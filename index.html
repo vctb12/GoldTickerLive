@@ -14,49 +14,37 @@
 
   <!-- ═══════════════════════ HEADER ═══════════════════════ -->
   <header class="site-header">
-    <div class="header-top">
-      <div class="header-title-group">
+    <div class="header-main">
+      <div class="header-brand">
         <h1 class="site-title" data-i18n="header.title">Live Gold Prices</h1>
         <p class="site-subtitle" data-i18n="header.subtitle">Spot-linked bullion estimates by karat &amp; currency</p>
       </div>
-      <button id="lang-toggle" class="lang-btn" aria-label="Toggle language" data-i18n="lang.toggle">العربية</button>
+      <div class="header-actions">
+        <div class="freshness-chips" aria-label="Data freshness">
+          <span class="freshness-chip chip-live" title="Gold spot price">
+            <span class="chip-live-dot" aria-hidden="true"></span>
+            <span id="gold-freshness-time" aria-live="polite">—</span>
+            <span class="chip-sep" aria-hidden="true">·</span>
+            <span id="gold-countdown" aria-live="polite">—</span>
+          </span>
+          <span class="freshness-chip chip-fx" title="FX rates">
+            <span class="chip-label" data-i18n="fx.badge">FX</span>
+            <span id="fx-freshness-time">—</span>
+          </span>
+        </div>
+        <button id="lang-toggle" class="lang-btn" aria-label="Toggle language" data-i18n="lang.toggle">العربية</button>
+      </div>
     </div>
 
     <!-- Offline banner -->
     <div id="offline-banner" class="status-banner status-offline" hidden role="alert">
-      <span class="banner-icon">📡</span>
+      <span class="banner-icon" aria-hidden="true">📡</span>
       <span data-i18n="status.offline">You are offline. Showing cached data.</span>
     </div>
 
     <!-- Error banner -->
     <div id="error-banner" class="status-banner status-error" hidden role="alert">
       <span id="error-banner-text"></span>
-    </div>
-
-    <!-- Freshness rows -->
-    <div class="freshness-grid">
-      <div class="freshness-row freshness-gold">
-        <span class="freshness-badge badge-live" data-i18n="gold.badge">LIVE</span>
-        <span class="freshness-label" data-i18n="gold.freshness.label">Gold updated:</span>
-        <span id="gold-freshness-time" class="freshness-time" aria-live="polite">—</span>
-        <span class="freshness-sep">·</span>
-        <span data-i18n="gold.countdown.label">Next refresh in:</span>
-        <span id="gold-countdown" class="countdown" aria-live="polite">—</span>
-      </div>
-      <div class="freshness-row freshness-fx">
-        <span class="freshness-badge badge-daily" data-i18n="fx.badge">DAILY</span>
-        <span class="freshness-label" data-i18n="fx.freshness.label">FX rates updated:</span>
-        <span id="fx-freshness-time" class="freshness-time">—</span>
-        <span class="freshness-sep">·</span>
-        <span data-i18n="fx.next.label">Next FX refresh:</span>
-        <span id="fx-next-time" class="freshness-time">—</span>
-      </div>
-    </div>
-
-    <!-- Cache health -->
-    <div class="cache-health" id="cache-health-row" hidden>
-      <span data-i18n="status.cacheHealth">Data freshness:</span>
-      <span id="cache-health-value" class="cache-health-value">—</span>
     </div>
   </header>
 
@@ -67,7 +55,7 @@
       <div class="section-header">
         <h2 id="spotlight-title" data-i18n="spotlight.title">UAE Gold Prices</h2>
         <div class="karat-selector-row">
-          <label class="selector-label" for="spotlight-karat" data-i18n="spotlight.karat.label">Karat:</label>
+          <span class="selector-label" data-i18n="spotlight.karat.label">Karat:</span>
           <div class="karat-pills" id="spotlight-karat-pills" role="group" aria-label="Select karat">
             <!-- Injected by JS -->
           </div>
@@ -116,8 +104,8 @@
           <thead>
             <tr>
               <th data-i18n="karat.col.karat">Karat</th>
-              <th data-i18n="karat.col.usd">USD</th>
-              <th data-i18n="karat.col.aed">AED (Fixed Peg)</th>
+              <th class="num-col" data-i18n="karat.col.usd">USD</th>
+              <th class="num-col" data-i18n="karat.col.aed">AED (Fixed Peg)</th>
             </tr>
           </thead>
           <tbody id="karat-tbody">
@@ -148,8 +136,8 @@
       <!-- Controls row -->
       <div class="controls-row">
         <div class="control-group">
-          <label class="selector-label" data-i18n="countries.karat.label">Show karat:</label>
-          <div class="karat-pills" id="countries-karat-pills" role="group">
+          <span class="selector-label" data-i18n="countries.karat.label">Karat:</span>
+          <div class="karat-pills" id="countries-karat-pills" role="group" aria-label="Select karat">
             <!-- Injected by JS -->
           </div>
         </div>
@@ -168,8 +156,8 @@
             aria-label="Search countries" />
         </div>
         <div class="control-group export-group">
-          <button id="export-csv-btn" class="export-btn" title="Export CSV">⬇ CSV</button>
-          <button id="export-json-btn" class="export-btn" title="Export JSON">⬇ JSON</button>
+          <button id="export-csv-btn" class="export-btn" title="Export CSV" data-i18n="export.csv">⬇ CSV</button>
+          <button id="export-json-btn" class="export-btn" title="Export JSON" data-i18n="export.json">⬇ JSON</button>
         </div>
       </div>
 
@@ -203,7 +191,7 @@
   <footer class="site-footer">
     <div class="footer-sources">
       <a href="https://gold-api.com" target="_blank" rel="noopener noreferrer" data-i18n="footer.goldSource">Gold data: Gold API (gold-api.com)</a>
-      <span class="footer-sep">·</span>
+      <span class="footer-sep" aria-hidden="true">·</span>
       <a href="https://open.er-api.com" target="_blank" rel="noopener noreferrer" data-i18n="footer.fxSource">FX data: ExchangeRate-API (open.er-api.com)</a>
     </div>
     <p class="footer-disclaimer" data-i18n="footer.disclaimer">
