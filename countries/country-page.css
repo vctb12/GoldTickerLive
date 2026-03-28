@@ -1,0 +1,296 @@
+/* ═══════════════════════════════════════════════════
+   Country Page Styles
+   ═══════════════════════════════════════════════════ */
+
+/* ── Hero ──────────────────────────────────────────── */
+.cp-hero {
+  background: linear-gradient(135deg, var(--color-gold-deep) 0%, #2a1a04 60%, #100c04 100%);
+  padding: 3rem 1.5rem 2.5rem;
+}
+
+.cp-hero-main {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.cp-hero-main.stale {
+  opacity: 0.85;
+}
+
+.cp-hero-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.cp-hero-flag {
+  font-size: 2.8rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.cp-hero-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.cp-hero-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-gold-light);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+.cp-hero-badges {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.cp-stale-badge {
+  background: rgba(245,158,11,0.2);
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold-light);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.cp-peg-badge {
+  background: rgba(59,130,246,0.2);
+  border: 1px solid #3b82f6;
+  color: #93c5fd;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.cp-prices-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cp-price-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.cp-price-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-gold-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cp-price-value {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 700;
+  color: var(--color-gold-light);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.cp-change-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.cp-change-label {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.5);
+}
+
+.cp-update-time {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.35);
+}
+
+@media (max-width: 640px) {
+  .cp-prices-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .cp-prices-row .cp-price-card:last-child {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 380px) {
+  .cp-prices-row {
+    grid-template-columns: 1fr;
+  }
+  .cp-prices-row .cp-price-card:last-child {
+    grid-column: span 1;
+  }
+}
+
+/* ── Page body sections ─────────────────────────────── */
+.cp-section {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+}
+
+.cp-section + .cp-section {
+  border-top: 1px solid var(--color-border);
+  padding-top: 2rem;
+}
+
+/* ── Karat table ────────────────────────────────────── */
+.cp-table-header {
+  margin-bottom: 1.2rem;
+}
+
+.cp-table-header h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.cp-table-sub {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.cp-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.cp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.cp-table th {
+  background: var(--color-surface-2);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cp-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.cp-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.cp-table tbody tr:hover {
+  background: var(--color-surface-2);
+}
+
+.cp-karat-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cp-karat-pct {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  padding: 0.1rem 0.35rem;
+}
+
+.cp-price-cell {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.cp-usd-col {
+  color: var(--color-text-muted);
+}
+
+.cp-disclaimer {
+  margin-top: 0.8rem;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Related countries ──────────────────────────────── */
+#cp-related h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.cp-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+}
+
+.cp-related-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--color-text);
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.cp-related-card:hover {
+  border-color: var(--color-gold);
+  background: var(--color-surface-2);
+}
+
+.cp-related-flag {
+  font-size: 1.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ── FAQ ────────────────────────────────────────────── */
+#cp-faq h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+/* ── RTL overrides ──────────────────────────────────── */
+[dir="rtl"] .cp-hero-row      { flex-direction: row-reverse; }
+[dir="rtl"] .cp-hero-labels   { align-items: flex-end; }
+[dir="rtl"] .cp-hero-badges   { flex-direction: row-reverse; }
+[dir="rtl"] .cp-change-row    { flex-direction: row-reverse; }
+[dir="rtl"] .cp-karat-name    { flex-direction: row-reverse; }
+[dir="rtl"] .cp-related-card  { flex-direction: row-reverse; }
+[dir="rtl"] .cp-table th,
+[dir="rtl"] .cp-table td      { text-align: right; }

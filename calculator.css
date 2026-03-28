@@ -1,0 +1,376 @@
+/* ═══════════════════════════════════════════════════
+   Calculator Page Styles
+   ═══════════════════════════════════════════════════ */
+
+/* ── Hero ─────────────────────────────────────────── */
+.calc-hero {
+  background: linear-gradient(135deg, #1a1206 0%, var(--color-gold-deep) 40%, #1a1206 100%);
+  padding: 2.5rem 1.5rem 2rem;
+  text-align: center;
+}
+
+.calc-hero-inner {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.calc-hero-title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  color: var(--color-gold-light);
+  margin: 0;
+}
+
+.calc-hero-sub {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.55);
+  margin: 0;
+}
+
+.calc-live-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 2rem;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.82rem;
+  color: var(--color-gold-light);
+}
+
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  background: #22c55e;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+#calc-spot-price {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Tab bar ───────────────────────────────────────── */
+.calc-nav-tabs {
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--color-surface-1);
+  border-bottom: 1px solid var(--color-border);
+  scrollbar-width: none;
+}
+
+.calc-nav-tabs::-webkit-scrollbar { display: none; }
+
+.calc-tab {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.9rem 1.25rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.calc-tab:hover {
+  color: var(--color-text);
+}
+
+.calc-tab.active {
+  color: var(--color-gold);
+  border-bottom-color: var(--color-gold);
+}
+
+/* ── Panel ─────────────────────────────────────────── */
+.calc-panel {
+  max-width: 680px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+.calc-panel[hidden] { display: none; }
+.calc-panel.active  { display: block; }
+
+/* ── Card ──────────────────────────────────────────── */
+.calc-card {
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+}
+
+.calc-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.calc-card-desc {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1.5rem;
+}
+
+/* ── Form ──────────────────────────────────────────── */
+.calc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.calc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.calc-field label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.calc-input-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.calc-input {
+  flex: 1;
+  min-width: 0;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+  font-size: 1rem;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  transition: border-color 0.15s;
+}
+
+.calc-input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+}
+
+.calc-input-full {
+  width: 100%;
+}
+
+.calc-select {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.75rem;
+  font-size: 0.88rem;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color 0.15s;
+  flex-shrink: 0;
+}
+
+.calc-select:focus {
+  outline: none;
+  border-color: var(--color-gold);
+}
+
+.calc-select-full {
+  width: 100%;
+}
+
+.calc-suffix {
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.calc-field-hint {
+  font-size: 0.73rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ── Result ────────────────────────────────────────── */
+.calc-result {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-top: 0.5rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.calc-result[hidden] { display: none; }
+
+.calc-result-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.8rem;
+}
+
+.calc-result-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.calc-result-value {
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: 800;
+  color: var(--color-gold-light);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.calc-result-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.calc-result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.calc-result-row strong {
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.calc-result-secondary {
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.calc-result-note {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.3);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  color: var(--color-gold-light);
+}
+
+/* ── Zakat nisab ──────────────────────────────────── */
+.calc-zakat-nisab {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.9rem;
+  font-size: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+.calc-zakat-nisab strong {
+  color: var(--color-gold-light);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Unit converter results ───────────────────────── */
+.calc-convert-results {
+  margin-top: 1rem;
+}
+
+.calc-convert-results[hidden] { display: none; }
+
+.calc-convert-results h3 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.75rem;
+}
+
+.conv-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.conv-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+  font-size: 0.88rem;
+}
+
+.conv-row-label {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+
+.conv-row-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+/* ── Disclaimer ───────────────────────────────────── */
+.calc-disclaimer {
+  font-size: 0.73rem;
+  color: var(--color-text-muted);
+  margin-top: 1rem;
+}
+
+/* ── Responsive ───────────────────────────────────── */
+@media (max-width: 480px) {
+  .calc-card { padding: 1.2rem; }
+  .conv-grid { grid-template-columns: 1fr; }
+}
+
+/* ── RTL ──────────────────────────────────────────── */
+[dir="rtl"] .calc-input-row  { flex-direction: row-reverse; }
+[dir="rtl"] .calc-result-row { flex-direction: row-reverse; }
+[dir="rtl"] .conv-row        { flex-direction: row-reverse; }
+[dir="rtl"] .calc-zakat-nisab { flex-direction: row-reverse; }

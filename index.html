@@ -3,205 +3,318 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Live gold price tracker with estimates by karat and local currency for GCC, Levant, and African markets." />
-  <title>Live Gold Prices | أسعار الذهب</title>
+  <meta name="description" content="Live gold prices in UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual English/Arabic. Updated every 90 seconds." />
+  <meta name="keywords" content="gold price today UAE, gold price Dubai, سعر الذهب اليوم, gold rate per gram AED, 24K gold price, 22K gold UAE, GCC gold prices, live gold tracker" />
+  <meta property="og:title" content="Live Gold Prices — GCC &amp; Arab World | أسعار الذهب المباشرة" />
+  <meta property="og:description" content="Track live gold spot prices in 24 countries across GCC, Levant, Africa and globally. 7 karats. Bilingual EN/AR. Free, updated every 90 seconds." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Live Gold Prices — GCC &amp; Arab World" />
+  <meta name="twitter:description" content="Track live gold prices in UAE, Saudi Arabia, Kuwait and 20+ countries. 7 karats. Bilingual." />
+  <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/" />
+  <title>Live Gold Prices Today — UAE, GCC &amp; Arab World | أسعار الذهب</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="home.css" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Gold Prices — GCC & Arab World",
+    "url": "https://vctb12.github.io/Gold-Prices/",
+    "inLanguage": ["en", "ar"],
+    "description": "Live gold spot prices across GCC, Levant, Africa and globally. 7 karats, bilingual English/Arabic.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://vctb12.github.io/Gold-Prices/tracker.html?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "GoldPrices",
+    "url": "https://vctb12.github.io/Gold-Prices/",
+    "description": "Live gold price tracker for GCC and Arab world — bilingual English/Arabic"
+  }
+  </script>
 </head>
-<body>
+<body class="home-page">
 
-  <!-- ═══════════════════════ HEADER ═══════════════════════ -->
-  <header class="site-header">
-    <div class="header-main">
-      <div class="header-brand">
-        <h1 class="site-title" data-i18n="header.title">Live Gold Prices</h1>
-        <p class="site-subtitle" data-i18n="header.subtitle">Spot-linked bullion estimates by karat &amp; currency</p>
-      </div>
-      <div class="header-actions">
-        <div class="freshness-chips" aria-label="Data freshness">
-          <span class="freshness-chip chip-live" title="Gold spot price">
-            <span class="chip-live-dot" aria-hidden="true"></span>
-            <span id="gold-freshness-time" aria-live="polite">—</span>
-            <span class="chip-sep" aria-hidden="true">·</span>
-            <span id="gold-countdown" aria-live="polite">—</span>
-          </span>
-          <span class="freshness-chip chip-fx" title="FX rates">
-            <span class="chip-label" data-i18n="fx.badge">FX</span>
-            <span id="fx-freshness-time">—</span>
-          </span>
-        </div>
-        <button id="lang-toggle" class="lang-btn" aria-label="Toggle language" data-i18n="lang.toggle">العربية</button>
-      </div>
-    </div>
-
-    <!-- Offline banner -->
-    <div id="offline-banner" class="status-banner status-offline" hidden role="alert">
-      <span class="banner-icon" aria-hidden="true">📡</span>
-      <span data-i18n="status.offline">You are offline. Showing cached data.</span>
-    </div>
-
-    <!-- Error banner -->
-    <div id="error-banner" class="status-banner status-error" hidden role="alert">
-      <span id="error-banner-text"></span>
-    </div>
-  </header>
+  <!-- ═══════ NAV (injected by home.js) ═══════ -->
 
   <main>
 
-    <!-- ═══════════════════════ UAE SPOTLIGHT ═══════════════════════ -->
-    <section class="section" id="section-spotlight" aria-labelledby="spotlight-title">
-      <div class="section-header">
-        <h2 id="spotlight-title" data-i18n="spotlight.title">UAE Gold Prices</h2>
-        <div class="karat-selector-row">
-          <span class="selector-label" data-i18n="spotlight.karat.label">Karat:</span>
-          <div class="karat-pills" id="spotlight-karat-pills" role="group" aria-label="Select karat">
-            <!-- Injected by JS -->
+    <!-- ═══════ HERO ═══════ -->
+    <section class="hero" aria-labelledby="hero-headline">
+      <div class="hero-inner">
+        <div class="hero-text">
+          <div class="hero-badge" id="hero-live-badge">
+            <span class="hero-badge-dot" aria-hidden="true"></span>
+            <span id="hero-live-label">Live · Updated every 90s</span>
+          </div>
+          <h1 id="hero-headline">
+            <span class="hero-title-main" id="hero-title-main">Gold Prices Today</span>
+            <span class="hero-title-sub" id="hero-title-sub">UAE, GCC &amp; Arab World</span>
+          </h1>
+          <p class="hero-lead" id="hero-lead">
+            Live spot-linked gold estimates across 24 countries in 7 karats — from 24K pure to 14K — in local currencies. Free, transparent, updated every 90 seconds.
+          </p>
+          <div class="hero-ctas">
+            <a href="tracker.html" class="btn btn-primary" id="hero-cta-tracker">View Live Tracker</a>
+            <a href="countries/uae.html" class="btn btn-outline" id="hero-cta-uae">UAE Gold Today</a>
+            <a href="calculator.html" class="btn btn-ghost" id="hero-cta-calc">Calculator</a>
+          </div>
+        </div>
+        <div class="hero-live-card" id="hero-live-card" aria-live="polite">
+          <div class="hlc-header">
+            <span class="hlc-title" id="hlc-title">Gold Spot Price</span>
+            <span class="hlc-badge" id="hlc-badge">XAU/USD</span>
+          </div>
+          <div class="hlc-price" id="hlc-price">—</div>
+          <div class="hlc-sub" id="hlc-sub">per troy ounce</div>
+          <div class="hlc-grid">
+            <div class="hlc-item">
+              <span class="hlc-item-label" id="hlc-label-aed24">24K / gram (AED)</span>
+              <span class="hlc-item-val" id="hlc-aed24">—</span>
+            </div>
+            <div class="hlc-item">
+              <span class="hlc-item-label" id="hlc-label-usd22">22K / gram (USD)</span>
+              <span class="hlc-item-val" id="hlc-usd22">—</span>
+            </div>
+            <div class="hlc-item">
+              <span class="hlc-item-label" id="hlc-label-aed22">22K / gram (AED)</span>
+              <span class="hlc-item-val" id="hlc-aed22">—</span>
+            </div>
+            <div class="hlc-item">
+              <span class="hlc-item-label" id="hlc-label-usd21">21K / gram (USD)</span>
+              <span class="hlc-item-val" id="hlc-usd21">—</span>
+            </div>
+          </div>
+          <div class="hlc-footer">
+            <span class="hlc-updated" id="hlc-updated">Fetching...</span>
           </div>
         </div>
       </div>
-
-      <div class="spotlight-grid" id="spotlight-grid">
-        <!-- Skeleton cards -->
-        <div class="spotlight-card skeleton-card"><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="spotlight-card skeleton-card"><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="spotlight-card skeleton-card"><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="spotlight-card skeleton-card"><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-      </div>
-
-      <p class="section-note" data-i18n="spotlight.note">Estimated bullion-equivalent value</p>
     </section>
 
-    <!-- ═══════════════════════ CHANGE PANEL ═══════════════════════ -->
-    <section class="section section-compact" id="section-change" aria-labelledby="change-title" hidden>
-      <h2 id="change-title" data-i18n="change.title">Price Movement</h2>
-      <div class="change-grid">
-        <div class="change-item" id="change-vs-prev">
-          <span class="change-label" data-i18n="change.vsPrev">vs previous fetch</span>
-          <span class="change-value" id="change-prev-value">—</span>
+    <!-- ═══════ TRUST STRIP ═══════ -->
+    <section class="trust-strip" aria-label="Key features">
+      <div class="trust-inner">
+        <div class="trust-item">
+          <span class="trust-icon" aria-hidden="true">◈</span>
+          <span class="trust-label" id="trust-live">Live spot data</span>
         </div>
-        <div class="change-item" id="change-vs-open">
-          <span class="change-label" data-i18n="change.vsOpen">vs Dubai day open</span>
-          <span class="change-value" id="change-open-value">—</span>
+        <div class="trust-item">
+          <span class="trust-icon" aria-hidden="true">🌍</span>
+          <span class="trust-label" id="trust-countries">24 countries</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-icon" aria-hidden="true">⚖</span>
+          <span class="trust-label" id="trust-karats">7 karats (14K–24K)</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-icon" aria-hidden="true">🔒</span>
+          <span class="trust-label" id="trust-aed">AED official peg</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-icon" aria-hidden="true">🌐</span>
+          <span class="trust-label" id="trust-bilingual">Bilingual EN / AR</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-icon" aria-hidden="true">⚡</span>
+          <span class="trust-label" id="trust-refresh">90s refresh</span>
         </div>
       </div>
-      <p class="section-note" data-i18n="change.note">24K per ounce · USD · Spot-linked estimate</p>
     </section>
 
-    <!-- ═══════════════════════ KARAT TABLE ═══════════════════════ -->
-    <section class="section" id="section-karat" aria-labelledby="karat-title">
-      <div class="section-header">
-        <h2 id="karat-title" data-i18n="karat.title">Price by Karat</h2>
-        <div class="unit-toggle-group" role="group" aria-label="Price unit">
-          <button class="unit-btn active" id="unit-gram" data-unit="gram" data-i18n="unit.gram">Per Gram</button>
-          <button class="unit-btn" id="unit-oz" data-unit="oz" data-i18n="unit.oz">Per Ounce</button>
+    <!-- ═══════ GCC QUICK PRICES ═══════ -->
+    <section class="home-section" aria-labelledby="gcc-section-title">
+      <div class="home-section-inner">
+        <div class="section-intro">
+          <h2 id="gcc-section-title" class="home-section-title">GCC Gold Prices Now</h2>
+          <p class="home-section-sub" id="gcc-section-sub">Live estimates in local currency · 22K per gram</p>
+          <a href="tracker.html" class="section-link" id="gcc-see-all">See all countries →</a>
+        </div>
+        <div class="gcc-grid" id="gcc-quick-grid">
+          <!-- Filled by home.js -->
+          <div class="gcc-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
+          <div class="gcc-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
+          <div class="gcc-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
+          <div class="gcc-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
+          <div class="gcc-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
+          <div class="gcc-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
         </div>
       </div>
-
-      <div class="table-wrapper">
-        <table id="karat-table" aria-label="Gold prices by karat">
-          <thead>
-            <tr>
-              <th data-i18n="karat.col.karat">Karat</th>
-              <th class="num-col" data-i18n="karat.col.usd">USD</th>
-              <th class="num-col" data-i18n="karat.col.aed">AED (Fixed Peg)</th>
-            </tr>
-          </thead>
-          <tbody id="karat-tbody">
-            <!-- Skeleton rows -->
-            <tr class="skeleton-row"><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td></tr>
-            <tr class="skeleton-row"><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td></tr>
-            <tr class="skeleton-row"><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="section-note" data-i18n="karat.disclaimer">Estimated bullion-equivalent values. Retail and jewelry prices may differ.</p>
     </section>
 
-    <!-- ═══════════════════════ COUNTRY PRICES ═══════════════════════ -->
-    <section class="section" id="section-countries" aria-labelledby="countries-title">
-      <div class="section-header">
-        <h2 id="countries-title" data-i18n="countries.title">Global Gold Estimates</h2>
+    <!-- ═══════ TOOLS ═══════ -->
+    <section class="home-section home-section--alt" aria-labelledby="tools-title">
+      <div class="home-section-inner">
+        <div class="section-intro centered">
+          <h2 id="tools-title" class="home-section-title" style="text-align:center">Everything You Need</h2>
+          <p class="home-section-sub" id="tools-sub" style="text-align:center">Built for buyers, investors and professionals across the Gulf &amp; Arab world</p>
+        </div>
+        <div class="tools-grid">
+          <a href="tracker.html" class="tool-card">
+            <div class="tool-card-icon" aria-hidden="true">📈</div>
+            <h3 class="tool-card-title" id="tool-tracker-title">Live Tracker</h3>
+            <p class="tool-card-desc" id="tool-tracker-desc">Full price matrix — 24 countries, 7 karats, per gram &amp; per ounce. Refreshed every 90 seconds.</p>
+            <span class="tool-card-cta" id="tool-tracker-cta">Open Tracker →</span>
+          </a>
+          <a href="calculator.html" class="tool-card">
+            <div class="tool-card-icon" aria-hidden="true">🧮</div>
+            <h3 class="tool-card-title" id="tool-calc-title">Gold Calculator</h3>
+            <p class="tool-card-desc" id="tool-calc-desc">Calculate value by weight, karat and currency. Scrap gold, jewelry value, buying power and more.</p>
+            <span class="tool-card-cta" id="tool-calc-cta">Open Calculator →</span>
+          </a>
+          <a href="countries/uae.html" class="tool-card">
+            <div class="tool-card-icon" aria-hidden="true">🇦🇪</div>
+            <h3 class="tool-card-title" id="tool-uae-title">UAE Gold Prices</h3>
+            <p class="tool-card-desc" id="tool-uae-desc">Dedicated UAE page with all karats in AED &amp; USD, plus context for Dubai buyers.</p>
+            <span class="tool-card-cta" id="tool-uae-cta">UAE Prices →</span>
+          </a>
+          <a href="learn.html" class="tool-card">
+            <div class="tool-card-icon" aria-hidden="true">📚</div>
+            <h3 class="tool-card-title" id="tool-learn-title">Learn &amp; Glossary</h3>
+            <p class="tool-card-desc" id="tool-learn-desc">What is 22K? Why does spot differ from retail? How does the AED peg work? Clear, honest answers.</p>
+            <span class="tool-card-cta" id="tool-learn-cta">Read Guide →</span>
+          </a>
+        </div>
       </div>
+    </section>
 
-      <!-- Tabs -->
-      <div class="tab-bar" role="tablist" aria-label="Region">
-        <button class="tab active" role="tab" aria-selected="true" data-tab="gcc" data-i18n="countries.tab.gcc">GCC</button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="levant" data-i18n="countries.tab.levant">Levant</button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="africa" data-i18n="countries.tab.africa">North &amp; East Africa</button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="global" data-i18n="countries.tab.global">Global Reference</button>
+    <!-- ═══════ COUNTRY QUICK ACCESS ═══════ -->
+    <section class="home-section" aria-labelledby="countries-quick-title">
+      <div class="home-section-inner">
+        <div class="section-intro">
+          <h2 id="countries-quick-title" class="home-section-title">Browse by Country</h2>
+          <p class="home-section-sub" id="countries-quick-sub">Dedicated pages with local context for every major market</p>
+        </div>
+        <div class="country-tiles">
+          <a href="countries/uae.html" class="country-tile"><span>🇦🇪</span><span id="ct-uae">UAE</span></a>
+          <a href="countries/saudi-arabia.html" class="country-tile"><span>🇸🇦</span><span id="ct-sa">Saudi Arabia</span></a>
+          <a href="countries/kuwait.html" class="country-tile"><span>🇰🇼</span><span id="ct-kw">Kuwait</span></a>
+          <a href="countries/qatar.html" class="country-tile"><span>🇶🇦</span><span id="ct-qa">Qatar</span></a>
+          <a href="countries/bahrain.html" class="country-tile"><span>🇧🇭</span><span id="ct-bh">Bahrain</span></a>
+          <a href="countries/oman.html" class="country-tile"><span>🇴🇲</span><span id="ct-om">Oman</span></a>
+          <a href="countries/egypt.html" class="country-tile"><span>🇪🇬</span><span id="ct-eg">Egypt</span></a>
+          <a href="countries/jordan.html" class="country-tile"><span>🇯🇴</span><span id="ct-jo">Jordan</span></a>
+          <a href="countries/morocco.html" class="country-tile"><span>🇲🇦</span><span id="ct-ma">Morocco</span></a>
+          <a href="countries/india.html" class="country-tile"><span>🇮🇳</span><span id="ct-in">India</span></a>
+          <a href="tracker.html" class="country-tile country-tile--more"><span>+</span><span id="ct-more">14 more</span></a>
+        </div>
       </div>
+    </section>
 
-      <!-- Controls row -->
-      <div class="controls-row">
-        <div class="control-group">
-          <span class="selector-label" data-i18n="countries.karat.label">Karat:</span>
-          <div class="karat-pills" id="countries-karat-pills" role="group" aria-label="Select karat">
-            <!-- Injected by JS -->
+    <!-- ═══════ WHY USE THIS ═══════ -->
+    <section class="home-section home-section--alt" aria-labelledby="why-title">
+      <div class="home-section-inner">
+        <div class="section-intro centered">
+          <h2 id="why-title" class="home-section-title" style="text-align:center">Why This Tracker</h2>
+        </div>
+        <div class="why-grid">
+          <div class="why-item">
+            <div class="why-icon" aria-hidden="true">🎯</div>
+            <h3 id="why1-title">GCC &amp; Arab Focus</h3>
+            <p id="why1-desc">Built for Gulf buyers. AED uses the official UAE Central Bank peg (3.6725), not a fluctuating API rate. GCC, Levant, and African markets all covered.</p>
+          </div>
+          <div class="why-item">
+            <div class="why-icon" aria-hidden="true">🔁</div>
+            <h3 id="why2-title">Genuinely Live</h3>
+            <p id="why2-desc">Gold spot price refreshes every 90 seconds via gold-api.com. FX rates update daily. Countdown shown. Cached locally so it works offline too.</p>
+          </div>
+          <div class="why-item">
+            <div class="why-icon" aria-hidden="true">🌗</div>
+            <h3 id="why3-title">Full Bilingual</h3>
+            <p id="why3-desc">Every label, badge, unit, and country name is available in English and Arabic. Full RTL layout switch — not just a font change.</p>
+          </div>
+          <div class="why-item">
+            <div class="why-icon" aria-hidden="true">⚗</div>
+            <h3 id="why4-title">7 Karats, 24 Countries</h3>
+            <p id="why4-desc">From pure 24K investment gold to 14K jewelry. All 7 standard karats × 24 countries = a complete price matrix in any unit.</p>
           </div>
         </div>
-        <div class="control-group">
-          <label class="selector-label" for="sort-select" data-i18n="countries.sort.label">Sort:</label>
-          <select id="sort-select" class="sort-select" aria-label="Sort countries">
-            <option value="high-low" data-i18n="countries.sort.highLow">Price: High → Low</option>
-            <option value="low-high" data-i18n="countries.sort.lowHigh">Price: Low → High</option>
-            <option value="alpha" data-i18n="countries.sort.alpha">Alphabetical</option>
-          </select>
-        </div>
-        <div class="control-group search-group">
-          <input type="search" id="search-input" class="search-input"
-            data-i18n-placeholder="countries.search.placeholder"
-            placeholder="Search countries..."
-            aria-label="Search countries" />
-        </div>
-        <div class="control-group export-group">
-          <button id="export-csv-btn" class="export-btn" title="Export CSV" data-i18n="export.csv">⬇ CSV</button>
-          <button id="export-json-btn" class="export-btn" title="Export JSON" data-i18n="export.json">⬇ JSON</button>
-        </div>
-      </div>
-
-      <!-- Country grid -->
-      <div id="country-grid" class="country-grid" role="list" aria-live="polite">
-        <!-- Skeleton cards -->
-        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-      </div>
-
-      <!-- Empty search state -->
-      <div id="country-empty" class="empty-state" hidden>
-        <span data-i18n="countries.empty">No countries found for</span>
-        <strong id="country-empty-query"></strong>
       </div>
     </section>
 
-    <!-- ═══════════════════════ NO DATA STATE ═══════════════════════ -->
-    <div id="no-data-state" class="no-data-state" hidden>
-      <p data-i18n="status.noData">No data available. Please check your connection and retry.</p>
-      <button id="retry-btn" class="retry-btn" data-i18n="status.retry">Retry</button>
-    </div>
+    <!-- ═══════ ALERT CTA ═══════ -->
+    <section class="home-section alert-cta-section" aria-labelledby="alert-cta-title">
+      <div class="home-section-inner">
+        <div class="alert-cta-box">
+          <div class="alert-cta-text">
+            <h2 id="alert-cta-title">Set a Price Alert</h2>
+            <p id="alert-cta-desc">Get notified when UAE 24K crosses your target price. Free, stored locally — no account needed.</p>
+          </div>
+          <a href="tracker.html#alerts" class="btn btn-primary btn-lg" id="alert-cta-btn">Set Alert</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ FAQ ═══════ -->
+    <section class="home-section" aria-labelledby="faq-title">
+      <div class="home-section-inner home-section-inner--narrow">
+        <div class="section-intro centered">
+          <h2 id="faq-title" class="home-section-title" style="text-align:center">Common Questions</h2>
+        </div>
+        <div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
+          <details class="faq-item" itemscope itemtype="https://schema.org/Question" itemprop="mainEntity">
+            <summary class="faq-q" itemprop="name">What is the gold price per gram in UAE today?</summary>
+            <div class="faq-a" itemscope itemtype="https://schema.org/Answer" itemprop="acceptedAnswer">
+              <div itemprop="text">
+                The live gold price per gram in UAE (AED) is shown on the <a href="tracker.html">Live Tracker</a> and the <a href="countries/uae.html">UAE page</a>. Prices are updated every 90 seconds from the XAU/USD spot rate, converted using the official AED peg of 3.6725.
+              </div>
+            </div>
+          </details>
+          <details class="faq-item" itemscope itemtype="https://schema.org/Question" itemprop="mainEntity">
+            <summary class="faq-q" itemprop="name">What is the difference between 24K, 22K and 21K gold?</summary>
+            <div class="faq-a" itemscope itemtype="https://schema.org/Answer" itemprop="acceptedAnswer">
+              <div itemprop="text">
+                24K is 100% pure gold. 22K is 91.7% gold (common for Gulf jewelry). 21K is 87.5% gold (popular in Egypt and Levant). 18K is 75% gold (common for fine jewelry worldwide). The price scales with purity — see our <a href="learn.html">Learn page</a> for the full breakdown.
+              </div>
+            </div>
+          </details>
+          <details class="faq-item" itemscope itemtype="https://schema.org/Question" itemprop="mainEntity">
+            <summary class="faq-q" itemprop="name">Why is the AED price different from a live API conversion?</summary>
+            <div class="faq-a" itemscope itemtype="https://schema.org/Answer" itemprop="acceptedAnswer">
+              <div itemprop="text">
+                The UAE Dirham is officially pegged to the US Dollar at 3.6725 by the UAE Central Bank. This rate never changes. Most FX APIs show a slightly different rate due to bid/ask spreads. We hardcode the official peg to give you accurate AED gold prices.
+              </div>
+            </div>
+          </details>
+          <details class="faq-item" itemscope itemtype="https://schema.org/Question" itemprop="mainEntity">
+            <summary class="faq-q" itemprop="name">Is this the actual jewelry or retail gold price?</summary>
+            <div class="faq-a" itemscope itemtype="https://schema.org/Answer" itemprop="acceptedAnswer">
+              <div itemprop="text">
+                No — these are spot-linked bullion estimates. Actual jewellery prices at retail stores are higher due to making charges, shop premiums, taxes, and markups. The Dubai Gold &amp; Jewellery Group publishes a daily retail rate. Our tracker gives you the international spot baseline.
+              </div>
+            </div>
+          </details>
+          <details class="faq-item" itemscope itemtype="https://schema.org/Question" itemprop="mainEntity">
+            <summary class="faq-q" itemprop="name">How often do prices update?</summary>
+            <div class="faq-a" itemscope itemtype="https://schema.org/Answer" itemprop="acceptedAnswer">
+              <div itemprop="text">
+                Gold spot price refreshes every 90 seconds while you have the page open. FX rates update once per day (via open.er-api.com). A countdown timer on the tracker shows you exactly when the next refresh is due. Data is cached locally so the last known price shows even when you're offline.
+              </div>
+            </div>
+          </details>
+        </div>
+        <div style="text-align:center;margin-top:1.5rem">
+          <a href="learn.html" class="section-link" id="faq-more-link">More questions answered on the Learn page →</a>
+        </div>
+      </div>
+    </section>
 
   </main>
 
-  <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
-  <footer class="site-footer">
-    <div class="footer-sources">
-      <a href="https://gold-api.com" target="_blank" rel="noopener noreferrer" data-i18n="footer.goldSource">Gold data: Gold API (gold-api.com)</a>
-      <span class="footer-sep" aria-hidden="true">·</span>
-      <a href="https://open.er-api.com" target="_blank" rel="noopener noreferrer" data-i18n="footer.fxSource">FX data: ExchangeRate-API (open.er-api.com)</a>
-    </div>
-    <p class="footer-disclaimer" data-i18n="footer.disclaimer">
-      Estimated bullion-equivalent values only. Retail and jewelry prices may differ significantly. Not financial advice.
-    </p>
-  </footer>
+  <!-- ═══════ FOOTER (injected by home.js) ═══════ -->
 
-  <!-- ═══════════════════════ DEBUG PANEL ═══════════════════════ -->
-  <div id="debug-panel" class="debug-panel" style="display:none;" aria-hidden="true"></div>
-
-  <script type="module" src="app.js"></script>
+  <script type="module" src="home.js"></script>
 </body>
 </html>

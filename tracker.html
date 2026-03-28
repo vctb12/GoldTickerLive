@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Live gold spot price tracker. Prices in 24K, 22K, 21K, 18K per gram and per ounce across GCC, Levant, Africa and global currencies. Updated every 90 seconds." />
+  <meta name="keywords" content="gold price today, live gold price, UAE gold rate, gold per gram, 24K gold, 22K gold, GCC gold prices, أسعار الذهب" />
+  <meta property="og:title" content="Live Gold Prices Tracker | أسعار الذهب المباشرة" />
+  <meta property="og:description" content="Live gold spot price in 24 countries and 7 karats. Updated every 90 seconds. Bilingual English/Arabic." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/tracker.html" />
+  <title>Live Gold Tracker — All Karats &amp; Currencies | أسعار الذهب</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Live Gold Prices Tracker",
+    "description": "Live gold spot prices by karat and currency for GCC and Arab world",
+    "url": "https://vctb12.github.io/Gold-Prices/tracker.html",
+    "inLanguage": ["en", "ar"],
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type":"ListItem","position":1,"name":"Home","item":"https://vctb12.github.io/Gold-Prices/"},
+        {"@type":"ListItem","position":2,"name":"Live Tracker","item":"https://vctb12.github.io/Gold-Prices/tracker.html"}
+      ]
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- ═══════════════════════ HEADER ═══════════════════════ -->
+  <header class="site-header">
+    <div class="header-main">
+      <div class="header-brand">
+        <h1 class="site-title" data-i18n="header.title">Live Gold Prices</h1>
+        <p class="site-subtitle" data-i18n="header.subtitle">Spot-linked bullion estimates by karat &amp; currency</p>
+      </div>
+      <div class="header-actions">
+        <div class="freshness-chips" aria-label="Data freshness">
+          <span class="freshness-chip chip-live" title="Gold spot price">
+            <span class="chip-live-dot" aria-hidden="true"></span>
+            <span id="gold-freshness-time" aria-live="polite">—</span>
+            <span class="chip-sep" aria-hidden="true">·</span>
+            <span id="gold-countdown" aria-live="polite">—</span>
+          </span>
+          <span class="freshness-chip chip-fx" title="FX rates">
+            <span class="chip-label" data-i18n="fx.badge">FX</span>
+            <span id="fx-freshness-time">—</span>
+          </span>
+        </div>
+        <button id="lang-toggle" class="lang-btn" aria-label="Toggle language" data-i18n="lang.toggle">العربية</button>
+      </div>
+    </div>
+
+    <!-- Offline banner -->
+    <div id="offline-banner" class="status-banner status-offline" hidden role="alert">
+      <span class="banner-icon" aria-hidden="true">📡</span>
+      <span data-i18n="status.offline">You are offline. Showing cached data.</span>
+    </div>
+
+    <!-- Error banner -->
+    <div id="error-banner" class="status-banner status-error" hidden role="alert">
+      <span id="error-banner-text"></span>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ═══════════════════════ UAE SPOTLIGHT ═══════════════════════ -->
+    <section class="section" id="section-spotlight" aria-labelledby="spotlight-title">
+      <div class="section-header">
+        <h2 id="spotlight-title" data-i18n="spotlight.title">UAE Gold Prices</h2>
+        <div class="karat-selector-row">
+          <span class="selector-label" data-i18n="spotlight.karat.label">Karat:</span>
+          <div class="karat-pills" id="spotlight-karat-pills" role="group" aria-label="Select karat">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+      </div>
+
+      <div class="spotlight-grid" id="spotlight-grid">
+        <!-- Skeleton cards -->
+        <div class="spotlight-card skeleton-card"><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
+        <div class="spotlight-card skeleton-card"><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
+        <div class="spotlight-card skeleton-card"><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
+        <div class="spotlight-card skeleton-card"><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
+      </div>
+
+      <p class="section-note" data-i18n="spotlight.note">Estimated bullion-equivalent value</p>
+    </section>
+
+    <!-- ═══════════════════════ CHANGE PANEL ═══════════════════════ -->
+    <section class="section section-compact" id="section-change" aria-labelledby="change-title" hidden>
+      <h2 id="change-title" data-i18n="change.title">Price Movement</h2>
+      <div class="change-grid">
+        <div class="change-item" id="change-vs-prev">
+          <span class="change-label" data-i18n="change.vsPrev">vs previous fetch</span>
+          <span class="change-value" id="change-prev-value">—</span>
+        </div>
+        <div class="change-item" id="change-vs-open">
+          <span class="change-label" data-i18n="change.vsOpen">vs Dubai day open</span>
+          <span class="change-value" id="change-open-value">—</span>
+        </div>
+      </div>
+      <p class="section-note" data-i18n="change.note">24K per ounce · USD · Spot-linked estimate</p>
+    </section>
+
+    <!-- ═══════════════════════ PRICE CHART ═══════════════════════ -->
+    <section class="section" id="section-chart" aria-labelledby="chart-title">
+      <div class="section-header">
+        <h2 id="chart-title" data-i18n="chart.title">Price Chart</h2>
+        <div class="chart-range-group" role="group" aria-label="Chart time range">
+          <button class="chart-range-btn active" data-range="24h">24H</button>
+          <button class="chart-range-btn" data-range="7d">7D</button>
+          <button class="chart-range-btn" data-range="30d">30D</button>
+        </div>
+      </div>
+      <div id="chart-container" class="chart-container" aria-label="Gold price chart">
+        <div class="chart-skeleton">
+          <div class="chart-skeleton-inner"></div>
+        </div>
+      </div>
+      <p class="section-note" data-i18n="chart.note">XAU/USD spot price · Snapshots stored locally every 90 seconds</p>
+    </section>
+
+    <!-- ═══════════════════════ KARAT TABLE ═══════════════════════ -->
+    <section class="section" id="section-karat" aria-labelledby="karat-title">
+      <div class="section-header">
+        <h2 id="karat-title" data-i18n="karat.title">Price by Karat</h2>
+        <div class="unit-toggle-group" role="group" aria-label="Price unit">
+          <button class="unit-btn active" id="unit-gram" data-unit="gram" data-i18n="unit.gram">Per Gram</button>
+          <button class="unit-btn" id="unit-oz" data-unit="oz" data-i18n="unit.oz">Per Ounce</button>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table id="karat-table" aria-label="Gold prices by karat">
+          <thead>
+            <tr>
+              <th data-i18n="karat.col.karat">Karat</th>
+              <th class="num-col" data-i18n="karat.col.usd">USD</th>
+              <th class="num-col" data-i18n="karat.col.aed">AED (Fixed Peg)</th>
+            </tr>
+          </thead>
+          <tbody id="karat-tbody">
+            <!-- Skeleton rows -->
+            <tr class="skeleton-row"><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td></tr>
+            <tr class="skeleton-row"><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td></tr>
+            <tr class="skeleton-row"><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="section-note" data-i18n="karat.disclaimer">Estimated bullion-equivalent values. Retail and jewelry prices may differ.</p>
+    </section>
+
+    <!-- ═══════════════════════ COUNTRY PRICES ═══════════════════════ -->
+    <section class="section" id="section-countries" aria-labelledby="countries-title">
+      <div class="section-header">
+        <h2 id="countries-title" data-i18n="countries.title">Global Gold Estimates</h2>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar" role="tablist" aria-label="Region">
+        <button class="tab active" role="tab" aria-selected="true" data-tab="gcc" data-i18n="countries.tab.gcc">GCC</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="levant" data-i18n="countries.tab.levant">Levant</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="africa" data-i18n="countries.tab.africa">North &amp; East Africa</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="global" data-i18n="countries.tab.global">Global Reference</button>
+      </div>
+
+      <!-- Controls row -->
+      <div class="controls-row">
+        <div class="control-group">
+          <span class="selector-label" data-i18n="countries.karat.label">Karat:</span>
+          <div class="karat-pills" id="countries-karat-pills" role="group" aria-label="Select karat">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="selector-label" for="sort-select" data-i18n="countries.sort.label">Sort:</label>
+          <select id="sort-select" class="sort-select" aria-label="Sort countries">
+            <option value="high-low" data-i18n="countries.sort.highLow">Price: High → Low</option>
+            <option value="low-high" data-i18n="countries.sort.lowHigh">Price: Low → High</option>
+            <option value="alpha" data-i18n="countries.sort.alpha">Alphabetical</option>
+          </select>
+        </div>
+        <div class="control-group search-group">
+          <input type="search" id="search-input" class="search-input"
+            data-i18n-placeholder="countries.search.placeholder"
+            placeholder="Search countries..."
+            aria-label="Search countries" />
+        </div>
+        <div class="control-group export-group">
+          <button id="export-csv-btn" class="export-btn" title="Export CSV" data-i18n="export.csv">⬇ CSV</button>
+          <button id="export-json-btn" class="export-btn" title="Export JSON" data-i18n="export.json">⬇ JSON</button>
+        </div>
+      </div>
+
+      <!-- Country grid -->
+      <div id="country-grid" class="country-grid" role="list" aria-live="polite">
+        <!-- Skeleton cards -->
+        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
+        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
+        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
+        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
+        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
+        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
+      </div>
+
+      <!-- Empty search state -->
+      <div id="country-empty" class="empty-state" hidden>
+        <span data-i18n="countries.empty">No countries found for</span>
+        <strong id="country-empty-query"></strong>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════ NO DATA STATE ═══════════════════════ -->
+    <div id="no-data-state" class="no-data-state" hidden>
+      <p data-i18n="status.noData">No data available. Please check your connection and retry.</p>
+      <button id="retry-btn" class="retry-btn" data-i18n="status.retry">Retry</button>
+    </div>
+
+  </main>
+
+  <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-sources">
+      <a href="https://gold-api.com" target="_blank" rel="noopener noreferrer" data-i18n="footer.goldSource">Gold data: Gold API (gold-api.com)</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="https://open.er-api.com" target="_blank" rel="noopener noreferrer" data-i18n="footer.fxSource">FX data: ExchangeRate-API (open.er-api.com)</a>
+    </div>
+    <p class="footer-disclaimer" data-i18n="footer.disclaimer">
+      Estimated bullion-equivalent values only. Retail and jewelry prices may differ significantly. Not financial advice.
+    </p>
+  </footer>
+
+  <!-- ═══════════════════════ DEBUG PANEL ═══════════════════════ -->
+  <div id="debug-panel" class="debug-panel" style="display:none;" aria-hidden="true"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -7,6 +7,10 @@ import * as search from './lib/search.js';
 import * as exp from './lib/export.js';
 import * as history from './lib/history.js';
 import * as debug from './lib/debug.js';
+import { GoldChart } from './components/chart.js';
+import { injectNav, updateNavLang } from './components/nav.js';
+import { injectFooter } from './components/footer.js';
+import * as alerts from './lib/alerts.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STATE
@@ -40,6 +44,8 @@ const STATE = {
 let _prices = {};
 let _goldRefreshTimestamp = 0;
 let _listenersSetup = false; // guard against duplicate registration on retry
+let _timerIds = [];          // stored so startTimers() can guard against double-start
+let _chart = null;           // GoldChart instance
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TRANSLATION
@@ -66,6 +72,8 @@ async function fetchGoldData() {
     cache.checkDayOpenReset(STATE);
     cache.saveHistorySnapshot(STATE);
     history.updateVolatility(STATE);
+    if (_chart) _chart.addPoint(data.price, data.updatedAt);
+    alerts.checkAlerts(data.price);
   } catch (err) {
     console.warn('[gold] fetch failed:', err.message);
     STATE.status.goldError = err.message;
@@ -319,7 +327,7 @@ function renderCountryGrid() {
           <span class="cc-currency">${country.currency}</span>
         </div>
         <button class="fav-btn${isFav ? ' active' : ''}" data-country="${country.code}"
-          aria-label="${isFav ? 'Remove from favourites' : 'Add to favourites'}"
+          aria-label="${isFav ? t('card.removeFavorite') : t('card.addFavorite')}"
           aria-pressed="${isFav}">${isFav ? '★' : '☆'}</button>
       </div>
       <div class="cc-badges">
@@ -338,7 +346,7 @@ function renderCountryGrid() {
         <button class="copy-btn"
           data-price="${gramFmt}" data-currency="${country.currency}"
           data-karat="${karat}" data-country="${country.code}"
-          aria-label="Copy ${name} price">${t('card.copy')}</button>
+          aria-label="${t('card.copy')} ${name}">${t('card.copy')}</button>
       </div>
     </article>`;
   }).join('');
@@ -416,17 +424,15 @@ function updateCountdown() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function startTimers() {
-  // Gold auto-refresh
-  setInterval(async () => {
+  if (_timerIds.length) return; // guard: never start twice
+  _timerIds.push(setInterval(async () => {
     if (!STATE.isOnline) return;
     await fetchGoldData();
     await fetchFXData();
     recalcPrices();
     renderAll();
-  }, CONSTANTS.GOLD_REFRESH_MS);
-
-  // Countdown tick
-  setInterval(updateCountdown, 1000);
+  }, CONSTANTS.GOLD_REFRESH_MS));
+  _timerIds.push(setInterval(updateCountdown, 1000));
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -438,12 +444,7 @@ function setupEventListeners() {
   if (_listenersSetup) return;
   _listenersSetup = true;
 
-  // ── Language toggle ──────────────────────────────────────────────────────
-  document.getElementById('lang-toggle')?.addEventListener('click', () => {
-    STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
-    cache.savePreference('lang', STATE.lang);
-    applyLanguage();
-  });
+  // Language toggle is wired via nav component in init()
 
   // ── Unit toggle (Per Gram / Per Ounce) ───────────────────────────────────
   function setUnit(unit) {
@@ -465,6 +466,7 @@ function setupEventListeners() {
     const { karat, selector } = btn.dataset;
     if (selector === 'spotlight') {
       STATE.selectedKaratSpotlight = karat;
+      cache.savePreference('selectedKaratSpotlight', karat);
       renderSpotlight();
     } else if (selector === 'countries') {
       STATE.selectedKaratCountries = karat;
@@ -478,6 +480,10 @@ function setupEventListeners() {
     tab.addEventListener('click', () => {
       STATE.activeTab = tab.dataset.tab;
       cache.savePreference('activeTab', STATE.activeTab);
+      // Clear search when switching tabs for clean UX
+      STATE.searchQuery = '';
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) searchInput.value = '';
       document.querySelectorAll('[data-tab]').forEach(t => {
         const isActive = t.dataset.tab === STATE.activeTab;
         t.classList.toggle('active', isActive);
@@ -573,24 +579,37 @@ function setupEventListeners() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 async function init() {
-  // ① Attach all event listeners FIRST.
-  //    Delegated handlers (document.addEventListener) will work on any dynamic
-  //    content rendered later. Static-target handlers (getElementById) work now
-  //    because we're inside DOMContentLoaded.
+  // ① Inject shared nav and footer
+  const navCtrl = injectNav(STATE.lang, 0);
+  navCtrl.getLangToggleButtons().forEach(btn => {
+    btn.addEventListener('click', () => {
+      STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
+      cache.savePreference('lang', STATE.lang);
+      updateNavLang(STATE.lang);
+      applyLanguage();
+    });
+  });
+  injectFooter(STATE.lang, 0);
+
+  // ② Attach all event listeners FIRST.
   setupEventListeners();
 
-  // ② Restore saved preferences and cached prices from localStorage.
+  // ③ Restore saved preferences and cached prices from localStorage.
   cache.loadState(STATE);
 
-  // ③ Sync UI control visual states (unit buttons, tabs, sort select) to match
-  //    the values just loaded from cache before first render.
+  // ④ Sync UI control visual states from loaded STATE.
   syncUIFromState();
 
-  // ④ Apply language: sets html[lang/dir], translates all [data-i18n] nodes,
-  //    and calls renderAll() to show skeleton / loading state immediately.
+  // ⑤ Apply language: sets html[lang/dir], translates [data-i18n], calls renderAll.
   applyLanguage();
 
-  // ⑤ Fetch live data (parallel-ish: gold first, then FX conditional on staleness).
+  // ⑥ Init chart (loads lib async; renders when data arrives)
+  if (document.getElementById('chart-container')) {
+    _chart = new GoldChart('chart-container', STATE.lang);
+    setupChartControls();
+  }
+
+  // ⑦ Fetch live data.
   if (STATE.isOnline) {
     await fetchGoldData();
     await fetchFXData();
@@ -599,21 +618,31 @@ async function init() {
     if (banner) banner.hidden = false;
   }
 
-  // ⑥ Recalculate price matrix and do the final render with real data.
+  // ⑧ Recalculate and final render.
   recalcPrices();
   renderAll();
 
-  // ⑦ Show no-data state only if we truly have nothing to display.
+  // ⑨ No-data state.
   const noDataEl = document.getElementById('no-data-state');
   if (noDataEl) noDataEl.hidden = !!STATE.goldPriceUsdPerOz;
 
-  // ⑧ Start auto-refresh and countdown timers.
+  // ⑩ Start timers.
   startTimers();
 
-  // ⑨ Debug panel (opt-in via ?debug=true).
+  // ⑪ Debug panel.
   if (new URLSearchParams(location.search).get('debug') === 'true') {
     debug.initDebugPanel(STATE, renderAll);
   }
+}
+
+function setupChartControls() {
+  document.querySelectorAll('.chart-range-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.chart-range-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (_chart) _chart.setRange(btn.dataset.range);
+    });
+  });
 }
 
 document.addEventListener('DOMContentLoaded', init);

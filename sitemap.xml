@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Home / Landing -->
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/?lang=ar"/>
+    <changefreq>hourly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Live Tracker -->
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/tracker.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/tracker.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/tracker.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- Calculator -->
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/calculator.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/calculator.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/calculator.html?lang=ar"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Learn -->
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/learn.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/learn.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/learn.html?lang=ar"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <!-- Country Pages — GCC -->
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/uae.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/uae.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/uae.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/saudi-arabia.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/saudi-arabia.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/saudi-arabia.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/kuwait.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/kuwait.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/kuwait.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/qatar.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/qatar.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/qatar.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/bahrain.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/bahrain.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/bahrain.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.82</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/oman.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/oman.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/oman.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.82</priority>
+  </url>
+
+  <!-- Country Pages — Other regions -->
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/egypt.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/egypt.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/egypt.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/jordan.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/jordan.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/jordan.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/morocco.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/morocco.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/morocco.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/india.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/india.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/india.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+</urlset>

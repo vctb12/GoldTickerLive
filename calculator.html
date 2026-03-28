@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gold Calculator — Value, Scrap, Zakat | GoldPrices</title>
+  <meta name="description" content="Free gold calculator tools: calculate gold value by weight and karat, scrap gold price, Zakat on gold, and buying power. Live XAU/USD rates." />
+  <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/calculator.html" />
+  <meta property="og:title" content="Gold Calculator — Free Online Gold Value Tools" />
+  <meta property="og:description" content="Calculate gold value, scrap price, Zakat, and buying power using live gold rates." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/calculator.html" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./calculator.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"Home","item":"https://vctb12.github.io/Gold-Prices/"},
+      {"@type":"ListItem","position":2,"name":"Gold Calculator","item":"https://vctb12.github.io/Gold-Prices/calculator.html"}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main>
+    <!-- Hero -->
+    <section class="calc-hero">
+      <div class="calc-hero-inner">
+        <h1 class="calc-hero-title" id="calc-hero-h1">Gold Calculator</h1>
+        <p class="calc-hero-sub" id="calc-hero-sub">Live prices · Multiple karats · AED &amp; USD</p>
+        <div class="calc-live-badge" id="calc-spot-badge">
+          <span class="badge-dot"></span>
+          <span id="calc-spot-label">Spot:</span>
+          <span id="calc-spot-price">—</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calculator Tabs -->
+    <div class="calc-nav-tabs" role="tablist">
+      <button class="calc-tab active" data-calc="value"    role="tab" aria-selected="true"  id="calc-value-title">Gold Value</button>
+      <button class="calc-tab"        data-calc="scrap"    role="tab" aria-selected="false" id="calc-scrap-title">Scrap Gold</button>
+      <button class="calc-tab"        data-calc="zakat"    role="tab" aria-selected="false" id="calc-zakat-title">Zakat</button>
+      <button class="calc-tab"        data-calc="buying"   role="tab" aria-selected="false" id="calc-buying-title">Buying Power</button>
+      <button class="calc-tab"        data-calc="convert"  role="tab" aria-selected="false" id="calc-convert-title">Unit Converter</button>
+    </div>
+
+    <!-- ── Calculator 1: Gold Value ── -->
+    <section class="calc-panel active" id="panel-value" role="tabpanel">
+      <div class="calc-card">
+        <h2 class="calc-card-title" id="calc-value-h2">How much is my gold worth?</h2>
+        <p class="calc-card-desc" id="calc-value-desc">Enter the weight and karat of your gold to get an instant value estimate.</p>
+        <div class="calc-form">
+          <div class="calc-field">
+            <label for="val-weight" id="val-weight-label">Weight</label>
+            <div class="calc-input-row">
+              <input type="number" id="val-weight" class="calc-input" min="0" step="0.01" placeholder="e.g. 10" value="" />
+              <select id="val-unit" class="calc-select">
+                <option value="gram">Gram</option>
+                <option value="oz">Troy Oz</option>
+                <option value="tola">Tola (11.66g)</option>
+                <option value="masha">Masha (0.972g)</option>
+              </select>
+            </div>
+          </div>
+          <div class="calc-field">
+            <label for="val-karat" id="val-karat-label">Karat</label>
+            <select id="val-karat" class="calc-select calc-select-full">
+              <option value="24">24K — Pure Gold (99.9%)</option>
+              <option value="22" selected>22K (91.7%)</option>
+              <option value="21">21K (87.5%)</option>
+              <option value="18">18K (75.0%)</option>
+              <option value="14">14K (58.3%)</option>
+              <option value="10">10K (41.7%)</option>
+            </select>
+          </div>
+          <div class="calc-field">
+            <label for="val-currency" id="val-currency-label">Currency</label>
+            <select id="val-currency" class="calc-select calc-select-full">
+              <option value="USD">USD — US Dollar</option>
+              <option value="AED" selected>AED — UAE Dirham</option>
+              <option value="SAR">SAR — Saudi Riyal</option>
+              <option value="KWD">KWD — Kuwaiti Dinar</option>
+              <option value="QAR">QAR — Qatari Riyal</option>
+              <option value="BHD">BHD — Bahraini Dinar</option>
+              <option value="OMR">OMR — Omani Rial</option>
+              <option value="EGP">EGP — Egyptian Pound</option>
+              <option value="JOD">JOD — Jordanian Dinar</option>
+              <option value="MAD">MAD — Moroccan Dirham</option>
+              <option value="INR">INR — Indian Rupee</option>
+            </select>
+          </div>
+        </div>
+        <div class="calc-result" id="val-result" hidden>
+          <div class="calc-result-main">
+            <div class="calc-result-label" id="val-result-label">Estimated Value</div>
+            <div class="calc-result-value" id="val-result-value">—</div>
+          </div>
+          <div class="calc-result-breakdown" id="val-result-breakdown"></div>
+        </div>
+        <p class="calc-disclaimer" id="val-disclaimer">Indicative estimate only. Does not include making charges, dealer markup or taxes.</p>
+      </div>
+    </section>
+
+    <!-- ── Calculator 2: Scrap Gold ── -->
+    <section class="calc-panel" id="panel-scrap" role="tabpanel" hidden>
+      <div class="calc-card">
+        <h2 class="calc-card-title" id="calc-scrap-h2">Scrap Gold Calculator</h2>
+        <p class="calc-card-desc" id="calc-scrap-desc">Estimate the refinery value of your scrap gold. Dealers typically pay 80–95% of spot value.</p>
+        <div class="calc-form">
+          <div class="calc-field">
+            <label for="scrap-weight" id="scrap-weight-label">Weight</label>
+            <div class="calc-input-row">
+              <input type="number" id="scrap-weight" class="calc-input" min="0" step="0.01" placeholder="e.g. 5" />
+              <select id="scrap-unit" class="calc-select">
+                <option value="gram">Gram</option>
+                <option value="oz">Troy Oz</option>
+                <option value="tola">Tola</option>
+              </select>
+            </div>
+          </div>
+          <div class="calc-field">
+            <label for="scrap-karat" id="scrap-karat-label">Karat</label>
+            <select id="scrap-karat" class="calc-select calc-select-full">
+              <option value="24">24K (99.9%)</option>
+              <option value="22" selected>22K (91.7%)</option>
+              <option value="21">21K (87.5%)</option>
+              <option value="18">18K (75.0%)</option>
+              <option value="14">14K (58.3%)</option>
+              <option value="10">10K (41.7%)</option>
+              <option value="9">9K (37.5%)</option>
+            </select>
+          </div>
+          <div class="calc-field">
+            <label for="scrap-payout" id="scrap-payout-label">Dealer payout %</label>
+            <div class="calc-input-row">
+              <input type="number" id="scrap-payout" class="calc-input" min="1" max="100" step="1" value="90" />
+              <span class="calc-suffix">%</span>
+            </div>
+            <p class="calc-field-hint" id="scrap-payout-hint">Typical range: 80–95%</p>
+          </div>
+          <div class="calc-field">
+            <label for="scrap-currency" id="scrap-currency-label">Currency</label>
+            <select id="scrap-currency" class="calc-select calc-select-full">
+              <option value="USD">USD</option>
+              <option value="AED" selected>AED</option>
+              <option value="SAR">SAR</option>
+              <option value="KWD">KWD</option>
+              <option value="EGP">EGP</option>
+              <option value="INR">INR</option>
+            </select>
+          </div>
+        </div>
+        <div class="calc-result" id="scrap-result" hidden>
+          <div class="calc-result-main">
+            <div class="calc-result-label" id="scrap-label-spot">Spot Value</div>
+            <div class="calc-result-value" id="scrap-result-spot">—</div>
+          </div>
+          <div class="calc-result-secondary">
+            <div class="calc-result-row">
+              <span id="scrap-label-dealer">Dealer Payout (<span id="scrap-pct-display">90</span>%)</span>
+              <strong id="scrap-result-dealer">—</strong>
+            </div>
+          </div>
+        </div>
+        <p class="calc-disclaimer" id="scrap-disclaimer">Actual dealer prices vary. Always get multiple quotes.</p>
+      </div>
+    </section>
+
+    <!-- ── Calculator 3: Zakat ── -->
+    <section class="calc-panel" id="panel-zakat" role="tabpanel" hidden>
+      <div class="calc-card">
+        <h2 class="calc-card-title" id="calc-zakat-h2">Zakat on Gold Calculator</h2>
+        <p class="calc-card-desc" id="calc-zakat-desc">Calculate your Zakat obligation on gold holdings. Zakat is 2.5% of gold above the nisab threshold (85g of 24K gold or equivalent).</p>
+        <div class="calc-zakat-nisab" id="zakat-nisab-display">
+          <span id="zakat-nisab-label">Current Nisab (85g of 24K):</span>
+          <strong id="zakat-nisab-value">—</strong>
+        </div>
+        <div class="calc-form">
+          <div class="calc-field">
+            <label for="zakat-weight" id="zakat-weight-label">Total Gold You Own</label>
+            <div class="calc-input-row">
+              <input type="number" id="zakat-weight" class="calc-input" min="0" step="0.01" placeholder="e.g. 100" />
+              <select id="zakat-unit" class="calc-select">
+                <option value="gram">Gram</option>
+                <option value="oz">Troy Oz</option>
+                <option value="tola">Tola</option>
+              </select>
+            </div>
+          </div>
+          <div class="calc-field">
+            <label for="zakat-karat" id="zakat-karat-label">Average Karat</label>
+            <select id="zakat-karat" class="calc-select calc-select-full">
+              <option value="24">24K (Pure)</option>
+              <option value="22" selected>22K</option>
+              <option value="21">21K</option>
+              <option value="18">18K</option>
+            </select>
+          </div>
+          <div class="calc-field">
+            <label for="zakat-currency" id="zakat-currency-label">Currency</label>
+            <select id="zakat-currency" class="calc-select calc-select-full">
+              <option value="USD">USD</option>
+              <option value="AED" selected>AED</option>
+              <option value="SAR">SAR</option>
+              <option value="KWD">KWD</option>
+              <option value="EGP">EGP</option>
+              <option value="INR">INR</option>
+            </select>
+          </div>
+        </div>
+        <div class="calc-result" id="zakat-result" hidden>
+          <div class="calc-result-main">
+            <div class="calc-result-label" id="zakat-label-due">Zakat Due (2.5%)</div>
+            <div class="calc-result-value" id="zakat-result-value">—</div>
+          </div>
+          <div class="calc-result-breakdown" id="zakat-result-breakdown"></div>
+          <div class="calc-result-note" id="zakat-below-nisab" hidden>
+            <span id="zakat-below-msg">Your gold is below the Nisab threshold — no Zakat due.</span>
+          </div>
+        </div>
+        <p class="calc-disclaimer" id="zakat-disclaimer">This is an estimate. Consult a qualified Islamic scholar for your specific circumstances.</p>
+      </div>
+    </section>
+
+    <!-- ── Calculator 4: Buying Power ── -->
+    <section class="calc-panel" id="panel-buying" role="tabpanel" hidden>
+      <div class="calc-card">
+        <h2 class="calc-card-title" id="calc-buying-h2">Buying Power Calculator</h2>
+        <p class="calc-card-desc" id="calc-buying-desc">How much gold can you buy with a given amount of money?</p>
+        <div class="calc-form">
+          <div class="calc-field">
+            <label for="buy-amount" id="buy-amount-label">Budget</label>
+            <div class="calc-input-row">
+              <input type="number" id="buy-amount" class="calc-input" min="0" step="1" placeholder="e.g. 5000" />
+              <select id="buy-currency" class="calc-select">
+                <option value="USD">USD</option>
+                <option value="AED" selected>AED</option>
+                <option value="SAR">SAR</option>
+                <option value="KWD">KWD</option>
+                <option value="QAR">QAR</option>
+                <option value="EGP">EGP</option>
+                <option value="INR">INR</option>
+              </select>
+            </div>
+          </div>
+          <div class="calc-field">
+            <label for="buy-karat" id="buy-karat-label">Karat</label>
+            <select id="buy-karat" class="calc-select calc-select-full">
+              <option value="24">24K (Pure)</option>
+              <option value="22" selected>22K</option>
+              <option value="21">21K</option>
+              <option value="18">18K</option>
+            </select>
+          </div>
+        </div>
+        <div class="calc-result" id="buy-result" hidden>
+          <div class="calc-result-main">
+            <div class="calc-result-label" id="buy-result-label">You can buy approximately</div>
+            <div class="calc-result-value" id="buy-result-grams">—</div>
+          </div>
+          <div class="calc-result-breakdown" id="buy-result-breakdown"></div>
+        </div>
+        <p class="calc-disclaimer" id="buy-disclaimer">Spot rate estimate only. Does not include making charges, VAT, or dealer markup.</p>
+      </div>
+    </section>
+
+    <!-- ── Calculator 5: Unit Converter ── -->
+    <section class="calc-panel" id="panel-convert" role="tabpanel" hidden>
+      <div class="calc-card">
+        <h2 class="calc-card-title" id="calc-convert-h2">Gold Weight Unit Converter</h2>
+        <p class="calc-card-desc" id="calc-convert-desc">Convert between grams, troy ounces, tolas, mashas, and more.</p>
+        <div class="calc-form">
+          <div class="calc-field">
+            <label for="conv-amount" id="conv-amount-label">Amount</label>
+            <input type="number" id="conv-amount" class="calc-input calc-input-full" min="0" step="0.0001" placeholder="Enter a value" />
+          </div>
+          <div class="calc-field">
+            <label for="conv-from" id="conv-from-label">From</label>
+            <select id="conv-from" class="calc-select calc-select-full">
+              <option value="gram" selected>Gram (g)</option>
+              <option value="oz">Troy Ounce (ozt)</option>
+              <option value="kg">Kilogram (kg)</option>
+              <option value="tola">Tola (India/Pakistan)</option>
+              <option value="masha">Masha</option>
+              <option value="baht">Baht (Thailand)</option>
+              <option value="taels">Taels (Chinese)</option>
+            </select>
+          </div>
+        </div>
+        <div class="calc-convert-results" id="conv-results" hidden>
+          <h3 id="conv-results-title">Equivalent weights</h3>
+          <div class="conv-grid" id="conv-grid"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="./calculator.js"></script>
+</body>
+</html>
