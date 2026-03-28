@@ -554,3 +554,139 @@
 [dir="rtl"] .hlc-indicators { flex-direction: row-reverse; }
 [dir="rtl"] .hlc-footer { flex-direction: row-reverse; }
 [dir="rtl"] .gcc-card-header { flex-direction: row-reverse; }
+
+/* ── Premium button variants for dark hero background ──────────── */
+.btn-outline-light {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--transition-md);
+  cursor: pointer;
+  border: 1.5px solid rgba(255,255,255,0.45);
+  background: transparent;
+  color: rgba(255,255,255,0.9);
+  white-space: nowrap;
+  min-height: 42px;
+  letter-spacing: 0.01em;
+}
+.btn-outline-light:hover {
+  border-color: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+.btn-ghost-light {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--transition-md);
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  background: transparent;
+  color: rgba(255,255,255,0.65);
+  white-space: nowrap;
+  min-height: 42px;
+  letter-spacing: 0.01em;
+}
+.btn-ghost-light:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.1);
+  text-decoration: none;
+}
+
+/* ── History & Data Section ────────────────────────────────────── */
+.home-history-section {
+  background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-gold-tint) 100%);
+}
+.history-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+.history-feat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: box-shadow var(--transition-md), border-color var(--transition-md), transform var(--transition-md);
+}
+.history-feat-card:hover {
+  box-shadow: var(--shadow-gold);
+  border-color: var(--color-gold);
+  transform: translateY(-2px);
+}
+.history-feat-card--chart {
+  background: var(--color-gold-bg);
+  border-color: rgba(196,153,62,0.3);
+}
+.history-feat-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.history-feat-card h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+.history-feat-card p {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  flex: 1;
+  margin: 0;
+}
+.history-feat-link {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-gold-dark);
+  text-decoration: none;
+  display: inline-block;
+  transition: text-decoration var(--transition);
+}
+.history-feat-link:hover { text-decoration: underline; }
+
+/* ── Tools grid upgrade — 3 columns on desktop ─────────────────── */
+.tools-grid {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+.tool-card {
+  border-radius: var(--radius-lg) !important;
+  border: 1px solid var(--color-border-subtle) !important;
+}
+.tool-card:hover {
+  box-shadow: var(--shadow-gold) !important;
+}
+
+/* ── Responsive additions ───────────────────────────────────────── */
+@media (max-width: 900px) {
+  .history-feature-grid { grid-template-columns: repeat(2, 1fr); }
+  .tools-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 640px) {
+  .history-feature-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .tools-grid { grid-template-columns: 1fr !important; }
+  .btn-outline-light, .btn-ghost-light { padding: 0.55rem 1rem; font-size: 0.85rem; }
+}
+@media (max-width: 480px) {
+  .history-feature-grid { grid-template-columns: 1fr; }
+}
+
+/* ── RTL additions ─────────────────────────────────────────────── */
+[dir="rtl"] .history-feature-grid { direction: rtl; }
+[dir="rtl"] .history-feat-link { direction: rtl; }

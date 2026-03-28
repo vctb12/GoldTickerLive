@@ -29,8 +29,15 @@ function saveSnapshots(snapshots) {
 
 function filterByRange(snapshots, range) {
   const now = Date.now();
-  const cutoffs = { '24h': 86400000, '7d': 604800000, '30d': 2592000000 };
-  const ms = cutoffs[range] || cutoffs['24h'];
+  const key = (range || '24H').toUpperCase();
+  const cutoffs = {
+    '24H': 86400000,
+    '7D':  604800000,
+    '30D': 2592000000,
+    '90D': 7776000000,
+    '1Y':  31536000000,
+  };
+  const ms = cutoffs[key] ?? cutoffs['24H'];
   return snapshots.filter(s => now - s.time * 1000 < ms);
 }
 
@@ -38,7 +45,7 @@ export class GoldChart {
   constructor(containerId, lang = 'en') {
     this.containerId = containerId;
     this.lang = lang;
-    this.range = '24h';
+    this.range = '24H';
     this.snapshots = loadSnapshots();
     this._chart = null;
     this._series = null;

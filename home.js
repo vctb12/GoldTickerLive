@@ -65,6 +65,7 @@ const T = {
     heroCta1: 'View Live Tracker',
     heroCta2: 'UAE Gold Today',
     heroCta3: 'Calculator',
+    heroCta4: 'History & Data',
     spotTitle: 'Gold Spot Price',
     perOz: 'per troy ounce',
     lbl24aed: '24K / gram (AED)',
@@ -102,14 +103,26 @@ const T = {
     countries: { UAE:'UAE', SA:'Saudi Arabia', KW:'Kuwait', QA:'Qatar', BH:'Bahrain', OM:'Oman', EG:'Egypt', JO:'Jordan', MA:'Morocco', IN:'India', more:'More countries →' },
     tools: {
       trackerT:'Live Tracker', trackerD:'Full price matrix — 24+ countries, 7 karats, per gram & per ounce. Refreshed every 90 seconds.', trackerC:'Open Tracker →',
-      calcT:'Gold Calculator', calcD:'Calculate value by weight, karat and currency. Scrap gold, jewelry value, Zakat and more.', calcC:'Open Calculator →',
+      calcT:'Gold Calculator', calcD:'Gold value, scrap, Zakat, buying power and unit conversion — all in one tool.', calcC:'Open Calculator →',
       uaeT:'UAE Gold Prices', uaeD:'Dedicated UAE page with all karats in AED & USD, plus context for Dubai buyers.', uaeC:'UAE Prices →',
-      learnT:'Learn & Glossary', learnD:'What is 22K? Why does spot differ from retail? How does the AED peg work? Clear answers.', learnC:'Read Guide →',
+      learnT:'Learn & Glossary', learnD:'What is 22K? Why does spot differ from retail? How does the AED peg work?', learnC:'Read Guide →',
+      insightsT:'Gold Insights', insightsD:'Market analysis, price drivers, and context for GCC gold buyers.', insightsC:'Read Insights →',
+      methodT:'Methodology', methodD:'Full transparency on data sources, AED peg, karat math, and freshness logic.', methodC:'Read Methodology →',
+    },
+    history: {
+      title: 'Historical Gold Prices',
+      sub: 'Explore daily, monthly & annual data — download CSV, look up any date',
+      feat1T: 'Price Chart', feat1D: '24H to 1Y range. Interactive chart built from local snapshots.',
+      feat2T: 'Monthly Archive', feat2D: 'Browse gold prices month by month with trend context.',
+      feat3T: 'Download CSV', feat3D: 'Export price data for any country or karat as a CSV file.',
+      feat4T: 'Date Lookup', feat4D: 'Look up what gold was worth on any specific date.',
+      feat1L: 'Open Chart →', feat2L: 'Browse Archive →', feat3L: 'Export Data →', feat4L: 'Look Up →',
     },
     faqMore: 'More questions answered on the Learn page →',
     insightsBannerTitle: 'Gold Market Insights',
     insightsBannerDesc: 'Analysis, guides, and market context for Gulf gold buyers',
     insightsBannerLink: 'Read Insights →',
+    trackerLink: 'Full Tracker →',
   },
   ar: {
     heroLive: 'مباشر · تحديث كل 90 ثانية',
@@ -119,6 +132,7 @@ const T = {
     heroCta1: 'عرض التتبع المباشر',
     heroCta2: 'ذهب الإمارات اليوم',
     heroCta3: 'الحاسبة',
+    heroCta4: 'التاريخ والبيانات',
     spotTitle: 'السعر الفوري للذهب',
     perOz: 'لكل أوقية تروي',
     lbl24aed: 'عيار 24 / غرام (AED)',
@@ -156,14 +170,26 @@ const T = {
     countries: { UAE:'الإمارات', SA:'السعودية', KW:'الكويت', QA:'قطر', BH:'البحرين', OM:'عُمان', EG:'مصر', JO:'الأردن', MA:'المغرب', IN:'الهند', more:'المزيد من الدول ←' },
     tools: {
       trackerT:'تتبع مباشر', trackerD:'مصفوفة أسعار كاملة — 24+ دولة، 7 عيارات، لكل غرام وأوقية. يتجدد كل 90 ثانية.', trackerC:'افتح المتتبع ←',
-      calcT:'حاسبة الذهب', calcD:'احسب القيمة حسب الوزن والعيار والعملة. ذهب خردة وزكاة وقوة شراء والمزيد.', calcC:'افتح الحاسبة ←',
+      calcT:'حاسبة الذهب', calcD:'قيمة الذهب، الخردة، الزكاة، القوة الشرائية، وتحويل الوحدات — في أداة واحدة.', calcC:'افتح الحاسبة ←',
       uaeT:'أسعار الذهب في الإمارات', uaeD:'صفحة مخصصة للإمارات بجميع العيارات بالدرهم والدولار.', uaeC:'أسعار الإمارات ←',
       learnT:'تعلّم والمسرد', learnD:'ما هو عيار 22؟ لماذا يختلف السعر الفوري عن التجزئة؟ كيف يعمل ربط الدرهم؟', learnC:'اقرأ الدليل ←',
+      insightsT:'رؤى الذهب', insightsD:'تحليل السوق ومحركات الأسعار وسياق لمشتري الذهب في الخليج.', insightsC:'اقرأ الرؤى ←',
+      methodT:'المنهجية', methodD:'شفافية كاملة حول مصادر البيانات وربط الدرهم وحسابات العيار.', methodC:'اقرأ المنهجية ←',
+    },
+    history: {
+      title: 'الأسعار التاريخية للذهب',
+      sub: 'استكشف البيانات اليومية والشهرية والسنوية — حمّل CSV وابحث في أي تاريخ',
+      feat1T: 'مخطط الأسعار', feat1D: 'نطاق من 24 ساعة إلى سنة. مخطط تفاعلي من لقطات محلية.',
+      feat2T: 'أرشيف شهري', feat2D: 'تصفح أسعار الذهب شهرًا بشهر مع سياق الاتجاه.',
+      feat3T: 'تحميل CSV', feat3D: 'صدّر بيانات الأسعار لأي دولة أو عيار كملف CSV.',
+      feat4T: 'البحث بتاريخ', feat4D: 'ابحث عن سعر الذهب في أي تاريخ محدد.',
+      feat1L: 'افتح المخطط ←', feat2L: 'تصفح الأرشيف ←', feat3L: 'تصدير البيانات ←', feat4L: 'ابحث ←',
     },
     faqMore: 'المزيد من الأسئلة المجاب عنها في صفحة التعلّم ←',
     insightsBannerTitle: 'رؤى سوق الذهب',
     insightsBannerDesc: 'تحليلات ومرشدات وسياق السوق لمشتري الذهب في الخليج',
     insightsBannerLink: 'قراءة الرؤى ←',
+    trackerLink: 'التتبع الكامل ←',
   },
 };
 
@@ -267,9 +293,11 @@ function applyLangToPage() {
   set('hero-title-main', tx('heroTitle'));
   set('hero-title-sub',  tx('heroSub'));
   set('hero-lead',       tx('heroLead'));
-  set('hero-cta-tracker', tx('heroCta1'));
-  set('hero-cta-uae',     tx('heroCta2'));
-  set('hero-cta-calc',    tx('heroCta3'));
+  set('hero-cta-tracker',  tx('heroCta1'));
+  set('hero-cta-uae',      tx('heroCta2'));
+  set('hero-cta-calc',     tx('heroCta3'));
+  set('hero-cta-history',  tx('heroCta4'));
+  set('hlc-tracker-link',  tx('trackerLink'));
   set('hlc-title',  tx('spotTitle'));
   set('hlc-sub',    tx('perOz'));
   set('hlc-label-aed24', tx('lbl24aed'));
@@ -304,10 +332,23 @@ function applyLangToPage() {
   set('ct-bh', cn.BH); set('ct-om', cn.OM); set('ct-eg', cn.EG); set('ct-jo', cn.JO);
   set('ct-ma', cn.MA); set('ct-in', cn.IN); set('ct-more', cn.more);
   const tl = tx('tools');
-  set('tool-tracker-title', tl.trackerT); set('tool-tracker-desc', tl.trackerD); set('tool-tracker-cta', tl.trackerC);
-  set('tool-calc-title',    tl.calcT);    set('tool-calc-desc',    tl.calcD);    set('tool-calc-cta',    tl.calcC);
-  set('tool-uae-title',     tl.uaeT);     set('tool-uae-desc',     tl.uaeD);     set('tool-uae-cta',     tl.uaeC);
-  set('tool-learn-title',   tl.learnT);   set('tool-learn-desc',   tl.learnD);   set('tool-learn-cta',   tl.learnC);
+  set('tool-tracker-title',  tl.trackerT); set('tool-tracker-desc',  tl.trackerD); set('tool-tracker-cta',  tl.trackerC);
+  set('tool-calc-title',     tl.calcT);    set('tool-calc-desc',     tl.calcD);    set('tool-calc-cta',     tl.calcC);
+  set('tool-uae-title',      tl.uaeT);     set('tool-uae-desc',      tl.uaeD);     set('tool-uae-cta',      tl.uaeC);
+  set('tool-learn-title',    tl.learnT);   set('tool-learn-desc',    tl.learnD);   set('tool-learn-cta',    tl.learnC);
+  set('tool-insights-title', tl.insightsT); set('tool-insights-desc', tl.insightsD); set('tool-insights-cta', tl.insightsC);
+  set('tool-method-title',   tl.methodT);   set('tool-method-desc',   tl.methodD);   set('tool-method-cta',   tl.methodC);
+
+  // History section
+  const ht = tx('history');
+  if (ht) {
+    set('history-section-title', ht.title);
+    set('history-section-sub',   ht.sub);
+    set('hist-feat-1-t', ht.feat1T); set('hist-feat-1-d', ht.feat1D); set('hist-feat-1-l', ht.feat1L);
+    set('hist-feat-2-t', ht.feat2T); set('hist-feat-2-d', ht.feat2D); set('hist-feat-2-l', ht.feat2L);
+    set('hist-feat-3-t', ht.feat3T); set('hist-feat-3-d', ht.feat3D); set('hist-feat-3-l', ht.feat3L);
+    set('hist-feat-4-t', ht.feat4T); set('hist-feat-4-d', ht.feat4D); set('hist-feat-4-l', ht.feat4L);
+  }
 
   // Insights banner
   set('insights-banner-title', tx('insightsBannerTitle'));
