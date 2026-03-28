@@ -118,6 +118,26 @@ function recalcPrices() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// MARKET STATUS
+// ─────────────────────────────────────────────────────────────────────────────
+
+function getMarketStatus() {
+  const now     = new Date();
+  const utcDay  = now.getUTCDay(); // 0=Sun … 6=Sat
+  const utcHour = now.getUTCHours();
+  const utcMin  = now.getUTCMinutes();
+  const utcTime = utcHour * 60 + utcMin;
+
+  const OPEN_SUN  = 22 * 60; // Sun 22:00 UTC
+  const CLOSE_FRI = 21 * 60; // Fri 21:00 UTC
+
+  if (utcDay === 6) return 'closed';                      // Saturday always closed
+  if (utcDay === 5 && utcTime >= CLOSE_FRI) return 'closed'; // Fri after 21:00 UTC
+  if (utcDay === 0 && utcTime < OPEN_SUN)  return 'closed'; // Sun before 22:00 UTC
+  return 'open';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // RENDER — HEADER
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -136,6 +156,20 @@ function renderHeader() {
     fxTime.textContent = STATE.freshness.fxUpdatedAt
       ? fmt.formatDate(STATE.freshness.fxUpdatedAt, STATE.lang)
       : '—';
+  }
+
+  // Market status chip
+  const marketChip = document.getElementById('market-status-chip');
+  if (marketChip) {
+    const status = getMarketStatus();
+    const isAr = STATE.lang === 'ar';
+    const labels = {
+      open:   isAr ? '● السوق مفتوح' : '● Market Open',
+      closed: isAr ? '○ السوق مغلق' : '○ Market Closed',
+    };
+    marketChip.textContent = labels[status] ?? labels.closed;
+    marketChip.className = `freshness-chip chip-market chip-market--${status}`;
+    marketChip.hidden = false;
   }
 
   // Offline banner — only when truly offline
@@ -547,6 +581,115 @@ function setupEventListeners() {
     exp.exportJSON(STATE, _prices);
   });
 
+  // ── Alerts UI ────────────────────────────────────────────────────────────
+  const alertAddBtn    = document.getElementById('alert-add-btn');
+  const alertForm      = document.getElementById('alert-form');
+  const alertSaveBtn   = document.getElementById('alert-save-btn');
+  const alertCancelBtn = document.getElementById('alert-cancel-btn');
+  const alertDirEl     = document.getElementById('alert-direction');
+  const alertPriceEl   = document.getElementById('alert-price');
+  const alertNotifStat = document.getElementById('alert-notif-status');
+
+  function renderAlerts() {
+    const list  = document.getElementById('alerts-list');
+    const empty = document.getElementById('alerts-empty');
+    if (!list) return;
+    const all = alerts.loadAlerts();
+    if (all.length === 0) {
+      list.innerHTML = '';
+      if (empty) empty.hidden = false;
+      return;
+    }
+    if (empty) empty.hidden = true;
+    list.innerHTML = all.map(a => {
+      const dirLabel = STATE.lang === 'ar'
+        ? (a.direction === 'above' ? 'يتجاوز' : 'ينخفض عن')
+        : (a.direction === 'above' ? 'goes above' : 'drops below');
+      const cls = a.direction === 'above' ? 'alert-direction-above' : 'alert-direction-below';
+      const status = a.active ? '' : ' alert-item--muted';
+      return `
+        <div class="alert-item${status}" data-id="${a.id}">
+          <div class="alert-item-info">
+            <span class="alert-direction-badge ${cls}">${dirLabel}</span>
+            <span class="alert-item-price">$${a.targetUsd.toLocaleString()}</span>
+            ${a.label ? `<span class="alert-item-label">${a.label}</span>` : ''}
+          </div>
+          <div class="alert-item-actions">
+            <button class="alert-btn alert-btn-toggle" data-id="${a.id}"
+              aria-label="${a.active ? 'Disable' : 'Enable'} alert">
+              ${a.active ? '◉' : '○'}
+            </button>
+            <button class="alert-btn alert-btn-delete" data-id="${a.id}" aria-label="Delete alert">✕</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  if (alertAddBtn && alertForm) {
+    alertAddBtn.addEventListener('click', async () => {
+      alertForm.hidden = !alertForm.hidden;
+      if (!alertForm.hidden) {
+        // Pre-fill with current price
+        if (STATE.goldPriceUsdPerOz && alertPriceEl) {
+          alertPriceEl.value = Math.round(STATE.goldPriceUsdPerOz);
+        }
+        // Check notification permission
+        const perm = await alerts.requestPermission();
+        const granted = perm === 'granted';
+        if (alertNotifStat) {
+          alertNotifStat.textContent = granted
+            ? (STATE.lang === 'ar' ? '✓ الإشعارات مفعّلة' : '✓ Notifications enabled')
+            : (STATE.lang === 'ar' ? '✗ الإشعارات معطّلة' : '✗ Notifications blocked');
+          alertNotifStat.style.color = granted ? '#4caf50' : '#e57373';
+        }
+      }
+    });
+  }
+
+  if (alertSaveBtn) {
+    alertSaveBtn.addEventListener('click', () => {
+      const price = parseFloat(alertPriceEl?.value);
+      const dir   = alertDirEl?.value || 'above';
+      if (!price || price <= 0) {
+        if (alertPriceEl) alertPriceEl.focus();
+        return;
+      }
+      alerts.addAlert(dir, price);
+      if (alertForm) alertForm.hidden = true;
+      if (alertPriceEl) alertPriceEl.value = '';
+      renderAlerts();
+    });
+  }
+
+  if (alertCancelBtn) {
+    alertCancelBtn.addEventListener('click', () => {
+      if (alertForm) alertForm.hidden = true;
+    });
+  }
+
+  // Delegated: toggle + delete
+  document.addEventListener('click', e => {
+    const toggleBtn = e.target.closest('.alert-btn-toggle');
+    if (toggleBtn) { alerts.toggleAlert(toggleBtn.dataset.id); renderAlerts(); return; }
+    const deleteBtn = e.target.closest('.alert-btn-delete');
+    if (deleteBtn) { alerts.removeAlert(deleteBtn.dataset.id); renderAlerts(); return; }
+  });
+
+  // Alert fired toast
+  window.addEventListener('goldAlertFired', e => {
+    const { alert: firedAlert } = e.detail || {};
+    const toast = document.createElement('div');
+    toast.className = 'alert-fired-toast';
+    const dirLabel = firedAlert?.direction === 'above' ? '▲ Above' : '▼ Below';
+    toast.innerHTML = `<strong>🔔 Price Alert</strong><br>${dirLabel} $${firedAlert?.targetUsd?.toLocaleString() ?? '—'}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 4500);
+    renderAlerts();
+  });
+
+  // Initial render of saved alerts
+  renderAlerts();
+
   // ── Retry ────────────────────────────────────────────────────────────────
   document.getElementById('retry-btn')?.addEventListener('click', async () => {
     const noDataEl = document.getElementById('no-data-state');
@@ -646,3 +789,8 @@ function setupChartControls() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// Register service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/Gold-Prices/sw.js').catch(() => {});
+}

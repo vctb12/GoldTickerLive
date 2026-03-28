@@ -38,6 +38,24 @@
     <priority>0.75</priority>
   </url>
 
+  <!-- Insights -->
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/insights.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/insights.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/insights.html?lang=ar"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Methodology -->
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/methodology.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/methodology.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/methodology.html?lang=ar"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.60</priority>
+  </url>
+
   <!-- Country Pages — GCC -->
   <url>
     <loc>https://vctb12.github.io/Gold-Prices/countries/uae.html</loc>

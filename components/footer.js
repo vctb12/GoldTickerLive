@@ -26,6 +26,8 @@ export function injectFooter(lang = 'en', depth = 0) {
         <a href="${r('../tracker.html')}">${isAr ? 'تتبع مباشر' : 'Live Tracker'}</a>
         <a href="${r('../calculator.html')}">${isAr ? 'حاسبة الذهب' : 'Gold Calculator'}</a>
         <a href="${r('../learn.html')}">${isAr ? 'تعلّم' : 'Learn'}</a>
+        <a href="${r('../insights.html')}">${isAr ? 'تحليلات' : 'Insights'}</a>
+        <a href="${r('../methodology.html')}">${isAr ? 'المنهجية' : 'Methodology'}</a>
       </div>
       <div class="footer-col">
         <h4>${isAr ? 'دول الخليج' : 'GCC Prices'}</h4>

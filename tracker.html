@@ -8,6 +8,7 @@
   <meta property="og:title" content="Live Gold Prices Tracker | أسعار الذهب المباشرة" />
   <meta property="og:description" content="Live gold spot price in 24 countries and 7 karats. Updated every 90 seconds. Bilingual English/Arabic." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/tracker.html" />
   <meta name="twitter:card" content="summary" />
   <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/tracker.html" />
   <title>Live Gold Tracker — All Karats &amp; Currencies | أسعار الذهب</title>
@@ -16,6 +17,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="manifest.json" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -34,16 +36,23 @@
   }
   </script>
 </head>
-<body>
+<body class="tracker-page">
 
-  <!-- ═══════════════════════ HEADER ═══════════════════════ -->
-  <header class="site-header">
-    <div class="header-main">
-      <div class="header-brand">
-        <h1 class="site-title" data-i18n="header.title">Live Gold Prices</h1>
-        <p class="site-subtitle" data-i18n="header.subtitle">Spot-linked bullion estimates by karat &amp; currency</p>
-      </div>
-      <div class="header-actions">
+  <!-- ═══════ NAV injected by app.js ═══════ -->
+
+  <main>
+
+    <!-- ═══════════════════════ TRACKER TOP BAR ═══════════════════════ -->
+    <div class="tracker-topbar" id="tracker-topbar">
+      <div class="tracker-topbar-inner">
+        <!-- Breadcrumb -->
+        <nav class="tracker-breadcrumb" aria-label="Breadcrumb">
+          <a href="index.html" data-i18n="nav.home">Home</a>
+          <span aria-hidden="true"> / </span>
+          <span data-i18n="tracker.pageTitle">Live Tracker</span>
+        </nav>
+
+        <!-- Freshness chips -->
         <div class="freshness-chips" aria-label="Data freshness">
           <span class="freshness-chip chip-live" title="Gold spot price">
             <span class="chip-live-dot" aria-hidden="true"></span>
@@ -55,24 +64,21 @@
             <span class="chip-label" data-i18n="fx.badge">FX</span>
             <span id="fx-freshness-time">—</span>
           </span>
+          <span class="freshness-chip chip-market" id="market-status-chip" title="Market session"></span>
         </div>
-        <button id="lang-toggle" class="lang-btn" aria-label="Toggle language" data-i18n="lang.toggle">العربية</button>
+      </div>
+
+      <!-- Offline banner -->
+      <div id="offline-banner" class="status-banner status-offline" hidden role="alert">
+        <span class="banner-icon" aria-hidden="true">📡</span>
+        <span data-i18n="status.offline">You are offline. Showing cached data.</span>
+      </div>
+
+      <!-- Error banner -->
+      <div id="error-banner" class="status-banner status-error" hidden role="alert">
+        <span id="error-banner-text"></span>
       </div>
     </div>
-
-    <!-- Offline banner -->
-    <div id="offline-banner" class="status-banner status-offline" hidden role="alert">
-      <span class="banner-icon" aria-hidden="true">📡</span>
-      <span data-i18n="status.offline">You are offline. Showing cached data.</span>
-    </div>
-
-    <!-- Error banner -->
-    <div id="error-banner" class="status-banner status-error" hidden role="alert">
-      <span id="error-banner-text"></span>
-    </div>
-  </header>
-
-  <main>
 
     <!-- ═══════════════════════ UAE SPOTLIGHT ═══════════════════════ -->
     <section class="section" id="section-spotlight" aria-labelledby="spotlight-title">
@@ -221,6 +227,48 @@
       </div>
     </section>
 
+    <!-- ═══════════════════════ PRICE ALERTS ═══════════════════════ -->
+    <section class="section" id="section-alerts" aria-labelledby="alerts-title">
+      <div class="section-header">
+        <h2 id="alerts-title" data-i18n="alerts.title">Price Alerts</h2>
+        <button class="btn-small btn-primary" id="alert-add-btn" data-i18n="alerts.add">+ Add Alert</button>
+      </div>
+
+      <!-- Alert creation form -->
+      <div class="alert-form" id="alert-form" hidden>
+        <div class="alert-form-inner">
+          <div class="alert-form-row">
+            <label for="alert-direction" data-i18n="alerts.direction">Alert when price</label>
+            <select id="alert-direction" class="calc-select">
+              <option value="above" data-i18n="alerts.above">goes above</option>
+              <option value="below" data-i18n="alerts.below">goes below</option>
+            </select>
+          </div>
+          <div class="alert-form-row">
+            <label for="alert-price" data-i18n="alerts.targetPrice">Target (XAU/USD)</label>
+            <input type="number" id="alert-price" class="calc-input" placeholder="e.g. 2100" min="100" max="9999" step="1" />
+          </div>
+          <div class="alert-form-actions">
+            <button class="btn btn-primary btn-sm" id="alert-save-btn" data-i18n="alerts.save">Save Alert</button>
+            <button class="btn btn-ghost btn-sm" id="alert-cancel-btn" data-i18n="alerts.cancel">Cancel</button>
+            <span class="alert-notif-status" id="alert-notif-status"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active alerts list -->
+      <div id="alerts-list" class="alerts-list">
+        <!-- Filled by JS -->
+      </div>
+
+      <!-- Empty state -->
+      <div id="alerts-empty" class="alerts-empty" hidden>
+        <p data-i18n="alerts.empty">No alerts set. Add one above to get notified when gold crosses your target price.</p>
+      </div>
+
+      <p class="section-note" data-i18n="alerts.note">Alerts are stored locally in your browser. Browser notifications required.</p>
+    </section>
+
     <!-- ═══════════════════════ NO DATA STATE ═══════════════════════ -->
     <div id="no-data-state" class="no-data-state" hidden>
       <p data-i18n="status.noData">No data available. Please check your connection and retry.</p>
@@ -229,17 +277,7 @@
 
   </main>
 
-  <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
-  <footer class="site-footer">
-    <div class="footer-sources">
-      <a href="https://gold-api.com" target="_blank" rel="noopener noreferrer" data-i18n="footer.goldSource">Gold data: Gold API (gold-api.com)</a>
-      <span class="footer-sep" aria-hidden="true">·</span>
-      <a href="https://open.er-api.com" target="_blank" rel="noopener noreferrer" data-i18n="footer.fxSource">FX data: ExchangeRate-API (open.er-api.com)</a>
-    </div>
-    <p class="footer-disclaimer" data-i18n="footer.disclaimer">
-      Estimated bullion-equivalent values only. Retail and jewelry prices may differ significantly. Not financial advice.
-    </p>
-  </footer>
+  <!-- ═══════════════════════ FOOTER injected by app.js ═══════════════════════ -->
 
   <!-- ═══════════════════════ DEBUG PANEL ═══════════════════════ -->
   <div id="debug-panel" class="debug-panel" style="display:none;" aria-hidden="true"></div>

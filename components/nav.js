@@ -10,12 +10,14 @@ const NAV_LINKS = {
     { href: '../tracker.html',     key: 'nav.tracker',    label: 'Live Tracker' },
     { href: '../calculator.html',  key: 'nav.calculator', label: 'Calculator' },
     { href: '../learn.html',       key: 'nav.learn',      label: 'Learn' },
+    { href: '../insights.html',    key: 'nav.insights',   label: 'Insights' },
   ],
   ar: [
     { href: '../index.html',       key: 'nav.home',       label: 'الرئيسية' },
     { href: '../tracker.html',     key: 'nav.tracker',    label: 'تتبع مباشر' },
     { href: '../calculator.html',  key: 'nav.calculator', label: 'حاسبة' },
     { href: '../learn.html',       key: 'nav.learn',      label: 'تعلّم' },
+    { href: '../insights.html',    key: 'nav.insights',   label: 'تحليلات' },
   ],
 };
 

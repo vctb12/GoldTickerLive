@@ -1,6 +1,7 @@
 /**
  * Landing page entry point.
- * Fetches live gold + FX data, renders the hero live card and GCC quick-price grid.
+ * Fetches live gold + FX data in parallel, renders the hero live card
+ * and GCC quick-price grid. Cache-first: shows cached data instantly.
  */
 import { CONSTANTS, KARATS, COUNTRIES } from './config/index.js';
 import * as api from './lib/api.js';
@@ -13,6 +14,10 @@ import { injectFooter } from './components/footer.js';
 // ── State ──────────────────────────────────────────────────────────────────
 const LANG_KEY = 'user_prefs';
 let lang = 'en';
+let goldPrice = null;
+let dayOpenPrice = null;
+let rates = {};
+let _refreshTimer = null;
 
 function getLang() {
   try {
@@ -29,13 +34,34 @@ function saveLang(l) {
   } catch {}
 }
 
-// ── Translations (home-specific strings) ──────────────────────────────────
+// ── Market status ──────────────────────────────────────────────────────────
+// Gold trades 24/5 (Sun 22:00 UTC – Fri 21:00 UTC approx)
+function getMarketStatus() {
+  const now = new Date();
+  const utcDay  = now.getUTCDay();   // 0=Sun, 5=Fri, 6=Sat
+  const utcHour = now.getUTCHours();
+  const utcMin  = now.getUTCMinutes();
+  const utcTime = utcHour * 60 + utcMin;
+
+  const OPEN_SUN  = 22 * 60;  // Sun 22:00 UTC
+  const CLOSE_FRI = 21 * 60;  // Fri 21:00 UTC
+
+  let isOpen = false;
+  if (utcDay === 6) { isOpen = false; }                           // Saturday always closed
+  else if (utcDay === 5) { isOpen = utcTime < CLOSE_FRI; }        // Friday: open until 21:00
+  else if (utcDay === 0) { isOpen = utcTime >= OPEN_SUN; }        // Sunday: open from 22:00
+  else { isOpen = true; }                                          // Mon–Thu always open
+
+  return isOpen ? 'open' : 'closed';
+}
+
+// ── Translations ────────────────────────────────────────────────────────────
 const T = {
   en: {
     heroLive: 'Live · Updated every 90s',
     heroTitle: 'Gold Prices Today',
     heroSub: 'UAE, GCC & Arab World',
-    heroLead: 'Live spot-linked gold estimates across 24 countries in 7 karats — from 24K pure to 14K — in local currencies. Free, transparent, updated every 90 seconds.',
+    heroLead: 'Live spot-linked gold estimates across 24+ countries in 7 karats — in local currencies. Free, transparent, updated every 90 seconds.',
     heroCta1: 'View Live Tracker',
     heroCta2: 'UAE Gold Today',
     heroCta3: 'Calculator',
@@ -47,12 +73,15 @@ const T = {
     lbl21usd: '21K / gram (USD)',
     fetching: 'Fetching...',
     updated: 'Updated',
+    changeLabel: 'Today',
+    marketOpen: '● Market Open',
+    marketClosed: '○ Market Closed',
     gccTitle: 'GCC Gold Prices Now',
     gccSub: 'Live estimates in local currency · 22K per gram',
     seeAll: 'See all countries →',
     perGram: 'per gram',
     trustLive: 'Live spot data',
-    trustCountries: '24 countries',
+    trustCountries: '24+ countries',
     trustKarats: '7 karats (14K–24K)',
     trustAed: 'AED official peg',
     trustBilingual: 'Bilingual EN / AR',
@@ -60,30 +89,33 @@ const T = {
     toolsTitle: 'Everything You Need',
     toolsSub: 'Built for buyers, investors and professionals across the Gulf & Arab world',
     alertTitle: 'Set a Price Alert',
-    alertDesc: 'Get notified when UAE 24K crosses your target price. Free, stored locally — no account needed.',
+    alertDesc: 'Get notified when gold crosses your target price. Free, stored locally — no account needed.',
     alertBtn: 'Set Alert',
     countriesTitle: 'Browse by Country',
     countriesSub: 'Dedicated pages with local context for every major market',
     faqTitle: 'Common Questions',
     whyTitle: 'Why This Tracker',
     why1t: 'GCC & Arab Focus', why1d: 'Built for Gulf buyers. AED uses the official UAE Central Bank peg (3.6725), not a fluctuating API rate. GCC, Levant, and African markets all covered.',
-    why2t: 'Genuinely Live',   why2d: 'Gold spot price refreshes every 90 seconds via gold-api.com. FX rates update daily. Cached locally so it works offline too.',
+    why2t: 'Genuinely Live',   why2d: 'Gold spot price refreshes every 90 seconds via gold-api.com. FX rates update daily. Countdown shown. Cached locally so it works offline too.',
     why3t: 'Full Bilingual',   why3d: 'Every label, badge, unit, and country name is available in English and Arabic. Full RTL layout switch — not just a font change.',
-    why4t: '7 Karats, 24 Countries', why4d: 'From pure 24K investment gold to 14K jewelry. All 7 standard karats × 24 countries = a complete price matrix in any unit.',
-    countries: { UAE:'UAE', SA:'Saudi Arabia', KW:'Kuwait', QA:'Qatar', BH:'Bahrain', OM:'Oman', EG:'Egypt', JO:'Jordan', MA:'Morocco', IN:'India', more:'14 more' },
+    why4t: '7 Karats, 24+ Countries', why4d: 'From pure 24K investment gold to 14K jewelry. All 7 standard karats × 24+ countries = a complete price matrix in any unit.',
+    countries: { UAE:'UAE', SA:'Saudi Arabia', KW:'Kuwait', QA:'Qatar', BH:'Bahrain', OM:'Oman', EG:'Egypt', JO:'Jordan', MA:'Morocco', IN:'India', more:'More countries →' },
     tools: {
-      trackerT:'Live Tracker', trackerD:'Full price matrix — 24 countries, 7 karats, per gram & per ounce. Refreshed every 90 seconds.', trackerC:'Open Tracker →',
-      calcT:'Gold Calculator', calcD:'Calculate value by weight, karat and currency. Scrap gold, jewelry value, buying power and more.', calcC:'Open Calculator →',
+      trackerT:'Live Tracker', trackerD:'Full price matrix — 24+ countries, 7 karats, per gram & per ounce. Refreshed every 90 seconds.', trackerC:'Open Tracker →',
+      calcT:'Gold Calculator', calcD:'Calculate value by weight, karat and currency. Scrap gold, jewelry value, Zakat and more.', calcC:'Open Calculator →',
       uaeT:'UAE Gold Prices', uaeD:'Dedicated UAE page with all karats in AED & USD, plus context for Dubai buyers.', uaeC:'UAE Prices →',
-      learnT:'Learn & Glossary', learnD:'What is 22K? Why does spot differ from retail? How does the AED peg work? Clear, honest answers.', learnC:'Read Guide →',
+      learnT:'Learn & Glossary', learnD:'What is 22K? Why does spot differ from retail? How does the AED peg work? Clear answers.', learnC:'Read Guide →',
     },
     faqMore: 'More questions answered on the Learn page →',
+    insightsBannerTitle: 'Gold Market Insights',
+    insightsBannerDesc: 'Analysis, guides, and market context for Gulf gold buyers',
+    insightsBannerLink: 'Read Insights →',
   },
   ar: {
     heroLive: 'مباشر · تحديث كل 90 ثانية',
     heroTitle: 'أسعار الذهب اليوم',
     heroSub: 'الإمارات والخليج والعالم العربي',
-    heroLead: 'تقديرات الذهب الفورية عبر 24 دولة وبـ 7 عيارات — من عيار 24 الخالص إلى 14 — بالعملات المحلية. مجاني وشفاف ويتحدث كل 90 ثانية.',
+    heroLead: 'تقديرات الذهب الفورية عبر 24+ دولة وبـ 7 عيارات — بالعملات المحلية. مجاني وشفاف ويتحدث كل 90 ثانية.',
     heroCta1: 'عرض التتبع المباشر',
     heroCta2: 'ذهب الإمارات اليوم',
     heroCta3: 'الحاسبة',
@@ -95,12 +127,15 @@ const T = {
     lbl21usd: 'عيار 21 / غرام (USD)',
     fetching: 'جارٍ التحميل...',
     updated: 'آخر تحديث',
+    changeLabel: 'اليوم',
+    marketOpen: '● السوق مفتوح',
+    marketClosed: '○ السوق مغلق',
     gccTitle: 'أسعار ذهب الخليج الآن',
     gccSub: 'تقديرات بالعملة المحلية · عيار 22 لكل غرام',
     seeAll: 'عرض كل الدول ←',
     perGram: 'لكل غرام',
     trustLive: 'بيانات فورية مباشرة',
-    trustCountries: '24 دولة',
+    trustCountries: '24+ دولة',
     trustKarats: '7 عيارات (14–24)',
     trustAed: 'ربط رسمي للدرهم',
     trustBilingual: 'ثنائي اللغة عربي / إنجليزي',
@@ -108,24 +143,27 @@ const T = {
     toolsTitle: 'كل ما تحتاجه',
     toolsSub: 'صُمّم للمشترين والمستثمرين والمحترفين في منطقة الخليج والعالم العربي',
     alertTitle: 'اضبط تنبيه سعر',
-    alertDesc: 'احصل على إشعار عندما يتجاوز ذهب الإمارات عيار 24 السعر المستهدف. مجاني ومحلي — لا حساب مطلوب.',
+    alertDesc: 'احصل على إشعار عندما يتجاوز الذهب السعر المستهدف. مجاني ومحلي — لا حساب مطلوب.',
     alertBtn: 'اضبط تنبيهاً',
     countriesTitle: 'تصفح حسب البلد',
     countriesSub: 'صفحات مخصصة بسياق محلي لكل سوق رئيسية',
     faqTitle: 'أسئلة شائعة',
     whyTitle: 'لماذا هذا المتتبع',
-    why1t: 'تركيز على الخليج والعرب', why1d: 'مصمم لمشتري الخليج. يستخدم الدرهم الربط الرسمي للبنك المركزي الإماراتي (3.6725)، وليس سعرًا متغيرًا. تغطية شاملة لدول الخليج والشام وأفريقيا.',
-    why2t: 'مباشر فعلًا', why2d: 'يتحدث السعر الفوري للذهب كل 90 ثانية عبر gold-api.com. أسعار الصرف تتجدد يوميًا. يعمل دون اتصال بالإنترنت أيضًا.',
+    why1t: 'تركيز على الخليج والعرب', why1d: 'مصمم لمشتري الخليج. يستخدم الدرهم الربط الرسمي للبنك المركزي الإماراتي (3.6725). تغطية شاملة لدول الخليج والشام وأفريقيا.',
+    why2t: 'مباشر فعلًا', why2d: 'يتحدث السعر الفوري للذهب كل 90 ثانية. أسعار الصرف تتجدد يوميًا. يعمل دون اتصال بالإنترنت أيضًا.',
     why3t: 'ثنائي اللغة الكامل', why3d: 'كل تسمية وشارة ووحدة واسم بلد متاح بالعربية والإنجليزية. تبديل كامل للاتجاه RTL.',
-    why4t: '7 عيارات، 24 دولة', why4d: 'من ذهب الاستثمار 24 عيارًا إلى مجوهرات 14 عيارًا. جميع العيارات السبعة × 24 دولة = مصفوفة أسعار كاملة.',
-    countries: { UAE:'الإمارات', SA:'السعودية', KW:'الكويت', QA:'قطر', BH:'البحرين', OM:'عُمان', EG:'مصر', JO:'الأردن', MA:'المغرب', IN:'الهند', more:'14 أخرى' },
+    why4t: '7 عيارات، 24+ دولة', why4d: 'من ذهب الاستثمار 24 عيارًا إلى مجوهرات 14 عيارًا. جميع العيارات السبعة × 24+ دولة = مصفوفة أسعار كاملة.',
+    countries: { UAE:'الإمارات', SA:'السعودية', KW:'الكويت', QA:'قطر', BH:'البحرين', OM:'عُمان', EG:'مصر', JO:'الأردن', MA:'المغرب', IN:'الهند', more:'المزيد من الدول ←' },
     tools: {
-      trackerT:'تتبع مباشر', trackerD:'مصفوفة أسعار كاملة — 24 دولة، 7 عيارات، لكل غرام وأوقية. يتجدد كل 90 ثانية.', trackerC:'افتح المتتبع ←',
-      calcT:'حاسبة الذهب', calcD:'احسب القيمة حسب الوزن والعيار والعملة. ذهب خردة وقيمة مجوهرات وقوة شراء والمزيد.', calcC:'افتح الحاسبة ←',
-      uaeT:'أسعار الذهب في الإمارات', uaeD:'صفحة مخصصة للإمارات بجميع العيارات بالدرهم والدولار مع سياق لمشتري دبي.', uaeC:'أسعار الإمارات ←',
-      learnT:'تعلّم والمسرد', learnD:'ما هو عيار 22؟ لماذا يختلف السعر الفوري عن التجزئة؟ كيف يعمل ربط الدرهم؟ إجابات واضحة وأمينة.', learnC:'اقرأ الدليل ←',
+      trackerT:'تتبع مباشر', trackerD:'مصفوفة أسعار كاملة — 24+ دولة، 7 عيارات، لكل غرام وأوقية. يتجدد كل 90 ثانية.', trackerC:'افتح المتتبع ←',
+      calcT:'حاسبة الذهب', calcD:'احسب القيمة حسب الوزن والعيار والعملة. ذهب خردة وزكاة وقوة شراء والمزيد.', calcC:'افتح الحاسبة ←',
+      uaeT:'أسعار الذهب في الإمارات', uaeD:'صفحة مخصصة للإمارات بجميع العيارات بالدرهم والدولار.', uaeC:'أسعار الإمارات ←',
+      learnT:'تعلّم والمسرد', learnD:'ما هو عيار 22؟ لماذا يختلف السعر الفوري عن التجزئة؟ كيف يعمل ربط الدرهم؟', learnC:'اقرأ الدليل ←',
     },
     faqMore: 'المزيد من الأسئلة المجاب عنها في صفحة التعلّم ←',
+    insightsBannerTitle: 'رؤى سوق الذهب',
+    insightsBannerDesc: 'تحليلات ومرشدات وسياق السوق لمشتري الذهب في الخليج',
+    insightsBannerLink: 'قراءة الرؤى ←',
   },
 };
 
@@ -134,27 +172,20 @@ function tx(key) { return T[lang]?.[key] ?? T.en[key] ?? key; }
 // ── GCC countries ──────────────────────────────────────────────────────────
 const GCC = COUNTRIES.filter(c => c.group === 'gcc');
 
-// ── Prices ────────────────────────────────────────────────────────────────
-let goldPrice = null;
-let rates = {};
-
 // ── Render helpers ─────────────────────────────────────────────────────────
 function set(id, text) {
   const el = document.getElementById(id);
   if (el) el.textContent = text;
 }
-function setHtml(id, html) {
-  const el = document.getElementById(id);
-  if (el) el.innerHTML = html;
-}
 
+// ── Render hero live card ──────────────────────────────────────────────────
 function renderHeroCard() {
   if (!goldPrice) return;
   const k24 = KARATS.find(k => k.code === '24');
   const k22 = KARATS.find(k => k.code === '22');
   const k21 = KARATS.find(k => k.code === '21');
 
-  const usd24oz = goldPrice; // 24K = spot
+  const usd24oz = goldPrice;
   const aed24g  = calc.usdPerGram(goldPrice, k24.purity) * CONSTANTS.AED_PEG;
   const usd22g  = calc.usdPerGram(goldPrice, k22.purity);
   const aed22g  = usd22g * CONSTANTS.AED_PEG;
@@ -166,8 +197,27 @@ function renderHeroCard() {
   set('hlc-aed22',  fmt.formatPrice(aed22g,  'AED', 2));
   set('hlc-usd21',  fmt.formatPrice(usd21g,  'USD', 2));
   set('hlc-updated', `${tx('updated')}: ${fmt.formatTimestampShort(new Date().toISOString(), lang)}`);
+
+  // Change vs day open
+  const changeEl = document.getElementById('hlc-change');
+  if (changeEl && dayOpenPrice && goldPrice) {
+    const chg = ((goldPrice - dayOpenPrice) / dayOpenPrice) * 100;
+    const sign = chg >= 0 ? '+' : '';
+    changeEl.textContent = `${tx('changeLabel')}: ${sign}${chg.toFixed(2)}%`;
+    changeEl.className = 'hlc-change ' + (chg >= 0 ? 'badge-up' : 'badge-down');
+    changeEl.hidden = false;
+  }
+
+  // Market status
+  const statusEl = document.getElementById('hlc-market-status');
+  if (statusEl) {
+    const status = getMarketStatus();
+    statusEl.textContent = status === 'open' ? tx('marketOpen') : tx('marketClosed');
+    statusEl.className = 'hlc-market ' + (status === 'open' ? 'hlc-market--open' : 'hlc-market--closed');
+  }
 }
 
+// ── Render GCC grid ────────────────────────────────────────────────────────
 function renderGCCGrid() {
   const grid = document.getElementById('gcc-quick-grid');
   if (!grid || !goldPrice) return;
@@ -181,8 +231,17 @@ function renderGCCGrid() {
       price = fmt.formatPrice(calc.usdPerGram(goldPrice, k22.purity) * rates[c.currency], c.currency, c.decimals);
     }
     const name = lang === 'ar' ? c.nameAr : c.nameEn;
-    const slug = c.code === 'AE' ? 'uae' : c.code === 'SA' ? 'saudi-arabia' : c.code === 'KW' ? 'kuwait' :
-                 c.code === 'QA' ? 'qatar' : c.code === 'BH' ? 'bahrain' : 'oman';
+    const slug = { AE:'uae', SA:'saudi-arabia', KW:'kuwait', QA:'qatar', BH:'bahrain', OM:'oman' }[c.code] ?? c.code.toLowerCase();
+
+    // change badge from day open
+    let changeBadge = '';
+    if (dayOpenPrice && goldPrice) {
+      const chg = ((goldPrice - dayOpenPrice) / dayOpenPrice) * 100;
+      const sign = chg >= 0 ? '+' : '';
+      const cls  = chg >= 0 ? 'badge-up' : 'badge-down';
+      changeBadge = `<span class="gcc-change badge ${cls}">${sign}${chg.toFixed(2)}%</span>`;
+    }
+
     return `<a href="countries/${slug}.html" class="gcc-card">
       <div class="gcc-card-header">
         <span class="gcc-flag" aria-hidden="true">${c.flag}</span>
@@ -190,6 +249,7 @@ function renderGCCGrid() {
           <span class="gcc-name">${name}</span>
           <span class="gcc-currency">${c.currency}</span>
         </div>
+        ${changeBadge}
       </div>
       <div class="gcc-price">${price}</div>
       <div class="gcc-unit">${tx('perGram')} · 22K</div>
@@ -197,6 +257,7 @@ function renderGCCGrid() {
   }).join('');
 }
 
+// ── Apply full page language ───────────────────────────────────────────────
 function applyLangToPage() {
   const isAr = lang === 'ar';
   document.documentElement.lang = lang;
@@ -225,6 +286,7 @@ function applyLangToPage() {
   set('trust-aed',        tx('trustAed'));
   set('trust-bilingual',  tx('trustBilingual'));
   set('trust-refresh',    tx('trustRefresh'));
+  set('tools-title',      tx('toolsTitle'));
   set('tools-sub',        tx('toolsSub'));
   set('alert-cta-title',  tx('alertTitle'));
   set('alert-cta-desc',   tx('alertDesc'));
@@ -247,13 +309,47 @@ function applyLangToPage() {
   set('tool-uae-title',     tl.uaeT);     set('tool-uae-desc',     tl.uaeD);     set('tool-uae-cta',     tl.uaeC);
   set('tool-learn-title',   tl.learnT);   set('tool-learn-desc',   tl.learnD);   set('tool-learn-cta',   tl.learnC);
 
+  // Insights banner
+  set('insights-banner-title', tx('insightsBannerTitle'));
+  set('insights-banner-desc',  tx('insightsBannerDesc'));
+  set('insights-banner-link',  tx('insightsBannerLink'));
+
   renderHeroCard();
   renderGCCGrid();
+}
+
+// ── Fetch live data in parallel ────────────────────────────────────────────
+async function fetchLiveData() {
+  if (!navigator.onLine) return;
+
+  const [goldRes, fxRes] = await Promise.allSettled([
+    api.fetchGold(),
+    api.fetchFX(),
+  ]);
+
+  if (goldRes.status === 'fulfilled') {
+    goldPrice = goldRes.value.price;
+    cache.saveGoldPrice(goldRes.value.price, goldRes.value.updatedAt);
+    renderHeroCard();
+  }
+
+  if (fxRes.status === 'fulfilled') {
+    rates = fxRes.value.rates ?? {};
+    cache.saveFXRates(rates, {
+      lastUpdateUtc: fxRes.value.time_last_update_utc,
+      nextUpdateUtc: fxRes.value.time_next_update_utc,
+    });
+    renderGCCGrid();
+  }
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
 async function init() {
   lang = getLang();
+
+  // Apply language immediately
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
 
   // Nav + footer
   const navCtrl = injectNav(lang, 0);
@@ -267,31 +363,36 @@ async function init() {
   });
   injectFooter(lang, 0);
 
-  applyLangToPage();
-
-  // Try loading from cache first for instant render
-  const STATE_STUB = { lang, goldPriceUsdPerOz: null, rates: {}, fxMeta: { nextUpdateUtc: 0 }, status: {}, freshness: {}, favorites: [], history: [], selectedKaratSpotlight:'24', selectedKaratCountries:'24', selectedUnitTable:'gram', sortOrder:'high-low', searchQuery:'', activeTab:'gcc', prevGoldPriceUsdPerOz:null, dayOpenGoldPriceUsdPerOz:null, isOnline: navigator.onLine, volatility7d:null, cacheHealthScore:0 };
+  // Load cache first for instant render
+  const STATE_STUB = {
+    lang, goldPriceUsdPerOz: null, rates: {}, fxMeta: { nextUpdateUtc: 0 },
+    status: {}, freshness: {}, favorites: [], history: [],
+    selectedKaratSpotlight:'24', selectedKaratCountries:'24', selectedUnitTable:'gram',
+    sortOrder:'high-low', searchQuery:'', activeTab:'gcc',
+    prevGoldPriceUsdPerOz:null, dayOpenGoldPriceUsdPerOz:null,
+    isOnline: navigator.onLine, volatility7d:null, cacheHealthScore:0,
+  };
   cache.loadState(STATE_STUB);
+
   if (STATE_STUB.goldPriceUsdPerOz) {
     goldPrice = STATE_STUB.goldPriceUsdPerOz;
+    dayOpenPrice = STATE_STUB.dayOpenGoldPriceUsdPerOz;
     rates = STATE_STUB.rates;
-    renderHeroCard();
-    renderGCCGrid();
   }
 
-  // Fetch live
-  if (navigator.onLine) {
-    try {
-      const data = await api.fetchGold();
-      goldPrice = data.price;
-      renderHeroCard();
-    } catch {}
-    try {
-      const fx = await api.fetchFX();
-      rates = fx.rates;
-      renderGCCGrid();
-    } catch {}
-  }
+  applyLangToPage();
+
+  // Fetch live data in parallel
+  await fetchLiveData();
+
+  // Auto-refresh every 90 seconds
+  if (_refreshTimer) clearInterval(_refreshTimer);
+  _refreshTimer = setInterval(fetchLiveData, CONSTANTS.GOLD_REFRESH_MS);
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// Register service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/Gold-Prices/sw.js').catch(() => {});
+}
