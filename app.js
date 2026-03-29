@@ -277,8 +277,14 @@ function renderKaratTable() {
     const rowCls = k.code === '24' ? 'row-24k' : k.code === '22' ? 'row-22k' : k.code === '21' ? 'row-21k' : '';
     const label = STATE.lang === 'ar' ? k.labelAr : k.labelEn;
 
+    const purityPct = Math.round(k.purity * 100);
+    const barWidth  = Math.round(k.purity * 80); // max 80px
     return `<tr class="${rowCls}">
-      <td class="karat-label-cell"><strong>${label}</strong></td>
+      <td class="karat-label-cell">
+        <strong>${label}</strong>
+        <span class="karat-purity-bar" style="width:${barWidth}px" aria-hidden="true"></span>
+        <span class="karat-purity-label">${purityPct}%</span>
+      </td>
       <td class="num-col">${fmt.formatPrice(usdVal, 'USD', 2)}</td>
       <td class="num-col">${fmt.formatPrice(aedVal, 'AED', 2)}</td>
     </tr>`;
