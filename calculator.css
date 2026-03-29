@@ -374,3 +374,76 @@
 [dir="rtl"] .calc-result-row { flex-direction: row-reverse; }
 [dir="rtl"] .conv-row        { flex-direction: row-reverse; }
 [dir="rtl"] .calc-zakat-nisab { flex-direction: row-reverse; }
+
+/* ═══════════════════════════════════════════════
+   Calculator Premium Upgrades
+   ═══════════════════════════════════════════════ */
+
+/* Better result display */
+.calc-result-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-gold-dark);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Improved input groups */
+.calc-input-group {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1rem;
+  transition: border-color 0.15s ease;
+}
+.calc-input-group:focus-within {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+
+/* Help text under inputs */
+.calc-help-text {
+  font-size: 0.78rem;
+  color: var(--color-text-faint);
+  margin-top: 0.35rem;
+  line-height: 1.4;
+}
+
+/* Trust disclaimer in calculator */
+.calc-disclaimer {
+  font-size: 0.78rem;
+  color: var(--color-text-faint);
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: 0.75rem;
+  margin-top: 1rem;
+  line-height: 1.5;
+}
+
+/* Copy result button */
+.calc-copy-btn {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font-main);
+}
+.calc-copy-btn:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold-dark);
+}
+.calc-copy-btn.copied {
+  background: var(--color-up-bg);
+  border-color: var(--color-up);
+  color: var(--color-up);
+}
+
+/* Better tab active state */
+.calc-tab.active {
+  color: var(--color-gold-dark);
+  border-bottom-color: var(--color-gold);
+  font-weight: 700;
+}
