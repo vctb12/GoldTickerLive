@@ -14,6 +14,23 @@ import { injectTicker, updateTicker, updateTickerLang } from './components/ticke
 import * as alerts from './lib/alerts.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
+// COUNTRY PAGE MAP
+// ─────────────────────────────────────────────────────────────────────────────
+
+const COUNTRY_PAGES = {
+  'AE': 'countries/uae.html',
+  'SA': 'countries/saudi-arabia.html',
+  'KW': 'countries/kuwait.html',
+  'QA': 'countries/qatar.html',
+  'BH': 'countries/bahrain.html',
+  'OM': 'countries/oman.html',
+  'EG': 'countries/egypt.html',
+  'JO': 'countries/jordan.html',
+  'MA': 'countries/morocco.html',
+  'IN': 'countries/india.html',
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // STATE
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -216,6 +233,9 @@ function renderSpotlight() {
     return;
   }
 
+  const purityMap = { '24': '99.9%', '22': '91.7%', '21': '87.5%', '18': '75.0%' };
+  const purityNote = purityMap[k] || '';
+
   const cards = [
     { labelKey: 'spotlight.perOzUsd',   val: p.USD?.oz,   cur: 'USD', aed: false },
     { labelKey: 'spotlight.perOzAed',   val: p.AED?.oz,   cur: 'AED', aed: true  },
@@ -227,6 +247,7 @@ function renderSpotlight() {
     <div class="spotlight-card${card.aed ? ' aed-card' : ''}">
       <div class="sc-label">${t(card.labelKey)}</div>
       <div class="sc-price">${fmt.formatPrice(card.val, card.cur, 2)}</div>
+      <div class="sc-purity">${purityNote} pure</div>
       ${card.aed ? `<div class="sc-badge"><span class="badge badge-fixed">${t('aed.badge')}</span></div>` : ''}
     </div>
   `).join('');
@@ -257,6 +278,13 @@ function renderChangePanel() {
 
   if (prev) applyChange('change-prev-value', curr - prev, prev);
   if (open) applyChange('change-open-value', curr - open, open);
+
+  const noteEl = document.getElementById('change-context-note');
+  if (noteEl && STATE.goldPriceUsdPerOz) {
+    const roundedPrice = Math.round(STATE.goldPriceUsdPerOz);
+    noteEl.textContent = `Current: $${roundedPrice.toLocaleString()} XAU/USD`;
+    noteEl.hidden = false;
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -358,6 +386,26 @@ function renderCountryGrid() {
     const primaryUnit   = unit === 'gram' ? t('card.perGram') : t('card.perOz');
     const secondaryUnit = unit === 'gram' ? t('card.perOz')   : t('card.perGram');
 
+    // Small movement indicator using day open
+    const dayOpenUsd = STATE.dayOpenGoldPriceUsdPerOz;
+    const currentUsd = STATE.goldPriceUsdPerOz;
+    let movementHtml = '';
+    if (dayOpenUsd && currentUsd && !noData) {
+      const pct = ((currentUsd - dayOpenUsd) / dayOpenUsd) * 100;
+      if (Math.abs(pct) >= 0.01) {
+        const dir = pct >= 0 ? 'up' : 'down';
+        const arrow = pct >= 0 ? '▲' : '▼';
+        const sign = pct >= 0 ? '+' : '';
+        movementHtml = `<span class="cc-movement cc-movement--${dir}" aria-label="${sign}${pct.toFixed(2)}%">${arrow} ${sign}${pct.toFixed(2)}%</span>`;
+      }
+    }
+
+    // Country page link
+    const countryPageHref = COUNTRY_PAGES[country.code];
+    const countryPageHtml = countryPageHref
+      ? `<a href="${countryPageHref}" class="cc-country-link" tabindex="0">${STATE.lang === 'ar' ? 'صفحة التفاصيل →' : 'Details →'}</a>`
+      : '';
+
     return `
     <article class="country-card${isStale ? ' stale-card' : ''}${noData ? ' no-data-card' : ''}"
       role="listitem" aria-label="${name}">
@@ -379,6 +427,7 @@ function renderCountryGrid() {
       <div class="cc-price-block">
         <div class="cc-price-main">${primary}</div>
         <div class="cc-price-unit">${primaryUnit}</div>
+        ${movementHtml}
       </div>
       <div class="cc-price-secondary">
         ${secondary} <span class="cc-price-unit">${secondaryUnit}</span>
@@ -389,6 +438,7 @@ function renderCountryGrid() {
           data-karat="${karat}" data-country="${country.code}"
           aria-label="${t('card.copy')} ${name}">${t('card.copy')}</button>
       </div>
+      ${countryPageHtml}
     </article>`;
   }).join('');
 }

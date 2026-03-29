@@ -2573,3 +2573,182 @@ body.has-ticker { padding-bottom: 38px; }
   border-radius: 6px;
   vertical-align: middle;
 }
+
+/* ═══════════════════════════════════════════════
+   Country Card Movement Arrows
+   ═══════════════════════════════════════════════ */
+.cc-movement {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  margin-top: 0.25rem;
+  width: fit-content;
+  font-variant-numeric: tabular-nums;
+}
+.cc-movement--up {
+  color: var(--color-up);
+  background: var(--color-up-bg);
+}
+.cc-movement--down {
+  color: var(--color-down);
+  background: var(--color-down-bg);
+}
+
+/* ═══════════════════════════════════════════════
+   Spotlight Card Purity Note
+   ═══════════════════════════════════════════════ */
+.sc-purity {
+  font-size: 0.72rem;
+  color: var(--color-text-faint);
+  font-weight: 500;
+  margin-top: 0.2rem;
+}
+
+/* ═══════════════════════════════════════════════
+   Change Panel — Current Price Note
+   ═══════════════════════════════════════════════ */
+.change-current-price {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  padding: 0.5rem 0 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ═══════════════════════════════════════════════
+   Section Improvements
+   ═══════════════════════════════════════════════ */
+
+/* Better section header alignment */
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+/* Premium section container */
+.section {
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.section:last-child { border-bottom: none; }
+
+/* Better tab bar spacing */
+.tab-bar {
+  margin-bottom: 1rem;
+}
+
+/* ═══════════════════════════════════════════════
+   Tracker Topbar Improvements
+   ═══════════════════════════════════════════════ */
+.tracker-topbar {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.tracker-topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Breadcrumb */
+.tracker-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+.tracker-breadcrumb a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+.tracker-breadcrumb a:hover { color: var(--color-gold-dark); text-decoration: underline; }
+
+/* ═══════════════════════════════════════════════
+   Country Card Link to Country Page
+   ═══════════════════════════════════════════════ */
+.cc-country-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--color-gold-dark);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.country-card:hover .cc-country-link { opacity: 1; }
+.cc-country-link:hover { text-decoration: underline; }
+
+/* ═══════════════════════════════════════════════
+   Loading States Polish
+   ═══════════════════════════════════════════════ */
+.skeleton-row td .skeleton-line { height: 16px; border-radius: 4px; }
+.skeleton-flag {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-surface-2);
+}
+.skeleton-line {
+  height: 14px;
+  border-radius: 4px;
+  background: var(--color-surface-2);
+  margin: 3px 0;
+}
+.skeleton-value {
+  height: 22px;
+  border-radius: 4px;
+  background: var(--color-surface-3);
+  margin-top: 6px;
+}
+
+/* ═══════════════════════════════════════════════
+   No-data state premium
+   ═══════════════════════════════════════════════ */
+.no-data-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+.no-data-state p {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  max-width: 300px;
+}
+.retry-btn {
+  padding: 0.65rem 1.75rem;
+  background: var(--color-gold);
+  color: #1a0c02;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.retry-btn:hover { background: var(--color-gold-light); transform: translateY(-1px); }
+
+/* ═══════════════════════════════════════════════
+   RTL Improvements
+   ═══════════════════════════════════════════════ */
+[dir="rtl"] .cc-movement { direction: ltr; } /* Keep numbers LTR */
+[dir="rtl"] .tracker-breadcrumb { flex-direction: row-reverse; }
+[dir="rtl"] .section-header { flex-direction: row-reverse; }
+[dir="rtl"] .change-grid { direction: rtl; }
+[dir="rtl"] .cc-price-main { text-align: start; }
+[dir="rtl"] .insights-featured-footer { flex-direction: row-reverse; }

@@ -45,12 +45,17 @@
 <body>
   <main>
 
-    <!-- Hero -->
+    <!-- Section 1: Page Hero -->
     <section class="insights-hero">
       <div class="insights-hero-inner">
-        <div class="insights-hero-tag" id="hero-tag">Market Analysis &amp; Buying Guides</div>
-        <h1 id="insights-h1">Gold Insights &amp; Analysis</h1>
-        <p id="insights-sub">Expert commentary, buying guides, and market context for UAE &amp; GCC gold buyers</p>
+        <div class="insights-hero-label" id="hero-tag" data-i18n="hero-tag">Market Intelligence</div>
+        <h1 class="insights-hero-title" id="insights-h1" data-i18n="insights-h1">Gold Market Insights</h1>
+        <p class="insights-hero-sub" id="insights-sub" data-i18n="insights-sub">Analysis, price drivers and context for GCC gold buyers — updated weekly</p>
+        <div class="insights-hero-meta">
+          <span class="insights-freshness-chip">📊 GCC-focused analysis</span>
+          <span class="insights-freshness-chip">📅 Weekly updates</span>
+          <span class="insights-freshness-chip">🌐 Bilingual EN/AR</span>
+        </div>
       </div>
     </section>
 
@@ -68,203 +73,117 @@
       </div>
     </div>
 
-    <div class="insights-body">
-
-      <!-- Featured Article -->
-      <section class="insights-featured" id="featured-article" aria-labelledby="featured-h2">
-        <div class="insights-featured-tag" id="featured-tag-label">Featured Article</div>
-        <h2 class="insights-featured-title" lang="en" id="featured-h2">
-          Understanding the Dubai Gold Souk Price vs. International Spot Price
-        </h2>
-        <div class="insights-featured-meta">
-          <span id="featured-date">March 10, 2026</span>
-          <span class="insights-meta-sep" aria-hidden="true">·</span>
-          <span id="featured-read-time">5 min read</span>
-          <span class="insights-meta-sep" aria-hidden="true">·</span>
-          <span class="insights-tag-chip" lang="en">Buying Guide</span>
-        </div>
-        <div class="insights-featured-body" lang="en">
-          <p>If you have ever walked through the glittering corridors of Dubai's Gold Souk in Deira and then checked an international gold price app, you may have noticed a gap between what you see on screen and what the jewellers are actually charging. That gap is not a scam — it is the result of several legitimate, well-understood components layered on top of the raw market price.</p>
-
-          <h3>What is the Spot Price (XAU/USD)?</h3>
-          <p>The "spot price" of gold is the real-time market price for one troy ounce (31.1035 grams) of pure 24K gold, expressed in US Dollars. It is determined continuously on global commodities markets — principally on COMEX in New York and through the London Bullion Market Association (LBMA), which publishes a twice-daily benchmark known as the London Gold Fix. This is the number you see on Bloomberg, Reuters, or on this tracker. It represents the wholesale price for large institutional trades — typically in 400-troy-ounce bars.</p>
-
-          <h3>What is the Dubai Gold Souk (DGJG) Daily Rate?</h3>
-          <p>The Dubai Gold &amp; Jewellery Group (DGJG) publishes a daily gold rate every morning, specific to the UAE market. This rate is expressed in AED per gram for different karat grades (24K, 22K, 21K, 18K). It is derived from the overnight LBMA closing price, converted to AED using the official peg (3.6725 AED/USD), and published before the Souk opens. All licensed jewellers in the Dubai Gold Souk are required to price their gold per gram at or above this daily rate — you will see it displayed on boards throughout the market. However, the DGJG rate is the floor, not the full price you will pay.</p>
-
-          <h3>Why Do They Differ? Making Charges, VAT, and Dealer Margins</h3>
-          <p>On top of the DGJG base rate, jewellers add three further components. First, making charges (also called "fabrication" or "labour" charges): these cover the cost of crafting the jewellery — stone-setting, polishing, design complexity, and brand premium. In the Dubai Gold Souk, making charges for machine-made 22K jewellery typically range from <strong>AED 3 to AED 12 per gram</strong>. Handmade, intricate, or designer pieces can command AED 15–30 per gram or more. Second, Value Added Tax (VAT): the UAE introduced VAT at 5% in January 2018. This applies to the total selling price including making charges. Third, a dealer margin: even the DGJG daily rate itself includes a small premium over the raw international spot price to account for the cost of importing, refining, and risk management.</p>
-
-          <h3>How to Use Our Tracker as Your Reference Point</h3>
-          <p>The price shown on this site is the <em>bullion-equivalent</em> price — the mathematical equivalent of what pure gold of each karat grade is worth at the current international spot price, converted to AED at the fixed 3.6725 peg. Think of it as the theoretical minimum floor, before any retail premium. When you visit the Gold Souk, compare our per-gram price for the relevant karat against the DGJG board rate: they should be within a few dirhams of each other. If the jeweller's base rate is significantly higher than our figure, the market may have moved since the DGJG morning fix — or the jeweller may be using a slightly different rate.</p>
-
-          <h3>What is a "Fair" Making Charge?</h3>
-          <p>For everyday 22K machine-made jewellery (chains, bangles, simple rings), AED 3–8 per gram is considered competitive in the Dubai Gold Souk. For hallmarked 22K pieces with moderate craftsmanship, AED 8–15 is reasonable. If a jeweller quotes you more than AED 20 per gram for plain 22K jewellery, it is worth asking whether the craftsmanship justifies the premium — or shopping around. Remember: making charges are negotiable in the Souk, especially for larger purchases. The gold price itself is fixed by the DGJG rate, but the making charge is where you have room to negotiate.</p>
-        </div>
-      </section>
-
-      <!-- Insights Grid -->
-      <section class="insights-grid-section" aria-labelledby="insights-grid-heading">
-        <h2 class="insights-section-heading" id="insights-grid-heading" id="insights-grid-h2">Latest Insights</h2>
-        <div class="insights-grid">
-
-          <!-- Card 1 -->
-          <article class="insight-card" id="article-dollar-gold">
-            <div class="insight-card-header">
-              <span class="insight-tag-chip insight-tag--analysis" lang="en">Market Analysis</span>
-              <span class="insight-read-time" lang="en">4 min read</span>
-            </div>
-            <h3 class="insight-card-title" lang="en">Why Gold Prices Rise When the Dollar Falls</h3>
-            <p class="insight-card-excerpt" lang="en">The inverse relationship between the US Dollar Index (DXY) and gold is one of the most reliable correlations in financial markets. When the dollar weakens, gold priced in USD becomes cheaper for foreign buyers — driving up global demand and pushing the price higher.</p>
-            <div class="insight-card-footer">
-              <span class="insight-card-date">February 18, 2026</span>
-              <a href="#article-dollar-gold" class="insight-read-more" id="read-more-1">Read more →</a>
-            </div>
-          </article>
-
-          <!-- Card 2 -->
-          <article class="insight-card" id="article-karat-guide">
-            <div class="insight-card-header">
-              <span class="insight-tag-chip insight-tag--guide" lang="en">Buying Guide</span>
-              <span class="insight-read-time" lang="en">6 min read</span>
-            </div>
-            <h3 class="insight-card-title" lang="en">24K vs 22K vs 21K Gold: Which Should You Buy in the UAE?</h3>
-            <p class="insight-card-excerpt" lang="en">The UAE is one of the few places in the world where you can walk into a shop and choose between four karat grades side by side. The right choice depends on whether you are buying for jewellery, investment, or gifting — and the difference in value can be significant.</p>
-            <div class="insight-card-footer">
-              <span class="insight-card-date">February 25, 2026</span>
-              <a href="#article-karat-guide" class="insight-read-more" id="read-more-2">Read more →</a>
-            </div>
-          </article>
-
-          <!-- Card 3 -->
-          <article class="insight-card" id="article-central-banks">
-            <div class="insight-card-header">
-              <span class="insight-tag-chip insight-tag--analysis" lang="en">Market Analysis</span>
-              <span class="insight-read-time" lang="en">5 min read</span>
-            </div>
-            <h3 class="insight-card-title" lang="en">How Central Bank Gold Buying Affects Your Gold Price</h3>
-            <p class="insight-card-excerpt" lang="en">Since 2022, central banks worldwide have been purchasing gold at the fastest pace in over five decades. The People's Bank of China, the Reserve Bank of India, and Gulf sovereign wealth funds are all accumulating — and this structural demand floor is reshaping the gold market.</p>
-            <div class="insight-card-footer">
-              <span class="insight-card-date">March 4, 2026</span>
-              <a href="#article-central-banks" class="insight-read-more" id="read-more-3">Read more →</a>
-            </div>
-          </article>
-
-          <!-- Card 4 -->
-          <article class="insight-card" id="article-zakat-guide">
-            <div class="insight-card-header">
-              <span class="insight-tag-chip insight-tag--islamic" lang="en">Islamic Finance</span>
-              <span class="insight-read-time" lang="en">7 min read</span>
-            </div>
-            <h3 class="insight-card-title" lang="en">Zakat on Gold: Your Complete 2025/2026 Guide</h3>
-            <p class="insight-card-excerpt" lang="en">Zakat on gold follows clear rules established in Islamic jurisprudence: the nisab threshold is 85 grams of pure gold, and the rate is 2.5% of total value held for a full lunar year. But questions around jewellery, ETFs, and mixed holdings require closer examination.</p>
-            <div class="insight-card-footer">
-              <span class="insight-card-date">March 11, 2026</span>
-              <a href="#article-zakat-guide" class="insight-read-more" id="read-more-4">Read more →</a>
-            </div>
-          </article>
-
-          <!-- Card 5 -->
-          <article class="insight-card" id="article-ramadan-gold">
-            <div class="insight-card-header">
-              <span class="insight-tag-chip insight-tag--regional" lang="en">Regional Insight</span>
-              <span class="insight-read-time" lang="en">4 min read</span>
-            </div>
-            <h3 class="insight-card-title" lang="en">Is Gold a Good Investment During Ramadan Season?</h3>
-            <p class="insight-card-excerpt" lang="en">Ramadan is traditionally associated with gift-giving, including gold jewellery for Eid. This seasonal demand spike from the Arab world and South Asian diaspora can create a short-term upward pressure on regional retail prices — though its effect on the global spot price is modest.</p>
-            <div class="insight-card-footer">
-              <span class="insight-card-date">March 17, 2026</span>
-              <a href="#article-ramadan-gold" class="insight-read-more" id="read-more-5">Read more →</a>
-            </div>
-          </article>
-
-          <!-- Card 6 -->
-          <article class="insight-card" id="article-chart-guide">
-            <div class="insight-card-header">
-              <span class="insight-tag-chip insight-tag--education" lang="en">Education</span>
-              <span class="insight-read-time" lang="en">5 min read</span>
-            </div>
-            <h3 class="insight-card-title" lang="en">How to Read a Gold Price Chart: A Beginner's Guide</h3>
-            <p class="insight-card-excerpt" lang="en">A gold price chart can tell you far more than just today's price. Understanding support and resistance levels, the difference between spot and futures prices, and how to read a candlestick chart puts you in a much stronger position when deciding when to buy or sell.</p>
-            <div class="insight-card-footer">
-              <span class="insight-card-date">March 24, 2026</span>
-              <a href="#article-chart-guide" class="insight-read-more" id="read-more-6">Read more →</a>
-            </div>
-          </article>
-
-        </div>
-      </section>
-
-      <!-- Weekly Brief -->
-      <section class="weekly-brief" aria-labelledby="weekly-brief-heading">
-        <div class="weekly-brief-header">
-          <div class="weekly-brief-label" id="weekly-brief-label">This Week in Gold</div>
-          <div class="weekly-brief-date" id="weekly-brief-date">Week of March 24, 2026</div>
-        </div>
-        <ul class="weekly-brief-list" lang="en">
-          <li>Gold held near multi-month highs as Federal Reserve officials reiterated a cautious approach to rate cuts, reinforcing the metal's appeal as a hedge against prolonged monetary easing uncertainty.</li>
-          <li>Central bank demand remained the dominant structural driver: net purchases by emerging market central banks continued to outpace ETF outflows for the sixth consecutive quarter, providing a durable demand floor.</li>
-          <li>The USD/AED rate remained locked at the official peg of 3.6725 — meaning AED-denominated gold prices tracked the USD spot price exactly, as they have since 1997.</li>
-          <li>In the Dubai Gold Souk, physical demand for 22K jewellery picked up ahead of Eid gift-buying season, with anecdotal reports of higher foot traffic in Deira compared to the prior week.</li>
-        </ul>
-        <p class="weekly-brief-disclaimer" id="weekly-brief-disclaimer">Based on global market trends at time of writing. Not financial advice.</p>
-      </section>
-
-      <!-- Evergreen Guides -->
-      <section class="evergreen-guides-section" aria-labelledby="guides-heading">
-        <h2 class="insights-section-heading" id="guides-heading" id="guides-h2">Essential Guides</h2>
-        <div class="guides-grid">
-
-          <a href="./learn.html#karats" class="guide-card">
-            <div class="guide-card-icon" aria-hidden="true">⬡</div>
-            <div class="guide-card-content">
-              <h3 class="guide-card-title" id="guide-title-1">Gold Karats Explained</h3>
-              <p class="guide-card-desc" id="guide-desc-1">24K, 22K, 21K, 18K — what the numbers mean and which karat is right for your purchase.</p>
-            </div>
-            <span class="guide-card-arrow" aria-hidden="true">→</span>
-          </a>
-
-          <a href="./learn.html#aed-peg" class="guide-card">
-            <div class="guide-card-icon" aria-hidden="true">⚓</div>
-            <div class="guide-card-content">
-              <h3 class="guide-card-title" id="guide-title-2">How the AED Peg Protects Your Gold Value</h3>
-              <p class="guide-card-desc" id="guide-desc-2">Why the UAE Dirham's fixed peg to the USD eliminates currency risk for local gold buyers.</p>
-            </div>
-            <span class="guide-card-arrow" aria-hidden="true">→</span>
-          </a>
-
-          <a href="./learn.html#zakat" class="guide-card">
-            <div class="guide-card-icon" aria-hidden="true">☽</div>
-            <div class="guide-card-content">
-              <h3 class="guide-card-title" id="guide-title-3">Zakat Calculation Guide</h3>
-              <p class="guide-card-desc" id="guide-desc-3">Step-by-step guide to calculating Zakat on your gold holdings using today's live price.</p>
-            </div>
-            <span class="guide-card-arrow" aria-hidden="true">→</span>
-          </a>
-
-          <a href="./learn.html#hallmark" class="guide-card">
-            <div class="guide-card-icon" aria-hidden="true">◎</div>
-            <div class="guide-card-content">
-              <h3 class="guide-card-title" id="guide-title-4">Understanding Gold Hallmarks</h3>
-              <p class="guide-card-desc" id="guide-desc-4">How to read UAE, BIS, and UK hallmarks — and why you should always check before buying.</p>
-            </div>
-            <span class="guide-card-arrow" aria-hidden="true">→</span>
-          </a>
-
-        </div>
-      </section>
-
-    </div><!-- end .insights-body -->
-
-    <section class="method-section" style="border-top: 1px solid var(--color-border); padding-top: 2rem; margin-top: 1rem;">
-      <div class="related-tools-row">
-        <a href="tracker.html" class="related-tool-link">📈 Live Tracker</a>
-        <a href="calculator.html" class="related-tool-link">🧮 Calculator</a>
-        <a href="countries/uae.html" class="related-tool-link">🇦🇪 UAE Prices</a>
-        <a href="methodology.html" class="related-tool-link">🔬 Methodology</a>
-        <a href="learn.html" class="related-tool-link">📚 Gold Guide</a>
+    <!-- Section 2: Featured Article -->
+    <section class="insights-section">
+      <div class="insights-inner">
+        <article class="insights-featured-card" id="featured-article">
+          <div class="insights-featured-label" id="featured-tag-label" data-i18n="featured-tag-label">Featured Analysis</div>
+          <h2 class="insights-featured-title" id="featured-h2">Why UAE Gold Prices Differ from Global Spot</h2>
+          <p class="insights-featured-sub"><span id="featured-date">March 2025</span> · <span id="featured-read-time">4 min read</span></p>
+          <div class="insights-featured-body" lang="en">
+            <p>When you see gold priced at AED 350/gram in a Dubai jewelry store but our tracker shows AED 310/gram for 22K, you might wonder: which is correct? Both are — they measure different things.</p>
+            <h3>The spot price: the international benchmark</h3>
+            <p>The XAU/USD spot price is the global benchmark for pure 24K gold traded between institutions and bullion dealers. It's set on international exchanges (primarily COMEX and OTC markets) and reflects supply/demand dynamics, central bank activity, USD strength, and investor sentiment.</p>
+            <p>This site converts that spot price to local currencies using official exchange rates (with the AED using the official Central Bank peg of 3.6725). The result is a bullion-equivalent estimate — what pure or high-purity gold is theoretically worth per gram at that moment.</p>
+            <h3>Retail prices: spot plus premiums</h3>
+            <p>A jewelry store in Dubai charges more because they add:</p>
+            <ul>
+              <li><strong>Making charges (رسوم الصنعة):</strong> 3–25% depending on piece complexity</li>
+              <li><strong>Store margin:</strong> 5–15% above spot</li>
+              <li><strong>Import/logistics costs</strong> for gold sourced abroad</li>
+              <li><strong>Design value:</strong> for branded or crafted pieces</li>
+            </ul>
+            <p>The Dubai Gold &amp; Jewellery Group publishes a daily retail rate that reflects these combined premiums. Our tracker gives you the spot baseline — the starting point every retailer works from.</p>
+            <h3>Why this matters for buyers</h3>
+            <p>If you're comparing our 22K AED/gram figure to what you paid in a store, expect the store price to be 8–20% higher. If you're buying investment-grade bars or coins, you may find prices much closer to our tracker — sometimes within 1–3%.</p>
+            <p>The tracker is most useful as a baseline reference and timing tool: when gold has moved significantly, you know whether a store's price is reasonable or elevated relative to the global market.</p>
+          </div>
+          <div class="insights-featured-footer">
+            <a href="learn.html" class="insights-read-more">Read our full Gold Guide →</a>
+            <a href="methodology.html" class="insights-read-more">Data Methodology →</a>
+          </div>
+        </article>
       </div>
     </section>
+
+    <!-- Section 3: Insight Cards Grid -->
+    <section class="insights-section insights-section--alt">
+      <div class="insights-inner">
+        <div class="insights-section-header">
+          <h2 class="insights-section-title" id="insights-grid-h2" data-i18n="insights-grid-h2">Gold Market Guides</h2>
+          <p class="insights-section-sub" data-i18n="insights-grid-sub">Essential reading for GCC gold buyers</p>
+        </div>
+        <div class="insights-cards-grid">
+          <article class="insights-card">
+            <div class="insights-card-tag">Pricing</div>
+            <h3 class="insights-card-title">Understanding the AED Gold Peg</h3>
+            <p class="insights-card-body">The UAE Central Bank has pegged 1 USD = 3.6725 AED since 1997. This means AED gold prices move exactly with USD prices — with zero FX noise. It makes UAE one of the most price-stable gold markets globally.</p>
+            <div class="insights-card-footer">
+              <a href="methodology.html" class="insights-card-link">Why we hardcode this peg →</a>
+            </div>
+          </article>
+          <article class="insights-card">
+            <div class="insights-card-tag">Education</div>
+            <h3 class="insights-card-title">24K vs 22K: Which is the Better Buy?</h3>
+            <p class="insights-card-body">24K is 99.9% pure gold — ideal for bars and coins. 22K (91.7%) is Gulf jewelry standard. The price scales with purity, but retail premiums don't always. For investment, bars beat jewelry. For gifts, 22K has better durability.</p>
+            <div class="insights-card-footer">
+              <a href="learn.html" class="insights-card-link">Full karat guide →</a>
+            </div>
+          </article>
+          <article class="insights-card">
+            <div class="insights-card-tag">Market Hours</div>
+            <h3 class="insights-card-title">When Do Gold Markets Open? A GCC Guide</h3>
+            <p class="insights-card-body">Gold trades 23.5 hours/day, Sun 22:00 – Fri 21:00 UTC. Best liquidity: London open (07:00 UTC). Most volatile: when London and New York overlap. Weekend: closed Friday evening through Sunday night.</p>
+            <div class="insights-card-footer">
+              <a href="tracker.html" class="insights-card-link">Check live market status →</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Gold by the Numbers -->
+    <section class="insights-section">
+      <div class="insights-inner">
+        <div class="insights-section-header">
+          <h2 class="insights-section-title" data-i18n="stats-title">Gold by the Numbers</h2>
+          <p class="insights-section-sub" data-i18n="stats-sub">Key facts for MENA gold buyers</p>
+        </div>
+        <div class="insights-stats-grid">
+          <div class="insights-stat">
+            <div class="insights-stat-value">3.6725</div>
+            <div class="insights-stat-label">AED per USD (official peg since 1997)</div>
+          </div>
+          <div class="insights-stat">
+            <div class="insights-stat-value">31.1g</div>
+            <div class="insights-stat-label">grams per troy ounce (international standard)</div>
+          </div>
+          <div class="insights-stat">
+            <div class="insights-stat-value">24+</div>
+            <div class="insights-stat-label">countries covered on this tracker</div>
+          </div>
+          <div class="insights-stat">
+            <div class="insights-stat-value">90s</div>
+            <div class="insights-stat-label">gold spot price refresh interval</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Related Tools -->
+    <section class="insights-section insights-section--alt">
+      <div class="insights-inner">
+        <h2 class="insights-section-title" style="margin-bottom: 1rem;" data-i18n="related-tools-title">Related Tools</h2>
+        <div class="related-tools-row">
+          <a href="tracker.html" class="related-tool-link">📈 Live Tracker</a>
+          <a href="calculator.html" class="related-tool-link">🧮 Gold Calculator</a>
+          <a href="countries/uae.html" class="related-tool-link">🇦🇪 UAE Prices</a>
+          <a href="learn.html" class="related-tool-link">📚 Gold Guide</a>
+          <a href="methodology.html" class="related-tool-link">🔬 Methodology</a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <script type="module" src="./insights.js"></script>

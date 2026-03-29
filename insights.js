@@ -39,85 +39,53 @@ const STATE = {
 const CONTENT = {
   en: {
     // Hero
-    'hero-tag':               'Market Analysis & Buying Guides',
-    'insights-h1':            'Gold Insights & Analysis',
-    'insights-sub':           'Expert commentary, buying guides, and market context for UAE & GCC gold buyers',
+    'hero-tag':               'Market Intelligence',
+    'insights-h1':            'Gold Market Insights',
+    'insights-sub':           'Analysis, price drivers and context for GCC gold buyers — updated weekly',
 
     // Price bar
     'price-bar-label':        'Live Gold Price',
 
     // Featured article
-    'featured-tag-label':     'Featured Article',
-    'featured-date':          'March 10, 2026',
-    'featured-read-time':     '5 min read',
+    'featured-tag-label':     'Featured Analysis',
+    'featured-date':          'March 2025',
+    'featured-read-time':     '4 min read',
 
     // Insight grid heading
-    'insights-grid-h2':       'Latest Insights',
+    'insights-grid-h2':       'Gold Market Guides',
+    'insights-grid-sub':      'Essential reading for GCC gold buyers',
 
-    // Read-more links
-    'read-more-1':            'Read more →',
-    'read-more-2':            'Read more →',
-    'read-more-3':            'Read more →',
-    'read-more-4':            'Read more →',
-    'read-more-5':            'Read more →',
-    'read-more-6':            'Read more →',
+    // Stats
+    'stats-title':            'Gold by the Numbers',
+    'stats-sub':              'Key facts for MENA gold buyers',
 
-    // Weekly brief
-    'weekly-brief-label':     'This Week in Gold',
-    'weekly-brief-date':      'Week of March 24, 2026',
-    'weekly-brief-disclaimer':'Based on global market trends at time of writing. Not financial advice.',
-
-    // Guides
-    'guides-h2':              'Essential Guides',
-    'guide-title-1':          'Gold Karats Explained',
-    'guide-desc-1':           '24K, 22K, 21K, 18K — what the numbers mean and which karat is right for your purchase.',
-    'guide-title-2':          'How the AED Peg Protects Your Gold Value',
-    'guide-desc-2':           'Why the UAE Dirham\'s fixed peg to the USD eliminates currency risk for local gold buyers.',
-    'guide-title-3':          'Zakat Calculation Guide',
-    'guide-desc-3':           'Step-by-step guide to calculating Zakat on your gold holdings using today\'s live price.',
-    'guide-title-4':          'Understanding Gold Hallmarks',
-    'guide-desc-4':           'How to read UAE, BIS, and UK hallmarks — and why you should always check before buying.',
+    // Related tools
+    'related-tools-title':    'Related Tools',
   },
   ar: {
     // Hero
-    'hero-tag':               'تحليل السوق وأدلة الشراء',
-    'insights-h1':            'رؤى وتحليلات الذهب',
-    'insights-sub':           'تعليقات متخصصة وأدلة شراء وسياق السوق لمشتري الذهب في الإمارات والخليج',
+    'hero-tag':               'ذكاء السوق',
+    'insights-h1':            'رؤى سوق الذهب',
+    'insights-sub':           'تحليلات ومحركات الأسعار وسياق السوق لمشتري الذهب في دول الخليج — تحديث أسبوعي',
 
     // Price bar
     'price-bar-label':        'سعر الذهب المباشر',
 
     // Featured article
-    'featured-tag-label':     'المقال المميز',
-    'featured-date':          '١٠ مارس ٢٠٢٦',
-    'featured-read-time':     'قراءة ٥ دقائق',
+    'featured-tag-label':     'تحليل مميز',
+    'featured-date':          'مارس ٢٠٢٥',
+    'featured-read-time':     'قراءة ٤ دقائق',
 
     // Insight grid heading
-    'insights-grid-h2':       'أحدث الرؤى',
+    'insights-grid-h2':       'أدلة سوق الذهب',
+    'insights-grid-sub':      'قراءة أساسية لمشتري الذهب في الخليج',
 
-    // Read-more links
-    'read-more-1':            'اقرأ المزيد →',
-    'read-more-2':            'اقرأ المزيد →',
-    'read-more-3':            'اقرأ المزيد →',
-    'read-more-4':            'اقرأ المزيد →',
-    'read-more-5':            'اقرأ المزيد →',
-    'read-more-6':            'اقرأ المزيد →',
+    // Stats
+    'stats-title':            'الذهب بالأرقام',
+    'stats-sub':              'حقائق رئيسية لمشتري الذهب في منطقة الشرق الأوسط وشمال أفريقيا',
 
-    // Weekly brief
-    'weekly-brief-label':     'هذا الأسبوع في عالم الذهب',
-    'weekly-brief-date':      'أسبوع ٢٤ مارس ٢٠٢٦',
-    'weekly-brief-disclaimer':'استناداً إلى اتجاهات السوق العالمية وقت الكتابة. ليست نصيحة مالية.',
-
-    // Guides
-    'guides-h2':              'الأدلة الأساسية',
-    'guide-title-1':          'شرح عيارات الذهب',
-    'guide-desc-1':           '٢٤ قيراط، ٢٢، ٢١، ١٨ — ما تعنيه الأرقام وأي عيار يناسب مشترياتك.',
-    'guide-title-2':          'كيف يحمي ربط الدرهم قيمة ذهبك',
-    'guide-desc-2':           'لماذا يُلغي الربط الثابت للدرهم بالدولار مخاطر الصرف لمشتري الذهب المحليين.',
-    'guide-title-3':          'دليل حساب الزكاة',
-    'guide-desc-3':           'دليل خطوة بخطوة لحساب زكاة محفظتك الذهبية بناءً على السعر المباشر اليوم.',
-    'guide-title-4':          'فهم دمغة الذهب',
-    'guide-desc-4':           'كيف تقرأ دمغات الإمارات وBIS والمملكة المتحدة — ولماذا يجب التحقق دائماً قبل الشراء.',
+    // Related tools
+    'related-tools-title':    'أدوات ذات صلة',
   },
 };
 
