@@ -66,7 +66,7 @@ const T = {
     heroCta1: 'View Live Tracker',
     heroCta2: 'UAE Gold Today',
     heroCta3: 'Calculator',
-    heroCta4: 'History & Data',
+    heroCta4: 'Set Alert',
     spotTitle: 'Gold Spot Price',
     perOz: 'per troy ounce',
     lbl24aed: '24K / gram (AED)',
@@ -83,11 +83,17 @@ const T = {
     seeAll: 'See all countries →',
     perGram: 'per gram',
     trustLive: 'Live spot data',
+    trustLiveSub: 'Updated every 90s',
     trustCountries: '24+ countries',
-    trustKarats: '7 karats (14K–24K)',
+    trustCountriesSub: 'GCC & Arab world',
+    trustKarats: '7 karats',
+    trustKaratsSub: '14K through 24K',
     trustAed: 'AED official peg',
+    trustAedSub: '3.6725 · always exact',
     trustBilingual: 'Bilingual EN / AR',
-    trustRefresh: '90s refresh',
+    trustBilingualSub: 'Full RTL support',
+    trustOffline: 'Works offline',
+    trustOfflineSub: 'Cached price data',
     toolsTitle: 'Everything You Need',
     toolsSub: 'Built for buyers, investors and professionals across the Gulf & Arab world',
     alertTitle: 'Set a Price Alert',
@@ -133,7 +139,7 @@ const T = {
     heroCta1: 'عرض التتبع المباشر',
     heroCta2: 'ذهب الإمارات اليوم',
     heroCta3: 'الحاسبة',
-    heroCta4: 'التاريخ والبيانات',
+    heroCta4: 'اضبط تنبيهاً',
     spotTitle: 'السعر الفوري للذهب',
     perOz: 'لكل أوقية تروي',
     lbl24aed: 'عيار 24 / غرام (AED)',
@@ -150,11 +156,17 @@ const T = {
     seeAll: 'عرض كل الدول ←',
     perGram: 'لكل غرام',
     trustLive: 'بيانات فورية مباشرة',
+    trustLiveSub: 'تحديث كل 90 ثانية',
     trustCountries: '24+ دولة',
-    trustKarats: '7 عيارات (14–24)',
+    trustCountriesSub: 'الخليج والعالم العربي',
+    trustKarats: '7 عيارات',
+    trustKaratsSub: 'من 14 إلى 24 عيارًا',
     trustAed: 'ربط رسمي للدرهم',
+    trustAedSub: '3.6725 · دائمًا دقيق',
     trustBilingual: 'ثنائي اللغة عربي / إنجليزي',
-    trustRefresh: 'تحديث كل 90 ثانية',
+    trustBilingualSub: 'دعم كامل لـ RTL',
+    trustOffline: 'يعمل دون إنترنت',
+    trustOfflineSub: 'بيانات مخزنة محليًا',
     toolsTitle: 'كل ما تحتاجه',
     toolsSub: 'صُمّم للمشترين والمستثمرين والمحترفين في منطقة الخليج والعالم العربي',
     alertTitle: 'اضبط تنبيه سعر',
@@ -312,7 +324,7 @@ function applyLangToPage() {
   set('hero-cta-tracker',  tx('heroCta1'));
   set('hero-cta-uae',      tx('heroCta2'));
   set('hero-cta-calc',     tx('heroCta3'));
-  set('hero-cta-history',  tx('heroCta4'));
+  set('hero-cta-alert',    tx('heroCta4'));
   set('hlc-tracker-link',  tx('trackerLink'));
   set('hlc-title',  tx('spotTitle'));
   set('hlc-sub',    tx('perOz'));
@@ -324,12 +336,18 @@ function applyLangToPage() {
   set('gcc-section-title', tx('gccTitle'));
   set('gcc-section-sub',   tx('gccSub'));
   set('gcc-see-all',       tx('seeAll'));
-  set('trust-live',       tx('trustLive'));
-  set('trust-countries',  tx('trustCountries'));
-  set('trust-karats',     tx('trustKarats'));
-  set('trust-aed',        tx('trustAed'));
-  set('trust-bilingual',  tx('trustBilingual'));
-  set('trust-refresh',    tx('trustRefresh'));
+  set('trust-live',            tx('trustLive'));
+  set('trust-live-sub',        tx('trustLiveSub'));
+  set('trust-countries',       tx('trustCountries'));
+  set('trust-countries-sub',   tx('trustCountriesSub'));
+  set('trust-karats',          tx('trustKarats'));
+  set('trust-karats-sub',      tx('trustKaratsSub'));
+  set('trust-aed',             tx('trustAed'));
+  set('trust-aed-sub',         tx('trustAedSub'));
+  set('trust-bilingual',       tx('trustBilingual'));
+  set('trust-bilingual-sub',   tx('trustBilingualSub'));
+  set('trust-offline',         tx('trustOffline'));
+  set('trust-offline-sub',     tx('trustOfflineSub'));
   set('tools-title',      tx('toolsTitle'));
   set('tools-sub',        tx('toolsSub'));
   set('alert-cta-title',  tx('alertTitle'));

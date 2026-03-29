@@ -392,7 +392,15 @@
   color: var(--color-gold-dark, #8c6d24);
 }
 
-.trust-icon { font-size: 0.9rem; line-height: 1; }
+.trust-icon { font-size: 1rem; line-height: 1; flex-shrink: 0; }
+
+.trust-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+.trust-label { font-size: 0.78rem; font-weight: 600; line-height: 1.2; }
+.trust-sub { font-size: 0.68rem; font-weight: 400; opacity: 0.65; }
 
 /* ══════════════════════════════════════════════════════════════
    HOME SECTIONS — shared scaffolding

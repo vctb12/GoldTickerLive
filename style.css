@@ -357,63 +357,94 @@ img, svg { display: block; }
 [dir="rtl"] .nav-drawer { box-shadow: 6px 0 32px rgba(0, 0, 0, 0.14); }
 
 /* ═══════════════════════════════════════════════
-   Global Footer (injected via components/footer.js)
+   Global Footer — 5-column dark premium
    ═══════════════════════════════════════════════ */
 .site-footer-global {
-  background: var(--color-gold-deep);
-  color: rgba(255,255,255,0.82);
-  padding: 2.5rem 1.5rem 1.5rem;
+  background: #0f0c08;
+  color: rgba(255,255,255,0.72);
   margin-top: auto;
+}
+.footer-top {
+  padding: 3rem 1.5rem 2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 .footer-inner {
   max-width: 1400px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
   gap: 2rem;
-  margin-bottom: 2rem;
 }
-.footer-brand { display: flex; flex-direction: column; gap: 0.4rem; }
+
+/* Brand column */
+.footer-col--brand { display: flex; flex-direction: column; gap: 0.5rem; }
 .footer-brand-icon { font-size: 1.5rem; color: var(--color-gold); }
 .footer-brand-name { font-size: 1.1rem; font-weight: 700; color: #fff; }
-.footer-tagline { font-size: 0.8rem; opacity: 0.7; line-height: 1.5; }
-.footer-links-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+.footer-tagline { font-size: 0.8rem; opacity: 0.65; line-height: 1.55; max-width: 22ch; }
+
+/* Link columns */
+.footer-col--links { display: flex; flex-direction: column; gap: 0.55rem; }
+.footer-col-heading {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-gold);
+  margin-bottom: 0.3rem;
 }
-.footer-col { display: flex; flex-direction: column; gap: 0.5rem; }
-.footer-col h4 { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-gold-light); margin-bottom: 0.2rem; }
-.footer-col a { font-size: 0.84rem; color: rgba(255,255,255,0.7); text-decoration: none; transition: color var(--transition); }
-.footer-col a:hover { color: var(--color-gold-light); }
+.footer-col-heading--mt { margin-top: 1.25rem; }
+.footer-col--links a {
+  font-size: 0.84rem;
+  color: rgba(255,255,255,0.62);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+.footer-col--links a:hover { color: var(--color-gold-light); }
+
+/* Bottom bar */
 .footer-bottom {
-  max-width: 1400px;
-  margin: 0 auto;
-  border-top: 1px solid rgba(255,255,255,0.12);
-  padding-top: 1rem;
+  padding: 1.2rem 1.5rem;
+}
+.footer-bottom .footer-inner {
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+  margin-bottom: 0;
 }
 .footer-sources {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
-  font-size: 0.78rem;
-  margin-bottom: 0.5rem;
+  font-size: 0.77rem;
+  color: rgba(255,255,255,0.45);
 }
 .footer-sources a { color: var(--color-gold-light); text-decoration: none; }
-.footer-sep { opacity: 0.35; }
-.footer-disclaimer { font-size: 0.73rem; opacity: 0.55; line-height: 1.6; }
-
-@media (max-width: 768px) {
-  .footer-inner { grid-template-columns: 1fr; gap: 1.5rem; }
-  .footer-links-grid { grid-template-columns: repeat(2, 1fr); }
+.footer-sep { opacity: 0.3; }
+.footer-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
-@media (max-width: 480px) {
-  .footer-links-grid { grid-template-columns: 1fr; }
+.footer-disclaimer { font-size: 0.72rem; opacity: 0.45; line-height: 1.6; max-width: 65ch; }
+.footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.4); white-space: nowrap; }
+
+@media (max-width: 960px) {
+  .footer-inner { grid-template-columns: 1.4fr 1fr 1fr; }
+  .footer-col--links:nth-child(5) { display: none; } /* hide last on tablet */
+}
+@media (max-width: 640px) {
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+  .footer-col--brand { grid-column: 1 / -1; }
+  .footer-col--links:nth-child(5) { display: flex; }
+}
+@media (max-width: 400px) {
+  .footer-inner { grid-template-columns: 1fr; }
+  .footer-col--brand { grid-column: 1; }
 }
 
 [dir="rtl"] .footer-inner { direction: rtl; }
-[dir="rtl"] .footer-links-grid { direction: rtl; }
 [dir="rtl"] .footer-sources { flex-direction: row-reverse; }
 
 /* ═══════════════════════════════════════════════
