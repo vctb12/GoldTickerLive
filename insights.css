@@ -756,3 +756,29 @@
   .insights-cards-grid { grid-template-columns: 1fr; }
   .insights-stats-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ═══════════════════════════════════════════════
+   Mobile Responsive Fixes — Insights Page
+   ═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .insights-hero { padding: 2.5rem 1.1rem 2rem; }
+  .insights-section { padding: 2rem 1rem; }
+  .insights-inner { max-width: 100%; }
+  .insights-featured-card { padding: 1.25rem 1rem; }
+  .insights-cards-grid { grid-template-columns: 1fr; }
+  .insights-stats-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+}
+
+@media (max-width: 480px) {
+  .insights-hero-title { font-size: 1.7rem; }
+  .insights-stats-grid { grid-template-columns: 1fr 1fr; }
+  .insights-stat { padding: 1rem; }
+  .insights-stat-value { font-size: 1.5rem; }
+  .insights-hero-meta { gap: 0.4rem; }
+  .insights-freshness-chip { font-size: 0.7rem; }
+}
+
+@media (max-width: 380px) {
+  .insights-stats-grid { grid-template-columns: 1fr; }
+  .insights-hero { padding: 2rem 0.85rem 1.5rem; }
+}

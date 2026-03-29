@@ -227,3 +227,24 @@
 [dir="rtl"] .learn-section ul { padding-left: 0; padding-right: 1.4rem; }
 [dir="rtl"] .learn-karat-table th,
 [dir="rtl"] .learn-karat-table td { text-align: right; }
+
+/* ── Mobile Responsive Fixes ── */
+@media (max-width: 768px) {
+  .learn-hero { padding: 2.5rem 1.1rem 2rem; }
+  .learn-body { padding: 1.5rem 1rem 3rem; }
+  .learn-section { padding: 2rem 0; }
+  .learn-karat-table-wrap { font-size: 0.82rem; }
+}
+
+@media (max-width: 480px) {
+  .learn-hero h1 { font-size: 1.7rem; }
+  .learn-section h2 { font-size: 1.2rem; }
+  .learn-toc-inner { gap: 0.6rem; }
+  .learn-toc-list { gap: 0.6rem; }
+  .learn-toc-list a { font-size: 0.78rem; }
+}
+
+@media (max-width: 380px) {
+  .learn-hero { padding: 1.75rem 0.85rem 1.5rem; }
+  .learn-callout { padding: 0.85rem 1rem; }
+}

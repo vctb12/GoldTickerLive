@@ -447,3 +447,20 @@
   border-bottom-color: var(--color-gold);
   font-weight: 700;
 }
+
+/* ── Comprehensive Mobile Fixes ── */
+@media (max-width: 768px) {
+  .calc-tab { font-size: 0.8rem; padding: 0.55rem 0.85rem; }
+  .calc-section { padding: 1.25rem; }
+  .calc-result-value { font-size: 1.6rem; }
+}
+
+@media (max-width: 640px) {
+  .calc-tab-bar { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; }
+  .calc-tab { flex-shrink: 0; white-space: nowrap; }
+}
+
+@media (max-width: 380px) {
+  .calc-tab { font-size: 0.75rem; padding: 0.45rem 0.6rem; }
+  .calc-section { padding: 1rem; }
+}
