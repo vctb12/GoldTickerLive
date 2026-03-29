@@ -2272,6 +2272,12 @@ body.has-ticker { padding-bottom: 38px; }
 /* ═══════════════════════════════════════════════
    SECTION 4: KARAT TABLE PURITY BARS
    ═══════════════════════════════════════════════ */
+.karat-label-cell {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  white-space: nowrap;
+}
 .karat-purity-bar {
   display: inline-block;
   height: 4px;

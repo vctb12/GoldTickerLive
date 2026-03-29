@@ -534,8 +534,7 @@ function applyLanguage() {
   document.querySelectorAll('#sort-select option[data-i18n]').forEach(el => {
     el.textContent = t(el.dataset.i18n);
   });
-  const langBtn = document.getElementById('lang-toggle');
-  if (langBtn) langBtn.textContent = t('lang.toggle');
+  // Nav lang toggle text is managed by updateNavLang() in the nav component
 
   renderAll();
 }
