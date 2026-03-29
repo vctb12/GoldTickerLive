@@ -6,6 +6,7 @@
 import * as cache from './lib/cache.js';
 import { injectNav, updateNavLang } from './components/nav.js';
 import { injectFooter } from './components/footer.js';
+import { injectTicker, updateTickerLang } from './components/ticker.js';
 
 const STATE = {
   lang: 'en',
@@ -167,12 +168,14 @@ async function init() {
 
   const navResult = injectNav(STATE.lang, 0);
   injectFooter(STATE.lang, 0);
+  injectTicker(STATE.lang, 0);
 
   navResult.getLangToggleButtons().forEach(btn => {
     btn.addEventListener('click', () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       cache.savePreference('lang', STATE.lang);
       updateNavLang(STATE.lang);
+      updateTickerLang(STATE.lang);
       applyLang(STATE.lang);
     });
   });

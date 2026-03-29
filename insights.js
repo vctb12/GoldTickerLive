@@ -7,6 +7,7 @@ import * as cache from './lib/cache.js';
 import * as api from './lib/api.js';
 import { injectNav, updateNavLang } from './components/nav.js';
 import { injectFooter } from './components/footer.js';
+import { injectTicker, updateTickerLang } from './components/ticker.js';
 import { CONSTANTS } from './config/index.js';
 
 const AED_PEG      = CONSTANTS.AED_PEG;       // 3.6725
@@ -207,12 +208,14 @@ async function init() {
 
   const navResult = injectNav(STATE.lang, 0);
   injectFooter(STATE.lang, 0);
+  injectTicker(STATE.lang, 0);
 
   navResult.getLangToggleButtons().forEach(btn => {
     btn.addEventListener('click', () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       cache.savePreference('lang', STATE.lang);
       updateNavLang(STATE.lang);
+      updateTickerLang(STATE.lang);
       applyLang(STATE.lang);
       // Refresh freshness label in new language
       if (STATE.goldPriceUsdPerOz > 0) {

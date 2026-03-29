@@ -10,6 +10,7 @@ import { usdPerGram } from './lib/price-calculator.js';
 import { formatPrice } from './lib/formatter.js';
 import { injectNav, updateNavLang } from './components/nav.js';
 import { injectFooter } from './components/footer.js';
+import { injectTicker, updateTicker, updateTickerLang } from './components/ticker.js';
 
 // ── State ───────────────────────────────────────────────────────────────────
 const STATE = {
@@ -481,6 +482,17 @@ async function fetchLiveData() {
     }
     updateSpotBadge();
     calcZakat(); // Re-render nisab display
+    if (STATE.spotUsdPerOz) {
+      const TROY = CONSTANTS.TROY_OZ_GRAMS;
+      const AED  = CONSTANTS.AED_PEG;
+      updateTicker({
+        xauUsd:  STATE.spotUsdPerOz,
+        uae24k:  (STATE.spotUsdPerOz * 1       / TROY) * AED,
+        uae22k:  (STATE.spotUsdPerOz * (22/24) / TROY) * AED,
+        uae21k:  (STATE.spotUsdPerOz * (21/24) / TROY) * AED,
+        uae18k:  (STATE.spotUsdPerOz * (18/24) / TROY) * AED,
+      });
+    }
   } catch (e) {
     console.warn('Calculator fetch error:', e);
   }
@@ -498,12 +510,14 @@ async function init() {
 
   const navResult = injectNav(STATE.lang, 0);
   injectFooter(STATE.lang, 0);
+  injectTicker(STATE.lang, 0);
 
   navResult.getLangToggleButtons().forEach(btn => {
     btn.addEventListener('click', () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       cache.savePreference('lang', STATE.lang);
       updateNavLang(STATE.lang);
+      updateTickerLang(STATE.lang);
       applyLang();
       updateSpotBadge();
     });

@@ -2085,10 +2085,14 @@ details[open] > .faq-q::after { content: '−'; }
   color: var(--color-gold-deep);
   text-decoration: none;
 }
-.nav-dropdown-item.nav-link--active {
+.nav-dropdown-item.nav-dropdown-item--active {
   background: var(--color-gold-bg);
   color: var(--color-gold-dark);
   font-weight: 600;
+}
+.nav-dropdown-btn--active {
+  color: var(--color-gold-dark);
+  background: var(--color-gold-tint);
 }
 
 /* Mobile drawer groups */
@@ -2549,4 +2553,23 @@ body.has-ticker { padding-bottom: 38px; }
   background: var(--color-gold-bg);
   text-decoration: none;
   transform: translateY(-1px);
+}
+
+/* ═══════════════════════════════════════════════
+   Skeleton inline placeholder
+   ═══════════════════════════════════════════════ */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton-inline {
+  display: inline-block;
+  background: linear-gradient(90deg,
+    var(--color-surface-2) 25%,
+    var(--color-surface-3) 50%,
+    var(--color-surface-2) 75%);
+  background-size: 800px 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+  border-radius: 6px;
+  vertical-align: middle;
 }

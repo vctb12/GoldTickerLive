@@ -6,6 +6,7 @@
 import * as cache from './lib/cache.js';
 import { injectNav, updateNavLang } from './components/nav.js';
 import { injectFooter } from './components/footer.js';
+import { injectTicker, updateTickerLang } from './components/ticker.js';
 
 const STATE = { lang: 'en' };
 
@@ -64,10 +65,12 @@ function init() {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       localStorage.setItem('gp_pref_lang', STATE.lang);
       updateNavLang(STATE.lang);
+      updateTickerLang(STATE.lang);
       applyLanguage();
     });
   });
   injectFooter(STATE.lang, 0);
+  injectTicker(STATE.lang, 0);
 
   applyLanguage();
 }

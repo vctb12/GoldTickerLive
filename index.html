@@ -74,12 +74,14 @@
             <a href="tracker.html#section-chart" class="btn btn-ghost-light" id="hero-cta-history">History &amp; Data</a>
           </div>
         </div>
-        <div class="hero-live-card" id="hero-live-card" aria-live="polite">
+        <div class="hero-live-card" id="hero-live-card" aria-live="polite" aria-busy="true">
           <div class="hlc-header">
             <span class="hlc-title" id="hlc-title">Gold Spot Price</span>
             <span class="hlc-badge" id="hlc-badge">XAU/USD</span>
           </div>
-          <div class="hlc-price" id="hlc-price">—</div>
+          <div class="hlc-price hlc-price--loading" id="hlc-price">
+            <span class="skeleton-inline" style="width:160px;height:2.2rem;display:inline-block;border-radius:6px;"></span>
+          </div>
           <div class="hlc-sub" id="hlc-sub">per troy ounce</div>
           <div class="hlc-indicators">
             <span class="hlc-change" id="hlc-change" hidden>—</span>
@@ -104,7 +106,7 @@
             </div>
           </div>
           <div class="hlc-footer">
-            <span class="hlc-updated" id="hlc-updated">Fetching...</span>
+            <span class="hlc-updated skeleton-text" id="hlc-updated" aria-label="Loading price update time">Loading...</span>
             <a href="tracker.html" class="hlc-tracker-link" id="hlc-tracker-link">Full Tracker →</a>
           </div>
         </div>

@@ -218,7 +218,12 @@ function renderHeroCard() {
   const aed22g  = usd22g * CONSTANTS.AED_PEG;
   const usd21g  = calc.usdPerGram(goldPrice, k21.purity);
 
-  set('hlc-price', fmt.formatPrice(usd24oz, 'USD', 2));
+  const priceEl = document.getElementById('hlc-price');
+  if (priceEl) {
+    priceEl.textContent = fmt.formatPrice(usd24oz, 'USD', 2);
+    priceEl.classList.remove('hlc-price--loading');
+  }
+  document.getElementById('hero-live-card')?.removeAttribute('aria-busy');
   set('hlc-aed24',  fmt.formatPrice(aed24g,  'AED', 2));
   set('hlc-usd22',  fmt.formatPrice(usd22g,  'USD', 2));
   set('hlc-aed22',  fmt.formatPrice(aed22g,  'AED', 2));
