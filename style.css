@@ -1124,42 +1124,9 @@ main {
 }
 .retry-btn:hover { background: var(--color-gold-deep); }
 
-/* ═══════════════════════════════════════════════
-   Skeleton Loading Animation
-   ═══════════════════════════════════════════════ */
-@keyframes shimmer {
-  0%   { background-position: -600px 0; }
-  100% { background-position: 600px 0; }
-}
-.skeleton-line, .skeleton-value, .skeleton-flag {
-  background: linear-gradient(90deg, #ede9e0 25%, #f5f2ea 50%, #ede9e0 75%);
-  background-size: 600px 100%;
-  animation: shimmer 1.6s infinite linear;
-  border-radius: 4px;
-}
-.skeleton-card .skeleton-line  { height: 13px; width: 65%; margin-bottom: 0.5rem; }
-.skeleton-card .skeleton-value { height: 28px; width: 50%; }
-.skeleton-card .skeleton-flag  { height: 26px; width: 26px; border-radius: 50%; margin-bottom: 0.5rem; }
+/* Skeleton loading — defined below in the dedicated Skeleton section */
 
-/* ═══════════════════════════════════════════════
-   Footer
-   ═══════════════════════════════════════════════ */
-.site-footer {
-  background: var(--color-surface);
-  border-top: 1px solid var(--color-border);
-  padding: 1rem 1.5rem;
-  font-size: 0.76rem;
-  color: var(--color-text-muted);
-}
-.footer-sources {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.4rem;
-}
-.footer-sep { opacity: 0.4; }
-.footer-disclaimer { line-height: 1.55; }
+/* Footer — see .site-footer-global defined in the Phase B footer block below */
 
 /* ═══════════════════════════════════════════════
    Chart Section
@@ -1173,33 +1140,7 @@ main {
   border: 1px solid var(--color-border-subtle);
 }
 
-.chart-range-pills {
-  display: flex;
-  gap: 0.25rem;
-  background: var(--color-surface-2);
-  padding: 0.25rem;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--color-border-subtle);
-}
-.chart-range-btn {
-  padding: 0.28rem 0.75rem;
-  border: none;
-  background: transparent;
-  border-radius: var(--radius-pill);
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  transition: var(--transition-md);
-  min-height: 30px;
-  white-space: nowrap;
-}
-.chart-range-btn:hover { background: var(--color-gold-tint); color: var(--color-gold-dark); }
-.chart-range-btn.active {
-  background: var(--color-gold-dark);
-  color: #fff;
-  box-shadow: var(--shadow-gold);
-}
+/* .chart-range-pills, .chart-range-btn — defined below in Phase B revamp section */
 
 .chart-controls-right { display: flex; align-items: center; gap: 0.75rem; }
 .chart-data-note { margin-top: 0.75rem; }
@@ -2671,27 +2612,7 @@ body.has-ticker { padding-bottom: 38px; }
 }
 .section:last-child { border-bottom: none; }
 
-/* Better tab bar spacing */
-.tab-bar {
-  margin-bottom: 1rem;
-}
-
-/* ═══════════════════════════════════════════════
-   Tracker Topbar Improvements
-   ═══════════════════════════════════════════════ */
-.tracker-topbar {
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border-subtle);
-}
-.tracker-topbar-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-/* Breadcrumb */
+/* Breadcrumb (additional style supplements from revamp) */
 .tracker-breadcrumb {
   display: flex;
   align-items: center;
