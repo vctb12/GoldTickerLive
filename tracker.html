@@ -136,47 +136,75 @@
 
       <!-- CHART PANEL -->
       <div class="workspace-panel active" data-workspace-panel="chart" id="ws-panel-chart">
-        <div class="chart-controls-right" style="margin-bottom: 0.75rem;">
+        <!-- History stats strip (populated by JS) -->
+        <div id="history-stats-strip" class="history-stats-strip" hidden aria-label="Gold price statistics"></div>
+
+        <div class="chart-controls-bar">
           <div class="chart-range-pills" role="group" aria-label="Time range">
-            <button class="chart-range-btn active" data-range="24H">24H</button>
+            <button class="chart-range-btn" data-range="24H">24H</button>
             <button class="chart-range-btn" data-range="7D">7D</button>
             <button class="chart-range-btn" data-range="30D">30D</button>
             <button class="chart-range-btn" data-range="90D">90D</button>
-            <button class="chart-range-btn" data-range="1Y">1Y</button>
+            <button class="chart-range-btn active" data-range="1Y">1Y</button>
+            <button class="chart-range-btn" data-range="3Y">3Y</button>
+            <button class="chart-range-btn" data-range="5Y">5Y</button>
+            <button class="chart-range-btn" data-range="ALL">All</button>
           </div>
         </div>
         <div id="chart-container" class="chart-container" aria-label="Gold price chart"></div>
         <p class="chart-data-note section-note" data-i18n="chart.dataNote">
-          Chart shows locally stored price snapshots — data accumulates while you use the site
+          Short ranges (24H/7D) use live session snapshots. Longer ranges use monthly baseline 2019–present.
         </p>
       </div>
 
       <!-- ARCHIVE PANEL -->
       <div class="workspace-panel" data-workspace-panel="archive" id="ws-panel-archive">
         <div class="archive-panel-inner">
-          <div class="section-header" style="margin-bottom: 1rem;">
-            <div>
-              <h3 style="font-size: 1rem; font-weight: 700;">Price Archive</h3>
-              <p class="section-note">Daily snapshots stored in your browser · Most recent first</p>
+          <div class="archive-panel-header">
+            <div class="archive-panel-title">
+              <h3>Price Archive</h3>
+              <p class="section-note">Monthly baseline 2019–present · Your daily snapshots · Most recent first</p>
             </div>
-            <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <label style="font-size: 0.82rem; color: var(--color-text-muted);">Karat:</label>
-              <select id="archive-karat-select" class="sort-select" style="min-width: 80px;">
-                <option value="24">24K</option>
-                <option value="22">22K</option>
-                <option value="21">21K</option>
-                <option value="18">18K</option>
-              </select>
-              <label style="font-size: 0.82rem; color: var(--color-text-muted);">Unit:</label>
-              <select id="archive-unit-select" class="sort-select" style="min-width: 90px;">
-                <option value="gram">Per gram</option>
-                <option value="oz">Per oz</option>
-              </select>
+            <div class="archive-controls">
+              <div class="archive-control-group">
+                <label class="archive-control-label" for="archive-range-select">Range</label>
+                <select id="archive-range-select" class="sort-select">
+                  <option value="ALL">All history</option>
+                  <option value="5Y">Last 5 years</option>
+                  <option value="3Y">Last 3 years</option>
+                  <option value="1Y">Last 1 year</option>
+                  <option value="90D">Last 90 days</option>
+                  <option value="30D">Last 30 days</option>
+                </select>
+              </div>
+              <div class="archive-control-group">
+                <label class="archive-control-label" for="archive-karat-select">Karat</label>
+                <select id="archive-karat-select" class="sort-select">
+                  <option value="24">24K</option>
+                  <option value="22">22K</option>
+                  <option value="21">21K</option>
+                  <option value="18">18K</option>
+                </select>
+              </div>
+              <div class="archive-control-group">
+                <label class="archive-control-label" for="archive-unit-select">Unit</label>
+                <select id="archive-unit-select" class="sort-select">
+                  <option value="gram">Per gram</option>
+                  <option value="oz">Per oz</option>
+                </select>
+              </div>
             </div>
+          </div>
+          <div class="archive-count-row">
+            <span id="archive-count" class="archive-count-label"></span>
+            <span class="archive-source-legend">
+              <span class="archive-legend-item"><span class="archive-legend-dot archive-legend-dot--baseline"></span> Monthly avg (baseline)</span>
+              <span class="archive-legend-item"><span class="archive-legend-dot archive-legend-dot--local"></span> Daily (your cache)</span>
+            </span>
           </div>
           <div id="archive-list" class="archive-history-list"></div>
           <div id="archive-empty" class="archive-empty" hidden>
-            <p>No archived data yet. Prices are stored automatically as you use the tracker.</p>
+            <p>Loading archive data…</p>
           </div>
         </div>
       </div>
@@ -202,16 +230,24 @@
           </div>
           <div class="download-card">
             <div class="download-card-icon">📅</div>
-            <div class="download-card-title">Archive — CSV</div>
-            <div class="download-card-desc">Export your locally stored historical price snapshots as CSV. Data accumulates daily as you visit.</div>
+            <div class="download-card-title">Daily Archive — CSV</div>
+            <div class="download-card-desc">Your locally cached daily snapshots (up to 90 days). Data grows automatically as you visit the tracker.</div>
             <div class="download-card-actions">
               <button class="btn btn-sm btn-outline" id="export-archive-csv-btn">⬇ Archive CSV</button>
+            </div>
+          </div>
+          <div class="download-card download-card--featured">
+            <div class="download-card-icon">🕰</div>
+            <div class="download-card-title">Full History — CSV</div>
+            <div class="download-card-desc">Monthly averages 2019–present (LBMA baseline) merged with your daily cache. Best for trend analysis.</div>
+            <div class="download-card-actions">
+              <button class="btn btn-sm btn-primary" id="export-historical-csv-btn">⬇ Full History CSV</button>
             </div>
           </div>
           <div class="download-card">
             <div class="download-card-icon">ℹ</div>
             <div class="download-card-title">About the Data</div>
-            <div class="download-card-desc">Prices are spot-linked bullion estimates. AED uses the official UAE Central Bank peg (3.6725). See full methodology for details.</div>
+            <div class="download-card-desc">Prices are spot-linked bullion estimates. AED uses the official UAE Central Bank peg (3.6725). Monthly history: LBMA public records.</div>
             <div class="download-card-actions">
               <a href="methodology.html" class="btn btn-sm btn-ghost">Methodology →</a>
             </div>

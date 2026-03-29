@@ -7,6 +7,7 @@ import * as search from './lib/search.js';
 import * as exp from './lib/export.js';
 import * as history from './lib/history.js';
 import * as debug from './lib/debug.js';
+import { getUnifiedHistory, getBaselineHistory, getHistoryStats } from './lib/historical-data.js';
 import { GoldChart } from './components/chart.js';
 import { injectNav, updateNavLang } from './components/nav.js';
 import { injectFooter } from './components/footer.js';
@@ -475,6 +476,48 @@ function renderAll() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// RENDER — HISTORY STATS STRIP
+// ─────────────────────────────────────────────────────────────────────────────
+
+function renderHistoryStats() {
+  const statsEl = document.getElementById('history-stats-strip');
+  if (!statsEl) return;
+
+  const records = getUnifiedHistory(STATE.history || []);
+  const stats   = getHistoryStats(records);
+
+  function fmtPct(v) {
+    if (v == null) return '—';
+    const sign = v >= 0 ? '+' : '';
+    return `${sign}${v.toFixed(1)}%`;
+  }
+  function fmtPrice(v) {
+    if (v == null) return '—';
+    return `$${Math.round(v).toLocaleString()}`;
+  }
+
+  statsEl.innerHTML = `
+    <div class="hs-item">
+      <span class="hs-label">${t('stats.ath')}</span>
+      <span class="hs-value">${fmtPrice(stats.allTimeHigh)}</span>
+    </div>
+    <div class="hs-item">
+      <span class="hs-label">${t('stats.ytd')}</span>
+      <span class="hs-value hs-value--${stats.ytdChange >= 0 ? 'up' : 'down'}">${fmtPct(stats.ytdChange)}</span>
+    </div>
+    <div class="hs-item">
+      <span class="hs-label">${t('stats.yoy')}</span>
+      <span class="hs-value hs-value--${stats.yoyChange >= 0 ? 'up' : 'down'}">${fmtPct(stats.yoyChange)}</span>
+    </div>
+    <div class="hs-item">
+      <span class="hs-label">${t('stats.since2019')}</span>
+      <span class="hs-value">${fmtPrice(1286)} → ${fmtPrice(stats.latest)}</span>
+    </div>
+  `;
+  statsEl.hidden = false;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // LANGUAGE
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -662,33 +705,53 @@ function setupEventListeners() {
   });
 
   function renderArchivePanel() {
-    const list = document.getElementById('archive-list');
-    const emptyEl = document.getElementById('archive-empty');
+    const list     = document.getElementById('archive-list');
+    const emptyEl  = document.getElementById('archive-empty');
+    const countEl  = document.getElementById('archive-count');
     if (!list) return;
 
-    const history = STATE.history || [];
-    const karat = document.getElementById('archive-karat-select')?.value || '24';
-    const unit = document.getElementById('archive-unit-select')?.value || 'gram';
+    const karat  = document.getElementById('archive-karat-select')?.value || '24';
+    const unit   = document.getElementById('archive-unit-select')?.value || 'gram';
+    const range  = document.getElementById('archive-range-select')?.value || 'ALL';
     const purity = { '24': 1, '22': 22/24, '21': 21/24, '18': 18/24 }[karat] || 1;
-    const TROY_OZ_GRAMS = 31.1035;
+    const TROY   = CONSTANTS.TROY_OZ_GRAMS;
+    const AED    = CONSTANTS.AED_PEG;
 
-    if (history.length === 0) {
+    // Use unified history: monthly baseline + daily cache
+    const allRecords = getUnifiedHistory(STATE.history || []);
+    const records    = range === 'ALL' ? allRecords : allRecords.filter(r => {
+      const days = { '30D':30, '90D':90, '1Y':365, '3Y':365*3, '5Y':365*5 }[range] || Infinity;
+      const cutoff = new Date(Date.now() - days * 86400000).toISOString().slice(0,10);
+      return r.date >= cutoff;
+    });
+
+    if (countEl) countEl.textContent = `${records.length} ${records.length === 1 ? 'entry' : 'entries'}`;
+
+    if (records.length === 0) {
       list.innerHTML = '';
       if (emptyEl) emptyEl.hidden = false;
       return;
     }
     if (emptyEl) emptyEl.hidden = true;
 
-    const rows = [...history].reverse().map(snap => {
+    const rows = [...records].reverse().map(snap => {
       const pricePerOz = snap.price * purity;
-      const displayVal = unit === 'gram'
-        ? (pricePerOz / TROY_OZ_GRAMS).toFixed(2)
-        : pricePerOz.toFixed(2);
+      const usdVal     = unit === 'gram' ? pricePerOz / TROY : pricePerOz;
+      const aedVal     = usdVal * AED;
+      const isBaseline = snap.granularity === 'monthly';
+      const sourceTag  = isBaseline
+        ? `<span class="archive-row-source archive-row-source--baseline">monthly avg</span>`
+        : `<span class="archive-row-source archive-row-source--local">daily</span>`;
+
       return `
         <div class="archive-history-row">
           <span class="archive-row-date">${snap.date}</span>
-          <span class="archive-row-price">$${parseFloat(displayVal).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}</span>
-          <span class="archive-row-karat">${karat}K ${unit === 'gram' ? '/g' : '/oz'} USD</span>
+          <div class="archive-row-prices">
+            <span class="archive-row-price">$${usdVal.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}</span>
+            <span class="archive-row-aed">${aedVal.toLocaleString('en-AE', {minimumFractionDigits:2, maximumFractionDigits:2})} AED</span>
+          </div>
+          <span class="archive-row-unit">${karat}K ${unit === 'gram' ? '/g' : '/oz'}</span>
+          ${sourceTag}
         </div>`;
     }).join('');
     list.innerHTML = rows;
@@ -697,32 +760,22 @@ function setupEventListeners() {
   // Wire archive selects
   document.getElementById('archive-karat-select')?.addEventListener('change', renderArchivePanel);
   document.getElementById('archive-unit-select')?.addEventListener('change', renderArchivePanel);
+  document.getElementById('archive-range-select')?.addEventListener('change', renderArchivePanel);
 
-  // Archive CSV export
+  // Archive CSV export (daily cached snapshots)
   document.getElementById('export-archive-csv-btn')?.addEventListener('click', () => {
-    const history = STATE.history || [];
-    if (!history.length) { alert('No archive data yet. Prices are stored as you use the tracker.'); return; }
-    const lines = ['Date,XAU/USD,24K/g USD,22K/g USD,21K/g USD,18K/g USD'];
-    history.forEach(snap => {
-      const p = snap.price;
-      const TROY = 31.1035;
-      lines.push([
-        snap.date,
-        p.toFixed(2),
-        (p / TROY).toFixed(4),
-        (p * 22/24 / TROY).toFixed(4),
-        (p * 21/24 / TROY).toFixed(4),
-        (p * 18/24 / TROY).toFixed(4),
-      ].join(','));
-    });
-    const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url;
-    a.download = `gold-archive-${new Date().toISOString().slice(0,10)}.csv`;
-    a.click(); URL.revokeObjectURL(url);
+    const karat = document.getElementById('archive-karat-select')?.value || '24';
+    exp.exportArchiveCSV(STATE.history || [], karat, CONSTANTS.AED_PEG);
   });
 
-  // ── Export ───────────────────────────────────────────────────────────────
+  // Historical baseline CSV export (monthly 2019-present + daily merged)
+  document.getElementById('export-historical-csv-btn')?.addEventListener('click', () => {
+    const karat   = document.getElementById('archive-karat-select')?.value || '24';
+    const records = getUnifiedHistory(STATE.history || []);
+    exp.exportHistoricalCSV(records, karat);
+  });
+
+  // ── Export (current snapshot) ────────────────────────────────────────────
   document.getElementById('export-csv-btn')?.addEventListener('click', () => {
     exp.exportCSV(
       COUNTRIES.filter(c => c.group === STATE.activeTab),
@@ -902,10 +955,12 @@ async function init() {
   // ⑤ Apply language: sets html[lang/dir], translates [data-i18n], calls renderAll.
   applyLanguage();
 
-  // ⑥ Init chart (loads lib async; renders when data arrives)
+  // ⑥ Init chart with historical data (loads lib async)
   if (document.getElementById('chart-container')) {
     _chart = new GoldChart('chart-container', STATE.lang);
+    _chart.setDailyHistory(STATE.history); // inject daily cache for merged view
     setupChartControls();
+    renderHistoryStats();
   }
 
   // ⑦ Fetch live data.
@@ -920,6 +975,7 @@ async function init() {
   // ⑧ Recalculate and final render.
   recalcPrices();
   renderAll();
+  renderHistoryStats();
 
   // ⑨ No-data state.
   const noDataEl = document.getElementById('no-data-state');
