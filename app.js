@@ -10,6 +10,7 @@ import * as debug from './lib/debug.js';
 import { GoldChart } from './components/chart.js';
 import { injectNav, updateNavLang } from './components/nav.js';
 import { injectFooter } from './components/footer.js';
+import { injectTicker, updateTicker, updateTickerLang } from './components/ticker.js';
 import * as alerts from './lib/alerts.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -387,6 +388,24 @@ function renderCountryGrid() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// RENDER — TICKER
+// ─────────────────────────────────────────────────────────────────────────────
+
+function renderTicker() {
+  if (!STATE.goldPriceUsdPerOz) return;
+  const karatPurities = { '24': 1, '22': 22/24, '21': 21/24, '18': 18/24 };
+  const TROY_OZ_GRAMS = 31.1035;
+  const AED_PEG = 3.6725;
+  updateTicker({
+    xauUsd:  STATE.goldPriceUsdPerOz,
+    uae24k:  (STATE.goldPriceUsdPerOz * karatPurities['24'] / TROY_OZ_GRAMS) * AED_PEG,
+    uae22k:  (STATE.goldPriceUsdPerOz * karatPurities['22'] / TROY_OZ_GRAMS) * AED_PEG,
+    uae21k:  (STATE.goldPriceUsdPerOz * karatPurities['21'] / TROY_OZ_GRAMS) * AED_PEG,
+    uae18k:  (STATE.goldPriceUsdPerOz * karatPurities['18'] / TROY_OZ_GRAMS) * AED_PEG,
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // RENDER — ALL
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -396,6 +415,7 @@ function renderAll() {
   renderChangePanel();
   renderKaratTable();
   renderCountryGrid();
+  renderTicker();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -568,6 +588,84 @@ function setupEventListeners() {
     renderCountryGrid();
   });
 
+  // ── Workspace tabs (chart/archive/downloads) ──────────────────
+  function switchWorkspace(panelId) {
+    document.querySelectorAll('.workspace-tab').forEach(t => {
+      const isActive = t.dataset.workspace === panelId;
+      t.classList.toggle('active', isActive);
+      t.setAttribute('aria-selected', String(isActive));
+    });
+    document.querySelectorAll('.workspace-panel').forEach(p => {
+      p.classList.toggle('active', p.dataset.workspacePanel === panelId);
+    });
+    if (panelId === 'archive') renderArchivePanel();
+  }
+
+  document.querySelectorAll('.workspace-tab').forEach(tab => {
+    tab.addEventListener('click', () => switchWorkspace(tab.dataset.workspace));
+  });
+
+  function renderArchivePanel() {
+    const list = document.getElementById('archive-list');
+    const emptyEl = document.getElementById('archive-empty');
+    if (!list) return;
+
+    const history = STATE.history || [];
+    const karat = document.getElementById('archive-karat-select')?.value || '24';
+    const unit = document.getElementById('archive-unit-select')?.value || 'gram';
+    const purity = { '24': 1, '22': 22/24, '21': 21/24, '18': 18/24 }[karat] || 1;
+    const TROY_OZ_GRAMS = 31.1035;
+
+    if (history.length === 0) {
+      list.innerHTML = '';
+      if (emptyEl) emptyEl.hidden = false;
+      return;
+    }
+    if (emptyEl) emptyEl.hidden = true;
+
+    const rows = [...history].reverse().map(snap => {
+      const pricePerOz = snap.price * purity;
+      const displayVal = unit === 'gram'
+        ? (pricePerOz / TROY_OZ_GRAMS).toFixed(2)
+        : pricePerOz.toFixed(2);
+      return `
+        <div class="archive-history-row">
+          <span class="archive-row-date">${snap.date}</span>
+          <span class="archive-row-price">$${parseFloat(displayVal).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}</span>
+          <span class="archive-row-karat">${karat}K ${unit === 'gram' ? '/g' : '/oz'} USD</span>
+        </div>`;
+    }).join('');
+    list.innerHTML = rows;
+  }
+
+  // Wire archive selects
+  document.getElementById('archive-karat-select')?.addEventListener('change', renderArchivePanel);
+  document.getElementById('archive-unit-select')?.addEventListener('change', renderArchivePanel);
+
+  // Archive CSV export
+  document.getElementById('export-archive-csv-btn')?.addEventListener('click', () => {
+    const history = STATE.history || [];
+    if (!history.length) { alert('No archive data yet. Prices are stored as you use the tracker.'); return; }
+    const lines = ['Date,XAU/USD,24K/g USD,22K/g USD,21K/g USD,18K/g USD'];
+    history.forEach(snap => {
+      const p = snap.price;
+      const TROY = 31.1035;
+      lines.push([
+        snap.date,
+        p.toFixed(2),
+        (p / TROY).toFixed(4),
+        (p * 22/24 / TROY).toFixed(4),
+        (p * 21/24 / TROY).toFixed(4),
+        (p * 18/24 / TROY).toFixed(4),
+      ].join(','));
+    });
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url;
+    a.download = `gold-archive-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click(); URL.revokeObjectURL(url);
+  });
+
   // ── Export ───────────────────────────────────────────────────────────────
   document.getElementById('export-csv-btn')?.addEventListener('click', () => {
     exp.exportCSV(
@@ -729,10 +827,12 @@ async function init() {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       cache.savePreference('lang', STATE.lang);
       updateNavLang(STATE.lang);
+      updateTickerLang(STATE.lang);
       applyLanguage();
     });
   });
   injectFooter(STATE.lang, 0);
+  injectTicker(STATE.lang, 0);
 
   // ② Attach all event listeners FIRST.
   setupEventListeners();

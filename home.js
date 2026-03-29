@@ -10,6 +10,7 @@ import * as calc from './lib/price-calculator.js';
 import * as fmt from './lib/formatter.js';
 import { injectNav, updateNavLang } from './components/nav.js';
 import { injectFooter } from './components/footer.js';
+import { injectTicker, updateTicker, updateTickerLang } from './components/ticker.js';
 
 // ── State ──────────────────────────────────────────────────────────────────
 const LANG_KEY = 'user_prefs';
@@ -241,6 +242,16 @@ function renderHeroCard() {
     statusEl.textContent = status === 'open' ? tx('marketOpen') : tx('marketClosed');
     statusEl.className = 'hlc-market ' + (status === 'open' ? 'hlc-market--open' : 'hlc-market--closed');
   }
+
+  // Update bottom ticker
+  const k18 = KARATS.find(k => k.code === '18');
+  updateTicker({
+    xauUsd:  goldPrice,
+    uae24k:  aed24g,
+    uae22k:  calc.usdPerGram(goldPrice, k22.purity) * CONSTANTS.AED_PEG,
+    uae21k:  calc.usdPerGram(goldPrice, k21.purity) * CONSTANTS.AED_PEG,
+    uae18k:  calc.usdPerGram(goldPrice, k18?.purity ?? 0.75) * CONSTANTS.AED_PEG,
+  });
 }
 
 // ── Render GCC grid ────────────────────────────────────────────────────────
@@ -399,10 +410,12 @@ async function init() {
       lang = lang === 'en' ? 'ar' : 'en';
       saveLang(lang);
       updateNavLang(lang);
+      updateTickerLang(lang);
       applyLangToPage();
     });
   });
   injectFooter(lang, 0);
+  injectTicker(lang, 0);
 
   // Load cache first for instant render
   const STATE_STUB = {

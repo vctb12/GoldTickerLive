@@ -28,6 +28,7 @@ import { usdPerGram, usdPerOz } from '../lib/price-calculator.js';
 import { formatPrice } from '../lib/formatter.js';
 import { injectNav, updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
+import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
 
 // Minimal shared STATE for country pages
 const STATE = {
@@ -292,6 +293,19 @@ async function fetchLiveData(cfg) {
     }
 
     renderAll(cfg);
+    // Update bottom ticker with latest UAE prices
+    if (STATE.goldPriceUsdPerOz) {
+      const AED_PEG = 3.6725;
+      const TROY = 31.1035;
+      const p = STATE.goldPriceUsdPerOz;
+      updateTicker({
+        xauUsd:  p,
+        uae24k:  (p * 1    / TROY) * AED_PEG,
+        uae22k:  (p * 22/24 / TROY) * AED_PEG,
+        uae21k:  (p * 21/24 / TROY) * AED_PEG,
+        uae18k:  (p * 18/24 / TROY) * AED_PEG,
+      });
+    }
   } catch (e) {
     console.warn('Country page fetch error:', e);
   }
@@ -313,6 +327,7 @@ export async function initCountryPage(cfg) {
   // Inject nav + footer (depth=1 since we're in /countries/)
   const navResult = injectNav(STATE.lang, 1);
   injectFooter(STATE.lang, 1);
+  injectTicker(STATE.lang, 1);
 
   // Wire language toggle
   navResult.getLangToggleButtons().forEach(btn => {
@@ -322,6 +337,7 @@ export async function initCountryPage(cfg) {
       document.documentElement.lang = STATE.lang;
       document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
       updateNavLang(STATE.lang);
+      updateTickerLang(STATE.lang);
       renderAll(cfg);
     });
   });

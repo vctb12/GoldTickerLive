@@ -119,14 +119,23 @@
       <p class="section-note" data-i18n="change.note">24K per ounce · USD · Spot-linked estimate</p>
     </section>
 
-    <!-- ═══════════════════════ PRICE CHART ═══════════════════════ -->
+    <!-- ═══════════════════════ CHART & DATA WORKSPACE ═══════════════════════ -->
     <section class="section" id="section-chart">
       <div class="section-header">
         <div>
           <h2 data-i18n="chart.title">Price Chart</h2>
-          <p class="section-note" data-i18n="chart.note">XAU/USD spot · Historical snapshot stored locally</p>
+          <p class="section-note" data-i18n="chart.note">XAU/USD spot · Historical snapshots stored locally</p>
         </div>
-        <div class="chart-controls-right">
+        <div class="workspace-tabs" role="tablist" aria-label="Chart workspace">
+          <button class="workspace-tab active" data-workspace="chart" role="tab" aria-selected="true" id="ws-tab-chart">📈 Chart</button>
+          <button class="workspace-tab" data-workspace="archive" role="tab" aria-selected="false" id="ws-tab-archive">📅 Archive</button>
+          <button class="workspace-tab" data-workspace="downloads" role="tab" aria-selected="false" id="ws-tab-downloads">⬇ Downloads</button>
+        </div>
+      </div>
+
+      <!-- CHART PANEL -->
+      <div class="workspace-panel active" data-workspace-panel="chart" id="ws-panel-chart">
+        <div class="chart-controls-right" style="margin-bottom: 0.75rem;">
           <div class="chart-range-pills" role="group" aria-label="Time range">
             <button class="chart-range-btn active" data-range="24H">24H</button>
             <button class="chart-range-btn" data-range="7D">7D</button>
@@ -135,17 +144,86 @@
             <button class="chart-range-btn" data-range="1Y">1Y</button>
           </div>
         </div>
+        <div id="chart-container" class="chart-container" aria-label="Gold price chart"></div>
+        <p class="chart-data-note section-note" data-i18n="chart.dataNote">
+          Chart shows locally stored price snapshots — data accumulates while you use the site
+        </p>
       </div>
-      <div id="chart-container" class="chart-container" aria-label="Gold price chart"></div>
-      <p class="chart-data-note section-note" data-i18n="chart.dataNote">
-        Chart shows locally stored price snapshots — data accumulates while you use the site
-      </p>
+
+      <!-- ARCHIVE PANEL -->
+      <div class="workspace-panel" data-workspace-panel="archive" id="ws-panel-archive">
+        <div class="archive-panel-inner">
+          <div class="section-header" style="margin-bottom: 1rem;">
+            <div>
+              <h3 style="font-size: 1rem; font-weight: 700;">Price Archive</h3>
+              <p class="section-note">Daily snapshots stored in your browser · Most recent first</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <label style="font-size: 0.82rem; color: var(--color-text-muted);">Karat:</label>
+              <select id="archive-karat-select" class="sort-select" style="min-width: 80px;">
+                <option value="24">24K</option>
+                <option value="22">22K</option>
+                <option value="21">21K</option>
+                <option value="18">18K</option>
+              </select>
+              <label style="font-size: 0.82rem; color: var(--color-text-muted);">Unit:</label>
+              <select id="archive-unit-select" class="sort-select" style="min-width: 90px;">
+                <option value="gram">Per gram</option>
+                <option value="oz">Per oz</option>
+              </select>
+            </div>
+          </div>
+          <div id="archive-list" class="archive-history-list"></div>
+          <div id="archive-empty" class="archive-empty" hidden>
+            <p>No archived data yet. Prices are stored automatically as you use the tracker.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOWNLOADS PANEL -->
+      <div class="workspace-panel" data-workspace-panel="downloads" id="ws-panel-downloads">
+        <div class="downloads-panel-inner">
+          <div class="download-card">
+            <div class="download-card-icon">📊</div>
+            <div class="download-card-title">Current Prices — CSV</div>
+            <div class="download-card-desc">Export today's gold prices for all countries and karats as a spreadsheet-ready CSV file.</div>
+            <div class="download-card-actions">
+              <button class="btn btn-sm btn-outline" id="export-csv-btn" data-i18n="export.csv">⬇ CSV</button>
+            </div>
+          </div>
+          <div class="download-card">
+            <div class="download-card-icon">🗃</div>
+            <div class="download-card-title">Current Prices — JSON</div>
+            <div class="download-card-desc">Full structured export with all prices, metadata, and timestamps in machine-readable JSON format.</div>
+            <div class="download-card-actions">
+              <button class="btn btn-sm btn-outline" id="export-json-btn" data-i18n="export.json">⬇ JSON</button>
+            </div>
+          </div>
+          <div class="download-card">
+            <div class="download-card-icon">📅</div>
+            <div class="download-card-title">Archive — CSV</div>
+            <div class="download-card-desc">Export your locally stored historical price snapshots as CSV. Data accumulates daily as you visit.</div>
+            <div class="download-card-actions">
+              <button class="btn btn-sm btn-outline" id="export-archive-csv-btn">⬇ Archive CSV</button>
+            </div>
+          </div>
+          <div class="download-card">
+            <div class="download-card-icon">ℹ</div>
+            <div class="download-card-title">About the Data</div>
+            <div class="download-card-desc">Prices are spot-linked bullion estimates. AED uses the official UAE Central Bank peg (3.6725). See full methodology for details.</div>
+            <div class="download-card-actions">
+              <a href="methodology.html" class="btn btn-sm btn-ghost">Methodology →</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- ═══════════════════════ KARAT TABLE ═══════════════════════ -->
     <section class="section" id="section-karat" aria-labelledby="karat-title">
       <div class="section-header">
         <h2 id="karat-title" data-i18n="karat.title">Price by Karat</h2>
+        <p class="section-note">UAE gold rate · AED uses official 3.6725 peg</p>
         <div class="unit-toggle-group" role="group" aria-label="Price unit">
           <button class="unit-btn active" id="unit-gram" data-unit="gram" data-i18n="unit.gram">Per Gram</button>
           <button class="unit-btn" id="unit-oz" data-unit="oz" data-i18n="unit.oz">Per Ounce</button>
@@ -208,10 +286,6 @@
             placeholder="Search countries..."
             aria-label="Search countries" />
         </div>
-        <div class="control-group export-group">
-          <button id="export-csv-btn" class="export-btn" title="Export CSV" data-i18n="export.csv">⬇ CSV</button>
-          <button id="export-json-btn" class="export-btn" title="Export JSON" data-i18n="export.json">⬇ JSON</button>
-        </div>
       </div>
 
       <!-- Country grid -->
@@ -271,6 +345,17 @@
       <div id="alerts-empty" class="alerts-empty" hidden>
         <div class="empty-icon" aria-hidden="true">🔔</div>
         <p data-i18n="alerts.empty">No alerts set yet. Add one above to get notified.</p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════ RELATED TOOLS ═══════════════════════ -->
+    <section class="section section-compact" aria-label="Related tools">
+      <div class="related-tools-row">
+        <a href="calculator.html" class="related-tool-link">🧮 Gold Calculator</a>
+        <a href="countries/uae.html" class="related-tool-link">🇦🇪 UAE Deep Dive</a>
+        <a href="methodology.html" class="related-tool-link">🔬 Data Methodology</a>
+        <a href="insights.html" class="related-tool-link">📊 Market Insights</a>
+        <a href="learn.html" class="related-tool-link">📚 Gold Guide</a>
       </div>
     </section>
 
