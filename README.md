@@ -24,16 +24,16 @@ A bilingual (English/Arabic) web app for live gold prices with local currency es
 
 ## Features
 
-- **Live XAU/USD spot price** — refreshed every 90 seconds
-- **Daily FX conversions** — 24 countries, refreshed once per day
-- **AED fixed peg** — hardcoded at 3.6725 (official UAE Central Bank peg)
-- **7 karats** — 24K, 22K, 21K, 20K, 18K, 16K, 14K with purity-adjusted prices
-- **Per gram and per ounce** — toggle between units
-- **Bilingual UI** — English (default) and Arabic with full RTL layout
-- **Price change panel** — vs previous fetch and vs Dubai day open
-- **Offline-first** — localStorage cache with 5-tier graceful degradation
-- **Export** — CSV and JSON per tab
-- **Debug mode** — simulate API failures, inspect state
+- **Live XAU/USD spot price** - refreshed every 90 seconds
+- **Daily FX conversions** - 24 countries, refreshed once per day
+- **AED fixed peg** - hardcoded at 3.6725 (official UAE Central Bank peg)
+- **7 karats** - 24K, 22K, 21K, 20K, 18K, 16K, 14K with purity-adjusted prices
+- **Per gram and per ounce** - toggle between units
+- **Bilingual UI** - English (default) and Arabic with full RTL layout
+- **Price change panel** - vs previous fetch and vs Dubai day open
+- **Offline-first** - localStorage cache with 5-tier graceful degradation
+- **Export** - CSV and JSON per tab
+- **Debug mode** - simulate API failures, inspect state
 
 ## Countries
 
