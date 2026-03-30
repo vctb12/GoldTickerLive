@@ -326,7 +326,7 @@
   padding: 0.75rem 1.1rem;
   background: rgba(255,255,255,0.07);
   border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   backdrop-filter: blur(6px);
   min-width: 110px;
 }
@@ -353,7 +353,7 @@
   padding: 0.55rem 1.1rem;
   background: var(--color-surface);
   border: 1px solid var(--color-border-subtle);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   font-size: 0.84rem;
   font-weight: 600;
   color: var(--color-text-muted);

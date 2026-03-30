@@ -166,6 +166,9 @@ img, svg { display: block; }
   color: var(--color-text-muted);
   text-decoration: none;
   white-space: nowrap;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   transition: background 0.22s cubic-bezier(0.4, 0, 0.2, 1),
               color 0.22s cubic-bezier(0.4, 0, 0.2, 1),
               transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
@@ -291,13 +294,15 @@ img, svg { display: block; }
   min-height: 100%;
 }
 .nav-drawer-link {
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 0.75rem 1rem;
   border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-text-muted);
   text-decoration: none;
+  min-height: 44px;
   transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
               color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
               transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -782,7 +787,7 @@ main {
 .num-col { text-align: end !important; }
 
 .skeleton-row td { padding: 0.65rem 1rem; }
-.skeleton-row .skeleton-line { height: 14px; border-radius: 4px; }
+.skeleton-row .skeleton-line { height: 14px; border-radius: var(--radius-xs); }
 
 /* ═══════════════════════════════════════════════
    Country Section — Tab bar
@@ -1518,7 +1523,7 @@ main {
   cursor: pointer;
   border: 1.5px solid transparent;
   white-space: nowrap;
-  min-height: 42px;
+  min-height: 44px;
   letter-spacing: 0.01em;
 }
 .btn:hover { text-decoration: none; }
@@ -1780,7 +1785,7 @@ details[open] > .faq-q::after { content: '−'; }
   font-size: 0.85rem;
   font-family: var(--font-main);
   color: var(--color-text);
-  min-height: 36px;
+  min-height: 44px;
   cursor: pointer;
 }
 .alert-direction-select:focus {
@@ -1797,7 +1802,7 @@ details[open] > .faq-q::after { content: '−'; }
   font-size: 0.9rem;
   font-family: var(--font-main);
   color: var(--color-text);
-  min-height: 36px;
+  min-height: 44px;
 }
 .alert-price-input:focus {
   outline: none;
@@ -1837,6 +1842,7 @@ details[open] > .faq-q::after { content: '−'; }
               color 0.22s cubic-bezier(0.4, 0, 0.2, 1),
               transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 44px;
 }
 .nav-dropdown-btn:hover {
   background: var(--color-gold-tint);
@@ -1865,7 +1871,7 @@ details[open] > .faq-q::after { content: '−'; }
   min-width: 200px;
   background: #fff;
   border: 1px solid rgba(201, 168, 76, 0.2);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
   padding: 6px;
   opacity: 0;
@@ -1883,7 +1889,7 @@ details[open] > .faq-q::after { content: '−'; }
 .nav-dropdown-item {
   display: block;
   padding: 0.55rem 1rem;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 0.88rem;
   color: var(--color-text);
   text-decoration: none;
@@ -2008,7 +2014,7 @@ details[open] > .faq-q::after { content: '−'; }
   line-height: 1;
   cursor: pointer;
   padding: 0 0.75rem;
-  height: 38px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   transition: color 0.15s ease;
@@ -2047,7 +2053,7 @@ body.has-ticker { padding-bottom: 38px; }
   color: var(--color-text-muted);
   transition: all 0.18s ease;
   white-space: nowrap;
-  min-height: 38px;
+  min-height: 44px;
 }
 .workspace-tab:hover { background: var(--color-surface); color: var(--color-text); }
 .workspace-tab.active {
@@ -2120,7 +2126,7 @@ body.has-ticker { padding-bottom: 38px; }
 .karat-purity-bar {
   display: inline-block;
   height: 4px;
-  border-radius: 99px;
+  border-radius: var(--radius-pill);
   background: linear-gradient(90deg, var(--color-gold) 0%, var(--color-gold-light) 100%);
   vertical-align: middle;
   margin-inline-start: 0.5rem;
@@ -2168,7 +2174,7 @@ body.has-ticker { padding-bottom: 38px; }
   font-size: 0.75rem;
   font-weight: 700;
   padding: 0.2rem 0.6rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 /* These two already existed above; this reinforces them alongside .alert-direction-badge */
 .alert-direction-above { background: var(--color-up-bg); color: var(--color-up); }
@@ -2183,6 +2189,10 @@ body.has-ticker { padding-bottom: 38px; }
   cursor: pointer;
   color: var(--color-text-muted);
   transition: all 0.15s ease;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-main);
 }
 .alert-btn:hover { border-color: var(--color-gold); color: var(--color-gold-dark); }
 .alert-btn-delete { color: var(--color-error); border-color: rgba(192,24,42,0.25); }
@@ -2197,7 +2207,7 @@ body.has-ticker { padding-bottom: 38px; }
   background: #1a1612;
   color: #fff;
   border: 1px solid rgba(196, 153, 62, 0.4);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: 0.85rem 1.4rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
   font-size: 0.9rem;
@@ -2247,12 +2257,13 @@ body.has-ticker { padding-bottom: 38px; }
   padding: 0.45rem 1rem;
   background: var(--color-surface);
   border: 1px solid var(--color-border-subtle);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   font-size: 0.83rem;
   font-weight: 600;
   color: var(--color-text-muted);
   text-decoration: none;
   transition: all 0.18s ease;
+  min-height: 44px;
 }
 .related-tool-link:hover {
   border-color: var(--color-gold);
@@ -2277,7 +2288,7 @@ body.has-ticker { padding-bottom: 38px; }
     var(--color-surface-2) 75%);
   background-size: 800px 100%;
   animation: skeleton-shimmer 1.4s ease-in-out infinite;
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   vertical-align: middle;
 }
 
@@ -2291,7 +2302,7 @@ body.has-ticker { padding-bottom: 38px; }
   font-size: 0.72rem;
   font-weight: 700;
   padding: 0.15rem 0.45rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   margin-top: 0.25rem;
   width: fit-content;
   font-variant-numeric: tabular-nums;
@@ -2356,6 +2367,8 @@ body.has-ticker { padding-bottom: 38px; }
   font-weight: 700;
   cursor: pointer;
   transition: all 0.18s ease;
+  min-height: 44px;
+  font-family: var(--font-main);
 }
 .retry-btn:hover { background: var(--color-gold-light); transform: translateY(-1px); }
 
@@ -2444,6 +2457,7 @@ body > * { max-width: 100%; }
   transition: all 0.15s ease;
   white-space: nowrap;
   flex-shrink: 0;
+  min-height: 44px;
 }
 .chart-range-btn:hover { border-color: var(--color-gold); color: var(--color-gold-dark); }
 .chart-range-btn.active {
