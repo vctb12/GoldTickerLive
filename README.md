@@ -17,7 +17,6 @@ A bilingual (English/Arabic) web app for live gold prices with local currency es
 
 <p align="center">
   <img src="./assets/screenshots/home.png" alt="Home" width="32%" />
-  <img src="./assets/screenshots/gold-guide.png" alt="Gold Guide" width="32%" />
   <img src="./assets/screenshots/calculator.png" alt="Calculator" width="32%" />
   <img src="./assets/screenshots/methodology.png" alt="Methodology" width="32%" />
 </p>
