@@ -242,14 +242,16 @@ export function injectNav(lang = 'en', depth = 0) {
          class="nav-link${homeActive ? ' nav-link--active' : ''}"
          role="listitem"
       >${data.home.label}</a>
+      
+  
+
+      ${desktopDropdownsHtml}
        <a href="${investHref}"
      class="nav-link${investActive ? ' nav-link--active' : ''}"
      role="listitem"
      data-nav-key="invest"
     >${data.invest.label}</a>
-  
-
-      ${desktopDropdownsHtml}
+    
     </div>
 
     <!-- Right-side actions -->
@@ -286,14 +288,16 @@ export function injectNav(lang = 'en', depth = 0) {
       <a href="${homeHref}"
          class="nav-drawer-link${homeActive ? ' nav-link--active' : ''}"
       >${data.home.label}</a>
-     <!-- Invest (direct) -->
+   
+
+      <!-- Grouped sections -->
+      ${mobileGroupsHtml}
+
+        <!-- Invest (direct) -->
     <a href="${investHref}"
      class="nav-drawer-link${investActive ? ' nav-link--active' : ''}"
      data-nav-key="invest"
     >${data.invest.label}</a>
-
-      <!-- Grouped sections -->
-      ${mobileGroupsHtml}
 
       <!-- Language toggle -->
       <button id="nav-lang-toggle-mobile"
