@@ -2,6 +2,22 @@
 
 A bilingual (English/Arabic) web app for live gold prices with local currency estimates across GCC, Levant, and African markets.
 
+## Live Demo
+[Open the site](https://vctb12.github.io/Gold-Prices/)
+
+## Highlights
+- Live gold spot pricing
+- Karat-based calculations
+- Multi-country local currency estimates
+- English + Arabic UI
+- Calculator, charts, and downloadable exports
+- Offline-friendly behavior
+
+## Screenshots
+![Home](./assets/screenshots/home.png)
+![Tracker](./assets/screenshots/tracker.png)
+![Calculator](./assets/screenshots/calculator.png)
+
 ## Features
 
 - **Live XAU/USD spot price** — refreshed every 90 seconds
