@@ -689,7 +689,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.48rem 1rem;
+  padding: 0.6rem 1rem;
+  min-height: 44px;
   background: var(--color-surface, #fff);
   border: 1px solid var(--color-border-subtle, rgba(0,0,0,0.07));
   border-radius: var(--radius-pill);
@@ -942,6 +943,7 @@
   .hero { padding: 2.5rem 1.1rem 2rem; }
   .hero-ctas { flex-direction: column; gap: 0.6rem; }
   .hero-ctas .btn { width: 100%; justify-content: center; text-align: center; }
+  .hero-ctas-secondary { justify-content: center; }
 
   .trust-inner { gap: 0.35rem; justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
   .trust-item  { font-size: 0.7rem; padding: 0.25rem 0.55rem; flex-shrink: 0; }
@@ -1010,6 +1012,7 @@
 [dir="rtl"] .hero-inner          { direction: rtl; }
 [dir="rtl"] .hero-badge           { flex-direction: row-reverse; }
 [dir="rtl"] .hero-ctas            { flex-direction: row-reverse; }
+[dir="rtl"] .hero-ctas-secondary { flex-direction: row-reverse; }
 [dir="rtl"] .hero-lead            { text-align: right; }
 [dir="rtl"] .trust-inner          { flex-direction: row-reverse; }
 [dir="rtl"] .trust-item           { flex-direction: row-reverse; }

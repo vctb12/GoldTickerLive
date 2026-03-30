@@ -571,10 +571,11 @@ main {
   margin-bottom: 1.25rem;
 }
 .section-header h2 {
-  font-size: 1.1rem;
+  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
   font-weight: 700;
   color: var(--color-gold-deep);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
 }
 .section-note {
   font-size: 0.72rem;
@@ -1868,7 +1869,7 @@ details[open] > .faq-q::after { content: '−'; }
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
-  min-width: 200px;
+  min-width: 220px;
   background: #fff;
   border: 1px solid rgba(201, 168, 76, 0.2);
   border-radius: var(--radius-md);
@@ -1887,8 +1888,10 @@ details[open] > .faq-q::after { content: '−'; }
 }
 
 .nav-dropdown-item {
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 0.55rem 1rem;
+  min-height: 40px;
   border-radius: var(--radius-sm);
   font-size: 0.88rem;
   color: var(--color-text);
