@@ -3,414 +3,2647 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Live gold spot price tracker. Prices in 24K, 22K, 21K, 18K per gram and per ounce across GCC, Levant, Africa and global currencies. Updated every 90 seconds." />
-  <meta name="keywords" content="gold price today, live gold price, UAE gold rate, gold per gram, 24K gold, 22K gold, GCC gold prices, أسعار الذهب" />
-  <meta property="og:title" content="Live Gold Prices Tracker | أسعار الذهب المباشرة" />
-  <meta property="og:description" content="Live gold spot price in 24 countries and 7 karats. Updated every 90 seconds. Bilingual English/Arabic." />
+  <meta
+    name="description"
+    content="Live gold tracker with real market workspace, UAE/GCC pricing, charting, long-run monthly history since 1833, date lookup, alerts, and downloads."
+  />
+  <meta name="theme-color" content="#0d0d0d" />
+  <meta property="og:title" content="Live Gold Tracker Workspace" />
+  <meta property="og:description" content="Track live gold, browse long-run history, compare karats, and download data." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/tracker.html" />
-  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:card" content="summary_large_image" />
   <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/tracker.html" />
-  <title>Live Gold Tracker — All Karats &amp; Currencies | أسعار الذهب</title>
+  <title>Gold Tracker Workspace | Live, History, Alerts & Downloads</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Live Gold Prices Tracker",
-    "description": "Live gold spot prices by karat and currency for GCC and Arab world",
-    "url": "https://vctb12.github.io/Gold-Prices/tracker.html",
-    "inLanguage": ["en", "ar"],
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {"@type":"ListItem","position":1,"name":"Home","item":"https://vctb12.github.io/Gold-Prices/"},
-        {"@type":"ListItem","position":2,"name":"Live Tracker","item":"https://vctb12.github.io/Gold-Prices/tracker.html"}
-      ]
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root {
+      --tracker-bg: #0d0d0d;
+      --tracker-surface: #141414;
+      --tracker-surface-2: #1b1b1b;
+      --tracker-surface-3: #222;
+      --tracker-card: rgba(255,255,255,0.035);
+      --tracker-card-2: rgba(255,255,255,0.055);
+      --tracker-border: rgba(201, 168, 76, 0.16);
+      --tracker-border-strong: rgba(201, 168, 76, 0.34);
+      --tracker-text: #f2ead7;
+      --tracker-muted: rgba(242, 234, 215, 0.72);
+      --tracker-gold: #c9a84c;
+      --tracker-gold-2: #f0c040;
+      --tracker-green: #4caf7d;
+      --tracker-red: #e06363;
+      --tracker-amber: #e0a020;
+      --tracker-radius-xl: 28px;
+      --tracker-radius-lg: 22px;
+      --tracker-radius-md: 16px;
+      --tracker-radius-sm: 12px;
+      --tracker-pill: 999px;
+      --tracker-shadow: 0 18px 40px rgba(0,0,0,0.26);
+      --tracker-shadow-soft: 0 10px 24px rgba(0,0,0,0.16);
+      --tracker-max: 1260px;
+      --tracker-transition: 220ms ease;
     }
-  }
-  </script>
+
+    html { scroll-behavior: smooth; }
+
+    body.tracker-workspace-page {
+      background:
+        radial-gradient(circle at top left, rgba(201,168,76,0.16), transparent 24%),
+        radial-gradient(circle at top right, rgba(240,192,64,0.10), transparent 30%),
+        var(--tracker-bg);
+      color: var(--tracker-text);
+      min-height: 100vh;
+    }
+
+    .tracker-main {
+      padding-top: calc(var(--nav-height, 64px) + 1rem);
+      padding-bottom: 5.75rem;
+    }
+
+    .tracker-shell {
+      width: min(var(--tracker-max), calc(100% - 2rem));
+      margin-inline: auto;
+    }
+
+    .tracker-topbar {
+      padding: 0.35rem 0 1.1rem;
+    }
+
+    .tracker-topbar-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.9rem;
+      align-items: center;
+      padding: 0.95rem 1.1rem;
+      border-radius: var(--tracker-radius-lg);
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: var(--tracker-shadow-soft);
+    }
+
+    .tracker-crumbs {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      color: var(--tracker-muted);
+      font-size: 0.92rem;
+    }
+
+    .tracker-crumbs a {
+      color: var(--tracker-text);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .tracker-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+    }
+
+    .tracker-chip {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--tracker-pill);
+      background: rgba(255,255,255,0.055);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--tracker-muted);
+      font-size: 0.83rem;
+      font-weight: 700;
+    }
+
+    .tracker-chip-dot {
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 50%;
+      background: var(--tracker-gold);
+      box-shadow: 0 0 0 5px rgba(201, 168, 76, 0.12);
+    }
+
+    .tracker-chip.is-open {
+      background: rgba(76, 175, 125, 0.12);
+      color: #d7f4e2;
+      border-color: rgba(76, 175, 125, 0.22);
+    }
+
+    .tracker-chip.is-closed {
+      background: rgba(224, 160, 32, 0.12);
+      color: #f7dfb0;
+      border-color: rgba(224, 160, 32, 0.22);
+    }
+
+    .tracker-banner {
+      margin-top: 0.8rem;
+      display: none;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.85rem 1rem;
+      border-radius: var(--tracker-radius-md);
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.05);
+      color: var(--tracker-text);
+    }
+
+    .tracker-banner.is-visible { display: flex; }
+    .tracker-banner--offline { border-color: rgba(224,160,32,0.25); background: rgba(224,160,32,0.1); color: #f7dfb0; }
+    .tracker-banner--error { border-color: rgba(224,99,99,0.25); background: rgba(224,99,99,0.12); color: #ffd8d8; }
+
+    .tracker-hero {
+      padding: 0.25rem 0 1.2rem;
+    }
+
+    .tracker-hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .tracker-hero-copy,
+    .tracker-hero-side {
+      border-radius: var(--tracker-radius-xl);
+      border: 1px solid var(--tracker-border);
+      box-shadow: var(--tracker-shadow);
+      overflow: hidden;
+    }
+
+    .tracker-hero-copy {
+      background:
+        radial-gradient(circle at 12% 18%, rgba(201,168,76,0.18), transparent 24%),
+        linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
+        linear-gradient(180deg, #111 0%, #171717 55%, #1b1911 100%);
+      padding: 1.8rem;
+    }
+
+    .tracker-hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 38px;
+      padding: 0.45rem 0.8rem;
+      border-radius: var(--tracker-pill);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--tracker-muted);
+      font-size: 0.84rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .tracker-hero-title {
+      margin: 0;
+      font-size: clamp(2rem, 4.1vw, 3.2rem);
+      line-height: 1.05;
+      color: #fff4d2;
+      letter-spacing: -0.03em;
+    }
+
+    .tracker-hero-sub {
+      margin: 0.95rem 0 0;
+      max-width: 62ch;
+      color: var(--tracker-muted);
+      font-size: 1.02rem;
+      line-height: 1.8;
+    }
+
+    .tracker-summary-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.85rem;
+      margin-top: 1.25rem;
+    }
+
+    .tracker-summary-box {
+      padding: 0.95rem 1rem;
+      border-radius: var(--tracker-radius-md);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      min-height: 106px;
+    }
+
+    .tracker-summary-label {
+      display: block;
+      color: var(--tracker-muted);
+      font-size: 0.82rem;
+      line-height: 1.45;
+      margin-bottom: 0.45rem;
+    }
+
+    .tracker-summary-value {
+      font-size: 1.35rem;
+      font-weight: 800;
+      line-height: 1.15;
+      color: #fff4d2;
+      word-break: break-word;
+    }
+
+    .tracker-summary-note {
+      display: block;
+      margin-top: 0.3rem;
+      color: var(--tracker-muted);
+      font-size: 0.84rem;
+    }
+
+    .tracker-action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+
+    .tracker-hero-side {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
+        var(--tracker-surface);
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .tracker-side-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.8rem;
+    }
+
+    .tracker-side-title {
+      margin: 0;
+      font-size: 1.15rem;
+      color: #fff4d2;
+    }
+
+    .tracker-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .tracker-metric-card {
+      padding: 0.9rem;
+      border-radius: var(--tracker-radius-md);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      min-height: 112px;
+    }
+
+    .tracker-metric-label {
+      color: var(--tracker-muted);
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    .tracker-metric-value {
+      margin-top: 0.45rem;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff4d2;
+      line-height: 1.12;
+    }
+
+    .tracker-metric-note {
+      margin-top: 0.3rem;
+      color: var(--tracker-muted);
+      font-size: 0.83rem;
+      line-height: 1.45;
+    }
+
+    .tracker-section {
+      padding: 1rem 0;
+    }
+
+    .tracker-section-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.95rem;
+    }
+
+    .tracker-section-title {
+      margin: 0;
+      color: #fff4d2;
+      font-size: clamp(1.35rem, 2.8vw, 2rem);
+      line-height: 1.1;
+    }
+
+    .tracker-section-sub {
+      margin: 0.45rem 0 0;
+      color: var(--tracker-muted);
+      line-height: 1.65;
+      max-width: 64ch;
+    }
+
+    .tracker-workspace {
+      border-radius: var(--tracker-radius-xl);
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.012)),
+        var(--tracker-surface);
+      box-shadow: var(--tracker-shadow);
+      overflow: hidden;
+    }
+
+    .tracker-workspace-head {
+      padding: 1.05rem 1.05rem 0;
+    }
+
+    .tracker-tab-row,
+    .tracker-control-row,
+    .tracker-subcontrol-row {
+      display: flex;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+
+    .tracker-tab-row { margin-bottom: 0.95rem; }
+
+    .tracker-tab,
+    .tracker-pill,
+    .tracker-outline-btn,
+    .tracker-select,
+    .tracker-input,
+    .tracker-ghost-btn {
+      font: inherit;
+    }
+
+    .tracker-tab,
+    .tracker-pill,
+    .tracker-ghost-btn,
+    .tracker-outline-btn {
+      min-height: 44px;
+      border-radius: var(--tracker-pill);
+      padding: 0.7rem 0.95rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: var(--tracker-text);
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform var(--tracker-transition), background var(--tracker-transition), border-color var(--tracker-transition);
+    }
+
+    .tracker-tab:hover,
+    .tracker-pill:hover,
+    .tracker-ghost-btn:hover,
+    .tracker-outline-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(201,168,76,0.26);
+    }
+
+    .tracker-tab.is-active,
+    .tracker-pill.is-active {
+      background: linear-gradient(180deg, rgba(201,168,76,0.26), rgba(201,168,76,0.12));
+      border-color: rgba(201,168,76,0.48);
+      color: #fff1c2;
+    }
+
+    .tracker-outline-btn {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .tracker-ghost-btn {
+      background: transparent;
+    }
+
+    .tracker-select,
+    .tracker-input {
+      min-height: 44px;
+      border-radius: var(--tracker-pill);
+      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.04);
+      color: var(--tracker-text);
+      padding: 0.7rem 0.95rem;
+      outline: none;
+    }
+
+    .tracker-input::placeholder {
+      color: rgba(242,234,215,0.45);
+    }
+
+    .tracker-select:focus,
+    .tracker-input:focus {
+      border-color: rgba(201,168,76,0.5);
+      box-shadow: 0 0 0 4px rgba(201,168,76,0.15);
+    }
+
+    .tracker-panel {
+      display: none;
+      padding: 0 1.05rem 1.05rem;
+    }
+
+    .tracker-panel.is-active {
+      display: block;
+    }
+
+    .tracker-chart-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 1rem;
+      align-items: stretch;
+      margin-top: 0.35rem;
+    }
+
+    .tracker-chart-card,
+    .tracker-side-card {
+      border-radius: var(--tracker-radius-lg);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .tracker-chart-card {
+      padding: 1rem;
+      min-height: 480px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tracker-chart-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .tracker-chart-title {
+      margin: 0;
+      font-size: 1.08rem;
+      color: #fff4d2;
+    }
+
+    .tracker-chart-note {
+      margin: 0.35rem 0 0;
+      color: var(--tracker-muted);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .tracker-chart-wrap {
+      position: relative;
+      flex: 1;
+      min-height: 320px;
+    }
+
+    .tracker-chart-foot {
+      margin-top: 0.95rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      color: var(--tracker-muted);
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .tracker-side-card {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .tracker-stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .tracker-stat {
+      padding: 0.85rem;
+      border-radius: var(--tracker-radius-md);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .tracker-stat-label {
+      color: var(--tracker-muted);
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    .tracker-stat-value {
+      margin-top: 0.35rem;
+      color: #fff4d2;
+      font-size: 1.18rem;
+      font-weight: 800;
+      line-height: 1.15;
+    }
+
+    .tracker-note-box {
+      padding: 0.95rem;
+      border-radius: var(--tracker-radius-md);
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.18);
+      color: #f7e6b8;
+      line-height: 1.65;
+      font-size: 0.92rem;
+    }
+
+    .tracker-lookup {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .tracker-lookup-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.7rem;
+      align-items: center;
+    }
+
+    .tracker-lookup-result {
+      min-height: 96px;
+      padding: 0.95rem;
+      border-radius: var(--tracker-radius-md);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--tracker-text);
+      line-height: 1.7;
+    }
+
+    .tracker-archive-toolbar,
+    .tracker-downloads-grid,
+    .tracker-alerts-wrap {
+      margin-top: 0.4rem;
+    }
+
+    .tracker-archive-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .tracker-archive-table-wrap {
+      overflow: auto;
+      border-radius: var(--tracker-radius-lg);
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.035);
+    }
+
+    .tracker-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    .tracker-table th,
+    .tracker-table td {
+      padding: 0.95rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .tracker-table th {
+      color: #fff4d2;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .tracker-table td {
+      color: var(--tracker-text);
+      font-size: 0.95rem;
+    }
+
+    .tracker-table td.muted {
+      color: var(--tracker-muted);
+    }
+
+    .tracker-tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--tracker-pill);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--tracker-muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .tracker-tag.is-baseline {
+      background: rgba(201,168,76,0.12);
+      border-color: rgba(201,168,76,0.22);
+      color: #f2d690;
+    }
+
+    .tracker-tag.is-local {
+      background: rgba(76,175,125,0.11);
+      border-color: rgba(76,175,125,0.22);
+      color: #ccefd9;
+    }
+
+    .tracker-downloads-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+
+    .tracker-download-card {
+      border-radius: var(--tracker-radius-lg);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      min-height: 215px;
+    }
+
+    .tracker-download-title {
+      margin: 0;
+      font-size: 1.05rem;
+      color: #fff4d2;
+    }
+
+    .tracker-download-desc {
+      color: var(--tracker-muted);
+      line-height: 1.65;
+      font-size: 0.92rem;
+      flex: 1;
+    }
+
+    .tracker-alerts-wrap {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 1rem;
+    }
+
+    .tracker-alert-form,
+    .tracker-alert-list {
+      border-radius: var(--tracker-radius-lg);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 1rem;
+    }
+
+    .tracker-form-grid {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .tracker-form-grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tracker-form-field {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .tracker-form-label {
+      color: var(--tracker-muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .tracker-alert-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      align-items: flex-start;
+    }
+
+    .tracker-alert-item:last-child {
+      border-bottom: 0;
+    }
+
+    .tracker-alert-meta {
+      display: grid;
+      gap: 0.25rem;
+    }
+
+    .tracker-alert-title {
+      font-weight: 800;
+      color: #fff4d2;
+    }
+
+    .tracker-alert-sub {
+      color: var(--tracker-muted);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .tracker-alert-actions {
+      display: flex;
+      gap: 0.55rem;
+      flex-shrink: 0;
+    }
+
+    .tracker-delete-btn {
+      min-height: 38px;
+      border-radius: var(--tracker-pill);
+      border: 1px solid rgba(224,99,99,0.25);
+      background: rgba(224,99,99,0.1);
+      color: #ffd8d8;
+      font: inherit;
+      font-weight: 700;
+      padding: 0.4rem 0.85rem;
+      cursor: pointer;
+    }
+
+    .tracker-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .tracker-karat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.85rem;
+    }
+
+    .tracker-karat-card {
+      border-radius: var(--tracker-radius-lg);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 1rem;
+      box-shadow: var(--tracker-shadow-soft);
+    }
+
+    .tracker-karat-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .tracker-karat-code {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff4d2;
+    }
+
+    .tracker-karat-purity {
+      font-size: 0.82rem;
+      color: var(--tracker-muted);
+    }
+
+    .tracker-karat-price {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #fff4d2;
+      line-height: 1.15;
+    }
+
+    .tracker-karat-secondary {
+      margin-top: 0.35rem;
+      color: var(--tracker-muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .tracker-region-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.95rem;
+    }
+
+    .tracker-region-tabs {
+      display: flex;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+
+    .tracker-countries-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .tracker-country-card {
+      border-radius: var(--tracker-radius-lg);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 1rem;
+      box-shadow: var(--tracker-shadow-soft);
+      transition: transform var(--tracker-transition), border-color var(--tracker-transition), box-shadow var(--tracker-transition);
+    }
+
+    .tracker-country-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(201,168,76,0.22);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.2);
+    }
+
+    .tracker-country-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+
+    .tracker-country-meta {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+    }
+
+    .tracker-country-flag {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .tracker-country-name {
+      font-weight: 800;
+      color: #fff4d2;
+      line-height: 1.2;
+    }
+
+    .tracker-country-code {
+      color: var(--tracker-muted);
+      font-size: 0.84rem;
+      margin-top: 0.2rem;
+    }
+
+    .tracker-country-price {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff4d2;
+      line-height: 1.15;
+      margin-top: 0.15rem;
+    }
+
+    .tracker-country-sub {
+      color: var(--tracker-muted);
+      font-size: 0.88rem;
+      margin-top: 0.25rem;
+      line-height: 1.5;
+    }
+
+    .tracker-empty {
+      padding: 1.15rem;
+      border-radius: var(--tracker-radius-lg);
+      border: 1px dashed rgba(255,255,255,0.12);
+      color: var(--tracker-muted);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .tracker-skeleton {
+      display: inline-block;
+      min-width: 7ch;
+      height: 1.1em;
+      border-radius: 8px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.08) 25%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.08) 75%);
+      background-size: 800px 100%;
+      animation: trackerShimmer 1.3s linear infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes trackerShimmer {
+      from { background-position: -400px 0; }
+      to { background-position: 400px 0; }
+    }
+
+    @media (max-width: 1100px) {
+      .tracker-hero-grid,
+      .tracker-chart-layout,
+      .tracker-alerts-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .tracker-downloads-grid,
+      .tracker-karat-grid,
+      .tracker-summary-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 740px) {
+      .tracker-main {
+        padding-bottom: 6.5rem;
+      }
+
+      .tracker-summary-row,
+      .tracker-metric-grid,
+      .tracker-karat-grid,
+      .tracker-downloads-grid,
+      .tracker-form-grid.two {
+        grid-template-columns: 1fr;
+      }
+
+      .tracker-chip-row,
+      .tracker-region-controls,
+      .tracker-control-row,
+      .tracker-subcontrol-row {
+        align-items: stretch;
+      }
+
+      .tracker-chart-card,
+      .tracker-side-card,
+      .tracker-alert-form,
+      .tracker-alert-list,
+      .tracker-workspace-head,
+      .tracker-panel,
+      .tracker-hero-copy,
+      .tracker-hero-side {
+        padding-left: 0.9rem;
+        padding-right: 0.9rem;
+      }
+    }
+
+    [dir="rtl"] .tracker-crumbs,
+    [dir="rtl"] .tracker-chip-row,
+    [dir="rtl"] .tracker-topbar-inner,
+    [dir="rtl"] .tracker-side-head,
+    [dir="rtl"] .tracker-region-controls,
+    [dir="rtl"] .tracker-country-head,
+    [dir="rtl"] .tracker-country-meta,
+    [dir="rtl"] .tracker-alert-item,
+    [dir="rtl"] .tracker-panel-foot {
+      direction: rtl;
+    }
+
+    [dir="rtl"] .tracker-table th,
+    [dir="rtl"] .tracker-table td,
+    [dir="rtl"] .tracker-hero-copy,
+    [dir="rtl"] .tracker-hero-side,
+    [dir="rtl"] .tracker-chart-card,
+    [dir="rtl"] .tracker-side-card,
+    [dir="rtl"] .tracker-alert-form,
+    [dir="rtl"] .tracker-alert-list,
+    [dir="rtl"] .tracker-country-card,
+    [dir="rtl"] .tracker-karat-card {
+      text-align: right;
+    }
+  </style>
 </head>
-<body class="tracker-page">
 
-  <!-- ═══════ NAV injected by app.js ═══════ -->
+<body class="tracker-workspace-page">
+  <main class="tracker-main">
+    <section class="tracker-topbar">
+      <div class="tracker-shell">
+        <div class="tracker-topbar-inner">
+          <nav class="tracker-crumbs" aria-label="Breadcrumb">
+            <a href="index.html" data-i18n="crumbHome">Home</a>
+            <span>/</span>
+            <span data-i18n="pageTitle">Tracker</span>
+          </nav>
 
-  <main>
-
-    <!-- ═══════════════════════ TRACKER TOP BAR ═══════════════════════ -->
-    <div class="tracker-topbar" id="tracker-topbar">
-      <div class="tracker-topbar-inner">
-        <!-- Breadcrumb -->
-        <nav class="tracker-breadcrumb" aria-label="Breadcrumb">
-          <a href="index.html" data-i18n="nav.home">Home</a>
-          <span aria-hidden="true"> / </span>
-          <span data-i18n="tracker.pageTitle">Live Tracker</span>
-        </nav>
-
-        <!-- Freshness chips -->
-        <div class="freshness-chips" aria-label="Data freshness">
-          <span class="freshness-chip chip-live" title="Gold spot price">
-            <span class="chip-live-dot" aria-hidden="true"></span>
-            <span id="gold-freshness-time" aria-live="polite">—</span>
-            <span class="chip-sep" aria-hidden="true">·</span>
-            <span id="gold-countdown" aria-live="polite">—</span>
-          </span>
-          <span class="freshness-chip chip-fx" title="FX rates">
-            <span class="chip-label" data-i18n="fx.badge">FX</span>
-            <span id="fx-freshness-time">—</span>
-          </span>
-          <span class="freshness-chip chip-market" id="market-status-chip" title="Market session"></span>
-        </div>
-      </div>
-
-      <!-- Offline banner -->
-      <div id="offline-banner" class="status-banner status-offline" hidden role="alert">
-        <span class="banner-icon" aria-hidden="true">📡</span>
-        <span data-i18n="status.offline">You are offline. Showing cached data.</span>
-      </div>
-
-      <!-- Error banner -->
-      <div id="error-banner" class="status-banner status-error" hidden role="alert">
-        <span id="error-banner-text"></span>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════ UAE SPOTLIGHT ═══════════════════════ -->
-    <section class="section" id="section-spotlight" aria-labelledby="spotlight-title">
-      <div class="section-header">
-        <h2 id="spotlight-title" data-i18n="spotlight.title">UAE Gold Prices</h2>
-        <div class="karat-selector-row">
-          <span class="selector-label" data-i18n="spotlight.karat.label">Karat:</span>
-          <div class="karat-pills" id="spotlight-karat-pills" role="group" aria-label="Select karat">
-            <!-- Injected by JS -->
-          </div>
-        </div>
-      </div>
-
-      <div class="spotlight-grid" id="spotlight-grid">
-        <!-- Skeleton cards -->
-        <div class="spotlight-card skeleton-card"><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="spotlight-card skeleton-card"><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="spotlight-card skeleton-card"><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="spotlight-card skeleton-card"><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-      </div>
-
-      <p class="section-note" data-i18n="spotlight.note">Estimated bullion-equivalent value</p>
-    </section>
-
-    <!-- ═══════════════════════ CHANGE PANEL ═══════════════════════ -->
-    <section class="section section-compact" id="section-change" aria-labelledby="change-title" hidden>
-      <h2 id="change-title" data-i18n="change.title">Price Movement</h2>
-      <div class="change-grid">
-        <div class="change-item" id="change-vs-prev">
-          <span class="change-label" data-i18n="change.vsPrev">vs previous fetch</span>
-          <span class="change-value" id="change-prev-value">—</span>
-        </div>
-        <div class="change-item" id="change-vs-open">
-          <span class="change-label" data-i18n="change.vsOpen">vs Dubai day open</span>
-          <span class="change-value" id="change-open-value">—</span>
-        </div>
-      </div>
-      <p id="change-context-note" class="change-current-price" hidden></p>
-      <p class="section-note" data-i18n="change.note">24K per ounce · USD · Spot-linked estimate</p>
-    </section>
-
-    <!-- ═══════════════════════ CHART & DATA WORKSPACE ═══════════════════════ -->
-    <section class="section" id="section-chart">
-      <div class="section-header">
-        <div>
-          <h2 data-i18n="chart.title">Price Chart</h2>
-          <p class="section-note" data-i18n="chart.note">XAU/USD spot · Historical snapshots stored locally</p>
-        </div>
-        <div class="workspace-tabs" role="tablist" aria-label="Chart workspace">
-          <button class="workspace-tab active" data-workspace="chart" role="tab" aria-selected="true" id="ws-tab-chart">📈 Chart</button>
-          <button class="workspace-tab" data-workspace="archive" role="tab" aria-selected="false" id="ws-tab-archive">📅 Archive</button>
-          <button class="workspace-tab" data-workspace="downloads" role="tab" aria-selected="false" id="ws-tab-downloads">⬇ Downloads</button>
-        </div>
-      </div>
-
-      <!-- CHART PANEL -->
-      <div class="workspace-panel active" data-workspace-panel="chart" id="ws-panel-chart">
-        <!-- History stats strip (populated by JS) -->
-        <div id="history-stats-strip" class="history-stats-strip" hidden aria-label="Gold price statistics"></div>
-
-        <div class="chart-controls-bar">
-          <div class="chart-range-pills" role="group" aria-label="Time range">
-            <button class="chart-range-btn" data-range="24H">24H</button>
-            <button class="chart-range-btn" data-range="7D">7D</button>
-            <button class="chart-range-btn" data-range="30D">30D</button>
-            <button class="chart-range-btn" data-range="90D">90D</button>
-            <button class="chart-range-btn active" data-range="1Y">1Y</button>
-            <button class="chart-range-btn" data-range="3Y">3Y</button>
-            <button class="chart-range-btn" data-range="5Y">5Y</button>
-            <button class="chart-range-btn" data-range="ALL">All</button>
-          </div>
-        </div>
-        <div id="chart-container" class="chart-container" aria-label="Gold price chart"></div>
-        <p class="chart-data-note section-note" data-i18n="chart.dataNote">
-          Short ranges (24H/7D) use live session snapshots. Longer ranges use monthly baseline 2019–present.
-        </p>
-      </div>
-
-      <!-- ARCHIVE PANEL -->
-      <div class="workspace-panel" data-workspace-panel="archive" id="ws-panel-archive">
-        <div class="archive-panel-inner">
-          <div class="archive-panel-header">
-            <div class="archive-panel-title">
-              <h3>Price Archive</h3>
-              <p class="section-note">Monthly baseline 2019–present · Your daily snapshots · Most recent first</p>
-            </div>
-            <div class="archive-controls">
-              <div class="archive-control-group">
-                <label class="archive-control-label" for="archive-range-select">Range</label>
-                <select id="archive-range-select" class="sort-select">
-                  <option value="ALL">All history</option>
-                  <option value="5Y">Last 5 years</option>
-                  <option value="3Y">Last 3 years</option>
-                  <option value="1Y">Last 1 year</option>
-                  <option value="90D">Last 90 days</option>
-                  <option value="30D">Last 30 days</option>
-                </select>
-              </div>
-              <div class="archive-control-group">
-                <label class="archive-control-label" for="archive-karat-select">Karat</label>
-                <select id="archive-karat-select" class="sort-select">
-                  <option value="24">24K</option>
-                  <option value="22">22K</option>
-                  <option value="21">21K</option>
-                  <option value="18">18K</option>
-                </select>
-              </div>
-              <div class="archive-control-group">
-                <label class="archive-control-label" for="archive-unit-select">Unit</label>
-                <select id="archive-unit-select" class="sort-select">
-                  <option value="gram">Per gram</option>
-                  <option value="oz">Per oz</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="archive-count-row">
-            <span id="archive-count" class="archive-count-label"></span>
-            <span class="archive-source-legend">
-              <span class="archive-legend-item"><span class="archive-legend-dot archive-legend-dot--baseline"></span> Monthly avg (baseline)</span>
-              <span class="archive-legend-item"><span class="archive-legend-dot archive-legend-dot--local"></span> Daily (your cache)</span>
+          <div class="tracker-chip-row">
+            <span class="tracker-chip">
+              <span class="tracker-chip-dot"></span>
+              <span id="chip-gold-time"><span class="tracker-skeleton"></span></span>
             </span>
-          </div>
-          <div id="archive-list" class="archive-history-list"></div>
-          <div id="archive-empty" class="archive-empty" hidden>
-            <p>No archive data yet. Prices are stored locally as you visit the tracker. Check back after a few days for your first entries.</p>
+            <span class="tracker-chip" id="chip-fx-time">FX —</span>
+            <span class="tracker-chip" id="chip-mode" data-i18n="chipMode">Workspace</span>
+            <span class="tracker-chip" id="chip-market-status"><span class="tracker-skeleton"></span></span>
           </div>
         </div>
-      </div>
 
-      <!-- DOWNLOADS PANEL -->
-      <div class="workspace-panel" data-workspace-panel="downloads" id="ws-panel-downloads">
-        <div class="downloads-panel-inner">
-          <div class="download-card">
-            <div class="download-card-icon">📊</div>
-            <div class="download-card-title">Current Prices — CSV</div>
-            <div class="download-card-desc">Export today's gold prices for all countries and karats as a spreadsheet-ready CSV file.</div>
-            <div class="download-card-actions">
-              <button class="btn btn-sm btn-outline" id="export-csv-btn" data-i18n="export.csv">⬇ CSV</button>
+        <div class="tracker-banner tracker-banner--offline" id="offline-banner">
+          <span>📡</span>
+          <span data-i18n="offline">You are offline. Showing cached data where available.</span>
+        </div>
+
+        <div class="tracker-banner tracker-banner--error" id="error-banner">
+          <span>⚠️</span>
+          <span id="error-banner-text">Unable to refresh live data.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="tracker-hero">
+      <div class="tracker-shell tracker-hero-grid">
+        <article class="tracker-hero-copy">
+          <div class="tracker-hero-kicker">
+            <span class="tracker-chip-dot"></span>
+            <span data-i18n="heroKicker">Gold market workspace</span>
+          </div>
+
+          <h1 class="tracker-hero-title" data-i18n="heroTitle">Track gold like a market, not like a widget.</h1>
+          <p class="tracker-hero-sub" data-i18n="heroSub">
+            Live spot, UAE/GCC local estimates, history since 1833, date lookup, alerts, and exports — all in one serious page.
+          </p>
+
+          <div class="tracker-summary-row">
+            <div class="tracker-summary-box">
+              <span class="tracker-summary-label" data-i18n="summarySpot">Spot gold</span>
+              <div class="tracker-summary-value" id="hero-spot"><span class="tracker-skeleton"></span></div>
+              <span class="tracker-summary-note" data-i18n="summarySpotNote">XAU/USD per troy ounce</span>
+            </div>
+            <div class="tracker-summary-box">
+              <span class="tracker-summary-label" data-i18n="summary24">UAE 24K</span>
+              <div class="tracker-summary-value" id="hero-24"><span class="tracker-skeleton"></span></div>
+              <span class="tracker-summary-note" data-i18n="summary24Note">AED per gram</span>
+            </div>
+            <div class="tracker-summary-box">
+              <span class="tracker-summary-label" data-i18n="summaryMove">Today</span>
+              <div class="tracker-summary-value" id="hero-move"><span class="tracker-skeleton"></span></div>
+              <span class="tracker-summary-note" id="hero-move-note" data-i18n="summaryMoveNote">vs previous close / open estimate</span>
             </div>
           </div>
-          <div class="download-card">
-            <div class="download-card-icon">🗃</div>
-            <div class="download-card-title">Current Prices — JSON</div>
-            <div class="download-card-desc">Full structured export with all prices, metadata, and timestamps in machine-readable JSON format.</div>
-            <div class="download-card-actions">
-              <button class="btn btn-sm btn-outline" id="export-json-btn" data-i18n="export.json">⬇ JSON</button>
+
+          <div class="tracker-action-row">
+            <a href="#workspace" class="btn btn-primary" data-i18n="ctaWorkspace">Open chart workspace</a>
+            <a href="#countries" class="btn btn-outline-light" data-i18n="ctaCompare">Compare countries</a>
+            <a href="#alerts" class="btn btn-ghost-light" data-i18n="ctaAlerts">Set alert</a>
+          </div>
+        </article>
+
+        <aside class="tracker-hero-side">
+          <div class="tracker-side-head">
+            <div>
+              <h2 class="tracker-side-title" data-i18n="sideTitle">Live monitor</h2>
+              <p class="tracker-chart-note" data-i18n="sideSub">A tracker-specific summary, not a duplicated home-page card.</p>
             </div>
           </div>
-          <div class="download-card">
-            <div class="download-card-icon">📅</div>
-            <div class="download-card-title">Daily Archive — CSV</div>
-            <div class="download-card-desc">Your locally cached daily snapshots (up to 90 days). Data grows automatically as you visit the tracker.</div>
-            <div class="download-card-actions">
-              <button class="btn btn-sm btn-outline" id="export-archive-csv-btn">⬇ Archive CSV</button>
+
+          <div class="tracker-metric-grid">
+            <div class="tracker-metric-card">
+              <div class="tracker-metric-label" data-i18n="metricPrevClose">Previous close</div>
+              <div class="tracker-metric-value" id="metric-prev-close"><span class="tracker-skeleton"></span></div>
+              <div class="tracker-metric-note" data-i18n="metricPrevCloseNote">spot basis</div>
+            </div>
+
+            <div class="tracker-metric-card">
+              <div class="tracker-metric-label" data-i18n="metricRange">Day range</div>
+              <div class="tracker-metric-value" id="metric-range"><span class="tracker-skeleton"></span></div>
+              <div class="tracker-metric-note" data-i18n="metricRangeNote">local session estimate</div>
+            </div>
+
+            <div class="tracker-metric-card">
+              <div class="tracker-metric-label" data-i18n="metric22">UAE 22K</div>
+              <div class="tracker-metric-value" id="metric-22"><span class="tracker-skeleton"></span></div>
+              <div class="tracker-metric-note" data-i18n="metric22Note">AED per gram</div>
+            </div>
+
+            <div class="tracker-metric-card">
+              <div class="tracker-metric-label" data-i18n="metric21">UAE 21K</div>
+              <div class="tracker-metric-value" id="metric-21"><span class="tracker-skeleton"></span></div>
+              <div class="tracker-metric-note" data-i18n="metric21Note">AED per gram</div>
             </div>
           </div>
-          <div class="download-card download-card--featured">
-            <div class="download-card-icon">🕰</div>
-            <div class="download-card-title">Full History — CSV</div>
-            <div class="download-card-desc">Monthly averages 2019–present (LBMA baseline) merged with your daily cache. Best for trend analysis.</div>
-            <div class="download-card-actions">
-              <button class="btn btn-sm btn-primary" id="export-historical-csv-btn">⬇ Full History CSV</button>
+
+          <div class="tracker-note-box" id="trust-note" data-i18n="trustNote">
+            Spot is the reference. Local jewelry/retail prices can differ because of making charges, spreads, and store policies.
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="tracker-section" id="workspace">
+      <div class="tracker-shell">
+        <div class="tracker-section-header">
+          <div>
+            <h2 class="tracker-section-title" data-i18n="workspaceTitle">Price chart, archive, downloads, and date lookup</h2>
+            <p class="tracker-section-sub" data-i18n="workspaceSub">
+              Short ranges use your local live snapshots. Longer ranges use a monthly historical baseline, so the page stays honest and still becomes useful.
+            </p>
+          </div>
+        </div>
+
+        <div class="tracker-workspace">
+          <div class="tracker-workspace-head">
+            <div class="tracker-tab-row">
+              <button class="tracker-tab is-active" data-panel="overview" data-i18n="tabOverview">Overview</button>
+              <button class="tracker-tab" data-panel="archive" data-i18n="tabArchive">Archive</button>
+              <button class="tracker-tab" data-panel="downloads" data-i18n="tabDownloads">Downloads</button>
+              <button class="tracker-tab" data-panel="alerts" data-i18n="tabAlerts">Alerts</button>
             </div>
           </div>
-          <div class="download-card">
-            <div class="download-card-icon">ℹ</div>
-            <div class="download-card-title">About the Data</div>
-            <div class="download-card-desc">Prices are spot-linked bullion estimates. AED uses the official UAE Central Bank peg (3.6725). Monthly history: LBMA public records.</div>
-            <div class="download-card-actions">
-              <a href="methodology.html" class="btn btn-sm btn-ghost">Methodology →</a>
+
+          <div class="tracker-panel is-active" data-panel-content="overview">
+            <div class="tracker-control-row">
+              <div class="tracker-subcontrol-row" id="range-pills"></div>
+              <div class="tracker-subcontrol-row" id="unit-pills"></div>
+              <div class="tracker-subcontrol-row" id="karat-pills"></div>
+            </div>
+
+            <div class="tracker-chart-layout">
+              <div class="tracker-chart-card">
+                <div class="tracker-chart-head">
+                  <div>
+                    <h3 class="tracker-chart-title" id="chart-title">Spot gold history</h3>
+                    <p class="tracker-chart-note" id="chart-note">Loading chart…</p>
+                  </div>
+                  <button class="tracker-outline-btn" id="copy-summary-btn" data-i18n="copySummary">Copy summary</button>
+                </div>
+
+                <div class="tracker-chart-wrap">
+                  <canvas id="trackerChart"></canvas>
+                </div>
+
+                <div class="tracker-chart-foot" id="chart-footnote">
+                  Monthly baseline + recent live cache.
+                </div>
+              </div>
+
+              <aside class="tracker-side-card">
+                <div class="tracker-stats-grid">
+                  <div class="tracker-stat">
+                    <div class="tracker-stat-label" data-i18n="statAth">All-time high tracked</div>
+                    <div class="tracker-stat-value" id="stat-ath">—</div>
+                  </div>
+                  <div class="tracker-stat">
+                    <div class="tracker-stat-label" data-i18n="statYtd">Year to date</div>
+                    <div class="tracker-stat-value" id="stat-ytd">—</div>
+                  </div>
+                  <div class="tracker-stat">
+                    <div class="tracker-stat-label" data-i18n="stat1y">1-year change</div>
+                    <div class="tracker-stat-value" id="stat-1y">—</div>
+                  </div>
+                  <div class="tracker-stat">
+                    <div class="tracker-stat-label" data-i18n="statSince">Since Jan 2019</div>
+                    <div class="tracker-stat-value" id="stat-since">—</div>
+                  </div>
+                </div>
+
+                <div class="tracker-note-box" id="view-explainer">
+                  This view changes depending on your selected range and market mode.
+                </div>
+
+                <div class="tracker-lookup">
+                  <label class="tracker-form-label" for="lookup-date" data-i18n="lookupLabel">Date lookup</label>
+                  <div class="tracker-lookup-row">
+                    <input class="tracker-input" type="date" id="lookup-date" />
+                    <button class="tracker-outline-btn" id="lookup-btn" data-i18n="lookupBtn">Look up</button>
+                  </div>
+                  <div class="tracker-lookup-result" id="lookup-result" data-i18n="lookupEmpty">
+                    Pick a date to see the closest historical entry available.
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </div>
+
+          <div class="tracker-panel" data-panel-content="archive">
+            <div class="tracker-archive-toolbar">
+              <select class="tracker-select" id="archive-range-select">
+                <option value="ALL">All history</option>
+                <option value="5Y">Last 5 years</option>
+                <option value="3Y">Last 3 years</option>
+                <option value="1Y">Last 1 year</option>
+                <option value="90D">Last 90 days</option>
+                <option value="30D">Last 30 days</option>
+              </select>
+
+              <select class="tracker-select" id="archive-source-select">
+                <option value="all">All sources</option>
+                <option value="baseline">Historical baseline</option>
+                <option value="local">Local snapshots</option>
+              </select>
+
+              <button class="tracker-outline-btn" id="archive-refresh-btn" data-i18n="archiveRefresh">Refresh archive</button>
+            </div>
+
+            <div class="tracker-archive-table-wrap">
+              <table class="tracker-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="colDate">Date</th>
+                    <th data-i18n="colType">Type</th>
+                    <th data-i18n="colSpot">Spot USD/oz</th>
+                    <th data-i18n="col24">24K AED/g</th>
+                    <th data-i18n="col22">22K AED/g</th>
+                  </tr>
+                </thead>
+                <tbody id="archive-tbody"></tbody>
+              </table>
+            </div>
+
+            <div class="tracker-empty" id="archive-empty" hidden data-i18n="archiveEmpty">
+              No archive rows match the current filters yet.
+            </div>
+          </div>
+
+          <div class="tracker-panel" data-panel-content="downloads">
+            <div class="tracker-downloads-grid">
+              <article class="tracker-download-card">
+                <h3 class="tracker-download-title" data-i18n="downloadCurrentCsv">Current view CSV</h3>
+                <div class="tracker-download-desc" data-i18n="downloadCurrentCsvDesc">
+                  Export the currently visible chart dataset as a spreadsheet-ready CSV file.
+                </div>
+                <button class="tracker-outline-btn" id="download-current-csv">CSV</button>
+              </article>
+
+              <article class="tracker-download-card">
+                <h3 class="tracker-download-title" data-i18n="downloadMatrixJson">Current matrix JSON</h3>
+                <div class="tracker-download-desc" data-i18n="downloadMatrixJsonDesc">
+                  Export live country prices, selected settings, and timestamps as structured JSON.
+                </div>
+                <button class="tracker-outline-btn" id="download-matrix-json">JSON</button>
+              </article>
+
+              <article class="tracker-download-card">
+                <h3 class="tracker-download-title" data-i18n="downloadBaselineCsv">History baseline CSV</h3>
+                <div class="tracker-download-desc" data-i18n="downloadBaselineCsvDesc">
+                  Export the monthly historical baseline used for long-range charting.
+                </div>
+                <button class="tracker-outline-btn" id="download-baseline-csv">Baseline CSV</button>
+              </article>
+
+              <article class="tracker-download-card">
+                <h3 class="tracker-download-title" data-i18n="downloadArchiveCsv">Local archive CSV</h3>
+                <div class="tracker-download-desc" data-i18n="downloadArchiveCsvDesc">
+                  Export your local recent snapshots gathered while using this tracker.
+                </div>
+                <button class="tracker-outline-btn" id="download-local-csv">Local CSV</button>
+              </article>
+            </div>
+          </div>
+
+          <div class="tracker-panel" data-panel-content="alerts">
+            <div class="tracker-alerts-wrap">
+              <div class="tracker-alert-form">
+                <div class="tracker-section-header" style="margin-bottom:0.8rem;">
+                  <div>
+                    <h3 class="tracker-section-title" style="font-size:1.2rem;" data-i18n="alertsTitle">Price alerts</h3>
+                    <p class="tracker-section-sub" style="margin-top:0.35rem;" data-i18n="alertsSub">
+                      Local alerts, no account needed.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="tracker-form-grid two">
+                  <div class="tracker-form-field">
+                    <label class="tracker-form-label" for="alert-metric" data-i18n="alertMetric">Metric</label>
+                    <select class="tracker-select" id="alert-metric">
+                      <option value="spot">Spot USD/oz</option>
+                      <option value="uae24">UAE 24K AED/g</option>
+                      <option value="current">Current selected view</option>
+                    </select>
+                  </div>
+
+                  <div class="tracker-form-field">
+                    <label class="tracker-form-label" for="alert-direction" data-i18n="alertDirection">Direction</label>
+                    <select class="tracker-select" id="alert-direction">
+                      <option value="above" data-i18n="alertAbove">Above</option>
+                      <option value="below" data-i18n="alertBelow">Below</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="tracker-form-grid two" style="margin-top:0.85rem;">
+                  <div class="tracker-form-field">
+                    <label class="tracker-form-label" for="alert-value" data-i18n="alertTarget">Target value</label>
+                    <input class="tracker-input" id="alert-value" type="number" min="0" step="0.01" placeholder="3200" />
+                  </div>
+
+                  <div class="tracker-form-field">
+                    <label class="tracker-form-label" data-i18n="alertHint">Current reference</label>
+                    <div class="tracker-note-box" id="alert-current-reference">—</div>
+                  </div>
+                </div>
+
+                <div class="tracker-action-row" style="margin-top:0.95rem;">
+                  <button class="btn btn-primary" id="save-alert-btn" data-i18n="alertSave">Save alert</button>
+                  <button class="tracker-ghost-btn" id="enable-notifications-btn" data-i18n="alertEnable">Enable notifications</button>
+                </div>
+              </div>
+
+              <div class="tracker-alert-list">
+                <div class="tracker-section-header" style="margin-bottom:0.8rem;">
+                  <div>
+                    <h3 class="tracker-section-title" style="font-size:1.2rem;" data-i18n="savedAlerts">Saved alerts</h3>
+                    <p class="tracker-section-sub" style="margin-top:0.35rem;" data-i18n="savedAlertsSub">
+                      These are stored locally in your browser.
+                    </p>
+                  </div>
+                </div>
+                <div id="alerts-list"></div>
+                <div class="tracker-empty" id="alerts-empty" data-i18n="alertsEmpty">
+                  No alerts yet. Add one from the form.
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ═══════════════════════ KARAT TABLE ═══════════════════════ -->
-    <section class="section" id="section-karat" aria-labelledby="karat-title">
-      <div class="section-header">
-        <div>
-          <h2 id="karat-title" data-i18n="karat.title">Price by Karat</h2>
-          <p class="section-note">UAE gold rate · AED uses official 3.6725 peg</p>
-        </div>
-        <div class="unit-toggle-group" role="group" aria-label="Price unit">
-          <button class="unit-btn active" id="unit-gram" data-unit="gram" data-i18n="unit.gram">Per Gram</button>
-          <button class="unit-btn" id="unit-oz" data-unit="oz" data-i18n="unit.oz">Per Ounce</button>
-        </div>
-      </div>
-
-      <div class="table-wrapper">
-        <table id="karat-table" aria-label="Gold prices by karat">
-          <thead>
-            <tr>
-              <th data-i18n="karat.col.karat">Karat</th>
-              <th class="num-col" data-i18n="karat.col.usd">USD</th>
-              <th class="num-col" data-i18n="karat.col.aed">AED (Fixed Peg)</th>
-            </tr>
-          </thead>
-          <tbody id="karat-tbody">
-            <!-- Skeleton rows -->
-            <tr class="skeleton-row"><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td></tr>
-            <tr class="skeleton-row"><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td></tr>
-            <tr class="skeleton-row"><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td><td><div class="skeleton-line"></div></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="section-note" data-i18n="karat.disclaimer">Estimated bullion-equivalent values. Retail and jewelry prices may differ.</p>
-    </section>
-
-    <!-- ═══════════════════════ COUNTRY PRICES ═══════════════════════ -->
-    <section class="section" id="section-countries" aria-labelledby="countries-title">
-      <div class="section-header">
-        <h2 id="countries-title" data-i18n="countries.title">Global Gold Estimates</h2>
-      </div>
-
-      <!-- Tabs -->
-      <div class="tab-bar" role="tablist" aria-label="Region">
-        <button class="tab active" role="tab" aria-selected="true" data-tab="gcc" data-i18n="countries.tab.gcc">GCC</button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="levant" data-i18n="countries.tab.levant">Levant</button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="africa" data-i18n="countries.tab.africa">North &amp; East Africa</button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="global" data-i18n="countries.tab.global">Global Reference</button>
-      </div>
-
-      <!-- Controls row -->
-      <div class="controls-row">
-        <div class="control-group">
-          <span class="selector-label" data-i18n="countries.karat.label">Karat:</span>
-          <div class="karat-pills" id="countries-karat-pills" role="group" aria-label="Select karat">
-            <!-- Injected by JS -->
+    <section class="tracker-section" id="karats">
+      <div class="tracker-shell">
+        <div class="tracker-section-header">
+          <div>
+            <h2 class="tracker-section-title" data-i18n="karatTitle">Price by karat</h2>
+            <p class="tracker-section-sub" data-i18n="karatSub">
+              A cleaner matrix that focuses on the Gulf-relevant karats first.
+            </p>
           </div>
         </div>
-        <div class="control-group">
-          <label class="selector-label" for="sort-select" data-i18n="countries.sort.label">Sort:</label>
-          <select id="sort-select" class="sort-select" aria-label="Sort countries">
-            <option value="high-low" data-i18n="countries.sort.highLow">Price: High → Low</option>
-            <option value="low-high" data-i18n="countries.sort.lowHigh">Price: Low → High</option>
-            <option value="alpha" data-i18n="countries.sort.alpha">Alphabetical</option>
-          </select>
-        </div>
-        <div class="control-group search-group">
-          <input type="search" id="search-input" class="search-input"
-            data-i18n-placeholder="countries.search.placeholder"
-            placeholder="Search countries..."
-            aria-label="Search countries" />
-        </div>
-      </div>
 
-      <!-- Country grid -->
-      <div id="country-grid" class="country-grid" role="list" aria-live="polite">
-        <!-- Skeleton cards -->
-        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-        <div class="country-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
-      </div>
-
-      <!-- Empty search state -->
-      <div id="country-empty" class="empty-state" hidden>
-        <span data-i18n="countries.empty">No countries found for</span>
-        <strong id="country-empty-query"></strong>
+        <div class="tracker-karat-grid" id="karat-grid"></div>
       </div>
     </section>
 
-    <!-- ═══════════════════════ PRICE ALERTS ═══════════════════════ -->
-    <section class="section section-compact" id="section-alerts">
-      <div class="section-header">
-        <div>
-          <h2 data-i18n="alerts.title">Price Alerts</h2>
-          <p class="section-note" data-i18n="alerts.subtitle">Get notified when gold crosses your target — stored locally, no account needed</p>
-        </div>
-        <button class="btn btn-sm btn-primary" id="alert-add-btn" data-i18n="alerts.addBtn">+ Add Alert</button>
-      </div>
-
-      <!-- Alert creation form -->
-      <div class="alert-form" id="alert-form" hidden>
-        <div class="alert-form-inner">
-          <div class="alert-form-row">
-            <label class="alert-form-label" data-i18n="alerts.whenLabel">Alert when price</label>
-            <select id="alert-direction" class="alert-direction-select">
-              <option value="above" data-i18n="alerts.above">goes above</option>
-              <option value="below" data-i18n="alerts.below">drops below</option>
-            </select>
-          </div>
-          <div class="alert-form-row">
-            <label class="alert-form-label" data-i18n="alerts.targetLabel">Target (XAU/USD $)</label>
-            <input type="number" id="alert-price" class="alert-price-input" placeholder="e.g. 3200" min="1" max="99999" step="1" />
-          </div>
-          <div class="alert-form-actions">
-            <button class="btn btn-sm btn-primary" id="alert-save-btn" data-i18n="alerts.save">Save Alert</button>
-            <button class="btn btn-sm btn-ghost" id="alert-cancel-btn" data-i18n="alerts.cancel">Cancel</button>
-            <span id="alert-notif-status" class="alert-notif-status"></span>
+    <section class="tracker-section" id="countries">
+      <div class="tracker-shell">
+        <div class="tracker-section-header">
+          <div>
+            <h2 class="tracker-section-title" data-i18n="countriesTitle">Compare live markets</h2>
+            <p class="tracker-section-sub" data-i18n="countriesSub">
+              Live local-currency estimates by region, filtered by your selected karat and unit.
+            </p>
           </div>
         </div>
-      </div>
 
-      <!-- Active alerts list -->
-      <div id="alerts-list" class="alerts-list"></div>
+        <div class="tracker-region-controls">
+          <div class="tracker-region-tabs" id="region-tabs"></div>
+          <div class="tracker-subcontrol-row">
+            <input class="tracker-input" id="country-search" type="search" placeholder="Search countries..." />
+          </div>
+        </div>
 
-      <!-- Empty state -->
-      <div id="alerts-empty" class="alerts-empty" hidden>
-        <div class="empty-icon" aria-hidden="true">🔔</div>
-        <p data-i18n="alerts.empty">No alerts set yet. Add one above to get notified.</p>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════ RELATED TOOLS ═══════════════════════ -->
-    <section class="section section-compact" aria-label="Related tools">
-      <div class="related-tools-row">
-        <a href="calculator.html" class="related-tool-link">🧮 Gold Calculator</a>
-        <a href="countries/uae.html" class="related-tool-link">🇦🇪 UAE Deep Dive</a>
-        <a href="methodology.html" class="related-tool-link">🔬 Data Methodology</a>
-        <a href="insights.html" class="related-tool-link">📊 Market Insights</a>
-        <a href="learn.html" class="related-tool-link">📚 Gold Guide</a>
+        <div class="tracker-countries-grid" id="countries-grid"></div>
+        <div class="tracker-empty" id="countries-empty" hidden data-i18n="countriesEmpty">No countries match the current search.</div>
       </div>
     </section>
-
-    <!-- ═══════════════════════ NO DATA STATE ═══════════════════════ -->
-    <div id="no-data-state" class="no-data-state" hidden>
-      <p data-i18n="status.noData">No data available. Please check your connection and retry.</p>
-      <button id="retry-btn" class="retry-btn" data-i18n="status.retry">Retry</button>
-    </div>
-
   </main>
 
-  <!-- ═══════════════════════ FOOTER injected by app.js ═══════════════════════ -->
+  <script type="module">
+    import { CONSTANTS, KARATS, COUNTRIES } from './config/index.js';
+    import * as api from './lib/api.js';
+    import * as calc from './lib/price-calculator.js';
+    import { injectNav, updateNavLang } from './components/nav.js';
+    import { injectFooter } from './components/footer.js';
+    import { injectTicker, updateTicker, updateTickerLang } from './components/ticker.js';
 
-  <!-- ═══════════════════════ DEBUG PANEL ═══════════════════════ -->
-  <div id="debug-panel" class="debug-panel" hidden aria-hidden="true"></div>
+    const LANG_KEY = 'user_prefs';
+    const LOCAL_SNAP_KEY = 'tracker_live_snapshots_v3';
+    const ALERT_KEY = 'tracker_alerts_v3';
+    const HISTORY_CSV_URL = 'https://datahub.io/core/gold-prices/_r/-/data/monthly-processed.csv';
 
-  <script type="module" src="app.js"></script>
+    const REGIONS = {
+      gcc: ['AE','SA','KW','QA','BH','OM'],
+      levant: ['JO','LB','EG'],
+      africa: ['EG','LY','TN','DZ','MA','SD','SO','MR','DJ','KM'],
+      global: ['US','GB','EU','IN']
+    };
+
+    const I18N = {
+      en: {
+        crumbHome: 'Home',
+        pageTitle: 'Live Tracker',
+        chipMode: 'Workspace',
+        offline: 'You are offline. Showing cached data where available.',
+        heroKicker: 'Gold market workspace',
+        heroTitle: 'Track gold like a market, not like a widget.',
+        heroSub: 'Live spot, UAE/GCC local estimates, history since 1833, date lookup, alerts, and exports — all in one serious page.',
+        summarySpot: 'Spot gold',
+        summarySpotNote: 'XAU/USD per troy ounce',
+        summary24: 'UAE 24K',
+        summary24Note: 'AED per gram',
+        summaryMove: 'Today',
+        summaryMoveNote: 'vs previous close / open estimate',
+        ctaWorkspace: 'Open chart workspace',
+        ctaCompare: 'Compare countries',
+        ctaAlerts: 'Set alert',
+        sideTitle: 'Live monitor',
+        sideSub: 'A tracker-specific summary, not a duplicated home-page card.',
+        metricPrevClose: 'Previous close',
+        metricPrevCloseNote: 'spot basis',
+        metricRange: 'Day range',
+        metricRangeNote: 'local session estimate',
+        metric22: 'UAE 22K',
+        metric22Note: 'AED per gram',
+        metric21: 'UAE 21K',
+        metric21Note: 'AED per gram',
+        trustNote: 'Spot is the reference. Local jewelry/retail prices can differ because of making charges, spreads, and store policies.',
+        workspaceTitle: 'Price chart, archive, downloads, and date lookup',
+        workspaceSub: 'Short ranges use your local live snapshots. Longer ranges use a monthly historical baseline, so the page stays honest and still becomes useful.',
+        tabOverview: 'Overview',
+        tabArchive: 'Archive',
+        tabDownloads: 'Downloads',
+        tabAlerts: 'Alerts',
+        copySummary: 'Copy summary',
+        statAth: 'All-time high tracked',
+        statYtd: 'Year to date',
+        stat1y: '1-year change',
+        statSince: 'Since Jan 2019',
+        lookupLabel: 'Date lookup',
+        lookupBtn: 'Look up',
+        lookupEmpty: 'Pick a date to see the closest historical entry available.',
+        archiveRefresh: 'Refresh archive',
+        archiveEmpty: 'No archive rows match the current filters yet.',
+        colDate: 'Date',
+        colType: 'Type',
+        colSpot: 'Spot USD/oz',
+        col24: '24K AED/g',
+        col22: '22K AED/g',
+        downloadCurrentCsv: 'Current view CSV',
+        downloadCurrentCsvDesc: 'Export the currently visible chart dataset as a spreadsheet-ready CSV file.',
+        downloadMatrixJson: 'Current matrix JSON',
+        downloadMatrixJsonDesc: 'Export live country prices, selected settings, and timestamps as structured JSON.',
+        downloadBaselineCsv: 'History baseline CSV',
+        downloadBaselineCsvDesc: 'Export the monthly historical baseline used for long-range charting.',
+        downloadArchiveCsv: 'Local archive CSV',
+        downloadArchiveCsvDesc: 'Export your local recent snapshots gathered while using this tracker.',
+        alertsTitle: 'Price alerts',
+        alertsSub: 'Local alerts, no account needed.',
+        alertMetric: 'Metric',
+        alertDirection: 'Direction',
+        alertAbove: 'Above',
+        alertBelow: 'Below',
+        alertTarget: 'Target value',
+        alertHint: 'Current reference',
+        alertSave: 'Save alert',
+        alertEnable: 'Enable notifications',
+        savedAlerts: 'Saved alerts',
+        savedAlertsSub: 'These are stored locally in your browser.',
+        alertsEmpty: 'No alerts yet. Add one from the form.',
+        karatTitle: 'Price by karat',
+        karatSub: 'A cleaner matrix that focuses on the Gulf-relevant karats first.',
+        countriesTitle: 'Compare live markets',
+        countriesSub: 'Live local-currency estimates by region, filtered by your selected karat and unit.',
+        countriesEmpty: 'No countries match the current search.',
+        marketOpen: 'Market open',
+        marketClosed: 'Market closed',
+        updated: 'Updated',
+        range24H: '24H',
+        range7D: '7D',
+        range30D: '30D',
+        range90D: '90D',
+        range1Y: '1Y',
+        range3Y: '3Y',
+        range5Y: '5Y',
+        rangeMAX: 'MAX',
+        unitGram: 'Per gram',
+        unitOz: 'Per ounce',
+        unitKilo: 'Per kilo',
+        spotChartTitle: 'Spot history',
+        localChartTitle: 'Recent local estimate',
+        chartShortNote: 'Short ranges use your browser-saved recent snapshots.',
+        chartLongNote: 'Long ranges use monthly historical baseline data in USD spot terms.',
+        chartFootShort: 'Recent chart = your local snapshot history while using the tracker.',
+        chartFootLong: 'Long history = monthly baseline data. Use this for macro trend context.',
+        chartLookupResult: 'Closest entry',
+        chartNoData: 'No chart data is available yet for this combination.',
+        region_gcc: 'GCC',
+        region_levant: 'Levant',
+        region_africa: 'Africa',
+        region_global: 'Global',
+        sourceBaseline: 'Historical baseline',
+        sourceLocal: 'Local snapshot',
+        alertSaved: 'Alert saved.',
+        alertFired: 'Alert triggered',
+        delete: 'Delete',
+        searchCountries: 'Search countries...',
+      },
+      ar: {
+        crumbHome: 'الرئيسية',
+        pageTitle: 'التتبع المباشر',
+        chipMode: 'مساحة العمل',
+        offline: 'أنت غير متصل. يتم عرض البيانات المتاحة محلياً.',
+        heroKicker: 'مساحة عمل سوق الذهب',
+        heroTitle: 'تابع الذهب كسوق حقيقي، لا كأداة سطحية.',
+        heroSub: 'سعر فوري مباشر، تقديرات محلية للإمارات والخليج، تاريخ منذ 1833، بحث بالتاريخ، تنبيهات، وتنزيلات — في صفحة واحدة جادة.',
+        summarySpot: 'السعر الفوري',
+        summarySpotNote: 'XAU/USD لكل أوقية',
+        summary24: 'الإمارات 24K',
+        summary24Note: 'درهم لكل غرام',
+        summaryMove: 'اليوم',
+        summaryMoveNote: 'مقارنة بالإغلاق السابق / افتتاح اليوم',
+        ctaWorkspace: 'افتح مساحة الرسم',
+        ctaCompare: 'قارن الدول',
+        ctaAlerts: 'اضبط تنبيهاً',
+        sideTitle: 'ملخص مباشر',
+        sideSub: 'ملخص خاص بالمتتبع وليس تكراراً من الصفحة الرئيسية.',
+        metricPrevClose: 'الإغلاق السابق',
+        metricPrevCloseNote: 'على أساس السعر الفوري',
+        metricRange: 'نطاق اليوم',
+        metricRangeNote: 'تقدير للجلسة الحالية',
+        metric22: 'الإمارات 22K',
+        metric22Note: 'درهم لكل غرام',
+        metric21: 'الإمارات 21K',
+        metric21Note: 'درهم لكل غرام',
+        trustNote: 'السعر الفوري هو المرجع. أسعار التجزئة والمجوهرات قد تختلف بسبب أجور الصنعة والهوامش وسياسات المتاجر.',
+        workspaceTitle: 'الرسم والأرشيف والتنزيلات والبحث بالتاريخ',
+        workspaceSub: 'النطاقات القصيرة تستخدم اللقطات الحية المخزنة محلياً. النطاقات الأطول تستخدم أساساً تاريخياً شهرياً حتى تبقى الصفحة صادقة ومفيدة.',
+        tabOverview: 'نظرة عامة',
+        tabArchive: 'الأرشيف',
+        tabDownloads: 'التنزيلات',
+        tabAlerts: 'التنبيهات',
+        copySummary: 'انسخ الملخص',
+        statAth: 'أعلى مستوى متابع',
+        statYtd: 'منذ بداية السنة',
+        stat1y: 'تغير سنة واحدة',
+        statSince: 'منذ يناير 2019',
+        lookupLabel: 'البحث بالتاريخ',
+        lookupBtn: 'ابحث',
+        lookupEmpty: 'اختر تاريخاً لعرض أقرب سجل تاريخي متاح.',
+        archiveRefresh: 'تحديث الأرشيف',
+        archiveEmpty: 'لا توجد صفوف أرشيف مطابقة لهذه الفلاتر.',
+        colDate: 'التاريخ',
+        colType: 'النوع',
+        colSpot: 'فوري دولار/أوقية',
+        col24: '24K درهم/غرام',
+        col22: '22K درهم/غرام',
+        downloadCurrentCsv: 'CSV للعرض الحالي',
+        downloadCurrentCsvDesc: 'صدّر بيانات الرسم الظاهرة حالياً كملف CSV جاهز للجداول.',
+        downloadMatrixJson: 'JSON للمصفوفة الحالية',
+        downloadMatrixJsonDesc: 'صدّر الأسعار الحية للدول مع الإعدادات والطوابع الزمنية بصيغة JSON.',
+        downloadBaselineCsv: 'CSV للأساس التاريخي',
+        downloadBaselineCsvDesc: 'صدّر الأساس التاريخي الشهري المستخدم للرسم طويل المدى.',
+        downloadArchiveCsv: 'CSV للأرشيف المحلي',
+        downloadArchiveCsvDesc: 'صدّر اللقطات المحلية الحديثة التي جمعها المتتبع في متصفحك.',
+        alertsTitle: 'تنبيهات الأسعار',
+        alertsSub: 'تنبيهات محلية من دون حساب.',
+        alertMetric: 'المؤشر',
+        alertDirection: 'الاتجاه',
+        alertAbove: 'أعلى من',
+        alertBelow: 'أقل من',
+        alertTarget: 'القيمة المستهدفة',
+        alertHint: 'المرجع الحالي',
+        alertSave: 'حفظ التنبيه',
+        alertEnable: 'تفعيل الإشعارات',
+        savedAlerts: 'التنبيهات المحفوظة',
+        savedAlertsSub: 'هذه التنبيهات محفوظة محلياً في متصفحك.',
+        alertsEmpty: 'لا توجد تنبيهات بعد. أضف واحداً من النموذج.',
+        karatTitle: 'السعر حسب العيار',
+        karatSub: 'مصفوفة أنظف تركّز على العيارات الأكثر أهمية في الخليج أولاً.',
+        countriesTitle: 'قارن الأسواق الحية',
+        countriesSub: 'تقديرات حية بالعملات المحلية حسب المنطقة ومفلترة بحسب العيار والوحدة المختارين.',
+        countriesEmpty: 'لا توجد دول مطابقة للبحث الحالي.',
+        marketOpen: 'السوق مفتوح',
+        marketClosed: 'السوق مغلق',
+        updated: 'آخر تحديث',
+        range24H: '24 ساعة',
+        range7D: '7 أيام',
+        range30D: '30 يوم',
+        range90D: '90 يوم',
+        range1Y: 'سنة',
+        range3Y: '3 سنوات',
+        range5Y: '5 سنوات',
+        rangeMAX: 'الكل',
+        unitGram: 'لكل غرام',
+        unitOz: 'لكل أوقية',
+        unitKilo: 'لكل كيلو',
+        spotChartTitle: 'تاريخ السعر الفوري',
+        localChartTitle: 'تقدير محلي حديث',
+        chartShortNote: 'النطاقات القصيرة تستخدم سجلك المحلي من اللقطات الحديثة.',
+        chartLongNote: 'النطاقات الطويلة تستخدم أساساً تاريخياً شهرياً بالدولار الأمريكي.',
+        chartFootShort: 'الرسم القصير = سجل اللقطات المخزن محلياً أثناء استخدامك للمتتبع.',
+        chartFootLong: 'التاريخ الطويل = بيانات شهرية أساسية. استخدمه لاتجاهات المدى الطويل.',
+        chartLookupResult: 'أقرب سجل',
+        chartNoData: 'لا توجد بيانات رسم كافية لهذا العرض حالياً.',
+        region_gcc: 'الخليج',
+        region_levant: 'الشام',
+        region_africa: 'أفريقيا',
+        region_global: 'مرجعي',
+        sourceBaseline: 'أساس تاريخي',
+        sourceLocal: 'لقطة محلية',
+        alertSaved: 'تم حفظ التنبيه.',
+        alertFired: 'تم تشغيل التنبيه',
+        delete: 'حذف',
+        searchCountries: 'ابحث عن الدول...',
+      }
+    };
+
+    const state = {
+      lang: 'en',
+      gold: null,
+      prevGold: null,
+      dayOpen: null,
+      rates: {},
+      fxUpdated: null,
+      goldUpdated: null,
+      monthlyHistory: [],
+      localSnapshots: [],
+      currentPanel: 'overview',
+      range: '1Y',
+      unit: 'gram',
+      karat: '24',
+      region: 'gcc',
+      search: '',
+      alerts: [],
+      chart: null,
+      timers: [],
+    };
+
+    function t(key) {
+      return I18N[state.lang]?.[key] ?? I18N.en[key] ?? key;
+    }
+
+    function getLang() {
+      try {
+        const prefs = JSON.parse(localStorage.getItem(LANG_KEY) || '{}');
+        return prefs.lang || 'en';
+      } catch {
+        return 'en';
+      }
+    }
+
+    function saveLang(nextLang) {
+      try {
+        const prefs = JSON.parse(localStorage.getItem(LANG_KEY) || '{}');
+        prefs.lang = nextLang;
+        localStorage.setItem(LANG_KEY, JSON.stringify(prefs));
+      } catch {}
+    }
+
+    function getMarketStatus() {
+      const now = new Date();
+      const utcDay = now.getUTCDay();
+      const utcTime = now.getUTCHours() * 60 + now.getUTCMinutes();
+      const OPEN_SUN = 22 * 60;
+      const CLOSE_FRI = 21 * 60;
+
+      let isOpen = false;
+      if (utcDay === 6) isOpen = false;
+      else if (utcDay === 5) isOpen = utcTime < CLOSE_FRI;
+      else if (utcDay === 0) isOpen = utcTime >= OPEN_SUN;
+      else isOpen = true;
+
+      return isOpen ? 'open' : 'closed';
+    }
+
+    function setBanner(type, text = '') {
+      const offline = document.getElementById('offline-banner');
+      const error = document.getElementById('error-banner');
+      offline.classList.remove('is-visible');
+      error.classList.remove('is-visible');
+
+      if (type === 'offline') {
+        offline.classList.add('is-visible');
+      } else if (type === 'error') {
+        document.getElementById('error-banner-text').textContent = text || 'Unable to refresh live data.';
+        error.classList.add('is-visible');
+      }
+    }
+
+    function formatCurrency(value, currency = 'USD', decimals = 2) {
+      if (value == null || Number.isNaN(value)) return '—';
+      try {
+        return new Intl.NumberFormat(state.lang === 'ar' ? 'ar-AE' : 'en-AE', {
+          style: 'currency',
+          currency,
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        }).format(value);
+      } catch {
+        return `${value.toFixed(decimals)} ${currency}`;
+      }
+    }
+
+    function formatPct(value) {
+      if (value == null || Number.isNaN(value)) return '—';
+      const sign = value > 0 ? '+' : '';
+      return `${sign}${value.toFixed(1)}%`;
+    }
+
+    function formatDubaiTime(ts) {
+      if (!ts) return '—';
+      const d = new Date(ts);
+      return d.toLocaleString(state.lang === 'ar' ? 'ar-AE' : 'en-AE', {
+        timeZone: 'Asia/Dubai',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+      });
+    }
+
+    function getCountryName(country) {
+      return state.lang === 'ar' ? country.nameAr : country.nameEn;
+    }
+
+    function getRateForCountry(country) {
+      if (country.currency === 'AED') return CONSTANTS.AED_PEG;
+      return state.rates[country.currency] ?? null;
+    }
+
+    function getKarat(code) {
+      return KARATS.find(k => k.code === code);
+    }
+
+    function getUnitMultiplier() {
+      if (state.unit === 'oz') return CONSTANTS.GRAMS_PER_TROY_OUNCE;
+      if (state.unit === 'kilo') return 1000;
+      return 1;
+    }
+
+    function getUnitLabel() {
+      return state.unit === 'oz' ? t('unitOz') : state.unit === 'kilo' ? t('unitKilo') : t('unitGram');
+    }
+
+    function getSelectedViewValue() {
+      if (!state.gold) return null;
+      const k = getKarat(state.karat);
+      if (!k) return null;
+
+      if (state.range === '24H' || state.range === '7D' || state.range === '30D') {
+        const rate = CONSTANTS.AED_PEG;
+        return calc.usdPerGram(state.gold, k.purity) * rate * getUnitMultiplier();
+      }
+      return state.gold;
+    }
+
+    function loadLocalSnapshots() {
+      try {
+        state.localSnapshots = JSON.parse(localStorage.getItem(LOCAL_SNAP_KEY) || '[]');
+      } catch {
+        state.localSnapshots = [];
+      }
+    }
+
+    function saveLocalSnapshots() {
+      localStorage.setItem(LOCAL_SNAP_KEY, JSON.stringify(state.localSnapshots.slice(-1500)));
+    }
+
+    function loadAlerts() {
+      try {
+        state.alerts = JSON.parse(localStorage.getItem(ALERT_KEY) || '[]');
+      } catch {
+        state.alerts = [];
+      }
+    }
+
+    function saveAlerts() {
+      localStorage.setItem(ALERT_KEY, JSON.stringify(state.alerts));
+    }
+
+    function appendSnapshot() {
+      if (!state.gold) return;
+      const last = state.localSnapshots[state.localSnapshots.length - 1];
+      const now = Date.now();
+      if (last && now - last.ts < 15 * 60 * 1000) {
+        // Keep last snapshot relatively fresh instead of over-growing
+        last.ts = now;
+        last.gold = state.gold;
+        last.rates = state.rates;
+      } else {
+        state.localSnapshots.push({
+          ts: now,
+          gold: state.gold,
+          rates: state.rates,
+        });
+      }
+      saveLocalSnapshots();
+    }
+
+    async function loadMonthlyHistory() {
+      try {
+        const res = await fetch(HISTORY_CSV_URL, { cache: 'force-cache' });
+        if (!res.ok) throw new Error('History request failed');
+        const text = await res.text();
+        const rows = text.trim().split('\n').slice(1);
+        state.monthlyHistory = rows.map(line => {
+          const [date, price] = line.split(',');
+          return {
+            date,
+            price: Number(price),
+            source: 'baseline',
+          };
+        }).filter(r => r.date && Number.isFinite(r.price));
+      } catch {
+        state.monthlyHistory = [];
+      }
+    }
+
+    function buildRangeButtons() {
+      const ranges = ['24H','7D','30D','90D','1Y','3Y','5Y','MAX'];
+      const root = document.getElementById('range-pills');
+      root.innerHTML = ranges.map(range => `
+        <button class="tracker-pill${state.range === range ? ' is-active' : ''}" data-range="${range}">
+          ${t(`range${range}`)}
+        </button>
+      `).join('');
+
+      root.querySelectorAll('[data-range]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.range = btn.dataset.range;
+          buildRangeButtons();
+          renderChartWorkspace();
+          renderAlertReference();
+        });
+      });
+    }
+
+    function buildUnitButtons() {
+      const options = [
+        { key: 'gram', label: t('unitGram') },
+        { key: 'oz', label: t('unitOz') },
+        { key: 'kilo', label: t('unitKilo') },
+      ];
+      const root = document.getElementById('unit-pills');
+      root.innerHTML = options.map(item => `
+        <button class="tracker-pill${state.unit === item.key ? ' is-active' : ''}" data-unit="${item.key}">
+          ${item.label}
+        </button>
+      `).join('');
+
+      root.querySelectorAll('[data-unit]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.unit = btn.dataset.unit;
+          buildUnitButtons();
+          renderKaratGrid();
+          renderCountries();
+          renderAlertReference();
+        });
+      });
+    }
+
+    function buildKaratButtons() {
+      const root = document.getElementById('karat-pills');
+      const focused = ['24','22','21','18'];
+      root.innerHTML = focused.map(code => `
+        <button class="tracker-pill${state.karat === code ? ' is-active' : ''}" data-karat="${code}">
+          ${code}K
+        </button>
+      `).join('');
+
+      root.querySelectorAll('[data-karat]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.karat = btn.dataset.karat;
+          buildKaratButtons();
+          renderKaratGrid();
+          renderCountries();
+          renderChartWorkspace();
+          renderAlertReference();
+        });
+      });
+    }
+
+    function buildRegionTabs() {
+      const tabs = ['gcc','levant','africa','global'];
+      const root = document.getElementById('region-tabs');
+      root.innerHTML = tabs.map(tab => `
+        <button class="tracker-tab${state.region === tab ? ' is-active' : ''}" data-region="${tab}">
+          ${t(`region_${tab}`)}
+        </button>
+      `).join('');
+
+      root.querySelectorAll('[data-region]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.region = btn.dataset.region;
+          buildRegionTabs();
+          renderCountries();
+        });
+      });
+    }
+
+    function renderStaticText() {
+      document.documentElement.lang = state.lang;
+      document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = t(key);
+      });
+
+      document.getElementById('country-search').placeholder = t('searchCountries');
+      document.title = state.lang === 'ar'
+        ? 'مساحة عمل تتبع الذهب | مباشر وتاريخي وتنزيلات'
+        : 'Gold Tracker Workspace | Live, History, Alerts & Downloads';
+    }
+
+    function renderTopbar() {
+      document.getElementById('chip-gold-time').textContent =
+        state.goldUpdated ? `${t('updated')}: ${formatDubaiTime(state.goldUpdated)}` : '—';
+      document.getElementById('chip-fx-time').textContent =
+        state.fxUpdated ? `FX · ${formatDubaiTime(state.fxUpdated)}` : 'FX —';
+
+      const statusEl = document.getElementById('chip-market-status');
+      const status = getMarketStatus();
+      statusEl.textContent = status === 'open' ? t('marketOpen') : t('marketClosed');
+      statusEl.className = `tracker-chip ${status === 'open' ? 'is-open' : 'is-closed'}`;
+    }
+
+    function renderHero() {
+      const k24 = getKarat('24');
+      const k22 = getKarat('22');
+      const k21 = getKarat('21');
+
+      const uae24 = state.gold ? calc.usdPerGram(state.gold, k24.purity) * CONSTANTS.AED_PEG : null;
+      const uae22 = state.gold ? calc.usdPerGram(state.gold, k22.purity) * CONSTANTS.AED_PEG : null;
+      const uae21 = state.gold ? calc.usdPerGram(state.gold, k21.purity) * CONSTANTS.AED_PEG : null;
+
+      document.getElementById('hero-spot').textContent = formatCurrency(state.gold, 'USD', 2);
+      document.getElementById('hero-24').textContent = formatCurrency(uae24, 'AED', 2);
+
+      let moveText = '—';
+      if (state.prevGold && state.gold) {
+        const pct = ((state.gold - state.prevGold) / state.prevGold) * 100;
+        moveText = formatPct(pct);
+      }
+      document.getElementById('hero-move').textContent = moveText;
+
+      document.getElementById('metric-prev-close').textContent =
+        formatCurrency(state.prevGold || state.gold, 'USD', 2);
+
+      document.getElementById('metric-range').textContent =
+        state.dayOpen && state.gold
+          ? `${formatCurrency(Math.min(state.dayOpen, state.gold), 'USD', 2)} – ${formatCurrency(Math.max(state.dayOpen, state.gold), 'USD', 2)}`
+          : '—';
+
+      document.getElementById('metric-22').textContent = formatCurrency(uae22, 'AED', 2);
+      document.getElementById('metric-21').textContent = formatCurrency(uae21, 'AED', 2);
+
+      const k18 = getKarat('18');
+      updateTicker({
+        xauUsd: state.gold,
+        uae24k: uae24,
+        uae22k: uae22,
+        uae21k: uae21,
+        uae18k: state.gold ? calc.usdPerGram(state.gold, k18.purity) * CONSTANTS.AED_PEG : null,
+      });
+    }
+
+    function getRecentChartData() {
+      const now = Date.now();
+      const millis = {
+        '24H': 24 * 60 * 60 * 1000,
+        '7D': 7 * 24 * 60 * 60 * 1000,
+        '30D': 30 * 24 * 60 * 60 * 1000,
+      }[state.range] || 30 * 24 * 60 * 60 * 1000;
+
+      const k = getKarat(state.karat);
+      const rate = CONSTANTS.AED_PEG;
+      const unitMultiplier = getUnitMultiplier();
+
+      return state.localSnapshots
+        .filter(item => now - item.ts <= millis)
+        .map(item => {
+          const value =
+            calc.usdPerGram(item.gold, k.purity) * rate * unitMultiplier;
+          return {
+            x: item.ts,
+            y: value,
+            source: 'local',
+          };
+        });
+    }
+
+    function getLongChartData() {
+      return state.monthlyHistory.map(row => ({
+        x: new Date(row.date).getTime(),
+        y: row.price,
+        source: 'baseline',
+      }));
+    }
+
+    function getChartDataset() {
+      if (['24H','7D','30D'].includes(state.range)) {
+        return {
+          mode: 'local',
+          title: t('localChartTitle'),
+          note: t('chartShortNote'),
+          foot: t('chartFootShort'),
+          data: getRecentChartData(),
+        };
+      }
+      return {
+        mode: 'spot',
+        title: t('spotChartTitle'),
+        note: t('chartLongNote'),
+        foot: t('chartFootLong'),
+        data: filterLongRange(getLongChartData()),
+      };
+    }
+
+    function filterLongRange(data) {
+      if (state.range === 'MAX') return data;
+      const now = Date.now();
+      const years = {
+        '90D': 90 / 365,
+        '1Y': 1,
+        '3Y': 3,
+        '5Y': 5,
+      }[state.range] ?? 1;
+
+      const minTs = now - years * 365 * 24 * 60 * 60 * 1000;
+      return data.filter(item => item.x >= minTs);
+    }
+
+    function createChart(dataset) {
+      const canvas = document.getElementById('trackerChart');
+      const ctx = canvas.getContext('2d');
+
+      if (state.chart) state.chart.destroy();
+
+      state.chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: [{
+            label: dataset.title,
+            data: dataset.data,
+            borderColor: '#c9a84c',
+            backgroundColor: 'rgba(201,168,76,0.14)',
+            pointRadius: dataset.data.length > 60 ? 0 : 2,
+            pointHoverRadius: 4,
+            tension: 0.24,
+            fill: true,
+            borderWidth: 2.5,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'nearest',
+            intersect: false,
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#141414',
+              borderColor: 'rgba(201,168,76,0.28)',
+              borderWidth: 1,
+              titleColor: '#fff4d2',
+              bodyColor: '#f2ead7',
+              displayColors: false,
+              callbacks: {
+                title(items) {
+                  const ts = items[0]?.parsed?.x;
+                  return new Date(ts).toLocaleDateString(state.lang === 'ar' ? 'ar-AE' : 'en-AE', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                  });
+                },
+                label(item) {
+                  return dataset.mode === 'local'
+                    ? formatCurrency(item.parsed.y, 'AED', 2)
+                    : formatCurrency(item.parsed.y, 'USD', 2);
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255,255,255,0.06)' },
+              ticks: {
+                color: 'rgba(242,234,215,0.68)',
+                maxRotation: 0,
+              }
+            },
+            y: {
+              grid: { color: 'rgba(255,255,255,0.06)' },
+              ticks: {
+                color: 'rgba(242,234,215,0.68)',
+                callback(value) {
+                  return dataset.mode === 'local'
+                    ? formatCurrency(value, 'AED', 0)
+                    : formatCurrency(value, 'USD', 0);
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function computeStats() {
+      const hist = state.monthlyHistory;
+      if (!hist.length || !state.gold) return;
+
+      const ath = Math.max(...hist.map(r => r.price), state.gold);
+      document.getElementById('stat-ath').textContent = formatCurrency(ath, 'USD', 0);
+
+      const year = new Date().getFullYear();
+      const jan = hist.find(r => r.date.startsWith(`${year}-01`));
+      if (jan) {
+        document.getElementById('stat-ytd').textContent = formatPct(((state.gold - jan.price) / jan.price) * 100);
+      }
+
+      const oneYearAgo = hist[hist.length - 13];
+      if (oneYearAgo) {
+        document.getElementById('stat-1y').textContent = formatPct(((state.gold - oneYearAgo.price) / oneYearAgo.price) * 100);
+      }
+
+      const jan2019 = hist.find(r => r.date.startsWith('2019-01'));
+      if (jan2019) {
+        document.getElementById('stat-since').textContent =
+          `${formatCurrency(jan2019.price, 'USD', 0)} → ${formatCurrency(state.gold, 'USD', 0)}`;
+      }
+    }
+
+    function renderChartWorkspace() {
+      const dataset = getChartDataset();
+      document.getElementById('chart-title').textContent = dataset.title;
+      document.getElementById('chart-note').textContent = dataset.note;
+      document.getElementById('chart-footnote').textContent = dataset.foot;
+
+      const explainer = document.getElementById('view-explainer');
+      explainer.textContent =
+        dataset.mode === 'local'
+          ? `${t('chartShortNote')} ${t('unitGram')} / ${state.karat}K · AED basis`
+          : `${t('chartLongNote')} USD spot monthly baseline since 1833.`;
+
+      if (!dataset.data.length) {
+        explainer.textContent = t('chartNoData');
+      }
+
+      createChart(dataset);
+      computeStats();
+    }
+
+    function renderArchiveTable() {
+      const range = document.getElementById('archive-range-select').value;
+      const sourceFilter = document.getElementById('archive-source-select').value;
+
+      let baselineRows = state.monthlyHistory.map(row => ({
+        ts: new Date(row.date).getTime(),
+        date: row.date,
+        spot: row.price,
+        source: 'baseline',
+      }));
+
+      let localRows = state.localSnapshots.map(row => ({
+        ts: row.ts,
+        date: new Date(row.ts).toISOString().slice(0,10),
+        spot: row.gold,
+        source: 'local',
+      }));
+
+      let merged = [...baselineRows, ...localRows];
+
+      if (range !== 'ALL') {
+        const now = Date.now();
+        const cutoff = {
+          '5Y': 5 * 365,
+          '3Y': 3 * 365,
+          '1Y': 365,
+          '90D': 90,
+          '30D': 30,
+        }[range] * 24 * 60 * 60 * 1000;
+        merged = merged.filter(row => now - row.ts <= cutoff);
+      }
+
+      if (sourceFilter !== 'all') {
+        merged = merged.filter(row => row.source === sourceFilter);
+      }
+
+      merged.sort((a, b) => b.ts - a.ts);
+
+      const tbody = document.getElementById('archive-tbody');
+      const empty = document.getElementById('archive-empty');
+
+      if (!merged.length) {
+        tbody.innerHTML = '';
+        empty.hidden = false;
+        return;
+      }
+
+      empty.hidden = true;
+
+      const p24 = spot => calc.usdPerGram(spot, getKarat('24').purity) * CONSTANTS.AED_PEG;
+      const p22 = spot => calc.usdPerGram(spot, getKarat('22').purity) * CONSTANTS.AED_PEG;
+
+      tbody.innerHTML = merged.slice(0, 240).map(row => `
+        <tr>
+          <td>${row.date}</td>
+          <td><span class="tracker-tag ${row.source === 'baseline' ? 'is-baseline' : 'is-local'}">${row.source === 'baseline' ? t('sourceBaseline') : t('sourceLocal')}</span></td>
+          <td>${formatCurrency(row.spot, 'USD', 2)}</td>
+          <td>${formatCurrency(p24(row.spot), 'AED', 2)}</td>
+          <td>${formatCurrency(p22(row.spot), 'AED', 2)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderKaratGrid() {
+      const focused = ['24','22','21','18'];
+      const root = document.getElementById('karat-grid');
+
+      root.innerHTML = focused.map(code => {
+        const k = getKarat(code);
+        const usdPerGram = state.gold ? calc.usdPerGram(state.gold, k.purity) : null;
+        const usdPerOz = usdPerGram ? usdPerGram * CONSTANTS.GRAMS_PER_TROY_OUNCE : null;
+        const aedPerGram = usdPerGram ? usdPerGram * CONSTANTS.AED_PEG : null;
+        const aedPerOz = usdPerOz ? usdPerOz * CONSTANTS.AED_PEG : null;
+
+        const primaryValue = state.unit === 'oz'
+          ? formatCurrency(aedPerOz, 'AED', 2)
+          : state.unit === 'kilo'
+            ? formatCurrency(aedPerGram ? aedPerGram * 1000 : null, 'AED', 2)
+            : formatCurrency(aedPerGram, 'AED', 2);
+
+        return `
+          <article class="tracker-karat-card">
+            <div class="tracker-karat-top">
+              <div>
+                <div class="tracker-karat-code">${code}K</div>
+                <div class="tracker-karat-purity">${(k.purity * 100).toFixed(1)}% pure</div>
+              </div>
+              ${code === '24' ? `<span class="tracker-tag is-baseline">Focus</span>` : ''}
+            </div>
+            <div class="tracker-karat-price">${primaryValue}</div>
+            <div class="tracker-karat-secondary">
+              USD/g: ${formatCurrency(usdPerGram, 'USD', 2)}<br />
+              AED/g: ${formatCurrency(aedPerGram, 'AED', 2)}
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function renderCountries() {
+      const root = document.getElementById('countries-grid');
+      const empty = document.getElementById('countries-empty');
+      const k = getKarat(state.karat);
+      const groupCodes = REGIONS[state.region] || REGIONS.gcc;
+      const filtered = COUNTRIES.filter(c => groupCodes.includes(c.code))
+        .filter(c => {
+          const q = state.search.trim().toLowerCase();
+          if (!q) return true;
+          return (
+            c.nameEn.toLowerCase().includes(q) ||
+            c.nameAr.includes(q) ||
+            c.currency.toLowerCase().includes(q) ||
+            c.code.toLowerCase().includes(q)
+          );
+        });
+
+      if (!filtered.length) {
+        root.innerHTML = '';
+        empty.hidden = false;
+        return;
+      }
+
+      empty.hidden = true;
+
+      root.innerHTML = filtered.map(country => {
+        const rate = getRateForCountry(country);
+        const perGramUsd = state.gold ? calc.usdPerGram(state.gold, k.purity) : null;
+        const localPerGram = perGramUsd && rate ? perGramUsd * rate : null;
+        const unitValue =
+          state.unit === 'oz' ? (localPerGram ? localPerGram * CONSTANTS.GRAMS_PER_TROY_OUNCE : null) :
+          state.unit === 'kilo' ? (localPerGram ? localPerGram * 1000 : null) :
+          localPerGram;
+
+        return `
+          <article class="tracker-country-card">
+            <div class="tracker-country-head">
+              <div class="tracker-country-meta">
+                <span class="tracker-country-flag">${country.flag}</span>
+                <div>
+                  <div class="tracker-country-name">${getCountryName(country)}</div>
+                  <div class="tracker-country-code">${country.currency} · ${state.karat}K</div>
+                </div>
+              </div>
+              ${country.currency === 'AED' ? `<span class="tracker-tag is-baseline">Fixed peg</span>` : ''}
+            </div>
+
+            <div class="tracker-country-price">${formatCurrency(unitValue, country.currency, country.decimals)}</div>
+            <div class="tracker-country-sub">
+              ${getUnitLabel()} · ${formatCurrency(localPerGram, country.currency, country.decimals)} / g
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function renderLookup(dateValue) {
+      const result = document.getElementById('lookup-result');
+      if (!dateValue) {
+        result.textContent = t('lookupEmpty');
+        return;
+      }
+
+      const target = new Date(dateValue).getTime();
+      const rows = [
+        ...state.monthlyHistory.map(r => ({ ts: new Date(r.date).getTime(), date: r.date, price: r.price, source: 'baseline' })),
+        ...state.localSnapshots.map(r => ({ ts: r.ts, date: new Date(r.ts).toISOString().slice(0,10), price: r.gold, source: 'local' })),
+      ];
+
+      if (!rows.length) {
+        result.textContent = t('lookupEmpty');
+        return;
+      }
+
+      rows.sort((a, b) => Math.abs(a.ts - target) - Math.abs(b.ts - target));
+      const found = rows[0];
+      const p24 = calc.usdPerGram(found.price, getKarat('24').purity) * CONSTANTS.AED_PEG;
+
+      result.innerHTML = `
+        <strong>${t('chartLookupResult')}:</strong> ${found.date}<br />
+        <strong>${t('colSpot')}:</strong> ${formatCurrency(found.price, 'USD', 2)}<br />
+        <strong>${t('col24')}:</strong> ${formatCurrency(p24, 'AED', 2)}<br />
+        <strong>${t('colType')}:</strong> ${found.source === 'baseline' ? t('sourceBaseline') : t('sourceLocal')}
+      `;
+    }
+
+    function renderAlertReference() {
+      const ref = document.getElementById('alert-current-reference');
+      const value = getSelectedViewValue();
+      ref.textContent = ['24H','7D','30D'].includes(state.range)
+        ? formatCurrency(value, 'AED', 2)
+        : formatCurrency(state.gold, 'USD', 2);
+    }
+
+    function currentMetricValue(metric) {
+      if (metric === 'spot') return state.gold;
+      if (metric === 'uae24') {
+        return state.gold ? calc.usdPerGram(state.gold, getKarat('24').purity) * CONSTANTS.AED_PEG : null;
+      }
+      return getSelectedViewValue();
+    }
+
+    function currentMetricLabel(metric) {
+      if (metric === 'spot') return 'Spot USD/oz';
+      if (metric === 'uae24') return 'UAE 24K AED/g';
+      return ['24H','7D','30D'].includes(state.range)
+        ? `Current view · ${state.karat}K AED/${state.unit}`
+        : 'Current view · Spot history';
+    }
+
+    function renderAlerts() {
+      const root = document.getElementById('alerts-list');
+      const empty = document.getElementById('alerts-empty');
+
+      if (!state.alerts.length) {
+        root.innerHTML = '';
+        empty.hidden = false;
+        return;
+      }
+
+      empty.hidden = true;
+      root.innerHTML = state.alerts.map(alert => `
+        <div class="tracker-alert-item">
+          <div class="tracker-alert-meta">
+            <div class="tracker-alert-title">${alert.label}</div>
+            <div class="tracker-alert-sub">${alert.direction === 'above' ? '↑' : '↓'} ${alert.target}</div>
+          </div>
+          <div class="tracker-alert-actions">
+            <button class="tracker-delete-btn" data-alert-delete="${alert.id}">${t('delete')}</button>
+          </div>
+        </div>
+      `).join('');
+
+      root.querySelectorAll('[data-alert-delete]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.alerts = state.alerts.filter(a => a.id !== btn.dataset.alertDelete);
+          saveAlerts();
+          renderAlerts();
+        });
+      });
+    }
+
+    function maybeFireAlerts() {
+      state.alerts.forEach(alert => {
+        if (alert.fired) return;
+        const current = currentMetricValue(alert.metric);
+        if (current == null) return;
+
+        const hit = alert.direction === 'above'
+          ? current >= alert.target
+          : current <= alert.target;
+
+        if (!hit) return;
+
+        alert.fired = true;
+        saveAlerts();
+
+        const message = `${t('alertFired')}: ${alert.label} (${alert.direction} ${alert.target})`;
+        setBanner('error', message);
+
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('Gold Tracker Alert', { body: message });
+        }
+      });
+
+      renderAlerts();
+    }
+
+    function saveNewAlert() {
+      const metric = document.getElementById('alert-metric').value;
+      const direction = document.getElementById('alert-direction').value;
+      const target = Number(document.getElementById('alert-value').value);
+
+      if (!Number.isFinite(target) || target <= 0) return;
+
+      state.alerts.unshift({
+        id: crypto.randomUUID(),
+        metric,
+        direction,
+        target,
+        fired: false,
+        label: currentMetricLabel(metric),
+      });
+      saveAlerts();
+      renderAlerts();
+      document.getElementById('alert-value').value = '';
+      setBanner('error', t('alertSaved'));
+    }
+
+    function enableNotifications() {
+      if (!('Notification' in window)) return;
+      Notification.requestPermission();
+    }
+
+    function downloadBlob(filename, content, type = 'text/plain;charset=utf-8') {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function downloadCurrentChartCsv() {
+      const dataset = getChartDataset();
+      const rows = ['date,value'];
+      dataset.data.forEach(row => {
+        rows.push(`${new Date(row.x).toISOString()},${row.y}`);
+      });
+      downloadBlob('gold-tracker-current-view.csv', rows.join('\n'), 'text/csv;charset=utf-8');
+    }
+
+    function downloadMatrixJson() {
+      const k = getKarat(state.karat);
+      const items = COUNTRIES.map(country => {
+        const rate = getRateForCountry(country);
+        const usd = state.gold ? calc.usdPerGram(state.gold, k.purity) : null;
+        const local = usd && rate ? usd * rate : null;
+        return {
+          code: country.code,
+          nameEn: country.nameEn,
+          nameAr: country.nameAr,
+          currency: country.currency,
+          karat: `${state.karat}K`,
+          perGram: local,
+          spotUsdPerOz: state.gold,
+        };
+      });
+
+      downloadBlob(
+        'gold-tracker-matrix.json',
+        JSON.stringify({
+          generatedAt: new Date().toISOString(),
+          karat: state.karat,
+          unit: state.unit,
+          range: state.range,
+          items,
+        }, null, 2),
+        'application/json;charset=utf-8'
+      );
+    }
+
+    function downloadBaselineCsv() {
+      const rows = ['date,price_usd_per_oz'];
+      state.monthlyHistory.forEach(row => rows.push(`${row.date},${row.price}`));
+      downloadBlob('gold-history-baseline.csv', rows.join('\n'), 'text/csv;charset=utf-8');
+    }
+
+    function downloadLocalCsv() {
+      const rows = ['timestamp,spot_usd_per_oz'];
+      state.localSnapshots.forEach(row => rows.push(`${new Date(row.ts).toISOString()},${row.gold}`));
+      downloadBlob('gold-local-archive.csv', rows.join('\n'), 'text/csv;charset=utf-8');
+    }
+
+    function copySummary() {
+      const summary = [
+        `Spot: ${formatCurrency(state.gold, 'USD', 2)}`,
+        `UAE 24K: ${formatCurrency(calc.usdPerGram(state.gold, getKarat('24').purity) * CONSTANTS.AED_PEG, 'AED', 2)}`,
+        `Range: ${state.range}`,
+        `Karat: ${state.karat}K`,
+        `Updated: ${formatDubaiTime(state.goldUpdated)}`
+      ].join(' | ');
+
+      navigator.clipboard.writeText(summary).then(() => {
+        setBanner('error', 'Summary copied.');
+      }).catch(() => {});
+    }
+
+    async function fetchLiveData() {
+      if (!navigator.onLine) {
+        setBanner('offline');
+        return;
+      }
+
+      setBanner(null);
+
+      const [goldRes, fxRes] = await Promise.allSettled([
+        api.fetchGold(),
+        api.fetchFX(),
+      ]);
+
+      if (goldRes.status === 'fulfilled') {
+        state.prevGold = state.gold;
+        state.gold = goldRes.value.price;
+        state.goldUpdated = goldRes.value.updatedAt || new Date().toISOString();
+        if (!state.dayOpen) state.dayOpen = state.gold;
+      }
+
+      if (fxRes.status === 'fulfilled') {
+        state.rates = fxRes.value.rates ?? {};
+        state.fxUpdated = fxRes.value.time_last_update_utc || new Date().toISOString();
+      }
+
+      if (goldRes.status !== 'fulfilled' && fxRes.status !== 'fulfilled') {
+        setBanner('error', 'Unable to refresh live gold and FX data.');
+      }
+
+      appendSnapshot();
+      renderTopbar();
+      renderHero();
+      renderChartWorkspace();
+      renderArchiveTable();
+      renderKaratGrid();
+      renderCountries();
+      renderAlertReference();
+      maybeFireAlerts();
+    }
+
+    function bindWorkspaceTabs() {
+      document.querySelectorAll('[data-panel]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.currentPanel = btn.dataset.panel;
+          document.querySelectorAll('[data-panel]').forEach(el => el.classList.toggle('is-active', el === btn));
+          document.querySelectorAll('[data-panel-content]').forEach(panel => panel.classList.toggle('is-active', panel.dataset.panelContent === state.currentPanel));
+        });
+      });
+    }
+
+    function applyLang() {
+      renderStaticText();
+      buildRangeButtons();
+      buildUnitButtons();
+      buildKaratButtons();
+      buildRegionTabs();
+      renderTopbar();
+      renderHero();
+      renderChartWorkspace();
+      renderArchiveTable();
+      renderKaratGrid();
+      renderCountries();
+      renderLookup(document.getElementById('lookup-date').value);
+      renderAlertReference();
+      renderAlerts();
+      updateNavLang(state.lang);
+      updateTickerLang(state.lang);
+    }
+
+    async function init() {
+      state.lang = getLang();
+      loadLocalSnapshots();
+      loadAlerts();
+
+      const navCtrl = injectNav(state.lang, 0);
+      navCtrl.getLangToggleButtons().forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.lang = state.lang === 'en' ? 'ar' : 'en';
+          saveLang(state.lang);
+          applyLang();
+        });
+      });
+
+      injectFooter(state.lang, 0);
+      injectTicker(state.lang, 0);
+
+      bindWorkspaceTabs();
+      applyLang();
+
+      document.getElementById('lookup-btn').addEventListener('click', () => {
+        renderLookup(document.getElementById('lookup-date').value);
+      });
+
+      document.getElementById('archive-range-select').addEventListener('change', renderArchiveTable);
+      document.getElementById('archive-source-select').addEventListener('change', renderArchiveTable);
+      document.getElementById('archive-refresh-btn').addEventListener('click', renderArchiveTable);
+      document.getElementById('download-current-csv').addEventListener('click', downloadCurrentChartCsv);
+      document.getElementById('download-matrix-json').addEventListener('click', downloadMatrixJson);
+      document.getElementById('download-baseline-csv').addEventListener('click', downloadBaselineCsv);
+      document.getElementById('download-local-csv').addEventListener('click', downloadLocalCsv);
+      document.getElementById('save-alert-btn').addEventListener('click', saveNewAlert);
+      document.getElementById('enable-notifications-btn').addEventListener('click', enableNotifications);
+      document.getElementById('copy-summary-btn').addEventListener('click', copySummary);
+      document.getElementById('country-search').addEventListener('input', e => {
+        state.search = e.target.value;
+        renderCountries();
+      });
+
+      await loadMonthlyHistory();
+      await fetchLiveData();
+
+      state.timers.push(setInterval(fetchLiveData, CONSTANTS.GOLD_REFRESH_MS));
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/Gold-Prices/sw.js').catch(() => {});
+    }
+  </script>
 </body>
 </html>
