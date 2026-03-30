@@ -19,7 +19,6 @@
 const NAV_DATA = {
   en: {
     home: { href: '../index.html', label: 'Home' },
-    invest: { href: '../invest.html', label: 'Invest' },
     groups: [
       {
         key: 'markets',
@@ -61,6 +60,7 @@ const NAV_DATA = {
           { href: '../insights.html#weekly-brief',   label: 'Weekly Brief'         },
         ],
       },
+      invest: { href: '../invest.html', label: 'Invest' },
     ],
     langToggle: 'العربية',
     openMenu:   'Open menu',
@@ -70,7 +70,6 @@ const NAV_DATA = {
 
   ar: {
     home: { href: '../index.html', label: 'الرئيسية' },
-    invest: { href: '../invest.html', label: 'الاستثمار' },
     groups: [
       {
         key: 'markets',
@@ -112,6 +111,8 @@ const NAV_DATA = {
           { href: '../insights.html#weekly-brief',   label: 'النشرة الأسبوعية'       },
         ],
       },
+          invest: { href: '../invest.html', label: 'الاستثمار' },
+
     ],
     langToggle: 'English',
     openMenu:   'فتح القائمة',
@@ -526,6 +527,11 @@ export function updateNavLang(lang) {
     }
   });
 
+   // Invest
+  nav.querySelectorAll('[data-nav-key="invest"]').forEach(el => {
+    el.textContent = data.invest.label;
+  });
+  
   // Dropdown groups
   data.groups.forEach((group, gi) => {
     // Desktop button — preserve the caret <span>
