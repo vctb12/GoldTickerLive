@@ -14,9 +14,12 @@ A bilingual (English/Arabic) web app for live gold prices with local currency es
 - Offline-friendly behavior
 
 ## Screenshots
-![Home](./assets/screenshots/home.png)
-![Tracker](./assets/screenshots/tracker.png)
-![Calculator](./assets/screenshots/calculator.png)
+
+<p align="center">
+  <img src="./assets/screenshots/home.png" alt="Home" width="32%" />
+  <img src="./assets/screenshots/tracker.png" alt="Tracker" width="32%" />
+  <img src="./assets/screenshots/calculator.png" alt="Calculator" width="32%" />
+</p>
 
 ## Features
 
