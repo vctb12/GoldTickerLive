@@ -3,108 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Live gold prices in UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual English/Arabic. Updated every 90 seconds." />
-  <meta name="keywords" content="gold price today UAE, gold price Dubai, سعر الذهب اليوم, gold rate per gram AED, 24K gold price, 22K gold UAE, GCC gold prices, live gold tracker" />
-  <meta property="og:title" content="Live Gold Prices — GCC &amp; Arab World | أسعار الذهب المباشرة" />
-  <meta property="og:description" content="Track live gold spot prices in 24 countries across GCC, Levant, Africa and globally. 7 karats. Bilingual EN/AR. Free, updated every 90 seconds." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Live Gold Prices — GCC &amp; Arab World" />
-  <meta name="twitter:description" content="Track live gold prices in UAE, Saudi Arabia, Kuwait and 20+ countries. 7 karats. Bilingual." />
-  <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/" />
-  <title>Live Gold Prices Today — UAE, GCC &amp; Arab World | أسعار الذهب</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <meta name="description" content="How to invest in gold rationally in UAE, Saudi Arabia & Egypt. Budget-based advice, 24K vs 22K vs ETFs, physical gold buying guide, taxes, storage & mistakes." />
+  <title>How to Invest in Gold as a Rational Person | UAE • Saudi • Egypt</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="home.css" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <link rel="manifest" href="manifest.json" />
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Gold Prices — GCC & Arab World",
-    "url": "https://vctb12.github.io/Gold-Prices/",
-    "inLanguage": ["en", "ar"],
-    "description": "Live gold spot prices across GCC, Levant, Africa and globally. 7 karats, bilingual English/Arabic.",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://vctb12.github.io/Gold-Prices/tracker.html?q={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "GoldPrices",
-    "url": "https://vctb12.github.io/Gold-Prices/",
-    "description": "Live gold price tracker for GCC and Arab world — bilingual English/Arabic"
-  }
-  </script>
 </head>
 <body class="home-page">
 
-  <!-- ═══════ NAV (injected by home.js) ═══════ -->
-
- <main>
-  <!-- HERO SECTION - stolen & adapted from your index.html -->
+<main>
+  <!-- HERO -->
   <section class="hero" aria-labelledby="invest-headline">
     <div class="hero-inner">
       <div class="hero-text">
-        <div class="hero-badge" id="hero-live-badge">
-          <span class="hero-badge-dot" aria-hidden="true"></span>
-          <span>Practical Guide • Updated March 2026</span>
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          <span>Practical Guide • March 2026</span>
         </div>
-        <h1 id="invest-headline" class="hero-title-main" style="font-size:2.75rem;line-height:1.1;">
-          How to Invest in Gold as a Rational Person
-        </h1>
-        <p class="hero-lead" style="max-width:620px;">
-          A no-nonsense guide based on your <strong>budget</strong> and <strong>purpose</strong>.<br>
-          Focused on UAE • Saudi Arabia • Egypt
-        </p>
+        <h1 id="invest-headline" style="font-size:2.8rem;line-height:1.15;">How to Invest in Gold as a Rational Person</h1>
+        <p class="hero-lead" style="max-width:640px;">No hype. No emotion. Just clear advice based on your <strong>budget</strong> and <strong>purpose</strong>.<br>Built for UAE • Saudi Arabia • Egypt</p>
+        
         <div class="hero-ctas">
-          <a href="tracker.html" class="btn btn-primary">Check Live Prices</a>
-          <a href="#comparison" class="btn btn-outline-light">See Comparison Table</a>
+          <a href="tracker.html" class="btn btn-primary">Check Live Gold Prices →</a>
+          <a href="#budget" class="btn btn-outline-light">Find Your Perfect Gold</a>
         </div>
       </div>
 
-      <!-- Reuse your live price card style -->
-      <div class="hero-live-card" style="max-width:380px;">
+      <!-- Live price card (your exact style) -->
+      <div class="hero-live-card">
         <div class="hlc-header">
           <span class="hlc-title">22K Gold Today</span>
           <span class="hlc-badge">AED</span>
         </div>
         <div class="hlc-price" id="invest-live-price">
-          <!-- home.js or your price script will fill this if you want -->
-          <span style="font-size:2.1rem;font-weight:700;color:#b8860b;">—</span>
+          <span style="font-size:2.4rem;font-weight:700;color:#b8860b;">—</span>
         </div>
-        <div class="hlc-sub">per gram • Live</div>
+        <div class="hlc-sub">per gram • Live • Updated every 90s</div>
       </div>
     </div>
   </section>
 
-  <!-- TRUST / PURPOSE STRIP -->
-  <section class="trust-strip" aria-label="Investment purposes">
-    <div class="trust-inner">
-      <div class="trust-item">
+  <!-- PURPOSE SELECTOR (interactive) -->
+  <section class="trust-strip" aria-label="Choose your purpose">
+    <div class="trust-inner" id="purpose-selector">
+      <div class="trust-item purpose-card" data-purpose="hedge" style="cursor:pointer;">
         <span class="trust-icon">🛡️</span>
         <div class="trust-content">
-          <span class="trust-label">Hedge &amp; Safety</span>
-          <span class="trust-sub">Inflation &amp; crisis protection</span>
+          <span class="trust-label">Hedge & Safety</span>
+          <span class="trust-sub">Inflation & crisis protection</span>
         </div>
       </div>
-      <div class="trust-item">
+      <div class="trust-item purpose-card" data-purpose="jewelry" style="cursor:pointer;">
         <span class="trust-icon">💍</span>
         <div class="trust-content">
           <span class="trust-label">Jewelry + Culture</span>
           <span class="trust-sub">Wear it or gift it</span>
         </div>
       </div>
-      <div class="trust-item">
+      <div class="trust-item purpose-card" data-purpose="profit" style="cursor:pointer;">
         <span class="trust-icon">📈</span>
         <div class="trust-content">
           <span class="trust-label">Short-term Profit</span>
@@ -114,35 +71,28 @@
     </div>
   </section>
 
-  <!-- BUDGET GUIDE SECTION -->
-  <section class="home-section">
+  <!-- BUDGET SELECTOR + RECOMMENDATION -->
+  <section id="budget" class="home-section">
     <div class="home-section-inner">
-      <div class="section-intro">
-        <h2 class="home-section-title">2. Choose Gold Based on Your Budget</h2>
-        <p class="home-section-sub">UAE • Saudi • Egypt — what to buy at each price level</p>
+      <div class="section-intro centered">
+        <h2 class="home-section-title">Choose Your Budget</h2>
+        <p class="home-section-sub">Click a level below to see exactly what to buy in UAE • Saudi • Egypt</p>
       </div>
-      <div class="overflow-x-auto">
-        <table class="w-full border-collapse text-left" style="background:#fff;border-radius:16px;overflow:hidden;">
-          <thead style="background:#fff7ed;">
-            <tr>
-              <th class="p-4">Budget</th>
-              <th class="p-4">Best Type</th>
-              <th class="p-4">Where to Buy</th>
-              <th class="p-4">Why it makes sense</th>
-            </tr>
-          </thead>
-          <tbody class="text-sm">
-            <tr class="border-b"><td class="p-4">Under 5,000</td><td class="p-4">22K small jewelry</td><td class="p-4">Gold souks or banks</td><td class="p-4">Cultural + starter savings</td></tr>
-            <tr class="border-b"><td class="p-4">5,000 – 30,000</td><td class="p-4">22K jewelry + small 24K bars</td><td class="p-4">Certified shops</td><td class="p-4">Wearable hedge</td></tr>
-            <tr><td class="p-4">Above 30,000</td><td class="p-4">24K bullion bars/coins</td><td class="p-4">Banks or licensed dealers</td><td class="p-4">Pure investment</td></tr>
-          </tbody>
-        </table>
+
+      <div class="flex justify-center gap-4 mb-8" style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <button onclick="selectBudget(1)" class="budget-btn btn btn-outline-light">Under 5,000</button>
+        <button onclick="selectBudget(2)" class="budget-btn btn btn-outline-light">5,000 – 30,000</button>
+        <button onclick="selectBudget(3)" class="budget-btn btn btn-outline-light">Above 30,000</button>
+      </div>
+
+      <div id="budget-recommendation" class="bg-white border border-amber-200 rounded-3xl p-8 text-center max-w-2xl mx-auto">
+        <p class="text-lg text-amber-700">👆 Click a budget level above</p>
       </div>
     </div>
   </section>
 
-  <!-- COMPARISON TABLE SECTION -->
-  <section id="comparison" class="home-section home-section--alt">
+  <!-- COMPARISON TABLE -->
+  <section class="home-section home-section--alt">
     <div class="home-section-inner">
       <div class="section-intro centered">
         <h2 class="home-section-title">24K Bullion vs 22K Jewelry vs Gold ETFs</h2>
@@ -160,23 +110,55 @@
           <tbody>
             <tr class="border-b"><td class="p-5">Purity</td><td class="p-5 text-center">100%</td><td class="p-5 text-center">91.7%</td><td class="p-5 text-center">100% (paper)</td></tr>
             <tr class="border-b"><td class="p-5">Liquidity</td><td class="p-5 text-center">High</td><td class="p-5 text-center">Medium</td><td class="p-5 text-center">Very High</td></tr>
-            <tr class="border-b"><td class="p-5">Storage</td><td class="p-5 text-center">Safe deposit</td><td class="p-5 text-center">Wear it</td><td class="p-5 text-center">None</td></tr>
+            <tr class="border-b"><td class="p-5">Storage needed</td><td class="p-5 text-center">Yes (safe deposit)</td><td class="p-5 text-center">No (wear it)</td><td class="p-5 text-center">No</td></tr>
             <tr class="border-b"><td class="p-5">Premium over spot</td><td class="p-5 text-center">0–2%</td><td class="p-5 text-center">8–25%</td><td class="p-5 text-center">0.3–0.8%</td></tr>
-            <tr><td class="p-5">Best for</td><td class="p-5 text-center">Serious investors</td><td class="p-5 text-center">GCC families</td><td class="p-5 text-center">Hands-off</td></tr>
+            <tr class="border-b"><td class="p-5">VAT in UAE</td><td class="p-5 text-center">0%</td><td class="p-5 text-center">5%</td><td class="p-5 text-center">0%</td></tr>
+            <tr><td class="p-5">Best for GCC investors</td><td class="p-5 text-center">Serious hedge</td><td class="p-5 text-center">Cultural + savings</td><td class="p-5 text-center">Hands-off</td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </section>
 
-  <!-- UAE / SAUDI / EGYPT BUYING GUIDE (we’ll expand this next) -->
+  <!-- HOW TO BUY - UAE / SAUDI / EGYPT -->
   <section class="home-section">
     <div class="home-section-inner">
       <div class="section-intro">
         <h2 class="home-section-title">How to Buy Physical Gold in UAE • Saudi • Egypt</h2>
-        <p class="home-section-sub">Taxes, best places, storage &amp; common mistakes</p>
       </div>
-      <p class="text-gray-600 text-center py-8">I’ll give you the full detailed subsections in the next step once you confirm this design looks good.</p>
+
+      <!-- UAE -->
+      <details class="mb-6 border border-amber-200 rounded-2xl p-6">
+        <summary class="font-bold text-xl cursor-pointer">🇦🇪 UAE (Dubai & Abu Dhabi)</summary>
+        <div class="mt-4 text-gray-700">
+          <p><strong>Taxes:</strong> 0% VAT on 24K bullion & coins. 5% on jewelry.</p>
+          <p><strong>Best places:</strong> Dubai Gold Souk, DMCC, banks (Emirates NBD, ADCB), certified dealers like Malabar Gold.</p>
+          <p><strong>Storage:</strong> Bank safe deposit box (AED 300–800/year).</p>
+          <p><strong>Common mistake:</strong> Buying jewelry thinking it’s pure investment (high making charges).</p>
+        </div>
+      </details>
+
+      <!-- Saudi -->
+      <details class="mb-6 border border-amber-200 rounded-2xl p-6">
+        <summary class="font-bold text-xl cursor-pointer">🇸🇦 Saudi Arabia</summary>
+        <div class="mt-4 text-gray-700">
+          <p><strong>Taxes:</strong> 15% VAT on jewelry. 0% on investment bars/coins (check latest SAMA rules).</p>
+          <p><strong>Best places:</strong> Riyadh & Jeddah gold souks, Al Rajhi Bank, Alinma Bank bullion desks.</p>
+          <p><strong>Storage:</strong> Home safe or bank box.</p>
+          <p><strong>Common mistake:</strong> Ignoring purity stamps (must have Saudi Standards).</p>
+        </div>
+      </details>
+
+      <!-- Egypt -->
+      <details class="mb-6 border border-amber-200 rounded-2xl p-6">
+        <summary class="font-bold text-xl cursor-pointer">🇪🇬 Egypt</summary>
+        <div class="mt-4 text-gray-700">
+          <p><strong>Taxes:</strong> No VAT on physical gold. Import duties apply if bringing from abroad.</p>
+          <p><strong>Best places:</strong> Khan El Khalili, Cairo gold shops, National Bank of Egypt.</p>
+          <p><strong>Storage:</strong> Home safe (common in Egypt) or bank.</p>
+          <p><strong>Common mistake:</strong> Buying without weighing in front of you.</p>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -184,15 +166,40 @@
   <section class="home-section alert-cta-section">
     <div class="home-section-inner">
       <div class="alert-cta-box">
-        <h2>Ready to start your gold journey?</h2>
+        <h2>Ready to invest rationally?</h2>
+        <p class="mb-6">See current prices and set alerts for your target level.</p>
         <a href="tracker.html" class="btn btn-primary btn-lg">Open Live Tracker →</a>
       </div>
     </div>
   </section>
 </main>
 
-  <!-- ═══════ FOOTER (injected by home.js) ═══════ -->
+<script type="module" src="home.js"></script>
 
-  <script type="module" src="home.js"></script>
+<!-- Simple interactivity script -->
+<script>
+function selectBudget(level) {
+  const rec = document.getElementById('budget-recommendation');
+  if (level === 1) {
+    rec.innerHTML = `<h3 class="text-2xl font-bold text-amber-800">Under 5,000 → Start with 22K Jewelry</h3>
+    <p class="mt-3">Perfect for cultural value + small savings. Buy small pieces in UAE souks or Saudi banks. Low risk, wearable hedge.</p>`;
+  } else if (level === 2) {
+    rec.innerHTML = `<h3 class="text-2xl font-bold text-amber-800">5,000 – 30,000 → Mix 22K Jewelry + Small 24K Bars</h3>
+    <p class="mt-3">Balanced approach. Wear part, invest part. Ideal for most GCC families.</p>`;
+  } else {
+    rec.innerHTML = `<h3 class="text-2xl font-bold text-amber-800">Above 30,000 → 24K Bullion Bars & Coins</h3>
+    <p class="mt-3">Pure investment. Lowest premium, best for serious hedging. Buy from banks.</p>`;
+  }
+}
+
+// Optional: make purpose cards highlight
+document.querySelectorAll('.purpose-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.purpose-card').forEach(c => c.style.border = '1px solid #e5e7eb');
+    card.style.border = '3px solid #b8860b';
+  });
+});
+</script>
+
 </body>
 </html>
