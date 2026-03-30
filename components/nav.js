@@ -19,6 +19,7 @@
 const NAV_DATA = {
   en: {
     home: { href: '../index.html', label: 'Home' },
+    invest: { href: '../invest.html', label: 'Invest' },
     groups: [
       {
         key: 'markets',
@@ -69,6 +70,7 @@ const NAV_DATA = {
 
   ar: {
     home: { href: '../index.html', label: 'الرئيسية' },
+    invest: { href: '../invest.html', label: 'الاستثمار' },
     groups: [
       {
         key: 'markets',
@@ -217,6 +219,8 @@ export function injectNav(lang = 'en', depth = 0) {
   const isRtl    = lang === 'ar';
   const homeHref = resolveHref(data.home.href, depth);
   const homeActive = isPageMatch(homeHref);
+  const investHref  = resolveHref(data.invest.href, depth);
+  const investActive = isPageMatch(investHref);
 
   const desktopDropdownsHtml = data.groups.map(g => buildDropdown(g, depth)).join('');
   const mobileGroupsHtml     = data.groups.map(g => buildDrawerGroup(g, depth)).join('');
@@ -275,6 +279,11 @@ export function injectNav(lang = 'en', depth = 0) {
       <a href="${homeHref}"
          class="nav-drawer-link${homeActive ? ' nav-link--active' : ''}"
       >${data.home.label}</a>
+      <a href="${investHref}"
+     class="nav-link${investActive ? ' nav-link--active' : ''}"
+     role="listitem"
+     data-nav-key="invest"
+  >${data.invest.label}</a>
 
       <!-- Grouped sections -->
       ${mobileGroupsHtml}
