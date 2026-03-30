@@ -382,6 +382,13 @@ code.method-formula {
 [dir="rtl"] .method-fallback-tier { flex-direction: row-reverse; }
 [dir="rtl"] .method-tier-desc { text-align: left; }
 
+/* Related tools footer */
+.method-section--tools {
+  border-top: 1px solid var(--color-border, #2e2b24);
+  padding-top: 2rem;
+  margin-top: 1rem;
+}
+
 /* ── Mobile Responsive Fixes ── */
 @media (max-width: 768px) {
   .method-section { padding: 2rem 1rem 1.5rem; }

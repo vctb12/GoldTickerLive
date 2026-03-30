@@ -932,6 +932,8 @@
 }
 .faq-item[open] .faq-q::after { content: '\2212'; }
 
+.faq-more-row { text-align: center; margin-top: 1.5rem; }
+
 .faq-a {
   padding: 0 1.3rem 1.1rem;
   font-size: 0.87rem;
