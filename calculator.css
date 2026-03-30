@@ -86,6 +86,7 @@
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s;
   white-space: nowrap;
+  min-height: 44px;
 }
 
 .calc-tab:hover {
@@ -165,6 +166,7 @@
   color: var(--color-text);
   font-variant-numeric: tabular-nums;
   transition: border-color 0.15s;
+  min-height: 44px;
 }
 
 .calc-input:focus {
@@ -186,6 +188,7 @@
   cursor: pointer;
   transition: border-color 0.15s;
   flex-shrink: 0;
+  min-height: 44px;
 }
 
 .calc-select:focus {
@@ -250,9 +253,10 @@
 .calc-result-value {
   font-size: clamp(1.5rem, 4vw, 2.2rem);
   font-weight: 800;
-  color: var(--color-gold-light);
+  color: var(--color-gold-dark);
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
 .calc-result-breakdown {
@@ -358,9 +362,12 @@
 
 /* ── Disclaimer ───────────────────────────────────── */
 .calc-disclaimer {
-  font-size: 0.73rem;
-  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  color: var(--color-text-faint);
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: 0.75rem;
   margin-top: 1rem;
+  line-height: 1.5;
 }
 
 /* ── Responsive ───────────────────────────────────── */
@@ -375,20 +382,7 @@
 [dir="rtl"] .conv-row        { flex-direction: row-reverse; }
 [dir="rtl"] .calc-zakat-nisab { flex-direction: row-reverse; }
 
-/* ═══════════════════════════════════════════════
-   Calculator Premium Upgrades
-   ═══════════════════════════════════════════════ */
-
-/* Better result display */
-.calc-result-value {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--color-gold-dark);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
-}
-
-/* Improved input groups */
+/* ── Improved input groups ─────────────────────── */
 .calc-input-group {
   background: var(--color-surface);
   border: 1.5px solid var(--color-border);
@@ -409,21 +403,11 @@
   line-height: 1.4;
 }
 
-/* Trust disclaimer in calculator */
-.calc-disclaimer {
-  font-size: 0.78rem;
-  color: var(--color-text-faint);
-  border-top: 1px solid var(--color-border-subtle);
-  padding-top: 0.75rem;
-  margin-top: 1rem;
-  line-height: 1.5;
-}
-
 /* Copy result button */
 .calc-copy-btn {
   background: none;
   border: 1px solid var(--color-border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   padding: 0.3rem 0.75rem;
   font-size: 0.8rem;
   color: var(--color-text-muted);
@@ -439,13 +423,6 @@
   background: var(--color-up-bg);
   border-color: var(--color-up);
   color: var(--color-up);
-}
-
-/* Better tab active state */
-.calc-tab.active {
-  color: var(--color-gold-dark);
-  border-bottom-color: var(--color-gold);
-  font-weight: 700;
 }
 
 /* ── Comprehensive Mobile Fixes ── */
