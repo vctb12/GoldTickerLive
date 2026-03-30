@@ -999,384 +999,227 @@
 
 <body class="tracker-workspace-page">
   <main class="tracker-main">
-    <section class="tracker-topbar">
-      <div class="tracker-shell">
-        <div class="tracker-topbar-inner">
-          <nav class="tracker-crumbs" aria-label="Breadcrumb">
-            <a href="index.html" data-i18n="crumbHome">Home</a>
-            <span>/</span>
-            <span data-i18n="pageTitle">Tracker</span>
-          </nav>
+    
+	<section class="section tracker-workspace-section" id="section-chart">
+  <div class="section-header tracker-workspace-header">
+    <div>
+      <h2 data-i18n="chart.title">Price Chart</h2>
+      <p class="section-note" data-i18n="chart.note">
+        Live spot for short ranges · Historical baseline for long ranges · Clear archive & lookup workflow
+      </p>
+    </div>
 
-          <div class="tracker-chip-row">
-            <span class="tracker-chip">
-              <span class="tracker-chip-dot"></span>
-              <span id="chip-gold-time"><span class="tracker-skeleton"></span></span>
-            </span>
-            <span class="tracker-chip" id="chip-fx-time">FX —</span>
-            <span class="tracker-chip" id="chip-mode" data-i18n="chipMode">Workspace</span>
-            <span class="tracker-chip" id="chip-market-status"><span class="tracker-skeleton"></span></span>
-          </div>
-        </div>
+    <div class="workspace-tabs" role="tablist" aria-label="Tracker workspace">
+      <button class="workspace-tab active" data-workspace="chart" role="tab" aria-selected="true">📈 <span data-i18n="workspace.chart">Chart</span></button>
+      <button class="workspace-tab" data-workspace="archive" role="tab" aria-selected="false">📅 <span data-i18n="workspace.archive">Archive</span></button>
+      <button class="workspace-tab" data-workspace="lookup" role="tab" aria-selected="false">🔎 <span data-i18n="workspace.lookup">Date Lookup</span></button>
+      <button class="workspace-tab" data-workspace="downloads" role="tab" aria-selected="false">⬇ <span data-i18n="workspace.downloads">Downloads</span></button>
+    </div>
+  </div>
 
-        <div class="tracker-banner tracker-banner--offline" id="offline-banner">
-          <span>📡</span>
-          <span data-i18n="offline">You are offline. Showing cached data where available.</span>
-        </div>
+  <!-- CHART PANEL -->
+  <div class="workspace-panel active" data-workspace-panel="chart" id="ws-panel-chart">
+    <div id="history-stats-strip" class="history-stats-strip" hidden aria-label="Gold price statistics"></div>
 
-        <div class="tracker-banner tracker-banner--error" id="error-banner">
-          <span>⚠️</span>
-          <span id="error-banner-text">Unable to refresh live data.</span>
-        </div>
+    <div class="tracker-workspace-toolbar">
+      <div class="chart-range-pills" role="group" aria-label="Time range">
+        <button class="chart-range-btn" data-range="24H">24H</button>
+        <button class="chart-range-btn" data-range="7D">7D</button>
+        <button class="chart-range-btn" data-range="30D">30D</button>
+        <button class="chart-range-btn" data-range="90D">90D</button>
+        <button class="chart-range-btn active" data-range="1Y">1Y</button>
+        <button class="chart-range-btn" data-range="3Y">3Y</button>
+        <button class="chart-range-btn" data-range="5Y">5Y</button>
+        <button class="chart-range-btn" data-range="ALL">All</button>
       </div>
-    </section>
 
-    <section class="tracker-hero">
-      <div class="tracker-shell tracker-hero-grid">
-        <article class="tracker-hero-copy">
-          <div class="tracker-hero-kicker">
-            <span class="tracker-chip-dot"></span>
-            <span data-i18n="heroKicker">Gold market workspace</span>
+      <div class="tracker-chart-actions">
+        <button class="btn btn-sm btn-ghost" id="chart-copy-summary-btn">Copy Summary</button>
+        <button class="btn btn-sm btn-outline" id="chart-refresh-btn">Refresh</button>
+      </div>
+    </div>
+
+    <div class="tracker-chart-layout">
+      <div class="tracker-chart-primary">
+        <div id="chart-container" class="chart-container chart-container--large" aria-label="Gold price chart"></div>
+        <p class="chart-data-note section-note" id="chart-data-note" data-i18n="chart.dataNote">
+          Short ranges (24H/7D) use live session snapshots. Longer ranges use historical monthly baseline data.
+        </p>
+      </div>
+
+      <aside class="tracker-chart-side">
+        <div class="tracker-side-card">
+          <div class="tracker-side-card-label" data-i18n="chart.side.currentView">Current view</div>
+          <div class="tracker-side-card-value" id="chart-current-view-value">—</div>
+          <div class="tracker-side-card-sub" id="chart-current-view-sub">24K · per gram · AED</div>
+        </div>
+
+        <div class="tracker-side-card">
+          <div class="tracker-side-card-label" data-i18n="chart.side.source">Source logic</div>
+          <div class="tracker-side-card-sub" id="chart-source-logic">
+            Live cache for short ranges. Historical baseline for long-range trend context.
           </div>
+        </div>
 
-          <h1 class="tracker-hero-title" data-i18n="heroTitle">Track gold like a market, not like a widget.</h1>
-          <p class="tracker-hero-sub" data-i18n="heroSub">
-            Live spot, UAE/GCC local estimates, history since 1833, date lookup, alerts, and exports — all in one serious page.
+        <div class="tracker-side-card">
+          <div class="tracker-side-card-label" data-i18n="chart.side.trust">What this means</div>
+          <div class="tracker-side-card-sub" id="chart-trust-copy">
+            Spot is the market reference. Local retail and jewelry quotes can differ because of premiums, making charges, and store spreads.
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- ARCHIVE PANEL -->
+  <div class="workspace-panel" data-workspace-panel="archive" id="ws-panel-archive">
+    <div class="archive-panel-inner">
+      <div class="archive-panel-header">
+        <div class="archive-panel-title">
+          <h3 data-i18n="archive.title">Price Archive</h3>
+          <p class="section-note" data-i18n="archive.note">
+            Browse long-run monthly history plus your locally stored recent snapshots
           </p>
-
-          <div class="tracker-summary-row">
-            <div class="tracker-summary-box">
-              <span class="tracker-summary-label" data-i18n="summarySpot">Spot gold</span>
-              <div class="tracker-summary-value" id="hero-spot"><span class="tracker-skeleton"></span></div>
-              <span class="tracker-summary-note" data-i18n="summarySpotNote">XAU/USD per troy ounce</span>
-            </div>
-            <div class="tracker-summary-box">
-              <span class="tracker-summary-label" data-i18n="summary24">UAE 24K</span>
-              <div class="tracker-summary-value" id="hero-24"><span class="tracker-skeleton"></span></div>
-              <span class="tracker-summary-note" data-i18n="summary24Note">AED per gram</span>
-            </div>
-            <div class="tracker-summary-box">
-              <span class="tracker-summary-label" data-i18n="summaryMove">Today</span>
-              <div class="tracker-summary-value" id="hero-move"><span class="tracker-skeleton"></span></div>
-              <span class="tracker-summary-note" id="hero-move-note" data-i18n="summaryMoveNote">vs previous close / open estimate</span>
-            </div>
-          </div>
-
-          <div class="tracker-action-row">
-            <a href="#workspace" class="btn btn-primary" data-i18n="ctaWorkspace">Open chart workspace</a>
-            <a href="#countries" class="btn btn-outline-light" data-i18n="ctaCompare">Compare countries</a>
-            <a href="#alerts" class="btn btn-ghost-light" data-i18n="ctaAlerts">Set alert</a>
-          </div>
-        </article>
-
-        <aside class="tracker-hero-side">
-          <div class="tracker-side-head">
-            <div>
-              <h2 class="tracker-side-title" data-i18n="sideTitle">Live monitor</h2>
-              <p class="tracker-chart-note" data-i18n="sideSub">A tracker-specific summary, not a duplicated home-page card.</p>
-            </div>
-          </div>
-
-          <div class="tracker-metric-grid">
-            <div class="tracker-metric-card">
-              <div class="tracker-metric-label" data-i18n="metricPrevClose">Previous close</div>
-              <div class="tracker-metric-value" id="metric-prev-close"><span class="tracker-skeleton"></span></div>
-              <div class="tracker-metric-note" data-i18n="metricPrevCloseNote">spot basis</div>
-            </div>
-
-            <div class="tracker-metric-card">
-              <div class="tracker-metric-label" data-i18n="metricRange">Day range</div>
-              <div class="tracker-metric-value" id="metric-range"><span class="tracker-skeleton"></span></div>
-              <div class="tracker-metric-note" data-i18n="metricRangeNote">local session estimate</div>
-            </div>
-
-            <div class="tracker-metric-card">
-              <div class="tracker-metric-label" data-i18n="metric22">UAE 22K</div>
-              <div class="tracker-metric-value" id="metric-22"><span class="tracker-skeleton"></span></div>
-              <div class="tracker-metric-note" data-i18n="metric22Note">AED per gram</div>
-            </div>
-
-            <div class="tracker-metric-card">
-              <div class="tracker-metric-label" data-i18n="metric21">UAE 21K</div>
-              <div class="tracker-metric-value" id="metric-21"><span class="tracker-skeleton"></span></div>
-              <div class="tracker-metric-note" data-i18n="metric21Note">AED per gram</div>
-            </div>
-          </div>
-
-          <div class="tracker-note-box" id="trust-note" data-i18n="trustNote">
-            Spot is the reference. Local jewelry/retail prices can differ because of making charges, spreads, and store policies.
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="tracker-section" id="workspace">
-      <div class="tracker-shell">
-        <div class="tracker-section-header">
-          <div>
-            <h2 class="tracker-section-title" data-i18n="workspaceTitle">Price chart, archive, downloads, and date lookup</h2>
-            <p class="tracker-section-sub" data-i18n="workspaceSub">
-              Short ranges use your local live snapshots. Longer ranges use a monthly historical baseline, so the page stays honest and still becomes useful.
-            </p>
-          </div>
         </div>
 
-        <div class="tracker-workspace">
-          <div class="tracker-workspace-head">
-            <div class="tracker-tab-row">
-              <button class="tracker-tab is-active" data-panel="overview" data-i18n="tabOverview">Overview</button>
-              <button class="tracker-tab" data-panel="archive" data-i18n="tabArchive">Archive</button>
-              <button class="tracker-tab" data-panel="downloads" data-i18n="tabDownloads">Downloads</button>
-              <button class="tracker-tab" data-panel="alerts" data-i18n="tabAlerts">Alerts</button>
-            </div>
+        <div class="archive-controls">
+          <div class="archive-control-group">
+            <label class="archive-control-label" for="archive-range-select">Range</label>
+            <select id="archive-range-select" class="sort-select">
+              <option value="ALL">All history</option>
+              <option value="5Y">Last 5 years</option>
+              <option value="3Y">Last 3 years</option>
+              <option value="1Y">Last 1 year</option>
+              <option value="90D">Last 90 days</option>
+              <option value="30D">Last 30 days</option>
+            </select>
           </div>
 
-          <div class="tracker-panel is-active" data-panel-content="overview">
-            <div class="tracker-control-row">
-              <div class="tracker-subcontrol-row" id="range-pills"></div>
-              <div class="tracker-subcontrol-row" id="unit-pills"></div>
-              <div class="tracker-subcontrol-row" id="karat-pills"></div>
-            </div>
-
-            <div class="tracker-chart-layout">
-              <div class="tracker-chart-card">
-                <div class="tracker-chart-head">
-                  <div>
-                    <h3 class="tracker-chart-title" id="chart-title">Spot gold history</h3>
-                    <p class="tracker-chart-note" id="chart-note">Loading chart…</p>
-                  </div>
-                  <button class="tracker-outline-btn" id="copy-summary-btn" data-i18n="copySummary">Copy summary</button>
-                </div>
-
-                <div class="tracker-chart-wrap">
-                  <canvas id="trackerChart"></canvas>
-                </div>
-
-                <div class="tracker-chart-foot" id="chart-footnote">
-                  Monthly baseline + recent live cache.
-                </div>
-              </div>
-
-              <aside class="tracker-side-card">
-                <div class="tracker-stats-grid">
-                  <div class="tracker-stat">
-                    <div class="tracker-stat-label" data-i18n="statAth">All-time high tracked</div>
-                    <div class="tracker-stat-value" id="stat-ath">—</div>
-                  </div>
-                  <div class="tracker-stat">
-                    <div class="tracker-stat-label" data-i18n="statYtd">Year to date</div>
-                    <div class="tracker-stat-value" id="stat-ytd">—</div>
-                  </div>
-                  <div class="tracker-stat">
-                    <div class="tracker-stat-label" data-i18n="stat1y">1-year change</div>
-                    <div class="tracker-stat-value" id="stat-1y">—</div>
-                  </div>
-                  <div class="tracker-stat">
-                    <div class="tracker-stat-label" data-i18n="statSince">Since Jan 2019</div>
-                    <div class="tracker-stat-value" id="stat-since">—</div>
-                  </div>
-                </div>
-
-                <div class="tracker-note-box" id="view-explainer">
-                  This view changes depending on your selected range and market mode.
-                </div>
-
-                <div class="tracker-lookup">
-                  <label class="tracker-form-label" for="lookup-date" data-i18n="lookupLabel">Date lookup</label>
-                  <div class="tracker-lookup-row">
-                    <input class="tracker-input" type="date" id="lookup-date" />
-                    <button class="tracker-outline-btn" id="lookup-btn" data-i18n="lookupBtn">Look up</button>
-                  </div>
-                  <div class="tracker-lookup-result" id="lookup-result" data-i18n="lookupEmpty">
-                    Pick a date to see the closest historical entry available.
-                  </div>
-                </div>
-              </aside>
-            </div>
+          <div class="archive-control-group">
+            <label class="archive-control-label" for="archive-karat-select">Karat</label>
+            <select id="archive-karat-select" class="sort-select">
+              <option value="24">24K</option>
+              <option value="22">22K</option>
+              <option value="21">21K</option>
+              <option value="18">18K</option>
+            </select>
           </div>
 
-          <div class="tracker-panel" data-panel-content="archive">
-            <div class="tracker-archive-toolbar">
-              <select class="tracker-select" id="archive-range-select">
-                <option value="ALL">All history</option>
-                <option value="5Y">Last 5 years</option>
-                <option value="3Y">Last 3 years</option>
-                <option value="1Y">Last 1 year</option>
-                <option value="90D">Last 90 days</option>
-                <option value="30D">Last 30 days</option>
-              </select>
-
-              <select class="tracker-select" id="archive-source-select">
-                <option value="all">All sources</option>
-                <option value="baseline">Historical baseline</option>
-                <option value="local">Local snapshots</option>
-              </select>
-
-              <button class="tracker-outline-btn" id="archive-refresh-btn" data-i18n="archiveRefresh">Refresh archive</button>
-            </div>
-
-            <div class="tracker-archive-table-wrap">
-              <table class="tracker-table">
-                <thead>
-                  <tr>
-                    <th data-i18n="colDate">Date</th>
-                    <th data-i18n="colType">Type</th>
-                    <th data-i18n="colSpot">Spot USD/oz</th>
-                    <th data-i18n="col24">24K AED/g</th>
-                    <th data-i18n="col22">22K AED/g</th>
-                  </tr>
-                </thead>
-                <tbody id="archive-tbody"></tbody>
-              </table>
-            </div>
-
-            <div class="tracker-empty" id="archive-empty" hidden data-i18n="archiveEmpty">
-              No archive rows match the current filters yet.
-            </div>
-          </div>
-
-          <div class="tracker-panel" data-panel-content="downloads">
-            <div class="tracker-downloads-grid">
-              <article class="tracker-download-card">
-                <h3 class="tracker-download-title" data-i18n="downloadCurrentCsv">Current view CSV</h3>
-                <div class="tracker-download-desc" data-i18n="downloadCurrentCsvDesc">
-                  Export the currently visible chart dataset as a spreadsheet-ready CSV file.
-                </div>
-                <button class="tracker-outline-btn" id="download-current-csv">CSV</button>
-              </article>
-
-              <article class="tracker-download-card">
-                <h3 class="tracker-download-title" data-i18n="downloadMatrixJson">Current matrix JSON</h3>
-                <div class="tracker-download-desc" data-i18n="downloadMatrixJsonDesc">
-                  Export live country prices, selected settings, and timestamps as structured JSON.
-                </div>
-                <button class="tracker-outline-btn" id="download-matrix-json">JSON</button>
-              </article>
-
-              <article class="tracker-download-card">
-                <h3 class="tracker-download-title" data-i18n="downloadBaselineCsv">History baseline CSV</h3>
-                <div class="tracker-download-desc" data-i18n="downloadBaselineCsvDesc">
-                  Export the monthly historical baseline used for long-range charting.
-                </div>
-                <button class="tracker-outline-btn" id="download-baseline-csv">Baseline CSV</button>
-              </article>
-
-              <article class="tracker-download-card">
-                <h3 class="tracker-download-title" data-i18n="downloadArchiveCsv">Local archive CSV</h3>
-                <div class="tracker-download-desc" data-i18n="downloadArchiveCsvDesc">
-                  Export your local recent snapshots gathered while using this tracker.
-                </div>
-                <button class="tracker-outline-btn" id="download-local-csv">Local CSV</button>
-              </article>
-            </div>
-          </div>
-
-          <div class="tracker-panel" data-panel-content="alerts">
-            <div class="tracker-alerts-wrap">
-              <div class="tracker-alert-form">
-                <div class="tracker-section-header" style="margin-bottom:0.8rem;">
-                  <div>
-                    <h3 class="tracker-section-title" style="font-size:1.2rem;" data-i18n="alertsTitle">Price alerts</h3>
-                    <p class="tracker-section-sub" style="margin-top:0.35rem;" data-i18n="alertsSub">
-                      Local alerts, no account needed.
-                    </p>
-                  </div>
-                </div>
-
-                <div class="tracker-form-grid two">
-                  <div class="tracker-form-field">
-                    <label class="tracker-form-label" for="alert-metric" data-i18n="alertMetric">Metric</label>
-                    <select class="tracker-select" id="alert-metric">
-                      <option value="spot">Spot USD/oz</option>
-                      <option value="uae24">UAE 24K AED/g</option>
-                      <option value="current">Current selected view</option>
-                    </select>
-                  </div>
-
-                  <div class="tracker-form-field">
-                    <label class="tracker-form-label" for="alert-direction" data-i18n="alertDirection">Direction</label>
-                    <select class="tracker-select" id="alert-direction">
-                      <option value="above" data-i18n="alertAbove">Above</option>
-                      <option value="below" data-i18n="alertBelow">Below</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="tracker-form-grid two" style="margin-top:0.85rem;">
-                  <div class="tracker-form-field">
-                    <label class="tracker-form-label" for="alert-value" data-i18n="alertTarget">Target value</label>
-                    <input class="tracker-input" id="alert-value" type="number" min="0" step="0.01" placeholder="3200" />
-                  </div>
-
-                  <div class="tracker-form-field">
-                    <label class="tracker-form-label" data-i18n="alertHint">Current reference</label>
-                    <div class="tracker-note-box" id="alert-current-reference">—</div>
-                  </div>
-                </div>
-
-                <div class="tracker-action-row" style="margin-top:0.95rem;">
-                  <button class="btn btn-primary" id="save-alert-btn" data-i18n="alertSave">Save alert</button>
-                  <button class="tracker-ghost-btn" id="enable-notifications-btn" data-i18n="alertEnable">Enable notifications</button>
-                </div>
-              </div>
-
-              <div class="tracker-alert-list">
-                <div class="tracker-section-header" style="margin-bottom:0.8rem;">
-                  <div>
-                    <h3 class="tracker-section-title" style="font-size:1.2rem;" data-i18n="savedAlerts">Saved alerts</h3>
-                    <p class="tracker-section-sub" style="margin-top:0.35rem;" data-i18n="savedAlertsSub">
-                      These are stored locally in your browser.
-                    </p>
-                  </div>
-                </div>
-                <div id="alerts-list"></div>
-                <div class="tracker-empty" id="alerts-empty" data-i18n="alertsEmpty">
-                  No alerts yet. Add one from the form.
-                </div>
-              </div>
-            </div>
+          <div class="archive-control-group">
+            <label class="archive-control-label" for="archive-unit-select">Unit</label>
+            <select id="archive-unit-select" class="sort-select">
+              <option value="gram">Per gram</option>
+              <option value="oz">Per oz</option>
+            </select>
           </div>
         </div>
       </div>
-    </section>
 
-    <section class="tracker-section" id="karats">
-      <div class="tracker-shell">
-        <div class="tracker-section-header">
-          <div>
-            <h2 class="tracker-section-title" data-i18n="karatTitle">Price by karat</h2>
-            <p class="tracker-section-sub" data-i18n="karatSub">
-              A cleaner matrix that focuses on the Gulf-relevant karats first.
-            </p>
-          </div>
-        </div>
-
-        <div class="tracker-karat-grid" id="karat-grid"></div>
+      <div class="archive-count-row">
+        <span id="archive-count" class="archive-count-label"></span>
+        <span class="archive-source-legend">
+          <span class="archive-legend-item"><span class="archive-legend-dot archive-legend-dot--baseline"></span> Historical baseline</span>
+          <span class="archive-legend-item"><span class="archive-legend-dot archive-legend-dot--local"></span> Your local cache</span>
+        </span>
       </div>
-    </section>
 
-    <section class="tracker-section" id="countries">
-      <div class="tracker-shell">
-        <div class="tracker-section-header">
-          <div>
-            <h2 class="tracker-section-title" data-i18n="countriesTitle">Compare live markets</h2>
-            <p class="tracker-section-sub" data-i18n="countriesSub">
-              Live local-currency estimates by region, filtered by your selected karat and unit.
-            </p>
-          </div>
-        </div>
+      <div id="archive-list" class="archive-history-list"></div>
 
-        <div class="tracker-region-controls">
-          <div class="tracker-region-tabs" id="region-tabs"></div>
-          <div class="tracker-subcontrol-row">
-            <input class="tracker-input" id="country-search" type="search" placeholder="Search countries..." />
-          </div>
-        </div>
-
-        <div class="tracker-countries-grid" id="countries-grid"></div>
-        <div class="tracker-empty" id="countries-empty" hidden data-i18n="countriesEmpty">No countries match the current search.</div>
+      <div id="archive-empty" class="archive-empty" hidden>
+        <p data-i18n="archive.empty">No archive rows match the current filters yet.</p>
       </div>
-    </section>
+    </div>
+  </div>
+
+  <!-- DATE LOOKUP PANEL -->
+  <div class="workspace-panel" data-workspace-panel="lookup" id="ws-panel-lookup">
+    <div class="lookup-panel-inner">
+      <div class="lookup-panel-header">
+        <div>
+          <h3 data-i18n="lookup.title">Date Lookup</h3>
+          <p class="section-note" data-i18n="lookup.note">
+            Pick a date and view the closest available historical entry
+          </p>
+        </div>
+      </div>
+
+      <div class="lookup-form-grid">
+        <div class="lookup-control-group">
+          <label class="archive-control-label" for="date-lookup-input">Date</label>
+          <input id="date-lookup-input" class="search-input" type="date" />
+        </div>
+
+        <div class="lookup-control-group">
+          <label class="archive-control-label" for="date-lookup-karat">Karat</label>
+          <select id="date-lookup-karat" class="sort-select">
+            <option value="24">24K</option>
+            <option value="22">22K</option>
+            <option value="21">21K</option>
+            <option value="18">18K</option>
+          </select>
+        </div>
+
+        <div class="lookup-control-group">
+          <label class="archive-control-label" for="date-lookup-currency">Currency</label>
+          <select id="date-lookup-currency" class="sort-select">
+            <option value="USD">USD</option>
+            <option value="AED">AED</option>
+          </select>
+        </div>
+
+        <div class="lookup-control-group lookup-control-group--action">
+          <button class="btn btn-sm btn-primary" id="date-lookup-btn">Look Up</button>
+        </div>
+      </div>
+
+      <div class="lookup-result-card" id="date-lookup-result">
+        <div class="lookup-empty-text">Pick a date to begin.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOWNLOADS PANEL -->
+  <div class="workspace-panel" data-workspace-panel="downloads" id="ws-panel-downloads">
+    <div class="downloads-panel-inner">
+      <div class="download-card">
+        <div class="download-card-icon">📊</div>
+        <div class="download-card-title">Current Prices — CSV</div>
+        <div class="download-card-desc">Export current live prices for all visible country cards.</div>
+        <div class="download-card-actions">
+          <button class="btn btn-sm btn-outline" id="export-csv-btn" data-i18n="export.csv">⬇ CSV</button>
+        </div>
+      </div>
+
+      <div class="download-card">
+        <div class="download-card-icon">🗃</div>
+        <div class="download-card-title">Current Prices — JSON</div>
+        <div class="download-card-desc">Export current visible state, prices, metadata, and timestamps as JSON.</div>
+        <div class="download-card-actions">
+          <button class="btn btn-sm btn-outline" id="export-json-btn" data-i18n="export.json">⬇ JSON</button>
+        </div>
+      </div>
+
+      <div class="download-card">
+        <div class="download-card-icon">📅</div>
+        <div class="download-card-title">Archive CSV</div>
+        <div class="download-card-desc">Export archived history for the selected karat and filters.</div>
+        <div class="download-card-actions">
+          <button class="btn btn-sm btn-outline" id="export-archive-csv-btn">⬇ Archive CSV</button>
+        </div>
+      </div>
+
+      <div class="download-card download-card--featured">
+        <div class="download-card-icon">🕰</div>
+        <div class="download-card-title">Full History CSV</div>
+        <div class="download-card-desc">Export the full historical view used by this tracker for long-run analysis.</div>
+        <div class="download-card-actions">
+          <button class="btn btn-sm btn-primary" id="export-historical-csv-btn">⬇ Full History CSV</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
   </main>
 
   <script type="module">
