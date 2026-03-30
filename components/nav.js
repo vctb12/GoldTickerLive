@@ -18,25 +18,28 @@
 
 const NAV_DATA = {
   en: {
-    home:     { href: '../index.html',    label: 'Home' },
-    insights: { href: '../insights.html', label: 'Insights' },
+    home: { href: '../index.html', label: 'Home' },
     groups: [
       {
         key: 'markets',
         label: 'Markets',
         items: [
-          { href: '../tracker.html',                   label: 'Live Tracker'      },
-          { href: '../countries/uae.html',             label: 'UAE Gold Today'    },
-          { href: '../tracker.html#section-countries', label: 'Compare Countries' },
-          { href: '../tracker.html#section-chart',     label: 'History & Data'    },
+          { href: '../tracker.html',                   label: 'Live Tracker'    },
+          { href: '../countries/uae.html',             label: 'UAE Gold Today'  },
+          { href: '../tracker.html#section-countries', label: 'GCC Compare'     },
+          { href: '../tracker.html#section-countries', label: 'Country Pages'   },
+          { href: '../tracker.html#section-chart',     label: 'History & Data'  },
         ],
       },
       {
         key: 'tools',
         label: 'Tools',
         items: [
-          { href: '../calculator.html',              label: 'Calculator'    },
-          { href: '../tracker.html#section-alerts',  label: 'Price Alerts'  },
+          { href: '../calculator.html',                label: 'Calculator'   },
+          { href: '../tracker.html#section-alerts',    label: 'Alerts'       },
+          { href: '../tracker.html#section-chart',     label: 'Downloads'    },
+          { href: '../tracker.html#section-chart',     label: 'Date Lookup'  },
+          { href: '../tracker.html#section-chart',     label: 'Archive'      },
         ],
       },
       {
@@ -45,6 +48,16 @@ const NAV_DATA = {
         items: [
           { href: '../learn.html',        label: 'Gold Guide'   },
           { href: '../methodology.html',  label: 'Methodology'  },
+          { href: '../learn.html#faq',    label: 'FAQ'          },
+        ],
+      },
+      {
+        key: 'insights',
+        label: 'Insights',
+        items: [
+          { href: '../insights.html',               label: 'Gold Insights'        },
+          { href: '../insights.html#why-gold-moved', label: 'Why Gold Moved Today' },
+          { href: '../insights.html#weekly-brief',   label: 'Weekly Brief'         },
         ],
       },
     ],
@@ -55,33 +68,46 @@ const NAV_DATA = {
   },
 
   ar: {
-    home:     { href: '../index.html',    label: 'الرئيسية' },
-    insights: { href: '../insights.html', label: 'تحليلات'  },
+    home: { href: '../index.html', label: 'الرئيسية' },
     groups: [
       {
         key: 'markets',
         label: 'الأسواق',
         items: [
-          { href: '../tracker.html',                   label: 'تتبع مباشر'        },
-          { href: '../countries/uae.html',             label: 'ذهب الإمارات'      },
-          { href: '../tracker.html#section-countries', label: 'مقارنة الدول'      },
-          { href: '../tracker.html#section-chart',     label: 'البيانات التاريخية' },
+          { href: '../tracker.html',                   label: 'تتبع مباشر'          },
+          { href: '../countries/uae.html',             label: 'ذهب الإمارات'        },
+          { href: '../tracker.html#section-countries', label: 'مقارنة دول الخليج'   },
+          { href: '../tracker.html#section-countries', label: 'صفحات الدول'         },
+          { href: '../tracker.html#section-chart',     label: 'البيانات التاريخية'   },
         ],
       },
       {
         key: 'tools',
         label: 'أدوات',
         items: [
-          { href: '../calculator.html',             label: 'حاسبة'          },
-          { href: '../tracker.html#section-alerts', label: 'تنبيهات الأسعار' },
+          { href: '../calculator.html',                label: 'حاسبة'             },
+          { href: '../tracker.html#section-alerts',    label: 'تنبيهات'           },
+          { href: '../tracker.html#section-chart',     label: 'تنزيلات'           },
+          { href: '../tracker.html#section-chart',     label: 'البحث بالتاريخ'    },
+          { href: '../tracker.html#section-chart',     label: 'الأرشيف'           },
         ],
       },
       {
         key: 'learn',
         label: 'تعلّم',
         items: [
-          { href: '../learn.html',       label: 'دليل الذهب' },
-          { href: '../methodology.html', label: 'المنهجية'   },
+          { href: '../learn.html',        label: 'دليل الذهب' },
+          { href: '../methodology.html',  label: 'المنهجية'   },
+          { href: '../learn.html#faq',    label: 'الأسئلة الشائعة' },
+        ],
+      },
+      {
+        key: 'insights',
+        label: 'تحليلات',
+        items: [
+          { href: '../insights.html',                label: 'تحليلات الذهب'          },
+          { href: '../insights.html#why-gold-moved', label: 'لماذا تحرك الذهب اليوم' },
+          { href: '../insights.html#weekly-brief',   label: 'النشرة الأسبوعية'       },
         ],
       },
     ],
@@ -187,12 +213,10 @@ export function injectNav(lang = 'en', depth = 0) {
 
   _currentLang = lang;
 
-  const data         = NAV_DATA[lang] || NAV_DATA.en;
-  const isRtl        = lang === 'ar';
-  const homeHref     = resolveHref(data.home.href, depth);
-  const insightsHref = resolveHref(data.insights.href, depth);
-  const homeActive     = isPageMatch(homeHref);
-  const insightsActive = isPageMatch(insightsHref);
+  const data     = NAV_DATA[lang] || NAV_DATA.en;
+  const isRtl    = lang === 'ar';
+  const homeHref = resolveHref(data.home.href, depth);
+  const homeActive = isPageMatch(homeHref);
 
   const desktopDropdownsHtml = data.groups.map(g => buildDropdown(g, depth)).join('');
   const mobileGroupsHtml     = data.groups.map(g => buildDrawerGroup(g, depth)).join('');
@@ -215,11 +239,6 @@ export function injectNav(lang = 'en', depth = 0) {
       >${data.home.label}</a>
 
       ${desktopDropdownsHtml}
-
-      <a href="${insightsHref}"
-         class="nav-link${insightsActive ? ' nav-link--active' : ''}"
-         role="listitem"
-      >${data.insights.label}</a>
     </div>
 
     <!-- Right-side actions -->
@@ -259,11 +278,6 @@ export function injectNav(lang = 'en', depth = 0) {
 
       <!-- Grouped sections -->
       ${mobileGroupsHtml}
-
-      <!-- Insights (direct) -->
-      <a href="${insightsHref}"
-         class="nav-drawer-link${insightsActive ? ' nav-link--active' : ''}"
-      >${data.insights.label}</a>
 
       <!-- Language toggle -->
       <button id="nav-lang-toggle-mobile"
@@ -495,11 +509,6 @@ export function updateNavLang(lang) {
     if (href && (href === 'index.html' || href.endsWith('/index.html') || href === '../index.html')) {
       a.textContent = data.home.label;
     }
-  });
-
-  // Insights
-  nav.querySelectorAll('.nav-link[href*="insights"], .nav-drawer-link[href*="insights"]').forEach(a => {
-    a.textContent = data.insights.label;
   });
 
   // Dropdown groups

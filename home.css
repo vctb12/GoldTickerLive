@@ -102,6 +102,30 @@
   margin-top: 2rem;
 }
 
+.hero-ctas-secondary {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.hero-secondary-link {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.hero-secondary-link:hover {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+}
+
+.hero-secondary-sep {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 0.82rem;
+}
+
 /* ══════════════════════════════════════════════════════════════
    BUTTONS — Hero dark-background variants only.
    Base .btn, .btn-outline, .btn-sm, .btn-lg are defined in style.css.
@@ -399,7 +423,8 @@
   flex-wrap: wrap;
   margin-bottom: 2rem;
 }
-.section-intro.centered { justify-content: center; }
+.section-intro.centered { justify-content: center; text-align: center; }
+.section-intro.centered .home-section-title { text-align: center; }
 
 .home-section-title {
   font-size: clamp(1.4rem, 3vw, 1.95rem);
