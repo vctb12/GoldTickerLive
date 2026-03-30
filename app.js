@@ -622,7 +622,7 @@ function setupEventListeners() {
       renderSpotlight();
     } else if (selector === 'countries') {
       STATE.selectedKaratCountries = karat;
-      cache.savePreference('selectedKarat', karat);
+      cache.savePreference('selectedKaratCountries', karat);
       renderCountryGrid();
     }
   });

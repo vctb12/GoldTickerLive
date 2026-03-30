@@ -14,18 +14,6 @@
   margin: 0 auto;
 }
 
-.insights-hero-tag {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--color-gold);
-  border: 1px solid rgba(201,168,76,0.4);
-  border-radius: var(--radius-pill);
-  padding: 0.3rem 0.9rem;
-  margin-bottom: 1rem;
-}
 
 .insights-hero h1 {
   font-size: clamp(1.9rem, 4.5vw, 3rem);

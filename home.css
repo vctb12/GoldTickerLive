@@ -3,15 +3,10 @@
    Imports shared design tokens from style.css via the cascade.
    ══════════════════════════════════════════════════════════════ */
 
-/* ── Keyframes ─────────────────────────────────────────────────── */
+/* ── Keyframes (pulse-live is hero-specific; skeleton-shimmer is in style.css) ── */
 @keyframes pulse-live {
   0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.55); }
   50%       { opacity: 0.85; transform: scale(1.15); box-shadow: 0 0 0 5px rgba(74, 222, 128, 0); }
-}
-
-@keyframes skeleton-shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -108,31 +103,18 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   BUTTONS
+   BUTTONS — Hero dark-background variants only.
+   Base .btn, .btn-outline, .btn-sm, .btn-lg are defined in style.css.
+   Only hero-specific dark-bg overrides live here, scoped to .hero.
    ══════════════════════════════════════════════════════════════ */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.65rem 1.5rem;
-  border-radius: var(--radius-sm, 8px);
-  font-size: 0.88rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap;
-  min-height: 44px;
-  cursor: pointer;
-  border: 2px solid transparent;
-}
 
-/* Primary — solid gold on dark hero */
-.btn-primary {
+/* Hero primary: gold background with dark text (for dark hero bg) */
+.hero .btn-primary {
   background: var(--color-gold, #c99a3e);
   color: #1e0e03;
   border-color: var(--color-gold, #c99a3e);
 }
-.btn-primary:hover {
+.hero .btn-primary:hover {
   background: var(--color-gold-light, #e5c96e);
   border-color: var(--color-gold-light, #e5c96e);
   color: #1a0c02;
@@ -141,10 +123,10 @@
   box-shadow: 0 4px 18px rgba(196, 153, 62, 0.42);
 }
 
-/* Outline light — white-bordered on dark bg */
+/* Outline light — white-bordered on dark bg (hero only) */
 .btn-outline-light {
   background: transparent;
-  border-color: rgba(255, 255, 255, 0.42);
+  border: 1.5px solid rgba(255, 255, 255, 0.42);
   color: rgba(255, 255, 255, 0.88);
 }
 .btn-outline-light:hover {
@@ -155,7 +137,7 @@
   transform: translateY(-1px);
 }
 
-/* Ghost light — minimal on dark bg */
+/* Ghost light — minimal on dark bg (hero only) */
 .btn-ghost-light {
   background: transparent;
   border-color: transparent;
@@ -168,27 +150,13 @@
   transform: translateY(-1px);
 }
 
-/* Outline — for light sections */
-.btn-outline {
-  background: transparent;
-  border-color: var(--color-gold, #c99a3e);
-  color: var(--color-gold-dark, #8c6d24);
-}
-.btn-outline:hover {
-  background: var(--color-gold-tint, rgba(196,153,62,0.08));
-  border-color: var(--color-gold-dark, #8c6d24);
-  color: var(--color-gold-deep, #5a3a0a);
-  text-decoration: none;
-  transform: translateY(-1px);
-}
-
-/* Ghost — for light sections */
-.btn-ghost {
+/* Hero ghost: white-on-dark variant */
+.hero .btn-ghost {
   background: rgba(255, 255, 255, 0.08);
   border-color: transparent;
   color: rgba(255, 255, 255, 0.72);
 }
-.btn-ghost:hover {
+.hero .btn-ghost:hover {
   background: rgba(255, 255, 255, 0.14);
   color: #fff;
   text-decoration: none;
@@ -420,6 +388,7 @@
 
 .home-section-inner--narrow {
   max-width: 760px;
+  margin: 0 auto;
 }
 
 .section-intro {
