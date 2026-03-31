@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gold Shops & Markets Directory by Region | GoldPrices</title>
+  <meta name="description" content="Explore listed gold shops and known gold markets by region, country, city, and specialty across GCC, Levant, Africa, and India." />
+  <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/shops.html" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#d4a017" />
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./shops.css" />
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+  <main>
+    <section class="shops-hero" aria-labelledby="shops-title">
+      <div class="shops-hero-inner">
+        <p class="shops-kicker" id="shops-kicker">Shops by region</p>
+        <h1 id="shops-title">Explore Gold Shops & Known Gold Markets</h1>
+        <p class="shops-lead" id="shops-lead">Browse directory listings across countries covered on GoldPrices. Use filters to narrow by region, country, city, and specialty. Shop information is for reference, and business details are shown where available.</p>
+
+        <div class="shops-hero-stats" aria-label="Directory overview">
+          <div class="shops-stat">
+            <span class="shops-stat-value" id="shops-stat-listings">0</span>
+            <span class="shops-stat-label" id="shops-stat-listings-label">Listed shops</span>
+          </div>
+          <div class="shops-stat">
+            <span class="shops-stat-value" id="shops-stat-countries">0</span>
+            <span class="shops-stat-label" id="shops-stat-countries-label">Countries</span>
+          </div>
+          <div class="shops-stat">
+            <span class="shops-stat-value" id="shops-stat-regions">0</span>
+            <span class="shops-stat-label" id="shops-stat-regions-label">Regions</span>
+          </div>
+        </div>
+
+        <div class="shops-popular" aria-label="Popular markets">
+          <span class="shops-popular-label" id="shops-popular-label">Popular markets</span>
+          <div class="shops-popular-chips" id="shops-popular-chips"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shops-controls" aria-label="Shop filters">
+      <div class="shops-controls-inner">
+        <label class="shops-control shops-control--wide" for="shops-search">
+          <span id="shops-search-label">Search by shop, city, country, market, or specialty</span>
+          <input id="shops-search" type="search" placeholder="e.g. Dubai Gold Souk, Riyadh, bullion" />
+        </label>
+
+        <label class="shops-control" for="shops-region-filter">
+          <span id="shops-region-label">Region</span>
+          <select id="shops-region-filter"></select>
+        </label>
+
+        <label class="shops-control" for="shops-country-filter">
+          <span id="shops-country-label">Country</span>
+          <select id="shops-country-filter"></select>
+        </label>
+
+        <label class="shops-control" for="shops-city-filter">
+          <span id="shops-city-label">City</span>
+          <select id="shops-city-filter"></select>
+        </label>
+
+        <label class="shops-control" for="shops-specialty-filter">
+          <span id="shops-specialty-label">Specialty</span>
+          <select id="shops-specialty-filter"></select>
+        </label>
+      </div>
+    </section>
+
+    <section class="shops-results" aria-labelledby="shops-results-title">
+      <div class="shops-results-inner">
+        <div class="shops-results-head">
+          <div>
+            <h2 id="shops-results-title">Listed Shops</h2>
+            <p id="shops-active-filters" class="shops-active-filters"></p>
+          </div>
+          <p id="shops-count" aria-live="polite"></p>
+        </div>
+
+        <div id="shops-grid" class="shops-grid"></div>
+
+        <div id="shops-empty" class="shops-empty" hidden>
+          <h3 id="shops-empty-title">No listings match your filters</h3>
+          <p id="shops-empty-text">Try clearing one filter or searching with a broader term.</p>
+          <button id="shops-clear-filters" type="button" class="shops-clear-btn">Clear filters</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="shops-info" aria-labelledby="shops-info-title">
+      <div class="shops-info-inner">
+        <h2 id="shops-info-title">How to use this directory</h2>
+        <div class="shops-info-grid">
+          <article class="shops-info-card">
+            <h3 id="shops-info-1-title">Compare by market area</h3>
+            <p id="shops-info-1-body">Start with a country or city filter, then compare listed markets and specialties side by side.</p>
+          </article>
+          <article class="shops-info-card">
+            <h3 id="shops-info-2-title">Check available details</h3>
+            <p id="shops-info-2-body">Cards indicate whether business details are limited or partially available so you know what to expect.</p>
+          </article>
+          <article class="shops-info-card">
+            <h3 id="shops-info-3-title">Use as a shortlist</h3>
+            <p id="shops-info-3-body">This page is for reference and discovery. Always confirm current prices, charges, and product details directly with shops.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="./shops.js"></script>
+</body>
+</html>
