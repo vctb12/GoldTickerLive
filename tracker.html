@@ -3,2235 +3,760 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta
-    name="description"
-    content="Live gold tracker workspace with chart, archive, downloads, date lookup, karat matrix, country comparison, and price alerts."
-  />
-  <meta name="keywords" content="gold tracker, live gold price, gold archive, gold chart, UAE gold price, 24K, 22K, GCC gold rates" />
+  <title>Gold Tracker Workspace</title>
+  <meta name="description" content="A premium live gold tracker with real-time spot price, UAE/GCC gold estimates, long-run history, date lookup, alerts, downloads, and market comparison." />
   <meta name="theme-color" content="#0d0d0d" />
-  <meta property="og:title" content="Live Gold Tracker Workspace" />
-  <meta property="og:description" content="Track live gold, browse history, compare karats, set alerts, and export data." />
+  <meta property="og:title" content="Gold Tracker Workspace" />
+  <meta property="og:description" content="Track live gold, browse long-run history, compare markets, and set alerts." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/tracker.html" />
   <meta name="twitter:card" content="summary_large_image" />
-  <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/tracker.html" />
-
-  <title>Live Gold Tracker Workspace</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <link rel="manifest" href="manifest.json" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <style>
-    :root {
-      --trk-bg: #0d0d0d;
-      --trk-surface: #141414;
-      --trk-surface-2: #1b1b1b;
-      --trk-surface-3: #232323;
-      --trk-card: rgba(255,255,255,0.04);
-      --trk-card-2: rgba(255,255,255,0.06);
-      --trk-border: rgba(201,168,76,0.16);
-      --trk-border-strong: rgba(201,168,76,0.3);
-      --trk-text: #f2ead7;
-      --trk-muted: rgba(242,234,215,0.72);
-      --trk-gold: #c9a84c;
-      --trk-gold-2: #f0c040;
-      --trk-green: #4caf7d;
-      --trk-red: #d86b6b;
-      --trk-amber: #e0a53b;
-      --trk-radius-xl: 30px;
-      --trk-radius-lg: 22px;
-      --trk-radius-md: 16px;
-      --trk-radius-sm: 12px;
-      --trk-pill: 999px;
-      --trk-shadow: 0 18px 42px rgba(0,0,0,0.28);
-      --trk-shadow-soft: 0 10px 24px rgba(0,0,0,0.18);
-      --trk-max: 1280px;
-      --trk-trans: 220ms ease;
+    :root{
+      --bg:#0d0d0d;
+      --bg-2:#111111;
+      --bg-3:#181818;
+      --surface:#151515;
+      --surface-2:#1d1d1d;
+      --surface-3:#262626;
+      --surface-soft:rgba(255,255,255,.04);
+      --surface-soft-2:rgba(255,255,255,.06);
+      --surface-soft-3:rgba(255,255,255,.08);
+      --border:rgba(255,255,255,.09);
+      --border-soft:rgba(255,255,255,.06);
+      --gold:#c9a84c;
+      --gold-2:#f0c040;
+      --gold-3:#ffe09a;
+      --green:#4db67f;
+      --red:#e06c6c;
+      --amber:#e0a03b;
+      --blue:#7eb3ff;
+      --text:#f2ead7;
+      --muted:rgba(242,234,215,.74);
+      --muted-2:rgba(242,234,215,.54);
+      --muted-3:rgba(242,234,215,.38);
+      --radius-xl:30px;
+      --radius-lg:22px;
+      --radius-md:16px;
+      --radius-sm:12px;
+      --pill:999px;
+      --shadow:0 18px 42px rgba(0,0,0,.28);
+      --shadow-soft:0 10px 24px rgba(0,0,0,.18);
+      --shadow-light:0 4px 12px rgba(0,0,0,.12);
+      --max:1360px;
+      --nav-h:76px;
+      --trans:220ms ease;
     }
 
-    html { scroll-behavior: smooth; }
-
-    body.tracker-page.tracker-revamp {
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:"Cairo", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(201,168,76,0.16), transparent 24%),
-        radial-gradient(circle at top right, rgba(240,192,64,0.08), transparent 28%),
-        var(--trk-bg);
-      color: var(--trk-text);
-      min-height: 100vh;
-    }
-
-    .tracker-revamp main {
-      padding-top: calc(var(--nav-height, 64px) + 1rem);
-      padding-bottom: 6rem;
-    }
-
-    .tracker-shell {
-      width: min(var(--trk-max), calc(100% - 2rem));
-      margin-inline: auto;
-    }
-
-    .tracker-section-shell {
-      width: min(var(--trk-max), calc(100% - 2rem));
-      margin-inline: auto;
-    }
-
-    /* Topbar */
-    .tracker-revamp .tracker-topbar {
-      position: sticky;
-      top: var(--nav-height, 64px);
-      z-index: 30;
-      padding: 0 0 1rem;
-      background: linear-gradient(180deg, rgba(13,13,13,0.88), rgba(13,13,13,0.66), transparent);
-      backdrop-filter: blur(8px);
-    }
-
-    .tracker-revamp .tracker-topbar-inner {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.9rem;
-      padding: 0.95rem 1rem;
-      border-radius: var(--trk-radius-lg);
-      background: rgba(255,255,255,0.035);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: var(--trk-shadow-soft);
-    }
-
-    .tracker-revamp .tracker-breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 0.55rem;
-      flex-wrap: wrap;
-      color: var(--trk-muted);
-      font-size: 0.92rem;
-    }
-
-    .tracker-revamp .tracker-breadcrumb a {
-      color: var(--trk-text);
-      text-decoration: none;
-      font-weight: 700;
-    }
-
-    .tracker-revamp .freshness-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.55rem;
-      align-items: center;
-    }
-
-    .tracker-revamp .freshness-chip {
-      min-height: 38px;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.45rem 0.85rem;
-      border-radius: var(--trk-pill);
-      background: rgba(255,255,255,0.055);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--trk-muted);
-      font-size: 0.83rem;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .tracker-revamp .chip-live-dot {
-      width: 0.52rem;
-      height: 0.52rem;
-      border-radius: 50%;
-      background: linear-gradient(180deg, var(--trk-gold-2), var(--trk-gold));
-      box-shadow: 0 0 0 5px rgba(201,168,76,0.12);
-    }
-
-    .tracker-revamp .chip-market--open {
-      background: rgba(76,175,125,0.12);
-      border-color: rgba(76,175,125,0.22);
-      color: #d7f4e2;
-    }
-
-    .tracker-revamp .chip-market--closed {
-      background: rgba(224,165,59,0.12);
-      border-color: rgba(224,165,59,0.22);
-      color: #f5e0b5;
-    }
-
-    .tracker-revamp .status-banner {
-      margin-top: 0.8rem;
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      padding: 0.9rem 1rem;
-      border-radius: var(--trk-radius-md);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: var(--trk-shadow-soft);
-    }
-
-    .tracker-revamp .status-offline {
-      background: rgba(224,165,59,0.11);
-      border-color: rgba(224,165,59,0.22);
-      color: #f7dfb0;
-    }
-
-    .tracker-revamp .status-error {
-      background: rgba(216,107,107,0.12);
-      border-color: rgba(216,107,107,0.22);
-      color: #ffdada;
-    }
-
-    /* Hero */
-    .tracker-hero {
-      padding: 0.4rem 0 1.25rem;
-    }
-
-    .tracker-hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
-      gap: 1rem;
-      align-items: stretch;
-    }
-
-    .tracker-hero-copy,
-    .tracker-hero-side {
-      border-radius: var(--trk-radius-xl);
-      border: 1px solid var(--trk-border);
-      box-shadow: var(--trk-shadow);
-      overflow: hidden;
-    }
-
-    .tracker-hero-copy {
-      background:
-        radial-gradient(circle at 12% 18%, rgba(201,168,76,0.18), transparent 24%),
-        linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
-        linear-gradient(180deg, #111 0%, #171717 55%, #1b1911 100%);
-      padding: 1.8rem;
-    }
-
-    .tracker-kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.55rem;
-      min-height: 38px;
-      padding: 0.45rem 0.8rem;
-      border-radius: var(--trk-pill);
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--trk-muted);
-      font-size: 0.84rem;
-      font-weight: 800;
-      margin-bottom: 1rem;
-    }
-
-    .tracker-kicker-dot {
-      width: 0.52rem;
-      height: 0.52rem;
-      border-radius: 50%;
-      background: linear-gradient(180deg, var(--trk-gold-2), var(--trk-gold));
-      box-shadow: 0 0 0 5px rgba(201,168,76,0.12);
-    }
-
-    .tracker-hero-title {
-      margin: 0;
-      font-size: clamp(2rem, 4.1vw, 3.15rem);
-      line-height: 1.05;
-      color: #fff4d2;
-      letter-spacing: -0.03em;
-      max-width: 12ch;
-    }
-
-    .tracker-hero-sub {
-      margin: 0.95rem 0 0;
-      max-width: 62ch;
-      color: var(--trk-muted);
-      font-size: 1.02rem;
-      line-height: 1.8;
-    }
-
-    .tracker-hero-points {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.8rem;
-      margin-top: 1.25rem;
-    }
-
-    .tracker-hero-point {
-      padding: 0.9rem 1rem;
-      border-radius: var(--trk-radius-md);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      min-height: 96px;
-    }
-
-    .tracker-hero-point strong {
-      display: block;
-      color: #fff4d2;
-      font-size: 0.98rem;
-      margin-bottom: 0.35rem;
-    }
-
-    .tracker-hero-point span {
-      color: var(--trk-muted);
-      line-height: 1.55;
-      font-size: 0.9rem;
-    }
-
-    .tracker-hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1.2rem;
-    }
-
-    .tracker-hero-side {
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
-        var(--trk-surface);
-      padding: 1.15rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-
-    .tracker-side-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 0.8rem;
-    }
-
-    .tracker-side-title {
-      margin: 0;
-      font-size: 1.15rem;
-      color: #fff4d2;
-    }
-
-    .tracker-side-sub {
-      margin: 0.25rem 0 0;
-      color: var(--trk-muted);
-      font-size: 0.9rem;
-      line-height: 1.55;
-    }
-
-    .tracker-hero-cards {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.75rem;
-    }
-
-    .tracker-side-card {
-      padding: 0.95rem;
-      border-radius: var(--trk-radius-md);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      min-height: 108px;
-    }
-
-    .tracker-side-card-label {
-      color: var(--trk-muted);
-      font-size: 0.82rem;
-      line-height: 1.45;
-    }
-
-    .tracker-side-card-value {
-      margin-top: 0.45rem;
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: #fff4d2;
-      line-height: 1.12;
-      word-break: break-word;
-    }
-
-    .tracker-side-card-sub {
-      margin-top: 0.25rem;
-      color: var(--trk-muted);
-      font-size: 0.84rem;
-      line-height: 1.5;
-    }
-
-    .tracker-note-box {
-      padding: 0.95rem;
-      border-radius: var(--trk-radius-md);
-      background: rgba(201,168,76,0.1);
-      border: 1px solid rgba(201,168,76,0.18);
-      color: #f7e6b8;
-      line-height: 1.65;
-      font-size: 0.92rem;
-    }
-
-    /* Generic section */
-    .tracker-revamp .section {
-      padding: 1rem 0;
-      background: transparent;
-      border: 0;
-      box-shadow: none;
-    }
-
-    .tracker-revamp .section-header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: end;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 0.95rem;
-    }
-
-    .tracker-revamp .section h2 {
-      margin: 0;
-      color: #fff4d2;
-      font-size: clamp(1.35rem, 2.8vw, 2rem);
-      line-height: 1.1;
-    }
-
-    .tracker-revamp .section-note {
-      margin-top: 0.45rem;
-      color: var(--trk-muted);
-      line-height: 1.65;
-      font-size: 0.94rem;
-      font-style: normal;
-    }
-
-    /* Spotlight */
-    .tracker-revamp #section-spotlight {
-      margin-top: 0.2rem;
-    }
-
-    .tracker-revamp .karat-selector-row {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    .tracker-revamp .selector-label {
-      color: var(--trk-muted);
-      font-size: 0.9rem;
-      font-weight: 700;
-    }
-
-    .tracker-revamp .karat-pills {
-      display: flex;
-      gap: 0.65rem;
-      flex-wrap: wrap;
-    }
-
-    .tracker-revamp .karat-pill {
-      min-height: 44px;
-      padding: 0.72rem 0.95rem;
-      border-radius: var(--trk-pill);
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      color: var(--trk-text);
-      font: inherit;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform var(--trk-trans), background var(--trk-trans), border-color var(--trk-trans), box-shadow var(--trk-trans);
-    }
-
-    .tracker-revamp .karat-pill:hover {
-      transform: translateY(-1px);
-      border-color: rgba(201,168,76,0.24);
-    }
-
-    .tracker-revamp .karat-pill.active {
-      background: linear-gradient(180deg, rgba(201,168,76,0.26), rgba(201,168,76,0.12));
-      border-color: rgba(201,168,76,0.48);
-      color: #fff1c2;
-      box-shadow: 0 0 0 4px rgba(201,168,76,0.12);
-    }
-
-    .tracker-revamp .spotlight-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.85rem;
-    }
-
-    .tracker-revamp .spotlight-card {
-      border-radius: var(--trk-radius-lg);
-      background: rgba(255,255,255,0.045);
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 1rem;
-      box-shadow: var(--trk-shadow-soft);
-      transition: transform var(--trk-trans), border-color var(--trk-trans), box-shadow var(--trk-trans);
-      min-height: 145px;
-    }
-
-    .tracker-revamp .spotlight-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(201,168,76,0.2);
-    }
-
-    .tracker-revamp .spotlight-card.aed-card {
-      background: linear-gradient(180deg, rgba(201,168,76,0.1), rgba(255,255,255,0.04));
-      border-color: rgba(201,168,76,0.18);
-    }
-
-    .tracker-revamp .sc-label {
-      color: var(--trk-muted);
-      font-size: 0.84rem;
-      line-height: 1.45;
-    }
-
-    .tracker-revamp .sc-price {
-      margin-top: 0.45rem;
-      font-size: 1.55rem;
-      font-weight: 800;
-      color: #fff4d2;
-      line-height: 1.12;
-    }
-
-    .tracker-revamp .sc-purity {
-      margin-top: 0.25rem;
-      color: var(--trk-muted);
-      font-size: 0.84rem;
-      line-height: 1.45;
-    }
-
-    .tracker-revamp .sc-badge {
-      margin-top: 0.65rem;
-    }
-
-    /* Change panel */
-    .tracker-revamp #section-change {
-      margin-top: 0.25rem;
-    }
-
-    .tracker-revamp .change-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.85rem;
-    }
-
-    .tracker-revamp .change-item {
-      padding: 0.95rem 1rem;
-      border-radius: var(--trk-radius-lg);
-      background: rgba(255,255,255,0.045);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .tracker-revamp .change-label {
-      color: var(--trk-muted);
-      font-size: 0.84rem;
-    }
-
-    .tracker-revamp .change-value {
-      display: block;
-      margin-top: 0.4rem;
-      color: #fff4d2;
-      font-size: 1.18rem;
-      font-weight: 800;
-      line-height: 1.15;
-    }
-
-    .tracker-revamp .change-value.up { color: #cdeed8; }
-    .tracker-revamp .change-value.down { color: #ffd7d7; }
-
-    .tracker-revamp .change-current-price {
-      margin-top: 0.8rem;
-      color: var(--trk-muted);
-      font-size: 0.92rem;
-    }
-
-    /* Workspace */
-    .tracker-workspace-section {
-      margin-top: 0.2rem;
-    }
-
-    .tracker-revamp .tracker-workspace-header {
-      align-items: start;
-    }
-
-    .tracker-revamp .workspace-tabs {
-      display: flex;
-      gap: 0.65rem;
-      flex-wrap: wrap;
-      border-radius: var(--trk-radius-pill);
-      background: rgba(255,255,255,0.04);
-      padding: 0.35rem;
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .tracker-revamp .workspace-tab {
-      min-height: 44px;
-      border-radius: var(--trk-pill);
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--trk-text);
-      font: inherit;
-      font-weight: 800;
-      padding: 0.68rem 0.95rem;
-      cursor: pointer;
-      transition: transform var(--trk-trans), background var(--trk-trans), border-color var(--trk-trans);
-    }
-
-    .tracker-revamp .workspace-tab:hover {
-      transform: translateY(-1px);
-      border-color: rgba(201,168,76,0.24);
-    }
-
-    .tracker-revamp .workspace-tab.active {
-      background: linear-gradient(180deg, rgba(201,168,76,0.26), rgba(201,168,76,0.12));
-      border-color: rgba(201,168,76,0.48);
-      color: #fff1c2;
-    }
-
-    .tracker-revamp .workspace-panel {
-      display: none;
-      margin-top: 1rem;
-    }
-
-    .tracker-revamp .workspace-panel.active {
-      display: block;
-    }
-
-    .tracker-revamp .tracker-workspace-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 0.85rem;
-      margin-bottom: 1rem;
-    }
-
-    .tracker-revamp .chart-range-pills {
-      display: flex;
-      gap: 0.65rem;
-      flex-wrap: wrap;
-    }
-
-    .tracker-revamp .chart-range-btn {
-      min-height: 44px;
-      border-radius: var(--trk-pill);
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      color: var(--trk-text);
-      font: inherit;
-      font-weight: 800;
-      padding: 0.68rem 0.95rem;
-      cursor: pointer;
-      transition: transform var(--trk-trans), background var(--trk-trans), border-color var(--trk-trans);
-    }
-
-    .tracker-revamp .chart-range-btn:hover {
-      transform: translateY(-1px);
-      border-color: rgba(201,168,76,0.24);
-    }
-
-    .tracker-revamp .chart-range-btn.active {
-      background: linear-gradient(180deg, rgba(201,168,76,0.26), rgba(201,168,76,0.12));
-      border-color: rgba(201,168,76,0.48);
-      color: #fff1c2;
-    }
-
-    .tracker-chart-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
-      gap: 1rem;
-      align-items: stretch;
-    }
-
-    .tracker-chart-primary,
-    .tracker-chart-side {
-      border-radius: var(--trk-radius-xl);
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: var(--trk-shadow-soft);
-      overflow: hidden;
-    }
-
-    .tracker-chart-primary {
-      padding: 1rem;
-      min-height: 520px;
-    }
-
-    .tracker-revamp .chart-container {
-      min-height: 400px;
-      border-radius: var(--trk-radius-lg);
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .tracker-chart-side {
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-
-    .tracker-chart-actions {
-      display: flex;
-      gap: 0.65rem;
-      flex-wrap: wrap;
-    }
-
-    /* Archive */
-    .tracker-revamp .archive-panel-inner,
-    .tracker-revamp .downloads-panel-inner,
-    .tracker-revamp .lookup-panel-inner {
-      border-radius: var(--trk-radius-xl);
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: var(--trk-shadow-soft);
-      padding: 1rem;
-    }
-
-    .tracker-revamp .archive-panel-header,
-    .tracker-revamp .lookup-panel-header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: start;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .tracker-revamp .archive-controls,
-    .tracker-revamp .lookup-form-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.85rem;
-    }
-
-    .tracker-revamp .archive-control-group,
-    .tracker-revamp .lookup-control-group {
-      display: grid;
-      gap: 0.45rem;
-    }
-
-    .tracker-revamp .lookup-control-group--action {
-      align-content: end;
-    }
-
-    .tracker-revamp .archive-control-label {
-      color: var(--trk-muted);
-      font-size: 0.84rem;
-      font-weight: 700;
-    }
-
-    .tracker-revamp .sort-select,
-    .tracker-revamp .search-input {
-      min-height: 44px;
-      border-radius: var(--trk-pill);
-      border: 1px solid rgba(255,255,255,0.09);
-      background: rgba(255,255,255,0.04);
-      color: var(--trk-text);
-      padding: 0.72rem 0.95rem;
-      font: inherit;
-      outline: none;
-    }
-
-    .tracker-revamp .sort-select:focus,
-    .tracker-revamp .search-input:focus {
-      border-color: rgba(201,168,76,0.5);
-      box-shadow: 0 0 0 4px rgba(201,168,76,0.15);
-    }
-
-    .tracker-revamp .archive-count-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 0.85rem;
-      align-items: center;
-      margin-bottom: 1rem;
-      color: var(--trk-muted);
-      font-size: 0.9rem;
-    }
-
-    .tracker-revamp .archive-source-legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.9rem;
-      align-items: center;
-    }
-
-    .tracker-revamp .archive-legend-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-    }
-
-    .tracker-revamp .archive-legend-dot {
-      width: 0.52rem;
-      height: 0.52rem;
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .tracker-revamp .archive-legend-dot--baseline {
-      background: var(--trk-gold);
-      box-shadow: 0 0 0 4px rgba(201,168,76,0.12);
-    }
-
-    .tracker-revamp .archive-legend-dot--local {
-      background: var(--trk-green);
-      box-shadow: 0 0 0 4px rgba(76,175,125,0.12);
-    }
-
-    .tracker-revamp .archive-history-list {
-      display: grid;
-      gap: 0.75rem;
-    }
-
-    .tracker-revamp .archive-history-row {
-      display: grid;
-      grid-template-columns: 140px 1fr auto auto;
-      gap: 0.9rem;
-      align-items: center;
-      padding: 0.95rem 1rem;
-      border-radius: var(--trk-radius-lg);
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .tracker-revamp .archive-row-date {
-      font-weight: 800;
-      color: #fff4d2;
-    }
-
-    .tracker-revamp .archive-row-prices {
-      display: flex;
-      flex-direction: column;
-      gap: 0.18rem;
-    }
-
-    .tracker-revamp .archive-row-price {
-      font-weight: 800;
-      color: #fff4d2;
-    }
-
-    .tracker-revamp .archive-row-aed,
-    .tracker-revamp .archive-row-unit {
-      color: var(--trk-muted);
-      font-size: 0.9rem;
-    }
-
-    .tracker-revamp .archive-row-source {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 34px;
-      padding: 0.3rem 0.75rem;
-      border-radius: var(--trk-pill);
-      font-size: 0.8rem;
-      font-weight: 800;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.05);
-      color: var(--trk-muted);
-      white-space: nowrap;
-    }
-
-    .tracker-revamp .archive-row-source--baseline {
-      background: rgba(201,168,76,0.12);
-      border-color: rgba(201,168,76,0.22);
-      color: #f3db9f;
-    }
-
-    .tracker-revamp .archive-row-source--local {
-      background: rgba(76,175,125,0.12);
-      border-color: rgba(76,175,125,0.22);
-      color: #d7f4e2;
-    }
-
-    .tracker-revamp .archive-empty,
-    .tracker-revamp .lookup-result-card {
-      margin-top: 1rem;
-      padding: 1rem;
-      border-radius: var(--trk-radius-lg);
-      border: 1px dashed rgba(255,255,255,0.12);
-      color: var(--trk-muted);
-      background: rgba(255,255,255,0.03);
-      line-height: 1.7;
-    }
-
-    .tracker-revamp .lookup-result-card {
-      border-style: solid;
-      background: rgba(255,255,255,0.04);
-    }
-
-    .tracker-revamp .lookup-empty-text {
-      color: var(--trk-muted);
-    }
-
-    .tracker-revamp .lookup-result-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.9rem;
-    }
-
-    .tracker-revamp .lookup-source-badge {
-      display: inline-flex;
-      align-items: center;
-      min-height: 34px;
-      padding: 0.3rem 0.75rem;
-      border-radius: var(--trk-pill);
-      background: rgba(201,168,76,0.12);
-      border: 1px solid rgba(201,168,76,0.22);
-      color: #f3db9f;
-      font-size: 0.8rem;
-      font-weight: 800;
-    }
-
-    .tracker-revamp .lookup-result-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.75rem;
-    }
-
-    .tracker-revamp .lookup-result-item {
-      padding: 0.9rem 0.95rem;
-      border-radius: var(--trk-radius-md);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .tracker-revamp .lookup-result-label {
-      display: block;
-      color: var(--trk-muted);
-      font-size: 0.84rem;
-      margin-bottom: 0.35rem;
-    }
-
-    .tracker-revamp .lookup-result-value {
-      color: #fff4d2;
-      font-weight: 800;
-      font-size: 1.05rem;
-    }
-
-    /* Downloads */
-    .tracker-revamp .downloads-panel-inner {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.9rem;
-    }
-
-    .tracker-revamp .download-card {
-      border-radius: var(--trk-radius-lg);
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-      min-height: 220px;
-      box-shadow: var(--trk-shadow-soft);
-    }
-
-    .tracker-revamp .download-card--featured {
-      background: linear-gradient(180deg, rgba(201,168,76,0.12), rgba(255,255,255,0.04));
-      border-color: rgba(201,168,76,0.22);
-    }
-
-    .tracker-revamp .download-card-icon {
-      font-size: 1.55rem;
-      line-height: 1;
-    }
-
-    .tracker-revamp .download-card-title {
-      color: #fff4d2;
-      font-weight: 800;
-      font-size: 1.05rem;
-    }
-
-    .tracker-revamp .download-card-desc {
-      color: var(--trk-muted);
-      font-size: 0.92rem;
-      line-height: 1.65;
-      flex: 1;
-    }
-
-    .tracker-revamp .download-card-actions {
-      display: flex;
-      gap: 0.65rem;
-      flex-wrap: wrap;
-    }
-
-    /* Karat table */
-    .tracker-revamp .table-wrapper {
-      overflow: auto;
-      border-radius: var(--trk-radius-xl);
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: var(--trk-shadow-soft);
-    }
-
-    .tracker-revamp #karat-table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 720px;
-    }
-
-    .tracker-revamp #karat-table th,
-    .tracker-revamp #karat-table td {
-      padding: 1rem 1rem;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      vertical-align: middle;
-      text-align: left;
-    }
-
-    .tracker-revamp #karat-table th {
-      color: #fff4d2;
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      background: rgba(255,255,255,0.04);
-    }
-
-    .tracker-revamp #karat-table td {
-      color: var(--trk-text);
-      font-size: 0.95rem;
-    }
-
-    .tracker-revamp .unit-toggle-group {
-      display: flex;
-      gap: 0.65rem;
-      flex-wrap: wrap;
-    }
-
-    .tracker-revamp .unit-btn {
-      min-height: 44px;
-      border-radius: var(--trk-pill);
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      color: var(--trk-text);
-      font: inherit;
-      font-weight: 800;
-      padding: 0.72rem 0.95rem;
-      cursor: pointer;
-      transition: transform var(--trk-trans), background var(--trk-trans), border-color var(--trk-trans);
-    }
-
-    .tracker-revamp .unit-btn:hover {
-      transform: translateY(-1px);
-      border-color: rgba(201,168,76,0.24);
-    }
-
-    .tracker-revamp .unit-btn.active {
-      background: linear-gradient(180deg, rgba(201,168,76,0.26), rgba(201,168,76,0.12));
-      border-color: rgba(201,168,76,0.48);
-      color: #fff1c2;
-    }
-
-    /* Country region compare */
-    .tracker-revamp .tab-bar {
-      display: flex;
-      gap: 0.65rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.95rem;
-    }
-
-    .tracker-revamp .tab {
-      min-height: 44px;
-      border-radius: var(--trk-pill);
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      color: var(--trk-text);
-      font: inherit;
-      font-weight: 800;
-      padding: 0.72rem 0.95rem;
-      cursor: pointer;
-      transition: transform var(--trk-trans), background var(--trk-trans), border-color var(--trk-trans);
-    }
-
-    .tracker-revamp .tab:hover {
-      transform: translateY(-1px);
-      border-color: rgba(201,168,76,0.24);
-    }
-
-    .tracker-revamp .tab.active {
-      background: linear-gradient(180deg, rgba(201,168,76,0.26), rgba(201,168,76,0.12));
-      border-color: rgba(201,168,76,0.48);
-      color: #fff1c2;
-    }
-
-    .tracker-revamp .controls-row {
-      display: grid;
-      grid-template-columns: 1.3fr auto minmax(220px, 320px);
-      gap: 0.85rem;
-      margin-bottom: 0.95rem;
-      align-items: end;
-    }
-
-    .tracker-revamp .control-group {
-      display: flex;
-      gap: 0.65rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .tracker-revamp .search-group {
-      justify-content: flex-end;
-    }
-
-    .tracker-revamp .country-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 0.9rem;
-    }
-
-    .tracker-revamp .country-card {
-      border-radius: var(--trk-radius-lg);
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 1rem;
-      box-shadow: var(--trk-shadow-soft);
-      transition: transform var(--trk-trans), border-color var(--trk-trans), box-shadow var(--trk-trans);
-    }
-
-    .tracker-revamp .country-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(201,168,76,0.22);
-      box-shadow: 0 14px 30px rgba(0,0,0,0.2);
-    }
-
-    .tracker-revamp .stale-card {
-      opacity: 0.75;
-    }
-
-    .tracker-revamp .no-data-card {
-      opacity: 0.6;
-      border-style: dashed;
-    }
-
-    .tracker-revamp .cc-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.75rem;
-      align-items: flex-start;
-      margin-bottom: 0.75rem;
-    }
-
-    .tracker-revamp .cc-flag {
-      font-size: 1.45rem;
-      line-height: 1;
-    }
-
-    .tracker-revamp .cc-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 0.15rem;
-      flex: 1;
-    }
-
-    .tracker-revamp .cc-name {
-      font-weight: 800;
-      color: #fff4d2;
-      line-height: 1.2;
-    }
-
-    .tracker-revamp .cc-currency {
-      color: var(--trk-muted);
-      font-size: 0.84rem;
-    }
-
-    .tracker-revamp .cc-badges {
-      display: flex;
-      gap: 0.45rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.75rem;
-    }
-
-    .tracker-revamp .badge {
-      display: inline-flex;
-      align-items: center;
-      min-height: 30px;
-      padding: 0.25rem 0.65rem;
-      border-radius: var(--trk-pill);
-      font-size: 0.78rem;
-      font-weight: 800;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.05);
-      color: var(--trk-muted);
-    }
-
-    .tracker-revamp .badge-fixed {
-      background: rgba(201,168,76,0.12);
-      border-color: rgba(201,168,76,0.22);
-      color: #f3db9f;
-    }
-
-    .tracker-revamp .badge-stale {
-      background: rgba(224,165,59,0.12);
-      border-color: rgba(224,165,59,0.22);
-      color: #f7dfb0;
-    }
-
-    .tracker-revamp .cc-price-block {
-      margin-bottom: 0.55rem;
-    }
-
-    .tracker-revamp .cc-price-main {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: #fff4d2;
-      line-height: 1.15;
-    }
-
-    .tracker-revamp .cc-price-unit,
-    .tracker-revamp .cc-price-secondary {
-      color: var(--trk-muted);
-      font-size: 0.88rem;
-      line-height: 1.5;
-      margin-top: 0.18rem;
-    }
-
-    .tracker-revamp .cc-movement {
-      display: inline-flex;
-      align-items: center;
-      min-height: 30px;
-      padding: 0.2rem 0.6rem;
-      border-radius: var(--trk-pill);
-      font-size: 0.78rem;
-      font-weight: 800;
-      margin-top: 0.45rem;
-    }
-
-    .tracker-revamp .cc-movement--up {
-      background: rgba(76,175,125,0.12);
-      color: #d7f4e2;
-      border: 1px solid rgba(76,175,125,0.22);
-    }
-
-    .tracker-revamp .cc-movement--down {
-      background: rgba(216,107,107,0.12);
-      color: #ffd7d7;
-      border: 1px solid rgba(216,107,107,0.22);
-    }
-
-    .tracker-revamp .cc-actions {
-      margin-top: 0.8rem;
-      display: flex;
-      gap: 0.55rem;
-      flex-wrap: wrap;
-    }
-
-    .tracker-revamp .copy-btn,
-    .tracker-revamp .fav-btn {
-      min-height: 38px;
-      border-radius: var(--trk-pill);
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      color: var(--trk-text);
-      font: inherit;
-      font-weight: 700;
-      padding: 0.42rem 0.85rem;
-      cursor: pointer;
-      transition: transform var(--trk-trans), background var(--trk-trans), border-color var(--trk-trans);
-    }
-
-    .tracker-revamp .copy-btn:hover,
-    .tracker-revamp .fav-btn:hover {
-      transform: translateY(-1px);
-      border-color: rgba(201,168,76,0.22);
-    }
-
-    .tracker-revamp .fav-btn.active {
-      background: rgba(201,168,76,0.12);
-      border-color: rgba(201,168,76,0.22);
-      color: #fff1c2;
-    }
-
-    .tracker-revamp .cc-country-link {
-      display: inline-flex;
-      margin-top: 0.8rem;
-      color: var(--trk-gold-2);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-
-    .tracker-revamp .empty-state {
-      margin-top: 1rem;
-      padding: 1rem;
-      border-radius: var(--trk-radius-lg);
-      border: 1px dashed rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.03);
-      color: var(--trk-muted);
-    }
-
-    /* Alerts */
-    .tracker-revamp .alert-form {
-      border-radius: var(--trk-radius-xl);
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: var(--trk-shadow-soft);
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .tracker-revamp .alert-form-inner {
-      display: grid;
-      gap: 0.85rem;
-    }
-
-    .tracker-revamp .alert-form-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      align-items: center;
-    }
-
-    .tracker-revamp .alert-form-label {
-      color: var(--trk-muted);
-      font-size: 0.9rem;
-      font-weight: 700;
-      min-width: 140px;
-    }
-
-    .tracker-revamp .alert-direction-select,
-    .tracker-revamp .alert-price-input {
-      min-height: 44px;
-      border-radius: var(--trk-pill);
-      border: 1px solid rgba(255,255,255,0.09);
-      background: rgba(255,255,255,0.04);
-      color: var(--trk-text);
-      padding: 0.72rem 0.95rem;
-      font: inherit;
-      outline: none;
-    }
-
-    .tracker-revamp .alert-form-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      align-items: center;
-    }
-
-    .tracker-revamp .alerts-list {
-      border-radius: var(--trk-radius-xl);
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: var(--trk-shadow-soft);
-      padding: 1rem;
-    }
-
-    .tracker-revamp .alerts-empty {
-      margin-top: 1rem;
-      padding: 1rem;
-      border-radius: var(--trk-radius-lg);
-      border: 1px dashed rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.03);
-      color: var(--trk-muted);
-      text-align: center;
-    }
-
-    /* Related / no data */
-    .tracker-revamp .related-tools-row {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin-top: 0.3rem;
-    }
-
-    .tracker-revamp .related-tool-link {
-      min-height: 42px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.68rem 0.95rem;
-      border-radius: var(--trk-pill);
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      color: var(--trk-text);
-      text-decoration: none;
-      font-weight: 700;
-      transition: transform var(--trk-trans), background var(--trk-trans), border-color var(--trk-trans);
-    }
-
-    .tracker-revamp .related-tool-link:hover {
-      transform: translateY(-1px);
-      border-color: rgba(201,168,76,0.22);
-    }
-
-    .tracker-revamp .no-data-state {
-      margin-top: 1rem;
-      padding: 1rem;
-      border-radius: var(--trk-radius-lg);
-      border: 1px dashed rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.03);
-      color: var(--trk-muted);
-      text-align: center;
-    }
-
-    .tracker-revamp .retry-btn {
-      margin-top: 0.75rem;
-      min-height: 42px;
-      border-radius: var(--trk-pill);
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      color: var(--trk-text);
-      font: inherit;
-      font-weight: 700;
-      padding: 0.65rem 1rem;
-      cursor: pointer;
-    }
-
-    /* Responsive */
-    @media (max-width: 1120px) {
-      .tracker-hero-grid,
-      .tracker-chart-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .tracker-revamp .spotlight-grid,
-      .tracker-revamp .tracker-hero-points,
-      .tracker-revamp .downloads-panel-inner {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 760px) {
-      .tracker-revamp main {
-        padding-bottom: 6.75rem;
-      }
-
-      .tracker-revamp .tracker-topbar {
-        top: 64px;
-      }
-
-      .tracker-revamp .tracker-breadcrumb {
-        display: none;
-      }
-
-      .tracker-revamp .tracker-hero-points,
-      .tracker-revamp .tracker-hero-cards,
-      .tracker-revamp .spotlight-grid,
-      .tracker-revamp .change-grid,
-      .tracker-revamp .downloads-panel-inner,
-      .tracker-revamp .archive-controls,
-      .tracker-revamp .lookup-form-grid,
-      .tracker-revamp .lookup-result-grid,
-      .tracker-revamp .controls-row {
-        grid-template-columns: 1fr;
-      }
-
-      .tracker-revamp .archive-history-row {
-        grid-template-columns: 1fr;
-      }
-
-      .tracker-revamp .search-group {
-        justify-content: stretch;
-      }
-    }
-
-    [dir="rtl"] .tracker-revamp .tracker-topbar-inner,
-    [dir="rtl"] .tracker-revamp .tracker-breadcrumb,
-    [dir="rtl"] .tracker-revamp .freshness-chips,
-    [dir="rtl"] .tracker-revamp .section-header,
-    [dir="rtl"] .tracker-revamp .tracker-chart-actions,
-    [dir="rtl"] .tracker-revamp .tracker-side-head,
-    [dir="rtl"] .tracker-revamp .archive-panel-header,
-    [dir="rtl"] .tracker-revamp .archive-count-row,
-    [dir="rtl"] .tracker-revamp .alert-form-row,
-    [dir="rtl"] .tracker-revamp .related-tools-row,
-    [dir="rtl"] .tracker-revamp .cc-header,
-    [dir="rtl"] .tracker-revamp .cc-actions {
-      direction: rtl;
-    }
-
-    [dir="rtl"] .tracker-revamp .tracker-hero-copy,
-    [dir="rtl"] .tracker-revamp .tracker-hero-side,
-    [dir="rtl"] .tracker-revamp .tracker-chart-primary,
-    [dir="rtl"] .tracker-revamp .tracker-chart-side,
-    [dir="rtl"] .tracker-revamp .archive-panel-inner,
-    [dir="rtl"] .tracker-revamp .downloads-panel-inner,
-    [dir="rtl"] .tracker-revamp .lookup-panel-inner,
-    [dir="rtl"] .tracker-revamp .alert-form,
-    [dir="rtl"] .tracker-revamp .alerts-list,
-    [dir="rtl"] .tracker-revamp .country-card,
-    [dir="rtl"] .tracker-revamp .table-wrapper {
-      text-align: right;
-    }
-
-    [dir="rtl"] .tracker-revamp #karat-table th,
-    [dir="rtl"] .tracker-revamp #karat-table td {
-      text-align: right;
-    }
+        radial-gradient(circle at top left, rgba(201,168,76,.13), transparent 24%),
+        radial-gradient(circle at top right, rgba(240,192,64,.08), transparent 28%),
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,.03), transparent 35%),
+        var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    a{color:inherit}
+    button,input,select{font:inherit}
+    img{max-width:100%}
+
+    .shell{
+      width:min(var(--max), calc(100% - 2rem));
+      margin-inline:auto;
+    }
+
+    .btn{
+      min-height:46px;
+      border-radius:var(--pill);
+      border:1px solid var(--border);
+      background:var(--surface-soft);
+      color:var(--text);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:.55rem;
+      padding:.75rem 1rem;
+      text-decoration:none;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform var(--trans), border-color var(--trans), background var(--trans), box-shadow var(--trans), color var(--trans);
+      white-space:nowrap;
+    }
+    .btn:hover{transform:translateY(-1px); border-color:rgba(201,168,76,.3)}
+    .btn-primary{
+      background:linear-gradient(180deg, rgba(201,168,76,.32), rgba(201,168,76,.14));
+      border-color:rgba(201,168,76,.46);
+      color:#fff3cd;
+      box-shadow:0 10px 24px rgba(201,168,76,.12);
+    }
+    .btn-soft{background:rgba(255,255,255,.05)}
+    .btn-ghost{background:transparent}
+    .btn-danger{background:rgba(224,108,108,.12);border-color:rgba(224,108,108,.25);color:#ffd9d9}
+    .btn-sm{min-height:38px;padding:.5rem .85rem;font-size:.92rem}
+
+    .nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);background:linear-gradient(180deg, rgba(13,13,13,.94), rgba(13,13,13,.8));border-bottom:1px solid rgba(255,255,255,.06)}
+    .nav-inner{min-height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.78rem;text-decoration:none;min-width:0;flex-shrink:0}
+    .brand-mark{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(180deg, rgba(201,168,76,.34), rgba(201,168,76,.16));border:1px solid rgba(201,168,76,.42);color:#fff0c3;font-weight:900;box-shadow:var(--shadow-light)}
+    .brand-copy{display:flex;flex-direction:column;line-height:1.02;min-width:0}
+    .brand-title{font-weight:900;color:#fff4d2;letter-spacing:-.02em}
+    .brand-sub{color:var(--muted);font-size:.8rem}
+    .nav-links{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;justify-content:center}
+    .nav-link{min-height:40px;display:inline-flex;align-items:center;justify-content:center;padding:.56rem .9rem;border-radius:var(--pill);text-decoration:none;color:var(--muted);font-weight:800;border:1px solid transparent;transition:background var(--trans), color var(--trans), border-color var(--trans)}
+    .nav-link:hover{color:var(--text);background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
+    .nav-link.active{color:#fff1c2;background:linear-gradient(180deg, rgba(201,168,76,.24), rgba(201,168,76,.1));border-color:rgba(201,168,76,.36)}
+    .nav-actions{display:flex;align-items:center;gap:.55rem;flex-shrink:0}
+    .mobile-menu-btn{display:none}
+    .mobile-menu{display:none;border-top:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg, rgba(13,13,13,.98), rgba(16,16,16,.98))}
+    .mobile-menu-inner{display:grid;gap:.6rem;padding:1rem 0 1.1rem}
+
+    .page-main{padding-top:1rem;padding-bottom:7rem}
+    .status-row{position:sticky;top:calc(var(--nav-h) + .35rem);z-index:60;margin-bottom:1rem}
+    .status-wrap{display:grid;gap:.75rem}
+    .status-top{display:flex;justify-content:space-between;align-items:center;gap:.9rem;flex-wrap:wrap;padding:.95rem 1rem;border-radius:var(--radius-lg);background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow-soft);backdrop-filter:blur(10px)}
+    .breadcrumbs{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:.92rem}
+    .breadcrumbs a{text-decoration:none;color:var(--text);font-weight:700}
+    .chip-row{display:flex;gap:.55rem;flex-wrap:wrap;align-items:center}
+    .chip{min-height:38px;display:inline-flex;align-items:center;gap:.45rem;padding:.45rem .85rem;border-radius:var(--pill);background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:.83rem;font-weight:700;white-space:nowrap}
+    .chip-dot{width:.52rem;height:.52rem;border-radius:50%;background:linear-gradient(180deg,var(--gold-2),var(--gold));box-shadow:0 0 0 5px rgba(201,168,76,.12)}
+    .chip.market-open{background:rgba(77,182,127,.12);border-color:rgba(77,182,127,.22);color:#d7f4e2}
+    .chip.market-closed{background:rgba(224,160,59,.12);border-color:rgba(224,160,59,.22);color:#f7dfb0}
+    .banner{display:none;align-items:center;gap:.65rem;padding:.92rem 1rem;border-radius:var(--radius-md);border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow-soft);line-height:1.6}
+    .banner.visible{display:flex}
+    .banner.offline{background:rgba(224,160,59,.11);border-color:rgba(224,160,59,.22);color:#f7dfb0}
+    .banner.error{background:rgba(224,108,108,.12);border-color:rgba(224,108,108,.22);color:#ffd9d9}
+    .banner.success{background:rgba(77,182,127,.12);border-color:rgba(77,182,127,.22);color:#d7f4e2}
+
+    .hero{padding:.2rem 0 1.25rem}
+    .hero-grid{display:grid;grid-template-columns:minmax(0, 1.18fr) minmax(340px, .82fr);gap:1rem;align-items:stretch}
+    .hero-panel,.hero-side{border-radius:var(--radius-xl);border:1px solid rgba(201,168,76,.18);box-shadow:var(--shadow);overflow:hidden}
+    .hero-panel{background:radial-gradient(circle at 10% 15%, rgba(201,168,76,.18), transparent 24%),linear-gradient(145deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),linear-gradient(180deg, #101010 0%, #151515 55%, #1b1810 100%);padding:1.9rem}
+    .hero-kicker{display:inline-flex;align-items:center;gap:.55rem;min-height:38px;padding:.45rem .8rem;border-radius:var(--pill);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:.84rem;font-weight:800;margin-bottom:1rem}
+    .hero-title{margin:0;font-size:clamp(2.1rem, 4vw, 3.7rem);line-height:1;color:#fff4d2;letter-spacing:-.03em;max-width:11ch}
+    .hero-sub{margin:1rem 0 0;max-width:67ch;color:var(--muted);font-size:1.02rem;line-height:1.84}
+    .hero-points{display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:.8rem;margin-top:1.3rem}
+    .hero-point{padding:1rem;border-radius:var(--radius-md);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);min-height:106px}
+    .hero-point strong{display:block;color:#fff4d2;margin-bottom:.35rem;font-size:.98rem}
+    .hero-point span{color:var(--muted);line-height:1.58;font-size:.9rem}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.3rem}
+    .hero-side{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),var(--surface);padding:1.15rem;display:flex;flex-direction:column;gap:.85rem}
+    .side-head{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem}
+    .side-title{margin:0;font-size:1.14rem;color:#fff4d2}
+    .side-sub{margin:.25rem 0 0;font-size:.9rem;color:var(--muted);line-height:1.55}
+    .summary-grid{display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:.75rem}
+    .metric-card{padding:.95rem;border-radius:var(--radius-md);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);min-height:118px}
+    .metric-label{color:var(--muted);font-size:.82rem;line-height:1.4}
+    .metric-value{margin-top:.45rem;color:#fff4d2;font-size:1.36rem;font-weight:800;line-height:1.12;word-break:break-word}
+    .metric-sub{margin-top:.25rem;color:var(--muted);font-size:.84rem;line-height:1.48}
+    .note-card{padding:.95rem 1rem;border-radius:var(--radius-md);background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.18);color:#f7e6b8;line-height:1.65;font-size:.92rem}
+
+    .section{padding:1rem 0}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+    .section-title{margin:0;color:#fff4d2;font-size:clamp(1.35rem, 2.6vw, 2rem);line-height:1.08}
+    .section-sub{margin:.45rem 0 0;color:var(--muted);line-height:1.67;font-size:.94rem;max-width:70ch}
+
+    .surface-shell{border-radius:var(--radius-xl);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow-soft);padding:1rem}
+    .workspace-shell{border-radius:var(--radius-xl);background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),var(--surface);border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow);padding:1rem}
+    .workspace-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+    .workspace-tabs{display:flex;gap:.55rem;flex-wrap:wrap;padding:.35rem;border-radius:var(--pill);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+    .workspace-tab{min-height:42px;border-radius:var(--pill);border:1px solid transparent;background:transparent;color:var(--text);font:inherit;font-weight:800;padding:.62rem .95rem;cursor:pointer;transition:transform var(--trans), background var(--trans), border-color var(--trans)}
+    .workspace-tab:hover{transform:translateY(-1px);border-color:rgba(201,168,76,.24)}
+    .workspace-tab.active{background:linear-gradient(180deg, rgba(201,168,76,.26), rgba(201,168,76,.12));border-color:rgba(201,168,76,.48);color:#fff1c2}
+    .workspace-actions{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+    .workspace-panel{display:none}
+    .workspace-panel.active{display:block}
+    .toolbar{display:grid;grid-template-columns:1fr auto;gap:.85rem;margin-bottom:1rem;align-items:end}
+    .toolbar-left,.toolbar-right{display:flex;gap:.65rem;flex-wrap:wrap;align-items:center}
+    .pill-group{display:flex;gap:.55rem;flex-wrap:wrap}
+    .pill-btn{min-height:42px;border-radius:var(--pill);border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:var(--text);font:inherit;font-weight:800;padding:.62rem .9rem;cursor:pointer;transition:transform var(--trans), background var(--trans), border-color var(--trans)}
+    .pill-btn:hover{transform:translateY(-1px);border-color:rgba(201,168,76,.24)}
+    .pill-btn.active{background:linear-gradient(180deg, rgba(201,168,76,.26), rgba(201,168,76,.12));border-color:rgba(201,168,76,.48);color:#fff1c2}
+    .field-inline{display:grid;gap:.4rem}
+    .field-label{color:var(--muted);font-size:.82rem;font-weight:700}
+    .field-control,.search-input{min-height:44px;border-radius:var(--pill);border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);color:var(--text);padding:.72rem .95rem;outline:none}
+    .field-control:focus,.search-input:focus{border-color:rgba(201,168,76,.5);box-shadow:0 0 0 4px rgba(201,168,76,.15)}
+
+    .chart-layout{display:grid;grid-template-columns:minmax(0, 1.28fr) minmax(320px, .72fr);gap:1rem;align-items:stretch}
+    .chart-card,.side-stack{border-radius:var(--radius-xl);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow-soft);overflow:hidden}
+    .chart-card{padding:1rem;min-height:580px;display:flex;flex-direction:column}
+    .chart-head{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;flex-wrap:wrap;margin-bottom:.95rem}
+    .chart-title{margin:0;color:#fff4d2;font-size:1.08rem}
+    .chart-note{margin:.35rem 0 0;color:var(--muted);font-size:.9rem;line-height:1.6;max-width:60ch}
+    .chart-wrap{position:relative;flex:1;min-height:380px}
+    .chart-foot{margin-top:.95rem;padding-top:.85rem;border-top:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:.88rem;line-height:1.6;display:flex;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
+    .stats-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem;margin-bottom:1rem}
+    .stats-item{padding:.9rem;border-radius:var(--radius-md);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+    .stats-label{color:var(--muted);font-size:.82rem;line-height:1.4}
+    .stats-value{margin-top:.4rem;color:#fff4d2;font-size:1.2rem;font-weight:800;line-height:1.12}
+    .stats-value.pos{color:#d7f4e2}.stats-value.neg{color:#ffd9d9}
+    .side-stack{padding:1rem;display:flex;flex-direction:column;gap:.8rem}
+    .mini-card{padding:.95rem;border-radius:var(--radius-md);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+    .mini-title{color:#fff4d2;font-weight:800;font-size:.98rem;margin-bottom:.35rem}
+    .mini-copy{color:var(--muted);font-size:.9rem;line-height:1.6}
+
+    .lookup-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem;margin-bottom:1rem}
+    .lookup-result{padding:1rem;border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:var(--text);line-height:1.7}
+    .lookup-result-head{display:flex;justify-content:space-between;gap:.75rem;align-items:center;flex-wrap:wrap;margin-bottom:.9rem}
+    .source-badge{display:inline-flex;align-items:center;min-height:32px;padding:.25rem .7rem;border-radius:var(--pill);background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.22);color:#f3db9f;font-size:.8rem;font-weight:800}
+    .lookup-result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}
+    .lookup-item{padding:.9rem;border-radius:var(--radius-md);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+    .lookup-label{display:block;color:var(--muted);font-size:.84rem;margin-bottom:.35rem}
+    .lookup-value{color:#fff4d2;font-weight:800;font-size:1.04rem}
+
+    .archive-layout{display:grid;gap:.85rem}
+    .archive-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem;margin-bottom:.9rem}
+    .archive-meta{display:flex;justify-content:space-between;gap:.75rem;align-items:center;flex-wrap:wrap;margin-bottom:.95rem;color:var(--muted);font-size:.9rem}
+    .archive-list{display:grid;gap:.75rem}
+    .archive-row{display:grid;grid-template-columns:140px 1fr auto auto;gap:.9rem;align-items:center;padding:.95rem 1rem;border-radius:var(--radius-lg);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+    .archive-date{font-weight:800;color:#fff4d2}
+    .archive-prices{display:flex;flex-direction:column;gap:.18rem}
+    .archive-price{color:#fff4d2;font-weight:800}.archive-sub,.archive-unit{color:var(--muted);font-size:.9rem}
+    .archive-tag{display:inline-flex;align-items:center;justify-content:center;min-height:32px;padding:.25rem .7rem;border-radius:var(--pill);font-size:.8rem;font-weight:800;border:1px solid rgba(255,255,255,.08)}
+    .archive-tag.baseline{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.22);color:#f3db9f}
+    .archive-tag.local{background:rgba(77,182,127,.12);border-color:rgba(77,182,127,.22);color:#d7f4e2}
+
+    .download-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.9rem}
+    .download-card{padding:1rem;border-radius:var(--radius-lg);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow-soft);display:flex;flex-direction:column;gap:.7rem;min-height:220px}
+    .download-card.featured{background:linear-gradient(180deg, rgba(201,168,76,.12), rgba(255,255,255,.04));border-color:rgba(201,168,76,.22)}
+    .download-icon{font-size:1.5rem;line-height:1}.download-title{color:#fff4d2;font-weight:800;font-size:1.04rem}.download-desc{color:var(--muted);font-size:.92rem;line-height:1.65;flex:1}
+
+    .matrix-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem}
+    .matrix-card{padding:1rem;border-radius:var(--radius-lg);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow-soft);transition:transform var(--trans), border-color var(--trans), box-shadow var(--trans)}
+    .matrix-card:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.22);box-shadow:0 14px 30px rgba(0,0,0,.2)}
+    .matrix-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.7rem;margin-bottom:.6rem}.matrix-code{font-size:1.08rem;font-weight:800;color:#fff4d2}.matrix-purity{color:var(--muted);font-size:.84rem}.matrix-price{font-size:1.42rem;font-weight:800;color:#fff4d2;line-height:1.14}.matrix-sub{color:var(--muted);font-size:.88rem;line-height:1.55;margin-top:.35rem}
+
+    .compare-top{display:grid;grid-template-columns:1.2fr auto minmax(240px,320px);gap:.85rem;align-items:end;margin-bottom:1rem}
+    .region-tabs{display:flex;gap:.55rem;flex-wrap:wrap}
+    .region-tab{min-height:42px;border-radius:var(--pill);border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:var(--text);font:inherit;font-weight:800;padding:.62rem .9rem;cursor:pointer;transition:transform var(--trans), background var(--trans), border-color var(--trans)}
+    .region-tab:hover{transform:translateY(-1px);border-color:rgba(201,168,76,.24)}
+    .region-tab.active{background:linear-gradient(180deg, rgba(201,168,76,.26), rgba(201,168,76,.12));border-color:rgba(201,168,76,.48);color:#fff1c2}
+    .country-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(250px,1fr));gap:.9rem}
+    .country-card{border-radius:var(--radius-lg);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:1rem;box-shadow:var(--shadow-soft);transition:transform var(--trans), border-color var(--trans), box-shadow var(--trans)}
+    .country-card:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.22);box-shadow:0 14px 30px rgba(0,0,0,.2)}
+    .country-head{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;margin-bottom:.75rem}
+    .country-meta{display:flex;gap:.7rem;align-items:flex-start;min-width:0;flex:1}
+    .country-flag{font-size:1.45rem;line-height:1;flex-shrink:0}.country-name{font-weight:800;color:#fff4d2;line-height:1.2}.country-code{margin-top:.18rem;color:var(--muted);font-size:.84rem}
+    .country-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.75rem}
+    .tag{display:inline-flex;align-items:center;min-height:30px;padding:.25rem .65rem;border-radius:var(--pill);font-size:.78rem;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:var(--muted)}
+    .tag.fixed{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.22);color:#f3db9f}
+    .country-main{font-size:1.42rem;font-weight:800;color:#fff4d2;line-height:1.14}.country-main-sub{margin-top:.2rem;color:var(--muted);font-size:.88rem}.country-secondary{margin-top:.45rem;color:var(--muted);font-size:.88rem;line-height:1.55}
+    .country-actions{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:.8rem}
+    .icon-btn{min-height:38px;border-radius:var(--pill);border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:var(--text);font:inherit;font-weight:700;padding:.42rem .85rem;cursor:pointer;transition:transform var(--trans), border-color var(--trans), background var(--trans)}
+    .icon-btn:hover{transform:translateY(-1px);border-color:rgba(201,168,76,.22)}
+    .icon-btn.active{background:rgba(201,168,76,.12);border-color:rgba(201,168,76,.22);color:#fff1c2}
+
+    .alerts-layout{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:1rem}
+    .alert-form{padding:1rem;border-radius:var(--radius-lg);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+    .alert-form-grid{display:grid;gap:.85rem}.alert-form-grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .alert-list{padding:1rem;border-radius:var(--radius-lg);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+    .alert-item{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;padding:.85rem 0;border-bottom:1px solid rgba(255,255,255,.08)}
+    .alert-item:last-child{border-bottom:0}.alert-meta{display:grid;gap:.25rem}.alert-title{font-weight:800;color:#fff4d2}.alert-sub{color:var(--muted);font-size:.88rem;line-height:1.55}.alert-actions{display:flex;gap:.55rem;flex-shrink:0}
+    .watchlist-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem;margin-top:1rem}
+    .watch-card{padding:.95rem;border-radius:var(--radius-md);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+    .watch-title{color:#fff4d2;font-weight:800;margin-bottom:.3rem}.watch-sub{color:var(--muted);font-size:.88rem;line-height:1.5}
+
+    .tool-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.9rem}
+    .tool-card{border-radius:var(--radius-lg);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:1rem;box-shadow:var(--shadow-soft);text-decoration:none;transition:transform var(--trans), border-color var(--trans), box-shadow var(--trans)}
+    .tool-card:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.22);box-shadow:0 14px 30px rgba(0,0,0,.2)}
+    .tool-title{font-size:1.12rem;font-weight:800;color:#fff4d2}.tool-copy{margin-top:.45rem;color:var(--muted);font-size:.92rem;line-height:1.6}
+
+    .empty-box{padding:1rem;border-radius:var(--radius-lg);border:1px dashed rgba(255,255,255,.12);background:rgba(255,255,255,.03);color:var(--muted);text-align:center}
+    .ticker{position:fixed;left:0;right:0;bottom:0;z-index:80;background:linear-gradient(180deg, rgba(12,12,12,.96), rgba(18,18,18,.98));border-top:1px solid rgba(255,255,255,.08);backdrop-filter:blur(12px);overflow:hidden}
+    .ticker-track{display:flex;gap:1.2rem;align-items:center;min-height:52px;white-space:nowrap;animation:ticker-scroll 30s linear infinite;width:max-content;padding-inline:1rem}
+    .ticker:hover .ticker-track{animation-play-state:paused}
+    .ticker-item{display:inline-flex;align-items:center;gap:.55rem;color:var(--muted);font-size:.88rem;font-weight:700}.ticker-item strong{color:#fff4d2}.ticker-sep{color:rgba(255,255,255,.12)}
+    @keyframes ticker-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    .skeleton{display:inline-block;min-width:7ch;height:1.1em;border-radius:8px;background:linear-gradient(90deg, rgba(255,255,255,.08) 25%, rgba(255,255,255,.18) 50%, rgba(255,255,255,.08) 75%);background-size:800px 100%;animation:shimmer 1.3s linear infinite;vertical-align:middle}
+    @keyframes shimmer{from{background-position:-400px 0}to{background-position:400px 0}}
+
+    @media (max-width:1200px){.hero-grid,.chart-layout,.alerts-layout{grid-template-columns:1fr}.hero-points,.summary-grid,.stats-strip,.matrix-grid,.watchlist-grid,.download-grid,.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:860px){.nav-links{display:none}.mobile-menu-btn{display:inline-flex}.mobile-menu.open{display:block}.hero-points,.summary-grid,.stats-strip,.lookup-grid,.lookup-result-grid,.archive-controls,.compare-top,.matrix-grid,.watchlist-grid,.download-grid,.tool-grid,.alert-form-grid.two{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr}.archive-row{grid-template-columns:1fr}}
+
+    [dir="rtl"] .nav-inner,[dir="rtl"] .status-top,[dir="rtl"] .breadcrumbs,[dir="rtl"] .chip-row,[dir="rtl"] .side-head,[dir="rtl"] .section-head,[dir="rtl"] .workspace-top,[dir="rtl"] .toolbar-left,[dir="rtl"] .toolbar-right,[dir="rtl"] .archive-meta,[dir="rtl"] .country-head,[dir="rtl"] .country-meta,[dir="rtl"] .country-actions,[dir="rtl"] .alert-item,[dir="rtl"] .alert-actions,[dir="rtl"] .hero-actions{direction:rtl}
+    [dir="rtl"] .hero-panel,[dir="rtl"] .hero-side,[dir="rtl"] .workspace-shell,[dir="rtl"] .chart-card,[dir="rtl"] .side-stack,[dir="rtl"] .surface-shell,[dir="rtl"] .alert-form,[dir="rtl"] .alert-list,[dir="rtl"] .country-card,[dir="rtl"] .matrix-card,[dir="rtl"] .download-card,[dir="rtl"] .archive-row,[dir="rtl"] .lookup-result,[dir="rtl"] .tool-card,[dir="rtl"] .note-card{text-align:right}
   </style>
 </head>
-
-<body class="tracker-page tracker-revamp">
-  <main>
-    <!-- Top bar -->
-    <div class="tracker-topbar" id="tracker-topbar">
-      <div class="tracker-shell">
-        <div class="tracker-topbar-inner">
-          <nav class="tracker-breadcrumb" aria-label="Breadcrumb">
-            <a href="index.html" data-i18n="nav.home">Home</a>
-            <span aria-hidden="true">/</span>
-            <span data-i18n="tracker.pageTitle">Live Tracker</span>
-          </nav>
-
-          <div class="freshness-chips" aria-label="Data freshness">
-            <span class="freshness-chip chip-live" title="Gold spot price">
-              <span class="chip-live-dot" aria-hidden="true"></span>
-              <span id="gold-freshness-time" aria-live="polite">—</span>
-              <span class="chip-sep" aria-hidden="true">·</span>
-              <span id="gold-countdown" aria-live="polite">—</span>
-            </span>
-
-            <span class="freshness-chip chip-fx" title="FX rates">
-              <span class="chip-label" data-i18n="fx.badge">FX</span>
-              <span id="fx-freshness-time">—</span>
-            </span>
-
-            <span class="freshness-chip chip-market" id="market-status-chip"></span>
-          </div>
-        </div>
-
-        <div id="offline-banner" class="status-banner status-offline" hidden role="alert">
-          <span>📡</span>
-          <span data-i18n="status.offline">You are offline. Showing cached data.</span>
-        </div>
-
-        <div id="error-banner" class="status-banner status-error" hidden role="alert">
-          <span>⚠️</span>
-          <span id="error-banner-text"></span>
-        </div>
+<body>
+  <header class="nav">
+    <div class="shell nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">Au</span>
+        <span class="brand-copy">
+          <span class="brand-title" id="brand-title">Gold Prices</span>
+          <span class="brand-sub" id="brand-sub">Live tracker workspace</span>
+        </span>
+      </a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a class="nav-link" href="index.html" id="nav-home">Home</a>
+        <a class="nav-link active" href="tracker.html" id="nav-tracker">Live Tracker</a>
+        <a class="nav-link" href="calculator.html" id="nav-calculator">Calculator</a>
+        <a class="nav-link" href="learn.html" id="nav-learn">Learn</a>
+        <a class="nav-link" href="insights.html" id="nav-insights">Insights</a>
+        <a class="nav-link" href="methodology.html" id="nav-methodology">Methodology</a>
+        <a class="nav-link" href="invest.html" id="nav-invest">Invest</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="btn btn-sm btn-soft" id="lang-toggle">العربية</button>
+        <button class="btn btn-sm btn-soft mobile-menu-btn" id="mobile-menu-btn">☰</button>
       </div>
     </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="shell mobile-menu-inner">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link active" href="tracker.html">Live Tracker</a>
+        <a class="nav-link" href="calculator.html">Calculator</a>
+        <a class="nav-link" href="learn.html">Learn</a>
+        <a class="nav-link" href="insights.html">Insights</a>
+        <a class="nav-link" href="methodology.html">Methodology</a>
+        <a class="nav-link" href="invest.html">Invest</a>
+      </div>
+    </div>
+  </header>
 
-    <!-- Hero -->
-    <section class="tracker-hero">
-      <div class="tracker-shell tracker-hero-grid">
-        <article class="tracker-hero-copy">
-          <div class="tracker-kicker">
-            <span class="tracker-kicker-dot"></span>
-            <span class="tracker-static tracker-static-kicker">Gold market workspace</span>
+  <div class="status-row">
+    <div class="shell status-wrap">
+      <div class="status-top">
+        <div class="breadcrumbs">
+          <a href="index.html" id="crumb-home">Home</a>
+          <span>/</span>
+          <span id="crumb-page">Live Tracker</span>
+        </div>
+        <div class="chip-row">
+          <span class="chip"><span class="chip-dot"></span><span id="chip-gold-updated"><span class="skeleton"></span></span></span>
+          <span class="chip" id="chip-fx-updated">FX —</span>
+          <span class="chip" id="chip-market-status"><span class="skeleton"></span></span>
+        </div>
+      </div>
+      <div class="banner offline" id="offline-banner">📡 <span id="offline-banner-text">You are offline. Showing cached data where available.</span></div>
+      <div class="banner error" id="error-banner">⚠️ <span id="error-banner-text">Unable to refresh live data.</span></div>
+      <div class="banner success" id="success-banner">✓ <span id="success-banner-text">Saved.</span></div>
+    </div>
+  </div>
+
+  <main class="page-main">
+    <section class="hero">
+      <div class="shell hero-grid">
+        <article class="hero-panel">
+          <div class="hero-kicker"><span class="chip-dot"></span> <span id="hero-kicker">Gold market workspace</span></div>
+          <h1 class="hero-title" id="hero-title">Track gold like a market, not like a widget.</h1>
+          <p class="hero-sub" id="hero-sub">Live spot, UAE/GCC local estimates, long-run history, archive, date lookup, alerts, downloads, compare tools, and watchlists — in one serious tracker.</p>
+          <div class="hero-points">
+            <div class="hero-point"><strong id="hero-point-1-title">Live first</strong><span id="hero-point-1-copy">Use real-time spot-linked estimates across UAE, GCC, Levant, Africa, and reference markets.</span></div>
+            <div class="hero-point"><strong id="hero-point-2-title">History that matters</strong><span id="hero-point-2-copy">Use short-range live cache and long-range monthly baseline for macro context.</span></div>
+            <div class="hero-point"><strong id="hero-point-3-title">Built to act</strong><span id="hero-point-3-copy">Look up dates, set alerts, compare markets, export files, and save your view.</span></div>
           </div>
-
-          <h1 class="tracker-hero-title tracker-static tracker-static-title">
-            Track gold like a market, not like a widget.
-          </h1>
-
-          <p class="tracker-hero-sub tracker-static tracker-static-sub">
-            Live spot, UAE/GCC local estimates, long-run context, archive, downloads, and alerts — in one serious tracker page.
-          </p>
-
-          <div class="tracker-hero-points">
-            <div class="tracker-hero-point">
-              <strong>Live first</strong>
-              <span>Use fast live spot-linked gold estimates across key MENA markets.</span>
-            </div>
-            <div class="tracker-hero-point">
-              <strong>History that matters</strong>
-              <span>Use short-range live cache and long-range historical baseline in one workspace.</span>
-            </div>
-            <div class="tracker-hero-point">
-              <strong>Built to act</strong>
-              <span>Compare, export, look up dates, and set alerts without leaving the tracker.</span>
-            </div>
-          </div>
-
-          <div class="tracker-hero-actions">
-            <a href="#section-chart" class="btn btn-primary">Open Workspace</a>
-            <a href="#section-countries" class="btn btn-outline-light">Compare Markets</a>
-            <a href="#section-alerts" class="btn btn-ghost-light">Set Alert</a>
+          <div class="hero-actions">
+            <a href="#workspace-section" class="btn btn-primary" id="hero-cta-1">Open workspace</a>
+            <a href="#compare-section" class="btn btn-ghost" id="hero-cta-2">Compare markets</a>
+            <a href="#alerts-section" class="btn btn-ghost" id="hero-cta-3">Set alert</a>
           </div>
         </article>
-
-        <aside class="tracker-hero-side">
-          <div class="tracker-side-head">
-            <div>
-              <h2 class="tracker-side-title">Live summary</h2>
-              <p class="tracker-side-sub">Tracker-specific context, not a duplicated home section.</p>
-            </div>
+        <aside class="hero-side">
+          <div class="side-head"><div><h2 class="side-title" id="side-title">Live summary</h2><p class="side-sub" id="side-sub">Your current market view and tracker context.</p></div></div>
+          <div class="summary-grid">
+            <div class="metric-card"><div class="metric-label" id="metric-spot-label">Spot gold</div><div class="metric-value" id="metric-spot"><span class="skeleton"></span></div><div class="metric-sub" id="metric-spot-sub">XAU/USD per troy ounce</div></div>
+            <div class="metric-card"><div class="metric-label" id="metric-uae24-label">UAE 24K</div><div class="metric-value" id="metric-uae24"><span class="skeleton"></span></div><div class="metric-sub" id="metric-uae24-sub">AED per gram</div></div>
+            <div class="metric-card"><div class="metric-label" id="metric-view-label">Current view</div><div class="metric-value" id="metric-current-view"><span class="skeleton"></span></div><div class="metric-sub" id="metric-current-view-sub">24K · per gram · AED</div></div>
+            <div class="metric-card"><div class="metric-label" id="metric-range-label">Selected range</div><div class="metric-value" id="metric-range-value">1Y</div><div class="metric-sub" id="metric-range-sub">Tracker working mode</div></div>
           </div>
-
-          <div class="tracker-hero-cards">
-            <div class="tracker-side-card">
-              <div class="tracker-side-card-label">Spot gold</div>
-              <div class="tracker-side-card-value" id="hero-spot-card">—</div>
-              <div class="tracker-side-card-sub">XAU/USD per troy ounce</div>
-            </div>
-
-            <div class="tracker-side-card">
-              <div class="tracker-side-card-label">UAE 24K</div>
-              <div class="tracker-side-card-value" id="hero-uae24-card">—</div>
-              <div class="tracker-side-card-sub">AED per gram</div>
-            </div>
-
-            <div class="tracker-side-card">
-              <div class="tracker-side-card-label">Current view</div>
-              <div class="tracker-side-card-value" id="chart-current-view-value">—</div>
-              <div class="tracker-side-card-sub" id="chart-current-view-sub">24K · per gram · AED</div>
-            </div>
-
-            <div class="tracker-side-card">
-              <div class="tracker-side-card-label">Source logic</div>
-              <div class="tracker-side-card-sub" id="chart-source-logic">
-                Live cache for short ranges. Historical baseline for long-range trend context.
-              </div>
-            </div>
-          </div>
-
-          <div class="tracker-note-box" id="chart-trust-copy">
-            Spot is the market reference. Local retail and jewelry quotes can differ because of premiums, making charges, and store spreads.
-          </div>
+          <div class="note-card" id="hero-note">Spot is the market reference. Local retail and jewelry quotes can differ because of premiums, making charges, spreads, and store policy.</div>
         </aside>
       </div>
     </section>
 
-    <!-- Existing Spotlight section kept for app.js -->
-    <section class="section" id="section-spotlight" aria-labelledby="spotlight-title">
-      <div class="tracker-section-shell">
-        <div class="section-header">
-          <div>
-            <h2 id="spotlight-title" data-i18n="spotlight.title">UAE Gold Prices</h2>
-            <p class="section-note">Fast UAE-focused spotlight across the most used Gulf karats.</p>
-          </div>
-
-          <div class="karat-selector-row">
-            <span class="selector-label" data-i18n="spotlight.karat.label">Karat:</span>
-            <div class="karat-pills" id="spotlight-karat-pills" role="group" aria-label="Select karat"></div>
-          </div>
-        </div>
-
-        <div class="spotlight-grid" id="spotlight-grid">
-          <div class="spotlight-card"><div class="sc-label">Loading</div><div class="sc-price">—</div></div>
-          <div class="spotlight-card"><div class="sc-label">Loading</div><div class="sc-price">—</div></div>
-          <div class="spotlight-card"><div class="sc-label">Loading</div><div class="sc-price">—</div></div>
-          <div class="spotlight-card"><div class="sc-label">Loading</div><div class="sc-price">—</div></div>
-        </div>
-
-        <p class="section-note" data-i18n="spotlight.note">Estimated bullion-equivalent value</p>
-      </div>
-    </section>
-
-    <!-- Price movement -->
-    <section class="section section-compact" id="section-change" aria-labelledby="change-title" hidden>
-      <div class="tracker-section-shell">
-        <div class="section-header">
-          <div>
-            <h2 id="change-title" data-i18n="change.title">Price Movement</h2>
-            <p class="section-note">Short-term context to help you judge whether the current move is flat, rising, or fading.</p>
-          </div>
-        </div>
-
-        <div class="change-grid">
-          <div class="change-item" id="change-vs-prev">
-            <span class="change-label" data-i18n="change.vsPrev">vs previous fetch</span>
-            <span class="change-value" id="change-prev-value">—</span>
-          </div>
-          <div class="change-item" id="change-vs-open">
-            <span class="change-label" data-i18n="change.vsOpen">vs Dubai day open</span>
-            <span class="change-value" id="change-open-value">—</span>
-          </div>
-        </div>
-
-        <p id="change-context-note" class="change-current-price" hidden></p>
-        <p class="section-note" data-i18n="change.note">24K per ounce · USD · Spot-linked estimate</p>
-      </div>
-    </section>
-
-    <!-- Workspace -->
-    <section class="section tracker-workspace-section" id="section-chart">
-      <div class="tracker-section-shell">
-        <div class="section-header tracker-workspace-header">
-          <div>
-            <h2 data-i18n="chart.title">Price Chart</h2>
-            <p class="section-note" data-i18n="chart.note">
-              Live spot for short ranges · Historical baseline for long ranges · Clear archive & lookup workflow
-            </p>
-          </div>
-
-          <div class="workspace-tabs" role="tablist" aria-label="Tracker workspace">
-            <button class="workspace-tab active" data-workspace="chart" role="tab" aria-selected="true">📈 <span>Chart</span></button>
-            <button class="workspace-tab" data-workspace="archive" role="tab" aria-selected="false">📅 <span>Archive</span></button>
-            <button class="workspace-tab" data-workspace="lookup" role="tab" aria-selected="false">🔎 <span>Date Lookup</span></button>
-            <button class="workspace-tab" data-workspace="downloads" role="tab" aria-selected="false">⬇ <span>Downloads</span></button>
-          </div>
-        </div>
-
-        <!-- CHART PANEL -->
-        <div class="workspace-panel active" data-workspace-panel="chart" id="ws-panel-chart">
-          <div id="history-stats-strip" class="history-stats-strip" hidden aria-label="Gold price statistics"></div>
-
-          <div class="tracker-workspace-toolbar">
-            <div class="chart-range-pills" role="group" aria-label="Time range">
-              <button class="chart-range-btn" data-range="24H">24H</button>
-              <button class="chart-range-btn" data-range="7D">7D</button>
-              <button class="chart-range-btn" data-range="30D">30D</button>
-              <button class="chart-range-btn" data-range="90D">90D</button>
-              <button class="chart-range-btn active" data-range="1Y">1Y</button>
-              <button class="chart-range-btn" data-range="3Y">3Y</button>
-              <button class="chart-range-btn" data-range="5Y">5Y</button>
-              <button class="chart-range-btn" data-range="ALL">All</button>
+    <section class="section" id="workspace-section">
+      <div class="shell">
+        <div class="section-head"><div><h2 class="section-title" id="workspace-title">Tracker workspace</h2><p class="section-sub" id="workspace-sub">Live chart, archive, date lookup, downloads, and quick market logic in one place.</p></div></div>
+        <div class="workspace-shell">
+          <div class="workspace-top">
+            <div class="workspace-tabs" role="tablist" aria-label="Workspace tabs">
+              <button class="workspace-tab active" data-panel="live" type="button" id="tab-live">📈 Live</button>
+              <button class="workspace-tab" data-panel="archive" type="button" id="tab-archive">🗃 Archive</button>
+              <button class="workspace-tab" data-panel="lookup" type="button" id="tab-lookup">🔎 Date Lookup</button>
+              <button class="workspace-tab" data-panel="downloads" type="button" id="tab-downloads">⬇ Downloads</button>
             </div>
-
-            <div class="tracker-chart-actions">
-              <button class="btn btn-sm btn-ghost" id="chart-copy-summary-btn">Copy Summary</button>
-              <button class="btn btn-sm btn-outline" id="chart-refresh-btn">Refresh</button>
+            <div class="workspace-actions">
+              <button class="btn btn-sm btn-ghost" id="copy-summary-btn">Copy Summary</button>
+              <button class="btn btn-sm btn-soft" id="save-view-btn">Save View</button>
+              <button class="btn btn-sm btn-soft" id="reset-view-btn">Reset</button>
             </div>
           </div>
 
-          <div class="tracker-chart-layout">
-            <div class="tracker-chart-primary">
-              <div id="chart-container" class="chart-container chart-container--large" aria-label="Gold price chart"></div>
-              <p class="chart-data-note section-note" id="chart-data-note" data-i18n="chart.dataNote">
-                Short ranges (24H/7D) use live session snapshots. Longer ranges use historical monthly baseline data.
-              </p>
+          <div class="workspace-panel active" data-panel-id="live">
+            <div class="stats-strip">
+              <div class="stats-item"><div class="stats-label" id="stat-ath-label">All-time high tracked</div><div class="stats-value" id="stat-ath">—</div></div>
+              <div class="stats-item"><div class="stats-label" id="stat-ytd-label">Year to date</div><div class="stats-value" id="stat-ytd">—</div></div>
+              <div class="stats-item"><div class="stats-label" id="stat-1y-label">1-year change</div><div class="stats-value" id="stat-1y">—</div></div>
+              <div class="stats-item"><div class="stats-label" id="stat-since-label">Since Jan 2019</div><div class="stats-value" id="stat-since">—</div></div>
             </div>
 
-            <aside class="tracker-chart-side">
-              <div class="tracker-side-card">
-                <div class="tracker-side-card-label">How to read this</div>
-                <div class="tracker-side-card-sub">
-                  Use short ranges for current momentum. Use longer ranges for macro context, not minute-by-minute timing.
-                </div>
+            <div class="toolbar">
+              <div class="toolbar-left">
+                <div class="pill-group" id="range-buttons"></div>
+                <div class="pill-group" id="unit-buttons"></div>
+                <div class="pill-group" id="karat-buttons"></div>
               </div>
+              <div class="toolbar-right">
+                <div class="field-inline"><label class="field-label" id="market-select-label" for="market-select">Market view</label><select class="field-control" id="market-select"></select></div>
+              </div>
+            </div>
 
-              <div class="tracker-side-card">
-                <div class="tracker-side-card-label">Data logic</div>
-                <div class="tracker-side-card-sub">
-                  Recent views rely on your live snapshot cache. Long views rely on historical baseline data.
+            <div class="chart-layout">
+              <div class="chart-card">
+                <div class="chart-head">
+                  <div><h3 class="chart-title" id="chart-title">Gold tracker chart</h3><p class="chart-note" id="chart-note">Loading chart…</p></div>
+                  <div class="workspace-actions"><button class="btn btn-sm btn-soft" id="refresh-data-btn">Refresh Data</button></div>
                 </div>
+                <div class="chart-wrap"><canvas id="tracker-chart"></canvas></div>
+                <div class="chart-foot"><span id="chart-foot-left">Short ranges use recent live snapshots. Longer ranges use historical monthly baseline data.</span><span id="chart-foot-right">Sources: gold-api · ER-API · DataHub</span></div>
               </div>
-
-              <div class="tracker-side-card">
-                <div class="tracker-side-card-label">Use before buying</div>
-                <div class="tracker-side-card-sub">
-                  Check the chart, then compare karat and country prices below before making any real purchase decision.
-                </div>
-              </div>
-            </aside>
+              <aside class="side-stack">
+                <div class="mini-card"><div class="mini-title" id="mini-title-1">How to read this</div><div class="mini-copy" id="mini-copy-1">Use short ranges for recent momentum. Use longer ranges for macro context, not minute-by-minute timing.</div></div>
+                <div class="mini-card"><div class="mini-title" id="mini-title-2">Data logic</div><div class="mini-copy" id="mini-copy-2">Recent views can use local recent cache. Long views use historical monthly baseline in USD spot terms.</div></div>
+                <div class="mini-card"><div class="mini-title" id="mini-title-3">Why this matters</div><div class="mini-copy" id="mini-copy-3">Check the chart first, then compare countries and karats below before making a real buy or sell decision.</div></div>
+                <div class="mini-card"><div class="mini-title" id="mini-title-4">Quick action</div><div class="mini-copy" id="mini-copy-4">Set a live alert for the current view from the Alerts section below.</div></div>
+              </aside>
+            </div>
           </div>
-        </div>
 
-        <!-- ARCHIVE PANEL -->
-        <div class="workspace-panel" data-workspace-panel="archive" id="ws-panel-archive">
-          <div class="archive-panel-inner">
-            <div class="archive-panel-header">
-              <div class="archive-panel-title">
-                <h3>Price Archive</h3>
-                <p class="section-note">
-                  Browse long-run monthly history plus your locally stored recent snapshots
-                </p>
-              </div>
-
+          <div class="workspace-panel" data-panel-id="archive">
+            <div class="archive-layout">
               <div class="archive-controls">
-                <div class="archive-control-group">
-                  <label class="archive-control-label" for="archive-range-select">Range</label>
-                  <select id="archive-range-select" class="sort-select">
-                    <option value="ALL">All history</option>
-                    <option value="5Y">Last 5 years</option>
-                    <option value="3Y">Last 3 years</option>
-                    <option value="1Y">Last 1 year</option>
-                    <option value="90D">Last 90 days</option>
-                    <option value="30D">Last 30 days</option>
-                  </select>
-                </div>
-
-                <div class="archive-control-group">
-                  <label class="archive-control-label" for="archive-karat-select">Karat</label>
-                  <select id="archive-karat-select" class="sort-select">
-                    <option value="24">24K</option>
-                    <option value="22">22K</option>
-                    <option value="21">21K</option>
-                    <option value="18">18K</option>
-                  </select>
-                </div>
-
-                <div class="archive-control-group">
-                  <label class="archive-control-label" for="archive-unit-select">Unit</label>
-                  <select id="archive-unit-select" class="sort-select">
-                    <option value="gram">Per gram</option>
-                    <option value="oz">Per oz</option>
-                  </select>
-                </div>
+                <div class="field-inline"><label class="field-label" id="archive-range-label" for="archive-range">Range</label><select class="field-control" id="archive-range"></select></div>
+                <div class="field-inline"><label class="field-label" id="archive-karat-label" for="archive-karat">Karat</label><select class="field-control" id="archive-karat"></select></div>
+                <div class="field-inline"><label class="field-label" id="archive-unit-label" for="archive-unit">Unit</label><select class="field-control" id="archive-unit"></select></div>
+                <div class="field-inline"><label class="field-label" id="archive-source-label" for="archive-source">Source</label><select class="field-control" id="archive-source"></select></div>
               </div>
-            </div>
-
-            <div class="archive-count-row">
-              <span id="archive-count" class="archive-count-label"></span>
-              <span class="archive-source-legend">
-                <span class="archive-legend-item"><span class="archive-legend-dot archive-legend-dot--baseline"></span> Historical baseline</span>
-                <span class="archive-legend-item"><span class="archive-legend-dot archive-legend-dot--local"></span> Your local cache</span>
-              </span>
-            </div>
-
-            <div id="archive-list" class="archive-history-list"></div>
-
-            <div id="archive-empty" class="archive-empty" hidden>
-              <p>No archive rows match the current filters yet.</p>
+              <div class="archive-meta"><span id="archive-count">0 entries</span><span id="archive-help">Historical baseline + recent local cache</span></div>
+              <div class="archive-list" id="archive-list"></div>
+              <div class="empty-box" id="archive-empty">No archive rows match the current filters yet.</div>
             </div>
           </div>
-        </div>
 
-        <!-- LOOKUP PANEL -->
-        <div class="workspace-panel" data-workspace-panel="lookup" id="ws-panel-lookup">
-          <div class="lookup-panel-inner">
-            <div class="lookup-panel-header">
-              <div>
-                <h3>Date Lookup</h3>
-                <p class="section-note">
-                  Pick a date and see the closest available historical reference from the long-run baseline.
-                </p>
-              </div>
+          <div class="workspace-panel" data-panel-id="lookup">
+            <div class="lookup-grid">
+              <div class="field-inline"><label class="field-label" id="lookup-date-label" for="lookup-date">Date</label><input class="field-control" id="lookup-date" type="date" /></div>
+              <div class="field-inline"><label class="field-label" id="lookup-karat-label" for="lookup-karat">Karat</label><select class="field-control" id="lookup-karat"></select></div>
+              <div class="field-inline"><label class="field-label" id="lookup-currency-label" for="lookup-currency">Currency</label><select class="field-control" id="lookup-currency"><option value="USD">USD</option><option value="AED">AED</option></select></div>
+              <div class="field-inline"><label class="field-label" id="lookup-action-label" for="lookup-btn">Action</label><button class="btn btn-primary" id="lookup-btn" type="button">Look Up</button></div>
             </div>
-
-            <div class="lookup-form-grid">
-              <div class="lookup-control-group">
-                <label class="archive-control-label" for="date-lookup-input">Date</label>
-                <input id="date-lookup-input" class="search-input" type="date" />
-              </div>
-
-              <div class="lookup-control-group">
-                <label class="archive-control-label" for="date-lookup-karat">Karat</label>
-                <select id="date-lookup-karat" class="sort-select">
-                  <option value="24">24K</option>
-                  <option value="22">22K</option>
-                  <option value="21">21K</option>
-                  <option value="18">18K</option>
-                </select>
-              </div>
-
-              <div class="lookup-control-group">
-                <label class="archive-control-label" for="date-lookup-currency">Currency</label>
-                <select id="date-lookup-currency" class="sort-select">
-                  <option value="USD">USD</option>
-                  <option value="AED">AED</option>
-                </select>
-              </div>
-
-              <div class="lookup-control-group lookup-control-group--action">
-                <button class="btn btn-sm btn-primary" id="date-lookup-btn">Look Up</button>
-              </div>
-            </div>
-
-            <div class="lookup-result-card" id="date-lookup-result">
-              <div class="lookup-empty-text">Pick a date to begin.</div>
-            </div>
+            <div class="lookup-result" id="lookup-result"><div id="lookup-empty-copy">Pick a date to begin.</div></div>
           </div>
-        </div>
 
-        <!-- DOWNLOADS PANEL -->
-        <div class="workspace-panel" data-workspace-panel="downloads" id="ws-panel-downloads">
-          <div class="downloads-panel-inner">
-            <div class="download-card">
-              <div class="download-card-icon">📊</div>
-              <div class="download-card-title">Current Prices — CSV</div>
-              <div class="download-card-desc">Export current live prices for the visible tracker state.</div>
-              <div class="download-card-actions">
-                <button class="btn btn-sm btn-outline" id="export-csv-btn" data-i18n="export.csv">⬇ CSV</button>
-              </div>
-            </div>
-
-            <div class="download-card">
-              <div class="download-card-icon">🗃</div>
-              <div class="download-card-title">Current Prices — JSON</div>
-              <div class="download-card-desc">Export current visible state, prices, metadata, and timestamps as JSON.</div>
-              <div class="download-card-actions">
-                <button class="btn btn-sm btn-outline" id="export-json-btn" data-i18n="export.json">⬇ JSON</button>
-              </div>
-            </div>
-
-            <div class="download-card">
-              <div class="download-card-icon">📅</div>
-              <div class="download-card-title">Archive CSV</div>
-              <div class="download-card-desc">Export archived history for the selected karat and filters.</div>
-              <div class="download-card-actions">
-                <button class="btn btn-sm btn-outline" id="export-archive-csv-btn">⬇ Archive CSV</button>
-              </div>
-            </div>
-
-            <div class="download-card download-card--featured">
-              <div class="download-card-icon">🕰</div>
-              <div class="download-card-title">Full History CSV</div>
-              <div class="download-card-desc">Export the full long-run history used by the tracker for macro trend analysis.</div>
-              <div class="download-card-actions">
-                <button class="btn btn-sm btn-primary" id="export-historical-csv-btn">⬇ Full History CSV</button>
-              </div>
+          <div class="workspace-panel" data-panel-id="downloads">
+            <div class="download-grid">
+              <div class="download-card"><div class="download-icon">📊</div><div class="download-title" id="dl-title-1">Current view CSV</div><div class="download-desc" id="dl-desc-1">Export the current chart dataset as CSV.</div><button class="btn btn-soft" id="download-current-csv">CSV</button></div>
+              <div class="download-card"><div class="download-icon">🗃</div><div class="download-title" id="dl-title-2">Current matrix JSON</div><div class="download-desc" id="dl-desc-2">Export live country prices, settings, and timestamps as JSON.</div><button class="btn btn-soft" id="download-current-json">JSON</button></div>
+              <div class="download-card"><div class="download-icon">📅</div><div class="download-title" id="dl-title-3">Archive CSV</div><div class="download-desc" id="dl-desc-3">Export the filtered archive view as CSV.</div><button class="btn btn-soft" id="download-archive-csv">Archive CSV</button></div>
+              <div class="download-card featured"><div class="download-icon">🕰</div><div class="download-title" id="dl-title-4">Historical baseline CSV</div><div class="download-desc" id="dl-desc-4">Export the full long-run monthly baseline used for macro context.</div><button class="btn btn-primary" id="download-baseline-csv">Baseline CSV</button></div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Karat table -->
-    <section class="section" id="section-karat" aria-labelledby="karat-title">
-      <div class="tracker-section-shell">
-        <div class="section-header">
-          <div>
-            <h2 id="karat-title" data-i18n="karat.title">Price by Karat</h2>
-            <p class="section-note">UAE gold rate with fixed AED peg treatment and cleaner comparison hierarchy.</p>
-          </div>
-
-          <div class="unit-toggle-group" role="group" aria-label="Price unit">
-            <button class="unit-btn active" id="unit-gram" data-unit="gram" data-i18n="unit.gram">Per Gram</button>
-            <button class="unit-btn" id="unit-oz" data-unit="oz" data-i18n="unit.oz">Per Ounce</button>
-          </div>
-        </div>
-
-        <div class="table-wrapper">
-          <table id="karat-table" aria-label="Gold prices by karat">
-            <thead>
-              <tr>
-                <th data-i18n="karat.col.karat">Karat</th>
-                <th class="num-col" data-i18n="karat.col.usd">USD</th>
-                <th class="num-col" data-i18n="karat.col.aed">AED (Fixed Peg)</th>
-              </tr>
-            </thead>
-            <tbody id="karat-tbody">
-              <tr><td>Loading…</td><td>—</td><td>—</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p class="section-note" data-i18n="karat.disclaimer">Estimated bullion-equivalent values. Retail and jewelry prices may differ.</p>
+    <section class="section" id="matrix-section">
+      <div class="shell">
+        <div class="section-head"><div><h2 class="section-title" id="matrix-title">Price by karat</h2><p class="section-sub" id="matrix-sub">Clean, fast karat cards built for the Gulf-relevant grades first.</p></div></div>
+        <div class="surface-shell"><div class="matrix-grid" id="matrix-grid"></div></div>
       </div>
     </section>
 
-    <!-- Countries -->
-    <section class="section" id="section-countries" aria-labelledby="countries-title">
-      <div class="tracker-section-shell">
-        <div class="section-header">
-          <div>
-            <h2 id="countries-title" data-i18n="countries.title">Global Gold Estimates</h2>
-            <p class="section-note">Live local-currency estimates across GCC, Levant, Africa, and global reference markets.</p>
+    <section class="section" id="compare-section">
+      <div class="shell">
+        <div class="section-head"><div><h2 class="section-title" id="compare-title">Compare live markets</h2><p class="section-sub" id="compare-sub">Compare GCC, Levant, Africa, and reference markets using your selected karat and unit.</p></div></div>
+        <div class="surface-shell">
+          <div class="compare-top">
+            <div class="region-tabs" id="region-tabs"></div>
+            <div class="field-inline"><label class="field-label" id="sort-label" for="sort-select">Sort</label><select class="field-control" id="sort-select"></select></div>
+            <div class="field-inline"><label class="field-label" id="search-label" for="country-search">Search</label><input class="search-input" id="country-search" type="search" placeholder="Search countries..." /></div>
           </div>
-        </div>
-
-        <div class="tab-bar" role="tablist" aria-label="Region">
-          <button class="tab active" role="tab" aria-selected="true" data-tab="gcc" data-i18n="countries.tab.gcc">GCC</button>
-          <button class="tab" role="tab" aria-selected="false" data-tab="levant" data-i18n="countries.tab.levant">Levant</button>
-          <button class="tab" role="tab" aria-selected="false" data-tab="africa" data-i18n="countries.tab.africa">North &amp; East Africa</button>
-          <button class="tab" role="tab" aria-selected="false" data-tab="global" data-i18n="countries.tab.global">Global Reference</button>
-        </div>
-
-        <div class="controls-row">
-          <div class="control-group">
-            <span class="selector-label" data-i18n="countries.karat.label">Karat:</span>
-            <div class="karat-pills" id="countries-karat-pills" role="group" aria-label="Select karat"></div>
-          </div>
-
-          <div class="control-group">
-            <label class="selector-label" for="sort-select" data-i18n="countries.sort.label">Sort:</label>
-            <select id="sort-select" class="sort-select" aria-label="Sort countries">
-              <option value="high-low" data-i18n="countries.sort.highLow">Price: High → Low</option>
-              <option value="low-high" data-i18n="countries.sort.lowHigh">Price: Low → High</option>
-              <option value="alpha" data-i18n="countries.sort.alpha">Alphabetical</option>
-            </select>
-          </div>
-
-          <div class="control-group search-group">
-            <input type="search" id="search-input" class="search-input"
-              data-i18n-placeholder="countries.search.placeholder"
-              placeholder="Search countries..."
-              aria-label="Search countries" />
-          </div>
-        </div>
-
-        <div id="country-grid" class="country-grid" role="list" aria-live="polite"></div>
-
-        <div id="country-empty" class="empty-state" hidden>
-          <span data-i18n="countries.empty">No countries found for</span>
-          <strong id="country-empty-query"></strong>
+          <div class="country-grid" id="country-grid"></div>
+          <div class="empty-box" id="country-empty">No countries match the current search.</div>
         </div>
       </div>
     </section>
 
-    <!-- Alerts -->
-    <section class="section section-compact" id="section-alerts">
-      <div class="tracker-section-shell">
-        <div class="section-header">
-          <div>
-            <h2 data-i18n="alerts.title">Price Alerts</h2>
-            <p class="section-note" data-i18n="alerts.subtitle">Get notified when gold crosses your target — stored locally, no account needed</p>
-          </div>
-          <button class="btn btn-sm btn-primary" id="alert-add-btn" data-i18n="alerts.addBtn">+ Add Alert</button>
-        </div>
-
-        <div class="alert-form" id="alert-form" hidden>
-          <div class="alert-form-inner">
-            <div class="alert-form-row">
-              <label class="alert-form-label" data-i18n="alerts.whenLabel">Alert when price</label>
-              <select id="alert-direction" class="alert-direction-select">
-                <option value="above" data-i18n="alerts.above">goes above</option>
-                <option value="below" data-i18n="alerts.below">drops below</option>
-              </select>
+    <section class="section" id="alerts-section">
+      <div class="shell">
+        <div class="section-head"><div><h2 class="section-title" id="alerts-title">Price alerts</h2><p class="section-sub" id="alerts-sub">Browser-based alerts for spot or current selected view. No account required.</p></div></div>
+        <div class="surface-shell">
+          <div class="alerts-layout">
+            <div class="alert-form">
+              <div class="alert-form-grid two">
+                <div class="field-inline"><label class="field-label" id="alert-metric-label" for="alert-metric">Metric</label><select class="field-control" id="alert-metric"></select></div>
+                <div class="field-inline"><label class="field-label" id="alert-direction-label" for="alert-direction">Direction</label><select class="field-control" id="alert-direction"></select></div>
+              </div>
+              <div class="alert-form-grid two" style="margin-top:.85rem;">
+                <div class="field-inline"><label class="field-label" id="alert-target-label" for="alert-target">Target value</label><input class="field-control" id="alert-target" type="number" min="0" step="0.01" placeholder="3200" /></div>
+                <div class="field-inline"><label class="field-label" id="alert-current-label">Current reference</label><div class="note-card" id="alert-current-reference">—</div></div>
+              </div>
+              <div class="hero-actions" style="margin-top:1rem;">
+                <button class="btn btn-primary" id="save-alert-btn">Save alert</button>
+                <button class="btn btn-soft" id="enable-notifications-btn">Enable notifications</button>
+              </div>
             </div>
-
-            <div class="alert-form-row">
-              <label class="alert-form-label" data-i18n="alerts.targetLabel">Target (XAU/USD $)</label>
-              <input type="number" id="alert-price" class="alert-price-input" placeholder="e.g. 3200" min="1" max="99999" step="1" />
-            </div>
-
-            <div class="alert-form-actions">
-              <button class="btn btn-sm btn-primary" id="alert-save-btn" data-i18n="alerts.save">Save Alert</button>
-              <button class="btn btn-sm btn-ghost" id="alert-cancel-btn" data-i18n="alerts.cancel">Cancel</button>
-              <span id="alert-notif-status" class="alert-notif-status"></span>
+            <div class="alert-list">
+              <div class="section-head" style="margin-bottom:.75rem;"><div><h3 class="section-title" style="font-size:1.2rem;" id="saved-alerts-title">Saved alerts</h3><p class="section-sub" style="margin-top:.35rem;" id="saved-alerts-sub">Stored locally in your browser.</p></div></div>
+              <div id="alerts-list"></div>
+              <div class="empty-box" id="alerts-empty">No alerts yet. Add one from the form.</div>
             </div>
           </div>
-        </div>
-
-        <div id="alerts-list" class="alerts-list"></div>
-
-        <div id="alerts-empty" class="alerts-empty" hidden>
-          <div class="empty-icon" aria-hidden="true">🔔</div>
-          <p data-i18n="alerts.empty">No alerts set yet. Add one above to get notified.</p>
+          <div class="watchlist-grid" id="watchlist-grid"></div>
         </div>
       </div>
     </section>
 
-    <!-- Related tools -->
-    <section class="section section-compact" aria-label="Related tools">
-      <div class="tracker-section-shell">
-        <div class="related-tools-row">
-          <a href="calculator.html" class="related-tool-link">🧮 Gold Calculator</a>
-          <a href="countries/uae.html" class="related-tool-link">🇦🇪 UAE Deep Dive</a>
-          <a href="methodology.html" class="related-tool-link">🔬 Data Methodology</a>
-          <a href="insights.html" class="related-tool-link">📊 Market Insights</a>
-          <a href="learn.html" class="related-tool-link">📚 Gold Guide</a>
+    <section class="section" id="tools-section">
+      <div class="shell">
+        <div class="section-head"><div><h2 class="section-title" id="tools-title">Related tools</h2><p class="section-sub" id="tools-sub">Jump directly into the rest of the site from the tracker.</p></div></div>
+        <div class="surface-shell">
+          <div class="tool-grid">
+            <a class="tool-card" href="calculator.html"><div class="tool-title">🧮 Gold Calculator</div><div class="tool-copy">Estimate value, compare units, and work out quick scenarios.</div></a>
+            <a class="tool-card" href="invest.html"><div class="tool-title">📈 Invest</div><div class="tool-copy">Practical gold investing guide and decision support.</div></a>
+            <a class="tool-card" href="methodology.html"><div class="tool-title">🔬 Methodology</div><div class="tool-copy">How live prices, FX, AED peg logic, and history work.</div></a>
+            <a class="tool-card" href="learn.html"><div class="tool-title">📚 Learn</div><div class="tool-copy">Understand karats, units, pricing logic, and gold basics.</div></a>
+          </div>
         </div>
       </div>
     </section>
-
-    <!-- No data -->
-    <div class="tracker-section-shell">
-      <div id="no-data-state" class="no-data-state" hidden>
-        <p data-i18n="status.noData">No data available. Please check your connection and retry.</p>
-        <button id="retry-btn" class="retry-btn" data-i18n="status.retry">Retry</button>
-      </div>
-    </div>
   </main>
 
-  <script type="module" src="app.js"></script>
+  <div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker-track"></div></div>
 
-  <!-- Enhancement layer: keeps app.js as controller, adds date-lookup + side-summary polish -->
-  <script type="module">
-    const LOOKUP_CSV = 'https://datahub.io/core/gold-prices/_r/-/data/monthly-processed.csv';
-    const AED_PEG = 3.6725;
-    const TROY_OZ_GRAMS = 31.1035;
+  <script>
+    (() => {
+      const CONFIG = {
+        GOLD_API: 'https://api.gold-api.com/price/XAU',
+        FX_API: 'https://open.er-api.com/v6/latest/USD',
+        HISTORY_CSV: 'https://datahub.io/core/gold-prices/_r/-/data/monthly-processed.csv',
+        AED_PEG: 3.6725,
+        TROY_OZ_GRAMS: 31.1035,
+        REFRESH_MS: 90 * 1000,
+        STORAGE: {
+          SETTINGS: 'tracker_masterpiece_settings_v1',
+          ALERTS: 'tracker_masterpiece_alerts_v1',
+          WATCHLIST: 'tracker_masterpiece_watchlist_v1',
+          LIVE_CACHE: 'tracker_masterpiece_live_cache_v1',
+          HISTORY_CACHE: 'tracker_masterpiece_history_cache_v1',
+        },
+        KARATS: {'24':{purity:1},'22':{purity:22/24},'21':{purity:21/24},'20':{purity:20/24},'18':{purity:18/24},'16':{purity:16/24},'14':{purity:14/24}},
+        REGIONS: {gcc:['AE','SA','KW','QA','BH','OM'],levant:['JO','LB','EG'],africa:['EG','LY','TN','DZ','MA','SD','SO','MR','DJ','KM'],global:['US','GB','EU','IN']},
+        COUNTRIES: [
+          { code:'AE', currency:'AED', nameEn:'United Arab Emirates', nameAr:'الإمارات العربية المتحدة', flag:'🇦🇪', decimals:2 },
+          { code:'SA', currency:'SAR', nameEn:'Saudi Arabia', nameAr:'السعودية', flag:'🇸🇦', decimals:2 },
+          { code:'KW', currency:'KWD', nameEn:'Kuwait', nameAr:'الكويت', flag:'🇰🇼', decimals:3 },
+          { code:'QA', currency:'QAR', nameEn:'Qatar', nameAr:'قطر', flag:'🇶🇦', decimals:2 },
+          { code:'BH', currency:'BHD', nameEn:'Bahrain', nameAr:'البحرين', flag:'🇧🇭', decimals:3 },
+          { code:'OM', currency:'OMR', nameEn:'Oman', nameAr:'عُمان', flag:'🇴🇲', decimals:3 },
+          { code:'JO', currency:'JOD', nameEn:'Jordan', nameAr:'الأردن', flag:'🇯🇴', decimals:3 },
+          { code:'LB', currency:'LBP', nameEn:'Lebanon', nameAr:'لبنان', flag:'🇱🇧', decimals:0 },
+          { code:'EG', currency:'EGP', nameEn:'Egypt', nameAr:'مصر', flag:'🇪🇬', decimals:2 },
+          { code:'LY', currency:'LYD', nameEn:'Libya', nameAr:'ليبيا', flag:'🇱🇾', decimals:3 },
+          { code:'TN', currency:'TND', nameEn:'Tunisia', nameAr:'تونس', flag:'🇹🇳', decimals:3 },
+          { code:'DZ', currency:'DZD', nameEn:'Algeria', nameAr:'الجزائر', flag:'🇩🇿', decimals:2 },
+          { code:'MA', currency:'MAD', nameEn:'Morocco', nameAr:'المغرب', flag:'🇲🇦', decimals:2 },
+          { code:'SD', currency:'SDG', nameEn:'Sudan', nameAr:'السودان', flag:'🇸🇩', decimals:2 },
+          { code:'SO', currency:'SOS', nameEn:'Somalia', nameAr:'الصومال', flag:'🇸🇴', decimals:0 },
+          { code:'MR', currency:'MRU', nameEn:'Mauritania', nameAr:'موريتانيا', flag:'🇲🇷', decimals:2 },
+          { code:'DJ', currency:'DJF', nameEn:'Djibouti', nameAr:'جيبوتي', flag:'🇩🇯', decimals:0 },
+          { code:'KM', currency:'KMF', nameEn:'Comoros', nameAr:'جزر القمر', flag:'🇰🇲', decimals:0 },
+          { code:'US', currency:'USD', nameEn:'United States', nameAr:'الولايات المتحدة', flag:'🇺🇸', decimals:2 },
+          { code:'GB', currency:'GBP', nameEn:'United Kingdom', nameAr:'المملكة المتحدة', flag:'🇬🇧', decimals:2 },
+          { code:'EU', currency:'EUR', nameEn:'Europe', nameAr:'أوروبا', flag:'🇪🇺', decimals:2 },
+          { code:'IN', currency:'INR', nameEn:'India', nameAr:'الهند', flag:'🇮🇳', decimals:2 }
+        ]
+      };
+      const I18N = {
+        en:{brandTitle:'Gold Prices',brandSub:'Live tracker workspace',navHome:'Home',navTracker:'Live Tracker',navCalculator:'Calculator',navLearn:'Learn',navInsights:'Insights',navMethodology:'Methodology',navInvest:'Invest',crumbHome:'Home',crumbPage:'Live Tracker',offlineBanner:'You are offline. Showing cached data where available.',heroKicker:'Gold market workspace',heroTitle:'Track gold like a market, not like a widget.',heroSub:'Live spot, UAE/GCC local estimates, long-run history, archive, date lookup, alerts, downloads, compare tools, and watchlists — in one serious tracker.',heroPoint1Title:'Live first',heroPoint1Copy:'Use real-time spot-linked estimates across UAE, GCC, Levant, Africa, and reference markets.',heroPoint2Title:'History that matters',heroPoint2Copy:'Use short-range live cache and long-range monthly baseline for macro context.',heroPoint3Title:'Built to act',heroPoint3Copy:'Look up dates, set alerts, compare markets, export files, and save your view.',heroCta1:'Open workspace',heroCta2:'Compare markets',heroCta3:'Set alert',sideTitle:'Live summary',sideSub:'Your current market view and tracker context.',metricSpotLabel:'Spot gold',metricSpotSub:'XAU/USD per troy ounce',metricUae24Label:'UAE 24K',metricUae24Sub:'AED per gram',metricViewLabel:'Current view',metricRangeLabel:'Selected range',metricRangeSub:'Tracker working mode',heroNote:'Spot is the market reference. Local retail and jewelry quotes can differ because of premiums, making charges, spreads, and store policy.',workspaceTitle:'Tracker workspace',workspaceSub:'Live chart, archive, date lookup, downloads, and quick market logic in one place.',tabLive:'Live',tabArchive:'Archive',tabLookup:'Date Lookup',tabDownloads:'Downloads',copySummary:'Copy Summary',saveView:'Save View',resetView:'Reset',marketSelectLabel:'Market view',range24H:'24H',range7D:'7D',range30D:'30D',range90D:'90D',range1Y:'1Y',range3Y:'3Y',range5Y:'5Y',rangeALL:'All',unitGram:'Per gram',unitOunce:'Per ounce',unitKilo:'Per kilo',chartTitleLive:'Gold tracker chart',chartShort:'Short ranges use recent live snapshots and current market logic.',chartLong:'Longer ranges use monthly historical baseline data in USD spot terms.',chartFootLeft:'Short ranges = local recent cache. Long ranges = monthly historical baseline.',chartFootRight:'Sources: gold-api · ER-API · DataHub',statAth:'All-time high tracked',statYtd:'Year to date',stat1y:'1-year change',statSince:'Since Jan 2019',mini1Title:'How to read this',mini1Copy:'Use short ranges for recent momentum. Use longer ranges for macro context, not minute-by-minute timing.',mini2Title:'Data logic',mini2Copy:'Recent views can use local recent cache. Long views use historical monthly baseline in USD spot terms.',mini3Title:'Why this matters',mini3Copy:'Check the chart first, then compare countries and karats below before making a real buy or sell decision.',mini4Title:'Quick action',mini4Copy:'Set a live alert for the current view from the Alerts section below.',archiveRange:'Range',archiveKarat:'Karat',archiveUnit:'Unit',archiveSource:'Source',archiveCount:'entries',archiveHelp:'Historical baseline + recent local cache',archiveEmpty:'No archive rows match the current filters yet.',archiveSourceAll:'All',archiveSourceBaseline:'Baseline',archiveSourceLocal:'Local cache',lookupDate:'Date',lookupKarat:'Karat',lookupCurrency:'Currency',lookupAction:'Action',lookupBtn:'Look Up',lookupEmpty:'Pick a date to begin.',lookupClosest:'Closest available record',lookupRequested:'Requested date',lookupReturned:'Returned date',lookupPerGram:'gold / gram',lookupPerOz:'gold / oz',lookupSource:'Historical monthly baseline',dl1Title:'Current view CSV',dl1Desc:'Export the current chart dataset as CSV.',dl2Title:'Current matrix JSON',dl2Desc:'Export live country prices, settings, and timestamps as JSON.',dl3Title:'Archive CSV',dl3Desc:'Export the filtered archive view as CSV.',dl4Title:'Historical baseline CSV',dl4Desc:'Export the full long-run monthly baseline used for macro context.',matrixTitle:'Price by karat',matrixSub:'Clean, fast karat cards built for the Gulf-relevant grades first.',compareTitle:'Compare live markets',compareSub:'Compare GCC, Levant, Africa, and reference markets using your selected karat and unit.',regionGcc:'GCC',regionLevant:'Levant',regionAfrica:'Africa',regionGlobal:'Global',sortLabel:'Sort',sortHighLow:'Price: High → Low',sortLowHigh:'Price: Low → High',sortAlpha:'Alphabetical',searchLabel:'Search',searchPlaceholder:'Search countries...',compareEmpty:'No countries match the current search.',fixedPeg:'Fixed peg',copy:'Copy',copied:'Copied',watch:'Watch',watching:'Watching',alertsTitle:'Price alerts',alertsSub:'Browser-based alerts for spot or current selected view. No account required.',alertMetric:'Metric',alertDirection:'Direction',alertDirectionAbove:'Above',alertDirectionBelow:'Below',alertTarget:'Target value',alertCurrent:'Current reference',alertSave:'Save alert',alertEnable:'Enable notifications',savedAlertsTitle:'Saved alerts',savedAlertsSub:'Stored locally in your browser.',alertsEmpty:'No alerts yet. Add one from the form.',delete:'Delete',toolsTitle:'Related tools',toolsSub:'Jump directly into the rest of the site from the tracker.',bannerSaved:'Saved.',bannerCopied:'Summary copied.',bannerAlertSaved:'Alert saved.',bannerNotifDenied:'Notifications are blocked in this browser.',bannerNotifEnabled:'Notifications enabled.',bannerDataRefreshed:'Data refreshed.',marketOpen:'● Market Open',marketClosed:'○ Market Closed',chipFX:'FX',metricsSpot:'Spot USD/oz',metricsUae24:'UAE 24K AED/g',metricsCurrent:'Current selected view'},
+        ar:{brandTitle:'أسعار الذهب',brandSub:'مساحة عمل التتبع',navHome:'الرئيسية',navTracker:'التتبع المباشر',navCalculator:'الحاسبة',navLearn:'تعلّم',navInsights:'الرؤى',navMethodology:'المنهجية',navInvest:'الاستثمار',crumbHome:'الرئيسية',crumbPage:'التتبع المباشر',offlineBanner:'أنت غير متصل. يتم عرض البيانات المتاحة محلياً.',heroKicker:'مساحة عمل سوق الذهب',heroTitle:'تابع الذهب كسوق حقيقي، لا كأداة سطحية.',heroSub:'سعر فوري مباشر، تقديرات محلية للإمارات والخليج، تاريخ طويل، أرشيف، بحث بالتاريخ، تنبيهات، تنزيلات، مقارنة، وقائمة متابعة — في صفحة واحدة جادة.',heroPoint1Title:'الحي أولاً',heroPoint1Copy:'استخدم تقديرات مرتبطة بالسعر الفوري عبر الإمارات والخليج والشام وأفريقيا والأسواق المرجعية.',heroPoint2Title:'تاريخ يهم',heroPoint2Copy:'استخدم السجل الحي القصير والأساس الشهري الطويل للسياق الكبير.',heroPoint3Title:'مبني للتصرف',heroPoint3Copy:'ابحث بالتاريخ، واضبط التنبيهات، وقارن الأسواق، وصدّر الملفات، واحفظ عرضك.',heroCta1:'افتح مساحة العمل',heroCta2:'قارن الأسواق',heroCta3:'اضبط تنبيهاً',sideTitle:'الملخص المباشر',sideSub:'عرض السوق الحالي وسياق المتتبع.',metricSpotLabel:'السعر الفوري',metricSpotSub:'XAU/USD لكل أوقية تروي',metricUae24Label:'الإمارات 24K',metricUae24Sub:'درهم لكل غرام',metricViewLabel:'العرض الحالي',metricRangeLabel:'النطاق المختار',metricRangeSub:'وضع عمل المتتبع',heroNote:'السعر الفوري هو المرجع. الأسعار المحلية والتجزئة والمجوهرات قد تختلف بسبب العلاوات وأجور الصنعة والهوامش وسياسة المتجر.',workspaceTitle:'مساحة عمل المتتبع',workspaceSub:'الرسم الحي، الأرشيف، البحث بالتاريخ، التنزيلات، ومنطق السوق السريع في مكان واحد.',tabLive:'مباشر',tabArchive:'الأرشيف',tabLookup:'البحث بالتاريخ',tabDownloads:'التنزيلات',copySummary:'انسخ الملخص',saveView:'احفظ العرض',resetView:'إعادة ضبط',marketSelectLabel:'عرض السوق',range24H:'24 ساعة',range7D:'7 أيام',range30D:'30 يوم',range90D:'90 يوم',range1Y:'سنة',range3Y:'3 سنوات',range5Y:'5 سنوات',rangeALL:'الكل',unitGram:'لكل غرام',unitOunce:'لكل أوقية',unitKilo:'لكل كيلو',chartTitleLive:'رسم متتبع الذهب',chartShort:'النطاقات القصيرة تستخدم لقطات حية حديثة ومنطق السوق الحالي.',chartLong:'النطاقات الأطول تستخدم بيانات شهرية تاريخية بصيغة السعر الفوري بالدولار.',chartFootLeft:'النطاقات القصيرة = سجل محلي حديث. النطاقات الطويلة = أساس شهري تاريخي.',chartFootRight:'المصادر: gold-api · ER-API · DataHub',statAth:'أعلى مستوى متابع',statYtd:'منذ بداية السنة',stat1y:'تغير سنة واحدة',statSince:'منذ يناير 2019',mini1Title:'كيف تقرأ هذا',mini1Copy:'استخدم النطاقات القصيرة لزخم قريب، والطويلة للسياق الكبير لا للتوقيت اللحظي.',mini2Title:'منطق البيانات',mini2Copy:'العروض الحديثة يمكن أن تستخدم السجل المحلي، أما العروض الطويلة فتستخدم أساساً شهرياً تاريخياً.',mini3Title:'لماذا يهم هذا',mini3Copy:'افحص الرسم أولاً، ثم قارن الدول والعيارات بالأسفل قبل أي قرار شراء أو بيع حقيقي.',mini4Title:'إجراء سريع',mini4Copy:'اضبط تنبيهاً مباشراً للعرض الحالي من قسم التنبيهات.',archiveRange:'النطاق',archiveKarat:'العيار',archiveUnit:'الوحدة',archiveSource:'المصدر',archiveCount:'سجل',archiveHelp:'أساس تاريخي + سجل محلي حديث',archiveEmpty:'لا توجد صفوف أرشيف مطابقة لهذه الفلاتر.',archiveSourceAll:'الكل',archiveSourceBaseline:'الأساس',archiveSourceLocal:'السجل المحلي',lookupDate:'التاريخ',lookupKarat:'العيار',lookupCurrency:'العملة',lookupAction:'الإجراء',lookupBtn:'ابحث',lookupEmpty:'اختر تاريخاً للبدء.',lookupClosest:'أقرب سجل متاح',lookupRequested:'التاريخ المطلوب',lookupReturned:'التاريخ المعروض',lookupPerGram:'ذهب / غرام',lookupPerOz:'ذهب / أوقية',lookupSource:'أساس تاريخي شهري',dl1Title:'CSV للعرض الحالي',dl1Desc:'صدّر بيانات الرسم الحالي كملف CSV.',dl2Title:'JSON للمصفوفة الحالية',dl2Desc:'صدّر أسعار الدول الحية والإعدادات والطوابع الزمنية بصيغة JSON.',dl3Title:'CSV للأرشيف',dl3Desc:'صدّر عرض الأرشيف المفلتر كملف CSV.',dl4Title:'CSV للأساس التاريخي',dl4Desc:'صدّر الأساس الشهري التاريخي الطويل المستخدم للسياق الكبير.',matrixTitle:'السعر حسب العيار',matrixSub:'بطاقات عيارات سريعة ونظيفة تركز على العيارات الأهم في الخليج أولاً.',compareTitle:'قارن الأسواق الحية',compareSub:'قارن الخليج والشام وأفريقيا والأسواق المرجعية باستخدام العيار والوحدة المختارين.',regionGcc:'الخليج',regionLevant:'الشام',regionAfrica:'أفريقيا',regionGlobal:'مرجعي',sortLabel:'الترتيب',sortHighLow:'السعر: الأعلى → الأدنى',sortLowHigh:'السعر: الأدنى → الأعلى',sortAlpha:'أبجدي',searchLabel:'البحث',searchPlaceholder:'ابحث عن الدول...',compareEmpty:'لا توجد دول مطابقة للبحث الحالي.',fixedPeg:'ربط ثابت',copy:'نسخ',copied:'تم النسخ',watch:'متابعة',watching:'قيد المتابعة',alertsTitle:'تنبيهات الأسعار',alertsSub:'تنبيهات عبر المتصفح للسعر الفوري أو العرض الحالي. لا حاجة لحساب.',alertMetric:'المؤشر',alertDirection:'الاتجاه',alertDirectionAbove:'أعلى من',alertDirectionBelow:'أقل من',alertTarget:'القيمة المستهدفة',alertCurrent:'المرجع الحالي',alertSave:'حفظ التنبيه',alertEnable:'تفعيل الإشعارات',savedAlertsTitle:'التنبيهات المحفوظة',savedAlertsSub:'محفوظة محلياً في متصفحك.',alertsEmpty:'لا توجد تنبيهات بعد. أضف واحداً من النموذج.',delete:'حذف',toolsTitle:'أدوات مرتبطة',toolsSub:'انتقل مباشرة إلى بقية الموقع من داخل المتتبع.',bannerSaved:'تم الحفظ.',bannerCopied:'تم نسخ الملخص.',bannerAlertSaved:'تم حفظ التنبيه.',bannerNotifDenied:'الإشعارات محجوبة في هذا المتصفح.',bannerNotifEnabled:'تم تفعيل الإشعارات.',bannerDataRefreshed:'تم تحديث البيانات.',marketOpen:'● السوق مفتوح',marketClosed:'○ السوق مغلق',chipFX:'العملات',metricsSpot:'السعر الفوري دولار/أوقية',metricsUae24:'الإمارات 24K درهم/غرام',metricsCurrent:'العرض الحالي'}
+      };
 
-    const LOOKUP_I18N = {
-      en: {
-        pickDate: 'Pick a date to begin.',
-        noData: 'No historical baseline data available right now.',
-        closest: 'Closest available record',
-        requested: 'Requested date',
-        returned: 'Returned date',
-        perGram: 'gold / gram',
-        perOz: 'gold / oz',
-        source: 'Historical monthly baseline',
-        copied: 'Summary copied',
-      },
-      ar: {
-        pickDate: 'اختر تاريخاً للبدء.',
-        noData: 'لا توجد بيانات تاريخية أساسية متاحة حالياً.',
-        closest: 'أقرب سجل متاح',
-        requested: 'التاريخ المطلوب',
-        returned: 'التاريخ المعروض',
-        perGram: 'ذهب / غرام',
-        perOz: 'ذهب / أوقية',
-        source: 'أساس تاريخي شهري',
-        copied: 'تم نسخ الملخص',
+      const state = {
+        lang: localStorage.getItem('tracker_lang') || 'en',
+        goldUsdPerOz: null,
+        prevGoldUsdPerOz: null,
+        rates: {},
+        goldUpdatedAt: null,
+        fxUpdatedAt: null,
+        monthlyHistory: [],
+        localLiveHistory: [],
+        range: '1Y',
+        unit: 'gram',
+        karat: '24',
+        panel: 'live',
+        region: 'gcc',
+        sort: 'high-low',
+        marketView: 'spot',
+        search: '',
+        alerts: [],
+        watchlist: [],
+        chart: null,
+      };
+
+      const el = {};
+      const ids = ['brand-title','brand-sub','nav-home','nav-tracker','nav-calculator','nav-learn','nav-insights','nav-methodology','nav-invest','lang-toggle','mobile-menu-btn','mobile-menu','crumb-home','crumb-page','chip-gold-updated','chip-fx-updated','chip-market-status','offline-banner','offline-banner-text','error-banner','error-banner-text','success-banner','success-banner-text','hero-kicker','hero-title','hero-sub','hero-point-1-title','hero-point-1-copy','hero-point-2-title','hero-point-2-copy','hero-point-3-title','hero-point-3-copy','hero-cta-1','hero-cta-2','hero-cta-3','side-title','side-sub','metric-spot-label','metric-spot','metric-spot-sub','metric-uae24-label','metric-uae24','metric-uae24-sub','metric-view-label','metric-current-view','metric-current-view-sub','metric-range-label','metric-range-value','metric-range-sub','hero-note','workspace-title','workspace-sub','tab-live','tab-archive','tab-lookup','tab-downloads','copy-summary-btn','save-view-btn','reset-view-btn','market-select-label','market-select','refresh-data-btn','chart-title','chart-note','chart-foot-left','chart-foot-right','stat-ath-label','stat-ath','stat-ytd-label','stat-ytd','stat-1y-label','stat-1y','stat-since-label','stat-since','mini-title-1','mini-copy-1','mini-title-2','mini-copy-2','mini-title-3','mini-copy-3','mini-title-4','mini-copy-4','range-buttons','unit-buttons','karat-buttons','archive-range-label','archive-range','archive-karat-label','archive-karat','archive-unit-label','archive-unit','archive-source-label','archive-source','archive-count','archive-help','archive-list','archive-empty','lookup-date-label','lookup-date','lookup-karat-label','lookup-karat','lookup-currency-label','lookup-currency','lookup-action-label','lookup-btn','lookup-result','dl-title-1','dl-desc-1','dl-title-2','dl-desc-2','dl-title-3','dl-desc-3','dl-title-4','dl-desc-4','download-current-csv','download-current-json','download-archive-csv','download-baseline-csv','matrix-title','matrix-sub','matrix-grid','compare-title','compare-sub','region-tabs','sort-label','sort-select','search-label','country-search','country-grid','country-empty','alerts-title','alerts-sub','alert-metric-label','alert-metric','alert-direction-label','alert-direction','alert-target-label','alert-target','alert-current-label','alert-current-reference','save-alert-btn','enable-notifications-btn','saved-alerts-title','saved-alerts-sub','alerts-list','alerts-empty','watchlist-grid','tools-title','tools-sub','ticker-track'];
+      ids.forEach(id => el[id] = document.getElementById(id));
+
+      function t(key){ return I18N[state.lang][key] || I18N.en[key] || key; }
+      function saveJson(key, value){ localStorage.setItem(key, JSON.stringify(value)); }
+      function loadJson(key, fallback){ try{ return JSON.parse(localStorage.getItem(key) || 'null') ?? fallback; }catch{return fallback;} }
+      function formatMoney(value, currency='USD', decimals=2){ if(value == null || Number.isNaN(value)) return '—'; try{ return new Intl.NumberFormat(state.lang === 'ar' ? 'ar-AE' : 'en-AE', {style:'currency',currency,minimumFractionDigits:decimals,maximumFractionDigits:decimals}).format(value); }catch{return value.toFixed(decimals)+' '+currency;} }
+      function formatPct(value){ if(value == null || Number.isNaN(value)) return '—'; const sign = value > 0 ? '+' : ''; return sign + value.toFixed(1) + '%'; }
+      function formatDubaiTime(ts){ if(!ts) return '—'; return new Date(ts).toLocaleString(state.lang === 'ar' ? 'ar-AE' : 'en-AE', {timeZone:'Asia/Dubai', month:'short', day:'numeric', hour:'numeric', minute:'2-digit'}); }
+      function karatPurity(code){ return CONFIG.KARATS[code]?.purity ?? 1; }
+      function rateForCurrency(currency){ if(currency === 'AED') return CONFIG.AED_PEG; return state.rates[currency] ?? null; }
+      function priceUsdPerGramForKarat(spotUsdPerOz, karatCode){ return (spotUsdPerOz * karatPurity(karatCode)) / CONFIG.TROY_OZ_GRAMS; }
+      function priceForUnit(basePerGram){ if(basePerGram == null) return null; if(state.unit === 'gram') return basePerGram; if(state.unit === 'oz') return basePerGram * CONFIG.TROY_OZ_GRAMS; if(state.unit === 'kilo') return basePerGram * 1000; return basePerGram; }
+      function isMarketOpen(){ const now = new Date(); const day = now.getUTCDay(); const minutes = now.getUTCHours()*60 + now.getUTCMinutes(); const openSun = 22*60; const closeFri = 21*60; if(day === 6) return false; if(day === 5 && minutes >= closeFri) return false; if(day === 0 && minutes < openSun) return false; return true; }
+      function showBanner(type, text){ ['offline-banner','error-banner','success-banner'].forEach(id => el[id].classList.remove('visible')); if(!type) return; if(type === 'offline'){ el['offline-banner-text'].textContent = text || t('offlineBanner'); el['offline-banner'].classList.add('visible'); } if(type === 'error'){ el['error-banner-text'].textContent = text; el['error-banner'].classList.add('visible'); } if(type === 'success'){ el['success-banner-text'].textContent = text; el['success-banner'].classList.add('visible'); setTimeout(() => el['success-banner'].classList.remove('visible'), 2200); } }
+
+      function persistSettings(){ saveJson(CONFIG.STORAGE.SETTINGS, {lang:state.lang,range:state.range,unit:state.unit,karat:state.karat,panel:state.panel,region:state.region,sort:state.sort,marketView:state.marketView}); }
+      function loadState(){ const raw = loadJson(CONFIG.STORAGE.SETTINGS, {}); state.lang = raw.lang || state.lang; state.range = raw.range || state.range; state.unit = raw.unit || state.unit; state.karat = raw.karat || state.karat; state.panel = raw.panel || state.panel; state.region = raw.region || state.region; state.sort = raw.sort || state.sort; state.marketView = raw.marketView || state.marketView; state.alerts = loadJson(CONFIG.STORAGE.ALERTS, []); state.watchlist = loadJson(CONFIG.STORAGE.WATCHLIST, []); state.localLiveHistory = loadJson(CONFIG.STORAGE.LIVE_CACHE, []); state.monthlyHistory = loadJson(CONFIG.STORAGE.HISTORY_CACHE, []); }
+      function saveAlerts(){ saveJson(CONFIG.STORAGE.ALERTS, state.alerts); }
+      function saveWatchlist(){ saveJson(CONFIG.STORAGE.WATCHLIST, state.watchlist); }
+      function saveLocalLiveHistory(){ saveJson(CONFIG.STORAGE.LIVE_CACHE, state.localLiveHistory.slice(-1500)); }
+      function saveHistoryCache(){ saveJson(CONFIG.STORAGE.HISTORY_CACHE, state.monthlyHistory); }
+
+      function applyText(){
+        document.documentElement.lang = state.lang; document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+        el['brand-title'].textContent = t('brandTitle'); el['brand-sub'].textContent = t('brandSub');
+        el['nav-home'].textContent = t('navHome'); el['nav-tracker'].textContent = t('navTracker'); el['nav-calculator'].textContent = t('navCalculator'); el['nav-learn'].textContent = t('navLearn'); el['nav-insights'].textContent = t('navInsights'); el['nav-methodology'].textContent = t('navMethodology'); el['nav-invest'].textContent = t('navInvest');
+        el['crumb-home'].textContent = t('crumbHome'); el['crumb-page'].textContent = t('crumbPage');
+        el['lang-toggle'].textContent = state.lang === 'en' ? 'العربية' : 'English';
+        el['offline-banner-text'].textContent = t('offlineBanner');
+        ['hero-kicker','hero-title','hero-sub','hero-point-1-title','hero-point-1-copy','hero-point-2-title','hero-point-2-copy','hero-point-3-title','hero-point-3-copy','hero-cta-1','hero-cta-2','hero-cta-3','side-title','side-sub','metric-spot-label','metric-spot-sub','metric-uae24-label','metric-uae24-sub','metric-view-label','metric-range-label','metric-range-sub','hero-note','workspace-title','workspace-sub','copy-summary-btn','save-view-btn','reset-view-btn','market-select-label','stat-ath-label','stat-ytd-label','stat-1y-label','stat-since-label','mini-title-1','mini-copy-1','mini-title-2','mini-copy-2','mini-title-3','mini-copy-3','mini-title-4','mini-copy-4','archive-range-label','archive-karat-label','archive-unit-label','archive-source-label','archive-help','archive-empty','lookup-date-label','lookup-karat-label','lookup-currency-label','lookup-action-label','lookup-btn','dl-title-1','dl-desc-1','dl-title-2','dl-desc-2','dl-title-3','dl-desc-3','dl-title-4','dl-desc-4','matrix-title','matrix-sub','compare-title','compare-sub','sort-label','search-label','alerts-title','alerts-sub','alert-metric-label','alert-direction-label','alert-target-label','alert-current-label','save-alert-btn','enable-notifications-btn','saved-alerts-title','saved-alerts-sub','alerts-empty','tools-title','tools-sub'].forEach(()=>{});
+        el['hero-kicker'].textContent = t('heroKicker'); el['hero-title'].textContent = t('heroTitle'); el['hero-sub'].textContent = t('heroSub'); el['hero-point-1-title'].textContent = t('heroPoint1Title'); el['hero-point-1-copy'].textContent = t('heroPoint1Copy'); el['hero-point-2-title'].textContent = t('heroPoint2Title'); el['hero-point-2-copy'].textContent = t('heroPoint2Copy'); el['hero-point-3-title'].textContent = t('heroPoint3Title'); el['hero-point-3-copy'].textContent = t('heroPoint3Copy'); el['hero-cta-1'].textContent = t('heroCta1'); el['hero-cta-2'].textContent = t('heroCta2'); el['hero-cta-3'].textContent = t('heroCta3');
+        el['side-title'].textContent = t('sideTitle'); el['side-sub'].textContent = t('sideSub'); el['metric-spot-label'].textContent = t('metricSpotLabel'); el['metric-spot-sub'].textContent = t('metricSpotSub'); el['metric-uae24-label'].textContent = t('metricUae24Label'); el['metric-uae24-sub'].textContent = t('metricUae24Sub'); el['metric-view-label'].textContent = t('metricViewLabel'); el['metric-range-label'].textContent = t('metricRangeLabel'); el['metric-range-sub'].textContent = t('metricRangeSub'); el['hero-note'].textContent = t('heroNote');
+        el['workspace-title'].textContent = t('workspaceTitle'); el['workspace-sub'].textContent = t('workspaceSub'); el['tab-live'].innerHTML = '📈 ' + t('tabLive'); el['tab-archive'].innerHTML = '🗃 ' + t('tabArchive'); el['tab-lookup'].innerHTML = '🔎 ' + t('tabLookup'); el['tab-downloads'].innerHTML = '⬇ ' + t('tabDownloads'); el['copy-summary-btn'].textContent = t('copySummary'); el['save-view-btn'].textContent = t('saveView'); el['reset-view-btn'].textContent = t('resetView'); el['market-select-label'].textContent = t('marketSelectLabel'); el['refresh-data-btn'].textContent = state.lang === 'ar' ? 'تحديث البيانات' : 'Refresh Data';
+        el['stat-ath-label'].textContent = t('statAth'); el['stat-ytd-label'].textContent = t('statYtd'); el['stat-1y-label'].textContent = t('stat1y'); el['stat-since-label'].textContent = t('statSince');
+        el['mini-title-1'].textContent = t('mini1Title'); el['mini-copy-1'].textContent = t('mini1Copy'); el['mini-title-2'].textContent = t('mini2Title'); el['mini-copy-2'].textContent = t('mini2Copy'); el['mini-title-3'].textContent = t('mini3Title'); el['mini-copy-3'].textContent = t('mini3Copy'); el['mini-title-4'].textContent = t('mini4Title'); el['mini-copy-4'].textContent = t('mini4Copy');
+        el['archive-range-label'].textContent = t('archiveRange'); el['archive-karat-label'].textContent = t('archiveKarat'); el['archive-unit-label'].textContent = t('archiveUnit'); el['archive-source-label'].textContent = t('archiveSource'); el['archive-help'].textContent = t('archiveHelp'); el['archive-empty'].textContent = t('archiveEmpty');
+        el['lookup-date-label'].textContent = t('lookupDate'); el['lookup-karat-label'].textContent = t('lookupKarat'); el['lookup-currency-label'].textContent = t('lookupCurrency'); el['lookup-action-label'].textContent = t('lookupAction'); el['lookup-btn'].textContent = t('lookupBtn');
+        el['dl-title-1'].textContent = t('dl1Title'); el['dl-desc-1'].textContent = t('dl1Desc'); el['dl-title-2'].textContent = t('dl2Title'); el['dl-desc-2'].textContent = t('dl2Desc'); el['dl-title-3'].textContent = t('dl3Title'); el['dl-desc-3'].textContent = t('dl3Desc'); el['dl-title-4'].textContent = t('dl4Title'); el['dl-desc-4'].textContent = t('dl4Desc');
+        el['matrix-title'].textContent = t('matrixTitle'); el['matrix-sub'].textContent = t('matrixSub');
+        el['compare-title'].textContent = t('compareTitle'); el['compare-sub'].textContent = t('compareSub'); el['sort-label'].textContent = t('sortLabel'); el['search-label'].textContent = t('searchLabel'); el['country-search'].placeholder = t('searchPlaceholder'); el['country-empty'].textContent = t('compareEmpty');
+        el['alerts-title'].textContent = t('alertsTitle'); el['alerts-sub'].textContent = t('alertsSub'); el['alert-metric-label'].textContent = t('alertMetric'); el['alert-direction-label'].textContent = t('alertDirection'); el['alert-target-label'].textContent = t('alertTarget'); el['alert-current-label'].textContent = t('alertCurrent'); el['save-alert-btn'].textContent = t('alertSave'); el['enable-notifications-btn'].textContent = t('alertEnable'); el['saved-alerts-title'].textContent = t('savedAlertsTitle'); el['saved-alerts-sub'].textContent = t('savedAlertsSub'); el['alerts-empty'].textContent = t('alertsEmpty');
+        el['tools-title'].textContent = t('toolsTitle'); el['tools-sub'].textContent = t('toolsSub');
+        document.title = state.lang === 'ar' ? 'مساحة عمل تتبع الذهب' : 'Gold Tracker Workspace';
       }
-    };
 
-    let baselineRows = [];
-    let baselineLoaded = false;
-
-    function lang() {
-      return document.documentElement.lang === 'ar' ? 'ar' : 'en';
-    }
-
-    function tx(key) {
-      return LOOKUP_I18N[lang()][key] || LOOKUP_I18N.en[key] || key;
-    }
-
-    async function loadBaseline() {
-      if (baselineLoaded) return baselineRows;
-      try {
-        const res = await fetch(LOOKUP_CSV, { cache: 'force-cache' });
-        if (!res.ok) throw new Error('history failed');
-        const text = await res.text();
-        baselineRows = text.trim().split('\\n').slice(1).map(line => {
-          const [date, price] = line.split(',');
-          return {
-            date,
-            price: Number(price)
-          };
-        }).filter(row => row.date && Number.isFinite(row.price));
-        baselineLoaded = true;
-      } catch {
-        baselineRows = [];
+      function buildSelects(){
+        el['market-select'].innerHTML = `<option value="spot">${state.lang === 'ar' ? 'السعر الفوري USD' : 'Spot USD'}</option><option value="uae">${state.lang === 'ar' ? 'الإمارات AED' : 'UAE AED'}</option>`; el['market-select'].value = state.marketView;
+        buildPills();
+        el['archive-range'].innerHTML = `<option value="ALL">${state.lang === 'ar' ? 'كل التاريخ' : 'All history'}</option><option value="5Y">${state.lang === 'ar' ? 'آخر 5 سنوات' : 'Last 5 years'}</option><option value="3Y">${state.lang === 'ar' ? 'آخر 3 سنوات' : 'Last 3 years'}</option><option value="1Y">${state.lang === 'ar' ? 'آخر سنة' : 'Last 1 year'}</option><option value="90D">${state.lang === 'ar' ? 'آخر 90 يوماً' : 'Last 90 days'}</option><option value="30D">${state.lang === 'ar' ? 'آخر 30 يوماً' : 'Last 30 days'}</option>`; el['archive-range'].value = ['24H','7D'].includes(state.range) ? '30D' : state.range;
+        el['archive-karat'].innerHTML = ['24','22','21','18'].map(v => `<option value="${v}">${v}K</option>`).join(''); el['archive-karat'].value = state.karat;
+        el['archive-unit'].innerHTML = `<option value="gram">${t('unitGram')}</option><option value="oz">${t('unitOunce')}</option>`; el['archive-unit'].value = state.unit === 'kilo' ? 'gram' : state.unit;
+        el['archive-source'].innerHTML = `<option value="all">${t('archiveSourceAll')}</option><option value="baseline">${t('archiveSourceBaseline')}</option><option value="local">${t('archiveSourceLocal')}</option>`;
+        el['lookup-karat'].innerHTML = ['24','22','21','18'].map(v => `<option value="${v}">${v}K</option>`).join(''); el['lookup-karat'].value = state.karat;
+        el['alert-metric'].innerHTML = `<option value="spot">${t('metricsSpot')}</option><option value="uae24">${t('metricsUae24')}</option><option value="current">${t('metricsCurrent')}</option>`;
+        el['alert-direction'].innerHTML = `<option value="above">${t('alertDirectionAbove')}</option><option value="below">${t('alertDirectionBelow')}</option>`;
+        el['sort-select'].innerHTML = `<option value="high-low">${t('sortHighLow')}</option><option value="low-high">${t('sortLowHigh')}</option><option value="alpha">${t('sortAlpha')}</option>`; el['sort-select'].value = state.sort;
+        el['region-tabs'].innerHTML = [{v:'gcc',l:t('regionGcc')},{v:'levant',l:t('regionLevant')},{v:'africa',l:t('regionAfrica')},{v:'global',l:t('regionGlobal')}].map(item => `<button class="region-tab ${state.region===item.v?'active':''}" data-region="${item.v}" type="button">${item.l}</button>`).join('');
+        el['region-tabs'].querySelectorAll('[data-region]').forEach(btn => btn.addEventListener('click', () => { state.region = btn.dataset.region; persistSettings(); buildSelects(); renderCountries(); }));
       }
-      return baselineRows;
-    }
 
-    function getPurity(code) {
-      return { '24': 1, '22': 22/24, '21': 21/24, '18': 18/24 }[code] || 1;
-    }
-
-    function fmtMoney(value, currency, decimals = 2) {
-      if (value == null || Number.isNaN(value)) return '—';
-      try {
-        return new Intl.NumberFormat(lang() === 'ar' ? 'ar-AE' : 'en-AE', {
-          style: 'currency',
-          currency,
-          minimumFractionDigits: decimals,
-          maximumFractionDigits: decimals,
-        }).format(value);
-      } catch {
-        return value.toFixed(decimals) + ' ' + currency;
+      function buildPills(){
+        const ranges = ['24H','7D','30D','90D','1Y','3Y','5Y','ALL'];
+        el['range-buttons'].innerHTML = ranges.map(v => `<button class="pill-btn ${state.range===v?'active':''}" data-range="${v}">${t('range'+v)}</button>`).join('');
+        el['range-buttons'].querySelectorAll('[data-range]').forEach(btn => btn.addEventListener('click', () => { state.range = btn.dataset.range; persistSettings(); buildPills(); renderAll(); }));
+        const units = [{v:'gram',l:t('unitGram')},{v:'oz',l:t('unitOunce')},{v:'kilo',l:t('unitKilo')}];
+        el['unit-buttons'].innerHTML = units.map(item => `<button class="pill-btn ${state.unit===item.v?'active':''}" data-unit="${item.v}">${item.l}</button>`).join('');
+        el['unit-buttons'].querySelectorAll('[data-unit]').forEach(btn => btn.addEventListener('click', () => { state.unit = btn.dataset.unit; persistSettings(); buildPills(); renderAll(); }));
+        const karats = ['24','22','21','18'];
+        el['karat-buttons'].innerHTML = karats.map(v => `<button class="pill-btn ${state.karat===v?'active':''}" data-karat="${v}">${v}K</button>`).join('');
+        el['karat-buttons'].querySelectorAll('[data-karat]').forEach(btn => btn.addEventListener('click', () => { state.karat = btn.dataset.karat; persistSettings(); buildPills(); renderAll(); }));
       }
-    }
 
-    function getClosest(dateStr) {
-      if (!dateStr || baselineRows.length === 0) return null;
-      const target = new Date(dateStr).getTime();
-      let best = null;
-      let bestDiff = Infinity;
-      for (const row of baselineRows) {
-        const ts = new Date(row.date).getTime();
-        const diff = Math.abs(ts - target);
-        if (diff < bestDiff) {
-          best = row;
-          bestDiff = diff;
+      function updateHeader(){
+        el['chip-gold-updated'].textContent = state.goldUpdatedAt ? formatDubaiTime(state.goldUpdatedAt) : '—';
+        el['chip-fx-updated'].textContent = state.fxUpdatedAt ? `${t('chipFX')} · ${formatDubaiTime(state.fxUpdatedAt)}` : `${t('chipFX')} —`;
+        el['chip-market-status'].textContent = isMarketOpen() ? t('marketOpen') : t('marketClosed');
+        el['chip-market-status'].className = 'chip ' + (isMarketOpen() ? 'market-open' : 'market-closed');
+      }
+
+      function getCurrentView(){
+        if(state.goldUsdPerOz == null) return {raw:null,text:'—',sub:'—'};
+        if(state.marketView === 'spot'){
+          const raw = state.unit === 'gram' ? priceUsdPerGramForKarat(state.goldUsdPerOz, state.karat) : state.unit === 'oz' ? state.goldUsdPerOz * karatPurity(state.karat) : priceUsdPerGramForKarat(state.goldUsdPerOz, state.karat) * 1000;
+          return {raw,text:formatMoney(raw,'USD',2),sub:`${state.karat}K · ${state.unit === 'gram' ? t('unitGram') : state.unit === 'oz' ? t('unitOunce') : t('unitKilo')} · USD`};
         }
-      }
-      return best;
-    }
-
-    function renderLookupResult() {
-      const resultEl = document.getElementById('date-lookup-result');
-      const dateEl = document.getElementById('date-lookup-input');
-      const karatEl = document.getElementById('date-lookup-karat');
-      const currencyEl = document.getElementById('date-lookup-currency');
-
-      if (!resultEl || !dateEl || !karatEl || !currencyEl) return;
-
-      const dateStr = dateEl.value;
-      if (!dateStr) {
-        resultEl.innerHTML = '<div class="lookup-empty-text">' + tx('pickDate') + '</div>';
-        return;
+        const baseGram = priceUsdPerGramForKarat(state.goldUsdPerOz, state.karat) * CONFIG.AED_PEG;
+        const raw = state.unit === 'gram' ? baseGram : state.unit === 'oz' ? baseGram * CONFIG.TROY_OZ_GRAMS : baseGram * 1000;
+        return {raw,text:formatMoney(raw,'AED',2),sub:`${state.karat}K · ${state.unit === 'gram' ? t('unitGram') : state.unit === 'oz' ? t('unitOunce') : t('unitKilo')} · AED`};
       }
 
-      const row = getClosest(dateStr);
-      if (!row) {
-        resultEl.innerHTML = '<div class="lookup-empty-text">' + tx('noData') + '</div>';
-        return;
+      function updateHero(){
+        const spot = state.goldUsdPerOz;
+        const uae24 = spot != null ? priceUsdPerGramForKarat(spot, '24') * CONFIG.AED_PEG : null;
+        el['metric-spot'].textContent = formatMoney(spot,'USD',2);
+        el['metric-uae24'].textContent = formatMoney(uae24,'AED',2);
+        const current = getCurrentView();
+        el['metric-current-view'].textContent = current.text;
+        el['metric-current-view-sub'].textContent = current.sub;
+        el['metric-range-value'].textContent = state.range;
       }
 
-      const karat = karatEl.value || '24';
-      const currency = currencyEl.value || 'USD';
-      const purity = getPurity(karat);
-
-      const usdPerOz = row.price * purity;
-      const usdPerGram = usdPerOz / TROY_OZ_GRAMS;
-      const aedPerOz = usdPerOz * AED_PEG;
-      const aedPerGram = usdPerGram * AED_PEG;
-
-      const gramValue = currency === 'AED'
-        ? fmtMoney(aedPerGram, 'AED', 2)
-        : fmtMoney(usdPerGram, 'USD', 2);
-
-      const ozValue = currency === 'AED'
-        ? fmtMoney(aedPerOz, 'AED', 2)
-        : fmtMoney(usdPerOz, 'USD', 2);
-
-      resultEl.innerHTML = \`
-        <div class="lookup-result-head">
-          <strong>\${tx('closest')}</strong>
-          <span class="lookup-source-badge">\${tx('source')}</span>
-        </div>
-
-        <div class="lookup-result-grid">
-          <div class="lookup-result-item">
-            <span class="lookup-result-label">\${tx('requested')}</span>
-            <span class="lookup-result-value">\${dateStr}</span>
-          </div>
-
-          <div class="lookup-result-item">
-            <span class="lookup-result-label">\${tx('returned')}</span>
-            <span class="lookup-result-value">\${row.date}</span>
-          </div>
-
-          <div class="lookup-result-item">
-            <span class="lookup-result-label">\${karat}K \${tx('perGram')}</span>
-            <span class="lookup-result-value">\${gramValue}</span>
-          </div>
-
-          <div class="lookup-result-item">
-            <span class="lookup-result-label">\${karat}K \${tx('perOz')}</span>
-            <span class="lookup-result-value">\${ozValue}</span>
-          </div>
-        </div>
-      \`;
-    }
-
-    function updateSideSummary() {
-      const spotCard = document.getElementById('hero-spot-card');
-      const uae24Card = document.getElementById('hero-uae24-card');
-      const currentView = document.getElementById('chart-current-view-value');
-      const currentSub = document.getElementById('chart-current-view-sub');
-      if (!spotCard || !uae24Card || !currentView || !currentSub) return;
-
-      const spotlightCards = Array.from(document.querySelectorAll('#spotlight-grid .spotlight-card'));
-      const activeKarat = document.querySelector('#spotlight-karat-pills .karat-pill.active')?.dataset.karat || '24';
-
-      const spotVal = spotlightCards[0]?.querySelector('.sc-price')?.textContent?.trim() || '—';
-      const uae24Val = spotlightCards[3]?.querySelector('.sc-price')?.textContent?.trim() || '—';
-
-      spotCard.textContent = spotVal;
-      uae24Card.textContent = uae24Val;
-      currentView.textContent = uae24Val;
-      currentSub.textContent = activeKarat + 'K · AED / gram';
-    }
-
-    function bindEnhancements() {
-      document.getElementById('date-lookup-btn')?.addEventListener('click', renderLookupResult);
-      document.getElementById('date-lookup-input')?.addEventListener('change', renderLookupResult);
-      document.getElementById('date-lookup-karat')?.addEventListener('change', renderLookupResult);
-      document.getElementById('date-lookup-currency')?.addEventListener('change', renderLookupResult);
-
-      document.getElementById('chart-copy-summary-btn')?.addEventListener('click', async () => {
-        const summary = [
-          'Spot: ' + (document.getElementById('hero-spot-card')?.textContent || '—'),
-          'UAE 24K/g: ' + (document.getElementById('hero-uae24-card')?.textContent || '—'),
-          'Range: ' + (document.querySelector('.chart-range-btn.active')?.dataset.range || '1Y'),
-          'Updated: ' + (document.getElementById('gold-freshness-time')?.textContent || '—')
-        ].join(' | ');
-        try {
-          await navigator.clipboard.writeText(summary);
-        } catch {}
-      });
-
-      document.getElementById('chart-refresh-btn')?.addEventListener('click', () => {
-        const retryBtn = document.getElementById('retry-btn');
-        if (retryBtn) retryBtn.click();
-        else window.location.reload();
-      });
-
-      const spotlight = document.getElementById('spotlight-grid');
-      if (spotlight) {
-        const mo = new MutationObserver(updateSideSummary);
-        mo.observe(spotlight, { childList: true, subtree: true });
+      function appendLiveSnapshot(){
+        if(state.goldUsdPerOz == null) return;
+        const now = Date.now();
+        const snapshot = { ts: now, goldUsdPerOz: state.goldUsdPerOz, rates: state.rates };
+        const last = state.localLiveHistory[state.localLiveHistory.length - 1];
+        if(last && now - last.ts < 10 * 60 * 1000) state.localLiveHistory[state.localLiveHistory.length - 1] = snapshot;
+        else state.localLiveHistory.push(snapshot);
+        saveLocalLiveHistory();
       }
 
-      const htmlMo = new MutationObserver(() => {
-        updateSideSummary();
-        renderLookupResult();
-      });
-      htmlMo.observe(document.documentElement, { attributes: true, attributeFilter: ['lang', 'dir'] });
+      async function fetchGold(){ const res = await fetch(CONFIG.GOLD_API, {cache:'no-store'}); if(!res.ok) throw new Error('Gold API failed'); const data = await res.json(); const next = Number(data.price); if(!Number.isFinite(next)) throw new Error('Gold price invalid'); state.prevGoldUsdPerOz = state.goldUsdPerOz; state.goldUsdPerOz = next; state.goldUpdatedAt = data.updatedAt || new Date().toISOString(); }
+      async function fetchFX(){ const res = await fetch(CONFIG.FX_API, {cache:'no-store'}); if(!res.ok) throw new Error('FX API failed'); const data = await res.json(); if(!data || data.result !== 'success') throw new Error('FX response invalid'); state.rates = data.rates || {}; state.fxUpdatedAt = data.time_last_update_utc || new Date().toISOString(); }
+      async function fetchHistory(){ try{ const res = await fetch(CONFIG.HISTORY_CSV, {cache:'force-cache'}); if(!res.ok) throw new Error('History fetch failed'); const text = await res.text(); const rows = text.trim().split('\n').slice(1).map(line => { const [date, price] = line.split(','); return {date, price:Number(price), source:'baseline'}; }).filter(row => row.date && Number.isFinite(row.price)); if(rows.length){ state.monthlyHistory = rows; saveHistoryCache(); } }catch{} }
+      async function fetchAll(){ if(!navigator.onLine){ showBanner('offline', t('offlineBanner')); renderAll(); return; } showBanner(null); const results = await Promise.allSettled([fetchGold(), fetchFX(), fetchHistory()]); const failed = results.filter(r => r.status === 'rejected').length; if(failed === 3) showBanner('error', 'Unable to refresh live gold, FX, and history.'); else if(failed > 0) showBanner('error', 'Some data sources failed. Showing the best available data.'); appendLiveSnapshot(); renderAll(); checkAlerts(); }
 
-      document.addEventListener('click', (e) => {
-        if (e.target.closest('#spotlight-karat-pills .karat-pill')) {
-          setTimeout(updateSideSummary, 0);
-        }
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      await loadBaseline();
-      bindEnhancements();
-      setTimeout(updateSideSummary, 250);
-      renderLookupResult();
-    });
+      function getRecentSeries(){ const now = Date.now(); const cutoffMap = {'24H':24*60*60*1000,'7D':7*24*60*60*1000,'30D':30*24*60*60*1000}; const cutoff = cutoffMap[state.range] ?? 30*24*60*60*1000; return state.localLiveHistory.filter(item => now - item.ts <= cutoff).map(item => { if(state.marketView === 'spot'){ const raw = state.unit === 'gram' ? priceUsdPerGramForKarat(item.goldUsdPerOz, state.karat) : state.unit === 'oz' ? item.goldUsdPerOz * karatPurity(state.karat) : priceUsdPerGramForKarat(item.goldUsdPerOz, state.karat) * 1000; return {x:item.ts, y:raw}; } const baseGram = priceUsdPerGramForKarat(item.goldUsdPerOz, state.karat) * CONFIG.AED_PEG; const raw = state.unit === 'gram' ? baseGram : state.unit === 'oz' ? baseGram * CONFIG.TROY_OZ_GRAMS : baseGram * 1000; return {x:item.ts, y:raw}; }); }
+      function getLongSeries(){ let rows = state.monthlyHistory.slice(); if(state.range !== 'ALL'){ const now = Date.now(); const days = {'90D':90,'1Y':365,'3Y':365*3,'5Y':365*5}[state.range] ?? 365; const cutoff = now - days*24*60*60*1000; rows = rows.filter(r => new Date(r.date).getTime() >= cutoff); } return rows.map(row => { if(state.marketView === 'spot'){ const raw = state.unit === 'gram' ? priceUsdPerGramForKarat(row.price, state.karat) : state.unit === 'oz' ? row.price * karatPurity(state.karat) : priceUsdPerGramForKarat(row.price, state.karat) * 1000; return {x:new Date(row.date).getTime(), y:raw}; } const baseGram = priceUsdPerGramForKarat(row.price, state.karat) * CONFIG.AED_PEG; const raw = state.unit === 'gram' ? baseGram : state.unit === 'oz' ? baseGram * CONFIG.TROY_OZ_GRAMS : baseGram * 1000; return {x:new Date(row.date).getTime(), y:raw}; }); }
+      function chartData(){ return ['24H','7D','30D'].includes(state.range) ? {data:getRecentSeries(), currency: state.marketView==='spot' ? 'USD' : 'AED', note:t('chartShort')} : {data:getLongSeries(), currency: state.marketView==='spot' ? 'USD' : 'AED', note:t('chartLong')}; }
+      function renderChart(){ const ctx = document.getElementById('tracker-chart').getContext('2d'); const ds = chartData(); if(state.chart) state.chart.destroy(); state.chart = new Chart(ctx, {type:'line', data:{datasets:[{label:t('chartTitleLive'), data:ds.data, borderColor:'#c9a84c', backgroundColor:'rgba(201,168,76,.14)', pointRadius: ds.data.length > 60 ? 0 : 2, pointHoverRadius:4, tension:.24, fill:true, borderWidth:2.5}]}, options:{responsive:true, maintainAspectRatio:false, interaction:{mode:'nearest',intersect:false}, plugins:{legend:{display:false}, tooltip:{backgroundColor:'#141414', borderColor:'rgba(201,168,76,.28)', borderWidth:1, titleColor:'#fff4d2', bodyColor:'#f2ead7', displayColors:false, callbacks:{title(items){ const ts = items[0]?.parsed?.x; return new Date(ts).toLocaleDateString(state.lang === 'ar' ? 'ar-AE' : 'en-AE', {year:'numeric',month:'short',day:'numeric'}); }, label(item){ return formatMoney(item.parsed.y, ds.currency, 2); }}}}, scales:{x:{grid:{color:'rgba(255,255,255,.06)'}, ticks:{color:'rgba(242,234,215,.68)', maxRotation:0}}, y:{grid:{color:'rgba(255,255,255,.06)'}, ticks:{color:'rgba(242,234,215,.68)', callback(value){ return formatMoney(value, ds.currency, 0); }}}}}}); el['chart-title'].textContent = t('chartTitleLive'); el['chart-note'].textContent = ds.note; el['chart-foot-left'].textContent = t('chartFootLeft'); el['chart-foot-right'].textContent = t('chartFootRight'); }
+      function renderStats(){ const hist = state.monthlyHistory; if(!hist.length || state.goldUsdPerOz == null){ ['stat-ath','stat-ytd','stat-1y','stat-since'].forEach(id => el[id].textContent = '—'); return; } const ath = Math.max(...hist.map(r => r.price), state.goldUsdPerOz); el['stat-ath'].textContent = formatMoney(ath, 'USD', 0); const year = new Date().getFullYear(); const jan = hist.find(r => r.date.startsWith(`${year}-01`)); if(jan){ const ytd = ((state.goldUsdPerOz - jan.price)/jan.price)*100; el['stat-ytd'].textContent = formatPct(ytd); el['stat-ytd'].className = 'stats-value ' + (ytd >= 0 ? 'pos' : 'neg'); } const oneYearAgo = hist[hist.length - 13]; if(oneYearAgo){ const yoy = ((state.goldUsdPerOz - oneYearAgo.price)/oneYearAgo.price)*100; el['stat-1y'].textContent = formatPct(yoy); el['stat-1y'].className = 'stats-value ' + (yoy >= 0 ? 'pos' : 'neg'); } const jan2019 = hist.find(r => r.date.startsWith('2019-01')); if(jan2019) el['stat-since'].textContent = `${formatMoney(jan2019.price,'USD',0)} → ${formatMoney(state.goldUsdPerOz,'USD',0)}`; }
+      function renderArchive(){ const range = el['archive-range'].value; const karat = el['archive-karat'].value; const unit = el['archive-unit'].value; const source = el['archive-source'].value; let rows = [...state.monthlyHistory.map(r => ({ts:new Date(r.date).getTime(),date:r.date,price:r.price,source:'baseline'})), ...state.localLiveHistory.map(r => ({ts:r.ts,date:new Date(r.ts).toISOString().slice(0,10),price:r.goldUsdPerOz,source:'local'}))]; if(range !== 'ALL'){ const now = Date.now(); const days = {'30D':30,'90D':90,'1Y':365,'3Y':365*3,'5Y':365*5}[range]; const cutoff = now - days*24*60*60*1000; rows = rows.filter(r => r.ts >= cutoff); } if(source !== 'all') rows = rows.filter(r => r.source === source); rows.sort((a,b) => b.ts - a.ts); el['archive-count'].textContent = `${rows.length} ${t('archiveCount')}`; if(!rows.length){ el['archive-list'].innerHTML = ''; el['archive-empty'].style.display = ''; return; } el['archive-empty'].style.display = 'none'; el['archive-list'].innerHTML = rows.slice(0,250).map(row => { const usdPerGram = priceUsdPerGramForKarat(row.price, karat); const usdVal = unit === 'gram' ? usdPerGram : usdPerGram * CONFIG.TROY_OZ_GRAMS; const aedVal = usdVal * CONFIG.AED_PEG; return `<div class="archive-row"><div class="archive-date">${row.date}</div><div class="archive-prices"><div class="archive-price">${formatMoney(usdVal,'USD',2)}</div><div class="archive-sub">${formatMoney(aedVal,'AED',2)}</div></div><div class="archive-unit">${karat}K · ${unit === 'gram' ? t('unitGram') : t('unitOunce')}</div><div class="archive-tag ${row.source === 'baseline' ? 'baseline' : 'local'}">${row.source === 'baseline' ? t('archiveSourceBaseline') : t('archiveSourceLocal')}</div></div>`; }).join(''); }
+      function renderLookup(){ const dateStr = el['lookup-date'].value; const karat = el['lookup-karat'].value; const currency = el['lookup-currency'].value; if(!dateStr){ el['lookup-result'].innerHTML = `<div>${t('lookupEmpty')}</div>`; return; } if(!state.monthlyHistory.length){ el['lookup-result'].innerHTML = `<div>${t('lookupEmpty')}</div>`; return; } const target = new Date(dateStr).getTime(); let best = null, bestDiff = Infinity; state.monthlyHistory.forEach(row => { const ts = new Date(row.date).getTime(); const diff = Math.abs(ts - target); if(diff < bestDiff){ best = row; bestDiff = diff; } }); if(!best){ el['lookup-result'].innerHTML = `<div>${t('lookupEmpty')}</div>`; return; } const usdPerOz = best.price * karatPurity(karat); const usdPerGram = usdPerOz / CONFIG.TROY_OZ_GRAMS; const aedPerOz = usdPerOz * CONFIG.AED_PEG; const aedPerGram = usdPerGram * CONFIG.AED_PEG; el['lookup-result'].innerHTML = `<div class="lookup-result-head"><strong>${t('lookupClosest')}</strong><span class="source-badge">${t('lookupSource')}</span></div><div class="lookup-result-grid"><div class="lookup-item"><span class="lookup-label">${t('lookupRequested')}</span><span class="lookup-value">${dateStr}</span></div><div class="lookup-item"><span class="lookup-label">${t('lookupReturned')}</span><span class="lookup-value">${best.date}</span></div><div class="lookup-item"><span class="lookup-label">${karat}K ${t('lookupPerGram')}</span><span class="lookup-value">${currency === 'AED' ? formatMoney(aedPerGram,'AED',2) : formatMoney(usdPerGram,'USD',2)}</span></div><div class="lookup-item"><span class="lookup-label">${karat}K ${t('lookupPerOz')}</span><span class="lookup-value">${currency === 'AED' ? formatMoney(aedPerOz,'AED',2) : formatMoney(usdPerOz,'USD',2)}</span></div></div>`; }
+      function renderMatrix(){ const items = ['24','22','21','18']; el['matrix-grid'].innerHTML = items.map(code => { const usdPerGram = state.goldUsdPerOz != null ? priceUsdPerGramForKarat(state.goldUsdPerOz, code) : null; const aedPerGram = usdPerGram != null ? usdPerGram * CONFIG.AED_PEG : null; const primary = state.unit === 'gram' ? formatMoney(aedPerGram,'AED',2) : state.unit === 'oz' ? formatMoney(aedPerGram != null ? aedPerGram * CONFIG.TROY_OZ_GRAMS : null,'AED',2) : formatMoney(aedPerGram != null ? aedPerGram * 1000 : null,'AED',2); return `<div class="matrix-card"><div class="matrix-top"><div><div class="matrix-code">${code}K</div><div class="matrix-purity">${(karatPurity(code)*100).toFixed(1)}% pure</div></div>${code==='24' ? `<span class="tag fixed">${state.lang === 'ar' ? 'أساسي' : 'Focus'}</span>` : ''}</div><div class="matrix-price">${primary}</div><div class="matrix-sub">USD/g: ${formatMoney(usdPerGram,'USD',2)}<br />AED/g: ${formatMoney(aedPerGram,'AED',2)}</div></div>`; }).join(''); }
+      function regionCountries(){ const codes = CONFIG.REGIONS[state.region] || CONFIG.REGIONS.gcc; const q = state.search.trim().toLowerCase(); let items = CONFIG.COUNTRIES.filter(c => codes.includes(c.code)); if(q){ items = items.filter(c => c.nameEn.toLowerCase().includes(q) || c.nameAr.includes(q) || c.currency.toLowerCase().includes(q) || c.code.toLowerCase().includes(q)); } const getLocal = country => { const rate = rateForCurrency(country.currency); if(state.goldUsdPerOz == null || rate == null) return null; const baseGram = priceUsdPerGramForKarat(state.goldUsdPerOz, state.karat) * rate; return state.unit === 'gram' ? baseGram : state.unit === 'oz' ? baseGram * CONFIG.TROY_OZ_GRAMS : baseGram * 1000; }; items.sort((a,b) => { if(state.sort === 'alpha'){ const na = state.lang === 'ar' ? a.nameAr : a.nameEn; const nb = state.lang === 'ar' ? b.nameAr : b.nameEn; return na.localeCompare(nb, state.lang === 'ar' ? 'ar' : 'en'); } const av = getLocal(a) ?? (state.sort === 'low-high' ? Infinity : -1); const bv = getLocal(b) ?? (state.sort === 'low-high' ? Infinity : -1); return state.sort === 'low-high' ? av - bv : bv - av; }); return items; }
+      function renderCountries(){ const items = regionCountries(); if(!items.length){ el['country-grid'].innerHTML = ''; el['country-empty'].style.display = ''; return; } el['country-empty'].style.display = 'none'; el['country-grid'].innerHTML = items.map(country => { const rate = rateForCurrency(country.currency); const usdPerGram = state.goldUsdPerOz != null ? priceUsdPerGramForKarat(state.goldUsdPerOz, state.karat) : null; const localPerGram = usdPerGram != null && rate != null ? usdPerGram * rate : null; const main = state.unit === 'gram' ? localPerGram : state.unit === 'oz' ? (localPerGram != null ? localPerGram * CONFIG.TROY_OZ_GRAMS : null) : (localPerGram != null ? localPerGram * 1000 : null); const mainText = formatMoney(main, country.currency, country.decimals); const gramText = formatMoney(localPerGram, country.currency, country.decimals); const name = state.lang === 'ar' ? country.nameAr : country.nameEn; const watched = state.watchlist.includes(country.code); return `<div class="country-card"><div class="country-head"><div class="country-meta"><span class="country-flag">${country.flag}</span><div><div class="country-name">${name}</div><div class="country-code">${country.currency} · ${state.karat}K</div></div></div></div><div class="country-tags"><span class="tag">${state.karat}K</span>${country.currency === 'AED' ? `<span class="tag fixed">${t('fixedPeg')}</span>` : ''}</div><div class="country-main">${mainText}</div><div class="country-main-sub">${state.unit === 'gram' ? t('unitGram') : state.unit === 'oz' ? t('unitOunce') : t('unitKilo')}</div><div class="country-secondary">${gramText} / g</div><div class="country-actions"><button class="icon-btn" data-copy-country="${country.code}">${t('copy')}</button><button class="icon-btn ${watched ? 'active' : ''}" data-watch-country="${country.code}">${watched ? t('watching') : t('watch')}</button></div></div>`; }).join(''); el['country-grid'].querySelectorAll('[data-copy-country]').forEach(btn => btn.addEventListener('click', async () => { const code = btn.dataset.copyCountry; const country = CONFIG.COUNTRIES.find(c => c.code === code); const rate = rateForCurrency(country.currency); const usdPerGram = state.goldUsdPerOz != null ? priceUsdPerGramForKarat(state.goldUsdPerOz, state.karat) : null; const localPerGram = usdPerGram != null && rate != null ? usdPerGram * rate : null; const main = state.unit === 'gram' ? localPerGram : state.unit === 'oz' ? (localPerGram != null ? localPerGram * CONFIG.TROY_OZ_GRAMS : null) : (localPerGram != null ? localPerGram * 1000 : null); try{ await navigator.clipboard.writeText(`${state.lang === 'ar' ? country.nameAr : country.nameEn} · ${state.karat}K · ${formatMoney(main, country.currency, country.decimals)}`); showBanner('success', t('bannerCopied')); }catch{} })); el['country-grid'].querySelectorAll('[data-watch-country]').forEach(btn => btn.addEventListener('click', () => { const code = btn.dataset.watchCountry; if(state.watchlist.includes(code)) state.watchlist = state.watchlist.filter(x => x !== code); else state.watchlist.push(code); saveWatchlist(); renderCountries(); renderWatchlist(); })); }
+      function renderWatchlist(){ if(!state.watchlist.length){ el['watchlist-grid'].innerHTML = ''; return; } el['watchlist-grid'].innerHTML = state.watchlist.map(code => CONFIG.COUNTRIES.find(c => c.code === code)).filter(Boolean).map(country => { const rate = rateForCurrency(country.currency); const usdPerGram = state.goldUsdPerOz != null ? priceUsdPerGramForKarat(state.goldUsdPerOz, state.karat) : null; const localPerGram = usdPerGram != null && rate != null ? usdPerGram * rate : null; return `<div class="watch-card"><div class="watch-title">${country.flag} ${state.lang === 'ar' ? country.nameAr : country.nameEn}</div><div class="watch-sub">${formatMoney(localPerGram, country.currency, country.decimals)} / g</div></div>`; }).join(''); }
+      function renderAlertReference(){ const current = getCurrentView(); el['alert-current-reference'].textContent = current.text; }
+      function renderAlerts(){ if(!state.alerts.length){ el['alerts-list'].innerHTML = ''; el['alerts-empty'].style.display = ''; return; } el['alerts-empty'].style.display = 'none'; el['alerts-list'].innerHTML = state.alerts.map(alert => `<div class="alert-item"><div class="alert-meta"><div class="alert-title">${alert.label}</div><div class="alert-sub">${alert.direction === 'above' ? '↑' : '↓'} ${alert.target}</div></div><div class="alert-actions"><button class="btn btn-sm btn-danger" data-delete-alert="${alert.id}">${t('delete')}</button></div></div>`).join(''); el['alerts-list'].querySelectorAll('[data-delete-alert]').forEach(btn => btn.addEventListener('click', () => { state.alerts = state.alerts.filter(a => a.id !== btn.dataset.deleteAlert); saveAlerts(); renderAlerts(); })); }
+      function currentMetricValue(metric){ if(metric === 'spot') return state.goldUsdPerOz; if(metric === 'uae24') return state.goldUsdPerOz != null ? priceUsdPerGramForKarat(state.goldUsdPerOz, '24') * CONFIG.AED_PEG : null; return getCurrentView().raw; }
+      function saveAlert(){ const metric = el['alert-metric'].value; const direction = el['alert-direction'].value; const target = Number(el['alert-target'].value); if(!Number.isFinite(target) || target <= 0) return; const labelMap = {spot:t('metricsSpot'), uae24:t('metricsUae24'), current:t('metricsCurrent')}; state.alerts.unshift({id:crypto.randomUUID(), metric, direction, target, label:labelMap[metric], fired:false}); saveAlerts(); el['alert-target'].value=''; renderAlerts(); showBanner('success', t('bannerAlertSaved')); }
+      function checkAlerts(){ state.alerts.forEach(alert => { if(alert.fired) return; const current = currentMetricValue(alert.metric); if(current == null) return; const hit = alert.direction === 'above' ? current >= alert.target : current <= alert.target; if(!hit) return; alert.fired = true; saveAlerts(); renderAlerts(); const message = `${alert.label} ${alert.direction} ${alert.target}`; showBanner('success', message); if('Notification' in window && Notification.permission === 'granted'){ try{ new Notification('Gold Tracker Alert', {body: message}); }catch{} } }); }
+      async function enableNotifications(){ if(!('Notification' in window)){ showBanner('error', t('bannerNotifDenied')); return; } const res = await Notification.requestPermission(); if(res === 'granted') showBanner('success', t('bannerNotifEnabled')); else showBanner('error', t('bannerNotifDenied')); }
+      function renderTicker(){ const spot = formatMoney(state.goldUsdPerOz,'USD',2); const u24 = state.goldUsdPerOz != null ? formatMoney(priceUsdPerGramForKarat(state.goldUsdPerOz,'24') * CONFIG.AED_PEG,'AED',2) : '—'; const u22 = state.goldUsdPerOz != null ? formatMoney(priceUsdPerGramForKarat(state.goldUsdPerOz,'22') * CONFIG.AED_PEG,'AED',2) : '—'; const u21 = state.goldUsdPerOz != null ? formatMoney(priceUsdPerGramForKarat(state.goldUsdPerOz,'21') * CONFIG.AED_PEG,'AED',2) : '—'; const u18 = state.goldUsdPerOz != null ? formatMoney(priceUsdPerGramForKarat(state.goldUsdPerOz,'18') * CONFIG.AED_PEG,'AED',2) : '—'; const items = [`${state.lang === 'ar' ? 'الفوري' : 'Spot'} <strong>${spot}</strong>`,`UAE 24K <strong>${u24}</strong>`,`UAE 22K <strong>${u22}</strong>`,`UAE 21K <strong>${u21}</strong>`,`UAE 18K <strong>${u18}</strong>`]; const doubled = [...items, ...items]; el['ticker-track'].innerHTML = doubled.map((item, idx) => `<span class="ticker-item">${item}</span>${idx < doubled.length - 1 ? '<span class="ticker-sep">•</span>' : ''}`).join(''); }
+      function renderAll(){ updateHeader(); updateHero(); renderChart(); renderStats(); renderArchive(); renderLookup(); renderMatrix(); renderCountries(); renderAlertReference(); renderAlerts(); renderWatchlist(); renderTicker(); }
+      function download(name, content, type){ const blob = new Blob([content], {type}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download=name; a.click(); URL.revokeObjectURL(url); }
+      function downloadCurrentCSV(){ const ds = ['24H','7D','30D'].includes(state.range) ? getRecentSeries() : getLongSeries(); const rows = ['date,value']; ds.forEach(row => rows.push(`${new Date(row.x).toISOString()},${row.y}`)); download('gold-tracker-current-view.csv', rows.join('\n'), 'text/csv;charset=utf-8'); }
+      function downloadCurrentJSON(){ const items = regionCountries().map(country => { const rate = rateForCurrency(country.currency); const usdPerGram = state.goldUsdPerOz != null ? priceUsdPerGramForKarat(state.goldUsdPerOz, state.karat) : null; const localPerGram = usdPerGram != null && rate != null ? usdPerGram * rate : null; return {code:country.code,nameEn:country.nameEn,nameAr:country.nameAr,currency:country.currency,perGram:localPerGram,spotUsdPerOz:state.goldUsdPerOz,karat:`${state.karat}K`}; }); download('gold-tracker-current-state.json', JSON.stringify({generatedAt:new Date().toISOString(),lang:state.lang,range:state.range,unit:state.unit,karat:state.karat,marketView:state.marketView,items}, null, 2), 'application/json;charset=utf-8'); }
+      function downloadArchiveCSV(){ const rows = ['date,source,spot_usd_per_oz']; [...state.monthlyHistory.map(r => ({date:r.date,source:'baseline',price:r.price})), ...state.localLiveHistory.map(r => ({date:new Date(r.ts).toISOString(),source:'local',price:r.goldUsdPerOz}))].forEach(row => rows.push(`${row.date},${row.source},${row.price}`)); download('gold-tracker-archive.csv', rows.join('\n'), 'text/csv;charset=utf-8'); }
+      function downloadBaselineCSV(){ const rows = ['Date,Price']; state.monthlyHistory.forEach(row => rows.push(`${row.date},${row.price}`)); download('gold-history-baseline.csv', rows.join('\n'), 'text/csv;charset=utf-8'); }
+      async function copySummary(){ const current = getCurrentView(); const summary = [`Spot: ${formatMoney(state.goldUsdPerOz,'USD',2)}`,`UAE 24K/g: ${formatMoney(state.goldUsdPerOz != null ? priceUsdPerGramForKarat(state.goldUsdPerOz,'24') * CONFIG.AED_PEG : null,'AED',2)}`,`View: ${current.text}`,`Range: ${state.range}`,`Updated: ${formatDubaiTime(state.goldUpdatedAt)}`].join(' | '); try{ await navigator.clipboard.writeText(summary); showBanner('success', t('bannerCopied')); }catch{} }
+      function saveView(){ persistSettings(); showBanner('success', t('bannerSaved')); }
+      function resetView(){ state.range='1Y'; state.unit='gram'; state.karat='24'; state.panel='live'; state.region='gcc'; state.sort='high-low'; state.marketView='spot'; state.search=''; persistSettings(); buildSelects(); activatePanel('live'); renderAll(); }
+      function activatePanel(id){ state.panel = id; persistSettings(); document.querySelectorAll('.workspace-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.panel === id)); document.querySelectorAll('.workspace-panel').forEach(p => p.classList.toggle('active', p.dataset.panelId === id)); }
+      function bind(){ el['lang-toggle'].addEventListener('click', () => { state.lang = state.lang === 'en' ? 'ar' : 'en'; persistSettings(); applyText(); buildSelects(); renderAll(); }); el['mobile-menu-btn'].addEventListener('click', () => el['mobile-menu'].classList.toggle('open')); document.querySelectorAll('.workspace-tab').forEach(btn => btn.addEventListener('click', () => activatePanel(btn.dataset.panel))); el['market-select'].addEventListener('change', e => { state.marketView = e.target.value; persistSettings(); renderAll(); }); el['archive-range'].addEventListener('change', renderArchive); el['archive-karat'].addEventListener('change', renderArchive); el['archive-unit'].addEventListener('change', renderArchive); el['archive-source'].addEventListener('change', renderArchive); el['lookup-btn'].addEventListener('click', renderLookup); el['lookup-date'].addEventListener('change', renderLookup); el['lookup-karat'].addEventListener('change', renderLookup); el['lookup-currency'].addEventListener('change', renderLookup); el['sort-select'].addEventListener('change', e => { state.sort = e.target.value; persistSettings(); renderCountries(); }); el['country-search'].addEventListener('input', e => { state.search = e.target.value; renderCountries(); }); el['save-alert-btn'].addEventListener('click', saveAlert); el['enable-notifications-btn'].addEventListener('click', enableNotifications); el['copy-summary-btn'].addEventListener('click', copySummary); el['save-view-btn'].addEventListener('click', saveView); el['reset-view-btn'].addEventListener('click', resetView); el['refresh-data-btn'].addEventListener('click', async () => { await fetchAll(); showBanner('success', t('bannerDataRefreshed')); }); el['download-current-csv'].addEventListener('click', downloadCurrentCSV); el['download-current-json'].addEventListener('click', downloadCurrentJSON); el['download-archive-csv'].addEventListener('click', downloadArchiveCSV); el['download-baseline-csv'].addEventListener('click', downloadBaselineCSV); window.addEventListener('online', () => { showBanner(null); fetchAll(); }); window.addEventListener('offline', () => showBanner('offline', t('offlineBanner'))); }
+      function init(){ loadState(); applyText(); buildSelects(); bind(); activatePanel(state.panel); fetchAll(); setInterval(fetchAll, CONFIG.REFRESH_MS); }
+      init();
+    })();
   </script>
 </body>
 </html>
