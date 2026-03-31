@@ -1,24 +1,96 @@
-# GoldPrices - Live Gold Tracker for UAE, GCC & Arab Markets | أسعار الذهب المباشرة
+<div align="center">
 
-A bilingual (English/Arabic) gold price platform for tracking live XAU/USD-linked gold prices across the UAE, GCC, Levant, North & East Africa, and selected global reference markets.
-Built as a lightweight static site, GoldPrices combines live spot pricing, local-currency estimates, historical views, alerts, calculators, exports, and country pages in a fast, offline-friendly experience.
+# GoldPrices  
+### Live Gold Tracker for UAE, GCC & Arab Markets  
+### أسعار الذهب المباشرة
 
-## Live Demo
+A bilingual gold price platform built for the UAE, GCC, Levant, North & East Africa, and selected global markets — with live spot-linked pricing, calculators, historical views, exports, alerts, and country pages.
 
-- **Main site:** [Open the site](https://vctb12.github.io/Gold-Prices/)
+<p>
+  <a href="https://vctb12.github.io/Gold-Prices/">
+    <img src="https://img.shields.io/badge/Live%20Site-Open%20Now-C9A227?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Site" />
+  </a>
+  <a href="https://vctb12.github.io/Gold-Prices/tracker.html">
+    <img src="https://img.shields.io/badge/Tracker-Live%20Workspace-1F6FEB?style=for-the-badge&logo=dependabot&logoColor=white" alt="Tracker" />
+  </a>
+  <a href="https://vctb12.github.io/Gold-Prices/calculator.html">
+    <img src="https://img.shields.io/badge/Calculator-Gold%20Tools-2DA44E?style=for-the-badge&logo=calculator&logoColor=white" alt="Calculator" />
+  </a>
+</p>
+
+<p>
+  <img src="https://img.shields.io/badge/Language-English%20%2F%20Arabic-8B5CF6?style=flat-square" alt="Bilingual" />
+  <img src="https://img.shields.io/badge/Markets-24%2B-C2410C?style=flat-square" alt="Markets" />
+  <img src="https://img.shields.io/badge/Karats-7-F59E0B?style=flat-square" alt="Karats" />
+  <img src="https://img.shields.io/badge/PWA-Ready-0EA5E9?style=flat-square" alt="PWA" />
+  <img src="https://img.shields.io/badge/Offline-Friendly-111827?style=flat-square" alt="Offline Friendly" />
+  <img src="https://img.shields.io/badge/Exports-CSV%20%2B%20JSON-059669?style=flat-square" alt="Exports" />
+</p>
+
+</div>
+
+---
+
+## Overview
+
+**GoldPrices** is a lightweight static web app for tracking live gold prices across the GCC, Arab world, and selected global markets.
+
+It combines:
+
+- live **XAU/USD spot-linked pricing**
+- **local currency estimates**
+- **historical price views**
+- **browser-based alerts and presets**
+- **gold calculators**
+- **country-specific pages**
+- **CSV / JSON exports**
+- **English + Arabic support with RTL**
+
+The goal is simple: make gold data easier to follow, compare, and use.
+
+---
+
+## Quick Links
+
+- **Main site:** [vctb12.github.io/Gold-Prices](https://vctb12.github.io/Gold-Prices/)
 - **Live tracker:** [tracker.html](https://vctb12.github.io/Gold-Prices/tracker.html)
 - **Calculator:** [calculator.html](https://vctb12.github.io/Gold-Prices/calculator.html)
 
+---
+
+## Table of Contents
+
+- [Highlights](#highlights)
+- [Screenshots](#screenshots)
+- [Feature Breakdown](#feature-breakdown)
+- [Supported Markets](#supported-markets)
+- [Main Pages](#main-pages)
+- [Data Sources](#data-sources)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Price Logic](#price-logic)
+- [Offline & PWA Behavior](#offline--pwa-behavior)
+- [Why This Project](#why-this-project)
+- [License](#license)
+
+---
+
 ## Highlights
 
-- Live gold spot pricing
-- Karat-based calculations
-- Multi-country local currency estimates
-- English + Arabic UI with RTL support
-- Historical views, charts, and date lookup
-- Alerts, presets, planners, and exports
-- Offline-friendly behavior with service worker caching
-- Country-specific pages and SEO-friendly structure
+- **Live gold spot pricing**
+- **7 tracker karats** with purity-adjusted values
+- **24+ supported markets**
+- **English + Arabic UI**
+- **RTL support**
+- **Historical archive and date lookup**
+- **Browser-based alerts and presets**
+- **Gold calculators**
+- **CSV / JSON exports**
+- **Offline-friendly behavior**
+- **Country landing pages**
+- **PWA install support**
+
+---
 
 ## Screenshots
 
@@ -28,47 +100,63 @@ Built as a lightweight static site, GoldPrices combines live spot pricing, local
   <img src="./assets/screenshots/methodology.png" alt="Methodology" width="32%" />
 </p>
 
-## Features
+---
+
+## Feature Breakdown
 
 ### Live Market Tracking
-- **Live XAU/USD spot price** — refreshed roughly every 90 seconds
-- **Daily FX conversions** — local currency conversion across supported markets
-- **AED fixed peg** — UAE pricing uses the official AED/USD peg of `3.6725`
-- **7 tracker karats** — 24K, 22K, 21K, 20K, 18K, 16K, 14K
-- **Per gram and per ounce** — switch between major units
-- **Price context** — compare against prior values and market context
-- **Bilingual UI** — English (default) and Arabic with full RTL layout
-- **Offline-first behavior** — graceful fallback through cache and stored state
+
+- **Live XAU/USD spot price** refreshed roughly every 90 seconds
+- **Daily FX conversion** for supported markets
+- **AED fixed peg** using the official `3.6725` AED/USD value
+- **Per gram and per ounce** views
+- **7 karats**:
+  - 24K
+  - 22K
+  - 21K
+  - 20K
+  - 18K
+  - 16K
+  - 14K
+- **Price context** and comparison across views
+- **Bilingual interface** with English and Arabic
 
 ### Tracker Workspace
+
 The live tracker is organized into multiple modes:
 
-- **Live** — chart, live metrics, karat ladder, watchlist, and decision cues
-- **Compare** — compare supported markets and rank by selected view
-- **Archive** — browse historical data, search ranges, and run date lookup
-- **Alerts** — save local browser alerts and presets
-- **Planner** — budgeting, position tracking, jewelry estimate, accumulation planning
-- **Exports** — visible chart CSV, archive CSV, history CSV, JSON snapshot, market brief
-- **Method** — transparent explanation of sources, pricing logic, and limitations
+| Mode | Purpose |
+|------|---------|
+| **Live** | Live chart, key metrics, karat ladder, watchlist, decision cues |
+| **Compare** | Compare markets and rank by selected view |
+| **Archive** | Browse historical data and run date lookup |
+| **Alerts** | Save local browser alerts and presets |
+| **Planner** | Budget, position, jewelry estimate, and accumulation planning |
+| **Exports** | CSV, JSON, and brief downloads |
+| **Method** | Sources, pricing methodology, and transparency notes |
 
 ### Calculator Tools
+
 The calculator page includes:
 
-- **Gold Value**
-- **Scrap Gold**
-- **Zakat on Gold**
-- **Buying Power**
-- **Unit Converter**
+- **Gold Value Calculator**
+- **Scrap Gold Calculator**
+- **Zakat on Gold Calculator**
+- **Buying Power Calculator**
+- **Weight Unit Converter**
 
-### Platform Features
-- **PWA-ready** manifest and installable shortcuts
-- **Service worker caching** for offline resilience
-- **Country landing pages** for major markets
+### Extra Platform Features
+
+- **PWA manifest** and installable shortcuts
+- **Service worker caching**
+- **Country-specific pages**
 - **Learn / glossary content**
-- **Insights and methodology pages**
-- **CSV and JSON exports**
-- **Shareable preset / URL workflow**
-- **Local browser persistence** using `localStorage`
+- **Insights pages**
+- **Methodology page**
+- **Local persistence with `localStorage`**
+- **Shareable state / preset-friendly workflow**
+
+---
 
 ## Supported Markets
 
@@ -79,37 +167,52 @@ The calculator page includes:
 | **North & East Africa** | Egypt, Libya, Tunisia, Algeria, Morocco, Sudan, Somalia, Mauritania, Djibouti, Comoros |
 | **Global Reference** | USA, United Kingdom, Eurozone, India |
 
+---
+
 ## Main Pages
 
 | Page | Purpose |
 |------|---------|
-| `index.html` | Landing page and product overview |
-| `tracker.html` | Full live gold workspace |
-| `calculator.html` | Gold calculators and converters |
+| `index.html` | Landing page and main hub |
+| `tracker.html` | Full live gold tracker workspace |
+| `calculator.html` | Gold calculators and conversion tools |
 | `learn.html` | Educational content and glossary |
-| `insights.html` | Gold-related market context and insights |
-| `methodology.html` | Pricing logic, sources, and transparency notes |
+| `insights.html` | Market context and gold-related insights |
+| `methodology.html` | Sources, formulas, and transparency notes |
 | `countries/*.html` | Country-specific gold price pages |
+
+---
 
 ## Data Sources
 
 | Source | Used for | Notes |
 |--------|----------|-------|
 | [Gold API](https://gold-api.com/docs) | Live XAU/USD spot price | Live market layer |
-| [ExchangeRate-API](https://www.exchangerate-api.com/docs/free) | FX conversion | Daily conversion layer |
-| Hardcoded `3.6725` | UAE AED conversion | Official AED/USD peg |
+| [ExchangeRate-API](https://www.exchangerate-api.com/docs/free) | Currency conversion | FX layer |
+| Hardcoded `3.6725` | UAE pricing | Official AED/USD peg |
 | [DataHub Gold Prices Dataset](https://datahub.io/core/gold-prices) | Historical baseline | Long-range historical layer |
-| [GDELT DOC API](https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/amp/) | Market wire / headlines | News strip and wire layer |
+| [GDELT DOC API](https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/amp/) | Market wire / headlines | News strip layer |
 
-> **Note:** Prices shown on the site are **spot-linked bullion-equivalent estimates**, not final jewelry retail prices. Real retail prices can differ because of making charges, dealer premiums, taxes, and store markups. This project is for estimation, tracking, and comparison only — not financial advice.
+> **Note**  
+> Prices shown on the site are **spot-linked bullion-equivalent estimates**, not final jewelry retail prices.  
+> Real store prices may differ because of:
+>
+> - making charges
+> - dealer premiums
+> - fabrication cost
+> - VAT or taxes
+> - shop markup
+
+---
 
 ## Getting Started
+
+### Run locally
 
 ```bash
 git clone https://github.com/vctb12/Gold-Prices.git
 cd Gold-Prices
 python3 -m http.server 8080
-# Open http://localhost:8080
 ```
 
 No build step, no dependencies, no API keys required.
