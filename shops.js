@@ -169,6 +169,23 @@ function applyStaticText() {
 }
 
 function shopsMatchingPrimaryFilters() {
+}
+
+function allCountriesInData() {
+  const codes = new Set(SHOPS.map((s) => s.countryCode));
+  return COUNTRIES.filter((c) => codes.has(c.code))
+    .sort((a, b) => countryName(a).localeCompare(countryName(b), STATE.lang));
+}
+
+function shopsForCountryFilter() {
+  if (STATE.region === 'all') return SHOPS;
+  return SHOPS.filter((shop) => {
+    const country = countryByCode(shop.countryCode);
+    return country?.group === STATE.region;
+  });
+}
+
+function shopsForCityFilter() {
   return SHOPS.filter((shop) => {
     const country = countryByCode(shop.countryCode);
     if (!country) return false;
@@ -273,8 +290,20 @@ function filterShops() {
   });
 }
 
+function updateHeaderStats() {
+  const uniqueCountries = new Set(SHOPS.map((shop) => shop.countryCode));
+  const uniqueRegions = new Set(
+    SHOPS.map((shop) => countryByCode(shop.countryCode)?.group).filter(Boolean)
+  );
+
+  document.getElementById('shops-stat-listings').textContent = String(SHOPS.length);
+  document.getElementById('shops-stat-countries').textContent = String(uniqueCountries.size);
+  document.getElementById('shops-stat-regions').textContent = String(uniqueRegions.size);
+}
+
 function activeFilterSummary() {
   const labels = [];
+
   if (STATE.region !== 'all') labels.push(regionName(STATE.region));
   if (STATE.country !== 'all') {
     const country = countryByCode(STATE.country);
@@ -339,7 +368,8 @@ function renderCards(shops) {
 function render() {
   const shops = filterShops();
   const empty = document.getElementById('shops-empty');
-  document.getElementById('shops-count').textContent = t('count')(shops.length);
+  const count = document.getElementById('shops-count');
+if (count) count.textContent = t('count')(shops.length);
   activeFilterSummary();
 
   if (!shops.length) {
