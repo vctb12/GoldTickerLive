@@ -1,17 +1,24 @@
-# Gold Price Tracker | متتبع أسعار الذهب
+# GoldPrices - Live Gold Tracker for UAE, GCC & Arab Markets | أسعار الذهب المباشرة
 
-A bilingual (English/Arabic) web app for live gold prices with local currency estimates across GCC, Levant, and African markets.
+A bilingual (English/Arabic) gold price platform for tracking live XAU/USD-linked gold prices across the UAE, GCC, Levant, North & East Africa, and selected global reference markets.
+Built as a lightweight static site, GoldPrices combines live spot pricing, local-currency estimates, historical views, alerts, calculators, exports, and country pages in a fast, offline-friendly experience.
 
 ## Live Demo
-[Open the site](https://vctb12.github.io/Gold-Prices/)
+
+- **Main site:** [Open the site](https://vctb12.github.io/Gold-Prices/)
+- **Live tracker:** [tracker.html](https://vctb12.github.io/Gold-Prices/tracker.html)
+- **Calculator:** [calculator.html](https://vctb12.github.io/Gold-Prices/calculator.html)
 
 ## Highlights
+
 - Live gold spot pricing
 - Karat-based calculations
 - Multi-country local currency estimates
-- English + Arabic UI
-- Calculator, charts, and downloadable exports
-- Offline-friendly behavior
+- English + Arabic UI with RTL support
+- Historical views, charts, and date lookup
+- Alerts, presets, planners, and exports
+- Offline-friendly behavior with service worker caching
+- Country-specific pages and SEO-friendly structure
 
 ## Screenshots
 
@@ -23,40 +30,83 @@ A bilingual (English/Arabic) web app for live gold prices with local currency es
 
 ## Features
 
-- **Live XAU/USD spot price** - refreshed every 90 seconds
-- **Daily FX conversions** - 24 countries, refreshed once per day
-- **AED fixed peg** - hardcoded at 3.6725 (official UAE Central Bank peg)
-- **7 karats** - 24K, 22K, 21K, 20K, 18K, 16K, 14K with purity-adjusted prices
-- **Per gram and per ounce** - toggle between units
-- **Bilingual UI** - English (default) and Arabic with full RTL layout
-- **Price change panel** - vs previous fetch and vs Dubai day open
-- **Offline-first** - localStorage cache with 5-tier graceful degradation
-- **Export** - CSV and JSON per tab
-- **Debug mode** - simulate API failures, inspect state
+### Live Market Tracking
+- **Live XAU/USD spot price** — refreshed roughly every 90 seconds
+- **Daily FX conversions** — local currency conversion across supported markets
+- **AED fixed peg** — UAE pricing uses the official AED/USD peg of `3.6725`
+- **7 tracker karats** — 24K, 22K, 21K, 20K, 18K, 16K, 14K
+- **Per gram and per ounce** — switch between major units
+- **Price context** — compare against prior values and market context
+- **Bilingual UI** — English (default) and Arabic with full RTL layout
+- **Offline-first behavior** — graceful fallback through cache and stored state
 
-## Countries
+### Tracker Workspace
+The live tracker is organized into multiple modes:
 
-| Tab | Countries |
-|-----|-----------|
+- **Live** — chart, live metrics, karat ladder, watchlist, and decision cues
+- **Compare** — compare supported markets and rank by selected view
+- **Archive** — browse historical data, search ranges, and run date lookup
+- **Alerts** — save local browser alerts and presets
+- **Planner** — budgeting, position tracking, jewelry estimate, accumulation planning
+- **Exports** — visible chart CSV, archive CSV, history CSV, JSON snapshot, market brief
+- **Method** — transparent explanation of sources, pricing logic, and limitations
+
+### Calculator Tools
+The calculator page includes:
+
+- **Gold Value**
+- **Scrap Gold**
+- **Zakat on Gold**
+- **Buying Power**
+- **Unit Converter**
+
+### Platform Features
+- **PWA-ready** manifest and installable shortcuts
+- **Service worker caching** for offline resilience
+- **Country landing pages** for major markets
+- **Learn / glossary content**
+- **Insights and methodology pages**
+- **CSV and JSON exports**
+- **Shareable preset / URL workflow**
+- **Local browser persistence** using `localStorage`
+
+## Supported Markets
+
+| Region | Countries |
+|--------|-----------|
 | **GCC** | UAE, Saudi Arabia, Kuwait, Qatar, Bahrain, Oman |
 | **Levant** | Jordan, Lebanon, Syria, Palestine |
 | **North & East Africa** | Egypt, Libya, Tunisia, Algeria, Morocco, Sudan, Somalia, Mauritania, Djibouti, Comoros |
 | **Global Reference** | USA, United Kingdom, Eurozone, India |
 
+## Main Pages
+
+| Page | Purpose |
+|------|---------|
+| `index.html` | Landing page and product overview |
+| `tracker.html` | Full live gold workspace |
+| `calculator.html` | Gold calculators and converters |
+| `learn.html` | Educational content and glossary |
+| `insights.html` | Gold-related market context and insights |
+| `methodology.html` | Pricing logic, sources, and transparency notes |
+| `countries/*.html` | Country-specific gold price pages |
+
 ## Data Sources
 
-| Source | Used for | Freshness |
-|--------|----------|-----------|
-| [Gold API](https://gold-api.com) | XAU/USD spot price | Every 90 seconds |
-| [ExchangeRate-API](https://open.er-api.com) | Currency conversion | Once daily |
-| Hardcoded `3.6725` | AED only | Permanent peg |
+| Source | Used for | Notes |
+|--------|----------|-------|
+| [Gold API](https://gold-api.com/docs) | Live XAU/USD spot price | Live market layer |
+| [ExchangeRate-API](https://www.exchangerate-api.com/docs/free) | FX conversion | Daily conversion layer |
+| Hardcoded `3.6725` | UAE AED conversion | Official AED/USD peg |
+| [DataHub Gold Prices Dataset](https://datahub.io/core/gold-prices) | Historical baseline | Long-range historical layer |
+| [GDELT DOC API](https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/amp/) | Market wire / headlines | News strip and wire layer |
 
-> **Note:** All prices are estimated bullion-equivalent values. Retail and jewelry prices may differ. Not financial advice.
+> **Note:** Prices shown on the site are **spot-linked bullion-equivalent estimates**, not final jewelry retail prices. Real retail prices can differ because of making charges, dealer premiums, taxes, and store markups. This project is for estimation, tracking, and comparison only — not financial advice.
 
 ## Getting Started
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/vctb12/Gold-Prices.git
 cd Gold-Prices
 python3 -m http.server 8080
 # Open http://localhost:8080
@@ -66,26 +116,52 @@ No build step, no dependencies, no API keys required.
 
 ## File Structure
 
-```
+```text
 Gold-Prices/
-├── index.html              # Semantic HTML shell (all text via data-i18n)
-├── style.css               # Theme, RTL layout, responsive grid
-├── app.js                  # Main orchestrator
+├── index.html              # Landing page / homepage
+├── tracker.html            # Main live gold tracker workspace
+├── tracker-pro.js          # Tracker page logic: modes, charts, alerts, archive, planners, exports
+├── tracker-pro.css         # Dedicated styling for the tracker workspace
+├── calculator.html         # Gold calculator page
+├── calculator.js           # Calculator logic: value, scrap, zakat, buying power, unit conversion
+├── calculator.css          # Calculator page styling
+├── learn.html              # Educational / glossary page
+├── learn.js                # Learn page interactions and rendering
+├── learn.css               # Learn page styling
+├── insights.html           # Gold insights / market context page
+├── insights.js             # Insights page logic
+├── insights.css            # Insights page styling
+├── methodology.html        # Methodology and sources page
+├── methodology.js          # Methodology page interactions
+├── methodology.css         # Methodology page styling
+├── home.js                 # Homepage logic and shared landing-page behavior
+├── home.css                # Homepage-specific styling
+├── style.css               # Shared global styles, layout, theme, and responsive rules
+├── manifest.json           # PWA manifest for installability and app shortcuts
+├── sw.js                   # Service worker for caching and offline-friendly behavior
+├── sitemap.xml             # Sitemap for search engines
+├── robots.txt              # Search engine crawling rules
+├── favicon.svg             # Site favicon
 ├── config/
-│   ├── constants.js        # API URLs, AED peg, timeouts
-│   ├── countries.js        # 24 countries with search aliases
-│   ├── karats.js           # 7 karat purities with EN/AR labels
-│   ├── translations.js     # All UI strings in English and Arabic
-│   └── index.js            # Central re-export
-└── lib/
-    ├── api.js              # Data fetching with retry logic
-    ├── cache.js            # localStorage dual-layer persistence
-    ├── price-calculator.js # Pure price formulas
-    ├── formatter.js        # Price, timestamp, countdown formatting
-    ├── search.js           # Bilingual full-text search
-    ├── export.js           # CSV and JSON export
-    ├── history.js          # 90-day snapshots and volatility
-    └── debug.js            # Debug panel (?debug=true)
+│   ├── constants.js        # Core constants: API URLs, timing, fixed values, configuration
+│   ├── countries.js        # Supported countries, currencies, flags, groups, and search aliases
+│   ├── karats.js           # Karat definitions, purity values, and EN/AR labels
+│   ├── translations.js     # Interface text in English and Arabic
+│   └── index.js            # Central export file for config modules
+├── lib/
+│   ├── api.js              # Fetching live gold and FX data with retry/fallback handling
+│   ├── cache.js            # localStorage caching, persistence, and fallback recovery
+│   ├── export.js           # CSV / JSON / brief export helpers
+│   ├── formatter.js        # Formatting helpers for prices, dates, times, and labels
+│   ├── historical-data.js  # Historical data merging and long-range dataset handling
+│   ├── price-calculator.js # Core gold pricing formulas and reusable calculation logic
+│   ├── search.js           # Bilingual search and filtering helpers
+│   └── alerts.js           # Local browser alert logic and saved alert helpers
+├── tracker/                # Tracker-specific modules and UI/state helpers
+├── components/             # Shared reusable UI parts (nav, footer, ticker, etc.)
+├── countries/              # Country-specific landing pages
+├── assets/                 # Images, screenshots, icons, and other static assets
+└── README.md               # Project documentation
 ```
 
 ## Price Calculations
@@ -97,7 +173,7 @@ usdPerGram(karat) = (spotUsdPerOz / 31.1035) × purity
 usdPerOz(karat)   = spotUsdPerOz × purity
 localPrice        = usdPrice × fxRate
 
-AED: always usdPrice × 3.6725 (never from FX API)
+AED: always usdPrice × 3.6725 
 ```
 
 ## Caching & Offline Behavior
