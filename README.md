@@ -10,8 +10,8 @@ A bilingual gold price platform built for the UAE, GCC, Levant, North & East Afr
   <a href="https://vctb12.github.io/Gold-Prices/">
     <img src="https://img.shields.io/badge/Live%20Site-Open%20Now-C9A227?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Site" />
   </a>
-  <a href="https://vctb12.github.io/Gold-Prices/tracker.html">
-    <img src="https://img.shields.io/badge/Tracker-Live%20Workspace-1F6FEB?style=for-the-badge&logo=dependabot&logoColor=white" alt="Tracker" />
+  <a href="https://vctb12.github.io/Gold-Prices/insights.html">
+    <img src="https://img.shields.io/badge/Tracker-Live%20Workspace-1F6FEB?style=for-the-badge&logo=dependabot&logoColor=white" alt="Insights" />
   </a>
   <a href="https://vctb12.github.io/Gold-Prices/calculator.html">
     <img src="https://img.shields.io/badge/Calculator-Gold%20Tools-2DA44E?style=for-the-badge&logo=calculator&logoColor=white" alt="Calculator" />
@@ -33,7 +33,7 @@ A bilingual gold price platform built for the UAE, GCC, Levant, North & East Afr
 
 ## Overview
 
-**GoldPrices** is a lightweight static web app for tracking live gold prices across the GCC, Arab world, and selected global markets.
+**GoldPrices** is a web app for tracking live gold prices across the GCC, Arab world, and selected global markets.
 
 It combines:
 
@@ -53,7 +53,7 @@ The goal is simple: make gold data easier to follow, compare, and use.
 ## Quick Links
 
 - **Main site:** [vctb12.github.io/Gold-Prices](https://vctb12.github.io/Gold-Prices/)
-- **Live tracker:** [tracker.html](https://vctb12.github.io/Gold-Prices/tracker.html)
+- **Insights:** [tracker.html](https://vctb12.github.io/Gold-Prices/insights.html)
 - **Calculator:** [calculator.html](https://vctb12.github.io/Gold-Prices/calculator.html)
 
 ---
