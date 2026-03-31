@@ -1,3467 +1,504 @@
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gold Tracker Workspace — Rebuilt</title>
-  <meta name="description" content="A from-scratch gold tracker workspace with live spot price, local estimates, archive, alerts, exports, and strong mobile UX." />
-  <style>
-    :root {
-      --bg: #07111f;
-      --bg-soft: #0b1628;
-      --bg-elev: rgba(14, 25, 44, 0.84);
-      --panel: rgba(12, 24, 43, 0.88);
-      --panel-2: rgba(9, 18, 33, 0.88);
-      --line: rgba(255,255,255,0.09);
-      --line-strong: rgba(255,255,255,0.16);
-      --text: #eef4ff;
-      --muted: #a9b7cf;
-      --muted-2: #7f90af;
-      --gold: #f3cc68;
-      --gold-2: #dba22b;
-      --cyan: #54d4ff;
-      --green: #1ed7a5;
-      --red: #ff6b7d;
-      --shadow: 0 18px 44px rgba(0, 0, 0, 0.33);
-      --radius-xl: 30px;
-      --radius-lg: 22px;
-      --radius-md: 16px;
-      --radius-sm: 12px;
-      --max: 1500px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: var(--sans);
-      color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(84, 212, 255, 0.15), transparent 28%),
-        radial-gradient(circle at 90% 0%, rgba(243, 204, 104, 0.14), transparent 24%),
-        linear-gradient(180deg, #050d19 0%, #081321 35%, #06101d 100%);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    a { color: inherit; text-decoration: none; }
-    button, select, input {
-      font: inherit;
-      color: inherit;
-    }
-    button { cursor: pointer; }
-
-    .shell {
-      width: min(var(--max), calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0 80px;
-    }
-
-    .glass {
-      background: linear-gradient(180deg, rgba(15, 27, 46, 0.82), rgba(9, 19, 34, 0.78));
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 14px 18px;
-      border-radius: 999px;
-      position: sticky;
-      top: 14px;
-      z-index: 20;
-      margin-bottom: 18px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      min-width: 0;
-    }
-
-    .brand-mark {
-      width: 44px;
-      height: 44px;
-      border-radius: 16px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, rgba(243, 204, 104, 0.22), rgba(84, 212, 255, 0.18));
-      border: 1px solid rgba(255,255,255,0.12);
-      flex: 0 0 auto;
-    }
-
-    .brand-mark svg {
-      width: 24px;
-      height: 24px;
-      color: var(--gold);
-    }
-
-    .brand-copy {
-      min-width: 0;
-    }
-
-    .eyebrow {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: var(--muted);
-      margin-bottom: 3px;
-    }
-
-    .brand-title {
-      font-size: 15px;
-      font-weight: 700;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .nav-pills {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .nav-pill, .chip, .segmented button, .btn {
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-      transition: transform .18s ease, border-color .18s ease, background .18s ease, opacity .18s ease;
-    }
-
-    .nav-pill:hover, .chip:hover, .segmented button:hover, .btn:hover {
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.07);
-    }
-
-    .nav-pill {
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .hero {
-      border-radius: var(--radius-xl);
-      padding: 30px;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 22px;
-    }
-
-    .hero::before,
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: auto;
-      pointer-events: none;
-      border-radius: 999px;
-      filter: blur(16px);
-      opacity: .75;
-    }
-
-    .hero::before {
-      width: 360px;
-      height: 360px;
-      right: -120px;
-      top: -150px;
-      background: radial-gradient(circle, rgba(84,212,255,0.2), transparent 65%);
-    }
-
-    .hero::after {
-      width: 320px;
-      height: 320px;
-      left: -120px;
-      bottom: -160px;
-      background: radial-gradient(circle, rgba(243,204,104,0.18), transparent 68%);
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.35fr 0.95fr;
-      gap: 24px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .status-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-size: 13px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.05);
-      color: var(--muted);
-    }
-
-    .status-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--muted);
-      box-shadow: 0 0 0 0 rgba(255,255,255,0.3);
-    }
-
-    .status-live .status-dot {
-      background: var(--green);
-      box-shadow: 0 0 0 8px rgba(30, 215, 165, 0.08);
-    }
-
-    .status-stale .status-dot {
-      background: var(--gold);
-      box-shadow: 0 0 0 8px rgba(243, 204, 104, 0.08);
-    }
-
-    .status-error .status-dot {
-      background: var(--red);
-      box-shadow: 0 0 0 8px rgba(255, 107, 125, 0.08);
-    }
-
-    .hero h1 {
-      margin: 0 0 12px;
-      font-size: clamp(34px, 5vw, 60px);
-      line-height: 0.95;
-      letter-spacing: -0.04em;
-      max-width: 13ch;
-    }
-
-    .hero p.lead {
-      margin: 0 0 18px;
-      max-width: 68ch;
-      font-size: 16px;
-      line-height: 1.68;
-      color: var(--muted);
-    }
-
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin: 22px 0 26px;
-    }
-
-    .btn {
-      padding: 13px 18px;
-      border-radius: 14px;
-      font-weight: 700;
-      min-height: 46px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, rgba(243,204,104,0.92), rgba(219,162,43,0.92));
-      color: #17110a;
-      border-color: rgba(255,255,255,0.12);
-      box-shadow: 0 12px 26px rgba(219,162,43,0.18);
-    }
-
-    .btn-secondary {
-      background: linear-gradient(135deg, rgba(84,212,255,0.12), rgba(84,212,255,0.04));
-      color: var(--text);
-    }
-
-    .btn-ghost {
-      background: rgba(255,255,255,0.02);
-      color: var(--muted);
-    }
-
-    .micro-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .micro-card {
-      padding: 16px;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.04);
-      min-height: 116px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .micro-label {
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .micro-value {
-      font-size: clamp(18px, 2.8vw, 28px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-    }
-
-    .micro-sub {
-      font-size: 12px;
-      color: var(--muted-2);
-    }
-
-    .info-panel {
-      padding: 22px;
-      border-radius: 24px;
-      min-height: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .info-stack {
-      display: grid;
-      gap: 14px;
-    }
-
-    .info-card {
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.04);
-      padding: 16px 18px;
-    }
-
-    .info-card h3 {
-      margin: 0 0 6px;
-      font-size: 14px;
-      color: var(--gold);
-      letter-spacing: 0.02em;
-    }
-
-    .info-card p, .info-card li {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 14px;
-    }
-
-    .info-card ul {
-      margin: 10px 0 0;
-      padding-left: 18px;
-      display: grid;
-      gap: 8px;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 1.12fr 0.88fr;
-      gap: 22px;
-      align-items: start;
-    }
-
-    .panel {
-      border-radius: var(--radius-lg);
-      padding: 22px;
-    }
-
-    .panel-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
-    .panel-title {
-      margin: 0;
-      font-size: clamp(22px, 2.2vw, 30px);
-      letter-spacing: -0.03em;
-    }
-
-    .panel-copy {
-      margin: 6px 0 0;
-      color: var(--muted);
-      line-height: 1.65;
-      max-width: 72ch;
-      font-size: 14px;
-    }
-
-    .label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border-radius: 999px;
-      padding: 9px 12px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--line);
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .control-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-
-    .field {
-      display: grid;
-      gap: 8px;
-    }
-
-    .field label {
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .field select, .field input {
-      width: 100%;
-      min-height: 46px;
-      padding: 0 14px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: rgba(3, 10, 18, 0.64);
-      color: var(--text);
-      outline: none;
-    }
-
-    .field input[type="date"]::-webkit-calendar-picker-indicator {
-      opacity: .8;
-      cursor: pointer;
-    }
-
-    .segmented {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .segmented button {
-      min-height: 40px;
-      padding: 0 13px;
-      border-radius: 12px;
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .segmented button.active,
-    .chip.active,
-    .nav-pill.active {
-      color: var(--text);
-      border-color: rgba(84,212,255,0.32);
-      background: linear-gradient(135deg, rgba(84,212,255,0.16), rgba(84,212,255,0.06));
-    }
-
-    .chip-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
-    .chip {
-      border-radius: 999px;
-      min-height: 42px;
-      padding: 0 14px;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--muted);
-    }
-
-    .chart-shell {
-      position: relative;
-      border-radius: 24px;
-      border: 1px solid var(--line);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)),
-        radial-gradient(circle at top right, rgba(84,212,255,0.08), transparent 28%);
-      padding: 16px 16px 10px;
-      overflow: hidden;
-    }
-
-    .chart-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-
-    .chart-meta-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .legend {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .legend-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, var(--gold), var(--gold-2));
-      box-shadow: 0 0 0 4px rgba(243,204,104,0.08);
-    }
-
-    .legend-dot.compare {
-      background: linear-gradient(135deg, var(--cyan), #1b9fe9);
-      box-shadow: 0 0 0 4px rgba(84,212,255,0.08);
-    }
-
-    .chart-stage {
-      position: relative;
-      min-height: 400px;
-      border-radius: 18px;
-      background:
-        linear-gradient(180deg, rgba(4,10,18,0.28), rgba(4,10,18,0.06)),
-        rgba(255,255,255,0.01);
-      overflow: hidden;
-    }
-
-    .chart-stage svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    .chart-tooltip {
-      position: absolute;
-      pointer-events: none;
-      transform: translate(-50%, calc(-100% - 18px));
-      min-width: 170px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(7, 13, 23, 0.95);
-      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.42);
-      backdrop-filter: blur(14px);
-      display: none;
-      z-index: 3;
-    }
-
-    .chart-tooltip strong {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
-
-    .chart-tooltip div {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .chart-summary {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .mini-stat {
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
-      padding: 14px;
-    }
-
-    .mini-stat .k {
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 6px;
-    }
-
-    .mini-stat .v {
-      font-size: 21px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-    }
-
-    .mini-stat .s {
-      font-size: 12px;
-      color: var(--muted-2);
-      margin-top: 4px;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 22px;
-      margin-top: 22px;
-    }
-
-    .matrix {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-      overflow: hidden;
-    }
-
-    .matrix-wrap {
-      border-radius: 20px;
-      border: 1px solid var(--line);
-      overflow: hidden;
-      background: rgba(255,255,255,0.02);
-    }
-
-    .matrix th, .matrix td {
-      padding: 14px 16px;
-      text-align: left;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      vertical-align: middle;
-    }
-
-    .matrix th {
-      color: var(--muted);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      background: rgba(255,255,255,0.03);
-    }
-
-    .matrix tr:last-child td {
-      border-bottom: 0;
-    }
-
-    .value {
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-
-    .subtle {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .pos { color: var(--green); }
-    .neg { color: var(--red); }
-    .neutral { color: var(--muted); }
-
-    .market-board {
-      display: grid;
-      gap: 12px;
-    }
-
-    .market-card {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: 14px;
-      padding: 14px;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
-    }
-
-    .market-rank {
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,0.06);
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .market-name {
-      display: grid;
-      gap: 3px;
-    }
-
-    .market-name strong {
-      font-size: 15px;
-    }
-
-    .market-name span {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .market-value {
-      text-align: right;
-    }
-
-    .market-value strong {
-      display: block;
-      font-size: 16px;
-      letter-spacing: -0.02em;
-    }
-
-    .market-value span {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .tabbar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    .tabbar button {
-      min-height: 42px;
-      border-radius: 12px;
-      padding: 0 14px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .tabbar button.active {
-      color: var(--text);
-      border-color: rgba(243,204,104,0.26);
-      background: linear-gradient(135deg, rgba(243,204,104,0.16), rgba(243,204,104,0.04));
-    }
-
-    .tabpane { display: none; }
-    .tabpane.active { display: block; }
-
-    .toolbar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
-    .toolbar .field { min-width: 170px; }
-
-    .archive-shell {
-      border-radius: 20px;
-      border: 1px solid var(--line);
-      overflow: hidden;
-      background: rgba(255,255,255,0.02);
-    }
-
-    .archive-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-      min-width: 680px;
-    }
-
-    .archive-scroll {
-      overflow: auto;
-      max-height: 430px;
-    }
-
-    .archive-table th,
-    .archive-table td {
-      padding: 13px 14px;
-      text-align: left;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .archive-table th {
-      position: sticky;
-      top: 0;
-      z-index: 2;
-      background: rgba(10,19,33,0.95);
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 12px;
-    }
-
-    .empty {
-      padding: 20px;
-      border-radius: 18px;
-      border: 1px dashed rgba(255,255,255,0.12);
-      color: var(--muted);
-      text-align: center;
-      background: rgba(255,255,255,0.02);
-    }
-
-    .lookup-box, .alert-box, .export-box, .method-box {
-      display: grid;
-      gap: 14px;
-      padding: 18px;
-      border-radius: 20px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
-    }
-
-    .result-box {
-      padding: 16px;
-      border-radius: 16px;
-      background: rgba(0,0,0,0.18);
-      border: 1px solid rgba(255,255,255,0.08);
-      display: grid;
-      gap: 8px;
-    }
-
-    .result-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .alert-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .alert-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items: center;
-      padding: 14px;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
-    }
-
-    .alert-row strong {
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .alert-row span {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.55;
-    }
-
-    .export-grid, .method-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .export-card, .method-card {
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
-      padding: 16px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .export-card h4, .method-card h4 {
-      margin: 0;
-      font-size: 16px;
-    }
-
-    .export-card p, .method-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 13px;
-    }
-
-    .source-links {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .source-links a {
-      color: var(--cyan);
-      text-decoration: underline;
-      text-decoration-color: rgba(84,212,255,0.24);
-      text-underline-offset: 3px;
-    }
-
-    .footnote {
-      margin-top: 18px;
-      color: var(--muted-2);
-      font-size: 12px;
-      line-height: 1.7;
-    }
-
-    .toast-stack {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      display: grid;
-      gap: 10px;
-      z-index: 40;
-      max-width: min(360px, calc(100vw - 24px));
-    }
-
-    .toast {
-      border-radius: 16px;
-      padding: 14px 16px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(7, 13, 24, 0.94);
-      box-shadow: 0 16px 34px rgba(0, 0, 0, 0.34);
-      color: var(--text);
-    }
-
-    .toast strong {
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .toast span {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.55;
-    }
-
-    .muted {
-      color: var(--muted);
-    }
-
-    .mono {
-      font-family: var(--mono);
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    @media (max-width: 1200px) {
-      .hero-grid,
-      .layout,
-      .grid-2 {
-        grid-template-columns: 1fr;
-      }
-
-      .control-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 760px) {
-      .shell {
-        width: min(var(--max), calc(100% - 18px));
-        padding-top: 12px;
-      }
-
-      .topbar {
-        border-radius: 24px;
-        padding: 12px;
-        position: static;
-      }
-
-      .hero, .panel {
-        padding: 18px;
-      }
-
-      .hero-actions,
-      .status-row,
-      .nav-pills,
-      .panel-head,
-      .chart-meta,
-      .chart-meta-left,
-      .toolbar,
-      .chip-row,
-      .tabbar {
-        align-items: stretch;
-      }
-
-      .nav-pills > *,
-      .hero-actions > *,
-      .tabbar > *,
-      .chart-meta > *,
-      .toolbar > *,
-      .segmented > *,
-      .chip-row > * {
-        flex: 1 1 auto;
-      }
-
-      .control-grid,
-      .result-grid,
-      .export-grid,
-      .method-grid,
-      .micro-grid,
-      .chart-summary {
-        grid-template-columns: 1fr;
-      }
-
-      .chart-stage {
-        min-height: 320px;
-      }
-
-      .market-card {
-        grid-template-columns: auto 1fr;
-      }
-
-      .market-value {
-        grid-column: 2;
-        text-align: left;
-      }
-
-      .alert-row {
-        grid-template-columns: 1fr;
-      }
-
-      .archive-table {
-        min-width: 620px;
-      }
-    }
-
-    .planner-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 18px;
-    }
-
-    .planner-stack {
-      display: grid;
-      gap: 14px;
-    }
-
-    .planner-note {
-      padding: 14px 16px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .planner-line {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px 14px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.02);
-    }
-
-    .planner-line strong {
-      font-size: 15px;
-    }
-
-    .planner-line span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .preset-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .preset-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px 14px;
-      background: rgba(255,255,255,0.03);
-    }
-
-    .preset-copy {
-      display: grid;
-      gap: 3px;
-    }
-
-    .preset-copy span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .planner-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .brief-box {
-      min-height: 154px;
-    }
-
-    .empty-soft {
-      padding: 16px;
-      border: 1px dashed var(--line-strong);
-      border-radius: 14px;
-      color: var(--muted);
-      text-align: center;
-      background: rgba(255,255,255,0.02);
-    }
-
-    @media (max-width: 980px) {
-      .planner-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-  </style>
+  <title>Gold Tracker Pro — Live Workspace</title>
+  <meta name="description" content="Integrated live gold tracker workspace for GCC and Arab markets with charts, archive, alerts, wire headlines, watchlists, and calculators." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="tracker-pro.css" />
 </head>
-<body>
-  <div class="shell">
-    <header class="topbar glass">
-      <div class="brand">
-        <div class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M12 3L18 7V17L12 21L6 17V7L12 3Z" stroke="currentColor" stroke-width="1.6"></path>
-            <path d="M9.5 11.5H14.5M9.5 14.5H13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
-          </svg>
-        </div>
-        <div class="brand-copy">
-          <div class="eyebrow">Gold tracker rebuild</div>
-          <div class="brand-title">Gold Tracker Workspace — from scratch, no legacy app.js</div>
-        </div>
-      </div>
-      <nav class="nav-pills" aria-label="Section navigation">
-        <a class="nav-pill" href="#workspace">Workspace</a>
-        <a class="nav-pill" href="#markets">Markets</a>
-        <a class="nav-pill" href="#planner-suite">Planner</a>
-        <a class="nav-pill" href="#archive-tools">Archive</a>
-        <a class="nav-pill" href="#methodology">Methodology</a>
-      </nav>
-    </header>
-
-    <section class="hero glass">
-      <div class="hero-grid">
-        <div>
-          <div class="status-row">
-            <div id="live-status" class="status-pill status-stale">
-              <span class="status-dot"></span>
-              <span id="status-copy">Preparing live feed…</span>
-            </div>
-            <div class="status-pill">
-              <strong class="mono" id="last-updated">—</strong>
-              <span>Last refresh</span>
-            </div>
-            <div class="status-pill">
-              <strong class="mono" id="snapshot-count">0</strong>
-              <span>Local session snapshots</span>
-            </div>
+<body class="tracker-page tracker-pro-page">
+  <main id="tracker-app">
+    <section class="tracker-shell tracker-hero-shell">
+      <div class="tracker-hero-card">
+        <div class="tracker-hero-copy">
+          <div class="tracker-badge-row">
+            <span class="tracker-badge tracker-badge-live" id="tp-live-badge">
+              <span class="tracker-badge-dot" aria-hidden="true"></span>
+              <span id="tp-live-badge-text">Preparing live feed</span>
+            </span>
+            <span class="tracker-badge" id="tp-market-badge">Gold market</span>
+            <span class="tracker-badge" id="tp-refresh-badge">Waiting for first sync</span>
           </div>
-
-          <h1>Track gold like a market, not like a broken widget.</h1>
-          <p class="lead">
-            This rebuild is a self-contained tracker page with a live spot layer, local-currency conversion,
-            karat logic, archive lookup, chart exports, browser alerts, and a much cleaner mobile-first structure.
-            It does not rely on the previous tracker code or the legacy global app script.
+          <h1 id="tp-hero-title">Gold Tracker Pro</h1>
+          <p id="tp-hero-copy">
+            A full tracker workspace built to live inside your site shell: live spot, Gulf pricing, market wire,
+            archive lookup, alerts, exports, planners, and a stronger compare experience.
           </p>
-
-          <div class="hero-actions">
-            <button class="btn btn-primary" id="refresh-btn" type="button">Refresh live data</button>
-            <button class="btn btn-secondary" id="copy-summary-btn" type="button">Copy quick summary</button>
-            <a class="btn btn-ghost" href="#planner-suite">Open planner suite</a>
-            <a class="btn btn-ghost" href="#archive-tools">Open archive tools</a>
+          <div class="tracker-hero-actions">
+            <button class="btn btn-primary" id="tp-refresh-btn" type="button">Refresh live data</button>
+            <button class="btn btn-outline" id="tp-share-btn" type="button">Copy quick brief</button>
+            <button class="btn btn-ghost" id="tp-reset-btn" type="button">Reset view</button>
+            <a class="btn btn-ghost" href="#section-chart">Jump to chart</a>
           </div>
-
-          <div class="micro-grid">
-            <article class="micro-card">
-              <div class="micro-label">Live XAU/USD</div>
-              <div class="micro-value" id="hero-spot">—</div>
-              <div class="micro-sub">Per troy ounce</div>
-            </article>
-            <article class="micro-card">
-              <div class="micro-label">UAE 24K</div>
-              <div class="micro-value" id="hero-uae24">—</div>
-              <div class="micro-sub">Estimated bullion-equivalent per gram</div>
-            </article>
-            <article class="micro-card">
-              <div class="micro-label">30D move</div>
-              <div class="micro-value" id="hero-30d">—</div>
-              <div class="micro-sub">Monthly baseline comparison</div>
-            </article>
-          </div>
+          <div class="tracker-hero-grid" id="tp-hero-stats"></div>
         </div>
-
-        <aside class="info-panel glass">
-          <div class="info-stack">
-            <div class="info-card">
-              <h3>Built for real tracking</h3>
-              <p>
-                Live spot, local estimates, range-aware charting, archive lookup, exports, and alerts are all on one page.
-                The page is intentionally transparent about where every layer comes from.
-              </p>
-            </div>
-            <div class="info-card">
-              <h3>What this page solves</h3>
-              <ul>
-                <li>Weak hierarchy and messy tracker UX</li>
-                <li>Broken-feeling exports with no clear data model</li>
-                <li>No trustworthy split between live data and long-range history</li>
-                <li>Not enough interaction or decision support</li>
-              </ul>
-            </div>
-            <div class="info-card">
-              <h3>What this page does not fake</h3>
-              <p>
-                Retail jewelry premiums, shop spreads, and making charges are not hidden. This tracker shows market-linked estimates,
-                not store checkout prices.
-              </p>
-            </div>
+        <aside class="tracker-hero-side">
+          <div class="tracker-side-block">
+            <h2>Live desk summary</h2>
+            <div class="tracker-side-list" id="tp-summary-list"></div>
+          </div>
+          <div class="tracker-side-block">
+            <h2>Why this rebuild is different</h2>
+            <ul class="tracker-side-ul">
+              <li>Uses your shared nav, footer, and bottom ticker.</li>
+              <li>Supports live wire headlines and local market snapshots.</li>
+              <li>Shares section anchors with your site so navigation does not break.</li>
+              <li>Stores watchlists, alerts, presets, and recent snapshots in browser storage.</li>
+            </ul>
           </div>
         </aside>
       </div>
     </section>
 
-    <div class="layout" id="workspace">
-      <section class="panel glass">
-        <div class="panel-head">
-          <div>
-            <h2 class="panel-title">Live workspace</h2>
-            <p class="panel-copy">
-              Choose the currency, karat, unit, chart range, and comparison market. The page keeps local session snapshots in your browser so
-              recent moves remain visible even if you leave and come back later.
-            </p>
-          </div>
-          <div class="label">Standalone tracker file · zero legacy dependencies</div>
-        </div>
-
-        <div class="control-grid">
-          <div class="field">
-            <label for="currency-select">Currency</label>
-            <select id="currency-select"></select>
-          </div>
-          <div class="field">
-            <label for="karat-select">Karat</label>
-            <select id="karat-select"></select>
-          </div>
-          <div class="field">
-            <label for="unit-select">Unit</label>
-            <select id="unit-select"></select>
-          </div>
-          <div class="field">
-            <label for="compare-select">Compare market</label>
-            <select id="compare-select"></select>
-          </div>
-        </div>
-
-        <div class="chip-row">
-          <button class="chip" data-action="toggle-auto" type="button" id="auto-refresh-chip">Auto refresh: off</button>
-          <button class="chip active" data-timeframe="24H" type="button">24H</button>
-          <button class="chip" data-timeframe="7D" type="button">7D</button>
-          <button class="chip" data-timeframe="30D" type="button">30D</button>
-          <button class="chip" data-timeframe="90D" type="button">90D</button>
-          <button class="chip" data-timeframe="1Y" type="button">1Y</button>
-          <button class="chip" data-timeframe="3Y" type="button">3Y</button>
-          <button class="chip" data-timeframe="5Y" type="button">5Y</button>
-          <button class="chip" data-timeframe="ALL" type="button">All</button>
-        </div>
-
-        <div class="chart-shell">
-          <div class="chart-meta">
-            <div class="chart-meta-left">
-              <span class="legend"><span class="legend-dot"></span> <span id="legend-main">Selected series</span></span>
-              <span class="legend"><span class="legend-dot compare"></span> Compare: <span id="legend-compare">UAE</span></span>
-            </div>
-            <div class="segmented" aria-label="Metric mode">
-              <button class="active" data-metric="selected" type="button">Selected view</button>
-              <button data-metric="spot" type="button">Spot only</button>
-              <button data-metric="compare" type="button">Compare view</button>
-            </div>
-          </div>
-
-          <div class="chart-stage" id="chart-stage">
-            <svg id="chart-svg" viewBox="0 0 1000 420" preserveAspectRatio="none" aria-label="Price chart"></svg>
-            <div class="chart-tooltip" id="chart-tooltip"></div>
-          </div>
-
-          <div class="chart-summary">
-            <div class="mini-stat">
-              <div class="k">Range</div>
-              <div class="v" id="summary-range">—</div>
-              <div class="s">High minus low for the visible chart</div>
-            </div>
-            <div class="mini-stat">
-              <div class="k">Change</div>
-              <div class="v" id="summary-change">—</div>
-              <div class="s">Start vs end of the visible chart</div>
-            </div>
-            <div class="mini-stat">
-              <div class="k">Visible points</div>
-              <div class="v" id="summary-points">—</div>
-              <div class="s">Based on live cache and baseline availability</div>
-            </div>
-            <div class="mini-stat">
-              <div class="k">Data logic</div>
-              <div class="v" id="summary-logic">—</div>
-              <div class="s">Short ranges use local cache, long ranges use monthly baseline</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <div class="lookup-box">
-            <div>
-              <h3 class="panel-title" style="font-size:22px;margin:0;">Quick stats</h3>
-              <p class="panel-copy">The current view in your selected currency, karat, and unit.</p>
-            </div>
-            <div class="result-grid">
-              <div class="result-box">
-                <div class="subtle">Current selected price</div>
-                <strong id="stat-selected" class="value">—</strong>
-                <div class="subtle">Karat-adjusted and FX-adjusted</div>
-              </div>
-              <div class="result-box">
-                <div class="subtle">24H move</div>
-                <strong id="stat-24h" class="value">—</strong>
-                <div class="subtle">Based on local session snapshots</div>
-              </div>
-              <div class="result-box">
-                <div class="subtle">90D move</div>
-                <strong id="stat-90d" class="value">—</strong>
-                <div class="subtle">Based on monthly historical baseline</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="lookup-box">
-            <div>
-              <h3 class="panel-title" style="font-size:22px;margin:0;">Data quality</h3>
-              <p class="panel-copy">This is where the page makes the data source split explicit.</p>
-            </div>
-            <div class="result-grid">
-              <div class="result-box">
-                <div class="subtle">Live spot source</div>
-                <strong id="source-live" class="value">Gold API</strong>
-                <div class="subtle">Direct browser fetch with CORS</div>
-              </div>
-              <div class="result-box">
-                <div class="subtle">FX source</div>
-                <strong id="source-fx" class="value">ExchangeRate API</strong>
-                <div class="subtle">Open exchange-rate endpoint</div>
-              </div>
-              <div class="result-box">
-                <div class="subtle">Long-run history</div>
-                <strong id="source-history" class="value">DataHub</strong>
-                <div class="subtle">Monthly gold prices in USD</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <aside class="panel glass" id="markets">
-        <div class="panel-head">
-          <div>
-            <h2 class="panel-title">Price by karat</h2>
-            <p class="panel-copy">
-              A faster hierarchy than the old tracker. It shows all major karats together, so the selected view is always grounded in context.
-            </p>
-          </div>
-          <div class="label" id="karat-context-label">AED · per gram</div>
-        </div>
-
-        <div class="matrix-wrap" style="margin-bottom:18px;">
-          <table class="matrix" aria-label="Price by karat table">
-            <thead>
-              <tr>
-                <th>Karat</th>
-                <th>Purity</th>
-                <th>Price</th>
-                <th>vs 24K</th>
-              </tr>
-            </thead>
-            <tbody id="karat-table-body"></tbody>
-          </table>
-        </div>
-
-        <div class="panel-head" style="margin-top:4px;">
-          <div>
-            <h2 class="panel-title" style="font-size:24px;">Regional market board</h2>
-            <p class="panel-copy">
-              Market-linked estimates across selected countries. Sort order updates live as currencies and karat settings change.
-            </p>
-          </div>
-        </div>
-
-        <div class="toolbar">
-          <div class="field" style="min-width:180px;">
-            <label for="market-sort-select">Sort markets</label>
-            <select id="market-sort-select">
-              <option value="high">Price: high to low</option>
-              <option value="low">Price: low to high</option>
-              <option value="alpha">Alphabetical</option>
+    <section class="tracker-shell tracker-toolbar-shell">
+      <div class="tracker-toolbar-card">
+        <div class="tracker-control-grid">
+          <label class="tracker-field">
+            <span>Language</span>
+            <select id="tp-language">
+              <option value="en">English</option>
+              <option value="ar">العربية</option>
             </select>
-          </div>
-          <div class="field" style="min-width:180px;">
-            <label for="market-filter-input">Filter</label>
-            <input id="market-filter-input" type="text" placeholder="UAE, Qatar, USD…" />
-          </div>
+          </label>
+          <label class="tracker-field">
+            <span>Currency</span>
+            <select id="tp-currency"></select>
+          </label>
+          <label class="tracker-field">
+            <span>Karat</span>
+            <select id="tp-karat"></select>
+          </label>
+          <label class="tracker-field">
+            <span>Unit</span>
+            <select id="tp-unit"></select>
+          </label>
+          <label class="tracker-field">
+            <span>Compare market</span>
+            <select id="tp-compare-country"></select>
+          </label>
+          <label class="tracker-field">
+            <span>Chart range</span>
+            <select id="tp-range">
+              <option value="24H">24H</option>
+              <option value="7D">7D</option>
+              <option value="30D">30D</option>
+              <option value="90D">90D</option>
+              <option value="1Y">1Y</option>
+              <option value="3Y">3Y</option>
+              <option value="5Y">5Y</option>
+              <option value="ALL">All</option>
+            </select>
+          </label>
         </div>
-
-        <div class="market-board" id="market-board"></div>
-      </aside>
-    </div>
-
-
-    <section class="panel glass" id="planner-suite" style="margin-top:22px;">
-      <div class="panel-head">
-        <div>
-          <h2 class="panel-title">Decision suite</h2>
-          <p class="panel-copy">
-            This layer turns the tracker from a display page into a working desk: budget planning, position tracking,
-            jewelry estimate logic, saved presets, and a concise market brief that you can export.
-          </p>
-        </div>
-        <div class="label">Built for actual use, not only display</div>
-      </div>
-
-      <div class="planner-grid">
-        <div class="lookup-box planner-stack">
-          <div>
-            <h3 class="panel-title" style="font-size:22px;margin:0;">Budget planner</h3>
-            <p class="panel-copy">See how much gold your budget can realistically buy in the current selected view.</p>
-          </div>
-          <div class="control-grid" style="margin-top:0;">
-            <div class="field">
-              <label for="budget-input">Budget amount</label>
-              <input id="budget-input" type="number" min="0" step="0.01" value="10000" />
-            </div>
-            <div class="field">
-              <label for="budget-fee-input">Extra fee %</label>
-              <input id="budget-fee-input" type="number" min="0" step="0.01" value="0" />
-            </div>
-          </div>
-          <div class="result-grid">
-            <div class="result-box">
-              <div class="subtle">Buyable quantity</div>
-              <strong id="budget-selected-qty" class="value">—</strong>
-              <div class="subtle">In the selected unit</div>
-            </div>
-            <div class="result-box">
-              <div class="subtle">Effective unit price</div>
-              <strong id="budget-effective-price" class="value">—</strong>
-              <div class="subtle">Current price plus entered fee</div>
-            </div>
-            <div class="result-box">
-              <div class="subtle">24K benchmark</div>
-              <strong id="budget-24k-grams" class="value">—</strong>
-              <div class="subtle">How many 24K grams the same budget buys</div>
-            </div>
-          </div>
-          <div id="budget-context" class="planner-note">—</div>
-        </div>
-
-        <div class="lookup-box planner-stack">
-          <div>
-            <h3 class="panel-title" style="font-size:22px;margin:0;">Position tracker</h3>
-            <p class="panel-copy">Enter your entry price and quantity to estimate current value and profit or loss.</p>
-          </div>
-          <div class="control-grid" style="margin-top:0;">
-            <div class="field">
-              <label for="position-entry-input">Entry price</label>
-              <input id="position-entry-input" type="number" min="0" step="0.01" value="0" />
-            </div>
-            <div class="field">
-              <label for="position-qty-input">Quantity</label>
-              <input id="position-qty-input" type="number" min="0" step="0.0001" value="0" />
-            </div>
-          </div>
-          <div class="result-grid">
-            <div class="result-box">
-              <div class="subtle">Current value</div>
-              <strong id="position-current-value" class="value">—</strong>
-              <div class="subtle">At the live selected price</div>
-            </div>
-            <div class="result-box">
-              <div class="subtle">P/L</div>
-              <strong id="position-pl" class="value">—</strong>
-              <div class="subtle">Absolute gain or loss</div>
-            </div>
-            <div class="result-box">
-              <div class="subtle">P/L %</div>
-              <strong id="position-plpct" class="value">—</strong>
-              <div class="subtle">Versus your cost basis</div>
-            </div>
-          </div>
-          <div id="position-context" class="planner-note">—</div>
-        </div>
-      </div>
-
-      <div class="planner-grid">
-        <div class="lookup-box planner-stack">
-          <div>
-            <h3 class="panel-title" style="font-size:22px;margin:0;">Jewelry estimate</h3>
-            <p class="panel-copy">Model bullion value, making charge, premium, and optional VAT for a more realistic store-side estimate.</p>
-          </div>
-          <div class="control-grid" style="margin-top:0;">
-            <div class="field">
-              <label for="jewelry-weight-input">Weight (grams)</label>
-              <input id="jewelry-weight-input" type="number" min="0" step="0.01" value="10" />
-            </div>
-            <div class="field">
-              <label for="jewelry-karat-select">Karat</label>
-              <select id="jewelry-karat-select"></select>
-            </div>
-            <div class="field">
-              <label for="jewelry-making-input">Making charge / gram</label>
-              <input id="jewelry-making-input" type="number" min="0" step="0.01" value="0" />
-            </div>
-            <div class="field">
-              <label for="jewelry-premium-input">Market premium %</label>
-              <input id="jewelry-premium-input" type="number" min="0" step="0.01" value="0" />
-            </div>
-          </div>
-          <div class="planner-toolbar">
-            <label class="chip active" style="cursor:pointer;">
-              <input id="jewelry-vat-toggle" type="checkbox" checked style="display:none;" />Include 5% VAT
-            </label>
-          </div>
-          <div class="result-grid">
-            <div class="result-box">
-              <div class="subtle">Bullion value</div>
-              <strong id="jewelry-bullion" class="value">—</strong>
-            </div>
-            <div class="result-box">
-              <div class="subtle">Charges + premium</div>
-              <strong id="jewelry-charges" class="value">—</strong>
-            </div>
-            <div class="result-box">
-              <div class="subtle">VAT</div>
-              <strong id="jewelry-vat" class="value">—</strong>
-            </div>
-          </div>
-          <div class="planner-line">
-            <div>
-              <strong>Total estimated ticket</strong>
-              <span id="jewelry-context">—</span>
-            </div>
-            <strong id="jewelry-total">—</strong>
-          </div>
-        </div>
-
-        <div class="lookup-box planner-stack brief-box">
-          <div>
-            <h3 class="panel-title" style="font-size:22px;margin:0;">Market brief and presets</h3>
-            <p class="panel-copy">Save useful tracker setups and generate a concise brief from the current state.</p>
-          </div>
-          <div class="result-box">
-            <div class="subtle">Brief headline</div>
-            <strong id="brief-headline" class="value" style="font-size:18px;">—</strong>
-          </div>
-          <div id="brief-body" class="planner-note">—</div>
-          <div class="control-grid" style="margin-top:0;">
-            <div class="field">
-              <label for="preset-name-input">Preset name</label>
-              <input id="preset-name-input" type="text" placeholder="Example: UAE 24K gram" />
-            </div>
-            <div class="field">
-              <label>&nbsp;</label>
-              <div class="planner-toolbar">
-                <button class="btn btn-primary" id="save-preset-btn" type="button">Save preset</button>
-                <button class="btn btn-secondary" id="export-brief-btn" type="button">Download brief</button>
-              </div>
-            </div>
-          </div>
-          <div id="preset-list" class="preset-list"></div>
+        <div class="tracker-chip-row">
+          <button type="button" class="tracker-chip" id="tp-auto-refresh">Auto refresh: on</button>
+          <button type="button" class="tracker-chip is-active" data-metric="selected">Selected view</button>
+          <button type="button" class="tracker-chip" data-metric="spot">Spot only</button>
+          <button type="button" class="tracker-chip" data-metric="compare">Compare market</button>
+          <button type="button" class="tracker-chip" data-toggle="wire">Wire headlines</button>
+          <button type="button" class="tracker-chip" data-toggle="favorites">Favorites only</button>
         </div>
       </div>
     </section>
 
-
-    <section class="panel glass" id="archive-tools" style="margin-top:22px;">
-      <div class="panel-head">
-        <div>
-          <h2 class="panel-title">Archive, lookup, alerts, and exports</h2>
-          <p class="panel-copy">
-            The old tracker felt thin here. This rebuild treats these tools as first-class workflows: browse history, jump to a date, set target alerts,
-            and export the exact thing you are looking at instead of a vague file.
-          </p>
-        </div>
-        <div class="label">Browser storage only · no sign-in needed</div>
-      </div>
-
-      <div class="tabbar" role="tablist" aria-label="Utility tabs">
-        <button class="active" data-tab="archive" type="button">Archive</button>
-        <button data-tab="lookup" type="button">Date lookup</button>
-        <button data-tab="alerts" type="button">Alerts</button>
-        <button data-tab="exports" type="button">Exports</button>
-      </div>
-
-      <div class="tabpane active" id="tab-archive">
-        <div class="toolbar">
-          <div class="field">
-            <label for="archive-range-select">Archive range</label>
-            <select id="archive-range-select">
-              <option value="ALL">All history</option>
-              <option value="5Y">Last 5 years</option>
-              <option value="3Y">Last 3 years</option>
-              <option value="1Y">Last 1 year</option>
-              <option value="90D">Last 90 days</option>
-              <option value="30D">Last 30 days</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="archive-search-input">Search</label>
-            <input id="archive-search-input" type="text" placeholder="2024, 2025, Jan…" />
-          </div>
-          <div class="field">
-            <label for="archive-limit-select">Rows</label>
-            <select id="archive-limit-select">
-              <option value="25">25 rows</option>
-              <option value="50">50 rows</option>
-              <option value="100">100 rows</option>
-              <option value="250">250 rows</option>
-              <option value="99999">All rows</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>&nbsp;</label>
-            <button class="btn btn-secondary" id="download-visible-archive-btn" type="button">Download visible archive CSV</button>
+    <section class="tracker-shell tracker-wire-shell">
+      <div class="tracker-wire-card">
+        <div class="tracker-wire-label">Market wire</div>
+        <div class="tracker-wire-marquee">
+          <div class="tracker-wire-track" id="tp-wire-track">
+            <span class="tracker-wire-item">Loading live market headlines…</span>
           </div>
         </div>
+        <button type="button" class="tracker-wire-refresh" id="tp-wire-refresh">Refresh wire</button>
+      </div>
+    </section>
 
-        <div class="archive-shell">
-          <div class="archive-scroll">
-            <table class="archive-table" aria-label="Archive history">
+    <section class="tracker-shell tracker-main-shell" id="section-chart">
+      <div id="chart" class="tracker-anchor"></div>
+      <div class="tracker-main-grid">
+        <section class="tracker-panel">
+          <div class="tracker-panel-head">
+            <div>
+              <h2>Live chart workspace</h2>
+              <p>Cross-checked live spot with cached snapshots and long-range baseline history. Recent ranges prioritize local live captures; longer ranges blend archive baselines.</p>
+            </div>
+            <div class="tracker-head-actions">
+              <button type="button" class="btn btn-sm btn-outline" id="tp-export-chart">Export visible chart CSV</button>
+              <button type="button" class="btn btn-sm btn-ghost" id="tp-download-json">Download snapshot JSON</button>
+            </div>
+          </div>
+
+          <div class="tracker-chart-meta">
+            <div class="tracker-legend">
+              <span class="tracker-legend-item"><span class="tracker-legend-dot"></span><span id="tp-legend-main">Selected series</span></span>
+              <span class="tracker-legend-item"><span class="tracker-legend-dot compare"></span><span id="tp-legend-compare">Compare series</span></span>
+            </div>
+            <div class="tracker-mini-strip" id="tp-mini-strip"></div>
+          </div>
+
+          <div class="tracker-chart-wrap">
+            <svg id="tp-chart" viewBox="0 0 1200 430" preserveAspectRatio="none" aria-label="Gold tracker chart"></svg>
+            <div class="tracker-tooltip" id="tp-tooltip"></div>
+          </div>
+
+          <div class="tracker-stat-grid" id="tp-chart-stats"></div>
+
+          <div class="tracker-two-up">
+            <article class="tracker-subpanel">
+              <div class="tracker-subpanel-head">
+                <h3>Range playback</h3>
+                <div class="tracker-subpanel-actions">
+                  <button type="button" class="btn btn-sm btn-ghost" id="tp-playback-btn">Play history</button>
+                </div>
+              </div>
+              <div class="tracker-playback-strip" id="tp-playback-strip"></div>
+            </article>
+
+            <article class="tracker-subpanel">
+              <div class="tracker-subpanel-head">
+                <h3>Visible range notes</h3>
+              </div>
+              <div class="tracker-note-list" id="tp-range-notes"></div>
+            </article>
+          </div>
+        </section>
+
+        <aside class="tracker-panel tracker-panel-side">
+          <div class="tracker-panel-head compact">
+            <div>
+              <h2>Watchlist + pricing ladder</h2>
+              <p>Fast context for your selected view without leaving the tracker.</p>
+            </div>
+          </div>
+
+          <div class="tracker-ladder-table-wrap">
+            <table class="tracker-table">
               <thead>
                 <tr>
-                  <th>Date</th>
-                  <th>Spot USD/oz</th>
-                  <th>Selected view</th>
-                  <th>24K local</th>
-                  <th>Source layer</th>
+                  <th>Karat</th>
+                  <th>Purity</th>
+                  <th>Selected price</th>
+                  <th>vs 24K</th>
                 </tr>
               </thead>
-              <tbody id="archive-table-body"></tbody>
+              <tbody id="tp-karat-table"></tbody>
             </table>
           </div>
-        </div>
-      </div>
 
-      <div class="tabpane" id="tab-lookup">
-        <div class="grid-2" style="margin-top:0;">
-          <div class="lookup-box">
-            <div class="field">
-              <label for="lookup-date-input">Lookup date</label>
-              <input id="lookup-date-input" type="date" />
+          <div class="tracker-watchlist-block">
+            <div class="tracker-subpanel-head">
+              <h3>Market watchlist</h3>
+              <button type="button" class="btn btn-sm btn-outline" id="tp-export-watchlist">Export watchlist CSV</button>
             </div>
-            <button class="btn btn-primary" id="lookup-btn" type="button">Look up closest historical point</button>
-            <div class="subtle">
-              This uses the monthly baseline. If you later add a daily historical source, the page architecture is ready for that upgrade.
-            </div>
+            <div class="tracker-watchlist-grid" id="tp-watchlist-grid"></div>
           </div>
 
-          <div class="lookup-box">
-            <div class="subtle">Lookup result</div>
-            <div class="result-grid">
-              <div class="result-box">
-                <div class="subtle">Matched date</div>
-                <strong id="lookup-date-result" class="value">—</strong>
-              </div>
-              <div class="result-box">
-                <div class="subtle">Spot USD/oz</div>
-                <strong id="lookup-spot-result" class="value">—</strong>
-              </div>
-              <div class="result-box">
-                <div class="subtle">Selected price</div>
-                <strong id="lookup-selected-result" class="value">—</strong>
-              </div>
+          <div class="tracker-watchlist-block">
+            <div class="tracker-subpanel-head">
+              <h3>Decision cues</h3>
             </div>
-            <div class="result-box">
-              <div class="subtle">Context</div>
-              <strong id="lookup-context-result" class="value" style="font-size:16px;">Pick a date to begin.</strong>
-            </div>
+            <div class="tracker-note-list" id="tp-decision-cues"></div>
           </div>
-        </div>
-      </div>
-
-      <div class="tabpane" id="tab-alerts">
-        <div class="grid-2" style="margin-top:0;">
-          <div class="alert-box">
-            <div>
-              <h3 class="panel-title" style="font-size:22px;margin:0;">Add alert</h3>
-              <p class="panel-copy">Alerts are stored in this browser. They are checked whenever live data refreshes.</p>
-            </div>
-            <div class="field">
-              <label for="alert-type-select">Condition</label>
-              <select id="alert-type-select">
-                <option value="above">Price goes above</option>
-                <option value="below">Price drops below</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="alert-target-input">Target value</label>
-              <input id="alert-target-input" type="number" step="0.01" min="0" placeholder="Enter target price" />
-            </div>
-            <div class="field">
-              <label for="alert-scope-select">Scope</label>
-              <select id="alert-scope-select">
-                <option value="selected">Selected view</option>
-                <option value="spot">Spot XAU/USD per oz</option>
-                <option value="uae24">UAE 24K per gram</option>
-              </select>
-            </div>
-            <div class="segmented">
-              <button class="btn btn-primary" id="save-alert-btn" type="button">Save alert</button>
-              <button class="btn btn-ghost" id="notify-permission-btn" type="button">Enable browser notifications</button>
-            </div>
-          </div>
-
-          <div class="alert-box">
-            <div>
-              <h3 class="panel-title" style="font-size:22px;margin:0;">Saved alerts</h3>
-              <p class="panel-copy">Triggered alerts stay visible until you remove them.</p>
-            </div>
-            <div class="alert-list" id="alert-list"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tabpane" id="tab-exports">
-        <div class="export-grid">
-          <div class="export-card">
-            <h4>Current snapshot — CSV</h4>
-            <p>Exports the current spot, selected configuration, karat prices, UAE 24K estimate, and update timestamps.</p>
-            <button class="btn btn-primary" id="export-snapshot-csv-btn" type="button">Download CSV</button>
-          </div>
-          <div class="export-card">
-            <h4>Current snapshot — JSON</h4>
-            <p>Useful for debugging, versioning, and later wiring into other pages.</p>
-            <button class="btn btn-secondary" id="export-snapshot-json-btn" type="button">Download JSON</button>
-          </div>
-          <div class="export-card">
-            <h4>Visible chart — CSV</h4>
-            <p>Exports the exact visible data series, not a generic catch-all dump.</p>
-            <button class="btn btn-secondary" id="export-chart-csv-btn" type="button">Download visible chart CSV</button>
-          </div>
-          <div class="export-card">
-            <h4>Full baseline history — CSV</h4>
-            <p>Exports the full monthly historical baseline loaded into the tracker.</p>
-            <button class="btn btn-secondary" id="export-full-history-btn" type="button">Download full history CSV</button>
-          </div>
-        </div>
+        </aside>
       </div>
     </section>
 
-    <section class="panel glass" id="methodology" style="margin-top:22px;">
-      <div class="panel-head">
-        <div>
-          <h2 class="panel-title">Methodology and source stack</h2>
-          <p class="panel-copy">
-            Strong trackers explain themselves. This section is built into the page so users understand what the numbers mean and where they do not.
-          </p>
-        </div>
-        <div class="label">Transparent by design</div>
-      </div>
-
-      <div class="method-grid">
-        <div class="method-card">
-          <h4>Live layer</h4>
-          <p>
-            The page fetches live gold spot data in USD and treats it as the market reference per troy ounce. Currency conversion is then applied to local estimates.
-          </p>
-          <div class="source-links">
-            <a href="https://gold-api.com/docs" target="_blank" rel="noreferrer">Gold API docs</a>
-            <a href="https://api.gold-api.com/price/XAU" target="_blank" rel="noreferrer">Live XAU endpoint</a>
+    <section class="tracker-shell tracker-compare-shell" id="section-countries">
+      <div id="compare" class="tracker-anchor"></div>
+      <div class="tracker-panel">
+        <div class="tracker-panel-head">
+          <div>
+            <h2>Markets compare board</h2>
+            <p>Live-ranking board with favorites, filters, quick favorite toggles, and one-click country deep links.</p>
+          </div>
+          <div class="tracker-head-actions">
+            <label class="tracker-search">
+              <span class="sr-only">Filter markets</span>
+              <input type="text" id="tp-market-filter" placeholder="Filter by country or currency" />
+            </label>
+            <label class="tracker-field tracker-field-inline">
+              <span>Sort</span>
+              <select id="tp-market-sort">
+                <option value="high">High to low</option>
+                <option value="low">Low to high</option>
+                <option value="alpha">A–Z</option>
+                <option value="favorites">Favorites first</option>
+              </select>
+            </label>
           </div>
         </div>
 
-        <div class="method-card">
-          <h4>FX layer</h4>
-          <p>
-            Local prices use open exchange-rate data from USD. Because this endpoint updates daily, the page caches rates and uses them for estimation rather than pretending they are tick-level FX prices.
-          </p>
-          <div class="source-links">
-            <a href="https://www.exchangerate-api.com/docs/free" target="_blank" rel="noreferrer">ExchangeRate API docs</a>
-            <a href="https://open.er-api.com/v6/latest/USD" target="_blank" rel="noreferrer">Open USD rates endpoint</a>
-          </div>
-        </div>
-
-        <div class="method-card">
-          <h4>Historical layer</h4>
-          <p>
-            The page first tries a daily-updated historical feed with CORS support, then falls back to a monthly public dataset if needed. That improves short-range charts without pretending to have tick-level archival data.
-          </p>
-          <div class="source-links">
-            <a href="https://freegoldapi.com/" target="_blank" rel="noreferrer">FreeGoldAPI</a>
-            <a href="https://datahub.io/core/gold-prices" target="_blank" rel="noreferrer">DataHub fallback dataset</a>
-          </div>
-        </div>
-
-        <div class="method-card">
-          <h4>Local estimate formula</h4>
-          <p>
-            Selected price = live spot per oz × purity factor × unit conversion × FX rate. It is a bullion-equivalent estimate, not a guaranteed retail jewelry quote.
-          </p>
-          <div class="source-links">
-            <a href="https://goldprice.org/gold-price-united-arab-emirates.html" target="_blank" rel="noreferrer">UAE gold price context</a>
-            <a href="https://www.lbma.org.uk/prices-and-data/lbma-gold-price" target="_blank" rel="noreferrer">LBMA benchmark context</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="footnote">
-        Attribution note for FX: ExchangeRate-API’s open access endpoint requires attribution. Historical data is blended from public sources, so keep the methodology section visible on the live site.
+        <div class="tracker-board-grid" id="tp-market-board"></div>
       </div>
     </section>
-  </div>
 
-  <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="false"></div>
-
-  <script>
-    const CONFIG = {
-      liveEndpoint: "https://api.gold-api.com/price/XAU",
-      fxEndpoint: "https://open.er-api.com/v6/latest/USD",
-      historyEndpoint: "https://freegoldapi.com/data/latest.json",
-      historyFallbackEndpoint: "https://datahub.io/core/gold-prices/_r/-/data/monthly-processed.csv",
-      storageKeys: {
-        snapshots: "gold-tracker-v2.snapshots",
-        alerts: "gold-tracker-v2.alerts",
-        settings: "gold-tracker-v2.settings",
-        lastLive: "gold-tracker-v2.lastLive",
-        fx: "gold-tracker-v2.fx",
-        presets: "gold-tracker-v2.presets"
-      },
-      gramPerTroyOunce: 31.1034768,
-      kilosPerTroyOunce: 1 / 32.1507465686,
-      autoRefreshMs: 60 * 1000,
-      historyFallbackStartYear: 2010,
-      markets: [
-        { key: "AED", name: "United Arab Emirates", short: "UAE" },
-        { key: "SAR", name: "Saudi Arabia", short: "Saudi" },
-        { key: "QAR", name: "Qatar", short: "Qatar" },
-        { key: "BHD", name: "Bahrain", short: "Bahrain" },
-        { key: "KWD", name: "Kuwait", short: "Kuwait" },
-        { key: "OMR", name: "Oman", short: "Oman" },
-        { key: "EGP", name: "Egypt", short: "Egypt" },
-        { key: "TRY", name: "Turkey", short: "Turkey" },
-        { key: "USD", name: "United States", short: "US" },
-        { key: "EUR", name: "Eurozone", short: "Eurozone" },
-        { key: "GBP", name: "United Kingdom", short: "UK" }
-      ],
-      currencies: [
-        ["AED", "AED"],
-        ["USD", "USD"],
-        ["SAR", "SAR"],
-        ["QAR", "QAR"],
-        ["BHD", "BHD"],
-        ["KWD", "KWD"],
-        ["OMR", "OMR"],
-        ["EUR", "EUR"],
-        ["GBP", "GBP"],
-        ["TRY", "TRY"],
-        ["EGP", "EGP"],
-        ["JPY", "JPY"]
-      ],
-      karats: [
-        { key: "24K", purity: 1, label: "24K" },
-        { key: "22K", purity: 22 / 24, label: "22K" },
-        { key: "21K", purity: 21 / 24, label: "21K" },
-        { key: "18K", purity: 18 / 24, label: "18K" }
-      ],
-      units: [
-        { key: "gram", label: "Per gram", factorFromOz: 1 / 31.1034768, short: "g" },
-        { key: "oz", label: "Per troy ounce", factorFromOz: 1, short: "oz" },
-        { key: "kilo", label: "Per kilogram", factorFromOz: 32.1507465686, short: "kg" }
-      ]
-    };
-
-    const state = {
-      live: null,
-      fx: null,
-      history: [],
-      snapshots: [],
-      alerts: [],
-      presets: [],
-      autoRefresh: false,
-      timerId: null,
-      metricMode: "selected",
-      timeframe: "24H",
-      selectedCurrency: "AED",
-      selectedKarat: "24K",
-      selectedUnit: "gram",
-      compareMarket: "AED",
-      archiveRange: "ALL",
-      archiveSearch: "",
-      marketSort: "high",
-      marketFilter: ""
-    };
-
-    const el = {
-      liveStatus: document.getElementById("live-status"),
-      statusCopy: document.getElementById("status-copy"),
-      lastUpdated: document.getElementById("last-updated"),
-      snapshotCount: document.getElementById("snapshot-count"),
-      heroSpot: document.getElementById("hero-spot"),
-      heroUae24: document.getElementById("hero-uae24"),
-      hero30d: document.getElementById("hero-30d"),
-      currencySelect: document.getElementById("currency-select"),
-      karatSelect: document.getElementById("karat-select"),
-      unitSelect: document.getElementById("unit-select"),
-      compareSelect: document.getElementById("compare-select"),
-      marketSortSelect: document.getElementById("market-sort-select"),
-      marketFilterInput: document.getElementById("market-filter-input"),
-      archiveRangeSelect: document.getElementById("archive-range-select"),
-      archiveSearchInput: document.getElementById("archive-search-input"),
-      archiveLimitSelect: document.getElementById("archive-limit-select"),
-      karatTableBody: document.getElementById("karat-table-body"),
-      marketBoard: document.getElementById("market-board"),
-      archiveTableBody: document.getElementById("archive-table-body"),
-      statSelected: document.getElementById("stat-selected"),
-      stat24h: document.getElementById("stat-24h"),
-      stat90d: document.getElementById("stat-90d"),
-      chartSvg: document.getElementById("chart-svg"),
-      chartStage: document.getElementById("chart-stage"),
-      chartTooltip: document.getElementById("chart-tooltip"),
-      summaryRange: document.getElementById("summary-range"),
-      summaryChange: document.getElementById("summary-change"),
-      summaryPoints: document.getElementById("summary-points"),
-      summaryLogic: document.getElementById("summary-logic"),
-      legendMain: document.getElementById("legend-main"),
-      legendCompare: document.getElementById("legend-compare"),
-      karatContextLabel: document.getElementById("karat-context-label"),
-      sourceLive: document.getElementById("source-live"),
-      sourceFx: document.getElementById("source-fx"),
-      sourceHistory: document.getElementById("source-history"),
-      lookupDateInput: document.getElementById("lookup-date-input"),
-      lookupDateResult: document.getElementById("lookup-date-result"),
-      lookupSpotResult: document.getElementById("lookup-spot-result"),
-      lookupSelectedResult: document.getElementById("lookup-selected-result"),
-      lookupContextResult: document.getElementById("lookup-context-result"),
-      alertTypeSelect: document.getElementById("alert-type-select"),
-      alertTargetInput: document.getElementById("alert-target-input"),
-      alertScopeSelect: document.getElementById("alert-scope-select"),
-      alertList: document.getElementById("alert-list"),
-      toastStack: document.getElementById("toast-stack"),
-      autoRefreshChip: document.getElementById("auto-refresh-chip"),
-      budgetInput: document.getElementById("budget-input"),
-      budgetFeeInput: document.getElementById("budget-fee-input"),
-      budgetSelectedQty: document.getElementById("budget-selected-qty"),
-      budgetEffectivePrice: document.getElementById("budget-effective-price"),
-      budget24kGrams: document.getElementById("budget-24k-grams"),
-      budgetContext: document.getElementById("budget-context"),
-      positionEntryInput: document.getElementById("position-entry-input"),
-      positionQtyInput: document.getElementById("position-qty-input"),
-      positionCurrentValue: document.getElementById("position-current-value"),
-      positionPl: document.getElementById("position-pl"),
-      positionPlpct: document.getElementById("position-plpct"),
-      positionContext: document.getElementById("position-context"),
-      jewelryWeightInput: document.getElementById("jewelry-weight-input"),
-      jewelryKaratSelect: document.getElementById("jewelry-karat-select"),
-      jewelryMakingInput: document.getElementById("jewelry-making-input"),
-      jewelryPremiumInput: document.getElementById("jewelry-premium-input"),
-      jewelryVatToggle: document.getElementById("jewelry-vat-toggle"),
-      jewelryBullion: document.getElementById("jewelry-bullion"),
-      jewelryCharges: document.getElementById("jewelry-charges"),
-      jewelryVat: document.getElementById("jewelry-vat"),
-      jewelryTotal: document.getElementById("jewelry-total"),
-      jewelryContext: document.getElementById("jewelry-context"),
-      briefHeadline: document.getElementById("brief-headline"),
-      briefBody: document.getElementById("brief-body"),
-      presetNameInput: document.getElementById("preset-name-input"),
-      presetList: document.getElementById("preset-list")
-    };
-
-    function loadLocalState() {
-      try {
-        state.snapshots = JSON.parse(localStorage.getItem(CONFIG.storageKeys.snapshots) || "[]");
-      } catch {
-        state.snapshots = [];
-      }
-      try {
-        state.alerts = JSON.parse(localStorage.getItem(CONFIG.storageKeys.alerts) || "[]");
-      } catch {
-        state.alerts = [];
-      }
-      try {
-        state.presets = JSON.parse(localStorage.getItem(CONFIG.storageKeys.presets) || "[]");
-      } catch {
-        state.presets = [];
-      }
-      try {
-        const saved = JSON.parse(localStorage.getItem(CONFIG.storageKeys.settings) || "{}");
-        if (saved.selectedCurrency) state.selectedCurrency = saved.selectedCurrency;
-        if (saved.selectedKarat) state.selectedKarat = saved.selectedKarat;
-        if (saved.selectedUnit) state.selectedUnit = saved.selectedUnit;
-        if (saved.compareMarket) state.compareMarket = saved.compareMarket;
-        if (saved.timeframe) state.timeframe = saved.timeframe;
-        if (typeof saved.autoRefresh === "boolean") state.autoRefresh = saved.autoRefresh;
-      } catch {}
-    }
-
-    function saveSettings() {
-      localStorage.setItem(CONFIG.storageKeys.settings, JSON.stringify({
-        selectedCurrency: state.selectedCurrency,
-        selectedKarat: state.selectedKarat,
-        selectedUnit: state.selectedUnit,
-        compareMarket: state.compareMarket,
-        timeframe: state.timeframe,
-        autoRefresh: state.autoRefresh
-      }));
-    }
-
-    function persistSnapshots() {
-      localStorage.setItem(CONFIG.storageKeys.snapshots, JSON.stringify(state.snapshots.slice(-800)));
-    }
-
-    function persistAlerts() {
-      localStorage.setItem(CONFIG.storageKeys.alerts, JSON.stringify(state.alerts));
-    }
-
-    function persistPresets() {
-      localStorage.setItem(CONFIG.storageKeys.presets, JSON.stringify(state.presets.slice(0, 20)));
-    }
-
-    function setupSelects() {
-      el.currencySelect.innerHTML = CONFIG.currencies.map(([key, label]) => `<option value="${key}">${label}</option>`).join("");
-      el.karatSelect.innerHTML = CONFIG.karats.map(item => `<option value="${item.key}">${item.label}</option>`).join("");
-      el.unitSelect.innerHTML = CONFIG.units.map(item => `<option value="${item.key}">${item.label}</option>`).join("");
-      el.compareSelect.innerHTML = CONFIG.markets.map(item => `<option value="${item.key}">${item.short}</option>`).join("");
-
-      el.currencySelect.value = state.selectedCurrency;
-      el.karatSelect.value = state.selectedKarat;
-      el.unitSelect.value = state.selectedUnit;
-      el.compareSelect.value = state.compareMarket;
-      el.archiveRangeSelect.value = state.archiveRange;
-      el.marketSortSelect.value = state.marketSort;
-      if (el.jewelryKaratSelect) {
-        el.jewelryKaratSelect.innerHTML = CONFIG.karats.map(item => `<option value="${item.key}">${item.label}</option>`).join("");
-        el.jewelryKaratSelect.value = state.selectedKarat;
-      }
-    }
-
-    function bindEvents() {
-      document.getElementById("refresh-btn").addEventListener("click", refreshAll);
-      document.getElementById("copy-summary-btn").addEventListener("click", copySummary);
-      document.getElementById("lookup-btn").addEventListener("click", runLookup);
-      document.getElementById("save-alert-btn").addEventListener("click", saveAlert);
-      document.getElementById("notify-permission-btn").addEventListener("click", requestNotifications);
-      document.getElementById("download-visible-archive-btn").addEventListener("click", exportVisibleArchive);
-      document.getElementById("export-snapshot-csv-btn").addEventListener("click", exportSnapshotCsv);
-      document.getElementById("export-snapshot-json-btn").addEventListener("click", exportSnapshotJson);
-      document.getElementById("export-chart-csv-btn").addEventListener("click", exportVisibleChartCsv);
-      document.getElementById("export-full-history-btn").addEventListener("click", exportFullHistory);
-      document.getElementById("save-preset-btn").addEventListener("click", savePreset);
-      document.getElementById("export-brief-btn").addEventListener("click", exportBrief);
-
-      [
-        el.budgetInput,
-        el.budgetFeeInput,
-        el.positionEntryInput,
-        el.positionQtyInput,
-        el.jewelryWeightInput,
-        el.jewelryKaratSelect,
-        el.jewelryMakingInput,
-        el.jewelryPremiumInput,
-        el.jewelryVatToggle
-      ].forEach((node) => {
-        if (!node) return;
-        node.addEventListener(node.tagName === "SELECT" || node.type === "checkbox" ? "change" : "input", renderDecisionSuite);
-      });
-
-      el.currencySelect.addEventListener("change", (e) => {
-        state.selectedCurrency = e.target.value;
-        saveSettings();
-        renderAll();
-      });
-      el.karatSelect.addEventListener("change", (e) => {
-        state.selectedKarat = e.target.value;
-        saveSettings();
-        renderAll();
-      });
-      el.unitSelect.addEventListener("change", (e) => {
-        state.selectedUnit = e.target.value;
-        saveSettings();
-        renderAll();
-      });
-      el.compareSelect.addEventListener("change", (e) => {
-        state.compareMarket = e.target.value;
-        saveSettings();
-        renderAll();
-      });
-
-      el.marketSortSelect.addEventListener("change", (e) => {
-        state.marketSort = e.target.value;
-        renderMarketBoard();
-      });
-
-      el.marketFilterInput.addEventListener("input", (e) => {
-        state.marketFilter = e.target.value.trim().toLowerCase();
-        renderMarketBoard();
-      });
-
-      el.archiveRangeSelect.addEventListener("change", (e) => {
-        state.archiveRange = e.target.value;
-        renderArchive();
-      });
-
-      el.archiveSearchInput.addEventListener("input", (e) => {
-        state.archiveSearch = e.target.value.trim().toLowerCase();
-        renderArchive();
-      });
-
-      el.archiveLimitSelect.addEventListener("change", renderArchive);
-
-      document.querySelectorAll("[data-timeframe]").forEach((button) => {
-        if (button.classList.contains("chip")) {
-          button.addEventListener("click", () => {
-            state.timeframe = button.dataset.timeframe;
-            document.querySelectorAll(".chip[data-timeframe]").forEach(btn => btn.classList.toggle("active", btn.dataset.timeframe === state.timeframe));
-            saveSettings();
-            renderChart();
-          });
-        }
-      });
-
-      document.querySelectorAll(".segmented button[data-metric]").forEach((button) => {
-        button.addEventListener("click", () => {
-          state.metricMode = button.dataset.metric;
-          document.querySelectorAll(".segmented button[data-metric]").forEach(btn => btn.classList.toggle("active", btn === button));
-          renderChart();
-        });
-      });
-
-      document.querySelector("[data-action='toggle-auto']").addEventListener("click", () => {
-        state.autoRefresh = !state.autoRefresh;
-        updateAutoRefresh();
-        saveSettings();
-      });
-
-      document.querySelectorAll(".tabbar button[data-tab]").forEach((button) => {
-        button.addEventListener("click", () => {
-          document.querySelectorAll(".tabbar button[data-tab]").forEach(btn => btn.classList.toggle("active", btn === button));
-          document.querySelectorAll(".tabpane").forEach(pane => pane.classList.toggle("active", pane.id === `tab-${button.dataset.tab}`));
-        });
-      });
-
-      window.addEventListener("resize", renderChart);
-    }
-
-    function updateStatus(mode, message) {
-      el.liveStatus.classList.remove("status-live", "status-stale", "status-error");
-      el.liveStatus.classList.add(mode === "live" ? "status-live" : mode === "error" ? "status-error" : "status-stale");
-      el.statusCopy.textContent = message;
-    }
-
-    async function refreshAll() {
-      updateStatus("stale", "Refreshing live data…");
-      const tasks = [fetchLive(), fetchFx(), ensureHistory()];
-      const results = await Promise.allSettled(tasks);
-      const liveOk = results[0].status === "fulfilled";
-      const fxOk = results[1].status === "fulfilled";
-
-      if (liveOk) {
-        captureSnapshot();
-        checkAlerts();
-        updateStatus("live", "Live feed active");
-      } else if (state.live) {
-        updateStatus("stale", "Live feed unavailable — using cached data");
-      } else {
-        updateStatus("error", "Live feed unavailable");
-      }
-
-      if (!fxOk && !state.fx) {
-        toast("FX unavailable", "Currency conversion could not be refreshed. Using any cached rates available.");
-      }
-
-      renderAll();
-    }
-
-    async function fetchLive() {
-      try {
-        const response = await fetch(CONFIG.liveEndpoint, { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const json = await response.json();
-
-        state.live = {
-          price: numberFrom(json.price ?? json.price_oz ?? json.value ?? json.current_price),
-          symbol: json.symbol ?? "XAU",
-          updatedAt: json.updatedAt || json.updated_at || json.timestamp || Date.now(),
-          raw: json
-        };
-
-        if (!state.live.price || Number.isNaN(state.live.price)) throw new Error("Bad live price");
-        localStorage.setItem(CONFIG.storageKeys.lastLive, JSON.stringify(state.live));
-      } catch (error) {
-        const cached = localStorage.getItem(CONFIG.storageKeys.lastLive);
-        if (cached) {
-          state.live = JSON.parse(cached);
-        } else {
-          throw error;
-        }
-      }
-    }
-
-    async function fetchFx() {
-      try {
-        const response = await fetch(CONFIG.fxEndpoint, { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const json = await response.json();
-        if (json.result !== "success" || !json.rates) throw new Error("Bad FX data");
-        state.fx = {
-          base: json.base_code || "USD",
-          rates: json.rates,
-          updatedAt: json.time_last_update_unix ? json.time_last_update_unix * 1000 : Date.now(),
-          provider: json.provider || "ExchangeRate-API"
-        };
-        localStorage.setItem(CONFIG.storageKeys.fx, JSON.stringify(state.fx));
-      } catch (error) {
-        const cached = localStorage.getItem(CONFIG.storageKeys.fx);
-        if (cached) {
-          state.fx = JSON.parse(cached);
-        } else {
-          throw error;
-        }
-      }
-    }
-
-    async function ensureHistory() {
-      if (state.history.length) return;
-      try {
-        const response = await fetch(CONFIG.historyEndpoint, { cache: "force-cache" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const json = await response.json();
-        state.history = parseHistoryJson(json);
-      } catch (primaryError) {
-        try {
-          const response = await fetch(CONFIG.historyFallbackEndpoint, { cache: "force-cache" });
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          const csv = await response.text();
-          state.history = parseCsvHistory(csv);
-          toast("History fallback loaded", "Primary historical feed was unavailable, so the tracker switched to the monthly fallback dataset.");
-        } catch (secondaryError) {
-          state.history = buildSyntheticHistory();
-          toast("History fallback loaded", "Historical feeds could not be fetched, so a synthetic baseline was generated for layout continuity.");
-        }
-      }
-      state.history = state.history.sort((a, b) => a.date - b.date);
-    }
-
-    function parseHistoryJson(rows) {
-      if (!Array.isArray(rows) || !rows.length) return buildSyntheticHistory();
-      return rows.map((row) => ({
-        date: new Date(row.date),
-        spot: numberFrom(row.price),
-        source: row.source || "historical"
-      })).filter(row => row.date instanceof Date && !Number.isNaN(row.date.getTime()) && row.spot > 0);
-    }
-
-    function parseCsvHistory(csv) {
-      const lines = csv.trim().split(/\r?\n/);
-      if (lines.length < 2) return buildSyntheticHistory();
-
-      const header = lines[0].split(",");
-      const dateIndex = header.findIndex(h => /date/i.test(h));
-      const priceIndex = header.findIndex(h => /price/i.test(h));
-
-      const rows = lines.slice(1).map(line => {
-        const parts = line.split(",");
-        const date = new Date(parts[dateIndex]);
-        const spot = numberFrom(parts[priceIndex]);
-        return {
-          date,
-          spot,
-          source: "monthly"
-        };
-      }).filter(row => row.date instanceof Date && !Number.isNaN(row.date.getTime()) && row.spot > 0);
-
-      return rows;
-    }
-
-    function buildSyntheticHistory() {
-      const rows = [];
-      const now = new Date();
-      let base = 1850;
-      for (let y = CONFIG.historyFallbackStartYear; y <= now.getFullYear(); y += 1) {
-        for (let m = 0; m < 12; m += 1) {
-          if (y === now.getFullYear() && m > now.getMonth()) break;
-          const drift = ((y - CONFIG.historyFallbackStartYear) * 38) + (Math.sin(m / 12 * Math.PI * 2) * 40);
-          const noise = Math.sin((y * 12 + m) * 0.6) * 34;
-          base = Math.max(1200, base + Math.sin((y + m) * 0.2) * 5);
-          rows.push({
-            date: new Date(Date.UTC(y, m, 1)),
-            spot: Math.round((base + drift + noise) * 100) / 100,
-            source: "synthetic"
-          });
-        }
-      }
-      return rows;
-    }
-
-    function captureSnapshot() {
-      if (!state.live || !state.fx) return;
-      const snapshot = {
-        ts: Date.now(),
-        spot: state.live.price,
-        aed24: computeLocalPrice({ currency: "AED", karat: "24K", unit: "gram", spot: state.live.price }),
-        selected: computeLocalPrice({ currency: state.selectedCurrency, karat: state.selectedKarat, unit: state.selectedUnit, spot: state.live.price }),
-        compare: computeLocalPrice({ currency: state.compareMarket, karat: state.selectedKarat, unit: state.selectedUnit, spot: state.live.price })
-      };
-      state.snapshots.push(snapshot);
-      const cutoff = Date.now() - (1000 * 60 * 60 * 24 * 14);
-      state.snapshots = state.snapshots.filter(item => item.ts >= cutoff);
-      persistSnapshots();
-    }
-
-    function updateAutoRefresh() {
-      if (state.timerId) clearInterval(state.timerId);
-      if (state.autoRefresh) {
-        state.timerId = setInterval(refreshAll, CONFIG.autoRefreshMs);
-      }
-      el.autoRefreshChip.textContent = `Auto refresh: ${state.autoRefresh ? "on" : "off"}`;
-      el.autoRefreshChip.classList.toggle("active", state.autoRefresh);
-    }
-
-    function numberFrom(value) {
-      const num = Number(value);
-      return Number.isFinite(num) ? num : 0;
-    }
-
-    function getKaratData(key) {
-      return CONFIG.karats.find(item => item.key === key) || CONFIG.karats[0];
-    }
-
-    function describeHistorySource(source) {
-      const value = String(source || "historical").toLowerCase();
-      if (value.includes("yahoo")) return "Daily history";
-      if (value.includes("world bank") || value.includes("monthly")) return "Monthly history";
-      if (value.includes("measuringworth") || value.includes("annual")) return "Annual history";
-      if (value.includes("synthetic")) return "Synthetic baseline";
-      return "Historical feed";
-    }
-
-    function unitToGrams(quantity, unit) {
-      if (unit === "gram") return quantity;
-      if (unit === "oz") return quantity * CONFIG.gramPerTroyOunce;
-      if (unit === "kilo") return quantity * 1000;
-      return quantity;
-    }
-
-    function nearestHistoryPoint(targetMs) {
-      if (!state.history.length) return null;
-      let best = state.history[0];
-      let diff = Infinity;
-      for (const row of state.history) {
-        const current = Math.abs(row.date.getTime() - targetMs);
-        if (current < diff) {
-          best = row;
-          diff = current;
-        }
-      }
-      return best;
-    }
-
-    function percentChangeFromHistorical(days, currency = state.selectedCurrency, karat = state.selectedKarat, unit = state.selectedUnit) {
-      const latestSpot = getLatestSpot();
-      if (!latestSpot) return null;
-      const current = computeLocalPrice({ currency, karat, unit, spot: latestSpot });
-      const match = nearestHistoryPoint(Date.now() - (days * 86400000));
-      if (!match) return null;
-      const thenValue = computeLocalPrice({ currency, karat, unit, spot: match.spot });
-      if (!thenValue) return null;
-      return ((current - thenValue) / thenValue) * 100;
-    }
-
-    function getUnitData(key) {
-      return CONFIG.units.find(item => item.key === key) || CONFIG.units[0];
-    }
-
-    function fxRate(currency) {
-      if (!state.fx || !state.fx.rates) return currency === "USD" ? 1 : 0;
-      return numberFrom(state.fx.rates[currency] ?? (currency === "USD" ? 1 : 0));
-    }
-
-    function computeLocalPrice({ currency, karat, unit, spot }) {
-      const purity = getKaratData(karat).purity;
-      const unitFactor = getUnitData(unit).factorFromOz;
-      const rate = fxRate(currency);
-      return spot * purity * unitFactor * rate;
-    }
-
-    function formatMoney(value, currency, decimals = null) {
-      const digits = decimals ?? (Math.abs(value) >= 1000 ? 0 : Math.abs(value) >= 100 ? 2 : 3);
-      return new Intl.NumberFormat(undefined, {
-        style: "currency",
-        currency,
-        maximumFractionDigits: digits,
-        minimumFractionDigits: digits
-      }).format(value);
-    }
-
-    function formatNumber(value, digits = 2) {
-      return new Intl.NumberFormat(undefined, {
-        maximumFractionDigits: digits,
-        minimumFractionDigits: digits
-      }).format(value);
-    }
-
-    function formatDate(date, withTime = false) {
-      const options = withTime
-        ? { year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }
-        : { year: "numeric", month: "short", day: "numeric" };
-      return new Intl.DateTimeFormat(undefined, options).format(date);
-    }
-
-    function formatPercent(change) {
-      const sign = change > 0 ? "+" : "";
-      return `${sign}${formatNumber(change, 2)}%`;
-    }
-
-    function timeToMs(value) {
-      if (typeof value === "number") {
-        return value < 1000000000000 ? value * 1000 : value;
-      }
-      if (typeof value === "string") {
-        const parsed = Date.parse(value);
-        return Number.isNaN(parsed) ? Date.now() : parsed;
-      }
-      return Date.now();
-    }
-
-    function classForChange(value) {
-      if (value > 0) return "pos";
-      if (value < 0) return "neg";
-      return "neutral";
-    }
-
-    function getLatestSpot() {
-      if (state.live?.price) return state.live.price;
-      const cached = state.snapshots.at(-1)?.spot;
-      if (cached) return cached;
-      return state.history.at(-1)?.spot ?? 0;
-    }
-
-    function getBaselineChange(daysApprox) {
-      const currentSpot = getLatestSpot();
-      if (!state.history.length || !currentSpot) return null;
-      const target = Date.now() - (daysApprox * 86400000);
-      let best = state.history[0];
-      let bestDiff = Infinity;
-      for (const row of state.history) {
-        const diff = Math.abs(row.date.getTime() - target);
-        if (diff < bestDiff) {
-          best = row;
-          bestDiff = diff;
-        }
-      }
-      if (!best?.spot) return null;
-      return ((currentSpot - best.spot) / best.spot) * 100;
-    }
-
-    function renderHero() {
-      const latestSpot = getLatestSpot();
-      const uae24 = computeLocalPrice({ currency: "AED", karat: "24K", unit: "gram", spot: latestSpot });
-      const move30 = getBaselineChange(30);
-
-      el.heroSpot.textContent = latestSpot ? formatMoney(latestSpot, "USD", 2) : "—";
-      el.heroUae24.textContent = latestSpot && state.fx ? formatMoney(uae24, "AED", 2) : "—";
-      el.hero30d.className = `micro-value ${move30 ? classForChange(move30) : ""}`;
-      el.hero30d.textContent = move30 === null ? "—" : formatPercent(move30);
-
-      el.lastUpdated.textContent = state.live?.updatedAt
-        ? formatDate(new Date(timeToMs(state.live.updatedAt)), true)
-        : "No live timestamp";
-
-      el.snapshotCount.textContent = String(state.snapshots.length);
-
-      el.sourceLive.textContent = state.live?.raw?.source || "Gold API";
-      el.sourceFx.textContent = state.fx?.provider || "ExchangeRate-API";
-      el.sourceHistory.textContent = state.history[0]?.source === "synthetic" ? "Synthetic fallback" : "DataHub monthly";
-    }
-
-    function renderKaratTable() {
-      const spot = getLatestSpot();
-      const currency = state.selectedCurrency;
-      const unit = state.selectedUnit;
-      const rows = CONFIG.karats.map(item => {
-        const price = computeLocalPrice({ currency, karat: item.key, unit, spot });
-        const ratio = item.purity / getKaratData("24K").purity;
-        return { ...item, price, ratio };
-      });
-
-      el.karatTableBody.innerHTML = rows.map(row => {
-        const diff = (row.ratio - 1) * 100;
-        return `
-          <tr>
-            <td><strong>${row.label}</strong></td>
-            <td>${formatNumber(row.purity * 100, 2)}%</td>
-            <td class="value">${formatMoney(row.price, currency, 2)}</td>
-            <td class="${classForChange(diff)}">${diff === 0 ? "Base" : formatPercent(diff)}</td>
-          </tr>
-        `;
-      }).join("");
-
-      el.karatContextLabel.textContent = `${state.selectedCurrency} · ${getUnitData(state.selectedUnit).label.toLowerCase()}`;
-    }
-
-    function marketRows() {
-      const spot = getLatestSpot();
-      return CONFIG.markets.map((market) => {
-        const value = computeLocalPrice({
-          currency: market.key,
-          karat: state.selectedKarat,
-          unit: state.selectedUnit,
-          spot
-        });
-        return {
-          ...market,
-          value
-        };
-      });
-    }
-
-    function renderMarketBoard() {
-      let rows = marketRows();
-
-      if (state.marketFilter) {
-        rows = rows.filter(row =>
-          row.name.toLowerCase().includes(state.marketFilter) ||
-          row.short.toLowerCase().includes(state.marketFilter) ||
-          row.key.toLowerCase().includes(state.marketFilter)
-        );
-      }
-
-      rows = rows.sort((a, b) => {
-        if (state.marketSort === "alpha") return a.name.localeCompare(b.name);
-        if (state.marketSort === "low") return a.value - b.value;
-        return b.value - a.value;
-      });
-
-      if (!rows.length) {
-        el.marketBoard.innerHTML = `<div class="empty">No market rows match the current filter.</div>`;
-        return;
-      }
-
-      el.marketBoard.innerHTML = rows.map((row, index) => `
-        <article class="market-card">
-          <div class="market-rank">${index + 1}</div>
-          <div class="market-name">
-            <strong>${row.short}</strong>
-            <span>${row.name} · ${state.selectedKarat} · ${getUnitData(state.selectedUnit).short}</span>
-          </div>
-          <div class="market-value">
-            <strong>${formatMoney(row.value, row.key, 2)}</strong>
-            <span>${row.key}</span>
-          </div>
-        </article>
-      `).join("");
-
-      el.legendCompare.textContent = CONFIG.markets.find(item => item.key === state.compareMarket)?.short || state.compareMarket;
-    }
-
-    function timeframeData() {
-      const latestSpot = getLatestSpot();
-      const selectedCurrency = state.selectedCurrency;
-      const selectedKarat = state.selectedKarat;
-      const selectedUnit = state.selectedUnit;
-      const compareCurrency = state.compareMarket;
-
-      if (["24H", "7D"].includes(state.timeframe)) {
-        const cutoff = Date.now() - (state.timeframe === "24H" ? 86400000 : 7 * 86400000);
-        const historicalRows = state.history
-          .filter(item => item.date.getTime() >= cutoff - 86400000)
-          .map(item => ({
-            date: item.date,
-            spot: item.spot,
-            selected: computeLocalPrice({ currency: selectedCurrency, karat: selectedKarat, unit: selectedUnit, spot: item.spot }),
-            compare: computeLocalPrice({ currency: compareCurrency, karat: selectedKarat, unit: selectedUnit, spot: item.spot }),
-            logic: describeHistorySource(item.source)
-          }));
-
-        const snapshotRows = state.snapshots
-          .filter(item => item.ts >= cutoff)
-          .map(item => ({
-            date: new Date(item.ts),
-            spot: item.spot,
-            selected: computeLocalPrice({ currency: selectedCurrency, karat: selectedKarat, unit: selectedUnit, spot: item.spot }),
-            compare: computeLocalPrice({ currency: compareCurrency, karat: selectedKarat, unit: selectedUnit, spot: item.spot }),
-            logic: "Live cache"
-          }));
-
-        const rows = [...historicalRows, ...snapshotRows].sort((a, b) => a.date - b.date);
-
-        if (!rows.length) {
-          return [{
-            date: new Date(),
-            spot: latestSpot,
-            selected: computeLocalPrice({ currency: selectedCurrency, karat: selectedKarat, unit: selectedUnit, spot: latestSpot }),
-            compare: computeLocalPrice({ currency: compareCurrency, karat: selectedKarat, unit: selectedUnit, spot: latestSpot }),
-            logic: "Live cache"
-          }];
-        }
-
-        const tail = rows.at(-1);
-        if (latestSpot && (!tail || Math.abs(Date.now() - tail.date.getTime()) > 15 * 60000)) {
-          rows.push({
-            date: new Date(),
-            spot: latestSpot,
-            selected: computeLocalPrice({ currency: selectedCurrency, karat: selectedKarat, unit: selectedUnit, spot: latestSpot }),
-            compare: computeLocalPrice({ currency: compareCurrency, karat: selectedKarat, unit: selectedUnit, spot: latestSpot }),
-            logic: "Live anchor"
-          });
-        }
-
-        return rows;
-      }
-
-      let rows = state.history.map(item => ({
-        date: item.date,
-        spot: item.spot,
-        selected: computeLocalPrice({ currency: selectedCurrency, karat: selectedKarat, unit: selectedUnit, spot: item.spot }),
-        compare: computeLocalPrice({ currency: compareCurrency, karat: selectedKarat, unit: selectedUnit, spot: item.spot }),
-        logic: describeHistorySource(item.source)
-      }));
-
-      const now = new Date();
-      const start = new Date(now);
-      if (state.timeframe === "30D") start.setDate(now.getDate() - 30);
-      if (state.timeframe === "90D") start.setDate(now.getDate() - 90);
-      if (state.timeframe === "1Y") start.setFullYear(now.getFullYear() - 1);
-      if (state.timeframe === "3Y") start.setFullYear(now.getFullYear() - 3);
-      if (state.timeframe === "5Y") start.setFullYear(now.getFullYear() - 5);
-
-      if (state.timeframe !== "ALL") {
-        rows = rows.filter(item => item.date >= start);
-      }
-
-      if (latestSpot && rows.length) {
-        const lastDate = rows.at(-1).date;
-        const currentDate = new Date();
-        if (currentDate.getMonth() !== lastDate.getMonth() || currentDate.getFullYear() !== lastDate.getFullYear()) {
-          rows.push({
-            date: currentDate,
-            spot: latestSpot,
-            selected: computeLocalPrice({ currency: selectedCurrency, karat: selectedKarat, unit: selectedUnit, spot: latestSpot }),
-            compare: computeLocalPrice({ currency: compareCurrency, karat: selectedKarat, unit: selectedUnit, spot: latestSpot }),
-            logic: "live anchor"
-          });
-        }
-      }
-
-      return rows;
-    }
-
-    function selectedChartSeries() {
-      const rows = timeframeData();
-      return rows.map(row => {
-        const value = state.metricMode === "spot"
-          ? row.spot
-          : state.metricMode === "compare"
-            ? row.compare
-            : row.selected;
-        return {
-          ...row,
-          value
-        };
-      });
-    }
-
-    function renderChart() {
-      const rows = selectedChartSeries();
-      el.legendMain.textContent = state.metricMode === "spot"
-        ? "XAU/USD spot"
-        : state.metricMode === "compare"
-          ? `Compare market (${state.compareMarket})`
-          : `${state.selectedCurrency} · ${state.selectedKarat} · ${getUnitData(state.selectedUnit).short}`;
-
-      const svg = el.chartSvg;
-      const tooltip = el.chartTooltip;
-      const width = 1000;
-      const height = 420;
-      const padding = { top: 22, right: 22, bottom: 42, left: 68 };
-      const innerW = width - padding.left - padding.right;
-      const innerH = height - padding.top - padding.bottom;
-
-      if (!rows.length) {
-        svg.innerHTML = "";
-        tooltip.style.display = "none";
-        return;
-      }
-
-      const values = rows.map(r => r.value);
-      const compareValues = rows.map(r => r.compare);
-      const min = Math.min(...values, ...(state.metricMode === "selected" ? compareValues : []));
-      const max = Math.max(...values, ...(state.metricMode === "selected" ? compareValues : []));
-      const safeMin = min === max ? min * 0.98 : min * 0.995;
-      const safeMax = min === max ? max * 1.02 : max * 1.005;
-
-      const x = (index) => padding.left + (rows.length === 1 ? innerW / 2 : (index / (rows.length - 1)) * innerW);
-      const y = (value) => padding.top + innerH - ((value - safeMin) / (safeMax - safeMin)) * innerH;
-
-      const gridLines = 5;
-      let gridMarkup = "";
-      for (let i = 0; i <= gridLines; i += 1) {
-        const yy = padding.top + (innerH / gridLines) * i;
-        const level = safeMax - ((safeMax - safeMin) / gridLines) * i;
-        gridMarkup += `
-          <line x1="${padding.left}" y1="${yy}" x2="${width - padding.right}" y2="${yy}" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
-          <text x="${padding.left - 12}" y="${yy + 4}" fill="rgba(169,183,207,0.82)" font-size="12" text-anchor="end">${escapeHtml(formatAxisNumber(level))}</text>
-        `;
-      }
-
-      const tickStep = Math.max(1, Math.floor(rows.length / 5));
-      let xMarkup = "";
-      rows.forEach((row, index) => {
-        if (index % tickStep !== 0 && index !== rows.length - 1 && index !== 0) return;
-        const xx = x(index);
-        xMarkup += `
-          <line x1="${xx}" y1="${height - padding.bottom}" x2="${xx}" y2="${height - padding.bottom + 6}" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
-          <text x="${xx}" y="${height - 12}" fill="rgba(169,183,207,0.82)" font-size="12" text-anchor="middle">${escapeHtml(formatAxisDate(row.date))}</text>
-        `;
-      });
-
-      const linePath = rows.map((row, index) => `${index === 0 ? "M" : "L"} ${x(index)} ${y(row.value)}`).join(" ");
-      const areaPath = `${linePath} L ${x(rows.length - 1)} ${padding.top + innerH} L ${x(0)} ${padding.top + innerH} Z`;
-
-      const comparePath = state.metricMode === "selected"
-        ? rows.map((row, index) => `${index === 0 ? "M" : "L"} ${x(index)} ${y(row.compare)}`).join(" ")
-        : "";
-
-      const pointMarkup = rows.map((row, index) => `
-        <circle cx="${x(index)}" cy="${y(row.value)}" r="0" fill="#f3cc68" data-index="${index}" />
-      `).join("");
-
-      svg.innerHTML = `
-        <defs>
-          <linearGradient id="goldFill" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stop-color="rgba(243,204,104,0.34)"></stop>
-            <stop offset="100%" stop-color="rgba(243,204,104,0.02)"></stop>
-          </linearGradient>
-          <linearGradient id="goldStroke" x1="0" x2="1">
-            <stop offset="0%" stop-color="#f3cc68"></stop>
-            <stop offset="100%" stop-color="#dba22b"></stop>
-          </linearGradient>
-          <linearGradient id="compareStroke" x1="0" x2="1">
-            <stop offset="0%" stop-color="#54d4ff"></stop>
-            <stop offset="100%" stop-color="#1b9fe9"></stop>
-          </linearGradient>
-        </defs>
-        <rect x="0" y="0" width="${width}" height="${height}" fill="transparent"></rect>
-        ${gridMarkup}
-        <line x1="${padding.left}" y1="${padding.top + innerH}" x2="${width - padding.right}" y2="${padding.top + innerH}" stroke="rgba(255,255,255,0.12)" stroke-width="1"></line>
-        ${xMarkup}
-        <path d="${areaPath}" fill="url(#goldFill)"></path>
-        ${state.metricMode === "selected" ? `<path d="${comparePath}" fill="none" stroke="url(#compareStroke)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"></path>` : ""}
-        <path d="${linePath}" fill="none" stroke="url(#goldStroke)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
-        ${pointMarkup}
-      `;
-
-      el.chartStage.onmousemove = (event) => {
-        const rect = el.chartStage.getBoundingClientRect();
-        const px = event.clientX - rect.left;
-        const ratio = Math.max(0, Math.min(1, px / rect.width));
-        const index = Math.round(ratio * (rows.length - 1));
-        const row = rows[index];
-        const cx = x(index) / width * rect.width;
-        const cy = y(row.value) / height * rect.height;
-
-        tooltip.style.display = "block";
-        tooltip.style.left = `${cx}px`;
-        tooltip.style.top = `${cy}px`;
-
-        const compareLine = state.metricMode === "selected"
-          ? `<div>Compare market: <strong>${formatMoney(row.compare, state.compareMarket, 2)}</strong></div>`
-          : "";
-
-        tooltip.innerHTML = `
-          <strong>${formatAxisDate(row.date, true)}</strong>
-          <div>Main: ${state.metricMode === "spot" ? formatMoney(row.value, "USD", 2) : formatMoney(row.value, state.metricMode === "compare" ? state.compareMarket : state.selectedCurrency, 2)}</div>
-          <div>Spot: ${formatMoney(row.spot, "USD", 2)}</div>
-          ${compareLine}
-          <div>Layer: ${row.logic}</div>
-        `;
-      };
-
-      el.chartStage.onmouseleave = () => {
-        tooltip.style.display = "none";
-      };
-
-      const first = rows[0].value;
-      const last = rows.at(-1).value;
-      const range = max - min;
-      const changePct = first ? ((last - first) / first) * 100 : 0;
-      const logic = new Set(rows.map(row => row.logic)).size === 1 ? rows[0].logic : "blended";
-
-      el.summaryRange.textContent = state.metricMode === "spot"
-        ? formatMoney(range, "USD", 2)
-        : formatMoney(range, state.metricMode === "compare" ? state.compareMarket : state.selectedCurrency, 2);
-      el.summaryChange.textContent = formatPercent(changePct);
-      el.summaryChange.className = `v ${classForChange(changePct)}`;
-      el.summaryPoints.textContent = formatNumber(rows.length, 0);
-      el.summaryLogic.textContent = logic;
-
-      renderQuickStats();
-    }
-
-    function renderQuickStats() {
-      const latestSpot = getLatestSpot();
-      const selected = computeLocalPrice({
-        currency: state.selectedCurrency,
-        karat: state.selectedKarat,
-        unit: state.selectedUnit,
-        spot: latestSpot
-      });
-
-      el.statSelected.textContent = selected ? formatMoney(selected, state.selectedCurrency, 2) : "—";
-
-      const change24 = computeSnapshotChange(1) ?? percentChangeFromHistorical(1);
-      const change90 = getBaselineChange(90) ?? percentChangeFromHistorical(90);
-
-      el.stat24h.className = `value ${change24 === null ? "" : classForChange(change24)}`;
-      el.stat24h.textContent = change24 === null ? "—" : formatPercent(change24);
-
-      el.stat90d.className = `value ${change90 === null ? "" : classForChange(change90)}`;
-      el.stat90d.textContent = change90 === null ? "—" : formatPercent(change90);
-    }
-
-    function computeSnapshotChange(days) {
-      if (!state.snapshots.length) return null;
-      const current = state.snapshots.at(-1);
-      const targetTs = current.ts - (days * 86400000);
-      let best = null;
-      let diff = Infinity;
-      for (const snap of state.snapshots) {
-        const d = Math.abs(snap.ts - targetTs);
-        if (d < diff) {
-          best = snap;
-          diff = d;
-        }
-      }
-      if (!best) return null;
-      if (!best.selected) return null;
-      return ((current.selected - best.selected) / best.selected) * 100;
-    }
-
-    function renderArchive() {
-      let rows = state.history.map(row => {
-        const selected = computeLocalPrice({
-          currency: state.selectedCurrency,
-          karat: state.selectedKarat,
-          unit: state.selectedUnit,
-          spot: row.spot
-        });
-        const uae24 = computeLocalPrice({
-          currency: "AED",
-          karat: "24K",
-          unit: "gram",
-          spot: row.spot
-        });
-        return {
-          ...row,
-          selected,
-          uae24,
-          layer: describeHistorySource(row.source)
-        };
-      });
-
-      const now = new Date();
-      if (state.archiveRange !== "ALL") {
-        const start = new Date(now);
-        if (state.archiveRange === "5Y") start.setFullYear(now.getFullYear() - 5);
-        if (state.archiveRange === "3Y") start.setFullYear(now.getFullYear() - 3);
-        if (state.archiveRange === "1Y") start.setFullYear(now.getFullYear() - 1);
-        if (state.archiveRange === "90D") start.setDate(now.getDate() - 90);
-        if (state.archiveRange === "30D") start.setDate(now.getDate() - 30);
-        rows = rows.filter(row => row.date >= start);
-      }
-
-      if (state.archiveSearch) {
-        rows = rows.filter(row =>
-          formatDate(row.date).toLowerCase().includes(state.archiveSearch) ||
-          String(row.date.getFullYear()).includes(state.archiveSearch)
-        );
-      }
-
-      const limit = Number(el.archiveLimitSelect.value);
-      rows = rows.sort((a, b) => b.date - a.date).slice(0, limit);
-
-      if (!rows.length) {
-        el.archiveTableBody.innerHTML = `<tr><td colspan="5"><div class="empty">No archive rows match the current filters.</div></td></tr>`;
-        return;
-      }
-
-      el.archiveTableBody.innerHTML = rows.map(row => `
-        <tr>
-          <td>${formatDate(row.date)}</td>
-          <td>${formatMoney(row.spot, "USD", 2)}</td>
-          <td>${formatMoney(row.selected, state.selectedCurrency, 2)}</td>
-          <td>${formatMoney(row.uae24, "AED", 2)}</td>
-          <td>${row.layer}</td>
-        </tr>
-      `).join("");
-    }
-
-    function runLookup() {
-      const value = el.lookupDateInput.value;
-      if (!value) {
-        toast("Pick a date", "Choose a date before running the lookup.");
-        return;
-      }
-
-      const target = new Date(value);
-      if (!state.history.length) {
-        toast("History not ready", "Historical baseline has not loaded yet.");
-        return;
-      }
-
-      let best = state.history[0];
-      let bestDiff = Infinity;
-      for (const row of state.history) {
-        const diff = Math.abs(row.date.getTime() - target.getTime());
-        if (diff < bestDiff) {
-          best = row;
-          bestDiff = diff;
-        }
-      }
-
-      const selected = computeLocalPrice({
-        currency: state.selectedCurrency,
-        karat: state.selectedKarat,
-        unit: state.selectedUnit,
-        spot: best.spot
-      });
-
-      const dayGap = Math.round(bestDiff / 86400000);
-      el.lookupDateResult.textContent = formatDate(best.date);
-      el.lookupSpotResult.textContent = formatMoney(best.spot, "USD", 2);
-      el.lookupSelectedResult.textContent = formatMoney(selected, state.selectedCurrency, 2);
-      el.lookupContextResult.textContent = dayGap === 0
-        ? `Exact match found from the ${describeHistorySource(best.source).toLowerCase()} layer.`
-        : `Closest historical point is ${dayGap} day${dayGap === 1 ? "" : "s"} away from the date you chose. Layer: ${describeHistorySource(best.source)}.`;
-    }
-
-    function saveAlert() {
-      const type = el.alertTypeSelect.value;
-      const target = Number(el.alertTargetInput.value);
-      const scope = el.alertScopeSelect.value;
-
-      if (!Number.isFinite(target) || target <= 0) {
-        toast("Invalid target", "Enter a positive number for the alert target.");
-        return;
-      }
-
-      const alert = {
-        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
-        createdAt: Date.now(),
-        type,
-        target,
-        scope,
-        triggered: false,
-        context: {
-          currency: state.selectedCurrency,
-          karat: state.selectedKarat,
-          unit: state.selectedUnit
-        }
-      };
-
-      state.alerts.unshift(alert);
-      persistAlerts();
-      renderAlerts();
-      el.alertTargetInput.value = "";
-      toast("Alert saved", "Your price alert is now stored in this browser.");
-    }
-
-    function alertValue(alert) {
-      const latestSpot = getLatestSpot();
-      if (alert.scope === "spot") return latestSpot;
-      if (alert.scope === "uae24") {
-        return computeLocalPrice({ currency: "AED", karat: "24K", unit: "gram", spot: latestSpot });
-      }
-      return computeLocalPrice({
-        currency: alert.context.currency,
-        karat: alert.context.karat,
-        unit: alert.context.unit,
-        spot: latestSpot
-      });
-    }
-
-    function checkAlerts() {
-      if (!state.alerts.length) return;
-      let changed = false;
-      for (const alert of state.alerts) {
-        if (alert.triggered) continue;
-        const current = alertValue(alert);
-        const hit = alert.type === "above" ? current >= alert.target : current <= alert.target;
-        if (hit) {
-          alert.triggered = true;
-          changed = true;
-          const scopeLabel = alert.scope === "spot"
-            ? "Spot XAU/USD"
-            : alert.scope === "uae24"
-              ? "UAE 24K per gram"
-              : `${alert.context.currency} ${alert.context.karat} ${alert.context.unit}`;
-          notify(`Alert hit: ${scopeLabel}`, `Current value: ${formatAlertValue(alert, current)} | Target: ${formatAlertValue(alert, alert.target)}`);
-        }
-      }
-      if (changed) {
-        persistAlerts();
-        renderAlerts();
-      }
-    }
-
-    function formatAlertValue(alert, value) {
-      if (alert.scope === "spot") return formatMoney(value, "USD", 2);
-      if (alert.scope === "uae24") return formatMoney(value, "AED", 2);
-      return formatMoney(value, alert.context.currency, 2);
-    }
-
-    function renderAlerts() {
-      if (!state.alerts.length) {
-        el.alertList.innerHTML = `<div class="empty">No alerts saved yet.</div>`;
-        return;
-      }
-
-      el.alertList.innerHTML = state.alerts.map(alert => {
-        const label = alert.scope === "spot"
-          ? "Spot XAU/USD per oz"
-          : alert.scope === "uae24"
-            ? "UAE 24K per gram"
-            : `${alert.context.currency} · ${alert.context.karat} · ${alert.context.unit}`;
-        return `
-          <article class="alert-row">
+    <section class="tracker-shell tracker-utilities-shell">
+      <div class="tracker-utility-grid">
+        <section class="tracker-panel" id="section-alerts">
+          <div id="alerts" class="tracker-anchor"></div>
+          <div class="tracker-panel-head">
             <div>
-              <strong>${alert.type === "above" ? "Above" : "Below"} ${formatAlertValue(alert, alert.target)}</strong>
-              <span>${label} · Created ${formatDate(new Date(alert.createdAt), true)} ${alert.triggered ? "· Triggered" : ""}</span>
+              <h2>Alerts + presets</h2>
+              <p>Threshold alerts run in the browser whenever live data refreshes. Presets let you save complete tracker setups.</p>
             </div>
-            <div class="segmented">
-              <button type="button" data-remove-alert="${alert.id}">Remove</button>
+          </div>
+
+          <div class="tracker-two-up tight">
+            <article class="tracker-subpanel">
+              <div class="tracker-subpanel-head">
+                <h3>New alert</h3>
+              </div>
+              <div class="tracker-form-grid">
+                <label class="tracker-field">
+                  <span>Scope</span>
+                  <select id="tp-alert-scope">
+                    <option value="selected">Selected view</option>
+                    <option value="spot">Spot XAU/USD</option>
+                    <option value="uae24">UAE 24K / g</option>
+                  </select>
+                </label>
+                <label class="tracker-field">
+                  <span>Condition</span>
+                  <select id="tp-alert-direction">
+                    <option value="above">Above</option>
+                    <option value="below">Below</option>
+                  </select>
+                </label>
+                <label class="tracker-field">
+                  <span>Target</span>
+                  <input type="number" id="tp-alert-target" min="0" step="0.01" placeholder="Enter price target" />
+                </label>
+              </div>
+              <div class="tracker-inline-actions">
+                <button class="btn btn-primary" type="button" id="tp-save-alert">Save alert</button>
+                <button class="btn btn-outline" type="button" id="tp-enable-notifications">Enable browser notifications</button>
+              </div>
+            </article>
+
+            <article class="tracker-subpanel">
+              <div class="tracker-subpanel-head">
+                <h3>Save preset</h3>
+              </div>
+              <div class="tracker-form-grid">
+                <label class="tracker-field">
+                  <span>Preset name</span>
+                  <input type="text" id="tp-preset-name" placeholder="Example: UAE 24K gram" />
+                </label>
+              </div>
+              <div class="tracker-inline-actions">
+                <button class="btn btn-primary" type="button" id="tp-save-preset">Save current setup</button>
+                <button class="btn btn-ghost" type="button" id="tp-copy-url">Copy shareable URL</button>
+              </div>
+            </article>
+          </div>
+
+          <div class="tracker-two-up tight">
+            <article class="tracker-subpanel">
+              <div class="tracker-subpanel-head">
+                <h3>Saved alerts</h3>
+              </div>
+              <div class="tracker-stack-list" id="tp-alert-list"></div>
+            </article>
+            <article class="tracker-subpanel">
+              <div class="tracker-subpanel-head">
+                <h3>Saved presets</h3>
+              </div>
+              <div class="tracker-stack-list" id="tp-preset-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="tracker-panel">
+          <div class="tracker-panel-head">
+            <div>
+              <h2>Planners + estimators</h2>
+              <p>Useful for buyers, resellers, and anyone trying to turn a price page into a working desk.</p>
+            </div>
+          </div>
+
+          <div class="tracker-planner-grid">
+            <article class="tracker-subpanel">
+              <div class="tracker-subpanel-head"><h3>Budget planner</h3></div>
+              <div class="tracker-form-grid">
+                <label class="tracker-field">
+                  <span>Budget amount</span>
+                  <input type="number" id="tp-budget-amount" min="0" step="0.01" value="10000" />
+                </label>
+                <label class="tracker-field">
+                  <span>Extra fee %</span>
+                  <input type="number" id="tp-budget-fee" min="0" step="0.01" value="0" />
+                </label>
+              </div>
+              <div class="tracker-result-grid" id="tp-budget-results"></div>
+            </article>
+
+            <article class="tracker-subpanel">
+              <div class="tracker-subpanel-head"><h3>Position tracker</h3></div>
+              <div class="tracker-form-grid">
+                <label class="tracker-field">
+                  <span>Entry price</span>
+                  <input type="number" id="tp-position-entry" min="0" step="0.01" value="0" />
+                </label>
+                <label class="tracker-field">
+                  <span>Quantity</span>
+                  <input type="number" id="tp-position-qty" min="0" step="0.0001" value="0" />
+                </label>
+              </div>
+              <div class="tracker-result-grid" id="tp-position-results"></div>
+            </article>
+
+            <article class="tracker-subpanel">
+              <div class="tracker-subpanel-head"><h3>Jewelry ticket estimate</h3></div>
+              <div class="tracker-form-grid">
+                <label class="tracker-field">
+                  <span>Weight (g)</span>
+                  <input type="number" id="tp-jewelry-weight" min="0" step="0.01" value="20" />
+                </label>
+                <label class="tracker-field">
+                  <span>Karat</span>
+                  <select id="tp-jewelry-karat"></select>
+                </label>
+                <label class="tracker-field">
+                  <span>Making charge / g</span>
+                  <input type="number" id="tp-jewelry-making" min="0" step="0.01" value="0" />
+                </label>
+                <label class="tracker-field">
+                  <span>Premium %</span>
+                  <input type="number" id="tp-jewelry-premium" min="0" step="0.01" value="0" />
+                </label>
+              </div>
+              <div class="tracker-inline-actions">
+                <label class="tracker-checkbox">
+                  <input type="checkbox" id="tp-jewelry-vat" checked />
+                  <span>Include 5% VAT</span>
+                </label>
+              </div>
+              <div class="tracker-result-grid" id="tp-jewelry-results"></div>
+            </article>
+
+            <article class="tracker-subpanel">
+              <div class="tracker-subpanel-head"><h3>Market brief</h3></div>
+              <div class="tracker-brief-block">
+                <strong id="tp-brief-headline">Preparing brief</strong>
+                <p id="tp-brief-copy">Waiting for live and archive data.</p>
+              </div>
+              <div class="tracker-inline-actions">
+                <button class="btn btn-outline" id="tp-download-brief" type="button">Download brief</button>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="tracker-shell tracker-archive-shell">
+      <div class="tracker-panel">
+        <div class="tracker-panel-head">
+          <div>
+            <h2>Archive + lookup + exports</h2>
+            <p>Browse visible history, export exact slices, and jump to the closest archived price point for a date.</p>
+          </div>
+          <div class="tracker-head-actions">
+            <label class="tracker-field tracker-field-inline">
+              <span>Archive range</span>
+              <select id="tp-archive-range">
+                <option value="ALL">All</option>
+                <option value="5Y">5Y</option>
+                <option value="3Y">3Y</option>
+                <option value="1Y">1Y</option>
+                <option value="90D">90D</option>
+                <option value="30D">30D</option>
+              </select>
+            </label>
+            <label class="tracker-search">
+              <span class="sr-only">Search archive</span>
+              <input type="text" id="tp-archive-search" placeholder="Search month, year, source" />
+            </label>
+          </div>
+        </div>
+
+        <div class="tracker-two-up">
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head">
+              <h3>Archive browser</h3>
+              <div class="tracker-inline-actions">
+                <button class="btn btn-sm btn-outline" type="button" id="tp-export-archive">Download visible archive CSV</button>
+                <button class="btn btn-sm btn-ghost" type="button" id="tp-export-history">Download full history CSV</button>
+              </div>
+            </div>
+            <div class="tracker-table-scroll">
+              <table class="tracker-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Spot USD/oz</th>
+                    <th>Selected view</th>
+                    <th>UAE 24K/g</th>
+                    <th>Source</th>
+                  </tr>
+                </thead>
+                <tbody id="tp-archive-body"></tbody>
+              </table>
             </div>
           </article>
-        `;
-      }).join("");
 
-      el.alertList.querySelectorAll("[data-remove-alert]").forEach(button => {
-        button.addEventListener("click", () => {
-          state.alerts = state.alerts.filter(item => item.id !== button.dataset.removeAlert);
-          persistAlerts();
-          renderAlerts();
-        });
-      });
-    }
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Date lookup</h3></div>
+            <div class="tracker-form-grid">
+              <label class="tracker-field">
+                <span>Lookup date</span>
+                <input type="date" id="tp-lookup-date" />
+              </label>
+            </div>
+            <div class="tracker-inline-actions">
+              <button class="btn btn-primary" type="button" id="tp-run-lookup">Look up closest point</button>
+            </div>
+            <div class="tracker-result-grid" id="tp-lookup-results"></div>
+          </article>
+        </div>
+      </div>
+    </section>
 
-    async function requestNotifications() {
-      if (!("Notification" in window)) {
-        toast("Unsupported", "This browser does not support notifications.");
-        return;
-      }
-      const result = await Notification.requestPermission();
-      toast("Notification permission", `Permission is now ${result}.`);
-    }
-
-    function notify(title, body) {
-      toast(title, body);
-      if ("Notification" in window && Notification.permission === "granted") {
-        new Notification(title, { body });
-      }
-    }
-
-    function copySummary() {
-      const latestSpot = getLatestSpot();
-      const selected = computeLocalPrice({
-        currency: state.selectedCurrency,
-        karat: state.selectedKarat,
-        unit: state.selectedUnit,
-        spot: latestSpot
-      });
-      const move30 = getBaselineChange(30);
-      const summary = [
-        `Gold tracker summary`,
-        `Spot XAU/USD: ${formatMoney(latestSpot, "USD", 2)} per oz`,
-        `Selected view: ${formatMoney(selected, state.selectedCurrency, 2)} (${state.selectedCurrency}, ${state.selectedKarat}, ${state.selectedUnit})`,
-        `30D move: ${move30 === null ? "n/a" : formatPercent(move30)}`,
-        `Snapshots stored: ${state.snapshots.length}`
-      ].join("\n");
-
-      navigator.clipboard.writeText(summary).then(() => {
-        toast("Summary copied", "The quick market summary is now on your clipboard.");
-      }).catch(() => {
-        toast("Copy failed", "Your browser blocked clipboard access.");
-      });
-    }
-
-    function exportSnapshotCsv() {
-      const latestSpot = getLatestSpot();
-      const rows = CONFIG.karats.map(item => ({
-        karat: item.key,
-        currency: state.selectedCurrency,
-        unit: state.selectedUnit,
-        price: computeLocalPrice({ currency: state.selectedCurrency, karat: item.key, unit: state.selectedUnit, spot: latestSpot })
-      }));
-
-      const content = toCsv(rows);
-      downloadText(content, `gold-tracker-snapshot-${fileDateStamp()}.csv`, "text/csv;charset=utf-8");
-    }
-
-    function exportSnapshotJson() {
-      const latestSpot = getLatestSpot();
-      const payload = {
-        exportedAt: new Date().toISOString(),
-        config: {
-          currency: state.selectedCurrency,
-          karat: state.selectedKarat,
-          unit: state.selectedUnit,
-          compareMarket: state.compareMarket,
-          timeframe: state.timeframe,
-          metricMode: state.metricMode
-        },
-        live: state.live,
-        fx: {
-          updatedAt: state.fx?.updatedAt,
-          base: state.fx?.base
-        },
-        current: {
-          spotUsdPerOz: latestSpot,
-          selected: computeLocalPrice({ currency: state.selectedCurrency, karat: state.selectedKarat, unit: state.selectedUnit, spot: latestSpot }),
-          uae24PerGram: computeLocalPrice({ currency: "AED", karat: "24K", unit: "gram", spot: latestSpot })
-        },
-        chart: selectedChartSeries()
-      };
-
-      downloadText(JSON.stringify(payload, null, 2), `gold-tracker-snapshot-${fileDateStamp()}.json`, "application/json;charset=utf-8");
-    }
-
-    function exportVisibleChartCsv() {
-      const rows = selectedChartSeries().map(row => ({
-        date: row.date.toISOString(),
-        spot_usd_oz: row.spot,
-        selected_value: row.selected,
-        compare_value: row.compare,
-        visible_value: row.value,
-        logic: row.logic
-      }));
-      downloadText(toCsv(rows), `gold-tracker-visible-chart-${fileDateStamp()}.csv`, "text/csv;charset=utf-8");
-    }
-
-    function exportFullHistory() {
-      const rows = state.history.map(row => ({
-        date: row.date.toISOString().slice(0, 10),
-        spot_usd_oz: row.spot,
-        source: row.source
-      }));
-      downloadText(toCsv(rows), `gold-tracker-full-history-${fileDateStamp()}.csv`, "text/csv;charset=utf-8");
-    }
-
-    function exportVisibleArchive() {
-      const trs = Array.from(el.archiveTableBody.querySelectorAll("tr"));
-      const rows = trs.filter(tr => !tr.querySelector(".empty")).map(tr => {
-        const tds = tr.querySelectorAll("td");
-        return {
-          date: tds[0]?.textContent || "",
-          spot_usd_oz: tds[1]?.textContent || "",
-          selected_value: tds[2]?.textContent || "",
-          uae24_per_gram: tds[3]?.textContent || "",
-          source_layer: tds[4]?.textContent || ""
-        };
-      });
-      downloadText(toCsv(rows), `gold-tracker-visible-archive-${fileDateStamp()}.csv`, "text/csv;charset=utf-8");
-    }
-
-    function toCsv(rows) {
-      if (!rows.length) return "";
-      const headers = Object.keys(rows[0]);
-      const lines = [headers.join(",")];
-      for (const row of rows) {
-        lines.push(headers.map(key => csvCell(row[key])).join(","));
-      }
-      return lines.join("\n");
-    }
-
-    function csvCell(value) {
-      const text = value == null ? "" : String(value);
-      if (/[,"\n]/.test(text)) return `"${text.replace(/"/g, '""')}"`;
-      return text;
-    }
-
-    function downloadText(content, filename, type) {
-      const blob = new Blob([content], { type });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      toast("Download ready", `${filename} was generated from the current tracker state.`);
-    }
-
-    function fileDateStamp() {
-      const d = new Date();
-      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-    }
-
-    function toast(title, body) {
-      const node = document.createElement("div");
-      node.className = "toast";
-      node.innerHTML = `<strong>${escapeHtml(title)}</strong><span>${escapeHtml(body)}</span>`;
-      el.toastStack.appendChild(node);
-      setTimeout(() => {
-        node.style.opacity = "0";
-        node.style.transform = "translateY(8px)";
-      }, 3400);
-      setTimeout(() => node.remove(), 3900);
-    }
-
-    function escapeHtml(value) {
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;");
-    }
-
-    function formatAxisNumber(value) {
-      if (state.metricMode === "spot") return formatNumber(value, value > 1000 ? 0 : 2);
-      const currency = state.metricMode === "compare" ? state.compareMarket : state.selectedCurrency;
-      const symbol = currency === "USD" ? "$" : currency === "AED" ? "AED " : `${currency} `;
-      return `${symbol}${formatNumber(value, value > 1000 ? 0 : 2)}`;
-    }
-
-    function formatAxisDate(date, short = false) {
-      if (["24H", "7D"].includes(state.timeframe) && short) {
-        return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", hour: "numeric" }).format(date);
-      }
-      if (["24H", "7D"].includes(state.timeframe)) {
-        return new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" }).format(date);
-      }
-      if (["30D", "90D", "1Y"].includes(state.timeframe)) {
-        return new Intl.DateTimeFormat(undefined, { month: "short", year: "2-digit" }).format(date);
-      }
-      return new Intl.DateTimeFormat(undefined, { year: "numeric" }).format(date);
-    }
-
-
-    function selectedCurrentPrice() {
-      return computeLocalPrice({
-        currency: state.selectedCurrency,
-        karat: state.selectedKarat,
-        unit: state.selectedUnit,
-        spot: getLatestSpot()
-      });
-    }
-
-    function renderDecisionSuite() {
-      renderBudgetPlanner();
-      renderPositionTracker();
-      renderJewelryEstimator();
-      renderMarketBrief();
-      renderPresets();
-    }
-
-    function renderBudgetPlanner() {
-      const budget = Math.max(0, numberFrom(el.budgetInput?.value));
-      const feePct = Math.max(0, numberFrom(el.budgetFeeInput?.value));
-      const basePrice = selectedCurrentPrice();
-      const effective = basePrice * (1 + feePct / 100);
-      const qty = effective > 0 ? budget / effective : 0;
-      const qtyGrams = unitToGrams(qty, state.selectedUnit);
-      const price24 = computeLocalPrice({ currency: state.selectedCurrency, karat: '24K', unit: 'gram', spot: getLatestSpot() });
-      const grams24 = price24 > 0 ? budget / price24 : 0;
-
-      el.budgetSelectedQty.textContent = qty > 0 ? `${formatNumber(qty, qty >= 10 ? 2 : 4)} ${getUnitData(state.selectedUnit).short}` : '—';
-      el.budgetEffectivePrice.textContent = effective > 0 ? formatMoney(effective, state.selectedCurrency, 2) : '—';
-      el.budget24kGrams.textContent = grams24 > 0 ? `${formatNumber(grams24, grams24 >= 10 ? 2 : 4)} g` : '—';
-      el.budgetContext.textContent = budget > 0 && basePrice > 0
-        ? `${formatMoney(budget, state.selectedCurrency, 2)} buys about ${formatNumber(qtyGrams, qtyGrams >= 10 ? 2 : 4)} grams of ${state.selectedKarat} bullion-equivalent value in the current selected view. Extra fee entered: ${formatNumber(feePct, 2)}%.`
-        : 'Enter a budget to see how much the current selected view can buy.';
-    }
-
-    function renderPositionTracker() {
-      const entry = Math.max(0, numberFrom(el.positionEntryInput?.value));
-      const qty = Math.max(0, numberFrom(el.positionQtyInput?.value));
-      const current = selectedCurrentPrice();
-      const currentValue = current * qty;
-      const costBasis = entry * qty;
-      const pl = currentValue - costBasis;
-      const plPct = costBasis > 0 ? (pl / costBasis) * 100 : null;
-
-      el.positionCurrentValue.textContent = qty > 0 && current > 0 ? formatMoney(currentValue, state.selectedCurrency, 2) : '—';
-      el.positionPl.textContent = qty > 0 && entry > 0 ? formatMoney(pl, state.selectedCurrency, 2) : '—';
-      el.positionPl.className = `value ${pl > 0 ? 'up' : pl < 0 ? 'down' : ''}`;
-      el.positionPlpct.textContent = plPct === null ? '—' : formatPercent(plPct);
-      el.positionPlpct.className = `value ${plPct > 0 ? 'up' : plPct < 0 ? 'down' : ''}`;
-      el.positionContext.textContent = qty > 0 && entry > 0
-        ? `At ${formatMoney(current, state.selectedCurrency, 2)} per ${getUnitData(state.selectedUnit).short}, your ${formatNumber(qty, 4)} ${getUnitData(state.selectedUnit).short} position is ${pl >= 0 ? 'up' : 'down'} ${formatMoney(Math.abs(pl), state.selectedCurrency, 2)} versus the entered cost basis.`
-        : 'Enter an entry price and quantity in the current selected unit to track gain or loss.';
-    }
-
-    function renderJewelryEstimator() {
-      const weight = Math.max(0, numberFrom(el.jewelryWeightInput?.value));
-      const karat = el.jewelryKaratSelect?.value || state.selectedKarat;
-      const making = Math.max(0, numberFrom(el.jewelryMakingInput?.value));
-      const premiumPct = Math.max(0, numberFrom(el.jewelryPremiumInput?.value));
-      const includeVat = !!el.jewelryVatToggle?.checked;
-      const bullionPerGram = computeLocalPrice({ currency: state.selectedCurrency, karat, unit: 'gram', spot: getLatestSpot() });
-      const bullion = bullionPerGram * weight;
-      const charges = (making * weight) + (bullion * premiumPct / 100);
-      const subtotal = bullion + charges;
-      const vat = includeVat ? subtotal * 0.05 : 0;
-      const total = subtotal + vat;
-
-      el.jewelryBullion.textContent = bullion > 0 ? formatMoney(bullion, state.selectedCurrency, 2) : '—';
-      el.jewelryCharges.textContent = charges > 0 ? formatMoney(charges, state.selectedCurrency, 2) : formatMoney(0, state.selectedCurrency, 2);
-      el.jewelryVat.textContent = formatMoney(vat, state.selectedCurrency, 2);
-      el.jewelryTotal.textContent = total > 0 ? formatMoney(total, state.selectedCurrency, 2) : '—';
-      el.jewelryContext.textContent = `${formatNumber(weight, 2)} g · ${karat} · ${includeVat ? 'VAT on' : 'VAT off'}`;
-    }
-
-    function renderMarketBrief() {
-      const current = selectedCurrentPrice();
-      const change7 = percentChangeFromHistorical(7);
-      const change30 = percentChangeFromHistorical(30);
-      const change365 = percentChangeFromHistorical(365);
-      let headline = 'Market brief unavailable';
-      let body = 'Live and historical layers need to load before the page can produce a concise brief.';
-
-      if (current) {
-        const bias = (change7 ?? 0) + (change30 ?? 0) * 0.7;
-        if ((change7 ?? 0) > 2 && (change30 ?? 0) > 4) {
-          headline = 'Momentum is still positive';
-        } else if ((change7 ?? 0) < -2 && (change30 ?? 0) < -4) {
-          headline = 'Short-term pressure is still visible';
-        } else {
-          headline = 'Market is mixed but tradable';
-        }
-
-        body = `${state.selectedCurrency} ${state.selectedKarat} per ${getUnitData(state.selectedUnit).short} is currently ${formatMoney(current, state.selectedCurrency, 2)}. ` +
-          `7D: ${change7 == null ? 'n/a' : formatPercent(change7)}, 30D: ${change30 == null ? 'n/a' : formatPercent(change30)}, 1Y: ${change365 == null ? 'n/a' : formatPercent(change365)}. ` +
-          `${bias > 5 ? 'The move is strong, so buying decisions should respect how stretched the market already is.' : bias < -5 ? 'The market is softer than recent periods, which may improve entry conditions for patient buyers.' : 'The market is not one-sided right now, so comparing entry levels and shop premiums matters more than chasing momentum.'}`;
-      }
-
-      el.briefHeadline.textContent = headline;
-      el.briefBody.textContent = body;
-    }
-
-    function renderPresets() {
-      if (!state.presets.length) {
-        el.presetList.innerHTML = `<div class="empty-soft">No saved presets yet.</div>`;
-        return;
-      }
-      el.presetList.innerHTML = state.presets.map((preset) => `
-        <article class="preset-row">
-          <div class="preset-copy">
-            <strong>${escapeHtml(preset.name)}</strong>
-            <span>${escapeHtml(`${preset.currency} · ${preset.karat} · ${preset.unit} · compare ${preset.compareMarket}`)}</span>
+    <section class="tracker-shell tracker-method-shell">
+      <div class="tracker-panel">
+        <div class="tracker-panel-head">
+          <div>
+            <h2>Methodology + sources</h2>
+            <p>This page is intentionally explicit about what is live, what is cached, and what is only a market-linked estimate.</p>
           </div>
-          <div class="planner-toolbar">
-            <button type="button" data-load-preset="${preset.id}">Load</button>
-            <button type="button" data-remove-preset="${preset.id}">Remove</button>
-          </div>
-        </article>
-      `).join('');
+        </div>
+        <div class="tracker-method-grid">
+          <article class="tracker-method-card">
+            <h3>Live spot layer</h3>
+            <p>Live spot is pulled from Gold API. The site uses USD/XAU as the base market reference and derives local estimates from that stream.</p>
+            <a href="https://gold-api.com/docs" target="_blank" rel="noopener noreferrer">Gold API docs</a>
+          </article>
+          <article class="tracker-method-card">
+            <h3>FX conversion layer</h3>
+            <p>FX conversion comes from the open ExchangeRate-API endpoint. AED still uses the official peg in the repo’s shared constants.</p>
+            <a href="https://www.exchangerate-api.com/docs/free" target="_blank" rel="noopener noreferrer">ExchangeRate-API docs</a>
+          </article>
+          <article class="tracker-method-card">
+            <h3>Historical layer</h3>
+            <p>Recent sessions use local snapshots. Longer windows fall back to public historical baselines so charts keep working instead of going blank.</p>
+            <a href="https://datahub.io/core/gold-prices" target="_blank" rel="noopener noreferrer">DataHub gold dataset</a>
+          </article>
+          <article class="tracker-method-card">
+            <h3>News wire</h3>
+            <p>The live wire uses the GDELT DOC API in article-list mode with a recent rolling timespan, which is suitable for static-site headline strips.</p>
+            <a href="https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/amp/" target="_blank" rel="noopener noreferrer">GDELT DOC API</a>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
 
-      el.presetList.querySelectorAll('[data-load-preset]').forEach((button) => {
-        button.addEventListener('click', () => {
-          const preset = state.presets.find((item) => item.id === button.dataset.loadPreset);
-          if (!preset) return;
-          state.selectedCurrency = preset.currency;
-          state.selectedKarat = preset.karat;
-          state.selectedUnit = preset.unit;
-          state.compareMarket = preset.compareMarket;
-          state.timeframe = preset.timeframe || state.timeframe;
-          setupSelects();
-          document.querySelectorAll('.chip[data-timeframe]').forEach(btn => btn.classList.toggle('active', btn.dataset.timeframe === state.timeframe));
-          saveSettings();
-          renderAll();
-          toast('Preset loaded', `${preset.name} is now active.`);
-        });
-      });
-
-      el.presetList.querySelectorAll('[data-remove-preset]').forEach((button) => {
-        button.addEventListener('click', () => {
-          state.presets = state.presets.filter((item) => item.id !== button.dataset.removePreset);
-          persistPresets();
-          renderPresets();
-        });
-      });
-    }
-
-    function savePreset() {
-      const name = (el.presetNameInput?.value || '').trim();
-      if (!name) {
-        toast('Preset name needed', 'Enter a short preset name before saving.');
-        return;
-      }
-      const preset = {
-        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
-        name,
-        currency: state.selectedCurrency,
-        karat: state.selectedKarat,
-        unit: state.selectedUnit,
-        compareMarket: state.compareMarket,
-        timeframe: state.timeframe,
-        createdAt: Date.now()
-      };
-      state.presets.unshift(preset);
-      state.presets = state.presets.slice(0, 20);
-      persistPresets();
-      el.presetNameInput.value = '';
-      renderPresets();
-      toast('Preset saved', `${name} was added to your saved tracker setups.`);
-    }
-
-    function exportBrief() {
-      const current = selectedCurrentPrice();
-      const content = [
-        'Gold tracker brief',
-        `Generated: ${new Date().toISOString()}`,
-        `View: ${state.selectedCurrency} ${state.selectedKarat} ${state.selectedUnit}`,
-        `Compare market: ${state.compareMarket}`,
-        `Current price: ${current ? formatMoney(current, state.selectedCurrency, 2) : 'n/a'}`,
-        `7D: ${percentChangeFromHistorical(7) == null ? 'n/a' : formatPercent(percentChangeFromHistorical(7))}`,
-        `30D: ${percentChangeFromHistorical(30) == null ? 'n/a' : formatPercent(percentChangeFromHistorical(30))}`,
-        `1Y: ${percentChangeFromHistorical(365) == null ? 'n/a' : formatPercent(percentChangeFromHistorical(365))}`,
-        '',
-        el.briefHeadline.textContent,
-        el.briefBody.textContent
-      ].join('\n');
-      downloadText(content, `gold-tracker-brief-${fileDateStamp()}.txt`, 'text/plain;charset=utf-8');
-    }
-
-    function renderAll() {
-      renderHero();
-      renderKaratTable();
-      renderMarketBoard();
-      renderChart();
-      renderArchive();
-      renderAlerts();
-      renderDecisionSuite();
-    }
-
-    async function init() {
-      loadLocalState();
-      setupSelects();
-      bindEvents();
-      updateAutoRefresh();
-      try {
-        await refreshAll();
-      } catch {
-        renderAll();
-      }
-      if (!state.history.length) {
-        await ensureHistory();
-        renderAll();
-      }
-    }
-
-    init();
-  </script>
+  <div class="tracker-toast-stack" id="tp-toast-stack" aria-live="polite" aria-atomic="false"></div>
+  <script type="module" src="tracker-pro.js"></script>
 </body>
 </html>
