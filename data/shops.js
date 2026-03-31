@@ -10,6 +10,7 @@ export const SHOPS = [
     phone: '+971 4 000 0000',
     website: '',
     detailsAvailability: 'partial',
+    featured: true,
     notes: 'Cluster listing for independent stores in the traditional gold souk district.'
   },
   {
@@ -36,6 +37,7 @@ export const SHOPS = [
     phone: '',
     website: '',
     detailsAvailability: 'partial',
+    featured: true,
     notes: 'Market-area listing focused on major jewellery shops around Taiba.'
   },
   {
@@ -75,6 +77,7 @@ export const SHOPS = [
     phone: '',
     website: '',
     detailsAvailability: 'limited',
+    featured: true,
     notes: 'Central market listing with mixed brand and independent storefronts.'
   },
   {
@@ -114,6 +117,7 @@ export const SHOPS = [
     phone: '',
     website: '',
     detailsAvailability: 'limited',
+    featured: true,
     notes: 'Historic Cairo market area with many multi-generation jewellery stores.'
   },
   {
@@ -153,6 +157,7 @@ export const SHOPS = [
     phone: '',
     website: '',
     detailsAvailability: 'partial',
+    featured: true,
     notes: 'Large listing hub for wholesale and retail gold trade.'
   }
 ];
