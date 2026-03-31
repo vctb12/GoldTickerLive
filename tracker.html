@@ -3,18 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Live gold prices in UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual English/Arabic. Updated every 90 seconds." />
-  <meta name="keywords" content="gold price today UAE, gold price Dubai, سعر الذهب اليوم, gold rate per gram AED, 24K gold price, 22K gold UAE, GCC gold prices, live gold tracker" />
+  <meta
+    name="description"
+    content="Live gold prices in UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual English/Arabic. Updated every 90 seconds."
+  />
+  <meta
+    name="keywords"
+    content="gold price today UAE, gold price Dubai, سعر الذهب اليوم, gold rate per gram AED, 24K gold price, 22K gold UAE, GCC gold prices, live gold tracker"
+  />
   <meta property="og:title" content="Live Gold Prices — GCC &amp; Arab World | أسعار الذهب المباشرة" />
-  <meta property="og:description" content="Track live gold spot prices in 24 countries across GCC, Levant, Africa and globally. 7 karats. Bilingual EN/AR. Free, updated every 90 seconds." />
+  <meta
+    property="og:description"
+    content="Track live gold spot prices in 24 countries across GCC, Levant, Africa and globally. 7 karats. Bilingual EN/AR. Free, updated every 90 seconds."
+  />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Live Gold Prices — GCC &amp; Arab World" />
-  <meta name="twitter:description" content="Track live gold prices in UAE, Saudi Arabia, Kuwait and 20+ countries. 7 karats. Bilingual." />
+  <meta
+    name="twitter:description"
+    content="Track live gold prices in UAE, Saudi Arabia, Kuwait and 20+ countries. 7 karats. Bilingual."
+  />
   <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/" />
   <title>Gold Tracker Pro — Live Workspace</title>
 
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -22,13 +35,13 @@
     rel="stylesheet"
   />
 
+  <!-- Site + tracker styles -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="tracker-pro.css" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
 </head>
 
-  
 <body class="tracker-page tracker-pro-page">
   <!-- Shared nav/footer/ticker are injected by tracker-pro.js using components/nav.js, components/footer.js, components/ticker.js -->
 
@@ -74,11 +87,11 @@
 
           <div class="tracker-side-block">
             <h2>Workspace tips</h2>
-            <ul class="tracker-side-ulul">
-              >Use the tabs below to switch between Live, Compare, Archive, Alerts, Planner, Exports, and Method.</l/li>
-              >Watchlists, alerts, and presets stay in your browser only — no account required.</l/li>
-              >Exports always include timestamps, range, and source-layer labels for trust and reuse.</l/li>
-              >Method explains exactly what is live, cached, estimated, or synthetic in each view.</li>
+            <ul class="tracker-side-ul">
+              <li>Use the tabs below to switch between Live, Compare, Archive, Alerts, Planner, Exports, and Method.</li>
+              <li>Watchlists, alerts, and presets stay in your browser only — no account required.</li>
+              <li>Exports always include timestamps, range, and source-layer labels for trust and reuse.</li>
+              <li>Method explains exactly what is live, cached, estimated, or synthetic in each view.</li>
             </ul>
           </div>
         </aside>
@@ -88,26 +101,87 @@
     <!-- Workspace tabs / mode bar -->
     <section class="tracker-shell tracker-mode-shell" aria-label="Tracker workspace modes">
       <nav class="tracker-modes" role="tablist" aria-orientation="horizontal">
-        <button class="tracker-mode-tab is-active" role="tab" aria-selected="true"
-                aria-controls="mode-live" id="tab-live" data-mode="live">Live</button>
-        <button class="tracker-mode-tab" role="tab" aria-selected="false"
-                aria-controls="mode-compare" id="tab-compare" data-mode="compare">Compare</button>
-        <button class="tracker-mode-tab" role="tab" aria-selected="false"
-                aria-controls="mode-archive" id="tab-archive" data-mode="archive">Archive</button>
-        <button class="tracker-mode-tab" role="tab" aria-selected="false"
-                aria-controls="mode-alerts" id="tab-alerts" data-mode="alerts">Alerts</button>
-        <button class="tracker-mode-tab" role="tab" aria-selected="false"
-                aria-controls="mode-planner" id="tab-planner" data-mode="planner">Planner</button>
-        <button class="tracker-mode-tab" role="tab" aria-selected="false"
-                aria-controls="mode-exports" id="tab-exports" data-mode="exports">Exports</button>
-        <button class="tracker-mode-tab" role="tab" aria-selected="false"
-                aria-controls="mode-method" id="tab-method" data-mode="method">Method</button>
+        <button
+          class="tracker-mode-tab is-active"
+          role="tab"
+          aria-selected="true"
+          aria-controls="mode-live"
+          id="tab-live"
+          data-mode="live"
+        >
+          Live
+        </button>
+        <button
+          class="tracker-mode-tab"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mode-compare"
+          id="tab-compare"
+          data-mode="compare"
+        >
+          Compare
+        </button>
+        <button
+          class="tracker-mode-tab"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mode-archive"
+          id="tab-archive"
+          data-mode="archive"
+        >
+          Archive
+        </button>
+        <button
+          class="tracker-mode-tab"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mode-alerts"
+          id="tab-alerts"
+          data-mode="alerts"
+        >
+          Alerts
+        </button>
+        <button
+          class="tracker-mode-tab"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mode-planner"
+          id="tab-planner"
+          data-mode="planner"
+        >
+          Planner
+        </button>
+        <button
+          class="tracker-mode-tab"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mode-exports"
+          id="tab-exports"
+          data-mode="exports"
+        >
+          Exports
+        </button>
+        <button
+          class="tracker-mode-tab"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mode-method"
+          id="tab-method"
+          data-mode="method"
+        >
+          Method
+        </button>
       </nav>
     </section>
 
     <!-- MODE: LIVE -->
-    <section class="tracker-shell tracker-main-shell tracker-mode-panel"
-             id="mode-live" role="tabpanel" aria-labelledby="tab-live" data-mode-panel="live">
+    <section
+      class="tracker-shell tracker-main-shell tracker-mode-panel"
+      id="mode-live"
+      role="tabpanel"
+      aria-labelledby="tab-live"
+      data-mode-panel="live"
+    >
       <!-- Top toolbar -->
       <div class="tracker-toolbar-card">
         <div class="tracker-control-grid">
@@ -172,7 +246,9 @@
           </div>
           <div class="tracker-wire-actions">
             <button type="button" class="tracker-wire-refresh" id="tp-wire-refresh">Refresh wire</button>
-            <button type="button" class="tracker-wire-pause" id="tp-wire-toggle" aria-pressed="false">Pause</button>
+            <button type="button" class="tracker-wire-pause" id="tp-wire-toggle" aria-pressed="false">
+              Pause
+            </button>
           </div>
         </div>
       </section>
@@ -247,7 +323,7 @@
         <aside class="tracker-panel tracker-panel-side">
           <div class="tracker-panel-head compact">
             <div>
-              <h2>Karat ladder & watchlist</h2>
+              <h2>Karat ladder &amp; watchlist</h2>
               <p>Fast context for your selected view across major karats and favorite markets.</p>
             </div>
           </div>
@@ -287,8 +363,14 @@
     </section>
 
     <!-- MODE: COMPARE -->
-    <section class="tracker-shell tracker-compare-shell tracker-mode-panel"
-             id="mode-compare" role="tabpanel" aria-labelledby="tab-compare" data-mode-panel="compare" hidden>
+    <section
+      class="tracker-shell tracker-compare-shell tracker-mode-panel"
+      id="mode-compare"
+      role="tabpanel"
+      aria-labelledby="tab-compare"
+      data-mode-panel="compare"
+      hidden
+    >
       <div class="tracker-panel">
         <div class="tracker-panel-head">
           <div>
@@ -308,11 +390,11 @@
         </div>
 
         <div class="tracker-compare-toolbar">
-          abel class="tracker-search">
+          <label class="tracker-search">
             <span class="sr-only">Filter markets</span>
             <input type="text" id="tp-market-filter" placeholder="Filter by country or currency" />
           </label>
-          abel class="tracker-field tracker-field-inline">
+          <label class="tracker-field tracker-field-inline">
             <span>Sort</span>
             <select id="tp-market-sort">
               <option value="high">High to low</option>
@@ -321,7 +403,7 @@
               <option value="favorites">Favorites first</option>
             </select>
           </label>
-          abel class="tracker-field tracker-field-inline">
+          <label class="tracker-field tracker-field-inline">
             <span>View</span>
             <select id="tp-market-view">
               <option value="card">Card grid</option>
@@ -338,8 +420,14 @@
     </section>
 
     <!-- MODE: ALERTS & PRESETS -->
-    <section class="tracker-shell tracker-utilities-shell tracker-mode-panel"
-             id="mode-alerts" role="tabpanel" aria-labelledby="tab-alerts" data-mode-panel="alerts" hidden>
+    <section
+      class="tracker-shell tracker-utilities-shell tracker-mode-panel"
+      id="mode-alerts"
+      role="tabpanel"
+      aria-labelledby="tab-alerts"
+      data-mode-panel="alerts"
+      hidden
+    >
       <div class="tracker-utility-grid">
         <section class="tracker-panel" id="section-alerts">
           <div class="tracker-panel-head">
@@ -375,8 +463,13 @@
                 </label>
                 <label class="tracker-field">
                   <span>Target</span>
-                  <input type="number" id="tp-alert-target" min="0" step="0.01"
-                         placeholder="Enter price target" />
+                  <input
+                    type="number"
+                    id="tp-alert-target"
+                    min="0"
+                    step="0.01"
+                    placeholder="Enter price target"
+                  />
                 </label>
               </div>
               <div class="tracker-inline-actions">
@@ -395,7 +488,11 @@
               <div class="tracker-form-grid">
                 <label class="tracker-field">
                   <span>Preset name</span>
-                  <input type="text" id="tp-preset-name" placeholder="Example: UAE 24K per gram" />
+                  <input
+                    type="text"
+                    id="tp-preset-name"
+                    placeholder="Example: UAE 24K per gram"
+                  />
                 </label>
               </div>
               <div class="tracker-inline-actions">
@@ -428,8 +525,14 @@
     </section>
 
     <!-- MODE: PLANNER -->
-    <section class="tracker-shell tracker-planner-shell tracker-mode-panel"
-             id="mode-planner" role="tabpanel" aria-labelledby="tab-planner" data-mode-panel="planner" hidden>
+    <section
+      class="tracker-shell tracker-planner-shell tracker-mode-panel"
+      id="mode-planner"
+      role="tabpanel"
+      aria-labelledby="tab-planner"
+      data-mode-panel="planner"
+      hidden
+    >
       <section class="tracker-panel">
         <div class="tracker-panel-head">
           <div>
@@ -493,7 +596,7 @@
               </label>
             </div>
             <div class="tracker-inline-actions">
-              abel class="tracker-checkbox">
+              <label class="tracker-checkbox">
                 <input type="checkbox" id="tp-jewelry-vat" checked />
                 <span>Include 5% VAT</span>
               </label>
@@ -525,8 +628,14 @@
     </section>
 
     <!-- MODE: ARCHIVE -->
-    <section class="tracker-shell tracker-archive-shell tracker-mode-panel"
-             id="mode-archive" role="tabpanel" aria-labelledby="tab-archive" data-mode-panel="archive" hidden>
+    <section
+      class="tracker-shell tracker-archive-shell tracker-mode-panel"
+      id="mode-archive"
+      role="tabpanel"
+      aria-labelledby="tab-archive"
+      data-mode-panel="archive"
+      hidden
+    >
       <div class="tracker-panel">
         <div class="tracker-panel-head">
           <div>
@@ -537,7 +646,7 @@
             </p>
           </div>
           <div class="tracker-head-actions">
-            abel class="tracker-field tracker-field-inline">
+            <label class="tracker-field tracker-field-inline">
               <span>Archive range</span>
               <select id="tp-archive-range">
                 <option value="ALL">All</option>
@@ -548,9 +657,13 @@
                 <option value="30D">30D</option>
               </select>
             </label>
-            abel class="tracker-search">
+            <label class="tracker-search">
               <span class="sr-only">Search archive</span>
-              <input type="text" id="tp-archive-search" placeholder="Search month, year, source" />
+              <input
+                type="text"
+                id="tp-archive-search"
+                placeholder="Search month, year, source"
+              />
             </label>
           </div>
         </div>
@@ -608,8 +721,14 @@
     </section>
 
     <!-- MODE: EXPORTS -->
-    <section class="tracker-shell tracker-exports-shell tracker-mode-panel"
-             id="mode-exports" role="tabpanel" aria-labelledby="tab-exports" data-mode-panel="exports" hidden>
+    <section
+      class="tracker-shell tracker-exports-shell tracker-mode-panel"
+      id="mode-exports"
+      role="tabpanel"
+      aria-labelledby="tab-exports"
+      data-mode-panel="exports"
+      hidden
+    >
       <section class="tracker-panel">
         <div class="tracker-panel-head">
           <div>
@@ -668,8 +787,14 @@
     </section>
 
     <!-- MODE: METHOD -->
-    <section class="tracker-shell tracker-method-shell tracker-mode-panel"
-             id="mode-method" role="tabpanel" aria-labelledby="tab-method" data-mode-panel="method" hidden>
+    <section
+      class="tracker-shell tracker-method-shell tracker-mode-panel"
+      id="mode-method"
+      role="tabpanel"
+      aria-labelledby="tab-method"
+      data-mode-panel="method"
+      hidden
+    >
       <section class="tracker-panel">
         <div class="tracker-panel-head">
           <div>
@@ -697,8 +822,11 @@
               FX conversion comes from ExchangeRate-API’s USD base feed.
               AED uses the fixed central-bank peg stored in the site constants, not the API feed.
             </p>
-            <a href="https://www.exchangerate-api.com/docs/free"
-               target="_blank" rel="noopener noreferrer">ExchangeRate-API docs</a>
+            <a
+              href="https://www.exchangerate-api.com/docs/free"
+              target="_blank"
+              rel="noopener noreferrer"
+            >ExchangeRate-API docs</a>
           </article>
 
           <article class="tracker-method-card">
@@ -707,8 +835,11 @@
               Short ranges draw on recent live snapshots cached in your browser.
               Longer ranges use a monthly baseline merged with those snapshots to avoid gaps and keep exports stable.
             </p>
-            <a href="https://datahub.io/core/gold-prices"
-               target="_blank" rel="noopener noreferrer">DataHub gold dataset</a>
+            <a
+              href="https://datahub.io/core/gold-prices"
+              target="_blank"
+              rel="noopener noreferrer"
+            >DataHub gold dataset</a>
           </article>
 
           <article class="tracker-method-card">
@@ -726,9 +857,31 @@
               The market wire uses the GDELT DOC API in article-list mode, suitable for static sites.
               When it fails, the workspace falls back to cached headlines or a static explainer strip.
             </p>
-            <a href="https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/amp/"
-               target="_blank" rel="noopener noreferrer">GDELT DOC API</a>
+            <a
+              href="https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/amp/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >GDELT DOC API</a>
           </article>
+        </div>
+      </section>
+    </section>
+
+    <!-- Global market brief section (shared across modes) -->
+    <section class="tracker-shell tracker-brief-shell" aria-label="Market brief">
+      <section class="tracker-panel">
+        <div class="tracker-panel-head">
+          <div>
+            <h2>Market brief</h2>
+            <p>
+              One-paragraph summary of current gold conditions for your selected view, updated as you change
+              markets, karats, and time ranges.
+            </p>
+          </div>
+        </div>
+        <div class="tracker-brief-body">
+          <h3 id="tp-brief-headline"></h3>
+          <p id="tp-brief-copy"></p>
         </div>
       </section>
     </section>
