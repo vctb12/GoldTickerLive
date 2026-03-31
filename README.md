@@ -66,7 +66,7 @@ The goal is simple: make gold data easier to follow, compare, and use.
 ## Quick Links
 
 - **Main site:** [vctb12.github.io/Gold-Prices](https://vctb12.github.io/Gold-Prices/)
-- **Insights:** [tracker.html](https://vctb12.github.io/Gold-Prices/insights.html)
+- **Insights:** [Insights.html](https://vctb12.github.io/Gold-Prices/insights.html)
 - **Calculator:** [calculator.html](https://vctb12.github.io/Gold-Prices/calculator.html)
 
 ---
