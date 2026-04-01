@@ -1,8 +1,3 @@
-# GoldPrices README and Release Pack — Revamped
-
-## README.md
-
-```md
 <div align="center">
 
 # GoldPrices
