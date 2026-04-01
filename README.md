@@ -22,13 +22,27 @@ A bilingual gold-price platform built for users who need more than a basic spot 
 </p>
 
 <p>
-  <img src="https://img.shields.io/badge/Language-English%20%2F%20Arabic-8B5CF6?style=flat-square" alt="Bilingual" />
-  <img src="https://img.shields.io/badge/Markets-24%2B-C2410C?style=flat-square" alt="Markets" />
-  <img src="https://img.shields.io/badge/Karats-7-F59E0B?style=flat-square" alt="Karats" />
-  <img src="https://img.shields.io/badge/Exports-CSV%20%2B%20JSON-059669?style=flat-square" alt="Exports" />
-  <img src="https://img.shields.io/badge/Offline-Friendly-111827?style=flat-square" alt="Offline Friendly" />
-  <img src="https://img.shields.io/badge/PWA-Ready-0EA5E9?style=flat-square" alt="PWA" />
-  <img src="https://img.shields.io/badge/License-MIT-2563EB?style=flat-square" alt="License" />
+  <a href="#platform-highlights">
+    <img src="https://img.shields.io/badge/Language-English%20%2F%20Arabic-8B5CF6?style=flat-square" alt="Bilingual" />
+  </a>
+  <a href="#supported-markets">
+    <img src="https://img.shields.io/badge/Markets-24%2B-C2410C?style=flat-square" alt="Markets" />
+  </a>
+  <a href="#platform-highlights">
+    <img src="https://img.shields.io/badge/Karats-7-F59E0B?style=flat-square" alt="Karats" />
+  </a>
+  <a href="#core-workspaces">
+    <img src="https://img.shields.io/badge/Exports-CSV%20%2B%20JSON-059669?style=flat-square" alt="Exports" />
+  </a>
+  <a href="#system-resilience-and-offline-behavior">
+    <img src="https://img.shields.io/badge/Offline-Friendly-111827?style=flat-square" alt="Offline Friendly" />
+  </a>
+  <a href="#system-resilience-and-offline-behavior">
+    <img src="https://img.shields.io/badge/PWA-Ready-0EA5E9?style=flat-square" alt="PWA" />
+  </a>
+  <a href="#license">
+    <img src="https://img.shields.io/badge/License-MIT-2563EB?style=flat-square" alt="License" />
+  </a>
 </p>
 
 </div>
