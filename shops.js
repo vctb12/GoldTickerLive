@@ -169,6 +169,14 @@ function applyStaticText() {
 }
 
 function shopsMatchingPrimaryFilters() {
+  return SHOPS.filter((shop) => {
+    const country = countryByCode(shop.countryCode);
+    if (!country) return false;
+    if (STATE.region !== 'all' && country.group !== STATE.region) return false;
+    if (STATE.country !== 'all' && shop.countryCode !== STATE.country) return false;
+    if (STATE.city !== 'all' && shop.city !== STATE.city) return false;
+    return true;
+  });
 }
 
 function allCountriesInData() {
@@ -315,14 +323,6 @@ function activeFilterSummary() {
 
   document.getElementById('shops-active-filters').textContent =
     labels.length ? t('activeFilters')(labels.join(' · ')) : t('noFilters');
-}
-
-function updateHeaderStats() {
-  const uniqueCountries = new Set(SHOPS.map((shop) => shop.countryCode));
-  const uniqueRegions = new Set(SHOPS.map((shop) => countryByCode(shop.countryCode)?.group).filter(Boolean));
-  document.getElementById('shops-stat-listings').textContent = String(SHOPS.length);
-  document.getElementById('shops-stat-countries').textContent = String(uniqueCountries.size);
-  document.getElementById('shops-stat-regions').textContent = String(uniqueRegions.size);
 }
 
 function renderCards(shops) {

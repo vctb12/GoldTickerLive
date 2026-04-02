@@ -40,6 +40,7 @@ export function injectFooter(lang = 'en', depth = 0) {
         <a href="${r('../countries/uae.html')}">${isAr ? 'ذهب الإمارات اليوم' : 'UAE Gold Today'}</a>
         <a href="${r('../tracker.html#section-countries')}">${isAr ? 'مقارنة دول الخليج' : 'GCC Compare'}</a>
         <a href="${r('../tracker.html#section-chart')}">${isAr ? 'البيانات التاريخية' : 'History &amp; Data'}</a>
+        <a href="${r('../shops.html')}">${isAr ? 'دليل المحلات' : 'Shop Directory'}</a>
       </div>
 
       <!-- Tools column -->

@@ -18,19 +18,19 @@
 
 const NAV_DATA = {
   en: {
-    home: { href: '../index.html', label: 'Home' },
+    home:  { href: '../index.html',  label: 'Home'  },
+    shops: { href: '../shops.html',  label: 'Shops' },
     invest: { href: '../invest.html', label: 'Invest' },
     groups: [
       {
         key: 'markets',
         label: 'Markets',
         items: [
-          { href: '../tracker.html',                   label: 'Live Tracker'    },
-          { href: '../countries/uae.html',             label: 'UAE Gold Today'  },
-          { href: '../tracker.html#section-countries', label: 'GCC Compare'     },
-          { href: '../tracker.html#section-countries', label: 'Country Pages'   },
-          { href: '../tracker.html#section-chart',     label: 'History & Data'  },
-          { href: '../shops.html',                   label: 'Shops'           },
+          { href: '../tracker.html',                   label: 'Live Tracker'   },
+          { href: '../countries/uae.html',             label: 'UAE Gold Today' },
+          { href: '../tracker.html#section-countries', label: 'GCC Compare'    },
+          { href: '../tracker.html#section-countries', label: 'Country Pages'  },
+          { href: '../tracker.html#section-chart',     label: 'History & Data' },
         ],
       },
       {
@@ -70,7 +70,8 @@ const NAV_DATA = {
   },
 
   ar: {
-    home: { href: '../index.html', label: 'الرئيسية' },
+    home:  { href: '../index.html',  label: 'الرئيسية'    },
+    shops: { href: '../shops.html',  label: 'المحلات'     },
     invest: { href: '../invest.html', label: 'الاستثمار' },
 
     groups: [
@@ -83,7 +84,6 @@ const NAV_DATA = {
           { href: '../tracker.html#section-countries', label: 'مقارنة دول الخليج'   },
           { href: '../tracker.html#section-countries', label: 'صفحات الدول'         },
           { href: '../tracker.html#section-chart',     label: 'البيانات التاريخية'   },
-          { href: '../shops.html',                   label: 'المحلات'           },
         ],
       },
       {
@@ -222,6 +222,8 @@ export function injectNav(lang = 'en', depth = 0) {
   const isRtl    = lang === 'ar';
   const homeHref = resolveHref(data.home.href, depth);
   const homeActive = isPageMatch(homeHref);
+  const shopsHref   = resolveHref(data.shops.href, depth);
+  const shopsActive = isPageMatch(shopsHref);
   const investHref  = resolveHref(data.invest.href, depth);
   const investActive = isPageMatch(investHref);
 
@@ -244,17 +246,20 @@ export function injectNav(lang = 'en', depth = 0) {
          class="nav-link${homeActive ? ' nav-link--active' : ''}"
          role="listitem"
       >${data.home.label}</a>
-      
-  
+
+      <a href="${shopsHref}"
+         class="nav-link nav-link--shops${shopsActive ? ' nav-link--active' : ''}"
+         role="listitem"
+         data-nav-key="shops"
+      >${data.shops.label}</a>
 
       ${desktopDropdownsHtml}
-      
-       <a href="${investHref}"
-     class="nav-link${investActive ? ' nav-link--active' : ''}"
-     role="listitem"
-     data-nav-key="invest"
-    >${data.invest.label}</a>
-    
+
+      <a href="${investHref}"
+         class="nav-link${investActive ? ' nav-link--active' : ''}"
+         role="listitem"
+         data-nav-key="invest"
+      >${data.invest.label}</a>
     </div>
 
     <!-- Right-side actions -->
@@ -291,16 +296,21 @@ export function injectNav(lang = 'en', depth = 0) {
       <a href="${homeHref}"
          class="nav-drawer-link${homeActive ? ' nav-link--active' : ''}"
       >${data.home.label}</a>
-   
+
+      <!-- Shops (direct) -->
+      <a href="${shopsHref}"
+         class="nav-drawer-link${shopsActive ? ' nav-link--active' : ''}"
+         data-nav-key="shops"
+      >${data.shops.label}</a>
 
       <!-- Grouped sections -->
       ${mobileGroupsHtml}
 
-        <!-- Invest (direct) -->
-    <a href="${investHref}"
-     class="nav-drawer-link${investActive ? ' nav-link--active' : ''}"
-     data-nav-key="invest"
-    >${data.invest.label}</a>
+      <!-- Invest (direct) -->
+      <a href="${investHref}"
+         class="nav-drawer-link${investActive ? ' nav-link--active' : ''}"
+         data-nav-key="invest"
+      >${data.invest.label}</a>
 
       <!-- Language toggle -->
       <button id="nav-lang-toggle-mobile"
@@ -534,7 +544,12 @@ export function updateNavLang(lang) {
     }
   });
 
-   // Invest
+  // Shops
+  nav.querySelectorAll('[data-nav-key="shops"]').forEach(el => {
+    el.textContent = data.shops.label;
+  });
+
+  // Invest
   nav.querySelectorAll('[data-nav-key="invest"]').forEach(el => {
     el.textContent = data.invest.label;
   });
