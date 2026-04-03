@@ -8,7 +8,8 @@ import * as alertsLib from './lib/alerts.js';
 import { createInitialState, persistState } from './tracker/state.js';
 import { mountShell, updateShellTickerFromState } from './tracker/ui-shell.js';
 import { fetchWire, renderWire as renderWireModule } from './tracker/wire.js';
-import { getUnifiedHistory } from './lib/historical-data.js';
+import { getUnifiedHistory, filterByRange, getHistoryStats } from './lib/historical-data.js';
+import * as exp from './lib/export.js';
 
 // Existing LANG map and helpers can be retained, but should be trimmed over time
 // to prefer config/translations.js for static text.
@@ -224,10 +225,14 @@ function bindCoreEvents() {
     });
     if (closest) {
       const aed24 = priceFor({ currency: 'AED', karat: '24', unit: 'gram', spot: closest.spot });
-      el.lookupResults.innerHTML = `<div class="tracker-result-item"><span>Date</span><strong>${closest.date instanceof Date ? closest.date.toISOString().slice(0, 10) : closest.date}</strong></div>
-        <div class="tracker-result-item"><span>Spot</span><strong>$${closest.spot.toFixed(2)}</strong></div>
-        <div class="tracker-result-item"><span>UAE 24K/g</span><strong>AED ${aed24 ? aed24.toFixed(2) : '—'}</strong></div>
-        <div class="tracker-result-item"><span>Source</span><strong>${closest.source}</strong></div>`;
+      const dateStr = closest.date instanceof Date ? closest.date.toISOString().slice(0, 10) : closest.date;
+      el.lookupResults.innerHTML = `
+        <div class="tracker-result-grid">
+          <div class="tracker-result-card"><div class="tracker-result-k">Date</div><div class="tracker-result-v">${dateStr}</div><div class="tracker-result-s">${closest.granularity || ''}</div></div>
+          <div class="tracker-result-card"><div class="tracker-result-k">XAU/USD</div><div class="tracker-result-v">$${closest.spot.toFixed(2)}</div><div class="tracker-result-s">per troy oz</div></div>
+          <div class="tracker-result-card"><div class="tracker-result-k">UAE 24K/g</div><div class="tracker-result-v">${aed24 ? 'AED ' + aed24.toFixed(2) : '—'}</div><div class="tracker-result-s">AED peg 3.6725</div></div>
+          <div class="tracker-result-card"><div class="tracker-result-k">Source</div><div class="tracker-result-v"><span class="tracker-source-badge tracker-source-badge--${closest.source}">${closest.source}</span></div><div class="tracker-result-s">&nbsp;</div></div>
+        </div>`;
     } else {
       el.lookupResults.innerHTML = '<p style="color:var(--tp-text-muted)">No data for that date range.</p>';
     }
@@ -242,10 +247,48 @@ function bindCoreEvents() {
     inp?.addEventListener('input', () => renderPlanners());
   });
 
-  // Export stubs (Phase 2 will wire real CSV generation)
-  [el.exportChart, el.exportChart2, el.exportCurrent, el.exportArchive, el.exportArchive2,
-   el.exportHistory, el.exportHistory2, el.exportWatchlist, el.downloadJson, el.downloadJson2, el.downloadBrief]
-    .forEach(btn => btn?.addEventListener('click', () => alert('Export ready in Phase 2.')));
+  // Exports — wired to lib/export.js
+  el.exportArchive?.addEventListener('click', () => exportArchiveData());
+  el.exportArchive2?.addEventListener('click', () => exportArchiveData());
+  el.exportHistory?.addEventListener('click', () => exportHistoryData());
+  el.exportHistory2?.addEventListener('click', () => exportHistoryData());
+  el.downloadJson?.addEventListener('click', () => exportJsonData());
+  el.downloadJson2?.addEventListener('click', () => exportJsonData());
+  // Chart/watchlist/brief export requires canvas or specialised formatting — deferred
+  [el.exportChart, el.exportChart2, el.exportCurrent, el.exportWatchlist, el.downloadBrief]
+    .forEach(btn => btn?.addEventListener('click', () => showToast('Export not available for this section yet.')));
+
+  // Alert list: delete button delegation
+  el.alertList?.addEventListener('click', (e) => {
+    const btn = e.target.closest('.tracker-remove-btn[data-idx]');
+    if (!btn) return;
+    const idx = parseInt(btn.dataset.idx, 10);
+    state.alerts = (state.alerts || []).filter((_, i) => i !== idx);
+    persistState(state);
+    renderAlerts();
+  });
+
+  // Preset list: delete + load button delegation
+  el.presetList?.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-idx]');
+    if (!btn) return;
+    const idx = parseInt(btn.dataset.idx, 10);
+    const preset = (state.presets || [])[idx];
+    if (!preset) return;
+    if (btn.classList.contains('tracker-remove-btn')) {
+      state.presets = state.presets.filter((_, i) => i !== idx);
+      persistState(state);
+      renderPresets();
+    } else if (btn.classList.contains('tracker-load-btn')) {
+      state.selectedCurrency = preset.currency;
+      state.selectedKarat = preset.karat;
+      state.selectedUnit = preset.unit;
+      state.range = preset.range;
+      persistState(state);
+      populateSelects();
+      renderAll();
+    }
+  });
 }
 
 let _autoRefreshTimer = null;
@@ -255,6 +298,7 @@ function startAutoRefresh() {
   _autoRefreshTimer = setInterval(async () => {
     if (!state.autoRefresh) return;
     await fetchLive();
+    checkAlerts();
     renderAll();
     if (el.refreshBadge) {
       el.refreshBadge.textContent = `Updated ${new Date().toLocaleTimeString()}`;
@@ -322,8 +366,15 @@ async function fetchLive() {
     if (goldRes.status === 'fulfilled') {
       const data = goldRes.value;
       state.live = { price: data.price, updatedAt: data.updatedAt, raw: data };
+      state.hasLiveFailure = false;
       cache.saveGoldPrice(data.price, data.updatedAt);
       cache.checkDayOpenReset({ goldPriceUsdPerOz: data.price });
+      // Save a daily snapshot so the archive layer has session-granularity data
+      const today = new Date().toISOString().slice(0, 10);
+      const alreadySaved = (state.snapshots || []).some(s => s.date === today);
+      if (!alreadySaved) {
+        state.snapshots = [...(state.snapshots || []), { date: today, price: data.price, timestamp: Date.now() }];
+      }
     } else if (!state.live) {
       const fb = cache.getFallbackGoldPrice();
       if (fb) {
@@ -397,9 +448,63 @@ function priceFor({ currency, karat, unit, spot }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// RENDER STUBS
-// These prevent ReferenceError crashes while Phase 2 build-out is pending.
-// Each stub writes a meaningful status into its target element(s).
+// UI HELPERS
+// ─────────────────────────────────────────────────────────────────────────────
+
+function showToast(msg, durationMs = 3500) {
+  if (!el.toastStack) return;
+  const toast = document.createElement('div');
+  toast.className = 'tracker-toast';
+  toast.textContent = msg;
+  el.toastStack.appendChild(toast);
+  setTimeout(() => toast.remove(), durationMs);
+}
+
+function checkAlerts() {
+  const spot = currentSpot();
+  if (!spot || !(state.alerts?.length)) return;
+  state.alerts.forEach(a => {
+    const hit = a.direction === 'above' ? spot > a.target : spot < a.target;
+    if (hit && 'Notification' in window && Notification.permission === 'granted') {
+      new Notification('Gold Price Alert', {
+        body: `XAU/USD ${a.direction} ${a.target}: now $${spot.toFixed(2)}`,
+      });
+    }
+  });
+}
+
+function exportArchiveData() {
+  if (!state.history.length) { showToast('No archive data available.'); return; }
+  const records = state.history.map(r => ({
+    date: r.date instanceof Date ? r.date.toISOString().slice(0, 10) : String(r.date),
+    price: r.spot,
+    source: r.source,
+    granularity: r.granularity,
+  }));
+  exp.exportHistoricalCSV(records, state.selectedKarat);
+}
+
+function exportHistoryData() {
+  exportArchiveData();
+}
+
+function exportJsonData() {
+  const spot = currentSpot();
+  const prices = {};
+  if (spot) {
+    KARATS.forEach(k => {
+      prices[k.code] = {};
+      [...new Set(COUNTRIES.map(c => c.currency))].forEach(cur => {
+        const p = priceFor({ currency: cur, karat: k.code, unit: 'gram', spot });
+        if (p) prices[k.code][cur] = { gram: p, oz: p * CONSTANTS.TROY_OZ_GRAMS };
+      });
+    });
+  }
+  exp.exportJSON({ selectedKarat: state.selectedKarat, lang: state.lang, rates: state.rates, fxMeta: state.fxMeta }, prices);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER FUNCTIONS
 // ─────────────────────────────────────────────────────────────────────────────
 
 function renderHero() {
@@ -428,9 +533,9 @@ function renderHero() {
       { label: 'UAE 22K', value: aed22 ? `AED ${aed22.toFixed(2)}` : '—', sub: 'per gram' },
       { label: 'USD/g 24K', value: usd24g ? `$${usd24g.toFixed(3)}` : '—', sub: 'per gram' },
     ].map(item => `<div class="tracker-hero-stat">
-      <div class="tracker-hero-stat-label">${item.label}</div>
-      <div class="tracker-hero-stat-value">${item.value}</div>
-      <div class="tracker-hero-stat-sub">${item.sub}</div>
+      <div class="tracker-hero-k">${item.label}</div>
+      <div class="tracker-hero-v">${item.value}</div>
+      <div class="tracker-hero-s">${item.sub}</div>
     </div>`).join('');
   }
 }
@@ -453,9 +558,16 @@ function renderChart() {
     return;
   }
   if (el.chartEmpty) el.chartEmpty.hidden = true;
-  // Phase 1: render a minimal SVG sparkline from history + live spot anchor.
-  // Phase 2 will replace this with the full interactive chart.
-  const rows = state.history.slice(-120); // last 120 points
+  // Render SVG sparkline filtered to the selected range.
+  const flatHistory = state.history.map(r => ({
+    date: r.date instanceof Date ? r.date.toISOString().slice(0, 10) : String(r.date),
+    price: r.spot,
+    spot: r.spot,
+    source: r.source,
+    granularity: r.granularity,
+  }));
+  const filtered = filterByRange(flatHistory, state.range);
+  const rows = filtered.map(r => ({ date: new Date(r.date), spot: r.spot, source: r.source }));
   if (spot) rows.push({ date: new Date(), spot, source: 'live' });
   if (rows.length < 2) { el.chart.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#9d8c72" font-size="14">Collecting data…</text>'; return; }
   const prices = rows.map(r => r.spot);
@@ -475,9 +587,13 @@ function renderChart() {
     <text x="${W - 8}" y="${H - 6}" text-anchor="end" fill="#9d8c72" font-size="11">Source: ${sourceLabel} · ${rows.length} points</text>
   `;
   if (el.chartStats) {
-    el.chartStats.innerHTML = `<div class="tracker-stat-item"><span>Points shown</span><strong>${rows.length}</strong></div>
-      <div class="tracker-stat-item"><span>Source</span><strong>${sourceLabel}</strong></div>
-      <div class="tracker-stat-item"><span>Baseline coverage</span><strong>2019–Mar 2025</strong></div>`;
+    const stats = getHistoryStats(flatHistory);
+    el.chartStats.innerHTML = `
+      <div class="tracker-stat-card"><div class="tracker-stat-k">Points shown</div><div class="tracker-stat-v">${rows.length}</div><div class="tracker-stat-s">${state.range || 'ALL'}</div></div>
+      <div class="tracker-stat-card"><div class="tracker-stat-k">Data source</div><div class="tracker-stat-v">${sourceLabel}</div><div class="tracker-stat-s">LBMA baseline 2019–Aug 2025 + session</div></div>
+      <div class="tracker-stat-card"><div class="tracker-stat-k">Range high</div><div class="tracker-stat-v">$${Math.max(...rows.map(r => r.spot)).toLocaleString('en', { maximumFractionDigits: 0 })}</div><div class="tracker-stat-s">within selected range</div></div>
+      <div class="tracker-stat-card"><div class="tracker-stat-k">Range low</div><div class="tracker-stat-v">$${Math.min(...rows.map(r => r.spot)).toLocaleString('en', { maximumFractionDigits: 0 })}</div><div class="tracker-stat-s">within selected range</div></div>
+    `;
   }
 }
 
@@ -513,11 +629,18 @@ function renderMarkets() {
     const cur = c.currency;
     const p = priceFor({ currency: cur, karat: state.selectedKarat, unit: state.selectedUnit, spot });
     const isFav = (state.favorites || []).includes(cur);
-    return `<div class="tracker-board-card${isFav ? ' is-fav' : ''}">
-      <div class="tracker-board-flag">${c.flag}</div>
-      <div class="tracker-board-name">${c.nameEn}</div>
-      <div class="tracker-board-cur">${cur}</div>
-      <div class="tracker-board-price">${p ? p.toFixed(2) : '—'}</div>
+    const name = state.lang === 'ar' ? (c.nameAr || c.nameEn) : c.nameEn;
+    return `<div class="tracker-market-card${isFav ? ' is-highlight' : ''}">
+      <div class="tracker-market-top">
+        <div class="tracker-market-title">
+          <strong>${c.flag ?? ''} ${name}</strong>
+          <span>${cur}</span>
+        </div>
+        <div class="tracker-market-value">
+          <strong>${p ? p.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}</strong>
+          <span>${state.selectedKarat}K / ${state.selectedUnit}</span>
+        </div>
+      </div>
     </div>`;
   }).join('');
   if (el.marketEmpty) el.marketEmpty.hidden = filtered.length > 0;
@@ -531,9 +654,18 @@ function renderWatchlist() {
   el.watchlistGrid.innerHTML = favs.map(cur => {
     const country = COUNTRIES.find(c => c.currency === cur);
     const p = priceFor({ currency: cur, karat: state.selectedKarat, unit: state.selectedUnit, spot });
-    return `<div class="tracker-watchlist-item">
-      <span>${country?.flag ?? ''} ${cur}</span>
-      <strong>${p ? p.toFixed(2) : '—'}</strong>
+    const name = state.lang === 'ar' ? (country?.nameAr || country?.nameEn) : country?.nameEn;
+    return `<div class="tracker-watch-card">
+      <div class="tracker-watch-top">
+        <div class="tracker-watch-title">
+          <strong>${country?.flag ?? ''} ${name ?? cur}</strong>
+          <span>${cur}</span>
+        </div>
+        <div class="tracker-watch-value">
+          <strong>${p ? p.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}</strong>
+          <span>${state.selectedKarat}K / ${state.selectedUnit}</span>
+        </div>
+      </div>
     </div>`;
   }).join('');
 }
@@ -545,7 +677,7 @@ function renderDecisionCues() {
   const lines = [
     `Live spot: $${spot.toFixed(2)} / troy oz`,
     state.hasLiveFailure ? '⚠ Data source: cached — API unreachable' : '✓ Data source: live API',
-    `History coverage: 2019–Mar 2025 (LBMA baseline) + session snapshots`,
+    `History coverage: 2019–Aug 2025 (LBMA baseline) + session snapshots`,
   ];
   el.decisionCues.innerHTML = lines.map(l => `<div class="tracker-note-item">${l}</div>`).join('');
 }
@@ -553,8 +685,15 @@ function renderDecisionCues() {
 function renderAlerts() {
   if (!el.alertList) return;
   const alerts = state.alerts || [];
+  const spot = currentSpot();
   el.alertList.innerHTML = alerts.length
-    ? alerts.map((a, i) => `<div class="tracker-stack-item">${a.scope} ${a.direction} ${a.target} <button data-idx="${i}" class="tracker-remove-btn">×</button></div>`).join('')
+    ? alerts.map((a, i) => {
+        const hit = spot && (a.direction === 'above' ? spot > a.target : spot < a.target);
+        return `<div class="tracker-stack-item${hit ? ' is-triggered' : ''}">
+          <span>${a.scope} ${a.direction} <strong>$${a.target}</strong>${hit ? ' ✓ triggered' : ''}</span>
+          <button data-idx="${i}" class="tracker-remove-btn" aria-label="Delete alert">×</button>
+        </div>`;
+      }).join('')
     : '<p style="color:var(--tp-text-muted);font-size:0.85rem">No alerts set.</p>';
 }
 
@@ -562,7 +701,13 @@ function renderPresets() {
   if (!el.presetList) return;
   const presets = state.presets || [];
   el.presetList.innerHTML = presets.length
-    ? presets.map((p, i) => `<div class="tracker-stack-item">${p.name} <button data-idx="${i}" class="tracker-remove-btn">×</button></div>`).join('')
+    ? presets.map((p, i) => `<div class="tracker-stack-item">
+        <span>${p.name} <small style="color:var(--tp-text-faint)">${p.karat}K · ${p.currency} · ${p.unit}</small></span>
+        <span>
+          <button data-idx="${i}" class="tracker-load-btn tracker-pill">Load</button>
+          <button data-idx="${i}" class="tracker-remove-btn" aria-label="Delete preset">×</button>
+        </span>
+      </div>`).join('')
     : '<p style="color:var(--tp-text-muted);font-size:0.85rem">No presets saved.</p>';
 }
 
@@ -618,9 +763,8 @@ function renderArchive() {
     </tr>`;
   }).join('');
   if (el.archiveMeta) {
-    el.archiveMeta.textContent = `${rows.length} records · newest first · sources: LBMA-baseline, local-snapshot, live`;
+    el.archiveMeta.textContent = `${rows.length} records shown · newest first · LBMA baseline 2019–Aug 2025 · session snapshots added live`;
   }
-  void spot; // silence unused warning — spot used indirectly via priceFor
 }
 
 function renderBrief() {
@@ -637,7 +781,7 @@ function renderBrief() {
   el.briefCopy.textContent = `UAE 24K: AED ${aed24 ? aed24.toFixed(2) : '—'}/g. `
     + `Selected view: ${state.selectedKarat}K in ${state.selectedCurrency} per ${state.selectedUnit}. `
     + `FX source: open.er-api.com (AED uses fixed peg 3.6725). `
-    + `History: LBMA monthly baseline 2019–Mar 2025 + session snapshots.`;
+    + `History: LBMA monthly baseline 2019–Aug 2025 + session snapshots.`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
