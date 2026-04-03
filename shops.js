@@ -62,6 +62,7 @@ const TXT = {
     noContact: 'Business details where available',
     visitWebsite: 'Visit website',
     featured: 'Featured market',
+    marketCluster: 'Market area cluster',
     infoTitle: 'How to use this directory',
     info1Title: 'Compare by market area',
     info1Body: 'Start with a country or city filter, then compare listed markets and specialties side by side.',
@@ -108,6 +109,7 @@ const TXT = {
     noContact: 'تفاصيل النشاط متاحة عند توفرها',
     visitWebsite: 'زيارة الموقع',
     featured: 'سوق مميز',
+    marketCluster: 'مجموعة متاجر بسوق',
     infoTitle: 'كيفية استخدام هذا الدليل',
     info1Title: 'قارن حسب منطقة السوق',
     info1Body: 'ابدأ بفلتر الدولة أو المدينة، ثم قارن الأسواق المدرجة والتخصصات بسهولة.',
@@ -138,6 +140,74 @@ function detailsAvailabilityLabel(value) {
   if (value === 'full') return t('detailsFull');
   if (value === 'partial') return t('detailsPartial');
   return t('detailsLimited');
+}
+
+function isMarketCluster(shop) {
+  // Market clusters typically have "cluster", "shops", "dealers", "area", or "market" in notes
+  // and empty phone/website
+  return !shop.phone && !shop.website &&
+         (shop.notes?.toLowerCase().includes('cluster') ||
+          shop.notes?.toLowerCase().includes('concentration') ||
+          shop.notes?.toLowerCase().includes('area'));
+}
+
+function openModal(shop) {
+  const modal = document.getElementById('shops-modal');
+  const country = countryByCode(shop.countryCode);
+  const specialties = (shop.specialties || []).map((item) => `<span class="shop-tag">${item}</span>`).join('');
+
+  const contactHTML = shop.phone || shop.website ?
+    `<div class="modal-contact">
+      ${shop.phone ? `<p><strong>${t('phone')}:</strong> ${shop.phone}</p>` : ''}
+      ${shop.website ? `<p><a href="${shop.website}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')} →</a></p>` : ''}
+    </div>` :
+    `<p class="modal-no-contact">${t('noContact')}</p>`;
+
+  const clusterBadge = isMarketCluster(shop) ?
+    `<span class="modal-cluster-badge">${t('marketCluster')}</span>` : '';
+
+  document.getElementById('shops-modal-body').innerHTML = `
+    <div class="modal-head">
+      <h2 id="shops-modal-title">${shop.name}</h2>
+      <div class="modal-badges">
+        ${clusterBadge}
+        <span class="modal-details-badge modal-details-${shop.detailsAvailability}">${t('detailsSignal')}: ${detailsAvailabilityLabel(shop.detailsAvailability)}</span>
+        ${shop.featured ? `<span class="modal-featured-badge">★ ${t('featured')}</span>` : ''}
+      </div>
+    </div>
+
+    <div class="modal-meta">
+      <div class="modal-meta-item">
+        <span class="modal-meta-label">${t('location')}</span>
+        <span class="modal-meta-value">${shop.city}, ${countryName(country)} · ${regionName(country.group)}</span>
+      </div>
+      <div class="modal-meta-item">
+        <span class="modal-meta-label">${t('market')}</span>
+        <span class="modal-meta-value">${shop.market}</span>
+      </div>
+      <div class="modal-meta-item">
+        <span class="modal-meta-label">${t('category')}</span>
+        <span class="modal-meta-value">${shop.category}</span>
+      </div>
+    </div>
+
+    ${specialties ? `<div class="modal-tags">
+      <span class="modal-tags-label">${t('specialties')}</span>
+      <div class="modal-tags-wrap">${specialties}</div>
+    </div>` : ''}
+
+    <div class="modal-notes">
+      <p>${shop.notes}</p>
+    </div>
+
+    ${contactHTML}
+  `;
+
+  modal.hidden = false;
+}
+
+function closeModal() {
+  document.getElementById('shops-modal').hidden = true;
 }
 
 function applyStaticText() {
@@ -329,9 +399,11 @@ function activeFilterSummary() {
 
 function renderCards(shops) {
   const grid = document.getElementById('shops-grid');
-  grid.innerHTML = shops.map((shop) => {
+  grid.innerHTML = shops.map((shop, idx) => {
     const country = countryByCode(shop.countryCode);
     const specialties = (shop.specialties || []).map((item) => `<span class="shop-tag">${item}</span>`).join('');
+    const isCluster = isMarketCluster(shop);
+    const clusterBadge = isCluster ? `<span class="shop-cluster-badge">${t('marketCluster')}</span>` : '';
 
     const contactParts = [];
     if (shop.phone) contactParts.push(`${t('phone')}: ${shop.phone}`);
@@ -340,13 +412,16 @@ function renderCards(shops) {
     }
 
     return `
-      <article class="shop-card${shop.featured ? ' shop-card--featured' : ''}">
+      <article class="shop-card${shop.featured ? ' shop-card--featured' : ''}${isCluster ? ' shop-card--cluster' : ''}" data-shop-id="${shop.id}" style="cursor: pointer;">
         <header class="shop-card-head">
           <div>
             <h3>${shop.name}</h3>
-            ${shop.featured ? `<span class="shop-featured">${t('featured')}</span>` : ''}
+            <div class="shop-card-badges">
+              ${clusterBadge}
+              ${shop.featured ? `<span class="shop-featured">${t('featured')}</span>` : ''}
+            </div>
           </div>
-          <span class="shop-signal">${t('detailsSignal')}: ${detailsAvailabilityLabel(shop.detailsAvailability)}</span>
+          <span class="shop-signal shop-signal--${shop.detailsAvailability}">${detailsAvailabilityLabel(shop.detailsAvailability)}</span>
         </header>
 
         <div class="shop-meta-grid">
@@ -365,14 +440,98 @@ function renderCards(shops) {
       </article>
     `;
   }).join('');
+
+  // Bind click handlers to open modal
+  grid.querySelectorAll('.shop-card').forEach((card) => {
+    card.addEventListener('click', () => {
+      const shopId = card.dataset.shopId;
+      const shop = SHOPS.find((s) => s.id === shopId);
+      if (shop) openModal(shop);
+    });
+  });
+}
+
+function renderFeaturedSection() {
+  const featuredSection = document.getElementById('shops-featured');
+  const featuredGrid = document.getElementById('shops-featured-grid');
+  const featured = SHOPS.filter((shop) => shop.featured);
+
+  if (!featured.length) {
+    featuredSection.hidden = true;
+    return;
+  }
+
+  featuredSection.hidden = false;
+  featuredGrid.innerHTML = featured.map((shop) => {
+    const country = countryByCode(shop.countryCode);
+    const specialties = (shop.specialties || []).slice(0, 2).map((item) => `<span class="featured-tag">${item}</span>`).join('');
+    return `
+      <article class="featured-card" data-shop-id="${shop.id}" style="cursor: pointer;">
+        <div class="featured-header">
+          <h3>${shop.name}</h3>
+          <span class="featured-location">${shop.city} · ${countryName(country)}</span>
+        </div>
+        <p class="featured-market">${shop.market}</p>
+        <div class="featured-tags">${specialties}</div>
+      </article>
+    `;
+  }).join('');
+
+  // Bind click handlers
+  featuredGrid.querySelectorAll('.featured-card').forEach((card) => {
+    card.addEventListener('click', () => {
+      const shopId = card.dataset.shopId;
+      const shop = SHOPS.find((s) => s.id === shopId);
+      if (shop) openModal(shop);
+    });
+  });
+}
+
+function renderFilterPills() {
+  const pillsContainer = document.getElementById('shops-filter-pills');
+  const pills = [];
+
+  if (STATE.region !== 'all') pills.push({ type: 'region', value: STATE.region, label: regionName(STATE.region) });
+  if (STATE.country !== 'all') {
+    const country = countryByCode(STATE.country);
+    if (country) pills.push({ type: 'country', value: STATE.country, label: countryName(country) });
+  }
+  if (STATE.city !== 'all') pills.push({ type: 'city', value: STATE.city, label: STATE.city });
+  if (STATE.specialty !== 'all') pills.push({ type: 'specialty', value: STATE.specialty, label: STATE.specialty });
+
+  if (!pills.length) {
+    pillsContainer.innerHTML = '';
+    return;
+  }
+
+  pillsContainer.innerHTML = pills.map((pill) => `
+    <button class="shops-filter-pill" data-type="${pill.type}" data-value="${pill.value}" type="button">
+      ${pill.label}
+      <span class="shops-filter-pill-remove">×</span>
+    </button>
+  `).join('');
+
+  pillsContainer.querySelectorAll('.shops-filter-pill').forEach((pill) => {
+    pill.addEventListener('click', () => {
+      const type = pill.dataset.type;
+      if (type === 'region') STATE.region = 'all';
+      if (type === 'country') STATE.country = 'all';
+      if (type === 'city') STATE.city = 'all';
+      if (type === 'specialty') STATE.specialty = 'all';
+      buildFilters();
+      render();
+    });
+  });
 }
 
 function render() {
   const shops = filterShops();
   const empty = document.getElementById('shops-empty');
   const count = document.getElementById('shops-count');
-if (count) count.textContent = t('count')(shops.length);
+  if (count) count.textContent = t('count')(shops.length);
   activeFilterSummary();
+  renderFilterPills();
+  renderFeaturedSection();
 
   if (!shops.length) {
     document.getElementById('shops-grid').innerHTML = '';
@@ -431,6 +590,23 @@ function bindEvents() {
   });
 
   document.getElementById('shops-clear-filters').addEventListener('click', resetFilters);
+
+  // Modal events
+  const modal = document.getElementById('shops-modal');
+  const modalClose = document.getElementById('shops-modal-close') || modal.querySelector('.shops-modal-close');
+  const modalOverlay = modal.querySelector('.shops-modal-overlay');
+
+  if (modalClose) {
+    modalClose.addEventListener('click', closeModal);
+  }
+
+  if (modalOverlay) {
+    modalOverlay.addEventListener('click', closeModal);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.hidden) closeModal();
+  });
 }
 
 function updateLanguage() {
