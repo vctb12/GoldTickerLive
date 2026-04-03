@@ -1380,3 +1380,173 @@ body.tracker-pro-page {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ── Mobile responsiveness for tracker ────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .tracker-hero-card {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .tracker-hero-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tracker-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tracker-panel-side {
+    margin-top: 1rem;
+  }
+
+  .tracker-region-tabs {
+    justify-content: flex-start;
+    overflow-x: auto;
+    gap: 0.6rem;
+    padding-bottom: 0.3rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .tracker-region-pill {
+    flex-shrink: 0;
+  }
+
+  .tracker-board-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tracker-market-card {
+    min-height: auto;
+  }
+
+  .tracker-watchlist-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tracker-chart-wrap {
+    min-height: 300px;
+  }
+
+  .tracker-toolbar-secondary {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .tracker-range-pills {
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-bottom: 0.3rem;
+  }
+
+  .tracker-range-pills button {
+    flex-shrink: 0;
+  }
+
+  .tracker-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tracker-control-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tracker-hero-actions {
+    flex-direction: column;
+  }
+
+  .tracker-hero-actions button,
+  .tracker-hero-actions a {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .tracker-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tracker-stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tracker-control-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tracker-chip-row {
+    flex-direction: column;
+  }
+
+  .tracker-chip-row > * {
+    width: 100%;
+  }
+
+  .tracker-badge {
+    font-size: 0.72rem;
+    min-height: 34px;
+  }
+
+  .tracker-hero-v {
+    font-size: 1.4rem;
+  }
+
+  .tracker-chart-wrap {
+    min-height: 240px;
+  }
+
+  .tracker-result-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tracker-method-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tracker-planner-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tracker-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tracker-two-up {
+    grid-template-columns: 1fr;
+  }
+
+  .tracker-utility-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tracker-legend {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tracker-mini-strip {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .tracker-mini-item {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .tracker-tooltip {
+    min-width: 160px;
+    font-size: 0.75rem;
+  }
+
+  .tracker-tooltip strong {
+    font-size: 0.85rem;
+  }
+
+  .tracker-toast-stack {
+    inset-inline-end: 8px;
+    bottom: 48px;
+    max-width: calc(100vw - 16px);
+  }
+}
