@@ -265,8 +265,10 @@ function bindCoreEvents() {
   el.marketSort?.addEventListener('change', () => renderMarkets());
 
   // Planner inputs
-  [el.budgetAmount, el.budgetFee, el.positionEntry, el.positionQty, el.accumMonthly, el.accumTarget].forEach(inp => {
+  [el.budgetAmount, el.budgetFee, el.positionEntry, el.positionQty, el.accumMonthly, el.accumTarget,
+   el.jewelryWeight, el.jewelryKarat, el.jewelryMaking, el.jewelryPremium, el.jewelryVat].forEach(inp => {
     inp?.addEventListener('input', () => renderPlanners());
+    inp?.addEventListener('change', () => renderPlanners());
   });
 
   // Exports — wired to lib/export.js
@@ -533,7 +535,13 @@ function exportJsonData() {
       });
     });
   }
-  exp.exportJSON({ selectedKarat: state.selectedKarat, lang: state.lang, rates: state.rates, fxMeta: state.fxMeta }, prices);
+  const exportState = {
+    goldPriceUsdPerOz: spot || null,
+    freshness: { goldUpdatedAt: state.live?.updatedAt || new Date().toISOString(), fxUpdatedAt: state.fxMeta?.lastUpdateUtc || new Date().toISOString() },
+    rates: state.rates,
+    lang: state.lang,
+  };
+  exp.exportJSON(exportState, prices);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -874,6 +882,51 @@ function renderPlanners() {
       : '<p style="color:var(--tp-text-muted)">Enter a budget above.</p>';
   }
 
+  // Position
+  if (el.positionResults) {
+    const entry = parseFloat(el.positionEntry?.value) || 0;
+    const qty = parseFloat(el.positionQty?.value) || 0;
+    const p = priceFor({ currency: state.selectedCurrency, karat: state.selectedKarat, unit: 'gram', spot });
+    if (entry && qty && p) {
+      const entryValue = entry * qty;
+      const currentValue = p * qty;
+      const gainLoss = currentValue - entryValue;
+      const gainLossPercent = (gainLoss / entryValue) * 100;
+      el.positionResults.innerHTML = `<div class="tracker-result-item"><span>Entry value</span><strong>${entryValue.toFixed(2)} ${state.selectedCurrency}</strong></div>
+        <div class="tracker-result-item"><span>Current value</span><strong>${currentValue.toFixed(2)} ${state.selectedCurrency}</strong></div>
+        <div class="tracker-result-item"><span>Gain / loss</span><strong style="color:${gainLoss >= 0 ? 'var(--tp-live)' : 'var(--tp-danger)'}">${gainLoss >= 0 ? '+' : ''}${gainLoss.toFixed(2)} ${state.selectedCurrency} (${gainLossPercent >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%)</strong></div>`;
+    } else {
+      el.positionResults.innerHTML = '<p style="color:var(--tp-text-muted)">Enter entry price and quantity above.</p>';
+    }
+  }
+
+  // Jewelry
+  if (el.jewelryResults) {
+    const weight = parseFloat(el.jewelryWeight?.value) || 0;
+    const karatCode = el.jewelryKarat?.value || state.selectedKarat;
+    const making = parseFloat(el.jewelryMaking?.value) || 0;
+    const premium = parseFloat(el.jewelryPremium?.value) || 0;
+    const vat = el.jewelryVat?.checked ? 0.05 : 0;
+    const karat = KARATS.find(k => k.code === karatCode);
+    const p = priceFor({ currency: state.selectedCurrency, karat: karatCode, unit: 'gram', spot });
+    if (weight && p && karat) {
+      const goldValue = p * weight;
+      const makingTotal = making * weight;
+      const premiumTotal = (goldValue * premium) / 100;
+      const subtotal = goldValue + makingTotal + premiumTotal;
+      const vatAmount = subtotal * vat;
+      const total = subtotal + vatAmount;
+      el.jewelryResults.innerHTML = `<div class="tracker-result-item"><span>Gold value</span><strong>${goldValue.toFixed(2)} ${state.selectedCurrency}</strong></div>
+        <div class="tracker-result-item"><span>Making charge</span><strong>${makingTotal.toFixed(2)} ${state.selectedCurrency}</strong></div>
+        ${premium ? `<div class="tracker-result-item"><span>Premium</span><strong>${premiumTotal.toFixed(2)} ${state.selectedCurrency}</strong></div>` : ''}
+        <div class="tracker-result-item"><span>Subtotal</span><strong>${subtotal.toFixed(2)} ${state.selectedCurrency}</strong></div>
+        ${vat ? `<div class="tracker-result-item"><span>VAT (5%)</span><strong>${vatAmount.toFixed(2)} ${state.selectedCurrency}</strong></div>` : ''}
+        <div class="tracker-result-item"><span>Total</span><strong style="color:var(--tp-accent)">${total.toFixed(2)} ${state.selectedCurrency}</strong></div>`;
+    } else {
+      el.jewelryResults.innerHTML = '<p style="color:var(--tp-text-muted)">Enter weight and select karat above.</p>';
+    }
+  }
+
   // Accumulation
   if (el.accumResults) {
     const monthly = parseFloat(el.accumMonthly?.value) || 0;
@@ -882,10 +935,12 @@ function renderPlanners() {
     if (p && monthly && target) {
       const gramsPerMonth = monthly / p;
       const months = target / gramsPerMonth;
+      const years = months / 12;
       el.accumResults.innerHTML = `<div class="tracker-result-item"><span>Grams / month</span><strong>${gramsPerMonth.toFixed(3)} g</strong></div>
-        <div class="tracker-result-item"><span>Months to target</span><strong>${months.toFixed(1)}</strong></div>`;
+        <div class="tracker-result-item"><span>Months to target</span><strong>${months.toFixed(1)}</strong></div>
+        <div class="tracker-result-item"><span>Years to target</span><strong>${years.toFixed(2)}</strong></div>`;
     } else {
-      el.accumResults.innerHTML = '<p style="color:var(--tp-text-muted)">Enter values above.</p>';
+      el.accumResults.innerHTML = '<p style="color:var(--tp-text-muted)">Enter monthly contribution and target quantity above.</p>';
     }
   }
 }
