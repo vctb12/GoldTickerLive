@@ -323,6 +323,16 @@ function bindCoreEvents() {
       renderAll();
     }
   });
+
+  // Trust banner close
+  const trustCloseBtn = document.querySelector('.tracker-trust-close');
+  const trustSection = document.querySelector('.tracker-data-trust-section');
+  if (trustCloseBtn && trustSection) {
+    trustCloseBtn.addEventListener('click', () => {
+      trustSection.style.display = 'none';
+      localStorage.setItem('tracker_trust_banner_dismissed', 'true');
+    });
+  }
 }
 
 let _autoRefreshTimer = null;
@@ -380,6 +390,12 @@ async function init() {
 
   populateSelects();
   bindCoreEvents();
+
+  // Restore trust banner dismissal state
+  if (localStorage.getItem('tracker_trust_banner_dismissed')) {
+    const trustSection = document.querySelector('.tracker-data-trust-section');
+    if (trustSection) trustSection.style.display = 'none';
+  }
 
   // Initialize region tabs active state
   const regionTabs = document.querySelectorAll('.tracker-region-pill[data-region]');
