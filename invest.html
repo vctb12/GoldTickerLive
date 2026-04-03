@@ -1007,6 +1007,9 @@
 </head>
 
 <body class="invest-page">
+  <!-- Nav + Breadcrumbs (injected by inline script) -->
+  <div class="page-breadcrumbs"></div>
+
   <main class="invest-main">
     <section class="invest-hero" aria-labelledby="invest-title">
       <div class="invest-shell invest-hero-grid">
@@ -1253,6 +1256,7 @@
     import { injectNav, updateNavLang } from './components/nav.js';
     import { injectFooter } from './components/footer.js';
     import { injectTicker, updateTicker, updateTickerLang } from './components/ticker.js';
+    import { injectBreadcrumbs } from './components/breadcrumbs.js';
 
     const LANG_KEY = 'user_prefs';
 
@@ -2222,6 +2226,7 @@
       state.lang = getLang();
 
       const navCtrl = injectNav(state.lang, 0);
+      injectBreadcrumbs('invest');
       navCtrl.getLangToggleButtons().forEach(btn => {
         btn.addEventListener('click', () => {
           state.lang = state.lang === 'en' ? 'ar' : 'en';
