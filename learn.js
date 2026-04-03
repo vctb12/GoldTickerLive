@@ -7,6 +7,7 @@ import * as cache from './lib/cache.js';
 import { injectNav, updateNavLang } from './components/nav.js';
 import { injectFooter } from './components/footer.js';
 import { injectTicker, updateTickerLang } from './components/ticker.js';
+import { injectBreadcrumbs } from './components/breadcrumbs.js';
 
 const STATE = {
   lang: 'en',
@@ -167,6 +168,7 @@ async function init() {
   document.documentElement.dir  = STATE.lang === 'ar' ? 'rtl' : 'ltr';
 
   const navResult = injectNav(STATE.lang, 0);
+  injectBreadcrumbs('learn');
   injectFooter(STATE.lang, 0);
   injectTicker(STATE.lang, 0);
 

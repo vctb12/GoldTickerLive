@@ -82,6 +82,17 @@ const T = {
     marketClosed: '○ Market Closed',
     gccTitle: 'GCC Gold Prices Now',
     gccSub: 'Live estimates in local currency · 22K per gram',
+    buyingGuideTitle: 'How to Buy Gold',
+    buyingGuideSub: 'Find shops, compare prices, and understand the market in your region',
+    guideShopsTitle: 'Find Trusted Shops',
+    guideShopsDesc: 'Browse listed gold shops and markets across countries. Filter by region, city, and specialty.',
+    guideShopsCta: 'Explore Shops →',
+    guideMarketsTitle: 'Browse by Market',
+    guideMarketsDesc: 'View local gold prices, market context, and buying tips for each country.',
+    guideMarketsCta: 'View Countries →',
+    guideCalcTitle: 'Calculate & Compare',
+    guideCalcDesc: 'Use our calculator to compare prices, values, and purchasing power across karats and currencies.',
+    guideCalcCta: 'Open Calculator →',
     seeAll: 'See all countries →',
     perGram: 'per gram',
     trustLive: 'Live spot data',
@@ -157,6 +168,17 @@ const T = {
     marketClosed: '○ السوق مغلق',
     gccTitle: 'أسعار ذهب الخليج الآن',
     gccSub: 'تقديرات بالعملة المحلية · عيار 22 لكل غرام',
+    buyingGuideTitle: 'كيف تشتري الذهب',
+    buyingGuideSub: 'ابحث عن محلات موثوقة وقارن الأسعار وافهم السوق في منطقتك',
+    guideShopsTitle: 'ابحث عن محلات موثوقة',
+    guideShopsDesc: 'تصفح محلات الذهب والأسواق المدرجة في جميع الدول. صفّ حسب المنطقة والمدينة والتخصص.',
+    guideShopsCta: 'استكشف المحلات ←',
+    guideMarketsTitle: 'تصفح حسب السوق',
+    guideMarketsDesc: 'اعرض أسعار الذهب المحلية والسياق السوقي والنصائح للشراء في كل دولة.',
+    guideMarketsCta: 'عرض الدول ←',
+    guideCalcTitle: 'احسب وقارن',
+    guideCalcDesc: 'استخدم الحاسبة لمقارنة الأسعار والقيم والقوة الشرائية عبر العيارات والعملات.',
+    guideCalcCta: 'افتح الحاسبة ←',
     seeAll: 'عرض كل الدول ←',
     perGram: 'لكل غرام',
     trustLive: 'بيانات فورية مباشرة',
@@ -342,6 +364,17 @@ function applyLangToPage() {
   set('gcc-section-title', tx('gccTitle'));
   set('gcc-section-sub',   tx('gccSub'));
   set('gcc-see-all',       tx('seeAll'));
+  set('buying-guide-title', tx('buyingGuideTitle'));
+  set('buying-guide-sub',  tx('buyingGuideSub'));
+  set('guide-shops-title', tx('guideShopsTitle'));
+  set('guide-shops-desc',  tx('guideShopsDesc'));
+  set('guide-shops-cta',   tx('guideShopsCta'));
+  set('guide-markets-title', tx('guideMarketsTitle'));
+  set('guide-markets-desc',  tx('guideMarketsDesc'));
+  set('guide-markets-cta',   tx('guideMarketsCta'));
+  set('guide-calc-title',  tx('guideCalcTitle'));
+  set('guide-calc-desc',   tx('guideCalcDesc'));
+  set('guide-calc-cta',    tx('guideCalcCta'));
   set('trust-live',            tx('trustLive'));
   set('trust-live-sub',        tx('trustLiveSub'));
   set('trust-countries',       tx('trustCountries'));

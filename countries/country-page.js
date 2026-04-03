@@ -29,6 +29,7 @@ import { formatPrice } from '../lib/formatter.js';
 import { injectNav, updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
+import { renderBreadcrumbs } from '../components/breadcrumbs.js';
 
 // Minimal shared STATE for country pages
 const STATE = {
@@ -326,6 +327,15 @@ export async function initCountryPage(cfg) {
 
   // Inject nav + footer (depth=1 since we're in /countries/)
   const navResult = injectNav(STATE.lang, 1);
+  // Inject breadcrumbs with country name
+  const countryName = STATE.lang === 'ar' ? cfg.nameAr : cfg.nameEn;
+  const breadcrumbContainer = document.querySelector('.page-breadcrumbs');
+  if (breadcrumbContainer) {
+    renderBreadcrumbs(breadcrumbContainer, [
+      { label: 'Home', url: '../' },
+      { label: countryName, url: '#' }
+    ]);
+  }
   injectFooter(STATE.lang, 1);
   injectTicker(STATE.lang, 1);
 
