@@ -214,17 +214,36 @@
       </div>
     </section>
 
+    <!-- ═══════ DATA TRUST BANNER ═══════ -->
+    <section class="home-section home-section--trust-banner">
+      <div class="home-section-inner home-section-inner--narrow">
+        <div class="trust-banner-box">
+          <div class="trust-banner-icon">⚠️</div>
+          <div class="trust-banner-content">
+            <h3>About Our Data</h3>
+            <p>These are <strong>spot-linked bullion estimates</strong>, not retail jewelry prices. Actual store prices include making charges and shop margins (typically 3–25 AED/gram). Prices update every 90 seconds from <a href="https://gold-api.com" target="_blank">gold-api.com</a>. <a href="methodology.html">Full methodology →</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ═══════ GCC QUICK PRICES ═══════ -->
     <section class="home-section" aria-labelledby="gcc-section-title">
       <div class="home-section-inner">
         <div class="section-intro">
           <div>
-            <h2 id="gcc-section-title" class="home-section-title">GCC Gold Prices Now</h2>
-            <p class="home-section-sub" id="gcc-section-sub">Live estimates in local currency · 22K per gram</p>
+            <h2 id="gcc-section-title" class="home-section-title"></h2>
+            <p class="home-section-sub" id="gcc-section-sub"></p>
           </div>
-          <a href="tracker.html" class="section-link" id="gcc-see-all">See all countries →</a>
+          <a href="tracker.html" class="section-link" id="gcc-see-all"></a>
         </div>
-        <div class="gcc-grid" id="gcc-quick-grid">
+        <!-- Region tabs for filtering prices -->
+        <div class="gcc-region-tabs" role="tablist" aria-label="Price region filter">
+          <button class="gcc-region-tab is-active" data-region="gcc" role="tab" aria-selected="true" aria-controls="gcc-quick-grid">GCC (6)</button>
+          <button class="gcc-region-tab" data-region="mena" role="tab" aria-selected="false" aria-controls="gcc-quick-grid">MENA (8+)</button>
+          <button class="gcc-region-tab" data-region="global" role="tab" aria-selected="false" aria-controls="gcc-quick-grid">Global (24+)</button>
+        </div>
+        <div class="gcc-grid" id="gcc-quick-grid" role="tabpanel">
           <!-- Filled by home.js -->
           <div class="gcc-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
           <div class="gcc-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
