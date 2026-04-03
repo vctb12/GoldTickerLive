@@ -1100,6 +1100,32 @@ body.tracker-pro-page {
   box-shadow: 0 10px 24px rgba(196, 154, 68, 0.12);
 }
 
+.tracker-watch-card.is-highlight {
+  border-color: rgba(196, 154, 68, 0.45);
+  background: rgba(196, 154, 68, 0.06);
+}
+
+.tracker-stack-item.is-highlight {
+  background: rgba(196, 154, 68, 0.08);
+  border-color: var(--tp-accent);
+}
+
+.tracker-stack-item.is-alert-close {
+  border-color: rgba(255, 180, 0, 0.6);
+  background: rgba(255, 180, 0, 0.05);
+}
+
+.tracker-stack-item.is-alert-imminent {
+  border-color: rgba(255, 77, 77, 0.6);
+  background: rgba(255, 77, 77, 0.05);
+}
+
+.tracker-stack-item.is-triggered {
+  border-color: var(--tp-accent);
+  background: rgba(196, 154, 68, 0.12);
+  font-weight: 500;
+}
+
 .tracker-table td.tracker-cell-strong {
   font-weight: 800;
   color: var(--tp-text);

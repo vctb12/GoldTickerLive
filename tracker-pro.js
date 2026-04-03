@@ -231,23 +231,32 @@ function bindCoreEvents() {
   el.runLookup?.addEventListener('click', () => {
     const dateStr = el.lookupDate?.value;
     if (!dateStr || !el.lookupResults) return;
-    const target = dateStr.slice(0, 7);
-    const closest = state.history.find(r => {
-      const d = r.date instanceof Date ? r.date.toISOString().slice(0, 7) : String(r.date).slice(0, 7);
-      return d >= target;
+    const targetDate = new Date(dateStr);
+    // Find closest historical record by exact date, not just month
+    let closest = null;
+    let minDaysDiff = Infinity;
+    state.history.forEach(r => {
+      const d = r.date instanceof Date ? r.date : new Date(r.date);
+      const daysDiff = Math.abs((d.getTime() - targetDate.getTime()) / (1000 * 60 * 60 * 24));
+      if (daysDiff < minDaysDiff) {
+        minDaysDiff = daysDiff;
+        closest = r;
+      }
     });
     if (closest) {
       const aed24 = priceFor({ currency: 'AED', karat: '24', unit: 'gram', spot: closest.spot });
-      const dateStr = closest.date instanceof Date ? closest.date.toISOString().slice(0, 10) : closest.date;
+      const lookupDateIso = closest.date instanceof Date ? closest.date.toISOString().slice(0, 10) : closest.date;
+      const daysAway = Math.round(minDaysDiff);
+      const daysNote = daysAway === 0 ? 'exact match' : `${daysAway} day${daysAway !== 1 ? 's' : ''} away`;
       el.lookupResults.innerHTML = `
         <div class="tracker-result-grid">
-          <div class="tracker-result-card"><div class="tracker-result-k">Date</div><div class="tracker-result-v">${dateStr}</div><div class="tracker-result-s">${closest.granularity || ''}</div></div>
+          <div class="tracker-result-card"><div class="tracker-result-k">Found date</div><div class="tracker-result-v">${lookupDateIso}</div><div class="tracker-result-s">${daysNote}</div></div>
           <div class="tracker-result-card"><div class="tracker-result-k">XAU/USD</div><div class="tracker-result-v">$${closest.spot.toFixed(2)}</div><div class="tracker-result-s">per troy oz</div></div>
           <div class="tracker-result-card"><div class="tracker-result-k">UAE 24K/g</div><div class="tracker-result-v">${aed24 ? 'AED ' + aed24.toFixed(2) : '—'}</div><div class="tracker-result-s">AED peg 3.6725</div></div>
-          <div class="tracker-result-card"><div class="tracker-result-k">Source</div><div class="tracker-result-v"><span class="tracker-source-badge tracker-source-badge--${closest.source}">${closest.source}</span></div><div class="tracker-result-s">&nbsp;</div></div>
+          <div class="tracker-result-card"><div class="tracker-result-k">Source</div><div class="tracker-result-v"><span class="tracker-source-badge tracker-source-badge--${closest.source}">${closest.source}</span></div><div class="tracker-result-s">${closest.granularity || 'daily'}</div></div>
         </div>`;
     } else {
-      el.lookupResults.innerHTML = '<p style="color:var(--tp-text-muted)">No data for that date range.</p>';
+      el.lookupResults.innerHTML = '<p style="color:var(--tp-text-muted)">No data available for that date. Archive covers 2019–present.</p>';
     }
   });
 
@@ -314,7 +323,10 @@ function startAutoRefresh() {
     checkAlerts();
     renderAll();
     if (el.refreshBadge) {
-      el.refreshBadge.textContent = `Updated ${new Date().toLocaleTimeString()}`;
+      const now = new Date().toLocaleTimeString();
+      el.refreshBadge.textContent = state.hasLiveFailure
+        ? `Last update ${now} (fallback)`
+        : `Live · synced ${now}`;
     }
   }, CONSTANTS.GOLD_REFRESH_MS);
 }
@@ -530,12 +542,15 @@ function exportJsonData() {
 
 function renderHero() {
   const spot = currentSpot();
-  const staleBadge = state.hasLiveFailure ? ' (cached)' : '';
 
   if (el.liveBadgeText) {
-    el.liveBadgeText.textContent = spot
-      ? `Live · XAU/USD ${spot.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${staleBadge}`
-      : state.hasLiveFailure ? 'Live feed unavailable — showing cached data' : 'Connecting…';
+    if (spot) {
+      el.liveBadgeText.textContent = state.hasLiveFailure
+        ? `Fallback · XAU/USD ${spot.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (cached)`
+        : `Live · XAU/USD ${spot.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    } else {
+      el.liveBadgeText.textContent = state.hasLiveFailure ? 'Live feed unavailable — no cached data' : 'Connecting to API…';
+    }
   }
   if (el.marketBadge) {
     const now = new Date();
@@ -748,16 +763,20 @@ function renderWatchlist() {
   if (!el.watchlistGrid) return;
   const spot = currentSpot();
   const favs = state.favorites || [];
-  if (!favs.length || !spot) { el.watchlistGrid.innerHTML = '<p style="color:var(--tp-text-muted);font-size:0.85rem">No favorites set. Add currencies via the Compare tab.</p>'; return; }
+  if (!favs.length || !spot) {
+    el.watchlistGrid.innerHTML = '<p style="color:var(--tp-text-muted);font-size:0.85rem">No favorites set. Add currencies via the Compare tab. Your watchlist will appear here for quick reference.</p>';
+    return;
+  }
   el.watchlistGrid.innerHTML = favs.map(cur => {
     const country = COUNTRIES.find(c => c.currency === cur);
     const p = priceFor({ currency: cur, karat: state.selectedKarat, unit: state.selectedUnit, spot });
     const name = state.lang === 'ar' ? (country?.nameAr || country?.nameEn) : country?.nameEn;
-    return `<div class="tracker-watch-card">
+    const isCurrent = state.selectedCurrency === cur;
+    return `<div class="tracker-watch-card${isCurrent ? ' is-highlight' : ''}">
       <div class="tracker-watch-top">
         <div class="tracker-watch-title">
           <strong>${country?.flag ?? ''} ${name ?? cur}</strong>
-          <span>${cur}</span>
+          <span>${cur}${isCurrent ? ' · selected' : ''}</span>
         </div>
         <div class="tracker-watch-value">
           <strong>${p ? p.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}</strong>
@@ -774,8 +793,10 @@ function renderDecisionCues() {
   if (!spot) { el.decisionCues.innerHTML = ''; return; }
   const lines = [
     `Live spot: $${spot.toFixed(2)} / troy oz`,
-    state.hasLiveFailure ? '⚠ Data source: cached — API unreachable' : '✓ Data source: live API',
-    `History coverage: 2019–Aug 2025 (LBMA baseline) + session snapshots`,
+    state.hasLiveFailure
+      ? `⚠ Data source: fallback — using cache (API unreachable — live may return soon)`
+      : `✓ Data source: live · last API fetch successful`,
+    `History coverage: 2019–Aug 2025 (LBMA baseline) + ${state.snapshots?.length || 0} session snapshots`,
   ];
   el.decisionCues.innerHTML = lines.map(l => `<div class="tracker-note-item">${l}</div>`).join('');
 }
@@ -787,8 +808,24 @@ function renderAlerts() {
   el.alertList.innerHTML = alerts.length
     ? alerts.map((a, i) => {
         const hit = spot && (a.direction === 'above' ? spot > a.target : spot < a.target);
-        return `<div class="tracker-stack-item${hit ? ' is-triggered' : ''}">
-          <span>${a.scope} ${a.direction} <strong>$${a.target}</strong>${hit ? ' ✓ triggered' : ''}</span>
+        let proximity = '';
+        let proximityClass = '';
+        if (spot) {
+          const distance = Math.abs(spot - a.target);
+          const pct = (distance / a.target) * 100;
+          if (pct < 1) {
+            proximity = '⚡ very close';
+            proximityClass = ' is-alert-imminent';
+          } else if (pct < 3) {
+            proximity = '● nearby';
+            proximityClass = ' is-alert-close';
+          }
+        }
+        return `<div class="tracker-stack-item${hit ? ' is-triggered' : ''}${proximityClass}">
+          <div style="flex:1">
+            <span>${a.scope} ${a.direction} <strong>$${a.target}</strong>${hit ? ' ✓ triggered' : ''}</span>
+            ${proximity ? `<div style="font-size:0.8rem;color:var(--tp-text-muted);margin-top:0.25rem">${proximity}</div>` : ''}
+          </div>
           <button data-idx="${i}" class="tracker-remove-btn" aria-label="Delete alert">×</button>
         </div>`;
       }).join('')
@@ -799,14 +836,26 @@ function renderPresets() {
   if (!el.presetList) return;
   const presets = state.presets || [];
   el.presetList.innerHTML = presets.length
-    ? presets.map((p, i) => `<div class="tracker-stack-item">
-        <span>${p.name} <small style="color:var(--tp-text-faint)">${p.karat}K · ${p.currency} · ${p.unit}</small></span>
+    ? presets.map((p, i) => {
+        const isCurrent = state.selectedCurrency === p.currency &&
+                         state.selectedKarat === p.karat &&
+                         state.selectedUnit === p.unit &&
+                         state.range === p.range;
+        return `<div class="tracker-stack-item${isCurrent ? ' is-highlight' : ''}">
+        <div style="flex:1">
+          <div><strong>${p.name}</strong></div>
+          <div style="font-size:0.8rem;color:var(--tp-text-muted);margin-top:0.25rem">
+            ${p.karat}K · ${p.currency}/${p.unit} · ${p.range} range
+            ${isCurrent ? ' · <span style="color:var(--tp-accent)">● current</span>' : ''}
+          </div>
+        </div>
         <span>
           <button data-idx="${i}" class="tracker-load-btn tracker-pill">Load</button>
           <button data-idx="${i}" class="tracker-remove-btn" aria-label="Delete preset">×</button>
         </span>
-      </div>`).join('')
-    : '<p style="color:var(--tp-text-muted);font-size:0.85rem">No presets saved.</p>';
+      </div>`;
+      }).join('')
+    : '<p style="color:var(--tp-text-muted);font-size:0.85rem">No presets saved. Save the current view via the form above.</p>';
 }
 
 function renderPlanners() {
@@ -843,9 +892,36 @@ function renderPlanners() {
 
 function renderArchive() {
   if (!el.archiveBody) return;
-  const rows = state.history.slice().reverse().slice(0, 200);
+  let rows = state.history.slice().reverse();
+
+  // Apply range filter
+  const range = el.archiveRange?.value || 'ALL';
+  if (range !== 'ALL') {
+    const daysBack = {
+      '30D': 30, '90D': 90, '1Y': 365, '3Y': 1095, '5Y': 1825
+    }[range] || 0;
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - daysBack);
+    rows = rows.filter(r => {
+      const d = r.date instanceof Date ? r.date : new Date(r.date);
+      return d >= cutoff;
+    });
+  }
+
+  // Apply search filter
+  const query = el.archiveSearch?.value?.toLowerCase() || '';
+  if (query) {
+    rows = rows.filter(r => {
+      const dateStr = r.date instanceof Date ? r.date.toISOString() : String(r.date);
+      return dateStr.includes(query) || r.source.toLowerCase().includes(query);
+    });
+  }
+
+  rows = rows.slice(0, 200);
+
   if (!rows.length) {
-    el.archiveBody.innerHTML = '<tr><td colspan="5">No archive data available yet.</td></tr>';
+    el.archiveBody.innerHTML = '<tr><td colspan="5">No records match filters.</td></tr>';
+    if (el.archiveMeta) el.archiveMeta.textContent = '';
     return;
   }
   const spot = currentSpot();
@@ -857,11 +933,14 @@ function renderArchive() {
       <td>$${r.spot.toFixed(2)}</td>
       <td>${selected ? selected.toFixed(2) : '—'}</td>
       <td>${aed24 ? aed24.toFixed(2) : '—'}</td>
-      <td><span class="tracker-source-badge tracker-source-badge--${r.source}">${r.source}</span></td>
+      <td><span class="tracker-source-badge tracker-source-badge--${r.source}">${r.source}${r.granularity ? ' · ' + r.granularity : ''}</span></td>
     </tr>`;
   }).join('');
   if (el.archiveMeta) {
-    el.archiveMeta.textContent = `${rows.length} records shown · newest first · LBMA baseline 2019–Aug 2025 · session snapshots added live`;
+    const sourceInfo = state.history.some(r => r.source === 'live' || r.source === 'session-cache')
+      ? 'session + baseline'
+      : 'baseline';
+    el.archiveMeta.textContent = `${rows.length}/${state.history.length} records · ${sourceInfo} · 2019–present · filter by date or source`;
   }
 }
 
