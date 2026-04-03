@@ -71,11 +71,19 @@
       </div>
     </section>
 
+    <section id="shops-featured" class="shops-featured" aria-labelledby="shops-featured-title" hidden>
+      <div class="shops-results-inner">
+        <h2 id="shops-featured-title" class="shops-featured-title">Featured Markets</h2>
+        <div id="shops-featured-grid" class="shops-featured-grid"></div>
+      </div>
+    </section>
+
     <section class="shops-results" aria-labelledby="shops-results-title">
       <div class="shops-results-inner">
         <div class="shops-results-head">
           <div class="shops-results-head-left">
             <h2 id="shops-results-title">Listed Shops</h2>
+            <div id="shops-filter-pills" class="shops-filter-pills"></div>
             <p id="shops-active-filters" class="shops-active-filters"></p>
           </div>
           <p id="shops-count" aria-live="polite"></p>
@@ -111,6 +119,14 @@
       </div>
     </section>
   </main>
+
+  <div id="shops-modal" class="shops-modal" hidden aria-labelledby="shops-modal-title" role="dialog" aria-modal="true">
+    <div class="shops-modal-overlay"></div>
+    <div class="shops-modal-content">
+      <button class="shops-modal-close" aria-label="Close details" type="button">×</button>
+      <div id="shops-modal-body"></div>
+    </div>
+  </div>
 
   <script type="module" src="./shops.js"></script>
 </body>
