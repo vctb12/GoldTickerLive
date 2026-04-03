@@ -283,6 +283,12 @@ function buildFilters() {
   const citySelect = document.getElementById('shops-city-filter');
   const specialtySelect = document.getElementById('shops-specialty-filter');
 
+  // Guard against missing DOM elements
+  if (!regionSelect || !countrySelect || !citySelect || !specialtySelect) {
+    console.warn('[shops] Filter select elements not found');
+    return;
+  }
+
   regionSelect.innerHTML = `<option value="all">${t('allRegions')}</option>${Object.entries(REGIONS)
     .map(([code, labels]) => `<option value="${code}">${labels[STATE.lang]}</option>`).join('')}`;
 
@@ -400,6 +406,11 @@ function activeFilterSummary() {
 
 function renderCards(shops) {
   const grid = document.getElementById('shops-grid');
+  if (!grid) {
+    console.warn('[shops] Element #shops-grid not found');
+    return;
+  }
+
   grid.innerHTML = shops.map((shop, idx) => {
     const country = countryByCode(shop.countryCode);
     const specialties = (shop.specialties || []).map((item) => `<span class="shop-tag">${item}</span>`).join('');
@@ -442,10 +453,22 @@ function renderCards(shops) {
     `;
   }).join('');
 
-  // Bind click handlers to open modal
+  // Bind click handlers after rendering
+  bindShopCardHandlers();
+}
+
+// Separate binding function to prevent handler orphaning
+function bindShopCardHandlers() {
+  const grid = document.getElementById('shops-grid');
+  if (!grid) return;
+
   grid.querySelectorAll('.shop-card').forEach((card) => {
-    card.addEventListener('click', () => {
-      const shopId = card.dataset.shopId;
+    // Remove existing listeners by cloning to prevent duplicate bindings
+    const newCard = card.cloneNode(true);
+    card.parentNode.replaceChild(newCard, card);
+
+    newCard.addEventListener('click', () => {
+      const shopId = newCard.dataset.shopId;
       const shop = SHOPS.find((s) => s.id === shopId);
       if (shop) openModal(shop);
     });
@@ -455,6 +478,12 @@ function renderCards(shops) {
 function renderFeaturedSection() {
   const featuredSection = document.getElementById('shops-featured');
   const featuredGrid = document.getElementById('shops-featured-grid');
+
+  if (!featuredSection || !featuredGrid) {
+    console.warn('[shops] Featured section elements not found');
+    return;
+  }
+
   const featured = SHOPS.filter((shop) => shop.featured);
 
   if (!featured.length) {
@@ -478,10 +507,21 @@ function renderFeaturedSection() {
     `;
   }).join('');
 
-  // Bind click handlers
+  // Bind click handlers after rendering
+  bindFeaturedCardHandlers();
+}
+
+// Separate binding function for featured cards
+function bindFeaturedCardHandlers() {
+  const featuredGrid = document.getElementById('shops-featured-grid');
+  if (!featuredGrid) return;
+
   featuredGrid.querySelectorAll('.featured-card').forEach((card) => {
-    card.addEventListener('click', () => {
-      const shopId = card.dataset.shopId;
+    const newCard = card.cloneNode(true);
+    card.parentNode.replaceChild(newCard, card);
+
+    newCard.addEventListener('click', () => {
+      const shopId = newCard.dataset.shopId;
       const shop = SHOPS.find((s) => s.id === shopId);
       if (shop) openModal(shop);
     });
@@ -619,6 +659,21 @@ function updateLanguage() {
 }
 
 function init() {
+  // Validate data and DOM prerequisites
+  if (!SHOPS || SHOPS.length === 0) {
+    console.error('[shops] SHOPS data is empty or not loaded');
+    document.body.innerHTML = '<p>Error: Shop data failed to load.</p>';
+    return;
+  }
+
+  // Validate critical DOM elements exist
+  const requiredElements = ['shops-grid', 'shops-empty', 'shops-featured', 'shops-featured-grid', 'shops-filter-pills'];
+  for (const id of requiredElements) {
+    if (!document.getElementById(id)) {
+      console.error(`[shops] Required element #${id} not found in DOM`);
+    }
+  }
+
   try {
     const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
     if (prefs.lang === 'ar' || prefs.lang === 'en') STATE.lang = prefs.lang;
