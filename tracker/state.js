@@ -21,6 +21,7 @@ export const DEFAULT_STATE = {
   autoRefresh: true,
   favoritesOnly: false,
   liveWireOn: true,
+  activeRegion: 'gcc',
   // Market + history
   live: null,
   rates: {},
@@ -99,6 +100,7 @@ export function createInitialState() {
   base.autoRefresh = saved.autoRefresh !== false;
   base.favoritesOnly = !!saved.favoritesOnly;
   base.liveWireOn = saved.liveWireOn !== false;
+  base.activeRegion = saved.activeRegion || base.activeRegion;
 
   base.alerts = readLocal(CONSTANTS.CACHE_KEYS.alerts || 'gold_price_alerts', []);
   base.presets = readLocal(STORAGE_KEYS.presets, []);
@@ -125,6 +127,7 @@ export function persistState(state) {
     autoRefresh: state.autoRefresh,
     favoritesOnly: state.favoritesOnly,
     liveWireOn: state.liveWireOn,
+    activeRegion: state.activeRegion,
   };
   writeLocal(STORAGE_KEYS.core, payload);
   writeLocal(STORAGE_KEYS.presets, state.presets.slice(0, 20));

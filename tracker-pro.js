@@ -38,6 +38,7 @@ function ui() {
     wireRefresh: document.getElementById('tp-wire-refresh'),
     wireToggle: document.getElementById('tp-wire-toggle'),
     chart: document.getElementById('tp-chart'),
+    chartWrap: document.querySelector('.tracker-chart-wrap'),
     tooltip: document.getElementById('tp-tooltip'),
     legendMain: document.getElementById('tp-legend-main'),
     legendCompare: document.getElementById('tp-legend-compare'),
@@ -171,6 +172,18 @@ function bindCoreEvents() {
     track.style.animationPlayState = paused ? 'running' : 'paused';
     el.wireToggle.textContent = paused ? 'Pause' : 'Resume';
     el.wireToggle.setAttribute('aria-pressed', String(!paused));
+  });
+
+  // Region tabs for compare board
+  const regionTabs = document.querySelectorAll('.tracker-region-pill[data-region]');
+  if (!state.activeRegion) state.activeRegion = 'gcc'; // Initialize region state
+  regionTabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.activeRegion = btn.dataset.region;
+      regionTabs.forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      renderMarkets();
+    });
   });
 
   // Alert save
@@ -343,6 +356,14 @@ async function init() {
 
   populateSelects();
   bindCoreEvents();
+
+  // Initialize region tabs active state
+  const regionTabs = document.querySelectorAll('.tracker-region-pill[data-region]');
+  regionTabs.forEach(btn => {
+    const isActive = btn.dataset.region === (state.activeRegion || 'gcc');
+    btn.classList.toggle('is-active', isActive);
+  });
+
   await refreshData(false);
   renderAll();
   if (state.autoRefresh) startAutoRefresh();
@@ -586,6 +607,31 @@ function renderChart() {
     <text x="8" y="${H - 6}" fill="#9d8c72" font-size="11">Low: ${min.toFixed(0)}</text>
     <text x="${W - 8}" y="${H - 6}" text-anchor="end" fill="#9d8c72" font-size="11">Source: ${sourceLabel} · ${rows.length} points</text>
   `;
+
+  // Wire chart tooltip
+  if (el.chartWrap) {
+    el.chartWrap.addEventListener('mousemove', (e) => {
+      if (!el.tooltip || rows.length < 2) return;
+      const rect = el.chart.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const idx = Math.round((x / rect.width) * (rows.length - 1));
+      const clampedIdx = Math.max(0, Math.min(idx, rows.length - 1));
+      const row = rows[clampedIdx];
+      const tooltip = el.tooltip;
+      tooltip.innerHTML = `
+        <strong>$${row.spot.toFixed(2)}</strong>
+        <div>${row.date.toLocaleDateString()} · ${row.source}</div>
+      `;
+      const left = x;
+      tooltip.style.left = left + 'px';
+      tooltip.style.top = '0px';
+      tooltip.style.display = 'block';
+    });
+    el.chartWrap.addEventListener('mouseleave', () => {
+      if (el.tooltip) el.tooltip.style.display = 'none';
+    });
+  }
+
   if (el.chartStats) {
     const stats = getHistoryStats(flatHistory);
     el.chartStats.innerHTML = `
@@ -618,13 +664,45 @@ function renderMarkets() {
   if (!el.marketBoard) return;
   const spot = currentSpot();
   if (!spot) { el.marketBoard.innerHTML = '<p style="padding:1rem;color:var(--tp-text-muted)">Waiting for live data…</p>'; return; }
-  const filtered = COUNTRIES.filter(c => {
+
+  // Region filtering
+  const activeRegion = state.activeRegion || 'gcc';
+  const regionMap = {
+    gcc: ['AE', 'SA', 'KW', 'QA', 'BH', 'OM'],
+    arab: ['AE', 'SA', 'KW', 'QA', 'BH', 'OM', 'EG', 'JO', 'LB', 'SY', 'YE', 'MA', 'TN', 'DZ', 'IQ'],
+    global: null, // null means all
+  };
+  const regionCodes = regionMap[activeRegion];
+
+  let filtered = COUNTRIES.filter(c => {
+    // Apply region filter
+    if (regionCodes && !regionCodes.includes(c.code)) return false;
+    // Apply text filter
     if (el.marketFilter?.value) {
       const q = el.marketFilter.value.toLowerCase();
       if (!c.nameEn.toLowerCase().includes(q) && !c.currency.toLowerCase().includes(q)) return false;
     }
     return true;
-  }).slice(0, 30);
+  });
+
+  // Apply sorting
+  const sortValue = el.marketSort?.value || 'high';
+  if (sortValue === 'high') {
+    filtered.sort((a, b) => (priceFor({ currency: b.currency, karat: state.selectedKarat, unit: state.selectedUnit, spot }) || 0) - (priceFor({ currency: a.currency, karat: state.selectedKarat, unit: state.selectedUnit, spot }) || 0));
+  } else if (sortValue === 'low') {
+    filtered.sort((a, b) => (priceFor({ currency: a.currency, karat: state.selectedKarat, unit: state.selectedUnit, spot }) || 0) - (priceFor({ currency: b.currency, karat: state.selectedKarat, unit: state.selectedUnit, spot }) || 0));
+  } else if (sortValue === 'alpha') {
+    filtered.sort((a, b) => a.nameEn.localeCompare(b.nameEn));
+  } else if (sortValue === 'favorites') {
+    filtered.sort((a, b) => {
+      const aFav = (state.favorites || []).includes(a.currency) ? 1 : 0;
+      const bFav = (state.favorites || []).includes(b.currency) ? 1 : 0;
+      return bFav - aFav;
+    });
+  }
+
+  filtered = filtered.slice(0, 30);
+
   el.marketBoard.innerHTML = filtered.map(c => {
     const cur = c.currency;
     const p = priceFor({ currency: cur, karat: state.selectedKarat, unit: state.selectedUnit, spot });
@@ -641,8 +719,28 @@ function renderMarkets() {
           <span>${state.selectedKarat}K / ${state.selectedUnit}</span>
         </div>
       </div>
+      <div class="tracker-market-bottom">
+        <button type="button" class="tracker-icon-btn${isFav ? ' is-favorite' : ''}" data-currency="${cur}" aria-label="Toggle favorite" aria-pressed="${isFav ? 'true' : 'false'}">★</button>
+      </div>
     </div>`;
   }).join('');
+
+  // Wire favorites toggle
+  el.marketBoard?.querySelectorAll('.tracker-icon-btn[data-currency]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const cur = btn.dataset.currency;
+      if ((state.favorites || []).includes(cur)) {
+        state.favorites = state.favorites.filter(c => c !== cur);
+      } else {
+        state.favorites = [...(state.favorites || []), cur];
+      }
+      persistState(state);
+      renderMarkets();
+      renderWatchlist();
+    });
+  });
+
   if (el.marketEmpty) el.marketEmpty.hidden = filtered.length > 0;
 }
 
