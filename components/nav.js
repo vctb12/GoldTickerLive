@@ -45,12 +45,32 @@ const NAV_DATA = {
         ],
       },
       {
+        key: 'cities',
+        label: 'Cities',
+        items: [
+          { href: '../cities/dubai.html',      label: 'Dubai, UAE'           },
+          { href: '../cities/abu-dhabi.html',  label: 'Abu Dhabi, UAE'       },
+          { href: '../cities/riyadh.html',     label: 'Riyadh, Saudi Arabia' },
+          { href: '../cities/cairo.html',      label: 'Cairo, Egypt'         },
+          { href: '../cities/doha.html',       label: 'Doha, Qatar'          },
+        ],
+      },
+      {
+        key: 'goldmarkets',
+        label: 'Famous Markets',
+        items: [
+          { href: '../markets/dubai-gold-souk.html',      label: 'Dubai Gold Souk'         },
+          { href: '../markets/khan-el-khalili-cairo.html', label: 'Khan el-Khalili, Cairo' },
+        ],
+      },
+      {
         key: 'learn',
         label: 'Learn',
         items: [
-          { href: '../learn.html',        label: 'Gold Guide'   },
-          { href: '../methodology.html',  label: 'Methodology'  },
-          { href: '../learn.html#faq',    label: 'FAQ'          },
+          { href: '../guides/buying-guide.html', label: 'How to Buy Gold' },
+          { href: '../learn.html',               label: 'Gold Guide'      },
+          { href: '../methodology.html',         label: 'Methodology'     },
+          { href: '../learn.html#faq',           label: 'FAQ'             },
         ],
       },
       {
@@ -98,12 +118,32 @@ const NAV_DATA = {
         ],
       },
       {
+        key: 'cities',
+        label: 'المدن',
+        items: [
+          { href: '../cities/dubai.html',      label: 'دبي، الإمارات'           },
+          { href: '../cities/abu-dhabi.html',  label: 'أبوظبي، الإمارات'        },
+          { href: '../cities/riyadh.html',     label: 'الرياض، السعودية'        },
+          { href: '../cities/cairo.html',      label: 'القاهرة، مصر'            },
+          { href: '../cities/doha.html',       label: 'الدوحة، قطر'             },
+        ],
+      },
+      {
+        key: 'goldmarkets',
+        label: 'أسواق الذهب الشهيرة',
+        items: [
+          { href: '../markets/dubai-gold-souk.html',      label: 'سوق الذهب بدبي'        },
+          { href: '../markets/khan-el-khalili-cairo.html', label: 'خان الخليلي، القاهرة' },
+        ],
+      },
+      {
         key: 'learn',
         label: 'تعلّم',
         items: [
-          { href: '../learn.html',        label: 'دليل الذهب' },
-          { href: '../methodology.html',  label: 'المنهجية'   },
-          { href: '../learn.html#faq',    label: 'الأسئلة الشائعة' },
+          { href: '../guides/buying-guide.html', label: 'كيفية شراء الذهب' },
+          { href: '../learn.html',               label: 'دليل الذهب'      },
+          { href: '../methodology.html',         label: 'المنهجية'        },
+          { href: '../learn.html#faq',           label: 'الأسئلة الشائعة'  },
         ],
       },
       {
