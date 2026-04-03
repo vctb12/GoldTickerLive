@@ -560,6 +560,42 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
+   GCC REGION TABS
+   ══════════════════════════════════════════════════════════════ */
+.gcc-region-tabs {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--color-border-subtle, rgba(0,0,0,0.07));
+  padding-bottom: 1rem;
+}
+
+.gcc-region-tab {
+  background: none;
+  border: none;
+  padding: 0.5rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-muted, #6b7280);
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  position: relative;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1rem;
+  padding-bottom: 1rem;
+}
+
+.gcc-region-tab:hover {
+  color: var(--color-gold-dark, #8c6d24);
+}
+
+.gcc-region-tab.is-active {
+  color: var(--color-gold-deep, #5a3a0a);
+  font-weight: 700;
+  border-bottom-color: var(--color-gold, #c99a3e);
+}
+
+/* ══════════════════════════════════════════════════════════════
    GCC QUICK GRID
    ══════════════════════════════════════════════════════════════ */
 .gcc-grid {
@@ -1164,6 +1200,10 @@
   .trust-sub   { display: none; } /* hide sub-labels to save space on small screens */
 
   .home-section { padding: 2rem 1rem; }
+
+  /* Region tabs responsive */
+  .gcc-region-tabs { gap: 0.4rem; padding-bottom: 0.7rem; margin-bottom: 1.5rem; }
+  .gcc-region-tab { padding: 0.4rem 0.8rem; font-size: 0.8rem; margin-bottom: -0.8rem; padding-bottom: 0.8rem; }
 
   /* GCC grid: MUST go to 2-col max at 640px, then 1-col at 480px */
   .gcc-grid { grid-template-columns: 1fr 1fr; gap: 0.65rem; }
