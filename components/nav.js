@@ -9,7 +9,7 @@
  *   updateNavLang(lang)   — live language switch without re-inject
  *
  * @param {'en'|'ar'} lang
- * @param {0|1}       depth  0 = root pages, 1 = /countries/ subdirectory
+ * @param {0|1|2}     depth  0 = root pages, 1 = /countries/ subdirectory, 2 = /countries/{code}/cities/ or /markets/
  */
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -48,19 +48,19 @@ const NAV_DATA = {
         key: 'cities',
         label: 'Cities',
         items: [
-          { href: '../cities/dubai.html',      label: 'Dubai, UAE'           },
-          { href: '../cities/abu-dhabi.html',  label: 'Abu Dhabi, UAE'       },
-          { href: '../cities/riyadh.html',     label: 'Riyadh, Saudi Arabia' },
-          { href: '../cities/cairo.html',      label: 'Cairo, Egypt'         },
-          { href: '../cities/doha.html',       label: 'Doha, Qatar'          },
+          { href: '../countries/uae/cities/dubai.html',           label: 'Dubai, UAE'           },
+          { href: '../countries/uae/cities/abu-dhabi.html',       label: 'Abu Dhabi, UAE'       },
+          { href: '../countries/saudi-arabia/cities/riyadh.html', label: 'Riyadh, Saudi Arabia' },
+          { href: '../countries/egypt/cities/cairo.html',         label: 'Cairo, Egypt'         },
+          { href: '../countries/qatar/cities/doha.html',          label: 'Doha, Qatar'          },
         ],
       },
       {
         key: 'goldmarkets',
         label: 'Famous Markets',
         items: [
-          { href: '../markets/dubai-gold-souk.html',      label: 'Dubai Gold Souk'         },
-          { href: '../markets/khan-el-khalili-cairo.html', label: 'Khan el-Khalili, Cairo' },
+          { href: '../countries/uae/markets/dubai-gold-souk.html',         label: 'Dubai Gold Souk'         },
+          { href: '../countries/egypt/markets/khan-el-khalili-cairo.html', label: 'Khan el-Khalili, Cairo' },
         ],
       },
       {
@@ -121,19 +121,19 @@ const NAV_DATA = {
         key: 'cities',
         label: 'المدن',
         items: [
-          { href: '../cities/dubai.html',      label: 'دبي، الإمارات'           },
-          { href: '../cities/abu-dhabi.html',  label: 'أبوظبي، الإمارات'        },
-          { href: '../cities/riyadh.html',     label: 'الرياض، السعودية'        },
-          { href: '../cities/cairo.html',      label: 'القاهرة، مصر'            },
-          { href: '../cities/doha.html',       label: 'الدوحة، قطر'             },
+          { href: '../countries/uae/cities/dubai.html',           label: 'دبي، الإمارات'           },
+          { href: '../countries/uae/cities/abu-dhabi.html',       label: 'أبوظبي، الإمارات'        },
+          { href: '../countries/saudi-arabia/cities/riyadh.html', label: 'الرياض، السعودية'        },
+          { href: '../countries/egypt/cities/cairo.html',         label: 'القاهرة، مصر'            },
+          { href: '../countries/qatar/cities/doha.html',          label: 'الدوحة، قطر'             },
         ],
       },
       {
         key: 'goldmarkets',
         label: 'أسواق الذهب الشهيرة',
         items: [
-          { href: '../markets/dubai-gold-souk.html',      label: 'سوق الذهب بدبي'        },
-          { href: '../markets/khan-el-khalili-cairo.html', label: 'خان الخليلي، القاهرة' },
+          { href: '../countries/uae/markets/dubai-gold-souk.html',         label: 'سوق الذهب بدبي'        },
+          { href: '../countries/egypt/markets/khan-el-khalili-cairo.html', label: 'خان الخليلي، القاهرة' },
         ],
       },
       {
