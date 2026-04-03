@@ -134,7 +134,11 @@ function bindCoreEvents() {
     const txt = spot
       ? `Gold: $${spot.toFixed(2)}/oz · UAE 24K: AED ${priceFor({ currency:'AED', karat:'24', unit:'gram', spot })?.toFixed(2)}/g · ${new Date().toUTCString()}`
       : 'Gold data unavailable';
-    navigator.clipboard?.writeText(txt).catch(() => {});
+    navigator.clipboard?.writeText(txt).then(() => {
+      showToast('Brief copied to clipboard');
+    }).catch(() => {
+      showToast('Failed to copy to clipboard');
+    });
   });
 
   // Toolbar selects
@@ -195,6 +199,7 @@ function bindCoreEvents() {
     state.alerts = [...(state.alerts || []), { scope, direction, target }];
     persistState(state);
     renderAlerts();
+    showToast(`Alert ${direction} $${target} saved`);
     if (el.alertTarget) el.alertTarget.value = '';
   });
 
@@ -215,12 +220,17 @@ function bindCoreEvents() {
     state.presets = [...(state.presets || []), { name, currency: state.selectedCurrency, karat: state.selectedKarat, unit: state.selectedUnit, range: state.range }];
     persistState(state);
     renderPresets();
+    showToast(`Preset "${name}" saved`);
     if (el.presetName) el.presetName.value = '';
   });
 
   // Copy URL
   el.copyUrl?.addEventListener('click', () => {
-    navigator.clipboard?.writeText(window.location.href).catch(() => {});
+    navigator.clipboard?.writeText(window.location.href).then(() => {
+      showToast('Preset URL copied to clipboard');
+    }).catch(() => {
+      showToast('Failed to copy to clipboard');
+    });
   });
 
   // Archive search
