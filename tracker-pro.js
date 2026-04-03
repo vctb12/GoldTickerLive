@@ -6,6 +6,7 @@ import * as calc from './lib/price-calculator.js';
 import * as fmt from './lib/formatter.js';
 import * as alertsLib from './lib/alerts.js';
 import { createInitialState, persistState } from './tracker/state.js';
+import { applyUrlState } from './tracker/state.js';
 import { mountShell, updateShellTickerFromState } from './tracker/ui-shell.js';
 import { fetchWire, renderWire as renderWireModule } from './tracker/wire.js';
 import { getUnifiedHistory, filterByRange, getHistoryStats } from './lib/historical-data.js';
@@ -119,7 +120,8 @@ function bindCoreEvents() {
 
   // Reset view
   el.resetBtn?.addEventListener('click', () => {
-    state.mode = 'live';
+    state.view = 'live';
+    state.activeTool = null;
     state.selectedCurrency = 'AED';
     state.selectedKarat = '24';
     state.selectedUnit = 'gram';
@@ -407,6 +409,13 @@ async function init() {
   await refreshData(false);
   renderAll();
   if (state.autoRefresh) startAutoRefresh();
+
+  // Add hashchange listener for back/forward button support
+  window.addEventListener('hashchange', () => {
+    applyUrlState(state);
+    shellCtrl.updateTabsAndPanels();
+    renderAll();
+  });
 }
 
 async function refreshData(forceLive = true) {
@@ -1053,21 +1062,25 @@ function renderAll() {
 
   renderHero();
 
-  if (state.mode === 'live') {
+  // Render view content
+  if (state.view === 'live') {
     renderMiniStrip();
     renderChart();
     renderKaratTable();
     renderMarkets();
     renderWatchlist();
     renderDecisionCues();
-  } else if (state.mode === 'compare') {
+  } else if (state.view === 'compare') {
     renderMarkets();
-  } else if (state.mode === 'archive') {
+  } else if (state.view === 'archive') {
     renderArchive();
-  } else if (state.mode === 'alerts') {
+  }
+
+  // Render active tool overlay (if any)
+  if (state.activeTool === 'alerts') {
     renderAlerts();
     renderPresets();
-  } else if (state.mode === 'planner') {
+  } else if (state.activeTool === 'planner') {
     renderPlanners();
   }
 
