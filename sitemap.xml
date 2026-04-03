@@ -20,6 +20,15 @@
     <priority>0.95</priority>
   </url>
 
+  <!-- Gold Shops Directory -->
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/shops.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/shops.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/shops.html?lang=ar"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
   <!-- Calculator -->
   <url>
     <loc>https://vctb12.github.io/Gold-Prices/calculator.html</loc>

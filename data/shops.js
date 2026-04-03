@@ -8,7 +8,7 @@ export const SHOPS = [
     market: 'Dubai Gold Souk (Deira)',
     category: 'Jewellery & Bullion',
     specialties: ['22K Jewellery', 'Gold Coins', 'Chains & Bangles'],
-    phone: '+971 4 000 0000',
+    phone: '',
     website: '',
     detailsAvailability: 'partial',
     featured: true,

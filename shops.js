@@ -2,8 +2,10 @@ import { COUNTRIES } from './config/countries.js';
 import { SHOPS } from './data/shops.js';
 import { injectNav, updateNavLang } from './components/nav.js';
 import { injectFooter } from './components/footer.js';
-import { injectTicker, updateTickerLang } from './components/ticker.js';
+import { injectTicker, updateTicker, updateTickerLang } from './components/ticker.js';
 import * as cache from './lib/cache.js';
+import { CONSTANTS } from './config/index.js';
+import { KARATS } from './config/index.js';
 
 const STATE = {
   lang: 'en',
@@ -448,6 +450,23 @@ function init() {
   const navResult = injectNav(STATE.lang, 0);
   injectFooter(STATE.lang, 0);
   injectTicker(STATE.lang, 0);
+
+  // Populate ticker from cache so it never shows all-dashes
+  const cachedGold = cache.getFallbackGoldPrice();
+  const cachedFX   = cache.getFallbackFXRates();
+  if (cachedGold?.price) {
+    const spot = cachedGold.price;
+    const aedRate = CONSTANTS.AED_PEG;
+    const purity = (k) => KARATS.find(x => x.code === k)?.purity ?? 1;
+    const aedGram = (k) => (spot / CONSTANTS.TROY_OZ_GRAMS) * purity(k) * aedRate;
+    updateTicker({
+      xauUsd:  spot,
+      uae24k:  aedGram('24'),
+      uae22k:  aedGram('22'),
+      uae21k:  aedGram('21'),
+      uae18k:  aedGram('18'),
+    });
+  }
 
   navResult.getLangToggleButtons().forEach((button) => {
     button.addEventListener('click', () => {

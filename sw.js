@@ -3,14 +3,17 @@
  * Strategy: cache-first for static assets, network-first for API calls.
  */
 
-const CACHE_NAME = 'goldprices-v1';
+const CACHE_NAME = 'goldprices-v2';
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 1 day
 
 // Static assets to pre-cache on install
 const PRECACHE_URLS = [
   '/Gold-Prices/',
-  '/Gold-Prices/index.html',
+  // NOTE: Do NOT add /Gold-Prices/index.html separately — GitHub Pages serves
+  // the same file for both / and /index.html, but the SW would cache them as
+  // two independent entries that can diverge across deploys. Keep only one.
   '/Gold-Prices/tracker.html',
+  '/Gold-Prices/shops.html',
   '/Gold-Prices/calculator.html',
   '/Gold-Prices/learn.html',
   '/Gold-Prices/insights.html',
@@ -18,7 +21,10 @@ const PRECACHE_URLS = [
   '/Gold-Prices/style.css',
   '/Gold-Prices/home.css',
   '/Gold-Prices/home.js',
-  '/Gold-Prices/app.js',
+  '/Gold-Prices/tracker-pro.js',
+  '/Gold-Prices/tracker-pro.css',
+  '/Gold-Prices/shops.js',
+  '/Gold-Prices/shops.css',
   '/Gold-Prices/calculator.js',
   '/Gold-Prices/calculator.css',
   '/Gold-Prices/learn.js',
