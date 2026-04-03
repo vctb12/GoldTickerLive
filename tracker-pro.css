@@ -769,14 +769,29 @@ body.tracker-pro-page {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.18rem 0.55rem;
+  padding: 0.35rem 0.85rem;
   border-radius: var(--tp-radius-pill);
-  border: 1px solid var(--tp-border);
+  border: 1.25px solid var(--tp-border);
   background: #fff;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--tp-text-muted);
   white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.tracker-pill:hover {
+  border-color: var(--tp-gold);
+  color: var(--tp-text);
+  background: var(--tp-gold-soft);
+}
+
+.tracker-pill.is-active {
+  background: var(--tp-gold-soft);
+  border-color: rgba(196, 154, 68, 0.4);
+  color: var(--tp-gold-strong);
+  font-weight: 800;
 }
 
 .tracker-tag.up,
