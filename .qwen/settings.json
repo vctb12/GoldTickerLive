@@ -1,6 +1,6 @@
 {
   "permissions": {
-    "defaultMode": "auto-edit",
+    "defaultMode": "plan",
     "confirmShellCommands": true,
     "confirmFileEdits": true
   },
