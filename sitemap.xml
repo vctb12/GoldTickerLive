@@ -65,6 +65,15 @@
     <priority>0.60</priority>
   </url>
 
+  <!-- Gold Investing Guide -->
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/invest.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/invest.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/invest.html?lang=ar"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
   <!-- Country Pages — GCC -->
   <url>
     <loc>https://vctb12.github.io/Gold-Prices/countries/uae.html</loc>
