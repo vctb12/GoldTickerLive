@@ -484,7 +484,7 @@ function renderFeaturedSection() {
     return;
   }
 
-  const featured = SHOPS.filter((shop) => shop.featured);
+  const featured = shopsMatchingPrimaryFilters().filter((shop) => shop.featured);
 
   if (!featured.length) {
     featuredSection.hidden = true;
@@ -530,6 +530,7 @@ function bindFeaturedCardHandlers() {
 
 function renderFilterPills() {
   const pillsContainer = document.getElementById('shops-filter-pills');
+  const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const pills = [];
 
   if (STATE.region !== 'all') pills.push({ type: 'region', value: STATE.region, label: regionName(STATE.region) });
@@ -539,18 +540,25 @@ function renderFilterPills() {
   }
   if (STATE.city !== 'all') pills.push({ type: 'city', value: STATE.city, label: STATE.city });
   if (STATE.specialty !== 'all') pills.push({ type: 'specialty', value: STATE.specialty, label: STATE.specialty });
+  if (STATE.search.trim()) {
+    const q = STATE.search.trim();
+    pills.push({ type: 'search', value: '', label: `"${esc(q)}"`, ariaLabel: `Remove "${q}" search filter` });
+  }
 
   if (!pills.length) {
     pillsContainer.innerHTML = '';
     return;
   }
 
-  pillsContainer.innerHTML = pills.map((pill) => `
-    <button class="shops-filter-pill" data-type="${pill.type}" data-value="${pill.value}" type="button">
-      ${pill.label}
-      <span class="shops-filter-pill-remove">×</span>
-    </button>
-  `).join('');
+  pillsContainer.innerHTML = pills.map((pill) => {
+    const ariaLabel = pill.ariaLabel || `Remove ${pill.label} filter`;
+    return `
+      <button class="shops-filter-pill" data-type="${pill.type}" data-value="${pill.value || ''}" type="button" aria-label="${ariaLabel}">
+        ${pill.label}
+        <span class="shops-filter-pill-remove" aria-hidden="true">×</span>
+      </button>
+    `;
+  }).join('');
 
   pillsContainer.querySelectorAll('.shops-filter-pill').forEach((pill) => {
     pill.addEventListener('click', () => {
@@ -559,6 +567,10 @@ function renderFilterPills() {
       if (type === 'country') STATE.country = 'all';
       if (type === 'city') STATE.city = 'all';
       if (type === 'specialty') STATE.specialty = 'all';
+      if (type === 'search') {
+        STATE.search = '';
+        document.getElementById('shops-search').value = '';
+      }
       buildFilters();
       render();
     });
