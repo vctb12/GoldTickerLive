@@ -402,6 +402,14 @@ function activeFilterSummary() {
 
   document.getElementById('shops-active-filters').textContent =
     labels.length ? t('activeFilters')(labels.join(' · ')) : t('noFilters');
+
+  // Update mobile filter badge count
+  const badge = document.getElementById('shops-filter-badge');
+  if (badge) {
+    const count = labels.length;
+    badge.textContent = String(count);
+    badge.hidden = count === 0;
+  }
 }
 
 function renderCards(shops) {
@@ -744,6 +752,16 @@ function init() {
     if (el) el.value = STATE.search;
   }
   updateLanguage();
+
+  // Mobile filter toggle
+  const filterToggle = document.getElementById('shops-filter-toggle');
+  const filterPanel  = document.getElementById('shops-filter-panel');
+  if (filterToggle && filterPanel) {
+    filterToggle.addEventListener('click', () => {
+      const open = filterPanel.classList.toggle('is-open');
+      filterToggle.setAttribute('aria-expanded', String(open));
+    });
+  }
 }
 
 init();

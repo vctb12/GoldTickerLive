@@ -38,6 +38,15 @@
           </div>
         </div>
 
+        <div class="shops-market-guides" aria-label="Market guide pages">
+          <a href="countries/uae/markets/dubai-gold-souk.html" class="shops-guide-chip">
+            <span aria-hidden="true">📍</span> Dubai Gold Souk Guide
+          </a>
+          <a href="countries/egypt/markets/khan-el-khalili-cairo.html" class="shops-guide-chip">
+            <span aria-hidden="true">📍</span> Khan el-Khalili Guide
+          </a>
+        </div>
+
         <div class="shops-popular" aria-label="Popular markets">
           <span class="shops-popular-label" id="shops-popular-label">Popular markets</span>
           <div class="shops-popular-chips" id="shops-popular-chips"></div>
@@ -47,6 +56,12 @@
 
     <section class="shops-controls" aria-label="Shop filters">
       <div class="shops-controls-inner">
+        <button class="shops-filter-toggle" id="shops-filter-toggle" aria-expanded="false" aria-controls="shops-filter-panel">
+          <span id="shops-filter-toggle-label">Filter &amp; Sort</span>
+          <span class="shops-filter-badge" id="shops-filter-badge" hidden>0</span>
+          <span class="shops-filter-toggle-icon" aria-hidden="true">▾</span>
+        </button>
+        <div class="shops-filter-panel" id="shops-filter-panel">
         <label class="shops-control shops-control--wide" for="shops-search">
           <span id="shops-search-label">Search by shop, city, country, market, or specialty</span>
           <input id="shops-search" type="search" placeholder="e.g. Dubai Gold Souk, Riyadh, bullion" />
@@ -71,6 +86,7 @@
           <span id="shops-specialty-label">Specialty</span>
           <select id="shops-specialty-filter"></select>
         </label>
+        </div><!-- /.shops-filter-panel -->
       </div>
     </section>
 
