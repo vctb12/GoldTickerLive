@@ -484,7 +484,7 @@ function renderFeaturedSection() {
     return;
   }
 
-  const featured = SHOPS.filter((shop) => shop.featured);
+  const featured = shopsMatchingPrimaryFilters().filter((shop) => shop.featured);
 
   if (!featured.length) {
     featuredSection.hidden = true;
