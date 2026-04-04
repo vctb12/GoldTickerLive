@@ -2,7 +2,7 @@
 import { injectNav, updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
-import { syncUrlFromState, persistState } from './state.js';
+import { syncUrlFromState, persistState, applyUrlState } from './state.js';
 
 export function mountShell(state, els, onModeChange, onLangChange) {
   // Mount shared shell
@@ -49,6 +49,13 @@ export function mountShell(state, els, onModeChange, onLangChange) {
 
   // Initial mode selection
   setMode(state.mode || 'live');
+
+  // Sync state when browser back/forward changes the URL hash
+  window.addEventListener('hashchange', () => {
+    applyUrlState(state);
+    setMode(state.mode || 'live');
+    if (typeof onModeChange === 'function') onModeChange(state.mode);
+  });
 
   // Keyboard shortcuts
   window.addEventListener('keydown', evt => {

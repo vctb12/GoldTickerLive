@@ -384,7 +384,7 @@ async function init() {
   const shellCtrl = mountShell(
     state,
     el,
-    /* onModeChange */ () => renderAll(),
+    /* onModeChange */ () => { populateSelects(); renderAll(); },
     /* onLangChange */ () => renderAll(),
   );
 
