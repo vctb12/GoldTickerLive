@@ -226,10 +226,10 @@
   <div id="ticker-root"></div>
 
   <script type="module">
-    import { injectNav } from '../../components/nav.js';
-    import { injectFooter } from '../../components/footer.js';
-    import { injectTicker } from '../../components/ticker.js';
-    import { renderBreadcrumbs } from '../../components/breadcrumbs.js';
+    import { injectNav } from '../../../components/nav.js';
+    import { injectFooter } from '../../../components/footer.js';
+    import { injectTicker } from '../../../components/ticker.js';
+    import { renderBreadcrumbs } from '../../../components/breadcrumbs.js';
 
     const lang = new URLSearchParams(location.search).get('lang') === 'ar' ? 'ar' : 'en';
     document.documentElement.lang = lang;
