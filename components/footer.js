@@ -38,16 +38,17 @@ export function injectFooter(lang = 'en', depth = 0) {
         <h4 class="footer-col-heading">${isAr ? 'الأسواق' : 'Markets'}</h4>
         <a href="${r('../tracker.html')}">${isAr ? 'تتبع مباشر' : 'Live Tracker'}</a>
         <a href="${r('../countries/uae.html')}">${isAr ? 'ذهب الإمارات اليوم' : 'UAE Gold Today'}</a>
-        <a href="${r('../tracker.html#compare')}">${isAr ? 'مقارنة الدول' : 'Compare Countries'}</a>
-        <a href="${r('../tracker.html#chart')}">${isAr ? 'البيانات التاريخية' : 'History &amp; Data'}</a>
+        <a href="${r('../tracker.html#section-countries')}">${isAr ? 'مقارنة دول الخليج' : 'GCC Compare'}</a>
+        <a href="${r('../tracker.html#section-chart')}">${isAr ? 'البيانات التاريخية' : 'History &amp; Data'}</a>
+        <a href="${r('../shops.html')}">${isAr ? 'دليل المحلات' : 'Shop Directory'}</a>
       </div>
 
       <!-- Tools column -->
       <div class="footer-col footer-col--links">
         <h4 class="footer-col-heading">${isAr ? 'الأدوات' : 'Tools'}</h4>
         <a href="${r('../calculator.html')}">${isAr ? 'حاسبة الذهب' : 'Gold Calculator'}</a>
-        <a href="${r('../tracker.html#alerts')}">${isAr ? 'تنبيهات السعر' : 'Price Alerts'}</a>
-        <a href="${r('../methodology.html')}">${isAr ? 'المنهجية' : 'Methodology'}</a>
+        <a href="${r('../tracker.html#section-alerts')}">${isAr ? 'تنبيهات السعر' : 'Price Alerts'}</a>
+        <a href="${r('../tracker.html#section-chart')}">${isAr ? 'تنزيل البيانات' : 'Downloads'}</a>
       </div>
 
       <!-- GCC column -->
@@ -68,8 +69,9 @@ export function injectFooter(lang = 'en', depth = 0) {
         <a href="${r('../countries/jordan.html')}">${isAr ? 'الأردن' : 'Jordan'}</a>
         <a href="${r('../countries/morocco.html')}">${isAr ? 'المغرب' : 'Morocco'}</a>
         <a href="${r('../countries/india.html')}">${isAr ? 'الهند' : 'India'}</a>
-        <h4 class="footer-col-heading footer-col-heading--mt">${isAr ? 'تعلّم' : 'Learn'}</h4>
+        <h4 class="footer-col-heading footer-col-heading--mt">${isAr ? 'تعلّم وتحليلات' : 'Learn &amp; Insights'}</h4>
         <a href="${r('../learn.html')}">${isAr ? 'دليل الذهب' : 'Gold Guide'}</a>
+        <a href="${r('../methodology.html')}">${isAr ? 'المنهجية' : 'Methodology'}</a>
         <a href="${r('../insights.html')}">${isAr ? 'تحليلات' : 'Insights'}</a>
       </div>
 

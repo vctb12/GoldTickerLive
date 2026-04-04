@@ -56,8 +56,7 @@
     })(window, document, "clarity", "script", "w4e0nhdxt5");
 </script>
 
-  <meta name="msvalidate.01" content="E88623E4C36CDC8E8D44913FA9192725" />
-  
+
 </head>
 <body class="home-page">
 
@@ -183,17 +182,68 @@
       </div>
     </section>
 
+    <!-- ═══════ BUYING GUIDE INTRO ═══════ -->
+    <section class="home-section" aria-labelledby="buying-guide-title">
+      <div class="home-section-inner">
+        <div class="section-intro">
+          <div>
+            <h2 id="buying-guide-title" class="home-section-title">How to Buy Gold</h2>
+            <p class="home-section-sub" id="buying-guide-sub">Find shops, compare prices, and understand the market in your region</p>
+          </div>
+        </div>
+        <div class="buying-guide-grid">
+          <a href="shops.html" class="buying-guide-card">
+            <div class="buying-guide-icon" aria-hidden="true">🏪</div>
+            <h3 class="buying-guide-title" id="guide-shops-title">Find Trusted Shops</h3>
+            <p class="buying-guide-desc" id="guide-shops-desc">Browse listed gold shops and markets across countries. Filter by region, city, and specialty.</p>
+            <span class="buying-guide-cta" id="guide-shops-cta">Explore Shops →</span>
+          </a>
+          <a href="countries/uae.html" class="buying-guide-card">
+            <div class="buying-guide-icon" aria-hidden="true">🗺️</div>
+            <h3 class="buying-guide-title" id="guide-markets-title">Browse by Market</h3>
+            <p class="buying-guide-desc" id="guide-markets-desc">View local gold prices, market context, and buying tips for each country.</p>
+            <span class="buying-guide-cta" id="guide-markets-cta">View Countries →</span>
+          </a>
+          <a href="calculator.html" class="buying-guide-card">
+            <div class="buying-guide-icon" aria-hidden="true">🧮</div>
+            <h3 class="buying-guide-title" id="guide-calc-title">Calculate & Compare</h3>
+            <p class="buying-guide-desc" id="guide-calc-desc">Use our calculator to compare prices, values, and purchasing power across karats and currencies.</p>
+            <span class="buying-guide-cta" id="guide-calc-cta">Open Calculator →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ DATA TRUST BANNER ═══════ -->
+    <section class="home-section home-section--trust-banner">
+      <div class="home-section-inner home-section-inner--narrow">
+        <div class="trust-banner-box">
+          <div class="trust-banner-icon">⚠️</div>
+          <div class="trust-banner-content">
+            <h3>About Our Data</h3>
+            <p>These are <strong>spot-linked bullion estimates</strong>, not retail jewelry prices. Actual store prices include making charges and shop margins (typically 3–25 AED/gram). Prices update every 90 seconds from <a href="https://gold-api.com" target="_blank">gold-api.com</a>. <a href="methodology.html">Full methodology →</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ═══════ GCC QUICK PRICES ═══════ -->
     <section class="home-section" aria-labelledby="gcc-section-title">
       <div class="home-section-inner">
         <div class="section-intro">
           <div>
-            <h2 id="gcc-section-title" class="home-section-title">GCC Gold Prices Now</h2>
-            <p class="home-section-sub" id="gcc-section-sub">Live estimates in local currency · 22K per gram</p>
+            <h2 id="gcc-section-title" class="home-section-title"></h2>
+            <p class="home-section-sub" id="gcc-section-sub"></p>
           </div>
-          <a href="tracker.html" class="section-link" id="gcc-see-all">See all countries →</a>
+          <a href="tracker.html" class="section-link" id="gcc-see-all"></a>
         </div>
-        <div class="gcc-grid" id="gcc-quick-grid">
+        <!-- Region tabs for filtering prices -->
+        <div class="gcc-region-tabs" role="tablist" aria-label="Price region filter">
+          <button class="gcc-region-tab is-active" data-region="gcc" role="tab" aria-selected="true" aria-controls="gcc-quick-grid">GCC (6)</button>
+          <button class="gcc-region-tab" data-region="mena" role="tab" aria-selected="false" aria-controls="gcc-quick-grid">MENA (8+)</button>
+          <button class="gcc-region-tab" data-region="global" role="tab" aria-selected="false" aria-controls="gcc-quick-grid">Global (24+)</button>
+        </div>
+        <div class="gcc-grid" id="gcc-quick-grid" role="tabpanel">
           <!-- Filled by home.js -->
           <div class="gcc-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
           <div class="gcc-card skeleton-card"><div class="skeleton-flag"></div><div class="skeleton-line"></div><div class="skeleton-value"></div></div>
@@ -266,11 +316,11 @@
             <p class="tool-card-desc" id="tool-calc-desc">Gold value, scrap, Zakat, buying power and unit conversion — all in one tool.</p>
             <span class="tool-card-cta" id="tool-calc-cta">Open Calculator →</span>
           </a>
-          <a href="countries/uae.html" class="tool-card">
-            <div class="tool-card-icon" aria-hidden="true">🇦🇪</div>
-            <h3 class="tool-card-title" id="tool-uae-title">UAE Gold Prices</h3>
-            <p class="tool-card-desc" id="tool-uae-desc">Dedicated UAE page with all karats in AED &amp; USD, plus context for Dubai buyers.</p>
-            <span class="tool-card-cta" id="tool-uae-cta">UAE Prices →</span>
+          <a href="invest.html" class="tool-card">
+            <div class="tool-card-icon" aria-hidden="true">💰</div>
+            <h3 class="tool-card-title" id="tool-invest-title">Gold Investing</h3>
+            <p class="tool-card-desc" id="tool-invest-desc">Build a rational gold investment plan, compare bullion vs jewelry, and decide wisely.</p>
+            <span class="tool-card-cta" id="tool-invest-cta">Investment Guide →</span>
           </a>
           <a href="learn.html" class="tool-card">
             <div class="tool-card-icon" aria-hidden="true">📚</div>
@@ -300,8 +350,9 @@
         <div class="section-intro">
           <div>
             <h2 id="countries-quick-title" class="home-section-title">Browse by Country</h2>
-            <p class="home-section-sub" id="countries-quick-sub">Dedicated pages with local context for every major market</p>
+            <p class="home-section-sub" id="countries-quick-sub">Live prices and market context in your region</p>
           </div>
+          <a href="tracker.html" class="section-link" id="countries-see-all">See all 24+ countries →</a>
         </div>
         <div class="country-tiles">
           <a href="countries/uae.html" class="country-tile"><span>🇦🇪</span><span id="ct-uae">UAE</span></a>
@@ -363,16 +414,31 @@
       </div>
     </section>
 
-    <!-- ═══════ INSIGHTS BANNER ═══════ -->
-    <section class="home-section" aria-labelledby="insights-banner-title">
+    <!-- ═══════ CONTENT HUB ═══════ -->
+    <section class="home-section" aria-labelledby="content-hub-title">
       <div class="home-section-inner">
-        <div class="insights-banner-box">
-          <div class="insights-banner-icon" aria-hidden="true">📊</div>
-          <div class="insights-banner-text">
-            <h2 id="insights-banner-title">Gold Market Insights</h2>
-            <p id="insights-banner-desc">Analysis, guides, and market context for Gulf gold buyers</p>
+        <div class="section-intro centered">
+          <div>
+            <h2 id="content-hub-title" class="home-section-title">Learn &amp; Insights</h2>
+            <p class="home-section-sub" id="content-hub-sub">Understand the gold market and make informed decisions</p>
           </div>
-          <a href="insights.html" class="btn btn-outline insights-banner-cta" id="insights-banner-link">Read Insights →</a>
+        </div>
+        <div class="content-hub-grid">
+          <a href="learn.html" class="content-hub-card">
+            <div class="content-hub-icon">📚</div>
+            <h3 id="hub-learn-title">Gold Fundamentals</h3>
+            <p id="hub-learn-desc">Karat grades, how pricing works, AED peg, Zakat rules, and more.</p>
+          </a>
+          <a href="insights.html" class="content-hub-card">
+            <div class="content-hub-icon">📊</div>
+            <h3 id="hub-insights-title">Market Insights</h3>
+            <p id="hub-insights-desc">Weekly analysis, price drivers, spot vs retail, and GCC market context.</p>
+          </a>
+          <a href="methodology.html" class="content-hub-card">
+            <div class="content-hub-icon">🔬</div>
+            <h3 id="hub-methodology-title">Data Transparency</h3>
+            <p id="hub-methodology-desc">How we get prices, AED peg logic, data freshness, and reliability.</p>
+          </a>
         </div>
       </div>
     </section>
@@ -425,7 +491,7 @@
             </div>
           </details>
         </div>
-        <div style="text-align:center;margin-top:1.5rem">
+        <div class="faq-more-row">
           <a href="learn.html" class="section-link" id="faq-more-link">More questions answered on the Learn page →</a>
         </div>
       </div>

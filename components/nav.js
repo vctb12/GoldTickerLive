@@ -9,7 +9,7 @@
  *   updateNavLang(lang)   — live language switch without re-inject
  *
  * @param {'en'|'ar'} lang
- * @param {0|1}       depth  0 = root pages, 1 = /countries/ subdirectory
+ * @param {0|1|2}     depth  0 = root pages, 1 = /countries/ subdirectory, 2 = /countries/{code}/cities/ or /markets/
  */
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -18,7 +18,8 @@
 
 const NAV_DATA = {
   en: {
-    home: { href: '../index.html', label: 'Home' },
+    home:  { href: '../index.html',  label: 'Home'  },
+    shops: { href: '../shops.html',  label: 'Shops' },
     invest: { href: '../invest.html', label: 'Invest' },
     groups: [
       {
@@ -45,12 +46,32 @@ const NAV_DATA = {
         ],
       },
       {
+        key: 'cities',
+        label: 'Cities',
+        items: [
+          { href: '../countries/uae/cities/dubai.html',           label: 'Dubai, UAE'           },
+          { href: '../countries/uae/cities/abu-dhabi.html',       label: 'Abu Dhabi, UAE'       },
+          { href: '../countries/saudi-arabia/cities/riyadh.html', label: 'Riyadh, Saudi Arabia' },
+          { href: '../countries/egypt/cities/cairo.html',         label: 'Cairo, Egypt'         },
+          { href: '../countries/qatar/cities/doha.html',          label: 'Doha, Qatar'          },
+        ],
+      },
+      {
+        key: 'goldmarkets',
+        label: 'Famous Markets',
+        items: [
+          { href: '../countries/uae/markets/dubai-gold-souk.html',         label: 'Dubai Gold Souk'         },
+          { href: '../countries/egypt/markets/khan-el-khalili-cairo.html', label: 'Khan el-Khalili, Cairo' },
+        ],
+      },
+      {
         key: 'learn',
         label: 'Learn',
         items: [
-          { href: '../learn.html',        label: 'Gold Guide'   },
-          { href: '../methodology.html',  label: 'Methodology'  },
-          { href: '../learn.html#faq',    label: 'FAQ'          },
+          { href: '../guides/buying-guide.html', label: 'How to Buy Gold' },
+          { href: '../learn.html',               label: 'Gold Guide'      },
+          { href: '../methodology.html',         label: 'Methodology'     },
+          { href: '../learn.html#faq',           label: 'FAQ'             },
         ],
       },
       {
@@ -70,7 +91,8 @@ const NAV_DATA = {
   },
 
   ar: {
-    home: { href: '../index.html', label: 'الرئيسية' },
+    home:  { href: '../index.html',  label: 'الرئيسية'    },
+    shops: { href: '../shops.html',  label: 'المحلات'     },
     invest: { href: '../invest.html', label: 'الاستثمار' },
 
     groups: [
@@ -98,12 +120,32 @@ const NAV_DATA = {
         ],
       },
       {
+        key: 'cities',
+        label: 'المدن',
+        items: [
+          { href: '../countries/uae/cities/dubai.html',           label: 'دبي، الإمارات'           },
+          { href: '../countries/uae/cities/abu-dhabi.html',       label: 'أبوظبي، الإمارات'        },
+          { href: '../countries/saudi-arabia/cities/riyadh.html', label: 'الرياض، السعودية'        },
+          { href: '../countries/egypt/cities/cairo.html',         label: 'القاهرة، مصر'            },
+          { href: '../countries/qatar/cities/doha.html',          label: 'الدوحة، قطر'             },
+        ],
+      },
+      {
+        key: 'goldmarkets',
+        label: 'أسواق الذهب الشهيرة',
+        items: [
+          { href: '../countries/uae/markets/dubai-gold-souk.html',         label: 'سوق الذهب بدبي'        },
+          { href: '../countries/egypt/markets/khan-el-khalili-cairo.html', label: 'خان الخليلي، القاهرة' },
+        ],
+      },
+      {
         key: 'learn',
         label: 'تعلّم',
         items: [
-          { href: '../learn.html',        label: 'دليل الذهب' },
-          { href: '../methodology.html',  label: 'المنهجية'   },
-          { href: '../learn.html#faq',    label: 'الأسئلة الشائعة' },
+          { href: '../guides/buying-guide.html', label: 'كيفية شراء الذهب' },
+          { href: '../learn.html',               label: 'دليل الذهب'      },
+          { href: '../methodology.html',         label: 'المنهجية'        },
+          { href: '../learn.html#faq',           label: 'الأسئلة الشائعة'  },
         ],
       },
       {
@@ -222,6 +264,8 @@ export function injectNav(lang = 'en', depth = 0) {
   const isRtl    = lang === 'ar';
   const homeHref = resolveHref(data.home.href, depth);
   const homeActive = isPageMatch(homeHref);
+  const shopsHref   = resolveHref(data.shops.href, depth);
+  const shopsActive = isPageMatch(shopsHref);
   const investHref  = resolveHref(data.invest.href, depth);
   const investActive = isPageMatch(investHref);
 
@@ -244,17 +288,20 @@ export function injectNav(lang = 'en', depth = 0) {
          class="nav-link${homeActive ? ' nav-link--active' : ''}"
          role="listitem"
       >${data.home.label}</a>
-      
-  
+
+      <a href="${shopsHref}"
+         class="nav-link nav-link--shops${shopsActive ? ' nav-link--active' : ''}"
+         role="listitem"
+         data-nav-key="shops"
+      >${data.shops.label}</a>
 
       ${desktopDropdownsHtml}
-      
-       <a href="${investHref}"
-     class="nav-link${investActive ? ' nav-link--active' : ''}"
-     role="listitem"
-     data-nav-key="invest"
-    >${data.invest.label}</a>
-    
+
+      <a href="${investHref}"
+         class="nav-link${investActive ? ' nav-link--active' : ''}"
+         role="listitem"
+         data-nav-key="invest"
+      >${data.invest.label}</a>
     </div>
 
     <!-- Right-side actions -->
@@ -291,16 +338,21 @@ export function injectNav(lang = 'en', depth = 0) {
       <a href="${homeHref}"
          class="nav-drawer-link${homeActive ? ' nav-link--active' : ''}"
       >${data.home.label}</a>
-   
+
+      <!-- Shops (direct) -->
+      <a href="${shopsHref}"
+         class="nav-drawer-link${shopsActive ? ' nav-link--active' : ''}"
+         data-nav-key="shops"
+      >${data.shops.label}</a>
 
       <!-- Grouped sections -->
       ${mobileGroupsHtml}
 
-        <!-- Invest (direct) -->
-    <a href="${investHref}"
-     class="nav-drawer-link${investActive ? ' nav-link--active' : ''}"
-     data-nav-key="invest"
-    >${data.invest.label}</a>
+      <!-- Invest (direct) -->
+      <a href="${investHref}"
+         class="nav-drawer-link${investActive ? ' nav-link--active' : ''}"
+         data-nav-key="invest"
+      >${data.invest.label}</a>
 
       <!-- Language toggle -->
       <button id="nav-lang-toggle-mobile"
@@ -534,7 +586,12 @@ export function updateNavLang(lang) {
     }
   });
 
-   // Invest
+  // Shops
+  nav.querySelectorAll('[data-nav-key="shops"]').forEach(el => {
+    el.textContent = data.shops.label;
+  });
+
+  // Invest
   nav.querySelectorAll('[data-nav-key="invest"]').forEach(el => {
     el.textContent = data.invest.label;
   });

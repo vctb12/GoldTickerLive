@@ -13,6 +13,9 @@
   <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
 </head>
 <body>
+  <!-- Nav + Breadcrumbs (injected by shops.js) -->
+  <div class="page-breadcrumbs"></div>
+
   <main>
     <section class="shops-hero" aria-labelledby="shops-title">
       <div class="shops-hero-inner">
@@ -119,6 +122,14 @@
       </div>
     </section>
   </main>
+
+  <div id="shops-modal" class="shops-modal" hidden aria-labelledby="shops-modal-title" role="dialog" aria-modal="true">
+    <div class="shops-modal-overlay"></div>
+    <div class="shops-modal-content">
+      <button class="shops-modal-close" aria-label="Close details" type="button">×</button>
+      <div id="shops-modal-body"></div>
+    </div>
+  </div>
 
   <script type="module" src="./shops.js"></script>
 </body>

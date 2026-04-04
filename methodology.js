@@ -7,6 +7,7 @@ import * as cache from './lib/cache.js';
 import { injectNav, updateNavLang } from './components/nav.js';
 import { injectFooter } from './components/footer.js';
 import { injectTicker, updateTickerLang } from './components/ticker.js';
+import { injectBreadcrumbs } from './components/breadcrumbs.js';
 
 const STATE = { lang: 'en' };
 
@@ -60,6 +61,7 @@ function init() {
   if (saved === 'ar' || saved === 'en') STATE.lang = saved;
 
   const navCtrl = injectNav(STATE.lang, 0);
+  injectBreadcrumbs('methodology');
   navCtrl.getLangToggleButtons().forEach(btn => {
     btn.addEventListener('click', () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';

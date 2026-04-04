@@ -1,0 +1,46 @@
+# ═══════════════════════════════════════════════════════════════
+# Route Reorganization Redirects (cities/markets moved under countries)
+# ═══════════════════════════════════════════════════════════════
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# Redirect old city paths to new structure
+RewriteRule ^cities/dubai\.html$ countries/uae/cities/dubai.html [R=301,L]
+RewriteRule ^cities/abu-dhabi\.html$ countries/uae/cities/abu-dhabi.html [R=301,L]
+RewriteRule ^cities/cairo\.html$ countries/egypt/cities/cairo.html [R=301,L]
+RewriteRule ^cities/doha\.html$ countries/qatar/cities/doha.html [R=301,L]
+RewriteRule ^cities/riyadh\.html$ countries/saudi-arabia/cities/riyadh.html [R=301,L]
+
+# Redirect old market paths to new structure
+RewriteRule ^markets/dubai-gold-souk\.html$ countries/uae/markets/dubai-gold-souk.html [R=301,L]
+RewriteRule ^markets/khan-el-khalili-cairo\.html$ countries/egypt/markets/khan-el-khalili-cairo.html [R=301,L]
+
+</IfModule>
+
+# ═══════════════════════════════════════════════════════════════
+# Service Worker & Static Assets Caching
+# ═══════════════════════════════════════════════════════════════
+
+# Cache busting for versioned assets
+<Files "*.v[0-9]*.js">
+  Header set Cache-Control "max-age=31536000, public, immutable"
+</Files>
+
+<Files "*.v[0-9]*.css">
+  Header set Cache-Control "max-age=31536000, public, immutable"
+</Files>
+
+# Service worker and index should not be cached
+<Files "sw.js">
+  Header set Cache-Control "max-age=0, public, must-revalidate"
+</Files>
+
+<Files "index.html">
+  Header set Cache-Control "max-age=3600, public"
+</Files>
+
+# Static pages (except index) are somewhat cacheable
+<FilesMatch "\.(html)$">
+  Header set Cache-Control "max-age=86400, public"
+</FilesMatch>

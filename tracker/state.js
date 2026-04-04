@@ -11,7 +11,8 @@ export const STORAGE_KEYS = {
 
 export const DEFAULT_STATE = {
   lang: 'en',
-  mode: 'live',
+  view: 'live',
+  activeTool: null,
   selectedCurrency: 'AED',
   selectedKarat: '24',
   selectedUnit: 'gram',
@@ -21,6 +22,7 @@ export const DEFAULT_STATE = {
   autoRefresh: true,
   favoritesOnly: false,
   liveWireOn: true,
+  activeRegion: 'gcc',
   // Market + history
   live: null,
   rates: {},
@@ -89,7 +91,8 @@ export function createInitialState() {
   // Tracker-specific saved state
   const saved = readLocal(STORAGE_KEYS.core, {});
   base.lang = saved.lang || readLanguagePref() || base.lang;
-  base.mode = saved.mode || base.mode;
+  base.view = saved.view || base.view;
+  base.activeTool = saved.activeTool || base.activeTool;
   base.selectedCurrency = saved.selectedCurrency || base.selectedCurrency;
   base.selectedKarat = saved.selectedKarat || base.selectedKarat;
   base.selectedUnit = saved.selectedUnit || base.selectedUnit;
@@ -99,6 +102,7 @@ export function createInitialState() {
   base.autoRefresh = saved.autoRefresh !== false;
   base.favoritesOnly = !!saved.favoritesOnly;
   base.liveWireOn = saved.liveWireOn !== false;
+  base.activeRegion = saved.activeRegion || base.activeRegion;
 
   base.alerts = readLocal(CONSTANTS.CACHE_KEYS.alerts || 'gold_price_alerts', []);
   base.presets = readLocal(STORAGE_KEYS.presets, []);
@@ -115,7 +119,8 @@ export function createInitialState() {
 export function persistState(state) {
   const payload = {
     lang: state.lang,
-    mode: state.mode,
+    view: state.view,
+    activeTool: state.activeTool,
     selectedCurrency: state.selectedCurrency,
     selectedKarat: state.selectedKarat,
     selectedUnit: state.selectedUnit,
@@ -125,6 +130,7 @@ export function persistState(state) {
     autoRefresh: state.autoRefresh,
     favoritesOnly: state.favoritesOnly,
     liveWireOn: state.liveWireOn,
+    activeRegion: state.activeRegion,
   };
   writeLocal(STORAGE_KEYS.core, payload);
   writeLocal(STORAGE_KEYS.presets, state.presets.slice(0, 20));
@@ -134,19 +140,39 @@ export function persistState(state) {
 
 export function syncUrlFromState(state) {
   const url = new URL(window.location.href);
-  url.hash = `mode=${state.mode}&cur=${state.selectedCurrency}&k=${state.selectedKarat}&u=${state.selectedUnit}&r=${state.range}&cmp=${state.compareCurrency}`;
+  let hash = `view=${state.view}&cur=${state.selectedCurrency}&k=${state.selectedKarat}&u=${state.selectedUnit}&range=${state.range}&cmp=${state.compareCurrency}`;
+  if (state.activeTool) {
+    hash += `&tool=${state.activeTool}`;
+  }
+  url.hash = hash;
   history.replaceState(null, '', url.toString());
 }
 
-function applyUrlState(state) {
+export function applyUrlState(state) {
   const hash = window.location.hash.slice(1);
   if (!hash) return;
   const params = new URLSearchParams(hash);
-  state.mode = params.get('mode') || state.mode;
+
+  // Handle both new format (view/tool) and old format (mode) for backward compat
+  const viewOrMode = params.get('view') || params.get('mode');
+  if (viewOrMode) {
+    // Map old mode values to new view/tool split
+    if (viewOrMode === 'alerts') {
+      state.view = 'live';
+      state.activeTool = 'alerts';
+    } else if (viewOrMode === 'planner') {
+      state.view = 'live';
+      state.activeTool = 'planner';
+    } else {
+      state.view = viewOrMode;
+    }
+  }
+
+  state.activeTool = params.get('tool') || state.activeTool;
   state.selectedCurrency = params.get('cur') || state.selectedCurrency;
   state.selectedKarat = params.get('k') || state.selectedKarat;
   state.selectedUnit = params.get('u') || state.selectedUnit;
-  state.range = params.get('r') || state.range;
+  state.range = params.get('range') || params.get('r') || state.range;
   state.compareCurrency = params.get('cmp') || state.compareCurrency;
 }
 

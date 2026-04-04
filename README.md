@@ -1,44 +1,49 @@
 <div align="center">
 
-# GoldPrices  
-### Live Gold Tracker for UAE, GCC & Arab Markets  
-### أسعار الذهب المباشرة
+# GoldPrices
+### Live Gold Intelligence Platform for UAE, GCC, Arab Markets, and Global Reference Pricing
+### منصة أسعار الذهب المباشرة والتحليلية
 
-A bilingual gold price platform built for the UAE, GCC, Levant, North & East Africa, and selected global markets — with live spot-linked pricing, calculators, historical views, exports, alerts, and country pages.
+A bilingual gold-price platform built for users who need more than a basic spot quote — combining live spot-linked pricing, market comparison, calculator tools, historical views, exports, alerts, country pages, and Arabic-first accessibility.
 
 <p>
   <a href="https://vctb12.github.io/Gold-Prices/">
     <img src="https://img.shields.io/badge/Live%20Site-Open%20Now-C9A227?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Site" />
   </a>
-  <a href="https://vctb12.github.io/Gold-Prices/insights.html">
-    <img src="https://img.shields.io/badge/Tracker-Live%20Workspace-1F6FEB?style=for-the-badge&logo=dependabot&logoColor=white" alt="Insights" />
+  <a href="https://vctb12.github.io/Gold-Prices/tracker.html">
+    <img src="https://img.shields.io/badge/Tracker-Live%20Workspace-1F6FEB?style=for-the-badge&logo=dependabot&logoColor=white" alt="Tracker Workspace" />
   </a>
   <a href="https://vctb12.github.io/Gold-Prices/calculator.html">
     <img src="https://img.shields.io/badge/Calculator-Gold%20Tools-2DA44E?style=for-the-badge&logo=calculator&logoColor=white" alt="Calculator" />
   </a>
+  <a href="https://github.com/vctb12/Gold-Prices/wiki">
+    <img src="https://img.shields.io/badge/Wiki-Full%20Documentation-6F42C1?style=for-the-badge&logo=github&logoColor=white" alt="Wiki" />
+  </a>
 </p>
 
 <p>
-  <a href="#feature-breakdown">
+  <a href="#platform-highlights">
     <img src="https://img.shields.io/badge/Language-English%20%2F%20Arabic-8B5CF6?style=flat-square" alt="Bilingual" />
   </a>
   <a href="#supported-markets">
     <img src="https://img.shields.io/badge/Markets-24%2B-C2410C?style=flat-square" alt="Markets" />
   </a>
-  <a href="#feature-breakdown">
+  <a href="#platform-highlights">
     <img src="https://img.shields.io/badge/Karats-7-F59E0B?style=flat-square" alt="Karats" />
   </a>
-  <a href="#offline--pwa-behavior">
-    <img src="https://img.shields.io/badge/PWA-Ready-0EA5E9?style=flat-square" alt="PWA" />
-  </a>
-  <a href="#offline--pwa-behavior">
-    <img src="https://img.shields.io/badge/Offline-Friendly-111827?style=flat-square" alt="Offline Friendly" />
-  </a>
-  <a href="#feature-breakdown">
+  <a href="#core-workspaces">
     <img src="https://img.shields.io/badge/Exports-CSV%20%2B%20JSON-059669?style=flat-square" alt="Exports" />
   </a>
+  <a href="#system-resilience-and-offline-behavior">
+    <img src="https://img.shields.io/badge/Offline-Friendly-111827?style=flat-square" alt="Offline Friendly" />
+  </a>
+  <a href="#system-resilience-and-offline-behavior">
+    <img src="https://img.shields.io/badge/PWA-Ready-0EA5E9?style=flat-square" alt="PWA" />
+  </a>
+  <a href="#license">
+    <img src="https://img.shields.io/badge/License-MIT-2563EB?style=flat-square" alt="License" />
+  </a>
 </p>
-
 
 </div>
 
@@ -46,62 +51,101 @@ A bilingual gold price platform built for the UAE, GCC, Levant, North & East Afr
 
 ## Overview
 
-**GoldPrices** is a web app for tracking live gold prices across the GCC, Arab world, and selected global markets.
+**GoldPrices** is a front-end gold pricing platform built for the UAE, GCC, the wider Arab world, and selected global reference markets.
+
+It is designed to answer a simple problem well:
+
+> most gold sites are either too narrow, too messy, too static, too ad-heavy, or too unclear about how their numbers are formed.
+
+GoldPrices is built to be cleaner, more transparent, more bilingual, and more useful in practice.
 
 It combines:
 
 - live **XAU/USD spot-linked pricing**
 - **local currency estimates**
-- **historical price views**
+- **7 purity-adjusted karat views**
+- **historical archive and date lookup**
 - **browser-based alerts and presets**
-- **gold calculators**
-- **country-specific pages**
+- **practical gold calculators**
+- **country-specific market pages**
 - **CSV / JSON exports**
 - **English + Arabic support with RTL**
+- **offline-friendly, local-first behavior**
 
-The goal is simple: make gold data easier to follow, compare, and use.
+The result is a product that feels less like a single quote widget and more like a usable gold tracking workspace.
+
+---
+
+## Why this project stands out
+
+GoldPrices is not trying to be just another price page.
+
+It is designed around five ideas:
+
+### 1) Regional relevance
+Most price tools are written with a generic global audience in mind. GoldPrices is structured for users in the UAE, GCC, Levant, North & East Africa, and adjacent Arabic-speaking markets.
+
+### 2) Practical utility
+The platform does not stop at showing one live number. It helps users compare, calculate, estimate, browse history, and export data.
+
+### 3) Bilingual usability
+Arabic is not treated as an afterthought. The product supports English and Arabic, including RTL handling and bilingual search-friendly structure.
+
+### 4) Transparent methodology
+Numbers are framed as **spot-linked bullion-equivalent estimates**, not disguised retail jewelry quotes. The site makes the logic understandable instead of hiding it.
+
+### 5) Resilient front-end architecture
+The experience is designed to remain usable even when live data is stale or unavailable, with cache-aware fallbacks and browser-side persistence.
 
 ---
 
 ## Quick Links
 
-- **Main site:** [vctb12.github.io/Gold-Prices](https://vctb12.github.io/Gold-Prices/)
-- **Insights:** [Insights.html](https://vctb12.github.io/Gold-Prices/insights.html)
+- **Main Site:** [vctb12.github.io/Gold-Prices](https://vctb12.github.io/Gold-Prices/)
+- **Tracker Workspace:** [tracker.html](https://vctb12.github.io/Gold-Prices/tracker.html)
 - **Calculator:** [calculator.html](https://vctb12.github.io/Gold-Prices/calculator.html)
+- **Insights:** [insights.html](https://vctb12.github.io/Gold-Prices/insights.html)
+- **Methodology:** [methodology.html](https://vctb12.github.io/Gold-Prices/methodology.html)
+- **Wiki:** [Project Wiki](https://github.com/vctb12/Gold-Prices/wiki)
+- **Latest Release:** [Releases](https://github.com/vctb12/Gold-Prices/releases/latest)
 
 ---
 
 ## Table of Contents
 
-- [Highlights](#highlights)
+- [Platform Highlights](#platform-highlights)
 - [Screenshots](#screenshots)
-- [Feature Breakdown](#feature-breakdown)
+- [Core Workspaces](#core-workspaces)
 - [Supported Markets](#supported-markets)
 - [Main Pages](#main-pages)
 - [Data Sources](#data-sources)
+- [Price Logic](#price-logic)
+- [System Resilience and Offline Behavior](#system-resilience-and-offline-behavior)
 - [Getting Started](#getting-started)
 - [Project Structure](#project-structure)
-- [Price Logic](#price-logic)
-- [Offline & PWA Behavior](#offline--pwa-behavior)
-- [Why This Project](#why-this-project)
+- [Technical Capabilities](#technical-capabilities)
+- [Roadmap Direction](#roadmap-direction)
+- [Documentation](#documentation)
 - [License](#license)
 
 ---
 
-## Highlights
+## Platform Highlights
 
-- **Live gold spot pricing**
-- **7 tracker karats** with purity-adjusted values
-- **24+ supported markets**
-- **English + Arabic UI**
+- **Live gold spot-linked pricing**
+- **7 tracker karats** with purity-adjusted valuation
+- **24+ supported markets** across GCC, Arab markets, and global references
+- **English + Arabic interface**
 - **RTL support**
 - **Historical archive and date lookup**
-- **Browser-based alerts and presets**
-- **Gold calculators**
-- **CSV / JSON exports**
-- **Offline-friendly behavior**
-- **Country landing pages**
+- **Browser-based alerts and saved presets**
+- **Gold calculators and unit conversion tools**
+- **CSV / JSON export support**
+- **Offline-friendly behavior with cache fallbacks**
+- **Country-specific landing pages**
 - **PWA install support**
+- **Local persistence with `localStorage`**
+- **Static deployment with no build step required**
 
 ---
 
@@ -113,17 +157,23 @@ The goal is simple: make gold data easier to follow, compare, and use.
   <img src="./assets/screenshots/methodology.png" alt="Methodology" width="32%" />
 </p>
 
+> Suggested next upgrade: add a second screenshot row for the tracker workspace, one country page, and a mobile view to make the repo page feel more complete and product-grade.
+
 ---
 
-## Feature Breakdown
+## Core Workspaces
 
 ### Live Market Tracking
+
+GoldPrices tracks the live gold market through a spot-linked approach that keeps the platform understandable and responsive.
+
+Main capabilities:
 
 - **Live XAU/USD spot price** refreshed roughly every 90 seconds
 - **Daily FX conversion** for supported markets
 - **AED fixed peg** using the official `3.6725` AED/USD value
-- **Per gram and per ounce** views
-- **7 karats**:
+- **Per gram and per ounce** presentation
+- **7 supported karats**:
   - 24K
   - 22K
   - 21K
@@ -131,26 +181,27 @@ The goal is simple: make gold data easier to follow, compare, and use.
   - 18K
   - 16K
   - 14K
-- **Price context** and comparison across views
-- **Bilingual interface** with English and Arabic
+- **Bilingual price context** and regional framing
 
 ### Tracker Workspace
 
-The live tracker is organized into multiple modes:
+The tracker is structured as a multi-mode workspace rather than a single page.
 
 | Mode | Purpose |
 |------|---------|
-| **Live** | Live chart, key metrics, karat ladder, watchlist, decision cues |
-| **Compare** | Compare markets and rank by selected view |
+| **Live** | Live chart, key metrics, karat ladder, watchlist, and directional cues |
+| **Compare** | Compare markets and rank countries by selected view |
 | **Archive** | Browse historical data and run date lookup |
-| **Alerts** | Save local browser alerts and presets |
-| **Planner** | Budget, position, jewelry estimate, and accumulation planning |
-| **Exports** | CSV, JSON, and brief downloads |
-| **Method** | Sources, pricing methodology, and transparency notes |
+| **Alerts** | Save local browser alerts and preset states |
+| **Planner** | Budget, jewelry estimate, accumulation, and scenario planning |
+| **Exports** | Download CSV, JSON, and brief outputs |
+| **Method** | Review sources, pricing assumptions, and methodology |
 
-### Calculator Tools
+### Calculator Suite
 
-The calculator page includes:
+The calculator page extends the product beyond market watching.
+
+Included tools:
 
 - **Gold Value Calculator**
 - **Scrap Gold Calculator**
@@ -158,16 +209,14 @@ The calculator page includes:
 - **Buying Power Calculator**
 - **Weight Unit Converter**
 
-### Extra Platform Features
+### Additional Platform Modules
 
-- **PWA manifest** and installable shortcuts
-- **Service worker caching**
 - **Country-specific pages**
 - **Learn / glossary content**
-- **Insights pages**
-- **Methodology page**
-- **Local persistence with `localStorage`**
-- **Shareable state / preset-friendly workflow**
+- **Insights and market context pages**
+- **Methodology and source transparency page**
+- **Local storage-backed persistence**
+- **Shareable / preset-friendly browser workflow**
 
 ---
 
@@ -179,6 +228,8 @@ The calculator page includes:
 | **Levant** | Jordan, Lebanon, Syria, Palestine |
 | **North & East Africa** | Egypt, Libya, Tunisia, Algeria, Morocco, Sudan, Somalia, Mauritania, Djibouti, Comoros |
 | **Global Reference** | USA, United Kingdom, Eurozone, India |
+
+This mix gives the platform a strong regional identity while still anchoring it against major global reference markets.
 
 ---
 
@@ -200,13 +251,13 @@ The calculator page includes:
 
 | Source | Used for | Notes |
 |--------|----------|-------|
-| [Gold API](https://gold-api.com/docs) | Live XAU/USD spot price | Live market layer |
+| [Gold API](https://gold-api.com/docs) | Live XAU/USD spot price | Primary live market layer |
 | [ExchangeRate-API](https://www.exchangerate-api.com/docs/free) | Currency conversion | FX layer |
 | Hardcoded `3.6725` | UAE pricing | Official AED/USD peg |
 | [DataHub Gold Prices Dataset](https://datahub.io/core/gold-prices) | Historical baseline | Long-range historical layer |
 | [GDELT DOC API](https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/amp/) | Market wire / headlines | News strip layer |
 
-> **Note**  
+> **Important note**  
 > Prices shown on the site are **spot-linked bullion-equivalent estimates**, not final jewelry retail prices.  
 > Real store prices may differ because of:
 >
@@ -215,6 +266,40 @@ The calculator page includes:
 > - fabrication cost
 > - VAT or taxes
 > - shop markup
+
+That distinction matters because it makes the project more honest and more useful.
+
+---
+
+## Price Logic
+
+```text
+1 troy ounce = 31.1035 grams
+
+usdPerGram(karat) = (spotUsdPerOz / 31.1035) × purity
+usdPerOz(karat)   = spotUsdPerOz × purity
+localPrice        = usdPrice × fxRate
+
+AED: always usdPrice × 3.6725
+```
+
+This keeps the pricing model simple enough to understand, reusable across modules, and transparent to users.
+
+---
+
+## System Resilience and Offline Behavior
+
+GoldPrices is designed to degrade gracefully instead of breaking abruptly when APIs are slow or unavailable.
+
+| State | Gold | FX | Behavior |
+|-------|------|----|----------|
+| 1 | Live | Live | Full precision, live state |
+| 2 | Live | Stale | FX badge shows stale age |
+| 3 | Stale | Live | Gold badge shows stale age |
+| 4 | Both stale | Both stale | Dual stale indicators, cache-backed rendering |
+| 5 | No cache | No cache | Empty state with retry flow |
+
+This is one of the strongest parts of the product because it pushes the site closer to a resilient tool instead of a fragile demo.
 
 ---
 
@@ -228,9 +313,32 @@ cd Gold-Prices
 python3 -m http.server 8080
 ```
 
-No build step, no dependencies, no API keys required.
+Then open:
 
-## File Structure
+```text
+http://localhost:8080
+```
+
+No build step, no framework setup, and no package install is required for the base site.
+
+### Debug mode
+
+Add `?debug=true` to the URL:
+
+```text
+http://localhost:8080/?debug=true
+```
+
+This exposes a debug panel for:
+
+- simulating gold API failure
+- simulating FX API failure
+- clearing local storage cache
+- inspecting live state behavior
+
+---
+
+## Project Structure
 
 ```text
 Gold-Prices/
@@ -274,54 +382,89 @@ Gold-Prices/
 │   ├── search.js           # Bilingual search and filtering helpers
 │   └── alerts.js           # Local browser alert logic and saved alert helpers
 ├── tracker/                # Tracker-specific modules and UI/state helpers
-├── components/             # Shared reusable UI parts (nav, footer, ticker, etc.)
+├── components/             # Shared reusable UI parts
 ├── countries/              # Country-specific landing pages
-├── assets/                 # Images, screenshots, icons, and other static assets
+├── assets/                 # Images, screenshots, icons, and static assets
 └── README.md               # Project documentation
 ```
 
-## Price Calculations
+---
 
-```
-1 troy ounce = 31.1035 grams
+## Technical Capabilities
 
-usdPerGram(karat) = (spotUsdPerOz / 31.1035) × purity
-usdPerOz(karat)   = spotUsdPerOz × purity
-localPrice        = usdPrice × fxRate
+### Front-end architecture
+- Static multi-page site
+- Modular browser-side logic
+- No mandatory build step for local use
+- Progressive enhancement through modular scripts
 
-AED: always usdPrice × 3.6725 
-```
+### User experience architecture
+- English and Arabic interface handling
+- Responsive behavior across desktop and mobile
+- RTL support
+- Local persistence with `localStorage`
+- PWA-style manifest and service worker support
 
-## Caching & Offline Behavior
+### Product utility
+- Historical data support
+- Country-level pricing views
+- Calculator suite
+- Exports and brief generation
+- Debug mode and resilience testing
 
-| State | Gold | FX | Behavior |
-|-------|------|----|----------|
-| 1 | Live | Live | Full precision, green/amber badges |
-| 2 | Live | Stale | FX amber badge, "FX X hours old" |
-| 3 | Stale | Live | Gold amber badge, prices still work |
-| 4 | Both stale | Both stale | Dual badges, renders from cache |
-| 5 | No cache | No cache | Empty state + retry button |
+### Search and discoverability
+- `sitemap.xml`
+- `robots.txt`
+- country pages for broader surface area
+- methodology page for transparency and trust
 
-## Debug Mode
+---
 
-Add `?debug=true` to the URL:
+## Documentation
 
-```
-http://localhost:8080/?debug=true
-```
+For deeper project documentation, implementation notes, and roadmap detail, use the wiki:
 
-Shows a panel with:
-- Simulate gold API failure
-- Simulate FX API failure
-- Clear all localStorage cache
-- Live STATE inspector
+- [Wiki Home](https://github.com/vctb12/Gold-Prices/wiki)
+- [Getting Started](https://github.com/vctb12/Gold-Prices/wiki/Getting-Started)
+- [Platform Architecture](https://github.com/vctb12/Gold-Prices/wiki/Platform-Architecture)
+- [Features and Modules](https://github.com/vctb12/Gold-Prices/wiki/Features-and-Modules)
+- [Tracker Workspace](https://github.com/vctb12/Gold-Prices/wiki/Tracker-Workspace)
+- [Calculator Engine](https://github.com/vctb12/Gold-Prices/wiki/Calculator-Engine)
+- [Historical Data and Exports](https://github.com/vctb12/Gold-Prices/wiki/Historical-Data-and-Exports)
+- [Deployment, Hosting, and SEO](https://github.com/vctb12/Gold-Prices/wiki/Deployment,-Hosting,-and-SEO)
+- [Roadmap](https://github.com/vctb12/Gold-Prices/wiki/Roadmap)
 
-## Browser Support
+---
 
-Chrome 90+, Firefox 88+, Safari 14+, iOS Safari 14+, Android Chrome 90+
+## Roadmap Direction
 
-Requires: ES6 modules, `fetch`, `localStorage`, `navigator.clipboard`, `Intl`
+Strong next directions for the project include:
+
+- richer historical chart ranges and zoom levels
+- better archive navigation and comparison flows
+- more export formats and dataset packaging
+- stronger country coverage and market depth
+- improved mobile interaction in tracker-heavy sections
+- more advanced alert logic
+- deeper SEO around country pages and methodology pages
+- more polished screenshot and social preview assets
+- public changelog discipline across releases
+
+---
+
+## Why GoldPrices has room to scale
+
+The current structure already supports something bigger than a simple market page.
+
+With stronger polish over time, GoldPrices can grow into:
+- a premium regional reference layer for live gold pricing
+- a trustworthy Arabic/English market utility tool
+- a better public product for search discovery and country-based traffic
+- a stronger portfolio project from both UI/UX and product-thinking angles
+
+---
 
 ## License
 
 MIT
+```

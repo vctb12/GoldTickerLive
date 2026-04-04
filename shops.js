@@ -2,8 +2,11 @@ import { COUNTRIES } from './config/countries.js';
 import { SHOPS } from './data/shops.js';
 import { injectNav, updateNavLang } from './components/nav.js';
 import { injectFooter } from './components/footer.js';
-import { injectTicker, updateTickerLang } from './components/ticker.js';
+import { injectTicker, updateTicker, updateTickerLang } from './components/ticker.js';
+import { injectBreadcrumbs } from './components/breadcrumbs.js';
 import * as cache from './lib/cache.js';
+import { CONSTANTS } from './config/index.js';
+import { KARATS } from './config/index.js';
 
 const STATE = {
   lang: 'en',
@@ -63,6 +66,7 @@ const TXT = {
     noContact: 'Business details where available',
     visitWebsite: 'Visit website',
     featured: 'Featured market',
+    marketCluster: 'Market area cluster',
     infoTitle: 'How to use this directory',
     info1Title: 'Compare by market area',
     info1Body: 'Start with a country or city filter, then compare listed markets and specialties side by side.',

@@ -11,6 +11,7 @@ import { formatPrice } from './lib/formatter.js';
 import { injectNav, updateNavLang } from './components/nav.js';
 import { injectFooter } from './components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from './components/ticker.js';
+import { injectBreadcrumbs } from './components/breadcrumbs.js';
 
 // ── State ───────────────────────────────────────────────────────────────────
 const STATE = {
@@ -509,6 +510,7 @@ async function init() {
   document.documentElement.dir  = STATE.lang === 'ar' ? 'rtl' : 'ltr';
 
   const navResult = injectNav(STATE.lang, 0);
+  injectBreadcrumbs('calculator');
   injectFooter(STATE.lang, 0);
   injectTicker(STATE.lang, 0);
 
