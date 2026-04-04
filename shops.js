@@ -29,10 +29,13 @@ const TXT = {
     kicker: 'Shops by region',
     title: 'Explore Gold Shops & Known Gold Markets',
     lead: 'Browse directory listings across countries covered on GoldPrices. Use filters to narrow by region, country, city, and specialty. Shop information is for reference, and business details are shown where available.',
+    trustNote: 'Directory listings are for discovery only — not endorsement. Always confirm pricing, making charges, and product details directly with each shop.',
+    reviewedAt: 'Directory reviewed: March 2026',
     statListings: 'Listed shops',
     statCountries: 'Countries',
     statRegions: 'Regions',
     popularMarkets: 'Popular markets',
+    filtersBtn: 'Filters',
     searchLabel: 'Search by shop, city, country, market, or specialty',
     searchPlaceholder: 'e.g. Dubai Gold Souk, Riyadh, bullion',
     region: 'Region',
@@ -50,12 +53,12 @@ const TXT = {
     emptyTitle: 'No listings match your filters',
     emptyText: 'Try clearing one filter or searching with a broader term.',
     clearFilters: 'Clear filters',
+    clearFilter: 'Clear',
     location: 'Location',
     market: 'Market',
     category: 'Category',
     specialties: 'Specialties',
     phone: 'Phone',
-    website: 'Website',
     detailsSignal: 'Business details',
     detailsPartial: 'Partially available',
     detailsLimited: 'Limited',
@@ -76,10 +79,13 @@ const TXT = {
     kicker: 'محلات حسب المنطقة',
     title: 'استكشف محلات الذهب والأسواق المعروفة',
     lead: 'تصفح إدراجات الدليل ضمن الدول التي يغطيها GoldPrices. استخدم الفلاتر حسب المنطقة والدولة والمدينة والتخصص. معلومات المحلات مرجعية، وتظهر تفاصيل النشاط حيثما كانت متاحة.',
+    trustNote: 'إدراجات الدليل مخصصة للاكتشاف فقط وليست اعتماداً رسمياً. احرص دائماً على تأكيد الأسعار والرسوم والتفاصيل مباشرة مع كل محل.',
+    reviewedAt: 'آخر مراجعة للدليل: مارس 2026',
     statListings: 'المحلات المدرجة',
     statCountries: 'الدول',
     statRegions: 'المناطق',
     popularMarkets: 'أسواق شائعة',
+    filtersBtn: 'الفلاتر',
     searchLabel: 'ابحث باسم المحل أو المدينة أو الدولة أو السوق أو التخصص',
     searchPlaceholder: 'مثال: سوق الذهب دبي، الرياض، سبائك',
     region: 'المنطقة',
@@ -97,12 +103,12 @@ const TXT = {
     emptyTitle: 'لا توجد إدراجات مطابقة',
     emptyText: 'جرّب إلغاء أحد الفلاتر أو استخدام كلمات أوسع في البحث.',
     clearFilters: 'مسح الفلاتر',
+    clearFilter: 'إزالة',
     location: 'الموقع',
     market: 'السوق',
     category: 'الفئة',
     specialties: 'التخصصات',
     phone: 'الهاتف',
-    website: 'الموقع',
     detailsSignal: 'تفاصيل النشاط',
     detailsPartial: 'متوفرة جزئياً',
     detailsLimited: 'محدودة',
@@ -110,7 +116,6 @@ const TXT = {
     noContact: 'تفاصيل النشاط متاحة عند توفرها',
     visitWebsite: 'زيارة الموقع',
     featured: 'سوق مميز',
-    marketCluster: 'مجموعة متاجر بسوق',
     infoTitle: 'كيفية استخدام هذا الدليل',
     info1Title: 'قارن حسب منطقة السوق',
     info1Body: 'ابدأ بفلتر الدولة أو المدينة، ثم قارن الأسواق المدرجة والتخصصات بسهولة.',
@@ -118,24 +123,14 @@ const TXT = {
     info2Body: 'توضح البطاقات مستوى توفر تفاصيل النشاط حتى تعرف المعلومات المتاحة قبل التواصل.',
     info3Title: 'استخدمه كقائمة مختصرة',
     info3Body: 'هذه الصفحة للاكتشاف والمرجعية. احرص على تأكيد الأسعار والرسوم والتفاصيل مباشرة مع المحلات.',
-  }
+  },
 };
 
-function t(key) {
-  return TXT[STATE.lang]?.[key] ?? TXT.en[key] ?? key;
-}
+function t(key) { return TXT[STATE.lang]?.[key] ?? TXT.en[key] ?? key; }
 
-function countryByCode(code) {
-  return COUNTRIES.find((country) => country.code === code);
-}
-
-function countryName(country) {
-  return STATE.lang === 'ar' ? country.nameAr : country.nameEn;
-}
-
-function regionName(group) {
-  return REGIONS[group]?.[STATE.lang] || group;
-}
+function countryByCode(code) { return COUNTRIES.find((country) => country.code === code); }
+function countryName(country) { return STATE.lang === 'ar' ? country.nameAr : country.nameEn; }
+function regionName(group) { return REGIONS[group]?.[STATE.lang] || group; }
 
 function detailsAvailabilityLabel(value) {
   if (value === 'full') return t('detailsFull');
@@ -143,102 +138,70 @@ function detailsAvailabilityLabel(value) {
   return t('detailsLimited');
 }
 
-function isMarketCluster(shop) {
-  // Market clusters typically have "cluster", "shops", "dealers", "area", or "market" in notes
-  // and empty phone/website
-  return !shop.phone && !shop.website &&
-         (shop.notes?.toLowerCase().includes('cluster') ||
-          shop.notes?.toLowerCase().includes('concentration') ||
-          shop.notes?.toLowerCase().includes('area'));
-}
-
-function openModal(shop) {
-  const modal = document.getElementById('shops-modal');
-  const country = countryByCode(shop.countryCode);
-  const specialties = (shop.specialties || []).map((item) => `<span class="shop-tag">${item}</span>`).join('');
-
-  const contactHTML = shop.phone || shop.website ?
-    `<div class="modal-contact">
-      ${shop.phone ? `<p><strong>${t('phone')}:</strong> ${shop.phone}</p>` : ''}
-      ${shop.website ? `<p><a href="${shop.website}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')} →</a></p>` : ''}
-    </div>` :
-    `<p class="modal-no-contact">${t('noContact')}</p>`;
-
-  const clusterBadge = isMarketCluster(shop) ?
-    `<span class="modal-cluster-badge">${t('marketCluster')}</span>` : '';
-
-  document.getElementById('shops-modal-body').innerHTML = `
-    <div class="modal-head">
-      <h2 id="shops-modal-title">${shop.name}</h2>
-      <div class="modal-badges">
-        ${clusterBadge}
-        <span class="modal-details-badge modal-details-${shop.detailsAvailability}">${t('detailsSignal')}: ${detailsAvailabilityLabel(shop.detailsAvailability)}</span>
-        ${shop.featured ? `<span class="modal-featured-badge">★ ${t('featured')}</span>` : ''}
-      </div>
-    </div>
-
-    <div class="modal-meta">
-      <div class="modal-meta-item">
-        <span class="modal-meta-label">${t('location')}</span>
-        <span class="modal-meta-value">${shop.city}, ${countryName(country)} · ${regionName(country.group)}</span>
-      </div>
-      <div class="modal-meta-item">
-        <span class="modal-meta-label">${t('market')}</span>
-        <span class="modal-meta-value">${shop.market}</span>
-      </div>
-      <div class="modal-meta-item">
-        <span class="modal-meta-label">${t('category')}</span>
-        <span class="modal-meta-value">${shop.category}</span>
-      </div>
-    </div>
-
-    ${specialties ? `<div class="modal-tags">
-      <span class="modal-tags-label">${t('specialties')}</span>
-      <div class="modal-tags-wrap">${specialties}</div>
-    </div>` : ''}
-
-    <div class="modal-notes">
-      <p>${shop.notes}</p>
-    </div>
-
-    ${contactHTML}
-  `;
-
-  modal.hidden = false;
-}
-
-function closeModal() {
-  document.getElementById('shops-modal').hidden = true;
-}
-
 function applyStaticText() {
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
 
-  document.getElementById('shops-kicker').textContent = t('kicker');
-  document.getElementById('shops-title').textContent = t('title');
-  document.getElementById('shops-lead').textContent = t('lead');
-  document.getElementById('shops-popular-label').textContent = t('popularMarkets');
-  document.getElementById('shops-search-label').textContent = t('searchLabel');
-  document.getElementById('shops-search').placeholder = t('searchPlaceholder');
-  document.getElementById('shops-region-label').textContent = t('region');
-  document.getElementById('shops-country-label').textContent = t('country');
-  document.getElementById('shops-city-label').textContent = t('city');
-  document.getElementById('shops-specialty-label').textContent = t('specialtyFilter');
-  document.getElementById('shops-results-title').textContent = t('listed');
-  document.getElementById('shops-empty-title').textContent = t('emptyTitle');
-  document.getElementById('shops-empty-text').textContent = t('emptyText');
-  document.getElementById('shops-clear-filters').textContent = t('clearFilters');
-  document.getElementById('shops-stat-listings-label').textContent = t('statListings');
-  document.getElementById('shops-stat-countries-label').textContent = t('statCountries');
-  document.getElementById('shops-stat-regions-label').textContent = t('statRegions');
-  document.getElementById('shops-info-title').textContent = t('infoTitle');
-  document.getElementById('shops-info-1-title').textContent = t('info1Title');
-  document.getElementById('shops-info-1-body').textContent = t('info1Body');
-  document.getElementById('shops-info-2-title').textContent = t('info2Title');
-  document.getElementById('shops-info-2-body').textContent = t('info2Body');
-  document.getElementById('shops-info-3-title').textContent = t('info3Title');
-  document.getElementById('shops-info-3-body').textContent = t('info3Body');
+  const map = {
+    'shops-kicker': 'kicker',
+    'shops-title': 'title',
+    'shops-lead': 'lead',
+    'shops-trust-note': 'trustNote',
+    'shops-reviewed-at': 'reviewedAt',
+    'shops-popular-label': 'popularMarkets',
+    'shops-search-label': 'searchLabel',
+    'shops-region-label': 'region',
+    'shops-country-label': 'country',
+    'shops-city-label': 'city',
+    'shops-specialty-label': 'specialtyFilter',
+    'shops-results-title': 'listed',
+    'shops-empty-title': 'emptyTitle',
+    'shops-empty-text': 'emptyText',
+    'shops-clear-filters': 'clearFilters',
+    'shops-stat-listings-label': 'statListings',
+    'shops-stat-countries-label': 'statCountries',
+    'shops-stat-regions-label': 'statRegions',
+    'shops-info-title': 'infoTitle',
+    'shops-info-1-title': 'info1Title',
+    'shops-info-1-body': 'info1Body',
+    'shops-info-2-title': 'info2Title',
+    'shops-info-2-body': 'info2Body',
+    'shops-info-3-title': 'info3Title',
+    'shops-info-3-body': 'info3Body',
+    'shops-filter-toggle': 'filtersBtn',
+  };
+
+  Object.entries(map).forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = t(key);
+  });
+
+  const search = document.getElementById('shops-search');
+  if (search) search.placeholder = t('searchPlaceholder');
+}
+
+function loadStateFromUrl() {
+  const params = new URLSearchParams(location.search);
+  const read = (key) => (params.get(key) || '').trim();
+
+  STATE.search = read('q');
+  STATE.region = read('region') || 'all';
+  STATE.country = read('country') || 'all';
+  STATE.city = read('city') || 'all';
+  STATE.specialty = read('specialty') || 'all';
+}
+
+function syncUrlState() {
+  const params = new URLSearchParams();
+  if (STATE.search.trim()) params.set('q', STATE.search.trim());
+  if (STATE.region !== 'all') params.set('region', STATE.region);
+  if (STATE.country !== 'all') params.set('country', STATE.country);
+  if (STATE.city !== 'all') params.set('city', STATE.city);
+  if (STATE.specialty !== 'all') params.set('specialty', STATE.specialty);
+
+  const q = params.toString();
+  const next = `${location.pathname}${q ? `?${q}` : ''}`;
+  history.replaceState(null, '', next);
 }
 
 function shopsMatchingPrimaryFilters() {
@@ -252,29 +215,10 @@ function shopsMatchingPrimaryFilters() {
   });
 }
 
-function allCountriesInData() {
-  const codes = new Set(SHOPS.map((s) => s.countryCode));
-  return COUNTRIES.filter((c) => codes.has(c.code))
-    .sort((a, b) => countryName(a).localeCompare(countryName(b), STATE.lang));
-}
-
-function shopsForCountryFilter() {
-  if (STATE.region === 'all') return SHOPS;
-  return SHOPS.filter((shop) => {
-    const country = countryByCode(shop.countryCode);
-    return country?.group === STATE.region;
-  });
-}
-
-function shopsForCityFilter() {
-  return SHOPS.filter((shop) => {
-    const country = countryByCode(shop.countryCode);
-    if (!country) return false;
-    if (STATE.region !== 'all' && country.group !== STATE.region) return false;
-    if (STATE.country !== 'all' && shop.countryCode !== STATE.country) return false;
-    if (STATE.city !== 'all' && shop.city !== STATE.city) return false;
-    return true;
-  });
+function shopsForFeaturedChips() {
+  const pool = shopsMatchingPrimaryFilters();
+  const featured = pool.filter((shop) => shop.featured);
+  return (featured.length ? featured : pool).slice(0, 6);
 }
 
 function buildFilters() {
@@ -283,23 +227,15 @@ function buildFilters() {
   const citySelect = document.getElementById('shops-city-filter');
   const specialtySelect = document.getElementById('shops-specialty-filter');
 
-  // Guard against missing DOM elements
-  if (!regionSelect || !countrySelect || !citySelect || !specialtySelect) {
-    console.warn('[shops] Filter select elements not found');
-    return;
-  }
-
   regionSelect.innerHTML = `<option value="all">${t('allRegions')}</option>${Object.entries(REGIONS)
     .map(([code, labels]) => `<option value="${code}">${labels[STATE.lang]}</option>`).join('')}`;
 
-  const countryCodes = [...new Set(shopsMatchingPrimaryFilters().map((shop) => shop.countryCode))];
-  const allCountries = COUNTRIES
+  const countriesInScope = COUNTRIES
     .filter((country) => SHOPS.some((shop) => shop.countryCode === country.code))
     .filter((country) => STATE.region === 'all' || country.group === STATE.region)
     .sort((a, b) => countryName(a).localeCompare(countryName(b), STATE.lang));
 
-  countrySelect.innerHTML = `<option value="all">${t('allCountries')}</option>${allCountries
-    .filter((country) => countryCodes.includes(country.code) || STATE.country === 'all')
+  countrySelect.innerHTML = `<option value="all">${t('allCountries')}</option>${countriesInScope
     .map((country) => `<option value="${country.code}">${countryName(country)}</option>`).join('')}`;
 
   const cityPool = SHOPS.filter((shop) => {
@@ -311,13 +247,11 @@ function buildFilters() {
   });
 
   const cities = [...new Set(cityPool.map((shop) => shop.city))].sort((a, b) => a.localeCompare(b));
-  citySelect.innerHTML = `<option value="all">${t('allCities')}</option>${cities
-    .map((city) => `<option value="${city}">${city}</option>`).join('')}`;
+  citySelect.innerHTML = `<option value="all">${t('allCities')}</option>${cities.map((city) => `<option value="${city}">${city}</option>`).join('')}`;
 
   const specialties = [...new Set(shopsMatchingPrimaryFilters().flatMap((shop) => shop.specialties || []))]
     .sort((a, b) => a.localeCompare(b));
-  specialtySelect.innerHTML = `<option value="all">${t('allSpecialties')}</option>${specialties
-    .map((item) => `<option value="${item}">${item}</option>`).join('')}`;
+  specialtySelect.innerHTML = `<option value="all">${t('allSpecialties')}</option>${specialties.map((item) => `<option value="${item}">${item}</option>`).join('')}`;
 
   regionSelect.value = STATE.region;
   if (![...countrySelect.options].some((option) => option.value === STATE.country)) STATE.country = 'all';
@@ -330,10 +264,11 @@ function buildFilters() {
 
 function populatePopularChips() {
   const box = document.getElementById('shops-popular-chips');
-  const featured = SHOPS.filter((shop) => shop.featured).slice(0, 6);
-  box.innerHTML = featured.map((shop) => {
+  const chips = shopsForFeaturedChips();
+
+  box.innerHTML = chips.map((shop) => {
     const label = `${shop.market} · ${shop.city}`;
-    return `<button class="shops-chip" type="button" data-country="${shop.countryCode}" data-city="${shop.city}">${label}</button>`;
+    return `<button class="shops-chip" type="button" data-country="${shop.countryCode}" data-city="${shop.city}" aria-label="${label}">${label}</button>`;
   }).join('');
 
   box.querySelectorAll('.shops-chip').forEach((button) => {
@@ -350,6 +285,7 @@ function populatePopularChips() {
 
 function filterShops() {
   const q = STATE.search.trim().toLowerCase();
+
   return SHOPS.filter((shop) => {
     const country = countryByCode(shop.countryCode);
     if (!country) return false;
@@ -362,78 +298,91 @@ function filterShops() {
     if (!q) return true;
 
     const haystack = [
-      shop.name,
-      shop.city,
-      shop.market,
-      shop.category,
-      ...(shop.specialties || []),
-      shop.notes,
-      country.nameEn,
-      country.nameAr,
-      regionName(country.group),
+      shop.name, shop.city, shop.market, shop.category,
+      ...(shop.specialties || []), shop.notes, country.nameEn, country.nameAr,
     ].join(' ').toLowerCase();
 
     return haystack.includes(q);
   });
 }
 
+function activeFilterLabels() {
+  const labels = [];
+  if (STATE.region !== 'all') labels.push({ key: 'region', label: regionName(STATE.region) });
+  if (STATE.country !== 'all') {
+    const country = countryByCode(STATE.country);
+    if (country) labels.push({ key: 'country', label: countryName(country) });
+  }
+  if (STATE.city !== 'all') labels.push({ key: 'city', label: STATE.city });
+  if (STATE.specialty !== 'all') labels.push({ key: 'specialty', label: STATE.specialty });
+  if (STATE.search.trim()) labels.push({ key: 'search', label: `"${STATE.search.trim()}"` });
+  return labels;
+}
+
+function renderActivePills() {
+  const pillsEl = document.getElementById('shops-active-pills');
+  const labels = activeFilterLabels();
+
+  pillsEl.innerHTML = labels.map((item) => `
+    <button type="button" class="shops-active-pill" data-key="${item.key}">
+      <span>${item.label}</span><span aria-hidden="true">×</span>
+    </button>
+  `).join('');
+
+  pillsEl.querySelectorAll('.shops-active-pill').forEach((button) => {
+    button.addEventListener('click', () => {
+      const key = button.dataset.key;
+      if (key === 'region') {
+        STATE.region = 'all'; STATE.country = 'all'; STATE.city = 'all'; STATE.specialty = 'all';
+      } else if (key === 'country') {
+        STATE.country = 'all'; STATE.city = 'all'; STATE.specialty = 'all';
+      } else if (key === 'city') {
+        STATE.city = 'all'; STATE.specialty = 'all';
+      } else if (key === 'specialty') {
+        STATE.specialty = 'all';
+      } else if (key === 'search') {
+        STATE.search = '';
+        document.getElementById('shops-search').value = '';
+      }
+      buildFilters();
+      render();
+    });
+  });
+}
+
+function activeFilterSummary() {
+  const labels = activeFilterLabels().map((item) => item.label);
+  document.getElementById('shops-active-filters').textContent =
+    labels.length ? t('activeFilters')(labels.join(' · ')) : t('noFilters');
+}
+
 function updateHeaderStats() {
   const uniqueCountries = new Set(SHOPS.map((shop) => shop.countryCode));
-  const uniqueRegions = new Set(
-    SHOPS.map((shop) => countryByCode(shop.countryCode)?.group).filter(Boolean)
-  );
-
+  const uniqueRegions = new Set(SHOPS.map((shop) => countryByCode(shop.countryCode)?.group).filter(Boolean));
   document.getElementById('shops-stat-listings').textContent = String(SHOPS.length);
   document.getElementById('shops-stat-countries').textContent = String(uniqueCountries.size);
   document.getElementById('shops-stat-regions').textContent = String(uniqueRegions.size);
 }
 
-function activeFilterSummary() {
-  const labels = [];
-
-  if (STATE.region !== 'all') labels.push(regionName(STATE.region));
-  if (STATE.country !== 'all') {
-    const country = countryByCode(STATE.country);
-    if (country) labels.push(countryName(country));
-  }
-  if (STATE.city !== 'all') labels.push(STATE.city);
-  if (STATE.specialty !== 'all') labels.push(STATE.specialty);
-  if (STATE.search.trim()) labels.push(`"${STATE.search.trim()}"`);
-
-  document.getElementById('shops-active-filters').textContent =
-    labels.length ? t('activeFilters')(labels.join(' · ')) : t('noFilters');
-}
-
 function renderCards(shops) {
   const grid = document.getElementById('shops-grid');
-  if (!grid) {
-    console.warn('[shops] Element #shops-grid not found');
-    return;
-  }
 
-  grid.innerHTML = shops.map((shop, idx) => {
+  grid.innerHTML = shops.map((shop) => {
     const country = countryByCode(shop.countryCode);
     const specialties = (shop.specialties || []).map((item) => `<span class="shop-tag">${item}</span>`).join('');
-    const isCluster = isMarketCluster(shop);
-    const clusterBadge = isCluster ? `<span class="shop-cluster-badge">${t('marketCluster')}</span>` : '';
 
     const contactParts = [];
     if (shop.phone) contactParts.push(`${t('phone')}: ${shop.phone}`);
-    if (shop.website) {
-      contactParts.push(`<a href="${shop.website}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')}</a>`);
-    }
+    if (shop.website) contactParts.push(`<a href="${shop.website}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')}</a>`);
 
     return `
-      <article class="shop-card${shop.featured ? ' shop-card--featured' : ''}${isCluster ? ' shop-card--cluster' : ''}" data-shop-id="${shop.id}" style="cursor: pointer;">
+      <article class="shop-card${shop.featured ? ' shop-card--featured' : ''}">
         <header class="shop-card-head">
           <div>
             <h3>${shop.name}</h3>
-            <div class="shop-card-badges">
-              ${clusterBadge}
-              ${shop.featured ? `<span class="shop-featured">${t('featured')}</span>` : ''}
-            </div>
+            ${shop.featured ? `<span class="shop-featured">${t('featured')}</span>` : ''}
           </div>
-          <span class="shop-signal shop-signal--${shop.detailsAvailability}">${detailsAvailabilityLabel(shop.detailsAvailability)}</span>
+          <span class="shop-signal">${t('detailsSignal')}: ${detailsAvailabilityLabel(shop.detailsAvailability)}</span>
         </header>
 
         <div class="shop-meta-grid">
@@ -452,139 +401,17 @@ function renderCards(shops) {
       </article>
     `;
   }).join('');
-
-  // Bind click handlers after rendering
-  bindShopCardHandlers();
-}
-
-// Separate binding function to prevent handler orphaning
-function bindShopCardHandlers() {
-  const grid = document.getElementById('shops-grid');
-  if (!grid) return;
-
-  grid.querySelectorAll('.shop-card').forEach((card) => {
-    // Remove existing listeners by cloning to prevent duplicate bindings
-    const newCard = card.cloneNode(true);
-    card.parentNode.replaceChild(newCard, card);
-
-    newCard.addEventListener('click', () => {
-      const shopId = newCard.dataset.shopId;
-      const shop = SHOPS.find((s) => s.id === shopId);
-      if (shop) openModal(shop);
-    });
-  });
-}
-
-function renderFeaturedSection() {
-  const featuredSection = document.getElementById('shops-featured');
-  const featuredGrid = document.getElementById('shops-featured-grid');
-
-  if (!featuredSection || !featuredGrid) {
-    console.warn('[shops] Featured section elements not found');
-    return;
-  }
-
-  const featured = shopsMatchingPrimaryFilters().filter((shop) => shop.featured);
-
-  if (!featured.length) {
-    featuredSection.hidden = true;
-    return;
-  }
-
-  featuredSection.hidden = false;
-  featuredGrid.innerHTML = featured.map((shop) => {
-    const country = countryByCode(shop.countryCode);
-    const specialties = (shop.specialties || []).slice(0, 2).map((item) => `<span class="featured-tag">${item}</span>`).join('');
-    return `
-      <article class="featured-card" data-shop-id="${shop.id}" style="cursor: pointer;">
-        <div class="featured-header">
-          <h3>${shop.name}</h3>
-          <span class="featured-location">${shop.city} · ${countryName(country)}</span>
-        </div>
-        <p class="featured-market">${shop.market}</p>
-        <div class="featured-tags">${specialties}</div>
-      </article>
-    `;
-  }).join('');
-
-  // Bind click handlers after rendering
-  bindFeaturedCardHandlers();
-}
-
-// Separate binding function for featured cards
-function bindFeaturedCardHandlers() {
-  const featuredGrid = document.getElementById('shops-featured-grid');
-  if (!featuredGrid) return;
-
-  featuredGrid.querySelectorAll('.featured-card').forEach((card) => {
-    const newCard = card.cloneNode(true);
-    card.parentNode.replaceChild(newCard, card);
-
-    newCard.addEventListener('click', () => {
-      const shopId = newCard.dataset.shopId;
-      const shop = SHOPS.find((s) => s.id === shopId);
-      if (shop) openModal(shop);
-    });
-  });
-}
-
-function renderFilterPills() {
-  const pillsContainer = document.getElementById('shops-filter-pills');
-  const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  const pills = [];
-
-  if (STATE.region !== 'all') pills.push({ type: 'region', value: STATE.region, label: regionName(STATE.region) });
-  if (STATE.country !== 'all') {
-    const country = countryByCode(STATE.country);
-    if (country) pills.push({ type: 'country', value: STATE.country, label: countryName(country) });
-  }
-  if (STATE.city !== 'all') pills.push({ type: 'city', value: STATE.city, label: STATE.city });
-  if (STATE.specialty !== 'all') pills.push({ type: 'specialty', value: STATE.specialty, label: STATE.specialty });
-  if (STATE.search.trim()) {
-    const q = STATE.search.trim();
-    pills.push({ type: 'search', value: '', label: `"${esc(q)}"`, ariaLabel: `Remove "${q}" search filter` });
-  }
-
-  if (!pills.length) {
-    pillsContainer.innerHTML = '';
-    return;
-  }
-
-  pillsContainer.innerHTML = pills.map((pill) => {
-    const ariaLabel = pill.ariaLabel || `Remove ${pill.label} filter`;
-    return `
-      <button class="shops-filter-pill" data-type="${pill.type}" data-value="${pill.value || ''}" type="button" aria-label="${ariaLabel}">
-        ${pill.label}
-        <span class="shops-filter-pill-remove" aria-hidden="true">×</span>
-      </button>
-    `;
-  }).join('');
-
-  pillsContainer.querySelectorAll('.shops-filter-pill').forEach((pill) => {
-    pill.addEventListener('click', () => {
-      const type = pill.dataset.type;
-      if (type === 'region') STATE.region = 'all';
-      if (type === 'country') STATE.country = 'all';
-      if (type === 'city') STATE.city = 'all';
-      if (type === 'specialty') STATE.specialty = 'all';
-      if (type === 'search') {
-        STATE.search = '';
-        document.getElementById('shops-search').value = '';
-      }
-      buildFilters();
-      render();
-    });
-  });
 }
 
 function render() {
   const shops = filterShops();
   const empty = document.getElementById('shops-empty');
-  const count = document.getElementById('shops-count');
-  if (count) count.textContent = t('count')(shops.length);
+
+  document.getElementById('shops-count').textContent = t('count')(shops.length);
   activeFilterSummary();
-  renderFilterPills();
-  renderFeaturedSection();
+  renderActivePills();
+  syncUrlState();
+  populatePopularChips();
 
   if (!shops.length) {
     document.getElementById('shops-grid').innerHTML = '';
@@ -644,88 +471,35 @@ function bindEvents() {
 
   document.getElementById('shops-clear-filters').addEventListener('click', resetFilters);
 
-  // Modal events
-  const modal = document.getElementById('shops-modal');
-  const modalClose = document.getElementById('shops-modal-close') || modal.querySelector('.shops-modal-close');
-  const modalOverlay = modal.querySelector('.shops-modal-overlay');
-
-  if (modalClose) {
-    modalClose.addEventListener('click', closeModal);
+  const toggle = document.getElementById('shops-filter-toggle');
+  const panel = document.getElementById('shops-controls-inner');
+  if (toggle && panel) {
+    toggle.addEventListener('click', () => {
+      panel.classList.toggle('is-collapsed');
+      const expanded = !panel.classList.contains('is-collapsed');
+      toggle.setAttribute('aria-expanded', String(expanded));
+    });
   }
-
-  if (modalOverlay) {
-    modalOverlay.addEventListener('click', closeModal);
-  }
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !modal.hidden) closeModal();
-  });
 }
 
 function updateLanguage() {
   applyStaticText();
   buildFilters();
   updateHeaderStats();
-  populatePopularChips();
   render();
 }
 
 function init() {
-  // Validate data and DOM prerequisites
-  if (!SHOPS || SHOPS.length === 0) {
-    console.error('[shops] SHOPS data is empty or not loaded');
-    document.body.innerHTML = '<p>Error: Shop data failed to load.</p>';
-    return;
-  }
-
-  // Validate critical DOM elements exist
-  const requiredElements = ['shops-grid', 'shops-empty', 'shops-featured', 'shops-featured-grid', 'shops-filter-pills'];
-  for (const id of requiredElements) {
-    if (!document.getElementById(id)) {
-      console.error(`[shops] Required element #${id} not found in DOM`);
-    }
-  }
-
   try {
     const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
     if (prefs.lang === 'ar' || prefs.lang === 'en') STATE.lang = prefs.lang;
   } catch {}
 
-  // Apply URL query params to initial state (e.g. ?country=AE&region=gcc)
-  const _p = new URLSearchParams(location.search);
-  const _pRegion  = (_p.get('region')    || '').toLowerCase();
-  const _pCountry = (_p.get('country')   || '').toUpperCase();
-  const _pCity    =  _p.get('city')      || '';
-  const _pSpec    =  _p.get('specialty') || '';
-  const _pSearch  =  _p.get('search')    || _p.get('q') || '';
-
-  if (_pRegion && Object.prototype.hasOwnProperty.call(REGIONS, _pRegion)) STATE.region = _pRegion;
-  if (_pCountry)  STATE.country   = _pCountry;   // buildFilters() resets to 'all' if invalid
-  if (_pCity)     STATE.city      = _pCity;
-  if (_pSpec)     STATE.specialty = _pSpec;
-  if (_pSearch)   STATE.search    = _pSearch;
+  loadStateFromUrl();
 
   const navResult = injectNav(STATE.lang, 0);
-  injectBreadcrumbs('shops');
   injectFooter(STATE.lang, 0);
   injectTicker(STATE.lang, 0);
-
-  // Populate ticker from cache so it never shows all-dashes
-  const cachedGold = cache.getFallbackGoldPrice();
-  const cachedFX   = cache.getFallbackFXRates();
-  if (cachedGold?.price) {
-    const spot = cachedGold.price;
-    const aedRate = CONSTANTS.AED_PEG;
-    const purity = (k) => KARATS.find(x => x.code === k)?.purity ?? 1;
-    const aedGram = (k) => (spot / CONSTANTS.TROY_OZ_GRAMS) * purity(k) * aedRate;
-    updateTicker({
-      xauUsd:  spot,
-      uae24k:  aedGram('24'),
-      uae22k:  aedGram('22'),
-      uae21k:  aedGram('21'),
-      uae18k:  aedGram('18'),
-    });
-  }
 
   navResult.getLangToggleButtons().forEach((button) => {
     button.addEventListener('click', () => {
@@ -738,12 +512,10 @@ function init() {
   });
 
   bindEvents();
-  // Sync search input DOM value if set from URL param
-  if (STATE.search) {
-    const el = document.getElementById('shops-search');
-    if (el) el.value = STATE.search;
-  }
   updateLanguage();
+
+  const search = document.getElementById('shops-search');
+  if (search) search.value = STATE.search;
 }
 
 init();

@@ -23,6 +23,8 @@
         <h1 id="shops-title">Explore Gold Shops & Known Gold Markets</h1>
         <p class="shops-lead" id="shops-lead">Browse directory listings across countries covered on GoldPrices. Use filters to narrow by region, country, city, and specialty. Shop information is for reference, and business details are shown where available.</p>
 
+        <p class="shops-trust-note" id="shops-trust-note">Directory listings are for discovery only — not endorsement. Always confirm pricing, making charges, and product details directly with each shop.</p>
+
         <div class="shops-hero-stats" aria-label="Directory overview">
           <div class="shops-stat">
             <span class="shops-stat-value" id="shops-stat-listings">0</span>
@@ -38,6 +40,8 @@
           </div>
         </div>
 
+        <p class="shops-reviewed-at" id="shops-reviewed-at">Directory reviewed: March 2026</p>
+
         <div class="shops-popular" aria-label="Popular markets">
           <span class="shops-popular-label" id="shops-popular-label">Popular markets</span>
           <div class="shops-popular-chips" id="shops-popular-chips"></div>
@@ -46,48 +50,44 @@
     </section>
 
     <section class="shops-controls" aria-label="Shop filters">
-      <div class="shops-controls-inner">
-        <label class="shops-control shops-control--wide" for="shops-search">
-          <span id="shops-search-label">Search by shop, city, country, market, or specialty</span>
-          <input id="shops-search" type="search" placeholder="e.g. Dubai Gold Souk, Riyadh, bullion" />
-        </label>
+      <div class="shops-controls-inner-wrap">
+        <button type="button" class="shops-filter-toggle" id="shops-filter-toggle" aria-expanded="true" aria-controls="shops-controls-inner">Filters</button>
+        <div class="shops-controls-inner" id="shops-controls-inner">
+          <label class="shops-control shops-control--wide" for="shops-search">
+            <span id="shops-search-label">Search by shop, city, country, market, or specialty</span>
+            <input id="shops-search" type="search" placeholder="e.g. Dubai Gold Souk, Riyadh, bullion" />
+          </label>
 
-        <label class="shops-control" for="shops-region-filter">
-          <span id="shops-region-label">Region</span>
-          <select id="shops-region-filter"></select>
-        </label>
+          <label class="shops-control" for="shops-region-filter">
+            <span id="shops-region-label">Region</span>
+            <select id="shops-region-filter"></select>
+          </label>
 
-        <label class="shops-control" for="shops-country-filter">
-          <span id="shops-country-label">Country</span>
-          <select id="shops-country-filter"></select>
-        </label>
+          <label class="shops-control" for="shops-country-filter">
+            <span id="shops-country-label">Country</span>
+            <select id="shops-country-filter"></select>
+          </label>
 
-        <label class="shops-control" for="shops-city-filter">
-          <span id="shops-city-label">City</span>
-          <select id="shops-city-filter"></select>
-        </label>
+          <label class="shops-control" for="shops-city-filter">
+            <span id="shops-city-label">City</span>
+            <select id="shops-city-filter"></select>
+          </label>
 
-        <label class="shops-control" for="shops-specialty-filter">
-          <span id="shops-specialty-label">Specialty</span>
-          <select id="shops-specialty-filter"></select>
-        </label>
-      </div>
-    </section>
-
-    <section id="shops-featured" class="shops-featured" aria-labelledby="shops-featured-title" hidden>
-      <div class="shops-results-inner">
-        <h2 id="shops-featured-title" class="shops-featured-title">Featured Markets</h2>
-        <div id="shops-featured-grid" class="shops-featured-grid"></div>
+          <label class="shops-control" for="shops-specialty-filter">
+            <span id="shops-specialty-label">Specialty</span>
+            <select id="shops-specialty-filter"></select>
+          </label>
+        </div>
       </div>
     </section>
 
     <section class="shops-results" aria-labelledby="shops-results-title">
       <div class="shops-results-inner">
         <div class="shops-results-head">
-          <div class="shops-results-head-left">
+          <div>
             <h2 id="shops-results-title">Listed Shops</h2>
-            <div id="shops-filter-pills" class="shops-filter-pills"></div>
             <p id="shops-active-filters" class="shops-active-filters"></p>
+            <div id="shops-active-pills" class="shops-active-pills" aria-live="polite"></div>
           </div>
           <p id="shops-count" aria-live="polite"></p>
         </div>

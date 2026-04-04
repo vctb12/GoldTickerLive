@@ -26,11 +26,12 @@ const NAV_DATA = {
         key: 'markets',
         label: 'Markets',
         items: [
-          { href: '../tracker.html',                   label: 'Live Tracker'   },
-          { href: '../countries/uae.html',             label: 'UAE Gold Today' },
-          { href: '../tracker.html#section-countries', label: 'GCC Compare'    },
-          { href: '../tracker.html#section-countries', label: 'Country Pages'  },
-          { href: '../tracker.html#section-chart',     label: 'History & Data' },
+          { href: '../tracker.html',                   label: 'Live Tracker'    },
+          { href: '../countries/uae.html',             label: 'UAE Gold Today'  },
+          { href: '../tracker.html#section-countries', label: 'GCC Compare'     },
+          { href: '../tracker.html#section-countries', label: 'Country Pages'   },
+          { href: '../tracker.html#section-chart',     label: 'History & Data'  },
+          { href: '../shops.html',                   label: 'Shops'           },
         ],
       },
       {
@@ -104,6 +105,7 @@ const NAV_DATA = {
           { href: '../tracker.html#section-countries', label: 'مقارنة دول الخليج'   },
           { href: '../tracker.html#section-countries', label: 'صفحات الدول'         },
           { href: '../tracker.html#section-chart',     label: 'البيانات التاريخية'   },
+          { href: '../shops.html',                   label: 'المحلات'           },
         ],
       },
       {

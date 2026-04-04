@@ -1,5 +1,4 @@
 export const SHOPS = [
-  // ── UAE ────────────────────────────────────────────────────────────────────
   {
     id: 'ae-dubai-gold-souk-traders',
     name: 'Dubai Gold Souk Traders',
@@ -7,6 +6,16 @@ export const SHOPS = [
     city: 'Dubai',
     market: 'Dubai Gold Souk (Deira)',
     category: 'Jewellery & Bullion',
+    specialties: ['22K Jewellery', 'Gold Coins'],
+    phone: '+971 4 000 0000',
+    website: '',
+    detailsAvailability: 'partial',
+    featured: true,
+    notes: 'Cluster listing for independent stores in the traditional gold souk district.'
+  },
+  {
+    id: 'ae-abu-dhabi-madinat-zayed',
+    name: 'Madinat Zayed Gold Center Shops',
     specialties: ['22K Jewellery', 'Gold Coins', 'Chains & Bangles'],
     phone: '',
     website: '',
@@ -49,6 +58,12 @@ export const SHOPS = [
     city: 'Abu Dhabi',
     market: 'Madinat Zayed Gold Center',
     category: 'Jewellery Retail',
+    specialties: ['21K Jewellery', 'Wedding Sets'],
+    phone: '',
+    website: '',
+    detailsAvailability: 'partial',
+    notes: 'Known shopping center area with multiple brands and independent retailers.'
+  },
     specialties: ['21K Jewellery', 'Wedding Sets', 'Bridal Collections'],
     phone: '',
     website: '',
