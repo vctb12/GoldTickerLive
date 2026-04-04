@@ -234,4 +234,17 @@ export function bindCoreEvents() {
       localStorage.setItem('tracker_trust_banner_dismissed', 'true');
     });
   }
+
+  // First-visit welcome strip
+  const welcomeStrip = document.getElementById('tracker-welcome-strip');
+  const welcomeClose = document.getElementById('tracker-welcome-close');
+  if (welcomeStrip && welcomeClose) {
+    if (!localStorage.getItem('tracker_first_visit')) {
+      welcomeStrip.hidden = false;
+    }
+    welcomeClose.addEventListener('click', () => {
+      welcomeStrip.hidden = true;
+      localStorage.setItem('tracker_first_visit', 'seen');
+    });
+  }
 }

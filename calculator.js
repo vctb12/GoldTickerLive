@@ -435,6 +435,14 @@ function updateSpotBadge() {
       ? `$${STATE.spotUsdPerOz.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
       : '—';
   }
+  // AED 24K/gram secondary badge
+  const aedBadge = document.getElementById('calc-aed-badge');
+  const aedPrice = document.getElementById('calc-aed-price');
+  if (aedBadge && aedPrice && STATE.spotUsdPerOz) {
+    const aed24 = (STATE.spotUsdPerOz / CONSTANTS.TROY_OZ_GRAMS) * CONSTANTS.AED_PEG;
+    aedPrice.textContent = `AED ${aed24.toFixed(2)}`;
+    aedBadge.hidden = false;
+  }
 }
 
 // ── Tab switching ────────────────────────────────────────────────────────────

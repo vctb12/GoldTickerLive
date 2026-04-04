@@ -1746,3 +1746,53 @@ body.tracker-pro-page {
     padding: 0.45rem 0.65rem;
   }
 }
+
+/* ── First-visit welcome strip ──────────────────────── */
+.tracker-welcome-strip {
+  background: color-mix(in srgb, var(--color-gold) 12%, var(--color-surface));
+  border-bottom: 1px solid color-mix(in srgb, var(--color-gold) 30%, var(--color-border));
+}
+
+.tracker-welcome-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+}
+
+.tracker-welcome-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.tracker-welcome-chip {
+  font-size: 0.82rem;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.65rem;
+}
+
+.tracker-welcome-close {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.65rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tracker-welcome-close:hover {
+  color: var(--color-text);
+  border-color: var(--color-text);
+}

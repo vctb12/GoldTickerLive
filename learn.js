@@ -183,6 +183,20 @@ async function init() {
   });
 
   applyLang(STATE.lang);
+
+  // TOC scroll-spy
+  const sections = document.querySelectorAll('.learn-section[id]');
+  const tocLinks = document.querySelectorAll('.learn-toc-list a[href^="#"]');
+  if (sections.length && tocLinks.length) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const id = entry.target.id;
+        const link = document.querySelector(`.learn-toc-list a[href="#${id}"]`);
+        if (link) link.classList.toggle('is-active', entry.isIntersecting);
+      });
+    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+    sections.forEach(s => observer.observe(s));
+  }
 }
 
 init();
