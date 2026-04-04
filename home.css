@@ -102,6 +102,41 @@
   margin-top: 2rem;
 }
 
+
+.hero-shop-cta {
+  margin-top: 1rem;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(196, 153, 62, 0.3);
+  border-radius: var(--radius-md);
+  padding: 0.7rem 0.8rem;
+}
+
+.btn-buy-gold {
+  background: linear-gradient(135deg, #f0c84a 0%, #c4993e 55%, #9e7328 100%);
+  border: 1px solid rgba(255, 224, 153, 0.45);
+  color: #1f1205;
+  font-weight: 800;
+  box-shadow: 0 6px 18px rgba(196, 153, 62, 0.32);
+}
+
+.btn-buy-gold:hover,
+.btn-buy-gold:focus-visible {
+  background: linear-gradient(135deg, #f5d777 0%, #d7a94b 55%, #ab7d2f 100%);
+  color: #180c03;
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.hero-shop-cta-sub {
+  margin: 0;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.68);
+}
+
 .hero-ctas-secondary {
   display: flex;
   align-items: center;
@@ -943,6 +978,9 @@
   .hero { padding: 2.5rem 1.1rem 2rem; }
   .hero-ctas { flex-direction: column; gap: 0.6rem; }
   .hero-ctas .btn { width: 100%; justify-content: center; text-align: center; }
+  .hero-shop-cta { width: 100%; align-items: stretch; }
+  .hero-shop-cta .btn { width: 100%; justify-content: center; }
+  .hero-shop-cta-sub { text-align: center; }
   .hero-ctas-secondary { justify-content: center; }
 
   .trust-inner { gap: 0.35rem; justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
