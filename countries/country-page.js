@@ -230,6 +230,27 @@ function renderRelated(cfg) {
     <div class="cp-related-grid">${cards}</div>`;
 }
 
+// ── FAQ JSON-LD schema injection ─────────────────────────────────────────────
+function injectFaqSchema(faqEn) {
+  if (!faqEn?.length) return;
+  const existing = document.getElementById('faq-schema-ld');
+  if (existing) existing.remove();
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqEn.map(item => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  };
+  const script = document.createElement('script');
+  script.id = 'faq-schema-ld';
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify(schema);
+  document.head.appendChild(script);
+}
+
 // ── Render FAQ ───────────────────────────────────────────────────────────────
 function renderFaq(cfg) {
   const el = document.getElementById('cp-faq');
@@ -237,6 +258,8 @@ function renderFaq(cfg) {
 
   const faqList = STATE.lang === 'ar' ? cfg.faqAr : cfg.faqEn;
   if (!faqList?.length) return;
+
+  injectFaqSchema(cfg.faqEn);
 
   const items = faqList.map((item, i) => `
     <details class="faq-item" ${i === 0 ? 'open' : ''}>

@@ -9,6 +9,8 @@ export const STORAGE_KEYS = {
   watchlist: 'tracker_pro_favorites_v5',
 };
 
+export const VALID_MODES = new Set(['live', 'compare', 'archive', 'alerts', 'planner', 'exports', 'method']);
+
 export const DEFAULT_STATE = {
   lang: 'en',
   mode: 'live',
@@ -90,7 +92,7 @@ export function createInitialState() {
   // Tracker-specific saved state
   const saved = readLocal(STORAGE_KEYS.core, {});
   base.lang = saved.lang || readLanguagePref() || base.lang;
-  base.mode = saved.mode || base.mode;
+  base.mode = (VALID_MODES.has(saved.mode) ? saved.mode : null) || base.mode;
   base.selectedCurrency = saved.selectedCurrency || base.selectedCurrency;
   base.selectedKarat = saved.selectedKarat || base.selectedKarat;
   base.selectedUnit = saved.selectedUnit || base.selectedUnit;
@@ -137,20 +139,23 @@ export function persistState(state) {
 
 export function syncUrlFromState(state) {
   const url = new URL(window.location.href);
-  url.hash = `mode=${state.mode}&cur=${state.selectedCurrency}&k=${state.selectedKarat}&u=${state.selectedUnit}&r=${state.range}&cmp=${state.compareCurrency}`;
+  url.hash = `mode=${state.mode}&cur=${state.selectedCurrency}&k=${state.selectedKarat}&u=${state.selectedUnit}&r=${state.range}&cmp=${state.compareCurrency}&lang=${state.lang}`;
   history.replaceState(null, '', url.toString());
 }
 
-function applyUrlState(state) {
+export function applyUrlState(state) {
   const hash = window.location.hash.slice(1);
   if (!hash) return;
   const params = new URLSearchParams(hash);
-  state.mode = params.get('mode') || state.mode;
+  const urlMode = params.get('mode');
+  if (urlMode && VALID_MODES.has(urlMode)) state.mode = urlMode;
   state.selectedCurrency = params.get('cur') || state.selectedCurrency;
   state.selectedKarat = params.get('k') || state.selectedKarat;
   state.selectedUnit = params.get('u') || state.selectedUnit;
   state.range = params.get('r') || state.range;
   state.compareCurrency = params.get('cmp') || state.compareCurrency;
+  const urlLang = params.get('lang');
+  if (urlLang === 'en' || urlLang === 'ar') state.lang = urlLang;
 }
 
 function readLocal(key, fallback) {

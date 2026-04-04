@@ -585,7 +585,24 @@ function renderFilterPills() {
   });
 }
 
+function syncUrlToState() {
+  const p = new URLSearchParams(location.search);
+
+  if (STATE.region !== 'all') p.set('region', STATE.region); else p.delete('region');
+  if (STATE.country !== 'all') p.set('country', STATE.country); else p.delete('country');
+  if (STATE.city !== 'all') p.set('city', STATE.city); else p.delete('city');
+  if (STATE.specialty !== 'all') p.set('specialty', STATE.specialty); else p.delete('specialty');
+
+  const q = STATE.search.trim();
+  if (q) { p.set('search', q); p.delete('q'); }
+  else { p.delete('search'); p.delete('q'); }
+
+  const qs = p.toString();
+  history.replaceState(null, '', qs ? `${location.pathname}?${qs}` : location.pathname);
+}
+
 function render() {
+  syncUrlToState();
   const shops = filterShops();
   const empty = document.getElementById('shops-empty');
   const count = document.getElementById('shops-count');
