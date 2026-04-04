@@ -19,6 +19,7 @@ Core priorities:
 - Prefer user trust over flashy presentation.
 - Prefer connected journeys over isolated pages.
 - Prefer strong structure over feature sprawl.
+- Be tough on weak UX, fake completeness, unclear trust language, and disconnected pages.
 
 ## Current product focus
 Highest page-level priority:
@@ -35,73 +36,101 @@ Highest system-level priorities:
 ## Branch and source-of-truth rules
 - Treat `main` as the source of truth unless clearly verified otherwise.
 - Do not plan or implement from stale, detached, or unclear branch context.
+- Do not treat `claude/gold-price-tracker-FHFL3` as source of truth.
 - Before serious work, verify:
   - current branch
   - git status
   - whether local `main` exists
   - whether `origin` exists
   - whether `origin/main` exists
-  - whether the branch can be safely compared with `main`
-- If source-of-truth cannot be verified safely, stop and report:
+  - whether the current branch can be safely compared with `main`
+  - whether the checkout appears connected to repo truth
+- If source-of-truth cannot be safely verified, stop and report only:
   1. blocker
   2. exact reason
   3. smallest safe corrective step
 
-## Repo inspection rules
+## Required preflight behavior
 Before planning or implementation:
-- read `AGENTS.md` if present
-- read `CLAUDE.md` if present
-- inspect package/build/deploy files
-- inspect repo structure before making assumptions
-- inspect the live site as far as the environment allows
-- if live verification is partial, say so clearly
+1. Check whether `AGENTS.md` exists and read it first if present.
+2. Check whether `CLAUDE.md` exists and read it if present.
+3. Check git status.
+4. Check current branch name.
+5. Check whether local `main` exists.
+6. Check whether `origin` exists.
+7. Check whether `origin/main` exists.
+8. Check whether the current branch is up to date with, ahead of, or behind `main` if possible.
+9. If the environment cannot safely verify or compare against `main`, stop.
 
-Do not claim features are present unless verified from repo or live evidence.
+Report clearly:
+- current branch
+- whether `AGENTS.md` was found and read
+- whether git status is clean
+- whether local `main` exists
+- whether `origin` exists
+- whether `origin/main` exists
+- whether the current session is safe to continue from
+- whether correction is needed before planning or implementation
 
-## Planning rules
-Start in plan mode for new or risky work.
-Do not jump into code for large audits or revamps.
+If any of the following are true, stop:
+- no `origin` remote
+- no local `main` and no `origin/main`
+- current branch cannot be compared against `main`
+- checkout is clearly stale or disconnected from repo truth
+
+## Planning mode rules
+Start in plan mode for new, large, or risky work.
+Do not jump into code for audits or revamps.
 Do not give shallow checklists.
-Be practical and product-minded.
+Do not silently start implementing.
+Do not give generic praise like “looks good overall.”
+Be practical, product-minded, and grounded in current repo reality.
 
 When planning:
-- identify what is already true
-- identify what is not true yet
+- verify repo reality before trusting past claims
 - separate verified facts from assumptions
+- identify what is already true
+- identify what is still missing
 - separate quick wins from medium and large revamps
 - call out high-risk changes
 - say when a page needs restructuring instead of patching
 
-## Execution rules
-Keep changes narrow and conflict-resistant.
-Prefer smaller phases over huge overlapping edits.
-Do not rewrite broad sections unless clearly justified.
-After edits:
-- summarize exactly what changed
-- explain how to test it
-- note any follow-up risk
+## Repo inspection rules
+Before serious planning:
+- inspect repo structure
+- inspect package/build/deploy files
+- inspect key pages and shared systems
+- inspect live-site behavior as far as the environment allows
+- if live verification is partial, say so clearly
+- do not claim a feature exists unless verified from repo or live evidence
 
-## UX rules
-- Prioritize readability over ornament
-- Prioritize mobile-first layouts
-- Avoid fake completeness
-- Avoid misleading stats or weak trust language
-- Avoid pages that feel like filler
-- Make CTAs specific and useful
-- Make cross-page navigation intentional
+## Whole-site audit scope
+Think about the site as both:
+- page-level quality
+- system-level quality
 
-## Data rules
-- Mark estimated, delayed, cached, derived, or manually curated data clearly
-- Keep methodology consistent with implementation
-- Keep trust claims aligned with actual repo/live behavior
-- Separate verified shops from broad market-area content when needed
-
-## Technical rules
-- Keep the stack lightweight
-- Avoid heavy dependencies unless clearly justified
-- Preserve accessibility, metadata, canonical logic, and performance
-- Prefer maintainable structure over cleverness
-- Preserve static-first direction unless there is a strong reason to change it
+At minimum inspect:
+- homepage
+- tracker
+- shops
+- calculator
+- insights
+- learn
+- methodology
+- invest
+- country pages
+- city pages
+- market pages
+- nav
+- footer
+- internal linking
+- CTA flow
+- page hierarchy
+- mobile behavior
+- trust messaging
+- SEO/discoverability patterns
+- repo structure
+- build/deploy reality
 
 ## Shops-specific rules
 The shops page is not just a list.
@@ -109,30 +138,78 @@ Treat it like a directory/discovery product.
 
 Inspect and improve:
 - first impression
-- search/filter usefulness
+- hero usefulness
+- loading behavior
+- stats behavior
+- filter logic
+- search usefulness
 - URL state and deep-linking
-- mobile filter behavior
-- trust/freshness messaging
+- featured/popular logic
 - empty states
-- internal links to country/city/market context
-- action flow to calculator, rates, and related pages
-- shareability and discoverability
+- modal/detail behavior
+- mobile filter behavior
+- accessibility
+- trust/freshness messaging
+- CTA flow
+- internal links to market/country/city pages
+- discoverability, shareability, and monetization opportunities
 
-## Output standards for audits
-For major audits, include:
-1. branch/source-of-truth verification
-2. preflight results
-3. executive summary
-4. verified improvements vs weak areas
-5. page-by-page/system audit
-6. execution order
-7. single best next chunk
-8. merge-conflict reduction strategy
+Be especially skeptical of:
+- fake directory completeness
+- weak trust wording
+- flat card actions
+- poor stateful discovery
+- filters that are present but product-weak
+
+## Technical rules
+- Keep the stack lightweight.
+- Avoid heavy dependencies unless clearly justified.
+- Prefer improving existing structure over broad rewrites.
+- Preserve accessibility, metadata, canonical logic, and performance.
+- Prefer maintainable structure over cleverness.
+- Preserve static-first direction unless there is a strong reason to change it.
+- Verify claims about architecture, build setup, tracker structure, and nav extraction before repeating them.
+
+## Execution rules
+Keep changes narrow and conflict-resistant.
+Prefer smaller phases over huge overlapping edits.
+Do not rewrite broad sections unless clearly justified.
+Do not edit many unrelated files in one chunk.
+
+After edits:
+- summarize exactly what changed
+- explain how to test it
+- note any follow-up risk
+- say whether another sync against `main` is advisable before the next chunk
+
+## Merge-conflict avoidance rules
+- Prefer a fresh task branch based on current `main` for implementation.
+- Re-check branch state before any execution session.
+- Keep PRs or push chunks narrow.
+- Avoid large overlapping edits across many files unless necessary.
+- Stop and resync if branch/source-of-truth becomes unclear.
+- If `origin/main` or local `main` is missing, do not continue implementation.
+
+## Output standards for major audits
+For serious planning work, return these sections:
+1. Branch / Source-of-Truth Verification
+2. Preflight Check Results
+3. Executive Summary
+4. Earlier Plan Reconciliation
+5. Verified Improvements vs Still-Weak Areas
+6. Shops Page Updated Master Revamp Plan
+7. Whole-Site Audit and Revamp Plan
+8. Technical / Repo Review
+9. Merge-Conflict Reduction Strategy
+10. Recommended Execution Order
+11. Do This Next
+12. If/When We Switch To Implementation
 
 ## What to avoid
-- generic praise
+- generic filler
 - fake certainty
 - broad rewrites without evidence
 - planning from stale branch context
 - treating partially verified claims as confirmed
 - bloated “all at once” implementation plans
+- product praise that ignores weak UX or trust issues
