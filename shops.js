@@ -679,6 +679,20 @@ function init() {
     if (prefs.lang === 'ar' || prefs.lang === 'en') STATE.lang = prefs.lang;
   } catch {}
 
+  // Apply URL query params to initial state (e.g. ?country=AE&region=gcc)
+  const _p = new URLSearchParams(location.search);
+  const _pRegion  = (_p.get('region')    || '').toLowerCase();
+  const _pCountry = (_p.get('country')   || '').toUpperCase();
+  const _pCity    =  _p.get('city')      || '';
+  const _pSpec    =  _p.get('specialty') || '';
+  const _pSearch  =  _p.get('search')    || _p.get('q') || '';
+
+  if (_pRegion && Object.prototype.hasOwnProperty.call(REGIONS, _pRegion)) STATE.region = _pRegion;
+  if (_pCountry)  STATE.country   = _pCountry;   // buildFilters() resets to 'all' if invalid
+  if (_pCity)     STATE.city      = _pCity;
+  if (_pSpec)     STATE.specialty = _pSpec;
+  if (_pSearch)   STATE.search    = _pSearch;
+
   const navResult = injectNav(STATE.lang, 0);
   injectBreadcrumbs('shops');
   injectFooter(STATE.lang, 0);
@@ -712,6 +726,11 @@ function init() {
   });
 
   bindEvents();
+  // Sync search input DOM value if set from URL param
+  if (STATE.search) {
+    const el = document.getElementById('shops-search');
+    if (el) el.value = STATE.search;
+  }
   updateLanguage();
 }
 
