@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "defaultMode": "auto-edit",
+    "confirmShellCommands": true,
+    "confirmFileEdits": true
+  },
+  "context": {
+    "fileName": ["QWEN.md"],
+    "fileFiltering": {
+      "respectGitIgnore": true,
+      "respectQwenIgnore": true,
+      "enableFuzzySearch": true,
+      "enableRecursiveFileSearch": true
+    }
+  }
+}
