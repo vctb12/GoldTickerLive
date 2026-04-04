@@ -18,6 +18,7 @@
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/tracker.html" />
+  <meta property="og:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.svg" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Gold Tracker Pro — Live Gold Price Workspace" />
   <meta
@@ -59,6 +60,18 @@
           <strong>Spot-Linked Estimates Only:</strong> These prices are based on global XAU/USD spot rates, not retail jewelry prices which include making charges (3–25 AED/gram) and shop markups. See <a href="methodology.html">Methodology</a> for full transparency on data sources, calculation methods, and update frequencies.
         </div>
         <button class="tracker-trust-close" type="button" aria-label="Close trust banner" title="Close">&times;</button>
+      </div>
+    </section>
+
+    <!-- First-visit welcome strip (shown only once, dismissed to localStorage) -->
+    <section class="tracker-welcome-strip" id="tracker-welcome-strip" hidden aria-label="Tracker orientation">
+      <div class="tracker-welcome-inner">
+        <div class="tracker-welcome-chips">
+          <span class="tracker-welcome-chip">📈 <strong>Live tab</strong> — current prices for 24+ countries</span>
+          <span class="tracker-welcome-chip">⚖️ <strong>Compare tab</strong> — compare regions side-by-side</span>
+          <span class="tracker-welcome-chip">📋 <strong>Planner</strong> — budget &amp; Zakat calculators</span>
+        </div>
+        <button class="tracker-welcome-close" id="tracker-welcome-close" type="button" aria-label="Dismiss orientation">Got it ×</button>
       </div>
     </section>
 

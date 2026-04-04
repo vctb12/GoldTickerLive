@@ -132,6 +132,12 @@
   color: var(--color-gold);
 }
 
+.learn-toc-list a.is-active {
+  color: var(--color-gold);
+  border-bottom: 2px solid var(--color-gold);
+  padding-bottom: 1px;
+}
+
 /* ── Body layout ────────────────────────────────────── */
 .learn-body {
   max-width: 800px;
@@ -269,6 +275,23 @@
 
 /* ── FAQ ────────────────────────────────────────────── */
 /* Uses global faq-item / faq-question / faq-answer from style.css */
+
+/* ── Purity bar column ──────────────────────────────── */
+.learn-purity-bar {
+  display: block;
+  width: 80px;
+  height: 8px;
+  background: var(--color-surface-2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.learn-purity-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--color-gold);
+  border-radius: 4px;
+}
 
 /* ── RTL ────────────────────────────────────────────── */
 [dir="rtl"] .learn-toc-inner { flex-direction: row-reverse; }

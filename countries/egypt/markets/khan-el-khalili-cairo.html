@@ -10,6 +10,7 @@
   <meta property="og:description" content="Everything you need to know about buying gold at Khan el-Khalili: history, 21K standard, making charges, practical tips, and live EGP price context." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/countries/egypt/markets/khan-el-khalili-cairo.html" />
+  <meta property="og:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.svg" />
   <meta name="twitter:card" content="summary" />
   <link rel="manifest" href="../../manifest.json" />
   <meta name="theme-color" content="#d4a017" />
@@ -31,15 +32,18 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": "TouristAttraction",
     "name": "Khan el-Khalili",
-    "description": "Cairo's historic bazaar, established in the 14th century, known for gold, jewellery, and traditional crafts.",
+    "description": "Cairo's historic bazaar, established in the 14th century in Islamic Cairo, known for gold jewellery, traditional crafts, and centuries of goldsmithing tradition.",
+    "url": "https://vctb12.github.io/Gold-Prices/countries/egypt/markets/khan-el-khalili-cairo.html",
     "address": {
       "@type": "PostalAddress",
+      "streetAddress": "Khan el-Khalili, Al-Muizz St",
       "addressLocality": "Cairo",
       "addressRegion": "Islamic Cairo",
       "addressCountry": "EG"
-    }
+    },
+    "touristType": ["Gold shoppers", "Jewellery buyers", "Cultural tourists"]
   }
   </script>
 </head>
@@ -222,10 +226,10 @@
   <div id="ticker-root"></div>
 
   <script type="module">
-    import { injectNav } from '../../components/nav.js';
-    import { injectFooter } from '../../components/footer.js';
-    import { injectTicker } from '../../components/ticker.js';
-    import { renderBreadcrumbs } from '../../components/breadcrumbs.js';
+    import { injectNav } from '../../../components/nav.js';
+    import { injectFooter } from '../../../components/footer.js';
+    import { injectTicker } from '../../../components/ticker.js';
+    import { renderBreadcrumbs } from '../../../components/breadcrumbs.js';
 
     const lang = new URLSearchParams(location.search).get('lang') === 'ar' ? 'ar' : 'en';
     document.documentElement.lang = lang;

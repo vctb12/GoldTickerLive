@@ -148,60 +148,55 @@
     <priority>0.85</priority>
   </url>
 
-  <!-- City Pages — Live Gold Price Pages -->
+  <!-- City Pages -->
   <url>
-    <loc>https://vctb12.github.io/Gold-Prices/cities/dubai.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/cities/dubai.html"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/cities/dubai.html?lang=ar"/>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/uae/cities/dubai.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/uae/cities/dubai.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/uae/cities/dubai.html?lang=ar"/>
     <changefreq>always</changefreq>
     <priority>0.9</priority>
   </url>
-
   <url>
-    <loc>https://vctb12.github.io/Gold-Prices/cities/abu-dhabi.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/cities/abu-dhabi.html"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/cities/abu-dhabi.html?lang=ar"/>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/uae/cities/abu-dhabi.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/uae/cities/abu-dhabi.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/uae/cities/abu-dhabi.html?lang=ar"/>
     <changefreq>always</changefreq>
     <priority>0.85</priority>
   </url>
-
   <url>
-    <loc>https://vctb12.github.io/Gold-Prices/cities/riyadh.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/cities/riyadh.html"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/cities/riyadh.html?lang=ar"/>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/saudi-arabia/cities/riyadh.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/saudi-arabia/cities/riyadh.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/saudi-arabia/cities/riyadh.html?lang=ar"/>
     <changefreq>always</changefreq>
     <priority>0.85</priority>
   </url>
-
   <url>
-    <loc>https://vctb12.github.io/Gold-Prices/cities/cairo.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/cities/cairo.html"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/cities/cairo.html?lang=ar"/>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/egypt/cities/cairo.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/egypt/cities/cairo.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/egypt/cities/cairo.html?lang=ar"/>
     <changefreq>always</changefreq>
     <priority>0.85</priority>
   </url>
-
   <url>
-    <loc>https://vctb12.github.io/Gold-Prices/cities/doha.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/cities/doha.html"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/cities/doha.html?lang=ar"/>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/qatar/cities/doha.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/qatar/cities/doha.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/qatar/cities/doha.html?lang=ar"/>
     <changefreq>always</changefreq>
     <priority>0.85</priority>
   </url>
 
   <!-- Market Guide Pages -->
   <url>
-    <loc>https://vctb12.github.io/Gold-Prices/markets/dubai-gold-souk.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/markets/dubai-gold-souk.html"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/markets/dubai-gold-souk.html?lang=ar"/>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/uae/markets/dubai-gold-souk.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/uae/markets/dubai-gold-souk.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/uae/markets/dubai-gold-souk.html?lang=ar"/>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
   <url>
-    <loc>https://vctb12.github.io/Gold-Prices/markets/khan-el-khalili-cairo.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/markets/khan-el-khalili-cairo.html"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/markets/khan-el-khalili-cairo.html?lang=ar"/>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/egypt/markets/khan-el-khalili-cairo.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/egypt/markets/khan-el-khalili-cairo.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/egypt/markets/khan-el-khalili-cairo.html?lang=ar"/>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>

@@ -12,6 +12,7 @@
   <meta property="og:description" content="Calculate gold value, scrap price, Zakat, and buying power using live gold rates." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/calculator.html" />
+  <meta property="og:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.svg" />
   <meta name="twitter:card" content="summary" />
   <link rel="stylesheet" href="./style.css" />
   <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
@@ -41,21 +42,27 @@
       <div class="calc-hero-inner">
         <h1 class="calc-hero-title" id="calc-hero-h1">Gold Calculator</h1>
         <p class="calc-hero-sub" id="calc-hero-sub">Live prices · Multiple karats · AED &amp; USD</p>
-        <div class="calc-live-badge" id="calc-spot-badge">
-          <span class="badge-dot"></span>
-          <span id="calc-spot-label">Spot:</span>
-          <span id="calc-spot-price">—</span>
+        <div class="calc-hero-badges">
+          <div class="calc-live-badge" id="calc-spot-badge">
+            <span class="badge-dot"></span>
+            <span id="calc-spot-label">Spot:</span>
+            <span id="calc-spot-price">—</span>
+          </div>
+          <div class="calc-live-badge calc-live-badge--aed" id="calc-aed-badge" hidden>
+            <span id="calc-aed-label">24K AED/g:</span>
+            <span id="calc-aed-price">—</span>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Calculator Tabs -->
     <div class="calc-nav-tabs" role="tablist">
-      <button class="calc-tab active" data-calc="value"    role="tab" aria-selected="true"  id="calc-value-title">Gold Value</button>
-      <button class="calc-tab"        data-calc="scrap"    role="tab" aria-selected="false" id="calc-scrap-title">Scrap Gold</button>
-      <button class="calc-tab"        data-calc="zakat"    role="tab" aria-selected="false" id="calc-zakat-title">Zakat</button>
-      <button class="calc-tab"        data-calc="buying"   role="tab" aria-selected="false" id="calc-buying-title">Buying Power</button>
-      <button class="calc-tab"        data-calc="convert"  role="tab" aria-selected="false" id="calc-convert-title">Unit Converter</button>
+      <button class="calc-tab active" data-calc="value"    role="tab" aria-selected="true"  id="calc-value-title"   title="Calculate the current market value of gold by weight and karat">Gold Value</button>
+      <button class="calc-tab"        data-calc="scrap"    role="tab" aria-selected="false" id="calc-scrap-title"   title="Find what your scrap or old gold is worth at today's spot price">Scrap Gold</button>
+      <button class="calc-tab"        data-calc="zakat"    role="tab" aria-selected="false" id="calc-zakat-title"   title="Calculate the Zakat obligation on your gold holdings">Zakat</button>
+      <button class="calc-tab"        data-calc="buying"   role="tab" aria-selected="false" id="calc-buying-title"  title="See how much gold you can buy with a given budget">Buying Power</button>
+      <button class="calc-tab"        data-calc="convert"  role="tab" aria-selected="false" id="calc-convert-title" title="Convert between grams, troy ounces, tolas, mashas, and more">Unit Converter</button>
     </div>
 
     <!-- ── Calculator 1: Gold Value ── -->
@@ -315,6 +322,32 @@
           <h3 id="conv-results-title">Equivalent weights</h3>
           <div class="conv-grid" id="conv-grid"></div>
         </div>
+      </div>
+    </section>
+    <!-- Related tools -->
+    <section class="calc-related" aria-label="Related tools">
+      <div class="calc-related-inner">
+        <a href="tracker.html" class="calc-related-card">
+          <div class="calc-related-icon" aria-hidden="true">📈</div>
+          <div>
+            <div class="calc-related-title" id="calc-rel-tracker-title">Live Tracker</div>
+            <div class="calc-related-desc" id="calc-rel-tracker-desc">24+ countries, 7 karats, alerts &amp; history</div>
+          </div>
+        </a>
+        <a href="shops.html" class="calc-related-card">
+          <div class="calc-related-icon" aria-hidden="true">🏪</div>
+          <div>
+            <div class="calc-related-title" id="calc-rel-shops-title">Find a Shop</div>
+            <div class="calc-related-desc" id="calc-rel-shops-desc">Browse gold shops by region, country &amp; city</div>
+          </div>
+        </a>
+        <a href="learn.html" class="calc-related-card">
+          <div class="calc-related-icon" aria-hidden="true">📚</div>
+          <div>
+            <div class="calc-related-title" id="calc-rel-learn-title">Karat Guide</div>
+            <div class="calc-related-desc" id="calc-rel-learn-desc">Learn about karats, purity, and gold standards</div>
+          </div>
+        </a>
       </div>
     </section>
   </main>

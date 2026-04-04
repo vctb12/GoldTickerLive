@@ -502,3 +502,91 @@
     align-items: flex-start;
   }
 }
+
+/* ── Market guide chips ──────────────────────────────────────────────────── */
+.shops-market-guides {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.1rem;
+}
+
+.shops-guide-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-gold, #c4993e);
+  color: var(--color-gold-dark, #8a6420);
+  background: rgba(196, 153, 62, 0.07);
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: background 0.18s, transform 0.18s;
+}
+
+.shops-guide-chip:hover {
+  background: rgba(196, 153, 62, 0.15);
+  transform: translateY(-1px);
+}
+
+/* ── Mobile filter toggle ────────────────────────────────────────────────── */
+.shops-filter-toggle {
+  display: none;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid var(--color-border, #e8e2d0);
+  border-radius: var(--radius-md, 12px);
+  background: var(--color-surface, #fff);
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  color: var(--color-text, #1a1612);
+}
+
+.shops-filter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.4rem;
+  height: 1.4rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: var(--color-gold, #c4993e);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  margin-inline-start: auto;
+}
+
+.shops-filter-toggle-icon {
+  font-size: 0.9rem;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.shops-filter-toggle[aria-expanded="true"] .shops-filter-toggle-icon {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 640px) {
+  .shops-filter-toggle {
+    display: flex;
+  }
+
+  .shops-filter-panel {
+    display: none;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border, #e8e2d0);
+    margin-top: 0.75rem;
+  }
+
+  .shops-filter-panel.is-open {
+    display: contents;
+  }
+}

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#1a1610"/>
+
+  <!-- Subtle grid lines -->
+  <line x1="0" y1="210" x2="1200" y2="210" stroke="#2a2218" stroke-width="1"/>
+  <line x1="0" y1="420" x2="1200" y2="420" stroke="#2a2218" stroke-width="1"/>
+  <line x1="400" y1="0" x2="400" y2="630" stroke="#2a2218" stroke-width="1"/>
+  <line x1="800" y1="0" x2="800" y2="630" stroke="#2a2218" stroke-width="1"/>
+
+  <!-- Gold accent bar top -->
+  <rect x="0" y="0" width="1200" height="6" fill="#c49a44"/>
+
+  <!-- Gold accent bar bottom -->
+  <rect x="0" y="624" width="1200" height="6" fill="#c49a44"/>
+
+  <!-- Left accent line -->
+  <rect x="80" y="140" width="3" height="350" fill="#c49a44" opacity="0.6"/>
+
+  <!-- Gold bar icon (simplified) -->
+  <rect x="530" y="170" width="140" height="90" rx="6" fill="#c49a44"/>
+  <rect x="540" y="178" width="120" height="74" rx="4" fill="#d4b05a"/>
+  <rect x="548" y="185" width="104" height="60" rx="3" fill="#c49a44" opacity="0.6"/>
+  <text x="600" y="221" font-family="Georgia, serif" font-size="18" font-weight="700" fill="#1a1610" text-anchor="middle">999.9</text>
+
+  <!-- Site name -->
+  <text x="600" y="320" font-family="Georgia, serif" font-size="68" font-weight="700" fill="#d4b05a" text-anchor="middle" letter-spacing="-1">GoldPrices</text>
+
+  <!-- Tagline -->
+  <text x="600" y="372" font-family="-apple-system, Arial, sans-serif" font-size="22" fill="#9d8c72" text-anchor="middle" letter-spacing="2">LIVE · HISTORICAL · GCC &amp; ARAB MARKETS</text>
+
+  <!-- Divider -->
+  <rect x="480" y="398" width="240" height="1" fill="#3a3020"/>
+
+  <!-- Sub-label -->
+  <text x="600" y="432" font-family="-apple-system, Arial, sans-serif" font-size="18" fill="#6b5f4a" text-anchor="middle">vctb12.github.io/Gold-Prices</text>
+
+  <!-- Corner decoration - top right -->
+  <text x="1100" y="60" font-family="Georgia, serif" font-size="48" fill="#c49a44" opacity="0.15" text-anchor="middle">Au</text>
+
+  <!-- Placeholder notice (invisible in social previews - just for internal use) -->
+  <!-- SWAP THIS FILE: Replace with a proper 1200×630 PNG/JPG before launch -->
+</svg>

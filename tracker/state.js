@@ -9,6 +9,8 @@ export const STORAGE_KEYS = {
   watchlist: 'tracker_pro_favorites_v5',
 };
 
+export const VALID_MODES = new Set(['live', 'compare', 'archive', 'alerts', 'planner', 'exports', 'method']);
+
 export const DEFAULT_STATE = {
   lang: 'en',
   view: 'live',
@@ -174,6 +176,8 @@ export function applyUrlState(state) {
   state.selectedUnit = params.get('u') || state.selectedUnit;
   state.range = params.get('range') || params.get('r') || state.range;
   state.compareCurrency = params.get('cmp') || state.compareCurrency;
+  const urlLang = params.get('lang');
+  if (urlLang === 'en' || urlLang === 'ar') state.lang = urlLang;
 }
 
 function readLocal(key, fallback) {
