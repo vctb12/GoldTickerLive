@@ -67,6 +67,8 @@ const T = {
     heroCta2: 'UAE Gold Today',
     heroCta3: 'Calculator',
     heroCta4: 'Set Alert',
+    heroCta5: 'Buy Gold Here',
+    heroCta5Sub: 'Browse listed shops by region, country, and city.',
     spotTitle: 'Gold Spot Price',
     perOz: 'per troy ounce',
     lbl24aed: '24K / gram (AED)',
@@ -140,6 +142,8 @@ const T = {
     heroCta2: 'ذهب الإمارات اليوم',
     heroCta3: 'الحاسبة',
     heroCta4: 'اضبط تنبيهاً',
+    heroCta5: 'اشترِ الذهب هنا',
+    heroCta5Sub: 'تصفح المحلات المدرجة حسب المنطقة والدولة والمدينة.',
     spotTitle: 'السعر الفوري للذهب',
     perOz: 'لكل أوقية تروي',
     lbl24aed: 'عيار 24 / غرام (AED)',
@@ -325,6 +329,8 @@ function applyLangToPage() {
   set('hero-cta-uae',      tx('heroCta2'));
   set('hero-cta-calc',     tx('heroCta3'));
   set('hero-cta-alert',    tx('heroCta4'));
+  set('hero-cta-shops',    tx('heroCta5'));
+  set('hero-cta-shops-sub', tx('heroCta5Sub'));
   set('hlc-tracker-link',  tx('trackerLink'));
   set('hlc-title',  tx('spotTitle'));
   set('hlc-sub',    tx('perOz'));
