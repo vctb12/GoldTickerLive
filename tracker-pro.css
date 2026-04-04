@@ -1668,3 +1668,81 @@ body.tracker-pro-page {
     max-width: calc(100vw - 16px);
   }
 }
+
+/* ── Mode tab bar ─────────────────────────────────────────────────────────── */
+
+.tracker-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.5rem;
+  background: var(--tp-panel);
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius-xl);
+  box-shadow: var(--tp-shadow-1);
+}
+
+.tracker-mode-tab {
+  flex: 1 1 auto;
+  min-width: 3.5rem;
+  padding: 0.55rem 0.9rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--tp-radius-md);
+  color: var(--tp-text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.tracker-mode-tab:hover {
+  background: var(--tp-gold-soft);
+  color: var(--tp-text);
+}
+
+.tracker-mode-tab.is-active,
+.tracker-mode-tab[aria-selected="true"] {
+  background: var(--tp-gold-soft);
+  border-color: rgba(196, 154, 68, 0.3);
+  color: var(--tp-accent);
+}
+
+.tracker-mode-tab:focus-visible {
+  outline: 2px solid var(--tp-gold);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .tracker-modes {
+    gap: 0.3rem;
+    padding: 0.4rem;
+    border-radius: 18px;
+  }
+  .tracker-mode-tab {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.77rem;
+    min-width: 2.8rem;
+  }
+}
+
+/* On very small screens, scroll the tab bar horizontally */
+@media (max-width: 420px) {
+  .tracker-modes {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.5rem;
+  }
+  .tracker-modes::-webkit-scrollbar {
+    display: none;
+  }
+  .tracker-mode-tab {
+    flex-shrink: 0;
+    padding: 0.45rem 0.65rem;
+  }
+}
