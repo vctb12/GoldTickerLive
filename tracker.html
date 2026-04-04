@@ -11,21 +11,21 @@
     name="keywords"
     content="gold price today UAE, gold price Dubai, سعر الذهب اليوم, gold rate per gram AED, 24K gold price, 22K gold UAE, GCC gold prices, live gold tracker"
   />
-  <meta property="og:title" content="Live Gold Prices — GCC &amp; Arab World | أسعار الذهب المباشرة" />
+  <meta property="og:title" content="Gold Tracker Pro — Live Workspace | GCC &amp; Arab World" />
   <meta
     property="og:description"
-    content="Track live gold spot prices in 24 countries across GCC, Levant, Africa and globally. 7 karats. Bilingual EN/AR. Free, updated every 90 seconds."
+    content="Live gold price tracker: compare 24 markets, 7 karats, historical chart, alerts, planners, and CSV exports. Updated every 90 seconds."
   />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/" />
+  <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/tracker.html" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Live Gold Prices — GCC &amp; Arab World" />
+  <meta name="twitter:title" content="Gold Tracker Pro — Live Gold Price Workspace" />
   <meta
     name="twitter:description"
-    content="Track live gold prices in UAE, Saudi Arabia, Kuwait and 20+ countries. 7 karats. Bilingual."
+    content="Live gold price tracker for GCC and Arab world. 24 markets, 7 karats, historical chart, alerts. Updated every 90 seconds."
   />
-  <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/" />
-  <title>Gold Tracker Pro — Live Workspace</title>
+  <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/tracker.html" />
+  <title>Gold Tracker Pro — Live Price Workspace | UAE, GCC &amp; Arab World</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -51,6 +51,17 @@
   <!-- Shared nav/footer/ticker are injected by tracker-pro.js using components/nav.js, components/footer.js, components/ticker.js -->
 
   <main id="tracker-app" class="tracker-app">
+    <!-- Data Trust Banner -->
+    <section class="tracker-shell tracker-data-trust-section">
+      <div class="tracker-data-trust-banner">
+        <div class="tracker-trust-icon">⚠️</div>
+        <div class="tracker-trust-content">
+          <strong>Spot-Linked Estimates Only:</strong> These prices are based on global XAU/USD spot rates, not retail jewelry prices which include making charges (3–25 AED/gram) and shop markups. See <a href="methodology.html">Methodology</a> for full transparency on data sources, calculation methods, and update frequencies.
+        </div>
+        <button class="tracker-trust-close" type="button" aria-label="Close trust banner" title="Close">&times;</button>
+      </div>
+    </section>
+
     <!-- Hero / Live desk -->
     <section class="tracker-shell tracker-hero-shell" aria-labelledby="tp-hero-title">
       <div class="tracker-hero-card">
@@ -705,6 +716,7 @@
 
           <article class="tracker-subpanel">
             <div class="tracker-subpanel-head"><h3>Date lookup</h3></div>
+            <p style="font-size: 0.85rem; color: var(--tp-text-muted); margin-bottom: 1rem;">Find the closest data point for any date in the archive. Searches baseline + session data.</p>
             <div class="tracker-form-grid">
               <label class="tracker-field">
                 <span>Lookup date</span>

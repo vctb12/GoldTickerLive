@@ -78,24 +78,28 @@
   flex-shrink: 0;
   background: none;
   border: none;
-  border-bottom: 2px solid transparent;
-  padding: 0.9rem 1.25rem;
-  font-size: 0.88rem;
+  border-bottom: 2.5px solid transparent;
+  padding: 1rem 1.4rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--color-text-muted);
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
+  transition: all 0.2s ease-out;
   white-space: nowrap;
-  min-height: 44px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
 }
 
 .calc-tab:hover {
-  color: var(--color-text);
+  color: var(--color-gold-dark);
+  background: rgba(196, 153, 62, 0.05);
 }
 
 .calc-tab.active {
-  color: var(--color-gold);
+  color: var(--color-gold-deep);
   border-bottom-color: var(--color-gold);
+  font-weight: 700;
 }
 
 /* ── Panel ─────────────────────────────────────────── */
@@ -110,10 +114,12 @@
 
 /* ── Card ──────────────────────────────────────────── */
 .calc-card {
-  background: var(--color-surface-1);
-  border: 1px solid var(--color-border);
+  background: linear-gradient(135deg, var(--color-surface-1) 0%, rgba(255, 255, 255, 0.97) 100%);
+  border: 1.25px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: 1.75rem;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.24s ease-out;
 }
 
 .calc-card-title {
@@ -159,19 +165,21 @@
   flex: 1;
   min-width: 0;
   background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
+  border: 1.25px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 0.65rem 0.85rem;
+  padding: 0.7rem 0.9rem;
   font-size: 1rem;
   color: var(--color-text);
   font-variant-numeric: tabular-nums;
-  transition: border-color 0.15s;
+  transition: all 0.2s ease-out;
   min-height: 44px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .calc-input:focus {
   outline: none;
   border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(196, 153, 62, 0.1);
 }
 
 .calc-input-full {
@@ -180,20 +188,22 @@
 
 .calc-select {
   background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
+  border: 1.25px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 0.65rem 0.75rem;
+  padding: 0.7rem 0.85rem;
   font-size: 0.88rem;
   color: var(--color-text);
   cursor: pointer;
-  transition: border-color 0.15s;
+  transition: all 0.2s ease-out;
   flex-shrink: 0;
   min-height: 44px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .calc-select:focus {
   outline: none;
   border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(196, 153, 62, 0.1);
 }
 
 .calc-select-full {

@@ -82,8 +82,21 @@ const T = {
     marketClosed: '○ Market Closed',
     gccTitle: 'GCC Gold Prices Now',
     gccSub: 'Live estimates in local currency · 22K per gram',
+    buyingGuideTitle: 'How to Buy Gold',
+    buyingGuideSub: 'Find shops, compare prices, and understand the market in your region',
+    guideShopsTitle: 'Find Trusted Shops',
+    guideShopsDesc: 'Browse listed gold shops and markets across countries. Filter by region, city, and specialty.',
+    guideShopsCta: 'Explore Shops →',
+    guideMarketsTitle: 'Browse by Market',
+    guideMarketsDesc: 'View local gold prices, market context, and buying tips for each country.',
+    guideMarketsCta: 'View Countries →',
+    guideCalcTitle: 'Calculate & Compare',
+    guideCalcDesc: 'Use our calculator to compare prices, values, and purchasing power across karats and currencies.',
+    guideCalcCta: 'Open Calculator →',
     seeAll: 'See all countries →',
     perGram: 'per gram',
+    gccLiveTitle: 'Live Gold Prices',
+    gccLiveSub: '22K per gram in local currency · updated every 90 seconds',
     trustLive: 'Live spot data',
     trustLiveSub: 'Updated every 90s',
     trustCountries: '24+ countries',
@@ -157,8 +170,21 @@ const T = {
     marketClosed: '○ السوق مغلق',
     gccTitle: 'أسعار ذهب الخليج الآن',
     gccSub: 'تقديرات بالعملة المحلية · عيار 22 لكل غرام',
+    buyingGuideTitle: 'كيف تشتري الذهب',
+    buyingGuideSub: 'ابحث عن محلات موثوقة وقارن الأسعار وافهم السوق في منطقتك',
+    guideShopsTitle: 'ابحث عن محلات موثوقة',
+    guideShopsDesc: 'تصفح محلات الذهب والأسواق المدرجة في جميع الدول. صفّ حسب المنطقة والمدينة والتخصص.',
+    guideShopsCta: 'استكشف المحلات ←',
+    guideMarketsTitle: 'تصفح حسب السوق',
+    guideMarketsDesc: 'اعرض أسعار الذهب المحلية والسياق السوقي والنصائح للشراء في كل دولة.',
+    guideMarketsCta: 'عرض الدول ←',
+    guideCalcTitle: 'احسب وقارن',
+    guideCalcDesc: 'استخدم الحاسبة لمقارنة الأسعار والقيم والقوة الشرائية عبر العيارات والعملات.',
+    guideCalcCta: 'افتح الحاسبة ←',
     seeAll: 'عرض كل الدول ←',
     perGram: 'لكل غرام',
+    gccLiveTitle: 'أسعار الذهب المباشرة',
+    gccLiveSub: 'عيار 22 لكل غرام بالعملة المحلية · تحديث كل 90 ثانية',
     trustLive: 'بيانات فورية مباشرة',
     trustLiveSub: 'تحديث كل 90 ثانية',
     trustCountries: '24+ دولة',
@@ -212,8 +238,11 @@ const T = {
 
 function tx(key) { return T[lang]?.[key] ?? T.en[key] ?? key; }
 
-// ── GCC countries ──────────────────────────────────────────────────────────
+// ── Regional groupings for homepage display ────────────────────────────────
 const GCC = COUNTRIES.filter(c => c.group === 'gcc');
+const MENA = COUNTRIES.filter(c => ['gcc', 'levant', 'africa'].includes(c.group));
+const GLOBAL = COUNTRIES;
+let homeRegion = 'gcc';  // Track which region is currently shown
 
 // ── Render helpers ─────────────────────────────────────────────────────────
 function set(id, text) {
@@ -281,7 +310,11 @@ function renderGCCGrid() {
   if (!grid || !goldPrice) return;
   const k22 = KARATS.find(k => k.code === '22');
 
-  grid.innerHTML = GCC.map(c => {
+  // Select countries based on current region filter
+  const regionLists = { gcc: GCC, mena: MENA, global: GLOBAL };
+  const countries = regionLists[homeRegion] || GCC;
+
+  grid.innerHTML = countries.map(c => {
     let price = '—';
     if (c.currency === 'AED') {
       price = fmt.formatPrice(calc.usdPerGram(goldPrice, k22.purity) * CONSTANTS.AED_PEG, 'AED', 2);
@@ -339,9 +372,20 @@ function applyLangToPage() {
   set('hlc-label-aed22', tx('lbl22aed'));
   set('hlc-label-usd21', tx('lbl21usd'));
   set('hlc-updated', tx('fetching'));
-  set('gcc-section-title', tx('gccTitle'));
-  set('gcc-section-sub',   tx('gccSub'));
+  set('gcc-section-title', tx('gccLiveTitle'));
+  set('gcc-section-sub',   tx('gccLiveSub'));
   set('gcc-see-all',       tx('seeAll'));
+  set('buying-guide-title', tx('buyingGuideTitle'));
+  set('buying-guide-sub',  tx('buyingGuideSub'));
+  set('guide-shops-title', tx('guideShopsTitle'));
+  set('guide-shops-desc',  tx('guideShopsDesc'));
+  set('guide-shops-cta',   tx('guideShopsCta'));
+  set('guide-markets-title', tx('guideMarketsTitle'));
+  set('guide-markets-desc',  tx('guideMarketsDesc'));
+  set('guide-markets-cta',   tx('guideMarketsCta'));
+  set('guide-calc-title',  tx('guideCalcTitle'));
+  set('guide-calc-desc',   tx('guideCalcDesc'));
+  set('guide-calc-cta',    tx('guideCalcCta'));
   set('trust-live',            tx('trustLive'));
   set('trust-live-sub',        tx('trustLiveSub'));
   set('trust-countries',       tx('trustCountries'));
@@ -445,6 +489,21 @@ async function init() {
   });
   injectFooter(lang, 0);
   injectTicker(lang, 0);
+
+  // Bind region tab filters
+  document.querySelectorAll('.gcc-region-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      homeRegion = tab.dataset.region;
+      document.querySelectorAll('.gcc-region-tab').forEach(t => t.classList.remove('is-active'));
+      tab.classList.add('is-active');
+      tab.setAttribute('aria-selected', 'true');
+      renderGCCGrid();
+    });
+    if (tab.dataset.region === homeRegion) {
+      tab.classList.add('is-active');
+      tab.setAttribute('aria-selected', 'true');
+    }
+  });
 
   // Load cache first for instant render
   const STATE_STUB = {

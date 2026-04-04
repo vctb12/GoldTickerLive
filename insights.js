@@ -8,6 +8,7 @@ import * as api from './lib/api.js';
 import { injectNav, updateNavLang } from './components/nav.js';
 import { injectFooter } from './components/footer.js';
 import { injectTicker, updateTickerLang } from './components/ticker.js';
+import { injectBreadcrumbs } from './components/breadcrumbs.js';
 import { CONSTANTS } from './config/index.js';
 
 const AED_PEG      = CONSTANTS.AED_PEG;       // 3.6725
@@ -175,6 +176,7 @@ async function init() {
   document.documentElement.dir  = STATE.lang === 'ar' ? 'rtl' : 'ltr';
 
   const navResult = injectNav(STATE.lang, 0);
+  injectBreadcrumbs('insights');
   injectFooter(STATE.lang, 0);
   injectTicker(STATE.lang, 0);
 

@@ -10,8 +10,22 @@
 }
 
 .learn-hero-inner {
-  max-width: 640px;
+  max-width: 700px;
   margin: 0 auto;
+}
+
+.learn-hero-tag {
+  display: inline-block;
+  background: rgba(196, 153, 62, 0.2);
+  border: 1px solid rgba(196, 153, 62, 0.4);
+  border-radius: var(--radius-pill);
+  padding: 0.3rem 0.8rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-gold-light);
+  margin-bottom: 1rem;
 }
 
 .learn-hero h1 {
@@ -21,9 +35,46 @@
   margin-bottom: 0.5rem;
 }
 
-.learn-hero p {
+.learn-hero-sub {
   font-size: 0.95rem;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.learn-hero-desc {
+  font-size: 0.87rem;
   color: rgba(255,255,255,0.5);
+  line-height: 1.65;
+  margin: 1rem 0;
+}
+
+.learn-hero-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  margin-top: 1.2rem;
+}
+
+.learn-hero-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 0.9rem;
+  background: rgba(196, 153, 62, 0.15);
+  border: 1px solid rgba(196, 153, 62, 0.3);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-gold-light);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.learn-hero-link:hover {
+  background: rgba(196, 153, 62, 0.25);
+  border-color: rgba(196, 153, 62, 0.5);
 }
 
 /* ── Table of contents ─────────────────────────────── */
@@ -247,4 +298,12 @@
 @media (max-width: 380px) {
   .learn-hero { padding: 1.75rem 0.85rem 1.5rem; }
   .learn-callout { padding: 0.85rem 1rem; }
+}
+
+/* ── Related tools footer section ── */
+.learn-tools-section {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+  border-top: 1px solid var(--color-border);
 }

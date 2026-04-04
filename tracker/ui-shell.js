@@ -27,28 +27,71 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   const tabs = Array.from(document.querySelectorAll('.tracker-mode-tab'));
   const panels = Array.from(document.querySelectorAll('.tracker-mode-panel'));
 
-  function setMode(mode) {
-    state.mode = mode;
-    tabs.forEach(tab => {
-      const active = tab.dataset.mode === mode;
-      tab.classList.toggle('is-active', active);
-      tab.setAttribute('aria-selected', active ? 'true' : 'false');
-    });
-    panels.forEach(panel => {
-      const active = panel.dataset.modePanel === mode;
-      panel.hidden = !active;
-    });
+  function setView(view) {
+    state.view = view;
+    // When switching views, close any open tool
+    state.activeTool = null;
+    updateTabsAndPanels();
     persistState(state);
     syncUrlFromState(state);
-    if (typeof onModeChange === 'function') onModeChange(mode);
+    if (typeof onModeChange === 'function') onModeChange(`view:${view}`);
+  }
+
+  function setActiveTool(tool) {
+    // Toggle tool: clicking active tool closes it, clicking different tool switches to that tool
+    state.activeTool = state.activeTool === tool ? null : tool;
+    updateTabsAndPanels();
+    persistState(state);
+    syncUrlFromState(state);
+    if (typeof onModeChange === 'function') onModeChange(`tool:${state.activeTool}`);
+  }
+
+  function updateTabsAndPanels() {
+    tabs.forEach(tab => {
+      const modeValue = tab.dataset.mode;
+      const isViewTab = ['live', 'archive', 'compare'].includes(modeValue);
+      const isToolTab = ['alerts', 'planner'].includes(modeValue);
+
+      let isActive = false;
+      if (isViewTab && modeValue === state.view && !state.activeTool) {
+        isActive = true;
+      } else if (isToolTab && modeValue === state.activeTool) {
+        isActive = true;
+      }
+
+      tab.classList.toggle('is-active', isActive);
+      tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+
+    panels.forEach(panel => {
+      const modeValue = panel.dataset.modePanel;
+      const isViewPanel = ['live', 'archive', 'compare'].includes(modeValue);
+      const isToolPanel = ['alerts', 'planner'].includes(modeValue);
+
+      let isActive = false;
+      if (isViewPanel && modeValue === state.view) {
+        isActive = true;
+      } else if (isToolPanel && modeValue === state.activeTool) {
+        isActive = true;
+      }
+
+      panel.hidden = !isActive;
+    });
   }
 
   tabs.forEach(tab => {
-    tab.addEventListener('click', () => setMode(tab.dataset.mode));
+    tab.addEventListener('click', () => {
+      const mode = tab.dataset.mode;
+      if (['live', 'archive', 'compare'].includes(mode)) {
+        setView(mode);
+      } else if (['alerts', 'planner'].includes(mode)) {
+        setActiveTool(mode);
+      }
+    });
   });
 
   // Initial mode selection
-  setMode(state.mode || 'live');
+  updateTabsAndPanels();
 
   // Keyboard shortcuts
   window.addEventListener('keydown', evt => {
@@ -57,21 +100,17 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     if (key === 'r') {
       els.refreshBtn?.click();
     } else if (key === 'h') {
-      setMode('live');
+      setView('live');
     } else if (key === 'c') {
-      setMode('compare');
+      setView('compare');
     } else if (key === 'a') {
-      setMode('alerts');
+      setActiveTool('alerts');
     } else if (key === 'p') {
-      setMode('planner');
-    } else if (key === 'x') {
-      setMode('exports');
-    } else if (key === 'm') {
-      setMode('method');
+      setActiveTool('planner');
     }
   });
 
-  return { setMode };
+  return { setView, setActiveTool, updateTabsAndPanels };
 }
 
 export function updateShellTickerFromState(state, spot, priceFor) {

@@ -404,12 +404,53 @@
   line-height: 1.7;
 }
 
+/* ── Section titles and tools ──────────────────────── */
+.cp-section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 0.2rem;
+}
+
+.cp-section-sub {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0 0 1rem;
+}
+
 /* Inner tools row */
 .cp-tools-row {
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
-  padding: 1.25rem 0 0;
+  padding: 0.5rem 0 1.25rem 0;
+}
+
+.related-tool-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.related-tool-link:hover {
+  box-shadow: 0 4px 12px rgba(196, 153, 62, 0.15);
+  border-color: var(--color-gold);
+  color: var(--color-text);
+}
+
+.related-tool-link.shops-discovery {
+  background: linear-gradient(135deg, rgba(196,153,62,0.1) 0%, rgba(196,153,62,0.05) 100%);
+  border-color: rgba(196,153,62,0.3);
 }
 
 /* Trust note */

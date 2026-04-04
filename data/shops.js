@@ -107,6 +107,30 @@ export const SHOPS = [
     notes: 'Souq cluster with stores focused on regional design styles.'
   },
   {
+    specialties: ['Traditional Jewellery', '22K Jewellery', 'Omani Designs'],
+    phone: '',
+    website: '',
+    detailsAvailability: 'limited',
+    featured: false,
+    notes: 'Historic souq cluster with stores focused on traditional Omani design styles and regional jewellery craftsmanship.'
+  },
+  {
+    id: 'om-muscat-seeb-gold',
+    name: 'Seeb Gold Market Dealers',
+    countryCode: 'OM',
+    city: 'Muscat',
+    market: 'Seeb Commercial Area',
+    category: 'Jewellery & Bullion',
+    specialties: ['21K Jewellery', 'Gold Bars', 'Coins'],
+    phone: '',
+    website: '',
+    detailsAvailability: 'limited',
+    featured: false,
+    notes: 'Residential-commercial area near Muscat International Airport. Practical shopping destination for everyday and investment gold.'
+  },
+
+  // ── Egypt ───────────────────────────────────────────────────────────────────
+  {
     id: 'eg-cairo-khan-el-khalili',
     name: 'Khan El Khalili Gold Shops',
     countryCode: 'EG',
