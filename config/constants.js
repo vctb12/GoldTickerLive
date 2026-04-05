@@ -15,5 +15,6 @@ export const CONSTANTS = {
     dayOpen: 'gold_day_open',
     history: 'gold_price_history',
     userPrefs: 'user_prefs',
+    alerts: 'gold_price_alerts',
   },
 };

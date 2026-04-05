@@ -1,38 +1,38 @@
 export const COUNTRIES = [
   // GCC
   {
-    code: 'AE', nameEn: 'United Arab Emirates', nameAr: 'الإمارات العربية المتحدة',
+    code: 'AE', slug: 'uae', nameEn: 'United Arab Emirates', nameAr: 'الإمارات العربية المتحدة',
     currency: 'AED', flag: '🇦🇪', group: 'gcc', decimals: 2, fixedPeg: true,
     searchAliases: ['uae', 'emirates', 'aed', 'الإمارات', 'امارات', 'إمارات'],
   },
   {
-    code: 'SA', nameEn: 'Saudi Arabia', nameAr: 'المملكة العربية السعودية',
+    code: 'SA', slug: 'saudi-arabia', nameEn: 'Saudi Arabia', nameAr: 'المملكة العربية السعودية',
     currency: 'SAR', flag: '🇸🇦', group: 'gcc', decimals: 2, fixedPeg: false,
     searchAliases: ['saudi', 'sa', 'sar', 'السعودية', 'سعودية', 'المملكة'],
   },
   {
-    code: 'KW', nameEn: 'Kuwait', nameAr: 'الكويت',
+    code: 'KW', slug: 'kuwait', nameEn: 'Kuwait', nameAr: 'الكويت',
     currency: 'KWD', flag: '🇰🇼', group: 'gcc', decimals: 3, fixedPeg: false,
     searchAliases: ['kuwait', 'kw', 'kwd', 'الكويت', 'كويت'],
   },
   {
-    code: 'QA', nameEn: 'Qatar', nameAr: 'قطر',
+    code: 'QA', slug: 'qatar', nameEn: 'Qatar', nameAr: 'قطر',
     currency: 'QAR', flag: '🇶🇦', group: 'gcc', decimals: 2, fixedPeg: false,
     searchAliases: ['qatar', 'qa', 'qar', 'قطر'],
   },
   {
-    code: 'BH', nameEn: 'Bahrain', nameAr: 'البحرين',
+    code: 'BH', slug: 'bahrain', nameEn: 'Bahrain', nameAr: 'البحرين',
     currency: 'BHD', flag: '🇧🇭', group: 'gcc', decimals: 3, fixedPeg: false,
     searchAliases: ['bahrain', 'bh', 'bhd', 'البحرين', 'بحرين'],
   },
   {
-    code: 'OM', nameEn: 'Oman', nameAr: 'عُمان',
+    code: 'OM', slug: 'oman', nameEn: 'Oman', nameAr: 'عُمان',
     currency: 'OMR', flag: '🇴🇲', group: 'gcc', decimals: 3, fixedPeg: false,
     searchAliases: ['oman', 'om', 'omr', 'عمان', 'عُمان'],
   },
   // Levant
   {
-    code: 'JO', nameEn: 'Jordan', nameAr: 'الأردن',
+    code: 'JO', slug: 'jordan', nameEn: 'Jordan', nameAr: 'الأردن',
     currency: 'JOD', flag: '🇯🇴', group: 'levant', decimals: 3, fixedPeg: false,
     searchAliases: ['jordan', 'jo', 'jod', 'الأردن', 'أردن'],
   },
@@ -53,7 +53,7 @@ export const COUNTRIES = [
   },
   // North & East Africa
   {
-    code: 'EG', nameEn: 'Egypt', nameAr: 'مصر',
+    code: 'EG', slug: 'egypt', nameEn: 'Egypt', nameAr: 'مصر',
     currency: 'EGP', flag: '🇪🇬', group: 'africa', decimals: 2, fixedPeg: false,
     searchAliases: ['egypt', 'eg', 'egp', 'مصر'],
   },
@@ -73,7 +73,7 @@ export const COUNTRIES = [
     searchAliases: ['algeria', 'dz', 'dzd', 'الجزائر', 'جزائر'],
   },
   {
-    code: 'MA', nameEn: 'Morocco', nameAr: 'المغرب',
+    code: 'MA', slug: 'morocco', nameEn: 'Morocco', nameAr: 'المغرب',
     currency: 'MAD', flag: '🇲🇦', group: 'africa', decimals: 2, fixedPeg: false,
     searchAliases: ['morocco', 'ma', 'mad', 'المغرب', 'مغرب'],
   },
@@ -119,7 +119,7 @@ export const COUNTRIES = [
     searchAliases: ['europe', 'eu', 'eur', 'eurozone', 'منطقة اليورو', 'يورو', 'أوروبا'],
   },
   {
-    code: 'IN', nameEn: 'India', nameAr: 'الهند',
+    code: 'IN', slug: 'india', nameEn: 'India', nameAr: 'الهند',
     currency: 'INR', flag: '🇮🇳', group: 'global', decimals: 2, fixedPeg: false,
     searchAliases: ['india', 'in', 'inr', 'الهند', 'هند'],
   },

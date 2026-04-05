@@ -60,6 +60,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   // Keyboard shortcuts
   window.addEventListener('keydown', evt => {
     if (evt.altKey || evt.metaKey || evt.ctrlKey) return;
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(evt.target.tagName)) return;
     const key = evt.key.toLowerCase();
     if (key === 'r') {
       els.refreshBtn?.click();
