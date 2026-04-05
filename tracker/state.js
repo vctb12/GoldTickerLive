@@ -132,6 +132,7 @@ export function persistState(state) {
     activeRegion: state.activeRegion,
   };
   writeLocal(STORAGE_KEYS.core, payload);
+  writeLocal(CONSTANTS.CACHE_KEYS.alerts, state.alerts.slice(0, 50));
   writeLocal(STORAGE_KEYS.presets, state.presets.slice(0, 20));
   writeLocal(STORAGE_KEYS.watchlist, state.favorites.slice(0, 32));
   writeLocal(STORAGE_KEYS.wire, state.wireItems.slice(0, 32));

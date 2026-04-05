@@ -39,7 +39,7 @@ const TXT = {
     title: 'Explore Gold Shops & Known Gold Markets',
     lead: 'Browse directory listings across countries covered on GoldPrices. Use filters to narrow by region, country, city, and specialty. Shop information is for reference, and business details are shown where available.',
     trustBanner: 'Directory updated regularly · Updated {date}',
-    statListings: 'Listed shops',
+    statListings: 'Listed markets',
     statCountries: 'Countries',
     statRegions: 'Regions',
     popularMarkets: 'Popular markets',
@@ -49,7 +49,7 @@ const TXT = {
     country: 'Country',
     city: 'City',
     specialtyFilter: 'Specialty',
-    listed: 'Listed Shops',
+    listed: 'Listed Markets',
     allRegions: 'All regions',
     allCountries: 'All countries',
     allCities: 'All cities',
@@ -70,7 +70,7 @@ const TXT = {
     detailsPartial: 'Partially available',
     detailsLimited: 'Limited',
     detailsFull: 'Available',
-    noContact: 'Business details where available',
+    noContact: 'Contact details not yet listed',
     visitWebsite: 'Visit website',
     featured: 'Featured market',
     marketCluster: 'Market area cluster',
@@ -98,7 +98,7 @@ const TXT = {
     title: 'استكشف محلات الذهب والأسواق المعروفة',
     lead: 'تصفح إدراجات الدليل ضمن الدول التي يغطيها GoldPrices. استخدم الفلاتر حسب المنطقة والدولة والمدينة والتخصص. معلومات المحلات مرجعية، وتظهر تفاصيل النشاط حيثما كانت متاحة.',
     trustBanner: 'يتم تحديث الدليل بانتظام · تم التحديث {date}',
-    statListings: 'المحلات المدرجة',
+    statListings: 'الأسواق المدرجة',
     statCountries: 'الدول',
     statRegions: 'المناطق',
     popularMarkets: 'أسواق شائعة',
@@ -108,7 +108,7 @@ const TXT = {
     country: 'الدولة',
     city: 'المدينة',
     specialtyFilter: 'التخصص',
-    listed: 'المحلات المدرجة',
+    listed: 'الأسواق المدرجة',
     allRegions: 'كل المناطق',
     allCountries: 'كل الدول',
     allCities: 'كل المدن',
@@ -129,7 +129,7 @@ const TXT = {
     detailsPartial: 'متوفرة جزئياً',
     detailsLimited: 'محدودة',
     detailsFull: 'متوفرة',
-    noContact: 'تفاصيل النشاط متاحة عند توفرها',
+    noContact: 'بيانات الاتصال غير مدرجة بعد',
     visitWebsite: 'زيارة الموقع',
     featured: 'سوق مميز',
     marketCluster: 'مجموعة متاجر بسوق',
@@ -587,7 +587,7 @@ function renderCards(shops) {
             <span class="shop-action-icon">📞</span>
             <span class="shop-action-label">${t('callShop')}</span>
           </a>` : ''}
-          ${country ? `<a href="countries/${country.code}.html" class="shop-action-btn shop-action-btn--country" aria-label="${t('viewCountryPage')}: ${countryName(country)}">
+          ${country?.slug ? `<a href="countries/${country.slug}.html" class="shop-action-btn shop-action-btn--country" aria-label="${t('viewCountryPage')}: ${countryName(country)}">
             <span class="shop-action-icon">📄</span>
             <span class="shop-action-label">${countryName(country)}</span>
           </a>` : ''}
