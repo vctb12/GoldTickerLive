@@ -1627,6 +1627,7 @@ main {
 .btn-ghost:hover { background: var(--color-surface-2); color: var(--color-text); }
 .btn-sm { padding: 0.4rem 1rem; font-size: 0.82rem; min-height: 34px; }
 .btn-lg { padding: 0.75rem 1.9rem; font-size: 0.98rem; min-height: 50px; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
 
 /* ═══════════════════════════════════════════════
    FAQ (global — used on home, learn, country pages)

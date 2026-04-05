@@ -190,8 +190,7 @@ export function bindCoreEvents() {
   _el.exportHistory2?.addEventListener('click', () => _cb.exportHistoryData());
   _el.downloadJson?.addEventListener('click', () => _cb.exportJsonData());
   _el.downloadJson2?.addEventListener('click', () => _cb.exportJsonData());
-  [_el.exportChart, _el.exportChart2, _el.exportCurrent, _el.exportWatchlist, _el.downloadBrief]
-    .forEach(btn => btn?.addEventListener('click', () => _cb.showToast('Export not available for this section yet.')));
+  // exportChart, exportChart2, exportCurrent, exportWatchlist, downloadBrief are disabled in HTML until implemented
 
   // Alert list: delete button delegation
   _el.alertList?.addEventListener('click', (e) => {
