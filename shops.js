@@ -15,7 +15,16 @@ const STATE = {
   country: 'all',
   city: 'all',
   specialty: 'all',
+  shortlist: [], // IDs of saved shops for quick comparison
 };
+
+// Load shortlist from localStorage on module init
+(function loadShortlist() {
+  try {
+    const stored = localStorage.getItem('shops_shortlist');
+    if (stored) STATE.shortlist = JSON.parse(stored);
+  } catch {}
+})();
 
 const REGIONS = {
   gcc: { en: 'GCC', ar: 'الخليج' },
@@ -64,6 +73,13 @@ const TXT = {
     visitWebsite: 'Visit website',
     featured: 'Featured market',
     marketCluster: 'Market area cluster',
+    saveToShortlist: 'Save to shortlist',
+    removeFromShortlist: 'Remove from shortlist',
+    saved: 'Saved',
+    shortlistCount: (n) => `${n} saved`,
+    shareShop: 'Share',
+    directions: 'Directions',
+    callShop: 'Call',
     infoTitle: 'How to use this directory',
     info1Title: 'Compare by market area',
     info1Body: 'Start with a country or city filter, then compare listed markets and specialties side by side.',
@@ -111,6 +127,13 @@ const TXT = {
     visitWebsite: 'زيارة الموقع',
     featured: 'سوق مميز',
     marketCluster: 'مجموعة متاجر بسوق',
+    saveToShortlist: 'حفظ في القائمة',
+    removeFromShortlist: 'إزالة من القائمة',
+    saved: 'محفوظ',
+    shortlistCount: (n) => `${n} محفوظة`,
+    shareShop: 'مشاركة',
+    directions: 'الاتجاهات',
+    callShop: 'اتصال',
     infoTitle: 'كيفية استخدام هذا الدليل',
     info1Title: 'قارن حسب منطقة السوق',
     info1Body: 'ابدأ بفلتر الدولة أو المدينة، ثم قارن الأسواق المدرجة والتخصصات بسهولة.',
@@ -152,10 +175,65 @@ function isMarketCluster(shop) {
           shop.notes?.toLowerCase().includes('area'));
 }
 
+function toggleShortlist(shopId) {
+  const idx = STATE.shortlist.indexOf(shopId);
+  if (idx === -1) {
+    STATE.shortlist.push(shopId);
+  } else {
+    STATE.shortlist.splice(idx, 1);
+  }
+  try {
+    localStorage.setItem('shops_shortlist', JSON.stringify(STATE.shortlist));
+  } catch {}
+  render(); // Re-render to update button states
+}
+
+function isInShortlist(shopId) {
+  return STATE.shortlist.includes(shopId);
+}
+
+function shareShop(shop) {
+  const url = `${location.origin}${location.pathname}?shop=${shop.id}`;
+  const text = `${shop.name} — ${shop.market}, ${shop.city}`;
+  
+  if (navigator.share) {
+    navigator.share({ title: shop.name, text, url }).catch(() => {});
+  } else {
+    // Fallback: copy to clipboard
+    navigator.clipboard?.writeText(url).then(() => {
+      alert(STATE.lang === 'ar' ? 'تم نسخ الرابط' : 'Link copied to clipboard');
+    }).catch(() => {});
+  }
+}
+
 function openModal(shop) {
   const modal = document.getElementById('shops-modal');
   const country = countryByCode(shop.countryCode);
   const specialties = (shop.specialties || []).map((item) => `<span class="shop-tag">${item}</span>`).join('');
+  const inList = isInShortlist(shop.id);
+  
+  // Build action buttons row
+  const actionsHTML = `
+    <div class="modal-actions">
+      <button class="modal-action-btn modal-action-btn--shortlist ${inList ? 'is-saved' : ''}" 
+              type="button" data-shop-id="${shop.id}" aria-label="${inList ? t('removeFromShortlist') : t('saveToShortlist')}">
+        <span class="modal-action-icon">${inList ? '✓' : '+'}</span>
+        <span class="modal-action-label">${inList ? t('saved') : t('saveToShortlist')}</span>
+      </button>
+      <button class="modal-action-btn modal-action-btn--share" type="button" data-shop-id="${shop.id}" aria-label="${t('shareShop')}">
+        <span class="modal-action-icon">↗</span>
+        <span class="modal-action-label">${t('shareShop')}</span>
+      </button>
+      ${shop.phone ? `<a href="tel:${shop.phone.replace(/\s+/g, '')}" class="modal-action-btn modal-action-btn--call" aria-label="${t('callShop')}">
+        <span class="modal-action-icon">📞</span>
+        <span class="modal-action-label">${t('callShop')}</span>
+      </a>` : ''}
+      ${shop.website ? `<a href="${shop.website}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--website" aria-label="${t('visitWebsite')}">
+        <span class="modal-action-icon">🌐</span>
+        <span class="modal-action-label">${t('visitWebsite')}</span>
+      </a>` : ''}
+    </div>
+  `;
 
   const contactHTML = shop.phone || shop.website ?
     `<div class="modal-contact">
@@ -176,6 +254,8 @@ function openModal(shop) {
         ${shop.featured ? `<span class="modal-featured-badge">★ ${t('featured')}</span>` : ''}
       </div>
     </div>
+
+    ${actionsHTML}
 
     <div class="modal-meta">
       <div class="modal-meta-item">
@@ -203,6 +283,20 @@ function openModal(shop) {
 
     ${contactHTML}
   `;
+
+  // Bind action button handlers
+  const shortlistBtn = modal.querySelector('.modal-action-btn--shortlist');
+  if (shortlistBtn) {
+    shortlistBtn.addEventListener('click', () => {
+      toggleShortlist(shop.id);
+      openModal(shop); // Re-open to refresh button state
+    });
+  }
+  
+  const shareBtn = modal.querySelector('.modal-action-btn--share');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', () => shareShop(shop));
+  }
 
   modal.hidden = false;
 }
@@ -424,6 +518,7 @@ function renderCards(shops) {
     const specialties = (shop.specialties || []).map((item) => `<span class="shop-tag">${item}</span>`).join('');
     const isCluster = isMarketCluster(shop);
     const clusterBadge = isCluster ? `<span class="shop-cluster-badge">${t('marketCluster')}</span>` : '';
+    const inShortlist = isInShortlist(shop.id);
 
     const contactParts = [];
     if (shop.phone) contactParts.push(`${t('phone')}: ${shop.phone}`);
@@ -432,7 +527,7 @@ function renderCards(shops) {
     }
 
     return `
-      <article class="shop-card${shop.featured ? ' shop-card--featured' : ''}${isCluster ? ' shop-card--cluster' : ''}" data-shop-id="${shop.id}" style="cursor: pointer;">
+      <article class="shop-card${shop.featured ? ' shop-card--featured' : ''}${isCluster ? ' shop-card--cluster' : ''}" data-shop-id="${shop.id}">
         <header class="shop-card-head">
           <div>
             <h3>${shop.name}</h3>
@@ -456,6 +551,23 @@ function renderCards(shops) {
         </div>
 
         <p class="shop-notes">${shop.notes}</p>
+        
+        <div class="shop-actions-row">
+          <button class="shop-action-btn shop-action-btn--save ${inShortlist ? 'is-saved' : ''}" 
+                  type="button" data-shop-id="${shop.id}" aria-label="${inShortlist ? t('removeFromShortlist') : t('saveToShortlist')}">
+            <span class="shop-action-icon">${inShortlist ? '✓' : '+'}</span>
+            <span class="shop-action-label">${inShortlist ? t('saved') : t('saveToShortlist')}</span>
+          </button>
+          <button class="shop-action-btn shop-action-btn--share" type="button" data-shop-id="${shop.id}" aria-label="${t('shareShop')}">
+            <span class="shop-action-icon">↗</span>
+            <span class="shop-action-label">${t('shareShop')}</span>
+          </button>
+          ${shop.phone ? `<a href="tel:${shop.phone.replace(/\s+/g, '')}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
+            <span class="shop-action-icon">📞</span>
+            <span class="shop-action-label">${t('callShop')}</span>
+          </a>` : ''}
+        </div>
+        
         <p class="shop-contact">${contactParts.join(' · ') || t('noContact')}</p>
       </article>
     `;
@@ -470,15 +582,36 @@ function bindShopCardHandlers() {
   const grid = document.getElementById('shops-grid');
   if (!grid) return;
 
+  // Bind card click -> open modal
   grid.querySelectorAll('.shop-card').forEach((card) => {
-    // Remove existing listeners by cloning to prevent duplicate bindings
     const newCard = card.cloneNode(true);
     card.parentNode.replaceChild(newCard, card);
 
-    newCard.addEventListener('click', () => {
+    newCard.addEventListener('click', (e) => {
+      // Ignore clicks on action buttons
+      if (e.target.closest('.shop-action-btn')) return;
+      
       const shopId = newCard.dataset.shopId;
       const shop = SHOPS.find((s) => s.id === shopId);
       if (shop) openModal(shop);
+    });
+  });
+
+  // Bind action buttons
+  grid.querySelectorAll('.shop-action-btn--save').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const shopId = btn.dataset.shopId;
+      toggleShortlist(shopId);
+    });
+  });
+
+  grid.querySelectorAll('.shop-action-btn--share').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const shopId = btn.dataset.shopId;
+      const shop = SHOPS.find((s) => s.id === shopId);
+      if (shop) shareShop(shop);
     });
   });
 }
@@ -601,6 +734,20 @@ function syncUrlToState() {
   history.replaceState(null, '', qs ? `${location.pathname}?${qs}` : location.pathname);
 }
 
+function renderShortlistBar() {
+  const bar = document.getElementById('shops-shortlist-bar');
+  const countEl = document.getElementById('shops-shortlist-count');
+  if (!bar || !countEl) return;
+  
+  const count = STATE.shortlist.length;
+  if (count === 0) {
+    bar.hidden = true;
+  } else {
+    bar.hidden = false;
+    countEl.textContent = t('shortlistCount')(count);
+  }
+}
+
 function render() {
   syncUrlToState();
   const shops = filterShops();
@@ -610,6 +757,7 @@ function render() {
   activeFilterSummary();
   renderFilterPills();
   renderFeaturedSection();
+  renderShortlistBar();
 
   if (!shops.length) {
     document.getElementById('shops-grid').innerHTML = '';
@@ -768,6 +916,16 @@ function init() {
     const el = document.getElementById('shops-search');
     if (el) el.value = STATE.search;
   }
+  
+  // Handle direct shop link from URL (?shop=ID)
+  const _pShop = new URLSearchParams(location.search).get('shop');
+  if (_pShop) {
+    const shop = SHOPS.find((s) => s.id === _pShop);
+    if (shop) {
+      setTimeout(() => openModal(shop), 500);
+    }
+  }
+  
   updateLanguage();
 
   // Mobile filter toggle
@@ -777,6 +935,16 @@ function init() {
     filterToggle.addEventListener('click', () => {
       const open = filterPanel.classList.toggle('is-open');
       filterToggle.setAttribute('aria-expanded', String(open));
+    });
+  }
+  
+  // Shortlist bar clear button
+  const shortlistClear = document.getElementById('shops-shortlist-clear');
+  if (shortlistClear) {
+    shortlistClear.addEventListener('click', () => {
+      STATE.shortlist = [];
+      try { localStorage.setItem('shops_shortlist', '[]'); } catch {}
+      render();
     });
   }
 }
