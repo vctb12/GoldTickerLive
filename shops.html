@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gold Shops & Markets Directory by Region | GoldPrices</title>
-  <meta name="description" content="Explore listed gold shops and known gold markets by region, country, city, and specialty across GCC, Levant, Africa, and India." />
+  <meta name="description" content="Explore listed gold shops and known gold markets by region, country, city, and specialty across GCC, Levant, Africa, and India. Find trusted dealers, compare locations, and discover market clusters." />
   <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/shops.html" />
   <link rel="manifest" href="manifest.json" />
   <meta property="og:type" content="website" />
@@ -16,6 +16,16 @@
   <link rel="stylesheet" href="./style.css" />
   <link rel="stylesheet" href="./shops.css" />
   <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <!-- Structured data for directory -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Gold Shops Directory",
+    "description": "Directory of gold shops and markets across GCC, Levant, Africa, and India",
+    "url": "https://vctb12.github.io/Gold-Prices/shops.html"
+  }
+  </script>
 </head>
 <body>
   <!-- Nav + Breadcrumbs (injected by shops.js) -->
@@ -27,6 +37,11 @@
         <p class="shops-kicker" id="shops-kicker">Shops by region</p>
         <h1 id="shops-title">Explore Gold Shops & Known Gold Markets</h1>
         <p class="shops-lead" id="shops-lead">Browse directory listings across countries covered on GoldPrices. Use filters to narrow by region, country, city, and specialty. Shop information is for reference, and business details are shown where available.</p>
+
+        <div class="shops-trust-banner" aria-label="Data freshness">
+          <span class="shops-trust-icon" aria-hidden="true">◈</span>
+          <span class="shops-trust-text">Directory updated regularly · <span id="shops-last-updated">Loading...</span></span>
+        </div>
 
         <div class="shops-hero-stats" aria-label="Directory overview">
           <div class="shops-stat">

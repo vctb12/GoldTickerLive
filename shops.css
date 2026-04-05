@@ -34,6 +34,31 @@
   overflow: hidden;
 }
 
+/* Trust banner */
+.shops-trust-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.85rem;
+  background: rgba(76, 175, 80, 0.08);
+  border: 1px solid rgba(76, 175, 80, 0.25);
+  border-radius: var(--radius-md);
+  font-size: 0.82rem;
+  color: rgba(129, 199, 132, 0.9);
+  font-weight: 600;
+}
+
+.shops-trust-icon {
+  font-size: 0.9rem;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
 .shops-hero-inner::before {
   content: '';
   position: absolute;
@@ -1287,6 +1312,18 @@
 
 .shop-action-btn.is-saved:hover {
   background: rgba(76, 175, 80, 0.12);
+}
+
+.shop-action-btn--country {
+  border-color: rgba(99, 102, 241, 0.35);
+  background: rgba(99, 102, 241, 0.06);
+  color: rgba(99, 102, 241, 0.9);
+}
+
+.shop-action-btn--country:hover {
+  border-color: rgba(99, 102, 241, 0.6);
+  background: rgba(99, 102, 241, 0.12);
+  color: rgba(99, 102, 241, 1);
 }
 
 .shop-action-icon {
