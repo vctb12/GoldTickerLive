@@ -1166,3 +1166,240 @@
     display: contents;
   }
 }
+
+/* ── Shortlist bar ───────────────────────────────────────────────────────── */
+.shops-shortlist-bar {
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(135deg, rgba(212, 160, 23, 0.08), rgba(196, 153, 62, 0.04));
+  border-top: 1px solid rgba(212, 160, 23, 0.2);
+  border-bottom: 1px solid rgba(212, 160, 23, 0.2);
+}
+
+.shops-shortlist-bar-inner {
+  max-width: 1220px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.shops-shortlist-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.shops-shortlist-icon {
+  font-size: 1.1rem;
+}
+
+#shops-shortlist-count {
+  color: var(--color-gold-dark, #b8860b);
+  font-weight: 700;
+}
+
+.shops-shortlist-label {
+  color: var(--color-text-muted, #888);
+  font-size: 0.8rem;
+}
+
+.shops-shortlist-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.shops-shortlist-clear-btn {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--color-border, #2e2b24);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted, #888);
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.18s;
+  min-height: 36px;
+}
+
+.shops-shortlist-clear-btn:hover {
+  border-color: var(--color-gold, #d4a017);
+  color: var(--color-gold-dark, #b8860b);
+}
+
+.shops-shortlist-compare-btn {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--color-gold, #d4a017);
+  border-radius: var(--radius-pill);
+  background: rgba(212, 160, 23, 0.1);
+  color: var(--color-gold-dark, #b8860b);
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: all 0.18s;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.shops-shortlist-compare-btn:hover {
+  background: rgba(212, 160, 23, 0.2);
+}
+
+/* ── Shop card action row ────────────────────────────────────────────────── */
+.shop-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border, #2e2b24);
+}
+
+.shop-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--color-border, #2e2b24);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--color-text-muted, #888);
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.18s;
+  min-height: 32px;
+}
+
+.shop-action-btn:hover {
+  border-color: var(--color-gold, #d4a017);
+  color: var(--color-gold-dark, #b8860b);
+  background: rgba(212, 160, 23, 0.06);
+}
+
+.shop-action-btn.is-saved {
+  border-color: rgba(76, 175, 80, 0.4);
+  background: rgba(76, 175, 80, 0.08);
+  color: rgba(76, 175, 80, 0.85);
+}
+
+.shop-action-btn.is-saved:hover {
+  background: rgba(76, 175, 80, 0.12);
+}
+
+.shop-action-icon {
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.shop-action-label {
+  white-space: nowrap;
+}
+
+/* ── Modal action buttons ────────────────────────────────────────────────── */
+.modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 1.25rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--color-border, #2e2b24);
+  border-bottom: 1px solid var(--color-border, #2e2b24);
+}
+
+.modal-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.85rem;
+  border: 1px solid var(--color-border, #2e2b24);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--color-text, #e8e0cc);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.18s;
+  min-height: 40px;
+}
+
+.modal-action-btn:hover {
+  border-color: var(--color-gold, #d4a017);
+  color: var(--color-gold-dark, #b8860b);
+  background: rgba(212, 160, 23, 0.08);
+}
+
+.modal-action-btn.is-saved {
+  border-color: rgba(76, 175, 80, 0.4);
+  background: rgba(76, 175, 80, 0.1);
+  color: rgba(76, 175, 80, 0.9);
+}
+
+.modal-action-btn.is-saved:hover {
+  background: rgba(76, 175, 80, 0.15);
+}
+
+.modal-action-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.modal-action-label {
+  white-space: nowrap;
+}
+
+/* ── Mobile shortlist bar ───────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .shops-shortlist-bar {
+    padding: 0.6rem 1rem;
+  }
+  
+  .shops-shortlist-bar-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .shops-shortlist-head {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .shops-shortlist-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .shop-actions-row {
+    gap: 0.3rem;
+  }
+  
+  .shop-action-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.5rem;
+  }
+  
+  .shop-action-label {
+    display: none;
+  }
+  
+  .modal-actions {
+    gap: 0.4rem;
+  }
+  
+  .modal-action-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+  }
+  
+  .modal-action-label {
+    display: none;
+  }
+}
