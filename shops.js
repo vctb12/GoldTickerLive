@@ -15,8 +15,11 @@ const STATE = {
   country: 'all',
   city: 'all',
   specialty: 'all',
+  verifiedOnly: false,
   shortlist: [], // IDs of saved shops for quick comparison
 };
+
+const SHOPS_LAST_REVIEWED_ISO = '2026-04-05';
 
 // Load shortlist from localStorage on module init
 (function loadShortlist() {
@@ -38,7 +41,7 @@ const TXT = {
     kicker: 'Shops by region',
     title: 'Explore Gold Shops & Known Gold Markets',
     lead: 'Browse directory listings across countries covered on GoldPrices. Use filters to narrow by region, country, city, and specialty. Shop information is for reference, and business details are shown where available.',
-    trustBanner: 'Directory updated regularly · Updated {date}',
+    trustBanner: 'Directory reference listings · Last content review {date}',
     statListings: 'Listed markets',
     statCountries: 'Countries',
     statRegions: 'Regions',
@@ -49,14 +52,17 @@ const TXT = {
     country: 'Country',
     city: 'City',
     specialtyFilter: 'Specialty',
-    listed: 'Listed Markets',
+    listed: 'Listings (shops + market areas)',
     allRegions: 'All regions',
     allCountries: 'All countries',
     allCities: 'All cities',
     allSpecialties: 'All specialties',
+    verifiedOnly: 'Verified details only',
+    verifiedHelp: 'Show listings with phone or website details only',
     count: (n) => `${n} listing${n === 1 ? '' : 's'}`,
     activeFilters: (value) => `Filters: ${value}`,
     noFilters: 'Showing all listings',
+    verifiedFilterLabel: 'verified details only',
     emptyTitle: 'No listings match your filters',
     emptyText: 'Try clearing one filter or searching with a broader term.',
     clearFilters: 'Clear filters',
@@ -97,7 +103,7 @@ const TXT = {
     kicker: 'محلات حسب المنطقة',
     title: 'استكشف محلات الذهب والأسواق المعروفة',
     lead: 'تصفح إدراجات الدليل ضمن الدول التي يغطيها GoldPrices. استخدم الفلاتر حسب المنطقة والدولة والمدينة والتخصص. معلومات المحلات مرجعية، وتظهر تفاصيل النشاط حيثما كانت متاحة.',
-    trustBanner: 'يتم تحديث الدليل بانتظام · تم التحديث {date}',
+    trustBanner: 'إدراجات مرجعية للدليل · آخر مراجعة للمحتوى {date}',
     statListings: 'الأسواق المدرجة',
     statCountries: 'الدول',
     statRegions: 'المناطق',
@@ -108,14 +114,17 @@ const TXT = {
     country: 'الدولة',
     city: 'المدينة',
     specialtyFilter: 'التخصص',
-    listed: 'الأسواق المدرجة',
+    listed: 'الإدراجات (محلات + مناطق سوق)',
     allRegions: 'كل المناطق',
     allCountries: 'كل الدول',
     allCities: 'كل المدن',
     allSpecialties: 'كل التخصصات',
+    verifiedOnly: 'تفاصيل موثقة فقط',
+    verifiedHelp: 'اعرض الإدراجات التي تتضمن هاتفاً أو موقعاً فقط',
     count: (n) => `${n} نتيجة`,
     activeFilters: (value) => `الفلاتر: ${value}`,
     noFilters: 'عرض جميع الإدراجات',
+    verifiedFilterLabel: 'تفاصيل موثقة فقط',
     emptyTitle: 'لا توجد إدراجات مطابقة',
     emptyText: 'جرّب إلغاء أحد الفلاتر أو استخدام كلمات أوسع في البحث.',
     clearFilters: 'مسح الفلاتر',
@@ -324,10 +333,10 @@ function applyStaticText() {
   document.getElementById('shops-lead').textContent = t('lead');
   
   // Trust banner with formatted date
-  const today = new Date();
-  const dateStr = STATE.lang === 'ar' 
-    ? today.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' })
-    : today.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  const reviewedDate = new Date(`${SHOPS_LAST_REVIEWED_ISO}T00:00:00Z`);
+  const dateStr = STATE.lang === 'ar'
+    ? reviewedDate.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' })
+    : reviewedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   const trustEl = document.getElementById('shops-last-updated');
   if (trustEl) {
     trustEl.textContent = t('trustBanner').replace('{date}', dateStr);
@@ -340,6 +349,8 @@ function applyStaticText() {
   document.getElementById('shops-country-label').textContent = t('country');
   document.getElementById('shops-city-label').textContent = t('city');
   document.getElementById('shops-specialty-label').textContent = t('specialtyFilter');
+  document.getElementById('shops-verified-label').textContent = t('verifiedOnly');
+  document.getElementById('shops-verified-help').textContent = t('verifiedHelp');
   document.getElementById('shops-results-title').textContent = t('listed');
   document.getElementById('shops-empty-title').textContent = t('emptyTitle');
   document.getElementById('shops-empty-text').textContent = t('emptyText');
@@ -473,6 +484,7 @@ function filterShops() {
     if (STATE.country !== 'all' && shop.countryCode !== STATE.country) return false;
     if (STATE.city !== 'all' && shop.city !== STATE.city) return false;
     if (STATE.specialty !== 'all' && !(shop.specialties || []).includes(STATE.specialty)) return false;
+    if (STATE.verifiedOnly && !(shop.phone || shop.website)) return false;
 
     if (!q) return true;
 
@@ -513,6 +525,7 @@ function activeFilterSummary() {
   }
   if (STATE.city !== 'all') labels.push(STATE.city);
   if (STATE.specialty !== 'all') labels.push(STATE.specialty);
+  if (STATE.verifiedOnly) labels.push(t('verifiedFilterLabel'));
   if (STATE.search.trim()) labels.push(`"${STATE.search.trim()}"`);
 
   document.getElementById('shops-active-filters').textContent =
@@ -706,6 +719,7 @@ function renderFilterPills() {
   }
   if (STATE.city !== 'all') pills.push({ type: 'city', value: STATE.city, label: STATE.city });
   if (STATE.specialty !== 'all') pills.push({ type: 'specialty', value: STATE.specialty, label: STATE.specialty });
+  if (STATE.verifiedOnly) pills.push({ type: 'verified', value: '1', label: t('verifiedFilterLabel') });
   if (STATE.search.trim()) {
     const q = STATE.search.trim();
     pills.push({ type: 'search', value: '', label: `"${esc(q)}"`, ariaLabel: `Remove "${q}" search filter` });
@@ -733,6 +747,11 @@ function renderFilterPills() {
       if (type === 'country') STATE.country = 'all';
       if (type === 'city') STATE.city = 'all';
       if (type === 'specialty') STATE.specialty = 'all';
+      if (type === 'verified') {
+        STATE.verifiedOnly = false;
+        const verifiedBox = document.getElementById('shops-verified-only');
+        if (verifiedBox) verifiedBox.checked = false;
+      }
       if (type === 'search') {
         STATE.search = '';
         document.getElementById('shops-search').value = '';
@@ -750,6 +769,7 @@ function syncUrlToState() {
   if (STATE.country !== 'all') p.set('country', STATE.country); else p.delete('country');
   if (STATE.city !== 'all') p.set('city', STATE.city); else p.delete('city');
   if (STATE.specialty !== 'all') p.set('specialty', STATE.specialty); else p.delete('specialty');
+  if (STATE.verifiedOnly) p.set('verified', '1'); else p.delete('verified');
 
   const q = STATE.search.trim();
   if (q) { p.set('search', q); p.delete('q'); }
@@ -800,7 +820,10 @@ function resetFilters() {
   STATE.country = 'all';
   STATE.city = 'all';
   STATE.specialty = 'all';
+  STATE.verifiedOnly = false;
   document.getElementById('shops-search').value = '';
+  const verifiedBox = document.getElementById('shops-verified-only');
+  if (verifiedBox) verifiedBox.checked = false;
   buildFilters();
   render();
 }
@@ -837,6 +860,11 @@ function bindEvents() {
 
   document.getElementById('shops-specialty-filter').addEventListener('change', (event) => {
     STATE.specialty = event.target.value;
+    render();
+  });
+
+  document.getElementById('shops-verified-only').addEventListener('change', (event) => {
+    STATE.verifiedOnly = event.target.checked;
     render();
   });
 
@@ -896,12 +924,14 @@ function init() {
   const _pCity    =  _p.get('city')      || '';
   const _pSpec    =  _p.get('specialty') || '';
   const _pSearch  =  _p.get('search')    || _p.get('q') || '';
+  const _pVerified = (_p.get('verified') || '') === '1';
 
   if (_pRegion && Object.prototype.hasOwnProperty.call(REGIONS, _pRegion)) STATE.region = _pRegion;
   if (_pCountry)  STATE.country   = _pCountry;   // buildFilters() resets to 'all' if invalid
   if (_pCity)     STATE.city      = _pCity;
   if (_pSpec)     STATE.specialty = _pSpec;
   if (_pSearch)   STATE.search    = _pSearch;
+  if (_pVerified) STATE.verifiedOnly = true;
 
   const navResult = injectNav(STATE.lang, 0);
   injectBreadcrumbs('shops');
@@ -941,6 +971,8 @@ function init() {
     const el = document.getElementById('shops-search');
     if (el) el.value = STATE.search;
   }
+  const verifiedBox = document.getElementById('shops-verified-only');
+  if (verifiedBox) verifiedBox.checked = STATE.verifiedOnly;
   
   // Handle direct shop link from URL (?shop=ID)
   const _pShop = new URLSearchParams(location.search).get('shop');
