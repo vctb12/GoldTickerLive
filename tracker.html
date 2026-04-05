@@ -294,7 +294,7 @@
               </p>
             </div>
             <div class="tracker-head-actions">
-              <button type="button" class="btn btn-sm btn-outline" id="tp-export-chart">
+              <button type="button" class="btn btn-sm btn-outline" id="tp-export-chart" disabled title="Not yet available">
                 Export visible chart CSV
               </button>
               <button type="button" class="btn btn-sm btn-ghost" id="tp-download-json">
@@ -308,10 +308,6 @@
               <span class="tracker-legend-item">
                 <span class="tracker-legend-dot"></span>
                 <span id="tp-legend-main">Selected series</span>
-              </span>
-              <span class="tracker-legend-item">
-                <span class="tracker-legend-dot compare"></span>
-                <span id="tp-legend-compare">Compare series</span>
               </span>
             </div>
             <div class="tracker-mini-strip" id="tp-mini-strip"></div>
@@ -374,7 +370,7 @@
           <div class="tracker-watchlist-block" aria-label="Market watchlist">
             <div class="tracker-subpanel-head">
               <h3>Market watchlist</h3>
-              <button type="button" class="btn btn-sm btn-outline" id="tp-export-watchlist">
+              <button type="button" class="btn btn-sm btn-outline" id="tp-export-watchlist" disabled title="Not yet available">
                 Export watchlist CSV
               </button>
             </div>
@@ -771,7 +767,7 @@
           <article class="tracker-subpanel">
             <div class="tracker-subpanel-head"><h3>Visible chart CSV</h3></div>
             <p>Exports only the currently visible chart slice with range, mode, and source-layer annotations.</p>
-            <button class="btn btn-outline" id="tp-export-chart-2" type="button">
+            <button class="btn btn-outline" id="tp-export-chart-2" type="button" disabled title="Not yet available">
               Export visible chart CSV
             </button>
           </article>
@@ -779,7 +775,7 @@
           <article class="tracker-subpanel">
             <div class="tracker-subpanel-head"><h3>Current view CSV</h3></div>
             <p>Snapshot of the current currency/karat/unit across markets, matching the compare board ordering.</p>
-            <button class="btn btn-outline" id="tp-export-current" type="button">
+            <button class="btn btn-outline" id="tp-export-current" type="button" disabled title="Not yet available">
               Download current view CSV
             </button>
           </article>
@@ -808,7 +804,7 @@
           <article class="tracker-subpanel">
             <div class="tracker-subpanel-head"><h3>Market brief text</h3></div>
             <p>Export the current market brief as plain text, suitable for email or note-taking.</p>
-            <button class="btn btn-outline" id="tp-download-brief" type="button">
+            <button class="btn btn-outline" id="tp-download-brief" type="button" disabled title="Not yet available">
               Download brief
             </button>
           </article>

@@ -13,9 +13,9 @@ export const NAV_DATA = {
         items: [
           { href: '../tracker.html',                   label: 'Live Tracker'   },
           { href: '../countries/uae.html',             label: 'UAE Gold Today' },
-          { href: '../tracker.html#section-countries', label: 'GCC Compare'    },
-          { href: '../tracker.html#section-countries', label: 'Country Pages'  },
-          { href: '../tracker.html#section-chart',     label: 'History & Data' },
+          { href: '../tracker.html#mode=compare',        label: 'GCC Compare'    },
+          { href: '../tracker.html#mode=compare',        label: 'Country Pages'  },
+          { href: '../tracker.html#mode=archive',        label: 'History & Data' },
         ],
       },
       {
@@ -23,10 +23,10 @@ export const NAV_DATA = {
         label: 'Tools',
         items: [
           { href: '../calculator.html',                label: 'Calculator'   },
-          { href: '../tracker.html#section-alerts',    label: 'Alerts'       },
-          { href: '../tracker.html#section-chart',     label: 'Downloads'    },
-          { href: '../tracker.html#section-chart',     label: 'Date Lookup'  },
-          { href: '../tracker.html#section-chart',     label: 'Archive'      },
+          { href: '../tracker.html#mode=alerts',         label: 'Alerts'       },
+          { href: '../tracker.html#mode=exports',        label: 'Downloads'    },
+          { href: '../tracker.html#mode=archive',        label: 'Date Lookup'  },
+          { href: '../tracker.html#mode=archive',        label: 'Archive'      },
         ],
       },
       {
@@ -86,9 +86,9 @@ export const NAV_DATA = {
         items: [
           { href: '../tracker.html',                   label: 'تتبع مباشر'          },
           { href: '../countries/uae.html',             label: 'ذهب الإمارات'        },
-          { href: '../tracker.html#section-countries', label: 'مقارنة دول الخليج'   },
-          { href: '../tracker.html#section-countries', label: 'صفحات الدول'         },
-          { href: '../tracker.html#section-chart',     label: 'البيانات التاريخية'   },
+          { href: '../tracker.html#mode=compare',        label: 'مقارنة دول الخليج'   },
+          { href: '../tracker.html#mode=compare',        label: 'صفحات الدول'         },
+          { href: '../tracker.html#mode=archive',        label: 'البيانات التاريخية'   },
         ],
       },
       {
@@ -96,10 +96,10 @@ export const NAV_DATA = {
         label: 'أدوات',
         items: [
           { href: '../calculator.html',                label: 'حاسبة'             },
-          { href: '../tracker.html#section-alerts',    label: 'تنبيهات'           },
-          { href: '../tracker.html#section-chart',     label: 'تنزيلات'           },
-          { href: '../tracker.html#section-chart',     label: 'البحث بالتاريخ'    },
-          { href: '../tracker.html#section-chart',     label: 'الأرشيف'           },
+          { href: '../tracker.html#mode=alerts',         label: 'تنبيهات'           },
+          { href: '../tracker.html#mode=exports',        label: 'تنزيلات'           },
+          { href: '../tracker.html#mode=archive',        label: 'البحث بالتاريخ'    },
+          { href: '../tracker.html#mode=archive',        label: 'الأرشيف'           },
         ],
       },
       {
