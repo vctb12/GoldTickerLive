@@ -7,7 +7,7 @@ import { createInitialState, persistState } from './tracker/state.js';
 import { mountShell } from './tracker/ui-shell.js';
 import { fetchWire, renderWire as renderWireModule } from './tracker/wire.js';
 import { getUnifiedHistory } from './lib/historical-data.js';
-import { initRender, renderAll, renderMarkets, renderAlerts, renderPresets, renderPlanners, renderArchive } from './tracker/render.js';
+import { initRender, renderAll, renderChart, renderMarkets, renderAlerts, renderPresets, renderPlanners, renderArchive } from './tracker/render.js';
 import { initEvents, bindCoreEvents } from './tracker/events.js';
 
 const state = createInitialState();
@@ -343,6 +343,15 @@ async function init() {
   await refreshData(false);
   renderAll();
   if (state.autoRefresh) startAutoRefresh();
+
+  // Redraw chart on resize so viewBox stays in sync with container dimensions
+  let _resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(() => {
+      if (state.mode === 'live') renderChart();
+    }, 150);
+  });
 }
 
 init();

@@ -82,7 +82,9 @@ export function renderChart() {
   const prices = rows.map(r => r.spot);
   const min = Math.min(...prices) * 0.998;
   const max = Math.max(...prices) * 1.002;
-  const W = 1200, H = 430;
+  const W = (_el.chartWrap?.clientWidth || 1200);
+  const H = (_el.chartWrap?.clientHeight || 430);
+  _el.chart.setAttribute('viewBox', `0 0 ${W} ${H}`);
   const pts = rows.map((r, i) => {
     const x = (i / (rows.length - 1)) * W;
     const y = H - ((r.spot - min) / (max - min)) * (H - 40) - 20;
