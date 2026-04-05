@@ -89,6 +89,9 @@ const TXT = {
     info2Body: 'Cards indicate whether business details are limited or partially available so you know what to expect.',
     info3Title: 'Use as a shortlist',
     info3Body: 'This page is for reference and discovery. Always confirm current prices, charges, and product details directly with shops.',
+    quickActionsCalc: 'Calculate Value',
+    quickActionsRates: 'Live Rates',
+    quickActionsUAE: 'UAE Market',
   },
   ar: {
     kicker: 'محلات حسب المنطقة',
@@ -145,6 +148,9 @@ const TXT = {
     info2Body: 'توضح البطاقات مستوى توفر تفاصيل النشاط حتى تعرف المعلومات المتاحة قبل التواصل.',
     info3Title: 'استخدمه كقائمة مختصرة',
     info3Body: 'هذه الصفحة للاكتشاف والمرجعية. احرص على تأكيد الأسعار والرسوم والتفاصيل مباشرة مع المحلات.',
+    quickActionsCalc: 'احسب القيمة',
+    quickActionsRates: 'الأسعار المباشرة',
+    quickActionsUAE: 'سوق الإمارات',
   }
 };
 

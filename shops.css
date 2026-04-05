@@ -194,6 +194,51 @@
   background: rgba(212, 160, 23, 0.3);
 }
 
+/* ── Quick actions row ──────────────────────────────────────────────────── */
+.shops-quick-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.shops-quick-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.1rem;
+  background: rgba(255, 248, 234, 0.06);
+  border: 1px solid rgba(255, 240, 195, 0.28);
+  border-radius: var(--radius-md);
+  color: rgba(255, 248, 234, 0.9);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.18s ease;
+  min-height: 44px;
+}
+
+.shops-quick-action-btn:hover {
+  background: rgba(212, 160, 23, 0.15);
+  border-color: rgba(212, 160, 23, 0.5);
+  color: #ffd98c;
+  transform: translateY(-1px);
+}
+
+.shops-quick-action-btn:active {
+  transform: translateY(0);
+}
+
+.shops-quick-action-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.shops-quick-action-text {
+  white-space: nowrap;
+}
+
 /* ── Controls / Filter bar ───────────────────────────────────────────────── */
 .shops-controls {
   padding-top: 1rem;
