@@ -38,6 +38,7 @@ const TXT = {
     kicker: 'Shops by region',
     title: 'Explore Gold Shops & Known Gold Markets',
     lead: 'Browse directory listings across countries covered on GoldPrices. Use filters to narrow by region, country, city, and specialty. Shop information is for reference, and business details are shown where available.',
+    trustBanner: 'Directory updated regularly · Updated {date}',
     statListings: 'Listed shops',
     statCountries: 'Countries',
     statRegions: 'Regions',
@@ -80,6 +81,7 @@ const TXT = {
     shareShop: 'Share',
     directions: 'Directions',
     callShop: 'Call',
+    viewCountryPage: 'View country page',
     infoTitle: 'How to use this directory',
     info1Title: 'Compare by market area',
     info1Body: 'Start with a country or city filter, then compare listed markets and specialties side by side.',
@@ -92,6 +94,7 @@ const TXT = {
     kicker: 'محلات حسب المنطقة',
     title: 'استكشف محلات الذهب والأسواق المعروفة',
     lead: 'تصفح إدراجات الدليل ضمن الدول التي يغطيها GoldPrices. استخدم الفلاتر حسب المنطقة والدولة والمدينة والتخصص. معلومات المحلات مرجعية، وتظهر تفاصيل النشاط حيثما كانت متاحة.',
+    trustBanner: 'يتم تحديث الدليل بانتظام · تم التحديث {date}',
     statListings: 'المحلات المدرجة',
     statCountries: 'الدول',
     statRegions: 'المناطق',
@@ -134,6 +137,7 @@ const TXT = {
     shareShop: 'مشاركة',
     directions: 'الاتجاهات',
     callShop: 'اتصال',
+    viewCountryPage: 'عرض صفحة الدولة',
     infoTitle: 'كيفية استخدام هذا الدليل',
     info1Title: 'قارن حسب منطقة السوق',
     info1Body: 'ابدأ بفلتر الدولة أو المدينة، ثم قارن الأسواق المدرجة والتخصصات بسهولة.',
@@ -312,6 +316,17 @@ function applyStaticText() {
   document.getElementById('shops-kicker').textContent = t('kicker');
   document.getElementById('shops-title').textContent = t('title');
   document.getElementById('shops-lead').textContent = t('lead');
+  
+  // Trust banner with formatted date
+  const today = new Date();
+  const dateStr = STATE.lang === 'ar' 
+    ? today.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' })
+    : today.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  const trustEl = document.getElementById('shops-last-updated');
+  if (trustEl) {
+    trustEl.textContent = t('trustBanner').replace('{date}', dateStr);
+  }
+  
   document.getElementById('shops-popular-label').textContent = t('popularMarkets');
   document.getElementById('shops-search-label').textContent = t('searchLabel');
   document.getElementById('shops-search').placeholder = t('searchPlaceholder');
@@ -565,6 +580,10 @@ function renderCards(shops) {
           ${shop.phone ? `<a href="tel:${shop.phone.replace(/\s+/g, '')}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
             <span class="shop-action-icon">📞</span>
             <span class="shop-action-label">${t('callShop')}</span>
+          </a>` : ''}
+          ${country ? `<a href="countries/${country.code}.html" class="shop-action-btn shop-action-btn--country" aria-label="${t('viewCountryPage')}: ${countryName(country)}">
+            <span class="shop-action-icon">📄</span>
+            <span class="shop-action-label">${countryName(country)}</span>
           </a>` : ''}
         </div>
         
