@@ -274,7 +274,30 @@
   grid-column: span 2;
 }
 
-.shops-control input,
+.shops-control--checkbox {
+  justify-content: flex-end;
+}
+
+.shops-control--checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  min-height: 18px;
+  margin: 0;
+  accent-color: var(--color-gold, #d4a017);
+}
+
+.shops-control--checkbox input[type="checkbox"]:focus-visible {
+  outline: 2px solid rgba(212, 160, 23, 0.6);
+  outline-offset: 2px;
+}
+
+.shops-control-help {
+  font-size: 0.74rem;
+  color: var(--color-text-muted, #888);
+  line-height: 1.35;
+}
+
+.shops-control input:not([type="checkbox"]),
 .shops-control select {
   border: 1px solid var(--color-border, #2e2b24);
   border-radius: var(--radius-md);
@@ -304,14 +327,14 @@
   padding-left: 2.2rem;
 }
 
-.shops-control input:focus,
+.shops-control input:not([type="checkbox"]):focus,
 .shops-control select:focus {
   outline: none;
   border-color: var(--color-gold, #d4a017);
   box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.14);
 }
 
-.shops-control input::placeholder {
+.shops-control input:not([type="checkbox"])::placeholder {
   color: var(--color-text-faint, #555);
 }
 
@@ -463,6 +486,14 @@
 .shops-active-filters {
   color: var(--color-text-muted, #888);
   font-size: 0.82rem;
+}
+
+.shops-results-disclaimer {
+  margin: 0.1rem 0 0;
+  color: var(--color-text-muted, #8e897b);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  max-width: 680px;
 }
 
 #shops-count {
@@ -1132,6 +1163,30 @@
   border-top: 1px solid var(--color-border, #2e2b24);
   padding-top: 1.2rem;
   margin: 0;
+}
+
+.modal-foot {
+  margin-top: 1.2rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-close-cta {
+  border: 1px solid var(--color-border, #2e2b24);
+  background: var(--color-bg, #131210);
+  color: var(--color-text, #e8e0cc);
+  border-radius: var(--radius-md);
+  min-height: 40px;
+  padding: 0.45rem 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-close-cta:hover,
+.modal-close-cta:focus-visible {
+  border-color: var(--color-gold, #d4a017);
+  box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.14);
+  outline: none;
 }
 
 /* ── RTL overrides ───────────────────────────────────────────────────────── */
