@@ -388,6 +388,12 @@ function applyStaticText() {
   document.getElementById('shops-info-3-title').textContent = t('info3Title');
   document.getElementById('shops-info-3-body').textContent = t('info3Body');
   document.getElementById('shops-results-disclaimer').textContent = t('resultsDisclaimer');
+
+  const modalCloseBtn = document.querySelector('.shops-modal-close');
+  if (modalCloseBtn) {
+    modalCloseBtn.setAttribute('aria-label', t('closeDetails'));
+    modalCloseBtn.setAttribute('title', t('closeDetails'));
+  }
 }
 
 function shopsMatchingPrimaryFilters() {
@@ -1005,7 +1011,7 @@ function init() {
   if (_pShop) {
     const shop = SHOPS.find((s) => s.id === _pShop);
     if (shop) {
-      setTimeout(() => openModal(shop), 500);
+      openModal(shop);
     }
   }
   
