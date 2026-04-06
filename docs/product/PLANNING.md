@@ -1,7 +1,7 @@
 # Planning
 
 ## Current phase
-Example: Tracker and shops revamp
+Phase 6 — QA and rollout governance
 
 ## Current goals
 - Finish tracker interaction and state reliability

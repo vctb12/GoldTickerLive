@@ -95,6 +95,32 @@ button, select, input { font-family: var(--font-main); }
 button { cursor: pointer; }
 img, svg { display: block; }
 
+/* Keyboard accessibility baseline */
+:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -48px;
+  z-index: 10000;
+  background: #111;
+  color: #fff;
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-gold);
+  text-decoration: none;
+  font-weight: 700;
+  transition: top var(--transition);
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 0.75rem;
+}
+
 /* ═══════════════════════════════════════════════
    Shared Navigation (injected via components/nav.js)
    ═══════════════════════════════════════════════ */
