@@ -15,8 +15,11 @@ const STATE = {
   country: 'all',
   city: 'all',
   specialty: 'all',
+  verifiedOnly: false,
   shortlist: [], // IDs of saved shops for quick comparison
 };
+
+const SHOPS_LAST_REVIEWED_ISO = '2026-04-05';
 
 // Load shortlist from localStorage on module init
 (function loadShortlist() {
@@ -38,7 +41,8 @@ const TXT = {
     kicker: 'Shops by region',
     title: 'Explore Gold Shops & Known Gold Markets',
     lead: 'Browse directory listings across countries covered on GoldPrices. Use filters to narrow by region, country, city, and specialty. Shop information is for reference, and business details are shown where available.',
-    trustBanner: 'Directory updated regularly · Updated {date}',
+    trustLabel: 'Directory reference listings',
+    trustDate: 'Last content review {date}',
     statListings: 'Listed markets',
     statCountries: 'Countries',
     statRegions: 'Regions',
@@ -49,14 +53,17 @@ const TXT = {
     country: 'Country',
     city: 'City',
     specialtyFilter: 'Specialty',
-    listed: 'Listed Markets',
+    listed: 'Listings (shops + market areas)',
     allRegions: 'All regions',
     allCountries: 'All countries',
     allCities: 'All cities',
     allSpecialties: 'All specialties',
+    verifiedOnly: 'Verified details only',
+    verifiedHelp: 'Show listings with phone or website details only',
     count: (n) => `${n} listing${n === 1 ? '' : 's'}`,
     activeFilters: (value) => `Filters: ${value}`,
     noFilters: 'Showing all listings',
+    verifiedFilterLabel: 'verified details only',
     emptyTitle: 'No listings match your filters',
     emptyText: 'Try clearing one filter or searching with a broader term.',
     clearFilters: 'Clear filters',
@@ -74,6 +81,8 @@ const TXT = {
     visitWebsite: 'Visit website',
     featured: 'Featured market',
     marketCluster: 'Market area cluster',
+    marketAreaListing: 'Market-area listing',
+    storeProfile: 'Store profile',
     saveToShortlist: 'Save to shortlist',
     removeFromShortlist: 'Remove from shortlist',
     saved: 'Saved',
@@ -81,6 +90,7 @@ const TXT = {
     shareShop: 'Share',
     directions: 'Directions',
     callShop: 'Call',
+    closeDetails: 'Close details',
     viewCountryPage: 'View country page',
     infoTitle: 'How to use this directory',
     info1Title: 'Compare by market area',
@@ -89,6 +99,9 @@ const TXT = {
     info2Body: 'Cards indicate whether business details are limited or partially available so you know what to expect.',
     info3Title: 'Use as a shortlist',
     info3Body: 'This page is for reference and discovery. Always confirm current prices, charges, and product details directly with shops.',
+    resultsDisclaimer: 'Listings may represent market areas or dealer clusters unless direct contact details are shown.',
+    nextStepTitle: 'Before you buy',
+    nextStepBody: 'Confirm final retail price, making charges, and taxes directly with the seller.',
     quickActionsCalc: 'Calculate Value',
     quickActionsRates: 'Live Rates',
     quickActionsUAE: 'UAE Market',
@@ -97,7 +110,8 @@ const TXT = {
     kicker: 'محلات حسب المنطقة',
     title: 'استكشف محلات الذهب والأسواق المعروفة',
     lead: 'تصفح إدراجات الدليل ضمن الدول التي يغطيها GoldPrices. استخدم الفلاتر حسب المنطقة والدولة والمدينة والتخصص. معلومات المحلات مرجعية، وتظهر تفاصيل النشاط حيثما كانت متاحة.',
-    trustBanner: 'يتم تحديث الدليل بانتظام · تم التحديث {date}',
+    trustLabel: 'إدراجات مرجعية للدليل',
+    trustDate: 'آخر مراجعة للمحتوى {date}',
     statListings: 'الأسواق المدرجة',
     statCountries: 'الدول',
     statRegions: 'المناطق',
@@ -108,14 +122,17 @@ const TXT = {
     country: 'الدولة',
     city: 'المدينة',
     specialtyFilter: 'التخصص',
-    listed: 'الأسواق المدرجة',
+    listed: 'الإدراجات (محلات + مناطق سوق)',
     allRegions: 'كل المناطق',
     allCountries: 'كل الدول',
     allCities: 'كل المدن',
     allSpecialties: 'كل التخصصات',
+    verifiedOnly: 'تفاصيل موثقة فقط',
+    verifiedHelp: 'اعرض الإدراجات التي تتضمن هاتفاً أو موقعاً فقط',
     count: (n) => `${n} نتيجة`,
     activeFilters: (value) => `الفلاتر: ${value}`,
     noFilters: 'عرض جميع الإدراجات',
+    verifiedFilterLabel: 'تفاصيل موثقة فقط',
     emptyTitle: 'لا توجد إدراجات مطابقة',
     emptyText: 'جرّب إلغاء أحد الفلاتر أو استخدام كلمات أوسع في البحث.',
     clearFilters: 'مسح الفلاتر',
@@ -133,6 +150,8 @@ const TXT = {
     visitWebsite: 'زيارة الموقع',
     featured: 'سوق مميز',
     marketCluster: 'مجموعة متاجر بسوق',
+    marketAreaListing: 'إدراج منطقة سوق',
+    storeProfile: 'ملف متجر',
     saveToShortlist: 'حفظ في القائمة',
     removeFromShortlist: 'إزالة من القائمة',
     saved: 'محفوظ',
@@ -140,6 +159,7 @@ const TXT = {
     shareShop: 'مشاركة',
     directions: 'الاتجاهات',
     callShop: 'اتصال',
+    closeDetails: 'إغلاق التفاصيل',
     viewCountryPage: 'عرض صفحة الدولة',
     infoTitle: 'كيفية استخدام هذا الدليل',
     info1Title: 'قارن حسب منطقة السوق',
@@ -148,6 +168,9 @@ const TXT = {
     info2Body: 'توضح البطاقات مستوى توفر تفاصيل النشاط حتى تعرف المعلومات المتاحة قبل التواصل.',
     info3Title: 'استخدمه كقائمة مختصرة',
     info3Body: 'هذه الصفحة للاكتشاف والمرجعية. احرص على تأكيد الأسعار والرسوم والتفاصيل مباشرة مع المحلات.',
+    resultsDisclaimer: 'قد تمثل بعض الإدراجات مناطق سوق أو تجمعات تجار ما لم تُعرض بيانات اتصال مباشرة.',
+    nextStepTitle: 'قبل الشراء',
+    nextStepBody: 'أكد السعر النهائي للتجزئة ورسوم المصنعية والضرائب مباشرة مع البائع.',
     quickActionsCalc: 'احسب القيمة',
     quickActionsRates: 'الأسعار المباشرة',
     quickActionsUAE: 'سوق الإمارات',
@@ -183,6 +206,10 @@ function isMarketCluster(shop) {
          (shop.notes?.toLowerCase().includes('cluster') ||
           shop.notes?.toLowerCase().includes('concentration') ||
           shop.notes?.toLowerCase().includes('area'));
+}
+
+function listingTypeLabel(shop) {
+  return isMarketCluster(shop) ? t('marketAreaListing') : t('storeProfile');
 }
 
 function toggleShortlist(shopId) {
@@ -254,12 +281,14 @@ function openModal(shop) {
 
   const clusterBadge = isMarketCluster(shop) ?
     `<span class="modal-cluster-badge">${t('marketCluster')}</span>` : '';
+  const listingTypeBadge = `<span class="modal-listing-type ${isMarketCluster(shop) ? 'modal-listing-type--market' : 'modal-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
 
   document.getElementById('shops-modal-body').innerHTML = `
     <div class="modal-head">
       <h2 id="shops-modal-title">${shop.name}</h2>
       <div class="modal-badges">
         ${clusterBadge}
+        ${listingTypeBadge}
         <span class="modal-details-badge modal-details-${shop.detailsAvailability}">${t('detailsSignal')}: ${detailsAvailabilityLabel(shop.detailsAvailability)}</span>
         ${shop.featured ? `<span class="modal-featured-badge">★ ${t('featured')}</span>` : ''}
       </div>
@@ -290,8 +319,15 @@ function openModal(shop) {
     <div class="modal-notes">
       <p>${shop.notes}</p>
     </div>
+    <div class="modal-next-step" role="note" aria-label="${t('nextStepTitle')}">
+      <strong>${t('nextStepTitle')}</strong>
+      <p>${t('nextStepBody')}</p>
+    </div>
 
     ${contactHTML}
+    <div class="modal-foot">
+      <button class="modal-close-cta" type="button">${t('closeDetails')}</button>
+    </div>
   `;
 
   // Bind action button handlers
@@ -309,10 +345,21 @@ function openModal(shop) {
   }
 
   modal.hidden = false;
+  document.body.style.overflow = 'hidden';
 }
 
-function closeModal() {
-  document.getElementById('shops-modal').hidden = true;
+function closeModal({ clearShopParam = true } = {}) {
+  const modal = document.getElementById('shops-modal');
+  if (!modal) return;
+  modal.hidden = true;
+  document.body.style.overflow = '';
+
+  if (!clearShopParam) return;
+  const params = new URLSearchParams(location.search);
+  if (!params.has('shop')) return;
+  params.delete('shop');
+  const qs = params.toString();
+  history.replaceState(null, '', qs ? `${location.pathname}?${qs}` : location.pathname);
 }
 
 function applyStaticText() {
@@ -324,13 +371,15 @@ function applyStaticText() {
   document.getElementById('shops-lead').textContent = t('lead');
   
   // Trust banner with formatted date
-  const today = new Date();
-  const dateStr = STATE.lang === 'ar' 
-    ? today.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' })
-    : today.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  const reviewedDate = new Date(`${SHOPS_LAST_REVIEWED_ISO}T00:00:00Z`);
+  const dateStr = STATE.lang === 'ar'
+    ? reviewedDate.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' })
+    : reviewedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   const trustEl = document.getElementById('shops-last-updated');
+  const trustLabelEl = document.getElementById('shops-trust-label');
+  if (trustLabelEl) trustLabelEl.textContent = t('trustLabel');
   if (trustEl) {
-    trustEl.textContent = t('trustBanner').replace('{date}', dateStr);
+    trustEl.textContent = t('trustDate').replace('{date}', dateStr);
   }
   
   document.getElementById('shops-popular-label').textContent = t('popularMarkets');
@@ -340,6 +389,8 @@ function applyStaticText() {
   document.getElementById('shops-country-label').textContent = t('country');
   document.getElementById('shops-city-label').textContent = t('city');
   document.getElementById('shops-specialty-label').textContent = t('specialtyFilter');
+  document.getElementById('shops-verified-label').textContent = t('verifiedOnly');
+  document.getElementById('shops-verified-help').textContent = t('verifiedHelp');
   document.getElementById('shops-results-title').textContent = t('listed');
   document.getElementById('shops-empty-title').textContent = t('emptyTitle');
   document.getElementById('shops-empty-text').textContent = t('emptyText');
@@ -354,6 +405,13 @@ function applyStaticText() {
   document.getElementById('shops-info-2-body').textContent = t('info2Body');
   document.getElementById('shops-info-3-title').textContent = t('info3Title');
   document.getElementById('shops-info-3-body').textContent = t('info3Body');
+  document.getElementById('shops-results-disclaimer').textContent = t('resultsDisclaimer');
+
+  const modalCloseBtn = document.querySelector('.shops-modal-close');
+  if (modalCloseBtn) {
+    modalCloseBtn.setAttribute('aria-label', t('closeDetails'));
+    modalCloseBtn.setAttribute('title', t('closeDetails'));
+  }
 }
 
 function shopsMatchingPrimaryFilters() {
@@ -473,6 +531,7 @@ function filterShops() {
     if (STATE.country !== 'all' && shop.countryCode !== STATE.country) return false;
     if (STATE.city !== 'all' && shop.city !== STATE.city) return false;
     if (STATE.specialty !== 'all' && !(shop.specialties || []).includes(STATE.specialty)) return false;
+    if (STATE.verifiedOnly && !(shop.phone || shop.website)) return false;
 
     if (!q) return true;
 
@@ -513,6 +572,7 @@ function activeFilterSummary() {
   }
   if (STATE.city !== 'all') labels.push(STATE.city);
   if (STATE.specialty !== 'all') labels.push(STATE.specialty);
+  if (STATE.verifiedOnly) labels.push(t('verifiedFilterLabel'));
   if (STATE.search.trim()) labels.push(`"${STATE.search.trim()}"`);
 
   document.getElementById('shops-active-filters').textContent =
@@ -539,6 +599,7 @@ function renderCards(shops) {
     const specialties = (shop.specialties || []).map((item) => `<span class="shop-tag">${item}</span>`).join('');
     const isCluster = isMarketCluster(shop);
     const clusterBadge = isCluster ? `<span class="shop-cluster-badge">${t('marketCluster')}</span>` : '';
+    const listingTypeBadge = `<span class="shop-listing-type ${isCluster ? 'shop-listing-type--market' : 'shop-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
     const inShortlist = isInShortlist(shop.id);
 
     const contactParts = [];
@@ -554,6 +615,7 @@ function renderCards(shops) {
             <h3>${shop.name}</h3>
             <div class="shop-card-badges">
               ${clusterBadge}
+              ${listingTypeBadge}
               ${shop.featured ? `<span class="shop-featured">${t('featured')}</span>` : ''}
             </div>
           </div>
@@ -706,6 +768,7 @@ function renderFilterPills() {
   }
   if (STATE.city !== 'all') pills.push({ type: 'city', value: STATE.city, label: STATE.city });
   if (STATE.specialty !== 'all') pills.push({ type: 'specialty', value: STATE.specialty, label: STATE.specialty });
+  if (STATE.verifiedOnly) pills.push({ type: 'verified', value: '1', label: t('verifiedFilterLabel') });
   if (STATE.search.trim()) {
     const q = STATE.search.trim();
     pills.push({ type: 'search', value: '', label: `"${esc(q)}"`, ariaLabel: `Remove "${q}" search filter` });
@@ -733,6 +796,11 @@ function renderFilterPills() {
       if (type === 'country') STATE.country = 'all';
       if (type === 'city') STATE.city = 'all';
       if (type === 'specialty') STATE.specialty = 'all';
+      if (type === 'verified') {
+        STATE.verifiedOnly = false;
+        const verifiedBox = document.getElementById('shops-verified-only');
+        if (verifiedBox) verifiedBox.checked = false;
+      }
       if (type === 'search') {
         STATE.search = '';
         document.getElementById('shops-search').value = '';
@@ -750,6 +818,8 @@ function syncUrlToState() {
   if (STATE.country !== 'all') p.set('country', STATE.country); else p.delete('country');
   if (STATE.city !== 'all') p.set('city', STATE.city); else p.delete('city');
   if (STATE.specialty !== 'all') p.set('specialty', STATE.specialty); else p.delete('specialty');
+  if (STATE.verifiedOnly) p.set('verified', '1'); else p.delete('verified');
+  if (STATE.lang === 'ar') p.set('lang', 'ar'); else p.delete('lang');
 
   const q = STATE.search.trim();
   if (q) { p.set('search', q); p.delete('q'); }
@@ -800,7 +870,10 @@ function resetFilters() {
   STATE.country = 'all';
   STATE.city = 'all';
   STATE.specialty = 'all';
+  STATE.verifiedOnly = false;
   document.getElementById('shops-search').value = '';
+  const verifiedBox = document.getElementById('shops-verified-only');
+  if (verifiedBox) verifiedBox.checked = false;
   buildFilters();
   render();
 }
@@ -840,20 +913,25 @@ function bindEvents() {
     render();
   });
 
+  document.getElementById('shops-verified-only').addEventListener('change', (event) => {
+    STATE.verifiedOnly = event.target.checked;
+    render();
+  });
+
   document.getElementById('shops-clear-filters').addEventListener('click', resetFilters);
 
   // Modal events
   const modal = document.getElementById('shops-modal');
-  const modalClose = document.getElementById('shops-modal-close') || modal.querySelector('.shops-modal-close');
-  const modalOverlay = modal.querySelector('.shops-modal-overlay');
-
-  if (modalClose) {
-    modalClose.addEventListener('click', closeModal);
-  }
-
-  if (modalOverlay) {
-    modalOverlay.addEventListener('click', closeModal);
-  }
+  if (!modal) return;
+  modal.addEventListener('click', (e) => {
+    if (
+      e.target.closest('.modal-close-cta') ||
+      e.target.closest('.shops-modal-close') ||
+      e.target.classList.contains('shops-modal-overlay')
+    ) {
+      closeModal();
+    }
+  });
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !modal.hidden) closeModal();
@@ -896,12 +974,16 @@ function init() {
   const _pCity    =  _p.get('city')      || '';
   const _pSpec    =  _p.get('specialty') || '';
   const _pSearch  =  _p.get('search')    || _p.get('q') || '';
+  const _pVerified = (_p.get('verified') || '') === '1';
+  const _pLang = (_p.get('lang') || '').toLowerCase();
 
   if (_pRegion && Object.prototype.hasOwnProperty.call(REGIONS, _pRegion)) STATE.region = _pRegion;
   if (_pCountry)  STATE.country   = _pCountry;   // buildFilters() resets to 'all' if invalid
   if (_pCity)     STATE.city      = _pCity;
   if (_pSpec)     STATE.specialty = _pSpec;
   if (_pSearch)   STATE.search    = _pSearch;
+  if (_pVerified) STATE.verifiedOnly = true;
+  if (_pLang === 'ar' || _pLang === 'en') STATE.lang = _pLang;
 
   const navResult = injectNav(STATE.lang, 0);
   injectBreadcrumbs('shops');
@@ -941,16 +1023,13 @@ function init() {
     const el = document.getElementById('shops-search');
     if (el) el.value = STATE.search;
   }
+  const verifiedBox = document.getElementById('shops-verified-only');
+  if (verifiedBox) verifiedBox.checked = STATE.verifiedOnly;
   
-  // Handle direct shop link from URL (?shop=ID)
-  const _pShop = new URLSearchParams(location.search).get('shop');
-  if (_pShop) {
-    const shop = SHOPS.find((s) => s.id === _pShop);
-    if (shop) {
-      setTimeout(() => openModal(shop), 500);
-    }
-  }
-  
+  // Prevent modal auto-open on page load even if ?shop is present.
+  // Keep initial load stable and non-intrusive.
+  closeModal();
+
   updateLanguage();
 
   // Mobile filter toggle

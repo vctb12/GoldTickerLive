@@ -1796,3 +1796,35 @@ body.tracker-pro-page {
   color: var(--color-text);
   border-color: var(--color-text);
 }
+
+/* ── Hero onboarding quickstart ─────────────────────── */
+.tracker-onboarding-card {
+  margin-top: 0.85rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--color-gold) 32%, var(--color-border));
+  background: color-mix(in srgb, var(--color-gold) 7%, var(--color-surface));
+  border-radius: var(--radius-md);
+}
+
+.tracker-onboarding-card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 0.92rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.tracker-onboarding-steps {
+  margin: 0;
+  padding-inline-start: 1.1rem;
+  display: grid;
+  gap: 0.35rem;
+  color: var(--color-text);
+  font-size: 0.9rem;
+}
+
+.tracker-onboarding-note {
+  margin: 0.55rem 0 0;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}

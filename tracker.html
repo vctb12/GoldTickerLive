@@ -49,6 +49,7 @@
 </head>
 
 <body class="tracker-page tracker-pro-page">
+  <a class="skip-link" href="#tracker-app">Skip to main content</a>
   <!-- Shared nav/footer/ticker are injected by tracker-pro.js using components/nav.js, components/footer.js, components/ticker.js -->
 
   <main id="tracker-app" class="tracker-app">
@@ -99,6 +100,16 @@
             <button class="btn btn-outline" id="tp-share-btn" type="button">Copy quick brief</button>
             <button class="btn btn-ghost" id="tp-reset-btn" type="button">Reset view</button>
             <a class="btn btn-ghost" href="#mode-live" id="tp-jump-chart">Jump to chart</a>
+          </div>
+
+          <div class="tracker-onboarding-card" aria-label="How to use tracker quickly">
+            <h2>Start in 30 seconds</h2>
+            <ol class="tracker-onboarding-steps">
+              <li>Check the source state first: <span class="tracker-source-badge tracker-source-badge--live">Live</span> or <span class="tracker-source-badge tracker-source-badge--cached">Cached/Fallback</span>.</li>
+              <li>Pick your market, currency, karat, and unit from the controls below.</li>
+              <li>Use Compare + Planner for decisions, then export with timestamps for records.</li>
+            </ol>
+            <p class="tracker-onboarding-note">All figures here are spot-linked reference estimates, not final retail jewelry quotes.</p>
           </div>
 
           <div class="tracker-hero-grid" id="tp-hero-stats" aria-label="Key live metrics"></div>

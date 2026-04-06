@@ -200,8 +200,8 @@ function startAutoRefresh() {
     if (el.refreshBadge) {
       const now = new Date().toLocaleTimeString();
       el.refreshBadge.textContent = state.hasLiveFailure
-        ? `Last update ${now} (fallback)`
-        : `Live · synced ${now}`;
+        ? `Cached/fallback · last update ${now}`
+        : `Live source · synced ${now}`;
     }
   }, CONSTANTS.GOLD_REFRESH_MS);
 }
