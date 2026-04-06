@@ -1006,15 +1006,10 @@ function init() {
   const verifiedBox = document.getElementById('shops-verified-only');
   if (verifiedBox) verifiedBox.checked = STATE.verifiedOnly;
   
-  // Handle direct shop link from URL (?shop=ID)
-  const _pShop = new URLSearchParams(location.search).get('shop');
-  if (_pShop) {
-    const shop = SHOPS.find((s) => s.id === _pShop);
-    if (shop) {
-      openModal(shop);
-    }
-  }
-  
+  // Prevent modal auto-open on page load even if ?shop is present.
+  // Keep initial load stable and non-intrusive.
+  closeModal();
+
   updateLanguage();
 
   // Mobile filter toggle
