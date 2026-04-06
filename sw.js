@@ -3,7 +3,7 @@
  * Strategy: cache-first for static assets, network-first for API calls.
  */
 
-const CACHE_NAME = 'goldprices-v2';
+const CACHE_NAME = 'goldprices-v4';
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 1 day
 
 // Static assets to pre-cache on install
@@ -89,6 +89,12 @@ self.addEventListener('fetch', event => {
     return;
   }
 
+  // For non-cacheable requests, use plain network fetch.
+  if (!shouldCacheRequest(request, url)) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
   // Cache-first for static assets (JS, CSS, images, fonts)
   event.respondWith(cacheFirstWithUpdate(request));
 });
@@ -107,7 +113,13 @@ async function networkFirstWithFallback(request) {
     return response;
   } catch {
     const cached = await caches.match(request);
-    return cached ?? new Response('Offline — cached version unavailable.', {
+    if (cached) return cached;
+
+    // Resilient offline fallback for navigation
+    const shell = await caches.match('/Gold-Prices/');
+    if (shell) return shell;
+
+    return new Response('Offline — cached version unavailable.', {
       status: 503,
       headers: { 'Content-Type': 'text/plain' },
     });
@@ -140,4 +152,21 @@ function fetchAndCache(request) {
       caches.open(CACHE_NAME).then(cache => cache.put(request, response));
     }
   }).catch(() => {});
+}
+
+function shouldCacheRequest(request, url) {
+  // Only cache same-origin static assets to avoid opaque/cache-bloat issues.
+  if (url.origin !== self.location.origin) return false;
+
+  // Query-param requests can explode cache cardinality; skip.
+  if (url.search) return false;
+
+  const cacheableDestinations = new Set([
+    'style',
+    'script',
+    'image',
+    'font',
+    'manifest',
+  ]);
+  return cacheableDestinations.has(request.destination);
 }
