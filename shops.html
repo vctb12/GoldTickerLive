@@ -40,7 +40,7 @@
 
         <div class="shops-trust-banner" aria-label="Data freshness">
           <span class="shops-trust-icon" aria-hidden="true">◈</span>
-          <span class="shops-trust-text">Directory updated regularly · <span id="shops-last-updated">Loading...</span></span>
+          <span class="shops-trust-text"><span id="shops-trust-label">Reference listings</span> · <span id="shops-last-updated">Loading...</span></span>
         </div>
 
         <div class="shops-hero-stats" aria-label="Directory overview">
@@ -121,6 +121,11 @@
           <span id="shops-specialty-label">Specialty</span>
           <select id="shops-specialty-filter"></select>
         </label>
+        <label class="shops-control shops-control--wide shops-control--checkbox" for="shops-verified-only">
+          <span id="shops-verified-label">Verified details</span>
+          <input id="shops-verified-only" type="checkbox" />
+          <span id="shops-verified-help" class="shops-control-help">Show listings with phone or website details only</span>
+        </label>
         </div><!-- /.shops-filter-panel -->
       </div>
     </section>
@@ -151,9 +156,10 @@
       <div class="shops-results-inner">
         <div class="shops-results-head">
           <div class="shops-results-head-left">
-            <h2 id="shops-results-title">Listed Shops</h2>
+            <h2 id="shops-results-title">Listings</h2>
             <div id="shops-filter-pills" class="shops-filter-pills"></div>
             <p id="shops-active-filters" class="shops-active-filters"></p>
+            <p id="shops-results-disclaimer" class="shops-results-disclaimer">Listings may represent market areas or dealer clusters unless direct contact details are shown.</p>
           </div>
           <p id="shops-count" aria-live="polite"></p>
         </div>
