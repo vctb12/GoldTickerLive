@@ -488,6 +488,14 @@
   font-size: 0.82rem;
 }
 
+.shops-results-disclaimer {
+  margin: 0.1rem 0 0;
+  color: var(--color-text-muted, #8e897b);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  max-width: 680px;
+}
+
 #shops-count {
   color: var(--color-gold-dark, #b8860b);
   font-weight: 700;

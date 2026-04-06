@@ -41,7 +41,8 @@ const TXT = {
     kicker: 'Shops by region',
     title: 'Explore Gold Shops & Known Gold Markets',
     lead: 'Browse directory listings across countries covered on GoldPrices. Use filters to narrow by region, country, city, and specialty. Shop information is for reference, and business details are shown where available.',
-    trustBanner: 'Directory reference listings · Last content review {date}',
+    trustLabel: 'Directory reference listings',
+    trustDate: 'Last content review {date}',
     statListings: 'Listed markets',
     statCountries: 'Countries',
     statRegions: 'Regions',
@@ -95,6 +96,7 @@ const TXT = {
     info2Body: 'Cards indicate whether business details are limited or partially available so you know what to expect.',
     info3Title: 'Use as a shortlist',
     info3Body: 'This page is for reference and discovery. Always confirm current prices, charges, and product details directly with shops.',
+    resultsDisclaimer: 'Listings may represent market areas or dealer clusters unless direct contact details are shown.',
     quickActionsCalc: 'Calculate Value',
     quickActionsRates: 'Live Rates',
     quickActionsUAE: 'UAE Market',
@@ -103,7 +105,8 @@ const TXT = {
     kicker: 'محلات حسب المنطقة',
     title: 'استكشف محلات الذهب والأسواق المعروفة',
     lead: 'تصفح إدراجات الدليل ضمن الدول التي يغطيها GoldPrices. استخدم الفلاتر حسب المنطقة والدولة والمدينة والتخصص. معلومات المحلات مرجعية، وتظهر تفاصيل النشاط حيثما كانت متاحة.',
-    trustBanner: 'إدراجات مرجعية للدليل · آخر مراجعة للمحتوى {date}',
+    trustLabel: 'إدراجات مرجعية للدليل',
+    trustDate: 'آخر مراجعة للمحتوى {date}',
     statListings: 'الأسواق المدرجة',
     statCountries: 'الدول',
     statRegions: 'المناطق',
@@ -157,6 +160,7 @@ const TXT = {
     info2Body: 'توضح البطاقات مستوى توفر تفاصيل النشاط حتى تعرف المعلومات المتاحة قبل التواصل.',
     info3Title: 'استخدمه كقائمة مختصرة',
     info3Body: 'هذه الصفحة للاكتشاف والمرجعية. احرص على تأكيد الأسعار والرسوم والتفاصيل مباشرة مع المحلات.',
+    resultsDisclaimer: 'قد تمثل بعض الإدراجات مناطق سوق أو تجمعات تجار ما لم تُعرض بيانات اتصال مباشرة.',
     quickActionsCalc: 'احسب القيمة',
     quickActionsRates: 'الأسعار المباشرة',
     quickActionsUAE: 'سوق الإمارات',
@@ -338,8 +342,10 @@ function applyStaticText() {
     ? reviewedDate.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' })
     : reviewedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   const trustEl = document.getElementById('shops-last-updated');
+  const trustLabelEl = document.getElementById('shops-trust-label');
+  if (trustLabelEl) trustLabelEl.textContent = t('trustLabel');
   if (trustEl) {
-    trustEl.textContent = t('trustBanner').replace('{date}', dateStr);
+    trustEl.textContent = t('trustDate').replace('{date}', dateStr);
   }
   
   document.getElementById('shops-popular-label').textContent = t('popularMarkets');
@@ -365,6 +371,7 @@ function applyStaticText() {
   document.getElementById('shops-info-2-body').textContent = t('info2Body');
   document.getElementById('shops-info-3-title').textContent = t('info3Title');
   document.getElementById('shops-info-3-body').textContent = t('info3Body');
+  document.getElementById('shops-results-disclaimer').textContent = t('resultsDisclaimer');
 }
 
 function shopsMatchingPrimaryFilters() {
@@ -770,6 +777,7 @@ function syncUrlToState() {
   if (STATE.city !== 'all') p.set('city', STATE.city); else p.delete('city');
   if (STATE.specialty !== 'all') p.set('specialty', STATE.specialty); else p.delete('specialty');
   if (STATE.verifiedOnly) p.set('verified', '1'); else p.delete('verified');
+  if (STATE.lang === 'ar') p.set('lang', 'ar'); else p.delete('lang');
 
   const q = STATE.search.trim();
   if (q) { p.set('search', q); p.delete('q'); }
@@ -925,6 +933,7 @@ function init() {
   const _pSpec    =  _p.get('specialty') || '';
   const _pSearch  =  _p.get('search')    || _p.get('q') || '';
   const _pVerified = (_p.get('verified') || '') === '1';
+  const _pLang = (_p.get('lang') || '').toLowerCase();
 
   if (_pRegion && Object.prototype.hasOwnProperty.call(REGIONS, _pRegion)) STATE.region = _pRegion;
   if (_pCountry)  STATE.country   = _pCountry;   // buildFilters() resets to 'all' if invalid
@@ -932,6 +941,7 @@ function init() {
   if (_pSpec)     STATE.specialty = _pSpec;
   if (_pSearch)   STATE.search    = _pSearch;
   if (_pVerified) STATE.verifiedOnly = true;
+  if (_pLang === 'ar' || _pLang === 'en') STATE.lang = _pLang;
 
   const navResult = injectNav(STATE.lang, 0);
   injectBreadcrumbs('shops');
