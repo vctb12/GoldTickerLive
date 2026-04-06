@@ -322,10 +322,21 @@ function openModal(shop) {
   }
 
   modal.hidden = false;
+  document.body.style.overflow = 'hidden';
 }
 
-function closeModal() {
-  document.getElementById('shops-modal').hidden = true;
+function closeModal({ clearShopParam = true } = {}) {
+  const modal = document.getElementById('shops-modal');
+  if (!modal) return;
+  modal.hidden = true;
+  document.body.style.overflow = '';
+
+  if (!clearShopParam) return;
+  const params = new URLSearchParams(location.search);
+  if (!params.has('shop')) return;
+  params.delete('shop');
+  const qs = params.toString();
+  history.replaceState(null, '', qs ? `${location.pathname}?${qs}` : location.pathname);
 }
 
 function applyStaticText() {
@@ -880,16 +891,12 @@ function bindEvents() {
 
   // Modal events
   const modal = document.getElementById('shops-modal');
-  const modalClose = document.getElementById('shops-modal-close') || modal.querySelector('.shops-modal-close');
-  const modalOverlay = modal.querySelector('.shops-modal-overlay');
-
-  if (modalClose) {
-    modalClose.addEventListener('click', closeModal);
-  }
-
-  if (modalOverlay) {
-    modalOverlay.addEventListener('click', closeModal);
-  }
+  if (!modal) return;
+  modal.addEventListener('click', (e) => {
+    if (e.target.closest('.shops-modal-close') || e.target.classList.contains('shops-modal-overlay')) {
+      closeModal();
+    }
+  });
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !modal.hidden) closeModal();
