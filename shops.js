@@ -81,6 +81,8 @@ const TXT = {
     visitWebsite: 'Visit website',
     featured: 'Featured market',
     marketCluster: 'Market area cluster',
+    marketAreaListing: 'Market-area listing',
+    storeProfile: 'Store profile',
     saveToShortlist: 'Save to shortlist',
     removeFromShortlist: 'Remove from shortlist',
     saved: 'Saved',
@@ -98,6 +100,8 @@ const TXT = {
     info3Title: 'Use as a shortlist',
     info3Body: 'This page is for reference and discovery. Always confirm current prices, charges, and product details directly with shops.',
     resultsDisclaimer: 'Listings may represent market areas or dealer clusters unless direct contact details are shown.',
+    nextStepTitle: 'Before you buy',
+    nextStepBody: 'Confirm final retail price, making charges, and taxes directly with the seller.',
     quickActionsCalc: 'Calculate Value',
     quickActionsRates: 'Live Rates',
     quickActionsUAE: 'UAE Market',
@@ -146,6 +150,8 @@ const TXT = {
     visitWebsite: 'زيارة الموقع',
     featured: 'سوق مميز',
     marketCluster: 'مجموعة متاجر بسوق',
+    marketAreaListing: 'إدراج منطقة سوق',
+    storeProfile: 'ملف متجر',
     saveToShortlist: 'حفظ في القائمة',
     removeFromShortlist: 'إزالة من القائمة',
     saved: 'محفوظ',
@@ -163,6 +169,8 @@ const TXT = {
     info3Title: 'استخدمه كقائمة مختصرة',
     info3Body: 'هذه الصفحة للاكتشاف والمرجعية. احرص على تأكيد الأسعار والرسوم والتفاصيل مباشرة مع المحلات.',
     resultsDisclaimer: 'قد تمثل بعض الإدراجات مناطق سوق أو تجمعات تجار ما لم تُعرض بيانات اتصال مباشرة.',
+    nextStepTitle: 'قبل الشراء',
+    nextStepBody: 'أكد السعر النهائي للتجزئة ورسوم المصنعية والضرائب مباشرة مع البائع.',
     quickActionsCalc: 'احسب القيمة',
     quickActionsRates: 'الأسعار المباشرة',
     quickActionsUAE: 'سوق الإمارات',
@@ -198,6 +206,10 @@ function isMarketCluster(shop) {
          (shop.notes?.toLowerCase().includes('cluster') ||
           shop.notes?.toLowerCase().includes('concentration') ||
           shop.notes?.toLowerCase().includes('area'));
+}
+
+function listingTypeLabel(shop) {
+  return isMarketCluster(shop) ? t('marketAreaListing') : t('storeProfile');
 }
 
 function toggleShortlist(shopId) {
@@ -269,12 +281,14 @@ function openModal(shop) {
 
   const clusterBadge = isMarketCluster(shop) ?
     `<span class="modal-cluster-badge">${t('marketCluster')}</span>` : '';
+  const listingTypeBadge = `<span class="modal-listing-type ${isMarketCluster(shop) ? 'modal-listing-type--market' : 'modal-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
 
   document.getElementById('shops-modal-body').innerHTML = `
     <div class="modal-head">
       <h2 id="shops-modal-title">${shop.name}</h2>
       <div class="modal-badges">
         ${clusterBadge}
+        ${listingTypeBadge}
         <span class="modal-details-badge modal-details-${shop.detailsAvailability}">${t('detailsSignal')}: ${detailsAvailabilityLabel(shop.detailsAvailability)}</span>
         ${shop.featured ? `<span class="modal-featured-badge">★ ${t('featured')}</span>` : ''}
       </div>
@@ -304,6 +318,10 @@ function openModal(shop) {
 
     <div class="modal-notes">
       <p>${shop.notes}</p>
+    </div>
+    <div class="modal-next-step" role="note" aria-label="${t('nextStepTitle')}">
+      <strong>${t('nextStepTitle')}</strong>
+      <p>${t('nextStepBody')}</p>
     </div>
 
     ${contactHTML}
@@ -581,6 +599,7 @@ function renderCards(shops) {
     const specialties = (shop.specialties || []).map((item) => `<span class="shop-tag">${item}</span>`).join('');
     const isCluster = isMarketCluster(shop);
     const clusterBadge = isCluster ? `<span class="shop-cluster-badge">${t('marketCluster')}</span>` : '';
+    const listingTypeBadge = `<span class="shop-listing-type ${isCluster ? 'shop-listing-type--market' : 'shop-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
     const inShortlist = isInShortlist(shop.id);
 
     const contactParts = [];
@@ -596,6 +615,7 @@ function renderCards(shops) {
             <h3>${shop.name}</h3>
             <div class="shop-card-badges">
               ${clusterBadge}
+              ${listingTypeBadge}
               ${shop.featured ? `<span class="shop-featured">${t('featured')}</span>` : ''}
             </div>
           </div>

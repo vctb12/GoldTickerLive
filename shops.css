@@ -597,6 +597,28 @@
   text-transform: uppercase;
 }
 
+.shop-listing-type {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.63rem;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  padding: 0.15rem 0.45rem;
+  letter-spacing: 0.03em;
+}
+
+.shop-listing-type--market {
+  color: rgba(255, 248, 234, 0.86);
+  background: rgba(180, 100, 0, 0.2);
+  border: 1px solid rgba(180, 100, 0, 0.28);
+}
+
+.shop-listing-type--store {
+  color: rgba(76, 175, 80, 0.86);
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
 .shop-featured {
   display: inline-flex;
   align-items: center;
@@ -1022,6 +1044,28 @@
   text-transform: uppercase;
 }
 
+.modal-listing-type {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  padding: 0.25rem 0.65rem;
+  letter-spacing: 0.03em;
+}
+
+.modal-listing-type--market {
+  color: rgba(255, 248, 234, 0.86);
+  background: rgba(180, 100, 0, 0.2);
+  border: 1px solid rgba(180, 100, 0, 0.28);
+}
+
+.modal-listing-type--store {
+  color: rgba(76, 175, 80, 0.86);
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
 .modal-details-badge {
   display: inline-flex;
   align-items: center;
@@ -1127,6 +1171,30 @@
 
 .modal-notes p {
   margin: 0;
+}
+
+.modal-next-step {
+  margin: 0 0 1.25rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(212, 160, 23, 0.28);
+  background: rgba(212, 160, 23, 0.08);
+}
+
+.modal-next-step strong {
+  display: inline-block;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text, #e8e0cc);
+  margin-bottom: 0.3rem;
+}
+
+.modal-next-step p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--color-text-muted, #8f836f);
+  line-height: 1.5;
 }
 
 .modal-contact {
