@@ -3,7 +3,7 @@
  * Strategy: cache-first for static assets, network-first for API calls.
  */
 
-const CACHE_NAME = 'goldprices-v2';
+const CACHE_NAME = 'goldprices-v3';
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 1 day
 
 // Static assets to pre-cache on install
