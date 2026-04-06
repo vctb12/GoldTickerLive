@@ -28,10 +28,11 @@
   </script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
   <!-- Nav + Breadcrumbs (injected by shops.js) -->
   <div class="page-breadcrumbs"></div>
 
-  <main>
+  <main id="main-content">
     <section class="shops-hero" aria-labelledby="shops-title">
       <div class="shops-hero-inner">
         <p class="shops-kicker" id="shops-kicker">Shops by region</p>
@@ -40,7 +41,7 @@
 
         <div class="shops-trust-banner" aria-label="Data freshness">
           <span class="shops-trust-icon" aria-hidden="true">◈</span>
-          <span class="shops-trust-text">Directory updated regularly · <span id="shops-last-updated">Loading...</span></span>
+          <span class="shops-trust-text"><span id="shops-trust-label">Reference listings</span> · <span id="shops-last-updated">Loading...</span></span>
         </div>
 
         <div class="shops-hero-stats" aria-label="Directory overview">
@@ -121,6 +122,11 @@
           <span id="shops-specialty-label">Specialty</span>
           <select id="shops-specialty-filter"></select>
         </label>
+        <label class="shops-control shops-control--wide shops-control--checkbox" for="shops-verified-only">
+          <span id="shops-verified-label">Verified details</span>
+          <input id="shops-verified-only" type="checkbox" />
+          <span id="shops-verified-help" class="shops-control-help">Show listings with phone or website details only</span>
+        </label>
         </div><!-- /.shops-filter-panel -->
       </div>
     </section>
@@ -151,9 +157,10 @@
       <div class="shops-results-inner">
         <div class="shops-results-head">
           <div class="shops-results-head-left">
-            <h2 id="shops-results-title">Listed Shops</h2>
+            <h2 id="shops-results-title">Listings</h2>
             <div id="shops-filter-pills" class="shops-filter-pills"></div>
             <p id="shops-active-filters" class="shops-active-filters"></p>
+            <p id="shops-results-disclaimer" class="shops-results-disclaimer">Listings may represent market areas or dealer clusters unless direct contact details are shown.</p>
           </div>
           <p id="shops-count" aria-live="polite"></p>
         </div>
@@ -192,7 +199,7 @@
   <div id="shops-modal" class="shops-modal" hidden aria-labelledby="shops-modal-title" role="dialog" aria-modal="true">
     <div class="shops-modal-overlay"></div>
     <div class="shops-modal-content">
-      <button class="shops-modal-close" aria-label="Close details" type="button">×</button>
+      <button class="shops-modal-close" type="button" aria-label="Close modal">×</button>
       <div id="shops-modal-body"></div>
     </div>
   </div>
