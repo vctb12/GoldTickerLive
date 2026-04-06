@@ -1026,12 +1026,19 @@ function init() {
   const verifiedBox = document.getElementById('shops-verified-only');
   if (verifiedBox) verifiedBox.checked = STATE.verifiedOnly;
   
-  // Prevent modal auto-open on page load even if ?shop is present.
-  // Keep initial load stable and non-intrusive.
-  closeModal();
-
   updateLanguage();
 
+const initialShopId = _p.get('shop');
+if (initialShopId) {
+  const initialShop = SHOPS.find((s) => s.id === initialShopId);
+  if (initialShop) {
+    openModal(initialShop);
+  } else {
+    closeModal({ clearShopParam: true });
+  }
+} else {
+  closeModal({ clearShopParam: false });
+}
   // Mobile filter toggle
   const filterToggle = document.getElementById('shops-filter-toggle');
   const filterPanel  = document.getElementById('shops-filter-panel');
