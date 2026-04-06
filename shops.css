@@ -1165,6 +1165,30 @@
   margin: 0;
 }
 
+.modal-foot {
+  margin-top: 1.2rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-close-cta {
+  border: 1px solid var(--color-border, #2e2b24);
+  background: var(--color-bg, #131210);
+  color: var(--color-text, #e8e0cc);
+  border-radius: var(--radius-md);
+  min-height: 40px;
+  padding: 0.45rem 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-close-cta:hover,
+.modal-close-cta:focus-visible {
+  border-color: var(--color-gold, #d4a017);
+  box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.14);
+  outline: none;
+}
+
 /* ── RTL overrides ───────────────────────────────────────────────────────── */
 [dir="rtl"] .shops-kicker::before {
   order: 1;

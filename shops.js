@@ -88,6 +88,7 @@ const TXT = {
     shareShop: 'Share',
     directions: 'Directions',
     callShop: 'Call',
+    closeDetails: 'Close details',
     viewCountryPage: 'View country page',
     infoTitle: 'How to use this directory',
     info1Title: 'Compare by market area',
@@ -152,6 +153,7 @@ const TXT = {
     shareShop: 'مشاركة',
     directions: 'الاتجاهات',
     callShop: 'اتصال',
+    closeDetails: 'إغلاق التفاصيل',
     viewCountryPage: 'عرض صفحة الدولة',
     infoTitle: 'كيفية استخدام هذا الدليل',
     info1Title: 'قارن حسب منطقة السوق',
@@ -305,6 +307,9 @@ function openModal(shop) {
     </div>
 
     ${contactHTML}
+    <div class="modal-foot">
+      <button class="modal-close-cta" type="button">${t('closeDetails')}</button>
+    </div>
   `;
 
   // Bind action button handlers
@@ -893,7 +898,11 @@ function bindEvents() {
   const modal = document.getElementById('shops-modal');
   if (!modal) return;
   modal.addEventListener('click', (e) => {
-    if (e.target.closest('.shops-modal-close') || e.target.classList.contains('shops-modal-overlay')) {
+    if (
+      e.target.closest('.modal-close-cta') ||
+      e.target.closest('.shops-modal-close') ||
+      e.target.classList.contains('shops-modal-overlay')
+    ) {
       closeModal();
     }
   });
