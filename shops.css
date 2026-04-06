@@ -959,11 +959,18 @@
 .shops-modal {
   position: fixed;
   inset: 0;
-  display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: 1rem;
+}
+
+.shops-modal[hidden] {
+  display: none !important;
+}
+
+.shops-modal:not([hidden]) {
+  display: flex;
 }
 
 .shops-modal-overlay {
