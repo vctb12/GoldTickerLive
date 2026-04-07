@@ -22,7 +22,12 @@ import { NAV_DATA } from './nav-data.js';
  * Resolve href depth: strip leading `../` for root-level pages (depth=0).
  */
 function resolveHref(href, depth) {
-  return depth === 0 ? href.replace('../', '') : href;
+  // Nav data hrefs all start with `../` (relative to depth-1 pages in /countries/).
+  // Strip that leading `../` then prepend the correct prefix for the actual page depth.
+  const stripped = href.replace(/^\.\.\//, '');
+  if (depth === 0) return stripped;                  // root pages
+  if (depth >= 2) return '../../../' + stripped;     // city/market pages (3 dirs deep)
+  return href;                                       // depth-1 country pages: unchanged
 }
 
 /**

@@ -348,19 +348,23 @@ export async function initCountryPage(cfg) {
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = isAr ? 'rtl' : 'ltr';
 
-  // Inject nav + footer (depth=1 since we're in /countries/)
-  const navResult = injectNav(STATE.lang, 1);
-  // Inject breadcrumbs with country name
+  // navDepth: 1 for /countries/ pages, 2 for /countries/X/cities/ and /countries/X/markets/
+  const navDepth = cfg.navDepth ?? 1;
+  const homeUrl  = navDepth >= 2 ? '../../../' : '../';
+
+  const navResult = injectNav(STATE.lang, navDepth);
+
+  // Inject breadcrumbs
   const countryName = STATE.lang === 'ar' ? cfg.nameAr : cfg.nameEn;
   const breadcrumbContainer = document.querySelector('.page-breadcrumbs');
   if (breadcrumbContainer) {
-    renderBreadcrumbs(breadcrumbContainer, [
-      { label: 'Home', url: '../' },
-      { label: countryName, url: '#' }
-    ]);
+    const crumbs = [{ label: 'Home', url: homeUrl }];
+    if (cfg.breadcrumbParent) crumbs.push(cfg.breadcrumbParent);
+    crumbs.push({ label: countryName, url: '#' });
+    renderBreadcrumbs(breadcrumbContainer, crumbs);
   }
-  injectFooter(STATE.lang, 1);
-  injectTicker(STATE.lang, 1);
+  injectFooter(STATE.lang, navDepth);
+  injectTicker(STATE.lang, navDepth);
 
   // Wire language toggle
   navResult.getLangToggleButtons().forEach(btn => {

@@ -983,8 +983,11 @@ async function init() {
   // ⑩ Start timers.
   startTimers();
 
-  // ⑪ Debug panel.
-  if (new URLSearchParams(location.search).get('debug') === 'true') {
+  // ⑪ Debug panel — only in dev environments.
+  const _isDevEnv = location.hostname === 'localhost' ||
+    location.hostname === '127.0.0.1' ||
+    location.hostname.endsWith('.replit.dev');
+  if (_isDevEnv && new URLSearchParams(location.search).get('debug') === 'true') {
     debug.initDebugPanel(STATE, renderAll);
   }
 }
@@ -1003,5 +1006,5 @@ document.addEventListener('DOMContentLoaded', init);
 
 // Register service worker
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/Gold-Prices/sw.js').catch(() => {});
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
 }

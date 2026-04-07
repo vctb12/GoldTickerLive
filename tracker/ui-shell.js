@@ -72,10 +72,6 @@ export function mountShell(state, els, onModeChange, onLangChange) {
       setMode('alerts');
     } else if (key === 'p') {
       setMode('planner');
-    } else if (key === 'x') {
-      setMode('exports');
-    } else if (key === 'm') {
-      setMode('method');
     }
   });
 
