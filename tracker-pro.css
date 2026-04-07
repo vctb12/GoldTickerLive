@@ -22,8 +22,8 @@
   --tp-danger-soft: rgba(179, 39, 47, 0.08);
   --tp-blue: #1455a4;
   --tp-blue-soft: rgba(20, 85, 164, 0.08);
-  --tp-shadow-1: 0 10px 28px rgba(61, 46, 21, 0.08);
-  --tp-shadow-2: 0 16px 38px rgba(61, 46, 21, 0.11);
+  --tp-shadow-1: 0 10px 28px rgba(61, 46, 21, 0.07), 0 2px 6px rgba(61,46,21,0.03);
+  --tp-shadow-2: 0 16px 40px rgba(61, 46, 21, 0.10), 0 4px 10px rgba(196,153,62,0.06);
   --tp-radius-xl: 24px;
   --tp-radius-lg: 18px;
   --tp-radius-md: 14px;
@@ -120,10 +120,11 @@ body.tracker-pro-page {
 .tracker-wire-card,
 .tracker-subpanel,
 .tracker-method-card {
-  background: var(--tp-panel);
+  background: linear-gradient(180deg, var(--tp-panel) 0%, #fdfaf4 100%);
   border: 1px solid var(--tp-border);
   border-radius: var(--tp-radius-xl);
   box-shadow: var(--tp-shadow-1);
+  transition: box-shadow 0.3s cubic-bezier(0.25,0.46,0.45,0.94), border-color 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
 }
 
 .tracker-panel {

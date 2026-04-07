@@ -4,9 +4,18 @@
 
 /* ── Hero ─────────────────────────────────────────── */
 .calc-hero {
-  background: linear-gradient(135deg, #1a1206 0%, var(--color-gold-deep) 40%, #1a1206 100%);
+  background: linear-gradient(155deg, #1a1206 0%, var(--color-gold-deep) 40%, #1a1206 100%);
   padding: 2.5rem 1.5rem 2rem;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.calc-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 80% at 50% 100%, rgba(196,153,62,0.08) 0%, transparent 60%);
+  pointer-events: none;
 }
 
 .calc-hero-inner {
@@ -114,12 +123,12 @@
 
 /* ── Card ──────────────────────────────────────────── */
 .calc-card {
-  background: linear-gradient(135deg, var(--color-surface-1) 0%, rgba(255, 255, 255, 0.97) 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #fdfbf7 100%);
   border: 1.25px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: all 0.24s ease-out;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(196,153,62,0.05);
+  transition: all 0.28s cubic-bezier(0.25,0.46,0.45,0.94);
 }
 
 .calc-card-title {
@@ -230,12 +239,13 @@
 
 /* ── Result ────────────────────────────────────────── */
 .calc-result {
-  background: var(--color-surface-2);
+  background: linear-gradient(135deg, var(--color-gold-bg, #fdf8ee) 0%, #fffbf0 100%);
   border: 1px solid var(--color-gold);
   border-radius: var(--radius-md);
   padding: 1.25rem;
   margin-top: 0.5rem;
-  animation: fadeIn 0.2s ease;
+  animation: fadeIn 0.25s ease;
+  box-shadow: 0 2px 8px rgba(196,153,62,0.10);
 }
 
 @keyframes fadeIn {

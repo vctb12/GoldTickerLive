@@ -52,20 +52,30 @@
   --radius-xl: 24px;
   --radius-pill: 999px;
 
-  /* Shadows — more refined */
-  --shadow-xs: 0 1px 2px rgba(0,0,0,0.05), 0 1px 1px rgba(0,0,0,0.03);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.07), 0 2px 6px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.09), 0 2px 4px rgba(0,0,0,0.05);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.11), 0 4px 8px rgba(0,0,0,0.06);
-  --shadow-gold: 0 4px 16px rgba(196,153,62,0.20);
+  /* Shadows — luxury layered depth */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.02);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.03);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.10), 0 4px 10px rgba(0,0,0,0.05);
+  --shadow-xl: 0 20px 50px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.06);
+  --shadow-gold: 0 4px 18px rgba(196,153,62,0.22), 0 1px 4px rgba(196,153,62,0.10);
+  --shadow-gold-lg: 0 8px 32px rgba(196,153,62,0.28), 0 2px 8px rgba(196,153,62,0.12);
+  --shadow-card-hover: 0 8px 28px rgba(0,0,0,0.10), 0 2px 6px rgba(196,153,62,0.08);
+
+  /* Premium gradients */
+  --gradient-gold: linear-gradient(135deg, #c4993e 0%, #e0b84a 50%, #c4993e 100%);
+  --gradient-gold-subtle: linear-gradient(135deg, rgba(196,153,62,0.08) 0%, rgba(224,184,74,0.04) 100%);
+  --gradient-dark: linear-gradient(155deg, #3d2005 0%, #1e0e03 45%, #0c0802 100%);
+  --gradient-surface: linear-gradient(180deg, #ffffff 0%, #fdfbf7 100%);
 
   /* Typography */
   --font-main: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-  /* Transitions */
-  --transition: 0.18s ease;
-  --transition-md: 0.26s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Transitions — luxury easing */
+  --transition: 0.2s ease;
+  --transition-md: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-slow: 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* ═══════════════════════════════════════════════
@@ -130,11 +140,21 @@ img, svg { display: block; }
   position: sticky;
   top: 0;
   z-index: 300;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(201, 168, 76, 0.25);
-  box-shadow: 0 1px 0 rgba(201, 168, 76, 0.12), 0 2px 12px rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px) saturate(1.6);
+  -webkit-backdrop-filter: blur(14px) saturate(1.6);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.18);
+  box-shadow: 0 1px 0 rgba(201, 168, 76, 0.10), 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+.site-nav::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(196,153,62,0.35) 30%, rgba(224,184,74,0.45) 50%, rgba(196,153,62,0.35) 70%, transparent 100%);
+  pointer-events: none;
 }
 
 /* --- Inner layout --- */
@@ -205,6 +225,7 @@ img, svg { display: block; }
   color: var(--color-gold-dark);
   text-decoration: none;
   transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(196,153,62,0.10);
 }
 .nav-link--active {
   background: var(--color-gold-bg);
@@ -458,13 +479,24 @@ img, svg { display: block; }
    Global Footer — 5-column dark premium
    ═══════════════════════════════════════════════ */
 .site-footer-global {
-  background: #0f0c08;
+  background: linear-gradient(180deg, #141008 0%, #0f0c08 40%, #0a0806 100%);
   color: rgba(255,255,255,0.72);
   margin-top: auto;
+  position: relative;
+}
+.site-footer-global::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(196,153,62,0.30) 30%, rgba(224,184,74,0.40) 50%, rgba(196,153,62,0.30) 70%, transparent 100%);
+  pointer-events: none;
 }
 .footer-top {
-  padding: 3rem 1.5rem 2rem;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 3.5rem 1.5rem 2.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 .footer-inner {
   max-width: 1400px;
@@ -493,11 +525,18 @@ img, svg { display: block; }
 .footer-col-heading--mt { margin-top: 1.25rem; }
 .footer-col--links a {
   font-size: 0.84rem;
-  color: rgba(255,255,255,0.62);
+  color: rgba(255,255,255,0.58);
   text-decoration: none;
-  transition: color var(--transition);
+  transition: color var(--transition-md), transform var(--transition);
+  display: inline-block;
 }
-.footer-col--links a:hover { color: var(--color-gold-light); }
+.footer-col--links a:hover {
+  color: var(--color-gold-light);
+  transform: translateX(2px);
+}
+[dir="rtl"] .footer-col--links a:hover {
+  transform: translateX(-2px);
+}
 
 /* Bottom bar */
 .footer-bottom {
@@ -644,15 +683,18 @@ main {
    Sections
    ═══════════════════════════════════════════════ */
 .section {
-  background: var(--color-surface);
+  background: var(--gradient-surface);
   border-radius: var(--radius-lg);
   padding: 1.6rem;
   margin-bottom: 1.5rem;
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--color-border-subtle);
-  transition: box-shadow var(--transition);
+  transition: box-shadow var(--transition-md), border-color var(--transition-md);
 }
-.section:hover { box-shadow: var(--shadow-md); }
+.section:hover {
+  box-shadow: var(--shadow-md);
+  border-color: rgba(196,153,62,0.15);
+}
 .section-compact { padding: 1rem 1.6rem; }
 
 .section-header {
@@ -980,7 +1022,7 @@ main {
 }
 
 .country-card {
-  background: var(--color-surface);
+  background: var(--gradient-surface);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-md);
   padding: 1.1rem;
@@ -992,9 +1034,9 @@ main {
   cursor: default;
 }
 .country-card:hover {
-  box-shadow: var(--shadow-gold);
+  box-shadow: var(--shadow-card-hover);
   border-color: var(--color-gold);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 .country-card.stale-card { border-color: var(--color-stale); }
 .country-card.no-data-card { opacity: 0.45; pointer-events: none; }
@@ -1624,16 +1666,16 @@ main {
 .btn:focus-visible { outline: 3px solid var(--color-gold-glow); outline-offset: 2px; }
 
 .btn-primary {
-  background: var(--color-gold-dark);
+  background: linear-gradient(135deg, var(--color-gold-dark) 0%, #9e7428 100%);
   border-color: var(--color-gold-dark);
   color: #fff;
   box-shadow: var(--shadow-gold);
 }
 .btn-primary:hover {
-  background: var(--color-gold-deep);
+  background: linear-gradient(135deg, var(--color-gold-deep) 0%, var(--color-gold-dark) 100%);
   border-color: var(--color-gold-deep);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(196,153,62,0.28);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold-lg);
 }
 .btn-outline {
   background: transparent;
@@ -1642,8 +1684,9 @@ main {
 }
 .btn-outline:hover {
   background: var(--color-gold-bg);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
+  border-color: var(--color-gold-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
 }
 .btn-ghost {
   background: transparent;
@@ -1714,22 +1757,38 @@ details[open] > .faq-q::after { content: '−'; }
    Insight cards (for insights page)
    ═══════════════════════════════════════════════ */
 .insight-card {
-  background: var(--color-surface);
+  background: var(--gradient-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+  transition: box-shadow var(--transition-md), border-color var(--transition-md), transform var(--transition-md);
   text-decoration: none;
   color: var(--color-text);
+  position: relative;
+  overflow: hidden;
+}
+.insight-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-gold, #c99a3e), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 .insight-card:hover {
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-card-hover);
   border-color: var(--color-gold);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   text-decoration: none;
+}
+.insight-card:hover::before {
+  opacity: 1;
 }
 
 .insight-tag {
