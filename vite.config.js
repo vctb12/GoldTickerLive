@@ -6,7 +6,7 @@ const root = resolve(__dirname);
 // All 26 HTML entry points for multi-page build
 export default defineConfig({
   root,
-  base: '/Gold-Prices/',
+  base: '/',
   publicDir: 'public',
   build: {
     outDir: 'dist',
@@ -52,6 +52,8 @@ export default defineConfig({
     },
   },
   server: {
-    open: true,
+    host: '0.0.0.0',
+    port: 5000,
+    allowedHosts: true,
   },
 });
