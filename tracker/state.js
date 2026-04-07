@@ -1,6 +1,7 @@
 // tracker/state.js
 import { CONSTANTS } from '../config/index.js';
 import * as cache from '../lib/cache.js';
+import { showStorageQuotaWarning } from '../lib/cache.js';
 
 export const STORAGE_KEYS = {
   core: 'tracker_pro_state_v5',
@@ -171,8 +172,9 @@ function readLocal(key, fallback) {
 function writeLocal(key, value) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // ignore quota errors silently for tracker extras
+  } catch (e) {
+    console.warn('Tracker storage write failed (quota?):', e.message);
+    showStorageQuotaWarning();
   }
 }
 
