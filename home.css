@@ -520,6 +520,8 @@
 
 .home-section--alt {
   background: var(--color-surface-2, #f9f7f3);
+  border-top: 1px solid rgba(196,153,62,0.08);
+  border-bottom: 1px solid rgba(196,153,62,0.08);
 }
 
 .home-section-inner {
@@ -547,8 +549,8 @@
   font-size: clamp(1.4rem, 3vw, 1.95rem);
   font-weight: 800;
   color: var(--color-gold-deep, #5a3a0a);
-  letter-spacing: -0.022em;
-  line-height: 1.2;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
 }
 
 .home-section-sub {

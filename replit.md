@@ -40,6 +40,18 @@ npm run build     # Build to dist/
 npm run preview   # Preview production build
 ```
 
+## Design System
+
+The site uses a premium gold-themed design language with CSS custom properties for all design tokens:
+- **Gold palette:** `--color-gold` (#c4993e base), `--color-gold-dark` (#8a6420), `--color-gold-deep` (#5e4210), `--color-gold-light` (#e0b84a)
+- **Premium gradients:** `--gradient-gold`, `--gradient-gold-subtle`, `--gradient-dark`, `--gradient-surface`
+- **Luxury shadows:** `--shadow-gold`, `--shadow-gold-lg`, `--shadow-card-hover`, `--shadow-xl`
+- **Transitions:** `--transition-md` (0.3s luxury easing), `--transition-bounce` (bouncy spring), `--transition-slow`
+- **Nav:** Frosted glass (blur 14px + saturate 1.6) with gold accent line
+- **Cards:** Surface gradients with gold top-border reveals on hover, elevated shadow depth
+- **Ticker:** Dark glass effect with gold separators
+- **Footer:** Rich gradient background with gold accent top line
+
 ## Configuration
 
 - `vite.config.js` — Multi-page build with 26+ HTML entry points; dev server on `0.0.0.0:5000` with `allowedHosts: true` for Replit proxy compatibility

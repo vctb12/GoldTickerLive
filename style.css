@@ -707,9 +707,9 @@ main {
 }
 .section-header h2 {
   font-size: clamp(1.1rem, 2.5vw, 1.3rem);
-  font-weight: 700;
+  font-weight: 800;
   color: var(--color-gold-deep);
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
   line-height: 1.2;
 }
 .section-note {
@@ -2098,11 +2098,11 @@ details[open] > .faq-q::after { content: '−'; }
   right: 0;
   z-index: 200;
   height: 38px;
-  background: rgba(15, 10, 3, 0.96);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-top: 1px solid rgba(196, 153, 62, 0.25);
-  box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.2);
+  background: rgba(12, 8, 2, 0.94);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border-top: 1px solid rgba(196, 153, 62, 0.20);
+  box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.18);
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -2156,7 +2156,7 @@ details[open] > .faq-q::after { content: '−'; }
   font-variant-numeric: tabular-nums;
 }
 .ticker-sep {
-  color: rgba(255, 255, 255, 0.18);
+  color: rgba(196, 153, 62, 0.25);
   font-size: 0.65rem;
   flex-shrink: 0;
 }
