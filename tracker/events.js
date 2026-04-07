@@ -190,7 +190,11 @@ export function bindCoreEvents() {
   _el.exportHistory2?.addEventListener('click', () => _cb.exportHistoryData());
   _el.downloadJson?.addEventListener('click', () => _cb.exportJsonData());
   _el.downloadJson2?.addEventListener('click', () => _cb.exportJsonData());
-  // exportChart, exportChart2, exportCurrent, exportWatchlist, downloadBrief are disabled in HTML until implemented
+  _el.exportChart?.addEventListener('click', () => _cb.exportChartData());
+  _el.exportChart2?.addEventListener('click', () => _cb.exportChartData());
+  _el.exportWatchlist?.addEventListener('click', () => _cb.exportWatchlistData());
+  _el.exportCurrent?.addEventListener('click', () => _cb.exportCurrentViewData());
+  _el.downloadBrief?.addEventListener('click', () => _cb.exportBriefData());
 
   // Alert list: delete button delegation
   _el.alertList?.addEventListener('click', (e) => {

@@ -485,12 +485,12 @@ export function renderAll() {
     renderMarkets();
   } else if (_state.mode === 'archive') {
     renderArchive();
-  } else if (_state.mode === 'alerts') {
-    renderAlerts();
-    renderPresets();
-  } else if (_state.mode === 'planner') {
-    renderPlanners();
   }
+
+  // Always render overlay content so it's fresh when opened
+  renderAlerts();
+  renderPresets();
+  renderPlanners();
 
   renderBrief();
 

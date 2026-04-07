@@ -172,22 +172,22 @@
           Archive
         </button>
         <button
-          class="tracker-mode-tab"
-          role="tab"
-          aria-selected="false"
-          aria-controls="mode-alerts"
+          class="tracker-mode-tab tracker-overlay-btn"
+          type="button"
           id="tab-alerts"
-          data-mode="alerts"
+          data-overlay="alerts"
+          aria-expanded="false"
+          aria-controls="tp-overlay-alerts"
         >
           Alerts
         </button>
         <button
-          class="tracker-mode-tab"
-          role="tab"
-          aria-selected="false"
-          aria-controls="mode-planner"
+          class="tracker-mode-tab tracker-overlay-btn"
+          type="button"
           id="tab-planner"
-          data-mode="planner"
+          data-overlay="planner"
+          aria-expanded="false"
+          aria-controls="tp-overlay-planner"
         >
           Planner
         </button>
@@ -305,7 +305,7 @@
               </p>
             </div>
             <div class="tracker-head-actions">
-              <button type="button" class="btn btn-sm btn-outline" id="tp-export-chart" disabled title="Not yet available">
+              <button type="button" class="btn btn-sm btn-outline" id="tp-export-chart">
                 Export visible chart CSV
               </button>
               <button type="button" class="btn btn-sm btn-ghost" id="tp-download-json">
@@ -381,7 +381,7 @@
           <div class="tracker-watchlist-block" aria-label="Market watchlist">
             <div class="tracker-subpanel-head">
               <h3>Market watchlist</h3>
-              <button type="button" class="btn btn-sm btn-outline" id="tp-export-watchlist" disabled title="Not yet available">
+              <button type="button" class="btn btn-sm btn-outline" id="tp-export-watchlist">
                 Export watchlist CSV
               </button>
             </div>
@@ -778,7 +778,7 @@
           <article class="tracker-subpanel">
             <div class="tracker-subpanel-head"><h3>Visible chart CSV</h3></div>
             <p>Exports only the currently visible chart slice with range, mode, and source-layer annotations.</p>
-            <button class="btn btn-outline" id="tp-export-chart-2" type="button" disabled title="Not yet available">
+            <button class="btn btn-outline" id="tp-export-chart-2" type="button">
               Export visible chart CSV
             </button>
           </article>
@@ -786,7 +786,7 @@
           <article class="tracker-subpanel">
             <div class="tracker-subpanel-head"><h3>Current view CSV</h3></div>
             <p>Snapshot of the current currency/karat/unit across markets, matching the compare board ordering.</p>
-            <button class="btn btn-outline" id="tp-export-current" type="button" disabled title="Not yet available">
+            <button class="btn btn-outline" id="tp-export-current" type="button">
               Download current view CSV
             </button>
           </article>
@@ -815,7 +815,7 @@
           <article class="tracker-subpanel">
             <div class="tracker-subpanel-head"><h3>Market brief text</h3></div>
             <p>Export the current market brief as plain text, suitable for email or note-taking.</p>
-            <button class="btn btn-outline" id="tp-download-brief" type="button" disabled title="Not yet available">
+            <button class="btn btn-outline" id="tp-download-brief" type="button">
               Download brief
             </button>
           </article>

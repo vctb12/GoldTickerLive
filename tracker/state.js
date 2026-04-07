@@ -10,7 +10,7 @@ export const STORAGE_KEYS = {
   watchlist: 'tracker_pro_favorites_v5',
 };
 
-export const VALID_MODES = new Set(['live', 'compare', 'archive', 'alerts', 'planner', 'exports', 'method']);
+export const VALID_MODES = new Set(['live', 'compare', 'archive', 'exports', 'method']);
 
 export const DEFAULT_STATE = {
   lang: 'en',

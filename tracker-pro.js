@@ -165,6 +165,62 @@ function exportHistoryData() {
   exportArchiveData();
 }
 
+function exportChartData() {
+  if (!state.history.length) { showToast('No chart data available yet.'); return; }
+  const { filterByRange } = window.__trackerHistLib || {};
+  const flat = state.history.map(r => ({
+    date: r.date instanceof Date ? r.date.toISOString().slice(0, 10) : String(r.date),
+    spot: r.spot,
+    price: r.spot,
+    source: r.source,
+  }));
+  const spot = currentSpot();
+  const rows = flat.filter(Boolean);
+  if (spot) rows.push({ date: new Date().toISOString().slice(0, 10), spot, price: spot, source: 'live' });
+  exp.exportChartCSV(rows, state.range, state.selectedKarat);
+  showToast('Chart CSV downloaded');
+}
+
+function exportWatchlistData() {
+  const spot = currentSpot();
+  if (!spot) { showToast('Waiting for live price data.'); return; }
+  if (!(state.favorites?.length)) { showToast('No favorites in watchlist. Add currencies via Compare tab.'); return; }
+  exp.exportWatchlistCSV({
+    favorites: state.favorites,
+    countries: COUNTRIES,
+    karatCode: state.selectedKarat,
+    priceFor,
+    spot,
+    selectedUnit: state.selectedUnit,
+    selectedCurrency: state.selectedCurrency,
+    lang: state.lang,
+  });
+  showToast('Watchlist CSV downloaded');
+}
+
+function exportCurrentViewData() {
+  const spot = currentSpot();
+  if (!spot) { showToast('Waiting for live price data.'); return; }
+  exp.exportCurrentViewCSV({
+    countries: COUNTRIES,
+    karatCode: state.selectedKarat,
+    priceFor,
+    spot,
+    selectedUnit: state.selectedUnit,
+    selectedCurrency: state.selectedCurrency,
+    lang: state.lang,
+  });
+  showToast('Current view CSV downloaded');
+}
+
+function exportBriefData() {
+  const headline = el.briefHeadline?.textContent;
+  const body = el.briefCopy?.textContent;
+  if (!headline || headline.startsWith('Waiting')) { showToast('Waiting for live data.'); return; }
+  exp.exportBriefText(headline, body);
+  showToast('Brief downloaded');
+}
+
 function exportJsonData() {
   const spot = currentSpot();
   const prices = {};
@@ -317,6 +373,7 @@ async function init() {
     startAutoRefresh, stopAutoRefresh,
     populateSelects, refreshWire,
     exportArchiveData, exportHistoryData, exportJsonData,
+    exportChartData, exportWatchlistData, exportCurrentViewData, exportBriefData,
   });
 
   mountShell(

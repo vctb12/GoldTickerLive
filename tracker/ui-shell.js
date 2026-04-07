@@ -4,6 +4,8 @@ import { injectFooter } from '../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
 import { syncUrlFromState, persistState, applyUrlState } from './state.js';
 
+let _openPanel = null;
+
 export function mountShell(state, els, onModeChange, onLangChange) {
   // Mount shared shell
   const navCtrl = injectNav(state.lang, 0);
@@ -23,9 +25,9 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   injectFooter(state.lang, 0);
   injectTicker(state.lang, 0);
 
-  // Wire mode tabs
-  const tabs = Array.from(document.querySelectorAll('.tracker-mode-tab'));
-  const panels = Array.from(document.querySelectorAll('.tracker-mode-panel'));
+  // Wire main mode tabs (Live / Compare / Archive / Exports / Method only)
+  const tabs = Array.from(document.querySelectorAll('.tracker-mode-tab[data-mode]'));
+  const panels = Array.from(document.querySelectorAll('.tracker-mode-panel[data-mode-panel]'));
 
   function setMode(mode) {
     state.mode = mode;
@@ -47,13 +49,78 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     tab.addEventListener('click', () => setMode(tab.dataset.mode));
   });
 
-  // Initial mode selection
-  setMode(state.mode || 'live');
+  // Initial mode selection (never allow alerts/planner as mode)
+  const safeMode = ['live', 'compare', 'archive', 'exports', 'method'].includes(state.mode)
+    ? state.mode
+    : 'live';
+  setMode(safeMode);
 
-  // Sync state when browser back/forward changes the URL hash
+  // Overlay system for Alerts and Planner
+  const overlays = {
+    alerts: document.getElementById('tp-overlay-alerts'),
+    planner: document.getElementById('tp-overlay-planner'),
+  };
+
+  function openOverlay(name) {
+    if (_openPanel && _openPanel !== name) closeOverlay(_openPanel);
+    const overlay = overlays[name];
+    if (!overlay) return;
+    _openPanel = name;
+    overlay.hidden = false;
+    overlay.removeAttribute('aria-hidden');
+    document.body.classList.add('tp-overlay-open');
+    // Mark toggle buttons as active
+    document.querySelectorAll(`.tracker-overlay-btn[data-overlay="${name}"]`).forEach(btn => {
+      btn.classList.add('is-active');
+      btn.setAttribute('aria-expanded', 'true');
+    });
+    // Sync URL with panel open
+    syncUrlFromState(state);
+  }
+
+  function closeOverlay(name) {
+    const overlay = overlays[name || _openPanel];
+    if (!overlay) return;
+    overlay.hidden = true;
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('tp-overlay-open');
+    document.querySelectorAll(`.tracker-overlay-btn[data-overlay="${name || _openPanel}"]`).forEach(btn => {
+      btn.classList.remove('is-active');
+      btn.setAttribute('aria-expanded', 'false');
+    });
+    _openPanel = null;
+    syncUrlFromState(state);
+  }
+
+  function toggleOverlay(name) {
+    if (_openPanel === name) closeOverlay(name);
+    else openOverlay(name);
+  }
+
+  // Wire overlay toggle buttons (Alerts, Planner in mode bar)
+  document.querySelectorAll('.tracker-overlay-btn[data-overlay]').forEach(btn => {
+    btn.addEventListener('click', () => toggleOverlay(btn.dataset.overlay));
+  });
+
+  // Wire overlay close buttons
+  document.querySelectorAll('.tp-overlay-close[data-close-overlay]').forEach(btn => {
+    btn.addEventListener('click', () => closeOverlay(btn.dataset.closeOverlay));
+  });
+
+  // Clicking overlay backdrop closes it
+  document.querySelectorAll('.tp-overlay-backdrop').forEach(backdrop => {
+    backdrop.addEventListener('click', () => {
+      if (_openPanel) closeOverlay(_openPanel);
+    });
+  });
+
+  // Sync back/forward navigation
   window.addEventListener('hashchange', () => {
     applyUrlState(state);
-    setMode(state.mode || 'live');
+    const m = ['live', 'compare', 'archive', 'exports', 'method'].includes(state.mode)
+      ? state.mode
+      : 'live';
+    setMode(m);
     if (typeof onModeChange === 'function') onModeChange(state.mode);
   });
 
@@ -62,20 +129,22 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     if (evt.altKey || evt.metaKey || evt.ctrlKey) return;
     if (['INPUT', 'TEXTAREA', 'SELECT'].includes(evt.target.tagName)) return;
     const key = evt.key.toLowerCase();
-    if (key === 'r') {
+    if (key === 'escape') {
+      if (_openPanel) closeOverlay(_openPanel);
+    } else if (key === 'r') {
       els.refreshBtn?.click();
     } else if (key === 'h') {
       setMode('live');
     } else if (key === 'c') {
       setMode('compare');
     } else if (key === 'a') {
-      setMode('alerts');
+      toggleOverlay('alerts');
     } else if (key === 'p') {
-      setMode('planner');
+      toggleOverlay('planner');
     }
   });
 
-  return { setMode };
+  return { setMode, openOverlay, closeOverlay };
 }
 
 export function updateShellTickerFromState(state, spot, priceFor) {
