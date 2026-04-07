@@ -455,130 +455,105 @@
       </div>
     </section>
 
-    <!-- MODE: ALERTS & PRESETS -->
-    <section
-      class="tracker-shell tracker-utilities-shell tracker-mode-panel"
-      id="mode-alerts"
-      role="tabpanel"
-      aria-labelledby="tab-alerts"
-      data-mode-panel="alerts"
+    <!-- OVERLAY: ALERTS & PRESETS (slide-in panel, independent of main view) -->
+    <div
+      class="tp-overlay"
+      id="tp-overlay-alerts"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tp-overlay-alerts-title"
+      aria-hidden="true"
       hidden
     >
-      <div class="tracker-utility-grid">
-        <section class="tracker-panel" id="section-alerts">
-          <div class="tracker-panel-head">
-            <div>
-              <h2>Alerts + presets</h2>
-              <p>
-                Browser-based price alerts and saved view presets — stored locally,
-                upgrade-ready for account-based alerts in the future.
-              </p>
-            </div>
-          </div>
-
-          <div class="tracker-two-up tight">
-            <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head">
-                <h3>New alert</h3>
-              </div>
-              <div class="tracker-form-grid">
-                <label class="tracker-field">
-                  <span>Scope</span>
-                  <select id="tp-alert-scope">
-                    <option value="selected">Selected view</option>
-                    <option value="spot">Spot XAU/USD</option>
-                    <option value="uae24">UAE 24K / g</option>
-                  </select>
-                </label>
-                <label class="tracker-field">
-                  <span>Condition</span>
-                  <select id="tp-alert-direction">
-                    <option value="above">Above</option>
-                    <option value="below">Below</option>
-                  </select>
-                </label>
-                <label class="tracker-field">
-                  <span>Target</span>
-                  <input
-                    type="number"
-                    id="tp-alert-target"
-                    min="0"
-                    step="0.01"
-                    placeholder="Enter price target"
-                  />
-                </label>
-              </div>
-              <div class="tracker-inline-actions">
-                <button class="btn btn-primary" type="button" id="tp-save-alert">Save alert</button>
-                <button class="btn btn-outline" type="button" id="tp-enable-notifications">
-                  Enable browser notifications
-                </button>
-              </div>
-              <p class="tracker-help-text" id="tp-alert-permission"></p>
-            </article>
-
-            <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head">
-                <h3>Save preset</h3>
-              </div>
-              <div class="tracker-form-grid">
-                <label class="tracker-field">
-                  <span>Preset name</span>
-                  <input
-                    type="text"
-                    id="tp-preset-name"
-                    placeholder="Example: UAE 24K per gram"
-                  />
-                </label>
-              </div>
-              <div class="tracker-inline-actions">
-                <button class="btn btn-primary" type="button" id="tp-save-preset">
-                  Save current setup
-                </button>
-                <button class="btn btn-ghost" type="button" id="tp-copy-url">
-                  Copy shareable URL
-                </button>
-              </div>
-            </article>
-          </div>
-
-          <div class="tracker-two-up tight">
-            <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head">
-                <h3>Saved alerts</h3>
-              </div>
-              <div class="tracker-stack-list" id="tp-alert-list"></div>
-            </article>
-            <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head">
-                <h3>Saved presets</h3>
-              </div>
-              <div class="tracker-stack-list" id="tp-preset-list"></div>
-            </article>
-          </div>
-        </section>
-      </div>
-    </section>
-
-    <!-- MODE: PLANNER -->
-    <section
-      class="tracker-shell tracker-planner-shell tracker-mode-panel"
-      id="mode-planner"
-      role="tabpanel"
-      aria-labelledby="tab-planner"
-      data-mode-panel="planner"
-      hidden
-    >
-      <section class="tracker-panel">
-        <div class="tracker-panel-head">
-          <div>
-            <h2>Planners + estimators</h2>
-            <p>Turn live prices into concrete decisions: budgets, positions, jewelry tickets, and accumulation plans.</p>
-          </div>
+      <div class="tp-overlay-panel">
+        <div class="tp-overlay-header">
+          <h2 id="tp-overlay-alerts-title">Alerts + presets</h2>
+          <button class="tp-overlay-close" type="button" data-close-overlay="alerts" aria-label="Close alerts panel">✕</button>
         </div>
+        <div class="tp-overlay-body">
+          <p class="tp-overlay-intro">
+            Browser-based price alerts and view presets — stored locally.
+            The live chart and prices remain visible behind this panel.
+          </p>
 
-        <div class="tracker-planner-grid">
-          <!-- Budget planner -->
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>New alert</h3></div>
+            <div class="tracker-form-grid">
+              <label class="tracker-field">
+                <span>Scope</span>
+                <select id="tp-alert-scope">
+                  <option value="selected">Selected view</option>
+                  <option value="spot">Spot XAU/USD</option>
+                  <option value="uae24">UAE 24K / g</option>
+                </select>
+              </label>
+              <label class="tracker-field">
+                <span>Condition</span>
+                <select id="tp-alert-direction">
+                  <option value="above">Above</option>
+                  <option value="below">Below</option>
+                </select>
+              </label>
+              <label class="tracker-field">
+                <span>Target price</span>
+                <input type="number" id="tp-alert-target" min="0" step="0.01" placeholder="Enter price target" />
+              </label>
+            </div>
+            <div class="tracker-inline-actions">
+              <button class="btn btn-primary" type="button" id="tp-save-alert">Save alert</button>
+              <button class="btn btn-outline" type="button" id="tp-enable-notifications">Enable notifications</button>
+            </div>
+            <p class="tracker-help-text" id="tp-alert-permission"></p>
+          </article>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Saved alerts</h3></div>
+            <div class="tracker-stack-list" id="tp-alert-list"></div>
+          </article>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Save preset</h3></div>
+            <div class="tracker-form-grid">
+              <label class="tracker-field">
+                <span>Preset name</span>
+                <input type="text" id="tp-preset-name" placeholder="Example: UAE 24K per gram" />
+              </label>
+            </div>
+            <div class="tracker-inline-actions">
+              <button class="btn btn-primary" type="button" id="tp-save-preset">Save current setup</button>
+              <button class="btn btn-ghost" type="button" id="tp-copy-url">Copy shareable URL</button>
+            </div>
+          </article>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Saved presets</h3></div>
+            <div class="tracker-stack-list" id="tp-preset-list"></div>
+          </article>
+        </div>
+      </div>
+      <div class="tp-overlay-backdrop" aria-hidden="true"></div>
+    </div>
+
+    <!-- OVERLAY: PLANNER (slide-in panel, independent of main view) -->
+    <div
+      class="tp-overlay"
+      id="tp-overlay-planner"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tp-overlay-planner-title"
+      aria-hidden="true"
+      hidden
+    >
+      <div class="tp-overlay-panel">
+        <div class="tp-overlay-header">
+          <h2 id="tp-overlay-planner-title">Planners + estimators</h2>
+          <button class="tp-overlay-close" type="button" data-close-overlay="planner" aria-label="Close planner panel">✕</button>
+        </div>
+        <div class="tp-overlay-body">
+          <p class="tp-overlay-intro">
+            Turn live prices into decisions. The chart and prices remain visible behind this panel.
+          </p>
+
           <article class="tracker-subpanel">
             <div class="tracker-subpanel-head"><h3>Budget planner</h3></div>
             <div class="tracker-form-grid">
@@ -594,7 +569,6 @@
             <div class="tracker-result-grid" id="tp-budget-results"></div>
           </article>
 
-          <!-- Position tracker -->
           <article class="tracker-subpanel">
             <div class="tracker-subpanel-head"><h3>Position tracker</h3></div>
             <div class="tracker-form-grid">
@@ -603,14 +577,13 @@
                 <input type="number" id="tp-position-entry" min="0" step="0.01" value="0" />
               </label>
               <label class="tracker-field">
-                <span>Quantity</span>
+                <span>Quantity (g)</span>
                 <input type="number" id="tp-position-qty" min="0" step="0.0001" value="0" />
               </label>
             </div>
             <div class="tracker-result-grid" id="tp-position-results"></div>
           </article>
 
-          <!-- Jewelry estimate -->
           <article class="tracker-subpanel">
             <div class="tracker-subpanel-head"><h3>Jewelry ticket estimate</h3></div>
             <div class="tracker-form-grid">
@@ -640,7 +613,6 @@
             <div class="tracker-result-grid" id="tp-jewelry-results"></div>
           </article>
 
-          <!-- Accumulation planner -->
           <article class="tracker-subpanel">
             <div class="tracker-subpanel-head"><h3>Accumulation planner</h3></div>
             <div class="tracker-form-grid">
@@ -649,19 +621,20 @@
                 <input type="number" id="tp-accum-monthly" min="0" step="0.01" value="2000" />
               </label>
               <label class="tracker-field">
-                <span>Target quantity</span>
+                <span>Target quantity (g)</span>
                 <input type="number" id="tp-accum-target" min="0" step="0.0001" value="100" />
               </label>
             </div>
             <div class="tracker-result-grid" id="tp-accum-results"></div>
           </article>
-        </div>
 
-        <div class="tracker-panel-footer-link">
-          <a href="calculator.html" class="tracker-link">Open full calculator with this context</a>
+          <div class="tracker-panel-footer-link">
+            <a href="calculator.html" class="tracker-link">Open full calculator →</a>
+          </div>
         </div>
-      </section>
-    </section>
+      </div>
+      <div class="tp-overlay-backdrop" aria-hidden="true"></div>
+    </div>
 
     <!-- MODE: ARCHIVE -->
     <section
