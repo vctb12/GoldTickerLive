@@ -1,6 +1,13 @@
 /**
  * GoldPrices Service Worker
  * Strategy: cache-first for static assets, network-first for API calls.
+ *
+ * Deployment base path: '/' (Replit root deployment).
+ * If deploying to a subpath (e.g. /Gold-Prices/ on GitHub Pages), update:
+ *   - PRECACHE_URLS to use the subpath prefix
+ *   - manifest.json start_url / scope
+ *   - config/constants.js BASE_PATH
+ *   - vite.config.js base
  */
 
 const CACHE_NAME = 'goldprices-v5';

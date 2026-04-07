@@ -3,7 +3,7 @@
  * Fetches live gold + FX data in parallel, renders the hero live card
  * and GCC quick-price grid. Cache-first: shows cached data instantly.
  */
-import { CONSTANTS, KARATS, COUNTRIES } from './config/index.js';
+import { CONSTANTS, BASE_PATH, KARATS, COUNTRIES } from './config/index.js';
 import * as api from './lib/api.js';
 import * as cache from './lib/cache.js';
 import * as calc from './lib/price-calculator.js';
@@ -534,7 +534,7 @@ async function init() {
 
 document.addEventListener('DOMContentLoaded', init);
 
-// Register service worker
+// Register service worker (path uses BASE_PATH from config/constants.js)
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(() => {});
+  navigator.serviceWorker.register(BASE_PATH + 'sw.js').catch(() => {});
 }

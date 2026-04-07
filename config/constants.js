@@ -1,3 +1,8 @@
+// BASE_PATH: the root path under which the site is served.
+// '/' for Replit/root deployment; '/Gold-Prices/' for GitHub Pages.
+// Must match vite.config.js `base` and the service worker scope.
+export const BASE_PATH = '/';
+
 export const CONSTANTS = {
   API_GOLD_URL: 'https://api.gold-api.com/price/XAU',
   API_FX_URL: 'https://open.er-api.com/v6/latest/USD',

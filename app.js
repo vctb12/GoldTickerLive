@@ -1,4 +1,4 @@
-import { CONSTANTS, KARATS, COUNTRIES, TRANSLATIONS } from './config/index.js';
+import { CONSTANTS, BASE_PATH, KARATS, COUNTRIES, TRANSLATIONS } from './config/index.js';
 import * as cache from './lib/cache.js';
 import * as api from './lib/api.js';
 import * as calc from './lib/price-calculator.js';
@@ -1004,7 +1004,7 @@ function setupChartControls() {
 
 document.addEventListener('DOMContentLoaded', init);
 
-// Register service worker
+// Register service worker (path uses BASE_PATH from config/constants.js)
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(() => {});
+  navigator.serviceWorker.register(BASE_PATH + 'sw.js').catch(() => {});
 }
