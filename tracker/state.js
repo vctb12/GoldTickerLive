@@ -11,6 +11,7 @@ export const STORAGE_KEYS = {
 };
 
 export const VALID_MODES = new Set(['live', 'compare', 'archive', 'exports', 'method']);
+export const VALID_PANELS = new Set(['alerts', 'planner']);
 
 export const DEFAULT_STATE = {
   lang: 'en',
@@ -139,18 +140,56 @@ export function persistState(state) {
   writeLocal(STORAGE_KEYS.wire, state.wireItems.slice(0, 32));
 }
 
-export function syncUrlFromState(state) {
+export function syncUrlFromState(state, panel = null) {
   const url = new URL(window.location.href);
-  url.hash = `mode=${state.mode}&cur=${state.selectedCurrency}&k=${state.selectedKarat}&u=${state.selectedUnit}&r=${state.range}&cmp=${state.compareCurrency}&lang=${state.lang}`;
+  const safePanel = VALID_PANELS.has(panel) ? panel : null;
+  const hashParams = new URLSearchParams({
+    mode: state.mode,
+    cur: state.selectedCurrency,
+    k: state.selectedKarat,
+    u: state.selectedUnit,
+    r: state.range,
+    cmp: state.compareCurrency,
+    lang: state.lang,
+  });
+  if (safePanel) hashParams.set('panel', safePanel);
+  url.hash = hashParams.toString();
   history.replaceState(null, '', url.toString());
 }
 
 export function applyUrlState(state) {
   const hash = window.location.hash.slice(1);
-  if (!hash) return;
+  if (!hash) return { panel: null };
+
+  const legacyHash = hash.toLowerCase();
+  const legacyPanelMap = {
+    alerts: 'alerts',
+    'section-alerts': 'alerts',
+  };
+
   const params = new URLSearchParams(hash);
   const urlMode = params.get('mode');
-  if (urlMode && VALID_MODES.has(urlMode)) state.mode = urlMode;
+  let panel = params.get('panel');
+  let shouldCanonicalize = false;
+
+  if (legacyPanelMap[legacyHash]) {
+    panel = legacyPanelMap[legacyHash];
+    shouldCanonicalize = true;
+  }
+
+  if (urlMode && VALID_MODES.has(urlMode)) {
+    state.mode = urlMode;
+  } else if (urlMode && VALID_PANELS.has(urlMode)) {
+    panel = urlMode;
+    state.mode = 'live';
+    shouldCanonicalize = true;
+  }
+
+  if (panel && !VALID_PANELS.has(panel)) {
+    panel = null;
+    shouldCanonicalize = true;
+  }
+
   state.selectedCurrency = params.get('cur') || state.selectedCurrency;
   state.selectedKarat = params.get('k') || state.selectedKarat;
   state.selectedUnit = params.get('u') || state.selectedUnit;
@@ -158,6 +197,17 @@ export function applyUrlState(state) {
   state.compareCurrency = params.get('cmp') || state.compareCurrency;
   const urlLang = params.get('lang');
   if (urlLang === 'en' || urlLang === 'ar') state.lang = urlLang;
+
+  if (!VALID_MODES.has(state.mode)) {
+    state.mode = 'live';
+    shouldCanonicalize = true;
+  }
+
+  if (shouldCanonicalize) {
+    syncUrlFromState(state, panel);
+  }
+
+  return { panel };
 }
 
 function readLocal(key, fallback) {

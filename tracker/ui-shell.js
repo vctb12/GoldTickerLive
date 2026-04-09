@@ -5,6 +5,7 @@ import { injectTicker, updateTicker, updateTickerLang } from '../components/tick
 import { syncUrlFromState, persistState, applyUrlState } from './state.js';
 
 let _openPanel = null;
+const BASE_MODES = ['live', 'compare', 'archive', 'exports', 'method'];
 
 export function mountShell(state, els, onModeChange, onLangChange) {
   // Mount shared shell
@@ -41,19 +42,13 @@ export function mountShell(state, els, onModeChange, onLangChange) {
       panel.hidden = !active;
     });
     persistState(state);
-    syncUrlFromState(state);
+    syncUrlFromState(state, _openPanel);
     if (typeof onModeChange === 'function') onModeChange(mode);
   }
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => setMode(tab.dataset.mode));
   });
-
-  // Initial mode selection (never allow alerts/planner as mode)
-  const safeMode = ['live', 'compare', 'archive', 'exports', 'method'].includes(state.mode)
-    ? state.mode
-    : 'live';
-  setMode(safeMode);
 
   // Overlay system for Alerts and Planner
   const overlays = {
@@ -75,7 +70,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
       btn.setAttribute('aria-expanded', 'true');
     });
     // Sync URL with panel open
-    syncUrlFromState(state);
+    syncUrlFromState(state, _openPanel);
   }
 
   function closeOverlay(name) {
@@ -89,7 +84,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
       btn.setAttribute('aria-expanded', 'false');
     });
     _openPanel = null;
-    syncUrlFromState(state);
+    syncUrlFromState(state, _openPanel);
   }
 
   function toggleOverlay(name) {
@@ -114,14 +109,23 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     });
   });
 
+  function applyModeAndPanelFromHash() {
+    const { panel } = applyUrlState(state);
+    const safeMode = BASE_MODES.includes(state.mode) ? state.mode : 'live';
+    setMode(safeMode);
+    if (panel && overlays[panel]) {
+      openOverlay(panel);
+    } else if (_openPanel) {
+      closeOverlay(_openPanel);
+    }
+  }
+
+  // Initial mode/panel selection (never allow alerts/planner as mode)
+  applyModeAndPanelFromHash();
+
   // Sync back/forward navigation
   window.addEventListener('hashchange', () => {
-    applyUrlState(state);
-    const m = ['live', 'compare', 'archive', 'exports', 'method'].includes(state.mode)
-      ? state.mode
-      : 'live';
-    setMode(m);
-    if (typeof onModeChange === 'function') onModeChange(state.mode);
+    applyModeAndPanelFromHash();
   });
 
   // Keyboard shortcuts
