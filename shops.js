@@ -99,7 +99,16 @@ const TXT = {
     info2Body: 'Cards indicate whether business details are limited or partially available so you know what to expect.',
     info3Title: 'Use as a shortlist',
     info3Body: 'This page is for reference and discovery. Always confirm current prices, charges, and product details directly with shops.',
+    resultsLegend: 'Legend: Store profile = direct business listing; Market-area listing = cluster/area reference. Details confidence reflects currently available contact details.',
     resultsDisclaimer: 'Listings may represent market areas or dealer clusters unless direct contact details are shown.',
+    listingConfidenceTitle: 'Listing type + details confidence',
+    detailsConfidence: 'Details confidence',
+    rankFull: 'High',
+    rankPartial: 'Medium',
+    rankLimited: 'Basic',
+    nextActionsStore: 'Best next steps',
+    nextActionsMarket: 'Area discovery',
+    areaGuide: 'Area guide',
     nextStepTitle: 'Before you buy',
     nextStepBody: 'Confirm final retail price, making charges, and taxes directly with the seller.',
     quickActionsCalc: 'Calculate Value',
@@ -168,7 +177,16 @@ const TXT = {
     info2Body: 'توضح البطاقات مستوى توفر تفاصيل النشاط حتى تعرف المعلومات المتاحة قبل التواصل.',
     info3Title: 'استخدمه كقائمة مختصرة',
     info3Body: 'هذه الصفحة للاكتشاف والمرجعية. احرص على تأكيد الأسعار والرسوم والتفاصيل مباشرة مع المحلات.',
+    resultsLegend: 'الدليل: ملف متجر = إدراج مباشر؛ إدراج منطقة سوق = مرجع لمنطقة/تجمع. مستوى الثقة يعكس تفاصيل الاتصال المتاحة حالياً.',
     resultsDisclaimer: 'قد تمثل بعض الإدراجات مناطق سوق أو تجمعات تجار ما لم تُعرض بيانات اتصال مباشرة.',
+    listingConfidenceTitle: 'نوع الإدراج + مستوى الثقة بالتفاصيل',
+    detailsConfidence: 'ثقة التفاصيل',
+    rankFull: 'مرتفع',
+    rankPartial: 'متوسط',
+    rankLimited: 'أساسي',
+    nextActionsStore: 'أفضل الخطوات التالية',
+    nextActionsMarket: 'استكشاف المنطقة',
+    areaGuide: 'دليل المنطقة',
     nextStepTitle: 'قبل الشراء',
     nextStepBody: 'أكد السعر النهائي للتجزئة ورسوم المصنعية والضرائب مباشرة مع البائع.',
     quickActionsCalc: 'احسب القيمة',
@@ -199,6 +217,18 @@ function detailsAvailabilityLabel(value) {
   return t('detailsLimited');
 }
 
+function detailsAvailabilityRank(value) {
+  if (value === 'full') return 3;
+  if (value === 'partial') return 2;
+  return 1;
+}
+
+function detailsConfidenceTier(value) {
+  if (value === 'full') return t('rankFull');
+  if (value === 'partial') return t('rankPartial');
+  return t('rankLimited');
+}
+
 function isMarketCluster(shop) {
   // Market clusters typically have "cluster", "shops", "dealers", "area", or "market" in notes
   // and empty phone/website
@@ -210,6 +240,23 @@ function isMarketCluster(shop) {
 
 function listingTypeLabel(shop) {
   return isMarketCluster(shop) ? t('marketAreaListing') : t('storeProfile');
+}
+
+function listingSortScore(shop) {
+  const detailRank = detailsAvailabilityRank(shop.detailsAvailability);
+  const contactBonus = shop.phone && shop.website ? 2 : (shop.phone || shop.website ? 1 : 0);
+  const typeBonus = isMarketCluster(shop) ? 0 : 1;
+  return (detailRank * 100) + (contactBonus * 10) + typeBonus;
+}
+
+function sortedShops(shops) {
+  return [...shops].sort((a, b) => {
+    const scoreDiff = listingSortScore(b) - listingSortScore(a);
+    if (scoreDiff !== 0) return scoreDiff;
+    const featuredDiff = Number(Boolean(b.featured)) - Number(Boolean(a.featured));
+    if (featuredDiff !== 0) return featuredDiff;
+    return a.name.localeCompare(b.name, STATE.lang);
+  });
 }
 
 function toggleShortlist(shopId) {
@@ -405,6 +452,7 @@ function applyStaticText() {
   document.getElementById('shops-info-2-body').textContent = t('info2Body');
   document.getElementById('shops-info-3-title').textContent = t('info3Title');
   document.getElementById('shops-info-3-body').textContent = t('info3Body');
+  document.getElementById('shops-results-legend').textContent = t('resultsLegend');
   document.getElementById('shops-results-disclaimer').textContent = t('resultsDisclaimer');
 
   const modalCloseBtn = document.querySelector('.shops-modal-close');
@@ -601,6 +649,12 @@ function renderCards(shops) {
     const clusterBadge = isCluster ? `<span class="shop-cluster-badge">${t('marketCluster')}</span>` : '';
     const listingTypeBadge = `<span class="shop-listing-type ${isCluster ? 'shop-listing-type--market' : 'shop-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
     const inShortlist = isInShortlist(shop.id);
+    const countryUrl = country?.slug ? `countries/${country.slug}.html` : '';
+    const areaGuideUrl = `${location.pathname}?country=${encodeURIComponent(shop.countryCode)}&search=${encodeURIComponent(shop.market)}`;
+    const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${shop.name}, ${shop.market}, ${shop.city}`)}`;
+    const confidenceTier = detailsConfidenceTier(shop.detailsAvailability);
+    const detailsLabel = detailsAvailabilityLabel(shop.detailsAvailability);
+    const nextActionLabel = isCluster ? t('nextActionsMarket') : t('nextActionsStore');
 
     const contactParts = [];
     if (shop.phone) contactParts.push(`${t('phone')}: ${shop.phone}`);
@@ -619,8 +673,21 @@ function renderCards(shops) {
               ${shop.featured ? `<span class="shop-featured">${t('featured')}</span>` : ''}
             </div>
           </div>
-          <span class="shop-signal shop-signal--${shop.detailsAvailability}">${detailsAvailabilityLabel(shop.detailsAvailability)}</span>
         </header>
+
+        <section class="shop-confidence-block" aria-label="${t('listingConfidenceTitle')}">
+          <p class="shop-confidence-title">${t('listingConfidenceTitle')}</p>
+          <div class="shop-confidence-grid">
+            <p class="shop-confidence-item">
+              <span>${t('category')}</span>
+              <strong>${listingTypeLabel(shop)}</strong>
+            </p>
+            <p class="shop-confidence-item">
+              <span>${t('detailsConfidence')}</span>
+              <strong class="shop-signal shop-signal--${shop.detailsAvailability}">${confidenceTier} · ${detailsLabel}</strong>
+            </p>
+          </div>
+        </section>
 
         <div class="shop-meta-grid">
           <p class="shop-meta"><span>${t('location')}</span><strong>${shop.city}, ${countryName(country)} · ${regionName(country.group)}</strong></p>
@@ -635,7 +702,31 @@ function renderCards(shops) {
 
         <p class="shop-notes">${shop.notes}</p>
         
-        <div class="shop-actions-row">
+        <div class="shop-next-action-label">${nextActionLabel}</div>
+        <div class="shop-actions-row shop-actions-row--primary">
+          ${isCluster ? `<a href="${areaGuideUrl}" class="shop-action-btn shop-action-btn--guide" aria-label="${t('areaGuide')}: ${shop.market}">
+            <span class="shop-action-icon">🧭</span>
+            <span class="shop-action-label">${t('areaGuide')}</span>
+          </a>` : ''}
+          ${!isCluster && shop.phone ? `<a href="tel:${shop.phone.replace(/\s+/g, '')}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
+            <span class="shop-action-icon">📞</span>
+            <span class="shop-action-label">${t('callShop')}</span>
+          </a>` : ''}
+          ${!isCluster && shop.website ? `<a href="${shop.website}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--website" aria-label="${t('visitWebsite')}">
+            <span class="shop-action-icon">🌐</span>
+            <span class="shop-action-label">${t('visitWebsite')}</span>
+          </a>` : ''}
+          ${!isCluster ? `<a href="${directionsUrl}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--directions" aria-label="${t('directions')}">
+            <span class="shop-action-icon">🧭</span>
+            <span class="shop-action-label">${t('directions')}</span>
+          </a>` : ''}
+          ${countryUrl ? `<a href="${countryUrl}" class="shop-action-btn shop-action-btn--country" aria-label="${t('viewCountryPage')}: ${countryName(country)}">
+            <span class="shop-action-icon">📄</span>
+            <span class="shop-action-label">${countryName(country)}</span>
+          </a>` : ''}
+        </div>
+
+        <div class="shop-actions-row shop-actions-row--secondary">
           <button class="shop-action-btn shop-action-btn--save ${inShortlist ? 'is-saved' : ''}" 
                   type="button" data-shop-id="${shop.id}" aria-label="${inShortlist ? t('removeFromShortlist') : t('saveToShortlist')}">
             <span class="shop-action-icon">${inShortlist ? '✓' : '+'}</span>
@@ -645,14 +736,6 @@ function renderCards(shops) {
             <span class="shop-action-icon">↗</span>
             <span class="shop-action-label">${t('shareShop')}</span>
           </button>
-          ${shop.phone ? `<a href="tel:${shop.phone.replace(/\s+/g, '')}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
-            <span class="shop-action-icon">📞</span>
-            <span class="shop-action-label">${t('callShop')}</span>
-          </a>` : ''}
-          ${country?.slug ? `<a href="countries/${country.slug}.html" class="shop-action-btn shop-action-btn--country" aria-label="${t('viewCountryPage')}: ${countryName(country)}">
-            <span class="shop-action-icon">📄</span>
-            <span class="shop-action-label">${countryName(country)}</span>
-          </a>` : ''}
         </div>
         
         <p class="shop-contact">${contactParts.join(' · ') || t('noContact')}</p>
@@ -845,7 +928,7 @@ function renderShortlistBar() {
 
 function render() {
   syncUrlToState();
-  const shops = filterShops();
+  const shops = sortedShops(filterShops());
   const empty = document.getElementById('shops-empty');
   const count = document.getElementById('shops-count');
   if (count) count.textContent = t('count')(shops.length);
