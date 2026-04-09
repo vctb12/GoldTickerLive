@@ -1717,6 +1717,14 @@ body.tracker-pro-page {
   outline-offset: 2px;
 }
 
+body.tracker-workspace-basic .tracker-advanced-only {
+  display: none !important;
+}
+
+body.tracker-workspace-basic .tracker-modes {
+  justify-content: flex-start;
+}
+
 @media (max-width: 640px) {
   .tracker-modes {
     gap: 0.3rem;

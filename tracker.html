@@ -91,8 +91,7 @@
 
           <h1 id="tp-hero-title">Gold Tracker Pro</h1>
           <p id="tp-hero-copy">
-            A live gold desk for GCC and Arab markets: spot-linked pricing, karat ladders, comparison board,
-            archive, alerts, planners, and exports — all inside your site shell.
+            First action sequence: refresh live reference prices, choose your market + karat, then read the chart before opening advanced tools.
           </p>
 
           <div class="tracker-hero-actions">
@@ -100,14 +99,15 @@
             <button class="btn btn-outline" id="tp-share-btn" type="button">Copy quick brief</button>
             <button class="btn btn-ghost" id="tp-reset-btn" type="button">Reset view</button>
             <a class="btn btn-ghost" href="#mode-live" id="tp-jump-chart">Jump to chart</a>
+            <button class="btn btn-ghost" id="tp-workspace-toggle" type="button" aria-pressed="false">Open advanced workspace</button>
           </div>
 
           <div class="tracker-onboarding-card" aria-label="How to use tracker quickly">
-            <h2>Start in 30 seconds</h2>
+            <h2>Start with one path</h2>
             <ol class="tracker-onboarding-steps">
-              <li>Check the source state first: <span class="tracker-source-badge tracker-source-badge--live">Live</span> or <span class="tracker-source-badge tracker-source-badge--cached">Cached/Fallback</span>.</li>
-              <li>Pick your market, currency, karat, and unit from the controls below.</li>
-              <li>Use Compare + Planner for decisions, then export with timestamps for records.</li>
+              <li>Press <strong>Refresh live data</strong> and confirm the source badge shows <span class="tracker-source-badge tracker-source-badge--live">Live</span> or <span class="tracker-source-badge tracker-source-badge--cached">Cached/Fallback</span>.</li>
+              <li>Pick your market, currency, karat, and unit in the live controls.</li>
+              <li>Read the chart trend and decision cues, then open advanced workspace only when needed.</li>
             </ol>
             <p class="tracker-onboarding-note">All figures here are spot-linked reference estimates, not final retail jewelry quotes.</p>
           </div>
@@ -152,7 +152,7 @@
           Live
         </button>
         <button
-          class="tracker-mode-tab"
+          class="tracker-mode-tab tracker-advanced-only"
           role="tab"
           aria-selected="false"
           aria-controls="mode-compare"
@@ -162,7 +162,7 @@
           Compare
         </button>
         <button
-          class="tracker-mode-tab"
+          class="tracker-mode-tab tracker-advanced-only"
           role="tab"
           aria-selected="false"
           aria-controls="mode-archive"
@@ -172,7 +172,7 @@
           Archive
         </button>
         <button
-          class="tracker-mode-tab tracker-overlay-btn"
+          class="tracker-mode-tab tracker-overlay-btn tracker-advanced-only"
           type="button"
           id="tab-alerts"
           data-overlay="alerts"
@@ -182,7 +182,7 @@
           Alerts
         </button>
         <button
-          class="tracker-mode-tab tracker-overlay-btn"
+          class="tracker-mode-tab tracker-overlay-btn tracker-advanced-only"
           type="button"
           id="tab-planner"
           data-overlay="planner"
@@ -192,7 +192,7 @@
           Planner
         </button>
         <button
-          class="tracker-mode-tab"
+          class="tracker-mode-tab tracker-advanced-only"
           role="tab"
           aria-selected="false"
           aria-controls="mode-exports"
@@ -202,7 +202,7 @@
           Exports
         </button>
         <button
-          class="tracker-mode-tab"
+          class="tracker-mode-tab tracker-advanced-only"
           role="tab"
           aria-selected="false"
           aria-controls="mode-method"
@@ -244,7 +244,7 @@
             <span>Unit</span>
             <select id="tp-unit"></select>
           </label>
-          <label class="tracker-field">
+          <label class="tracker-field tracker-advanced-only">
             <span>Compare market</span>
             <select id="tp-compare-country"></select>
           </label>
@@ -265,15 +265,15 @@
             <button type="button" class="tracker-chip" id="tp-auto-refresh">Auto refresh: on</button>
             <button type="button" class="tracker-chip is-active" data-metric="selected">Selected view</button>
             <button type="button" class="tracker-chip" data-metric="spot">Spot only</button>
-            <button type="button" class="tracker-chip" data-metric="compare">Compare market</button>
-            <button type="button" class="tracker-chip" data-toggle="wire">Wire headlines</button>
+            <button type="button" class="tracker-chip tracker-advanced-only" data-metric="compare">Compare market</button>
+            <button type="button" class="tracker-chip tracker-advanced-only" data-toggle="wire">Wire headlines</button>
             <button type="button" class="tracker-chip" data-toggle="favorites">Favorites only</button>
           </div>
         </div>
       </div>
 
       <!-- Market wire -->
-      <section class="tracker-wire-shell" aria-label="Market wire">
+      <section class="tracker-wire-shell tracker-advanced-only" aria-label="Market wire">
         <div class="tracker-wire-card">
           <div class="tracker-wire-label">Market wire</div>
           <div class="tracker-wire-meta" id="tp-wire-meta">
@@ -305,10 +305,10 @@
               </p>
             </div>
             <div class="tracker-head-actions">
-              <button type="button" class="btn btn-sm btn-outline" id="tp-export-chart">
+              <button type="button" class="btn btn-sm btn-outline tracker-advanced-only" id="tp-export-chart">
                 Export visible chart CSV
               </button>
-              <button type="button" class="btn btn-sm btn-ghost" id="tp-download-json">
+              <button type="button" class="btn btn-sm btn-ghost tracker-advanced-only" id="tp-download-json">
                 Download snapshot JSON
               </button>
             </div>
@@ -381,7 +381,7 @@
           <div class="tracker-watchlist-block" aria-label="Market watchlist">
             <div class="tracker-subpanel-head">
               <h3>Market watchlist</h3>
-              <button type="button" class="btn btn-sm btn-outline" id="tp-export-watchlist">
+              <button type="button" class="btn btn-sm btn-outline tracker-advanced-only" id="tp-export-watchlist">
                 Export watchlist CSV
               </button>
             </div>
@@ -400,7 +400,7 @@
 
     <!-- MODE: COMPARE -->
     <section
-      class="tracker-shell tracker-compare-shell tracker-mode-panel"
+      class="tracker-shell tracker-compare-shell tracker-mode-panel tracker-advanced-only"
       id="mode-compare"
       role="tabpanel"
       aria-labelledby="tab-compare"
@@ -457,7 +457,7 @@
 
     <!-- OVERLAY: ALERTS & PRESETS (slide-in panel, independent of main view) -->
     <div
-      class="tp-overlay"
+      class="tp-overlay tracker-advanced-only"
       id="tp-overlay-alerts"
       role="dialog"
       aria-modal="true"
@@ -536,7 +536,7 @@
 
     <!-- OVERLAY: PLANNER (slide-in panel, independent of main view) -->
     <div
-      class="tp-overlay"
+      class="tp-overlay tracker-advanced-only"
       id="tp-overlay-planner"
       role="dialog"
       aria-modal="true"
@@ -638,7 +638,7 @@
 
     <!-- MODE: ARCHIVE -->
     <section
-      class="tracker-shell tracker-archive-shell tracker-mode-panel"
+      class="tracker-shell tracker-archive-shell tracker-mode-panel tracker-advanced-only"
       id="mode-archive"
       role="tabpanel"
       aria-labelledby="tab-archive"
@@ -732,7 +732,7 @@
 
     <!-- MODE: EXPORTS -->
     <section
-      class="tracker-shell tracker-exports-shell tracker-mode-panel"
+      class="tracker-shell tracker-exports-shell tracker-mode-panel tracker-advanced-only"
       id="mode-exports"
       role="tabpanel"
       aria-labelledby="tab-exports"
@@ -798,7 +798,7 @@
 
     <!-- MODE: METHOD -->
     <section
-      class="tracker-shell tracker-method-shell tracker-mode-panel"
+      class="tracker-shell tracker-method-shell tracker-mode-panel tracker-advanced-only"
       id="mode-method"
       role="tabpanel"
       aria-labelledby="tab-method"
