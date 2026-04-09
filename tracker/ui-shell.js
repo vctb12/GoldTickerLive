@@ -29,8 +29,40 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   // Wire main mode tabs (Live / Compare / Archive / Exports / Method only)
   const tabs = Array.from(document.querySelectorAll('.tracker-mode-tab[data-mode]'));
   const panels = Array.from(document.querySelectorAll('.tracker-mode-panel[data-mode-panel]'));
+  const workspaceToggle = els.workspaceToggle || document.getElementById('tp-workspace-toggle');
+  const isAdvancedMode = () => state.workspaceLevel === 'advanced';
+
+  function applyWorkspaceLevel() {
+    const advanced = isAdvancedMode();
+    document.body.classList.toggle('tracker-workspace-basic', !advanced);
+    document.body.classList.toggle('tracker-workspace-advanced', advanced);
+    if (workspaceToggle) {
+      workspaceToggle.textContent = advanced ? 'Use basic workspace' : 'Open advanced workspace';
+      workspaceToggle.setAttribute('aria-pressed', advanced ? 'true' : 'false');
+    }
+    if (!advanced && state.mode !== 'live') {
+      setMode('live');
+    }
+    if (!advanced && _openPanel) {
+      closeOverlay(_openPanel);
+    }
+  }
+
+  function setWorkspaceLevel(level = 'basic') {
+    state.workspaceLevel = level === 'advanced' ? 'advanced' : 'basic';
+    persistState(state);
+    applyWorkspaceLevel();
+    if (typeof onModeChange === 'function') onModeChange(state.mode);
+  }
+
+  function ensureAdvancedWorkspace() {
+    if (!isAdvancedMode()) {
+      setWorkspaceLevel('advanced');
+    }
+  }
 
   function setMode(mode) {
+    if (mode !== 'live') ensureAdvancedWorkspace();
     state.mode = mode;
     tabs.forEach(tab => {
       const active = tab.dataset.mode === mode;
@@ -57,6 +89,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   };
 
   function openOverlay(name) {
+    ensureAdvancedWorkspace();
     if (_openPanel && _openPanel !== name) closeOverlay(_openPanel);
     const overlay = overlays[name];
     if (!overlay) return;
@@ -111,6 +144,9 @@ export function mountShell(state, els, onModeChange, onLangChange) {
 
   function applyModeAndPanelFromHash() {
     const { panel } = applyUrlState(state);
+    const needsAdvanced = state.mode !== 'live' || !!panel;
+    if (needsAdvanced) state.workspaceLevel = 'advanced';
+    applyWorkspaceLevel();
     const safeMode = BASE_MODES.includes(state.mode) ? state.mode : 'live';
     setMode(safeMode);
     if (panel && overlays[panel]) {
@@ -146,6 +182,10 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     } else if (key === 'p') {
       toggleOverlay('planner');
     }
+  });
+
+  workspaceToggle?.addEventListener('click', () => {
+    setWorkspaceLevel(isAdvancedMode() ? 'basic' : 'advanced');
   });
 
   return { setMode, openOverlay, closeOverlay };
