@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gold Price by Country — GCC & Arab World | GoldPrices</title>
+  <meta name="description" content="Browse country gold price pages across GCC, Levant, Africa, and India. Live spot-linked estimates by country with local currency context." />
+  <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/countries/index.html" />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../home.css" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <style>
+    .countries-trust-note {
+      background: rgba(212, 160, 23, 0.12);
+      border: 1px solid rgba(212, 160, 23, 0.3);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1rem;
+      color: var(--text-color, #2b2b2b);
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <main id="main-content">
+    <section class="home-section" aria-labelledby="countries-index-title" style="padding-top:2rem;">
+      <div class="home-section-inner">
+        <div class="section-intro">
+          <div>
+            <h1 id="countries-index-title" class="home-section-title">Country Gold Price Pages</h1>
+            <p class="home-section-sub">Choose a country page for local spot-linked estimates, currency context, and market notes.</p>
+          </div>
+          <a href="../tracker.html" class="section-link">Open Live Tracker →</a>
+        </div>
+
+        <div class="countries-trust-note">
+          ⚠ These are <strong>spot-linked bullion estimates</strong>, not retail jewelry prices. Store prices may include making charges and local premiums.
+        </div>
+
+        <div class="country-tiles">
+          <a href="uae.html" class="country-tile"><span>🇦🇪</span><span>UAE</span></a>
+          <a href="saudi-arabia.html" class="country-tile"><span>🇸🇦</span><span>Saudi Arabia</span></a>
+          <a href="kuwait.html" class="country-tile"><span>🇰🇼</span><span>Kuwait</span></a>
+          <a href="qatar.html" class="country-tile"><span>🇶🇦</span><span>Qatar</span></a>
+          <a href="bahrain.html" class="country-tile"><span>🇧🇭</span><span>Bahrain</span></a>
+          <a href="oman.html" class="country-tile"><span>🇴🇲</span><span>Oman</span></a>
+          <a href="egypt.html" class="country-tile"><span>🇪🇬</span><span>Egypt</span></a>
+          <a href="jordan.html" class="country-tile"><span>🇯🇴</span><span>Jordan</span></a>
+          <a href="morocco.html" class="country-tile"><span>🇲🇦</span><span>Morocco</span></a>
+          <a href="india.html" class="country-tile"><span>🇮🇳</span><span>India</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { injectNav } from '../components/nav.js';
+    import { injectFooter } from '../components/footer.js';
+
+    injectNav('en', 1);
+    injectFooter('en', 1);
+  </script>
+</body>
+</html>
