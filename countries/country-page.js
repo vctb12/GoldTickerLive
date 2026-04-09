@@ -13,6 +13,7 @@
  *   decimals: 2,
  *   timezone: 'Asia/Dubai',
  *   relatedCountries: [      // links at bottom
+ *     // Use page-relative URLs (city pages: '../../uae.html', country pages: 'uae.html')
  *     { file: 'saudi-arabia.html', nameEn: 'Saudi Arabia', nameAr: 'السعودية', flag: '🇸🇦' },
  *     ...
  *   ],
@@ -214,13 +215,32 @@ function renderKaratTable(cfg) {
     <p class="cp-disclaimer">${t('disclaimer')}</p>`;
 }
 
+function normalizeRelatedCountryUrl(file) {
+  if (typeof file !== 'string') return '#';
+  const trimmed = file.trim();
+  if (!trimmed) return '#';
+  if (/^(?:https?:|mailto:|tel:|#)/i.test(trimmed)) return trimmed;
+
+  // Guard for legacy configs that used ../countries/... or ../../countries/... from city pages.
+  const normalizedRelative = trimmed
+    .replace(/^\.\.\/\.\.\/countries\//, '../../')
+    .replace(/^\.\.\/countries\//, '../');
+
+  try {
+    const resolved = new URL(normalizedRelative, window.location.href);
+    return `${resolved.pathname}${resolved.search}${resolved.hash}`;
+  } catch {
+    return normalizedRelative;
+  }
+}
+
 // ── Render related countries ─────────────────────────────────────────────────
 function renderRelated(cfg) {
   const el = document.getElementById('cp-related');
   if (!el || !cfg.relatedCountries?.length) return;
 
   const cards = cfg.relatedCountries.map(c => `
-    <a href="${c.file}" class="cp-related-card">
+    <a href="${normalizeRelatedCountryUrl(c.file)}" class="cp-related-card">
       <span class="cp-related-flag">${c.flag}</span>
       <span class="cp-related-name">${STATE.lang === 'ar' ? c.nameAr : c.nameEn}</span>
     </a>`).join('');
