@@ -114,6 +114,8 @@ const TXT = {
     quickActionsCalc: 'Calculate Value',
     quickActionsRates: 'Live Rates',
     quickActionsUAE: 'UAE Market',
+    freshnessSemantics: 'Freshness semantics: Live / Delayed / Cached-Fallback / Estimated / Historical baseline (used consistently across GoldPrices). Directory source: editorial review timestamp.',
+    priceDisclaimer: 'Listings support discovery only. Spot-linked reference prices are separate from final retail jewelry quotes.',
   },
   ar: {
     kicker: 'محلات حسب المنطقة',
@@ -192,6 +194,8 @@ const TXT = {
     quickActionsCalc: 'احسب القيمة',
     quickActionsRates: 'الأسعار المباشرة',
     quickActionsUAE: 'سوق الإمارات',
+    freshnessSemantics: 'دلالات حداثة البيانات: مباشر / متأخر / مخزن-احتياطي / تقديري / خط أساس تاريخي (موحدة عبر GoldPrices). مصدر الدليل: تاريخ مراجعة تحريرية.',
+    priceDisclaimer: 'هذه الإدراجات للاكتشاف فقط. الأسعار المرجعية المرتبطة بالسعر الفوري منفصلة عن سعر التجزئة النهائي للمجوهرات.',
   }
 };
 
@@ -454,6 +458,8 @@ function applyStaticText() {
   document.getElementById('shops-info-3-body').textContent = t('info3Body');
   document.getElementById('shops-results-legend').textContent = t('resultsLegend');
   document.getElementById('shops-results-disclaimer').textContent = t('resultsDisclaimer');
+  document.getElementById('shops-freshness-semantics').textContent = t('freshnessSemantics');
+  document.getElementById('shops-price-disclaimer').textContent = t('priceDisclaimer');
 
   const modalCloseBtn = document.querySelector('.shops-modal-close');
   if (modalCloseBtn) {

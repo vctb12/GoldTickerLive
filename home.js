@@ -18,6 +18,8 @@ let lang = 'en';
 let goldPrice = null;
 let dayOpenPrice = null;
 let rates = {};
+let goldUpdatedAt = null;
+let priceSourceLabel = 'cached/fallback';
 let _refreshTimer = null;
 
 function getLang() {
@@ -75,6 +77,7 @@ const T = {
     lbl21usd: '21K / gram (USD)',
     fetching: 'Fetching...',
     updated: 'Updated',
+    source: 'Source',
     changeLabel: 'Today',
     marketOpen: '● Market Open',
     marketClosed: '○ Market Closed',
@@ -161,6 +164,7 @@ const T = {
     lbl21usd: 'عيار 21 / غرام (USD)',
     fetching: 'جارٍ التحميل...',
     updated: 'آخر تحديث',
+    source: 'المصدر',
     changeLabel: 'اليوم',
     marketOpen: '● السوق مفتوح',
     marketClosed: '○ السوق مغلق',
@@ -269,7 +273,9 @@ function renderHeroCard() {
   set('hlc-usd22',  fmt.formatPrice(usd22g,  'USD', 2));
   set('hlc-aed22',  fmt.formatPrice(aed22g,  'AED', 2));
   set('hlc-usd21',  fmt.formatPrice(usd21g,  'USD', 2));
-  set('hlc-updated', `${tx('updated')}: ${fmt.formatTimestampShort(new Date().toISOString(), lang)}`);
+  const freshnessTime = goldUpdatedAt || new Date().toISOString();
+  const sourceText = priceSourceLabel === 'live' ? 'Live' : 'Cached/Fallback';
+  set('hlc-updated', `${tx('updated')}: ${fmt.formatTimestampShort(freshnessTime, lang)} · ${tx('source')}: ${sourceText}`);
 
   // Change vs day open
   const changeEl = document.getElementById('hlc-change');
@@ -448,8 +454,12 @@ async function fetchLiveData() {
 
   if (goldRes.status === 'fulfilled') {
     goldPrice = goldRes.value.price;
+    goldUpdatedAt = goldRes.value.updatedAt || new Date().toISOString();
+    priceSourceLabel = 'live';
     cache.saveGoldPrice(goldRes.value.price, goldRes.value.updatedAt);
     renderHeroCard();
+  } else if (!goldPrice) {
+    priceSourceLabel = 'cached/fallback';
   }
 
   if (fxRes.status === 'fulfilled') {
@@ -514,6 +524,8 @@ async function init() {
     goldPrice = STATE_STUB.goldPriceUsdPerOz;
     dayOpenPrice = STATE_STUB.dayOpenGoldPriceUsdPerOz;
     rates = STATE_STUB.rates;
+    goldUpdatedAt = STATE_STUB.freshness?.goldUpdatedAt || null;
+    priceSourceLabel = 'cached/fallback';
   }
 
   applyLangToPage();
