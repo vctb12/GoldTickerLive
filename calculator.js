@@ -17,6 +17,7 @@ import { injectBreadcrumbs } from './components/breadcrumbs.js';
 const STATE = {
   lang: 'en',
   spotUsdPerOz: 0,
+  spotSource: 'cached/fallback',
   rates: {},
   fxMeta: { nextUpdateUtc: 0 },
   status: { goldStale: false, fxStale: false },
@@ -80,6 +81,8 @@ const T = {
     conv_amount: 'Amount',
     conv_from: 'From',
     conv_results_title: 'Equivalent weights',
+    freshness_waiting: 'Freshness: waiting for source timestamp…',
+    trust_note: 'Labels used across GoldPrices: Live, Delayed, Cached/Fallback, Estimated, Historical baseline. Calculator outputs are spot-linked reference estimates, not final retail jewelry quotes.',
   },
   ar: {
     pageTitle: 'حاسبة الذهب',
@@ -127,6 +130,8 @@ const T = {
     conv_amount: 'الكمية',
     conv_from: 'من',
     conv_results_title: 'الأوزان المكافئة',
+    freshness_waiting: 'حداثة البيانات: بانتظار الطابع الزمني من المصدر…',
+    trust_note: 'التسميات الموحدة عبر GoldPrices: مباشر، متأخر، مخزن/احتياطي، تقديري، وخط أساس تاريخي. نتائج الحاسبة تقديرات مرجعية مرتبطة بالسعر الفوري وليست سعر تجزئة نهائي للمجوهرات.',
   },
 };
 
@@ -422,6 +427,8 @@ function applyLang() {
   set('conv-amount-label', t('conv_amount'));
   set('conv-from-label', t('conv_from'));
   set('conv-results-title', t('conv_results_title'));
+  set('calc-freshness-note', t('freshness_waiting'));
+  set('calc-trust-note', t('trust_note'));
 
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir  = STATE.lang === 'ar' ? 'rtl' : 'ltr';
@@ -442,6 +449,25 @@ function updateSpotBadge() {
     const aed24 = (STATE.spotUsdPerOz / CONSTANTS.TROY_OZ_GRAMS) * CONSTANTS.AED_PEG;
     aedPrice.textContent = `AED ${aed24.toFixed(2)}`;
     aedBadge.hidden = false;
+  }
+
+  const freshnessEl = document.getElementById('calc-freshness-note');
+  if (freshnessEl) {
+    if (!STATE.freshness.goldUpdatedAt) {
+      freshnessEl.textContent = t('freshness_waiting');
+    } else {
+      const locale = STATE.lang === 'ar' ? 'ar-AE' : 'en-US';
+      const stamp = new Date(STATE.freshness.goldUpdatedAt).toLocaleString(locale, {
+        year: 'numeric', month: 'short', day: 'numeric',
+        hour: '2-digit', minute: '2-digit',
+      });
+      const sourceLabel = STATE.spotSource === 'live'
+        ? (STATE.lang === 'ar' ? 'مباشر' : 'Live')
+        : (STATE.lang === 'ar' ? 'مخزن/احتياطي' : 'Cached/Fallback');
+      freshnessEl.textContent = STATE.lang === 'ar'
+        ? `حداثة البيانات: ${sourceLabel} · ${stamp} · المصدر: gold-api.com`
+        : `Freshness: ${sourceLabel} · ${stamp} · Source: gold-api.com`;
+    }
   }
 }
 
@@ -480,7 +506,11 @@ async function fetchLiveData() {
     const [goldRes, fxRes] = await Promise.allSettled([api.fetchGold(), api.fetchFX()]);
     if (goldRes.status === 'fulfilled') {
       STATE.spotUsdPerOz = goldRes.value.price;
+      STATE.freshness.goldUpdatedAt = goldRes.value.updatedAt || new Date().toISOString();
+      STATE.spotSource = 'live';
       cache.saveGoldPrice(goldRes.value.price, goldRes.value.updatedAt);
+    } else if (STATE.spotUsdPerOz) {
+      STATE.spotSource = 'cached/fallback';
     }
     if (fxRes.status === 'fulfilled') {
       STATE.rates = fxRes.value.rates;

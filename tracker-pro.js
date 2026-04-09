@@ -255,10 +255,12 @@ function startAutoRefresh() {
     checkAlerts();
     renderAll();
     if (el.refreshBadge) {
-      const now = new Date().toLocaleTimeString();
+      const stamp = state.live?.updatedAt
+        ? new Date(state.live.updatedAt).toLocaleString()
+        : new Date().toLocaleTimeString();
       el.refreshBadge.textContent = state.hasLiveFailure
-        ? `Cached/fallback · last update ${now}`
-        : `Live source · synced ${now}`;
+        ? `Cached/Fallback · source timestamp ${stamp} · Source: gold-api.com`
+        : `Live · source timestamp ${stamp} · Source: gold-api.com`;
     }
   }, CONSTANTS.GOLD_REFRESH_MS);
 }
@@ -319,6 +321,7 @@ async function fetchLive() {
       const fb = cache.getFallbackGoldPrice();
       if (fb) {
         state.live = { price: fb.price, updatedAt: fb.updatedAt, raw: fb };
+        state.hasLiveFailure = true;
       } else {
         state.hasLiveFailure = true;
       }
