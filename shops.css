@@ -1378,6 +1378,7 @@
   font-size: 0.95rem;
   cursor: pointer;
   color: var(--color-text, #1a1612);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 
 .shops-filter-badge {
@@ -1405,7 +1406,25 @@
   transform: rotate(180deg);
 }
 
+.shops-filter-toggle:focus-visible {
+  outline: 2px solid rgba(196, 153, 62, 0.85);
+  outline-offset: 2px;
+  border-color: rgba(196, 153, 62, 0.7);
+  box-shadow: 0 0 0 3px rgba(196, 153, 62, 0.2);
+}
+
+.shops-filter-toggle[aria-expanded="true"] {
+  border-color: rgba(196, 153, 62, 0.6);
+  background: rgba(196, 153, 62, 0.08);
+}
+
 @media (max-width: 640px) {
+  .shops-controls-inner {
+    display: block;
+    grid-template-columns: none;
+    gap: 0;
+  }
+
   .shops-filter-toggle {
     display: flex;
   }
@@ -1418,7 +1437,9 @@
   }
 
   .shops-filter-panel.is-open {
-    display: contents;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
   }
 }
 
