@@ -52,6 +52,7 @@ export default defineConfig({
         insights:    resolve(root, 'insights.html'),
         methodology: resolve(root, 'methodology.html'),
         invest:      resolve(root, 'invest.html'),
+        admin:       resolve(root, 'admin.html'),
 
         // Buying guide
         'guides-buying-guide': resolve(root, 'guides/buying-guide.html'),
