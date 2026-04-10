@@ -23,7 +23,11 @@ export const NAV_DATA = {
         label: 'Tools',
         items: [
           { href: '../calculator.html',                label: 'Calculator'   },
+<<<<<<< codex/audit-repository-for-ux-improvement-plan
+          { href: '../tracker.html#mode=live&panel=alerts',         label: 'Alerts'       },
+=======
           { href: '../tracker.html#mode=live&panel=alerts', label: 'Alerts'       },
+>>>>>>> main
           { href: '../tracker.html#mode=exports',        label: 'Downloads'    },
           { href: '../tracker.html#mode=archive',        label: 'Date Lookup'  },
         ],
@@ -95,7 +99,11 @@ export const NAV_DATA = {
         label: 'أدوات',
         items: [
           { href: '../calculator.html',                label: 'حاسبة'             },
+<<<<<<< codex/audit-repository-for-ux-improvement-plan
+          { href: '../tracker.html#mode=live&panel=alerts',         label: 'تنبيهات'           },
+=======
           { href: '../tracker.html#mode=live&panel=alerts', label: 'تنبيهات'           },
+>>>>>>> main
           { href: '../tracker.html#mode=exports',        label: 'تنزيلات'           },
           { href: '../tracker.html#mode=archive',        label: 'البحث بالتاريخ'    },
         ],
