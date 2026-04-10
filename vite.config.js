@@ -11,7 +11,37 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_debugger: true,
+        pure_funcs: ['console.warn', 'console.log'],
+      },
+      format: {
+        comments: false,
+      },
+    },
+    cssMinify: true,
     rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('node_modules/lightweight-charts')) {
+            return 'vendor';
+          }
+          if (id.includes('/lib/cache.js') || id.includes('/lib/api.js') || 
+              id.includes('/lib/price-calculator.js') || id.includes('/lib/formatter.js')) {
+            return 'utils';
+          }
+        },
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name?.endsWith('.css')) {
+            return 'assets/[name]-[hash][extname]';
+          }
+          return 'assets/[name]-[hash][extname]';
+        },
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+      },
       input: {
         // Root pages
         index:       resolve(root, 'index.html'),
