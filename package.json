@@ -2,14 +2,25 @@
   "name": "gold-prices",
   "private": true,
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node server.js"
   },
   "devDependencies": {
     "terser": "^5.46.1",
     "vite": "^5.4.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "lowdb": "^1.0.0",
+    "morgan": "^1.10.1",
+    "uuid": "^13.0.0"
   }
 }
