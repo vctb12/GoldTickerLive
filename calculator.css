@@ -5,7 +5,7 @@
 /* ── Hero ─────────────────────────────────────────── */
 .calc-hero {
   background: linear-gradient(155deg, #1a1206 0%, var(--color-gold-deep) 40%, #1a1206 100%);
-  padding: 2.5rem 1.5rem 2rem;
+  padding: var(--space-6) var(--space-5) var(--space-6);
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -147,8 +147,8 @@
 /* ── Panel ─────────────────────────────────────────── */
 .calc-panel {
   max-width: 680px;
-  margin: 2rem auto;
-  padding: 0 1.5rem;
+  margin: var(--space-6) auto;
+  padding: 0 var(--space-5);
 }
 
 .calc-panel[hidden] { display: none; }
@@ -156,11 +156,11 @@
 
 /* ── Card ──────────────────────────────────────────── */
 .calc-card {
-  background: linear-gradient(180deg, #ffffff 0%, #fdfbf7 100%);
-  border: 1.25px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 2rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(196,153,62,0.05);
+  background: linear-gradient(180deg, var(--surface-primary) 0%, #fdfbf7 100%);
+  border: 1.25px solid var(--border-default);
+  border-radius: var(--radius-card);
+  padding: var(--space-6);
+  box-shadow: var(--elev-2), 0 1px 3px rgba(196,153,62,0.05);
   transition: box-shadow 0.28s cubic-bezier(0.25,0.46,0.45,0.94), border-color 0.28s cubic-bezier(0.25,0.46,0.45,0.94);
 }
 

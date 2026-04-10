@@ -5,7 +5,7 @@
 /* ── Hero ──────────────────────────────────────────── */
 .cp-hero {
   background: linear-gradient(155deg, var(--color-gold-deep) 0%, #2a1a04 50%, #100c04 100%);
-  padding: 3rem 1.5rem 2.5rem;
+  padding: var(--space-7) var(--space-5) var(--space-6);
   position: relative;
   overflow: hidden;
 }
@@ -92,8 +92,8 @@
 .cp-price-card {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(201,168,76,0.25);
-  border-radius: var(--radius-md);
-  padding: 1rem 1.2rem;
+  border-radius: var(--radius-control);
+  padding: var(--space-4) var(--space-5);
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
@@ -154,12 +154,12 @@
 .cp-section {
   max-width: 860px;
   margin: 0 auto;
-  padding: 2.5rem 1.5rem;
+  padding: var(--space-6) var(--space-5);
 }
 
 .cp-section + .cp-section {
-  border-top: 1px solid var(--color-border);
-  padding-top: 2rem;
+  border-top: 1px solid var(--border-default);
+  padding-top: var(--space-6);
 }
 
 /* ── Karat table ────────────────────────────────────── */
@@ -181,8 +181,8 @@
 .cp-table-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border-default);
 }
 
 .cp-table {

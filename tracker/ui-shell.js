@@ -82,6 +82,10 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     tab.addEventListener('click', () => setMode(tab.dataset.mode));
   });
 
+  // Initial mode selection (never allow alerts/planner as mode)
+  const safeMode = VALID_MODES.has(state.mode) ? state.mode : 'live';
+  setMode(safeMode);
+
   // Overlay system for Alerts and Planner
   const overlays = {
     alerts: document.getElementById('tp-overlay-alerts'),
@@ -89,7 +93,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   };
 
   function openOverlay(name) {
-    ensureAdvancedWorkspace();
+    if (!VALID_PANELS.has(name)) return;
     if (_openPanel && _openPanel !== name) closeOverlay(_openPanel);
     const overlay = overlays[name];
     if (!overlay) return;
@@ -119,7 +123,8 @@ export function mountShell(state, els, onModeChange, onLangChange) {
       btn.setAttribute('aria-expanded', 'false');
     });
     _openPanel = null;
-    syncUrlFromState(state, _openPanel);
+    state.panel = null;
+    syncUrlFromState(state);
   }
 
   function toggleOverlay(name) {
@@ -144,26 +149,24 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     });
   });
 
-  function applyModeAndPanelFromHash() {
-    const { panel } = applyUrlState(state);
-    const needsAdvanced = state.mode !== 'live' || !!panel;
-    if (needsAdvanced) state.workspaceLevel = 'advanced';
-    applyWorkspaceLevel();
-    const safeMode = BASE_MODES.includes(state.mode) ? state.mode : 'live';
-    setMode(safeMode);
-    if (panel && overlays[panel]) {
-      openOverlay(panel);
-    } else if (_openPanel) {
-      closeOverlay(_openPanel);
+  function syncOverlayFromState() {
+    const desiredPanel = state.panel && VALID_PANELS.has(state.panel) ? state.panel : null;
+    if (!desiredPanel) {
+      if (_openPanel) closeOverlay(_openPanel);
+      return;
     }
+    if (_openPanel !== desiredPanel) openOverlay(desiredPanel);
   }
 
-  // Initial mode/panel selection (never allow alerts/planner as mode)
-  applyModeAndPanelFromHash();
+  syncOverlayFromState();
 
   // Sync back/forward navigation
   window.addEventListener('hashchange', () => {
-    applyModeAndPanelFromHash();
+    const parsed = applyUrlState(state);
+    const m = VALID_MODES.has(state.mode) ? state.mode : 'live';
+    setMode(m);
+    syncOverlayFromState();
+    if (parsed?.shouldCanonicalize) syncUrlFromState(state);
   });
 
   // Keyboard shortcuts
