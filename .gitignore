@@ -1,4 +1,22 @@
 ```
 # Build artifacts
 dist/
+build/
+
+# Compiled files
+*.css.map
+*.js.map
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
 ```
