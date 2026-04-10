@@ -20,7 +20,7 @@ export function renderHero() {
   if (_el.liveBadgeText) {
     if (spot) {
       _el.liveBadgeText.textContent = _state.hasLiveFailure
-        ? `Fallback · XAU/USD ${spot.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (cached)`
+        ? `Cached/Fallback · XAU/USD ${spot.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         : `Live · XAU/USD ${spot.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     } else {
       _el.liveBadgeText.textContent = _state.hasLiveFailure ? 'Live feed unavailable — no cached data' : 'Connecting to API…';
@@ -78,7 +78,7 @@ export function renderChart() {
   const filtered = filterByRange(flatHistory, _state.range);
   const rows = filtered.map(r => ({ date: new Date(r.date), spot: r.spot, source: r.source }));
   if (spot) rows.push({ date: new Date(), spot, source: 'live' });
-  if (rows.length < 2) { _el.chart.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#9d8c72" font-size="14">Collecting data…</text>'; return; }
+  if (rows.length < 2) { const msg = _state.lang === 'ar' ? 'جمع البيانات…' : 'Collecting data…'; _el.chart.innerHTML = `<text x="50%" y="50%" text-anchor="middle" fill="#9d8c72" font-size="14">${msg}</text>`; return; }
   const prices = rows.map(r => r.spot);
   const min = Math.min(...prices) * 0.998;
   const max = Math.max(...prices) * 1.002;
@@ -262,7 +262,7 @@ export function renderDecisionCues() {
   const lines = [
     `Live spot: $${spot.toFixed(2)} / troy oz`,
     _state.hasLiveFailure
-      ? `⚠ Data source: fallback — using cache (API unreachable — live may return soon)`
+      ? `⚠ Data source: Cached/Fallback — using cache (API unreachable — live may return soon)`
       : `✓ Data source: live · last API fetch successful`,
     `History coverage: 2019–Aug 2025 (LBMA baseline) + ${_state.snapshots?.length || 0} session snapshots`,
   ];

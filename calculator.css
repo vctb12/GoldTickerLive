@@ -79,9 +79,35 @@
   background: var(--color-surface-1);
   border-bottom: 1px solid var(--color-border);
   scrollbar-width: none;
+  position: relative;
+  padding-inline: 0.35rem;
+  gap: 0.15rem;
 }
 
 .calc-nav-tabs::-webkit-scrollbar { display: none; }
+
+.calc-nav-tabs::before,
+.calc-nav-tabs::after {
+  content: "";
+  position: sticky;
+  top: 0;
+  width: 22px;
+  flex: 0 0 22px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.calc-nav-tabs::before {
+  left: 0;
+  margin-right: -22px;
+  background: linear-gradient(to right, var(--color-surface-1) 15%, rgba(255,255,255,0));
+}
+
+.calc-nav-tabs::after {
+  right: 0;
+  margin-left: -22px;
+  background: linear-gradient(to left, var(--color-surface-1) 15%, rgba(255,255,255,0));
+}
 
 .calc-tab {
   flex-shrink: 0;
@@ -103,6 +129,13 @@
 .calc-tab:hover {
   color: var(--color-gold-dark);
   background: rgba(196, 153, 62, 0.05);
+}
+
+.calc-tab:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: -2px;
+  background: rgba(196, 153, 62, 0.09);
+  color: var(--color-gold-dark);
 }
 
 .calc-tab.active {

@@ -74,6 +74,15 @@
     <priority>0.75</priority>
   </url>
 
+  <!-- Countries Index -->
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/index.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/index.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/index.html?lang=ar"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
   <!-- Country Pages — GCC -->
   <url>
     <loc>https://vctb12.github.io/Gold-Prices/countries/uae.html</loc>

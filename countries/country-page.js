@@ -13,6 +13,7 @@
  *   decimals: 2,
  *   timezone: 'Asia/Dubai',
  *   relatedCountries: [      // links at bottom
+ *     // Use page-relative URLs (city pages: '../../uae.html', country pages: 'uae.html')
  *     { file: 'saudi-arabia.html', nameEn: 'Saudi Arabia', nameAr: 'السعودية', flag: '🇸🇦' },
  *     ...
  *   ],
@@ -60,7 +61,7 @@ const T = {
     karat21: '21K',
     karat18: '18K',
     karatTitle: 'Gold Karat Prices',
-    karatSub: 'All prices are estimates based on live XAU/USD spot rate and exchange rate.',
+    karatSub: 'All prices are spot-linked reference estimates. Trust labels: Live, Delayed, Cached/Fallback, Estimated, Historical baseline.',
     usdEquiv: 'USD Equivalent',
     change: 'Change',
     from: 'from today\'s open',
@@ -68,8 +69,8 @@ const T = {
     fixedPeg: 'Fixed Peg',
     faq: 'Frequently Asked Questions',
     related: 'Related Countries',
-    disclaimer: 'Prices are indicative estimates only — not financial advice.',
-    lastUpdate: 'Last updated',
+    disclaimer: 'Spot-linked reference estimates only — not final retail jewelry quotes. Retail prices may include making charges, dealer margins, and local taxes.',
+    lastUpdate: 'Freshness',
     gram: 'gram',
     oz: 'troy oz',
     switchLang: 'العربية',
@@ -83,7 +84,7 @@ const T = {
     karat21: 'عيار 21',
     karat18: 'عيار 18',
     karatTitle: 'أسعار عيارات الذهب',
-    karatSub: 'جميع الأسعار تقديرية بناءً على سعر الذهب مقابل الدولار.',
+    karatSub: 'جميع الأسعار تقديرات مرجعية مرتبطة بالسعر الفوري. تسميات الثقة: مباشر، متأخر، مخزن/احتياطي، تقديري، وخط أساس تاريخي.',
     usdEquiv: 'ما يعادله بالدولار',
     change: 'التغيير',
     from: 'من سعر فتح اليوم',
@@ -91,8 +92,8 @@ const T = {
     fixedPeg: 'ربط ثابت',
     faq: 'الأسئلة الشائعة',
     related: 'دول أخرى',
-    disclaimer: 'الأسعار تقديرية فقط — وليست نصيحة مالية.',
-    lastUpdate: 'آخر تحديث',
+    disclaimer: 'هذه الأسعار تقديرات مرجعية مرتبطة بالسعر الفوري وليست أسعار تجزئة نهائية للمجوهرات. قد تتضمن أسعار التجزئة رسوم مصنعية وهوامش وضرائب محلية.',
+    lastUpdate: 'حداثة البيانات',
     gram: 'غرام',
     oz: 'أوقية',
     switchLang: 'English',
@@ -161,7 +162,7 @@ function renderHero(cfg) {
         <span class="badge ${changeClass}">${changeSign}${changeVal.toFixed(2)}%</span>
         <span class="cp-change-label">${t('from')}</span>
       </div>` : ''}
-      <div class="cp-update-time">${t('lastUpdate')}: ${STATE.freshness.goldUpdatedAt ? new Date(STATE.freshness.goldUpdatedAt).toLocaleString(STATE.lang === 'ar' ? 'ar-AE' : 'en-AE', { timeZone: cfg.timezone, hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'}</div>
+      <div class="cp-update-time">${t('lastUpdate')}: ${STATE.status.goldStale ? 'Cached/Fallback' : 'Live'} · ${STATE.freshness.goldUpdatedAt ? new Date(STATE.freshness.goldUpdatedAt).toLocaleString(STATE.lang === 'ar' ? 'ar-AE' : 'en-AE', { timeZone: cfg.timezone, hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'} · Source: gold-api.com</div>
     </div>`;
 }
 
@@ -214,13 +215,32 @@ function renderKaratTable(cfg) {
     <p class="cp-disclaimer">${t('disclaimer')}</p>`;
 }
 
+function normalizeRelatedCountryUrl(file) {
+  if (typeof file !== 'string') return '#';
+  const trimmed = file.trim();
+  if (!trimmed) return '#';
+  if (/^(?:https?:|mailto:|tel:|#)/i.test(trimmed)) return trimmed;
+
+  // Guard for legacy configs that used ../countries/... or ../../countries/... from city pages.
+  const normalizedRelative = trimmed
+    .replace(/^\.\.\/\.\.\/countries\//, '../../')
+    .replace(/^\.\.\/countries\//, '../');
+
+  try {
+    const resolved = new URL(normalizedRelative, window.location.href);
+    return `${resolved.pathname}${resolved.search}${resolved.hash}`;
+  } catch {
+    return normalizedRelative;
+  }
+}
+
 // ── Render related countries ─────────────────────────────────────────────────
 function renderRelated(cfg) {
   const el = document.getElementById('cp-related');
   if (!el || !cfg.relatedCountries?.length) return;
 
   const cards = cfg.relatedCountries.map(c => `
-    <a href="${c.file}" class="cp-related-card">
+    <a href="${normalizeRelatedCountryUrl(c.file)}" class="cp-related-card">
       <span class="cp-related-flag">${c.flag}</span>
       <span class="cp-related-name">${STATE.lang === 'ar' ? c.nameAr : c.nameEn}</span>
     </a>`).join('');

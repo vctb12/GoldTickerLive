@@ -49,7 +49,7 @@ const CONTENT = {
 
     // Featured article
     'featured-tag-label':     'Featured Analysis',
-    'featured-date':          'March 2025',
+    'featured-date':          'March 2026',
     'featured-read-time':     '4 min read',
 
     // Insight grid heading
@@ -74,7 +74,7 @@ const CONTENT = {
 
     // Featured article
     'featured-tag-label':     'تحليل مميز',
-    'featured-date':          'مارس ٢٠٢٥',
+    'featured-date':          'مارس ٢٠٢٦',
     'featured-read-time':     'قراءة ٤ دقائق',
 
     // Insight grid heading
