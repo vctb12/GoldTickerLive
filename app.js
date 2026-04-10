@@ -1004,6 +1004,19 @@ function setupChartControls() {
 
 document.addEventListener('DOMContentLoaded', init);
 
+// Back-to-top button
+(function () {
+  const btn = document.createElement('button');
+  btn.id = 'back-to-top';
+  btn.setAttribute('aria-label', 'Back to top');
+  btn.setAttribute('title', 'Back to top');
+  btn.innerHTML = '↑';
+  btn.hidden = true;
+  document.body.appendChild(btn);
+  window.addEventListener('scroll', () => { btn.hidden = window.scrollY < 400; }, { passive: true });
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+}());
+
 // Register service worker (path uses BASE_PATH from config/constants.js)
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register(BASE_PATH + 'sw.js').catch(() => {});

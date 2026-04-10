@@ -536,6 +536,23 @@ async function init() {
   // Auto-refresh every 90 seconds
   if (_refreshTimer) clearInterval(_refreshTimer);
   _refreshTimer = setInterval(fetchLiveData, CONSTANTS.GOLD_REFRESH_MS);
+
+  // Skeleton timeout: if price still loading after 12s, show unavailable state
+  setTimeout(() => {
+    const priceEl = document.getElementById('hlc-price');
+    if (priceEl && priceEl.classList.contains('hlc-price--loading')) {
+      priceEl.classList.remove('hlc-price--loading');
+      priceEl.textContent = '—';
+      const updEl = document.getElementById('hlc-updated');
+      if (updEl) updEl.textContent = 'Price unavailable — check connection';
+      document.getElementById('hero-live-card')?.removeAttribute('aria-busy');
+    }
+    // GCC grid skeleton timeout
+    document.querySelectorAll('.gcc-card.skeleton-card').forEach(card => {
+      card.classList.remove('skeleton-card');
+      card.textContent = '—';
+    });
+  }, 12000);
 }
 
 document.addEventListener('DOMContentLoaded', init);

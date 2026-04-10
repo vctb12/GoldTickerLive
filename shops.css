@@ -457,6 +457,19 @@
   opacity: 1;
 }
 
+.shops-filter-pill--clear-all {
+  background: transparent;
+  border-color: var(--color-text-muted, #888);
+  color: var(--color-text-muted, #888);
+  font-weight: 600;
+}
+
+.shops-filter-pill--clear-all:hover {
+  border-color: var(--color-error, #e57373);
+  color: var(--color-error, #e57373);
+  background: transparent;
+}
+
 /* ── Results header ──────────────────────────────────────────────────────── */
 .shops-results {
   padding-top: 1.25rem;
@@ -1026,6 +1039,21 @@
 
 .shops-modal:not([hidden]) {
   display: flex;
+  animation: modal-fade-in 0.18s ease both;
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.shops-modal:not([hidden]) .shops-modal-content {
+  animation: modal-slide-in 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes modal-slide-in {
+  from { transform: translateY(16px) scale(0.97); }
+  to   { transform: translateY(0) scale(1); }
 }
 
 .shops-modal-overlay {

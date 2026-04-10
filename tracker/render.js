@@ -78,7 +78,7 @@ export function renderChart() {
   const filtered = filterByRange(flatHistory, _state.range);
   const rows = filtered.map(r => ({ date: new Date(r.date), spot: r.spot, source: r.source }));
   if (spot) rows.push({ date: new Date(), spot, source: 'live' });
-  if (rows.length < 2) { _el.chart.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#9d8c72" font-size="14">Collecting data…</text>'; return; }
+  if (rows.length < 2) { const msg = _state.lang === 'ar' ? 'جمع البيانات…' : 'Collecting data…'; _el.chart.innerHTML = `<text x="50%" y="50%" text-anchor="middle" fill="#9d8c72" font-size="14">${msg}</text>`; return; }
   const prices = rows.map(r => r.spot);
   const min = Math.min(...prices) * 0.998;
   const max = Math.max(...prices) * 1.002;

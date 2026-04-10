@@ -868,6 +868,10 @@ function renderFilterPills() {
     return;
   }
 
+  const clearAllHtml = pills.length > 1
+    ? `<button class="shops-filter-pill shops-filter-pill--clear-all" data-type="clear-all" type="button" aria-label="Clear all filters">Clear all ×</button>`
+    : '';
+
   pillsContainer.innerHTML = pills.map((pill) => {
     const ariaLabel = pill.ariaLabel || `Remove ${pill.label} filter`;
     return `
@@ -876,7 +880,7 @@ function renderFilterPills() {
         <span class="shops-filter-pill-remove" aria-hidden="true">×</span>
       </button>
     `;
-  }).join('');
+  }).join('') + clearAllHtml;
 
   pillsContainer.querySelectorAll('.shops-filter-pill').forEach((pill) => {
     pill.addEventListener('click', () => {
@@ -893,6 +897,10 @@ function renderFilterPills() {
       if (type === 'search') {
         STATE.search = '';
         document.getElementById('shops-search').value = '';
+      }
+      if (type === 'clear-all') {
+        resetFilters();
+        return;
       }
       buildFilters();
       render();
