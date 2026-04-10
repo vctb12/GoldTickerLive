@@ -119,14 +119,12 @@
             <div class="calc-result-label" id="val-result-label">Estimated Value</div>
             <div class="calc-result-value" id="val-result-value">—</div>
             <button class="calc-copy-btn" id="calc-copy-btn" onclick="
-  const resultEl = document.querySelector('.calc-result-value, #calc-result-value, [data-result]');
-  if (resultEl) {
-    navigator.clipboard?.writeText(resultEl.textContent.trim()).then(() => {
-      this.textContent = 'Copied!';
-      this.classList.add('copied');
-      setTimeout(() => { this.textContent = 'Copy Result'; this.classList.remove('copied'); }, 1500);
-    });
-  }
+  const resultEl = document.querySelector('#val-result-value, .calc-result-value');
+  if (!resultEl) return;
+  const text = resultEl.textContent.trim();
+  const done = () => { this.textContent = 'Copied!'; this.classList.add('copied'); setTimeout(() => { this.textContent = 'Copy Result'; this.classList.remove('copied'); }, 1500); };
+  if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done).catch(() => done()); }
+  else { try { const t = document.createElement('textarea'); t.value = text; t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); done(); } catch(e) {} }
 ">Copy Result</button>
           </div>
           <div class="calc-result-breakdown" id="val-result-breakdown"></div>

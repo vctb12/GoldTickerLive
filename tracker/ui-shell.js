@@ -82,13 +82,6 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     tab.addEventListener('click', () => setMode(tab.dataset.mode));
   });
 
-<<<<<<< codex/audit-repository-for-ux-improvement-plan
-  // Initial mode selection (never allow alerts/planner as mode)
-  const safeMode = VALID_MODES.has(state.mode) ? state.mode : 'live';
-  setMode(safeMode);
-
-=======
->>>>>>> main
   // Overlay system for Alerts and Planner
   const overlays = {
     alerts: document.getElementById('tp-overlay-alerts'),
@@ -96,11 +89,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   };
 
   function openOverlay(name) {
-<<<<<<< codex/audit-repository-for-ux-improvement-plan
-    if (!VALID_PANELS.has(name)) return;
-=======
     ensureAdvancedWorkspace();
->>>>>>> main
     if (_openPanel && _openPanel !== name) closeOverlay(_openPanel);
     const overlay = overlays[name];
     if (!overlay) return;
@@ -130,12 +119,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
       btn.setAttribute('aria-expanded', 'false');
     });
     _openPanel = null;
-<<<<<<< codex/audit-repository-for-ux-improvement-plan
-    state.panel = null;
-    syncUrlFromState(state);
-=======
     syncUrlFromState(state, _openPanel);
->>>>>>> main
   }
 
   function toggleOverlay(name) {
@@ -160,26 +144,6 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     });
   });
 
-<<<<<<< codex/audit-repository-for-ux-improvement-plan
-  function syncOverlayFromState() {
-    const desiredPanel = state.panel && VALID_PANELS.has(state.panel) ? state.panel : null;
-    if (!desiredPanel) {
-      if (_openPanel) closeOverlay(_openPanel);
-      return;
-    }
-    if (_openPanel !== desiredPanel) openOverlay(desiredPanel);
-  }
-
-  syncOverlayFromState();
-
-  // Sync back/forward navigation
-  window.addEventListener('hashchange', () => {
-    const parsed = applyUrlState(state);
-    const m = VALID_MODES.has(state.mode) ? state.mode : 'live';
-    setMode(m);
-    syncOverlayFromState();
-    if (parsed?.shouldCanonicalize) syncUrlFromState(state);
-=======
   function applyModeAndPanelFromHash() {
     const { panel } = applyUrlState(state);
     const needsAdvanced = state.mode !== 'live' || !!panel;
@@ -200,7 +164,6 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   // Sync back/forward navigation
   window.addEventListener('hashchange', () => {
     applyModeAndPanelFromHash();
->>>>>>> main
   });
 
   // Keyboard shortcuts
