@@ -1,1 +1,4 @@
-Nothing should be ignored based on the provided file changes. The modified files (home.js, index.html, style.css, tracker.html) are all source code files that should be tracked in version control.
+```
+# Build artifacts
+dist/
+```
