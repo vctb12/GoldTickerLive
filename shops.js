@@ -510,21 +510,34 @@ function buildFilters() {
   const citySelect = document.getElementById('shops-city-filter');
   const specialtySelect = document.getElementById('shops-specialty-filter');
 
-  // Guard against missing DOM elements
+  // Guard against missing DOM elements - FAIL LOUDLY
   if (!regionSelect || !countrySelect || !citySelect || !specialtySelect) {
-    console.warn('[shops] Filter select elements not found');
-    return;
+    const missing = [];
+    if (!regionSelect) missing.push('shops-region-filter');
+    if (!countrySelect) missing.push('shops-country-filter');
+    if (!citySelect) missing.push('shops-city-filter');
+    if (!specialtySelect) missing.push('shops-specialty-filter');
+    
+    const errorMsg = `[shops] CRITICAL: Filter select elements not found: ${missing.join(', ')}. Check shops.html.`;
+    console.error(errorMsg);
+    throw new Error(errorMsg);
   }
+
+  console.log('[shops] buildFilters(): Building filter dropdowns with state:', { region: STATE.region, country: STATE.country, city: STATE.city, specialty: STATE.specialty });
 
   regionSelect.innerHTML = `<option value="all">${t('allRegions')}</option>${Object.entries(REGIONS)
     .map(([code, labels]) => `<option value="${code}">${labels[STATE.lang]}</option>`).join('')}`;
 
   const countryCodes = [...new Set(shopsMatchingPrimaryFilters().map((shop) => shop.countryCode))];
+  console.log('[shops] buildFilters(): Found', countryCodes.length, 'country codes in filtered shops:', countryCodes);
+  
   const allCountries = COUNTRIES
     .filter((country) => SHOPS.some((shop) => shop.countryCode === country.code))
     .filter((country) => STATE.region === 'all' || country.group === STATE.region)
     .sort((a, b) => countryName(a).localeCompare(countryName(b), STATE.lang));
 
+  console.log('[shops] buildFilters(): Populating country filter with', allCountries.length, 'countries');
+  
   countrySelect.innerHTML = `<option value="all">${t('allCountries')}</option>${allCountries
     .filter((country) => countryCodes.includes(country.code) || STATE.country === 'all')
     .map((country) => `<option value="${country.code}">${countryName(country)}</option>`).join('')}`;
@@ -538,21 +551,36 @@ function buildFilters() {
   });
 
   const cities = [...new Set(cityPool.map((shop) => shop.city))].sort((a, b) => a.localeCompare(b));
+  console.log('[shops] buildFilters(): Found', cities.length, 'cities:', cities.slice(0, 5));
+  
   citySelect.innerHTML = `<option value="all">${t('allCities')}</option>${cities
     .map((city) => `<option value="${city}">${city}</option>`).join('')}`;
 
   const specialties = [...new Set(shopsMatchingPrimaryFilters().flatMap((shop) => shop.specialties || []))]
     .sort((a, b) => a.localeCompare(b));
+  console.log('[shops] buildFilters(): Found', specialties.length, 'specialties:', specialties.slice(0, 5));
+  
   specialtySelect.innerHTML = `<option value="all">${t('allSpecialties')}</option>${specialties
     .map((item) => `<option value="${item}">${item}</option>`).join('')}`;
 
   regionSelect.value = STATE.region;
-  if (![...countrySelect.options].some((option) => option.value === STATE.country)) STATE.country = 'all';
+  if (![...countrySelect.options].some((option) => option.value === STATE.country)) {
+    console.warn('[shops] buildFilters(): Invalid country', STATE.country, 'resetting to all');
+    STATE.country = 'all';
+  }
   countrySelect.value = STATE.country;
-  if (![...citySelect.options].some((option) => option.value === STATE.city)) STATE.city = 'all';
+  if (![...citySelect.options].some((option) => option.value === STATE.city)) {
+    console.warn('[shops] buildFilters(): Invalid city', STATE.city, 'resetting to all');
+    STATE.city = 'all';
+  }
   citySelect.value = STATE.city;
-  if (![...specialtySelect.options].some((option) => option.value === STATE.specialty)) STATE.specialty = 'all';
+  if (![...specialtySelect.options].some((option) => option.value === STATE.specialty)) {
+    console.warn('[shops] buildFilters(): Invalid specialty', STATE.specialty, 'resetting to all');
+    STATE.specialty = 'all';
+  }
   specialtySelect.value = STATE.specialty;
+  
+  console.log('[shops] buildFilters(): Final state after validation:', { region: STATE.region, country: STATE.country, city: STATE.city, specialty: STATE.specialty });
 }
 
 function populatePopularChips() {
@@ -577,9 +605,12 @@ function populatePopularChips() {
 
 function filterShops() {
   const q = STATE.search.trim().toLowerCase();
-  return SHOPS.filter((shop) => {
+  const filtered = SHOPS.filter((shop) => {
     const country = countryByCode(shop.countryCode);
-    if (!country) return false;
+    if (!country) {
+      console.warn('[shops] Shop missing country:', shop.id, shop.countryCode);
+      return false;
+    }
 
     if (STATE.region !== 'all' && country.group !== STATE.region) return false;
     if (STATE.country !== 'all' && shop.countryCode !== STATE.country) return false;
@@ -603,6 +634,9 @@ function filterShops() {
 
     return haystack.includes(q);
   });
+  
+  console.log('[shops] filterShops():', SHOPS.length, 'total ->', filtered.length, 'after filtering');
+  return filtered;
 }
 
 function updateHeaderStats() {
@@ -943,6 +977,11 @@ function renderShortlistBar() {
 function render() {
   syncUrlToState();
   const shops = sortedShops(filterShops());
+  
+  // Debug logging for render pipeline
+  console.log('[shops] render() called with', shops.length, 'shops after filtering');
+  console.log('[shops] Current filter state:', { region: STATE.region, country: STATE.country, city: STATE.city, specialty: STATE.specialty, verifiedOnly: STATE.verifiedOnly, search: STATE.search });
+  
   const empty = document.getElementById('shops-empty');
   const count = document.getElementById('shops-count');
   if (count) count.textContent = t('count')(shops.length);
@@ -952,11 +991,13 @@ function render() {
   renderShortlistBar();
 
   if (!shops.length) {
+    console.log('[shops] No shops to render, showing empty state');
     document.getElementById('shops-grid').innerHTML = '';
     empty.hidden = false;
     return;
   }
 
+  console.log('[shops] Rendering', shops.length, 'shop cards');
   empty.hidden = true;
   renderCards(shops);
 }
@@ -1044,20 +1085,60 @@ function updateLanguage() {
 }
 
 function init() {
-  // Validate data and DOM prerequisites
-  if (!SHOPS || SHOPS.length === 0) {
-    console.error('[shops] SHOPS data is empty or not loaded');
-    document.body.innerHTML = '<p>Error: Shop data failed to load.</p>';
-    return;
+  // Validate data and DOM prerequisites - FAIL LOUDLY
+  if (!SHOPS || !Array.isArray(SHOPS) || SHOPS.length === 0) {
+    const errorMsg = '[shops] CRITICAL: SHOPS data is empty, not an array, or not loaded. Check data/shops.js module export.';
+    console.error(errorMsg);
+    console.error('[shops] SHOPS value:', SHOPS);
+    document.body.innerHTML = `
+      <div style="padding:2rem;background:#fee;color:#900;font-family:system-ui;">
+        <h1 style="color:#c00;">Shops Page Data Error</h1>
+        <p><strong>Error:</strong> Shop data failed to load.</p>
+        <p><code>SHOPS = ${JSON.stringify(SHOPS)?.slice(0, 200)}${JSON.stringify(SHOPS)?.length > 200 ? '...' : ''}</code></p>
+        <p>Check browser console for details. Verify data/shops.js exports SHOPS array correctly.</p>
+      </div>
+    `;
+    throw new Error(errorMsg);
   }
 
-  // Validate critical DOM elements exist
-  const requiredElements = ['shops-grid', 'shops-empty', 'shops-featured', 'shops-featured-grid', 'shops-filter-pills'];
+  // Validate critical DOM elements exist - FAIL LOUDLY if missing
+  const requiredElements = [
+    'shops-grid', 
+    'shops-empty', 
+    'shops-featured', 
+    'shops-featured-grid', 
+    'shops-filter-pills',
+    'shops-region-filter',
+    'shops-country-filter',
+    'shops-city-filter',
+    'shops-specialty-filter',
+    'shops-search',
+    'shops-count'
+  ];
+  const missingElements = [];
   for (const id of requiredElements) {
     if (!document.getElementById(id)) {
+      missingElements.push(id);
       console.error(`[shops] Required element #${id} not found in DOM`);
     }
   }
+  if (missingElements.length > 0) {
+    const errorMsg = `[shops] CRITICAL: Missing required DOM elements: ${missingElements.join(', ')}. Check shops.html structure.`;
+    console.error(errorMsg);
+    document.body.innerHTML = `
+      <div style="padding:2rem;background:#fee;color:#900;font-family:system-ui;">
+        <h1 style="color:#c00;">Shops Page DOM Error</h1>
+        <p><strong>Error:</strong> Required HTML elements are missing.</p>
+        <p><strong>Missing IDs:</strong> ${missingElements.join(', ')}</p>
+        <p>Check shops.html for correct element IDs.</p>
+      </div>
+    `;
+    throw new Error(errorMsg);
+  }
+
+  // Log data loading for debugging
+  console.log('[shops] Initializing with', SHOPS.length, 'shops');
+  console.log('[shops] Sample shop IDs:', SHOPS.slice(0, 3).map(s => s.id));
 
   try {
     const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
@@ -1125,17 +1206,20 @@ function init() {
   
   updateLanguage();
 
-const initialShopId = _p.get('shop');
-if (initialShopId) {
-  const initialShop = SHOPS.find((s) => s.id === initialShopId);
-  if (initialShop) {
-    openModal(initialShop);
+  // Handle initial shop modal from URL param
+  const initialShopId = _p.get('shop');
+  if (initialShopId) {
+    const initialShop = SHOPS.find((s) => s.id === initialShopId);
+    if (initialShop) {
+      openModal(initialShop);
+    } else {
+      console.warn('[shops] Shop ID from URL not found:', initialShopId);
+      closeModal({ clearShopParam: true });
+    }
   } else {
-    closeModal({ clearShopParam: true });
+    closeModal({ clearShopParam: false });
   }
-} else {
-  closeModal({ clearShopParam: false });
-}
+
   // Mobile filter toggle
   const filterToggle = document.getElementById('shops-filter-toggle');
   const filterPanel  = document.getElementById('shops-filter-panel');
