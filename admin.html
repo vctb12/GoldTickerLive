@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Gold Prices</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>🔐 Admin Access</h1>
+                <p>Gold Prices Intelligence Platform</p>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="admin-email">Email</label>
+                    <input type="email" id="admin-email" required placeholder="admin@goldprices.com">
+                </div>
+                <div class="form-group">
+                    <label for="admin-password">Password</label>
+                    <input type="password" id="admin-password" required placeholder="Enter password">
+                </div>
+                <div id="login-error" class="error-message" style="display:none;"></div>
+                <button type="submit" class="btn-primary btn-full">Sign In</button>
+            </form>
+            <div class="login-footer">
+                <p class="hint">Default: admin@goldprices.com / admin123</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard (hidden until logged in) -->
+    <div id="dashboard" class="dashboard-container" style="display:none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>⚡ Admin Panel</h2>
+                <button id="logout-btn" class="btn-logout" title="Logout">🚪</button>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#overview" class="nav-item active" data-section="overview">
+                    <span class="nav-icon">📊</span>
+                    <span>Overview</span>
+                </a>
+                <a href="#shops" class="nav-item" data-section="shops">
+                    <span class="nav-icon">🏪</span>
+                    <span>Shops</span>
+                    <span class="badge" id="shops-badge">0</span>
+                </a>
+                <a href="#cities" class="nav-item" data-section="cities">
+                    <span class="nav-icon">🏙️</span>
+                    <span>Cities & Markets</span>
+                </a>
+                <a href="#content" class="nav-item" data-section="content">
+                    <span class="nav-icon">📝</span>
+                    <span>Content</span>
+                </a>
+                <a href="#trust" class="nav-item" data-section="trust">
+                    <span class="nav-icon">🛡️</span>
+                    <span>Trust Labels</span>
+                </a>
+                <a href="#audit" class="nav-item" data-section="audit">
+                    <span class="nav-icon">📋</span>
+                    <span>Audit Logs</span>
+                </a>
+                <a href="#settings" class="nav-item" data-section="settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <span class="user-avatar">👤</span>
+                    <div>
+                        <div class="user-name" id="user-name">Admin</div>
+                        <div class="user-role" id="user-role">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Section -->
+            <section id="section-overview" class="content-section active">
+                <header class="section-header">
+                    <h1>Dashboard Overview</h1>
+                    <p>System status and quick metrics</p>
+                </header>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🏪</div>
+                        <div class="stat-value" id="stat-shops">0</div>
+                        <div class="stat-label">Total Shops</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-value" id="stat-verified">0</div>
+                        <div class="stat-label">Verified Shops</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏙️</div>
+                        <div class="stat-value" id="stat-cities">0</div>
+                        <div class="stat-label">Cities</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-value" id="stat-guides">0</div>
+                        <div class="stat-label">Guides</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔔</div>
+                        <div class="stat-value" id="stat-alerts">0</div>
+                        <div class="stat-label">Active Alerts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-value" id="stat-audit">0</div>
+                        <div class="stat-label">Audit Entries</div>
+                    </div>
+                </div>
+                <div class="recent-activity">
+                    <h2>Recent Activity</h2>
+                    <div id="recent-logs" class="activity-list"></div>
+                </div>
+            </section>
+
+            <!-- Shops Section -->
+            <section id="section-shops" class="content-section">
+                <header class="section-header">
+                    <h1>Shop Management</h1>
+                    <button id="add-shop-btn" class="btn-primary">+ Add Shop</button>
+                </header>
+                <div class="filters-bar">
+                    <input type="text" id="shop-search" placeholder="Search shops..." class="search-input">
+                    <select id="shop-filter-status" class="filter-select">
+                        <option value="all">All Status</option>
+                        <option value="verified">Verified</option>
+                        <option value="pending">Pending</option>
+                        <option value="unverified">Unverified</option>
+                    </select>
+                    <select id="shop-filter-type" class="filter-select">
+                        <option value="all">All Types</option>
+                        <option value="direct">Direct Shop</option>
+                        <option value="market">Market Area</option>
+                    </select>
+                </div>
+                <div id="shops-list" class="data-grid"></div>
+            </section>
+
+            <!-- Cities Section -->
+            <section id="section-cities" class="content-section">
+                <header class="section-header">
+                    <h1>Cities & Markets</h1>
+                    <button id="add-city-btn" class="btn-primary">+ Add City</button>
+                </header>
+                <div id="cities-list" class="data-grid"></div>
+            </section>
+
+            <!-- Content Section -->
+            <section id="section-content" class="content-section">
+                <header class="section-header">
+                    <h1>Content Management</h1>
+                    <button id="add-guide-btn" class="btn-primary">+ Add Guide</button>
+                </header>
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="guides">Guides</button>
+                    <button class="tab-btn" data-tab="flags">Content Flags</button>
+                    <button class="tab-btn" data-tab="faqs">FAQs</button>
+                </div>
+                <div id="content-panel-guides" class="tab-panel active">
+                    <div id="guides-list" class="data-list"></div>
+                </div>
+                <div id="content-panel-flags" class="tab-panel">
+                    <div id="flags-list" class="data-list"></div>
+                </div>
+                <div id="content-panel-faqs" class="tab-panel">
+                    <div id="faqs-list" class="data-list"></div>
+                </div>
+            </section>
+
+            <!-- Trust Section -->
+            <section id="section-trust" class="content-section">
+                <header class="section-header">
+                    <h1>Trust & Confidence</h1>
+                </header>
+                <div class="trust-config">
+                    <div class="config-card">
+                        <h3>Confidence Score Thresholds</h3>
+                        <div class="threshold-slider">
+                            <label>High (Green): ≥ <span id="threshold-high-val">90</span>%</label>
+                            <input type="range" id="threshold-high" min="50" max="100" value="90">
+                        </div>
+                        <div class="threshold-slider">
+                            <label>Medium (Amber): ≥ <span id="threshold-medium-val">70</span>%</label>
+                            <input type="range" id="threshold-medium" min="30" max="89" value="70">
+                        </div>
+                        <button id="save-thresholds" class="btn-primary">Save Thresholds</button>
+                    </div>
+                    <div class="config-card">
+                        <h3>Trust Badges</h3>
+                        <div id="badges-list" class="badges-editor"></div>
+                        <button id="add-badge-btn" class="btn-secondary">+ Add Badge</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Audit Section -->
+            <section id="section-audit" class="content-section">
+                <header class="section-header">
+                    <h1>Audit Logs</h1>
+                    <button id="export-audit-btn" class="btn-secondary">Export CSV</button>
+                </header>
+                <div class="filters-bar">
+                    <input type="text" id="audit-search" placeholder="Search logs..." class="search-input">
+                    <select id="audit-filter-action" class="filter-select">
+                        <option value="all">All Actions</option>
+                        <option value="create">Create</option>
+                        <option value="update">Update</option>
+                        <option value="delete">Delete</option>
+                        <option value="login">Login</option>
+                    </select>
+                    <select id="audit-filter-entity" class="filter-select">
+                        <option value="all">All Entities</option>
+                        <option value="shop">Shop</option>
+                        <option value="city">City</option>
+                        <option value="guide">Guide</option>
+                        <option value="user">User</option>
+                    </select>
+                </div>
+                <div id="audit-list" class="audit-table-container">
+                    <table class="audit-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Entity</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="audit-tbody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="section-settings" class="content-section">
+                <header class="section-header">
+                    <h1>Settings</h1>
+                </header>
+                <div class="settings-grid">
+                    <div class="config-card">
+                        <h3>Admin Users</h3>
+                        <div id="users-list" class="users-editor"></div>
+                        <button id="add-user-btn" class="btn-secondary">+ Add User</button>
+                    </div>
+                    <div class="config-card">
+                        <h3>Data Management</h3>
+                        <button id="clear-cache-btn" class="btn-warning">Clear Cache</button>
+                        <button id="reset-data-btn" class="btn-danger">Reset All Data</button>
+                        <button id="export-all-btn" class="btn-secondary">Export All Data</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for Shop/City/Guide Forms -->
+    <div id="modal-overlay" class="modal-overlay" style="display:none;">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h2 id="modal-title">Edit Item</h2>
+                <button id="modal-close" class="modal-close">×</button>
+            </div>
+            <div id="modal-content" class="modal-body"></div>
+        </div>
+    </div>
+
+    <script type="module" src="./admin.js"></script>
+</body>
+</html>
