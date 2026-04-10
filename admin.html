@@ -3,287 +3,426 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Gold Prices</title>
-    <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="./admin.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <title>Gold Price Admin - Client Side</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --primary: #d4af37;
+            --dark: #1a1a1a;
+            --light: #f4f4f4;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f1c40f;
+        }
+        body { font-family: 'Cairo', sans-serif; background: var(--light); margin: 0; padding: 0; }
+        
+        /* Layout */
+        .admin-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { background: var(--dark); color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 1.5rem; color: var(--primary); }
+        
+        /* Login Screen */
+        #login-screen { max-width: 400px; margin: 100px auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        .form-group input { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { background: var(--primary); color: var(--dark); border: none; padding: 0.8rem 1.5rem; cursor: pointer; font-weight: bold; border-radius: 4px; width: 100%; }
+        button:hover { opacity: 0.9; }
+        button.danger { background: var(--danger); color: white; }
+        button.success { background: var(--success); color: white; }
+        
+        /* Dashboard */
+        #dashboard-screen { display: none; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 4px solid var(--primary); }
+        .stat-number { font-size: 2rem; font-weight: bold; color: var(--dark); }
+        
+        /* Table */
+        .table-container { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: 600; }
+        tr:hover { background: #f8f9fa; }
+        
+        /* Badges */
+        .badge { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+        .badge-verified { background: #d4edda; color: #155724; }
+        .badge-pending { background: #fff3cd; color: #856404; }
+        .badge-unverified { background: #f8d7da; color: #721c24; }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+        .modal-content { background: white; max-width: 600px; margin: 50px auto; padding: 2rem; border-radius: 8px; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; margin-bottom: 1rem; }
+        .close-modal { cursor: pointer; font-size: 1.5rem; }
+        
+        /* Alerts */
+        .alert { padding: 1rem; margin-bottom: 1rem; border-radius: 4px; display: none; }
+        .alert-error { background: #f8d7da; color: #721c24; }
+        .alert-success { background: #d4edda; color: #155724; }
+        
+        .toolbar { display: flex; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap; }
+        .search-box { flex: 1; min-width: 200px; }
+    </style>
 </head>
-<body class="admin-body">
+<body>
+
     <!-- Login Screen -->
-    <div id="login-screen" class="login-container">
-        <div class="login-box">
-            <div class="login-header">
-                <h1>🔐 Admin Access</h1>
-                <p>Gold Prices Intelligence Platform</p>
+    <div id="login-screen">
+        <h2 style="text-align: center; color: var(--dark);">Admin Access</h2>
+        <div id="login-alert" class="alert alert-error"></div>
+        <form id="login-form">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" required placeholder="admin@goldprices.com">
             </div>
-            <form id="login-form" class="login-form">
-                <div class="form-group">
-                    <label for="admin-email">Email</label>
-                    <input type="email" id="admin-email" required placeholder="admin@goldprices.com">
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" required placeholder="admin123">
+            </div>
+            <button type="submit">Sign In</button>
+        </form>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666; text-align: center;">
+            Default: admin@goldprices.com / admin123
+        </p>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="dashboard-screen">
+        <div class="header">
+            <h1>Gold Price Admin</h1>
+            <div>
+                <span id="user-display" style="margin-right: 15px;"></span>
+                <button onclick="logout()" style="width: auto; padding: 0.5rem 1rem; background: #555; color: white;">Logout</button>
+            </div>
+        </div>
+
+        <div class="admin-container">
+            <div id="dashboard-alert" class="alert"></div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-total">0</div>
+                    <div>Total Shops</div>
                 </div>
-                <div class="form-group">
-                    <label for="admin-password">Password</label>
-                    <input type="password" id="admin-password" required placeholder="Enter password">
+                <div class="stat-card" style="border-color: var(--success);">
+                    <div class="stat-number" id="stat-verified">0</div>
+                    <div>Verified</div>
                 </div>
-                <div id="login-error" class="error-message" style="display:none;"></div>
-                <button type="submit" class="btn-primary btn-full">Sign In</button>
-            </form>
-            <div class="login-footer">
-                <p class="hint">Default: admin@goldprices.com / admin123</p>
+                <div class="stat-card" style="border-color: var(--warning);">
+                    <div class="stat-number" id="stat-pending">0</div>
+                    <div>Pending Review</div>
+                </div>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <input type="text" id="search-input" class="search-box form-group" placeholder="Search shops by name or city..." style="margin:0; padding: 0.8rem; border:1px solid #ddd; border-radius:4px;">
+                <button onclick="exportData()" class="success" style="width: auto;">💾 Download Updated Data</button>
+                <button onclick="resetData()" class="danger" style="width: auto;">🔄 Reset to Original</button>
+            </div>
+
+            <!-- Table -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>City/Country</th>
+                            <th>Type</th>
+                            <th>Confidence</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="shops-table-body">
+                        <!-- Rows injected by JS -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <!-- Dashboard (hidden until logged in) -->
-    <div id="dashboard" class="dashboard-container" style="display:none;">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h2>⚡ Admin Panel</h2>
-                <button id="logout-btn" class="btn-logout" title="Logout">🚪</button>
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Shop</h2>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
             </div>
-            <nav class="sidebar-nav">
-                <a href="#overview" class="nav-item active" data-section="overview">
-                    <span class="nav-icon">📊</span>
-                    <span>Overview</span>
-                </a>
-                <a href="#shops" class="nav-item" data-section="shops">
-                    <span class="nav-icon">🏪</span>
-                    <span>Shops</span>
-                    <span class="badge" id="shops-badge">0</span>
-                </a>
-                <a href="#cities" class="nav-item" data-section="cities">
-                    <span class="nav-icon">🏙️</span>
-                    <span>Cities & Markets</span>
-                </a>
-                <a href="#content" class="nav-item" data-section="content">
-                    <span class="nav-icon">📝</span>
-                    <span>Content</span>
-                </a>
-                <a href="#trust" class="nav-item" data-section="trust">
-                    <span class="nav-icon">🛡️</span>
-                    <span>Trust Labels</span>
-                </a>
-                <a href="#audit" class="nav-item" data-section="audit">
-                    <span class="nav-icon">📋</span>
-                    <span>Audit Logs</span>
-                </a>
-                <a href="#settings" class="nav-item" data-section="settings">
-                    <span class="nav-icon">⚙️</span>
-                    <span>Settings</span>
-                </a>
-            </nav>
-            <div class="sidebar-footer">
-                <div class="user-info">
-                    <span class="user-avatar">👤</span>
-                    <div>
-                        <div class="user-name" id="user-name">Admin</div>
-                        <div class="user-role" id="user-role">Administrator</div>
-                    </div>
+            <form id="edit-form">
+                <input type="hidden" id="edit-id">
+                <div class="form-group">
+                    <label>Shop Name</label>
+                    <input type="text" id="edit-name" required>
                 </div>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Overview Section -->
-            <section id="section-overview" class="content-section active">
-                <header class="section-header">
-                    <h1>Dashboard Overview</h1>
-                    <p>System status and quick metrics</p>
-                </header>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">🏪</div>
-                        <div class="stat-value" id="stat-shops">0</div>
-                        <div class="stat-label">Total Shops</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">✅</div>
-                        <div class="stat-value" id="stat-verified">0</div>
-                        <div class="stat-label">Verified Shops</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🏙️</div>
-                        <div class="stat-value" id="stat-cities">0</div>
-                        <div class="stat-label">Cities</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">📝</div>
-                        <div class="stat-value" id="stat-guides">0</div>
-                        <div class="stat-label">Guides</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🔔</div>
-                        <div class="stat-value" id="stat-alerts">0</div>
-                        <div class="stat-label">Active Alerts</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">📋</div>
-                        <div class="stat-value" id="stat-audit">0</div>
-                        <div class="stat-label">Audit Entries</div>
-                    </div>
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" id="edit-city" required>
                 </div>
-                <div class="recent-activity">
-                    <h2>Recent Activity</h2>
-                    <div id="recent-logs" class="activity-list"></div>
+                <div class="form-group">
+                    <label>Country</label>
+                    <input type="text" id="edit-country" required>
                 </div>
-            </section>
-
-            <!-- Shops Section -->
-            <section id="section-shops" class="content-section">
-                <header class="section-header">
-                    <h1>Shop Management</h1>
-                    <button id="add-shop-btn" class="btn-primary">+ Add Shop</button>
-                </header>
-                <div class="filters-bar">
-                    <input type="text" id="shop-search" placeholder="Search shops..." class="search-input">
-                    <select id="shop-filter-status" class="filter-select">
-                        <option value="all">All Status</option>
-                        <option value="verified">Verified</option>
-                        <option value="pending">Pending</option>
-                        <option value="unverified">Unverified</option>
-                    </select>
-                    <select id="shop-filter-type" class="filter-select">
-                        <option value="all">All Types</option>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="edit-type" style="width: 100%; padding: 0.8rem;">
                         <option value="direct">Direct Shop</option>
                         <option value="market">Market Area</option>
                     </select>
                 </div>
-                <div id="shops-list" class="data-grid"></div>
-            </section>
-
-            <!-- Cities Section -->
-            <section id="section-cities" class="content-section">
-                <header class="section-header">
-                    <h1>Cities & Markets</h1>
-                    <button id="add-city-btn" class="btn-primary">+ Add City</button>
-                </header>
-                <div id="cities-list" class="data-grid"></div>
-            </section>
-
-            <!-- Content Section -->
-            <section id="section-content" class="content-section">
-                <header class="section-header">
-                    <h1>Content Management</h1>
-                    <button id="add-guide-btn" class="btn-primary">+ Add Guide</button>
-                </header>
-                <div class="tabs">
-                    <button class="tab-btn active" data-tab="guides">Guides</button>
-                    <button class="tab-btn" data-tab="flags">Content Flags</button>
-                    <button class="tab-btn" data-tab="faqs">FAQs</button>
+                <div class="form-group">
+                    <label>Confidence Score (0-100)</label>
+                    <input type="number" id="edit-confidence" min="0" max="100" required>
                 </div>
-                <div id="content-panel-guides" class="tab-panel active">
-                    <div id="guides-list" class="data-list"></div>
-                </div>
-                <div id="content-panel-flags" class="tab-panel">
-                    <div id="flags-list" class="data-list"></div>
-                </div>
-                <div id="content-panel-faqs" class="tab-panel">
-                    <div id="faqs-list" class="data-list"></div>
-                </div>
-            </section>
-
-            <!-- Trust Section -->
-            <section id="section-trust" class="content-section">
-                <header class="section-header">
-                    <h1>Trust & Confidence</h1>
-                </header>
-                <div class="trust-config">
-                    <div class="config-card">
-                        <h3>Confidence Score Thresholds</h3>
-                        <div class="threshold-slider">
-                            <label>High (Green): ≥ <span id="threshold-high-val">90</span>%</label>
-                            <input type="range" id="threshold-high" min="50" max="100" value="90">
-                        </div>
-                        <div class="threshold-slider">
-                            <label>Medium (Amber): ≥ <span id="threshold-medium-val">70</span>%</label>
-                            <input type="range" id="threshold-medium" min="30" max="89" value="70">
-                        </div>
-                        <button id="save-thresholds" class="btn-primary">Save Thresholds</button>
-                    </div>
-                    <div class="config-card">
-                        <h3>Trust Badges</h3>
-                        <div id="badges-list" class="badges-editor"></div>
-                        <button id="add-badge-btn" class="btn-secondary">+ Add Badge</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Audit Section -->
-            <section id="section-audit" class="content-section">
-                <header class="section-header">
-                    <h1>Audit Logs</h1>
-                    <button id="export-audit-btn" class="btn-secondary">Export CSV</button>
-                </header>
-                <div class="filters-bar">
-                    <input type="text" id="audit-search" placeholder="Search logs..." class="search-input">
-                    <select id="audit-filter-action" class="filter-select">
-                        <option value="all">All Actions</option>
-                        <option value="create">Create</option>
-                        <option value="update">Update</option>
-                        <option value="delete">Delete</option>
-                        <option value="login">Login</option>
-                    </select>
-                    <select id="audit-filter-entity" class="filter-select">
-                        <option value="all">All Entities</option>
-                        <option value="shop">Shop</option>
-                        <option value="city">City</option>
-                        <option value="guide">Guide</option>
-                        <option value="user">User</option>
+                <div class="form-group">
+                    <label>Verification Status</label>
+                    <select id="edit-status" style="width: 100%; padding: 0.8rem;">
+                        <option value="verified">Verified</option>
+                        <option value="pending">Pending</option>
+                        <option value="unverified">Unverified</option>
                     </select>
                 </div>
-                <div id="audit-list" class="audit-table-container">
-                    <table class="audit-table">
-                        <thead>
-                            <tr>
-                                <th>Timestamp</th>
-                                <th>User</th>
-                                <th>Action</th>
-                                <th>Entity</th>
-                                <th>Details</th>
-                            </tr>
-                        </thead>
-                        <tbody id="audit-tbody"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Settings Section -->
-            <section id="section-settings" class="content-section">
-                <header class="section-header">
-                    <h1>Settings</h1>
-                </header>
-                <div class="settings-grid">
-                    <div class="config-card">
-                        <h3>Admin Users</h3>
-                        <div id="users-list" class="users-editor"></div>
-                        <button id="add-user-btn" class="btn-secondary">+ Add User</button>
-                    </div>
-                    <div class="config-card">
-                        <h3>Data Management</h3>
-                        <button id="clear-cache-btn" class="btn-warning">Clear Cache</button>
-                        <button id="reset-data-btn" class="btn-danger">Reset All Data</button>
-                        <button id="export-all-btn" class="btn-secondary">Export All Data</button>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Modal for Shop/City/Guide Forms -->
-    <div id="modal-overlay" class="modal-overlay" style="display:none;">
-        <div class="modal-dialog">
-            <div class="modal-header">
-                <h2 id="modal-title">Edit Item</h2>
-                <button id="modal-close" class="modal-close">×</button>
-            </div>
-            <div id="modal-content" class="modal-body"></div>
+                <button type="submit" class="success">Save Changes</button>
+            </form>
         </div>
     </div>
 
-    <script type="module" src="./admin.js"></script>
+    <script>
+        // --- CONFIGURATION ---
+        const CREDENTIALS = { email: 'admin@goldprices.com', pass: 'admin123' };
+        const STORAGE_KEY = 'gold_admin_shops';
+        const ORIGINAL_DATA_URL = 'data/shops.js'; // Fallback if local storage is empty
+
+        // --- STATE ---
+        let shopsData = [];
+        let originalShopsReference = [];
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            loadShopsData();
+            
+            // Event Listeners
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+            document.getElementById('edit-form').addEventListener('submit', handleSave);
+            document.getElementById('search-input').addEventListener('input', renderTable);
+        });
+
+        // --- AUTHENTICATION (Client-Side Only) ---
+        function checkAuth() {
+            const isLoggedIn = localStorage.getItem('gold_admin_logged_in');
+            if (isLoggedIn === 'true') {
+                showDashboard();
+            } else {
+                document.getElementById('login-screen').style.display = 'block';
+                document.getElementById('dashboard-screen').style.display = 'none';
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const alertBox = document.getElementById('login-alert');
+
+            if (email === CREDENTIALS.email && password === CREDENTIALS.pass) {
+                localStorage.setItem('gold_admin_logged_in', 'true');
+                localStorage.setItem('gold_admin_user', email);
+                showDashboard();
+            } else {
+                alertBox.textContent = 'Invalid credentials';
+                alertBox.style.display = 'block';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('gold_admin_logged_in');
+            localStorage.removeItem('gold_admin_user');
+            location.reload();
+        }
+
+        function showDashboard() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('dashboard-screen').style.display = 'block';
+            document.getElementById('user-display').textContent = localStorage.getItem('gold_admin_user');
+            renderStats();
+            renderTable();
+        }
+
+        // --- DATA MANAGEMENT ---
+        async function loadShopsData() {
+            // 1. Try LocalStorage first (User edits)
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                shopsData = JSON.parse(stored);
+                console.log('Loaded from LocalStorage');
+                return;
+            }
+
+            // 2. Fetch Original Data if no local edits
+            try {
+                // We need to fetch the raw JS file content
+                const response = await fetch(ORIGINAL_DATA_URL);
+                if (!response.ok) throw new Error('Failed to load shops.js');
+                
+                const text = await response.text();
+                // Extract the array from "const SHOPS = [...]"
+                const match = text.match(/const\s+SHOPS\s*=\s*(\[.*\]);?\s*$/s);
+                if (match && match[1]) {
+                    originalShopsReference = JSON.parse(match[1]);
+                    shopsData = JSON.parse(JSON.stringify(originalShopsReference)); // Deep copy
+                    console.log('Loaded from remote shops.js');
+                } else {
+                    throw new Error('Invalid data format in shops.js');
+                }
+            } catch (err) {
+                console.error('Error loading data:', err);
+                showAlert('dashboard-alert', 'Could not load shop data. Ensure data/shops.js exists.', 'error');
+                shopsData = [];
+            }
+        }
+
+        function saveToLocal() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(shopsData));
+            renderStats();
+            renderTable();
+            showAlert('dashboard-alert', 'Changes saved locally! Use "Download" to update your site files.', 'success');
+        }
+
+        function resetData() {
+            if(confirm('Are you sure? This will delete all local edits and reload the original data.')) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            }
+        }
+
+        // --- UI RENDERING ---
+        function renderStats() {
+            document.getElementById('stat-total').textContent = shopsData.length;
+            document.getElementById('stat-verified').textContent = shopsData.filter(s => s.status === 'verified').length;
+            document.getElementById('stat-pending').textContent = shopsData.filter(s => s.status === 'pending').length;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('shops-table-body');
+            const search = document.getElementById('search-input').value.toLowerCase();
+            tbody.innerHTML = '';
+
+            const filtered = shopsData.filter(shop => 
+                shop.name.toLowerCase().includes(search) || 
+                shop.city.toLowerCase().includes(search) ||
+                shop.country.toLowerCase().includes(search)
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No shops found</td></tr>';
+                return;
+            }
+
+            filtered.forEach((shop, index) => {
+                // Find real index in main array for editing
+                const realIndex = shopsData.indexOf(shop);
+                
+                let badgeClass = 'badge-unverified';
+                if (shop.status === 'verified') badgeClass = 'badge-verified';
+                if (shop.status === 'pending') badgeClass = 'badge-pending';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${shop.name}</strong></td>
+                    <td>${shop.city}, ${shop.country}</td>
+                    <td>${shop.type === 'direct' ? 'Direct Shop' : 'Market Area'}</td>
+                    <td>
+                        <div style="background:#eee; width:100px; height:8px; border-radius:4px; display:inline-block; vertical-align:middle; margin-right:5px;">
+                            <div style="background:${getConfidenceColor(shop.confidence)}; width:${shop.confidence}%; height:100%; border-radius:4px;"></div>
+                        </div>
+                        ${shop.confidence}%
+                    </td>
+                    <td><span class="badge ${badgeClass}">${shop.status}</span></td>
+                    <td>
+                        <button onclick="openEdit(${realIndex})" style="padding:0.2rem 0.5rem; font-size:0.8rem; width:auto;">Edit</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function getConfidenceColor(score) {
+            if (score >= 90) return '#2ecc71';
+            if (score >= 70) return '#f1c40f';
+            return '#e74c3c';
+        }
+
+        // --- EDIT LOGIC ---
+        function openEdit(index) {
+            const shop = shopsData[index];
+            document.getElementById('edit-id').value = index;
+            document.getElementById('edit-name').value = shop.name;
+            document.getElementById('edit-city').value = shop.city;
+            document.getElementById('edit-country').value = shop.country;
+            document.getElementById('edit-type').value = shop.type;
+            document.getElementById('edit-confidence').value = shop.confidence;
+            document.getElementById('edit-status').value = shop.status;
+            
+            document.getElementById('edit-modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('edit-modal').style.display = 'none';
+        }
+
+        function handleSave(e) {
+            e.preventDefault();
+            const index = parseInt(document.getElementById('edit-id').value);
+            
+            shopsData[index] = {
+                ...shopsData[index],
+                name: document.getElementById('edit-name').value,
+                city: document.getElementById('edit-city').value,
+                country: document.getElementById('edit-country').value,
+                type: document.getElementById('edit-type').value,
+                confidence: parseInt(document.getElementById('edit-confidence').value),
+                status: document.getElementById('edit-status').value
+            };
+
+            saveToLocal();
+            closeModal();
+        }
+
+        // --- EXPORT FUNCTIONALITY ---
+        function exportData() {
+            const content = `// Auto-generated by Admin Panel on ${new Date().toISOString()}\nconst SHOPS = ${JSON.stringify(shopsData, null, 2)};\n\nif (typeof module !== 'undefined' && module.exports) {\n  module.exports = { SHOPS };\n}`;
+            
+            const blob = new Blob([content], { type: 'text/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'shops.js';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('File downloaded! \n\nTo update your live site:\n1. Upload this "shops.js" to your repository.\n2. Replace the existing file in the "data/" folder.\n3. Commit changes.');
+        }
+
+        function showAlert(elementId, message, type) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.className = `alert alert-${type}`;
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+
+        // Close modal if clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('edit-modal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
 </body>
 </html>
