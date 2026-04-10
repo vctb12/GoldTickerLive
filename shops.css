@@ -1,5 +1,8 @@
 /* ─── Shops Page ─────────────────────────────────────────────────────────── */
 
+/* Critical: Ensure [hidden] attribute works for this page */
+[hidden] { display: none !important; }
+
 /* ── Section layout ─────────────────────────────────────────────────────── */
 .shops-hero,
 .shops-controls,
