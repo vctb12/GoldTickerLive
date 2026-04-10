@@ -5,6 +5,7 @@ import { injectTicker, updateTicker, updateTickerLang } from '../components/tick
 import { syncUrlFromState, persistState, applyUrlState, VALID_MODES, VALID_PANELS } from './state.js';
 
 let _openPanel = null;
+const BASE_MODES = ['live', 'compare', 'archive', 'exports', 'method'];
 
 export function mountShell(state, els, onModeChange, onLangChange) {
   // Mount shared shell
@@ -28,8 +29,40 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   // Wire main mode tabs (Live / Compare / Archive / Exports / Method only)
   const tabs = Array.from(document.querySelectorAll('.tracker-mode-tab[data-mode]'));
   const panels = Array.from(document.querySelectorAll('.tracker-mode-panel[data-mode-panel]'));
+  const workspaceToggle = els.workspaceToggle || document.getElementById('tp-workspace-toggle');
+  const isAdvancedMode = () => state.workspaceLevel === 'advanced';
+
+  function applyWorkspaceLevel() {
+    const advanced = isAdvancedMode();
+    document.body.classList.toggle('tracker-workspace-basic', !advanced);
+    document.body.classList.toggle('tracker-workspace-advanced', advanced);
+    if (workspaceToggle) {
+      workspaceToggle.textContent = advanced ? 'Use basic workspace' : 'Open advanced workspace';
+      workspaceToggle.setAttribute('aria-pressed', advanced ? 'true' : 'false');
+    }
+    if (!advanced && state.mode !== 'live') {
+      setMode('live');
+    }
+    if (!advanced && _openPanel) {
+      closeOverlay(_openPanel);
+    }
+  }
+
+  function setWorkspaceLevel(level = 'basic') {
+    state.workspaceLevel = level === 'advanced' ? 'advanced' : 'basic';
+    persistState(state);
+    applyWorkspaceLevel();
+    if (typeof onModeChange === 'function') onModeChange(state.mode);
+  }
+
+  function ensureAdvancedWorkspace() {
+    if (!isAdvancedMode()) {
+      setWorkspaceLevel('advanced');
+    }
+  }
 
   function setMode(mode) {
+    if (mode !== 'live') ensureAdvancedWorkspace();
     state.mode = mode;
     tabs.forEach(tab => {
       const active = tab.dataset.mode === mode;
@@ -41,7 +74,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
       panel.hidden = !active;
     });
     persistState(state);
-    syncUrlFromState(state);
+    syncUrlFromState(state, _openPanel);
     if (typeof onModeChange === 'function') onModeChange(mode);
   }
 
@@ -49,10 +82,13 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     tab.addEventListener('click', () => setMode(tab.dataset.mode));
   });
 
+<<<<<<< codex/audit-repository-for-ux-improvement-plan
   // Initial mode selection (never allow alerts/planner as mode)
   const safeMode = VALID_MODES.has(state.mode) ? state.mode : 'live';
   setMode(safeMode);
 
+=======
+>>>>>>> main
   // Overlay system for Alerts and Planner
   const overlays = {
     alerts: document.getElementById('tp-overlay-alerts'),
@@ -60,7 +96,11 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   };
 
   function openOverlay(name) {
+<<<<<<< codex/audit-repository-for-ux-improvement-plan
     if (!VALID_PANELS.has(name)) return;
+=======
+    ensureAdvancedWorkspace();
+>>>>>>> main
     if (_openPanel && _openPanel !== name) closeOverlay(_openPanel);
     const overlay = overlays[name];
     if (!overlay) return;
@@ -75,7 +115,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
       btn.setAttribute('aria-expanded', 'true');
     });
     // Sync URL with panel open
-    syncUrlFromState(state);
+    syncUrlFromState(state, _openPanel);
   }
 
   function closeOverlay(name) {
@@ -90,8 +130,12 @@ export function mountShell(state, els, onModeChange, onLangChange) {
       btn.setAttribute('aria-expanded', 'false');
     });
     _openPanel = null;
+<<<<<<< codex/audit-repository-for-ux-improvement-plan
     state.panel = null;
     syncUrlFromState(state);
+=======
+    syncUrlFromState(state, _openPanel);
+>>>>>>> main
   }
 
   function toggleOverlay(name) {
@@ -116,6 +160,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     });
   });
 
+<<<<<<< codex/audit-repository-for-ux-improvement-plan
   function syncOverlayFromState() {
     const desiredPanel = state.panel && VALID_PANELS.has(state.panel) ? state.panel : null;
     if (!desiredPanel) {
@@ -134,6 +179,28 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     setMode(m);
     syncOverlayFromState();
     if (parsed?.shouldCanonicalize) syncUrlFromState(state);
+=======
+  function applyModeAndPanelFromHash() {
+    const { panel } = applyUrlState(state);
+    const needsAdvanced = state.mode !== 'live' || !!panel;
+    if (needsAdvanced) state.workspaceLevel = 'advanced';
+    applyWorkspaceLevel();
+    const safeMode = BASE_MODES.includes(state.mode) ? state.mode : 'live';
+    setMode(safeMode);
+    if (panel && overlays[panel]) {
+      openOverlay(panel);
+    } else if (_openPanel) {
+      closeOverlay(_openPanel);
+    }
+  }
+
+  // Initial mode/panel selection (never allow alerts/planner as mode)
+  applyModeAndPanelFromHash();
+
+  // Sync back/forward navigation
+  window.addEventListener('hashchange', () => {
+    applyModeAndPanelFromHash();
+>>>>>>> main
   });
 
   // Keyboard shortcuts
@@ -154,6 +221,10 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     } else if (key === 'p') {
       toggleOverlay('planner');
     }
+  });
+
+  workspaceToggle?.addEventListener('click', () => {
+    setWorkspaceLevel(isAdvancedMode() ? 'basic' : 'advanced');
   });
 
   return { setMode, openOverlay, closeOverlay };

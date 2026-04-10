@@ -18,6 +18,8 @@ let lang = 'en';
 let goldPrice = null;
 let dayOpenPrice = null;
 let rates = {};
+let goldUpdatedAt = null;
+let priceSourceLabel = 'cached/fallback';
 let _refreshTimer = null;
 
 function getLang() {
@@ -64,11 +66,9 @@ const T = {
     heroSub: 'UAE, GCC & Arab World',
     heroLead: 'Live spot-linked gold estimates across 24+ countries in 7 karats — in local currencies. Free, transparent, updated every 90 seconds.',
     heroCta1: 'View Live Tracker',
-    heroCta2: 'UAE Gold Today',
+    heroCta2: 'Browse Countries',
     heroCta3: 'Calculator',
-    heroCta4: 'Set Alert',
-    heroCta5: 'Find Gold Shops',
-    heroCta5Sub: '26 listings across UAE, Saudi Arabia, India & more — filterable by city and specialty.',
+    heroCta4: 'Find Gold Shops',
     spotTitle: 'Gold Spot Price',
     perOz: 'per troy ounce',
     lbl24aed: '24K / gram (AED)',
@@ -77,6 +77,7 @@ const T = {
     lbl21usd: '21K / gram (USD)',
     fetching: 'Fetching...',
     updated: 'Updated',
+    source: 'Source',
     changeLabel: 'Today',
     marketOpen: '● Market Open',
     marketClosed: '○ Market Closed',
@@ -122,7 +123,7 @@ const T = {
     why2t: 'Genuinely Live',   why2d: 'Gold spot price refreshes every 90 seconds via gold-api.com. FX rates update daily. Countdown shown. Cached locally so it works offline too.',
     why3t: 'Full Bilingual',   why3d: 'Every label, badge, unit, and country name is available in English and Arabic. Full RTL layout switch — not just a font change.',
     why4t: '7 Karats, 24+ Countries', why4d: 'From pure 24K investment gold to 14K jewelry. All 7 standard karats × 24+ countries = a complete price matrix in any unit.',
-    countries: { UAE:'UAE', SA:'Saudi Arabia', KW:'Kuwait', QA:'Qatar', BH:'Bahrain', OM:'Oman', EG:'Egypt', JO:'Jordan', MA:'Morocco', IN:'India', more:'More countries →' },
+    countries: { UAE:'UAE', SA:'Saudi Arabia', KW:'Kuwait', QA:'Qatar', BH:'Bahrain', OM:'Oman', EG:'Egypt', JO:'Jordan', MA:'Morocco', IN:'India', more:'See all countries →' },
     tools: {
       trackerT:'Live Tracker', trackerD:'Full price matrix — 24+ countries, 7 karats, per gram & per ounce. Refreshed every 90 seconds.', trackerC:'Open Tracker →',
       calcT:'Gold Calculator', calcD:'Gold value, scrap, Zakat, buying power and unit conversion — all in one tool.', calcC:'Open Calculator →',
@@ -152,11 +153,9 @@ const T = {
     heroSub: 'الإمارات والخليج والعالم العربي',
     heroLead: 'تقديرات الذهب الفورية عبر 24+ دولة وبـ 7 عيارات — بالعملات المحلية. مجاني وشفاف ويتحدث كل 90 ثانية.',
     heroCta1: 'عرض التتبع المباشر',
-    heroCta2: 'ذهب الإمارات اليوم',
+    heroCta2: 'تصفح الدول',
     heroCta3: 'الحاسبة',
-    heroCta4: 'اضبط تنبيهاً',
-    heroCta5: 'ابحث عن محلات الذهب',
-    heroCta5Sub: '26 إدراجاً في الإمارات والسعودية والهند وأكثر — مع إمكانية التصفية حسب المدينة والتخصص.',
+    heroCta4: 'ابحث عن محلات الذهب',
     spotTitle: 'السعر الفوري للذهب',
     perOz: 'لكل أوقية تروي',
     lbl24aed: 'عيار 24 / غرام (AED)',
@@ -165,6 +164,7 @@ const T = {
     lbl21usd: 'عيار 21 / غرام (USD)',
     fetching: 'جارٍ التحميل...',
     updated: 'آخر تحديث',
+    source: 'المصدر',
     changeLabel: 'اليوم',
     marketOpen: '● السوق مفتوح',
     marketClosed: '○ السوق مغلق',
@@ -210,7 +210,7 @@ const T = {
     why2t: 'مباشر فعلًا', why2d: 'يتحدث السعر الفوري للذهب كل 90 ثانية. أسعار الصرف تتجدد يوميًا. يعمل دون اتصال بالإنترنت أيضًا.',
     why3t: 'ثنائي اللغة الكامل', why3d: 'كل تسمية وشارة ووحدة واسم بلد متاح بالعربية والإنجليزية. تبديل كامل للاتجاه RTL.',
     why4t: '7 عيارات، 24+ دولة', why4d: 'من ذهب الاستثمار 24 عيارًا إلى مجوهرات 14 عيارًا. جميع العيارات السبعة × 24+ دولة = مصفوفة أسعار كاملة.',
-    countries: { UAE:'الإمارات', SA:'السعودية', KW:'الكويت', QA:'قطر', BH:'البحرين', OM:'عُمان', EG:'مصر', JO:'الأردن', MA:'المغرب', IN:'الهند', more:'المزيد من الدول ←' },
+    countries: { UAE:'الإمارات', SA:'السعودية', KW:'الكويت', QA:'قطر', BH:'البحرين', OM:'عُمان', EG:'مصر', JO:'الأردن', MA:'المغرب', IN:'الهند', more:'عرض كل الدول ←' },
     tools: {
       trackerT:'تتبع مباشر', trackerD:'مصفوفة أسعار كاملة — 24+ دولة، 7 عيارات، لكل غرام وأوقية. يتجدد كل 90 ثانية.', trackerC:'افتح المتتبع ←',
       calcT:'حاسبة الذهب', calcD:'قيمة الذهب، الخردة، الزكاة، القوة الشرائية، وتحويل الوحدات — في أداة واحدة.', calcC:'افتح الحاسبة ←',
@@ -273,7 +273,9 @@ function renderHeroCard() {
   set('hlc-usd22',  fmt.formatPrice(usd22g,  'USD', 2));
   set('hlc-aed22',  fmt.formatPrice(aed22g,  'AED', 2));
   set('hlc-usd21',  fmt.formatPrice(usd21g,  'USD', 2));
-  set('hlc-updated', `${tx('updated')}: ${fmt.formatTimestampShort(new Date().toISOString(), lang)}`);
+  const freshnessTime = goldUpdatedAt || new Date().toISOString();
+  const sourceText = priceSourceLabel === 'live' ? 'Live' : 'Cached/Fallback';
+  set('hlc-updated', `${tx('updated')}: ${fmt.formatTimestampShort(freshnessTime, lang)} · ${tx('source')}: ${sourceText}`);
 
   // Change vs day open
   const changeEl = document.getElementById('hlc-change');
@@ -359,11 +361,9 @@ function applyLangToPage() {
   set('hero-title-sub',  tx('heroSub'));
   set('hero-lead',       tx('heroLead'));
   set('hero-cta-tracker',  tx('heroCta1'));
-  set('hero-cta-uae',      tx('heroCta2'));
+  set('hero-cta-countries', tx('heroCta2'));
   set('hero-cta-calc',     tx('heroCta3'));
-  set('hero-cta-alert',    tx('heroCta4'));
-  set('hero-cta-shops',    tx('heroCta5'));
-  set('hero-cta-shops-sub', tx('heroCta5Sub'));
+  set('hero-cta-shops',    tx('heroCta4'));
   set('hlc-tracker-link',  tx('trackerLink'));
   set('hlc-title',  tx('spotTitle'));
   set('hlc-sub',    tx('perOz'));
@@ -428,10 +428,10 @@ function applyLangToPage() {
   if (ht) {
     set('history-section-title', ht.title);
     set('history-section-sub',   ht.sub);
-    set('hist-feat-1-t', ht.feat1T); set('hist-feat-1-d', ht.feat1D); set('hist-feat-1-l', ht.feat1L);
-    set('hist-feat-2-t', ht.feat2T); set('hist-feat-2-d', ht.feat2D); set('hist-feat-2-l', ht.feat2L);
-    set('hist-feat-3-t', ht.feat3T); set('hist-feat-3-d', ht.feat3D); set('hist-feat-3-l', ht.feat3L);
-    set('hist-feat-4-t', ht.feat4T); set('hist-feat-4-d', ht.feat4D); set('hist-feat-4-l', ht.feat4L);
+    set('hist-feat-1-t', ht.feat1T); set('hist-feat-1-d', ht.feat1D);
+    set('hist-feat-2-t', ht.feat2T); set('hist-feat-2-d', ht.feat2D);
+    set('hist-feat-3-t', ht.feat3T); set('hist-feat-3-d', ht.feat3D);
+    set('hist-feat-4-t', ht.feat4T); set('hist-feat-4-d', ht.feat4D);
   }
 
   // Insights banner
@@ -454,8 +454,12 @@ async function fetchLiveData() {
 
   if (goldRes.status === 'fulfilled') {
     goldPrice = goldRes.value.price;
+    goldUpdatedAt = goldRes.value.updatedAt || new Date().toISOString();
+    priceSourceLabel = 'live';
     cache.saveGoldPrice(goldRes.value.price, goldRes.value.updatedAt);
     renderHeroCard();
+  } else if (!goldPrice) {
+    priceSourceLabel = 'cached/fallback';
   }
 
   if (fxRes.status === 'fulfilled') {
@@ -520,6 +524,8 @@ async function init() {
     goldPrice = STATE_STUB.goldPriceUsdPerOz;
     dayOpenPrice = STATE_STUB.dayOpenGoldPriceUsdPerOz;
     rates = STATE_STUB.rates;
+    goldUpdatedAt = STATE_STUB.freshness?.goldUpdatedAt || null;
+    priceSourceLabel = 'cached/fallback';
   }
 
   applyLangToPage();

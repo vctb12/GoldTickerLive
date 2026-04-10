@@ -20,7 +20,7 @@ export function renderHero() {
   if (_el.liveBadgeText) {
     if (spot) {
       _el.liveBadgeText.textContent = _state.hasLiveFailure
-        ? `Fallback · XAU/USD ${spot.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (cached)`
+        ? `Cached/Fallback · XAU/USD ${spot.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         : `Live · XAU/USD ${spot.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     } else {
       _el.liveBadgeText.textContent = _state.hasLiveFailure ? 'Live feed unavailable — no cached data' : 'Connecting to API…';
@@ -262,7 +262,7 @@ export function renderDecisionCues() {
   const lines = [
     `Live spot: $${spot.toFixed(2)} / troy oz`,
     _state.hasLiveFailure
-      ? `⚠ Data source: fallback — using cache (API unreachable — live may return soon)`
+      ? `⚠ Data source: Cached/Fallback — using cache (API unreachable — live may return soon)`
       : `✓ Data source: live · last API fetch successful`,
     `History coverage: 2019–Aug 2025 (LBMA baseline) + ${_state.snapshots?.length || 0} session snapshots`,
   ];

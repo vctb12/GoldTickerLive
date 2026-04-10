@@ -16,6 +16,7 @@ export const VALID_PANELS = new Set(['alerts', 'planner']);
 export const DEFAULT_STATE = {
   lang: 'en',
   mode: 'live',
+  workspaceLevel: 'basic',
   selectedCurrency: 'AED',
   selectedKarat: '24',
   selectedUnit: 'gram',
@@ -96,6 +97,7 @@ export function createInitialState() {
   const saved = readLocal(STORAGE_KEYS.core, {});
   base.lang = saved.lang || readLanguagePref() || base.lang;
   base.mode = (VALID_MODES.has(saved.mode) ? saved.mode : null) || base.mode;
+  base.workspaceLevel = saved.workspaceLevel === 'advanced' ? 'advanced' : base.workspaceLevel;
   base.selectedCurrency = saved.selectedCurrency || base.selectedCurrency;
   base.selectedKarat = saved.selectedKarat || base.selectedKarat;
   base.selectedUnit = saved.selectedUnit || base.selectedUnit;
@@ -124,6 +126,7 @@ export function persistState(state) {
   const payload = {
     lang: state.lang,
     mode: state.mode,
+    workspaceLevel: state.workspaceLevel === 'advanced' ? 'advanced' : 'basic',
     selectedCurrency: state.selectedCurrency,
     selectedKarat: state.selectedKarat,
     selectedUnit: state.selectedUnit,
@@ -142,7 +145,7 @@ export function persistState(state) {
   writeLocal(STORAGE_KEYS.wire, state.wireItems.slice(0, 32));
 }
 
-export function syncUrlFromState(state) {
+export function syncUrlFromState(state, panel = null) {
   const url = new URL(window.location.href);
   const params = new URLSearchParams();
   params.set('mode', VALID_MODES.has(state.mode) ? state.mode : 'live');

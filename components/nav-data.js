@@ -14,7 +14,7 @@ export const NAV_DATA = {
           { href: '../tracker.html',                   label: 'Live Tracker'   },
           { href: '../countries/uae.html',             label: 'UAE Gold Today' },
           { href: '../tracker.html#mode=compare',        label: 'GCC Compare'    },
-          { href: '../tracker.html#mode=compare',        label: 'Country Pages'  },
+          { href: '../countries/index.html',            label: 'Country Pages'  },
           { href: '../tracker.html#mode=archive',        label: 'History & Data' },
         ],
       },
@@ -23,10 +23,13 @@ export const NAV_DATA = {
         label: 'Tools',
         items: [
           { href: '../calculator.html',                label: 'Calculator'   },
+<<<<<<< codex/audit-repository-for-ux-improvement-plan
           { href: '../tracker.html#mode=live&panel=alerts',         label: 'Alerts'       },
+=======
+          { href: '../tracker.html#mode=live&panel=alerts', label: 'Alerts'       },
+>>>>>>> main
           { href: '../tracker.html#mode=exports',        label: 'Downloads'    },
           { href: '../tracker.html#mode=archive',        label: 'Date Lookup'  },
-          { href: '../tracker.html#mode=archive',        label: 'Archive'      },
         ],
       },
       {
@@ -87,7 +90,7 @@ export const NAV_DATA = {
           { href: '../tracker.html',                   label: 'تتبع مباشر'          },
           { href: '../countries/uae.html',             label: 'ذهب الإمارات'        },
           { href: '../tracker.html#mode=compare',        label: 'مقارنة دول الخليج'   },
-          { href: '../tracker.html#mode=compare',        label: 'صفحات الدول'         },
+          { href: '../countries/index.html',            label: 'صفحات الدول'         },
           { href: '../tracker.html#mode=archive',        label: 'البيانات التاريخية'   },
         ],
       },
@@ -96,10 +99,13 @@ export const NAV_DATA = {
         label: 'أدوات',
         items: [
           { href: '../calculator.html',                label: 'حاسبة'             },
+<<<<<<< codex/audit-repository-for-ux-improvement-plan
           { href: '../tracker.html#mode=live&panel=alerts',         label: 'تنبيهات'           },
+=======
+          { href: '../tracker.html#mode=live&panel=alerts', label: 'تنبيهات'           },
+>>>>>>> main
           { href: '../tracker.html#mode=exports',        label: 'تنزيلات'           },
           { href: '../tracker.html#mode=archive',        label: 'البحث بالتاريخ'    },
-          { href: '../tracker.html#mode=archive',        label: 'الأرشيف'           },
         ],
       },
       {
