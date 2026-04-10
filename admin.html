@@ -3,632 +3,604 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Prices Admin Dashboard</title>
+    <title>Gold Prices | Command Center</title>
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #34495e;
-            --accent: #e74c3c;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border: #334155;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+        
+        body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--dark);
-            color: var(--light);
-            line-height: 1.6;
+        /* Login Overlay */
+        #login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-dark); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
         }
-
-        .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        .login-box {
+            background: var(--bg-card); padding: 2.5rem; border-radius: 12px;
+            border: 1px solid var(--border); width: 100%; max-width: 400px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-
-        .login-form {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            width: 100%;
-            max-width: 400px;
+        .login-box h2 { text-align: center; margin-bottom: 1.5rem; color: var(--primary); }
+        .input-group { margin-bottom: 1rem; }
+        .input-group label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem; }
+        .input-group input {
+            width: 100%; padding: 0.75rem; background: var(--bg-dark);
+            border: 1px solid var(--border); border-radius: 6px; color: white;
         }
-
-        .login-form h2 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: white;
+        .btn-full {
+            width: 100%; padding: 0.75rem; background: var(--primary); color: white;
+            border: none; border-radius: 6px; font-weight: 600; cursor: pointer;
+            transition: opacity 0.2s;
         }
+        .btn-full:hover { opacity: 0.9; }
 
-        .form-group {
-            margin-bottom: 1rem;
+        /* Sidebar */
+        aside {
+            width: 260px; background: var(--bg-card); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; padding: 1.5rem;
         }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--light);
+        .brand { font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 2rem; display: flex; align-items: center; gap: 0.5rem; }
+        .nav-item {
+            padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 6px;
+            color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 0.75rem;
         }
+        .nav-item:hover, .nav-item.active { background: rgba(59, 130, 246, 0.1); color: var(--primary); }
+        .nav-item.danger { color: var(--danger); }
+        .nav-item.danger:hover { background: rgba(239, 68, 68, 0.1); }
 
-        .form-group input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 0.75rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #c0392b;
-            transform: translateY(-2px);
-        }
-
-        .dashboard {
-            display: none;
-        }
-
-        .sidebar {
-            width: 250px;
-            background: var(--primary);
-            height: 100vh;
-            position: fixed;
-            padding: 2rem 1rem;
-        }
-
-        .sidebar nav ul {
-            list-style: none;
-        }
-
-        .sidebar nav li {
-            margin-bottom: 1rem;
-        }
-
-        .sidebar nav a {
-            color: var(--light);
-            text-decoration: none;
-            padding: 0.75rem;
-            display: block;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar nav a:hover,
-        .sidebar nav a.active {
-            background: var(--accent);
-        }
-
-        .main-content {
-            margin-left: 250px;
-            padding: 2rem;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
+        /* Main Content */
+        main { flex: 1; overflow-y: auto; padding: 2rem; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        h1 { font-size: 1.8rem; }
+        
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
         .stat-card {
-            background: var(--secondary);
-            padding: 1.5rem;
-            border-radius: 10px;
-            text-align: center;
+            background: var(--bg-card); padding: 1.5rem; border-radius: 8px;
+            border: 1px solid var(--border);
         }
+        .stat-val { font-size: 2rem; font-weight: 700; color: var(--text-main); }
+        .stat-label { color: var(--text-muted); font-size: 0.875rem; margin-top: 0.25rem; }
 
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--accent);
-            margin-bottom: 0.5rem;
+        /* Tables & Lists */
+        .data-panel { background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
+        .panel-header {
+            padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
         }
-
-        .table-container {
-            background: var(--secondary);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 1rem;
+        .search-bar {
+            background: var(--bg-dark); border: 1px solid var(--border);
+            padding: 0.5rem 1rem; border-radius: 6px; color: white; width: 300px;
         }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem 1.5rem; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: rgba(0,0,0,0.2); color: var(--text-muted); font-weight: 600; font-size: 0.875rem; }
+        tr:hover { background: rgba(255,255,255,0.02); }
+        
+        .badge { padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 600; }
+        .badge-high { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .badge-med { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .badge-low { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        th {
-            background: var(--primary);
-            font-weight: bold;
-        }
-
-        tr:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-small {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 0 0.25rem;
-        }
-
-        .btn-edit {
-            background: var(--warning);
-            color: white;
-        }
-
-        .btn-delete {
-            background: var(--accent);
-            color: white;
-        }
-
+        /* Modal */
         .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;
         }
-
         .modal-content {
-            background: var(--primary);
-            margin: 5% auto;
-            padding: 2rem;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 600px;
+            background: var(--bg-card); padding: 2rem; border-radius: 12px;
+            width: 100%; max-width: 600px; border: 1px solid var(--border);
         }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 0.75rem; background: var(--bg-dark);
+            border: 1px solid var(--border); border-radius: 6px; color: white;
+        }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
+        .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-main); padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; }
+        .btn-primary { background: var(--primary); border: none; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; }
 
-        .close {
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 2rem; right: 2rem; padding: 1rem 1.5rem;
+            background: var(--success); color: white; border-radius: 8px;
+            transform: translateY(100px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
         }
+        .toast.show { transform: translateY(0); }
+        .toast.error { background: var(--danger); }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem;
-            border-radius: 8px;
-            color: white;
-            z-index: 1001;
-        }
-
-        .notification.success {
-            background: var(--success);
-        }
-
-        .notification.error {
-            background: var(--accent);
-        }
+        /* Utility */
+        .hidden { display: none !important; }
+        .text-right { text-align: right; }
+        .action-btn { padding: 0.4rem 0.8rem; border-radius: 4px; border: none; cursor: pointer; font-size: 0.8rem; margin-right: 0.5rem; }
+        .btn-edit { background: var(--warning); color: #000; }
+        .btn-del { background: var(--danger); color: white; }
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div class="login-container" id="loginContainer">
-        <div class="login-form">
-            <h2>Admin Login</h2>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" placeholder="admin@goldprices.com">
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2>🔐 Command Center</h2>
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="login-email" value="admin@goldprices.com">
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="admin123">
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="login-pass" value="admin123">
             </div>
-            <button class="btn btn-primary" onclick="login()">Login</button>
+            <button class="btn-full" onclick="app.auth.login()">Access System</button>
+            <p style="margin-top:1rem; font-size:0.8rem; color:var(--text-muted); text-align:center;">
+                Runs entirely in browser. No server required.
+            </p>
         </div>
     </div>
 
-    <!-- Dashboard -->
-    <div class="dashboard" id="dashboard">
-        <div class="sidebar">
-            <h3>Gold Prices Admin</h3>
-            <nav>
-                <ul>
-                    <li><a href="#" class="active" onclick="showSection('dashboard')">Dashboard</a></li>
-                    <li><a href="#" onclick="showSection('shops')">Shops</a></li>
-                    <li><a href="#" onclick="showSection('alerts')">Alerts</a></li>
-                    <li><a href="#" onclick="showSection('portfolio')">Portfolio</a></li>
-                    <li><a href="#" onclick="showSection('users')">Users</a></li>
-                    <li><a href="#" onclick="showSection('content')">Content</a></li>
-                    <li><a href="#" onclick="showSection('audit')">Audit Log</a></li>
-                    <li><a href="#" onclick="logout()">Logout</a></li>
-                </ul>
-            </nav>
+    <!-- MAIN APP -->
+    <aside id="sidebar" class="hidden">
+        <div class="brand">⚡ GoldAdmin</div>
+        <nav>
+            <div class="nav-item active" onclick="app.router.navigate('dashboard')">📊 Dashboard</div>
+            <div class="nav-item" onclick="app.router.navigate('shops')">🏪 Shops Manager</div>
+            <div class="nav-item" onclick="app.router.navigate('analytics')">📈 Analytics</div>
+            <div class="nav-item" onclick="app.router.navigate('search')">🔍 Search Index</div>
+            <div class="nav-item" onclick="app.router.navigate('audit')">🛡️ Audit Logs</div>
+            <div class="nav-item danger" onclick="app.auth.logout()">🚪 Logout</div>
+        </nav>
+        <div style="margin-top:auto; padding-top:1rem; border-top:1px solid var(--border); font-size:0.8rem; color:var(--text-muted);">
+            v2.0 Local-First
+        </div>
+    </aside>
+
+    <main id="main-content" class="hidden">
+        <!-- DASHBOARD VIEW -->
+        <div id="view-dashboard">
+            <header>
+                <h1>System Overview</h1>
+                <button class="btn-primary" onclick="app.data.exportAll()">💾 Download Backup</button>
+            </header>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-val" id="stat-shops">0</div>
+                    <div class="stat-label">Active Shops</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val" id="stat-audit">0</div>
+                    <div class="stat-label">Audit Events</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val" id="stat-searches">0</div>
+                    <div class="stat-label">Search Queries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val" style="color:var(--success)">Online</div>
+                    <div class="stat-label">System Status</div>
+                </div>
+            </div>
+            
+            <div class="data-panel">
+                <div class="panel-header">
+                    <h3>Recent Activity</h3>
+                </div>
+                <table>
+                    <thead><tr><th>Time</th><th>Action</th><th>Details</th></tr></thead>
+                    <tbody id="audit-table-body"></tbody>
+                </table>
+            </div>
         </div>
 
-        <div class="main-content">
-            <div class="header">
-                <h1>Admin Dashboard</h1>
-                <button class="btn btn-primary" onclick="exportData()">Export Data</button>
-            </div>
-
-            <!-- Dashboard Section -->
-            <div id="dashboard-section">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-shops">0</div>
-                        <div>Total Shops</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-alerts">0</div>
-                        <div>Active Alerts</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-transactions">0</div>
-                        <div>Transactions</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="last-update">--</div>
-                        <div>Last Update</div>
-                    </div>
+        <!-- SHOPS VIEW -->
+        <div id="view-shops" class="hidden">
+            <header>
+                <h1>Shop Directory</h1>
+                <button class="btn-primary" onclick="app.shops.openModal()">+ Add New Shop</button>
+            </header>
+            <div class="data-panel">
+                <div class="panel-header">
+                    <input type="text" class="search-bar" placeholder="Search shops..." onkeyup="app.shops.filter(this.value)">
                 </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Recent Activity</th>
-                                <th>Action</th>
-                                <th>Time</th>
-                            </tr>
-                        </thead>
-                        <tbody id="recent-activity">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Shops Section -->
-            <div id="shops-section" style="display:none;">
-                <button class="btn btn-primary" onclick="openShopModal()">Add New Shop</button>
-                
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Location</th>
-                                <th>Price</th>
-                                <th>Confidence</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="shops-table-body">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Alerts Section -->
-            <div id="alerts-section" style="display:none;">
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>User</th>
-                                <th>Type</th>
-                                <th>Target</th>
-                                <th>Status</th>
-                                <th>Created</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="alerts-table-body">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Portfolio Section -->
-            <div id="portfolio-section" style="display:none;">
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>User</th>
-                                <th>Asset</th>
-                                <th>Amount</th>
-                                <th>Value</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="portfolio-table-body">
-                        </tbody>
-                    </table>
-                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Location</th>
+                            <th>Price (24k)</th>
+                            <th>Confidence</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="shops-table-body"></tbody>
+                </table>
             </div>
         </div>
-    </div>
 
-    <!-- Modal for Add/Edit Shop -->
+        <!-- ANALYTICS VIEW -->
+        <div id="view-analytics" class="hidden">
+            <header><h1>Analytics Engine</h1></header>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-val" id="ana-views">0</div>
+                    <div class="stat-label">Page Views</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val" id="ana-clicks">0</div>
+                    <div class="stat-label">CTA Clicks</div>
+                </div>
+            </div>
+            <div class="data-panel">
+                <div class="panel-header"><h3>Event Log</h3></div>
+                <table>
+                    <thead><tr><th>Event</th><th>Timestamp</th><th>Data</th></tr></thead>
+                    <tbody id="analytics-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SEARCH VIEW -->
+        <div id="view-search" class="hidden">
+            <header><h1>Search Index</h1></div>
+            <div class="data-panel">
+                <div class="panel-header">
+                    <input type="text" class="search-bar" placeholder="Test search index..." onkeyup="app.search.test(this.value)">
+                </div>
+                <div id="search-results" style="padding:1rem;"></div>
+            </div>
+        </div>
+
+        <!-- AUDIT VIEW -->
+        <div id="view-audit" class="hidden">
+            <header><h1>Audit Logs</h1></header>
+            <div class="data-panel">
+                <table>
+                    <thead><tr><th>ID</th><th>Action</th><th>User</th><th>Timestamp</th></tr></thead>
+                    <tbody id="full-audit-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- SHOP MODAL -->
     <div id="shop-modal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modal-title">Add New Shop</h2>
-            <form id="shop-form">
-                <div class="form-row">
+            <h2 id="modal-title">Add/Edit Shop</h2>
+            <form id="shop-form" onsubmit="event.preventDefault(); app.shops.save();">
+                <input type="hidden" id="shop-id">
+                <div class="form-grid">
                     <div class="form-group">
-                        <label for="shop-name">Name</label>
+                        <label>Shop Name</label>
                         <input type="text" id="shop-name" required>
                     </div>
                     <div class="form-group">
-                        <label for="shop-location">Location</label>
+                        <label>Location/City</label>
                         <input type="text" id="shop-location" required>
                     </div>
                 </div>
-                <div class="form-row">
+                <div class="form-grid">
                     <div class="form-group">
-                        <label for="shop-price">Price</label>
-                        <input type="number" id="shop-price" step="0.01" required>
+                        <label>Price (USD)</label>
+                        <input type="number" step="0.01" id="shop-price" required>
                     </div>
                     <div class="form-group">
-                        <label for="shop-confidence">Confidence Score</label>
-                        <input type="number" id="shop-confidence" min="0" max="100" value="95">
+                        <label>Confidence Score (0-100)</label>
+                        <input type="number" id="shop-confidence" max="100" value="90">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="shop-description">Description</label>
-                    <textarea id="shop-description" rows="3"></textarea>
+                    <label>Description</label>
+                    <textarea id="shop-desc" rows="3"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Save Shop</button>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="document.getElementById('shop-modal').style.display='none'">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
             </form>
         </div>
     </div>
 
-    <script src="lib/admin-core.js"></script>
-    <script>
-        let currentView = 'dashboard';
+    <div id="toast" class="toast">Operation Successful</div>
 
-        function login() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+<script>
+/**
+ * GOLD ADMIN CORE - LOCAL FIRST ARCHITECTURE
+ * Fully functional without a backend server.
+ */
+const app = {
+    state: {
+        user: null,
+        shops: [],
+        audit: [],
+        analytics: [],
+        searchIndex: {}
+    },
 
-            if (email === 'admin@goldprices.com' && password === 'admin123') {
-                document.getElementById('loginContainer').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-                loadDashboardData();
+    init() {
+        this.db.load();
+        this.search.buildIndex();
+        if (localStorage.getItem('goldAdminAuth') === 'true') {
+            this.auth.success();
+        }
+    },
+
+    // --- AUTH MODULE ---
+    auth: {
+        login() {
+            const e = document.getElementById('login-email').value;
+            const p = document.getElementById('login-pass').value;
+            if (e === 'admin@goldprices.com' && p === 'admin123') {
+                localStorage.setItem('goldAdminAuth', 'true');
+                app.auth.success();
             } else {
-                showNotification('Invalid credentials', 'error');
+                app.ui.toast('Invalid Credentials', true);
             }
+        },
+        logout() {
+            localStorage.removeItem('goldAdminAuth');
+            location.reload();
+        },
+        success() {
+            document.getElementById('login-overlay').classList.add('hidden');
+            document.getElementById('sidebar').classList.remove('hidden');
+            document.getElementById('main-content').classList.remove('hidden');
+            app.router.navigate('dashboard');
+            app.ui.renderDashboard();
         }
+    },
 
-        function logout() {
-            document.getElementById('dashboard').style.display = 'none';
-            document.getElementById('loginContainer').style.display = 'flex';
-            document.getElementById('email').value = '';
-            document.getElementById('password').value = '';
+    // --- DATABASE MODULE (LocalStorage) ---
+    db: {
+        load() {
+            const s = localStorage.getItem('goldShops');
+            const a = localStorage.getItem('goldAudit');
+            const an = localStorage.getItem('goldAnalytics');
+            
+            // Initialize with dummy data if empty for demo
+            app.state.shops = s ? JSON.parse(s) : [
+                {id:'1', name:'Dubai Gold Souq', location:'Dubai, UAE', price:2350, confidence:98, desc:'Historic market'},
+                {id:'2', name:'Karachi Jewelers', location:'Karachi, PK', price:2310, confidence:85, desc:'Local hub'}
+            ];
+            app.state.audit = a ? JSON.parse(a) : [];
+            app.state.analytics = an ? JSON.parse(an) : [];
+            
+            this.log('SYSTEM', 'Database loaded');
+        },
+        save() {
+            localStorage.setItem('goldShops', JSON.stringify(app.state.shops));
+            localStorage.setItem('goldAudit', JSON.stringify(app.state.audit));
+            localStorage.setItem('goldAnalytics', JSON.stringify(app.state.analytics));
+            app.search.buildIndex(); // Re-index on save
+        },
+        log(action, details) {
+            const entry = {
+                id: Date.now(),
+                action,
+                details,
+                user: 'admin',
+                time: new Date().toISOString()
+            };
+            app.state.audit.unshift(entry);
+            if(app.state.audit.length > 100) app.state.audit.pop();
+            this.save();
         }
+    },
 
-        function showSection(section) {
-            // Hide all sections
-            document.querySelectorAll('[id$="-section"]').forEach(el => {
-                el.style.display = 'none';
-            });
-            
-            // Remove active class from all nav items
-            document.querySelectorAll('.sidebar nav a').forEach(el => {
-                el.classList.remove('active');
-            });
-            
-            // Show selected section and set active nav item
-            document.getElementById(`${section}-section`).style.display = 'block';
-            event.target.classList.add('active');
-            
-            currentView = section;
-            
-            if (section === 'dashboard') {
-                loadDashboardData();
-            } else if (section === 'shops') {
-                loadShopsTable();
-            } else if (section === 'alerts') {
-                loadAlertsTable();
-            } else if (section === 'portfolio') {
-                loadPortfolioTable();
-            }
-        }
-
-        function loadDashboardData() {
-            const shops = adminCore.getAllShops();
-            const alerts = adminCore.getActiveAlerts();
-            const portfolio = adminCore.data.portfolio;
-            const auditLog = adminCore.data.auditLog.slice(-10).reverse(); // Last 10 entries
-
-            document.getElementById('total-shops').textContent = shops.length;
-            document.getElementById('total-alerts').textContent = alerts.length;
-            document.getElementById('total-transactions').textContent = portfolio.length;
-            document.getElementById('last-update').textContent = new Date().toLocaleDateString();
-
-            const activityBody = document.getElementById('recent-activity');
-            activityBody.innerHTML = '';
-            auditLog.forEach(log => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${log.action}</td>
-                    <td>${log.details ? JSON.stringify(log.details).substring(0, 50) + '...' : 'N/A'}</td>
-                    <td>${new Date(log.timestamp).toLocaleString()}</td>
-                `;
-                activityBody.appendChild(row);
-            });
-        }
-
-        function loadShopsTable() {
-            const shops = adminCore.getAllShops();
+    // --- SHOPS MANAGER ---
+    shops: {
+        render(list = app.state.shops) {
             const tbody = document.getElementById('shops-table-body');
             tbody.innerHTML = '';
-
-            shops.forEach(shop => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${shop.name}</td>
-                    <td>${shop.location}</td>
-                    <td>$${shop.price}</td>
-                    <td>${shop.confidenceScore}%</td>
-                    <td>${shop.status || 'Active'}</td>
-                    <td>
-                        <button class="btn-small btn-edit" onclick="editShop('${shop.id}')">Edit</button>
-                        <button class="btn-small btn-delete" onclick="deleteShop('${shop.id}')">Delete</button>
-                    </td>
+            list.forEach(shop => {
+                const badgeClass = shop.confidence >= 90 ? 'badge-high' : (shop.confidence >= 70 ? 'badge-med' : 'badge-low');
+                const row = `
+                    <tr>
+                        <td><strong>${shop.name}</strong></td>
+                        <td>${shop.location}</td>
+                        <td>$${parseFloat(shop.price).toFixed(2)}</td>
+                        <td><span class="badge ${badgeClass}">${shop.confidence}%</span></td>
+                        <td>
+                            <button class="action-btn btn-edit" onclick="app.shops.edit('${shop.id}')">Edit</button>
+                            <button class="action-btn btn-del" onclick="app.shops.delete('${shop.id}')">Del</button>
+                        </td>
+                    </tr>
                 `;
-                tbody.appendChild(row);
+                tbody.innerHTML += row;
             });
-        }
-
-        function openShopModal(shopId = null) {
-            document.getElementById('shop-modal').style.display = 'block';
-            
-            if (shopId) {
-                const shop = adminCore.getAllShops().find(s => s.id === shopId);
-                if (shop) {
-                    document.getElementById('modal-title').textContent = 'Edit Shop';
-                    document.getElementById('shop-name').value = shop.name;
-                    document.getElementById('shop-location').value = shop.location;
-                    document.getElementById('shop-price').value = shop.price;
-                    document.getElementById('shop-confidence').value = shop.confidenceScore;
-                    document.getElementById('shop-description').value = shop.description || '';
-                    document.getElementById('shop-form').dataset.shopId = shopId;
-                }
-            } else {
-                document.getElementById('modal-title').textContent = 'Add New Shop';
-                document.getElementById('shop-form').reset();
-                delete document.getElementById('shop-form').dataset.shopId;
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('shop-modal').style.display = 'none';
-        }
-
-        document.getElementById('shop-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const shopId = this.dataset.shopId;
-            const shopData = {
+        },
+        filter(query) {
+            const q = query.toLowerCase();
+            const filtered = app.state.shops.filter(s => 
+                s.name.toLowerCase().includes(q) || s.location.toLowerCase().includes(q)
+            );
+            this.render(filtered);
+        },
+        openModal() {
+            document.getElementById('shop-form').reset();
+            document.getElementById('shop-id').value = '';
+            document.getElementById('modal-title').innerText = 'Add New Shop';
+            document.getElementById('shop-modal').style.display = 'flex';
+        },
+        edit(id) {
+            const shop = app.state.shops.find(s => s.id === id);
+            if(!shop) return;
+            document.getElementById('shop-id').value = shop.id;
+            document.getElementById('shop-name').value = shop.name;
+            document.getElementById('shop-location').value = shop.location;
+            document.getElementById('shop-price').value = shop.price;
+            document.getElementById('shop-confidence').value = shop.confidence;
+            document.getElementById('shop-desc').value = shop.desc || '';
+            document.getElementById('modal-title').innerText = 'Edit Shop';
+            document.getElementById('shop-modal').style.display = 'flex';
+        },
+        save() {
+            const id = document.getElementById('shop-id').value;
+            const data = {
+                id: id || Date.now().toString(),
                 name: document.getElementById('shop-name').value,
                 location: document.getElementById('shop-location').value,
                 price: parseFloat(document.getElementById('shop-price').value),
-                confidenceScore: parseInt(document.getElementById('shop-confidence').value),
-                description: document.getElementById('shop-description').value
+                confidence: parseInt(document.getElementById('shop-confidence').value),
+                desc: document.getElementById('shop-desc').value
             };
 
-            if (shopId) {
-                adminCore.updateShop(shopId, shopData);
-                showNotification('Shop updated successfully', 'success');
+            if(id) {
+                const idx = app.state.shops.findIndex(s => s.id === id);
+                app.state.shops[idx] = data;
+                app.db.log('UPDATE_SHOP', data.name);
             } else {
-                adminCore.createShop(shopData);
-                showNotification('Shop created successfully', 'success');
+                app.state.shops.push(data);
+                app.db.log('CREATE_SHOP', data.name);
             }
-
-            closeModal();
-            if (currentView === 'shops') {
-                loadShopsTable();
-            }
-        });
-
-        function editShop(shopId) {
-            openShopModal(shopId);
-        }
-
-        function deleteShop(shopId) {
-            if (confirm('Are you sure you want to delete this shop?')) {
-                adminCore.deleteShop(shopId);
-                showNotification('Shop deleted successfully', 'success');
-                if (currentView === 'shops') {
-                    loadShopsTable();
-                }
+            
+            app.db.save();
+            this.render();
+            document.getElementById('shop-modal').style.display = 'none';
+            app.ui.toast('Shop Saved Successfully');
+            app.ui.renderDashboard(); // Update stats
+        },
+        delete(id) {
+            if(confirm('Delete this shop?')) {
+                app.state.shops = app.state.shops.filter(s => s.id !== id);
+                app.db.log('DELETE_SHOP', id);
+                app.db.save();
+                this.render();
+                app.ui.toast('Shop Deleted', true);
+                app.ui.renderDashboard();
             }
         }
+    },
 
-        function exportData() {
-            const data = adminCore.exportData();
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    // --- SEARCH ENGINE ---
+    search: {
+        buildIndex() {
+            app.state.searchIndex = {};
+            app.state.shops.forEach(shop => {
+                const terms = [...shop.name.split(' '), ...shop.location.split(' ')];
+                terms.forEach(t => {
+                    const key = t.toLowerCase();
+                    if(!app.state.searchIndex[key]) app.state.searchIndex[key] = [];
+                    app.state.searchIndex[key].push(shop.id);
+                });
+            });
+        },
+        test(query) {
+            const resDiv = document.getElementById('search-results');
+            if(!query) { resDiv.innerHTML = ''; return; }
+            
+            const terms = query.toLowerCase().split(' ');
+            const matches = new Set();
+            
+            terms.forEach(t => {
+                Object.keys(app.state.searchIndex).forEach(key => {
+                    if(key.includes(t)) {
+                        app.state.searchIndex[key].forEach(id => matches.add(id));
+                    }
+                });
+            });
+
+            const results = app.state.shops.filter(s => matches.has(s.id));
+            resDiv.innerHTML = results.length ? 
+                results.map(r => `<div style="padding:0.5rem; border-bottom:1px solid #334155">${r.name} (${r.location})</div>`).join('') : 
+                '<div style="padding:1rem; color:#94a3b8">No results found</div>';
+        }
+    },
+
+    // --- ANALYTICS TRACKER ---
+    analytics: {
+        track(event, data) {
+            app.state.analytics.unshift({ event, data, time: new Date().toISOString() });
+            app.db.save();
+            this.render();
+        },
+        render() {
+            const tbody = document.getElementById('analytics-table-body');
+            tbody.innerHTML = '';
+            app.state.analytics.slice(0, 20).forEach(a => {
+                tbody.innerHTML += `<tr><td>${a.event}</td><td>${new Date(a.time).toLocaleTimeString()}</td><td>${JSON.stringify(a.data)}</td></tr>`;
+            });
+            document.getElementById('ana-views').innerText = app.state.analytics.filter(x=>x.event==='PAGE_VIEW').length;
+            document.getElementById('ana-clicks').innerText = app.state.analytics.filter(x=>x.event==='CLICK').length;
+        }
+    },
+
+    // --- ROUTER & UI ---
+    router: {
+        navigate(view) {
+            document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`view-${view}`).classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if(view === 'shops') app.shops.render();
+            if(view === 'analytics') app.analytics.render();
+            if(view === 'audit') app.ui.renderAudit();
+            
+            app.analytics.track('PAGE_VIEW', { page: view });
+        }
+    },
+
+    ui: {
+        toast(msg, isError = false) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.className = `toast show ${isError ? 'error' : ''}`;
+            setTimeout(() => t.classList.remove('show'), 3000);
+        },
+        renderDashboard() {
+            document.getElementById('stat-shops').innerText = app.state.shops.length;
+            document.getElementById('stat-audit').innerText = app.state.audit.length;
+            document.getElementById('stat-searches').innerText = Object.keys(app.state.searchIndex).length;
+            
+            const tbody = document.getElementById('audit-table-body');
+            tbody.innerHTML = '';
+            app.state.audit.slice(0, 5).forEach(a => {
+                tbody.innerHTML += `<tr><td>${new Date(a.time).toLocaleTimeString()}</td><td>${a.action}</td><td>${a.details}</td></tr>`;
+            });
+        },
+        renderAudit() {
+            const tbody = document.getElementById('full-audit-body');
+            tbody.innerHTML = '';
+            app.state.audit.forEach(a => {
+                tbody.innerHTML += `<tr><td>${a.id}</td><td>${a.action}</td><td>${a.user}</td><td>${new Date(a.time).toLocaleString()}</td></tr>`;
+            });
+        },
+        exportAll() {
+            const data = {
+                shops: app.state.shops,
+                audit: app.state.audit,
+                analytics: app.state.analytics,
+                exportedAt: new Date().toISOString()
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `gold-prices-export-${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `gold-admin-backup-${Date.now()}.json`;
             a.click();
-            URL.revokeObjectURL(url);
-            showNotification('Data exported successfully', 'success');
+            app.ui.toast('Backup Downloaded');
         }
+    }
+};
 
-        function showNotification(message, type) {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-
-        // Initialize
-        window.addEventListener('load', function() {
-            // Check if already logged in
-            if (localStorage.getItem('adminLoggedIn') === 'true') {
-                document.getElementById('loginContainer').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-                loadDashboardData();
-            }
-        });
-    </script>
+// Start App
+app.init();
+</script>
 </body>
 </html>
