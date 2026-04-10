@@ -11,6 +11,7 @@ export const STORAGE_KEYS = {
 };
 
 export const VALID_MODES = new Set(['live', 'compare', 'archive', 'exports', 'method']);
+export const VALID_PANELS = new Set(['alerts', 'planner']);
 
 export const DEFAULT_STATE = {
   lang: 'en',
@@ -25,6 +26,7 @@ export const DEFAULT_STATE = {
   favoritesOnly: false,
   liveWireOn: true,
   activeRegion: 'gcc',
+  panel: null,
   // Market + history
   live: null,
   rates: {},
@@ -104,6 +106,7 @@ export function createInitialState() {
   base.favoritesOnly = !!saved.favoritesOnly;
   base.liveWireOn = saved.liveWireOn !== false;
   base.activeRegion = saved.activeRegion || base.activeRegion;
+  base.panel = null;
 
   base.alerts = readLocal(CONSTANTS.CACHE_KEYS.alerts || 'gold_price_alerts', []);
   base.presets = readLocal(STORAGE_KEYS.presets, []);
@@ -141,16 +144,28 @@ export function persistState(state) {
 
 export function syncUrlFromState(state) {
   const url = new URL(window.location.href);
-  url.hash = `mode=${state.mode}&cur=${state.selectedCurrency}&k=${state.selectedKarat}&u=${state.selectedUnit}&r=${state.range}&cmp=${state.compareCurrency}&lang=${state.lang}`;
+  const params = new URLSearchParams();
+  params.set('mode', VALID_MODES.has(state.mode) ? state.mode : 'live');
+  params.set('cur', state.selectedCurrency);
+  params.set('k', state.selectedKarat);
+  params.set('u', state.selectedUnit);
+  params.set('r', state.range);
+  params.set('cmp', state.compareCurrency);
+  params.set('lang', state.lang);
+  if (state.panel && VALID_PANELS.has(state.panel)) params.set('panel', state.panel);
+  url.hash = params.toString();
   history.replaceState(null, '', url.toString());
 }
 
 export function applyUrlState(state) {
-  const hash = window.location.hash.slice(1);
-  if (!hash) return;
-  const params = new URLSearchParams(hash);
-  const urlMode = params.get('mode');
-  if (urlMode && VALID_MODES.has(urlMode)) state.mode = urlMode;
+  const parsed = parseHash(window.location.hash.slice(1));
+  state.panel = null;
+
+  if (!parsed.hasHash) return parsed;
+  if (parsed.mode) state.mode = parsed.mode;
+  if (parsed.panel) state.panel = parsed.panel;
+
+  const params = parsed.params;
   state.selectedCurrency = params.get('cur') || state.selectedCurrency;
   state.selectedKarat = params.get('k') || state.selectedKarat;
   state.selectedUnit = params.get('u') || state.selectedUnit;
@@ -158,6 +173,58 @@ export function applyUrlState(state) {
   state.compareCurrency = params.get('cmp') || state.compareCurrency;
   const urlLang = params.get('lang');
   if (urlLang === 'en' || urlLang === 'ar') state.lang = urlLang;
+  return parsed;
+}
+
+function parseHash(hash) {
+  const raw = (hash || '').trim();
+  if (!raw) {
+    return { hasHash: false, params: new URLSearchParams(), mode: null, panel: null, shouldCanonicalize: false };
+  }
+
+  // Legacy one-token hashes (task-1 compatibility)
+  if (raw === 'alerts' || raw === 'section-alerts') {
+    return {
+      hasHash: true,
+      params: new URLSearchParams(),
+      mode: 'live',
+      panel: 'alerts',
+      shouldCanonicalize: true,
+    };
+  }
+
+  const params = new URLSearchParams(raw);
+  const explicitMode = params.get('mode');
+  let mode = null;
+  let panel = null;
+  let shouldCanonicalize = false;
+
+  if (explicitMode === 'alerts') {
+    mode = 'live';
+    panel = 'alerts';
+    shouldCanonicalize = true;
+  } else if (explicitMode) {
+    if (VALID_MODES.has(explicitMode)) mode = explicitMode;
+    else {
+      mode = 'live';
+      shouldCanonicalize = true;
+    }
+  }
+
+  const explicitPanel = params.get('panel');
+  if (explicitPanel) {
+    if (VALID_PANELS.has(explicitPanel)) panel = explicitPanel;
+    else shouldCanonicalize = true;
+  }
+
+  // Deterministic behavior: panel-only hashes should not depend on persisted mode.
+  // Canonical form is live mode + panel.
+  if (panel && !mode) {
+    mode = 'live';
+    shouldCanonicalize = true;
+  }
+
+  return { hasHash: true, params, mode, panel, shouldCanonicalize };
 }
 
 function readLocal(key, fallback) {

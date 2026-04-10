@@ -13,9 +13,9 @@
    HERO
    ══════════════════════════════════════════════════════════════ */
 .hero {
-  background: linear-gradient(155deg, #3d2005 0%, #1e0e03 45%, #0c0802 100%);
-  color: #fff;
-  padding: 5rem 1.5rem 4rem;
+  background: var(--gradient-dark);
+  color: var(--text-on-dark);
+  padding: var(--space-8) var(--space-5) var(--space-7);
   position: relative;
   overflow: hidden;
 }
@@ -253,13 +253,13 @@
 .hero-live-card {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: var(--radius-lg, 16px);
-  padding: 1.75rem 1.5rem;
+  border-radius: var(--radius-card);
+  padding: var(--space-6) var(--space-5);
   backdrop-filter: blur(24px) saturate(1.4);
   -webkit-backdrop-filter: blur(24px) saturate(1.4);
   box-shadow:
     0 1px 0 rgba(255,255,255,0.06) inset,
-    0 28px 56px rgba(0, 0, 0, 0.50),
+    var(--elev-5),
     0 6px 20px rgba(196, 153, 62, 0.12);
   position: relative;
   overflow: hidden;
@@ -515,7 +515,7 @@
    HOME SECTIONS — shared scaffolding
    ══════════════════════════════════════════════════════════════ */
 .home-section {
-  padding: 3.5rem 1.5rem;
+  padding: var(--space-7) var(--space-5);
 }
 
 .home-section--alt {

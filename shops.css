@@ -22,11 +22,11 @@
     radial-gradient(circle at 85% 15%, rgba(240, 200, 74, 0.18), transparent 42%),
     radial-gradient(circle at 10% 80%, rgba(180, 100, 0, 0.12), transparent 50%),
     linear-gradient(145deg, #19140e 0%, #2a1f10 55%, #5b4117 100%);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-panel);
   color: #fff8ea;
   padding: clamp(1.6rem, 4vw, 2.8rem);
   box-shadow:
-    0 16px 40px rgba(0, 0, 0, 0.3),
+    var(--elev-5),
     0 4px 10px rgba(196, 153, 62, 0.18),
     inset 0 1px 0 rgba(255, 220, 120, 0.15);
   border: 1px solid rgba(240, 200, 74, 0.28);
@@ -246,14 +246,14 @@
 }
 
 .shops-controls-inner {
-  background: var(--color-surface, #1a1814);
-  border: 1px solid var(--color-border, #2e2b24);
-  border-radius: var(--radius-lg);
-  padding: 1rem 1.1rem;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-card);
+  padding: var(--space-4) var(--space-4);
   display: grid;
   grid-template-columns: repeat(5, minmax(130px, 1fr));
   gap: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--elev-2);
 }
 
 .shops-control {
@@ -517,12 +517,12 @@
 
 /* ── Shop card ───────────────────────────────────────────────────────────── */
 .shop-card {
-  background: var(--color-surface, #1a1814);
-  border: 1px solid var(--color-border, #2e2b24);
-  border-radius: var(--radius-lg);
-  padding: 1.1rem 1.15rem;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-card);
+  padding: var(--space-4) var(--space-5);
   display: grid;
-  gap: 0.75rem;
+  gap: var(--space-3);
   transition: transform 0.28s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.28s cubic-bezier(0.25,0.46,0.45,0.94), border-color 0.28s cubic-bezier(0.25,0.46,0.45,0.94);
   cursor: pointer;
   position: relative;
@@ -530,7 +530,7 @@
 
 .shop-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(196, 153, 62, 0.10);
+  box-shadow: var(--elev-4), 0 2px 8px rgba(196, 153, 62, 0.10);
   border-color: rgba(212, 160, 23, 0.30);
 }
 
@@ -813,10 +813,10 @@
 }
 
 .shops-info-inner {
-  background: var(--color-surface, #1a1814);
-  border: 1px solid var(--color-border, #2e2b24);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem 1.4rem;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-card);
+  padding: var(--space-5);
 }
 
 .shops-info-inner h2 {
