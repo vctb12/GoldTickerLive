@@ -2,43 +2,22 @@
  * GoldPrices Service Worker
  * Strategy: cache-first for static assets, network-first for API calls.
  *
- * Deployment base path: '/' (Replit root deployment).
- * If deploying to a subpath (e.g. /Gold-Prices/ on GitHub Pages), update:
- *   - PRECACHE_URLS to use the subpath prefix
- *   - manifest.json start_url / scope
- *   - config/constants.js BASE_PATH
- *   - vite.config.js base
+ * Deployment base path: '/Gold-Prices/' (GitHub Pages project site).
+ * All precache URLs must include the /Gold-Prices/ prefix.
  */
 
-const CACHE_NAME = 'goldprices-v5';
+const CACHE_NAME = 'goldprices-v6';
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 1 day
 
-// Static assets to pre-cache on install
+// Static assets to pre-cache on install - MUST use /Gold-Prices/ prefix for GitHub Pages
 const PRECACHE_URLS = [
-  '/',
-  '/tracker.html',
-  '/shops.html',
-  '/calculator.html',
-  '/learn.html',
-  '/insights.html',
-  '/methodology.html',
-  '/style.css',
-  '/home.css',
-  '/home.js',
-  '/tracker-pro.js',
-  '/tracker-pro.css',
-  '/shops.js',
-  '/shops.css',
-  '/calculator.js',
-  '/calculator.css',
-  '/learn.js',
-  '/learn.css',
-  '/insights.js',
-  '/insights.css',
-  '/methodology.js',
-  '/methodology.css',
-  '/favicon.svg',
-  '/manifest.json',
+  '/Gold-Prices/',
+  '/Gold-Prices/tracker.html',
+  '/Gold-Prices/shops.html',
+  '/Gold-Prices/calculator.html',
+  '/Gold-Prices/learn.html',
+  '/Gold-Prices/insights.html',
+  '/Gold-Prices/methodology.html',
 ];
 
 // External origins that should bypass the cache (live data APIs)

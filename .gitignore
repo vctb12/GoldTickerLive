@@ -3,20 +3,26 @@
 dist/
 build/
 
-# Compiled files
-*.css.map
-*.js.map
+# Dependencies
+node_modules/
 
 # Logs and temp files
 *.log
 *.tmp
 
-# Environment
-.env
-.env.local
-*.env.*
-
 # Editors
 .vscode/
 .idea/
+
+# Environment
+.env
+.env.local
+.env.*
+
+# Cache
+.cache/
+.vite/
+
+# Original rules preserved
+*.log
 ```
