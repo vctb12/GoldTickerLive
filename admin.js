@@ -1,11 +1,12 @@
 /**
  * Admin Dashboard JavaScript
  * Handles authentication, CRUD operations, and UI management
+ * Connects to real backend API
  */
 
 // Configuration
 const ADMIN_CONFIG = {
-    API_BASE: '/Gold-Prices/api/admin',
+    API_BASE: '/api/admin',
     STORAGE_KEY: 'gold_admin_session',
     DEFAULT_USER: {
         email: 'admin@goldprices.com',
@@ -20,6 +21,38 @@ let shopsData = [];
 let citiesData = [];
 let guidesData = [];
 let auditLogs = [];
+let authToken = null;
+
+// API Helper
+async function apiRequest(endpoint, options = {}) {
+    const url = `${ADMIN_CONFIG.API_BASE}${endpoint}`;
+    const headers = {
+        'Content-Type': 'application/json',
+        ...options.headers
+    };
+    
+    if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
+    }
+    
+    try {
+        const response = await fetch(url, {
+            ...options,
+            headers
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'API request failed');
+        }
+        
+        return data;
+    } catch (err) {
+        console.error(`API Error (${endpoint}):`, err);
+        throw err;
+    }
+}
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -28,12 +61,25 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Authentication Functions
-function checkAuth() {
+async function checkAuth() {
     const session = localStorage.getItem(ADMIN_CONFIG.STORAGE_KEY);
     if (session) {
         try {
-            currentUser = JSON.parse(session);
-            showDashboard();
+            const data = JSON.parse(session);
+            authToken = data.token;
+            currentUser = data.user;
+            
+            // Verify token is still valid
+            try {
+                const result = await apiRequest('/auth/verify');
+                showDashboard();
+            } catch (err) {
+                // Token expired or invalid
+                localStorage.removeItem(ADMIN_CONFIG.STORAGE_KEY);
+                authToken = null;
+                currentUser = null;
+                showLogin();
+            }
         } catch (e) {
             localStorage.removeItem(ADMIN_CONFIG.STORAGE_KEY);
             showLogin();
@@ -51,33 +97,43 @@ function showLogin() {
 function showDashboard() {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('dashboard').style.display = 'flex';
+    document.getElementById('user-name').textContent = currentUser?.name || 'Admin';
+    document.getElementById('user-role').textContent = currentUser?.role || 'Administrator';
     loadDashboardData();
 }
 
 async function login(email, password) {
-    // Simple auth for demo - in production, use real API
-    if (email === ADMIN_CONFIG.DEFAULT_USER.email && 
-        password === ADMIN_CONFIG.DEFAULT_USER.password) {
-        currentUser = {
-            email: email,
-            name: 'Administrator',
-            role: 'admin'
-        };
-        localStorage.setItem(ADMIN_CONFIG.STORAGE_KEY, JSON.stringify(currentUser));
+    try {
+        const response = await fetch(`${ADMIN_CONFIG.API_BASE}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
         
-        // Log the login action
-        await logAudit('login', 'user', currentUser.email, { success: true });
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Login failed');
+        }
+        
+        authToken = data.token;
+        currentUser = data.user;
+        
+        localStorage.setItem(ADMIN_CONFIG.STORAGE_KEY, JSON.stringify({
+            token: authToken,
+            user: currentUser
+        }));
         
         showDashboard();
         return true;
+    } catch (err) {
+        throw err;
     }
-    
-    throw new Error('Invalid credentials');
 }
 
 function logout() {
-    logAudit('logout', 'user', currentUser?.email, {});
     localStorage.removeItem(ADMIN_CONFIG.STORAGE_KEY);
+    authToken = null;
     currentUser = null;
     showLogin();
 }

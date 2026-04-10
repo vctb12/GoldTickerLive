@@ -1,0 +1,89 @@
+[
+  {
+    "id": "log_1775836428033_mky4a2593",
+    "timestamp": "2026-04-10T15:53:48.033Z",
+    "actor": "admin@goldprices.com",
+    "action": "login",
+    "entityType": "user",
+    "entityId": "admin_1",
+    "changes": {
+      "success": true
+    },
+    "metadata": {},
+    "ipAddress": null,
+    "userAgent": null
+  },
+  {
+    "id": "log_1775836431845_cst1ld0pd",
+    "timestamp": "2026-04-10T15:53:51.845Z",
+    "actor": "admin@goldprices.com",
+    "action": "login",
+    "entityType": "user",
+    "entityId": "admin_1",
+    "changes": {
+      "success": true
+    },
+    "metadata": {},
+    "ipAddress": null,
+    "userAgent": null
+  },
+  {
+    "id": "log_1775836440114_1bvvzhkt8",
+    "timestamp": "2026-04-10T15:54:00.114Z",
+    "actor": "admin@goldprices.com",
+    "action": "login",
+    "entityType": "user",
+    "entityId": "admin_1",
+    "changes": {
+      "success": true
+    },
+    "metadata": {},
+    "ipAddress": null,
+    "userAgent": null
+  },
+  {
+    "id": "log_1775836440168_2uz2kpczr",
+    "timestamp": "2026-04-10T15:54:00.168Z",
+    "actor": "admin@goldprices.com",
+    "action": "create",
+    "entityType": "shop",
+    "entityId": "shop_1775836440167",
+    "changes": {
+      "id": "shop_1775836440167",
+      "name": "Golden Jewelry",
+      "city": "Dubai",
+      "country": "UAE",
+      "type": "direct",
+      "phone": "+971501234567",
+      "email": "info@golden.ae",
+      "website": "",
+      "address": "",
+      "latitude": null,
+      "longitude": null,
+      "hours": "",
+      "verified": true,
+      "notes": "",
+      "createdAt": "2026-04-10T15:54:00.167Z",
+      "createdBy": "admin@goldprices.com",
+      "confidence": 73,
+      "contactQuality": "medium"
+    },
+    "metadata": {},
+    "ipAddress": null,
+    "userAgent": null
+  },
+  {
+    "id": "log_1775836444114_p7kqkdg5r",
+    "timestamp": "2026-04-10T15:54:04.114Z",
+    "actor": "admin@goldprices.com",
+    "action": "login",
+    "entityType": "user",
+    "entityId": "admin_1",
+    "changes": {
+      "success": true
+    },
+    "metadata": {},
+    "ipAddress": null,
+    "userAgent": null
+  }
+]
