@@ -103,6 +103,7 @@ const TXT = {
     resultsDisclaimer: 'Listings may represent market areas or dealer clusters unless direct contact details are shown.',
     listingConfidenceTitle: 'Listing type + details confidence',
     detailsConfidence: 'Details confidence',
+    contactQuality: 'Contact quality',
     rankFull: 'High',
     rankPartial: 'Medium',
     rankLimited: 'Basic',
@@ -233,23 +234,69 @@ function detailsConfidenceTier(value) {
   return t('rankLimited');
 }
 
-function isMarketCluster(shop) {
-  // Market clusters typically have "cluster", "shops", "dealers", "area", or "market" in notes
-  // and empty phone/website
+// NEW: Contact quality scoring based on new data model
+function contactQualityScore(shop) {
+  // Use explicit contactQuality field if available (0-100 scale mapped to high/medium/low)
+  if (shop.contactQuality === 'high') return 3;
+  if (shop.contactQuality === 'medium') return 2;
+  return 1;
+}
+
+function contactQualityLabel(shop) {
+  const score = contactQualityScore(shop);
+  if (score === 3) return t('rankFull');
+  if (score === 2) return t('rankPartial');
+  return t('rankLimited');
+}
+
+// NEW: Confidence badge calculation combining multiple signals
+function calculateConfidenceBadge(shop) {
+  // Combine confidence score (0-100), verification status, and contact quality
+  let score = shop.confidence || 50;
+  
+  // Boost for verified shops
+  if (shop.verified) score = Math.min(100, score + 10);
+  
+  // Boost for high contact quality
+  if (shop.contactQuality === 'high') score = Math.min(100, score + 5);
+  if (shop.contactQuality === 'low') score = Math.max(0, score - 5);
+  
+  // Determine badge level
+  if (score >= 90) return { level: 'high', label: `${score}%`, color: 'green' };
+  if (score >= 70) return { level: 'medium', label: `${score}%`, color: 'amber' };
+  return { level: 'low', label: `${score}%`, color: 'red' };
+}
+
+// NEW: Market-area vs direct-shop distinction
+function isMarketArea(shop) {
+  // Explicit type field takes precedence
+  if (shop.type === 'market') return true;
+  if (shop.type === 'direct') return false;
+  
+  // Fallback to legacy detection
   return !shop.phone && !shop.website &&
          (shop.notes?.toLowerCase().includes('cluster') ||
           shop.notes?.toLowerCase().includes('concentration') ||
           shop.notes?.toLowerCase().includes('area'));
 }
 
+function isDirectShop(shop) {
+  if (shop.type === 'direct') return true;
+  if (shop.type === 'market') return false;
+  
+  // Fallback: has direct contact info
+  return !!(shop.phone || shop.website);
+}
+
 function listingTypeLabel(shop) {
-  return isMarketCluster(shop) ? t('marketAreaListing') : t('storeProfile');
+  if (isMarketArea(shop)) return t('marketAreaListing');
+  return t('storeProfile');
 }
 
 function listingSortScore(shop) {
   const detailRank = detailsAvailabilityRank(shop.detailsAvailability);
   const contactBonus = shop.phone && shop.website ? 2 : (shop.phone || shop.website ? 1 : 0);
-  const typeBonus = isMarketCluster(shop) ? 0 : 1;
+  const typeBonus = isMarketArea(shop) ? 0 : 1;
   return (detailRank * 100) + (contactBonus * 10) + typeBonus;
 }
 
@@ -330,9 +377,12 @@ function openModal(shop) {
     </div>` :
     `<p class="modal-no-contact">${t('noContact')}</p>`;
 
-  const clusterBadge = isMarketCluster(shop) ?
+  const isCluster = isMarketArea(shop);
+  const confidenceBadge = calculateConfidenceBadge(shop);
+  const clusterBadge = isCluster ?
     `<span class="modal-cluster-badge">${t('marketCluster')}</span>` : '';
-  const listingTypeBadge = `<span class="modal-listing-type ${isMarketCluster(shop) ? 'modal-listing-type--market' : 'modal-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
+  const listingTypeBadge = `<span class="modal-listing-type ${isCluster ? 'modal-listing-type--market' : 'modal-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
+  const confidenceBadgeHTML = `<span class="modal-confidence-badge modal-confidence-${confidenceBadge.level}" style="--confidence-color: var(--color-${confidenceBadge.color})">${t('detailsConfidence')}: ${confidenceBadge.label}</span>`;
 
   document.getElementById('shops-modal-body').innerHTML = `
     <div class="modal-head">
@@ -340,6 +390,7 @@ function openModal(shop) {
       <div class="modal-badges">
         ${clusterBadge}
         ${listingTypeBadge}
+        ${confidenceBadgeHTML}
         <span class="modal-details-badge modal-details-${shop.detailsAvailability}">${t('detailsSignal')}: ${detailsAvailabilityLabel(shop.detailsAvailability)}</span>
         ${shop.featured ? `<span class="modal-featured-badge">★ ${t('featured')}</span>` : ''}
       </div>
@@ -685,7 +736,8 @@ function renderCards(shops) {
   grid.innerHTML = shops.map((shop, idx) => {
     const country = countryByCode(shop.countryCode);
     const specialties = (shop.specialties || []).map((item) => `<span class="shop-tag">${item}</span>`).join('');
-    const isCluster = isMarketCluster(shop);
+    const isCluster = isMarketArea(shop);
+    const confidenceBadge = calculateConfidenceBadge(shop);
     const clusterBadge = isCluster ? `<span class="shop-cluster-badge">${t('marketCluster')}</span>` : '';
     const listingTypeBadge = `<span class="shop-listing-type ${isCluster ? 'shop-listing-type--market' : 'shop-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
     const inShortlist = isInShortlist(shop.id);
@@ -695,6 +747,7 @@ function renderCards(shops) {
     const confidenceTier = detailsConfidenceTier(shop.detailsAvailability);
     const detailsLabel = detailsAvailabilityLabel(shop.detailsAvailability);
     const nextActionLabel = isCluster ? t('nextActionsMarket') : t('nextActionsStore');
+    const contactQualityLabel = contactQualityLabel(shop);
 
     const contactParts = [];
     if (shop.phone) contactParts.push(`${t('phone')}: ${shop.phone}`);
@@ -724,7 +777,11 @@ function renderCards(shops) {
             </p>
             <p class="shop-confidence-item">
               <span>${t('detailsConfidence')}</span>
-              <strong class="shop-signal shop-signal--${shop.detailsAvailability}">${confidenceTier} · ${detailsLabel}</strong>
+              <strong class="shop-signal shop-signal--${confidenceBadge.level}" style="--confidence-color: var(--color-${confidenceBadge.color})">${confidenceBadge.label}</strong>
+            </p>
+            <p class="shop-confidence-item">
+              <span>${t('contactQuality')}</span>
+              <strong>${contactQualityLabel}</strong>
             </p>
           </div>
         </section>
