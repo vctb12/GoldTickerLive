@@ -1,52 +1,66 @@
 ```
+# Compiled and build artifacts
+*.js.map
+*.min.js
+dist/
+build/
+lib/*.js
+
 # Dependencies
 node_modules/
 
-# Environment variables
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Editors
+.vscode/
+.idea/
+
+# Environment
 .env
 .env.local
 *.env.*
 
-# Logs
-*.log
-
-# Temporary files
-*.tmp
-*.swp
-
-# Build artifacts
-build/
-dist/
-
-# Cache directories
-.cache/
-.nyc_output/
-coverage/
-htmlcov/
-.coverage
-
-# Package lock files (already in your changes)
-package-lock.json
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Python specific (if applicable)
+# Python (if applicable)
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
-*.so
+env/
+venv/
+.venv/
+pip-log.txt
+pip-selfcheck.json
+.coverage
+htmlcov/
+.coverage.*
+.cache
+.pytest_cache/
+.mypy_cache/
 
-# Compressed files
+# Java (if applicable)
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+target/
+.gradle/
+build/
+
+# C/C++ (if applicable)
+*.o
+*.obj
+*.so
+*.a
+*.dll
+*.exe
+*.out
+
+# Compression files
 *.zip
 *.gz
 *.tar
