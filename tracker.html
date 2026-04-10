@@ -27,10 +27,21 @@
   />
   <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/tracker.html" />
   <title>Gold Tracker Pro — Live Price Workspace | UAE, GCC &amp; Arab World</title>
-
-  <!-- Fonts -->
+  
+  <!-- Critical Preloads for faster FCP -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" />
+  <link rel="preload" as="style" href="style.css" />
+  <link rel="preload" as="style" href="tracker-pro.css" />
+  <link rel="preload" as="script" href="tracker-pro.js" type="module" />
+  
+  <!-- Resource hints for common navigation paths -->
+  <link rel="prefetch" href="index.html" as="document" />
+  <link rel="prefetch" href="calculator.html" as="document" />
+  <link rel="prefetch" href="countries/index.html" as="document" />
+  
+  <!-- Fonts with font-display: swap -->
   <link
     href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
     rel="stylesheet"

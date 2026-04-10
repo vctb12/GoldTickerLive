@@ -17,9 +17,24 @@
   <meta name="twitter:description" content="Track live gold prices in UAE, Saudi Arabia, Kuwait and 20+ countries. 7 karats. Bilingual." />
   <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/" />
   <title>Live Gold Prices Today — UAE, GCC &amp; Arab World | أسعار الذهب</title>
+  
+  <!-- Critical Preloads -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" />
+  <link rel="preload" as="style" href="style.css" />
+  <link rel="preload" as="style" href="home.css" />
+  <link rel="preload" as="script" href="home.js" type="module" />
+  
+  <!-- Resource Hints for Prefetching -->
+  <link rel="prefetch" href="tracker.html" as="document" />
+  <link rel="prefetch" href="countries/index.html" as="document" />
+  <link rel="prefetch" href="shops.html" as="document" />
+  
+  <!-- Fonts with font-display: swap for faster FCP -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="home.css" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
