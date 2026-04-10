@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Live gold prices in UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual English/Arabic. Updated every 90 seconds."
+  />
+  <meta
+    name="keywords"
+    content="gold price today UAE, gold price Dubai, سعر الذهب اليوم, gold rate per gram AED, 24K gold price, 22K gold UAE, GCC gold prices, live gold tracker"
+  />
+  <meta property="og:title" content="Gold Tracker Pro — Live Workspace | GCC &amp; Arab World" />
+  <meta
+    property="og:description"
+    content="Live gold price tracker: compare 24 markets, 7 karats, historical chart, alerts, planners, and CSV exports. Updated every 90 seconds."
+  />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/tracker.html" />
+  <meta property="og:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Gold Tracker Pro — Live Gold Price Workspace" />
+  <meta
+    name="twitter:description"
+    content="Live gold price tracker for GCC and Arab world. 24 markets, 7 karats, historical chart, alerts. Updated every 90 seconds."
+  />
+  <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/tracker.html" />
+  <title>Gold Tracker Pro — Live Price Workspace | UAE, GCC &amp; Arab World</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Site + tracker styles -->
+  <link rel="icon" href="/assets/favicon-De_NsVNM.svg" type="image/svg+xml" />
+  <link rel="manifest" href="/assets/manifest-Cl92ZZt2.json" />
+
+
+  <meta name="msvalidate.01" content="E88623E4C36CDC8E8D44913FA9192725" />
+
+  
+  <script type="module" crossorigin src="/assets/tracker-DSY2eFJs.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/ticker-BxUDbM2L.js">
+  <link rel="modulepreload" crossorigin href="/assets/utils-Owvk3OYq.js">
+  <link rel="stylesheet" crossorigin href="/assets/ticker-B80_dh5a.css">
+  <link rel="stylesheet" crossorigin href="/assets/tracker-D4GzKuhV.css">
+</head>
+
+<body class="tracker-page tracker-pro-page">
+  <a class="skip-link" href="#tracker-app">Skip to main content</a>
+  <!-- Shared nav/footer/ticker are injected by tracker-pro.js using components/nav.js, components/footer.js, components/ticker.js -->
+
+  <main id="tracker-app" class="tracker-app">
+    <!-- Data Trust Banner -->
+    <section class="tracker-shell tracker-data-trust-section">
+      <div class="tracker-data-trust-banner">
+        <div class="tracker-trust-icon">⚠️</div>
+        <div class="tracker-trust-content">
+          <strong>Spot-Linked Reference Estimates:</strong> These prices are based on global XAU/USD spot data and conversion rules, not final retail jewelry quotes (which may add making charges, dealer/shop margins, and local taxes). Freshness labels follow one shared vocabulary: <strong>Live</strong>, <strong>Delayed</strong>, <strong>Cached/Fallback</strong>, <strong>Estimated</strong>, and <strong>Historical baseline</strong>. See <a href="methodology.html">Methodology</a> for definitions and source details.
+        </div>
+        <button class="tracker-trust-close" type="button" aria-label="Close trust banner" title="Close">&times;</button>
+      </div>
+    </section>
+
+    <!-- First-visit welcome strip (shown only once, dismissed to localStorage) -->
+    <section class="tracker-welcome-strip" id="tracker-welcome-strip" hidden aria-label="Tracker orientation">
+      <div class="tracker-welcome-inner">
+        <div class="tracker-welcome-chips">
+          <span class="tracker-welcome-chip">📈 <strong>Live tab</strong> — current prices for 24+ countries</span>
+          <span class="tracker-welcome-chip">⚖️ <strong>Compare tab</strong> — compare regions side-by-side</span>
+          <span class="tracker-welcome-chip">📋 <strong>Planner</strong> — budget &amp; Zakat calculators</span>
+        </div>
+        <button class="tracker-welcome-close" id="tracker-welcome-close" type="button" aria-label="Dismiss orientation">Got it ×</button>
+      </div>
+    </section>
+
+    <!-- Hero / Live desk -->
+    <section class="tracker-shell tracker-hero-shell" aria-labelledby="tp-hero-title">
+      <div class="tracker-hero-card">
+        <div class="tracker-hero-copy">
+          <div class="tracker-badge-row">
+            <span class="tracker-badge tracker-badge-live" id="tp-live-badge">
+              <span class="tracker-badge-dot" aria-hidden="true"></span>
+              <span id="tp-live-badge-text">Preparing live feed</span>
+            </span>
+            <span class="tracker-badge" id="tp-market-badge">Gold market</span>
+            <span class="tracker-badge" id="tp-refresh-badge">Waiting for first sync</span>
+          </div>
+
+          <h1 id="tp-hero-title">Gold Tracker Pro</h1>
+          <p id="tp-hero-copy">
+            First action sequence: refresh live reference prices, choose your market + karat, then read the chart before opening advanced tools.
+          </p>
+
+          <div class="tracker-hero-actions">
+            <button class="btn btn-primary" id="tp-refresh-btn" type="button">Refresh live data</button>
+            <button class="btn btn-outline" id="tp-share-btn" type="button">Copy quick brief</button>
+            <button class="btn btn-ghost" id="tp-reset-btn" type="button">Reset view</button>
+            <a class="btn btn-ghost" href="#mode-live" id="tp-jump-chart">Jump to chart</a>
+            <button class="btn btn-ghost" id="tp-workspace-toggle" type="button" aria-pressed="false">Open advanced workspace</button>
+          </div>
+
+          <div class="tracker-onboarding-card" aria-label="How to use tracker quickly">
+            <h2>Start with one path</h2>
+            <ol class="tracker-onboarding-steps">
+              <li>Press <strong>Refresh live data</strong> and confirm the source badge shows <span class="tracker-source-badge tracker-source-badge--live">Live</span> or <span class="tracker-source-badge tracker-source-badge--cached">Cached/Fallback</span>.</li>
+              <li>Pick your market, currency, karat, and unit in the live controls.</li>
+              <li>Read the chart trend and decision cues, then open advanced workspace only when needed.</li>
+            </ol>
+            <p class="tracker-onboarding-note">All figures here are spot-linked reference estimates, not final retail jewelry quotes.</p>
+          </div>
+
+          <div class="tracker-hero-grid" id="tp-hero-stats" aria-label="Key live metrics"></div>
+
+          <div class="tracker-hero-hints" id="tp-hero-hints" aria-hidden="true">
+            <span>Keyboard: R refresh · H Live · C Compare · A Alerts · P Planner</span>
+          </div>
+        </div>
+
+        <aside class="tracker-hero-side" aria-label="Live desk summary">
+          <div class="tracker-side-block">
+            <h2 id="tp-live-summary-heading">Live desk summary</h2>
+            <div class="tracker-side-list" id="tp-summary-list" aria-describedby="tp-live-summary-heading"></div>
+          </div>
+
+          <div class="tracker-side-block">
+            <h2>Workspace tips</h2>
+            <ul class="tracker-side-ul">
+              <li>Use the tabs below to switch between Live, Compare, Archive, Alerts, Planner, Exports, and Method.</li>
+              <li>Watchlists, alerts, and presets stay in your browser only — no account required.</li>
+              <li>Exports always include timestamps, range, and source-layer labels for trust and reuse.</li>
+              <li>Method explains exactly what is live, cached, estimated, or synthetic in each view.</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Workspace tabs / mode bar -->
+    <section class="tracker-shell tracker-mode-shell" aria-label="Tracker workspace modes">
+      <nav class="tracker-modes" role="tablist" aria-orientation="horizontal">
+        <button
+          class="tracker-mode-tab is-active"
+          role="tab"
+          aria-selected="true"
+          aria-controls="mode-live"
+          id="tab-live"
+          data-mode="live"
+        >
+          Live
+        </button>
+        <button
+          class="tracker-mode-tab tracker-advanced-only"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mode-compare"
+          id="tab-compare"
+          data-mode="compare"
+        >
+          Compare
+        </button>
+        <button
+          class="tracker-mode-tab tracker-advanced-only"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mode-archive"
+          id="tab-archive"
+          data-mode="archive"
+        >
+          Archive
+        </button>
+        <button
+          class="tracker-mode-tab tracker-overlay-btn tracker-advanced-only"
+          type="button"
+          id="tab-alerts"
+          data-overlay="alerts"
+          aria-expanded="false"
+          aria-controls="tp-overlay-alerts"
+        >
+          Alerts
+        </button>
+        <button
+          class="tracker-mode-tab tracker-overlay-btn tracker-advanced-only"
+          type="button"
+          id="tab-planner"
+          data-overlay="planner"
+          aria-expanded="false"
+          aria-controls="tp-overlay-planner"
+        >
+          Planner
+        </button>
+        <button
+          class="tracker-mode-tab tracker-advanced-only"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mode-exports"
+          id="tab-exports"
+          data-mode="exports"
+        >
+          Exports
+        </button>
+        <button
+          class="tracker-mode-tab tracker-advanced-only"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mode-method"
+          id="tab-method"
+          data-mode="method"
+        >
+          Method
+        </button>
+      </nav>
+    </section>
+
+    <!-- MODE: LIVE -->
+    <section
+      class="tracker-shell tracker-main-shell tracker-mode-panel"
+      id="mode-live"
+      role="tabpanel"
+      aria-labelledby="tab-live"
+      data-mode-panel="live"
+    >
+      <!-- Top toolbar -->
+      <div class="tracker-toolbar-card">
+        <div class="tracker-control-grid">
+          <label class="tracker-field">
+            <span>Language</span>
+            <select id="tp-language">
+              <option value="en">English</option>
+              <option value="ar">العربية</option>
+            </select>
+          </label>
+          <label class="tracker-field">
+            <span>Currency</span>
+            <select id="tp-currency"></select>
+          </label>
+          <label class="tracker-field">
+            <span>Karat</span>
+            <select id="tp-karat"></select>
+          </label>
+          <label class="tracker-field">
+            <span>Unit</span>
+            <select id="tp-unit"></select>
+          </label>
+          <label class="tracker-field tracker-advanced-only">
+            <span>Compare market</span>
+            <select id="tp-compare-country"></select>
+          </label>
+        </div>
+
+        <div class="tracker-toolbar-secondary">
+          <div class="tracker-range-pills" id="tp-range-pills" aria-label="Chart range">
+            <button type="button" class="tracker-pill is-active" data-range="24H">24H</button>
+            <button type="button" class="tracker-pill" data-range="7D">7D</button>
+            <button type="button" class="tracker-pill" data-range="30D">30D</button>
+            <button type="button" class="tracker-pill" data-range="90D">90D</button>
+            <button type="button" class="tracker-pill" data-range="1Y">1Y</button>
+            <button type="button" class="tracker-pill" data-range="3Y">3Y</button>
+            <button type="button" class="tracker-pill" data-range="5Y">5Y</button>
+            <button type="button" class="tracker-pill" data-range="ALL">All</button>
+          </div>
+          <div class="tracker-chip-row">
+            <button type="button" class="tracker-chip" id="tp-auto-refresh">Auto refresh: on</button>
+            <button type="button" class="tracker-chip is-active" data-metric="selected">Selected view</button>
+            <button type="button" class="tracker-chip" data-metric="spot">Spot only</button>
+            <button type="button" class="tracker-chip tracker-advanced-only" data-metric="compare">Compare market</button>
+            <button type="button" class="tracker-chip tracker-advanced-only" data-toggle="wire">Wire headlines</button>
+            <button type="button" class="tracker-chip" data-toggle="favorites">Favorites only</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Market wire -->
+      <section class="tracker-wire-shell tracker-advanced-only" aria-label="Market wire">
+        <div class="tracker-wire-card">
+          <div class="tracker-wire-label">Market wire</div>
+          <div class="tracker-wire-meta" id="tp-wire-meta">
+            Live headlines · <span id="tp-wire-updated">waiting…</span>
+          </div>
+          <div class="tracker-wire-marquee">
+            <div class="tracker-wire-track" id="tp-wire-track">
+              <span class="tracker-wire-item">Loading live market headlines…</span>
+            </div>
+          </div>
+          <div class="tracker-wire-actions">
+            <button type="button" class="tracker-wire-refresh" id="tp-wire-refresh">Refresh wire</button>
+            <button type="button" class="tracker-wire-pause" id="tp-wire-toggle" aria-pressed="false">
+              Pause
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Live chart + ladder + watchlist -->
+      <section class="tracker-main-grid" id="section-chart">
+        <section class="tracker-panel">
+          <div class="tracker-panel-head">
+            <div>
+              <h2>Live chart workspace</h2>
+              <p>
+                Blended spot-linked history: recent ranges use live and cached snapshots;
+                longer ranges use monthly baseline anchored to XAU/USD.
+              </p>
+            </div>
+            <div class="tracker-head-actions">
+              <button type="button" class="btn btn-sm btn-outline tracker-advanced-only" id="tp-export-chart">
+                Export visible chart CSV
+              </button>
+              <button type="button" class="btn btn-sm btn-ghost tracker-advanced-only" id="tp-download-json">
+                Download snapshot JSON
+              </button>
+            </div>
+          </div>
+
+          <div class="tracker-chart-meta">
+            <div class="tracker-legend">
+              <span class="tracker-legend-item">
+                <span class="tracker-legend-dot"></span>
+                <span id="tp-legend-main">Selected series</span>
+              </span>
+            </div>
+            <div class="tracker-mini-strip" id="tp-mini-strip"></div>
+          </div>
+
+          <div class="tracker-chart-wrap" aria-label="Gold price chart" role="group">
+            <svg id="tp-chart" viewBox="0 0 1200 430"></svg>
+            <div class="tracker-tooltip" id="tp-tooltip" role="status" aria-live="polite"></div>
+            <div class="tracker-chart-empty" id="tp-chart-empty" hidden>
+              <p>Waiting for live and history data…</p>
+            </div>
+          </div>
+
+          <div class="tracker-stat-grid" id="tp-chart-stats"></div>
+
+          <div class="tracker-two-up">
+            <article class="tracker-subpanel">
+              <div class="tracker-subpanel-head">
+                <h3>Range playback</h3>
+                <div class="tracker-subpanel-actions">
+                  <button type="button" class="btn btn-sm btn-ghost" id="tp-playback-btn">
+                    Play history
+                  </button>
+                </div>
+              </div>
+              <div class="tracker-playback-strip" id="tp-playback-strip"></div>
+            </article>
+
+            <article class="tracker-subpanel">
+              <div class="tracker-subpanel-head">
+                <h3>Visible range notes</h3>
+              </div>
+              <div class="tracker-note-list" id="tp-range-notes"></div>
+            </article>
+          </div>
+        </section>
+
+        <aside class="tracker-panel tracker-panel-side">
+          <div class="tracker-panel-head compact">
+            <div>
+              <h2>Karat ladder &amp; watchlist</h2>
+              <p>Fast context for your selected view across major karats and favorite markets.</p>
+            </div>
+          </div>
+
+          <div class="tracker-ladder-table-wrap" aria-label="Karat ladder">
+            <table class="tracker-table">
+              <thead>
+                <tr>
+                  <th>Karat</th>
+                  <th>Purity</th>
+                  <th>Selected price</th>
+                  <th>vs 24K</th>
+                </tr>
+              </thead>
+              <tbody id="tp-karat-table"></tbody>
+            </table>
+          </div>
+
+          <div class="tracker-watchlist-block" aria-label="Market watchlist">
+            <div class="tracker-subpanel-head">
+              <h3>Market watchlist</h3>
+              <button type="button" class="btn btn-sm btn-outline tracker-advanced-only" id="tp-export-watchlist">
+                Export watchlist CSV
+              </button>
+            </div>
+            <div class="tracker-watchlist-grid" id="tp-watchlist-grid"></div>
+          </div>
+
+          <div class="tracker-watchlist-block">
+            <div class="tracker-subpanel-head">
+              <h3>Decision cues</h3>
+            </div>
+            <div class="tracker-note-list" id="tp-decision-cues"></div>
+          </div>
+        </aside>
+      </section>
+    </section>
+
+    <!-- MODE: COMPARE -->
+    <section
+      class="tracker-shell tracker-compare-shell tracker-mode-panel tracker-advanced-only"
+      id="mode-compare"
+      role="tabpanel"
+      aria-labelledby="tab-compare"
+      data-mode-panel="compare"
+      hidden
+    >
+      <div class="tracker-panel">
+        <div class="tracker-panel-head">
+          <div>
+            <h2>Markets compare board</h2>
+            <p>
+              Live-ranking board for GCC, Arab, and reference markets with favorites, filters,
+              and deep links to country pages.
+            </p>
+          </div>
+          <div class="tracker-head-actions">
+            <div class="tracker-region-tabs" id="tp-region-tabs" role="tablist" aria-label="Market regions">
+              <button type="button" class="tracker-region-pill is-active" data-region="gcc">GCC</button>
+              <button type="button" class="tracker-region-pill" data-region="arab">Arab</button>
+              <button type="button" class="tracker-region-pill" data-region="global">Reference</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tracker-compare-toolbar">
+          <label class="tracker-search">
+            <span class="sr-only">Filter markets</span>
+            <input type="text" id="tp-market-filter" placeholder="Filter by country or currency" />
+          </label>
+          <label class="tracker-field tracker-field-inline">
+            <span>Sort</span>
+            <select id="tp-market-sort">
+              <option value="high">High to low</option>
+              <option value="low">Low to high</option>
+              <option value="alpha">A–Z</option>
+              <option value="favorites">Favorites first</option>
+            </select>
+          </label>
+          <label class="tracker-field tracker-field-inline">
+            <span>View</span>
+            <select id="tp-market-view">
+              <option value="card">Card grid</option>
+              <option value="row">Compact rows</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="tracker-board-grid" id="tp-market-board"></div>
+        <div class="tracker-empty" id="tp-market-empty" hidden>
+          No markets match the current filters.
+        </div>
+      </div>
+    </section>
+
+    <!-- OVERLAY: ALERTS & PRESETS (slide-in panel, independent of main view) -->
+    <div
+      class="tp-overlay tracker-advanced-only"
+      id="tp-overlay-alerts"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tp-overlay-alerts-title"
+      aria-hidden="true"
+      hidden
+    >
+      <div class="tp-overlay-panel">
+        <div class="tp-overlay-header">
+          <h2 id="tp-overlay-alerts-title">Alerts + presets</h2>
+          <button class="tp-overlay-close" type="button" data-close-overlay="alerts" aria-label="Close alerts panel">✕</button>
+        </div>
+        <div class="tp-overlay-body">
+          <p class="tp-overlay-intro">
+            Browser-based price alerts and view presets — stored locally.
+            The live chart and prices remain visible behind this panel.
+          </p>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>New alert</h3></div>
+            <div class="tracker-form-grid">
+              <label class="tracker-field">
+                <span>Scope</span>
+                <select id="tp-alert-scope">
+                  <option value="selected">Selected view</option>
+                  <option value="spot">Spot XAU/USD</option>
+                  <option value="uae24">UAE 24K / g</option>
+                </select>
+              </label>
+              <label class="tracker-field">
+                <span>Condition</span>
+                <select id="tp-alert-direction">
+                  <option value="above">Above</option>
+                  <option value="below">Below</option>
+                </select>
+              </label>
+              <label class="tracker-field">
+                <span>Target price</span>
+                <input type="number" id="tp-alert-target" min="0" step="0.01" placeholder="Enter price target" />
+              </label>
+            </div>
+            <div class="tracker-inline-actions">
+              <button class="btn btn-primary" type="button" id="tp-save-alert">Save alert</button>
+              <button class="btn btn-outline" type="button" id="tp-enable-notifications">Enable notifications</button>
+            </div>
+            <p class="tracker-help-text" id="tp-alert-permission"></p>
+          </article>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Saved alerts</h3></div>
+            <div class="tracker-stack-list" id="tp-alert-list"></div>
+          </article>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Save preset</h3></div>
+            <div class="tracker-form-grid">
+              <label class="tracker-field">
+                <span>Preset name</span>
+                <input type="text" id="tp-preset-name" placeholder="Example: UAE 24K per gram" />
+              </label>
+            </div>
+            <div class="tracker-inline-actions">
+              <button class="btn btn-primary" type="button" id="tp-save-preset">Save current setup</button>
+              <button class="btn btn-ghost" type="button" id="tp-copy-url">Copy shareable URL</button>
+            </div>
+          </article>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Saved presets</h3></div>
+            <div class="tracker-stack-list" id="tp-preset-list"></div>
+          </article>
+        </div>
+      </div>
+      <div class="tp-overlay-backdrop" aria-hidden="true"></div>
+    </div>
+
+    <!-- OVERLAY: PLANNER (slide-in panel, independent of main view) -->
+    <div
+      class="tp-overlay tracker-advanced-only"
+      id="tp-overlay-planner"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tp-overlay-planner-title"
+      aria-hidden="true"
+      hidden
+    >
+      <div class="tp-overlay-panel">
+        <div class="tp-overlay-header">
+          <h2 id="tp-overlay-planner-title">Planners + estimators</h2>
+          <button class="tp-overlay-close" type="button" data-close-overlay="planner" aria-label="Close planner panel">✕</button>
+        </div>
+        <div class="tp-overlay-body">
+          <p class="tp-overlay-intro">
+            Turn live prices into decisions. The chart and prices remain visible behind this panel.
+          </p>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Budget planner</h3></div>
+            <div class="tracker-form-grid">
+              <label class="tracker-field">
+                <span>Budget amount</span>
+                <input type="number" id="tp-budget-amount" min="0" step="0.01" value="10000" />
+              </label>
+              <label class="tracker-field">
+                <span>Extra fee %</span>
+                <input type="number" id="tp-budget-fee" min="0" step="0.01" value="0" />
+              </label>
+            </div>
+            <div class="tracker-result-grid" id="tp-budget-results"></div>
+          </article>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Position tracker</h3></div>
+            <div class="tracker-form-grid">
+              <label class="tracker-field">
+                <span>Entry price</span>
+                <input type="number" id="tp-position-entry" min="0" step="0.01" value="0" />
+              </label>
+              <label class="tracker-field">
+                <span>Quantity (g)</span>
+                <input type="number" id="tp-position-qty" min="0" step="0.0001" value="0" />
+              </label>
+            </div>
+            <div class="tracker-result-grid" id="tp-position-results"></div>
+          </article>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Jewelry ticket estimate</h3></div>
+            <div class="tracker-form-grid">
+              <label class="tracker-field">
+                <span>Weight (g)</span>
+                <input type="number" id="tp-jewelry-weight" min="0" step="0.01" value="20" />
+              </label>
+              <label class="tracker-field">
+                <span>Karat</span>
+                <select id="tp-jewelry-karat"></select>
+              </label>
+              <label class="tracker-field">
+                <span>Making charge / g</span>
+                <input type="number" id="tp-jewelry-making" min="0" step="0.01" value="0" />
+              </label>
+              <label class="tracker-field">
+                <span>Premium %</span>
+                <input type="number" id="tp-jewelry-premium" min="0" step="0.01" value="0" />
+              </label>
+            </div>
+            <div class="tracker-inline-actions">
+              <label class="tracker-checkbox">
+                <input type="checkbox" id="tp-jewelry-vat" checked />
+                <span>Include 5% VAT</span>
+              </label>
+            </div>
+            <div class="tracker-result-grid" id="tp-jewelry-results"></div>
+          </article>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Accumulation planner</h3></div>
+            <div class="tracker-form-grid">
+              <label class="tracker-field">
+                <span>Monthly contribution</span>
+                <input type="number" id="tp-accum-monthly" min="0" step="0.01" value="2000" />
+              </label>
+              <label class="tracker-field">
+                <span>Target quantity (g)</span>
+                <input type="number" id="tp-accum-target" min="0" step="0.0001" value="100" />
+              </label>
+            </div>
+            <div class="tracker-result-grid" id="tp-accum-results"></div>
+          </article>
+
+          <div class="tracker-panel-footer-link">
+            <a href="calculator.html" class="tracker-link">Open full calculator →</a>
+          </div>
+        </div>
+      </div>
+      <div class="tp-overlay-backdrop" aria-hidden="true"></div>
+    </div>
+
+    <!-- MODE: ARCHIVE -->
+    <section
+      class="tracker-shell tracker-archive-shell tracker-mode-panel tracker-advanced-only"
+      id="mode-archive"
+      role="tabpanel"
+      aria-labelledby="tab-archive"
+      data-mode-panel="archive"
+      hidden
+    >
+      <div class="tracker-panel">
+        <div class="tracker-panel-head">
+          <div>
+            <h2>Archive + lookup</h2>
+            <p>
+              Browse unified history (baseline + cache), export slices, and jump to the nearest archived point
+              for any date.
+            </p>
+          </div>
+          <div class="tracker-head-actions">
+            <label class="tracker-field tracker-field-inline">
+              <span>Archive range</span>
+              <select id="tp-archive-range">
+                <option value="ALL">All</option>
+                <option value="5Y">5Y</option>
+                <option value="3Y">3Y</option>
+                <option value="1Y">1Y</option>
+                <option value="90D">90D</option>
+                <option value="30D">30D</option>
+              </select>
+            </label>
+            <label class="tracker-search">
+              <span class="sr-only">Search archive</span>
+              <input
+                type="text"
+                id="tp-archive-search"
+                placeholder="Search month, year, source"
+              />
+            </label>
+          </div>
+        </div>
+
+        <div class="tracker-two-up">
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head">
+              <h3>Archive browser</h3>
+              <div class="tracker-inline-actions">
+                <button class="btn btn-sm btn-outline" type="button" id="tp-export-archive">
+                  Download visible archive CSV
+                </button>
+                <button class="btn btn-sm btn-ghost" type="button" id="tp-export-history">
+                  Download full history CSV
+                </button>
+              </div>
+            </div>
+            <div class="tracker-table-scroll">
+              <table class="tracker-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Spot USD/oz</th>
+                    <th>Selected view</th>
+                    <th>UAE 24K/g</th>
+                    <th>Source</th>
+                  </tr>
+                </thead>
+                <tbody id="tp-archive-body"></tbody>
+              </table>
+              <div class="tracker-table-footer" id="tp-archive-meta"></div>
+            </div>
+          </article>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Date lookup</h3></div>
+            <p style="font-size: 0.85rem; color: var(--tp-text-muted); margin-bottom: 1rem;">Find the closest data point for any date in the archive. Searches baseline + session data.</p>
+            <div class="tracker-form-grid">
+              <label class="tracker-field">
+                <span>Lookup date</span>
+                <input type="date" id="tp-lookup-date" />
+              </label>
+            </div>
+            <div class="tracker-inline-actions">
+              <button class="btn btn-primary" type="button" id="tp-run-lookup">
+                Look up closest point
+              </button>
+            </div>
+            <div class="tracker-result-grid" id="tp-lookup-results"></div>
+
+            <div class="tracker-subpanel-head"><h3>Seasonal patterns</h3></div>
+            <div class="tracker-result-grid" id="tp-seasonal-results"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODE: EXPORTS -->
+    <section
+      class="tracker-shell tracker-exports-shell tracker-mode-panel tracker-advanced-only"
+      id="mode-exports"
+      role="tabpanel"
+      aria-labelledby="tab-exports"
+      data-mode-panel="exports"
+      hidden
+    >
+      <section class="tracker-panel">
+        <div class="tracker-panel-head">
+          <div>
+            <h2>Exports</h2>
+            <p>Trustworthy CSV and JSON exports with clear source and timestamp metadata for the current workspace.</p>
+          </div>
+        </div>
+
+        <div class="tracker-export-grid">
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Visible chart CSV</h3></div>
+            <p>Exports only the currently visible chart slice with range, mode, and source-layer annotations.</p>
+            <button class="btn btn-outline" id="tp-export-chart-2" type="button">
+              Export visible chart CSV
+            </button>
+          </article>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Current view CSV</h3></div>
+            <p>Snapshot of the current currency/karat/unit across markets, matching the compare board ordering.</p>
+            <button class="btn btn-outline" id="tp-export-current" type="button">
+              Download current view CSV
+            </button>
+          </article>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Archive CSVs</h3></div>
+            <p>Download cached daily archive and full baseline+cache history for longer-term analysis.</p>
+            <div class="tracker-inline-actions">
+              <button class="btn btn-outline" id="tp-export-archive-2" type="button">
+                Visible archive CSV
+              </button>
+              <button class="btn btn-ghost" id="tp-export-history-2" type="button">
+                Full history CSV
+              </button>
+            </div>
+          </article>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Snapshot JSON</h3></div>
+            <p>Structured JSON payload with prices, FX, favorites, and selected view — useful for tooling integration.</p>
+            <button class="btn btn-outline" id="tp-download-json-2" type="button">
+              Download snapshot JSON
+            </button>
+          </article>
+
+          <article class="tracker-subpanel">
+            <div class="tracker-subpanel-head"><h3>Market brief text</h3></div>
+            <p>Export the current market brief as plain text, suitable for email or note-taking.</p>
+            <button class="btn btn-outline" id="tp-download-brief" type="button">
+              Download brief
+            </button>
+          </article>
+        </div>
+      </section>
+    </section>
+
+    <!-- MODE: METHOD -->
+    <section
+      class="tracker-shell tracker-method-shell tracker-mode-panel tracker-advanced-only"
+      id="mode-method"
+      role="tabpanel"
+      aria-labelledby="tab-method"
+      data-mode-panel="method"
+      hidden
+    >
+      <section class="tracker-panel">
+        <div class="tracker-panel-head">
+          <div>
+            <h2>Methodology + sources</h2>
+            <p>
+              This workspace is explicit about what is live, what is cached, what is estimated,
+              and what is synthetic baseline.
+            </p>
+          </div>
+        </div>
+
+        <div class="tracker-method-grid">
+          <article class="tracker-method-card">
+            <h3>Live spot layer</h3>
+            <p>
+              Live spot is pulled from Gold API in XAU/USD and refreshed roughly every 90 seconds,
+              with retries and fallbacks from cache when networks fail.
+            </p>
+            <a href="https://gold-api.com/docs" target="_blank" rel="noopener noreferrer">Gold API docs</a>
+          </article>
+
+          <article class="tracker-method-card">
+            <h3>FX conversion layer</h3>
+            <p>
+              FX conversion comes from ExchangeRate-API’s USD base feed.
+              AED uses the fixed central-bank peg stored in the site constants, not the API feed.
+            </p>
+            <a
+              href="https://www.exchangerate-api.com/docs/free"
+              target="_blank"
+              rel="noopener noreferrer"
+            >ExchangeRate-API docs</a>
+          </article>
+
+          <article class="tracker-method-card">
+            <h3>Historical layer</h3>
+            <p>
+              Short ranges draw on recent live snapshots cached in your browser.
+              Longer ranges use a monthly baseline merged with those snapshots to avoid gaps and keep exports stable.
+            </p>
+            <a
+              href="https://datahub.io/core/gold-prices"
+              target="_blank"
+              rel="noopener noreferrer"
+            >DataHub gold dataset</a>
+          </article>
+
+          <article class="tracker-method-card">
+            <h3>Retail vs bullion</h3>
+            <p>
+              All prices are bullion-equivalent estimates based on spot. Actual jewelry and retail prices
+              can differ due to making charges, premiums, and taxes.
+            </p>
+            <a href="methodology.html" class="tracker-link">Read full site methodology</a>
+          </article>
+
+          <article class="tracker-method-card">
+            <h3>News wire</h3>
+            <p>
+              The market wire uses the GDELT DOC API in article-list mode, suitable for static sites.
+              When it fails, the workspace falls back to cached headlines or a static explainer strip.
+            </p>
+            <a
+              href="https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/amp/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >GDELT DOC API</a>
+          </article>
+        </div>
+      </section>
+    </section>
+
+    <!-- Global market brief section (shared across modes) -->
+    <section class="tracker-shell tracker-brief-shell" aria-label="Market brief">
+      <section class="tracker-panel">
+        <div class="tracker-panel-head">
+          <div>
+            <h2>Market brief</h2>
+            <p>
+              One-paragraph summary of current gold conditions for your selected view, updated as you change
+              markets, karats, and time ranges.
+            </p>
+          </div>
+        </div>
+        <div class="tracker-brief-body">
+          <h3 id="tp-brief-headline"></h3>
+          <p id="tp-brief-copy"></p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div class="tracker-toast-stack" id="tp-toast-stack" aria-live="polite" aria-atomic="false"></div>
+</body>
+</html>

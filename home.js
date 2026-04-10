@@ -530,14 +530,27 @@ async function init() {
 
   applyLangToPage();
 
-  // Fetch live data in parallel
-  await fetchLiveData();
+  // Render cached data immediately for instant content (non-blocking)
+  if (goldPrice) {
+    renderHeroCard();
+    renderGCCGrid();
+  }
+
+  // Fetch live data in parallel (non-blocking to UI rendering)
+  fetchLiveData().then(() => {
+    // First paint already happened with cached data, now update with fresh data
+  });
 
   // Auto-refresh every 90 seconds
   if (_refreshTimer) clearInterval(_refreshTimer);
   _refreshTimer = setInterval(fetchLiveData, CONSTANTS.GOLD_REFRESH_MS);
 
-  // Skeleton timeout: if price still loading after 12s, show unavailable state
+  // Register service worker early for offline support
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register(BASE_PATH + 'sw.js').catch(() => {});
+  }
+
+  // Skeleton timeout: if price still loading after 8s, show unavailable state
   setTimeout(() => {
     const priceEl = document.getElementById('hlc-price');
     if (priceEl && priceEl.classList.contains('hlc-price--loading')) {
@@ -552,12 +565,7 @@ async function init() {
       card.classList.remove('skeleton-card');
       card.textContent = '—';
     });
-  }, 12000);
+  }, 8000);
 }
 
 document.addEventListener('DOMContentLoaded', init);
-
-// Register service worker (path uses BASE_PATH from config/constants.js)
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register(BASE_PATH + 'sw.js').catch(() => {});
-}
