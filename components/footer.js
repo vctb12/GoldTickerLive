@@ -38,8 +38,8 @@ export function injectFooter(lang = 'en', depth = 0) {
         <h4 class="footer-col-heading">${isAr ? 'الأسواق' : 'Markets'}</h4>
         <a href="${r('../tracker.html')}">${isAr ? 'تتبع مباشر' : 'Live Tracker'}</a>
         <a href="${r('../countries/uae.html')}">${isAr ? 'ذهب الإمارات اليوم' : 'UAE Gold Today'}</a>
-        <a href="${r('../tracker.html#section-countries')}">${isAr ? 'مقارنة دول الخليج' : 'GCC Compare'}</a>
-        <a href="${r('../tracker.html#section-chart')}">${isAr ? 'البيانات التاريخية' : 'History &amp; Data'}</a>
+        <a href="${r('../tracker.html#mode=compare')}">${isAr ? 'مقارنة دول الخليج' : 'GCC Compare'}</a>
+        <a href="${r('../tracker.html#mode=archive')}">${isAr ? 'البيانات التاريخية' : 'History &amp; Data'}</a>
         <a href="${r('../shops.html')}">${isAr ? 'دليل المحلات' : 'Shop Directory'}</a>
       </div>
 
@@ -47,8 +47,8 @@ export function injectFooter(lang = 'en', depth = 0) {
       <div class="footer-col footer-col--links">
         <h4 class="footer-col-heading">${isAr ? 'الأدوات' : 'Tools'}</h4>
         <a href="${r('../calculator.html')}">${isAr ? 'حاسبة الذهب' : 'Gold Calculator'}</a>
-        <a href="${r('../tracker.html#section-alerts')}">${isAr ? 'تنبيهات السعر' : 'Price Alerts'}</a>
-        <a href="${r('../tracker.html#section-chart')}">${isAr ? 'تنزيل البيانات' : 'Downloads'}</a>
+        <a href="${r('../tracker.html#mode=live&panel=alerts')}">${isAr ? 'تنبيهات السعر' : 'Price Alerts'}</a>
+        <a href="${r('../tracker.html#mode=exports')}">${isAr ? 'تنزيل البيانات' : 'Downloads'}</a>
       </div>
 
       <!-- GCC column -->

@@ -2,7 +2,7 @@
 import { injectNav, updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
-import { syncUrlFromState, persistState, applyUrlState } from './state.js';
+import { syncUrlFromState, persistState, applyUrlState, VALID_MODES, VALID_PANELS } from './state.js';
 
 let _openPanel = null;
 
@@ -50,9 +50,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   });
 
   // Initial mode selection (never allow alerts/planner as mode)
-  const safeMode = ['live', 'compare', 'archive', 'exports', 'method'].includes(state.mode)
-    ? state.mode
-    : 'live';
+  const safeMode = VALID_MODES.has(state.mode) ? state.mode : 'live';
   setMode(safeMode);
 
   // Overlay system for Alerts and Planner
@@ -62,10 +60,12 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   };
 
   function openOverlay(name) {
+    if (!VALID_PANELS.has(name)) return;
     if (_openPanel && _openPanel !== name) closeOverlay(_openPanel);
     const overlay = overlays[name];
     if (!overlay) return;
     _openPanel = name;
+    state.panel = name;
     overlay.hidden = false;
     overlay.removeAttribute('aria-hidden');
     document.body.classList.add('tp-overlay-open');
@@ -79,16 +79,18 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   }
 
   function closeOverlay(name) {
-    const overlay = overlays[name || _openPanel];
+    const panelName = name || _openPanel;
+    const overlay = overlays[panelName];
     if (!overlay) return;
     overlay.hidden = true;
     overlay.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('tp-overlay-open');
-    document.querySelectorAll(`.tracker-overlay-btn[data-overlay="${name || _openPanel}"]`).forEach(btn => {
+    document.querySelectorAll(`.tracker-overlay-btn[data-overlay="${panelName}"]`).forEach(btn => {
       btn.classList.remove('is-active');
       btn.setAttribute('aria-expanded', 'false');
     });
     _openPanel = null;
+    state.panel = null;
     syncUrlFromState(state);
   }
 
@@ -114,14 +116,24 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     });
   });
 
+  function syncOverlayFromState() {
+    const desiredPanel = state.panel && VALID_PANELS.has(state.panel) ? state.panel : null;
+    if (!desiredPanel) {
+      if (_openPanel) closeOverlay(_openPanel);
+      return;
+    }
+    if (_openPanel !== desiredPanel) openOverlay(desiredPanel);
+  }
+
+  syncOverlayFromState();
+
   // Sync back/forward navigation
   window.addEventListener('hashchange', () => {
-    applyUrlState(state);
-    const m = ['live', 'compare', 'archive', 'exports', 'method'].includes(state.mode)
-      ? state.mode
-      : 'live';
+    const parsed = applyUrlState(state);
+    const m = VALID_MODES.has(state.mode) ? state.mode : 'live';
     setMode(m);
-    if (typeof onModeChange === 'function') onModeChange(state.mode);
+    syncOverlayFromState();
+    if (parsed?.shouldCanonicalize) syncUrlFromState(state);
   });
 
   // Keyboard shortcuts
