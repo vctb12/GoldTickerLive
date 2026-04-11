@@ -406,6 +406,100 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
+   LIVE KARAT PRICE STRIP
+   ══════════════════════════════════════════════════════════════ */
+.karat-strip {
+  background: linear-gradient(180deg, #1a1206 0%, #1e1608 100%);
+  border-top: 1px solid rgba(196,153,62,0.15);
+  border-bottom: 1px solid rgba(0,0,0,0.3);
+  padding: 0.6rem 1.5rem;
+}
+
+.karat-strip-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.karat-strip-inner::-webkit-scrollbar { display: none; }
+
+.karat-strip-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: rgba(196,153,62,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.karat-strip-prices {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.karat-strip-prices::-webkit-scrollbar { display: none; }
+
+.karat-strip-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(196,153,62,0.15);
+  border-radius: var(--radius-pill, 999px);
+  padding: 0.3rem 0.8rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s;
+}
+.karat-strip-item:hover {
+  background: rgba(196,153,62,0.10);
+  border-color: rgba(196,153,62,0.35);
+}
+
+.karat-strip-k {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(196,153,62,0.7);
+  letter-spacing: 0.02em;
+}
+
+.karat-strip-v {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #f0d070;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.karat-strip-link {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(196,153,62,0.55);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: auto;
+  transition: color 0.15s;
+  padding: 0.3rem 0.5rem;
+}
+.karat-strip-link:hover {
+  color: var(--color-gold-light, #e5c96e);
+}
+
+@media (max-width: 480px) {
+  .karat-strip { padding: 0.5rem 0.85rem; }
+  .karat-strip-link { display: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════
    TRUST STRIP
    ══════════════════════════════════════════════════════════════ */
 .trust-strip {
