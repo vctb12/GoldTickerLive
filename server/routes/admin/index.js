@@ -3,15 +3,20 @@
  * RESTful endpoints for admin operations
  */
 
-const express = require('express');
-const router = express.Router();
-const { authenticate, authMiddleware } = require('../../../lib/auth');
+const express     = require('express');
+const rateLimit   = require('express-rate-limit');
+const router      = express.Router();
+const auth        = require('../../../lib/auth');
+const { authenticate, authMiddleware } = auth;
 const shopManager = require('../../../lib/admin/shop-manager');
-const auditLog = require('../../../lib/audit-log');
+const auditLog    = require('../../../lib/audit-log');
+const shopsRepo   = require('../../../repositories/shops.repository');
+const auditRepo   = require('../../../repositories/audit.repository');
 
 // ---------------------------------------------------------------------------
 // Simple in-memory rate limiter for the login endpoint
-// Tracks failed attempts per IP; blocks after MAX_ATTEMPTS within WINDOW_MS.
+// Tracks *failed* attempts per IP; blocks after MAX_ATTEMPTS within WINDOW_MS.
+// Uses a custom implementation so it only counts failures, not all requests.
 // ---------------------------------------------------------------------------
 const LOGIN_MAX_ATTEMPTS = 10;
 const LOGIN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
@@ -51,6 +56,19 @@ function recordFailedLogin(ip) {
 function clearLoginAttempts(ip) {
     loginAttempts.delete(ip);
 }
+
+// ---------------------------------------------------------------------------
+// Rate limiter for authenticated admin routes (user management, stats).
+// 100 requests per IP per 15-minute window.
+// Using express-rate-limit so static analysis tools can recognise the pattern.
+// ---------------------------------------------------------------------------
+const adminRateLimiter = rateLimit({
+    windowMs:         15 * 60 * 1000, // 15 minutes
+    max:              100,
+    standardHeaders:  true,
+    legacyHeaders:    false,
+    message:          { success: false, message: 'Too many requests. Please try again later.' },
+});
 
 // Login endpoint
 router.post('/auth/login', loginRateLimiter, async (req, res) => {
@@ -268,6 +286,125 @@ router.get('/audit-logs/export', authMiddleware('admin'), (req, res) => {
             success: false, 
             message: 'Failed to export audit logs' 
         });
+    }
+});
+
+// ===== USER MANAGEMENT ROUTES =====
+// All routes require admin role and are rate-limited.
+
+// List all users (no passwords)
+router.get('/users', adminRateLimiter, authMiddleware('admin'), (req, res) => {
+    try {
+        const users = auth.getAllUsers();
+        res.json({ success: true, users });
+    } catch (err) {
+        console.error('Error fetching users:', err);
+        res.status(500).json({ success: false, message: 'Failed to fetch users' });
+    }
+});
+
+// Create a new user
+router.post('/users', adminRateLimiter, authMiddleware('admin'), async (req, res) => {
+    try {
+        const { email, password, name, role } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ success: false, message: 'Email and password are required' });
+        }
+
+        const result = await auth.createUser({ email, password, name, role }, req.user.email);
+
+        if (!result.success) {
+            return res.status(400).json(result);
+        }
+
+        auditLog.logAction(req.user.email, 'create', 'user', result.user.id, { email: result.user.email, role: result.user.role });
+        res.status(201).json(result);
+    } catch (err) {
+        console.error('Error creating user:', err);
+        res.status(500).json({ success: false, message: 'Failed to create user' });
+    }
+});
+
+// Update a user (name, role, or password)
+router.put('/users/:id', adminRateLimiter, authMiddleware('admin'), async (req, res) => {
+    try {
+        const { name, role, password } = req.body;
+        const updates = {};
+        if (name !== undefined) updates.name = name;
+        if (role !== undefined) updates.role = role;
+        // Require password to be a non-empty string of at least 8 chars if provided
+        if (password !== undefined) {
+            if (typeof password !== 'string' || password.length < 8) {
+                return res.status(400).json({ success: false, message: 'Password must be at least 8 characters' });
+            }
+            updates.password = password;
+        }
+
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({ success: false, message: 'No valid fields to update' });
+        }
+
+        const result = await auth.updateUser(req.params.id, updates, req.user.email);
+
+        if (!result.success) {
+            return res.status(404).json(result);
+        }
+
+        const auditUpdates = { ...updates };
+        if (auditUpdates.password) auditUpdates.password = '[redacted]';
+        auditLog.logAction(req.user.email, 'update', 'user', req.params.id, auditUpdates);
+        res.json(result);
+    } catch (err) {
+        console.error('Error updating user:', err);
+        res.status(500).json({ success: false, message: 'Failed to update user' });
+    }
+});
+
+// Delete a user
+router.delete('/users/:id', adminRateLimiter, authMiddleware('admin'), (req, res) => {
+    try {
+        const result = auth.deleteUser(req.params.id, req.user.email);
+
+        if (!result.success) {
+            return res.status(400).json(result);
+        }
+
+        auditLog.logAction(req.user.email, 'delete', 'user', req.params.id, {});
+        res.json(result);
+    } catch (err) {
+        console.error('Error deleting user:', err);
+        res.status(500).json({ success: false, message: 'Failed to delete user' });
+    }
+});
+
+// ===== DASHBOARD STATS =====
+
+// GET /stats — aggregate metrics for the admin dashboard
+router.get('/stats', adminRateLimiter, authMiddleware(), async (req, res) => {
+    try {
+        const shopStats  = await shopsRepo.getStats();
+        const recentLogs = await auditRepo.query({ page: 1, limit: 10 });
+        const users      = auth.getAllUsers();
+
+        res.json({
+            success: true,
+            stats: {
+                shops: shopStats,
+                users: {
+                    total:  users.length,
+                    admins: users.filter(u => u.role === 'admin').length,
+                },
+                auditLog: {
+                    recentEntries: recentLogs.logs,
+                    total:         recentLogs.total,
+                },
+                storageBackend: process.env.STORAGE_BACKEND || 'file',
+            },
+        });
+    } catch (err) {
+        console.error('Error fetching stats:', err);
+        res.status(500).json({ success: false, message: 'Failed to fetch stats' });
     }
 });
 
