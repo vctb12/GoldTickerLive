@@ -64,6 +64,15 @@
   }
   </script>
 
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://vctb12.github.io/Gold-Prices/" }
+    ]
+  }
+  </script>
   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -221,36 +230,7 @@
     </section>
 
     <!-- ═══════ BUYING GUIDE INTRO ═══════ -->
-    <section class="home-section" aria-labelledby="buying-guide-title">
-      <div class="home-section-inner">
-        <div class="section-intro">
-          <div>
-            <h2 id="buying-guide-title" class="home-section-title">How to Buy Gold</h2>
-            <p class="home-section-sub" id="buying-guide-sub">Find shops, compare prices, and understand the market in your region</p>
-          </div>
-        </div>
-        <div class="buying-guide-grid">
-          <a href="shops.html" class="buying-guide-card">
-            <div class="buying-guide-icon" aria-hidden="true">🏪</div>
-            <h3 class="buying-guide-title" id="guide-shops-title">Find Trusted Shops</h3>
-            <p class="buying-guide-desc" id="guide-shops-desc">Browse listed gold shops and markets across countries. Filter by region, city, and specialty.</p>
-            <span class="buying-guide-cta" id="guide-shops-cta">Explore Shops →</span>
-          </a>
-          <a href="countries/index.html" class="buying-guide-card">
-            <div class="buying-guide-icon" aria-hidden="true">🗺️</div>
-            <h3 class="buying-guide-title" id="guide-markets-title">Browse by Market</h3>
-            <p class="buying-guide-desc" id="guide-markets-desc">View local gold prices, market context, and buying tips for each country.</p>
-            <span class="buying-guide-cta" id="guide-markets-cta">View Countries →</span>
-          </a>
-          <a href="calculator.html" class="buying-guide-card">
-            <div class="buying-guide-icon" aria-hidden="true">🧮</div>
-            <h3 class="buying-guide-title" id="guide-calc-title">Calculate & Compare</h3>
-            <p class="buying-guide-desc" id="guide-calc-desc">Use our calculator to compare prices, values, and purchasing power across karats and currencies.</p>
-            <span class="buying-guide-cta" id="guide-calc-cta">Open Calculator →</span>
-          </a>
-        </div>
-      </div>
-    </section>
+    <!-- Removed: shops, countries & calculator cards are now in the Tools grid below -->
 
     <!-- ═══════ DATA TRUST BANNER ═══════ -->
     <section class="home-section home-section--trust-banner">
@@ -270,8 +250,8 @@
       <div class="home-section-inner">
         <div class="section-intro">
           <div>
-            <h2 id="gcc-section-title" class="home-section-title"></h2>
-            <p class="home-section-sub" id="gcc-section-sub"></p>
+            <h2 id="gcc-section-title" class="home-section-title">Live Gold Prices</h2>
+            <p class="home-section-sub" id="gcc-section-sub">22K per gram in local currency · updated every 90 seconds</p>
           </div>
           <a href="tracker.html" class="section-link" id="gcc-see-all"></a>
         </div>
@@ -294,43 +274,7 @@
     </section>
 
     <!-- ═══════ HISTORY & DATA TEASER ═══════ -->
-    <section class="home-section home-history-section" aria-labelledby="history-section-title">
-      <div class="home-section-inner">
-        <div class="section-intro">
-          <div>
-            <h2 id="history-section-title" class="home-section-title">Historical Gold Prices</h2>
-            <p class="home-section-sub" id="history-section-sub">Explore daily, monthly &amp; annual data — download CSV, look up any date</p>
-          </div>
-          <a href="tracker.html#mode=archive" class="section-link" id="history-see-all">Open Full History →</a>
-        </div>
-        <div class="history-feature-grid">
-          <div class="history-feat-card history-feat-card--chart">
-            <div class="history-feat-icon">📈</div>
-            <h3 id="hist-feat-1-t">Price Chart</h3>
-            <p id="hist-feat-1-d">24H to 5Y range. Interactive chart with full gold price history across all karats and currencies.</p>
-            <a href="tracker.html#mode=archive" class="history-feat-link" id="hist-feat-1-l">Open Chart →</a>
-          </div>
-          <div class="history-feat-card">
-            <div class="history-feat-icon">📅</div>
-            <h3 id="hist-feat-2-t">Monthly Archive</h3>
-            <p id="hist-feat-2-d">Browse historical gold prices month by month for any country or karat.</p>
-            <a href="tracker.html#mode=archive" class="history-feat-link" id="hist-feat-2-l">Browse Archive →</a>
-          </div>
-          <a href="tracker.html#mode=exports" class="history-feat-card">
-            <div class="history-feat-icon">⬇</div>
-            <h3 id="hist-feat-3-t">Download CSV</h3>
-            <p id="hist-feat-3-d">Export price data for any country or karat as a CSV file for offline analysis.</p>
-            <span class="history-feat-link" id="hist-feat-3-l">Open Exports →</span>
-          </a>
-          <div class="history-feat-card">
-            <div class="history-feat-icon">🔍</div>
-            <h3 id="hist-feat-4-t">Date Lookup</h3>
-            <p id="hist-feat-4-d">Look up exactly what gold was worth on any specific date in any currency.</p>
-            <a href="tracker.html#mode=archive" class="history-feat-link" id="hist-feat-4-l">Lookup →</a>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- Removed: chart, archive, CSV download, and date lookup are accessible from the Live Tracker -->
 
     <!-- ═══════ TOOLS ═══════ -->
     <section class="home-section home-section--alt" aria-labelledby="tools-title">
@@ -360,6 +304,18 @@
             <p class="tool-card-desc" id="tool-uae-desc">Dedicated UAE page with all karats in AED &amp; USD, plus context for Dubai buyers.</p>
             <span class="tool-card-cta" id="tool-uae-cta">UAE Prices →</span>
           </a>
+          <a href="shops.html" class="tool-card">
+            <div class="tool-card-icon" aria-hidden="true">🏪</div>
+            <h3 class="tool-card-title" id="tool-shops-title">Find Gold Shops</h3>
+            <p class="tool-card-desc" id="tool-shops-desc">Browse listed gold shops across UAE, GCC &amp; Arab world. Filter by region, city, and specialty.</p>
+            <span class="tool-card-cta" id="tool-shops-cta">Browse Shops →</span>
+          </a>
+          <a href="countries/index.html" class="tool-card">
+            <div class="tool-card-icon" aria-hidden="true">🗺️</div>
+            <h3 class="tool-card-title" id="tool-countries-title">Browse Countries</h3>
+            <p class="tool-card-desc" id="tool-countries-desc">Country-specific pages with local gold prices and market context for 24+ markets.</p>
+            <span class="tool-card-cta" id="tool-countries-cta">All Countries →</span>
+          </a>
           <a href="learn.html" class="tool-card">
             <div class="tool-card-icon" aria-hidden="true">📚</div>
             <h3 class="tool-card-title" id="tool-learn-title">Learn &amp; Glossary</h3>
@@ -385,6 +341,11 @@
             <span class="tool-card-cta" id="tool-invest-cta">Read Guide →</span>
           </a>
         </div>
+        <!-- Compact alert prompt -->
+        <div class="tools-alert-row">
+          <span id="tools-alert-text">Set a price alert — free, stored locally, no account needed.</span>
+          <a href="tracker.html#mode=live&amp;panel=alerts" class="btn btn-sm btn-outline" id="tools-alert-btn">Set Alert →</a>
+        </div>
       </div>
     </section>
 
@@ -396,6 +357,7 @@
             <h2 id="countries-quick-title" class="home-section-title">Browse by Country</h2>
             <p class="home-section-sub" id="countries-quick-sub">Dedicated pages with local context for every major market</p>
           </div>
+          <a href="countries/index.html" class="section-link" id="countries-see-all">See all countries →</a>
         </div>
         <div class="country-tiles">
           <a href="countries/uae.html" class="country-tile"><span>🇦🇪</span><span id="ct-uae">UAE</span></a>
@@ -414,62 +376,13 @@
     </section>
 
     <!-- ═══════ WHY USE THIS ═══════ -->
-    <section class="home-section home-section--alt" aria-labelledby="why-title">
-      <div class="home-section-inner">
-        <div class="section-intro centered">
-          <h2 id="why-title" class="home-section-title">Why This Tracker</h2>
-        </div>
-        <div class="why-grid">
-          <div class="why-item">
-            <div class="why-icon" aria-hidden="true">🎯</div>
-            <h3 id="why1-title">GCC &amp; Arab Focus</h3>
-            <p id="why1-desc">Built for Gulf buyers. AED uses the official UAE Central Bank peg (3.6725), not a fluctuating API rate. GCC, Levant, and African markets all covered.</p>
-          </div>
-          <div class="why-item">
-            <div class="why-icon" aria-hidden="true">🔁</div>
-            <h3 id="why2-title">Genuinely Live</h3>
-            <p id="why2-desc">Gold spot price refreshes every 90 seconds via gold-api.com. FX rates update daily. Countdown shown. Cached locally so it works offline too.</p>
-          </div>
-          <div class="why-item">
-            <div class="why-icon" aria-hidden="true">🌗</div>
-            <h3 id="why3-title">Full Bilingual</h3>
-            <p id="why3-desc">Every label, badge, unit, and country name is available in English and Arabic. Full RTL layout switch — not just a font change.</p>
-          </div>
-          <div class="why-item">
-            <div class="why-icon" aria-hidden="true">⚗</div>
-            <h3 id="why4-title">7 Karats, 24 Countries</h3>
-            <p id="why4-desc">From pure 24K investment gold to 14K jewelry. All 7 standard karats × 24 countries = a complete price matrix in any unit.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- Removed: trust strip above covers all six value props concisely -->
 
     <!-- ═══════ ALERT CTA ═══════ -->
-    <section class="home-section alert-cta-section" aria-labelledby="alert-cta-title">
-      <div class="home-section-inner">
-        <div class="alert-cta-box">
-          <div class="alert-cta-text">
-            <h2 id="alert-cta-title">Set a Price Alert</h2>
-            <p id="alert-cta-desc">Get notified when UAE 24K crosses your target price. Free, stored locally — no account needed.</p>
-          </div>
-          <a href="tracker.html#mode=live&panel=alerts" class="btn btn-primary btn-lg" id="alert-cta-btn">Set Alert</a>
-        </div>
-      </div>
-    </section>
+    <!-- Removed: compact alert prompt is now inline in the Tools section above -->
 
     <!-- ═══════ INSIGHTS BANNER ═══════ -->
-    <section class="home-section" aria-labelledby="insights-banner-title">
-      <div class="home-section-inner">
-        <div class="insights-banner-box">
-          <div class="insights-banner-icon" aria-hidden="true">📊</div>
-          <div class="insights-banner-text">
-            <h2 id="insights-banner-title">Gold Market Insights</h2>
-            <p id="insights-banner-desc">Analysis, guides, and market context for Gulf gold buyers</p>
-          </div>
-          <a href="insights.html" class="btn btn-outline insights-banner-cta" id="insights-banner-link">Read Insights →</a>
-        </div>
-      </div>
-    </section>
+    <!-- Removed: Insights is already a card in the Tools grid above -->
 
     <!-- ═══════ FAQ ═══════ -->
     <section id="faq" class="home-section" aria-labelledby="faq-title">
