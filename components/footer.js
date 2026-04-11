@@ -7,7 +7,11 @@ export function injectFooter(lang = 'en', depth = 0) {
   const isAr = lang === 'ar';
 
   function r(href) {
-    return depth === 0 ? href.replace('../', '') : href;
+    // Strip leading ../ to get the base filename, then prepend correct prefix
+    const base = href.replace(/^\.\.\//, '');
+    if (depth === 0) return base;
+    if (depth >= 2) return '../../../' + base;  // city/market pages: 3 dirs deep
+    return href;  // depth 1: country pages — unchanged (../filename)
   }
 
   const year = new Date().getFullYear();
@@ -41,6 +45,7 @@ export function injectFooter(lang = 'en', depth = 0) {
         <a href="${r('../tracker.html#mode=compare')}">${isAr ? 'مقارنة دول الخليج' : 'GCC Compare'}</a>
         <a href="${r('../tracker.html#mode=archive')}">${isAr ? 'البيانات التاريخية' : 'History &amp; Data'}</a>
         <a href="${r('../shops.html')}">${isAr ? 'دليل المحلات' : 'Shop Directory'}</a>
+        <a href="${r('../countries/index.html')}">${isAr ? 'جميع الدول' : 'All Countries'}</a>
       </div>
 
       <!-- Tools column -->
@@ -49,6 +54,7 @@ export function injectFooter(lang = 'en', depth = 0) {
         <a href="${r('../calculator.html')}">${isAr ? 'حاسبة الذهب' : 'Gold Calculator'}</a>
         <a href="${r('../tracker.html#mode=live&panel=alerts')}">${isAr ? 'تنبيهات السعر' : 'Price Alerts'}</a>
         <a href="${r('../tracker.html#mode=exports')}">${isAr ? 'تنزيل البيانات' : 'Downloads'}</a>
+        <a href="${r('../invest.html')}">${isAr ? 'دليل الاستثمار' : 'Investing Guide'}</a>
       </div>
 
       <!-- GCC column -->
@@ -69,8 +75,13 @@ export function injectFooter(lang = 'en', depth = 0) {
         <a href="${r('../countries/jordan.html')}">${isAr ? 'الأردن' : 'Jordan'}</a>
         <a href="${r('../countries/morocco.html')}">${isAr ? 'المغرب' : 'Morocco'}</a>
         <a href="${r('../countries/india.html')}">${isAr ? 'الهند' : 'India'}</a>
+        <h4 class="footer-col-heading footer-col-heading--mt">${isAr ? 'مدن رئيسية' : 'Top Cities'}</h4>
+        <a href="${r('../countries/uae/cities/dubai.html')}">${isAr ? 'دبي' : 'Dubai'}</a>
+        <a href="${r('../countries/saudi-arabia/cities/riyadh.html')}">${isAr ? 'الرياض' : 'Riyadh'}</a>
+        <a href="${r('../countries/egypt/cities/cairo.html')}">${isAr ? 'القاهرة' : 'Cairo'}</a>
         <h4 class="footer-col-heading footer-col-heading--mt">${isAr ? 'تعلّم وتحليلات' : 'Learn &amp; Insights'}</h4>
         <a href="${r('../learn.html')}">${isAr ? 'دليل الذهب' : 'Gold Guide'}</a>
+        <a href="${r('../guides/buying-guide.html')}">${isAr ? 'دليل الشراء' : 'Buying Guide'}</a>
         <a href="${r('../methodology.html')}">${isAr ? 'المنهجية' : 'Methodology'}</a>
         <a href="${r('../insights.html')}">${isAr ? 'تحليلات' : 'Insights'}</a>
       </div>

@@ -3,16 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gold Price by Country — GCC & Arab World | GoldPrices</title>
-  <meta name="description" content="Browse country gold price pages across GCC, Levant, Africa, and India. Live spot-linked estimates by country with local currency context." />
+  <title>Gold Price by Country — GCC, Levant, Africa &amp; India | GoldPrices</title>
+  <meta name="description" content="Live gold prices by country — UAE, Saudi Arabia, Kuwait, Qatar, Egypt, India and 15+ countries. Spot-linked estimates in local currencies, updated every 90 seconds." />
   <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/countries/index.html" />
+  <link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/countries/index.html" />
+  <link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/index.html" />
+  <link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/index.html?lang=ar" />
+  <meta property="og:title" content="Gold Price by Country — GCC &amp; Arab World" />
+  <meta property="og:description" content="Browse live gold prices for 15+ countries. Spot-linked estimates in local currencies." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/countries/index.html" />
+  <meta property="og:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Gold Price by Country — GCC &amp; Arab World" />
+  <meta name="twitter:description" content="Browse live gold prices for 15+ countries in local currencies." />
+  <meta name="twitter:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../home.css" />
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
-
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
-    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png" />
-<style>
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png" />
+  <link rel="manifest" href="../manifest.json" />
+  <meta name="theme-color" content="#d4a017" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Gold Price by Country",
+    "description": "Live gold prices by country — UAE, Saudi Arabia, Kuwait, Qatar, Egypt, India and 15+ countries.",
+    "url": "https://vctb12.github.io/Gold-Prices/countries/index.html",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "GoldPrices",
+      "url": "https://vctb12.github.io/Gold-Prices/"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"Home","item":"https://vctb12.github.io/Gold-Prices/"},
+      {"@type":"ListItem","position":2,"name":"Countries","item":"https://vctb12.github.io/Gold-Prices/countries/index.html"}
+    ]
+  }
+  </script>
+  <style>
     .countries-trust-note {
       background: rgba(212, 160, 23, 0.12);
       border: 1px solid rgba(212, 160, 23, 0.3);
@@ -21,6 +58,32 @@
       margin-bottom: 1rem;
       color: var(--text-color, #2b2b2b);
     }
+    .region-heading {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.75rem;
+      color: var(--text-color, #2b2b2b);
+    }
+    .region-heading:first-of-type { margin-top: 0; }
+    .cities-section { margin-top: 2rem; }
+    .cities-section h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; }
+    .city-tiles { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .city-tile {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.5rem 0.85rem; border-radius: 8px;
+      background: rgba(212,160,23,0.08); border: 1px solid rgba(212,160,23,0.2);
+      color: inherit; text-decoration: none; font-size: 0.95rem;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .city-tile:hover { background: rgba(212,160,23,0.18); border-color: rgba(212,160,23,0.4); }
+    .tools-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+    .tools-row a {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.5rem 0.85rem; border-radius: 8px;
+      background: rgba(212,160,23,0.08); border: 1px solid rgba(212,160,23,0.2);
+      color: inherit; text-decoration: none; font-size: 0.95rem;
+    }
+    .tools-row a:hover { background: rgba(212,160,23,0.18); }
   </style>
 </head>
 <body>
@@ -31,8 +94,8 @@
       <div class="home-section-inner">
         <div class="section-intro">
           <div>
-            <h1 id="countries-index-title" class="home-section-title">Country Gold Price Pages</h1>
-            <p class="home-section-sub">Choose a country page for local spot-linked estimates, currency context, and market notes.</p>
+            <h1 id="countries-index-title" class="home-section-title">Gold Price by Country</h1>
+            <p class="home-section-sub">Live spot-linked gold prices for 15+ countries in local currencies. Choose a country for 24K–18K karat prices, currency context, and market notes. Updated every 90 seconds.</p>
           </div>
           <a href="../tracker.html" class="section-link">Open Live Tracker →</a>
         </div>
@@ -41,17 +104,60 @@
           ⚠ These are <strong>spot-linked bullion estimates</strong>, not retail jewelry prices. Store prices may include making charges and local premiums.
         </div>
 
+        <h2 class="region-heading">GCC Countries</h2>
         <div class="country-tiles">
-          <a href="uae.html" class="country-tile"><span>🇦🇪</span><span>UAE</span></a>
-          <a href="saudi-arabia.html" class="country-tile"><span>🇸🇦</span><span>Saudi Arabia</span></a>
-          <a href="kuwait.html" class="country-tile"><span>🇰🇼</span><span>Kuwait</span></a>
-          <a href="qatar.html" class="country-tile"><span>🇶🇦</span><span>Qatar</span></a>
-          <a href="bahrain.html" class="country-tile"><span>🇧🇭</span><span>Bahrain</span></a>
-          <a href="oman.html" class="country-tile"><span>🇴🇲</span><span>Oman</span></a>
-          <a href="egypt.html" class="country-tile"><span>🇪🇬</span><span>Egypt</span></a>
-          <a href="jordan.html" class="country-tile"><span>🇯🇴</span><span>Jordan</span></a>
-          <a href="morocco.html" class="country-tile"><span>🇲🇦</span><span>Morocco</span></a>
-          <a href="india.html" class="country-tile"><span>🇮🇳</span><span>India</span></a>
+          <a href="uae.html" class="country-tile"><span>🇦🇪</span><span>UAE (AED)</span></a>
+          <a href="saudi-arabia.html" class="country-tile"><span>🇸🇦</span><span>Saudi Arabia (SAR)</span></a>
+          <a href="kuwait.html" class="country-tile"><span>🇰🇼</span><span>Kuwait (KWD)</span></a>
+          <a href="qatar.html" class="country-tile"><span>🇶🇦</span><span>Qatar (QAR)</span></a>
+          <a href="bahrain.html" class="country-tile"><span>🇧🇭</span><span>Bahrain (BHD)</span></a>
+          <a href="oman.html" class="country-tile"><span>🇴🇲</span><span>Oman (OMR)</span></a>
+        </div>
+
+        <h2 class="region-heading">Levant &amp; North Africa</h2>
+        <div class="country-tiles">
+          <a href="egypt.html" class="country-tile"><span>🇪🇬</span><span>Egypt (EGP)</span></a>
+          <a href="jordan.html" class="country-tile"><span>🇯🇴</span><span>Jordan (JOD)</span></a>
+          <a href="lebanon.html" class="country-tile"><span>🇱🇧</span><span>Lebanon (LBP)</span></a>
+          <a href="morocco.html" class="country-tile"><span>🇲🇦</span><span>Morocco (MAD)</span></a>
+          <a href="tunisia.html" class="country-tile"><span>🇹🇳</span><span>Tunisia (TND)</span></a>
+          <a href="algeria.html" class="country-tile"><span>🇩🇿</span><span>Algeria (DZD)</span></a>
+          <a href="libya.html" class="country-tile"><span>🇱🇾</span><span>Libya (LYD)</span></a>
+          <a href="sudan.html" class="country-tile"><span>🇸🇩</span><span>Sudan (SDG)</span></a>
+        </div>
+
+        <h2 class="region-heading">Global Reference</h2>
+        <div class="country-tiles">
+          <a href="india.html" class="country-tile"><span>🇮🇳</span><span>India (INR)</span></a>
+        </div>
+
+        <div class="cities-section">
+          <h2>Major Cities</h2>
+          <p style="margin-bottom:0.75rem;font-size:0.95rem;">City-level gold price pages with local buying guides and market information.</p>
+          <div class="city-tiles">
+            <a href="uae/cities/dubai.html" class="city-tile">🇦🇪 Dubai</a>
+            <a href="uae/cities/abu-dhabi.html" class="city-tile">🇦🇪 Abu Dhabi</a>
+            <a href="saudi-arabia/cities/riyadh.html" class="city-tile">🇸🇦 Riyadh</a>
+            <a href="egypt/cities/cairo.html" class="city-tile">🇪🇬 Cairo</a>
+            <a href="qatar/cities/doha.html" class="city-tile">🇶🇦 Doha</a>
+          </div>
+        </div>
+
+        <div class="cities-section">
+          <h2>Famous Gold Markets</h2>
+          <p style="margin-bottom:0.75rem;font-size:0.95rem;">Detailed guides to the most well-known gold souks and bazaars.</p>
+          <div class="city-tiles">
+            <a href="uae/markets/dubai-gold-souk.html" class="city-tile">🇦🇪 Dubai Gold Souk</a>
+            <a href="egypt/markets/khan-el-khalili-cairo.html" class="city-tile">🇪🇬 Khan el-Khalili, Cairo</a>
+          </div>
+        </div>
+
+        <div class="tools-row">
+          <a href="../calculator.html">🧮 Gold Calculator</a>
+          <a href="../tracker.html">📈 Live Tracker</a>
+          <a href="../shops.html">🏪 Gold Shops</a>
+          <a href="../learn.html">📚 Learn About Gold</a>
+          <a href="../guides/buying-guide.html">📖 Buying Guide</a>
         </div>
       </div>
     </section>

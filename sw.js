@@ -6,7 +6,7 @@
  * All precache URLs must include the /Gold-Prices/ prefix.
  */
 
-const CACHE_NAME = 'goldprices-v8';
+const CACHE_NAME = 'goldprices-v9';
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 1 day
 
 // Static assets to pre-cache on install - MUST use /Gold-Prices/ prefix for GitHub Pages
@@ -38,6 +38,15 @@ const PRECACHE_URLS = [
   '/Gold-Prices/countries/algeria.html',
   '/Gold-Prices/countries/libya.html',
   '/Gold-Prices/countries/sudan.html',
+  // City pages
+  '/Gold-Prices/countries/uae/cities/dubai.html',
+  '/Gold-Prices/countries/uae/cities/abu-dhabi.html',
+  '/Gold-Prices/countries/saudi-arabia/cities/riyadh.html',
+  '/Gold-Prices/countries/egypt/cities/cairo.html',
+  '/Gold-Prices/countries/qatar/cities/doha.html',
+  // Market pages
+  '/Gold-Prices/countries/uae/markets/dubai-gold-souk.html',
+  '/Gold-Prices/countries/egypt/markets/khan-el-khalili-cairo.html',
 ];
 
 // External origins that should bypass the cache (live data APIs)
