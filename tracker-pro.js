@@ -256,11 +256,11 @@ function startAutoRefresh() {
     renderAll();
     if (el.refreshBadge) {
       const stamp = state.live?.updatedAt
-        ? new Date(state.live.updatedAt).toLocaleString()
+        ? new Date(state.live.updatedAt).toLocaleTimeString()
         : new Date().toLocaleTimeString();
       el.refreshBadge.textContent = state.hasLiveFailure
-        ? `Cached/Fallback · source timestamp ${stamp} · Source: gold-api.com`
-        : `Live · source timestamp ${stamp} · Source: gold-api.com`;
+        ? `Cached/Fallback · ${stamp}`
+        : `Live · updated ${stamp}`;
     }
   }, CONSTANTS.GOLD_REFRESH_MS);
 }

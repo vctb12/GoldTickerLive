@@ -17,7 +17,7 @@ export function bindCoreEvents() {
     await _cb.refreshData(true);
     _cb.renderAll();
     _el.refreshBtn.disabled = false;
-    _el.refreshBtn.textContent = 'Refresh live data';
+    _el.refreshBtn.textContent = '↻ Refresh';
   });
 
   // Reset view
