@@ -3,15 +3,30 @@
 ## How to Access the Admin Dashboard
 
 ### URL
-Navigate to: `https://yourusername.github.io/Gold-Prices/admin.html`
 
-Or from the main site, add `/admin.html` to your base URL.
+- **Development (Express server):** `http://localhost:3000/admin`
+- **GitHub Pages / static build:** `https://yourusername.github.io/Gold-Prices/admin.html`
 
-### Default Login Credentials
-- **Email:** `admin@goldprices.com`
-- **Password:** `admin123`
+---
 
-⚠️ **IMPORTANT:** Change these default credentials immediately in production by modifying the `ADMIN_CONFIG.DEFAULT_USER` object in `admin.js`.
+## Initial Setup (Required Before Deploying)
+
+1. Copy `.env.example` to `.env` and fill in all values.
+2. Set a strong `JWT_SECRET` (32+ random characters):
+   ```bash
+   node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+   ```
+3. Set `ADMIN_PASSWORD` to a strong password for the default admin account.  
+   The default bootstrap account uses `admin@goldprices.com` with the value of `ADMIN_PASSWORD`.
+4. **Never commit `.env` to source control.**
+
+### Default Admin Email
+
+`admin@goldprices.com` — the password is read from the `ADMIN_PASSWORD` environment variable at startup.
+
+> ⚠️ If `ADMIN_PASSWORD` is not set, a weak placeholder is used. Always set it in `.env` before running the server.
+
+---
 
 ## Features
 
@@ -50,7 +65,7 @@ Or from the main site, add `/admin.html` to your base URL.
 - Filter by action type (create/update/delete/login)
 - Filter by entity type (shop/city/guide/user)
 - Search functionality
-- Export to CSV capability
+- Export to CSV (all fields are properly quoted and formula-injection safe)
 - Shows user, timestamp, action, entity, and changes
 
 ### 7. Settings
@@ -59,91 +74,93 @@ Or from the main site, add `/admin.html` to your base URL.
 - Data export functionality
 - System reset options
 
+---
+
 ## Technical Details
 
 ### Authentication
-- Session-based authentication using localStorage
-- JWT-ready architecture for backend integration
-- Automatic session validation on page load
-- Secure logout with audit logging
+- JWT-based authentication (`lib/auth.js`)
+- Rate limiting on the login endpoint: 10 failed attempts per IP triggers a 15-minute lockout
+- Role hierarchy: `admin > editor > viewer`
+- Token expiry: 24 hours
 
 ### Data Storage
-- Currently uses localStorage for demo purposes
-- Ready for backend API integration via `ADMIN_CONFIG.API_BASE`
-- All CRUD operations logged to audit system
+- Server-side file storage (`data/shops-data.json`, `data/audit-logs.json`, `data/users.json`)
+- Supabase-ready: see [`docs/SUPABASE_SETUP.md`](docs/SUPABASE_SETUP.md) for migration guide
+- All CRUD operations are logged to the audit system
 
-### Security Notes
-1. Change default credentials before deploying to production
-2. Implement server-side authentication for production use
-3. Enable HTTPS for all admin traffic
-4. Consider adding rate limiting for login attempts
-5. Review audit logs regularly for suspicious activity
+### Security Checklist
+1. Set `JWT_SECRET` and `ADMIN_PASSWORD` environment variables before deploy
+2. Enable HTTPS for all admin traffic
+3. Review audit logs regularly for suspicious activity
+4. Consider IP whitelisting for `/api/admin` in production
+
+---
 
 ## Integration with Backend
 
-To connect to a real backend API:
+The admin API is at `/api/admin` on the Express server (`server.js`).
 
-1. Update `ADMIN_CONFIG.API_BASE` in `admin.js` to point to your API endpoint
-2. Modify the `login()` function to make real API calls
-3. Update CRUD functions (`saveShop`, `saveCity`, etc.) to use fetch/Axios
-4. Implement proper JWT token handling
-5. Add refresh token logic for session persistence
+Key endpoints:
 
-Example API integration:
-```javascript
-async function login(email, password) {
-    const response = await fetch(`${ADMIN_CONFIG.API_BASE}/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-    });
-    
-    if (!response.ok) throw new Error('Invalid credentials');
-    
-    const data = await response.json();
-    currentUser = data.user;
-    localStorage.setItem(ADMIN_CONFIG.STORAGE_KEY, JSON.stringify({
-        ...data.user,
-        token: data.token
-    }));
-    
-    showDashboard();
-}
-```
+| Method | Path | Auth Required |
+|--------|------|--------------|
+| POST | `/api/admin/auth/login` | — |
+| GET | `/api/admin/auth/verify` | Any |
+| GET | `/api/admin/shops` | Any |
+| POST | `/api/admin/shops` | editor+ |
+| PUT | `/api/admin/shops/:id` | editor+ |
+| DELETE | `/api/admin/shops/:id` | admin |
+| GET | `/api/admin/audit-logs` | Any |
+| GET | `/api/admin/audit-logs/export` | admin |
+
+---
 
 ## File Structure
 ```
-/workspace/
-├── admin.html          # Admin dashboard HTML
-├── admin.css           # Admin-specific styles
-├── admin.js            # Admin dashboard logic
-└── dist/
-    ├── admin.html      # Built admin page
-    └── assets/
-        ├── admin-*.js  # Bundled admin JS
-        └── admin-*.css # Bundled admin CSS
+/
+├── admin.html              # Admin dashboard HTML + inline JS
+├── admin.css               # Admin-specific styles
+├── server.js               # Express server
+├── .env.example            # Environment variable template
+├── lib/
+│   ├── auth.js             # JWT auth + user management
+│   └── admin/
+│       └── shop-manager.js # Shop CRUD logic
+├── lib/audit-log.js        # Immutable audit logging
+├── server/routes/admin/    # Admin API routes
+├── data/
+│   ├── shops-data.json     # Shop data (file-based)
+│   └── audit-logs.json     # Audit log data (file-based)
+├── docs/
+│   └── SUPABASE_SETUP.md   # Supabase migration guide
+└── supabase/
+    └── schema.sql          # Database schema + RLS policies
 ```
+
+---
 
 ## Troubleshooting
 
 ### Can't access admin page?
-- Ensure you're using the correct URL with `/Gold-Prices/` base path
-- Check browser console for 404 errors on assets
-- Verify the build completed successfully
+- Ensure the Express server is running (`npm start`) if using the API
+- For static build: verify the Vite build completed (`npm run build`)
 
 ### Login not working?
-- Clear browser localStorage and try again
-- Check browser console for JavaScript errors
-- Verify default credentials match `ADMIN_CONFIG.DEFAULT_USER`
+- Check the `JWT_SECRET` and `ADMIN_PASSWORD` are set in `.env`
+- Check server logs for the warning about default JWT_SECRET
+- Rate limiting: if you've had 10+ failed attempts, wait 15 minutes
 
 ### Changes not persisting?
-- localStorage may be cleared by browser settings
-- For production, implement backend database storage
-- Check browser's storage limits
+- Data is stored in `data/*.json` (server-side)
+- Ensure the `data/` directory is writable by the server process
+
+---
 
 ## Next Steps
 
-1. **Immediate:** Change default admin password
-2. **Short-term:** Implement backend API for data persistence
-3. **Medium-term:** Add role-based permissions (Editor, Viewer roles)
+1. **Immediate:** Set `JWT_SECRET` and `ADMIN_PASSWORD` in `.env`
+2. **Short-term:** Migrate data storage to Supabase (see `docs/SUPABASE_SETUP.md`)
+3. **Medium-term:** Switch admin auth to Supabase Auth for session management
 4. **Long-term:** Add two-factor authentication and IP whitelisting
+
