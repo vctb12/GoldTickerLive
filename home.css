@@ -868,6 +868,15 @@
   margin: 0;
 }
 
+a.history-feat-card {
+  text-decoration: none;
+  color: inherit;
+}
+a.history-feat-card:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
 .history-feat-link {
   font-size: 0.8rem;
   font-weight: 700;

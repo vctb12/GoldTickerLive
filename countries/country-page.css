@@ -461,3 +461,37 @@
   .cp-price-chip { min-width: calc(50% - 0.25rem); }
   .cp-hero { padding: 1.5rem 0.85rem 1.25rem !important; }
 }
+
+/* ── Related tools row ──────────────────────────────────── */
+.related-tool-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.1rem;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 40px;
+  white-space: nowrap;
+}
+.related-tool-link:hover {
+  border-color: var(--color-gold);
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(196,153,62,0.12);
+}
+
+@media (max-width: 560px) {
+  .cp-tools-row { gap: 0.5rem; }
+  .related-tool-link {
+    font-size: 0.78rem;
+    padding: 0.45rem 0.85rem;
+  }
+}

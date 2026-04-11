@@ -115,10 +115,10 @@
 
           <!-- Compact hint chips (replaces verbose onboarding steps) -->
           <div class="tracker-hint-chips" id="tracker-hint-chips" aria-label="Quick usage hints">
-            <span class="tracker-hint-chip">1 · Refresh to get live data</span>
-            <span class="tracker-hint-chip">2 · Pick market, karat &amp; unit</span>
-            <span class="tracker-hint-chip">3 · Read chart trend below</span>
-            <span class="tracker-hint-chip tracker-hint-chip--note">Reference estimates — not retail jewelry prices</span>
+            <span class="tracker-hint-chip"><span aria-hidden="true">📡</span> Live data · refreshes every 90s</span>
+            <span class="tracker-hint-chip"><span aria-hidden="true">🌍</span> 24+ countries · 7 karats</span>
+            <span class="tracker-hint-chip"><span aria-hidden="true">📊</span> Chart · compare · alerts · planner</span>
+            <span class="tracker-hint-chip tracker-hint-chip--note"><span aria-hidden="true">⚠</span> Spot-linked estimates · not retail quotes</span>
           </div>
 
           <div class="tracker-hero-grid" id="tp-hero-stats" aria-label="Key live metrics"></div>
@@ -160,7 +160,7 @@
           Live
         </button>
         <button
-          class="tracker-mode-tab tracker-advanced-only"
+          class="tracker-mode-tab"
           role="tab"
           aria-selected="false"
           aria-controls="mode-compare"
@@ -170,7 +170,7 @@
           Compare
         </button>
         <button
-          class="tracker-mode-tab tracker-advanced-only"
+          class="tracker-mode-tab"
           role="tab"
           aria-selected="false"
           aria-controls="mode-archive"
@@ -180,7 +180,7 @@
           Archive
         </button>
         <button
-          class="tracker-mode-tab tracker-overlay-btn tracker-advanced-only"
+          class="tracker-mode-tab tracker-overlay-btn"
           type="button"
           id="tab-alerts"
           data-overlay="alerts"
@@ -190,7 +190,7 @@
           Alerts
         </button>
         <button
-          class="tracker-mode-tab tracker-overlay-btn tracker-advanced-only"
+          class="tracker-mode-tab tracker-overlay-btn"
           type="button"
           id="tab-planner"
           data-overlay="planner"
