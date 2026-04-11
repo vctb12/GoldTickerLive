@@ -87,19 +87,24 @@ function validateSitemap(htmlFiles) {
 
   const sitemap = fs.readFileSync(sitemapPath, 'utf-8');
   const sitemapUrls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(m => m[1]);
+  const sitemapUrlSet = new Set(sitemapUrls);
   const issues = [];
 
   // Check if all HTML pages are in sitemap
   for (const file of htmlFiles) {
     const url = file === 'index.html' ? BASE_URL : BASE_URL + file;
-    if (!sitemapUrls.includes(url)) {
-      issues.push(`Page NOT in sitemap: ${file} (${url})`);
+    if (!sitemapUrlSet.has(url)) {
+      issues.push(`Page NOT in sitemap: ${file}`);
     }
   }
 
   // Check for sitemap URLs that don't have matching files
   for (const url of sitemapUrls) {
-    const relPath = url.replace(BASE_URL, '');
+    if (!url.startsWith(BASE_URL)) {
+      issues.push(`Sitemap URL has unexpected origin: ${url}`);
+      continue;
+    }
+    const relPath = url.slice(BASE_URL.length);
     const filePath = relPath === '' ? 'index.html' : relPath;
     if (!htmlFiles.includes(filePath)) {
       issues.push(`Sitemap URL has no file: ${url}`);
