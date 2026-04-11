@@ -9,8 +9,52 @@ const { authenticate, authMiddleware } = require('../../../lib/auth');
 const shopManager = require('../../../lib/admin/shop-manager');
 const auditLog = require('../../../lib/audit-log');
 
+// ---------------------------------------------------------------------------
+// Simple in-memory rate limiter for the login endpoint
+// Tracks failed attempts per IP; blocks after MAX_ATTEMPTS within WINDOW_MS.
+// ---------------------------------------------------------------------------
+const LOGIN_MAX_ATTEMPTS = 10;
+const LOGIN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+
+const loginAttempts = new Map(); // ip -> { count, firstAttemptAt }
+
+function loginRateLimiter(req, res, next) {
+    const ip = req.ip || req.socket?.remoteAddress || 'unknown';
+    const now = Date.now();
+    const record = loginAttempts.get(ip);
+
+    if (record) {
+        if (now - record.firstAttemptAt > LOGIN_WINDOW_MS) {
+            loginAttempts.delete(ip);
+        } else if (record.count >= LOGIN_MAX_ATTEMPTS) {
+            const retryAfterSec = Math.ceil((LOGIN_WINDOW_MS - (now - record.firstAttemptAt)) / 1000);
+            res.set('Retry-After', retryAfterSec);
+            return res.status(429).json({
+                success: false,
+                message: 'Too many login attempts. Please try again later.',
+            });
+        }
+    }
+    next();
+}
+
+function recordFailedLogin(ip) {
+    const now = Date.now();
+    const record = loginAttempts.get(ip);
+    if (!record || now - record.firstAttemptAt > LOGIN_WINDOW_MS) {
+        loginAttempts.set(ip, { count: 1, firstAttemptAt: now });
+    } else {
+        record.count += 1;
+    }
+}
+
+function clearLoginAttempts(ip) {
+    loginAttempts.delete(ip);
+}
+
 // Login endpoint
-router.post('/auth/login', async (req, res) => {
+router.post('/auth/login', loginRateLimiter, async (req, res) => {
+    const ip = req.ip || req.socket?.remoteAddress || 'unknown';
     try {
         const { email, password } = req.body;
         
@@ -24,8 +68,11 @@ router.post('/auth/login', async (req, res) => {
         const result = await authenticate(email, password);
         
         if (!result.success) {
+            recordFailedLogin(ip);
             return res.status(401).json(result);
         }
+
+        clearLoginAttempts(ip);
         
         // Log login
         auditLog.logAction(result.user.email, 'login', 'user', result.user.id, { 
