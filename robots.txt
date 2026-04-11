@@ -1,4 +1,13 @@
 User-agent: *
 Allow: /
 
+# Block non-public pages
+Disallow: /admin.html
+Disallow: /server/
+Disallow: /tests/
+Disallow: /node_modules/
+Disallow: /supabase/
+Disallow: /repositories/
+Disallow: /dist/
+
 Sitemap: https://vctb12.github.io/Gold-Prices/sitemap.xml
