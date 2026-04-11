@@ -1449,6 +1449,13 @@
   background: rgba(196, 153, 62, 0.08);
 }
 
+/* ── Filter panel: display:contents on desktop so controls flow into parent grid ── */
+@media (min-width: 641px) {
+  .shops-filter-panel {
+    display: contents;
+  }
+}
+
 @media (max-width: 640px) {
   .shops-controls-inner {
     display: block;

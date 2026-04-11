@@ -1277,10 +1277,15 @@ function init() {
     closeModal({ clearShopParam: false });
   }
 
-  // Mobile filter toggle
+  // Mobile filter toggle — auto-open on desktop
   const filterToggle = document.getElementById('shops-filter-toggle');
   const filterPanel  = document.getElementById('shops-filter-panel');
   if (filterToggle && filterPanel) {
+    // On desktop (>640px) start expanded; on mobile keep collapsed
+    if (window.innerWidth > 640) {
+      filterPanel.classList.add('is-open');
+      filterToggle.setAttribute('aria-expanded', 'true');
+    }
     filterToggle.addEventListener('click', () => {
       const open = filterPanel.classList.toggle('is-open');
       filterToggle.setAttribute('aria-expanded', String(open));

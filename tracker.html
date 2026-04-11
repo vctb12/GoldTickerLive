@@ -102,25 +102,23 @@
 
           <h1 id="tp-hero-title">Gold Tracker Pro</h1>
           <p id="tp-hero-copy">
-            First action sequence: refresh live reference prices, choose your market + karat, then read the chart before opening advanced tools.
+            Live spot-linked gold reference prices across 24+ countries, 7 karats, updated every 90 seconds.
           </p>
 
           <div class="tracker-hero-actions">
-            <button class="btn btn-primary" id="tp-refresh-btn" type="button">Refresh live data</button>
-            <button class="btn btn-outline" id="tp-share-btn" type="button">Copy quick brief</button>
-            <button class="btn btn-ghost" id="tp-reset-btn" type="button">Reset view</button>
-            <a class="btn btn-ghost" href="#mode-live" id="tp-jump-chart">Jump to chart</a>
-            <button class="btn btn-ghost" id="tp-workspace-toggle" type="button" aria-pressed="false">Open advanced workspace</button>
+            <button class="btn btn-primary" id="tp-refresh-btn" type="button">↻ Refresh</button>
+            <button class="btn btn-outline" id="tp-share-btn" type="button">Copy brief</button>
+            <button class="btn btn-ghost" id="tp-reset-btn" type="button">Reset</button>
+            <a class="btn btn-ghost" href="#mode-live" id="tp-jump-chart">Chart ↓</a>
+            <button class="btn btn-ghost" id="tp-workspace-toggle" type="button" aria-pressed="false">Advanced ⋯</button>
           </div>
 
-          <div class="tracker-onboarding-card" aria-label="How to use tracker quickly">
-            <h2>Start with one path</h2>
-            <ol class="tracker-onboarding-steps">
-              <li>Press <strong>Refresh live data</strong> and confirm the source badge shows <span class="tracker-source-badge tracker-source-badge--live">Live</span> or <span class="tracker-source-badge tracker-source-badge--cached">Cached/Fallback</span>.</li>
-              <li>Pick your market, currency, karat, and unit in the live controls.</li>
-              <li>Read the chart trend and decision cues, then open advanced workspace only when needed.</li>
-            </ol>
-            <p class="tracker-onboarding-note">All figures here are spot-linked reference estimates, not final retail jewelry quotes.</p>
+          <!-- Compact hint chips (replaces verbose onboarding steps) -->
+          <div class="tracker-hint-chips" id="tracker-hint-chips" aria-label="Quick usage hints">
+            <span class="tracker-hint-chip">1 · Refresh to get live data</span>
+            <span class="tracker-hint-chip">2 · Pick market, karat &amp; unit</span>
+            <span class="tracker-hint-chip">3 · Read chart trend below</span>
+            <span class="tracker-hint-chip tracker-hint-chip--note">Reference estimates — not retail jewelry prices</span>
           </div>
 
           <div class="tracker-hero-grid" id="tp-hero-stats" aria-label="Key live metrics"></div>
@@ -132,17 +130,16 @@
 
         <aside class="tracker-hero-side" aria-label="Live desk summary">
           <div class="tracker-side-block">
-            <h2 id="tp-live-summary-heading">Live desk summary</h2>
+            <h2 id="tp-live-summary-heading">Live desk</h2>
             <div class="tracker-side-list" id="tp-summary-list" aria-describedby="tp-live-summary-heading"></div>
           </div>
 
-          <div class="tracker-side-block">
-            <h2>Workspace tips</h2>
+          <div class="tracker-side-block tracker-side-block--tips">
+            <h2>About this workspace</h2>
             <ul class="tracker-side-ul">
-              <li>Use the tabs below to switch between Live, Compare, Archive, Alerts, Planner, Exports, and Method.</li>
-              <li>Watchlists, alerts, and presets stay in your browser only — no account required.</li>
-              <li>Exports always include timestamps, range, and source-layer labels for trust and reuse.</li>
-              <li>Method explains exactly what is live, cached, estimated, or synthetic in each view.</li>
+              <li>Tabs: Live · Compare · Archive · Alerts · Planner · Exports · Method</li>
+              <li>Watchlists &amp; alerts stay in your browser — no account needed</li>
+              <li>Exports include timestamps &amp; source labels for trust</li>
             </ul>
           </div>
         </aside>
