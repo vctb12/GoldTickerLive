@@ -1,13 +1,13 @@
 [
   {
-    "id": "log_1775917222802_kvltnqofc",
-    "timestamp": "2026-04-11T14:20:22.802Z",
+    "id": "log_1775917893701_464wm84j7",
+    "timestamp": "2026-04-11T14:31:33.701Z",
     "actor": "admin@goldprices.com",
     "action": "create",
     "entityType": "shop",
-    "entityId": "shop_1775917222801_uoe9tk",
+    "entityId": "shop_1775917893701_z2yvx8",
     "changes": {
-      "id": "shop_1775917222801_uoe9tk",
+      "id": "shop_1775917893701_z2yvx8",
       "name": "Gold Palace",
       "city": "Dubai",
       "country": "UAE",
@@ -21,7 +21,7 @@
       "hours": "",
       "verified": false,
       "notes": "",
-      "createdAt": "2026-04-11T14:20:22.801Z",
+      "createdAt": "2026-04-11T14:31:33.701Z",
       "createdBy": "admin@goldprices.com",
       "confidence": 56,
       "contactQuality": "medium"
@@ -31,14 +31,14 @@
     "userAgent": null
   },
   {
-    "id": "log_1775917222803_9zxp37wk7",
-    "timestamp": "2026-04-11T14:20:22.803Z",
+    "id": "log_1775917893703_h1jc89p26",
+    "timestamp": "2026-04-11T14:31:33.703Z",
     "actor": "admin@goldprices.com",
     "action": "create",
     "entityType": "shop",
-    "entityId": "shop_1775917222803_4c4yw7",
+    "entityId": "shop_1775917893703_dw3ipm",
     "changes": {
-      "id": "shop_1775917222803_4c4yw7",
+      "id": "shop_1775917893703_dw3ipm",
       "name": "Silver Star",
       "city": "Abu Dhabi",
       "country": "",
@@ -52,7 +52,7 @@
       "hours": "",
       "verified": false,
       "notes": "",
-      "createdAt": "2026-04-11T14:20:22.803Z",
+      "createdAt": "2026-04-11T14:31:33.703Z",
       "createdBy": "admin@goldprices.com",
       "confidence": 29,
       "contactQuality": "low"
@@ -62,14 +62,14 @@
     "userAgent": null
   },
   {
-    "id": "log_1775917222804_6z58fb010",
-    "timestamp": "2026-04-11T14:20:22.804Z",
+    "id": "log_1775917893704_uc1k0x60d",
+    "timestamp": "2026-04-11T14:31:33.704Z",
     "actor": "admin@goldprices.com",
     "action": "create",
     "entityType": "shop",
-    "entityId": "shop_1775917222804_xjq844",
+    "entityId": "shop_1775917893704_eqzz9l",
     "changes": {
-      "id": "shop_1775917222804_xjq844",
+      "id": "shop_1775917893704_eqzz9l",
       "name": "FindMe",
       "city": "",
       "country": "",
@@ -83,7 +83,7 @@
       "hours": "",
       "verified": false,
       "notes": "",
-      "createdAt": "2026-04-11T14:20:22.804Z",
+      "createdAt": "2026-04-11T14:31:33.704Z",
       "createdBy": "admin@goldprices.com",
       "confidence": 17,
       "contactQuality": "low"
@@ -93,14 +93,14 @@
     "userAgent": null
   },
   {
-    "id": "log_1775917222805_07lr0bplp",
-    "timestamp": "2026-04-11T14:20:22.805Z",
+    "id": "log_1775917893705_sumue60vr",
+    "timestamp": "2026-04-11T14:31:33.705Z",
     "actor": "admin@goldprices.com",
     "action": "create",
     "entityType": "shop",
-    "entityId": "shop_1775917222805_a4pumx",
+    "entityId": "shop_1775917893705_xn4v0h",
     "changes": {
-      "id": "shop_1775917222805_a4pumx",
+      "id": "shop_1775917893705_xn4v0h",
       "name": "UpdateMe",
       "city": "Dubai",
       "country": "",
@@ -114,7 +114,7 @@
       "hours": "",
       "verified": false,
       "notes": "",
-      "createdAt": "2026-04-11T14:20:22.805Z",
+      "createdAt": "2026-04-11T14:31:33.705Z",
       "createdBy": "admin@goldprices.com",
       "confidence": 29,
       "contactQuality": "low"
@@ -124,12 +124,12 @@
     "userAgent": null
   },
   {
-    "id": "log_1775917222805_qxner9rmv",
-    "timestamp": "2026-04-11T14:20:22.805Z",
+    "id": "log_1775917893706_7zhruwwcm",
+    "timestamp": "2026-04-11T14:31:33.706Z",
     "actor": "admin@goldprices.com",
     "action": "update",
     "entityType": "shop",
-    "entityId": "shop_1775917222805_a4pumx",
+    "entityId": "shop_1775917893705_xn4v0h",
     "changes": {
       "city": {
         "from": "Dubai",
@@ -145,14 +145,14 @@
     "userAgent": null
   },
   {
-    "id": "log_1775917222806_y6tth4aub",
-    "timestamp": "2026-04-11T14:20:22.806Z",
+    "id": "log_1775917893707_om8nerc0o",
+    "timestamp": "2026-04-11T14:31:33.707Z",
     "actor": "admin@goldprices.com",
     "action": "create",
     "entityType": "shop",
-    "entityId": "shop_1775917222806_zl9awj",
+    "entityId": "shop_1775917893707_97ors1",
     "changes": {
-      "id": "shop_1775917222806_zl9awj",
+      "id": "shop_1775917893707_97ors1",
       "name": "ConfidenceCheck",
       "city": "",
       "country": "",
@@ -166,7 +166,7 @@
       "hours": "",
       "verified": false,
       "notes": "",
-      "createdAt": "2026-04-11T14:20:22.806Z",
+      "createdAt": "2026-04-11T14:31:33.707Z",
       "createdBy": "admin@goldprices.com",
       "confidence": 17,
       "contactQuality": "low"
@@ -176,12 +176,12 @@
     "userAgent": null
   },
   {
-    "id": "log_1775917222807_mx0dvk00r",
-    "timestamp": "2026-04-11T14:20:22.807Z",
+    "id": "log_1775917893707_j99uuw2dl",
+    "timestamp": "2026-04-11T14:31:33.707Z",
     "actor": "admin@goldprices.com",
     "action": "update",
     "entityType": "shop",
-    "entityId": "shop_1775917222806_zl9awj",
+    "entityId": "shop_1775917893707_97ors1",
     "changes": {
       "phone": {
         "from": "",
@@ -205,14 +205,14 @@
     "userAgent": null
   },
   {
-    "id": "log_1775917222808_ur3uviqey",
-    "timestamp": "2026-04-11T14:20:22.808Z",
+    "id": "log_1775917893708_c7dune7fz",
+    "timestamp": "2026-04-11T14:31:33.708Z",
     "actor": "admin@goldprices.com",
     "action": "create",
     "entityType": "shop",
-    "entityId": "shop_1775917222807_l2kx6x",
+    "entityId": "shop_1775917893708_6nalsg",
     "changes": {
-      "id": "shop_1775917222807_l2kx6x",
+      "id": "shop_1775917893708_6nalsg",
       "name": "DeleteMe",
       "city": "",
       "country": "",
@@ -226,7 +226,7 @@
       "hours": "",
       "verified": false,
       "notes": "",
-      "createdAt": "2026-04-11T14:20:22.807Z",
+      "createdAt": "2026-04-11T14:31:33.708Z",
       "createdBy": "admin@goldprices.com",
       "confidence": 17,
       "contactQuality": "low"
@@ -236,14 +236,14 @@
     "userAgent": null
   },
   {
-    "id": "log_1775917222808_ti3x8li7p",
-    "timestamp": "2026-04-11T14:20:22.808Z",
+    "id": "log_1775917893709_txmp4zj19",
+    "timestamp": "2026-04-11T14:31:33.709Z",
     "actor": "admin@goldprices.com",
     "action": "delete",
     "entityType": "shop",
-    "entityId": "shop_1775917222807_l2kx6x",
+    "entityId": "shop_1775917893708_6nalsg",
     "changes": {
-      "id": "shop_1775917222807_l2kx6x",
+      "id": "shop_1775917893708_6nalsg",
       "name": "DeleteMe",
       "city": "",
       "country": "",
@@ -257,7 +257,7 @@
       "hours": "",
       "verified": false,
       "notes": "",
-      "createdAt": "2026-04-11T14:20:22.807Z",
+      "createdAt": "2026-04-11T14:31:33.708Z",
       "createdBy": "admin@goldprices.com",
       "confidence": 17,
       "contactQuality": "low"
@@ -267,14 +267,14 @@
     "userAgent": null
   },
   {
-    "id": "log_1775917222810_in2fgoyh4",
-    "timestamp": "2026-04-11T14:20:22.810Z",
+    "id": "log_1775917893710_lk65ac4at",
+    "timestamp": "2026-04-11T14:31:33.710Z",
     "actor": "seed",
     "action": "create",
     "entityType": "shop",
-    "entityId": "shop_1775917222809_xaix3l",
+    "entityId": "shop_1775917893710_w22hm1",
     "changes": {
-      "id": "shop_1775917222809_xaix3l",
+      "id": "shop_1775917893710_w22hm1",
       "name": "Alpha Gold",
       "city": "Dubai",
       "country": "UAE",
@@ -288,7 +288,7 @@
       "hours": "",
       "verified": false,
       "notes": "",
-      "createdAt": "2026-04-11T14:20:22.809Z",
+      "createdAt": "2026-04-11T14:31:33.710Z",
       "createdBy": "seed",
       "confidence": 42,
       "contactQuality": "low"
@@ -298,14 +298,14 @@
     "userAgent": null
   },
   {
-    "id": "log_1775917222810_9avnb6re9",
-    "timestamp": "2026-04-11T14:20:22.810Z",
+    "id": "log_1775917893711_x0ifhkqzy",
+    "timestamp": "2026-04-11T14:31:33.711Z",
     "actor": "seed",
     "action": "create",
     "entityType": "shop",
-    "entityId": "shop_1775917222810_sr243p",
+    "entityId": "shop_1775917893711_hfhc7i",
     "changes": {
-      "id": "shop_1775917222810_sr243p",
+      "id": "shop_1775917893711_hfhc7i",
       "name": "Beta Jewels",
       "city": "Riyadh",
       "country": "Saudi Arabia",
@@ -319,7 +319,7 @@
       "hours": "",
       "verified": false,
       "notes": "",
-      "createdAt": "2026-04-11T14:20:22.810Z",
+      "createdAt": "2026-04-11T14:31:33.711Z",
       "createdBy": "seed",
       "confidence": 42,
       "contactQuality": "low"
@@ -329,14 +329,14 @@
     "userAgent": null
   },
   {
-    "id": "log_1775917222810_1wfkcqeqj",
-    "timestamp": "2026-04-11T14:20:22.810Z",
+    "id": "log_1775917893711_h5tc0xjmz",
+    "timestamp": "2026-04-11T14:31:33.711Z",
     "actor": "seed",
     "action": "create",
     "entityType": "shop",
-    "entityId": "shop_1775917222810_tfopnb",
+    "entityId": "shop_1775917893711_6d2o6v",
     "changes": {
-      "id": "shop_1775917222810_tfopnb",
+      "id": "shop_1775917893711_6d2o6v",
       "name": "Gamma Exchange",
       "city": "Dubai",
       "country": "UAE",
@@ -350,7 +350,7 @@
       "hours": "",
       "verified": true,
       "notes": "",
-      "createdAt": "2026-04-11T14:20:22.810Z",
+      "createdAt": "2026-04-11T14:31:33.711Z",
       "createdBy": "seed",
       "confidence": 58,
       "contactQuality": "low"
@@ -360,8 +360,8 @@
     "userAgent": null
   },
   {
-    "id": "log_1775917222812_2mw4okgan",
-    "timestamp": "2026-04-11T14:20:22.812Z",
+    "id": "log_1775917893713_sh6mfj6au",
+    "timestamp": "2026-04-11T14:31:33.713Z",
     "actor": "admin@goldprices.com",
     "action": "create",
     "entityType": "shop",
@@ -375,398 +375,8 @@
     "userAgent": null
   },
   {
-    "id": "log_1775917222813_7n0gj4jr1",
-    "timestamp": "2026-04-11T14:20:22.813Z",
-    "actor": "admin@goldprices.com",
-    "action": "create",
-    "entityType": "shop",
-    "entityId": "batch_import",
-    "changes": {
-      "count": 1,
-      "errors": 1
-    },
-    "metadata": {},
-    "ipAddress": null,
-    "userAgent": null
-  },
-  {
-    "id": "log_1775917231464_uwcsy63gd",
-    "timestamp": "2026-04-11T14:20:31.464Z",
-    "actor": "admin@goldprices.com",
-    "action": "create",
-    "entityType": "shop",
-    "entityId": "shop_1775917231464_c5alby",
-    "changes": {
-      "id": "shop_1775917231464_c5alby",
-      "name": "Gold Palace",
-      "city": "Dubai",
-      "country": "UAE",
-      "type": "direct",
-      "phone": "+971501234567",
-      "email": "",
-      "website": "https://goldpalace.ae",
-      "address": "",
-      "latitude": null,
-      "longitude": null,
-      "hours": "",
-      "verified": false,
-      "notes": "",
-      "createdAt": "2026-04-11T14:20:31.464Z",
-      "createdBy": "admin@goldprices.com",
-      "confidence": 56,
-      "contactQuality": "medium"
-    },
-    "metadata": {},
-    "ipAddress": null,
-    "userAgent": null
-  },
-  {
-    "id": "log_1775917231466_f0r1j0bl1",
-    "timestamp": "2026-04-11T14:20:31.466Z",
-    "actor": "admin@goldprices.com",
-    "action": "create",
-    "entityType": "shop",
-    "entityId": "shop_1775917231466_sitfl0",
-    "changes": {
-      "id": "shop_1775917231466_sitfl0",
-      "name": "Silver Star",
-      "city": "Abu Dhabi",
-      "country": "",
-      "type": "direct",
-      "phone": "",
-      "email": "",
-      "website": "",
-      "address": "",
-      "latitude": null,
-      "longitude": null,
-      "hours": "",
-      "verified": false,
-      "notes": "",
-      "createdAt": "2026-04-11T14:20:31.466Z",
-      "createdBy": "admin@goldprices.com",
-      "confidence": 29,
-      "contactQuality": "low"
-    },
-    "metadata": {},
-    "ipAddress": null,
-    "userAgent": null
-  },
-  {
-    "id": "log_1775917231467_4rtj8xhvn",
-    "timestamp": "2026-04-11T14:20:31.467Z",
-    "actor": "admin@goldprices.com",
-    "action": "create",
-    "entityType": "shop",
-    "entityId": "shop_1775917231466_8h9jjb",
-    "changes": {
-      "id": "shop_1775917231466_8h9jjb",
-      "name": "FindMe",
-      "city": "",
-      "country": "",
-      "type": "direct",
-      "phone": "",
-      "email": "",
-      "website": "",
-      "address": "",
-      "latitude": null,
-      "longitude": null,
-      "hours": "",
-      "verified": false,
-      "notes": "",
-      "createdAt": "2026-04-11T14:20:31.466Z",
-      "createdBy": "admin@goldprices.com",
-      "confidence": 17,
-      "contactQuality": "low"
-    },
-    "metadata": {},
-    "ipAddress": null,
-    "userAgent": null
-  },
-  {
-    "id": "log_1775917231468_l2p6gl98d",
-    "timestamp": "2026-04-11T14:20:31.468Z",
-    "actor": "admin@goldprices.com",
-    "action": "create",
-    "entityType": "shop",
-    "entityId": "shop_1775917231468_jdnrwm",
-    "changes": {
-      "id": "shop_1775917231468_jdnrwm",
-      "name": "UpdateMe",
-      "city": "Dubai",
-      "country": "",
-      "type": "direct",
-      "phone": "",
-      "email": "",
-      "website": "",
-      "address": "",
-      "latitude": null,
-      "longitude": null,
-      "hours": "",
-      "verified": false,
-      "notes": "",
-      "createdAt": "2026-04-11T14:20:31.468Z",
-      "createdBy": "admin@goldprices.com",
-      "confidence": 29,
-      "contactQuality": "low"
-    },
-    "metadata": {},
-    "ipAddress": null,
-    "userAgent": null
-  },
-  {
-    "id": "log_1775917231468_yffgagt8h",
-    "timestamp": "2026-04-11T14:20:31.468Z",
-    "actor": "admin@goldprices.com",
-    "action": "update",
-    "entityType": "shop",
-    "entityId": "shop_1775917231468_jdnrwm",
-    "changes": {
-      "city": {
-        "from": "Dubai",
-        "to": "Sharjah"
-      },
-      "phone": {
-        "from": "",
-        "to": "+971501111111"
-      }
-    },
-    "metadata": {},
-    "ipAddress": null,
-    "userAgent": null
-  },
-  {
-    "id": "log_1775917231470_gbaylynun",
-    "timestamp": "2026-04-11T14:20:31.470Z",
-    "actor": "admin@goldprices.com",
-    "action": "create",
-    "entityType": "shop",
-    "entityId": "shop_1775917231470_5d5nec",
-    "changes": {
-      "id": "shop_1775917231470_5d5nec",
-      "name": "ConfidenceCheck",
-      "city": "",
-      "country": "",
-      "type": "direct",
-      "phone": "",
-      "email": "",
-      "website": "",
-      "address": "",
-      "latitude": null,
-      "longitude": null,
-      "hours": "",
-      "verified": false,
-      "notes": "",
-      "createdAt": "2026-04-11T14:20:31.470Z",
-      "createdBy": "admin@goldprices.com",
-      "confidence": 17,
-      "contactQuality": "low"
-    },
-    "metadata": {},
-    "ipAddress": null,
-    "userAgent": null
-  },
-  {
-    "id": "log_1775917231471_vca3jsk11",
-    "timestamp": "2026-04-11T14:20:31.471Z",
-    "actor": "admin@goldprices.com",
-    "action": "update",
-    "entityType": "shop",
-    "entityId": "shop_1775917231470_5d5nec",
-    "changes": {
-      "phone": {
-        "from": "",
-        "to": "+97150000000"
-      },
-      "website": {
-        "from": "",
-        "to": "https://test.com"
-      },
-      "address": {
-        "from": "",
-        "to": "123 Gold St"
-      },
-      "hours": {
-        "from": "",
-        "to": "9am-9pm"
-      }
-    },
-    "metadata": {},
-    "ipAddress": null,
-    "userAgent": null
-  },
-  {
-    "id": "log_1775917231471_u0c7b50cc",
-    "timestamp": "2026-04-11T14:20:31.471Z",
-    "actor": "admin@goldprices.com",
-    "action": "create",
-    "entityType": "shop",
-    "entityId": "shop_1775917231471_prjouf",
-    "changes": {
-      "id": "shop_1775917231471_prjouf",
-      "name": "DeleteMe",
-      "city": "",
-      "country": "",
-      "type": "direct",
-      "phone": "",
-      "email": "",
-      "website": "",
-      "address": "",
-      "latitude": null,
-      "longitude": null,
-      "hours": "",
-      "verified": false,
-      "notes": "",
-      "createdAt": "2026-04-11T14:20:31.471Z",
-      "createdBy": "admin@goldprices.com",
-      "confidence": 17,
-      "contactQuality": "low"
-    },
-    "metadata": {},
-    "ipAddress": null,
-    "userAgent": null
-  },
-  {
-    "id": "log_1775917231472_3a57dx7an",
-    "timestamp": "2026-04-11T14:20:31.472Z",
-    "actor": "admin@goldprices.com",
-    "action": "delete",
-    "entityType": "shop",
-    "entityId": "shop_1775917231471_prjouf",
-    "changes": {
-      "id": "shop_1775917231471_prjouf",
-      "name": "DeleteMe",
-      "city": "",
-      "country": "",
-      "type": "direct",
-      "phone": "",
-      "email": "",
-      "website": "",
-      "address": "",
-      "latitude": null,
-      "longitude": null,
-      "hours": "",
-      "verified": false,
-      "notes": "",
-      "createdAt": "2026-04-11T14:20:31.471Z",
-      "createdBy": "admin@goldprices.com",
-      "confidence": 17,
-      "contactQuality": "low"
-    },
-    "metadata": {},
-    "ipAddress": null,
-    "userAgent": null
-  },
-  {
-    "id": "log_1775917231473_mkbnrnqvf",
-    "timestamp": "2026-04-11T14:20:31.473Z",
-    "actor": "seed",
-    "action": "create",
-    "entityType": "shop",
-    "entityId": "shop_1775917231473_f87agj",
-    "changes": {
-      "id": "shop_1775917231473_f87agj",
-      "name": "Alpha Gold",
-      "city": "Dubai",
-      "country": "UAE",
-      "type": "direct",
-      "phone": "",
-      "email": "",
-      "website": "",
-      "address": "",
-      "latitude": null,
-      "longitude": null,
-      "hours": "",
-      "verified": false,
-      "notes": "",
-      "createdAt": "2026-04-11T14:20:31.473Z",
-      "createdBy": "seed",
-      "confidence": 42,
-      "contactQuality": "low"
-    },
-    "metadata": {},
-    "ipAddress": null,
-    "userAgent": null
-  },
-  {
-    "id": "log_1775917231473_fwh5s8zjy",
-    "timestamp": "2026-04-11T14:20:31.473Z",
-    "actor": "seed",
-    "action": "create",
-    "entityType": "shop",
-    "entityId": "shop_1775917231473_7btz8u",
-    "changes": {
-      "id": "shop_1775917231473_7btz8u",
-      "name": "Beta Jewels",
-      "city": "Riyadh",
-      "country": "Saudi Arabia",
-      "type": "direct",
-      "phone": "",
-      "email": "",
-      "website": "",
-      "address": "",
-      "latitude": null,
-      "longitude": null,
-      "hours": "",
-      "verified": false,
-      "notes": "",
-      "createdAt": "2026-04-11T14:20:31.473Z",
-      "createdBy": "seed",
-      "confidence": 42,
-      "contactQuality": "low"
-    },
-    "metadata": {},
-    "ipAddress": null,
-    "userAgent": null
-  },
-  {
-    "id": "log_1775917231474_j5z5jwbj2",
-    "timestamp": "2026-04-11T14:20:31.474Z",
-    "actor": "seed",
-    "action": "create",
-    "entityType": "shop",
-    "entityId": "shop_1775917231473_08mqo5",
-    "changes": {
-      "id": "shop_1775917231473_08mqo5",
-      "name": "Gamma Exchange",
-      "city": "Dubai",
-      "country": "UAE",
-      "type": "direct",
-      "phone": "",
-      "email": "",
-      "website": "",
-      "address": "",
-      "latitude": null,
-      "longitude": null,
-      "hours": "",
-      "verified": true,
-      "notes": "",
-      "createdAt": "2026-04-11T14:20:31.473Z",
-      "createdBy": "seed",
-      "confidence": 58,
-      "contactQuality": "low"
-    },
-    "metadata": {},
-    "ipAddress": null,
-    "userAgent": null
-  },
-  {
-    "id": "log_1775917231476_hw0qmdy36",
-    "timestamp": "2026-04-11T14:20:31.476Z",
-    "actor": "admin@goldprices.com",
-    "action": "create",
-    "entityType": "shop",
-    "entityId": "batch_import",
-    "changes": {
-      "count": 3,
-      "errors": 0
-    },
-    "metadata": {},
-    "ipAddress": null,
-    "userAgent": null
-  },
-  {
-    "id": "log_1775917231476_6tu6ibf9s",
-    "timestamp": "2026-04-11T14:20:31.476Z",
+    "id": "log_1775917893714_6l0zox5a5",
+    "timestamp": "2026-04-11T14:31:33.714Z",
     "actor": "admin@goldprices.com",
     "action": "create",
     "entityType": "shop",
