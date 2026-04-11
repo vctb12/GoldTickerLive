@@ -111,8 +111,14 @@ Key endpoints:
 | POST | `/api/admin/shops` | editor+ |
 | PUT | `/api/admin/shops/:id` | editor+ |
 | DELETE | `/api/admin/shops/:id` | admin |
+| POST | `/api/admin/shops/batch-import` | admin |
 | GET | `/api/admin/audit-logs` | Any |
 | GET | `/api/admin/audit-logs/export` | admin |
+| GET | `/api/admin/users` | admin |
+| POST | `/api/admin/users` | admin |
+| PUT | `/api/admin/users/:id` | admin |
+| DELETE | `/api/admin/users/:id` | admin |
+| GET | `/api/admin/stats` | Any |
 
 ---
 
@@ -125,14 +131,19 @@ Key endpoints:
 ├── .env.example            # Environment variable template
 ├── lib/
 │   ├── auth.js             # JWT auth + user management
+│   ├── audit-log.js        # Immutable audit logging
+│   ├── supabase-client.js  # Lazy Supabase client factory
 │   └── admin/
 │       └── shop-manager.js # Shop CRUD logic
-├── lib/audit-log.js        # Immutable audit logging
+├── repositories/
+│   ├── shops.repository.js # Storage-agnostic shop interface
+│   └── audit.repository.js # Storage-agnostic audit log interface
 ├── server/routes/admin/    # Admin API routes
 ├── data/
 │   ├── shops-data.json     # Shop data (file-based)
 │   └── audit-logs.json     # Audit log data (file-based)
 ├── docs/
+│   ├── ARCHITECTURE.md     # Architecture overview
 │   └── SUPABASE_SETUP.md   # Supabase migration guide
 └── supabase/
     └── schema.sql          # Database schema + RLS policies

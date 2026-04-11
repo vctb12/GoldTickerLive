@@ -1,22 +1,14 @@
 [
   {
-    "id": "shop_1775836440167",
-    "name": "Golden Jewelry",
+    "id": "repo_shop_1",
+    "name": "Repo Gold",
     "city": "Dubai",
     "country": "UAE",
-    "type": "direct",
-    "phone": "+971501234567",
-    "email": "info@golden.ae",
-    "website": "",
-    "address": "",
-    "latitude": null,
-    "longitude": null,
-    "hours": "",
-    "verified": true,
-    "notes": "",
-    "createdAt": "2026-04-10T15:54:00.167Z",
-    "createdBy": "admin@goldprices.com",
-    "confidence": 73,
-    "contactQuality": "medium"
+    "verified": false
+  },
+  {
+    "id": "repo_shop_2",
+    "name": "Find Me",
+    "city": "Riyadh"
   }
 ]

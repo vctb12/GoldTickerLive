@@ -53,42 +53,65 @@ Writes to `audit_logs` are performed server-side using the **service-role key**,
 
 ---
 
-## 5. Using the Client in Code
+## 5. Install the Supabase package
 
-### Browser (public pages)
-```html
-<!-- Load Supabase CDN before your ES module scripts -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+```bash
+npm install @supabase/supabase-js
 ```
 
-Then in your JS module:
-```js
-import { getSupabaseClient } from '/lib/supabase-client.js';
-
-const supabase = getSupabaseClient(); // uses SUPABASE_ANON_KEY
-const { data, error } = await supabase.from('shops').select('*').eq('verified', true);
-```
-
-### Server (admin API routes / server.js)
-```js
-// npm install @supabase/supabase-js  (already in package.json dependencies if added)
-const { getSupabaseClient } = require('./lib/supabase-client');
-const supabase = getSupabaseClient(true); // useServiceRole = true — bypasses RLS
-const { data, error } = await supabase.from('audit_logs').insert([...]);
-```
+The package is not listed as a hard dependency so the app runs without it
+(falling back to file storage).  Install it only when you are ready to enable
+Supabase storage.
 
 ---
 
-## 6. Migrating From File-Based Storage
+## 6. Using the Client in Code
+
+`lib/supabase-client.js` provides a lazy-initialised factory.  It returns
+`null` gracefully if the env vars or the package are missing, so callers can
+fall back to file storage.
+
+### Server-side (admin API routes / server.js)
+```js
+const { getSupabaseClient } = require('./lib/supabase-client');
+
+// Anon client – respects RLS (suitable for read-only public queries)
+const supabase = getSupabaseClient();
+
+// Service-role client – bypasses RLS (server-only; never expose to the browser)
+const supabaseAdmin = getSupabaseClient(true);
+
+const { data, error } = await supabaseAdmin.from('audit_logs').insert([...]);
+```
+
+### Repository layer
+The `repositories/` layer selects the backend automatically based on
+`STORAGE_BACKEND`.  Direct client usage is only needed for advanced queries
+outside the repository interface.
+
+### Browser (public pages)
+For browser-side Supabase access (e.g. live shop queries), load via CDN:
+```html
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+```
+
+Then use the globally available `supabase` object, initialised with your
+`SUPABASE_URL` and `SUPABASE_ANON_KEY`.
+
+---
+
+## 7. Migrating From File-Based Storage
 
 The current server uses `data/shops-data.json` and `data/audit-logs.json` for persistence. When Supabase is connected, you can migrate by:
 
 1. Reading the existing JSON files.
 2. Using a one-off import script that calls `supabase.from('shops').insert(shops)`.
-3. Switching `lib/admin/shop-manager.js` to read/write Supabase instead of the JSON files.
-4. Switching `lib/audit-log.js` to insert into `public.audit_logs`.
+3. Setting `STORAGE_BACKEND=supabase` in `.env`.
+4. The `repositories/` layer (which the admin API routes use) will automatically switch to Supabase — no further code changes required.
 
-Keep the file-based layer as a fallback until the migration is verified.
+The file-based layer continues to work as a fallback until the migration is verified.
+
+See [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) for the full storage abstraction details.
 
 ---
 
