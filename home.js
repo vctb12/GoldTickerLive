@@ -147,11 +147,14 @@ function renderKaratStrip(k18Ref) {
   const k22 = KARATS.find(k => k.code === '22');
   const k24 = KARATS.find(k => k.code === '24');
 
+  // Skip rendering if required karat data is not available
+  if (!k18 || !k21 || !k22 || !k24) return;
+
   const prices = {
-    '24': calc.usdPerGram(goldPrice, k24?.purity ?? 1)     * AED,
-    '22': calc.usdPerGram(goldPrice, k22?.purity ?? 22/24) * AED,
-    '21': calc.usdPerGram(goldPrice, k21?.purity ?? 21/24) * AED,
-    '18': calc.usdPerGram(goldPrice, k18?.purity ?? 0.75)  * AED,
+    '24': calc.usdPerGram(goldPrice, k24.purity) * AED,
+    '22': calc.usdPerGram(goldPrice, k22.purity) * AED,
+    '21': calc.usdPerGram(goldPrice, k21.purity) * AED,
+    '18': calc.usdPerGram(goldPrice, k18.purity) * AED,
   };
 
   for (const [k, v] of Object.entries(prices)) {
@@ -248,14 +251,30 @@ function applyLangToPage() {
   set('karat-strip-cta',    tx('karatStripCta'));
   set('tools-title',        tx('toolsTitle'));
   set('tools-sub',          tx('toolsSub'));
-  set('tool-tracker-title', tx('toolTrackerTitle')); set('tool-tracker-desc', tx('toolTrackerDesc')); set('tool-tracker-cta', tx('toolTrackerCta'));
-  set('tool-calc-title',    tx('toolCalcTitle'));    set('tool-calc-desc',    tx('toolCalcDesc'));    set('tool-calc-cta',    tx('toolCalcCta'));
-  set('tool-uae-title',     tx('toolUaeTitle'));     set('tool-uae-desc',     tx('toolUaeDesc'));     set('tool-uae-cta',     tx('toolUaeCta'));
-  set('tool-shops-title',   tx('toolShopsTitle'));   set('tool-shops-desc',   tx('toolShopsDesc'));   set('tool-shops-cta',   tx('toolShopsCta'));
-  set('tool-countries-title', tx('toolCountriesTitle')); set('tool-countries-desc', tx('toolCountriesDesc')); set('tool-countries-cta', tx('toolCountriesCta'));
-  set('tool-learn-title',   tx('toolLearnTitle'));   set('tool-learn-desc',   tx('toolLearnDesc'));   set('tool-learn-cta',   tx('toolLearnCta'));
-  set('tool-insights-title', tx('toolInsightsTitle')); set('tool-insights-desc', tx('toolInsightsDesc')); set('tool-insights-cta', tx('toolInsightsCta'));
-  set('tool-method-title',  tx('toolMethodTitle'));  set('tool-method-desc',  tx('toolMethodDesc'));  set('tool-method-cta',  tx('toolMethodCta'));
+  set('tool-tracker-title',   tx('toolTrackerTitle'));
+  set('tool-tracker-desc',    tx('toolTrackerDesc'));
+  set('tool-tracker-cta',     tx('toolTrackerCta'));
+  set('tool-calc-title',      tx('toolCalcTitle'));
+  set('tool-calc-desc',       tx('toolCalcDesc'));
+  set('tool-calc-cta',        tx('toolCalcCta'));
+  set('tool-uae-title',       tx('toolUaeTitle'));
+  set('tool-uae-desc',        tx('toolUaeDesc'));
+  set('tool-uae-cta',         tx('toolUaeCta'));
+  set('tool-shops-title',     tx('toolShopsTitle'));
+  set('tool-shops-desc',      tx('toolShopsDesc'));
+  set('tool-shops-cta',       tx('toolShopsCta'));
+  set('tool-countries-title', tx('toolCountriesTitle'));
+  set('tool-countries-desc',  tx('toolCountriesDesc'));
+  set('tool-countries-cta',   tx('toolCountriesCta'));
+  set('tool-learn-title',     tx('toolLearnTitle'));
+  set('tool-learn-desc',      tx('toolLearnDesc'));
+  set('tool-learn-cta',       tx('toolLearnCta'));
+  set('tool-insights-title',  tx('toolInsightsTitle'));
+  set('tool-insights-desc',   tx('toolInsightsDesc'));
+  set('tool-insights-cta',    tx('toolInsightsCta'));
+  set('tool-method-title',    tx('toolMethodTitle'));
+  set('tool-method-desc',     tx('toolMethodDesc'));
+  set('tool-method-cta',      tx('toolMethodCta'));
   set('tools-alert-text',   tx('alertRowText'));
   set('tools-alert-btn',    tx('alertBtn'));
   set('countries-quick-title', tx('countriesTitle'));
