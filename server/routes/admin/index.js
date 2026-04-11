@@ -3,18 +3,20 @@
  * RESTful endpoints for admin operations
  */
 
-const express = require('express');
-const router = express.Router();
-const auth = require('../../../lib/auth');
+const express     = require('express');
+const rateLimit   = require('express-rate-limit');
+const router      = express.Router();
+const auth        = require('../../../lib/auth');
 const { authenticate, authMiddleware } = auth;
 const shopManager = require('../../../lib/admin/shop-manager');
-const auditLog = require('../../../lib/audit-log');
-const shopsRepo = require('../../../repositories/shops.repository');
-const auditRepo = require('../../../repositories/audit.repository');
+const auditLog    = require('../../../lib/audit-log');
+const shopsRepo   = require('../../../repositories/shops.repository');
+const auditRepo   = require('../../../repositories/audit.repository');
 
 // ---------------------------------------------------------------------------
 // Simple in-memory rate limiter for the login endpoint
-// Tracks failed attempts per IP; blocks after MAX_ATTEMPTS within WINDOW_MS.
+// Tracks *failed* attempts per IP; blocks after MAX_ATTEMPTS within WINDOW_MS.
+// Uses a custom implementation so it only counts failures, not all requests.
 // ---------------------------------------------------------------------------
 const LOGIN_MAX_ATTEMPTS = 10;
 const LOGIN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
@@ -56,36 +58,17 @@ function clearLoginAttempts(ip) {
 }
 
 // ---------------------------------------------------------------------------
-// General-purpose rate limiter for authenticated admin routes
-// Prevents abuse of high-value endpoints (user management, stats) even with
-// a valid JWT.  100 requests per IP per 15-minute window.
+// Rate limiter for authenticated admin routes (user management, stats).
+// 100 requests per IP per 15-minute window.
+// Using express-rate-limit so static analysis tools can recognise the pattern.
 // ---------------------------------------------------------------------------
-const ADMIN_MAX_REQUESTS = 100;
-const ADMIN_WINDOW_MS    = 15 * 60 * 1000;
-
-const adminRequests = new Map(); // ip -> { count, windowStart }
-
-function adminRateLimiter(req, res, next) {
-    const ip  = req.ip || req.socket?.remoteAddress || 'unknown';
-    const now = Date.now();
-    const rec = adminRequests.get(ip);
-
-    if (!rec || now - rec.windowStart > ADMIN_WINDOW_MS) {
-        adminRequests.set(ip, { count: 1, windowStart: now });
-        return next();
-    }
-
-    rec.count += 1;
-    if (rec.count > ADMIN_MAX_REQUESTS) {
-        const retryAfterSec = Math.ceil((ADMIN_WINDOW_MS - (now - rec.windowStart)) / 1000);
-        res.set('Retry-After', retryAfterSec);
-        return res.status(429).json({
-            success: false,
-            message: 'Too many requests. Please try again later.',
-        });
-    }
-    next();
-}
+const adminRateLimiter = rateLimit({
+    windowMs:         15 * 60 * 1000, // 15 minutes
+    max:              100,
+    standardHeaders:  true,
+    legacyHeaders:    false,
+    message:          { success: false, message: 'Too many requests. Please try again later.' },
+});
 
 // Login endpoint
 router.post('/auth/login', loginRateLimiter, async (req, res) => {
@@ -350,10 +333,10 @@ router.put('/users/:id', adminRateLimiter, authMiddleware('admin'), async (req, 
         const updates = {};
         if (name !== undefined) updates.name = name;
         if (role !== undefined) updates.role = role;
-        // Require password to be a non-empty string if provided
+        // Require password to be a non-empty string of at least 8 chars if provided
         if (password !== undefined) {
-            if (typeof password !== 'string' || password.length === 0) {
-                return res.status(400).json({ success: false, message: 'Password must be a non-empty string' });
+            if (typeof password !== 'string' || password.length < 8) {
+                return res.status(400).json({ success: false, message: 'Password must be at least 8 characters' });
             }
             updates.password = password;
         }
