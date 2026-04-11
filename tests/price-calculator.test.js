@@ -10,10 +10,10 @@
 const { test, describe } = require('node:test');
 const assert = require('node:assert/strict');
 
-// price-calculator uses ES module syntax (import), so we load it via a
-// small compatibility shim that re-exports the functions as CommonJS.
-// We inline the logic here to avoid a transpile step and keep tests fast.
-
+// NOTE: lib/price-calculator.js uses ES module syntax (import/export). Rather than
+// requiring a transpile step or --experimental-vm-modules flag, the pure mathematical
+// functions are inlined here so the test suite runs with plain `node --test`. If the
+// project ever adds a build step for tests, switch these to dynamic import() calls.
 const TROY_OZ_GRAMS = 31.1035;
 const AED_PEG = 3.6725;
 

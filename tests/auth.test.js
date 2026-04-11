@@ -5,7 +5,7 @@
  * Run with:  npm test
  */
 
-const { test, describe, beforeEach, before } = require('node:test');
+const { test, describe, beforeEach, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('path');
 const fs = require('fs');
@@ -33,8 +33,7 @@ before(() => {
     if (fs.existsSync(REAL_USERS_FILE)) fs.unlinkSync(REAL_USERS_FILE);
 });
 
-// Restore after all tests
-process.on('exit', () => {
+after(() => {
     if (_savedUsers) {
         fs.writeFileSync(REAL_USERS_FILE, _savedUsers);
     } else if (fs.existsSync(REAL_USERS_FILE)) {
