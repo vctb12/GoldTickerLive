@@ -25,7 +25,7 @@ const path = require('path');
 const { getSupabaseClient } = require('../lib/supabase-client');
 
 const SHOPS_FILE  = path.join(__dirname, '../data/shops-data.json');
-const BACKEND     = () => process.env.STORAGE_BACKEND || 'file';
+const getBackend  = () => process.env.STORAGE_BACKEND || 'file';
 
 // ---------------------------------------------------------------------------
 // File-store helpers
@@ -113,7 +113,7 @@ async function _supabaseInsertMany(shops) {
  * @returns {Promise<object[]>}
  */
 async function getAll() {
-    if (BACKEND() === 'supabase') return _supabaseGetAll();
+    if (getBackend() === 'supabase') return _supabaseGetAll();
     return _readFile();
 }
 
@@ -123,7 +123,7 @@ async function getAll() {
  * @returns {Promise<object|null>}
  */
 async function getById(id) {
-    if (BACKEND() === 'supabase') return _supabaseGetById(id);
+    if (getBackend() === 'supabase') return _supabaseGetById(id);
     const shops = _readFile();
     return shops.find(s => s.id === id) || null;
 }
@@ -134,7 +134,7 @@ async function getById(id) {
  * @returns {Promise<object>}  the saved shop
  */
 async function insert(shop) {
-    if (BACKEND() === 'supabase') return _supabaseInsert(shop);
+    if (getBackend() === 'supabase') return _supabaseInsert(shop);
     const shops = _readFile();
     shops.push(shop);
     _writeFile(shops);
@@ -148,7 +148,7 @@ async function insert(shop) {
  * @returns {Promise<object|null>}  the updated shop, or null if not found
  */
 async function update(id, updates) {
-    if (BACKEND() === 'supabase') return _supabaseUpdate(id, updates);
+    if (getBackend() === 'supabase') return _supabaseUpdate(id, updates);
     const shops = _readFile();
     const idx = shops.findIndex(s => s.id === id);
     if (idx === -1) return null;
@@ -163,7 +163,7 @@ async function update(id, updates) {
  * @returns {Promise<boolean>}  true if deleted, false if not found
  */
 async function remove(id) {
-    if (BACKEND() === 'supabase') {
+    if (getBackend() === 'supabase') {
         return _supabaseDelete(id); // returns true/false based on affected rows
     }
     const shops = _readFile();
@@ -180,7 +180,7 @@ async function remove(id) {
  * @returns {Promise<object[]>}  the saved shops
  */
 async function insertMany(shops) {
-    if (BACKEND() === 'supabase') return _supabaseInsertMany(shops);
+    if (getBackend() === 'supabase') return _supabaseInsertMany(shops);
     const existing = _readFile();
     existing.push(...shops);
     _writeFile(existing);
@@ -193,7 +193,7 @@ async function insertMany(shops) {
  * @param {object[]} shops
  */
 async function replaceAll(shops) {
-    if (BACKEND() === 'supabase') {
+    if (getBackend() === 'supabase') {
         throw new Error('replaceAll is not supported with the Supabase backend. Use insert/update/remove.');
     }
     _writeFile(shops);

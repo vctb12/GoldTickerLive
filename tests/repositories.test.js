@@ -7,6 +7,10 @@
  *
  * These tests exercise the file backend (STORAGE_BACKEND=file / default).
  * Run with:  npm test
+ *
+ * NOTE: The test suite uses --test-concurrency=1 (see package.json) because
+ * multiple test files share the same data/*.json files for isolation via
+ * backup/restore.  Concurrent execution would cause data races between files.
  */
 
 const { test, describe, before, after, beforeEach } = require('node:test');

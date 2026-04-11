@@ -19,7 +19,7 @@ const path = require('path');
 const { getSupabaseClient } = require('../lib/supabase-client');
 
 const AUDIT_FILE = path.join(__dirname, '../data/audit-logs.json');
-const BACKEND    = () => process.env.STORAGE_BACKEND || 'file';
+const getBackend = () => process.env.STORAGE_BACKEND || 'file';
 
 // ---------------------------------------------------------------------------
 // File-store helpers
@@ -121,7 +121,7 @@ function _mapFromSupabase(row) {
  * @returns {Promise<object>}  the saved entry (including generated id and timestamp)
  */
 async function append(entry) {
-    if (BACKEND() === 'supabase') return _supabaseInsert(entry);
+    if (getBackend() === 'supabase') return _supabaseInsert(entry);
 
     const logs = _readFile();
     const saved = {
@@ -139,7 +139,7 @@ async function append(entry) {
  * @returns {Promise<object[]>}
  */
 async function getAll() {
-    if (BACKEND() === 'supabase') {
+    if (getBackend() === 'supabase') {
         const result = await _supabaseQuery({ limit: 10000 });
         return result.logs;
     }
@@ -152,7 +152,7 @@ async function getAll() {
  * @returns {Promise<{ logs: object[], total: number, page: number, limit: number, totalPages: number }>}
  */
 async function query(options = {}) {
-    if (BACKEND() === 'supabase') return _supabaseQuery(options);
+    if (getBackend() === 'supabase') return _supabaseQuery(options);
 
     let logs = _readFile();
 
@@ -184,7 +184,7 @@ async function query(options = {}) {
  * @returns {Promise<number>}  count of deleted entries
  */
 async function pruneOldEntries(daysToKeep = 90) {
-    if (BACKEND() === 'supabase') {
+    if (getBackend() === 'supabase') {
         console.warn('[audit.repository] pruneOldEntries is a no-op for the Supabase backend.');
         return 0;
     }
