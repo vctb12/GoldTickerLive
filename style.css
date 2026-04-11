@@ -3024,3 +3024,234 @@ body > * { max-width: 100%; }
 #back-to-top[hidden] { display: none !important; }
 
 [dir="rtl"] #back-to-top { right: auto; left: 1.5rem; }
+
+/* ═══════════════════════════════════════════════
+   Shared Tool Chips / Quick-action rows
+   Used across calculator, country pages, shops, tracker
+   ═══════════════════════════════════════════════ */
+.tool-chips-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.tool-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 40px;
+  white-space: nowrap;
+}
+.tool-chip:hover {
+  border-color: var(--color-gold);
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-xs);
+}
+.tool-chip--primary {
+  background: var(--color-gold-bg);
+  border-color: rgba(196,153,62,0.45);
+  color: var(--color-gold-dark);
+}
+.tool-chip--primary:hover {
+  background: var(--color-gold-tint);
+  border-color: var(--color-gold-dark);
+}
+.tool-chip-icon {
+  font-size: 1em;
+  line-height: 1;
+}
+
+/* ═══════════════════════════════════════════════
+   Data methodology / source note
+   Used on price pages, tracker, calculator
+   ═══════════════════════════════════════════════ */
+.data-source-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.65rem 0.9rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-subtle);
+  border-left: 3px solid var(--color-gold);
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+.data-source-note a {
+  color: var(--color-gold-dark);
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════
+   Premium info / callout box
+   Replaces plain disclaimer text on key pages
+   ═══════════════════════════════════════════════ */
+.info-callout {
+  display: flex;
+  gap: 0.85rem;
+  padding: 1rem 1.1rem;
+  background: var(--color-gold-bg);
+  border: 1.5px solid rgba(196,153,62,0.28);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--color-text);
+  margin-top: 1rem;
+}
+.info-callout__icon {
+  font-size: 1.15rem;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+.info-callout__body strong { color: var(--color-gold-deep); }
+.info-callout__body a {
+  color: var(--color-gold-dark);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.info-callout--neutral {
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
+}
+.info-callout--info {
+  background: rgba(20,85,164,0.04);
+  border-color: rgba(20,85,164,0.2);
+}
+
+/* ═══════════════════════════════════════════════
+   Back-to-site / admin nav link
+   Used in admin panel
+   ═══════════════════════════════════════════════ */
+.admin-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+  transition: color 0.2s, background 0.2s;
+}
+.admin-back-link:hover {
+  color: white;
+  background: rgba(255,255,255,0.08);
+  text-decoration: none;
+}
+
+/* ═══════════════════════════════════════════════
+   Section intro improvements
+   ═══════════════════════════════════════════════ */
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-gold-dark);
+  margin-bottom: 0.5rem;
+}
+.section-kicker::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 2px;
+  background: var(--color-gold);
+  border-radius: 2px;
+}
+
+/* ═══════════════════════════════════════════════
+   Improved empty/loading states
+   ═══════════════════════════════════════════════ */
+.empty-state-premium {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+.empty-state-premium__icon {
+  font-size: 2.5rem;
+  opacity: 0.45;
+  line-height: 1;
+}
+.empty-state-premium__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+.empty-state-premium__desc {
+  font-size: 0.85rem;
+  color: var(--color-text-faint);
+  max-width: 32ch;
+  line-height: 1.6;
+}
+.empty-state-premium__action {
+  margin-top: 0.25rem;
+}
+
+/* ═══════════════════════════════════════════════
+   Status context bar (used in tracker, calculator)
+   Shows data source + freshness in one compact row
+   ═══════════════════════════════════════════════ */
+.context-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  border-top: 1px solid var(--color-border-subtle);
+  margin-top: 0.75rem;
+}
+.context-bar__sep {
+  opacity: 0.3;
+  flex-shrink: 0;
+}
+.context-bar__item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+.context-bar a {
+  color: var(--color-gold-dark);
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════
+   Responsive mobile improvements
+   ═══════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .tool-chips-row {
+    gap: 0.4rem;
+  }
+  .tool-chip {
+    font-size: 0.8rem;
+    padding: 0.45rem 0.85rem;
+  }
+  .info-callout {
+    font-size: 0.82rem;
+    padding: 0.85rem 0.9rem;
+  }
+}

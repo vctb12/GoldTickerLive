@@ -562,6 +562,36 @@ async function fetchLiveData() {
   }
 }
 
+function initCopyBtn() {
+  const btn = document.getElementById('calc-copy-btn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const resultEl = document.getElementById('val-result-value');
+    if (!resultEl) return;
+    const text = resultEl.textContent.trim();
+    const done = () => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy Result'; btn.classList.remove('copied'); }, 1500);
+    };
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(done).catch(done);
+    } else {
+      try {
+        const t = document.createElement('textarea');
+        t.value = text;
+        t.style.position = 'fixed';
+        t.style.opacity = '0';
+        document.body.appendChild(t);
+        t.select();
+        document.execCommand('copy');
+        document.body.removeChild(t);
+        done();
+      } catch (e) { /* silent */ }
+    }
+  });
+}
+
 // ── Init ─────────────────────────────────────────────────────────────────────
 async function init() {
   cache.loadState(STATE);
@@ -591,6 +621,7 @@ async function init() {
   applyLang();
   setupTabs();
   wireInputs();
+  initCopyBtn();
   updateSpotBadge();
   calcZakat(); // show nisab immediately from cache
 

@@ -738,6 +738,7 @@
             </nav>
 
             <div class="sidebar-footer">
+                <a href="index.html" class="admin-back-link" title="Return to public site">← Back to GoldPrices</a>
                 <div class="user-info">
                     <div class="avatar" id="user-avatar">U</div>
                     <div class="user-details">
@@ -1123,10 +1124,9 @@
             },
 
             logout() {
-                if(window.confirm("Sign out and clear your session?")) {
-                    localStorage.removeItem('gold_admin_session');
-                    location.reload();
-                }
+                localStorage.removeItem('gold_admin_session');
+                utils.toast('Signed out. Redirecting…', 'info');
+                setTimeout(() => location.reload(), 900);
             },
 
             async loadShopsData() {
@@ -1223,6 +1223,7 @@
                     <div class="table-container">
                         <div class="table-header">
                             <h3>Recent Listings (top 5)</h3>
+                            <a href="#" onclick="event.preventDefault();app.navigate('shops')" style="font-size:0.82rem;color:var(--primary);text-decoration:none;font-weight:600;">View all →</a>
                         </div>
                         <table>
                             <thead>
@@ -1477,23 +1478,44 @@
             },
 
             renderSettings(container) {
+                const repoUrl = `https://github.com/${state.user}/${state.repo}`;
                 container.innerHTML = `
-                    <div class="stat-card" style="max-width: 600px;">
-                        <h3>Repository Settings</h3>
-                        <p class="text-muted mb-4">Current connection details.</p>
-                        <div class="form-group">
-                            <label class="form-label">Username</label>
-                            <input type="text" class="form-input" value="${state.user}" disabled>
+                    <div style="max-width:680px;display:flex;flex-direction:column;gap:1.5rem;">
+                        <div class="stat-card">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;">
+                                <h3 style="font-size:1.05rem;font-weight:700;color:white;margin:0;">Repository Connection</h3>
+                                <a href="${repoUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="width:auto;padding:0.45rem 1rem;font-size:0.82rem;">View on GitHub ↗</a>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">GitHub Username</label>
+                                <input type="text" class="form-input" value="${state.user}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Repository</label>
+                                <input type="text" class="form-input" value="${state.repo}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Branch</label>
+                                <input type="text" class="form-input" value="${state.branch}" disabled>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Repository</label>
-                            <input type="text" class="form-input" value="${state.repo}" disabled>
+                        <div class="stat-card">
+                            <h3 style="font-size:1.05rem;font-weight:700;color:white;margin:0 0 0.75rem;">Quick Guide</h3>
+                            <ul style="color:var(--text-muted);font-size:0.85rem;line-height:1.9;padding-left:1.2rem;margin:0;">
+                                <li><strong style="color:white;">Dashboard</strong> — overview stats and most recent listings</li>
+                                <li><strong style="color:white;">Shops Directory</strong> — search, filter, edit, add or delete listings</li>
+                                <li><strong style="color:white;">Global Map</strong> — visualise listings by country centroid</li>
+                                <li><strong style="color:white;">Analytics</strong> — listing counts by country and completeness</li>
+                                <li><strong style="color:white;">Audit Log</strong> — recent repository commits</li>
+                                <li>Changes are saved directly to <code>data/shops.js</code> via GitHub API</li>
+                                <li>Token is stored in <code>localStorage</code> — sign out to clear it</li>
+                            </ul>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Branch</label>
-                            <input type="text" class="form-input" value="${state.branch}" disabled>
+                        <div class="stat-card">
+                            <h3 style="font-size:1.05rem;font-weight:700;color:white;margin:0 0 0.75rem;">Session</h3>
+                            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;">Signed in as <strong style="color:white;">${state.user}</strong>. Disconnect to clear stored token and return to login.</p>
+                            <button class="btn btn-danger" style="width:auto;" onclick="app.logout()">Sign Out &amp; Disconnect</button>
                         </div>
-                        <button class="btn btn-danger" onclick="app.logout()">Disconnect & Logout</button>
                     </div>
                 `;
             },

@@ -1783,3 +1783,26 @@
     display: none;
   }
 }
+
+/* ── Result count info bar ── */
+.shops-results-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.6rem 0;
+  font-size: 0.82rem;
+  color: var(--color-text-muted, #6b5f4e);
+  border-bottom: 1px solid var(--color-border-subtle, #ede8da);
+  margin-bottom: 1rem;
+}
+.shops-results-count {
+  font-weight: 700;
+  color: var(--color-text, #1a1612);
+}
+
+/* ── Shops card — hover state glow improvement ── */
+.shops-card:hover {
+  box-shadow: 0 8px 28px rgba(196,153,62,0.16), 0 2px 6px rgba(0,0,0,0.05);
+}
