@@ -3143,4 +3143,53 @@
     <changefreq>hourly</changefreq>
     <priority>0.75</priority>
   </url>
+
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/uae/cities/dubai.html</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.50</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/uae/cities/abu-dhabi.html</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.50</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/uae/markets/dubai-gold-souk.html</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.50</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/saudi-arabia/cities/riyadh.html</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.50</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/egypt/cities/cairo.html</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.50</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/egypt/markets/khan-el-khalili-cairo.html</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.50</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/qatar/cities/doha.html</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.50</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.55</priority>
+  </url>
 </urlset>
