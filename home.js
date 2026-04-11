@@ -304,6 +304,34 @@ function renderHeroCard() {
     uae21k:  calc.usdPerGram(goldPrice, k21.purity) * CONSTANTS.AED_PEG,
     uae18k:  calc.usdPerGram(goldPrice, k18?.purity ?? 0.75) * CONSTANTS.AED_PEG,
   });
+
+  // Update karat strip
+  renderKaratStrip(k18);
+}
+
+// ── Render karat price strip ───────────────────────────────────────────────
+function renderKaratStrip(k18Ref) {
+  if (!goldPrice) return;
+  const AED = CONSTANTS.AED_PEG;
+  const k18 = k18Ref || KARATS.find(k => k.code === '18');
+  const k21 = KARATS.find(k => k.code === '21');
+  const k22 = KARATS.find(k => k.code === '22');
+  const k24 = KARATS.find(k => k.code === '24');
+
+  const prices = {
+    '24': calc.usdPerGram(goldPrice, k24?.purity ?? 1)    * AED,
+    '22': calc.usdPerGram(goldPrice, k22?.purity ?? 22/24) * AED,
+    '21': calc.usdPerGram(goldPrice, k21?.purity ?? 21/24) * AED,
+    '18': calc.usdPerGram(goldPrice, k18?.purity ?? 0.75) * AED,
+  };
+
+  for (const [k, v] of Object.entries(prices)) {
+    const el = document.getElementById(`kstrip-${k}-val`);
+    if (el) {
+      el.className = 'karat-strip-v';
+      el.textContent = fmt.formatPrice(v, 'AED', 2);
+    }
+  }
 }
 
 // ── Render GCC grid ────────────────────────────────────────────────────────
@@ -398,6 +426,8 @@ function applyLangToPage() {
   set('trust-bilingual-sub',   tx('trustBilingualSub'));
   set('trust-offline',         tx('trustOffline'));
   set('trust-offline-sub',     tx('trustOfflineSub'));
+  set('karat-strip-label',     lang === 'ar' ? 'درهم / غرام' : 'AED / gram');
+  set('karat-strip-cta',       lang === 'ar' ? 'المتتبع الكامل ←' : 'Full tracker →');
   set('tools-title',      tx('toolsTitle'));
   set('tools-sub',        tx('toolsSub'));
   set('alert-cta-title',  tx('alertTitle'));

@@ -567,3 +567,54 @@
 @media (max-width: 640px) {
   .calc-related-inner { grid-template-columns: 1fr; }
 }
+
+/* ── Quick weight preset chips ───────────────────────── */
+.calc-presets {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.calc-presets-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--color-text-muted, #6b5f4e);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  margin-right: 0.25rem;
+}
+
+.calc-preset-chip {
+  background: var(--color-surface-2, #f9f6f0);
+  border: 1.25px solid var(--color-border, #e8e2d0);
+  border-radius: var(--radius-pill, 999px);
+  padding: 0.28rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted, #6b5f4e);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+  white-space: nowrap;
+  font-family: inherit;
+  min-height: 32px;
+}
+
+.calc-preset-chip:hover {
+  background: var(--color-gold-tint, #faf4e2);
+  border-color: var(--color-gold, #c4993e);
+  color: var(--color-gold-dark, #8a6420);
+}
+
+.calc-preset-chip:active {
+  transform: scale(0.95);
+}
+
+.calc-preset-chip.is-active {
+  background: var(--color-gold-bg, #fdf8ee);
+  border-color: var(--color-gold, #c4993e);
+  color: var(--color-gold-deep, #5e4210);
+  font-weight: 700;
+}

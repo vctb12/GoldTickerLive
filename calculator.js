@@ -498,6 +498,31 @@ function wireInputs() {
   ['zakat-weight','zakat-unit','zakat-karat','zakat-currency'].forEach(id => on(id, calcZakat));
   ['buy-amount','buy-currency','buy-karat'].forEach(id => on(id, calcBuying));
   ['conv-amount','conv-from'].forEach(id => on(id, calcConvert));
+
+  // Quick weight preset chips
+  const weightInput = document.getElementById('val-weight');
+  const unitSelect  = document.getElementById('val-unit');
+  document.querySelectorAll('.calc-preset-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const w = chip.dataset.weight;
+      const u = chip.dataset.unit;
+      if (weightInput && w) {
+        weightInput.value = w;
+        if (unitSelect && u) unitSelect.value = u;
+        // Update active state
+        document.querySelectorAll('.calc-preset-chip').forEach(c => c.classList.remove('is-active'));
+        chip.classList.add('is-active');
+        calcValue();
+      }
+    });
+  });
+
+  // Clear active chip when user manually edits weight
+  if (weightInput) {
+    weightInput.addEventListener('input', () => {
+      document.querySelectorAll('.calc-preset-chip').forEach(c => c.classList.remove('is-active'));
+    });
+  }
 }
 
 // ── Fetch live data ──────────────────────────────────────────────────────────

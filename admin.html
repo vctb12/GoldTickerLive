@@ -78,7 +78,7 @@
         #login-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            background: radial-gradient(ellipse 140% 120% at 50% 110%, #1e2d47 0%, #0f172a 55%);
             z-index: 9999;
             display: flex;
             align-items: center;
@@ -86,35 +86,191 @@
             padding: 20px;
         }
 
+        #login-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 70% 50% at 20% 30%, rgba(59,130,246,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 80% 70%, rgba(16,185,129,0.04) 0%, transparent 55%);
+            pointer-events: none;
+        }
+
         .login-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
-            padding: 2.5rem;
-            border-radius: 16px;
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(99,120,164,0.25);
+            padding: 2.75rem 2.5rem 2.25rem;
+            border-radius: 20px;
             width: 100%;
-            max-width: 480px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            max-width: 460px;
+            box-shadow:
+                0 24px 48px rgba(0,0,0,0.5),
+                0 1px 0 rgba(255,255,255,0.06) inset;
+            position: relative;
+        }
+
+        .login-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            justify-content: center;
+            margin-bottom: 1.75rem;
+        }
+
+        .login-brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(245,158,11,0.35);
+        }
+
+        .login-brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-brand-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            line-height: 1.1;
+        }
+
+        .login-brand-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .login-divider {
+            height: 1px;
+            background: var(--border);
+            margin-bottom: 1.75rem;
+        }
+
+        .login-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-title h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.3rem;
+        }
+
+        .login-title p {
+            color: var(--text-muted);
+            font-size: 0.82rem;
         }
 
         .login-header { text-align: center; margin-bottom: 2rem; }
         .login-header h1 { font-size: 1.8rem; font-weight: 700; color: white; margin-bottom: 0.5rem; }
         .login-header p { color: var(--text-muted); font-size: 0.9rem; }
 
-        .form-group { margin-bottom: 1.25rem; }
-        .form-label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-label {
+            display: block;
+            margin-bottom: 0.45rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
         .form-input {
             width: 100%;
-            padding: 0.75rem 1rem;
-            background: rgba(15, 23, 42, 0.6);
+            padding: 0.8rem 1rem;
+            background: rgba(15, 23, 42, 0.5);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
+            border-radius: 10px;
             color: white;
             font-size: 0.95rem;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .form-input:focus { border-color: var(--primary); }
-        .form-input::placeholder { color: #475569; }
+        .form-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+        }
+        .form-input:focus + .form-input-icon,
+        .form-input-wrapper:focus-within .form-input-icon { color: var(--primary); }
+        .form-input::placeholder { color: #374151; }
+        .form-input.is-invalid { border-color: var(--danger); }
+        .form-input.is-invalid:focus { box-shadow: 0 0 0 3px rgba(239,68,68,0.15); }
+
+        .form-input-wrapper {
+            position: relative;
+        }
+        .form-input-wrapper .form-input { padding-right: 2.75rem; }
+        .form-input-icon {
+            position: absolute;
+            right: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.2rem;
+            display: flex;
+            align-items: center;
+            transition: color 0.15s;
+            font-size: 1rem;
+            line-height: 1;
+        }
+        .form-input-icon:hover { color: white; }
+
+        .form-error {
+            display: none;
+            font-size: 0.75rem;
+            color: #fca5a5;
+            margin-top: 0.35rem;
+            padding-left: 0.2rem;
+        }
+        .form-error.visible { display: block; }
+
+        .login-info-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            padding: 0.85rem 1rem;
+            background: rgba(59, 130, 246, 0.07);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            font-size: 0.8rem;
+            color: #93c5fd;
+            line-height: 1.5;
+        }
+        .login-info-box-icon { font-size: 0.9rem; flex-shrink: 0; margin-top: 0.05rem; }
+        .login-info-box a { color: #93c5fd; text-decoration: underline; text-underline-offset: 2px; }
+
+        .login-advanced-toggle {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: color 0.15s;
+            margin-bottom: 0.8rem;
+        }
+        .login-advanced-toggle:hover { color: white; }
+        .login-advanced-fields { display: none; }
+        .login-advanced-fields.open { display: block; }
 
         .btn {
             display: inline-flex;
@@ -484,46 +640,70 @@
     <!-- LOGIN SCREEN -->
     <div id="login-screen">
         <div class="login-card">
-            <div class="login-header">
-                <h1>Gold Admin <span class="logo-accent">Pro</span></h1>
-                <p>Enterprise Management Console</p>
+            <!-- Brand -->
+            <div class="login-brand">
+                <div class="login-brand-icon">⚙</div>
+                <div class="login-brand-text">
+                    <span class="login-brand-name">Gold<span class="logo-accent">Admin</span></span>
+                    <span class="login-brand-sub">Enterprise Console</span>
+                </div>
             </div>
-            
+            <div class="login-divider"></div>
+
+            <div class="login-title">
+                <h2>Sign in to continue</h2>
+                <p>GitHub API integration — no server required</p>
+            </div>
+
+            <!-- Info box -->
+            <div class="login-info-box" id="login-info">
+                <span class="login-info-box-icon">ℹ</span>
+                <span>Requires a GitHub <strong>Personal Access Token (Classic)</strong> with <code>repo</code> scope.
+                <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer">Generate token →</a></span>
+            </div>
+
+            <!-- Alert -->
             <div id="login-alert" class="alert-box alert-error"></div>
-            <div id="login-info" class="alert-box alert-info">
-                Enter your GitHub credentials to access the live repository data. 
-                Requires a <strong>Personal Access Token (Classic)</strong> with <code>repo</code> scope.
-            </div>
 
-            <form id="login-form">
+            <form id="login-form" novalidate>
                 <div class="form-group">
-                    <label class="form-label">GitHub Username</label>
-                    <input type="text" id="gh-user" class="form-input" placeholder="e.g., vctb12" required autocomplete="username">
-                    <div id="user-hint" class="text-xs text-danger mt-4 hidden">Please enter USERNAME only, not email.</div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Personal Access Token</label>
-                    <input type="password" id="gh-token" class="form-input" placeholder="ghp_..." required autocomplete="current-password">
+                    <label class="form-label" for="gh-user">GitHub Username</label>
+                    <input type="text" id="gh-user" class="form-input" placeholder="e.g. vctb12" required autocomplete="username" spellcheck="false">
+                    <div id="user-hint" class="form-error">Enter your GitHub username, not an email address.</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Repository Name</label>
-                    <input type="text" id="gh-repo" class="form-input" value="Gold-Prices" required>
+                    <label class="form-label" for="gh-token">Personal Access Token</label>
+                    <div class="form-input-wrapper">
+                        <input type="password" id="gh-token" class="form-input" placeholder="ghp_…" required autocomplete="current-password" spellcheck="false">
+                        <button type="button" class="form-input-icon" id="pat-toggle" aria-label="Show/hide token" title="Toggle token visibility">👁</button>
+                    </div>
+                    <div id="token-hint" class="form-error">Token is required.</div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Branch Name</label>
-                    <input type="text" id="gh-branch" class="form-input" value="main" required>
+                <!-- Advanced (repo/branch) — collapsed by default -->
+                <button type="button" class="login-advanced-toggle" id="advanced-toggle" aria-expanded="false" aria-controls="advanced-fields">
+                    <span id="advanced-arrow">▶</span> Advanced options
+                </button>
+                <div class="login-advanced-fields" id="advanced-fields">
+                    <div class="form-group">
+                        <label class="form-label" for="gh-repo">Repository Name</label>
+                        <input type="text" id="gh-repo" class="form-input" value="Gold-Prices" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="gh-branch">Branch Name</label>
+                        <input type="text" id="gh-branch" class="form-input" value="main" required>
+                    </div>
                 </div>
 
-                <button type="submit" id="login-btn" class="btn btn-primary">
-                    <span>Secure Login</span>
+                <button type="submit" id="login-btn" class="btn btn-primary" style="margin-top:0.5rem;">
+                    <span id="login-btn-text">Sign In</span>
                 </button>
             </form>
-            
-            <div style="margin-top: 1.5rem; text-align: center; font-size: 0.75rem; color: var(--text-muted);">
-                <p>Direct GitHub API Integration • No Server Required • End-to-End Encrypted</p>
+
+            <div style="margin-top: 1.5rem; text-align: center; font-size: 0.72rem; color: var(--text-muted); line-height: 1.6;">
+                <p>Your token is stored in <code>localStorage</code> for session persistence only.<br>
+                Sign out to clear it. Never share admin tokens.</p>
             </div>
         </div>
     </div>
@@ -794,6 +974,30 @@
         // Main Application Logic
         const app = {
             init() {
+                // Wire show/hide PAT toggle
+                const patToggle = utils.$('pat-toggle');
+                const patInput  = utils.$('gh-token');
+                if (patToggle && patInput) {
+                    patToggle.addEventListener('click', () => {
+                        const isHidden = patInput.type === 'password';
+                        patInput.type = isHidden ? 'text' : 'password';
+                        patToggle.textContent = isHidden ? '🙈' : '👁';
+                        patToggle.setAttribute('aria-label', isHidden ? 'Hide token' : 'Show token');
+                    });
+                }
+
+                // Wire advanced options toggle
+                const advToggle = utils.$('advanced-toggle');
+                const advFields = utils.$('advanced-fields');
+                const advArrow  = utils.$('advanced-arrow');
+                if (advToggle && advFields) {
+                    advToggle.addEventListener('click', () => {
+                        const open = advFields.classList.toggle('open');
+                        advToggle.setAttribute('aria-expanded', open);
+                        if (advArrow) advArrow.textContent = open ? '▼' : '▶';
+                    });
+                }
+
                 const saved = localStorage.getItem('gold_admin_session');
                 if (saved) {
                     try {
@@ -806,7 +1010,7 @@
                         // Auto-restore: attempt login in background without user interaction
                         const btn = utils.$('login-btn');
                         btn.disabled = true;
-                        btn.innerHTML = '<div class="spinner"></div> Restoring session…';
+                        btn.innerHTML = '<div class="spinner"></div>&nbsp;Restoring session…';
 
                         state.user  = session.user;
                         state.token = session.token;
@@ -819,8 +1023,8 @@
                         }).catch(() => {
                             localStorage.removeItem('gold_admin_session');
                             btn.disabled = false;
-                            btn.innerHTML = '<span>Secure Login</span>';
-                            utils.toast('Session expired. Please log in again.', 'warning');
+                            btn.innerHTML = '<span id="login-btn-text">Sign In</span>';
+                            utils.toast('Session expired. Please sign in again.', 'warning');
                         });
                     } catch {
                         localStorage.removeItem('gold_admin_session');
@@ -834,24 +1038,44 @@
                 e.preventDefault();
                 const btn = utils.$('login-btn');
                 const alertBox = utils.$('login-alert');
+                const userInput = utils.$('gh-user');
+                const tokenInput = utils.$('gh-token');
                 const userHint = utils.$('user-hint');
-                
-                const username = utils.$('gh-user').value.trim();
-                const token = utils.$('gh-token').value.trim();
+                const tokenHint = utils.$('token-hint');
+
+                const username = userInput.value.trim();
+                const token = tokenInput.value.trim();
                 const repo = utils.$('gh-repo').value.trim();
                 const branch = utils.$('gh-branch').value.trim();
 
-                // Validation
-                if (username.includes('@')) {
-                    userHint.classList.remove('hidden');
-                    utils.$('gh-user').focus();
-                    return;
-                }
-                userHint.classList.add('hidden');
+                // Clear previous errors
                 alertBox.style.display = 'none';
+                userInput.classList.remove('is-invalid');
+                tokenInput.classList.remove('is-invalid');
+                if (userHint) userHint.classList.remove('visible');
+                if (tokenHint) tokenHint.classList.remove('visible');
+
+                // Validation
+                let hasError = false;
+                if (!username) {
+                    userInput.classList.add('is-invalid');
+                    if (userHint) { userHint.textContent = 'GitHub username is required.'; userHint.classList.add('visible'); }
+                    hasError = true;
+                } else if (username.includes('@')) {
+                    userInput.classList.add('is-invalid');
+                    if (userHint) { userHint.textContent = 'Enter your GitHub username, not an email address.'; userHint.classList.add('visible'); }
+                    userInput.focus();
+                    hasError = true;
+                }
+                if (!token) {
+                    tokenInput.classList.add('is-invalid');
+                    if (tokenHint) { tokenHint.textContent = 'Personal Access Token is required.'; tokenHint.classList.add('visible'); }
+                    hasError = true;
+                }
+                if (hasError) return;
 
                 btn.disabled = true;
-                btn.innerHTML = '<div class="spinner"></div> Authenticating...';
+                btn.innerHTML = '<div class="spinner"></div>&nbsp;Authenticating…';
 
                 try {
                     // Set state credentials BEFORE making the API request so
@@ -863,7 +1087,7 @@
 
                     // Verify credentials by fetching the authenticated user
                     const userData = await githubAPI.request('/user');
-                    
+
                     localStorage.setItem('gold_admin_session', JSON.stringify({
                         user: username, token, repo, branch
                     }));
@@ -873,10 +1097,11 @@
 
                 } catch (error) {
                     console.error(error);
-                    alertBox.textContent = `Authentication Failed: ${error.message}. Check token scope (repo) and username.`;
+                    alertBox.textContent = `Sign in failed: ${error.message}. Check your token scope (repo) and username.`;
                     alertBox.style.display = 'block';
                     btn.disabled = false;
-                    btn.innerHTML = '<span>Secure Login</span>';
+                    btn.innerHTML = '<span id="login-btn-text">Sign In</span>';
+                    tokenInput.classList.add('is-invalid');
                 }
             },
 
@@ -898,7 +1123,7 @@
             },
 
             logout() {
-                if(confirm("Are you sure you want to logout?")) {
+                if(window.confirm("Sign out and clear your session?")) {
                     localStorage.removeItem('gold_admin_session');
                     location.reload();
                 }
