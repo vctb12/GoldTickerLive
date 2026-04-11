@@ -18,10 +18,11 @@
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/tracker.html" />
-  <meta property="og:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.svg" />
+  <meta property="og:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Gold Tracker Pro — Live Gold Price Workspace" />
-  <meta
+    <meta name="twitter:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
+<meta
     name="twitter:description"
     content="Live gold price tracker for GCC and Arab world. 24 markets, 7 karats, historical chart, alerts. Updated every 90 seconds."
   />
@@ -50,14 +51,57 @@
   <!-- Site + tracker styles -->
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="tracker-pro.css" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+<link rel="manifest" href="manifest.json" />
 
 
   <meta name="msvalidate.01" content="E88623E4C36CDC8E8D44913FA9192725" />
 
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How often does the gold price update?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The tracker refreshes live gold prices every 90 seconds using the XAU/USD spot price from gold-api.com and current exchange rates. Prices are shown with a freshness timestamp so you always know when data was last fetched."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which currencies and countries are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The tracker supports 24+ countries across the GCC, Levant, Africa, and globally, including UAE (AED), Saudi Arabia (SAR), Kuwait (KWD), Qatar (QAR), Bahrain (BHD), Oman (OMR), Egypt (EGP), Jordan (JOD), India (INR), and more. Switch currencies using the currency selector."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What karats can I track?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can track 24K (pure gold), 22K, 21K, 20K, 18K, 16K, and 14K gold. Select the karat using the karat selector in the tracker. Prices are shown per gram and per troy ounce."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the gold price shown retail or spot?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The tracker shows the international XAU/USD spot price converted to local currencies. This is the wholesale reference rate, not a retail jewellery price. Actual jewellery shop prices include making charges and may differ by 3–15% or more above the spot rate."
+        }
+      }
+    ]
+  }
+  </script>
+
   
-</head>
 
 <body class="tracker-page tracker-pro-page">
   <a class="skip-link" href="#tracker-app">Skip to main content</a>

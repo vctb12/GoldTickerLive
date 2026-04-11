@@ -2,8 +2,8 @@
   "name": "GoldPrices — Live Gold Tracker",
   "short_name": "GoldPrices",
   "description": "Live gold prices for UAE, GCC and the Arab world. Track 24K, 22K, 21K, 18K gold in 24+ currencies.",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "/Gold-Prices/",
+  "scope": "/Gold-Prices/",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#0f0e0a",
@@ -14,6 +14,18 @@
       "src": "favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],
@@ -24,15 +36,15 @@
       "name": "Live Tracker",
       "short_name": "Tracker",
       "description": "Open the live gold price tracker",
-      "url": "/tracker.html",
-      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
+      "url": "/Gold-Prices/tracker.html",
+      "icons": [{ "src": "assets/favicon-192x192.png", "sizes": "192x192" }]
     },
     {
       "name": "Calculator",
       "short_name": "Calculator",
       "description": "Gold value calculator",
-      "url": "/calculator.html",
-      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
+      "url": "/Gold-Prices/calculator.html",
+      "icons": [{ "src": "assets/favicon-192x192.png", "sizes": "192x192" }]
     }
   ]
 }
