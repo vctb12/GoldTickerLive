@@ -473,7 +473,8 @@
             .form-grid { grid-template-columns: 1fr; }
             .table-container { overflow-x: auto; }
             table { min-width: 800px; }
-            /* Show hamburger via CSS so ResizeObserver is not needed */
+            /* Show hamburger via CSS media query — replaces the previous JS-based
+               one-time width check that did not respond to resize events. */
             #menu-toggle { display: block !important; }
         }
     </style>
@@ -717,8 +718,9 @@
             parseShopsFile(content) {
                 try {
                     // Handle both `export const SHOPS = [...]` and `const SHOPS_DATA = [...]`
+                    // Anchored to the two known variable names to avoid false matches.
                     const jsonStr = content
-                        .replace(/^(?:export\s+)?const\s+\w+\s*=\s*/, '')
+                        .replace(/^(?:export\s+)?const\s+(?:SHOPS|SHOPS_DATA)\s*=\s*/, '')
                         .replace(/;\s*$/, '');
                     const data = JSON.parse(jsonStr);
                     return Array.isArray(data) ? data : [];
@@ -1334,6 +1336,8 @@
                 const detailsAvailability = utils.$('s-details-avail').value;
 
                 // Auto-calculate confidence from detailsAvailability + contact presence (6d)
+                // Scoring rubric: base from details quality + bonus for each contact field present
+                // full=90, partial=65, limited=40; phone+5, website+5; capped at 100
                 const confidenceScore = (() => {
                     let score = detailsAvailability === 'full' ? 90
                         : detailsAvailability === 'partial' ? 65 : 40;
@@ -1447,6 +1451,8 @@
                     const lines = e.target.result.split('\n').filter(l => l.trim());
                     if (lines.length < 2) { utils.toast('CSV appears empty', 'error'); return; }
                     const headers = lines[0].split(',').map(h => h.replace(/"/g,'').trim());
+                    // Note: this parser handles basic RFC 4180 quoted fields but does not
+                    // support multi-line values (newlines inside quoted cells).
                     const imported = lines.slice(1).map(line => {
                         const vals = line.match(/("(?:[^"]|"")*"|[^,]*)/g).map(v =>
                             v.replace(/^"|"$/g,'').replace(/""/g,'"').trim()
