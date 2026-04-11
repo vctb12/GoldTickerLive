@@ -755,6 +755,9 @@
                 <div class="nav-item" onclick="app.navigate('settings')">
                     <span class="nav-icon">⚙️</span> Settings
                 </div>
+                <div class="nav-item" onclick="app.navigate('social')">
+                    <span class="nav-icon">🐦</span> Social
+                </div>
             </nav>
 
             <div class="sidebar-footer">
@@ -1185,7 +1188,8 @@
                     map: 'Global Shop Map',
                     analytics: 'Market Analytics',
                     audit: 'Audit Log',
-                    settings: 'System Settings'
+                    settings: 'System Settings',
+                    social: 'X/Twitter Post Generator'
                 };
                 utils.$('page-title').textContent = titles[view] || view;
 
@@ -1200,6 +1204,7 @@
                     case 'analytics': this.renderAnalytics(container); break;
                     case 'audit': this.renderAudit(container); break;
                     case 'settings': this.renderSettings(container); break;
+                    case 'social': this.renderSocial(container); break;
                 }
 
                 // Close mobile sidebar if open
@@ -1752,6 +1757,210 @@
                 };
                 reader.readAsText(file);
                 input.value = ''; // reset so same file can be re-imported
+            },
+
+            },
+
+            renderSocial(container) {
+                const SITE_URL = 'https://vctb12.github.io/Gold-Prices/';
+                const X_URL_LENGTH = 23;
+                const AED_PEG = 3.6725;
+                const TROY_OZ_GRAMS = 31.1035;
+                const HISTORY_KEY = 'social_post_history';
+
+                function fmt(n, decimals) {
+                    decimals = decimals == null ? 2 : decimals;
+                    if (n == null || isNaN(n)) return '—';
+                    return n.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+                }
+                function fmtChange(change, pct) {
+                    if (change == null || isNaN(change)) return '—';
+                    const sign = change >= 0 ? '+' : '';
+                    return sign + fmt(change) + ' (' + sign + fmt(pct) + '%)';
+                }
+                function trendEmoji(pct) {
+                    if (pct == null || isNaN(pct)) return '➡️';
+                    if (pct > 1) return '🚀';
+                    if (pct > 0) return '📈';
+                    if (pct < -1) return '📉';
+                    if (pct < 0) return '🔻';
+                    return '➡️';
+                }
+                function trendText(pct) {
+                    if (pct == null || isNaN(pct)) return 'Steady';
+                    if (pct > 1) return 'Surging';
+                    if (pct > 0) return 'Rising';
+                    if (pct < -1) return 'Falling';
+                    if (pct < 0) return 'Slipping';
+                    return 'Steady';
+                }
+                function calcKarat(spot, purity) {
+                    const usdPerGram = (spot / TROY_OZ_GRAMS) * purity;
+                    return { usdPerGram, aedPerGram: usdPerGram * AED_PEG };
+                }
+                function xCharCount(text) {
+                    const normalized = text.replace(/https?:\/\/\S+/g, '_'.repeat(X_URL_LENGTH));
+                    return [...normalized].length;
+                }
+                function generateDaily(spot, dayOpen, now) {
+                    const k24 = calcKarat(spot, 1.0), k22 = calcKarat(spot, 22/24), k21 = calcKarat(spot, 21/24), k18 = calcKarat(spot, 18/24);
+                    const change = dayOpen ? spot - dayOpen : null;
+                    const pct = (change != null && dayOpen) ? (change / dayOpen) * 100 : null;
+                    const dateStr = new Date(now).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                    return [trendEmoji(pct) + ' Gold Price Update — ' + dateStr,
+                        'Spot: $' + fmt(spot) + '/oz' + (change != null ? '  ' + fmtChange(change, pct) : ''),
+                        '', '24K  AED ' + fmt(k24.aedPerGram) + '/g', '22K  AED ' + fmt(k22.aedPerGram) + '/g',
+                        '21K  AED ' + fmt(k21.aedPerGram) + '/g', '18K  AED ' + fmt(k18.aedPerGram) + '/g',
+                        '', '🔗 ' + SITE_URL, '#GoldPrice #Gold #UAE'].join('\n');
+                }
+                function generateAlert(spot, dayOpen, now) {
+                    const k24 = calcKarat(spot, 1.0);
+                    const change = dayOpen ? spot - dayOpen : null;
+                    const pct = (change != null && dayOpen) ? (change / dayOpen) * 100 : null;
+                    const sign = (change != null && change >= 0) ? '+' : '';
+                    const timeStr = new Date(now).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Dubai' });
+                    return ['🚨 GOLD PRICE ALERT — ' + timeStr + ' GST', '',
+                        trendEmoji(pct) + ' Gold is ' + trendText(pct) + '!',
+                        'Spot: $' + fmt(spot) + '/oz',
+                        change != null ? 'Move: ' + sign + '$' + fmt(Math.abs(change)) + ' (' + sign + fmt(pct) + '%)' : null,
+                        '24K: AED ' + fmt(k24.aedPerGram) + '/g', '',
+                        'Track live → ' + SITE_URL, '#GoldAlert #GoldPrice #XAU'].filter(Boolean).join('\n');
+                }
+                function generateWeekly(spot, now) {
+                    const d = new Date(now), mon = new Date(d);
+                    mon.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+                    const fri = new Date(mon); fri.setDate(mon.getDate() + 4);
+                    const range = mon.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + '–' + fri.toLocaleDateString('en-US', { day: 'numeric' });
+                    return ['📊 Gold Week in Review (' + range + ')',
+                        'Current: $' + fmt(spot) + '/oz', '',
+                        '24K AED ' + fmt(calcKarat(spot, 1.0).aedPerGram) + '/g',
+                        '22K AED ' + fmt(calcKarat(spot, 22/24).aedPerGram) + '/g', '',
+                        '📈 Charts & history → ' + SITE_URL, '#GoldPrice #WeeklyUpdate'].join('\n');
+                }
+
+                container.innerHTML = `
+                <style>
+                  .social-card { background:var(--surface,#1e293b); border:1px solid var(--border,#334155); border-radius:12px; padding:1.5rem; margin-bottom:1.25rem; }
+                  .social-card h2 { margin:0 0 1rem; font-size:1rem; font-weight:700; }
+                  .social-label { display:block; font-size:0.8rem; font-weight:600; color:var(--text-secondary,#94a3b8); margin-bottom:0.4rem; }
+                  .social-select { width:100%; padding:0.5rem 0.75rem; border:1px solid var(--border,#334155); border-radius:8px; font-size:0.875rem; background:var(--bg,#0f172a); color:var(--text,#f1f5f9); margin-bottom:1rem; }
+                  .social-preview { background:#0f172a; color:#f1f5f9; border:1px solid #334155; border-radius:10px; padding:1.25rem; font-size:0.875rem; line-height:1.6; white-space:pre-wrap; word-break:break-word; min-height:120px; }
+                  .social-counter { font-size:0.78rem; text-align:right; margin-top:0.4rem; }
+                  .social-freshness { font-size:0.75rem; color:#64748b; margin-top:0.4rem; }
+                  .social-history-item { border:1px solid var(--border,#334155); border-radius:8px; padding:0.7rem 1rem; margin-bottom:0.6rem; cursor:pointer; }
+                  .social-history-item:hover { background:rgba(255,255,255,0.04); }
+                  .social-history-meta { font-size:0.73rem; color:#64748b; margin-bottom:0.25rem; }
+                  .social-history-text { font-size:0.8rem; color:#94a3b8; white-space:pre-wrap; max-height:55px; overflow:hidden; }
+                  .social-error { color:#f87171; font-size:0.83rem; margin-top:0.5rem; }
+                  .social-spinner { display:inline-block; width:13px; height:13px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; }
+                  @keyframes spin { to { transform:rotate(360deg); } }
+                </style>
+
+                <div class="social-card">
+                  <h2>🐦 X/Twitter Post Generator</h2>
+                  <label class="social-label" for="soc-tmpl">Template</label>
+                  <select class="social-select" id="soc-tmpl">
+                    <option value="daily">Daily Price Update</option>
+                    <option value="alert">Price Alert (Big Move)</option>
+                    <option value="weekly">Weekly Summary</option>
+                  </select>
+                  <button class="btn btn-primary" id="soc-gen-btn" onclick="socGenerate()">✨ Generate Post</button>
+                  <div class="social-error" id="soc-error"></div>
+                </div>
+
+                <div class="social-card">
+                  <h2>Preview</h2>
+                  <div class="social-preview" id="soc-preview" style="color:#64748b;font-style:italic;">Post preview will appear here…</div>
+                  <div class="social-counter" id="soc-counter"></div>
+                  <div class="social-freshness" id="soc-freshness"></div>
+                  <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.75rem;">
+                    <button class="btn btn-secondary" onclick="socCopy()">📋 Copy</button>
+                    <button class="btn" style="background:#0f172a;color:white;border:1px solid #334155;" onclick="socOpenX()">𝕏 Open on X</button>
+                  </div>
+                </div>
+
+                <div class="social-card">
+                  <h2>Post History</h2>
+                  <div id="soc-history-list"></div>
+                  <button class="btn btn-secondary" onclick="socClearHistory()" style="margin-top:0.5rem;">🗑 Clear History</button>
+                </div>`;
+
+                // Wire up functions to window scope for inline onclick
+                window.socCurrentPost = '';
+
+                window.socLoadHistory = function() {
+                    try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch(e) { return []; }
+                };
+                window.socRenderHistory = function() {
+                    const history = window.socLoadHistory();
+                    const list = document.getElementById('soc-history-list');
+                    if (!list) return;
+                    if (!history.length) { list.innerHTML = '<p style="color:#64748b;font-size:0.83rem;">No posts yet.</p>'; return; }
+                    list.innerHTML = history.map((item, i) => {
+                        const date = new Date(item.generatedAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                        const preview = (item.text || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+                        return '<div class="social-history-item" onclick="socLoadItem(' + i + ')"><div class="social-history-meta">' + date + ' · ' + (item.template || '') + '</div><div class="social-history-text">' + preview + '</div></div>';
+                    }).join('');
+                };
+                window.socLoadItem = function(i) {
+                    const item = window.socLoadHistory()[i];
+                    if (!item) return;
+                    window.socCurrentPost = item.text;
+                    const el = document.getElementById('soc-preview');
+                    if (el) { el.textContent = item.text; el.style.color = ''; el.style.fontStyle = ''; }
+                    const cnt = document.getElementById('soc-counter');
+                    if (cnt) { const n = xCharCount(item.text); cnt.textContent = n + ' / 280'; cnt.style.color = n > 280 ? '#f87171' : n > 240 ? '#fbbf24' : '#4ade80'; }
+                };
+                window.socClearHistory = function() {
+                    localStorage.removeItem(HISTORY_KEY);
+                    window.socRenderHistory();
+                };
+                window.socGenerate = function() {
+                    const btn = document.getElementById('soc-gen-btn');
+                    const errEl = document.getElementById('soc-error');
+                    const tmpl = document.getElementById('soc-tmpl').value;
+                    errEl.textContent = '';
+                    btn.innerHTML = '<span class="social-spinner"></span> Fetching…';
+                    btn.disabled = true;
+                    fetch('https://api.gold-api.com/price/XAU')
+                        .then(r => { if (!r.ok) throw new Error('API ' + r.status); return r.json(); })
+                        .then(data => {
+                            const spot = data.price || data.Price || data.rate;
+                            const dayOpen = data.open || data.openPrice || data.prev_close || null;
+                            const now = new Date().toISOString();
+                            let text;
+                            if (tmpl === 'daily') text = generateDaily(spot, dayOpen, now);
+                            else if (tmpl === 'alert') text = generateAlert(spot, dayOpen, now);
+                            else text = generateWeekly(spot, now);
+                            window.socCurrentPost = text;
+                            const el = document.getElementById('soc-preview');
+                            if (el) { el.textContent = text; el.style.color = ''; el.style.fontStyle = ''; }
+                            const cnt = document.getElementById('soc-counter');
+                            if (cnt) { const n = xCharCount(text); cnt.textContent = n + ' / 280 chars (X-adjusted)'; cnt.style.color = n > 280 ? '#f87171' : n > 240 ? '#fbbf24' : '#4ade80'; }
+                            const fresh = document.getElementById('soc-freshness');
+                            if (fresh) fresh.textContent = 'Fetched: ' + new Date(now).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
+                            // Save history
+                            const history = window.socLoadHistory();
+                            history.unshift({ text, template: tmpl, generatedAt: now });
+                            localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, 50)));
+                            window.socRenderHistory();
+                        })
+                        .catch(e => { errEl.textContent = '⚠️ Could not fetch prices: ' + e.message; })
+                        .finally(() => { btn.innerHTML = '✨ Generate Post'; btn.disabled = false; });
+                };
+                window.socCopy = function() {
+                    if (!window.socCurrentPost) return;
+                    navigator.clipboard.writeText(window.socCurrentPost).then(() => {
+                        const btn = document.querySelector('[onclick="socCopy()"]');
+                        if (btn) { const orig = btn.textContent; btn.textContent = '✅ Copied!'; setTimeout(() => { btn.textContent = orig; }, 1800); }
+                    }).catch(() => alert('Copy failed — select and copy manually.'));
+                };
+                window.socOpenX = function() {
+                    if (!window.socCurrentPost) return;
+                    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(window.socCurrentPost), '_blank', 'noopener,noreferrer');
+                };
+
+                window.socRenderHistory();
             },
 
         }; // end const app

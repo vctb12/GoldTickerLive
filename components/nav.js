@@ -160,6 +160,12 @@ export function injectNav(lang = 'en', depth = 0) {
 
     <!-- Right-side actions -->
     <div class="nav-actions">
+      <button id="nav-search-btn"
+              type="button"
+              aria-label="Search"
+              style="background:none;border:none;cursor:pointer;padding:0.4rem;font-size:1.1rem;color:#64748b;display:flex;align-items:center;line-height:1;"
+      >🔍</button>
+
       <button id="nav-lang-toggle"
               class="nav-lang-btn"
               type="button"
@@ -177,6 +183,13 @@ export function injectNav(lang = 'en', depth = 0) {
       </button>
     </div>
 
+  </div>
+
+  <!-- Search overlay -->
+  <div id="nav-search-overlay" style="display:none;position:absolute;top:100%;right:0;left:0;background:white;border-bottom:1px solid #e2e8f0;padding:0.75rem 1rem;z-index:1000;">
+    <input id="nav-search-input" type="search" placeholder="Search countries, cities, karats..." autocomplete="off"
+      style="width:100%;max-width:480px;padding:0.5rem 0.75rem;border:1px solid #e2e8f0;border-radius:6px;font-size:0.875rem;outline:none;display:block;margin:0 auto;" />
+    <div id="nav-search-dropdown" style="max-width:480px;margin:0.25rem auto 0;background:white;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);max-height:300px;overflow-y:auto;"></div>
   </div>
 
   <!-- Mobile off-canvas drawer -->
@@ -489,4 +502,108 @@ export function updateNavLang(lang) {
   // Drawer aria-label
   const drawer = document.getElementById('nav-drawer');
   if (drawer) drawer.setAttribute('aria-label', data.mainNav);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// initNavSearch — wire up the search bar injected by injectNav()
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Initialize the nav search bar.
+ * Called once per page, after injectNav().
+ * @param {string} basePath  Base URL path (e.g. '/Gold-Prices')
+ */
+export function initNavSearch(basePath = '/Gold-Prices') {
+  // Lazy-load the search engine only when the user first interacts
+  let searchModule = null;
+
+  async function getSearch() {
+    if (searchModule) return searchModule;
+    searchModule = await import('../search/searchEngine.js').catch(() => null);
+    return searchModule;
+  }
+
+  const btn      = document.getElementById('nav-search-btn');
+  const overlay  = document.getElementById('nav-search-overlay');
+  const input    = document.getElementById('nav-search-input');
+  const dropdown = document.getElementById('nav-search-dropdown');
+
+  if (!btn || !overlay || !input) return;
+
+  let debounceTimer = null;
+
+  function openOverlay() {
+    overlay.style.display = 'block';
+    input.focus();
+  }
+
+  function closeOverlay() {
+    overlay.style.display = 'none';
+    if (dropdown) dropdown.innerHTML = '';
+  }
+
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    overlay.style.display === 'block' ? closeOverlay() : openOverlay();
+  });
+
+  // Close on outside click
+  document.addEventListener('click', e => {
+    if (!overlay.contains(e.target) && e.target !== btn) {
+      closeOverlay();
+    }
+  });
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeOverlay(); }
+    if (e.key === 'Enter') {
+      const first = dropdown.querySelector('a');
+      if (first) first.click();
+    }
+    if (e.key === 'ArrowDown') {
+      const items = Array.from(dropdown.querySelectorAll('a'));
+      if (items.length) { items[0].focus(); e.preventDefault(); }
+    }
+  });
+
+  dropdown.addEventListener('keydown', e => {
+    const items = Array.from(dropdown.querySelectorAll('a'));
+    const idx   = items.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown' && idx < items.length - 1) { items[idx + 1].focus(); e.preventDefault(); }
+    if (e.key === 'ArrowUp') {
+      if (idx > 0) { items[idx - 1].focus(); e.preventDefault(); }
+      else { input.focus(); e.preventDefault(); }
+    }
+    if (e.key === 'Escape') { closeOverlay(); input.focus(); }
+  });
+
+  input.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    const q = input.value.trim();
+    if (q.length < 2) { dropdown.innerHTML = ''; return; }
+
+    debounceTimer = setTimeout(async () => {
+      const mod = await getSearch();
+      if (!mod) {
+        dropdown.innerHTML = '<div style="padding:0.75rem 1rem;color:#64748b;font-size:0.875rem;">Search unavailable</div>';
+        return;
+      }
+      const results = mod.search(q);
+      if (!results.length) {
+        dropdown.innerHTML = '<div style="padding:0.75rem 1rem;color:#64748b;font-size:0.875rem;">No results found</div>';
+        return;
+      }
+      const base = basePath.replace(/\/$/, '');
+      dropdown.innerHTML = results.map(r => {
+        const href = base + r.url;
+        return `<a href="${href}" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 1rem;text-decoration:none;color:#1e293b;font-size:0.875rem;border-bottom:1px solid #f1f5f9;" tabindex="0">
+          <span style="font-size:1rem;">${r.icon || '🔍'}</span>
+          <span>
+            <span style="font-weight:500;">${r.label}</span>
+            <span style="font-size:0.75rem;color:#94a3b8;margin-left:0.4rem;">${r.type}</span>
+          </span>
+        </a>`;
+      }).join('');
+    }, 200);
+  });
 }
