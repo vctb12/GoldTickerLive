@@ -587,7 +587,7 @@ function initCopyBtn() {
         document.execCommand('copy');
         document.body.removeChild(t);
         done();
-      } catch (e) { /* silent */ }
+      } catch (e) { console.warn('Copy fallback failed:', e); }
     }
   });
 }
