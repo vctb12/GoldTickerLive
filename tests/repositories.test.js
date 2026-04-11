@@ -195,31 +195,36 @@ describe('auditRepo.append + getAll', () => {
 });
 
 describe('auditRepo.query', () => {
+    // Use unique actor names so these seeded entries can be filtered precisely
+    const ACTOR_A = 'alice_qtest@x.com';
+    const ACTOR_B = 'bob_qtest@x.com';
+
     before(async () => {
-        // Seed logs for query tests
-        await auditRepo.append({ actor: 'alice@x.com', action: 'create', entityType: 'shop',  entityId: 's1' });
-        await auditRepo.append({ actor: 'bob@x.com',   action: 'delete', entityType: 'shop',  entityId: 's2' });
-        await auditRepo.append({ actor: 'alice@x.com', action: 'login',  entityType: 'user',  entityId: 'alice@x.com' });
+        await auditRepo.append({ actor: ACTOR_A, action: 'create', entityType: 'shop', entityId: 's1' });
+        await auditRepo.append({ actor: ACTOR_B, action: 'delete', entityType: 'shop', entityId: 's2' });
+        await auditRepo.append({ actor: ACTOR_A, action: 'login',  entityType: 'user', entityId: ACTOR_A });
     });
 
     test('filters by action', async () => {
-        const result = await auditRepo.query({ action: 'delete' });
+        const result = await auditRepo.query({ action: 'delete', actor: ACTOR_B });
         assert.ok(result.logs.every(l => l.action === 'delete'));
+        assert.ok(result.total >= 1);
     });
 
     test('filters by actor', async () => {
-        const result = await auditRepo.query({ actor: 'alice@x.com' });
-        assert.ok(result.logs.every(l => l.actor === 'alice@x.com'));
+        const result = await auditRepo.query({ actor: ACTOR_A });
+        assert.ok(result.logs.every(l => l.actor === ACTOR_A));
+        assert.ok(result.total >= 2);
     });
 
     test('filters by entityType', async () => {
-        const result = await auditRepo.query({ entityType: 'user' });
+        const result = await auditRepo.query({ entityType: 'user', actor: ACTOR_A });
         assert.ok(result.logs.every(l => l.entityType === 'user'));
     });
 
-    test('returns correct total count', async () => {
-        const result = await auditRepo.query({});
-        assert.ok(result.total >= 3);
+    test('returns total count for seeded entries', async () => {
+        const result = await auditRepo.query({ actor: ACTOR_A });
+        assert.ok(result.total >= 2); // create + login
     });
 
     test('paginates correctly', async () => {

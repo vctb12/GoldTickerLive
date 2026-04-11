@@ -55,6 +55,38 @@ function clearLoginAttempts(ip) {
     loginAttempts.delete(ip);
 }
 
+// ---------------------------------------------------------------------------
+// General-purpose rate limiter for authenticated admin routes
+// Prevents abuse of high-value endpoints (user management, stats) even with
+// a valid JWT.  100 requests per IP per 15-minute window.
+// ---------------------------------------------------------------------------
+const ADMIN_MAX_REQUESTS = 100;
+const ADMIN_WINDOW_MS    = 15 * 60 * 1000;
+
+const adminRequests = new Map(); // ip -> { count, windowStart }
+
+function adminRateLimiter(req, res, next) {
+    const ip  = req.ip || req.socket?.remoteAddress || 'unknown';
+    const now = Date.now();
+    const rec = adminRequests.get(ip);
+
+    if (!rec || now - rec.windowStart > ADMIN_WINDOW_MS) {
+        adminRequests.set(ip, { count: 1, windowStart: now });
+        return next();
+    }
+
+    rec.count += 1;
+    if (rec.count > ADMIN_MAX_REQUESTS) {
+        const retryAfterSec = Math.ceil((ADMIN_WINDOW_MS - (now - rec.windowStart)) / 1000);
+        res.set('Retry-After', retryAfterSec);
+        return res.status(429).json({
+            success: false,
+            message: 'Too many requests. Please try again later.',
+        });
+    }
+    next();
+}
+
 // Login endpoint
 router.post('/auth/login', loginRateLimiter, async (req, res) => {
     const ip = req.ip || req.socket?.remoteAddress || 'unknown';
@@ -275,10 +307,10 @@ router.get('/audit-logs/export', authMiddleware('admin'), (req, res) => {
 });
 
 // ===== USER MANAGEMENT ROUTES =====
-// All routes require admin role.
+// All routes require admin role and are rate-limited.
 
 // List all users (no passwords)
-router.get('/users', authMiddleware('admin'), (req, res) => {
+router.get('/users', adminRateLimiter, authMiddleware('admin'), (req, res) => {
     try {
         const users = auth.getAllUsers();
         res.json({ success: true, users });
@@ -289,7 +321,7 @@ router.get('/users', authMiddleware('admin'), (req, res) => {
 });
 
 // Create a new user
-router.post('/users', authMiddleware('admin'), async (req, res) => {
+router.post('/users', adminRateLimiter, authMiddleware('admin'), async (req, res) => {
     try {
         const { email, password, name, role } = req.body;
 
@@ -312,13 +344,19 @@ router.post('/users', authMiddleware('admin'), async (req, res) => {
 });
 
 // Update a user (name, role, or password)
-router.put('/users/:id', authMiddleware('admin'), async (req, res) => {
+router.put('/users/:id', adminRateLimiter, authMiddleware('admin'), async (req, res) => {
     try {
         const { name, role, password } = req.body;
         const updates = {};
-        if (name     !== undefined) updates.name     = name;
-        if (role     !== undefined) updates.role     = role;
-        if (password !== undefined) updates.password = password;
+        if (name !== undefined) updates.name = name;
+        if (role !== undefined) updates.role = role;
+        // Require password to be a non-empty string if provided
+        if (password !== undefined) {
+            if (typeof password !== 'string' || password.length === 0) {
+                return res.status(400).json({ success: false, message: 'Password must be a non-empty string' });
+            }
+            updates.password = password;
+        }
 
         if (Object.keys(updates).length === 0) {
             return res.status(400).json({ success: false, message: 'No valid fields to update' });
@@ -330,7 +368,9 @@ router.put('/users/:id', authMiddleware('admin'), async (req, res) => {
             return res.status(404).json(result);
         }
 
-        auditLog.logAction(req.user.email, 'update', 'user', req.params.id, updates);
+        const auditUpdates = { ...updates };
+        if (auditUpdates.password) auditUpdates.password = '[redacted]';
+        auditLog.logAction(req.user.email, 'update', 'user', req.params.id, auditUpdates);
         res.json(result);
     } catch (err) {
         console.error('Error updating user:', err);
@@ -339,7 +379,7 @@ router.put('/users/:id', authMiddleware('admin'), async (req, res) => {
 });
 
 // Delete a user
-router.delete('/users/:id', authMiddleware('admin'), (req, res) => {
+router.delete('/users/:id', adminRateLimiter, authMiddleware('admin'), (req, res) => {
     try {
         const result = auth.deleteUser(req.params.id, req.user.email);
 
@@ -358,7 +398,7 @@ router.delete('/users/:id', authMiddleware('admin'), (req, res) => {
 // ===== DASHBOARD STATS =====
 
 // GET /stats — aggregate metrics for the admin dashboard
-router.get('/stats', authMiddleware(), async (req, res) => {
+router.get('/stats', adminRateLimiter, authMiddleware(), async (req, res) => {
     try {
         const shopStats  = await shopsRepo.getStats();
         const recentLogs = await auditRepo.query({ page: 1, limit: 10 });

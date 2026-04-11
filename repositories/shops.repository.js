@@ -90,8 +90,10 @@ async function _supabaseUpdate(id, updates) {
 async function _supabaseDelete(id) {
     const sb = getSupabaseClient(true);
     if (!sb) throw new Error('Supabase is not configured.');
-    const { error } = await sb.from('shops').delete().eq('id', id);
+    const { data, error } = await sb.from('shops').delete().eq('id', id).select('id');
     if (error) throw new Error(`Supabase error: ${error.message}`);
+    // Return whether a row was actually deleted
+    return Array.isArray(data) && data.length > 0;
 }
 
 async function _supabaseInsertMany(shops) {
@@ -162,8 +164,7 @@ async function update(id, updates) {
  */
 async function remove(id) {
     if (BACKEND() === 'supabase') {
-        await _supabaseDelete(id);
-        return true;
+        return _supabaseDelete(id); // returns true/false based on affected rows
     }
     const shops = _readFile();
     const idx = shops.findIndex(s => s.id === id);
