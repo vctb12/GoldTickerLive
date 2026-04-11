@@ -473,6 +473,9 @@
             .form-grid { grid-template-columns: 1fr; }
             .table-container { overflow-x: auto; }
             table { min-width: 800px; }
+            /* Show hamburger via CSS media query — replaces the previous JS-based
+               one-time width check that did not respond to resize events. */
+            #menu-toggle { display: block !important; }
         }
     </style>
 </head>
@@ -599,50 +602,57 @@
                     <input type="hidden" id="shop-id">
                     <div class="form-grid">
                         <div class="form-group form-full">
-                            <label class="form-label">Shop Name</label>
+                            <label class="form-label">Shop / Listing Name *</label>
                             <input type="text" id="s-name" class="form-input" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Country</label>
-                            <input type="text" id="s-country" class="form-input" required>
+                            <label class="form-label">Country Code * (e.g. AE, SA, EG)</label>
+                            <input type="text" id="s-country-code" class="form-input" maxlength="2" style="text-transform:uppercase" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label">City</label>
                             <input type="text" id="s-city" class="form-input">
                         </div>
                         <div class="form-group form-full">
-                            <label class="form-label">Address / Location Details</label>
-                            <input type="text" id="s-address" class="form-input">
+                            <label class="form-label">Market / Area Name</label>
+                            <input type="text" id="s-market" class="form-input" placeholder="e.g. Dubai Gold Souk (Deira)">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Price 24k (USD/g)</label>
-                            <input type="number" step="0.01" id="s-price-24" class="form-input" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Price 22k (USD/g)</label>
-                            <input type="number" step="0.01" id="s-price-22" class="form-input">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Confidence Score (0-100)</label>
-                            <input type="number" min="0" max="100" id="s-confidence" class="form-input" value="90">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Verification Status</label>
-                            <select id="s-verified" class="form-input">
-                                <option value="false">Pending</option>
-                                <option value="true">Verified</option>
+                            <label class="form-label">Category</label>
+                            <select id="s-category" class="form-input">
+                                <option value="Jewellery & Bullion">Jewellery &amp; Bullion</option>
+                                <option value="Jewellery Retail">Jewellery Retail</option>
+                                <option value="Bullion">Bullion</option>
+                                <option value="Other">Other</option>
                             </select>
                         </div>
-                        <div class="form-group form-full">
-                            <label class="form-label">Contact Info / Website</label>
-                            <input type="text" id="s-contact" class="form-input">
+                        <div class="form-group">
+                            <label class="form-label">Details Availability</label>
+                            <select id="s-details-avail" class="form-input">
+                                <option value="limited">Limited</option>
+                                <option value="partial">Partial</option>
+                                <option value="full">Full</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone</label>
+                            <input type="text" id="s-phone" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Website</label>
+                            <input type="url" id="s-website" class="form-input" placeholder="https://...">
                         </div>
                         <div class="form-group form-full">
-                            <label class="form-label">Coordinates (Lat, Lng)</label>
-                            <div class="flex gap-2">
-                                <input type="text" id="s-lat" class="form-input" placeholder="Latitude">
-                                <input type="text" id="s-lng" class="form-input" placeholder="Longitude">
-                            </div>
+                            <label class="form-label">Specialties (comma-separated)</label>
+                            <input type="text" id="s-specialties" class="form-input" placeholder="e.g. 22K Jewellery, Gold Coins">
+                        </div>
+                        <div class="form-group form-full" style="display:flex;align-items:center;gap:0.75rem;">
+                            <input type="checkbox" id="s-featured" style="width:18px;height:18px;cursor:pointer;">
+                            <label class="form-label" for="s-featured" style="margin:0;cursor:pointer;">Featured listing</label>
+                        </div>
+                        <div class="form-group form-full">
+                            <label class="form-label">Notes</label>
+                            <textarea id="s-notes" class="form-input" rows="3" style="resize:vertical;"></textarea>
                         </div>
                     </div>
                 </form>
@@ -707,18 +717,22 @@
 
             parseShopsFile(content) {
                 try {
-                    // Remove 'const SHOPS_DATA = ' and trailing ';'
-                    const jsonStr = content.replace(/^const\s+SHOPS_DATA\s*=\s*/, '').replace(/;?\s*$/, '');
+                    // Handle both `export const SHOPS = [...]` and `const SHOPS_DATA = [...]`
+                    // Anchored to the two known variable names to avoid false matches.
+                    const jsonStr = content
+                        .replace(/^(?:export\s+)?const\s+(?:SHOPS|SHOPS_DATA)\s*=\s*/, '')
+                        .replace(/;\s*$/, '');
                     const data = JSON.parse(jsonStr);
                     return Array.isArray(data) ? data : [];
                 } catch (e) {
                     console.error("Parse error:", e);
-                    throw new Error("Invalid shops.js format. Ensure it exports a JSON array.");
+                    throw new Error("Invalid shops.js format. Expected: export const SHOPS = [...]");
                 }
             },
 
             generateJSContent(data) {
-                return `// AUTO-GENERATED BY ADMIN PANEL - DO NOT EDIT MANUALLY\n// Last Updated: ${new Date().toISOString()}\nconst SHOPS_DATA = ${JSON.stringify(data, null, 2)};\n\nif (typeof module !== 'undefined' && module.exports) { module.exports = SHOPS_DATA; }`;
+                // Preserve the ES module format used by data/shops.js
+                return `export const SHOPS = ${JSON.stringify(data, null, 2)};\n`;
             }
         };
 
@@ -748,6 +762,7 @@
                 try {
                     const data = await this.request(`/repos/${state.user}/${state.repo}/contents/${path}?ref=${state.branch}`);
                     state.fileSha = data.sha;
+                    state.lastLoadedPath = path; // track which path was actually loaded
                     // Decode base64
                     const content = atob(data.content);
                     return content;
@@ -779,22 +794,40 @@
         // Main Application Logic
         const app = {
             init() {
-                // Load saved session
                 const saved = localStorage.getItem('gold_admin_session');
                 if (saved) {
-                    const session = JSON.parse(saved);
-                    utils.$('gh-user').value = session.user;
-                    utils.$('gh-token').value = session.token;
-                    utils.$('gh-repo').value = session.repo;
-                    utils.$('gh-branch').value = session.branch;
+                    try {
+                        const session = JSON.parse(saved);
+                        utils.$('gh-user').value = session.user || '';
+                        utils.$('gh-token').value = session.token || '';
+                        utils.$('gh-repo').value = session.repo || '';
+                        utils.$('gh-branch').value = session.branch || '';
+
+                        // Auto-restore: attempt login in background without user interaction
+                        const btn = utils.$('login-btn');
+                        btn.disabled = true;
+                        btn.innerHTML = '<div class="spinner"></div> Restoring session…';
+
+                        state.user  = session.user;
+                        state.token = session.token;
+                        state.repo  = session.repo;
+                        state.branch = session.branch;
+
+                        githubAPI.request('/user').then(userData => {
+                            utils.toast(`Welcome back, ${userData.login}!`, 'success');
+                            this.enterApp();
+                        }).catch(() => {
+                            localStorage.removeItem('gold_admin_session');
+                            btn.disabled = false;
+                            btn.innerHTML = '<span>Secure Login</span>';
+                            utils.toast('Session expired. Please log in again.', 'warning');
+                        });
+                    } catch {
+                        localStorage.removeItem('gold_admin_session');
+                    }
                 }
 
                 utils.$('login-form').addEventListener('submit', (e) => this.handleLogin(e));
-                
-                // Mobile menu toggle
-                if (window.innerWidth <= 768) {
-                    utils.$('menu-toggle').style.display = 'block';
-                }
             },
 
             async handleLogin(e) {
@@ -821,14 +854,15 @@
                 btn.innerHTML = '<div class="spinner"></div> Authenticating...';
 
                 try {
-                    // Test connection by fetching user info
-                    const userData = await githubAPI.request('/user');
-                    
-                    // Save session
-                    state.user = username;
-                    state.token = token;
-                    state.repo = repo;
+                    // Set state credentials BEFORE making the API request so
+                    // githubAPI.request() can attach the Authorization header.
+                    state.user   = username;
+                    state.token  = token;
+                    state.repo   = repo;
                     state.branch = branch;
+
+                    // Verify credentials by fetching the authenticated user
+                    const userData = await githubAPI.request('/user');
                     
                     localStorage.setItem('gold_admin_session', JSON.stringify({
                         user: username, token, repo, branch
@@ -932,50 +966,50 @@
             // --- VIEW RENDERERS ---
 
             renderDashboard(container) {
-                const total = state.shops.length;
-                const verified = state.shops.filter(s => s.is_verified || s.verified).length;
-                const countries = new Set(state.shops.map(s => s.country)).size;
-                const avgPrice = state.shops.reduce((acc, s) => acc + (parseFloat(s.price_24k) || 0), 0) / (total || 1);
+                const total     = state.shops.length;
+                const fullDetails = state.shops.filter(s => s.detailsAvailability === 'full').length;
+                const featured  = state.shops.filter(s => s.featured).length;
+                const countries = new Set(state.shops.map(s => s.countryCode).filter(Boolean)).size;
 
                 container.innerHTML = `
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <div class="stat-label">Total Shops</div>
+                            <div class="stat-label">Total Listings</div>
                             <div class="stat-value">${total}</div>
                             <div class="stat-trend trend-up">↑ Active Directory</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-label">Verified Shops</div>
-                            <div class="stat-value" style="color:var(--success)">${verified}</div>
-                            <div class="stat-trend">${Math.round((verified/total)*100) || 0}% Verification Rate</div>
+                            <div class="stat-label">Full Details</div>
+                            <div class="stat-value" style="color:var(--success)">${fullDetails}</div>
+                            <div class="stat-trend">${Math.round((fullDetails/total)*100) || 0}% Complete</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Featured Listings</div>
+                            <div class="stat-value" style="color:var(--warning)">${featured}</div>
+                            <div class="stat-trend">Promoted in directory</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-label">Countries Covered</div>
-                            <div class="stat-value" style="color:var(--warning)">${countries}</div>
+                            <div class="stat-value">${countries}</div>
                             <div class="stat-trend">Global Reach</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Avg Price (24k)</div>
-                            <div class="stat-value">$${avgPrice.toFixed(2)}</div>
-                            <div class="stat-trend">USD / Gram</div>
                         </div>
                     </div>
 
                     <div class="table-container">
                         <div class="table-header">
-                            <h3>Recent Activity</h3>
+                            <h3>Recent Listings (top 5)</h3>
                         </div>
                         <table>
                             <thead>
-                                <tr><th>Shop Name</th><th>Location</th><th>Price</th><th>Status</th></tr>
+                                <tr><th>Name</th><th>Location</th><th>Market</th><th>Details</th></tr>
                             </thead>
                             <tbody>
                                 ${state.shops.slice(0, 5).map(shop => `
                                     <tr>
-                                        <td><strong>${shop.name}</strong></td>
-                                        <td>${shop.city}, ${shop.country}</td>
-                                        <td>$${shop.price_24k || 'N/A'}</td>
-                                        <td><span class="badge ${shop.is_verified ? 'badge-verified' : 'badge-pending'}">${shop.is_verified ? 'Verified' : 'Pending'}</span></td>
+                                        <td><strong>${shop.name}</strong>${shop.featured ? ' <span class="badge badge-verified" style="font-size:0.7rem">★ Featured</span>' : ''}</td>
+                                        <td>${[shop.city, shop.countryCode].filter(Boolean).join(', ')}</td>
+                                        <td>${shop.market || '—'}</td>
+                                        <td><span class="badge ${shop.detailsAvailability === 'full' ? 'badge-verified' : shop.detailsAvailability === 'partial' ? 'badge-pending' : 'badge-low'}">${shop.detailsAvailability || 'limited'}</span></td>
                                     </tr>
                                 `).join('')}
                                 ${state.shops.length === 0 ? '<tr><td colspan="4" style="text-align:center">No data loaded</td></tr>' : ''}
@@ -989,13 +1023,18 @@
                 container.innerHTML = `
                     <div class="table-container">
                         <div class="table-header">
-                            <h3>All Shops (${state.shops.length})</h3>
+                            <h3>All Listings (${state.shops.length})</h3>
                             <div class="table-actions">
                                 <div class="search-box">
                                     <span class="search-icon">🔍</span>
-                                    <input type="text" class="search-input" placeholder="Search shops..." onkeyup="app.filterShops(this.value)">
+                                    <input type="text" class="search-input" placeholder="Search name, city, market, category…" onkeyup="app.filterShops(this.value)">
                                 </div>
-                                <button class="btn btn-primary" style="width:auto;" onclick="app.openModal()">+ Add Shop</button>
+                                <button class="btn btn-secondary" style="width:auto;padding:0.5rem 1rem;font-size:0.85rem;" onclick="app.exportShops()">⬇ Export CSV</button>
+                                <label class="btn btn-secondary" style="width:auto;padding:0.5rem 1rem;font-size:0.85rem;cursor:pointer;" title="Import shops from CSV">
+                                    ⬆ Import CSV
+                                    <input type="file" id="import-csv-input" accept=".csv" style="display:none;" onchange="app.importShopsCSV(this)">
+                                </label>
+                                <button class="btn btn-primary" style="width:auto;" onclick="app.openModal()">+ Add Listing</button>
                             </div>
                         </div>
                         <table id="shops-table">
@@ -1003,9 +1042,9 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Location</th>
-                                    <th>Price (24k)</th>
-                                    <th>Confidence</th>
-                                    <th>Status</th>
+                                    <th>Market</th>
+                                    <th>Category</th>
+                                    <th>Details</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -1018,26 +1057,30 @@
             },
 
             generateShopRows(shops) {
-                if (shops.length === 0) return '<tr><td colspan="6" style="text-align:center; padding:2rem;">No shops found.</td></tr>';
-                
+                if (shops.length === 0) return '<tr><td colspan="6" style="text-align:center; padding:2rem;">No listings found.</td></tr>';
+
                 return shops.map(shop => {
-                    const verifiedClass = shop.is_verified ? 'badge-verified' : 'badge-pending';
-                    const verifiedText = shop.is_verified ? 'Verified' : 'Pending';
-                    const confClass = (shop.confidence_score || 0) < 50 ? 'badge-low' : '';
-                    
+                    const detailsClass = shop.detailsAvailability === 'full' ? 'badge-verified'
+                        : shop.detailsAvailability === 'partial' ? 'badge-pending' : 'badge-low';
+                    const searchStr = [shop.name, shop.city, shop.countryCode, shop.market, shop.category,
+                        ...(shop.specialties || [])].filter(Boolean).join(' ').toLowerCase();
+                    const shopId = (shop.id || shop.name).replace(/'/g, "\\'");
                     return `
-                        <tr data-name="${shop.name.toLowerCase()}">
-                            <td><strong>${shop.name}</strong></td>
+                        <tr data-search="${searchStr}">
                             <td>
-                                <div>${shop.city || 'N/A'}</div>
-                                <div class="text-xs text-muted">${shop.country}</div>
+                                <strong>${shop.name}</strong>
+                                ${shop.featured ? '<span class="badge badge-verified" style="font-size:0.7rem;margin-left:4px">★</span>' : ''}
                             </td>
-                            <td>$${shop.price_24k || '0.00'}</td>
-                            <td><span class="badge ${confClass}">${shop.confidence_score || 0}%</span></td>
-                            <td><span class="badge ${verifiedClass}">${verifiedText}</span></td>
                             <td>
-                                <button class="action-btn edit" onclick="app.editShop('${shop.id || shop.name}')" title="Edit">✏️</button>
-                                <button class="action-btn delete" onclick="app.deleteShop('${shop.id || shop.name}')" title="Delete">🗑️</button>
+                                <div>${shop.city || '—'}</div>
+                                <div class="text-xs text-muted">${shop.countryCode || '—'}</div>
+                            </td>
+                            <td>${shop.market || '—'}</td>
+                            <td>${shop.category || '—'}</td>
+                            <td><span class="badge ${detailsClass}">${shop.detailsAvailability || 'limited'}</span></td>
+                            <td>
+                                <button class="action-btn edit" onclick="app.editShop('${shopId}')" title="Edit">✏️</button>
+                                <button class="action-btn delete" onclick="app.deleteShop('${shopId}')" title="Delete">🗑️</button>
                             </td>
                         </tr>
                     `;
@@ -1048,77 +1091,100 @@
                 const term = query.toLowerCase();
                 const rows = utils.$$('#shops-table tbody tr');
                 rows.forEach(row => {
-                    const name = row.getAttribute('data-name');
-                    row.style.display = name.includes(term) ? '' : 'none';
+                    const search = row.getAttribute('data-search') || '';
+                    row.style.display = search.includes(term) ? '' : 'none';
                 });
             },
 
             renderMap(container) {
-                container.innerHTML = '<div id="map-view"></div><p class="text-muted mt-4 text-center">Interactive map of all verified shop locations.</p>';
-                
-                // Initialize Leaflet Map
+                container.innerHTML = `
+                    <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:0.75rem 1rem;margin-bottom:1rem;font-size:0.85rem;color:#fcd34d;">
+                        ⚠️ Individual shop GPS coordinates are not yet in the data. Markers show approximate country centroids with listing counts.
+                    </div>
+                    <div id="map-view"></div>
+                `;
+
+                // Approximate country centroids for known country codes
+                const CENTROIDS = {
+                    AE:[25.2048,55.2708], SA:[23.8859,45.0792], KW:[29.3117,47.4818],
+                    QA:[25.2867,51.5333], BH:[26.0667,50.5577], OM:[23.6140,58.5922],
+                    JO:[31.9566,35.9454], EG:[26.8206,30.8025], MA:[31.7917,-7.0926],
+                    IN:[20.5937,78.9629], LY:[26.3351,17.2283], TN:[33.8869,9.5375],
+                    DZ:[28.0339,1.6596],  SD:[15.5007,32.5599], LB:[33.8547,35.8623],
+                    SY:[34.8021,38.9968], PS:[31.9522,35.2332], US:[37.0902,-95.7129],
+                    GB:[55.3781,-3.4360], EU:[50.1109,8.6821],
+                };
+
                 setTimeout(() => {
-                    const map = L.map('map-view').setView([20, 0], 2);
+                    const map = L.map('map-view').setView([20, 30], 3);
                     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
                         attribution: '&copy; OpenStreetMap &copy; CARTO',
                         subdomains: 'abcd',
                         maxZoom: 19
                     }).addTo(map);
 
+                    // Group shops by countryCode
+                    const byCountry = {};
                     state.shops.forEach(shop => {
-                        if (shop.latitude && shop.longitude) {
-                            const marker = L.marker([shop.latitude, shop.longitude]).addTo(map);
-                            marker.bindPopup(`
-                                <b>${shop.name}</b><br>
-                                ${shop.city}, ${shop.country}<br>
-                                Price: $${shop.price_24k}
-                            `);
-                        }
+                        const code = shop.countryCode || 'XX';
+                        if (!byCountry[code]) byCountry[code] = [];
+                        byCountry[code].push(shop);
                     });
+
+                    Object.entries(byCountry).forEach(([code, shops]) => {
+                        const coords = CENTROIDS[code];
+                        if (!coords) return;
+                        const marker = L.marker(coords).addTo(map);
+                        marker.bindPopup(`
+                            <b>${code}</b><br>
+                            ${shops.length} listing${shops.length !== 1 ? 's' : ''}<br>
+                            <small>${shops.slice(0, 3).map(s => s.name).join(', ')}${shops.length > 3 ? '…' : ''}</small>
+                        `);
+                    });
+
                     state.mapInstance = map;
                 }, 100);
             },
 
             renderAnalytics(container) {
+                // Group by countryCode
+                const byCountry = {};
+                state.shops.forEach(s => {
+                    const c = s.countryCode || 'Unknown';
+                    byCountry[c] = (byCountry[c] || 0) + 1;
+                });
+                const sorted = Object.entries(byCountry).sort((a,b) => b[1]-a[1]);
+                const countLabels = sorted.map(e => e[0]);
+                const countData   = sorted.map(e => e[1]);
+
+                // Stats
+                const fullCount    = state.shops.filter(s => s.detailsAvailability === 'full').length;
+                const partialCount = state.shops.filter(s => s.detailsAvailability === 'partial').length;
+                const featuredCount = state.shops.filter(s => s.featured).length;
+
                 container.innerHTML = `
-                    <div class="chart-container">
-                        <canvas id="priceChart"></canvas>
+                    <div class="stats-grid mb-4" style="margin-bottom:1.5rem;">
+                        <div class="stat-card"><div class="stat-label">Full Details</div><div class="stat-value" style="color:var(--success)">${fullCount}</div></div>
+                        <div class="stat-card"><div class="stat-label">Partial Details</div><div class="stat-value" style="color:var(--warning)">${partialCount}</div></div>
+                        <div class="stat-card"><div class="stat-label">Limited Details</div><div class="stat-value" style="color:var(--danger)">${state.shops.length - fullCount - partialCount}</div></div>
+                        <div class="stat-card"><div class="stat-label">Featured</div><div class="stat-value">${featuredCount}</div></div>
                     </div>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-label">Highest Price</div>
-                            <div class="stat-value">$${Math.max(...state.shops.map(s => s.price_24k || 0)).toFixed(2)}</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Lowest Price</div>
-                            <div class="stat-value">$${Math.min(...state.shops.map(s => s.price_24k || 0)).toFixed(2)}</div>
-                        </div>
+                    <div class="chart-container">
+                        <canvas id="countryChart"></canvas>
                     </div>
                 `;
 
                 setTimeout(() => {
-                    const ctx = document.getElementById('priceChart').getContext('2d');
-                    
-                    // Group by Country Avg
-                    const countryData = {};
-                    state.shops.forEach(s => {
-                        if (!countryData[s.country]) countryData[s.country] = [];
-                        if (s.price_24k) countryData[s.country].push(parseFloat(s.price_24k));
-                    });
-
-                    const labels = Object.keys(countryData);
-                    const data = labels.map(c => {
-                        const arr = countryData[c];
-                        return arr.reduce((a,b) => a+b, 0) / arr.length;
-                    });
-
+                    const ctx = document.getElementById('countryChart')?.getContext('2d');
+                    if (!ctx) return;
+                    if (state.chartInstance) state.chartInstance.destroy();
                     state.chartInstance = new Chart(ctx, {
                         type: 'bar',
                         data: {
-                            labels: labels,
+                            labels: countLabels,
                             datasets: [{
-                                label: 'Average Gold Price (24k) by Country',
-                                data: data,
+                                label: 'Listings by Country',
+                                data: countData,
                                 backgroundColor: '#3b82f6',
                                 borderColor: '#2563eb',
                                 borderWidth: 1
@@ -1127,11 +1193,9 @@
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
-                            plugins: {
-                                legend: { labels: { color: 'white' } }
-                            },
+                            plugins: { legend: { labels: { color: 'white' } } },
                             scales: {
-                                y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+                                y: { ticks: { color: '#94a3b8', stepSize: 1 }, grid: { color: '#334155' } },
                                 x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
                             }
                         }
@@ -1140,29 +1204,50 @@
             },
 
             async renderAudit(container) {
-                container.innerHTML = '<div class="loading">Loading commit history...</div>';
+                container.innerHTML = '<div class="loading" style="padding:2rem;text-align:center;">Loading commit history…</div>';
                 try {
-                    const commits = await githubAPI.getCommits(20);
-                    let html = `
-                        <div class="table-container">
-                            <div class="table-header"><h3>Recent Repository Commits</h3></div>
-                            <table>
-                                <thead><tr><th>Message</th><th>Author</th><th>Date</th></tr></thead>
-                                <tbody>
-                    `;
-                    commits.forEach(c => {
-                        html += `
+                    const commits = await githubAPI.getCommits(50);
+                    const ADMIN_PREFIX = 'admin:';
+                    let filtered = commits;
+                    let showingAll = true;
+
+                    const buildTable = (list, all) => {
+                        const rows = list.map(c => `
                             <tr>
-                                <td>${c.commit.message}</td>
+                                <td>${c.commit.message.replace(/</g,'&lt;')}</td>
                                 <td>${c.commit.author.name}</td>
                                 <td>${utils.formatDate(c.commit.author.date)}</td>
                             </tr>
-                        `;
-                    });
-                    html += '</tbody></table></div>';
-                    container.innerHTML = html;
+                        `).join('');
+                        return `
+                            <div class="table-container">
+                                <div class="table-header" style="flex-wrap:wrap;gap:0.5rem;">
+                                    <h3>Repository Commits (${list.length})</h3>
+                                    <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:var(--text-muted);cursor:pointer;">
+                                        <input type="checkbox" id="audit-admin-only" ${!all ? 'checked' : ''} onchange="app.toggleAuditFilter(this.checked)">
+                                        Admin panel commits only
+                                    </label>
+                                </div>
+                                <table>
+                                    <thead><tr><th>Message</th><th>Author</th><th>Date</th></tr></thead>
+                                    <tbody>${rows.length ? rows : '<tr><td colspan="3" style="text-align:center;padding:1rem;">No matching commits</td></tr>'}</tbody>
+                                </table>
+                            </div>`;
+                    };
+
+                    state._allCommits = commits;
+                    container.innerHTML = buildTable(commits, true);
+
+                    // Expose toggle for checkbox
+                    app.toggleAuditFilter = (adminOnly) => {
+                        const list = adminOnly
+                            ? commits.filter(c => c.commit.message.startsWith(ADMIN_PREFIX))
+                            : commits;
+                        const wrap = document.querySelector('.table-container');
+                        if (wrap) wrap.outerHTML = buildTable(list, !adminOnly);
+                    };
                 } catch (e) {
-                    container.innerHTML = `<div class="alert-box alert-error">Failed to load audit log: ${e.message}</div>`;
+                    container.innerHTML = `<div class="alert-box alert-error" style="display:block;">Failed to load audit log: ${e.message}</div>`;
                 }
             },
 
@@ -1192,32 +1277,31 @@
 
             openModal(shopId = null) {
                 const modal = utils.$('shop-modal');
-                const form = utils.$('shop-form');
+                const form  = utils.$('shop-form');
                 form.reset();
-                
+
                 if (shopId) {
                     const shop = state.shops.find(s => (s.id || s.name) === shopId);
                     if (shop) {
-                        utils.$('shop-id').value = shop.id || shop.name;
-                        utils.$('s-name').value = shop.name;
-                        utils.$('s-country').value = shop.country;
-                        utils.$('s-city').value = shop.city || '';
-                        utils.$('s-address').value = shop.address || '';
-                        utils.$('s-price-24').value = shop.price_24k || '';
-                        utils.$('s-price-22').value = shop.price_22k || '';
-                        utils.$('s-confidence').value = shop.confidence_score || 90;
-                        utils.$('s-verified').value = shop.is_verified ? 'true' : 'false';
-                        utils.$('s-contact').value = shop.contact_info || '';
-                        utils.$('s-lat').value = shop.latitude || '';
-                        utils.$('s-lng').value = shop.longitude || '';
-                        
-                        utils.$('modal-title').textContent = 'Edit Shop';
+                        utils.$('shop-id').value           = shop.id || shop.name;
+                        utils.$('s-name').value            = shop.name || '';
+                        utils.$('s-country-code').value    = shop.countryCode || '';
+                        utils.$('s-city').value            = shop.city || '';
+                        utils.$('s-market').value          = shop.market || '';
+                        utils.$('s-category').value        = shop.category || 'Jewellery & Bullion';
+                        utils.$('s-details-avail').value   = shop.detailsAvailability || 'limited';
+                        utils.$('s-phone').value           = shop.phone || '';
+                        utils.$('s-website').value         = shop.website || '';
+                        utils.$('s-specialties').value     = (shop.specialties || []).join(', ');
+                        utils.$('s-featured').checked      = !!shop.featured;
+                        utils.$('s-notes').value           = shop.notes || '';
+                        utils.$('modal-title').textContent = 'Edit Listing';
                     }
                 } else {
                     utils.$('shop-id').value = '';
-                    utils.$('modal-title').textContent = 'Add New Shop';
+                    utils.$('modal-title').textContent = 'Add New Listing';
                 }
-                
+
                 modal.classList.add('active');
             },
 
@@ -1242,38 +1326,68 @@
 
             async saveShop() {
                 const id = utils.$('shop-id').value;
+                const specialtiesRaw = utils.$('s-specialties').value;
+                const specialties = specialtiesRaw
+                    ? specialtiesRaw.split(',').map(s => s.trim()).filter(Boolean)
+                    : [];
+
+                const phone   = utils.$('s-phone').value.trim();
+                const website = utils.$('s-website').value.trim();
+                const detailsAvailability = utils.$('s-details-avail').value;
+
+                // Auto-calculate confidence from detailsAvailability + contact presence (6d)
+                // Scoring rubric: base from details quality + bonus for each contact field present
+                // full=90, partial=65, limited=40; phone+5, website+5; capped at 100
+                const confidenceScore = (() => {
+                    let score = detailsAvailability === 'full' ? 90
+                        : detailsAvailability === 'partial' ? 65 : 40;
+                    if (phone) score += 5;
+                    if (website) score += 5;
+                    return Math.min(score, 100);
+                })();
+
                 const newShop = {
-                    id: id || Date.now().toString(),
-                    name: utils.$('s-name').value,
-                    country: utils.$('s-country').value,
-                    city: utils.$('s-city').value,
-                    address: utils.$('s-address').value,
-                    price_24k: parseFloat(utils.$('s-price-24').value),
-                    price_22k: parseFloat(utils.$('s-price-22').value),
-                    confidence_score: parseInt(utils.$('s-confidence').value),
-                    is_verified: utils.$('s-verified').value === 'true',
-                    contact_info: utils.$('s-contact').value,
-                    latitude: utils.$('s-lat').value,
-                    longitude: utils.$('s-lng').value
+                    id: id || `${utils.$('s-country-code').value.toLowerCase()}-${Date.now()}`,
+                    name: utils.$('s-name').value.trim(),
+                    countryCode: utils.$('s-country-code').value.trim().toUpperCase(),
+                    city: utils.$('s-city').value.trim(),
+                    market: utils.$('s-market').value.trim(),
+                    category: utils.$('s-category').value,
+                    specialties,
+                    phone,
+                    website,
+                    detailsAvailability,
+                    featured: utils.$('s-featured').checked,
+                    notes: utils.$('s-notes').value.trim(),
+                    confidenceScore,
                 };
 
-                if (!newShop.name || !newShop.country) {
-                    utils.toast('Name and Country are required', 'warning');
+                if (!newShop.name || !newShop.countryCode) {
+                    utils.toast('Name and Country Code are required', 'warning');
                     return;
                 }
 
                 try {
+                    let action;
                     if (id) {
-                        // Update existing
                         const index = state.shops.findIndex(s => (s.id || s.name) === id);
-                        if (index !== -1) state.shops[index] = newShop;
-                        await this.commitChanges('update', newShop.name);
+                        if (index !== -1) {
+                            // Show diff preview before committing (6b)
+                            const old = state.shops[index];
+                            const changed = Object.keys(newShop).filter(k =>
+                                JSON.stringify(old[k]) !== JSON.stringify(newShop[k]));
+                            if (changed.length && !confirm(
+                                `Changed fields: ${changed.join(', ')}\n\nCommit these changes to GitHub?`
+                            )) return;
+                            state.shops[index] = newShop;
+                        }
+                        action = 'update';
                     } else {
-                        // Create new
                         state.shops.push(newShop);
-                        await this.commitChanges('create', newShop.name);
+                        action = 'create';
                     }
-                    
+
+                    await this.commitChanges(action, newShop.name);
                     this.closeModal();
                     this.navigate('shops');
                     utils.toast('Changes saved to GitHub!', 'success');
@@ -1283,19 +1397,88 @@
             },
 
             async commitChanges(action, target) {
-                this.setSyncStatus('syncing', 'Committing changes...');
-                const content = utils.generateJSContent(state.shops);
-                const msg = `${action}: ${target} via Admin Panel`;
-                
+                this.setSyncStatus('syncing', 'Committing changes…');
+                const filePath = state.lastLoadedPath || CONFIG.filePath;
+                const content  = utils.generateJSContent(state.shops);
+                const msg = `admin: ${action} "${target}" via Admin Panel`;
+
                 try {
-                    await githubAPI.updateFile(CONFIG.filePath, content, msg);
+                    // Re-fetch the current SHA to avoid 409 conflicts if the file
+                    // was updated externally between our load and this save.
+                    try {
+                        const fileData = await githubAPI.request(
+                            `/repos/${state.user}/${state.repo}/contents/${filePath}?ref=${state.branch}`
+                        );
+                        state.fileSha = fileData.sha;
+                    } catch (shaErr) {
+                        // File might not exist yet on first create — proceed without SHA
+                    }
+
+                    await githubAPI.updateFile(filePath, content, msg);
                     this.setSyncStatus('connected', 'Synced');
                 } catch (e) {
                     this.setSyncStatus('error', 'Sync Failed');
-                    throw e;
+                    const errMsg = (e.message || '').toLowerCase().includes('409')
+                        ? 'Conflict: the file was modified by another commit. Please reload to get the latest version before saving.'
+                        : e.message;
+                    throw new Error(errMsg);
                 }
-            }
-        };
+            },
+
+            // --- EXPORT / IMPORT (6a, 6c) ---
+
+            exportShops() {
+                const headers = ['id','name','countryCode','city','market','category','specialties','phone','website','detailsAvailability','featured','notes','confidenceScore'];
+                const rows = state.shops.map(s =>
+                    headers.map(h => {
+                        const v = h === 'specialties' ? (s[h] || []).join('; ') : (s[h] ?? '');
+                        return `"${String(v).replace(/"/g, '""')}"`;
+                    }).join(',')
+                );
+                const csv = [headers.join(','), ...rows].join('\n');
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `shops-export-${new Date().toISOString().slice(0,10)}.csv`;
+                a.click();
+            },
+
+            importShopsCSV(input) {
+                const file = input.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const lines = e.target.result.split('\n').filter(l => l.trim());
+                    if (lines.length < 2) { utils.toast('CSV appears empty', 'error'); return; }
+                    const headers = lines[0].split(',').map(h => h.replace(/"/g,'').trim());
+                    // Note: this parser handles basic RFC 4180 quoted fields but does not
+                    // support multi-line values (newlines inside quoted cells).
+                    const imported = lines.slice(1).map(line => {
+                        const vals = line.match(/("(?:[^"]|"")*"|[^,]*)/g).map(v =>
+                            v.replace(/^"|"$/g,'').replace(/""/g,'"').trim()
+                        );
+                        const obj = {};
+                        headers.forEach((h, i) => { obj[h] = vals[i] || ''; });
+                        if (obj.specialties) obj.specialties = obj.specialties.split(';').map(s=>s.trim()).filter(Boolean);
+                        if (obj.featured) obj.featured = obj.featured === 'true';
+                        if (obj.confidenceScore) obj.confidenceScore = parseInt(obj.confidenceScore) || 0;
+                        return obj;
+                    }).filter(o => o.name);
+
+                    if (!imported.length) { utils.toast('No valid rows found in CSV', 'error'); return; }
+                    if (!confirm(`Import ${imported.length} listing(s)? This will be added on top of the ${state.shops.length} existing listing(s).`)) return;
+
+                    state.shops = [...state.shops, ...imported];
+                    this.commitChanges('batch-import', `${imported.length} listings`)
+                        .then(() => {
+                            this.navigate('shops');
+                            utils.toast(`Imported ${imported.length} listings`, 'success');
+                        })
+                        .catch(err => utils.toast(`Import commit failed: ${err.message}`, 'error'));
+                };
+                reader.readAsText(file);
+                input.value = ''; // reset so same file can be re-imported
+            },
 
         // Initialize App
         document.addEventListener('DOMContentLoaded', () => app.init());

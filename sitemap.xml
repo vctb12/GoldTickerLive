@@ -156,6 +156,41 @@
     <changefreq>always</changefreq>
     <priority>0.85</priority>
   </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/lebanon.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/lebanon.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/lebanon.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/tunisia.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/tunisia.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/tunisia.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/algeria.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/algeria.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/algeria.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/libya.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/libya.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/libya.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/countries/sudan.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/sudan.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/sudan.html?lang=ar"/>
+    <changefreq>always</changefreq>
+    <priority>0.75</priority>
+  </url>
 
   <!-- City Pages -->
   <url>
