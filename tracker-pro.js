@@ -246,11 +246,27 @@ function exportJsonData() {
 // ── Auto-refresh ──────────────────────────────────────────────────────────────
 
 let _autoRefreshTimer = null;
+let _countdownTimer = null;
+let _countdownValue = 0;
+
+function startCountdown() {
+  clearInterval(_countdownTimer);
+  _countdownValue = Math.floor(CONSTANTS.GOLD_REFRESH_MS / 1000);
+
+  function tick() {
+    _countdownValue--;
+    if (_countdownValue <= 0) { clearInterval(_countdownTimer); return; }
+    const el_countdown = document.getElementById('tp-countdown');
+    if (el_countdown) el_countdown.textContent = `Next update in ${_countdownValue}s`;
+  }
+  _countdownTimer = setInterval(tick, 1000);
+}
 
 function startAutoRefresh() {
   if (_autoRefreshTimer) return;
   _autoRefreshTimer = setInterval(async () => {
     if (!state.autoRefresh) return;
+    startCountdown();
     await fetchLive();
     checkAlerts();
     renderAll();
@@ -362,6 +378,11 @@ async function refreshWire() {
 // ── Init ──────────────────────────────────────────────────────────────────────
 
 async function init() {
+  // Wait for DOM to be fully ready
+  if (document.readyState !== 'complete' && document.readyState !== 'interactive') {
+    await new Promise(r => document.addEventListener('DOMContentLoaded', r, { once: true }));
+  }
+
   Object.assign(el, ui());
 
   document.documentElement.lang = state.lang;
@@ -404,6 +425,30 @@ async function init() {
   await refreshData(false);
   renderAll();
   if (state.autoRefresh) startAutoRefresh();
+  startCountdown();
+
+  // Mobile swipe for region tabs
+  const marketBoard = document.getElementById('tp-market-board');
+  if (marketBoard) {
+    let touchStartX = 0;
+    const REGIONS_ORDER = ['gcc', 'levant', 'africa', 'global'];
+
+    marketBoard.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    marketBoard.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) < 50) return;
+      const currentIdx = REGIONS_ORDER.indexOf(state.activeRegion || 'gcc');
+      let nextIdx = dx < 0 ? currentIdx + 1 : currentIdx - 1;
+      nextIdx = Math.max(0, Math.min(REGIONS_ORDER.length - 1, nextIdx));
+      if (nextIdx !== currentIdx) {
+        state.activeRegion = REGIONS_ORDER[nextIdx];
+        document.querySelectorAll('.tracker-region-pill[data-region]').forEach(btn => {
+          btn.classList.toggle('is-active', btn.dataset.region === state.activeRegion);
+        });
+        renderMarkets();
+      }
+    }, { passive: true });
+  }
 
   // Redraw chart on resize so viewBox stays in sync with container dimensions
   let _resizeTimer = null;
@@ -414,5 +459,25 @@ async function init() {
     }, 150);
   });
 }
+
+// Offline detection
+function handleOnlineStatus() {
+  const isOnline = navigator.onLine;
+  let offlineBanner = document.getElementById('tp-offline-banner');
+  if (!isOnline) {
+    if (!offlineBanner) {
+      offlineBanner = document.createElement('div');
+      offlineBanner.id = 'tp-offline-banner';
+      offlineBanner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#dc2626;color:white;text-align:center;padding:0.5rem;font-size:0.875rem;font-weight:500;';
+      const cached = state.live?.updatedAt ? new Date(state.live.updatedAt).toLocaleTimeString() : 'unknown';
+      offlineBanner.textContent = `⚠️ You're offline — showing cached prices from ${cached}`;
+      document.body.prepend(offlineBanner);
+    }
+  } else {
+    offlineBanner?.remove();
+  }
+}
+window.addEventListener('online', handleOnlineStatus);
+window.addEventListener('offline', handleOnlineStatus);
 
 init();

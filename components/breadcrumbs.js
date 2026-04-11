@@ -123,3 +123,23 @@ export function injectBreadcrumbs(pageName, extra = {}) {
   const breadcrumbs = getBreadcrumbs(pageName, extra);
   renderBreadcrumbs(breadcrumbContainer, breadcrumbs);
 }
+
+/**
+ * Generate JSON-LD BreadcrumbList from breadcrumb items.
+ * @param {Array<{label: string, href: string}>} items
+ * @param {string} baseUrl
+ * @returns {string} script tag HTML
+ */
+export function generateBreadcrumbSchema(items, baseUrl = 'https://vctb12.github.io/Gold-Prices') {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': items.map((item, i) => ({
+      '@type': 'ListItem',
+      'position': i + 1,
+      'name': item.label || item.name,
+      'item': item.href?.startsWith('http') ? item.href : `${baseUrl}${item.href}`,
+    })),
+  };
+  return `<script type="application/ld+json">${JSON.stringify(schema)}</script>`;
+}
