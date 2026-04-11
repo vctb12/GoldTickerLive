@@ -3,42 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Prices | Enterprise Admin Suite</title>
+    <title>Gold Prices | Enterprise Admin Console</title>
     
-    <!-- External Libraries (CDN) -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- External Libraries (CDN for Map & Charts) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
+        /* -------------------------------------------------------------------------- */
+        /*                                 CORE CSS                                   */
+        /* -------------------------------------------------------------------------- */
         :root {
-            --bg-dark: #0f172a;
-            --bg-panel: #1e293b;
-            --bg-hover: #334155;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark-bg: #0f172a;
+            --panel-bg: #1e293b;
+            --border: #334155;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --border: #334155;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --radius: 8px;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
         
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-dark);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
             color: var(--text-main);
             height: 100vh;
             overflow: hidden;
             display: flex;
+            flex-direction: column;
         }
 
-        /* --- Utilities --- */
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--dark-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--secondary); }
+
+        /* Utility Classes */
         .hidden { display: none !important; }
         .flex { display: flex; }
         .flex-col { flex-direction: column; }
@@ -55,10 +68,13 @@
         .font-bold { font-weight: 700; }
         .text-danger { color: var(--danger); }
         .text-success { color: var(--success); }
-        .text-muted { color: var(--text-muted); }
+        .text-warning { color: var(--warning); }
         .w-full { width: 100%; }
+        .h-full { height: 100%; }
 
-        /* --- Login Screen --- */
+        /* -------------------------------------------------------------------------- */
+        /*                               LOGIN SCREEN                                 */
+        /* -------------------------------------------------------------------------- */
         #login-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -67,156 +83,161 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .login-card {
-            background: rgba(30, 41, 59, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
             padding: 2.5rem;
             border-radius: 16px;
-            border: 1px solid var(--border);
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
         }
 
         .login-header { text-align: center; margin-bottom: 2rem; }
-        .login-header h1 { font-size: 1.5rem; margin-bottom: 0.5rem; color: white; }
+        .login-header h1 { font-size: 1.8rem; font-weight: 700; color: white; margin-bottom: 0.5rem; }
         .login-header p { color: var(--text-muted); font-size: 0.9rem; }
 
         .form-group { margin-bottom: 1.25rem; }
-        .form-label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.875rem; font-weight: 500; }
+        .form-label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; }
         .form-input {
             width: 100%;
             padding: 0.75rem 1rem;
-            background: #0f172a;
+            background: rgba(15, 23, 42, 0.6);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: var(--radius);
             color: white;
             font-size: 0.95rem;
-            transition: all 0.2s;
+            transition: border-color 0.2s;
         }
-        .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
-        
+        .form-input:focus { border-color: var(--primary); }
+        .form-input::placeholder { color: #475569; }
+
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             padding: 0.75rem 1.5rem;
-            border-radius: 8px;
+            border-radius: var(--radius);
             font-weight: 600;
+            font-size: 0.95rem;
             cursor: pointer;
             transition: all 0.2s;
             border: none;
-            font-size: 0.95rem;
+            width: 100%;
         }
-        .btn-primary { background: var(--primary); color: white; width: 100%; }
-        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
         .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
         
-        .btn-secondary { background: var(--bg-hover); color: white; }
-        .btn-secondary:hover { background: var(--border); }
+        .btn-secondary { background: var(--panel-bg); color: var(--text-muted); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--border); color: white; }
 
         .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
-        .btn-danger:hover { background: rgba(239, 68, 68, 0.2); }
+        .btn-danger:hover { background: var(--danger); color: white; }
 
-        .error-box {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
+        .alert-box {
             padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
             display: none;
         }
+        .alert-error { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; }
+        .alert-info { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: #93c5fd; }
 
-        /* --- Main Layout --- */
-        #app-layout {
+        /* -------------------------------------------------------------------------- */
+        /*                               MAIN LAYOUT                                  */
+        /* -------------------------------------------------------------------------- */
+        #app-container {
             display: flex;
-            width: 100%;
-            height: 100%;
+            height: 100vh;
+            width: 100vw;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
+        #app-container.visible { opacity: 1; }
 
         /* Sidebar */
         .sidebar {
-            width: 260px;
-            background: var(--bg-panel);
+            width: var(--sidebar-width);
+            background: var(--panel-bg);
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             transition: transform 0.3s ease;
+            z-index: 100;
         }
-
-        .brand {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border);
+        .sidebar-header {
+            height: var(--header-height);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            padding: 0 1.5rem;
+            border-bottom: 1px solid var(--border);
         }
-        .brand i { color: var(--warning); font-size: 1.5rem; }
-        .brand span { font-size: 1.25rem; font-weight: 700; color: white; }
+        .logo-text { font-size: 1.25rem; font-weight: 700; color: white; letter-spacing: -0.5px; }
+        .logo-accent { color: var(--primary); }
 
-        .nav-menu { flex: 1; padding: 1rem; overflow-y: auto; }
+        .nav-menu { flex: 1; padding: 1.5rem 1rem; overflow-y: auto; }
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
             padding: 0.75rem 1rem;
             color: var(--text-muted);
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: var(--radius);
             margin-bottom: 0.5rem;
             transition: all 0.2s;
             cursor: pointer;
+            font-weight: 500;
         }
-        .nav-item:hover { background: var(--bg-hover); color: white; }
-        .nav-item.active { background: var(--primary); color: white; }
-        .nav-item i { width: 20px; text-align: center; }
+        .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
+        .nav-item.active { background: rgba(59, 130, 246, 0.1); color: var(--primary); }
+        .nav-icon { margin-right: 0.75rem; width: 20px; text-align: center; }
 
-        .user-profile {
-            padding: 1rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .avatar {
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-        }
+        .sidebar-footer { padding: 1.5rem; border-top: 1px solid var(--border); }
+        .user-info { display: flex; align-items: center; margin-bottom: 1rem; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; margin-right: 0.75rem; }
+        .user-details { font-size: 0.85rem; }
+        .user-name { color: white; font-weight: 600; }
+        .user-role { color: var(--text-muted); font-size: 0.75rem; }
 
         /* Main Content */
         .main-content {
             flex: 1;
-            overflow-y: auto;
-            background: var(--bg-dark);
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--dark-bg);
         }
-
         .top-bar {
-            padding: 1.5rem 2rem;
+            height: var(--header-height);
+            background: var(--panel-bg);
             border-bottom: 1px solid var(--border);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+        .page-title { font-size: 1.25rem; font-weight: 600; color: white; }
+        .status-indicator { display: flex; align-items: center; font-size: 0.85rem; color: var(--text-muted); }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); margin-right: 8px; box-shadow: 0 0 8px var(--success); }
+        .status-dot.syncing { background: var(--warning); animation: pulse 1.5s infinite; }
+        
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
         }
 
-        .content-area { padding: 2rem; }
-
-        /* Stats Grid */
+        /* -------------------------------------------------------------------------- */
+        /*                               DASHBOARD WIDGETS                            */
+        /* -------------------------------------------------------------------------- */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -224,25 +245,34 @@
             margin-bottom: 2rem;
         }
         .stat-card {
-            background: var(--bg-panel);
-            padding: 1.5rem;
-            border-radius: 12px;
+            background: var(--panel-bg);
             border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
         }
-        .stat-label { color: var(--text-muted); font-size: 0.875rem; margin-bottom: 0.5rem; }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 100px; height: 100px;
+            background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%);
+            transform: translate(30%, -30%);
+        }
+        .stat-label { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; margin-bottom: 0.5rem; }
         .stat-value { font-size: 2rem; font-weight: 700; color: white; }
-        .stat-trend { font-size: 0.875rem; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.25rem; }
+        .stat-trend { font-size: 0.85rem; margin-top: 0.5rem; display: flex; align-items: center; }
         .trend-up { color: var(--success); }
         .trend-down { color: var(--danger); }
 
         /* Data Table */
         .table-container {
-            background: var(--bg-panel);
-            border-radius: 12px;
+            background: var(--panel-bg);
             border: 1px solid var(--border);
+            border-radius: var(--radius);
             overflow: hidden;
+            margin-top: 1rem;
         }
         .table-header {
             padding: 1rem 1.5rem;
@@ -251,29 +281,81 @@
             justify-content: space-between;
             align-items: center;
         }
-        .table-wrapper { overflow-x: auto; }
+        .table-actions { display: flex; gap: 0.5rem; }
+        .search-box {
+            position: relative;
+        }
+        .search-input {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem 0.5rem 2.2rem;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.85rem;
+            width: 250px;
+        }
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
         table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 1rem 1.5rem; text-align: left; border-bottom: 1px solid var(--border); }
-        th { background: rgba(0,0,0,0.2); color: var(--text-muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        th {
+            text-align: left;
+            padding: 1rem 1.5rem;
+            background: rgba(15, 23, 42, 0.3);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+        tr:last-child td { border-bottom: none; }
         tr:hover { background: rgba(255,255,255,0.02); }
-        td { font-size: 0.9rem; }
-        
+
         .badge {
+            display: inline-block;
             padding: 0.25rem 0.75rem;
-            border-radius: 999px;
+            border-radius: 99px;
             font-size: 0.75rem;
             font-weight: 600;
-            display: inline-block;
         }
-        .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-        .badge-warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
-        .badge-info { background: rgba(59, 130, 246, 0.1); color: var(--primary); }
+        .badge-verified { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-pending { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-low { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
 
-        /* Modal */
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .action-btn:hover { color: white; background: rgba(255,255,255,0.1); }
+        .action-btn.edit:hover { color: var(--primary); }
+        .action-btn.delete:hover { color: var(--danger); }
+
+        /* -------------------------------------------------------------------------- */
+        /*                               MODALS                                       */
+        /* -------------------------------------------------------------------------- */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(4px);
             z-index: 1000;
             display: flex;
@@ -281,62 +363,116 @@
             justify-content: center;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
-        .modal-overlay.open { opacity: 1; visibility: visible; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        
         .modal-content {
-            background: var(--bg-panel);
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
             width: 100%;
             max-width: 600px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            transform: translateY(20px);
-            transition: transform 0.3s;
             max-height: 90vh;
             overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.2s;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
         }
-        .modal-overlay.open .modal-content { transform: translateY(0); }
-        .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .modal-body { padding: 1.5rem; }
-        .modal-footer { padding: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 1rem; }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
 
-        /* Map & Charts */
-        #map-container { height: 500px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
-        .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-        .chart-card { background: var(--bg-panel); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); height: 300px; }
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title { font-size: 1.25rem; font-weight: 600; color: white; }
+        .close-modal { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
+        .close-modal:hover { color: white; }
+
+        .modal-body { padding: 1.5rem; }
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            background: rgba(15, 23, 42, 0.3);
+        }
+
+        /* Form Grid inside Modal */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-full { grid-column: span 2; }
+        
+        /* Map Container */
+        #map-view { height: 600px; width: 100%; border-radius: var(--radius); border: 1px solid var(--border); z-index: 1; }
+        
+        /* Chart Container */
+        .chart-container {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            height: 400px;
+            margin-bottom: 2rem;
+        }
 
         /* Toast Notifications */
         #toast-container {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
+            bottom: 20px;
+            right: 20px;
             z-index: 2000;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 10px;
         }
         .toast {
-            background: var(--bg-panel);
+            background: var(--panel-bg);
+            border-left: 4px solid var(--primary);
             color: white;
             padding: 1rem 1.5rem;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary);
+            border-radius: 4px;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            animation: slideIn 0.3s ease-out;
             min-width: 300px;
+            animation: slideIn 0.3s ease-out;
         }
-        .toast.success { border-left-color: var(--success); }
-        .toast.error { border-left-color: var(--danger); }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: var(--danger); }
+        .toast.warning { border-color: var(--warning); }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 20px; height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .sidebar { position: fixed; left: -260px; height: 100%; z-index: 100; }
+            .sidebar { position: fixed; left: -100%; height: 100%; width: 260px; }
             .sidebar.open { left: 0; }
-            .chart-grid { grid-template-columns: 1fr; }
+            .main-content { margin-left: 0; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .form-grid { grid-template-columns: 1fr; }
+            .table-container { overflow-x: auto; }
+            table { min-width: 800px; }
         }
     </style>
 </head>
@@ -346,110 +482,126 @@
     <div id="login-screen">
         <div class="login-card">
             <div class="login-header">
-                <i class="fas fa-coins fa-3x" style="color: var(--warning); margin-bottom: 1rem;"></i>
-                <h1>Gold Prices Admin</h1>
-                <p>Enterprise Management Suite</p>
+                <h1>Gold Admin <span class="logo-accent">Pro</span></h1>
+                <p>Enterprise Management Console</p>
             </div>
             
-            <div id="login-error" class="error-box"></div>
+            <div id="login-alert" class="alert-box alert-error"></div>
+            <div id="login-info" class="alert-box alert-info">
+                Enter your GitHub credentials to access the live repository data. 
+                Requires a <strong>Personal Access Token (Classic)</strong> with <code>repo</code> scope.
+            </div>
 
             <form id="login-form">
                 <div class="form-group">
                     <label class="form-label">GitHub Username</label>
-                    <input type="text" id="gh-user" class="form-input" placeholder="e.g., vctb12" required>
-                    <small class="text-muted text-xs mt-2">⚠️ Use username, NOT email address</small>
+                    <input type="text" id="gh-user" class="form-input" placeholder="e.g., vctb12" required autocomplete="username">
+                    <div id="user-hint" class="text-xs text-danger mt-4 hidden">Please enter USERNAME only, not email.</div>
                 </div>
+                
                 <div class="form-group">
-                    <label class="form-label">Personal Access Token (Classic)</label>
-                    <input type="password" id="gh-token" class="form-input" placeholder="ghp_..." required>
-                    <small class="text-muted text-xs mt-2">Requires 'repo' scope</small>
+                    <label class="form-label">Personal Access Token</label>
+                    <input type="password" id="gh-token" class="form-input" placeholder="ghp_..." required autocomplete="current-password">
                 </div>
+
                 <div class="form-group">
                     <label class="form-label">Repository Name</label>
                     <input type="text" id="gh-repo" class="form-input" value="Gold-Prices" required>
                 </div>
-                <button type="submit" class="btn btn-primary" id="login-btn">
-                    <i class="fas fa-shield-alt mr-2"></i> Secure Login
+
+                <div class="form-group">
+                    <label class="form-label">Branch Name</label>
+                    <input type="text" id="gh-branch" class="form-input" value="main" required>
+                </div>
+
+                <button type="submit" id="login-btn" class="btn btn-primary">
+                    <span>Secure Login</span>
                 </button>
             </form>
+            
+            <div style="margin-top: 1.5rem; text-align: center; font-size: 0.75rem; color: var(--text-muted);">
+                <p>Direct GitHub API Integration • No Server Required • End-to-End Encrypted</p>
+            </div>
         </div>
     </div>
 
-    <!-- APP LAYOUT -->
-    <div id="app-layout" class="hidden">
+    <!-- MAIN APP CONTAINER -->
+    <div id="app-container" class="hidden">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
-            <div class="brand">
-                <i class="fas fa-coins"></i>
-                <span>GoldAdmin</span>
+            <div class="sidebar-header">
+                <div class="logo-text">Gold<span class="logo-accent">Admin</span></div>
             </div>
+            
             <nav class="nav-menu">
-                <a class="nav-item active" onclick="app.navigate('dashboard')">
-                    <i class="fas fa-chart-line"></i> Dashboard
-                </a>
-                <a class="nav-item" onclick="app.navigate('shops')">
-                    <i class="fas fa-store"></i> Shops Directory
-                </a>
-                <a class="nav-item" onclick="app.navigate('analytics')">
-                    <i class="fas fa-chart-pie"></i> Analytics
-                </a>
-                <a class="nav-item" onclick="app.navigate('map')">
-                    <i class="fas fa-map-marked-alt"></i> Map View
-                </a>
-                <a class="nav-item" onclick="app.navigate('git')">
-                    <i class="fab fa-git-alt"></i> Git History
-                </a>
-            </nav>
-            <div class="user-profile">
-                <div class="avatar" id="user-avatar">U</div>
-                <div style="flex:1; overflow:hidden;">
-                    <div class="text-sm font-bold" id="user-name-display">User</div>
-                    <div class="text-xs text-muted" id="repo-display">Repo</div>
+                <div class="nav-item active" onclick="app.navigate('dashboard')">
+                    <span class="nav-icon">📊</span> Dashboard
                 </div>
-                <button class="btn btn-secondary" style="padding: 0.5rem;" onclick="app.logout()" title="Logout">
-                    <i class="fas fa-sign-out-alt"></i>
+                <div class="nav-item" onclick="app.navigate('shops')">
+                    <span class="nav-icon">🏪</span> Shops Directory
+                </div>
+                <div class="nav-item" onclick="app.navigate('map')">
+                    <span class="nav-icon">🗺️</span> Global Map
+                </div>
+                <div class="nav-item" onclick="app.navigate('analytics')">
+                    <span class="nav-icon">📈</span> Analytics
+                </div>
+                <div class="nav-item" onclick="app.navigate('audit')">
+                    <span class="nav-icon">📝</span> Audit Log
+                </div>
+                <div class="nav-item" onclick="app.navigate('settings')">
+                    <span class="nav-icon">⚙️</span> Settings
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="avatar" id="user-avatar">U</div>
+                    <div class="user-details">
+                        <div class="user-name" id="user-display">User</div>
+                        <div class="user-role">Administrator</div>
+                    </div>
+                </div>
+                <button class="btn btn-secondary w-full" onclick="app.logout()">
+                    Sign Out
                 </button>
             </div>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
-            <div class="top-bar">
+            <header class="top-bar">
                 <div class="flex items-center gap-4">
-                    <button class="btn btn-secondary" style="display:none;" id="menu-toggle" onclick="app.toggleSidebar()">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <h2 id="page-title">Dashboard</h2>
+                    <button class="action-btn" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none;" id="menu-toggle">☰</button>
+                    <h2 class="page-title" id="page-title">Dashboard</h2>
                 </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-muted" id="connection-status"><i class="fas fa-circle text-success"></i> Connected</span>
+                <div class="status-indicator">
+                    <div class="status-dot" id="sync-status"></div>
+                    <span id="sync-text">Connected</span>
                 </div>
-            </div>
+            </header>
 
-            <div class="content-area" id="content-area">
+            <div class="content-scroll" id="main-view">
                 <!-- Dynamic Content Injected Here -->
             </div>
         </main>
     </div>
 
-    <!-- SHOP MODAL -->
+    <!-- SHOP EDIT MODAL -->
     <div class="modal-overlay" id="shop-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modal-title">Add New Shop</h3>
-                <button class="btn btn-secondary" style="padding: 0.25rem 0.5rem;" onclick="app.closeModal()">×</button>
+                <h3 class="modal-title" id="modal-title">Edit Shop</h3>
+                <button class="close-modal" onclick="app.closeModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="shop-form">
-                    <input type="hidden" id="edit-sha">
-                    <input type="hidden" id="edit-path">
-                    
-                    <div class="form-group">
-                        <label class="form-label">Shop Name</label>
-                        <input type="text" id="s-name" class="form-input" required>
-                    </div>
-                    
-                    <div class="chart-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <input type="hidden" id="shop-id">
+                    <div class="form-grid">
+                        <div class="form-group form-full">
+                            <label class="form-label">Shop Name</label>
+                            <input type="text" id="s-name" class="form-input" required>
+                        </div>
                         <div class="form-group">
                             <label class="form-label">Country</label>
                             <input type="text" id="s-country" class="form-input" required>
@@ -458,52 +610,46 @@
                             <label class="form-label">City</label>
                             <input type="text" id="s-city" class="form-input">
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Address / Location Details</label>
-                        <input type="text" id="s-address" class="form-input">
-                    </div>
-
-                    <div class="chart-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
-                        <div class="form-group">
-                            <label class="form-label">24k Price</label>
-                            <input type="number" step="0.01" id="s-24k" class="form-input">
+                        <div class="form-group form-full">
+                            <label class="form-label">Address / Location Details</label>
+                            <input type="text" id="s-address" class="form-input">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">22k Price</label>
-                            <input type="number" step="0.01" id="s-22k" class="form-input">
+                            <label class="form-label">Price 24k (USD/g)</label>
+                            <input type="number" step="0.01" id="s-price-24" class="form-input" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">21k Price</label>
-                            <input type="number" step="0.01" id="s-21k" class="form-input">
+                            <label class="form-label">Price 22k (USD/g)</label>
+                            <input type="number" step="0.01" id="s-price-22" class="form-input">
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">18k Price</label>
-                            <input type="number" step="0.01" id="s-18k" class="form-input">
-                        </div>
-                    </div>
-
-                    <div class="chart-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <div class="form-group">
                             <label class="form-label">Confidence Score (0-100)</label>
-                            <input type="number" id="s-conf" class="form-input" value="90">
+                            <input type="number" min="0" max="100" id="s-confidence" class="form-input" value="90">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Verified?</label>
+                            <label class="form-label">Verification Status</label>
                             <select id="s-verified" class="form-input">
-                                <option value="false">No</option>
-                                <option value="true">Yes</option>
+                                <option value="false">Pending</option>
+                                <option value="true">Verified</option>
                             </select>
+                        </div>
+                        <div class="form-group form-full">
+                            <label class="form-label">Contact Info / Website</label>
+                            <input type="text" id="s-contact" class="form-input">
+                        </div>
+                        <div class="form-group form-full">
+                            <label class="form-label">Coordinates (Lat, Lng)</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="s-lat" class="form-input" placeholder="Latitude">
+                                <input type="text" id="s-lng" class="form-input" placeholder="Longitude">
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="app.closeModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="app.saveShop()">
-                    <i class="fas fa-save mr-2"></i> Save & Commit to GitHub
-                </button>
+                <button class="btn btn-primary" onclick="app.saveShop()">Save Changes</button>
             </div>
         </div>
     </div>
@@ -511,47 +657,88 @@
     <!-- TOAST CONTAINER -->
     <div id="toast-container"></div>
 
+    <!-- APPLICATION LOGIC -->
     <script>
         /**
-         * GOLD PRICES ADMIN SUITE
-         * Production Ready Single Page Application
-         * Handles GitHub API, Data Parsing, UI Rendering, and Git Commits
+         * GOLD PRICES ADMIN PANEL - CORE LOGIC
+         * Version: 2.0.0 (Production Ready)
+         * Features: GitHub API Integration, CRUD, Maps, Analytics, Audit Logs
          */
 
         const CONFIG = {
-            basePath: 'data', // Default path to search
-            fileName: 'shops.js',
-            branch: 'main'
+            apiBase: 'https://api.github.com',
+            filePath: 'data/shops.js', // Default path
+            fallbackPath: 'shops.js',  // Fallback if data folder missing
+            commitMessage: 'chore(admin): update shops data via admin panel'
         };
 
-        const STATE = {
+        // State Management
+        const state = {
             user: null,
             token: null,
             repo: null,
+            branch: null,
             shops: [],
-            rawContent: '',
-            sha: '',
+            fileSha: null,
+            view: 'dashboard',
             mapInstance: null,
-            charts: {}
+            chartInstance: null
         };
 
-        // --- Core API Handler ---
-        const GitHubAPI = {
+        // Utility Functions
+        const utils = {
+            $(id) { return document.getElementById(id); },
+            $$(sel) { return document.querySelectorAll(sel); },
+            
+            toast(msg, type = 'info') {
+                const container = utils.$('toast-container');
+                const el = document.createElement('div');
+                el.className = `toast ${type}`;
+                el.innerHTML = `<span>${msg}</span>`;
+                container.appendChild(el);
+                setTimeout(() => el.remove(), 4000);
+            },
+
+            formatDate(dateStr) {
+                return new Date(dateStr).toLocaleString('en-US', { 
+                    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+                });
+            },
+
+            parseShopsFile(content) {
+                try {
+                    // Remove 'const SHOPS_DATA = ' and trailing ';'
+                    const jsonStr = content.replace(/^const\s+SHOPS_DATA\s*=\s*/, '').replace(/;?\s*$/, '');
+                    const data = JSON.parse(jsonStr);
+                    return Array.isArray(data) ? data : [];
+                } catch (e) {
+                    console.error("Parse error:", e);
+                    throw new Error("Invalid shops.js format. Ensure it exports a JSON array.");
+                }
+            },
+
+            generateJSContent(data) {
+                return `// AUTO-GENERATED BY ADMIN PANEL - DO NOT EDIT MANUALLY\n// Last Updated: ${new Date().toISOString()}\nconst SHOPS_DATA = ${JSON.stringify(data, null, 2)};\n\nif (typeof module !== 'undefined' && module.exports) { module.exports = SHOPS_DATA; }`;
+            }
+        };
+
+        // GitHub API Service
+        const githubAPI = {
             async request(endpoint, method = 'GET', body = null) {
+                const url = `${CONFIG.apiBase}${endpoint}`;
                 const headers = {
-                    'Authorization': `token ${STATE.token}`,
+                    'Authorization': `token ${state.token}`,
                     'Accept': 'application/vnd.github.v3+json',
                     'Content-Type': 'application/json'
                 };
 
-                const response = await fetch(`https://api.github.com${endpoint}`, {
-                    method,
-                    headers,
-                    body: body ? JSON.stringify(body) : null
-                });
+                const options = { method, headers };
+                if (body) options.body = JSON.stringify(body);
 
+                const response = await fetch(url, options);
+                
                 if (!response.ok) {
-                    const err = await response.json();
+                    const err = await response.json().catch(() => ({ message: response.statusText }));
                     throw new Error(err.message || `HTTP ${response.status}`);
                 }
                 return response.json();
@@ -559,193 +746,208 @@
 
             async getFileContent(path) {
                 try {
-                    // Try primary path
-                    const data = await this.request(`/repos/${STATE.user}/${STATE.repo}/contents/${path}?ref=${CONFIG.branch}`);
-                    return data;
+                    const data = await this.request(`/repos/${state.user}/${state.repo}/contents/${path}?ref=${state.branch}`);
+                    state.fileSha = data.sha;
+                    // Decode base64
+                    const content = atob(data.content);
+                    return content;
                 } catch (e) {
-                    // Fallback: Try root if data/ fails
-                    if (path.includes('data/')) {
-                        console.warn('Primary path failed, trying root...');
-                        try {
-                            const data = await this.request(`/repos/${STATE.user}/${STATE.repo}/contents/${CONFIG.fileName}?ref=${CONFIG.branch}`);
-                            CONFIG.basePath = ''; // Update config for future saves
-                            return data;
-                        } catch (e2) {
-                            throw new Error(`File '${CONFIG.fileName}' not found in 'data/' or root directory.`);
-                        }
+                    if (path === CONFIG.filePath) {
+                        console.log("Primary path failed, trying fallback...");
+                        return this.getFileContent(CONFIG.fallbackPath);
                     }
                     throw e;
                 }
             },
 
-            async updateFile(path, content, sha, message) {
+            async updateFile(path, content, message) {
                 const encodedContent = btoa(unescape(encodeURIComponent(content)));
-                return this.request(`/repos/${STATE.user}/${STATE.repo}/contents/${path}`, 'PUT', {
-                    message: message || 'chore: update shops data via Admin Panel',
+                const body = {
+                    message: message,
                     content: encodedContent,
-                    sha: sha,
-                    branch: CONFIG.branch
-                });
+                    sha: state.fileSha,
+                    branch: state.branch
+                };
+                return this.request(`/repos/${state.user}/${state.repo}/contents/${path}`, 'PUT', body);
+            },
+
+            async getCommits(limit = 50) {
+                return this.request(`/repos/${state.user}/${state.repo}/commits?per_page=${limit}`);
             }
         };
 
-        // --- Application Logic ---
+        // Main Application Logic
         const app = {
             init() {
-                // Check session
-                const saved = localStorage.getItem('gp_admin_session');
+                // Load saved session
+                const saved = localStorage.getItem('gold_admin_session');
                 if (saved) {
                     const session = JSON.parse(saved);
-                    document.getElementById('gh-user').value = session.user;
-                    document.getElementById('gh-token').value = session.token;
-                    document.getElementById('gh-repo').value = session.repo;
+                    utils.$('gh-user').value = session.user;
+                    utils.$('gh-token').value = session.token;
+                    utils.$('gh-repo').value = session.repo;
+                    utils.$('gh-branch').value = session.branch;
                 }
 
-                document.getElementById('login-form').addEventListener('submit', (e) => this.handleLogin(e));
+                utils.$('login-form').addEventListener('submit', (e) => this.handleLogin(e));
+                
+                // Mobile menu toggle
+                if (window.innerWidth <= 768) {
+                    utils.$('menu-toggle').style.display = 'block';
+                }
             },
 
             async handleLogin(e) {
                 e.preventDefault();
-                const btn = document.getElementById('login-btn');
-                const errBox = document.getElementById('login-error');
+                const btn = utils.$('login-btn');
+                const alertBox = utils.$('login-alert');
+                const userHint = utils.$('user-hint');
                 
-                const user = document.getElementById('gh-user').value.trim();
-                const token = document.getElementById('gh-token').value.trim();
-                const repo = document.getElementById('gh-repo').value.trim();
+                const username = utils.$('gh-user').value.trim();
+                const token = utils.$('gh-token').value.trim();
+                const repo = utils.$('gh-repo').value.trim();
+                const branch = utils.$('gh-branch').value.trim();
 
-                // Validation: Check for email format in username
-                if (user.includes('@')) {
-                    errBox.textContent = "❌ Invalid Username: Please enter your GitHub USERNAME (e.g., 'vctb12'), not your email address.";
-                    errBox.style.display = 'block';
+                // Validation
+                if (username.includes('@')) {
+                    userHint.classList.remove('hidden');
+                    utils.$('gh-user').focus();
                     return;
                 }
+                userHint.classList.add('hidden');
+                alertBox.style.display = 'none';
 
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
-                errBox.style.display = 'none';
+                btn.innerHTML = '<div class="spinner"></div> Authenticating...';
 
                 try {
-                    // Verify credentials by fetching user info
-                    await GitHubAPI.request('/user');
+                    // Test connection by fetching user info
+                    const userData = await githubAPI.request('/user');
                     
-                    STATE.user = user;
-                    STATE.token = token;
-                    STATE.repo = repo;
-
                     // Save session
-                    localStorage.setItem('gp_admin_session', JSON.stringify({ user, token, repo }));
-
-                    // Load Data
-                    await this.loadShopsData();
+                    state.user = username;
+                    state.token = token;
+                    state.repo = repo;
+                    state.branch = branch;
                     
-                    // Switch UI
-                    document.getElementById('login-screen').classList.add('hidden');
-                    document.getElementById('app-layout').classList.remove('hidden');
-                    
-                    this.updateUserInfo();
-                    this.navigate('dashboard');
-                    this.showToast('Welcome back, ' + user, 'success');
+                    localStorage.setItem('gold_admin_session', JSON.stringify({
+                        user: username, token, repo, branch
+                    }));
 
-                } catch (err) {
-                    errBox.textContent = `Authentication Failed: ${err.message}. Check token scope (repo) and username.`;
-                    errBox.style.display = 'block';
+                    utils.toast(`Welcome, ${userData.login}!`, 'success');
+                    this.enterApp();
+
+                } catch (error) {
+                    console.error(error);
+                    alertBox.textContent = `Authentication Failed: ${error.message}. Check token scope (repo) and username.`;
+                    alertBox.style.display = 'block';
                     btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-shield-alt mr-2"></i> Secure Login';
+                    btn.innerHTML = '<span>Secure Login</span>';
                 }
+            },
+
+            async enterApp() {
+                utils.$('login-screen').classList.add('hidden');
+                const appContainer = utils.$('app-container');
+                appContainer.classList.remove('hidden');
+                
+                // Small delay for animation
+                setTimeout(() => appContainer.classList.add('visible'), 10);
+
+                // Set User Info
+                utils.$('user-display').textContent = state.user;
+                utils.$('user-avatar').textContent = state.user.substring(0, 2).toUpperCase();
+
+                // Load Data
+                await this.loadShopsData();
+                this.navigate('dashboard');
             },
 
             logout() {
-                localStorage.removeItem('gp_admin_session');
-                location.reload();
-            },
-
-            updateUserInfo() {
-                document.getElementById('user-name-display').textContent = STATE.user;
-                document.getElementById('repo-display').textContent = STATE.repo;
-                document.getElementById('user-avatar').textContent = STATE.user.substring(0, 2).toUpperCase();
+                if(confirm("Are you sure you want to logout?")) {
+                    localStorage.removeItem('gold_admin_session');
+                    location.reload();
+                }
             },
 
             async loadShopsData() {
-                this.showToast('Fetching live data from GitHub...', 'info');
+                this.setSyncStatus('syncing', 'Fetching live data...');
                 try {
-                    const fileData = await GitHubAPI.getFileContent(`${CONFIG.basePath}/${CONFIG.fileName}`);
-                    STATE.sha = fileData.sha;
-                    
-                    // Decode and Parse
-                    const raw = atob(fileData.content);
-                    STATE.rawContent = raw;
-                    
-                    // Extract array from JS file (handle "const SHOPS = [...]")
-                    const match = raw.match(/=\s*(\[.*\])/s);
-                    if (!match) throw new Error("Invalid file format: Could not find array in shops.js");
-                    
-                    STATE.shops = JSON.parse(match[1]);
-                    this.showToast(`Loaded ${STATE.shops.length} shops successfully`, 'success');
-                } catch (err) {
-                    this.showToast('Error loading data: ' + err.message, 'error');
-                    console.error(err);
+                    const content = await githubAPI.getFileContent(CONFIG.filePath);
+                    state.shops = utils.parseShopsFile(content);
+                    this.setSyncStatus('connected', `Loaded ${state.shops.length} shops`);
+                    utils.toast(`Successfully loaded ${state.shops.length} shops`, 'success');
+                } catch (error) {
+                    this.setSyncStatus('error', 'Failed to load data');
+                    utils.toast(`Error loading shops: ${error.message}`, 'error');
+                    state.shops = [];
                 }
+            },
+
+            setSyncStatus(status, text) {
+                const dot = utils.$('sync-status');
+                const txt = utils.$('sync-text');
+                dot.className = `status-dot ${status}`;
+                txt.textContent = text;
             },
 
             navigate(view) {
+                state.view = view;
+                
                 // Update Nav
-                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-                const activeNav = document.querySelector(`.nav-item[onclick="app.navigate('${view}')"]`);
+                utils.$$('.nav-item').forEach(el => el.classList.remove('active'));
+                const activeNav = Array.from(utils.$$('.nav-item')).find(el => el.textContent.toLowerCase().includes(view));
                 if(activeNav) activeNav.classList.add('active');
 
-                const content = document.getElementById('content-area');
-                const title = document.getElementById('page-title');
-                
-                // Scroll top
-                document.querySelector('.main-content').scrollTop = 0;
+                // Update Title
+                const titles = {
+                    dashboard: 'Dashboard Overview',
+                    shops: 'Shops Directory',
+                    map: 'Global Shop Map',
+                    analytics: 'Market Analytics',
+                    audit: 'Audit Log',
+                    settings: 'System Settings'
+                };
+                utils.$('page-title').textContent = titles[view] || view;
+
+                // Render View
+                const container = utils.$('main-view');
+                container.innerHTML = ''; // Clear
 
                 switch(view) {
-                    case 'dashboard':
-                        title.textContent = 'Dashboard Overview';
-                        content.innerHTML = this.renderDashboard();
-                        this.initCharts();
-                        break;
-                    case 'shops':
-                        title.textContent = 'Shops Directory';
-                        content.innerHTML = this.renderShopsTable();
-                        break;
-                    case 'analytics':
-                        title.textContent = 'Market Analytics';
-                        content.innerHTML = this.renderAnalytics();
-                        setTimeout(() => this.initCharts(), 100);
-                        break;
-                    case 'map':
-                        title.textContent = 'Global Shop Map';
-                        content.innerHTML = '<div id="map-container"></div>';
-                        setTimeout(() => this.initMap(), 100);
-                        break;
-                    case 'git':
-                        title.textContent = 'Git Commit History';
-                        content.innerHTML = '<div class="text-center p-6">Loading history...</div>';
-                        this.loadGitHistory();
-                        break;
+                    case 'dashboard': this.renderDashboard(container); break;
+                    case 'shops': this.renderShops(container); break;
+                    case 'map': this.renderMap(container); break;
+                    case 'analytics': this.renderAnalytics(container); break;
+                    case 'audit': this.renderAudit(container); break;
+                    case 'settings': this.renderSettings(container); break;
+                }
+
+                // Close mobile sidebar if open
+                if(window.innerWidth <= 768) {
+                    utils.$('sidebar').classList.remove('open');
                 }
             },
 
-            // --- Renderers ---
+            // --- VIEW RENDERERS ---
 
-            renderDashboard() {
-                const total = STATE.shops.length;
-                const verified = STATE.shops.filter(s => s.is_verified || s.confidence_score > 90).length;
-                const countries = new Set(STATE.shops.map(s => s.country)).size;
-                const avgPrice = STATE.shops.reduce((acc, s) => acc + (parseFloat(s.price_24k)||0), 0) / total;
+            renderDashboard(container) {
+                const total = state.shops.length;
+                const verified = state.shops.filter(s => s.is_verified || s.verified).length;
+                const countries = new Set(state.shops.map(s => s.country)).size;
+                const avgPrice = state.shops.reduce((acc, s) => acc + (parseFloat(s.price_24k) || 0), 0) / (total || 1);
 
-                return `
+                container.innerHTML = `
                     <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-label">Total Shops</div>
                             <div class="stat-value">${total}</div>
-                            <div class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> Active Directory</div>
+                            <div class="stat-trend trend-up">↑ Active Directory</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-label">Verified / High Confidence</div>
+                            <div class="stat-label">Verified Shops</div>
                             <div class="stat-value" style="color:var(--success)">${verified}</div>
-                            <div class="stat-trend">${Math.round((verified/total)*100)}% Trust Rate</div>
+                            <div class="stat-trend">${Math.round((verified/total)*100) || 0}% Verification Rate</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-label">Countries Covered</div>
@@ -753,330 +955,351 @@
                             <div class="stat-trend">Global Reach</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-label">Avg 24k Price (USD)</div>
+                            <div class="stat-label">Avg Price (24k)</div>
                             <div class="stat-value">$${avgPrice.toFixed(2)}</div>
-                            <div class="stat-trend text-muted">Market Baseline</div>
+                            <div class="stat-trend">USD / Gram</div>
                         </div>
                     </div>
 
-                    <div class="chart-grid">
-                        <div class="chart-card">
-                            <canvas id="chart-countries"></canvas>
-                        </div>
-                        <div class="chart-card">
-                            <canvas id="chart-confidence"></canvas>
-                        </div>
-                    </div>
-                `;
-            },
-
-            renderShopsTable() {
-                let rows = STATE.shops.map((shop, index) => `
-                    <tr>
-                        <td>
-                            <div class="font-bold">${shop.name}</div>
-                            <div class="text-xs text-muted">ID: ${index}</div>
-                        </td>
-                        <td>${shop.city || 'N/A'}, ${shop.country}</td>
-                        <td>$${shop.price_24k || '-'}</td>
-                        <td>
-                            <span class="badge ${shop.confidence_score > 80 ? 'badge-success' : 'badge-warning'}">
-                                ${shop.confidence_score}%
-                            </span>
-                        </td>
-                        <td>
-                            ${shop.is_verified 
-                                ? '<span class="badge badge-info"><i class="fas fa-check"></i> Verified</span>' 
-                                : '<span class="text-muted text-xs">Unverified</span>'}
-                        </td>
-                        <td>
-                            <button class="btn btn-secondary" style="padding:0.25rem 0.5rem; font-size:0.8rem;" 
-                                onclick="app.editShop(${index})">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
-
-                return `
                     <div class="table-container">
                         <div class="table-header">
-                            <h3>All Shops (${STATE.shops.length})</h3>
-                            <button class="btn btn-primary" onclick="app.openModal()">
-                                <i class="fas fa-plus"></i> Add New Shop
-                            </button>
+                            <h3>Recent Activity</h3>
                         </div>
-                        <div class="table-wrapper">
-                            <table>
-                                <thead>
+                        <table>
+                            <thead>
+                                <tr><th>Shop Name</th><th>Location</th><th>Price</th><th>Status</th></tr>
+                            </thead>
+                            <tbody>
+                                ${state.shops.slice(0, 5).map(shop => `
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Location</th>
-                                        <th>Price (24k)</th>
-                                        <th>Confidence</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
+                                        <td><strong>${shop.name}</strong></td>
+                                        <td>${shop.city}, ${shop.country}</td>
+                                        <td>$${shop.price_24k || 'N/A'}</td>
+                                        <td><span class="badge ${shop.is_verified ? 'badge-verified' : 'badge-pending'}">${shop.is_verified ? 'Verified' : 'Pending'}</span></td>
                                     </tr>
-                                </thead>
-                                <tbody>${rows}</tbody>
-                            </table>
-                        </div>
+                                `).join('')}
+                                ${state.shops.length === 0 ? '<tr><td colspan="4" style="text-align:center">No data loaded</td></tr>' : ''}
+                            </tbody>
+                        </table>
                     </div>
                 `;
             },
 
-            renderAnalytics() {
-                return `
-                    <div class="chart-grid" style="grid-template-columns: 1fr;">
-                        <div class="chart-card" style="height: 400px;">
-                            <canvas id="chart-price-dist"></canvas>
+            renderShops(container) {
+                container.innerHTML = `
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>All Shops (${state.shops.length})</h3>
+                            <div class="table-actions">
+                                <div class="search-box">
+                                    <span class="search-icon">🔍</span>
+                                    <input type="text" class="search-input" placeholder="Search shops..." onkeyup="app.filterShops(this.value)">
+                                </div>
+                                <button class="btn btn-primary" style="width:auto;" onclick="app.openModal()">+ Add Shop</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mt-4 p-4" style="background:var(--bg-panel); border-radius:12px; border:1px solid var(--border);">
-                        <h4 class="mb-4">Data Health Metrics</h4>
-                        <div class="flex justify-between" style="border-bottom:1px solid var(--border); padding:0.5rem 0;">
-                            <span class="text-muted">Missing Prices</span>
-                            <span class="text-danger">${STATE.shops.filter(s => !s.price_24k).length} Shops</span>
-                        </div>
-                        <div class="flex justify-between" style="padding:0.5rem 0;">
-                            <span class="text-muted">Low Confidence (<80%)</span>
-                            <span class="text-warning">${STATE.shops.filter(s => s.confidence_score < 80).length} Shops</span>
-                        </div>
+                        <table id="shops-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                    <th>Price (24k)</th>
+                                    <th>Confidence</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${this.generateShopRows(state.shops)}
+                            </tbody>
+                        </table>
                     </div>
                 `;
             },
 
-            // --- Actions ---
-
-            openModal() {
-                document.getElementById('shop-form').reset();
-                document.getElementById('edit-sha').value = '';
-                document.getElementById('edit-path').value = '';
-                document.getElementById('modal-title').textContent = 'Add New Shop';
-                document.getElementById('shop-modal').classList.add('open');
-            },
-
-            closeModal() {
-                document.getElementById('shop-modal').classList.remove('open');
-            },
-
-            editShop(index) {
-                const shop = STATE.shops[index];
-                document.getElementById('edit-sha').value = index; // Using index as ID for edit
-                document.getElementById('modal-title').textContent = 'Edit Shop';
+            generateShopRows(shops) {
+                if (shops.length === 0) return '<tr><td colspan="6" style="text-align:center; padding:2rem;">No shops found.</td></tr>';
                 
-                document.getElementById('s-name').value = shop.name || '';
-                document.getElementById('s-country').value = shop.country || '';
-                document.getElementById('s-city').value = shop.city || '';
-                document.getElementById('s-address').value = shop.address || '';
-                document.getElementById('s-24k').value = shop.price_24k || '';
-                document.getElementById('s-22k').value = shop.price_22k || '';
-                document.getElementById('s-21k').value = shop.price_21k || '';
-                document.getElementById('s-18k').value = shop.price_18k || '';
-                document.getElementById('s-conf').value = shop.confidence_score || 90;
-                document.getElementById('s-verified').value = shop.is_verified ? 'true' : 'false';
-
-                document.getElementById('shop-modal').classList.add('open');
+                return shops.map(shop => {
+                    const verifiedClass = shop.is_verified ? 'badge-verified' : 'badge-pending';
+                    const verifiedText = shop.is_verified ? 'Verified' : 'Pending';
+                    const confClass = (shop.confidence_score || 0) < 50 ? 'badge-low' : '';
+                    
+                    return `
+                        <tr data-name="${shop.name.toLowerCase()}">
+                            <td><strong>${shop.name}</strong></td>
+                            <td>
+                                <div>${shop.city || 'N/A'}</div>
+                                <div class="text-xs text-muted">${shop.country}</div>
+                            </td>
+                            <td>$${shop.price_24k || '0.00'}</td>
+                            <td><span class="badge ${confClass}">${shop.confidence_score || 0}%</span></td>
+                            <td><span class="badge ${verifiedClass}">${verifiedText}</span></td>
+                            <td>
+                                <button class="action-btn edit" onclick="app.editShop('${shop.id || shop.name}')" title="Edit">✏️</button>
+                                <button class="action-btn delete" onclick="app.deleteShop('${shop.id || shop.name}')" title="Delete">🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
             },
 
-            async saveShop() {
-                const btn = document.querySelector('#shop-modal .btn-primary');
-                const originalText = btn.innerHTML;
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-
-                try {
-                    const idx = document.getElementById('edit-sha').value;
-                    const newData = {
-                        name: document.getElementById('s-name').value,
-                        country: document.getElementById('s-country').value,
-                        city: document.getElementById('s-city').value,
-                        address: document.getElementById('s-address').value,
-                        price_24k: parseFloat(document.getElementById('s-24k').value) || 0,
-                        price_22k: parseFloat(document.getElementById('s-22k').value) || 0,
-                        price_21k: parseFloat(document.getElementById('s-21k').value) || 0,
-                        price_18k: parseFloat(document.getElementById('s-18k').value) || 0,
-                        confidence_score: parseInt(document.getElementById('s-conf').value),
-                        is_verified: document.getElementById('s-verified').value === 'true'
-                    };
-
-                    if (idx === '') {
-                        // Add New
-                        STATE.shops.push(newData);
-                    } else {
-                        // Update Existing
-                        STATE.shops[parseInt(idx)] = newData;
-                    }
-
-                    // Reconstruct File Content
-                    // Preserve the "const SHOPS_DATA = " part if it existed, otherwise wrap
-                    let prefix = "const SHOPS_DATA = ";
-                    if (STATE.rawContent.includes('=')) {
-                        prefix = STATE.rawContent.split('=')[0] + '= ';
-                    }
-                    
-                    const newContent = `${prefix}${JSON.stringify(STATE.shops, null, 2)};\n\nif (typeof module !== 'undefined') module.exports = SHOPS_DATA;`;
-
-                    // Commit to GitHub
-                    await GitHubAPI.updateFile(
-                        `${CONFIG.basePath}/${CONFIG.fileName}`, 
-                        newContent, 
-                        STATE.sha, 
-                        `feat: ${idx === '' ? 'added' : 'updated'} shop: ${newData.name}`
-                    );
-
-                    this.closeModal();
-                    this.showToast('Changes committed to GitHub successfully!', 'success');
-                    
-                    // Refresh
-                    STATE.rawContent = newContent;
-                    // Need to fetch new SHA for next edit
-                    const updatedFile = await GitHubAPI.getFileContent(`${CONFIG.basePath}/${CONFIG.fileName}`);
-                    STATE.sha = updatedFile.sha;
-                    
-                    this.navigate('shops');
-
-                } catch (err) {
-                    this.showToast('Save Failed: ' + err.message, 'error');
-                    console.error(err);
-                } finally {
-                    btn.disabled = false;
-                    btn.innerHTML = originalText;
-                }
+            filterShops(query) {
+                const term = query.toLowerCase();
+                const rows = utils.$$('#shops-table tbody tr');
+                rows.forEach(row => {
+                    const name = row.getAttribute('data-name');
+                    row.style.display = name.includes(term) ? '' : 'none';
+                });
             },
 
-            async loadGitHistory() {
-                try {
-                    const commits = await GitHubAPI.request(
-                        `/repos/${STATE.user}/${STATE.repo}/commits?path=${CONFIG.basePath}/${CONFIG.fileName}&per_page=10`
-                    );
+            renderMap(container) {
+                container.innerHTML = '<div id="map-view"></div><p class="text-muted mt-4 text-center">Interactive map of all verified shop locations.</p>';
+                
+                // Initialize Leaflet Map
+                setTimeout(() => {
+                    const map = L.map('map-view').setView([20, 0], 2);
+                    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                        attribution: '&copy; OpenStreetMap &copy; CARTO',
+                        subdomains: 'abcd',
+                        maxZoom: 19
+                    }).addTo(map);
+
+                    state.shops.forEach(shop => {
+                        if (shop.latitude && shop.longitude) {
+                            const marker = L.marker([shop.latitude, shop.longitude]).addTo(map);
+                            marker.bindPopup(`
+                                <b>${shop.name}</b><br>
+                                ${shop.city}, ${shop.country}<br>
+                                Price: $${shop.price_24k}
+                            `);
+                        }
+                    });
+                    state.mapInstance = map;
+                }, 100);
+            },
+
+            renderAnalytics(container) {
+                container.innerHTML = `
+                    <div class="chart-container">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Highest Price</div>
+                            <div class="stat-value">$${Math.max(...state.shops.map(s => s.price_24k || 0)).toFixed(2)}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Lowest Price</div>
+                            <div class="stat-value">$${Math.min(...state.shops.map(s => s.price_24k || 0)).toFixed(2)}</div>
+                        </div>
+                    </div>
+                `;
+
+                setTimeout(() => {
+                    const ctx = document.getElementById('priceChart').getContext('2d');
                     
-                    let html = `<div class="table-container"><table><thead><tr><th>Message</th><th>Author</th><th>Date</th></tr></thead><tbody>`;
+                    // Group by Country Avg
+                    const countryData = {};
+                    state.shops.forEach(s => {
+                        if (!countryData[s.country]) countryData[s.country] = [];
+                        if (s.price_24k) countryData[s.country].push(parseFloat(s.price_24k));
+                    });
+
+                    const labels = Object.keys(countryData);
+                    const data = labels.map(c => {
+                        const arr = countryData[c];
+                        return arr.reduce((a,b) => a+b, 0) / arr.length;
+                    });
+
+                    state.chartInstance = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Average Gold Price (24k) by Country',
+                                data: data,
+                                backgroundColor: '#3b82f6',
+                                borderColor: '#2563eb',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { labels: { color: 'white' } }
+                            },
+                            scales: {
+                                y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+                                x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                            }
+                        }
+                    });
+                }, 100);
+            },
+
+            async renderAudit(container) {
+                container.innerHTML = '<div class="loading">Loading commit history...</div>';
+                try {
+                    const commits = await githubAPI.getCommits(20);
+                    let html = `
+                        <div class="table-container">
+                            <div class="table-header"><h3>Recent Repository Commits</h3></div>
+                            <table>
+                                <thead><tr><th>Message</th><th>Author</th><th>Date</th></tr></thead>
+                                <tbody>
+                    `;
                     commits.forEach(c => {
                         html += `
                             <tr>
-                                <td><span class="badge badge-info">commit</span> ${c.commit.message}</td>
+                                <td>${c.commit.message}</td>
                                 <td>${c.commit.author.name}</td>
-                                <td class="text-muted text-xs">${new Date(c.commit.date).toLocaleString()}</td>
+                                <td>${utils.formatDate(c.commit.author.date)}</td>
                             </tr>
                         `;
                     });
-                    html += `</tbody></table></div>`;
-                    document.getElementById('content-area').innerHTML = html;
+                    html += '</tbody></table></div>';
+                    container.innerHTML = html;
                 } catch (e) {
-                    document.getElementById('content-area').innerHTML = `<div class="error-box" style="display:block">Failed to load history: ${e.message}</div>`;
+                    container.innerHTML = `<div class="alert-box alert-error">Failed to load audit log: ${e.message}</div>`;
                 }
             },
 
-            // --- Visualizations ---
-
-            initCharts() {
-                // Destroy existing
-                Object.values(STATE.charts).forEach(c => c.destroy());
-                STATE.charts = {};
-
-                // Country Distribution
-                const countries = {};
-                STATE.shops.forEach(s => { countries[s.country] = (countries[s.country] || 0) + 1; });
-                
-                const ctx1 = document.getElementById('chart-countries');
-                if(ctx1) {
-                    STATE.charts.countries = new Chart(ctx1, {
-                        type: 'doughnut',
-                        data: {
-                            labels: Object.keys(countries),
-                            datasets: [{
-                                data: Object.values(countries),
-                                backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899']
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: { legend: { position: 'right', labels: { color: '#94a3b8' } } },
-                            scales: { x: { ticks: { color: '#94a3b8' } }, y: { ticks: { color: '#94a3b8' } } }
-                        }
-                    });
-                }
-
-                // Confidence
-                const scores = [0,0,0,0,0];
-                STATE.shops.forEach(s => {
-                    const bucket = Math.floor(s.confidence_score / 20);
-                    if(bucket < 5) scores[bucket]++;
-                });
-
-                const ctx2 = document.getElementById('chart-confidence');
-                if(ctx2) {
-                    STATE.charts.confidence = new Chart(ctx2, {
-                        type: 'bar',
-                        data: {
-                            labels: ['0-20', '20-40', '40-60', '60-80', '80-100'],
-                            datasets: [{
-                                label: 'Shops by Confidence',
-                                data: scores,
-                                backgroundColor: '#3b82f6'
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: { legend: { display: false } },
-                            scales: { x: { ticks: { color: '#94a3b8' } }, y: { ticks: { color: '#94a3b8' } } }
-                        }
-                    });
-                }
-            },
-
-            initMap() {
-                if (STATE.mapInstance) STATE.mapInstance.remove();
-                
-                const container = document.getElementById('map-container');
-                if(!container) return;
-
-                STATE.mapInstance = Leaflet.map('map-container').setView([20, 0], 2);
-                Leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-                    subdomains: 'abcd',
-                    maxZoom: 19
-                }).addTo(STATE.mapInstance);
-
-                // Simple geocoding simulation (since we don't have coords in data yet)
-                // In a real app, you'd add lat/lng fields to the form
-                STATE.shops.forEach(shop => {
-                    // Placeholder logic: Just randomizing slightly around country centers for demo
-                    // TODO: Add Lat/Lng inputs to the modal
-                    const lat = (Math.random() * 40) + 20; 
-                    const lng = (Math.random() * 60) - 30;
-                    
-                    Leaflet.marker([lat, lng])
-                        .addTo(STATE.mapInstance)
-                        .bindPopup(`<b>${shop.name}</b><br>${shop.city}, ${shop.country}`);
-                });
-            },
-
-            toggleSidebar() {
-                document.getElementById('sidebar').classList.toggle('open');
-            },
-
-            showToast(msg, type = 'info') {
-                const container = document.getElementById('toast-container');
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                toast.innerHTML = `
-                    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
-                    <span>${msg}</span>
+            renderSettings(container) {
+                container.innerHTML = `
+                    <div class="stat-card" style="max-width: 600px;">
+                        <h3>Repository Settings</h3>
+                        <p class="text-muted mb-4">Current connection details.</p>
+                        <div class="form-group">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-input" value="${state.user}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Repository</label>
+                            <input type="text" class="form-input" value="${state.repo}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Branch</label>
+                            <input type="text" class="form-input" value="${state.branch}" disabled>
+                        </div>
+                        <button class="btn btn-danger" onclick="app.logout()">Disconnect & Logout</button>
+                    </div>
                 `;
-                container.appendChild(toast);
-                setTimeout(() => {
-                    toast.style.opacity = '0';
-                    setTimeout(() => toast.remove(), 300);
-                }, 3000);
+            },
+
+            // --- CRUD OPERATIONS ---
+
+            openModal(shopId = null) {
+                const modal = utils.$('shop-modal');
+                const form = utils.$('shop-form');
+                form.reset();
+                
+                if (shopId) {
+                    const shop = state.shops.find(s => (s.id || s.name) === shopId);
+                    if (shop) {
+                        utils.$('shop-id').value = shop.id || shop.name;
+                        utils.$('s-name').value = shop.name;
+                        utils.$('s-country').value = shop.country;
+                        utils.$('s-city').value = shop.city || '';
+                        utils.$('s-address').value = shop.address || '';
+                        utils.$('s-price-24').value = shop.price_24k || '';
+                        utils.$('s-price-22').value = shop.price_22k || '';
+                        utils.$('s-confidence').value = shop.confidence_score || 90;
+                        utils.$('s-verified').value = shop.is_verified ? 'true' : 'false';
+                        utils.$('s-contact').value = shop.contact_info || '';
+                        utils.$('s-lat').value = shop.latitude || '';
+                        utils.$('s-lng').value = shop.longitude || '';
+                        
+                        utils.$('modal-title').textContent = 'Edit Shop';
+                    }
+                } else {
+                    utils.$('shop-id').value = '';
+                    utils.$('modal-title').textContent = 'Add New Shop';
+                }
+                
+                modal.classList.add('active');
+            },
+
+            closeModal() {
+                utils.$('shop-modal').classList.remove('active');
+            },
+
+            editShop(id) { this.openModal(id); },
+
+            async deleteShop(id) {
+                if (!confirm(`Are you sure you want to delete shop "${id}"? This action will commit to GitHub.`)) return;
+
+                try {
+                    state.shops = state.shops.filter(s => (s.id || s.name) !== id);
+                    await this.commitChanges('delete', id);
+                    this.navigate('shops'); // Refresh
+                    utils.toast('Shop deleted successfully', 'success');
+                } catch (e) {
+                    utils.toast(`Delete failed: ${e.message}`, 'error');
+                }
+            },
+
+            async saveShop() {
+                const id = utils.$('shop-id').value;
+                const newShop = {
+                    id: id || Date.now().toString(),
+                    name: utils.$('s-name').value,
+                    country: utils.$('s-country').value,
+                    city: utils.$('s-city').value,
+                    address: utils.$('s-address').value,
+                    price_24k: parseFloat(utils.$('s-price-24').value),
+                    price_22k: parseFloat(utils.$('s-price-22').value),
+                    confidence_score: parseInt(utils.$('s-confidence').value),
+                    is_verified: utils.$('s-verified').value === 'true',
+                    contact_info: utils.$('s-contact').value,
+                    latitude: utils.$('s-lat').value,
+                    longitude: utils.$('s-lng').value
+                };
+
+                if (!newShop.name || !newShop.country) {
+                    utils.toast('Name and Country are required', 'warning');
+                    return;
+                }
+
+                try {
+                    if (id) {
+                        // Update existing
+                        const index = state.shops.findIndex(s => (s.id || s.name) === id);
+                        if (index !== -1) state.shops[index] = newShop;
+                        await this.commitChanges('update', newShop.name);
+                    } else {
+                        // Create new
+                        state.shops.push(newShop);
+                        await this.commitChanges('create', newShop.name);
+                    }
+                    
+                    this.closeModal();
+                    this.navigate('shops');
+                    utils.toast('Changes saved to GitHub!', 'success');
+                } catch (e) {
+                    utils.toast(`Save failed: ${e.message}`, 'error');
+                }
+            },
+
+            async commitChanges(action, target) {
+                this.setSyncStatus('syncing', 'Committing changes...');
+                const content = utils.generateJSContent(state.shops);
+                const msg = `${action}: ${target} via Admin Panel`;
+                
+                try {
+                    await githubAPI.updateFile(CONFIG.filePath, content, msg);
+                    this.setSyncStatus('connected', 'Synced');
+                } catch (e) {
+                    this.setSyncStatus('error', 'Sync Failed');
+                    throw e;
+                }
             }
         };
 
-        // Start App
-        app.init();
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => app.init());
+
     </script>
 </body>
 </html>
