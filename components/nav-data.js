@@ -26,6 +26,9 @@ export const NAV_DATA = {
           { href: '../tracker.html#mode=live&panel=alerts',         label: 'Alerts'       },
           { href: '../tracker.html#mode=exports',        label: 'Downloads'    },
           { href: '../tracker.html#mode=archive',        label: 'Date Lookup'  },
+          { href: '../gold-price-history/',              label: 'Price History' },
+          { href: '../order-gold/',                      label: 'Order Gold'   },
+          { href: '../social/x-post-generator.html',    label: 'X Post Generator' },
         ],
       },
       {
@@ -98,6 +101,9 @@ export const NAV_DATA = {
           { href: '../tracker.html#mode=live&panel=alerts',         label: 'تنبيهات'           },
           { href: '../tracker.html#mode=exports',        label: 'تنزيلات'           },
           { href: '../tracker.html#mode=archive',        label: 'البحث بالتاريخ'    },
+          { href: '../gold-price-history/',              label: 'سجل الأسعار'       },
+          { href: '../order-gold/',                      label: 'اطلب الذهب'        },
+          { href: '../social/x-post-generator.html',    label: 'منشئ منشورات X'    },
         ],
       },
       {

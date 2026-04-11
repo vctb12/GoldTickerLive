@@ -4,42 +4,88 @@ export const COUNTRIES = [
     code: 'AE', slug: 'uae', nameEn: 'United Arab Emirates', nameAr: 'الإمارات العربية المتحدة',
     currency: 'AED', flag: '🇦🇪', group: 'gcc', decimals: 2, fixedPeg: true,
     searchAliases: ['uae', 'emirates', 'aed', 'الإمارات', 'امارات', 'إمارات'],
+    cities: [
+      { slug: 'dubai',         nameEn: 'Dubai',         nameAr: 'دبي' },
+      { slug: 'sharjah',       nameEn: 'Sharjah',       nameAr: 'الشارقة' },
+      { slug: 'abu-dhabi',     nameEn: 'Abu Dhabi',     nameAr: 'أبوظبي' },
+      { slug: 'ajman',         nameEn: 'Ajman',         nameAr: 'عجمان' },
+      { slug: 'ras-al-khaimah',nameEn: 'Ras Al Khaimah',nameAr: 'رأس الخيمة' },
+      { slug: 'fujairah',      nameEn: 'Fujairah',      nameAr: 'الفجيرة' },
+      { slug: 'umm-al-quwain', nameEn: 'Umm Al Quwain', nameAr: 'أم القيوين' },
+    ],
   },
   {
     code: 'SA', slug: 'saudi-arabia', nameEn: 'Saudi Arabia', nameAr: 'المملكة العربية السعودية',
     currency: 'SAR', flag: '🇸🇦', group: 'gcc', decimals: 2, fixedPeg: false,
     searchAliases: ['saudi', 'sa', 'sar', 'السعودية', 'سعودية', 'المملكة'],
+    cities: [
+      { slug: 'riyadh',  nameEn: 'Riyadh',  nameAr: 'الرياض' },
+      { slug: 'jeddah',  nameEn: 'Jeddah',  nameAr: 'جدة' },
+      { slug: 'mecca',   nameEn: 'Mecca',   nameAr: 'مكة المكرمة' },
+      { slug: 'medina',  nameEn: 'Medina',  nameAr: 'المدينة المنورة' },
+      { slug: 'dammam',  nameEn: 'Dammam',  nameAr: 'الدمام' },
+    ],
   },
   {
     code: 'KW', slug: 'kuwait', nameEn: 'Kuwait', nameAr: 'الكويت',
     currency: 'KWD', flag: '🇰🇼', group: 'gcc', decimals: 3, fixedPeg: false,
     searchAliases: ['kuwait', 'kw', 'kwd', 'الكويت', 'كويت'],
+    cities: [
+      { slug: 'kuwait-city', nameEn: 'Kuwait City', nameAr: 'مدينة الكويت' },
+      { slug: 'hawalli',     nameEn: 'Hawalli',     nameAr: 'حولي' },
+      { slug: 'salmiya',     nameEn: 'Salmiya',     nameAr: 'السالمية' },
+    ],
   },
   {
     code: 'QA', slug: 'qatar', nameEn: 'Qatar', nameAr: 'قطر',
     currency: 'QAR', flag: '🇶🇦', group: 'gcc', decimals: 2, fixedPeg: false,
     searchAliases: ['qatar', 'qa', 'qar', 'قطر'],
+    cities: [
+      { slug: 'doha',       nameEn: 'Doha',       nameAr: 'الدوحة' },
+      { slug: 'al-wakrah',  nameEn: 'Al Wakrah',  nameAr: 'الوكرة' },
+      { slug: 'al-rayyan',  nameEn: 'Al Rayyan',  nameAr: 'الريان' },
+    ],
   },
   {
     code: 'BH', slug: 'bahrain', nameEn: 'Bahrain', nameAr: 'البحرين',
     currency: 'BHD', flag: '🇧🇭', group: 'gcc', decimals: 3, fixedPeg: false,
     searchAliases: ['bahrain', 'bh', 'bhd', 'البحرين', 'بحرين'],
+    cities: [
+      { slug: 'manama',   nameEn: 'Manama',   nameAr: 'المنامة' },
+      { slug: 'rifaa',    nameEn: 'Rifaa',    nameAr: 'الرفاع' },
+      { slug: 'muharraq', nameEn: 'Muharraq', nameAr: 'المحرق' },
+    ],
   },
   {
     code: 'OM', slug: 'oman', nameEn: 'Oman', nameAr: 'عُمان',
     currency: 'OMR', flag: '🇴🇲', group: 'gcc', decimals: 3, fixedPeg: false,
     searchAliases: ['oman', 'om', 'omr', 'عمان', 'عُمان'],
+    cities: [
+      { slug: 'muscat',  nameEn: 'Muscat',  nameAr: 'مسقط' },
+      { slug: 'salalah', nameEn: 'Salalah', nameAr: 'صلالة' },
+      { slug: 'sohar',   nameEn: 'Sohar',   nameAr: 'صحار' },
+    ],
   },
   // Levant
   {
     code: 'JO', slug: 'jordan', nameEn: 'Jordan', nameAr: 'الأردن',
     currency: 'JOD', flag: '🇯🇴', group: 'levant', decimals: 3, fixedPeg: false,
     searchAliases: ['jordan', 'jo', 'jod', 'الأردن', 'أردن'],
+    cities: [
+      { slug: 'amman', nameEn: 'Amman', nameAr: 'عمّان' },
+      { slug: 'zarqa', nameEn: 'Zarqa', nameAr: 'الزرقاء' },
+      { slug: 'irbid', nameEn: 'Irbid', nameAr: 'إربد' },
+    ],
   },
   {
-    code: 'LB', nameEn: 'Lebanon', nameAr: 'لبنان',
+    code: 'LB', slug: 'lebanon', nameEn: 'Lebanon', nameAr: 'لبنان',
     currency: 'LBP', flag: '🇱🇧', group: 'levant', decimals: 0, fixedPeg: false,
     searchAliases: ['lebanon', 'lb', 'lbp', 'لبنان'],
+    cities: [
+      { slug: 'beirut',  nameEn: 'Beirut',  nameAr: 'بيروت' },
+      { slug: 'tripoli', nameEn: 'Tripoli', nameAr: 'طرابلس' },
+      { slug: 'sidon',   nameEn: 'Sidon',   nameAr: 'صيدا' },
+    ],
   },
   {
     code: 'SY', nameEn: 'Syria', nameAr: 'سوريا',
@@ -56,31 +102,61 @@ export const COUNTRIES = [
     code: 'EG', slug: 'egypt', nameEn: 'Egypt', nameAr: 'مصر',
     currency: 'EGP', flag: '🇪🇬', group: 'africa', decimals: 2, fixedPeg: false,
     searchAliases: ['egypt', 'eg', 'egp', 'مصر'],
+    cities: [
+      { slug: 'cairo',      nameEn: 'Cairo',      nameAr: 'القاهرة' },
+      { slug: 'alexandria', nameEn: 'Alexandria', nameAr: 'الإسكندرية' },
+      { slug: 'giza',       nameEn: 'Giza',       nameAr: 'الجيزة' },
+    ],
   },
   {
-    code: 'LY', nameEn: 'Libya', nameAr: 'ليبيا',
+    code: 'LY', slug: 'libya', nameEn: 'Libya', nameAr: 'ليبيا',
     currency: 'LYD', flag: '🇱🇾', group: 'africa', decimals: 3, fixedPeg: false,
     searchAliases: ['libya', 'ly', 'lyd', 'ليبيا'],
+    cities: [
+      { slug: 'tripoli',  nameEn: 'Tripoli',  nameAr: 'طرابلس' },
+      { slug: 'benghazi', nameEn: 'Benghazi', nameAr: 'بنغازي' },
+      { slug: 'misrata',  nameEn: 'Misrata',  nameAr: 'مصراتة' },
+    ],
   },
   {
-    code: 'TN', nameEn: 'Tunisia', nameAr: 'تونس',
+    code: 'TN', slug: 'tunisia', nameEn: 'Tunisia', nameAr: 'تونس',
     currency: 'TND', flag: '🇹🇳', group: 'africa', decimals: 3, fixedPeg: false,
     searchAliases: ['tunisia', 'tn', 'tnd', 'تونس'],
+    cities: [
+      { slug: 'tunis', nameEn: 'Tunis', nameAr: 'تونس' },
+      { slug: 'sfax',  nameEn: 'Sfax',  nameAr: 'صفاقس' },
+      { slug: 'sousse',nameEn: 'Sousse',nameAr: 'سوسة' },
+    ],
   },
   {
-    code: 'DZ', nameEn: 'Algeria', nameAr: 'الجزائر',
+    code: 'DZ', slug: 'algeria', nameEn: 'Algeria', nameAr: 'الجزائر',
     currency: 'DZD', flag: '🇩🇿', group: 'africa', decimals: 2, fixedPeg: false,
     searchAliases: ['algeria', 'dz', 'dzd', 'الجزائر', 'جزائر'],
+    cities: [
+      { slug: 'algiers',    nameEn: 'Algiers',    nameAr: 'الجزائر' },
+      { slug: 'oran',       nameEn: 'Oran',       nameAr: 'وهران' },
+      { slug: 'constantine',nameEn: 'Constantine',nameAr: 'قسنطينة' },
+    ],
   },
   {
     code: 'MA', slug: 'morocco', nameEn: 'Morocco', nameAr: 'المغرب',
     currency: 'MAD', flag: '🇲🇦', group: 'africa', decimals: 2, fixedPeg: false,
     searchAliases: ['morocco', 'ma', 'mad', 'المغرب', 'مغرب'],
+    cities: [
+      { slug: 'casablanca', nameEn: 'Casablanca', nameAr: 'الدار البيضاء' },
+      { slug: 'rabat',      nameEn: 'Rabat',      nameAr: 'الرباط' },
+      { slug: 'marrakech',  nameEn: 'Marrakech',  nameAr: 'مراكش' },
+    ],
   },
   {
-    code: 'SD', nameEn: 'Sudan', nameAr: 'السودان',
+    code: 'SD', slug: 'sudan', nameEn: 'Sudan', nameAr: 'السودان',
     currency: 'SDG', flag: '🇸🇩', group: 'africa', decimals: 2, fixedPeg: false,
     searchAliases: ['sudan', 'sd', 'sdg', 'السودان', 'سودان'],
+    cities: [
+      { slug: 'khartoum',   nameEn: 'Khartoum',   nameAr: 'الخرطوم' },
+      { slug: 'omdurman',   nameEn: 'Omdurman',   nameAr: 'أم درمان' },
+      { slug: 'port-sudan', nameEn: 'Port Sudan',  nameAr: 'بورتسودان' },
+    ],
   },
   {
     code: 'SO', nameEn: 'Somalia', nameAr: 'الصومال',
@@ -122,5 +198,10 @@ export const COUNTRIES = [
     code: 'IN', slug: 'india', nameEn: 'India', nameAr: 'الهند',
     currency: 'INR', flag: '🇮🇳', group: 'global', decimals: 2, fixedPeg: false,
     searchAliases: ['india', 'in', 'inr', 'الهند', 'هند'],
+    cities: [
+      { slug: 'mumbai',  nameEn: 'Mumbai',  nameAr: 'مومباي' },
+      { slug: 'delhi',   nameEn: 'Delhi',   nameAr: 'دلهي' },
+      { slug: 'chennai', nameEn: 'Chennai', nameAr: 'تشيناي' },
+    ],
   },
 ];

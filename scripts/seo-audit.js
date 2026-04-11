@@ -56,9 +56,13 @@ function extract(html, file) {
   }
 
   // Expected canonical
+  // For index.html files in subdirectories, canonical is the directory URL (no index.html).
   let expectedCanonical;
   if (file === 'index.html') {
     expectedCanonical = BASE_URL;
+  } else if (file.endsWith('/index.html')) {
+    // directory page: canonical is the directory URL
+    expectedCanonical = BASE_URL + file.slice(0, -'index.html'.length);
   } else {
     expectedCanonical = BASE_URL + file;
   }
@@ -92,7 +96,15 @@ function validateSitemap(htmlFiles) {
 
   // Check if all HTML pages are in sitemap
   for (const file of htmlFiles) {
-    const url = file === 'index.html' ? BASE_URL : BASE_URL + file;
+    // Build canonical URL for the file (same logic as extract())
+    let url;
+    if (file === 'index.html') {
+      url = BASE_URL;
+    } else if (file.endsWith('/index.html')) {
+      url = BASE_URL + file.slice(0, -'index.html'.length); // directory URL with trailing slash
+    } else {
+      url = BASE_URL + file;
+    }
     if (!sitemapUrlSet.has(url)) {
       issues.push(`Page NOT in sitemap: ${file}`);
     }
@@ -105,7 +117,15 @@ function validateSitemap(htmlFiles) {
       continue;
     }
     const relPath = url.slice(BASE_URL.length);
-    const filePath = relPath === '' ? 'index.html' : relPath;
+    // Handle trailing-slash directory URLs → look for index.html
+    let filePath;
+    if (relPath === '') {
+      filePath = 'index.html';
+    } else if (relPath.endsWith('/')) {
+      filePath = relPath + 'index.html';
+    } else {
+      filePath = relPath;
+    }
     if (!htmlFiles.includes(filePath)) {
       issues.push(`Sitemap URL has no file: ${url}`);
     }
