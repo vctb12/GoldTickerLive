@@ -329,9 +329,10 @@ async function main() {
   ].filter(([, v]) => !v).map(([k]) => k);
 
   if (missing.length > 0) {
-    console.error('❌ Missing environment variables:', missing.join(', '));
-    console.error('   See docs/TWITTER_AUTOMATION.md for setup instructions.');
-    process.exit(1);
+    console.log('⚠️  Missing environment variables:', missing.join(', '));
+    console.log('   See docs/TWITTER_AUTOMATION.md for setup instructions.');
+    console.log('   Skipping tweet — configure secrets in repo Settings → Secrets → Actions.');
+    process.exit(0);
   }
 
   // 1. Fetch gold price

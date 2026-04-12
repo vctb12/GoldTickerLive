@@ -87,9 +87,9 @@ async function main() {
   ].filter(([, v]) => !v).map(([k]) => k);
 
   if (missing.length) {
-    console.error('❌ Missing env vars:', missing.join(', '));
-    console.error('   See docs/AUTOMATIONS.md for setup.');
-    process.exit(1);
+    console.log('⚠️  Missing env vars:', missing.join(', '));
+    console.log('   Skipping Telegram post — configure secrets in repo Settings → Secrets → Actions.');
+    process.exit(0);
   }
 
   console.log('📡 Fetching gold price…');
