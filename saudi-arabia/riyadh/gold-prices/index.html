@@ -63,6 +63,64 @@
   ]
 }
   </script>
+  <style>
+    .city-faq { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0; }
+    .city-faq h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: #1e293b; }
+    .city-faq details { border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 0.6rem; overflow: hidden; }
+    .city-faq summary { padding: 0.85rem 1rem; font-weight: 600; font-size: 0.9rem; cursor: pointer; list-style: none; color: #1e293b; background: #f8fafc; }
+    .city-faq summary::-webkit-details-marker { display: none; }
+    .city-faq summary::after { content: '+'; float: right; font-size: 1.1rem; color: #94a3b8; }
+    .city-faq details[open] summary::after { content: '−'; }
+    .city-faq .faq-body { padding: 0.85rem 1rem; font-size: 0.875rem; line-height: 1.65; color: #475569; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+            "@type": "Question",
+            "name": "What is the gold price in Riyadh today?",
+            "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The live 24K gold price in Riyadh is updated every 90 seconds on this page based on the global XAU/USD spot rate converted to Saudi Riyal (SAR). The SAR is pegged to the USD at approximately 3.75, so Riyadh gold prices track global spot closely. Check the price cards above for current rates per gram."
+            }
+      },
+      {
+            "@type": "Question",
+            "name": "Which gold market is most popular in Riyadh?",
+            "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Al-Zal gold market in central Riyadh and the gold shops in Al-Bataha district are the main trading hubs. Large malls such as Kingdom Centre and Al Nakheel also have prominent jewellery retailers. Traditional souqs typically offer better making-charge rates than mall shops."
+            }
+      },
+      {
+            "@type": "Question",
+            "name": "Is gold cheaper in Riyadh or Dubai?",
+            "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The base gold rate (the spot price) is the same in both cities — it's a global benchmark. Differences come from making charges and dealer margins. Dubai's competitive Gold Souk typically has lower making charges than Riyadh mall retailers, but traditional Riyadh souqs are comparable."
+            }
+      },
+      {
+            "@type": "Question",
+            "name": "What karat is most common for Saudi gold jewellery?",
+            "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "21K and 18K gold are the most common in Saudi Arabia for jewellery, reflecting the preference for harder, more durable alloys in intricate designs. 24K is used for investment bars. 22K is increasingly popular due to Gulf-wide standardisation."
+            }
+      },
+      {
+            "@type": "Question",
+            "name": "Does Saudi Arabia charge VAT on gold?",
+            "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Saudi Arabia charges 15% VAT on gold jewellery. Investment-grade gold (coins, bars) meeting specific purity thresholds is VAT-exempt. Always ask the retailer whether the quoted price includes VAT."
+            }
+      }
+]
+  }
+  </script>
 </head>
 <body>
   <div id="nav-root"></div>
@@ -90,6 +148,42 @@
     <a href="https://vctb12.github.io/Gold-Prices/saudi-arabia/mecca/gold-prices/" style="padding:0.4rem 0.75rem;background:#f1f5f9;border-radius:6px;font-size:0.875rem;text-decoration:none;color:#1e293b;">Mecca</a>
     <a href="https://vctb12.github.io/Gold-Prices/saudi-arabia/medina/gold-prices/" style="padding:0.4rem 0.75rem;background:#f1f5f9;border-radius:6px;font-size:0.875rem;text-decoration:none;color:#1e293b;">Medina</a>
     <a href="https://vctb12.github.io/Gold-Prices/saudi-arabia/dammam/gold-prices/" style="padding:0.4rem 0.75rem;background:#f1f5f9;border-radius:6px;font-size:0.875rem;text-decoration:none;color:#1e293b;">Dammam</a></div></section>
+
+    <section class="city-faq" aria-labelledby="city-faq-heading">
+      <h2 id="city-faq-heading">Frequently Asked Questions — Gold Price in Riyadh</h2>
+      <div itemscope itemtype="https://schema.org/FAQPage">
+        <details class="faq-item" open itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <summary class="faq-question" itemprop="name">What is the gold price in Riyadh today?</summary>
+          <div class="faq-answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+            <p itemprop="text">The live 24K gold price in Riyadh is updated every 90 seconds on this page based on the global XAU/USD spot rate converted to Saudi Riyal (SAR). The SAR is pegged to the USD at approximately 3.75, so Riyadh gold prices track global spot closely. Check the price cards above for current rates per gram.</p>
+          </div>
+        </details>
+        <details class="faq-item"  itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <summary class="faq-question" itemprop="name">Which gold market is most popular in Riyadh?</summary>
+          <div class="faq-answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+            <p itemprop="text">Al-Zal gold market in central Riyadh and the gold shops in Al-Bataha district are the main trading hubs. Large malls such as Kingdom Centre and Al Nakheel also have prominent jewellery retailers. Traditional souqs typically offer better making-charge rates than mall shops.</p>
+          </div>
+        </details>
+        <details class="faq-item"  itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <summary class="faq-question" itemprop="name">Is gold cheaper in Riyadh or Dubai?</summary>
+          <div class="faq-answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+            <p itemprop="text">The base gold rate (the spot price) is the same in both cities — it's a global benchmark. Differences come from making charges and dealer margins. Dubai's competitive Gold Souk typically has lower making charges than Riyadh mall retailers, but traditional Riyadh souqs are comparable.</p>
+          </div>
+        </details>
+        <details class="faq-item"  itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <summary class="faq-question" itemprop="name">What karat is most common for Saudi gold jewellery?</summary>
+          <div class="faq-answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+            <p itemprop="text">21K and 18K gold are the most common in Saudi Arabia for jewellery, reflecting the preference for harder, more durable alloys in intricate designs. 24K is used for investment bars. 22K is increasingly popular due to Gulf-wide standardisation.</p>
+          </div>
+        </details>
+        <details class="faq-item"  itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <summary class="faq-question" itemprop="name">Does Saudi Arabia charge VAT on gold?</summary>
+          <div class="faq-answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+            <p itemprop="text">Saudi Arabia charges 15% VAT on gold jewellery. Investment-grade gold (coins, bars) meeting specific purity thresholds is VAT-exempt. Always ask the retailer whether the quoted price includes VAT.</p>
+          </div>
+        </details>
+      </div>
+    </section>
   </main>
 
   <div id="footer-root"></div>
