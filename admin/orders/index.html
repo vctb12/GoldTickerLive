@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orders — GoldAdmin</title>
+  <link rel="stylesheet" href="../admin.css" />
+  <style>
+    /* ── Stat grid ──────────────────────────────────────────── */
+    .stat-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(4, 1fr);
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .stat-grid { grid-template-columns: 1fr; } }
+
+    /* ── Toolbar ────────────────────────────────────────────── */
+    .toolbar {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .toolbar .search-wrap {
+      flex: 1 1 200px;
+      position: relative;
+    }
+    .toolbar .search-wrap .search-icon {
+      color: var(--text-dim);
+      left: 10px;
+      pointer-events: none;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .toolbar .search-wrap .form-input { padding-left: 32px; }
+    .toolbar .form-select { flex: 0 1 160px; min-width: 120px; }
+    .toolbar .date-input { flex: 0 1 140px; min-width: 120px; }
+    .toolbar-actions {
+      align-items: center;
+      display: flex;
+      flex-shrink: 0;
+      gap: 8px;
+    }
+
+    /* ── Table extras ───────────────────────────────────────── */
+    .order-id-cell { font-variant-numeric: tabular-nums; font-size: 0.8125rem; color: var(--text-muted); }
+    .order-id-cell strong { color: var(--text); font-weight: 600; }
+    .customer-cell { display: flex; flex-direction: column; gap: 2px; }
+    .customer-name { font-weight: 500; color: var(--text); max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .customer-email { color: var(--text-dim); font-size: 0.75rem; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .items-summary { color: var(--text-muted); font-size: 0.8125rem; }
+    .total-cell { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+
+    .badge {
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 2px 9px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      display: inline-block;
+    }
+    .badge-pending  { background: rgba(245,158,11,0.15); color: var(--warning); border: 1px solid rgba(245,158,11,0.35); }
+    .badge-confirmed { background: rgba(59,130,246,0.15); color: var(--info); border: 1px solid rgba(59,130,246,0.35); }
+    .badge-processing { background: rgba(59,130,246,0.1); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
+    .badge-shipped  { background: rgba(16,185,129,0.12); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
+    .badge-delivered { background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4); }
+    .badge-cancelled { background: rgba(239,68,68,0.1); color: var(--danger); border: 1px solid rgba(239,68,68,0.25); }
+
+    .row-actions { align-items: center; display: flex; gap: 4px; }
+    .btn-icon {
+      align-items: center; background: none; border: 1px solid transparent;
+      border-radius: var(--radius-sm); color: var(--text-muted); cursor: pointer;
+      display: inline-flex; height: 30px; justify-content: center; padding: 0;
+      transition: background 0.15s, color 0.15s, border-color 0.15s; width: 30px;
+    }
+    .btn-icon:hover { background: var(--surface-2); color: var(--text); border-color: var(--border); }
+    .btn-icon.btn-icon-success:hover { background: rgba(16,185,129,0.1); color: var(--success); border-color: rgba(16,185,129,0.3); }
+    tbody tr { cursor: pointer; }
+    tbody tr td.actions-td { cursor: default; }
+
+    /* ── Section heading ────────────────────────────────────── */
+    .section-heading {
+      align-items: center; display: flex; gap: 10px; justify-content: space-between;
+      margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .section-heading h2 { font-size: 0.9375rem; font-weight: 600; color: var(--text); }
+    .result-count { color: var(--text-dim); font-size: 0.8125rem; }
+
+    /* ── Empty state ────────────────────────────────────────── */
+    .empty-state {
+      color: var(--text-dim); font-size: 0.9375rem; padding: 48px 24px; text-align: center;
+    }
+    .empty-state p { margin-top: 8px; font-size: 0.8125rem; color: var(--text-muted); }
+
+    /* ── Sample data notice ─────────────────────────────────── */
+    .sample-notice {
+      align-items: center; background: rgba(59,130,246,0.07);
+      border: 1px solid rgba(59,130,246,0.2); border-radius: var(--radius);
+      color: var(--info); display: flex; font-size: 0.8125rem; gap: 8px;
+      margin-bottom: 16px; padding: 10px 14px;
+    }
+
+    /* ── Modal ──────────────────────────────────────────────── */
+    .modal-backdrop {
+      align-items: flex-start; background: rgba(0,0,0,0.55); bottom: 0;
+      display: flex; justify-content: center; left: 0; overflow-y: auto;
+      padding: 24px 16px; position: fixed; right: 0; top: 0; z-index: 500;
+    }
+    .modal-backdrop.hidden { display: none; }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); max-width: 700px; width: 100%;
+      position: relative; margin: auto;
+    }
+    .modal-header {
+      align-items: center; border-bottom: 1px solid var(--border);
+      display: flex; gap: 12px; justify-content: space-between;
+      padding: 16px 20px; flex-shrink: 0;
+    }
+    .modal-title { font-size: 1rem; font-weight: 700; color: var(--text); }
+    .modal-close {
+      background: none; border: none; color: var(--text-muted); cursor: pointer;
+      font-size: 18px; line-height: 1; padding: 4px 6px;
+      border-radius: var(--radius-sm); transition: color 0.15s, background 0.15s;
+    }
+    .modal-close:hover { background: var(--surface-2); color: var(--text); }
+    .modal-body { padding: 20px; overflow-y: auto; max-height: calc(90vh - 120px); }
+
+    /* ── Detail sections ────────────────────────────────────── */
+    .detail-section { margin-bottom: 20px; }
+    .detail-section-title {
+      border-bottom: 1px solid var(--border); color: var(--text-dim);
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+      margin-bottom: 12px; padding-bottom: 6px; text-transform: uppercase;
+    }
+    .detail-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 540px) { .detail-grid { grid-template-columns: 1fr; } }
+    .detail-item {}
+    .detail-label { color: var(--text-dim); font-size: 0.75rem; font-weight: 600; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .detail-value { color: var(--text); font-size: 0.875rem; }
+
+    /* ── Status history ─────────────────────────────────────── */
+    .status-timeline { display: flex; flex-direction: column; gap: 8px; }
+    .timeline-item {
+      align-items: flex-start; display: flex; gap: 12px;
+    }
+    .timeline-dot {
+      background: var(--border); border-radius: 50%; flex-shrink: 0;
+      height: 10px; margin-top: 5px; width: 10px;
+    }
+    .timeline-dot.dot-active { background: var(--primary); }
+    .timeline-content {}
+    .timeline-status { font-size: 0.8125rem; font-weight: 600; color: var(--text); }
+    .timeline-meta { color: var(--text-dim); font-size: 0.75rem; margin-top: 2px; }
+
+    /* ── Pricing breakdown ──────────────────────────────────── */
+    .pricing-table { width: 100%; }
+    .pricing-table td { padding: 4px 0; font-size: 0.875rem; }
+    .pricing-table td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+    .pricing-table .pricing-total td { border-top: 1px solid var(--border); font-weight: 700; padding-top: 8px; color: var(--text); }
+    .pricing-table .text-muted { color: var(--text-dim); }
+
+    /* ── Status change form ─────────────────────────────────── */
+    .status-change-box {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px 16px; margin-top: 4px;
+    }
+    .status-change-row {
+      align-items: center; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;
+    }
+    .wa-btn {
+      align-items: center; display: inline-flex; gap: 6px;
+      background: #25d366; border: none; border-radius: var(--radius);
+      color: #fff; cursor: pointer; font-size: 0.875rem; font-weight: 600;
+      padding: 8px 14px; text-decoration: none; transition: background 0.15s;
+    }
+    .wa-btn:hover { background: #1ebe5d; text-decoration: none; }
+
+    /* ── Toast ──────────────────────────────────────────────── */
+    .toast-container {
+      bottom: 20px; display: flex; flex-direction: column; gap: 8px;
+      position: fixed; right: 20px; z-index: 9999; pointer-events: none;
+    }
+    .toast {
+      align-items: center; animation: toast-in 0.25s ease;
+      border-radius: var(--radius); display: flex; gap: 8px;
+      min-width: 220px; max-width: 340px; padding: 10px 14px;
+      pointer-events: all; font-size: 0.875rem; border: 1px solid transparent;
+    }
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .toast-success { background: #0f2d21; border-color: rgba(16,185,129,0.35); color: #34d399; }
+    .toast-error   { background: #2d0f0f; border-color: rgba(239,68,68,0.35); color: #f87171; }
+    .toast-info    { background: #0f1d3a; border-color: rgba(59,130,246,0.35); color: #93c5fd; }
+    .toast-warning { background: #2d1f0a; border-color: rgba(245,158,11,0.35); color: #fbbf24; }
+  </style>
+</head>
+<body>
+
+  <!-- Auth guard -->
+  <script>(function(){try{var s=JSON.parse(localStorage.getItem('gp_admin_session'));if(!s||s.expires<Date.now())window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="admin-layout">
+
+    <!-- ── Sidebar ──────────────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+      <div class="sidebar-header">
+        <span class="logo-icon" aria-hidden="true">⚙</span>
+        <span class="logo-text">GoldAdmin</span>
+      </div>
+      <nav class="sidebar-nav" aria-label="Main menu">
+        <a href="../" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a>
+        <a href="../shops/" class="nav-link"><span class="nav-icon">🏪</span> Shops</a>
+        <a href="../pricing/" class="nav-link"><span class="nav-icon">💰</span> Pricing</a>
+        <a href="../orders/" class="nav-link nav-link-active"><span class="nav-icon">📦</span> Orders</a>
+        <a href="../content/" class="nav-link"><span class="nav-icon">📝</span> Content</a>
+        <a href="../social/" class="nav-link"><span class="nav-icon">📱</span> Social</a>
+        <a href="../settings/" class="nav-link"><span class="nav-icon">⚙</span> Settings</a>
+        <a href="../analytics/" class="nav-link"><span class="nav-icon">📈</span> Analytics</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">↩ Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- ── Main area ────────────────────────────────────────── -->
+    <div class="main-area">
+
+      <header class="page-header">
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle navigation" type="button">☰</button>
+        <h1 class="page-title">📦 Orders</h1>
+      </header>
+
+      <main class="content-area">
+
+        <!-- Sample data notice -->
+        <div class="sample-notice hidden" id="sample-notice" role="status">
+          📦 Sample Data Loaded — these are demo orders. Real orders come from /order-gold.
+        </div>
+
+        <!-- ── Stats ────────────────────────────────────────── -->
+        <div class="stat-grid" role="list" aria-label="Order statistics">
+          <div class="stat-card" role="listitem">
+            <div class="stat-label">Total Orders</div>
+            <div class="stat-number" id="stat-total">—</div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-label">Pending</div>
+            <div class="stat-number" id="stat-pending">—</div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-label">Today's Revenue</div>
+            <div class="stat-number" id="stat-today-rev">—</div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-number" id="stat-total-rev">—</div>
+          </div>
+        </div>
+
+        <!-- ── Toolbar ──────────────────────────────────────── -->
+        <div class="toolbar" role="search" aria-label="Filter orders">
+          <div class="search-wrap">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input
+              class="form-input"
+              id="search-input"
+              type="search"
+              placeholder="Search by name or order ID…"
+              aria-label="Search orders"
+              autocomplete="off"
+            />
+          </div>
+          <select class="form-select" id="filter-status" aria-label="Filter by status">
+            <option value="">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="processing">Processing</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <input class="form-input date-input" id="filter-date-from" type="date" aria-label="From date" title="From date" />
+          <input class="form-input date-input" id="filter-date-to" type="date" aria-label="To date" title="To date" />
+          <select class="form-select" id="sort-select" aria-label="Sort orders">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="amount-desc">Amount (High–Low)</option>
+            <option value="amount-asc">Amount (Low–High)</option>
+          </select>
+          <div class="toolbar-actions">
+            <button class="btn btn-ghost btn-sm" id="export-csv-btn" type="button">⬇ Export CSV</button>
+          </div>
+        </div>
+
+        <!-- ── Table ────────────────────────────────────────── -->
+        <div class="section-heading">
+          <h2>Orders</h2>
+          <span class="result-count" id="result-count" aria-live="polite"></span>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" id="orders-table" aria-label="Orders list">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Items</th>
+                <th>Total (AED)</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody"></tbody>
+          </table>
+        </div>
+
+      </main>
+    </div><!-- /main-area -->
+  </div><!-- /admin-layout -->
+
+  <!-- ── Order Detail Modal ───────────────────────────────── -->
+  <div class="modal-backdrop hidden" id="order-modal" role="dialog" aria-modal="true" aria-labelledby="order-modal-title">
+    <div class="modal" id="order-modal-inner">
+      <div class="modal-header">
+        <span class="modal-title" id="order-modal-title">Order Details</span>
+        <button class="modal-close" id="order-modal-close" aria-label="Close order details" type="button">✕</button>
+      </div>
+      <div class="modal-body" id="order-modal-body">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Toast container ──────────────────────────────────── -->
+  <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <script type="module">
+    import { logActivity, logout } from '../auth.js';
+
+    // ── Storage ────────────────────────────────────────────
+    const STORAGE_KEY = 'gp_orders';
+
+    function loadOrders() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveOrders(orders) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+      } catch {
+        showToast('Storage error — could not save orders.', 'error');
+      }
+    }
+
+    function updateOrderStatus(id, newStatus, note) {
+      const orders = loadOrders();
+      const idx = orders.findIndex(o => o.id === id);
+      if (idx === -1) return null;
+      const now = new Date().toISOString();
+      const entry = { status: newStatus, timestamp: now, note: note || '' };
+      if (!Array.isArray(orders[idx].statusHistory)) orders[idx].statusHistory = [];
+      orders[idx].statusHistory.push(entry);
+      orders[idx].status = newStatus;
+      orders[idx].updatedAt = now;
+      saveOrders(orders);
+      logActivity('order_status', `Order ${id} → ${newStatus}${note ? ': ' + note : ''}`);
+      return orders[idx];
+    }
+
+    // ── Sample data ────────────────────────────────────────
+    function buildSampleOrders() {
+      const now = new Date();
+      const yesterday = new Date(now); yesterday.setDate(yesterday.getDate() - 1);
+      const lastWeek  = new Date(now); lastWeek.setDate(lastWeek.getDate() - 7);
+
+      return [
+        {
+          id: 'ORD-20260412-001',
+          items: [{ weight: 10, weightUnit: 'gram', karat: '24K', quantity: 1, unitPriceAed: 3832.70 }],
+          pricing: { basePrice: 3832.70, margin: 114.98, marginPercent: 3, subtotal: 3947.68, vat: 197.38, vatRate: 5, total: 4145.06, currency: 'AED' },
+          goldSpotAtOrder: 3255.75, fxRateAtOrder: 3.6725,
+          customer: { name: 'Ahmed Al-Rashid', phone: '+971501234567', email: 'ahmed@example.com', delivery: 'pickup', notes: 'Prefers morning pickup' },
+          status: 'pending',
+          statusHistory: [{ status: 'pending', timestamp: now.toISOString(), note: 'Order submitted' }],
+          createdAt: now.toISOString(), updatedAt: now.toISOString(),
+        },
+        {
+          id: 'ORD-20260411-003',
+          items: [
+            { weight: 5,  weightUnit: 'gram', karat: '22K', quantity: 2, unitPriceAed: 1712.50 },
+            { weight: 2,  weightUnit: 'gram', karat: '18K', quantity: 1, unitPriceAed:  560.80 },
+          ],
+          pricing: { basePrice: 3985.80, margin: 119.57, marginPercent: 3, subtotal: 4105.37, vat: 205.27, vatRate: 5, total: 4310.64, currency: 'AED' },
+          goldSpotAtOrder: 3240.50, fxRateAtOrder: 3.6725,
+          customer: { name: 'Sara Hassan', phone: '+971509876543', email: 'sara.h@example.com', delivery: 'delivery', notes: '' },
+          status: 'confirmed',
+          statusHistory: [
+            { status: 'pending',   timestamp: yesterday.toISOString(), note: 'Order submitted' },
+            { status: 'confirmed', timestamp: now.toISOString(),       note: 'Payment verified' },
+          ],
+          createdAt: yesterday.toISOString(), updatedAt: now.toISOString(),
+        },
+        {
+          id: 'ORD-20260405-012',
+          items: [{ weight: 50, weightUnit: 'gram', karat: '24K', quantity: 1, unitPriceAed: 18650.00 }],
+          pricing: { basePrice: 18650.00, margin: 559.50, marginPercent: 3, subtotal: 19209.50, vat: 960.48, vatRate: 5, total: 20169.98, currency: 'AED' },
+          goldSpotAtOrder: 3180.00, fxRateAtOrder: 3.6725,
+          customer: { name: 'Mohammed Al-Farsi', phone: '+971551234000', email: 'mfarsi@example.com', delivery: 'pickup', notes: 'VIP customer — call before ready' },
+          status: 'delivered',
+          statusHistory: [
+            { status: 'pending',   timestamp: lastWeek.toISOString(),  note: 'Order submitted' },
+            { status: 'confirmed', timestamp: lastWeek.toISOString(),  note: 'Payment confirmed' },
+            { status: 'processing',timestamp: lastWeek.toISOString(),  note: 'Preparing order' },
+            { status: 'delivered', timestamp: yesterday.toISOString(), note: 'Picked up by customer' },
+          ],
+          createdAt: lastWeek.toISOString(), updatedAt: yesterday.toISOString(),
+        },
+      ];
+    }
+
+    // ── Helpers ────────────────────────────────────────────
+    function formatDate(iso) {
+      if (!iso) return '—';
+      try {
+        return new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      } catch { return iso; }
+    }
+
+    function formatDatetime(iso) {
+      if (!iso) return '—';
+      try {
+        return new Date(iso).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      } catch { return iso; }
+    }
+
+    function formatAed(amount) {
+      if (amount == null || isNaN(amount)) return '—';
+      return 'AED ' + Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function itemsSummary(items) {
+      if (!Array.isArray(items) || items.length === 0) return '—';
+      return items.map(i => `${i.weight}${i.weightUnit === 'gram' ? 'g' : i.weightUnit} ${i.karat} × ${i.quantity}`).join(', ');
+    }
+
+    function badgeHtml(status) {
+      const labels = { pending: 'Pending', confirmed: 'Confirmed', processing: 'Processing', shipped: 'Shipped', delivered: 'Delivered', cancelled: 'Cancelled' };
+      const s = String(status).toLowerCase();
+      return `<span class="badge badge-${s}">${labels[s] || status}</span>`;
+    }
+
+    function isToday(iso) {
+      if (!iso) return false;
+      const d = new Date(iso);
+      const n = new Date();
+      return d.getFullYear() === n.getFullYear() && d.getMonth() === n.getMonth() && d.getDate() === n.getDate();
+    }
+
+    const REVENUE_STATUSES = new Set(['confirmed', 'processing', 'shipped', 'delivered']);
+
+    // ── Toast ──────────────────────────────────────────────
+    function showToast(msg, type = 'info') {
+      const c = document.getElementById('toast-container');
+      const t = document.createElement('div');
+      t.className = `toast toast-${type}`;
+      t.textContent = msg;
+      c.appendChild(t);
+      setTimeout(() => t.remove(), 4000);
+    }
+
+    // ── State ──────────────────────────────────────────────
+    let allOrders = [];
+    let filteredOrders = [];
+
+    // ── Stats ──────────────────────────────────────────────
+    function renderStats() {
+      const total = allOrders.length;
+      const pending = allOrders.filter(o => o.status === 'pending').length;
+      const todayRev = allOrders
+        .filter(o => isToday(o.createdAt) && REVENUE_STATUSES.has(o.status))
+        .reduce((s, o) => s + (o.pricing?.total || 0), 0);
+      const totalRev = allOrders
+        .filter(o => REVENUE_STATUSES.has(o.status))
+        .reduce((s, o) => s + (o.pricing?.total || 0), 0);
+
+      document.getElementById('stat-total').textContent = total;
+      document.getElementById('stat-pending').textContent = pending;
+      document.getElementById('stat-today-rev').textContent = formatAed(todayRev);
+      document.getElementById('stat-total-rev').textContent = formatAed(totalRev);
+    }
+
+    // ── Filter & sort ──────────────────────────────────────
+    function applyFilters() {
+      const search = document.getElementById('search-input').value.trim().toLowerCase();
+      const statusF = document.getElementById('filter-status').value;
+      const dateFrom = document.getElementById('filter-date-from').value;
+      const dateTo   = document.getElementById('filter-date-to').value;
+      const sort     = document.getElementById('sort-select').value;
+
+      filteredOrders = allOrders.filter(o => {
+        if (search) {
+          const haystack = `${o.id} ${o.customer?.name || ''}`.toLowerCase();
+          if (!haystack.includes(search)) return false;
+        }
+        if (statusF && o.status !== statusF) return false;
+        if (dateFrom) {
+          const d = new Date(o.createdAt); d.setHours(0,0,0,0);
+          if (d < new Date(dateFrom)) return false;
+        }
+        if (dateTo) {
+          const d = new Date(o.createdAt); d.setHours(23,59,59,999);
+          if (d > new Date(dateTo)) return false;
+        }
+        return true;
+      });
+
+      filteredOrders.sort((a, b) => {
+        if (sort === 'newest')      return new Date(b.createdAt) - new Date(a.createdAt);
+        if (sort === 'oldest')      return new Date(a.createdAt) - new Date(b.createdAt);
+        if (sort === 'amount-desc') return (b.pricing?.total || 0) - (a.pricing?.total || 0);
+        if (sort === 'amount-asc')  return (a.pricing?.total || 0) - (b.pricing?.total || 0);
+        return 0;
+      });
+
+      renderTable();
+    }
+
+    // ── Table ──────────────────────────────────────────────
+    function renderTable() {
+      const tbody = document.getElementById('orders-tbody');
+      document.getElementById('result-count').textContent =
+        `${filteredOrders.length} order${filteredOrders.length !== 1 ? 's' : ''}`;
+
+      if (filteredOrders.length === 0) {
+        const noOrders = allOrders.length === 0;
+        tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">
+          📦 ${noOrders ? 'No orders yet.' : 'No orders match your filters.'}
+          <p>${noOrders ? 'Orders submitted on /order-gold will appear here.' : 'Try adjusting your search or filters.'}</p>
+        </div></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filteredOrders.map(o => {
+        const hasPhone = o.customer?.phone;
+        const waText = encodeURIComponent(`Order ${o.id}\n${itemsSummary(o.items)}\nTotal: AED ${(o.pricing?.total || 0).toFixed(2)}\nCustomer: ${o.customer?.name || '—'}`);
+        const waHref = hasPhone ? `https://wa.me/${o.customer.phone.replace(/\D/g, '')}?text=${waText}` : '';
+
+        return `<tr data-id="${o.id}" tabindex="0" role="row" aria-label="Order ${o.id}">
+          <td class="order-id-cell"><strong>${o.id}</strong></td>
+          <td>${formatDate(o.createdAt)}</td>
+          <td><div class="customer-cell">
+            <span class="customer-name">${escHtml(o.customer?.name || '—')}</span>
+            <span class="customer-email">${escHtml(o.customer?.email || '')}</span>
+          </div></td>
+          <td class="items-summary">${escHtml(itemsSummary(o.items))}</td>
+          <td class="total-cell">${formatAed(o.pricing?.total)}</td>
+          <td>${badgeHtml(o.status)}</td>
+          <td class="actions-td"><div class="row-actions" role="group" aria-label="Actions for ${o.id}">
+            <button class="btn-icon view-btn" data-id="${o.id}" aria-label="View order ${o.id}" title="View details" type="button">👁</button>
+            <button class="btn-icon status-btn" data-id="${o.id}" aria-label="Change status of ${o.id}" title="Change status" type="button">→</button>
+            ${hasPhone ? `<a class="btn-icon btn-icon-success" href="${waHref}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp ${o.customer.name}" title="Contact via WhatsApp">💬</a>` : ''}
+          </div></td>
+        </tr>`;
+      }).join('');
+    }
+
+    function escHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ── Order detail modal ─────────────────────────────────
+    function openOrderModal(orderId) {
+      const o = allOrders.find(x => x.id === orderId);
+      if (!o) return;
+
+      document.getElementById('order-modal-title').textContent = `Order ${o.id}`;
+
+      const hasPhone = o.customer?.phone;
+      const waText = encodeURIComponent(`Order ${o.id}\n${itemsSummary(o.items)}\nTotal: AED ${(o.pricing?.total || 0).toFixed(2)}\nCustomer: ${o.customer?.name || '—'}`);
+      const waHref = hasPhone ? `https://wa.me/${o.customer.phone.replace(/\D/g, '')}?text=${waText}` : '';
+
+      const nextStatuses = getNextStatuses(o.status);
+
+      // Status history
+      const historyHtml = Array.isArray(o.statusHistory) && o.statusHistory.length
+        ? `<div class="status-timeline">${o.statusHistory.slice().reverse().map((h, i) =>
+            `<div class="timeline-item">
+              <div class="timeline-dot${i === 0 ? ' dot-active' : ''}"></div>
+              <div class="timeline-content">
+                <div class="timeline-status">${badgeHtml(h.status)}</div>
+                <div class="timeline-meta">${formatDatetime(h.timestamp)}${h.note ? ' — ' + escHtml(h.note) : ''}</div>
+              </div>
+            </div>`
+          ).join('')}</div>`
+        : '<p style="color:var(--text-dim);font-size:0.8125rem;">No history.</p>';
+
+      // Items table
+      const itemsHtml = Array.isArray(o.items) && o.items.length
+        ? `<table class="data-table" style="font-size:0.8125rem;">
+            <thead><tr><th>Weight</th><th>Karat</th><th>Qty</th><th style="text-align:right">Unit Price</th><th style="text-align:right">Line Total</th></tr></thead>
+            <tbody>${o.items.map(it =>
+              `<tr>
+                <td>${it.weight} ${it.weightUnit || 'g'}</td>
+                <td>${escHtml(it.karat)}</td>
+                <td>${it.quantity}</td>
+                <td style="text-align:right">${formatAed(it.unitPriceAed)}</td>
+                <td style="text-align:right">${formatAed((it.unitPriceAed || 0) * (it.quantity || 1))}</td>
+              </tr>`
+            ).join('')}</tbody>
+           </table>`
+        : '<p style="color:var(--text-dim)">No items.</p>';
+
+      const p = o.pricing || {};
+      const pricingHtml = `<table class="pricing-table">
+        <tr><td class="text-muted">Base Price</td><td>${formatAed(p.basePrice)}</td></tr>
+        <tr><td class="text-muted">Margin (${p.marginPercent || 0}%)</td><td>+ ${formatAed(p.margin)}</td></tr>
+        <tr><td class="text-muted">Subtotal</td><td>${formatAed(p.subtotal)}</td></tr>
+        <tr><td class="text-muted">VAT (${p.vatRate || 0}%)</td><td>+ ${formatAed(p.vat)}</td></tr>
+        <tr class="pricing-total"><td>Total</td><td>${formatAed(p.total)} ${escHtml(p.currency || 'AED')}</td></tr>
+      </table>`;
+
+      const statusChangeHtml = nextStatuses.length
+        ? `<div class="status-change-box">
+            <div class="status-change-row">
+              <span style="font-size:0.8125rem;color:var(--text-muted);flex-shrink:0;">Change to:</span>
+              <select class="form-select" id="modal-status-select" aria-label="New status" style="flex:1;min-width:130px;">
+                ${nextStatuses.map(s => `<option value="${s}">${s.charAt(0).toUpperCase() + s.slice(1)}</option>`).join('')}
+              </select>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;">
+              <input class="form-input" id="modal-status-note" type="text" placeholder="Add a note (optional)" style="flex:1;" aria-label="Status note" />
+              <button class="btn btn-primary btn-sm" id="modal-update-status-btn" data-id="${o.id}" type="button">Update Status</button>
+            </div>
+          </div>`
+        : `<p style="color:var(--text-dim);font-size:0.8125rem;margin-top:4px;">No further status transitions available.</p>`;
+
+      document.getElementById('order-modal-body').innerHTML = `
+        <div class="detail-section">
+          <div class="detail-section-title">Order Overview</div>
+          <div class="detail-grid">
+            <div class="detail-item"><div class="detail-label">Order ID</div><div class="detail-value">${escHtml(o.id)}</div></div>
+            <div class="detail-item"><div class="detail-label">Status</div><div class="detail-value">${badgeHtml(o.status)}</div></div>
+            <div class="detail-item"><div class="detail-label">Created</div><div class="detail-value">${formatDatetime(o.createdAt)}</div></div>
+            <div class="detail-item"><div class="detail-label">Last Updated</div><div class="detail-value">${formatDatetime(o.updatedAt)}</div></div>
+            <div class="detail-item"><div class="detail-label">Gold Spot at Order</div><div class="detail-value">USD ${o.goldSpotAtOrder != null ? Number(o.goldSpotAtOrder).toLocaleString('en-US', {minimumFractionDigits:2}) : '—'}/oz</div></div>
+            <div class="detail-item"><div class="detail-label">FX Rate at Order</div><div class="detail-value">1 USD = ${o.fxRateAtOrder != null ? o.fxRateAtOrder : '—'} AED</div></div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">Customer</div>
+          <div class="detail-grid">
+            <div class="detail-item"><div class="detail-label">Name</div><div class="detail-value">${escHtml(o.customer?.name || '—')}</div></div>
+            <div class="detail-item"><div class="detail-label">Phone</div><div class="detail-value">${escHtml(o.customer?.phone || '—')}</div></div>
+            <div class="detail-item"><div class="detail-label">Email</div><div class="detail-value">${escHtml(o.customer?.email || '—')}</div></div>
+            <div class="detail-item"><div class="detail-label">Delivery</div><div class="detail-value">${escHtml(o.customer?.delivery || '—')}</div></div>
+            ${o.customer?.notes ? `<div class="detail-item" style="grid-column:span 2"><div class="detail-label">Notes</div><div class="detail-value">${escHtml(o.customer.notes)}</div></div>` : ''}
+          </div>
+          ${hasPhone ? `<div style="margin-top:12px;"><a class="wa-btn" href="${waHref}" target="_blank" rel="noopener noreferrer">💬 WhatsApp ${escHtml(o.customer.name)}</a></div>` : ''}
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">Items</div>
+          ${itemsHtml}
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">Pricing Breakdown</div>
+          ${pricingHtml}
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">Status History</div>
+          ${historyHtml}
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">Change Status</div>
+          ${statusChangeHtml}
+        </div>
+      `;
+
+      document.getElementById('order-modal').classList.remove('hidden');
+      document.getElementById('order-modal-close').focus();
+
+      const updateBtn = document.getElementById('modal-update-status-btn');
+      if (updateBtn) {
+        updateBtn.addEventListener('click', () => {
+          const newStatus = document.getElementById('modal-status-select').value;
+          const note = document.getElementById('modal-status-note').value.trim();
+          const updated = updateOrderStatus(orderId, newStatus, note);
+          if (updated) {
+            allOrders = loadOrders();
+            renderStats();
+            applyFilters();
+            openOrderModal(orderId); // re-render modal
+            showToast(`Status updated to ${newStatus}.`, 'success');
+          }
+        });
+      }
+    }
+
+    function getNextStatuses(current) {
+      const flow = {
+        pending:    ['confirmed', 'cancelled'],
+        confirmed:  ['processing', 'cancelled'],
+        processing: ['shipped', 'cancelled'],
+        shipped:    ['delivered', 'cancelled'],
+        delivered:  [],
+        cancelled:  [],
+      };
+      return flow[current] || [];
+    }
+
+    function closeOrderModal() {
+      document.getElementById('order-modal').classList.add('hidden');
+    }
+
+    // ── CSV export ─────────────────────────────────────────
+    function exportCsv() {
+      const headers = ['id','createdAt','customerName','customerPhone','customerEmail','delivery','notes','items','basePrice','margin','subtotal','vat','total','currency','status'];
+      const rows = filteredOrders.map(o => {
+        const p = o.pricing || {};
+        const c = o.customer || {};
+        const cells = [
+          o.id,
+          o.createdAt,
+          c.name || '',
+          c.phone || '',
+          c.email || '',
+          c.delivery || '',
+          c.notes || '',
+          JSON.stringify(o.items || []),
+          p.basePrice || 0,
+          p.margin || 0,
+          p.subtotal || 0,
+          p.vat || 0,
+          p.total || 0,
+          p.currency || 'AED',
+          o.status,
+        ];
+        return cells.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
+      });
+      const csv = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `orders-${new Date().toISOString().slice(0,10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast(`Exported ${filteredOrders.length} order${filteredOrders.length !== 1 ? 's' : ''}.`, 'success');
+    }
+
+    // ── Init ───────────────────────────────────────────────
+    function init() {
+      allOrders = loadOrders();
+
+      if (allOrders.length === 0) {
+        allOrders = buildSampleOrders();
+        saveOrders(allOrders);
+        document.getElementById('sample-notice').classList.remove('hidden');
+      }
+
+      renderStats();
+      applyFilters();
+
+      // Active nav link
+      document.querySelectorAll('.nav-link').forEach(a => {
+        if (a.pathname && window.location.pathname.startsWith(a.pathname) && a.pathname !== '/admin/') {
+          a.classList.add('nav-link-active');
+        }
+      });
+
+      // Toolbar events
+      ['search-input','filter-status','filter-date-from','filter-date-to','sort-select'].forEach(id => {
+        document.getElementById(id).addEventListener('input', applyFilters);
+        document.getElementById(id).addEventListener('change', applyFilters);
+      });
+
+      // Table click delegation
+      const tbody = document.getElementById('orders-tbody');
+      tbody.addEventListener('click', e => {
+        const viewBtn = e.target.closest('.view-btn');
+        const statusBtn = e.target.closest('.status-btn');
+        const row = e.target.closest('tr[data-id]');
+
+        if (viewBtn) { openOrderModal(viewBtn.dataset.id); return; }
+        if (statusBtn) { openOrderModal(statusBtn.dataset.id); return; }
+        if (row && !e.target.closest('.row-actions')) { openOrderModal(row.dataset.id); }
+      });
+
+      tbody.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          const row = e.target.closest('tr[data-id]');
+          if (row) openOrderModal(row.dataset.id);
+        }
+      });
+
+      // Modal close
+      document.getElementById('order-modal-close').addEventListener('click', closeOrderModal);
+      document.getElementById('order-modal').addEventListener('click', e => {
+        if (e.target === document.getElementById('order-modal')) closeOrderModal();
+      });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeOrderModal();
+      });
+
+      // Export CSV
+      document.getElementById('export-csv-btn').addEventListener('click', exportCsv);
+
+      // Sidebar toggle (mobile)
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      document.getElementById('sidebar-toggle').addEventListener('click', () => {
+        sidebar.classList.toggle('sidebar-open');
+        overlay.classList.toggle('visible');
+      });
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('sidebar-open');
+        overlay.classList.remove('visible');
+      });
+
+      // Logout
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        logout();
+        window.location.replace('../login/');
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>

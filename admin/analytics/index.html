@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics — GoldAdmin</title>
+  <link rel="stylesheet" href="../admin.css" />
+  <style>
+    /* ── Stat grid ──────────────────────────────────────────── */
+    .stat-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(4, 1fr);
+      margin-bottom: 20px;
+    }
+    @media (max-width: 900px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .stat-grid { grid-template-columns: 1fr; } }
+
+    /* ── Bar chart ──────────────────────────────────────────── */
+    .bar-chart-wrap {
+      align-items: flex-end;
+      display: flex;
+      gap: 6px;
+      height: 160px;
+      margin-bottom: 8px;
+      padding-bottom: 0;
+    }
+    .bar-col {
+      align-items: center;
+      display: flex;
+      flex: 1 1 0;
+      flex-direction: column;
+      gap: 4px;
+      justify-content: flex-end;
+      min-width: 0;
+    }
+    .bar-fill {
+      background: var(--primary);
+      border-radius: 3px 3px 0 0;
+      min-height: 2px;
+      transition: background 0.2s;
+      width: 100%;
+    }
+    .bar-fill.today { background: var(--gold); }
+    .bar-fill.zero-bar { background: var(--border); min-height: 4px; opacity: 0.4; }
+    .bar-label {
+      color: var(--text-dim);
+      font-size: 0.65rem;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+    .bar-count {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      text-align: center;
+    }
+    .chart-legend {
+      align-items: center;
+      display: flex;
+      font-size: 0.75rem;
+      gap: 16px;
+      color: var(--text-dim);
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .legend-dot {
+      border-radius: 50%;
+      display: inline-block;
+      height: 8px;
+      margin-right: 4px;
+      width: 8px;
+    }
+
+    /* ── Event badge ────────────────────────────────────────── */
+    .event-badge {
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 7px;
+      white-space: nowrap;
+    }
+    .badge-pageview  { background: rgba(59,130,246,0.15);  color: #60a5fa; }
+    .badge-click     { background: rgba(16,185,129,0.15);  color: #34d399; }
+    .badge-error     { background: rgba(239,68,68,0.15);   color: #f87171; }
+    .badge-search    { background: rgba(139,92,246,0.15);  color: #a78bfa; }
+    .badge-order     { background: rgba(245,158,11,0.15);  color: #fbbf24; }
+    .badge-default   { background: rgba(100,116,139,0.15); color: #94a3b8; }
+
+    /* ── Progress bar for top pages ────────────────────────── */
+    .page-bar-wrap {
+      background: var(--surface-2);
+      border-radius: 3px;
+      height: 6px;
+      margin-top: 4px;
+      overflow: hidden;
+      width: 100%;
+    }
+    .page-bar-fill {
+      background: var(--primary);
+      border-radius: 3px;
+      height: 100%;
+      transition: width 0.3s;
+    }
+
+    /* ── Empty state ────────────────────────────────────────── */
+    .empty-state-page {
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .empty-state-page .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+    .empty-state-page h2 {
+      color: var(--text-muted);
+      font-size: 1.125rem;
+      margin-bottom: 8px;
+    }
+    .empty-state-page p {
+      color: var(--text-dim);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+    .empty-state {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      padding: 32px 16px;
+      text-align: center;
+    }
+
+    /* ── Source notice ──────────────────────────────────────── */
+    .source-notice {
+      background: rgba(59,130,246,0.06);
+      border: 1px solid rgba(59,130,246,0.2);
+      border-radius: var(--radius);
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+    }
+
+    /* ── Data period ────────────────────────────────────────── */
+    .data-period {
+      color: var(--text-dim);
+      font-size: 0.8125rem;
+      margin-top: 10px;
+    }
+
+    .page-url {
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      max-width: 260px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .relative-time {
+      color: var(--text-dim);
+      font-size: 0.8125rem;
+      white-space: nowrap;
+    }
+    .actions-row {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Auth guard -->
+  <script>(function(){try{var s=JSON.parse(localStorage.getItem('gp_admin_session'));if(!s||s.expires<Date.now())window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+      <div class="sidebar-header">
+        <span class="logo-icon" aria-hidden="true">⚙</span>
+        <span class="logo-text">GoldAdmin</span>
+      </div>
+      <nav class="sidebar-nav" aria-label="Main menu">
+        <a href="../" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a>
+        <a href="../shops/" class="nav-link"><span class="nav-icon">🏪</span> Shops</a>
+        <a href="../pricing/" class="nav-link"><span class="nav-icon">💰</span> Pricing</a>
+        <a href="../orders/" class="nav-link"><span class="nav-icon">📦</span> Orders</a>
+        <a href="../content/" class="nav-link"><span class="nav-icon">📝</span> Content</a>
+        <a href="../social/" class="nav-link"><span class="nav-icon">📱</span> Social</a>
+        <a href="../settings/" class="nav-link"><span class="nav-icon">⚙</span> Settings</a>
+        <a href="../analytics/" class="nav-link"><span class="nav-icon">📈</span> Analytics</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">↩ Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- Main area -->
+    <div class="main-area">
+
+      <header class="page-header">
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle navigation" type="button">☰</button>
+        <h1 class="page-title">📈 Analytics</h1>
+        <div class="header-actions"></div>
+      </header>
+
+      <main class="content-area" id="main-content">
+        <!-- Populated by JS -->
+      </main>
+
+    </div><!-- /.main-area -->
+  </div><!-- /.admin-layout -->
+
+  <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+  <script type="module">
+    import { isAuthenticated, logActivity, logout } from '../auth.js';
+
+    const EVENTS_KEY = 'gp_analytics_events';
+    const API_LOG_KEY = 'gp_api_call_log';
+
+    /* ── Toast ──────────────────────────────────────────────── */
+    function showToast(msg, type = 'info') {
+      const icons = { success: '✓', error: '✕', warning: '⚠', info: 'ℹ' };
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast toast--${type}`;
+      toast.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add('toast-hide');
+        toast.addEventListener('animationend', () => toast.remove(), { once: true });
+      }, 3500);
+    }
+
+    /* ── Data helpers ───────────────────────────────────────── */
+    function loadEvents() {
+      try { return JSON.parse(localStorage.getItem(EVENTS_KEY)) || []; } catch { return []; }
+    }
+
+    function loadApiLog() {
+      try { return JSON.parse(localStorage.getItem(API_LOG_KEY)) || []; } catch { return []; }
+    }
+
+    function relativeTime(ts) {
+      const diff = Date.now() - ts;
+      if (diff < 60000) return `${Math.round(diff / 1000)}s ago`;
+      if (diff < 3600000) return `${Math.round(diff / 60000)} min ago`;
+      if (diff < 86400000) return `${Math.round(diff / 3600000)}h ago`;
+      return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    function dateMDStr(ts) {
+      const d = new Date(ts);
+      return `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function dayKey(ts) {
+      const d = new Date(ts);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function todayKey() {
+      return dayKey(Date.now());
+    }
+
+    /* ── Event badge ────────────────────────────────────────── */
+    function eventBadge(type) {
+      const cls = {
+        pageview: 'badge-pageview',
+        click: 'badge-click',
+        error: 'badge-error',
+        search: 'badge-search',
+        order: 'badge-order',
+      }[type] || 'badge-default';
+      return `<span class="event-badge ${cls}">${type}</span>`;
+    }
+
+    /* ── Empty state (no data at all) ───────────────────────── */
+    function renderEmptyState() {
+      const content = document.getElementById('main-content');
+      content.innerHTML = `
+        <div class="source-notice">
+          ℹ Analytics data is collected when users visit public pages with the analytics module loaded.
+          Data is stored in localStorage on the user's device and is not transmitted to any external service.
+        </div>
+        <div class="card">
+          <div class="card-body empty-state-page">
+            <div class="empty-icon">📊</div>
+            <h2>No analytics data yet</h2>
+            <p>
+              Analytics data appears here once public pages are visited with the analytics module loaded.
+              Events are stored locally in <code>gp_analytics_events</code> and read by this dashboard.
+            </p>
+            <p style="margin-top:12px;">
+              Track events from public pages by appending objects to <code>gp_analytics_events</code>
+              in localStorage with the shape: <code>{ event, page, referrer, sessionId, ts }</code>
+            </p>
+          </div>
+        </div>`;
+    }
+
+    /* ── Full dashboard ─────────────────────────────────────── */
+    function renderDashboard(events) {
+      const content = document.getElementById('main-content');
+      const pageviews = events.filter(e => e.event === 'pageview');
+      const totalViews = pageviews.length;
+
+      // Unique sessions
+      const sessionSet = new Set(events.map(e => e.sessionId).filter(Boolean));
+      const uniqueSessions = sessionSet.size || '—';
+
+      // Most viewed page
+      const pageCounts = {};
+      pageviews.forEach(e => {
+        const p = e.page || '(unknown)';
+        pageCounts[p] = (pageCounts[p] || 0) + 1;
+      });
+      const topPage = Object.entries(pageCounts).sort((a, b) => b[1] - a[1])[0];
+      const topPageLabel = topPage
+        ? `${topPage[0].replace(/^https?:\/\/[^/]+/, '')} (${topPage[1]})`
+        : '—';
+
+      // API success rate
+      const apiLog = loadApiLog();
+      let apiRateLabel = 'N/A';
+      if (apiLog.length > 0) {
+        const successes = apiLog.filter(e => e.success === true || e.status === 'success').length;
+        const rate = Math.round((successes / apiLog.length) * 100);
+        apiRateLabel = `${rate}%`;
+      }
+
+      // Last 14 days bar chart data
+      const days14 = [];
+      const now = Date.now();
+      for (let i = 13; i >= 0; i--) {
+        const dayTs = now - i * 86400000;
+        days14.push({ key: dayKey(dayTs), label: dateMDStr(dayTs), count: 0 });
+      }
+      const dayMap = {};
+      days14.forEach(d => { dayMap[d.key] = d; });
+      pageviews.forEach(e => {
+        const k = dayKey(e.ts);
+        if (dayMap[k]) dayMap[k].count++;
+      });
+      const maxCount = Math.max(...days14.map(d => d.count), 1);
+      const today = todayKey();
+      const bars = days14.map(d => {
+        const pct = Math.round((d.count / maxCount) * 100);
+        const isToday = d.key === today;
+        return `<div class="bar-col">
+          <div class="bar-count">${d.count > 0 ? d.count : ''}</div>
+          <div class="bar-fill${isToday ? ' today' : ''}${d.count === 0 ? ' zero-bar' : ''}" style="height:${Math.max(pct, 2)}%;"></div>
+          <div class="bar-label">${d.label}</div>
+        </div>`;
+      }).join('');
+
+      // Top pages table
+      const sortedPages = Object.entries(pageCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
+      const topPageRows = sortedPages.length > 0
+        ? sortedPages.map(([page, count]) => {
+            const pct = totalViews > 0 ? Math.round((count / totalViews) * 100) : 0;
+            const cleanPage = page.replace(/^https?:\/\/[^/]+/, '') || '/';
+            return `<tr>
+              <td><div class="page-url" title="${page}">${cleanPage}</div>
+                <div class="page-bar-wrap"><div class="page-bar-fill" style="width:${pct}%;"></div></div>
+              </td>
+              <td style="text-align:right;font-weight:600;">${count.toLocaleString()}</td>
+              <td style="text-align:right;color:var(--text-dim);">${pct}%</td>
+            </tr>`;
+          }).join('')
+        : `<tr><td colspan="3" style="text-align:center;color:var(--text-dim);padding:24px;">No page view data recorded yet.</td></tr>`;
+
+      // Recent events (last 30)
+      const recentEvents = [...events].sort((a, b) => b.ts - a.ts).slice(0, 30);
+      const recentRows = recentEvents.length > 0
+        ? recentEvents.map(e => {
+            const page = (e.page || '(unknown)').replace(/^https?:\/\/[^/]+/, '') || '/';
+            return `<tr>
+              <td>${eventBadge(e.event || 'unknown')}</td>
+              <td class="page-url" title="${e.page || ''}">${page}</td>
+              <td class="relative-time">${relativeTime(e.ts)}</td>
+            </tr>`;
+          }).join('')
+        : `<tr><td colspan="3" style="text-align:center;color:var(--text-dim);padding:24px;">No events recorded.</td></tr>`;
+
+      // Data period
+      const sortedByTs = [...events].sort((a, b) => a.ts - b.ts);
+      let datePeriod = '';
+      if (sortedByTs.length > 0) {
+        const from = new Date(sortedByTs[0].ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const to = new Date(sortedByTs[sortedByTs.length - 1].ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        datePeriod = from === to ? from : `${from} – ${to}`;
+      }
+
+      content.innerHTML = `
+        <div class="source-notice">
+          ℹ Analytics data is collected when users visit public pages with the analytics module loaded.
+          Data is stored in localStorage on the user's device and is not transmitted to any external service.
+        </div>
+
+        <!-- Summary stats -->
+        <div class="stat-grid" role="list" aria-label="Analytics summary">
+          <div class="stat-card" role="listitem">
+            <div class="stat-label">Page Views (Total)</div>
+            <div class="stat-number">${totalViews.toLocaleString()}</div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-label">Unique Sessions</div>
+            <div class="stat-number">${typeof uniqueSessions === 'number' ? uniqueSessions.toLocaleString() : uniqueSessions}</div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-label">Most Viewed Page</div>
+            <div class="stat-number" style="font-size:0.9rem;word-break:break-all;" title="${topPage ? topPage[0] : ''}">${topPageLabel}</div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-label">API Success Rate</div>
+            <div class="stat-number">${apiRateLabel}</div>
+          </div>
+        </div>
+
+        <!-- Bar chart -->
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-header">
+            <h2 class="card-title">Page Views — Last 14 Days</h2>
+          </div>
+          <div class="card-body">
+            <div class="bar-chart-wrap" role="img" aria-label="Page views bar chart last 14 days">${bars}</div>
+            <div class="chart-legend">
+              <span><span class="legend-dot" style="background:var(--primary);"></span>Page views</span>
+              <span><span class="legend-dot" style="background:var(--gold);"></span>Today</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top pages -->
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-header">
+            <h2 class="card-title">Top Pages</h2>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div style="overflow-x:auto;">
+              <table class="table">
+                <thead><tr><th>Page</th><th style="text-align:right;">Views</th><th style="text-align:right;">% of Total</th></tr></thead>
+                <tbody>${topPageRows}</tbody>
+              </table>
+            </div>
+            ${sortedPages.length === 0 ? `<div class="empty-state">No page view data recorded yet. Data appears here as users visit public pages.</div>` : ''}
+          </div>
+        </div>
+
+        <!-- Recent events -->
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-header">
+            <h2 class="card-title">Recent Events</h2>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div style="overflow-x:auto;">
+              <table class="table">
+                <thead><tr><th>Event</th><th>Page</th><th>Time</th></tr></thead>
+                <tbody id="recent-events-tbody">${recentRows}</tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data management -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Data Management</h2>
+          </div>
+          <div class="card-body">
+            <div class="actions-row">
+              <button class="btn btn-secondary btn-sm" id="export-events-btn" type="button">⬇ Export Events JSON</button>
+              <button class="btn btn-ghost btn-sm" id="clear-events-btn" type="button" style="color:var(--danger);">🗑 Clear Analytics Data</button>
+            </div>
+            ${datePeriod ? `<div class="data-period">Data period: ${datePeriod}</div>` : ''}
+          </div>
+        </div>`;
+
+      /* ── Wire data management actions ───────────────────────── */
+      let clearPending = false;
+
+      document.getElementById('export-events-btn').addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(events, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'gp_analytics_events.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      document.getElementById('clear-events-btn').addEventListener('click', () => {
+        const btn = document.getElementById('clear-events-btn');
+        if (!clearPending) {
+          clearPending = true;
+          btn.textContent = '⚠ Confirm Clear';
+          btn.style.background = 'rgba(239,68,68,0.15)';
+          setTimeout(() => {
+            clearPending = false;
+            btn.textContent = '🗑 Clear Analytics Data';
+            btn.style.background = '';
+          }, 3000);
+        } else {
+          clearPending = false;
+          try { localStorage.removeItem(EVENTS_KEY); } catch {}
+          showToast('Analytics data cleared.', 'info');
+          renderPage();
+        }
+      });
+    }
+
+    /* ── Main render ────────────────────────────────────────── */
+    function renderPage() {
+      const events = loadEvents();
+      if (events.length === 0) {
+        renderEmptyState();
+      } else {
+        renderDashboard(events);
+      }
+    }
+
+    /* ── Init ───────────────────────────────────────────────── */
+    function init() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      document.getElementById('sidebar-toggle').addEventListener('click', () => {
+        sidebar.classList.toggle('sidebar--open');
+        overlay.classList.toggle('sidebar-overlay--visible');
+      });
+      overlay.addEventListener('click', () => {
+        sidebar.classList.remove('sidebar--open');
+        overlay.classList.remove('sidebar-overlay--visible');
+      });
+
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        logout();
+        window.location.replace('../login/');
+      });
+
+      document.querySelectorAll('.nav-link').forEach(a => {
+        if (location.href.includes(a.href.split('/Gold-Prices').pop())) a.classList.add('active');
+      });
+
+      renderPage();
+    }
+
+    init();
+  </script>
+</body>
+</html>
