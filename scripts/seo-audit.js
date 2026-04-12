@@ -40,6 +40,8 @@ function extract(html, file) {
   const desc = (html.match(/<meta\s+name="description"\s+content="([^"]*)"/s) || [])[1] || '❌ MISSING';
   const canonical = (html.match(/<link\s+rel="canonical"\s+href="([^"]*)"/s) || [])[1] || '❌ MISSING';
   const hreflangCount = (html.match(/hreflang=/g) || []).length;
+  // Detect noindex — skip full SEO checks for private/utility pages
+  const isNoindex = /<meta\s+name="robots"\s+content="[^"]*noindex/i.test(html);
   const ogTitle = (html.match(/<meta\s+property="og:title"\s+content="([^"]*)"/s) || [])[1] || '—';
   const twitterCard = (html.match(/<meta\s+name="twitter:card"\s+content="([^"]*)"/s) || [])[1] || '—';
 
@@ -68,17 +70,20 @@ function extract(html, file) {
   }
 
   const issues = [];
-  if (title === '❌ MISSING') issues.push('Missing title');
-  if (desc === '❌ MISSING') issues.push('Missing meta description');
-  if (canonical === '❌ MISSING') issues.push('Missing canonical');
-  if (canonical !== '❌ MISSING' && canonical !== expectedCanonical) {
-    issues.push(`Canonical mismatch: got "${canonical}", expected "${expectedCanonical}"`);
+  // Skip detailed SEO checks for noindex pages (admin, offline, embed, etc.)
+  if (!isNoindex) {
+    if (title === '❌ MISSING') issues.push('Missing title');
+    if (desc === '❌ MISSING') issues.push('Missing meta description');
+    if (canonical === '❌ MISSING') issues.push('Missing canonical');
+    if (canonical !== '❌ MISSING' && canonical !== expectedCanonical) {
+      issues.push(`Canonical mismatch: got "${canonical}", expected "${expectedCanonical}"`);
+    }
+    if (hreflangCount === 0) issues.push('No hreflang tags in HTML');
+    if (hreflangCount > 0 && hreflangCount < 3) issues.push(`Only ${hreflangCount} hreflang tags (expected 3: x-default, en, ar)`);
+    if (schemas.length === 0) issues.push('No JSON-LD structured data');
   }
-  if (hreflangCount === 0) issues.push('No hreflang tags in HTML');
-  if (hreflangCount > 0 && hreflangCount < 3) issues.push(`Only ${hreflangCount} hreflang tags (expected 3: x-default, en, ar)`);
-  if (schemas.length === 0) issues.push('No JSON-LD structured data');
 
-  return { file, title, desc, canonical, hreflangCount, ogTitle, twitterCard, schemas, issues };
+  return { file, title, desc, canonical, hreflangCount, ogTitle, twitterCard, schemas, issues, isNoindex };
 }
 
 // ─────────────────────────────────────────────────────────────────────
@@ -94,8 +99,10 @@ function validateSitemap(htmlFiles) {
   const sitemapUrlSet = new Set(sitemapUrls);
   const issues = [];
 
-  // Check if all HTML pages are in sitemap
+  // Check if all HTML pages are in sitemap (skip noindex pages)
   for (const file of htmlFiles) {
+    const content = fs.readFileSync(path.join(REPO_ROOT, file), 'utf-8');
+    if (/<meta\s+name="robots"\s+content="[^"]*noindex/i.test(content)) continue;
     // Build canonical URL for the file (same logic as extract())
     let url;
     if (file === 'index.html') {

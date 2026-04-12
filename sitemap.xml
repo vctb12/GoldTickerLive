@@ -4,7 +4,7 @@
 
   <url>
     <loc>https://vctb12.github.io/Gold-Prices/</loc>
-    <lastmod>2026-04-11</lastmod>
+    <lastmod>2026-04-12</lastmod>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/?lang=ar"/>
@@ -13,7 +13,7 @@
   </url>
   <url>
     <loc>https://vctb12.github.io/Gold-Prices/tracker.html</loc>
-    <lastmod>2026-04-11</lastmod>
+    <lastmod>2026-04-12</lastmod>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/tracker.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/tracker.html"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/tracker.html?lang=ar"/>
@@ -22,7 +22,7 @@
   </url>
   <url>
     <loc>https://vctb12.github.io/Gold-Prices/shops.html</loc>
-    <lastmod>2026-04-11</lastmod>
+    <lastmod>2026-04-10</lastmod>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/shops.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/shops.html"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/shops.html?lang=ar"/>
@@ -31,7 +31,7 @@
   </url>
   <url>
     <loc>https://vctb12.github.io/Gold-Prices/calculator.html</loc>
-    <lastmod>2026-04-11</lastmod>
+    <lastmod>2026-04-09</lastmod>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/calculator.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/calculator.html"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/calculator.html?lang=ar"/>
@@ -40,7 +40,7 @@
   </url>
   <url>
     <loc>https://vctb12.github.io/Gold-Prices/learn.html</loc>
-    <lastmod>2026-04-11</lastmod>
+    <lastmod>2026-04-05</lastmod>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/learn.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/learn.html"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/learn.html?lang=ar"/>
@@ -58,7 +58,7 @@
   </url>
   <url>
     <loc>https://vctb12.github.io/Gold-Prices/methodology.html</loc>
-    <lastmod>2026-04-11</lastmod>
+    <lastmod>2026-03-28</lastmod>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/methodology.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/methodology.html"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/methodology.html?lang=ar"/>
@@ -67,7 +67,7 @@
   </url>
   <url>
     <loc>https://vctb12.github.io/Gold-Prices/invest.html</loc>
-    <lastmod>2026-04-11</lastmod>
+    <lastmod>2026-03-25</lastmod>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/invest.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/invest.html"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/invest.html?lang=ar"/>
@@ -76,10 +76,64 @@
   </url>
   <url>
     <loc>https://vctb12.github.io/Gold-Prices/guides/buying-guide.html</loc>
-    <lastmod>2026-04-11</lastmod>
+    <lastmod>2026-04-12</lastmod>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/guides/buying-guide.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/guides/buying-guide.html"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/guides/buying-guide.html?lang=ar"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/guides/aed-peg-explained.html</loc>
+    <lastmod>2026-04-12</lastmod>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/guides/aed-peg-explained.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/guides/aed-peg-explained.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/guides/aed-peg-explained.html?lang=ar"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/guides/24k-vs-22k.html</loc>
+    <lastmod>2026-04-12</lastmod>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/guides/24k-vs-22k.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/guides/24k-vs-22k.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/guides/24k-vs-22k.html?lang=ar"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/guides/gcc-market-hours.html</loc>
+    <lastmod>2026-04-12</lastmod>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/guides/gcc-market-hours.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/guides/gcc-market-hours.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/guides/gcc-market-hours.html?lang=ar"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/guides/gold-karat-comparison.html</loc>
+    <lastmod>2026-04-12</lastmod>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/guides/gold-karat-comparison.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/guides/gold-karat-comparison.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/guides/gold-karat-comparison.html?lang=ar"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/guides/zakat-gold-guide.html</loc>
+    <lastmod>2026-04-12</lastmod>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/guides/zakat-gold-guide.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/guides/zakat-gold-guide.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/guides/zakat-gold-guide.html?lang=ar"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://vctb12.github.io/Gold-Prices/guides/invest-in-gold-gcc.html</loc>
+    <lastmod>2026-04-12</lastmod>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/guides/invest-in-gold-gcc.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/guides/invest-in-gold-gcc.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/guides/invest-in-gold-gcc.html?lang=ar"/>
     <changefreq>monthly</changefreq>
     <priority>0.65</priority>
   </url>
@@ -111,8 +165,17 @@
     <priority>0.40</priority>
   </url>
   <url>
+    <loc>https://vctb12.github.io/Gold-Prices/search/</loc>
+    <lastmod>2026-04-12</lastmod>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/search/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/search/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/search/?lang=ar"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.55</priority>
+  </url>
+  <url>
     <loc>https://vctb12.github.io/Gold-Prices/countries/index.html</loc>
-    <lastmod>2026-04-11</lastmod>
+    <lastmod>2026-04-12</lastmod>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/countries/index.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/countries/index.html"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/countries/index.html?lang=ar"/>
