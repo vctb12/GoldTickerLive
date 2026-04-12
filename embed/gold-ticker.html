@@ -177,8 +177,10 @@
 
     // Read currency preference from query string: ?cur=AED (default AED)
     const qs       = new URLSearchParams(location.search);
-    const currency = (qs.get('cur') || 'AED').toUpperCase();
-    const lang     = (qs.get('lang') || 'en').toLowerCase();
+    const ALLOWED_CURRENCIES = new Set(['AED','SAR','USD','KWD','QAR','BHD','OMR','EGP','JOD','MAD','DZD','TND','LBP','INR','GBP','EUR']);
+    const rawCur   = (qs.get('cur') || 'AED').toUpperCase().replace(/[^A-Z]/g, '');
+    const currency = ALLOWED_CURRENCIES.has(rawCur) ? rawCur : 'AED';
+    const lang     = (qs.get('lang') || 'en').toLowerCase() === 'ar' ? 'ar' : 'en';
 
     function fmt(n, d = 2) {
       return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
@@ -216,14 +218,23 @@
 
       // Karat grid
       const grid = document.getElementById('karat-grid');
-      grid.innerHTML = KARATS.map(k => {
+      grid.innerHTML = '';
+      for (const k of KARATS) {
         const pricePerGram = (spot / TROY) * k.purity * fxRate;
-        return `<div class="karat-cell">
-          <div class="karat-label">${k.code}K</div>
-          <div class="karat-price">${fmt(pricePerGram)}</div>
-          <div class="karat-unit">${currency}/g</div>
-        </div>`;
-      }).join('');
+        const cell  = document.createElement('div');
+        cell.className = 'karat-cell';
+        const lbl   = document.createElement('div');
+        lbl.className = 'karat-label';
+        lbl.textContent = k.code + 'K';
+        const price = document.createElement('div');
+        price.className = 'karat-price';
+        price.textContent = fmt(pricePerGram);
+        const unit  = document.createElement('div');
+        unit.className = 'karat-unit';
+        unit.textContent = currency + '/g';
+        cell.append(lbl, price, unit);
+        grid.appendChild(cell);
+      }
 
       // Freshness
       const dot = document.getElementById('dot');
