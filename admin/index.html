@@ -438,8 +438,8 @@
 
     // ── Stat: Data Freshness ─────────────────────────────────
     function updateFreshnessStat() {
-      // Check both keys: 'gp_cache_gold' is used by some page scripts as a legacy key;
-      // 'goldprice_cache' is an older fallback from earlier versions of the site.
+      // Primary key 'gp_cache_gold' (used by current page scripts) is checked first;
+      // 'goldprice_cache' is the legacy fallback key from earlier site versions.
       const raw = storageGet('gp_cache_gold') || storageGet('goldprice_cache');
       const el  = qs('#stat-freshness');
       if (!raw) { el.textContent = 'No data'; return; }

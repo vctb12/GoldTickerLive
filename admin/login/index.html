@@ -293,14 +293,16 @@
     passwordEl.addEventListener('input', () => {
       if (!isFirstTimeSetup) return;
       const pw = passwordEl.value;
+      const MIN_STRENGTH_PCT = 10;
       const score = scorePassword(pw);
-      const pct = pw.length === 0 ? 0 : Math.max(10, score * 20);
+      const colorIndex = Math.min(score - 1, 4);
+      const pct = pw.length === 0 ? 0 : Math.max(MIN_STRENGTH_PCT, score * 20);
       const colors = ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#10b981'];
       const labels = ['Very weak', 'Weak', 'Fair', 'Good', 'Strong'];
       strengthBar.style.width   = pct + '%';
-      strengthBar.style.background = pw.length ? colors[Math.min(score - 1, 4)] : 'transparent';
-      strengthLbl.textContent   = pw.length ? labels[Math.min(score - 1, 4)] : '';
-      strengthLbl.style.color   = pw.length ? colors[Math.min(score - 1, 4)] : 'var(--text-dim)';
+      strengthBar.style.background = pw.length ? colors[colorIndex] : 'transparent';
+      strengthLbl.textContent   = pw.length ? labels[colorIndex] : '';
+      strengthLbl.style.color   = pw.length ? colors[colorIndex] : 'var(--text-dim)';
     });
 
     // --- Error display ---
