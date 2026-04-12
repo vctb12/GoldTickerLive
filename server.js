@@ -18,6 +18,8 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 const adminRoutes = require('./server/routes/admin');
 
 // Middleware — Security headers
+// CSP is intentionally disabled in development for ease of debugging.
+// In production (NODE_ENV=production), a strict CSP is enforced.
 app.use(helmet({
     contentSecurityPolicy: IS_PROD ? {
         directives: {
@@ -46,10 +48,16 @@ app.use(helmet({
     crossOriginEmbedderPolicy: false,
 }));
 
-// CORS — restrict origins in production
+// CORS — restrict origins in production.
+// In production, always set CORS_ORIGINS (comma-separated) to avoid allowing all origins.
+// Example: CORS_ORIGINS=https://vctb12.github.io,https://goldprices.com
 const ALLOWED_ORIGINS = process.env.CORS_ORIGINS
     ? process.env.CORS_ORIGINS.split(',').map(o => o.trim())
-    : null; // null → allow all in development
+    : null; // null → allow all (development only)
+
+if (IS_PROD && !ALLOWED_ORIGINS) {
+    console.warn('[server] WARNING: CORS_ORIGINS is not set. All origins will be allowed.');
+}
 app.use(cors(ALLOWED_ORIGINS ? {
     origin(origin, cb) {
         // Allow requests with no origin (server-to-server, curl, etc.)
