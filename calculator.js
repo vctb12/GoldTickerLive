@@ -590,6 +590,20 @@ function initCopyBtn() {
       } catch (e) { console.warn('Copy fallback failed:', e); }
     }
   });
+
+  // Event delegation for data-target copy buttons
+  document.addEventListener('click', e => {
+    const b = e.target.closest('.calc-copy-btn[data-target]');
+    if (!b) return;
+    const targetEl = document.getElementById(b.dataset.target);
+    const text = targetEl?.textContent?.trim();
+    if (!text || text === '—') return;
+    navigator.clipboard?.writeText(text).then(() => {
+      const orig = b.textContent;
+      b.textContent = '✓ Copied';
+      setTimeout(() => { b.textContent = orig; }, 2000);
+    }).catch(() => {});
+  });
 }
 
 // ── Init ─────────────────────────────────────────────────────────────────────

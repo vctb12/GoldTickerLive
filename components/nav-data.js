@@ -10,6 +10,7 @@ export const NAV_DATA = {
       {
         key: 'markets',
         label: 'Markets',
+        description: 'Live tracker, GCC compare & historical data',
         items: [
           { href: '../tracker.html',                   label: 'Live Tracker'   },
           { href: '../countries/uae.html',             label: 'UAE Gold Today' },
@@ -21,6 +22,7 @@ export const NAV_DATA = {
       {
         key: 'tools',
         label: 'Tools',
+        description: 'Calculator, alerts, exports & price history',
         items: [
           { href: '../calculator.html',                label: 'Calculator'   },
           { href: '../tracker.html#mode=live&panel=alerts',         label: 'Alerts'       },
@@ -34,6 +36,7 @@ export const NAV_DATA = {
       {
         key: 'cities',
         label: 'Cities',
+        description: 'Gold prices by city across the Arab world',
         items: [
           { href: '../countries/uae/cities/dubai.html',           label: 'Dubai, UAE'           },
           { href: '../countries/uae/cities/abu-dhabi.html',       label: 'Abu Dhabi, UAE'       },
@@ -45,6 +48,7 @@ export const NAV_DATA = {
       {
         key: 'goldmarkets',
         label: 'Famous Markets',
+        description: 'Famous gold souks and bazaars',
         items: [
           { href: '../countries/uae/markets/dubai-gold-souk.html',         label: 'Dubai Gold Souk'         },
           { href: '../countries/egypt/markets/khan-el-khalili-cairo.html', label: 'Khan el-Khalili, Cairo' },
@@ -53,6 +57,7 @@ export const NAV_DATA = {
       {
         key: 'learn',
         label: 'Learn',
+        description: 'Guides, methodology & FAQs',
         items: [
           { href: '../guides/buying-guide.html', label: 'How to Buy Gold' },
           { href: '../learn.html',               label: 'Gold Guide'      },
@@ -63,6 +68,7 @@ export const NAV_DATA = {
       {
         key: 'insights',
         label: 'Insights',
+        description: 'Market analysis & weekly briefs',
         items: [
           { href: '../insights.html',                label: 'Gold Insights'        },
           { href: '../insights.html#why-gold-moved', label: 'Why Gold Moved Today' },
@@ -85,6 +91,7 @@ export const NAV_DATA = {
       {
         key: 'markets',
         label: 'الأسواق',
+        description: 'متتبع مباشر، مقارنة الخليج والبيانات التاريخية',
         items: [
           { href: '../tracker.html',                   label: 'تتبع مباشر'          },
           { href: '../countries/uae.html',             label: 'ذهب الإمارات'        },
@@ -96,6 +103,7 @@ export const NAV_DATA = {
       {
         key: 'tools',
         label: 'أدوات',
+        description: 'حاسبة، تنبيهات، تصدير وسجل الأسعار',
         items: [
           { href: '../calculator.html',                label: 'حاسبة'             },
           { href: '../tracker.html#mode=live&panel=alerts',         label: 'تنبيهات'           },
@@ -109,6 +117,7 @@ export const NAV_DATA = {
       {
         key: 'cities',
         label: 'المدن',
+        description: 'أسعار الذهب بحسب المدينة',
         items: [
           { href: '../countries/uae/cities/dubai.html',           label: 'دبي، الإمارات'           },
           { href: '../countries/uae/cities/abu-dhabi.html',       label: 'أبوظبي، الإمارات'        },
@@ -120,6 +129,7 @@ export const NAV_DATA = {
       {
         key: 'goldmarkets',
         label: 'أسواق الذهب الشهيرة',
+        description: 'أسواق الذهب الشهيرة والبازارات',
         items: [
           { href: '../countries/uae/markets/dubai-gold-souk.html',         label: 'سوق الذهب بدبي'        },
           { href: '../countries/egypt/markets/khan-el-khalili-cairo.html', label: 'خان الخليلي، القاهرة' },
@@ -128,6 +138,7 @@ export const NAV_DATA = {
       {
         key: 'learn',
         label: 'تعلّم',
+        description: 'أدلة، منهجية وأسئلة شائعة',
         items: [
           { href: '../guides/buying-guide.html', label: 'كيفية شراء الذهب' },
           { href: '../learn.html',               label: 'دليل الذهب'      },
@@ -138,6 +149,7 @@ export const NAV_DATA = {
       {
         key: 'insights',
         label: 'تحليلات',
+        description: 'تحليل السوق والنشرات الأسبوعية',
         items: [
           { href: '../insights.html',                label: 'تحليلات الذهب'          },
           { href: '../insights.html#why-gold-moved', label: 'لماذا تحرك الذهب اليوم' },
