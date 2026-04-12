@@ -1,9 +1,41 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'path';
+import { resolve, relative } from 'path';
+import { globSync } from 'node:fs';
 
 const root = resolve(__dirname);
 
-// All 26 HTML entry points for multi-page build
+// ── Excluded directories: never processed by Vite ──────────────────────────
+// Leaf pages (country/city/karat/shops) load page-hydrator.js as raw ES
+// modules and are served verbatim — they are copied by the deploy workflow.
+const EXCLUDE_DIRS = [
+  'dist', 'node_modules', '.git',
+  // country-specific leaf-page trees (country/city/karat/shops)
+  'uae', 'saudi-arabia', 'qatar', 'kuwait', 'bahrain', 'oman',
+  'jordan', 'lebanon', 'egypt', 'morocco', 'algeria', 'tunisia',
+  'libya', 'sudan', 'india',
+  // embed widget served verbatim
+  'embed',
+];
+
+/**
+ * Discover all HTML entry-point files that Vite should bundle.
+ * Excludes leaf-page trees that are copied as-is by the deploy workflow.
+ */
+function discoverHtmlEntries() {
+  const htmlFiles = globSync('**/*.html', {
+    cwd: root,
+    exclude: (path) => EXCLUDE_DIRS.some(d => path === d || path.startsWith(d + '/')),
+  });
+
+  const entries = {};
+  for (const file of htmlFiles) {
+    // Use a dash-joined key derived from the relative path
+    const key = file.replace(/\//g, '-').replace(/\.html$/, '');
+    entries[key] = resolve(root, file);
+  }
+  return entries;
+}
+
 export default defineConfig({
   root,
   base: '/Gold-Prices/',
@@ -28,58 +60,16 @@ export default defineConfig({
           if (id.includes('node_modules/lightweight-charts')) {
             return 'vendor';
           }
-          if (id.includes('/lib/cache.js') || id.includes('/lib/api.js') || 
+          if (id.includes('/lib/cache.js') || id.includes('/lib/api.js') ||
               id.includes('/lib/price-calculator.js') || id.includes('/lib/formatter.js')) {
             return 'utils';
           }
         },
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name?.endsWith('.css')) {
-            return 'assets/[name]-[hash][extname]';
-          }
-          return 'assets/[name]-[hash][extname]';
-        },
+        assetFileNames: () => 'assets/[name]-[hash][extname]',
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
       },
-      input: {
-        // Root pages
-        index:       resolve(root, 'index.html'),
-        tracker:     resolve(root, 'tracker.html'),
-        calculator:  resolve(root, 'calculator.html'),
-        shops:       resolve(root, 'shops.html'),
-        learn:       resolve(root, 'learn.html'),
-        insights:    resolve(root, 'insights.html'),
-        methodology: resolve(root, 'methodology.html'),
-        invest:      resolve(root, 'invest.html'),
-        admin:       resolve(root, 'admin.html'),
-
-        // Buying guide
-        'guides-buying-guide': resolve(root, 'guides/buying-guide.html'),
-
-        // Country pages
-        'countries-uae':          resolve(root, 'countries/uae.html'),
-        'countries-saudi-arabia': resolve(root, 'countries/saudi-arabia.html'),
-        'countries-kuwait':       resolve(root, 'countries/kuwait.html'),
-        'countries-qatar':        resolve(root, 'countries/qatar.html'),
-        'countries-bahrain':      resolve(root, 'countries/bahrain.html'),
-        'countries-oman':         resolve(root, 'countries/oman.html'),
-        'countries-egypt':        resolve(root, 'countries/egypt.html'),
-        'countries-jordan':       resolve(root, 'countries/jordan.html'),
-        'countries-morocco':      resolve(root, 'countries/morocco.html'),
-        'countries-india':        resolve(root, 'countries/india.html'),
-
-        // City pages
-        'cities-dubai':     resolve(root, 'countries/uae/cities/dubai.html'),
-        'cities-abu-dhabi': resolve(root, 'countries/uae/cities/abu-dhabi.html'),
-        'cities-riyadh':    resolve(root, 'countries/saudi-arabia/cities/riyadh.html'),
-        'cities-cairo':     resolve(root, 'countries/egypt/cities/cairo.html'),
-        'cities-doha':      resolve(root, 'countries/qatar/cities/doha.html'),
-
-        // Market guide pages
-        'markets-dubai-gold-souk':       resolve(root, 'countries/uae/markets/dubai-gold-souk.html'),
-        'markets-khan-el-khalili-cairo': resolve(root, 'countries/egypt/markets/khan-el-khalili-cairo.html'),
-      },
+      input: discoverHtmlEntries(),
     },
   },
   server: {

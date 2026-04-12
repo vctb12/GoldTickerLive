@@ -9,7 +9,11 @@
     "preview": "vite preview",
     "start": "node server.js",
     "test": "node --test --test-concurrency=1 tests/*.test.js",
-    "seo-audit": "node scripts/seo-audit.js"
+    "seo-audit": "node scripts/seo-audit.js",
+    "check-links": "node scripts/check-links.js",
+    "audit-pages": "node scripts/audit-pages.js",
+    "generate-sitemap": "node scripts/generate-sitemap.js",
+    "preflight": "npm run audit-pages && npm run check-links"
   },
   "devDependencies": {
     "terser": "^5.46.1",

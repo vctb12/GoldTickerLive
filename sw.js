@@ -6,7 +6,7 @@
  * All precache URLs must include the /Gold-Prices/ prefix.
  */
 
-const CACHE_NAME = 'goldprices-v9';
+const CACHE_NAME = 'goldprices-v10';
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 1 day
 
 // Static assets to pre-cache on install - MUST use /Gold-Prices/ prefix for GitHub Pages
@@ -20,6 +20,7 @@ const PRECACHE_URLS = [
   '/Gold-Prices/methodology.html',
   '/Gold-Prices/invest.html',
   '/Gold-Prices/countries/index.html',
+  // Country pages
   '/Gold-Prices/countries/uae.html',
   '/Gold-Prices/countries/saudi-arabia.html',
   '/Gold-Prices/countries/kuwait.html',
@@ -30,14 +31,18 @@ const PRECACHE_URLS = [
   '/Gold-Prices/countries/jordan.html',
   '/Gold-Prices/countries/morocco.html',
   '/Gold-Prices/countries/india.html',
-  '/Gold-Prices/guides/buying-guide.html',
-  '/Gold-Prices/tracker-pro.js',
-  '/Gold-Prices/home.js',
   '/Gold-Prices/countries/lebanon.html',
   '/Gold-Prices/countries/tunisia.html',
   '/Gold-Prices/countries/algeria.html',
   '/Gold-Prices/countries/libya.html',
   '/Gold-Prices/countries/sudan.html',
+  // Guides
+  '/Gold-Prices/guides/buying-guide.html',
+  // Tool pages
+  '/Gold-Prices/gold-price-history/',
+  '/Gold-Prices/order-gold/',
+  '/Gold-Prices/social/x-post-generator.html',
+  '/Gold-Prices/search/',
   // City pages
   '/Gold-Prices/countries/uae/cities/dubai.html',
   '/Gold-Prices/countries/uae/cities/abu-dhabi.html',
@@ -47,6 +52,17 @@ const PRECACHE_URLS = [
   // Market pages
   '/Gold-Prices/countries/uae/markets/dubai-gold-souk.html',
   '/Gold-Prices/countries/egypt/markets/khan-el-khalili-cairo.html',
+  // Key leaf pages (UAE cities)
+  '/Gold-Prices/uae/gold-price/',
+  '/Gold-Prices/uae/dubai/gold-prices/',
+  '/Gold-Prices/uae/dubai/gold-rate/24-karat/',
+  '/Gold-Prices/uae/dubai/gold-rate/22-karat/',
+  '/Gold-Prices/uae/dubai/gold-rate/21-karat/',
+  '/Gold-Prices/uae/dubai/gold-rate/18-karat/',
+  '/Gold-Prices/uae/abu-dhabi/gold-prices/',
+  '/Gold-Prices/uae/sharjah/gold-prices/',
+  // Offline fallback
+  '/Gold-Prices/offline.html',
 ];
 
 // External origins that should bypass the cache (live data APIs)
@@ -128,7 +144,9 @@ async function networkFirstWithFallback(request) {
     if (cached) return cached;
 
     // Resilient offline fallback for navigation
-    const shell = await caches.match('/');
+    const offlinePage = await caches.match('/Gold-Prices/offline.html');
+    if (offlinePage) return offlinePage;
+    const shell = await caches.match('/Gold-Prices/');
     if (shell) return shell;
 
     return new Response('Offline — cached version unavailable.', {

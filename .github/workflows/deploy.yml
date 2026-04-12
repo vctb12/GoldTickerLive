@@ -41,6 +41,36 @@ jobs:
           cp -r assets dist/
           # Prevent Jekyll from breaking ES6 module imports on GitHub Pages
           touch dist/.nojekyll
+          # Robots.txt and .htaccess must live at root for GitHub Pages / servers
+          cp robots.txt dist/
+          [ -f .htaccess ] && cp .htaccess dist/ || true
+          # ES module source files used by all leaf pages via page-hydrator.js
+          cp -r lib dist/
+          cp -r config dist/
+          cp -r components dist/
+          cp -r data dist/
+          # Root-level shared CSS/icons used by leaf pages via relative paths
+          cp style.css dist/
+          cp favicon.svg dist/
+          cp manifest.json dist/
+          # ── Country-specific city / karat / shops leaf-page directories ──
+          # Each of these contains static index.html files that load page-hydrator.js.
+          # Copy any top-level directory that contains at least one gold-price/ subdirectory
+          # (i.e. is a country leaf-page tree), excluding Vite-managed source dirs.
+          VITE_DIRS="assets dist node_modules .git guides countries social gold-price-history order-gold search embed components config lib data"
+          for d in */; do
+            country="${d%/}"
+            # Skip known non-country dirs
+            if echo "$VITE_DIRS" | tr ' ' '\n' | grep -qx "$country"; then continue; fi
+            # Skip directories without a gold-price subdirectory (not a country tree)
+            if [ ! -d "$country/gold-price" ]; then continue; fi
+            cp -r "$country" dist/
+          done
+          # ── Tool / feature directories ──
+          # Note: social/, gold-price-history/, order-gold/, search/, guides/ are
+          # handled by Vite build (ES module imports bundled and hashed).
+          # Only embed/ is copied verbatim (standalone, no build needed).
+          [ -d embed ] && cp -r embed dist/ || true
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
