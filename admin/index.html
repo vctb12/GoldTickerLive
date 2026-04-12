@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — GoldAdmin</title>
+  <link rel="stylesheet" href="admin.css" />
+  <style>
+    /* ── Stat grid ─────────────────────────────────────────── */
+    .stat-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(4, 1fr);
+      margin-bottom: 28px;
+    }
+    @media (max-width: 900px) {
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .stat-grid { grid-template-columns: 1fr; }
+    }
+
+    .stat-card .stat-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .stat-card .stat-sub {
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      margin-top: 4px;
+    }
+
+    /* ── Sections ───────────────────────────────────────────── */
+    .section {
+      margin-bottom: 28px;
+    }
+
+    /* ── API Status table ───────────────────────────────────── */
+    .api-status-header {
+      align-items: center;
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .api-last-checked {
+      color: var(--text-dim);
+      font-size: 0.75rem;
+    }
+
+    /* ── Quick actions ──────────────────────────────────────── */
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    /* ── Activity timeline ──────────────────────────────────── */
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .activity-item {
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+    }
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+    .activity-icon {
+      background: var(--surface-2);
+      border-radius: 50%;
+      flex-shrink: 0;
+      font-size: 14px;
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      width: 32px;
+    }
+    .activity-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .activity-action {
+      color: var(--text);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .activity-details {
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      margin-top: 1px;
+    }
+    .activity-time {
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .activity-empty {
+      color: var(--text-dim);
+      font-size: 0.875rem;
+      padding: 24px 0;
+      text-align: center;
+    }
+
+    /* ── Gold ticker badge ──────────────────────────────────── */
+    .ticker-badge {
+      align-items: center;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      display: flex;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      gap: 6px;
+      padding: 4px 12px;
+      white-space: nowrap;
+    }
+    .ticker-dot {
+      border-radius: 50%;
+      flex-shrink: 0;
+      height: 7px;
+      width: 7px;
+    }
+    .ticker-dot--green  { background: var(--success); }
+    .ticker-dot--yellow { background: var(--warning); }
+    .ticker-loading { opacity: 0.5; }
+
+    /* ── Spinner inline ─────────────────────────────────────── */
+    .inline-spinner {
+      animation: spin 0.75s linear infinite;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      display: inline-block;
+      height: 14px;
+      vertical-align: middle;
+      width: 14px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <!-- Flash prevention: redirect to login if no valid session -->
+  <script>
+    (function(){try{var s=JSON.parse(localStorage.getItem('gp_admin_session'));if(!s||s.expires<Date.now())window.location.replace('./login/');}catch(e){window.location.replace('./login/');}})();
+  </script>
+
+  <!-- Sidebar overlay (mobile) -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="admin-layout">
+    <!-- ── Sidebar ──────────────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+      <div class="sidebar-header">
+        <span class="logo-icon" aria-hidden="true">⚙</span>
+        <span class="logo-text">GoldAdmin</span>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Main menu">
+        <a class="nav-link" href="./"          data-path="/Gold-Prices/admin/">
+          <span class="nav-icon">🏠</span> Dashboard
+        </a>
+        <a class="nav-link" href="./shops/"    data-path="/Gold-Prices/admin/shops/">
+          <span class="nav-icon">🏪</span> Shops
+        </a>
+        <a class="nav-link" href="./pricing/"  data-path="/Gold-Prices/admin/pricing/">
+          <span class="nav-icon">💰</span> Pricing
+        </a>
+        <a class="nav-link" href="./orders/"   data-path="/Gold-Prices/admin/orders/">
+          <span class="nav-icon">📦</span> Orders
+        </a>
+        <a class="nav-link" href="./content/"  data-path="/Gold-Prices/admin/content/">
+          <span class="nav-icon">📝</span> Content
+        </a>
+        <a class="nav-link" href="./social/"   data-path="/Gold-Prices/admin/social/">
+          <span class="nav-icon">📣</span> Social
+        </a>
+        <a class="nav-link" href="./settings/" data-path="/Gold-Prices/admin/settings/">
+          <span class="nav-icon">⚙️</span> Settings
+        </a>
+        <a class="nav-link" href="./analytics/" data-path="/Gold-Prices/admin/analytics/">
+          <span class="nav-icon">📊</span> Analytics
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">
+          <span aria-hidden="true">🚪</span> Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- ── Main area ────────────────────────────────────────── -->
+    <div class="main-area">
+      <!-- Header -->
+      <header class="page-header">
+        <button
+          class="sidebar-toggle"
+          id="sidebar-toggle"
+          aria-label="Toggle navigation"
+          type="button"
+        >☰</button>
+        <h1 class="page-title">Dashboard</h1>
+        <div class="header-actions">
+          <div class="ticker-badge ticker-loading" id="ticker-badge" aria-live="polite">
+            <span class="ticker-dot ticker-dot--yellow" id="ticker-dot"></span>
+            <span id="ticker-text">XAU: loading…</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="content-area">
+
+        <!-- ── Stat cards ──────────────────────────────────── -->
+        <div class="stat-grid" role="list" aria-label="Key metrics">
+
+          <!-- System Health -->
+          <div class="stat-card" role="listitem">
+            <div class="stat-label">System Health</div>
+            <div class="stat-number" id="stat-health" aria-live="polite">
+              <span class="inline-spinner" aria-hidden="true"></span>
+            </div>
+          </div>
+
+          <!-- Data Freshness -->
+          <div class="stat-card" role="listitem">
+            <div class="stat-label">Data Freshness</div>
+            <div class="stat-number" id="stat-freshness" aria-live="polite">
+              <span class="inline-spinner" aria-hidden="true"></span>
+            </div>
+            <div class="stat-sub">🕐 Cached gold price age</div>
+          </div>
+
+          <!-- Pending Orders -->
+          <div class="stat-card" role="listitem">
+            <div class="stat-label">Pending Orders</div>
+            <div class="stat-number" id="stat-orders" aria-live="polite">—</div>
+            <div class="stat-sub" id="stat-orders-sub"></div>
+          </div>
+
+          <!-- Activity Today -->
+          <div class="stat-card" role="listitem">
+            <div class="stat-label">Activity Today</div>
+            <div class="stat-number" id="stat-activity" aria-live="polite">—</div>
+            <div class="stat-sub">log entries</div>
+          </div>
+
+        </div>
+
+        <!-- ── API Status ──────────────────────────────────── -->
+        <section class="section card" aria-labelledby="api-status-title">
+          <div class="api-status-header">
+            <div class="flex gap-2" style="align-items:center">
+              <h2 class="card-title" id="api-status-title">API Status</h2>
+              <span class="api-last-checked" id="api-last-checked"></span>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="api-check-btn" type="button">
+              Check Now
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table aria-label="API service status">
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>Status</th>
+                  <th>Last Checked</th>
+                  <th>Response (ms)</th>
+                </tr>
+              </thead>
+              <tbody id="api-table-body">
+                <tr>
+                  <td colspan="4" style="color:var(--text-dim);text-align:center;padding:20px">
+                    <span class="inline-spinner" aria-hidden="true"></span>
+                    Checking services…
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ── Quick Actions ───────────────────────────────── -->
+        <section class="section" aria-label="Quick actions">
+          <div class="quick-actions">
+            <button class="btn btn-primary" id="qa-force-refresh" type="button">
+              ⚡ Force Refresh Prices
+            </button>
+            <button class="btn btn-ghost" id="qa-export-shops" type="button">
+              📥 Export Shops CSV
+            </button>
+            <button class="btn btn-ghost" id="qa-clear-cache" type="button">
+              🗑 Clear Cache
+            </button>
+            <a class="btn btn-ghost" href="./orders/">
+              📦 View Orders
+            </a>
+          </div>
+        </section>
+
+        <!-- ── Recent Activity ─────────────────────────────── -->
+        <section class="section card" aria-labelledby="activity-title">
+          <div class="card-header">
+            <h2 class="card-title" id="activity-title">Recent Activity</h2>
+            <button class="btn btn-ghost btn-sm" id="clear-log-btn" type="button">
+              Clear Log
+            </button>
+          </div>
+          <div id="activity-list" class="activity-list" aria-live="polite">
+            <div class="activity-empty">No activity recorded yet.</div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+  <script type="module">
+    import { logout, logActivity } from './auth.js';
+
+    // ── Helpers ──────────────────────────────────────────────
+
+    function qs(sel) { return document.querySelector(sel); }
+
+    /** @param {string} message @param {'info'|'success'|'error'|'warning'} type */
+    function showToast(message, type = 'info') {
+      const container = qs('#toast-container');
+      const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+      const cls   = { success: 'toast--success', error: 'toast--danger', warning: 'toast--warning', info: 'toast--info' };
+      const toast = document.createElement('div');
+      toast.className = `toast ${cls[type] || cls.info}`;
+      toast.innerHTML = `<span class="toast-icon" aria-hidden="true">${icons[type] || icons.info}</span><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add('toast-hide');
+        toast.addEventListener('animationend', () => toast.remove(), { once: true });
+      }, 4000);
+    }
+
+    function relativeTime(isoString) {
+      const diff = Date.now() - new Date(isoString).getTime();
+      const sec  = Math.floor(diff / 1000);
+      if (sec < 60)   return `${sec}s ago`;
+      const min  = Math.floor(sec / 60);
+      if (min < 60)   return `${min} min ago`;
+      const hr   = Math.floor(min / 60);
+      if (hr < 24)    return `${hr} hour${hr !== 1 ? 's' : ''} ago`;
+      const days = Math.floor(hr / 24);
+      return `${days} day${days !== 1 ? 's' : ''} ago`;
+    }
+
+    function isToday(isoString) {
+      const d = new Date(isoString);
+      const n = new Date();
+      return d.getDate() === n.getDate() && d.getMonth() === n.getMonth() && d.getFullYear() === n.getFullYear();
+    }
+
+    function storageGet(key) {
+      try { return localStorage.getItem(key); } catch { return null; }
+    }
+    function storageSet(key, value) {
+      try { localStorage.setItem(key, value); return true; } catch { return false; }
+    }
+    function storageRemove(...keys) {
+      keys.forEach(k => { try { localStorage.removeItem(k); } catch {} });
+    }
+
+    // ── Active nav link ──────────────────────────────────────
+    const currentPath = window.location.pathname.replace(/\/+$/, '') + '/';
+    document.querySelectorAll('.nav-link[data-path]').forEach(a => {
+      const p = a.dataset.path.replace(/\/+$/, '') + '/';
+      if (currentPath === p || (p.endsWith('/admin/') && currentPath.endsWith('/admin/'))) {
+        a.classList.add('active');
+        a.setAttribute('aria-current', 'page');
+      }
+    });
+
+    // ── Sidebar mobile toggle ────────────────────────────────
+    const sidebar        = qs('#sidebar');
+    const sidebarOverlay = qs('#sidebar-overlay');
+    qs('#sidebar-toggle').addEventListener('click', () => {
+      sidebar.classList.toggle('sidebar--open');
+      sidebarOverlay.classList.toggle('sidebar-overlay--visible');
+    });
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('sidebar--open');
+      sidebarOverlay.classList.remove('sidebar-overlay--visible');
+    });
+
+    // ── Logout ───────────────────────────────────────────────
+    qs('#logout-btn').addEventListener('click', () => {
+      logout();
+      window.location.replace('./login/');
+    });
+
+    // ── Gold Ticker ──────────────────────────────────────────
+    async function updateTicker() {
+      const badge     = qs('#ticker-badge');
+      const dot       = qs('#ticker-dot');
+      const tickerTxt = qs('#ticker-text');
+      try {
+        const res  = await fetch('https://api.gold-api.com/price/XAU');
+        const data = await res.json();
+        const price = data.price ?? data.Price ?? null;
+        if (price) {
+          const formatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(price);
+          tickerTxt.textContent = `XAU: ${formatted}`;
+          dot.className = 'ticker-dot ticker-dot--green';
+          badge.classList.remove('ticker-loading');
+          storageSet('gp_ticker_ts', Date.now().toString());
+        }
+      } catch {
+        tickerTxt.textContent = 'XAU: unavailable';
+        dot.className = 'ticker-dot ticker-dot--yellow';
+      }
+    }
+    updateTicker();
+
+    // ── Stat: Data Freshness ─────────────────────────────────
+    function updateFreshnessStat() {
+      const raw = storageGet('gp_cache_gold') || storageGet('goldprice_cache');
+      const el  = qs('#stat-freshness');
+      if (!raw) { el.textContent = 'No data'; return; }
+      try {
+        const obj = JSON.parse(raw);
+        const ts  = obj.timestamp ?? obj.ts ?? obj.cachedAt ?? null;
+        if (!ts) { el.textContent = 'No data'; return; }
+        const ageMs  = Date.now() - new Date(ts).getTime();
+        const ageMins = Math.floor(ageMs / 60000);
+        el.textContent = ageMins < 1 ? 'Just now' : `${ageMins} min ago`;
+      } catch {
+        el.textContent = 'No data';
+      }
+    }
+    updateFreshnessStat();
+
+    // ── Stat: Pending Orders ─────────────────────────────────
+    function updateOrdersStat() {
+      const raw = storageGet('gp_orders');
+      const el  = qs('#stat-orders');
+      const sub = qs('#stat-orders-sub');
+      if (!raw) { el.textContent = '0'; sub.textContent = '0 total today'; return; }
+      try {
+        const orders  = JSON.parse(raw);
+        if (!Array.isArray(orders)) { el.textContent = '0'; return; }
+        const pending = orders.filter(o => o.status === 'pending').length;
+        const today   = orders.filter(o => o.createdAt && isToday(o.createdAt)).length;
+        el.textContent  = pending;
+        sub.textContent = `${today} total today`;
+      } catch {
+        el.textContent = '—';
+      }
+    }
+    updateOrdersStat();
+
+    // ── Stat: Activity Today ─────────────────────────────────
+    function updateActivityStat() {
+      const raw = storageGet('gp_activity_log');
+      const el  = qs('#stat-activity');
+      if (!raw) { el.textContent = '0'; return; }
+      try {
+        const log    = JSON.parse(raw);
+        const today  = Array.isArray(log) ? log.filter(e => isToday(e.timestamp)).length : 0;
+        el.textContent = today;
+      } catch {
+        el.textContent = '0';
+      }
+    }
+    updateActivityStat();
+
+    // ── API Status checks ────────────────────────────────────
+    const SERVICES = [
+      { name: 'Gold API (gold-api.com)',   url: 'https://api.gold-api.com/price/XAU' },
+      { name: 'Exchange Rates (er-api.com)', url: 'https://open.er-api.com/v6/latest/USD' },
+    ];
+
+    let lastCheckedAt = null;
+
+    async function checkService(service) {
+      const start = performance.now();
+      try {
+        const res  = await fetch(service.url, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+        const ms   = Math.round(performance.now() - start);
+        return { name: service.name, ok: res.ok, status: res.status, ms };
+      } catch (err) {
+        const ms = Math.round(performance.now() - start);
+        return { name: service.name, ok: false, status: 'Error', ms };
+      }
+    }
+
+    function renderApiTable(results) {
+      const tbody = qs('#api-table-body');
+      const now   = new Date().toLocaleTimeString();
+      tbody.innerHTML = results.map(r => `
+        <tr>
+          <td>${r.name}</td>
+          <td>${r.ok ? '🟢 ' + r.status + ' OK' : '🔴 ' + r.status}</td>
+          <td>${now}</td>
+          <td>${r.ms} ms</td>
+        </tr>
+      `).join('');
+    }
+
+    function updateHealthStat(results) {
+      const allOk = results.every(r => r.ok);
+      qs('#stat-health').textContent = allOk ? '🟢 All OK' : '🔴 Issues Detected';
+    }
+
+    async function runApiChecks() {
+      const tbody     = qs('#api-table-body');
+      const checkBtn  = qs('#api-check-btn');
+      const lastEl    = qs('#api-last-checked');
+
+      checkBtn.disabled = true;
+      qs('#stat-health').innerHTML = '<span class="inline-spinner" aria-hidden="true"></span>';
+      tbody.innerHTML = `<tr><td colspan="4" style="color:var(--text-dim);text-align:center;padding:20px">
+        <span class="inline-spinner" aria-hidden="true"></span> Checking…
+      </td></tr>`;
+
+      const results = await Promise.all(SERVICES.map(checkService));
+      lastCheckedAt = Date.now();
+
+      renderApiTable(results);
+      updateHealthStat(results);
+      checkBtn.disabled = false;
+      lastEl.textContent = 'Last checked: just now';
+    }
+
+    runApiChecks();
+
+    qs('#api-check-btn').addEventListener('click', runApiChecks);
+
+    // Update "X seconds ago" counter for API last-checked
+    setInterval(() => {
+      if (!lastCheckedAt) return;
+      const sec = Math.floor((Date.now() - lastCheckedAt) / 1000);
+      const lastEl = qs('#api-last-checked');
+      if (sec < 60) lastEl.textContent = `Last checked: ${sec}s ago`;
+      else lastEl.textContent = `Last checked: ${Math.floor(sec / 60)} min ago`;
+    }, 5000);
+
+    // ── Quick Actions ────────────────────────────────────────
+    qs('#qa-force-refresh').addEventListener('click', () => {
+      storageSet('gp_force_refresh', Date.now().toString());
+      logActivity('force_refresh', 'Manual price refresh triggered from dashboard.');
+      showToast('Cache cleared — prices will refresh on next visit', 'success');
+    });
+
+    qs('#qa-clear-cache').addEventListener('click', () => {
+      storageRemove('gp_cache_gold', 'goldprice_cache', 'gp_fx_cache');
+      logActivity('clear_cache', 'Price and FX cache cleared from dashboard.');
+      updateFreshnessStat();
+      showToast('Cache cleared', 'success');
+    });
+
+    qs('#qa-export-shops').addEventListener('click', () => {
+      const raw = storageGet('gp_shops');
+      let shops = [];
+      if (raw) {
+        try { shops = JSON.parse(raw); } catch {}
+      }
+      if (!Array.isArray(shops) || shops.length === 0) {
+        showToast('No shops data found in localStorage (gp_shops)', 'warning');
+        return;
+      }
+      const headers = ['id', 'name', 'country', 'city', 'area', 'phone', 'website', 'verified'];
+      const rows = shops.map(s =>
+        headers.map(h => {
+          const v = s[h] ?? '';
+          const str = String(v).replace(/"/g, '""');
+          return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str}"` : str;
+        }).join(',')
+      );
+      const csv = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = `shops-export-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      logActivity('export_shops', `Exported ${shops.length} shops to CSV.`);
+      showToast(`Exported ${shops.length} shops`, 'success');
+    });
+
+    // ── Activity Log ─────────────────────────────────────────
+    const ACTION_ICONS = {
+      login:         '🔑',
+      logout:        '🚪',
+      login_fail:    '🚫',
+      setup:         '🔧',
+      force_refresh: '⚡',
+      clear_cache:   '🗑',
+      export_shops:  '📥',
+      default:       '📋',
+    };
+
+    function renderActivityLog() {
+      const raw = storageGet('gp_activity_log');
+      const container = qs('#activity-list');
+      let log = [];
+      if (raw) {
+        try { log = JSON.parse(raw); if (!Array.isArray(log)) log = []; } catch { log = []; }
+      }
+      if (log.length === 0) {
+        container.innerHTML = '<div class="activity-empty">No activity recorded yet.</div>';
+        return;
+      }
+      const recent = log.slice(-20).reverse();
+      container.innerHTML = recent.map(entry => {
+        const icon = ACTION_ICONS[entry.action] ?? ACTION_ICONS.default;
+        const time = relativeTime(entry.timestamp);
+        return `
+          <div class="activity-item" role="listitem">
+            <div class="activity-icon" aria-hidden="true">${icon}</div>
+            <div class="activity-body">
+              <div class="activity-action">${entry.action}</div>
+              <div class="activity-details">${entry.details || ''}</div>
+            </div>
+            <div class="activity-time">${time}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    renderActivityLog();
+
+    qs('#clear-log-btn').addEventListener('click', () => {
+      storageRemove('gp_activity_log');
+      renderActivityLog();
+      updateActivityStat();
+      showToast('Activity log cleared', 'info');
+    });
+
+  </script>
+</body>
+</html>
