@@ -178,8 +178,8 @@ async function sendTweet(spot, changePct, changeAbs, sign) {
 // ---------------------------------------------------------------------------
 async function main() {
   if (!GOLD_API_KEY) {
-    console.error('❌ Missing GOLD_API_KEY');
-    process.exit(1);
+    console.log('⚠️  GOLD_API_KEY not set — skipping spike check (configure in repo Settings → Secrets).');
+    process.exit(0);
   }
 
   console.log(`📡 Fetching gold price (spike threshold: ±${THRESHOLD}%)…`);

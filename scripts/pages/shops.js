@@ -1,12 +1,13 @@
-import { COUNTRIES } from './config/countries.js';
-import { SHOPS } from './data/shops.js';
-import { injectNav, updateNavLang } from './components/nav.js';
-import { injectFooter } from './components/footer.js';
-import { injectTicker, updateTicker, updateTickerLang } from './components/ticker.js';
-import { injectBreadcrumbs } from './components/breadcrumbs.js';
-import * as cache from './lib/cache.js';
-import { CONSTANTS } from './config/index.js';
-import { KARATS } from './config/index.js';
+import { COUNTRIES } from '../../config/countries.js';
+import { SHOPS } from '../../data/shops.js';
+import { injectNav, updateNavLang } from '../../components/nav.js';
+import { injectFooter } from '../../components/footer.js';
+import { injectTicker, updateTicker, updateTickerLang } from '../../components/ticker.js';
+import { injectBreadcrumbs } from '../../components/breadcrumbs.js';
+import * as cache from '../../lib/cache.js';
+import { renderAdSlot } from '../../components/adSlot.js';
+import { CONSTANTS } from '../../config/index.js';
+import { KARATS } from '../../config/index.js';
 
 const STATE = {
   lang: 'en',
@@ -1224,6 +1225,7 @@ function init() {
   injectBreadcrumbs('shops');
   injectFooter(STATE.lang, 0);
   injectTicker(STATE.lang, 0);
+  renderAdSlot('ad-top', 'leaderboard');
 
   // Populate ticker from cache so it never shows all-dashes
   const cachedGold = cache.getFallbackGoldPrice();

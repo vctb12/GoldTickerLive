@@ -52,8 +52,10 @@ export function injectFooter(lang = 'en', depth = 0) {
       <div class="footer-col footer-col--links">
         <h4 class="footer-col-heading">${isAr ? 'الأدوات' : 'Tools'}</h4>
         <a href="${r('../calculator.html')}">${isAr ? 'حاسبة الذهب' : 'Gold Calculator'}</a>
+        <a href="${r('../tools/weight-converter.html')}">${isAr ? 'محول الأوزان' : 'Weight Converter'}</a>
+        <a href="${r('../tools/zakat-calculator.html')}">${isAr ? 'حاسبة الزكاة' : 'Zakat Calculator'}</a>
+        <a href="${r('../tools/investment-return.html')}">${isAr ? 'عائد الاستثمار' : 'Investment Return'}</a>
         <a href="${r('../tracker.html#mode=live&panel=alerts')}">${isAr ? 'تنبيهات السعر' : 'Price Alerts'}</a>
-        <a href="${r('../tracker.html#mode=exports')}">${isAr ? 'تنزيل البيانات' : 'Downloads'}</a>
         <a href="${r('../gold-price-history/')}">${isAr ? 'سجل الأسعار' : 'Price History'}</a>
         <a href="${r('../order-gold/')}">${isAr ? 'اطلب الذهب' : 'Order Gold'}</a>
         <a href="${r('../invest.html')}">${isAr ? 'دليل الاستثمار' : 'Investing Guide'}</a>

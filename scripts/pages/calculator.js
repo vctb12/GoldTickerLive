@@ -3,15 +3,16 @@
  * Handles 5 calculators: Value, Scrap, Zakat, Buying Power, Unit Converter.
  */
 
-import { CONSTANTS, KARATS } from './config/index.js';
-import * as api from './lib/api.js';
-import * as cache from './lib/cache.js';
-import { usdPerGram } from './lib/price-calculator.js';
-import { formatPrice } from './lib/formatter.js';
-import { injectNav, updateNavLang } from './components/nav.js';
-import { injectFooter } from './components/footer.js';
-import { injectTicker, updateTicker, updateTickerLang } from './components/ticker.js';
-import { injectBreadcrumbs } from './components/breadcrumbs.js';
+import { CONSTANTS, KARATS } from '../../config/index.js';
+import * as api from '../../lib/api.js';
+import * as cache from '../../lib/cache.js';
+import { usdPerGram } from '../../lib/price-calculator.js';
+import { formatPrice } from '../../lib/formatter.js';
+import { injectNav, updateNavLang } from '../../components/nav.js';
+import { injectFooter } from '../../components/footer.js';
+import { injectTicker, updateTicker, updateTickerLang } from '../../components/ticker.js';
+import { injectBreadcrumbs } from '../../components/breadcrumbs.js';
+import { renderAdSlot } from '../../components/adSlot.js';
 
 // ── State ───────────────────────────────────────────────────────────────────
 const STATE = {
@@ -620,6 +621,7 @@ async function init() {
   injectBreadcrumbs('calculator');
   injectFooter(STATE.lang, 0);
   injectTicker(STATE.lang, 0);
+  renderAdSlot('ad-bottom', 'rectangle');
 
   navResult.getLangToggleButtons().forEach(btn => {
     btn.addEventListener('click', () => {

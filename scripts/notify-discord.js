@@ -84,8 +84,9 @@ async function main() {
   ].filter(([, v]) => !v).map(([k]) => k);
 
   if (missing.length) {
-    console.error('❌ Missing env vars:', missing.join(', '));
-    process.exit(1);
+    console.log('⚠️  Missing env vars:', missing.join(', '));
+    console.log('   Skipping Discord post — configure secrets in repo Settings → Secrets → Actions.');
+    process.exit(0);
   }
 
   console.log('📡 Fetching gold price…');
