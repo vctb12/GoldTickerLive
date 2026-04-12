@@ -101,6 +101,8 @@ export function injectFooter(lang = 'en', depth = 0) {
         <span>${isAr ? 'الدرهم الإماراتي:' : 'AED peg:'} <a href="${r('../methodology.html')}">${isAr ? '3.6725 ثابت' : '3.6725 fixed'}</a></span>
         <span class="footer-sep" aria-hidden="true">·</span>
         <span>${isAr ? 'أونصة ترويوا:' : 'Troy oz:'} 31.1035 g</span>
+        <span class="footer-sep" aria-hidden="true">·</span>
+        <span class="footer-freshness"></span>
       </div>
       <div class="footer-bottom-row">
         <p class="footer-disclaimer">${isAr
@@ -114,5 +116,19 @@ export function injectFooter(lang = 'en', depth = 0) {
 
   const wrapper = document.createElement('div');
   wrapper.innerHTML = html;
-  document.body.appendChild(wrapper.firstElementChild);
+  const footerEl = wrapper.firstElementChild;
+  document.body.appendChild(footerEl);
+
+  // Populate gold-data freshness timestamp from localStorage
+  try {
+    const ts = localStorage.getItem('goldprices_gold_ts');
+    const freshnessEl = footerEl.querySelector('.footer-freshness');
+    if (freshnessEl && ts) {
+      const d = new Date(Number(ts));
+      if (!isNaN(d.getTime())) {
+        const isAr2 = document.documentElement.lang === 'ar' || document.documentElement.dir === 'rtl';
+        freshnessEl.textContent = (isAr2 ? 'آخر تحديث: ' : 'Gold: ') + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+    }
+  } catch (_) {}
 }

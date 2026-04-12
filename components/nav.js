@@ -82,6 +82,7 @@ function buildDropdown(group, depth) {
               data-group="${group.key}"
       >${group.label}<span class="nav-dropdown-caret" aria-hidden="true"></span></button>
       <div class="nav-dropdown-panel" role="menu" aria-label="${group.label}">
+        ${group.description ? `<div class="nav-dropdown-panel-header"><span class="nav-dropdown-panel-title">${group.label}</span><span class="nav-dropdown-panel-desc">${group.description}</span></div>` : ''}
         ${itemsHtml}
       </div>
     </div>`;
@@ -166,6 +167,12 @@ export function injectNav(lang = 'en', depth = 0) {
               style="background:none;border:none;cursor:pointer;padding:0.4rem;font-size:1.1rem;color:#64748b;display:flex;align-items:center;line-height:1;"
       >🔍</button>
 
+      <button id="nav-theme-toggle"
+              type="button"
+              aria-label="Switch to dark mode"
+              style="background:none;border:none;cursor:pointer;padding:0.4rem;font-size:1.1rem;color:var(--color-text-muted);display:flex;align-items:center;line-height:1;"
+      >🌙</button>
+
       <button id="nav-lang-toggle"
               class="nav-lang-btn"
               type="button"
@@ -241,6 +248,36 @@ export function injectNav(lang = 'en', depth = 0) {
   const anchor = document.querySelector('main') || document.body.firstElementChild;
   document.body.insertBefore(navEl, anchor);
 
+  // ── Theme (dark/light) toggle ────────────────────────────────────────────
+  const themeBtn = document.getElementById('nav-theme-toggle');
+  if (themeBtn) {
+    function _applyTheme(t) {
+      document.documentElement.setAttribute('data-theme', t);
+      themeBtn.textContent = t === 'dark' ? '☀️' : '🌙';
+      themeBtn.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+    try {
+      const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
+      const saved = prefs.theme;
+      if (saved) {
+        _applyTheme(saved);
+      } else {
+        _applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      }
+    } catch (e) { console.warn('theme init', e); }
+
+    themeBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      _applyTheme(next);
+      try {
+        const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
+        prefs.theme = next;
+        localStorage.setItem('user_prefs', JSON.stringify(prefs));
+      } catch (e) { console.warn('theme save', e); }
+    });
+  }
+
   // ── DOM references ──────────────────────────────────────────────────────────
   const burger   = document.getElementById('nav-hamburger');
   const drawer   = document.getElementById('nav-drawer');
@@ -272,7 +309,8 @@ export function injectNav(lang = 'en', depth = 0) {
     burger.setAttribute('aria-expanded', 'false');
     burger.setAttribute('aria-label', d.openMenu);
     burger.classList.remove('is-open');
-    document.body.style.overflow = '';
+    // Defer overflow reset so the slide-out CSS transition finishes first
+    setTimeout(() => { document.body.style.overflow = ''; }, 260);
   }
 
   // ── Dropdown helpers ────────────────────────────────────────────────────────

@@ -1076,3 +1076,57 @@
   [dir="rtl"] .hero-ctas     { flex-direction: column; }
   [dir="rtl"] .section-intro { flex-direction: column; align-items: flex-end; }
 }
+
+/* ── Freshness banner ── */
+.home-freshness-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  background: var(--color-live-bg);
+  border-bottom: 1px solid var(--color-live-border);
+  color: var(--color-live);
+  font-size: 0.83rem;
+  font-weight: 600;
+  position: sticky;
+  top: 64px;
+  z-index: 100;
+}
+.home-freshness-bar--stale {
+  background: var(--color-daily-bg);
+  border-bottom-color: var(--color-daily-border);
+  color: var(--color-daily);
+}
+.hfb-dismiss {
+  margin-inline-start: auto;
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.1rem;
+  cursor: pointer;
+  opacity: 0.7;
+  padding: 0 0.25rem;
+  line-height: 1;
+}
+.hfb-dismiss:hover { opacity: 1; }
+
+/* ── Copy button on country cards ── */
+.gcc-card-wrapper { position: relative; }
+.gcc-copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  inset-inline-end: 0.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-faint);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  opacity: 0;
+  transition: opacity 0.2s ease, color 0.2s ease;
+  z-index: 2;
+}
+.gcc-card-wrapper:hover .gcc-copy-btn,
+.gcc-card-wrapper:focus-within .gcc-copy-btn { opacity: 1; }
+.gcc-copy-btn:hover { color: var(--color-gold-dark); border-color: var(--color-gold); }

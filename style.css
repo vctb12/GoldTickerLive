@@ -13,7 +13,7 @@
   /* Text */
   --color-text:        #1a1612;
   --color-text-muted:  #6b5f4e;
-  --color-text-faint:  #9e9080;
+  --color-text-faint:  #78685a;
 
   /* Gold palette — richer, more premium */
   --color-gold:        #c4993e;
@@ -123,6 +123,63 @@
   --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* ═══════════════════════════════════════════════
+   Dark Mode Tokens
+   ═══════════════════════════════════════════════ */
+[data-theme="dark"] {
+  --color-bg:          #0f0c08;
+  --color-surface:     #1a1510;
+  --color-surface-2:   #211a12;
+  --color-surface-3:   #2a2018;
+  --color-border:      #3a3020;
+  --color-border-subtle: #2e2518;
+  --color-text:        #f0ebe0;
+  --color-text-muted:  #c8b99a;
+  --color-text-faint:  #8a7a62;
+  --color-gold-bg:     #1e1808;
+  --color-gold-tint:   #1a1508;
+  --surface-canvas:    #0f0c08;
+  --surface-primary:   #1a1510;
+  --surface-secondary: #211a12;
+  --surface-tertiary:  #2a2018;
+  --surface-accent:    #1e1808;
+  --text-primary:      #f0ebe0;
+  --text-secondary:    #c8b99a;
+  --text-tertiary:     #8a7a62;
+  --border-default:    #3a3020;
+  --border-subtle:     #2e2518;
+  --border-strong:     #4a3a28;
+  --gradient-surface:  linear-gradient(180deg, #1a1510 0%, #181208 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg:          #0f0c08;
+    --color-surface:     #1a1510;
+    --color-surface-2:   #211a12;
+    --color-surface-3:   #2a2018;
+    --color-border:      #3a3020;
+    --color-border-subtle: #2e2518;
+    --color-text:        #f0ebe0;
+    --color-text-muted:  #c8b99a;
+    --color-text-faint:  #8a7a62;
+    --color-gold-bg:     #1e1808;
+    --color-gold-tint:   #1a1508;
+    --surface-canvas:    #0f0c08;
+    --surface-primary:   #1a1510;
+    --surface-secondary: #211a12;
+    --surface-tertiary:  #2a2018;
+    --surface-accent:    #1e1808;
+    --text-primary:      #f0ebe0;
+    --text-secondary:    #c8b99a;
+    --text-tertiary:     #8a7a62;
+    --border-default:    #3a3020;
+    --border-subtle:     #2e2518;
+    --border-strong:     #4a3a28;
+    --gradient-surface:  linear-gradient(180deg, #1a1510 0%, #181208 100%);
+  }
+}
+
 /* Font loading optimization to reduce layout shift */
 @font-face {
   font-family: 'Cairo';
@@ -158,6 +215,11 @@ a:hover { text-decoration: underline; }
 button, select, input { font-family: var(--font-main); }
 button { cursor: pointer; }
 img, svg { display: block; }
+
+/* Tabular numerics for all price/rate values */
+.price, [data-price], .rate, [data-rate] {
+  font-variant-numeric: tabular-nums;
+}
 
 /* Keyboard accessibility baseline */
 :focus-visible {
@@ -462,6 +524,16 @@ img, svg { display: block; }
 [dir="rtl"] .nav-links { flex-direction: row-reverse; padding-inline-start: 0; padding-inline-end: 2rem; }
 [dir="rtl"] .nav-drawer { box-shadow: 6px 0 32px rgba(0, 0, 0, 0.14); }
 
+/* Dark mode nav */
+[data-theme="dark"] .site-nav {
+  background: rgba(15, 12, 8, 0.92);
+  border-bottom-color: rgba(196, 153, 62, 0.25);
+}
+[data-theme="dark"] .nav-drawer { background: var(--color-surface); }
+[data-theme="dark"] .site-nav::after {
+  background: linear-gradient(90deg, transparent 0%, rgba(196,153,62,0.45) 30%, rgba(224,184,74,0.55) 50%, rgba(196,153,62,0.45) 70%, transparent 100%);
+}
+
 /* ═══════════════════════════════════════════════
    Breadcrumbs (injected via components/breadcrumbs.js)
    ═══════════════════════════════════════════════ */
@@ -721,6 +793,20 @@ img, svg { display: block; }
   border: 1px solid rgba(192,24,42,0.28);
 }
 .banner-icon { font-size: 1rem; }
+.status-retry-btn {
+  margin-inline-start: auto;
+  padding: 0.3rem 0.8rem;
+  border: 1.5px solid currentColor;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.18s;
+}
+.status-retry-btn:hover { background: rgba(255,255,255,0.2); }
 
 /* ═══════════════════════════════════════════════
    Main
@@ -2103,6 +2189,28 @@ details[open] > .faq-q::after { content: '−'; }
   visibility: visible;
   transform: translateY(0);
 }
+
+.nav-dropdown-panel-header {
+  padding: 0.55rem 1rem 0.45rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  margin-bottom: 0.2rem;
+}
+.nav-dropdown-panel-title {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--color-gold-dark);
+}
+.nav-dropdown-panel-desc {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-faint);
+  margin-top: 0.1rem;
+  line-height: 1.4;
+}
+[data-theme="dark"] .nav-dropdown-panel-header { border-bottom-color: var(--border-subtle); }
 
 .nav-dropdown-item {
   display: flex;

@@ -71,7 +71,9 @@ function tx(key) {
 const GCC    = COUNTRIES.filter(c => c.group === 'gcc');
 const MENA   = COUNTRIES.filter(c => ['gcc', 'levant', 'africa'].includes(c.group));
 const GLOBAL = COUNTRIES;
-let homeRegion = 'gcc';  // Track which region is currently shown
+let homeRegion = (() => {
+  try { return JSON.parse(localStorage.getItem('user_prefs') || '{}').homeRegion || 'gcc'; } catch { return 'gcc'; }
+})();
 
 // ── Render helpers ─────────────────────────────────────────────────────────
 function set(id, text) {
@@ -136,6 +138,19 @@ function renderHeroCard() {
 
   // Update karat strip
   renderKaratStrip(k18);
+
+  // Update freshness banner
+  const bar = document.getElementById('home-freshness-bar');
+  const barText = document.getElementById('hfb-text');
+  if (bar && barText) {
+    const isStale = priceSourceLabel !== 'live';
+    const timeStr = goldUpdatedAt ? fmt.formatTimestampShort(goldUpdatedAt, lang) : '—';
+    bar.classList.toggle('home-freshness-bar--stale', isStale);
+    barText.textContent = isStale
+      ? `Cached data · Last updated: ${timeStr}`
+      : `Live · Updated: ${timeStr}`;
+    bar.removeAttribute('hidden');
+  }
 }
 
 // ── Render karat price strip ───────────────────────────────────────────────
@@ -195,18 +210,21 @@ function renderGCCGrid() {
       changeBadge = `<span class="gcc-change badge ${cls}">${sign}${chg.toFixed(2)}%</span>`;
     }
 
-    return `<a href="countries/${slug}.html" class="gcc-card">
-      <div class="gcc-card-header">
-        <span class="gcc-flag" aria-hidden="true">${c.flag}</span>
-        <div class="gcc-meta">
-          <span class="gcc-name">${name}</span>
-          <span class="gcc-currency">${c.currency}</span>
+    return `<div class="gcc-card-wrapper">
+      <a href="countries/${slug}.html" class="gcc-card">
+        <div class="gcc-card-header">
+          <span class="gcc-flag" aria-hidden="true">${c.flag}</span>
+          <div class="gcc-meta">
+            <span class="gcc-name">${name}</span>
+            <span class="gcc-currency">${c.currency}</span>
+          </div>
+          ${changeBadge}
         </div>
-        ${changeBadge}
-      </div>
-      <div class="gcc-price">${price}</div>
-      <div class="gcc-unit">${tx('perGram')} · 22K</div>
-    </a>`;
+        <div class="gcc-price">${price}</div>
+        <div class="gcc-unit">${tx('perGram')} · 22K</div>
+      </a>
+      <button class="gcc-copy-btn" data-copy="${price}" aria-label="Copy ${name} price" type="button">⎘</button>
+    </div>`;
   }).join('');
 }
 
@@ -351,6 +369,11 @@ async function init() {
   document.querySelectorAll('.gcc-region-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       homeRegion = tab.dataset.region;
+      try {
+        const p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
+        p.homeRegion = homeRegion;
+        localStorage.setItem('user_prefs', JSON.stringify(p));
+      } catch (_) {}
       document.querySelectorAll('.gcc-region-tab').forEach(t => {
         t.classList.remove('is-active');
         t.setAttribute('aria-selected', 'false');
@@ -363,6 +386,24 @@ async function init() {
       tab.classList.add('is-active');
       tab.setAttribute('aria-selected', 'true');
     }
+  });
+
+  // Freshness bar dismiss
+  document.getElementById('hfb-dismiss')?.addEventListener('click', () => {
+    document.getElementById('home-freshness-bar')?.setAttribute('hidden', '');
+  });
+
+  // Copy price button (event delegation)
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.gcc-copy-btn');
+    if (!btn) return;
+    const text = btn.dataset.copy;
+    if (!text || text === '—') return;
+    navigator.clipboard?.writeText(text).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '✓';
+      setTimeout(() => { btn.textContent = orig; }, 1500);
+    }).catch(() => {});
   });
 
   // Load cache first for instant render

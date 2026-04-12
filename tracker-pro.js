@@ -480,4 +480,42 @@ function handleOnlineStatus() {
 window.addEventListener('online', handleOnlineStatus);
 window.addEventListener('offline', handleOnlineStatus);
 
+// ── Share / copy-URL buttons ──────────────────────────────────────────────
+function initShareButtons() {
+  function copyUrlToClipboard(btn) {
+    const url = window.location.href;
+    navigator.clipboard?.writeText(url).then(() => {
+      if (!btn) return;
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    }).catch(() => {});
+  }
+  document.getElementById('tp-copy-url')?.addEventListener('click', e => copyUrlToClipboard(e.currentTarget));
+  document.getElementById('tp-share-btn')?.addEventListener('click', e => copyUrlToClipboard(e.currentTarget));
+}
+
+// ── First-time onboarding overlay ────────────────────────────────────────
+function initOnboarding() {
+  const SEEN_KEY = 'tracker_onb_seen';
+  const overlay = document.getElementById('tracker-onboarding');
+  if (!overlay) return;
+  try { if (localStorage.getItem(SEEN_KEY) === '1') return; } catch { return; }
+
+  setTimeout(() => { overlay.removeAttribute('hidden'); }, 1800);
+
+  function dismiss() {
+    overlay.setAttribute('hidden', '');
+    try { localStorage.setItem(SEEN_KEY, '1'); } catch {}
+  }
+  document.getElementById('onb-dismiss')?.addEventListener('click', dismiss);
+  document.getElementById('onb-close')?.addEventListener('click', dismiss);
+  overlay.querySelector('.onb-backdrop')?.addEventListener('click', dismiss);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !overlay.hasAttribute('hidden')) dismiss();
+  });
+}
+
 init();
+initShareButtons();
+initOnboarding();

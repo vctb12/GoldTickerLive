@@ -194,19 +194,28 @@ function renderKaratTable(cfg) {
       </tr>`;
   }).join('');
 
+  const tsLabel = STATE.freshness?.goldUpdatedAt
+    ? ` · ${new Date(STATE.freshness.goldUpdatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+    : '';
+  const countryName = STATE.lang === 'ar' ? (cfg.nameAr || cfg.nameEn) : cfg.nameEn;
+  const tableAriaLabel = STATE.lang === 'ar'
+    ? `جدول أسعار الذهب — ${countryName}`
+    : `Gold price table — ${countryName}${tsLabel}`;
+
   el.innerHTML = `
     <div class="cp-table-header">
       <h2>${t('karatTitle')}</h2>
       <p class="cp-table-sub">${t('karatSub')}</p>
     </div>
     <div class="cp-table-scroll">
-      <table class="cp-table">
+      <table class="cp-table" aria-label="${tableAriaLabel}" role="table">
+        <caption class="cp-table-caption visually-hidden">${tableAriaLabel}</caption>
         <thead>
           <tr>
-            <th>${STATE.lang === 'ar' ? 'العيار' : 'Karat'}</th>
-            <th>${STATE.lang === 'ar' ? 'سعر الغرام' : 'Per Gram'} (${cfg.currency})</th>
-            <th>${STATE.lang === 'ar' ? 'سعر الأوقية' : 'Per Troy Oz'} (${cfg.currency})</th>
-            <th class="cp-usd-col">${t('usdEquiv')} / gram</th>
+            <th scope="col">${STATE.lang === 'ar' ? 'العيار' : 'Karat'}</th>
+            <th scope="col">${STATE.lang === 'ar' ? 'سعر الغرام' : 'Per Gram'} (${cfg.currency})</th>
+            <th scope="col">${STATE.lang === 'ar' ? 'سعر الأوقية' : 'Per Troy Oz'} (${cfg.currency})</th>
+            <th scope="col" class="cp-usd-col">${t('usdEquiv')} / gram</th>
           </tr>
         </thead>
         <tbody>${rows}</tbody>
