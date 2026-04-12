@@ -33,6 +33,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Regenerate sitemap.xml
+        run: node scripts/generate-sitemap.js
+
+      - name: Generate RSS feed
+        run: node scripts/generate-rss.js
+
       - name: Copy root-level statics not bundled by Vite
         run: |
           # Service worker must be at the root to have the correct scope
@@ -44,6 +50,9 @@ jobs:
           # Robots.txt and .htaccess must live at root for GitHub Pages / servers
           cp robots.txt dist/
           [ -f .htaccess ] && cp .htaccess dist/ || true
+          # Copy freshly-generated sitemap and RSS feed
+          cp sitemap.xml dist/ || true
+          cp feed.xml dist/ || true
           # ES module source files used by all leaf pages via page-hydrator.js
           cp -r lib dist/
           cp -r config dist/

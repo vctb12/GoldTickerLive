@@ -40,8 +40,9 @@
       {"@type":"ListItem","position":1,"name":"Home","item":"https://vctb12.github.io/Gold-Prices/"},
       {"@type":"ListItem","position":2,"name":"Gold Shops & Markets","item":"https://vctb12.github.io/Gold-Prices/shops.html"}
     ]
-  }
-  </script>
+  <!-- Google AdSense — replace ca-pub-XXXXXXXXXXXXXXXX with your publisher ID from https://adsense.google.com -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+    crossorigin="anonymous"></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -211,6 +212,20 @@
             <p id="shops-info-3-body">This page is for reference and discovery. Always confirm current prices, charges, and product details directly with shops.</p>
           </article>
         </div>
+      </div>
+    </section>
+
+    <!-- Near Me Map Section (uses Geolocation API + OpenStreetMap/Nominatim) -->
+    <section class="shops-nearme" id="shops-nearme" aria-labelledby="shops-nearme-title">
+      <div class="shops-nearme-inner">
+        <h2 id="shops-nearme-title">📍 Find Gold Souqs Near You</h2>
+        <p class="shops-nearme-lead">Allow location access to discover which gold markets and souqs are closest to your current position. No account required.</p>
+        <button class="btn btn-primary shops-nearme-btn" id="shops-nearme-btn" type="button">
+          <span class="shops-nearme-btn-icon" aria-hidden="true">📍</span>
+          Find shops near me
+        </button>
+        <div class="shops-nearme-status" id="shops-nearme-status" hidden aria-live="polite"></div>
+        <div class="shops-nearme-results" id="shops-nearme-results" hidden></div>
       </div>
     </section>
   </main>

@@ -337,3 +337,70 @@
 [dir="rtl"] .price-breakdown-row,
 [dir="rtl"] .price-breakdown-total { flex-direction: row-reverse; }
 [dir="rtl"] .order-radio-group { direction: rtl; }
+
+/* ── Partner / Affiliate Dealers ── */
+.order-partners {
+  margin-top: var(--space-8, 2rem);
+  padding: var(--space-6, 1.5rem);
+  background: var(--color-surface, #fafaf8);
+  border: 1px solid var(--color-border, #e8e0d0);
+  border-radius: var(--radius-lg, 12px);
+}
+.order-partners-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text, #1a1a1a);
+  margin: 0 0 0.35rem;
+}
+.order-partners-lead {
+  font-size: 0.85rem;
+  color: var(--color-muted, #666);
+  margin: 0 0 1.25rem;
+}
+.order-partners-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+@media (min-width: 640px) {
+  .order-partners-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.order-partner-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid var(--color-border, #e8e0d0);
+  border-radius: var(--radius-md, 8px);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.order-partner-card:hover {
+  border-color: var(--color-gold, #d4a017);
+  box-shadow: 0 2px 8px rgba(212,160,23,0.12);
+}
+.order-partner-logo { font-size: 1.5rem; line-height: 1; }
+.order-partner-name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-text, #1a1a1a);
+}
+.order-partner-desc {
+  font-size: 0.78rem;
+  color: var(--color-muted, #666);
+  line-height: 1.4;
+  flex: 1;
+}
+.order-partner-cta {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-gold, #d4a017);
+  margin-top: auto;
+}
+.order-partners-disclaimer {
+  font-size: 0.72rem;
+  color: var(--color-muted, #888);
+  margin: 1rem 0 0;
+  line-height: 1.5;
+}

@@ -1,0 +1,35 @@
+name: Hourly Gold Price Tweet
+
+on:
+  schedule:
+    # Runs at the top of every hour (UTC)
+    - cron: '0 * * * *'
+  # Allow manual trigger from Actions tab (for testing)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tweet:
+    name: Post gold price to X / Twitter
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Post gold price tweet
+        env:
+          GOLD_API_KEY:                ${{ secrets.GOLD_API_KEY }}
+          TWITTER_API_KEY:             ${{ secrets.TWITTER_API_KEY }}
+          TWITTER_API_SECRET:          ${{ secrets.TWITTER_API_SECRET }}
+          TWITTER_ACCESS_TOKEN:        ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+        run: node scripts/tweet-gold-price.js

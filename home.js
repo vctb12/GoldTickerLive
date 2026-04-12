@@ -414,6 +414,9 @@ async function init() {
     navigator.serviceWorker.register(BASE_PATH + 'sw.js').catch(() => {});
   }
 
+  // PWA install prompt — capture the beforeinstallprompt event and show a
+  // subtle banner after 30 seconds if the user hasn't dismissed it before.
+  initPwaInstallPrompt();
   // Skeleton timeout: if price still loading after 8s, show unavailable state
   setTimeout(() => {
     const priceEl = document.getElementById('hlc-price');
@@ -433,3 +436,105 @@ async function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// ---------------------------------------------------------------------------
+// PWA Install Prompt
+// ---------------------------------------------------------------------------
+/**
+ * Listens for the browser's beforeinstallprompt event and shows a subtle
+ * bottom banner after a delay. Respects user dismissal via localStorage.
+ * The banner renders itself directly into the DOM — no HTML changes needed.
+ */
+function initPwaInstallPrompt() {
+  // Don't show if user already dismissed or if already installed
+  if (localStorage.getItem('pwa_install_dismissed')) return;
+  if (window.matchMedia('(display-mode: standalone)').matches) return;
+
+  let deferredPrompt = null;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    // Show banner after 30 seconds of engagement
+    setTimeout(() => {
+      if (!deferredPrompt) return;
+      if (localStorage.getItem('pwa_install_dismissed')) return;
+      showPwaBanner(deferredPrompt);
+    }, 30000);
+  });
+}
+
+function showPwaBanner(deferredPrompt) {
+  const banner = document.createElement('div');
+  banner.id = 'pwa-install-banner';
+  banner.setAttribute('role', 'region');
+  banner.setAttribute('aria-label', 'Install app');
+  banner.innerHTML = `
+    <div class="pwa-banner-inner">
+      <img src="${BASE_PATH}favicon.svg" width="32" height="32" alt="" aria-hidden="true" class="pwa-banner-icon" />
+      <div class="pwa-banner-text">
+        <strong>Add GoldPrices to your home screen</strong>
+        <span>Live gold prices — works offline too</span>
+      </div>
+      <button class="pwa-banner-install btn btn-primary btn-sm" id="pwa-install-btn">Install</button>
+      <button class="pwa-banner-dismiss" id="pwa-dismiss-btn" aria-label="Dismiss install prompt">✕</button>
+    </div>
+  `;
+
+  // Inject styles
+  if (!document.getElementById('pwa-banner-styles')) {
+    const style = document.createElement('style');
+    style.id = 'pwa-banner-styles';
+    style.textContent = `
+      #pwa-install-banner {
+        position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+        background: #1e293b; color: #f8fafc;
+        border-top: 2px solid #d4a017;
+        padding: 0.75rem 1rem;
+        box-shadow: 0 -4px 24px rgba(0,0,0,0.3);
+        animation: pwaSlideUp 0.3s ease;
+      }
+      @keyframes pwaSlideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+      .pwa-banner-inner {
+        display: flex; align-items: center; gap: 0.75rem;
+        max-width: 960px; margin: 0 auto;
+      }
+      .pwa-banner-icon { flex-shrink: 0; border-radius: 8px; }
+      .pwa-banner-text { flex: 1; min-width: 0; }
+      .pwa-banner-text strong { display: block; font-size: 0.875rem; font-weight: 700; }
+      .pwa-banner-text span { font-size: 0.78rem; color: #94a3b8; }
+      .pwa-banner-install {
+        flex-shrink: 0; background: #d4a017; color: #fff; border: none;
+        padding: 0.45rem 1rem; border-radius: 6px; font-size: 0.8rem;
+        font-weight: 700; cursor: pointer; white-space: nowrap;
+      }
+      .pwa-banner-install:hover { background: #b8860b; }
+      .pwa-banner-dismiss {
+        background: none; border: none; color: #94a3b8; cursor: pointer;
+        font-size: 1rem; padding: 0.25rem 0.5rem; flex-shrink: 0;
+      }
+      .pwa-banner-dismiss:hover { color: #f8fafc; }
+    `;
+    document.head.appendChild(style);
+  }
+
+  document.body.appendChild(banner);
+
+  document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+    banner.remove();
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      localStorage.setItem('pwa_install_dismissed', '1');
+    }
+    deferredPrompt = null;
+  });
+
+  document.getElementById('pwa-dismiss-btn').addEventListener('click', () => {
+    banner.remove();
+    localStorage.setItem('pwa_install_dismissed', '1');
+    deferredPrompt = null;
+  });
+}
+

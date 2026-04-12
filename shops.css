@@ -1806,3 +1806,113 @@
 .shops-card:hover {
   box-shadow: 0 8px 28px rgba(196,153,62,0.16), 0 2px 6px rgba(0,0,0,0.05);
 }
+
+/* ── Near Me Section ── */
+.shops-nearme {
+  background: var(--color-bg-subtle, #fafaf8);
+  border-top: 1px solid var(--color-border, #e8e0d0);
+  padding: 2.5rem var(--page-gutter, 1.25rem);
+}
+.shops-nearme-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+}
+.shops-nearme-inner h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+  color: var(--color-text, #1a1612);
+}
+.shops-nearme-lead {
+  font-size: 0.9rem;
+  color: var(--color-text-muted, #6b5f4e);
+  margin: 0 0 1.25rem;
+}
+.shops-nearme-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.shops-nearme-status {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-align: left;
+}
+.shops-nearme-status--info  { background: #eff6ff; color: #1d4ed8; }
+.shops-nearme-status--error { background: #fef2f2; color: #b91c1c; }
+.shops-nearme-results {
+  margin-top: 1.25rem;
+  text-align: left;
+}
+.nearme-intro {
+  font-size: 0.85rem;
+  color: var(--color-text-muted, #6b5f4e);
+  margin: 0 0 0.5rem;
+}
+.nearme-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.nearme-item { display: block; }
+.nearme-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  border: 1px solid var(--color-border, #e8e0d0);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--color-text, #1a1612);
+  font-size: 0.875rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.nearme-link:hover {
+  border-color: var(--color-gold, #c49a3e);
+  box-shadow: 0 2px 8px rgba(196,153,62,0.12);
+}
+.nearme-name { font-weight: 600; }
+.nearme-dist {
+  font-size: 0.78rem;
+  color: var(--color-gold-dark, #9a7a1e);
+  font-weight: 500;
+  white-space: nowrap;
+  margin-left: 0.5rem;
+}
+.nearme-map-links {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.nearme-map-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 0.9rem;
+  background: var(--color-bg-card, #fff);
+  border: 1px solid var(--color-border, #e8e0d0);
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--color-text, #1a1612);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: border-color 0.15s;
+}
+.nearme-map-btn:hover { border-color: var(--color-gold, #c49a3e); }
+.nearme-fallback p {
+  font-size: 0.85rem;
+  color: var(--color-text-muted, #6b5f4e);
+  margin: 0 0 0.75rem;
+}
