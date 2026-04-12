@@ -20,6 +20,7 @@
   <link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/" />
   <link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/" />
   <link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/?lang=ar" />
+  <link rel="alternate" type="application/rss+xml" title="GoldPrices — Live Gold Price Updates" href="https://vctb12.github.io/Gold-Prices/feed.xml" />
   <title>Live Gold Prices Today — UAE, GCC &amp; Arab World | أسعار الذهب</title>
   
   <!-- Critical Preloads -->
@@ -28,12 +29,10 @@
   <link rel="preconnect" href="https://api.gold-api.com" />
   <link rel="preconnect" href="https://open.er-api.com" />
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" />
-  <link rel="preload" as="script" href="/Gold-Prices/assets/home-DS_uYcUT.js" type="module" />
+  <link rel="preload" as="script" href="/Gold-Prices/assets/home-CWoq0unJ.js" type="module" />
   
   <!-- Resource Hints for Prefetching -->
-  <link rel="prefetch" href="/Gold-Prices/assets/tracker-DxT3rCTn.html" as="document" />
-  <link rel="prefetch" href="/Gold-Prices/assets/index-DwH2GZDt.html" as="document" />
-  <link rel="prefetch" href="/Gold-Prices/assets/shops-CZHEceFV.html" as="document" />
+  <link rel="prefetch" href="/Gold-Prices/assets/index-cnJfX-v1.html" as="document" />
   
   <!-- Fonts with font-display: swap for faster FCP -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
@@ -48,13 +47,16 @@
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Gold Prices — GCC & Arab World",
+    "name": "GoldPrices",
     "url": "https://vctb12.github.io/Gold-Prices/",
     "inLanguage": ["en", "ar"],
-    "description": "Live gold spot prices across GCC, Levant, Africa and globally. 7 karats, bilingual English/Arabic.",
+    "description": "Live gold prices for UAE, GCC and the Arab world. Track 24K, 22K, 21K, 18K gold in 24+ currencies.",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://vctb12.github.io/Gold-Prices/tracker.html?q={search_term_string}",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://vctb12.github.io/Gold-Prices/search/?q={search_term_string}"
+      },
       "query-input": "required name=search_term_string"
     }
   }
@@ -65,7 +67,17 @@
     "@type": "Organization",
     "name": "GoldPrices",
     "url": "https://vctb12.github.io/Gold-Prices/",
-    "description": "Live gold price tracker for GCC and Arab world — bilingual English/Arabic"
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://vctb12.github.io/Gold-Prices/assets/favicon-192x192.png",
+      "width": 192,
+      "height": 192
+    },
+    "description": "Live gold price tracker for GCC and Arab world — bilingual English/Arabic",
+    "sameAs": [
+      "https://x.com/goldprices",
+      "https://www.facebook.com/goldprices"
+    ]
   }
   </script>
 
@@ -86,13 +98,13 @@
     })(window, document, "clarity", "script", "w4e0nhdxt5");
 </script>
 
-
-  <script type="module" crossorigin src="/Gold-Prices/assets/index-eFb-28X6.js"></script>
-  <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/footer-CarceDCZ.js">
+  <script type="module" crossorigin src="/Gold-Prices/assets/index-DM6GDK5H.js"></script>
+  <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/modulepreload-polyfill-YP0FEG5d.js">
   <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/utils-C2wD3a7F.js">
+  <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/footer-D7qki7yJ.js">
   <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/ticker-ka-nCBow.js">
-  <link rel="stylesheet" crossorigin href="/Gold-Prices/assets/style-C_Wqmt1q.css">
-  <link rel="stylesheet" crossorigin href="/Gold-Prices/assets/home-BO8eNuU3.css">
+  <link rel="stylesheet" crossorigin href="/Gold-Prices/assets/style-3kLRkJ9_.css">
+  <link rel="stylesheet" crossorigin href="/Gold-Prices/assets/home-BGS_wpGC.css">
 </head>
 <body class="home-page">
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -101,7 +113,11 @@
 
   <main id="main-content">
 
-    <!-- ═══════ HERO ═══════ -->
+    <div id="home-freshness-bar" class="home-freshness-bar" role="status" aria-live="polite" hidden>
+      <span class="hfb-icon" aria-hidden="true">⚡</span>
+      <span id="hfb-text"></span>
+      <button id="hfb-dismiss" class="hfb-dismiss" aria-label="Dismiss" type="button">×</button>
+    </div>
     <section class="hero" aria-labelledby="hero-headline">
       <div class="hero-inner">
         <div class="hero-text">
@@ -127,7 +143,7 @@
             <a href="shops.html" class="hero-secondary-link" id="hero-cta-shops">Find Gold Shops</a>
           </div>
         </div>
-        <div class="hero-live-card" id="hero-live-card" aria-live="polite" aria-busy="true">
+        <div class="hero-live-card" id="hero-live-card" aria-live="polite" aria-atomic="false" aria-busy="true">
           <div class="hlc-header">
             <span class="hlc-title" id="hlc-title">Gold Spot Price</span>
             <span class="hlc-badge" id="hlc-badge">XAU/USD</span>
@@ -170,7 +186,7 @@
     <section class="karat-strip" aria-label="Live karat reference prices">
       <div class="karat-strip-inner">
         <span class="karat-strip-label" id="karat-strip-label">AED / gram</span>
-        <div class="karat-strip-prices" id="karat-strip-prices">
+        <div class="karat-strip-prices" id="karat-strip-prices" aria-live="polite" aria-atomic="false">
           <div class="karat-strip-item" id="kstrip-24">
             <span class="karat-strip-k">24K</span>
             <span class="karat-strip-v skeleton-inline" style="width:56px;height:1.1em;" id="kstrip-24-val">—</span>

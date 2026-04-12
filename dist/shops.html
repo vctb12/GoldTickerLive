@@ -40,14 +40,15 @@
     ]
   }
   </script>
-  <script type="module" crossorigin src="/Gold-Prices/assets/shops-BunJeL45.js"></script>
-  <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/footer-CarceDCZ.js">
+  <script type="module" crossorigin src="/Gold-Prices/assets/shops-zGoJrmbp.js"></script>
+  <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/modulepreload-polyfill-YP0FEG5d.js">
   <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/utils-C2wD3a7F.js">
   <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/shops-B1fWIOMV.js">
+  <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/footer-D7qki7yJ.js">
   <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/ticker-ka-nCBow.js">
   <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/breadcrumbs-CxxVGuAV.js">
-  <link rel="stylesheet" crossorigin href="/Gold-Prices/assets/shops-DXJrbsQL.css">
-  <link rel="stylesheet" crossorigin href="/Gold-Prices/assets/style-C_Wqmt1q.css">
+  <link rel="stylesheet" crossorigin href="/Gold-Prices/assets/shops-DwsV5thm.css">
+  <link rel="stylesheet" crossorigin href="/Gold-Prices/assets/style-3kLRkJ9_.css">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -193,8 +194,9 @@
         <div id="shops-grid" class="shops-grid"></div>
 
         <div id="shops-empty" class="shops-empty" hidden>
-          <h3 id="shops-empty-title">No listings match your filters</h3>
-          <p id="shops-empty-text">Try clearing one filter or searching with a broader term.</p>
+          <span class="ses-icon" aria-hidden="true">🔍</span>
+          <h3 id="shops-empty-title">No shops found for this filter</h3>
+          <p id="shops-empty-text">Try broadening your search or <a href="mailto:info@goldprices.com?subject=Shop%20Suggestion" class="ses-link">suggest a shop</a>.</p>
           <button id="shops-clear-filters" type="button" class="shops-clear-btn">Clear filters</button>
         </div>
       </div>
@@ -216,6 +218,35 @@
             <h3 id="shops-info-3-title">Use as a shortlist</h3>
             <p id="shops-info-3-body">This page is for reference and discovery. Always confirm current prices, charges, and product details directly with shops.</p>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Near Me Map Section (uses Geolocation API + OpenStreetMap/Nominatim) -->
+    <section class="shops-nearme" id="shops-nearme" aria-labelledby="shops-nearme-title">
+      <div class="shops-nearme-inner">
+        <h2 id="shops-nearme-title">📍 Find Gold Souqs Near You</h2>
+        <p class="shops-nearme-lead">Allow location access to discover which gold markets and souqs are closest to your current position. No account required.</p>
+        <button class="btn btn-primary shops-nearme-btn" id="shops-nearme-btn" type="button">
+          <span class="shops-nearme-btn-icon" aria-hidden="true">📍</span>
+          Find shops near me
+        </button>
+        <div class="shops-nearme-status" id="shops-nearme-status" hidden aria-live="polite"></div>
+        <div class="shops-nearme-results" id="shops-nearme-results" hidden></div>
+      </div>
+    </section>
+
+    <section class="shops-section" aria-labelledby="shops-guides-heading">
+      <div class="shops-inner">
+        <h2 id="shops-guides-heading" style="font-size:1.1rem;font-weight:600;margin-bottom:0.75rem;">Buying Guides &amp; Resources</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+          <a href="guides/buying-guide.html" style="padding:0.4rem 0.85rem;background:#fef9c3;border-radius:6px;font-size:0.875rem;text-decoration:none;color:#713f12;font-weight:500;">📖 How to Buy Gold</a>
+          <a href="guides/24k-vs-22k.html" style="padding:0.4rem 0.85rem;background:#f1f5f9;border-radius:6px;font-size:0.875rem;text-decoration:none;color:#1e293b;font-weight:500;">⚖️ 24K vs 22K Guide</a>
+          <a href="guides/gold-karat-comparison.html" style="padding:0.4rem 0.85rem;background:#f1f5f9;border-radius:6px;font-size:0.875rem;text-decoration:none;color:#1e293b;font-weight:500;">💎 Karat Comparison</a>
+          <a href="tracker.html" style="padding:0.4rem 0.85rem;background:#f1f5f9;border-radius:6px;font-size:0.875rem;text-decoration:none;color:#1e293b;font-weight:500;">📈 Live Price Tracker</a>
+          <a href="calculator.html" style="padding:0.4rem 0.85rem;background:#f1f5f9;border-radius:6px;font-size:0.875rem;text-decoration:none;color:#1e293b;font-weight:500;">🧮 Gold Calculator</a>
+          <a href="countries/uae/markets/dubai-gold-souk.html" style="padding:0.4rem 0.85rem;background:#f1f5f9;border-radius:6px;font-size:0.875rem;text-decoration:none;color:#1e293b;font-weight:500;">🏛 Dubai Gold Souk</a>
+          <a href="countries/egypt/markets/khan-el-khalili-cairo.html" style="padding:0.4rem 0.85rem;background:#f1f5f9;border-radius:6px;font-size:0.875rem;text-decoration:none;color:#1e293b;font-weight:500;">🏛 Khan El-Khalili</a>
         </div>
       </div>
     </section>
