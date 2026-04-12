@@ -555,10 +555,8 @@
     function addOverride(data) {
       const overrides = loadOverrides();
       const ov = {
-        id: 'ov_' + Date.now(),
         karat: '24', currency: 'AED', unit: 'gram',
         overridePrice: 0, expiresAt: null, reason: '', active: true,
-        createdAt: new Date().toISOString(),
         ...data,
         id: 'ov_' + Date.now(),
         createdAt: new Date().toISOString(),
@@ -708,6 +706,8 @@
         : `<span>${str}</span>`;
     }
 
+    let deleteOvTargetId = null;
+
     function renderOverridesTable() {
       const overrides = loadOverrides();
       const tbody = document.getElementById('overrides-tbody');
@@ -734,6 +734,20 @@
       tbody.innerHTML = overrides.map(ov => {
         const { label, cls } = getOverrideStatus(ov);
         const canDeactivate = ov.active;
+        const isDeleting = deleteOvTargetId === ov.id;
+        const actions = isDeleting
+          ? `<div class="delete-confirm" style="align-items:center;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:4px;display:flex;font-size:.8125rem;gap:8px;padding:4px 8px;white-space:nowrap">
+               <span style="color:var(--danger);font-weight:500">Delete ${ov.karat}K ${ov.currency}?</span>
+               <button class="btn btn-danger btn-sm" data-action="delete-ov-confirm" data-id="${ov.id}" type="button">Confirm</button>
+               <button class="btn btn-ghost btn-sm" data-action="delete-ov-cancel" type="button">Cancel</button>
+             </div>`
+          : `<div class="row-actions">
+               <button class="btn-icon" data-action="edit-ov" data-id="${ov.id}" title="Edit override" aria-label="Edit override" type="button">✏️</button>
+               ${canDeactivate
+                 ? `<button class="btn-icon btn-icon-warn" data-action="deactivate-ov" data-id="${ov.id}" title="Deactivate" aria-label="Deactivate override" type="button">⏸</button>`
+                 : ''}
+               <button class="btn-icon btn-icon-danger" data-action="delete-ov" data-id="${ov.id}" title="Delete override" aria-label="Delete override" type="button">🗑️</button>
+             </div>`;
         return `<tr>
           <td><strong>${ov.karat}K</strong></td>
           <td>${ov.currency}</td>
@@ -742,15 +756,7 @@
           <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${ov.reason || ''}">${ov.reason || '<span class="text-dim">—</span>'}</td>
           <td>${formatExpiry(ov.expiresAt)}</td>
           <td><span class="${cls}">${label}</span></td>
-          <td>
-            <div class="row-actions">
-              <button class="btn-icon" data-action="edit-ov" data-id="${ov.id}" title="Edit override" aria-label="Edit override" type="button">✏️</button>
-              ${canDeactivate
-                ? `<button class="btn-icon btn-icon-warn" data-action="deactivate-ov" data-id="${ov.id}" title="Deactivate" aria-label="Deactivate override" type="button">⏸</button>`
-                : ''}
-              <button class="btn-icon btn-icon-danger" data-action="delete-ov" data-id="${ov.id}" title="Delete override" aria-label="Delete override" type="button">🗑️</button>
-            </div>
-          </td>
+          <td>${actions}</td>
         </tr>`;
       }).join('');
     }
@@ -970,11 +976,21 @@
           return;
         }
         if (btn.dataset.action === 'delete-ov') {
-          if (!confirm(`Delete this ${ov ? ov.karat + 'K ' + ov.currency : ''} override?`)) return;
-          deleteOverride(id);
+          deleteOvTargetId = id;
+          renderOverridesTable();
+          return;
+        }
+        if (btn.dataset.action === 'delete-ov-confirm') {
+          deleteOverride(deleteOvTargetId);
+          deleteOvTargetId = null;
           showToast('Override deleted.', 'info');
           renderOverridesTable();
           renderLiveTable();
+          return;
+        }
+        if (btn.dataset.action === 'delete-ov-cancel') {
+          deleteOvTargetId = null;
+          renderOverridesTable();
           return;
         }
       });

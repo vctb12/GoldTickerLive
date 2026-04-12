@@ -550,12 +550,11 @@
     function addShop(data) {
       const shops = loadShops();
       const shop = {
-        id: 'shop_' + Date.now(),
         name: '', nameAr: '', country: 'AE', city: '', area: '',
         address: '', addressAr: '', phone: '', website: '',
         coordinates: { lat: null, lng: null }, hours: '',
         rating: null, verified: false, featured: false, tags: [],
-        notes: '', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+        notes: '',
         ...data,
         id: 'shop_' + Date.now(),
         createdAt: new Date().toISOString(),
