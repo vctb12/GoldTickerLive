@@ -3,7 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>X/Twitter Post Generator — GoldPrices Admin</title>
+  <title>X/Twitter Gold Price Post Generator | GoldPrices</title>
+  <meta name="description" content="Generate ready-to-post X/Twitter updates with live gold prices. Choose from daily, alert, weekly, and ATH templates." />
+  <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/social/x-post-generator.html" />
+  <meta property="og:title" content="X/Twitter Gold Post Generator | GoldPrices" />
+  <meta property="og:description" content="Generate ready-to-post X/Twitter updates with live gold prices." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/social/x-post-generator.html" />
+  <meta property="og:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../style.css" />
   <style>
     body { background: #f8fafc; color: #1e293b; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 1.5rem; }
@@ -53,10 +62,11 @@
   </style>
 </head>
 <body>
+<div id="nav-root"></div>
 
+<div style="max-width:700px;margin:0 auto;padding:1.5rem 1rem;">
 <div class="page-header">
-  <a href="../admin.html">← Admin</a>
-  <h1>🐦 X/Twitter Post Generator</h1>
+  <h1>𝕏 Gold Post Generator</h1>
 </div>
 
 <!-- Controls -->
@@ -70,6 +80,9 @@
       <option value="daily">Daily Price Update — Full karat breakdown with AED prices and day change</option>
       <option value="alert">Price Alert (Big Move) — Urgent post for significant price movements</option>
       <option value="weekly">Weekly Summary — Week-in-review with high/low and overall change</option>
+      <option value="ath">New All-Time High Alert — Milestone announcement when gold hits ATH</option>
+      <option value="friday">Friday Market Close — End-of-week wrap-up with week performance</option>
+      <option value="ramadan">Ramadan Market Brief — Seasonal market note for Ramadan period</option>
     </select>
   </div>
 
@@ -215,6 +228,65 @@ function generateWeekly(spotUsdPerOz, generatedAt) {
   return lines.join('\n');
 }
 
+function generateATH(spotUsdPerOz, generatedAt) {
+  var k24     = calcKarat(spotUsdPerOz, 1.0);
+  var dateStr = new Date(generatedAt).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  var lines = [
+    '🏆 NEW ALL-TIME HIGH — ' + dateStr,
+    '',
+    '🥇 Gold just hit a NEW record: $' + fmt(spotUsdPerOz) + '/oz',
+    '24K in AED: ' + fmt(k24.aedPerGram) + '/g',
+    '',
+    'A historic milestone for gold investors.',
+    '',
+    '📈 Track live prices → ' + SITE_URL,
+    '#GoldATH #GoldRecord #XAU #Gold',
+  ];
+  return lines.join('\n');
+}
+
+function generateFriday(spotUsdPerOz, dayOpenUsdPerOz, generatedAt) {
+  var k24    = calcKarat(spotUsdPerOz, 1.0);
+  var change = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
+  var pct    = (change != null && dayOpenUsdPerOz) ? (change / dayOpenUsdPerOz) * 100 : null;
+  var emoji  = trendEmoji(pct);
+  var now    = new Date(generatedAt);
+  var dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+  var lines = [
+    emoji + ' Friday Gold Market Close — ' + dateStr,
+    '',
+    'Spot: $' + fmt(spotUsdPerOz) + '/oz',
+    change != null ? 'Day: ' + fmtChange(change, pct) : null,
+    '',
+    '24K AED ' + fmt(k24.aedPerGram) + '/g',
+    '',
+    'Have a great weekend! 🌙',
+    '→ ' + SITE_URL,
+    '#GoldMarket #FridayClose #GoldPrice',
+  ].filter(Boolean);
+  return lines.join('\n');
+}
+
+function generateRamadan(spotUsdPerOz, generatedAt) {
+  var k22 = calcKarat(spotUsdPerOz, 22/24);
+  var k21 = calcKarat(spotUsdPerOz, 21/24);
+  var lines = [
+    '🌙 Ramadan Kareem Gold Market Brief',
+    '',
+    'Spot: $' + fmt(spotUsdPerOz) + '/oz',
+    '',
+    'Gold rates this Ramadan:',
+    '22K AED ' + fmt(k22.aedPerGram) + '/g  (popular for jewelry)',
+    '21K AED ' + fmt(k21.aedPerGram) + '/g',
+    '',
+    'Planning a gold purchase this season?',
+    '→ ' + SITE_URL,
+    '#Ramadan #GoldPrice #UAE #GoldJewelry',
+  ];
+  return lines.join('\n');
+}
+
 function xCharCount(text) {
   var urlPattern = /https?:\/\/\S+/g;
   var normalized = text.replace(urlPattern, '_'.repeat(X_URL_LENGTH));
@@ -307,9 +379,13 @@ function generatePost() {
       fetchedAt   = now;
 
       var text;
-      if (templateId === 'daily')  text = generateDaily(spot, dayOpen, now);
-      else if (templateId === 'alert')  text = generateAlert(spot, dayOpen, now);
-      else text = generateWeekly(spot, now);
+      if (templateId === 'daily')        text = generateDaily(spot, dayOpen, now);
+      else if (templateId === 'alert')   text = generateAlert(spot, dayOpen, now);
+      else if (templateId === 'weekly')  text = generateWeekly(spot, now);
+      else if (templateId === 'ath')     text = generateATH(spot, now);
+      else if (templateId === 'friday')  text = generateFriday(spot, dayOpen, now);
+      else if (templateId === 'ramadan') text = generateRamadan(spot, now);
+      else                               text = generateWeekly(spot, now);
 
       currentPost = text;
       document.getElementById('preview-box').textContent = text;
@@ -350,6 +426,14 @@ function openOnX() {
 
 // ─── Init ────────────────────────────────────────────────────────────────────
 renderHistory();
+</script>
+</div><!-- /max-width wrapper -->
+<div id="footer-root"></div>
+<script type="module">
+  import { injectNav } from '../components/nav.js';
+  import { injectFooter } from '../components/footer.js';
+  injectNav('en', 1);
+  injectFooter('en', 1);
 </script>
 </body>
 </html>

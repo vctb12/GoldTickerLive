@@ -41,6 +41,28 @@ jobs:
           cp -r assets dist/
           # Prevent Jekyll from breaking ES6 module imports on GitHub Pages
           touch dist/.nojekyll
+          # Robots.txt and .htaccess must live at root for GitHub Pages / servers
+          cp robots.txt dist/
+          [ -f .htaccess ] && cp .htaccess dist/ || true
+          # ES module source files used by all leaf pages via page-hydrator.js
+          cp -r lib dist/
+          cp -r config dist/
+          cp -r components dist/
+          cp -r data dist/
+          # Root-level shared CSS/icons used by leaf pages via relative paths
+          cp style.css dist/
+          cp favicon.svg dist/
+          cp manifest.json dist/
+          # ── Country-specific city / karat / shops leaf-page directories ──
+          # Each of these contains static index.html files that load page-hydrator.js
+          for country in uae saudi-arabia qatar kuwait bahrain oman jordan lebanon egypt morocco algeria tunisia libya sudan india; do
+            [ -d "$country" ] && cp -r "$country" dist/ || true
+          done
+          # ── Tool / feature directories ──
+          # Note: social/, gold-price-history/, order-gold/, search/, guides/ are
+          # handled by Vite build (ES module imports bundled and hashed).
+          # Only embed/ is copied verbatim (standalone, no build needed).
+          [ -d embed ] && cp -r embed dist/ || true
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
