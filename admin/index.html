@@ -332,6 +332,11 @@
 
   <script type="module">
     import { logout, logActivity } from './auth.js';
+    import { CONSTANTS } from '../config/constants.js';
+
+    const API_GOLD_URL    = CONSTANTS.API_GOLD_URL;
+    const API_FX_URL      = CONSTANTS.API_FX_URL;
+    const API_TIMEOUT_MS  = CONSTANTS.GOLD_FETCH_TIMEOUT;
 
     // ── Helpers ──────────────────────────────────────────────
 
@@ -414,7 +419,7 @@
       const dot       = qs('#ticker-dot');
       const tickerTxt = qs('#ticker-text');
       try {
-        const res  = await fetch('https://api.gold-api.com/price/XAU');
+        const res  = await fetch(API_GOLD_URL);
         const data = await res.json();
         const price = data.price ?? data.Price ?? null;
         if (price) {
@@ -433,6 +438,8 @@
 
     // ── Stat: Data Freshness ─────────────────────────────────
     function updateFreshnessStat() {
+      // Check both keys: 'gp_cache_gold' is used by some page scripts as a legacy key;
+      // 'goldprice_cache' is an older fallback from earlier versions of the site.
       const raw = storageGet('gp_cache_gold') || storageGet('goldprice_cache');
       const el  = qs('#stat-freshness');
       if (!raw) { el.textContent = 'No data'; return; }
@@ -485,8 +492,8 @@
 
     // ── API Status checks ────────────────────────────────────
     const SERVICES = [
-      { name: 'Gold API (gold-api.com)',   url: 'https://api.gold-api.com/price/XAU' },
-      { name: 'Exchange Rates (er-api.com)', url: 'https://open.er-api.com/v6/latest/USD' },
+      { name: 'Gold API (gold-api.com)',     url: API_GOLD_URL },
+      { name: 'Exchange Rates (er-api.com)', url: API_FX_URL },
     ];
 
     let lastCheckedAt = null;
@@ -494,7 +501,7 @@
     async function checkService(service) {
       const start = performance.now();
       try {
-        const res  = await fetch(service.url, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+        const res  = await fetch(service.url, { cache: 'no-store', signal: AbortSignal.timeout(API_TIMEOUT_MS) });
         const ms   = Math.round(performance.now() - start);
         return { name: service.name, ok: res.ok, status: res.status, ms };
       } catch (err) {
