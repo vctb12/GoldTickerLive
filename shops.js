@@ -1304,3 +1304,171 @@ function init() {
 }
 
 init();
+
+// ---------------------------------------------------------------------------
+// Near Me — Geolocation + OpenStreetMap Nominatim reverse geocode
+// ---------------------------------------------------------------------------
+/**
+ * Uses the browser Geolocation API to find the user's position, then builds
+ * a link to the nearest matching market pages using OpenStreetMap.
+ * No backend or API key required — all client-side.
+ *
+ * Known gold market locations are matched against the user's country/city.
+ * Falls back to an OpenStreetMap link showing gold shops near the coordinates.
+ */
+(function initNearMe() {
+  const btn     = document.getElementById('shops-nearme-btn');
+  const status  = document.getElementById('shops-nearme-status');
+  const results = document.getElementById('shops-nearme-results');
+
+  if (!btn) return;
+
+  // Known gold market areas keyed by ISO country code
+  const KNOWN_MARKETS = {
+    AE: [
+      { city: 'Dubai',      name: 'Dubai Gold Souk',        page: '/Gold-Prices/countries/uae/markets/dubai-gold-souk.html', lat: 25.2881, lng: 55.3021 },
+      { city: 'Dubai',      name: 'Deira Gold Market',       page: '/Gold-Prices/shops.html?country=AE&city=Dubai', lat: 25.2721, lng: 55.3110 },
+    ],
+    EG: [
+      { city: 'Cairo',      name: "Khan el-Khalili Gold Market", page: '/Gold-Prices/countries/egypt/markets/khan-el-khalili-cairo.html', lat: 30.0478, lng: 31.2625 },
+    ],
+    SA: [
+      { city: 'Riyadh',     name: 'Riyadh Gold Market',     page: '/Gold-Prices/shops.html?country=SA&city=Riyadh', lat: 24.6970, lng: 46.7206 },
+      { city: 'Jeddah',     name: 'Jeddah Gold Souk',       page: '/Gold-Prices/shops.html?country=SA&city=Jeddah', lat: 21.4858, lng: 39.1925 },
+    ],
+    KW: [
+      { city: 'Kuwait City', name: 'Kuwait Gold Souk',      page: '/Gold-Prices/shops.html?country=KW', lat: 29.3697, lng: 47.9783 },
+    ],
+    QA: [
+      { city: 'Doha',       name: 'Doha Gold Souk',         page: '/Gold-Prices/shops.html?country=QA', lat: 25.2854, lng: 51.5310 },
+    ],
+    BH: [
+      { city: 'Manama',     name: 'Manama Gold Souk',       page: '/Gold-Prices/shops.html?country=BH', lat: 26.2175, lng: 50.5905 },
+    ],
+    OM: [
+      { city: 'Muscat',     name: 'Muscat Gold Souk (Muttrah)', page: '/Gold-Prices/shops.html?country=OM', lat: 23.6166, lng: 58.5922 },
+    ],
+    JO: [
+      { city: 'Amman',      name: 'Amman Gold Market',      page: '/Gold-Prices/shops.html?country=JO', lat: 31.9519, lng: 35.9300 },
+    ],
+  };
+
+  // Haversine distance in km
+  function haversine(lat1, lng1, lat2, lng2) {
+    const R  = 6371;
+    const dL = (lat2 - lat1) * Math.PI / 180;
+    const dN = (lng2 - lng1) * Math.PI / 180;
+    const a  = Math.sin(dL / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dN / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  function setStatus(msg, type = 'info') {
+    status.hidden = false;
+    status.className = `shops-nearme-status shops-nearme-status--${type}`;
+    status.textContent = msg;
+  }
+
+  function showFallback(lat, lng) {
+    const osmUrl = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=14/${lat}/${lng}`;
+    const googleUrl = `https://www.google.com/maps/search/gold+shop/@${lat},${lng},14z`;
+    results.hidden = false;
+    results.innerHTML = `
+      <div class="nearme-fallback">
+        <p>We couldn't identify a specific market in our directory for your location, but you can search for nearby gold shops on the map.</p>
+        <div class="nearme-map-links">
+          <a href="${osmUrl}" target="_blank" rel="noopener noreferrer" class="nearme-map-btn">
+            🗺️ View on OpenStreetMap
+          </a>
+          <a href="${googleUrl}" target="_blank" rel="noopener noreferrer" class="nearme-map-btn">
+            📍 Search on Google Maps
+          </a>
+        </div>
+      </div>
+    `;
+  }
+
+  async function findNearestMarkets(lat, lng) {
+    // Reverse geocode via Nominatim to get country code
+    let countryCode = null;
+    try {
+      const r = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
+        { headers: { 'Accept-Language': 'en' } }
+      );
+      if (r.ok) {
+        const data = await r.json();
+        countryCode = (data.address?.country_code || '').toUpperCase();
+      }
+    } catch {
+      // silently continue without country match
+    }
+
+    // Compute distance to all known markets
+    const allMarkets = Object.values(KNOWN_MARKETS).flat();
+    const withDist   = allMarkets.map(m => ({
+      ...m,
+      distKm: haversine(lat, lng, m.lat, m.lng),
+    })).sort((a, b) => a.distKm - b.distKm);
+
+    // Show top 3 closest markets within 1000 km, or just top 3 globally
+    const nearby = withDist.slice(0, 3);
+
+    if (!nearby.length) { showFallback(lat, lng); return; }
+
+    results.hidden = false;
+    results.innerHTML = `
+      <p class="nearme-intro">Closest gold markets in our directory:</p>
+      <ul class="nearme-list">
+        ${nearby.map(m => `
+          <li class="nearme-item">
+            <a href="${m.page}" class="nearme-link">
+              <span class="nearme-name">${m.name}</span>
+              <span class="nearme-dist">${m.distKm < 1 ? '<1 km' : Math.round(m.distKm).toLocaleString() + ' km'} away</span>
+            </a>
+          </li>
+        `).join('')}
+      </ul>
+      <div class="nearme-map-links" style="margin-top:0.75rem">
+        <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=13/${lat}/${lng}" target="_blank" rel="noopener noreferrer" class="nearme-map-btn">
+          🗺️ Open my location on map
+        </a>
+      </div>
+    `;
+  }
+
+  btn.addEventListener('click', () => {
+    if (!navigator.geolocation) {
+      setStatus('Your browser does not support Geolocation. Try a modern browser.', 'error');
+      return;
+    }
+
+    btn.disabled = true;
+    setStatus('Getting your location…', 'info');
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude: lat, longitude: lng } = pos.coords;
+        setStatus(`Location found (${lat.toFixed(4)}, ${lng.toFixed(4)}). Finding nearby markets…`, 'info');
+        try {
+          await findNearestMarkets(lat, lng);
+          status.hidden = true;
+        } catch (e) {
+          setStatus('Could not load nearby markets. Please try again.', 'error');
+          showFallback(lat, lng);
+        }
+        btn.disabled = false;
+      },
+      (err) => {
+        const msgs = {
+          1: 'Location access was denied. Please allow location in your browser settings.',
+          2: 'Could not determine your position. Check your device GPS or network.',
+          3: 'Location request timed out. Please try again.',
+        };
+        setStatus(msgs[err.code] || 'Location error. Please try again.', 'error');
+        btn.disabled = false;
+      },
+      { timeout: 10000, maximumAge: 60000 }
+    );
+  });
+}());
+

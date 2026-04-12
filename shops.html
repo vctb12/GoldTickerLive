@@ -214,6 +214,20 @@
         </div>
       </div>
     </section>
+
+    <!-- Near Me Map Section (uses Geolocation API + OpenStreetMap/Nominatim) -->
+    <section class="shops-nearme" id="shops-nearme" aria-labelledby="shops-nearme-title">
+      <div class="shops-nearme-inner">
+        <h2 id="shops-nearme-title">📍 Find Gold Souqs Near You</h2>
+        <p class="shops-nearme-lead">Allow location access to discover which gold markets and souqs are closest to your current position. No account required.</p>
+        <button class="btn btn-primary shops-nearme-btn" id="shops-nearme-btn" type="button">
+          <span class="shops-nearme-btn-icon" aria-hidden="true">📍</span>
+          Find shops near me
+        </button>
+        <div class="shops-nearme-status" id="shops-nearme-status" hidden aria-live="polite"></div>
+        <div class="shops-nearme-results" id="shops-nearme-results" hidden></div>
+      </div>
+    </section>
   </main>
 
   <div id="shops-modal" class="shops-modal" hidden aria-labelledby="shops-modal-title" role="dialog" aria-modal="true">

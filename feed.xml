@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GoldPrices — Live Gold Price Updates</title>
+    <link>https://vctb12.github.io/Gold-Prices/</link>
+    <description>Live gold prices for UAE, GCC and the Arab world. 24K, 22K, 21K, 18K per gram and per ounce. Updated every 90 seconds.</description>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 12 Apr 2026 13:25:26 GMT</lastBuildDate>
+    <ttl>90</ttl>
+    <atom:link href="https://vctb12.github.io/Gold-Prices/feed.xml" rel="self" type="application/rss+xml" />
+    <image>
+      <url>https://vctb12.github.io/Gold-Prices/assets/favicon-192x192.png</url>
+      <title>GoldPrices</title>
+      <link>https://vctb12.github.io/Gold-Prices/</link>
+    </image>
+    <item>
+      <title>Track Live Gold Prices — GCC &amp; Arab World</title>
+      <link>https://vctb12.github.io/Gold-Prices/</link>
+      <guid isPermaLink="false">https://vctb12.github.io/Gold-Prices/gold-prices-tracker</guid>
+      <pubDate>Sun, 12 Apr 2026 13:25:26 GMT</pubDate>
+      <description>GoldPrices tracks live XAU/USD spot price and converts to 24+ currencies across the GCC and Arab world. 7 karats (24K to 14K), updated every 90 seconds. Free, bilingual English/Arabic.</description>
+      <category>Gold Tracker</category>
+    </item>
+    <item>
+      <title>Free Gold Calculator — Value, Scrap, Zakat &amp; Buying Power</title>
+      <link>https://vctb12.github.io/Gold-Prices/calculator.html</link>
+      <guid isPermaLink="false">https://vctb12.github.io/Gold-Prices/calculator</guid>
+      <pubDate>Sat, 11 Apr 2026 13:25:26 GMT</pubDate>
+      <description>Calculate the value of your gold by weight and karat, estimate scrap gold prices, compute Zakat on gold holdings, and find your buying power at live spot rates.</description>
+      <category>Gold Tools</category>
+    </item>
+    <item>
+      <title>Gold Shops Directory — GCC &amp; Arab World</title>
+      <link>https://vctb12.github.io/Gold-Prices/shops.html</link>
+      <guid isPermaLink="false">https://vctb12.github.io/Gold-Prices/shops</guid>
+      <pubDate>Fri, 10 Apr 2026 13:25:26 GMT</pubDate>
+      <description>Browse a curated directory of gold shops and souqs across UAE, Saudi Arabia, Kuwait, Qatar, Bahrain, Oman, Egypt and more. Filter by region, country, city, and specialty.</description>
+      <category>Gold Shops</category>
+    </item>
+  </channel>
+</rss>
