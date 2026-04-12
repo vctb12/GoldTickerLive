@@ -200,6 +200,12 @@ function pickTemplate(now) {
   if (dubaiHour === 6) return 'morning';
   // Arabic edition (08:00 Dubai = peak GCC engagement)
   if (dubaiHour === 8) return 'arabic';
+  // Country-specific post (10:00 Dubai)
+  if (dubaiHour === 10) return 'country';
+  // Midday comparison (14:00 Dubai)
+  if (dubaiHour === 14) return 'comparison';
+  // Educational post (16:00 Dubai)
+  if (dubaiHour === 16) return 'educational';
   // Evening wrap-up
   if (dubaiHour === 20) return 'evening';
   // Weekend edition on Fridays at noon
@@ -308,6 +314,72 @@ function buildTweetText(templateId, data) {
         `📊 ${SITE_URL}`,
         `#GoldWeekend #GoldPrice #GCC`,
       ].filter(Boolean).join('\n');
+    }
+
+    case 'comparison': {
+      const usdPerGram24 = spotUsdPerOz / TROY_OZ;
+      return [
+        `📊 Gold Karat Comparison Right Now`,
+        ``,
+        `24K: AED ${fmt(k24.aedPerGram)}/g ($${fmt(usdPerGram24)})`,
+        `22K: AED ${fmt(k22.aedPerGram)}/g`,
+        `21K: AED ${fmt(k21.aedPerGram)}/g`,
+        `18K: AED ${fmt(k18.aedPerGram)}/g`,
+        ``,
+        `Spot: $${fmt(spotUsdPerOz)}/oz ${trendEmoji(changePct)}`,
+        `Compare all → ${SITE_URL}tracker.html#mode=compare`,
+        `#GoldKarat #24KGold #22KGold #UAE`,
+      ].join('\n');
+    }
+
+    case 'country': {
+      // Rotate through GCC countries by day of month
+      const countries = [
+        { flag: '🇦🇪', name: 'UAE', cur: 'AED', rate: AED_PEG, slug: 'uae' },
+        { flag: '🇸🇦', name: 'Saudi Arabia', cur: 'SAR', rate: 3.75, slug: 'saudi-arabia' },
+        { flag: '🇰🇼', name: 'Kuwait', cur: 'KWD', rate: 0.308, slug: 'kuwait' },
+        { flag: '🇶🇦', name: 'Qatar', cur: 'QAR', rate: 3.64, slug: 'qatar' },
+        { flag: '🇧🇭', name: 'Bahrain', cur: 'BHD', rate: 0.376, slug: 'bahrain' },
+        { flag: '🇴🇲', name: 'Oman', cur: 'OMR', rate: 0.3845, slug: 'oman' },
+        { flag: '🇪🇬', name: 'Egypt', cur: 'EGP', rate: 50.0, slug: 'egypt' },
+      ];
+      const dayOfMonth = new Date(generatedAt).getUTCDate();
+      const c = countries[dayOfMonth % countries.length];
+      const localPerGram24 = (spotUsdPerOz / TROY_OZ) * c.rate;
+      const localPerGram22 = (spotUsdPerOz / TROY_OZ) * (22/24) * c.rate;
+      return [
+        `${c.flag} Gold in ${c.name} Today ${trendEmoji(changePct)}`,
+        ``,
+        `24K: ${c.cur} ${fmt(localPerGram24)}/g`,
+        `22K: ${c.cur} ${fmt(localPerGram22)}/g`,
+        `Spot: $${fmt(spotUsdPerOz)}/oz`,
+        change != null ? `Change: ${sign}${fmt(changePct)}%` : null,
+        ``,
+        `Full prices → ${SITE_URL}countries/${c.slug}.html`,
+        `#GoldPrice #${c.name.replace(/\s/g, '')} #Gold`,
+      ].filter(Boolean).join('\n');
+    }
+
+    case 'educational': {
+      const facts = [
+        `💡 Did you know? 24K gold is 99.9% pure, while 22K is 91.7% pure. The difference affects both price and durability.`,
+        `💡 Gold Fact: 1 troy ounce = 31.1035 grams. This is heavier than a standard ounce (28.35g).`,
+        `💡 The AED is pegged to USD at 3.6725 — so UAE gold prices move exactly with the global spot.`,
+        `💡 Gold has been money for 5,000+ years. It's the only metal that doesn't corrode or tarnish.`,
+        `💡 Zakat on gold: If you own 85g+ of pure gold for one lunar year, 2.5% is due as zakat.`,
+        `💡 21K gold (87.5% pure) is the most popular for jewellery in the Gulf region.`,
+        `💡 All the gold ever mined would fit in a cube measuring about 21 meters on each side.`,
+      ];
+      const factIndex = Math.floor(Date.now() / (24 * 60 * 60 * 1000)) % facts.length;
+      return [
+        facts[factIndex],
+        ``,
+        `Current spot: $${fmt(spotUsdPerOz)}/oz ${trendEmoji(changePct)}`,
+        `🇦🇪 24K: AED ${fmt(k24.aedPerGram)}/g`,
+        ``,
+        `Learn more → ${SITE_URL}learn.html`,
+        `#GoldFacts #Gold #GoldPrice`,
+      ].join('\n');
     }
 
     default:

@@ -64,7 +64,9 @@ jobs:
           cp manifest.json dist/
           # Page-specific CSS/JS in new organized directories
           cp -r styles dist/
-          cp -r scripts/pages dist/scripts-pages || true
+          mkdir -p dist/scripts/pages && cp -r scripts/pages/* dist/scripts/pages/ || true
+          # Tool pages
+          [ -d tools ] && cp -r tools dist/ || true
           # ── Country-specific city / karat / shops leaf-page directories ──
           # Each of these contains static index.html files that load page-hydrator.js.
           # Copy any top-level directory that contains at least one gold-price/ subdirectory
