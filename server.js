@@ -8,22 +8,69 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
+const { errorHandler } = require('./lib/errors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const IS_PROD = process.env.NODE_ENV === 'production';
 
 // Import admin routes
 const adminRoutes = require('./server/routes/admin');
 
-// Middleware
+// Middleware — Security headers
+// CSP is intentionally disabled in development for ease of debugging.
+// In production (NODE_ENV=production), a strict CSP is enforced.
 app.use(helmet({
-    contentSecurityPolicy: false, // Disable for development
-    crossOriginEmbedderPolicy: false
+    contentSecurityPolicy: IS_PROD ? {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: [
+                "'self'",
+                "'unsafe-inline'",
+                "https://cdn.jsdelivr.net",
+                "https://www.googletagmanager.com",
+            ],
+            styleSrc: [
+                "'self'",
+                "'unsafe-inline'",
+                "https://fonts.googleapis.com",
+            ],
+            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            imgSrc: ["'self'", "data:", "https:"],
+            connectSrc: [
+                "'self'",
+                "https://api.gold-api.com",
+                "https://data-asg.goldprice.org",
+                "https://open.er-api.com",
+            ],
+        },
+    } : false,
+    crossOriginEmbedderPolicy: false,
 }));
-app.use(cors());
-app.use(morgan('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+// CORS — restrict origins in production.
+// In production, always set CORS_ORIGINS (comma-separated) to avoid allowing all origins.
+// Example: CORS_ORIGINS=https://vctb12.github.io,https://goldprices.com
+const ALLOWED_ORIGINS = process.env.CORS_ORIGINS
+    ? process.env.CORS_ORIGINS.split(',').map(o => o.trim())
+    : null; // null → allow all (development only)
+
+if (IS_PROD && !ALLOWED_ORIGINS) {
+    console.warn('[server] WARNING: CORS_ORIGINS is not set. All origins will be allowed.');
+}
+app.use(cors(ALLOWED_ORIGINS ? {
+    origin(origin, cb) {
+        // Allow requests with no origin (server-to-server, curl, etc.)
+        if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+        cb(new Error('Not allowed by CORS'));
+    },
+} : undefined));
+
+app.use(morgan(IS_PROD ? 'combined' : 'dev'));
+
+// Body parsing with size limits
+app.use(express.json({ limit: '256kb' }));
+app.use(express.urlencoded({ extended: true, limit: '256kb' }));
 
 // Static file serving for dist folder (GitHub Pages build output)
 app.use('/Gold-Prices', express.static(path.join(__dirname, 'dist')));
@@ -67,14 +114,8 @@ app.get('/{*path}', (req, res, next) => {
     res.sendFile(indexPath);
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error('Server error:', err);
-    res.status(err.status || 500).json({
-        success: false,
-        message: err.message || 'Internal server error'
-    });
-});
+// Centralized error handling middleware (must be last)
+app.use(errorHandler);
 
 // Start server
 app.listen(PORT, () => {
