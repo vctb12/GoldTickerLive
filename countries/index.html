@@ -163,12 +163,17 @@
     </section>
   </main>
 
+  <!-- ═══════ AD: Rectangle (below country listings) ═══════ -->
+  <div id="ad-bottom" class="ad-container" aria-label="Advertisement"></div>
+
   <script type="module">
     import { injectNav } from '../components/nav.js';
     import { injectFooter } from '../components/footer.js';
+    import { renderAdSlot } from '../components/adSlot.js';
 
     injectNav('en', 1);
     injectFooter('en', 1);
+    renderAdSlot('ad-bottom', 'rectangle');
   </script>
 </body>
 </html>

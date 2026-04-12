@@ -11,6 +11,7 @@ import * as fmt from '../../lib/formatter.js';
 import { injectNav, updateNavLang } from '../../components/nav.js';
 import { injectFooter } from '../../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../../components/ticker.js';
+import { renderAdSlot } from '../../components/adSlot.js';
 
 // ── Constants ──────────────────────────────────────────────────────────────
 const LANG_KEY = 'user_prefs';
@@ -364,6 +365,10 @@ async function init() {
   });
   injectFooter(lang, 0);
   injectTicker(lang, 0);
+
+  // Render ad slots
+  renderAdSlot('ad-top', 'leaderboard');
+  renderAdSlot('ad-bottom', 'rectangle');
 
   // Bind region tab filters
   document.querySelectorAll('.gcc-region-tab').forEach(tab => {

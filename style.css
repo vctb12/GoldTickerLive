@@ -3363,3 +3363,18 @@ body > * { max-width: 100%; }
     padding: 0.85rem 0.9rem;
   }
 }
+
+/* ═══════════════════════════════════════════════
+   Advertisement containers
+   ═══════════════════════════════════════════════ */
+.ad-container {
+  width: 100%;
+  max-width: 728px;
+  margin: 1.5rem auto;
+  text-align: center;
+  min-height: 0;
+}
+.ad-container:empty {
+  min-height: 0;
+  margin: 0;
+}
