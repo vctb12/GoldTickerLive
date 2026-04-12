@@ -2,6 +2,15 @@
  * admin/auth.js
  * Client-side SHA-256 authentication for the admin panel.
  * Uses Web Crypto API (crypto.subtle) — no external dependencies.
+ *
+ * ⚠️  SECURITY NOTE
+ * This module stores a SHA-256 hash of the admin password in localStorage
+ * and performs all comparison in the browser. It is suitable for low-risk,
+ * single-user admin panels on private/internal deployments where no server
+ * is available. It does NOT protect against an attacker who has physical or
+ * network access to the browser storage; for that use-case, replace this
+ * with proper server-side authentication (e.g. HTTP Basic Auth, session
+ * cookies, or a backend with bcrypt/argon2 hashing).
  */
 
 const KEYS = {
