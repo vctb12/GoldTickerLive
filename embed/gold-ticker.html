@@ -180,7 +180,8 @@
     const ALLOWED_CURRENCIES = new Set(['AED','SAR','USD','KWD','QAR','BHD','OMR','EGP','JOD','MAD','DZD','TND','LBP','INR','GBP','EUR']);
     const rawCur   = (qs.get('cur') || 'AED').toUpperCase().replace(/[^A-Z]/g, '');
     const currency = ALLOWED_CURRENCIES.has(rawCur) ? rawCur : 'AED';
-    const lang     = (qs.get('lang') || 'en').toLowerCase() === 'ar' ? 'ar' : 'en';
+    const lang     = (qs.get('lang') || 'en').toLowerCase();
+    const isAr     = lang === 'ar'; // only 'ar' triggers RTL; all other values default to LTR
 
     function fmt(n, d = 2) {
       return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });

@@ -54,9 +54,17 @@ jobs:
           cp favicon.svg dist/
           cp manifest.json dist/
           # ── Country-specific city / karat / shops leaf-page directories ──
-          # Each of these contains static index.html files that load page-hydrator.js
-          for country in uae saudi-arabia qatar kuwait bahrain oman jordan lebanon egypt morocco algeria tunisia libya sudan india; do
-            [ -d "$country" ] && cp -r "$country" dist/ || true
+          # Each of these contains static index.html files that load page-hydrator.js.
+          # Copy any top-level directory that contains at least one gold-price/ subdirectory
+          # (i.e. is a country leaf-page tree), excluding Vite-managed source dirs.
+          VITE_DIRS="assets dist node_modules .git guides countries social gold-price-history order-gold search embed components config lib data"
+          for d in */; do
+            country="${d%/}"
+            # Skip known non-country dirs
+            if echo "$VITE_DIRS" | tr ' ' '\n' | grep -qx "$country"; then continue; fi
+            # Skip directories without a gold-price subdirectory (not a country tree)
+            if [ ! -d "$country/gold-price" ]; then continue; fi
+            cp -r "$country" dist/
           done
           # ── Tool / feature directories ──
           # Note: social/, gold-price-history/, order-gold/, search/, guides/ are
