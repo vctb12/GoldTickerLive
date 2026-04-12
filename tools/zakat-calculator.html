@@ -656,19 +656,30 @@
         const zakatUSD = totalValueUSD * ZAKAT_RATE;
         const zakatAED = zakatUSD * AED_PEG;
         verdictEl.className = 'zc-verdict obligatory';
-        verdictEl.innerHTML =
-          `<strong>✅ Zakat is obligatory</strong>` +
-          `Your pure gold (${fmtNum(pureGold)} g) meets the 85 g nisab threshold.<br>` +
-          `<strong>Zakat due (2.5%):</strong> ${fmtUSD(zakatUSD)} / ${fmtAED(zakatAED)}`;
+        verdictEl.textContent = '';
+        const s1 = document.createElement('strong');
+        s1.textContent = '✅ Zakat is obligatory';
+        verdictEl.appendChild(s1);
+        verdictEl.appendChild(document.createTextNode(
+          ` Your pure gold (${fmtNum(pureGold)} g) meets the 85 g nisab threshold. `
+        ));
+        const s2 = document.createElement('strong');
+        s2.textContent = `Zakat due (2.5%): ${fmtUSD(zakatUSD)} / ${fmtAED(zakatAED)}`;
+        verdictEl.appendChild(s2);
       } else {
         const deficit = NISAB_GRAMS - pureGold;
         const deficitActual = deficit / purity;
+        const karatLabel = ['24K','22K','21K','18K'][karatSelect.selectedIndex] || '24K';
         verdictEl.className = 'zc-verdict below';
-        verdictEl.innerHTML =
-          `<strong>ℹ️ Below nisab — zakat not required</strong>` +
-          `Your pure gold equivalent (${fmtNum(pureGold)} g) is below the 85 g threshold.<br>` +
-          `You need <strong>${fmtNum(deficit)} g more pure gold</strong>` +
-          ` (~${fmtNum(deficitActual)} g at ${karatSelect.options[karatSelect.selectedIndex].textContent.split('—')[0].trim()}) to reach nisab.`;
+        verdictEl.textContent = '';
+        const strong = document.createElement('strong');
+        strong.textContent = 'ℹ️ Below nisab — zakat not required';
+        verdictEl.appendChild(strong);
+        verdictEl.appendChild(document.createTextNode(
+          ` Your pure gold equivalent (${fmtNum(pureGold)} g) is below the 85 g threshold. `
+          + `You need ${fmtNum(deficit)} g more pure gold`
+          + ` (~${fmtNum(deficitActual)} g at ${karatLabel}) to reach nisab.`
+        ));
       }
 
       resultPanel.classList.add('visible');

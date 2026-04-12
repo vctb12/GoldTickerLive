@@ -617,6 +617,8 @@
 
     /* ── Historical gold prices (approximate USD/oz) ── */
     const TROY_OZ_G = 31.1035;
+    // Approximate spot price as of early 2026. Update periodically or
+    // replace with a live API fetch for more accurate current valuations.
     const CURRENT_PRICE_OZ = 3200;
 
     const PRICE_HISTORY = [
@@ -796,16 +798,19 @@
       const purchaseDateStr = purchaseDate.toLocaleDateString('en-US', {
         year: 'numeric', month: 'short', day: 'numeric'
       });
+      const karatLabel = ['24K','22K','21K','18K'][karatSelect.selectedIndex] || '24K';
       verdictEl.className = 'ir-verdict ' + (isGain ? 'gain' : 'loss');
-      verdictEl.innerHTML = isGain
-        ? `<strong>📈 Your investment gained ${fmtNum(totalPct, 1)}%</strong>`
-          + `A ${fmtUSD(amount)} investment on ${purchaseDateStr} at ~$${fmtNum(priceAtPurchaseOz, 0)}/oz`
-          + ` would have bought ${fmtNum(grams, 2)} g of ${karatSelect.options[karatSelect.selectedIndex].textContent.split('—')[0].trim()} gold.`
-          + ` At today's ~$${fmtNum(CURRENT_PRICE_OZ, 0)}/oz, that gold is worth approximately ${fmtUSD(currentValue)}.`
-        : `<strong>📉 Your investment declined ${fmtNum(Math.abs(totalPct), 1)}%</strong>`
-          + `A ${fmtUSD(amount)} investment on ${purchaseDateStr} at ~$${fmtNum(priceAtPurchaseOz, 0)}/oz`
-          + ` would have bought ${fmtNum(grams, 2)} g of ${karatSelect.options[karatSelect.selectedIndex].textContent.split('—')[0].trim()} gold.`
-          + ` At today's ~$${fmtNum(CURRENT_PRICE_OZ, 0)}/oz, that gold is worth approximately ${fmtUSD(currentValue)}.`;
+      verdictEl.textContent = '';
+      const strong = document.createElement('strong');
+      strong.textContent = isGain
+        ? `📈 Your investment gained ${fmtNum(totalPct, 1)}%`
+        : `📉 Your investment declined ${fmtNum(Math.abs(totalPct), 1)}%`;
+      verdictEl.appendChild(strong);
+      verdictEl.appendChild(document.createTextNode(
+        ` A ${fmtUSD(amount)} investment on ${purchaseDateStr} at ~$${fmtNum(priceAtPurchaseOz, 0)}/oz`
+        + ` would have bought ${fmtNum(grams, 2)} g of ${karatLabel} gold.`
+        + ` At today's ~$${fmtNum(CURRENT_PRICE_OZ, 0)}/oz, that gold is worth approximately ${fmtUSD(currentValue)}.`
+      ));
 
       resultPanel.classList.add('visible');
       resultPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
