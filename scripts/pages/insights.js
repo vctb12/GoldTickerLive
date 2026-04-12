@@ -3,13 +3,13 @@
  * Handles nav injection, language toggle, live mini price bar, and bilingual content.
  */
 
-import * as cache from './lib/cache.js';
-import * as api from './lib/api.js';
-import { injectNav, updateNavLang } from './components/nav.js';
-import { injectFooter } from './components/footer.js';
-import { injectTicker, updateTickerLang } from './components/ticker.js';
-import { injectBreadcrumbs } from './components/breadcrumbs.js';
-import { CONSTANTS } from './config/index.js';
+import * as cache from '../../lib/cache.js';
+import * as api from '../../lib/api.js';
+import { injectNav, updateNavLang } from '../../components/nav.js';
+import { injectFooter } from '../../components/footer.js';
+import { injectTicker, updateTickerLang } from '../../components/ticker.js';
+import { injectBreadcrumbs } from '../../components/breadcrumbs.js';
+import { CONSTANTS } from '../../config/index.js';
 
 const AED_PEG      = CONSTANTS.AED_PEG;       // 3.6725
 const TROY_GRAMS   = CONSTANTS.TROY_OZ_GRAMS; // 31.1035

@@ -1,14 +1,14 @@
 // tracker-pro.js — slim orchestrator
-import { CONSTANTS, KARATS, COUNTRIES } from './config/index.js';
-import * as api from './lib/api.js';
-import * as cache from './lib/cache.js';
-import * as exp from './lib/export.js';
-import { createInitialState, persistState } from './tracker/state.js';
-import { mountShell } from './tracker/ui-shell.js';
-import { fetchWire, renderWire as renderWireModule } from './tracker/wire.js';
-import { getUnifiedHistory } from './lib/historical-data.js';
-import { initRender, renderAll, renderChart, renderMarkets, renderAlerts, renderPresets, renderPlanners, renderArchive } from './tracker/render.js';
-import { initEvents, bindCoreEvents } from './tracker/events.js';
+import { CONSTANTS, KARATS, COUNTRIES } from '../../config/index.js';
+import * as api from '../../lib/api.js';
+import * as cache from '../../lib/cache.js';
+import * as exp from '../../lib/export.js';
+import { createInitialState, persistState } from '../../tracker/state.js';
+import { mountShell } from '../../tracker/ui-shell.js';
+import { fetchWire, renderWire as renderWireModule } from '../../tracker/wire.js';
+import { getUnifiedHistory } from '../../lib/historical-data.js';
+import { initRender, renderAll, renderChart, renderMarkets, renderAlerts, renderPresets, renderPlanners, renderArchive } from '../../tracker/render.js';
+import { initEvents, bindCoreEvents } from '../../tracker/events.js';
 
 const state = createInitialState();
 const el = {};

@@ -1,12 +1,12 @@
-import { COUNTRIES } from './config/countries.js';
-import { SHOPS } from './data/shops.js';
-import { injectNav, updateNavLang } from './components/nav.js';
-import { injectFooter } from './components/footer.js';
-import { injectTicker, updateTicker, updateTickerLang } from './components/ticker.js';
-import { injectBreadcrumbs } from './components/breadcrumbs.js';
-import * as cache from './lib/cache.js';
-import { CONSTANTS } from './config/index.js';
-import { KARATS } from './config/index.js';
+import { COUNTRIES } from '../../config/countries.js';
+import { SHOPS } from '../../data/shops.js';
+import { injectNav, updateNavLang } from '../../components/nav.js';
+import { injectFooter } from '../../components/footer.js';
+import { injectTicker, updateTicker, updateTickerLang } from '../../components/ticker.js';
+import { injectBreadcrumbs } from '../../components/breadcrumbs.js';
+import * as cache from '../../lib/cache.js';
+import { CONSTANTS } from '../../config/index.js';
+import { KARATS } from '../../config/index.js';
 
 const STATE = {
   lang: 'en',

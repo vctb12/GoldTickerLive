@@ -6,7 +6,7 @@
  * All precache URLs must include the /Gold-Prices/ prefix.
  */
 
-const CACHE_NAME = 'goldprices-v10';
+const CACHE_NAME = 'goldprices-v11';
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 1 day
 
 // Static assets to pre-cache on install - MUST use /Gold-Prices/ prefix for GitHub Pages
@@ -43,6 +43,9 @@ const PRECACHE_URLS = [
   '/Gold-Prices/order-gold/',
   '/Gold-Prices/social/x-post-generator.html',
   '/Gold-Prices/search/',
+  '/Gold-Prices/tools/weight-converter.html',
+  '/Gold-Prices/tools/zakat-calculator.html',
+  '/Gold-Prices/tools/investment-return.html',
   // City pages
   '/Gold-Prices/countries/uae/cities/dubai.html',
   '/Gold-Prices/countries/uae/cities/abu-dhabi.html',

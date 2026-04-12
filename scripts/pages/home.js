@@ -3,14 +3,14 @@
  * Fetches live gold + FX data in parallel, renders the hero live card
  * and GCC quick-price grid. Cache-first: shows cached data instantly.
  */
-import { CONSTANTS, BASE_PATH, KARATS, COUNTRIES, TRANSLATIONS } from './config/index.js';
-import * as api from './lib/api.js';
-import * as cache from './lib/cache.js';
-import * as calc from './lib/price-calculator.js';
-import * as fmt from './lib/formatter.js';
-import { injectNav, updateNavLang } from './components/nav.js';
-import { injectFooter } from './components/footer.js';
-import { injectTicker, updateTicker, updateTickerLang } from './components/ticker.js';
+import { CONSTANTS, BASE_PATH, KARATS, COUNTRIES, TRANSLATIONS } from '../../config/index.js';
+import * as api from '../../lib/api.js';
+import * as cache from '../../lib/cache.js';
+import * as calc from '../../lib/price-calculator.js';
+import * as fmt from '../../lib/formatter.js';
+import { injectNav, updateNavLang } from '../../components/nav.js';
+import { injectFooter } from '../../components/footer.js';
+import { injectTicker, updateTicker, updateTickerLang } from '../../components/ticker.js';
 
 // ── Constants ──────────────────────────────────────────────────────────────
 const LANG_KEY = 'user_prefs';
