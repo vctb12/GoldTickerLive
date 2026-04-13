@@ -76,29 +76,37 @@ function checkHtmlFile(filePath) {
       const funcName = fm[2];
       const bodyStart = fm.index + fm[0].length;
 
-      // Walk brace-matched body
+      // Walk brace-matched body, tracking which braces open an async context
       let depth = 1;
       let i = bodyStart;
-      let nestedAsync = 0;
+      // Stack tracks whether each brace depth level is an async context
+      const asyncAtDepth = new Set();
 
       while (i < script.length && depth > 0) {
         const rest = script.slice(i);
 
-        // Detect nested async context (arrow or function)
-        if (/^async\s+(function\b|\(|[a-zA-Z_$])/.test(rest)) {
-          nestedAsync++;
+        // Detect start of async context: `async function`, `async (`, `async id =>`
+        if (/^async\s+(function\b|\()/.test(rest)) {
+          // The next opening brace will be an async context
+          // Find it by scanning forward
+          const braceIdx = script.indexOf('{', i + 5);
+          if (braceIdx !== -1) {
+            // Mark this upcoming depth as async when we encounter the brace
+            asyncAtDepth.add(depth + 1);
+          }
         }
 
         if (script[i] === '{') {
           depth++;
         } else if (script[i] === '}') {
+          asyncAtDepth.delete(depth);
           depth--;
-          if (nestedAsync > 0) nestedAsync--;
           if (depth === 0) break;
         }
 
-        // Bare await outside nested async
-        if (nestedAsync === 0 && /^await\s/.test(rest)) {
+        // Check for bare await — only flag if we're not inside any nested async
+        const inAsyncContext = [...asyncAtDepth].some(d => d <= depth);
+        if (!inAsyncContext && /^await\s/.test(rest)) {
           const beforeInHtml = html.slice(0, scriptOffset + i);
           const lineNo = beforeInHtml.split('\n').length;
           const snippet = script.slice(i, i + 50).replace(/\n/g, ' ').trim();
