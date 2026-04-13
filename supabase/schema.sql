@@ -79,6 +79,48 @@ create trigger shops_set_updated_at
     before update on public.shops
     for each row execute procedure public.set_updated_at();
 
+-- Extra columns added for admin form fields not in original schema
+alter table public.shops add column if not exists name_ar    text;
+alter table public.shops add column if not exists area       text;
+alter table public.shops add column if not exists address_ar text;
+alter table public.shops add column if not exists rating     numeric;
+
+-- ============================================================
+-- SITE SETTINGS (single-row config, JSON value)
+-- ============================================================
+create table if not exists public.site_settings (
+    id          text primary key default 'default',
+    value       jsonb not null default '{}',
+    updated_at  timestamptz not null default now(),
+    updated_by  text
+);
+
+alter table public.site_settings enable row level security;
+
+-- Anyone can read settings (public site needs feature flags, site name, etc.)
+create policy "Public read settings"
+    on public.site_settings for select
+    using (true);
+
+-- Only authenticated admins can write settings
+create policy "Admin insert settings"
+    on public.site_settings for insert
+    to authenticated
+    with check (true);
+
+create policy "Admin update settings"
+    on public.site_settings for update
+    to authenticated
+    using (true);
+
+create trigger site_settings_set_updated_at
+    before update on public.site_settings
+    for each row execute procedure public.set_updated_at();
+
+-- Seed a default row so upsert always works
+insert into public.site_settings (id, value) values ('default', '{}')
+on conflict (id) do nothing;
+
 -- ============================================================
 -- AUDIT LOGS
 -- ============================================================

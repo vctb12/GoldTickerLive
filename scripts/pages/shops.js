@@ -1,5 +1,6 @@
 import { COUNTRIES } from '../../config/countries.js';
-import { SHOPS } from '../../data/shops.js';
+import { SHOPS as FALLBACK_SHOPS } from '../../data/shops.js';
+import { fetchShops as fetchSupabaseShops } from '../../lib/supabase-data.js';
 import { injectNav, updateNavLang } from '../../components/nav.js';
 import { injectFooter } from '../../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../../components/ticker.js';
@@ -8,6 +9,12 @@ import * as cache from '../../lib/cache.js';
 import { renderAdSlot } from '../../components/adSlot.js';
 import { CONSTANTS } from '../../config/index.js';
 import { KARATS } from '../../config/index.js';
+
+/**
+ * Mutable shops array — starts with hardcoded fallback data,
+ * replaced by Supabase data once it loads.
+ */
+let SHOPS = [...FALLBACK_SHOPS];
 
 const STATE = {
   lang: 'en',
@@ -1306,6 +1313,29 @@ function init() {
 }
 
 init();
+
+// ── Supabase live data upgrade ──────────────────────────────────────────────
+// After the page renders with hardcoded data, try to fetch live data from
+// Supabase. If successful, replace SHOPS and re-render so users see the
+// most up-to-date directory without any visible delay.
+(async function upgradeToLiveData() {
+  try {
+    const remote = await fetchSupabaseShops();
+    if (remote && Array.isArray(remote) && remote.length > 0) {
+      SHOPS = remote;
+      console.log('[shops] Upgraded to Supabase live data:', SHOPS.length, 'shops');
+      // Re-build filters and re-render with live data
+      buildFilters();
+      updateHeaderStats();
+      populatePopularChips();
+      render();
+    } else {
+      console.log('[shops] Supabase returned no shops; keeping fallback data.');
+    }
+  } catch (err) {
+    console.warn('[shops] Could not fetch Supabase data; using fallback:', err.message);
+  }
+})();
 
 // ---------------------------------------------------------------------------
 // Near Me — Geolocation + OpenStreetMap Nominatim reverse geocode
