@@ -216,31 +216,7 @@
       </header>
 
       <main class="content-area" id="main-content">
-        <!-- ── Server-side stats ────────────────────────────── -->
-        <div id="server-stats-section">
-          <div class="source-notice" id="server-stats-notice" style="display:none">
-            ⚠️ Admin server is offline — server-side stats unavailable.
-          </div>
-          <div class="stat-grid" role="list" aria-label="Server-side metrics" id="server-stat-grid">
-            <div class="stat-card" role="listitem">
-              <div class="stat-label">Total Shops</div>
-              <div class="stat-number" id="srv-shops"><span class="inline-spinner" aria-hidden="true"></span></div>
-            </div>
-            <div class="stat-card" role="listitem">
-              <div class="stat-label">Verified Shops</div>
-              <div class="stat-number" id="srv-verified"><span class="inline-spinner" aria-hidden="true"></span></div>
-            </div>
-            <div class="stat-card" role="listitem">
-              <div class="stat-label">Pending Shops</div>
-              <div class="stat-number" id="srv-pending"><span class="inline-spinner" aria-hidden="true"></span></div>
-            </div>
-            <div class="stat-card" role="listitem">
-              <div class="stat-label">Audit Log Entries</div>
-              <div class="stat-number" id="srv-audit"><span class="inline-spinner" aria-hidden="true"></span></div>
-            </div>
-          </div>
-        </div>
-        <!-- ── Frontend analytics (localStorage) ─────────────── -->
+        <!-- Analytics is fully client-side (localStorage) -->
       </main>
 
     </div><!-- /.main-area -->
@@ -249,31 +225,13 @@
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
   <script type="module">
-    import { logout as legacyLogout, getStats, getAuditLogs } from '../api-client.js';
-    import { logout as supabaseLogout } from '../supabase-auth.js';
+    import { logout as supabaseLogout, requireAuth } from '../supabase-auth.js';
+
+    // ── Auth guard ──────────────────────────────────────────
+    if (!(await requireAuth())) throw new Error('redirect');
 
     const EVENTS_KEY = 'gp_analytics_events';
     const API_LOG_KEY = 'gp_api_call_log';
-
-    // ── Server-side stats ─────────────────────────────────────
-    async function loadServerStats() {
-      try {
-        const data = await getStats();
-        if (!data.success) return;
-        const { shops, auditLog } = data.stats;
-        document.getElementById('srv-shops').textContent    = shops?.total ?? '—';
-        document.getElementById('srv-verified').textContent = shops?.verified ?? '—';
-        document.getElementById('srv-pending').textContent  = shops?.pending ?? '—';
-        document.getElementById('srv-audit').textContent    = auditLog?.total ?? '—';
-      } catch {
-        document.getElementById('server-stats-notice').style.display = '';
-        ['srv-shops','srv-verified','srv-pending','srv-audit'].forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.textContent = '—';
-        });
-      }
-    }
-    loadServerStats();
 
     /* ── Toast ──────────────────────────────────────────────── */
     function showToast(msg, type = 'info') {
@@ -340,23 +298,21 @@
       frontendSection.innerHTML = `
         <div class="source-notice">
           ℹ Analytics data is collected when users visit public pages with the analytics module loaded.
-          Data is stored in localStorage on the user's device and is not transmitted to any external service.
+          Data is stored in <code>localStorage</code> on the user's browser and is not sent to any external service.
         </div>
         <div class="card">
           <div class="card-body empty-state-page">
             <div class="empty-icon">📊</div>
             <h2>No analytics data yet</h2>
-            <p>
-              Analytics data appears here once public pages are visited with the analytics module loaded.
-              Events are stored locally in <code>gp_analytics_events</code> and read by this dashboard.
-            </p>
-            <p style="margin-top:12px;">
-              Track events from public pages by appending objects to <code>gp_analytics_events</code>
-              in localStorage with the shape: <code>{ event, page, referrer, sessionId, ts }</code>
-            </p>
+            <p>Visit your public Gold Prices pages to start collecting analytics data.
+               Events like page views, searches, and clicks are automatically tracked when the analytics module is loaded.</p>
+            <p style="margin-top:12px;">Data is stored in <code>gp_analytics_events</code> in localStorage and displayed here.</p>
+            <div style="margin-top:20px;">
+              <a class="btn btn-primary" href="../../index.html" target="_blank">Visit Homepage</a>
+              <a class="btn btn-ghost" href="../../tracker.html" target="_blank" style="margin-left:8px;">Open Tracker</a>
+            </div>
           </div>
         </div>`;
-      // Remove existing frontend section if any, then append
       document.getElementById('frontend-analytics')?.remove();
       content.appendChild(frontendSection);
     }
@@ -602,7 +558,6 @@
       });
 
       document.getElementById('logout-btn').addEventListener('click', async () => {
-        legacyLogout();
         await supabaseLogout();
         window.location.replace('../login/');
       });

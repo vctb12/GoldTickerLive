@@ -485,7 +485,10 @@
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
   <script type="module">
-    import { logActivity, logout } from '../auth.js';
+    import { logActivity, logout, requireAuth } from '../auth.js';
+
+    // ── Auth guard ──────────────────────────────────────────
+    if (!(await requireAuth())) throw new Error('redirect');
 
     // ── Storage ────────────────────────────────────────────
     const STORAGE_KEY = 'gp_blog_posts';
