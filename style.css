@@ -692,6 +692,8 @@ img, svg { display: block; }
 }
 .footer-disclaimer { font-size: 0.72rem; opacity: 0.45; line-height: 1.6; max-width: 65ch; }
 .footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.4); white-space: nowrap; }
+.footer-copy a { color: rgba(255,255,255,0.45); text-decoration: none; }
+.footer-copy a:hover { color: var(--color-gold, #d4a017); }
 
 @media (max-width: 960px) {
   .footer-inner { grid-template-columns: 1.4fr 1fr 1fr; }
