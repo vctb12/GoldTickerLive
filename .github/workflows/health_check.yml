@@ -1,0 +1,48 @@
+name: Daily Health Check
+
+on:
+  schedule:
+    # Daily at 04:00 UTC = 08:00 GST (morning in the Gulf)
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  health:
+    name: Verify system health
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-poster-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-poster-
+
+      - name: Install dependencies
+        run: pip install requests tweepy supabase
+
+      - name: Run health check
+        env:
+          POST_MODE: health_check
+          GOLD_API_KEY: ${{ secrets.GOLD_API_KEY }}
+          TWITTER_API_KEY: ${{ secrets.CONSUMER_KEY }}
+          TWITTER_API_SECRET: ${{ secrets.CONSUMER_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python scripts/gold_poster.py

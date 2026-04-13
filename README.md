@@ -379,6 +379,37 @@ The tweet script (`scripts/tweet-gold-price.js`) rotates across 10+ templates ba
 - 🏆 Milestone post (round numbers)
 - 🌍 Country-specific post
 
+### @GoldTickerLive Posting System (Python)
+
+A production-grade, fully automated, config-driven gold price posting system
+for the @GoldTickerLive X account. Runs via four additional GitHub Actions workflows.
+
+| Workflow | Schedule | Description |
+|---|---|---|
+| `hourly_post.yml` | Every hour | Fetches price from GoldAPI, posts hourly update with AED karat prices |
+| `market_events.yml` | Session open/close | Posts at Sydney open, London open, COMEX close, Dubai open |
+| `spike_alert.yml` | Every 15 minutes | Detects ≥2% price spikes, rate-limited to 4 alerts/day |
+| `health_check.yml` | Daily 08:00 GST | Verifies API, Supabase freshness, and Twitter credentials |
+
+#### Quick Start
+
+1. **Set up secrets** — add these in GitHub → Settings → Secrets → Actions:
+   - `GOLD_API_KEY` — from [goldapi.io](https://www.goldapi.io)
+   - `CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET` — from [X Developer Portal](https://developer.twitter.com)
+   - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` — from your Supabase project dashboard
+
+2. **Create Supabase tables** — run the SQL in [`docs/twitter_bot_schema.md`](docs/twitter_bot_schema.md)
+
+3. **Test manually** — go to Actions → pick any workflow → click "Run workflow"
+
+4. **Adjust spike threshold** — edit `config/twitter_bot/thresholds.json` (no code changes needed)
+
+5. **Change tweet format** — edit `config/twitter_bot/tweet_templates.json` (no code changes needed)
+
+See [`docs/twitter_bot_architecture.md`](docs/twitter_bot_architecture.md) for the full system design,
+[`docs/twitter_bot_secrets.md`](docs/twitter_bot_secrets.md) for secret details, and
+[`docs/twitter_bot_schema.md`](docs/twitter_bot_schema.md) for database schema.
+
 ---
 
 ## Admin Panel
