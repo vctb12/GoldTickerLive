@@ -3,6 +3,15 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '.github/workflows/setup-mcp.yml'
+      - '.github/copilot/**'
+      - 'docs/**'
+      - '*.md'
+      - 'scripts/gold_poster.py'
+      - 'scripts/post_gold_price.py'
+      - 'scripts/utils/**'
+      - 'config/twitter_bot/**'
   workflow_dispatch:
 
 permissions:
@@ -29,6 +38,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Pre-build validation
+        run: npm run validate
 
       - name: Build
         run: NODE_ENV=production npm run build
@@ -67,11 +79,13 @@ jobs:
           mkdir -p dist/scripts/pages && cp -r scripts/pages/* dist/scripts/pages/ || true
           # Tool pages
           [ -d tools ] && cp -r tools dist/ || true
+          # Admin pages — excluded from Vite build, served as-is (ES modules with top-level await)
+          [ -d admin ] && cp -r admin dist/ || true
           # ── Country-specific city / karat / shops leaf-page directories ──
           # Each of these contains static index.html files that load page-hydrator.js.
           # Copy any top-level directory that contains at least one gold-price/ subdirectory
           # (i.e. is a country leaf-page tree), excluding Vite-managed source dirs.
-          VITE_DIRS="assets dist node_modules .git guides countries social gold-price-history order-gold search embed components config lib data"
+          VITE_DIRS="assets dist node_modules .git guides countries social gold-price-history order-gold search embed components config lib data admin"
           for d in */; do
             country="${d%/}"
             # Skip known non-country dirs
@@ -85,6 +99,20 @@ jobs:
           # handled by Vite build (ES module imports bundled and hashed).
           # Only embed/ is copied verbatim (standalone, no build needed).
           [ -d embed ] && cp -r embed dist/ || true
+
+      - name: Verify dist directory
+        run: |
+          echo "── dist/ contents ──"
+          ls -la dist/
+          echo ""
+          echo "── dist/ size ──"
+          du -sh dist/
+          echo ""
+          # Sanity check: index.html must exist
+          if [ ! -f dist/index.html ]; then
+            echo "::error::dist/index.html is missing — build may have failed silently"
+            exit 1
+          fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
