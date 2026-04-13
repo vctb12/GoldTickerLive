@@ -700,6 +700,7 @@
         const country = COUNTRIES[s.country] || s.country || '—';
         const cityArea = [s.city, s.area].filter(Boolean).join(' · ') || '—';
 
+        // API returns `verified` (bool) OR `status === 'active'` depending on backend.
         const isVerified = s.verified || s.status === 'active';
         const isFeatured = !!s.featured;
         const verifiedBadge = isVerified
@@ -709,6 +710,7 @@
           ? `<span class="badge badge-warning" style="margin-left:4px">★ Featured</span>`
           : '';
 
+        // API may return `id`, `_id`, or `shopId` depending on storage backend.
         const id = s.id || s._id || s.shopId;
         const isDeleting = deleteTargetId === id;
         const actions = isDeleting

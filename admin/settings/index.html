@@ -908,7 +908,7 @@
         document.getElementById('u-password-err').classList.add('hidden');
         errorEl.style.display = 'none';
 
-        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        if (!email || !emailEl.checkValidity()) {
           document.getElementById('u-email-err').classList.remove('hidden');
           emailEl.focus();
           return;

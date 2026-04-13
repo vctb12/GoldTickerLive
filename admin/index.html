@@ -526,7 +526,8 @@
 
     function updateHealthStat(results) {
       const allOk = results.every(r => r.ok);
-      qs('#stat-health') && (qs('#stat-health').textContent = allOk ? '🟢 All OK' : '🔴 Issues Detected');
+      const el = qs('#stat-health');
+      if (el) el.textContent = allOk ? '🟢 All OK' : '🔴 Issues Detected';
     }
 
     async function runApiChecks() {

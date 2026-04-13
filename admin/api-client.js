@@ -127,10 +127,6 @@ export async function apiFetch(path, options = {}) {
 
 /** Resolve the login redirect path relative to the current page depth. */
 function resolveLoginPath() {
-  const depth = (window.location.pathname.match(/\/admin\//i)?.[0] ? 1 : 0) +
-    (window.location.pathname.split('/').filter(Boolean).length - 1);
-  // If we're in admin/something/, go up one level to reach admin/login/
-  // Simple heuristic: if pathname contains /admin/ and a sub-path, use ../login/
   const path = window.location.pathname;
   if (path.includes('/admin/') && path.split('/admin/')[1]?.length > 0) {
     return '../login/';
