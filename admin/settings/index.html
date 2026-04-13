@@ -385,7 +385,8 @@
               </div>
             </div>
             <div class="notice-box">
-              ⚠ API keys are stored in your browser's localStorage only. They are not transmitted to any server. Use for client-side fallback only.
+              ℹ API keys are stored in Supabase along with other settings. They are synced across devices.
+              Keys are never exposed to public visitors — only authenticated admins can read them.
             </div>
           </div>
         </div>
@@ -424,12 +425,12 @@
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
   <script type="module">
-    import { logout as supabaseLogout, requireAuth, logActivity } from '../supabase-auth.js';
+    import { logout as supabaseLogout, requireAuth, getSupabase, logActivity } from '../supabase-auth.js';
 
     // ── Auth guard ──────────────────────────────────────────
     if (!(await requireAuth())) throw new Error('redirect');
 
-    const SETTINGS_KEY = 'gp_settings';
+    const SETTINGS_CACHE_KEY = 'gp_settings';
     const LAST_SAVED_KEY = 'gp_settings_saved_at';
 
     const DEFAULTS = {
@@ -464,13 +465,22 @@
       }, 3500);
     }
 
-    /* ── Load / save ────────────────────────────────────────── */
-    function loadSettings() {
+    /* ── Load / save (Supabase with localStorage cache) ───── */
+
+    /** Cache settings in localStorage for offline resilience. */
+    function cacheSettings(s) {
       try {
-        const raw = localStorage.getItem(SETTINGS_KEY);
-        if (!raw) return structuredClone(DEFAULTS);
+        localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify(s));
+        localStorage.setItem(LAST_SAVED_KEY, String(Date.now()));
+      } catch {}
+    }
+
+    /** Read cached settings from localStorage. */
+    function readCachedSettings() {
+      try {
+        const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
+        if (!raw) return null;
         const saved = JSON.parse(raw);
-        // Deep merge with defaults so new keys are always present
         return {
           ...DEFAULTS,
           ...saved,
@@ -479,16 +489,62 @@
           apiKeys: { ...DEFAULTS.apiKeys, ...(saved.apiKeys || {}) },
         };
       } catch {
-        return structuredClone(DEFAULTS);
+        return null;
       }
     }
 
-    function saveSettings(s) {
-      try {
-        localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
-        localStorage.setItem(LAST_SAVED_KEY, String(Date.now()));
-      } catch (e) {
-        showToast('Failed to save: ' + e.message, 'error');
+    /**
+     * Load settings from Supabase, fall back to localStorage cache, then defaults.
+     */
+    async function loadSettings() {
+      const sb = getSupabase();
+      if (sb) {
+        try {
+          const { data, error } = await sb
+            .from('site_settings')
+            .select('value')
+            .eq('id', 'default')
+            .single();
+          if (!error && data?.value) {
+            const saved = data.value;
+            const merged = {
+              ...DEFAULTS,
+              ...saved,
+              socialLinks: { ...DEFAULTS.socialLinks, ...(saved.socialLinks || {}) },
+              features: { ...DEFAULTS.features, ...(saved.features || {}) },
+              apiKeys: { ...DEFAULTS.apiKeys, ...(saved.apiKeys || {}) },
+            };
+            cacheSettings(merged);
+            return merged;
+          }
+          if (error) console.warn('[settings] Supabase read error:', error.message);
+        } catch (err) {
+          console.warn('[settings] Supabase unreachable:', err.message);
+        }
+      }
+      // Fall back to cache, then defaults
+      return readCachedSettings() || structuredClone(DEFAULTS);
+    }
+
+    // Cache admin email at init to avoid repeated getUser() calls
+    let _adminEmail = null;
+
+    /**
+     * Save settings to Supabase (upsert) and cache locally.
+     */
+    async function saveSettings(s) {
+      // Always cache locally first for resilience
+      cacheSettings(s);
+
+      const sb = getSupabase();
+      if (sb) {
+        const { error } = await sb
+          .from('site_settings')
+          .upsert({ id: 'default', value: s, updated_by: _adminEmail })
+          .eq('id', 'default');
+        if (error) throw new Error(error.message);
+      } else {
+        throw new Error('Supabase client not available. Settings saved locally only.');
       }
     }
 
@@ -602,6 +658,7 @@
         const { getSession } = await import('../supabase-auth.js');
         const session = await getSession();
         const email = session?.user?.email || '—';
+        _adminEmail = session?.user?.email || null;
         document.getElementById('settings-user-email').textContent = email;
       } catch {
         document.getElementById('settings-user-email').textContent = 'Could not load';
@@ -637,18 +694,22 @@
       loadAdminUser();
 
       // Populate form on load
-      populateForm(loadSettings());
+      populateForm(await loadSettings());
       updateLastSaved();
       setInterval(updateLastSaved, 30000);
 
       // Save
-      document.getElementById('save-btn').addEventListener('click', () => {
+      document.getElementById('save-btn').addEventListener('click', async () => {
         const s = readForm();
         const err = validate(s);
         if (err) { showToast(err, 'error'); return; }
-        saveSettings(s);
-        updateLastSaved();
-        showToast('Settings saved to localStorage.', 'success');
+        try {
+          await saveSettings(s);
+          updateLastSaved();
+          showToast('Settings saved to Supabase.', 'success');
+        } catch (e) {
+          showToast('Save error: ' + e.message, 'error');
+        }
       });
 
       // Reset
