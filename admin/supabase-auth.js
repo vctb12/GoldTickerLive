@@ -2,14 +2,15 @@
  * admin/supabase-auth.js
  * Supabase-based authentication for the GoldAdmin panel.
  *
- * Uses Supabase Auth (email + password) instead of the custom JWT backend.
+ * Uses Supabase Auth with GitHub OAuth for admin login.
+ * Only the ALLOWED_EMAIL (your GitHub email) can access the panel.
  * The Supabase JS client is loaded from the CDN — no build step needed.
  *
  * Config is loaded from admin/supabase-config.js which must export
- * SUPABASE_URL and SUPABASE_ANON_KEY.
+ * SUPABASE_URL, SUPABASE_ANON_KEY, and ALLOWED_EMAIL.
  */
 
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from './supabase-config.js';
+import { SUPABASE_URL, SUPABASE_ANON_KEY, ALLOWED_EMAIL } from './supabase-config.js';
 
 let _supabase = null;
 
@@ -31,20 +32,35 @@ function getClient() {
 // ---------------------------------------------------------------------------
 
 /**
- * Sign in with email + password via Supabase Auth.
- * @param {string} email
- * @param {string} password
- * @returns {Promise<{ success: boolean, message?: string, user?: object }>}
+ * Sign in via GitHub OAuth using Supabase Auth.
+ * Redirects the user to GitHub's authorization page.
+ * @param {string} [redirectTo] — URL to return to after login (defaults to admin root)
+ * @returns {Promise<{ success: boolean, message?: string }>}
  */
-export async function login(email, password) {
+export async function loginWithGitHub(redirectTo) {
   const sb = getClient();
   if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh.' };
 
-  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  // Default redirect: go to admin root (one level up from /login/)
+  const target = redirectTo || window.location.origin + window.location.pathname.replace(/\/login\/?$/, '/');
+
+  const { error } = await sb.auth.signInWithOAuth({
+    provider: 'github',
+    options: { redirectTo: target },
+  });
+
   if (error) {
-    return { success: false, message: error.message || 'Invalid credentials.' };
+    return { success: false, message: error.message || 'GitHub login failed.' };
   }
-  return { success: true, user: data.user };
+  return { success: true };
+}
+
+/**
+ * Legacy login stub — kept for backward compatibility.
+ * GitHub OAuth is the primary method; email/password is no longer used.
+ */
+export async function login() {
+  return loginWithGitHub();
 }
 
 /**
@@ -74,16 +90,28 @@ export async function getUser() {
 }
 
 /**
- * Check if user is authenticated (has an active Supabase session).
- * This is async — use for module-level checks.
+ * Check if the current session belongs to the allowed admin email.
+ * @returns {Promise<boolean>}
+ */
+export async function isAdminUser() {
+  const session = await getSession();
+  if (!session) return false;
+  return session.user.email === ALLOWED_EMAIL;
+}
+
+/**
+ * Check if user is authenticated AND is the allowed admin.
+ * @returns {Promise<boolean>}
  */
 export async function isAuthenticated() {
-  return !!(await getSession());
+  return await isAdminUser();
 }
 
 /**
  * Quick synchronous check — looks at Supabase's stored session key.
  * Used for flash-prevention inline scripts only.
+ * NOTE: This only checks for *any* Supabase session; the async
+ * requireAuth() below also verifies the email.
  */
 export function hasStoredSession() {
   try {
@@ -96,13 +124,16 @@ export function hasStoredSession() {
 }
 
 /**
- * Async auth guard — redirects to login if no session.
+ * Async auth guard — redirects to login if no session or wrong email.
  * Call this at the top of every admin page module.
  * @param {string} [redirectTo='../login/']
  */
 export async function requireAuth(redirectTo = '../login/') {
   const session = await getSession();
-  if (!session) {
+
+  if (!session || session.user.email !== ALLOWED_EMAIL) {
+    // If logged in with the wrong account, sign them out first
+    if (session) await logout();
     window.location.replace(redirectTo);
     return false;
   }

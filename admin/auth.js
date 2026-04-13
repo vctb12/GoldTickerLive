@@ -5,8 +5,10 @@
  */
 export {
   isAuthenticated,
+  isAdminUser,
   requireAuth,
   login,
+  loginWithGitHub,
   logout,
   logActivity,
   hasStoredSession,
