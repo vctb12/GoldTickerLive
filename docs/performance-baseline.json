@@ -1,0 +1,39 @@
+{
+  "generated": "2026-04-13T15:27:00Z",
+  "note": "Baseline metrics — estimated from codebase analysis (no live Lighthouse available in CI)",
+  "environment": "GitHub Pages static hosting",
+  "buildTool": "Vite 5.4.0 with Terser",
+  "metrics": {
+    "estimatedPerformanceScore": "85-95 (static site, no SSR delay)",
+    "estimatedLCP": "< 2.0s (static HTML, no blocking JS for initial paint)",
+    "estimatedCLS": "< 0.15 (ad slots have min-height reservation, but placeholder may shift)",
+    "estimatedINP": "< 200ms (vanilla JS, no heavy framework)",
+    "estimatedTTI": "< 3.0s (lightweight JS, async module loading)",
+    "estimatedTBT": "< 300ms (no large synchronous JS bundles)"
+  },
+  "bundleSizes": {
+    "rawJS": "~350KB (68 JS files, source)",
+    "rawCSS": "~368KB (16 CSS files, source)",
+    "estimatedProductionJS": "~100-140KB (Terser minified, gzipped ~40-60KB)",
+    "estimatedProductionCSS": "~120-150KB (minified, gzipped ~20-30KB)"
+  },
+  "knownRisks": [
+    "Ad slots (adSlot.js) may cause CLS if min-height is insufficient",
+    "Chart.js / lightweight-charts lazy loading may delay chart render",
+    "External API calls (gold-api.com, open.er-api.com) add network latency",
+    "Service worker precaches 50+ URLs — first install may be slow"
+  ],
+  "vulnerabilities": {
+    "moderate": 2,
+    "high": 0,
+    "critical": 0,
+    "details": "esbuild <=0.24.2 dev server vulnerability (no production impact)"
+  },
+  "testResults": {
+    "totalTests": 147,
+    "passing": 147,
+    "failing": 0,
+    "suites": 45,
+    "duration": "~1000ms"
+  }
+}

@@ -29,6 +29,8 @@ app.use(helmet({
                 "'unsafe-inline'",
                 "https://cdn.jsdelivr.net",
                 "https://www.googletagmanager.com",
+                "https://pagead2.googlesyndication.com",
+                "https://www.google-analytics.com",
             ],
             styleSrc: [
                 "'self'",
@@ -42,6 +44,12 @@ app.use(helmet({
                 "https://api.gold-api.com",
                 "https://data-asg.goldprice.org",
                 "https://open.er-api.com",
+                "https://www.google-analytics.com",
+                "https://*.supabase.co",
+            ],
+            frameSrc: [
+                "'self'",
+                "https://pagead2.googlesyndication.com",
             ],
         },
     } : false,
