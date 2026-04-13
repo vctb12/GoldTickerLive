@@ -1,0 +1,28 @@
+name: Setup MCP Config
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Write MCP config
+        run: |
+          mkdir -p .github/copilot
+          cat > .github/copilot/mcp.json << EOF
+          {
+            "servers": {
+              "supabase": {
+                "type": "http",
+                "url": "https://mcp.supabase.com",
+                "headers": {
+                  "Authorization": "Bearer ${{ secrets.SUPABASE_MCP_TOKEN }}"
+                }
+              }
+            }
+          }
+          EOF
