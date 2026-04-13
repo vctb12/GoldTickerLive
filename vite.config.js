@@ -13,6 +13,8 @@ const EXCLUDE_DIRS = [
   'uae', 'saudi-arabia', 'qatar', 'kuwait', 'bahrain', 'oman',
   'jordan', 'lebanon', 'egypt', 'morocco', 'algeria', 'tunisia',
   'libya', 'sudan', 'india',
+  // admin pages use top-level await and Supabase auth — served as-is
+  'admin',
   // embed widget served verbatim
   'embed',
 ];
