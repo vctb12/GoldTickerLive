@@ -4,10 +4,289 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Social — GoldAdmin</title>
+  <title>Social Command Center — GoldAdmin</title>
   <link rel="stylesheet" href="../admin.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
+    /* ── Page-specific styles ─────────────────────────────────── */
+
+    /* Tabs */
+    .page-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+    .page-tab {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: -2px;
+      padding: 10px 20px;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .page-tab:hover { color: var(--text); }
+    .page-tab.active {
+      border-bottom-color: var(--gold);
+      color: var(--gold);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Schedule Grid ─────────────────────────────────────────── */
+    .schedule-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .schedule-header h2 { margin: 0; font-size: 1.1rem; }
+    .week-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .week-nav button {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      height: 32px;
+      width: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .week-nav button:hover { background: var(--border); color: var(--text); }
+    .week-label {
+      color: var(--text);
+      font-size: 0.875rem;
+      font-weight: 600;
+      min-width: 180px;
+      text-align: center;
+    }
+
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: 80px repeat(7, 1fr);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      font-size: 0.8125rem;
+    }
+    .sg-header {
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 10px 8px;
+      text-align: center;
+    }
+    .sg-header.today {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--gold);
+    }
+    .sg-time {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 4px;
+    }
+    .sg-cell {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      min-height: 48px;
+      padding: 4px;
+      position: relative;
+      transition: background 0.15s;
+    }
+    .sg-cell:hover { background: var(--surface-2); }
+    .sg-cell.today-col { background: rgba(245, 158, 11, 0.04); }
+    .sg-cell.today-col:hover { background: rgba(245, 158, 11, 0.08); }
+    .sg-chip {
+      border-radius: 4px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      line-height: 1.3;
+      padding: 3px 6px;
+      transition: opacity 0.15s;
+      word-break: break-word;
+    }
+    .sg-chip:hover { opacity: 0.85; }
+    .sg-chip.t-hourly    { background: #3b82f6; }
+    .sg-chip.t-daily     { background: #8b5cf6; }
+    .sg-chip.t-morning   { background: #f59e0b; color: #000; }
+    .sg-chip.t-arabic    { background: #10b981; }
+    .sg-chip.t-country   { background: #ef4444; }
+    .sg-chip.t-comparison{ background: #06b6d4; }
+    .sg-chip.t-educational{ background: #ec4899; }
+    .sg-chip.t-evening   { background: #6366f1; }
+    .sg-chip.t-weekend   { background: #f97316; }
+
+    @media (max-width: 900px) {
+      .schedule-grid {
+        grid-template-columns: 60px repeat(7, 1fr);
+        font-size: 0.75rem;
+      }
+      .sg-chip { font-size: 0.625rem; padding: 2px 4px; }
+    }
+
+    /* ── Stats Bar ─────────────────────────────────────────────── */
+    .stats-bar {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      margin-bottom: 24px;
+    }
+    .stat-mini {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-mini .stat-num {
+      color: var(--gold);
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .stat-mini .stat-label {
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      margin-top: 4px;
+    }
+
+    /* ── Post Detail Modal ─────────────────────────────────────── */
+    .modal-backdrop {
+      align-items: center;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      inset: 0;
+      justify-content: center;
+      padding: 16px;
+      position: fixed;
+      z-index: 1000;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      max-height: 85vh;
+      max-width: 560px;
+      overflow-y: auto;
+      padding: 28px;
+      width: 100%;
+    }
+    .modal-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .modal-title h3 { font-size: 1.1rem; margin: 0; }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 1.25rem;
+      margin-left: auto;
+      padding: 4px;
+    }
+    .modal-close:hover { color: var(--text); }
+    .modal-badge {
+      border-radius: 4px;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      padding: 2px 8px;
+    }
+
+    .preview-card {
+      background: #15202b;
+      border: 1px solid #2d3e50;
+      border-radius: 12px;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .preview-card-header {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+    .preview-avatar {
+      background: var(--gold);
+      border-radius: 50%;
+      color: #000;
+      font-size: 1rem;
+      font-weight: 700;
+      height: 40px;
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .preview-name { font-weight: 600; font-size: 0.9375rem; }
+    .preview-handle { color: #8899aa; font-size: 0.8125rem; }
+    .preview-body {
+      color: #e8e8f0;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .preview-meta {
+      border-top: 1px solid #2d3e50;
+      color: #8899aa;
+      display: flex;
+      font-size: 0.75rem;
+      gap: 16px;
+      margin-top: 12px;
+      padding-top: 10px;
+    }
+    .char-badge {
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 10px;
+    }
+    .char-ok { background: rgba(16,185,129,0.15); color: #34d399; }
+    .char-warn { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .char-over { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+    .modal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
     /* ── Controls card ──────────────────────────────────────── */
     .pill-tabs {
       display: flex;
@@ -59,17 +338,10 @@
     }
     @media (max-width: 700px) { .controls-grid { grid-template-columns: 1fr; } }
 
-    /* ── Preview section ────────────────────────────────────── */
-    .preview-layout {
-      display: grid;
-      gap: 20px;
-      grid-template-columns: 60fr 40fr;
-      align-items: start;
-    }
-    @media (max-width: 700px) { .preview-layout { grid-template-columns: 1fr; } }
+    /* ── Twitter card in generator ─────────────────────────────── */
     .twitter-card {
-      background: #1a1a2e;
-      border: 1px solid #2d2d4e;
+      background: #15202b;
+      border: 1px solid #2d3e50;
       border-radius: 12px;
       color: #fff;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -129,6 +401,13 @@
       gap: 8px;
       margin-top: 16px;
     }
+    .preview-layout {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: 60fr 40fr;
+      align-items: start;
+    }
+    @media (max-width: 700px) { .preview-layout { grid-template-columns: 1fr; } }
 
     /* ── History table ──────────────────────────────────────── */
     .history-text-preview {
@@ -173,11 +452,86 @@
       font-weight: 500;
       margin-bottom: 6px;
     }
+
+    /* ── Template legend ───────────────────────────────────── */
+    .template-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .legend-item {
+      align-items: center;
+      display: flex;
+      font-size: 0.75rem;
+      gap: 5px;
+    }
+    .legend-dot {
+      border-radius: 3px;
+      height: 12px;
+      width: 12px;
+      flex-shrink: 0;
+    }
+
+    /* ── Automation status ──────────────────────────────────── */
+    .auto-status {
+      align-items: center;
+      display: flex;
+      gap: 8px;
+      font-size: 0.8125rem;
+    }
+    .auto-dot {
+      border-radius: 50%;
+      height: 8px;
+      width: 8px;
+      flex-shrink: 0;
+    }
+    .auto-dot.live { background: #10b981; box-shadow: 0 0 6px rgba(16,185,129,0.5); }
+    .auto-dot.off { background: #ef4444; }
+
+    /* ── Next post banner ──────────────────────────────────── */
+    .next-post-banner {
+      background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(245,158,11,0.02));
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+    }
+    .next-post-icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
+    .next-post-info { flex: 1; }
+    .next-post-label {
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .next-post-time {
+      color: var(--gold);
+      font-size: 1.125rem;
+      font-weight: 700;
+    }
+    .next-post-template {
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+    }
+    .next-post-countdown {
+      color: var(--text);
+      font-family: monospace;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Auth guard -->
+  <!-- Auth guard (Supabase session) -->
   <script>(function(){try{var k=Object.keys(localStorage);if(!k.some(function(x){return x.startsWith('sb-')&&x.endsWith('-auth-token')}))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
 
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
@@ -196,7 +550,7 @@
         <a href="../pricing/" class="nav-link"><span class="nav-icon">💰</span> Pricing</a>
         <a href="../orders/" class="nav-link"><span class="nav-icon">📦</span> Orders</a>
         <a href="../content/" class="nav-link"><span class="nav-icon">📝</span> Content</a>
-        <a href="../social/" class="nav-link"><span class="nav-icon">📱</span> Social</a>
+        <a href="../social/" class="nav-link active"><span class="nav-icon">📱</span> Social</a>
         <a href="../settings/" class="nav-link"><span class="nav-icon">⚙</span> Settings</a>
         <a href="../analytics/" class="nav-link"><span class="nav-icon">📈</span> Analytics</a>
       </nav>
@@ -210,127 +564,241 @@
 
       <header class="page-header">
         <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle navigation" type="button">☰</button>
-        <h1 class="page-title">📱 Social</h1>
-        <div class="header-actions"></div>
+        <h1 class="page-title">𝕏 Social Command Center</h1>
+        <div class="header-actions">
+          <div class="auto-status" id="auto-status">
+            <span class="auto-dot live"></span>
+            <span>Automation Active</span>
+          </div>
+        </div>
       </header>
 
       <main class="content-area">
 
-        <!-- Controls card -->
-        <div class="card" style="margin-bottom:20px;">
-          <div class="card-header">
-            <h2 class="card-title">Post Generator</h2>
+        <!-- Next post banner -->
+        <div class="next-post-banner" id="next-post-banner">
+          <div class="next-post-icon">🐦</div>
+          <div class="next-post-info">
+            <div class="next-post-label">Next Scheduled Post</div>
+            <div class="next-post-time" id="next-post-time">—</div>
+            <div class="next-post-template" id="next-post-template">—</div>
           </div>
-          <div class="card-body">
-            <div class="controls-grid">
-              <!-- Platform -->
-              <div class="form-group" style="margin-bottom:0;">
-                <div class="form-label-sm">Platform</div>
-                <div class="pill-tabs" id="platform-tabs" role="tablist" aria-label="Platform">
-                  <button class="pill-tab active" data-platform="twitter" role="tab" aria-selected="true" type="button">𝕏 / Twitter</button>
-                  <button class="pill-tab" data-platform="instagram" role="tab" aria-selected="false" type="button">📸 Instagram</button>
-                  <button class="pill-tab" data-platform="whatsapp" role="tab" aria-selected="false" type="button">💬 WhatsApp</button>
-                  <button class="pill-tab" data-platform="linkedin" role="tab" aria-selected="false" type="button">💼 LinkedIn</button>
-                </div>
-              </div>
-              <!-- Template -->
-              <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label-sm" for="template-select">Template</label>
-                <select class="form-select" id="template-select">
-                  <option value="daily_update">Daily Update</option>
-                  <option value="price_alert">Price Alert</option>
-                  <option value="weekly_summary">Weekly Summary</option>
-                  <option value="milestone">Milestone</option>
-                  <option value="uae_ar">UAE (Arabic)</option>
-                </select>
-              </div>
-              <!-- Language -->
-              <div class="form-group" style="margin-bottom:0;" id="lang-group">
-                <div class="form-label-sm">Language</div>
-                <div class="lang-pills">
-                  <label class="lang-label selected" id="lang-en-label">
-                    <input type="radio" name="lang" value="en" checked id="lang-en" /> English
-                  </label>
-                  <label class="lang-label" id="lang-ar-label">
-                    <input type="radio" name="lang" value="ar" id="lang-ar" /> Arabic
-                  </label>
-                </div>
-              </div>
+          <div class="next-post-countdown" id="next-post-countdown">--:--:--</div>
+        </div>
+
+        <!-- Stats bar -->
+        <div class="stats-bar">
+          <div class="stat-mini">
+            <div class="stat-num" id="stat-today">0</div>
+            <div class="stat-label">Posts Today</div>
+          </div>
+          <div class="stat-mini">
+            <div class="stat-num" id="stat-week">0</div>
+            <div class="stat-label">Posts This Week</div>
+          </div>
+          <div class="stat-mini">
+            <div class="stat-num" id="stat-templates">10</div>
+            <div class="stat-label">Template Types</div>
+          </div>
+          <div class="stat-mini">
+            <div class="stat-num" id="stat-frequency">24/day</div>
+            <div class="stat-label">Post Frequency</div>
+          </div>
+        </div>
+
+        <!-- Page tabs -->
+        <div class="page-tabs" role="tablist">
+          <button class="page-tab active" data-tab="schedule" role="tab" type="button">📅 Weekly Schedule</button>
+          <button class="page-tab" data-tab="generator" role="tab" type="button">⚡ Post Generator</button>
+          <button class="page-tab" data-tab="templates" role="tab" type="button">📋 Templates</button>
+          <button class="page-tab" data-tab="history" role="tab" type="button">🕑 History</button>
+        </div>
+
+        <!-- ═══ TAB: Weekly Schedule ═══════════════════════════ -->
+        <div class="tab-panel active" id="panel-schedule">
+          <div class="schedule-header">
+            <div class="week-nav">
+              <button id="prev-week" type="button" aria-label="Previous week">‹</button>
+              <div class="week-label" id="week-label">—</div>
+              <button id="next-week" type="button" aria-label="Next week">›</button>
             </div>
-            <div style="margin-top:20px;">
-              <button class="btn btn-gold" id="generate-btn" type="button">⚡ Generate Post</button>
+            <button class="btn btn-ghost btn-sm" id="today-btn" type="button">Today</button>
+          </div>
+
+          <div id="schedule-container">
+            <!-- Schedule grid rendered by JS -->
+          </div>
+
+          <div class="template-legend">
+            <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> Hourly</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6;"></span> Daily</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> Morning</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Arabic</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> Country</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#06b6d4;"></span> Comparison</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#ec4899;"></span> Educational</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#6366f1;"></span> Evening</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#f97316;"></span> Weekend</div>
+          </div>
+
+          <div class="card" style="margin-top: 20px;">
+            <div class="card-header">
+              <h2 class="card-title">ℹ️ About Automation</h2>
+            </div>
+            <div class="card-body" style="font-size:0.875rem;color:var(--text-muted);line-height:1.7;">
+              <p>Posts are <strong>automatically generated and posted every hour</strong> by the GitHub Actions workflow
+              <code>gold-price-tweet.yml</code>. The template rotates based on Dubai time (UTC+4):</p>
+              <ul style="margin:12px 0;padding-left:20px;">
+                <li><strong>Special templates</strong> fire at fixed hours: 00:00 (Daily), 06:00 (Morning), 08:00 (Arabic), 10:00 (Country), 14:00 (Comparison), 16:00 (Educational), 20:00 (Evening)</li>
+                <li><strong>Weekend edition</strong> replaces the noon post on Fridays &amp; Saturdays</li>
+                <li><strong>All other hours</strong> use the Hourly Snapshot template</li>
+              </ul>
+              <p>Templates are <strong>read-only</strong> — they are defined in <code>scripts/tweet-gold-price.js</code>.
+              To modify a template, edit that file and push to <code>main</code>.</p>
+              <p style="margin-top:8px;">Use the <strong>Post Generator</strong> tab to manually create and post custom content at any time.</p>
             </div>
           </div>
         </div>
 
-        <!-- Preview card -->
-        <div class="card" style="margin-bottom:20px;">
-          <div class="card-header">
-            <h2 class="card-title">Preview</h2>
-          </div>
-          <div class="card-body">
-            <div class="preview-layout">
-              <!-- Post preview -->
-              <div>
-                <div class="twitter-card" id="post-preview-card">
-                  <div class="twitter-card-header">
-                    <div class="twitter-avatar">⚙</div>
-                    <div>
-                      <div class="twitter-name">GoldPrices</div>
-                      <div class="twitter-handle">@goldprices_ae</div>
-                    </div>
+        <!-- ═══ TAB: Post Generator ════════════════════════════ -->
+        <div class="tab-panel" id="panel-generator">
+
+          <!-- Controls card -->
+          <div class="card" style="margin-bottom:20px;">
+            <div class="card-header">
+              <h2 class="card-title">Generate Post</h2>
+            </div>
+            <div class="card-body">
+              <div class="controls-grid">
+                <!-- Platform -->
+                <div class="form-group" style="margin-bottom:0;">
+                  <div class="form-label-sm">Platform</div>
+                  <div class="pill-tabs" id="platform-tabs" role="tablist" aria-label="Platform">
+                    <button class="pill-tab active" data-platform="twitter" role="tab" aria-selected="true" type="button">𝕏 / Twitter</button>
+                    <button class="pill-tab" data-platform="instagram" role="tab" aria-selected="false" type="button">📸 Instagram</button>
+                    <button class="pill-tab" data-platform="whatsapp" role="tab" aria-selected="false" type="button">💬 WhatsApp</button>
+                    <button class="pill-tab" data-platform="linkedin" role="tab" aria-selected="false" type="button">💼 LinkedIn</button>
                   </div>
-                  <div class="twitter-body empty-preview" id="post-preview-text">Generate a post to see preview…</div>
+                </div>
+                <!-- Template -->
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label-sm" for="template-select">Template</label>
+                  <select class="form-select" id="template-select">
+                    <option value="daily_update">Daily Update</option>
+                    <option value="price_alert">Price Alert</option>
+                    <option value="weekly_summary">Weekly Summary</option>
+                    <option value="milestone">Milestone</option>
+                    <option value="uae_ar">UAE (Arabic)</option>
+                  </select>
+                </div>
+                <!-- Language -->
+                <div class="form-group" style="margin-bottom:0;" id="lang-group">
+                  <div class="form-label-sm">Language</div>
+                  <div class="lang-pills">
+                    <label class="lang-label selected" id="lang-en-label">
+                      <input type="radio" name="lang" value="en" checked id="lang-en" /> English
+                    </label>
+                    <label class="lang-label" id="lang-ar-label">
+                      <input type="radio" name="lang" value="ar" id="lang-ar" /> Arabic
+                    </label>
+                  </div>
                 </div>
               </div>
-              <!-- Char counter + meta -->
-              <div>
-                <div style="margin-bottom:12px;">
-                  <div class="char-counter" id="char-counter">0 / 280</div>
-                  <div class="char-limit-label" id="char-limit-label">X / Twitter limit</div>
-                  <div class="char-limit-warn" id="char-limit-warn">⚠ Post exceeds character limit</div>
-                </div>
+              <div style="margin-top:20px;">
+                <button class="btn btn-gold" id="generate-btn" type="button">⚡ Generate Post</button>
               </div>
             </div>
-            <!-- Action buttons below preview -->
-            <div class="preview-actions">
-              <button class="btn btn-secondary" id="copy-btn" type="button" disabled>📋 Copy Text</button>
-              <button class="btn btn-secondary" id="open-x-btn" type="button" style="display:none;" disabled>🐦 Open X</button>
-              <button class="btn btn-secondary" id="share-whatsapp-btn" type="button" style="display:none;" disabled>📲 Share via WhatsApp</button>
+          </div>
+
+          <!-- Preview card -->
+          <div class="card" style="margin-bottom:20px;">
+            <div class="card-header">
+              <h2 class="card-title">Preview</h2>
+            </div>
+            <div class="card-body">
+              <div class="preview-layout">
+                <!-- Post preview -->
+                <div>
+                  <div class="twitter-card" id="post-preview-card">
+                    <div class="twitter-card-header">
+                      <div class="twitter-avatar">G</div>
+                      <div>
+                        <div class="twitter-name">GoldPrices</div>
+                        <div class="twitter-handle">@goldprices_ae</div>
+                      </div>
+                    </div>
+                    <div class="twitter-body empty-preview" id="post-preview-text">Generate a post to see preview…</div>
+                  </div>
+                </div>
+                <!-- Char counter + meta -->
+                <div>
+                  <div style="margin-bottom:12px;">
+                    <div class="char-counter" id="char-counter">0 / 280</div>
+                    <div class="char-limit-label" id="char-limit-label">X / Twitter limit</div>
+                    <div class="char-limit-warn" id="char-limit-warn">⚠ Post exceeds character limit</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Action buttons below preview -->
+              <div class="preview-actions">
+                <button class="btn btn-secondary" id="copy-btn" type="button" disabled>📋 Copy Text</button>
+                <button class="btn btn-secondary" id="open-x-btn" type="button" disabled>🐦 Open on X</button>
+                <button class="btn btn-secondary" id="share-whatsapp-btn" type="button" style="display:none;" disabled>📲 Share via WhatsApp</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom post card -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Custom Post</h2>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label-sm" for="custom-textarea">Custom template — use <code>{A24}</code>, <code>{P24}</code>, <code>{DATE}</code> etc. Placeholders are replaced on generate.</label>
+                <textarea class="form-input" id="custom-textarea" rows="6" placeholder="Write your custom post here…&#10;&#10;Example: 🥇 24K gold today: {A24} AED/gram — track live at goldprices.ae"></textarea>
+              </div>
+              <div class="custom-limit-row">
+                <span style="color:var(--text-dim);">Characters:</span>
+                <span id="custom-char-count" style="font-weight:600;">0</span>
+                <span style="color:var(--text-dim);">/ <span id="custom-char-limit">280</span></span>
+              </div>
+              <div style="margin-top:14px;">
+                <button class="btn btn-gold" id="generate-custom-btn" type="button">⚡ Generate from Custom</button>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Post History card -->
-        <div class="card" style="margin-bottom:20px;">
-          <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-            <h2 class="card-title" style="margin:0;">Post History</h2>
-            <button class="btn btn-ghost btn-sm" id="clear-history-btn" type="button" style="color:var(--danger);">🗑 Clear History</button>
-          </div>
-          <div class="card-body" style="padding:0;">
-            <div id="history-container">
-              <!-- Populated by JS -->
+        <!-- ═══ TAB: Templates ═════════════════════════════════ -->
+        <div class="tab-panel" id="panel-templates">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Automated Tweet Templates</h2>
+            </div>
+            <div class="card-body">
+              <p style="color:var(--text-muted);font-size:0.875rem;margin-bottom:20px;">
+                These are the 10 templates used by the automated hourly posting system.
+                Each fires at a specific Dubai time. The script picks the template based on the hour and posts to X/Twitter automatically.
+              </p>
+              <div id="templates-list">
+                <!-- Rendered by JS -->
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Custom post card -->
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">Custom Post</h2>
-          </div>
-          <div class="card-body">
-            <div class="form-group">
-              <label class="form-label-sm" for="custom-textarea">Custom template — use <code>{A24}</code>, <code>{P24}</code>, <code>{DATE}</code> etc. Placeholders are replaced on generate.</label>
-              <textarea class="form-input" id="custom-textarea" rows="6" placeholder="Write your custom post here…&#10;&#10;Example: 🥇 24K gold today: {A24} AED/gram — track live at goldprices.ae"></textarea>
+        <!-- ═══ TAB: History ═══════════════════════════════════ -->
+        <div class="tab-panel" id="panel-history">
+          <div class="card">
+            <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+              <h2 class="card-title" style="margin:0;">Generated Post History</h2>
+              <button class="btn btn-ghost btn-sm" id="clear-history-btn" type="button" style="color:var(--danger);">🗑 Clear History</button>
             </div>
-            <div class="custom-limit-row">
-              <span style="color:var(--text-dim);">Characters:</span>
-              <span id="custom-char-count" style="font-weight:600;">0</span>
-              <span style="color:var(--text-dim);">/ <span id="custom-char-limit">280</span></span>
-            </div>
-            <div style="margin-top:14px;">
-              <button class="btn btn-gold" id="generate-custom-btn" type="button">⚡ Generate from Custom</button>
+            <div class="card-body" style="padding:0;">
+              <div id="history-container">
+                <!-- Populated by JS -->
+              </div>
             </div>
           </div>
         </div>
@@ -339,12 +807,44 @@
     </div><!-- /.main-area -->
   </div><!-- /.admin-layout -->
 
+  <!-- Post detail modal -->
+  <div class="modal-backdrop" id="post-modal">
+    <div class="modal-box" id="modal-box">
+      <div class="modal-title">
+        <h3 id="modal-template-name">—</h3>
+        <span class="modal-badge sg-chip" id="modal-badge">—</span>
+        <button class="modal-close" id="modal-close" type="button" aria-label="Close">✕</button>
+      </div>
+      <div id="modal-meta" style="color:var(--text-dim);font-size:0.8125rem;margin-bottom:16px;"></div>
+      <div class="preview-card">
+        <div class="preview-card-header">
+          <div class="preview-avatar">G</div>
+          <div>
+            <div class="preview-name">GoldPrices</div>
+            <div class="preview-handle">@goldprices_ae</div>
+          </div>
+        </div>
+        <div class="preview-body" id="modal-preview-text">—</div>
+        <div class="preview-meta">
+          <span id="modal-time">—</span>
+          <span id="modal-char-count">—</span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="modal-copy-btn" type="button">📋 Copy Text</button>
+        <button class="btn btn-secondary" id="modal-open-x-btn" type="button">🐦 Open on X</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
   <script type="module">
-    import { isAuthenticated, logActivity, logout } from '../auth.js';
+    import { logout } from '../supabase-auth.js';
 
-    /* ── Constants ──────────────────────────────────────────── */
+    /* ══════════════════════════════════════════════════════════════
+       CONSTANTS
+       ══════════════════════════════════════════════════════════════ */
     const PLATFORM_LIMITS = { twitter: 280, instagram: 2200, whatsapp: 3000, linkedin: 3000 };
     const PLATFORM_LABELS = { twitter: 'X / Twitter limit', instagram: 'Instagram limit', whatsapp: 'WhatsApp limit', linkedin: 'LinkedIn limit' };
     const AED_PEG = 3.6725;
@@ -353,8 +853,345 @@
     const CACHE_TTL = 5 * 60 * 1000;
     const PURITIES = { '24': 1, '22': 22/24, '21': 21/24, '18': 18/24 };
     const TROY_OZ = 31.1035;
+    const SITE_URL = 'https://vctb12.github.io/Gold-Prices/';
 
-    /* ── Templates ──────────────────────────────────────────── */
+    /* Template metadata matching scripts/tweet-gold-price.js pickTemplate() */
+    const TEMPLATE_SCHEDULE = [
+      { id: 'daily',       hour: 0,  label: 'Daily Breakdown',   emoji: '🥇', description: 'Full karat breakdown with AED prices and day change' },
+      { id: 'hourly',      hour: 1,  label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+      { id: 'hourly',      hour: 2,  label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+      { id: 'hourly',      hour: 3,  label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+      { id: 'hourly',      hour: 4,  label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+      { id: 'hourly',      hour: 5,  label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+      { id: 'morning',     hour: 6,  label: 'Morning Open',      emoji: '☀️', description: 'Good morning greeting with market open prices' },
+      { id: 'hourly',      hour: 7,  label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+      { id: 'arabic',      hour: 8,  label: 'Arabic Edition',    emoji: '🇦🇪', description: 'Full Arabic translation with karat prices in AED' },
+      { id: 'hourly',      hour: 9,  label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+      { id: 'country',     hour: 10, label: 'Country Spotlight',  emoji: '🌍', description: 'Rotates through GCC countries with local currency prices' },
+      { id: 'hourly',      hour: 11, label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+      { id: 'hourly',      hour: 12, label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update (Weekend Edition on Fri/Sat)' },
+      { id: 'hourly',      hour: 13, label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+      { id: 'comparison',  hour: 14, label: 'Karat Comparison',   emoji: '📊', description: 'Side-by-side comparison of all karat purities' },
+      { id: 'hourly',      hour: 15, label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+      { id: 'educational', hour: 16, label: 'Educational Fact',   emoji: '💡', description: 'Rotating gold facts with market context' },
+      { id: 'hourly',      hour: 17, label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+      { id: 'hourly',      hour: 18, label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+      { id: 'hourly',      hour: 19, label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+      { id: 'evening',     hour: 20, label: 'Evening Wrap-Up',    emoji: '🌙', description: 'End of day summary with open/close and change' },
+      { id: 'hourly',      hour: 21, label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+      { id: 'hourly',      hour: 22, label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+      { id: 'hourly',      hour: 23, label: 'Hourly Snapshot',   emoji: '⏰', description: 'Quick price update with spot and top karats' },
+    ];
+
+    const TEMPLATE_INFO = {
+      hourly:      { color: '#3b82f6', label: 'Hourly Snapshot', emoji: '⏰' },
+      daily:       { color: '#8b5cf6', label: 'Daily Breakdown', emoji: '🥇' },
+      morning:     { color: '#f59e0b', label: 'Morning Open', emoji: '☀️' },
+      arabic:      { color: '#10b981', label: 'Arabic Edition', emoji: '🇦🇪' },
+      country:     { color: '#ef4444', label: 'Country Spotlight', emoji: '🌍' },
+      comparison:  { color: '#06b6d4', label: 'Karat Comparison', emoji: '📊' },
+      educational: { color: '#ec4899', label: 'Educational Fact', emoji: '💡' },
+      evening:     { color: '#6366f1', label: 'Evening Wrap-Up', emoji: '🌙' },
+      weekend:     { color: '#f97316', label: 'Weekend Edition', emoji: '🌅' },
+    };
+
+    /* ══════════════════════════════════════════════════════════════
+       SCHEDULE LOGIC
+       ══════════════════════════════════════════════════════════════ */
+
+    /** Get Dubai time from a Date */
+    function toDubai(d) {
+      const utcMs = d.getTime() + d.getTimezoneOffset() * 60000;
+      return new Date(utcMs + 4 * 3600000);
+    }
+
+    /** Pick template for a given UTC Date (mirrors scripts/tweet-gold-price.js) */
+    function pickTemplate(utcDate) {
+      const dubaiHour = (utcDate.getUTCHours() + 4) % 24;
+      const dubaiDate = new Date(utcDate.getTime() + 4 * 3600 * 1000);
+      const dayOfWeek = dubaiDate.getUTCDay();
+
+      if (dubaiHour === 0) return 'daily';
+      if (dubaiHour === 6) return 'morning';
+      if (dubaiHour === 8) return 'arabic';
+      if (dubaiHour === 10) return 'country';
+      if (dubaiHour === 14) return 'comparison';
+      if (dubaiHour === 16) return 'educational';
+      if (dubaiHour === 20) return 'evening';
+      if ((dayOfWeek === 5 || dayOfWeek === 6) && dubaiHour === 12) return 'weekend';
+      return 'hourly';
+    }
+
+    /** Get start of week (Sunday) for a given date */
+    function getWeekStart(d) {
+      const result = new Date(d);
+      result.setUTCDate(result.getUTCDate() - result.getUTCDay());
+      result.setUTCHours(0, 0, 0, 0);
+      return result;
+    }
+
+    let currentWeekOffset = 0;
+
+    function renderSchedule() {
+      const now = new Date();
+      const dubaiNow = toDubai(now);
+      const todayDubai = dubaiNow.getUTCDate();
+      const todayDubaiMonth = dubaiNow.getUTCMonth();
+
+      // Compute week start based on offset
+      const refDate = new Date(now);
+      refDate.setUTCDate(refDate.getUTCDate() + currentWeekOffset * 7);
+      const weekStart = getWeekStart(refDate);
+
+      // Week label
+      const weekEnd = new Date(weekStart);
+      weekEnd.setUTCDate(weekEnd.getUTCDate() + 6);
+      const fmt = (d) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      document.getElementById('week-label').textContent = `${fmt(weekStart)} — ${fmt(weekEnd)}, ${weekEnd.getUTCFullYear()}`;
+
+      // Day headers
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const dayDates = [];
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(weekStart);
+        d.setUTCDate(d.getUTCDate() + i);
+        dayDates.push(d);
+      }
+
+      // Determine today column
+      const todayColIdx = dayDates.findIndex(d =>
+        d.getUTCDate() === todayDubai && d.getUTCMonth() === todayDubaiMonth
+      );
+
+      // Time slots to show (Dubai hours with posts)
+      const showHours = [0, 6, 8, 10, 12, 14, 16, 20];
+
+      let html = '<div class="schedule-grid">';
+
+      // Header row
+      html += '<div class="sg-header">Dubai</div>';
+      for (let i = 0; i < 7; i++) {
+        const d = dayDates[i];
+        const isToday = i === todayColIdx;
+        const dayLabel = days[d.getUTCDay()];
+        const dateLabel = d.getUTCDate();
+        html += `<div class="sg-header${isToday ? ' today' : ''}">${dayLabel} ${dateLabel}</div>`;
+      }
+
+      // Data rows
+      for (const dubaiHour of showHours) {
+        const hourLabel = String(dubaiHour).padStart(2, '0') + ':00';
+        html += `<div class="sg-time">${hourLabel}</div>`;
+
+        for (let col = 0; col < 7; col++) {
+          const d = dayDates[col];
+          const isToday = col === todayColIdx;
+
+          // Create a UTC date for this slot
+          const utcHour = (dubaiHour - 4 + 24) % 24;
+          const slotDate = new Date(Date.UTC(
+            d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),
+            utcHour, 0, 0
+          ));
+          // If Dubai hour < 4, the UTC date is actually the previous day
+          if (dubaiHour < 4) {
+            slotDate.setUTCDate(slotDate.getUTCDate() + 1);
+          }
+
+          const templateId = pickTemplate(slotDate);
+          const info = TEMPLATE_INFO[templateId] || TEMPLATE_INFO.hourly;
+
+          // Check if this slot is in the past
+          const isPast = slotDate < now;
+          const opacity = isPast ? 'opacity:0.5;' : '';
+
+          html += `<div class="sg-cell${isToday ? ' today-col' : ''}">`
+            + `<div class="sg-chip t-${templateId}" style="${opacity}" `
+            + `data-slot-time="${slotDate.toISOString()}" data-template="${templateId}" `
+            + `title="${info.label} — ${hourLabel} Dubai">`
+            + `${info.emoji} ${info.label.split(' ')[0]}`
+            + `</div></div>`;
+        }
+      }
+
+      // Also show remaining hourly slots indicator
+      html += `<div class="sg-time" style="font-style:italic;color:var(--text-dim);">+16h</div>`;
+      for (let col = 0; col < 7; col++) {
+        const isToday = col === todayColIdx;
+        html += `<div class="sg-cell${isToday ? ' today-col' : ''}" style="color:var(--text-dim);font-size:0.6875rem;display:flex;align-items:center;justify-content:center;">Hourly ×16</div>`;
+      }
+
+      html += '</div>';
+      document.getElementById('schedule-container').innerHTML = html;
+
+      // Add click handlers to chips
+      document.querySelectorAll('.sg-chip').forEach(chip => {
+        chip.addEventListener('click', () => openPostModal(chip.dataset.template, chip.dataset.slotTime));
+      });
+
+      // Update stats
+      updateStats(dayDates, now);
+    }
+
+    function updateStats(dayDates, now) {
+      const dubaiNow = toDubai(now);
+      const dubaiHourNow = dubaiNow.getUTCHours();
+
+      // Posts today = hours elapsed + 1 (if past the hour)
+      document.getElementById('stat-today').textContent = String(dubaiHourNow + 1);
+
+      // Posts this week
+      const weekDayIdx = dubaiNow.getUTCDay();
+      const postsThisWeek = (weekDayIdx * 24) + dubaiHourNow + 1;
+      document.getElementById('stat-week').textContent = String(postsThisWeek);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       NEXT POST BANNER
+       ══════════════════════════════════════════════════════════════ */
+    function updateNextPost() {
+      const now = new Date();
+      const nextHourUtc = new Date(now);
+      nextHourUtc.setUTCMinutes(0, 0, 0);
+      nextHourUtc.setUTCHours(nextHourUtc.getUTCHours() + 1);
+
+      const templateId = pickTemplate(nextHourUtc);
+      const info = TEMPLATE_INFO[templateId] || TEMPLATE_INFO.hourly;
+
+      const dubaiTime = new Date(nextHourUtc.getTime() + 4 * 3600000);
+      const timeStr = dubaiTime.toLocaleTimeString('en-US', {
+        hour: '2-digit', minute: '2-digit', hour12: true
+      });
+
+      document.getElementById('next-post-time').textContent = `${timeStr} Dubai Time`;
+      document.getElementById('next-post-template').textContent = `${info.emoji} ${info.label}`;
+
+      // Countdown
+      const diff = nextHourUtc - now;
+      const mins = Math.floor(diff / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+      document.getElementById('next-post-countdown').textContent =
+        `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       POST DETAIL MODAL
+       ══════════════════════════════════════════════════════════════ */
+    let modalCurrentText = '';
+
+    function openPostModal(templateId, isoTime) {
+      const info = TEMPLATE_INFO[templateId] || TEMPLATE_INFO.hourly;
+      const slotDate = new Date(isoTime);
+      const dubaiTime = new Date(slotDate.getTime() + 4 * 3600000);
+
+      document.getElementById('modal-template-name').textContent = info.label;
+
+      const badge = document.getElementById('modal-badge');
+      badge.textContent = templateId;
+      badge.className = `modal-badge sg-chip t-${templateId}`;
+
+      const dayStr = dubaiTime.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+      const timeStr = dubaiTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      document.getElementById('modal-meta').textContent = `${dayStr} at ${timeStr} Dubai Time (UTC+4)`;
+
+      // Generate a sample post text
+      const sampleText = generateSampleTweet(templateId, slotDate);
+      modalCurrentText = sampleText;
+
+      document.getElementById('modal-preview-text').textContent = sampleText;
+      document.getElementById('modal-time').textContent = `${dayStr} · ${timeStr}`;
+
+      const charCount = [...sampleText].length;
+      const charEl = document.getElementById('modal-char-count');
+      charEl.textContent = `${charCount}/280 chars`;
+      charEl.className = charCount <= 280 ? '' : 'char-over';
+
+      document.getElementById('post-modal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('post-modal').classList.remove('open');
+    }
+
+    function generateSampleTweet(templateId, slotDate) {
+      // Use a representative price for preview
+      const spotUsd = 3250;
+      const prevClose = 3230;
+      const change = spotUsd - prevClose;
+      const changePct = (change / prevClose * 100);
+      const sign = change >= 0 ? '+' : '';
+
+      const k24aed = ((spotUsd / TROY_OZ) * 1.0 * AED_PEG).toFixed(2);
+      const k22aed = ((spotUsd / TROY_OZ) * (22/24) * AED_PEG).toFixed(2);
+      const k21aed = ((spotUsd / TROY_OZ) * (21/24) * AED_PEG).toFixed(2);
+      const k18aed = ((spotUsd / TROY_OZ) * (18/24) * AED_PEG).toFixed(2);
+
+      const dateStr = slotDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      const timeStr = new Date(slotDate.getTime() + 4*3600000).toLocaleTimeString('en-US', {
+        hour: '2-digit', minute: '2-digit', timeZone: 'UTC', hour12: true
+      });
+
+      const samples = {
+        hourly: `🥇 Gold Now (${timeStr} UAE) 📈\nSpot: $${spotUsd.toLocaleString()}/oz ${sign}${changePct.toFixed(2)}%\n24K: AED ${k24aed}/g\n22K: AED ${k22aed}/g\n21K: AED ${k21aed}/g\n📊 ${SITE_URL}\n#GoldPrice #Gold #UAE #Dubai`,
+        daily: `🥇 Gold Prices Today — ${dateStr}\n24K: $${spotUsd.toLocaleString()}/oz (${sign}${changePct.toFixed(2)}%)\n🇦🇪 UAE (AED/g):\n24K: ${k24aed} | 22K: ${k22aed}\n21K: ${k21aed} | 18K: ${k18aed}\n📈 ${SITE_URL}\n#GoldPrice #Gold #UAE #Dubai`,
+        morning: `☀️ Good Morning — Gold Opens ${dateStr}\nSpot: $${spotUsd.toLocaleString()}/oz 📈\nvs Yesterday: ${sign}$${change.toFixed(2)} (${sign}${changePct.toFixed(2)}%)\n🇦🇪 24K UAE: AED ${k24aed}/g\n🇦🇪 22K UAE: AED ${k22aed}/g\nTrack live → ${SITE_URL}\n#GoldPrice #GoldMarket #Dubai #GCC`,
+        arabic: `🥇 أسعار الذهب اليوم 📈\nعيار 24: ${k24aed} درهم/جرام\nعيار 22: ${k22aed} درهم/جرام\nعيار 21: ${k21aed} درهم/جرام\nعيار 18: ${k18aed} درهم/جرام\nالتغيير: ${sign}$${change.toFixed(2)} (${sign}${changePct.toFixed(2)}%)\n📊 ${SITE_URL}\n#سعر_الذهب #ذهب #الإمارات #دبي`,
+        country: `🇦🇪 Gold in UAE Today 📈\n\n24K: AED ${k24aed}/g\n22K: AED ${k22aed}/g\nSpot: $${spotUsd.toLocaleString()}/oz\nChange: ${sign}${changePct.toFixed(2)}%\n\nFull prices → ${SITE_URL}countries/uae.html\n#GoldPrice #UAE #Gold`,
+        comparison: `📊 Gold Karat Comparison Right Now\n\n24K: AED ${k24aed}/g ($${(spotUsd/TROY_OZ).toFixed(2)})\n22K: AED ${k22aed}/g\n21K: AED ${k21aed}/g\n18K: AED ${k18aed}/g\n\nSpot: $${spotUsd.toLocaleString()}/oz 📈\nCompare all → ${SITE_URL}tracker.html#mode=compare\n#GoldKarat #24KGold #22KGold #UAE`,
+        educational: `💡 Did you know? 24K gold is 99.9% pure, while 22K is 91.7% pure. The difference affects both price and durability.\n\nCurrent spot: $${spotUsd.toLocaleString()}/oz 📈\n🇦🇪 24K: AED ${k24aed}/g\n\nLearn more → ${SITE_URL}learn.html\n#GoldFacts #Gold #GoldPrice`,
+        evening: `🌙 Gold End of Day — ${dateStr}\nClose: $${spotUsd.toLocaleString()}/oz 📈\nOpen:  $${prevClose.toLocaleString()}/oz\nChange: ${sign}$${change.toFixed(2)} (${sign}${changePct.toFixed(2)}%)\n🇦🇪 24K Dubai: AED ${k24aed}/g\nCharts → ${SITE_URL}\n#GoldClose #GoldPrice #Dubai`,
+        weekend: `🌅 Weekend Gold Wrap-Up 📈\nCurrent: $${spotUsd.toLocaleString()}/oz\nToday:   ${sign}$${change.toFixed(2)} (${sign}${changePct.toFixed(2)}%)\n🇦🇪 24K: AED ${k24aed}/g | 22K: AED ${k22aed}/g\n📊 ${SITE_URL}\n#GoldWeekend #GoldPrice #GCC`,
+      };
+
+      return samples[templateId] || samples.hourly;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       TEMPLATES TAB
+       ══════════════════════════════════════════════════════════════ */
+    function renderTemplates() {
+      const uniqueTemplates = [
+        { id: 'hourly', hours: 'All other hours (1-5, 7, 9, 11, 13, 15, 17-19, 21-23)' },
+        { id: 'daily', hours: '00:00 Dubai (Midnight)' },
+        { id: 'morning', hours: '06:00 Dubai' },
+        { id: 'arabic', hours: '08:00 Dubai' },
+        { id: 'country', hours: '10:00 Dubai' },
+        { id: 'comparison', hours: '14:00 Dubai' },
+        { id: 'educational', hours: '16:00 Dubai' },
+        { id: 'evening', hours: '20:00 Dubai' },
+        { id: 'weekend', hours: '12:00 Dubai (Fri & Sat only)' },
+      ];
+
+      const container = document.getElementById('templates-list');
+      container.innerHTML = uniqueTemplates.map(t => {
+        const info = TEMPLATE_INFO[t.id];
+        const sample = generateSampleTweet(t.id, new Date());
+        const charCount = [...sample].length;
+        const charClass = charCount <= 240 ? 'char-ok' : charCount <= 280 ? 'char-warn' : 'char-over';
+
+        return `<div class="card" style="margin-bottom:12px;border-left:3px solid ${info.color};">
+          <div class="card-body" style="padding:16px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+              <span style="font-size:1.25rem;">${info.emoji}</span>
+              <strong style="font-size:0.9375rem;">${info.label}</strong>
+              <span class="sg-chip t-${t.id}" style="font-size:0.6875rem;">${t.id}</span>
+              <span class="char-badge ${charClass}">${charCount} chars</span>
+              <span style="color:var(--text-dim);font-size:0.75rem;margin-left:auto;">🕐 ${t.hours}</span>
+            </div>
+            <div style="background:#15202b;border:1px solid #2d3e50;border-radius:8px;padding:12px;color:#e8e8f0;font-size:0.8125rem;line-height:1.6;white-space:pre-wrap;word-break:break-word;max-height:180px;overflow-y:auto;">${escapeHtml(sample)}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       POST GENERATOR (from original social page)
+       ══════════════════════════════════════════════════════════════ */
+
     const DAILY_UPDATE_EN =
       `🥇 Gold Prices — {DAY}, {DATE}\n\n24K: \${P24}/oz ({D24})\n22K: \${P22}/oz\n21K: \${P21}/oz\n18K: \${P18}/oz\n\n🇦🇪 UAE (AED per gram):\n24K: {A24} • 22K: {A22}\n21K: {A21} • 18K: {A18}\n\n{TREND_EMOJI} {TREND_LINE}\n\n📊 Live prices → goldprices.ae\n#GoldPrice #Gold #UAE`;
 
@@ -372,12 +1209,10 @@
 
     const UAE_FOCUSED_AR = DAILY_UPDATE_AR;
 
-    /* ── State ──────────────────────────────────────────────── */
     let currentPlatform = 'twitter';
     let currentText = '';
     let clearHistoryPending = false;
 
-    /* ── Utilities ──────────────────────────────────────────── */
     function formatPrice(n, decimals = 2) {
       return Number(n).toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
     }
@@ -410,7 +1245,6 @@
       return tmpl.replace(/\{([A-Z0-9_]+)\}/g, (_, key) => vars[key] !== undefined ? vars[key] : `{${key}}`);
     }
 
-    /* ── Cache / fetch ──────────────────────────────────────── */
     function getCachedPrice() {
       try {
         const raw = localStorage.getItem(CACHE_KEY);
@@ -440,7 +1274,6 @@
       return { price, prev, ts: Date.now() };
     }
 
-    /* ── Build post ─────────────────────────────────────────── */
     function buildPost(templateId, lang, spotUsd, prevUsd) {
       const prices = calcPrices(spotUsd);
       const { day, date, dateAr } = getDatePlaceholders();
@@ -470,12 +1303,10 @@
         DELTA_PCT: deltaPct,
         AED24: prices.A24,
         D24: deltaSigned,
-        // Weekly (use deltas as proxy)
         WEEK_DELTA: deltaSigned,
         WEEK_PCT: deltaPct,
         HIGH: formatPrice(Math.max(spotUsd, prevUsd)),
         LOW: formatPrice(Math.min(spotUsd, prevUsd)),
-        // Milestone
         MILESTONE: spotUsd > 3000 ? formatPrice(Math.floor(spotUsd / 500) * 500) : '3000',
       };
 
@@ -506,9 +1337,9 @@
       saveHistory(history.slice(0, 50));
     }
 
-    const TEMPLATE_LABELS = {
+    const GEN_TEMPLATE_LABELS = {
       daily_update: 'Daily Update', price_alert: 'Price Alert',
-      weekly_summary: 'Weekly Summary', milestone: 'Milestone', uae_ar: 'UAE (Arabic)',
+      weekly_summary: 'Weekly Summary', milestone: 'Milestone', uae_ar: 'UAE (Arabic)', custom: 'Custom',
     };
 
     function renderHistory() {
@@ -517,7 +1348,7 @@
       clearHistoryPending = false;
 
       if (history.length === 0) {
-        container.innerHTML = `<div class="empty-state">No posts generated yet.</div>`;
+        container.innerHTML = `<div class="empty-state">No posts generated yet. Use the Post Generator tab to create posts.</div>`;
         return;
       }
 
@@ -529,9 +1360,9 @@
           : '<span class="event-badge badge-en">EN</span>';
         return `<tr>
           <td style="white-space:nowrap;color:var(--text-dim);font-size:0.8125rem;">${ts}</td>
-          <td>${TEMPLATE_LABELS[e.template] || e.template}</td>
+          <td>${GEN_TEMPLATE_LABELS[e.template] || e.template}</td>
           <td>${langBadge} <span style="color:var(--text-dim);font-size:0.8125rem;">${e.platform || ''}</span></td>
-          <td class="history-text-preview" title="${e.text.replace(/"/g,'&quot;')}">${preview}</td>
+          <td class="history-text-preview" title="${escapeHtml(e.text || '')}">${escapeHtml(preview)}</td>
           <td><button class="btn btn-ghost btn-sm" data-reuse="${i}" type="button">Re-use</button></td>
         </tr>`;
       }).join('');
@@ -539,7 +1370,7 @@
       container.innerHTML = `<div style="overflow-x:auto;">
         <table class="table">
           <thead><tr>
-            <th>Date</th><th>Template</th><th>Language / Platform</th><th>Preview</th><th></th>
+            <th>Date</th><th>Template</th><th>Language</th><th>Preview</th><th></th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>
@@ -550,6 +1381,8 @@
           const idx = parseInt(btn.dataset.reuse, 10);
           const entry = loadHistory()[idx];
           if (!entry) return;
+          // Switch to generator tab and display
+          switchTab('generator');
           displayPost(entry.text, entry.platform || currentPlatform);
         });
       });
@@ -565,10 +1398,9 @@
 
       const counterEl = document.getElementById('char-counter');
       const warnEl = document.getElementById('char-limit-warn');
-      counterEl.textContent = `${text.length} / ${limit}`;
-      counterEl.classList.toggle('over-limit', text.length > limit);
-      warnEl.classList.toggle('visible', text.length > limit);
-
+      counterEl.textContent = `${[...text].length} / ${limit}`;
+      counterEl.classList.toggle('over-limit', [...text].length > limit);
+      warnEl.classList.toggle('visible', [...text].length > limit);
       document.getElementById('char-limit-label').textContent = PLATFORM_LABELS[platform] || '';
 
       document.getElementById('copy-btn').disabled = false;
@@ -584,9 +1416,9 @@
       if (currentText) {
         const counterEl = document.getElementById('char-counter');
         const warnEl = document.getElementById('char-limit-warn');
-        counterEl.textContent = `${currentText.length} / ${limit}`;
-        counterEl.classList.toggle('over-limit', currentText.length > limit);
-        warnEl.classList.toggle('visible', currentText.length > limit);
+        counterEl.textContent = `${[...currentText].length} / ${limit}`;
+        counterEl.classList.toggle('over-limit', [...currentText].length > limit);
+        warnEl.classList.toggle('visible', [...currentText].length > limit);
         document.getElementById('char-limit-label').textContent = PLATFORM_LABELS[platform] || '';
       }
       document.getElementById('custom-char-limit').textContent = String(limit);
@@ -656,11 +1488,23 @@
       };
       addToHistory(entry);
       renderHistory();
-
-      try { logActivity('social_post', `${customText ? 'custom' : templateId} ${lang}`); } catch {}
     }
 
-    /* ── Init ───────────────────────────────────────────────── */
+    /* ══════════════════════════════════════════════════════════════
+       TAB SWITCHING
+       ══════════════════════════════════════════════════════════════ */
+    function switchTab(tabId) {
+      document.querySelectorAll('.page-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.tab === tabId);
+      });
+      document.querySelectorAll('.tab-panel').forEach(p => {
+        p.classList.toggle('active', p.id === `panel-${tabId}`);
+      });
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       INIT
+       ══════════════════════════════════════════════════════════════ */
     function init() {
       // Sidebar toggle
       const sidebar = document.getElementById('sidebar');
@@ -675,14 +1519,14 @@
       });
 
       // Logout
-      document.getElementById('logout-btn').addEventListener('click', () => {
-        logout();
+      document.getElementById('logout-btn').addEventListener('click', async () => {
+        await logout();
         window.location.replace('../login/');
       });
 
-      // Active nav link
-      document.querySelectorAll('.nav-link').forEach(a => {
-        if (location.href.includes(a.href.split('/Gold-Prices').pop())) a.classList.add('active');
+      // Page tabs
+      document.querySelectorAll('.page-tab').forEach(tab => {
+        tab.addEventListener('click', () => switchTab(tab.dataset.tab));
       });
 
       // Platform tabs
@@ -773,8 +1617,45 @@
         document.getElementById('custom-char-count').textContent = String(len);
       });
 
+      // Modal
+      document.getElementById('modal-close').addEventListener('click', closeModal);
+      document.getElementById('post-modal').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('post-modal')) closeModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+      });
+
+      document.getElementById('modal-copy-btn').addEventListener('click', async () => {
+        if (!modalCurrentText) return;
+        try {
+          await navigator.clipboard.writeText(modalCurrentText);
+          showToast('Post copied to clipboard!', 'success');
+        } catch {
+          showToast('Could not access clipboard.', 'error');
+        }
+      });
+
+      document.getElementById('modal-open-x-btn').addEventListener('click', () => {
+        if (!modalCurrentText) return;
+        window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(modalCurrentText), '_blank', 'noopener');
+      });
+
+      // Week navigation
+      document.getElementById('prev-week').addEventListener('click', () => { currentWeekOffset--; renderSchedule(); });
+      document.getElementById('next-week').addEventListener('click', () => { currentWeekOffset++; renderSchedule(); });
+      document.getElementById('today-btn').addEventListener('click', () => { currentWeekOffset = 0; renderSchedule(); });
+
       updatePlatformButtons('twitter');
+
+      // Render everything
+      renderSchedule();
+      renderTemplates();
       renderHistory();
+      updateNextPost();
+
+      // Update countdown every second
+      setInterval(updateNextPost, 1000);
     }
 
     init();
