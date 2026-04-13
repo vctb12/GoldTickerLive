@@ -192,6 +192,19 @@
       padding: 10px 14px;
     }
 
+    /* ── Pagination ─────────────────────────────────────────── */
+    .pagination {
+      align-items: center;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .page-info {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
     /* ── Section heading ────────────────────────────────────── */
     .section-heading {
       align-items: center;
@@ -209,8 +222,8 @@
 </head>
 <body>
 
-  <!-- Auth guard: redirect to login if no valid session -->
-  <script>(function(){try{var s=JSON.parse(localStorage.getItem('gp_admin_session'));if(!s||s.expires<Date.now())window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
+  <!-- Auth guard: redirect to login if no token -->
+  <script>(function(){try{if(!localStorage.getItem('gp_admin_token'))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
 
   <!-- Sidebar overlay (mobile) -->
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
@@ -252,6 +265,12 @@
 
       <!-- Content -->
       <main class="content-area">
+
+        <!-- ── Offline banner ──────────────────────────────── -->
+        <div class="offline-banner hidden" id="offline-banner" role="alert">
+          <span>⚠️</span>
+          <span>Admin server is offline. Make sure <code>npm start</code> is running.</span>
+        </div>
 
         <!-- ── Stats ────────────────────────────────────────── -->
         <div class="stat-grid" role="list" aria-label="Shop statistics">
@@ -349,6 +368,13 @@
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <!-- ── Pagination ────────────────────────────────────── -->
+        <div class="pagination hidden" id="pagination" role="navigation" aria-label="Shops pagination">
+          <button class="btn btn-ghost btn-sm" id="page-prev" type="button" aria-label="Previous page">‹ Prev</button>
+          <span class="page-info" id="page-info"></span>
+          <button class="btn btn-ghost btn-sm" id="page-next" type="button" aria-label="Next page">Next ›</button>
         </div>
 
       </main>
@@ -523,12 +549,12 @@
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
   <script type="module">
-    import { isAuthenticated, logActivity, logout } from '../auth.js';
+    import { logout, getShops, createShop, updateShop, deleteShop, getStats } from '../api-client.js';
 
     /* ─────────────────────────────────────────────────────────
        Config
     ───────────────────────────────────────────────────────── */
-    const LS_KEY = 'gp_shops';
+    const PAGE_SIZE = 25;
 
     const COUNTRIES = {
       AE:'🇦🇪 UAE', SA:'🇸🇦 Saudi Arabia', KW:'🇰🇼 Kuwait',
@@ -539,47 +565,26 @@
     };
 
     /* ─────────────────────────────────────────────────────────
-       Data helpers
+       State
     ───────────────────────────────────────────────────────── */
-    function loadShops() {
-      try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; }
-      catch { return []; }
-    }
-    function saveShops(shops) {
-      localStorage.setItem(LS_KEY, JSON.stringify(shops));
-    }
-    function addShop(data) {
-      const shops = loadShops();
-      const shop = {
-        name: '', nameAr: '', country: 'AE', city: '', area: '',
-        address: '', addressAr: '', phone: '', website: '',
-        coordinates: { lat: null, lng: null }, hours: '',
-        rating: null, verified: false, featured: false, tags: [],
-        notes: '',
-        ...data,
-        id: 'shop_' + Date.now(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      shops.push(shop);
-      saveShops(shops);
-      logActivity('shop_add', { shopId: shop.id, name: shop.name });
-      return shop;
-    }
-    function updateShop(id, data) {
-      const shops = loadShops();
-      const idx = shops.findIndex(s => s.id === id);
-      if (idx === -1) return null;
-      shops[idx] = { ...shops[idx], ...data, id, updatedAt: new Date().toISOString() };
-      saveShops(shops);
-      logActivity('shop_update', { shopId: id, name: shops[idx].name });
-      return shops[idx];
-    }
-    function deleteShop(id) {
-      const shops = loadShops().filter(s => s.id !== id);
-      saveShops(shops);
-      logActivity('shop_delete', { shopId: id });
-    }
+    let currentPage    = 1;
+    let totalPages     = 1;
+    let totalShops     = 0;
+    let deleteTargetId = null;
+    let isLoading      = false;
+
+    /* ─────────────────────────────────────────────────────────
+       Offline / forbidden events
+    ───────────────────────────────────────────────────────── */
+    document.addEventListener('admin:offline', () => {
+      document.getElementById('offline-banner')?.classList.remove('hidden');
+    });
+    document.addEventListener('admin:online', () => {
+      document.getElementById('offline-banner')?.classList.add('hidden');
+    });
+    document.addEventListener('admin:forbidden', () => {
+      showToast('Insufficient permissions.', 'danger');
+    });
 
     /* ─────────────────────────────────────────────────────────
        Toast
@@ -598,15 +603,19 @@
     }
 
     /* ─────────────────────────────────────────────────────────
-       Stats
+       Stats (from API)
     ───────────────────────────────────────────────────────── */
-    function updateStats() {
-      const shops = loadShops();
-      const today = new Date().toISOString().slice(0, 10);
-      document.getElementById('stat-total').textContent = shops.length;
-      document.getElementById('stat-verified').textContent = shops.filter(s => s.verified).length;
-      document.getElementById('stat-featured').textContent = shops.filter(s => s.featured).length;
-      document.getElementById('stat-today').textContent = shops.filter(s => (s.updatedAt || '').startsWith(today)).length;
+    async function updateStats() {
+      try {
+        const data = await getStats();
+        if (data.success && data.stats?.shops) {
+          const { total, verified, featured } = data.stats.shops;
+          document.getElementById('stat-total').textContent    = total ?? '—';
+          document.getElementById('stat-verified').textContent = verified ?? '—';
+          document.getElementById('stat-featured').textContent = featured ?? '—';
+          document.getElementById('stat-today').textContent    = data.stats.shops.updatedToday ?? '—';
+        }
+      } catch {}
     }
 
     /* ─────────────────────────────────────────────────────────
@@ -622,47 +631,68 @@
     }
 
     /* ─────────────────────────────────────────────────────────
-       Filter / sort / render
+       Fetch + render table
     ───────────────────────────────────────────────────────── */
-    let deleteTargetId = null;
+    async function renderTable(page = currentPage) {
+      if (isLoading) return;
+      isLoading = true;
 
-    function getFiltered() {
-      const q = (document.getElementById('search-input').value || '').toLowerCase();
-      const country = document.getElementById('filter-country').value;
+      const tbody = document.getElementById('shops-tbody');
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:32px">
+        <span class="inline-spinner" aria-hidden="true"></span> Loading…
+      </td></tr>`;
+
+      const q        = (document.getElementById('search-input').value || '').trim();
+      const country  = document.getElementById('filter-country').value;
       const verified = document.getElementById('filter-verified').value;
-      const sort = document.getElementById('sort-select').value;
+      const sortVal  = document.getElementById('sort-select').value;
 
-      let shops = loadShops();
+      // Map sort-select values to API params
+      const sortMap = {
+        name_asc:  { sortBy: 'name',       sortDesc: false },
+        name_desc: { sortBy: 'name',       sortDesc: true  },
+        country:   { sortBy: 'country',    sortDesc: false },
+        recent:    { sortBy: 'created_at', sortDesc: true  },
+      };
+      const sortOpts = sortMap[sortVal] || {};
 
-      if (q) shops = shops.filter(s =>
-        (s.name || '').toLowerCase().includes(q) ||
-        (s.nameAr || '').includes(q) ||
-        (s.city || '').toLowerCase().includes(q) ||
-        (s.country || '').toLowerCase().includes(q) ||
-        (COUNTRIES[s.country] || '').toLowerCase().includes(q)
-      );
-      if (country) shops = shops.filter(s => s.country === country);
-      if (verified === 'verified') shops = shops.filter(s => s.verified);
-      if (verified === 'unverified') shops = shops.filter(s => !s.verified);
+      const opts = {
+        page,
+        limit: PAGE_SIZE,
+        ...(q ? { search: q } : {}),
+        ...(country ? { country } : {}),
+        ...(verified === 'verified' ? { status: 'active' } : {}),
+        ...sortOpts,
+      };
 
-      if (sort === 'name_asc')   shops.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-      if (sort === 'name_desc')  shops.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
-      if (sort === 'country')    shops.sort((a, b) => (a.country || '').localeCompare(b.country || ''));
-      if (sort === 'recent')     shops.sort((a, b) => (b.createdAt || '') > (a.createdAt || '') ? 1 : -1);
+      try {
+        const data = await getShops(opts);
+        currentPage = data.page || page;
+        totalPages  = data.totalPages || 1;
+        totalShops  = data.total || 0;
 
-      return shops;
+        document.getElementById('result-count').textContent =
+          `${totalShops} shop${totalShops !== 1 ? 's' : ''}`;
+
+        renderShops(data.shops || []);
+        updatePagination();
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">
+          ❌ Failed to load shops.<br><span style="font-size:0.8rem">${err.message || 'Server error'}</span>
+        </div></td></tr>`;
+        document.getElementById('result-count').textContent = '';
+        document.getElementById('pagination')?.classList.add('hidden');
+      } finally {
+        isLoading = false;
+      }
     }
 
-    function renderTable() {
-      const shops = getFiltered();
+    function renderShops(shops) {
       const tbody = document.getElementById('shops-tbody');
-      document.getElementById('result-count').textContent = `${shops.length} shop${shops.length !== 1 ? 's' : ''}`;
-
       if (shops.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">🏪 No shops found.<p>Add your first shop or import JSON.</p></div></td></tr>`;
         return;
       }
-
       tbody.innerHTML = shops.map(s => {
         const nameDisplay = (s.name || '').length > 30
           ? (s.name || '').slice(0, 30) + '…'
@@ -670,26 +700,32 @@
         const country = COUNTRIES[s.country] || s.country || '—';
         const cityArea = [s.city, s.area].filter(Boolean).join(' · ') || '—';
 
-        const verifiedBadge = s.verified
+        // API returns `verified` (bool) OR `status === 'active'` depending on backend.
+        const isVerified = s.verified || s.status === 'active';
+        const isFeatured = !!s.featured;
+        const verifiedBadge = isVerified
           ? `<span class="badge badge-success">✓ Verified</span>`
           : `<span class="badge badge-neutral">Unverified</span>`;
-        const featuredBadge = s.featured
+        const featuredBadge = isFeatured
           ? `<span class="badge badge-warning" style="margin-left:4px">★ Featured</span>`
           : '';
 
-        const isDeleting = deleteTargetId === s.id;
+        // API may return `id`, `_id`, or `shopId` depending on storage backend.
+        const id = s.id || s._id || s.shopId;
+        const isDeleting = deleteTargetId === id;
         const actions = isDeleting
           ? `<div class="delete-confirm" onclick="event.stopPropagation()">
                <span>Delete "${nameDisplay}"?</span>
-               <button class="btn btn-danger btn-sm" data-action="delete-confirm" data-id="${s.id}" type="button">Confirm</button>
+               <button class="btn btn-danger btn-sm" data-action="delete-confirm" data-id="${id}" type="button">Confirm</button>
                <button class="btn btn-ghost btn-sm" data-action="delete-cancel" type="button">Cancel</button>
              </div>`
           : `<div class="row-actions" onclick="event.stopPropagation()">
-               <button class="btn-icon" data-action="edit" data-id="${s.id}" title="Edit shop" type="button" aria-label="Edit ${nameDisplay}">✏️</button>
-               <button class="btn-icon btn-icon-danger" data-action="delete" data-id="${s.id}" title="Delete shop" type="button" aria-label="Delete ${nameDisplay}">🗑️</button>
+               <button class="btn-icon" data-action="edit" data-id="${id}" title="Edit shop" type="button" aria-label="Edit ${nameDisplay}">✏️</button>
+               <button class="btn-icon btn-icon-danger" data-action="delete" data-id="${id}" title="Delete shop" type="button" aria-label="Delete ${nameDisplay}">🗑️</button>
              </div>`;
 
-        return `<tr data-id="${s.id}" data-action="row-edit">
+        const ratingVal = s.rating ?? s.confidenceScore ?? null;
+        return `<tr data-id="${id}" data-action="row-edit">
           <td>
             <div class="shop-name-cell">
               <span class="shop-name-primary">${nameDisplay}</span>
@@ -698,22 +734,40 @@
           </td>
           <td>${cityArea}</td>
           <td>${s.phone ? `<a href="tel:${s.phone}" onclick="event.stopPropagation()">${s.phone}</a>` : '—'}</td>
-          <td>${renderStars(s.rating)}</td>
+          <td>${renderStars(ratingVal)}</td>
           <td>${verifiedBadge}${featuredBadge}</td>
           <td>${actions}</td>
         </tr>`;
       }).join('');
     }
 
+    function updatePagination() {
+      const pag     = document.getElementById('pagination');
+      const prev    = document.getElementById('page-prev');
+      const next    = document.getElementById('page-next');
+      const info    = document.getElementById('page-info');
+      if (totalPages <= 1) {
+        pag?.classList.add('hidden');
+        return;
+      }
+      pag?.classList.remove('hidden');
+      info.textContent = `Page ${currentPage} of ${totalPages}`;
+      if (prev) prev.disabled = currentPage <= 1;
+      if (next) next.disabled = currentPage >= totalPages;
+    }
+
     /* ─────────────────────────────────────────────────────────
        Modal helpers
     ───────────────────────────────────────────────────────── */
+    // Cache for currently editing shop object (from API)
+    let editingShop = null;
+
     function openModal(shop = null) {
+      editingShop = shop;
       const modal = document.getElementById('shop-modal');
       const title = document.getElementById('modal-title');
       title.textContent = shop ? 'Edit Shop' : 'Add Shop';
 
-      // reset tabs
       document.querySelectorAll('.modal-tab').forEach(t => {
         t.classList.toggle('active', t.dataset.tab === 'basic');
         t.setAttribute('aria-selected', t.dataset.tab === 'basic' ? 'true' : 'false');
@@ -722,95 +776,94 @@
         p.classList.toggle('active', p.id === 'tab-basic');
       });
 
-      // populate
-      document.getElementById('edit-id').value = shop ? shop.id : '';
-      document.getElementById('f-name').value = shop ? (shop.name || '') : '';
-      document.getElementById('f-name-ar').value = shop ? (shop.nameAr || '') : '';
-      document.getElementById('f-country').value = shop ? (shop.country || 'AE') : 'AE';
-      document.getElementById('f-city').value = shop ? (shop.city || '') : '';
-      document.getElementById('f-area').value = shop ? (shop.area || '') : '';
-      document.getElementById('f-verified').checked = shop ? !!shop.verified : false;
+      document.getElementById('edit-id').value    = shop ? (shop.id || shop._id || shop.shopId || '') : '';
+      document.getElementById('f-name').value     = shop ? (shop.name || '') : '';
+      document.getElementById('f-name-ar').value  = shop ? (shop.nameAr || '') : '';
+      document.getElementById('f-country').value  = shop ? (shop.country || 'AE') : 'AE';
+      document.getElementById('f-city').value     = shop ? (shop.city || '') : '';
+      document.getElementById('f-area').value     = shop ? (shop.area || '') : '';
+      document.getElementById('f-verified').checked = shop ? !!(shop.verified || shop.status === 'active') : false;
       document.getElementById('f-featured').checked = shop ? !!shop.featured : false;
-      document.getElementById('f-address').value = shop ? (shop.address || '') : '';
+      document.getElementById('f-address').value  = shop ? (shop.address || '') : '';
       document.getElementById('f-address-ar').value = shop ? (shop.addressAr || '') : '';
-      document.getElementById('f-lat').value = shop && shop.coordinates ? (shop.coordinates.lat || '') : '';
-      document.getElementById('f-lng').value = shop && shop.coordinates ? (shop.coordinates.lng || '') : '';
-      document.getElementById('f-hours').value = shop ? (shop.hours || '') : '';
-      document.getElementById('f-phone').value = shop ? (shop.phone || '') : '';
+      document.getElementById('f-lat').value = shop ? (shop.latitude ?? shop.coordinates?.lat ?? '') : '';
+      document.getElementById('f-lng').value = shop ? (shop.longitude ?? shop.coordinates?.lng ?? '') : '';
+      document.getElementById('f-hours').value   = shop ? (shop.hours || '') : '';
+      document.getElementById('f-phone').value   = shop ? (shop.phone || '') : '';
       document.getElementById('f-website').value = shop ? (shop.website || '') : '';
-      document.getElementById('f-rating').value = shop && shop.rating != null ? shop.rating : '';
-      document.getElementById('f-tags').value = shop && Array.isArray(shop.tags) ? shop.tags.join(', ') : '';
-      document.getElementById('f-notes').value = shop ? (shop.notes || '') : '';
+      document.getElementById('f-rating').value  = shop && shop.rating != null ? shop.rating : '';
+      document.getElementById('f-tags').value    = shop && Array.isArray(shop.tags) ? shop.tags.join(', ') : '';
+      document.getElementById('f-notes').value   = shop ? (shop.notes || shop.description || '') : '';
 
-      // hide name error
       document.getElementById('f-name-err').classList.add('hidden');
-
       modal.classList.remove('hidden');
       document.getElementById('f-name').focus();
     }
 
     function closeModal() {
       document.getElementById('shop-modal').classList.add('hidden');
+      editingShop = null;
     }
 
     function getFormData() {
       const lat = parseFloat(document.getElementById('f-lat').value);
       const lng = parseFloat(document.getElementById('f-lng').value);
       const ratingVal = document.getElementById('f-rating').value;
-      const tagsRaw = document.getElementById('f-tags').value;
+      const tagsRaw   = document.getElementById('f-tags').value;
       return {
-        name: document.getElementById('f-name').value.trim(),
-        nameAr: document.getElementById('f-name-ar').value.trim(),
-        country: document.getElementById('f-country').value,
-        city: document.getElementById('f-city').value.trim(),
-        area: document.getElementById('f-area').value.trim(),
+        name:     document.getElementById('f-name').value.trim(),
+        nameAr:   document.getElementById('f-name-ar').value.trim(),
+        country:  document.getElementById('f-country').value,
+        city:     document.getElementById('f-city').value.trim(),
+        area:     document.getElementById('f-area').value.trim(),
         verified: document.getElementById('f-verified').checked,
         featured: document.getElementById('f-featured').checked,
-        address: document.getElementById('f-address').value.trim(),
+        address:  document.getElementById('f-address').value.trim(),
         addressAr: document.getElementById('f-address-ar').value.trim(),
-        coordinates: {
-          lat: isNaN(lat) ? null : lat,
-          lng: isNaN(lng) ? null : lng,
-        },
-        hours: document.getElementById('f-hours').value.trim(),
-        phone: document.getElementById('f-phone').value.trim(),
-        website: document.getElementById('f-website').value.trim(),
-        rating: ratingVal ? parseFloat(ratingVal) : null,
-        tags: tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [],
-        notes: document.getElementById('f-notes').value.trim(),
+        latitude:  isNaN(lat) ? null : lat,
+        longitude: isNaN(lng) ? null : lng,
+        hours:     document.getElementById('f-hours').value.trim(),
+        phone:     document.getElementById('f-phone').value.trim(),
+        website:   document.getElementById('f-website').value.trim(),
+        rating:    ratingVal ? parseFloat(ratingVal) : null,
+        tags:      tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [],
+        description: document.getElementById('f-notes').value.trim(),
       };
     }
 
     /* ─────────────────────────────────────────────────────────
-       Export CSV
+       Export CSV (from API data)
     ───────────────────────────────────────────────────────── */
-    function exportCSV() {
-      const shops = loadShops();
-      if (shops.length === 0) { showToast('No shops to export.', 'warning'); return; }
-      const headers = ['id','name','nameAr','country','city','area','address','addressAr',
-        'phone','website','lat','lng','hours','rating','verified','featured','tags','notes','createdAt','updatedAt'];
-      const rows = shops.map(s => [
-        s.id, s.name, s.nameAr, s.country, s.city, s.area, s.address, s.addressAr,
-        s.phone, s.website,
-        s.coordinates?.lat ?? '', s.coordinates?.lng ?? '',
-        s.hours, s.rating ?? '', s.verified ? '1' : '0', s.featured ? '1' : '0',
-        (s.tags || []).join('|'), s.notes, s.createdAt, s.updatedAt,
-      ].map(v => `"${String(v ?? '').replace(/"/g, '""')}"`));
-      const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `shops-${new Date().toISOString().slice(0,10)}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-      showToast(`Exported ${shops.length} shops.`, 'success');
+    async function exportCSV() {
+      try {
+        showToast('Preparing export…', 'info');
+        const data = await getShops({ limit: 1000 });
+        const shops = data.shops || [];
+        if (shops.length === 0) { showToast('No shops to export.', 'warning'); return; }
+        const headers = ['id','name','country','city','address','phone','website',
+          'latitude','longitude','hours','rating','verified','featured','tags','description','createdAt','updatedAt'];
+        const rows = shops.map(s => headers.map(h => {
+          let v = s[h] ?? '';
+          if (Array.isArray(v)) v = v.join('|');
+          const str = String(v).replace(/"/g, '""');
+          return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str}"` : str;
+        }));
+        const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href = url; a.download = `shops-${new Date().toISOString().slice(0,10)}.csv`; a.click();
+        URL.revokeObjectURL(url);
+        showToast(`Exported ${shops.length} shops.`, 'success');
+      } catch (err) {
+        showToast('Export failed: ' + (err.message || 'server error'), 'danger');
+      }
     }
 
     /* ─────────────────────────────────────────────────────────
-       Import JSON
+       Import JSON (POST each shop to API)
     ───────────────────────────────────────────────────────── */
-    function runImport() {
+    async function runImport() {
       const raw = document.getElementById('import-textarea').value.trim();
       const resultEl = document.getElementById('import-result');
       let parsed;
@@ -825,18 +878,29 @@
         resultEl.innerHTML = '<span class="text-danger">❌ Expected a JSON array (e.g. [{…}, {…}]).</span>';
         return;
       }
-      let imported = 0, errors = 0;
-      parsed.forEach(item => {
-        if (!item || typeof item !== 'object' || !item.name || !item.name.trim()) { errors++; return; }
-        addShop(item);
-        imported++;
-      });
+      const confirmBtn = document.getElementById('import-confirm');
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Importing…';
       resultEl.classList.remove('hidden');
+      resultEl.innerHTML = '<span class="text-dim">Importing…</span>';
+
+      let imported = 0, errors = 0;
+      for (const item of parsed) {
+        if (!item || typeof item !== 'object' || !item.name?.trim()) { errors++; continue; }
+        try {
+          await createShop(item);
+          imported++;
+        } catch {
+          errors++;
+        }
+      }
       resultEl.innerHTML = `<span class="${imported > 0 ? 'text-success' : 'text-warning'}">
         Imported <strong>${imported}</strong> shop${imported !== 1 ? 's' : ''}, <strong>${errors}</strong> error${errors !== 1 ? 's' : ''}.
       </span>`;
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = 'Import';
       if (imported > 0) {
-        renderTable();
+        await renderTable(1);
         updateStats();
         showToast(`Imported ${imported} shop${imported !== 1 ? 's' : ''}.`, 'success');
       }
@@ -879,11 +943,11 @@
       });
 
       // Search / filter — debounced
-      const rerender = debounce(() => renderTable(), 200);
+      const rerender = debounce(() => renderTable(1), 300);
       document.getElementById('search-input').addEventListener('input', rerender);
-      document.getElementById('filter-country').addEventListener('change', () => renderTable());
-      document.getElementById('filter-verified').addEventListener('change', () => renderTable());
-      document.getElementById('sort-select').addEventListener('change', () => renderTable());
+      document.getElementById('filter-country').addEventListener('change', () => renderTable(1));
+      document.getElementById('filter-verified').addEventListener('change', () => renderTable(1));
+      document.getElementById('sort-select').addEventListener('change', () => renderTable(1));
 
       // Add buttons
       document.getElementById('add-btn').addEventListener('click', () => openModal(null));
@@ -930,7 +994,7 @@
       });
 
       // Modal save
-      document.getElementById('modal-save').addEventListener('click', () => {
+      document.getElementById('modal-save').addEventListener('click', async () => {
         const data = getFormData();
         const nameErr = document.getElementById('f-name-err');
         if (!data.name) {
@@ -939,69 +1003,92 @@
           return;
         }
         nameErr.classList.add('hidden');
+
+        const saveBtn = document.getElementById('modal-save');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving…';
+
         const id = document.getElementById('edit-id').value;
-        if (id) {
-          updateShop(id, data);
-          showToast(`Shop "${data.name}" updated.`, 'success');
-        } else {
-          addShop(data);
-          showToast(`Shop "${data.name}" added.`, 'success');
+        try {
+          if (id) {
+            await updateShop(id, data);
+            showToast(`Shop "${data.name}" updated.`, 'success');
+          } else {
+            await createShop(data);
+            showToast(`Shop "${data.name}" added.`, 'success');
+          }
+          closeModal();
+          await renderTable(currentPage);
+          updateStats();
+        } catch (err) {
+          showToast(`Save failed: ${err.message || 'server error'}`, 'danger');
+        } finally {
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Save Shop';
         }
-        closeModal();
-        renderTable();
-        updateStats();
       });
 
       // Table delegation (edit, delete, row click)
-      document.getElementById('shops-tbody').addEventListener('click', e => {
+      document.getElementById('shops-tbody').addEventListener('click', async e => {
         const actionBtn = e.target.closest('[data-action]');
         if (!actionBtn) return;
         const action = actionBtn.dataset.action;
         const id = actionBtn.dataset.id;
 
-        if (action === 'row-edit') {
-          const shops = loadShops();
-          const shop = shops.find(s => s.id === id);
-          if (shop) openModal(shop);
-          return;
-        }
-        if (action === 'edit') {
-          const shops = loadShops();
-          const shop = shops.find(s => s.id === id);
-          if (shop) openModal(shop);
+        if (action === 'row-edit' || action === 'edit') {
+          try {
+            const { getShop } = await import('../api-client.js');
+            const res = await getShop(id);
+            openModal(res.shop || res);
+          } catch {
+            showToast('Failed to load shop details.', 'danger');
+          }
           return;
         }
         if (action === 'delete') {
           deleteTargetId = id;
-          renderTable();
+          await renderTable(currentPage);
           return;
         }
         if (action === 'delete-confirm') {
-          const shops = loadShops();
-          const shop = shops.find(s => s.id === deleteTargetId);
-          deleteShop(deleteTargetId);
-          deleteTargetId = null;
-          renderTable();
-          updateStats();
-          showToast(`Shop "${shop?.name || ''}" deleted.`, 'info');
+          try {
+            await deleteShop(deleteTargetId);
+            deleteTargetId = null;
+            showToast('Shop deleted.', 'info');
+            await renderTable(currentPage);
+            updateStats();
+          } catch (err) {
+            showToast(`Delete failed: ${err.message || 'server error'}`, 'danger');
+            deleteTargetId = null;
+          }
           return;
         }
         if (action === 'delete-cancel') {
           deleteTargetId = null;
-          renderTable();
+          await renderTable(currentPage);
           return;
         }
       });
 
       // Row click (not on action buttons)
-      document.getElementById('shops-tbody').addEventListener('click', e => {
+      document.getElementById('shops-tbody').addEventListener('click', async e => {
         if (e.target.closest('[data-action]')) return;
         const row = e.target.closest('tr[data-id]');
         if (!row) return;
         const id = row.dataset.id;
-        const shops = loadShops();
-        const shop = shops.find(s => s.id === id);
-        if (shop) openModal(shop);
+        try {
+          const { getShop } = await import('../api-client.js');
+          const res = await getShop(id);
+          openModal(res.shop || res);
+        } catch {}
+      });
+
+      // Pagination
+      document.getElementById('page-prev')?.addEventListener('click', () => {
+        if (currentPage > 1) renderTable(currentPage - 1);
+      });
+      document.getElementById('page-next')?.addEventListener('click', () => {
+        if (currentPage < totalPages) renderTable(currentPage + 1);
       });
 
       // Keyboard: ESC closes modals
@@ -1014,7 +1101,7 @@
       });
 
       // Initial render
-      renderTable();
+      renderTable(1);
       updateStats();
     }
 

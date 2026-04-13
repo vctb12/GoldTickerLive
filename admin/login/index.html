@@ -75,39 +75,27 @@
       gap: 18px;
     }
 
-    .strength-bar-wrap {
-      background: var(--surface-2);
-      border-radius: 999px;
-      height: 4px;
-      overflow: hidden;
-      margin-top: 6px;
-    }
-
-    .strength-bar {
-      border-radius: 999px;
-      height: 100%;
-      transition: width 0.3s ease, background 0.3s ease;
-      width: 0%;
-    }
-
-    .strength-label {
-      color: var(--text-dim);
-      font-size: 0.7rem;
-      margin-top: 4px;
-    }
-
-    .login-error {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.3);
+    .login-alert {
+      align-items: flex-start;
       border-radius: var(--radius-sm);
-      color: var(--danger);
       display: none;
       font-size: 0.8125rem;
+      gap: 8px;
       padding: 10px 14px;
     }
 
-    .login-error.visible {
-      display: block;
+    .login-alert.visible { display: flex; }
+
+    .login-alert--error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--danger);
+    }
+
+    .login-alert--offline {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--warning);
     }
 
     .btn-submit {
@@ -115,49 +103,19 @@
       width: 100%;
     }
 
-    .reset-row {
-      margin-top: 16px;
+    .login-help {
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      margin-top: 20px;
       text-align: center;
     }
 
-    .reset-link {
-      background: none;
-      border: none;
-      color: var(--text-dim);
-      cursor: pointer;
-      font-size: 0.8125rem;
-      padding: 0;
-      text-decoration: underline;
-      transition: color 0.15s;
-    }
-
-    .reset-link:hover {
-      color: var(--danger);
-    }
-
-    .reset-confirm {
-      background: rgba(239, 68, 68, 0.08);
-      border: 1px solid rgba(239, 68, 68, 0.25);
-      border-radius: var(--radius-sm);
-      display: none;
-      margin-top: 16px;
-      padding: 14px;
-    }
-
-    .reset-confirm.visible {
-      display: block;
-    }
-
-    .reset-confirm p {
+    .login-help a {
       color: var(--text-muted);
-      font-size: 0.8125rem;
-      margin-bottom: 12px;
+      text-decoration: underline;
     }
 
-    .reset-confirm-actions {
-      display: flex;
-      gap: 8px;
-    }
+    .login-help a:hover { color: var(--text); }
   </style>
 </head>
 <body>
@@ -165,8 +123,7 @@
   <script>
     (function () {
       try {
-        var s = JSON.parse(localStorage.getItem('gp_admin_session'));
-        if (s && s.expires > Date.now()) {
+        if (localStorage.getItem('gp_admin_token')) {
           window.location.replace('../');
         }
       } catch (e) {
@@ -182,10 +139,23 @@
     </div>
 
     <div class="login-card">
-      <h1 id="login-heading">Admin Login</h1>
-      <p class="login-sub" id="login-sub">Gold Prices Admin Panel</p>
+      <h1>Admin Login</h1>
+      <p class="login-sub">Gold Prices Admin Panel</p>
 
       <form class="login-form" id="login-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="email">Email</label>
+          <input
+            class="form-input"
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder="admin@goldprices.com"
+            required
+          />
+        </div>
+
         <div class="form-group">
           <label class="form-label" for="password">Password</label>
           <input
@@ -196,191 +166,91 @@
             autocomplete="current-password"
             required
           />
-          <!-- Password strength meter — shown only in setup mode -->
-          <div id="strength-wrap" class="hidden">
-            <div class="strength-bar-wrap">
-              <div class="strength-bar" id="strength-bar"></div>
-            </div>
-            <div class="strength-label" id="strength-label"></div>
-          </div>
         </div>
 
-        <!-- Confirm password — shown only in setup mode -->
-        <div class="form-group hidden" id="confirm-group">
-          <label class="form-label" for="confirm">Confirm Password</label>
-          <input
-            class="form-input"
-            id="confirm"
-            name="confirm"
-            type="password"
-            autocomplete="new-password"
-          />
+        <div class="login-alert login-alert--error" id="login-error" role="alert"></div>
+        <div class="login-alert login-alert--offline" id="login-offline" role="alert">
+          <span>⚠️</span>
+          <span>Admin server is unreachable. Make sure <code>npm start</code> is running on port 3000.</span>
         </div>
-
-        <div class="login-error" id="login-error" role="alert"></div>
 
         <button type="submit" class="btn btn-gold btn-submit" id="submit-btn">
           Sign In
         </button>
       </form>
 
-      <!-- Login-mode only: reset link -->
-      <div class="reset-row hidden" id="reset-row">
-        <button class="reset-link" id="reset-link" type="button">
-          Reset password
-        </button>
-        <div class="reset-confirm hidden" id="reset-confirm">
-          <p>⚠️ Resetting clears all admin data. Are you sure?</p>
-          <div class="reset-confirm-actions">
-            <button class="btn btn-danger btn-sm" id="reset-confirm-btn" type="button">
-              Confirm Reset
-            </button>
-            <button class="btn btn-ghost btn-sm" id="reset-cancel-btn" type="button">
-              Cancel
-            </button>
-          </div>
-        </div>
-      </div>
+      <p class="login-help">
+        Credentials set via <code>ADMIN_EMAIL</code> / <code>ADMIN_PASSWORD</code> env vars
+        &nbsp;·&nbsp;
+        <a href="../../ADMIN_SETUP.md" target="_blank" rel="noopener">Setup guide</a>
+      </p>
     </div>
   </div>
 
   <script type="module">
-    import { isSetup, isAuthenticated, setupPassword, login, logActivity } from '../auth.js';
+    import { login } from '../api-client.js';
 
-    // --- DOM refs ---
-    const heading     = document.getElementById('login-heading');
-    const sub         = document.getElementById('login-sub');
-    const form        = document.getElementById('login-form');
-    const passwordEl  = document.getElementById('password');
-    const confirmEl   = document.getElementById('confirm');
-    const confirmGroup= document.getElementById('confirm-group');
-    const strengthWrap= document.getElementById('strength-wrap');
-    const strengthBar = document.getElementById('strength-bar');
-    const strengthLbl = document.getElementById('strength-label');
-    const errorEl     = document.getElementById('login-error');
-    const submitBtn   = document.getElementById('submit-btn');
-    const resetRow    = document.getElementById('reset-row');
-    const resetLink   = document.getElementById('reset-link');
-    const resetConfirm= document.getElementById('reset-confirm');
-    const resetConfirmBtn = document.getElementById('reset-confirm-btn');
-    const resetCancelBtn  = document.getElementById('reset-cancel-btn');
+    const form      = document.getElementById('login-form');
+    const emailEl   = document.getElementById('email');
+    const passwordEl= document.getElementById('password');
+    const errorEl   = document.getElementById('login-error');
+    const offlineEl = document.getElementById('login-offline');
+    const submitBtn = document.getElementById('submit-btn');
 
-    // true when no password hash exists yet (first-time setup flow)
-    const isFirstTimeSetup = !isSetup();
-
-    // --- Configure UI for mode ---
-    if (isFirstTimeSetup) {
-      heading.textContent   = 'Set Admin Password';
-      sub.textContent       = 'First-time setup — choose a strong password for admin access.';
-      submitBtn.textContent = 'Create Password';
-      passwordEl.setAttribute('autocomplete', 'new-password');
-      confirmGroup.classList.remove('hidden');
-      strengthWrap.classList.remove('hidden');
-    } else {
-      resetRow.classList.remove('hidden');
-    }
-
-    // --- Strength meter ---
-    function scorePassword(pw) {
-      let score = 0;
-      if (pw.length >= 8)  score++;
-      if (pw.length >= 12) score++;
-      if (/[A-Z]/.test(pw)) score++;
-      if (/[0-9]/.test(pw)) score++;
-      if (/[^A-Za-z0-9]/.test(pw)) score++;
-      return score; // 0-5
-    }
-
-    passwordEl.addEventListener('input', () => {
-      if (!isFirstTimeSetup) return;
-      const pw = passwordEl.value;
-      const MIN_STRENGTH_PCT = 10;
-      const score = scorePassword(pw);
-      const colorIndex = Math.min(score - 1, 4);
-      const pct = pw.length === 0 ? 0 : Math.max(MIN_STRENGTH_PCT, score * 20);
-      const colors = ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#10b981'];
-      const labels = ['Very weak', 'Weak', 'Fair', 'Good', 'Strong'];
-      strengthBar.style.width   = pct + '%';
-      strengthBar.style.background = pw.length ? colors[colorIndex] : 'transparent';
-      strengthLbl.textContent   = pw.length ? labels[colorIndex] : '';
-      strengthLbl.style.color   = pw.length ? colors[colorIndex] : 'var(--text-dim)';
-    });
-
-    // --- Error display ---
     function showError(msg) {
       errorEl.textContent = msg;
       errorEl.classList.add('visible');
+      offlineEl.classList.remove('visible');
     }
 
-    function clearError() {
-      errorEl.textContent = '';
+    function showOffline() {
+      offlineEl.classList.add('visible');
       errorEl.classList.remove('visible');
     }
 
-    // --- Form submit ---
+    function clearAlerts() {
+      errorEl.classList.remove('visible');
+      offlineEl.classList.remove('visible');
+    }
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      clearError();
+      clearAlerts();
 
-      const pw = passwordEl.value.trim();
+      const email    = emailEl.value.trim();
+      const password = passwordEl.value;
 
-      if (isFirstTimeSetup) {
-        if (pw.length < 8) {
-          showError('Password must be at least 8 characters.');
-          passwordEl.focus();
-          return;
-        }
-        const confirm = confirmEl.value.trim();
-        if (pw !== confirm) {
-          showError('Passwords do not match.');
-          confirmEl.focus();
-          return;
-        }
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Setting up…';
-        try {
-          await setupPassword(pw);
-          logActivity('login', 'Admin signed in');
-          window.location.replace('../');
-        } catch (err) {
-          showError('Setup failed. Please try again.');
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Create Password';
-        }
+      if (!email) {
+        showError('Email is required.');
+        emailEl.focus();
+        return;
+      }
+      if (!password) {
+        showError('Password is required.');
+        passwordEl.focus();
+        return;
+      }
+
+      submitBtn.disabled    = true;
+      submitBtn.textContent = 'Signing in…';
+
+      const result = await login(email, password);
+
+      if (result.success) {
+        window.location.replace('../');
+        return;
+      }
+
+      submitBtn.disabled    = false;
+      submitBtn.textContent = 'Sign In';
+
+      if (result.offline) {
+        showOffline();
       } else {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Signing in…';
-        const ok = await login(pw);
-        if (ok) {
-          logActivity('login', 'Admin signed in');
-          window.location.replace('../');
-        } else {
-          showError('Incorrect password.');
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Sign In';
-          passwordEl.focus();
-          passwordEl.select();
-        }
+        showError(result.message || 'Invalid credentials.');
+        passwordEl.value = '';
+        passwordEl.focus();
       }
-    });
-
-    // --- Reset flow ---
-    resetLink.addEventListener('click', () => {
-      resetConfirm.classList.toggle('visible');
-    });
-
-    resetCancelBtn.addEventListener('click', () => {
-      resetConfirm.classList.remove('visible');
-    });
-
-    resetConfirmBtn.addEventListener('click', () => {
-      const keysToRemove = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith('gp_')) keysToRemove.push(key);
-      }
-      keysToRemove.forEach(k => localStorage.removeItem(k));
-      window.location.reload();
     });
   </script>
 </body>

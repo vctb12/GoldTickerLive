@@ -7,6 +7,33 @@
   <title>Settings — GoldAdmin</title>
   <link rel="stylesheet" href="../admin.css" />
   <style>
+    /* ── Inline spinner ──────────────────────────────────────── */
+    .inline-spinner {
+      animation: spin 0.75s linear infinite;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      display: inline-block;
+      height: 14px;
+      vertical-align: middle;
+      width: 14px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── User modal alert ────────────────────────────────────── */
+    .login-alert {
+      align-items: flex-start;
+      border-radius: var(--radius-sm);
+      font-size: 0.8125rem;
+      gap: 8px;
+      padding: 10px 14px;
+    }
+    .login-alert--error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--danger);
+    }
+
     /* ── Settings layout ────────────────────────────────────── */
     .settings-card {
       margin-bottom: 20px;
@@ -150,7 +177,7 @@
 <body>
 
   <!-- Auth guard -->
-  <script>(function(){try{var s=JSON.parse(localStorage.getItem('gp_admin_session'));if(!s||s.expires<Date.now())window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
+  <script>(function(){try{if(!localStorage.getItem('gp_admin_token'))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
 
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
@@ -186,7 +213,107 @@
         <div class="header-actions"></div>
       </header>
 
-      <main class="content-area" style="padding-bottom:80px;">
+      <main class="content-area" style="padding-bottom:80px;" id="settings-main">
+
+        <!-- ── Offline banner ────────────────────────────────── -->
+        <div class="offline-banner hidden" id="offline-banner" role="alert">
+          <span>⚠️</span>
+          <span>Admin server is offline. User management and audit logs unavailable.</span>
+        </div>
+
+        <!-- ── User Management ──────────────────────────────── -->
+        <div class="card settings-card" id="users-section">
+          <div class="card-header">
+            <h2 class="card-title">User Management</h2>
+            <button class="btn btn-gold btn-sm" id="add-user-btn" type="button">+ Add User</button>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div id="users-loading" style="padding:24px;text-align:center;color:var(--text-dim);">
+              <span class="inline-spinner" aria-hidden="true"></span> Loading users…
+            </div>
+            <div class="table-wrap hidden" id="users-table-wrap">
+              <table id="users-table" aria-label="Admin users">
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="users-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add/Edit User Modal -->
+        <div class="modal-backdrop hidden" id="user-modal" role="dialog" aria-modal="true" aria-labelledby="user-modal-title">
+          <div class="modal" style="max-width:440px">
+            <div class="modal-header">
+              <h2 id="user-modal-title">Add User</h2>
+              <button class="modal-close" id="user-modal-close" aria-label="Close" type="button">✕</button>
+            </div>
+            <div class="modal-body">
+              <form id="user-form" novalidate>
+                <input type="hidden" id="u-edit-id" />
+                <div class="form-group">
+                  <label class="form-label" for="u-email">Email <span style="color:var(--danger)">*</span></label>
+                  <input class="form-input" id="u-email" type="email" autocomplete="off" required />
+                  <span class="form-error hidden" id="u-email-err">Valid email required.</span>
+                </div>
+                <div class="form-group" style="margin-top:14px">
+                  <label class="form-label" for="u-name">Display Name</label>
+                  <input class="form-input" id="u-name" type="text" autocomplete="off" />
+                </div>
+                <div class="form-group" style="margin-top:14px">
+                  <label class="form-label" for="u-role">Role</label>
+                  <select class="form-select" id="u-role">
+                    <option value="viewer">Viewer</option>
+                    <option value="editor">Editor</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-top:14px" id="u-password-group">
+                  <label class="form-label" for="u-password">Password <span id="u-password-req" style="color:var(--danger)">*</span></label>
+                  <input class="form-input" id="u-password" type="password" autocomplete="new-password" />
+                  <div class="form-help" id="u-password-help">Leave blank to keep current password.</div>
+                  <span class="form-error hidden" id="u-password-err">Password required for new users.</span>
+                </div>
+                <div class="login-alert login-alert--error" id="user-modal-error" role="alert" style="margin-top:12px;display:none;"></div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-ghost" id="user-modal-cancel" type="button">Cancel</button>
+              <button class="btn btn-primary" id="user-modal-save" type="button">Save User</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Audit Logs ────────────────────────────────────── -->
+        <div class="card settings-card" id="audit-section">
+          <div class="card-header">
+            <h2 class="card-title">Audit Log</h2>
+            <button class="btn btn-ghost btn-sm" id="export-audit-btn" type="button">⬇ Export CSV</button>
+          </div>
+          <div id="audit-loading" style="padding:24px;text-align:center;color:var(--text-dim);">
+            <span class="inline-spinner" aria-hidden="true"></span> Loading…
+          </div>
+          <div class="table-wrap hidden" id="audit-table-wrap">
+            <table id="audit-table" aria-label="Audit log">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Actor</th>
+                  <th>Action</th>
+                  <th>Entity</th>
+                </tr>
+              </thead>
+              <tbody id="audit-tbody"></tbody>
+            </table>
+          </div>
+          <div id="audit-empty" class="hidden" style="padding:24px;text-align:center;color:var(--text-dim);font-size:0.875rem;">No audit log entries found.</div>
+        </div>
 
         <!-- Commerce Settings -->
         <div class="card settings-card">
@@ -372,7 +499,7 @@
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
   <script type="module">
-    import { isAuthenticated, logActivity, logout } from '../auth.js';
+    import { logout, logActivity, getUsers, createUser, updateUser, deleteUser, getAuditLogs, exportAuditLogs } from '../api-client.js';
 
     const SETTINGS_KEY = 'gp_settings';
     const LAST_SAVED_KEY = 'gp_settings_saved_at';
@@ -541,6 +668,114 @@
     /* ── Reset confirm ──────────────────────────────────────── */
     let resetPending = false;
 
+    /* ── Offline / forbidden events ────────────────────────── */
+    document.addEventListener('admin:offline', () => {
+      document.getElementById('offline-banner')?.classList.remove('hidden');
+    });
+    document.addEventListener('admin:online', () => {
+      document.getElementById('offline-banner')?.classList.add('hidden');
+    });
+
+    /* ── User Management ────────────────────────────────────── */
+    function relativeTime(isoString) {
+      const diff = Date.now() - new Date(isoString).getTime();
+      const sec  = Math.floor(diff / 1000);
+      if (sec < 60)   return `${sec}s ago`;
+      const min  = Math.floor(sec / 60);
+      if (min < 60)   return `${min} min ago`;
+      const hr   = Math.floor(min / 60);
+      if (hr < 24)    return `${hr}h ago`;
+      return new Date(isoString).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    async function loadUsers() {
+      const loading  = document.getElementById('users-loading');
+      const tableWrap= document.getElementById('users-table-wrap');
+      const tbody    = document.getElementById('users-tbody');
+      try {
+        const data = await getUsers();
+        const users = data.users || [];
+        loading.classList.add('hidden');
+        tableWrap.classList.remove('hidden');
+        if (users.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--text-dim);padding:24px;">No users found.</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = users.map(u => {
+          const id = u.id || u._id || u.userId;
+          const roleClass = { admin: 'badge-warning', editor: 'badge-info', viewer: 'badge-neutral' }[u.role] || 'badge-neutral';
+          return `<tr>
+            <td>${u.email || '—'}</td>
+            <td>${u.name || '—'}</td>
+            <td><span class="badge ${roleClass}">${u.role || 'viewer'}</span></td>
+            <td>
+              <div class="row-actions" style="display:flex;gap:4px;">
+                <button class="btn btn-ghost btn-sm" data-action="edit-user" data-id="${id}" type="button">Edit</button>
+                <button class="btn btn-ghost btn-sm" data-action="delete-user" data-id="${id}" style="color:var(--danger)" type="button">Delete</button>
+              </div>
+            </td>
+          </tr>`;
+        }).join('');
+      } catch (err) {
+        loading.textContent = 'Could not load users.';
+      }
+    }
+
+    function openUserModal(user = null) {
+      const modal = document.getElementById('user-modal');
+      document.getElementById('user-modal-title').textContent = user ? 'Edit User' : 'Add User';
+      document.getElementById('u-edit-id').value    = user ? (user.id || user._id || '') : '';
+      document.getElementById('u-email').value      = user ? (user.email || '') : '';
+      document.getElementById('u-name').value       = user ? (user.name || '') : '';
+      document.getElementById('u-role').value       = user ? (user.role || 'viewer') : 'viewer';
+      document.getElementById('u-password').value   = '';
+      document.getElementById('u-email-err').classList.add('hidden');
+      document.getElementById('u-password-err').classList.add('hidden');
+      document.getElementById('user-modal-error').style.display = 'none';
+      // Password is required only for new users
+      const pwHelp = document.getElementById('u-password-help');
+      const pwReq  = document.getElementById('u-password-req');
+      if (user) {
+        if (pwHelp) pwHelp.style.display = '';
+        if (pwReq)  pwReq.style.display  = 'none';
+      } else {
+        if (pwHelp) pwHelp.style.display = 'none';
+        if (pwReq)  pwReq.style.display  = '';
+      }
+      modal.classList.remove('hidden');
+      document.getElementById('u-email').focus();
+    }
+
+    function closeUserModal() {
+      document.getElementById('user-modal').classList.add('hidden');
+    }
+
+    /* ── Audit Logs ─────────────────────────────────────────── */
+    async function loadAuditLogs() {
+      const loading   = document.getElementById('audit-loading');
+      const tableWrap = document.getElementById('audit-table-wrap');
+      const empty     = document.getElementById('audit-empty');
+      const tbody     = document.getElementById('audit-tbody');
+      try {
+        const data = await getAuditLogs({ limit: 50 });
+        const logs = data.logs || [];
+        loading.classList.add('hidden');
+        if (logs.length === 0) {
+          empty.classList.remove('hidden');
+          return;
+        }
+        tableWrap.classList.remove('hidden');
+        tbody.innerHTML = logs.map(entry => `<tr>
+          <td style="white-space:nowrap;font-size:0.8125rem;">${relativeTime(entry.timestamp)}</td>
+          <td style="font-size:0.8125rem;">${entry.actor || 'system'}</td>
+          <td style="font-size:0.8125rem;">${entry.action || '—'}</td>
+          <td style="font-size:0.8125rem;">${entry.entityType || '—'}</td>
+        </tr>`).join('');
+      } catch {
+        loading.textContent = 'Could not load audit log.';
+      }
+    }
+
     /* ── Init ───────────────────────────────────────────────── */
     function init() {
       // Sidebar
@@ -624,6 +859,97 @@
           input.type = input.type === 'password' ? 'text' : 'password';
           btn.textContent = input.type === 'password' ? '👁' : '🙈';
         });
+      });
+
+      // ── User Management ───────────────────────────────────────
+      loadUsers();
+      loadAuditLogs();
+
+      document.getElementById('add-user-btn')?.addEventListener('click', () => openUserModal(null));
+      document.getElementById('user-modal-close')?.addEventListener('click', closeUserModal);
+      document.getElementById('user-modal-cancel')?.addEventListener('click', closeUserModal);
+      document.getElementById('user-modal')?.addEventListener('click', e => {
+        if (e.target === e.currentTarget) closeUserModal();
+      });
+
+      document.getElementById('users-tbody')?.addEventListener('click', async e => {
+        const btn = e.target.closest('[data-action]');
+        if (!btn) return;
+        const id = btn.dataset.id;
+        if (btn.dataset.action === 'edit-user') {
+          try {
+            const data = await getUsers();
+            const user = (data.users || []).find(u => (u.id || u._id) === id);
+            if (user) openUserModal(user);
+          } catch { showToast('Could not load user.', 'error'); }
+        }
+        if (btn.dataset.action === 'delete-user') {
+          if (!confirm('Delete this user? This cannot be undone.')) return;
+          try {
+            await deleteUser(id);
+            showToast('User deleted.', 'info');
+            loadUsers();
+          } catch (err) {
+            showToast('Delete failed: ' + (err.message || 'server error'), 'error');
+          }
+        }
+      });
+
+      document.getElementById('user-modal-save')?.addEventListener('click', async () => {
+        const emailEl = document.getElementById('u-email');
+        const email   = emailEl.value.trim();
+        const name    = document.getElementById('u-name').value.trim();
+        const role    = document.getElementById('u-role').value;
+        const password= document.getElementById('u-password').value;
+        const id      = document.getElementById('u-edit-id').value;
+        const errorEl = document.getElementById('user-modal-error');
+
+        document.getElementById('u-email-err').classList.add('hidden');
+        document.getElementById('u-password-err').classList.add('hidden');
+        errorEl.style.display = 'none';
+
+        if (!email || !emailEl.checkValidity()) {
+          document.getElementById('u-email-err').classList.remove('hidden');
+          emailEl.focus();
+          return;
+        }
+        if (!id && !password) {
+          document.getElementById('u-password-err').classList.remove('hidden');
+          document.getElementById('u-password').focus();
+          return;
+        }
+
+        const saveBtn = document.getElementById('user-modal-save');
+        saveBtn.disabled = true; saveBtn.textContent = 'Saving…';
+
+        try {
+          if (id) {
+            const updates = { name, role };
+            if (password) updates.password = password;
+            await updateUser(id, updates);
+            showToast('User updated.', 'success');
+          } else {
+            await createUser({ email, name, role, password });
+            showToast('User created.', 'success');
+          }
+          closeUserModal();
+          loadUsers();
+        } catch (err) {
+          errorEl.textContent = err.message || 'Save failed.';
+          errorEl.style.display = 'flex';
+        } finally {
+          saveBtn.disabled = false; saveBtn.textContent = 'Save User';
+        }
+      });
+
+      // ── Audit log export ─────────────────────────────────────
+      document.getElementById('export-audit-btn')?.addEventListener('click', async () => {
+        try {
+          await exportAuditLogs();
+          showToast('Audit log exported.', 'success');
+        } catch (err) {
+          showToast('Export failed: ' + (err.message || 'server error'), 'error');
+        }
       });
     }
 

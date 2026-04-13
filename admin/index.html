@@ -152,9 +152,9 @@
 </head>
 <body>
 
-  <!-- Flash prevention: redirect to login if no valid session -->
+  <!-- Flash prevention: redirect to login if no token present -->
   <script>
-    (function(){try{var s=JSON.parse(localStorage.getItem('gp_admin_session'));if(!s||s.expires<Date.now())window.location.replace('./login/');}catch(e){window.location.replace('./login/');}})();
+    (function(){try{if(!localStorage.getItem('gp_admin_token'))window.location.replace('./login/');}catch(e){window.location.replace('./login/');}})();
   </script>
 
   <!-- Sidebar overlay (mobile) -->
@@ -196,6 +196,10 @@
       </nav>
 
       <div class="sidebar-footer">
+        <div class="sidebar-user" id="sidebar-user" style="display:none;padding:0 0 10px;border-bottom:1px solid var(--border);margin-bottom:10px;">
+          <div style="font-size:0.8125rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="sidebar-email"></div>
+          <span class="role-badge" id="sidebar-role-badge"></span>
+        </div>
         <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">
           <span aria-hidden="true">🚪</span> Sign Out
         </button>
@@ -224,38 +228,44 @@
       <!-- Content -->
       <main class="content-area">
 
+        <!-- ── Offline banner ─────────────────────────────── -->
+        <div class="offline-banner hidden" id="offline-banner" role="alert">
+          <span>⚠️</span>
+          <span>Admin server is offline. Stats and activity cannot be loaded. Make sure <code>npm start</code> is running.</span>
+        </div>
+
         <!-- ── Stat cards ──────────────────────────────────── -->
         <div class="stat-grid" role="list" aria-label="Key metrics">
 
-          <!-- System Health -->
+          <!-- Total Shops -->
           <div class="stat-card" role="listitem">
-            <div class="stat-label">System Health</div>
-            <div class="stat-number" id="stat-health" aria-live="polite">
+            <div class="stat-label">Total Shops</div>
+            <div class="stat-number" id="stat-shops" aria-live="polite">
+              <span class="inline-spinner" aria-hidden="true"></span>
+            </div>
+            <div class="stat-sub" id="stat-shops-sub"></div>
+          </div>
+
+          <!-- Verified Shops -->
+          <div class="stat-card" role="listitem">
+            <div class="stat-label">Verified Shops</div>
+            <div class="stat-number" id="stat-verified" aria-live="polite">
               <span class="inline-spinner" aria-hidden="true"></span>
             </div>
           </div>
 
-          <!-- Data Freshness -->
+          <!-- Users -->
           <div class="stat-card" role="listitem">
-            <div class="stat-label">Data Freshness</div>
-            <div class="stat-number" id="stat-freshness" aria-live="polite">
-              <span class="inline-spinner" aria-hidden="true"></span>
-            </div>
-            <div class="stat-sub">🕐 Cached gold price age</div>
-          </div>
-
-          <!-- Pending Orders -->
-          <div class="stat-card" role="listitem">
-            <div class="stat-label">Pending Orders</div>
-            <div class="stat-number" id="stat-orders" aria-live="polite">—</div>
-            <div class="stat-sub" id="stat-orders-sub"></div>
+            <div class="stat-label">Admin Users</div>
+            <div class="stat-number" id="stat-users" aria-live="polite">—</div>
+            <div class="stat-sub" id="stat-users-sub"></div>
           </div>
 
           <!-- Activity Today -->
           <div class="stat-card" role="listitem">
-            <div class="stat-label">Activity Today</div>
+            <div class="stat-label">Audit Log Entries</div>
             <div class="stat-number" id="stat-activity" aria-live="polite">—</div>
-            <div class="stat-sub">log entries</div>
+            <div class="stat-sub">total logged</div>
           </div>
 
         </div>
@@ -315,12 +325,10 @@
         <section class="section card" aria-labelledby="activity-title">
           <div class="card-header">
             <h2 class="card-title" id="activity-title">Recent Activity</h2>
-            <button class="btn btn-ghost btn-sm" id="clear-log-btn" type="button">
-              Clear Log
-            </button>
+            <a class="btn btn-ghost btn-sm" href="./settings/#audit">View All</a>
           </div>
           <div id="activity-list" class="activity-list" aria-live="polite">
-            <div class="activity-empty">No activity recorded yet.</div>
+            <div class="activity-empty">Loading…</div>
           </div>
         </section>
 
@@ -332,7 +340,7 @@
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
   <script type="module">
-    import { logout, logActivity } from './auth.js';
+    import { logout, getStats, getAuditLogs, verifyToken } from './api-client.js';
     import { CONSTANTS } from '../config/constants.js';
 
     const API_GOLD_URL    = CONSTANTS.API_GOLD_URL;
@@ -370,12 +378,6 @@
       return `${days} day${days !== 1 ? 's' : ''} ago`;
     }
 
-    function isToday(isoString) {
-      const d = new Date(isoString);
-      const n = new Date();
-      return d.getDate() === n.getDate() && d.getMonth() === n.getMonth() && d.getFullYear() === n.getFullYear();
-    }
-
     function storageGet(key) {
       try { return localStorage.getItem(key); } catch { return null; }
     }
@@ -385,6 +387,17 @@
     function storageRemove(...keys) {
       keys.forEach(k => { try { localStorage.removeItem(k); } catch {} });
     }
+
+    // ── Offline / online banner ──────────────────────────────
+    document.addEventListener('admin:offline', () => {
+      qs('#offline-banner')?.classList.remove('hidden');
+    });
+    document.addEventListener('admin:online', () => {
+      qs('#offline-banner')?.classList.add('hidden');
+    });
+    document.addEventListener('admin:forbidden', () => {
+      showToast('Insufficient permissions.', 'error');
+    });
 
     // ── Active nav link ──────────────────────────────────────
     const currentPath = window.location.pathname.replace(/\/+$/, '') + '/';
@@ -414,6 +427,47 @@
       window.location.replace('./login/');
     });
 
+    // ── Verify token & show user info ────────────────────────
+    async function loadUserInfo() {
+      const result = await verifyToken();
+      if (!result?.success) return; // verifyToken handles 401 redirect
+      const user = result.user;
+      const emailEl = qs('#sidebar-email');
+      const badgeEl = qs('#sidebar-role-badge');
+      const userEl  = qs('#sidebar-user');
+      if (emailEl && user?.email) {
+        emailEl.textContent = user.email;
+        if (badgeEl) {
+          badgeEl.textContent = user.role || 'viewer';
+          badgeEl.className = `role-badge role-badge--${user.role || 'viewer'}`;
+        }
+        if (userEl) userEl.style.display = '';
+      }
+    }
+    loadUserInfo();
+
+    // ── Load & render dashboard stats ────────────────────────
+    async function loadStats() {
+      try {
+        const data = await getStats();
+        if (!data.success) return;
+        const { shops, users, auditLog } = data.stats;
+
+        qs('#stat-shops').textContent   = shops?.total ?? '—';
+        qs('#stat-shops-sub').textContent = shops?.pending > 0 ? `${shops.pending} pending` : '';
+        qs('#stat-verified').textContent = shops?.verified ?? '—';
+        qs('#stat-users').textContent    = users?.total ?? '—';
+        qs('#stat-users-sub').textContent = users?.admins > 0 ? `${users.admins} admin${users.admins !== 1 ? 's' : ''}` : '';
+        qs('#stat-activity').textContent = auditLog?.total ?? '—';
+      } catch (err) {
+        ['#stat-shops','#stat-verified','#stat-users','#stat-activity'].forEach(id => {
+          const el = qs(id);
+          if (el) el.textContent = '—';
+        });
+      }
+    }
+    loadStats();
+
     // ── Gold Ticker ──────────────────────────────────────────
     async function updateTicker() {
       const badge     = qs('#ticker-badge');
@@ -437,60 +491,6 @@
     }
     updateTicker();
 
-    // ── Stat: Data Freshness ─────────────────────────────────
-    function updateFreshnessStat() {
-      // Primary key 'gp_cache_gold' (used by current page scripts) is checked first;
-      // 'goldprice_cache' is the legacy fallback key from earlier site versions.
-      const raw = storageGet('gp_cache_gold') || storageGet('goldprice_cache');
-      const el  = qs('#stat-freshness');
-      if (!raw) { el.textContent = 'No data'; return; }
-      try {
-        const obj = JSON.parse(raw);
-        const ts  = obj.timestamp ?? obj.ts ?? obj.cachedAt ?? null;
-        if (!ts) { el.textContent = 'No data'; return; }
-        const ageMs  = Date.now() - new Date(ts).getTime();
-        const ageMins = Math.floor(ageMs / 60000);
-        el.textContent = ageMins < 1 ? 'Just now' : `${ageMins} min ago`;
-      } catch {
-        el.textContent = 'No data';
-      }
-    }
-    updateFreshnessStat();
-
-    // ── Stat: Pending Orders ─────────────────────────────────
-    function updateOrdersStat() {
-      const raw = storageGet('gp_orders');
-      const el  = qs('#stat-orders');
-      const sub = qs('#stat-orders-sub');
-      if (!raw) { el.textContent = '0'; sub.textContent = '0 total today'; return; }
-      try {
-        const orders  = JSON.parse(raw);
-        if (!Array.isArray(orders)) { el.textContent = '0'; return; }
-        const pending = orders.filter(o => o.status === 'pending').length;
-        const today   = orders.filter(o => o.createdAt && isToday(o.createdAt)).length;
-        el.textContent  = pending;
-        sub.textContent = `${today} total today`;
-      } catch {
-        el.textContent = '—';
-      }
-    }
-    updateOrdersStat();
-
-    // ── Stat: Activity Today ─────────────────────────────────
-    function updateActivityStat() {
-      const raw = storageGet('gp_activity_log');
-      const el  = qs('#stat-activity');
-      if (!raw) { el.textContent = '0'; return; }
-      try {
-        const log    = JSON.parse(raw);
-        const today  = Array.isArray(log) ? log.filter(e => isToday(e.timestamp)).length : 0;
-        el.textContent = today;
-      } catch {
-        el.textContent = '0';
-      }
-    }
-    updateActivityStat();
-
     // ── API Status checks ────────────────────────────────────
     const SERVICES = [
       { name: 'Gold API (gold-api.com)',     url: API_GOLD_URL },
@@ -505,7 +505,7 @@
         const res  = await fetch(service.url, { cache: 'no-store', signal: AbortSignal.timeout(API_TIMEOUT_MS) });
         const ms   = Math.round(performance.now() - start);
         return { name: service.name, ok: res.ok, status: res.status, ms };
-      } catch (err) {
+      } catch {
         const ms = Math.round(performance.now() - start);
         return { name: service.name, ok: false, status: 'Error', ms };
       }
@@ -526,7 +526,8 @@
 
     function updateHealthStat(results) {
       const allOk = results.every(r => r.ok);
-      qs('#stat-health').textContent = allOk ? '🟢 All OK' : '🔴 Issues Detected';
+      const el = qs('#stat-health');
+      if (el) el.textContent = allOk ? '🟢 All OK' : '🔴 Issues Detected';
     }
 
     async function runApiChecks() {
@@ -535,7 +536,6 @@
       const lastEl    = qs('#api-last-checked');
 
       checkBtn.disabled = true;
-      qs('#stat-health').innerHTML = '<span class="inline-spinner" aria-hidden="true"></span>';
       tbody.innerHTML = `<tr><td colspan="4" style="color:var(--text-dim);text-align:center;padding:20px">
         <span class="inline-spinner" aria-hidden="true"></span> Checking…
       </td></tr>`;
@@ -550,10 +550,8 @@
     }
 
     runApiChecks();
-
     qs('#api-check-btn').addEventListener('click', runApiChecks);
 
-    // Update "X seconds ago" counter for API last-checked
     setInterval(() => {
       if (!lastCheckedAt) return;
       const sec = Math.floor((Date.now() - lastCheckedAt) / 1000);
@@ -565,95 +563,82 @@
     // ── Quick Actions ────────────────────────────────────────
     qs('#qa-force-refresh').addEventListener('click', () => {
       storageSet('gp_force_refresh', Date.now().toString());
-      logActivity('force_refresh', 'Manual price refresh triggered from dashboard.');
       showToast('Cache cleared — prices will refresh on next visit', 'success');
     });
 
     qs('#qa-clear-cache').addEventListener('click', () => {
       storageRemove('gp_cache_gold', 'goldprice_cache', 'gp_fx_cache');
-      logActivity('clear_cache', 'Price and FX cache cleared from dashboard.');
-      updateFreshnessStat();
       showToast('Cache cleared', 'success');
     });
 
-    qs('#qa-export-shops').addEventListener('click', () => {
-      const raw = storageGet('gp_shops');
-      let shops = [];
-      if (raw) {
-        try { shops = JSON.parse(raw); } catch {}
+    qs('#qa-export-shops') && qs('#qa-export-shops').addEventListener('click', async () => {
+      try {
+        const { getShops } = await import('./api-client.js');
+        const data = await getShops({ limit: 1000 });
+        const shops = data.shops || [];
+        if (shops.length === 0) { showToast('No shops found.', 'warning'); return; }
+        const headers = ['id', 'name', 'country', 'city', 'phone', 'website', 'verified', 'status'];
+        const rows = shops.map(s =>
+          headers.map(h => {
+            const v = s[h] ?? '';
+            const str = String(v).replace(/"/g, '""');
+            return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str}"` : str;
+          }).join(',')
+        );
+        const csv = [headers.join(','), ...rows].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href = url;
+        a.download = `shops-export-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast(`Exported ${shops.length} shops`, 'success');
+      } catch (err) {
+        showToast('Export failed: ' + (err.message || 'server error'), 'error');
       }
-      if (!Array.isArray(shops) || shops.length === 0) {
-        showToast('No shops data found in localStorage (gp_shops)', 'warning');
-        return;
-      }
-      const headers = ['id', 'name', 'country', 'city', 'area', 'phone', 'website', 'verified'];
-      const rows = shops.map(s =>
-        headers.map(h => {
-          const v = s[h] ?? '';
-          const str = String(v).replace(/"/g, '""');
-          return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str}"` : str;
-        }).join(',')
-      );
-      const csv = [headers.join(','), ...rows].join('\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement('a');
-      a.href     = url;
-      a.download = `shops-export-${new Date().toISOString().slice(0, 10)}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-      logActivity('export_shops', `Exported ${shops.length} shops to CSV.`);
-      showToast(`Exported ${shops.length} shops`, 'success');
     });
 
     // ── Activity Log ─────────────────────────────────────────
     const ACTION_ICONS = {
-      login:         '🔑',
-      logout:        '🚪',
-      login_fail:    '🚫',
-      setup:         '🔧',
-      force_refresh: '⚡',
-      clear_cache:   '🗑',
-      export_shops:  '📥',
-      default:       '📋',
+      login:   '🔑',
+      logout:  '🚪',
+      create:  '➕',
+      update:  '✏️',
+      delete:  '🗑',
+      default: '📋',
     };
 
-    function renderActivityLog() {
-      const raw = storageGet('gp_activity_log');
+    async function renderActivityLog() {
       const container = qs('#activity-list');
-      let log = [];
-      if (raw) {
-        try { log = JSON.parse(raw); if (!Array.isArray(log)) log = []; } catch { log = []; }
-      }
-      if (log.length === 0) {
-        container.innerHTML = '<div class="activity-empty">No activity recorded yet.</div>';
-        return;
-      }
-      const recent = log.slice(-20).reverse();
-      container.innerHTML = recent.map(entry => {
-        const icon = ACTION_ICONS[entry.action] ?? ACTION_ICONS.default;
-        const time = relativeTime(entry.timestamp);
-        return `
-          <div class="activity-item" role="listitem">
-            <div class="activity-icon" aria-hidden="true">${icon}</div>
-            <div class="activity-body">
-              <div class="activity-action">${entry.action}</div>
-              <div class="activity-details">${entry.details || ''}</div>
+      try {
+        const data = await getAuditLogs({ limit: 15 });
+        const logs = data.logs || [];
+        if (logs.length === 0) {
+          container.innerHTML = '<div class="activity-empty">No activity recorded yet.</div>';
+          return;
+        }
+        container.innerHTML = logs.map(entry => {
+          const icon = ACTION_ICONS[entry.action] ?? ACTION_ICONS.default;
+          const time = relativeTime(entry.timestamp);
+          const detail = entry.entityType ? `${entry.action} ${entry.entityType}` : entry.action;
+          return `
+            <div class="activity-item" role="listitem">
+              <div class="activity-icon" aria-hidden="true">${icon}</div>
+              <div class="activity-body">
+                <div class="activity-action">${entry.actor || 'system'}</div>
+                <div class="activity-details">${detail}</div>
+              </div>
+              <div class="activity-time">${time}</div>
             </div>
-            <div class="activity-time">${time}</div>
-          </div>
-        `;
-      }).join('');
+          `;
+        }).join('');
+      } catch {
+        container.innerHTML = '<div class="activity-empty">Could not load activity log.</div>';
+      }
     }
 
     renderActivityLog();
-
-    qs('#clear-log-btn').addEventListener('click', () => {
-      storageRemove('gp_activity_log');
-      renderActivityLog();
-      updateActivityStat();
-      showToast('Activity log cleared', 'info');
-    });
 
   </script>
 </body>

@@ -209,7 +209,7 @@
 <body>
 
   <!-- Auth guard: redirect to login if no valid session -->
-  <script>(function(){try{var s=JSON.parse(localStorage.getItem('gp_admin_session'));if(!s||s.expires<Date.now())window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
+  <script>(function(){try{if(!localStorage.getItem('gp_admin_token'))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
 
   <!-- Sidebar overlay (mobile) -->
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
