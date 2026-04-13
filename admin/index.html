@@ -229,44 +229,41 @@
       <!-- Content -->
       <main class="content-area">
 
-        <!-- ── Offline banner ─────────────────────────────── -->
-        <div class="offline-banner hidden" id="offline-banner" role="alert">
-          <span>⚠️</span>
-          <span>Admin server is offline. Stats and activity cannot be loaded. Make sure <code>npm start</code> is running.</span>
-        </div>
-
         <!-- ── Stat cards ──────────────────────────────────── -->
         <div class="stat-grid" role="list" aria-label="Key metrics">
 
-          <!-- Total Shops -->
+          <!-- Gold Spot -->
           <div class="stat-card" role="listitem">
-            <div class="stat-label">Total Shops</div>
-            <div class="stat-number" id="stat-shops" aria-live="polite">
+            <div class="stat-icon" aria-hidden="true">🥇</div>
+            <div class="stat-label">Gold Spot (XAU)</div>
+            <div class="stat-number" id="stat-gold" aria-live="polite">
               <span class="inline-spinner" aria-hidden="true"></span>
             </div>
-            <div class="stat-sub" id="stat-shops-sub"></div>
+            <div class="stat-sub" id="stat-gold-sub"></div>
           </div>
 
-          <!-- Verified Shops -->
+          <!-- Analytics Events -->
           <div class="stat-card" role="listitem">
-            <div class="stat-label">Verified Shops</div>
-            <div class="stat-number" id="stat-verified" aria-live="polite">
-              <span class="inline-spinner" aria-hidden="true"></span>
-            </div>
+            <div class="stat-icon" aria-hidden="true">📊</div>
+            <div class="stat-label">Analytics Events</div>
+            <div class="stat-number" id="stat-events" aria-live="polite">—</div>
+            <div class="stat-sub" id="stat-events-sub">from localStorage</div>
           </div>
 
-          <!-- Users -->
+          <!-- Posts Generated -->
           <div class="stat-card" role="listitem">
-            <div class="stat-label">Admin Users</div>
-            <div class="stat-number" id="stat-users" aria-live="polite">—</div>
-            <div class="stat-sub" id="stat-users-sub"></div>
+            <div class="stat-icon" aria-hidden="true">📣</div>
+            <div class="stat-label">Posts Generated</div>
+            <div class="stat-number" id="stat-posts" aria-live="polite">—</div>
+            <div class="stat-sub" id="stat-posts-sub">social post history</div>
           </div>
 
-          <!-- Activity Today -->
+          <!-- Admin User -->
           <div class="stat-card" role="listitem">
-            <div class="stat-label">Audit Log Entries</div>
-            <div class="stat-number" id="stat-activity" aria-live="polite">—</div>
-            <div class="stat-sub">total logged</div>
+            <div class="stat-icon" aria-hidden="true">🔐</div>
+            <div class="stat-label">Logged In As</div>
+            <div class="stat-number" id="stat-user" aria-live="polite" style="font-size:0.9rem;word-break:break-all;">—</div>
+            <div class="stat-sub" id="stat-user-sub"></div>
           </div>
 
         </div>
@@ -310,12 +307,12 @@
             <button class="btn btn-primary" id="qa-force-refresh" type="button">
               ⚡ Force Refresh Prices
             </button>
-            <button class="btn btn-ghost" id="qa-export-shops" type="button">
-              📥 Export Shops CSV
-            </button>
             <button class="btn btn-ghost" id="qa-clear-cache" type="button">
               🗑 Clear Cache
             </button>
+            <a class="btn btn-ghost" href="./shops/">
+              🏪 Manage Shops
+            </a>
             <a class="btn btn-ghost" href="./orders/">
               📦 View Orders
             </a>
@@ -325,11 +322,51 @@
         <!-- ── Recent Activity ─────────────────────────────── -->
         <section class="section card" aria-labelledby="activity-title">
           <div class="card-header">
-            <h2 class="card-title" id="activity-title">Recent Activity</h2>
-            <a class="btn btn-ghost btn-sm" href="./settings/#audit">View All</a>
+            <h2 class="card-title" id="activity-title">Quick Links</h2>
           </div>
-          <div id="activity-list" class="activity-list" aria-live="polite">
-            <div class="activity-empty">Loading…</div>
+          <div class="activity-list" id="activity-list">
+            <div class="activity-item" role="listitem">
+              <div class="activity-icon" aria-hidden="true">🏪</div>
+              <div class="activity-body">
+                <a href="./shops/" class="activity-action" style="color:var(--primary)">Manage Shops</a>
+                <div class="activity-details">Add, edit, and verify gold shop listings</div>
+              </div>
+            </div>
+            <div class="activity-item" role="listitem">
+              <div class="activity-icon" aria-hidden="true">📣</div>
+              <div class="activity-body">
+                <a href="./social/" class="activity-action" style="color:var(--primary)">Social Post Generator</a>
+                <div class="activity-details">Create and schedule social media posts</div>
+              </div>
+            </div>
+            <div class="activity-item" role="listitem">
+              <div class="activity-icon" aria-hidden="true">💰</div>
+              <div class="activity-body">
+                <a href="./pricing/" class="activity-action" style="color:var(--primary)">Pricing Overrides</a>
+                <div class="activity-details">View live prices and manage overrides</div>
+              </div>
+            </div>
+            <div class="activity-item" role="listitem">
+              <div class="activity-icon" aria-hidden="true">📝</div>
+              <div class="activity-body">
+                <a href="./content/" class="activity-action" style="color:var(--primary)">Content Editor</a>
+                <div class="activity-details">Create and manage educational content</div>
+              </div>
+            </div>
+            <div class="activity-item" role="listitem">
+              <div class="activity-icon" aria-hidden="true">📊</div>
+              <div class="activity-body">
+                <a href="./analytics/" class="activity-action" style="color:var(--primary)">Analytics</a>
+                <div class="activity-details">View page views and user engagement</div>
+              </div>
+            </div>
+            <div class="activity-item" role="listitem">
+              <div class="activity-icon" aria-hidden="true">⚙️</div>
+              <div class="activity-body">
+                <a href="./settings/" class="activity-action" style="color:var(--primary)">Settings</a>
+                <div class="activity-details">Configure site settings and preferences</div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -341,9 +378,12 @@
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
   <script type="module">
-    import { logout as legacyLogout, getStats, getAuditLogs, verifyToken } from './api-client.js';
-    import { logout as supabaseLogout } from './supabase-auth.js';
+    import { logout as supabaseLogout, requireAuth, getSession } from './supabase-auth.js';
+    import { ALLOWED_EMAIL } from './supabase-config.js';
     import { CONSTANTS } from '../config/constants.js';
+
+    // ── Auth guard: verify session + email ──────────────────
+    if (!(await requireAuth('./login/'))) throw new Error('redirect');
 
     const API_GOLD_URL    = CONSTANTS.API_GOLD_URL;
     const API_FX_URL      = CONSTANTS.API_FX_URL;
@@ -391,15 +431,7 @@
     }
 
     // ── Offline / online banner ──────────────────────────────
-    document.addEventListener('admin:offline', () => {
-      qs('#offline-banner')?.classList.remove('hidden');
-    });
-    document.addEventListener('admin:online', () => {
-      qs('#offline-banner')?.classList.add('hidden');
-    });
-    document.addEventListener('admin:forbidden', () => {
-      showToast('Insufficient permissions.', 'error');
-    });
+    // (no backend — removed offline event listeners)
 
     // ── Active nav link ──────────────────────────────────────
     const currentPath = window.location.pathname.replace(/\/+$/, '') + '/';
@@ -425,49 +457,53 @@
 
     // ── Logout ───────────────────────────────────────────────
     qs('#logout-btn').addEventListener('click', async () => {
-      legacyLogout();
       await supabaseLogout();
       window.location.replace('./login/');
     });
 
-    // ── Verify token & show user info ────────────────────────
+    // ── Show user info from Supabase session ─────────────────
     async function loadUserInfo() {
-      const result = await verifyToken();
-      if (!result?.success) return; // verifyToken handles 401 redirect
-      const user = result.user;
+      const session = await getSession();
+      if (!session) return;
+      const user = session.user;
       const emailEl = qs('#sidebar-email');
       const badgeEl = qs('#sidebar-role-badge');
       const userEl  = qs('#sidebar-user');
       if (emailEl && user?.email) {
         emailEl.textContent = user.email;
         if (badgeEl) {
-          badgeEl.textContent = user.role || 'viewer';
-          badgeEl.className = `role-badge role-badge--${user.role || 'viewer'}`;
+          badgeEl.textContent = 'admin';
+          badgeEl.className = 'role-badge role-badge--admin';
         }
         if (userEl) userEl.style.display = '';
       }
+      // Also update the stat card
+      qs('#stat-user').textContent = user?.email || '—';
+      qs('#stat-user-sub').textContent = 'admin · authenticated via GitHub';
     }
     loadUserInfo();
 
-    // ── Load & render dashboard stats ────────────────────────
-    async function loadStats() {
+    // ── Load & render dashboard stats (from localStorage) ──
+    function loadStats() {
+      // Analytics events
       try {
-        const data = await getStats();
-        if (!data.success) return;
-        const { shops, users, auditLog } = data.stats;
+        const events = JSON.parse(storageGet('gp_analytics_events') || '[]');
+        qs('#stat-events').textContent = events.length.toLocaleString();
+        if (events.length > 0) {
+          const latest = new Date(events[events.length - 1].ts);
+          qs('#stat-events-sub').textContent = `last: ${relativeTime(latest.toISOString())}`;
+        }
+      } catch { qs('#stat-events').textContent = '0'; }
 
-        qs('#stat-shops').textContent   = shops?.total ?? '—';
-        qs('#stat-shops-sub').textContent = shops?.pending > 0 ? `${shops.pending} pending` : '';
-        qs('#stat-verified').textContent = shops?.verified ?? '—';
-        qs('#stat-users').textContent    = users?.total ?? '—';
-        qs('#stat-users-sub').textContent = users?.admins > 0 ? `${users.admins} admin${users.admins !== 1 ? 's' : ''}` : '';
-        qs('#stat-activity').textContent = auditLog?.total ?? '—';
-      } catch (err) {
-        ['#stat-shops','#stat-verified','#stat-users','#stat-activity'].forEach(id => {
-          const el = qs(id);
-          if (el) el.textContent = '—';
-        });
-      }
+      // Social post history
+      try {
+        const posts = JSON.parse(storageGet('gp_post_history') || '[]');
+        qs('#stat-posts').textContent = posts.length.toLocaleString();
+        if (posts.length > 0) {
+          const latest = new Date(posts[0].generatedAt);
+          qs('#stat-posts-sub').textContent = `last: ${relativeTime(latest.toISOString())}`;
+        }
+      } catch { qs('#stat-posts').textContent = '0'; }
     }
     loadStats();
 
@@ -486,10 +522,22 @@
           dot.className = 'ticker-dot ticker-dot--green';
           badge.classList.remove('ticker-loading');
           storageSet('gp_ticker_ts', Date.now().toString());
+          // Update stat card
+          qs('#stat-gold').textContent = formatted;
+          const change = data.ch ?? data.change ?? null;
+          const changePct = data.chp ?? data.change_percent ?? null;
+          if (change !== null) {
+            const sign = change >= 0 ? '+' : '';
+            qs('#stat-gold-sub').textContent = `${sign}${Number(change).toFixed(2)} (${sign}${Number(changePct).toFixed(2)}%)`;
+          } else {
+            qs('#stat-gold-sub').textContent = 'live spot price';
+          }
         }
       } catch {
         tickerTxt.textContent = 'XAU: unavailable';
         dot.className = 'ticker-dot ticker-dot--yellow';
+        qs('#stat-gold').textContent = 'Unavailable';
+        qs('#stat-gold-sub').textContent = 'could not fetch price';
       }
     }
     updateTicker();
@@ -573,75 +621,6 @@
       storageRemove('gp_cache_gold', 'goldprice_cache', 'gp_fx_cache');
       showToast('Cache cleared', 'success');
     });
-
-    qs('#qa-export-shops') && qs('#qa-export-shops').addEventListener('click', async () => {
-      try {
-        const { getShops } = await import('./api-client.js');
-        const data = await getShops({ limit: 1000 });
-        const shops = data.shops || [];
-        if (shops.length === 0) { showToast('No shops found.', 'warning'); return; }
-        const headers = ['id', 'name', 'country', 'city', 'phone', 'website', 'verified', 'status'];
-        const rows = shops.map(s =>
-          headers.map(h => {
-            const v = s[h] ?? '';
-            const str = String(v).replace(/"/g, '""');
-            return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str}"` : str;
-          }).join(',')
-        );
-        const csv = [headers.join(','), ...rows].join('\n');
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const url  = URL.createObjectURL(blob);
-        const a    = document.createElement('a');
-        a.href = url;
-        a.download = `shops-export-${new Date().toISOString().slice(0, 10)}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
-        showToast(`Exported ${shops.length} shops`, 'success');
-      } catch (err) {
-        showToast('Export failed: ' + (err.message || 'server error'), 'error');
-      }
-    });
-
-    // ── Activity Log ─────────────────────────────────────────
-    const ACTION_ICONS = {
-      login:   '🔑',
-      logout:  '🚪',
-      create:  '➕',
-      update:  '✏️',
-      delete:  '🗑',
-      default: '📋',
-    };
-
-    async function renderActivityLog() {
-      const container = qs('#activity-list');
-      try {
-        const data = await getAuditLogs({ limit: 15 });
-        const logs = data.logs || [];
-        if (logs.length === 0) {
-          container.innerHTML = '<div class="activity-empty">No activity recorded yet.</div>';
-          return;
-        }
-        container.innerHTML = logs.map(entry => {
-          const icon = ACTION_ICONS[entry.action] ?? ACTION_ICONS.default;
-          const time = relativeTime(entry.timestamp);
-          const detail = entry.entityType ? `${entry.action} ${entry.entityType}` : entry.action;
-          return `
-            <div class="activity-item" role="listitem">
-              <div class="activity-icon" aria-hidden="true">${icon}</div>
-              <div class="activity-body">
-                <div class="activity-action">${entry.actor || 'system'}</div>
-                <div class="activity-details">${detail}</div>
-              </div>
-              <div class="activity-time">${time}</div>
-            </div>
-          `;
-        }).join('');
-      } catch {
-        container.innerHTML = '<div class="activity-empty">Could not load activity log.</div>';
-      }
-    }
-
-    renderActivityLog();
 
   </script>
 </body>

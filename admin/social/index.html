@@ -840,7 +840,10 @@
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
   <script type="module">
-    import { logout } from '../supabase-auth.js';
+    import { logout, requireAuth } from '../supabase-auth.js';
+
+    // ── Auth guard ──────────────────────────────────────────
+    if (!(await requireAuth())) throw new Error('redirect');
 
     /* ══════════════════════════════════════════════════════════════
        CONSTANTS

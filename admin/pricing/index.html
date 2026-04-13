@@ -495,7 +495,10 @@
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
   <script type="module">
-    import { isAuthenticated, logActivity, logout } from '../auth.js';
+    import { isAuthenticated, logActivity, logout, requireAuth } from '../auth.js';
+
+    // ── Auth guard ──────────────────────────────────────────
+    if (!(await requireAuth())) throw new Error('redirect');
 
     /* ─────────────────────────────────────────────────────────
        Config

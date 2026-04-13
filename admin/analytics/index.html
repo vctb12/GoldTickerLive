@@ -249,8 +249,10 @@
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
   <script type="module">
-    import { logout as legacyLogout, getStats, getAuditLogs } from '../api-client.js';
-    import { logout as supabaseLogout } from '../supabase-auth.js';
+    import { logout as supabaseLogout, requireAuth } from '../supabase-auth.js';
+
+    // ── Auth guard ──────────────────────────────────────────
+    if (!(await requireAuth())) throw new Error('redirect');
 
     const EVENTS_KEY = 'gp_analytics_events';
     const API_LOG_KEY = 'gp_api_call_log';
