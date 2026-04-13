@@ -110,7 +110,7 @@ export function injectFooter(lang = 'en', depth = 0) {
         <p class="footer-disclaimer">${isAr
           ? 'قيم تقديرية مكافئة للسبيكة فقط. قد تختلف أسعار التجزئة والمجوهرات. ليست نصيحة مالية.'
           : 'Estimated bullion-equivalent values only. Retail and jewellery prices may differ. Not financial advice.'}</p>
-        <p class="footer-copy">© ${year} GoldPrices</p>
+        <p class="footer-copy">© ${year} GoldPrices · <a href="${r('../terms.html')}">${isAr ? 'شروط الخدمة' : 'Terms'}</a> · <a href="${r('../privacy.html')}">${isAr ? 'الخصوصية' : 'Privacy'}</a></p>
       </div>
     </div>
   </div>

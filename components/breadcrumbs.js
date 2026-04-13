@@ -90,6 +90,12 @@ export function getBreadcrumbs(pageName, extra = {}) {
     'methodology': [
       { label: 'Methodology', url: '/methodology.html' }
     ],
+    'terms': [
+      { label: 'Terms of Service', url: '/terms.html' }
+    ],
+    'privacy': [
+      { label: 'Privacy Policy', url: '/privacy.html' }
+    ],
     'invest': [
       { label: 'Invest', url: '/invest.html' }
     ],
