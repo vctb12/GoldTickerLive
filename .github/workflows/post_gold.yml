@@ -1,9 +1,9 @@
-name: Hourly Gold Price Tweet
+name: Post Gold Price to X (Python)
 
 on:
   schedule:
-    # Runs at the top of every hour (UTC)
-    - cron: '0 * * * *'
+    # Runs every 3 hours to avoid overlap with the Node.js hourly workflow
+    - cron: '30 */3 * * *'
   # Allow manual trigger from Actions tab (for testing)
   workflow_dispatch:
 
@@ -11,8 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  tweet:
-    name: Post gold price to X / Twitter
+  post:
+    name: Post gold price to X / Twitter (Python)
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -20,16 +20,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          node-version: 24
+          python-version: '3.11'
 
-      - name: Post gold price tweet
+      - name: Install dependencies
+        run: pip install requests tweepy
+
+      - name: Run posting script
         env:
           GOLD_API_KEY:                ${{ secrets.GOLD_API_KEY }}
           TWITTER_API_KEY:             ${{ secrets.CONSUMER_KEY }}
           TWITTER_API_SECRET:          ${{ secrets.CONSUMER_SECRET }}
           TWITTER_ACCESS_TOKEN:        ${{ secrets.ACCESS_TOKEN }}
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
-        run: node scripts/tweet-gold-price.js
+        run: python scripts/post_gold_price.py

@@ -6,6 +6,7 @@
   <meta name="robots" content="noindex, nofollow" />
   <title>Pricing — GoldAdmin</title>
   <link rel="stylesheet" href="../admin.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     /* ── Section spacing ────────────────────────────────────── */
     .section { margin-bottom: 28px; }
@@ -209,7 +210,7 @@
 <body>
 
   <!-- Auth guard: redirect to login if no valid session -->
-  <script>(function(){try{if(!localStorage.getItem('gp_admin_token'))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
+  <script>(function(){try{var k=Object.keys(localStorage);if(!k.some(function(x){return x.startsWith('sb-')&&x.endsWith('-auth-token')}))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
 
   <!-- Sidebar overlay (mobile) -->
   <div class="sidebar-overlay" id="sidebar-overlay"></div>

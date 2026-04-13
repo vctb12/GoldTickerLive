@@ -6,6 +6,7 @@
   <meta name="robots" content="noindex, nofollow" />
   <title>Analytics — GoldAdmin</title>
   <link rel="stylesheet" href="../admin.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     /* ── Stat grid ──────────────────────────────────────────── */
     .stat-grid {
@@ -178,7 +179,7 @@
 <body>
 
   <!-- Auth guard -->
-  <script>(function(){try{if(!localStorage.getItem('gp_admin_token'))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
+  <script>(function(){try{var k=Object.keys(localStorage);if(!k.some(function(x){return x.startsWith('sb-')&&x.endsWith('-auth-token')}))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
 
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
@@ -248,7 +249,8 @@
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
   <script type="module">
-    import { logout, getStats, getAuditLogs } from '../api-client.js';
+    import { logout as legacyLogout, getStats, getAuditLogs } from '../api-client.js';
+    import { logout as supabaseLogout } from '../supabase-auth.js';
 
     const EVENTS_KEY = 'gp_analytics_events';
     const API_LOG_KEY = 'gp_api_call_log';
@@ -599,8 +601,9 @@
         overlay.classList.remove('sidebar-overlay--visible');
       });
 
-      document.getElementById('logout-btn').addEventListener('click', () => {
-        logout();
+      document.getElementById('logout-btn').addEventListener('click', async () => {
+        legacyLogout();
+        await supabaseLogout();
         window.location.replace('../login/');
       });
 
