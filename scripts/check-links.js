@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * scripts/check-links.js
- * Crawls all HTML files in the repo and checks every internal href/src
- * for a corresponding file on disk.
+ * Crawls all HTML files under --dir and checks every internal HTML navigation
+ * link for a corresponding file on disk.
  *
  * Usage:  node scripts/check-links.js [--dir <path>] [--fail-on-error]
  *         node scripts/check-links.js --dir dist --fail-on-error
@@ -22,6 +22,29 @@ const dirArg    = args.indexOf('--dir');
 const rootDir   = dirArg >= 0 ? path.resolve(args[dirArg + 1]) : path.resolve(__dirname, '..');
 const failOnErr = args.includes('--fail-on-error');
 
+// ── Asset extensions to skip (not navigational links) ───────────────────────
+const ASSET_EXTENSIONS = [
+  '.js', '.mjs', '.css', '.png', '.jpg', '.jpeg', '.gif',
+  '.webp', '.svg', '.ico', '.json', '.xml', '.txt', '.pdf',
+  '.woff', '.woff2', '.ttf', '.eot', '.mp4', '.webm', '.mp3',
+];
+
+function isAsset(url) {
+  const lower = url.toLowerCase().split('?')[0].split('#')[0];
+  return ASSET_EXTENSIONS.some(ext => lower.endsWith(ext));
+}
+
+// ── Strip deployment base path so absolute links resolve under rootDir ───────
+// Handles builds produced with base: '/Gold-Prices/' (GitHub Pages production).
+const BASE_PATH_PREFIX = '/Gold-Prices/';
+
+function normalizePath(url) {
+  if (url.startsWith(BASE_PATH_PREFIX)) {
+    return '/' + url.slice(BASE_PATH_PREFIX.length);
+  }
+  return url;
+}
+
 // ── Helpers ─────────────────────────────────────────────────────────────────
 function walkHtml(dir, results = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -37,33 +60,38 @@ function walkHtml(dir, results = []) {
   return results;
 }
 
-const INTERNAL_HREF  = /href="([^"#?]+(?:\.html|\.js|\.css|\/)[^"#?]*)"/g;
-const INTERNAL_SRC   = /src="([^"]+)"/g;
-const LINK_HREF      = /<link[^>]+href="([^"]+)"/g;
+// Only extract href= values that look like HTML page navigation.
+// Deliberately excludes <script src>, <link href> (assets), and inline styles.
+const ANCHOR_HREF = /<a\s[^>]*\bhref="([^"#?][^"]*?)"/g;
 
 function extractLinks(html) {
   const links = new Set();
-  for (const re of [INTERNAL_HREF, INTERNAL_SRC, LINK_HREF]) {
-    re.lastIndex = 0;
-    let m;
-    while ((m = re.exec(html)) !== null) {
-      const href = m[1];
-      // Skip absolute URLs, data URIs, mailto, tel, anchors
-      if (href.startsWith('http') || href.startsWith('//') ||
-          href.startsWith('data:') || href.startsWith('mailto:') ||
-          href.startsWith('tel:') || href === '#') continue;
-      links.add(href.split('#')[0].split('?')[0]);
-    }
+  ANCHOR_HREF.lastIndex = 0;
+  let m;
+  while ((m = ANCHOR_HREF.exec(html)) !== null) {
+    const href = m[1].split('#')[0].split('?')[0].trim();
+    if (!href) continue;
+    // Skip absolute URLs, data URIs, special protocols, and JS template expressions
+    if (
+      href.startsWith('http') || href.startsWith('//') ||
+      href.startsWith('data:') || href.startsWith('mailto:') ||
+      href.startsWith('tel:') || href.startsWith('javascript:') ||
+      href.includes('${')
+    ) continue;
+    // Skip asset files — these are not page-navigation links
+    if (isAsset(href)) continue;
+    links.add(href);
   }
-  return [...links].filter(Boolean);
+  return [...links];
 }
 
 function resolveLink(fromFile, link) {
-  if (link.startsWith('/')) {
-    // Absolute path — resolve from rootDir
-    return path.join(rootDir, link);
+  const normalized = normalizePath(link);
+  if (normalized.startsWith('/')) {
+    // Absolute path — resolve from rootDir (the dist directory)
+    return path.join(rootDir, normalized);
   }
-  return path.resolve(path.dirname(fromFile), link);
+  return path.resolve(path.dirname(fromFile), normalized);
 }
 
 function fileExists(p) {
@@ -71,8 +99,7 @@ function fileExists(p) {
     const stat = fs.statSync(p);
     if (stat.isFile()) return true;
     // Directory — look for index.html
-    const idx = path.join(p, 'index.html');
-    return fs.existsSync(idx);
+    return fs.existsSync(path.join(p, 'index.html'));
   } catch { return false; }
 }
 
@@ -82,8 +109,8 @@ let broken = 0;
 const report = [];
 
 for (const file of htmlFiles) {
-  const html  = fs.readFileSync(file, 'utf8');
-  const links = extractLinks(html);
+  const html    = fs.readFileSync(file, 'utf8');
+  const links   = extractLinks(html);
   const relFile = path.relative(rootDir, file);
 
   for (const link of links) {
@@ -95,18 +122,20 @@ for (const file of htmlFiles) {
   }
 }
 
+console.log(`Checked ${htmlFiles.length} HTML files`);
+
 if (broken === 0) {
-  console.log(`✅  check-links: all internal links resolved in ${htmlFiles.length} HTML files.`);
+  console.log(`✅  check-links: all internal links resolved.`);
   process.exit(0);
 } else {
-  console.error(`❌  check-links: ${broken} broken link(s) found in ${htmlFiles.length} HTML files:\n`);
+  console.error(`\n❌  check-links: ${broken} broken link(s) found:\n`);
   const byFile = {};
   for (const r of report) {
     if (!byFile[r.file]) byFile[r.file] = [];
     byFile[r.file].push(`  → ${r.link}  (expected: ${r.resolved})`);
   }
   for (const [f, issues] of Object.entries(byFile)) {
-    console.error(`📄  ${f}`);
+    console.error(`\n📄  ${f}`);
     for (const i of issues) console.error(i);
   }
   if (failOnErr) process.exit(1);
