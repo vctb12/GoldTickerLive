@@ -76,6 +76,7 @@ function extractLinks(html) {
       href.startsWith('http') || href.startsWith('//') ||
       href.startsWith('data:') || href.startsWith('mailto:') ||
       href.startsWith('tel:') || href.startsWith('javascript:') ||
+      href.startsWith('vbscript:') ||
       href.includes('${')
     ) continue;
     // Skip asset files — these are not page-navigation links
