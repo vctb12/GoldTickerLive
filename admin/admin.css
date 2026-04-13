@@ -901,3 +901,52 @@ tbody td {
   white-space: nowrap;
   width: 1px;
 }
+
+/* --------------------------------------------------------------------------
+   17. Offline Banner
+   -------------------------------------------------------------------------- */
+.offline-banner {
+  align-items: flex-start;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: var(--radius);
+  color: var(--warning);
+  display: flex;
+  font-size: 0.875rem;
+  gap: 10px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+}
+
+/* --------------------------------------------------------------------------
+   18. Role Badge
+   -------------------------------------------------------------------------- */
+.role-badge {
+  border-radius: 4px;
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+  padding: 2px 6px;
+  text-transform: uppercase;
+}
+.role-badge--admin  { background: rgba(245,158,11,0.15); color: var(--gold); }
+.role-badge--editor { background: rgba(59,130,246,0.15);  color: #60a5fa; }
+.role-badge--viewer { background: rgba(100,116,139,0.15); color: var(--text-dim); }
+
+/* --------------------------------------------------------------------------
+   19. Inline Spinner (used inside table cells and stat cards)
+   -------------------------------------------------------------------------- */
+.inline-spinner {
+  animation: admin-spin 0.75s linear infinite;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  display: inline-block;
+  height: 14px;
+  vertical-align: middle;
+  width: 14px;
+}
+@keyframes admin-spin { to { transform: rotate(360deg); } }

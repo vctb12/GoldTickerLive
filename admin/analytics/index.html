@@ -178,7 +178,7 @@
 <body>
 
   <!-- Auth guard -->
-  <script>(function(){try{var s=JSON.parse(localStorage.getItem('gp_admin_session'));if(!s||s.expires<Date.now())window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
+  <script>(function(){try{if(!localStorage.getItem('gp_admin_token'))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
 
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
@@ -215,7 +215,31 @@
       </header>
 
       <main class="content-area" id="main-content">
-        <!-- Populated by JS -->
+        <!-- ── Server-side stats ────────────────────────────── -->
+        <div id="server-stats-section">
+          <div class="source-notice" id="server-stats-notice" style="display:none">
+            ⚠️ Admin server is offline — server-side stats unavailable.
+          </div>
+          <div class="stat-grid" role="list" aria-label="Server-side metrics" id="server-stat-grid">
+            <div class="stat-card" role="listitem">
+              <div class="stat-label">Total Shops</div>
+              <div class="stat-number" id="srv-shops"><span class="inline-spinner" aria-hidden="true"></span></div>
+            </div>
+            <div class="stat-card" role="listitem">
+              <div class="stat-label">Verified Shops</div>
+              <div class="stat-number" id="srv-verified"><span class="inline-spinner" aria-hidden="true"></span></div>
+            </div>
+            <div class="stat-card" role="listitem">
+              <div class="stat-label">Pending Shops</div>
+              <div class="stat-number" id="srv-pending"><span class="inline-spinner" aria-hidden="true"></span></div>
+            </div>
+            <div class="stat-card" role="listitem">
+              <div class="stat-label">Audit Log Entries</div>
+              <div class="stat-number" id="srv-audit"><span class="inline-spinner" aria-hidden="true"></span></div>
+            </div>
+          </div>
+        </div>
+        <!-- ── Frontend analytics (localStorage) ─────────────── -->
       </main>
 
     </div><!-- /.main-area -->
@@ -224,10 +248,30 @@
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
   <script type="module">
-    import { isAuthenticated, logActivity, logout } from '../auth.js';
+    import { logout, getStats, getAuditLogs } from '../api-client.js';
 
     const EVENTS_KEY = 'gp_analytics_events';
     const API_LOG_KEY = 'gp_api_call_log';
+
+    // ── Server-side stats ─────────────────────────────────────
+    async function loadServerStats() {
+      try {
+        const data = await getStats();
+        if (!data.success) return;
+        const { shops, auditLog } = data.stats;
+        document.getElementById('srv-shops').textContent    = shops?.total ?? '—';
+        document.getElementById('srv-verified').textContent = shops?.verified ?? '—';
+        document.getElementById('srv-pending').textContent  = shops?.pending ?? '—';
+        document.getElementById('srv-audit').textContent    = auditLog?.total ?? '—';
+      } catch {
+        document.getElementById('server-stats-notice').style.display = '';
+        ['srv-shops','srv-verified','srv-pending','srv-audit'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = '—';
+        });
+      }
+    }
+    loadServerStats();
 
     /* ── Toast ──────────────────────────────────────────────── */
     function showToast(msg, type = 'info') {
@@ -289,7 +333,9 @@
     /* ── Empty state (no data at all) ───────────────────────── */
     function renderEmptyState() {
       const content = document.getElementById('main-content');
-      content.innerHTML = `
+      const frontendSection = document.createElement('div');
+      frontendSection.id = 'frontend-analytics';
+      frontendSection.innerHTML = `
         <div class="source-notice">
           ℹ Analytics data is collected when users visit public pages with the analytics module loaded.
           Data is stored in localStorage on the user's device and is not transmitted to any external service.
@@ -308,6 +354,9 @@
             </p>
           </div>
         </div>`;
+      // Remove existing frontend section if any, then append
+      document.getElementById('frontend-analytics')?.remove();
+      content.appendChild(frontendSection);
     }
 
     /* ── Full dashboard ─────────────────────────────────────── */
@@ -403,7 +452,11 @@
         datePeriod = from === to ? from : `${from} – ${to}`;
       }
 
-      content.innerHTML = `
+      // Remove existing frontend section if any
+      document.getElementById('frontend-analytics')?.remove();
+      const frontendSection = document.createElement('div');
+      frontendSection.id = 'frontend-analytics';
+      frontendSection.innerHTML = `
         <div class="source-notice">
           ℹ Analytics data is collected when users visit public pages with the analytics module loaded.
           Data is stored in localStorage on the user's device and is not transmitted to any external service.
@@ -487,6 +540,8 @@
             ${datePeriod ? `<div class="data-period">Data period: ${datePeriod}</div>` : ''}
           </div>
         </div>`;
+
+      content.appendChild(frontendSection);
 
       /* ── Wire data management actions ───────────────────────── */
       let clearPending = false;
