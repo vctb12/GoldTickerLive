@@ -1,0 +1,56 @@
+{
+  "sessions": [
+    {
+      "name": "Sydney",
+      "open_utc": "22:00",
+      "close_utc": "07:00",
+      "active_days": [0, 1, 2, 3, 4],
+      "primary": false,
+      "timezone_label": "AEST (UTC+10)"
+    },
+    {
+      "name": "Tokyo",
+      "open_utc": "00:00",
+      "close_utc": "09:00",
+      "active_days": [0, 1, 2, 3, 4],
+      "primary": false,
+      "timezone_label": "JST (UTC+9)"
+    },
+    {
+      "name": "London",
+      "open_utc": "08:00",
+      "close_utc": "17:00",
+      "active_days": [0, 1, 2, 3, 4],
+      "primary": true,
+      "timezone_label": "GMT/BST (UTC+0/+1)"
+    },
+    {
+      "name": "New York COMEX",
+      "open_utc": "13:30",
+      "close_utc": "18:00",
+      "active_days": [0, 1, 2, 3, 4],
+      "primary": true,
+      "timezone_label": "ET (UTC-5/-4)"
+    },
+    {
+      "name": "Dubai",
+      "open_utc": "04:30",
+      "close_utc": "12:30",
+      "active_days": [0, 1, 2, 3, 4, 6],
+      "primary": false,
+      "timezone_label": "GST (UTC+4)"
+    }
+  ],
+  "global_market": {
+    "weekly_open": {
+      "day": 6,
+      "time_utc": "22:00",
+      "description": "Sunday 22:00 UTC — Sydney session opens"
+    },
+    "weekly_close": {
+      "day": 4,
+      "time_utc": "18:00",
+      "description": "Friday 18:00 UTC — New York COMEX closes"
+    }
+  }
+}

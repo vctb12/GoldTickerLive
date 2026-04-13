@@ -1,0 +1,9 @@
+{
+  "spike_threshold_pct": 2.0,
+  "max_spike_posts_per_24h": 4,
+  "min_minutes_between_spike_posts": 60,
+  "api_retry_attempts": 3,
+  "api_retry_delay_seconds": 5,
+  "max_tweet_length": 280,
+  "tweet_length_safety_buffer": 10
+}

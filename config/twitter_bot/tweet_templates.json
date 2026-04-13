@@ -1,0 +1,26 @@
+{
+  "hourly": {
+    "template": "{emoji} Gold Update ({timestamp_gst} GST)\n\nXAU/USD: ${spot_usd}/oz {change_direction}{change_pct}%\n\nPer Gram (AED):\n24K: {k24_aed}\n22K: {k22_aed}\n21K: {k21_aed}\n\n{market_status}\n{disclaimer}\n📊 {url}\n\n{hashtags}",
+    "hashtags": "#Gold #XAU #GoldPrice #UAE"
+  },
+  "market_open": {
+    "template": "🔔 {session_name} Market Open\n\nXAU/USD: ${spot_usd}/oz\n\nPer Gram (AED):\n24K: {k24_aed}\n22K: {k22_aed}\n21K: {k21_aed}\n\nTrading is underway — watch for early moves.\n{disclaimer}\n📊 {url}\n\n{hashtags}",
+    "hashtags": "#Gold #XAU #GoldPrice #MarketOpen"
+  },
+  "market_close": {
+    "template": "🔒 {session_name} Market Close\n\nFinal XAU/USD: ${spot_usd}/oz {change_direction}{change_pct}%\nSession High: ${high_usd} · Low: ${low_usd}\n\nPer Gram (AED):\n24K: {k24_aed}\n22K: {k22_aed}\n21K: {k21_aed}\n\n{disclaimer}\n📊 {url}\n\n{hashtags}",
+    "hashtags": "#Gold #XAU #GoldPrice #MarketClose"
+  },
+  "spike_up": {
+    "template": "🚀 GOLD SURGING {change_direction}{spike_pct}%\n\nXAU/USD: ${spot_usd}/oz (+${spike_amount})\n\nPer Gram (AED):\n24K: {k24_aed}\n22K: {k22_aed}\n21K: {k21_aed}\n\n⚡ Rapid move — prices may be volatile.\n{disclaimer}\n📊 {url}\n\n{hashtags}",
+    "hashtags": "#Gold #XAU #GoldPrice #GoldSurge #Breaking"
+  },
+  "spike_down": {
+    "template": "🔻 GOLD DROPPING {change_direction}{spike_pct}%\n\nXAU/USD: ${spot_usd}/oz (-${spike_amount})\n\nPer Gram (AED):\n24K: {k24_aed}\n22K: {k22_aed}\n21K: {k21_aed}\n\n⚡ Sharp decline — prices may be volatile.\n{disclaimer}\n📊 {url}\n\n{hashtags}",
+    "hashtags": "#Gold #XAU #GoldPrice #GoldDrop #Breaking"
+  },
+  "health_check": {
+    "template": "✅ @GoldTickerLive Status\n\n{health_summary}\n\nLast Price: XAU/USD ${spot_usd}/oz\nTimestamp: {timestamp_gst} GST\n{market_status}\n\n📊 {url}\n\n{hashtags}",
+    "hashtags": "#Gold #GoldPrice #BotStatus"
+  }
+}
