@@ -808,12 +808,12 @@
   </div><!-- /.admin-layout -->
 
   <!-- Post detail modal -->
-  <div class="modal-backdrop" id="post-modal">
+  <div class="modal-backdrop" id="post-modal" style="display:none;">
     <div class="modal-box" id="modal-box">
       <div class="modal-title">
         <h3 id="modal-template-name">—</h3>
         <span class="modal-badge sg-chip" id="modal-badge">—</span>
-        <button class="modal-close" id="modal-close" type="button" aria-label="Close">✕</button>
+        <button class="modal-close" id="modal-close" type="button" aria-label="Close modal" title="Close">✕</button>
       </div>
       <div id="modal-meta" style="color:var(--text-dim);font-size:0.8125rem;margin-bottom:16px;"></div>
       <div class="preview-card">
@@ -1109,11 +1109,11 @@
       charEl.textContent = `${charCount}/280 chars`;
       charEl.className = charCount <= 280 ? '' : 'char-over';
 
-      document.getElementById('post-modal').classList.add('open');
+      document.getElementById('post-modal').style.display = 'flex';
     }
 
     function closeModal() {
-      document.getElementById('post-modal').classList.remove('open');
+      document.getElementById('post-modal').style.display = 'none';
     }
 
     function generateSampleTweet(templateId, slotDate) {
