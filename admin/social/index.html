@@ -1146,6 +1146,10 @@
       return samples[templateId] || samples.hourly;
     }
 
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
     /* ══════════════════════════════════════════════════════════════
        TEMPLATES TAB
        ══════════════════════════════════════════════════════════════ */
@@ -1182,10 +1186,6 @@
           </div>
         </div>`;
       }).join('');
-    }
-
-    function escapeHtml(str) {
-      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
     /* ══════════════════════════════════════════════════════════════
