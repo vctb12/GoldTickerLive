@@ -12,7 +12,7 @@ Required environment variables (set as GitHub Secrets):
   TWITTER_ACCESS_TOKEN      – X Developer Portal: Access Token (read-write)
   TWITTER_ACCESS_TOKEN_SECRET – X Developer Portal: Access Token Secret
 
-Runs from .github/workflows/post_gold.yml on an hourly schedule.
+Runs from .github/workflows/post_gold.yml every 3 hours (at :30 past the hour).
 """
 
 import os
@@ -45,10 +45,18 @@ def get_gold_price():
 # ── Step 2: Format the tweet ─────────────────────────────────────────────────
 def format_tweet(data):
     """Build the tweet text from the GoldAPI response, with AED conversion."""
-    usd_price = f"{data['price']:,.2f}"
-    g24_aed = f"{data['price_gram_24k'] * AED_RATE:.2f}"
-    g22_aed = f"{data['price_gram_22k'] * AED_RATE:.2f}"
-    g21_aed = f"{data['price_gram_21k'] * AED_RATE:.2f}"
+    price = data.get('price')
+    g24 = data.get('price_gram_24k')
+    g22 = data.get('price_gram_22k')
+    g21 = data.get('price_gram_21k')
+
+    if not all([price, g24, g22, g21]):
+        raise ValueError("GoldAPI response missing required price fields")
+
+    usd_price = f"{price:,.2f}"
+    g24_aed = f"{g24 * AED_RATE:.2f}"
+    g22_aed = f"{g22 * AED_RATE:.2f}"
+    g21_aed = f"{g21 * AED_RATE:.2f}"
 
     tweet = (
         f"🟡 Gold Price Update\n"
@@ -98,7 +106,8 @@ def main():
             missing.append(name)
 
     if missing:
-        print(f"⚠️  Missing environment variables: {', '.join(missing)}")
+        count = len(missing)
+        print(f"⚠️  {count} required environment variable(s) not set.")
         print("   Set these as GitHub Secrets in Settings → Secrets → Actions.")
         print("   Skipping tweet.")
         sys.exit(0)  # Exit 0 so the workflow doesn't report as failed
