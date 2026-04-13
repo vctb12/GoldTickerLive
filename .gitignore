@@ -3,8 +3,6 @@
 *.js.map
 *.min.js
 dist/
-lib/*.js
-!lib/page-hydrator.js
 
 # Dependencies
 node_modules/
