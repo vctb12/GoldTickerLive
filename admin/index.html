@@ -6,6 +6,7 @@
   <meta name="robots" content="noindex, nofollow" />
   <title>Dashboard — GoldAdmin</title>
   <link rel="stylesheet" href="admin.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     /* ── Stat grid ─────────────────────────────────────────── */
     .stat-grid {
@@ -154,7 +155,7 @@
 
   <!-- Flash prevention: redirect to login if no token present -->
   <script>
-    (function(){try{if(!localStorage.getItem('gp_admin_token'))window.location.replace('./login/');}catch(e){window.location.replace('./login/');}})();
+    (function(){try{var k=Object.keys(localStorage);if(!k.some(function(x){return x.startsWith('sb-')&&x.endsWith('-auth-token')}))window.location.replace('./login/');}catch(e){window.location.replace('./login/');}})();
   </script>
 
   <!-- Sidebar overlay (mobile) -->
@@ -340,7 +341,8 @@
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
   <script type="module">
-    import { logout, getStats, getAuditLogs, verifyToken } from './api-client.js';
+    import { logout as legacyLogout, getStats, getAuditLogs, verifyToken } from './api-client.js';
+    import { logout as supabaseLogout } from './supabase-auth.js';
     import { CONSTANTS } from '../config/constants.js';
 
     const API_GOLD_URL    = CONSTANTS.API_GOLD_URL;
@@ -422,8 +424,9 @@
     });
 
     // ── Logout ───────────────────────────────────────────────
-    qs('#logout-btn').addEventListener('click', () => {
-      logout();
+    qs('#logout-btn').addEventListener('click', async () => {
+      legacyLogout();
+      await supabaseLogout();
       window.location.replace('./login/');
     });
 

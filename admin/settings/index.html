@@ -6,6 +6,7 @@
   <meta name="robots" content="noindex, nofollow" />
   <title>Settings — GoldAdmin</title>
   <link rel="stylesheet" href="../admin.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     /* ── Inline spinner ──────────────────────────────────────── */
     .inline-spinner {
@@ -177,7 +178,7 @@
 <body>
 
   <!-- Auth guard -->
-  <script>(function(){try{if(!localStorage.getItem('gp_admin_token'))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
+  <script>(function(){try{var k=Object.keys(localStorage);if(!k.some(function(x){return x.startsWith('sb-')&&x.endsWith('-auth-token')}))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
 
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
@@ -499,7 +500,8 @@
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
   <script type="module">
-    import { logout, logActivity, getUsers, createUser, updateUser, deleteUser, getAuditLogs, exportAuditLogs } from '../api-client.js';
+    import { logout as legacyLogout, logActivity, getUsers, createUser, updateUser, deleteUser, getAuditLogs, exportAuditLogs } from '../api-client.js';
+    import { logout as supabaseLogout } from '../supabase-auth.js';
 
     const SETTINGS_KEY = 'gp_settings';
     const LAST_SAVED_KEY = 'gp_settings_saved_at';
@@ -791,8 +793,9 @@
       });
 
       // Logout
-      document.getElementById('logout-btn').addEventListener('click', () => {
-        logout();
+      document.getElementById('logout-btn').addEventListener('click', async () => {
+        legacyLogout();
+        await supabaseLogout();
         window.location.replace('../login/');
       });
 

@@ -6,6 +6,7 @@
   <meta name="robots" content="noindex, nofollow" />
   <title>Admin Login — Gold Prices</title>
   <link rel="stylesheet" href="../admin.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     body {
       align-items: center;
@@ -119,11 +120,15 @@
   </style>
 </head>
 <body>
-  <!-- Flash prevention: redirect immediately if already authenticated -->
+  <!-- Flash prevention: redirect immediately if already authenticated via Supabase -->
   <script>
     (function () {
       try {
-        if (localStorage.getItem('gp_admin_token')) {
+        var keys = Object.keys(localStorage);
+        var hasSession = keys.some(function(k) {
+          return k.startsWith('sb-') && k.endsWith('-auth-token');
+        });
+        if (hasSession) {
           window.location.replace('../');
         }
       } catch (e) {
@@ -171,7 +176,7 @@
         <div class="login-alert login-alert--error" id="login-error" role="alert"></div>
         <div class="login-alert login-alert--offline" id="login-offline" role="alert">
           <span>⚠️</span>
-          <span>Admin server is unreachable. Make sure <code>npm start</code> is running on port 3000.</span>
+          <span>Could not reach Supabase. Check your internet connection.</span>
         </div>
 
         <button type="submit" class="btn btn-gold btn-submit" id="submit-btn">
@@ -180,15 +185,13 @@
       </form>
 
       <p class="login-help">
-        Credentials set via <code>ADMIN_EMAIL</code> / <code>ADMIN_PASSWORD</code> env vars
-        &nbsp;·&nbsp;
-        <a href="../../ADMIN_SETUP.md" target="_blank" rel="noopener">Setup guide</a>
+        Authenticated via Supabase Auth
       </p>
     </div>
   </div>
 
   <script type="module">
-    import { login } from '../api-client.js';
+    import { login } from '../supabase-auth.js';
 
     const form      = document.getElementById('login-form');
     const emailEl   = document.getElementById('email');
@@ -244,7 +247,7 @@
       submitBtn.disabled    = false;
       submitBtn.textContent = 'Sign In';
 
-      if (result.offline) {
+      if (result.message && result.message.includes('fetch')) {
         showOffline();
       } else {
         showError(result.message || 'Invalid credentials.');

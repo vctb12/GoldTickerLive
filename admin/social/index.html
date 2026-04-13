@@ -6,6 +6,7 @@
   <meta name="robots" content="noindex, nofollow" />
   <title>Social — GoldAdmin</title>
   <link rel="stylesheet" href="../admin.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     /* ── Controls card ──────────────────────────────────────── */
     .pill-tabs {
@@ -177,7 +178,7 @@
 <body>
 
   <!-- Auth guard -->
-  <script>(function(){try{if(!localStorage.getItem('gp_admin_token'))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
+  <script>(function(){try{var k=Object.keys(localStorage);if(!k.some(function(x){return x.startsWith('sb-')&&x.endsWith('-auth-token')}))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
 
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
