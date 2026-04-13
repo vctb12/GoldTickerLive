@@ -526,7 +526,7 @@
           qs('#stat-gold').textContent = formatted;
           const change = data.ch ?? data.change ?? null;
           const changePct = data.chp ?? data.change_percent ?? null;
-          if (change !== null) {
+          if (change !== null && changePct !== null) {
             const sign = change >= 0 ? '+' : '';
             qs('#stat-gold-sub').textContent = `${sign}${Number(change).toFixed(2)} (${sign}${Number(changePct).toFixed(2)}%)`;
           } else {
