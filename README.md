@@ -142,21 +142,21 @@ GoldPrices is built to be **cleaner, more transparent, more bilingual, and more 
 │  countries/*.html · guides/*.html · order-gold/ · search/   │
 ├─────────────────────────────────────────────────────────────┤
 │              Page-specific JS (scripts/pages/)              │
-│  home.js · tracker-pro.js · calculator.js · shops.js · …   │
+│  home.js · tracker-pro.js · calculator.js · shops.js · …    │
 ├─────────────────────────────────────────────────────────────┤
 │              Shared Components (components/)                │
-│  nav.js · footer.js · ticker.js · breadcrumbs.js · chart.js│
+│  nav.js · footer.js · ticker.js · breadcrumbs.js · chart.js │
 │  adSlot.js (Google AdSense lazy loader)                     │
 ├─────────────────────────────────────────────────────────────┤
 │                Core Libraries (lib/)                        │
-│  api.js → cache.js → price-calculator.js → formatter.js    │
-│  export.js · historical-data.js · search.js · alerts.js    │
+│  api.js → cache.js → price-calculator.js → formatter.js     │
+│  export.js · historical-data.js · search.js · alerts.js     │
 ├─────────────────────────────────────────────────────────────┤
 │              Configuration (config/)                        │
 │  constants.js · countries.js · karats.js · translations.js  │
 ├─────────────────────────────────────────────────────────────┤
 │                External APIs                                │
-│  gold-api.com (XAU/USD) · open.er-api.com (FX rates)       │
+│  gold-api.com (XAU/USD) · open.er-api.com (FX rates)        │
 │  datahub.io (historical) · GDELT (news headlines)           │
 └─────────────────────────────────────────────────────────────┘
 ```
