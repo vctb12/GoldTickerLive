@@ -48,6 +48,4 @@ jobs:
           echo "HTML files generated"
 
       - name: Run tests
-        run: npm test || true
-        # `|| true` because 2 pre-existing test files have missing modules.
-        # Remove once lib/errors.js and lib/supabase-client.js are restored.
+        run: npm test
