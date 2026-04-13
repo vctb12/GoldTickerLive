@@ -385,7 +385,8 @@
               </div>
             </div>
             <div class="notice-box">
-              ⚠ API keys are stored in your browser's localStorage only. They are not transmitted to any server. Use for client-side fallback only.
+              ℹ API keys are stored in Supabase along with other settings. They are synced across devices.
+              Keys are never exposed to public visitors — only authenticated admins can read them.
             </div>
           </div>
         </div>
@@ -525,6 +526,9 @@
       return readCachedSettings() || structuredClone(DEFAULTS);
     }
 
+    // Cache admin email at init to avoid repeated getUser() calls
+    let _adminEmail = null;
+
     /**
      * Save settings to Supabase (upsert) and cache locally.
      */
@@ -536,7 +540,7 @@
       if (sb) {
         const { error } = await sb
           .from('site_settings')
-          .upsert({ id: 'default', value: s, updated_by: (await sb.auth.getUser())?.data?.user?.email || null })
+          .upsert({ id: 'default', value: s, updated_by: _adminEmail })
           .eq('id', 'default');
         if (error) throw new Error(error.message);
       } else {
@@ -654,6 +658,7 @@
         const { getSession } = await import('../supabase-auth.js');
         const session = await getSession();
         const email = session?.user?.email || '—';
+        _adminEmail = session?.user?.email || null;
         document.getElementById('settings-user-email').textContent = email;
       } catch {
         document.getElementById('settings-user-email').textContent = 'Could not load';

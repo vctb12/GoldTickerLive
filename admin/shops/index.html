@@ -600,6 +600,7 @@
         name:                  shop.name         || null,
         name_ar:               shop.nameAr       || null,
         country_code:          shop.country       || null,
+        // Strip emoji prefix from COUNTRIES map (e.g. '🇦🇪 UAE' → 'UAE')
         country:               COUNTRIES[shop.country]?.replace(/^.*? /, '') || null,
         city:                  shop.city          || null,
         area:                  shop.area          || null,
@@ -613,6 +614,7 @@
         phone:                 shop.phone         || null,
         website:               shop.website       || null,
         rating:                shop.rating        ?? null,
+        // Admin form uses 'tags'; DB column is 'specialties'
         specialties:           Array.isArray(shop.tags) ? shop.tags : [],
         notes:                 shop.description   || shop.notes || null,
       };
