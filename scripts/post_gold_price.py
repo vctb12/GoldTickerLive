@@ -43,38 +43,57 @@ def get_gold_price():
 
 
 # ── Step 2: Format the tweet ─────────────────────────────────────────────────
-def format_tweet(data):
-    """Build the tweet text from the GoldAPI response, with AED conversion."""
-    price = data.get('price')
-    g24 = data.get('price_gram_24k')
-    g22 = data.get('price_gram_22k')
-    g21 = data.get('price_gram_21k')
+from datetime import datetime, timezone, timedelta
 
-    if not all([price, g24, g22, g21]):
+UAE_TZ = timezone(timedelta(hours=4))
+
+def format_tweet(data):
+    price   = data.get('price')
+    g24     = data.get('price_gram_24k')
+    g22     = data.get('price_gram_22k')
+    g21     = data.get('price_gram_21k')
+    g18     = data.get('price_gram_18k')
+    chp     = data.get('chp')
+
+    if not all([price, g24, g22, g21, g18]):
         raise ValueError("GoldAPI response missing required price fields")
 
-    usd_price = f"{price:,.2f}"
-    g24_aed = f"{g24 * AED_RATE:.2f}"
-    g22_aed = f"{g22 * AED_RATE:.2f}"
-    g21_aed = f"{g21 * AED_RATE:.2f}"
+    now_uae  = datetime.now(UAE_TZ)
+    date_str = now_uae.strftime('%b %-d, %Y')
+    time_str = now_uae.strftime('%I:%M %p').lstrip('0')  # e.g. "2:35 PM"
+
+    if chp is not None:
+        sign = '+' if chp >= 0 else ''
+        change_str = f' ({sign}{chp:.2f}%)'
+    else:
+        change_str = ''
+
+    if chp is None:
+        trend = '📊'
+    elif chp > 0:
+        trend = '📈'
+    elif chp < 0:
+        trend = '📉'
+    else:
+        trend = '➡️'
+
+    def aed(gram_usd):
+        return f'{gram_usd * AED_RATE:.2f}'
 
     tweet = (
-        f"🟡 Gold Price Update\n"
+        f"🥇 Gold Prices Today — {date_str}\n"
+        f"🕐 {time_str} UAE (GMT+4)\n"
         f"\n"
-        f"XAU/USD: ${usd_price}\n"
+        f"24K: ${price:,.2f}/oz{change_str}\n"
+        f"🇦🇪 UAE (AED/g):\n"
+        f"24K: {aed(g24)} | 22K: {aed(g22)}\n"
+        f"21K: {aed(g21)} | 18K: {aed(g18)}\n"
         f"\n"
-        f"Per Gram (AED):\n"
-        f"24K → {g24_aed}\n"
-        f"22K → {g22_aed}\n"
-        f"21K → {g21_aed}\n"
+        f"{trend} goldprices.ae\n"
         f"\n"
-        f"Spot rate · Not retail\n"
-        f"📊 goldprices.ae\n"
-        f"\n"
-        f"#Gold #XAU #GoldPrice #UAE #DXB"
+        f"#GoldPrice #Gold #UAE #Dubai"
     )
     return tweet
-
 
 # ── Step 3: Post to X / Twitter ──────────────────────────────────────────────
 def post_tweet(text):
