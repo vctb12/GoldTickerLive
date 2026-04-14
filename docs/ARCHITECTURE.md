@@ -35,32 +35,32 @@ admin API and server-side data persistence).
 │  HTML Pages (index.html, tracker.html, calculator.html, …) │
 │       │                                                     │
 │       ▼                                                     │
-│  Page Scripts (scripts/pages/home.js, tracker-pro.js, …)   │
+│  Page Scripts (src/pages/home.js, tracker-pro.js, …)   │
 │       │                                                     │
 │       ├──► Services Layer                                   │
-│       │    ├── services/goldPriceService.js (spot price)    │
-│       │    ├── services/fxService.js (FX rates)             │
-│       │    ├── services/pricingEngine.js (calculations)     │
-│       │    └── services/apiAdapter.js (fetch wrapper)       │
+│       │    ├── src/services/goldPriceService.js (spot price) │
+│       │    ├── src/services/fxService.js (FX rates)          │
+│       │    ├── src/services/pricingEngine.js (calculations)  │
+│       │    └── src/services/apiAdapter.js (fetch wrapper)    │
 │       │                                                     │
 │       ├──► Core Library                                     │
-│       │    ├── lib/api.js (legacy fetch)                    │
-│       │    ├── lib/cache.js (localStorage)                  │
-│       │    ├── lib/price-calculator.js (formulas)           │
-│       │    └── lib/formatter.js (display)                   │
+│       │    ├── src/lib/api.js (legacy fetch)                 │
+│       │    ├── src/lib/cache.js (localStorage)               │
+│       │    ├── src/lib/price-calculator.js (formulas)        │
+│       │    └── src/lib/formatter.js (display)                │
 │       │                                                     │
 │       ├──► Components                                       │
-│       │    ├── components/nav.js + nav-data.js              │
-│       │    ├── components/footer.js                         │
-│       │    ├── components/chart.js                          │
-│       │    ├── components/ticker.js                         │
-│       │    └── components/breadcrumbs.js                    │
+│       │    ├── src/components/nav.js + nav-data.js           │
+│       │    ├── src/components/footer.js                      │
+│       │    ├── src/components/chart.js                       │
+│       │    ├── src/components/ticker.js                      │
+│       │    └── src/components/breadcrumbs.js                 │
 │       │                                                     │
 │       └──► Config                                           │
-│            ├── config/constants.js                           │
-│            ├── config/countries.js                           │
-│            ├── config/karats.js                              │
-│            └── config/translations.js                       │
+│            ├── src/config/constants.js                       │
+│            ├── src/config/countries.js                       │
+│            ├── src/config/karats.js                          │
+│            └── src/config/translations.js                   │
 │                                                             │
 │  ┌──────────────────────────────────────┐                   │
 │  │ External APIs (fetched from browser) │                   │
@@ -86,11 +86,11 @@ admin API and server-side data persistence).
 │    ├── Morgan (logging)                                     │
 │    ├── Static file serving                                  │
 │    └── /api/admin routes                                    │
-│         ├── lib/auth.js (JWT)                               │
-│         ├── repositories/ (storage abstraction)             │
+│         ├── server/lib/auth.js (JWT)                        │
+│         ├── server/repositories/ (storage abstraction)      │
 │         │    ├── file backend (data/*.json)                 │
 │         │    └── Supabase backend (optional)                │
-│         └── lib/admin/shop-manager.js                       │
+│         └── server/lib/admin/shop-manager.js                │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
@@ -115,18 +115,18 @@ admin API and server-side data persistence).
 ├── index.html, calculator.html, shops.html, tracker.html, …
 │   → 12 public-facing root pages
 │
-├── guides/             → 7 educational guide pages
-├── tools/              → 3 interactive tool pages
-├── search/             → Search interface
-├── gold-price-history/ → Historical data page
-├── embed/              → Embeddable gold ticker widget
-├── social/             → X post generator
-├── order-gold/         → Gold ordering page
+├── content/guides/          → 7 educational guide pages
+├── content/tools/           → 3 interactive tool pages
+├── content/search/          → Search interface
+├── content/gold-price-history/ → Historical data page
+├── content/embed/           → Embeddable gold ticker widget
+├── content/social/          → X post generator
+├── content/order-gold/      → Gold ordering page
 │
-├── countries/          → Country listing + legacy country/city/market pages
+├── countries/          → Country listing + country/city/market pages
 │   ├── index.html      → Countries overview
-│   ├── {country}.html  → 15 legacy country pages
-│   ├── {country}/cities/{city}.html   → Legacy city pages
+│   ├── {country}/index.html → 15 country pages
+│   ├── {country}/cities/{city}.html   → City pages
 │   └── {country}/markets/{market}.html → Famous market pages
 │
 ├── {country}/          → 15 country directories with generated leaf pages
@@ -136,7 +136,7 @@ admin API and server-side data persistence).
 │       ├── gold-shops/index.html       → City shops
 │       └── gold-rate/{karat}-karat/index.html → Karat-specific rates
 │
-├── components/         → Reusable UI components (browser ES modules)
+├── src/components/      → Reusable UI components (browser ES modules)
 │   ├── nav.js, nav-data.js  → Bilingual navigation
 │   ├── footer.js       → 5-column footer
 │   ├── chart.js        → Price chart (lightweight-charts)
@@ -145,7 +145,7 @@ admin API and server-side data persistence).
 │   ├── internalLinks.js → SEO internal linking
 │   └── adSlot.js       → AdSense component
 │
-├── config/             → Application configuration
+├── src/config/          → Application configuration
 │   ├── constants.js    → API URLs, timeouts, refresh interval, AED peg, troy-oz
 │   ├── countries.js    → 24+ countries with codes, names, currencies, cities
 │   ├── karats.js       → 7 karat definitions with purity fractions
@@ -153,7 +153,7 @@ admin API and server-side data persistence).
 │   ├── supabase.js     → Supabase public config
 │   └── index.js        → Config re-exports
 │
-├── lib/                → Core business logic
+├── src/lib/             → Core business logic
 │   ├── api.js          → Gold price + FX fetch with timeout/retry (browser)
 │   ├── cache.js        → Dual-layer localStorage cache (browser)
 │   ├── price-calculator.js → Core pricing formulas (browser + Node)
@@ -162,30 +162,25 @@ admin API and server-side data persistence).
 │   ├── historical-data.js → Session + DataHub historical merge
 │   ├── search.js       → Bilingual search
 │   ├── page-hydrator.js → Leaf page live data injection
-│   ├── errors.js       → Structured error classes
-│   ├── supabase-client.js → Supabase client factory (server)
 │   ├── supabase-data.js → Supabase data operations (browser)
-│   ├── auth.js         → JWT auth + user management (server)
-│   ├── audit-log.js    → Immutable audit logging (server)
-│   └── admin/
-│       └── shop-manager.js → Shop CRUD with confidence scoring (server)
+│   └── errors.js       → Structured error classes
 │
-├── services/           → Service layer
+├── src/services/        → Service layer
 │   ├── apiAdapter.js   → API abstraction with timeout/retry
 │   ├── goldPriceService.js → Multi-provider gold spot price fetcher
 │   ├── fxService.js    → FX rate fetcher with AED peg override
 │   └── pricingEngine.js → All-prices calculator (countries × karats)
 │
-├── utils/              → Shared utilities
+├── src/utils/           → Shared utilities
 │   ├── routeBuilder.js → URL generation (single source of truth)
 │   ├── routeValidator.js → Route parameter validation
 │   ├── inputValidation.js → Input sanitization and validation
 │   └── slugify.js      → URL slug generation
 │
-├── routes/
+├── src/routes/
 │   └── routeRegistry.js → URL path → page metadata resolver
 │
-├── tracker/            → Tracker workspace modules
+├── src/tracker/         → Tracker workspace modules
 │   ├── state.js        → State management (synced to URL hash)
 │   ├── ui-shell.js     → UI orchestration
 │   ├── render.js       → Data rendering
@@ -193,7 +188,8 @@ admin API and server-side data persistence).
 │   └── wire.js         → Component wiring
 │
 ├── scripts/            → Build, automation, and page scripts
-│   ├── pages/          → Page entry points (home.js, tracker-pro.js, etc.)
+│   ├── node/           → Node.js automation scripts
+│   ├── python/         → Python automation scripts
 │   ├── validate-build.js → Pre-build validation
 │   ├── audit-pages.js  → Page structure audit
 │   ├── check-links.js  → Link checker
@@ -201,9 +197,21 @@ admin API and server-side data persistence).
 │   ├── generate-sitemap.js → Sitemap generator
 │   └── …               → Notifications, alerts, social posting
 │
-├── repositories/       → Storage-agnostic data access (server)
-│   ├── shops.repository.js → Shop CRUD (file or Supabase)
-│   └── audit.repository.js → Audit log access
+├── server/             → Server-side code
+│   ├── routes/admin/index.js → Admin API routes
+│   ├── lib/            → Server libraries (auth, errors, audit-log, admin/)
+│   │   ├── auth.js         → JWT auth + user management
+│   │   ├── audit-log.js    → Immutable audit logging
+│   │   ├── errors.js       → Structured error classes
+│   │   ├── supabase-client.js → Supabase client factory
+│   │   └── admin/
+│   │       └── shop-manager.js → Shop CRUD with confidence scoring
+│   ├── repositories/   → Storage-agnostic data access
+│   │   ├── shops.repository.js → Shop CRUD (file or Supabase)
+│   │   └── audit.repository.js → Audit log access
+│   └── services/       → Server services
+│
+├── src/pages/          → Page entry points (home.js, tracker-pro.js, etc.)
 │
 ├── server.js           → Express server (optional)
 ├── server/routes/admin/index.js → Admin API routes
@@ -218,7 +226,9 @@ admin API and server-side data persistence).
 ├── tests/              → 10 test files, 205 tests
 ├── build/              → Page generation scripts
 ├── styles/pages/       → Page-specific CSS files
-├── style.css           → Global stylesheet (4,548 lines)
+├── styles/global.css   → Global stylesheet
+├── styles/country-page.css → Country page styles
+├── styles/admin.css    → Admin panel styles
 ├── assets/             → Favicons, OG images, screenshots
 └── docs/               → Documentation
 ```
@@ -233,26 +243,26 @@ admin API and server-side data persistence).
 User visits page
   │
   ▼
-HTML loads page-specific JS (e.g. scripts/pages/home.js)
+HTML loads page-specific JS (e.g. src/pages/home.js)
   │
-  ├──► Check localStorage cache (lib/cache.js)
+  ├──► Check localStorage cache (src/lib/cache.js)
   │    └── If fresh → use cached data → render immediately
   │
-  ├──► Fetch gold spot price (services/goldPriceService.js)
+  ├──► Fetch gold spot price (src/services/goldPriceService.js)
   │    ├── Provider 1: api.gold-api.com (primary)
   │    ├── Provider 2: data-asg.goldprice.org (fallback)
   │    └── On failure: use stale cache → show "stale data" badge
   │
-  ├──► Fetch FX rates (services/fxService.js)
+  ├──► Fetch FX rates (src/services/fxService.js)
   │    ├── Source: open.er-api.com
   │    └── AED always uses fixed peg (3.6725) regardless of API
   │
-  ├──► Calculate prices (services/pricingEngine.js)
+  ├──► Calculate prices (src/services/pricingEngine.js)
   │    └── For each country × karat:
   │         usdPerGram = (spotPerOz / 31.1035) × purity
   │         localPerGram = usdPerGram × fxRate
   │
-  ├──► Format for display (lib/formatter.js)
+  ├──► Format for display (src/lib/formatter.js)
   │
   └──► Render into DOM + update cache
 ```
@@ -266,7 +276,7 @@ Admin visits /admin/login/
   │    └── Checks session.user.email === ALLOWED_EMAIL
   │
   └──► Admin dashboard → Supabase REST API
-       ├── Shop CRUD (lib/supabase-data.js)
+       ├── Shop CRUD (src/lib/supabase-data.js)
        ├── Site settings
        └── Falls back to localStorage if Supabase unavailable
 ```
@@ -276,14 +286,14 @@ Admin visits /admin/login/
 ```
 POST /api/admin/auth/login
   │
-  ├──► lib/auth.js (JWT auth)
+  ├──► server/lib/auth.js (JWT auth)
   │
   └──► /api/admin/* routes
-       ├── repositories/shops.repository.js
+       ├── server/repositories/shops.repository.js
        │    ├── file backend → data/shops-data.json
        │    └── Supabase backend → supabase/schema.sql tables
-       ├── lib/admin/shop-manager.js (CRUD + confidence scoring)
-       └── lib/audit-log.js (immutable action log)
+       ├── server/lib/admin/shop-manager.js (CRUD + confidence scoring)
+       └── server/lib/audit-log.js (immutable action log)
 ```
 
 ---
@@ -308,18 +318,18 @@ POST /api/admin/auth/login
 
 ### Navigation Components
 
-- **Nav bar** (`components/nav.js`): 6 dropdown groups (Markets, Tools, Cities, Famous Markets,
+- **Nav bar** (`src/components/nav.js`): 6 dropdown groups (Markets, Tools, Cities, Famous Markets,
   Learn, Insights) + Home, Shops, Invest quick links. Full EN/AR bilingual.
-- **Footer** (`components/footer.js`): 5-column layout with Markets, Tools, Learn, Legal, Brand.
-- **Breadcrumbs** (`components/breadcrumbs.js`): Shown on deep pages (city, karat, shops).
-- **Internal links** (`components/internalLinks.js`): SEO cross-links injected into pages.
+- **Footer** (`src/components/footer.js`): 5-column layout with Markets, Tools, Learn, Legal, Brand.
+- **Breadcrumbs** (`src/components/breadcrumbs.js`): Shown on deep pages (city, karat, shops).
+- **Internal links** (`src/components/internalLinks.js`): SEO cross-links injected into pages.
 
 ### Route Generation
 
-All internal URLs should be generated via `utils/routeBuilder.js`:
+All internal URLs should be generated via `src/utils/routeBuilder.js`:
 
 ```js
-import { buildRoute } from '../utils/routeBuilder.js';
+import { buildRoute } from '../src/utils/routeBuilder.js';
 
 buildRoute({ page: 'tracker' })           // → '/tracker.html'
 buildRoute({ country: 'uae' })            // → '/uae/gold-price/'
@@ -374,7 +384,7 @@ npm run build       → Vite build → dist/ (minified HTML/CSS/JS, vendor chunk
 ### Vite Configuration
 
 - **Base path**: `/Gold-Prices/` (GitHub Pages) or `/` (local)
-- **Excluded from Vite**: Country leaf-page dirs, admin/, embed/ (copied as-is by deploy workflow)
+- **Excluded from Vite**: Country leaf-page dirs, admin/, content/ (copied as-is by deploy workflow)
 - **Chunks**: `vendor` (lightweight-charts), `utils` (cache, api, calculator, formatter)
 - **Minification**: Terser with `drop_debugger`, removes `console.warn`/`console.log`
 
@@ -397,7 +407,7 @@ npm run build       → Vite build → dist/ (minified HTML/CSS/JS, vendor chunk
 ### Why it exists
 
 The app currently uses JSON files for persistence.  
-The `repositories/` layer lets you **swap in Supabase** without rewriting every call site.
+The `server/repositories/` layer lets you **swap in Supabase** without rewriting every call site.
 
 ### How it works
 
@@ -412,7 +422,7 @@ Both modes share the same async API:
 
 ```js
 // Example – works with either backend
-const shopsRepo = require('./repositories/shops.repository');
+const shopsRepo = require('./server/repositories/shops.repository');
 
 const all = await shopsRepo.getAll();
 const shop = await shopsRepo.getById('shop_123');
@@ -461,7 +471,7 @@ All routes live under `/api/admin`.
 
 ## Authentication
 
-- JWT-based (`lib/auth.js`), token expiry 24 h.
+- JWT-based (`server/lib/auth.js`), token expiry 24 h.
 - Role hierarchy: `viewer < editor < admin`.
 - Rate limiting on `/auth/login`: 10 failed attempts per IP → 15-minute lock.
 - Users stored in `data/users.json` (file mode) or `public.user_profiles` (Supabase mode).
