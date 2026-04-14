@@ -454,7 +454,9 @@ export function injectNav(lang = 'en', depth = 0) {
   });
 
   // ── Apply site-level feature flags (async — runs after current call stack) ─
-  applyFeatureFlags().catch(() => {});
+  applyFeatureFlags().catch((err) => {
+    console.warn('[nav] Failed to apply feature flags:', err);
+  });
 
   return _buildReturnValue();
 }
