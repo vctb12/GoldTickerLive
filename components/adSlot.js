@@ -7,7 +7,7 @@
  * - Placeholder publisher ID: ca-pub-XXXXXXXXXX (to be replaced)
  */
 
-const AD_PUBLISHER_ID = 'ca-pub-XXXXXXXXXX';
+const AD_PUBLISHER_ID = 'ca-pub-8578581906562588';
 
 const AD_DIMENSIONS = {
   leaderboard: { width: 728, height: 90, mobileWidth: 320, mobileHeight: 50 },
