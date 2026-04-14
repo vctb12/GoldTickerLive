@@ -1112,7 +1112,7 @@
     <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
     <script type="module">
-      import { logout, requireAuth } from '../supabase-auth.js';
+      import { logout, requireAuth, getSupabase } from '../supabase-auth.js';
 
       // ── Auth guard ──────────────────────────────────────────
       if (!(await requireAuth())) throw new Error('redirect');
@@ -1800,25 +1800,74 @@
         return fillTemplate(tmpl, vars);
       }
 
-      /* ── History ────────────────────────────────────────────── */
-      function loadHistory() {
-        try {
-          return JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
-        } catch {
-          return [];
+      /* ── History (Supabase with localStorage cache fallback) ── */
+
+      /** Cache history to localStorage for offline resilience. */
+      function cacheHistory(entries) {
+        try { localStorage.setItem(HISTORY_KEY, JSON.stringify(entries)); } catch {}
+      }
+
+      /** Read cached history from localStorage. */
+      function readCachedHistory() {
+        try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch { return []; }
+      }
+
+      /**
+       * Load history. Tries Supabase first; falls back to localStorage cache.
+       */
+      async function loadHistory() {
+        const sb = getSupabase();
+        if (sb) {
+          try {
+            const { data, error } = await sb
+              .from('social_posts')
+              .select('*')
+              .order('created_at', { ascending: false })
+              .limit(50);
+            if (!error && Array.isArray(data)) {
+              const entries = data.map((row) => ({
+                id: row.id,
+                template: row.template || '',
+                language: row.language || 'en',
+                text: row.text || '',
+                platform: row.platform || '',
+                generatedAt: row.generated_at || new Date(row.created_at).getTime(),
+              }));
+              cacheHistory(entries);
+              return entries;
+            }
+            console.warn('[social] Supabase read error, falling back to cache:', error?.message);
+          } catch (err) {
+            console.warn('[social] Supabase unreachable, falling back to cache:', err.message);
+          }
         }
+        return readCachedHistory();
       }
 
       function saveHistory(entries) {
-        try {
-          localStorage.setItem(HISTORY_KEY, JSON.stringify(entries));
-        } catch {}
+        cacheHistory(entries);
       }
 
-      function addToHistory(entry) {
-        const history = loadHistory();
+      async function addToHistory(entry) {
+        const sb = getSupabase();
+        if (sb) {
+          try {
+            const row = {
+              template: entry.template || null,
+              language: entry.language || 'en',
+              platform: entry.platform || null,
+              text: entry.text || null,
+              generated_at: entry.generatedAt || Date.now(),
+            };
+            await sb.from('social_posts').insert(row);
+          } catch (err) {
+            console.warn('[social] Supabase insert error:', err.message);
+          }
+        }
+        // Always update local cache too
+        const history = readCachedHistory();
         history.unshift(entry);
-        saveHistory(history.slice(0, 50));
+        cacheHistory(history.slice(0, 50));
       }
 
       const GEN_TEMPLATE_LABELS = {
@@ -1830,9 +1879,9 @@
         custom: 'Custom',
       };
 
-      function renderHistory() {
+      async function renderHistory() {
         const container = document.getElementById('history-container');
-        const history = loadHistory();
+        const history = await loadHistory();
         clearHistoryPending = false;
 
         if (history.length === 0) {
@@ -1872,10 +1921,12 @@
         </table>
       </div>`;
 
+        // Store history locally for sync reuse lookups
+        const _historyCache = history;
         container.querySelectorAll('[data-reuse]').forEach((btn) => {
           btn.addEventListener('click', () => {
             const idx = parseInt(btn.dataset.reuse, 10);
-            const entry = loadHistory()[idx];
+            const entry = _historyCache[idx];
             if (!entry) return;
             // Switch to generator tab and display
             switchTab('generator');
@@ -1983,8 +2034,8 @@
           platform,
           generatedAt: Date.now(),
         };
-        addToHistory(entry);
-        renderHistory();
+        await addToHistory(entry);
+        await renderHistory();
       }
 
       /* ══════════════════════════════════════════════════════════════
@@ -2002,7 +2053,7 @@
       /* ══════════════════════════════════════════════════════════════
        INIT
        ══════════════════════════════════════════════════════════════ */
-      function init() {
+      async function init() {
         // Sidebar toggle
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
@@ -2103,7 +2154,7 @@
         });
 
         // Clear history
-        document.getElementById('clear-history-btn').addEventListener('click', () => {
+        document.getElementById('clear-history-btn').addEventListener('click', async () => {
           if (!clearHistoryPending) {
             clearHistoryPending = true;
             const btn = document.getElementById('clear-history-btn');
@@ -2116,10 +2167,13 @@
             }, 3000);
           } else {
             clearHistoryPending = false;
-            try {
-              localStorage.removeItem(HISTORY_KEY);
-            } catch {}
-            renderHistory();
+            // Clear from Supabase
+            const sb = getSupabase();
+            if (sb) {
+              try { await sb.from('social_posts').delete().neq('id', '00000000-0000-0000-0000-000000000000'); } catch {}
+            }
+            try { localStorage.removeItem(HISTORY_KEY); } catch {}
+            await renderHistory();
             const btn = document.getElementById('clear-history-btn');
             btn.textContent = '🗑 Clear History';
             btn.style.background = '';
@@ -2180,7 +2234,7 @@
         // Render everything
         renderSchedule();
         renderTemplates();
-        renderHistory();
+        await renderHistory();
         updateNextPost();
 
         // Update countdown every second

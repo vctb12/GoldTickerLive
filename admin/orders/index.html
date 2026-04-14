@@ -683,35 +683,118 @@
     <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <script type="module">
-      import { logActivity, logout, requireAuth } from '../auth.js';
+      import { logout, requireAuth, getSupabase, logActivity } from '../supabase-auth.js';
 
       // ── Auth guard ──────────────────────────────────────────
       if (!(await requireAuth())) throw new Error('redirect');
 
-      // ── Storage ────────────────────────────────────────────
+      // ── Supabase Data Layer (with localStorage cache fallback) ──
       const STORAGE_KEY = 'gp_orders';
 
-      function loadOrders() {
+      /** Map admin UI order → Supabase row. */
+      function toDbRow(order) {
+        return {
+          id: order.id,
+          items: order.items || [],
+          pricing: order.pricing || {},
+          gold_spot_at_order: order.goldSpotAtOrder ?? null,
+          fx_rate_at_order: order.fxRateAtOrder ?? null,
+          customer: order.customer || {},
+          status: order.status || 'pending',
+          status_history: order.statusHistory || [],
+          created_at: order.createdAt || new Date().toISOString(),
+          updated_at: order.updatedAt || new Date().toISOString(),
+        };
+      }
+
+      /** Map Supabase row → admin UI shape. */
+      function fromDbRow(row) {
+        return {
+          id: row.id,
+          items: row.items || [],
+          pricing: row.pricing || {},
+          goldSpotAtOrder: row.gold_spot_at_order,
+          fxRateAtOrder: row.fx_rate_at_order,
+          customer: row.customer || {},
+          status: row.status || 'pending',
+          statusHistory: row.status_history || [],
+          createdAt: row.created_at,
+          updatedAt: row.updated_at,
+        };
+      }
+
+      /** Cache orders to localStorage for offline resilience. */
+      function cacheOrders(orders) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(orders)); } catch {}
+      }
+
+      /** Read cached orders from localStorage. */
+      function readCachedOrders() {
         try {
           const raw = localStorage.getItem(STORAGE_KEY);
           if (!raw) return [];
           const parsed = JSON.parse(raw);
           return Array.isArray(parsed) ? parsed : [];
-        } catch {
-          return [];
-        }
+        } catch { return []; }
       }
 
-      function saveOrders(orders) {
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
-        } catch {
-          showToast('Storage error — could not save orders.', 'error');
+      /**
+       * Load all orders. Tries Supabase first; falls back to localStorage cache.
+       */
+      async function loadOrders() {
+        const sb = getSupabase();
+        if (sb) {
+          try {
+            const { data, error } = await sb
+              .from('orders')
+              .select('*')
+              .order('created_at', { ascending: false });
+            if (!error && Array.isArray(data)) {
+              const orders = data.map(fromDbRow);
+              cacheOrders(orders);
+              return orders;
+            }
+            console.warn('[orders] Supabase read error, falling back to cache:', error?.message);
+          } catch (err) {
+            console.warn('[orders] Supabase unreachable, falling back to cache:', err.message);
+          }
         }
+        return readCachedOrders();
       }
 
-      function updateOrderStatus(id, newStatus, note) {
-        const orders = loadOrders();
+      /** Save/upsert a single order to Supabase and cache. */
+      async function saveOrder(order) {
+        const sb = getSupabase();
+        if (sb) {
+          const row = toDbRow(order);
+          const { error } = await sb.from('orders').upsert(row).eq('id', order.id);
+          if (error) console.warn('[orders] Supabase upsert error:', error.message);
+        }
+        // Always update local cache
+        const cached = readCachedOrders();
+        const idx = cached.findIndex((o) => o.id === order.id);
+        if (idx !== -1) cached[idx] = order;
+        else cached.unshift(order);
+        cacheOrders(cached);
+      }
+
+      /** Batch-save all orders (for sample data init). */
+      async function saveOrders(orders) {
+        const sb = getSupabase();
+        if (sb) {
+          try {
+            const rows = orders.map(toDbRow);
+            const { error } = await sb.from('orders').upsert(rows);
+            if (error) console.warn('[orders] Supabase batch upsert error:', error.message);
+          } catch (err) {
+            console.warn('[orders] Supabase batch upsert failed:', err.message);
+          }
+        }
+        cacheOrders(orders);
+      }
+
+      async function updateOrderStatus(id, newStatus, note) {
+        const orders = await loadOrders();
         const idx = orders.findIndex((o) => o.id === id);
         if (idx === -1) return null;
         const now = new Date().toISOString();
@@ -720,7 +803,7 @@
         orders[idx].statusHistory.push(entry);
         orders[idx].status = newStatus;
         orders[idx].updatedAt = now;
-        saveOrders(orders);
+        await saveOrder(orders[idx]);
         logActivity('order_status', `Order ${id} → ${newStatus}${note ? ': ' + note : ''}`);
         return orders[idx];
       }
@@ -1168,12 +1251,12 @@
 
         const updateBtn = document.getElementById('modal-update-status-btn');
         if (updateBtn) {
-          updateBtn.addEventListener('click', () => {
+          updateBtn.addEventListener('click', async () => {
             const newStatus = document.getElementById('modal-status-select').value;
             const note = document.getElementById('modal-status-note').value.trim();
-            const updated = updateOrderStatus(orderId, newStatus, note);
+            const updated = await updateOrderStatus(orderId, newStatus, note);
             if (updated) {
-              allOrders = loadOrders();
+              allOrders = await loadOrders();
               renderStats();
               applyFilters();
               openOrderModal(orderId); // re-render modal
@@ -1257,12 +1340,12 @@
       }
 
       // ── Init ───────────────────────────────────────────────
-      function init() {
-        allOrders = loadOrders();
+      async function init() {
+        allOrders = await loadOrders();
 
         if (allOrders.length === 0) {
           allOrders = buildSampleOrders();
-          saveOrders(allOrders);
+          await saveOrders(allOrders);
           document.getElementById('sample-notice').classList.remove('hidden');
         }
 
