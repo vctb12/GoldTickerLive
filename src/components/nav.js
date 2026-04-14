@@ -9,7 +9,7 @@
  *   updateNavLang(lang)   — live language switch without re-inject
  *
  * @param {'en'|'ar'} lang
- * @param {0|1|2}     depth  0 = root pages, 1 = /countries/ subdirectory, 2 = /countries/{code}/cities/ or /markets/
+ * @param {number}   depth  Number of directory levels from the site root (0 = root pages, 1 = /countries/, 2 = /content/guides/, etc.)
  */
 
 import { NAV_DATA } from './nav-data.js';
@@ -20,15 +20,16 @@ import { applyFeatureFlags } from '../lib/site-settings.js';
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Resolve href depth: strip leading `../` for root-level pages (depth=0).
+ * Resolve href depth: strip leading `../` then prepend the correct number
+ * of `../` segments for the page's actual depth from the site root.
+ *
+ * @param {string} href  — href from NAV_DATA (always starts with `../`)
+ * @param {number} depth — 0 = root, 1 = one dir deep, 2 = two dirs deep, etc.
  */
 function resolveHref(href, depth) {
-  // Nav data hrefs all start with `../` (relative to depth-1 pages in /countries/).
-  // Strip that leading `../` then prepend the correct prefix for the actual page depth.
   const stripped = href.replace(/^\.\.\//, '');
-  if (depth === 0) return stripped; // root pages
-  if (depth >= 2) return '../../../' + stripped; // city/market pages (3 dirs deep)
-  return href; // depth-1 country pages: unchanged
+  if (depth === 0) return stripped;
+  return '../'.repeat(depth) + stripped;
 }
 
 /**
@@ -474,8 +475,7 @@ function _injectMobileBottomNav(lang, depth) {
   function r(href) {
     const base = href.replace(/^\.\.\//, '');
     if (depth === 0) return base;
-    if (depth >= 2) return '../../../' + base;
-    return href;
+    return '../'.repeat(depth) + base;
   }
 
   const items = [

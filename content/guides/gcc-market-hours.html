@@ -485,19 +485,19 @@
       document.documentElement.lang = lang;
       document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
 
-      injectNav(lang, 1);
+      injectNav(lang, 2);
 
       const bc = document.createElement('div');
       bc.className = 'page-breadcrumbs';
       document.body.insertBefore(bc, document.querySelector('main'));
       renderBreadcrumbs(bc, [
-        { label: 'Home', url: '../' },
+        { label: 'Home', url: '../../' },
         { label: 'Guides', url: './' },
         { label: 'GCC Market Hours', url: '#' },
       ]);
 
-      injectFooter(lang, 1);
-      injectTicker(lang, 1);
+      injectFooter(lang, 2);
+      injectTicker(lang, 2);
     </script>
   </body>
 </html>

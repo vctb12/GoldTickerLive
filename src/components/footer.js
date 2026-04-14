@@ -7,11 +7,9 @@ export function injectFooter(lang = 'en', depth = 0) {
   const isAr = lang === 'ar';
 
   function r(href) {
-    // Strip leading ../ to get the base filename, then prepend correct prefix
     const base = href.replace(/^\.\.\//, '');
     if (depth === 0) return base;
-    if (depth >= 2) return '../../../' + base; // city/market pages: 3 dirs deep
-    return href; // depth 1: country pages — unchanged (../filename)
+    return '../'.repeat(depth) + base;
   }
 
   const year = new Date().getFullYear();

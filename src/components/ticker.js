@@ -75,7 +75,7 @@ export function injectTicker(lang = 'en', depth = 0) {
   if (document.getElementById('gold-ticker')) return; // already injected
 
   const isAr = lang === 'ar';
-  const trackerHref = depth === 0 ? 'tracker.html' : '../tracker.html';
+  const trackerHref = depth === 0 ? 'tracker.html' : '../'.repeat(depth) + 'tracker.html';
   const dismissLabel = isAr ? 'إغلاق الشريط' : 'Dismiss ticker';
   const ariaLabel = isAr ? 'شريط أسعار الذهب' : 'Live gold price ticker';
 

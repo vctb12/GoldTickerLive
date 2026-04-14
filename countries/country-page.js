@@ -403,9 +403,9 @@ export async function initCountryPage(cfg) {
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = isAr ? 'rtl' : 'ltr';
 
-  // navDepth: 1 for /countries/ pages, 2 for /countries/X/cities/ and /countries/X/markets/
-  const navDepth = cfg.navDepth ?? 1;
-  const homeUrl = navDepth >= 2 ? '../../../' : '../';
+  // navDepth: 2 for /countries/{code}/ pages, 3 for /countries/{code}/cities/ and /countries/{code}/markets/
+  const navDepth = cfg.navDepth ?? 2;
+  const homeUrl = '../'.repeat(navDepth);
 
   const navResult = injectNav(STATE.lang, navDepth);
 
