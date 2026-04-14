@@ -13,6 +13,7 @@
  */
 
 import { NAV_DATA } from './nav-data.js';
+import { applyFeatureFlags } from '../lib/site-settings.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -451,6 +452,9 @@ export function injectNav(lang = 'en', depth = 0) {
       btn.focus();
     }
   });
+
+  // ── Apply site-level feature flags (async — runs after current call stack) ─
+  applyFeatureFlags().catch(() => {});
 
   return _buildReturnValue();
 }
