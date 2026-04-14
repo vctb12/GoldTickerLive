@@ -1,12 +1,18 @@
 /**
  * admin/api-client.js
- * Shared JWT API client for all GoldAdmin pages.
  *
- * All requests target the Express backend at /api/admin/*.
- * The API origin is auto-detected from window.location.origin and can be
- * overridden by storing a URL in localStorage under 'gp_api_origin'
- * (useful when the admin static files are served from GitHub Pages but the
- * API runs on a separate host, e.g. Replit).
+ * ⚠️  DEPRECATED — This file is no longer used by any admin page.
+ *
+ * All admin pages now talk directly to Supabase via admin/supabase-auth.js
+ * and the @supabase/supabase-js CDN client.  The Express JWT API routes
+ * (/api/admin/*) that this client targets are unused by the current admin UI.
+ *
+ * This file is kept for reference only and will be removed in a future cleanup.
+ * Do NOT import this file in new code.
+ *
+ * Original purpose:
+ *   Shared JWT API client for all GoldAdmin pages.
+ *   All requests targeted the Express backend at /api/admin/*.
  */
 
 // ---------------------------------------------------------------------------
