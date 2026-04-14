@@ -675,7 +675,7 @@
     <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
     <script type="module">
-      import { isAuthenticated, logActivity, logout, requireAuth } from '../auth.js';
+      import { logout, requireAuth, getSupabase, logActivity } from '../supabase-auth.js';
 
       // ── Auth guard ──────────────────────────────────────────
       if (!(await requireAuth())) throw new Error('redirect');
@@ -715,33 +715,91 @@
       }
 
       /* ─────────────────────────────────────────────────────────
-       Override data helpers
+       Supabase Data Layer (with localStorage cache fallback)
     ───────────────────────────────────────────────────────── */
-      function loadOverrides() {
-        try {
-          return JSON.parse(localStorage.getItem(LS_KEY)) || [];
-        } catch {
-          return [];
-        }
+
+      /** Map admin UI override → Supabase row. */
+      function toDbRow(ov) {
+        return {
+          karat: ov.karat || '24',
+          currency: ov.currency || 'AED',
+          unit: ov.unit || 'gram',
+          override_price: Number(ov.overridePrice) || 0,
+          reason: ov.reason || null,
+          expires_at: ov.expiresAt || null,
+          active: ov.active !== false,
+        };
       }
-      function saveOverrides(overrides) {
-        localStorage.setItem(LS_KEY, JSON.stringify(overrides));
+
+      /** Map Supabase row → admin UI shape. */
+      function fromDbRow(row) {
+        return {
+          id: row.id,
+          karat: row.karat || '24',
+          currency: row.currency || 'AED',
+          unit: row.unit || 'gram',
+          overridePrice: Number(row.override_price) || 0,
+          reason: row.reason || '',
+          expiresAt: row.expires_at || null,
+          active: row.active !== false,
+          createdAt: row.created_at,
+          updatedAt: row.updated_at,
+        };
+      }
+
+      /** Cache overrides to localStorage for offline resilience. */
+      function cacheOverrides(overrides) {
+        try { localStorage.setItem(LS_KEY, JSON.stringify(overrides)); } catch {}
+      }
+
+      /** Read cached overrides from localStorage. */
+      function readCachedOverrides() {
+        try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch { return []; }
+      }
+
+      /**
+       * Load all overrides. Tries Supabase first; falls back to localStorage cache.
+       */
+      async function loadOverrides() {
+        const sb = getSupabase();
+        if (sb) {
+          try {
+            const { data, error } = await sb
+              .from('pricing_overrides')
+              .select('*')
+              .order('created_at', { ascending: false });
+            if (!error && Array.isArray(data)) {
+              const overrides = data.map(fromDbRow);
+              cacheOverrides(overrides);
+              return overrides;
+            }
+            console.warn('[pricing] Supabase read error, falling back to cache:', error?.message);
+          } catch (err) {
+            console.warn('[pricing] Supabase unreachable, falling back to cache:', err.message);
+          }
+        }
+        return readCachedOverrides();
       }
 
       /** Mark expired overrides on load */
-      function autoExpire() {
+      async function autoExpire() {
         const now = Date.now();
-        const overrides = loadOverrides().map((ov) => {
+        const overrides = await loadOverrides();
+        const sb = getSupabase();
+        for (const ov of overrides) {
           if (ov.expiresAt && new Date(ov.expiresAt).getTime() < now && ov.active) {
-            return { ...ov, active: false };
+            if (sb) {
+              try {
+                await sb.from('pricing_overrides').update({ active: false }).eq('id', ov.id);
+              } catch {}
+            }
           }
-          return ov;
-        });
-        saveOverrides(overrides);
+        }
+        // Refresh cache after expiry updates
+        return loadOverrides();
       }
 
-      function addOverride(data) {
-        const overrides = loadOverrides();
+      async function addOverride(data) {
         const ov = {
           karat: '24',
           currency: 'AED',
@@ -751,42 +809,85 @@
           reason: '',
           active: true,
           ...data,
-          id: 'ov_' + Date.now(),
-          createdAt: new Date().toISOString(),
         };
-        overrides.push(ov);
-        saveOverrides(overrides);
-        logActivity('pricing_override', {
-          id: ov.id,
-          karat: ov.karat,
-          currency: ov.currency,
-          price: ov.overridePrice,
-        });
+
+        const sb = getSupabase();
+        if (sb) {
+          const row = toDbRow(ov);
+          const { data: inserted, error } = await sb
+            .from('pricing_overrides')
+            .insert(row)
+            .select()
+            .single();
+          if (error) throw new Error(error.message);
+          const result = fromDbRow(inserted);
+          // Update cache
+          const cached = readCachedOverrides();
+          cached.unshift(result);
+          cacheOverrides(cached);
+          logActivity('pricing_override', { id: result.id, karat: result.karat, currency: result.currency, price: result.overridePrice });
+          return result;
+        }
+        // Fallback: localStorage only
+        ov.id = 'ov_' + Date.now();
+        ov.createdAt = new Date().toISOString();
+        const cached = readCachedOverrides();
+        cached.push(ov);
+        cacheOverrides(cached);
+        logActivity('pricing_override', { id: ov.id, karat: ov.karat, currency: ov.currency, price: ov.overridePrice });
         return ov;
       }
 
-      function updateOverride(id, data) {
-        const overrides = loadOverrides();
+      async function updateOverride(id, data) {
+        const sb = getSupabase();
+        if (sb) {
+          const row = {};
+          if (data.active !== undefined) row.active = data.active;
+          if (data.overridePrice !== undefined) row.override_price = Number(data.overridePrice);
+          if (data.reason !== undefined) row.reason = data.reason;
+          if (data.expiresAt !== undefined) row.expires_at = data.expiresAt;
+          if (data.karat !== undefined) row.karat = data.karat;
+          if (data.currency !== undefined) row.currency = data.currency;
+          if (data.unit !== undefined) row.unit = data.unit;
+
+          const { data: updated, error } = await sb
+            .from('pricing_overrides')
+            .update(row)
+            .eq('id', id)
+            .select()
+            .single();
+          if (error) throw new Error(error.message);
+          const result = fromDbRow(updated);
+          // Refresh cache
+          const cached = readCachedOverrides();
+          const idx = cached.findIndex((o) => o.id === id);
+          if (idx !== -1) cached[idx] = result;
+          cacheOverrides(cached);
+          logActivity('pricing_override', { action: 'update', id, karat: result.karat, currency: result.currency });
+          return result;
+        }
+        // Fallback: localStorage only
+        const overrides = readCachedOverrides();
         const idx = overrides.findIndex((o) => o.id === id);
         if (idx === -1) return null;
         overrides[idx] = { ...overrides[idx], ...data, id };
-        saveOverrides(overrides);
-        logActivity('pricing_override', {
-          action: 'update',
-          id,
-          karat: overrides[idx].karat,
-          currency: overrides[idx].currency,
-        });
+        cacheOverrides(overrides);
+        logActivity('pricing_override', { action: 'update', id, karat: overrides[idx].karat, currency: overrides[idx].currency });
         return overrides[idx];
       }
 
-      function deactivateOverride(id) {
+      async function deactivateOverride(id) {
         return updateOverride(id, { active: false });
       }
 
-      function deleteOverride(id) {
-        const overrides = loadOverrides().filter((o) => o.id !== id);
-        saveOverrides(overrides);
+      async function deleteOverride(id) {
+        const sb = getSupabase();
+        if (sb) {
+          const { error } = await sb.from('pricing_overrides').delete().eq('id', id);
+          if (error) throw new Error(error.message);
+        }
+        const overrides = readCachedOverrides().filter((o) => o.id !== id);
+        cacheOverrides(overrides);
         logActivity('pricing_override', { action: 'delete', id });
       }
 
@@ -855,9 +956,12 @@
         return usdPerGram * rate;
       }
 
+      // In-memory cache of overrides — updated after each async load
+      let _overridesCache = readCachedOverrides();
+
       function hasActiveOverride(karatCode, currency) {
         const now = Date.now();
-        return loadOverrides().some(
+        return _overridesCache.some(
           (ov) =>
             ov.active &&
             ov.karat === karatCode &&
@@ -917,8 +1021,9 @@
 
       let deleteOvTargetId = null;
 
-      function renderOverridesTable() {
-        const overrides = loadOverrides();
+      async function renderOverridesTable() {
+        const overrides = await loadOverrides();
+        _overridesCache = overrides;
         const tbody = document.getElementById('overrides-tbody');
         const banner = document.getElementById('override-banner');
         const bannerText = document.getElementById('override-banner-text');
@@ -1029,7 +1134,7 @@
         document.getElementById('save-override-btn').textContent = 'Save Override';
       }
 
-      function saveOverrideFromForm() {
+      async function saveOverrideFromForm() {
         const price = parseFloat(document.getElementById('ov-price').value);
         const priceErr = document.getElementById('ov-price-err');
         if (!price || price <= 0) {
@@ -1052,14 +1157,14 @@
 
         const id = document.getElementById('ov-edit-id').value;
         if (id) {
-          updateOverride(id, data);
+          await updateOverride(id, data);
           showToast('Override updated.', 'success');
         } else {
-          addOverride(data);
+          await addOverride(data);
           showToast(`Override added: ${data.karat}K ${data.currency} = ${price}`, 'success');
         }
         resetAddForm();
-        renderOverridesTable();
+        await renderOverridesTable();
         renderLiveTable(); // refresh override badges
       }
 
@@ -1086,7 +1191,7 @@
         document.getElementById('edit-modal').classList.add('hidden');
       }
 
-      function saveEditModal() {
+      async function saveEditModal() {
         const price = parseFloat(document.getElementById('em-price').value);
         const priceErr = document.getElementById('em-price-err');
         if (!price || price <= 0) {
@@ -1098,7 +1203,7 @@
 
         const id = document.getElementById('em-id').value;
         const expiresRaw = document.getElementById('em-expires').value;
-        updateOverride(id, {
+        await updateOverride(id, {
           karat: document.getElementById('em-karat').value,
           currency: document.getElementById('em-currency').value,
           unit: document.getElementById('em-unit').value,
@@ -1109,14 +1214,14 @@
         });
         showToast('Override updated.', 'success');
         closeEditModal();
-        renderOverridesTable();
+        await renderOverridesTable();
         renderLiveTable();
       }
 
       /* ─────────────────────────────────────────────────────────
        Event wiring
     ───────────────────────────────────────────────────────── */
-      function init() {
+      async function init() {
         // Sidebar mobile toggle
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
@@ -1178,40 +1283,39 @@
         });
 
         // Overrides table delegation
-        document.getElementById('overrides-tbody').addEventListener('click', (e) => {
+        document.getElementById('overrides-tbody').addEventListener('click', async (e) => {
           const btn = e.target.closest('[data-action]');
           if (!btn) return;
           const id = btn.dataset.id;
-          const overrides = loadOverrides();
-          const ov = overrides.find((o) => o.id === id);
+          const ov = _overridesCache.find((o) => o.id === id);
 
           if (btn.dataset.action === 'edit-ov') {
             if (ov) openEditModal(ov);
             return;
           }
           if (btn.dataset.action === 'deactivate-ov') {
-            deactivateOverride(id);
+            await deactivateOverride(id);
             showToast('Override deactivated.', 'info');
-            renderOverridesTable();
+            await renderOverridesTable();
             renderLiveTable();
             return;
           }
           if (btn.dataset.action === 'delete-ov') {
             deleteOvTargetId = id;
-            renderOverridesTable();
+            await renderOverridesTable();
             return;
           }
           if (btn.dataset.action === 'delete-ov-confirm') {
-            deleteOverride(deleteOvTargetId);
+            await deleteOverride(deleteOvTargetId);
             deleteOvTargetId = null;
             showToast('Override deleted.', 'info');
-            renderOverridesTable();
+            await renderOverridesTable();
             renderLiveTable();
             return;
           }
           if (btn.dataset.action === 'delete-ov-cancel') {
             deleteOvTargetId = null;
-            renderOverridesTable();
+            await renderOverridesTable();
             return;
           }
         });
@@ -1230,8 +1334,8 @@
         });
 
         // Auto-expire on load, then render
-        autoExpire();
-        renderOverridesTable();
+        await autoExpire();
+        await renderOverridesTable();
         fetchLivePrices();
 
         // Refresh live prices every 90 seconds
