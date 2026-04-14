@@ -4546,3 +4546,227 @@ body > * {
   min-height: 0;
   margin: 0;
 }
+
+/* ═══════════════════════════════════════════════
+   Mobile Bottom Navigation Bar
+   Fixed bottom nav for quick access on mobile.
+   Shows Home, Tracker, Calculator, Shops, Menu.
+   ═══════════════════════════════════════════════ */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 250;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  box-shadow: 0 -2px 12px rgb(0 0 0 / 8%);
+  padding: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.mobile-bottom-nav-inner {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  max-width: 500px;
+  margin: 0 auto;
+  height: 60px;
+}
+
+.mobile-bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 2px;
+  padding: 6px 4px 4px;
+  text-decoration: none;
+  color: var(--color-text-faint);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-main);
+}
+
+.mobile-bottom-nav-item:hover,
+.mobile-bottom-nav-item:active {
+  text-decoration: none;
+}
+
+.mobile-bottom-nav-item.is-active {
+  color: var(--color-gold-dark);
+}
+
+.mobile-bottom-nav-icon {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.mobile-bottom-nav-item.is-active .mobile-bottom-nav-icon {
+  filter: drop-shadow(0 1px 3px rgb(196 153 62 / 30%));
+}
+
+.mobile-bottom-nav-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 60px;
+}
+
+/* Show bottom nav only on mobile */
+@media (width <= 640px) {
+  .mobile-bottom-nav {
+    display: block;
+  }
+
+  /* Add bottom padding to body so content isn't hidden behind the nav */
+  body {
+    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Dark mode bottom nav */
+[data-theme='dark'] .mobile-bottom-nav {
+  background: var(--color-surface);
+  border-top-color: var(--color-border);
+  box-shadow: 0 -2px 16px rgb(0 0 0 / 25%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .mobile-bottom-nav {
+    background: var(--color-surface);
+    border-top-color: var(--color-border);
+    box-shadow: 0 -2px 16px rgb(0 0 0 / 25%);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   Mobile Drawer Improvements
+   Better grouping, larger touch targets, smooth
+   scroll, search field at top.
+   ═══════════════════════════════════════════════ */
+.nav-drawer-search {
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.nav-drawer-search input {
+  width: 100%;
+  padding: 0.65rem 1rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nav-drawer-search input:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgb(196 153 62 / 15%);
+}
+
+.nav-drawer-search input::placeholder {
+  color: var(--color-text-faint);
+}
+
+/* Drawer group sections with visual separator */
+.nav-drawer-group {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.nav-drawer-group:first-of-type {
+  border-top: none;
+  margin-top: 0;
+}
+
+.nav-drawer-group-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ═══════════════════════════════════════════════
+   Mobile-Specific Improvements
+   Consistent breakpoints, better touch targets,
+   improved spacing at small widths.
+   ═══════════════════════════════════════════════ */
+
+/* Ensure all interactive elements have min 44px touch targets */
+@media (width <= 640px) {
+  button,
+  [role='button'],
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+  }
+
+  /* Better mobile spacing for main content */
+  .page-content,
+  .container,
+  .section-inner {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Improve mobile card spacing */
+  .card,
+  .price-card,
+  .feature-card,
+  .shop-card {
+    border-radius: var(--radius-md);
+  }
+
+  /* Better mobile tables */
+  .price-table {
+    font-size: 0.85rem;
+  }
+
+  .price-table th,
+  .price-table td {
+    padding: 0.6rem 0.5rem;
+  }
+}
+
+/* Extra small screens (< 380px) */
+@media (width <= 380px) {
+  .mobile-bottom-nav-inner {
+    height: 54px;
+  }
+
+  .mobile-bottom-nav-icon {
+    font-size: 1rem;
+  }
+
+  .mobile-bottom-nav-label {
+    font-size: 0.58rem;
+  }
+}

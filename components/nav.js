@@ -249,6 +249,9 @@ export function injectNav(lang = 'en', depth = 0) {
   const anchor = document.querySelector('main') || document.body.firstElementChild;
   document.body.insertBefore(navEl, anchor);
 
+  // ── Mobile bottom navigation bar ──────────────────────────────────────────
+  _injectMobileBottomNav(lang, depth);
+
   // ── Theme (dark/light) toggle ────────────────────────────────────────────
   const themeBtn = document.getElementById('nav-theme-toggle');
   if (themeBtn) {
@@ -453,6 +456,97 @@ export function injectNav(lang = 'en', depth = 0) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Mobile bottom navigation bar
+// ─────────────────────────────────────────────────────────────────────────────
+
+function _injectMobileBottomNav(lang, depth) {
+  // Guard against double-injection
+  if (document.querySelector('.mobile-bottom-nav')) return;
+
+  const isAr = lang === 'ar';
+
+  function r(href) {
+    const base = href.replace(/^\.\.\//, '');
+    if (depth === 0) return base;
+    if (depth >= 2) return '../../../' + base;
+    return href;
+  }
+
+  const items = [
+    {
+      href: r('../index.html'),
+      icon: '🏠',
+      label: isAr ? 'الرئيسية' : 'Home',
+      key: 'home',
+    },
+    {
+      href: r('../tracker.html'),
+      icon: '📈',
+      label: isAr ? 'تتبع' : 'Tracker',
+      key: 'tracker',
+    },
+    {
+      href: r('../calculator.html'),
+      icon: '🧮',
+      label: isAr ? 'حاسبة' : 'Calc',
+      key: 'calculator',
+    },
+    {
+      href: r('../shops.html'),
+      icon: '🏪',
+      label: isAr ? 'المحلات' : 'Shops',
+      key: 'shops',
+    },
+    {
+      action: 'menu',
+      icon: '☰',
+      label: isAr ? 'القائمة' : 'More',
+      key: 'menu',
+    },
+  ];
+
+  const itemsHtml = items
+    .map((item) => {
+      const isActive =
+        !item.action && typeof item.href === 'string' && isPageMatch(item.href);
+      const cls = 'mobile-bottom-nav-item' + (isActive ? ' is-active' : '');
+
+      if (item.action === 'menu') {
+        return `<button class="${cls}" data-mobile-nav="menu" type="button" aria-label="${item.label}">
+          <span class="mobile-bottom-nav-icon" aria-hidden="true">${item.icon}</span>
+          <span class="mobile-bottom-nav-label">${item.label}</span>
+        </button>`;
+      }
+
+      return `<a href="${item.href}" class="${cls}" data-mobile-nav="${item.key}">
+        <span class="mobile-bottom-nav-icon" aria-hidden="true">${item.icon}</span>
+        <span class="mobile-bottom-nav-label">${item.label}</span>
+      </a>`;
+    })
+    .join('');
+
+  const bottomNavHtml = `
+    <div class="mobile-bottom-nav" role="navigation" aria-label="${isAr ? 'التنقل السريع' : 'Quick navigation'}" dir="${isAr ? 'rtl' : 'ltr'}">
+      <div class="mobile-bottom-nav-inner">
+        ${itemsHtml}
+      </div>
+    </div>`;
+
+  const container = document.createElement('div');
+  container.innerHTML = bottomNavHtml.trim();
+  document.body.appendChild(container.firstElementChild);
+
+  // Wire "More" button to open the mobile drawer
+  const menuBtn = document.querySelector('[data-mobile-nav="menu"]');
+  if (menuBtn) {
+    menuBtn.addEventListener('click', () => {
+      const burger = document.getElementById('nav-hamburger');
+      if (burger) burger.click();
+    });
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Module-level state
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -553,6 +647,25 @@ export function updateNavLang(lang) {
   // Drawer aria-label
   const drawer = document.getElementById('nav-drawer');
   if (drawer) drawer.setAttribute('aria-label', data.mainNav);
+
+  // Mobile bottom nav language update
+  const bottomNav = document.querySelector('.mobile-bottom-nav');
+  if (bottomNav) {
+    bottomNav.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
+    bottomNav.setAttribute('aria-label', isRtl ? 'التنقل السريع' : 'Quick navigation');
+    const labels = {
+      home: isRtl ? 'الرئيسية' : 'Home',
+      tracker: isRtl ? 'تتبع' : 'Tracker',
+      calculator: isRtl ? 'حاسبة' : 'Calc',
+      shops: isRtl ? 'المحلات' : 'Shops',
+      menu: isRtl ? 'القائمة' : 'More',
+    };
+    bottomNav.querySelectorAll('[data-mobile-nav]').forEach((el) => {
+      const key = el.dataset.mobileNav;
+      const lbl = el.querySelector('.mobile-bottom-nav-label');
+      if (lbl && labels[key]) lbl.textContent = labels[key];
+    });
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

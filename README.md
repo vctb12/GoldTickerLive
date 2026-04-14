@@ -670,7 +670,7 @@ Gold-Prices/
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for:
+See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for:
 
 - Code style guide (vanilla ES6, no framework)
 - PR workflow and branch naming
