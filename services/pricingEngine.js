@@ -40,21 +40,21 @@ export function calculateAllPrices(spotUsdPerOz, fxRates = {}) {
   for (const country of COUNTRIES) {
     const isAED = country.currency === 'AED';
     const fxRate = isAED ? AED_PEG : (fxRates[country.currency] ?? null);
-    const fxSource = isAED ? 'fixed-peg' : (fxRate ? 'api' : 'unavailable');
+    const fxSource = isAED ? 'fixed-peg' : fxRate ? 'api' : 'unavailable';
 
     for (const karat of KARATS) {
       const base = baseUsd[karat.code];
       const key = `${country.code}_${karat.code}`;
       prices[key] = {
-        usdPerGram:    base.usdPerGram,
-        usdPerOz:      base.usdPerOz,
-        usdPerTola:    base.usdPerTola,
-        localPerGram:  fxRate ? base.usdPerGram * fxRate : null,
-        localPerOz:    fxRate ? base.usdPerOz   * fxRate : null,
-        localPerTola:  fxRate ? base.usdPerTola * fxRate : null,
-        currency:      country.currency,
-        karat:         karat.code,
-        country:       country.code,
+        usdPerGram: base.usdPerGram,
+        usdPerOz: base.usdPerOz,
+        usdPerTola: base.usdPerTola,
+        localPerGram: fxRate ? base.usdPerGram * fxRate : null,
+        localPerOz: fxRate ? base.usdPerOz * fxRate : null,
+        localPerTola: fxRate ? base.usdPerTola * fxRate : null,
+        currency: country.currency,
+        karat: karat.code,
+        country: country.code,
         fxRate,
         fxSource,
       };
@@ -73,12 +73,15 @@ export function calculateAllPrices(spotUsdPerOz, fxRates = {}) {
  */
 export function calcPrice(spotUsdPerOz, karatCode, fxRate, unit = 'gram') {
   if (!spotUsdPerOz || !fxRate) return null;
-  const karat = KARATS.find(k => k.code === String(karatCode));
+  const karat = KARATS.find((k) => k.code === String(karatCode));
   if (!karat) return null;
   const usdPerGram = (spotUsdPerOz / TROY_OZ_GRAMS) * karat.purity;
   switch (unit) {
-    case 'oz':   return usdPerGram * TROY_OZ_GRAMS * fxRate;
-    case 'tola': return usdPerGram * TOLA_GRAMS * fxRate;
-    default:     return usdPerGram * fxRate;
+    case 'oz':
+      return usdPerGram * TROY_OZ_GRAMS * fxRate;
+    case 'tola':
+      return usdPerGram * TOLA_GRAMS * fxRate;
+    default:
+      return usdPerGram * fxRate;
   }
 }

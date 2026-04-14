@@ -16,13 +16,15 @@
 import { getUnifiedHistory, toChartData, filterByRange } from '../lib/historical-data.js';
 
 const CHART_CACHE_KEY = 'gold_chart_snapshots';
-const MAX_SNAPSHOTS   = 5000; // ~5 days at 90s intervals
+const MAX_SNAPSHOTS = 5000; // ~5 days at 90s intervals
 
 function loadSnapshots() {
   try {
     const raw = localStorage.getItem(CHART_CACHE_KEY);
     return raw ? JSON.parse(raw) : [];
-  } catch { return []; }
+  } catch {
+    return [];
+  }
 }
 
 function saveSnapshots(snapshots) {
@@ -36,12 +38,12 @@ function saveSnapshots(snapshots) {
  */
 function filterSnapshotsByMs(snapshots, ms) {
   const cutoff = Date.now() - ms;
-  return snapshots.filter(s => s.time * 1000 >= cutoff);
+  return snapshots.filter((s) => s.time * 1000 >= cutoff);
 }
 
 const SHORT_RANGE_MS = {
   '24H': 86400000,
-  '7D':  604800000,
+  '7D': 604800000,
 };
 
 const LIGHTWEIGHT_CDN = 'https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.3/+esm';
@@ -135,15 +137,20 @@ export class GoldChart {
     const container = document.getElementById(this.containerId);
     if (!container) return;
     const msgs = {
-      'load-error': this.lang === 'ar'
-        ? 'تعذّر تحميل المخطط. تحقق من الاتصال.'
-        : 'Chart unavailable. Check your connection.',
-      'no-data': this.lang === 'ar'
-        ? 'لا تتوفر بيانات بعد — ستظهر البيانات عند وصول التحديثات'
-        : 'No data for this range yet — data populates as updates arrive',
+      'load-error':
+        this.lang === 'ar'
+          ? 'تعذّر تحميل المخطط. تحقق من الاتصال.'
+          : 'Chart unavailable. Check your connection.',
+      'no-data':
+        this.lang === 'ar'
+          ? 'لا تتوفر بيانات بعد — ستظهر البيانات عند وصول التحديثات'
+          : 'No data for this range yet — data populates as updates arrive',
     };
     const existing = container.querySelector('.chart-no-data');
-    if (existing) { existing.textContent = msgs[reason] || msgs['no-data']; return; }
+    if (existing) {
+      existing.textContent = msgs[reason] || msgs['no-data'];
+      return;
+    }
     const msg = document.createElement('div');
     msg.className = 'chart-no-data';
     msg.textContent = msgs[reason] || msgs['no-data'];
@@ -162,11 +169,11 @@ export class GoldChart {
       const ms = SHORT_RANGE_MS[range];
       const filtered = filterSnapshotsByMs(this.snapshots, ms);
       if (filtered.length < 2) return null;
-      return filtered.map(s => ({ time: s.time, value: s.price }));
+      return filtered.map((s) => ({ time: s.time, value: s.price }));
     }
 
     // Longer ranges: use unified history (baseline + daily cache)
-    const unified  = getUnifiedHistory(this._cachedDaily);
+    const unified = getUnifiedHistory(this._cachedDaily);
     const filtered = filterByRange(unified, range);
     if (filtered.length < 2) return null;
     return toChartData(filtered);
@@ -187,7 +194,10 @@ export class GoldChart {
     const deduped = [];
     for (const d of data) {
       const key = typeof d.time === 'string' ? d.time : String(d.time);
-      if (!seen.has(key)) { seen.add(key); deduped.push(d); }
+      if (!seen.has(key)) {
+        seen.add(key);
+        deduped.push(d);
+      }
     }
     deduped.sort((a, b) => {
       const ka = typeof a.time === 'string' ? a.time : String(a.time);

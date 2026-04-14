@@ -10,9 +10,9 @@
 const AD_PUBLISHER_ID = 'ca-pub-XXXXXXXXXX';
 
 const AD_DIMENSIONS = {
-  leaderboard:  { width: 728, height: 90,  mobileWidth: 320, mobileHeight: 50 },
-  rectangle:    { width: 300, height: 250, mobileWidth: 300, mobileHeight: 250 },
-  skyscraper:   { width: 160, height: 600, mobileWidth: 0,   mobileHeight: 0 },
+  leaderboard: { width: 728, height: 90, mobileWidth: 320, mobileHeight: 50 },
+  rectangle: { width: 300, height: 250, mobileWidth: 300, mobileHeight: 250 },
+  skyscraper: { width: 160, height: 600, mobileWidth: 0, mobileHeight: 0 },
 };
 
 const isMobile = () => window.innerWidth < 768;
@@ -34,8 +34,8 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '')
   const dims = AD_DIMENSIONS[adFormat];
   if (!dims) return;
 
-  const mobile  = isMobile();
-  const w = mobile && dims.mobileWidth  ? dims.mobileWidth  : dims.width;
+  const mobile = isMobile();
+  const w = mobile && dims.mobileWidth ? dims.mobileWidth : dims.width;
   const h = mobile && dims.mobileHeight ? dims.mobileHeight : dims.height;
 
   if (w === 0) return; // skyscraper hidden on mobile
@@ -57,13 +57,16 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '')
 
   let loaded = false;
 
-  const observer = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting && !loaded) {
-      loaded = true;
-      observer.disconnect();
-      _loadAd(container, adSlotId, adFormat);
-    }
-  }, { rootMargin: '200px' });
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting && !loaded) {
+        loaded = true;
+        observer.disconnect();
+        _loadAd(container, adSlotId, adFormat);
+      }
+    },
+    { rootMargin: '200px' }
+  );
 
   observer.observe(container);
 }
@@ -96,5 +99,7 @@ function _loadAd(container, slotId, adFormat) {
 
   try {
     (window.adsbygoogle = window.adsbygoogle || []).push({});
-  } catch (_) { /* ignore ad push errors */ }
+  } catch (_) {
+    /* ignore ad push errors */
+  }
 }

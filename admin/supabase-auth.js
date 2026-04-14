@@ -42,7 +42,8 @@ export async function loginWithGitHub(redirectTo) {
   if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh.' };
 
   // Default redirect: go to admin root (one level up from /login/)
-  const target = redirectTo || window.location.origin + window.location.pathname.replace(/\/login\/?$/, '/');
+  const target =
+    redirectTo || window.location.origin + window.location.pathname.replace(/\/login\/?$/, '/');
 
   const { error } = await sb.auth.signInWithOAuth({
     provider: 'github',
@@ -117,7 +118,7 @@ export function hasStoredSession() {
   try {
     // Supabase stores sessions under sb-<ref>-auth-token
     const keys = Object.keys(localStorage);
-    return keys.some(k => k.startsWith('sb-') && k.endsWith('-auth-token'));
+    return keys.some((k) => k.startsWith('sb-') && k.endsWith('-auth-token'));
   } catch {
     return false;
   }

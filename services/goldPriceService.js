@@ -15,7 +15,8 @@ const PROVIDERS = [
     name: 'gold-api',
     url: 'https://api.gold-api.com/price/XAU',
     parse(data) {
-      if (typeof data.price !== 'number' || data.price <= 0) throw new DataError('Invalid gold-api price');
+      if (typeof data.price !== 'number' || data.price <= 0)
+        throw new DataError('Invalid gold-api price');
       return { price: data.price, updatedAt: data.updatedAt || new Date().toISOString() };
     },
   },
@@ -24,7 +25,8 @@ const PROVIDERS = [
     url: 'https://data-asg.goldprice.org/dbXRates/USD',
     parse(data) {
       const price = data?.items?.[0]?.xauPrice;
-      if (typeof price !== 'number' || price <= 0) throw new DataError('Invalid goldprice-org response');
+      if (typeof price !== 'number' || price <= 0)
+        throw new DataError('Invalid goldprice-org response');
       return { price, updatedAt: new Date().toISOString() };
     },
   },
@@ -35,7 +37,11 @@ const GOLD_CACHE_KEY = CONSTANTS.CACHE_KEYS.goldPrice;
 const GOLD_FALLBACK_KEY = CONSTANTS.CACHE_KEYS.goldFallback;
 
 function readCache(key) {
-  try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
+  try {
+    return JSON.parse(localStorage.getItem(key));
+  } catch {
+    return null;
+  }
 }
 
 /**

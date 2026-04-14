@@ -9,33 +9,39 @@ Define a safe rollout sequence and release gate for multi-PR revamp work.
 ### Wave 1 — Shops
 
 Scope:
+
 - `shops.html`
 - `shops.js`
 - `shops.css`
 
 Gate to move forward:
+
 - Functional and trust checks pass for shops flows.
 - No unresolved accessibility blockers in modal/filter path.
 
 ### Wave 2 — Tracker
 
 Scope:
+
 - `tracker.html`
 - `tracker-pro.js`
 - `tracker-pro.css`
 - `tracker/` modules touched by tracker PRs
 
 Gate to move forward:
+
 - Onboarding and source-state clarity validated.
 - Compare/archive/planner critical paths verified.
 
 ### Wave 3 — Country/City/Market templates
 
 Scope:
+
 - country/city/market HTML templates
 - metadata/canonical/internal-link consistency
 
 Gate to move forward:
+
 - Metadata parity (title/description/canonical/OG/Twitter)
 - Internal links and depth-relative assets verified.
 

@@ -23,7 +23,7 @@ const { COUNTRIES } = (() => {
   const raw = fs.readFileSync(path.join(ROOT, 'config/countries.js'), 'utf8');
   const match = raw.match(/export const COUNTRIES\s*=\s*(\[[\s\S]*?\]);/);
   if (!match) throw new Error('Could not parse COUNTRIES from config/countries.js');
-  // eslint-disable-next-line no-new-func
+   
   return { COUNTRIES: new Function('return ' + match[1])() };
 })();
 
@@ -31,7 +31,7 @@ const { KARATS } = (() => {
   const raw = fs.readFileSync(path.join(ROOT, 'config/karats.js'), 'utf8');
   const match = raw.match(/export const KARATS\s*=\s*(\[[\s\S]*?\]);/);
   if (!match) throw new Error('Could not parse KARATS from config/karats.js');
-  // eslint-disable-next-line no-new-func
+   
   return { KARATS: new Function('return ' + match[1])() };
 })();
 

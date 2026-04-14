@@ -15,7 +15,9 @@
 
 function getApiBase() {
   let override = null;
-  try { override = localStorage.getItem('gp_api_origin'); } catch {}
+  try {
+    override = localStorage.getItem('gp_api_origin');
+  } catch {}
   return (override || window.location.origin) + '/api/admin';
 }
 
@@ -29,12 +31,18 @@ const TOKEN_KEY = 'gp_admin_token';
 
 /** @returns {string|null} */
 export function getToken() {
-  try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
+  try {
+    return localStorage.getItem(TOKEN_KEY);
+  } catch {
+    return null;
+  }
 }
 
 /** @param {string} token */
 export function setToken(token) {
-  try { localStorage.setItem(TOKEN_KEY, token); } catch {}
+  try {
+    localStorage.setItem(TOKEN_KEY, token);
+  } catch {}
 }
 
 /** Remove stored JWT and any legacy session key. */
@@ -94,7 +102,10 @@ export async function apiFetch(path, options = {}) {
   } catch (err) {
     // Network error / server offline
     document.dispatchEvent(new CustomEvent('admin:offline'));
-    throw { offline: true, message: 'Admin server is unreachable. Make sure the server is running.' };
+    throw {
+      offline: true,
+      message: 'Admin server is unreachable. Make sure the server is running.',
+    };
   }
 
   // Server is reachable — hide any offline banner
@@ -161,7 +172,10 @@ export async function login(email, password) {
       return { success: false, message: err.body?.message || 'Invalid credentials.' };
     }
     if (err.status === 429) {
-      return { success: false, message: 'Too many login attempts. Please try again in 15 minutes.' };
+      return {
+        success: false,
+        message: 'Too many login attempts. Please try again in 15 minutes.',
+      };
     }
     return { success: false, message: err.message || 'Login failed.' };
   }
@@ -211,15 +225,15 @@ export async function getStats() {
  */
 export async function getShops(opts = {}) {
   const params = new URLSearchParams();
-  if (opts.search)     params.set('search', opts.search);
-  if (opts.status)     params.set('status', opts.status);
-  if (opts.type)       params.set('type', opts.type);
-  if (opts.city)       params.set('city', opts.city);
-  if (opts.country)    params.set('country', opts.country);
-  if (opts.sortBy)     params.set('sortBy', opts.sortBy);
-  if (opts.sortDesc)   params.set('sortDesc', 'true');
-  if (opts.page)       params.set('page', String(opts.page));
-  if (opts.limit)      params.set('limit', String(opts.limit));
+  if (opts.search) params.set('search', opts.search);
+  if (opts.status) params.set('status', opts.status);
+  if (opts.type) params.set('type', opts.type);
+  if (opts.city) params.set('city', opts.city);
+  if (opts.country) params.set('country', opts.country);
+  if (opts.sortBy) params.set('sortBy', opts.sortBy);
+  if (opts.sortDesc) params.set('sortDesc', 'true');
+  if (opts.page) params.set('page', String(opts.page));
+  if (opts.limit) params.set('limit', String(opts.limit));
   const qs = params.toString();
   return apiFetch('/shops' + (qs ? '?' + qs : ''));
 }
@@ -246,7 +260,10 @@ export async function createShop(data) {
  * @returns {Promise<{ success: true, shop: object }>}
  */
 export async function updateShop(id, data) {
-  return apiFetch(`/shops/${encodeURIComponent(id)}`, { method: 'PUT', body: JSON.stringify(data) });
+  return apiFetch(`/shops/${encodeURIComponent(id)}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
 }
 
 /**
@@ -267,13 +284,13 @@ export async function deleteShop(id) {
  */
 export async function getAuditLogs(opts = {}) {
   const params = new URLSearchParams();
-  if (opts.action)     params.set('action', opts.action);
+  if (opts.action) params.set('action', opts.action);
   if (opts.entityType) params.set('entityType', opts.entityType);
-  if (opts.actor)      params.set('actor', opts.actor);
-  if (opts.startDate)  params.set('startDate', opts.startDate);
-  if (opts.endDate)    params.set('endDate', opts.endDate);
-  if (opts.page)       params.set('page', String(opts.page));
-  if (opts.limit)      params.set('limit', String(opts.limit));
+  if (opts.actor) params.set('actor', opts.actor);
+  if (opts.startDate) params.set('startDate', opts.startDate);
+  if (opts.endDate) params.set('endDate', opts.endDate);
+  if (opts.page) params.set('page', String(opts.page));
+  if (opts.limit) params.set('limit', String(opts.limit));
   const qs = params.toString();
   return apiFetch('/audit-logs' + (qs ? '?' + qs : ''));
 }
@@ -319,7 +336,10 @@ export async function createUser(data) {
  * @returns {Promise<{ success: true, user: object }|{ success: false, message: string }>}
  */
 export async function updateUser(id, updates) {
-  return apiFetch(`/users/${encodeURIComponent(id)}`, { method: 'PUT', body: JSON.stringify(updates) });
+  return apiFetch(`/users/${encodeURIComponent(id)}`, {
+    method: 'PUT',
+    body: JSON.stringify(updates),
+  });
 }
 
 /**

@@ -5,13 +5,23 @@
  */
 
 export class NetworkError extends Error {
-  constructor(msg, status) { super(msg); this.name = 'NetworkError'; this.status = status; }
+  constructor(msg, status) {
+    super(msg);
+    this.name = 'NetworkError';
+    this.status = status;
+  }
 }
 export class TimeoutError extends Error {
-  constructor(msg) { super(msg); this.name = 'TimeoutError'; }
+  constructor(msg) {
+    super(msg);
+    this.name = 'TimeoutError';
+  }
 }
 export class DataError extends Error {
-  constructor(msg) { super(msg); this.name = 'DataError'; }
+  constructor(msg) {
+    super(msg);
+    this.name = 'DataError';
+  }
 }
 
 /**
@@ -50,7 +60,7 @@ export async function retryWithBackoff(fn, maxRetries = 2) {
     } catch (e) {
       lastErr = e;
       if (attempt < maxRetries) {
-        await new Promise(r => setTimeout(r, 1000 * Math.pow(2, attempt)));
+        await new Promise((r) => setTimeout(r, 1000 * Math.pow(2, attempt)));
       }
     }
   }

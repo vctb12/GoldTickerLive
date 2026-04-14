@@ -2,7 +2,13 @@
 import { injectNav, updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
-import { syncUrlFromState, persistState, applyUrlState, VALID_MODES, VALID_PANELS } from './state.js';
+import {
+  syncUrlFromState,
+  persistState,
+  applyUrlState,
+  VALID_MODES,
+  VALID_PANELS,
+} from './state.js';
 
 let _openPanel = null;
 const BASE_MODES = ['live', 'compare', 'archive', 'exports', 'method'];
@@ -10,7 +16,7 @@ const BASE_MODES = ['live', 'compare', 'archive', 'exports', 'method'];
 export function mountShell(state, els, onModeChange, onLangChange) {
   // Mount shared shell
   const navCtrl = injectNav(state.lang, 0);
-  navCtrl.getLangToggleButtons().forEach(btn => {
+  navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       state.lang = state.lang === 'en' ? 'ar' : 'en';
       persistState(state);
@@ -64,12 +70,12 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   function setMode(mode) {
     if (mode !== 'live') ensureAdvancedWorkspace();
     state.mode = mode;
-    tabs.forEach(tab => {
+    tabs.forEach((tab) => {
       const active = tab.dataset.mode === mode;
       tab.classList.toggle('is-active', active);
       tab.setAttribute('aria-selected', active ? 'true' : 'false');
     });
-    panels.forEach(panel => {
+    panels.forEach((panel) => {
       const active = panel.dataset.modePanel === mode;
       panel.hidden = !active;
     });
@@ -78,7 +84,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     if (typeof onModeChange === 'function') onModeChange(mode);
   }
 
-  tabs.forEach(tab => {
+  tabs.forEach((tab) => {
     tab.addEventListener('click', () => setMode(tab.dataset.mode));
   });
 
@@ -103,7 +109,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     overlay.removeAttribute('aria-hidden');
     document.body.classList.add('tp-overlay-open');
     // Mark toggle buttons as active
-    document.querySelectorAll(`.tracker-overlay-btn[data-overlay="${name}"]`).forEach(btn => {
+    document.querySelectorAll(`.tracker-overlay-btn[data-overlay="${name}"]`).forEach((btn) => {
       btn.classList.add('is-active');
       btn.setAttribute('aria-expanded', 'true');
     });
@@ -118,10 +124,12 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     overlay.hidden = true;
     overlay.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('tp-overlay-open');
-    document.querySelectorAll(`.tracker-overlay-btn[data-overlay="${panelName}"]`).forEach(btn => {
-      btn.classList.remove('is-active');
-      btn.setAttribute('aria-expanded', 'false');
-    });
+    document
+      .querySelectorAll(`.tracker-overlay-btn[data-overlay="${panelName}"]`)
+      .forEach((btn) => {
+        btn.classList.remove('is-active');
+        btn.setAttribute('aria-expanded', 'false');
+      });
     _openPanel = null;
     state.panel = null;
     syncUrlFromState(state);
@@ -133,17 +141,17 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   }
 
   // Wire overlay toggle buttons (Alerts, Planner in mode bar)
-  document.querySelectorAll('.tracker-overlay-btn[data-overlay]').forEach(btn => {
+  document.querySelectorAll('.tracker-overlay-btn[data-overlay]').forEach((btn) => {
     btn.addEventListener('click', () => toggleOverlay(btn.dataset.overlay));
   });
 
   // Wire overlay close buttons
-  document.querySelectorAll('.tp-overlay-close[data-close-overlay]').forEach(btn => {
+  document.querySelectorAll('.tp-overlay-close[data-close-overlay]').forEach((btn) => {
     btn.addEventListener('click', () => closeOverlay(btn.dataset.closeOverlay));
   });
 
   // Clicking overlay backdrop closes it
-  document.querySelectorAll('.tp-overlay-backdrop').forEach(backdrop => {
+  document.querySelectorAll('.tp-overlay-backdrop').forEach((backdrop) => {
     backdrop.addEventListener('click', () => {
       if (_openPanel) closeOverlay(_openPanel);
     });
@@ -170,7 +178,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   });
 
   // Keyboard shortcuts
-  window.addEventListener('keydown', evt => {
+  window.addEventListener('keydown', (evt) => {
     if (evt.altKey || evt.metaKey || evt.ctrlKey) return;
     if (['INPUT', 'TEXTAREA', 'SELECT'].includes(evt.target.tagName)) return;
     const key = evt.key.toLowerCase();

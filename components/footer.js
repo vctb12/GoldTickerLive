@@ -10,8 +10,8 @@ export function injectFooter(lang = 'en', depth = 0) {
     // Strip leading ../ to get the base filename, then prepend correct prefix
     const base = href.replace(/^\.\.\//, '');
     if (depth === 0) return base;
-    if (depth >= 2) return '../../../' + base;  // city/market pages: 3 dirs deep
-    return href;  // depth 1: country pages — unchanged (../filename)
+    if (depth >= 2) return '../../../' + base; // city/market pages: 3 dirs deep
+    return href; // depth 1: country pages — unchanged (../filename)
   }
 
   const year = new Date().getFullYear();
@@ -27,9 +27,11 @@ export function injectFooter(lang = 'en', depth = 0) {
           <span class="footer-brand-icon" aria-hidden="true">◈</span>
           <span class="footer-brand-name">${isAr ? 'أسعار الذهب' : 'GoldPrices'}</span>
         </a>
-        <p class="footer-tagline">${isAr
-          ? 'تقديرات الذهب المباشرة للخليج والعالم العربي'
-          : 'Live gold estimates for the Gulf &amp; Arab world'}</p>
+        <p class="footer-tagline">${
+  isAr
+    ? 'تقديرات الذهب المباشرة للخليج والعالم العربي'
+    : 'Live gold estimates for the Gulf &amp; Arab world'
+}</p>
         <div class="footer-brand-badges">
           <span class="footer-badge">${isAr ? '24+ دولة' : '24+ Countries'}</span>
           <span class="footer-badge">${isAr ? '7 عيارات' : '7 Karats'}</span>
@@ -107,9 +109,11 @@ export function injectFooter(lang = 'en', depth = 0) {
         <span class="footer-freshness"></span>
       </div>
       <div class="footer-bottom-row">
-        <p class="footer-disclaimer">${isAr
-          ? 'قيم تقديرية مكافئة للسبيكة فقط. قد تختلف أسعار التجزئة والمجوهرات. ليست نصيحة مالية.'
-          : 'Estimated bullion-equivalent values only. Retail and jewellery prices may differ. Not financial advice.'}</p>
+        <p class="footer-disclaimer">${
+  isAr
+    ? 'قيم تقديرية مكافئة للسبيكة فقط. قد تختلف أسعار التجزئة والمجوهرات. ليست نصيحة مالية.'
+    : 'Estimated bullion-equivalent values only. Retail and jewellery prices may differ. Not financial advice.'
+}</p>
         <p class="footer-copy">© ${year} GoldPrices · <a href="${r('../terms.html')}">${isAr ? 'شروط الخدمة' : 'Terms'}</a> · <a href="${r('../privacy.html')}">${isAr ? 'الخصوصية' : 'Privacy'}</a></p>
       </div>
     </div>
@@ -128,8 +132,11 @@ export function injectFooter(lang = 'en', depth = 0) {
     if (freshnessEl && ts) {
       const d = new Date(Number(ts));
       if (!isNaN(d.getTime())) {
-        const isAr2 = document.documentElement.lang === 'ar' || document.documentElement.dir === 'rtl';
-        freshnessEl.textContent = (isAr2 ? 'آخر تحديث: ' : 'Gold: ') + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const isAr2 =
+          document.documentElement.lang === 'ar' || document.documentElement.dir === 'rtl';
+        freshnessEl.textContent =
+          (isAr2 ? 'آخر تحديث: ' : 'Gold: ') +
+          d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       }
     }
   } catch (_) {}

@@ -14,13 +14,24 @@
 
 'use strict';
 
-const fs   = require('fs');
+const fs = require('fs');
 const path = require('path');
 
-const ROOT       = path.resolve(__dirname, '..');
-const FAIL       = process.argv.includes('--fail-on-error');
+const ROOT = path.resolve(__dirname, '..');
+const FAIL = process.argv.includes('--fail-on-error');
 
-const SKIP_DIRS  = new Set(['dist', 'node_modules', '.git', 'server', 'tests', 'docs', 'supabase', 'repositories', 'build', 'scripts']);
+const SKIP_DIRS = new Set([
+  'dist',
+  'node_modules',
+  '.git',
+  'server',
+  'tests',
+  'docs',
+  'supabase',
+  'repositories',
+  'build',
+  'scripts',
+]);
 const SKIP_FILES = new Set(['admin.html', 'offline.html']);
 
 function walkHtml(dir, results = []) {
@@ -34,10 +45,10 @@ function walkHtml(dir, results = []) {
 }
 
 const CHECKS = [
-  { name: 'title',       re: /<title[^>]*>([^<]{3,})<\/title>/i },
+  { name: 'title', re: /<title[^>]*>([^<]{3,})<\/title>/i },
   { name: 'description', re: /<meta\s[^>]*name=["']description["'][^>]*content=["'][^"']{10,}/i },
-  { name: 'canonical',   re: /<link\s[^>]*rel=["']canonical["']/i },
-  { name: 'og:image',    re: /<meta\s[^>]*property=["']og:image["']/i },
+  { name: 'canonical', re: /<link\s[^>]*rel=["']canonical["']/i },
+  { name: 'og:image', re: /<meta\s[^>]*property=["']og:image["']/i },
 ];
 
 const htmlFiles = walkHtml(ROOT);
@@ -45,9 +56,9 @@ let totalIssues = 0;
 const report = [];
 
 for (const file of htmlFiles) {
-  const html   = fs.readFileSync(file, 'utf8');
+  const html = fs.readFileSync(file, 'utf8');
   const relFile = path.relative(ROOT, file);
-  const issues  = [];
+  const issues = [];
 
   for (const { name, re } of CHECKS) {
     if (!re.test(html)) {
@@ -65,7 +76,9 @@ if (totalIssues === 0) {
   console.log(`✅  audit-pages: all ${htmlFiles.length} HTML pages pass metadata checks.`);
   process.exit(0);
 } else {
-  console.error(`⚠️  audit-pages: ${totalIssues} metadata issue(s) across ${report.length} page(s):\n`);
+  console.error(
+    `⚠️  audit-pages: ${totalIssues} metadata issue(s) across ${report.length} page(s):\n`
+  );
   for (const { file, issues } of report) {
     console.error(`📄  ${file}`);
     for (const issue of issues) {

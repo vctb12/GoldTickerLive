@@ -1,740 +1,912 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gold Price History &amp; Charts — 30 Days to 5 Years | GoldPrices</title>
-  <meta name="description" content="Interactive gold price history charts spanning 30 days to 5 years. View ATH, ATL, YTD performance, karat comparisons, and download historical data." />
-  <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/gold-price-history/" />
-  <link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/gold-price-history/" />
-  <link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/gold-price-history/" />
-  <link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/gold-price-history/?lang=ar" />
-  <link rel="manifest" href="../manifest.json" />
-  <meta name="theme-color" content="#d4a017" />
-  <meta property="og:title" content="Gold Price History &amp; Charts — 30 Days to 5 Years" />
-  <meta property="og:description" content="Explore gold price history charts from 30 days to all-time. ATH, ATL, karat comparison, and downloadable data." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/gold-price-history/" />
-  <meta property="og:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
-  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
-  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png" />
-  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
-  <link rel="stylesheet" href="../style.css" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gold Price History &amp; Charts — 30 Days to 5 Years | GoldPrices</title>
+    <meta
+      name="description"
+      content="Interactive gold price history charts spanning 30 days to 5 years. View ATH, ATL, YTD performance, karat comparisons, and download historical data."
+    />
+    <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/gold-price-history/" />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://vctb12.github.io/Gold-Prices/gold-price-history/"
+    />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://vctb12.github.io/Gold-Prices/gold-price-history/"
+    />
+    <link
+      rel="alternate"
+      hreflang="ar"
+      href="https://vctb12.github.io/Gold-Prices/gold-price-history/?lang=ar"
+    />
+    <link rel="manifest" href="../manifest.json" />
+    <meta name="theme-color" content="#d4a017" />
+    <meta property="og:title" content="Gold Price History &amp; Charts — 30 Days to 5 Years" />
+    <meta
+      property="og:description"
+      content="Explore gold price history charts from 30 days to all-time. ATH, ATL, karat comparison, and downloadable data."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/gold-price-history/" />
+    <meta property="og:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png" />
+    <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../style.css" />
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Gold Price History & Charts",
-    "description": "Interactive gold price history charts spanning 30 days to 5 years with ATH, ATL, and karat comparisons.",
-    "url": "https://vctb12.github.io/Gold-Prices/gold-price-history/",
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {"@type":"ListItem","position":1,"name":"Home","item":"https://vctb12.github.io/Gold-Prices/"},
-        {"@type":"ListItem","position":2,"name":"Gold Price History","item":"https://vctb12.github.io/Gold-Prices/gold-price-history/"}
-      ]
-    }
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Dataset",
-    "name": "Gold Price Historical Data — XAU/USD and Multi-Currency",
-    "description": "Historical gold price data covering 30 days to 5 years. XAU/USD spot price with karat comparisons (24K, 22K, 21K, 18K) and multi-currency conversion including AED, SAR, KWD, QAR, BHD, OMR, EGP, JOD.",
-    "url": "https://vctb12.github.io/Gold-Prices/gold-price-history/",
-    "temporalCoverage": "2019/..",
-    "variableMeasured": [
-      {"@type": "PropertyValue", "name": "XAU/USD spot price", "unitText": "USD per troy ounce"},
-      {"@type": "PropertyValue", "name": "24K gold per gram", "unitText": "AED"},
-      {"@type": "PropertyValue", "name": "22K gold per gram", "unitText": "AED"}
-    ],
-    "creator": {"@type": "Organization", "name": "GoldPrices", "url": "https://vctb12.github.io/Gold-Prices/"},
-    "license": "https://creativecommons.org/licenses/by/4.0/",
-    "distribution": [
+    <script type="application/ld+json">
       {
-        "@type": "DataDownload",
-        "encodingFormat": "text/csv",
-        "contentUrl": "https://vctb12.github.io/Gold-Prices/gold-price-history/"
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Gold Price History & Charts",
+        "description": "Interactive gold price history charts spanning 30 days to 5 years with ATH, ATL, and karat comparisons.",
+        "url": "https://vctb12.github.io/Gold-Prices/gold-price-history/",
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://vctb12.github.io/Gold-Prices/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Gold Price History",
+              "item": "https://vctb12.github.io/Gold-Prices/gold-price-history/"
+            }
+          ]
+        }
       }
-    ],
-    "keywords": ["gold price history", "XAU USD historical", "gold price chart", "gold rate UAE", "سعر الذهب تاريخي"]
-  }
-  </script>
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Dataset",
+        "name": "Gold Price Historical Data — XAU/USD and Multi-Currency",
+        "description": "Historical gold price data covering 30 days to 5 years. XAU/USD spot price with karat comparisons (24K, 22K, 21K, 18K) and multi-currency conversion including AED, SAR, KWD, QAR, BHD, OMR, EGP, JOD.",
+        "url": "https://vctb12.github.io/Gold-Prices/gold-price-history/",
+        "temporalCoverage": "2019/..",
+        "variableMeasured": [
+          {
+            "@type": "PropertyValue",
+            "name": "XAU/USD spot price",
+            "unitText": "USD per troy ounce"
+          },
+          { "@type": "PropertyValue", "name": "24K gold per gram", "unitText": "AED" },
+          { "@type": "PropertyValue", "name": "22K gold per gram", "unitText": "AED" }
+        ],
+        "creator": {
+          "@type": "Organization",
+          "name": "GoldPrices",
+          "url": "https://vctb12.github.io/Gold-Prices/"
+        },
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "distribution": [
+          {
+            "@type": "DataDownload",
+            "encodingFormat": "text/csv",
+            "contentUrl": "https://vctb12.github.io/Gold-Prices/gold-price-history/"
+          }
+        ],
+        "keywords": [
+          "gold price history",
+          "XAU USD historical",
+          "gold price chart",
+          "gold rate UAE",
+          "سعر الذهب تاريخي"
+        ]
+      }
+    </script>
 
-  <style>
-    /* ── Page layout ── */
-    .hist-page { max-width: 1100px; margin: 0 auto; padding: var(--space-5) var(--space-4); }
+    <style>
+      /* ── Page layout ── */
+      .hist-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: var(--space-5) var(--space-4);
+      }
 
-    /* ── Hero ── */
-    .hist-hero {
-      background: var(--gradient-dark);
-      color: var(--text-on-dark);
-      padding: var(--space-7) var(--space-6);
-      border-radius: var(--radius-xl);
-      margin-bottom: var(--space-6);
-      position: relative;
-      overflow: hidden;
-    }
-    .hist-hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 70% 50%, rgba(196,153,62,0.18) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .hist-hero-title {
-      font-size: clamp(1.5rem, 3vw, 2.2rem);
-      font-weight: 700;
-      margin: 0 0 var(--space-2);
-      color: #fff;
-    }
-    .hist-hero-sub { color: rgba(255,255,255,0.72); font-size: 1rem; margin: 0 0 var(--space-5); }
-    .hist-hero-badges { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
-    .hist-price-badge {
-      background: var(--color-gold);
-      color: #fff;
-      font-size: 1.35rem;
-      font-weight: 700;
-      padding: var(--space-2) var(--space-4);
-      border-radius: var(--radius-pill);
-    }
-    .hist-price-unit { font-size: 0.85rem; opacity: 0.85; font-weight: 400; }
-    .hist-freshness {
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.6);
-      background: rgba(255,255,255,0.08);
-      padding: var(--space-1) var(--space-3);
-      border-radius: var(--radius-pill);
-    }
+      /* ── Hero ── */
+      .hist-hero {
+        background: var(--gradient-dark);
+        color: var(--text-on-dark);
+        padding: var(--space-7) var(--space-6);
+        border-radius: var(--radius-xl);
+        margin-bottom: var(--space-6);
+        position: relative;
+        overflow: hidden;
+      }
+      .hist-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at 70% 50%,
+          rgba(196, 153, 62, 0.18) 0%,
+          transparent 60%
+        );
+        pointer-events: none;
+      }
+      .hist-hero-title {
+        font-size: clamp(1.5rem, 3vw, 2.2rem);
+        font-weight: 700;
+        margin: 0 0 var(--space-2);
+        color: #fff;
+      }
+      .hist-hero-sub {
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 1rem;
+        margin: 0 0 var(--space-5);
+      }
+      .hist-hero-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        align-items: center;
+      }
+      .hist-price-badge {
+        background: var(--color-gold);
+        color: #fff;
+        font-size: 1.35rem;
+        font-weight: 700;
+        padding: var(--space-2) var(--space-4);
+        border-radius: var(--radius-pill);
+      }
+      .hist-price-unit {
+        font-size: 0.85rem;
+        opacity: 0.85;
+        font-weight: 400;
+      }
+      .hist-freshness {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.08);
+        padding: var(--space-1) var(--space-3);
+        border-radius: var(--radius-pill);
+      }
 
-    /* ── Stats grid ── */
-    .hist-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: var(--space-3);
-      margin-bottom: var(--space-5);
-    }
-    .hist-stat-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      padding: var(--space-4);
-      text-align: center;
-      box-shadow: var(--shadow-sm);
-    }
-    .hist-stat-label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: var(--space-1); }
-    .hist-stat-value { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); }
-    .hist-stat-value.up { color: var(--color-up); }
-    .hist-stat-value.down { color: var(--color-down); }
+      /* ── Stats grid ── */
+      .hist-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: var(--space-3);
+        margin-bottom: var(--space-5);
+      }
+      .hist-stat-card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        padding: var(--space-4);
+        text-align: center;
+        box-shadow: var(--shadow-sm);
+      }
+      .hist-stat-label {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: var(--space-1);
+      }
+      .hist-stat-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .hist-stat-value.up {
+        color: var(--color-up);
+      }
+      .hist-stat-value.down {
+        color: var(--color-down);
+      }
 
-    /* ── Chart card ── */
-    .hist-chart-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-xl);
-      padding: var(--space-5);
-      margin-bottom: var(--space-5);
-      box-shadow: var(--shadow-md);
-    }
-    .hist-chart-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-3);
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: var(--space-4);
-    }
-    .hist-timeframe-group { display: flex; gap: var(--space-1); flex-wrap: wrap; }
-    .hist-tf-btn {
-      background: var(--color-surface-2);
-      border: 1px solid var(--color-border);
-      color: var(--text-secondary);
-      font-size: 0.85rem;
-      font-weight: 600;
-      padding: 0.35rem 0.9rem;
-      border-radius: var(--radius-pill);
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    .hist-tf-btn:hover { background: var(--color-gold-tint); border-color: var(--color-gold); color: var(--color-gold-dark); }
-    .hist-tf-btn.active {
-      background: var(--color-gold);
-      border-color: var(--color-gold);
-      color: #fff;
-    }
-    .hist-chart-wrap { position: relative; height: 380px; }
-    @media (max-width: 600px) { .hist-chart-wrap { height: 260px; } }
+      /* ── Chart card ── */
+      .hist-chart-card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-xl);
+        padding: var(--space-5);
+        margin-bottom: var(--space-5);
+        box-shadow: var(--shadow-md);
+      }
+      .hist-chart-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: var(--space-4);
+      }
+      .hist-timeframe-group {
+        display: flex;
+        gap: var(--space-1);
+        flex-wrap: wrap;
+      }
+      .hist-tf-btn {
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.35rem 0.9rem;
+        border-radius: var(--radius-pill);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      .hist-tf-btn:hover {
+        background: var(--color-gold-tint);
+        border-color: var(--color-gold);
+        color: var(--color-gold-dark);
+      }
+      .hist-tf-btn.active {
+        background: var(--color-gold);
+        border-color: var(--color-gold);
+        color: #fff;
+      }
+      .hist-chart-wrap {
+        position: relative;
+        height: 380px;
+      }
+      @media (max-width: 600px) {
+        .hist-chart-wrap {
+          height: 260px;
+        }
+      }
 
-    /* ── Karat overlay controls ── */
-    .hist-karat-section {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      padding: var(--space-4);
-      margin-bottom: var(--space-5);
-    }
-    .hist-karat-header { font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin-bottom: var(--space-3); }
-    .hist-karat-toggles { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-    .hist-karat-toggle {
-      display: flex; align-items: center; gap: var(--space-2);
-      background: var(--color-surface-2);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-pill);
-      padding: 0.3rem var(--space-3);
-      cursor: pointer;
-      font-size: 0.85rem; font-weight: 600;
-      transition: var(--transition);
-      user-select: none;
-    }
-    .hist-karat-toggle input[type=checkbox] { display: none; }
-    .hist-karat-toggle.checked {
-      background: var(--color-gold-tint);
-      border-color: var(--color-gold);
-      color: var(--color-gold-dark);
-    }
-    .hist-karat-swatch {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      display: inline-block;
-    }
+      /* ── Karat overlay controls ── */
+      .hist-karat-section {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        padding: var(--space-4);
+        margin-bottom: var(--space-5);
+      }
+      .hist-karat-header {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: var(--space-3);
+      }
+      .hist-karat-toggles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+      }
+      .hist-karat-toggle {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-pill);
+        padding: 0.3rem var(--space-3);
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: var(--transition);
+        user-select: none;
+      }
+      .hist-karat-toggle input[type='checkbox'] {
+        display: none;
+      }
+      .hist-karat-toggle.checked {
+        background: var(--color-gold-tint);
+        border-color: var(--color-gold);
+        color: var(--color-gold-dark);
+      }
+      .hist-karat-swatch {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+      }
 
-    /* ── Data table ── */
-    .hist-table-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-      box-shadow: var(--shadow-sm);
-    }
-    .hist-table-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: var(--space-4) var(--space-5);
-      border-bottom: 1px solid var(--color-border);
-    }
-    .hist-table-title { font-weight: 700; font-size: 1rem; }
-    .hist-download-btn {
-      background: var(--color-surface-2);
-      border: 1px solid var(--color-border);
-      color: var(--text-secondary);
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 0.35rem var(--space-3);
-      border-radius: var(--radius-pill);
-      cursor: pointer;
-      transition: var(--transition);
-      text-decoration: none;
-    }
-    .hist-download-btn:hover { background: var(--color-gold-tint); border-color: var(--color-gold); color: var(--color-gold-dark); }
-    .hist-table-scroll { max-height: 420px; overflow-y: auto; }
-    .hist-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.875rem;
-    }
-    .hist-table thead { position: sticky; top: 0; background: var(--color-surface-2); }
-    .hist-table th {
-      text-align: left;
-      padding: var(--space-2) var(--space-4);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--text-secondary);
-      border-bottom: 1px solid var(--color-border);
-      font-weight: 600;
-    }
-    .hist-table td {
-      padding: var(--space-2) var(--space-4);
-      border-bottom: 1px solid var(--color-border-subtle);
-      color: var(--text-primary);
-    }
-    .hist-table tr:last-child td { border-bottom: none; }
-    .hist-table tr:hover td { background: var(--color-gold-tint); }
-    .hist-table .chg-up { color: var(--color-up); font-weight: 600; }
-    .hist-table .chg-down { color: var(--color-down); font-weight: 600; }
-    .hist-table .chg-neutral { color: var(--text-secondary); }
+      /* ── Data table ── */
+      .hist-table-card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+      }
+      .hist-table-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--space-4) var(--space-5);
+        border-bottom: 1px solid var(--color-border);
+      }
+      .hist-table-title {
+        font-weight: 700;
+        font-size: 1rem;
+      }
+      .hist-download-btn {
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-border);
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.35rem var(--space-3);
+        border-radius: var(--radius-pill);
+        cursor: pointer;
+        transition: var(--transition);
+        text-decoration: none;
+      }
+      .hist-download-btn:hover {
+        background: var(--color-gold-tint);
+        border-color: var(--color-gold);
+        color: var(--color-gold-dark);
+      }
+      .hist-table-scroll {
+        max-height: 420px;
+        overflow-y: auto;
+      }
+      .hist-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+      }
+      .hist-table thead {
+        position: sticky;
+        top: 0;
+        background: var(--color-surface-2);
+      }
+      .hist-table th {
+        text-align: left;
+        padding: var(--space-2) var(--space-4);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--text-secondary);
+        border-bottom: 1px solid var(--color-border);
+        font-weight: 600;
+      }
+      .hist-table td {
+        padding: var(--space-2) var(--space-4);
+        border-bottom: 1px solid var(--color-border-subtle);
+        color: var(--text-primary);
+      }
+      .hist-table tr:last-child td {
+        border-bottom: none;
+      }
+      .hist-table tr:hover td {
+        background: var(--color-gold-tint);
+      }
+      .hist-table .chg-up {
+        color: var(--color-up);
+        font-weight: 600;
+      }
+      .hist-table .chg-down {
+        color: var(--color-down);
+        font-weight: 600;
+      }
+      .hist-table .chg-neutral {
+        color: var(--text-secondary);
+      }
 
-    /* ── Loading / error states ── */
-    .hist-loading {
-      display: flex; align-items: center; justify-content: center;
-      height: 200px;
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-    }
-    .hist-error {
-      background: var(--color-error-bg);
-      color: var(--color-error);
-      border: 1px solid rgba(184,20,40,0.2);
-      border-radius: var(--radius-md);
-      padding: var(--space-3) var(--space-4);
-      font-size: 0.875rem;
-      margin-bottom: var(--space-4);
-    }
+      /* ── Loading / error states ── */
+      .hist-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+      .hist-error {
+        background: var(--color-error-bg);
+        color: var(--color-error);
+        border: 1px solid rgba(184, 20, 40, 0.2);
+        border-radius: var(--radius-md);
+        padding: var(--space-3) var(--space-4);
+        font-size: 0.875rem;
+        margin-bottom: var(--space-4);
+      }
 
-    /* ── Disclaimer ── */
-    .hist-disclaimer {
-      font-size: 0.78rem;
-      color: var(--text-tertiary);
-      text-align: center;
-      margin-top: var(--space-5);
-      line-height: 1.6;
-    }
-    .hist-disclaimer a { color: var(--color-gold-dark); text-decoration: underline; }
+      /* ── Disclaimer ── */
+      .hist-disclaimer {
+        font-size: 0.78rem;
+        color: var(--text-tertiary);
+        text-align: center;
+        margin-top: var(--space-5);
+        line-height: 1.6;
+      }
+      .hist-disclaimer a {
+        color: var(--color-gold-dark);
+        text-decoration: underline;
+      }
 
-    /* ── RTL support ── */
-    [dir="rtl"] .hist-table th,
-    [dir="rtl"] .hist-table td { text-align: right; }
-  </style>
-</head>
-<body>
-  <div id="nav-root"></div>
+      /* ── RTL support ── */
+      [dir='rtl'] .hist-table th,
+      [dir='rtl'] .hist-table td {
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="nav-root"></div>
 
-  <main class="hist-page">
-    <section class="hist-hero">
-      <h1 class="hist-hero-title" data-i18n="hist_title">Gold Price History &amp; Charts</h1>
-      <p class="hist-hero-sub" data-i18n="hist_sub">Historical XAU/USD spot prices — monthly averages from 2019 to present</p>
-      <div class="hist-hero-badges">
-        <span class="hist-price-badge">
-          <span id="live-price">—</span>
-          <span class="hist-price-unit"> USD/oz</span>
-        </span>
-        <span class="hist-freshness" id="freshness-label">Loading…</span>
-      </div>
-    </section>
+    <main class="hist-page">
+      <section class="hist-hero">
+        <h1 class="hist-hero-title" data-i18n="hist_title">Gold Price History &amp; Charts</h1>
+        <p class="hist-hero-sub" data-i18n="hist_sub">
+          Historical XAU/USD spot prices — monthly averages from 2019 to present
+        </p>
+        <div class="hist-hero-badges">
+          <span class="hist-price-badge">
+            <span id="live-price">—</span>
+            <span class="hist-price-unit"> USD/oz</span>
+          </span>
+          <span class="hist-freshness" id="freshness-label">Loading…</span>
+        </div>
+      </section>
 
-    <div id="error-banner" class="hist-error" style="display:none;"></div>
+      <div id="error-banner" class="hist-error" style="display: none"></div>
 
-    <!-- Stats grid -->
-    <div class="hist-stats">
-      <div class="hist-stat-card">
-        <div class="hist-stat-label" data-i18n="hist_stat_current">Current</div>
-        <div class="hist-stat-value" id="stat-current">—</div>
-      </div>
-      <div class="hist-stat-card">
-        <div class="hist-stat-label" data-i18n="hist_stat_ath">All-Time High</div>
-        <div class="hist-stat-value" id="stat-ath">—</div>
-      </div>
-      <div class="hist-stat-card">
-        <div class="hist-stat-label" data-i18n="hist_stat_atl">All-Time Low</div>
-        <div class="hist-stat-value" id="stat-atl">—</div>
-      </div>
-      <div class="hist-stat-card">
-        <div class="hist-stat-label" data-i18n="hist_stat_ytd">YTD Change</div>
-        <div class="hist-stat-value" id="stat-ytd">—</div>
-      </div>
-      <div class="hist-stat-card">
-        <div class="hist-stat-label" data-i18n="hist_stat_yoy">1-Year Change</div>
-        <div class="hist-stat-value" id="stat-yoy">—</div>
-      </div>
-    </div>
-
-    <!-- Chart card -->
-    <div class="hist-chart-card">
-      <div class="hist-chart-toolbar">
-        <div class="hist-timeframe-group" id="timeframe-btns" role="group" aria-label="Timeframe">
-          <button class="hist-tf-btn" data-range="30D">30D</button>
-          <button class="hist-tf-btn" data-range="90D">90D</button>
-          <button class="hist-tf-btn active" data-range="1Y">1Y</button>
-          <button class="hist-tf-btn" data-range="3Y">3Y</button>
-          <button class="hist-tf-btn" data-range="5Y">5Y</button>
-          <button class="hist-tf-btn" data-range="ALL" data-i18n-content="hist_all">ALL</button>
+      <!-- Stats grid -->
+      <div class="hist-stats">
+        <div class="hist-stat-card">
+          <div class="hist-stat-label" data-i18n="hist_stat_current">Current</div>
+          <div class="hist-stat-value" id="stat-current">—</div>
+        </div>
+        <div class="hist-stat-card">
+          <div class="hist-stat-label" data-i18n="hist_stat_ath">All-Time High</div>
+          <div class="hist-stat-value" id="stat-ath">—</div>
+        </div>
+        <div class="hist-stat-card">
+          <div class="hist-stat-label" data-i18n="hist_stat_atl">All-Time Low</div>
+          <div class="hist-stat-value" id="stat-atl">—</div>
+        </div>
+        <div class="hist-stat-card">
+          <div class="hist-stat-label" data-i18n="hist_stat_ytd">YTD Change</div>
+          <div class="hist-stat-value" id="stat-ytd">—</div>
+        </div>
+        <div class="hist-stat-card">
+          <div class="hist-stat-label" data-i18n="hist_stat_yoy">1-Year Change</div>
+          <div class="hist-stat-value" id="stat-yoy">—</div>
         </div>
       </div>
-      <div class="hist-chart-wrap">
-        <canvas id="history-chart"></canvas>
-        <div class="hist-loading" id="chart-loading" data-i18n="hist_loading">Loading chart data…</div>
+
+      <!-- Chart card -->
+      <div class="hist-chart-card">
+        <div class="hist-chart-toolbar">
+          <div class="hist-timeframe-group" id="timeframe-btns" role="group" aria-label="Timeframe">
+            <button class="hist-tf-btn" data-range="30D">30D</button>
+            <button class="hist-tf-btn" data-range="90D">90D</button>
+            <button class="hist-tf-btn active" data-range="1Y">1Y</button>
+            <button class="hist-tf-btn" data-range="3Y">3Y</button>
+            <button class="hist-tf-btn" data-range="5Y">5Y</button>
+            <button class="hist-tf-btn" data-range="ALL" data-i18n-content="hist_all">ALL</button>
+          </div>
+        </div>
+        <div class="hist-chart-wrap">
+          <canvas id="history-chart"></canvas>
+          <div class="hist-loading" id="chart-loading" data-i18n="hist_loading">
+            Loading chart data…
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- Karat comparison -->
-    <div class="hist-karat-section">
-      <div class="hist-karat-header" data-i18n="hist_karat_overlay">Karat Price Comparison (per gram, AED)</div>
-      <div class="hist-karat-toggles" id="karat-toggles">
-        <label class="hist-karat-toggle checked" data-karat="24">
-          <input type="checkbox" checked />
-          <span class="hist-karat-swatch" style="background:#c4993e;"></span>
-          24K
-        </label>
-        <label class="hist-karat-toggle" data-karat="22">
-          <input type="checkbox" />
-          <span class="hist-karat-swatch" style="background:#7a9e5a;"></span>
-          22K
-        </label>
-        <label class="hist-karat-toggle" data-karat="21">
-          <input type="checkbox" />
-          <span class="hist-karat-swatch" style="background:#5a7aba;"></span>
-          21K
-        </label>
-        <label class="hist-karat-toggle" data-karat="18">
-          <input type="checkbox" />
-          <span class="hist-karat-swatch" style="background:#a05aba;"></span>
-          18K
-        </label>
+      <!-- Karat comparison -->
+      <div class="hist-karat-section">
+        <div class="hist-karat-header" data-i18n="hist_karat_overlay">
+          Karat Price Comparison (per gram, AED)
+        </div>
+        <div class="hist-karat-toggles" id="karat-toggles">
+          <label class="hist-karat-toggle checked" data-karat="24">
+            <input type="checkbox" checked />
+            <span class="hist-karat-swatch" style="background: #c4993e"></span>
+            24K
+          </label>
+          <label class="hist-karat-toggle" data-karat="22">
+            <input type="checkbox" />
+            <span class="hist-karat-swatch" style="background: #7a9e5a"></span>
+            22K
+          </label>
+          <label class="hist-karat-toggle" data-karat="21">
+            <input type="checkbox" />
+            <span class="hist-karat-swatch" style="background: #5a7aba"></span>
+            21K
+          </label>
+          <label class="hist-karat-toggle" data-karat="18">
+            <input type="checkbox" />
+            <span class="hist-karat-swatch" style="background: #a05aba"></span>
+            18K
+          </label>
+        </div>
       </div>
-    </div>
 
-    <!-- Data table -->
-    <div class="hist-table-card">
-      <div class="hist-table-header">
-        <span class="hist-table-title" data-i18n="hist_table_title">Historical Data</span>
-        <button class="hist-download-btn" id="download-csv" data-i18n="hist_download">⬇ Download CSV</button>
+      <!-- Data table -->
+      <div class="hist-table-card">
+        <div class="hist-table-header">
+          <span class="hist-table-title" data-i18n="hist_table_title">Historical Data</span>
+          <button class="hist-download-btn" id="download-csv" data-i18n="hist_download">
+            ⬇ Download CSV
+          </button>
+        </div>
+        <div class="hist-table-scroll">
+          <table class="hist-table" id="data-table">
+            <thead>
+              <tr>
+                <th data-i18n="hist_col_date">Date</th>
+                <th data-i18n="hist_col_price">Price (USD/oz)</th>
+                <th data-i18n="hist_col_aed">Price (AED/g 24K)</th>
+                <th data-i18n="hist_col_change">Change</th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+              <tr>
+                <td colspan="4" class="hist-loading" data-i18n="hist_loading">Loading…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="hist-table-scroll">
-        <table class="hist-table" id="data-table">
-          <thead>
-            <tr>
-              <th data-i18n="hist_col_date">Date</th>
-              <th data-i18n="hist_col_price">Price (USD/oz)</th>
-              <th data-i18n="hist_col_aed">Price (AED/g 24K)</th>
-              <th data-i18n="hist_col_change">Change</th>
-            </tr>
-          </thead>
-          <tbody id="table-body">
-            <tr><td colspan="4" class="hist-loading" data-i18n="hist_loading">Loading…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
 
-    <p class="hist-disclaimer" data-i18n="hist_disclaimer">
-      Data sourced from LBMA monthly averages (public domain). Prices are historical monthly averages in USD/troy oz and are for informational purposes only.
-      <a href="../methodology.html" data-i18n="hist_methodology_link">Methodology</a>
-    </p>
-  </main>
+      <p class="hist-disclaimer" data-i18n="hist_disclaimer">
+        Data sourced from LBMA monthly averages (public domain). Prices are historical monthly
+        averages in USD/troy oz and are for informational purposes only.
+        <a href="../methodology.html" data-i18n="hist_methodology_link">Methodology</a>
+      </p>
+    </main>
 
-  <div id="footer-root"></div>
+    <div id="footer-root"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-  <script type="module">
-    import { injectNav, updateNavLang } from '../components/nav.js';
-    import { injectFooter } from '../components/footer.js';
-    import { fetchGold } from '../lib/api.js';
-    import { getBaselineHistory, filterByRange, getHistoryStats, toChartData } from '../lib/historical-data.js';
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script type="module">
+      import { injectNav, updateNavLang } from '../components/nav.js';
+      import { injectFooter } from '../components/footer.js';
+      import { fetchGold } from '../lib/api.js';
+      import {
+        getBaselineHistory,
+        filterByRange,
+        getHistoryStats,
+        toChartData,
+      } from '../lib/historical-data.js';
 
-    // ── i18n ──────────────────────────────────────────────────────────────────
-    const STRINGS = {
-      en: {
-        hist_title: 'Gold Price History & Charts',
-        hist_sub: 'Historical XAU/USD spot prices — monthly averages from 2019 to present',
-        hist_stat_current: 'Current',
-        hist_stat_ath: 'All-Time High',
-        hist_stat_atl: 'All-Time Low',
-        hist_stat_ytd: 'YTD Change',
-        hist_stat_yoy: '1-Year Change',
-        hist_all: 'ALL',
-        hist_loading: 'Loading…',
-        hist_karat_overlay: 'Karat Price Comparison (per gram, AED)',
-        hist_table_title: 'Historical Data',
-        hist_download: '⬇ Download CSV',
-        hist_col_date: 'Date',
-        hist_col_price: 'Price (USD/oz)',
-        hist_col_aed: 'Price (AED/g 24K)',
-        hist_col_change: 'Change',
-        hist_disclaimer: 'Data sourced from LBMA monthly averages (public domain). Prices are historical monthly averages in USD/troy oz and are for informational purposes only.',
-        hist_methodology_link: 'Methodology',
-      },
-      ar: {
-        hist_title: 'تاريخ أسعار الذهب والرسوم البيانية',
-        hist_sub: 'أسعار XAU/USD التاريخية — متوسطات شهرية من 2019 حتى الآن',
-        hist_stat_current: 'السعر الحالي',
-        hist_stat_ath: 'أعلى سعر على الإطلاق',
-        hist_stat_atl: 'أدنى سعر على الإطلاق',
-        hist_stat_ytd: 'التغير منذ بداية العام',
-        hist_stat_yoy: 'التغير خلال سنة',
-        hist_all: 'الكل',
-        hist_loading: 'جارٍ التحميل…',
-        hist_karat_overlay: 'مقارنة أسعار العيارات (لكل غرام، درهم)',
-        hist_table_title: 'البيانات التاريخية',
-        hist_download: '⬇ تنزيل CSV',
-        hist_col_date: 'التاريخ',
-        hist_col_price: 'السعر (USD/أوقية)',
-        hist_col_aed: 'السعر (درهم/غ 24 عيار)',
-        hist_col_change: 'التغير',
-        hist_disclaimer: 'البيانات مصدرها متوسطات LBMA الشهرية (المجال العام). الأسعار هي متوسطات شهرية تاريخية للمعلومات فقط.',
-        hist_methodology_link: 'المنهجية',
-      }
-    };
+      // ── i18n ──────────────────────────────────────────────────────────────────
+      const STRINGS = {
+        en: {
+          hist_title: 'Gold Price History & Charts',
+          hist_sub: 'Historical XAU/USD spot prices — monthly averages from 2019 to present',
+          hist_stat_current: 'Current',
+          hist_stat_ath: 'All-Time High',
+          hist_stat_atl: 'All-Time Low',
+          hist_stat_ytd: 'YTD Change',
+          hist_stat_yoy: '1-Year Change',
+          hist_all: 'ALL',
+          hist_loading: 'Loading…',
+          hist_karat_overlay: 'Karat Price Comparison (per gram, AED)',
+          hist_table_title: 'Historical Data',
+          hist_download: '⬇ Download CSV',
+          hist_col_date: 'Date',
+          hist_col_price: 'Price (USD/oz)',
+          hist_col_aed: 'Price (AED/g 24K)',
+          hist_col_change: 'Change',
+          hist_disclaimer:
+            'Data sourced from LBMA monthly averages (public domain). Prices are historical monthly averages in USD/troy oz and are for informational purposes only.',
+          hist_methodology_link: 'Methodology',
+        },
+        ar: {
+          hist_title: 'تاريخ أسعار الذهب والرسوم البيانية',
+          hist_sub: 'أسعار XAU/USD التاريخية — متوسطات شهرية من 2019 حتى الآن',
+          hist_stat_current: 'السعر الحالي',
+          hist_stat_ath: 'أعلى سعر على الإطلاق',
+          hist_stat_atl: 'أدنى سعر على الإطلاق',
+          hist_stat_ytd: 'التغير منذ بداية العام',
+          hist_stat_yoy: 'التغير خلال سنة',
+          hist_all: 'الكل',
+          hist_loading: 'جارٍ التحميل…',
+          hist_karat_overlay: 'مقارنة أسعار العيارات (لكل غرام، درهم)',
+          hist_table_title: 'البيانات التاريخية',
+          hist_download: '⬇ تنزيل CSV',
+          hist_col_date: 'التاريخ',
+          hist_col_price: 'السعر (USD/أوقية)',
+          hist_col_aed: 'السعر (درهم/غ 24 عيار)',
+          hist_col_change: 'التغير',
+          hist_disclaimer:
+            'البيانات مصدرها متوسطات LBMA الشهرية (المجال العام). الأسعار هي متوسطات شهرية تاريخية للمعلومات فقط.',
+          hist_methodology_link: 'المنهجية',
+        },
+      };
 
-    // ── Constants ─────────────────────────────────────────────────────────────
-    const AED_PER_USD = 3.6725;
-    const TROY_OZ_TO_GRAM = 31.1035;
-    const KARAT_PURITIES = { '24': 1.0, '22': 22/24, '21': 21/24, '18': 18/24 };
-    const KARAT_COLORS = { '24': '#c4993e', '22': '#7a9e5a', '21': '#5a7aba', '18': '#a05aba' };
+      // ── Constants ─────────────────────────────────────────────────────────────
+      const AED_PER_USD = 3.6725;
+      const TROY_OZ_TO_GRAM = 31.1035;
+      const KARAT_PURITIES = { 24: 1.0, 22: 22 / 24, 21: 21 / 24, 18: 18 / 24 };
+      const KARAT_COLORS = { 24: '#c4993e', 22: '#7a9e5a', 21: '#5a7aba', 18: '#a05aba' };
 
-    // ── State ─────────────────────────────────────────────────────────────────
-    let lang = new URLSearchParams(location.search).get('lang') || 'en';
-    let activeRange = '1Y';
-    let activeKarats = new Set(['24']);
-    let allRecords = [];
-    let livePrice = null;
-    let chartInstance = null;
+      // ── State ─────────────────────────────────────────────────────────────────
+      let lang = new URLSearchParams(location.search).get('lang') || 'en';
+      let activeRange = '1Y';
+      let activeKarats = new Set(['24']);
+      let allRecords = [];
+      let livePrice = null;
+      let chartInstance = null;
 
-    // ── Init ──────────────────────────────────────────────────────────────────
-    const navCtrl = injectNav(lang, 1);
-    injectFooter(lang, 1);
-    applyLang();
-    loadData();
-    setupTimeframeBtns();
-    setupKaratToggles();
-    setupDownload();
-
-    // Lang toggle from nav
-    const langBtns = navCtrl.getLangToggleButtons ? navCtrl.getLangToggleButtons() : [];
-    langBtns.forEach(btn => btn.addEventListener('click', () => {
-      lang = btn.dataset.lang || (lang === 'en' ? 'ar' : 'en');
-      document.documentElement.lang = lang;
-      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-      updateNavLang(lang);
+      // ── Init ──────────────────────────────────────────────────────────────────
+      const navCtrl = injectNav(lang, 1);
+      injectFooter(lang, 1);
       applyLang();
-      renderTable(filterByRange(allRecords, activeRange));
-    }));
+      loadData();
+      setupTimeframeBtns();
+      setupKaratToggles();
+      setupDownload();
 
-    // ── Data loading ──────────────────────────────────────────────────────────
-    async function loadData() {
-      allRecords = getBaselineHistory();
-      renderStats(allRecords);
-      renderTable(filterByRange(allRecords, activeRange));
-      renderChart(filterByRange(allRecords, activeRange));
+      // Lang toggle from nav
+      const langBtns = navCtrl.getLangToggleButtons ? navCtrl.getLangToggleButtons() : [];
+      langBtns.forEach((btn) =>
+        btn.addEventListener('click', () => {
+          lang = btn.dataset.lang || (lang === 'en' ? 'ar' : 'en');
+          document.documentElement.lang = lang;
+          document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+          updateNavLang(lang);
+          applyLang();
+          renderTable(filterByRange(allRecords, activeRange));
+        })
+      );
 
-      try {
-        const gold = await fetchGold();
-        livePrice = gold.priceUSD;
-        document.getElementById('live-price').textContent = formatUSD(livePrice);
-        document.getElementById('freshness-label').textContent = 'Live';
-
-        // Inject live price as today's data point for chart
-        const today = new Date().toISOString().slice(0, 10);
-        const existing = allRecords.find(r => r.date === today || r.date === today.slice(0, 7));
-        if (!existing) {
-          allRecords = [...allRecords, { date: today, price: livePrice, granularity: 'live', source: 'live' }];
-        }
-
+      // ── Data loading ──────────────────────────────────────────────────────────
+      async function loadData() {
+        allRecords = getBaselineHistory();
         renderStats(allRecords);
         renderTable(filterByRange(allRecords, activeRange));
         renderChart(filterByRange(allRecords, activeRange));
 
-        document.getElementById('stat-current').textContent = formatUSD(livePrice);
-      } catch (e) {
-        showError('Could not load live price. Showing historical data only.');
-        document.getElementById('freshness-label').textContent = 'Historical only';
-      }
-    }
+        try {
+          const gold = await fetchGold();
+          livePrice = gold.priceUSD;
+          document.getElementById('live-price').textContent = formatUSD(livePrice);
+          document.getElementById('freshness-label').textContent = 'Live';
 
-    // ── Stats ─────────────────────────────────────────────────────────────────
-    function renderStats(records) {
-      const stats = getHistoryStats(records);
-      if (stats.latest) {
-        document.getElementById('stat-current').textContent = formatUSD(stats.latest);
-        document.getElementById('live-price').textContent = formatUSD(stats.latest);
-      }
-      if (stats.allTimeHigh) {
-        document.getElementById('stat-ath').textContent = formatUSD(stats.allTimeHigh);
-      }
-      if (stats.allTimeLow) {
-        document.getElementById('stat-atl').textContent = formatUSD(stats.allTimeLow);
-      }
-      renderChangeEl('stat-ytd', stats.ytdChange);
-      renderChangeEl('stat-yoy', stats.yoyChange);
-    }
-
-    function renderChangeEl(id, pct) {
-      const el = document.getElementById(id);
-      if (pct == null) { el.textContent = '—'; return; }
-      const sign = pct >= 0 ? '+' : '';
-      el.textContent = `${sign}${pct.toFixed(2)}%`;
-      el.className = 'hist-stat-value ' + (pct >= 0 ? 'up' : 'down');
-    }
-
-    // ── Chart ─────────────────────────────────────────────────────────────────
-    function renderChart(records) {
-      document.getElementById('chart-loading').style.display = 'none';
-      if (typeof Chart === 'undefined') {
-        document.getElementById('chart-loading').textContent = 'Chart.js unavailable.';
-        document.getElementById('chart-loading').style.display = 'flex';
-        return;
-      }
-      const canvas = document.getElementById('history-chart');
-      const chartData = toChartData(records);
-
-      const datasets = buildDatasets(chartData, records);
-
-      if (chartInstance) {
-        chartInstance.data.labels = chartData.map(d => d.time);
-        chartInstance.data.datasets = datasets;
-        chartInstance.update('none');
-        return;
-      }
-
-      chartInstance = new Chart(canvas, {
-        type: 'line',
-        data: { labels: chartData.map(d => d.time), datasets },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: { mode: 'index', intersect: false },
-          plugins: {
-            legend: { display: activeKarats.size > 1 },
-            tooltip: {
-              callbacks: {
-                label: ctx => ` $${ctx.parsed.y.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} USD/oz`,
-              }
-            }
-          },
-          scales: {
-            x: {
-              ticks: {
-                maxTicksLimit: 12,
-                color: '#9e9080',
-                font: { size: 11 },
-                maxRotation: 0,
-              },
-              grid: { color: 'rgba(0,0,0,0.04)' }
-            },
-            y: {
-              ticks: {
-                color: '#9e9080',
-                font: { size: 11 },
-                callback: v => `$${v.toLocaleString('en-US', { maximumFractionDigits: 0 })}`,
-              },
-              grid: { color: 'rgba(0,0,0,0.06)' }
-            }
+          // Inject live price as today's data point for chart
+          const today = new Date().toISOString().slice(0, 10);
+          const existing = allRecords.find((r) => r.date === today || r.date === today.slice(0, 7));
+          if (!existing) {
+            allRecords = [
+              ...allRecords,
+              { date: today, price: livePrice, granularity: 'live', source: 'live' },
+            ];
           }
-        }
-      });
-    }
 
-    function buildDatasets(chartData, records) {
-      const datasets = [];
-      for (const k of ['24', '22', '21', '18']) {
-        if (!activeKarats.has(k)) continue;
-        const purity = KARAT_PURITIES[k];
-        const label = `${k}K (USD/oz)`;
-        const data = chartData.map(d => k === '24' ? d.value : Math.round(d.value * purity));
-        datasets.push({
-          label,
-          data,
-          borderColor: KARAT_COLORS[k],
-          backgroundColor: KARAT_COLORS[k] + '18',
-          borderWidth: k === '24' ? 2.5 : 1.5,
-          pointRadius: 0,
-          pointHoverRadius: 4,
-          tension: 0.2,
-          fill: k === '24' && activeKarats.size === 1,
+          renderStats(allRecords);
+          renderTable(filterByRange(allRecords, activeRange));
+          renderChart(filterByRange(allRecords, activeRange));
+
+          document.getElementById('stat-current').textContent = formatUSD(livePrice);
+        } catch (e) {
+          showError('Could not load live price. Showing historical data only.');
+          document.getElementById('freshness-label').textContent = 'Historical only';
+        }
+      }
+
+      // ── Stats ─────────────────────────────────────────────────────────────────
+      function renderStats(records) {
+        const stats = getHistoryStats(records);
+        if (stats.latest) {
+          document.getElementById('stat-current').textContent = formatUSD(stats.latest);
+          document.getElementById('live-price').textContent = formatUSD(stats.latest);
+        }
+        if (stats.allTimeHigh) {
+          document.getElementById('stat-ath').textContent = formatUSD(stats.allTimeHigh);
+        }
+        if (stats.allTimeLow) {
+          document.getElementById('stat-atl').textContent = formatUSD(stats.allTimeLow);
+        }
+        renderChangeEl('stat-ytd', stats.ytdChange);
+        renderChangeEl('stat-yoy', stats.yoyChange);
+      }
+
+      function renderChangeEl(id, pct) {
+        const el = document.getElementById(id);
+        if (pct == null) {
+          el.textContent = '—';
+          return;
+        }
+        const sign = pct >= 0 ? '+' : '';
+        el.textContent = `${sign}${pct.toFixed(2)}%`;
+        el.className = 'hist-stat-value ' + (pct >= 0 ? 'up' : 'down');
+      }
+
+      // ── Chart ─────────────────────────────────────────────────────────────────
+      function renderChart(records) {
+        document.getElementById('chart-loading').style.display = 'none';
+        if (typeof Chart === 'undefined') {
+          document.getElementById('chart-loading').textContent = 'Chart.js unavailable.';
+          document.getElementById('chart-loading').style.display = 'flex';
+          return;
+        }
+        const canvas = document.getElementById('history-chart');
+        const chartData = toChartData(records);
+
+        const datasets = buildDatasets(chartData, records);
+
+        if (chartInstance) {
+          chartInstance.data.labels = chartData.map((d) => d.time);
+          chartInstance.data.datasets = datasets;
+          chartInstance.update('none');
+          return;
+        }
+
+        chartInstance = new Chart(canvas, {
+          type: 'line',
+          data: { labels: chartData.map((d) => d.time), datasets },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { display: activeKarats.size > 1 },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) =>
+                    ` $${ctx.parsed.y.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} USD/oz`,
+                },
+              },
+            },
+            scales: {
+              x: {
+                ticks: {
+                  maxTicksLimit: 12,
+                  color: '#9e9080',
+                  font: { size: 11 },
+                  maxRotation: 0,
+                },
+                grid: { color: 'rgba(0,0,0,0.04)' },
+              },
+              y: {
+                ticks: {
+                  color: '#9e9080',
+                  font: { size: 11 },
+                  callback: (v) => `$${v.toLocaleString('en-US', { maximumFractionDigits: 0 })}`,
+                },
+                grid: { color: 'rgba(0,0,0,0.06)' },
+              },
+            },
+          },
         });
       }
-      return datasets;
-    }
 
-    // ── Table ─────────────────────────────────────────────────────────────────
-    function renderTable(records) {
-      const tbody = document.getElementById('table-body');
-      const s = STRINGS[lang];
-      const reversed = [...records].reverse().slice(0, 200);
-
-      if (!reversed.length) {
-        tbody.innerHTML = `<tr><td colspan="4" class="hist-loading">${s.hist_loading}</td></tr>`;
-        return;
+      function buildDatasets(chartData, records) {
+        const datasets = [];
+        for (const k of ['24', '22', '21', '18']) {
+          if (!activeKarats.has(k)) continue;
+          const purity = KARAT_PURITIES[k];
+          const label = `${k}K (USD/oz)`;
+          const data = chartData.map((d) => (k === '24' ? d.value : Math.round(d.value * purity)));
+          datasets.push({
+            label,
+            data,
+            borderColor: KARAT_COLORS[k],
+            backgroundColor: KARAT_COLORS[k] + '18',
+            borderWidth: k === '24' ? 2.5 : 1.5,
+            pointRadius: 0,
+            pointHoverRadius: 4,
+            tension: 0.2,
+            fill: k === '24' && activeKarats.size === 1,
+          });
+        }
+        return datasets;
       }
 
-      tbody.innerHTML = reversed.map((r, i) => {
-        const prev = reversed[i + 1];
-        const chgVal = prev ? ((r.price - prev.price) / prev.price * 100) : null;
-        const chgClass = chgVal == null ? 'chg-neutral' : chgVal >= 0 ? 'chg-up' : 'chg-down';
-        const chgStr = chgVal == null ? '—' : `${chgVal >= 0 ? '+' : ''}${chgVal.toFixed(2)}%`;
-        const aedPerGram = (r.price / TROY_OZ_TO_GRAM * AED_PER_USD).toFixed(2);
-        return `<tr>
+      // ── Table ─────────────────────────────────────────────────────────────────
+      function renderTable(records) {
+        const tbody = document.getElementById('table-body');
+        const s = STRINGS[lang];
+        const reversed = [...records].reverse().slice(0, 200);
+
+        if (!reversed.length) {
+          tbody.innerHTML = `<tr><td colspan="4" class="hist-loading">${s.hist_loading}</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = reversed
+          .map((r, i) => {
+            const prev = reversed[i + 1];
+            const chgVal = prev ? ((r.price - prev.price) / prev.price) * 100 : null;
+            const chgClass = chgVal == null ? 'chg-neutral' : chgVal >= 0 ? 'chg-up' : 'chg-down';
+            const chgStr = chgVal == null ? '—' : `${chgVal >= 0 ? '+' : ''}${chgVal.toFixed(2)}%`;
+            const aedPerGram = ((r.price / TROY_OZ_TO_GRAM) * AED_PER_USD).toFixed(2);
+            return `<tr>
           <td>${r.date}</td>
           <td>${formatUSD(r.price)}</td>
           <td>${aedPerGram}</td>
           <td class="${chgClass}">${chgStr}</td>
         </tr>`;
-      }).join('');
-    }
+          })
+          .join('');
+      }
 
-    // ── Timeframe buttons ─────────────────────────────────────────────────────
-    function setupTimeframeBtns() {
-      document.getElementById('timeframe-btns').addEventListener('click', e => {
-        const btn = e.target.closest('.hist-tf-btn');
-        if (!btn) return;
-        document.querySelectorAll('.hist-tf-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        activeRange = btn.dataset.range;
-        const filtered = filterByRange(allRecords, activeRange);
-        renderChart(filtered);
-        renderTable(filtered);
-      });
-    }
-
-    // ── Karat toggles ─────────────────────────────────────────────────────────
-    function setupKaratToggles() {
-      document.getElementById('karat-toggles').addEventListener('click', e => {
-        const label = e.target.closest('.hist-karat-toggle');
-        if (!label) return;
-        const k = label.dataset.karat;
-        const cb = label.querySelector('input[type=checkbox]');
-        if (activeKarats.has(k)) {
-          if (activeKarats.size === 1) return; // must keep at least one
-          activeKarats.delete(k);
-          cb.checked = false;
-          label.classList.remove('checked');
-        } else {
-          activeKarats.add(k);
-          cb.checked = true;
-          label.classList.add('checked');
-        }
-        const filtered = filterByRange(allRecords, activeRange);
-        renderChart(filtered);
-      });
-    }
-
-    // ── Download CSV ──────────────────────────────────────────────────────────
-    function setupDownload() {
-      document.getElementById('download-csv').addEventListener('click', () => {
-        const filtered = filterByRange(allRecords, activeRange);
-        const rows = [['Date', 'Price USD/oz', 'AED/g 24K', 'Granularity']];
-        filtered.forEach(r => {
-          const aed = (r.price / TROY_OZ_TO_GRAM * AED_PER_USD).toFixed(2);
-          rows.push([r.date, r.price, aed, r.granularity || 'monthly']);
+      // ── Timeframe buttons ─────────────────────────────────────────────────────
+      function setupTimeframeBtns() {
+        document.getElementById('timeframe-btns').addEventListener('click', (e) => {
+          const btn = e.target.closest('.hist-tf-btn');
+          if (!btn) return;
+          document.querySelectorAll('.hist-tf-btn').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeRange = btn.dataset.range;
+          const filtered = filterByRange(allRecords, activeRange);
+          renderChart(filtered);
+          renderTable(filtered);
         });
-        const csv = rows.map(r => r.join(',')).join('\n');
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `gold-price-history-${activeRange}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
-      });
-    }
+      }
 
-    // ── i18n ──────────────────────────────────────────────────────────────────
-    function applyLang() {
-      const s = STRINGS[lang] || STRINGS.en;
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.dataset.i18n;
-        if (s[key]) el.textContent = s[key];
-      });
-      document.querySelectorAll('[data-i18n-content]').forEach(el => {
-        const key = el.dataset.i18nContent;
-        if (s[key]) el.textContent = s[key];
-      });
-      document.documentElement.lang = lang;
-      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    }
+      // ── Karat toggles ─────────────────────────────────────────────────────────
+      function setupKaratToggles() {
+        document.getElementById('karat-toggles').addEventListener('click', (e) => {
+          const label = e.target.closest('.hist-karat-toggle');
+          if (!label) return;
+          const k = label.dataset.karat;
+          const cb = label.querySelector('input[type=checkbox]');
+          if (activeKarats.has(k)) {
+            if (activeKarats.size === 1) return; // must keep at least one
+            activeKarats.delete(k);
+            cb.checked = false;
+            label.classList.remove('checked');
+          } else {
+            activeKarats.add(k);
+            cb.checked = true;
+            label.classList.add('checked');
+          }
+          const filtered = filterByRange(allRecords, activeRange);
+          renderChart(filtered);
+        });
+      }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
-    function formatUSD(val) {
-      if (val == null || isNaN(val)) return '—';
-      return `$${Number(val).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
-    }
+      // ── Download CSV ──────────────────────────────────────────────────────────
+      function setupDownload() {
+        document.getElementById('download-csv').addEventListener('click', () => {
+          const filtered = filterByRange(allRecords, activeRange);
+          const rows = [['Date', 'Price USD/oz', 'AED/g 24K', 'Granularity']];
+          filtered.forEach((r) => {
+            const aed = ((r.price / TROY_OZ_TO_GRAM) * AED_PER_USD).toFixed(2);
+            rows.push([r.date, r.price, aed, r.granularity || 'monthly']);
+          });
+          const csv = rows.map((r) => r.join(',')).join('\n');
+          const blob = new Blob([csv], { type: 'text/csv' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `gold-price-history-${activeRange}.csv`;
+          a.click();
+          URL.revokeObjectURL(url);
+        });
+      }
 
-    function showError(msg) {
-      const el = document.getElementById('error-banner');
-      el.textContent = msg;
-      el.style.display = 'block';
-    }
-  </script>
-</body>
+      // ── i18n ──────────────────────────────────────────────────────────────────
+      function applyLang() {
+        const s = STRINGS[lang] || STRINGS.en;
+        document.querySelectorAll('[data-i18n]').forEach((el) => {
+          const key = el.dataset.i18n;
+          if (s[key]) el.textContent = s[key];
+        });
+        document.querySelectorAll('[data-i18n-content]').forEach((el) => {
+          const key = el.dataset.i18nContent;
+          if (s[key]) el.textContent = s[key];
+        });
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      }
+
+      // ── Helpers ───────────────────────────────────────────────────────────────
+      function formatUSD(val) {
+        if (val == null || isNaN(val)) return '—';
+        return `$${Number(val).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+      }
+
+      function showError(msg) {
+        const el = document.getElementById('error-banner');
+        el.textContent = msg;
+        el.style.display = 'block';
+      }
+    </script>
+  </body>
 </html>

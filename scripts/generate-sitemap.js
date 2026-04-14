@@ -11,19 +11,29 @@
 
 'use strict';
 
-const fs   = require('fs');
+const fs = require('fs');
 const path = require('path');
 
-const ROOT      = path.resolve(__dirname, '..');
-const BASE_URL  = (() => {
+const ROOT = path.resolve(__dirname, '..');
+const BASE_URL = (() => {
   const i = process.argv.indexOf('--base');
   return i >= 0 ? process.argv[i + 1] : 'https://vctb12.github.io/Gold-Prices';
 })();
 
 // Directories/pages to exclude from the sitemap
 const EXCLUDE = new Set([
-  'admin.html', 'offline.html', 'dist', 'node_modules', '.git',
-  'server', 'tests', 'docs', 'supabase', 'repositories', 'build', 'scripts',
+  'admin.html',
+  'offline.html',
+  'dist',
+  'node_modules',
+  '.git',
+  'server',
+  'tests',
+  'docs',
+  'supabase',
+  'repositories',
+  'build',
+  'scripts',
 ]);
 
 // ── Walk filesystem ──────────────────────────────────────────────────────────
@@ -60,10 +70,13 @@ function getPriority(urlPath) {
 }
 
 function getChangefreq(urlPath) {
-  if (urlPath.includes('gold-price') || urlPath.includes('gold-rate') || urlPath === '') return 'daily';
-  if (urlPath.includes('countries') || urlPath.includes('cities') || urlPath.includes('markets')) return 'daily';
+  if (urlPath.includes('gold-price') || urlPath.includes('gold-rate') || urlPath === '')
+    return 'daily';
+  if (urlPath.includes('countries') || urlPath.includes('cities') || urlPath.includes('markets'))
+    return 'daily';
   if (urlPath.includes('tracker') || urlPath === 'tracker.html') return 'always';
-  if (urlPath.includes('learn') || urlPath.includes('guides') || urlPath.includes('methodology')) return 'monthly';
+  if (urlPath.includes('learn') || urlPath.includes('guides') || urlPath.includes('methodology'))
+    return 'monthly';
   return 'weekly';
 }
 
@@ -85,18 +98,19 @@ const allEntries = [rootEntry, ...pages].sort((a, b) => {
 });
 
 // ── Generate XML ─────────────────────────────────────────────────────────────
-const urls = allEntries.map(({ urlPath, file }) => {
-  const loc       = urlPath ? `${BASE_URL}/${urlPath}` : `${BASE_URL}/`;
-  const stat      = fs.statSync(file);
-  const lastmod   = formatDate(stat.mtimeMs);
-  const priority  = getPriority(urlPath);
-  const changefreq = getChangefreq(urlPath);
+const urls = allEntries
+  .map(({ urlPath, file }) => {
+    const loc = urlPath ? `${BASE_URL}/${urlPath}` : `${BASE_URL}/`;
+    const stat = fs.statSync(file);
+    const lastmod = formatDate(stat.mtimeMs);
+    const priority = getPriority(urlPath);
+    const changefreq = getChangefreq(urlPath);
 
-  // Add hreflang alternates for all pages
-  const enUrl = loc;
-  const arUrl = loc.includes('?') ? loc + '&lang=ar' : loc + '?lang=ar';
+    // Add hreflang alternates for all pages
+    const enUrl = loc;
+    const arUrl = loc.includes('?') ? loc + '&lang=ar' : loc + '?lang=ar';
 
-  return `  <url>
+    return `  <url>
     <loc>${loc}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>${changefreq}</changefreq>
@@ -105,7 +119,8 @@ const urls = allEntries.map(({ urlPath, file }) => {
     <xhtml:link rel="alternate" hreflang="en" href="${enUrl}"/>
     <xhtml:link rel="alternate" hreflang="ar" href="${arUrl}"/>
   </url>`;
-}).join('\n\n');
+  })
+  .join('\n\n');
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"

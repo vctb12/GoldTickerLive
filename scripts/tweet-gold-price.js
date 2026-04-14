@@ -24,25 +24,25 @@
 
 'use strict';
 
-const https  = require('https');
+const https = require('https');
 const crypto = require('crypto');
-const url    = require('url');
+const url = require('url');
 
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
-const SITE_URL     = 'https://vctb12.github.io/Gold-Prices/';
+const SITE_URL = 'https://vctb12.github.io/Gold-Prices/';
 const GOLD_API_URL = 'https://api.gold-api.com/price/XAU';
-const TWEET_URL    = 'https://api.twitter.com/2/tweets';
-const AED_PEG      = 3.6725;
-const TROY_OZ      = 31.1035;
+const TWEET_URL = 'https://api.twitter.com/2/tweets';
+const AED_PEG = 3.6725;
+const TROY_OZ = 31.1035;
 
 // Credentials from environment
-const GOLD_API_KEY               = process.env.GOLD_API_KEY               || '';
-const TWITTER_API_KEY            = process.env.TWITTER_API_KEY            || '';
-const TWITTER_API_SECRET         = process.env.TWITTER_API_SECRET         || '';
-const TWITTER_ACCESS_TOKEN       = process.env.TWITTER_ACCESS_TOKEN       || '';
-const TWITTER_ACCESS_TOKEN_SECRET= process.env.TWITTER_ACCESS_TOKEN_SECRET|| '';
+const GOLD_API_KEY = process.env.GOLD_API_KEY || '';
+const TWITTER_API_KEY = process.env.TWITTER_API_KEY || '';
+const TWITTER_API_SECRET = process.env.TWITTER_API_SECRET || '';
+const TWITTER_ACCESS_TOKEN = process.env.TWITTER_ACCESS_TOKEN || '';
+const TWITTER_ACCESS_TOKEN_SECRET = process.env.TWITTER_ACCESS_TOKEN_SECRET || '';
 
 // ---------------------------------------------------------------------------
 // Utilities
@@ -57,10 +57,10 @@ function fmt(n, decimals = 2) {
 
 function trendEmoji(pct) {
   if (pct == null || isNaN(pct)) return '➡️';
-  if (pct > 1)  return '🚀';
-  if (pct > 0)  return '📈';
+  if (pct > 1) return '🚀';
+  if (pct > 0) return '📈';
   if (pct < -1) return '📉';
-  if (pct < 0)  return '🔻';
+  if (pct < 0) return '🔻';
   return '➡️';
 }
 
@@ -75,19 +75,26 @@ function calcKarat(spotUsdPerOz, purity) {
 // ---------------------------------------------------------------------------
 function httpsGet(targetUrl, headers = {}) {
   return new Promise((resolve, reject) => {
-    const req = https.get(targetUrl, { headers }, res => {
+    const req = https.get(targetUrl, { headers }, (res) => {
       let body = '';
-      res.on('data', chunk => { body += chunk; });
+      res.on('data', (chunk) => {
+        body += chunk;
+      });
       res.on('end', () => {
         if (res.statusCode !== 200) {
           return reject(new Error(`HTTP ${res.statusCode} from ${targetUrl}: ${body}`));
         }
-        try { resolve(JSON.parse(body)); }
-        catch (e) { reject(new Error(`JSON parse error: ${e.message}`)); }
+        try {
+          resolve(JSON.parse(body));
+        } catch (e) {
+          reject(new Error(`JSON parse error: ${e.message}`));
+        }
       });
     });
     req.on('error', reject);
-    req.setTimeout(10000, () => { req.destroy(new Error('Request timed out')); });
+    req.setTimeout(10000, () => {
+      req.destroy(new Error('Request timed out'));
+    });
   });
 }
 
@@ -105,12 +112,18 @@ function httpsPost(targetUrl, payload, headers = {}) {
         ...headers,
       },
     };
-    const req = https.request(options, res => {
+    const req = https.request(options, (res) => {
       let data = '';
-      res.on('data', chunk => { data += chunk; });
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
       res.on('end', () => {
         let parsed;
-        try { parsed = JSON.parse(data); } catch { parsed = data; }
+        try {
+          parsed = JSON.parse(data);
+        } catch {
+          parsed = data;
+        }
         if (res.statusCode >= 400) {
           return reject(new Error(`HTTP ${res.statusCode}: ${JSON.stringify(parsed)}`));
         }
@@ -118,7 +131,9 @@ function httpsPost(targetUrl, payload, headers = {}) {
       });
     });
     req.on('error', reject);
-    req.setTimeout(15000, () => { req.destroy(new Error('Request timed out')); });
+    req.setTimeout(15000, () => {
+      req.destroy(new Error('Request timed out'));
+    });
     req.write(body);
     req.end();
   });
@@ -129,30 +144,37 @@ function httpsPost(targetUrl, payload, headers = {}) {
 // ---------------------------------------------------------------------------
 function percentEncode(s) {
   return encodeURIComponent(String(s))
-    .replace(/!/g,  '%21')
-    .replace(/'/g,  '%27')
+    .replace(/!/g, '%21')
+    .replace(/'/g, '%27')
     .replace(/\(/g, '%28')
     .replace(/\)/g, '%29')
     .replace(/\*/g, '%2A');
 }
 
-function buildOAuthHeader(method, endpointUrl, consumerKey, consumerSecret, accessToken, tokenSecret) {
-  const nonce     = crypto.randomBytes(16).toString('hex');
+function buildOAuthHeader(
+  method,
+  endpointUrl,
+  consumerKey,
+  consumerSecret,
+  accessToken,
+  tokenSecret
+) {
+  const nonce = crypto.randomBytes(16).toString('hex');
   const timestamp = Math.floor(Date.now() / 1000).toString();
 
   const oauthParams = {
-    oauth_consumer_key:     consumerKey,
-    oauth_nonce:            nonce,
+    oauth_consumer_key: consumerKey,
+    oauth_nonce: nonce,
     oauth_signature_method: 'HMAC-SHA1',
-    oauth_timestamp:        timestamp,
-    oauth_token:            accessToken,
-    oauth_version:          '1.0',
+    oauth_timestamp: timestamp,
+    oauth_token: accessToken,
+    oauth_version: '1.0',
   };
 
   // Signature base string: method + URL + sorted encoded params
   const sortedParams = Object.keys(oauthParams)
     .sort()
-    .map(k => `${percentEncode(k)}=${percentEncode(oauthParams[k])}`)
+    .map((k) => `${percentEncode(k)}=${percentEncode(oauthParams[k])}`)
     .join('&');
 
   const signatureBase = [
@@ -166,17 +188,16 @@ function buildOAuthHeader(method, endpointUrl, consumerKey, consumerSecret, acce
   // This is NOT a password hash — it is a message authentication code used to
   // verify the request has not been tampered with. The algorithm is specified by
   // the X/Twitter API and cannot be replaced with a stronger digest.
-  const signature  = crypto
-    .createHmac('sha1', signingKey)
-    .update(signatureBase)
-    .digest('base64');
+  const signature = crypto.createHmac('sha1', signingKey).update(signatureBase).digest('base64');
 
   oauthParams.oauth_signature = signature;
 
-  const headerValue = 'OAuth ' + Object.keys(oauthParams)
-    .sort()
-    .map(k => `${percentEncode(k)}="${percentEncode(oauthParams[k])}"`)
-    .join(', ');
+  const headerValue =
+    'OAuth ' +
+    Object.keys(oauthParams)
+      .sort()
+      .map((k) => `${percentEncode(k)}="${percentEncode(oauthParams[k])}"`)
+      .join(', ');
 
   return { Authorization: headerValue };
 }
@@ -216,9 +237,11 @@ function pickTemplate(now) {
 
 function buildTweetText(templateId, data) {
   const { spotUsdPerOz, dayOpenUsdPerOz, generatedAt } = data;
-  const change     = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
-  const changePct  = dayOpenUsdPerOz ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100 : null;
-  const sign       = change != null && change >= 0 ? '+' : '';
+  const change = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
+  const changePct = dayOpenUsdPerOz
+    ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100
+    : null;
+  const sign = change != null && change >= 0 ? '+' : '';
 
   const k24 = calcKarat(spotUsdPerOz, 1.0);
   const k22 = calcKarat(spotUsdPerOz, 22 / 24);
@@ -226,10 +249,12 @@ function buildTweetText(templateId, data) {
   const k18 = calcKarat(spotUsdPerOz, 18 / 24);
 
   switch (templateId) {
-
     case 'hourly': {
       const time = new Date(generatedAt).toLocaleTimeString('en-US', {
-        hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Dubai', hour12: true,
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'Asia/Dubai',
+        hour12: true,
       });
       return [
         `🥇 Gold Now (${time} UAE) ${trendEmoji(changePct)}`,
@@ -238,29 +263,33 @@ function buildTweetText(templateId, data) {
         `22K: AED ${fmt(k22.aedPerGram)}/g`,
         `21K: AED ${fmt(k21.aedPerGram)}/g`,
         `📊 ${SITE_URL}`,
-        `#GoldPrice #Gold #UAE #Dubai`,
+        '#GoldPrice #Gold #UAE #Dubai',
       ].join('\n');
     }
 
     case 'daily': {
       const date = new Date(generatedAt).toLocaleDateString('en-US', {
-        month: 'short', day: 'numeric', year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
       });
       const changeStr = change != null ? ` (${sign}${fmt(changePct)}%)` : '';
       return [
         `🥇 Gold Prices Today — ${date}`,
         `24K: $${fmt(spotUsdPerOz)}/oz${changeStr}`,
-        `🇦🇪 UAE (AED/g):`,
+        '🇦🇪 UAE (AED/g):',
         `24K: ${fmt(k24.aedPerGram)} | 22K: ${fmt(k22.aedPerGram)}`,
         `21K: ${fmt(k21.aedPerGram)} | 18K: ${fmt(k18.aedPerGram)}`,
         `${trendEmoji(changePct)} ${SITE_URL}`,
-        `#GoldPrice #Gold #UAE #Dubai`,
+        '#GoldPrice #Gold #UAE #Dubai',
       ].join('\n');
     }
 
     case 'morning': {
       const date = new Date(generatedAt).toLocaleDateString('en-US', {
-        weekday: 'long', month: 'short', day: 'numeric',
+        weekday: 'long',
+        month: 'short',
+        day: 'numeric',
       });
       return [
         `☀️ Good Morning — Gold Opens ${date}`,
@@ -269,13 +298,17 @@ function buildTweetText(templateId, data) {
         `🇦🇪 24K UAE: AED ${fmt(k24.aedPerGram)}/g`,
         `🇦🇪 22K UAE: AED ${fmt(k22.aedPerGram)}/g`,
         `Track live → ${SITE_URL}`,
-        `#GoldPrice #GoldMarket #Dubai #GCC`,
-      ].filter(Boolean).join('\n');
+        '#GoldPrice #GoldMarket #Dubai #GCC',
+      ]
+        .filter(Boolean)
+        .join('\n');
     }
 
     case 'evening': {
       const date = new Date(generatedAt).toLocaleDateString('en-US', {
-        month: 'short', day: 'numeric', year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
       });
       return [
         `🌙 Gold End of Day — ${date}`,
@@ -284,13 +317,16 @@ function buildTweetText(templateId, data) {
         change != null ? `Change: ${sign}$${fmt(change)} (${sign}${fmt(changePct)}%)` : null,
         `🇦🇪 24K Dubai: AED ${fmt(k24.aedPerGram)}/g`,
         `Charts → ${SITE_URL}`,
-        `#GoldClose #GoldPrice #Dubai`,
-      ].filter(Boolean).join('\n');
+        '#GoldClose #GoldPrice #Dubai',
+      ]
+        .filter(Boolean)
+        .join('\n');
     }
 
     case 'arabic': {
       const date = new Date(generatedAt).toLocaleDateString('ar-AE', {
-        month: 'short', day: 'numeric',
+        month: 'short',
+        day: 'numeric',
       });
       const trend = changePct == null ? '➡️' : changePct > 0 ? '📈' : changePct < 0 ? '📉' : '➡️';
       return [
@@ -301,8 +337,10 @@ function buildTweetText(templateId, data) {
         `عيار 18: ${fmt(k18.aedPerGram)} درهم/جرام`,
         change != null ? `التغيير: ${sign}$${fmt(change)} (${sign}${fmt(changePct)}%)` : null,
         `📊 ${SITE_URL}`,
-        `#سعر_الذهب #ذهب #الإمارات #دبي`,
-      ].filter(Boolean).join('\n');
+        '#سعر_الذهب #ذهب #الإمارات #دبي',
+      ]
+        .filter(Boolean)
+        .join('\n');
     }
 
     case 'weekend': {
@@ -312,23 +350,25 @@ function buildTweetText(templateId, data) {
         change != null ? `Today:   ${sign}$${fmt(change)} (${sign}${fmt(changePct)}%)` : null,
         `🇦🇪 24K: AED ${fmt(k24.aedPerGram)}/g | 22K: AED ${fmt(k22.aedPerGram)}/g`,
         `📊 ${SITE_URL}`,
-        `#GoldWeekend #GoldPrice #GCC`,
-      ].filter(Boolean).join('\n');
+        '#GoldWeekend #GoldPrice #GCC',
+      ]
+        .filter(Boolean)
+        .join('\n');
     }
 
     case 'comparison': {
       const usdPerGram24 = spotUsdPerOz / TROY_OZ;
       return [
-        `📊 Gold Karat Comparison Right Now`,
-        ``,
+        '📊 Gold Karat Comparison Right Now',
+        '',
         `24K: AED ${fmt(k24.aedPerGram)}/g ($${fmt(usdPerGram24)})`,
         `22K: AED ${fmt(k22.aedPerGram)}/g`,
         `21K: AED ${fmt(k21.aedPerGram)}/g`,
         `18K: AED ${fmt(k18.aedPerGram)}/g`,
-        ``,
+        '',
         `Spot: $${fmt(spotUsdPerOz)}/oz ${trendEmoji(changePct)}`,
         `Compare all → ${SITE_URL}tracker.html#mode=compare`,
-        `#GoldKarat #24KGold #22KGold #UAE`,
+        '#GoldKarat #24KGold #22KGold #UAE',
       ].join('\n');
     }
 
@@ -346,39 +386,41 @@ function buildTweetText(templateId, data) {
       const dayOfMonth = new Date(generatedAt).getUTCDate();
       const c = countries[dayOfMonth % countries.length];
       const localPerGram24 = (spotUsdPerOz / TROY_OZ) * c.rate;
-      const localPerGram22 = (spotUsdPerOz / TROY_OZ) * (22/24) * c.rate;
+      const localPerGram22 = (spotUsdPerOz / TROY_OZ) * (22 / 24) * c.rate;
       return [
         `${c.flag} Gold in ${c.name} Today ${trendEmoji(changePct)}`,
-        ``,
+        '',
         `24K: ${c.cur} ${fmt(localPerGram24)}/g`,
         `22K: ${c.cur} ${fmt(localPerGram22)}/g`,
         `Spot: $${fmt(spotUsdPerOz)}/oz`,
         change != null ? `Change: ${sign}${fmt(changePct)}%` : null,
-        ``,
+        '',
         `Full prices → ${SITE_URL}countries/${c.slug}.html`,
         `#GoldPrice #${c.name.replace(/\s/g, '')} #Gold`,
-      ].filter(Boolean).join('\n');
+      ]
+        .filter(Boolean)
+        .join('\n');
     }
 
     case 'educational': {
       const facts = [
-        `💡 Did you know? 24K gold is 99.9% pure, while 22K is 91.7% pure. The difference affects both price and durability.`,
-        `💡 Gold Fact: 1 troy ounce = 31.1035 grams. This is heavier than a standard ounce (28.35g).`,
-        `💡 The AED is pegged to USD at 3.6725 — so UAE gold prices move exactly with the global spot.`,
-        `💡 Gold has been money for 5,000+ years. It's the only metal that doesn't corrode or tarnish.`,
-        `💡 Zakat on gold: If you own 85g+ of pure gold for one lunar year, 2.5% is due as zakat.`,
-        `💡 21K gold (87.5% pure) is the most popular for jewellery in the Gulf region.`,
-        `💡 All the gold ever mined would fit in a cube measuring about 21 meters on each side.`,
+        '💡 Did you know? 24K gold is 99.9% pure, while 22K is 91.7% pure. The difference affects both price and durability.',
+        '💡 Gold Fact: 1 troy ounce = 31.1035 grams. This is heavier than a standard ounce (28.35g).',
+        '💡 The AED is pegged to USD at 3.6725 — so UAE gold prices move exactly with the global spot.',
+        '💡 Gold has been money for 5,000+ years. It\'s the only metal that doesn\'t corrode or tarnish.',
+        '💡 Zakat on gold: If you own 85g+ of pure gold for one lunar year, 2.5% is due as zakat.',
+        '💡 21K gold (87.5% pure) is the most popular for jewellery in the Gulf region.',
+        '💡 All the gold ever mined would fit in a cube measuring about 21 meters on each side.',
       ];
       const factIndex = Math.floor(Date.now() / (24 * 60 * 60 * 1000)) % facts.length;
       return [
         facts[factIndex],
-        ``,
+        '',
         `Current spot: $${fmt(spotUsdPerOz)}/oz ${trendEmoji(changePct)}`,
         `🇦🇪 24K: AED ${fmt(k24.aedPerGram)}/g`,
-        ``,
+        '',
         `Learn more → ${SITE_URL}learn.html`,
-        `#GoldFacts #Gold #GoldPrice`,
+        '#GoldFacts #Gold #GoldPrice',
       ].join('\n');
     }
 
@@ -393,12 +435,14 @@ function buildTweetText(templateId, data) {
 async function main() {
   // Validate credentials
   const missing = [
-    ['GOLD_API_KEY',               GOLD_API_KEY],
-    ['TWITTER_API_KEY',            TWITTER_API_KEY],
-    ['TWITTER_API_SECRET',         TWITTER_API_SECRET],
-    ['TWITTER_ACCESS_TOKEN',       TWITTER_ACCESS_TOKEN],
-    ['TWITTER_ACCESS_TOKEN_SECRET',TWITTER_ACCESS_TOKEN_SECRET],
-  ].filter(([, v]) => !v).map(([k]) => k);
+    ['GOLD_API_KEY', GOLD_API_KEY],
+    ['TWITTER_API_KEY', TWITTER_API_KEY],
+    ['TWITTER_API_SECRET', TWITTER_API_SECRET],
+    ['TWITTER_ACCESS_TOKEN', TWITTER_ACCESS_TOKEN],
+    ['TWITTER_ACCESS_TOKEN_SECRET', TWITTER_ACCESS_TOKEN_SECRET],
+  ]
+    .filter(([, v]) => !v)
+    .map(([k]) => k);
 
   if (missing.length > 0) {
     console.log('⚠️  Missing environment variables:', missing.join(', '));
@@ -423,13 +467,13 @@ async function main() {
     process.exit(1);
   }
 
-  const generatedAt     = new Date().toISOString();
+  const generatedAt = new Date().toISOString();
   const dayOpenUsdPerOz = goldData.prev_close_price || goldData.open_price || null;
 
   console.log(`✅ Spot price: $${fmt(spotUsdPerOz)}/oz`);
 
   // 2. Pick template based on current time
-  const now        = new Date(generatedAt);
+  const now = new Date(generatedAt);
   const templateId = pickTemplate(now);
   console.log(`📝 Using template: ${templateId}`);
 
@@ -455,7 +499,7 @@ async function main() {
     TWITTER_API_KEY,
     TWITTER_API_SECRET,
     TWITTER_ACCESS_TOKEN,
-    TWITTER_ACCESS_TOKEN_SECRET,
+    TWITTER_ACCESS_TOKEN_SECRET
   );
 
   console.log('📤 Posting tweet…');
@@ -476,7 +520,7 @@ async function main() {
   }
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error('❌ Unhandled error:', err.message);
   process.exit(1);
 });

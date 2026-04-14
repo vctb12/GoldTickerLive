@@ -13,32 +13,33 @@ const STATE = { lang: 'en' };
 
 const T = {
   en: {
-    'method-hero-tag':   'Transparency & Trust',
-    'method-h1':         'Data Sources & Methodology',
-    'method-sub':        'How we calculate every price you see — step by step, with full source attribution.',
-    'method-toc-label':  'Sections',
-    'toc-overview':      'Overview',
-    'toc-gold-data':     'Gold Price Data',
-    'toc-fx-rates':      'FX Rates',
-    'toc-aed-peg':       'AED Peg',
-    'toc-karat':         'Karat Conversion',
-    'toc-not-included':  "What We Don't Include",
-    'toc-fallback':      'Fallback & Reliability',
-    'toc-disclaimer':    'Disclaimer',
+    'method-hero-tag': 'Transparency & Trust',
+    'method-h1': 'Data Sources & Methodology',
+    'method-sub':
+      'How we calculate every price you see — step by step, with full source attribution.',
+    'method-toc-label': 'Sections',
+    'toc-overview': 'Overview',
+    'toc-gold-data': 'Gold Price Data',
+    'toc-fx-rates': 'FX Rates',
+    'toc-aed-peg': 'AED Peg',
+    'toc-karat': 'Karat Conversion',
+    'toc-not-included': "What We Don't Include",
+    'toc-fallback': 'Fallback & Reliability',
+    'toc-disclaimer': 'Disclaimer',
   },
   ar: {
-    'method-hero-tag':   'الشفافية والثقة',
-    'method-h1':         'مصادر البيانات والمنهجية',
-    'method-sub':        'كيف نحسب كل سعر تراه — خطوة بخطوة، مع الإسناد الكامل للمصادر.',
-    'method-toc-label':  'الأقسام',
-    'toc-overview':      'نظرة عامة',
-    'toc-gold-data':     'بيانات سعر الذهب',
-    'toc-fx-rates':      'أسعار الصرف',
-    'toc-aed-peg':       'ربط الدرهم',
-    'toc-karat':         'تحويل العيار',
-    'toc-not-included':  'ما لا تشمله الأسعار',
-    'toc-fallback':      'النسخ الاحتياطي والموثوقية',
-    'toc-disclaimer':    'إخلاء المسؤولية',
+    'method-hero-tag': 'الشفافية والثقة',
+    'method-h1': 'مصادر البيانات والمنهجية',
+    'method-sub': 'كيف نحسب كل سعر تراه — خطوة بخطوة، مع الإسناد الكامل للمصادر.',
+    'method-toc-label': 'الأقسام',
+    'toc-overview': 'نظرة عامة',
+    'toc-gold-data': 'بيانات سعر الذهب',
+    'toc-fx-rates': 'أسعار الصرف',
+    'toc-aed-peg': 'ربط الدرهم',
+    'toc-karat': 'تحويل العيار',
+    'toc-not-included': 'ما لا تشمله الأسعار',
+    'toc-fallback': 'النسخ الاحتياطي والموثوقية',
+    'toc-disclaimer': 'إخلاء المسؤولية',
   },
 };
 
@@ -49,7 +50,7 @@ function t(key) {
 function applyLanguage() {
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
-  Object.keys(T.en).forEach(key => {
+  Object.keys(T.en).forEach((key) => {
     const el = document.getElementById(key);
     if (el) el.textContent = t(key);
   });
@@ -62,7 +63,7 @@ function init() {
 
   const navCtrl = injectNav(STATE.lang, 0);
   injectBreadcrumbs('methodology');
-  navCtrl.getLangToggleButtons().forEach(btn => {
+  navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       localStorage.setItem('gp_pref_lang', STATE.lang);

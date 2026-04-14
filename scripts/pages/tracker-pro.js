@@ -7,7 +7,16 @@ import { createInitialState, persistState } from '../../tracker/state.js';
 import { mountShell } from '../../tracker/ui-shell.js';
 import { fetchWire, renderWire as renderWireModule } from '../../tracker/wire.js';
 import { getUnifiedHistory } from '../../lib/historical-data.js';
-import { initRender, renderAll, renderChart, renderMarkets, renderAlerts, renderPresets, renderPlanners, renderArchive } from '../../tracker/render.js';
+import {
+  initRender,
+  renderAll,
+  renderChart,
+  renderMarkets,
+  renderAlerts,
+  renderPresets,
+  renderPlanners,
+  renderArchive,
+} from '../../tracker/render.js';
 import { initEvents, bindCoreEvents } from '../../tracker/events.js';
 import { renderAdSlot } from '../../components/adSlot.js';
 
@@ -113,7 +122,7 @@ function currentSpot() {
 function priceFor({ currency, karat, unit, spot }) {
   const s = spot ?? currentSpot();
   if (!s) return null;
-  const karatObj = KARATS.find(k => k.code === String(karat));
+  const karatObj = KARATS.find((k) => k.code === String(karat));
   if (!karatObj) return null;
   const usdPerGram = (s / CONSTANTS.TROY_OZ_GRAMS) * karatObj.purity;
   let local;
@@ -141,8 +150,8 @@ function showToast(msg, durationMs = 3500) {
 
 function checkAlerts() {
   const spot = currentSpot();
-  if (!spot || !(state.alerts?.length)) return;
-  state.alerts.forEach(a => {
+  if (!spot || !state.alerts?.length) return;
+  state.alerts.forEach((a) => {
     const hit = a.direction === 'above' ? spot > a.target : spot < a.target;
     if (hit && 'Notification' in window && Notification.permission === 'granted') {
       new Notification('Gold Price Alert', {
@@ -153,8 +162,11 @@ function checkAlerts() {
 }
 
 function exportArchiveData() {
-  if (!state.history.length) { showToast('No archive data available.'); return; }
-  const records = state.history.map(r => ({
+  if (!state.history.length) {
+    showToast('No archive data available.');
+    return;
+  }
+  const records = state.history.map((r) => ({
     date: r.date instanceof Date ? r.date.toISOString().slice(0, 10) : String(r.date),
     price: r.spot,
     source: r.source,
@@ -168,9 +180,12 @@ function exportHistoryData() {
 }
 
 function exportChartData() {
-  if (!state.history.length) { showToast('No chart data available yet.'); return; }
+  if (!state.history.length) {
+    showToast('No chart data available yet.');
+    return;
+  }
   const { filterByRange } = window.__trackerHistLib || {};
-  const flat = state.history.map(r => ({
+  const flat = state.history.map((r) => ({
     date: r.date instanceof Date ? r.date.toISOString().slice(0, 10) : String(r.date),
     spot: r.spot,
     price: r.spot,
@@ -178,15 +193,22 @@ function exportChartData() {
   }));
   const spot = currentSpot();
   const rows = flat.filter(Boolean);
-  if (spot) rows.push({ date: new Date().toISOString().slice(0, 10), spot, price: spot, source: 'live' });
+  if (spot)
+    rows.push({ date: new Date().toISOString().slice(0, 10), spot, price: spot, source: 'live' });
   exp.exportChartCSV(rows, state.range, state.selectedKarat);
   showToast('Chart CSV downloaded');
 }
 
 function exportWatchlistData() {
   const spot = currentSpot();
-  if (!spot) { showToast('Waiting for live price data.'); return; }
-  if (!(state.favorites?.length)) { showToast('No favorites in watchlist. Add currencies via Compare tab.'); return; }
+  if (!spot) {
+    showToast('Waiting for live price data.');
+    return;
+  }
+  if (!state.favorites?.length) {
+    showToast('No favorites in watchlist. Add currencies via Compare tab.');
+    return;
+  }
   exp.exportWatchlistCSV({
     favorites: state.favorites,
     countries: COUNTRIES,
@@ -202,7 +224,10 @@ function exportWatchlistData() {
 
 function exportCurrentViewData() {
   const spot = currentSpot();
-  if (!spot) { showToast('Waiting for live price data.'); return; }
+  if (!spot) {
+    showToast('Waiting for live price data.');
+    return;
+  }
   exp.exportCurrentViewCSV({
     countries: COUNTRIES,
     karatCode: state.selectedKarat,
@@ -218,7 +243,10 @@ function exportCurrentViewData() {
 function exportBriefData() {
   const headline = el.briefHeadline?.textContent;
   const body = el.briefCopy?.textContent;
-  if (!headline || headline.startsWith('Waiting')) { showToast('Waiting for live data.'); return; }
+  if (!headline || headline.startsWith('Waiting')) {
+    showToast('Waiting for live data.');
+    return;
+  }
   exp.exportBriefText(headline, body);
   showToast('Brief downloaded');
 }
@@ -227,9 +255,9 @@ function exportJsonData() {
   const spot = currentSpot();
   const prices = {};
   if (spot) {
-    KARATS.forEach(k => {
+    KARATS.forEach((k) => {
       prices[k.code] = {};
-      [...new Set(COUNTRIES.map(c => c.currency))].forEach(cur => {
+      [...new Set(COUNTRIES.map((c) => c.currency))].forEach((cur) => {
         const p = priceFor({ currency: cur, karat: k.code, unit: 'gram', spot });
         if (p) prices[k.code][cur] = { gram: p, oz: p * CONSTANTS.TROY_OZ_GRAMS };
       });
@@ -237,7 +265,10 @@ function exportJsonData() {
   }
   const exportState = {
     goldPriceUsdPerOz: spot || null,
-    freshness: { goldUpdatedAt: state.live?.updatedAt || new Date().toISOString(), fxUpdatedAt: state.fxMeta?.lastUpdateUtc || new Date().toISOString() },
+    freshness: {
+      goldUpdatedAt: state.live?.updatedAt || new Date().toISOString(),
+      fxUpdatedAt: state.fxMeta?.lastUpdateUtc || new Date().toISOString(),
+    },
     rates: state.rates,
     lang: state.lang,
   };
@@ -256,7 +287,10 @@ function startCountdown() {
 
   function tick() {
     _countdownValue--;
-    if (_countdownValue <= 0) { clearInterval(_countdownTimer); return; }
+    if (_countdownValue <= 0) {
+      clearInterval(_countdownTimer);
+      return;
+    }
     const el_countdown = document.getElementById('tp-countdown');
     if (el_countdown) el_countdown.textContent = `Next update in ${_countdownValue}s`;
   }
@@ -291,18 +325,32 @@ function stopAutoRefresh() {
 
 function populateSelects() {
   if (el.currency) {
-    const currencies = [...new Set(COUNTRIES.map(c => c.currency))].sort();
-    el.currency.innerHTML = currencies.map(c => `<option value="${c}"${c === state.selectedCurrency ? ' selected' : ''}>${c}</option>`).join('');
+    const currencies = [...new Set(COUNTRIES.map((c) => c.currency))].sort();
+    el.currency.innerHTML = currencies
+      .map(
+        (c) =>
+          `<option value="${c}"${c === state.selectedCurrency ? ' selected' : ''}>${c}</option>`
+      )
+      .join('');
   }
   if (el.karat) {
-    el.karat.innerHTML = KARATS.map(k => `<option value="${k.code}"${k.code === state.selectedKarat ? ' selected' : ''}>${k.code}K — ${(k.purity * 100).toFixed(1)}%</option>`).join('');
+    el.karat.innerHTML = KARATS.map(
+      (k) =>
+        `<option value="${k.code}"${k.code === state.selectedKarat ? ' selected' : ''}>${k.code}K — ${(k.purity * 100).toFixed(1)}%</option>`
+    ).join('');
   }
   if (el.unit) {
-    el.unit.innerHTML = ['gram','oz'].map(u => `<option value="${u}"${u === state.selectedUnit ? ' selected' : ''}>${u}</option>`).join('');
+    el.unit.innerHTML = ['gram', 'oz']
+      .map(
+        (u) => `<option value="${u}"${u === state.selectedUnit ? ' selected' : ''}>${u}</option>`
+      )
+      .join('');
   }
   if (el.language) el.language.value = state.lang;
   if (el.jewelryKarat) {
-    el.jewelryKarat.innerHTML = KARATS.map(k => `<option value="${k.code}">${k.code}K</option>`).join('');
+    el.jewelryKarat.innerHTML = KARATS.map(
+      (k) => `<option value="${k.code}">${k.code}K</option>`
+    ).join('');
   }
 }
 
@@ -319,10 +367,7 @@ async function refreshData(forceLive = true) {
 
 async function fetchLive() {
   try {
-    const [goldRes, fxRes] = await Promise.allSettled([
-      api.fetchGold(),
-      api.fetchFX(),
-    ]);
+    const [goldRes, fxRes] = await Promise.allSettled([api.fetchGold(), api.fetchFX()]);
     if (goldRes.status === 'fulfilled') {
       const data = goldRes.value;
       state.live = { price: data.price, updatedAt: data.updatedAt, raw: data };
@@ -330,9 +375,12 @@ async function fetchLive() {
       cache.saveGoldPrice(data.price, data.updatedAt);
       cache.checkDayOpenReset({ goldPriceUsdPerOz: data.price });
       const today = new Date().toISOString().slice(0, 10);
-      const alreadySaved = (state.snapshots || []).some(s => s.date === today);
+      const alreadySaved = (state.snapshots || []).some((s) => s.date === today);
       if (!alreadySaved) {
-        state.snapshots = [...(state.snapshots || []), { date: today, price: data.price, timestamp: Date.now() }];
+        state.snapshots = [
+          ...(state.snapshots || []),
+          { date: today, price: data.price, timestamp: Date.now() },
+        ];
       }
     } else if (!state.live) {
       const fb = cache.getFallbackGoldPrice();
@@ -362,12 +410,14 @@ async function fetchLive() {
 async function ensureUnifiedHistory() {
   const cachedDaily = Array.isArray(state.snapshots) ? state.snapshots : [];
   const unified = await getUnifiedHistory(cachedDaily);
-  state.history = unified.map(row => ({
-    date: new Date(row.date.length === 7 ? `${row.date}-01` : row.date),
-    spot: Number(row.price),
-    source: row.source,
-    granularity: row.granularity,
-  })).filter(r => r.spot > 0 && Number.isFinite(r.date.getTime()));
+  state.history = unified
+    .map((row) => ({
+      date: new Date(row.date.length === 7 ? `${row.date}-01` : row.date),
+      spot: Number(row.price),
+      source: row.source,
+      granularity: row.granularity,
+    }))
+    .filter((r) => r.spot > 0 && Number.isFinite(r.date.getTime()));
 }
 
 async function refreshWire() {
@@ -381,7 +431,7 @@ async function refreshWire() {
 async function init() {
   // Wait for DOM to be fully ready
   if (document.readyState !== 'complete' && document.readyState !== 'interactive') {
-    await new Promise(r => document.addEventListener('DOMContentLoaded', r, { once: true }));
+    await new Promise((r) => document.addEventListener('DOMContentLoaded', r, { once: true }));
   }
 
   Object.assign(el, ui());
@@ -392,21 +442,39 @@ async function init() {
   // Init sub-modules with their dependencies
   initRender({ state, el, priceFor, currentSpot, showToast });
   initEvents({
-    state, el,
-    refreshData, renderAll,
-    renderMarkets, renderAlerts, renderPresets, renderPlanners, renderArchive,
-    showToast, currentSpot, priceFor,
-    startAutoRefresh, stopAutoRefresh,
-    populateSelects, refreshWire,
-    exportArchiveData, exportHistoryData, exportJsonData,
-    exportChartData, exportWatchlistData, exportCurrentViewData, exportBriefData,
+    state,
+    el,
+    refreshData,
+    renderAll,
+    renderMarkets,
+    renderAlerts,
+    renderPresets,
+    renderPlanners,
+    renderArchive,
+    showToast,
+    currentSpot,
+    priceFor,
+    startAutoRefresh,
+    stopAutoRefresh,
+    populateSelects,
+    refreshWire,
+    exportArchiveData,
+    exportHistoryData,
+    exportJsonData,
+    exportChartData,
+    exportWatchlistData,
+    exportCurrentViewData,
+    exportBriefData,
   });
 
   mountShell(
     state,
     el,
-    /* onModeChange */ () => { populateSelects(); renderAll(); },
-    /* onLangChange */ () => renderAll(),
+    /* onModeChange */ () => {
+      populateSelects();
+      renderAll();
+    },
+    /* onLangChange */ () => renderAll()
   );
 
   populateSelects();
@@ -418,7 +486,7 @@ async function init() {
   }
 
   const regionTabs = document.querySelectorAll('.tracker-region-pill[data-region]');
-  regionTabs.forEach(btn => {
+  regionTabs.forEach((btn) => {
     const isActive = btn.dataset.region === (state.activeRegion || 'gcc');
     btn.classList.toggle('is-active', isActive);
   });
@@ -434,21 +502,31 @@ async function init() {
     let touchStartX = 0;
     const REGIONS_ORDER = ['gcc', 'levant', 'africa', 'global'];
 
-    marketBoard.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-    marketBoard.addEventListener('touchend', e => {
-      const dx = e.changedTouches[0].clientX - touchStartX;
-      if (Math.abs(dx) < 50) return;
-      const currentIdx = REGIONS_ORDER.indexOf(state.activeRegion || 'gcc');
-      let nextIdx = dx < 0 ? currentIdx + 1 : currentIdx - 1;
-      nextIdx = Math.max(0, Math.min(REGIONS_ORDER.length - 1, nextIdx));
-      if (nextIdx !== currentIdx) {
-        state.activeRegion = REGIONS_ORDER[nextIdx];
-        document.querySelectorAll('.tracker-region-pill[data-region]').forEach(btn => {
-          btn.classList.toggle('is-active', btn.dataset.region === state.activeRegion);
-        });
-        renderMarkets();
-      }
-    }, { passive: true });
+    marketBoard.addEventListener(
+      'touchstart',
+      (e) => {
+        touchStartX = e.touches[0].clientX;
+      },
+      { passive: true }
+    );
+    marketBoard.addEventListener(
+      'touchend',
+      (e) => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) < 50) return;
+        const currentIdx = REGIONS_ORDER.indexOf(state.activeRegion || 'gcc');
+        let nextIdx = dx < 0 ? currentIdx + 1 : currentIdx - 1;
+        nextIdx = Math.max(0, Math.min(REGIONS_ORDER.length - 1, nextIdx));
+        if (nextIdx !== currentIdx) {
+          state.activeRegion = REGIONS_ORDER[nextIdx];
+          document.querySelectorAll('.tracker-region-pill[data-region]').forEach((btn) => {
+            btn.classList.toggle('is-active', btn.dataset.region === state.activeRegion);
+          });
+          renderMarkets();
+        }
+      },
+      { passive: true }
+    );
   }
 
   // Redraw chart on resize so viewBox stays in sync with container dimensions
@@ -469,8 +547,11 @@ function handleOnlineStatus() {
     if (!offlineBanner) {
       offlineBanner = document.createElement('div');
       offlineBanner.id = 'tp-offline-banner';
-      offlineBanner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#dc2626;color:white;text-align:center;padding:0.5rem;font-size:0.875rem;font-weight:500;';
-      const cached = state.live?.updatedAt ? new Date(state.live.updatedAt).toLocaleTimeString() : 'unknown';
+      offlineBanner.style.cssText =
+        'position:fixed;top:0;left:0;right:0;z-index:9999;background:#dc2626;color:white;text-align:center;padding:0.5rem;font-size:0.875rem;font-weight:500;';
+      const cached = state.live?.updatedAt
+        ? new Date(state.live.updatedAt).toLocaleTimeString()
+        : 'unknown';
       offlineBanner.textContent = `⚠️ You're offline — showing cached prices from ${cached}`;
       document.body.prepend(offlineBanner);
     }
@@ -485,15 +566,24 @@ window.addEventListener('offline', handleOnlineStatus);
 function initShareButtons() {
   function copyUrlToClipboard(btn) {
     const url = window.location.href;
-    navigator.clipboard?.writeText(url).then(() => {
-      if (!btn) return;
-      const orig = btn.textContent;
-      btn.textContent = '✓ Copied!';
-      setTimeout(() => { btn.textContent = orig; }, 2000);
-    }).catch(() => {});
+    navigator.clipboard
+      ?.writeText(url)
+      .then(() => {
+        if (!btn) return;
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => {
+          btn.textContent = orig;
+        }, 2000);
+      })
+      .catch(() => {});
   }
-  document.getElementById('tp-copy-url')?.addEventListener('click', e => copyUrlToClipboard(e.currentTarget));
-  document.getElementById('tp-share-btn')?.addEventListener('click', e => copyUrlToClipboard(e.currentTarget));
+  document
+    .getElementById('tp-copy-url')
+    ?.addEventListener('click', (e) => copyUrlToClipboard(e.currentTarget));
+  document
+    .getElementById('tp-share-btn')
+    ?.addEventListener('click', (e) => copyUrlToClipboard(e.currentTarget));
 }
 
 // ── First-time onboarding overlay ────────────────────────────────────────
@@ -501,18 +591,26 @@ function initOnboarding() {
   const SEEN_KEY = 'tracker_onb_seen';
   const overlay = document.getElementById('tracker-onboarding');
   if (!overlay) return;
-  try { if (localStorage.getItem(SEEN_KEY) === '1') return; } catch { return; }
+  try {
+    if (localStorage.getItem(SEEN_KEY) === '1') return;
+  } catch {
+    return;
+  }
 
-  setTimeout(() => { overlay.removeAttribute('hidden'); }, 1800);
+  setTimeout(() => {
+    overlay.removeAttribute('hidden');
+  }, 1800);
 
   function dismiss() {
     overlay.setAttribute('hidden', '');
-    try { localStorage.setItem(SEEN_KEY, '1'); } catch {}
+    try {
+      localStorage.setItem(SEEN_KEY, '1');
+    } catch {}
   }
   document.getElementById('onb-dismiss')?.addEventListener('click', dismiss);
   document.getElementById('onb-close')?.addEventListener('click', dismiss);
   overlay.querySelector('.onb-backdrop')?.addEventListener('click', dismiss);
-  document.addEventListener('keydown', e => {
+  document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !overlay.hasAttribute('hidden')) dismiss();
   });
 }

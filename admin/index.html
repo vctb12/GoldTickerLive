@@ -1,627 +1,721 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow" />
-  <title>Dashboard — GoldAdmin</title>
-  <link rel="stylesheet" href="admin.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <style>
-    /* ── Stat grid ─────────────────────────────────────────── */
-    .stat-grid {
-      display: grid;
-      gap: 16px;
-      grid-template-columns: repeat(4, 1fr);
-      margin-bottom: 28px;
-    }
-    @media (max-width: 900px) {
-      .stat-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 480px) {
-      .stat-grid { grid-template-columns: 1fr; }
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Dashboard — GoldAdmin</title>
+    <link rel="stylesheet" href="admin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <style>
+      /* ── Stat grid ─────────────────────────────────────────── */
+      .stat-grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(4, 1fr);
+        margin-bottom: 28px;
+      }
+      @media (max-width: 900px) {
+        .stat-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 480px) {
+        .stat-grid {
+          grid-template-columns: 1fr;
+        }
+      }
 
-    .stat-card .stat-icon {
-      font-size: 1.5rem;
-      line-height: 1;
-      margin-bottom: 10px;
-    }
-    .stat-card .stat-sub {
-      color: var(--text-dim);
-      font-size: 0.75rem;
-      margin-top: 4px;
-    }
+      .stat-card .stat-icon {
+        font-size: 1.5rem;
+        line-height: 1;
+        margin-bottom: 10px;
+      }
+      .stat-card .stat-sub {
+        color: var(--text-dim);
+        font-size: 0.75rem;
+        margin-top: 4px;
+      }
 
-    /* ── Sections ───────────────────────────────────────────── */
-    .section {
-      margin-bottom: 28px;
-    }
+      /* ── Sections ───────────────────────────────────────────── */
+      .section {
+        margin-bottom: 28px;
+      }
 
-    /* ── API Status table ───────────────────────────────────── */
-    .api-status-header {
-      align-items: center;
-      display: flex;
-      gap: 12px;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .api-last-checked {
-      color: var(--text-dim);
-      font-size: 0.75rem;
-    }
+      /* ── API Status table ───────────────────────────────────── */
+      .api-status-header {
+        align-items: center;
+        display: flex;
+        gap: 12px;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .api-last-checked {
+        color: var(--text-dim);
+        font-size: 0.75rem;
+      }
 
-    /* ── Quick actions ──────────────────────────────────────── */
-    .quick-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 28px;
-    }
+      /* ── Quick actions ──────────────────────────────────────── */
+      .quick-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 28px;
+      }
 
-    /* ── Activity timeline ──────────────────────────────────── */
-    .activity-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-    .activity-item {
-      align-items: flex-start;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      gap: 12px;
-      padding: 12px 0;
-    }
-    .activity-item:last-child {
-      border-bottom: none;
-    }
-    .activity-icon {
-      background: var(--surface-2);
-      border-radius: 50%;
-      flex-shrink: 0;
-      font-size: 14px;
-      height: 32px;
-      line-height: 32px;
-      text-align: center;
-      width: 32px;
-    }
-    .activity-body {
-      flex: 1;
-      min-width: 0;
-    }
-    .activity-action {
-      color: var(--text);
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-    .activity-details {
-      color: var(--text-muted);
-      font-size: 0.8125rem;
-      margin-top: 1px;
-    }
-    .activity-time {
-      color: var(--text-dim);
-      font-size: 0.75rem;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-    .activity-empty {
-      color: var(--text-dim);
-      font-size: 0.875rem;
-      padding: 24px 0;
-      text-align: center;
-    }
+      /* ── Activity timeline ──────────────────────────────────── */
+      .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+      .activity-item {
+        align-items: flex-start;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        gap: 12px;
+        padding: 12px 0;
+      }
+      .activity-item:last-child {
+        border-bottom: none;
+      }
+      .activity-icon {
+        background: var(--surface-2);
+        border-radius: 50%;
+        flex-shrink: 0;
+        font-size: 14px;
+        height: 32px;
+        line-height: 32px;
+        text-align: center;
+        width: 32px;
+      }
+      .activity-body {
+        flex: 1;
+        min-width: 0;
+      }
+      .activity-action {
+        color: var(--text);
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+      .activity-details {
+        color: var(--text-muted);
+        font-size: 0.8125rem;
+        margin-top: 1px;
+      }
+      .activity-time {
+        color: var(--text-dim);
+        font-size: 0.75rem;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .activity-empty {
+        color: var(--text-dim);
+        font-size: 0.875rem;
+        padding: 24px 0;
+        text-align: center;
+      }
 
-    /* ── Gold ticker badge ──────────────────────────────────── */
-    .ticker-badge {
-      align-items: center;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      display: flex;
-      font-size: 0.8125rem;
-      font-weight: 600;
-      gap: 6px;
-      padding: 4px 12px;
-      white-space: nowrap;
-    }
-    .ticker-dot {
-      border-radius: 50%;
-      flex-shrink: 0;
-      height: 7px;
-      width: 7px;
-    }
-    .ticker-dot--green  { background: var(--success); }
-    .ticker-dot--yellow { background: var(--warning); }
-    .ticker-loading { opacity: 0.5; }
+      /* ── Gold ticker badge ──────────────────────────────────── */
+      .ticker-badge {
+        align-items: center;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        display: flex;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        gap: 6px;
+        padding: 4px 12px;
+        white-space: nowrap;
+      }
+      .ticker-dot {
+        border-radius: 50%;
+        flex-shrink: 0;
+        height: 7px;
+        width: 7px;
+      }
+      .ticker-dot--green {
+        background: var(--success);
+      }
+      .ticker-dot--yellow {
+        background: var(--warning);
+      }
+      .ticker-loading {
+        opacity: 0.5;
+      }
 
-    /* ── Spinner inline ─────────────────────────────────────── */
-    .inline-spinner {
-      animation: spin 0.75s linear infinite;
-      border: 2px solid var(--border);
-      border-radius: 50%;
-      border-top-color: var(--primary);
-      display: inline-block;
-      height: 14px;
-      vertical-align: middle;
-      width: 14px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
-</head>
-<body>
+      /* ── Spinner inline ─────────────────────────────────────── */
+      .inline-spinner {
+        animation: spin 0.75s linear infinite;
+        border: 2px solid var(--border);
+        border-radius: 50%;
+        border-top-color: var(--primary);
+        display: inline-block;
+        height: 14px;
+        vertical-align: middle;
+        width: 14px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Flash prevention: redirect to login if no token present -->
+    <script>
+      (function () {
+        try {
+          var k = Object.keys(localStorage);
+          if (
+            !k.some(function (x) {
+              return x.startsWith('sb-') && x.endsWith('-auth-token');
+            })
+          )
+            window.location.replace('./login/');
+        } catch (e) {
+          window.location.replace('./login/');
+        }
+      })();
+    </script>
 
-  <!-- Flash prevention: redirect to login if no token present -->
-  <script>
-    (function(){try{var k=Object.keys(localStorage);if(!k.some(function(x){return x.startsWith('sb-')&&x.endsWith('-auth-token')}))window.location.replace('./login/');}catch(e){window.location.replace('./login/');}})();
-  </script>
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-  <!-- Sidebar overlay (mobile) -->
-  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="admin-layout">
+      <!-- ── Sidebar ──────────────────────────────────────────── -->
+      <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+        <div class="sidebar-header">
+          <span class="logo-icon" aria-hidden="true">⚙</span>
+          <span class="logo-text">GoldAdmin</span>
+        </div>
 
-  <div class="admin-layout">
-    <!-- ── Sidebar ──────────────────────────────────────────── -->
-    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
-      <div class="sidebar-header">
-        <span class="logo-icon" aria-hidden="true">⚙</span>
-        <span class="logo-text">GoldAdmin</span>
+        <nav class="sidebar-nav" aria-label="Main menu">
+          <a class="nav-link" href="./" data-path="/Gold-Prices/admin/">
+            <span class="nav-icon">🏠</span> Dashboard
+          </a>
+          <a class="nav-link" href="./shops/" data-path="/Gold-Prices/admin/shops/">
+            <span class="nav-icon">🏪</span> Shops
+          </a>
+          <a class="nav-link" href="./pricing/" data-path="/Gold-Prices/admin/pricing/">
+            <span class="nav-icon">💰</span> Pricing
+          </a>
+          <a class="nav-link" href="./orders/" data-path="/Gold-Prices/admin/orders/">
+            <span class="nav-icon">📦</span> Orders
+          </a>
+          <a class="nav-link" href="./content/" data-path="/Gold-Prices/admin/content/">
+            <span class="nav-icon">📝</span> Content
+          </a>
+          <a class="nav-link" href="./social/" data-path="/Gold-Prices/admin/social/">
+            <span class="nav-icon">📣</span> Social
+          </a>
+          <a class="nav-link" href="./settings/" data-path="/Gold-Prices/admin/settings/">
+            <span class="nav-icon">⚙️</span> Settings
+          </a>
+          <a class="nav-link" href="./analytics/" data-path="/Gold-Prices/admin/analytics/">
+            <span class="nav-icon">📊</span> Analytics
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div
+            class="sidebar-user"
+            id="sidebar-user"
+            style="
+              display: none;
+              padding: 0 0 10px;
+              border-bottom: 1px solid var(--border);
+              margin-bottom: 10px;
+            "
+          >
+            <div
+              style="
+                font-size: 0.8125rem;
+                color: var(--text-muted);
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              "
+              id="sidebar-email"
+            ></div>
+            <span class="role-badge" id="sidebar-role-badge"></span>
+          </div>
+          <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">
+            <span aria-hidden="true">🚪</span> Sign Out
+          </button>
+        </div>
+      </aside>
+
+      <!-- ── Main area ────────────────────────────────────────── -->
+      <div class="main-area">
+        <!-- Header -->
+        <header class="page-header">
+          <button
+            class="sidebar-toggle"
+            id="sidebar-toggle"
+            aria-label="Toggle navigation"
+            type="button"
+          >
+            ☰
+          </button>
+          <h1 class="page-title">Dashboard</h1>
+          <div class="header-actions">
+            <div class="ticker-badge ticker-loading" id="ticker-badge" aria-live="polite">
+              <span class="ticker-dot ticker-dot--yellow" id="ticker-dot"></span>
+              <span id="ticker-text">XAU: loading…</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <main class="content-area">
+          <!-- ── Stat cards ──────────────────────────────────── -->
+          <div class="stat-grid" role="list" aria-label="Key metrics">
+            <!-- Gold Spot -->
+            <div class="stat-card" role="listitem">
+              <div class="stat-icon" aria-hidden="true">🥇</div>
+              <div class="stat-label">Gold Spot (XAU)</div>
+              <div class="stat-number" id="stat-gold" aria-live="polite">
+                <span class="inline-spinner" aria-hidden="true"></span>
+              </div>
+              <div class="stat-sub" id="stat-gold-sub"></div>
+            </div>
+
+            <!-- Analytics Events -->
+            <div class="stat-card" role="listitem">
+              <div class="stat-icon" aria-hidden="true">📊</div>
+              <div class="stat-label">Analytics Events</div>
+              <div class="stat-number" id="stat-events" aria-live="polite">—</div>
+              <div class="stat-sub" id="stat-events-sub">from localStorage</div>
+            </div>
+
+            <!-- Posts Generated -->
+            <div class="stat-card" role="listitem">
+              <div class="stat-icon" aria-hidden="true">📣</div>
+              <div class="stat-label">Posts Generated</div>
+              <div class="stat-number" id="stat-posts" aria-live="polite">—</div>
+              <div class="stat-sub" id="stat-posts-sub">social post history</div>
+            </div>
+
+            <!-- Admin User -->
+            <div class="stat-card" role="listitem">
+              <div class="stat-icon" aria-hidden="true">🔐</div>
+              <div class="stat-label">Logged In As</div>
+              <div
+                class="stat-number"
+                id="stat-user"
+                aria-live="polite"
+                style="font-size: 0.9rem; word-break: break-all"
+              >
+                —
+              </div>
+              <div class="stat-sub" id="stat-user-sub"></div>
+            </div>
+          </div>
+
+          <!-- ── API Status ──────────────────────────────────── -->
+          <section class="section card" aria-labelledby="api-status-title">
+            <div class="api-status-header">
+              <div class="flex gap-2" style="align-items: center">
+                <h2 class="card-title" id="api-status-title">API Status</h2>
+                <span class="api-last-checked" id="api-last-checked"></span>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="api-check-btn" type="button">
+                Check Now
+              </button>
+            </div>
+            <div class="table-wrap">
+              <table aria-label="API service status">
+                <thead>
+                  <tr>
+                    <th>Service</th>
+                    <th>Status</th>
+                    <th>Last Checked</th>
+                    <th>Response (ms)</th>
+                  </tr>
+                </thead>
+                <tbody id="api-table-body">
+                  <tr>
+                    <td
+                      colspan="4"
+                      style="color: var(--text-dim); text-align: center; padding: 20px"
+                    >
+                      <span class="inline-spinner" aria-hidden="true"></span>
+                      Checking services…
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ── Quick Actions ───────────────────────────────── -->
+          <section class="section" aria-label="Quick actions">
+            <div class="quick-actions">
+              <button class="btn btn-primary" id="qa-force-refresh" type="button">
+                ⚡ Force Refresh Prices
+              </button>
+              <button class="btn btn-ghost" id="qa-clear-cache" type="button">
+                🗑 Clear Cache
+              </button>
+              <a class="btn btn-ghost" href="./shops/"> 🏪 Manage Shops </a>
+              <a class="btn btn-ghost" href="./orders/"> 📦 View Orders </a>
+            </div>
+          </section>
+
+          <!-- ── Recent Activity ─────────────────────────────── -->
+          <section class="section card" aria-labelledby="activity-title">
+            <div class="card-header">
+              <h2 class="card-title" id="activity-title">Quick Links</h2>
+            </div>
+            <div class="activity-list" id="activity-list">
+              <div class="activity-item" role="listitem">
+                <div class="activity-icon" aria-hidden="true">🏪</div>
+                <div class="activity-body">
+                  <a href="./shops/" class="activity-action" style="color: var(--primary)"
+                    >Manage Shops</a
+                  >
+                  <div class="activity-details">Add, edit, and verify gold shop listings</div>
+                </div>
+              </div>
+              <div class="activity-item" role="listitem">
+                <div class="activity-icon" aria-hidden="true">📣</div>
+                <div class="activity-body">
+                  <a href="./social/" class="activity-action" style="color: var(--primary)"
+                    >Social Post Generator</a
+                  >
+                  <div class="activity-details">Create and schedule social media posts</div>
+                </div>
+              </div>
+              <div class="activity-item" role="listitem">
+                <div class="activity-icon" aria-hidden="true">💰</div>
+                <div class="activity-body">
+                  <a href="./pricing/" class="activity-action" style="color: var(--primary)"
+                    >Pricing Overrides</a
+                  >
+                  <div class="activity-details">View live prices and manage overrides</div>
+                </div>
+              </div>
+              <div class="activity-item" role="listitem">
+                <div class="activity-icon" aria-hidden="true">📝</div>
+                <div class="activity-body">
+                  <a href="./content/" class="activity-action" style="color: var(--primary)"
+                    >Content Editor</a
+                  >
+                  <div class="activity-details">Create and manage educational content</div>
+                </div>
+              </div>
+              <div class="activity-item" role="listitem">
+                <div class="activity-icon" aria-hidden="true">📊</div>
+                <div class="activity-body">
+                  <a href="./analytics/" class="activity-action" style="color: var(--primary)"
+                    >Analytics</a
+                  >
+                  <div class="activity-details">View page views and user engagement</div>
+                </div>
+              </div>
+              <div class="activity-item" role="listitem">
+                <div class="activity-icon" aria-hidden="true">⚙️</div>
+                <div class="activity-body">
+                  <a href="./settings/" class="activity-action" style="color: var(--primary)"
+                    >Settings</a
+                  >
+                  <div class="activity-details">Configure site settings and preferences</div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
       </div>
-
-      <nav class="sidebar-nav" aria-label="Main menu">
-        <a class="nav-link" href="./"          data-path="/Gold-Prices/admin/">
-          <span class="nav-icon">🏠</span> Dashboard
-        </a>
-        <a class="nav-link" href="./shops/"    data-path="/Gold-Prices/admin/shops/">
-          <span class="nav-icon">🏪</span> Shops
-        </a>
-        <a class="nav-link" href="./pricing/"  data-path="/Gold-Prices/admin/pricing/">
-          <span class="nav-icon">💰</span> Pricing
-        </a>
-        <a class="nav-link" href="./orders/"   data-path="/Gold-Prices/admin/orders/">
-          <span class="nav-icon">📦</span> Orders
-        </a>
-        <a class="nav-link" href="./content/"  data-path="/Gold-Prices/admin/content/">
-          <span class="nav-icon">📝</span> Content
-        </a>
-        <a class="nav-link" href="./social/"   data-path="/Gold-Prices/admin/social/">
-          <span class="nav-icon">📣</span> Social
-        </a>
-        <a class="nav-link" href="./settings/" data-path="/Gold-Prices/admin/settings/">
-          <span class="nav-icon">⚙️</span> Settings
-        </a>
-        <a class="nav-link" href="./analytics/" data-path="/Gold-Prices/admin/analytics/">
-          <span class="nav-icon">📊</span> Analytics
-        </a>
-      </nav>
-
-      <div class="sidebar-footer">
-        <div class="sidebar-user" id="sidebar-user" style="display:none;padding:0 0 10px;border-bottom:1px solid var(--border);margin-bottom:10px;">
-          <div style="font-size:0.8125rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="sidebar-email"></div>
-          <span class="role-badge" id="sidebar-role-badge"></span>
-        </div>
-        <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">
-          <span aria-hidden="true">🚪</span> Sign Out
-        </button>
-      </div>
-    </aside>
-
-    <!-- ── Main area ────────────────────────────────────────── -->
-    <div class="main-area">
-      <!-- Header -->
-      <header class="page-header">
-        <button
-          class="sidebar-toggle"
-          id="sidebar-toggle"
-          aria-label="Toggle navigation"
-          type="button"
-        >☰</button>
-        <h1 class="page-title">Dashboard</h1>
-        <div class="header-actions">
-          <div class="ticker-badge ticker-loading" id="ticker-badge" aria-live="polite">
-            <span class="ticker-dot ticker-dot--yellow" id="ticker-dot"></span>
-            <span id="ticker-text">XAU: loading…</span>
-          </div>
-        </div>
-      </header>
-
-      <!-- Content -->
-      <main class="content-area">
-
-        <!-- ── Stat cards ──────────────────────────────────── -->
-        <div class="stat-grid" role="list" aria-label="Key metrics">
-
-          <!-- Gold Spot -->
-          <div class="stat-card" role="listitem">
-            <div class="stat-icon" aria-hidden="true">🥇</div>
-            <div class="stat-label">Gold Spot (XAU)</div>
-            <div class="stat-number" id="stat-gold" aria-live="polite">
-              <span class="inline-spinner" aria-hidden="true"></span>
-            </div>
-            <div class="stat-sub" id="stat-gold-sub"></div>
-          </div>
-
-          <!-- Analytics Events -->
-          <div class="stat-card" role="listitem">
-            <div class="stat-icon" aria-hidden="true">📊</div>
-            <div class="stat-label">Analytics Events</div>
-            <div class="stat-number" id="stat-events" aria-live="polite">—</div>
-            <div class="stat-sub" id="stat-events-sub">from localStorage</div>
-          </div>
-
-          <!-- Posts Generated -->
-          <div class="stat-card" role="listitem">
-            <div class="stat-icon" aria-hidden="true">📣</div>
-            <div class="stat-label">Posts Generated</div>
-            <div class="stat-number" id="stat-posts" aria-live="polite">—</div>
-            <div class="stat-sub" id="stat-posts-sub">social post history</div>
-          </div>
-
-          <!-- Admin User -->
-          <div class="stat-card" role="listitem">
-            <div class="stat-icon" aria-hidden="true">🔐</div>
-            <div class="stat-label">Logged In As</div>
-            <div class="stat-number" id="stat-user" aria-live="polite" style="font-size:0.9rem;word-break:break-all;">—</div>
-            <div class="stat-sub" id="stat-user-sub"></div>
-          </div>
-
-        </div>
-
-        <!-- ── API Status ──────────────────────────────────── -->
-        <section class="section card" aria-labelledby="api-status-title">
-          <div class="api-status-header">
-            <div class="flex gap-2" style="align-items:center">
-              <h2 class="card-title" id="api-status-title">API Status</h2>
-              <span class="api-last-checked" id="api-last-checked"></span>
-            </div>
-            <button class="btn btn-ghost btn-sm" id="api-check-btn" type="button">
-              Check Now
-            </button>
-          </div>
-          <div class="table-wrap">
-            <table aria-label="API service status">
-              <thead>
-                <tr>
-                  <th>Service</th>
-                  <th>Status</th>
-                  <th>Last Checked</th>
-                  <th>Response (ms)</th>
-                </tr>
-              </thead>
-              <tbody id="api-table-body">
-                <tr>
-                  <td colspan="4" style="color:var(--text-dim);text-align:center;padding:20px">
-                    <span class="inline-spinner" aria-hidden="true"></span>
-                    Checking services…
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <!-- ── Quick Actions ───────────────────────────────── -->
-        <section class="section" aria-label="Quick actions">
-          <div class="quick-actions">
-            <button class="btn btn-primary" id="qa-force-refresh" type="button">
-              ⚡ Force Refresh Prices
-            </button>
-            <button class="btn btn-ghost" id="qa-clear-cache" type="button">
-              🗑 Clear Cache
-            </button>
-            <a class="btn btn-ghost" href="./shops/">
-              🏪 Manage Shops
-            </a>
-            <a class="btn btn-ghost" href="./orders/">
-              📦 View Orders
-            </a>
-          </div>
-        </section>
-
-        <!-- ── Recent Activity ─────────────────────────────── -->
-        <section class="section card" aria-labelledby="activity-title">
-          <div class="card-header">
-            <h2 class="card-title" id="activity-title">Quick Links</h2>
-          </div>
-          <div class="activity-list" id="activity-list">
-            <div class="activity-item" role="listitem">
-              <div class="activity-icon" aria-hidden="true">🏪</div>
-              <div class="activity-body">
-                <a href="./shops/" class="activity-action" style="color:var(--primary)">Manage Shops</a>
-                <div class="activity-details">Add, edit, and verify gold shop listings</div>
-              </div>
-            </div>
-            <div class="activity-item" role="listitem">
-              <div class="activity-icon" aria-hidden="true">📣</div>
-              <div class="activity-body">
-                <a href="./social/" class="activity-action" style="color:var(--primary)">Social Post Generator</a>
-                <div class="activity-details">Create and schedule social media posts</div>
-              </div>
-            </div>
-            <div class="activity-item" role="listitem">
-              <div class="activity-icon" aria-hidden="true">💰</div>
-              <div class="activity-body">
-                <a href="./pricing/" class="activity-action" style="color:var(--primary)">Pricing Overrides</a>
-                <div class="activity-details">View live prices and manage overrides</div>
-              </div>
-            </div>
-            <div class="activity-item" role="listitem">
-              <div class="activity-icon" aria-hidden="true">📝</div>
-              <div class="activity-body">
-                <a href="./content/" class="activity-action" style="color:var(--primary)">Content Editor</a>
-                <div class="activity-details">Create and manage educational content</div>
-              </div>
-            </div>
-            <div class="activity-item" role="listitem">
-              <div class="activity-icon" aria-hidden="true">📊</div>
-              <div class="activity-body">
-                <a href="./analytics/" class="activity-action" style="color:var(--primary)">Analytics</a>
-                <div class="activity-details">View page views and user engagement</div>
-              </div>
-            </div>
-            <div class="activity-item" role="listitem">
-              <div class="activity-icon" aria-hidden="true">⚙️</div>
-              <div class="activity-body">
-                <a href="./settings/" class="activity-action" style="color:var(--primary)">Settings</a>
-                <div class="activity-details">Configure site settings and preferences</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </main>
     </div>
-  </div>
 
-  <!-- Toast container -->
-  <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
+    <!-- Toast container -->
+    <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
-  <script type="module">
-    import { logout as supabaseLogout, requireAuth, getSession } from './supabase-auth.js';
-    import { ALLOWED_EMAIL } from './supabase-config.js';
-    import { CONSTANTS } from '../config/constants.js';
+    <script type="module">
+      import { logout as supabaseLogout, requireAuth, getSession } from './supabase-auth.js';
+      import { ALLOWED_EMAIL } from './supabase-config.js';
+      import { CONSTANTS } from '../config/constants.js';
 
-    // ── Auth guard: verify session + email ──────────────────
-    if (!(await requireAuth('./login/'))) throw new Error('redirect');
+      // ── Auth guard: verify session + email ──────────────────
+      if (!(await requireAuth('./login/'))) throw new Error('redirect');
 
-    const API_GOLD_URL    = CONSTANTS.API_GOLD_URL;
-    const API_FX_URL      = CONSTANTS.API_FX_URL;
-    const API_TIMEOUT_MS  = CONSTANTS.GOLD_FETCH_TIMEOUT;
+      const API_GOLD_URL = CONSTANTS.API_GOLD_URL;
+      const API_FX_URL = CONSTANTS.API_FX_URL;
+      const API_TIMEOUT_MS = CONSTANTS.GOLD_FETCH_TIMEOUT;
 
-    // ── Helpers ──────────────────────────────────────────────
+      // ── Helpers ──────────────────────────────────────────────
 
-    function qs(sel) { return document.querySelector(sel); }
-
-    /** @param {string} message @param {'info'|'success'|'error'|'warning'} type */
-    function showToast(message, type = 'info') {
-      const container = qs('#toast-container');
-      const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
-      const cls   = { success: 'toast--success', error: 'toast--danger', warning: 'toast--warning', info: 'toast--info' };
-      const toast = document.createElement('div');
-      toast.className = `toast ${cls[type] || cls.info}`;
-      toast.innerHTML = `<span class="toast-icon" aria-hidden="true">${icons[type] || icons.info}</span><span>${message}</span>`;
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.classList.add('toast-hide');
-        toast.addEventListener('animationend', () => toast.remove(), { once: true });
-      }, 4000);
-    }
-
-    function relativeTime(isoString) {
-      const diff = Date.now() - new Date(isoString).getTime();
-      const sec  = Math.floor(diff / 1000);
-      if (sec < 60)   return `${sec}s ago`;
-      const min  = Math.floor(sec / 60);
-      if (min < 60)   return `${min} min ago`;
-      const hr   = Math.floor(min / 60);
-      if (hr < 24)    return `${hr} hour${hr !== 1 ? 's' : ''} ago`;
-      const days = Math.floor(hr / 24);
-      return `${days} day${days !== 1 ? 's' : ''} ago`;
-    }
-
-    function storageGet(key) {
-      try { return localStorage.getItem(key); } catch { return null; }
-    }
-    function storageSet(key, value) {
-      try { localStorage.setItem(key, value); return true; } catch { return false; }
-    }
-    function storageRemove(...keys) {
-      keys.forEach(k => { try { localStorage.removeItem(k); } catch {} });
-    }
-
-    // ── Offline / online banner ──────────────────────────────
-    // (no backend — removed offline event listeners)
-
-    // ── Active nav link ──────────────────────────────────────
-    const currentPath = window.location.pathname.replace(/\/+$/, '') + '/';
-    document.querySelectorAll('.nav-link[data-path]').forEach(a => {
-      const p = a.dataset.path.replace(/\/+$/, '') + '/';
-      if (currentPath === p || (p.endsWith('/admin/') && currentPath.endsWith('/admin/'))) {
-        a.classList.add('active');
-        a.setAttribute('aria-current', 'page');
+      function qs(sel) {
+        return document.querySelector(sel);
       }
-    });
 
-    // ── Sidebar mobile toggle ────────────────────────────────
-    const sidebar        = qs('#sidebar');
-    const sidebarOverlay = qs('#sidebar-overlay');
-    qs('#sidebar-toggle').addEventListener('click', () => {
-      sidebar.classList.toggle('sidebar--open');
-      sidebarOverlay.classList.toggle('sidebar-overlay--visible');
-    });
-    sidebarOverlay.addEventListener('click', () => {
-      sidebar.classList.remove('sidebar--open');
-      sidebarOverlay.classList.remove('sidebar-overlay--visible');
-    });
-
-    // ── Logout ───────────────────────────────────────────────
-    qs('#logout-btn').addEventListener('click', async () => {
-      await supabaseLogout();
-      window.location.replace('./login/');
-    });
-
-    // ── Show user info from Supabase session ─────────────────
-    async function loadUserInfo() {
-      const session = await getSession();
-      if (!session) return;
-      const user = session.user;
-      const emailEl = qs('#sidebar-email');
-      const badgeEl = qs('#sidebar-role-badge');
-      const userEl  = qs('#sidebar-user');
-      if (emailEl && user?.email) {
-        emailEl.textContent = user.email;
-        if (badgeEl) {
-          badgeEl.textContent = 'admin';
-          badgeEl.className = 'role-badge role-badge--admin';
-        }
-        if (userEl) userEl.style.display = '';
+      /** @param {string} message @param {'info'|'success'|'error'|'warning'} type */
+      function showToast(message, type = 'info') {
+        const container = qs('#toast-container');
+        const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+        const cls = {
+          success: 'toast--success',
+          error: 'toast--danger',
+          warning: 'toast--warning',
+          info: 'toast--info',
+        };
+        const toast = document.createElement('div');
+        toast.className = `toast ${cls[type] || cls.info}`;
+        toast.innerHTML = `<span class="toast-icon" aria-hidden="true">${icons[type] || icons.info}</span><span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.classList.add('toast-hide');
+          toast.addEventListener('animationend', () => toast.remove(), { once: true });
+        }, 4000);
       }
-      // Also update the stat card
-      qs('#stat-user').textContent = user?.email || '—';
-      qs('#stat-user-sub').textContent = 'admin · authenticated via GitHub';
-    }
-    loadUserInfo();
 
-    // ── Load & render dashboard stats (from localStorage) ──
-    function loadStats() {
-      // Analytics events
-      try {
-        const events = JSON.parse(storageGet('gp_analytics_events') || '[]');
-        qs('#stat-events').textContent = events.length.toLocaleString();
-        if (events.length > 0) {
-          const latest = new Date(events[events.length - 1].ts);
-          qs('#stat-events-sub').textContent = `last: ${relativeTime(latest.toISOString())}`;
+      function relativeTime(isoString) {
+        const diff = Date.now() - new Date(isoString).getTime();
+        const sec = Math.floor(diff / 1000);
+        if (sec < 60) return `${sec}s ago`;
+        const min = Math.floor(sec / 60);
+        if (min < 60) return `${min} min ago`;
+        const hr = Math.floor(min / 60);
+        if (hr < 24) return `${hr} hour${hr !== 1 ? 's' : ''} ago`;
+        const days = Math.floor(hr / 24);
+        return `${days} day${days !== 1 ? 's' : ''} ago`;
+      }
+
+      function storageGet(key) {
+        try {
+          return localStorage.getItem(key);
+        } catch {
+          return null;
         }
-      } catch { qs('#stat-events').textContent = '0'; }
-
-      // Social post history
-      try {
-        const posts = JSON.parse(storageGet('gp_post_history') || '[]');
-        qs('#stat-posts').textContent = posts.length.toLocaleString();
-        if (posts.length > 0) {
-          const latest = new Date(posts[0].generatedAt);
-          qs('#stat-posts-sub').textContent = `last: ${relativeTime(latest.toISOString())}`;
+      }
+      function storageSet(key, value) {
+        try {
+          localStorage.setItem(key, value);
+          return true;
+        } catch {
+          return false;
         }
-      } catch { qs('#stat-posts').textContent = '0'; }
-    }
-    loadStats();
+      }
+      function storageRemove(...keys) {
+        keys.forEach((k) => {
+          try {
+            localStorage.removeItem(k);
+          } catch {}
+        });
+      }
 
-    // ── Gold Ticker ──────────────────────────────────────────
-    async function updateTicker() {
-      const badge     = qs('#ticker-badge');
-      const dot       = qs('#ticker-dot');
-      const tickerTxt = qs('#ticker-text');
-      try {
-        const res  = await fetch(API_GOLD_URL);
-        const data = await res.json();
-        const price = data.price ?? data.Price ?? null;
-        if (price) {
-          const formatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(price);
-          tickerTxt.textContent = `XAU: ${formatted}`;
-          dot.className = 'ticker-dot ticker-dot--green';
-          badge.classList.remove('ticker-loading');
-          storageSet('gp_ticker_ts', Date.now().toString());
-          // Update stat card
-          qs('#stat-gold').textContent = formatted;
-          const change = data.ch ?? data.change ?? null;
-          const changePct = data.chp ?? data.change_percent ?? null;
-          if (change !== null && changePct !== null) {
-            const sign = change >= 0 ? '+' : '';
-            qs('#stat-gold-sub').textContent = `${sign}${Number(change).toFixed(2)} (${sign}${Number(changePct).toFixed(2)}%)`;
-          } else {
-            qs('#stat-gold-sub').textContent = 'live spot price';
+      // ── Offline / online banner ──────────────────────────────
+      // (no backend — removed offline event listeners)
+
+      // ── Active nav link ──────────────────────────────────────
+      const currentPath = window.location.pathname.replace(/\/+$/, '') + '/';
+      document.querySelectorAll('.nav-link[data-path]').forEach((a) => {
+        const p = a.dataset.path.replace(/\/+$/, '') + '/';
+        if (currentPath === p || (p.endsWith('/admin/') && currentPath.endsWith('/admin/'))) {
+          a.classList.add('active');
+          a.setAttribute('aria-current', 'page');
+        }
+      });
+
+      // ── Sidebar mobile toggle ────────────────────────────────
+      const sidebar = qs('#sidebar');
+      const sidebarOverlay = qs('#sidebar-overlay');
+      qs('#sidebar-toggle').addEventListener('click', () => {
+        sidebar.classList.toggle('sidebar--open');
+        sidebarOverlay.classList.toggle('sidebar-overlay--visible');
+      });
+      sidebarOverlay.addEventListener('click', () => {
+        sidebar.classList.remove('sidebar--open');
+        sidebarOverlay.classList.remove('sidebar-overlay--visible');
+      });
+
+      // ── Logout ───────────────────────────────────────────────
+      qs('#logout-btn').addEventListener('click', async () => {
+        await supabaseLogout();
+        window.location.replace('./login/');
+      });
+
+      // ── Show user info from Supabase session ─────────────────
+      async function loadUserInfo() {
+        const session = await getSession();
+        if (!session) return;
+        const user = session.user;
+        const emailEl = qs('#sidebar-email');
+        const badgeEl = qs('#sidebar-role-badge');
+        const userEl = qs('#sidebar-user');
+        if (emailEl && user?.email) {
+          emailEl.textContent = user.email;
+          if (badgeEl) {
+            badgeEl.textContent = 'admin';
+            badgeEl.className = 'role-badge role-badge--admin';
           }
+          if (userEl) userEl.style.display = '';
         }
-      } catch {
-        tickerTxt.textContent = 'XAU: unavailable';
-        dot.className = 'ticker-dot ticker-dot--yellow';
-        qs('#stat-gold').textContent = 'Unavailable';
-        qs('#stat-gold-sub').textContent = 'could not fetch price';
+        // Also update the stat card
+        qs('#stat-user').textContent = user?.email || '—';
+        qs('#stat-user-sub').textContent = 'admin · authenticated via GitHub';
       }
-    }
-    updateTicker();
+      loadUserInfo();
 
-    // ── API Status checks ────────────────────────────────────
-    const SERVICES = [
-      { name: 'Gold API (gold-api.com)',     url: API_GOLD_URL },
-      { name: 'Exchange Rates (er-api.com)', url: API_FX_URL },
-    ];
+      // ── Load & render dashboard stats (from localStorage) ──
+      function loadStats() {
+        // Analytics events
+        try {
+          const events = JSON.parse(storageGet('gp_analytics_events') || '[]');
+          qs('#stat-events').textContent = events.length.toLocaleString();
+          if (events.length > 0) {
+            const latest = new Date(events[events.length - 1].ts);
+            qs('#stat-events-sub').textContent = `last: ${relativeTime(latest.toISOString())}`;
+          }
+        } catch {
+          qs('#stat-events').textContent = '0';
+        }
 
-    let lastCheckedAt = null;
-
-    async function checkService(service) {
-      const start = performance.now();
-      try {
-        const res  = await fetch(service.url, { cache: 'no-store', signal: AbortSignal.timeout(API_TIMEOUT_MS) });
-        const ms   = Math.round(performance.now() - start);
-        return { name: service.name, ok: res.ok, status: res.status, ms };
-      } catch {
-        const ms = Math.round(performance.now() - start);
-        return { name: service.name, ok: false, status: 'Error', ms };
+        // Social post history
+        try {
+          const posts = JSON.parse(storageGet('gp_post_history') || '[]');
+          qs('#stat-posts').textContent = posts.length.toLocaleString();
+          if (posts.length > 0) {
+            const latest = new Date(posts[0].generatedAt);
+            qs('#stat-posts-sub').textContent = `last: ${relativeTime(latest.toISOString())}`;
+          }
+        } catch {
+          qs('#stat-posts').textContent = '0';
+        }
       }
-    }
+      loadStats();
 
-    function renderApiTable(results) {
-      const tbody = qs('#api-table-body');
-      const now   = new Date().toLocaleTimeString();
-      tbody.innerHTML = results.map(r => `
+      // ── Gold Ticker ──────────────────────────────────────────
+      async function updateTicker() {
+        const badge = qs('#ticker-badge');
+        const dot = qs('#ticker-dot');
+        const tickerTxt = qs('#ticker-text');
+        try {
+          const res = await fetch(API_GOLD_URL);
+          const data = await res.json();
+          const price = data.price ?? data.Price ?? null;
+          if (price) {
+            const formatted = new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              maximumFractionDigits: 2,
+            }).format(price);
+            tickerTxt.textContent = `XAU: ${formatted}`;
+            dot.className = 'ticker-dot ticker-dot--green';
+            badge.classList.remove('ticker-loading');
+            storageSet('gp_ticker_ts', Date.now().toString());
+            // Update stat card
+            qs('#stat-gold').textContent = formatted;
+            const change = data.ch ?? data.change ?? null;
+            const changePct = data.chp ?? data.change_percent ?? null;
+            if (change !== null && changePct !== null) {
+              const sign = change >= 0 ? '+' : '';
+              qs('#stat-gold-sub').textContent =
+                `${sign}${Number(change).toFixed(2)} (${sign}${Number(changePct).toFixed(2)}%)`;
+            } else {
+              qs('#stat-gold-sub').textContent = 'live spot price';
+            }
+          }
+        } catch {
+          tickerTxt.textContent = 'XAU: unavailable';
+          dot.className = 'ticker-dot ticker-dot--yellow';
+          qs('#stat-gold').textContent = 'Unavailable';
+          qs('#stat-gold-sub').textContent = 'could not fetch price';
+        }
+      }
+      updateTicker();
+
+      // ── API Status checks ────────────────────────────────────
+      const SERVICES = [
+        { name: 'Gold API (gold-api.com)', url: API_GOLD_URL },
+        { name: 'Exchange Rates (er-api.com)', url: API_FX_URL },
+      ];
+
+      let lastCheckedAt = null;
+
+      async function checkService(service) {
+        const start = performance.now();
+        try {
+          const res = await fetch(service.url, {
+            cache: 'no-store',
+            signal: AbortSignal.timeout(API_TIMEOUT_MS),
+          });
+          const ms = Math.round(performance.now() - start);
+          return { name: service.name, ok: res.ok, status: res.status, ms };
+        } catch {
+          const ms = Math.round(performance.now() - start);
+          return { name: service.name, ok: false, status: 'Error', ms };
+        }
+      }
+
+      function renderApiTable(results) {
+        const tbody = qs('#api-table-body');
+        const now = new Date().toLocaleTimeString();
+        tbody.innerHTML = results
+          .map(
+            (r) => `
         <tr>
           <td>${r.name}</td>
           <td>${r.ok ? '🟢 ' + r.status + ' OK' : '🔴 ' + r.status}</td>
           <td>${now}</td>
           <td>${r.ms} ms</td>
         </tr>
-      `).join('');
-    }
+      `
+          )
+          .join('');
+      }
 
-    function updateHealthStat(results) {
-      const allOk = results.every(r => r.ok);
-      const el = qs('#stat-health');
-      if (el) el.textContent = allOk ? '🟢 All OK' : '🔴 Issues Detected';
-    }
+      function updateHealthStat(results) {
+        const allOk = results.every((r) => r.ok);
+        const el = qs('#stat-health');
+        if (el) el.textContent = allOk ? '🟢 All OK' : '🔴 Issues Detected';
+      }
 
-    async function runApiChecks() {
-      const tbody     = qs('#api-table-body');
-      const checkBtn  = qs('#api-check-btn');
-      const lastEl    = qs('#api-last-checked');
+      async function runApiChecks() {
+        const tbody = qs('#api-table-body');
+        const checkBtn = qs('#api-check-btn');
+        const lastEl = qs('#api-last-checked');
 
-      checkBtn.disabled = true;
-      tbody.innerHTML = `<tr><td colspan="4" style="color:var(--text-dim);text-align:center;padding:20px">
+        checkBtn.disabled = true;
+        tbody.innerHTML = `<tr><td colspan="4" style="color:var(--text-dim);text-align:center;padding:20px">
         <span class="inline-spinner" aria-hidden="true"></span> Checking…
       </td></tr>`;
 
-      const results = await Promise.all(SERVICES.map(checkService));
-      lastCheckedAt = Date.now();
+        const results = await Promise.all(SERVICES.map(checkService));
+        lastCheckedAt = Date.now();
 
-      renderApiTable(results);
-      updateHealthStat(results);
-      checkBtn.disabled = false;
-      lastEl.textContent = 'Last checked: just now';
-    }
+        renderApiTable(results);
+        updateHealthStat(results);
+        checkBtn.disabled = false;
+        lastEl.textContent = 'Last checked: just now';
+      }
 
-    runApiChecks();
-    qs('#api-check-btn').addEventListener('click', runApiChecks);
+      runApiChecks();
+      qs('#api-check-btn').addEventListener('click', runApiChecks);
 
-    setInterval(() => {
-      if (!lastCheckedAt) return;
-      const sec = Math.floor((Date.now() - lastCheckedAt) / 1000);
-      const lastEl = qs('#api-last-checked');
-      if (sec < 60) lastEl.textContent = `Last checked: ${sec}s ago`;
-      else lastEl.textContent = `Last checked: ${Math.floor(sec / 60)} min ago`;
-    }, 5000);
+      setInterval(() => {
+        if (!lastCheckedAt) return;
+        const sec = Math.floor((Date.now() - lastCheckedAt) / 1000);
+        const lastEl = qs('#api-last-checked');
+        if (sec < 60) lastEl.textContent = `Last checked: ${sec}s ago`;
+        else lastEl.textContent = `Last checked: ${Math.floor(sec / 60)} min ago`;
+      }, 5000);
 
-    // ── Quick Actions ────────────────────────────────────────
-    qs('#qa-force-refresh').addEventListener('click', () => {
-      storageSet('gp_force_refresh', Date.now().toString());
-      showToast('Cache cleared — prices will refresh on next visit', 'success');
-    });
+      // ── Quick Actions ────────────────────────────────────────
+      qs('#qa-force-refresh').addEventListener('click', () => {
+        storageSet('gp_force_refresh', Date.now().toString());
+        showToast('Cache cleared — prices will refresh on next visit', 'success');
+      });
 
-    qs('#qa-clear-cache').addEventListener('click', () => {
-      storageRemove('gp_cache_gold', 'goldprice_cache', 'gp_fx_cache');
-      showToast('Cache cleared', 'success');
-    });
-
-  </script>
-</body>
+      qs('#qa-clear-cache').addEventListener('click', () => {
+        storageRemove('gp_cache_gold', 'goldprice_cache', 'gp_fx_cache');
+        showToast('Cache cleared', 'success');
+      });
+    </script>
+  </body>
 </html>

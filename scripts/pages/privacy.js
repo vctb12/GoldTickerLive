@@ -12,42 +12,42 @@ const STATE = { lang: 'en' };
 
 const T = {
   en: {
-    'legal-hero-tag':   'Legal',
-    'legal-h1':         'Privacy Policy',
-    'legal-sub':        'How GoldPrices.app handles your data and privacy.',
-    'legal-toc-label':  'Sections',
-    'toc-overview':     'Overview',
-    'toc-data':         'Data Collected',
-    'toc-storage':      'Local Storage',
-    'toc-third':        'Third Parties',
-    'toc-analytics':    'Analytics',
-    'toc-rights':       'Your Rights',
-    'toc-security':     'Security',
-    'toc-children':     'Children',
-    'toc-changes':      'Changes',
-    'toc-contact':      'Contact',
+    'legal-hero-tag': 'Legal',
+    'legal-h1': 'Privacy Policy',
+    'legal-sub': 'How GoldPrices.app handles your data and privacy.',
+    'legal-toc-label': 'Sections',
+    'toc-overview': 'Overview',
+    'toc-data': 'Data Collected',
+    'toc-storage': 'Local Storage',
+    'toc-third': 'Third Parties',
+    'toc-analytics': 'Analytics',
+    'toc-rights': 'Your Rights',
+    'toc-security': 'Security',
+    'toc-children': 'Children',
+    'toc-changes': 'Changes',
+    'toc-contact': 'Contact',
     'meta-effective-label': 'Effective:',
-    'meta-updated-label':   'Last updated:',
-    'meta-lang-label':      'Also available in:',
+    'meta-updated-label': 'Last updated:',
+    'meta-lang-label': 'Also available in:',
   },
   ar: {
-    'legal-hero-tag':   'قانوني',
-    'legal-h1':         'سياسة الخصوصية',
-    'legal-sub':        'كيف تتعامل GoldPrices.app مع بياناتك وخصوصيتك.',
-    'legal-toc-label':  'الأقسام',
-    'toc-overview':     'نظرة عامة',
-    'toc-data':         'البيانات المجمّعة',
-    'toc-storage':      'التخزين المحلي',
-    'toc-third':        'أطراف ثالثة',
-    'toc-analytics':    'التحليلات',
-    'toc-rights':       'حقوقك',
-    'toc-security':     'الأمان',
-    'toc-children':     'الأطفال',
-    'toc-changes':      'التغييرات',
-    'toc-contact':      'التواصل',
+    'legal-hero-tag': 'قانوني',
+    'legal-h1': 'سياسة الخصوصية',
+    'legal-sub': 'كيف تتعامل GoldPrices.app مع بياناتك وخصوصيتك.',
+    'legal-toc-label': 'الأقسام',
+    'toc-overview': 'نظرة عامة',
+    'toc-data': 'البيانات المجمّعة',
+    'toc-storage': 'التخزين المحلي',
+    'toc-third': 'أطراف ثالثة',
+    'toc-analytics': 'التحليلات',
+    'toc-rights': 'حقوقك',
+    'toc-security': 'الأمان',
+    'toc-children': 'الأطفال',
+    'toc-changes': 'التغييرات',
+    'toc-contact': 'التواصل',
     'meta-effective-label': 'تاريخ السريان:',
-    'meta-updated-label':   'آخر تحديث:',
-    'meta-lang-label':      'متاح أيضًا بـ:',
+    'meta-updated-label': 'آخر تحديث:',
+    'meta-lang-label': 'متاح أيضًا بـ:',
   },
 };
 
@@ -58,7 +58,7 @@ function t(key) {
 function applyLanguage() {
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
-  Object.keys(T.en).forEach(key => {
+  Object.keys(T.en).forEach((key) => {
     const el = document.getElementById(key);
     if (el) el.textContent = t(key);
   });
@@ -70,7 +70,7 @@ function init() {
 
   const navCtrl = injectNav(STATE.lang, 0);
   injectBreadcrumbs('privacy');
-  navCtrl.getLangToggleButtons().forEach(btn => {
+  navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       localStorage.setItem('gp_pref_lang', STATE.lang);

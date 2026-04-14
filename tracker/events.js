@@ -35,25 +35,44 @@ export function bindCoreEvents() {
   _el.shareBtn?.addEventListener('click', () => {
     const spot = _cb.currentSpot();
     const txt = spot
-      ? `Gold: $${spot.toFixed(2)}/oz · UAE 24K: AED ${_cb.priceFor({ currency:'AED', karat:'24', unit:'gram', spot })?.toFixed(2)}/g · ${new Date().toUTCString()}`
+      ? `Gold: $${spot.toFixed(2)}/oz · UAE 24K: AED ${_cb.priceFor({ currency: 'AED', karat: '24', unit: 'gram', spot })?.toFixed(2)}/g · ${new Date().toUTCString()}`
       : 'Gold data unavailable';
-    navigator.clipboard?.writeText(txt).then(() => {
-      _cb.showToast('Brief copied to clipboard');
-    }).catch(() => {
-      _cb.showToast('Failed to copy to clipboard');
-    });
+    navigator.clipboard
+      ?.writeText(txt)
+      .then(() => {
+        _cb.showToast('Brief copied to clipboard');
+      })
+      .catch(() => {
+        _cb.showToast('Failed to copy to clipboard');
+      });
   });
 
   // Toolbar selects
-  _el.currency?.addEventListener('change', () => { _state.selectedCurrency = _el.currency.value; persistState(_state); _cb.renderAll(); });
-  _el.karat?.addEventListener('change', () => { _state.selectedKarat = _el.karat.value; persistState(_state); _cb.renderAll(); });
-  _el.unit?.addEventListener('change', () => { _state.selectedUnit = _el.unit.value; persistState(_state); _cb.renderAll(); });
-  _el.language?.addEventListener('change', () => { _state.lang = _el.language.value; persistState(_state); _cb.renderAll(); });
+  _el.currency?.addEventListener('change', () => {
+    _state.selectedCurrency = _el.currency.value;
+    persistState(_state);
+    _cb.renderAll();
+  });
+  _el.karat?.addEventListener('change', () => {
+    _state.selectedKarat = _el.karat.value;
+    persistState(_state);
+    _cb.renderAll();
+  });
+  _el.unit?.addEventListener('change', () => {
+    _state.selectedUnit = _el.unit.value;
+    persistState(_state);
+    _cb.renderAll();
+  });
+  _el.language?.addEventListener('change', () => {
+    _state.lang = _el.language.value;
+    persistState(_state);
+    _cb.renderAll();
+  });
 
   // Range pills
-  _el.rangePills?.forEach(pill => {
+  _el.rangePills?.forEach((pill) => {
     pill.addEventListener('click', () => {
-      _el.rangePills.forEach(p => p.classList.remove('is-active'));
+      _el.rangePills.forEach((p) => p.classList.remove('is-active'));
       pill.classList.add('is-active');
       _state.range = pill.dataset.range;
       persistState(_state);
@@ -71,7 +90,9 @@ export function bindCoreEvents() {
   });
 
   // Wire controls
-  _el.wireRefresh?.addEventListener('click', async () => { await _cb.refreshWire(); });
+  _el.wireRefresh?.addEventListener('click', async () => {
+    await _cb.refreshWire();
+  });
   _el.wireToggle?.addEventListener('click', () => {
     const track = _el.wireTrack;
     if (!track) return;
@@ -84,10 +105,10 @@ export function bindCoreEvents() {
   // Region tabs for compare board
   const regionTabs = document.querySelectorAll('.tracker-region-pill[data-region]');
   if (!_state.activeRegion) _state.activeRegion = 'gcc';
-  regionTabs.forEach(btn => {
+  regionTabs.forEach((btn) => {
     btn.addEventListener('click', () => {
       _state.activeRegion = btn.dataset.region;
-      regionTabs.forEach(b => b.classList.remove('is-active'));
+      regionTabs.forEach((b) => b.classList.remove('is-active'));
       btn.classList.add('is-active');
       _cb.renderMarkets();
     });
@@ -109,18 +130,30 @@ export function bindCoreEvents() {
   // Notifications enable
   _el.enableNotifications?.addEventListener('click', async () => {
     if (!('Notification' in window)) {
-      if (_el.alertPermission) _el.alertPermission.textContent = 'Browser notifications not supported.';
+      if (_el.alertPermission)
+        _el.alertPermission.textContent = 'Browser notifications not supported.';
       return;
     }
     const perm = await Notification.requestPermission();
-    if (_el.alertPermission) _el.alertPermission.textContent = perm === 'granted' ? 'Notifications enabled.' : 'Notifications blocked.';
+    if (_el.alertPermission)
+      _el.alertPermission.textContent =
+        perm === 'granted' ? 'Notifications enabled.' : 'Notifications blocked.';
   });
 
   // Preset save
   _el.savePreset?.addEventListener('click', () => {
     const name = _el.presetName?.value?.trim();
     if (!name) return;
-    _state.presets = [...(_state.presets || []), { name, currency: _state.selectedCurrency, karat: _state.selectedKarat, unit: _state.selectedUnit, range: _state.range }];
+    _state.presets = [
+      ...(_state.presets || []),
+      {
+        name,
+        currency: _state.selectedCurrency,
+        karat: _state.selectedKarat,
+        unit: _state.selectedUnit,
+        range: _state.range,
+      },
+    ];
     persistState(_state);
     _cb.renderPresets();
     _cb.showToast(`Preset "${name}" saved`);
@@ -129,11 +162,14 @@ export function bindCoreEvents() {
 
   // Copy URL
   _el.copyUrl?.addEventListener('click', () => {
-    navigator.clipboard?.writeText(window.location.href).then(() => {
-      _cb.showToast('Preset URL copied to clipboard');
-    }).catch(() => {
-      _cb.showToast('Failed to copy to clipboard');
-    });
+    navigator.clipboard
+      ?.writeText(window.location.href)
+      .then(() => {
+        _cb.showToast('Preset URL copied to clipboard');
+      })
+      .catch(() => {
+        _cb.showToast('Failed to copy to clipboard');
+      });
   });
 
   // Archive search
@@ -147,7 +183,7 @@ export function bindCoreEvents() {
     const targetDate = new Date(dateStr);
     let closest = null;
     let minDaysDiff = Infinity;
-    _state.history.forEach(r => {
+    _state.history.forEach((r) => {
       const d = r.date instanceof Date ? r.date : new Date(r.date);
       const daysDiff = Math.abs((d.getTime() - targetDate.getTime()) / (1000 * 60 * 60 * 24));
       if (daysDiff < minDaysDiff) {
@@ -156,10 +192,17 @@ export function bindCoreEvents() {
       }
     });
     if (closest) {
-      const aed24 = _cb.priceFor({ currency: 'AED', karat: '24', unit: 'gram', spot: closest.spot });
-      const lookupDateIso = closest.date instanceof Date ? closest.date.toISOString().slice(0, 10) : closest.date;
+      const aed24 = _cb.priceFor({
+        currency: 'AED',
+        karat: '24',
+        unit: 'gram',
+        spot: closest.spot,
+      });
+      const lookupDateIso =
+        closest.date instanceof Date ? closest.date.toISOString().slice(0, 10) : closest.date;
       const daysAway = Math.round(minDaysDiff);
-      const daysNote = daysAway === 0 ? 'exact match' : `${daysAway} day${daysAway !== 1 ? 's' : ''} away`;
+      const daysNote =
+        daysAway === 0 ? 'exact match' : `${daysAway} day${daysAway !== 1 ? 's' : ''} away`;
       _el.lookupResults.innerHTML = `
         <div class="tracker-result-grid">
           <div class="tracker-result-card"><div class="tracker-result-k">Found date</div><div class="tracker-result-v">${lookupDateIso}</div><div class="tracker-result-s">${daysNote}</div></div>
@@ -168,7 +211,8 @@ export function bindCoreEvents() {
           <div class="tracker-result-card"><div class="tracker-result-k">Source</div><div class="tracker-result-v"><span class="tracker-source-badge tracker-source-badge--${closest.source}">${closest.source}</span></div><div class="tracker-result-s">${closest.granularity || 'daily'}</div></div>
         </div>`;
     } else {
-      _el.lookupResults.innerHTML = '<p style="color:var(--tp-text-muted)">No data available for that date. Archive covers 2019–present.</p>';
+      _el.lookupResults.innerHTML =
+        '<p style="color:var(--tp-text-muted)">No data available for that date. Archive covers 2019–present.</p>';
     }
   });
 
@@ -177,8 +221,19 @@ export function bindCoreEvents() {
   _el.marketSort?.addEventListener('change', () => _cb.renderMarkets());
 
   // Planner inputs
-  [_el.budgetAmount, _el.budgetFee, _el.positionEntry, _el.positionQty, _el.accumMonthly, _el.accumTarget,
-   _el.jewelryWeight, _el.jewelryKarat, _el.jewelryMaking, _el.jewelryPremium, _el.jewelryVat].forEach(inp => {
+  [
+    _el.budgetAmount,
+    _el.budgetFee,
+    _el.positionEntry,
+    _el.positionQty,
+    _el.accumMonthly,
+    _el.accumTarget,
+    _el.jewelryWeight,
+    _el.jewelryKarat,
+    _el.jewelryMaking,
+    _el.jewelryPremium,
+    _el.jewelryVat,
+  ].forEach((inp) => {
     inp?.addEventListener('input', () => _cb.renderPlanners());
     inp?.addEventListener('change', () => _cb.renderPlanners());
   });

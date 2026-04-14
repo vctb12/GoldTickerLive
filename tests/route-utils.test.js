@@ -21,16 +21,22 @@ const BASE_PATH = '/Gold-Prices/';
 // Subset of countries for testing (mirrors config/countries.js structure)
 const COUNTRIES = [
   {
-    code: 'AE', slug: 'uae', nameEn: 'United Arab Emirates',
-    currency: 'AED', cities: [
+    code: 'AE',
+    slug: 'uae',
+    nameEn: 'United Arab Emirates',
+    currency: 'AED',
+    cities: [
       { slug: 'dubai', nameEn: 'Dubai' },
       { slug: 'sharjah', nameEn: 'Sharjah' },
       { slug: 'abu-dhabi', nameEn: 'Abu Dhabi' },
     ],
   },
   {
-    code: 'SA', slug: 'saudi-arabia', nameEn: 'Saudi Arabia',
-    currency: 'SAR', cities: [
+    code: 'SA',
+    slug: 'saudi-arabia',
+    nameEn: 'Saudi Arabia',
+    currency: 'SAR',
+    cities: [
       { slug: 'riyadh', nameEn: 'Riyadh' },
       { slug: 'jeddah', nameEn: 'Jeddah' },
     ],
@@ -52,11 +58,20 @@ const KARATS = [
 function buildRoute({ country, city, karat, page } = {}) {
   if (page) {
     const staticRoutes = {
-      home: '', calculator: 'calculator.html', tracker: 'tracker.html',
-      shops: 'shops.html', order: 'order-gold', history: 'gold-price-history',
-      search: 'search', xpost: 'social/x-post-generator.html',
-      learn: 'learn.html', insights: 'insights.html', invest: 'invest.html',
-      methodology: 'methodology.html', terms: 'terms.html', privacy: 'privacy.html',
+      home: '',
+      calculator: 'calculator.html',
+      tracker: 'tracker.html',
+      shops: 'shops.html',
+      order: 'order-gold',
+      history: 'gold-price-history',
+      search: 'search',
+      xpost: 'social/x-post-generator.html',
+      learn: 'learn.html',
+      insights: 'insights.html',
+      invest: 'invest.html',
+      methodology: 'methodology.html',
+      terms: 'terms.html',
+      privacy: 'privacy.html',
     };
     const segment = staticRoutes[page];
     if (segment === undefined) return null;
@@ -84,25 +99,29 @@ function buildCanonicalURL(path, domain = 'https://vctb12.github.io') {
 
 function validateCountry(slug) {
   if (!slug || typeof slug !== 'string') return { valid: false, error: 'Country slug is required' };
-  const country = COUNTRIES.find(c => c.slug === slug);
+  const country = COUNTRIES.find((c) => c.slug === slug);
   if (!country) return { valid: false, error: `Unknown country: ${slug}` };
-  if (!country.cities || country.cities.length === 0) return { valid: false, error: `Country "${slug}" has no city pages` };
+  if (!country.cities || country.cities.length === 0)
+    return { valid: false, error: `Country "${slug}" has no city pages` };
   return { valid: true, country };
 }
 
 function validateCity(countrySlug, citySlug) {
   const cr = validateCountry(countrySlug);
   if (!cr.valid) return cr;
-  if (!citySlug || typeof citySlug !== 'string') return { valid: false, error: 'City slug is required' };
-  const city = cr.country.cities.find(c => c.slug === citySlug);
-  if (!city) return { valid: false, error: `Unknown city "${citySlug}" in country "${countrySlug}"` };
+  if (!citySlug || typeof citySlug !== 'string')
+    return { valid: false, error: 'City slug is required' };
+  const city = cr.country.cities.find((c) => c.slug === citySlug);
+  if (!city)
+    return { valid: false, error: `Unknown city "${citySlug}" in country "${countrySlug}"` };
   return { valid: true, country: cr.country, city };
 }
 
 function validateKarat(karatCode) {
-  if (!karatCode || typeof karatCode !== 'string') return { valid: false, error: 'Karat code is required' };
+  if (!karatCode || typeof karatCode !== 'string')
+    return { valid: false, error: 'Karat code is required' };
   const code = karatCode.replace('-karat', '');
-  const karat = KARATS.find(k => k.code === code);
+  const karat = KARATS.find((k) => k.code === code);
   if (!karat) return { valid: false, error: `Unknown karat: ${karatCode}` };
   return { valid: true, karat };
 }
@@ -111,9 +130,21 @@ function validateRoute({ country, city, karat } = {}) {
   if (karat && !city) return { valid: false, error: 'Karat pages require a city' };
   if (city && !country) return { valid: false, error: 'City pages require a country' };
   let countryObj, cityObj, karatObj;
-  if (country) { const cr = validateCountry(country); if (!cr.valid) return cr; countryObj = cr.country; }
-  if (city) { const cir = validateCity(country, city); if (!cir.valid) return cir; cityObj = cir.city; }
-  if (karat) { const kr = validateKarat(karat); if (!kr.valid) return kr; karatObj = kr.karat; }
+  if (country) {
+    const cr = validateCountry(country);
+    if (!cr.valid) return cr;
+    countryObj = cr.country;
+  }
+  if (city) {
+    const cir = validateCity(country, city);
+    if (!cir.valid) return cir;
+    cityObj = cir.city;
+  }
+  if (karat) {
+    const kr = validateKarat(karat);
+    if (!kr.valid) return kr;
+    karatObj = kr.karat;
+  }
   return { valid: true, country: countryObj, city: cityObj, karat: karatObj };
 }
 
@@ -166,10 +197,7 @@ describe('buildRoute', () => {
 
 describe('buildShopsRoute', () => {
   test('builds correct shops URL', () => {
-    assert.equal(
-      buildShopsRoute('uae', 'dubai'),
-      '/Gold-Prices/uae/dubai/gold-shops'
-    );
+    assert.equal(buildShopsRoute('uae', 'dubai'), '/Gold-Prices/uae/dubai/gold-shops');
   });
 });
 

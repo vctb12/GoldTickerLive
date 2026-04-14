@@ -9,18 +9,18 @@ const WIRE_CONFIG = {
 function safeParseWirePayload(payload) {
   const articles = Array.isArray(payload?.articles) ? payload.articles : [];
   return articles
-    .map(item => ({
+    .map((item) => ({
       title: item.title || item.seendate || 'Gold headline',
       url: item.url || item.url_mobile || '',
       domain: item.domain || item.sourcecountry || '',
       seenDate: item.seendate || item.date || '',
     }))
-    .filter(it => it.title)
+    .filter((it) => it.title)
     .slice(0, WIRE_CONFIG.maxrecords);
 }
 
 export async function fetchWire(existingItems = []) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const callbackName = `__wire_${Date.now().toString(36)}`;
     const script = document.createElement('script');
     let settled = false;
@@ -52,7 +52,7 @@ export async function fetchWire(existingItems = []) {
       }
     }, WIRE_CONFIG.timeoutMs);
 
-    window[callbackName] = payload => {
+    window[callbackName] = (payload) => {
       clearTimeout(timeoutId);
       const items = safeParseWirePayload(payload);
       cleanup();
@@ -78,8 +78,10 @@ export function renderWire(els, state) {
   }
 
   const html = state.wireItems
-    .map(item => {
-      const domain = item.domain ? `<span class="tracker-wire-domain">${escapeHtml(item.domain)}</span>` : '';
+    .map((item) => {
+      const domain = item.domain
+        ? `<span class="tracker-wire-domain">${escapeHtml(item.domain)}</span>`
+        : '';
       const content = `${escapeHtml(item.title)}${domain ? ' · ' + domain : ''}`;
       return item.url
         ? `<a href="${escapeHtml(item.url)}" class="tracker-wire-item" target="_blank" rel="noopener noreferrer">${content}</a>`

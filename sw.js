@@ -69,48 +69,49 @@ const PRECACHE_URLS = [
 ];
 
 // External origins that should bypass the cache (live data APIs)
-const BYPASS_ORIGINS = [
-  'gold-api.com',
-  'open.er-api.com',
-];
+const BYPASS_ORIGINS = ['gold-api.com', 'open.er-api.com'];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // INSTALL — pre-cache static shell
 // ─────────────────────────────────────────────────────────────────────────────
-self.addEventListener('install', event => {
+self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache =>
-      cache.addAll(PRECACHE_URLS).catch(err => {
-        // Don't fail install if some assets are missing (dev environment)
-        console.warn('[SW] Pre-cache partial failure:', err.message);
-      })
-    ).then(() => self.skipWaiting())
+    caches
+      .open(CACHE_NAME)
+      .then((cache) =>
+        cache.addAll(PRECACHE_URLS).catch((err) => {
+          // Don't fail install if some assets are missing (dev environment)
+          console.warn('[SW] Pre-cache partial failure:', err.message);
+        })
+      )
+      .then(() => self.skipWaiting())
   );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ACTIVATE — clean up old caches
 // ─────────────────────────────────────────────────────────────────────────────
-self.addEventListener('activate', event => {
+self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+    caches
+      .keys()
+      .then((keys) =>
+        Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
       )
-    ).then(() => self.clients.claim())
+      .then(() => self.clients.claim())
   );
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
 // FETCH — routing strategy
 // ─────────────────────────────────────────────────────────────────────────────
-self.addEventListener('fetch', event => {
+self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
   // Always bypass for non-GET or external API calls
   if (request.method !== 'GET') return;
-  if (BYPASS_ORIGINS.some(o => url.hostname.includes(o))) return;
+  if (BYPASS_ORIGINS.some((o) => url.hostname.includes(o))) return;
   // Bypass chrome-extension and non-http(s) schemes
   if (!url.protocol.startsWith('http')) return;
 
@@ -180,11 +181,13 @@ async function cacheFirstWithUpdate(request) {
 }
 
 function fetchAndCache(request) {
-  fetch(request).then(response => {
-    if (response.ok) {
-      caches.open(CACHE_NAME).then(cache => cache.put(request, response));
-    }
-  }).catch(() => {});
+  fetch(request)
+    .then((response) => {
+      if (response.ok) {
+        caches.open(CACHE_NAME).then((cache) => cache.put(request, response));
+      }
+    })
+    .catch(() => {});
 }
 
 function shouldCacheRequest(request, url) {
@@ -194,12 +197,6 @@ function shouldCacheRequest(request, url) {
   // Query-param requests can explode cache cardinality; skip.
   if (url.search) return false;
 
-  const cacheableDestinations = new Set([
-    'style',
-    'script',
-    'image',
-    'font',
-    'manifest',
-  ]);
+  const cacheableDestinations = new Set(['style', 'script', 'image', 'font', 'manifest']);
   return cacheableDestinations.has(request.destination);
 }

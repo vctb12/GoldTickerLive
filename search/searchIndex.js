@@ -26,7 +26,7 @@ function buildIndex() {
     });
 
     // Cities
-    for (const city of (c.cities || [])) {
+    for (const city of c.cities || []) {
       entries.push({
         type: 'city',
         slug: city.slug,
@@ -55,19 +55,68 @@ function buildIndex() {
 
   // Static pages
   entries.push(
-    { type: 'page', label: 'Live Gold Tracker', labelAr: 'تتبع الذهب المباشر', url: '/tracker.html', icon: '📊', keywords: ['tracker', 'live', 'real-time', 'تتبع'] },
-    { type: 'page', label: 'Gold Price Calculator', labelAr: 'حاسبة أسعار الذهب', url: '/calculator.html', icon: '🧮', keywords: ['calculator', 'calc', 'compute', 'حاسبة'] },
-    { type: 'page', label: 'Gold Price History & Charts', labelAr: 'تاريخ أسعار الذهب', url: '/gold-price-history/', icon: '📈', keywords: ['history', 'chart', 'historical', 'تاريخ'] },
-    { type: 'page', label: 'Order Gold', labelAr: 'اطلب الذهب', url: '/order-gold/', icon: '🛒', keywords: ['buy', 'order', 'purchase', 'شراء', 'طلب'] },
-    { type: 'page', label: 'Gold Shops Directory', labelAr: 'دليل محلات الذهب', url: '/shops.html', icon: '🏪', keywords: ['shops', 'dealers', 'jewellers', 'محلات', 'بائعين'] },
-    { type: 'page', label: 'Gold Price Methodology', labelAr: 'منهجية أسعار الذهب', url: '/methodology.html', icon: '📋', keywords: ['methodology', 'how', 'منهجية'] },
-    { type: 'page', label: 'Gold Insights & Analysis', labelAr: 'تحليلات الذهب', url: '/insights.html', icon: '💡', keywords: ['insights', 'analysis', 'news', 'تحليل'] },
+    {
+      type: 'page',
+      label: 'Live Gold Tracker',
+      labelAr: 'تتبع الذهب المباشر',
+      url: '/tracker.html',
+      icon: '📊',
+      keywords: ['tracker', 'live', 'real-time', 'تتبع'],
+    },
+    {
+      type: 'page',
+      label: 'Gold Price Calculator',
+      labelAr: 'حاسبة أسعار الذهب',
+      url: '/calculator.html',
+      icon: '🧮',
+      keywords: ['calculator', 'calc', 'compute', 'حاسبة'],
+    },
+    {
+      type: 'page',
+      label: 'Gold Price History & Charts',
+      labelAr: 'تاريخ أسعار الذهب',
+      url: '/gold-price-history/',
+      icon: '📈',
+      keywords: ['history', 'chart', 'historical', 'تاريخ'],
+    },
+    {
+      type: 'page',
+      label: 'Order Gold',
+      labelAr: 'اطلب الذهب',
+      url: '/order-gold/',
+      icon: '🛒',
+      keywords: ['buy', 'order', 'purchase', 'شراء', 'طلب'],
+    },
+    {
+      type: 'page',
+      label: 'Gold Shops Directory',
+      labelAr: 'دليل محلات الذهب',
+      url: '/shops.html',
+      icon: '🏪',
+      keywords: ['shops', 'dealers', 'jewellers', 'محلات', 'بائعين'],
+    },
+    {
+      type: 'page',
+      label: 'Gold Price Methodology',
+      labelAr: 'منهجية أسعار الذهب',
+      url: '/methodology.html',
+      icon: '📋',
+      keywords: ['methodology', 'how', 'منهجية'],
+    },
+    {
+      type: 'page',
+      label: 'Gold Insights & Analysis',
+      labelAr: 'تحليلات الذهب',
+      url: '/insights.html',
+      icon: '💡',
+      keywords: ['insights', 'analysis', 'news', 'تحليل'],
+    }
   );
 
   // Shops
-  for (const s of (Array.isArray(SHOPS) ? SHOPS : [])) {
+  for (const s of Array.isArray(SHOPS) ? SHOPS : []) {
     if (!s.name) continue;
-    const country = COUNTRIES.find(c => c.code === s.countryCode);
+    const country = COUNTRIES.find((c) => c.code === s.countryCode);
     entries.push({
       type: 'shop',
       slug: s.id || s.name.toLowerCase().replace(/\s+/g, '-'),
@@ -75,7 +124,14 @@ function buildIndex() {
       labelAr: s.nameAr || s.name,
       url: `/shops.html#${s.id || ''}`,
       icon: '🏪',
-      keywords: [s.name, s.nameAr || '', s.city || '', s.market || '', ...(s.specialties || []), country?.nameEn || ''],
+      keywords: [
+        s.name,
+        s.nameAr || '',
+        s.city || '',
+        s.market || '',
+        ...(s.specialties || []),
+        country?.nameEn || '',
+      ],
     });
   }
 

@@ -8,4 +8,5 @@
 - Any fallback/estimated data must be clearly labeled.
 - When reviewing code, inspect relevant files before proposing architecture changes.
 - Always separate review, plan, debug, and build modes.
-- `buildFilters()` on the shops page already validates each dropdown value and resets invalid ones to `'all'` — lean on that safety net rather than duplicating validation upstream.
+- `buildFilters()` on the shops page already validates each dropdown value and resets invalid ones
+  to `'all'` — lean on that safety net rather than duplicating validation upstream.

@@ -13,25 +13,43 @@
 
 'use strict';
 
-const fs   = require('fs');
+const fs = require('fs');
 const path = require('path');
 
 // ── CLI args ────────────────────────────────────────────────────────────────
-const args      = process.argv.slice(2);
-const dirArg    = args.indexOf('--dir');
-const rootDir   = dirArg >= 0 ? path.resolve(args[dirArg + 1]) : path.resolve(__dirname, '..');
+const args = process.argv.slice(2);
+const dirArg = args.indexOf('--dir');
+const rootDir = dirArg >= 0 ? path.resolve(args[dirArg + 1]) : path.resolve(__dirname, '..');
 const failOnErr = args.includes('--fail-on-error');
 
 // ── Asset extensions to skip (not navigational links) ───────────────────────
 const ASSET_EXTENSIONS = [
-  '.js', '.mjs', '.css', '.png', '.jpg', '.jpeg', '.gif',
-  '.webp', '.svg', '.ico', '.json', '.xml', '.txt', '.pdf',
-  '.woff', '.woff2', '.ttf', '.eot', '.mp4', '.webm', '.mp3',
+  '.js',
+  '.mjs',
+  '.css',
+  '.png',
+  '.jpg',
+  '.jpeg',
+  '.gif',
+  '.webp',
+  '.svg',
+  '.ico',
+  '.json',
+  '.xml',
+  '.txt',
+  '.pdf',
+  '.woff',
+  '.woff2',
+  '.ttf',
+  '.eot',
+  '.mp4',
+  '.webm',
+  '.mp3',
 ];
 
 function isAsset(url) {
   const lower = url.toLowerCase().split('?')[0].split('#')[0];
-  return ASSET_EXTENSIONS.some(ext => lower.endsWith(ext));
+  return ASSET_EXTENSIONS.some((ext) => lower.endsWith(ext));
 }
 
 // ── Strip deployment base path so absolute links resolve under rootDir ───────
@@ -73,12 +91,16 @@ function extractLinks(html) {
     if (!href) continue;
     // Skip absolute URLs, data URIs, special protocols, and JS template expressions
     if (
-      href.startsWith('http') || href.startsWith('//') ||
-      href.startsWith('data:') || href.startsWith('mailto:') ||
-      href.startsWith('tel:') || href.startsWith('javascript:') ||
+      href.startsWith('http') ||
+      href.startsWith('//') ||
+      href.startsWith('data:') ||
+      href.startsWith('mailto:') ||
+      href.startsWith('tel:') ||
+      href.startsWith('javascript:') ||
       href.startsWith('vbscript:') ||
       href.includes('${')
-    ) continue;
+    )
+      continue;
     // Skip asset files — these are not page-navigation links
     if (isAsset(href)) continue;
     links.add(href);
@@ -101,7 +123,9 @@ function fileExists(p) {
     if (stat.isFile()) return true;
     // Directory — look for index.html
     return fs.existsSync(path.join(p, 'index.html'));
-  } catch { return false; }
+  } catch {
+    return false;
+  }
 }
 
 // ── Main ─────────────────────────────────────────────────────────────────────
@@ -110,8 +134,8 @@ let broken = 0;
 const report = [];
 
 for (const file of htmlFiles) {
-  const html    = fs.readFileSync(file, 'utf8');
-  const links   = extractLinks(html);
+  const html = fs.readFileSync(file, 'utf8');
+  const links = extractLinks(html);
   const relFile = path.relative(rootDir, file);
 
   for (const link of links) {
@@ -126,7 +150,7 @@ for (const file of htmlFiles) {
 console.log(`Checked ${htmlFiles.length} HTML files`);
 
 if (broken === 0) {
-  console.log(`✅  check-links: all internal links resolved.`);
+  console.log('✅  check-links: all internal links resolved.');
   process.exit(0);
 } else {
   console.error(`\n❌  check-links: ${broken} broken link(s) found:\n`);

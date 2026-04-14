@@ -12,7 +12,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'partial',
     featured: true,
-    notes: 'Cluster listing for independent stores in the traditional gold souk district in Deira. One of the highest concentrations of gold retail in the world.'
+    notes:
+      'Cluster listing for independent stores in the traditional gold souk district in Deira. One of the highest concentrations of gold retail in the world.',
   },
   {
     id: 'ae-dubai-gold-souk-bullion',
@@ -26,7 +27,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Specialist bullion and investment-grade gold outlets concentrated around the traditional souk. Primarily serves wholesale and serious retail buyers.'
+    notes:
+      'Specialist bullion and investment-grade gold outlets concentrated around the traditional souk. Primarily serves wholesale and serious retail buyers.',
   },
   {
     id: 'ae-sharjah-gold-souk',
@@ -40,7 +42,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Sharjah\'s Central Souq (Blue Souk) houses a large concentration of gold and jewellery retailers across two towers. Known for competitive pricing and variety.'
+    notes:
+      "Sharjah's Central Souq (Blue Souk) houses a large concentration of gold and jewellery retailers across two towers. Known for competitive pricing and variety.",
   },
   {
     id: 'ae-abu-dhabi-madinat-zayed',
@@ -54,7 +57,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'partial',
     featured: true,
-    notes: 'Major Abu Dhabi destination with multiple brands and independent retailers across several floors. Popular for bridal and occasion sets.'
+    notes:
+      'Major Abu Dhabi destination with multiple brands and independent retailers across several floors. Popular for bridal and occasion sets.',
   },
   {
     id: 'ae-abu-dhabi-hamdan-street',
@@ -68,7 +72,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Mid-city retail strip with standalone jewellery boutiques and chain outlets. Good variety of contemporary and traditional designs.'
+    notes:
+      'Mid-city retail strip with standalone jewellery boutiques and chain outlets. Good variety of contemporary and traditional designs.',
   },
 
   // ── Saudi Arabia ────────────────────────────────────────────────────────────
@@ -84,7 +89,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'partial',
     featured: true,
-    notes: 'Market-area cluster near the city center. One of the busiest jewellery shopping destinations in Riyadh, with dozens of shops in close proximity.'
+    notes:
+      'Market-area cluster near the city center. One of the busiest jewellery shopping destinations in Riyadh, with dozens of shops in close proximity.',
   },
   {
     id: 'sa-riyadh-olaya-gold',
@@ -98,7 +104,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Upscale commercial district with high-end jewellery boutiques and international brand outlets alongside local designers.'
+    notes:
+      'Upscale commercial district with high-end jewellery boutiques and international brand outlets alongside local designers.',
   },
   {
     id: 'sa-jeddah-balad-jewelry',
@@ -112,7 +119,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Historic district with UNESCO World Heritage status, home to long-established jewellery stores. Known for heritage and traditional Gulf designs.'
+    notes:
+      'Historic district with UNESCO World Heritage status, home to long-established jewellery stores. Known for heritage and traditional Gulf designs.',
   },
   {
     id: 'sa-dammam-gold-market',
@@ -126,7 +134,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Eastern Province hub with a concentration of jewellery shops and bullion dealers serving Dammam and Al-Khobar residents.'
+    notes:
+      'Eastern Province hub with a concentration of jewellery shops and bullion dealers serving Dammam and Al-Khobar residents.',
   },
 
   // ── Kuwait ──────────────────────────────────────────────────────────────────
@@ -142,7 +151,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Traditional souk area with both jewellery counters and bullion-focused shops. Near the historic Mubarakiya market.'
+    notes:
+      'Traditional souk area with both jewellery counters and bullion-focused shops. Near the historic Mubarakiya market.',
   },
   {
     id: 'kw-kuwait-city-avenues-gold',
@@ -156,7 +166,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'partial',
     featured: false,
-    notes: 'Mall-based luxury and mid-range jewellery retailers at one of Kuwait\'s largest shopping destinations. Includes international and regional brands.'
+    notes:
+      "Mall-based luxury and mid-range jewellery retailers at one of Kuwait's largest shopping destinations. Includes international and regional brands.",
   },
 
   // ── Qatar ───────────────────────────────────────────────────────────────────
@@ -172,7 +183,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: true,
-    notes: 'Central market listing with mixed brand and independent storefronts. The souq is adjacent to Souq Waqif and sees heavy tourist and local traffic.'
+    notes:
+      'Central market listing with mixed brand and independent storefronts. The souq is adjacent to Souq Waqif and sees heavy tourist and local traffic.',
   },
   {
     id: 'qa-doha-villaggio-gold',
@@ -186,7 +198,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Upmarket mall retail cluster covering international jewellery chains and regional brands. Catered toward higher-end buyers.'
+    notes:
+      'Upmarket mall retail cluster covering international jewellery chains and regional brands. Catered toward higher-end buyers.',
   },
 
   // ── Bahrain ─────────────────────────────────────────────────────────────────
@@ -202,7 +215,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Well-known destination for wedding and occasion jewellery with multiple floors of shops and competitive pricing.'
+    notes:
+      'Well-known destination for wedding and occasion jewellery with multiple floors of shops and competitive pricing.',
   },
   {
     id: 'bh-manama-souk-gold',
@@ -216,7 +230,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Traditional souk area in the heart of Manama with jewellery and bullion dealers. Popular with Saudi visitors crossing the King Fahd Causeway.'
+    notes:
+      'Traditional souk area in the heart of Manama with jewellery and bullion dealers. Popular with Saudi visitors crossing the King Fahd Causeway.',
   },
 
   // ── Oman ────────────────────────────────────────────────────────────────────
@@ -232,7 +247,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Historic souq cluster with stores focused on traditional Omani design styles and regional jewellery craftsmanship.'
+    notes:
+      'Historic souq cluster with stores focused on traditional Omani design styles and regional jewellery craftsmanship.',
   },
   {
     id: 'om-muscat-seeb-gold',
@@ -246,7 +262,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Residential-commercial area near Muscat International Airport. Practical shopping destination for everyday and investment gold.'
+    notes:
+      'Residential-commercial area near Muscat International Airport. Practical shopping destination for everyday and investment gold.',
   },
 
   // ── Egypt ───────────────────────────────────────────────────────────────────
@@ -262,7 +279,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: true,
-    notes: 'Historic Cairo market dating to the 14th century with many multi-generation jewellery stores. Known globally for Egyptian-style gold craftsmanship.'
+    notes:
+      'Historic Cairo market dating to the 14th century with many multi-generation jewellery stores. Known globally for Egyptian-style gold craftsmanship.',
   },
   {
     id: 'eg-cairo-wekalet-el-balah',
@@ -276,7 +294,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Downtown Cairo area known as a wholesale and retail hub for plain-weight gold. Primarily serves both trade buyers and individual customers.'
+    notes:
+      'Downtown Cairo area known as a wholesale and retail hub for plain-weight gold. Primarily serves both trade buyers and individual customers.',
   },
   {
     id: 'eg-alexandria-attarine-gold',
@@ -290,7 +309,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Alexandria\'s main jewellery market district with a mix of traditional craftsmen and modern retail boutiques.'
+    notes:
+      "Alexandria's main jewellery market district with a mix of traditional craftsmen and modern retail boutiques.",
   },
 
   // ── Jordan ──────────────────────────────────────────────────────────────────
@@ -306,7 +326,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'City-center listing used by local buyers comparing multiple nearby shops. Concentrated on Gold Street in downtown Amman.'
+    notes:
+      'City-center listing used by local buyers comparing multiple nearby shops. Concentrated on Gold Street in downtown Amman.',
   },
   {
     id: 'jo-amman-mecca-mall-gold',
@@ -320,7 +341,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'partial',
     featured: false,
-    notes: 'West Amman mall cluster with a dedicated jewellery wing. Mix of local Jordanian brands and regional chains serving the middle and upper-income market.'
+    notes:
+      'West Amman mall cluster with a dedicated jewellery wing. Mix of local Jordanian brands and regional chains serving the middle and upper-income market.',
   },
 
   // ── Morocco ─────────────────────────────────────────────────────────────────
@@ -336,7 +358,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Urban retail area with boutique and mid-size jewellery businesses. Popular for bridal sets and modern designs.'
+    notes:
+      'Urban retail area with boutique and mid-size jewellery businesses. Popular for bridal sets and modern designs.',
   },
   {
     id: 'ma-marrakech-souk-jeld',
@@ -350,7 +373,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Marrakech medina area with jewellery artisans and traders. Known for Berber-influenced and traditional Moroccan designs. Mix of silver and gold.'
+    notes:
+      'Marrakech medina area with jewellery artisans and traders. Known for Berber-influenced and traditional Moroccan designs. Mix of silver and gold.',
   },
 
   // ── India ───────────────────────────────────────────────────────────────────
@@ -366,7 +390,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'partial',
     featured: true,
-    notes: 'India\'s largest gold market, handling an estimated 20% of national gold trade. A key hub for wholesale and retail gold across all purities.'
+    notes:
+      "India's largest gold market, handling an estimated 20% of national gold trade. A key hub for wholesale and retail gold across all purities.",
   },
   {
     id: 'in-delhi-karol-bagh-gold',
@@ -380,7 +405,8 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'limited',
     featured: false,
-    notes: 'Major jewellery destination in Delhi NCR. Known for bridal and wedding jewellery, intricate craftsmanship, and competitive pricing.'
+    notes:
+      'Major jewellery destination in Delhi NCR. Known for bridal and wedding jewellery, intricate craftsmanship, and competitive pricing.',
   },
   {
     id: 'in-chennai-t-nagar-gold',
@@ -394,6 +420,7 @@ export const SHOPS = [
     website: '',
     detailsAvailability: 'partial',
     featured: false,
-    notes: 'T. Nagar is one of the world\'s highest-density gold retail areas. Chennai is famous for 22K jewellery, and T. Nagar is its commercial epicenter.'
+    notes:
+      "T. Nagar is one of the world's highest-density gold retail areas. Chennai is famous for 22K jewellery, and T. Nagar is its commercial epicenter.",
   },
 ];

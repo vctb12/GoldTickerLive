@@ -4,15 +4,18 @@
 
 Create non-negotiable product rules for trust language before any broad visual or UX revamp.
 
-This phase ensures the site remains explicit about what prices represent and what they do **not** represent.
+This phase ensures the site remains explicit about what prices represent and what they do **not**
+represent.
 
 ## Scope
 
-- Copy and labeling standards for all pages that show prices, rates, listings, or market comparisons.
+- Copy and labeling standards for all pages that show prices, rates, listings, or market
+  comparisons.
 - Shared trust wording patterns for banners, cards, and detail panels.
 - Verification checklist for PR review.
 
 Out of scope:
+
 - Major layout redesigns
 - Framework migrations
 - Large structural rewrites
@@ -73,6 +76,7 @@ Avoid ambiguous terms:
 ### Tracker pages
 
 Must include:
+
 - source-layer label (live/cached/fallback)
 - methodology link
 - spot-vs-retail distinction
@@ -81,6 +85,7 @@ Must include:
 ### Shops directory and listing detail modal
 
 Must include:
+
 - listing-type clarity (store vs market area)
 - details availability badge (full/partial/limited)
 - “confirm directly with seller” disclaimer
@@ -89,6 +94,7 @@ Must include:
 ### Country/city/market guide pages
 
 Must include:
+
 - clear separation between benchmark prices and local retail variability
 - links to methodology and relevant tracker/shops pages
 

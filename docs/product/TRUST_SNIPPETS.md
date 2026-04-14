@@ -1,6 +1,7 @@
 # Trust Copy Snippets (Reusable)
 
-Use these snippets as defaults for banners, cards, and modals. Adapt wording to context without changing meaning.
+Use these snippets as defaults for banners, cards, and modals. Adapt wording to context without
+changing meaning.
 
 ## A) Spot/reference estimate banner
 
@@ -19,7 +20,8 @@ Use these snippets as defaults for banners, cards, and modals. Adapt wording to 
 
 ## D) Shops directory disclaimer
 
-"Directory listings may represent market areas or dealer clusters unless direct business details are shown."
+"Directory listings may represent market areas or dealer clusters unless direct business details are
+shown."
 
 ## E) Seller confirmation CTA
 

@@ -1,12 +1,16 @@
 # Product Requirements Document
 
 ## Product
+
 Gold-Prices website
 
 ## Mission
-Help users quickly and confidently understand gold prices, historical movement, market context, and where/how to buy.
+
+Help users quickly and confidently understand gold prices, historical movement, market context, and
+where/how to buy.
 
 ## Primary users
+
 - Retail users checking today’s prices
 - Users comparing countries/cities/karats
 - Users looking for gold shops/markets
@@ -14,6 +18,7 @@ Help users quickly and confidently understand gold prices, historical movement, 
 - SEO users landing on country/city/guide pages
 
 ## Core jobs to be done
+
 - See current gold price clearly
 - Compare karats and currencies
 - Browse historical data with confidence
@@ -22,6 +27,7 @@ Help users quickly and confidently understand gold prices, historical movement, 
 - Use calculators and educational pages without confusion
 
 ## Product pillars
+
 - Trust and clarity
 - Speed
 - Mobile-first UX
@@ -29,6 +35,7 @@ Help users quickly and confidently understand gold prices, historical movement, 
 - Clean information architecture
 
 ## Core sections
+
 - Homepage
 - Tracker / historical prices
 - Country pages
@@ -39,6 +46,7 @@ Help users quickly and confidently understand gold prices, historical movement, 
 - Learn / methodology / guides
 
 ## Non-negotiables
+
 - Label estimated, fallback, and derived values clearly
 - Preserve internal linking between pages
 - No fake “live” claims without support
