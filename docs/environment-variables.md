@@ -2,72 +2,56 @@
 
 ## Required Variables
 
-| Variable            | Required     | Description                                     | Example                       |
-| ------------------- | ------------ | ----------------------------------------------- | ----------------------------- |
-| `GOLD_API_KEY`      | Yes          | GoldAPI.io API key for live XAU/USD spot prices | `goldapi-abc123xyz`           |
-| `JWT_SECRET`        | Yes (server) | Secret for signing JWT admin tokens             | `[random 64-char hex string]` |
-| `ADMIN_PASSWORD`    | Yes (server) | Admin panel password for server-side auth       | `[strong password]`           |
-| `SUPABASE_URL`      | Yes          | Supabase project URL                            | `https://xxxxx.supabase.co`   |
-| `SUPABASE_ANON_KEY` | Yes          | Supabase anonymous/public API key               | `eyJhbGciOi...`               |
-| `ALLOWED_EMAIL`     | Yes          | Admin email whitelist for GitHub OAuth          | `admin@example.com`           |
+| Variable | Required | Description | Example |
+|----------|----------|-------------|---------|
+| `SUPABASE_URL` | Yes | Supabase project URL | `https://xxxxx.supabase.co` |
+| `SUPABASE_ANON_KEY` | Yes | Supabase anonymous/public API key | `eyJhbGciOi...` |
+| `ALLOWED_EMAIL` | Yes | Admin email whitelist for GitHub OAuth | `admin@example.com` |
+| `GOLD_API_KEY` | Yes | gold-api.com API key for live XAU/USD spot prices | `goldapi-abc123xyz` |
 
-## Optional Variables
+## Optional Variables (Express Server / Self-Hosted)
 
-| Variable             | Required | Description                             | Example               |
-| -------------------- | -------- | --------------------------------------- | --------------------- |
-| `METALS_API_KEY`     | Optional | Metals-API fallback key for gold prices | `metals-api-key-123`  |
-| `GA4_MEASUREMENT_ID` | Optional | Google Analytics 4 measurement ID       | `G-XXXXXXXXXX`        |
-| `ADSENSE_CLIENT_ID`  | Optional | Google AdSense publisher ID             | `ca-pub-1234567890`   |
-| `CORS_ORIGINS`       | Optional | Allowed CORS origins (comma-separated)  | `https://example.com` |
-| `NODE_ENV`           | Optional | Environment mode                        | `production`          |
-| `PORT`               | Optional | Server port (default: 3000)             | `3000`                |
+| Variable | Required | Description | Example |
+|----------|----------|-------------|---------|
+| `JWT_SECRET` | Server only | Secret for signing JWT admin tokens | `[random 64-char hex string]` |
+| `ADMIN_PASSWORD` | Server only | Admin panel password for Express server auth | `[strong password]` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server/CI | Supabase service-role key (bypasses RLS) | `eyJhbGciOi...` |
+| `STORAGE_BACKEND` | No | `file` (default) or `supabase` | `supabase` |
+| `GA4_MEASUREMENT_ID` | No | Google Analytics 4 measurement ID | `G-XXXXXXXXXX` |
+| `ADSENSE_CLIENT_ID` | No | Google AdSense publisher ID | `ca-pub-1234567890` |
+| `CORS_ORIGINS` | No | Allowed CORS origins (comma-separated) | `https://example.com` |
+| `NODE_ENV` | No | Environment mode | `production` |
+| `PORT` | No | Server port (default: 3000) | `3000` |
 
 ## GitHub Actions Secrets
 
-These are configured as repository secrets in GitHub:
+These are configured as repository secrets in GitHub (Settings → Secrets → Actions):
 
-| Secret Name           | Used By            | Maps To                       |
-| --------------------- | ------------------ | ----------------------------- |
-| `GOLD_API_KEY`        | Multiple workflows | `GOLD_API_KEY` env var        |
-| `CONSUMER_KEY`        | Tweet workflows    | `TWITTER_API_KEY`             |
-| `CONSUMER_SECRET`     | Tweet workflows    | `TWITTER_API_SECRET`          |
-| `ACCESS_TOKEN`        | Tweet workflows    | `TWITTER_ACCESS_TOKEN`        |
-| `ACCESS_TOKEN_SECRET` | Tweet workflows    | `TWITTER_ACCESS_TOKEN_SECRET` |
-| `DISCORD_WEBHOOK_URL` | Discord workflow   | `DISCORD_WEBHOOK_URL`         |
-| `TELEGRAM_BOT_TOKEN`  | Telegram workflow  | `TELEGRAM_BOT_TOKEN`          |
-| `TELEGRAM_CHAT_ID`    | Telegram workflow  | `TELEGRAM_CHAT_ID`            |
+| Secret Name | Used By | Purpose |
+|-------------|---------|---------|
+| `GOLD_API_KEY` | Multiple workflows | Gold price API key (api.gold-api.com) |
+| `CONSUMER_KEY` | Tweet workflows | Twitter/X OAuth 1.0a API Key |
+| `CONSUMER_SECRET` | Tweet workflows | Twitter/X OAuth 1.0a API Secret |
+| `ACCESS_TOKEN` | Tweet workflows | Twitter/X Access Token (read-write) |
+| `ACCESS_TOKEN_SECRET` | Tweet workflows | Twitter/X Access Token Secret |
+| `SUPABASE_URL` | DB sync, Python workflows | Supabase project URL |
+| `SUPABASE_SERVICE_ROLE_KEY` | DB sync, Python workflows | Supabase service-role key (admin bypass) |
+| `TELEGRAM_BOT_TOKEN` | Telegram workflow | Telegram Bot API token |
+| `TELEGRAM_CHANNEL_ID` | Telegram workflow | Telegram channel/group ID |
+| `DISCORD_WEBHOOK_URL` | Discord workflow | Discord webhook URL |
+| `SUPABASE_MCP_TOKEN` | MCP setup (optional) | Supabase MCP bearer token |
+
+> **Note**: Twitter workflow files map these secrets to `TWITTER_API_KEY`, `TWITTER_API_SECRET`, etc. env vars internally. The GitHub secret names do NOT have a `TWITTER_` prefix.
 
 ## .env.example
 
-```env
-# Gold Price API
-GOLD_API_KEY=your_goldapi_key_here
-METALS_API_KEY=your_metals_api_key_here
-
-# Server Auth
-JWT_SECRET=change_this_to_a_random_64_char_hex_string
-ADMIN_PASSWORD=change_this_to_a_strong_password
-
-# Supabase
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your_supabase_anon_key_here
-ALLOWED_EMAIL=your_admin_email@example.com
-
-# Analytics & Ads (optional)
-GA4_MEASUREMENT_ID=G-XXXXXXXXXX
-ADSENSE_CLIENT_ID=ca-pub-XXXXXXXXXX
-
-# Server Config
-NODE_ENV=development
-PORT=3000
-CORS_ORIGINS=http://localhost:5000,http://localhost:3000
-```
+See [`.env.example`](../.env.example) in the repo root for a complete template.
 
 ## Notes
 
 - Never commit `.env` files to the repository
-- The `.env.example` file should be committed as a template
+- The `.env.example` file is committed as a template
 - Supabase anon key is safe to expose client-side (RLS protects data)
 - All API keys for external services must be in GitHub Secrets for CI/CD workflows
-- In production (GitHub Pages), client-side code does NOT use env vars — API keys are in GitHub
-  Secrets only
+- In production (GitHub Pages), client-side code does NOT use env vars — API keys are in GitHub Secrets only
+- `STORAGE_BACKEND=supabase` switches the Express server's repository layer from file-based to Supabase

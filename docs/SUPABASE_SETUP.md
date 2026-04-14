@@ -38,6 +38,9 @@ This creates:
 | `public.shops`         | Gold shop directory with confidence scores and verification status |
 | `public.audit_logs`    | Immutable record of all admin actions                              |
 | `public.user_profiles` | Admin role/name data linked to `auth.users`                        |
+| `public.site_settings` | Key-value store for admin-configurable site settings               |
+| `public.gold_prices`   | Cached gold price snapshots (per-country, per-karat)               |
+| `public.fetch_logs`    | Log of every gold-price fetch attempt (status, source, errors)     |
 
 ---
 
@@ -45,11 +48,14 @@ This creates:
 
 All tables have RLS **enabled**. The policies enforce:
 
-| Table           | Unauthenticated    | Authenticated user | Admin           |
-| --------------- | ------------------ | ------------------ | --------------- |
-| `shops`         | Read verified only | Read all           | Full CRUD       |
-| `audit_logs`    | No access          | Read own           | Read all        |
-| `user_profiles` | No access          | Read own profile   | Read/update all |
+| Table           | Unauthenticated    | Authenticated user | Admin              |
+| --------------- | ------------------ | ------------------ | ------------------ |
+| `shops`         | Read verified only | Read all           | Full CRUD          |
+| `audit_logs`    | No access          | Read own           | Read all           |
+| `user_profiles` | No access          | Read own profile   | Read/update all    |
+| `site_settings` | Public read        | Public read        | Admin write        |
+| `gold_prices`   | No access          | No access          | Service-role only  |
+| `fetch_logs`    | No access          | No access          | Service-role only  |
 
 Writes to `audit_logs` are performed server-side using the **service-role key**, which bypasses RLS.
 Never expose the service-role key to the browser.
@@ -121,19 +127,23 @@ See [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) for the full storage abstraction d
 
 ---
 
-## 7. Authentication via Supabase Auth (Optional)
+## 7. Authentication via Supabase Auth (Current)
 
-If you want to replace the current JWT-based login with Supabase Auth:
+The admin panel uses **Supabase GitHub OAuth** for authentication:
 
-1. Enable _Email_ provider in Supabase _Authentication → Providers_.
-2. Create your admin user in Supabase _Authentication → Users_.
-3. Insert a matching row in `public.user_profiles` with `role = 'admin'`.
-4. In `admin.html`, replace the current login flow with `supabase.auth.signInWithPassword(...)`.
-5. The admin page should call `supabase.auth.getSession()` on load and redirect to login if no
-   session.
+1. Enable **GitHub** provider in Supabase → Authentication → Providers.
+2. Create a GitHub OAuth App at https://github.com/settings/developers and set the callback URL to your Supabase project's auth callback URL.
+3. Enter the GitHub OAuth Client ID and Secret in the Supabase provider settings.
+4. Set `ALLOWED_EMAIL` in `admin/supabase-config.js` to match the email on your GitHub account.
 
-The existing JWT flow in `lib/auth.js` and `server/routes/admin/index.js` can continue to be used
-until you're ready to switch.
+The login flow:
+- User clicks "Sign in with GitHub" on `/admin/login/`
+- Supabase redirects to GitHub for OAuth
+- On success, Supabase creates a session
+- `admin/supabase-auth.js` checks `session.user.email === ALLOWED_EMAIL`
+- If the email doesn't match, the user is signed out and shown an error
+
+The legacy JWT flow in `lib/auth.js` and `server/routes/admin/index.js` is still available for self-hosted Express deployments.
 
 ---
 
