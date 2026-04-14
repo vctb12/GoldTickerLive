@@ -63,11 +63,11 @@ Generated: 2026-04-14
 - **Fix**: Add `loading="lazy"` to any below-the-fold images if more images are added in the future.
 - **Impact**: Negligible — the site has very few images.
 
-### 5. AdSense Placeholder Publisher ID
+### 5. AdSense Publisher ID
 
-- **Severity**: Low
+- **Severity**: Info — verify this is the correct publisher ID
 - **File**: `components/adSlot.js:10`
-- **Issue**: `AD_PUBLISHER_ID = 'ca-pub-XXXXXXXXXX'` is a placeholder.
+- **Issue**: `AD_PUBLISHER_ID` has been set to `ca-pub-8578581906562588` (no longer a placeholder `ca-pub-XXXXXXXXXX`).
 - **Root cause**: AdSense account has not been configured.
 - **Fix**: Replace with real Google AdSense publisher ID when available.
 - **Impact**: Ad slots render but show no ads (zero revenue).
@@ -82,6 +82,24 @@ Generated: 2026-04-14
 - **Fix**: Legacy pages have canonical tags. Consider adding 301 redirects from legacy to
   hierarchical pages via `.htaccess` rules.
 - **Impact**: Potential duplicate content for SEO — mitigated by canonical tags.
+
+### 7. Admin Dashboard Shows localStorage Stats Only
+
+- **Severity**: Medium
+- **File**: `admin/index.html`
+- **Issue**: Dashboard stat cards pull data from localStorage (e.g. `gp_analytics_events`, `gp_post_history`) instead of Supabase tables.
+- **Root cause**: Dashboard was built before Supabase integration was completed for all pages.
+- **Fix**: Migrate dashboard to query Supabase for shop counts, latest gold price, and recent activity.
+- **Impact**: Admin sees stale/empty stats unless they've used those features in the same browser.
+
+### 8. Five Admin Pages Are UI Shells (No Backend)
+
+- **Severity**: Medium
+- **Files**: `admin/pricing/`, `admin/orders/`, `admin/content/`, `admin/social/`, `admin/analytics/`
+- **Issue**: These pages store data in localStorage only — not Supabase. Data doesn't persist across browsers/devices.
+- **Root cause**: Pages were built as UI prototypes before Supabase migration.
+- **Fix**: Create Supabase tables (`pricing_overrides`, `orders`, `blog_posts`) and migrate each page's storage layer.
+- **Impact**: Admin work in these pages is lost when clearing browser data or using a different browser.
 
 ---
 
