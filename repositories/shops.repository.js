@@ -20,35 +20,35 @@
 
 'use strict';
 
-const fs   = require('fs');
+const fs = require('fs');
 const path = require('path');
 const { getSupabaseClient } = require('../lib/supabase-client');
 
-const SHOPS_FILE  = path.join(__dirname, '../data/shops-data.json');
-const getBackend  = () => process.env.STORAGE_BACKEND || 'file';
+const SHOPS_FILE = path.join(__dirname, '../data/shops-data.json');
+const getBackend = () => process.env.STORAGE_BACKEND || 'file';
 
 // ---------------------------------------------------------------------------
 // File-store helpers
 // ---------------------------------------------------------------------------
 
 function _ensureFile() {
-    const dir = path.dirname(SHOPS_FILE);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    if (!fs.existsSync(SHOPS_FILE)) fs.writeFileSync(SHOPS_FILE, '[]');
+  const dir = path.dirname(SHOPS_FILE);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  if (!fs.existsSync(SHOPS_FILE)) fs.writeFileSync(SHOPS_FILE, '[]');
 }
 
 function _readFile() {
-    _ensureFile();
-    try {
-        return JSON.parse(fs.readFileSync(SHOPS_FILE, 'utf8'));
-    } catch {
-        return [];
-    }
+  _ensureFile();
+  try {
+    return JSON.parse(fs.readFileSync(SHOPS_FILE, 'utf8'));
+  } catch {
+    return [];
+  }
 }
 
 function _writeFile(shops) {
-    _ensureFile();
-    fs.writeFileSync(SHOPS_FILE, JSON.stringify(shops, null, 2));
+  _ensureFile();
+  fs.writeFileSync(SHOPS_FILE, JSON.stringify(shops, null, 2));
 }
 
 // ---------------------------------------------------------------------------
@@ -56,52 +56,52 @@ function _writeFile(shops) {
 // ---------------------------------------------------------------------------
 
 async function _supabaseGetAll() {
-    const sb = getSupabaseClient(true);
-    if (!sb) throw new Error('Supabase is not configured (missing env vars or package).');
-    const { data, error } = await sb.from('shops').select('*');
-    if (error) throw new Error(`Supabase error: ${error.message}`);
-    return data || [];
+  const sb = getSupabaseClient(true);
+  if (!sb) throw new Error('Supabase is not configured (missing env vars or package).');
+  const { data, error } = await sb.from('shops').select('*');
+  if (error) throw new Error(`Supabase error: ${error.message}`);
+  return data || [];
 }
 
 async function _supabaseGetById(id) {
-    const sb = getSupabaseClient(true);
-    if (!sb) throw new Error('Supabase is not configured.');
-    const { data, error } = await sb.from('shops').select('*').eq('id', id).maybeSingle();
-    if (error) throw new Error(`Supabase error: ${error.message}`);
-    return data;
+  const sb = getSupabaseClient(true);
+  if (!sb) throw new Error('Supabase is not configured.');
+  const { data, error } = await sb.from('shops').select('*').eq('id', id).maybeSingle();
+  if (error) throw new Error(`Supabase error: ${error.message}`);
+  return data;
 }
 
 async function _supabaseInsert(shop) {
-    const sb = getSupabaseClient(true);
-    if (!sb) throw new Error('Supabase is not configured.');
-    const { data, error } = await sb.from('shops').insert([shop]).select().single();
-    if (error) throw new Error(`Supabase error: ${error.message}`);
-    return data;
+  const sb = getSupabaseClient(true);
+  if (!sb) throw new Error('Supabase is not configured.');
+  const { data, error } = await sb.from('shops').insert([shop]).select().single();
+  if (error) throw new Error(`Supabase error: ${error.message}`);
+  return data;
 }
 
 async function _supabaseUpdate(id, updates) {
-    const sb = getSupabaseClient(true);
-    if (!sb) throw new Error('Supabase is not configured.');
-    const { data, error } = await sb.from('shops').update(updates).eq('id', id).select().single();
-    if (error) throw new Error(`Supabase error: ${error.message}`);
-    return data;
+  const sb = getSupabaseClient(true);
+  if (!sb) throw new Error('Supabase is not configured.');
+  const { data, error } = await sb.from('shops').update(updates).eq('id', id).select().single();
+  if (error) throw new Error(`Supabase error: ${error.message}`);
+  return data;
 }
 
 async function _supabaseDelete(id) {
-    const sb = getSupabaseClient(true);
-    if (!sb) throw new Error('Supabase is not configured.');
-    const { data, error } = await sb.from('shops').delete().eq('id', id).select('id');
-    if (error) throw new Error(`Supabase error: ${error.message}`);
-    // Return whether a row was actually deleted
-    return Array.isArray(data) && data.length > 0;
+  const sb = getSupabaseClient(true);
+  if (!sb) throw new Error('Supabase is not configured.');
+  const { data, error } = await sb.from('shops').delete().eq('id', id).select('id');
+  if (error) throw new Error(`Supabase error: ${error.message}`);
+  // Return whether a row was actually deleted
+  return Array.isArray(data) && data.length > 0;
 }
 
 async function _supabaseInsertMany(shops) {
-    const sb = getSupabaseClient(true);
-    if (!sb) throw new Error('Supabase is not configured.');
-    const { data, error } = await sb.from('shops').insert(shops).select();
-    if (error) throw new Error(`Supabase error: ${error.message}`);
-    return data || [];
+  const sb = getSupabaseClient(true);
+  if (!sb) throw new Error('Supabase is not configured.');
+  const { data, error } = await sb.from('shops').insert(shops).select();
+  if (error) throw new Error(`Supabase error: ${error.message}`);
+  return data || [];
 }
 
 // ---------------------------------------------------------------------------
@@ -113,8 +113,8 @@ async function _supabaseInsertMany(shops) {
  * @returns {Promise<object[]>}
  */
 async function getAll() {
-    if (getBackend() === 'supabase') return _supabaseGetAll();
-    return _readFile();
+  if (getBackend() === 'supabase') return _supabaseGetAll();
+  return _readFile();
 }
 
 /**
@@ -123,9 +123,9 @@ async function getAll() {
  * @returns {Promise<object|null>}
  */
 async function getById(id) {
-    if (getBackend() === 'supabase') return _supabaseGetById(id);
-    const shops = _readFile();
-    return shops.find(s => s.id === id) || null;
+  if (getBackend() === 'supabase') return _supabaseGetById(id);
+  const shops = _readFile();
+  return shops.find((s) => s.id === id) || null;
 }
 
 /**
@@ -134,11 +134,11 @@ async function getById(id) {
  * @returns {Promise<object>}  the saved shop
  */
 async function insert(shop) {
-    if (getBackend() === 'supabase') return _supabaseInsert(shop);
-    const shops = _readFile();
-    shops.push(shop);
-    _writeFile(shops);
-    return shop;
+  if (getBackend() === 'supabase') return _supabaseInsert(shop);
+  const shops = _readFile();
+  shops.push(shop);
+  _writeFile(shops);
+  return shop;
 }
 
 /**
@@ -148,13 +148,13 @@ async function insert(shop) {
  * @returns {Promise<object|null>}  the updated shop, or null if not found
  */
 async function update(id, updates) {
-    if (getBackend() === 'supabase') return _supabaseUpdate(id, updates);
-    const shops = _readFile();
-    const idx = shops.findIndex(s => s.id === id);
-    if (idx === -1) return null;
-    shops[idx] = { ...shops[idx], ...updates };
-    _writeFile(shops);
-    return shops[idx];
+  if (getBackend() === 'supabase') return _supabaseUpdate(id, updates);
+  const shops = _readFile();
+  const idx = shops.findIndex((s) => s.id === id);
+  if (idx === -1) return null;
+  shops[idx] = { ...shops[idx], ...updates };
+  _writeFile(shops);
+  return shops[idx];
 }
 
 /**
@@ -163,15 +163,15 @@ async function update(id, updates) {
  * @returns {Promise<boolean>}  true if deleted, false if not found
  */
 async function remove(id) {
-    if (getBackend() === 'supabase') {
-        return _supabaseDelete(id); // returns true/false based on affected rows
-    }
-    const shops = _readFile();
-    const idx = shops.findIndex(s => s.id === id);
-    if (idx === -1) return false;
-    shops.splice(idx, 1);
-    _writeFile(shops);
-    return true;
+  if (getBackend() === 'supabase') {
+    return _supabaseDelete(id); // returns true/false based on affected rows
+  }
+  const shops = _readFile();
+  const idx = shops.findIndex((s) => s.id === id);
+  if (idx === -1) return false;
+  shops.splice(idx, 1);
+  _writeFile(shops);
+  return true;
 }
 
 /**
@@ -180,11 +180,11 @@ async function remove(id) {
  * @returns {Promise<object[]>}  the saved shops
  */
 async function insertMany(shops) {
-    if (getBackend() === 'supabase') return _supabaseInsertMany(shops);
-    const existing = _readFile();
-    existing.push(...shops);
-    _writeFile(existing);
-    return shops;
+  if (getBackend() === 'supabase') return _supabaseInsertMany(shops);
+  const existing = _readFile();
+  existing.push(...shops);
+  _writeFile(existing);
+  return shops;
 }
 
 /**
@@ -193,10 +193,12 @@ async function insertMany(shops) {
  * @param {object[]} shops
  */
 async function replaceAll(shops) {
-    if (getBackend() === 'supabase') {
-        throw new Error('replaceAll is not supported with the Supabase backend. Use insert/update/remove.');
-    }
-    _writeFile(shops);
+  if (getBackend() === 'supabase') {
+    throw new Error(
+      'replaceAll is not supported with the Supabase backend. Use insert/update/remove.'
+    );
+  }
+  _writeFile(shops);
 }
 
 /**
@@ -204,18 +206,18 @@ async function replaceAll(shops) {
  * @returns {Promise<{total: number, verified: number, byCountry: object}>}
  */
 async function getStats() {
-    const shops = await getAll();
-    const byCountry = {};
-    for (const s of shops) {
-        const key = s.country || s.countryCode || 'Unknown';
-        byCountry[key] = (byCountry[key] || 0) + 1;
-    }
-    return {
-        total:    shops.length,
-        verified: shops.filter(s => s.verified).length,
-        featured: shops.filter(s => s.featured).length,
-        byCountry,
-    };
+  const shops = await getAll();
+  const byCountry = {};
+  for (const s of shops) {
+    const key = s.country || s.countryCode || 'Unknown';
+    byCountry[key] = (byCountry[key] || 0) + 1;
+  }
+  return {
+    total: shops.length,
+    verified: shops.filter((s) => s.verified).length,
+    featured: shops.filter((s) => s.featured).length,
+    byCountry,
+  };
 }
 
 module.exports = { getAll, getById, insert, update, remove, insertMany, replaceAll, getStats };

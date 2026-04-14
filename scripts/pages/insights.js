@@ -11,8 +11,8 @@ import { injectTicker, updateTickerLang } from '../../components/ticker.js';
 import { injectBreadcrumbs } from '../../components/breadcrumbs.js';
 import { CONSTANTS } from '../../config/index.js';
 
-const AED_PEG      = CONSTANTS.AED_PEG;       // 3.6725
-const TROY_GRAMS   = CONSTANTS.TROY_OZ_GRAMS; // 31.1035
+const AED_PEG = CONSTANTS.AED_PEG; // 3.6725
+const TROY_GRAMS = CONSTANTS.TROY_OZ_GRAMS; // 31.1035
 const KARAT_22_PURITY = 22 / 24;
 
 const STATE = {
@@ -40,53 +40,53 @@ const STATE = {
 const CONTENT = {
   en: {
     // Hero
-    'hero-tag':               'Market Intelligence',
-    'insights-h1':            'Gold Market Insights',
-    'insights-sub':           'Analysis, price drivers and context for GCC gold buyers — updated weekly',
+    'hero-tag': 'Market Intelligence',
+    'insights-h1': 'Gold Market Insights',
+    'insights-sub': 'Analysis, price drivers and context for GCC gold buyers — updated weekly',
 
     // Price bar
-    'price-bar-label':        'Live Gold Price',
+    'price-bar-label': 'Live Gold Price',
 
     // Featured article
-    'featured-tag-label':     'Featured Analysis',
-    'featured-date':          'March 2026',
-    'featured-read-time':     '4 min read',
+    'featured-tag-label': 'Featured Analysis',
+    'featured-date': 'March 2026',
+    'featured-read-time': '4 min read',
 
     // Insight grid heading
-    'insights-grid-h2':       'Gold Market Guides',
-    'insights-grid-sub':      'Essential reading for GCC gold buyers',
+    'insights-grid-h2': 'Gold Market Guides',
+    'insights-grid-sub': 'Essential reading for GCC gold buyers',
 
     // Stats
-    'stats-title':            'Gold by the Numbers',
-    'stats-sub':              'Key facts for MENA gold buyers',
+    'stats-title': 'Gold by the Numbers',
+    'stats-sub': 'Key facts for MENA gold buyers',
 
     // Related tools
-    'related-tools-title':    'Related Tools',
+    'related-tools-title': 'Related Tools',
   },
   ar: {
     // Hero
-    'hero-tag':               'ذكاء السوق',
-    'insights-h1':            'رؤى سوق الذهب',
-    'insights-sub':           'تحليلات ومحركات الأسعار وسياق السوق لمشتري الذهب في دول الخليج — تحديث أسبوعي',
+    'hero-tag': 'ذكاء السوق',
+    'insights-h1': 'رؤى سوق الذهب',
+    'insights-sub': 'تحليلات ومحركات الأسعار وسياق السوق لمشتري الذهب في دول الخليج — تحديث أسبوعي',
 
     // Price bar
-    'price-bar-label':        'سعر الذهب المباشر',
+    'price-bar-label': 'سعر الذهب المباشر',
 
     // Featured article
-    'featured-tag-label':     'تحليل مميز',
-    'featured-date':          'مارس ٢٠٢٦',
-    'featured-read-time':     'قراءة ٤ دقائق',
+    'featured-tag-label': 'تحليل مميز',
+    'featured-date': 'مارس ٢٠٢٦',
+    'featured-read-time': 'قراءة ٤ دقائق',
 
     // Insight grid heading
-    'insights-grid-h2':       'أدلة سوق الذهب',
-    'insights-grid-sub':      'قراءة أساسية لمشتري الذهب في الخليج',
+    'insights-grid-h2': 'أدلة سوق الذهب',
+    'insights-grid-sub': 'قراءة أساسية لمشتري الذهب في الخليج',
 
     // Stats
-    'stats-title':            'الذهب بالأرقام',
-    'stats-sub':              'حقائق رئيسية لمشتري الذهب في منطقة الشرق الأوسط وشمال أفريقيا',
+    'stats-title': 'الذهب بالأرقام',
+    'stats-sub': 'حقائق رئيسية لمشتري الذهب في منطقة الشرق الأوسط وشمال أفريقيا',
 
     // Related tools
-    'related-tools-title':    'أدوات ذات صلة',
+    'related-tools-title': 'أدوات ذات صلة',
   },
 };
 
@@ -101,7 +101,7 @@ function applyLang(lang) {
     if (el) el.textContent = text;
   });
   document.documentElement.lang = lang;
-  document.documentElement.dir  = lang === 'ar' ? 'rtl' : 'ltr';
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -117,8 +117,8 @@ function calcAed22kPerGram(usdPerOz) {
 }
 
 function updatePriceBar(priceUsd, stale) {
-  const valEl   = document.getElementById('price-bar-value');
-  const aedEl   = document.getElementById('price-bar-aed');
+  const valEl = document.getElementById('price-bar-value');
+  const aedEl = document.getElementById('price-bar-aed');
   const freshEl = document.getElementById('price-bar-freshness');
 
   if (!valEl) return;
@@ -128,7 +128,11 @@ function updatePriceBar(priceUsd, stale) {
     valEl.classList.toggle('price-bar-stale', !!stale);
 
     const aed22 = calcAed22kPerGram(priceUsd);
-    if (aedEl) aedEl.textContent = aed22.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (aedEl)
+      aedEl.textContent = aed22.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
   }
 
   if (freshEl) {
@@ -173,14 +177,14 @@ async function init() {
   if (urlLang === 'ar' || urlLang === 'en') STATE.lang = urlLang;
 
   document.documentElement.lang = STATE.lang;
-  document.documentElement.dir  = STATE.lang === 'ar' ? 'rtl' : 'ltr';
+  document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
 
   const navResult = injectNav(STATE.lang, 0);
   injectBreadcrumbs('insights');
   injectFooter(STATE.lang, 0);
   injectTicker(STATE.lang, 0);
 
-  navResult.getLangToggleButtons().forEach(btn => {
+  navResult.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       cache.savePreference('lang', STATE.lang);

@@ -2,7 +2,8 @@
 
 ## Summary
 
-Gold Prices is a **static multi-page front-end** served via GitHub Pages or an optional Express server.  
+Gold Prices is a **static multi-page front-end** served via GitHub Pages or an optional Express
+server.  
 The Express layer adds a JWT-secured admin API and server-side data persistence.
 
 ---
@@ -50,6 +51,7 @@ The Express layer adds a JWT-secured admin API and server-side data persistence.
 ## Data Flow
 
 ### Public pages (browser-only)
+
 ```
 HTML page
   → page-specific JS (home.js, tracker-pro.js, calculator.js, …)
@@ -58,6 +60,7 @@ HTML page
 ```
 
 ### Admin API (Express server)
+
 ```
 admin.html  (GitHub-token auth, reads data/shops.js via GitHub API)
             │
@@ -83,10 +86,10 @@ The `repositories/` layer lets you **swap in Supabase** without rewriting every 
 
 Set `STORAGE_BACKEND` in `.env`:
 
-| Value       | Behavior                                               |
-|-------------|--------------------------------------------------------|
-| `file`      | (default) JSON files in `data/`                       |
-| `supabase`  | Supabase tables (requires env vars + package install) |
+| Value      | Behavior                                              |
+| ---------- | ----------------------------------------------------- |
+| `file`     | (default) JSON files in `data/`                       |
+| `supabase` | Supabase tables (requires env vars + package install) |
 
 Both modes share the same async API:
 
@@ -94,12 +97,12 @@ Both modes share the same async API:
 // Example – works with either backend
 const shopsRepo = require('./repositories/shops.repository');
 
-const all      = await shopsRepo.getAll();
-const shop     = await shopsRepo.getById('shop_123');
+const all = await shopsRepo.getAll();
+const shop = await shopsRepo.getById('shop_123');
 const inserted = await shopsRepo.insert({ id: '...', name: '...' });
-const updated  = await shopsRepo.update('shop_123', { verified: true });
-const deleted  = await shopsRepo.remove('shop_123');
-const stats    = await shopsRepo.getStats();
+const updated = await shopsRepo.update('shop_123', { verified: true });
+const deleted = await shopsRepo.remove('shop_123');
+const stats = await shopsRepo.getStats();
 ```
 
 ### Migration path (file → Supabase)
@@ -119,23 +122,23 @@ See [`docs/SUPABASE_SETUP.md`](SUPABASE_SETUP.md) for the full migration guide.
 
 All routes live under `/api/admin`.
 
-| Method | Path                      | Min Role | Description                        |
-|--------|---------------------------|----------|------------------------------------|
-| POST   | `/auth/login`             | —        | JWT login                          |
-| GET    | `/auth/verify`            | any      | Verify token                       |
-| GET    | `/shops`                  | any      | List shops (filterable, paginated) |
-| GET    | `/shops/:id`              | any      | Get single shop                    |
-| POST   | `/shops`                  | editor   | Create shop                        |
-| PUT    | `/shops/:id`              | editor   | Update shop                        |
-| DELETE | `/shops/:id`              | admin    | Delete shop                        |
-| POST   | `/shops/batch-import`     | admin    | Batch import shops                 |
-| GET    | `/audit-logs`             | any      | List audit log (filterable)        |
-| GET    | `/audit-logs/export`      | admin    | Export audit log as CSV            |
-| GET    | `/users`                  | admin    | List admin users                   |
-| POST   | `/users`                  | admin    | Create admin user                  |
-| PUT    | `/users/:id`              | admin    | Update admin user                  |
-| DELETE | `/users/:id`              | admin    | Delete admin user                  |
-| GET    | `/stats`                  | any      | Dashboard stats (shops + users)    |
+| Method | Path                  | Min Role | Description                        |
+| ------ | --------------------- | -------- | ---------------------------------- |
+| POST   | `/auth/login`         | —        | JWT login                          |
+| GET    | `/auth/verify`        | any      | Verify token                       |
+| GET    | `/shops`              | any      | List shops (filterable, paginated) |
+| GET    | `/shops/:id`          | any      | Get single shop                    |
+| POST   | `/shops`              | editor   | Create shop                        |
+| PUT    | `/shops/:id`          | editor   | Update shop                        |
+| DELETE | `/shops/:id`          | admin    | Delete shop                        |
+| POST   | `/shops/batch-import` | admin    | Batch import shops                 |
+| GET    | `/audit-logs`         | any      | List audit log (filterable)        |
+| GET    | `/audit-logs/export`  | admin    | Export audit log as CSV            |
+| GET    | `/users`              | admin    | List admin users                   |
+| POST   | `/users`              | admin    | Create admin user                  |
+| PUT    | `/users/:id`          | admin    | Update admin user                  |
+| DELETE | `/users/:id`          | admin    | Delete admin user                  |
+| GET    | `/stats`              | any      | Dashboard stats (shops + users)    |
 
 ---
 
@@ -151,15 +154,15 @@ All routes live under `/api/admin`.
 
 ## Environment Variables
 
-| Variable                  | Required | Purpose                                                   |
-|---------------------------|----------|-----------------------------------------------------------|
-| `PORT`                    | No       | Express port (default 3000)                               |
-| `JWT_SECRET`              | Yes      | Secret for signing JWTs (32+ random chars)                |
-| `ADMIN_PASSWORD`          | Yes      | Bootstrap password for `admin@goldprices.com`             |
-| `STORAGE_BACKEND`         | No       | `file` (default) or `supabase`                           |
-| `SUPABASE_URL`            | Supabase | Your Supabase project URL                                 |
-| `SUPABASE_ANON_KEY`       | Supabase | Anon key (browser-safe reads)                             |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase | Service-role key (server only, bypasses RLS)            |
+| Variable                    | Required | Purpose                                       |
+| --------------------------- | -------- | --------------------------------------------- |
+| `PORT`                      | No       | Express port (default 3000)                   |
+| `JWT_SECRET`                | Yes      | Secret for signing JWTs (32+ random chars)    |
+| `ADMIN_PASSWORD`            | Yes      | Bootstrap password for `admin@goldprices.com` |
+| `STORAGE_BACKEND`           | No       | `file` (default) or `supabase`                |
+| `SUPABASE_URL`              | Supabase | Your Supabase project URL                     |
+| `SUPABASE_ANON_KEY`         | Supabase | Anon key (browser-safe reads)                 |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase | Service-role key (server only, bypasses RLS)  |
 
 ---
 
@@ -170,6 +173,7 @@ npm test          # runs all tests in tests/*.test.js
 ```
 
 Test files:
+
 - `tests/price-calculator.test.js` – pricing formulas
 - `tests/shop-manager.test.js` – shop CRUD + confidence scoring
 - `tests/audit-log.test.js` – audit log filtering, CSV export, injection prevention

@@ -22,7 +22,19 @@ function findHtmlFiles(dir, base = '') {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const rel = path.join(base, entry.name);
     if (entry.isDirectory()) {
-      if (['node_modules', '.git', 'dist', 'tests', 'server', 'supabase', 'repositories', '.github'].includes(entry.name)) continue;
+      if (
+        [
+          'node_modules',
+          '.git',
+          'dist',
+          'tests',
+          'server',
+          'supabase',
+          'repositories',
+          '.github',
+        ].includes(entry.name)
+      )
+        continue;
       results.push(...findHtmlFiles(path.join(dir, entry.name), rel));
     } else if (entry.name.endsWith('.html') && entry.name !== 'admin.html') {
       results.push(rel);
@@ -37,17 +49,22 @@ function findHtmlFiles(dir, base = '') {
 
 function extract(html, file) {
   const title = (html.match(/<title>(.*?)<\/title>/s) || [])[1] || '❌ MISSING';
-  const desc = (html.match(/<meta\s+name="description"\s+content="([^"]*)"/s) || [])[1] || '❌ MISSING';
-  const canonical = (html.match(/<link\s+rel="canonical"\s+href="([^"]*)"/s) || [])[1] || '❌ MISSING';
+  const desc =
+    (html.match(/<meta\s+name="description"\s+content="([^"]*)"/s) || [])[1] || '❌ MISSING';
+  const canonical =
+    (html.match(/<link\s+rel="canonical"\s+href="([^"]*)"/s) || [])[1] || '❌ MISSING';
   const hreflangCount = (html.match(/hreflang=/g) || []).length;
   // Detect noindex — skip full SEO checks for private/utility pages
   const isNoindex = /<meta\s+name="robots"\s+content="[^"]*noindex/i.test(html);
   const ogTitle = (html.match(/<meta\s+property="og:title"\s+content="([^"]*)"/s) || [])[1] || '—';
-  const twitterCard = (html.match(/<meta\s+name="twitter:card"\s+content="([^"]*)"/s) || [])[1] || '—';
+  const twitterCard =
+    (html.match(/<meta\s+name="twitter:card"\s+content="([^"]*)"/s) || [])[1] || '—';
 
   // JSON-LD schemas
   const schemas = [];
-  const jsonLdMatches = html.matchAll(/<script\s+type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>/g);
+  const jsonLdMatches = html.matchAll(
+    /<script\s+type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>/g
+  );
   for (const m of jsonLdMatches) {
     try {
       const obj = JSON.parse(m[1]);
@@ -79,11 +96,23 @@ function extract(html, file) {
       issues.push(`Canonical mismatch: got "${canonical}", expected "${expectedCanonical}"`);
     }
     if (hreflangCount === 0) issues.push('No hreflang tags in HTML');
-    if (hreflangCount > 0 && hreflangCount < 3) issues.push(`Only ${hreflangCount} hreflang tags (expected 3: x-default, en, ar)`);
+    if (hreflangCount > 0 && hreflangCount < 3)
+      issues.push(`Only ${hreflangCount} hreflang tags (expected 3: x-default, en, ar)`);
     if (schemas.length === 0) issues.push('No JSON-LD structured data');
   }
 
-  return { file, title, desc, canonical, hreflangCount, ogTitle, twitterCard, schemas, issues, isNoindex };
+  return {
+    file,
+    title,
+    desc,
+    canonical,
+    hreflangCount,
+    ogTitle,
+    twitterCard,
+    schemas,
+    issues,
+    isNoindex,
+  };
 }
 
 // ─────────────────────────────────────────────────────────────────────
@@ -95,7 +124,7 @@ function validateSitemap(htmlFiles) {
   if (!fs.existsSync(sitemapPath)) return ['❌ sitemap.xml not found'];
 
   const sitemap = fs.readFileSync(sitemapPath, 'utf-8');
-  const sitemapUrls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(m => m[1]);
+  const sitemapUrls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => m[1]);
   const sitemapUrlSet = new Set(sitemapUrls);
   const issues = [];
 
@@ -163,7 +192,7 @@ function validateRobots() {
 // ─────────────────────────────────────────────────────────────────────
 
 const htmlFiles = findHtmlFiles(REPO_ROOT);
-const results = htmlFiles.map(file => {
+const results = htmlFiles.map((file) => {
   const content = fs.readFileSync(path.join(REPO_ROOT, file), 'utf-8');
   return extract(content, file);
 });
@@ -175,8 +204,10 @@ console.log(`Generated: ${new Date().toISOString()}\n`);
 
 console.log('## Summary');
 console.log(`- **Total pages:** ${results.length}`);
-console.log(`- **Pages with issues:** ${results.filter(r => r.issues.length > 0).length}`);
-console.log(`- **Pages with all metadata:** ${results.filter(r => r.issues.length === 0).length}\n`);
+console.log(`- **Pages with issues:** ${results.filter((r) => r.issues.length > 0).length}`);
+console.log(
+  `- **Pages with all metadata:** ${results.filter((r) => r.issues.length === 0).length}\n`
+);
 
 // Page table
 console.log('## Page Metadata');
@@ -185,15 +216,17 @@ console.log('|------|-------|-----------|----------|-----|---------|--------|');
 for (const r of results) {
   const titleOk = r.title !== '❌ MISSING' ? '✅' : '❌';
   const canonOk = r.canonical !== '❌ MISSING' ? '✅' : '❌';
-  const hrefOk = r.hreflangCount >= 3 ? '✅' : (r.hreflangCount > 0 ? '⚠' : '❌');
+  const hrefOk = r.hreflangCount >= 3 ? '✅' : r.hreflangCount > 0 ? '⚠' : '❌';
   const ogOk = r.ogTitle !== '—' ? '✅' : '—';
   const schemaList = r.schemas.length > 0 ? r.schemas.join(', ') : '—';
   const issueCount = r.issues.length > 0 ? `⚠ ${r.issues.length}` : '✅';
-  console.log(`| ${r.file} | ${titleOk} | ${canonOk} | ${hrefOk} | ${ogOk} | ${schemaList} | ${issueCount} |`);
+  console.log(
+    `| ${r.file} | ${titleOk} | ${canonOk} | ${hrefOk} | ${ogOk} | ${schemaList} | ${issueCount} |`
+  );
 }
 
 // Issues
-const allIssues = results.filter(r => r.issues.length > 0);
+const allIssues = results.filter((r) => r.issues.length > 0);
 if (allIssues.length > 0) {
   console.log('\n## Issues Found');
   for (const r of allIssues) {
@@ -227,7 +260,10 @@ if (robotsIssues.length === 0) {
 }
 
 // Exit code
-const totalIssues = allIssues.reduce((sum, r) => sum + r.issues.length, 0) + sitemapIssues.length + robotsIssues.length;
+const totalIssues =
+  allIssues.reduce((sum, r) => sum + r.issues.length, 0) +
+  sitemapIssues.length +
+  robotsIssues.length;
 if (totalIssues > 0) {
   console.log(`\n⚠ Total issues: ${totalIssues}`);
 }

@@ -1,5 +1,5 @@
 export const KARATS = [
-  { code: '24', purity: 1.0000, labelEn: '24 Karat (Pure Gold)', labelAr: 'عيار 24 (ذهب خالص)' },
+  { code: '24', purity: 1.0, labelEn: '24 Karat (Pure Gold)', labelAr: 'عيار 24 (ذهب خالص)' },
   { code: '22', purity: 22 / 24, labelEn: '22 Karat', labelAr: 'عيار 22' },
   { code: '21', purity: 21 / 24, labelEn: '21 Karat', labelAr: 'عيار 21' },
   { code: '20', purity: 20 / 24, labelEn: '20 Karat', labelAr: 'عيار 20' },

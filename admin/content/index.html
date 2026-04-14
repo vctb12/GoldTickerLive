@@ -1,702 +1,1277 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow" />
-  <title>Content — GoldAdmin</title>
-  <link rel="stylesheet" href="../admin.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <style>
-    /* ── Split layout ───────────────────────────────────────── */
-    .content-area {
-      display: flex;
-      flex: 1 1 0%;
-      gap: 0;
-      height: calc(100vh - var(--header-h));
-      overflow: hidden;
-      padding: 0;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Content — GoldAdmin</title>
+    <link rel="stylesheet" href="../admin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <style>
+      /* ── Split layout ───────────────────────────────────────── */
+      .content-area {
+        display: flex;
+        flex: 1 1 0%;
+        gap: 0;
+        height: calc(100vh - var(--header-h));
+        overflow: hidden;
+        padding: 0;
+      }
 
-    /* ── Left panel ─────────────────────────────────────────── */
-    .posts-panel {
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      overflow: hidden;
-      width: 300px;
-    }
-    .posts-panel-toolbar {
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      flex-shrink: 0;
-      padding: 12px;
-    }
-    .posts-panel-toolbar .new-post-btn { width: 100%; }
-    .posts-search-wrap { position: relative; }
-    .posts-search-wrap .search-icon {
-      color: var(--text-dim); left: 9px; pointer-events: none;
-      position: absolute; top: 50%; transform: translateY(-50%); font-size: 13px;
-    }
-    .posts-search-wrap .form-input { padding-left: 28px; font-size: 0.8125rem; }
-    .posts-panel-toolbar .form-select { font-size: 0.8125rem; width: 100%; }
-    .posts-list {
-      flex: 1 1 0%;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border) transparent;
-    }
-    .posts-list::-webkit-scrollbar { width: 4px; }
-    .posts-list::-webkit-scrollbar-track { background: transparent; }
-    .posts-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-    .post-item {
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      padding: 12px 14px;
-      position: relative;
-      transition: background 0.13s;
-    }
-    .post-item:hover { background: var(--surface-2); }
-    .post-item.active { background: rgba(59,130,246,0.08); border-left: 2px solid var(--primary); }
-    .post-item-title {
-      color: var(--text); font-size: 0.875rem; font-weight: 600;
-      margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
-    .post-item-meta {
-      align-items: center; display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px;
-    }
-    .post-item-date { color: var(--text-dim); font-size: 0.7rem; }
-    .post-item-readtime { color: var(--text-dim); font-size: 0.7rem; }
-    .post-item-menu {
-      background: none; border: 1px solid transparent; border-radius: var(--radius-sm);
-      color: var(--text-dim); cursor: pointer; font-size: 16px; line-height: 1;
-      padding: 1px 5px; position: absolute; right: 10px; top: 10px;
-      transition: background 0.13s, color 0.13s;
-    }
-    .post-item-menu:hover { background: var(--surface-2); color: var(--text); border-color: var(--border); }
+      /* ── Left panel ─────────────────────────────────────────── */
+      .posts-panel {
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        overflow: hidden;
+        width: 300px;
+      }
+      .posts-panel-toolbar {
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex-shrink: 0;
+        padding: 12px;
+      }
+      .posts-panel-toolbar .new-post-btn {
+        width: 100%;
+      }
+      .posts-search-wrap {
+        position: relative;
+      }
+      .posts-search-wrap .search-icon {
+        color: var(--text-dim);
+        left: 9px;
+        pointer-events: none;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 13px;
+      }
+      .posts-search-wrap .form-input {
+        padding-left: 28px;
+        font-size: 0.8125rem;
+      }
+      .posts-panel-toolbar .form-select {
+        font-size: 0.8125rem;
+        width: 100%;
+      }
+      .posts-list {
+        flex: 1 1 0%;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) transparent;
+      }
+      .posts-list::-webkit-scrollbar {
+        width: 4px;
+      }
+      .posts-list::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .posts-list::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 2px;
+      }
+      .post-item {
+        border-bottom: 1px solid var(--border);
+        cursor: pointer;
+        padding: 12px 14px;
+        position: relative;
+        transition: background 0.13s;
+      }
+      .post-item:hover {
+        background: var(--surface-2);
+      }
+      .post-item.active {
+        background: rgba(59, 130, 246, 0.08);
+        border-left: 2px solid var(--primary);
+      }
+      .post-item-title {
+        color: var(--text);
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .post-item-meta {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 4px;
+      }
+      .post-item-date {
+        color: var(--text-dim);
+        font-size: 0.7rem;
+      }
+      .post-item-readtime {
+        color: var(--text-dim);
+        font-size: 0.7rem;
+      }
+      .post-item-menu {
+        background: none;
+        border: 1px solid transparent;
+        border-radius: var(--radius-sm);
+        color: var(--text-dim);
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 1;
+        padding: 1px 5px;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        transition:
+          background 0.13s,
+          color 0.13s;
+      }
+      .post-item-menu:hover {
+        background: var(--surface-2);
+        color: var(--text);
+        border-color: var(--border);
+      }
 
-    .badge {
-      border-radius: 999px; font-size: 0.65rem; font-weight: 700;
-      letter-spacing: 0.04em; padding: 2px 7px; text-transform: uppercase;
-      white-space: nowrap; display: inline-block;
-    }
-    .badge-draft     { background: rgba(100,116,139,0.2); color: var(--text-dim); border: 1px solid rgba(100,116,139,0.3); }
-    .badge-published { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
-    .badge-category  { background: rgba(59,130,246,0.12); color: #93c5fd; border: 1px solid rgba(59,130,246,0.25); font-size: 0.63rem; }
+      .badge {
+        border-radius: 999px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 2px 7px;
+        text-transform: uppercase;
+        white-space: nowrap;
+        display: inline-block;
+      }
+      .badge-draft {
+        background: rgba(100, 116, 139, 0.2);
+        color: var(--text-dim);
+        border: 1px solid rgba(100, 116, 139, 0.3);
+      }
+      .badge-published {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--success);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+      }
+      .badge-category {
+        background: rgba(59, 130, 246, 0.12);
+        color: #93c5fd;
+        border: 1px solid rgba(59, 130, 246, 0.25);
+        font-size: 0.63rem;
+      }
 
-    .posts-empty {
-      color: var(--text-dim); font-size: 0.875rem; padding: 40px 20px; text-align: center;
-    }
+      .posts-empty {
+        color: var(--text-dim);
+        font-size: 0.875rem;
+        padding: 40px 20px;
+        text-align: center;
+      }
 
-    /* ── Context menu ───────────────────────────────────────── */
-    .ctx-menu {
-      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4); min-width: 160px; padding: 4px;
-      position: fixed; z-index: 600;
-    }
-    .ctx-menu.hidden { display: none; }
-    .ctx-item {
-      border-radius: var(--radius-sm); color: var(--text-muted); cursor: pointer;
-      display: block; font-size: 0.8125rem; padding: 8px 12px;
-      transition: background 0.13s, color 0.13s; white-space: nowrap; width: 100%;
-      background: none; border: none; text-align: left;
-    }
-    .ctx-item:hover { background: var(--surface-2); color: var(--text); }
-    .ctx-item.danger { color: var(--danger); }
-    .ctx-item.danger:hover { background: rgba(239,68,68,0.1); }
-    .ctx-sep { border-top: 1px solid var(--border); margin: 4px 0; }
+      /* ── Context menu ───────────────────────────────────────── */
+      .ctx-menu {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        min-width: 160px;
+        padding: 4px;
+        position: fixed;
+        z-index: 600;
+      }
+      .ctx-menu.hidden {
+        display: none;
+      }
+      .ctx-item {
+        border-radius: var(--radius-sm);
+        color: var(--text-muted);
+        cursor: pointer;
+        display: block;
+        font-size: 0.8125rem;
+        padding: 8px 12px;
+        transition:
+          background 0.13s,
+          color 0.13s;
+        white-space: nowrap;
+        width: 100%;
+        background: none;
+        border: none;
+        text-align: left;
+      }
+      .ctx-item:hover {
+        background: var(--surface-2);
+        color: var(--text);
+      }
+      .ctx-item.danger {
+        color: var(--danger);
+      }
+      .ctx-item.danger:hover {
+        background: rgba(239, 68, 68, 0.1);
+      }
+      .ctx-sep {
+        border-top: 1px solid var(--border);
+        margin: 4px 0;
+      }
 
-    /* ── Inline delete confirm ──────────────────────────────── */
-    .inline-confirm {
-      align-items: center; background: rgba(239,68,68,0.07);
-      border: 1px solid rgba(239,68,68,0.25); border-radius: var(--radius-sm);
-      display: flex; font-size: 0.8125rem; gap: 8px; margin: 4px 0; padding: 8px 12px;
-    }
-    .inline-confirm span { color: var(--danger); font-weight: 500; flex: 1; }
+      /* ── Inline delete confirm ──────────────────────────────── */
+      .inline-confirm {
+        align-items: center;
+        background: rgba(239, 68, 68, 0.07);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        border-radius: var(--radius-sm);
+        display: flex;
+        font-size: 0.8125rem;
+        gap: 8px;
+        margin: 4px 0;
+        padding: 8px 12px;
+      }
+      .inline-confirm span {
+        color: var(--danger);
+        font-weight: 500;
+        flex: 1;
+      }
 
-    /* ── Editor panel ───────────────────────────────────────── */
-    .editor-panel {
-      display: flex; flex: 1 1 0%; flex-direction: column; min-width: 0; overflow: hidden;
-    }
-    .editor-welcome {
-      align-items: center; color: var(--text-dim); display: flex;
-      flex: 1 1 0%; flex-direction: column; font-size: 0.9375rem;
-      gap: 10px; justify-content: center; text-align: center; padding: 40px;
-    }
-    .editor-welcome .welcome-icon { font-size: 48px; opacity: 0.4; }
-    .editor-welcome p { font-size: 0.8125rem; color: var(--text-dim); margin-top: 4px; }
+      /* ── Editor panel ───────────────────────────────────────── */
+      .editor-panel {
+        display: flex;
+        flex: 1 1 0%;
+        flex-direction: column;
+        min-width: 0;
+        overflow: hidden;
+      }
+      .editor-welcome {
+        align-items: center;
+        color: var(--text-dim);
+        display: flex;
+        flex: 1 1 0%;
+        flex-direction: column;
+        font-size: 0.9375rem;
+        gap: 10px;
+        justify-content: center;
+        text-align: center;
+        padding: 40px;
+      }
+      .editor-welcome .welcome-icon {
+        font-size: 48px;
+        opacity: 0.4;
+      }
+      .editor-welcome p {
+        font-size: 0.8125rem;
+        color: var(--text-dim);
+        margin-top: 4px;
+      }
 
-    /* ── Editor tabs ────────────────────────────────────────── */
-    .editor-tabs {
-      border-bottom: 1px solid var(--border); display: flex;
-      flex-shrink: 0; overflow-x: auto; padding: 0 16px;
-    }
-    .editor-tab {
-      background: none; border: none; border-bottom: 2px solid transparent;
-      color: var(--text-muted); cursor: pointer; font-size: 0.875rem; font-weight: 500;
-      margin-bottom: -1px; padding: 12px 14px; transition: color 0.15s, border-color 0.15s;
-      white-space: nowrap;
-    }
-    .editor-tab:hover { color: var(--text); }
-    .editor-tab.active { border-bottom-color: var(--primary); color: var(--primary); }
+      /* ── Editor tabs ────────────────────────────────────────── */
+      .editor-tabs {
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-shrink: 0;
+        overflow-x: auto;
+        padding: 0 16px;
+      }
+      .editor-tab {
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: -1px;
+        padding: 12px 14px;
+        transition:
+          color 0.15s,
+          border-color 0.15s;
+        white-space: nowrap;
+      }
+      .editor-tab:hover {
+        color: var(--text);
+      }
+      .editor-tab.active {
+        border-bottom-color: var(--primary);
+        color: var(--primary);
+      }
 
-    .editor-content {
-      flex: 1 1 0%; overflow-y: auto; padding: 20px;
-      scrollbar-width: thin; scrollbar-color: var(--border) transparent;
-    }
-    .editor-content::-webkit-scrollbar { width: 4px; }
-    .editor-content::-webkit-scrollbar-track { background: transparent; }
-    .editor-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+      .editor-content {
+        flex: 1 1 0%;
+        overflow-y: auto;
+        padding: 20px;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) transparent;
+      }
+      .editor-content::-webkit-scrollbar {
+        width: 4px;
+      }
+      .editor-content::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .editor-content::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 2px;
+      }
 
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
+      .tab-panel {
+        display: none;
+      }
+      .tab-panel.active {
+        display: block;
+      }
 
-    /* ── Title input ────────────────────────────────────────── */
-    .title-input {
-      background: transparent; border: none; border-bottom: 2px solid var(--border);
-      border-radius: 0; color: var(--text); font-size: 1.375rem; font-weight: 700;
-      margin-bottom: 16px; padding: 4px 0 8px; width: 100%;
-      transition: border-color 0.2s; outline: none;
-    }
-    .title-input:focus { border-bottom-color: var(--primary); }
-    .title-input::placeholder { color: var(--text-dim); }
+      /* ── Title input ────────────────────────────────────────── */
+      .title-input {
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid var(--border);
+        border-radius: 0;
+        color: var(--text);
+        font-size: 1.375rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+        padding: 4px 0 8px;
+        width: 100%;
+        transition: border-color 0.2s;
+        outline: none;
+      }
+      .title-input:focus {
+        border-bottom-color: var(--primary);
+      }
+      .title-input::placeholder {
+        color: var(--text-dim);
+      }
 
-    /* ── Body textarea ──────────────────────────────────────── */
-    .body-textarea {
-      background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius);
-      color: var(--text); font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
-      font-size: 0.875rem; line-height: 1.8; min-height: 400px; padding: 14px;
-      resize: vertical; width: 100%; outline: none; transition: border-color 0.2s;
-    }
-    .body-textarea:focus { border-color: var(--primary); }
-    .textarea-meta {
-      color: var(--text-dim); font-size: 0.75rem; margin-top: 6px; text-align: right;
-    }
+      /* ── Body textarea ──────────────────────────────────────── */
+      .body-textarea {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        color: var(--text);
+        font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+        font-size: 0.875rem;
+        line-height: 1.8;
+        min-height: 400px;
+        padding: 14px;
+        resize: vertical;
+        width: 100%;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .body-textarea:focus {
+        border-color: var(--primary);
+      }
+      .textarea-meta {
+        color: var(--text-dim);
+        font-size: 0.75rem;
+        margin-top: 6px;
+        text-align: right;
+      }
 
-    /* ── Settings tab ───────────────────────────────────────── */
-    .settings-grid { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
-    @media (max-width: 600px) { .settings-grid { grid-template-columns: 1fr; } }
-    .settings-full { grid-column: span 2; }
-    @media (max-width: 600px) { .settings-full { grid-column: span 1; } }
+      /* ── Settings tab ───────────────────────────────────────── */
+      .settings-grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 1fr 1fr;
+      }
+      @media (max-width: 600px) {
+        .settings-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .settings-full {
+        grid-column: span 2;
+      }
+      @media (max-width: 600px) {
+        .settings-full {
+          grid-column: span 1;
+        }
+      }
 
-    /* ── Tag chips ──────────────────────────────────────────── */
-    .tags-chips {
-      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; min-height: 28px;
-    }
-    .tag-chip {
-      align-items: center; background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: 999px; color: var(--text-muted); display: inline-flex;
-      font-size: 0.75rem; gap: 5px; padding: 3px 10px;
-    }
-    .tag-chip-remove {
-      background: none; border: none; color: var(--text-dim); cursor: pointer;
-      font-size: 14px; line-height: 1; padding: 0; transition: color 0.13s;
-    }
-    .tag-chip-remove:hover { color: var(--danger); }
+      /* ── Tag chips ──────────────────────────────────────────── */
+      .tags-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px;
+        min-height: 28px;
+      }
+      .tag-chip {
+        align-items: center;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: var(--text-muted);
+        display: inline-flex;
+        font-size: 0.75rem;
+        gap: 5px;
+        padding: 3px 10px;
+      }
+      .tag-chip-remove {
+        background: none;
+        border: none;
+        color: var(--text-dim);
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        padding: 0;
+        transition: color 0.13s;
+      }
+      .tag-chip-remove:hover {
+        color: var(--danger);
+      }
 
-    /* ── Status pill toggle ─────────────────────────────────── */
-    .pill-toggle {
-      align-items: center; background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: 999px; display: inline-flex; padding: 3px;
-    }
-    .pill-option {
-      border-radius: 999px; cursor: pointer; font-size: 0.8125rem; font-weight: 600;
-      padding: 5px 18px; transition: background 0.15s, color 0.15s;
-      background: none; border: none; color: var(--text-dim);
-    }
-    .pill-option.active-draft { background: var(--surface); color: var(--text); }
-    .pill-option.active-published { background: var(--success); color: #fff; }
+      /* ── Status pill toggle ─────────────────────────────────── */
+      .pill-toggle {
+        align-items: center;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        display: inline-flex;
+        padding: 3px;
+      }
+      .pill-option {
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        padding: 5px 18px;
+        transition:
+          background 0.15s,
+          color 0.15s;
+        background: none;
+        border: none;
+        color: var(--text-dim);
+      }
+      .pill-option.active-draft {
+        background: var(--surface);
+        color: var(--text);
+      }
+      .pill-option.active-published {
+        background: var(--success);
+        color: #fff;
+      }
 
-    /* ── Preview ────────────────────────────────────────────── */
-    .preview-box {
-      background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius);
-      line-height: 1.75; max-width: 680px; padding: 24px 28px;
-    }
-    .preview-box h1, .preview-box h2, .preview-box h3 {
-      color: var(--text); font-weight: 700; margin: 1.2em 0 0.5em;
-    }
-    .preview-box h1 { font-size: 1.5rem; }
-    .preview-box h2 { font-size: 1.2rem; }
-    .preview-box h3 { font-size: 1rem; }
-    .preview-box p  { color: var(--text-muted); margin: 0 0 1em; }
-    .preview-box strong { color: var(--text); }
-    .preview-box em { color: var(--text-muted); font-style: italic; }
-    .preview-box ul { list-style: disc; margin: 0 0 1em 1.4em; color: var(--text-muted); }
-    .preview-box li { margin-bottom: 4px; }
-    .preview-disclaimer {
-      color: var(--text-dim); font-size: 0.75rem; font-style: italic; margin-top: 16px;
-      border-top: 1px solid var(--border); padding-top: 12px;
-    }
+      /* ── Preview ────────────────────────────────────────────── */
+      .preview-box {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        line-height: 1.75;
+        max-width: 680px;
+        padding: 24px 28px;
+      }
+      .preview-box h1,
+      .preview-box h2,
+      .preview-box h3 {
+        color: var(--text);
+        font-weight: 700;
+        margin: 1.2em 0 0.5em;
+      }
+      .preview-box h1 {
+        font-size: 1.5rem;
+      }
+      .preview-box h2 {
+        font-size: 1.2rem;
+      }
+      .preview-box h3 {
+        font-size: 1rem;
+      }
+      .preview-box p {
+        color: var(--text-muted);
+        margin: 0 0 1em;
+      }
+      .preview-box strong {
+        color: var(--text);
+      }
+      .preview-box em {
+        color: var(--text-muted);
+        font-style: italic;
+      }
+      .preview-box ul {
+        list-style: disc;
+        margin: 0 0 1em 1.4em;
+        color: var(--text-muted);
+      }
+      .preview-box li {
+        margin-bottom: 4px;
+      }
+      .preview-disclaimer {
+        color: var(--text-dim);
+        font-size: 0.75rem;
+        font-style: italic;
+        margin-top: 16px;
+        border-top: 1px solid var(--border);
+        padding-top: 12px;
+      }
 
-    /* ── Action bar ─────────────────────────────────────────── */
-    .editor-actions {
-      align-items: center; background: var(--surface); border-top: 1px solid var(--border);
-      display: flex; flex-shrink: 0; gap: 8px; padding: 12px 20px; flex-wrap: wrap;
-    }
-    .unsaved-indicator {
-      align-items: center; color: var(--warning); display: flex; font-size: 0.8125rem;
-      gap: 4px; margin-right: auto;
-    }
-    .unsaved-indicator.hidden { display: none; }
+      /* ── Action bar ─────────────────────────────────────────── */
+      .editor-actions {
+        align-items: center;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        display: flex;
+        flex-shrink: 0;
+        gap: 8px;
+        padding: 12px 20px;
+        flex-wrap: wrap;
+      }
+      .unsaved-indicator {
+        align-items: center;
+        color: var(--warning);
+        display: flex;
+        font-size: 0.8125rem;
+        gap: 4px;
+        margin-right: auto;
+      }
+      .unsaved-indicator.hidden {
+        display: none;
+      }
 
-    /* ── Toast ──────────────────────────────────────────────── */
-    .toast-container {
-      bottom: 20px; display: flex; flex-direction: column; gap: 8px;
-      position: fixed; right: 20px; z-index: 9999; pointer-events: none;
-    }
-    .toast {
-      align-items: center; animation: toast-in 0.25s ease;
-      border-radius: var(--radius); display: flex; gap: 8px;
-      min-width: 220px; max-width: 340px; padding: 10px 14px;
-      pointer-events: all; font-size: 0.875rem; border: 1px solid transparent;
-    }
-    @keyframes toast-in {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .toast-success { background: #0f2d21; border-color: rgba(16,185,129,0.35); color: #34d399; }
-    .toast-error   { background: #2d0f0f; border-color: rgba(239,68,68,0.35); color: #f87171; }
-    .toast-info    { background: #0f1d3a; border-color: rgba(59,130,246,0.35); color: #93c5fd; }
-    .toast-warning { background: #2d1f0a; border-color: rgba(245,158,11,0.35); color: #fbbf24; }
+      /* ── Toast ──────────────────────────────────────────────── */
+      .toast-container {
+        bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        position: fixed;
+        right: 20px;
+        z-index: 9999;
+        pointer-events: none;
+      }
+      .toast {
+        align-items: center;
+        animation: toast-in 0.25s ease;
+        border-radius: var(--radius);
+        display: flex;
+        gap: 8px;
+        min-width: 220px;
+        max-width: 340px;
+        padding: 10px 14px;
+        pointer-events: all;
+        font-size: 0.875rem;
+        border: 1px solid transparent;
+      }
+      @keyframes toast-in {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .toast-success {
+        background: #0f2d21;
+        border-color: rgba(16, 185, 129, 0.35);
+        color: #34d399;
+      }
+      .toast-error {
+        background: #2d0f0f;
+        border-color: rgba(239, 68, 68, 0.35);
+        color: #f87171;
+      }
+      .toast-info {
+        background: #0f1d3a;
+        border-color: rgba(59, 130, 246, 0.35);
+        color: #93c5fd;
+      }
+      .toast-warning {
+        background: #2d1f0a;
+        border-color: rgba(245, 158, 11, 0.35);
+        color: #fbbf24;
+      }
 
-    /* ── Delete confirm modal ───────────────────────────────── */
-    .modal-backdrop {
-      align-items: center; background: rgba(0,0,0,0.55); bottom: 0;
-      display: flex; justify-content: center; left: 0; padding: 24px 16px;
-      position: fixed; right: 0; top: 0; z-index: 700;
-    }
-    .modal-backdrop.hidden { display: none; }
-    .confirm-modal {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); max-width: 400px; padding: 24px; width: 100%;
-    }
-    .confirm-modal h3 { color: var(--text); font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
-    .confirm-modal p  { color: var(--text-muted); font-size: 0.875rem; margin-bottom: 20px; }
-    .confirm-actions  { display: flex; gap: 8px; justify-content: flex-end; }
+      /* ── Delete confirm modal ───────────────────────────────── */
+      .modal-backdrop {
+        align-items: center;
+        background: rgba(0, 0, 0, 0.55);
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        left: 0;
+        padding: 24px 16px;
+        position: fixed;
+        right: 0;
+        top: 0;
+        z-index: 700;
+      }
+      .modal-backdrop.hidden {
+        display: none;
+      }
+      .confirm-modal {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        max-width: 400px;
+        padding: 24px;
+        width: 100%;
+      }
+      .confirm-modal h3 {
+        color: var(--text);
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .confirm-modal p {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        margin-bottom: 20px;
+      }
+      .confirm-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+      }
 
-    /* ── Responsive ─────────────────────────────────────────── */
-    @media (max-width: 720px) {
-      .content-area { flex-direction: column; height: auto; overflow: visible; }
-      .posts-panel { border-right: none; border-bottom: 1px solid var(--border); height: 340px; width: 100%; }
-      .editor-panel { min-height: 500px; }
-    }
-  </style>
-</head>
-<body>
+      /* ── Responsive ─────────────────────────────────────────── */
+      @media (max-width: 720px) {
+        .content-area {
+          flex-direction: column;
+          height: auto;
+          overflow: visible;
+        }
+        .posts-panel {
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+          height: 340px;
+          width: 100%;
+        }
+        .editor-panel {
+          min-height: 500px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Auth guard -->
+    <script>
+      (function () {
+        try {
+          var k = Object.keys(localStorage);
+          if (
+            !k.some(function (x) {
+              return x.startsWith('sb-') && x.endsWith('-auth-token');
+            })
+          )
+            window.location.replace('../login/');
+        } catch (e) {
+          window.location.replace('../login/');
+        }
+      })();
+    </script>
 
-  <!-- Auth guard -->
-  <script>(function(){try{var k=Object.keys(localStorage);if(!k.some(function(x){return x.startsWith('sb-')&&x.endsWith('-auth-token')}))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-  <div class="sidebar-overlay" id="sidebar-overlay"></div>
-
-  <div class="admin-layout">
-
-    <!-- ── Sidebar ──────────────────────────────────────────── -->
-    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
-      <div class="sidebar-header">
-        <span class="logo-icon" aria-hidden="true">⚙</span>
-        <span class="logo-text">GoldAdmin</span>
-      </div>
-      <nav class="sidebar-nav" aria-label="Main menu">
-        <a href="../" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a>
-        <a href="../shops/" class="nav-link"><span class="nav-icon">🏪</span> Shops</a>
-        <a href="../pricing/" class="nav-link"><span class="nav-icon">💰</span> Pricing</a>
-        <a href="../orders/" class="nav-link"><span class="nav-icon">📦</span> Orders</a>
-        <a href="../content/" class="nav-link nav-link-active"><span class="nav-icon">📝</span> Content</a>
-        <a href="../social/" class="nav-link"><span class="nav-icon">📱</span> Social</a>
-        <a href="../settings/" class="nav-link"><span class="nav-icon">⚙</span> Settings</a>
-        <a href="../analytics/" class="nav-link"><span class="nav-icon">📈</span> Analytics</a>
-      </nav>
-      <div class="sidebar-footer">
-        <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">↩ Sign Out</button>
-      </div>
-    </aside>
-
-    <!-- ── Main area ────────────────────────────────────────── -->
-    <div class="main-area">
-
-      <header class="page-header">
-        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle navigation" type="button">☰</button>
-        <h1 class="page-title">📝 Content</h1>
-      </header>
-
-      <!-- ── Split content area ──────────────────────────── -->
-      <div class="content-area" id="content-area">
-
-        <!-- Left: posts list -->
-        <div class="posts-panel" id="posts-panel" aria-label="Posts list">
-          <div class="posts-panel-toolbar">
-            <button class="btn btn-gold btn-sm new-post-btn" id="new-post-btn" type="button">+ New Post</button>
-            <div class="posts-search-wrap">
-              <span class="search-icon" aria-hidden="true">🔍</span>
-              <input
-                class="form-input"
-                id="posts-search"
-                type="search"
-                placeholder="Search posts…"
-                aria-label="Search posts"
-                autocomplete="off"
-              />
-            </div>
-            <select class="form-select" id="posts-status-filter" aria-label="Filter by status">
-              <option value="">All</option>
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-          </div>
-          <div class="posts-list" id="posts-list" role="list" aria-label="Blog posts"></div>
+    <div class="admin-layout">
+      <!-- ── Sidebar ──────────────────────────────────────────── -->
+      <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+        <div class="sidebar-header">
+          <span class="logo-icon" aria-hidden="true">⚙</span>
+          <span class="logo-text">GoldAdmin</span>
         </div>
+        <nav class="sidebar-nav" aria-label="Main menu">
+          <a href="../" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a>
+          <a href="../shops/" class="nav-link"><span class="nav-icon">🏪</span> Shops</a>
+          <a href="../pricing/" class="nav-link"><span class="nav-icon">💰</span> Pricing</a>
+          <a href="../orders/" class="nav-link"><span class="nav-icon">📦</span> Orders</a>
+          <a href="../content/" class="nav-link nav-link-active"
+            ><span class="nav-icon">📝</span> Content</a
+          >
+          <a href="../social/" class="nav-link"><span class="nav-icon">📱</span> Social</a>
+          <a href="../settings/" class="nav-link"><span class="nav-icon">⚙</span> Settings</a>
+          <a href="../analytics/" class="nav-link"><span class="nav-icon">📈</span> Analytics</a>
+        </nav>
+        <div class="sidebar-footer">
+          <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">
+            ↩ Sign Out
+          </button>
+        </div>
+      </aside>
 
-        <!-- Right: editor -->
-        <div class="editor-panel" id="editor-panel">
+      <!-- ── Main area ────────────────────────────────────────── -->
+      <div class="main-area">
+        <header class="page-header">
+          <button
+            class="sidebar-toggle"
+            id="sidebar-toggle"
+            aria-label="Toggle navigation"
+            type="button"
+          >
+            ☰
+          </button>
+          <h1 class="page-title">📝 Content</h1>
+        </header>
 
-          <!-- Welcome state -->
-          <div class="editor-welcome" id="editor-welcome">
-            <div class="welcome-icon">📝</div>
-            <strong style="color:var(--text-muted)">Select a post to edit or create a new one</strong>
-            <p>Your blog posts will appear in the panel on the left.</p>
+        <!-- ── Split content area ──────────────────────────── -->
+        <div class="content-area" id="content-area">
+          <!-- Left: posts list -->
+          <div class="posts-panel" id="posts-panel" aria-label="Posts list">
+            <div class="posts-panel-toolbar">
+              <button class="btn btn-gold btn-sm new-post-btn" id="new-post-btn" type="button">
+                + New Post
+              </button>
+              <div class="posts-search-wrap">
+                <span class="search-icon" aria-hidden="true">🔍</span>
+                <input
+                  class="form-input"
+                  id="posts-search"
+                  type="search"
+                  placeholder="Search posts…"
+                  aria-label="Search posts"
+                  autocomplete="off"
+                />
+              </div>
+              <select class="form-select" id="posts-status-filter" aria-label="Filter by status">
+                <option value="">All</option>
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
+              </select>
+            </div>
+            <div class="posts-list" id="posts-list" role="list" aria-label="Blog posts"></div>
           </div>
 
-          <!-- Editor (hidden until a post is selected) -->
-          <div id="editor-form" class="hidden" style="display:flex;flex-direction:column;flex:1 1 0%;min-height:0;overflow:hidden;">
-            <div class="editor-tabs" role="tablist" aria-label="Editor tabs">
-              <button class="editor-tab active" data-tab="en" role="tab" aria-selected="true" type="button">Content (EN)</button>
-              <button class="editor-tab" data-tab="ar" role="tab" aria-selected="false" type="button">Content (AR)</button>
-              <button class="editor-tab" data-tab="settings" role="tab" aria-selected="false" type="button">Settings</button>
-              <button class="editor-tab" data-tab="preview" role="tab" aria-selected="false" type="button">Preview</button>
+          <!-- Right: editor -->
+          <div class="editor-panel" id="editor-panel">
+            <!-- Welcome state -->
+            <div class="editor-welcome" id="editor-welcome">
+              <div class="welcome-icon">📝</div>
+              <strong style="color: var(--text-muted)"
+                >Select a post to edit or create a new one</strong
+              >
+              <p>Your blog posts will appear in the panel on the left.</p>
             </div>
 
-            <div class="editor-content">
-
-              <!-- Content EN -->
-              <div class="tab-panel active" id="tab-en" role="tabpanel">
-                <input class="title-input" id="field-title" type="text" placeholder="Post title…" aria-label="English title" autocomplete="off" />
-                <textarea class="body-textarea" id="field-body" placeholder="Write your post in Markdown…" aria-label="English body"></textarea>
-                <div class="textarea-meta" id="body-meta" aria-live="polite"></div>
+            <!-- Editor (hidden until a post is selected) -->
+            <div
+              id="editor-form"
+              class="hidden"
+              style="
+                display: flex;
+                flex-direction: column;
+                flex: 1 1 0%;
+                min-height: 0;
+                overflow: hidden;
+              "
+            >
+              <div class="editor-tabs" role="tablist" aria-label="Editor tabs">
+                <button
+                  class="editor-tab active"
+                  data-tab="en"
+                  role="tab"
+                  aria-selected="true"
+                  type="button"
+                >
+                  Content (EN)
+                </button>
+                <button
+                  class="editor-tab"
+                  data-tab="ar"
+                  role="tab"
+                  aria-selected="false"
+                  type="button"
+                >
+                  Content (AR)
+                </button>
+                <button
+                  class="editor-tab"
+                  data-tab="settings"
+                  role="tab"
+                  aria-selected="false"
+                  type="button"
+                >
+                  Settings
+                </button>
+                <button
+                  class="editor-tab"
+                  data-tab="preview"
+                  role="tab"
+                  aria-selected="false"
+                  type="button"
+                >
+                  Preview
+                </button>
               </div>
 
-              <!-- Content AR -->
-              <div class="tab-panel" id="tab-ar" role="tabpanel" dir="rtl">
-                <input class="title-input" id="field-title-ar" type="text" placeholder="عنوان المقال…" aria-label="Arabic title" autocomplete="off" />
-                <textarea class="body-textarea" id="field-body-ar" placeholder="اكتب مقالك بصيغة Markdown…" aria-label="Arabic body" dir="rtl"></textarea>
-                <div class="textarea-meta" id="body-ar-meta" aria-live="polite" dir="ltr"></div>
-              </div>
+              <div class="editor-content">
+                <!-- Content EN -->
+                <div class="tab-panel active" id="tab-en" role="tabpanel">
+                  <input
+                    class="title-input"
+                    id="field-title"
+                    type="text"
+                    placeholder="Post title…"
+                    aria-label="English title"
+                    autocomplete="off"
+                  />
+                  <textarea
+                    class="body-textarea"
+                    id="field-body"
+                    placeholder="Write your post in Markdown…"
+                    aria-label="English body"
+                  ></textarea>
+                  <div class="textarea-meta" id="body-meta" aria-live="polite"></div>
+                </div>
 
-              <!-- Settings -->
-              <div class="tab-panel" id="tab-settings" role="tabpanel">
-                <div class="settings-grid">
-                  <div class="form-group settings-full">
-                    <label class="form-label" for="field-slug">Slug</label>
-                    <input class="form-input" id="field-slug" type="text" placeholder="auto-generated-from-title" autocomplete="off" aria-describedby="slug-hint" />
-                    <small id="slug-hint" style="color:var(--text-dim);font-size:0.75rem;margin-top:4px;display:block;">Auto-generated from title. You can edit it.</small>
-                  </div>
+                <!-- Content AR -->
+                <div class="tab-panel" id="tab-ar" role="tabpanel" dir="rtl">
+                  <input
+                    class="title-input"
+                    id="field-title-ar"
+                    type="text"
+                    placeholder="عنوان المقال…"
+                    aria-label="Arabic title"
+                    autocomplete="off"
+                  />
+                  <textarea
+                    class="body-textarea"
+                    id="field-body-ar"
+                    placeholder="اكتب مقالك بصيغة Markdown…"
+                    aria-label="Arabic body"
+                    dir="rtl"
+                  ></textarea>
+                  <div class="textarea-meta" id="body-ar-meta" aria-live="polite" dir="ltr"></div>
+                </div>
 
-                  <div class="form-group">
-                    <label class="form-label" for="field-category">Category</label>
-                    <select class="form-select" id="field-category" aria-label="Post category">
-                      <option value="Education">Education</option>
-                      <option value="Market Analysis">Market Analysis</option>
-                      <option value="Price Updates">Price Updates</option>
-                      <option value="Buying Guide">Buying Guide</option>
-                      <option value="News">News</option>
-                    </select>
-                  </div>
+                <!-- Settings -->
+                <div class="tab-panel" id="tab-settings" role="tabpanel">
+                  <div class="settings-grid">
+                    <div class="form-group settings-full">
+                      <label class="form-label" for="field-slug">Slug</label>
+                      <input
+                        class="form-input"
+                        id="field-slug"
+                        type="text"
+                        placeholder="auto-generated-from-title"
+                        autocomplete="off"
+                        aria-describedby="slug-hint"
+                      />
+                      <small
+                        id="slug-hint"
+                        style="
+                          color: var(--text-dim);
+                          font-size: 0.75rem;
+                          margin-top: 4px;
+                          display: block;
+                        "
+                        >Auto-generated from title. You can edit it.</small
+                      >
+                    </div>
 
-                  <div class="form-group">
-                    <label class="form-label" for="field-publish-date">Publish Date</label>
-                    <input class="form-input" id="field-publish-date" type="date" aria-label="Publish date" />
-                  </div>
+                    <div class="form-group">
+                      <label class="form-label" for="field-category">Category</label>
+                      <select class="form-select" id="field-category" aria-label="Post category">
+                        <option value="Education">Education</option>
+                        <option value="Market Analysis">Market Analysis</option>
+                        <option value="Price Updates">Price Updates</option>
+                        <option value="Buying Guide">Buying Guide</option>
+                        <option value="News">News</option>
+                      </select>
+                    </div>
 
-                  <div class="form-group settings-full">
-                    <label class="form-label" for="field-tags">Tags</label>
-                    <input class="form-input" id="field-tags-input" type="text" placeholder="Add tag and press Enter or comma…" autocomplete="off" aria-label="Tags input" />
-                    <div class="tags-chips" id="tags-chips" aria-label="Current tags" role="list"></div>
-                  </div>
+                    <div class="form-group">
+                      <label class="form-label" for="field-publish-date">Publish Date</label>
+                      <input
+                        class="form-input"
+                        id="field-publish-date"
+                        type="date"
+                        aria-label="Publish date"
+                      />
+                    </div>
 
-                  <div class="form-group settings-full">
-                    <label class="form-label">Status</label>
-                    <div class="pill-toggle" role="group" aria-label="Post status">
-                      <button class="pill-option" id="pill-draft" data-status="draft" type="button">Draft</button>
-                      <button class="pill-option" id="pill-published" data-status="published" type="button">Published</button>
+                    <div class="form-group settings-full">
+                      <label class="form-label" for="field-tags">Tags</label>
+                      <input
+                        class="form-input"
+                        id="field-tags-input"
+                        type="text"
+                        placeholder="Add tag and press Enter or comma…"
+                        autocomplete="off"
+                        aria-label="Tags input"
+                      />
+                      <div
+                        class="tags-chips"
+                        id="tags-chips"
+                        aria-label="Current tags"
+                        role="list"
+                      ></div>
+                    </div>
+
+                    <div class="form-group settings-full">
+                      <label class="form-label">Status</label>
+                      <div class="pill-toggle" role="group" aria-label="Post status">
+                        <button
+                          class="pill-option"
+                          id="pill-draft"
+                          data-status="draft"
+                          type="button"
+                        >
+                          Draft
+                        </button>
+                        <button
+                          class="pill-option"
+                          id="pill-published"
+                          data-status="published"
+                          type="button"
+                        >
+                          Published
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label" for="field-read-time">Read Time (min)</label>
+                      <input
+                        class="form-input"
+                        id="field-read-time"
+                        type="number"
+                        min="1"
+                        max="120"
+                        value="5"
+                        aria-label="Estimated read time"
+                      />
+                    </div>
+
+                    <div class="form-group settings-full">
+                      <label class="form-label" for="field-excerpt"
+                        >Excerpt
+                        <small style="color: var(--text-dim); font-weight: 400"
+                          >(max 200 chars — auto-filled from body if empty)</small
+                        ></label
+                      >
+                      <textarea
+                        class="form-textarea"
+                        id="field-excerpt"
+                        rows="3"
+                        maxlength="200"
+                        placeholder="Short summary shown in listings…"
+                        aria-label="Excerpt"
+                      ></textarea>
+                      <div class="textarea-meta" id="excerpt-meta" aria-live="polite"></div>
                     </div>
                   </div>
+                </div>
 
-                  <div class="form-group">
-                    <label class="form-label" for="field-read-time">Read Time (min)</label>
-                    <input class="form-input" id="field-read-time" type="number" min="1" max="120" value="5" aria-label="Estimated read time" />
-                  </div>
-
-                  <div class="form-group settings-full">
-                    <label class="form-label" for="field-excerpt">Excerpt <small style="color:var(--text-dim);font-weight:400;">(max 200 chars — auto-filled from body if empty)</small></label>
-                    <textarea class="form-textarea" id="field-excerpt" rows="3" maxlength="200" placeholder="Short summary shown in listings…" aria-label="Excerpt"></textarea>
-                    <div class="textarea-meta" id="excerpt-meta" aria-live="polite"></div>
-                  </div>
+                <!-- Preview -->
+                <div class="tab-panel" id="tab-preview" role="tabpanel">
+                  <div class="preview-box" id="preview-content" aria-label="Post preview"></div>
+                  <p class="preview-disclaimer">
+                    Note: Final rendering depends on the live site's markdown processor.
+                  </p>
                 </div>
               </div>
+              <!-- /editor-content -->
 
-              <!-- Preview -->
-              <div class="tab-panel" id="tab-preview" role="tabpanel">
-                <div class="preview-box" id="preview-content" aria-label="Post preview"></div>
-                <p class="preview-disclaimer">Note: Final rendering depends on the live site's markdown processor.</p>
+              <!-- Sticky action bar -->
+              <div class="editor-actions">
+                <span class="unsaved-indicator hidden" id="unsaved-indicator" aria-live="polite"
+                  >● Unsaved changes</span
+                >
+                <button class="btn btn-ghost btn-sm" id="btn-save-draft" type="button">
+                  Save Draft
+                </button>
+                <button class="btn btn-gold btn-sm" id="btn-publish" type="button">Publish</button>
+                <button
+                  class="btn btn-sm"
+                  id="btn-delete-post"
+                  style="
+                    background: rgba(239, 68, 68, 0.1);
+                    color: var(--danger);
+                    border: 1px solid rgba(239, 68, 68, 0.3);
+                  "
+                  type="button"
+                >
+                  Delete
+                </button>
               </div>
-
-            </div><!-- /editor-content -->
-
-            <!-- Sticky action bar -->
-            <div class="editor-actions">
-              <span class="unsaved-indicator hidden" id="unsaved-indicator" aria-live="polite">● Unsaved changes</span>
-              <button class="btn btn-ghost btn-sm" id="btn-save-draft" type="button">Save Draft</button>
-              <button class="btn btn-gold btn-sm" id="btn-publish" type="button">Publish</button>
-              <button class="btn btn-sm" id="btn-delete-post" style="background:rgba(239,68,68,0.1);color:var(--danger);border:1px solid rgba(239,68,68,0.3);" type="button">Delete</button>
             </div>
-          </div><!-- /editor-form -->
+            <!-- /editor-form -->
+          </div>
+          <!-- /editor-panel -->
+        </div>
+        <!-- /content-area -->
+      </div>
+      <!-- /main-area -->
+    </div>
+    <!-- /admin-layout -->
 
-        </div><!-- /editor-panel -->
+    <!-- Context menu -->
+    <div class="ctx-menu hidden" id="ctx-menu" role="menu" aria-label="Post actions">
+      <button class="ctx-item" id="ctx-edit" role="menuitem" type="button">✏️ Edit</button>
+      <button class="ctx-item" id="ctx-duplicate" role="menuitem" type="button">
+        📋 Duplicate
+      </button>
+      <div class="ctx-sep"></div>
+      <button class="ctx-item danger" id="ctx-delete" role="menuitem" type="button">
+        🗑 Delete
+      </button>
+    </div>
 
-      </div><!-- /content-area -->
-    </div><!-- /main-area -->
-  </div><!-- /admin-layout -->
-
-  <!-- Context menu -->
-  <div class="ctx-menu hidden" id="ctx-menu" role="menu" aria-label="Post actions">
-    <button class="ctx-item" id="ctx-edit" role="menuitem" type="button">✏️ Edit</button>
-    <button class="ctx-item" id="ctx-duplicate" role="menuitem" type="button">📋 Duplicate</button>
-    <div class="ctx-sep"></div>
-    <button class="ctx-item danger" id="ctx-delete" role="menuitem" type="button">🗑 Delete</button>
-  </div>
-
-  <!-- Delete confirm modal -->
-  <div class="modal-backdrop hidden" id="delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
-    <div class="confirm-modal">
-      <h3 id="delete-modal-title">Delete Post?</h3>
-      <p id="delete-modal-msg">This will permanently delete the post. This cannot be undone.</p>
-      <div class="confirm-actions">
-        <button class="btn btn-ghost btn-sm" id="delete-cancel-btn" type="button">Cancel</button>
-        <button class="btn btn-sm" id="delete-confirm-btn" style="background:var(--danger);color:#fff;border:none;" type="button">Delete</button>
+    <!-- Delete confirm modal -->
+    <div
+      class="modal-backdrop hidden"
+      id="delete-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="delete-modal-title"
+    >
+      <div class="confirm-modal">
+        <h3 id="delete-modal-title">Delete Post?</h3>
+        <p id="delete-modal-msg">This will permanently delete the post. This cannot be undone.</p>
+        <div class="confirm-actions">
+          <button class="btn btn-ghost btn-sm" id="delete-cancel-btn" type="button">Cancel</button>
+          <button
+            class="btn btn-sm"
+            id="delete-confirm-btn"
+            style="background: var(--danger); color: #fff; border: none"
+            type="button"
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Toast container -->
-  <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
+    <!-- Toast container -->
+    <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
-  <script type="module">
-    import { logActivity, logout, requireAuth } from '../auth.js';
+    <script type="module">
+      import { logActivity, logout, requireAuth } from '../auth.js';
 
-    // ── Auth guard ──────────────────────────────────────────
-    if (!(await requireAuth())) throw new Error('redirect');
+      // ── Auth guard ──────────────────────────────────────────
+      if (!(await requireAuth())) throw new Error('redirect');
 
-    // ── Storage ────────────────────────────────────────────
-    const STORAGE_KEY = 'gp_blog_posts';
+      // ── Storage ────────────────────────────────────────────
+      const STORAGE_KEY = 'gp_blog_posts';
 
-    function loadPosts() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return [];
-        const parsed = JSON.parse(raw);
-        return Array.isArray(parsed) ? parsed : [];
-      } catch { return []; }
-    }
-
-    function savePosts(posts) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-      } catch {
-        showToast('Storage error — could not save posts.', 'error');
-      }
-    }
-
-    function createPost(data) {
-      const posts = loadPosts();
-      const post = { ...data, id: 'post_' + Date.now(), createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
-      posts.unshift(post);
-      savePosts(posts);
-      logActivity('post_create', post.title || '(untitled)');
-      return post;
-    }
-
-    function updatePost(id, data) {
-      const posts = loadPosts();
-      const idx = posts.findIndex(p => p.id === id);
-      if (idx === -1) return null;
-      posts[idx] = { ...posts[idx], ...data, id, updatedAt: new Date().toISOString() };
-      savePosts(posts);
-      logActivity('post_update', posts[idx].title || '(untitled)');
-      return posts[idx];
-    }
-
-    function deletePost(id) {
-      const posts = loadPosts();
-      const post = posts.find(p => p.id === id);
-      const filtered = posts.filter(p => p.id !== id);
-      savePosts(filtered);
-      if (post) logActivity('post_delete', post.title || '(untitled)');
-      return filtered;
-    }
-
-    // ── Slug ───────────────────────────────────────────────
-    function slugify(text) {
-      return String(text).toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/[\s_-]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-    }
-
-    // ── Word / read time ───────────────────────────────────
-    function wordCount(text) {
-      return String(text).trim().split(/\s+/).filter(Boolean).length;
-    }
-
-    function calcReadTime(text) {
-      return Math.floor(wordCount(text) / 200) + 1;
-    }
-
-    // ── Markdown preview ───────────────────────────────────
-    function simpleMarkdown(text) {
-      const escHtml = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      let html = '';
-      const lines = escHtml(text).split('\n');
-      let inList = false;
-
-      for (let i = 0; i < lines.length; i++) {
-        let line = lines[i];
-        const isListItem = /^- /.test(line);
-
-        if (!isListItem && inList) { html += '</ul>'; inList = false; }
-
-        if (/^### /.test(line)) {
-          html += `<h3>${line.slice(4)}</h3>`;
-        } else if (/^## /.test(line)) {
-          html += `<h2>${line.slice(3)}</h2>`;
-        } else if (/^# /.test(line)) {
-          html += `<h1>${line.slice(2)}</h1>`;
-        } else if (isListItem) {
-          if (!inList) { html += '<ul>'; inList = true; }
-          html += `<li>${applyInline(line.slice(2))}</li>`;
-        } else if (line.trim() === '') {
-          if (inList) { html += '</ul>'; inList = false; }
-          html += '';
-        } else {
-          html += `<p>${applyInline(line)}</p>`;
+      function loadPosts() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return [];
+          const parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
         }
       }
-      if (inList) html += '</ul>';
-      return html;
-    }
 
-    function applyInline(text) {
-      return text
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>');
-    }
-
-    // ── Toast ──────────────────────────────────────────────
-    function showToast(msg, type = 'info') {
-      const c = document.getElementById('toast-container');
-      const t = document.createElement('div');
-      t.className = `toast toast-${type}`;
-      t.textContent = msg;
-      c.appendChild(t);
-      setTimeout(() => t.remove(), 4000);
-    }
-
-    // ── Sample posts ───────────────────────────────────────
-    function buildSamplePosts() {
-      const now = new Date();
-      const twoWeeksAgo = new Date(now); twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-      const oneWeekAgo  = new Date(now); oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-      return [
-        {
-          id: 'post_sample_1',
-          slug: 'understanding-gold-karats-guide',
-          title: 'Understanding Gold Karats: A Complete Guide',
-          titleAr: 'فهم عيارات الذهب: دليل شامل',
-          body: `# Understanding Gold Karats\n\nGold purity is measured in **karats** (K), which indicate the proportion of pure gold in an alloy.\n\n## Common Karat Values\n\n- **24K** — 99.9% pure gold. Softest and most valuable, ideal for investment bars and coins.\n- **22K** — 91.6% gold. Used widely in GCC jewellery for its balance of purity and durability.\n- **18K** — 75% gold. Popular globally; harder and more scratch-resistant.\n- **14K** — 58.3% gold. Common in Western markets for everyday jewellery.\n\n## Why Karat Matters for Price\n\nThe price you pay per gram scales directly with karat purity. A **24K gram** costs roughly 33% more than an **18K gram** of equivalent weight, because 24K is 100% gold while 18K is 75%.`,
-          bodyAr: `# فهم عيارات الذهب\n\nتُقاس نقاء الذهب بـ**القيراط** (K)، الذي يشير إلى نسبة الذهب الخالص في السبيكة.\n\n## القيم الشائعة للقيراط\n\n- **24 قيراط** — نقاء 99.9%. أنعم وأعلى قيمة، مثالي لسبائك الاستثمار والعملات.\n- **22 قيراط** — 91.6% ذهب. يُستخدم على نطاق واسع في مجوهرات دول الخليج.\n- **18 قيراط** — 75% ذهب. شائع عالمياً وأكثر صلابة ومقاومة للخدوش.`,
-          category: 'Education',
-          tags: ['karats', 'purity', '24K', 'buying guide'],
-          publishDate: twoWeeksAgo.toISOString().slice(0, 10),
-          status: 'published',
-          excerpt: 'Learn the difference between 24K, 22K, 18K and 14K gold, and how karat purity affects the price you pay.',
-          readTime: 4,
-          createdAt: twoWeeksAgo.toISOString(),
-          updatedAt: twoWeeksAgo.toISOString(),
-        },
-        {
-          id: 'post_sample_2',
-          slug: 'gold-price-analysis-april-2026',
-          title: 'Gold Price Analysis: What\'s Driving Prices in April 2026',
-          titleAr: '',
-          body: `# Gold Price Analysis — April 2026\n\nGold prices have surged past **$3,200 per troy ounce** in April 2026, driven by a confluence of macroeconomic factors.\n\n## Key Drivers\n\n- **USD weakness** — A softer dollar makes gold cheaper for international buyers, boosting demand.\n- **Central bank buying** — Emerging market central banks continue to diversify reserves into gold.\n- **Geopolitical risk** — Ongoing uncertainty in several regions is sustaining safe-haven demand.\n\n## What This Means for GCC Buyers\n\nFor UAE and GCC buyers, prices in AED are further influenced by the USD/AED peg at 3.6725. When spot gold rises, local prices rise proportionally.`,
-          bodyAr: '',
-          category: 'Market Analysis',
-          tags: ['market', 'price', 'analysis', '2026'],
-          publishDate: oneWeekAgo.toISOString().slice(0, 10),
-          status: 'published',
-          excerpt: 'An overview of the factors pushing gold above $3,200/oz in April 2026, and what it means for buyers in the GCC.',
-          readTime: 3,
-          createdAt: oneWeekAgo.toISOString(),
-          updatedAt: oneWeekAgo.toISOString(),
-        },
-        {
-          id: 'post_sample_3',
-          slug: 'how-to-buy-gold-in-dubai',
-          title: 'How to Buy Gold in Dubai: Tips for First-Time Buyers',
-          titleAr: '',
-          body: `# How to Buy Gold in Dubai\n\nDubai is one of the world's premier gold markets. Here's what first-time buyers need to know.\n\n## Step 1: Know the Spot Price\n\nBefore entering any gold souk, check the current **spot price** of gold. The Dubai Gold & Commodities Exchange (DGCX) posts real-time rates.\n\n## Step 2: Understand Making Charges\n\nJewellery prices include a **making charge** on top of the gold value. This varies by design complexity — expect 5%–25% for handcrafted pieces.\n\n## Step 3: Ask for the Karat Certificate\n\nAll reputable Dubai retailers will provide a purity certificate. Always ask for it and verify the hallmark stamped on the piece.`,
-          bodyAr: '',
-          category: 'Buying Guide',
-          tags: ['dubai', 'buying', 'souk', 'tips'],
-          publishDate: '',
-          status: 'draft',
-          excerpt: 'A step-by-step guide for first-time gold buyers visiting Dubai\'s gold souk, covering spot prices, making charges, and what to check before you buy.',
-          readTime: 5,
-          createdAt: now.toISOString(),
-          updatedAt: now.toISOString(),
-        },
-      ];
-    }
-
-    // ── State ──────────────────────────────────────────────
-    let allPosts = [];
-    let currentPostId = null;
-    let isDirty = false;
-    let autoSaveTimer = null;
-    let currentTags = [];
-    let currentStatus = 'draft';
-    let ctxTargetId = null;
-    let pendingDeleteId = null;
-    let slugManuallyEdited = false;
-
-    // ── Render posts list ──────────────────────────────────
-    function renderPostsList() {
-      const search = document.getElementById('posts-search').value.trim().toLowerCase();
-      const statusF = document.getElementById('posts-status-filter').value;
-      const list = document.getElementById('posts-list');
-
-      let filtered = allPosts.filter(p => {
-        if (statusF && p.status !== statusF) return false;
-        if (search) {
-          const h = `${p.title || ''} ${p.category || ''} ${(p.tags || []).join(' ')}`.toLowerCase();
-          if (!h.includes(search)) return false;
+      function savePosts(posts) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+        } catch {
+          showToast('Storage error — could not save posts.', 'error');
         }
-        return true;
-      });
-
-      if (filtered.length === 0) {
-        list.innerHTML = `<div class="posts-empty">${allPosts.length === 0 ? '📝 No posts yet.' : 'No posts match your search.'}</div>`;
-        return;
       }
 
-      list.innerHTML = filtered.map(p => {
-        const date = p.publishDate || p.createdAt?.slice(0,10) || '';
-        const active = p.id === currentPostId ? ' active' : '';
-        return `<div class="post-item${active}" data-id="${p.id}" role="listitem" tabindex="0" aria-label="${escHtml(p.title || 'Untitled')}">
+      function createPost(data) {
+        const posts = loadPosts();
+        const post = {
+          ...data,
+          id: 'post_' + Date.now(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        posts.unshift(post);
+        savePosts(posts);
+        logActivity('post_create', post.title || '(untitled)');
+        return post;
+      }
+
+      function updatePost(id, data) {
+        const posts = loadPosts();
+        const idx = posts.findIndex((p) => p.id === id);
+        if (idx === -1) return null;
+        posts[idx] = { ...posts[idx], ...data, id, updatedAt: new Date().toISOString() };
+        savePosts(posts);
+        logActivity('post_update', posts[idx].title || '(untitled)');
+        return posts[idx];
+      }
+
+      function deletePost(id) {
+        const posts = loadPosts();
+        const post = posts.find((p) => p.id === id);
+        const filtered = posts.filter((p) => p.id !== id);
+        savePosts(filtered);
+        if (post) logActivity('post_delete', post.title || '(untitled)');
+        return filtered;
+      }
+
+      // ── Slug ───────────────────────────────────────────────
+      function slugify(text) {
+        return String(text)
+          .toLowerCase()
+          .replace(/[^\w\s-]/g, '')
+          .replace(/[\s_-]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+      }
+
+      // ── Word / read time ───────────────────────────────────
+      function wordCount(text) {
+        return String(text).trim().split(/\s+/).filter(Boolean).length;
+      }
+
+      function calcReadTime(text) {
+        return Math.floor(wordCount(text) / 200) + 1;
+      }
+
+      // ── Markdown preview ───────────────────────────────────
+      function simpleMarkdown(text) {
+        const escHtml = (s) =>
+          String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        let html = '';
+        const lines = escHtml(text).split('\n');
+        let inList = false;
+
+        for (let i = 0; i < lines.length; i++) {
+          let line = lines[i];
+          const isListItem = /^- /.test(line);
+
+          if (!isListItem && inList) {
+            html += '</ul>';
+            inList = false;
+          }
+
+          if (/^### /.test(line)) {
+            html += `<h3>${line.slice(4)}</h3>`;
+          } else if (/^## /.test(line)) {
+            html += `<h2>${line.slice(3)}</h2>`;
+          } else if (/^# /.test(line)) {
+            html += `<h1>${line.slice(2)}</h1>`;
+          } else if (isListItem) {
+            if (!inList) {
+              html += '<ul>';
+              inList = true;
+            }
+            html += `<li>${applyInline(line.slice(2))}</li>`;
+          } else if (line.trim() === '') {
+            if (inList) {
+              html += '</ul>';
+              inList = false;
+            }
+            html += '';
+          } else {
+            html += `<p>${applyInline(line)}</p>`;
+          }
+        }
+        if (inList) html += '</ul>';
+        return html;
+      }
+
+      function applyInline(text) {
+        return text
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.+?)\*/g, '<em>$1</em>');
+      }
+
+      // ── Toast ──────────────────────────────────────────────
+      function showToast(msg, type = 'info') {
+        const c = document.getElementById('toast-container');
+        const t = document.createElement('div');
+        t.className = `toast toast-${type}`;
+        t.textContent = msg;
+        c.appendChild(t);
+        setTimeout(() => t.remove(), 4000);
+      }
+
+      // ── Sample posts ───────────────────────────────────────
+      function buildSamplePosts() {
+        const now = new Date();
+        const twoWeeksAgo = new Date(now);
+        twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+        const oneWeekAgo = new Date(now);
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+        return [
+          {
+            id: 'post_sample_1',
+            slug: 'understanding-gold-karats-guide',
+            title: 'Understanding Gold Karats: A Complete Guide',
+            titleAr: 'فهم عيارات الذهب: دليل شامل',
+            body: `# Understanding Gold Karats\n\nGold purity is measured in **karats** (K), which indicate the proportion of pure gold in an alloy.\n\n## Common Karat Values\n\n- **24K** — 99.9% pure gold. Softest and most valuable, ideal for investment bars and coins.\n- **22K** — 91.6% gold. Used widely in GCC jewellery for its balance of purity and durability.\n- **18K** — 75% gold. Popular globally; harder and more scratch-resistant.\n- **14K** — 58.3% gold. Common in Western markets for everyday jewellery.\n\n## Why Karat Matters for Price\n\nThe price you pay per gram scales directly with karat purity. A **24K gram** costs roughly 33% more than an **18K gram** of equivalent weight, because 24K is 100% gold while 18K is 75%.`,
+            bodyAr: `# فهم عيارات الذهب\n\nتُقاس نقاء الذهب بـ**القيراط** (K)، الذي يشير إلى نسبة الذهب الخالص في السبيكة.\n\n## القيم الشائعة للقيراط\n\n- **24 قيراط** — نقاء 99.9%. أنعم وأعلى قيمة، مثالي لسبائك الاستثمار والعملات.\n- **22 قيراط** — 91.6% ذهب. يُستخدم على نطاق واسع في مجوهرات دول الخليج.\n- **18 قيراط** — 75% ذهب. شائع عالمياً وأكثر صلابة ومقاومة للخدوش.`,
+            category: 'Education',
+            tags: ['karats', 'purity', '24K', 'buying guide'],
+            publishDate: twoWeeksAgo.toISOString().slice(0, 10),
+            status: 'published',
+            excerpt:
+              'Learn the difference between 24K, 22K, 18K and 14K gold, and how karat purity affects the price you pay.',
+            readTime: 4,
+            createdAt: twoWeeksAgo.toISOString(),
+            updatedAt: twoWeeksAgo.toISOString(),
+          },
+          {
+            id: 'post_sample_2',
+            slug: 'gold-price-analysis-april-2026',
+            title: "Gold Price Analysis: What's Driving Prices in April 2026",
+            titleAr: '',
+            body: `# Gold Price Analysis — April 2026\n\nGold prices have surged past **$3,200 per troy ounce** in April 2026, driven by a confluence of macroeconomic factors.\n\n## Key Drivers\n\n- **USD weakness** — A softer dollar makes gold cheaper for international buyers, boosting demand.\n- **Central bank buying** — Emerging market central banks continue to diversify reserves into gold.\n- **Geopolitical risk** — Ongoing uncertainty in several regions is sustaining safe-haven demand.\n\n## What This Means for GCC Buyers\n\nFor UAE and GCC buyers, prices in AED are further influenced by the USD/AED peg at 3.6725. When spot gold rises, local prices rise proportionally.`,
+            bodyAr: '',
+            category: 'Market Analysis',
+            tags: ['market', 'price', 'analysis', '2026'],
+            publishDate: oneWeekAgo.toISOString().slice(0, 10),
+            status: 'published',
+            excerpt:
+              'An overview of the factors pushing gold above $3,200/oz in April 2026, and what it means for buyers in the GCC.',
+            readTime: 3,
+            createdAt: oneWeekAgo.toISOString(),
+            updatedAt: oneWeekAgo.toISOString(),
+          },
+          {
+            id: 'post_sample_3',
+            slug: 'how-to-buy-gold-in-dubai',
+            title: 'How to Buy Gold in Dubai: Tips for First-Time Buyers',
+            titleAr: '',
+            body: `# How to Buy Gold in Dubai\n\nDubai is one of the world's premier gold markets. Here's what first-time buyers need to know.\n\n## Step 1: Know the Spot Price\n\nBefore entering any gold souk, check the current **spot price** of gold. The Dubai Gold & Commodities Exchange (DGCX) posts real-time rates.\n\n## Step 2: Understand Making Charges\n\nJewellery prices include a **making charge** on top of the gold value. This varies by design complexity — expect 5%–25% for handcrafted pieces.\n\n## Step 3: Ask for the Karat Certificate\n\nAll reputable Dubai retailers will provide a purity certificate. Always ask for it and verify the hallmark stamped on the piece.`,
+            bodyAr: '',
+            category: 'Buying Guide',
+            tags: ['dubai', 'buying', 'souk', 'tips'],
+            publishDate: '',
+            status: 'draft',
+            excerpt:
+              "A step-by-step guide for first-time gold buyers visiting Dubai's gold souk, covering spot prices, making charges, and what to check before you buy.",
+            readTime: 5,
+            createdAt: now.toISOString(),
+            updatedAt: now.toISOString(),
+          },
+        ];
+      }
+
+      // ── State ──────────────────────────────────────────────
+      let allPosts = [];
+      let currentPostId = null;
+      let isDirty = false;
+      let autoSaveTimer = null;
+      let currentTags = [];
+      let currentStatus = 'draft';
+      let ctxTargetId = null;
+      let pendingDeleteId = null;
+      let slugManuallyEdited = false;
+
+      // ── Render posts list ──────────────────────────────────
+      function renderPostsList() {
+        const search = document.getElementById('posts-search').value.trim().toLowerCase();
+        const statusF = document.getElementById('posts-status-filter').value;
+        const list = document.getElementById('posts-list');
+
+        let filtered = allPosts.filter((p) => {
+          if (statusF && p.status !== statusF) return false;
+          if (search) {
+            const h =
+              `${p.title || ''} ${p.category || ''} ${(p.tags || []).join(' ')}`.toLowerCase();
+            if (!h.includes(search)) return false;
+          }
+          return true;
+        });
+
+        if (filtered.length === 0) {
+          list.innerHTML = `<div class="posts-empty">${allPosts.length === 0 ? '📝 No posts yet.' : 'No posts match your search.'}</div>`;
+          return;
+        }
+
+        list.innerHTML = filtered
+          .map((p) => {
+            const date = p.publishDate || p.createdAt?.slice(0, 10) || '';
+            const active = p.id === currentPostId ? ' active' : '';
+            return `<div class="post-item${active}" data-id="${p.id}" role="listitem" tabindex="0" aria-label="${escHtml(p.title || 'Untitled')}">
           <button class="post-item-menu" data-id="${p.id}" aria-label="Post actions for ${escHtml(p.title || 'Untitled')}" type="button">⋯</button>
           <div class="post-item-title">${escHtml(p.title || '(Untitled)')}</div>
           <div class="post-item-meta">
@@ -708,487 +1283,549 @@
             <span class="post-item-readtime">${p.readTime || 1} min read</span>
           </div>
         </div>`;
-      }).join('');
-    }
-
-    function escHtml(str) {
-      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    // ── Open post in editor ────────────────────────────────
-    function openPost(id) {
-      const post = allPosts.find(p => p.id === id);
-      if (!post) return;
-      currentPostId = id;
-      isDirty = false;
-      slugManuallyEdited = true; // don't auto-overwrite existing slug
-
-      document.getElementById('field-title').value       = post.title || '';
-      document.getElementById('field-body').value        = post.body || '';
-      document.getElementById('field-title-ar').value    = post.titleAr || '';
-      document.getElementById('field-body-ar').value     = post.bodyAr || '';
-      document.getElementById('field-slug').value        = post.slug || '';
-      document.getElementById('field-category').value    = post.category || 'Education';
-      document.getElementById('field-publish-date').value = post.publishDate || '';
-      document.getElementById('field-read-time').value   = post.readTime || 1;
-      document.getElementById('field-excerpt').value     = post.excerpt || '';
-      currentTags   = Array.isArray(post.tags) ? [...post.tags] : [];
-      currentStatus = post.status || 'draft';
-
-      renderTags();
-      updateStatusPill();
-      updateBodyMeta();
-      updateExcerptMeta();
-
-      // Show editor
-      document.getElementById('editor-welcome').classList.add('hidden');
-      const form = document.getElementById('editor-form');
-      form.classList.remove('hidden');
-      form.style.display = '';
-
-      document.getElementById('unsaved-indicator').classList.add('hidden');
-      switchTab('en');
-      renderPostsList(); // re-render to highlight active
-    }
-
-    // ── New post ───────────────────────────────────────────
-    function newPost() {
-      const blankPost = {
-        id: 'post_new_' + Date.now(),
-        slug: '', title: '', titleAr: '', body: '', bodyAr: '',
-        category: 'Education', tags: [], publishDate: '',
-        status: 'draft', excerpt: '', readTime: 1,
-        createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
-      };
-      // Temporarily push, but don't save yet — save on first explicit save
-      allPosts.unshift(blankPost);
-      currentPostId = blankPost.id;
-      isDirty = false;
-      slugManuallyEdited = false;
-
-      document.getElementById('field-title').value        = '';
-      document.getElementById('field-body').value         = '';
-      document.getElementById('field-title-ar').value     = '';
-      document.getElementById('field-body-ar').value      = '';
-      document.getElementById('field-slug').value         = '';
-      document.getElementById('field-category').value     = 'Education';
-      document.getElementById('field-publish-date').value = '';
-      document.getElementById('field-read-time').value    = 1;
-      document.getElementById('field-excerpt').value      = '';
-      currentTags   = [];
-      currentStatus = 'draft';
-
-      renderTags();
-      updateStatusPill();
-      updateBodyMeta();
-      updateExcerptMeta();
-
-      document.getElementById('editor-welcome').classList.add('hidden');
-      const form = document.getElementById('editor-form');
-      form.classList.remove('hidden');
-      form.style.display = '';
-      document.getElementById('unsaved-indicator').classList.add('hidden');
-      switchTab('en');
-      renderPostsList();
-      document.getElementById('field-title').focus();
-    }
-
-    // ── Save post ──────────────────────────────────────────
-    function collectFormData(status) {
-      const title   = document.getElementById('field-title').value.trim();
-      const body    = document.getElementById('field-body').value;
-      const titleAr = document.getElementById('field-title-ar').value.trim();
-      const bodyAr  = document.getElementById('field-body-ar').value;
-      let   slug    = document.getElementById('field-slug').value.trim();
-      const category     = document.getElementById('field-category').value;
-      const publishDate  = document.getElementById('field-publish-date').value;
-      const readTimeVal  = parseInt(document.getElementById('field-read-time').value, 10) || calcReadTime(body);
-      let   excerpt      = document.getElementById('field-excerpt').value.trim();
-
-      if (!slug && title) slug = slugify(title);
-      if (!excerpt && body) excerpt = body.replace(/#+\s*/g,'').replace(/\*+/g,'').trim().slice(0, 150);
-
-      return { title, titleAr, body, bodyAr, slug, category, tags: currentTags, publishDate, status, excerpt, readTime: readTimeVal };
-    }
-
-    function savePost(status) {
-      if (!currentPostId) return;
-      const data = collectFormData(status);
-
-      if (!data.title) {
-        showToast('Please add a title before saving.', 'warning');
-        return;
+          })
+          .join('');
       }
 
-      const existing = allPosts.find(p => p.id === currentPostId);
-      if (existing && existing.createdAt && !existing.id.startsWith('post_new_')) {
-        updatePost(currentPostId, data);
-      } else {
-        // new post — replace temp in-memory entry with a real saved one
-        allPosts = allPosts.filter(p => p.id !== currentPostId);
-        const now = new Date().toISOString();
-        const saved = { ...data, id: currentPostId.startsWith('post_new_') ? 'post_' + Date.now() : currentPostId, createdAt: now, updatedAt: now };
-        const posts = loadPosts();
-        posts.unshift(saved);
-        savePosts(posts);
-        logActivity('post_create', data.title);
-        currentPostId = saved.id;
+      function escHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
       }
 
-      allPosts = loadPosts();
-      isDirty = false;
-      document.getElementById('unsaved-indicator').classList.add('hidden');
-      renderPostsList();
-      showToast(status === 'published' ? 'Post published.' : 'Draft saved.', 'success');
-    }
+      // ── Open post in editor ────────────────────────────────
+      function openPost(id) {
+        const post = allPosts.find((p) => p.id === id);
+        if (!post) return;
+        currentPostId = id;
+        isDirty = false;
+        slugManuallyEdited = true; // don't auto-overwrite existing slug
 
-    // ── Tab switching ──────────────────────────────────────
-    function switchTab(tab) {
-      document.querySelectorAll('.editor-tab').forEach(btn => {
-        const isActive = btn.dataset.tab === tab;
-        btn.classList.toggle('active', isActive);
-        btn.setAttribute('aria-selected', String(isActive));
-      });
-      document.querySelectorAll('.tab-panel').forEach(panel => {
-        panel.classList.toggle('active', panel.id === `tab-${tab}`);
-      });
-      if (tab === 'preview') renderPreview();
-    }
+        document.getElementById('field-title').value = post.title || '';
+        document.getElementById('field-body').value = post.body || '';
+        document.getElementById('field-title-ar').value = post.titleAr || '';
+        document.getElementById('field-body-ar').value = post.bodyAr || '';
+        document.getElementById('field-slug').value = post.slug || '';
+        document.getElementById('field-category').value = post.category || 'Education';
+        document.getElementById('field-publish-date').value = post.publishDate || '';
+        document.getElementById('field-read-time').value = post.readTime || 1;
+        document.getElementById('field-excerpt').value = post.excerpt || '';
+        currentTags = Array.isArray(post.tags) ? [...post.tags] : [];
+        currentStatus = post.status || 'draft';
 
-    // ── Preview ────────────────────────────────────────────
-    function renderPreview() {
-      const title = document.getElementById('field-title').value;
-      const body  = document.getElementById('field-body').value;
-      const box   = document.getElementById('preview-content');
-      const titleHtml = title ? `<h1>${escHtml(title)}</h1>` : '';
-      box.innerHTML = titleHtml + (body ? simpleMarkdown(body) : '<p style="color:var(--text-dim)">Nothing to preview yet.</p>');
-    }
+        renderTags();
+        updateStatusPill();
+        updateBodyMeta();
+        updateExcerptMeta();
 
-    // ── Tags ───────────────────────────────────────────────
-    function renderTags() {
-      const container = document.getElementById('tags-chips');
-      container.innerHTML = currentTags.map(tag =>
-        `<span class="tag-chip" role="listitem">
+        // Show editor
+        document.getElementById('editor-welcome').classList.add('hidden');
+        const form = document.getElementById('editor-form');
+        form.classList.remove('hidden');
+        form.style.display = '';
+
+        document.getElementById('unsaved-indicator').classList.add('hidden');
+        switchTab('en');
+        renderPostsList(); // re-render to highlight active
+      }
+
+      // ── New post ───────────────────────────────────────────
+      function newPost() {
+        const blankPost = {
+          id: 'post_new_' + Date.now(),
+          slug: '',
+          title: '',
+          titleAr: '',
+          body: '',
+          bodyAr: '',
+          category: 'Education',
+          tags: [],
+          publishDate: '',
+          status: 'draft',
+          excerpt: '',
+          readTime: 1,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        // Temporarily push, but don't save yet — save on first explicit save
+        allPosts.unshift(blankPost);
+        currentPostId = blankPost.id;
+        isDirty = false;
+        slugManuallyEdited = false;
+
+        document.getElementById('field-title').value = '';
+        document.getElementById('field-body').value = '';
+        document.getElementById('field-title-ar').value = '';
+        document.getElementById('field-body-ar').value = '';
+        document.getElementById('field-slug').value = '';
+        document.getElementById('field-category').value = 'Education';
+        document.getElementById('field-publish-date').value = '';
+        document.getElementById('field-read-time').value = 1;
+        document.getElementById('field-excerpt').value = '';
+        currentTags = [];
+        currentStatus = 'draft';
+
+        renderTags();
+        updateStatusPill();
+        updateBodyMeta();
+        updateExcerptMeta();
+
+        document.getElementById('editor-welcome').classList.add('hidden');
+        const form = document.getElementById('editor-form');
+        form.classList.remove('hidden');
+        form.style.display = '';
+        document.getElementById('unsaved-indicator').classList.add('hidden');
+        switchTab('en');
+        renderPostsList();
+        document.getElementById('field-title').focus();
+      }
+
+      // ── Save post ──────────────────────────────────────────
+      function collectFormData(status) {
+        const title = document.getElementById('field-title').value.trim();
+        const body = document.getElementById('field-body').value;
+        const titleAr = document.getElementById('field-title-ar').value.trim();
+        const bodyAr = document.getElementById('field-body-ar').value;
+        let slug = document.getElementById('field-slug').value.trim();
+        const category = document.getElementById('field-category').value;
+        const publishDate = document.getElementById('field-publish-date').value;
+        const readTimeVal =
+          parseInt(document.getElementById('field-read-time').value, 10) || calcReadTime(body);
+        let excerpt = document.getElementById('field-excerpt').value.trim();
+
+        if (!slug && title) slug = slugify(title);
+        if (!excerpt && body)
+          excerpt = body.replace(/#+\s*/g, '').replace(/\*+/g, '').trim().slice(0, 150);
+
+        return {
+          title,
+          titleAr,
+          body,
+          bodyAr,
+          slug,
+          category,
+          tags: currentTags,
+          publishDate,
+          status,
+          excerpt,
+          readTime: readTimeVal,
+        };
+      }
+
+      function savePost(status) {
+        if (!currentPostId) return;
+        const data = collectFormData(status);
+
+        if (!data.title) {
+          showToast('Please add a title before saving.', 'warning');
+          return;
+        }
+
+        const existing = allPosts.find((p) => p.id === currentPostId);
+        if (existing && existing.createdAt && !existing.id.startsWith('post_new_')) {
+          updatePost(currentPostId, data);
+        } else {
+          // new post — replace temp in-memory entry with a real saved one
+          allPosts = allPosts.filter((p) => p.id !== currentPostId);
+          const now = new Date().toISOString();
+          const saved = {
+            ...data,
+            id: currentPostId.startsWith('post_new_') ? 'post_' + Date.now() : currentPostId,
+            createdAt: now,
+            updatedAt: now,
+          };
+          const posts = loadPosts();
+          posts.unshift(saved);
+          savePosts(posts);
+          logActivity('post_create', data.title);
+          currentPostId = saved.id;
+        }
+
+        allPosts = loadPosts();
+        isDirty = false;
+        document.getElementById('unsaved-indicator').classList.add('hidden');
+        renderPostsList();
+        showToast(status === 'published' ? 'Post published.' : 'Draft saved.', 'success');
+      }
+
+      // ── Tab switching ──────────────────────────────────────
+      function switchTab(tab) {
+        document.querySelectorAll('.editor-tab').forEach((btn) => {
+          const isActive = btn.dataset.tab === tab;
+          btn.classList.toggle('active', isActive);
+          btn.setAttribute('aria-selected', String(isActive));
+        });
+        document.querySelectorAll('.tab-panel').forEach((panel) => {
+          panel.classList.toggle('active', panel.id === `tab-${tab}`);
+        });
+        if (tab === 'preview') renderPreview();
+      }
+
+      // ── Preview ────────────────────────────────────────────
+      function renderPreview() {
+        const title = document.getElementById('field-title').value;
+        const body = document.getElementById('field-body').value;
+        const box = document.getElementById('preview-content');
+        const titleHtml = title ? `<h1>${escHtml(title)}</h1>` : '';
+        box.innerHTML =
+          titleHtml +
+          (body
+            ? simpleMarkdown(body)
+            : '<p style="color:var(--text-dim)">Nothing to preview yet.</p>');
+      }
+
+      // ── Tags ───────────────────────────────────────────────
+      function renderTags() {
+        const container = document.getElementById('tags-chips');
+        container.innerHTML = currentTags
+          .map(
+            (tag) =>
+              `<span class="tag-chip" role="listitem">
           ${escHtml(tag)}
           <button class="tag-chip-remove" data-tag="${escHtml(tag)}" aria-label="Remove tag ${escHtml(tag)}" type="button">×</button>
         </span>`
-      ).join('');
-    }
-
-    function addTag(raw) {
-      const tag = raw.trim().toLowerCase().replace(/,/g, '');
-      if (tag && !currentTags.includes(tag)) {
-        currentTags.push(tag);
-        renderTags();
-        markDirty();
-      }
-    }
-
-    // ── Status pill ────────────────────────────────────────
-    function updateStatusPill() {
-      const draftBtn     = document.getElementById('pill-draft');
-      const publishedBtn = document.getElementById('pill-published');
-      draftBtn.classList.toggle('active-draft', currentStatus === 'draft');
-      draftBtn.classList.remove('active-published');
-      publishedBtn.classList.toggle('active-published', currentStatus === 'published');
-      publishedBtn.classList.remove('active-draft');
-    }
-
-    // ── Body meta ──────────────────────────────────────────
-    function updateBodyMeta() {
-      const body  = document.getElementById('field-body').value;
-      const words = wordCount(body);
-      const chars = body.length;
-      const rt    = calcReadTime(body);
-      document.getElementById('body-meta').textContent = `${chars} chars · ${words} words · ~${rt} min read`;
-      // auto-update read time
-      document.getElementById('field-read-time').value = rt;
-    }
-
-    function updateBodyArMeta() {
-      const body  = document.getElementById('field-body-ar').value;
-      const words = wordCount(body);
-      const chars = body.length;
-      document.getElementById('body-ar-meta').textContent = `${chars} chars · ${words} words`;
-    }
-
-    function updateExcerptMeta() {
-      const val = document.getElementById('field-excerpt').value;
-      document.getElementById('excerpt-meta').textContent = `${val.length}/200`;
-    }
-
-    // ── Dirty tracking ─────────────────────────────────────
-    function markDirty() {
-      if (!currentPostId) return;
-      isDirty = true;
-      document.getElementById('unsaved-indicator').classList.remove('hidden');
-    }
-
-    // ── Auto-save ──────────────────────────────────────────
-    function scheduleAutoSave() {
-      clearTimeout(autoSaveTimer);
-      autoSaveTimer = setTimeout(() => {
-        if (isDirty && currentPostId) {
-          const data = collectFormData(currentStatus);
-          if (data.title) {
-            savePost(currentStatus);
-            showToast('Auto-saved.', 'info');
-          }
-        }
-      }, 30000);
-    }
-
-    // ── Delete ─────────────────────────────────────────────
-    function openDeleteModal(id) {
-      const post = allPosts.find(p => p.id === id);
-      pendingDeleteId = id;
-      document.getElementById('delete-modal-msg').textContent =
-        `"${post?.title || 'Untitled'}" will be permanently deleted. This cannot be undone.`;
-      document.getElementById('delete-modal').classList.remove('hidden');
-    }
-
-    function confirmDelete() {
-      if (!pendingDeleteId) return;
-      allPosts = deletePost(pendingDeleteId);
-      if (currentPostId === pendingDeleteId) {
-        currentPostId = null;
-        isDirty = false;
-        document.getElementById('editor-welcome').classList.remove('hidden');
-        const form = document.getElementById('editor-form');
-        form.classList.add('hidden');
-        form.style.display = 'none';
-      }
-      pendingDeleteId = null;
-      document.getElementById('delete-modal').classList.add('hidden');
-      renderPostsList();
-      showToast('Post deleted.', 'success');
-    }
-
-    // ── Context menu ───────────────────────────────────────
-    function showCtxMenu(e, id) {
-      e.preventDefault();
-      e.stopPropagation();
-      ctxTargetId = id;
-      const menu = document.getElementById('ctx-menu');
-      menu.classList.remove('hidden');
-      const x = Math.min(e.clientX, window.innerWidth - 180);
-      const y = Math.min(e.clientY, window.innerHeight - 120);
-      menu.style.left = x + 'px';
-      menu.style.top  = y + 'px';
-    }
-
-    function hideCtxMenu() {
-      document.getElementById('ctx-menu').classList.add('hidden');
-      ctxTargetId = null;
-    }
-
-    function duplicatePost(id) {
-      const post = allPosts.find(p => p.id === id);
-      if (!post) return;
-      const newId = 'post_' + Date.now();
-      const copy = {
-        ...post,
-        id: newId,
-        title: (post.title || '') + ' (Copy)',
-        slug: slugify((post.title || '') + '-copy'),
-        status: 'draft',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      const posts = loadPosts();
-      posts.unshift(copy);
-      savePosts(posts);
-      logActivity('post_create', copy.title);
-      allPosts = loadPosts();
-      renderPostsList();
-      openPost(newId);
-      showToast('Post duplicated.', 'success');
-    }
-
-    // ── Init ───────────────────────────────────────────────
-    function init() {
-      allPosts = loadPosts();
-
-      if (allPosts.length === 0) {
-        const samples = buildSamplePosts();
-        savePosts(samples);
-        allPosts = loadPosts();
+          )
+          .join('');
       }
 
-      renderPostsList();
-
-      // Active nav link highlight
-      document.querySelectorAll('.nav-link').forEach(a => {
-        if (a.pathname && window.location.pathname.startsWith(a.pathname) && a.pathname !== '/admin/') {
-          a.classList.add('nav-link-active');
-        }
-      });
-
-      // ── New post button
-      document.getElementById('new-post-btn').addEventListener('click', newPost);
-
-      // ── Posts list: click, keyboard, context menu
-      const postsList = document.getElementById('posts-list');
-      postsList.addEventListener('click', e => {
-        const menuBtn = e.target.closest('.post-item-menu');
-        const item    = e.target.closest('.post-item[data-id]');
-        if (menuBtn) {
-          showCtxMenu(e, menuBtn.dataset.id);
-        } else if (item) {
-          openPost(item.dataset.id);
-        }
-      });
-      postsList.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-          const item = e.target.closest('.post-item[data-id]');
-          if (item) openPost(item.dataset.id);
-        }
-      });
-      postsList.addEventListener('contextmenu', e => {
-        const item = e.target.closest('.post-item[data-id]');
-        if (item) showCtxMenu(e, item.dataset.id);
-      });
-
-      // ── Tags chips remove
-      document.getElementById('tags-chips').addEventListener('click', e => {
-        const btn = e.target.closest('.tag-chip-remove');
-        if (btn) {
-          currentTags = currentTags.filter(t => t !== btn.dataset.tag);
+      function addTag(raw) {
+        const tag = raw.trim().toLowerCase().replace(/,/g, '');
+        if (tag && !currentTags.includes(tag)) {
+          currentTags.push(tag);
           renderTags();
           markDirty();
         }
-      });
+      }
 
-      // ── Tags input
-      const tagsInput = document.getElementById('field-tags-input');
-      tagsInput.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ',') {
-          e.preventDefault();
+      // ── Status pill ────────────────────────────────────────
+      function updateStatusPill() {
+        const draftBtn = document.getElementById('pill-draft');
+        const publishedBtn = document.getElementById('pill-published');
+        draftBtn.classList.toggle('active-draft', currentStatus === 'draft');
+        draftBtn.classList.remove('active-published');
+        publishedBtn.classList.toggle('active-published', currentStatus === 'published');
+        publishedBtn.classList.remove('active-draft');
+      }
+
+      // ── Body meta ──────────────────────────────────────────
+      function updateBodyMeta() {
+        const body = document.getElementById('field-body').value;
+        const words = wordCount(body);
+        const chars = body.length;
+        const rt = calcReadTime(body);
+        document.getElementById('body-meta').textContent =
+          `${chars} chars · ${words} words · ~${rt} min read`;
+        // auto-update read time
+        document.getElementById('field-read-time').value = rt;
+      }
+
+      function updateBodyArMeta() {
+        const body = document.getElementById('field-body-ar').value;
+        const words = wordCount(body);
+        const chars = body.length;
+        document.getElementById('body-ar-meta').textContent = `${chars} chars · ${words} words`;
+      }
+
+      function updateExcerptMeta() {
+        const val = document.getElementById('field-excerpt').value;
+        document.getElementById('excerpt-meta').textContent = `${val.length}/200`;
+      }
+
+      // ── Dirty tracking ─────────────────────────────────────
+      function markDirty() {
+        if (!currentPostId) return;
+        isDirty = true;
+        document.getElementById('unsaved-indicator').classList.remove('hidden');
+      }
+
+      // ── Auto-save ──────────────────────────────────────────
+      function scheduleAutoSave() {
+        clearTimeout(autoSaveTimer);
+        autoSaveTimer = setTimeout(() => {
+          if (isDirty && currentPostId) {
+            const data = collectFormData(currentStatus);
+            if (data.title) {
+              savePost(currentStatus);
+              showToast('Auto-saved.', 'info');
+            }
+          }
+        }, 30000);
+      }
+
+      // ── Delete ─────────────────────────────────────────────
+      function openDeleteModal(id) {
+        const post = allPosts.find((p) => p.id === id);
+        pendingDeleteId = id;
+        document.getElementById('delete-modal-msg').textContent =
+          `"${post?.title || 'Untitled'}" will be permanently deleted. This cannot be undone.`;
+        document.getElementById('delete-modal').classList.remove('hidden');
+      }
+
+      function confirmDelete() {
+        if (!pendingDeleteId) return;
+        allPosts = deletePost(pendingDeleteId);
+        if (currentPostId === pendingDeleteId) {
+          currentPostId = null;
+          isDirty = false;
+          document.getElementById('editor-welcome').classList.remove('hidden');
+          const form = document.getElementById('editor-form');
+          form.classList.add('hidden');
+          form.style.display = 'none';
+        }
+        pendingDeleteId = null;
+        document.getElementById('delete-modal').classList.add('hidden');
+        renderPostsList();
+        showToast('Post deleted.', 'success');
+      }
+
+      // ── Context menu ───────────────────────────────────────
+      function showCtxMenu(e, id) {
+        e.preventDefault();
+        e.stopPropagation();
+        ctxTargetId = id;
+        const menu = document.getElementById('ctx-menu');
+        menu.classList.remove('hidden');
+        const x = Math.min(e.clientX, window.innerWidth - 180);
+        const y = Math.min(e.clientY, window.innerHeight - 120);
+        menu.style.left = x + 'px';
+        menu.style.top = y + 'px';
+      }
+
+      function hideCtxMenu() {
+        document.getElementById('ctx-menu').classList.add('hidden');
+        ctxTargetId = null;
+      }
+
+      function duplicatePost(id) {
+        const post = allPosts.find((p) => p.id === id);
+        if (!post) return;
+        const newId = 'post_' + Date.now();
+        const copy = {
+          ...post,
+          id: newId,
+          title: (post.title || '') + ' (Copy)',
+          slug: slugify((post.title || '') + '-copy'),
+          status: 'draft',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        const posts = loadPosts();
+        posts.unshift(copy);
+        savePosts(posts);
+        logActivity('post_create', copy.title);
+        allPosts = loadPosts();
+        renderPostsList();
+        openPost(newId);
+        showToast('Post duplicated.', 'success');
+      }
+
+      // ── Init ───────────────────────────────────────────────
+      function init() {
+        allPosts = loadPosts();
+
+        if (allPosts.length === 0) {
+          const samples = buildSamplePosts();
+          savePosts(samples);
+          allPosts = loadPosts();
+        }
+
+        renderPostsList();
+
+        // Active nav link highlight
+        document.querySelectorAll('.nav-link').forEach((a) => {
+          if (
+            a.pathname &&
+            window.location.pathname.startsWith(a.pathname) &&
+            a.pathname !== '/admin/'
+          ) {
+            a.classList.add('nav-link-active');
+          }
+        });
+
+        // ── New post button
+        document.getElementById('new-post-btn').addEventListener('click', newPost);
+
+        // ── Posts list: click, keyboard, context menu
+        const postsList = document.getElementById('posts-list');
+        postsList.addEventListener('click', (e) => {
+          const menuBtn = e.target.closest('.post-item-menu');
+          const item = e.target.closest('.post-item[data-id]');
+          if (menuBtn) {
+            showCtxMenu(e, menuBtn.dataset.id);
+          } else if (item) {
+            openPost(item.dataset.id);
+          }
+        });
+        postsList.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            const item = e.target.closest('.post-item[data-id]');
+            if (item) openPost(item.dataset.id);
+          }
+        });
+        postsList.addEventListener('contextmenu', (e) => {
+          const item = e.target.closest('.post-item[data-id]');
+          if (item) showCtxMenu(e, item.dataset.id);
+        });
+
+        // ── Tags chips remove
+        document.getElementById('tags-chips').addEventListener('click', (e) => {
+          const btn = e.target.closest('.tag-chip-remove');
+          if (btn) {
+            currentTags = currentTags.filter((t) => t !== btn.dataset.tag);
+            renderTags();
+            markDirty();
+          }
+        });
+
+        // ── Tags input
+        const tagsInput = document.getElementById('field-tags-input');
+        tagsInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ',') {
+            e.preventDefault();
+            if (tagsInput.value.trim()) {
+              addTag(tagsInput.value);
+              tagsInput.value = '';
+            }
+          }
+        });
+        tagsInput.addEventListener('blur', () => {
           if (tagsInput.value.trim()) {
             addTag(tagsInput.value);
             tagsInput.value = '';
           }
-        }
-      });
-      tagsInput.addEventListener('blur', () => {
-        if (tagsInput.value.trim()) {
-          addTag(tagsInput.value);
-          tagsInput.value = '';
-        }
-      });
+        });
 
-      // ── Status pill
-      document.getElementById('pill-draft').addEventListener('click', () => {
-        currentStatus = 'draft'; updateStatusPill(); markDirty();
-      });
-      document.getElementById('pill-published').addEventListener('click', () => {
-        currentStatus = 'published'; updateStatusPill(); markDirty();
-      });
+        // ── Status pill
+        document.getElementById('pill-draft').addEventListener('click', () => {
+          currentStatus = 'draft';
+          updateStatusPill();
+          markDirty();
+        });
+        document.getElementById('pill-published').addEventListener('click', () => {
+          currentStatus = 'published';
+          updateStatusPill();
+          markDirty();
+        });
 
-      // ── Editor tabs
-      document.querySelectorAll('.editor-tab').forEach(btn => {
-        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-      });
+        // ── Editor tabs
+        document.querySelectorAll('.editor-tab').forEach((btn) => {
+          btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+        });
 
-      // ── Title → slug auto-gen
-      document.getElementById('field-title').addEventListener('input', () => {
-        if (!slugManuallyEdited) {
-          document.getElementById('field-slug').value = slugify(document.getElementById('field-title').value);
-        }
-        markDirty();
-        scheduleAutoSave();
-      });
-
-      // ── Slug manual edit flag
-      document.getElementById('field-slug').addEventListener('input', () => {
-        slugManuallyEdited = true;
-        markDirty();
-      });
-
-      // ── Body / textarea dirty events
-      ['field-body', 'field-title-ar', 'field-body-ar', 'field-category',
-       'field-publish-date', 'field-read-time', 'field-excerpt'].forEach(id => {
-        document.getElementById(id).addEventListener('input', () => {
+        // ── Title → slug auto-gen
+        document.getElementById('field-title').addEventListener('input', () => {
+          if (!slugManuallyEdited) {
+            document.getElementById('field-slug').value = slugify(
+              document.getElementById('field-title').value
+            );
+          }
           markDirty();
           scheduleAutoSave();
         });
-      });
 
-      document.getElementById('field-body').addEventListener('input', () => {
-        updateBodyMeta();
-      });
-      document.getElementById('field-body-ar').addEventListener('input', updateBodyArMeta);
-      document.getElementById('field-excerpt').addEventListener('input', updateExcerptMeta);
+        // ── Slug manual edit flag
+        document.getElementById('field-slug').addEventListener('input', () => {
+          slugManuallyEdited = true;
+          markDirty();
+        });
 
-      // ── Action bar buttons
-      document.getElementById('btn-save-draft').addEventListener('click', () => savePost('draft'));
-      document.getElementById('btn-publish').addEventListener('click', () => savePost('published'));
-      document.getElementById('btn-delete-post').addEventListener('click', () => {
-        if (currentPostId) openDeleteModal(currentPostId);
-      });
+        // ── Body / textarea dirty events
+        [
+          'field-body',
+          'field-title-ar',
+          'field-body-ar',
+          'field-category',
+          'field-publish-date',
+          'field-read-time',
+          'field-excerpt',
+        ].forEach((id) => {
+          document.getElementById(id).addEventListener('input', () => {
+            markDirty();
+            scheduleAutoSave();
+          });
+        });
 
-      // ── Filter / search
-      document.getElementById('posts-search').addEventListener('input', renderPostsList);
-      document.getElementById('posts-status-filter').addEventListener('change', renderPostsList);
+        document.getElementById('field-body').addEventListener('input', () => {
+          updateBodyMeta();
+        });
+        document.getElementById('field-body-ar').addEventListener('input', updateBodyArMeta);
+        document.getElementById('field-excerpt').addEventListener('input', updateExcerptMeta);
 
-      // ── Context menu actions
-      document.getElementById('ctx-edit').addEventListener('click', () => {
-        if (ctxTargetId) openPost(ctxTargetId);
-        hideCtxMenu();
-      });
-      document.getElementById('ctx-duplicate').addEventListener('click', () => {
-        if (ctxTargetId) duplicatePost(ctxTargetId);
-        hideCtxMenu();
-      });
-      document.getElementById('ctx-delete').addEventListener('click', () => {
-        if (ctxTargetId) openDeleteModal(ctxTargetId);
-        hideCtxMenu();
-      });
+        // ── Action bar buttons
+        document
+          .getElementById('btn-save-draft')
+          .addEventListener('click', () => savePost('draft'));
+        document
+          .getElementById('btn-publish')
+          .addEventListener('click', () => savePost('published'));
+        document.getElementById('btn-delete-post').addEventListener('click', () => {
+          if (currentPostId) openDeleteModal(currentPostId);
+        });
 
-      // ── Close ctx menu on outside click / escape
-      document.addEventListener('click', e => {
-        if (!e.target.closest('#ctx-menu') && !e.target.closest('.post-item-menu')) hideCtxMenu();
-      });
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') {
+        // ── Filter / search
+        document.getElementById('posts-search').addEventListener('input', renderPostsList);
+        document.getElementById('posts-status-filter').addEventListener('change', renderPostsList);
+
+        // ── Context menu actions
+        document.getElementById('ctx-edit').addEventListener('click', () => {
+          if (ctxTargetId) openPost(ctxTargetId);
           hideCtxMenu();
-          document.getElementById('delete-modal').classList.add('hidden');
-        }
-      });
+        });
+        document.getElementById('ctx-duplicate').addEventListener('click', () => {
+          if (ctxTargetId) duplicatePost(ctxTargetId);
+          hideCtxMenu();
+        });
+        document.getElementById('ctx-delete').addEventListener('click', () => {
+          if (ctxTargetId) openDeleteModal(ctxTargetId);
+          hideCtxMenu();
+        });
 
-      // ── Delete modal
-      document.getElementById('delete-confirm-btn').addEventListener('click', confirmDelete);
-      document.getElementById('delete-cancel-btn').addEventListener('click', () => {
-        pendingDeleteId = null;
-        document.getElementById('delete-modal').classList.add('hidden');
-      });
-      document.getElementById('delete-modal').addEventListener('click', e => {
-        if (e.target === document.getElementById('delete-modal')) {
+        // ── Close ctx menu on outside click / escape
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('#ctx-menu') && !e.target.closest('.post-item-menu')) hideCtxMenu();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            hideCtxMenu();
+            document.getElementById('delete-modal').classList.add('hidden');
+          }
+        });
+
+        // ── Delete modal
+        document.getElementById('delete-confirm-btn').addEventListener('click', confirmDelete);
+        document.getElementById('delete-cancel-btn').addEventListener('click', () => {
           pendingDeleteId = null;
           document.getElementById('delete-modal').classList.add('hidden');
-        }
-      });
+        });
+        document.getElementById('delete-modal').addEventListener('click', (e) => {
+          if (e.target === document.getElementById('delete-modal')) {
+            pendingDeleteId = null;
+            document.getElementById('delete-modal').classList.add('hidden');
+          }
+        });
 
-      // ── Sidebar toggle (mobile)
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebar-overlay');
-      document.getElementById('sidebar-toggle').addEventListener('click', () => {
-        sidebar.classList.toggle('sidebar-open');
-        overlay.classList.toggle('visible');
-      });
-      overlay.addEventListener('click', () => {
-        sidebar.classList.remove('sidebar-open');
-        overlay.classList.remove('visible');
-      });
+        // ── Sidebar toggle (mobile)
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        document.getElementById('sidebar-toggle').addEventListener('click', () => {
+          sidebar.classList.toggle('sidebar-open');
+          overlay.classList.toggle('visible');
+        });
+        overlay.addEventListener('click', () => {
+          sidebar.classList.remove('sidebar-open');
+          overlay.classList.remove('visible');
+        });
 
-      // ── Logout
-      document.getElementById('logout-btn').addEventListener('click', () => {
-        logout();
-        window.location.replace('../login/');
-      });
-    }
+        // ── Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+          logout();
+          window.location.replace('../login/');
+        });
+      }
 
-    init();
-  </script>
-</body>
+      init();
+    </script>
+  </body>
 </html>

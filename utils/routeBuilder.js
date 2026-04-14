@@ -21,20 +21,20 @@ export function buildRoute({ country, city, karat, page } = {}) {
   // Static pages
   if (page) {
     const staticRoutes = {
-      home:        '',
-      calculator:  'calculator.html',
-      tracker:     'tracker.html',
-      shops:       'shops.html',
-      order:       'order-gold',
-      history:     'gold-price-history',
-      search:      'search',
-      xpost:       'social/x-post-generator.html',
-      learn:       'learn.html',
-      insights:    'insights.html',
-      invest:      'invest.html',
+      home: '',
+      calculator: 'calculator.html',
+      tracker: 'tracker.html',
+      shops: 'shops.html',
+      order: 'order-gold',
+      history: 'gold-price-history',
+      search: 'search',
+      xpost: 'social/x-post-generator.html',
+      learn: 'learn.html',
+      insights: 'insights.html',
+      invest: 'invest.html',
       methodology: 'methodology.html',
-      terms:       'terms.html',
-      privacy:     'privacy.html',
+      terms: 'terms.html',
+      privacy: 'privacy.html',
     };
     const segment = staticRoutes[page];
     if (segment === undefined) return null;

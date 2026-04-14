@@ -1,9 +1,8 @@
 # Supabase Schema — @GoldTickerLive Posting System
 
-This document describes the Supabase tables used by the automated
-gold price posting system. These tables are **in addition to** the
-existing `shops`, `site_settings`, `audit_logs`, and `user_profiles`
-tables documented in `supabase/schema.sql`.
+This document describes the Supabase tables used by the automated gold price posting system. These
+tables are **in addition to** the existing `shops`, `site_settings`, `audit_logs`, and
+`user_profiles` tables documented in `supabase/schema.sql`.
 
 ---
 
@@ -11,18 +10,18 @@ tables documented in `supabase/schema.sql`.
 
 Stores every gold price fetched by the system.
 
-| Column | Type | Purpose |
-|---|---|---|
-| `id` | `uuid` (PK, auto) | Unique row identifier |
-| `spot_usd` | `numeric` | XAU/USD spot price per troy ounce |
-| `change_pct` | `numeric` | Percentage change from previous close |
-| `open_usd` | `numeric` | Day open price (nullable) |
-| `high_usd` | `numeric` | Day high price (nullable) |
-| `low_usd` | `numeric` | Day low price (nullable) |
-| `k24_aed` | `numeric` | 24K AED per gram (nullable) |
-| `k22_aed` | `numeric` | 22K AED per gram (nullable) |
-| `k21_aed` | `numeric` | 21K AED per gram (nullable) |
-| `fetched_at` | `timestamptz` | When the price was fetched (UTC) |
+| Column       | Type              | Purpose                               |
+| ------------ | ----------------- | ------------------------------------- |
+| `id`         | `uuid` (PK, auto) | Unique row identifier                 |
+| `spot_usd`   | `numeric`         | XAU/USD spot price per troy ounce     |
+| `change_pct` | `numeric`         | Percentage change from previous close |
+| `open_usd`   | `numeric`         | Day open price (nullable)             |
+| `high_usd`   | `numeric`         | Day high price (nullable)             |
+| `low_usd`    | `numeric`         | Day low price (nullable)              |
+| `k24_aed`    | `numeric`         | 24K AED per gram (nullable)           |
+| `k22_aed`    | `numeric`         | 22K AED per gram (nullable)           |
+| `k21_aed`    | `numeric`         | 21K AED per gram (nullable)           |
+| `fetched_at` | `timestamptz`     | When the price was fetched (UTC)      |
 
 ### SQL to Create
 
@@ -72,15 +71,15 @@ order by day desc;
 
 Logs every workflow run — successes, skips, and failures.
 
-| Column | Type | Purpose |
-|---|---|---|
-| `id` | `uuid` (PK, auto) | Unique row identifier |
-| `status` | `text` | `success`, `error`, `skipped` |
-| `mode` | `text` | `hourly`, `market_event`, `spike_alert`, `health_check` |
-| `price_usd` | `numeric` | The fetched price at time of run (nullable) |
-| `tweet_id` | `text` | The posted tweet ID (nullable) |
-| `error_message` | `text` | Error details if status is `error` or reason if `skipped` |
-| `created_at` | `timestamptz` | When the log was created (UTC) |
+| Column          | Type              | Purpose                                                   |
+| --------------- | ----------------- | --------------------------------------------------------- |
+| `id`            | `uuid` (PK, auto) | Unique row identifier                                     |
+| `status`        | `text`            | `success`, `error`, `skipped`                             |
+| `mode`          | `text`            | `hourly`, `market_event`, `spike_alert`, `health_check`   |
+| `price_usd`     | `numeric`         | The fetched price at time of run (nullable)               |
+| `tweet_id`      | `text`            | The posted tweet ID (nullable)                            |
+| `error_message` | `text`            | Error details if status is `error` or reason if `skipped` |
+| `created_at`    | `timestamptz`     | When the log was created (UTC)                            |
 
 ### SQL to Create
 
@@ -137,6 +136,6 @@ order by day desc;
 
 1. Go to your Supabase project → **SQL Editor**
 2. Run the SQL from both `create table` blocks above
-3. Both tables use RLS but the posting system uses the **service role key**
-   which bypasses RLS, so no additional policies are needed for the bot
+3. Both tables use RLS but the posting system uses the **service role key** which bypasses RLS, so
+   no additional policies are needed for the bot
 4. Set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` as GitHub Secrets

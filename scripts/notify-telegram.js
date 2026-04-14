@@ -22,18 +22,21 @@
 
 const https = require('https');
 
-const SITE_URL     = 'https://vctb12.github.io/Gold-Prices/';
+const SITE_URL = 'https://vctb12.github.io/Gold-Prices/';
 const GOLD_API_URL = 'https://api.gold-api.com/price/XAU';
-const AED_PEG      = 3.6725;
-const TROY_OZ      = 31.1035;
+const AED_PEG = 3.6725;
+const TROY_OZ = 31.1035;
 
-const GOLD_API_KEY        = process.env.GOLD_API_KEY        || '';
-const TELEGRAM_BOT_TOKEN  = process.env.TELEGRAM_BOT_TOKEN  || '';
+const GOLD_API_KEY = process.env.GOLD_API_KEY || '';
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const TELEGRAM_CHANNEL_ID = process.env.TELEGRAM_CHANNEL_ID || '';
 
 function fmt(n, decimals = 2) {
   if (n == null || isNaN(n)) return '—';
-  return n.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  return n.toLocaleString('en-US', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
 }
 
 function calcAedPerGram(spotUsdPerOz, purity) {
@@ -42,12 +45,18 @@ function calcAedPerGram(spotUsdPerOz, purity) {
 
 function httpsGet(url, headers = {}) {
   return new Promise((resolve, reject) => {
-    const req = https.get(url, { headers }, res => {
+    const req = https.get(url, { headers }, (res) => {
       let body = '';
-      res.on('data', c => { body += c; });
+      res.on('data', (c) => {
+        body += c;
+      });
       res.on('end', () => {
         if (res.statusCode !== 200) return reject(new Error(`HTTP ${res.statusCode}: ${body}`));
-        try { resolve(JSON.parse(body)); } catch (e) { reject(e); }
+        try {
+          resolve(JSON.parse(body));
+        } catch (e) {
+          reject(e);
+        }
       });
     });
     req.on('error', reject);
@@ -60,15 +69,29 @@ function httpsPost(url, payload, headers = {}) {
     const body = JSON.stringify(payload);
     const u = new (require('url').URL)(url);
     const opts = {
-      hostname: u.hostname, path: u.pathname + u.search, method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body), ...headers },
+      hostname: u.hostname,
+      path: u.pathname + u.search,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body),
+        ...headers,
+      },
     };
-    const req = https.request(opts, res => {
+    const req = https.request(opts, (res) => {
       let data = '';
-      res.on('data', c => { data += c; });
+      res.on('data', (c) => {
+        data += c;
+      });
       res.on('end', () => {
-        let parsed; try { parsed = JSON.parse(data); } catch { parsed = data; }
-        if (res.statusCode >= 400) return reject(new Error(`HTTP ${res.statusCode}: ${JSON.stringify(parsed)}`));
+        let parsed;
+        try {
+          parsed = JSON.parse(data);
+        } catch {
+          parsed = data;
+        }
+        if (res.statusCode >= 400)
+          return reject(new Error(`HTTP ${res.statusCode}: ${JSON.stringify(parsed)}`));
         resolve(parsed);
       });
     });
@@ -84,11 +107,15 @@ async function main() {
     ['GOLD_API_KEY', GOLD_API_KEY],
     ['TELEGRAM_BOT_TOKEN', TELEGRAM_BOT_TOKEN],
     ['TELEGRAM_CHANNEL_ID', TELEGRAM_CHANNEL_ID],
-  ].filter(([, v]) => !v).map(([k]) => k);
+  ]
+    .filter(([, v]) => !v)
+    .map(([k]) => k);
 
   if (missing.length) {
     console.log('⚠️  Missing env vars:', missing.join(', '));
-    console.log('   Skipping Telegram post — configure secrets in repo Settings → Secrets → Actions.');
+    console.log(
+      '   Skipping Telegram post — configure secrets in repo Settings → Secrets → Actions.'
+    );
     process.exit(0);
   }
 
@@ -107,14 +134,30 @@ async function main() {
     process.exit(1);
   }
 
-  const open      = goldData.prev_close_price || goldData.open_price || null;
-  const change    = open ? spot - open : null;
+  const open = goldData.prev_close_price || goldData.open_price || null;
+  const change = open ? spot - open : null;
   const changePct = open ? ((spot - open) / open) * 100 : null;
-  const sign      = change != null && change >= 0 ? '+' : '';
-  const trend     = changePct == null ? '➡️' : changePct > 1 ? '🚀' : changePct > 0 ? '📈' : changePct < -1 ? '📉' : changePct < 0 ? '🔻' : '➡️';
+  const sign = change != null && change >= 0 ? '+' : '';
+  const trend =
+    changePct == null
+      ? '➡️'
+      : changePct > 1
+        ? '🚀'
+        : changePct > 0
+          ? '📈'
+          : changePct < -1
+            ? '📉'
+            : changePct < 0
+              ? '🔻'
+              : '➡️';
 
-  const now  = new Date();
-  const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Dubai', hour12: true });
+  const now = new Date();
+  const time = now.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Asia/Dubai',
+    hour12: true,
+  });
   const date = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
   const k24 = calcAedPerGram(spot, 1.0);
@@ -125,15 +168,15 @@ async function main() {
   // Telegram uses HTML parse mode — keep it clean
   const lines = [
     `🥇 <b>Gold Prices</b> — ${date} (${time} UAE) ${trend}`,
-    ``,
+    '',
     `📌 Spot: <b>$${fmt(spot)}/oz</b>${change != null ? `  ${sign}${fmt(changePct)}%` : ''}`,
-    ``,
-    `🇦🇪 UAE (AED/g):`,
+    '',
+    '🇦🇪 UAE (AED/g):',
     `24K: <b>${fmt(k24)}</b>  |  22K: <b>${fmt(k22)}</b>`,
     `21K: <b>${fmt(k21)}</b>  |  18K: <b>${fmt(k18)}</b>`,
-    ``,
+    '',
     `📊 <a href="${SITE_URL}">Track live on GoldPrices</a>`,
-    `#GoldPrice #Gold #UAE #Dubai #GCC`,
+    '#GoldPrice #Gold #UAE #Dubai #GCC',
   ];
 
   const text = lines.join('\n');
@@ -142,7 +185,7 @@ async function main() {
   const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
   try {
     const res = await httpsPost(telegramUrl, {
-      chat_id:    TELEGRAM_CHANNEL_ID,
+      chat_id: TELEGRAM_CHANNEL_ID,
       text,
       parse_mode: 'HTML',
       disable_web_page_preview: false,
@@ -159,4 +202,7 @@ async function main() {
   }
 }
 
-main().catch(err => { console.error('❌ Unhandled error:', err.message); process.exit(1); });
+main().catch((err) => {
+  console.error('❌ Unhandled error:', err.message);
+  process.exit(1);
+});

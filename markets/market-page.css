@@ -15,8 +15,8 @@
 
 .mkt-hero-badge {
   display: inline-block;
-  background: rgba(196,153,62,0.15);
-  border: 1px solid rgba(196,153,62,0.4);
+  background: rgb(196 153 62 / 15%);
+  border: 1px solid rgb(196 153 62 / 40%);
   color: var(--color-gold-light);
   font-size: 0.7rem;
   font-weight: 700;
@@ -31,14 +31,14 @@
   font-size: 1.7rem;
   font-weight: 700;
   color: var(--color-gold-light);
-  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 1px 4px rgb(0 0 0 / 50%);
   line-height: 1.25;
   margin-bottom: 0.6rem;
 }
 
 .mkt-hero-subtitle {
   font-size: 0.95rem;
-  color: rgba(224,184,74,0.7);
+  color: rgb(224 184 74 / 70%);
   line-height: 1.6;
   max-width: 640px;
   margin-bottom: 1.2rem;
@@ -59,7 +59,7 @@
 .mkt-hero-meta-label {
   font-size: 0.68rem;
   font-weight: 700;
-  color: rgba(224,184,74,0.5);
+  color: rgb(224 184 74 / 50%);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -76,7 +76,9 @@
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
-.mkt-section:last-child { border-bottom: none; }
+.mkt-section:last-child {
+  border-bottom: none;
+}
 
 .mkt-inner {
   max-width: 860px;
@@ -181,7 +183,9 @@
   color: var(--color-text);
   text-decoration: none;
   background: var(--color-surface);
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
 }
 
 .mkt-link-btn:hover {
@@ -210,7 +214,9 @@
   padding: 1rem 1.1rem;
   text-decoration: none;
   color: inherit;
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
   display: block;
 }
 
@@ -233,8 +239,8 @@
 
 /* ── Trust note ─────────────────────────────────────── */
 .mkt-trust-note {
-  background: rgba(196,153,62,0.07);
-  border: 1px solid rgba(196,153,62,0.2);
+  background: rgb(196 153 62 / 7%);
+  border: 1px solid rgb(196 153 62 / 20%);
   border-radius: var(--radius-sm);
   padding: 0.75rem 1rem;
   font-size: 0.78rem;
@@ -256,20 +262,37 @@
   text-decoration: none;
 }
 
-.mkt-breadcrumbs a:hover { text-decoration: underline; }
-
-.mkt-breadcrumbs span { color: var(--color-text-faint); margin: 0 0.4rem; }
-
-/* ── Responsive ─────────────────────────────────────── */
-@media (max-width: 640px) {
-  .mkt-hero-title { font-size: 1.35rem; }
-  .mkt-info-grid  { grid-template-columns: 1fr 1fr; }
-  .mkt-related-grid { grid-template-columns: 1fr; }
+.mkt-breadcrumbs a:hover {
+  text-decoration: underline;
 }
 
-@media (max-width: 400px) {
-  .mkt-info-grid { grid-template-columns: 1fr; }
+.mkt-breadcrumbs span {
+  color: var(--color-text-faint);
+  margin: 0 0.4rem;
+}
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (width <= 640px) {
+  .mkt-hero-title {
+    font-size: 1.35rem;
+  }
+
+  .mkt-info-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mkt-related-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (width <= 400px) {
+  .mkt-info-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── RTL ────────────────────────────────────────────── */
-[dir="rtl"] .mkt-tips-list li { flex-direction: row-reverse; }
+[dir='rtl'] .mkt-tips-list li {
+  flex-direction: row-reverse;
+}

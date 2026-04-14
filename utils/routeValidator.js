@@ -15,7 +15,7 @@ export function validateCountry(slug) {
   if (!slug || typeof slug !== 'string') {
     return { valid: false, error: 'Country slug is required' };
   }
-  const country = COUNTRIES.find(c => c.slug === slug);
+  const country = COUNTRIES.find((c) => c.slug === slug);
   if (!country) {
     return { valid: false, error: `Unknown country: ${slug}` };
   }
@@ -39,7 +39,7 @@ export function validateCity(countrySlug, citySlug) {
     return { valid: false, error: 'City slug is required' };
   }
 
-  const city = countryResult.country.cities.find(c => c.slug === citySlug);
+  const city = countryResult.country.cities.find((c) => c.slug === citySlug);
   if (!city) {
     return { valid: false, error: `Unknown city "${citySlug}" in country "${countrySlug}"` };
   }
@@ -57,7 +57,7 @@ export function validateKarat(karatCode) {
     return { valid: false, error: 'Karat code is required' };
   }
   const code = karatCode.replace('-karat', '');
-  const karat = KARATS.find(k => k.code === code);
+  const karat = KARATS.find((k) => k.code === code);
   if (!karat) {
     return { valid: false, error: `Unknown karat: ${karatCode}` };
   }

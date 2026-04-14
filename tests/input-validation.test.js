@@ -54,8 +54,15 @@ function validatePriceAlert(price, currency) {
   const num = Number(price);
   if (isNaN(num) || num <= 0) return { valid: false, error: 'Price must be a positive number' };
   const MAX_PRICE_PER_GRAM = {
-    USD: 500, AED: 2000, SAR: 2000, KWD: 200, QAR: 2000,
-    BHD: 200, OMR: 200, EGP: 30000, INR: 50000,
+    USD: 500,
+    AED: 2000,
+    SAR: 2000,
+    KWD: 200,
+    QAR: 2000,
+    BHD: 200,
+    OMR: 200,
+    EGP: 30000,
+    INR: 50000,
   };
   const maxPrice = MAX_PRICE_PER_GRAM[currency] || 100000;
   if (num > maxPrice) return { valid: false, error: `Price seems too high for ${currency}` };
@@ -155,8 +162,10 @@ describe('validateNumericRange', () => {
 
 describe('sanitizeText', () => {
   test('escapes HTML entities', () => {
-    assert.equal(sanitizeText('<script>alert("xss")</script>'),
-      '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;');
+    assert.equal(
+      sanitizeText('<script>alert("xss")</script>'),
+      '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;'
+    );
   });
 
   test('escapes ampersand', () => {

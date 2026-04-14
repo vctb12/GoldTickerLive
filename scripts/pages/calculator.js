@@ -51,9 +51,11 @@ const T = {
     val_karat: 'Karat',
     val_currency: 'Currency',
     val_result_label: 'Estimated Value',
-    val_disclaimer: 'Indicative estimate only. Does not include making charges, dealer markup or taxes.',
+    val_disclaimer:
+      'Indicative estimate only. Does not include making charges, dealer markup or taxes.',
     scrap_title: 'Scrap Gold Calculator',
-    scrap_desc: 'Estimate the refinery value of your scrap gold. Dealers typically pay 80–95% of spot value.',
+    scrap_desc:
+      'Estimate the refinery value of your scrap gold. Dealers typically pay 80–95% of spot value.',
     scrap_weight: 'Weight',
     scrap_karat: 'Karat',
     scrap_payout: 'Dealer payout %',
@@ -63,27 +65,31 @@ const T = {
     scrap_label_dealer: 'Dealer Payout',
     scrap_disclaimer: 'Actual dealer prices vary. Always get multiple quotes.',
     zakat_title: 'Zakat on Gold Calculator',
-    zakat_desc: 'Calculate your Zakat obligation on gold holdings. Zakat is 2.5% of gold above the nisab threshold (85g of 24K gold or equivalent).',
+    zakat_desc:
+      'Calculate your Zakat obligation on gold holdings. Zakat is 2.5% of gold above the nisab threshold (85g of 24K gold or equivalent).',
     zakat_nisab_label: 'Current Nisab (85g of 24K):',
     zakat_weight: 'Total Gold You Own',
     zakat_karat: 'Average Karat',
     zakat_currency: 'Currency',
     zakat_label_due: 'Zakat Due (2.5%)',
     zakat_below_msg: 'Your gold is below the Nisab threshold — no Zakat due.',
-    zakat_disclaimer: 'This is an estimate. Consult a qualified Islamic scholar for your specific circumstances.',
+    zakat_disclaimer:
+      'This is an estimate. Consult a qualified Islamic scholar for your specific circumstances.',
     buying_title: 'Buying Power Calculator',
     buying_desc: 'How much gold can you buy with a given amount of money?',
     buy_amount: 'Budget',
     buy_karat: 'Karat',
     buy_result_label: 'You can buy approximately',
-    buy_disclaimer: 'Spot rate estimate only. Does not include making charges, VAT, or dealer markup.',
+    buy_disclaimer:
+      'Spot rate estimate only. Does not include making charges, VAT, or dealer markup.',
     convert_title: 'Gold Weight Unit Converter',
     convert_desc: 'Convert between grams, troy ounces, tolas, mashas, and more.',
     conv_amount: 'Amount',
     conv_from: 'From',
     conv_results_title: 'Equivalent weights',
     freshness_waiting: 'Freshness: waiting for source timestamp…',
-    trust_note: 'Labels used across GoldPrices: Live, Delayed, Cached/Fallback, Estimated, Historical baseline. Calculator outputs are spot-linked reference estimates, not final retail jewelry quotes.',
+    trust_note:
+      'Labels used across GoldPrices: Live, Delayed, Cached/Fallback, Estimated, Historical baseline. Calculator outputs are spot-linked reference estimates, not final retail jewelry quotes.',
   },
   ar: {
     pageTitle: 'حاسبة الذهب',
@@ -112,7 +118,8 @@ const T = {
     scrap_label_dealer: 'مبلغ التاجر',
     scrap_disclaimer: 'تختلف أسعار التجار. احصل دائماً على عروض متعددة.',
     zakat_title: 'حاسبة زكاة الذهب',
-    zakat_desc: 'احسب زكاة ذهبك. الزكاة 2.5% من الذهب الزائد عن النصاب (85 غرام من الذهب عيار 24 أو ما يعادله).',
+    zakat_desc:
+      'احسب زكاة ذهبك. الزكاة 2.5% من الذهب الزائد عن النصاب (85 غرام من الذهب عيار 24 أو ما يعادله).',
     zakat_nisab_label: 'النصاب الحالي (85 غرام عيار 24):',
     zakat_weight: 'إجمالي ما تمتلكه من ذهب',
     zakat_karat: 'متوسط العيار',
@@ -132,7 +139,8 @@ const T = {
     conv_from: 'من',
     conv_results_title: 'الأوزان المكافئة',
     freshness_waiting: 'حداثة البيانات: بانتظار الطابع الزمني من المصدر…',
-    trust_note: 'التسميات الموحدة عبر GoldPrices: مباشر، متأخر، مخزن/احتياطي، تقديري، وخط أساس تاريخي. نتائج الحاسبة تقديرات مرجعية مرتبطة بالسعر الفوري وليست سعر تجزئة نهائي للمجوهرات.',
+    trust_note:
+      'التسميات الموحدة عبر GoldPrices: مباشر، متأخر، مخزن/احتياطي، تقديري، وخط أساس تاريخي. نتائج الحاسبة تقديرات مرجعية مرتبطة بالسعر الفوري وليست سعر تجزئة نهائي للمجوهرات.',
   },
 };
 
@@ -143,21 +151,21 @@ function t(key) {
 // ── Weight unit conversions (to grams) ─────────────────────────────────────
 const UNIT_TO_GRAMS = {
   gram: 1,
-  oz:   31.1035,
-  kg:   1000,
+  oz: 31.1035,
+  kg: 1000,
   tola: 11.6638,
-  masha: 0.9720,
+  masha: 0.972,
   baht: 15.244,
   taels: 37.429,
 };
 
 const UNIT_LABELS = {
-  gram:  'Gram (g)',
-  oz:    'Troy Ounce (ozt)',
-  kg:    'Kilogram (kg)',
-  tola:  'Tola',
+  gram: 'Gram (g)',
+  oz: 'Troy Ounce (ozt)',
+  kg: 'Kilogram (kg)',
+  tola: 'Tola',
   masha: 'Masha',
-  baht:  'Baht (Thai)',
+  baht: 'Baht (Thai)',
   taels: 'Taels (Chinese)',
 };
 
@@ -172,7 +180,7 @@ function getRate(currency) {
 }
 
 function getPurityForKarat(code) {
-  const k = KARATS.find(k => k.code === String(code));
+  const k = KARATS.find((k) => k.code === String(code));
   // also handle custom codes like 10, 9
   if (k) return k.purity;
   const n = parseInt(code, 10);
@@ -183,9 +191,9 @@ function getPurityForKarat(code) {
 // ── Calculator 1: Value ─────────────────────────────────────────────────────
 function calcValue() {
   const weightRaw = parseFloat(document.getElementById('val-weight')?.value);
-  const unit      = document.getElementById('val-unit')?.value ?? 'gram';
-  const karat     = document.getElementById('val-karat')?.value ?? '22';
-  const currency  = document.getElementById('val-currency')?.value ?? 'AED';
+  const unit = document.getElementById('val-unit')?.value ?? 'gram';
+  const karat = document.getElementById('val-karat')?.value ?? '22';
+  const currency = document.getElementById('val-currency')?.value ?? 'AED';
 
   const result = document.getElementById('val-result');
   if (!result) return;
@@ -198,15 +206,22 @@ function calcValue() {
   const weightGrams = toGrams(weightRaw, unit);
   const purity = getPurityForKarat(karat);
   const rate = getRate(currency);
-  if (!rate) { result.hidden = true; return; }
+  if (!rate) {
+    result.hidden = true;
+    return;
+  }
 
   const gramPriceUsd = usdPerGram(STATE.spotUsdPerOz, purity);
   const totalUsd = gramPriceUsd * weightGrams;
   const totalLocal = totalUsd * rate;
 
-  const decimals = ['KWD','BHD','OMR','JOD'].includes(currency) ? 3 : 2;
+  const decimals = ['KWD', 'BHD', 'OMR', 'JOD'].includes(currency) ? 3 : 2;
 
-  document.getElementById('val-result-value').textContent = formatPrice(totalLocal, currency, decimals);
+  document.getElementById('val-result-value').textContent = formatPrice(
+    totalLocal,
+    currency,
+    decimals
+  );
 
   const breakdown = document.getElementById('val-result-breakdown');
   if (breakdown) {
@@ -224,10 +239,10 @@ function calcValue() {
 // ── Calculator 2: Scrap ─────────────────────────────────────────────────────
 function calcScrap() {
   const weightRaw = parseFloat(document.getElementById('scrap-weight')?.value);
-  const unit      = document.getElementById('scrap-unit')?.value ?? 'gram';
-  const karat     = document.getElementById('scrap-karat')?.value ?? '22';
-  const payout    = parseFloat(document.getElementById('scrap-payout')?.value) / 100;
-  const currency  = document.getElementById('scrap-currency')?.value ?? 'AED';
+  const unit = document.getElementById('scrap-unit')?.value ?? 'gram';
+  const karat = document.getElementById('scrap-karat')?.value ?? '22';
+  const payout = parseFloat(document.getElementById('scrap-payout')?.value) / 100;
+  const currency = document.getElementById('scrap-currency')?.value ?? 'AED';
 
   const result = document.getElementById('scrap-result');
   if (!result) return;
@@ -240,16 +255,27 @@ function calcScrap() {
   const weightGrams = toGrams(weightRaw, unit);
   const purity = getPurityForKarat(karat);
   const rate = getRate(currency);
-  if (!rate) { result.hidden = true; return; }
+  if (!rate) {
+    result.hidden = true;
+    return;
+  }
 
-  const decimals = ['KWD','BHD','OMR','JOD'].includes(currency) ? 3 : 2;
+  const decimals = ['KWD', 'BHD', 'OMR', 'JOD'].includes(currency) ? 3 : 2;
   const gramPriceUsd = usdPerGram(STATE.spotUsdPerOz, purity);
   const totalUsd = gramPriceUsd * weightGrams;
   const totalLocal = totalUsd * rate;
   const dealerLocal = totalLocal * payout;
 
-  document.getElementById('scrap-result-spot').textContent = formatPrice(totalLocal, currency, decimals);
-  document.getElementById('scrap-result-dealer').textContent = formatPrice(dealerLocal, currency, decimals);
+  document.getElementById('scrap-result-spot').textContent = formatPrice(
+    totalLocal,
+    currency,
+    decimals
+  );
+  document.getElementById('scrap-result-dealer').textContent = formatPrice(
+    dealerLocal,
+    currency,
+    decimals
+  );
   const pctEl = document.getElementById('scrap-pct-display');
   if (pctEl) pctEl.textContent = Math.round(payout * 100);
 
@@ -259,15 +285,15 @@ function calcScrap() {
 // ── Calculator 3: Zakat ─────────────────────────────────────────────────────
 function calcZakat() {
   const weightRaw = parseFloat(document.getElementById('zakat-weight')?.value);
-  const unit      = document.getElementById('zakat-unit')?.value ?? 'gram';
-  const karat     = document.getElementById('zakat-karat')?.value ?? '22';
-  const currency  = document.getElementById('zakat-currency')?.value ?? 'AED';
+  const unit = document.getElementById('zakat-unit')?.value ?? 'gram';
+  const karat = document.getElementById('zakat-karat')?.value ?? '22';
+  const currency = document.getElementById('zakat-currency')?.value ?? 'AED';
 
   const result = document.getElementById('zakat-result');
   if (!result) return;
 
   const rate = getRate(currency);
-  const decimals = ['KWD','BHD','OMR','JOD'].includes(currency) ? 3 : 2;
+  const decimals = ['KWD', 'BHD', 'OMR', 'JOD'].includes(currency) ? 3 : 2;
 
   // Nisab = 85g of 24K gold
   const NISAB_GRAMS_24K = 85;
@@ -299,12 +325,14 @@ function calcZakat() {
   if (grams24kEquiv < NISAB_GRAMS_24K) {
     if (valueEl) valueEl.textContent = formatPrice(0, currency, decimals);
     if (belowNisab) belowNisab.hidden = false;
-    if (breakdown) breakdown.innerHTML = `<div class="calc-result-row"><span>24K equivalent</span><strong>${grams24kEquiv.toFixed(2)} g</strong></div><div class="calc-result-row"><span>Nisab</span><strong>${NISAB_GRAMS_24K} g</strong></div>`;
+    if (breakdown)
+      breakdown.innerHTML = `<div class="calc-result-row"><span>24K equivalent</span><strong>${grams24kEquiv.toFixed(2)} g</strong></div><div class="calc-result-row"><span>Nisab</span><strong>${NISAB_GRAMS_24K} g</strong></div>`;
   } else {
     const zakatLocal = totalLocal * 0.025;
     if (valueEl) valueEl.textContent = formatPrice(zakatLocal, currency, decimals);
     if (belowNisab) belowNisab.hidden = true;
-    if (breakdown) breakdown.innerHTML = `
+    if (breakdown)
+      breakdown.innerHTML = `
       <div class="calc-result-row"><span>Total gold value</span><strong>${formatPrice(totalLocal, currency, decimals)}</strong></div>
       <div class="calc-result-row"><span>24K equivalent</span><strong>${grams24kEquiv.toFixed(2)} g</strong></div>
       <div class="calc-result-row"><span>Nisab threshold</span><strong>${NISAB_GRAMS_24K} g (${formatPrice(nisabLocal, currency, decimals)})</strong></div>
@@ -316,9 +344,9 @@ function calcZakat() {
 
 // ── Calculator 4: Buying power ──────────────────────────────────────────────
 function calcBuying() {
-  const amount   = parseFloat(document.getElementById('buy-amount')?.value);
+  const amount = parseFloat(document.getElementById('buy-amount')?.value);
   const currency = document.getElementById('buy-currency')?.value ?? 'AED';
-  const karat    = document.getElementById('buy-karat')?.value ?? '22';
+  const karat = document.getElementById('buy-karat')?.value ?? '22';
 
   const result = document.getElementById('buy-result');
   if (!result) return;
@@ -329,7 +357,10 @@ function calcBuying() {
   }
 
   const rate = getRate(currency);
-  if (!rate) { result.hidden = true; return; }
+  if (!rate) {
+    result.hidden = true;
+    return;
+  }
 
   const purity = getPurityForKarat(karat);
   const gramPriceLocal = usdPerGram(STATE.spotUsdPerOz, purity) * rate;
@@ -345,7 +376,7 @@ function calcBuying() {
     breakdown.innerHTML = `
       <div class="calc-result-row"><span>In troy ounces</span><strong>${ozYouGet.toFixed(4)} ozt</strong></div>
       <div class="calc-result-row"><span>In tolas</span><strong>${tolaYouGet.toFixed(3)} tola</strong></div>
-      <div class="calc-result-row"><span>Price per gram (${karat}K)</span><strong>${formatPrice(gramPriceLocal, currency, ['KWD','BHD','OMR','JOD'].includes(currency) ? 3 : 2)}</strong></div>
+      <div class="calc-result-row"><span>Price per gram (${karat}K)</span><strong>${formatPrice(gramPriceLocal, currency, ['KWD', 'BHD', 'OMR', 'JOD'].includes(currency) ? 3 : 2)}</strong></div>
     `;
   }
 
@@ -355,7 +386,7 @@ function calcBuying() {
 // ── Calculator 5: Unit converter ────────────────────────────────────────────
 function calcConvert() {
   const amount = parseFloat(document.getElementById('conv-amount')?.value);
-  const from   = document.getElementById('conv-from')?.value ?? 'gram';
+  const from = document.getElementById('conv-from')?.value ?? 'gram';
   const convResults = document.getElementById('conv-results');
   const grid = document.getElementById('conv-grid');
   if (!convResults || !grid) return;
@@ -368,11 +399,15 @@ function calcConvert() {
   const inGrams = toGrams(amount, from);
   const entries = Object.entries(UNIT_TO_GRAMS).filter(([unit]) => unit !== from);
 
-  grid.innerHTML = entries.map(([unit, factor]) => `
+  grid.innerHTML = entries
+    .map(
+      ([unit, factor]) => `
     <div class="conv-row">
       <span class="conv-row-label">${UNIT_LABELS[unit] ?? unit}</span>
       <span class="conv-row-value">${(inGrams / factor).toLocaleString('en-US', { maximumFractionDigits: 6 })}</span>
-    </div>`).join('');
+    </div>`
+    )
+    .join('');
 
   convResults.hidden = false;
 }
@@ -432,7 +467,7 @@ function applyLang() {
   set('calc-trust-note', t('trust_note'));
 
   document.documentElement.lang = STATE.lang;
-  document.documentElement.dir  = STATE.lang === 'ar' ? 'rtl' : 'ltr';
+  document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
 }
 
 // ── Spot badge ───────────────────────────────────────────────────────────────
@@ -459,29 +494,38 @@ function updateSpotBadge() {
     } else {
       const locale = STATE.lang === 'ar' ? 'ar-AE' : 'en-US';
       const stamp = new Date(STATE.freshness.goldUpdatedAt).toLocaleString(locale, {
-        year: 'numeric', month: 'short', day: 'numeric',
-        hour: '2-digit', minute: '2-digit',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
       });
-      const sourceLabel = STATE.spotSource === 'live'
-        ? (STATE.lang === 'ar' ? 'مباشر' : 'Live')
-        : (STATE.lang === 'ar' ? 'مخزن/احتياطي' : 'Cached/Fallback');
-      freshnessEl.textContent = STATE.lang === 'ar'
-        ? `حداثة البيانات: ${sourceLabel} · ${stamp} · المصدر: gold-api.com`
-        : `Freshness: ${sourceLabel} · ${stamp} · Source: gold-api.com`;
+      const sourceLabel =
+        STATE.spotSource === 'live'
+          ? STATE.lang === 'ar'
+            ? 'مباشر'
+            : 'Live'
+          : STATE.lang === 'ar'
+            ? 'مخزن/احتياطي'
+            : 'Cached/Fallback';
+      freshnessEl.textContent =
+        STATE.lang === 'ar'
+          ? `حداثة البيانات: ${sourceLabel} · ${stamp} · المصدر: gold-api.com`
+          : `Freshness: ${sourceLabel} · ${stamp} · Source: gold-api.com`;
     }
   }
 }
 
 // ── Tab switching ────────────────────────────────────────────────────────────
 function setupTabs() {
-  document.querySelectorAll('.calc-tab').forEach(btn => {
+  document.querySelectorAll('.calc-tab').forEach((btn) => {
     btn.addEventListener('click', () => {
       const target = btn.dataset.calc;
-      document.querySelectorAll('.calc-tab').forEach(b => {
+      document.querySelectorAll('.calc-tab').forEach((b) => {
         b.classList.toggle('active', b.dataset.calc === target);
         b.setAttribute('aria-selected', String(b.dataset.calc === target));
       });
-      document.querySelectorAll('.calc-panel').forEach(p => {
+      document.querySelectorAll('.calc-panel').forEach((p) => {
         const isTarget = p.id === `panel-${target}`;
         p.classList.toggle('active', isTarget);
         p.hidden = !isTarget;
@@ -494,16 +538,20 @@ function setupTabs() {
 function wireInputs() {
   const on = (id, fn) => document.getElementById(id)?.addEventListener('input', fn);
 
-  ['val-weight','val-unit','val-karat','val-currency'].forEach(id => on(id, calcValue));
-  ['scrap-weight','scrap-unit','scrap-karat','scrap-payout','scrap-currency'].forEach(id => on(id, calcScrap));
-  ['zakat-weight','zakat-unit','zakat-karat','zakat-currency'].forEach(id => on(id, calcZakat));
-  ['buy-amount','buy-currency','buy-karat'].forEach(id => on(id, calcBuying));
-  ['conv-amount','conv-from'].forEach(id => on(id, calcConvert));
+  ['val-weight', 'val-unit', 'val-karat', 'val-currency'].forEach((id) => on(id, calcValue));
+  ['scrap-weight', 'scrap-unit', 'scrap-karat', 'scrap-payout', 'scrap-currency'].forEach((id) =>
+    on(id, calcScrap)
+  );
+  ['zakat-weight', 'zakat-unit', 'zakat-karat', 'zakat-currency'].forEach((id) =>
+    on(id, calcZakat)
+  );
+  ['buy-amount', 'buy-currency', 'buy-karat'].forEach((id) => on(id, calcBuying));
+  ['conv-amount', 'conv-from'].forEach((id) => on(id, calcConvert));
 
   // Quick weight preset chips
   const weightInput = document.getElementById('val-weight');
-  const unitSelect  = document.getElementById('val-unit');
-  document.querySelectorAll('.calc-preset-chip').forEach(chip => {
+  const unitSelect = document.getElementById('val-unit');
+  document.querySelectorAll('.calc-preset-chip').forEach((chip) => {
     chip.addEventListener('click', () => {
       const w = chip.dataset.weight;
       const u = chip.dataset.unit;
@@ -511,7 +559,9 @@ function wireInputs() {
         weightInput.value = w;
         if (unitSelect && u) unitSelect.value = u;
         // Update active state
-        document.querySelectorAll('.calc-preset-chip').forEach(c => c.classList.remove('is-active'));
+        document
+          .querySelectorAll('.calc-preset-chip')
+          .forEach((c) => c.classList.remove('is-active'));
         chip.classList.add('is-active');
         calcValue();
       }
@@ -521,7 +571,9 @@ function wireInputs() {
   // Clear active chip when user manually edits weight
   if (weightInput) {
     weightInput.addEventListener('input', () => {
-      document.querySelectorAll('.calc-preset-chip').forEach(c => c.classList.remove('is-active'));
+      document
+        .querySelectorAll('.calc-preset-chip')
+        .forEach((c) => c.classList.remove('is-active'));
     });
   }
 }
@@ -549,13 +601,13 @@ async function fetchLiveData() {
     calcZakat(); // Re-render nisab display
     if (STATE.spotUsdPerOz) {
       const TROY = CONSTANTS.TROY_OZ_GRAMS;
-      const AED  = CONSTANTS.AED_PEG;
+      const AED = CONSTANTS.AED_PEG;
       updateTicker({
-        xauUsd:  STATE.spotUsdPerOz,
-        uae24k:  (STATE.spotUsdPerOz * 1       / TROY) * AED,
-        uae22k:  (STATE.spotUsdPerOz * (22/24) / TROY) * AED,
-        uae21k:  (STATE.spotUsdPerOz * (21/24) / TROY) * AED,
-        uae18k:  (STATE.spotUsdPerOz * (18/24) / TROY) * AED,
+        xauUsd: STATE.spotUsdPerOz,
+        uae24k: ((STATE.spotUsdPerOz * 1) / TROY) * AED,
+        uae22k: ((STATE.spotUsdPerOz * (22 / 24)) / TROY) * AED,
+        uae21k: ((STATE.spotUsdPerOz * (21 / 24)) / TROY) * AED,
+        uae18k: ((STATE.spotUsdPerOz * (18 / 24)) / TROY) * AED,
       });
     }
   } catch (e) {
@@ -573,7 +625,10 @@ function initCopyBtn() {
     const done = () => {
       btn.textContent = 'Copied!';
       btn.classList.add('copied');
-      setTimeout(() => { btn.textContent = 'Copy Result'; btn.classList.remove('copied'); }, 1500);
+      setTimeout(() => {
+        btn.textContent = 'Copy Result';
+        btn.classList.remove('copied');
+      }, 1500);
     };
     if (navigator.clipboard) {
       navigator.clipboard.writeText(text).then(done).catch(done);
@@ -588,22 +643,29 @@ function initCopyBtn() {
         document.execCommand('copy');
         document.body.removeChild(t);
         done();
-      } catch (e) { console.warn('Copy fallback failed:', e); }
+      } catch (e) {
+        console.warn('Copy fallback failed:', e);
+      }
     }
   });
 
   // Event delegation for data-target copy buttons
-  document.addEventListener('click', e => {
+  document.addEventListener('click', (e) => {
     const b = e.target.closest('.calc-copy-btn[data-target]');
     if (!b) return;
     const targetEl = document.getElementById(b.dataset.target);
     const text = targetEl?.textContent?.trim();
     if (!text || text === '—') return;
-    navigator.clipboard?.writeText(text).then(() => {
-      const orig = b.textContent;
-      b.textContent = '✓ Copied';
-      setTimeout(() => { b.textContent = orig; }, 2000);
-    }).catch(() => {});
+    navigator.clipboard
+      ?.writeText(text)
+      .then(() => {
+        const orig = b.textContent;
+        b.textContent = '✓ Copied';
+        setTimeout(() => {
+          b.textContent = orig;
+        }, 2000);
+      })
+      .catch(() => {});
   });
 }
 
@@ -615,7 +677,7 @@ async function init() {
   if (urlLang === 'ar' || urlLang === 'en') STATE.lang = urlLang;
 
   document.documentElement.lang = STATE.lang;
-  document.documentElement.dir  = STATE.lang === 'ar' ? 'rtl' : 'ltr';
+  document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
 
   const navResult = injectNav(STATE.lang, 0);
   injectBreadcrumbs('calculator');
@@ -623,7 +685,7 @@ async function init() {
   injectTicker(STATE.lang, 0);
   renderAdSlot('ad-bottom', 'rectangle');
 
-  navResult.getLangToggleButtons().forEach(btn => {
+  navResult.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       cache.savePreference('lang', STATE.lang);

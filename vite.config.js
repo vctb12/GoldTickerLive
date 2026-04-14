@@ -8,11 +8,25 @@ const root = resolve(__dirname);
 // Leaf pages (country/city/karat/shops) load page-hydrator.js as raw ES
 // modules and are served verbatim — they are copied by the deploy workflow.
 const EXCLUDE_DIRS = [
-  'dist', 'node_modules', '.git',
+  'dist',
+  'node_modules',
+  '.git',
   // country-specific leaf-page trees (country/city/karat/shops)
-  'uae', 'saudi-arabia', 'qatar', 'kuwait', 'bahrain', 'oman',
-  'jordan', 'lebanon', 'egypt', 'morocco', 'algeria', 'tunisia',
-  'libya', 'sudan', 'india',
+  'uae',
+  'saudi-arabia',
+  'qatar',
+  'kuwait',
+  'bahrain',
+  'oman',
+  'jordan',
+  'lebanon',
+  'egypt',
+  'morocco',
+  'algeria',
+  'tunisia',
+  'libya',
+  'sudan',
+  'india',
   // admin pages use top-level await and Supabase auth — served as-is
   'admin',
   // embed widget served verbatim
@@ -26,7 +40,7 @@ const EXCLUDE_DIRS = [
 function discoverHtmlEntries() {
   const htmlFiles = globSync('**/*.html', {
     cwd: root,
-    exclude: (path) => EXCLUDE_DIRS.some(d => path === d || path.startsWith(d + '/')),
+    exclude: (path) => EXCLUDE_DIRS.some((d) => path === d || path.startsWith(d + '/')),
   });
 
   const entries = {};
@@ -63,8 +77,12 @@ export default defineConfig({
           if (id.includes('node_modules/lightweight-charts')) {
             return 'vendor';
           }
-          if (id.includes('/lib/cache.js') || id.includes('/lib/api.js') ||
-              id.includes('/lib/price-calculator.js') || id.includes('/lib/formatter.js')) {
+          if (
+            id.includes('/lib/cache.js') ||
+            id.includes('/lib/api.js') ||
+            id.includes('/lib/price-calculator.js') ||
+            id.includes('/lib/formatter.js')
+          ) {
             return 'utils';
           }
         },

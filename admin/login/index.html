@@ -1,283 +1,289 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow" />
-  <title>Admin Login — Gold Prices</title>
-  <link rel="stylesheet" href="../admin.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <style>
-    body {
-      align-items: center;
-      display: flex;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 16px;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Admin Login — Gold Prices</title>
+    <link rel="stylesheet" href="../admin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <style>
+      body {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 16px;
+      }
 
-    .login-wrap {
-      width: 100%;
-      max-width: 400px;
-    }
+      .login-wrap {
+        width: 100%;
+        max-width: 400px;
+      }
 
-    .login-brand {
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 32px;
-      text-align: center;
-    }
+      .login-brand {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 32px;
+        text-align: center;
+      }
 
-    .brand-icon {
-      align-items: center;
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      border-radius: 14px;
-      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
-      color: #0f172a;
-      display: flex;
-      font-size: 28px;
-      height: 60px;
-      justify-content: center;
-      width: 60px;
-    }
+      .brand-icon {
+        align-items: center;
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        border-radius: 14px;
+        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
+        color: #0f172a;
+        display: flex;
+        font-size: 28px;
+        height: 60px;
+        justify-content: center;
+        width: 60px;
+      }
 
-    .brand-name {
-      color: var(--text);
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-    }
+      .brand-name {
+        color: var(--text);
+        font-size: 1.25rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
 
-    .login-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px;
-    }
+      .login-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 32px;
+      }
 
-    .login-card h1 {
-      color: var(--text);
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
+      .login-card h1 {
+        color: var(--text);
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
 
-    .login-sub {
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      margin-bottom: 28px;
-    }
+      .login-sub {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        margin-bottom: 28px;
+      }
 
-    .login-alert {
-      align-items: flex-start;
-      border-radius: var(--radius-sm);
-      display: none;
-      font-size: 0.8125rem;
-      gap: 8px;
-      padding: 10px 14px;
-      margin-bottom: 16px;
-    }
+      .login-alert {
+        align-items: flex-start;
+        border-radius: var(--radius-sm);
+        display: none;
+        font-size: 0.8125rem;
+        gap: 8px;
+        padding: 10px 14px;
+        margin-bottom: 16px;
+      }
 
-    .login-alert.visible { display: flex; }
+      .login-alert.visible {
+        display: flex;
+      }
 
-    .login-alert--error {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: var(--danger);
-    }
+      .login-alert--error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: var(--danger);
+      }
 
-    .login-alert--offline {
-      background: rgba(245, 158, 11, 0.1);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      color: var(--warning);
-    }
+      .login-alert--offline {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        color: var(--warning);
+      }
 
-    .login-alert--denied {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: var(--danger);
-    }
+      .login-alert--denied {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: var(--danger);
+      }
 
-    .btn-github {
-      align-items: center;
-      background: #24292f;
-      border: 1px solid #444c56;
-      border-radius: var(--radius);
-      color: #fff;
-      cursor: pointer;
-      display: flex;
-      font-size: 1rem;
-      font-weight: 600;
-      gap: 10px;
-      justify-content: center;
-      padding: 12px 20px;
-      transition: background 0.15s, border-color 0.15s;
-      width: 100%;
-    }
+      .btn-github {
+        align-items: center;
+        background: #24292f;
+        border: 1px solid #444c56;
+        border-radius: var(--radius);
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        font-size: 1rem;
+        font-weight: 600;
+        gap: 10px;
+        justify-content: center;
+        padding: 12px 20px;
+        transition:
+          background 0.15s,
+          border-color 0.15s;
+        width: 100%;
+      }
 
-    .btn-github:hover {
-      background: #2d333b;
-      border-color: #768390;
-    }
+      .btn-github:hover {
+        background: #2d333b;
+        border-color: #768390;
+      }
 
-    .btn-github:disabled {
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
+      .btn-github:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
 
-    .btn-github svg {
-      flex-shrink: 0;
-      height: 20px;
-      width: 20px;
-    }
+      .btn-github svg {
+        flex-shrink: 0;
+        height: 20px;
+        width: 20px;
+      }
 
-    .login-help {
-      color: var(--text-dim);
-      font-size: 0.8rem;
-      margin-top: 20px;
-      text-align: center;
-    }
+      .login-help {
+        color: var(--text-dim);
+        font-size: 0.8rem;
+        margin-top: 20px;
+        text-align: center;
+      }
 
-    .spinner {
-      display: none;
-      margin: 16px auto;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.875rem;
-    }
+      .spinner {
+        display: none;
+        margin: 16px auto;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
 
-    .spinner.visible { display: block; }
-  </style>
-</head>
-<body>
-  <!-- Flash prevention: redirect immediately if already authenticated via Supabase -->
-  <script>
-    (function () {
-      try {
-        var keys = Object.keys(localStorage);
-        var hasSession = keys.some(function(k) {
-          return k.startsWith('sb-') && k.endsWith('-auth-token');
-        });
-        if (hasSession) {
+      .spinner.visible {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Flash prevention: redirect immediately if already authenticated via Supabase -->
+    <script>
+      (function () {
+        try {
+          var keys = Object.keys(localStorage);
+          var hasSession = keys.some(function (k) {
+            return k.startsWith('sb-') && k.endsWith('-auth-token');
+          });
+          if (hasSession) {
+            window.location.replace('../');
+          }
+        } catch (e) {
+          // not authenticated
+        }
+      })();
+    </script>
+
+    <div class="login-wrap">
+      <div class="login-brand">
+        <div class="brand-icon" aria-hidden="true">⚙</div>
+        <span class="brand-name">GoldAdmin</span>
+      </div>
+
+      <div class="login-card">
+        <h1>Admin Login</h1>
+        <p class="login-sub">Gold Prices Admin Panel</p>
+
+        <div class="login-alert login-alert--error" id="login-error" role="alert"></div>
+        <div class="login-alert login-alert--denied" id="login-denied" role="alert">
+          <span>🚫</span>
+          <span>Access denied. Only the admin account can access this panel.</span>
+        </div>
+        <div class="login-alert login-alert--offline" id="login-offline" role="alert">
+          <span>⚠️</span>
+          <span>Could not reach Supabase. Check your internet connection.</span>
+        </div>
+
+        <button type="button" class="btn-github" id="github-login-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path
+              d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+            />
+          </svg>
+          Sign in with GitHub
+        </button>
+
+        <div class="spinner" id="login-spinner">Checking authentication…</div>
+
+        <p class="login-help">Admin-only · Authenticated via GitHub + Supabase</p>
+      </div>
+    </div>
+
+    <script type="module">
+      import { loginWithGitHub, getSession, isAdminUser, logout } from '../supabase-auth.js';
+      import { ALLOWED_EMAIL } from '../supabase-config.js';
+
+      const githubBtn = document.getElementById('github-login-btn');
+      const errorEl = document.getElementById('login-error');
+      const deniedEl = document.getElementById('login-denied');
+      const offlineEl = document.getElementById('login-offline');
+      const spinnerEl = document.getElementById('login-spinner');
+
+      function showError(msg) {
+        errorEl.textContent = msg;
+        errorEl.classList.add('visible');
+        deniedEl.classList.remove('visible');
+        offlineEl.classList.remove('visible');
+      }
+
+      function showDenied() {
+        deniedEl.classList.add('visible');
+        errorEl.classList.remove('visible');
+        offlineEl.classList.remove('visible');
+      }
+
+      function clearAlerts() {
+        errorEl.classList.remove('visible');
+        deniedEl.classList.remove('visible');
+        offlineEl.classList.remove('visible');
+      }
+
+      // ── Check if user just returned from GitHub OAuth ────────────
+      async function checkPostOAuthReturn() {
+        const session = await getSession();
+        if (!session) return; // Not logged in, show the button
+
+        spinnerEl.classList.add('visible');
+        githubBtn.disabled = true;
+
+        // Check if this user is the allowed admin
+        if (session.user.email === ALLOWED_EMAIL) {
+          // Authorized — go to admin dashboard
           window.location.replace('../');
+          return;
         }
-      } catch (e) {
-        // not authenticated
-      }
-    })();
-  </script>
 
-  <div class="login-wrap">
-    <div class="login-brand">
-      <div class="brand-icon" aria-hidden="true">⚙</div>
-      <span class="brand-name">GoldAdmin</span>
-    </div>
-
-    <div class="login-card">
-      <h1>Admin Login</h1>
-      <p class="login-sub">Gold Prices Admin Panel</p>
-
-      <div class="login-alert login-alert--error" id="login-error" role="alert"></div>
-      <div class="login-alert login-alert--denied" id="login-denied" role="alert">
-        <span>🚫</span>
-        <span>Access denied. Only the admin account can access this panel.</span>
-      </div>
-      <div class="login-alert login-alert--offline" id="login-offline" role="alert">
-        <span>⚠️</span>
-        <span>Could not reach Supabase. Check your internet connection.</span>
-      </div>
-
-      <button type="button" class="btn-github" id="github-login-btn">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-        </svg>
-        Sign in with GitHub
-      </button>
-
-      <div class="spinner" id="login-spinner">Checking authentication…</div>
-
-      <p class="login-help">
-        Admin-only · Authenticated via GitHub + Supabase
-      </p>
-    </div>
-  </div>
-
-  <script type="module">
-    import { loginWithGitHub, getSession, isAdminUser, logout } from '../supabase-auth.js';
-    import { ALLOWED_EMAIL } from '../supabase-config.js';
-
-    const githubBtn = document.getElementById('github-login-btn');
-    const errorEl   = document.getElementById('login-error');
-    const deniedEl  = document.getElementById('login-denied');
-    const offlineEl = document.getElementById('login-offline');
-    const spinnerEl = document.getElementById('login-spinner');
-
-    function showError(msg) {
-      errorEl.textContent = msg;
-      errorEl.classList.add('visible');
-      deniedEl.classList.remove('visible');
-      offlineEl.classList.remove('visible');
-    }
-
-    function showDenied() {
-      deniedEl.classList.add('visible');
-      errorEl.classList.remove('visible');
-      offlineEl.classList.remove('visible');
-    }
-
-    function clearAlerts() {
-      errorEl.classList.remove('visible');
-      deniedEl.classList.remove('visible');
-      offlineEl.classList.remove('visible');
-    }
-
-    // ── Check if user just returned from GitHub OAuth ────────────
-    async function checkPostOAuthReturn() {
-      const session = await getSession();
-      if (!session) return; // Not logged in, show the button
-
-      spinnerEl.classList.add('visible');
-      githubBtn.disabled = true;
-
-      // Check if this user is the allowed admin
-      if (session.user.email === ALLOWED_EMAIL) {
-        // Authorized — go to admin dashboard
-        window.location.replace('../');
-        return;
-      }
-
-      // Wrong account — sign them out and show denial
-      await logout();
-      spinnerEl.classList.remove('visible');
-      githubBtn.disabled = false;
-      showDenied();
-    }
-
-    // ── GitHub login button ──────────────────────────────────────
-    githubBtn.addEventListener('click', async () => {
-      clearAlerts();
-      githubBtn.disabled = true;
-      githubBtn.textContent = 'Redirecting to GitHub…';
-
-      const result = await loginWithGitHub();
-
-      if (!result.success) {
+        // Wrong account — sign them out and show denial
+        await logout();
+        spinnerEl.classList.remove('visible');
         githubBtn.disabled = false;
-        githubBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:20px;height:20px"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg> Sign in with GitHub`;
-
-        if (result.message && result.message.includes('fetch')) {
-          offlineEl.classList.add('visible');
-        } else {
-          showError(result.message || 'GitHub login failed.');
-        }
+        showDenied();
       }
-      // If success, the page will redirect to GitHub OAuth
-    });
 
-    // Run post-OAuth check on page load
-    checkPostOAuthReturn();
-  </script>
-</body>
+      // ── GitHub login button ──────────────────────────────────────
+      githubBtn.addEventListener('click', async () => {
+        clearAlerts();
+        githubBtn.disabled = true;
+        githubBtn.textContent = 'Redirecting to GitHub…';
+
+        const result = await loginWithGitHub();
+
+        if (!result.success) {
+          githubBtn.disabled = false;
+          githubBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:20px;height:20px"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg> Sign in with GitHub`;
+
+          if (result.message && result.message.includes('fetch')) {
+            offlineEl.classList.add('visible');
+          } else {
+            showError(result.message || 'GitHub login failed.');
+          }
+        }
+        // If success, the page will redirect to GitHub OAuth
+      });
+
+      // Run post-OAuth check on page load
+      checkPostOAuthReturn();
+    </script>
+  </body>
 </html>

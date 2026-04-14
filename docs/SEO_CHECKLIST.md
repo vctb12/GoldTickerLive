@@ -7,6 +7,7 @@ Reference for maintaining and improving search visibility for the Gold-Prices we
 ## Search Console & Bing Setup
 
 ### Google Search Console
+
 1. Visit [Google Search Console](https://search.google.com/search-console)
 2. Add property: `https://vctb12.github.io/Gold-Prices/`
 3. Verification is already done via `<meta name="google-site-verification">` in `index.html`
@@ -15,6 +16,7 @@ Reference for maintaining and improving search visibility for the Gold-Prices we
 6. Monitor **Enhancements** → check structured data, breadcrumbs, FAQ rich results
 
 ### Bing Webmaster Tools
+
 1. Visit [Bing Webmaster Tools](https://www.bing.com/webmasters)
 2. Add site: `https://vctb12.github.io/Gold-Prices/`
 3. Verification is already done via `<meta name="msvalidate.01">` in `index.html`
@@ -25,30 +27,32 @@ Reference for maintaining and improving search visibility for the Gold-Prices we
 
 ## Key URLs to Monitor First
 
-| URL | Intent | Priority |
-|-----|--------|----------|
-| `/` | Live gold prices GCC | Critical |
-| `/tracker.html` | Live gold tracker | Critical |
-| `/countries/uae.html` | Gold price UAE today | Critical |
-| `/countries/saudi-arabia.html` | Gold price Saudi | Critical |
-| `/countries/uae/cities/dubai.html` | Gold price Dubai | High |
-| `/calculator.html` | Gold calculator | High |
-| `/countries/egypt.html` | Gold price Egypt | High |
-| `/countries/index.html` | Country directory | Medium |
-| `/shops.html` | Gold shops directory | Medium |
-| `/guides/buying-guide.html` | How to buy gold | Medium |
+| URL                                | Intent               | Priority |
+| ---------------------------------- | -------------------- | -------- |
+| `/`                                | Live gold prices GCC | Critical |
+| `/tracker.html`                    | Live gold tracker    | Critical |
+| `/countries/uae.html`              | Gold price UAE today | Critical |
+| `/countries/saudi-arabia.html`     | Gold price Saudi     | Critical |
+| `/countries/uae/cities/dubai.html` | Gold price Dubai     | High     |
+| `/calculator.html`                 | Gold calculator      | High     |
+| `/countries/egypt.html`            | Gold price Egypt     | High     |
+| `/countries/index.html`            | Country directory    | Medium   |
+| `/shops.html`                      | Gold shops directory | Medium   |
+| `/guides/buying-guide.html`        | How to buy gold      | Medium   |
 
 ---
 
 ## SEO Audit Script
 
-Run the built-in SEO audit to check metadata, canonicals, hreflang, structured data, sitemap, and robots:
+Run the built-in SEO audit to check metadata, canonicals, hreflang, structured data, sitemap, and
+robots:
 
 ```bash
 node scripts/seo-audit.js
 ```
 
 This checks all 32 public HTML pages for:
+
 - Title tags
 - Meta descriptions
 - Canonical URLs (must match expected pattern)
@@ -98,17 +102,17 @@ When adding a new HTML page:
 
 ## Structured Data Types in Use
 
-| Schema | Pages | Purpose |
-|--------|-------|---------|
-| WebSite + SearchAction | Homepage | Sitelinks search box |
-| Organization | Homepage | Brand entity |
-| BreadcrumbList | All pages | Breadcrumb rich results |
-| FAQPage | Calculator, Learn, Tracker | FAQ rich results |
-| Article | Insights, Methodology, Invest, Buying Guide | Article rich results |
-| ItemList | Shops | Directory listing |
-| CollectionPage | Countries index | Collection page |
-| TouristAttraction | Market pages (Dubai Gold Souk, Khan el-Khalili) | Place rich results |
-| City | Dubai city page | Place entity |
+| Schema                 | Pages                                           | Purpose                 |
+| ---------------------- | ----------------------------------------------- | ----------------------- |
+| WebSite + SearchAction | Homepage                                        | Sitelinks search box    |
+| Organization           | Homepage                                        | Brand entity            |
+| BreadcrumbList         | All pages                                       | Breadcrumb rich results |
+| FAQPage                | Calculator, Learn, Tracker                      | FAQ rich results        |
+| Article                | Insights, Methodology, Invest, Buying Guide     | Article rich results    |
+| ItemList               | Shops                                           | Directory listing       |
+| CollectionPage         | Countries index                                 | Collection page         |
+| TouristAttraction      | Market pages (Dubai Gold Souk, Khan el-Khalili) | Place rich results      |
+| City                   | Dubai city page                                 | Place entity            |
 
 ---
 

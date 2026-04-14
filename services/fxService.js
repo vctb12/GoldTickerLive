@@ -25,19 +25,24 @@ const PROVIDERS = [
       return {
         rates,
         time_last_update_utc: data.time_last_update_utc || new Date().toUTCString(),
-        time_next_update_utc: data.time_next_update_utc || new Date(Date.now() + FX_TTL_MS).toUTCString(),
+        time_next_update_utc:
+          data.time_next_update_utc || new Date(Date.now() + FX_TTL_MS).toUTCString(),
       };
     },
   },
 ];
 
 function readCache(key) {
-  try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
+  try {
+    return JSON.parse(localStorage.getItem(key));
+  } catch {
+    return null;
+  }
 }
 
 function isFresh(cached) {
   if (!cached || !cached.fetchedAt) return false;
-  return (Date.now() - cached.fetchedAt) < FX_TTL_MS;
+  return Date.now() - cached.fetchedAt < FX_TTL_MS;
 }
 
 /**
@@ -48,7 +53,12 @@ export async function fetchFXRates() {
   const cached = readCache(FX_CACHE_KEY);
   if (isFresh(cached)) {
     const rates = { ...cached.rates, AED: AED_PEG };
-    return { rates, time_last_update_utc: cached.time_last_update_utc, source: 'cache', fromCache: true };
+    return {
+      rates,
+      time_last_update_utc: cached.time_last_update_utc,
+      source: 'cache',
+      fromCache: true,
+    };
   }
 
   for (const provider of PROVIDERS) {

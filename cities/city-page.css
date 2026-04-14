@@ -38,7 +38,9 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  transition: box-shadow var(--transition), border-color var(--transition);
+  transition:
+    box-shadow var(--transition),
+    border-color var(--transition);
   text-decoration: none;
   color: inherit;
 }
@@ -200,7 +202,9 @@
   transition: opacity var(--transition);
 }
 
-.city-cta-btn:hover { opacity: 0.85; }
+.city-cta-btn:hover {
+  opacity: 0.85;
+}
 
 .city-cta-btn-primary {
   background: var(--color-gold);
@@ -234,7 +238,9 @@
   color: var(--color-text);
   text-decoration: none;
   background: var(--color-surface);
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
 }
 
 .city-related-link:hover {
@@ -243,22 +249,36 @@
 }
 
 /* ── Responsive ─────────────────────────────────────── */
-@media (max-width: 640px) {
-  .city-markets-grid { grid-template-columns: 1fr; }
-  .city-areas-grid   { grid-template-columns: 1fr 1fr; }
-  .city-cta-banner   { flex-direction: column; gap: 1rem; }
-  .cp-prices-row     { grid-template-columns: 1fr 1fr; }
+@media (width <= 640px) {
+  .city-markets-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .city-areas-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .city-cta-banner {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cp-prices-row {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
-@media (max-width: 400px) {
-  .city-areas-grid { grid-template-columns: 1fr; }
+@media (width <= 400px) {
+  .city-areas-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── RTL overrides ──────────────────────────────────── */
-[dir="rtl"] .city-tips-list li {
+[dir='rtl'] .city-tips-list li {
   flex-direction: row-reverse;
 }
 
-[dir="rtl"] .city-cta-banner {
+[dir='rtl'] .city-cta-banner {
   flex-direction: row-reverse;
 }

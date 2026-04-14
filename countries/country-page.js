@@ -61,15 +61,17 @@ const T = {
     karat21: '21K',
     karat18: '18K',
     karatTitle: 'Gold Karat Prices',
-    karatSub: 'All prices are spot-linked reference estimates. Trust labels: Live, Delayed, Cached/Fallback, Estimated, Historical baseline.',
+    karatSub:
+      'All prices are spot-linked reference estimates. Trust labels: Live, Delayed, Cached/Fallback, Estimated, Historical baseline.',
     usdEquiv: 'USD Equivalent',
     change: 'Change',
-    from: 'from today\'s open',
+    from: "from today's open",
     stale: 'Stale data',
     fixedPeg: 'Fixed Peg',
     faq: 'Frequently Asked Questions',
     related: 'Related Countries',
-    disclaimer: 'Spot-linked reference estimates only — not final retail jewelry quotes. Retail prices may include making charges, dealer margins, and local taxes.',
+    disclaimer:
+      'Spot-linked reference estimates only — not final retail jewelry quotes. Retail prices may include making charges, dealer margins, and local taxes.',
     lastUpdate: 'Freshness',
     gram: 'gram',
     oz: 'troy oz',
@@ -84,7 +86,8 @@ const T = {
     karat21: 'عيار 21',
     karat18: 'عيار 18',
     karatTitle: 'أسعار عيارات الذهب',
-    karatSub: 'جميع الأسعار تقديرات مرجعية مرتبطة بالسعر الفوري. تسميات الثقة: مباشر، متأخر، مخزن/احتياطي، تقديري، وخط أساس تاريخي.',
+    karatSub:
+      'جميع الأسعار تقديرات مرجعية مرتبطة بالسعر الفوري. تسميات الثقة: مباشر، متأخر، مخزن/احتياطي، تقديري، وخط أساس تاريخي.',
     usdEquiv: 'ما يعادله بالدولار',
     change: 'التغيير',
     from: 'من سعر فتح اليوم',
@@ -92,7 +95,8 @@ const T = {
     fixedPeg: 'ربط ثابت',
     faq: 'الأسئلة الشائعة',
     related: 'دول أخرى',
-    disclaimer: 'هذه الأسعار تقديرات مرجعية مرتبطة بالسعر الفوري وليست أسعار تجزئة نهائية للمجوهرات. قد تتضمن أسعار التجزئة رسوم مصنعية وهوامش وضرائب محلية.',
+    disclaimer:
+      'هذه الأسعار تقديرات مرجعية مرتبطة بالسعر الفوري وليست أسعار تجزئة نهائية للمجوهرات. قد تتضمن أسعار التجزئة رسوم مصنعية وهوامش وضرائب محلية.',
     lastUpdate: 'حداثة البيانات',
     gram: 'غرام',
     oz: 'أوقية',
@@ -117,18 +121,22 @@ function calcChange(price) {
 // ── Render hero price block ──────────────────────────────────────────────────
 function renderHero(cfg) {
   const rate = getRate(cfg);
-  const karat22 = KARATS.find(k => k.code === '22');
-  const karat24 = KARATS.find(k => k.code === '24');
+  const karat22 = KARATS.find((k) => k.code === '22');
+  const karat24 = KARATS.find((k) => k.code === '24');
 
   const gram22 = rate ? usdPerGram(STATE.goldPriceUsdPerOz, karat22.purity) * rate : null;
   const gram24 = rate ? usdPerGram(STATE.goldPriceUsdPerOz, karat24.purity) * rate : null;
-  const oz24usd = STATE.goldPriceUsdPerOz ? usdPerOz(STATE.goldPriceUsdPerOz, karat24.purity) : null;
+  const oz24usd = STATE.goldPriceUsdPerOz
+    ? usdPerOz(STATE.goldPriceUsdPerOz, karat24.purity)
+    : null;
 
   const changeVal = calcChange(STATE.goldPriceUsdPerOz);
   const changeSign = changeVal !== null ? (changeVal >= 0 ? '+' : '') : '';
   const changeClass = changeVal !== null ? (changeVal >= 0 ? 'badge-up' : 'badge-down') : '';
   const staleClass = STATE.status.goldStale ? ' stale' : '';
-  const staleHtml = STATE.status.goldStale ? `<span class="cp-stale-badge">${t('stale')}</span>` : '';
+  const staleHtml = STATE.status.goldStale
+    ? `<span class="cp-stale-badge">${t('stale')}</span>`
+    : '';
   const pegHtml = cfg.fixedPeg ? `<span class="cp-peg-badge">${t('fixedPeg')}</span>` : '';
 
   const heroEl = document.getElementById('cp-hero-price');
@@ -157,11 +165,15 @@ function renderHero(cfg) {
           <div class="cp-price-value">${oz24usd ? formatPrice(oz24usd, 'USD', 2) : '—'}</div>
         </div>
       </div>
-      ${changeVal !== null ? `
+      ${
+  changeVal !== null
+    ? `
       <div class="cp-change-row">
         <span class="badge ${changeClass}">${changeSign}${changeVal.toFixed(2)}%</span>
         <span class="cp-change-label">${t('from')}</span>
-      </div>` : ''}
+      </div>`
+    : ''
+}
       <div class="cp-update-time">${t('lastUpdate')}: ${STATE.status.goldStale ? 'Cached/Fallback' : 'Live'} · ${STATE.freshness.goldUpdatedAt ? new Date(STATE.freshness.goldUpdatedAt).toLocaleString(STATE.lang === 'ar' ? 'ar-AE' : 'en-AE', { timeZone: cfg.timezone, hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'} · Source: gold-api.com</div>
     </div>`;
 }
@@ -173,34 +185,39 @@ function renderKaratTable(cfg) {
   if (!el) return;
 
   const showKarats = ['24', '22', '21', '18'];
-  const rows = showKarats.map(code => {
-    const karat = KARATS.find(k => k.code === code);
-    if (!karat) return '';
+  const rows = showKarats
+    .map((code) => {
+      const karat = KARATS.find((k) => k.code === code);
+      if (!karat) return '';
 
-    const gramLocal = rate ? usdPerGram(STATE.goldPriceUsdPerOz, karat.purity) * rate : null;
-    const ozLocal   = rate ? usdPerOz(STATE.goldPriceUsdPerOz, karat.purity) * rate : null;
-    const gramUsd   = STATE.goldPriceUsdPerOz ? usdPerGram(STATE.goldPriceUsdPerOz, karat.purity) : null;
+      const gramLocal = rate ? usdPerGram(STATE.goldPriceUsdPerOz, karat.purity) * rate : null;
+      const ozLocal = rate ? usdPerOz(STATE.goldPriceUsdPerOz, karat.purity) * rate : null;
+      const gramUsd = STATE.goldPriceUsdPerOz
+        ? usdPerGram(STATE.goldPriceUsdPerOz, karat.purity)
+        : null;
 
-    const labelKey = `karat${code}`;
-    const label = T[STATE.lang]?.[labelKey] ?? `${code}K`;
-    const pct = Math.round(karat.purity * 100);
+      const labelKey = `karat${code}`;
+      const label = T[STATE.lang]?.[labelKey] ?? `${code}K`;
+      const pct = Math.round(karat.purity * 100);
 
-    return `
+      return `
       <tr>
         <td class="cp-karat-name"><strong>${label}</strong><span class="cp-karat-pct">${pct}%</span></td>
         <td class="cp-price-cell">${gramLocal ? formatPrice(gramLocal, cfg.currency, cfg.decimals) : '—'}</td>
         <td class="cp-price-cell">${ozLocal ? formatPrice(ozLocal, cfg.currency, cfg.decimals) : '—'}</td>
         <td class="cp-price-cell cp-usd-col">${gramUsd ? formatPrice(gramUsd, 'USD', 2) : '—'}</td>
       </tr>`;
-  }).join('');
+    })
+    .join('');
 
   const tsLabel = STATE.freshness?.goldUpdatedAt
     ? ` · ${new Date(STATE.freshness.goldUpdatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
     : '';
-  const countryName = STATE.lang === 'ar' ? (cfg.nameAr || cfg.nameEn) : cfg.nameEn;
-  const tableAriaLabel = STATE.lang === 'ar'
-    ? `جدول أسعار الذهب — ${countryName}`
-    : `Gold price table — ${countryName}${tsLabel}`;
+  const countryName = STATE.lang === 'ar' ? cfg.nameAr || cfg.nameEn : cfg.nameEn;
+  const tableAriaLabel =
+    STATE.lang === 'ar'
+      ? `جدول أسعار الذهب — ${countryName}`
+      : `Gold price table — ${countryName}${tsLabel}`;
 
   el.innerHTML = `
     <div class="cp-table-header">
@@ -248,11 +265,15 @@ function renderRelated(cfg) {
   const el = document.getElementById('cp-related');
   if (!el || !cfg.relatedCountries?.length) return;
 
-  const cards = cfg.relatedCountries.map(c => `
+  const cards = cfg.relatedCountries
+    .map(
+      (c) => `
     <a href="${normalizeRelatedCountryUrl(c.file)}" class="cp-related-card">
       <span class="cp-related-flag">${c.flag}</span>
       <span class="cp-related-name">${STATE.lang === 'ar' ? c.nameAr : c.nameEn}</span>
-    </a>`).join('');
+    </a>`
+    )
+    .join('');
 
   el.innerHTML = `
     <h2>${t('related')}</h2>
@@ -267,7 +288,7 @@ function injectFaqSchema(faqEn) {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: faqEn.map(item => ({
+    mainEntity: faqEn.map((item) => ({
       '@type': 'Question',
       name: item.q,
       acceptedAnswer: { '@type': 'Answer', text: item.a },
@@ -290,24 +311,32 @@ function renderFaq(cfg) {
 
   injectFaqSchema(cfg.faqEn);
 
-  const items = faqList.map((item, i) => `
+  const items = faqList
+    .map(
+      (item, i) => `
     <details class="faq-item" ${i === 0 ? 'open' : ''}>
       <summary class="faq-question" itemprop="name">${item.q}</summary>
       <div class="faq-answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
         <p itemprop="text">${item.a}</p>
       </div>
-    </details>`).join('');
+    </details>`
+    )
+    .join('');
 
   el.innerHTML = `
     <h2>${t('faq')}</h2>
     <div itemscope itemtype="https://schema.org/FAQPage">
-      ${faqList.map((item, i) => `
+      ${faqList
+    .map(
+      (item, i) => `
         <details class="faq-item" ${i === 0 ? 'open' : ''} itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
           <summary class="faq-question" itemprop="name">${item.q}</summary>
           <div class="faq-answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
             <p itemprop="text">${item.a}</p>
           </div>
-        </details>`).join('')}
+        </details>`
+    )
+    .join('')}
     </div>`;
 }
 
@@ -324,10 +353,7 @@ function renderAll(cfg) {
 // ── Live data fetch ──────────────────────────────────────────────────────────
 async function fetchLiveData(cfg) {
   try {
-    const [goldData, fxData] = await Promise.allSettled([
-      api.fetchGold(),
-      api.fetchFX(),
-    ]);
+    const [goldData, fxData] = await Promise.allSettled([api.fetchGold(), api.fetchFX()]);
 
     if (goldData.status === 'fulfilled') {
       STATE.goldPriceUsdPerOz = goldData.value.price;
@@ -352,11 +378,11 @@ async function fetchLiveData(cfg) {
       const TROY = 31.1035;
       const p = STATE.goldPriceUsdPerOz;
       updateTicker({
-        xauUsd:  p,
-        uae24k:  (p * 1    / TROY) * AED_PEG,
-        uae22k:  (p * 22/24 / TROY) * AED_PEG,
-        uae21k:  (p * 21/24 / TROY) * AED_PEG,
-        uae18k:  (p * 18/24 / TROY) * AED_PEG,
+        xauUsd: p,
+        uae24k: ((p * 1) / TROY) * AED_PEG,
+        uae22k: ((p * 22) / 24 / TROY) * AED_PEG,
+        uae21k: ((p * 21) / 24 / TROY) * AED_PEG,
+        uae18k: ((p * 18) / 24 / TROY) * AED_PEG,
       });
     }
   } catch (e) {
@@ -379,7 +405,7 @@ export async function initCountryPage(cfg) {
 
   // navDepth: 1 for /countries/ pages, 2 for /countries/X/cities/ and /countries/X/markets/
   const navDepth = cfg.navDepth ?? 1;
-  const homeUrl  = navDepth >= 2 ? '../../../' : '../';
+  const homeUrl = navDepth >= 2 ? '../../../' : '../';
 
   const navResult = injectNav(STATE.lang, navDepth);
 
@@ -396,7 +422,7 @@ export async function initCountryPage(cfg) {
   injectTicker(STATE.lang, navDepth);
 
   // Wire language toggle
-  navResult.getLangToggleButtons().forEach(btn => {
+  navResult.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       cache.savePreference('lang', STATE.lang);

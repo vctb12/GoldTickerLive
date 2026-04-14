@@ -1,759 +1,957 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow" />
-  <title>Pricing — GoldAdmin</title>
-  <link rel="stylesheet" href="../admin.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <style>
-    /* ── Section spacing ────────────────────────────────────── */
-    .section { margin-bottom: 28px; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Pricing — GoldAdmin</title>
+    <link rel="stylesheet" href="../admin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <style>
+      /* ── Section spacing ────────────────────────────────────── */
+      .section {
+        margin-bottom: 28px;
+      }
 
-    /* ── Override warning banner ────────────────────────────── */
-    .override-banner {
-      align-items: center;
-      background: rgba(245, 158, 11, 0.1);
-      border: 1px solid rgba(245, 158, 11, 0.35);
-      border-radius: var(--radius);
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-      padding: 12px 16px;
-    }
-    .override-banner .banner-icon { flex-shrink: 0; font-size: 18px; }
-    .override-banner .banner-text { color: var(--warning); font-size: 0.875rem; font-weight: 500; }
+      /* ── Override warning banner ────────────────────────────── */
+      .override-banner {
+        align-items: center;
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.35);
+        border-radius: var(--radius);
+        display: flex;
+        gap: 12px;
+        margin-bottom: 20px;
+        padding: 12px 16px;
+      }
+      .override-banner .banner-icon {
+        flex-shrink: 0;
+        font-size: 18px;
+      }
+      .override-banner .banner-text {
+        color: var(--warning);
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
 
-    /* ── Live prices table ──────────────────────────────────── */
-    .live-header {
-      align-items: center;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-    .live-header h2 { color: var(--text); font-size: 0.9375rem; font-weight: 600; }
-    .freshness-badge {
-      align-items: center;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      display: inline-flex;
-      font-size: 0.75rem;
-      font-weight: 500;
-      gap: 5px;
-      padding: 3px 10px;
-      white-space: nowrap;
-    }
-    .freshness-dot {
-      border-radius: 50%;
-      height: 7px;
-      width: 7px;
-      flex-shrink: 0;
-    }
-    .freshness-dot--green  { background: var(--success); }
-    .freshness-dot--yellow { background: var(--warning); }
-    .freshness-dot--red    { background: var(--danger); }
+      /* ── Live prices table ──────────────────────────────────── */
+      .live-header {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+      .live-header h2 {
+        color: var(--text);
+        font-size: 0.9375rem;
+        font-weight: 600;
+      }
+      .freshness-badge {
+        align-items: center;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        display: inline-flex;
+        font-size: 0.75rem;
+        font-weight: 500;
+        gap: 5px;
+        padding: 3px 10px;
+        white-space: nowrap;
+      }
+      .freshness-dot {
+        border-radius: 50%;
+        height: 7px;
+        width: 7px;
+        flex-shrink: 0;
+      }
+      .freshness-dot--green {
+        background: var(--success);
+      }
+      .freshness-dot--yellow {
+        background: var(--warning);
+      }
+      .freshness-dot--red {
+        background: var(--danger);
+      }
 
-    .price-cell {
-      min-width: 90px;
-      position: relative;
-      text-align: right;
-      white-space: nowrap;
-    }
-    .price-cell .override-badge {
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      border-radius: var(--radius-sm);
-      color: var(--warning);
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 1px 5px;
-      margin-left: 4px;
-    }
-    .price-value { color: var(--text); font-size: 0.875rem; font-weight: 600; font-variant-numeric: tabular-nums; }
-    .price-loading { color: var(--text-dim); font-size: 0.8125rem; }
+      .price-cell {
+        min-width: 90px;
+        position: relative;
+        text-align: right;
+        white-space: nowrap;
+      }
+      .price-cell .override-badge {
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: var(--radius-sm);
+        color: var(--warning);
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 1px 5px;
+        margin-left: 4px;
+      }
+      .price-value {
+        color: var(--text);
+        font-size: 0.875rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+      }
+      .price-loading {
+        color: var(--text-dim);
+        font-size: 0.8125rem;
+      }
 
-    /* ── Overrides table status ─────────────────────────────── */
-    .status-active  { color: var(--success); font-weight: 600; }
-    .status-expired { color: var(--danger); }
-    .status-inactive { color: var(--text-dim); }
+      /* ── Overrides table status ─────────────────────────────── */
+      .status-active {
+        color: var(--success);
+        font-weight: 600;
+      }
+      .status-expired {
+        color: var(--danger);
+      }
+      .status-inactive {
+        color: var(--text-dim);
+      }
 
-    /* ── Add override form card ─────────────────────────────── */
-    .form-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-    }
-    .form-card-header {
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      display: flex;
-      gap: 10px;
-      justify-content: space-between;
-      padding: 14px 20px;
-      user-select: none;
-    }
-    .form-card-header h2 { color: var(--text); font-size: 0.9375rem; font-weight: 600; }
-    .form-card-toggle { color: var(--text-muted); font-size: 14px; transition: transform 0.2s; }
-    .form-card-toggle.open { transform: rotate(180deg); }
-    .form-card-body {
-      display: none;
-      padding: 20px;
-    }
-    .form-card-body.open { display: block; }
+      /* ── Add override form card ─────────────────────────────── */
+      .form-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+      }
+      .form-card-header {
+        align-items: center;
+        border-bottom: 1px solid var(--border);
+        cursor: pointer;
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        padding: 14px 20px;
+        user-select: none;
+      }
+      .form-card-header h2 {
+        color: var(--text);
+        font-size: 0.9375rem;
+        font-weight: 600;
+      }
+      .form-card-toggle {
+        color: var(--text-muted);
+        font-size: 14px;
+        transition: transform 0.2s;
+      }
+      .form-card-toggle.open {
+        transform: rotate(180deg);
+      }
+      .form-card-body {
+        display: none;
+        padding: 20px;
+      }
+      .form-card-body.open {
+        display: block;
+      }
 
-    /* ── Info card ──────────────────────────────────────────── */
-    .info-card {
-      background: rgba(59, 130, 246, 0.06);
-      border: 1px solid rgba(59, 130, 246, 0.2);
-      border-radius: var(--radius);
-      padding: 16px 20px;
-    }
-    .info-card-title { color: var(--info); font-size: 0.875rem; font-weight: 600; margin-bottom: 8px; }
-    .info-card-body { color: var(--text-muted); font-size: 0.8125rem; line-height: 1.6; }
+      /* ── Info card ──────────────────────────────────────────── */
+      .info-card {
+        background: rgba(59, 130, 246, 0.06);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+      }
+      .info-card-title {
+        color: var(--info);
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .info-card-body {
+        color: var(--text-muted);
+        font-size: 0.8125rem;
+        line-height: 1.6;
+      }
 
-    /* ── Empty state ────────────────────────────────────────── */
-    .empty-state {
-      color: var(--text-dim);
-      font-size: 0.9375rem;
-      padding: 36px 24px;
-      text-align: center;
-    }
+      /* ── Empty state ────────────────────────────────────────── */
+      .empty-state {
+        color: var(--text-dim);
+        font-size: 0.9375rem;
+        padding: 36px 24px;
+        text-align: center;
+      }
 
-    /* ── Row actions ────────────────────────────────────────── */
-    .row-actions { align-items: center; display: flex; gap: 4px; }
-    .btn-icon {
-      align-items: center;
-      background: none;
-      border: 1px solid transparent;
-      border-radius: var(--radius-sm);
-      color: var(--text-muted);
-      cursor: pointer;
-      display: inline-flex;
-      height: 30px;
-      justify-content: center;
-      padding: 0;
-      transition: background 0.15s, color 0.15s, border-color 0.15s;
-      width: 30px;
-    }
-    .btn-icon:hover { background: var(--surface-2); color: var(--text); border-color: var(--border); }
-    .btn-icon.btn-icon-danger:hover  { background: rgba(239,68,68,0.12); color: var(--danger); border-color: rgba(239,68,68,0.3); }
-    .btn-icon.btn-icon-warn:hover { background: rgba(245,158,11,0.12); color: var(--warning); border-color: rgba(245,158,11,0.3); }
+      /* ── Row actions ────────────────────────────────────────── */
+      .row-actions {
+        align-items: center;
+        display: flex;
+        gap: 4px;
+      }
+      .btn-icon {
+        align-items: center;
+        background: none;
+        border: 1px solid transparent;
+        border-radius: var(--radius-sm);
+        color: var(--text-muted);
+        cursor: pointer;
+        display: inline-flex;
+        height: 30px;
+        justify-content: center;
+        padding: 0;
+        transition:
+          background 0.15s,
+          color 0.15s,
+          border-color 0.15s;
+        width: 30px;
+      }
+      .btn-icon:hover {
+        background: var(--surface-2);
+        color: var(--text);
+        border-color: var(--border);
+      }
+      .btn-icon.btn-icon-danger:hover {
+        background: rgba(239, 68, 68, 0.12);
+        color: var(--danger);
+        border-color: rgba(239, 68, 68, 0.3);
+      }
+      .btn-icon.btn-icon-warn:hover {
+        background: rgba(245, 158, 11, 0.12);
+        color: var(--warning);
+        border-color: rgba(245, 158, 11, 0.3);
+      }
 
-    /* ── Toggle switch ──────────────────────────────────────── */
-    .toggle-row {
-      align-items: center;
-      display: flex;
-      gap: 12px;
-    }
-    .toggle-label { color: var(--text-muted); font-size: 0.8125rem; font-weight: 500; }
-    .toggle-switch {
-      appearance: none;
-      background: var(--border);
-      border-radius: 999px;
-      cursor: pointer;
-      flex-shrink: 0;
-      height: 22px;
-      position: relative;
-      transition: background 0.2s;
-      width: 40px;
-    }
-    .toggle-switch::after {
-      background: #fff;
-      border-radius: 50%;
-      content: '';
-      height: 16px;
-      left: 3px;
-      position: absolute;
-      top: 3px;
-      transition: transform 0.2s;
-      width: 16px;
-    }
-    .toggle-switch:checked { background: var(--primary); }
-    .toggle-switch:checked::after { transform: translateX(18px); }
+      /* ── Toggle switch ──────────────────────────────────────── */
+      .toggle-row {
+        align-items: center;
+        display: flex;
+        gap: 12px;
+      }
+      .toggle-label {
+        color: var(--text-muted);
+        font-size: 0.8125rem;
+        font-weight: 500;
+      }
+      .toggle-switch {
+        appearance: none;
+        background: var(--border);
+        border-radius: 999px;
+        cursor: pointer;
+        flex-shrink: 0;
+        height: 22px;
+        position: relative;
+        transition: background 0.2s;
+        width: 40px;
+      }
+      .toggle-switch::after {
+        background: #fff;
+        border-radius: 50%;
+        content: '';
+        height: 16px;
+        left: 3px;
+        position: absolute;
+        top: 3px;
+        transition: transform 0.2s;
+        width: 16px;
+      }
+      .toggle-switch:checked {
+        background: var(--primary);
+      }
+      .toggle-switch:checked::after {
+        transform: translateX(18px);
+      }
 
-    /* ── Edit modal ─────────────────────────────────────────── */
-    .modal-backdrop.hidden { display: none; }
+      /* ── Edit modal ─────────────────────────────────────────── */
+      .modal-backdrop.hidden {
+        display: none;
+      }
 
-    /* ── Inline spinner ─────────────────────────────────────── */
-    .inline-spin {
-      animation: _spin 0.75s linear infinite;
-      border: 2px solid var(--border);
-      border-radius: 50%;
-      border-top-color: var(--primary);
-      display: inline-block;
-      height: 14px;
-      vertical-align: middle;
-      width: 14px;
-    }
-    @keyframes _spin { to { transform: rotate(360deg); } }
+      /* ── Inline spinner ─────────────────────────────────────── */
+      .inline-spin {
+        animation: _spin 0.75s linear infinite;
+        border: 2px solid var(--border);
+        border-radius: 50%;
+        border-top-color: var(--primary);
+        display: inline-block;
+        height: 14px;
+        vertical-align: middle;
+        width: 14px;
+      }
+      @keyframes _spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
 
-    /* ── Section card header ────────────────────────────────── */
-    .card-section-header {
-      align-items: center;
-      display: flex;
-      gap: 10px;
-      justify-content: space-between;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-    .card-section-header h2 { color: var(--text); font-size: 0.9375rem; font-weight: 600; }
+      /* ── Section card header ────────────────────────────────── */
+      .card-section-header {
+        align-items: center;
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+      .card-section-header h2 {
+        color: var(--text);
+        font-size: 0.9375rem;
+        font-weight: 600;
+      }
 
-    thead th { text-align: left; }
-    .text-right { text-align: right; }
-  </style>
-</head>
-<body>
+      thead th {
+        text-align: left;
+      }
+      .text-right {
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Auth guard: redirect to login if no valid session -->
+    <script>
+      (function () {
+        try {
+          var k = Object.keys(localStorage);
+          if (
+            !k.some(function (x) {
+              return x.startsWith('sb-') && x.endsWith('-auth-token');
+            })
+          )
+            window.location.replace('../login/');
+        } catch (e) {
+          window.location.replace('../login/');
+        }
+      })();
+    </script>
 
-  <!-- Auth guard: redirect to login if no valid session -->
-  <script>(function(){try{var k=Object.keys(localStorage);if(!k.some(function(x){return x.startsWith('sb-')&&x.endsWith('-auth-token')}))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-  <!-- Sidebar overlay (mobile) -->
-  <div class="sidebar-overlay" id="sidebar-overlay"></div>
-
-  <div class="admin-layout">
-
-    <!-- ── Sidebar ──────────────────────────────────────────── -->
-    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
-      <div class="sidebar-header">
-        <span class="logo-icon" aria-hidden="true">⚙</span>
-        <span class="logo-text">GoldAdmin</span>
-      </div>
-      <nav class="sidebar-nav" aria-label="Main menu">
-        <a href="../" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a>
-        <a href="../shops/" class="nav-link"><span class="nav-icon">🏪</span> Shops</a>
-        <a href="../pricing/" class="nav-link"><span class="nav-icon">💰</span> Pricing</a>
-        <a href="../orders/" class="nav-link"><span class="nav-icon">📦</span> Orders</a>
-        <a href="../content/" class="nav-link"><span class="nav-icon">📝</span> Content</a>
-        <a href="../social/" class="nav-link"><span class="nav-icon">📱</span> Social</a>
-        <a href="../settings/" class="nav-link"><span class="nav-icon">⚙</span> Settings</a>
-        <a href="../analytics/" class="nav-link"><span class="nav-icon">📈</span> Analytics</a>
-      </nav>
-      <div class="sidebar-footer">
-        <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">↩ Sign Out</button>
-      </div>
-    </aside>
-
-    <!-- ── Main area ────────────────────────────────────────── -->
-    <div class="main-area">
-
-      <!-- Header -->
-      <header class="page-header">
-        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle navigation" type="button">☰</button>
-        <h1 class="page-title">💰 Pricing</h1>
-        <div class="header-actions">
-          <div class="freshness-badge" id="live-freshness-badge">
-            <span class="freshness-dot freshness-dot--yellow" id="freshness-dot"></span>
-            <span id="freshness-text">Fetching prices…</span>
-          </div>
+    <div class="admin-layout">
+      <!-- ── Sidebar ──────────────────────────────────────────── -->
+      <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+        <div class="sidebar-header">
+          <span class="logo-icon" aria-hidden="true">⚙</span>
+          <span class="logo-text">GoldAdmin</span>
         </div>
-      </header>
-
-      <!-- Content -->
-      <main class="content-area">
-
-        <!-- ── Override warning banner ──────────────────────── -->
-        <div class="override-banner hidden" id="override-banner" role="alert">
-          <span class="banner-icon">⚠️</span>
-          <span class="banner-text" id="override-banner-text"></span>
+        <nav class="sidebar-nav" aria-label="Main menu">
+          <a href="../" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a>
+          <a href="../shops/" class="nav-link"><span class="nav-icon">🏪</span> Shops</a>
+          <a href="../pricing/" class="nav-link"><span class="nav-icon">💰</span> Pricing</a>
+          <a href="../orders/" class="nav-link"><span class="nav-icon">📦</span> Orders</a>
+          <a href="../content/" class="nav-link"><span class="nav-icon">📝</span> Content</a>
+          <a href="../social/" class="nav-link"><span class="nav-icon">📱</span> Social</a>
+          <a href="../settings/" class="nav-link"><span class="nav-icon">⚙</span> Settings</a>
+          <a href="../analytics/" class="nav-link"><span class="nav-icon">📈</span> Analytics</a>
+        </nav>
+        <div class="sidebar-footer">
+          <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">
+            ↩ Sign Out
+          </button>
         </div>
+      </aside>
 
-        <!-- ── Live Prices ───────────────────────────────────── -->
-        <section class="section card" aria-labelledby="live-prices-title">
-          <div class="live-header">
-            <div style="display:flex;align-items:center;gap:10px">
-              <h2 id="live-prices-title">Live Prices</h2>
-            </div>
-            <button class="btn btn-ghost btn-sm" id="refresh-btn" type="button">⟳ Refresh</button>
-          </div>
-          <p class="text-muted text-sm" style="margin-bottom:12px" id="live-note">
-            <span class="inline-spin"></span> Fetching live prices from API…
-          </p>
-          <div class="table-wrap">
-            <table id="live-table" aria-label="Live gold prices by karat and currency">
-              <thead>
-                <tr>
-                  <th>Karat</th>
-                  <th class="text-right">USD / gram</th>
-                  <th class="text-right">AED / gram</th>
-                  <th class="text-right">SAR / gram</th>
-                  <th class="text-right">KWD / gram</th>
-                </tr>
-              </thead>
-              <tbody id="live-tbody">
-                <tr>
-                  <td colspan="5" style="text-align:center;padding:20px;color:var(--text-dim)">
-                    <span class="inline-spin"></span> Loading…
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <!-- ── Active Overrides ──────────────────────────────── -->
-        <section class="section" aria-labelledby="overrides-title">
-          <div class="card-section-header">
-            <h2 id="overrides-title">Active Overrides</h2>
-            <button class="btn btn-ghost btn-sm" id="open-add-form-btn" type="button">+ Add Override</button>
-          </div>
-          <div class="table-wrap">
-            <table id="overrides-table" aria-label="Price overrides">
-              <thead>
-                <tr>
-                  <th>Karat</th>
-                  <th>Currency</th>
-                  <th>Unit</th>
-                  <th class="text-right">Override Price</th>
-                  <th>Reason</th>
-                  <th>Expires</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="overrides-tbody">
-                <tr>
-                  <td colspan="8">
-                    <div class="empty-state">No price overrides active.</div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <!-- ── Add Override form (collapsible) ──────────────── -->
-        <section class="section form-card" aria-labelledby="add-override-title" id="add-override-section">
-          <div class="form-card-header" id="form-card-toggle" role="button" tabindex="0"
-               aria-expanded="false" aria-controls="add-override-body">
-            <h2 id="add-override-title">Add / Edit Price Override</h2>
-            <span class="form-card-toggle" id="form-card-arrow" aria-hidden="true">▼</span>
-          </div>
-          <div class="form-card-body" id="add-override-body">
-            <form id="override-form" novalidate>
-              <input type="hidden" id="ov-edit-id" />
-              <div class="input-row">
-                <div class="form-group">
-                  <label class="form-label" for="ov-karat">Karat</label>
-                  <select class="form-select" id="ov-karat">
-                    <option value="24">24K</option>
-                    <option value="22">22K</option>
-                    <option value="21">21K</option>
-                    <option value="20">20K</option>
-                    <option value="18">18K</option>
-                    <option value="16">16K</option>
-                    <option value="14">14K</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="ov-currency">Currency</label>
-                  <select class="form-select" id="ov-currency">
-                    <option value="USD">USD</option>
-                    <option value="AED">AED</option>
-                    <option value="SAR">SAR</option>
-                    <option value="KWD">KWD</option>
-                    <option value="QAR">QAR</option>
-                    <option value="BHD">BHD</option>
-                    <option value="OMR">OMR</option>
-                    <option value="EGP">EGP</option>
-                    <option value="JOD">JOD</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="ov-unit">Unit</label>
-                  <select class="form-select" id="ov-unit">
-                    <option value="gram">gram</option>
-                    <option value="oz">oz</option>
-                    <option value="tola">tola</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="ov-price">
-                    Override Price <span style="color:var(--danger)">*</span>
-                  </label>
-                  <input class="form-input" id="ov-price" type="number" min="0" step="any" placeholder="e.g. 245.50" />
-                  <span class="form-error hidden" id="ov-price-err">Must be a positive number.</span>
-                </div>
-              </div>
-              <div class="input-row" style="margin-top:14px">
-                <div class="form-group" style="flex:2 1 240px">
-                  <label class="form-label" for="ov-reason">Reason</label>
-                  <input class="form-input" id="ov-reason" type="text" placeholder="e.g. Correcting API error" autocomplete="off" />
-                </div>
-                <div class="form-group" style="flex:1 1 200px">
-                  <label class="form-label" for="ov-expires">Expires (optional)</label>
-                  <input class="form-input" id="ov-expires" type="datetime-local" />
-                </div>
-              </div>
-              <div class="toggle-row" style="margin-top:16px">
-                <input class="toggle-switch" id="ov-active" type="checkbox" role="switch" checked />
-                <label class="toggle-label" for="ov-active">Active</label>
-              </div>
-              <div style="margin-top:16px;display:flex;gap:8px">
-                <button class="btn btn-primary" id="save-override-btn" type="button">Save Override</button>
-                <button class="btn btn-ghost" id="cancel-edit-btn" type="button" style="display:none">Cancel Edit</button>
-              </div>
-            </form>
-          </div>
-        </section>
-
-        <!-- ── Info card ─────────────────────────────────────── -->
-        <section class="section">
-          <div class="info-card" role="note" aria-label="Override behavior information">
-            <div class="info-card-title">ℹ️ Override Behavior</div>
-            <div class="info-card-body">
-              When an override is active, the live price for that karat/currency combination is replaced by
-              the override price on all public pages. A <strong>⚠️ badge</strong> will appear on public pages
-              where prices are displayed to indicate that a manual override is in effect.
-              Overrides expire automatically at the set time. Expired overrides are shown in red and can
-              be removed manually.
+      <!-- ── Main area ────────────────────────────────────────── -->
+      <div class="main-area">
+        <!-- Header -->
+        <header class="page-header">
+          <button
+            class="sidebar-toggle"
+            id="sidebar-toggle"
+            aria-label="Toggle navigation"
+            type="button"
+          >
+            ☰
+          </button>
+          <h1 class="page-title">💰 Pricing</h1>
+          <div class="header-actions">
+            <div class="freshness-badge" id="live-freshness-badge">
+              <span class="freshness-dot freshness-dot--yellow" id="freshness-dot"></span>
+              <span id="freshness-text">Fetching prices…</span>
             </div>
           </div>
-        </section>
+        </header>
 
-      </main>
-    </div><!-- /.main-area -->
-  </div><!-- /.admin-layout -->
+        <!-- Content -->
+        <main class="content-area">
+          <!-- ── Override warning banner ──────────────────────── -->
+          <div class="override-banner hidden" id="override-banner" role="alert">
+            <span class="banner-icon">⚠️</span>
+            <span class="banner-text" id="override-banner-text"></span>
+          </div>
 
-  <!-- ── Edit Override Modal ───────────────────────────────── -->
-  <div class="modal-backdrop hidden" id="edit-modal" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 id="edit-modal-title">Edit Override</h2>
-        <button class="modal-close" id="edit-modal-close" aria-label="Close modal" type="button">✕</button>
+          <!-- ── Live Prices ───────────────────────────────────── -->
+          <section class="section card" aria-labelledby="live-prices-title">
+            <div class="live-header">
+              <div style="display: flex; align-items: center; gap: 10px">
+                <h2 id="live-prices-title">Live Prices</h2>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="refresh-btn" type="button">⟳ Refresh</button>
+            </div>
+            <p class="text-muted text-sm" style="margin-bottom: 12px" id="live-note">
+              <span class="inline-spin"></span> Fetching live prices from API…
+            </p>
+            <div class="table-wrap">
+              <table id="live-table" aria-label="Live gold prices by karat and currency">
+                <thead>
+                  <tr>
+                    <th>Karat</th>
+                    <th class="text-right">USD / gram</th>
+                    <th class="text-right">AED / gram</th>
+                    <th class="text-right">SAR / gram</th>
+                    <th class="text-right">KWD / gram</th>
+                  </tr>
+                </thead>
+                <tbody id="live-tbody">
+                  <tr>
+                    <td
+                      colspan="5"
+                      style="text-align: center; padding: 20px; color: var(--text-dim)"
+                    >
+                      <span class="inline-spin"></span> Loading…
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ── Active Overrides ──────────────────────────────── -->
+          <section class="section" aria-labelledby="overrides-title">
+            <div class="card-section-header">
+              <h2 id="overrides-title">Active Overrides</h2>
+              <button class="btn btn-ghost btn-sm" id="open-add-form-btn" type="button">
+                + Add Override
+              </button>
+            </div>
+            <div class="table-wrap">
+              <table id="overrides-table" aria-label="Price overrides">
+                <thead>
+                  <tr>
+                    <th>Karat</th>
+                    <th>Currency</th>
+                    <th>Unit</th>
+                    <th class="text-right">Override Price</th>
+                    <th>Reason</th>
+                    <th>Expires</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="overrides-tbody">
+                  <tr>
+                    <td colspan="8">
+                      <div class="empty-state">No price overrides active.</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ── Add Override form (collapsible) ──────────────── -->
+          <section
+            class="section form-card"
+            aria-labelledby="add-override-title"
+            id="add-override-section"
+          >
+            <div
+              class="form-card-header"
+              id="form-card-toggle"
+              role="button"
+              tabindex="0"
+              aria-expanded="false"
+              aria-controls="add-override-body"
+            >
+              <h2 id="add-override-title">Add / Edit Price Override</h2>
+              <span class="form-card-toggle" id="form-card-arrow" aria-hidden="true">▼</span>
+            </div>
+            <div class="form-card-body" id="add-override-body">
+              <form id="override-form" novalidate>
+                <input type="hidden" id="ov-edit-id" />
+                <div class="input-row">
+                  <div class="form-group">
+                    <label class="form-label" for="ov-karat">Karat</label>
+                    <select class="form-select" id="ov-karat">
+                      <option value="24">24K</option>
+                      <option value="22">22K</option>
+                      <option value="21">21K</option>
+                      <option value="20">20K</option>
+                      <option value="18">18K</option>
+                      <option value="16">16K</option>
+                      <option value="14">14K</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="ov-currency">Currency</label>
+                    <select class="form-select" id="ov-currency">
+                      <option value="USD">USD</option>
+                      <option value="AED">AED</option>
+                      <option value="SAR">SAR</option>
+                      <option value="KWD">KWD</option>
+                      <option value="QAR">QAR</option>
+                      <option value="BHD">BHD</option>
+                      <option value="OMR">OMR</option>
+                      <option value="EGP">EGP</option>
+                      <option value="JOD">JOD</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="ov-unit">Unit</label>
+                    <select class="form-select" id="ov-unit">
+                      <option value="gram">gram</option>
+                      <option value="oz">oz</option>
+                      <option value="tola">tola</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="ov-price">
+                      Override Price <span style="color: var(--danger)">*</span>
+                    </label>
+                    <input
+                      class="form-input"
+                      id="ov-price"
+                      type="number"
+                      min="0"
+                      step="any"
+                      placeholder="e.g. 245.50"
+                    />
+                    <span class="form-error hidden" id="ov-price-err"
+                      >Must be a positive number.</span
+                    >
+                  </div>
+                </div>
+                <div class="input-row" style="margin-top: 14px">
+                  <div class="form-group" style="flex: 2 1 240px">
+                    <label class="form-label" for="ov-reason">Reason</label>
+                    <input
+                      class="form-input"
+                      id="ov-reason"
+                      type="text"
+                      placeholder="e.g. Correcting API error"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <div class="form-group" style="flex: 1 1 200px">
+                    <label class="form-label" for="ov-expires">Expires (optional)</label>
+                    <input class="form-input" id="ov-expires" type="datetime-local" />
+                  </div>
+                </div>
+                <div class="toggle-row" style="margin-top: 16px">
+                  <input
+                    class="toggle-switch"
+                    id="ov-active"
+                    type="checkbox"
+                    role="switch"
+                    checked
+                  />
+                  <label class="toggle-label" for="ov-active">Active</label>
+                </div>
+                <div style="margin-top: 16px; display: flex; gap: 8px">
+                  <button class="btn btn-primary" id="save-override-btn" type="button">
+                    Save Override
+                  </button>
+                  <button
+                    class="btn btn-ghost"
+                    id="cancel-edit-btn"
+                    type="button"
+                    style="display: none"
+                  >
+                    Cancel Edit
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <!-- ── Info card ─────────────────────────────────────── -->
+          <section class="section">
+            <div class="info-card" role="note" aria-label="Override behavior information">
+              <div class="info-card-title">ℹ️ Override Behavior</div>
+              <div class="info-card-body">
+                When an override is active, the live price for that karat/currency combination is
+                replaced by the override price on all public pages. A <strong>⚠️ badge</strong> will
+                appear on public pages where prices are displayed to indicate that a manual override
+                is in effect. Overrides expire automatically at the set time. Expired overrides are
+                shown in red and can be removed manually.
+              </div>
+            </div>
+          </section>
+        </main>
       </div>
-      <div class="modal-body">
-        <input type="hidden" id="em-id" />
-        <div class="input-row">
-          <div class="form-group">
-            <label class="form-label" for="em-karat">Karat</label>
-            <select class="form-select" id="em-karat">
-              <option value="24">24K</option>
-              <option value="22">22K</option>
-              <option value="21">21K</option>
-              <option value="20">20K</option>
-              <option value="18">18K</option>
-              <option value="16">16K</option>
-              <option value="14">14K</option>
-            </select>
+      <!-- /.main-area -->
+    </div>
+    <!-- /.admin-layout -->
+
+    <!-- ── Edit Override Modal ───────────────────────────────── -->
+    <div
+      class="modal-backdrop hidden"
+      id="edit-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="edit-modal-title"
+    >
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="edit-modal-title">Edit Override</h2>
+          <button class="modal-close" id="edit-modal-close" aria-label="Close modal" type="button">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="em-id" />
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label" for="em-karat">Karat</label>
+              <select class="form-select" id="em-karat">
+                <option value="24">24K</option>
+                <option value="22">22K</option>
+                <option value="21">21K</option>
+                <option value="20">20K</option>
+                <option value="18">18K</option>
+                <option value="16">16K</option>
+                <option value="14">14K</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="em-currency">Currency</label>
+              <select class="form-select" id="em-currency">
+                <option value="USD">USD</option>
+                <option value="AED">AED</option>
+                <option value="SAR">SAR</option>
+                <option value="KWD">KWD</option>
+                <option value="QAR">QAR</option>
+                <option value="BHD">BHD</option>
+                <option value="OMR">OMR</option>
+                <option value="EGP">EGP</option>
+                <option value="JOD">JOD</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="em-unit">Unit</label>
+              <select class="form-select" id="em-unit">
+                <option value="gram">gram</option>
+                <option value="oz">oz</option>
+                <option value="tola">tola</option>
+              </select>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="em-currency">Currency</label>
-            <select class="form-select" id="em-currency">
-              <option value="USD">USD</option>
-              <option value="AED">AED</option>
-              <option value="SAR">SAR</option>
-              <option value="KWD">KWD</option>
-              <option value="QAR">QAR</option>
-              <option value="BHD">BHD</option>
-              <option value="OMR">OMR</option>
-              <option value="EGP">EGP</option>
-              <option value="JOD">JOD</option>
-            </select>
+          <div class="input-row" style="margin-top: 14px">
+            <div class="form-group">
+              <label class="form-label" for="em-price"
+                >Override Price <span style="color: var(--danger)">*</span></label
+              >
+              <input class="form-input" id="em-price" type="number" min="0" step="any" />
+              <span class="form-error hidden" id="em-price-err">Must be a positive number.</span>
+            </div>
+            <div class="form-group" style="flex: 2 1 200px">
+              <label class="form-label" for="em-reason">Reason</label>
+              <input class="form-input" id="em-reason" type="text" autocomplete="off" />
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="em-unit">Unit</label>
-            <select class="form-select" id="em-unit">
-              <option value="gram">gram</option>
-              <option value="oz">oz</option>
-              <option value="tola">tola</option>
-            </select>
+          <div class="form-group" style="margin-top: 14px">
+            <label class="form-label" for="em-expires">Expires (optional)</label>
+            <input class="form-input" id="em-expires" type="datetime-local" />
+          </div>
+          <div class="toggle-row" style="margin-top: 16px">
+            <input class="toggle-switch" id="em-active" type="checkbox" role="switch" />
+            <label class="toggle-label" for="em-active">Active</label>
           </div>
         </div>
-        <div class="input-row" style="margin-top:14px">
-          <div class="form-group">
-            <label class="form-label" for="em-price">Override Price <span style="color:var(--danger)">*</span></label>
-            <input class="form-input" id="em-price" type="number" min="0" step="any" />
-            <span class="form-error hidden" id="em-price-err">Must be a positive number.</span>
-          </div>
-          <div class="form-group" style="flex:2 1 200px">
-            <label class="form-label" for="em-reason">Reason</label>
-            <input class="form-input" id="em-reason" type="text" autocomplete="off" />
-          </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" id="edit-modal-cancel" type="button">Cancel</button>
+          <button class="btn btn-primary" id="edit-modal-save" type="button">Save Changes</button>
         </div>
-        <div class="form-group" style="margin-top:14px">
-          <label class="form-label" for="em-expires">Expires (optional)</label>
-          <input class="form-input" id="em-expires" type="datetime-local" />
-        </div>
-        <div class="toggle-row" style="margin-top:16px">
-          <input class="toggle-switch" id="em-active" type="checkbox" role="switch" />
-          <label class="toggle-label" for="em-active">Active</label>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-ghost" id="edit-modal-cancel" type="button">Cancel</button>
-        <button class="btn btn-primary" id="edit-modal-save" type="button">Save Changes</button>
       </div>
     </div>
-  </div>
 
-  <!-- ── Toast container ──────────────────────────────────── -->
-  <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
+    <!-- ── Toast container ──────────────────────────────────── -->
+    <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
-  <script type="module">
-    import { isAuthenticated, logActivity, logout, requireAuth } from '../auth.js';
+    <script type="module">
+      import { isAuthenticated, logActivity, logout, requireAuth } from '../auth.js';
 
-    // ── Auth guard ──────────────────────────────────────────
-    if (!(await requireAuth())) throw new Error('redirect');
+      // ── Auth guard ──────────────────────────────────────────
+      if (!(await requireAuth())) throw new Error('redirect');
 
-    /* ─────────────────────────────────────────────────────────
+      /* ─────────────────────────────────────────────────────────
        Config
     ───────────────────────────────────────────────────────── */
-    const LS_KEY = 'gp_pricing_overrides';
-    const GOLD_API_URL = 'https://api.gold-api.com/price/XAU';
-    const FX_API_URL   = 'https://open.er-api.com/v6/latest/USD';
-    const AED_PEG      = 3.6725;
-    const TROY_OZ      = 31.1035;
+      const LS_KEY = 'gp_pricing_overrides';
+      const GOLD_API_URL = 'https://api.gold-api.com/price/XAU';
+      const FX_API_URL = 'https://open.er-api.com/v6/latest/USD';
+      const AED_PEG = 3.6725;
+      const TROY_OZ = 31.1035;
 
-    const KARATS = [
-      { code: '24', label: '24K', purity: 1.0 },
-      { code: '22', label: '22K', purity: 22/24 },
-      { code: '21', label: '21K', purity: 21/24 },
-      { code: '20', label: '20K', purity: 20/24 },
-      { code: '18', label: '18K', purity: 18/24 },
-    ];
-    const LIVE_CURRENCIES = ['USD', 'AED', 'SAR', 'KWD'];
+      const KARATS = [
+        { code: '24', label: '24K', purity: 1.0 },
+        { code: '22', label: '22K', purity: 22 / 24 },
+        { code: '21', label: '21K', purity: 21 / 24 },
+        { code: '20', label: '20K', purity: 20 / 24 },
+        { code: '18', label: '18K', purity: 18 / 24 },
+      ];
+      const LIVE_CURRENCIES = ['USD', 'AED', 'SAR', 'KWD'];
 
-    /* ─────────────────────────────────────────────────────────
+      /* ─────────────────────────────────────────────────────────
        Toast
     ───────────────────────────────────────────────────────── */
-    function showToast(msg, type = 'info') {
-      const icons = { success: '✅', warning: '⚠️', danger: '❌', info: 'ℹ️' };
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = `toast toast--${type}`;
-      toast.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span>${msg}</span>`;
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.classList.add('toast-hide');
-        toast.addEventListener('animationend', () => toast.remove(), { once: true });
-      }, 4000);
-    }
+      function showToast(msg, type = 'info') {
+        const icons = { success: '✅', warning: '⚠️', danger: '❌', info: 'ℹ️' };
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast toast--${type}`;
+        toast.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span>${msg}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.classList.add('toast-hide');
+          toast.addEventListener('animationend', () => toast.remove(), { once: true });
+        }, 4000);
+      }
 
-    /* ─────────────────────────────────────────────────────────
+      /* ─────────────────────────────────────────────────────────
        Override data helpers
     ───────────────────────────────────────────────────────── */
-    function loadOverrides() {
-      try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; }
-      catch { return []; }
-    }
-    function saveOverrides(overrides) {
-      localStorage.setItem(LS_KEY, JSON.stringify(overrides));
-    }
-
-    /** Mark expired overrides on load */
-    function autoExpire() {
-      const now = Date.now();
-      const overrides = loadOverrides().map(ov => {
-        if (ov.expiresAt && new Date(ov.expiresAt).getTime() < now && ov.active) {
-          return { ...ov, active: false };
+      function loadOverrides() {
+        try {
+          return JSON.parse(localStorage.getItem(LS_KEY)) || [];
+        } catch {
+          return [];
         }
+      }
+      function saveOverrides(overrides) {
+        localStorage.setItem(LS_KEY, JSON.stringify(overrides));
+      }
+
+      /** Mark expired overrides on load */
+      function autoExpire() {
+        const now = Date.now();
+        const overrides = loadOverrides().map((ov) => {
+          if (ov.expiresAt && new Date(ov.expiresAt).getTime() < now && ov.active) {
+            return { ...ov, active: false };
+          }
+          return ov;
+        });
+        saveOverrides(overrides);
+      }
+
+      function addOverride(data) {
+        const overrides = loadOverrides();
+        const ov = {
+          karat: '24',
+          currency: 'AED',
+          unit: 'gram',
+          overridePrice: 0,
+          expiresAt: null,
+          reason: '',
+          active: true,
+          ...data,
+          id: 'ov_' + Date.now(),
+          createdAt: new Date().toISOString(),
+        };
+        overrides.push(ov);
+        saveOverrides(overrides);
+        logActivity('pricing_override', {
+          id: ov.id,
+          karat: ov.karat,
+          currency: ov.currency,
+          price: ov.overridePrice,
+        });
         return ov;
-      });
-      saveOverrides(overrides);
-    }
+      }
 
-    function addOverride(data) {
-      const overrides = loadOverrides();
-      const ov = {
-        karat: '24', currency: 'AED', unit: 'gram',
-        overridePrice: 0, expiresAt: null, reason: '', active: true,
-        ...data,
-        id: 'ov_' + Date.now(),
-        createdAt: new Date().toISOString(),
-      };
-      overrides.push(ov);
-      saveOverrides(overrides);
-      logActivity('pricing_override', { id: ov.id, karat: ov.karat, currency: ov.currency, price: ov.overridePrice });
-      return ov;
-    }
+      function updateOverride(id, data) {
+        const overrides = loadOverrides();
+        const idx = overrides.findIndex((o) => o.id === id);
+        if (idx === -1) return null;
+        overrides[idx] = { ...overrides[idx], ...data, id };
+        saveOverrides(overrides);
+        logActivity('pricing_override', {
+          action: 'update',
+          id,
+          karat: overrides[idx].karat,
+          currency: overrides[idx].currency,
+        });
+        return overrides[idx];
+      }
 
-    function updateOverride(id, data) {
-      const overrides = loadOverrides();
-      const idx = overrides.findIndex(o => o.id === id);
-      if (idx === -1) return null;
-      overrides[idx] = { ...overrides[idx], ...data, id };
-      saveOverrides(overrides);
-      logActivity('pricing_override', { action: 'update', id, karat: overrides[idx].karat, currency: overrides[idx].currency });
-      return overrides[idx];
-    }
+      function deactivateOverride(id) {
+        return updateOverride(id, { active: false });
+      }
 
-    function deactivateOverride(id) {
-      return updateOverride(id, { active: false });
-    }
+      function deleteOverride(id) {
+        const overrides = loadOverrides().filter((o) => o.id !== id);
+        saveOverrides(overrides);
+        logActivity('pricing_override', { action: 'delete', id });
+      }
 
-    function deleteOverride(id) {
-      const overrides = loadOverrides().filter(o => o.id !== id);
-      saveOverrides(overrides);
-      logActivity('pricing_override', { action: 'delete', id });
-    }
-
-    /* ─────────────────────────────────────────────────────────
+      /* ─────────────────────────────────────────────────────────
        Live price fetch
     ───────────────────────────────────────────────────────── */
-    let liveState = { spotUsd: null, rates: {}, fetchedAt: null, error: null };
+      let liveState = { spotUsd: null, rates: {}, fetchedAt: null, error: null };
 
-    async function fetchLivePrices() {
-      setFreshnessLoading();
-      try {
-        const [goldRes, fxRes] = await Promise.all([
-          fetch(GOLD_API_URL, { signal: AbortSignal.timeout(8000) }),
-          fetch(FX_API_URL,   { signal: AbortSignal.timeout(8000) }),
-        ]);
-        const goldData = await goldRes.json();
-        const fxData   = await fxRes.json();
-        liveState.spotUsd  = goldData.price ?? goldData.ask ?? goldData.xau ?? null;
-        liveState.rates    = fxData.rates ?? {};
-        liveState.rates.USD = 1;
-        liveState.rates.AED = AED_PEG; // always use peg
-        liveState.fetchedAt = Date.now();
-        liveState.error     = null;
-      } catch (err) {
-        liveState.error = err.message || 'Fetch failed';
-      }
-      renderLiveTable();
-      setFreshnessStatus();
-    }
-
-    function setFreshnessLoading() {
-      const dot  = document.getElementById('freshness-dot');
-      const text = document.getElementById('freshness-text');
-      dot.className = 'freshness-dot freshness-dot--yellow';
-      text.textContent = 'Fetching…';
-    }
-
-    function setFreshnessStatus() {
-      const dot  = document.getElementById('freshness-dot');
-      const text = document.getElementById('freshness-text');
-      const note = document.getElementById('live-note');
-      if (liveState.error) {
-        dot.className = 'freshness-dot freshness-dot--red';
-        text.textContent = 'Fetch error';
-        note.innerHTML = `<span style="color:var(--danger)">⚠ Could not fetch live prices: ${liveState.error}</span>`;
-      } else if (liveState.fetchedAt) {
-        const age = Math.round((Date.now() - liveState.fetchedAt) / 1000);
-        dot.className = age < 120 ? 'freshness-dot freshness-dot--green' : 'freshness-dot freshness-dot--yellow';
-        text.textContent = `Updated ${age}s ago`;
-        note.innerHTML = `Spot XAU/USD: <strong>$${liveState.spotUsd ? liveState.spotUsd.toFixed(2) : '—'}</strong>/oz — Prices below are per gram.`;
-      }
-    }
-
-    function getUsdPerGram(karat) {
-      if (!liveState.spotUsd) return null;
-      return (liveState.spotUsd / TROY_OZ) * karat.purity;
-    }
-
-    function getPriceInCurrency(usdPerGram, currency) {
-      if (usdPerGram == null) return null;
-      const rate = liveState.rates[currency];
-      if (!rate) return null;
-      return usdPerGram * rate;
-    }
-
-    function hasActiveOverride(karatCode, currency) {
-      const now = Date.now();
-      return loadOverrides().some(ov =>
-        ov.active && ov.karat === karatCode && ov.currency === currency &&
-        ov.unit === 'gram' &&
-        (!ov.expiresAt || new Date(ov.expiresAt).getTime() > now)
-      );
-    }
-
-    function renderLiveTable() {
-      const tbody = document.getElementById('live-tbody');
-      if (!liveState.spotUsd && !liveState.error) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-dim)"><span class="inline-spin"></span> Loading…</td></tr>`;
-        return;
-      }
-      if (liveState.error && !liveState.spotUsd) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--danger)">Could not load live prices.</td></tr>`;
-        return;
+      async function fetchLivePrices() {
+        setFreshnessLoading();
+        try {
+          const [goldRes, fxRes] = await Promise.all([
+            fetch(GOLD_API_URL, { signal: AbortSignal.timeout(8000) }),
+            fetch(FX_API_URL, { signal: AbortSignal.timeout(8000) }),
+          ]);
+          const goldData = await goldRes.json();
+          const fxData = await fxRes.json();
+          liveState.spotUsd = goldData.price ?? goldData.ask ?? goldData.xau ?? null;
+          liveState.rates = fxData.rates ?? {};
+          liveState.rates.USD = 1;
+          liveState.rates.AED = AED_PEG; // always use peg
+          liveState.fetchedAt = Date.now();
+          liveState.error = null;
+        } catch (err) {
+          liveState.error = err.message || 'Fetch failed';
+        }
+        renderLiveTable();
+        setFreshnessStatus();
       }
 
-      tbody.innerHTML = KARATS.map(k => {
-        const usdPerGram = getUsdPerGram(k);
-        const cells = LIVE_CURRENCIES.map(cur => {
-          const price = getPriceInCurrency(usdPerGram, cur);
-          const hasOv = hasActiveOverride(k.code, cur);
-          const priceStr = price != null ? price.toFixed(cur === 'KWD' ? 3 : 2) : '—';
-          const ovBadge = hasOv ? `<span class="override-badge">⚠️ OV</span>` : '';
-          return `<td class="price-cell"><span class="price-value">${priceStr}</span>${ovBadge}</td>`;
-        }).join('');
-        return `<tr>
+      function setFreshnessLoading() {
+        const dot = document.getElementById('freshness-dot');
+        const text = document.getElementById('freshness-text');
+        dot.className = 'freshness-dot freshness-dot--yellow';
+        text.textContent = 'Fetching…';
+      }
+
+      function setFreshnessStatus() {
+        const dot = document.getElementById('freshness-dot');
+        const text = document.getElementById('freshness-text');
+        const note = document.getElementById('live-note');
+        if (liveState.error) {
+          dot.className = 'freshness-dot freshness-dot--red';
+          text.textContent = 'Fetch error';
+          note.innerHTML = `<span style="color:var(--danger)">⚠ Could not fetch live prices: ${liveState.error}</span>`;
+        } else if (liveState.fetchedAt) {
+          const age = Math.round((Date.now() - liveState.fetchedAt) / 1000);
+          dot.className =
+            age < 120
+              ? 'freshness-dot freshness-dot--green'
+              : 'freshness-dot freshness-dot--yellow';
+          text.textContent = `Updated ${age}s ago`;
+          note.innerHTML = `Spot XAU/USD: <strong>$${liveState.spotUsd ? liveState.spotUsd.toFixed(2) : '—'}</strong>/oz — Prices below are per gram.`;
+        }
+      }
+
+      function getUsdPerGram(karat) {
+        if (!liveState.spotUsd) return null;
+        return (liveState.spotUsd / TROY_OZ) * karat.purity;
+      }
+
+      function getPriceInCurrency(usdPerGram, currency) {
+        if (usdPerGram == null) return null;
+        const rate = liveState.rates[currency];
+        if (!rate) return null;
+        return usdPerGram * rate;
+      }
+
+      function hasActiveOverride(karatCode, currency) {
+        const now = Date.now();
+        return loadOverrides().some(
+          (ov) =>
+            ov.active &&
+            ov.karat === karatCode &&
+            ov.currency === currency &&
+            ov.unit === 'gram' &&
+            (!ov.expiresAt || new Date(ov.expiresAt).getTime() > now)
+        );
+      }
+
+      function renderLiveTable() {
+        const tbody = document.getElementById('live-tbody');
+        if (!liveState.spotUsd && !liveState.error) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-dim)"><span class="inline-spin"></span> Loading…</td></tr>`;
+          return;
+        }
+        if (liveState.error && !liveState.spotUsd) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--danger)">Could not load live prices.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = KARATS.map((k) => {
+          const usdPerGram = getUsdPerGram(k);
+          const cells = LIVE_CURRENCIES.map((cur) => {
+            const price = getPriceInCurrency(usdPerGram, cur);
+            const hasOv = hasActiveOverride(k.code, cur);
+            const priceStr = price != null ? price.toFixed(cur === 'KWD' ? 3 : 2) : '—';
+            const ovBadge = hasOv ? `<span class="override-badge">⚠️ OV</span>` : '';
+            return `<td class="price-cell"><span class="price-value">${priceStr}</span>${ovBadge}</td>`;
+          }).join('');
+          return `<tr>
           <td><strong>${k.label}</strong></td>
           ${cells}
         </tr>`;
-      }).join('');
-    }
+        }).join('');
+      }
 
-    /* ─────────────────────────────────────────────────────────
+      /* ─────────────────────────────────────────────────────────
        Overrides table render
     ───────────────────────────────────────────────────────── */
-    function getOverrideStatus(ov) {
-      if (!ov.active) return { label: 'Inactive', cls: 'status-inactive' };
-      if (ov.expiresAt && new Date(ov.expiresAt).getTime() < Date.now())
-        return { label: 'Expired', cls: 'status-expired' };
-      return { label: 'Active', cls: 'status-active' };
-    }
-
-    function formatExpiry(expiresAt) {
-      if (!expiresAt) return '<span class="text-dim">—</span>';
-      const d = new Date(expiresAt);
-      const now = Date.now();
-      const expired = d.getTime() < now;
-      const str = d.toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' });
-      return expired
-        ? `<span class="text-danger">${str} (expired)</span>`
-        : `<span>${str}</span>`;
-    }
-
-    let deleteOvTargetId = null;
-
-    function renderOverridesTable() {
-      const overrides = loadOverrides();
-      const tbody = document.getElementById('overrides-tbody');
-      const banner = document.getElementById('override-banner');
-      const bannerText = document.getElementById('override-banner-text');
-
-      const activeCount = overrides.filter(o => {
-        const s = getOverrideStatus(o);
-        return s.label === 'Active';
-      }).length;
-
-      if (activeCount > 0) {
-        banner.classList.remove('hidden');
-        bannerText.textContent = `${activeCount} manual override${activeCount !== 1 ? 's are' : ' is'} currently active. Affected pages will show an override warning badge.`;
-      } else {
-        banner.classList.add('hidden');
+      function getOverrideStatus(ov) {
+        if (!ov.active) return { label: 'Inactive', cls: 'status-inactive' };
+        if (ov.expiresAt && new Date(ov.expiresAt).getTime() < Date.now())
+          return { label: 'Expired', cls: 'status-expired' };
+        return { label: 'Active', cls: 'status-active' };
       }
 
-      if (overrides.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state">No price overrides active.</div></td></tr>`;
-        return;
+      function formatExpiry(expiresAt) {
+        if (!expiresAt) return '<span class="text-dim">—</span>';
+        const d = new Date(expiresAt);
+        const now = Date.now();
+        const expired = d.getTime() < now;
+        const str = d.toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' });
+        return expired
+          ? `<span class="text-danger">${str} (expired)</span>`
+          : `<span>${str}</span>`;
       }
 
-      tbody.innerHTML = overrides.map(ov => {
-        const { label, cls } = getOverrideStatus(ov);
-        const canDeactivate = ov.active;
-        const isDeleting = deleteOvTargetId === ov.id;
-        const actions = isDeleting
-          ? `<div class="delete-confirm" style="align-items:center;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:4px;display:flex;font-size:.8125rem;gap:8px;padding:4px 8px;white-space:nowrap">
+      let deleteOvTargetId = null;
+
+      function renderOverridesTable() {
+        const overrides = loadOverrides();
+        const tbody = document.getElementById('overrides-tbody');
+        const banner = document.getElementById('override-banner');
+        const bannerText = document.getElementById('override-banner-text');
+
+        const activeCount = overrides.filter((o) => {
+          const s = getOverrideStatus(o);
+          return s.label === 'Active';
+        }).length;
+
+        if (activeCount > 0) {
+          banner.classList.remove('hidden');
+          bannerText.textContent = `${activeCount} manual override${activeCount !== 1 ? 's are' : ' is'} currently active. Affected pages will show an override warning badge.`;
+        } else {
+          banner.classList.add('hidden');
+        }
+
+        if (overrides.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state">No price overrides active.</div></td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = overrides
+          .map((ov) => {
+            const { label, cls } = getOverrideStatus(ov);
+            const canDeactivate = ov.active;
+            const isDeleting = deleteOvTargetId === ov.id;
+            const actions = isDeleting
+              ? `<div class="delete-confirm" style="align-items:center;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:4px;display:flex;font-size:.8125rem;gap:8px;padding:4px 8px;white-space:nowrap">
                <span style="color:var(--danger);font-weight:500">Delete ${ov.karat}K ${ov.currency}?</span>
                <button class="btn btn-danger btn-sm" data-action="delete-ov-confirm" data-id="${ov.id}" type="button">Confirm</button>
                <button class="btn btn-ghost btn-sm" data-action="delete-ov-cancel" type="button">Cancel</button>
              </div>`
-          : `<div class="row-actions">
+              : `<div class="row-actions">
                <button class="btn-icon" data-action="edit-ov" data-id="${ov.id}" title="Edit override" aria-label="Edit override" type="button">✏️</button>
-               ${canDeactivate
-                 ? `<button class="btn-icon btn-icon-warn" data-action="deactivate-ov" data-id="${ov.id}" title="Deactivate" aria-label="Deactivate override" type="button">⏸</button>`
-                 : ''}
+               ${
+                 canDeactivate
+                   ? `<button class="btn-icon btn-icon-warn" data-action="deactivate-ov" data-id="${ov.id}" title="Deactivate" aria-label="Deactivate override" type="button">⏸</button>`
+                   : ''
+               }
                <button class="btn-icon btn-icon-danger" data-action="delete-ov" data-id="${ov.id}" title="Delete override" aria-label="Delete override" type="button">🗑️</button>
              </div>`;
-        return `<tr>
+            return `<tr>
           <td><strong>${ov.karat}K</strong></td>
           <td>${ov.currency}</td>
           <td>${ov.unit}</td>
@@ -763,269 +961,278 @@
           <td><span class="${cls}">${label}</span></td>
           <td>${actions}</td>
         </tr>`;
-      }).join('');
-    }
+          })
+          .join('');
+      }
 
-    /* ─────────────────────────────────────────────────────────
+      /* ─────────────────────────────────────────────────────────
        Add override form helpers
     ───────────────────────────────────────────────────────── */
-    let editingId = null;
+      let editingId = null;
 
-    function openAddForm(ov = null) {
-      // Expand card
-      document.getElementById('add-override-body').classList.add('open');
-      document.getElementById('form-card-arrow').classList.add('open');
-      document.getElementById('form-card-toggle').setAttribute('aria-expanded', 'true');
+      function openAddForm(ov = null) {
+        // Expand card
+        document.getElementById('add-override-body').classList.add('open');
+        document.getElementById('form-card-arrow').classList.add('open');
+        document.getElementById('form-card-toggle').setAttribute('aria-expanded', 'true');
 
-      editingId = ov ? ov.id : null;
-      document.getElementById('ov-edit-id').value = ov ? ov.id : '';
-      document.getElementById('ov-karat').value    = ov ? ov.karat : '24';
-      document.getElementById('ov-currency').value = ov ? ov.currency : 'AED';
-      document.getElementById('ov-unit').value      = ov ? ov.unit : 'gram';
-      document.getElementById('ov-price').value     = ov ? ov.overridePrice : '';
-      document.getElementById('ov-reason').value    = ov ? (ov.reason || '') : '';
-      document.getElementById('ov-expires').value   = ov && ov.expiresAt
-        ? new Date(ov.expiresAt).toISOString().slice(0, 16) : '';
-      document.getElementById('ov-active').checked  = ov ? ov.active : true;
-      document.getElementById('ov-price-err').classList.add('hidden');
+        editingId = ov ? ov.id : null;
+        document.getElementById('ov-edit-id').value = ov ? ov.id : '';
+        document.getElementById('ov-karat').value = ov ? ov.karat : '24';
+        document.getElementById('ov-currency').value = ov ? ov.currency : 'AED';
+        document.getElementById('ov-unit').value = ov ? ov.unit : 'gram';
+        document.getElementById('ov-price').value = ov ? ov.overridePrice : '';
+        document.getElementById('ov-reason').value = ov ? ov.reason || '' : '';
+        document.getElementById('ov-expires').value =
+          ov && ov.expiresAt ? new Date(ov.expiresAt).toISOString().slice(0, 16) : '';
+        document.getElementById('ov-active').checked = ov ? ov.active : true;
+        document.getElementById('ov-price-err').classList.add('hidden');
 
-      const cancelBtn = document.getElementById('cancel-edit-btn');
-      const saveBtn   = document.getElementById('save-override-btn');
-      if (ov) {
-        saveBtn.textContent = 'Save Changes';
-        cancelBtn.style.display = '';
-      } else {
-        saveBtn.textContent = 'Save Override';
-        cancelBtn.style.display = 'none';
-      }
+        const cancelBtn = document.getElementById('cancel-edit-btn');
+        const saveBtn = document.getElementById('save-override-btn');
+        if (ov) {
+          saveBtn.textContent = 'Save Changes';
+          cancelBtn.style.display = '';
+        } else {
+          saveBtn.textContent = 'Save Override';
+          cancelBtn.style.display = 'none';
+        }
 
-      // Scroll to form
-      document.getElementById('add-override-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      document.getElementById('ov-price').focus();
-    }
-
-    function resetAddForm() {
-      editingId = null;
-      document.getElementById('ov-edit-id').value = '';
-      document.getElementById('ov-karat').value    = '24';
-      document.getElementById('ov-currency').value = 'AED';
-      document.getElementById('ov-unit').value      = 'gram';
-      document.getElementById('ov-price').value     = '';
-      document.getElementById('ov-reason').value    = '';
-      document.getElementById('ov-expires').value   = '';
-      document.getElementById('ov-active').checked  = true;
-      document.getElementById('ov-price-err').classList.add('hidden');
-      document.getElementById('cancel-edit-btn').style.display = 'none';
-      document.getElementById('save-override-btn').textContent = 'Save Override';
-    }
-
-    function saveOverrideFromForm() {
-      const price = parseFloat(document.getElementById('ov-price').value);
-      const priceErr = document.getElementById('ov-price-err');
-      if (!price || price <= 0) {
-        priceErr.classList.remove('hidden');
+        // Scroll to form
+        document
+          .getElementById('add-override-section')
+          .scrollIntoView({ behavior: 'smooth', block: 'start' });
         document.getElementById('ov-price').focus();
-        return;
       }
-      priceErr.classList.add('hidden');
 
-      const expiresRaw = document.getElementById('ov-expires').value;
-      const data = {
-        karat:         document.getElementById('ov-karat').value,
-        currency:      document.getElementById('ov-currency').value,
-        unit:          document.getElementById('ov-unit').value,
-        overridePrice: price,
-        reason:        document.getElementById('ov-reason').value.trim(),
-        expiresAt:     expiresRaw ? new Date(expiresRaw).toISOString() : null,
-        active:        document.getElementById('ov-active').checked,
-      };
-
-      const id = document.getElementById('ov-edit-id').value;
-      if (id) {
-        updateOverride(id, data);
-        showToast('Override updated.', 'success');
-      } else {
-        addOverride(data);
-        showToast(`Override added: ${data.karat}K ${data.currency} = ${price}`, 'success');
+      function resetAddForm() {
+        editingId = null;
+        document.getElementById('ov-edit-id').value = '';
+        document.getElementById('ov-karat').value = '24';
+        document.getElementById('ov-currency').value = 'AED';
+        document.getElementById('ov-unit').value = 'gram';
+        document.getElementById('ov-price').value = '';
+        document.getElementById('ov-reason').value = '';
+        document.getElementById('ov-expires').value = '';
+        document.getElementById('ov-active').checked = true;
+        document.getElementById('ov-price-err').classList.add('hidden');
+        document.getElementById('cancel-edit-btn').style.display = 'none';
+        document.getElementById('save-override-btn').textContent = 'Save Override';
       }
-      resetAddForm();
-      renderOverridesTable();
-      renderLiveTable(); // refresh override badges
-    }
 
-    /* ─────────────────────────────────────────────────────────
+      function saveOverrideFromForm() {
+        const price = parseFloat(document.getElementById('ov-price').value);
+        const priceErr = document.getElementById('ov-price-err');
+        if (!price || price <= 0) {
+          priceErr.classList.remove('hidden');
+          document.getElementById('ov-price').focus();
+          return;
+        }
+        priceErr.classList.add('hidden');
+
+        const expiresRaw = document.getElementById('ov-expires').value;
+        const data = {
+          karat: document.getElementById('ov-karat').value,
+          currency: document.getElementById('ov-currency').value,
+          unit: document.getElementById('ov-unit').value,
+          overridePrice: price,
+          reason: document.getElementById('ov-reason').value.trim(),
+          expiresAt: expiresRaw ? new Date(expiresRaw).toISOString() : null,
+          active: document.getElementById('ov-active').checked,
+        };
+
+        const id = document.getElementById('ov-edit-id').value;
+        if (id) {
+          updateOverride(id, data);
+          showToast('Override updated.', 'success');
+        } else {
+          addOverride(data);
+          showToast(`Override added: ${data.karat}K ${data.currency} = ${price}`, 'success');
+        }
+        resetAddForm();
+        renderOverridesTable();
+        renderLiveTable(); // refresh override badges
+      }
+
+      /* ─────────────────────────────────────────────────────────
        Edit modal
     ───────────────────────────────────────────────────────── */
-    function openEditModal(ov) {
-      document.getElementById('em-id').value        = ov.id;
-      document.getElementById('em-karat').value     = ov.karat;
-      document.getElementById('em-currency').value  = ov.currency;
-      document.getElementById('em-unit').value       = ov.unit;
-      document.getElementById('em-price').value      = ov.overridePrice;
-      document.getElementById('em-reason').value     = ov.reason || '';
-      document.getElementById('em-expires').value    = ov.expiresAt
-        ? new Date(ov.expiresAt).toISOString().slice(0, 16) : '';
-      document.getElementById('em-active').checked   = ov.active;
-      document.getElementById('em-price-err').classList.add('hidden');
-      document.getElementById('edit-modal').classList.remove('hidden');
-      document.getElementById('em-price').focus();
-    }
-
-    function closeEditModal() {
-      document.getElementById('edit-modal').classList.add('hidden');
-    }
-
-    function saveEditModal() {
-      const price = parseFloat(document.getElementById('em-price').value);
-      const priceErr = document.getElementById('em-price-err');
-      if (!price || price <= 0) {
-        priceErr.classList.remove('hidden');
+      function openEditModal(ov) {
+        document.getElementById('em-id').value = ov.id;
+        document.getElementById('em-karat').value = ov.karat;
+        document.getElementById('em-currency').value = ov.currency;
+        document.getElementById('em-unit').value = ov.unit;
+        document.getElementById('em-price').value = ov.overridePrice;
+        document.getElementById('em-reason').value = ov.reason || '';
+        document.getElementById('em-expires').value = ov.expiresAt
+          ? new Date(ov.expiresAt).toISOString().slice(0, 16)
+          : '';
+        document.getElementById('em-active').checked = ov.active;
+        document.getElementById('em-price-err').classList.add('hidden');
+        document.getElementById('edit-modal').classList.remove('hidden');
         document.getElementById('em-price').focus();
-        return;
       }
-      priceErr.classList.add('hidden');
 
-      const id = document.getElementById('em-id').value;
-      const expiresRaw = document.getElementById('em-expires').value;
-      updateOverride(id, {
-        karat:         document.getElementById('em-karat').value,
-        currency:      document.getElementById('em-currency').value,
-        unit:          document.getElementById('em-unit').value,
-        overridePrice: price,
-        reason:        document.getElementById('em-reason').value.trim(),
-        expiresAt:     expiresRaw ? new Date(expiresRaw).toISOString() : null,
-        active:        document.getElementById('em-active').checked,
-      });
-      showToast('Override updated.', 'success');
-      closeEditModal();
-      renderOverridesTable();
-      renderLiveTable();
-    }
+      function closeEditModal() {
+        document.getElementById('edit-modal').classList.add('hidden');
+      }
 
-    /* ─────────────────────────────────────────────────────────
+      function saveEditModal() {
+        const price = parseFloat(document.getElementById('em-price').value);
+        const priceErr = document.getElementById('em-price-err');
+        if (!price || price <= 0) {
+          priceErr.classList.remove('hidden');
+          document.getElementById('em-price').focus();
+          return;
+        }
+        priceErr.classList.add('hidden');
+
+        const id = document.getElementById('em-id').value;
+        const expiresRaw = document.getElementById('em-expires').value;
+        updateOverride(id, {
+          karat: document.getElementById('em-karat').value,
+          currency: document.getElementById('em-currency').value,
+          unit: document.getElementById('em-unit').value,
+          overridePrice: price,
+          reason: document.getElementById('em-reason').value.trim(),
+          expiresAt: expiresRaw ? new Date(expiresRaw).toISOString() : null,
+          active: document.getElementById('em-active').checked,
+        });
+        showToast('Override updated.', 'success');
+        closeEditModal();
+        renderOverridesTable();
+        renderLiveTable();
+      }
+
+      /* ─────────────────────────────────────────────────────────
        Event wiring
     ───────────────────────────────────────────────────────── */
-    function init() {
-      // Sidebar mobile toggle
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebar-overlay');
-      document.getElementById('sidebar-toggle').addEventListener('click', () => {
-        sidebar.classList.toggle('sidebar--open');
-        overlay.classList.toggle('sidebar-overlay--visible');
-      });
-      overlay.addEventListener('click', () => {
-        sidebar.classList.remove('sidebar--open');
-        overlay.classList.remove('sidebar-overlay--visible');
-      });
+      function init() {
+        // Sidebar mobile toggle
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        document.getElementById('sidebar-toggle').addEventListener('click', () => {
+          sidebar.classList.toggle('sidebar--open');
+          overlay.classList.toggle('sidebar-overlay--visible');
+        });
+        overlay.addEventListener('click', () => {
+          sidebar.classList.remove('sidebar--open');
+          overlay.classList.remove('sidebar-overlay--visible');
+        });
 
-      // Logout
-      document.getElementById('logout-btn').addEventListener('click', () => {
-        logout();
-        window.location.replace('../login/');
-      });
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+          logout();
+          window.location.replace('../login/');
+        });
 
-      // Active nav link
-      document.querySelectorAll('.nav-link').forEach(a => {
-        if (window.location.pathname.includes(a.getAttribute('href').replace('../', '')))
-          a.classList.add('active');
-      });
+        // Active nav link
+        document.querySelectorAll('.nav-link').forEach((a) => {
+          if (window.location.pathname.includes(a.getAttribute('href').replace('../', '')))
+            a.classList.add('active');
+        });
 
-      // Refresh live prices
-      document.getElementById('refresh-btn').addEventListener('click', () => fetchLivePrices());
+        // Refresh live prices
+        document.getElementById('refresh-btn').addEventListener('click', () => fetchLivePrices());
 
-      // Collapsible form card
-      const formToggle = document.getElementById('form-card-toggle');
-      const formBody   = document.getElementById('add-override-body');
-      const formArrow  = document.getElementById('form-card-arrow');
-      function toggleFormCard() {
-        const isOpen = formBody.classList.toggle('open');
-        formArrow.classList.toggle('open', isOpen);
-        formToggle.setAttribute('aria-expanded', String(isOpen));
-      }
-      formToggle.addEventListener('click', toggleFormCard);
-      formToggle.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleFormCard(); }
-      });
-
-      // Open add form from section button
-      document.getElementById('open-add-form-btn').addEventListener('click', () => {
-        resetAddForm();
-        openAddForm(null);
-      });
-
-      // Save override from inline form
-      document.getElementById('save-override-btn').addEventListener('click', saveOverrideFromForm);
-
-      // Cancel edit in inline form
-      document.getElementById('cancel-edit-btn').addEventListener('click', () => {
-        resetAddForm();
-      });
-
-      // Overrides table delegation
-      document.getElementById('overrides-tbody').addEventListener('click', e => {
-        const btn = e.target.closest('[data-action]');
-        if (!btn) return;
-        const id = btn.dataset.id;
-        const overrides = loadOverrides();
-        const ov = overrides.find(o => o.id === id);
-
-        if (btn.dataset.action === 'edit-ov') {
-          if (ov) openEditModal(ov);
-          return;
+        // Collapsible form card
+        const formToggle = document.getElementById('form-card-toggle');
+        const formBody = document.getElementById('add-override-body');
+        const formArrow = document.getElementById('form-card-arrow');
+        function toggleFormCard() {
+          const isOpen = formBody.classList.toggle('open');
+          formArrow.classList.toggle('open', isOpen);
+          formToggle.setAttribute('aria-expanded', String(isOpen));
         }
-        if (btn.dataset.action === 'deactivate-ov') {
-          deactivateOverride(id);
-          showToast('Override deactivated.', 'info');
-          renderOverridesTable();
-          renderLiveTable();
-          return;
-        }
-        if (btn.dataset.action === 'delete-ov') {
-          deleteOvTargetId = id;
-          renderOverridesTable();
-          return;
-        }
-        if (btn.dataset.action === 'delete-ov-confirm') {
-          deleteOverride(deleteOvTargetId);
-          deleteOvTargetId = null;
-          showToast('Override deleted.', 'info');
-          renderOverridesTable();
-          renderLiveTable();
-          return;
-        }
-        if (btn.dataset.action === 'delete-ov-cancel') {
-          deleteOvTargetId = null;
-          renderOverridesTable();
-          return;
-        }
-      });
+        formToggle.addEventListener('click', toggleFormCard);
+        formToggle.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleFormCard();
+          }
+        });
 
-      // Edit modal
-      document.getElementById('edit-modal-close').addEventListener('click', closeEditModal);
-      document.getElementById('edit-modal-cancel').addEventListener('click', closeEditModal);
-      document.getElementById('edit-modal-save').addEventListener('click', saveEditModal);
-      document.getElementById('edit-modal').addEventListener('click', e => {
-        if (e.target === e.currentTarget) closeEditModal();
-      });
+        // Open add form from section button
+        document.getElementById('open-add-form-btn').addEventListener('click', () => {
+          resetAddForm();
+          openAddForm(null);
+        });
 
-      // ESC closes modal
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closeEditModal();
-      });
+        // Save override from inline form
+        document
+          .getElementById('save-override-btn')
+          .addEventListener('click', saveOverrideFromForm);
 
-      // Auto-expire on load, then render
-      autoExpire();
-      renderOverridesTable();
-      fetchLivePrices();
+        // Cancel edit in inline form
+        document.getElementById('cancel-edit-btn').addEventListener('click', () => {
+          resetAddForm();
+        });
 
-      // Refresh live prices every 90 seconds
-      setInterval(() => {
+        // Overrides table delegation
+        document.getElementById('overrides-tbody').addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-action]');
+          if (!btn) return;
+          const id = btn.dataset.id;
+          const overrides = loadOverrides();
+          const ov = overrides.find((o) => o.id === id);
+
+          if (btn.dataset.action === 'edit-ov') {
+            if (ov) openEditModal(ov);
+            return;
+          }
+          if (btn.dataset.action === 'deactivate-ov') {
+            deactivateOverride(id);
+            showToast('Override deactivated.', 'info');
+            renderOverridesTable();
+            renderLiveTable();
+            return;
+          }
+          if (btn.dataset.action === 'delete-ov') {
+            deleteOvTargetId = id;
+            renderOverridesTable();
+            return;
+          }
+          if (btn.dataset.action === 'delete-ov-confirm') {
+            deleteOverride(deleteOvTargetId);
+            deleteOvTargetId = null;
+            showToast('Override deleted.', 'info');
+            renderOverridesTable();
+            renderLiveTable();
+            return;
+          }
+          if (btn.dataset.action === 'delete-ov-cancel') {
+            deleteOvTargetId = null;
+            renderOverridesTable();
+            return;
+          }
+        });
+
+        // Edit modal
+        document.getElementById('edit-modal-close').addEventListener('click', closeEditModal);
+        document.getElementById('edit-modal-cancel').addEventListener('click', closeEditModal);
+        document.getElementById('edit-modal-save').addEventListener('click', saveEditModal);
+        document.getElementById('edit-modal').addEventListener('click', (e) => {
+          if (e.target === e.currentTarget) closeEditModal();
+        });
+
+        // ESC closes modal
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closeEditModal();
+        });
+
+        // Auto-expire on load, then render
+        autoExpire();
+        renderOverridesTable();
         fetchLivePrices();
-        setFreshnessStatus();
-      }, 90_000);
-    }
 
-    init();
-  </script>
-</body>
+        // Refresh live prices every 90 seconds
+        setInterval(() => {
+          fetchLivePrices();
+          setFreshnessStatus();
+        }, 90_000);
+      }
+
+      init();
+    </script>
+  </body>
 </html>

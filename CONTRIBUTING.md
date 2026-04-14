@@ -1,6 +1,7 @@
 # Contributing to GoldPrices
 
-Thank you for your interest in contributing! This guide covers the conventions, workflow, and practical steps for working on GoldPrices.
+Thank you for your interest in contributing! This guide covers the conventions, workflow, and
+practical steps for working on GoldPrices.
 
 ---
 
@@ -15,16 +16,16 @@ Thank you for your interest in contributing! This guide covers the conventions, 
 
 ### File organization
 
-| Type | Location |
-|------|----------|
-| Page-specific CSS | `styles/pages/<page>.css` |
-| Page-specific JS | `scripts/pages/<page>.js` |
-| Shared UI components | `components/<name>.js` |
-| Core libraries | `lib/<name>.js` |
-| Configuration | `config/<name>.js` |
-| Automation scripts | `scripts/<name>.js` |
-| Guide articles | `guides/<slug>.html` |
-| Tool pages | `tools/<slug>.html` |
+| Type                 | Location                  |
+| -------------------- | ------------------------- |
+| Page-specific CSS    | `styles/pages/<page>.css` |
+| Page-specific JS     | `scripts/pages/<page>.js` |
+| Shared UI components | `components/<name>.js`    |
+| Core libraries       | `lib/<name>.js`           |
+| Configuration        | `config/<name>.js`        |
+| Automation scripts   | `scripts/<name>.js`       |
+| Guide articles       | `guides/<slug>.html`      |
+| Tool pages           | `tools/<slug>.html`       |
 
 ---
 
@@ -48,13 +49,16 @@ Thank you for your interest in contributing! This guide covers the conventions, 
 ## Adding a New Country
 
 1. **Add to config:** Add an entry to `config/countries.js`:
+
    ```js
    { code: 'XX', name: 'Country Name', nameAr: 'الاسم', currency: 'XXX', flag: '🇽🇽', group: 'region', decimals: 2 }
    ```
 
-2. **Create country page:** Copy an existing file in `countries/` (e.g., `countries/oman.html`) and update the country-specific content.
+2. **Create country page:** Copy an existing file in `countries/` (e.g., `countries/oman.html`) and
+   update the country-specific content.
 
 3. **Create city pages:** Under `<country-slug>/` create the city structure:
+
    ```text
    country-slug/
    ├── gold-price/index.html
@@ -68,9 +72,11 @@ Thank you for your interest in contributing! This guide covers the conventions, 
        └── gold-shops/index.html
    ```
 
-4. **Update navigation:** Add the country to `components/nav-data.js` if it should appear in the nav dropdown.
+4. **Update navigation:** Add the country to `components/nav-data.js` if it should appear in the nav
+   dropdown.
 
-5. **Update footer:** Add to `components/footer.js` if the country belongs to GCC or primary regions.
+5. **Update footer:** Add to `components/footer.js` if the country belongs to GCC or primary
+   regions.
 
 6. **Update sitemap:** Run `npm run generate-sitemap` or add manually to `sitemap.xml`.
 
@@ -115,7 +121,8 @@ Tests run with `--test-concurrency=1` to prevent file races on shared JSON data.
 ## Important Notes
 
 - **AED peg is fixed** at 3.6725 — never fetch it from an API
-- **Prices are estimates** — always frame as "bullion-equivalent estimates" with appropriate disclaimers
+- **Prices are estimates** — always frame as "bullion-equivalent estimates" with appropriate
+  disclaimers
 - **Service worker version** must be bumped in `sw.js` when precache URLs change
 - **Dark mode** uses `[data-theme="dark"]` attribute — test both themes
 - **No admin credentials in source** — all secrets go in GitHub repository settings
@@ -124,4 +131,5 @@ Tests run with `--test-concurrency=1` to prevent file races on shared JSON data.
 
 ## Questions?
 
-Open an issue or check the [Wiki](https://github.com/vctb12/Gold-Prices/wiki) for deeper documentation.
+Open an issue or check the [Wiki](https://github.com/vctb12/Gold-Prices/wiki) for deeper
+documentation.

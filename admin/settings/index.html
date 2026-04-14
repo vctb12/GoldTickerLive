@@ -1,763 +1,944 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow" />
-  <title>Settings — GoldAdmin</title>
-  <link rel="stylesheet" href="../admin.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <style>
-    /* ── Inline spinner ──────────────────────────────────────── */
-    .inline-spinner {
-      animation: spin 0.75s linear infinite;
-      border: 2px solid var(--border);
-      border-radius: 50%;
-      border-top-color: var(--primary);
-      display: inline-block;
-      height: 14px;
-      vertical-align: middle;
-      width: 14px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Settings — GoldAdmin</title>
+    <link rel="stylesheet" href="../admin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <style>
+      /* ── Inline spinner ──────────────────────────────────────── */
+      .inline-spinner {
+        animation: spin 0.75s linear infinite;
+        border: 2px solid var(--border);
+        border-radius: 50%;
+        border-top-color: var(--primary);
+        display: inline-block;
+        height: 14px;
+        vertical-align: middle;
+        width: 14px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
 
-    /* ── User modal alert ────────────────────────────────────── */
-    .login-alert {
-      align-items: flex-start;
-      border-radius: var(--radius-sm);
-      font-size: 0.8125rem;
-      gap: 8px;
-      padding: 10px 14px;
-    }
-    .login-alert--error {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: var(--danger);
-    }
+      /* ── User modal alert ────────────────────────────────────── */
+      .login-alert {
+        align-items: flex-start;
+        border-radius: var(--radius-sm);
+        font-size: 0.8125rem;
+        gap: 8px;
+        padding: 10px 14px;
+      }
+      .login-alert--error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: var(--danger);
+      }
 
-    /* ── Settings layout ────────────────────────────────────── */
-    .settings-card {
-      margin-bottom: 20px;
-    }
-    .settings-grid {
-      display: grid;
-      gap: 16px;
-      grid-template-columns: 1fr 1fr;
-    }
-    @media (max-width: 640px) { .settings-grid { grid-template-columns: 1fr; } }
-    .settings-grid-3 {
-      display: grid;
-      gap: 16px;
-      grid-template-columns: 1fr 1fr 1fr;
-    }
-    @media (max-width: 800px) { .settings-grid-3 { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 480px) { .settings-grid-3 { grid-template-columns: 1fr; } }
+      /* ── Settings layout ────────────────────────────────────── */
+      .settings-card {
+        margin-bottom: 20px;
+      }
+      .settings-grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 1fr 1fr;
+      }
+      @media (max-width: 640px) {
+        .settings-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .settings-grid-3 {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      @media (max-width: 800px) {
+        .settings-grid-3 {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 480px) {
+        .settings-grid-3 {
+          grid-template-columns: 1fr;
+        }
+      }
 
-    /* ── Toggle switch ──────────────────────────────────────── */
-    .toggle-row {
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 14px 0;
-    }
-    .toggle-row:last-child { border-bottom: none; }
-    .toggle-info { flex: 1 1 0; min-width: 0; }
-    .toggle-label {
-      color: var(--text);
-      display: block;
-      font-size: 0.9375rem;
-      font-weight: 500;
-    }
-    .toggle-desc {
-      color: var(--text-dim);
-      font-size: 0.8125rem;
-      margin-top: 2px;
-    }
-    .toggle-switch {
-      cursor: pointer;
-      flex-shrink: 0;
-      height: 24px;
-      position: relative;
-      width: 44px;
-    }
-    .toggle-switch input { height: 0; opacity: 0; position: absolute; width: 0; }
-    .toggle-track {
-      background: var(--border);
-      border-radius: 12px;
-      bottom: 0;
-      cursor: pointer;
-      left: 0;
-      position: absolute;
-      right: 0;
-      top: 0;
-      transition: background 0.2s;
-    }
-    .toggle-track::before {
-      background: #fff;
-      border-radius: 50%;
-      bottom: 3px;
-      content: '';
-      height: 18px;
-      left: 3px;
-      position: absolute;
-      transition: transform 0.2s;
-      width: 18px;
-    }
-    .toggle-switch input:checked + .toggle-track { background: var(--gold); }
-    .toggle-switch input:checked + .toggle-track::before { transform: translateX(20px); }
-    .toggle-switch input:focus-visible + .toggle-track {
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
-    }
+      /* ── Toggle switch ──────────────────────────────────────── */
+      .toggle-row {
+        align-items: center;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 0;
+      }
+      .toggle-row:last-child {
+        border-bottom: none;
+      }
+      .toggle-info {
+        flex: 1 1 0;
+        min-width: 0;
+      }
+      .toggle-label {
+        color: var(--text);
+        display: block;
+        font-size: 0.9375rem;
+        font-weight: 500;
+      }
+      .toggle-desc {
+        color: var(--text-dim);
+        font-size: 0.8125rem;
+        margin-top: 2px;
+      }
+      .toggle-switch {
+        cursor: pointer;
+        flex-shrink: 0;
+        height: 24px;
+        position: relative;
+        width: 44px;
+      }
+      .toggle-switch input {
+        height: 0;
+        opacity: 0;
+        position: absolute;
+        width: 0;
+      }
+      .toggle-track {
+        background: var(--border);
+        border-radius: 12px;
+        bottom: 0;
+        cursor: pointer;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transition: background 0.2s;
+      }
+      .toggle-track::before {
+        background: #fff;
+        border-radius: 50%;
+        bottom: 3px;
+        content: '';
+        height: 18px;
+        left: 3px;
+        position: absolute;
+        transition: transform 0.2s;
+        width: 18px;
+      }
+      .toggle-switch input:checked + .toggle-track {
+        background: var(--gold);
+      }
+      .toggle-switch input:checked + .toggle-track::before {
+        transform: translateX(20px);
+      }
+      .toggle-switch input:focus-visible + .toggle-track {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+      }
 
-    /* ── API key field ──────────────────────────────────────── */
-    .api-key-wrap {
-      position: relative;
-    }
-    .api-key-wrap .form-input {
-      padding-right: 44px;
-    }
-    .eye-btn {
-      align-items: center;
-      background: none;
-      border: none;
-      color: var(--text-dim);
-      cursor: pointer;
-      display: flex;
-      height: 38px;
-      justify-content: center;
-      position: absolute;
-      right: 6px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 32px;
-    }
-    .eye-btn:hover { color: var(--text); }
+      /* ── API key field ──────────────────────────────────────── */
+      .api-key-wrap {
+        position: relative;
+      }
+      .api-key-wrap .form-input {
+        padding-right: 44px;
+      }
+      .eye-btn {
+        align-items: center;
+        background: none;
+        border: none;
+        color: var(--text-dim);
+        cursor: pointer;
+        display: flex;
+        height: 38px;
+        justify-content: center;
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 32px;
+      }
+      .eye-btn:hover {
+        color: var(--text);
+      }
 
-    /* ── Notice box ─────────────────────────────────────────── */
-    .notice-box {
-      background: rgba(245,158,11,0.08);
-      border: 1px solid rgba(245,158,11,0.25);
-      border-radius: var(--radius);
-      color: var(--text-muted);
-      font-size: 0.8125rem;
-      line-height: 1.55;
-      margin-top: 16px;
-      padding: 12px 14px;
-    }
+      /* ── Notice box ─────────────────────────────────────────── */
+      .notice-box {
+        background: rgba(245, 158, 11, 0.08);
+        border: 1px solid rgba(245, 158, 11, 0.25);
+        border-radius: var(--radius);
+        color: var(--text-muted);
+        font-size: 0.8125rem;
+        line-height: 1.55;
+        margin-top: 16px;
+        padding: 12px 14px;
+      }
 
-    /* ── Sticky save bar ────────────────────────────────────── */
-    .save-bar {
-      align-items: center;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      bottom: 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      left: var(--sidebar-w);
-      padding: 12px 24px;
-      position: sticky;
-      z-index: 10;
-    }
-    @media (max-width: 700px) { .save-bar { left: 0; } }
-    .save-bar-spacer { flex: 1 1 0; }
-    .last-saved-text {
-      color: var(--text-dim);
-      font-size: 0.8125rem;
-    }
-    .form-help {
-      color: var(--text-dim);
-      font-size: 0.8125rem;
-      margin-top: 4px;
-    }
-  </style>
-</head>
-<body>
+      /* ── Sticky save bar ────────────────────────────────────── */
+      .save-bar {
+        align-items: center;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        bottom: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        left: var(--sidebar-w);
+        padding: 12px 24px;
+        position: sticky;
+        z-index: 10;
+      }
+      @media (max-width: 700px) {
+        .save-bar {
+          left: 0;
+        }
+      }
+      .save-bar-spacer {
+        flex: 1 1 0;
+      }
+      .last-saved-text {
+        color: var(--text-dim);
+        font-size: 0.8125rem;
+      }
+      .form-help {
+        color: var(--text-dim);
+        font-size: 0.8125rem;
+        margin-top: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Auth guard -->
+    <script>
+      (function () {
+        try {
+          var k = Object.keys(localStorage);
+          if (
+            !k.some(function (x) {
+              return x.startsWith('sb-') && x.endsWith('-auth-token');
+            })
+          )
+            window.location.replace('../login/');
+        } catch (e) {
+          window.location.replace('../login/');
+        }
+      })();
+    </script>
 
-  <!-- Auth guard -->
-  <script>(function(){try{var k=Object.keys(localStorage);if(!k.some(function(x){return x.startsWith('sb-')&&x.endsWith('-auth-token')}))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-  <div class="sidebar-overlay" id="sidebar-overlay"></div>
-
-  <div class="admin-layout">
-
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
-      <div class="sidebar-header">
-        <span class="logo-icon" aria-hidden="true">⚙</span>
-        <span class="logo-text">GoldAdmin</span>
-      </div>
-      <nav class="sidebar-nav" aria-label="Main menu">
-        <a href="../" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a>
-        <a href="../shops/" class="nav-link"><span class="nav-icon">🏪</span> Shops</a>
-        <a href="../pricing/" class="nav-link"><span class="nav-icon">💰</span> Pricing</a>
-        <a href="../orders/" class="nav-link"><span class="nav-icon">📦</span> Orders</a>
-        <a href="../content/" class="nav-link"><span class="nav-icon">📝</span> Content</a>
-        <a href="../social/" class="nav-link"><span class="nav-icon">📱</span> Social</a>
-        <a href="../settings/" class="nav-link"><span class="nav-icon">⚙</span> Settings</a>
-        <a href="../analytics/" class="nav-link"><span class="nav-icon">📈</span> Analytics</a>
-      </nav>
-      <div class="sidebar-footer">
-        <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">↩ Sign Out</button>
-      </div>
-    </aside>
-
-    <!-- Main area -->
-    <div class="main-area">
-
-      <header class="page-header">
-        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle navigation" type="button">☰</button>
-        <h1 class="page-title">⚙ Settings</h1>
-        <div class="header-actions"></div>
-      </header>
-
-      <main class="content-area" style="padding-bottom:80px;" id="settings-main">
-
-        <!-- ── Admin Account Info ──────────────────────────── -->
-        <div class="card settings-card" id="users-section">
-          <div class="card-header">
-            <h2 class="card-title">Admin Account</h2>
-          </div>
-          <div class="card-body">
-            <div id="admin-user-info" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-              <div style="flex:1;min-width:200px;">
-                <div style="font-size:0.8125rem;color:var(--text-dim);margin-bottom:4px;">Logged in as</div>
-                <div id="settings-user-email" style="font-size:1rem;font-weight:600;">Loading…</div>
-                <div id="settings-user-provider" style="font-size:0.8125rem;color:var(--text-muted);margin-top:2px;">GitHub OAuth via Supabase</div>
-              </div>
-              <div>
-                <span class="badge badge-warning" style="font-size:0.8125rem;">admin</span>
-              </div>
-            </div>
-            <div class="notice-box" style="margin-top:16px;">
-              ℹ Admin access is controlled by the <code>ALLOWED_EMAIL</code> in <code>admin/supabase-config.js</code>.
-              Only the configured email can access this panel. To change the admin email, edit that file and push to <code>main</code>.
-              User authentication is handled via Supabase GitHub OAuth.
-            </div>
-          </div>
+    <div class="admin-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+        <div class="sidebar-header">
+          <span class="logo-icon" aria-hidden="true">⚙</span>
+          <span class="logo-text">GoldAdmin</span>
         </div>
-
-        <!-- Commerce Settings -->
-        <div class="card settings-card">
-          <div class="card-header">
-            <h2 class="card-title">Commerce Settings</h2>
-          </div>
-          <div class="card-body">
-            <div class="settings-grid">
-              <div class="form-group">
-                <label class="form-label" for="s-margin">Order Margin (%)</label>
-                <input class="form-input" type="number" id="s-margin" min="0" max="20" step="0.5" placeholder="3" />
-                <div class="form-help">Added to gold spot price for buy orders. Default: 3%</div>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="s-vat">VAT Rate (%)</label>
-                <input class="form-input" type="number" id="s-vat" min="0" max="30" step="0.5" placeholder="5" />
-                <div class="form-help">Applied on subtotal. UAE standard: 5%.</div>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="s-whatsapp">WhatsApp Number</label>
-                <input class="form-input" type="text" id="s-whatsapp" placeholder="+971501234567" />
-                <div class="form-help">Format: +971XXXXXXXXX</div>
-              </div>
-            </div>
-          </div>
+        <nav class="sidebar-nav" aria-label="Main menu">
+          <a href="../" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a>
+          <a href="../shops/" class="nav-link"><span class="nav-icon">🏪</span> Shops</a>
+          <a href="../pricing/" class="nav-link"><span class="nav-icon">💰</span> Pricing</a>
+          <a href="../orders/" class="nav-link"><span class="nav-icon">📦</span> Orders</a>
+          <a href="../content/" class="nav-link"><span class="nav-icon">📝</span> Content</a>
+          <a href="../social/" class="nav-link"><span class="nav-icon">📱</span> Social</a>
+          <a href="../settings/" class="nav-link"><span class="nav-icon">⚙</span> Settings</a>
+          <a href="../analytics/" class="nav-link"><span class="nav-icon">📈</span> Analytics</a>
+        </nav>
+        <div class="sidebar-footer">
+          <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">
+            ↩ Sign Out
+          </button>
         </div>
+      </aside>
 
-        <!-- Site Identity -->
-        <div class="card settings-card">
-          <div class="card-header">
-            <h2 class="card-title">Site Identity</h2>
-          </div>
-          <div class="card-body">
-            <div class="settings-grid" style="margin-bottom:16px;">
-              <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label" for="s-site-name">Site Name</label>
-                <input class="form-input" type="text" id="s-site-name" placeholder="Gold Prices" />
-              </div>
-              <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label" for="s-tagline">Tagline</label>
-                <input class="form-input" type="text" id="s-tagline" placeholder="Live Gold Rates — UAE, GCC &amp; Global" />
-              </div>
-            </div>
-            <div class="settings-grid-3">
-              <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label" for="s-twitter">Twitter / X URL</label>
-                <input class="form-input" type="url" id="s-twitter" placeholder="https://twitter.com/..." />
-              </div>
-              <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label" for="s-instagram">Instagram URL</label>
-                <input class="form-input" type="url" id="s-instagram" placeholder="https://instagram.com/..." />
-              </div>
-              <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label" for="s-social-whatsapp">WhatsApp Link</label>
-                <input class="form-input" type="text" id="s-social-whatsapp" placeholder="+971501234567" />
-              </div>
-            </div>
-          </div>
-        </div>
+      <!-- Main area -->
+      <div class="main-area">
+        <header class="page-header">
+          <button
+            class="sidebar-toggle"
+            id="sidebar-toggle"
+            aria-label="Toggle navigation"
+            type="button"
+          >
+            ☰
+          </button>
+          <h1 class="page-title">⚙ Settings</h1>
+          <div class="header-actions"></div>
+        </header>
 
-        <!-- Feature Toggles -->
-        <div class="card settings-card">
-          <div class="card-header">
-            <h2 class="card-title">Feature Toggles</h2>
-          </div>
-          <div class="card-body" style="padding-top:4px;padding-bottom:4px;">
-            <div class="toggle-row">
-              <div class="toggle-info">
-                <span class="toggle-label">Dark Mode</span>
-                <span class="toggle-desc">Allow users to switch to dark theme</span>
-              </div>
-              <label class="toggle-switch" aria-label="Dark Mode">
-                <input type="checkbox" id="f-dark-mode" />
-                <span class="toggle-track"></span>
-              </label>
+        <main class="content-area" style="padding-bottom: 80px" id="settings-main">
+          <!-- ── Admin Account Info ──────────────────────────── -->
+          <div class="card settings-card" id="users-section">
+            <div class="card-header">
+              <h2 class="card-title">Admin Account</h2>
             </div>
-            <div class="toggle-row">
-              <div class="toggle-info">
-                <span class="toggle-label">Newsletter Signup</span>
-                <span class="toggle-desc">Show newsletter subscription form on public pages</span>
-              </div>
-              <label class="toggle-switch" aria-label="Newsletter Signup">
-                <input type="checkbox" id="f-newsletter" />
-                <span class="toggle-track"></span>
-              </label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info">
-                <span class="toggle-label">Portfolio Tracker</span>
-                <span class="toggle-desc">Enable portfolio tracking features for users</span>
-              </div>
-              <label class="toggle-switch" aria-label="Portfolio Tracker">
-                <input type="checkbox" id="f-portfolio" />
-                <span class="toggle-track"></span>
-              </label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info">
-                <span class="toggle-label">Order Gold</span>
-                <span class="toggle-desc">Show order flow and buy buttons on public pages</span>
-              </div>
-              <label class="toggle-switch" aria-label="Order Gold">
-                <input type="checkbox" id="f-order-gold" />
-                <span class="toggle-track"></span>
-              </label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info">
-                <span class="toggle-label">Price Alerts</span>
-                <span class="toggle-desc">Allow users to set browser-based price alerts</span>
-              </div>
-              <label class="toggle-switch" aria-label="Price Alerts">
-                <input type="checkbox" id="f-price-alerts" />
-                <span class="toggle-track"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- API Keys -->
-        <div class="card settings-card">
-          <div class="card-header">
-            <h2 class="card-title">API Keys</h2>
-          </div>
-          <div class="card-body">
-            <div class="settings-grid" style="margin-bottom:16px;">
-              <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label" for="k-gold-api">Gold API Key</label>
-                <div class="api-key-wrap">
-                  <input class="form-input" type="password" id="k-gold-api" autocomplete="off" placeholder="••••••••••••••••" />
-                  <button class="eye-btn" type="button" data-target="k-gold-api" aria-label="Toggle visibility">👁</button>
+            <div class="card-body">
+              <div
+                id="admin-user-info"
+                style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap"
+              >
+                <div style="flex: 1; min-width: 200px">
+                  <div style="font-size: 0.8125rem; color: var(--text-dim); margin-bottom: 4px">
+                    Logged in as
+                  </div>
+                  <div id="settings-user-email" style="font-size: 1rem; font-weight: 600">
+                    Loading…
+                  </div>
+                  <div
+                    id="settings-user-provider"
+                    style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px"
+                  >
+                    GitHub OAuth via Supabase
+                  </div>
+                </div>
+                <div>
+                  <span class="badge badge-warning" style="font-size: 0.8125rem">admin</span>
                 </div>
               </div>
-              <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label" for="k-fx-api">FX API Key</label>
-                <div class="api-key-wrap">
-                  <input class="form-input" type="password" id="k-fx-api" autocomplete="off" placeholder="••••••••••••••••" />
-                  <button class="eye-btn" type="button" data-target="k-fx-api" aria-label="Toggle visibility">👁</button>
+              <div class="notice-box" style="margin-top: 16px">
+                ℹ Admin access is controlled by the <code>ALLOWED_EMAIL</code> in
+                <code>admin/supabase-config.js</code>. Only the configured email can access this
+                panel. To change the admin email, edit that file and push to <code>main</code>. User
+                authentication is handled via Supabase GitHub OAuth.
+              </div>
+            </div>
+          </div>
+
+          <!-- Commerce Settings -->
+          <div class="card settings-card">
+            <div class="card-header">
+              <h2 class="card-title">Commerce Settings</h2>
+            </div>
+            <div class="card-body">
+              <div class="settings-grid">
+                <div class="form-group">
+                  <label class="form-label" for="s-margin">Order Margin (%)</label>
+                  <input
+                    class="form-input"
+                    type="number"
+                    id="s-margin"
+                    min="0"
+                    max="20"
+                    step="0.5"
+                    placeholder="3"
+                  />
+                  <div class="form-help">Added to gold spot price for buy orders. Default: 3%</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="s-vat">VAT Rate (%)</label>
+                  <input
+                    class="form-input"
+                    type="number"
+                    id="s-vat"
+                    min="0"
+                    max="30"
+                    step="0.5"
+                    placeholder="5"
+                  />
+                  <div class="form-help">Applied on subtotal. UAE standard: 5%.</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="s-whatsapp">WhatsApp Number</label>
+                  <input
+                    class="form-input"
+                    type="text"
+                    id="s-whatsapp"
+                    placeholder="+971501234567"
+                  />
+                  <div class="form-help">Format: +971XXXXXXXXX</div>
                 </div>
               </div>
-              <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label" for="k-adsense">AdSense Publisher ID</label>
-                <input class="form-input" type="text" id="k-adsense" autocomplete="off" placeholder="ca-pub-XXXXXXXXXXXXXXXX" />
+            </div>
+          </div>
+
+          <!-- Site Identity -->
+          <div class="card settings-card">
+            <div class="card-header">
+              <h2 class="card-title">Site Identity</h2>
+            </div>
+            <div class="card-body">
+              <div class="settings-grid" style="margin-bottom: 16px">
+                <div class="form-group" style="margin-bottom: 0">
+                  <label class="form-label" for="s-site-name">Site Name</label>
+                  <input
+                    class="form-input"
+                    type="text"
+                    id="s-site-name"
+                    placeholder="Gold Prices"
+                  />
+                </div>
+                <div class="form-group" style="margin-bottom: 0">
+                  <label class="form-label" for="s-tagline">Tagline</label>
+                  <input
+                    class="form-input"
+                    type="text"
+                    id="s-tagline"
+                    placeholder="Live Gold Rates — UAE, GCC &amp; Global"
+                  />
+                </div>
+              </div>
+              <div class="settings-grid-3">
+                <div class="form-group" style="margin-bottom: 0">
+                  <label class="form-label" for="s-twitter">Twitter / X URL</label>
+                  <input
+                    class="form-input"
+                    type="url"
+                    id="s-twitter"
+                    placeholder="https://twitter.com/..."
+                  />
+                </div>
+                <div class="form-group" style="margin-bottom: 0">
+                  <label class="form-label" for="s-instagram">Instagram URL</label>
+                  <input
+                    class="form-input"
+                    type="url"
+                    id="s-instagram"
+                    placeholder="https://instagram.com/..."
+                  />
+                </div>
+                <div class="form-group" style="margin-bottom: 0">
+                  <label class="form-label" for="s-social-whatsapp">WhatsApp Link</label>
+                  <input
+                    class="form-input"
+                    type="text"
+                    id="s-social-whatsapp"
+                    placeholder="+971501234567"
+                  />
+                </div>
               </div>
             </div>
-            <div class="notice-box">
-              ℹ API keys are stored in Supabase along with other settings. They are synced across devices.
-              Keys are never exposed to public visitors — only authenticated admins can read them.
+          </div>
+
+          <!-- Feature Toggles -->
+          <div class="card settings-card">
+            <div class="card-header">
+              <h2 class="card-title">Feature Toggles</h2>
+            </div>
+            <div class="card-body" style="padding-top: 4px; padding-bottom: 4px">
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-label">Dark Mode</span>
+                  <span class="toggle-desc">Allow users to switch to dark theme</span>
+                </div>
+                <label class="toggle-switch" aria-label="Dark Mode">
+                  <input type="checkbox" id="f-dark-mode" />
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-label">Newsletter Signup</span>
+                  <span class="toggle-desc">Show newsletter subscription form on public pages</span>
+                </div>
+                <label class="toggle-switch" aria-label="Newsletter Signup">
+                  <input type="checkbox" id="f-newsletter" />
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-label">Portfolio Tracker</span>
+                  <span class="toggle-desc">Enable portfolio tracking features for users</span>
+                </div>
+                <label class="toggle-switch" aria-label="Portfolio Tracker">
+                  <input type="checkbox" id="f-portfolio" />
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-label">Order Gold</span>
+                  <span class="toggle-desc">Show order flow and buy buttons on public pages</span>
+                </div>
+                <label class="toggle-switch" aria-label="Order Gold">
+                  <input type="checkbox" id="f-order-gold" />
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-label">Price Alerts</span>
+                  <span class="toggle-desc">Allow users to set browser-based price alerts</span>
+                </div>
+                <label class="toggle-switch" aria-label="Price Alerts">
+                  <input type="checkbox" id="f-price-alerts" />
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Admin Notes -->
-        <div class="card settings-card">
-          <div class="card-header">
-            <h2 class="card-title">Admin Notes</h2>
-          </div>
-          <div class="card-body">
-            <div class="form-group" style="margin-bottom:0;">
-              <label class="form-label" for="s-notes">Internal notes <span style="color:var(--text-dim);font-weight:400;">(not shown to public)</span></label>
-              <textarea class="form-input" id="s-notes" rows="5" placeholder="Notes visible only to admins…"></textarea>
+          <!-- API Keys -->
+          <div class="card settings-card">
+            <div class="card-header">
+              <h2 class="card-title">API Keys</h2>
+            </div>
+            <div class="card-body">
+              <div class="settings-grid" style="margin-bottom: 16px">
+                <div class="form-group" style="margin-bottom: 0">
+                  <label class="form-label" for="k-gold-api">Gold API Key</label>
+                  <div class="api-key-wrap">
+                    <input
+                      class="form-input"
+                      type="password"
+                      id="k-gold-api"
+                      autocomplete="off"
+                      placeholder="••••••••••••••••"
+                    />
+                    <button
+                      class="eye-btn"
+                      type="button"
+                      data-target="k-gold-api"
+                      aria-label="Toggle visibility"
+                    >
+                      👁
+                    </button>
+                  </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 0">
+                  <label class="form-label" for="k-fx-api">FX API Key</label>
+                  <div class="api-key-wrap">
+                    <input
+                      class="form-input"
+                      type="password"
+                      id="k-fx-api"
+                      autocomplete="off"
+                      placeholder="••••••••••••••••"
+                    />
+                    <button
+                      class="eye-btn"
+                      type="button"
+                      data-target="k-fx-api"
+                      aria-label="Toggle visibility"
+                    >
+                      👁
+                    </button>
+                  </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 0">
+                  <label class="form-label" for="k-adsense">AdSense Publisher ID</label>
+                  <input
+                    class="form-input"
+                    type="text"
+                    id="k-adsense"
+                    autocomplete="off"
+                    placeholder="ca-pub-XXXXXXXXXXXXXXXX"
+                  />
+                </div>
+              </div>
+              <div class="notice-box">
+                ℹ API keys are stored in Supabase along with other settings. They are synced across
+                devices. Keys are never exposed to public visitors — only authenticated admins can
+                read them.
+              </div>
             </div>
           </div>
+
+          <!-- Admin Notes -->
+          <div class="card settings-card">
+            <div class="card-header">
+              <h2 class="card-title">Admin Notes</h2>
+            </div>
+            <div class="card-body">
+              <div class="form-group" style="margin-bottom: 0">
+                <label class="form-label" for="s-notes"
+                  >Internal notes
+                  <span style="color: var(--text-dim); font-weight: 400"
+                    >(not shown to public)</span
+                  ></label
+                >
+                <textarea
+                  class="form-input"
+                  id="s-notes"
+                  rows="5"
+                  placeholder="Notes visible only to admins…"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Import file (hidden, triggered by button) -->
+          <input type="file" id="import-file" accept=".json" style="display: none" />
+        </main>
+
+        <!-- Sticky save bar -->
+        <div class="save-bar">
+          <button
+            class="btn btn-ghost btn-sm"
+            id="reset-btn"
+            type="button"
+            style="color: var(--danger)"
+          >
+            ↺ Reset to Defaults
+          </button>
+          <button class="btn btn-ghost btn-sm" id="export-btn" type="button">⬇ Export JSON</button>
+          <button class="btn btn-ghost btn-sm" id="import-btn" type="button">⬆ Import JSON</button>
+          <div class="save-bar-spacer"></div>
+          <span class="last-saved-text" id="last-saved-text"></span>
+          <button class="btn btn-gold" id="save-btn" type="button">💾 Save Settings</button>
         </div>
-
-        <!-- Import file (hidden, triggered by button) -->
-        <input type="file" id="import-file" accept=".json" style="display:none;" />
-
-      </main>
-
-      <!-- Sticky save bar -->
-      <div class="save-bar">
-        <button class="btn btn-ghost btn-sm" id="reset-btn" type="button" style="color:var(--danger);">↺ Reset to Defaults</button>
-        <button class="btn btn-ghost btn-sm" id="export-btn" type="button">⬇ Export JSON</button>
-        <button class="btn btn-ghost btn-sm" id="import-btn" type="button">⬆ Import JSON</button>
-        <div class="save-bar-spacer"></div>
-        <span class="last-saved-text" id="last-saved-text"></span>
-        <button class="btn btn-gold" id="save-btn" type="button">💾 Save Settings</button>
       </div>
+      <!-- /.main-area -->
+    </div>
+    <!-- /.admin-layout -->
 
-    </div><!-- /.main-area -->
-  </div><!-- /.admin-layout -->
+    <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
-  <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
+    <script type="module">
+      import {
+        logout as supabaseLogout,
+        requireAuth,
+        getSupabase,
+        logActivity,
+      } from '../supabase-auth.js';
 
-  <script type="module">
-    import { logout as supabaseLogout, requireAuth, getSupabase, logActivity } from '../supabase-auth.js';
+      // ── Auth guard ──────────────────────────────────────────
+      if (!(await requireAuth())) throw new Error('redirect');
 
-    // ── Auth guard ──────────────────────────────────────────
-    if (!(await requireAuth())) throw new Error('redirect');
+      const SETTINGS_CACHE_KEY = 'gp_settings';
+      const LAST_SAVED_KEY = 'gp_settings_saved_at';
 
-    const SETTINGS_CACHE_KEY = 'gp_settings';
-    const LAST_SAVED_KEY = 'gp_settings_saved_at';
+      const DEFAULTS = {
+        marginPercent: 3,
+        vatRate: 5,
+        whatsappNumber: '+971501234567',
+        siteName: 'Gold Prices',
+        tagline: 'Live Gold Rates — UAE, GCC & Global',
+        socialLinks: { twitter: '', instagram: '', whatsapp: '' },
+        features: {
+          darkMode: true,
+          newsletter: false,
+          portfolioTracker: true,
+          orderGold: true,
+          priceAlerts: true,
+        },
+        apiKeys: { goldApi: '', fxApi: '', adsensePublisherId: '' },
+        adminNotes: '',
+      };
 
-    const DEFAULTS = {
-      marginPercent: 3,
-      vatRate: 5,
-      whatsappNumber: '+971501234567',
-      siteName: 'Gold Prices',
-      tagline: 'Live Gold Rates — UAE, GCC & Global',
-      socialLinks: { twitter: '', instagram: '', whatsapp: '' },
-      features: {
-        darkMode: true,
-        newsletter: false,
-        portfolioTracker: true,
-        orderGold: true,
-        priceAlerts: true,
-      },
-      apiKeys: { goldApi: '', fxApi: '', adsensePublisherId: '' },
-      adminNotes: '',
-    };
+      /* ── Toast ──────────────────────────────────────────────── */
+      function showToast(msg, type = 'info') {
+        const icons = { success: '✓', error: '✕', warning: '⚠', info: 'ℹ' };
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast toast--${type}`;
+        toast.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span>${msg}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.classList.add('toast-hide');
+          toast.addEventListener('animationend', () => toast.remove(), { once: true });
+        }, 3500);
+      }
 
-    /* ── Toast ──────────────────────────────────────────────── */
-    function showToast(msg, type = 'info') {
-      const icons = { success: '✓', error: '✕', warning: '⚠', info: 'ℹ' };
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = `toast toast--${type}`;
-      toast.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span>${msg}</span>`;
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.classList.add('toast-hide');
-        toast.addEventListener('animationend', () => toast.remove(), { once: true });
-      }, 3500);
-    }
+      /* ── Load / save (Supabase with localStorage cache) ───── */
 
-    /* ── Load / save (Supabase with localStorage cache) ───── */
+      /** Cache settings in localStorage for offline resilience. */
+      function cacheSettings(s) {
+        try {
+          localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify(s));
+          localStorage.setItem(LAST_SAVED_KEY, String(Date.now()));
+        } catch {}
+      }
 
-    /** Cache settings in localStorage for offline resilience. */
-    function cacheSettings(s) {
-      try {
-        localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify(s));
-        localStorage.setItem(LAST_SAVED_KEY, String(Date.now()));
-      } catch {}
-    }
+      /** Read cached settings from localStorage. */
+      function readCachedSettings() {
+        try {
+          const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
+          if (!raw) return null;
+          const saved = JSON.parse(raw);
+          return {
+            ...DEFAULTS,
+            ...saved,
+            socialLinks: { ...DEFAULTS.socialLinks, ...(saved.socialLinks || {}) },
+            features: { ...DEFAULTS.features, ...(saved.features || {}) },
+            apiKeys: { ...DEFAULTS.apiKeys, ...(saved.apiKeys || {}) },
+          };
+        } catch {
+          return null;
+        }
+      }
 
-    /** Read cached settings from localStorage. */
-    function readCachedSettings() {
-      try {
-        const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
-        if (!raw) return null;
-        const saved = JSON.parse(raw);
+      /**
+       * Load settings from Supabase, fall back to localStorage cache, then defaults.
+       */
+      async function loadSettings() {
+        const sb = getSupabase();
+        if (sb) {
+          try {
+            const { data, error } = await sb
+              .from('site_settings')
+              .select('value')
+              .eq('id', 'default')
+              .single();
+            if (!error && data?.value) {
+              const saved = data.value;
+              const merged = {
+                ...DEFAULTS,
+                ...saved,
+                socialLinks: { ...DEFAULTS.socialLinks, ...(saved.socialLinks || {}) },
+                features: { ...DEFAULTS.features, ...(saved.features || {}) },
+                apiKeys: { ...DEFAULTS.apiKeys, ...(saved.apiKeys || {}) },
+              };
+              cacheSettings(merged);
+              return merged;
+            }
+            if (error) console.warn('[settings] Supabase read error:', error.message);
+          } catch (err) {
+            console.warn('[settings] Supabase unreachable:', err.message);
+          }
+        }
+        // Fall back to cache, then defaults
+        return readCachedSettings() || structuredClone(DEFAULTS);
+      }
+
+      // Cache admin email at init to avoid repeated getUser() calls
+      let _adminEmail = null;
+
+      /**
+       * Save settings to Supabase (upsert) and cache locally.
+       */
+      async function saveSettings(s) {
+        // Always cache locally first for resilience
+        cacheSettings(s);
+
+        const sb = getSupabase();
+        if (sb) {
+          const { error } = await sb
+            .from('site_settings')
+            .upsert({ id: 'default', value: s, updated_by: _adminEmail })
+            .eq('id', 'default');
+          if (error) throw new Error(error.message);
+        } else {
+          throw new Error('Supabase client not available. Settings saved locally only.');
+        }
+      }
+
+      /* ── Populate form from settings ────────────────────────── */
+      function populateForm(s) {
+        document.getElementById('s-margin').value = s.marginPercent ?? 3;
+        document.getElementById('s-vat').value = s.vatRate ?? 5;
+        document.getElementById('s-whatsapp').value = s.whatsappNumber ?? '';
+        document.getElementById('s-site-name').value = s.siteName ?? '';
+        document.getElementById('s-tagline').value = s.tagline ?? '';
+        document.getElementById('s-twitter').value = s.socialLinks?.twitter ?? '';
+        document.getElementById('s-instagram').value = s.socialLinks?.instagram ?? '';
+        document.getElementById('s-social-whatsapp').value = s.socialLinks?.whatsapp ?? '';
+        document.getElementById('f-dark-mode').checked = !!s.features?.darkMode;
+        document.getElementById('f-newsletter').checked = !!s.features?.newsletter;
+        document.getElementById('f-portfolio').checked = !!s.features?.portfolioTracker;
+        document.getElementById('f-order-gold').checked = !!s.features?.orderGold;
+        document.getElementById('f-price-alerts').checked = !!s.features?.priceAlerts;
+        document.getElementById('k-gold-api').value = s.apiKeys?.goldApi ?? '';
+        document.getElementById('k-fx-api').value = s.apiKeys?.fxApi ?? '';
+        document.getElementById('k-adsense').value = s.apiKeys?.adsensePublisherId ?? '';
+        document.getElementById('s-notes').value = s.adminNotes ?? '';
+      }
+
+      /* ── Read form into settings object ────────────────────── */
+      function readForm() {
         return {
-          ...DEFAULTS,
-          ...saved,
-          socialLinks: { ...DEFAULTS.socialLinks, ...(saved.socialLinks || {}) },
-          features: { ...DEFAULTS.features, ...(saved.features || {}) },
-          apiKeys: { ...DEFAULTS.apiKeys, ...(saved.apiKeys || {}) },
+          marginPercent: parseFloat(document.getElementById('s-margin').value) || 3,
+          vatRate: parseFloat(document.getElementById('s-vat').value) || 5,
+          whatsappNumber: document.getElementById('s-whatsapp').value.trim(),
+          siteName: document.getElementById('s-site-name').value.trim(),
+          tagline: document.getElementById('s-tagline').value.trim(),
+          socialLinks: {
+            twitter: document.getElementById('s-twitter').value.trim(),
+            instagram: document.getElementById('s-instagram').value.trim(),
+            whatsapp: document.getElementById('s-social-whatsapp').value.trim(),
+          },
+          features: {
+            darkMode: document.getElementById('f-dark-mode').checked,
+            newsletter: document.getElementById('f-newsletter').checked,
+            portfolioTracker: document.getElementById('f-portfolio').checked,
+            orderGold: document.getElementById('f-order-gold').checked,
+            priceAlerts: document.getElementById('f-price-alerts').checked,
+          },
+          apiKeys: {
+            goldApi: document.getElementById('k-gold-api').value,
+            fxApi: document.getElementById('k-fx-api').value,
+            adsensePublisherId: document.getElementById('k-adsense').value.trim(),
+          },
+          adminNotes: document.getElementById('s-notes').value,
         };
-      } catch {
+      }
+
+      /* ── Validate ───────────────────────────────────────────── */
+      function validate(s) {
+        if (s.marginPercent < 0 || s.marginPercent > 50) return 'Margin must be between 0 and 50%.';
+        if (s.vatRate < 0 || s.vatRate > 30) return 'VAT rate must be between 0 and 30%.';
+        if (s.whatsappNumber && !/^\+\d{7,15}$/.test(s.whatsappNumber))
+          return 'WhatsApp number must be in format +XXXXXXXXXXX.';
         return null;
       }
-    }
 
-    /**
-     * Load settings from Supabase, fall back to localStorage cache, then defaults.
-     */
-    async function loadSettings() {
-      const sb = getSupabase();
-      if (sb) {
+      /* ── Last-saved label ───────────────────────────────────── */
+      function updateLastSaved() {
+        const el = document.getElementById('last-saved-text');
         try {
-          const { data, error } = await sb
-            .from('site_settings')
-            .select('value')
-            .eq('id', 'default')
-            .single();
-          if (!error && data?.value) {
-            const saved = data.value;
+          const ts = parseInt(localStorage.getItem(LAST_SAVED_KEY) || '0', 10);
+          if (!ts) {
+            el.textContent = '';
+            return;
+          }
+          const mins = Math.round((Date.now() - ts) / 60000);
+          el.textContent = mins < 1 ? 'Saved just now' : `Last saved ${mins} min ago`;
+        } catch {
+          el.textContent = '';
+        }
+      }
+
+      /* ── Export / Import ────────────────────────────────────── */
+      function exportSettings() {
+        const s = readForm();
+        const blob = new Blob([JSON.stringify(s, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'gp_settings.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function importSettings(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const parsed = JSON.parse(e.target.result);
             const merged = {
               ...DEFAULTS,
-              ...saved,
-              socialLinks: { ...DEFAULTS.socialLinks, ...(saved.socialLinks || {}) },
-              features: { ...DEFAULTS.features, ...(saved.features || {}) },
-              apiKeys: { ...DEFAULTS.apiKeys, ...(saved.apiKeys || {}) },
+              ...parsed,
+              socialLinks: { ...DEFAULTS.socialLinks, ...(parsed.socialLinks || {}) },
+              features: { ...DEFAULTS.features, ...(parsed.features || {}) },
+              apiKeys: { ...DEFAULTS.apiKeys, ...(parsed.apiKeys || {}) },
             };
-            cacheSettings(merged);
-            return merged;
+            populateForm(merged);
+            showToast('Settings imported. Click Save to apply.', 'success');
+          } catch {
+            showToast('Invalid JSON file.', 'error');
           }
-          if (error) console.warn('[settings] Supabase read error:', error.message);
-        } catch (err) {
-          console.warn('[settings] Supabase unreachable:', err.message);
-        }
+        };
+        reader.readAsText(file);
       }
-      // Fall back to cache, then defaults
-      return readCachedSettings() || structuredClone(DEFAULTS);
-    }
 
-    // Cache admin email at init to avoid repeated getUser() calls
-    let _adminEmail = null;
+      /* ── Reset confirm ──────────────────────────────────────── */
+      let resetPending = false;
 
-    /**
-     * Save settings to Supabase (upsert) and cache locally.
-     */
-    async function saveSettings(s) {
-      // Always cache locally first for resilience
-      cacheSettings(s);
-
-      const sb = getSupabase();
-      if (sb) {
-        const { error } = await sb
-          .from('site_settings')
-          .upsert({ id: 'default', value: s, updated_by: _adminEmail })
-          .eq('id', 'default');
-        if (error) throw new Error(error.message);
-      } else {
-        throw new Error('Supabase client not available. Settings saved locally only.');
-      }
-    }
-
-    /* ── Populate form from settings ────────────────────────── */
-    function populateForm(s) {
-      document.getElementById('s-margin').value = s.marginPercent ?? 3;
-      document.getElementById('s-vat').value = s.vatRate ?? 5;
-      document.getElementById('s-whatsapp').value = s.whatsappNumber ?? '';
-      document.getElementById('s-site-name').value = s.siteName ?? '';
-      document.getElementById('s-tagline').value = s.tagline ?? '';
-      document.getElementById('s-twitter').value = s.socialLinks?.twitter ?? '';
-      document.getElementById('s-instagram').value = s.socialLinks?.instagram ?? '';
-      document.getElementById('s-social-whatsapp').value = s.socialLinks?.whatsapp ?? '';
-      document.getElementById('f-dark-mode').checked = !!s.features?.darkMode;
-      document.getElementById('f-newsletter').checked = !!s.features?.newsletter;
-      document.getElementById('f-portfolio').checked = !!s.features?.portfolioTracker;
-      document.getElementById('f-order-gold').checked = !!s.features?.orderGold;
-      document.getElementById('f-price-alerts').checked = !!s.features?.priceAlerts;
-      document.getElementById('k-gold-api').value = s.apiKeys?.goldApi ?? '';
-      document.getElementById('k-fx-api').value = s.apiKeys?.fxApi ?? '';
-      document.getElementById('k-adsense').value = s.apiKeys?.adsensePublisherId ?? '';
-      document.getElementById('s-notes').value = s.adminNotes ?? '';
-    }
-
-    /* ── Read form into settings object ────────────────────── */
-    function readForm() {
-      return {
-        marginPercent: parseFloat(document.getElementById('s-margin').value) || 3,
-        vatRate: parseFloat(document.getElementById('s-vat').value) || 5,
-        whatsappNumber: document.getElementById('s-whatsapp').value.trim(),
-        siteName: document.getElementById('s-site-name').value.trim(),
-        tagline: document.getElementById('s-tagline').value.trim(),
-        socialLinks: {
-          twitter: document.getElementById('s-twitter').value.trim(),
-          instagram: document.getElementById('s-instagram').value.trim(),
-          whatsapp: document.getElementById('s-social-whatsapp').value.trim(),
-        },
-        features: {
-          darkMode: document.getElementById('f-dark-mode').checked,
-          newsletter: document.getElementById('f-newsletter').checked,
-          portfolioTracker: document.getElementById('f-portfolio').checked,
-          orderGold: document.getElementById('f-order-gold').checked,
-          priceAlerts: document.getElementById('f-price-alerts').checked,
-        },
-        apiKeys: {
-          goldApi: document.getElementById('k-gold-api').value,
-          fxApi: document.getElementById('k-fx-api').value,
-          adsensePublisherId: document.getElementById('k-adsense').value.trim(),
-        },
-        adminNotes: document.getElementById('s-notes').value,
-      };
-    }
-
-    /* ── Validate ───────────────────────────────────────────── */
-    function validate(s) {
-      if (s.marginPercent < 0 || s.marginPercent > 50) return 'Margin must be between 0 and 50%.';
-      if (s.vatRate < 0 || s.vatRate > 30) return 'VAT rate must be between 0 and 30%.';
-      if (s.whatsappNumber && !/^\+\d{7,15}$/.test(s.whatsappNumber)) return 'WhatsApp number must be in format +XXXXXXXXXXX.';
-      return null;
-    }
-
-    /* ── Last-saved label ───────────────────────────────────── */
-    function updateLastSaved() {
-      const el = document.getElementById('last-saved-text');
-      try {
-        const ts = parseInt(localStorage.getItem(LAST_SAVED_KEY) || '0', 10);
-        if (!ts) { el.textContent = ''; return; }
-        const mins = Math.round((Date.now() - ts) / 60000);
-        el.textContent = mins < 1 ? 'Saved just now' : `Last saved ${mins} min ago`;
-      } catch { el.textContent = ''; }
-    }
-
-    /* ── Export / Import ────────────────────────────────────── */
-    function exportSettings() {
-      const s = readForm();
-      const blob = new Blob([JSON.stringify(s, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'gp_settings.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function importSettings(file) {
-      const reader = new FileReader();
-      reader.onload = e => {
+      /* ── Load current user info from Supabase ─────────────── */
+      async function loadAdminUser() {
         try {
-          const parsed = JSON.parse(e.target.result);
-          const merged = {
-            ...DEFAULTS, ...parsed,
-            socialLinks: { ...DEFAULTS.socialLinks, ...(parsed.socialLinks || {}) },
-            features: { ...DEFAULTS.features, ...(parsed.features || {}) },
-            apiKeys: { ...DEFAULTS.apiKeys, ...(parsed.apiKeys || {}) },
-          };
-          populateForm(merged);
-          showToast('Settings imported. Click Save to apply.', 'success');
+          const { getSession } = await import('../supabase-auth.js');
+          const session = await getSession();
+          const email = session?.user?.email || '—';
+          _adminEmail = session?.user?.email || null;
+          document.getElementById('settings-user-email').textContent = email;
         } catch {
-          showToast('Invalid JSON file.', 'error');
+          document.getElementById('settings-user-email').textContent = 'Could not load';
         }
-      };
-      reader.readAsText(file);
-    }
-
-    /* ── Reset confirm ──────────────────────────────────────── */
-    let resetPending = false;
-
-    /* ── Load current user info from Supabase ─────────────── */
-    async function loadAdminUser() {
-      try {
-        const { getSession } = await import('../supabase-auth.js');
-        const session = await getSession();
-        const email = session?.user?.email || '—';
-        _adminEmail = session?.user?.email || null;
-        document.getElementById('settings-user-email').textContent = email;
-      } catch {
-        document.getElementById('settings-user-email').textContent = 'Could not load';
       }
-    }
 
-    /* ── Init ───────────────────────────────────────────────── */
-    async function init() {
-      // Sidebar
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebar-overlay');
-      document.getElementById('sidebar-toggle').addEventListener('click', () => {
-        sidebar.classList.toggle('sidebar--open');
-        overlay.classList.toggle('sidebar-overlay--visible');
-      });
-      overlay.addEventListener('click', () => {
-        sidebar.classList.remove('sidebar--open');
-        overlay.classList.remove('sidebar-overlay--visible');
-      });
-
-      // Logout
-      document.getElementById('logout-btn').addEventListener('click', async () => {
-        await supabaseLogout();
-        window.location.replace('../login/');
-      });
-
-      // Active nav
-      document.querySelectorAll('.nav-link').forEach(a => {
-        if (location.href.includes(a.href.split('/Gold-Prices').pop())) a.classList.add('active');
-      });
-
-      // Load admin user info
-      loadAdminUser();
-
-      // Populate form on load
-      populateForm(await loadSettings());
-      updateLastSaved();
-      setInterval(updateLastSaved, 30000);
-
-      // Save
-      document.getElementById('save-btn').addEventListener('click', async () => {
-        const s = readForm();
-        const err = validate(s);
-        if (err) { showToast(err, 'error'); return; }
-        try {
-          await saveSettings(s);
-          updateLastSaved();
-          showToast('Settings saved to Supabase.', 'success');
-        } catch (e) {
-          showToast('Save error: ' + e.message, 'error');
-        }
-      });
-
-      // Reset
-      document.getElementById('reset-btn').addEventListener('click', () => {
-        if (!resetPending) {
-          resetPending = true;
-          const btn = document.getElementById('reset-btn');
-          btn.textContent = '⚠ Confirm Reset';
-          btn.style.background = 'rgba(239,68,68,0.15)';
-          setTimeout(() => {
-            resetPending = false;
-            btn.textContent = '↺ Reset to Defaults';
-            btn.style.background = '';
-          }, 3000);
-        } else {
-          resetPending = false;
-          populateForm(structuredClone(DEFAULTS));
-          document.getElementById('reset-btn').textContent = '↺ Reset to Defaults';
-          document.getElementById('reset-btn').style.background = '';
-          showToast('Form reset to defaults. Click Save to apply.', 'info');
-        }
-      });
-
-      // Export
-      document.getElementById('export-btn').addEventListener('click', exportSettings);
-
-      // Import
-      document.getElementById('import-btn').addEventListener('click', () => {
-        document.getElementById('import-file').click();
-      });
-      document.getElementById('import-file').addEventListener('change', e => {
-        const file = e.target.files[0];
-        if (file) importSettings(file);
-        e.target.value = '';
-      });
-
-      // Eye toggles for API keys
-      document.querySelectorAll('.eye-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const input = document.getElementById(btn.dataset.target);
-          if (!input) return;
-          input.type = input.type === 'password' ? 'text' : 'password';
-          btn.textContent = input.type === 'password' ? '👁' : '🙈';
+      /* ── Init ───────────────────────────────────────────────── */
+      async function init() {
+        // Sidebar
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        document.getElementById('sidebar-toggle').addEventListener('click', () => {
+          sidebar.classList.toggle('sidebar--open');
+          overlay.classList.toggle('sidebar-overlay--visible');
         });
-      });
-    }
+        overlay.addEventListener('click', () => {
+          sidebar.classList.remove('sidebar--open');
+          overlay.classList.remove('sidebar-overlay--visible');
+        });
 
-    init();
-  </script>
-</body>
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+          await supabaseLogout();
+          window.location.replace('../login/');
+        });
+
+        // Active nav
+        document.querySelectorAll('.nav-link').forEach((a) => {
+          if (location.href.includes(a.href.split('/Gold-Prices').pop())) a.classList.add('active');
+        });
+
+        // Load admin user info
+        loadAdminUser();
+
+        // Populate form on load
+        populateForm(await loadSettings());
+        updateLastSaved();
+        setInterval(updateLastSaved, 30000);
+
+        // Save
+        document.getElementById('save-btn').addEventListener('click', async () => {
+          const s = readForm();
+          const err = validate(s);
+          if (err) {
+            showToast(err, 'error');
+            return;
+          }
+          try {
+            await saveSettings(s);
+            updateLastSaved();
+            showToast('Settings saved to Supabase.', 'success');
+          } catch (e) {
+            showToast('Save error: ' + e.message, 'error');
+          }
+        });
+
+        // Reset
+        document.getElementById('reset-btn').addEventListener('click', () => {
+          if (!resetPending) {
+            resetPending = true;
+            const btn = document.getElementById('reset-btn');
+            btn.textContent = '⚠ Confirm Reset';
+            btn.style.background = 'rgba(239,68,68,0.15)';
+            setTimeout(() => {
+              resetPending = false;
+              btn.textContent = '↺ Reset to Defaults';
+              btn.style.background = '';
+            }, 3000);
+          } else {
+            resetPending = false;
+            populateForm(structuredClone(DEFAULTS));
+            document.getElementById('reset-btn').textContent = '↺ Reset to Defaults';
+            document.getElementById('reset-btn').style.background = '';
+            showToast('Form reset to defaults. Click Save to apply.', 'info');
+          }
+        });
+
+        // Export
+        document.getElementById('export-btn').addEventListener('click', exportSettings);
+
+        // Import
+        document.getElementById('import-btn').addEventListener('click', () => {
+          document.getElementById('import-file').click();
+        });
+        document.getElementById('import-file').addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file) importSettings(file);
+          e.target.value = '';
+        });
+
+        // Eye toggles for API keys
+        document.querySelectorAll('.eye-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const input = document.getElementById(btn.dataset.target);
+            if (!input) return;
+            input.type = input.type === 'password' ? 'text' : 'password';
+            btn.textContent = input.type === 'password' ? '👁' : '🙈';
+          });
+        });
+      }
+
+      init();
+    </script>
+  </body>
 </html>

@@ -70,42 +70,22 @@ export function renderBreadcrumbs(container, items) {
  * Returns array of { label, url } objects
  */
 export function getBreadcrumbs(pageName, extra = {}) {
-  const breadcrumbs = [
-    { label: 'Home', url: '/' }
-  ];
+  const breadcrumbs = [{ label: 'Home', url: '/' }];
 
   const pageMap = {
-    'shops': [
-      { label: 'Shops & Markets', url: '/shops.html' }
-    ],
-    'calculator': [
-      { label: 'Calculator', url: '/calculator.html' }
-    ],
-    'learn': [
-      { label: 'Learn', url: '/learn.html' }
-    ],
-    'insights': [
-      { label: 'Insights', url: '/insights.html' }
-    ],
-    'methodology': [
-      { label: 'Methodology', url: '/methodology.html' }
-    ],
-    'terms': [
-      { label: 'Terms of Service', url: '/terms.html' }
-    ],
-    'privacy': [
-      { label: 'Privacy Policy', url: '/privacy.html' }
-    ],
-    'invest': [
-      { label: 'Invest', url: '/invest.html' }
-    ],
-    'tracker': [
-      { label: 'Tracker', url: '/tracker.html' }
-    ],
-    'country': [
+    shops: [{ label: 'Shops & Markets', url: '/shops.html' }],
+    calculator: [{ label: 'Calculator', url: '/calculator.html' }],
+    learn: [{ label: 'Learn', url: '/learn.html' }],
+    insights: [{ label: 'Insights', url: '/insights.html' }],
+    methodology: [{ label: 'Methodology', url: '/methodology.html' }],
+    terms: [{ label: 'Terms of Service', url: '/terms.html' }],
+    privacy: [{ label: 'Privacy Policy', url: '/privacy.html' }],
+    invest: [{ label: 'Invest', url: '/invest.html' }],
+    tracker: [{ label: 'Tracker', url: '/tracker.html' }],
+    country: [
       { label: 'Countries', url: '/tracker.html' },
-      { label: extra.countryName || 'Country', url: extra.countryUrl || '#' }
-    ]
+      { label: extra.countryName || 'Country', url: extra.countryUrl || '#' },
+    ],
   };
 
   if (pageMap[pageName]) {
@@ -140,11 +120,11 @@ export function generateBreadcrumbSchema(items, baseUrl = 'https://vctb12.github
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
-    'itemListElement': items.map((item, i) => ({
+    itemListElement: items.map((item, i) => ({
       '@type': 'ListItem',
-      'position': i + 1,
-      'name': item.label || item.name,
-      'item': item.href?.startsWith('http') ? item.href : `${baseUrl}${item.href}`,
+      position: i + 1,
+      name: item.label || item.name,
+      item: item.href?.startsWith('http') ? item.href : `${baseUrl}${item.href}`,
     })),
   };
   return `<script type="application/ld+json">${JSON.stringify(schema)}</script>`;

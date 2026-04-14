@@ -2,10 +2,9 @@
 
 ## Overview
 
-The system automatically posts gold price updates to the @GoldTickerLive
-X (Twitter) account using GitHub Actions workflows that run on cron
-schedules. Everything is config-driven: changing tweet format, spike
-thresholds, or market sessions requires editing JSON files only.
+The system automatically posts gold price updates to the @GoldTickerLive X (Twitter) account using
+GitHub Actions workflows that run on cron schedules. Everything is config-driven: changing tweet
+format, spike thresholds, or market sessions requires editing JSON files only.
 
 ---
 
@@ -41,6 +40,7 @@ thresholds, or market sessions requires editing JSON files only.
 ## Data Flow
 
 ### Hourly Post
+
 ```
 Cron trigger (every hour)
   → gold_poster.py (POST_MODE=hourly)
@@ -52,6 +52,7 @@ Cron trigger (every hour)
 ```
 
 ### Market Event Post
+
 ```
 Cron trigger (at session open/close times)
   → gold_poster.py (POST_MODE=market_event)
@@ -63,6 +64,7 @@ Cron trigger (at session open/close times)
 ```
 
 ### Spike Alert
+
 ```
 Cron trigger (every 15 minutes)
   → gold_poster.py (POST_MODE=spike_alert)
@@ -77,6 +79,7 @@ Cron trigger (every 15 minutes)
 ```
 
 ### Health Check
+
 ```
 Cron trigger (daily at 08:00 GST)
   → gold_poster.py (POST_MODE=health_check)
@@ -93,41 +96,41 @@ Cron trigger (daily at 08:00 GST)
 
 All behaviour is driven by JSON config files in `config/twitter_bot/`.
 
-| File | Controls |
-|---|---|
+| File                   | Controls                                                         |
+| ---------------------- | ---------------------------------------------------------------- |
 | `market_sessions.json` | Session names, open/close times (UTC), active days, primary flag |
-| `karat_weights.json` | Karat purity multipliers for per-gram price calculation |
-| `thresholds.json` | Spike threshold %, rate limits, retry settings, tweet length |
-| `tweet_templates.json` | Tweet text templates with named placeholders |
+| `karat_weights.json`   | Karat purity multipliers for per-gram price calculation          |
+| `thresholds.json`      | Spike threshold %, rate limits, retry settings, tweet length     |
+| `tweet_templates.json` | Tweet text templates with named placeholders                     |
 
-**Changing any tweet format requires editing only `tweet_templates.json` —
-no Python or YAML changes needed.**
+**Changing any tweet format requires editing only `tweet_templates.json` — no Python or YAML changes
+needed.**
 
 ---
 
 ## Error Handling
 
-| Failure | Behaviour |
-|---|---|
-| GoldAPI down | Retry per thresholds.json → log error to fetch_logs → exit non-zero (no tweet posted with stale data) |
-| Twitter rate limit (429) | Exponential backoff retry → fail after max retries |
-| Twitter auth error (401/403) | Fail immediately, log clearly |
-| Duplicate tweet | Log and skip silently |
-| Supabase down (hourly/market) | Still post tweet, log warning |
-| Supabase down (spike) | Skip spike check entirely to avoid uncontrolled posting |
-| Missing env vars | Fail immediately with clear message listing missing secrets |
-| Malformed API response | Validate all fields → fail cleanly if anything is missing |
+| Failure                       | Behaviour                                                                                             |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------- |
+| GoldAPI down                  | Retry per thresholds.json → log error to fetch_logs → exit non-zero (no tweet posted with stale data) |
+| Twitter rate limit (429)      | Exponential backoff retry → fail after max retries                                                    |
+| Twitter auth error (401/403)  | Fail immediately, log clearly                                                                         |
+| Duplicate tweet               | Log and skip silently                                                                                 |
+| Supabase down (hourly/market) | Still post tweet, log warning                                                                         |
+| Supabase down (spike)         | Skip spike check entirely to avoid uncontrolled posting                                               |
+| Missing env vars              | Fail immediately with clear message listing missing secrets                                           |
+| Malformed API response        | Validate all fields → fail cleanly if anything is missing                                             |
 
 ---
 
 ## Secrets
 
-See [`docs/twitter_bot_secrets.md`](twitter_bot_secrets.md) for the complete
-list of required GitHub Secrets and where to find them.
+See [`docs/twitter_bot_secrets.md`](twitter_bot_secrets.md) for the complete list of required GitHub
+Secrets and where to find them.
 
 ---
 
 ## Database
 
-See [`docs/twitter_bot_schema.md`](twitter_bot_schema.md) for the Supabase
-table schemas, column descriptions, and example queries.
+See [`docs/twitter_bot_schema.md`](twitter_bot_schema.md) for the Supabase table schemas, column
+descriptions, and example queries.

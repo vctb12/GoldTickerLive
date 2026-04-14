@@ -102,13 +102,18 @@ const TXT = {
     viewCountryPage: 'View country page',
     infoTitle: 'How to use this directory',
     info1Title: 'Compare by market area',
-    info1Body: 'Start with a country or city filter, then compare listed markets and specialties side by side.',
+    info1Body:
+      'Start with a country or city filter, then compare listed markets and specialties side by side.',
     info2Title: 'Check available details',
-    info2Body: 'Cards indicate whether business details are limited or partially available so you know what to expect.',
+    info2Body:
+      'Cards indicate whether business details are limited or partially available so you know what to expect.',
     info3Title: 'Use as a shortlist',
-    info3Body: 'This page is for reference and discovery. Always confirm current prices, charges, and product details directly with shops.',
-    resultsLegend: 'Legend: Store profile = direct business listing; Market-area listing = cluster/area reference. Details confidence reflects currently available contact details.',
-    resultsDisclaimer: 'Listings may represent market areas or dealer clusters unless direct contact details are shown.',
+    info3Body:
+      'This page is for reference and discovery. Always confirm current prices, charges, and product details directly with shops.',
+    resultsLegend:
+      'Legend: Store profile = direct business listing; Market-area listing = cluster/area reference. Details confidence reflects currently available contact details.',
+    resultsDisclaimer:
+      'Listings may represent market areas or dealer clusters unless direct contact details are shown.',
     listingConfidenceTitle: 'Listing type + details confidence',
     detailsConfidence: 'Details confidence',
     contactQuality: 'Contact quality',
@@ -123,8 +128,10 @@ const TXT = {
     quickActionsCalc: 'Calculate Value',
     quickActionsRates: 'Live Rates',
     quickActionsUAE: 'UAE Market',
-    freshnessSemantics: 'Freshness semantics: Live / Delayed / Cached-Fallback / Estimated / Historical baseline (used consistently across GoldPrices). Directory source: editorial review timestamp.',
-    priceDisclaimer: 'Listings support discovery only. Spot-linked reference prices are separate from final retail jewelry quotes.',
+    freshnessSemantics:
+      'Freshness semantics: Live / Delayed / Cached-Fallback / Estimated / Historical baseline (used consistently across GoldPrices). Directory source: editorial review timestamp.',
+    priceDisclaimer:
+      'Listings support discovery only. Spot-linked reference prices are separate from final retail jewelry quotes.',
   },
   ar: {
     kicker: 'محلات حسب المنطقة',
@@ -187,9 +194,12 @@ const TXT = {
     info2Title: 'راجع مستوى التفاصيل',
     info2Body: 'توضح البطاقات مستوى توفر تفاصيل النشاط حتى تعرف المعلومات المتاحة قبل التواصل.',
     info3Title: 'استخدمه كقائمة مختصرة',
-    info3Body: 'هذه الصفحة للاكتشاف والمرجعية. احرص على تأكيد الأسعار والرسوم والتفاصيل مباشرة مع المحلات.',
-    resultsLegend: 'الدليل: ملف متجر = إدراج مباشر؛ إدراج منطقة سوق = مرجع لمنطقة/تجمع. مستوى الثقة يعكس تفاصيل الاتصال المتاحة حالياً.',
-    resultsDisclaimer: 'قد تمثل بعض الإدراجات مناطق سوق أو تجمعات تجار ما لم تُعرض بيانات اتصال مباشرة.',
+    info3Body:
+      'هذه الصفحة للاكتشاف والمرجعية. احرص على تأكيد الأسعار والرسوم والتفاصيل مباشرة مع المحلات.',
+    resultsLegend:
+      'الدليل: ملف متجر = إدراج مباشر؛ إدراج منطقة سوق = مرجع لمنطقة/تجمع. مستوى الثقة يعكس تفاصيل الاتصال المتاحة حالياً.',
+    resultsDisclaimer:
+      'قد تمثل بعض الإدراجات مناطق سوق أو تجمعات تجار ما لم تُعرض بيانات اتصال مباشرة.',
     listingConfidenceTitle: 'نوع الإدراج + مستوى الثقة بالتفاصيل',
     detailsConfidence: 'ثقة التفاصيل',
     rankFull: 'مرتفع',
@@ -203,9 +213,11 @@ const TXT = {
     quickActionsCalc: 'احسب القيمة',
     quickActionsRates: 'الأسعار المباشرة',
     quickActionsUAE: 'سوق الإمارات',
-    freshnessSemantics: 'دلالات حداثة البيانات: مباشر / متأخر / مخزن-احتياطي / تقديري / خط أساس تاريخي (موحدة عبر GoldPrices). مصدر الدليل: تاريخ مراجعة تحريرية.',
-    priceDisclaimer: 'هذه الإدراجات للاكتشاف فقط. الأسعار المرجعية المرتبطة بالسعر الفوري منفصلة عن سعر التجزئة النهائي للمجوهرات.',
-  }
+    freshnessSemantics:
+      'دلالات حداثة البيانات: مباشر / متأخر / مخزن-احتياطي / تقديري / خط أساس تاريخي (موحدة عبر GoldPrices). مصدر الدليل: تاريخ مراجعة تحريرية.',
+    priceDisclaimer:
+      'هذه الإدراجات للاكتشاف فقط. الأسعار المرجعية المرتبطة بالسعر الفوري منفصلة عن سعر التجزئة النهائي للمجوهرات.',
+  },
 };
 
 function t(key) {
@@ -261,14 +273,14 @@ function contactQualityLabel(shop) {
 function calculateConfidenceBadge(shop) {
   // Combine confidence score (0-100), verification status, and contact quality
   let score = shop.confidence || 50;
-  
+
   // Boost for verified shops
   if (shop.verified) score = Math.min(100, score + 10);
-  
+
   // Boost for high contact quality
   if (shop.contactQuality === 'high') score = Math.min(100, score + 5);
   if (shop.contactQuality === 'low') score = Math.max(0, score - 5);
-  
+
   // Determine badge level
   if (score >= 90) return { level: 'high', label: `${score}%`, color: 'green' };
   if (score >= 70) return { level: 'medium', label: `${score}%`, color: 'amber' };
@@ -280,18 +292,21 @@ function isMarketArea(shop) {
   // Explicit type field takes precedence
   if (shop.type === 'market') return true;
   if (shop.type === 'direct') return false;
-  
+
   // Fallback to legacy detection
-  return !shop.phone && !shop.website &&
-         (shop.notes?.toLowerCase().includes('cluster') ||
-          shop.notes?.toLowerCase().includes('concentration') ||
-          shop.notes?.toLowerCase().includes('area'));
+  return (
+    !shop.phone &&
+    !shop.website &&
+    (shop.notes?.toLowerCase().includes('cluster') ||
+      shop.notes?.toLowerCase().includes('concentration') ||
+      shop.notes?.toLowerCase().includes('area'))
+  );
 }
 
 function isDirectShop(shop) {
   if (shop.type === 'direct') return true;
   if (shop.type === 'market') return false;
-  
+
   // Fallback: has direct contact info
   return !!(shop.phone || shop.website);
 }
@@ -303,9 +318,9 @@ function listingTypeLabel(shop) {
 
 function listingSortScore(shop) {
   const detailRank = detailsAvailabilityRank(shop.detailsAvailability);
-  const contactBonus = shop.phone && shop.website ? 2 : (shop.phone || shop.website ? 1 : 0);
+  const contactBonus = shop.phone && shop.website ? 2 : shop.phone || shop.website ? 1 : 0;
   const typeBonus = isMarketArea(shop) ? 0 : 1;
-  return (detailRank * 100) + (contactBonus * 10) + typeBonus;
+  return detailRank * 100 + contactBonus * 10 + typeBonus;
 }
 
 function sortedShops(shops) {
@@ -338,23 +353,28 @@ function isInShortlist(shopId) {
 function shareShop(shop) {
   const url = `${location.origin}${location.pathname}?shop=${shop.id}`;
   const text = `${shop.name} — ${shop.market}, ${shop.city}`;
-  
+
   if (navigator.share) {
     navigator.share({ title: shop.name, text, url }).catch(() => {});
   } else {
     // Fallback: copy to clipboard
-    navigator.clipboard?.writeText(url).then(() => {
-      alert(STATE.lang === 'ar' ? 'تم نسخ الرابط' : 'Link copied to clipboard');
-    }).catch(() => {});
+    navigator.clipboard
+      ?.writeText(url)
+      .then(() => {
+        alert(STATE.lang === 'ar' ? 'تم نسخ الرابط' : 'Link copied to clipboard');
+      })
+      .catch(() => {});
   }
 }
 
 function openModal(shop) {
   const modal = document.getElementById('shops-modal');
   const country = countryByCode(shop.countryCode);
-  const specialties = (shop.specialties || []).map((item) => `<span class="shop-tag">${item}</span>`).join('');
+  const specialties = (shop.specialties || [])
+    .map((item) => `<span class="shop-tag">${item}</span>`)
+    .join('');
   const inList = isInShortlist(shop.id);
-  
+
   // Build action buttons row
   const actionsHTML = `
     <div class="modal-actions">
@@ -367,28 +387,38 @@ function openModal(shop) {
         <span class="modal-action-icon">↗</span>
         <span class="modal-action-label">${t('shareShop')}</span>
       </button>
-      ${shop.phone ? `<a href="tel:${shop.phone.replace(/\s+/g, '')}" class="modal-action-btn modal-action-btn--call" aria-label="${t('callShop')}">
+      ${
+  shop.phone
+    ? `<a href="tel:${shop.phone.replace(/\s+/g, '')}" class="modal-action-btn modal-action-btn--call" aria-label="${t('callShop')}">
         <span class="modal-action-icon">📞</span>
         <span class="modal-action-label">${t('callShop')}</span>
-      </a>` : ''}
-      ${shop.website ? `<a href="${shop.website}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--website" aria-label="${t('visitWebsite')}">
+      </a>`
+    : ''
+}
+      ${
+  shop.website
+    ? `<a href="${shop.website}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--website" aria-label="${t('visitWebsite')}">
         <span class="modal-action-icon">🌐</span>
         <span class="modal-action-label">${t('visitWebsite')}</span>
-      </a>` : ''}
+      </a>`
+    : ''
+}
     </div>
   `;
 
-  const contactHTML = shop.phone || shop.website ?
-    `<div class="modal-contact">
+  const contactHTML =
+    shop.phone || shop.website
+      ? `<div class="modal-contact">
       ${shop.phone ? `<p><strong>${t('phone')}:</strong> ${shop.phone}</p>` : ''}
       ${shop.website ? `<p><a href="${shop.website}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')} →</a></p>` : ''}
-    </div>` :
-    `<p class="modal-no-contact">${t('noContact')}</p>`;
+    </div>`
+      : `<p class="modal-no-contact">${t('noContact')}</p>`;
 
   const isCluster = isMarketArea(shop);
   const confidenceBadge = calculateConfidenceBadge(shop);
-  const clusterBadge = isCluster ?
-    `<span class="modal-cluster-badge">${t('marketCluster')}</span>` : '';
+  const clusterBadge = isCluster
+    ? `<span class="modal-cluster-badge">${t('marketCluster')}</span>`
+    : '';
   const listingTypeBadge = `<span class="modal-listing-type ${isCluster ? 'modal-listing-type--market' : 'modal-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
   const confidenceBadgeHTML = `<span class="modal-confidence-badge modal-confidence-${confidenceBadge.level}" style="--confidence-color: var(--color-${confidenceBadge.color})">${t('detailsConfidence')}: ${confidenceBadge.label}</span>`;
 
@@ -421,10 +451,14 @@ function openModal(shop) {
       </div>
     </div>
 
-    ${specialties ? `<div class="modal-tags">
+    ${
+  specialties
+    ? `<div class="modal-tags">
       <span class="modal-tags-label">${t('specialties')}</span>
       <div class="modal-tags-wrap">${specialties}</div>
-    </div>` : ''}
+    </div>`
+    : ''
+}
 
     <div class="modal-notes">
       <p>${shop.notes}</p>
@@ -448,7 +482,7 @@ function openModal(shop) {
       openModal(shop); // Re-open to refresh button state
     });
   }
-  
+
   const shareBtn = modal.querySelector('.modal-action-btn--share');
   if (shareBtn) {
     shareBtn.addEventListener('click', () => shareShop(shop));
@@ -479,19 +513,28 @@ function applyStaticText() {
   document.getElementById('shops-kicker').textContent = t('kicker');
   document.getElementById('shops-title').textContent = t('title');
   document.getElementById('shops-lead').textContent = t('lead');
-  
+
   // Trust banner with formatted date
   const reviewedDate = new Date(`${SHOPS_LAST_REVIEWED_ISO}T00:00:00Z`);
-  const dateStr = STATE.lang === 'ar'
-    ? reviewedDate.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' })
-    : reviewedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  const dateStr =
+    STATE.lang === 'ar'
+      ? reviewedDate.toLocaleDateString('ar-EG', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+      : reviewedDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
   const trustEl = document.getElementById('shops-last-updated');
   const trustLabelEl = document.getElementById('shops-trust-label');
   if (trustLabelEl) trustLabelEl.textContent = t('trustLabel');
   if (trustEl) {
     trustEl.textContent = t('trustDate').replace('{date}', dateStr);
   }
-  
+
   document.getElementById('shops-popular-label').textContent = t('popularMarkets');
   document.getElementById('shops-search-label').textContent = t('searchLabel');
   document.getElementById('shops-search').placeholder = t('searchPlaceholder');
@@ -540,8 +583,9 @@ function shopsMatchingPrimaryFilters() {
 
 function allCountriesInData() {
   const codes = new Set(SHOPS.map((s) => s.countryCode));
-  return COUNTRIES.filter((c) => codes.has(c.code))
-    .sort((a, b) => countryName(a).localeCompare(countryName(b), STATE.lang));
+  return COUNTRIES.filter((c) => codes.has(c.code)).sort((a, b) =>
+    countryName(a).localeCompare(countryName(b), STATE.lang)
+  );
 }
 
 function shopsForCountryFilter() {
@@ -576,30 +620,47 @@ function buildFilters() {
     if (!countrySelect) missing.push('shops-country-filter');
     if (!citySelect) missing.push('shops-city-filter');
     if (!specialtySelect) missing.push('shops-specialty-filter');
-    
+
     const errorMsg = `[shops] CRITICAL: Filter select elements not found: ${missing.join(', ')}. Check shops.html.`;
     console.error(errorMsg);
     throw new Error(errorMsg);
   }
 
-  console.log('[shops] buildFilters(): Building filter dropdowns with state:', { region: STATE.region, country: STATE.country, city: STATE.city, specialty: STATE.specialty });
+  console.log('[shops] buildFilters(): Building filter dropdowns with state:', {
+    region: STATE.region,
+    country: STATE.country,
+    city: STATE.city,
+    specialty: STATE.specialty,
+  });
 
   regionSelect.innerHTML = `<option value="all">${t('allRegions')}</option>${Object.entries(REGIONS)
-    .map(([code, labels]) => `<option value="${code}">${labels[STATE.lang]}</option>`).join('')}`;
+    .map(([code, labels]) => `<option value="${code}">${labels[STATE.lang]}</option>`)
+    .join('')}`;
 
   const countryCodes = [...new Set(shopsMatchingPrimaryFilters().map((shop) => shop.countryCode))];
-  console.log('[shops] buildFilters(): Found', countryCodes.length, 'country codes in filtered shops:', countryCodes);
-  
-  const allCountries = COUNTRIES
-    .filter((country) => SHOPS.some((shop) => shop.countryCode === country.code))
+  console.log(
+    '[shops] buildFilters(): Found',
+    countryCodes.length,
+    'country codes in filtered shops:',
+    countryCodes
+  );
+
+  const allCountries = COUNTRIES.filter((country) =>
+    SHOPS.some((shop) => shop.countryCode === country.code)
+  )
     .filter((country) => STATE.region === 'all' || country.group === STATE.region)
     .sort((a, b) => countryName(a).localeCompare(countryName(b), STATE.lang));
 
-  console.log('[shops] buildFilters(): Populating country filter with', allCountries.length, 'countries');
-  
+  console.log(
+    '[shops] buildFilters(): Populating country filter with',
+    allCountries.length,
+    'countries'
+  );
+
   countrySelect.innerHTML = `<option value="all">${t('allCountries')}</option>${allCountries
     .filter((country) => countryCodes.includes(country.code) || STATE.country === 'all')
-    .map((country) => `<option value="${country.code}">${countryName(country)}</option>`).join('')}`;
+    .map((country) => `<option value="${country.code}">${countryName(country)}</option>`)
+    .join('')}`;
 
   const cityPool = SHOPS.filter((shop) => {
     const country = countryByCode(shop.countryCode);
@@ -611,16 +672,24 @@ function buildFilters() {
 
   const cities = [...new Set(cityPool.map((shop) => shop.city))].sort((a, b) => a.localeCompare(b));
   console.log('[shops] buildFilters(): Found', cities.length, 'cities:', cities.slice(0, 5));
-  
-  citySelect.innerHTML = `<option value="all">${t('allCities')}</option>${cities
-    .map((city) => `<option value="${city}">${city}</option>`).join('')}`;
 
-  const specialties = [...new Set(shopsMatchingPrimaryFilters().flatMap((shop) => shop.specialties || []))]
-    .sort((a, b) => a.localeCompare(b));
-  console.log('[shops] buildFilters(): Found', specialties.length, 'specialties:', specialties.slice(0, 5));
-  
+  citySelect.innerHTML = `<option value="all">${t('allCities')}</option>${cities
+    .map((city) => `<option value="${city}">${city}</option>`)
+    .join('')}`;
+
+  const specialties = [
+    ...new Set(shopsMatchingPrimaryFilters().flatMap((shop) => shop.specialties || [])),
+  ].sort((a, b) => a.localeCompare(b));
+  console.log(
+    '[shops] buildFilters(): Found',
+    specialties.length,
+    'specialties:',
+    specialties.slice(0, 5)
+  );
+
   specialtySelect.innerHTML = `<option value="all">${t('allSpecialties')}</option>${specialties
-    .map((item) => `<option value="${item}">${item}</option>`).join('')}`;
+    .map((item) => `<option value="${item}">${item}</option>`)
+    .join('')}`;
 
   regionSelect.value = STATE.region;
   if (![...countrySelect.options].some((option) => option.value === STATE.country)) {
@@ -638,17 +707,24 @@ function buildFilters() {
     STATE.specialty = 'all';
   }
   specialtySelect.value = STATE.specialty;
-  
-  console.log('[shops] buildFilters(): Final state after validation:', { region: STATE.region, country: STATE.country, city: STATE.city, specialty: STATE.specialty });
+
+  console.log('[shops] buildFilters(): Final state after validation:', {
+    region: STATE.region,
+    country: STATE.country,
+    city: STATE.city,
+    specialty: STATE.specialty,
+  });
 }
 
 function populatePopularChips() {
   const box = document.getElementById('shops-popular-chips');
   const featured = SHOPS.filter((shop) => shop.featured).slice(0, 6);
-  box.innerHTML = featured.map((shop) => {
-    const label = `${shop.market} · ${shop.city}`;
-    return `<button class="shops-chip" type="button" data-country="${shop.countryCode}" data-city="${shop.city}">${label}</button>`;
-  }).join('');
+  box.innerHTML = featured
+    .map((shop) => {
+      const label = `${shop.market} · ${shop.city}`;
+      return `<button class="shops-chip" type="button" data-country="${shop.countryCode}" data-city="${shop.city}">${label}</button>`;
+    })
+    .join('');
 
   box.querySelectorAll('.shops-chip').forEach((button) => {
     button.addEventListener('click', () => {
@@ -674,7 +750,8 @@ function filterShops() {
     if (STATE.region !== 'all' && country.group !== STATE.region) return false;
     if (STATE.country !== 'all' && shop.countryCode !== STATE.country) return false;
     if (STATE.city !== 'all' && shop.city !== STATE.city) return false;
-    if (STATE.specialty !== 'all' && !(shop.specialties || []).includes(STATE.specialty)) return false;
+    if (STATE.specialty !== 'all' && !(shop.specialties || []).includes(STATE.specialty))
+      return false;
     if (STATE.verifiedOnly && !(shop.phone || shop.website)) return false;
 
     if (!q) return true;
@@ -689,12 +766,20 @@ function filterShops() {
       country.nameEn,
       country.nameAr,
       regionName(country.group),
-    ].join(' ').toLowerCase();
+    ]
+      .join(' ')
+      .toLowerCase();
 
     return haystack.includes(q);
   });
-  
-  console.log('[shops] filterShops():', SHOPS.length, 'total ->', filtered.length, 'after filtering');
+
+  console.log(
+    '[shops] filterShops():',
+    SHOPS.length,
+    'total ->',
+    filtered.length,
+    'after filtering'
+  );
   return filtered;
 }
 
@@ -722,8 +807,9 @@ function activeFilterSummary() {
   if (STATE.verifiedOnly) labels.push(t('verifiedFilterLabel'));
   if (STATE.search.trim()) labels.push(`"${STATE.search.trim()}"`);
 
-  document.getElementById('shops-active-filters').textContent =
-    labels.length ? t('activeFilters')(labels.join(' · ')) : t('noFilters');
+  document.getElementById('shops-active-filters').textContent = labels.length
+    ? t('activeFilters')(labels.join(' · '))
+    : t('noFilters');
 
   // Update mobile filter badge count
   const badge = document.getElementById('shops-filter-badge');
@@ -741,29 +827,36 @@ function renderCards(shops) {
     return;
   }
 
-  grid.innerHTML = shops.map((shop, idx) => {
-    const country = countryByCode(shop.countryCode);
-    const specialties = (shop.specialties || []).map((item) => `<span class="shop-tag">${item}</span>`).join('');
-    const isCluster = isMarketArea(shop);
-    const confidenceBadge = calculateConfidenceBadge(shop);
-    const clusterBadge = isCluster ? `<span class="shop-cluster-badge">${t('marketCluster')}</span>` : '';
-    const listingTypeBadge = `<span class="shop-listing-type ${isCluster ? 'shop-listing-type--market' : 'shop-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
-    const inShortlist = isInShortlist(shop.id);
-    const countryUrl = country?.slug ? `countries/${country.slug}.html` : '';
-    const areaGuideUrl = `${location.pathname}?country=${encodeURIComponent(shop.countryCode)}&search=${encodeURIComponent(shop.market)}`;
-    const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${shop.name}, ${shop.market}, ${shop.city}`)}`;
-    const confidenceTier = detailsConfidenceTier(shop.detailsAvailability);
-    const detailsLabel = detailsAvailabilityLabel(shop.detailsAvailability);
-    const nextActionLabel = isCluster ? t('nextActionsMarket') : t('nextActionsStore');
-    const contactQualityLabel = contactQualityLabel(shop);
+  grid.innerHTML = shops
+    .map((shop, idx) => {
+      const country = countryByCode(shop.countryCode);
+      const specialties = (shop.specialties || [])
+        .map((item) => `<span class="shop-tag">${item}</span>`)
+        .join('');
+      const isCluster = isMarketArea(shop);
+      const confidenceBadge = calculateConfidenceBadge(shop);
+      const clusterBadge = isCluster
+        ? `<span class="shop-cluster-badge">${t('marketCluster')}</span>`
+        : '';
+      const listingTypeBadge = `<span class="shop-listing-type ${isCluster ? 'shop-listing-type--market' : 'shop-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
+      const inShortlist = isInShortlist(shop.id);
+      const countryUrl = country?.slug ? `countries/${country.slug}.html` : '';
+      const areaGuideUrl = `${location.pathname}?country=${encodeURIComponent(shop.countryCode)}&search=${encodeURIComponent(shop.market)}`;
+      const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${shop.name}, ${shop.market}, ${shop.city}`)}`;
+      const confidenceTier = detailsConfidenceTier(shop.detailsAvailability);
+      const detailsLabel = detailsAvailabilityLabel(shop.detailsAvailability);
+      const nextActionLabel = isCluster ? t('nextActionsMarket') : t('nextActionsStore');
+      const contactQualityLabel = contactQualityLabel(shop);
 
-    const contactParts = [];
-    if (shop.phone) contactParts.push(`${t('phone')}: ${shop.phone}`);
-    if (shop.website) {
-      contactParts.push(`<a href="${shop.website}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')}</a>`);
-    }
+      const contactParts = [];
+      if (shop.phone) contactParts.push(`${t('phone')}: ${shop.phone}`);
+      if (shop.website) {
+        contactParts.push(
+          `<a href="${shop.website}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')}</a>`
+        );
+      }
 
-    return `
+      return `
       <article class="shop-card${shop.featured ? ' shop-card--featured' : ''}${isCluster ? ' shop-card--cluster' : ''}" data-shop-id="${shop.id}">
         <header class="shop-card-head">
           <div>
@@ -802,33 +895,53 @@ function renderCards(shops) {
 
         <div class="shop-tags-wrap">
           <span class="shop-tag shop-tag--muted">${t('specialties')}</span>
-          ${specialties || `<span class="shop-tag">—</span>`}
+          ${specialties || '<span class="shop-tag">—</span>'}
         </div>
 
         <p class="shop-notes">${shop.notes}</p>
         
         <div class="shop-next-action-label">${nextActionLabel}</div>
         <div class="shop-actions-row shop-actions-row--primary">
-          ${isCluster ? `<a href="${areaGuideUrl}" class="shop-action-btn shop-action-btn--guide" aria-label="${t('areaGuide')}: ${shop.market}">
+          ${
+  isCluster
+    ? `<a href="${areaGuideUrl}" class="shop-action-btn shop-action-btn--guide" aria-label="${t('areaGuide')}: ${shop.market}">
             <span class="shop-action-icon">🧭</span>
             <span class="shop-action-label">${t('areaGuide')}</span>
-          </a>` : ''}
-          ${!isCluster && shop.phone ? `<a href="tel:${shop.phone.replace(/\s+/g, '')}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
+          </a>`
+    : ''
+}
+          ${
+  !isCluster && shop.phone
+    ? `<a href="tel:${shop.phone.replace(/\s+/g, '')}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
             <span class="shop-action-icon">📞</span>
             <span class="shop-action-label">${t('callShop')}</span>
-          </a>` : ''}
-          ${!isCluster && shop.website ? `<a href="${shop.website}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--website" aria-label="${t('visitWebsite')}">
+          </a>`
+    : ''
+}
+          ${
+  !isCluster && shop.website
+    ? `<a href="${shop.website}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--website" aria-label="${t('visitWebsite')}">
             <span class="shop-action-icon">🌐</span>
             <span class="shop-action-label">${t('visitWebsite')}</span>
-          </a>` : ''}
-          ${!isCluster ? `<a href="${directionsUrl}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--directions" aria-label="${t('directions')}">
+          </a>`
+    : ''
+}
+          ${
+  !isCluster
+    ? `<a href="${directionsUrl}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--directions" aria-label="${t('directions')}">
             <span class="shop-action-icon">🧭</span>
             <span class="shop-action-label">${t('directions')}</span>
-          </a>` : ''}
-          ${countryUrl ? `<a href="${countryUrl}" class="shop-action-btn shop-action-btn--country" aria-label="${t('viewCountryPage')}: ${countryName(country)}">
+          </a>`
+    : ''
+}
+          ${
+  countryUrl
+    ? `<a href="${countryUrl}" class="shop-action-btn shop-action-btn--country" aria-label="${t('viewCountryPage')}: ${countryName(country)}">
             <span class="shop-action-icon">📄</span>
             <span class="shop-action-label">${countryName(country)}</span>
-          </a>` : ''}
+          </a>`
+    : ''
+}
         </div>
 
         <div class="shop-actions-row shop-actions-row--secondary">
@@ -846,7 +959,8 @@ function renderCards(shops) {
         <p class="shop-contact">${contactParts.join(' · ') || t('noContact')}</p>
       </article>
     `;
-  }).join('');
+    })
+    .join('');
 
   // Bind click handlers after rendering
   bindShopCardHandlers();
@@ -865,7 +979,7 @@ function bindShopCardHandlers() {
     newCard.addEventListener('click', (e) => {
       // Ignore clicks on action buttons
       if (e.target.closest('.shop-action-btn')) return;
-      
+
       const shopId = newCard.dataset.shopId;
       const shop = SHOPS.find((s) => s.id === shopId);
       if (shop) openModal(shop);
@@ -908,10 +1022,14 @@ function renderFeaturedSection() {
   }
 
   featuredSection.hidden = false;
-  featuredGrid.innerHTML = featured.map((shop) => {
-    const country = countryByCode(shop.countryCode);
-    const specialties = (shop.specialties || []).slice(0, 2).map((item) => `<span class="featured-tag">${item}</span>`).join('');
-    return `
+  featuredGrid.innerHTML = featured
+    .map((shop) => {
+      const country = countryByCode(shop.countryCode);
+      const specialties = (shop.specialties || [])
+        .slice(0, 2)
+        .map((item) => `<span class="featured-tag">${item}</span>`)
+        .join('');
+      return `
       <article class="featured-card" data-shop-id="${shop.id}" style="cursor: pointer;">
         <div class="featured-header">
           <h3>${shop.name}</h3>
@@ -921,7 +1039,8 @@ function renderFeaturedSection() {
         <div class="featured-tags">${specialties}</div>
       </article>
     `;
-  }).join('');
+    })
+    .join('');
 
   // Bind click handlers after rendering
   bindFeaturedCardHandlers();
@@ -946,20 +1065,29 @@ function bindFeaturedCardHandlers() {
 
 function renderFilterPills() {
   const pillsContainer = document.getElementById('shops-filter-pills');
-  const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const esc = (s) =>
+    s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const pills = [];
 
-  if (STATE.region !== 'all') pills.push({ type: 'region', value: STATE.region, label: regionName(STATE.region) });
+  if (STATE.region !== 'all')
+    pills.push({ type: 'region', value: STATE.region, label: regionName(STATE.region) });
   if (STATE.country !== 'all') {
     const country = countryByCode(STATE.country);
     if (country) pills.push({ type: 'country', value: STATE.country, label: countryName(country) });
   }
   if (STATE.city !== 'all') pills.push({ type: 'city', value: STATE.city, label: STATE.city });
-  if (STATE.specialty !== 'all') pills.push({ type: 'specialty', value: STATE.specialty, label: STATE.specialty });
-  if (STATE.verifiedOnly) pills.push({ type: 'verified', value: '1', label: t('verifiedFilterLabel') });
+  if (STATE.specialty !== 'all')
+    pills.push({ type: 'specialty', value: STATE.specialty, label: STATE.specialty });
+  if (STATE.verifiedOnly)
+    pills.push({ type: 'verified', value: '1', label: t('verifiedFilterLabel') });
   if (STATE.search.trim()) {
     const q = STATE.search.trim();
-    pills.push({ type: 'search', value: '', label: `"${esc(q)}"`, ariaLabel: `Remove "${q}" search filter` });
+    pills.push({
+      type: 'search',
+      value: '',
+      label: `"${esc(q)}"`,
+      ariaLabel: `Remove "${q}" search filter`,
+    });
   }
 
   if (!pills.length) {
@@ -967,19 +1095,23 @@ function renderFilterPills() {
     return;
   }
 
-  const clearAllHtml = pills.length > 1
-    ? `<button class="shops-filter-pill shops-filter-pill--clear-all" data-type="clear-all" type="button" aria-label="Clear all filters">Clear all ×</button>`
-    : '';
+  const clearAllHtml =
+    pills.length > 1
+      ? '<button class="shops-filter-pill shops-filter-pill--clear-all" data-type="clear-all" type="button" aria-label="Clear all filters">Clear all ×</button>'
+      : '';
 
-  pillsContainer.innerHTML = pills.map((pill) => {
-    const ariaLabel = pill.ariaLabel || `Remove ${pill.label} filter`;
-    return `
+  pillsContainer.innerHTML =
+    pills
+      .map((pill) => {
+        const ariaLabel = pill.ariaLabel || `Remove ${pill.label} filter`;
+        return `
       <button class="shops-filter-pill" data-type="${pill.type}" data-value="${pill.value || ''}" type="button" aria-label="${ariaLabel}">
         ${pill.label}
         <span class="shops-filter-pill-remove" aria-hidden="true">×</span>
       </button>
     `;
-  }).join('') + clearAllHtml;
+      })
+      .join('') + clearAllHtml;
 
   pillsContainer.querySelectorAll('.shops-filter-pill').forEach((pill) => {
     pill.addEventListener('click', () => {
@@ -1010,16 +1142,27 @@ function renderFilterPills() {
 function syncUrlToState() {
   const p = new URLSearchParams(location.search);
 
-  if (STATE.region !== 'all') p.set('region', STATE.region); else p.delete('region');
-  if (STATE.country !== 'all') p.set('country', STATE.country); else p.delete('country');
-  if (STATE.city !== 'all') p.set('city', STATE.city); else p.delete('city');
-  if (STATE.specialty !== 'all') p.set('specialty', STATE.specialty); else p.delete('specialty');
-  if (STATE.verifiedOnly) p.set('verified', '1'); else p.delete('verified');
-  if (STATE.lang === 'ar') p.set('lang', 'ar'); else p.delete('lang');
+  if (STATE.region !== 'all') p.set('region', STATE.region);
+  else p.delete('region');
+  if (STATE.country !== 'all') p.set('country', STATE.country);
+  else p.delete('country');
+  if (STATE.city !== 'all') p.set('city', STATE.city);
+  else p.delete('city');
+  if (STATE.specialty !== 'all') p.set('specialty', STATE.specialty);
+  else p.delete('specialty');
+  if (STATE.verifiedOnly) p.set('verified', '1');
+  else p.delete('verified');
+  if (STATE.lang === 'ar') p.set('lang', 'ar');
+  else p.delete('lang');
 
   const q = STATE.search.trim();
-  if (q) { p.set('search', q); p.delete('q'); }
-  else { p.delete('search'); p.delete('q'); }
+  if (q) {
+    p.set('search', q);
+    p.delete('q');
+  } else {
+    p.delete('search');
+    p.delete('q');
+  }
 
   const qs = p.toString();
   history.replaceState(null, '', qs ? `${location.pathname}?${qs}` : location.pathname);
@@ -1029,7 +1172,7 @@ function renderShortlistBar() {
   const bar = document.getElementById('shops-shortlist-bar');
   const countEl = document.getElementById('shops-shortlist-count');
   if (!bar || !countEl) return;
-  
+
   const count = STATE.shortlist.length;
   if (count === 0) {
     bar.hidden = true;
@@ -1042,11 +1185,18 @@ function renderShortlistBar() {
 function render() {
   syncUrlToState();
   const shops = sortedShops(filterShops());
-  
+
   // Debug logging for render pipeline
   console.log('[shops] render() called with', shops.length, 'shops after filtering');
-  console.log('[shops] Current filter state:', { region: STATE.region, country: STATE.country, city: STATE.city, specialty: STATE.specialty, verifiedOnly: STATE.verifiedOnly, search: STATE.search });
-  
+  console.log('[shops] Current filter state:', {
+    region: STATE.region,
+    country: STATE.country,
+    city: STATE.city,
+    specialty: STATE.specialty,
+    verifiedOnly: STATE.verifiedOnly,
+    search: STATE.search,
+  });
+
   const empty = document.getElementById('shops-empty');
   const count = document.getElementById('shops-count');
   if (count) count.textContent = t('count')(shops.length);
@@ -1152,7 +1302,8 @@ function updateLanguage() {
 function init() {
   // Validate data and DOM prerequisites - FAIL LOUDLY
   if (!SHOPS || !Array.isArray(SHOPS) || SHOPS.length === 0) {
-    const errorMsg = '[shops] CRITICAL: SHOPS data is empty, not an array, or not loaded. Check data/shops.js module export.';
+    const errorMsg =
+      '[shops] CRITICAL: SHOPS data is empty, not an array, or not loaded. Check data/shops.js module export.';
     console.error(errorMsg);
     console.error('[shops] SHOPS value:', SHOPS);
     document.body.innerHTML = `
@@ -1168,17 +1319,17 @@ function init() {
 
   // Validate critical DOM elements exist - FAIL LOUDLY if missing
   const requiredElements = [
-    'shops-grid', 
-    'shops-empty', 
-    'shops-featured', 
-    'shops-featured-grid', 
+    'shops-grid',
+    'shops-empty',
+    'shops-featured',
+    'shops-featured-grid',
     'shops-filter-pills',
     'shops-region-filter',
     'shops-country-filter',
     'shops-city-filter',
     'shops-specialty-filter',
     'shops-search',
-    'shops-count'
+    'shops-count',
   ];
   const missingElements = [];
   for (const id of requiredElements) {
@@ -1203,7 +1354,10 @@ function init() {
 
   // Log data loading for debugging
   console.log('[shops] Initializing with', SHOPS.length, 'shops');
-  console.log('[shops] Sample shop IDs:', SHOPS.slice(0, 3).map(s => s.id));
+  console.log(
+    '[shops] Sample shop IDs:',
+    SHOPS.slice(0, 3).map((s) => s.id)
+  );
 
   try {
     const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
@@ -1212,19 +1366,19 @@ function init() {
 
   // Apply URL query params to initial state (e.g. ?country=AE&region=gcc)
   const _p = new URLSearchParams(location.search);
-  const _pRegion  = (_p.get('region')    || '').toLowerCase();
-  const _pCountry = (_p.get('country')   || '').toUpperCase();
-  const _pCity    =  _p.get('city')      || '';
-  const _pSpec    =  _p.get('specialty') || '';
-  const _pSearch  =  _p.get('search')    || _p.get('q') || '';
+  const _pRegion = (_p.get('region') || '').toLowerCase();
+  const _pCountry = (_p.get('country') || '').toUpperCase();
+  const _pCity = _p.get('city') || '';
+  const _pSpec = _p.get('specialty') || '';
+  const _pSearch = _p.get('search') || _p.get('q') || '';
   const _pVerified = (_p.get('verified') || '') === '1';
   const _pLang = (_p.get('lang') || '').toLowerCase();
 
   if (_pRegion && Object.prototype.hasOwnProperty.call(REGIONS, _pRegion)) STATE.region = _pRegion;
-  if (_pCountry)  STATE.country   = _pCountry;   // buildFilters() resets to 'all' if invalid
-  if (_pCity)     STATE.city      = _pCity;
-  if (_pSpec)     STATE.specialty = _pSpec;
-  if (_pSearch)   STATE.search    = _pSearch;
+  if (_pCountry) STATE.country = _pCountry; // buildFilters() resets to 'all' if invalid
+  if (_pCity) STATE.city = _pCity;
+  if (_pSpec) STATE.specialty = _pSpec;
+  if (_pSearch) STATE.search = _pSearch;
   if (_pVerified) STATE.verifiedOnly = true;
   if (_pLang === 'ar' || _pLang === 'en') STATE.lang = _pLang;
 
@@ -1236,18 +1390,18 @@ function init() {
 
   // Populate ticker from cache so it never shows all-dashes
   const cachedGold = cache.getFallbackGoldPrice();
-  const cachedFX   = cache.getFallbackFXRates();
+  const cachedFX = cache.getFallbackFXRates();
   if (cachedGold?.price) {
     const spot = cachedGold.price;
     const aedRate = CONSTANTS.AED_PEG;
-    const purity = (k) => KARATS.find(x => x.code === k)?.purity ?? 1;
+    const purity = (k) => KARATS.find((x) => x.code === k)?.purity ?? 1;
     const aedGram = (k) => (spot / CONSTANTS.TROY_OZ_GRAMS) * purity(k) * aedRate;
     updateTicker({
-      xauUsd:  spot,
-      uae24k:  aedGram('24'),
-      uae22k:  aedGram('22'),
-      uae21k:  aedGram('21'),
-      uae18k:  aedGram('18'),
+      xauUsd: spot,
+      uae24k: aedGram('24'),
+      uae22k: aedGram('22'),
+      uae21k: aedGram('21'),
+      uae18k: aedGram('18'),
     });
   }
 
@@ -1269,7 +1423,7 @@ function init() {
   }
   const verifiedBox = document.getElementById('shops-verified-only');
   if (verifiedBox) verifiedBox.checked = STATE.verifiedOnly;
-  
+
   updateLanguage();
 
   // Handle initial shop modal from URL param
@@ -1288,7 +1442,7 @@ function init() {
 
   // Mobile filter toggle — auto-open on desktop
   const filterToggle = document.getElementById('shops-filter-toggle');
-  const filterPanel  = document.getElementById('shops-filter-panel');
+  const filterPanel = document.getElementById('shops-filter-panel');
   if (filterToggle && filterPanel) {
     // On desktop (>640px) start expanded; on mobile keep collapsed
     if (window.innerWidth > 640) {
@@ -1300,13 +1454,15 @@ function init() {
       filterToggle.setAttribute('aria-expanded', String(open));
     });
   }
-  
+
   // Shortlist bar clear button
   const shortlistClear = document.getElementById('shops-shortlist-clear');
   if (shortlistClear) {
     shortlistClear.addEventListener('click', () => {
       STATE.shortlist = [];
-      try { localStorage.setItem('shops_shortlist', '[]'); } catch {}
+      try {
+        localStorage.setItem('shops_shortlist', '[]');
+      } catch {}
       render();
     });
   }
@@ -1349,8 +1505,8 @@ init();
  * Falls back to an OpenStreetMap link showing gold shops near the coordinates.
  */
 (function initNearMe() {
-  const btn     = document.getElementById('shops-nearme-btn');
-  const status  = document.getElementById('shops-nearme-status');
+  const btn = document.getElementById('shops-nearme-btn');
+  const status = document.getElementById('shops-nearme-status');
   const results = document.getElementById('shops-nearme-results');
 
   if (!btn) return;
@@ -1358,39 +1514,101 @@ init();
   // Known gold market areas keyed by ISO country code
   const KNOWN_MARKETS = {
     AE: [
-      { city: 'Dubai',      name: 'Dubai Gold Souk',        page: '/Gold-Prices/countries/uae/markets/dubai-gold-souk.html', lat: 25.2881, lng: 55.3021 },
-      { city: 'Dubai',      name: 'Deira Gold Market',       page: '/Gold-Prices/shops.html?country=AE&city=Dubai', lat: 25.2721, lng: 55.3110 },
+      {
+        city: 'Dubai',
+        name: 'Dubai Gold Souk',
+        page: '/Gold-Prices/countries/uae/markets/dubai-gold-souk.html',
+        lat: 25.2881,
+        lng: 55.3021,
+      },
+      {
+        city: 'Dubai',
+        name: 'Deira Gold Market',
+        page: '/Gold-Prices/shops.html?country=AE&city=Dubai',
+        lat: 25.2721,
+        lng: 55.311,
+      },
     ],
     EG: [
-      { city: 'Cairo',      name: "Khan el-Khalili Gold Market", page: '/Gold-Prices/countries/egypt/markets/khan-el-khalili-cairo.html', lat: 30.0478, lng: 31.2625 },
+      {
+        city: 'Cairo',
+        name: 'Khan el-Khalili Gold Market',
+        page: '/Gold-Prices/countries/egypt/markets/khan-el-khalili-cairo.html',
+        lat: 30.0478,
+        lng: 31.2625,
+      },
     ],
     SA: [
-      { city: 'Riyadh',     name: 'Riyadh Gold Market',     page: '/Gold-Prices/shops.html?country=SA&city=Riyadh', lat: 24.6970, lng: 46.7206 },
-      { city: 'Jeddah',     name: 'Jeddah Gold Souk',       page: '/Gold-Prices/shops.html?country=SA&city=Jeddah', lat: 21.4858, lng: 39.1925 },
+      {
+        city: 'Riyadh',
+        name: 'Riyadh Gold Market',
+        page: '/Gold-Prices/shops.html?country=SA&city=Riyadh',
+        lat: 24.697,
+        lng: 46.7206,
+      },
+      {
+        city: 'Jeddah',
+        name: 'Jeddah Gold Souk',
+        page: '/Gold-Prices/shops.html?country=SA&city=Jeddah',
+        lat: 21.4858,
+        lng: 39.1925,
+      },
     ],
     KW: [
-      { city: 'Kuwait City', name: 'Kuwait Gold Souk',      page: '/Gold-Prices/shops.html?country=KW', lat: 29.3697, lng: 47.9783 },
+      {
+        city: 'Kuwait City',
+        name: 'Kuwait Gold Souk',
+        page: '/Gold-Prices/shops.html?country=KW',
+        lat: 29.3697,
+        lng: 47.9783,
+      },
     ],
     QA: [
-      { city: 'Doha',       name: 'Doha Gold Souk',         page: '/Gold-Prices/shops.html?country=QA', lat: 25.2854, lng: 51.5310 },
+      {
+        city: 'Doha',
+        name: 'Doha Gold Souk',
+        page: '/Gold-Prices/shops.html?country=QA',
+        lat: 25.2854,
+        lng: 51.531,
+      },
     ],
     BH: [
-      { city: 'Manama',     name: 'Manama Gold Souk',       page: '/Gold-Prices/shops.html?country=BH', lat: 26.2175, lng: 50.5905 },
+      {
+        city: 'Manama',
+        name: 'Manama Gold Souk',
+        page: '/Gold-Prices/shops.html?country=BH',
+        lat: 26.2175,
+        lng: 50.5905,
+      },
     ],
     OM: [
-      { city: 'Muscat',     name: 'Muscat Gold Souk (Muttrah)', page: '/Gold-Prices/shops.html?country=OM', lat: 23.6166, lng: 58.5922 },
+      {
+        city: 'Muscat',
+        name: 'Muscat Gold Souk (Muttrah)',
+        page: '/Gold-Prices/shops.html?country=OM',
+        lat: 23.6166,
+        lng: 58.5922,
+      },
     ],
     JO: [
-      { city: 'Amman',      name: 'Amman Gold Market',      page: '/Gold-Prices/shops.html?country=JO', lat: 31.9519, lng: 35.9300 },
+      {
+        city: 'Amman',
+        name: 'Amman Gold Market',
+        page: '/Gold-Prices/shops.html?country=JO',
+        lat: 31.9519,
+        lng: 35.93,
+      },
     ],
   };
 
   // Haversine distance in km
   function haversine(lat1, lng1, lat2, lng2) {
-    const R  = 6371;
-    const dL = (lat2 - lat1) * Math.PI / 180;
-    const dN = (lng2 - lng1) * Math.PI / 180;
-    const a  = Math.sin(dL / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dN / 2) ** 2;
+    const R = 6371;
+    const dL = ((lat2 - lat1) * Math.PI) / 180;
+    const dN = ((lng2 - lng1) * Math.PI) / 180;
+    const a =
+      Math.sin(dL / 2) ** 2 +
+      Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dN / 2) ** 2;
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   }
 
@@ -1437,28 +1655,37 @@ init();
 
     // Compute distance to all known markets
     const allMarkets = Object.values(KNOWN_MARKETS).flat();
-    const withDist   = allMarkets.map(m => ({
-      ...m,
-      distKm: haversine(lat, lng, m.lat, m.lng),
-    })).sort((a, b) => a.distKm - b.distKm);
+    const withDist = allMarkets
+      .map((m) => ({
+        ...m,
+        distKm: haversine(lat, lng, m.lat, m.lng),
+      }))
+      .sort((a, b) => a.distKm - b.distKm);
 
     // Show top 3 closest markets within 1000 km, or just top 3 globally
     const nearby = withDist.slice(0, 3);
 
-    if (!nearby.length) { showFallback(lat, lng); return; }
+    if (!nearby.length) {
+      showFallback(lat, lng);
+      return;
+    }
 
     results.hidden = false;
     results.innerHTML = `
       <p class="nearme-intro">Closest gold markets in our directory:</p>
       <ul class="nearme-list">
-        ${nearby.map(m => `
+        ${nearby
+    .map(
+      (m) => `
           <li class="nearme-item">
             <a href="${m.page}" class="nearme-link">
               <span class="nearme-name">${m.name}</span>
               <span class="nearme-dist">${m.distKm < 1 ? '<1 km' : Math.round(m.distKm).toLocaleString() + ' km'} away</span>
             </a>
           </li>
-        `).join('')}
+        `
+    )
+    .join('')}
       </ul>
       <div class="nearme-map-links" style="margin-top:0.75rem">
         <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=13/${lat}/${lng}" target="_blank" rel="noopener noreferrer" class="nearme-map-btn">
@@ -1480,7 +1707,10 @@ init();
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         const { latitude: lat, longitude: lng } = pos.coords;
-        setStatus(`Location found (${lat.toFixed(4)}, ${lng.toFixed(4)}). Finding nearby markets…`, 'info');
+        setStatus(
+          `Location found (${lat.toFixed(4)}, ${lng.toFixed(4)}). Finding nearby markets…`,
+          'info'
+        );
         try {
           await findNearestMarkets(lat, lng);
           status.hidden = true;
@@ -1502,5 +1732,4 @@ init();
       { timeout: 10000, maximumAge: 60000 }
     );
   });
-}());
-
+})();

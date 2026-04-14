@@ -41,14 +41,15 @@
 
 html {
   font-size: 16px;
-  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    'Helvetica Neue', sans-serif;
   line-height: 1.5;
   min-height: 100vh;
   overflow-x: hidden;
@@ -180,7 +181,9 @@ ol {
   gap: 10px;
   padding: 8px 10px;
   text-decoration: none;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
   font-size: 0.875rem;
   white-space: nowrap;
   overflow: hidden;
@@ -205,7 +208,7 @@ ol {
 }
 
 .nav-link.active {
-  background: rgba(245, 158, 11, 0.12);
+  background: rgb(245 158 11 / 12%);
   color: var(--gold);
   font-weight: 600;
 }
@@ -341,12 +344,12 @@ ol {
 }
 
 .stat-card .stat-delta.up {
-  background: rgba(16, 185, 129, 0.15);
+  background: rgb(16 185 129 / 15%);
   color: var(--success);
 }
 
 .stat-card .stat-delta.down {
-  background: rgba(239, 68, 68, 0.15);
+  background: rgb(239 68 68 / 15%);
   color: var(--danger);
 }
 
@@ -371,7 +374,11 @@ ol {
   line-height: 1;
   padding: 9px 16px;
   text-decoration: none;
-  transition: background 0.15s, border-color 0.15s, color 0.15s, opacity 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s,
+    opacity 0.15s;
   user-select: none;
   white-space: nowrap;
 }
@@ -449,7 +456,9 @@ ol {
   border-radius: var(--radius-sm);
   color: var(--text);
   padding: 9px 12px;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
   width: 100%;
 }
 
@@ -462,7 +471,7 @@ ol {
 .form-select:focus,
 .form-textarea:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 0 0 3px rgb(59 130 246 / 20%);
   outline: none;
 }
 
@@ -561,22 +570,22 @@ tbody td {
 }
 
 .badge-success {
-  background: rgba(16, 185, 129, 0.15);
+  background: rgb(16 185 129 / 15%);
   color: var(--success);
 }
 
 .badge-warning {
-  background: rgba(245, 158, 11, 0.15);
+  background: rgb(245 158 11 / 15%);
   color: var(--warning);
 }
 
 .badge-danger {
-  background: rgba(239, 68, 68, 0.15);
+  background: rgb(239 68 68 / 15%);
   color: var(--danger);
 }
 
 .badge-info {
-  background: rgba(59, 130, 246, 0.15);
+  background: rgb(59 130 246 / 15%);
   color: var(--info);
 }
 
@@ -590,15 +599,12 @@ tbody td {
    -------------------------------------------------------------------------- */
 .modal-backdrop {
   align-items: center;
-  background: rgba(0, 0, 0, 0.6);
-  bottom: 0;
+  background: rgb(0 0 0 / 60%);
+  inset: 0;
   display: flex;
   justify-content: center;
-  left: 0;
   padding: 16px;
   position: fixed;
-  right: 0;
-  top: 0;
   z-index: 500;
 }
 
@@ -610,7 +616,7 @@ tbody td {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 50%);
   display: flex;
   flex-direction: column;
   max-height: calc(100vh - 48px);
@@ -644,7 +650,9 @@ tbody td {
   display: flex;
   height: 28px;
   justify-content: center;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
   width: 28px;
 }
 
@@ -687,7 +695,7 @@ tbody td {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 40%);
   color: var(--text);
   display: flex;
   font-size: 0.875rem;
@@ -704,23 +712,48 @@ tbody td {
   line-height: 1.4;
 }
 
-.toast.toast--success { border-left: 3px solid var(--success); }
-.toast.toast--warning { border-left: 3px solid var(--warning); }
-.toast.toast--danger  { border-left: 3px solid var(--danger); }
-.toast.toast--info    { border-left: 3px solid var(--info); }
+.toast.toast--success {
+  border-left: 3px solid var(--success);
+}
+
+.toast.toast--warning {
+  border-left: 3px solid var(--warning);
+}
+
+.toast.toast--danger {
+  border-left: 3px solid var(--danger);
+}
+
+.toast.toast--info {
+  border-left: 3px solid var(--info);
+}
 
 .toast-hide {
   animation: toast-out 0.25s ease forwards;
 }
 
 @keyframes toast-in {
-  from { opacity: 0; transform: translateX(100%); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes toast-out {
-  from { opacity: 1; transform: translateX(0); }
-  to   { opacity: 0; transform: translateX(100%); }
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -748,16 +781,13 @@ tbody td {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--surface) 25%,
-    var(--surface-2) 50%,
-    var(--surface) 75%
-  );
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 50%, var(--surface) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
   border-radius: var(--radius-sm);
@@ -765,8 +795,13 @@ tbody td {
 }
 
 @keyframes shimmer {
-  from { background-position: 200% 0; }
-  to   { background-position: -200% 0; }
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -780,22 +815,33 @@ tbody td {
   width: 8px;
 }
 
-.status-dot--green  { background: var(--success); }
-.status-dot--yellow { background: var(--warning); }
-.status-dot--red    { background: var(--danger); }
-.status-dot--gray   { background: var(--text-dim); }
+.status-dot--green {
+  background: var(--success);
+}
+
+.status-dot--yellow {
+  background: var(--warning);
+}
+
+.status-dot--red {
+  background: var(--danger);
+}
+
+.status-dot--gray {
+  background: var(--text-dim);
+}
 
 /* --------------------------------------------------------------------------
    15. Responsive — mobile sidebar overlay
    -------------------------------------------------------------------------- */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .sidebar {
     transform: translateX(-100%);
     box-shadow: none;
   }
 
   .sidebar--open {
-    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+    box-shadow: 4px 0 24px rgb(0 0 0 / 50%);
     transform: translateX(0);
   }
 
@@ -841,13 +887,10 @@ tbody td {
 
 /* Mobile overlay backdrop for sidebar */
 .sidebar-overlay {
-  background: rgba(0, 0, 0, 0.5);
-  bottom: 0;
+  background: rgb(0 0 0 / 50%);
+  inset: 0;
   display: none;
-  left: 0;
   position: fixed;
-  right: 0;
-  top: 0;
   z-index: 199;
 }
 
@@ -858,29 +901,89 @@ tbody td {
 /* --------------------------------------------------------------------------
    16. Utilities
    -------------------------------------------------------------------------- */
-.hidden { display: none !important; }
+.hidden {
+  display: none !important;
+}
 
-.flex         { display: flex; }
-.flex-between { display: flex; align-items: center; justify-content: space-between; }
-.flex-center  { display: flex; align-items: center; justify-content: center; }
-.gap-2        { gap: 8px; }
-.gap-4        { gap: 16px; }
-.mt-2         { margin-top: 8px; }
-.mt-4         { margin-top: 16px; }
-.mb-4         { margin-bottom: 16px; }
+.flex {
+  display: flex;
+}
 
-.text-muted   { color: var(--text-muted); }
-.text-dim     { color: var(--text-dim); }
-.text-danger  { color: var(--danger); }
-.text-success { color: var(--success); }
-.text-warning { color: var(--warning); }
-.text-info    { color: var(--info); }
-.text-gold    { color: var(--gold); }
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-.text-sm  { font-size: 0.8125rem; }
-.text-xs  { font-size: 0.75rem; }
-.font-600 { font-weight: 600; }
-.font-700 { font-weight: 700; }
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gap-2 {
+  gap: 8px;
+}
+
+.gap-4 {
+  gap: 16px;
+}
+
+.mt-2 {
+  margin-top: 8px;
+}
+
+.mt-4 {
+  margin-top: 16px;
+}
+
+.mb-4 {
+  margin-bottom: 16px;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-dim {
+  color: var(--text-dim);
+}
+
+.text-danger {
+  color: var(--danger);
+}
+
+.text-success {
+  color: var(--success);
+}
+
+.text-warning {
+  color: var(--warning);
+}
+
+.text-info {
+  color: var(--info);
+}
+
+.text-gold {
+  color: var(--gold);
+}
+
+.text-sm {
+  font-size: 0.8125rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.font-600 {
+  font-weight: 600;
+}
+
+.font-700 {
+  font-weight: 700;
+}
 
 .truncate {
   max-width: 100%;
@@ -889,7 +992,10 @@ tbody td {
   white-space: nowrap;
 }
 
-.w-full  { width: 100%; }
+.w-full {
+  width: 100%;
+}
+
 .sr-only {
   border: 0;
   clip: rect(0, 0, 0, 0);
@@ -907,8 +1013,8 @@ tbody td {
    -------------------------------------------------------------------------- */
 .offline-banner {
   align-items: flex-start;
-  background: rgba(245, 158, 11, 0.1);
-  border: 1px solid rgba(245, 158, 11, 0.35);
+  background: rgb(245 158 11 / 10%);
+  border: 1px solid rgb(245 158 11 / 35%);
   border-radius: var(--radius);
   color: var(--warning);
   display: flex;
@@ -932,9 +1038,21 @@ tbody td {
   padding: 2px 6px;
   text-transform: uppercase;
 }
-.role-badge--admin  { background: rgba(245,158,11,0.15); color: var(--gold); }
-.role-badge--editor { background: rgba(59,130,246,0.15);  color: #60a5fa; }
-.role-badge--viewer { background: rgba(100,116,139,0.15); color: var(--text-dim); }
+
+.role-badge--admin {
+  background: rgb(245 158 11 / 15%);
+  color: var(--gold);
+}
+
+.role-badge--editor {
+  background: rgb(59 130 246 / 15%);
+  color: #60a5fa;
+}
+
+.role-badge--viewer {
+  background: rgb(100 116 139 / 15%);
+  color: var(--text-dim);
+}
 
 /* --------------------------------------------------------------------------
    19. Inline Spinner (used inside table cells and stat cards)
@@ -949,4 +1067,9 @@ tbody td {
   vertical-align: middle;
   width: 14px;
 }
-@keyframes admin-spin { to { transform: rotate(360deg); } }
+
+@keyframes admin-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

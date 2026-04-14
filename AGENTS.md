@@ -1,9 +1,11 @@
 # AGENTS.md
 
 ## Project
+
 Gold-Prices website
 
-Static, multi-page gold-prices website with tools, country/city/market pages, educational pages, and a shops directory.
+Static, multi-page gold-prices website with tools, country/city/market pages, educational pages, and
+a shops directory.
 
 ## How Codex should work in this repo
 
@@ -25,7 +27,8 @@ Static, multi-page gold-prices website with tools, country/city/market pages, ed
 - Then implement.
 - Do not do broad repo audits unless explicitly asked.
 - Do not re-open already completed work unless a regression or mismatch is found.
-- Do not add unrelated features, opportunistic cleanup, or architecture changes unless explicitly asked.
+- Do not add unrelated features, opportunistic cleanup, or architecture changes unless explicitly
+  asked.
 
 ## Architecture preferences
 
@@ -39,6 +42,7 @@ Static, multi-page gold-prices website with tools, country/city/market pages, ed
 ## Product priorities
 
 Priority order:
+
 1. Trust and correctness
 2. Working UX
 3. Mobile usability
@@ -51,8 +55,10 @@ Priority order:
 
 - Always distinguish spot/reference prices from retail/jewelry prices.
 - Clearly label estimated, derived, delayed, fallback, or cached values.
-- Do not present market-area listings as if they are verified individual stores unless the data supports that.
-- Trust banners, freshness labels, disclaimers, methodology, and internal linking are core product elements.
+- Do not present market-area listings as if they are verified individual stores unless the data
+  supports that.
+- Trust banners, freshness labels, disclaimers, methodology, and internal linking are core product
+  elements.
 - Avoid fake completeness, misleading stats, and vague trust wording.
 - For shops and market discovery flows, prioritize clarity, shareability, and next-step actions.
 
@@ -61,7 +67,8 @@ Priority order:
 - Avoid generic AI-looking design.
 - Prefer clean, premium, trustworthy UI with strong hierarchy and good spacing.
 - Keep mobile behavior explicit and usable at small widths.
-- Accessibility matters: focus states, keyboard access, contrast, semantic structure, aria labels where needed.
+- Accessibility matters: focus states, keyboard access, contrast, semantic structure, aria labels
+  where needed.
 - If a control is unfinished, disable or hide it rather than leaving it silently broken.
 
 ## SEO rules
@@ -79,6 +86,7 @@ Priority order:
 ## Build / test / verification
 
 Before claiming work is complete:
+
 - run the most relevant checks available for the task
 - verify changed flows as far as possible
 - report what was actually verified vs not verified
@@ -87,6 +95,7 @@ Before claiming work is complete:
 Never say “fixed” or “done” unless you verified it.
 
 Use this reporting format in final responses:
+
 1. Task understanding
 2. Files inspected
 3. Plan
@@ -97,6 +106,7 @@ Use this reporting format in final responses:
 ## Repo-specific guidance
 
 High-priority areas in this repo:
+
 - `shops.html`, `shops.js`, `shops.css`
 - `tracker.html`, `tracker-pro.js`, `tracker/`
 - `components/nav.js` and related shared UI files
@@ -104,9 +114,12 @@ High-priority areas in this repo:
 - metadata, schema, sitemap, internal linking
 
 When working on shops:
-- prioritize state behavior, deep-linking, trust framing, mobile filtering, and useful next-step CTAs
+
+- prioritize state behavior, deep-linking, trust framing, mobile filtering, and useful next-step
+  CTAs
 
 When working on tracker:
+
 - prioritize clarity, reliability, onboarding, and avoiding overwhelming first-time users
 
 ## Do-not rules
@@ -115,4 +128,5 @@ When working on tracker:
 - Do not force-push unless explicitly asked.
 - Do not create huge PRs touching many unrelated files.
 - Do not assume the live site matches the latest repo state without checking.
-- Do not claim a migration or architecture change is complete unless it is clearly present and verified.
+- Do not claim a migration or architecture change is complete unless it is clearly present and
+  verified.

@@ -15,10 +15,10 @@ const TYPE_BOOST = { country: 5, city: 3, page: 2, karat: 1, shop: 0 };
  * @returns {number}
  */
 function score(q, entry) {
-  const label   = (entry.label || '').toLowerCase();
+  const label = (entry.label || '').toLowerCase();
   const labelAr = (entry.labelAr || '').toLowerCase();
-  const kws     = (entry.keywords || []).map(k => (k || '').toLowerCase());
-  const boost   = TYPE_BOOST[entry.type] || 0;
+  const kws = (entry.keywords || []).map((k) => (k || '').toLowerCase());
+  const boost = TYPE_BOOST[entry.type] || 0;
 
   // Exact match in label
   if (label === q || labelAr === q) return 100 + boost;
@@ -27,14 +27,14 @@ function score(q, entry) {
   // Contains in label
   if (label.includes(q) || labelAr.includes(q)) return 50 + boost;
   // Keyword exact match
-  if (kws.some(k => k === q)) return 35 + boost;
+  if (kws.some((k) => k === q)) return 35 + boost;
   // Keyword starts-with
-  if (kws.some(k => k.startsWith(q))) return 25 + boost;
+  if (kws.some((k) => k.startsWith(q))) return 25 + boost;
   // Keyword contains
-  if (kws.some(k => k.includes(q))) return 15 + boost;
+  if (kws.some((k) => k.includes(q))) return 15 + boost;
   // Fuzzy: allow 1-char tolerance (substring within 1 edit)
   if (q.length >= 3) {
-    const fuzzy = [...new Set([label, labelAr, ...kws])].some(s => {
+    const fuzzy = [...new Set([label, labelAr, ...kws])].some((s) => {
       for (let i = 0; i <= s.length - q.length + 1; i++) {
         const sub = s.slice(i, i + q.length + 1);
         if (levenshtein(q, sub) <= 1) return true;
@@ -55,9 +55,10 @@ function levenshtein(a, b) {
   );
   for (let i = 1; i <= a.length; i++) {
     for (let j = 1; j <= b.length; j++) {
-      dp[i][j] = a[i - 1] === b[j - 1]
-        ? dp[i - 1][j - 1]
-        : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+      dp[i][j] =
+        a[i - 1] === b[j - 1]
+          ? dp[i - 1][j - 1]
+          : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
     }
   }
   return dp[a.length][b.length];
@@ -73,9 +74,8 @@ export function search(query, limit = 10) {
   const q = (query || '').toLowerCase().trim();
   if (q.length < 2) return [];
 
-  return SEARCH_INDEX
-    .map(entry => ({ ...entry, _score: score(q, entry) }))
-    .filter(r => r._score > 0)
+  return SEARCH_INDEX.map((entry) => ({ ...entry, _score: score(q, entry) }))
+    .filter((r) => r._score > 0)
     .sort((a, b) => b._score - a._score)
     .slice(0, limit)
     .map(({ _score, ...rest }) => rest);

@@ -30,7 +30,7 @@ export function slugToKarat(slug) {
  * @returns {string|null}
  */
 export function countryCodeToSlug(countryCode) {
-  return COUNTRIES.find(c => c.code === countryCode)?.slug ?? null;
+  return COUNTRIES.find((c) => c.code === countryCode)?.slug ?? null;
 }
 
 /**
@@ -40,8 +40,8 @@ export function countryCodeToSlug(countryCode) {
  * @returns {string|null}
  */
 export function cityToSlug(countrySlug, cityNameEn) {
-  const country = COUNTRIES.find(c => c.slug === countrySlug);
-  return (country?.cities || []).find(ci => ci.nameEn === cityNameEn)?.slug ?? null;
+  const country = COUNTRIES.find((c) => c.slug === countrySlug);
+  return (country?.cities || []).find((ci) => ci.nameEn === cityNameEn)?.slug ?? null;
 }
 
 /**

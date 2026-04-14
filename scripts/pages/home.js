@@ -30,7 +30,9 @@ function getLang() {
   try {
     const p = JSON.parse(localStorage.getItem(LANG_KEY) || '{}');
     return p.lang || 'en';
-  } catch { return 'en'; }
+  } catch {
+    return 'en';
+  }
 }
 
 function saveLang(l) {
@@ -45,19 +47,27 @@ function saveLang(l) {
 // Gold trades 24/5 (Sun 22:00 UTC – Fri 21:00 UTC approx)
 function getMarketStatus() {
   const now = new Date();
-  const utcDay  = now.getUTCDay();   // 0=Sun, 5=Fri, 6=Sat
+  const utcDay = now.getUTCDay(); // 0=Sun, 5=Fri, 6=Sat
   const utcHour = now.getUTCHours();
-  const utcMin  = now.getUTCMinutes();
+  const utcMin = now.getUTCMinutes();
   const utcTime = utcHour * 60 + utcMin;
 
-  const OPEN_SUN  = 22 * 60;  // Sun 22:00 UTC
-  const CLOSE_FRI = 21 * 60;  // Fri 21:00 UTC
+  const OPEN_SUN = 22 * 60; // Sun 22:00 UTC
+  const CLOSE_FRI = 21 * 60; // Fri 21:00 UTC
 
   let isOpen = false;
-  if (utcDay === 6) { isOpen = false; }                           // Saturday always closed
-  else if (utcDay === 5) { isOpen = utcTime < CLOSE_FRI; }        // Friday: open until 21:00
-  else if (utcDay === 0) { isOpen = utcTime >= OPEN_SUN; }        // Sunday: open from 22:00
-  else { isOpen = true; }                                          // Mon–Thu always open
+  if (utcDay === 6) {
+    isOpen = false;
+  } // Saturday always closed
+  else if (utcDay === 5) {
+    isOpen = utcTime < CLOSE_FRI;
+  } // Friday: open until 21:00
+  else if (utcDay === 0) {
+    isOpen = utcTime >= OPEN_SUN;
+  } // Sunday: open from 22:00
+  else {
+    isOpen = true;
+  } // Mon–Thu always open
 
   return isOpen ? 'open' : 'closed';
 }
@@ -69,11 +79,15 @@ function tx(key) {
 }
 
 // ── Regional groupings for homepage display ────────────────────────────────
-const GCC    = COUNTRIES.filter(c => c.group === 'gcc');
-const MENA   = COUNTRIES.filter(c => ['gcc', 'levant', 'africa'].includes(c.group));
+const GCC = COUNTRIES.filter((c) => c.group === 'gcc');
+const MENA = COUNTRIES.filter((c) => ['gcc', 'levant', 'africa'].includes(c.group));
 const GLOBAL = COUNTRIES;
 let homeRegion = (() => {
-  try { return JSON.parse(localStorage.getItem('user_prefs') || '{}').homeRegion || 'gcc'; } catch { return 'gcc'; }
+  try {
+    return JSON.parse(localStorage.getItem('user_prefs') || '{}').homeRegion || 'gcc';
+  } catch {
+    return 'gcc';
+  }
 })();
 
 // ── Render helpers ─────────────────────────────────────────────────────────
@@ -85,15 +99,15 @@ function set(id, text) {
 // ── Render hero live card ──────────────────────────────────────────────────
 function renderHeroCard() {
   if (!goldPrice) return;
-  const k24 = KARATS.find(k => k.code === '24');
-  const k22 = KARATS.find(k => k.code === '22');
-  const k21 = KARATS.find(k => k.code === '21');
+  const k24 = KARATS.find((k) => k.code === '24');
+  const k22 = KARATS.find((k) => k.code === '22');
+  const k21 = KARATS.find((k) => k.code === '21');
 
   const usd24oz = goldPrice;
-  const aed24g  = calc.usdPerGram(goldPrice, k24.purity) * CONSTANTS.AED_PEG;
-  const usd22g  = calc.usdPerGram(goldPrice, k22.purity);
-  const aed22g  = usd22g * CONSTANTS.AED_PEG;
-  const usd21g  = calc.usdPerGram(goldPrice, k21.purity);
+  const aed24g = calc.usdPerGram(goldPrice, k24.purity) * CONSTANTS.AED_PEG;
+  const usd22g = calc.usdPerGram(goldPrice, k22.purity);
+  const aed22g = usd22g * CONSTANTS.AED_PEG;
+  const usd21g = calc.usdPerGram(goldPrice, k21.purity);
 
   const priceEl = document.getElementById('hlc-price');
   if (priceEl) {
@@ -101,13 +115,16 @@ function renderHeroCard() {
     priceEl.classList.remove('hlc-price--loading');
   }
   document.getElementById('hero-live-card')?.removeAttribute('aria-busy');
-  set('hlc-aed24',  fmt.formatPrice(aed24g,  'AED', 2));
-  set('hlc-usd22',  fmt.formatPrice(usd22g,  'USD', 2));
-  set('hlc-aed22',  fmt.formatPrice(aed22g,  'AED', 2));
-  set('hlc-usd21',  fmt.formatPrice(usd21g,  'USD', 2));
+  set('hlc-aed24', fmt.formatPrice(aed24g, 'AED', 2));
+  set('hlc-usd22', fmt.formatPrice(usd22g, 'USD', 2));
+  set('hlc-aed22', fmt.formatPrice(aed22g, 'AED', 2));
+  set('hlc-usd21', fmt.formatPrice(usd21g, 'USD', 2));
   const freshnessTime = goldUpdatedAt || new Date().toISOString();
   const sourceText = priceSourceLabel === 'live' ? 'Live' : 'Cached/Fallback';
-  set('hlc-updated', `${tx('updated')}: ${fmt.formatTimestampShort(freshnessTime, lang)} · ${tx('source')}: ${sourceText}`);
+  set(
+    'hlc-updated',
+    `${tx('updated')}: ${fmt.formatTimestampShort(freshnessTime, lang)} · ${tx('source')}: ${sourceText}`
+  );
 
   // Change vs day open
   const changeEl = document.getElementById('hlc-change');
@@ -124,17 +141,18 @@ function renderHeroCard() {
   if (statusEl) {
     const status = getMarketStatus();
     statusEl.textContent = status === 'open' ? tx('marketOpen') : tx('marketClosed');
-    statusEl.className = 'hlc-market ' + (status === 'open' ? 'hlc-market--open' : 'hlc-market--closed');
+    statusEl.className =
+      'hlc-market ' + (status === 'open' ? 'hlc-market--open' : 'hlc-market--closed');
   }
 
   // Update bottom ticker
-  const k18 = KARATS.find(k => k.code === '18');
+  const k18 = KARATS.find((k) => k.code === '18');
   updateTicker({
-    xauUsd:  goldPrice,
-    uae24k:  aed24g,
-    uae22k:  calc.usdPerGram(goldPrice, k22.purity) * CONSTANTS.AED_PEG,
-    uae21k:  calc.usdPerGram(goldPrice, k21.purity) * CONSTANTS.AED_PEG,
-    uae18k:  calc.usdPerGram(goldPrice, k18?.purity ?? 0.75) * CONSTANTS.AED_PEG,
+    xauUsd: goldPrice,
+    uae24k: aed24g,
+    uae22k: calc.usdPerGram(goldPrice, k22.purity) * CONSTANTS.AED_PEG,
+    uae21k: calc.usdPerGram(goldPrice, k21.purity) * CONSTANTS.AED_PEG,
+    uae18k: calc.usdPerGram(goldPrice, k18?.purity ?? 0.75) * CONSTANTS.AED_PEG,
   });
 
   // Update karat strip
@@ -158,19 +176,19 @@ function renderHeroCard() {
 function renderKaratStrip(k18Ref) {
   if (!goldPrice) return;
   const AED = CONSTANTS.AED_PEG;
-  const k18 = k18Ref || KARATS.find(k => k.code === '18');
-  const k21 = KARATS.find(k => k.code === '21');
-  const k22 = KARATS.find(k => k.code === '22');
-  const k24 = KARATS.find(k => k.code === '24');
+  const k18 = k18Ref || KARATS.find((k) => k.code === '18');
+  const k21 = KARATS.find((k) => k.code === '21');
+  const k22 = KARATS.find((k) => k.code === '22');
+  const k24 = KARATS.find((k) => k.code === '24');
 
   // Skip rendering if required karat data is not available
   if (!k18 || !k21 || !k22 || !k24) return;
 
   const prices = {
-    '24': calc.usdPerGram(goldPrice, k24.purity) * AED,
-    '22': calc.usdPerGram(goldPrice, k22.purity) * AED,
-    '21': calc.usdPerGram(goldPrice, k21.purity) * AED,
-    '18': calc.usdPerGram(goldPrice, k18.purity) * AED,
+    24: calc.usdPerGram(goldPrice, k24.purity) * AED,
+    22: calc.usdPerGram(goldPrice, k22.purity) * AED,
+    21: calc.usdPerGram(goldPrice, k21.purity) * AED,
+    18: calc.usdPerGram(goldPrice, k18.purity) * AED,
   };
 
   for (const [k, v] of Object.entries(prices)) {
@@ -186,32 +204,44 @@ function renderKaratStrip(k18Ref) {
 function renderGCCGrid() {
   const grid = document.getElementById('gcc-quick-grid');
   if (!grid || !goldPrice) return;
-  const k22 = KARATS.find(k => k.code === '22');
+  const k22 = KARATS.find((k) => k.code === '22');
 
   // Select countries based on current region filter
   const regionLists = { gcc: GCC, mena: MENA, global: GLOBAL };
   const countries = regionLists[homeRegion] || GCC;
 
-  grid.innerHTML = countries.map(c => {
-    let price = '—';
-    if (c.currency === 'AED') {
-      price = fmt.formatPrice(calc.usdPerGram(goldPrice, k22.purity) * CONSTANTS.AED_PEG, 'AED', 2);
-    } else if (rates[c.currency]) {
-      price = fmt.formatPrice(calc.usdPerGram(goldPrice, k22.purity) * rates[c.currency], c.currency, c.decimals);
-    }
-    const name = lang === 'ar' ? c.nameAr : c.nameEn;
-    const slug = { AE:'uae', SA:'saudi-arabia', KW:'kuwait', QA:'qatar', BH:'bahrain', OM:'oman' }[c.code] ?? c.code.toLowerCase();
+  grid.innerHTML = countries
+    .map((c) => {
+      let price = '—';
+      if (c.currency === 'AED') {
+        price = fmt.formatPrice(
+          calc.usdPerGram(goldPrice, k22.purity) * CONSTANTS.AED_PEG,
+          'AED',
+          2
+        );
+      } else if (rates[c.currency]) {
+        price = fmt.formatPrice(
+          calc.usdPerGram(goldPrice, k22.purity) * rates[c.currency],
+          c.currency,
+          c.decimals
+        );
+      }
+      const name = lang === 'ar' ? c.nameAr : c.nameEn;
+      const slug =
+        { AE: 'uae', SA: 'saudi-arabia', KW: 'kuwait', QA: 'qatar', BH: 'bahrain', OM: 'oman' }[
+          c.code
+        ] ?? c.code.toLowerCase();
 
-    // Change badge from day open
-    let changeBadge = '';
-    if (dayOpenPrice && goldPrice) {
-      const chg = ((goldPrice - dayOpenPrice) / dayOpenPrice) * 100;
-      const sign = chg >= 0 ? '+' : '';
-      const cls  = chg >= 0 ? 'badge-up' : 'badge-down';
-      changeBadge = `<span class="gcc-change badge ${cls}">${sign}${chg.toFixed(2)}%</span>`;
-    }
+      // Change badge from day open
+      let changeBadge = '';
+      if (dayOpenPrice && goldPrice) {
+        const chg = ((goldPrice - dayOpenPrice) / dayOpenPrice) * 100;
+        const sign = chg >= 0 ? '+' : '';
+        const cls = chg >= 0 ? 'badge-up' : 'badge-down';
+        changeBadge = `<span class="gcc-change badge ${cls}">${sign}${chg.toFixed(2)}%</span>`;
+      }
 
-    return `<div class="gcc-card-wrapper">
+      return `<div class="gcc-card-wrapper">
       <a href="countries/${slug}.html" class="gcc-card">
         <div class="gcc-card-header">
           <span class="gcc-flag" aria-hidden="true">${c.flag}</span>
@@ -226,7 +256,8 @@ function renderGCCGrid() {
       </a>
       <button class="gcc-copy-btn" data-copy="${price}" aria-label="Copy ${name} price" type="button">⎘</button>
     </div>`;
-  }).join('');
+    })
+    .join('');
 }
 
 // ── Apply full page language ───────────────────────────────────────────────
@@ -235,78 +266,87 @@ function applyLangToPage() {
   document.documentElement.lang = lang;
   document.documentElement.dir = isAr ? 'rtl' : 'ltr';
 
-  set('hero-live-label',    tx('heroLive'));
-  set('hero-title-main',    tx('heroTitle'));
-  set('hero-title-sub',     tx('heroSub'));
-  set('hero-lead',          tx('heroLead'));
-  set('hero-cta-tracker',   tx('heroCta1'));
+  set('hero-live-label', tx('heroLive'));
+  set('hero-title-main', tx('heroTitle'));
+  set('hero-title-sub', tx('heroSub'));
+  set('hero-lead', tx('heroLead'));
+  set('hero-cta-tracker', tx('heroCta1'));
   set('hero-cta-countries', tx('heroCta2'));
-  set('hero-cta-shops',     tx('heroCta4'));
-  set('hero-cta-alert',     tx('heroCta5'));
-  set('hlc-tracker-link',   tx('trackerLink'));
-  set('hlc-title',          tx('spotTitle'));
-  set('hlc-sub',            tx('perOz'));
-  set('hlc-label-aed24',    tx('lbl24aed'));
-  set('hlc-label-usd22',    tx('lbl22usd'));
-  set('hlc-label-aed22',    tx('lbl22aed'));
-  set('hlc-label-usd21',    tx('lbl21usd'));
-  set('hlc-updated',        tx('fetching'));
-  set('gcc-section-title',  tx('gccLiveTitle'));
-  set('gcc-section-sub',    tx('gccLiveSub'));
-  set('gcc-see-all',        tx('seeAll'));
-  set('trust-live',         tx('trustLive'));
-  set('trust-live-sub',     tx('trustLiveSub'));
-  set('trust-countries',    tx('trustCountries'));
+  set('hero-cta-shops', tx('heroCta4'));
+  set('hero-cta-alert', tx('heroCta5'));
+  set('hlc-tracker-link', tx('trackerLink'));
+  set('hlc-title', tx('spotTitle'));
+  set('hlc-sub', tx('perOz'));
+  set('hlc-label-aed24', tx('lbl24aed'));
+  set('hlc-label-usd22', tx('lbl22usd'));
+  set('hlc-label-aed22', tx('lbl22aed'));
+  set('hlc-label-usd21', tx('lbl21usd'));
+  set('hlc-updated', tx('fetching'));
+  set('gcc-section-title', tx('gccLiveTitle'));
+  set('gcc-section-sub', tx('gccLiveSub'));
+  set('gcc-see-all', tx('seeAll'));
+  set('trust-live', tx('trustLive'));
+  set('trust-live-sub', tx('trustLiveSub'));
+  set('trust-countries', tx('trustCountries'));
   set('trust-countries-sub', tx('trustCountriesSub'));
-  set('trust-karats',       tx('trustKarats'));
-  set('trust-karats-sub',   tx('trustKaratsSub'));
-  set('trust-aed',          tx('trustAed'));
-  set('trust-aed-sub',      tx('trustAedSub'));
-  set('trust-bilingual',    tx('trustBilingual'));
+  set('trust-karats', tx('trustKarats'));
+  set('trust-karats-sub', tx('trustKaratsSub'));
+  set('trust-aed', tx('trustAed'));
+  set('trust-aed-sub', tx('trustAedSub'));
+  set('trust-bilingual', tx('trustBilingual'));
   set('trust-bilingual-sub', tx('trustBilingualSub'));
-  set('trust-offline',      tx('trustOffline'));
-  set('trust-offline-sub',  tx('trustOfflineSub'));
-  set('karat-strip-label',  tx('karatStripLabel'));
-  set('karat-strip-cta',    tx('karatStripCta'));
-  set('tools-title',        tx('toolsTitle'));
-  set('tools-sub',          tx('toolsSub'));
-  set('tool-tracker-title',   tx('toolTrackerTitle'));
-  set('tool-tracker-desc',    tx('toolTrackerDesc'));
-  set('tool-tracker-cta',     tx('toolTrackerCta'));
-  set('tool-calc-title',      tx('toolCalcTitle'));
-  set('tool-calc-desc',       tx('toolCalcDesc'));
-  set('tool-calc-cta',        tx('toolCalcCta'));
-  set('tool-uae-title',       tx('toolUaeTitle'));
-  set('tool-uae-desc',        tx('toolUaeDesc'));
-  set('tool-uae-cta',         tx('toolUaeCta'));
-  set('tool-shops-title',     tx('toolShopsTitle'));
-  set('tool-shops-desc',      tx('toolShopsDesc'));
-  set('tool-shops-cta',       tx('toolShopsCta'));
+  set('trust-offline', tx('trustOffline'));
+  set('trust-offline-sub', tx('trustOfflineSub'));
+  set('karat-strip-label', tx('karatStripLabel'));
+  set('karat-strip-cta', tx('karatStripCta'));
+  set('tools-title', tx('toolsTitle'));
+  set('tools-sub', tx('toolsSub'));
+  set('tool-tracker-title', tx('toolTrackerTitle'));
+  set('tool-tracker-desc', tx('toolTrackerDesc'));
+  set('tool-tracker-cta', tx('toolTrackerCta'));
+  set('tool-calc-title', tx('toolCalcTitle'));
+  set('tool-calc-desc', tx('toolCalcDesc'));
+  set('tool-calc-cta', tx('toolCalcCta'));
+  set('tool-uae-title', tx('toolUaeTitle'));
+  set('tool-uae-desc', tx('toolUaeDesc'));
+  set('tool-uae-cta', tx('toolUaeCta'));
+  set('tool-shops-title', tx('toolShopsTitle'));
+  set('tool-shops-desc', tx('toolShopsDesc'));
+  set('tool-shops-cta', tx('toolShopsCta'));
   set('tool-countries-title', tx('toolCountriesTitle'));
-  set('tool-countries-desc',  tx('toolCountriesDesc'));
-  set('tool-countries-cta',   tx('toolCountriesCta'));
-  set('tool-learn-title',     tx('toolLearnTitle'));
-  set('tool-learn-desc',      tx('toolLearnDesc'));
-  set('tool-learn-cta',       tx('toolLearnCta'));
-  set('tool-insights-title',  tx('toolInsightsTitle'));
-  set('tool-insights-desc',   tx('toolInsightsDesc'));
-  set('tool-insights-cta',    tx('toolInsightsCta'));
-  set('tool-method-title',    tx('toolMethodTitle'));
-  set('tool-method-desc',     tx('toolMethodDesc'));
-  set('tool-method-cta',      tx('toolMethodCta'));
-  set('tools-alert-text',   tx('alertRowText'));
-  set('tools-alert-btn',    tx('alertBtn'));
+  set('tool-countries-desc', tx('toolCountriesDesc'));
+  set('tool-countries-cta', tx('toolCountriesCta'));
+  set('tool-learn-title', tx('toolLearnTitle'));
+  set('tool-learn-desc', tx('toolLearnDesc'));
+  set('tool-learn-cta', tx('toolLearnCta'));
+  set('tool-insights-title', tx('toolInsightsTitle'));
+  set('tool-insights-desc', tx('toolInsightsDesc'));
+  set('tool-insights-cta', tx('toolInsightsCta'));
+  set('tool-method-title', tx('toolMethodTitle'));
+  set('tool-method-desc', tx('toolMethodDesc'));
+  set('tool-method-cta', tx('toolMethodCta'));
+  set('tools-alert-text', tx('alertRowText'));
+  set('tools-alert-btn', tx('alertBtn'));
   set('countries-quick-title', tx('countriesTitle'));
-  set('countries-quick-sub',   tx('countriesSub'));
-  set('countries-see-all',     tx('seeAllCountries'));
-  set('faq-more-link',         tx('faqMore'));
+  set('countries-quick-sub', tx('countriesSub'));
+  set('countries-see-all', tx('seeAllCountries'));
+  set('faq-more-link', tx('faqMore'));
 
   // Country tiles — use localised names from COUNTRIES data
-  const countryMap = { 'ct-uae':'AE', 'ct-sa':'SA', 'ct-kw':'KW', 'ct-qa':'QA',
-                       'ct-bh':'BH', 'ct-om':'OM', 'ct-eg':'EG', 'ct-jo':'JO',
-                       'ct-ma':'MA', 'ct-in':'IN' };
+  const countryMap = {
+    'ct-uae': 'AE',
+    'ct-sa': 'SA',
+    'ct-kw': 'KW',
+    'ct-qa': 'QA',
+    'ct-bh': 'BH',
+    'ct-om': 'OM',
+    'ct-eg': 'EG',
+    'ct-jo': 'JO',
+    'ct-ma': 'MA',
+    'ct-in': 'IN',
+  };
   for (const [elId, code] of Object.entries(countryMap)) {
-    const c = COUNTRIES.find(x => x.code === code);
+    const c = COUNTRIES.find((x) => x.code === code);
     if (c) set(elId, isAr ? c.nameAr : c.nameEn);
   }
   set('ct-more', tx('seeAllCountries'));
@@ -319,10 +359,7 @@ function applyLangToPage() {
 async function fetchLiveData() {
   if (!navigator.onLine) return;
 
-  const [goldRes, fxRes] = await Promise.allSettled([
-    api.fetchGold(),
-    api.fetchFX(),
-  ]);
+  const [goldRes, fxRes] = await Promise.allSettled([api.fetchGold(), api.fetchFX()]);
 
   if (goldRes.status === 'fulfilled') {
     goldPrice = goldRes.value.price;
@@ -354,7 +391,7 @@ async function init() {
 
   // Nav + footer
   const navCtrl = injectNav(lang, 0);
-  navCtrl.getLangToggleButtons().forEach(btn => {
+  navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       lang = lang === 'en' ? 'ar' : 'en';
       saveLang(lang);
@@ -371,7 +408,7 @@ async function init() {
   renderAdSlot('ad-bottom', 'rectangle');
 
   // Bind region tab filters
-  document.querySelectorAll('.gcc-region-tab').forEach(tab => {
+  document.querySelectorAll('.gcc-region-tab').forEach((tab) => {
     tab.addEventListener('click', () => {
       homeRegion = tab.dataset.region;
       try {
@@ -379,7 +416,7 @@ async function init() {
         p.homeRegion = homeRegion;
         localStorage.setItem('user_prefs', JSON.stringify(p));
       } catch (_) {}
-      document.querySelectorAll('.gcc-region-tab').forEach(t => {
+      document.querySelectorAll('.gcc-region-tab').forEach((t) => {
         t.classList.remove('is-active');
         t.setAttribute('aria-selected', 'false');
       });
@@ -399,16 +436,21 @@ async function init() {
   });
 
   // Copy price button (event delegation)
-  document.addEventListener('click', e => {
+  document.addEventListener('click', (e) => {
     const btn = e.target.closest('.gcc-copy-btn');
     if (!btn) return;
     const text = btn.dataset.copy;
     if (!text || text === '—') return;
-    navigator.clipboard?.writeText(text).then(() => {
-      const orig = btn.textContent;
-      btn.textContent = '✓';
-      setTimeout(() => { btn.textContent = orig; }, 1500);
-    }).catch(() => {});
+    navigator.clipboard
+      ?.writeText(text)
+      .then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '✓';
+        setTimeout(() => {
+          btn.textContent = orig;
+        }, 1500);
+      })
+      .catch(() => {});
   });
 
   // Load cache first for instant render
@@ -451,9 +493,16 @@ async function init() {
   _refreshTimer = setInterval(fetchLiveData, CONSTANTS.GOLD_REFRESH_MS);
 
   // Clean up timer on page unload to prevent memory leaks
-  window.addEventListener('pagehide', () => {
-    if (_refreshTimer) { clearInterval(_refreshTimer); _refreshTimer = null; }
-  }, { once: true });
+  window.addEventListener(
+    'pagehide',
+    () => {
+      if (_refreshTimer) {
+        clearInterval(_refreshTimer);
+        _refreshTimer = null;
+      }
+    },
+    { once: true }
+  );
 
   // Register service worker for offline support
   if ('serviceWorker' in navigator) {
@@ -474,7 +523,7 @@ async function init() {
       document.getElementById('hero-live-card')?.removeAttribute('aria-busy');
     }
     // GCC grid skeleton timeout
-    document.querySelectorAll('.gcc-card.skeleton-card').forEach(card => {
+    document.querySelectorAll('.gcc-card.skeleton-card').forEach((card) => {
       card.classList.remove('skeleton-card');
       card.textContent = '—';
     });
@@ -583,4 +632,3 @@ function showPwaBanner(deferredPrompt) {
     deferredPrompt = null;
   });
 }
-

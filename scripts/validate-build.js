@@ -41,8 +41,14 @@ function ok(msg) {
 
 console.log('\n\uD83D\uDD0D Checking required static files\u2026');
 const REQUIRED_FILES = [
-  'index.html', 'sw.js', 'robots.txt', 'style.css',
-  'favicon.svg', 'manifest.json', 'vite.config.js', 'package.json',
+  'index.html',
+  'sw.js',
+  'robots.txt',
+  'style.css',
+  'favicon.svg',
+  'manifest.json',
+  'vite.config.js',
+  'package.json',
 ];
 let requiredOk = true;
 for (const f of REQUIRED_FILES) {
@@ -105,12 +111,17 @@ function checkHtmlFile(filePath) {
         }
 
         // Check for bare await — only flag if we're not inside any nested async
-        const inAsyncContext = [...asyncAtDepth].some(d => d <= depth);
+        const inAsyncContext = [...asyncAtDepth].some((d) => d <= depth);
         if (!inAsyncContext && /^await\s/.test(rest)) {
           const beforeInHtml = html.slice(0, scriptOffset + i);
           const lineNo = beforeInHtml.split('\n').length;
-          const snippet = script.slice(i, i + 50).replace(/\n/g, ' ').trim();
-          error(`${path.relative(ROOT, filePath)}:${lineNo} \u2014 'await' in non-async function ${funcName}(): "${snippet}\u2026"`);
+          const snippet = script
+            .slice(i, i + 50)
+            .replace(/\n/g, ' ')
+            .trim();
+          error(
+            `${path.relative(ROOT, filePath)}:${lineNo} \u2014 'await' in non-async function ${funcName}(): "${snippet}\u2026"`
+          );
           fileOk = false;
         }
 
@@ -125,9 +136,21 @@ function checkHtmlFile(filePath) {
 const viteConfig = fs.readFileSync(path.join(ROOT, 'vite.config.js'), 'utf8');
 const excludeMatch = viteConfig.match(/EXCLUDE_DIRS\s*=\s*\[([\s\S]*?)\]/);
 const excludeDirs = excludeMatch
-  ? [...excludeMatch[1].matchAll(/'([^']+)'/g)].map(m => m[1])
+  ? [...excludeMatch[1].matchAll(/'([^']+)'/g)].map((m) => m[1])
   : [];
-const SKIP = new Set([...excludeDirs, 'dist', 'node_modules', '.git', '.github', 'scripts', 'tests', 'repositories', 'supabase', 'docs', 'public']);
+const SKIP = new Set([
+  ...excludeDirs,
+  'dist',
+  'node_modules',
+  '.git',
+  '.github',
+  'scripts',
+  'tests',
+  'repositories',
+  'supabase',
+  'docs',
+  'public',
+]);
 
 function walkHtml(dir) {
   const results = [];
@@ -152,7 +175,8 @@ let htmlIssues = 0;
 for (const f of htmlFiles) {
   if (!checkHtmlFile(f)) htmlIssues++;
 }
-if (htmlIssues === 0) ok(`Checked ${htmlFiles.length} HTML files \u2014 no await-in-non-async issues`);
+if (htmlIssues === 0)
+  ok(`Checked ${htmlFiles.length} HTML files \u2014 no await-in-non-async issues`);
 
 // ── 3. Check that critical JS imports resolve ───────────────────────────────
 
@@ -172,7 +196,11 @@ function checkImports(jsFile) {
     const spec = im[1];
     if (!spec.startsWith('.') && !spec.startsWith('/')) continue;
     const resolved = path.resolve(path.dirname(jsFile), spec);
-    if (!fs.existsSync(resolved) && !fs.existsSync(resolved + '.js') && !fs.existsSync(path.join(resolved, 'index.js'))) {
+    if (
+      !fs.existsSync(resolved) &&
+      !fs.existsSync(resolved + '.js') &&
+      !fs.existsSync(path.join(resolved, 'index.js'))
+    ) {
       const rel = path.relative(ROOT, jsFile);
       error(`${rel}: import '${spec}' does not resolve to an existing file`);
       importIssues++;

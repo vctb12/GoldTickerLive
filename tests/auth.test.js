@@ -25,168 +25,176 @@ const REAL_USERS_FILE = path.join(AUTH_DATA_DIR, 'users.json');
 let _savedUsers;
 
 before(() => {
-    // Back up existing users.json if present
-    if (fs.existsSync(REAL_USERS_FILE)) {
-        _savedUsers = fs.readFileSync(REAL_USERS_FILE);
-    }
-    // Remove so auth.js starts fresh
-    if (fs.existsSync(REAL_USERS_FILE)) fs.unlinkSync(REAL_USERS_FILE);
+  // Back up existing users.json if present
+  if (fs.existsSync(REAL_USERS_FILE)) {
+    _savedUsers = fs.readFileSync(REAL_USERS_FILE);
+  }
+  // Remove so auth.js starts fresh
+  if (fs.existsSync(REAL_USERS_FILE)) fs.unlinkSync(REAL_USERS_FILE);
 });
 
 after(() => {
-    if (_savedUsers) {
-        fs.writeFileSync(REAL_USERS_FILE, _savedUsers);
-    } else if (fs.existsSync(REAL_USERS_FILE)) {
-        fs.unlinkSync(REAL_USERS_FILE);
-    }
+  if (_savedUsers) {
+    fs.writeFileSync(REAL_USERS_FILE, _savedUsers);
+  } else if (fs.existsSync(REAL_USERS_FILE)) {
+    fs.unlinkSync(REAL_USERS_FILE);
+  }
 });
 
 const auth = require('../lib/auth');
 
 describe('authenticate', () => {
-    test('succeeds with correct default admin credentials', async () => {
-        const result = await auth.authenticate('admin@goldprices.com', 'TestPass123!');
-        assert.equal(result.success, true);
-        assert.ok(result.token);
-        assert.equal(result.user.role, 'admin');
-    });
+  test('succeeds with correct default admin credentials', async () => {
+    const result = await auth.authenticate('admin@goldprices.com', 'TestPass123!');
+    assert.equal(result.success, true);
+    assert.ok(result.token);
+    assert.equal(result.user.role, 'admin');
+  });
 
-    test('fails with wrong password', async () => {
-        const result = await auth.authenticate('admin@goldprices.com', 'wrongpassword');
-        assert.equal(result.success, false);
-    });
+  test('fails with wrong password', async () => {
+    const result = await auth.authenticate('admin@goldprices.com', 'wrongpassword');
+    assert.equal(result.success, false);
+  });
 
-    test('fails with unknown email', async () => {
-        const result = await auth.authenticate('nobody@example.com', 'TestPass123!');
-        assert.equal(result.success, false);
-    });
+  test('fails with unknown email', async () => {
+    const result = await auth.authenticate('nobody@example.com', 'TestPass123!');
+    assert.equal(result.success, false);
+  });
 
-    test('fails with invalid email format', async () => {
-        const result = await auth.authenticate('not-an-email', 'TestPass123!');
-        assert.equal(result.success, false);
-    });
+  test('fails with invalid email format', async () => {
+    const result = await auth.authenticate('not-an-email', 'TestPass123!');
+    assert.equal(result.success, false);
+  });
 
-    test('fails with empty email', async () => {
-        const result = await auth.authenticate('', 'TestPass123!');
-        assert.equal(result.success, false);
-    });
+  test('fails with empty email', async () => {
+    const result = await auth.authenticate('', 'TestPass123!');
+    assert.equal(result.success, false);
+  });
 });
 
 describe('generateToken / verifyToken', () => {
-    test('generates a verifiable JWT', () => {
-        const fakeUser = { id: 'u1', email: 'test@test.com', role: 'viewer' };
-        const token = auth.generateToken(fakeUser);
-        assert.ok(typeof token === 'string' && token.length > 0);
+  test('generates a verifiable JWT', () => {
+    const fakeUser = { id: 'u1', email: 'test@test.com', role: 'viewer' };
+    const token = auth.generateToken(fakeUser);
+    assert.ok(typeof token === 'string' && token.length > 0);
 
-        const decoded = auth.verifyToken(token);
-        assert.equal(decoded.id, 'u1');
-        assert.equal(decoded.email, 'test@test.com');
-        assert.equal(decoded.role, 'viewer');
-    });
+    const decoded = auth.verifyToken(token);
+    assert.equal(decoded.id, 'u1');
+    assert.equal(decoded.email, 'test@test.com');
+    assert.equal(decoded.role, 'viewer');
+  });
 
-    test('verifyToken returns null for a tampered token', () => {
-        const result = auth.verifyToken('totally.invalid.token');
-        assert.equal(result, null);
-    });
+  test('verifyToken returns null for a tampered token', () => {
+    const result = auth.verifyToken('totally.invalid.token');
+    assert.equal(result, null);
+  });
 });
 
 describe('createUser / getUserById / deleteUser', () => {
-    test('creates a new user with valid data', async () => {
-        const result = await auth.createUser(
-            { email: 'newuser@example.com', password: 'Password1!', name: 'New User', role: 'editor' },
-            'admin@goldprices.com'
-        );
-        assert.equal(result.success, true);
-        assert.equal(result.user.email, 'newuser@example.com');
-        assert.equal(result.user.role, 'editor');
-        assert.ok(!result.user.password, 'password should not be returned');
-    });
+  test('creates a new user with valid data', async () => {
+    const result = await auth.createUser(
+      { email: 'newuser@example.com', password: 'Password1!', name: 'New User', role: 'editor' },
+      'admin@goldprices.com'
+    );
+    assert.equal(result.success, true);
+    assert.equal(result.user.email, 'newuser@example.com');
+    assert.equal(result.user.role, 'editor');
+    assert.ok(!result.user.password, 'password should not be returned');
+  });
 
-    test('rejects duplicate email', async () => {
-        const result = await auth.createUser(
-            { email: 'newuser@example.com', password: 'Password2!', name: 'Dup User', role: 'viewer' },
-            'admin@goldprices.com'
-        );
-        assert.equal(result.success, false);
-        assert.match(result.message, /already exists/i);
-    });
+  test('rejects duplicate email', async () => {
+    const result = await auth.createUser(
+      { email: 'newuser@example.com', password: 'Password2!', name: 'Dup User', role: 'viewer' },
+      'admin@goldprices.com'
+    );
+    assert.equal(result.success, false);
+    assert.match(result.message, /already exists/i);
+  });
 
-    test('rejects invalid email format', async () => {
-        const result = await auth.createUser(
-            { email: 'bad-email', password: 'Password3!', name: 'Bad Email' },
-            'admin@goldprices.com'
-        );
-        assert.equal(result.success, false);
-        assert.match(result.message, /invalid email/i);
-    });
+  test('rejects invalid email format', async () => {
+    const result = await auth.createUser(
+      { email: 'bad-email', password: 'Password3!', name: 'Bad Email' },
+      'admin@goldprices.com'
+    );
+    assert.equal(result.success, false);
+    assert.match(result.message, /invalid email/i);
+  });
 
-    test('rejects short password (< 8 chars)', async () => {
-        const result = await auth.createUser(
-            { email: 'short@example.com', password: 'abc', name: 'Short' },
-            'admin@goldprices.com'
-        );
-        assert.equal(result.success, false);
-        assert.match(result.message, /password/i);
-    });
+  test('rejects short password (< 8 chars)', async () => {
+    const result = await auth.createUser(
+      { email: 'short@example.com', password: 'abc', name: 'Short' },
+      'admin@goldprices.com'
+    );
+    assert.equal(result.success, false);
+    assert.match(result.message, /password/i);
+  });
 
-    test('getUserById returns user without password', () => {
-        const users = auth.getAllUsers();
-        const first = users[0];
-        const found = auth.getUserById(first.id);
-        assert.equal(found.id, first.id);
-        assert.ok(!found.password, 'should not expose password hash');
-    });
+  test('getUserById returns user without password', () => {
+    const users = auth.getAllUsers();
+    const first = users[0];
+    const found = auth.getUserById(first.id);
+    assert.equal(found.id, first.id);
+    assert.ok(!found.password, 'should not expose password hash');
+  });
 
-    test('prevents deleting the last admin user', () => {
-        const adminUser = auth.getAllUsers().find(u => u.role === 'admin');
-        assert.ok(adminUser, 'admin user should exist');
-        const result = auth.deleteUser(adminUser.id, 'system');
-        assert.equal(result.success, false);
-        assert.match(result.message, /last admin/i);
-    });
+  test('prevents deleting the last admin user', () => {
+    const adminUser = auth.getAllUsers().find((u) => u.role === 'admin');
+    assert.ok(adminUser, 'admin user should exist');
+    const result = auth.deleteUser(adminUser.id, 'system');
+    assert.equal(result.success, false);
+    assert.match(result.message, /last admin/i);
+  });
 });
 
 describe('authMiddleware', () => {
-    function makeRes() {
-        const res = { _status: 200, _body: null };
-        res.status = (code) => { res._status = code; return res; };
-        res.json = (body) => { res._body = body; return res; };
-        return res;
-    }
+  function makeRes() {
+    const res = { _status: 200, _body: null };
+    res.status = (code) => {
+      res._status = code;
+      return res;
+    };
+    res.json = (body) => {
+      res._body = body;
+      return res;
+    };
+    return res;
+  }
 
-    test('rejects missing Authorization header', () => {
-        const middleware = auth.authMiddleware();
-        const req = { headers: {} };
-        const res = makeRes();
-        middleware(req, res, () => {});
-        assert.equal(res._status, 401);
-    });
+  test('rejects missing Authorization header', () => {
+    const middleware = auth.authMiddleware();
+    const req = { headers: {} };
+    const res = makeRes();
+    middleware(req, res, () => {});
+    assert.equal(res._status, 401);
+  });
 
-    test('rejects malformed token', () => {
-        const middleware = auth.authMiddleware();
-        const req = { headers: { authorization: 'Bearer badtoken' } };
-        const res = makeRes();
-        middleware(req, res, () => {});
-        assert.equal(res._status, 401);
-    });
+  test('rejects malformed token', () => {
+    const middleware = auth.authMiddleware();
+    const req = { headers: { authorization: 'Bearer badtoken' } };
+    const res = makeRes();
+    middleware(req, res, () => {});
+    assert.equal(res._status, 401);
+  });
 
-    test('accepts a valid token and calls next', () => {
-        const middleware = auth.authMiddleware();
-        const token = auth.generateToken({ id: 'u1', email: 'a@b.com', role: 'admin' });
-        const req = { headers: { authorization: `Bearer ${token}` } };
-        const res = makeRes();
-        let nextCalled = false;
-        middleware(req, res, () => { nextCalled = true; });
-        assert.ok(nextCalled);
-        assert.equal(req.user.role, 'admin');
+  test('accepts a valid token and calls next', () => {
+    const middleware = auth.authMiddleware();
+    const token = auth.generateToken({ id: 'u1', email: 'a@b.com', role: 'admin' });
+    const req = { headers: { authorization: `Bearer ${token}` } };
+    const res = makeRes();
+    let nextCalled = false;
+    middleware(req, res, () => {
+      nextCalled = true;
     });
+    assert.ok(nextCalled);
+    assert.equal(req.user.role, 'admin');
+  });
 
-    test('rejects insufficient role (viewer trying editor route)', () => {
-        const middleware = auth.authMiddleware('editor');
-        const token = auth.generateToken({ id: 'u2', email: 'v@b.com', role: 'viewer' });
-        const req = { headers: { authorization: `Bearer ${token}` } };
-        const res = makeRes();
-        middleware(req, res, () => {});
-        assert.equal(res._status, 403);
-    });
+  test('rejects insufficient role (viewer trying editor route)', () => {
+    const middleware = auth.authMiddleware('editor');
+    const token = auth.generateToken({ id: 'u2', email: 'v@b.com', role: 'viewer' });
+    const req = { headers: { authorization: `Bearer ${token}` } };
+    const res = makeRes();
+    middleware(req, res, () => {});
+    assert.equal(res._status, 403);
+  });
 });

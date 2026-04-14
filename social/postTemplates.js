@@ -19,7 +19,10 @@ const X_URL_LENGTH = 23;
  */
 function fmt(n, decimals = 2) {
   if (n == null || isNaN(n)) return '—';
-  return n.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  return n.toLocaleString('en-US', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
 }
 
 /**
@@ -84,18 +87,22 @@ function generateDaily(data) {
   const { spotUsdPerOz, dayOpenUsdPerOz, generatedAt } = data;
   const AED_PEG = 3.6725;
 
-  const k24 = calcKarat(spotUsdPerOz, 1.0,      AED_PEG);
-  const k22 = calcKarat(spotUsdPerOz, 22 / 24,  AED_PEG);
-  const k21 = calcKarat(spotUsdPerOz, 21 / 24,  AED_PEG);
-  const k18 = calcKarat(spotUsdPerOz, 18 / 24,  AED_PEG);
+  const k24 = calcKarat(spotUsdPerOz, 1.0, AED_PEG);
+  const k22 = calcKarat(spotUsdPerOz, 22 / 24, AED_PEG);
+  const k21 = calcKarat(spotUsdPerOz, 21 / 24, AED_PEG);
+  const k18 = calcKarat(spotUsdPerOz, 18 / 24, AED_PEG);
 
-  const change   = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
-  const changePct = dayOpenUsdPerOz ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100 : null;
-  const sign      = change != null && change >= 0 ? '+' : '';
+  const change = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
+  const changePct = dayOpenUsdPerOz
+    ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100
+    : null;
+  const sign = change != null && change >= 0 ? '+' : '';
   const changeStr = change != null ? ` (${sign}${fmt(changePct)}%)` : '';
 
   const date = new Date(generatedAt).toLocaleDateString('en-US', {
-    month: 'short', day: 'numeric', year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
   });
 
   const trend = trendEmoji(changePct);
@@ -106,12 +113,12 @@ function generateDaily(data) {
     `22K: $${fmt(k22.usdPerOz)}/oz`,
     `21K: $${fmt(k21.usdPerOz)}/oz`,
     `18K: $${fmt(k18.usdPerOz)}/oz`,
-    `🇦🇪 UAE (AED/g):`,
+    '🇦🇪 UAE (AED/g):',
     `24K: ${fmt(k24.aedPerGram)} | 22K: ${fmt(k22.aedPerGram)}`,
     `21K: ${fmt(k21.aedPerGram)} | 18K: ${fmt(k18.aedPerGram)}`,
     `${trend} ${trendText(changePct)}`,
     `📊 ${SITE_URL}`,
-    `#GoldPrice #Gold #UAE #Dubai`,
+    '#GoldPrice #Gold #UAE #Dubai',
   ];
 
   return lines.join('\n');
@@ -125,11 +132,13 @@ function generateAlert(data) {
   const AED_PEG = 3.6725;
 
   const k24 = calcKarat(spotUsdPerOz, 1.0, AED_PEG);
-  const change    = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
-  const changePct = dayOpenUsdPerOz ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100 : null;
+  const change = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
+  const changePct = dayOpenUsdPerOz
+    ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100
+    : null;
   const direction = change == null ? '⚡' : change >= 0 ? '⬆️' : '⬇️';
-  const absPct    = changePct != null ? Math.abs(changePct).toFixed(2) : '?';
-  const sign      = change != null && change >= 0 ? '+' : '';
+  const absPct = changePct != null ? Math.abs(changePct).toFixed(2) : '?';
+  const sign = change != null && change >= 0 ? '+' : '';
   const changeStr = change != null ? `${sign}$${fmt(change)} (${sign}${fmt(changePct)}%)` : '?';
 
   const lines = [
@@ -139,7 +148,7 @@ function generateAlert(data) {
     change != null ? `Change: ${changeStr}` : null,
     `🇦🇪 24K Dubai: AED ${fmt(k24.aedPerGram)}/g`,
     `📊 Track live → ${SITE_URL}`,
-    `#GoldPrice #Alert`,
+    '#GoldPrice #Alert',
   ].filter(Boolean);
 
   return lines.join('\n');
@@ -156,13 +165,18 @@ function generateHourly(data) {
   const k22 = calcKarat(spotUsdPerOz, 22 / 24, AED_PEG);
   const k21 = calcKarat(spotUsdPerOz, 21 / 24, AED_PEG);
 
-  const change    = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
-  const changePct = dayOpenUsdPerOz ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100 : null;
-  const sign      = change != null && change >= 0 ? '+' : '';
+  const change = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
+  const changePct = dayOpenUsdPerOz
+    ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100
+    : null;
+  const sign = change != null && change >= 0 ? '+' : '';
   const changeStr = change != null ? ` ${sign}${fmt(changePct)}%` : '';
 
   const time = new Date(generatedAt).toLocaleTimeString('en-US', {
-    hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Dubai', hour12: true,
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Asia/Dubai',
+    hour12: true,
   });
 
   const lines = [
@@ -172,7 +186,7 @@ function generateHourly(data) {
     `22K: AED ${fmt(k22.aedPerGram)}/g`,
     `21K: AED ${fmt(k21.aedPerGram)}/g`,
     `📊 ${SITE_URL}`,
-    `#GoldPrice #Gold #UAE #Dubai`,
+    '#GoldPrice #Gold #UAE #Dubai',
   ];
 
   return lines.join('\n');
@@ -187,25 +201,29 @@ function generateMorning(data) {
 
   const k24 = calcKarat(spotUsdPerOz, 1.0, AED_PEG);
   const k22 = calcKarat(spotUsdPerOz, 22 / 24, AED_PEG);
-  const change    = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
-  const changePct = dayOpenUsdPerOz ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100 : null;
-  const sign      = change != null && change >= 0 ? '+' : '';
+  const change = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
+  const changePct = dayOpenUsdPerOz
+    ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100
+    : null;
+  const sign = change != null && change >= 0 ? '+' : '';
 
   const date = new Date(generatedAt).toLocaleDateString('en-US', {
-    weekday: 'long', month: 'short', day: 'numeric',
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric',
   });
 
   const lines = [
     `☀️ Good Morning — Gold Opens ${date}`,
     `Spot: $${fmt(spotUsdPerOz)}/oz ${trendEmoji(changePct)}`,
     change != null ? `vs Yesterday Open: ${sign}$${fmt(change)} (${sign}${fmt(changePct)}%)` : null,
-    ``,
+    '',
     `🇦🇪 24K UAE: AED ${fmt(k24.aedPerGram)}/g`,
     `🇦🇪 22K UAE: AED ${fmt(k22.aedPerGram)}/g`,
-    ``,
+    '',
     `Track live → ${SITE_URL}`,
-    `#GoldPrice #GoldMarket #Dubai #GCC`,
-  ].filter(l => l !== null);
+    '#GoldPrice #GoldMarket #Dubai #GCC',
+  ].filter((l) => l !== null);
 
   return lines.join('\n');
 }
@@ -218,24 +236,28 @@ function generateEvening(data) {
   const AED_PEG = 3.6725;
 
   const k24 = calcKarat(spotUsdPerOz, 1.0, AED_PEG);
-  const change    = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
-  const changePct = dayOpenUsdPerOz ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100 : null;
-  const sign      = change != null && change >= 0 ? '+' : '';
+  const change = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
+  const changePct = dayOpenUsdPerOz
+    ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100
+    : null;
+  const sign = change != null && change >= 0 ? '+' : '';
 
   const date = new Date(generatedAt).toLocaleDateString('en-US', {
-    month: 'short', day: 'numeric', year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
   });
 
   const lines = [
     `🌙 Gold End of Day — ${date}`,
     `Close:  $${fmt(spotUsdPerOz)}/oz ${trendEmoji(changePct)}`,
     dayOpenUsdPerOz ? `Open:   $${fmt(dayOpenUsdPerOz)}/oz` : null,
-    (change != null) ? `Change: ${sign}$${fmt(change)} (${sign}${fmt(changePct)}%)` : null,
+    change != null ? `Change: ${sign}$${fmt(change)} (${sign}${fmt(changePct)}%)` : null,
     dayHighUsdPerOz ? `High:   $${fmt(dayHighUsdPerOz)}/oz` : null,
-    dayLowUsdPerOz  ? `Low:    $${fmt(dayLowUsdPerOz)}/oz`  : null,
+    dayLowUsdPerOz ? `Low:    $${fmt(dayLowUsdPerOz)}/oz` : null,
     `🇦🇪 24K Dubai close: AED ${fmt(k24.aedPerGram)}/g`,
     `Charts → ${SITE_URL}`,
-    `#GoldClose #GoldPrice #Dubai`,
+    '#GoldClose #GoldPrice #Dubai',
   ].filter(Boolean);
 
   return lines.join('\n');
@@ -253,15 +275,18 @@ function generateArabic(data) {
   const k21 = calcKarat(spotUsdPerOz, 21 / 24, AED_PEG);
   const k18 = calcKarat(spotUsdPerOz, 18 / 24, AED_PEG);
 
-  const change    = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
-  const changePct = dayOpenUsdPerOz ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100 : null;
+  const change = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
+  const changePct = dayOpenUsdPerOz
+    ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100
+    : null;
 
   const date = new Date(generatedAt).toLocaleDateString('ar-AE', {
-    month: 'short', day: 'numeric',
+    month: 'short',
+    day: 'numeric',
   });
 
   const trend = changePct == null ? '➡️' : changePct > 0 ? '📈' : changePct < 0 ? '📉' : '➡️';
-  const sign  = change != null && change >= 0 ? '+' : '';
+  const sign = change != null && change >= 0 ? '+' : '';
 
   const lines = [
     `🥇 أسعار الذهب اليوم — ${date} ${trend}`,
@@ -271,7 +296,7 @@ function generateArabic(data) {
     `عيار 18: ${fmt(k18.aedPerGram)} درهم/جرام`,
     change != null ? `التغيير: ${sign}$${fmt(change)} (${sign}${fmt(changePct)}%)` : null,
     `📊 ${SITE_URL}`,
-    `#سعر_الذهب #ذهب #الإمارات #دبي`,
+    '#سعر_الذهب #ذهب #الإمارات #دبي',
   ].filter(Boolean);
 
   return lines.join('\n');
@@ -284,24 +309,32 @@ function generateInvestment(data) {
   const { spotUsdPerOz, dayOpenUsdPerOz, weekLowUsdPerOz, weekHighUsdPerOz, generatedAt } = data;
   const AED_PEG = 3.6725;
 
-  const k24      = calcKarat(spotUsdPerOz, 1.0, AED_PEG);
-  const change    = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
-  const changePct = dayOpenUsdPerOz ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100 : null;
-  const sign      = change != null && change >= 0 ? '+' : '';
+  const k24 = calcKarat(spotUsdPerOz, 1.0, AED_PEG);
+  const change = dayOpenUsdPerOz ? spotUsdPerOz - dayOpenUsdPerOz : null;
+  const changePct = dayOpenUsdPerOz
+    ? ((spotUsdPerOz - dayOpenUsdPerOz) / dayOpenUsdPerOz) * 100
+    : null;
+  const sign = change != null && change >= 0 ? '+' : '';
 
   // Estimate how far from week high/low
-  const fromWeekHigh = weekHighUsdPerOz ? ((spotUsdPerOz - weekHighUsdPerOz) / weekHighUsdPerOz) * 100 : null;
-  const fromWeekLow  = weekLowUsdPerOz  ? ((spotUsdPerOz - weekLowUsdPerOz)  / weekLowUsdPerOz)  * 100 : null;
+  const fromWeekHigh = weekHighUsdPerOz
+    ? ((spotUsdPerOz - weekHighUsdPerOz) / weekHighUsdPerOz) * 100
+    : null;
+  const fromWeekLow = weekLowUsdPerOz
+    ? ((spotUsdPerOz - weekLowUsdPerOz) / weekLowUsdPerOz) * 100
+    : null;
 
   const lines = [
-    `💰 Gold as Investment — Right Now`,
+    '💰 Gold as Investment — Right Now',
     `Spot: $${fmt(spotUsdPerOz)}/oz ${trendEmoji(changePct)}`,
     change != null ? `Today: ${sign}$${fmt(change)} (${sign}${fmt(changePct)}%)` : null,
-    weekHighUsdPerOz ? `Wk High: $${fmt(weekHighUsdPerOz)} (${fromWeekHigh != null ? fmt(fromWeekHigh) : '?'}% away)` : null,
-    weekLowUsdPerOz  ? `Wk Low:  $${fmt(weekLowUsdPerOz)}` : null,
+    weekHighUsdPerOz
+      ? `Wk High: $${fmt(weekHighUsdPerOz)} (${fromWeekHigh != null ? fmt(fromWeekHigh) : '?'}% away)`
+      : null,
+    weekLowUsdPerOz ? `Wk Low:  $${fmt(weekLowUsdPerOz)}` : null,
     `AED cost for 1g of 24K: ${fmt(k24.aedPerGram)}`,
     `📊 Full analysis → ${SITE_URL}`,
-    `#GoldInvestment #Gold #XAU #StoreOfValue`,
+    '#GoldInvestment #Gold #XAU #StoreOfValue',
   ].filter(Boolean);
 
   return lines.join('\n');
@@ -318,19 +351,21 @@ function generateMilestone(data) {
   const label = milestoneLabel || 'New Price Level';
 
   const date = new Date(generatedAt).toLocaleDateString('en-US', {
-    month: 'short', day: 'numeric', year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
   });
 
   const lines = [
     `🏆 ${label} — ${date}`,
     `Gold hits $${fmt(spotUsdPerOz)}/oz`,
-    ``,
+    '',
     `🇦🇪 24K Dubai: AED ${fmt(k24.aedPerGram)}/g`,
-    ``,
-    `A historic moment for the gold market.`,
+    '',
+    'A historic moment for the gold market.',
     `📊 Track it live → ${SITE_URL}`,
-    `#GoldATH #GoldRecord #GoldPrice #XAU`,
-  ].filter(l => l !== null);
+    '#GoldATH #GoldRecord #GoldPrice #XAU',
+  ].filter((l) => l !== null);
 
   return lines.join('\n');
 }
@@ -345,25 +380,28 @@ function generateWeekend(data) {
   const k24 = calcKarat(spotUsdPerOz, 1.0, AED_PEG);
   const k22 = calcKarat(spotUsdPerOz, 22 / 24, AED_PEG);
 
-  let monPrice = null, friPrice = null;
+  let monPrice = null,
+    friPrice = null;
   if (Array.isArray(weekHistory) && weekHistory.length >= 2) {
     monPrice = weekHistory[0].price;
     friPrice = weekHistory[weekHistory.length - 1].price;
   }
-  const weekChange    = (monPrice && friPrice) ? friPrice - monPrice : null;
-  const weekChangePct = (monPrice && friPrice) ? ((friPrice - monPrice) / monPrice) * 100 : null;
-  const sign          = weekChange != null && weekChange >= 0 ? '+' : '';
+  const weekChange = monPrice && friPrice ? friPrice - monPrice : null;
+  const weekChangePct = monPrice && friPrice ? ((friPrice - monPrice) / monPrice) * 100 : null;
+  const sign = weekChange != null && weekChange >= 0 ? '+' : '';
 
   const lines = [
     `🌅 Weekend Gold Wrap-Up ${trendEmoji(weekChangePct)}`,
     `Current:  $${fmt(spotUsdPerOz)}/oz`,
-    weekChange != null ? `Week:     ${sign}$${fmt(weekChange)} (${sign}${fmt(weekChangePct)}%)` : null,
+    weekChange != null
+      ? `Week:     ${sign}$${fmt(weekChange)} (${sign}${fmt(weekChangePct)}%)`
+      : null,
     weekHighUsdPerOz ? `Wk High:  $${fmt(weekHighUsdPerOz)}` : null,
-    weekLowUsdPerOz  ? `Wk Low:   $${fmt(weekLowUsdPerOz)}`  : null,
-    ``,
+    weekLowUsdPerOz ? `Wk Low:   $${fmt(weekLowUsdPerOz)}` : null,
+    '',
     `🇦🇪 24K: AED ${fmt(k24.aedPerGram)}/g | 22K: AED ${fmt(k22.aedPerGram)}/g`,
     `📊 ${SITE_URL}`,
-    `#GoldWeekend #GoldPrice #GCC`,
+    '#GoldWeekend #GoldPrice #GCC',
   ].filter(Boolean);
 
   return lines.join('\n');
@@ -377,14 +415,18 @@ function generateWeekly(data) {
 
   // weekHistory: array of { date: 'YYYY-MM-DD', price: number } sorted ascending
   // Derive Mon/Fri and high/low from history if available; fall back to estimates.
-  let monPrice = null, friPrice = null, highPrice = null, lowPrice = null;
-  let highDay = '', lowDay = '';
+  let monPrice = null,
+    friPrice = null,
+    highPrice = null,
+    lowPrice = null;
+  let highDay = '',
+    lowDay = '';
 
   if (Array.isArray(weekHistory) && weekHistory.length >= 2) {
     monPrice = weekHistory[0].price;
     friPrice = weekHistory[weekHistory.length - 1].price;
 
-    weekHistory.forEach(h => {
+    weekHistory.forEach((h) => {
       if (highPrice == null || h.price > highPrice) {
         highPrice = h.price;
         highDay = new Date(h.date).toLocaleDateString('en-US', { weekday: 'short' });
@@ -400,12 +442,12 @@ function generateWeekly(data) {
     monPrice = null;
   }
 
-  const weekChange    = (monPrice && friPrice) ? friPrice - monPrice : null;
-  const weekChangePct = (monPrice && friPrice) ? ((friPrice - monPrice) / monPrice) * 100 : null;
-  const sign          = weekChange != null && weekChange >= 0 ? '+' : '';
+  const weekChange = monPrice && friPrice ? friPrice - monPrice : null;
+  const weekChangePct = monPrice && friPrice ? ((friPrice - monPrice) / monPrice) * 100 : null;
+  const sign = weekChange != null && weekChange >= 0 ? '+' : '';
 
   // Build the week range label: "Apr 7–11" style
-  const now    = new Date(generatedAt);
+  const now = new Date(generatedAt);
   const monday = new Date(now);
   monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
   const friday = new Date(monday);
@@ -418,11 +460,13 @@ function generateWeekly(data) {
     `📊 Gold Week in Review (${weekRange})`,
     monPrice ? `Mon: $${fmt(monPrice)}` : null,
     friPrice ? `Fri: $${fmt(friPrice)}` : null,
-    weekChange != null ? `Change: ${sign}$${fmt(weekChange)} (${sign}${fmt(weekChangePct)}%)` : null,
+    weekChange != null
+      ? `Change: ${sign}$${fmt(weekChange)} (${sign}${fmt(weekChangePct)}%)`
+      : null,
     highPrice ? `High: $${fmt(highPrice)}${highDay ? ` (${highDay})` : ''}` : null,
-    lowPrice  ? `Low:  $${fmt(lowPrice)}${lowDay  ? ` (${lowDay})` : ''}` : null,
+    lowPrice ? `Low:  $${fmt(lowPrice)}${lowDay ? ` (${lowDay})` : ''}` : null,
     `📈 Charts & history → ${SITE_URL}`,
-    `#GoldPrice #WeeklyUpdate`,
+    '#GoldPrice #WeeklyUpdate',
   ].filter(Boolean);
 
   return lines.join('\n');
@@ -502,7 +546,7 @@ export const TEMPLATES = [
  * @returns {object|undefined}
  */
 export function getTemplate(id) {
-  return TEMPLATES.find(t => t.id === id);
+  return TEMPLATES.find((t) => t.id === id);
 }
 
 /**

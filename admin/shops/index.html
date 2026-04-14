@@ -1,848 +1,1148 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow" />
-  <title>Shops — GoldAdmin</title>
-  <link rel="stylesheet" href="../admin.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <style>
-    /* ── Stat grid ──────────────────────────────────────────── */
-    .stat-grid {
-      display: grid;
-      gap: 16px;
-      grid-template-columns: repeat(4, 1fr);
-      margin-bottom: 24px;
-    }
-    @media (max-width: 900px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 480px) { .stat-grid { grid-template-columns: 1fr; } }
-
-    /* ── Toolbar ────────────────────────────────────────────── */
-    .toolbar {
-      align-items: center;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-    .toolbar .search-wrap {
-      flex: 1 1 200px;
-      position: relative;
-    }
-    .toolbar .search-wrap .search-icon {
-      color: var(--text-dim);
-      left: 10px;
-      pointer-events: none;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-    .toolbar .search-wrap .form-input {
-      padding-left: 32px;
-    }
-    .toolbar .form-select {
-      flex: 0 1 160px;
-      min-width: 120px;
-    }
-    .toolbar-actions {
-      align-items: center;
-      display: flex;
-      flex-shrink: 0;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    /* ── Table extras ───────────────────────────────────────── */
-    .shop-name-cell {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .shop-name-primary {
-      color: var(--text);
-      font-weight: 500;
-      max-width: 220px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .shop-name-secondary {
-      color: var(--text-dim);
-      font-size: 0.75rem;
-    }
-    .rating-stars {
-      color: var(--gold);
-      letter-spacing: 1px;
-      white-space: nowrap;
-    }
-    .rating-empty { color: var(--text-dim); }
-    .row-actions {
-      align-items: center;
-      display: flex;
-      gap: 4px;
-    }
-    .btn-icon {
-      align-items: center;
-      background: none;
-      border: 1px solid transparent;
-      border-radius: var(--radius-sm);
-      color: var(--text-muted);
-      cursor: pointer;
-      display: inline-flex;
-      height: 30px;
-      justify-content: center;
-      padding: 0;
-      transition: background 0.15s, color 0.15s, border-color 0.15s;
-      width: 30px;
-    }
-    .btn-icon:hover { background: var(--surface-2); color: var(--text); border-color: var(--border); }
-    .btn-icon.btn-icon-danger:hover { background: rgba(239,68,68,0.12); color: var(--danger); border-color: rgba(239,68,68,0.3); }
-    tbody tr { cursor: pointer; }
-    tbody tr .row-actions { cursor: default; }
-
-    /* ── Inline delete confirm ──────────────────────────────── */
-    .delete-confirm {
-      align-items: center;
-      background: rgba(239,68,68,0.08);
-      border: 1px solid rgba(239,68,68,0.25);
-      border-radius: var(--radius-sm);
-      display: flex;
-      font-size: 0.8125rem;
-      gap: 8px;
-      padding: 4px 8px;
-      white-space: nowrap;
-    }
-    .delete-confirm span { color: var(--danger); font-weight: 500; }
-
-    /* ── Empty state ────────────────────────────────────────── */
-    .empty-state {
-      color: var(--text-dim);
-      font-size: 0.9375rem;
-      padding: 48px 24px;
-      text-align: center;
-    }
-    .empty-state p { margin-top: 8px; font-size: 0.8125rem; color: var(--text-muted); }
-
-    /* ── Modal tabs ─────────────────────────────────────────── */
-    .modal-tabs {
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      gap: 0;
-      margin-bottom: 20px;
-      overflow-x: auto;
-    }
-    .modal-tab {
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 0.875rem;
-      font-weight: 500;
-      margin-bottom: -1px;
-      padding: 10px 16px;
-      transition: color 0.15s, border-color 0.15s;
-      white-space: nowrap;
-    }
-    .modal-tab:hover { color: var(--text); }
-    .modal-tab.active { border-bottom-color: var(--primary); color: var(--primary); }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-
-    /* ── Toggle switch ──────────────────────────────────────── */
-    .toggle-row {
-      align-items: center;
-      display: flex;
-      gap: 12px;
-      justify-content: space-between;
-    }
-    .toggle-label { color: var(--text-muted); font-size: 0.8125rem; font-weight: 500; }
-    .toggle-switch {
-      appearance: none;
-      background: var(--border);
-      border-radius: 999px;
-      cursor: pointer;
-      flex-shrink: 0;
-      height: 22px;
-      position: relative;
-      transition: background 0.2s;
-      width: 40px;
-    }
-    .toggle-switch::after {
-      background: #fff;
-      border-radius: 50%;
-      content: '';
-      height: 16px;
-      left: 3px;
-      position: absolute;
-      top: 3px;
-      transition: transform 0.2s;
-      width: 16px;
-    }
-    .toggle-switch:checked { background: var(--primary); }
-    .toggle-switch:checked::after { transform: translateX(18px); }
-
-    /* ── Import modal ───────────────────────────────────────── */
-    .import-result {
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-size: 0.8125rem;
-      margin-top: 12px;
-      padding: 10px 14px;
-    }
-
-    /* ── Pagination ─────────────────────────────────────────── */
-    .pagination {
-      align-items: center;
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      margin-top: 16px;
-    }
-    .page-info {
-      color: var(--text-muted);
-      font-size: 0.875rem;
-    }
-
-    /* ── Section heading ────────────────────────────────────── */
-    .section-heading {
-      align-items: center;
-      display: flex;
-      gap: 10px;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
-    .section-heading h2 { font-size: 0.9375rem; font-weight: 600; color: var(--text); }
-
-    /* ── Result count ───────────────────────────────────────── */
-    .result-count { color: var(--text-dim); font-size: 0.8125rem; }
-  </style>
-</head>
-<body>
-
-  <!-- Auth guard: redirect to login if no token -->
-  <script>(function(){try{var k=Object.keys(localStorage);if(!k.some(function(x){return x.startsWith('sb-')&&x.endsWith('-auth-token')}))window.location.replace('../login/');}catch(e){window.location.replace('../login/');}})();</script>
-
-  <!-- Sidebar overlay (mobile) -->
-  <div class="sidebar-overlay" id="sidebar-overlay"></div>
-
-  <div class="admin-layout">
-
-    <!-- ── Sidebar ──────────────────────────────────────────── -->
-    <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
-      <div class="sidebar-header">
-        <span class="logo-icon" aria-hidden="true">⚙</span>
-        <span class="logo-text">GoldAdmin</span>
-      </div>
-      <nav class="sidebar-nav" aria-label="Main menu">
-        <a href="../" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a>
-        <a href="../shops/" class="nav-link"><span class="nav-icon">🏪</span> Shops</a>
-        <a href="../pricing/" class="nav-link"><span class="nav-icon">💰</span> Pricing</a>
-        <a href="../orders/" class="nav-link"><span class="nav-icon">📦</span> Orders</a>
-        <a href="../content/" class="nav-link"><span class="nav-icon">📝</span> Content</a>
-        <a href="../social/" class="nav-link"><span class="nav-icon">📱</span> Social</a>
-        <a href="../settings/" class="nav-link"><span class="nav-icon">⚙</span> Settings</a>
-        <a href="../analytics/" class="nav-link"><span class="nav-icon">📈</span> Analytics</a>
-      </nav>
-      <div class="sidebar-footer">
-        <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">↩ Sign Out</button>
-      </div>
-    </aside>
-
-    <!-- ── Main area ────────────────────────────────────────── -->
-    <div class="main-area">
-
-      <!-- Header -->
-      <header class="page-header">
-        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle navigation" type="button">☰</button>
-        <h1 class="page-title">🏪 Shops</h1>
-        <div class="header-actions">
-          <button class="btn btn-gold btn-sm" id="header-add-btn" type="button">+ Add Shop</button>
-        </div>
-      </header>
-
-      <!-- Content -->
-      <main class="content-area">
-
-        <!-- ── Stats ────────────────────────────────────────── -->
-        <div class="stat-grid" role="list" aria-label="Shop statistics">
-          <div class="stat-card" role="listitem">
-            <div class="stat-label">Total Shops</div>
-            <div class="stat-number" id="stat-total">—</div>
-          </div>
-          <div class="stat-card" role="listitem">
-            <div class="stat-label">Verified</div>
-            <div class="stat-number" id="stat-verified">—</div>
-          </div>
-          <div class="stat-card" role="listitem">
-            <div class="stat-label">Featured</div>
-            <div class="stat-number" id="stat-featured">—</div>
-          </div>
-          <div class="stat-card" role="listitem">
-            <div class="stat-label">Updated Today</div>
-            <div class="stat-number" id="stat-today">—</div>
-          </div>
-        </div>
-
-        <!-- ── Toolbar ──────────────────────────────────────── -->
-        <div class="toolbar" role="search" aria-label="Filter shops">
-          <div class="search-wrap">
-            <span class="search-icon" aria-hidden="true">🔍</span>
-            <input
-              class="form-input"
-              id="search-input"
-              type="search"
-              placeholder="Search by name, city, country…"
-              aria-label="Search shops"
-              autocomplete="off"
-            />
-          </div>
-          <select class="form-select" id="filter-country" aria-label="Filter by country">
-            <option value="">All Countries</option>
-            <option value="AE">🇦🇪 UAE</option>
-            <option value="SA">🇸🇦 Saudi Arabia</option>
-            <option value="KW">🇰🇼 Kuwait</option>
-            <option value="QA">🇶🇦 Qatar</option>
-            <option value="BH">🇧🇭 Bahrain</option>
-            <option value="OM">🇴🇲 Oman</option>
-            <option value="EG">🇪🇬 Egypt</option>
-            <option value="JO">🇯🇴 Jordan</option>
-            <option value="LB">🇱🇧 Lebanon</option>
-            <option value="MA">🇲🇦 Morocco</option>
-            <option value="DZ">🇩🇿 Algeria</option>
-            <option value="TN">🇹🇳 Tunisia</option>
-            <option value="LY">🇱🇾 Libya</option>
-            <option value="SD">🇸🇩 Sudan</option>
-          </select>
-          <select class="form-select" id="filter-verified" aria-label="Filter by verified status" style="flex:0 1 140px">
-            <option value="">All</option>
-            <option value="verified">Verified</option>
-            <option value="unverified">Unverified</option>
-          </select>
-          <select class="form-select" id="sort-select" aria-label="Sort shops" style="flex:0 1 160px">
-            <option value="name_asc">Name A–Z</option>
-            <option value="name_desc">Name Z–A</option>
-            <option value="country">Country</option>
-            <option value="recent">Recently Added</option>
-          </select>
-          <div class="toolbar-actions">
-            <button class="btn btn-gold" id="add-btn" type="button">+ Add Shop</button>
-            <button class="btn btn-ghost" id="import-btn" type="button">⬆ Import JSON</button>
-            <button class="btn btn-ghost" id="export-btn" type="button">⬇ Export CSV</button>
-          </div>
-        </div>
-
-        <!-- ── Table ─────────────────────────────────────────── -->
-        <div class="section-heading">
-          <h2>Shop Directory</h2>
-          <span class="result-count" id="result-count" aria-live="polite"></span>
-        </div>
-        <div class="table-wrap">
-          <table id="shops-table" aria-label="Shops list">
-            <thead>
-              <tr>
-                <th>Name / Country</th>
-                <th>City / Area</th>
-                <th>Phone</th>
-                <th>Rating</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="shops-tbody">
-              <tr>
-                <td colspan="6">
-                  <div class="empty-state">
-                    🏪 No shops found.
-                    <p>Add your first shop or import JSON.</p>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- ── Pagination ────────────────────────────────────── -->
-        <div class="pagination hidden" id="pagination" role="navigation" aria-label="Shops pagination">
-          <button class="btn btn-ghost btn-sm" id="page-prev" type="button" aria-label="Previous page">‹ Prev</button>
-          <span class="page-info" id="page-info"></span>
-          <button class="btn btn-ghost btn-sm" id="page-next" type="button" aria-label="Next page">Next ›</button>
-        </div>
-
-      </main>
-    </div><!-- /.main-area -->
-  </div><!-- /.admin-layout -->
-
-  <!-- ── Add/Edit Modal ───────────────────────────────────── -->
-  <div class="modal-backdrop hidden" id="shop-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div class="modal" style="max-width:640px">
-      <div class="modal-header">
-        <h2 id="modal-title">Add Shop</h2>
-        <button class="modal-close" id="modal-close" aria-label="Close modal" type="button">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="modal-tabs" role="tablist" aria-label="Shop form tabs">
-          <button class="modal-tab active" role="tab" aria-selected="true"  data-tab="basic"    type="button">Basic Info</button>
-          <button class="modal-tab"        role="tab" aria-selected="false" data-tab="location" type="button">Location</button>
-          <button class="modal-tab"        role="tab" aria-selected="false" data-tab="contact"  type="button">Contact</button>
-          <button class="modal-tab"        role="tab" aria-selected="false" data-tab="details"  type="button">Details</button>
-        </div>
-
-        <form id="shop-form" novalidate>
-          <input type="hidden" id="edit-id" />
-
-          <!-- Basic Info -->
-          <div class="tab-panel active" id="tab-basic" role="tabpanel" aria-labelledby="tab-btn-basic">
-            <div class="input-row">
-              <div class="form-group">
-                <label class="form-label" for="f-name">Name <span style="color:var(--danger)">*</span></label>
-                <input class="form-input" id="f-name" type="text" placeholder="Shop name" autocomplete="off" required />
-                <span class="form-error hidden" id="f-name-err">Name is required.</span>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="f-name-ar">Name (Arabic)</label>
-                <input class="form-input" id="f-name-ar" type="text" placeholder="اسم المحل" dir="auto" />
-              </div>
-            </div>
-            <div class="input-row" style="margin-top:14px">
-              <div class="form-group">
-                <label class="form-label" for="f-country">Country</label>
-                <select class="form-select" id="f-country">
-                  <option value="AE">🇦🇪 UAE</option>
-                  <option value="SA">🇸🇦 Saudi Arabia</option>
-                  <option value="KW">🇰🇼 Kuwait</option>
-                  <option value="QA">🇶🇦 Qatar</option>
-                  <option value="BH">🇧🇭 Bahrain</option>
-                  <option value="OM">🇴🇲 Oman</option>
-                  <option value="EG">🇪🇬 Egypt</option>
-                  <option value="JO">🇯🇴 Jordan</option>
-                  <option value="LB">🇱🇧 Lebanon</option>
-                  <option value="MA">🇲🇦 Morocco</option>
-                  <option value="DZ">🇩🇿 Algeria</option>
-                  <option value="TN">🇹🇳 Tunisia</option>
-                  <option value="LY">🇱🇾 Libya</option>
-                  <option value="SD">🇸🇩 Sudan</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="f-city">City</label>
-                <input class="form-input" id="f-city" type="text" placeholder="e.g. Dubai" autocomplete="off" />
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="f-area">Area</label>
-                <input class="form-input" id="f-area" type="text" placeholder="e.g. Gold Souk" autocomplete="off" />
-              </div>
-            </div>
-            <div style="margin-top:16px;display:flex;flex-direction:column;gap:12px">
-              <div class="toggle-row">
-                <label class="toggle-label" for="f-verified">Verified</label>
-                <input class="toggle-switch" id="f-verified" type="checkbox" role="switch" aria-checked="false" />
-              </div>
-              <div class="toggle-row">
-                <label class="toggle-label" for="f-featured">Featured</label>
-                <input class="toggle-switch" id="f-featured" type="checkbox" role="switch" aria-checked="false" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Location -->
-          <div class="tab-panel" id="tab-location" role="tabpanel">
-            <div class="form-group">
-              <label class="form-label" for="f-address">Address (English)</label>
-              <input class="form-input" id="f-address" type="text" placeholder="Street address" autocomplete="off" />
-            </div>
-            <div class="form-group" style="margin-top:14px">
-              <label class="form-label" for="f-address-ar">Address (Arabic)</label>
-              <input class="form-input" id="f-address-ar" type="text" placeholder="العنوان بالعربي" dir="auto" />
-            </div>
-            <div class="input-row" style="margin-top:14px">
-              <div class="form-group">
-                <label class="form-label" for="f-lat">Latitude</label>
-                <input class="form-input" id="f-lat" type="number" step="any" placeholder="e.g. 25.2048" />
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="f-lng">Longitude</label>
-                <input class="form-input" id="f-lng" type="number" step="any" placeholder="e.g. 55.2708" />
-              </div>
-            </div>
-            <div class="form-group" style="margin-top:14px">
-              <label class="form-label" for="f-hours">Opening Hours</label>
-              <input class="form-input" id="f-hours" type="text" placeholder="e.g. Mon–Sat 9am–9pm" autocomplete="off" />
-            </div>
-          </div>
-
-          <!-- Contact -->
-          <div class="tab-panel" id="tab-contact" role="tabpanel">
-            <div class="form-group">
-              <label class="form-label" for="f-phone">Phone</label>
-              <input class="form-input" id="f-phone" type="tel" placeholder="+971 4 123 4567" autocomplete="off" />
-            </div>
-            <div class="form-group" style="margin-top:14px">
-              <label class="form-label" for="f-website">Website</label>
-              <input class="form-input" id="f-website" type="url" placeholder="https://example.com" autocomplete="off" />
-            </div>
-          </div>
-
-          <!-- Details -->
-          <div class="tab-panel" id="tab-details" role="tabpanel">
-            <div class="form-group">
-              <label class="form-label" for="f-rating">Rating (1–5)</label>
-              <input class="form-input" id="f-rating" type="number" min="1" max="5" step="0.1" placeholder="e.g. 4.5" style="width:140px" />
-            </div>
-            <div class="form-group" style="margin-top:14px">
-              <label class="form-label" for="f-tags">Tags <span class="text-dim">(comma-separated)</span></label>
-              <input class="form-input" id="f-tags" type="text" placeholder="e.g. jewellery, wholesale, certified" autocomplete="off" />
-            </div>
-            <div class="form-group" style="margin-top:14px">
-              <label class="form-label" for="f-notes">Notes</label>
-              <textarea class="form-textarea" id="f-notes" placeholder="Internal notes…" style="min-height:80px"></textarea>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-ghost" id="modal-cancel" type="button">Cancel</button>
-        <button class="btn btn-primary" id="modal-save" type="button">Save Shop</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── Import Modal ──────────────────────────────────────── -->
-  <div class="modal-backdrop hidden" id="import-modal" role="dialog" aria-modal="true" aria-labelledby="import-modal-title">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 id="import-modal-title">Import Shops from JSON</h2>
-        <button class="modal-close" id="import-modal-close" aria-label="Close import modal" type="button">✕</button>
-      </div>
-      <div class="modal-body">
-        <p class="text-muted text-sm" style="margin-bottom:12px">
-          Paste a JSON array of shop objects below. Each object must have at least a <code>name</code> field.
-          Existing shops are preserved; imports are appended.
-        </p>
-        <div class="form-group">
-          <label class="form-label" for="import-textarea">JSON Data</label>
-          <textarea
-            class="form-textarea"
-            id="import-textarea"
-            placeholder='[{"name": "Gold Palace", "country": "AE", "city": "Dubai"}, …]'
-            style="min-height:160px;font-family:monospace;font-size:0.8125rem"
-          ></textarea>
-        </div>
-        <div class="import-result hidden" id="import-result" aria-live="polite"></div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-ghost" id="import-cancel" type="button">Cancel</button>
-        <button class="btn btn-primary" id="import-confirm" type="button">Import</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── Toast container ──────────────────────────────────── -->
-  <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
-
-  <script type="module">
-    import { logout as supabaseLogout, requireAuth, getSupabase } from '../supabase-auth.js';
-
-    // ── Auth guard ──────────────────────────────────────────
-    if (!(await requireAuth())) throw new Error('redirect');
-
-    /* ─────────────────────────────────────────────────────────
-       Config
-    ───────────────────────────────────────────────────────── */
-    const PAGE_SIZE = 25;
-
-    const COUNTRIES = {
-      AE:'🇦🇪 UAE', SA:'🇸🇦 Saudi Arabia', KW:'🇰🇼 Kuwait',
-      QA:'🇶🇦 Qatar', BH:'🇧🇭 Bahrain', OM:'🇴🇲 Oman',
-      EG:'🇪🇬 Egypt', JO:'🇯🇴 Jordan', LB:'🇱🇧 Lebanon',
-      MA:'🇲🇦 Morocco', DZ:'🇩🇿 Algeria', TN:'🇹🇳 Tunisia',
-      LY:'🇱🇾 Libya', SD:'🇸🇩 Sudan',
-    };
-
-    /* ─────────────────────────────────────────────────────────
-       State
-    ───────────────────────────────────────────────────────── */
-    let currentPage    = 1;
-    let totalPages     = 1;
-    let totalShops     = 0;
-    let deleteTargetId = null;
-    let isLoading      = false;
-
-    /* ─────────────────────────────────────────────────────────
-       Toast
-    ───────────────────────────────────────────────────────── */
-    function showToast(msg, type = 'info') {
-      const icons = { success: '✅', warning: '⚠️', danger: '❌', info: 'ℹ️' };
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = `toast toast--${type}`;
-      toast.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span>${msg}</span>`;
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.classList.add('toast-hide');
-        toast.addEventListener('animationend', () => toast.remove(), { once: true });
-      }, 4000);
-    }
-
-    /* ─────────────────────────────────────────────────────────
-       Supabase Data Layer (with localStorage cache fallback)
-    ───────────────────────────────────────────────────────── */
-    const SHOPS_CACHE_KEY = 'gp_admin_shops';
-
-    /**
-     * Map admin form / cache data to Supabase column names.
-     */
-    function toDbRow(shop) {
-      return {
-        name:                  shop.name         || null,
-        name_ar:               shop.nameAr       || null,
-        country_code:          shop.country       || null,
-        // Strip emoji prefix from COUNTRIES map (e.g. '🇦🇪 UAE' → 'UAE')
-        country:               COUNTRIES[shop.country]?.replace(/^.*? /, '') || null,
-        city:                  shop.city          || null,
-        area:                  shop.area          || null,
-        verified:              !!shop.verified,
-        featured:              !!shop.featured,
-        address:               shop.address       || null,
-        address_ar:            shop.addressAr     || null,
-        latitude:              shop.latitude      ?? null,
-        longitude:             shop.longitude     ?? null,
-        hours:                 shop.hours         || null,
-        phone:                 shop.phone         || null,
-        website:               shop.website       || null,
-        rating:                shop.rating        ?? null,
-        // Admin form uses 'tags'; DB column is 'specialties'
-        specialties:           Array.isArray(shop.tags) ? shop.tags : [],
-        notes:                 shop.description   || shop.notes || null,
-      };
-    }
-
-    /**
-     * Map a Supabase row back to the shape used by the admin UI.
-     */
-    function fromDbRow(row) {
-      return {
-        id:          row.id,
-        name:        row.name          || '',
-        nameAr:      row.name_ar       || '',
-        country:     row.country_code  || '',
-        city:        row.city          || '',
-        area:        row.area          || '',
-        verified:    !!row.verified,
-        featured:    !!row.featured,
-        address:     row.address       || '',
-        addressAr:   row.address_ar    || '',
-        latitude:    row.latitude,
-        longitude:   row.longitude,
-        hours:       row.hours         || '',
-        phone:       row.phone         || '',
-        website:     row.website       || '',
-        rating:      row.rating,
-        tags:        row.specialties   || [],
-        description: row.notes         || '',
-        notes:       row.notes         || '',
-        createdAt:   row.created_at,
-        updatedAt:   row.updated_at,
-      };
-    }
-
-    /** Cache shops to localStorage for offline resilience. */
-    function cacheShops(shops) {
-      try { localStorage.setItem(SHOPS_CACHE_KEY, JSON.stringify(shops)); }
-      catch {}
-    }
-
-    /** Read cached shops from localStorage. */
-    function readCachedShops() {
-      try { return JSON.parse(localStorage.getItem(SHOPS_CACHE_KEY)) || []; }
-      catch { return []; }
-    }
-
-    /**
-     * Load all shops. Tries Supabase first; falls back to localStorage cache.
-     */
-    async function loadAllShops() {
-      const sb = getSupabase();
-      if (sb) {
-        try {
-          // Authenticated admins can read all shops (RLS allows it)
-          const { data, error } = await sb.from('shops').select('*').order('created_at', { ascending: false });
-          if (!error && Array.isArray(data)) {
-            const shops = data.map(fromDbRow);
-            cacheShops(shops);
-            return shops;
-          }
-          console.warn('[shops-admin] Supabase read error, falling back to cache:', error?.message);
-        } catch (err) {
-          console.warn('[shops-admin] Supabase unreachable, falling back to cache:', err.message);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Shops — GoldAdmin</title>
+    <link rel="stylesheet" href="../admin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <style>
+      /* ── Stat grid ──────────────────────────────────────────── */
+      .stat-grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(4, 1fr);
+        margin-bottom: 24px;
+      }
+      @media (max-width: 900px) {
+        .stat-grid {
+          grid-template-columns: repeat(2, 1fr);
         }
       }
-      return readCachedShops();
-    }
-
-    /**
-     * Insert a new shop into Supabase. Returns the new shop object or null.
-     */
-    async function insertShop(formData) {
-      const sb = getSupabase();
-      const row = toDbRow(formData);
-      if (sb) {
-        const { data, error } = await sb.from('shops').insert(row).select().single();
-        if (error) throw new Error(error.message);
-        return fromDbRow(data);
+      @media (max-width: 480px) {
+        .stat-grid {
+          grid-template-columns: 1fr;
+        }
       }
-      throw new Error('Supabase client not available. Please refresh.');
-    }
 
-    /**
-     * Update an existing shop in Supabase.
-     */
-    async function updateShop(id, formData) {
-      const sb = getSupabase();
-      const row = toDbRow(formData);
-      if (sb) {
-        const { data, error } = await sb.from('shops').update(row).eq('id', id).select().single();
-        if (error) throw new Error(error.message);
-        return fromDbRow(data);
+      /* ── Toolbar ────────────────────────────────────────────── */
+      .toolbar {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
       }
-      throw new Error('Supabase client not available. Please refresh.');
-    }
-
-    /**
-     * Delete a shop from Supabase.
-     */
-    async function deleteShop(id) {
-      const sb = getSupabase();
-      if (sb) {
-        const { error } = await sb.from('shops').delete().eq('id', id);
-        if (error) throw new Error(error.message);
-        return;
+      .toolbar .search-wrap {
+        flex: 1 1 200px;
+        position: relative;
       }
-      throw new Error('Supabase client not available. Please refresh.');
-    }
+      .toolbar .search-wrap .search-icon {
+        color: var(--text-dim);
+        left: 10px;
+        pointer-events: none;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      .toolbar .search-wrap .form-input {
+        padding-left: 32px;
+      }
+      .toolbar .form-select {
+        flex: 0 1 160px;
+        min-width: 120px;
+      }
+      .toolbar-actions {
+        align-items: center;
+        display: flex;
+        flex-shrink: 0;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
 
-    /**
-     * Batch-insert multiple shops into Supabase.
-     */
-    async function insertManyShops(shopsArray) {
-      const sb = getSupabase();
-      if (!sb) throw new Error('Supabase client not available. Please refresh.');
-      const rows = shopsArray.map(toDbRow);
-      const { data, error } = await sb.from('shops').insert(rows).select();
-      if (error) throw new Error(error.message);
-      return (data || []).map(fromDbRow);
-    }
+      /* ── Table extras ───────────────────────────────────────── */
+      .shop-name-cell {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .shop-name-primary {
+        color: var(--text);
+        font-weight: 500;
+        max-width: 220px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .shop-name-secondary {
+        color: var(--text-dim);
+        font-size: 0.75rem;
+      }
+      .rating-stars {
+        color: var(--gold);
+        letter-spacing: 1px;
+        white-space: nowrap;
+      }
+      .rating-empty {
+        color: var(--text-dim);
+      }
+      .row-actions {
+        align-items: center;
+        display: flex;
+        gap: 4px;
+      }
+      .btn-icon {
+        align-items: center;
+        background: none;
+        border: 1px solid transparent;
+        border-radius: var(--radius-sm);
+        color: var(--text-muted);
+        cursor: pointer;
+        display: inline-flex;
+        height: 30px;
+        justify-content: center;
+        padding: 0;
+        transition:
+          background 0.15s,
+          color 0.15s,
+          border-color 0.15s;
+        width: 30px;
+      }
+      .btn-icon:hover {
+        background: var(--surface-2);
+        color: var(--text);
+        border-color: var(--border);
+      }
+      .btn-icon.btn-icon-danger:hover {
+        background: rgba(239, 68, 68, 0.12);
+        color: var(--danger);
+        border-color: rgba(239, 68, 68, 0.3);
+      }
+      tbody tr {
+        cursor: pointer;
+      }
+      tbody tr .row-actions {
+        cursor: default;
+      }
 
-    /* ─────────────────────────────────────────────────────────
+      /* ── Inline delete confirm ──────────────────────────────── */
+      .delete-confirm {
+        align-items: center;
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        border-radius: var(--radius-sm);
+        display: flex;
+        font-size: 0.8125rem;
+        gap: 8px;
+        padding: 4px 8px;
+        white-space: nowrap;
+      }
+      .delete-confirm span {
+        color: var(--danger);
+        font-weight: 500;
+      }
+
+      /* ── Empty state ────────────────────────────────────────── */
+      .empty-state {
+        color: var(--text-dim);
+        font-size: 0.9375rem;
+        padding: 48px 24px;
+        text-align: center;
+      }
+      .empty-state p {
+        margin-top: 8px;
+        font-size: 0.8125rem;
+        color: var(--text-muted);
+      }
+
+      /* ── Modal tabs ─────────────────────────────────────────── */
+      .modal-tabs {
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        gap: 0;
+        margin-bottom: 20px;
+        overflow-x: auto;
+      }
+      .modal-tab {
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: -1px;
+        padding: 10px 16px;
+        transition:
+          color 0.15s,
+          border-color 0.15s;
+        white-space: nowrap;
+      }
+      .modal-tab:hover {
+        color: var(--text);
+      }
+      .modal-tab.active {
+        border-bottom-color: var(--primary);
+        color: var(--primary);
+      }
+      .tab-panel {
+        display: none;
+      }
+      .tab-panel.active {
+        display: block;
+      }
+
+      /* ── Toggle switch ──────────────────────────────────────── */
+      .toggle-row {
+        align-items: center;
+        display: flex;
+        gap: 12px;
+        justify-content: space-between;
+      }
+      .toggle-label {
+        color: var(--text-muted);
+        font-size: 0.8125rem;
+        font-weight: 500;
+      }
+      .toggle-switch {
+        appearance: none;
+        background: var(--border);
+        border-radius: 999px;
+        cursor: pointer;
+        flex-shrink: 0;
+        height: 22px;
+        position: relative;
+        transition: background 0.2s;
+        width: 40px;
+      }
+      .toggle-switch::after {
+        background: #fff;
+        border-radius: 50%;
+        content: '';
+        height: 16px;
+        left: 3px;
+        position: absolute;
+        top: 3px;
+        transition: transform 0.2s;
+        width: 16px;
+      }
+      .toggle-switch:checked {
+        background: var(--primary);
+      }
+      .toggle-switch:checked::after {
+        transform: translateX(18px);
+      }
+
+      /* ── Import modal ───────────────────────────────────────── */
+      .import-result {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 0.8125rem;
+        margin-top: 12px;
+        padding: 10px 14px;
+      }
+
+      /* ── Pagination ─────────────────────────────────────────── */
+      .pagination {
+        align-items: center;
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin-top: 16px;
+      }
+      .page-info {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
+
+      /* ── Section heading ────────────────────────────────────── */
+      .section-heading {
+        align-items: center;
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+      .section-heading h2 {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      /* ── Result count ───────────────────────────────────────── */
+      .result-count {
+        color: var(--text-dim);
+        font-size: 0.8125rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Auth guard: redirect to login if no token -->
+    <script>
+      (function () {
+        try {
+          var k = Object.keys(localStorage);
+          if (
+            !k.some(function (x) {
+              return x.startsWith('sb-') && x.endsWith('-auth-token');
+            })
+          )
+            window.location.replace('../login/');
+        } catch (e) {
+          window.location.replace('../login/');
+        }
+      })();
+    </script>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="admin-layout">
+      <!-- ── Sidebar ──────────────────────────────────────────── -->
+      <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+        <div class="sidebar-header">
+          <span class="logo-icon" aria-hidden="true">⚙</span>
+          <span class="logo-text">GoldAdmin</span>
+        </div>
+        <nav class="sidebar-nav" aria-label="Main menu">
+          <a href="../" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a>
+          <a href="../shops/" class="nav-link"><span class="nav-icon">🏪</span> Shops</a>
+          <a href="../pricing/" class="nav-link"><span class="nav-icon">💰</span> Pricing</a>
+          <a href="../orders/" class="nav-link"><span class="nav-icon">📦</span> Orders</a>
+          <a href="../content/" class="nav-link"><span class="nav-icon">📝</span> Content</a>
+          <a href="../social/" class="nav-link"><span class="nav-icon">📱</span> Social</a>
+          <a href="../settings/" class="nav-link"><span class="nav-icon">⚙</span> Settings</a>
+          <a href="../analytics/" class="nav-link"><span class="nav-icon">📈</span> Analytics</a>
+        </nav>
+        <div class="sidebar-footer">
+          <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">
+            ↩ Sign Out
+          </button>
+        </div>
+      </aside>
+
+      <!-- ── Main area ────────────────────────────────────────── -->
+      <div class="main-area">
+        <!-- Header -->
+        <header class="page-header">
+          <button
+            class="sidebar-toggle"
+            id="sidebar-toggle"
+            aria-label="Toggle navigation"
+            type="button"
+          >
+            ☰
+          </button>
+          <h1 class="page-title">🏪 Shops</h1>
+          <div class="header-actions">
+            <button class="btn btn-gold btn-sm" id="header-add-btn" type="button">
+              + Add Shop
+            </button>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <main class="content-area">
+          <!-- ── Stats ────────────────────────────────────────── -->
+          <div class="stat-grid" role="list" aria-label="Shop statistics">
+            <div class="stat-card" role="listitem">
+              <div class="stat-label">Total Shops</div>
+              <div class="stat-number" id="stat-total">—</div>
+            </div>
+            <div class="stat-card" role="listitem">
+              <div class="stat-label">Verified</div>
+              <div class="stat-number" id="stat-verified">—</div>
+            </div>
+            <div class="stat-card" role="listitem">
+              <div class="stat-label">Featured</div>
+              <div class="stat-number" id="stat-featured">—</div>
+            </div>
+            <div class="stat-card" role="listitem">
+              <div class="stat-label">Updated Today</div>
+              <div class="stat-number" id="stat-today">—</div>
+            </div>
+          </div>
+
+          <!-- ── Toolbar ──────────────────────────────────────── -->
+          <div class="toolbar" role="search" aria-label="Filter shops">
+            <div class="search-wrap">
+              <span class="search-icon" aria-hidden="true">🔍</span>
+              <input
+                class="form-input"
+                id="search-input"
+                type="search"
+                placeholder="Search by name, city, country…"
+                aria-label="Search shops"
+                autocomplete="off"
+              />
+            </div>
+            <select class="form-select" id="filter-country" aria-label="Filter by country">
+              <option value="">All Countries</option>
+              <option value="AE">🇦🇪 UAE</option>
+              <option value="SA">🇸🇦 Saudi Arabia</option>
+              <option value="KW">🇰🇼 Kuwait</option>
+              <option value="QA">🇶🇦 Qatar</option>
+              <option value="BH">🇧🇭 Bahrain</option>
+              <option value="OM">🇴🇲 Oman</option>
+              <option value="EG">🇪🇬 Egypt</option>
+              <option value="JO">🇯🇴 Jordan</option>
+              <option value="LB">🇱🇧 Lebanon</option>
+              <option value="MA">🇲🇦 Morocco</option>
+              <option value="DZ">🇩🇿 Algeria</option>
+              <option value="TN">🇹🇳 Tunisia</option>
+              <option value="LY">🇱🇾 Libya</option>
+              <option value="SD">🇸🇩 Sudan</option>
+            </select>
+            <select
+              class="form-select"
+              id="filter-verified"
+              aria-label="Filter by verified status"
+              style="flex: 0 1 140px"
+            >
+              <option value="">All</option>
+              <option value="verified">Verified</option>
+              <option value="unverified">Unverified</option>
+            </select>
+            <select
+              class="form-select"
+              id="sort-select"
+              aria-label="Sort shops"
+              style="flex: 0 1 160px"
+            >
+              <option value="name_asc">Name A–Z</option>
+              <option value="name_desc">Name Z–A</option>
+              <option value="country">Country</option>
+              <option value="recent">Recently Added</option>
+            </select>
+            <div class="toolbar-actions">
+              <button class="btn btn-gold" id="add-btn" type="button">+ Add Shop</button>
+              <button class="btn btn-ghost" id="import-btn" type="button">⬆ Import JSON</button>
+              <button class="btn btn-ghost" id="export-btn" type="button">⬇ Export CSV</button>
+            </div>
+          </div>
+
+          <!-- ── Table ─────────────────────────────────────────── -->
+          <div class="section-heading">
+            <h2>Shop Directory</h2>
+            <span class="result-count" id="result-count" aria-live="polite"></span>
+          </div>
+          <div class="table-wrap">
+            <table id="shops-table" aria-label="Shops list">
+              <thead>
+                <tr>
+                  <th>Name / Country</th>
+                  <th>City / Area</th>
+                  <th>Phone</th>
+                  <th>Rating</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="shops-tbody">
+                <tr>
+                  <td colspan="6">
+                    <div class="empty-state">
+                      🏪 No shops found.
+                      <p>Add your first shop or import JSON.</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ── Pagination ────────────────────────────────────── -->
+          <div
+            class="pagination hidden"
+            id="pagination"
+            role="navigation"
+            aria-label="Shops pagination"
+          >
+            <button
+              class="btn btn-ghost btn-sm"
+              id="page-prev"
+              type="button"
+              aria-label="Previous page"
+            >
+              ‹ Prev
+            </button>
+            <span class="page-info" id="page-info"></span>
+            <button
+              class="btn btn-ghost btn-sm"
+              id="page-next"
+              type="button"
+              aria-label="Next page"
+            >
+              Next ›
+            </button>
+          </div>
+        </main>
+      </div>
+      <!-- /.main-area -->
+    </div>
+    <!-- /.admin-layout -->
+
+    <!-- ── Add/Edit Modal ───────────────────────────────────── -->
+    <div
+      class="modal-backdrop hidden"
+      id="shop-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
+      <div class="modal" style="max-width: 640px">
+        <div class="modal-header">
+          <h2 id="modal-title">Add Shop</h2>
+          <button class="modal-close" id="modal-close" aria-label="Close modal" type="button">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-tabs" role="tablist" aria-label="Shop form tabs">
+            <button
+              class="modal-tab active"
+              role="tab"
+              aria-selected="true"
+              data-tab="basic"
+              type="button"
+            >
+              Basic Info
+            </button>
+            <button
+              class="modal-tab"
+              role="tab"
+              aria-selected="false"
+              data-tab="location"
+              type="button"
+            >
+              Location
+            </button>
+            <button
+              class="modal-tab"
+              role="tab"
+              aria-selected="false"
+              data-tab="contact"
+              type="button"
+            >
+              Contact
+            </button>
+            <button
+              class="modal-tab"
+              role="tab"
+              aria-selected="false"
+              data-tab="details"
+              type="button"
+            >
+              Details
+            </button>
+          </div>
+
+          <form id="shop-form" novalidate>
+            <input type="hidden" id="edit-id" />
+
+            <!-- Basic Info -->
+            <div
+              class="tab-panel active"
+              id="tab-basic"
+              role="tabpanel"
+              aria-labelledby="tab-btn-basic"
+            >
+              <div class="input-row">
+                <div class="form-group">
+                  <label class="form-label" for="f-name"
+                    >Name <span style="color: var(--danger)">*</span></label
+                  >
+                  <input
+                    class="form-input"
+                    id="f-name"
+                    type="text"
+                    placeholder="Shop name"
+                    autocomplete="off"
+                    required
+                  />
+                  <span class="form-error hidden" id="f-name-err">Name is required.</span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="f-name-ar">Name (Arabic)</label>
+                  <input
+                    class="form-input"
+                    id="f-name-ar"
+                    type="text"
+                    placeholder="اسم المحل"
+                    dir="auto"
+                  />
+                </div>
+              </div>
+              <div class="input-row" style="margin-top: 14px">
+                <div class="form-group">
+                  <label class="form-label" for="f-country">Country</label>
+                  <select class="form-select" id="f-country">
+                    <option value="AE">🇦🇪 UAE</option>
+                    <option value="SA">🇸🇦 Saudi Arabia</option>
+                    <option value="KW">🇰🇼 Kuwait</option>
+                    <option value="QA">🇶🇦 Qatar</option>
+                    <option value="BH">🇧🇭 Bahrain</option>
+                    <option value="OM">🇴🇲 Oman</option>
+                    <option value="EG">🇪🇬 Egypt</option>
+                    <option value="JO">🇯🇴 Jordan</option>
+                    <option value="LB">🇱🇧 Lebanon</option>
+                    <option value="MA">🇲🇦 Morocco</option>
+                    <option value="DZ">🇩🇿 Algeria</option>
+                    <option value="TN">🇹🇳 Tunisia</option>
+                    <option value="LY">🇱🇾 Libya</option>
+                    <option value="SD">🇸🇩 Sudan</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="f-city">City</label>
+                  <input
+                    class="form-input"
+                    id="f-city"
+                    type="text"
+                    placeholder="e.g. Dubai"
+                    autocomplete="off"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="f-area">Area</label>
+                  <input
+                    class="form-input"
+                    id="f-area"
+                    type="text"
+                    placeholder="e.g. Gold Souk"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+              <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 12px">
+                <div class="toggle-row">
+                  <label class="toggle-label" for="f-verified">Verified</label>
+                  <input
+                    class="toggle-switch"
+                    id="f-verified"
+                    type="checkbox"
+                    role="switch"
+                    aria-checked="false"
+                  />
+                </div>
+                <div class="toggle-row">
+                  <label class="toggle-label" for="f-featured">Featured</label>
+                  <input
+                    class="toggle-switch"
+                    id="f-featured"
+                    type="checkbox"
+                    role="switch"
+                    aria-checked="false"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Location -->
+            <div class="tab-panel" id="tab-location" role="tabpanel">
+              <div class="form-group">
+                <label class="form-label" for="f-address">Address (English)</label>
+                <input
+                  class="form-input"
+                  id="f-address"
+                  type="text"
+                  placeholder="Street address"
+                  autocomplete="off"
+                />
+              </div>
+              <div class="form-group" style="margin-top: 14px">
+                <label class="form-label" for="f-address-ar">Address (Arabic)</label>
+                <input
+                  class="form-input"
+                  id="f-address-ar"
+                  type="text"
+                  placeholder="العنوان بالعربي"
+                  dir="auto"
+                />
+              </div>
+              <div class="input-row" style="margin-top: 14px">
+                <div class="form-group">
+                  <label class="form-label" for="f-lat">Latitude</label>
+                  <input
+                    class="form-input"
+                    id="f-lat"
+                    type="number"
+                    step="any"
+                    placeholder="e.g. 25.2048"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="f-lng">Longitude</label>
+                  <input
+                    class="form-input"
+                    id="f-lng"
+                    type="number"
+                    step="any"
+                    placeholder="e.g. 55.2708"
+                  />
+                </div>
+              </div>
+              <div class="form-group" style="margin-top: 14px">
+                <label class="form-label" for="f-hours">Opening Hours</label>
+                <input
+                  class="form-input"
+                  id="f-hours"
+                  type="text"
+                  placeholder="e.g. Mon–Sat 9am–9pm"
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="tab-panel" id="tab-contact" role="tabpanel">
+              <div class="form-group">
+                <label class="form-label" for="f-phone">Phone</label>
+                <input
+                  class="form-input"
+                  id="f-phone"
+                  type="tel"
+                  placeholder="+971 4 123 4567"
+                  autocomplete="off"
+                />
+              </div>
+              <div class="form-group" style="margin-top: 14px">
+                <label class="form-label" for="f-website">Website</label>
+                <input
+                  class="form-input"
+                  id="f-website"
+                  type="url"
+                  placeholder="https://example.com"
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+
+            <!-- Details -->
+            <div class="tab-panel" id="tab-details" role="tabpanel">
+              <div class="form-group">
+                <label class="form-label" for="f-rating">Rating (1–5)</label>
+                <input
+                  class="form-input"
+                  id="f-rating"
+                  type="number"
+                  min="1"
+                  max="5"
+                  step="0.1"
+                  placeholder="e.g. 4.5"
+                  style="width: 140px"
+                />
+              </div>
+              <div class="form-group" style="margin-top: 14px">
+                <label class="form-label" for="f-tags"
+                  >Tags <span class="text-dim">(comma-separated)</span></label
+                >
+                <input
+                  class="form-input"
+                  id="f-tags"
+                  type="text"
+                  placeholder="e.g. jewellery, wholesale, certified"
+                  autocomplete="off"
+                />
+              </div>
+              <div class="form-group" style="margin-top: 14px">
+                <label class="form-label" for="f-notes">Notes</label>
+                <textarea
+                  class="form-textarea"
+                  id="f-notes"
+                  placeholder="Internal notes…"
+                  style="min-height: 80px"
+                ></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" id="modal-cancel" type="button">Cancel</button>
+          <button class="btn btn-primary" id="modal-save" type="button">Save Shop</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Import Modal ──────────────────────────────────────── -->
+    <div
+      class="modal-backdrop hidden"
+      id="import-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="import-modal-title"
+    >
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="import-modal-title">Import Shops from JSON</h2>
+          <button
+            class="modal-close"
+            id="import-modal-close"
+            aria-label="Close import modal"
+            type="button"
+          >
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted text-sm" style="margin-bottom: 12px">
+            Paste a JSON array of shop objects below. Each object must have at least a
+            <code>name</code> field. Existing shops are preserved; imports are appended.
+          </p>
+          <div class="form-group">
+            <label class="form-label" for="import-textarea">JSON Data</label>
+            <textarea
+              class="form-textarea"
+              id="import-textarea"
+              placeholder='[{"name": "Gold Palace", "country": "AE", "city": "Dubai"}, …]'
+              style="min-height: 160px; font-family: monospace; font-size: 0.8125rem"
+            ></textarea>
+          </div>
+          <div class="import-result hidden" id="import-result" aria-live="polite"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" id="import-cancel" type="button">Cancel</button>
+          <button class="btn btn-primary" id="import-confirm" type="button">Import</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Toast container ──────────────────────────────────── -->
+    <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+    <script type="module">
+      import { logout as supabaseLogout, requireAuth, getSupabase } from '../supabase-auth.js';
+
+      // ── Auth guard ──────────────────────────────────────────
+      if (!(await requireAuth())) throw new Error('redirect');
+
+      /* ─────────────────────────────────────────────────────────
+       Config
+    ───────────────────────────────────────────────────────── */
+      const PAGE_SIZE = 25;
+
+      const COUNTRIES = {
+        AE: '🇦🇪 UAE',
+        SA: '🇸🇦 Saudi Arabia',
+        KW: '🇰🇼 Kuwait',
+        QA: '🇶🇦 Qatar',
+        BH: '🇧🇭 Bahrain',
+        OM: '🇴🇲 Oman',
+        EG: '🇪🇬 Egypt',
+        JO: '🇯🇴 Jordan',
+        LB: '🇱🇧 Lebanon',
+        MA: '🇲🇦 Morocco',
+        DZ: '🇩🇿 Algeria',
+        TN: '🇹🇳 Tunisia',
+        LY: '🇱🇾 Libya',
+        SD: '🇸🇩 Sudan',
+      };
+
+      /* ─────────────────────────────────────────────────────────
+       State
+    ───────────────────────────────────────────────────────── */
+      let currentPage = 1;
+      let totalPages = 1;
+      let totalShops = 0;
+      let deleteTargetId = null;
+      let isLoading = false;
+
+      /* ─────────────────────────────────────────────────────────
+       Toast
+    ───────────────────────────────────────────────────────── */
+      function showToast(msg, type = 'info') {
+        const icons = { success: '✅', warning: '⚠️', danger: '❌', info: 'ℹ️' };
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast toast--${type}`;
+        toast.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span>${msg}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.classList.add('toast-hide');
+          toast.addEventListener('animationend', () => toast.remove(), { once: true });
+        }, 4000);
+      }
+
+      /* ─────────────────────────────────────────────────────────
+       Supabase Data Layer (with localStorage cache fallback)
+    ───────────────────────────────────────────────────────── */
+      const SHOPS_CACHE_KEY = 'gp_admin_shops';
+
+      /**
+       * Map admin form / cache data to Supabase column names.
+       */
+      function toDbRow(shop) {
+        return {
+          name: shop.name || null,
+          name_ar: shop.nameAr || null,
+          country_code: shop.country || null,
+          // Strip emoji prefix from COUNTRIES map (e.g. '🇦🇪 UAE' → 'UAE')
+          country: COUNTRIES[shop.country]?.replace(/^.*? /, '') || null,
+          city: shop.city || null,
+          area: shop.area || null,
+          verified: !!shop.verified,
+          featured: !!shop.featured,
+          address: shop.address || null,
+          address_ar: shop.addressAr || null,
+          latitude: shop.latitude ?? null,
+          longitude: shop.longitude ?? null,
+          hours: shop.hours || null,
+          phone: shop.phone || null,
+          website: shop.website || null,
+          rating: shop.rating ?? null,
+          // Admin form uses 'tags'; DB column is 'specialties'
+          specialties: Array.isArray(shop.tags) ? shop.tags : [],
+          notes: shop.description || shop.notes || null,
+        };
+      }
+
+      /**
+       * Map a Supabase row back to the shape used by the admin UI.
+       */
+      function fromDbRow(row) {
+        return {
+          id: row.id,
+          name: row.name || '',
+          nameAr: row.name_ar || '',
+          country: row.country_code || '',
+          city: row.city || '',
+          area: row.area || '',
+          verified: !!row.verified,
+          featured: !!row.featured,
+          address: row.address || '',
+          addressAr: row.address_ar || '',
+          latitude: row.latitude,
+          longitude: row.longitude,
+          hours: row.hours || '',
+          phone: row.phone || '',
+          website: row.website || '',
+          rating: row.rating,
+          tags: row.specialties || [],
+          description: row.notes || '',
+          notes: row.notes || '',
+          createdAt: row.created_at,
+          updatedAt: row.updated_at,
+        };
+      }
+
+      /** Cache shops to localStorage for offline resilience. */
+      function cacheShops(shops) {
+        try {
+          localStorage.setItem(SHOPS_CACHE_KEY, JSON.stringify(shops));
+        } catch {}
+      }
+
+      /** Read cached shops from localStorage. */
+      function readCachedShops() {
+        try {
+          return JSON.parse(localStorage.getItem(SHOPS_CACHE_KEY)) || [];
+        } catch {
+          return [];
+        }
+      }
+
+      /**
+       * Load all shops. Tries Supabase first; falls back to localStorage cache.
+       */
+      async function loadAllShops() {
+        const sb = getSupabase();
+        if (sb) {
+          try {
+            // Authenticated admins can read all shops (RLS allows it)
+            const { data, error } = await sb
+              .from('shops')
+              .select('*')
+              .order('created_at', { ascending: false });
+            if (!error && Array.isArray(data)) {
+              const shops = data.map(fromDbRow);
+              cacheShops(shops);
+              return shops;
+            }
+            console.warn(
+              '[shops-admin] Supabase read error, falling back to cache:',
+              error?.message
+            );
+          } catch (err) {
+            console.warn('[shops-admin] Supabase unreachable, falling back to cache:', err.message);
+          }
+        }
+        return readCachedShops();
+      }
+
+      /**
+       * Insert a new shop into Supabase. Returns the new shop object or null.
+       */
+      async function insertShop(formData) {
+        const sb = getSupabase();
+        const row = toDbRow(formData);
+        if (sb) {
+          const { data, error } = await sb.from('shops').insert(row).select().single();
+          if (error) throw new Error(error.message);
+          return fromDbRow(data);
+        }
+        throw new Error('Supabase client not available. Please refresh.');
+      }
+
+      /**
+       * Update an existing shop in Supabase.
+       */
+      async function updateShop(id, formData) {
+        const sb = getSupabase();
+        const row = toDbRow(formData);
+        if (sb) {
+          const { data, error } = await sb.from('shops').update(row).eq('id', id).select().single();
+          if (error) throw new Error(error.message);
+          return fromDbRow(data);
+        }
+        throw new Error('Supabase client not available. Please refresh.');
+      }
+
+      /**
+       * Delete a shop from Supabase.
+       */
+      async function deleteShop(id) {
+        const sb = getSupabase();
+        if (sb) {
+          const { error } = await sb.from('shops').delete().eq('id', id);
+          if (error) throw new Error(error.message);
+          return;
+        }
+        throw new Error('Supabase client not available. Please refresh.');
+      }
+
+      /**
+       * Batch-insert multiple shops into Supabase.
+       */
+      async function insertManyShops(shopsArray) {
+        const sb = getSupabase();
+        if (!sb) throw new Error('Supabase client not available. Please refresh.');
+        const rows = shopsArray.map(toDbRow);
+        const { data, error } = await sb.from('shops').insert(rows).select();
+        if (error) throw new Error(error.message);
+        return (data || []).map(fromDbRow);
+      }
+
+      /* ─────────────────────────────────────────────────────────
        Stats (from Supabase / cache)
     ───────────────────────────────────────────────────────── */
-    async function updateStats() {
-      const shops = await loadAllShops();
-      document.getElementById('stat-total').textContent    = shops.length;
-      document.getElementById('stat-verified').textContent = shops.filter(s => s.verified).length;
-      document.getElementById('stat-featured').textContent = shops.filter(s => s.featured).length;
-      const today = new Date().toISOString().slice(0, 10);
-      document.getElementById('stat-today').textContent    = shops.filter(s => (s.updatedAt || s.createdAt || '').startsWith(today)).length;
-    }
+      async function updateStats() {
+        const shops = await loadAllShops();
+        document.getElementById('stat-total').textContent = shops.length;
+        document.getElementById('stat-verified').textContent = shops.filter(
+          (s) => s.verified
+        ).length;
+        document.getElementById('stat-featured').textContent = shops.filter(
+          (s) => s.featured
+        ).length;
+        const today = new Date().toISOString().slice(0, 10);
+        document.getElementById('stat-today').textContent = shops.filter((s) =>
+          (s.updatedAt || s.createdAt || '').startsWith(today)
+        ).length;
+      }
 
-    /* ─────────────────────────────────────────────────────────
+      /* ─────────────────────────────────────────────────────────
        Rating renderer
     ───────────────────────────────────────────────────────── */
-    function renderStars(rating) {
-      if (rating == null || isNaN(rating)) return '<span class="text-dim">—</span>';
-      const full = Math.round(rating);
-      const stars = Array.from({ length: 5 }, (_, i) =>
-        `<span class="${i < full ? '' : 'rating-empty'}">★</span>`
-      ).join('');
-      return `<span class="rating-stars">${stars}</span> <span class="text-dim text-xs">${parseFloat(rating).toFixed(1)}</span>`;
-    }
+      function renderStars(rating) {
+        if (rating == null || isNaN(rating)) return '<span class="text-dim">—</span>';
+        const full = Math.round(rating);
+        const stars = Array.from(
+          { length: 5 },
+          (_, i) => `<span class="${i < full ? '' : 'rating-empty'}">★</span>`
+        ).join('');
+        return `<span class="rating-stars">${stars}</span> <span class="text-dim text-xs">${parseFloat(rating).toFixed(1)}</span>`;
+      }
 
-    /* ─────────────────────────────────────────────────────────
+      /* ─────────────────────────────────────────────────────────
        Fetch + render table (Supabase with cache fallback)
     ───────────────────────────────────────────────────────── */
-    async function renderTable(page = currentPage) {
-      if (isLoading) return;
-      isLoading = true;
+      async function renderTable(page = currentPage) {
+        if (isLoading) return;
+        isLoading = true;
 
-      const tbody = document.getElementById('shops-tbody');
-      let shops = await loadAllShops();
+        const tbody = document.getElementById('shops-tbody');
+        let shops = await loadAllShops();
 
-      const q        = (document.getElementById('search-input').value || '').trim().toLowerCase();
-      const country  = document.getElementById('filter-country').value;
-      const verified = document.getElementById('filter-verified').value;
-      const sortVal  = document.getElementById('sort-select').value;
+        const q = (document.getElementById('search-input').value || '').trim().toLowerCase();
+        const country = document.getElementById('filter-country').value;
+        const verified = document.getElementById('filter-verified').value;
+        const sortVal = document.getElementById('sort-select').value;
 
-      // Filter
-      if (q) shops = shops.filter(s => (s.name || '').toLowerCase().includes(q) || (s.city || '').toLowerCase().includes(q));
-      if (country) shops = shops.filter(s => s.country === country);
-      if (verified === 'verified') shops = shops.filter(s => s.verified);
+        // Filter
+        if (q)
+          shops = shops.filter(
+            (s) =>
+              (s.name || '').toLowerCase().includes(q) || (s.city || '').toLowerCase().includes(q)
+          );
+        if (country) shops = shops.filter((s) => s.country === country);
+        if (verified === 'verified') shops = shops.filter((s) => s.verified);
 
-      // Sort
-      const sortFns = {
-        name_asc:  (a, b) => (a.name || '').localeCompare(b.name || ''),
-        name_desc: (a, b) => (b.name || '').localeCompare(a.name || ''),
-        country:   (a, b) => (a.country || '').localeCompare(b.country || ''),
-        recent:    (a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''),
-      };
-      if (sortFns[sortVal]) shops.sort(sortFns[sortVal]);
+        // Sort
+        const sortFns = {
+          name_asc: (a, b) => (a.name || '').localeCompare(b.name || ''),
+          name_desc: (a, b) => (b.name || '').localeCompare(a.name || ''),
+          country: (a, b) => (a.country || '').localeCompare(b.country || ''),
+          recent: (a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''),
+        };
+        if (sortFns[sortVal]) shops.sort(sortFns[sortVal]);
 
-      totalShops  = shops.length;
-      totalPages  = Math.max(1, Math.ceil(totalShops / PAGE_SIZE));
-      currentPage = Math.min(page, totalPages);
+        totalShops = shops.length;
+        totalPages = Math.max(1, Math.ceil(totalShops / PAGE_SIZE));
+        currentPage = Math.min(page, totalPages);
 
-      document.getElementById('result-count').textContent =
-        `${totalShops} shop${totalShops !== 1 ? 's' : ''}`;
+        document.getElementById('result-count').textContent =
+          `${totalShops} shop${totalShops !== 1 ? 's' : ''}`;
 
-      const start = (currentPage - 1) * PAGE_SIZE;
-      const pageShops = shops.slice(start, start + PAGE_SIZE);
+        const start = (currentPage - 1) * PAGE_SIZE;
+        const pageShops = shops.slice(start, start + PAGE_SIZE);
 
-      renderShops(pageShops);
-      updatePagination();
-      isLoading = false;
-    }
-
-    function renderShops(shops) {
-      const tbody = document.getElementById('shops-tbody');
-      if (shops.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">🏪 No shops found.<p>Add your first shop or import JSON.</p></div></td></tr>`;
-        return;
+        renderShops(pageShops);
+        updatePagination();
+        isLoading = false;
       }
-      tbody.innerHTML = shops.map(s => {
-        const nameDisplay = (s.name || '').length > 30
-          ? (s.name || '').slice(0, 30) + '…'
-          : (s.name || '—');
-        const country = COUNTRIES[s.country] || s.country || '—';
-        const cityArea = [s.city, s.area].filter(Boolean).join(' · ') || '—';
 
-        // API returns `verified` (bool) OR `status === 'active'` depending on backend.
-        const isVerified = s.verified || s.status === 'active';
-        const isFeatured = !!s.featured;
-        const verifiedBadge = isVerified
-          ? `<span class="badge badge-success">✓ Verified</span>`
-          : `<span class="badge badge-neutral">Unverified</span>`;
-        const featuredBadge = isFeatured
-          ? `<span class="badge badge-warning" style="margin-left:4px">★ Featured</span>`
-          : '';
+      function renderShops(shops) {
+        const tbody = document.getElementById('shops-tbody');
+        if (shops.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">🏪 No shops found.<p>Add your first shop or import JSON.</p></div></td></tr>`;
+          return;
+        }
+        tbody.innerHTML = shops
+          .map((s) => {
+            const nameDisplay =
+              (s.name || '').length > 30 ? (s.name || '').slice(0, 30) + '…' : s.name || '—';
+            const country = COUNTRIES[s.country] || s.country || '—';
+            const cityArea = [s.city, s.area].filter(Boolean).join(' · ') || '—';
 
-        // API may return `id`, `_id`, or `shopId` depending on storage backend.
-        const id = s.id || s._id || s.shopId;
-        const isDeleting = deleteTargetId === id;
-        const actions = isDeleting
-          ? `<div class="delete-confirm" onclick="event.stopPropagation()">
+            // API returns `verified` (bool) OR `status === 'active'` depending on backend.
+            const isVerified = s.verified || s.status === 'active';
+            const isFeatured = !!s.featured;
+            const verifiedBadge = isVerified
+              ? `<span class="badge badge-success">✓ Verified</span>`
+              : `<span class="badge badge-neutral">Unverified</span>`;
+            const featuredBadge = isFeatured
+              ? `<span class="badge badge-warning" style="margin-left:4px">★ Featured</span>`
+              : '';
+
+            // API may return `id`, `_id`, or `shopId` depending on storage backend.
+            const id = s.id || s._id || s.shopId;
+            const isDeleting = deleteTargetId === id;
+            const actions = isDeleting
+              ? `<div class="delete-confirm" onclick="event.stopPropagation()">
                <span>Delete "${nameDisplay}"?</span>
                <button class="btn btn-danger btn-sm" data-action="delete-confirm" data-id="${id}" type="button">Confirm</button>
                <button class="btn btn-ghost btn-sm" data-action="delete-cancel" type="button">Cancel</button>
              </div>`
-          : `<div class="row-actions" onclick="event.stopPropagation()">
+              : `<div class="row-actions" onclick="event.stopPropagation()">
                <button class="btn-icon" data-action="edit" data-id="${id}" title="Edit shop" type="button" aria-label="Edit ${nameDisplay}">✏️</button>
                <button class="btn-icon btn-icon-danger" data-action="delete" data-id="${id}" title="Delete shop" type="button" aria-label="Delete ${nameDisplay}">🗑️</button>
              </div>`;
 
-        const ratingVal = s.rating ?? s.confidenceScore ?? null;
-        return `<tr data-id="${id}" data-action="row-edit">
+            const ratingVal = s.rating ?? s.confidenceScore ?? null;
+            return `<tr data-id="${id}" data-action="row-edit">
           <td>
             <div class="shop-name-cell">
               <span class="shop-name-primary">${nameDisplay}</span>
@@ -855,351 +1155,407 @@
           <td>${verifiedBadge}${featuredBadge}</td>
           <td>${actions}</td>
         </tr>`;
-      }).join('');
-    }
-
-    function updatePagination() {
-      const pag     = document.getElementById('pagination');
-      const prev    = document.getElementById('page-prev');
-      const next    = document.getElementById('page-next');
-      const info    = document.getElementById('page-info');
-      if (totalPages <= 1) {
-        pag?.classList.add('hidden');
-        return;
+          })
+          .join('');
       }
-      pag?.classList.remove('hidden');
-      info.textContent = `Page ${currentPage} of ${totalPages}`;
-      if (prev) prev.disabled = currentPage <= 1;
-      if (next) next.disabled = currentPage >= totalPages;
-    }
 
-    /* ─────────────────────────────────────────────────────────
+      function updatePagination() {
+        const pag = document.getElementById('pagination');
+        const prev = document.getElementById('page-prev');
+        const next = document.getElementById('page-next');
+        const info = document.getElementById('page-info');
+        if (totalPages <= 1) {
+          pag?.classList.add('hidden');
+          return;
+        }
+        pag?.classList.remove('hidden');
+        info.textContent = `Page ${currentPage} of ${totalPages}`;
+        if (prev) prev.disabled = currentPage <= 1;
+        if (next) next.disabled = currentPage >= totalPages;
+      }
+
+      /* ─────────────────────────────────────────────────────────
        Modal helpers
     ───────────────────────────────────────────────────────── */
-    // Cache for currently editing shop object (from API)
-    let editingShop = null;
+      // Cache for currently editing shop object (from API)
+      let editingShop = null;
 
-    function openModal(shop = null) {
-      editingShop = shop;
-      const modal = document.getElementById('shop-modal');
-      const title = document.getElementById('modal-title');
-      title.textContent = shop ? 'Edit Shop' : 'Add Shop';
+      function openModal(shop = null) {
+        editingShop = shop;
+        const modal = document.getElementById('shop-modal');
+        const title = document.getElementById('modal-title');
+        title.textContent = shop ? 'Edit Shop' : 'Add Shop';
 
-      document.querySelectorAll('.modal-tab').forEach(t => {
-        t.classList.toggle('active', t.dataset.tab === 'basic');
-        t.setAttribute('aria-selected', t.dataset.tab === 'basic' ? 'true' : 'false');
-      });
-      document.querySelectorAll('.tab-panel').forEach(p => {
-        p.classList.toggle('active', p.id === 'tab-basic');
-      });
+        document.querySelectorAll('.modal-tab').forEach((t) => {
+          t.classList.toggle('active', t.dataset.tab === 'basic');
+          t.setAttribute('aria-selected', t.dataset.tab === 'basic' ? 'true' : 'false');
+        });
+        document.querySelectorAll('.tab-panel').forEach((p) => {
+          p.classList.toggle('active', p.id === 'tab-basic');
+        });
 
-      document.getElementById('edit-id').value    = shop ? (shop.id || shop._id || shop.shopId || '') : '';
-      document.getElementById('f-name').value     = shop ? (shop.name || '') : '';
-      document.getElementById('f-name-ar').value  = shop ? (shop.nameAr || '') : '';
-      document.getElementById('f-country').value  = shop ? (shop.country || 'AE') : 'AE';
-      document.getElementById('f-city').value     = shop ? (shop.city || '') : '';
-      document.getElementById('f-area').value     = shop ? (shop.area || '') : '';
-      document.getElementById('f-verified').checked = shop ? !!(shop.verified || shop.status === 'active') : false;
-      document.getElementById('f-featured').checked = shop ? !!shop.featured : false;
-      document.getElementById('f-address').value  = shop ? (shop.address || '') : '';
-      document.getElementById('f-address-ar').value = shop ? (shop.addressAr || '') : '';
-      document.getElementById('f-lat').value = shop ? (shop.latitude ?? shop.coordinates?.lat ?? '') : '';
-      document.getElementById('f-lng').value = shop ? (shop.longitude ?? shop.coordinates?.lng ?? '') : '';
-      document.getElementById('f-hours').value   = shop ? (shop.hours || '') : '';
-      document.getElementById('f-phone').value   = shop ? (shop.phone || '') : '';
-      document.getElementById('f-website').value = shop ? (shop.website || '') : '';
-      document.getElementById('f-rating').value  = shop && shop.rating != null ? shop.rating : '';
-      document.getElementById('f-tags').value    = shop && Array.isArray(shop.tags) ? shop.tags.join(', ') : '';
-      document.getElementById('f-notes').value   = shop ? (shop.notes || shop.description || '') : '';
+        document.getElementById('edit-id').value = shop
+          ? shop.id || shop._id || shop.shopId || ''
+          : '';
+        document.getElementById('f-name').value = shop ? shop.name || '' : '';
+        document.getElementById('f-name-ar').value = shop ? shop.nameAr || '' : '';
+        document.getElementById('f-country').value = shop ? shop.country || 'AE' : 'AE';
+        document.getElementById('f-city').value = shop ? shop.city || '' : '';
+        document.getElementById('f-area').value = shop ? shop.area || '' : '';
+        document.getElementById('f-verified').checked = shop
+          ? !!(shop.verified || shop.status === 'active')
+          : false;
+        document.getElementById('f-featured').checked = shop ? !!shop.featured : false;
+        document.getElementById('f-address').value = shop ? shop.address || '' : '';
+        document.getElementById('f-address-ar').value = shop ? shop.addressAr || '' : '';
+        document.getElementById('f-lat').value = shop
+          ? (shop.latitude ?? shop.coordinates?.lat ?? '')
+          : '';
+        document.getElementById('f-lng').value = shop
+          ? (shop.longitude ?? shop.coordinates?.lng ?? '')
+          : '';
+        document.getElementById('f-hours').value = shop ? shop.hours || '' : '';
+        document.getElementById('f-phone').value = shop ? shop.phone || '' : '';
+        document.getElementById('f-website').value = shop ? shop.website || '' : '';
+        document.getElementById('f-rating').value = shop && shop.rating != null ? shop.rating : '';
+        document.getElementById('f-tags').value =
+          shop && Array.isArray(shop.tags) ? shop.tags.join(', ') : '';
+        document.getElementById('f-notes').value = shop ? shop.notes || shop.description || '' : '';
 
-      document.getElementById('f-name-err').classList.add('hidden');
-      modal.classList.remove('hidden');
-      document.getElementById('f-name').focus();
-    }
+        document.getElementById('f-name-err').classList.add('hidden');
+        modal.classList.remove('hidden');
+        document.getElementById('f-name').focus();
+      }
 
-    function closeModal() {
-      document.getElementById('shop-modal').classList.add('hidden');
-      editingShop = null;
-    }
+      function closeModal() {
+        document.getElementById('shop-modal').classList.add('hidden');
+        editingShop = null;
+      }
 
-    function getFormData() {
-      const lat = parseFloat(document.getElementById('f-lat').value);
-      const lng = parseFloat(document.getElementById('f-lng').value);
-      const ratingVal = document.getElementById('f-rating').value;
-      const tagsRaw   = document.getElementById('f-tags').value;
-      return {
-        name:     document.getElementById('f-name').value.trim(),
-        nameAr:   document.getElementById('f-name-ar').value.trim(),
-        country:  document.getElementById('f-country').value,
-        city:     document.getElementById('f-city').value.trim(),
-        area:     document.getElementById('f-area').value.trim(),
-        verified: document.getElementById('f-verified').checked,
-        featured: document.getElementById('f-featured').checked,
-        address:  document.getElementById('f-address').value.trim(),
-        addressAr: document.getElementById('f-address-ar').value.trim(),
-        latitude:  isNaN(lat) ? null : lat,
-        longitude: isNaN(lng) ? null : lng,
-        hours:     document.getElementById('f-hours').value.trim(),
-        phone:     document.getElementById('f-phone').value.trim(),
-        website:   document.getElementById('f-website').value.trim(),
-        rating:    ratingVal ? parseFloat(ratingVal) : null,
-        tags:      tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [],
-        description: document.getElementById('f-notes').value.trim(),
-      };
-    }
+      function getFormData() {
+        const lat = parseFloat(document.getElementById('f-lat').value);
+        const lng = parseFloat(document.getElementById('f-lng').value);
+        const ratingVal = document.getElementById('f-rating').value;
+        const tagsRaw = document.getElementById('f-tags').value;
+        return {
+          name: document.getElementById('f-name').value.trim(),
+          nameAr: document.getElementById('f-name-ar').value.trim(),
+          country: document.getElementById('f-country').value,
+          city: document.getElementById('f-city').value.trim(),
+          area: document.getElementById('f-area').value.trim(),
+          verified: document.getElementById('f-verified').checked,
+          featured: document.getElementById('f-featured').checked,
+          address: document.getElementById('f-address').value.trim(),
+          addressAr: document.getElementById('f-address-ar').value.trim(),
+          latitude: isNaN(lat) ? null : lat,
+          longitude: isNaN(lng) ? null : lng,
+          hours: document.getElementById('f-hours').value.trim(),
+          phone: document.getElementById('f-phone').value.trim(),
+          website: document.getElementById('f-website').value.trim(),
+          rating: ratingVal ? parseFloat(ratingVal) : null,
+          tags: tagsRaw
+            ? tagsRaw
+                .split(',')
+                .map((t) => t.trim())
+                .filter(Boolean)
+            : [],
+          description: document.getElementById('f-notes').value.trim(),
+        };
+      }
 
-    /* ─────────────────────────────────────────────────────────
+      /* ─────────────────────────────────────────────────────────
        Export CSV (from Supabase / cache)
     ───────────────────────────────────────────────────────── */
-    async function exportCSV() {
-      const shops = await loadAllShops();
-      if (shops.length === 0) { showToast('No shops to export.', 'warning'); return; }
-      const headers = ['id','name','country','city','address','phone','website',
-        'latitude','longitude','hours','rating','verified','featured','tags','description','createdAt','updatedAt'];
-      const rows = shops.map(s => headers.map(h => {
-        let v = s[h] ?? '';
-        if (Array.isArray(v)) v = v.join('|');
-        const str = String(v).replace(/"/g, '""');
-        return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str}"` : str;
-      }));
-      const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement('a');
-      a.href = url; a.download = `shops-${new Date().toISOString().slice(0,10)}.csv`; a.click();
-      URL.revokeObjectURL(url);
-      showToast(`Exported ${shops.length} shops.`, 'success');
-    }
+      async function exportCSV() {
+        const shops = await loadAllShops();
+        if (shops.length === 0) {
+          showToast('No shops to export.', 'warning');
+          return;
+        }
+        const headers = [
+          'id',
+          'name',
+          'country',
+          'city',
+          'address',
+          'phone',
+          'website',
+          'latitude',
+          'longitude',
+          'hours',
+          'rating',
+          'verified',
+          'featured',
+          'tags',
+          'description',
+          'createdAt',
+          'updatedAt',
+        ];
+        const rows = shops.map((s) =>
+          headers.map((h) => {
+            let v = s[h] ?? '';
+            if (Array.isArray(v)) v = v.join('|');
+            const str = String(v).replace(/"/g, '""');
+            return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str}"` : str;
+          })
+        );
+        const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `shops-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast(`Exported ${shops.length} shops.`, 'success');
+      }
 
-    /* ─────────────────────────────────────────────────────────
+      /* ─────────────────────────────────────────────────────────
        Import JSON (save to Supabase)
     ───────────────────────────────────────────────────────── */
-    async function runImport() {
-      const raw = document.getElementById('import-textarea').value.trim();
-      const resultEl = document.getElementById('import-result');
-      let parsed;
-      try { parsed = JSON.parse(raw); }
-      catch {
-        resultEl.classList.remove('hidden');
-        resultEl.innerHTML = '<span class="text-danger">❌ Invalid JSON. Please check your input.</span>';
-        return;
-      }
-      if (!Array.isArray(parsed)) {
-        resultEl.classList.remove('hidden');
-        resultEl.innerHTML = '<span class="text-danger">❌ Expected a JSON array (e.g. [{…}, {…}]).</span>';
-        return;
-      }
-      const validItems = parsed.filter(item => item && typeof item === 'object' && item.name?.trim());
-      const errors = parsed.length - validItems.length;
-      if (validItems.length === 0) {
-        resultEl.classList.remove('hidden');
-        resultEl.innerHTML = `<span class="text-warning">No valid shops found. ${errors} item(s) skipped (missing name).</span>`;
-        return;
-      }
-      try {
-        await insertManyShops(validItems);
-        resultEl.classList.remove('hidden');
-        resultEl.innerHTML = `<span class="text-success">
+      async function runImport() {
+        const raw = document.getElementById('import-textarea').value.trim();
+        const resultEl = document.getElementById('import-result');
+        let parsed;
+        try {
+          parsed = JSON.parse(raw);
+        } catch {
+          resultEl.classList.remove('hidden');
+          resultEl.innerHTML =
+            '<span class="text-danger">❌ Invalid JSON. Please check your input.</span>';
+          return;
+        }
+        if (!Array.isArray(parsed)) {
+          resultEl.classList.remove('hidden');
+          resultEl.innerHTML =
+            '<span class="text-danger">❌ Expected a JSON array (e.g. [{…}, {…}]).</span>';
+          return;
+        }
+        const validItems = parsed.filter(
+          (item) => item && typeof item === 'object' && item.name?.trim()
+        );
+        const errors = parsed.length - validItems.length;
+        if (validItems.length === 0) {
+          resultEl.classList.remove('hidden');
+          resultEl.innerHTML = `<span class="text-warning">No valid shops found. ${errors} item(s) skipped (missing name).</span>`;
+          return;
+        }
+        try {
+          await insertManyShops(validItems);
+          resultEl.classList.remove('hidden');
+          resultEl.innerHTML = `<span class="text-success">
           Imported <strong>${validItems.length}</strong> shop${validItems.length !== 1 ? 's' : ''}, <strong>${errors}</strong> error${errors !== 1 ? 's' : ''}.
         </span>`;
-        await renderTable(1);
-        await updateStats();
-        showToast(`Imported ${validItems.length} shop${validItems.length !== 1 ? 's' : ''}.`, 'success');
-      } catch (err) {
-        resultEl.classList.remove('hidden');
-        resultEl.innerHTML = `<span class="text-danger">❌ Import failed: ${err.message}</span>`;
-        showToast('Import failed: ' + err.message, 'danger');
+          await renderTable(1);
+          await updateStats();
+          showToast(
+            `Imported ${validItems.length} shop${validItems.length !== 1 ? 's' : ''}.`,
+            'success'
+          );
+        } catch (err) {
+          resultEl.classList.remove('hidden');
+          resultEl.innerHTML = `<span class="text-danger">❌ Import failed: ${err.message}</span>`;
+          showToast('Import failed: ' + err.message, 'danger');
+        }
       }
-    }
 
-    /* ─────────────────────────────────────────────────────────
+      /* ─────────────────────────────────────────────────────────
        Debounce
     ───────────────────────────────────────────────────────── */
-    function debounce(fn, ms) {
-      let timer;
-      return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), ms); };
-    }
+      function debounce(fn, ms) {
+        let timer;
+        return (...args) => {
+          clearTimeout(timer);
+          timer = setTimeout(() => fn(...args), ms);
+        };
+      }
 
-    /* ─────────────────────────────────────────────────────────
+      /* ─────────────────────────────────────────────────────────
        Event wiring
     ───────────────────────────────────────────────────────── */
-    async function init() {
-      // Sidebar mobile toggle
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebar-overlay');
-      document.getElementById('sidebar-toggle').addEventListener('click', () => {
-        sidebar.classList.toggle('sidebar--open');
-        overlay.classList.toggle('sidebar-overlay--visible');
-      });
-      overlay.addEventListener('click', () => {
-        sidebar.classList.remove('sidebar--open');
-        overlay.classList.remove('sidebar-overlay--visible');
-      });
+      async function init() {
+        // Sidebar mobile toggle
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        document.getElementById('sidebar-toggle').addEventListener('click', () => {
+          sidebar.classList.toggle('sidebar--open');
+          overlay.classList.toggle('sidebar-overlay--visible');
+        });
+        overlay.addEventListener('click', () => {
+          sidebar.classList.remove('sidebar--open');
+          overlay.classList.remove('sidebar-overlay--visible');
+        });
 
-      // Logout
-      document.getElementById('logout-btn').addEventListener('click', async () => {
-        await supabaseLogout();
-        window.location.replace('../login/');
-      });
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+          await supabaseLogout();
+          window.location.replace('../login/');
+        });
 
-      // Active nav link
-      document.querySelectorAll('.nav-link').forEach(a => {
-        if (window.location.pathname.includes(a.getAttribute('href').replace('../', '')))
-          a.classList.add('active');
-      });
+        // Active nav link
+        document.querySelectorAll('.nav-link').forEach((a) => {
+          if (window.location.pathname.includes(a.getAttribute('href').replace('../', '')))
+            a.classList.add('active');
+        });
 
-      // Search / filter — debounced
-      const rerender = debounce(() => renderTable(1), 300);
-      document.getElementById('search-input').addEventListener('input', rerender);
-      document.getElementById('filter-country').addEventListener('change', () => renderTable(1));
-      document.getElementById('filter-verified').addEventListener('change', () => renderTable(1));
-      document.getElementById('sort-select').addEventListener('change', () => renderTable(1));
+        // Search / filter — debounced
+        const rerender = debounce(() => renderTable(1), 300);
+        document.getElementById('search-input').addEventListener('input', rerender);
+        document.getElementById('filter-country').addEventListener('change', () => renderTable(1));
+        document.getElementById('filter-verified').addEventListener('change', () => renderTable(1));
+        document.getElementById('sort-select').addEventListener('change', () => renderTable(1));
 
-      // Add buttons
-      document.getElementById('add-btn').addEventListener('click', () => openModal(null));
-      document.getElementById('header-add-btn').addEventListener('click', () => openModal(null));
+        // Add buttons
+        document.getElementById('add-btn').addEventListener('click', () => openModal(null));
+        document.getElementById('header-add-btn').addEventListener('click', () => openModal(null));
 
-      // Export
-      document.getElementById('export-btn').addEventListener('click', () => exportCSV());
+        // Export
+        document.getElementById('export-btn').addEventListener('click', () => exportCSV());
 
-      // Import modal open/close
-      document.getElementById('import-btn').addEventListener('click', () => {
-        document.getElementById('import-textarea').value = '';
-        document.getElementById('import-result').classList.add('hidden');
-        document.getElementById('import-modal').classList.remove('hidden');
-      });
-      document.getElementById('import-modal-close').addEventListener('click', () =>
-        document.getElementById('import-modal').classList.add('hidden'));
-      document.getElementById('import-cancel').addEventListener('click', () =>
-        document.getElementById('import-modal').classList.add('hidden'));
-      document.getElementById('import-confirm').addEventListener('click', runImport);
+        // Import modal open/close
+        document.getElementById('import-btn').addEventListener('click', () => {
+          document.getElementById('import-textarea').value = '';
+          document.getElementById('import-result').classList.add('hidden');
+          document.getElementById('import-modal').classList.remove('hidden');
+        });
+        document
+          .getElementById('import-modal-close')
+          .addEventListener('click', () =>
+            document.getElementById('import-modal').classList.add('hidden')
+          );
+        document
+          .getElementById('import-cancel')
+          .addEventListener('click', () =>
+            document.getElementById('import-modal').classList.add('hidden')
+          );
+        document.getElementById('import-confirm').addEventListener('click', runImport);
 
-      // Modal close
-      document.getElementById('modal-close').addEventListener('click', closeModal);
-      document.getElementById('modal-cancel').addEventListener('click', closeModal);
-      document.getElementById('shop-modal').addEventListener('click', e => {
-        if (e.target === e.currentTarget) closeModal();
-      });
-      document.getElementById('import-modal').addEventListener('click', e => {
-        if (e.target === e.currentTarget)
-          document.getElementById('import-modal').classList.add('hidden');
-      });
+        // Modal close
+        document.getElementById('modal-close').addEventListener('click', closeModal);
+        document.getElementById('modal-cancel').addEventListener('click', closeModal);
+        document.getElementById('shop-modal').addEventListener('click', (e) => {
+          if (e.target === e.currentTarget) closeModal();
+        });
+        document.getElementById('import-modal').addEventListener('click', (e) => {
+          if (e.target === e.currentTarget)
+            document.getElementById('import-modal').classList.add('hidden');
+        });
 
-      // Modal tabs
-      document.querySelectorAll('.modal-tab').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const tab = btn.dataset.tab;
-          document.querySelectorAll('.modal-tab').forEach(t => {
-            t.classList.toggle('active', t.dataset.tab === tab);
-            t.setAttribute('aria-selected', t.dataset.tab === tab ? 'true' : 'false');
-          });
-          document.querySelectorAll('.tab-panel').forEach(p => {
-            p.classList.toggle('active', p.id === `tab-${tab}`);
+        // Modal tabs
+        document.querySelectorAll('.modal-tab').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const tab = btn.dataset.tab;
+            document.querySelectorAll('.modal-tab').forEach((t) => {
+              t.classList.toggle('active', t.dataset.tab === tab);
+              t.setAttribute('aria-selected', t.dataset.tab === tab ? 'true' : 'false');
+            });
+            document.querySelectorAll('.tab-panel').forEach((p) => {
+              p.classList.toggle('active', p.id === `tab-${tab}`);
+            });
           });
         });
-      });
 
-      // Modal save (Supabase)
-      document.getElementById('modal-save').addEventListener('click', async () => {
-        const data = getFormData();
-        const nameErr = document.getElementById('f-name-err');
-        if (!data.name) {
-          nameErr.classList.remove('hidden');
-          document.getElementById('f-name').focus();
-          return;
-        }
-        nameErr.classList.add('hidden');
-
-        const id = document.getElementById('edit-id').value;
-
-        try {
-          if (id) {
-            await updateShop(id, data);
-            showToast(`Shop "${data.name}" updated.`, 'success');
-          } else {
-            await insertShop(data);
-            showToast(`Shop "${data.name}" added.`, 'success');
+        // Modal save (Supabase)
+        document.getElementById('modal-save').addEventListener('click', async () => {
+          const data = getFormData();
+          const nameErr = document.getElementById('f-name-err');
+          if (!data.name) {
+            nameErr.classList.remove('hidden');
+            document.getElementById('f-name').focus();
+            return;
           }
-          closeModal();
-          await renderTable(currentPage);
-          await updateStats();
-        } catch (err) {
-          showToast(`Save failed: ${err.message}`, 'danger');
-        }
-      });
+          nameErr.classList.add('hidden');
 
-      // Table delegation (edit, delete, row click)
-      document.getElementById('shops-tbody').addEventListener('click', async (e) => {
-        const actionBtn = e.target.closest('[data-action]');
-        if (!actionBtn) return;
-        const action = actionBtn.dataset.action;
-        const id = actionBtn.dataset.id;
+          const id = document.getElementById('edit-id').value;
 
-        if (action === 'row-edit' || action === 'edit') {
-          const shops = await loadAllShops();
-          const shop = shops.find(s => s.id === id);
-          if (shop) openModal(shop);
-          else showToast('Shop not found.', 'danger');
-          return;
-        }
-        if (action === 'delete') {
-          deleteTargetId = id;
-          await renderTable(currentPage);
-          return;
-        }
-        if (action === 'delete-confirm') {
           try {
-            await deleteShop(deleteTargetId);
-            deleteTargetId = null;
-            showToast('Shop deleted.', 'info');
+            if (id) {
+              await updateShop(id, data);
+              showToast(`Shop "${data.name}" updated.`, 'success');
+            } else {
+              await insertShop(data);
+              showToast(`Shop "${data.name}" added.`, 'success');
+            }
+            closeModal();
             await renderTable(currentPage);
             await updateStats();
           } catch (err) {
-            showToast('Delete failed: ' + err.message, 'danger');
+            showToast(`Save failed: ${err.message}`, 'danger');
           }
-          return;
-        }
-        if (action === 'delete-cancel') {
-          deleteTargetId = null;
-          await renderTable(currentPage);
-          return;
-        }
-      });
+        });
 
-      // Row click (not on action buttons)
-      document.getElementById('shops-tbody').addEventListener('click', async (e) => {
-        if (e.target.closest('[data-action]')) return;
-        const row = e.target.closest('tr[data-id]');
-        if (!row) return;
-        const id = row.dataset.id;
-        const shops = await loadAllShops();
-        const shop = shops.find(s => s.id === id);
-        if (shop) openModal(shop);
-      });
+        // Table delegation (edit, delete, row click)
+        document.getElementById('shops-tbody').addEventListener('click', async (e) => {
+          const actionBtn = e.target.closest('[data-action]');
+          if (!actionBtn) return;
+          const action = actionBtn.dataset.action;
+          const id = actionBtn.dataset.id;
 
-      // Pagination
-      document.getElementById('page-prev')?.addEventListener('click', () => {
-        if (currentPage > 1) renderTable(currentPage - 1);
-      });
-      document.getElementById('page-next')?.addEventListener('click', () => {
-        if (currentPage < totalPages) renderTable(currentPage + 1);
-      });
+          if (action === 'row-edit' || action === 'edit') {
+            const shops = await loadAllShops();
+            const shop = shops.find((s) => s.id === id);
+            if (shop) openModal(shop);
+            else showToast('Shop not found.', 'danger');
+            return;
+          }
+          if (action === 'delete') {
+            deleteTargetId = id;
+            await renderTable(currentPage);
+            return;
+          }
+          if (action === 'delete-confirm') {
+            try {
+              await deleteShop(deleteTargetId);
+              deleteTargetId = null;
+              showToast('Shop deleted.', 'info');
+              await renderTable(currentPage);
+              await updateStats();
+            } catch (err) {
+              showToast('Delete failed: ' + err.message, 'danger');
+            }
+            return;
+          }
+          if (action === 'delete-cancel') {
+            deleteTargetId = null;
+            await renderTable(currentPage);
+            return;
+          }
+        });
 
-      // Keyboard: ESC closes modals
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') {
-          closeModal();
-          document.getElementById('import-modal').classList.add('hidden');
-          deleteTargetId = null;
-        }
-      });
+        // Row click (not on action buttons)
+        document.getElementById('shops-tbody').addEventListener('click', async (e) => {
+          if (e.target.closest('[data-action]')) return;
+          const row = e.target.closest('tr[data-id]');
+          if (!row) return;
+          const id = row.dataset.id;
+          const shops = await loadAllShops();
+          const shop = shops.find((s) => s.id === id);
+          if (shop) openModal(shop);
+        });
 
-      // Initial render
-      await renderTable(1);
-      await updateStats();
-    }
+        // Pagination
+        document.getElementById('page-prev')?.addEventListener('click', () => {
+          if (currentPage > 1) renderTable(currentPage - 1);
+        });
+        document.getElementById('page-next')?.addEventListener('click', () => {
+          if (currentPage < totalPages) renderTable(currentPage + 1);
+        });
 
-    init();
-  </script>
-</body>
+        // Keyboard: ESC closes modals
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            closeModal();
+            document.getElementById('import-modal').classList.add('hidden');
+            deleteTargetId = null;
+          }
+        });
+
+        // Initial render
+        await renderTable(1);
+        await updateStats();
+      }
+
+      init();
+    </script>
+  </body>
 </html>

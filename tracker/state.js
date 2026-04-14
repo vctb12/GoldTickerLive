@@ -86,11 +86,13 @@ export function createInitialState() {
   base.rates = stub.rates || {};
   base.fxMeta = stub.fxMeta || {};
   if (Array.isArray(stub.history) && stub.history.length) {
-    base.history = stub.history.map(row => ({
-      date: new Date(row.date || row.timestamp || row.ts),
-      spot: Number(row.price || row.spot || 0),
-      source: row.source || 'session-cache',
-    })).filter(r => Number.isFinite(r.date.getTime()) && r.spot > 0);
+    base.history = stub.history
+      .map((row) => ({
+        date: new Date(row.date || row.timestamp || row.ts),
+        spot: Number(row.price || row.spot || 0),
+        source: row.source || 'session-cache',
+      }))
+      .filter((r) => Number.isFinite(r.date.getTime()) && r.spot > 0);
   }
 
   // Tracker-specific saved state
@@ -182,7 +184,13 @@ export function applyUrlState(state) {
 function parseHash(hash) {
   const raw = (hash || '').trim();
   if (!raw) {
-    return { hasHash: false, params: new URLSearchParams(), mode: null, panel: null, shouldCanonicalize: false };
+    return {
+      hasHash: false,
+      params: new URLSearchParams(),
+      mode: null,
+      panel: null,
+      shouldCanonicalize: false,
+    };
   }
 
   // Legacy one-token hashes (task-1 compatibility)

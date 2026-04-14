@@ -17,15 +17,15 @@
 
 'use strict';
 
-const fs   = require('fs');
+const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-const ROOT     = path.resolve(__dirname, '..');
+const ROOT = path.resolve(__dirname, '..');
 const OUT_FILE = path.join(ROOT, 'feed.xml');
 const SITE_URL = 'https://vctb12.github.io/Gold-Prices';
-const AED_PEG  = 3.6725;
-const TROY_OZ  = 31.1035;
+const AED_PEG = 3.6725;
+const TROY_OZ = 31.1035;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -50,12 +50,18 @@ function rfc822(date) {
 
 function httpsGet(url, headers = {}) {
   return new Promise((resolve, reject) => {
-    const req = https.get(url, { headers }, res => {
+    const req = https.get(url, { headers }, (res) => {
       let body = '';
-      res.on('data', c => { body += c; });
+      res.on('data', (c) => {
+        body += c;
+      });
       res.on('end', () => {
         if (res.statusCode !== 200) return reject(new Error(`HTTP ${res.statusCode}`));
-        try { resolve(JSON.parse(body)); } catch (e) { reject(e); }
+        try {
+          resolve(JSON.parse(body));
+        } catch (e) {
+          reject(e);
+        }
       });
     });
     req.on('error', reject);
@@ -68,18 +74,22 @@ function httpsGet(url, headers = {}) {
 // ---------------------------------------------------------------------------
 async function buildItems() {
   const items = [];
-  const now   = new Date();
+  const now = new Date();
 
   // Try to fetch live price for today's item
-  const goldApiKey = process.env.GOLD_API_KEY || (() => {
-    const i = process.argv.indexOf('--gold-api-key');
-    return i >= 0 ? process.argv[i + 1] : '';
-  })();
+  const goldApiKey =
+    process.env.GOLD_API_KEY ||
+    (() => {
+      const i = process.argv.indexOf('--gold-api-key');
+      return i >= 0 ? process.argv[i + 1] : '';
+    })();
 
   let liveSpot = null;
   if (goldApiKey) {
     try {
-      const data = await httpsGet('https://api.gold-api.com/price/XAU', { 'x-access-token': goldApiKey });
+      const data = await httpsGet('https://api.gold-api.com/price/XAU', {
+        'x-access-token': goldApiKey,
+      });
       if (typeof data.price === 'number' && data.price > 0) liveSpot = data.price;
     } catch (e) {
       console.warn('⚠️  Could not fetch live price for RSS item:', e.message);
@@ -89,44 +99,51 @@ async function buildItems() {
   if (liveSpot) {
     const k24 = (liveSpot / TROY_OZ) * AED_PEG;
     const k22 = (liveSpot / TROY_OZ) * (22 / 24) * AED_PEG;
-    const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const dateStr = now.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    });
 
     items.push({
-      title:       `Gold Prices Today — ${dateStr}`,
-      link:        `${SITE_URL}/`,
-      guid:        `${SITE_URL}/gold-price-${now.toISOString().slice(0, 10)}`,
-      pubDate:     rfc822(now),
+      title: `Gold Prices Today — ${dateStr}`,
+      link: `${SITE_URL}/`,
+      guid: `${SITE_URL}/gold-price-${now.toISOString().slice(0, 10)}`,
+      pubDate: rfc822(now),
       description: `Live gold spot price: $${fmt(liveSpot)}/oz. UAE prices: 24K AED ${fmt(k24)}/g, 22K AED ${fmt(k22)}/g. Track all karats and 24+ countries at GoldPrices.`,
-      category:    'Gold Price Update',
+      category: 'Gold Price Update',
     });
   }
 
   // Always include a static "about" item so the feed is never empty
   items.push({
-    title:       'Track Live Gold Prices — GCC & Arab World',
-    link:        `${SITE_URL}/`,
-    guid:        `${SITE_URL}/gold-prices-tracker`,
-    pubDate:     rfc822(now),
-    description: 'GoldPrices tracks live XAU/USD spot price and converts to 24+ currencies across the GCC and Arab world. 7 karats (24K to 14K), updated every 90 seconds. Free, bilingual English/Arabic.',
-    category:    'Gold Tracker',
+    title: 'Track Live Gold Prices — GCC & Arab World',
+    link: `${SITE_URL}/`,
+    guid: `${SITE_URL}/gold-prices-tracker`,
+    pubDate: rfc822(now),
+    description:
+      'GoldPrices tracks live XAU/USD spot price and converts to 24+ currencies across the GCC and Arab world. 7 karats (24K to 14K), updated every 90 seconds. Free, bilingual English/Arabic.',
+    category: 'Gold Tracker',
   });
 
   items.push({
-    title:       'Free Gold Calculator — Value, Scrap, Zakat & Buying Power',
-    link:        `${SITE_URL}/calculator.html`,
-    guid:        `${SITE_URL}/calculator`,
-    pubDate:     rfc822(new Date(now.getTime() - 86400000)),
-    description: 'Calculate the value of your gold by weight and karat, estimate scrap gold prices, compute Zakat on gold holdings, and find your buying power at live spot rates.',
-    category:    'Gold Tools',
+    title: 'Free Gold Calculator — Value, Scrap, Zakat & Buying Power',
+    link: `${SITE_URL}/calculator.html`,
+    guid: `${SITE_URL}/calculator`,
+    pubDate: rfc822(new Date(now.getTime() - 86400000)),
+    description:
+      'Calculate the value of your gold by weight and karat, estimate scrap gold prices, compute Zakat on gold holdings, and find your buying power at live spot rates.',
+    category: 'Gold Tools',
   });
 
   items.push({
-    title:       'Gold Shops Directory — GCC & Arab World',
-    link:        `${SITE_URL}/shops.html`,
-    guid:        `${SITE_URL}/shops`,
-    pubDate:     rfc822(new Date(now.getTime() - 2 * 86400000)),
-    description: 'Browse a curated directory of gold shops and souqs across UAE, Saudi Arabia, Kuwait, Qatar, Bahrain, Oman, Egypt and more. Filter by region, country, city, and specialty.',
-    category:    'Gold Shops',
+    title: 'Gold Shops Directory — GCC & Arab World',
+    link: `${SITE_URL}/shops.html`,
+    guid: `${SITE_URL}/shops`,
+    pubDate: rfc822(new Date(now.getTime() - 2 * 86400000)),
+    description:
+      'Browse a curated directory of gold shops and souqs across UAE, Saudi Arabia, Kuwait, Qatar, Bahrain, Oman, Egypt and more. Filter by region, country, city, and specialty.',
+    category: 'Gold Shops',
   });
 
   return items;
@@ -137,7 +154,9 @@ async function buildItems() {
 // ---------------------------------------------------------------------------
 function renderRss(items) {
   const now = new Date();
-  const itemXml = items.map(item => `
+  const itemXml = items
+    .map(
+      (item) => `
     <item>
       <title>${xmlEscape(item.title)}</title>
       <link>${xmlEscape(item.link)}</link>
@@ -145,7 +164,9 @@ function renderRss(items) {
       <pubDate>${item.pubDate}</pubDate>
       <description>${xmlEscape(item.description)}</description>
       <category>${xmlEscape(item.category)}</category>
-    </item>`).join('');
+    </item>`
+    )
+    .join('');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -173,10 +194,13 @@ function renderRss(items) {
 async function main() {
   console.log('📰 Generating RSS feed…');
   const items = await buildItems();
-  const xml   = renderRss(items);
+  const xml = renderRss(items);
 
   fs.writeFileSync(OUT_FILE, xml, 'utf8');
   console.log(`✅ feed.xml written (${items.length} items) → ${OUT_FILE}`);
 }
 
-main().catch(err => { console.error('❌ RSS generation failed:', err.message); process.exit(1); });
+main().catch((err) => {
+  console.error('❌ RSS generation failed:', err.message);
+  process.exit(1);
+});

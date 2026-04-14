@@ -25,9 +25,9 @@ function resolveHref(href, depth) {
   // Nav data hrefs all start with `../` (relative to depth-1 pages in /countries/).
   // Strip that leading `../` then prepend the correct prefix for the actual page depth.
   const stripped = href.replace(/^\.\.\//, '');
-  if (depth === 0) return stripped;                  // root pages
-  if (depth >= 2) return '../../../' + stripped;     // city/market pages (3 dirs deep)
-  return href;                                       // depth-1 country pages: unchanged
+  if (depth === 0) return stripped; // root pages
+  if (depth >= 2) return '../../../' + stripped; // city/market pages (3 dirs deep)
+  return href; // depth-1 country pages: unchanged
 }
 
 /**
@@ -44,18 +44,14 @@ function isPageMatch(href) {
     .replace(/\.html$/, '');
 
   if (base === 'index') {
-    return (
-      path.endsWith('/') ||
-      path.endsWith('/index.html') ||
-      /\/Gold-Prices\/?$/.test(path)
-    );
+    return path.endsWith('/') || path.endsWith('/index.html') || /\/Gold-Prices\/?$/.test(path);
   }
   return path.includes(base);
 }
 
 /** True if any item in the group matches the current page. */
 function groupIsActive(items) {
-  return items.some(item => isPageMatch(item.href));
+  return items.some((item) => isPageMatch(item.href));
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -65,11 +61,14 @@ function groupIsActive(items) {
 function buildDropdown(group, depth) {
   const active = groupIsActive(group.items);
 
-  const itemsHtml = group.items.map(item => {
-    const href      = resolveHref(item.href, depth);
-    const itemClass = 'nav-dropdown-item' + (isPageMatch(href) ? ' nav-dropdown-item--active' : '');
-    return `<a href="${href}" class="${itemClass}" role="menuitem">${item.label}</a>`;
-  }).join('');
+  const itemsHtml = group.items
+    .map((item) => {
+      const href = resolveHref(item.href, depth);
+      const itemClass =
+        'nav-dropdown-item' + (isPageMatch(href) ? ' nav-dropdown-item--active' : '');
+      return `<a href="${href}" class="${itemClass}" role="menuitem">${item.label}</a>`;
+    })
+    .join('');
 
   const btnClass = 'nav-dropdown-btn' + (active ? ' nav-dropdown-btn--active' : '');
 
@@ -89,11 +88,13 @@ function buildDropdown(group, depth) {
 }
 
 function buildDrawerGroup(group, depth) {
-  const itemsHtml = group.items.map(item => {
-    const href      = resolveHref(item.href, depth);
-    const itemClass = 'nav-drawer-link' + (isPageMatch(href) ? ' nav-link--active' : '');
-    return `<a href="${href}" class="${itemClass}">${item.label}</a>`;
-  }).join('');
+  const itemsHtml = group.items
+    .map((item) => {
+      const href = resolveHref(item.href, depth);
+      const itemClass = 'nav-drawer-link' + (isPageMatch(href) ? ' nav-link--active' : '');
+      return `<a href="${href}" class="${itemClass}">${item.label}</a>`;
+    })
+    .join('');
 
   return `
     <div class="nav-drawer-group">
@@ -115,17 +116,17 @@ export function injectNav(lang = 'en', depth = 0) {
 
   _currentLang = lang;
 
-  const data     = NAV_DATA[lang] || NAV_DATA.en;
-  const isRtl    = lang === 'ar';
+  const data = NAV_DATA[lang] || NAV_DATA.en;
+  const isRtl = lang === 'ar';
   const homeHref = resolveHref(data.home.href, depth);
   const homeActive = isPageMatch(homeHref);
-  const shopsHref   = resolveHref(data.shops.href, depth);
+  const shopsHref = resolveHref(data.shops.href, depth);
   const shopsActive = isPageMatch(shopsHref);
-  const investHref  = resolveHref(data.invest.href, depth);
+  const investHref = resolveHref(data.invest.href, depth);
   const investActive = isPageMatch(investHref);
 
-  const desktopDropdownsHtml = data.groups.map(g => buildDropdown(g, depth)).join('');
-  const mobileGroupsHtml     = data.groups.map(g => buildDrawerGroup(g, depth)).join('');
+  const desktopDropdownsHtml = data.groups.map((g) => buildDropdown(g, depth)).join('');
+  const mobileGroupsHtml = data.groups.map((g) => buildDrawerGroup(g, depth)).join('');
 
   const html = `
 <nav class="site-nav" role="navigation" aria-label="${data.mainNav}" dir="${isRtl ? 'rtl' : 'ltr'}">
@@ -254,7 +255,10 @@ export function injectNav(lang = 'en', depth = 0) {
     function _applyTheme(t) {
       document.documentElement.setAttribute('data-theme', t);
       themeBtn.textContent = t === 'dark' ? '☀️' : '🌙';
-      themeBtn.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      themeBtn.setAttribute(
+        'aria-label',
+        t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+      );
     }
     try {
       const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
@@ -264,7 +268,9 @@ export function injectNav(lang = 'en', depth = 0) {
       } else {
         _applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       }
-    } catch (e) { console.warn('theme init', e); }
+    } catch (e) {
+      console.warn('theme init', e);
+    }
 
     themeBtn.addEventListener('click', () => {
       const current = document.documentElement.getAttribute('data-theme') || 'light';
@@ -274,13 +280,15 @@ export function injectNav(lang = 'en', depth = 0) {
         const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
         prefs.theme = next;
         localStorage.setItem('user_prefs', JSON.stringify(prefs));
-      } catch (e) { console.warn('theme save', e); }
+      } catch (e) {
+        console.warn('theme save', e);
+      }
     });
   }
 
   // ── DOM references ──────────────────────────────────────────────────────────
-  const burger   = document.getElementById('nav-hamburger');
-  const drawer   = document.getElementById('nav-drawer');
+  const burger = document.getElementById('nav-hamburger');
+  const drawer = document.getElementById('nav-drawer');
   const backdrop = document.getElementById('nav-backdrop');
 
   // ── Drawer helpers ──────────────────────────────────────────────────────────
@@ -310,13 +318,15 @@ export function injectNav(lang = 'en', depth = 0) {
     burger.setAttribute('aria-label', d.openMenu);
     burger.classList.remove('is-open');
     // Defer overflow reset so the slide-out CSS transition finishes first
-    setTimeout(() => { document.body.style.overflow = ''; }, 260);
+    setTimeout(() => {
+      document.body.style.overflow = '';
+    }, 260);
   }
 
   // ── Dropdown helpers ────────────────────────────────────────────────────────
   /** Close all open dropdowns, optionally skipping one group key. */
   function closeAllDropdowns(exceptKey) {
-    navEl.querySelectorAll('.nav-dropdown.is-open').forEach(dd => {
+    navEl.querySelectorAll('.nav-dropdown.is-open').forEach((dd) => {
       if (dd.dataset.group === exceptKey) return;
       dd.classList.remove('is-open');
       const btn = dd.querySelector('.nav-dropdown-btn');
@@ -336,10 +346,10 @@ export function injectNav(lang = 'en', depth = 0) {
   }
 
   // ── Dropdown button events ──────────────────────────────────────────────────
-  navEl.querySelectorAll('.nav-dropdown-btn').forEach(btn => {
+  navEl.querySelectorAll('.nav-dropdown-btn').forEach((btn) => {
     const groupEl = btn.closest('.nav-dropdown');
 
-    btn.addEventListener('click', e => {
+    btn.addEventListener('click', (e) => {
       e.stopPropagation();
       if (groupEl.classList.contains('is-open')) {
         closeDropdown(groupEl, btn);
@@ -348,7 +358,7 @@ export function injectNav(lang = 'en', depth = 0) {
       }
     });
 
-    btn.addEventListener('keydown', e => {
+    btn.addEventListener('keydown', (e) => {
       const panel = groupEl.querySelector('.nav-dropdown-panel');
       if (e.key === 'ArrowDown') {
         e.preventDefault();
@@ -364,10 +374,10 @@ export function injectNav(lang = 'en', depth = 0) {
   });
 
   // ── Keyboard nav inside dropdown panels ────────────────────────────────────
-  navEl.querySelectorAll('.nav-dropdown-panel').forEach(panel => {
-    panel.addEventListener('keydown', e => {
+  navEl.querySelectorAll('.nav-dropdown-panel').forEach((panel) => {
+    panel.addEventListener('keydown', (e) => {
       const items = [...panel.querySelectorAll('.nav-dropdown-item')];
-      const idx   = items.indexOf(document.activeElement);
+      const idx = items.indexOf(document.activeElement);
 
       if (e.key === 'ArrowDown') {
         e.preventDefault();
@@ -380,21 +390,21 @@ export function injectNav(lang = 'en', depth = 0) {
       if (e.key === 'Escape') {
         e.preventDefault();
         const groupEl = panel.closest('.nav-dropdown');
-        const btn     = groupEl.querySelector('.nav-dropdown-btn');
+        const btn = groupEl.querySelector('.nav-dropdown-btn');
         closeDropdown(groupEl, btn);
         btn.focus();
       }
       if (e.key === 'Tab') {
         // Let Tab move naturally; just close the dropdown
         const groupEl = panel.closest('.nav-dropdown');
-        const btn     = groupEl.querySelector('.nav-dropdown-btn');
+        const btn = groupEl.querySelector('.nav-dropdown-btn');
         closeDropdown(groupEl, btn);
       }
     });
   });
 
   // ── Click-outside closes dropdowns ─────────────────────────────────────────
-  document.addEventListener('click', e => {
+  document.addEventListener('click', (e) => {
     if (!navEl.contains(e.target)) {
       closeAllDropdowns(null);
     }
@@ -417,12 +427,12 @@ export function injectNav(lang = 'en', depth = 0) {
   });
 
   // ── Close drawer on any drawer link click ──────────────────────────────────
-  drawer.querySelectorAll('a').forEach(link => {
+  drawer.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => closeDrawer());
   });
 
   // ── Global Escape key ──────────────────────────────────────────────────────
-  document.addEventListener('keydown', e => {
+  document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
 
     if (navEl.classList.contains('nav--open')) {
@@ -468,7 +478,7 @@ function _buildReturnValue() {
  */
 export function updateNavLang(lang) {
   _currentLang = lang;
-  const data  = NAV_DATA[lang] || NAV_DATA.en;
+  const data = NAV_DATA[lang] || NAV_DATA.en;
   const isRtl = lang === 'ar';
 
   const nav = document.querySelector('.site-nav');
@@ -479,34 +489,37 @@ export function updateNavLang(lang) {
   nav.setAttribute('aria-label', data.mainNav);
 
   // Language toggle buttons
-  document.querySelectorAll('#nav-lang-toggle, #nav-lang-toggle-mobile').forEach(btn => {
+  document.querySelectorAll('#nav-lang-toggle, #nav-lang-toggle-mobile').forEach((btn) => {
     btn.textContent = data.langToggle;
   });
 
   // Home — match by href ending in index.html or just /
-  nav.querySelectorAll('.nav-link[href], .nav-drawer-link[href]').forEach(a => {
+  nav.querySelectorAll('.nav-link[href], .nav-drawer-link[href]').forEach((a) => {
     const href = a.getAttribute('href');
-    if (href && (href === 'index.html' || href.endsWith('/index.html') || href === '../index.html')) {
+    if (
+      href &&
+      (href === 'index.html' || href.endsWith('/index.html') || href === '../index.html')
+    ) {
       a.textContent = data.home.label;
     }
   });
 
   // Shops
-  nav.querySelectorAll('[data-nav-key="shops"]').forEach(el => {
+  nav.querySelectorAll('[data-nav-key="shops"]').forEach((el) => {
     el.textContent = data.shops.label;
   });
 
   // Invest
-  nav.querySelectorAll('[data-nav-key="invest"]').forEach(el => {
+  nav.querySelectorAll('[data-nav-key="invest"]').forEach((el) => {
     el.textContent = data.invest.label;
   });
-  
+
   // Dropdown groups
   data.groups.forEach((group, gi) => {
     // Desktop button — preserve the caret <span>
     const btn = nav.querySelector(`.nav-dropdown-btn[data-group="${group.key}"]`);
     if (btn) {
-      btn.childNodes.forEach(node => {
+      btn.childNodes.forEach((node) => {
         if (node.nodeType === Node.TEXT_NODE) node.textContent = group.label;
       });
     }
@@ -561,9 +574,9 @@ export function initNavSearch(basePath = '/Gold-Prices') {
     return searchModule;
   }
 
-  const btn      = document.getElementById('nav-search-btn');
-  const overlay  = document.getElementById('nav-search-overlay');
-  const input    = document.getElementById('nav-search-input');
+  const btn = document.getElementById('nav-search-btn');
+  const overlay = document.getElementById('nav-search-overlay');
+  const input = document.getElementById('nav-search-input');
   const dropdown = document.getElementById('nav-search-dropdown');
 
   if (!btn || !overlay || !input) return;
@@ -580,68 +593,91 @@ export function initNavSearch(basePath = '/Gold-Prices') {
     if (dropdown) dropdown.innerHTML = '';
   }
 
-  btn.addEventListener('click', e => {
+  btn.addEventListener('click', (e) => {
     e.stopPropagation();
     overlay.style.display === 'block' ? closeOverlay() : openOverlay();
   });
 
   // Close on outside click
-  document.addEventListener('click', e => {
+  document.addEventListener('click', (e) => {
     if (!overlay.contains(e.target) && e.target !== btn) {
       closeOverlay();
     }
   });
 
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeOverlay(); }
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeOverlay();
+    }
     if (e.key === 'Enter') {
       const first = dropdown.querySelector('a');
       if (first) first.click();
     }
     if (e.key === 'ArrowDown') {
       const items = Array.from(dropdown.querySelectorAll('a'));
-      if (items.length) { items[0].focus(); e.preventDefault(); }
+      if (items.length) {
+        items[0].focus();
+        e.preventDefault();
+      }
     }
   });
 
-  dropdown.addEventListener('keydown', e => {
+  dropdown.addEventListener('keydown', (e) => {
     const items = Array.from(dropdown.querySelectorAll('a'));
-    const idx   = items.indexOf(document.activeElement);
-    if (e.key === 'ArrowDown' && idx < items.length - 1) { items[idx + 1].focus(); e.preventDefault(); }
-    if (e.key === 'ArrowUp') {
-      if (idx > 0) { items[idx - 1].focus(); e.preventDefault(); }
-      else { input.focus(); e.preventDefault(); }
+    const idx = items.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown' && idx < items.length - 1) {
+      items[idx + 1].focus();
+      e.preventDefault();
     }
-    if (e.key === 'Escape') { closeOverlay(); input.focus(); }
+    if (e.key === 'ArrowUp') {
+      if (idx > 0) {
+        items[idx - 1].focus();
+        e.preventDefault();
+      } else {
+        input.focus();
+        e.preventDefault();
+      }
+    }
+    if (e.key === 'Escape') {
+      closeOverlay();
+      input.focus();
+    }
   });
 
   input.addEventListener('input', () => {
     clearTimeout(debounceTimer);
     const q = input.value.trim();
-    if (q.length < 2) { dropdown.innerHTML = ''; return; }
+    if (q.length < 2) {
+      dropdown.innerHTML = '';
+      return;
+    }
 
     debounceTimer = setTimeout(async () => {
       const mod = await getSearch();
       if (!mod) {
-        dropdown.innerHTML = '<div style="padding:0.75rem 1rem;color:#64748b;font-size:0.875rem;">Search unavailable</div>';
+        dropdown.innerHTML =
+          '<div style="padding:0.75rem 1rem;color:#64748b;font-size:0.875rem;">Search unavailable</div>';
         return;
       }
       const results = mod.search(q);
       if (!results.length) {
-        dropdown.innerHTML = '<div style="padding:0.75rem 1rem;color:#64748b;font-size:0.875rem;">No results found</div>';
+        dropdown.innerHTML =
+          '<div style="padding:0.75rem 1rem;color:#64748b;font-size:0.875rem;">No results found</div>';
         return;
       }
       const base = basePath.replace(/\/$/, '');
-      dropdown.innerHTML = results.map(r => {
-        const href = base + r.url;
-        return `<a href="${href}" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 1rem;text-decoration:none;color:#1e293b;font-size:0.875rem;border-bottom:1px solid #f1f5f9;" tabindex="0">
+      dropdown.innerHTML = results
+        .map((r) => {
+          const href = base + r.url;
+          return `<a href="${href}" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 1rem;text-decoration:none;color:#1e293b;font-size:0.875rem;border-bottom:1px solid #f1f5f9;" tabindex="0">
           <span style="font-size:1rem;">${r.icon || '🔍'}</span>
           <span>
             <span style="font-weight:500;">${r.label}</span>
             <span style="font-size:0.75rem;color:#94a3b8;margin-left:0.4rem;">${r.type}</span>
           </span>
         </a>`;
-      }).join('');
+        })
+        .join('');
     }, 200);
   });
 }
