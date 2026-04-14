@@ -5,6 +5,9 @@
 The admin panel uses **Supabase GitHub OAuth** for authentication and **Supabase Postgres** for data
 storage. It runs as static HTML on GitHub Pages — no server required.
 
+There is a single login page at `admin/login/` with a "Sign in with GitHub" button. Only the
+configured admin email can access the panel.
+
 ## Quick Start (GitHub Pages + Supabase)
 
 ### 1. Create a Supabase Project
@@ -20,11 +23,19 @@ storage. It runs as static HTML on GitHub Pages — no server required.
 
 ### 3. Enable GitHub OAuth
 
-1. In Supabase: Authentication → Providers → GitHub → Enable
-2. In GitHub: Settings → Developer settings → OAuth Apps → New OAuth App
+1. **In GitHub:** Settings → Developer settings → OAuth Apps → New OAuth App
+   - **Application name:** Gold Prices Admin (or any name)
    - **Homepage URL:** `https://yourusername.github.io/Gold-Prices/`
    - **Authorization callback URL:** `https://<your-project-ref>.supabase.co/auth/v1/callback`
-3. Copy the GitHub **Client ID** and **Client Secret** into the Supabase GitHub provider settings
+   - Click **Register application**
+   - Copy the **Client ID** and generate a **Client Secret**
+
+2. **In Supabase:** Authentication → Providers → GitHub → Enable
+   - Paste the **Client ID** and **Client Secret** from step 1
+   - Save
+
+> **Important:** The callback URL in GitHub must exactly match your Supabase project reference.
+> For example: `https://nebdpxjazlnsrfmlpgeq.supabase.co/auth/v1/callback`
 
 ### 4. Configure the Admin Panel
 
@@ -36,7 +47,11 @@ export const SUPABASE_ANON_KEY = '<your-anon-public-key>';
 export const ALLOWED_EMAIL = 'your-github-email@example.com';
 ```
 
-`ALLOWED_EMAIL` must match the **primary email** on your GitHub account (Settings → Emails).
+`ALLOWED_EMAIL` must match the **primary email** on your GitHub account (GitHub → Settings → Emails).
+
+> **Private email?** If your GitHub email is set to private, the admin panel uses fallback
+> resolution: it checks `user_metadata.email` and identity data from the GitHub provider. Make sure
+> at least one email matches `ALLOWED_EMAIL`.
 
 ### 5. Access the Admin Panel
 
@@ -65,19 +80,33 @@ admin dashboard.
 
 ## Authentication
 
-- **Method:** Supabase GitHub OAuth
+- **Method:** Supabase GitHub OAuth (single sign-on via GitHub)
 - **Guard:** Every admin page calls `requireAuth()` from `admin/supabase-auth.js` on load
 - **Access control:** Only the email in `ALLOWED_EMAIL` is allowed; all other accounts are signed
   out and redirected to login
+- **Email resolution:** Uses `resolveEmail()` which checks `user.email`, `user_metadata.email`, and
+  GitHub identity data — handles private GitHub emails
 - **Session storage:** Supabase stores the session in localStorage under `sb-<ref>-auth-token`
 
 ### Auth Flow
 
 ```
-/admin/login/  →  loginWithGitHub()  →  GitHub OAuth  →  Supabase session  →  /admin/
-                                                                 ↓
-                                              requireAuth() checks email match
+/admin/login/  →  loginWithGitHub()  →  GitHub OAuth  →  Supabase callback
+                                                              ↓
+                                                    Redirect to /admin/
+                                                    (with #access_token=… hash)
+                                                              ↓
+                                               Supabase client parses hash → session
+                                                              ↓
+                                               requireAuth() checks email via resolveEmail()
 ```
+
+### Flash Prevention
+
+All admin pages include an inline `<script>` that redirects to `/admin/login/` if no Supabase
+session token exists in localStorage. This prevents a flash of admin content before the async
+auth check completes. The script skips the redirect if an OAuth hash fragment (`#access_token=…`)
+is present, allowing the Supabase client to process the callback.
 
 ---
 
@@ -111,16 +140,34 @@ Run `supabase/schema.sql` to create all required tables and RLS policies. The sc
 
 ## Troubleshooting
 
-### Cannot Login
+### Cannot Login / "Sign in with GitHub" Does Nothing
 
-- Verify GitHub is enabled as a provider in Supabase (Authentication → Providers)
-- Check the OAuth callback URL matches your Supabase project
-- Open browser DevTools → Console for error messages
+1. **GitHub OAuth provider not enabled in Supabase:**
+   Go to Supabase Dashboard → Authentication → Providers → GitHub and verify it is enabled with
+   the correct Client ID and Client Secret from your GitHub OAuth App.
+
+2. **Wrong callback URL in GitHub:**
+   The Authorization callback URL in your GitHub OAuth App must be exactly:
+   `https://<your-project-ref>.supabase.co/auth/v1/callback`
+
+3. **Browser errors:**
+   Open DevTools → Console and look for error messages. Common ones:
+   - `"provider is not enabled"` — Enable GitHub in Supabase Providers
+   - `"redirect_uri_mismatch"` — Fix the callback URL in GitHub OAuth App settings
+   - Network errors — Check internet connection and Supabase project status
 
 ### Logged In But Redirected to Login
 
 - Your GitHub email does not match `ALLOWED_EMAIL` in `admin/supabase-config.js`
-- Check your GitHub primary email and update the config to match
+- If your GitHub email is private, make sure it still appears in your GitHub profile's identity data
+- Check your GitHub primary email (GitHub → Settings → Emails) and update the config to match
+
+### "Could not read your GitHub email"
+
+- Your GitHub email is set to private and the fallback resolution could not find a matching email
+- Go to GitHub → Settings → Emails and either:
+  - Make your email public, OR
+  - Ensure the email in `ALLOWED_EMAIL` is listed as a verified email on your GitHub account
 
 ### Data Not Persisting
 
@@ -136,10 +183,31 @@ Run `supabase/schema.sql` to create all required tables and RLS policies. The sc
 
 ---
 
+## Admin Panel File Structure
+
+```
+admin/
+├── index.html              # Dashboard page
+├── login/index.html        # Login page (GitHub OAuth)
+├── supabase-auth.js        # Auth module (loginWithGitHub, requireAuth, resolveEmail, etc.)
+├── supabase-config.js      # Supabase credentials + ALLOWED_EMAIL
+├── auth.js                 # Compatibility shim (re-exports from supabase-auth.js)
+├── shops/index.html        # Shops management (Supabase backend)
+├── settings/index.html     # Settings management (Supabase backend)
+├── pricing/index.html      # Pricing management (localStorage)
+├── orders/index.html       # Orders management (localStorage)
+├── content/index.html      # Content management (localStorage)
+├── social/index.html       # Social post generator (localStorage)
+└── analytics/index.html    # Analytics dashboard (localStorage)
+```
+
+---
+
 ## Optional: Self-Hosted Express Server
 
 For self-hosted deployments, the Express server (`server.js`) and its JWT-based auth still exist as
-a legacy option. This is **not required** for GitHub Pages.
+a legacy option. This is **not required** for GitHub Pages. The `/admin` route on the Express server
+now redirects to `/admin/` (the Supabase-integrated admin panel).
 
 ### Express Quick Start
 
@@ -152,12 +220,9 @@ npm start
 
 The Express server provides:
 
-- JWT authentication via `lib/auth.js`
+- JWT authentication via `server/lib/auth.js`
 - File-based storage in `data/*.json`
 - REST API at `/api/admin/` (shops, audit logs, users)
-
-> ⚠️ The admin HTML pages no longer import `admin/api-client.js` (the Express API client). If you
-> need Express-based admin, you will need to re-integrate the API client or build a custom frontend.
 
 ---
 
@@ -168,5 +233,3 @@ Run the test suite to verify nothing is broken:
 ```bash
 npm test
 ```
-
-205 tests should pass.

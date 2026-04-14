@@ -179,6 +179,10 @@
     <script>
       (function () {
         try {
+          // If the URL has an OAuth hash fragment (#access_token=...), let the
+          // Supabase client parse it before deciding — do NOT redirect yet.
+          if (window.location.hash && window.location.hash.includes('access_token')) return;
+
           var k = Object.keys(localStorage);
           if (
             !k.some(function (x) {

@@ -496,6 +496,7 @@
     <script>
       (function () {
         try {
+          if (window.location.hash && window.location.hash.includes('access_token')) return;
           var k = Object.keys(localStorage);
           if (
             !k.some(function (x) {

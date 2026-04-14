@@ -14,7 +14,9 @@ export {
   hasStoredSession,
   getSession,
   getUser,
+  getUserEmail,
   getSupabase,
+  resolveEmail,
 } from './supabase-auth.js';
 
 /**
@@ -32,7 +34,7 @@ export function isSetup() {
  */
 export async function setupPassword() {}
 
-/* Legacy stubs for api-client.js compatibility */
+/** Legacy stub — returns the raw Supabase session token string if present. */
 export function getToken() {
   try {
     const keys = Object.keys(localStorage);
@@ -43,6 +45,7 @@ export function getToken() {
   }
 }
 
+/** Legacy stub — clears all Supabase session tokens from localStorage. */
 export function clearToken() {
   try {
     const keys = Object.keys(localStorage);
