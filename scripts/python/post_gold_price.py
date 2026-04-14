@@ -113,8 +113,9 @@ def format_hourly_tweet(data):
         f"22K  {_aed(g22)} AED/g\n"
         f"21K  {_aed(g21)} AED/g\n"
         f"18K  {_aed(g18)} AED/g\n"
-        f"Spot rate · Not retail price\n"
+        f"\n"
         f"{_trend_emoji(chp)} {SITE_URL}\n"
+        f"Spot rate · Not retail price\n"
         f"\n"
         f"#GoldPrice #Gold #UAE #Dubai"
     )
