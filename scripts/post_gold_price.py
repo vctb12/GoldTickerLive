@@ -81,7 +81,7 @@ def format_tweet(data):
         return f'{gram_usd * AED_RATE:.2f}'
 
     tweet = (
-        f"🥇 Gold Prices Today - {date_str}\n"
+        f"🥇 Gold Prices Now - {date_str}\n"
         f"\n"
         f"🕐 {time_str} UAE (GMT+4)\n"
         f"\n"
