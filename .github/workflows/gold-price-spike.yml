@@ -35,4 +35,4 @@ jobs:
           TWITTER_ACCESS_TOKEN:        ${{ secrets.ACCESS_TOKEN }}
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
           SPIKE_THRESHOLD_PCT:         "2.0"
-        run: node scripts/price-spike-alert.js
+        run: node scripts/node/price-spike-alert.js

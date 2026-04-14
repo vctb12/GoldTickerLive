@@ -13,7 +13,7 @@ const SITE_URL = 'https://vctb12.github.io/Gold-Prices';
 const TODAY    = new Date().toISOString().slice(0, 10);
 
 const { COUNTRIES } = (() => {
-  const raw = fs.readFileSync(path.join(ROOT, 'config/countries.js'), 'utf8');
+  const raw = fs.readFileSync(path.join(ROOT, 'src/config/countries.js'), 'utf8');
   const match = raw.match(/export const COUNTRIES\s*=\s*(\[[\s\S]*?\]);/);
   if (!match) throw new Error('Could not parse COUNTRIES');
    
@@ -21,7 +21,7 @@ const { COUNTRIES } = (() => {
 })();
 
 const { KARATS } = (() => {
-  const raw = fs.readFileSync(path.join(ROOT, 'config/karats.js'), 'utf8');
+  const raw = fs.readFileSync(path.join(ROOT, 'src/config/karats.js'), 'utf8');
   const match = raw.match(/export const KARATS\s*=\s*(\[[\s\S]*?\]);/);
   if (!match) throw new Error('Could not parse KARATS');
    
@@ -53,7 +53,7 @@ const staticPages = [
   { loc: `${SITE_URL}/insights.html`,     changefreq: 'daily',   priority: '0.75' },
   { loc: `${SITE_URL}/methodology.html`,  changefreq: 'monthly', priority: '0.55' },
   { loc: `${SITE_URL}/invest.html`,       changefreq: 'monthly', priority: '0.60' },
-  { loc: `${SITE_URL}/guides/buying-guide.html`, changefreq: 'monthly', priority: '0.65' },
+  { loc: `${SITE_URL}/content/guides/buying-guide.html`, changefreq: 'monthly', priority: '0.65' },
   { loc: `${SITE_URL}/gold-price-history/`, changefreq: 'daily', priority: '0.80' },
   { loc: `${SITE_URL}/order-gold/`,       changefreq: 'hourly',  priority: '0.85' },
   { loc: `${SITE_URL}/social/x-post-generator.html`, changefreq: 'monthly', priority: '0.40' },
@@ -67,9 +67,9 @@ for (const p of staticPages) {
 // Old country pages (kept for backlinks)
 for (const country of COUNTRIES) {
   if (!country.slug) continue;
-  const htmlPath = path.join(ROOT, 'countries', `${country.slug}.html`);
+  const htmlPath = path.join(ROOT, 'countries', country.slug, 'index.html');
   if (fs.existsSync(htmlPath)) {
-    const oldUrl = `${SITE_URL}/countries/${country.slug}.html`;
+    const oldUrl = `${SITE_URL}/countries/${country.slug}/`;
     urls.push(url(oldUrl, 'monthly', '0.40'));
   }
 }

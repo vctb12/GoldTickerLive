@@ -23,7 +23,7 @@
       href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="styles/global.css" />
     <link rel="stylesheet" href="styles/pages/invest.css" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 
@@ -440,15 +440,15 @@
     </main>
 
     <script type="module">
-      import { CONSTANTS, KARATS } from './config/index.js';
-      import * as api from './lib/api.js';
-      import * as cache from './lib/cache.js';
-      import * as calc from './lib/price-calculator.js';
-      import * as fmt from './lib/formatter.js';
-      import { injectNav, updateNavLang } from './components/nav.js';
-      import { injectFooter } from './components/footer.js';
-      import { injectTicker, updateTicker, updateTickerLang } from './components/ticker.js';
-      import { injectBreadcrumbs } from './components/breadcrumbs.js';
+      import { CONSTANTS, KARATS } from './src/config/index.js';
+      import * as api from './src/lib/api.js';
+      import * as cache from './src/lib/cache.js';
+      import * as calc from './src/lib/price-calculator.js';
+      import * as fmt from './src/lib/formatter.js';
+      import { injectNav, updateNavLang } from './src/components/nav.js';
+      import { injectFooter } from './src/components/footer.js';
+      import { injectTicker, updateTicker, updateTickerLang } from './src/components/ticker.js';
+      import { injectBreadcrumbs } from './src/components/breadcrumbs.js';
 
       const LANG_KEY = 'user_prefs';
 

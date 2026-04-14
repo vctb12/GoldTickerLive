@@ -29,4 +29,4 @@ jobs:
           GOLD_API_KEY:        ${{ secrets.GOLD_API_KEY }}
           TELEGRAM_BOT_TOKEN:  ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
-        run: node scripts/notify-telegram.js
+        run: node scripts/node/notify-telegram.js

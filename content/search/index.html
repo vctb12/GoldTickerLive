@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-M14N2GP8ZQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-M14N2GP8ZQ');
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Gold Prices — Countries, Cities & Tools | GoldPrices</title>
+    <meta
+      name="description"
+      content="Search live gold prices by country, city, or karat. Find gold shops, price history, and tools for UAE, GCC, and Arab world markets."
+    />
+    <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/content/search/" />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://vctb12.github.io/Gold-Prices/content/search/"
+    />
+    <link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/content/search/" />
+    <link
+      rel="alternate"
+      hreflang="ar"
+      href="https://vctb12.github.io/Gold-Prices/content/search/?lang=ar"
+    />
+    <meta property="og:title" content="Search Gold Prices — GoldPrices" />
+    <meta
+      property="og:description"
+      content="Search live gold prices by country, city, or karat for the GCC and Arab world."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/content/search/" />
+    <meta property="og:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Search Gold Prices — GoldPrices" />
+    <meta
+      name="twitter:description"
+      content="Search live gold prices by country, city, or karat."
+    />
+    <meta name="twitter:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#d4a017" />
+    <link rel="stylesheet" href="../../styles/global.css" />
+    <style>
+      .search-page {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 2rem 1rem 4rem;
+      }
+      .search-hero {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .search-hero h1 {
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+      }
+      .search-hero p {
+        color: #64748b;
+        font-size: 0.95rem;
+      }
+
+      .search-box-wrap {
+        position: relative;
+        margin-bottom: 1.5rem;
+      }
+      .search-input {
+        width: 100%;
+        padding: 0.85rem 3rem 0.85rem 1.1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 1rem;
+        outline: none;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        box-sizing: border-box;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .search-input:focus {
+        border-color: #d4a017;
+        box-shadow: 0 0 0 4px rgba(212, 160, 23, 0.12);
+      }
+      .search-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 1.1rem;
+        pointer-events: none;
+      }
+      .search-clear {
+        position: absolute;
+        right: 2.8rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #94a3b8;
+        font-size: 1rem;
+        padding: 0.25rem;
+        display: none;
+      }
+      .search-clear:hover {
+        color: #64748b;
+      }
+
+      .search-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.25rem;
+      }
+      .filter-chip {
+        padding: 0.35rem 0.9rem;
+        border-radius: 20px;
+        border: 1.5px solid #e2e8f0;
+        background: white;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s;
+        color: #475569;
+      }
+      .filter-chip:hover {
+        border-color: #d4a017;
+        color: #92400e;
+      }
+      .filter-chip.active {
+        background: #d4a017;
+        border-color: #d4a017;
+        color: white;
+      }
+
+      .search-results-count {
+        font-size: 0.8rem;
+        color: #94a3b8;
+        margin-bottom: 0.75rem;
+      }
+      .search-results {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .result-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.85rem 1rem;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        text-decoration: none;
+        color: inherit;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s,
+          transform 0.1s;
+      }
+      .result-card:hover {
+        border-color: #d4a017;
+        box-shadow: 0 4px 12px rgba(212, 160, 23, 0.12);
+        transform: translateY(-1px);
+      }
+      .result-icon {
+        font-size: 1.4rem;
+        width: 2.2rem;
+        text-align: center;
+        flex-shrink: 0;
+      }
+      .result-body {
+        flex: 1;
+        min-width: 0;
+      }
+      .result-label {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #1e293b;
+      }
+      .result-sublabel {
+        font-size: 0.8rem;
+        color: #64748b;
+        margin-top: 0.1rem;
+      }
+      .result-badge {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.2rem 0.5rem;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        flex-shrink: 0;
+      }
+      .badge-country {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .badge-city {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+      .badge-karat {
+        background: #f0fdf4;
+        color: #166534;
+      }
+      .badge-page {
+        background: #f1f5f9;
+        color: #475569;
+      }
+      .badge-shop {
+        background: #fdf4ff;
+        color: #7e22ce;
+      }
+
+      .search-empty {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #94a3b8;
+      }
+      .search-empty .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+      .search-empty p {
+        font-size: 0.9rem;
+      }
+
+      .search-suggestions {
+        margin-top: 2rem;
+      }
+      .suggestions-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .suggestion-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .suggestion-pill {
+        padding: 0.35rem 0.8rem;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        color: #475569;
+        transition: all 0.15s;
+      }
+      .suggestion-pill:hover {
+        background: #fef3c7;
+        border-color: #d4a017;
+        color: #92400e;
+      }
+
+      [dir='rtl'] .search-icon {
+        right: auto;
+        left: 1rem;
+      }
+      [dir='rtl'] .search-clear {
+        right: auto;
+        left: 2.8rem;
+      }
+      [dir='rtl'] .search-input {
+        padding: 0.85rem 1.1rem 0.85rem 3rem;
+      }
+    </style>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Search Gold Prices — Countries, Cities & Tools | GoldPrices",
+        "description": "Search live gold prices by country, city, or karat. Find gold shops, price history, and tools for UAE, GCC, and Arab world markets.",
+        "url": "https://vctb12.github.io/Gold-Prices/content/search/",
+        "inLanguage": ["en", "ar"],
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://vctb12.github.io/Gold-Prices/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Search",
+              "item": "https://vctb12.github.io/Gold-Prices/content/search/"
+            }
+          ]
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="nav-root"></div>
+
+    <main class="search-page" role="main">
+      <div class="search-hero">
+        <h1 id="hero-title">Search Gold Prices</h1>
+        <p id="hero-subtitle">Find prices by country, city, karat, or gold shop</p>
+      </div>
+
+      <!-- Search input -->
+      <div class="search-box-wrap">
+        <input
+          type="search"
+          id="search-input"
+          class="search-input"
+          placeholder="Search: Dubai, UAE, 24K, Egypt…"
+          autocomplete="off"
+          spellcheck="false"
+          aria-label="Search gold prices"
+          aria-autocomplete="list"
+          aria-controls="search-results"
+        />
+        <button class="search-clear" id="clear-btn" aria-label="Clear search">✕</button>
+        <span class="search-icon" aria-hidden="true">🔍</span>
+      </div>
+
+      <!-- Filter chips -->
+      <div class="search-filters" role="group" aria-label="Filter by type" id="filter-chips">
+        <button class="filter-chip active" data-type="all" id="chip-all">All</button>
+        <button class="filter-chip" data-type="country">Countries</button>
+        <button class="filter-chip" data-type="city">Cities</button>
+        <button class="filter-chip" data-type="karat">Karats</button>
+        <button class="filter-chip" data-type="page">Tools</button>
+        <button class="filter-chip" data-type="shop">Shops</button>
+      </div>
+
+      <!-- Results -->
+      <div id="results-count" class="search-results-count"></div>
+      <div
+        id="search-results"
+        class="search-results"
+        role="listbox"
+        aria-live="polite"
+        aria-label="Search results"
+      ></div>
+
+      <!-- Suggestions (shown when query is empty) -->
+      <div class="search-suggestions" id="suggestions-panel">
+        <div class="suggestions-title" id="suggestions-title">Popular searches</div>
+        <div class="suggestion-pills" id="suggestion-pills"></div>
+      </div>
+    </main>
+
+    <div id="footer-root"></div>
+
+    <script type="module">
+      import { search } from '../../src/search/searchEngine.js';
+      import { injectNav, updateNavLang } from '../../src/components/nav.js';
+      import { injectFooter } from '../../src/components/footer.js';
+
+      const BASE = 'https://vctb12.github.io/Gold-Prices';
+
+      // ── Language ──────────────────────────────────────────────────────────
+      function getLang() {
+        try {
+          const p = JSON.parse(localStorage.getItem('gp_user_prefs') || '{}');
+          return new URLSearchParams(location.search).get('lang') || p.lang || 'en';
+        } catch {
+          return 'en';
+        }
+      }
+
+      const lang = getLang();
+      const isAr = lang === 'ar';
+      document.documentElement.lang = lang;
+      document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+
+      injectNav(lang, 0);
+      injectFooter(lang, 0);
+
+      if (isAr) {
+        document.getElementById('hero-title').textContent = 'ابحث عن أسعار الذهب';
+        document.getElementById('hero-subtitle').textContent =
+          'ابحث بالدولة أو المدينة أو العيار أو اسم المحل';
+        document.getElementById('search-input').placeholder = 'ابحث: دبي، الإمارات، عيار ٢٤، مصر…';
+        document.getElementById('search-input').setAttribute('aria-label', 'ابحث عن أسعار الذهب');
+        document.getElementById('suggestions-title').textContent = 'عمليات بحث شائعة';
+        document.getElementById('chip-all').textContent = 'الكل';
+      }
+
+      // ── DOM refs ──────────────────────────────────────────────────────────
+      const input = document.getElementById('search-input');
+      const clearBtn = document.getElementById('clear-btn');
+      const resultsEl = document.getElementById('search-results');
+      const countEl = document.getElementById('results-count');
+      const sugPanel = document.getElementById('suggestions-panel');
+      const sugPills = document.getElementById('suggestion-pills');
+      const chips = document.querySelectorAll('.filter-chip[data-type]');
+
+      let activeType = 'all';
+
+      // ── Resolve URL ───────────────────────────────────────────────────────
+      function resolveUrl(url) {
+        return url.startsWith('http') ? url : BASE + url;
+      }
+
+      // ── Render result cards ───────────────────────────────────────────────
+      const BADGE_LABELS = {
+        en: { country: 'Country', city: 'City', karat: 'Karat', page: 'Tool', shop: 'Shop' },
+        ar: { country: 'دولة', city: 'مدينة', karat: 'عيار', page: 'أداة', shop: 'محل' },
+      };
+
+      function renderResults(results) {
+        const labels = BADGE_LABELS[lang] || BADGE_LABELS.en;
+        if (!results.length) {
+          resultsEl.innerHTML = `
+          <div class="search-empty">
+            <div class="empty-icon">🔍</div>
+            <p>${isAr ? 'لا توجد نتائج. جرّب كلمة أخرى.' : 'No results found. Try a different search term.'}</p>
+          </div>`;
+          countEl.textContent = '';
+          return;
+        }
+
+        countEl.textContent = isAr
+          ? `${results.length} نتيجة`
+          : `${results.length} result${results.length !== 1 ? 's' : ''}`;
+
+        resultsEl.innerHTML = results
+          .map((r) => {
+            const label = isAr ? r.labelAr || r.label : r.label;
+            const sublabel = resolveUrl(r.url).replace(BASE, '');
+            return `<a href="${resolveUrl(r.url)}" class="result-card" role="option">
+          <span class="result-icon" aria-hidden="true">${r.icon || '🔗'}</span>
+          <span class="result-body">
+            <span class="result-label">${label}</span>
+            <span class="result-sublabel">${sublabel}</span>
+          </span>
+          <span class="result-badge badge-${r.type}">${labels[r.type] || r.type}</span>
+        </a>`;
+          })
+          .join('');
+      }
+
+      // ── Filter + search ───────────────────────────────────────────────────
+      function runSearch() {
+        const q = input.value.trim();
+        clearBtn.style.display = q ? 'block' : 'none';
+        sugPanel.style.display = q ? 'none' : '';
+
+        if (!q) {
+          resultsEl.innerHTML = '';
+          countEl.textContent = '';
+          return;
+        }
+
+        let results = search(q, 30);
+        if (activeType !== 'all') {
+          results = results.filter((r) => r.type === activeType);
+        }
+        renderResults(results);
+      }
+
+      // ── Filter chips ──────────────────────────────────────────────────────
+      chips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+          chips.forEach((c) => c.classList.remove('active'));
+          chip.classList.add('active');
+          activeType = chip.dataset.type;
+          runSearch();
+        });
+      });
+
+      // ── Input events ──────────────────────────────────────────────────────
+      input.addEventListener('input', runSearch);
+      clearBtn.addEventListener('click', () => {
+        input.value = '';
+        clearBtn.style.display = 'none';
+        resultsEl.innerHTML = '';
+        countEl.textContent = '';
+        sugPanel.style.display = '';
+        input.focus();
+      });
+
+      // ── Suggestions ───────────────────────────────────────────────────────
+      const SUGGESTIONS = isAr
+        ? ['دبي', 'الإمارات', 'السعودية', 'عيار 24', 'عيار 22', 'مصر', 'الكويت', 'قطر']
+        : ['Dubai', 'UAE', 'Saudi Arabia', '24K', '22K', 'Egypt', 'Kuwait', 'Qatar'];
+
+      sugPills.innerHTML = SUGGESTIONS.map(
+        (s) => `<button class="suggestion-pill">${s}</button>`
+      ).join('');
+
+      sugPills.querySelectorAll('.suggestion-pill').forEach((pill) => {
+        pill.addEventListener('click', () => {
+          input.value = pill.textContent;
+          runSearch();
+          input.focus();
+        });
+      });
+
+      // ── Pre-fill from URL query ───────────────────────────────────────────
+      const qs = new URLSearchParams(location.search);
+      const prefill = qs.get('q');
+      if (prefill) {
+        input.value = prefill;
+        runSearch();
+      }
+
+      input.focus();
+    </script>
+  </body>
+</html>

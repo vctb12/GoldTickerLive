@@ -50,7 +50,7 @@
 
 ### 4. Dual URL Structure (Legacy + Hierarchical)
 
-- **Issue**: Country pages exist at both `/countries/uae.html` (legacy) and `/uae/gold-price/`
+- **Issue**: Country pages exist at both `/countries/uae/` (summary) and `/uae/gold-price/`
   (hierarchical). Both serve similar content.
 - **Impact**: Potential duplicate content, split link equity, confusing for developers.
 - **Mitigation**: Canonical tags and .htaccess redirects cover some paths.
@@ -72,12 +72,12 @@
 
 ### 1. Large CSS Bundle
 
-- **Issue**: `style.css` is 4,548 lines — a single monolithic file containing global styles,
+- **Issue**: `styles/global.css` is 4,548 lines — a single monolithic file containing global styles,
   component styles, and responsive breakpoints.
 - **Impact**: Every page loads the entire CSS file even if it only uses a fraction.
 - **Mitigation**: Vite minifies CSS in production. Page-specific CSS files exist for additional
   styles.
-- **Ideal fix**: Split `style.css` into smaller modules; use CSS containment or code-splitting.
+- **Ideal fix**: Split `styles/global.css` into smaller modules; use CSS containment or code-splitting.
 
 ### 2. No Image Optimization Pipeline
 
@@ -183,7 +183,7 @@
 
 ### 1. Supabase Anon Key in Client Code
 
-- **Issue**: `config/supabase.js` contains the Supabase URL and anon key in committed source.
+- **Issue**: `src/config/supabase.js` contains the Supabase URL and anon key in committed source.
 - **Impact**: Low — anon keys are designed for client-side use with RLS.
 - **Mitigation**: Row Level Security ensures anon users can only read verified shops and settings.
 

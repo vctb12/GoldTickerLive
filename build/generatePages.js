@@ -20,7 +20,7 @@ const ROOT = path.resolve(__dirname, '..');
 const { COUNTRIES } = (() => {
   // Inline a copy because ES modules can't be require()'d directly
   // This must stay in sync with config/countries.js
-  const raw = fs.readFileSync(path.join(ROOT, 'config/countries.js'), 'utf8');
+  const raw = fs.readFileSync(path.join(ROOT, 'src/config/countries.js'), 'utf8');
   const match = raw.match(/export const COUNTRIES\s*=\s*(\[[\s\S]*?\]);/);
   if (!match) throw new Error('Could not parse COUNTRIES from config/countries.js');
    
@@ -28,7 +28,7 @@ const { COUNTRIES } = (() => {
 })();
 
 const { KARATS } = (() => {
-  const raw = fs.readFileSync(path.join(ROOT, 'config/karats.js'), 'utf8');
+  const raw = fs.readFileSync(path.join(ROOT, 'src/config/karats.js'), 'utf8');
   const match = raw.match(/export const KARATS\s*=\s*(\[[\s\S]*?\]);/);
   if (!match) throw new Error('Could not parse KARATS from config/karats.js');
    
@@ -81,7 +81,7 @@ function buildPage({ title, description, canonical, h1, introText, depth, jsonLd
   <link rel="preconnect" href="https://api.gold-api.com" />
   <link rel="preconnect" href="https://open.er-api.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="${rel}style.css" />
+  <link rel="stylesheet" href="${rel}styles/global.css" />
   <link rel="icon" href="${rel}favicon.svg" type="image/svg+xml" />
   <script type="application/ld+json">
 ${jsonLdStr}
@@ -111,7 +111,7 @@ ${jsonLdStr}
 
   <div id="footer-root"></div>
 
-  <script type="module" src="${rel}lib/page-hydrator.js"></script>
+  <script type="module" src="${rel}src/lib/page-hydrator.js"></script>
 </body>
 </html>`;
 }

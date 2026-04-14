@@ -46,4 +46,4 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           SPIKE_THRESHOLD: ${{ vars.SPIKE_THRESHOLD || '2.0' }}
-        run: python scripts/gold_poster.py
+        run: python scripts/python/gold_poster.py

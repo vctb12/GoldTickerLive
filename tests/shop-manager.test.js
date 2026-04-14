@@ -34,7 +34,7 @@ after(() => {
   }
 });
 
-const shopManager = require('../lib/admin/shop-manager');
+const shopManager = require('../server/lib/admin/shop-manager');
 
 describe('createShop', () => {
   test('creates a valid shop', () => {

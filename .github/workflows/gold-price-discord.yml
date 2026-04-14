@@ -28,4 +28,4 @@ jobs:
         env:
           GOLD_API_KEY:          ${{ secrets.GOLD_API_KEY }}
           DISCORD_WEBHOOK_URL:   ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: node scripts/notify-discord.js
+        run: node scripts/node/notify-discord.js

@@ -11,22 +11,8 @@ const EXCLUDE_DIRS = [
   'dist',
   'node_modules',
   '.git',
-  // country-specific leaf-page trees (country/city/karat/shops)
-  'uae',
-  'saudi-arabia',
-  'qatar',
-  'kuwait',
-  'bahrain',
-  'oman',
-  'jordan',
-  'lebanon',
-  'egypt',
-  'morocco',
-  'algeria',
-  'tunisia',
-  'libya',
-  'sudan',
-  'india',
+  // country-specific leaf-page trees (now unified under countries/)
+  'countries',
   // admin pages use top-level await and Supabase auth — served as-is
   'admin',
   // embed widget served verbatim
@@ -78,10 +64,10 @@ export default defineConfig({
             return 'vendor';
           }
           if (
-            id.includes('/lib/cache.js') ||
-            id.includes('/lib/api.js') ||
-            id.includes('/lib/price-calculator.js') ||
-            id.includes('/lib/formatter.js')
+            id.includes('/src/lib/cache.js') ||
+            id.includes('/src/lib/api.js') ||
+            id.includes('/src/lib/price-calculator.js') ||
+            id.includes('/src/lib/formatter.js')
           ) {
             return 'utils';
           }

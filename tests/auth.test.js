@@ -41,7 +41,7 @@ after(() => {
   }
 });
 
-const auth = require('../lib/auth');
+const auth = require('../server/lib/auth');
 
 describe('authenticate', () => {
   test('succeeds with correct default admin credentials', async () => {

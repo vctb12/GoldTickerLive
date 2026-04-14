@@ -146,20 +146,20 @@ practice**, combining:
 │                        HTML Pages                           │
 │  index.html · tracker.html · calculator.html · shops.html   │
 │  learn.html · insights.html · methodology.html · invest.html│
-│  countries/*.html · guides/*.html · order-gold/ · search/   │
+│  countries/*.html · content/guides/ · content/order-gold/    │
 ├─────────────────────────────────────────────────────────────┤
-│              Page-specific JS (scripts/pages/)              │
+│              Page-specific JS (src/pages/)                  │
 │  home.js · tracker-pro.js · calculator.js · shops.js · …    │
 ├─────────────────────────────────────────────────────────────┤
-│              Shared Components (components/)                │
+│              Shared Components (src/components/)            │
 │  nav.js · footer.js · ticker.js · breadcrumbs.js · chart.js │
 │  adSlot.js (Google AdSense lazy loader)                     │
 ├─────────────────────────────────────────────────────────────┤
-│                Core Libraries (lib/)                        │
+│                Core Libraries (src/lib/)                    │
 │  api.js → cache.js → price-calculator.js → formatter.js     │
 │  export.js · historical-data.js · search.js · alerts.js     │
 ├─────────────────────────────────────────────────────────────┤
-│              Configuration (config/)                        │
+│              Configuration (src/config/)                    │
 │  constants.js · countries.js · karats.js · translations.js  │
 ├─────────────────────────────────────────────────────────────┤
 │                External APIs                                │
@@ -168,8 +168,8 @@ practice**, combining:
 └─────────────────────────────────────────────────────────────┘
 ```
 
-**Data flow:** HTML page → page JS → `lib/api.js` → `lib/cache.js` (dual-layer localStorage) →
-`lib/price-calculator.js` → `lib/formatter.js` → DOM
+**Data flow:** HTML page → page JS → `src/lib/api.js` → `src/lib/cache.js` (dual-layer localStorage) →
+`src/lib/price-calculator.js` → `src/lib/formatter.js` → DOM
 
 ---
 
@@ -243,26 +243,26 @@ npm run seo-audit    # Validates SEO metadata across all pages
 
 | Tool                  | URL                                                                                                  | Description                                    |
 | --------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| **Order Gold**        | [`/order-gold/`](https://vctb12.github.io/Gold-Prices/order-gold/)                                   | Order 1g–100g bars with live pricing + UAE VAT |
-| **X Post Generator**  | [`/social/x-post-generator.html`](https://vctb12.github.io/Gold-Prices/social/x-post-generator.html) | Generate ready-to-post X/Twitter updates       |
-| **Price History**     | [`/gold-price-history/`](https://vctb12.github.io/Gold-Prices/gold-price-history/)                   | Historical gold price data and charts          |
-| **Search**            | [`/search/`](https://vctb12.github.io/Gold-Prices/search/)                                           | Bilingual full-text search                     |
-| **Weight Converter**  | [`/tools/weight-converter.html`](https://vctb12.github.io/Gold-Prices/tools/weight-converter.html)   | Grams ↔ Troy oz ↔ Tola ↔ Baht ↔ Mithqal        |
-| **Zakat Calculator**  | [`/tools/zakat-calculator.html`](https://vctb12.github.io/Gold-Prices/tools/zakat-calculator.html)   | Interactive gold zakat calculation             |
-| **Investment Return** | [`/tools/investment-return.html`](https://vctb12.github.io/Gold-Prices/tools/investment-return.html) | Historical investment return calculator        |
-| **Embed Widget**      | [`/embed/gold-ticker.html`](https://vctb12.github.io/Gold-Prices/embed/gold-ticker.html)             | Embeddable gold price ticker                   |
+| **Order Gold**        | [`/content/order-gold/`](https://vctb12.github.io/Gold-Prices/content/order-gold/)                                   | Order 1g–100g bars with live pricing + UAE VAT |
+| **X Post Generator**  | [`/content/social/x-post-generator.html`](https://vctb12.github.io/Gold-Prices/content/social/x-post-generator.html) | Generate ready-to-post X/Twitter updates       |
+| **Price History**     | [`/content/gold-price-history/`](https://vctb12.github.io/Gold-Prices/content/gold-price-history/)                   | Historical gold price data and charts          |
+| **Search**            | [`/content/search/`](https://vctb12.github.io/Gold-Prices/content/search/)                                           | Bilingual full-text search                     |
+| **Weight Converter**  | [`/content/tools/weight-converter.html`](https://vctb12.github.io/Gold-Prices/content/tools/weight-converter.html)   | Grams ↔ Troy oz ↔ Tola ↔ Baht ↔ Mithqal        |
+| **Zakat Calculator**  | [`/content/tools/zakat-calculator.html`](https://vctb12.github.io/Gold-Prices/content/tools/zakat-calculator.html)   | Interactive gold zakat calculation             |
+| **Investment Return** | [`/content/tools/investment-return.html`](https://vctb12.github.io/Gold-Prices/content/tools/investment-return.html) | Historical investment return calculator        |
+| **Embed Widget**      | [`/content/embed/gold-ticker.html`](https://vctb12.github.io/Gold-Prices/content/embed/gold-ticker.html)             | Embeddable gold price ticker                   |
 
 ### Guides
 
 | Guide                 | URL                                                                                                            |
 | --------------------- | -------------------------------------------------------------------------------------------------------------- |
-| How to Buy Gold       | [`/guides/buying-guide.html`](https://vctb12.github.io/Gold-Prices/guides/buying-guide.html)                   |
-| 24K vs 22K Gold       | [`/guides/24k-vs-22k.html`](https://vctb12.github.io/Gold-Prices/guides/24k-vs-22k.html)                       |
-| Gold Karat Comparison | [`/guides/gold-karat-comparison.html`](https://vctb12.github.io/Gold-Prices/guides/gold-karat-comparison.html) |
-| AED Peg Explained     | [`/guides/aed-peg-explained.html`](https://vctb12.github.io/Gold-Prices/guides/aed-peg-explained.html)         |
-| GCC Market Hours      | [`/guides/gcc-market-hours.html`](https://vctb12.github.io/Gold-Prices/guides/gcc-market-hours.html)           |
-| Invest in Gold (GCC)  | [`/guides/invest-in-gold-gcc.html`](https://vctb12.github.io/Gold-Prices/guides/invest-in-gold-gcc.html)       |
-| Zakat on Gold         | [`/guides/zakat-gold-guide.html`](https://vctb12.github.io/Gold-Prices/guides/zakat-gold-guide.html)           |
+| How to Buy Gold       | [`/content/guides/buying-guide.html`](https://vctb12.github.io/Gold-Prices/content/guides/buying-guide.html)                   |
+| 24K vs 22K Gold       | [`/content/guides/24k-vs-22k.html`](https://vctb12.github.io/Gold-Prices/content/guides/24k-vs-22k.html)                       |
+| Gold Karat Comparison | [`/content/guides/gold-karat-comparison.html`](https://vctb12.github.io/Gold-Prices/content/guides/gold-karat-comparison.html) |
+| AED Peg Explained     | [`/content/guides/aed-peg-explained.html`](https://vctb12.github.io/Gold-Prices/content/guides/aed-peg-explained.html)         |
+| GCC Market Hours      | [`/content/guides/gcc-market-hours.html`](https://vctb12.github.io/Gold-Prices/content/guides/gcc-market-hours.html)           |
+| Invest in Gold (GCC)  | [`/content/guides/invest-in-gold-gcc.html`](https://vctb12.github.io/Gold-Prices/content/guides/invest-in-gold-gcc.html)       |
+| Zakat on Gold         | [`/content/guides/zakat-gold-guide.html`](https://vctb12.github.io/Gold-Prices/content/guides/zakat-gold-guide.html)           |
 
 ### Country Pages (15 countries, 45+ cities)
 
@@ -377,7 +377,7 @@ GoldPrices runs **8 GitHub Actions workflows** for automated operations:
 
 ### Tweet template rotation
 
-The tweet script (`scripts/tweet-gold-price.js`) rotates across 10+ templates based on time of day
+The tweet script (`scripts/node/tweet-gold-price.js`) rotates across 10+ templates based on time of day
 (Dubai timezone):
 
 - 🌅 Morning update (06:00)
@@ -507,13 +507,13 @@ npm start  # Starts Express server on port 3000
 1. Sign up at [gold-api.com](https://gold-api.com)
 2. Get your API key
 3. Add as GitHub Secret: `GOLD_API_KEY`
-4. The frontend uses this key via `config/constants.js`
+4. The frontend uses this key via `src/config/constants.js`
 
 ### ExchangeRate API (required for FX conversion)
 
 1. Sign up at [exchangerate-api.com](https://www.exchangerate-api.com)
 2. Free tier: 1,500 requests/month
-3. Configure in `config/constants.js`
+3. Configure in `src/config/constants.js`
 
 ### X/Twitter API (for automated tweets)
 
@@ -549,12 +549,12 @@ Gold-Prices/
 ├── methodology.html           # Data sources and transparency
 ├── invest.html                # Gold investing guide
 ├── offline.html               # Offline fallback page
-├── style.css                  # Shared global styles (theme, layout, responsive)
+├── styles/global.css            # Shared global styles (theme, layout, responsive)
 ├── sw.js                      # Service worker (cache-first static, network-first API)
 ├── server.js                  # Express.js admin API server
 ├── vite.config.js             # Vite build configuration
 │
-├── scripts/pages/             # Page-specific JavaScript
+├── src/pages/                 # Page-specific JavaScript
 │   ├── home.js                # Homepage logic
 │   ├── tracker-pro.js         # Tracker workspace orchestrator
 │   ├── calculator.js          # Calculator logic
@@ -573,14 +573,14 @@ Gold-Prices/
 │   ├── methodology.css        # Methodology styling
 │   └── invest.css             # Invest page styling
 │
-├── config/                    # Configuration modules
+├── src/config/                 # Configuration modules
 │   ├── constants.js           # API URLs, timing, AED peg (3.6725), troy oz (31.1035)
 │   ├── countries.js           # 24+ countries with codes, names (EN/AR), currencies, flags
 │   ├── karats.js              # 7 karat definitions with purity fractions
 │   ├── translations.js        # All UI strings in English and Arabic
 │   └── index.js               # Central config export
 │
-├── lib/                       # Core libraries
+├── src/lib/                   # Core libraries
 │   ├── api.js                 # Fetch with timeout, retry, simulation hooks
 │   ├── cache.js               # Dual-layer localStorage persistence
 │   ├── price-calculator.js    # Core pricing formulas
@@ -590,7 +590,7 @@ Gold-Prices/
 │   ├── search.js              # Bilingual search and filtering
 │   └── alerts.js              # Browser-side price alert logic
 │
-├── components/                # Shared UI components
+├── src/components/            # Shared UI components
 │   ├── nav.js                 # Bilingual navigation bar (desktop dropdowns + mobile drawer)
 │   ├── nav-data.js            # Navigation menu structure (EN/AR)
 │   ├── footer.js              # 5-column footer with data source attribution
@@ -599,45 +599,50 @@ Gold-Prices/
 │   ├── breadcrumbs.js         # Breadcrumb navigation
 │   └── adSlot.js              # Google AdSense lazy-loading ad component
 │
-├── tracker/                   # Tracker workspace modules
+├── src/tracker/               # Tracker workspace modules
 │   ├── state.js               # URL hash-synced state management
 │   ├── ui-shell.js            # UI orchestration
 │   ├── render.js              # Rendering functions
 │   ├── events.js              # Event bindings
 │   └── wire.js                # News wire module
 │
-├── tools/                     # Standalone tool pages
+├── content/tools/              # Standalone tool pages
 │   ├── weight-converter.html  # Unit conversion tool
 │   ├── zakat-calculator.html  # Interactive zakat calculator
 │   └── investment-return.html # Historical investment return calculator
 │
 ├── countries/                 # Country landing pages (15 countries)
-├── guides/                    # Educational guide articles (7 guides)
-├── social/                    # X post generator + templates
-├── order-gold/                # Gold ordering feature
-├── gold-price-history/        # Historical price data page
-├── search/                    # Bilingual search page
-├── embed/                     # Embeddable gold ticker widget
+├── content/guides/            # Educational guide articles (7 guides)
+├── content/social/            # X post generator + templates
+├── content/order-gold/        # Gold ordering feature
+├── content/gold-price-history/# Historical price data page
+├── content/search/            # Bilingual search page
+├── content/embed/             # Embeddable gold ticker widget
 ├── admin/                     # Admin panel (dashboard, shops, orders, settings, etc.)
 │
 ├── scripts/                   # Automation & build scripts
-│   ├── tweet-gold-price.js    # X/Twitter posting (10+ rotating templates)
-│   ├── notify-telegram.js     # Telegram channel notifications
-│   ├── notify-discord.js      # Discord server notifications
-│   ├── price-spike-alert.js   # Price spike detection
-│   ├── uptime-check.js        # Site uptime monitoring
-│   ├── generate-sitemap.js    # Auto-generate sitemap.xml
-│   ├── generate-rss.js        # Auto-generate feed.xml
-│   ├── seo-audit.js           # SEO metadata validation
-│   ├── check-links.js         # Internal link checker
-│   └── audit-pages.js         # Page audit script
+│   ├── node/
+│   │   ├── tweet-gold-price.js    # X/Twitter posting (10+ rotating templates)
+│   │   ├── notify-telegram.js     # Telegram channel notifications
+│   │   ├── notify-discord.js      # Discord server notifications
+│   │   ├── price-spike-alert.js   # Price spike detection
+│   │   ├── uptime-check.js        # Site uptime monitoring
+│   │   ├── generate-sitemap.js    # Auto-generate sitemap.xml
+│   │   ├── generate-rss.js        # Auto-generate feed.xml
+│   │   ├── seo-audit.js           # SEO metadata validation
+│   │   ├── check-links.js         # Internal link checker
+│   │   └── audit-pages.js         # Page audit script
+│   └── python/
+│       └── gold_poster.py         # Python gold price poster
 │
 ├── .github/workflows/         # GitHub Actions (8 workflows)
 ├── data/                      # Static data files (shops, audit logs)
 ├── assets/                    # Images, screenshots, icons
-├── server/                    # Server-side admin routes and middleware
-├── services/                  # Backend services (pricing engine, FX, gold API adapter)
-├── repositories/              # Data access layer (file + Supabase backends)
+├── server/                    # Server-side admin routes, middleware, and lib
+│   ├── routes/admin/index.js  # Admin API routes
+│   ├── lib/                   # Server-side libraries (auth, errors, audit-log, admin/)
+│   ├── repositories/          # Data access layer (file + Supabase backends)
+│   └── services/              # Backend services (pricing engine, FX, gold API adapter)
 ├── docs/                      # Extended documentation
 │   ├── TEARDOWN.md            # 📖 COMPLETE technical teardown (start here!)
 │   ├── ARCHITECTURE.md        # Full system architecture and data flow
@@ -692,7 +697,7 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for:
 ### Quick rules
 
 - **No frameworks** — vanilla ES6 modules only
-- **All UI strings** in `config/translations.js` (never hard-code)
+- **All UI strings** in `src/config/translations.js` (never hard-code)
 - **Bilingual** — all user-facing features must support EN + AR
 - **Test your changes** — `npm test` must pass
 - **Preflight before PR** — `npm run preflight` + `npm run seo-audit`
@@ -710,9 +715,9 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for:
 
 ### Tracker page not loading
 
-- Ensure `scripts/pages/tracker-pro.js` exists (moved from root in v11)
+- Ensure `src/pages/tracker-pro.js` exists (moved from root in v11)
 - Check for script tag issues in tracker.html
-- Verify `tracker/state.js` and `tracker/ui-shell.js` are accessible
+- Verify `src/tracker/state.js` and `src/tracker/ui-shell.js` are accessible
 
 ### Service worker serving stale content
 
@@ -730,7 +735,7 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for:
 ### Tests failing
 
 - Run `npm install` first (some tests require `jsonwebtoken` package)
-- Pre-existing: `repositories.test.js` may fail if `lib/supabase-client.js` is not present
+- Pre-existing: `repositories.test.js` may fail if `server/lib/supabase-client.js` is not present
 
 ### Tweet workflow not posting
 

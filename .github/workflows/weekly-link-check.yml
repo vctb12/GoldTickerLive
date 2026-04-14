@@ -32,4 +32,4 @@ jobs:
         run: npm run build
 
       - name: Run link checker against built output
-        run: node scripts/check-links.js --dir dist --fail-on-error
+        run: node scripts/node/check-links.js --dir dist --fail-on-error

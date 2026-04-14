@@ -30,4 +30,4 @@ jobs:
           TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           SITE_URL: 'https://vctb12.github.io/Gold-Prices/'
-        run: node scripts/uptime-check.js
+        run: node scripts/node/uptime-check.js

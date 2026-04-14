@@ -22,15 +22,15 @@
  * }
  */
 
-import { CONSTANTS, KARATS } from '../config/index.js';
-import * as api from '../lib/api.js';
-import * as cache from '../lib/cache.js';
-import { usdPerGram, usdPerOz } from '../lib/price-calculator.js';
-import { formatPrice } from '../lib/formatter.js';
-import { injectNav, updateNavLang } from '../components/nav.js';
-import { injectFooter } from '../components/footer.js';
-import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
-import { renderBreadcrumbs } from '../components/breadcrumbs.js';
+import { CONSTANTS, KARATS } from '../src/config/index.js';
+import * as api from '../src/lib/api.js';
+import * as cache from '../src/lib/cache.js';
+import { usdPerGram, usdPerOz } from '../src/lib/price-calculator.js';
+import { formatPrice } from '../src/lib/formatter.js';
+import { injectNav, updateNavLang } from '../src/components/nav.js';
+import { injectFooter } from '../src/components/footer.js';
+import { injectTicker, updateTicker, updateTickerLang } from '../src/components/ticker.js';
+import { renderBreadcrumbs } from '../src/components/breadcrumbs.js';
 
 // Minimal shared STATE for country pages
 const STATE = {
