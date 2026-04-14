@@ -12,15 +12,20 @@ Required environment variables (set as GitHub Secrets):
   TWITTER_ACCESS_TOKEN      – X Developer Portal: Access Token (read-write)
   TWITTER_ACCESS_TOKEN_SECRET – X Developer Portal: Access Token Secret
 
-Runs from .github/workflows/post_gold.yml every 3 hours (at :30 past the hour).
-"""
+Workflow cron schedule (.github/workflows/post_gold.yml):
+  - cron: '0 4-18 * * 1-5'   # Hourly 8AM–10PM UAE, Mon–Fri only
+  - cron: '0 21 * * 0'        # Market OPEN  — Sun 9PM UTC = Mon 1AM UAE
+  - cron: '0 21 * * 5'        # Market CLOSE — Fri 9PM UTC = Sat 1AM UAE"""
 
 import os
 import sys
 import requests
+from datetime import datetime, timezone, timedelta
 
 # ── Config ────────────────────────────────────────────────────────────────────
 AED_RATE = 3.6725  # UAE Dirham is pegged to USD
+SITE_URL  = "https://vctb12.github.io/Gold-Prices/"
+UAE_TZ    = timezone(timedelta(hours=4))
 
 GOLD_API_KEY = os.environ.get('GOLD_API_KEY', '')
 TWITTER_API_KEY = os.environ.get('TWITTER_API_KEY', '')
@@ -43,61 +48,127 @@ def get_gold_price():
 
 
 # ── Step 2: Format the tweet ─────────────────────────────────────────────────
-from datetime import datetime, timezone, timedelta
 
-UAE_TZ = timezone(timedelta(hours=4))
 
-def format_tweet(data):
-    price   = data.get('price')
-    g24     = data.get('price_gram_24k')
-    g22     = data.get('price_gram_22k')
-    g21     = data.get('price_gram_21k')
-    g18     = data.get('price_gram_18k')
-    chp     = data.get('chp')
-
+# ── Helpers ───────────────────────────────────────────────────────────────────
+def _parse_fields(data):
+    price = data.get('price')
+    g24   = data.get('price_gram_24k')
+    g22   = data.get('price_gram_22k')
+    g21   = data.get('price_gram_21k')
+    g18   = data.get('price_gram_18k')
+    chp   = data.get('chp')
     if not all([price, g24, g22, g21, g18]):
         raise ValueError("GoldAPI response missing required price fields")
+    return price, g24, g22, g21, g18, chp
 
-    now_uae  = datetime.now(UAE_TZ)
-    date_str = now_uae.strftime('%b %-d, %Y')
-    time_str = now_uae.strftime('%I:%M %p').lstrip('0')  # e.g. "2:35 PM"
+def _aed(gram_usd):
+    return f'{gram_usd * AED_RATE:.2f}'
 
-    if chp is not None:
-        sign = '+' if chp >= 0 else ''
-        change_str = f' ({sign}{chp:.2f}%)'
-    else:
-        change_str = ''
-
+def _change_str(chp):
     if chp is None:
-        trend = '📊'
-    elif chp > 0:
-        trend = '📈'
-    elif chp < 0:
-        trend = '📉'
-    else:
-        trend = '➡️'
+        return ''
+    sign = '+' if chp >= 0 else ''
+    return f' ({sign}{chp:.2f}%)'
 
-    def aed(gram_usd):
-        return f'{gram_usd * AED_RATE:.2f}'
+def _trend_emoji(chp):
+    if chp is None: return '📊'
+    if chp > 0:     return '📈'
+    if chp < 0:     return '📉'
+    return '➡️'
 
-    tweet = (
-        f"🥇 Gold Prices Now - {date_str}\n"
-        f"\n"
-        f"🕐 {time_str} UAE (GMT+4)\n"
-        f"\n"
-        f"Spot: 24K - ${price:,.2f}/oz{change_str}\n"
-        f"\n"
-        f"🇦🇪 UAE (AED/g):\n"
-        f"24K: {aed(g24)} AED/g\n"
-        f"22K: {aed(g22)} AED/g\n"
-        f"21K: {aed(g21)} AED/g\n"
-        f"18K: {aed(g18)} AED/g\n"
-        f"\n"
-        f"{trend} https://vctb12.github.io/Gold-Prices/\n"
+def _uae_datetime():
+    now = datetime.now(UAE_TZ)
+    date_str = now.strftime('%b %-d, %Y')
+    time_str = now.strftime('%I:%M %p').lstrip('0')
+    return date_str, time_str
+
+
+# ── Detect post type ──────────────────────────────────────────────────────────
+def get_post_type():
+    now     = datetime.now(timezone.utc)
+    weekday = now.weekday()  # 0=Mon … 6=Sun
+    hour    = now.hour
+    if weekday == 6 and hour == 21:
+        return 'market_open'
+    if weekday == 4 and hour == 21:
+        return 'market_close'
+    return 'hourly'
+
+
+# ── Tweet templates ───────────────────────────────────────────────────────────
+def format_hourly_tweet(data):
+    price, g24, g22, g21, g18, chp = _parse_fields(data)
+    date_str, time_str = _uae_datetime()
+    return (
+        f"📍 Gold Price Update — {date_str}\n"
+        f"🕐 {time_str} (UAE · GMT+4)\n"
+        f"─────────────────────\n"
+        f"Spot XAU/USD\n"
+        f"24K · ${price:,.2f}/oz{_change_str(chp)}\n"
+        f"─────────────────────\n"
+        f"🇦🇪 Per Gram in AED\n"
+        f"24K  {_aed(g24)} AED\n"
+        f"22K  {_aed(g22)} AED\n"
+        f"21K  {_aed(g21)} AED\n"
+        f"18K  {_aed(g18)} AED\n"
+        f"─────────────────────\n"
+        f"Spot rate · Not retail price\n"
+        f"{_trend_emoji(chp)} {SITE_URL}\n"
         f"\n"
         f"#GoldPrice #Gold #UAE #Dubai"
     )
-    return tweet
+
+def format_market_open_tweet(data):
+    price, g24, g22, g21, g18, chp = _parse_fields(data)
+    return (
+        f"🟢 Gold Market Is Now Open\n"
+        f"🕐 Monday · 1:00 AM (UAE · GMT+4)\n"
+        f"─────────────────────\n"
+        f"Opening Spot XAU/USD\n"
+        f"24K · ${price:,.2f}/oz{_change_str(chp)}\n"
+        f"─────────────────────\n"
+        f"🇦🇪 Per Gram in AED\n"
+        f"24K  {_aed(g24)} AED\n"
+        f"22K  {_aed(g22)} AED\n"
+        f"21K  {_aed(g21)} AED\n"
+        f"18K  {_aed(g18)} AED\n"
+        f"─────────────────────\n"
+        f"New week. Track live prices 👇\n"
+        f"{SITE_URL}\n"
+        f"\n"
+        f"#GoldPrice #Gold #XAU #UAE #Dubai"
+    )
+
+def format_market_close_tweet(data):
+    price, g24, g22, g21, g18, chp = _parse_fields(data)
+    return (
+        f"🔴 Gold Market Is Now Closed\n"
+        f"🕐 Saturday · 1:00 AM (UAE · GMT+4)\n"
+        f"─────────────────────\n"
+        f"Closing Spot XAU/USD\n"
+        f"24K · ${price:,.2f}/oz{_change_str(chp)}\n"
+        f"─────────────────────\n"
+        f"🇦🇪 Per Gram in AED\n"
+        f"24K  {_aed(g24)} AED\n"
+        f"22K  {_aed(g22)} AED\n"
+        f"21K  {_aed(g21)} AED\n"
+        f"18K  {_aed(g18)} AED\n"
+        f"─────────────────────\n"
+        f"Reopens Monday 1:00 AM 🌙\n"
+        f"{SITE_URL}\n"
+        f"\n"
+        f"#GoldPrice #Gold #XAU #UAE #Dubai"
+    )
+
+def format_tweet(data):
+    post_type = get_post_type()
+    print(f"   Post type: {post_type}")
+    if post_type == 'market_open':
+        return format_market_open_tweet(data)
+    if post_type == 'market_close':
+        return format_market_close_tweet(data)
+    return format_hourly_tweet(data)
 
 # ── Step 3: Post to X / Twitter ──────────────────────────────────────────────
 def post_tweet(text):
