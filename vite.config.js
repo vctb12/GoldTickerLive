@@ -11,22 +11,8 @@ const EXCLUDE_DIRS = [
   'dist',
   'node_modules',
   '.git',
-  // country-specific leaf-page trees (country/city/karat/shops)
-  'uae',
-  'saudi-arabia',
-  'qatar',
-  'kuwait',
-  'bahrain',
-  'oman',
-  'jordan',
-  'lebanon',
-  'egypt',
-  'morocco',
-  'algeria',
-  'tunisia',
-  'libya',
-  'sudan',
-  'india',
+  // country-specific leaf-page trees (now unified under countries/)
+  'countries',
   // admin pages use top-level await and Supabase auth — served as-is
   'admin',
   // embed widget served verbatim
