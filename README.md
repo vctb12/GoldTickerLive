@@ -639,11 +639,16 @@ Gold-Prices/
 ├── services/                  # Backend services (pricing engine, FX, gold API adapter)
 ├── repositories/              # Data access layer (file + Supabase backends)
 ├── docs/                      # Extended documentation
+│   ├── TEARDOWN.md            # 📖 COMPLETE technical teardown (start here!)
 │   ├── ARCHITECTURE.md        # Full system architecture and data flow
 │   ├── FILES_GUIDE.md         # Every major file explained
 │   ├── EDIT_GUIDE.md          # "Change X → go to Y" quick reference
 │   ├── LIMITATIONS.md         # Technical limitations and bottlenecks
 │   ├── ERROR_REPORT.md        # Error audit findings and fixes
+│   ├── ADMIN_GUIDE.md         # Admin panel usage guide
+│   ├── ADMIN_SETUP.md         # Admin setup instructions
+│   ├── CONTRIBUTING.md        # Contribution guidelines
+│   ├── CHANGELOG.md           # Version history
 │   └── …                      # SEO, Supabase, automation, risk docs
 ├── .env.example               # Environment variable template
 └── tests/                     # Test suite (205 tests across 10 files)
@@ -655,6 +660,7 @@ Gold-Prices/
 
 | Document | Purpose |
 |----------|---------|
+| **[`docs/TEARDOWN.md`](docs/TEARDOWN.md)** | **📖 Complete technical teardown — every file, system, limitation, and production guide** |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Full system architecture, data flow, component dependencies |
 | [`docs/FILES_GUIDE.md`](docs/FILES_GUIDE.md) | Every major file — what it does, when to edit it |
 | [`docs/EDIT_GUIDE.md`](docs/EDIT_GUIDE.md) | "If you want to change X → go to Y" quick reference |
@@ -664,13 +670,18 @@ Gold-Prices/
 | [`docs/SUPABASE_SETUP.md`](docs/SUPABASE_SETUP.md) | Supabase migration guide |
 | [`docs/SEO_CHECKLIST.md`](docs/SEO_CHECKLIST.md) | SEO optimization checklist |
 | [`docs/AUTOMATIONS.md`](docs/AUTOMATIONS.md) | CI/CD workflow documentation |
+| [`docs/ADMIN_GUIDE.md`](docs/ADMIN_GUIDE.md) | Admin dashboard usage guide |
+| [`docs/ADMIN_SETUP.md`](docs/ADMIN_SETUP.md) | Admin setup instructions |
+| [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) | Contribution guidelines |
+| [`docs/DEPENDENCIES.md`](docs/DEPENDENCIES.md) | Dependency documentation |
+| [`docs/CHANGELOG.md`](docs/CHANGELOG.md) | Version history |
 | [`.env.example`](.env.example) | Environment variable template — copy to `.env` |
 
 ---
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for:
+See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for:
 
 - Code style guide (vanilla ES6, no framework)
 - PR workflow and branch naming

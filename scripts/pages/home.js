@@ -590,6 +590,9 @@ function showPwaBanner(deferredPrompt) {
         box-shadow: 0 -4px 24px rgba(0,0,0,0.3);
         animation: pwaSlideUp 0.3s ease;
       }
+      @media (max-width: 640px) {
+        #pwa-install-banner { bottom: 60px; }
+      }
       @keyframes pwaSlideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
       .pwa-banner-inner {
         display: flex; align-items: center; gap: 0.75rem;

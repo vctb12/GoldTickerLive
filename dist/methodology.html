@@ -1,331 +1,562 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Sources &amp; Methodology | GoldPrices</title>
-  <meta name="description" content="How GoldPrices.app calculates gold prices, sources data, and handles AED fixed peg, karat conversions, and data freshness." />
-  <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/methodology.html" />
-  <link rel="alternate" hreflang="x-default" href="https://vctb12.github.io/Gold-Prices/methodology.html" />
-  <link rel="alternate" hreflang="en" href="https://vctb12.github.io/Gold-Prices/methodology.html" />
-  <link rel="alternate" hreflang="ar" href="https://vctb12.github.io/Gold-Prices/methodology.html?lang=ar" />
-  <meta property="og:title" content="Data Sources &amp; Methodology | GoldPrices" />
-  <meta property="og:description" content="Full transparency on how we calculate gold prices: data sources, AED peg, karat math, and fallback logic." />
-  <meta property="og:type" content="article" />
-  <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/methodology.html" />
-  <meta property="og:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
-  <meta name="twitter:card" content="summary" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Sources &amp; Methodology | GoldPrices</title>
+    <meta
+      name="description"
+      content="How GoldPrices.app calculates gold prices, sources data, and handles AED fixed peg, karat conversions, and data freshness."
+    />
+    <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/methodology.html" />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://vctb12.github.io/Gold-Prices/methodology.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href="https://vctb12.github.io/Gold-Prices/methodology.html"
+    />
+    <link
+      rel="alternate"
+      hreflang="ar"
+      href="https://vctb12.github.io/Gold-Prices/methodology.html?lang=ar"
+    />
+    <meta property="og:title" content="Data Sources &amp; Methodology | GoldPrices" />
+    <meta
+      property="og:description"
+      content="Full transparency on how we calculate gold prices: data sources, AED peg, karat math, and fallback logic."
+    />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://vctb12.github.io/Gold-Prices/methodology.html" />
+    <meta property="og:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
-  <link rel="apple-touch-icon" href="/Gold-Prices/assets/apple-touch-icon-DUSNQezN.png" />
+    <link rel="apple-touch-icon" href="/Gold-Prices/assets/apple-touch-icon-DUSNQezN.png" />
 
-  <link rel="icon" href="/Gold-Prices/assets/favicon-De_NsVNM.svg" type="image/svg+xml" />
+    <link rel="icon" href="/Gold-Prices/assets/favicon-De_NsVNM.svg" type="image/svg+xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="/Gold-Prices/assets/favicon-32x32-b2MMG5GO.png" />
-<link rel="manifest" href="/Gold-Prices/assets/manifest-OrpbCCXp.json" />
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {"@type":"ListItem","position":1,"name":"Home","item":"https://vctb12.github.io/Gold-Prices/"},
-      {"@type":"ListItem","position":2,"name":"Data Sources & Methodology","item":"https://vctb12.github.io/Gold-Prices/methodology.html"}
-    ]
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "Data Sources & Methodology — How GoldPrices Calculates Gold Prices",
-    "description": "How GoldPrices calculates gold prices, sources data, and handles AED fixed peg, karat conversions, and data freshness.",
-    "url": "https://vctb12.github.io/Gold-Prices/methodology.html",
-    "inLanguage": "en",
-    "publisher": {
-      "@type": "Organization",
-      "name": "GoldPrices",
-      "url": "https://vctb12.github.io/Gold-Prices/"
-    }
-  }
-  </script>
+    <link rel="manifest" href="/Gold-Prices/assets/manifest-OrpbCCXp.json" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://vctb12.github.io/Gold-Prices/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Data Sources & Methodology",
+            "item": "https://vctb12.github.io/Gold-Prices/methodology.html"
+          }
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Data Sources & Methodology — How GoldPrices Calculates Gold Prices",
+        "description": "How GoldPrices calculates gold prices, sources data, and handles AED fixed peg, karat conversions, and data freshness.",
+        "url": "https://vctb12.github.io/Gold-Prices/methodology.html",
+        "inLanguage": "en",
+        "publisher": {
+          "@type": "Organization",
+          "name": "GoldPrices",
+          "url": "https://vctb12.github.io/Gold-Prices/"
+        }
+      }
+    </script>
 
-  <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "w4e0nhdxt5");
-</script>
+    <script type="text/javascript">
+      (function (c, l, a, r, i, t, y) {
+        c[a] =
+          c[a] ||
+          function () {
+            (c[a].q = c[a].q || []).push(arguments);
+          };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = 'https://www.clarity.ms/tag/' + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+      })(window, document, 'clarity', 'script', 'w4e0nhdxt5');
+    </script>
 
-  <meta name="msvalidate.01" content="E88623E4C36CDC8E8D44913FA9192725" />
+    <meta name="msvalidate.01" content="E88623E4C36CDC8E8D44913FA9192725" />
+    <script type="module" crossorigin src="/Gold-Prices/assets/methodology-J2OI5PSw.js"></script>
+    <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/rolldown-runtime-DT9E6Kcq.js">
+    <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/footer-C5IFd6hi.js">
+    <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/utils-BA1AJxVD.js">
+    <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/breadcrumbs-DUayqmw2.js">
+    <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/ticker-Bg5HNlvB.js">
+    <link rel="stylesheet" crossorigin href="/Gold-Prices/assets/methodology-B-XrT9Pv.css">
+    <link rel="stylesheet" crossorigin href="/Gold-Prices/assets/style-igB7d4g5.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <!-- Nav + Breadcrumbs (injected by methodology.js) -->
+    <div class="page-breadcrumbs"></div>
 
-  
-  <script type="module" crossorigin src="/Gold-Prices/assets/methodology-pmYguEqZ.js"></script>
-  <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/modulepreload-polyfill-YP0FEG5d.js">
-  <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/footer-D7qki7yJ.js">
-  <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/ticker-ka-nCBow.js">
-  <link rel="modulepreload" crossorigin href="/Gold-Prices/assets/breadcrumbs-CxxVGuAV.js">
-  <link rel="stylesheet" crossorigin href="/Gold-Prices/assets/methodology-xhjCRFI9.css">
-  <link rel="stylesheet" crossorigin href="/Gold-Prices/assets/style-3kLRkJ9_.css">
-</head>
-<body>
-  <a class="skip-link" href="#main-content">Skip to main content</a>
-  <!-- Nav + Breadcrumbs (injected by methodology.js) -->
-  <div class="page-breadcrumbs"></div>
+    <main id="main-content">
+      <!-- Hero -->
+      <section class="method-hero">
+        <div class="method-hero-inner">
+          <div class="method-hero-tag" id="method-hero-tag">Transparency &amp; Trust</div>
+          <h1 id="method-h1">Data Sources &amp; Methodology</h1>
+          <p id="method-sub">
+            How we calculate every price you see — step by step, with full source attribution.
+          </p>
+        </div>
+      </section>
 
-  <main id="main-content">
+      <!-- Table of Contents -->
+      <nav class="method-toc" aria-label="Methodology sections">
+        <div class="method-toc-inner">
+          <span class="method-toc-label" id="method-toc-label">Sections</span>
+          <ul class="method-toc-list">
+            <li><a href="#overview" id="toc-overview">Overview</a></li>
+            <li><a href="#gold-data" id="toc-gold-data">Gold Price Data</a></li>
+            <li><a href="#fx-rates" id="toc-fx-rates">FX Rates</a></li>
+            <li><a href="#aed-peg" id="toc-aed-peg">AED Peg</a></li>
+            <li><a href="#karat-conversion" id="toc-karat">Karat Conversion</a></li>
+            <li><a href="#not-included" id="toc-not-included">What We Don't Include</a></li>
+            <li><a href="#fallback" id="toc-fallback">Fallback &amp; Reliability</a></li>
+            <li><a href="#disclaimer" id="toc-disclaimer">Disclaimer</a></li>
+          </ul>
+        </div>
+      </nav>
 
-    <!-- Hero -->
-    <section class="method-hero">
-      <div class="method-hero-inner">
-        <div class="method-hero-tag" id="method-hero-tag">Transparency &amp; Trust</div>
-        <h1 id="method-h1">Data Sources &amp; Methodology</h1>
-        <p id="method-sub">How we calculate every price you see — step by step, with full source attribution.</p>
+      <div class="method-body">
+        <!-- Section 1: Overview -->
+        <section class="method-section" id="overview">
+          <h2 id="overview-h2">Overview</h2>
+          <p id="overview-p1">
+            GoldPrices aggregates live gold spot price data and currency exchange rates to show
+            indicative bullion-equivalent gold prices across 24+ countries and 7 karat grades. Our
+            goal is to give gold buyers and investors in the UAE, GCC, and wider Arab world a fast,
+            accurate reference price — available in both English and Arabic.
+          </p>
+          <p id="overview-p2">
+            This is a reference and education tool, not a trading platform. Prices shown are
+            estimates of the wholesale bullion-equivalent value of gold at the current moment. They
+            should be used for orientation, comparison, and research — not as the basis for
+            executing trades or financial transactions.
+          </p>
+
+          <div class="method-source-card-row">
+            <div class="method-source-card">
+              <div class="method-source-card-name">gold-api.com</div>
+              <div class="method-source-card-role" id="source-gold-role">
+                Gold spot price (XAU/USD)
+              </div>
+              <div class="method-source-card-freq" id="source-gold-freq">
+                Fetched every 90 seconds
+              </div>
+              <a
+                href="https://gold-api.com"
+                target="_blank"
+                rel="noopener"
+                class="method-source-card-link"
+                >↗ gold-api.com</a
+              >
+            </div>
+            <div class="method-source-card">
+              <div class="method-source-card-name">open.er-api.com</div>
+              <div class="method-source-card-role" id="source-fx-role">
+                Foreign exchange rates (USD base)
+              </div>
+              <div class="method-source-card-freq" id="source-fx-freq">Updated ~every 24 hours</div>
+              <a
+                href="https://open.er-api.com"
+                target="_blank"
+                rel="noopener"
+                class="method-source-card-link"
+                >↗ open.er-api.com</a
+              >
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2: Gold Price Data -->
+        <section class="method-section" id="gold-data">
+          <h2 id="gold-data-h2">Gold Price Data</h2>
+
+          <h3 id="gold-data-source-h3">Source</h3>
+          <p id="gold-data-source-p">
+            We fetch the XAU/USD spot price from
+            <a href="https://gold-api.com" target="_blank" rel="noopener">gold-api.com</a>, a
+            dedicated precious metals data API. The price represents the current market spot rate
+            for one troy ounce of pure gold (99.9% fineness / 24K), denominated in US Dollars.
+          </p>
+
+          <h3 id="gold-data-update-h3">Update Frequency</h3>
+          <p id="gold-data-update-p">
+            The gold price is fetched every <strong>90 seconds</strong> while a page is open and the
+            device is online. This provides near-real-time data with a potential lag of up to 90
+            seconds versus institutional trading platforms.
+          </p>
+
+          <h3 id="gold-data-cache-h3">Caching</h3>
+          <p id="gold-data-cache-p">
+            The most recently fetched gold price is stored in the browser's
+            <code>localStorage</code>. When you load a page, the cached price is displayed
+            immediately — before a network request is made — so you always see a number rather than
+            a blank. A secondary "fallback" slot stores the previous known price for additional
+            resilience.
+          </p>
+
+          <h3 id="gold-data-freshness-h3">Freshness Indicator</h3>
+          <p id="gold-data-freshness-p">
+            A live countdown timer and "last updated" timestamp are displayed throughout the site.
+            If the gold API fails or the data is more than 3 minutes old, a visual "stale" indicator
+            appears in amber/orange. This ensures you always know how fresh the data is.
+          </p>
+
+          <div class="method-warning" id="gold-data-warning">
+            <strong id="gold-data-warning-title">Limitation</strong>
+            <p id="gold-data-warning-body">
+              There is a potential lag of up to 90 seconds versus live institutional trading
+              platforms. This site is for reference only — do not use these prices for executing
+              trades or financial decisions.
+            </p>
+          </div>
+        </section>
+
+        <!-- Section 3: FX Rates -->
+        <section class="method-section" id="fx-rates">
+          <h2 id="fx-rates-h2">Foreign Exchange Rates</h2>
+
+          <h3 id="fx-rates-source-h3">Source</h3>
+          <p id="fx-rates-source-p">
+            Currency exchange rates (USD as the base currency) are fetched from
+            <a href="https://open.er-api.com" target="_blank" rel="noopener">open.er-api.com</a>
+            (free tier). This provides rates for all 24+ currencies supported by the tracker.
+          </p>
+
+          <h3 id="fx-rates-update-h3">Update Frequency</h3>
+          <p id="fx-rates-update-p">
+            Exchange rates are updated approximately once per 24 hours by the API provider. We cache
+            the rates locally in <code>localStorage</code> and display an "FX" chip in the tracker
+            showing the last update time. When FX rates are stale (the provider's
+            <code>next_update</code> timestamp has passed), a visual stale indicator is shown.
+          </p>
+
+          <div class="method-warning method-warning--info" id="fx-rates-warning">
+            <strong id="fx-rates-warning-title">Important Limitation</strong>
+            <p id="fx-rates-warning-body">
+              Exchange rates are mid-market reference rates. Actual gold trade prices — especially
+              for physical import/export — reflect bid/ask spreads, dealer margins, and local market
+              premiums that are not captured here.
+            </p>
+          </div>
+        </section>
+
+        <!-- Section 4: AED Peg -->
+        <section class="method-section" id="aed-peg">
+          <h2 id="aed-peg-h2">The AED Fixed Peg (Special Case)</h2>
+
+          <p id="aed-peg-p1">
+            The UAE Dirham has been officially pegged to the US Dollar at a rate of
+            <strong>3.6725 AED per 1 USD</strong> since November 1997. This peg is maintained by the
+            UAE Central Bank and has never changed in over 27 years of continuous operation.
+          </p>
+
+          <div class="method-formula-block">
+            <div class="method-formula-label" id="aed-formula-label">Hardcoded AED Rate</div>
+            <code class="method-formula"
+              >1 USD = 3.6725 AED (official Central Bank of UAE peg)</code
+            >
+          </div>
+
+          <h3 id="aed-peg-approach-h3">Our Approach</h3>
+          <p id="aed-peg-approach-p">
+            We <strong>never</strong> use the AED rate returned by the open.er-api.com API. Even
+            though the API returns an AED rate, free-tier exchange rate APIs can occasionally return
+            rounded or slightly off values. To guarantee accuracy for AED-denominated gold prices,
+            we hardcode the official peg rate of <strong>3.6725</strong> and delete any AED value
+            from the API response before processing.
+          </p>
+
+          <p id="aed-peg-effect-p">
+            This means AED gold prices on this site are always mathematically exact relative to the
+            USD spot price — with zero exchange rate uncertainty. This is actually a feature, not a
+            limitation: because the peg has held since 1997, our hardcoded value is more accurate
+            than any API-derived figure.
+          </p>
+
+          <p id="aed-peg-reference-p">
+            Reference:
+            <a href="https://www.centralbank.ae/" target="_blank" rel="noopener"
+              >UAE Central Bank</a
+            >
+            official communications and regulatory framework.
+          </p>
+        </section>
+
+        <!-- Section 5: Karat Conversion -->
+        <section class="method-section" id="karat-conversion">
+          <h2 id="karat-h2">Karat Conversion</h2>
+
+          <p id="karat-intro-p">
+            Gold purity is expressed in karats, where 24 karats = pure gold (99.9% fineness). Lower
+            karat grades are alloys — mixtures of gold with other metals such as silver, copper, or
+            palladium. The gold content by weight is a simple fraction:
+          </p>
+
+          <div class="method-karat-table-wrap">
+            <table class="method-karat-table">
+              <thead>
+                <tr>
+                  <th id="karat-th-grade">Karat Grade</th>
+                  <th id="karat-th-purity">Purity</th>
+                  <th id="karat-th-fraction">Fraction</th>
+                  <th id="karat-th-fineness">Millesimal Fineness</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>24K</strong></td>
+                  <td>99.9%</td>
+                  <td>24/24 = 1.0000</td>
+                  <td>999</td>
+                </tr>
+                <tr>
+                  <td><strong>22K</strong></td>
+                  <td>91.7%</td>
+                  <td>22/24 = 0.9167</td>
+                  <td>916</td>
+                </tr>
+                <tr>
+                  <td><strong>21K</strong></td>
+                  <td>87.5%</td>
+                  <td>21/24 = 0.8750</td>
+                  <td>875</td>
+                </tr>
+                <tr>
+                  <td><strong>18K</strong></td>
+                  <td>75.0%</td>
+                  <td>18/24 = 0.7500</td>
+                  <td>750</td>
+                </tr>
+                <tr>
+                  <td><strong>14K</strong></td>
+                  <td>58.3%</td>
+                  <td>14/24 = 0.5833</td>
+                  <td>583</td>
+                </tr>
+                <tr>
+                  <td><strong>9K</strong></td>
+                  <td>37.5%</td>
+                  <td>9/24 = 0.3750</td>
+                  <td>375</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 id="karat-formula-h3">The Price Formula</h3>
+          <p id="karat-formula-intro">
+            All prices displayed on this site are derived from a single formula applied consistently
+            across every country and karat grade:
+          </p>
+
+          <div class="method-formula-block">
+            <div class="method-formula-label" id="formula-label-main">Core Price Formula</div>
+            <code class="method-formula"
+              >Price per gram = (XAU/USD spot ÷ 31.1035) × (karat ÷ 24) × FX rate</code
+            >
+          </div>
+
+          <ul class="method-formula-breakdown">
+            <li><code>XAU/USD spot</code> — Current gold price in US Dollars per troy ounce</li>
+            <li>
+              <code>÷ 31.1035</code> — Converts troy ounce to grams (1 troy oz = 31.1035 g, the
+              international standard)
+            </li>
+            <li><code>× (karat ÷ 24)</code> — Adjusts for purity (e.g., 22/24 = 0.9167 for 22K)</li>
+            <li>
+              <code>× FX rate</code> — Converts USD to the target currency (AED: always 3.6725)
+            </li>
+          </ul>
+
+          <p id="karat-troy-p">
+            The troy ounce (31.1035 grams) is the universal standard unit for precious metals
+            pricing worldwide. It is distinct from the avoirdupois ounce (28.35 grams) used for
+            everyday weights.
+          </p>
+        </section>
+
+        <!-- Section 6: What We Don't Include -->
+        <section class="method-section" id="not-included">
+          <h2 id="not-included-h2">What Our Prices Are Not</h2>
+          <p id="not-included-intro">
+            Our prices are bullion-equivalent spot values. They intentionally exclude several
+            components that affect real-world retail prices. Understanding these exclusions helps
+            you interpret the numbers correctly.
+          </p>
+
+          <div class="method-not-list">
+            <div class="method-not-item">
+              <div class="method-not-icon" aria-hidden="true">✗</div>
+              <div>
+                <strong id="not-dgjg-title"
+                  >Not the Dubai Gold &amp; Jewellery Group (DGJG) Daily Rate</strong
+                >
+                <p id="not-dgjg-p">
+                  The DGJG publishes a daily retail floor rate each morning based on the overnight
+                  LBMA close. Our price is based on the live international spot price, which updates
+                  throughout the day. The two will differ by a small amount depending on how much
+                  the market has moved since the DGJG morning fix.
+                </p>
+              </div>
+            </div>
+            <div class="method-not-item">
+              <div class="method-not-icon" aria-hidden="true">✗</div>
+              <div>
+                <strong id="not-making-title">Not Inclusive of Making Charges</strong>
+                <p id="not-making-p">
+                  Jewellery prices include fabrication/making charges on top of the gold price. In
+                  the Dubai Gold Souk, these typically range from AED 3–12 per gram for machine-made
+                  pieces, and up to AED 30+ per gram for handmade or designer jewellery. Investment
+                  bars from reputable dealers carry much smaller premiums (typically 0.5–3% over
+                  spot).
+                </p>
+              </div>
+            </div>
+            <div class="method-not-item">
+              <div class="method-not-icon" aria-hidden="true">✗</div>
+              <div>
+                <strong id="not-vat-title">Not Inclusive of VAT</strong>
+                <p id="not-vat-p">
+                  VAT applies in some countries covered by this tracker. As of 2025: UAE (5%), Saudi
+                  Arabia (15%), Bahrain (10%), Oman (5%). Kuwait and Qatar do not currently levy VAT
+                  on gold. Our prices do not include any VAT component — add the applicable rate for
+                  your jurisdiction to estimate a retail total.
+                </p>
+              </div>
+            </div>
+            <div class="method-not-item">
+              <div class="method-not-icon" aria-hidden="true">✗</div>
+              <div>
+                <strong id="not-advice-title">Not Financial Advice</strong>
+                <p id="not-advice-p">
+                  Nothing on this site constitutes financial, investment, or legal advice. Gold
+                  markets are volatile. Always consult a qualified financial advisor before making
+                  investment decisions.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 7: Fallback & Reliability -->
+        <section class="method-section" id="fallback">
+          <h2 id="fallback-h2">Data Fallback &amp; Reliability</h2>
+          <p id="fallback-intro">
+            We implement a multi-tier data fallback system to ensure the site remains useful even
+            when APIs are unavailable or slow.
+          </p>
+
+          <div class="method-fallback-tiers">
+            <div class="method-fallback-tier method-fallback-tier--1">
+              <div class="method-tier-badge">Tier 1</div>
+              <div class="method-tier-label" id="tier-1-label">Live API</div>
+              <div class="method-tier-desc" id="tier-1-desc">
+                gold-api.com responds within 8 seconds — fresh real-time price
+              </div>
+            </div>
+            <div class="method-fallback-tier method-fallback-tier--2">
+              <div class="method-tier-badge">Tier 2</div>
+              <div class="method-tier-label" id="tier-2-label">localStorage Primary Cache</div>
+              <div class="method-tier-desc" id="tier-2-desc">
+                Last known price from this browser session — shown immediately on load
+              </div>
+            </div>
+            <div class="method-fallback-tier method-fallback-tier--3">
+              <div class="method-tier-badge">Tier 3</div>
+              <div class="method-tier-label" id="tier-3-label">localStorage Fallback Slot</div>
+              <div class="method-tier-desc" id="tier-3-desc">
+                Previous known price — preserved when cache is overwritten
+              </div>
+            </div>
+            <div class="method-fallback-tier method-fallback-tier--4">
+              <div class="method-tier-badge">Tier 4</div>
+              <div class="method-tier-label" id="tier-4-label">Hardcoded Last-Resort Value</div>
+              <div class="method-tier-desc" id="tier-4-desc">
+                Static compile-time price used only if all other sources fail
+              </div>
+            </div>
+            <div class="method-fallback-tier method-fallback-tier--5">
+              <div class="method-tier-badge">Tier 5</div>
+              <div class="method-tier-label" id="tier-5-label">Error State</div>
+              <div class="method-tier-desc" id="tier-5-desc">
+                Clear error banner shown if all data is unavailable — no silent failures
+              </div>
+            </div>
+          </div>
+
+          <h3 id="fallback-stale-h3">Stale Data Handling</h3>
+          <p id="fallback-stale-p">
+            If the gold API fails on a refresh attempt, the last known price is kept visible with an
+            amber "stale" indicator. We never show a blank price — but we also never silently
+            pretend stale data is fresh.
+          </p>
+
+          <h3 id="fallback-offline-h3">Offline Mode</h3>
+          <p id="fallback-offline-p">
+            Because cached data is stored in <code>localStorage</code>, the site displays cached
+            gold prices and FX rates immediately on load — even without a network connection. Cached
+            data is labelled with its age so you always know what you are looking at.
+          </p>
+        </section>
+
+        <!-- Section 8: Disclaimer -->
+        <section class="method-section" id="disclaimer">
+          <h2 id="disclaimer-h2">Disclaimer</h2>
+
+          <div class="method-warning method-warning--strong">
+            <strong id="disclaimer-title">Important Disclaimer</strong>
+            <p id="disclaimer-p1">
+              All gold prices and currency conversions displayed on this website are estimates only.
+              They are calculated from third-party data sources that may contain errors, delays, or
+              inaccuracies. The prices shown represent theoretical bullion-equivalent values and do
+              not reflect actual retail, wholesale, or trade prices available from any specific
+              dealer, exchange, or institution.
+            </p>
+            <p id="disclaimer-p2">
+              GoldPrices is not a financial services firm, investment advisor, or dealer in precious
+              metals. Nothing on this website constitutes financial, investment, tax, or legal
+              advice. Past gold price performance does not guarantee future results. Gold is a
+              volatile asset — its value can fall as well as rise.
+            </p>
+            <p id="disclaimer-p3">
+              Always verify prices with a licensed gold dealer or financial institution before
+              executing any transaction. Consult a qualified financial advisor for investment
+              decisions. For Zakat calculations, consult a qualified Islamic scholar.
+            </p>
+          </div>
+        </section>
       </div>
-    </section>
+      <!-- end .method-body -->
 
-    <!-- Table of Contents -->
-    <nav class="method-toc" aria-label="Methodology sections">
-      <div class="method-toc-inner">
-        <span class="method-toc-label" id="method-toc-label">Sections</span>
-        <ul class="method-toc-list">
-          <li><a href="#overview" id="toc-overview">Overview</a></li>
-          <li><a href="#gold-data" id="toc-gold-data">Gold Price Data</a></li>
-          <li><a href="#fx-rates" id="toc-fx-rates">FX Rates</a></li>
-          <li><a href="#aed-peg" id="toc-aed-peg">AED Peg</a></li>
-          <li><a href="#karat-conversion" id="toc-karat">Karat Conversion</a></li>
-          <li><a href="#not-included" id="toc-not-included">What We Don't Include</a></li>
-          <li><a href="#fallback" id="toc-fallback">Fallback &amp; Reliability</a></li>
-          <li><a href="#disclaimer" id="toc-disclaimer">Disclaimer</a></li>
-        </ul>
-      </div>
-    </nav>
-
-    <div class="method-body">
-
-      <!-- Section 1: Overview -->
-      <section class="method-section" id="overview">
-        <h2 id="overview-h2">Overview</h2>
-        <p id="overview-p1">GoldPrices aggregates live gold spot price data and currency exchange rates to show indicative bullion-equivalent gold prices across 24+ countries and 7 karat grades. Our goal is to give gold buyers and investors in the UAE, GCC, and wider Arab world a fast, accurate reference price — available in both English and Arabic.</p>
-        <p id="overview-p2">This is a reference and education tool, not a trading platform. Prices shown are estimates of the wholesale bullion-equivalent value of gold at the current moment. They should be used for orientation, comparison, and research — not as the basis for executing trades or financial transactions.</p>
-
-        <div class="method-source-card-row">
-          <div class="method-source-card">
-            <div class="method-source-card-name">gold-api.com</div>
-            <div class="method-source-card-role" id="source-gold-role">Gold spot price (XAU/USD)</div>
-            <div class="method-source-card-freq" id="source-gold-freq">Fetched every 90 seconds</div>
-            <a href="https://gold-api.com" target="_blank" rel="noopener" class="method-source-card-link">↗ gold-api.com</a>
-          </div>
-          <div class="method-source-card">
-            <div class="method-source-card-name">open.er-api.com</div>
-            <div class="method-source-card-role" id="source-fx-role">Foreign exchange rates (USD base)</div>
-            <div class="method-source-card-freq" id="source-fx-freq">Updated ~every 24 hours</div>
-            <a href="https://open.er-api.com" target="_blank" rel="noopener" class="method-source-card-link">↗ open.er-api.com</a>
-          </div>
+      <section class="method-section method-section--tools">
+        <div class="related-tools-row">
+          <a href="tracker.html" class="related-tool-link">📈 Live Tracker</a>
+          <a href="calculator.html" class="related-tool-link">🧮 Calculator</a>
+          <a href="countries/uae.html" class="related-tool-link">🇦🇪 UAE Prices</a>
+          <a href="learn.html" class="related-tool-link">📚 Gold Guide</a>
+          <a href="insights.html" class="related-tool-link">📊 Insights</a>
         </div>
       </section>
+    </main>
 
-      <!-- Section 2: Gold Price Data -->
-      <section class="method-section" id="gold-data">
-        <h2 id="gold-data-h2">Gold Price Data</h2>
-
-        <h3 id="gold-data-source-h3">Source</h3>
-        <p id="gold-data-source-p">We fetch the XAU/USD spot price from <a href="https://gold-api.com" target="_blank" rel="noopener">gold-api.com</a>, a dedicated precious metals data API. The price represents the current market spot rate for one troy ounce of pure gold (99.9% fineness / 24K), denominated in US Dollars.</p>
-
-        <h3 id="gold-data-update-h3">Update Frequency</h3>
-        <p id="gold-data-update-p">The gold price is fetched every <strong>90 seconds</strong> while a page is open and the device is online. This provides near-real-time data with a potential lag of up to 90 seconds versus institutional trading platforms.</p>
-
-        <h3 id="gold-data-cache-h3">Caching</h3>
-        <p id="gold-data-cache-p">The most recently fetched gold price is stored in the browser's <code>localStorage</code>. When you load a page, the cached price is displayed immediately — before a network request is made — so you always see a number rather than a blank. A secondary "fallback" slot stores the previous known price for additional resilience.</p>
-
-        <h3 id="gold-data-freshness-h3">Freshness Indicator</h3>
-        <p id="gold-data-freshness-p">A live countdown timer and "last updated" timestamp are displayed throughout the site. If the gold API fails or the data is more than 3 minutes old, a visual "stale" indicator appears in amber/orange. This ensures you always know how fresh the data is.</p>
-
-        <div class="method-warning" id="gold-data-warning">
-          <strong id="gold-data-warning-title">Limitation</strong>
-          <p id="gold-data-warning-body">There is a potential lag of up to 90 seconds versus live institutional trading platforms. This site is for reference only — do not use these prices for executing trades or financial decisions.</p>
-        </div>
-      </section>
-
-      <!-- Section 3: FX Rates -->
-      <section class="method-section" id="fx-rates">
-        <h2 id="fx-rates-h2">Foreign Exchange Rates</h2>
-
-        <h3 id="fx-rates-source-h3">Source</h3>
-        <p id="fx-rates-source-p">Currency exchange rates (USD as the base currency) are fetched from <a href="https://open.er-api.com" target="_blank" rel="noopener">open.er-api.com</a> (free tier). This provides rates for all 24+ currencies supported by the tracker.</p>
-
-        <h3 id="fx-rates-update-h3">Update Frequency</h3>
-        <p id="fx-rates-update-p">Exchange rates are updated approximately once per 24 hours by the API provider. We cache the rates locally in <code>localStorage</code> and display an "FX" chip in the tracker showing the last update time. When FX rates are stale (the provider's <code>next_update</code> timestamp has passed), a visual stale indicator is shown.</p>
-
-        <div class="method-warning method-warning--info" id="fx-rates-warning">
-          <strong id="fx-rates-warning-title">Important Limitation</strong>
-          <p id="fx-rates-warning-body">Exchange rates are mid-market reference rates. Actual gold trade prices — especially for physical import/export — reflect bid/ask spreads, dealer margins, and local market premiums that are not captured here.</p>
-        </div>
-      </section>
-
-      <!-- Section 4: AED Peg -->
-      <section class="method-section" id="aed-peg">
-        <h2 id="aed-peg-h2">The AED Fixed Peg (Special Case)</h2>
-
-        <p id="aed-peg-p1">The UAE Dirham has been officially pegged to the US Dollar at a rate of <strong>3.6725 AED per 1 USD</strong> since November 1997. This peg is maintained by the UAE Central Bank and has never changed in over 27 years of continuous operation.</p>
-
-        <div class="method-formula-block">
-          <div class="method-formula-label" id="aed-formula-label">Hardcoded AED Rate</div>
-          <code class="method-formula">1 USD = 3.6725 AED  (official Central Bank of UAE peg)</code>
-        </div>
-
-        <h3 id="aed-peg-approach-h3">Our Approach</h3>
-        <p id="aed-peg-approach-p">We <strong>never</strong> use the AED rate returned by the open.er-api.com API. Even though the API returns an AED rate, free-tier exchange rate APIs can occasionally return rounded or slightly off values. To guarantee accuracy for AED-denominated gold prices, we hardcode the official peg rate of <strong>3.6725</strong> and delete any AED value from the API response before processing.</p>
-
-        <p id="aed-peg-effect-p">This means AED gold prices on this site are always mathematically exact relative to the USD spot price — with zero exchange rate uncertainty. This is actually a feature, not a limitation: because the peg has held since 1997, our hardcoded value is more accurate than any API-derived figure.</p>
-
-        <p id="aed-peg-reference-p">Reference: <a href="https://www.centralbank.ae/" target="_blank" rel="noopener">UAE Central Bank</a> official communications and regulatory framework.</p>
-      </section>
-
-      <!-- Section 5: Karat Conversion -->
-      <section class="method-section" id="karat-conversion">
-        <h2 id="karat-h2">Karat Conversion</h2>
-
-        <p id="karat-intro-p">Gold purity is expressed in karats, where 24 karats = pure gold (99.9% fineness). Lower karat grades are alloys — mixtures of gold with other metals such as silver, copper, or palladium. The gold content by weight is a simple fraction:</p>
-
-        <div class="method-karat-table-wrap">
-          <table class="method-karat-table">
-            <thead>
-              <tr>
-                <th id="karat-th-grade">Karat Grade</th>
-                <th id="karat-th-purity">Purity</th>
-                <th id="karat-th-fraction">Fraction</th>
-                <th id="karat-th-fineness">Millesimal Fineness</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>24K</strong></td><td>99.9%</td><td>24/24 = 1.0000</td><td>999</td></tr>
-              <tr><td><strong>22K</strong></td><td>91.7%</td><td>22/24 = 0.9167</td><td>916</td></tr>
-              <tr><td><strong>21K</strong></td><td>87.5%</td><td>21/24 = 0.8750</td><td>875</td></tr>
-              <tr><td><strong>18K</strong></td><td>75.0%</td><td>18/24 = 0.7500</td><td>750</td></tr>
-              <tr><td><strong>14K</strong></td><td>58.3%</td><td>14/24 = 0.5833</td><td>583</td></tr>
-              <tr><td><strong>9K</strong></td><td>37.5%</td><td>9/24 = 0.3750</td><td>375</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3 id="karat-formula-h3">The Price Formula</h3>
-        <p id="karat-formula-intro">All prices displayed on this site are derived from a single formula applied consistently across every country and karat grade:</p>
-
-        <div class="method-formula-block">
-          <div class="method-formula-label" id="formula-label-main">Core Price Formula</div>
-          <code class="method-formula">Price per gram = (XAU/USD spot ÷ 31.1035) × (karat ÷ 24) × FX rate</code>
-        </div>
-
-        <ul class="method-formula-breakdown">
-          <li><code>XAU/USD spot</code> — Current gold price in US Dollars per troy ounce</li>
-          <li><code>÷ 31.1035</code> — Converts troy ounce to grams (1 troy oz = 31.1035 g, the international standard)</li>
-          <li><code>× (karat ÷ 24)</code> — Adjusts for purity (e.g., 22/24 = 0.9167 for 22K)</li>
-          <li><code>× FX rate</code> — Converts USD to the target currency (AED: always 3.6725)</li>
-        </ul>
-
-        <p id="karat-troy-p">The troy ounce (31.1035 grams) is the universal standard unit for precious metals pricing worldwide. It is distinct from the avoirdupois ounce (28.35 grams) used for everyday weights.</p>
-      </section>
-
-      <!-- Section 6: What We Don't Include -->
-      <section class="method-section" id="not-included">
-        <h2 id="not-included-h2">What Our Prices Are Not</h2>
-        <p id="not-included-intro">Our prices are bullion-equivalent spot values. They intentionally exclude several components that affect real-world retail prices. Understanding these exclusions helps you interpret the numbers correctly.</p>
-
-        <div class="method-not-list">
-          <div class="method-not-item">
-            <div class="method-not-icon" aria-hidden="true">✗</div>
-            <div>
-              <strong id="not-dgjg-title">Not the Dubai Gold &amp; Jewellery Group (DGJG) Daily Rate</strong>
-              <p id="not-dgjg-p">The DGJG publishes a daily retail floor rate each morning based on the overnight LBMA close. Our price is based on the live international spot price, which updates throughout the day. The two will differ by a small amount depending on how much the market has moved since the DGJG morning fix.</p>
-            </div>
-          </div>
-          <div class="method-not-item">
-            <div class="method-not-icon" aria-hidden="true">✗</div>
-            <div>
-              <strong id="not-making-title">Not Inclusive of Making Charges</strong>
-              <p id="not-making-p">Jewellery prices include fabrication/making charges on top of the gold price. In the Dubai Gold Souk, these typically range from AED 3–12 per gram for machine-made pieces, and up to AED 30+ per gram for handmade or designer jewellery. Investment bars from reputable dealers carry much smaller premiums (typically 0.5–3% over spot).</p>
-            </div>
-          </div>
-          <div class="method-not-item">
-            <div class="method-not-icon" aria-hidden="true">✗</div>
-            <div>
-              <strong id="not-vat-title">Not Inclusive of VAT</strong>
-              <p id="not-vat-p">VAT applies in some countries covered by this tracker. As of 2025: UAE (5%), Saudi Arabia (15%), Bahrain (10%), Oman (5%). Kuwait and Qatar do not currently levy VAT on gold. Our prices do not include any VAT component — add the applicable rate for your jurisdiction to estimate a retail total.</p>
-            </div>
-          </div>
-          <div class="method-not-item">
-            <div class="method-not-icon" aria-hidden="true">✗</div>
-            <div>
-              <strong id="not-advice-title">Not Financial Advice</strong>
-              <p id="not-advice-p">Nothing on this site constitutes financial, investment, or legal advice. Gold markets are volatile. Always consult a qualified financial advisor before making investment decisions.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Section 7: Fallback & Reliability -->
-      <section class="method-section" id="fallback">
-        <h2 id="fallback-h2">Data Fallback &amp; Reliability</h2>
-        <p id="fallback-intro">We implement a multi-tier data fallback system to ensure the site remains useful even when APIs are unavailable or slow.</p>
-
-        <div class="method-fallback-tiers">
-          <div class="method-fallback-tier method-fallback-tier--1">
-            <div class="method-tier-badge">Tier 1</div>
-            <div class="method-tier-label" id="tier-1-label">Live API</div>
-            <div class="method-tier-desc" id="tier-1-desc">gold-api.com responds within 8 seconds — fresh real-time price</div>
-          </div>
-          <div class="method-fallback-tier method-fallback-tier--2">
-            <div class="method-tier-badge">Tier 2</div>
-            <div class="method-tier-label" id="tier-2-label">localStorage Primary Cache</div>
-            <div class="method-tier-desc" id="tier-2-desc">Last known price from this browser session — shown immediately on load</div>
-          </div>
-          <div class="method-fallback-tier method-fallback-tier--3">
-            <div class="method-tier-badge">Tier 3</div>
-            <div class="method-tier-label" id="tier-3-label">localStorage Fallback Slot</div>
-            <div class="method-tier-desc" id="tier-3-desc">Previous known price — preserved when cache is overwritten</div>
-          </div>
-          <div class="method-fallback-tier method-fallback-tier--4">
-            <div class="method-tier-badge">Tier 4</div>
-            <div class="method-tier-label" id="tier-4-label">Hardcoded Last-Resort Value</div>
-            <div class="method-tier-desc" id="tier-4-desc">Static compile-time price used only if all other sources fail</div>
-          </div>
-          <div class="method-fallback-tier method-fallback-tier--5">
-            <div class="method-tier-badge">Tier 5</div>
-            <div class="method-tier-label" id="tier-5-label">Error State</div>
-            <div class="method-tier-desc" id="tier-5-desc">Clear error banner shown if all data is unavailable — no silent failures</div>
-          </div>
-        </div>
-
-        <h3 id="fallback-stale-h3">Stale Data Handling</h3>
-        <p id="fallback-stale-p">If the gold API fails on a refresh attempt, the last known price is kept visible with an amber "stale" indicator. We never show a blank price — but we also never silently pretend stale data is fresh.</p>
-
-        <h3 id="fallback-offline-h3">Offline Mode</h3>
-        <p id="fallback-offline-p">Because cached data is stored in <code>localStorage</code>, the site displays cached gold prices and FX rates immediately on load — even without a network connection. Cached data is labelled with its age so you always know what you are looking at.</p>
-      </section>
-
-      <!-- Section 8: Disclaimer -->
-      <section class="method-section" id="disclaimer">
-        <h2 id="disclaimer-h2">Disclaimer</h2>
-
-        <div class="method-warning method-warning--strong">
-          <strong id="disclaimer-title">Important Disclaimer</strong>
-          <p id="disclaimer-p1">All gold prices and currency conversions displayed on this website are estimates only. They are calculated from third-party data sources that may contain errors, delays, or inaccuracies. The prices shown represent theoretical bullion-equivalent values and do not reflect actual retail, wholesale, or trade prices available from any specific dealer, exchange, or institution.</p>
-          <p id="disclaimer-p2">GoldPrices is not a financial services firm, investment advisor, or dealer in precious metals. Nothing on this website constitutes financial, investment, tax, or legal advice. Past gold price performance does not guarantee future results. Gold is a volatile asset — its value can fall as well as rise.</p>
-          <p id="disclaimer-p3">Always verify prices with a licensed gold dealer or financial institution before executing any transaction. Consult a qualified financial advisor for investment decisions. For Zakat calculations, consult a qualified Islamic scholar.</p>
-        </div>
-      </section>
-
-    </div><!-- end .method-body -->
-
-    <section class="method-section method-section--tools">
-      <div class="related-tools-row">
-        <a href="tracker.html" class="related-tool-link">📈 Live Tracker</a>
-        <a href="calculator.html" class="related-tool-link">🧮 Calculator</a>
-        <a href="countries/uae.html" class="related-tool-link">🇦🇪 UAE Prices</a>
-        <a href="learn.html" class="related-tool-link">📚 Gold Guide</a>
-        <a href="insights.html" class="related-tool-link">📊 Insights</a>
-      </div>
-    </section>
-  </main>
-
-</body>
+  </body>
 </html>
