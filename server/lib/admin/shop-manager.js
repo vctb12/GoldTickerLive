@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const { logAction } = require('../audit-log');
 
-const SHOPS_FILE = path.join(__dirname, '../../data/shops-data.json');
+const SHOPS_FILE = path.join(__dirname, '../../../data/shops-data.json');
 
 // Ensure data directory exists
 const dataDir = path.dirname(SHOPS_FILE);

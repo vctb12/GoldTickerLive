@@ -18,7 +18,7 @@ const fs = require('fs');
 const path = require('path');
 const { getSupabaseClient } = require('../lib/supabase-client');
 
-const AUDIT_FILE = path.join(__dirname, '../data/audit-logs.json');
+const AUDIT_FILE = path.join(__dirname, '../../data/audit-logs.json');
 const getBackend = () => process.env.STORAGE_BACKEND || 'file';
 
 // ---------------------------------------------------------------------------

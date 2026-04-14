@@ -6,7 +6,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const AUDIT_LOG_FILE = path.join(__dirname, '../data/audit-logs.json');
+const AUDIT_LOG_FILE = path.join(__dirname, '../../data/audit-logs.json');
 
 // Ensure data directory exists
 const dataDir = path.dirname(AUDIT_LOG_FILE);

@@ -8,7 +8,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
-const { errorHandler } = require('./lib/errors');
+const { errorHandler } = require('./server/lib/errors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;

@@ -59,8 +59,8 @@ after(() => {
   }
 });
 
-const shopsRepo = require('../repositories/shops.repository');
-const auditRepo = require('../repositories/audit.repository');
+const shopsRepo = require('../server/repositories/shops.repository');
+const auditRepo = require('../server/repositories/audit.repository');
 
 // ===========================================================================
 // shops.repository

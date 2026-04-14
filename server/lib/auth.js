@@ -55,7 +55,7 @@ let users = [
 // Load users from file if exists
 const fs = require('fs');
 const path = require('path');
-const USERS_FILE = path.join(__dirname, '../data/users.json');
+const USERS_FILE = path.join(__dirname, '../../data/users.json');
 
 function loadUsers() {
   if (fs.existsSync(USERS_FILE)) {

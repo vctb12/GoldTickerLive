@@ -15,7 +15,7 @@ const {
   NotFoundError,
   RateLimitError,
   errorHandler,
-} = require('../lib/errors');
+} = require('../server/lib/errors');
 
 // ---------------------------------------------------------------------------
 // Error class tests

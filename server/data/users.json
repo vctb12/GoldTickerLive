@@ -1,0 +1,19 @@
+[
+  {
+    "id": "admin_1",
+    "email": "admin@goldprices.com",
+    "password": "$2b$10$6NNpNyFRIPm13wcSe1NMBOUZP7F3YEN6l4nbnTG3R5J6boSO3cZNy",
+    "name": "Administrator",
+    "role": "admin",
+    "createdAt": "2026-04-14T12:03:50.854Z"
+  },
+  {
+    "id": "user_1776168231142",
+    "email": "newuser@example.com",
+    "password": "$2b$10$lPd8DhdYWwJJsQh2WNzAcOozcj64pIP0P1MKHm8DYmX8lht1F1r4O",
+    "name": "New User",
+    "role": "editor",
+    "createdAt": "2026-04-14T12:03:51.142Z",
+    "createdBy": "admin@goldprices.com"
+  }
+]

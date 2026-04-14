@@ -6,13 +6,13 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const router = express.Router();
-const auth = require('../../../lib/auth');
+const auth = require('../../lib/auth');
 const { authenticate, authMiddleware } = auth;
-const shopManager = require('../../../lib/admin/shop-manager');
-const auditLog = require('../../../lib/audit-log');
-const shopsRepo = require('../../../repositories/shops.repository');
-const auditRepo = require('../../../repositories/audit.repository');
-const { ValidationError, NotFoundError } = require('../../../lib/errors');
+const shopManager = require('../../lib/admin/shop-manager');
+const auditLog = require('../../lib/audit-log');
+const shopsRepo = require('../../repositories/shops.repository');
+const auditRepo = require('../../repositories/audit.repository');
+const { ValidationError, NotFoundError } = require('../../lib/errors');
 
 // ---------------------------------------------------------------------------
 // Simple in-memory rate limiter for the login endpoint

@@ -30,7 +30,7 @@ after(() => {
   }
 });
 
-const auditLog = require('../lib/audit-log');
+const auditLog = require('../server/lib/audit-log');
 
 describe('logAction', () => {
   test('creates a log entry with required fields', () => {
