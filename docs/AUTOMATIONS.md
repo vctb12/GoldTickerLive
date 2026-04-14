@@ -8,25 +8,40 @@ All automation runs via GitHub Actions and requires only GitHub Secrets — no p
 
 Go to **Settings → Secrets and variables → Actions → New repository secret** for each:
 
-| Secret                        | Used by                 | How to get it                                        |
-| ----------------------------- | ----------------------- | ---------------------------------------------------- |
-| `GOLD_API_KEY`                | All price scripts       | Sign up at https://gold-api.com                      |
-| `TWITTER_API_KEY`             | X/Twitter posts         | X Developer Portal: API Key                          |
-| `TWITTER_API_SECRET`          | X/Twitter posts         | X Developer Portal: API Key Secret                   |
-| `TWITTER_ACCESS_TOKEN`        | X/Twitter posts         | X Developer Portal: Access Token (read-write)        |
-| `TWITTER_ACCESS_TOKEN_SECRET` | X/Twitter posts         | X Developer Portal: Access Token Secret              |
-| `TELEGRAM_BOT_TOKEN`          | Telegram posts & alerts | @BotFather on Telegram                               |
-| `TELEGRAM_CHANNEL_ID`         | Telegram posts & alerts | Channel username e.g. `@mygoldchannel` or numeric ID |
-| `DISCORD_WEBHOOK_URL`         | Discord posts & alerts  | Discord channel → Integrations → Webhooks            |
+| Secret                        | Used by                      | How to get it                                        |
+| ----------------------------- | ---------------------------- | ---------------------------------------------------- |
+| `GOLD_API_KEY`                | All price scripts            | Sign up at https://gold-api.com                      |
+| `CONSUMER_KEY`                | X/Twitter posts              | X Developer Portal: API Key (Consumer Key)           |
+| `CONSUMER_SECRET`             | X/Twitter posts              | X Developer Portal: API Key Secret                   |
+| `ACCESS_TOKEN`                | X/Twitter posts              | X Developer Portal: Access Token (read-write)        |
+| `ACCESS_TOKEN_SECRET`         | X/Twitter posts              | X Developer Portal: Access Token Secret              |
+| `SUPABASE_URL`                | Python poster, DB sync       | Supabase project → Settings → API → URL              |
+| `SUPABASE_SERVICE_ROLE_KEY`   | Python poster, DB sync       | Supabase project → Settings → API → service_role key |
+| `TELEGRAM_BOT_TOKEN`          | Telegram posts & alerts      | @BotFather on Telegram                               |
+| `TELEGRAM_CHANNEL_ID`         | Telegram posts & alerts      | Channel username e.g. `@mygoldchannel` or numeric ID |
+| `DISCORD_WEBHOOK_URL`         | Discord posts & alerts       | Discord channel → Integrations → Webhooks            |
+
+> **Note on Twitter secrets:** Workflows map these GitHub secrets to environment variables named
+> `TWITTER_API_KEY`, `TWITTER_API_SECRET`, `TWITTER_ACCESS_TOKEN`, and
+> `TWITTER_ACCESS_TOKEN_SECRET` inside the workflow YAML files. The actual GitHub secret names are
+> the shorter forms listed above.
 
 ---
 
 ## Workflows
 
-### 1. Hourly X/Twitter posts — `gold-price-tweet.yml`
+> **JS vs Python posting systems:** Two X/Twitter posting systems exist. The original JavaScript
+> system (`scripts/tweet-gold-price.js` + `gold-price-tweet.yml`) and a newer Python system
+> (`scripts/gold_poster.py` + `hourly_post.yml`). The Python system is recommended for new setups
+> as it supports market events, spike alerts, health checks, and Supabase logging. Both can coexist
+> and share the same Twitter API credentials. See `docs/twitter_bot_architecture.md` for the Python
+> system's full architecture.
+
+### 1. Hourly X/Twitter posts (JS) — `gold-price-tweet.yml`
 
 Posts every hour. Rotates 10 templates by Dubai time.
 
+- Script: `scripts/tweet-gold-price.js`
 - See `docs/TWITTER_AUTOMATION.md` for detailed setup.
 
 ### 2. Telegram posts — `gold-price-telegram.yml`
@@ -86,6 +101,53 @@ Action if broken links are found.
 Pings the site every **30 minutes**. Alerts via Telegram and/or Discord if site is down.
 
 - Script: `scripts/uptime-check.js`
+
+### 8. Python hourly posts — `hourly_post.yml`
+
+Posts gold prices to X/Twitter every hour using the Python system. More capable than the JS system —
+supports richer templates, Supabase logging, and integrates with the broader Python bot ecosystem.
+
+- Script: `scripts/gold_poster.py`
+- Secrets needed: `CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET`,
+  `GOLD_API_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
+- See `docs/twitter_bot_architecture.md` for full architecture details.
+
+### 9. Market events — `market_events.yml`
+
+Posts session open/close alerts (e.g. London open, New York close) to X/Twitter.
+
+- Script: `scripts/gold_poster.py` (market events mode)
+- Secrets needed: same as workflow 8
+
+### 10. Spike alerts (Python) — `spike_alert.yml`
+
+Python-based price spike detection. Fires alerts when gold moves significantly.
+
+- Script: `scripts/gold_poster.py` (spike alert mode)
+- Secrets needed: same as workflow 8
+
+### 11. Health check — `health_check.yml`
+
+Daily system health verification. Checks API connectivity, credential validity, and posting status.
+
+- Script: `scripts/gold_poster.py` (health check mode)
+- Secrets needed: same as workflow 8
+
+### 12. Sync DB to Git — `sync-db-to-git.yml`
+
+Syncs Supabase shops data to `data/shops.js` and commits the result.
+
+- Secrets needed: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
+
+### 13. CI validation — `ci.yml`
+
+Runs on pull requests. Executes tests, validation, and build checks.
+
+### 14. Deploy — `deploy.yml`
+
+Builds and deploys the site to GitHub Pages on push to `main`.
+
+- Also regenerates `sitemap.xml` and `feed.xml` (see workflow 5).
 
 ---
 

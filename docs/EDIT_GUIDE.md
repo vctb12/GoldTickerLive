@@ -106,6 +106,8 @@
 | Change shop storage backend | `repositories/shops.repository.js` |
 | Edit shop confidence scoring | `lib/admin/shop-manager.js` → `calculateConfidenceScore()` |
 | Add a shop via admin panel | Admin UI at `/admin/shops/` |
+| Manage shops in admin panel | `admin/shops/index.html` (talks directly to Supabase `shops` table) |
+| Change Supabase shop fetch (public) | `lib/supabase-data.js` |
 
 ---
 
@@ -118,6 +120,22 @@
 | Add new admin page | Create `admin/{section}/index.html`, link from `admin/index.html` |
 | Change admin API routes | `server/routes/admin/index.js` |
 | Change admin panel styling | `admin/admin.css` |
+| Change Supabase credentials | `admin/supabase-config.js` → `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `ALLOWED_EMAIL` |
+| Change admin settings storage | `admin/settings/index.html` (talks directly to Supabase `site_settings` table) |
+
+---
+
+## Supabase & Data
+
+| I want to… | Go to… |
+|------------|--------|
+| Change Supabase schema | `supabase/schema.sql` (then re-run in Supabase SQL Editor) |
+| Change Supabase client config (public) | `config/supabase.js` |
+| Change Supabase client config (admin) | `admin/supabase-config.js` |
+| Switch storage backend (file ↔ supabase) | Set `STORAGE_BACKEND` env var in `.env` |
+| Change shop repository layer | `repositories/shops.repository.js` |
+| Change audit log repository layer | `repositories/audit.repository.js` |
+| Add environment variables | `.env.example` (template) + `docs/environment-variables.md` (docs) |
 
 ---
 
@@ -192,6 +210,11 @@
 | Change price spike alerts | `scripts/price-spike-alert.js` |
 | Change uptime monitoring | `scripts/uptime-check.js` |
 | Change posting schedule | `.github/workflows/hourly_post.yml` (cron expression) |
+| Change Python posting system | `scripts/gold_poster.py` + `scripts/utils/` |
+| Change market event detection | `scripts/utils/market_hours.py` + `config/twitter_bot/market_hours.json` |
+| Change spike detection | `scripts/utils/spike_detector.py` + `config/twitter_bot/spike_config.json` |
+| Change health check workflow | `.github/workflows/health_check.yml` |
+| Change DB sync workflow | `.github/workflows/sync-db-to-git.yml` |
 
 ---
 

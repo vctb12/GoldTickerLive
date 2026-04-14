@@ -4,6 +4,24 @@ Automated hourly gold price tweets via GitHub Actions.
 
 ---
 
+## Two Posting Systems
+
+This repo contains **two** X/Twitter posting systems:
+
+| System     | Script                        | Workflow               | Notes                                                    |
+| ---------- | ----------------------------- | ---------------------- | -------------------------------------------------------- |
+| JavaScript | `scripts/tweet-gold-price.js` | `gold-price-tweet.yml` | Original system. Hourly posts with template rotation.    |
+| Python     | `scripts/gold_poster.py`      | `hourly_post.yml`      | Newer, more capable. Supports market events, spike alerts, health checks, and Supabase logging. |
+
+- The **JavaScript system** is documented in detail on this page.
+- The **Python system** also supports market events (`market_events.yml`), spike alerts
+  (`spike_alert.yml`), and health checks (`health_check.yml`).
+- See `docs/twitter_bot_architecture.md` for the Python system's full architecture.
+- Both systems can coexist and **share the same Twitter API credentials**.
+- For new setups, the **Python system is recommended**.
+
+---
+
 ## How it works
 
 1. The workflow (`.github/workflows/gold-price-tweet.yml`) runs on a cron **every hour at :00**.
@@ -55,13 +73,18 @@ In your repository on GitHub:
 1. Go to **Settings → Secrets and variables → Actions**.
 2. Add each of the following secrets:
 
-| Secret name                   | Value                        |
-| ----------------------------- | ---------------------------- |
-| `GOLD_API_KEY`                | Your gold-api.com API key    |
-| `TWITTER_API_KEY`             | X App API Key (Consumer Key) |
-| `TWITTER_API_SECRET`          | X App API Key Secret         |
-| `TWITTER_ACCESS_TOKEN`        | X Access Token (read-write)  |
-| `TWITTER_ACCESS_TOKEN_SECRET` | X Access Token Secret        |
+| Secret name            | Value                        |
+| ---------------------- | ---------------------------- |
+| `GOLD_API_KEY`         | Your gold-api.com API key    |
+| `CONSUMER_KEY`         | X App API Key (Consumer Key) |
+| `CONSUMER_SECRET`      | X App API Key Secret         |
+| `ACCESS_TOKEN`         | X Access Token (read-write)  |
+| `ACCESS_TOKEN_SECRET`  | X Access Token Secret        |
+
+> **Note:** The workflow YAML files map these GitHub secrets to environment variables named
+> `TWITTER_API_KEY`, `TWITTER_API_SECRET`, `TWITTER_ACCESS_TOKEN`, and
+> `TWITTER_ACCESS_TOKEN_SECRET`. You do not need to create secrets with the `TWITTER_` prefix —
+> the mapping is handled in the workflow.
 
 ---
 

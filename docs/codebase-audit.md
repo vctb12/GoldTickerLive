@@ -17,7 +17,7 @@ Generated: 2026-04-13
 
 ## 2. Build System
 
-**Vite 5.4.0 with Terser minification**
+**Vite 8.0.8 with Terser minification**
 
 - Config: `vite.config.js`
 - Plugins: None (zero-dependency)
