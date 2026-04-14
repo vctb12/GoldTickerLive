@@ -14,12 +14,16 @@ import { formatPrice, formatFreshness } from './formatter.js';
 import { injectNav, updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
 
-// Determine depth from script's own src attribute
-const scriptEl = document.currentScript;
-const scriptSrc = scriptEl?.src || '';
-// Count how many ../ are in the relative path to this file
-const selfPathMatch = scriptSrc.match(/(\.\.\/)+lib\/page-hydrator\.js/);
-const depth = selfPathMatch ? (selfPathMatch[0].match(/\.\.\//g) || []).length : 0;
+// Determine depth by comparing import.meta.url (this module) to the page URL.
+// This module lives at {root}/src/lib/page-hydrator.js (2 dirs from root).
+// depth = (dirs between page and root).
+const _modUrl = new URL(import.meta.url);
+const _pageUrl = new URL(location.href);
+// Module path always ends with /src/lib/page-hydrator.js — strip that to find root
+const _rootPath = _modUrl.pathname.replace(/\/src\/lib\/page-hydrator\.js$/, '/');
+// Page path relative to root — count directory segments
+const _relPath = _pageUrl.pathname.slice(_rootPath.length).replace(/[^/]+$/, ''); // strip filename
+const depth = _relPath ? _relPath.split('/').filter(Boolean).length : 0;
 
 const AED_PEG = CONSTANTS.AED_PEG;
 const TROY_OZ_GRAMS = CONSTANTS.TROY_OZ_GRAMS;

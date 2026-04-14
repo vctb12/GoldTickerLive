@@ -33,7 +33,7 @@ export const NAV_DATA = {
           { href: '../content/gold-price-history/', label: 'Price History' },
           { href: '../content/order-gold/', label: 'Order Gold' },
           { href: '../content/search/', label: 'Search' },
-          { href: '../social/x-post-generator.html', label: 'X Post Generator' },
+          { href: '../content/social/x-post-generator.html', label: 'X Post Generator' },
         ],
       },
       {
@@ -126,7 +126,7 @@ export const NAV_DATA = {
           { href: '../content/gold-price-history/', label: 'سجل الأسعار' },
           { href: '../content/order-gold/', label: 'اطلب الذهب' },
           { href: '../content/search/', label: 'بحث' },
-          { href: '../social/x-post-generator.html', label: 'منشئ منشورات X' },
+          { href: '../content/social/x-post-generator.html', label: 'منشئ منشورات X' },
         ],
       },
       {

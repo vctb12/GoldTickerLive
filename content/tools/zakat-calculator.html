@@ -697,8 +697,8 @@
       const lang = new URLSearchParams(location.search).get('lang') === 'ar' ? 'ar' : 'en';
       if (lang === 'ar') document.documentElement.setAttribute('dir', 'rtl');
       document.documentElement.lang = lang;
-      injectNav(lang, 1);
-      injectFooter(lang, 1);
+      injectNav(lang, 2);
+      injectFooter(lang, 2);
 
       /* ── Constants ────────────────────────────────── */
       const NISAB_GRAMS = 85;

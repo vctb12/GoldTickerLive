@@ -732,8 +732,8 @@
       const lang = new URLSearchParams(location.search).get('lang') === 'ar' ? 'ar' : 'en';
       if (lang === 'ar') document.documentElement.setAttribute('dir', 'rtl');
       document.documentElement.lang = lang;
-      injectNav(lang, 1);
-      injectFooter(lang, 1);
+      injectNav(lang, 2);
+      injectFooter(lang, 2);
 
       /* ── Historical gold prices (approximate USD/oz) ── */
       const TROY_OZ_G = 31.1035;
