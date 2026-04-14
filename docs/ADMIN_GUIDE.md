@@ -4,29 +4,56 @@
 
 ### URL
 
-- **Development (Express server):** `http://localhost:3000/admin`
-- **GitHub Pages / static build:** `https://yourusername.github.io/Gold-Prices/admin.html`
+- **GitHub Pages:** `https://yourusername.github.io/Gold-Prices/admin/`
+- **Local development:** serve the repo statically (e.g. `python3 -m http.server 8080`) and open
+  `http://localhost:8080/admin/`
+
+> The admin panel is a set of static pages under `admin/`. No Express server is required for GitHub
+> Pages deployments.
 
 ---
 
-## Initial Setup (Required Before Deploying)
+## Authentication
 
-1. Copy `.env.example` to `.env` and fill in all values.
-2. Set a strong `JWT_SECRET` (32+ random characters):
-   ```bash
-   node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
-   ```
-3. Set `ADMIN_PASSWORD` to a strong password for the default admin account.  
-   The default bootstrap account uses `admin@goldprices.com` with the value of `ADMIN_PASSWORD`.
-4. **Never commit `.env` to source control.**
+The admin panel uses **Supabase GitHub OAuth**. Only the email address configured in
+`admin/supabase-config.js` (`ALLOWED_EMAIL`) is granted access.
 
-### Default Admin Email
+### How Login Works
 
-`admin@goldprices.com` — the password is read from the `ADMIN_PASSWORD` environment variable at
-startup.
+1. User visits `/admin/` — the auth guard (`supabase-auth.js → requireAuth()`) checks for a valid
+   Supabase session.
+2. If no session (or wrong email), the user is redirected to `/admin/login/`.
+3. The login page calls `loginWithGitHub()`, which redirects to GitHub's OAuth consent screen.
+4. After GitHub authorization, Supabase issues a session and redirects back to `/admin/`.
+5. `requireAuth()` verifies `session.user.email === ALLOWED_EMAIL` on every page load.
 
-> ⚠️ If `ADMIN_PASSWORD` is not set, a weak placeholder is used. Always set it in `.env` before
-> running the server.
+### Key Auth Files
+
+| File                      | Purpose                                              |
+| ------------------------- | ---------------------------------------------------- |
+| `admin/supabase-config.js`| Supabase URL, anon key, and allowed admin email      |
+| `admin/supabase-auth.js`  | Auth helpers: login, logout, session check, guard    |
+| `admin/login/index.html`  | Login page with "Sign in with GitHub" button         |
+
+---
+
+## Admin Page Matrix
+
+| Page        | Path                  | Status                | Data Source        |
+| ----------- | --------------------- | --------------------- | ------------------ |
+| Login       | `admin/login/`        | ✅ Working             | Supabase Auth      |
+| Dashboard   | `admin/` (index)      | ⚠️ Partial (UI shell) | localStorage       |
+| Shops       | `admin/shops/`        | ✅ Working (CRUD)      | Supabase `shops`   |
+| Settings    | `admin/settings/`     | ✅ Working (read/write)| Supabase `site_settings` |
+| Pricing     | `admin/pricing/`      | 🔲 UI shell only       | localStorage       |
+| Orders      | `admin/orders/`       | 🔲 UI shell only       | localStorage       |
+| Content     | `admin/content/`      | 🔲 UI shell only       | localStorage       |
+| Social      | `admin/social/`       | 🔲 UI shell only       | localStorage       |
+| Analytics   | `admin/analytics/`    | 🔲 UI shell only       | localStorage       |
+
+**✅ Working** = reads/writes Supabase tables.  
+**⚠️ Partial** = has some real data but still relies on localStorage for parts.  
+**🔲 UI shell** = page renders but uses localStorage only; Supabase integration not yet wired.
 
 ---
 
@@ -34,11 +61,12 @@ startup.
 
 ### 1. Dashboard Overview
 
-- Real-time statistics for shops, cities, guides, and audit entries
-- Recent activity feed showing latest admin actions
+- Stat cards for shops, cities, guides, and audit entries
+- Recent activity feed
 - Quick metrics for verified vs pending shops
+- ⚠️ Currently sources most data from localStorage
 
-### 2. Shop Management
+### 2. Shop Management (Supabase)
 
 - View all shops with filtering by status (verified/pending/unverified) and type (direct/market)
 - Add new shops with name, city, type, verification status, and confidence score
@@ -47,41 +75,21 @@ startup.
 - Delete shops with confirmation
 - Search shops by name or city
 
-### 3. Cities & Markets Management
+### 3. Settings (Supabase)
 
-- Add new cities with country association
-- Edit city details
-- Delete cities (with confirmation)
-- View shop count per city
-
-### 4. Content Management
-
-- Manage buying guides and editorial content
-- Create, edit, and delete guides
-- Track author and update timestamps
-- Tabbed interface for guides, flags, and FAQs
-
-### 5. Trust & Confidence Settings
-
-- Configure confidence score thresholds (high/medium/low)
-- Visual sliders for threshold adjustment
-- Trust badge management
-
-### 6. Audit Logs
-
-- Complete audit trail of all admin actions
-- Filter by action type (create/update/delete/login)
-- Filter by entity type (shop/city/guide/user)
-- Search functionality
-- Export to CSV (all fields are properly quoted and formula-injection safe)
-- Shows user, timestamp, action, entity, and changes
-
-### 7. Settings
-
-- User management (add/remove admin users)
+- Read and write `site_settings` table
 - Cache management
 - Data export functionality
-- System reset options
+
+### 4. UI Shell Pages (localStorage)
+
+The following pages render a functional-looking UI but are not yet backed by Supabase:
+
+- **Pricing** — placeholder price configuration
+- **Orders** — placeholder order management
+- **Content** — placeholder content/guide management
+- **Social** — placeholder social media integration
+- **Analytics** — placeholder analytics dashboard
 
 ---
 
@@ -89,77 +97,89 @@ startup.
 
 ### Authentication
 
-- JWT-based authentication (`lib/auth.js`)
-- Rate limiting on the login endpoint: 10 failed attempts per IP triggers a 15-minute lockout
-- Role hierarchy: `admin > editor > viewer`
-- Token expiry: 24 hours
+- Supabase GitHub OAuth via `admin/supabase-auth.js`
+- Single allowed email configured in `admin/supabase-config.js`
+- Session managed by Supabase Auth (stored in localStorage under `sb-<ref>-auth-token`)
+- Every admin page calls `requireAuth()` on load — redirects to login if session is missing or email
+  does not match
 
 ### Data Storage
 
-- Server-side file storage (`data/shops-data.json`, `data/audit-logs.json`, `data/users.json`)
-- Supabase-ready: see [`docs/SUPABASE_SETUP.md`](docs/SUPABASE_SETUP.md) for migration guide
-- All CRUD operations are logged to the audit system
+- **Primary (Supabase):** `shops` and `site_settings` tables with Row Level Security
+- **UI shell pages:** localStorage only (no server persistence)
+- **Schema:** `supabase/schema.sql` defines tables and RLS policies
 
 ### Security Checklist
 
-1. Set `JWT_SECRET` and `ADMIN_PASSWORD` environment variables before deploy
-2. Enable HTTPS for all admin traffic
-3. Review audit logs regularly for suspicious activity
-4. Consider IP whitelisting for `/api/admin` in production
+1. Set `ALLOWED_EMAIL` in `admin/supabase-config.js` to your GitHub account email
+2. Enable GitHub as an OAuth provider in your Supabase project
+3. Use HTTPS (GitHub Pages provides this automatically)
+4. Keep `SUPABASE_ANON_KEY` scoped — RLS policies protect data server-side
+5. Review Supabase Auth logs for unauthorized access attempts
 
 ---
 
-## Integration with Backend
+## Integration with Supabase
 
-The admin API is at `/api/admin` on the Express server (`server.js`).
+Admin pages talk directly to Supabase using the browser client loaded from CDN:
 
-Key endpoints:
+```html
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+```
 
-| Method | Path                            | Auth Required |
-| ------ | ------------------------------- | ------------- |
-| POST   | `/api/admin/auth/login`         | —             |
-| GET    | `/api/admin/auth/verify`        | Any           |
-| GET    | `/api/admin/shops`              | Any           |
-| POST   | `/api/admin/shops`              | editor+       |
-| PUT    | `/api/admin/shops/:id`          | editor+       |
-| DELETE | `/api/admin/shops/:id`          | admin         |
-| POST   | `/api/admin/shops/batch-import` | admin         |
-| GET    | `/api/admin/audit-logs`         | Any           |
-| GET    | `/api/admin/audit-logs/export`  | admin         |
-| GET    | `/api/admin/users`              | admin         |
-| POST   | `/api/admin/users`              | admin         |
-| PUT    | `/api/admin/users/:id`          | admin         |
-| DELETE | `/api/admin/users/:id`          | admin         |
-| GET    | `/api/admin/stats`              | Any           |
+The client is initialized lazily in `supabase-auth.js` via `window.supabase.createClient()`.
+
+### Database Tables
+
+| Table            | Used By          | Operations         |
+| ---------------- | ---------------- | ------------------ |
+| `shops`          | Shops page       | Full CRUD          |
+| `site_settings`  | Settings page    | Read / Write       |
+
+### Legacy Express Server
+
+The Express server (`server.js`) and its `/api/admin` endpoints still exist for self-hosted
+deployments that prefer server-side storage. For GitHub Pages deployments, the Express server is
+**not used** — all admin operations go directly to Supabase.
+
+Legacy files (not required for Supabase deployment):
+
+- `server.js`, `server/routes/admin/`
+- `lib/auth.js` (JWT auth)
+- `admin/api-client.js` (deprecated — not imported by any current page)
+- `data/*.json` (file-based storage)
 
 ---
 
 ## File Structure
 
 ```
-/
-├── admin.html              # Admin dashboard HTML + inline JS
+admin/
+├── index.html              # Dashboard page
 ├── admin.css               # Admin-specific styles
-├── server.js               # Express server
-├── .env.example            # Environment variable template
-├── lib/
-│   ├── auth.js             # JWT auth + user management
-│   ├── audit-log.js        # Immutable audit logging
-│   ├── supabase-client.js  # Lazy Supabase client factory
-│   └── admin/
-│       └── shop-manager.js # Shop CRUD logic
-├── repositories/
-│   ├── shops.repository.js # Storage-agnostic shop interface
-│   └── audit.repository.js # Storage-agnostic audit log interface
-├── server/routes/admin/    # Admin API routes
-├── data/
-│   ├── shops-data.json     # Shop data (file-based)
-│   └── audit-logs.json     # Audit log data (file-based)
-├── docs/
-│   ├── ARCHITECTURE.md     # Architecture overview
-│   └── SUPABASE_SETUP.md   # Supabase migration guide
-└── supabase/
-    └── schema.sql          # Database schema + RLS policies
+├── supabase-config.js      # Supabase URL, anon key, allowed email
+├── supabase-auth.js        # Auth helpers (login, logout, guard)
+├── auth.js                 # Legacy auth compatibility shim
+├── api-client.js           # Deprecated (not imported anywhere)
+├── login/
+│   └── index.html          # GitHub OAuth login page
+├── shops/
+│   └── index.html          # Shop management (Supabase CRUD)
+├── settings/
+│   └── index.html          # Site settings (Supabase read/write)
+├── pricing/
+│   └── index.html          # UI shell (localStorage)
+├── orders/
+│   └── index.html          # UI shell (localStorage)
+├── content/
+│   └── index.html          # UI shell (localStorage)
+├── social/
+│   └── index.html          # UI shell (localStorage)
+└── analytics/
+    └── index.html          # UI shell (localStorage)
+
+supabase/
+└── schema.sql              # Database tables + RLS policies
 ```
 
 ---
@@ -168,25 +188,37 @@ Key endpoints:
 
 ### Can't access admin page?
 
-- Ensure the Express server is running (`npm start`) if using the API
-- For static build: verify the Vite build completed (`npm run build`)
+- Ensure you are visiting `/admin/` (with trailing slash) — each page is a directory with
+  `index.html`
+- For local development, serve the repo root statically; the admin pages are plain HTML
 
 ### Login not working?
 
-- Check the `JWT_SECRET` and `ADMIN_PASSWORD` are set in `.env`
-- Check server logs for the warning about default JWT_SECRET
-- Rate limiting: if you've had 10+ failed attempts, wait 15 minutes
+- Confirm GitHub is enabled as an OAuth provider in your Supabase project (Authentication →
+  Providers → GitHub)
+- Check that the OAuth callback URL in GitHub matches your Supabase project
+- Verify `SUPABASE_URL` and `SUPABASE_ANON_KEY` in `admin/supabase-config.js` are correct
+- Open browser DevTools → Console for Supabase error messages
+
+### Logged in but immediately redirected back to login?
+
+- Your GitHub email may not match `ALLOWED_EMAIL` in `admin/supabase-config.js`
+- Check your GitHub account's primary email (Settings → Emails) and update `ALLOWED_EMAIL` to match
+- If you changed `ALLOWED_EMAIL`, hard-refresh the page to pick up the new value
 
 ### Changes not persisting?
 
-- Data is stored in `data/*.json` (server-side)
-- Ensure the `data/` directory is writable by the server process
+- **Shops / Settings:** data is stored in Supabase — check your Supabase dashboard for the tables
+- **Other pages (Pricing, Orders, etc.):** these are UI shells using localStorage only — data does
+  not survive a browser clear
+- If Supabase writes fail, check RLS policies in `supabase/schema.sql`
 
 ---
 
 ## Next Steps
 
-1. **Immediate:** Set `JWT_SECRET` and `ADMIN_PASSWORD` in `.env`
-2. **Short-term:** Migrate data storage to Supabase (see `docs/SUPABASE_SETUP.md`)
-3. **Medium-term:** Switch admin auth to Supabase Auth for session management
-4. **Long-term:** Add two-factor authentication and IP whitelisting
+1. **Immediate:** Verify `ALLOWED_EMAIL` matches your GitHub email
+2. **Short-term:** Wire remaining UI shell pages (Dashboard, Pricing, Orders, Content, Social,
+   Analytics) to Supabase tables
+3. **Medium-term:** Add audit logging to Supabase for admin actions
+4. **Long-term:** Role-based access for multiple admin users via Supabase Auth
