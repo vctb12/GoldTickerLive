@@ -101,7 +101,7 @@ def format_hourly_tweet(data):
     price, g24, g22, g21, g18, chp = _parse_fields(data)
     date_str, time_str = _uae_datetime()
     return (
-        f"📍 Gold Price Update — {date_str}\n"
+        f"📍 Gold Price Update - {date_str}\n"
         f"🕐 {time_str} (UAE · GMT+4)\n"
         f"─────────────────────\n"
         f"Spot XAU/USD\n"
