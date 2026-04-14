@@ -35,4 +35,4 @@ jobs:
           TWITTER_API_SECRET:          ${{ secrets.CONSUMER_SECRET }}
           TWITTER_ACCESS_TOKEN:        ${{ secrets.ACCESS_TOKEN }}
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
-        run: python scripts/post_gold_price.py
+        run: python scripts/python/post_gold_price.py

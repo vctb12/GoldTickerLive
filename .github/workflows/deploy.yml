@@ -8,9 +8,7 @@ on:
       - '.github/copilot/**'
       - 'docs/**'
       - '*.md'
-      - 'scripts/gold_poster.py'
-      - 'scripts/post_gold_price.py'
-      - 'scripts/utils/**'
+      - 'scripts/python/**'
       - 'config/twitter_bot/**'
   workflow_dispatch:
 
@@ -46,10 +44,10 @@ jobs:
         run: NODE_ENV=production npm run build
 
       - name: Regenerate sitemap.xml
-        run: node scripts/generate-sitemap.js
+        run: node scripts/node/generate-sitemap.js
 
       - name: Generate RSS feed
-        run: node scripts/generate-rss.js
+        run: node scripts/node/generate-rss.js
 
       - name: Copy root-level statics not bundled by Vite
         run: |
@@ -66,39 +64,19 @@ jobs:
           cp sitemap.xml dist/ || true
           cp feed.xml dist/ || true
           # ES module source files used by all leaf pages via page-hydrator.js
-          cp -r lib dist/
-          cp -r config dist/
-          cp -r components dist/
+          cp -r src dist/
           cp -r data dist/
           # Root-level shared CSS/icons used by leaf pages via relative paths
-          cp style.css dist/
           cp favicon.svg dist/
           cp manifest.json dist/
-          # Page-specific CSS/JS in new organized directories
+          # Page-specific CSS/JS in organized directories
           cp -r styles dist/
-          mkdir -p dist/scripts/pages && cp -r scripts/pages/* dist/scripts/pages/ || true
-          # Tool pages
-          [ -d tools ] && cp -r tools dist/ || true
           # Admin pages — excluded from Vite build, served as-is (ES modules with top-level await)
           [ -d admin ] && cp -r admin dist/ || true
-          # ── Country-specific city / karat / shops leaf-page directories ──
-          # Each of these contains static index.html files that load page-hydrator.js.
-          # Copy any top-level directory that contains at least one gold-price/ subdirectory
-          # (i.e. is a country leaf-page tree), excluding Vite-managed source dirs.
-          VITE_DIRS="assets dist node_modules .git guides countries social gold-price-history order-gold search embed components config lib data admin"
-          for d in */; do
-            country="${d%/}"
-            # Skip known non-country dirs
-            if echo "$VITE_DIRS" | tr ' ' '\n' | grep -qx "$country"; then continue; fi
-            # Skip directories without a gold-price subdirectory (not a country tree)
-            if [ ! -d "$country/gold-price" ]; then continue; fi
-            cp -r "$country" dist/
-          done
-          # ── Tool / feature directories ──
-          # Note: social/, gold-price-history/, order-gold/, search/, guides/ are
-          # handled by Vite build (ES module imports bundled and hashed).
-          # Only embed/ is copied verbatim (standalone, no build needed).
-          [ -d embed ] && cp -r embed dist/ || true
+          # ── Country content (unified under countries/) ──
+          cp -r countries dist/
+          # ── Content pages (guides, tools, etc.) ──
+          [ -d content ] && cp -r content dist/ || true
 
       - name: Verify dist directory
         run: |

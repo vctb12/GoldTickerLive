@@ -31,9 +31,12 @@ const EXCLUDE = new Set([
   'tests',
   'docs',
   'supabase',
-  'repositories',
   'build',
   'scripts',
+  'src',
+  'config',
+  'data',
+  'assets',
 ]);
 
 // ── Walk filesystem ──────────────────────────────────────────────────────────
