@@ -107,10 +107,10 @@ Use this reporting format in final responses:
 
 High-priority areas in this repo:
 
-- `shops.html`, `shops.js`, `shops.css`
-- `tracker.html`, `tracker-pro.js`, `tracker/`
-- `components/nav.js` and related shared UI files
-- country / city / market pages
+- `shops.html`, `src/pages/shops.js`, `styles/pages/shops.css`
+- `tracker.html`, `src/pages/tracker-pro.js`, `src/tracker/`
+- `src/components/nav.js` and related shared UI files
+- country / city / market pages (under `countries/`)
 - metadata, schema, sitemap, internal linking
 
 When working on shops:
