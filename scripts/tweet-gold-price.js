@@ -258,11 +258,15 @@ function buildTweetText(templateId, data) {
       });
       return [
         `🥇 Gold Now (${time} UAE) ${trendEmoji(changePct)}`,
+        
         `Spot: $${fmt(spotUsdPerOz)}/oz` + (change != null ? ` ${sign}${fmt(changePct)}%` : ''),
+        
         `24K: AED ${fmt(k24.aedPerGram)}/g`,
         `22K: AED ${fmt(k22.aedPerGram)}/g`,
         `21K: AED ${fmt(k21.aedPerGram)}/g`,
+        
         `📊 ${SITE_URL}`,
+        
         '#GoldPrice #Gold #UAE #Dubai',
       ].join('\n');
     }
@@ -276,11 +280,14 @@ function buildTweetText(templateId, data) {
       const changeStr = change != null ? ` (${sign}${fmt(changePct)}%)` : '';
       return [
         `🥇 Gold Prices Today — ${date}`,
+        
         `24K: $${fmt(spotUsdPerOz)}/oz${changeStr}`,
         '🇦🇪 UAE (AED/g):',
         `24K: ${fmt(k24.aedPerGram)} | 22K: ${fmt(k22.aedPerGram)}`,
         `21K: ${fmt(k21.aedPerGram)} | 18K: ${fmt(k18.aedPerGram)}`,
+        
         `${trendEmoji(changePct)} ${SITE_URL}`,
+        
         '#GoldPrice #Gold #UAE #Dubai',
       ].join('\n');
     }
@@ -293,11 +300,16 @@ function buildTweetText(templateId, data) {
       });
       return [
         `☀️ Good Morning — Gold Opens ${date}`,
+        
         `Spot: $${fmt(spotUsdPerOz)}/oz ${trendEmoji(changePct)}`,
+        
         change != null ? `vs Yesterday: ${sign}$${fmt(change)} (${sign}${fmt(changePct)}%)` : null,
+        
         `🇦🇪 24K UAE: AED ${fmt(k24.aedPerGram)}/g`,
         `🇦🇪 22K UAE: AED ${fmt(k22.aedPerGram)}/g`,
+        
         `Track live → ${SITE_URL}`,
+        
         '#GoldPrice #GoldMarket #Dubai #GCC',
       ]
         .filter(Boolean)
@@ -312,11 +324,15 @@ function buildTweetText(templateId, data) {
       });
       return [
         `🌙 Gold End of Day — ${date}`,
+        
         `Close: $${fmt(spotUsdPerOz)}/oz ${trendEmoji(changePct)}`,
         dayOpenUsdPerOz ? `Open:  $${fmt(dayOpenUsdPerOz)}/oz` : null,
         change != null ? `Change: ${sign}$${fmt(change)} (${sign}${fmt(changePct)}%)` : null,
+        
         `🇦🇪 24K Dubai: AED ${fmt(k24.aedPerGram)}/g`,
+        
         `Charts → ${SITE_URL}`,
+        
         '#GoldClose #GoldPrice #Dubai',
       ]
         .filter(Boolean)
@@ -331,12 +347,19 @@ function buildTweetText(templateId, data) {
       const trend = changePct == null ? '➡️' : changePct > 0 ? '📈' : changePct < 0 ? '📉' : '➡️';
       return [
         `🥇 أسعار الذهب اليوم — ${date} ${trend}`,
+        
         `عيار 24: ${fmt(k24.aedPerGram)} درهم/جرام`,
+        
         `عيار 22: ${fmt(k22.aedPerGram)} درهم/جرام`,
+        
         `عيار 21: ${fmt(k21.aedPerGram)} درهم/جرام`,
+        
         `عيار 18: ${fmt(k18.aedPerGram)} درهم/جرام`,
+        
         change != null ? `التغيير: ${sign}$${fmt(change)} (${sign}${fmt(changePct)}%)` : null,
+        
         `📊 ${SITE_URL}`,
+        
         '#سعر_الذهب #ذهب #الإمارات #دبي',
       ]
         .filter(Boolean)
@@ -346,10 +369,15 @@ function buildTweetText(templateId, data) {
     case 'weekend': {
       return [
         `🌅 Weekend Gold Wrap-Up ${trendEmoji(changePct)}`,
+        
         `Current: $${fmt(spotUsdPerOz)}/oz`,
+        
         change != null ? `Today:   ${sign}$${fmt(change)} (${sign}${fmt(changePct)}%)` : null,
+        
         `🇦🇪 24K: AED ${fmt(k24.aedPerGram)}/g | 22K: AED ${fmt(k22.aedPerGram)}/g`,
+        
         `📊 ${SITE_URL}`,
+        
         '#GoldWeekend #GoldPrice #GCC',
       ]
         .filter(Boolean)
@@ -362,12 +390,18 @@ function buildTweetText(templateId, data) {
         '📊 Gold Karat Comparison Right Now',
         '',
         `24K: AED ${fmt(k24.aedPerGram)}/g ($${fmt(usdPerGram24)})`,
+        
         `22K: AED ${fmt(k22.aedPerGram)}/g`,
+        
         `21K: AED ${fmt(k21.aedPerGram)}/g`,
+        
         `18K: AED ${fmt(k18.aedPerGram)}/g`,
+        
         '',
         `Spot: $${fmt(spotUsdPerOz)}/oz ${trendEmoji(changePct)}`,
+        
         `Compare all → ${SITE_URL}tracker.html#mode=compare`,
+        
         '#GoldKarat #24KGold #22KGold #UAE',
       ].join('\n');
     }
