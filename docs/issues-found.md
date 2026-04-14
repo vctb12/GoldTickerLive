@@ -36,12 +36,11 @@ Generated: 2026-04-13
 - **Risk**: Removing old pages may break existing backlinks
 - **Recommendation**: Add canonical tags pointing from old to new, or 301 redirects
 
-### 5. No routeBuilder or routeValidator Utility
+### 5. ~~No routeBuilder or routeValidator Utility~~ ✅ Resolved
 
-- **Severity**: Medium
-- **Issue**: Internal links use hardcoded paths instead of a centralized route builder
-- **Impact**: URL changes require find-and-replace across hundreds of files
-- **Recommendation**: Create `utils/routeBuilder.js` as single source of truth for URL generation
+- **Status**: ✅ Fixed
+- **Resolution**: `utils/routeBuilder.js` and `utils/routeValidator.js` now exist as the single
+  source of truth for URL generation and validation. Tests in `tests/route-utils.test.js`.
 
 ## Resolved Issues
 

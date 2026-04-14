@@ -212,7 +212,7 @@ Append `?debug=true` to any page URL to expose a debug panel for:
 
 ```bash
 npm install
-npm test             # Runs 66+ tests
+npm test             # Runs 205 tests across 10 test suites
 ```
 
 ### Run preflight checks
@@ -639,8 +639,32 @@ Gold-Prices/
 ├── services/                  # Backend services (pricing engine, FX, gold API adapter)
 ├── repositories/              # Data access layer (file + Supabase backends)
 ├── docs/                      # Extended documentation
-└── tests/                     # Test suite (66+ tests)
+│   ├── ARCHITECTURE.md        # Full system architecture and data flow
+│   ├── FILES_GUIDE.md         # Every major file explained
+│   ├── EDIT_GUIDE.md          # "Change X → go to Y" quick reference
+│   ├── LIMITATIONS.md         # Technical limitations and bottlenecks
+│   ├── ERROR_REPORT.md        # Error audit findings and fixes
+│   └── …                      # SEO, Supabase, automation, risk docs
+├── .env.example               # Environment variable template
+└── tests/                     # Test suite (205 tests across 10 files)
 ```
+
+---
+
+## Developer Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Full system architecture, data flow, component dependencies |
+| [`docs/FILES_GUIDE.md`](docs/FILES_GUIDE.md) | Every major file — what it does, when to edit it |
+| [`docs/EDIT_GUIDE.md`](docs/EDIT_GUIDE.md) | "If you want to change X → go to Y" quick reference |
+| [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md) | Technical limitations, bottlenecks, UX/SEO weaknesses |
+| [`docs/ERROR_REPORT.md`](docs/ERROR_REPORT.md) | Error audit findings, root causes, and fixes |
+| [`docs/environment-variables.md`](docs/environment-variables.md) | Environment variable reference |
+| [`docs/SUPABASE_SETUP.md`](docs/SUPABASE_SETUP.md) | Supabase migration guide |
+| [`docs/SEO_CHECKLIST.md`](docs/SEO_CHECKLIST.md) | SEO optimization checklist |
+| [`docs/AUTOMATIONS.md`](docs/AUTOMATIONS.md) | CI/CD workflow documentation |
+| [`.env.example`](.env.example) | Environment variable template — copy to `.env` |
 
 ---
 
@@ -687,9 +711,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for:
 
 ### Build fails with Vite
 
-- Ensure Node.js 24+ is installed (uses `fs.globSync`)
+- Use Node.js 22 LTS (recommended) — see `.nvmrc`
 - Run `npm ci` to clean-install dependencies
 - Check `vite.config.js` EXCLUDE_DIRS matches your directory structure
+- Note: Vite 8.x may not fully support Node.js v24+
 
 ### Tests failing
 

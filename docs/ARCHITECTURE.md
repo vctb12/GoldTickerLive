@@ -2,9 +2,109 @@
 
 ## Summary
 
-Gold Prices is a **static multi-page front-end** served via GitHub Pages or an optional Express
-server.  
-The Express layer adds a JWT-secured admin API and server-side data persistence.
+Gold Prices is a **zero-dependency, static multi-page front-end** gold pricing platform for
+GCC/Arab markets, written in vanilla ES6 modules — no bundler framework, no package manager for
+browser code.
+
+It is served via **GitHub Pages** (primary) or an optional **Express server** (adds JWT-secured
+admin API and server-side data persistence).
+
+### Key Stats
+
+| Metric | Value |
+|--------|-------|
+| HTML pages | 70+ root/guide/tool pages + 400+ generated leaf pages |
+| Countries | 15 (UAE, Saudi Arabia, Qatar, Kuwait, Bahrain, Oman, Jordan, Lebanon, Egypt, Morocco, Algeria, Tunisia, Libya, Sudan, India) |
+| Cities | 50+ |
+| Karat grades | 7 (24K, 22K, 21K, 18K, 14K, 12K, 10K) |
+| Languages | English + Arabic (full RTL support) |
+| CSS lines | ~17,000 across 16 files |
+| JS modules | 75+ |
+| Test suites | 10 files, 205 tests |
+| External APIs | gold-api.com (gold spot), exchangerate-api.com (FX), DataHub (historical) |
+
+---
+
+## High-Level Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     BROWSER (Client)                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  HTML Pages (index.html, tracker.html, calculator.html, …) │
+│       │                                                     │
+│       ▼                                                     │
+│  Page Scripts (scripts/pages/home.js, tracker-pro.js, …)   │
+│       │                                                     │
+│       ├──► Services Layer                                   │
+│       │    ├── services/goldPriceService.js (spot price)    │
+│       │    ├── services/fxService.js (FX rates)             │
+│       │    ├── services/pricingEngine.js (calculations)     │
+│       │    └── services/apiAdapter.js (fetch wrapper)       │
+│       │                                                     │
+│       ├──► Core Library                                     │
+│       │    ├── lib/api.js (legacy fetch)                    │
+│       │    ├── lib/cache.js (localStorage)                  │
+│       │    ├── lib/price-calculator.js (formulas)           │
+│       │    └── lib/formatter.js (display)                   │
+│       │                                                     │
+│       ├──► Components                                       │
+│       │    ├── components/nav.js + nav-data.js              │
+│       │    ├── components/footer.js                         │
+│       │    ├── components/chart.js                          │
+│       │    ├── components/ticker.js                         │
+│       │    └── components/breadcrumbs.js                    │
+│       │                                                     │
+│       └──► Config                                           │
+│            ├── config/constants.js                           │
+│            ├── config/countries.js                           │
+│            ├── config/karats.js                              │
+│            └── config/translations.js                       │
+│                                                             │
+│  ┌──────────────────────────────────────┐                   │
+│  │ External APIs (fetched from browser) │                   │
+│  │  • api.gold-api.com (XAU/USD spot)   │                   │
+│  │  • open.er-api.com (FX rates)        │                   │
+│  │  • goldprice.org (fallback)          │                   │
+│  └──────────────────────────────────────┘                   │
+│                                                             │
+│  ┌──────────────────────────────────────┐                   │
+│  │ Browser Storage                      │                   │
+│  │  • localStorage (dual-layer cache)   │                   │
+│  │  • Service Worker (sw.js)            │                   │
+│  └──────────────────────────────────────┘                   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│                    SERVER (Optional)                         │
+├─────────────────────────────────────────────────────────────┤
+│  server.js (Express)                                        │
+│    ├── Helmet (security headers)                            │
+│    ├── CORS                                                 │
+│    ├── Morgan (logging)                                     │
+│    ├── Static file serving                                  │
+│    └── /api/admin routes                                    │
+│         ├── lib/auth.js (JWT)                               │
+│         ├── repositories/ (storage abstraction)             │
+│         │    ├── file backend (data/*.json)                 │
+│         │    └── Supabase backend (optional)                │
+│         └── lib/admin/shop-manager.js                       │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│                    ADMIN PANEL                               │
+├─────────────────────────────────────────────────────────────┤
+│  admin/ (static HTML, served as-is)                         │
+│    ├── Supabase GitHub OAuth authentication                 │
+│    ├── Shop management (CRUD)                               │
+│    ├── Site settings                                        │
+│    ├── Analytics dashboard                                  │
+│    ├── Content management                                   │
+│    └── Social posting tools                                 │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -12,66 +112,283 @@ The Express layer adds a JWT-secured admin API and server-side data persistence.
 
 ```
 /
-├── index.html, calculator.html, shops.html, tracker.html, ...
-│   → public-facing static pages
+├── index.html, calculator.html, shops.html, tracker.html, …
+│   → 12 public-facing root pages
 │
-├── countries/          → per-country static HTML pages
-├── components/         → nav.js, footer.js, chart.js, ticker.js (browser ES modules)
-├── config/             → constants.js, countries.js, karats.js, translations.js
-├── lib/                → shared utilities
-│   ├── api.js          → gold price + FX fetch (browser)
-│   ├── cache.js        → localStorage dual-layer cache (browser)
-│   ├── price-calculator.js → core pricing formulas (browser + Node)
-│   ├── formatter.js    → display formatting
-│   ├── auth.js         → JWT auth + file-based user store (Node/server)
-│   ├── audit-log.js    → immutable audit logging (Node/server)
-│   ├── supabase-client.js  → lazy Supabase client factory (Node/server)
+├── guides/             → 7 educational guide pages
+├── tools/              → 3 interactive tool pages
+├── search/             → Search interface
+├── gold-price-history/ → Historical data page
+├── embed/              → Embeddable gold ticker widget
+├── social/             → X post generator
+├── order-gold/         → Gold ordering page
+│
+├── countries/          → Country listing + legacy country/city/market pages
+│   ├── index.html      → Countries overview
+│   ├── {country}.html  → 15 legacy country pages
+│   ├── {country}/cities/{city}.html   → Legacy city pages
+│   └── {country}/markets/{market}.html → Famous market pages
+│
+├── {country}/          → 15 country directories with generated leaf pages
+│   ├── gold-price/index.html           → Country price overview
+│   └── {city}/
+│       ├── gold-prices/index.html      → City prices
+│       ├── gold-shops/index.html       → City shops
+│       └── gold-rate/{karat}-karat/index.html → Karat-specific rates
+│
+├── components/         → Reusable UI components (browser ES modules)
+│   ├── nav.js, nav-data.js  → Bilingual navigation
+│   ├── footer.js       → 5-column footer
+│   ├── chart.js        → Price chart (lightweight-charts)
+│   ├── ticker.js       → Scrolling price ticker
+│   ├── breadcrumbs.js  → Navigation breadcrumbs
+│   ├── internalLinks.js → SEO internal linking
+│   └── adSlot.js       → AdSense component
+│
+├── config/             → Application configuration
+│   ├── constants.js    → API URLs, timeouts, refresh interval, AED peg, troy-oz
+│   ├── countries.js    → 24+ countries with codes, names, currencies, cities
+│   ├── karats.js       → 7 karat definitions with purity fractions
+│   ├── translations.js → All UI strings (EN + AR)
+│   ├── supabase.js     → Supabase public config
+│   └── index.js        → Config re-exports
+│
+├── lib/                → Core business logic
+│   ├── api.js          → Gold price + FX fetch with timeout/retry (browser)
+│   ├── cache.js        → Dual-layer localStorage cache (browser)
+│   ├── price-calculator.js → Core pricing formulas (browser + Node)
+│   ├── formatter.js    → Price/date/label formatting
+│   ├── export.js       → CSV/JSON export generators
+│   ├── historical-data.js → Session + DataHub historical merge
+│   ├── search.js       → Bilingual search
+│   ├── page-hydrator.js → Leaf page live data injection
+│   ├── errors.js       → Structured error classes
+│   ├── supabase-client.js → Supabase client factory (server)
+│   ├── supabase-data.js → Supabase data operations (browser)
+│   ├── auth.js         → JWT auth + user management (server)
+│   ├── audit-log.js    → Immutable audit logging (server)
 │   └── admin/
-│       └── shop-manager.js → shop CRUD with confidence scoring (Node/server)
+│       └── shop-manager.js → Shop CRUD with confidence scoring (server)
 │
-├── repositories/       → storage-agnostic data access layer (Node/server)
-│   ├── shops.repository.js
-│   └── audit.repository.js
+├── services/           → Service layer
+│   ├── apiAdapter.js   → API abstraction with timeout/retry
+│   ├── goldPriceService.js → Multi-provider gold spot price fetcher
+│   ├── fxService.js    → FX rate fetcher with AED peg override
+│   └── pricingEngine.js → All-prices calculator (countries × karats)
 │
-├── server/
-│   └── routes/admin/index.js  → Express admin API routes
+├── utils/              → Shared utilities
+│   ├── routeBuilder.js → URL generation (single source of truth)
+│   ├── routeValidator.js → Route parameter validation
+│   ├── inputValidation.js → Input sanitization and validation
+│   └── slugify.js      → URL slug generation
 │
-├── data/               → server-side file persistence (JSON, git-tracked)
-│   ├── shops-data.json → admin-managed shop records
-│   └── audit-logs.json → immutable admin action log
+├── routes/
+│   └── routeRegistry.js → URL path → page metadata resolver
 │
-├── supabase/
-│   └── schema.sql      → Supabase DB schema + RLS policies
+├── tracker/            → Tracker workspace modules
+│   ├── state.js        → State management (synced to URL hash)
+│   ├── ui-shell.js     → UI orchestration
+│   ├── render.js       → Data rendering
+│   ├── events.js       → Event handling
+│   └── wire.js         → Component wiring
 │
-└── tests/              → Node test runner tests
+├── scripts/            → Build, automation, and page scripts
+│   ├── pages/          → Page entry points (home.js, tracker-pro.js, etc.)
+│   ├── validate-build.js → Pre-build validation
+│   ├── audit-pages.js  → Page structure audit
+│   ├── check-links.js  → Link checker
+│   ├── seo-audit.js    → SEO audit
+│   ├── generate-sitemap.js → Sitemap generator
+│   └── …               → Notifications, alerts, social posting
+│
+├── repositories/       → Storage-agnostic data access (server)
+│   ├── shops.repository.js → Shop CRUD (file or Supabase)
+│   └── audit.repository.js → Audit log access
+│
+├── server.js           → Express server (optional)
+├── server/routes/admin/index.js → Admin API routes
+│
+├── data/               → Server-side JSON persistence
+│   ├── shops.js        → Hardcoded shop reference data (browser)
+│   ├── shops-data.json → Admin-managed shop records (server)
+│   └── audit-logs.json → Audit log (server)
+│
+├── admin/              → Admin panel (9 pages, Supabase auth)
+├── supabase/           → Database schema + RLS policies
+├── tests/              → 10 test files, 205 tests
+├── build/              → Page generation scripts
+├── styles/pages/       → Page-specific CSS files
+├── style.css           → Global stylesheet (4,548 lines)
+├── assets/             → Favicons, OG images, screenshots
+└── docs/               → Documentation
 ```
 
 ---
 
 ## Data Flow
 
-### Public pages (browser-only)
+### Public Pages (browser-only)
 
 ```
-HTML page
-  → page-specific JS (home.js, tracker-pro.js, calculator.js, …)
-    → lib/api.js → lib/cache.js → lib/price-calculator.js → lib/formatter.js
-      → External APIs (gold-api.com for XAU/USD, exchangerate-api.com for FX)
+User visits page
+  │
+  ▼
+HTML loads page-specific JS (e.g. scripts/pages/home.js)
+  │
+  ├──► Check localStorage cache (lib/cache.js)
+  │    └── If fresh → use cached data → render immediately
+  │
+  ├──► Fetch gold spot price (services/goldPriceService.js)
+  │    ├── Provider 1: api.gold-api.com (primary)
+  │    ├── Provider 2: data-asg.goldprice.org (fallback)
+  │    └── On failure: use stale cache → show "stale data" badge
+  │
+  ├──► Fetch FX rates (services/fxService.js)
+  │    ├── Source: open.er-api.com
+  │    └── AED always uses fixed peg (3.6725) regardless of API
+  │
+  ├──► Calculate prices (services/pricingEngine.js)
+  │    └── For each country × karat:
+  │         usdPerGram = (spotPerOz / 31.1035) × purity
+  │         localPerGram = usdPerGram × fxRate
+  │
+  ├──► Format for display (lib/formatter.js)
+  │
+  └──► Render into DOM + update cache
 ```
 
-### Admin API (Express server)
+### Admin Panel (browser → Supabase)
 
 ```
-admin.html  (GitHub-token auth, reads data/shops.js via GitHub API)
-            │
-            └─ [optional] Express admin API at /api/admin
-                 server/routes/admin/index.js
-                   → lib/auth.js          (JWT auth, users in data/users.json)
-                   → repositories/        (storage abstraction layer)
-                       → lib/admin/shop-manager.js  (file backend)
-                       → lib/audit-log.js           (file backend)
-                       → lib/supabase-client.js      (Supabase backend, when configured)
+Admin visits /admin/login/
+  │
+  ├──► Supabase GitHub OAuth (admin/supabase-auth.js)
+  │    └── Checks session.user.email === ALLOWED_EMAIL
+  │
+  └──► Admin dashboard → Supabase REST API
+       ├── Shop CRUD (lib/supabase-data.js)
+       ├── Site settings
+       └── Falls back to localStorage if Supabase unavailable
 ```
+
+### Admin API (Express server — optional)
+
+```
+POST /api/admin/auth/login
+  │
+  ├──► lib/auth.js (JWT auth)
+  │
+  └──► /api/admin/* routes
+       ├── repositories/shops.repository.js
+       │    ├── file backend → data/shops-data.json
+       │    └── Supabase backend → supabase/schema.sql tables
+       ├── lib/admin/shop-manager.js (CRUD + confidence scoring)
+       └── lib/audit-log.js (immutable action log)
+```
+
+---
+
+## Routing / Navigation Logic
+
+### URL Patterns
+
+| Pattern | Example | Pages |
+|---------|---------|-------|
+| Root pages | `/`, `/tracker.html`, `/calculator.html` | 12 |
+| Country overview | `/{country}/gold-price/` | 15 |
+| City prices | `/{country}/{city}/gold-prices/` | ~55 |
+| City shops | `/{country}/{city}/gold-shops/` | ~55 |
+| Karat rates | `/{country}/{city}/gold-rate/{karat}-karat/` | ~220 |
+| Legacy country | `/countries/{country}.html` | 15 |
+| Legacy city | `/countries/{country}/cities/{city}.html` | 5 |
+| Legacy market | `/countries/{country}/markets/{market}.html` | 2 |
+| Guides | `/guides/*.html` | 7 |
+| Tools | `/tools/*.html` | 3 |
+| Admin | `/admin/*` | 9 |
+
+### Navigation Components
+
+- **Nav bar** (`components/nav.js`): 6 dropdown groups (Markets, Tools, Cities, Famous Markets,
+  Learn, Insights) + Home, Shops, Invest quick links. Full EN/AR bilingual.
+- **Footer** (`components/footer.js`): 5-column layout with Markets, Tools, Learn, Legal, Brand.
+- **Breadcrumbs** (`components/breadcrumbs.js`): Shown on deep pages (city, karat, shops).
+- **Internal links** (`components/internalLinks.js`): SEO cross-links injected into pages.
+
+### Route Generation
+
+All internal URLs should be generated via `utils/routeBuilder.js`:
+
+```js
+import { buildRoute } from '../utils/routeBuilder.js';
+
+buildRoute({ page: 'tracker' })           // → '/tracker.html'
+buildRoute({ country: 'uae' })            // → '/uae/gold-price/'
+buildRoute({ country: 'uae', city: 'dubai' }) // → '/uae/dubai/gold-prices/'
+buildRoute({ country: 'uae', city: 'dubai', karat: '24' }) // → '/uae/dubai/gold-rate/24-karat/'
+```
+
+---
+
+## Component Dependencies
+
+```
+Page Scripts ──► Services ──► API Adapter ──► External APIs
+     │              │
+     │              └──► Config (constants, countries, karats)
+     │
+     ├──► Core Library (api, cache, calculator, formatter)
+     │         │
+     │         └──► Config
+     │
+     ├──► Components (nav, footer, chart, ticker, breadcrumbs)
+     │         │
+     │         └──► Config (nav-data, translations)
+     │
+     └──► Utils (routeBuilder, routeValidator, inputValidation)
+               │
+               └──► Config (countries, karats)
+```
+
+---
+
+## Resilience & Offline Strategy
+
+- **Dual cache layers**: Primary + fallback localStorage prevents data loss on storage errors
+- **Multi-provider fallback**: Gold price tries gold-api.com → goldprice.org → cache
+- **Stale data badges**: When cached data is used, freshness indicators are shown
+- **Service worker** (`sw.js`): Cache-first for static assets, network-first for API calls
+- **AED fixed peg**: Always 3.6725 regardless of FX API (removes dependency for UAE prices)
+- **Skeleton loading**: Placeholder UI shown during data fetching
+
+---
+
+## Build & Deployment
+
+### Build Pipeline
+
+```
+npm run validate    → scripts/validate-build.js (check HTML, imports, required files)
+npm run build       → Vite build → dist/ (minified HTML/CSS/JS, vendor chunks)
+```
+
+### Vite Configuration
+
+- **Base path**: `/Gold-Prices/` (GitHub Pages) or `/` (local)
+- **Excluded from Vite**: Country leaf-page dirs, admin/, embed/ (copied as-is by deploy workflow)
+- **Chunks**: `vendor` (lightweight-charts), `utils` (cache, api, calculator, formatter)
+- **Minification**: Terser with `drop_debugger`, removes `console.warn`/`console.log`
+
+### CI/CD Workflows
+
+| Workflow | Trigger | Purpose |
+|----------|---------|---------|
+| `ci.yml` | PR to main | Lint, test, validate, build |
+| `deploy.yml` | Push to main | Build + deploy to GitHub Pages |
+| `hourly_post.yml` | Cron (hourly) | Python gold price posting to X |
+| `gold-price-tweet.yml` | Cron | Node.js gold price tweet |
+| `market_events.yml` | Cron | Market event detection |
+| `spike_alert.yml` | Cron | Price spike alerts |
+| `health_check.yml` | Cron | Site uptime monitoring |
 
 ---
 
