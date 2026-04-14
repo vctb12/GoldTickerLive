@@ -44,7 +44,7 @@ const REQUIRED_FILES = [
   'index.html',
   'sw.js',
   'robots.txt',
-  'style.css',
+  'styles/global.css',
   'favicon.svg',
   'manifest.json',
   'vite.config.js',
