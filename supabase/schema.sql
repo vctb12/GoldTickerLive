@@ -232,3 +232,232 @@ create table if not exists public.fetch_logs (
 );
 
 alter table public.fetch_logs enable row level security;
+
+-- ============================================================
+-- PRICING OVERRIDES (admin manual price adjustments)
+-- ============================================================
+create table if not exists public.pricing_overrides (
+    id              uuid primary key default uuid_generate_v4(),
+    karat           text not null,              -- '24', '22', '21', '20', '18'
+    currency        text not null default 'AED',-- 'USD', 'AED', 'SAR', 'KWD', etc.
+    unit            text not null default 'gram',-- 'gram', 'oz', 'kg', 'tola'
+    override_price  numeric not null,
+    reason          text,
+    expires_at      timestamptz,
+    active          boolean not null default true,
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now(),
+    created_by      text
+);
+
+alter table public.pricing_overrides enable row level security;
+
+create policy "Admin read pricing overrides"
+    on public.pricing_overrides for select
+    to authenticated
+    using (true);
+
+create policy "Admin insert pricing overrides"
+    on public.pricing_overrides for insert
+    to authenticated
+    with check (true);
+
+create policy "Admin update pricing overrides"
+    on public.pricing_overrides for update
+    to authenticated
+    using (true);
+
+create policy "Admin delete pricing overrides"
+    on public.pricing_overrides for delete
+    to authenticated
+    using (true);
+
+create trigger pricing_overrides_set_updated_at
+    before update on public.pricing_overrides
+    for each row execute procedure public.set_updated_at();
+
+-- ============================================================
+-- ORDERS (gold purchase orders)
+-- ============================================================
+create table if not exists public.orders (
+    id              text primary key,           -- e.g. 'ORD-20260412-001'
+    items           jsonb not null default '[]',
+    pricing         jsonb not null default '{}',
+    gold_spot_at_order numeric,
+    fx_rate_at_order   numeric,
+    customer        jsonb not null default '{}',
+    status          text not null default 'pending',
+    status_history  jsonb not null default '[]',
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now(),
+    created_by      text
+);
+
+alter table public.orders enable row level security;
+
+create policy "Admin read orders"
+    on public.orders for select
+    to authenticated
+    using (true);
+
+create policy "Admin insert orders"
+    on public.orders for insert
+    to authenticated
+    with check (true);
+
+create policy "Admin update orders"
+    on public.orders for update
+    to authenticated
+    using (true);
+
+create policy "Admin delete orders"
+    on public.orders for delete
+    to authenticated
+    using (true);
+
+create trigger orders_set_updated_at
+    before update on public.orders
+    for each row execute procedure public.set_updated_at();
+
+-- ============================================================
+-- CONTENT POSTS (blog / educational articles)
+-- ============================================================
+create table if not exists public.content_posts (
+    id              uuid primary key default uuid_generate_v4(),
+    title           text not null,
+    title_ar        text,
+    slug            text unique,
+    body            text,
+    body_ar         text,
+    excerpt         text,
+    category        text,
+    tags            text[],
+    status          text not null default 'draft', -- 'draft', 'published'
+    publish_date    text,                          -- ISO date string YYYY-MM-DD
+    read_time       int,
+    author          text,
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now()
+);
+
+alter table public.content_posts enable row level security;
+
+-- Published posts are public
+create policy "Public read published posts"
+    on public.content_posts for select
+    using (status = 'published');
+
+create policy "Admin read all posts"
+    on public.content_posts for select
+    to authenticated
+    using (true);
+
+create policy "Admin insert posts"
+    on public.content_posts for insert
+    to authenticated
+    with check (true);
+
+create policy "Admin update posts"
+    on public.content_posts for update
+    to authenticated
+    using (true);
+
+create policy "Admin delete posts"
+    on public.content_posts for delete
+    to authenticated
+    using (true);
+
+create trigger content_posts_set_updated_at
+    before update on public.content_posts
+    for each row execute procedure public.set_updated_at();
+
+-- ============================================================
+-- SOCIAL POSTS (post generation history)
+-- ============================================================
+create table if not exists public.social_posts (
+    id              uuid primary key default uuid_generate_v4(),
+    template        text,                       -- 'daily_update', 'price_alert', 'custom', etc.
+    language        text,                       -- 'en', 'ar'
+    platform        text,                       -- 'twitter', 'instagram', etc.
+    text            text,
+    generated_at    bigint,                     -- JS timestamp (Date.now())
+    created_at      timestamptz not null default now()
+);
+
+alter table public.social_posts enable row level security;
+
+create policy "Admin read social posts"
+    on public.social_posts for select
+    to authenticated
+    using (true);
+
+create policy "Admin insert social posts"
+    on public.social_posts for insert
+    to authenticated
+    with check (true);
+
+create policy "Admin delete social posts"
+    on public.social_posts for delete
+    to authenticated
+    using (true);
+
+-- ============================================================
+-- ANALYTICS EVENTS (client-side event tracking)
+-- ============================================================
+create table if not exists public.analytics_events (
+    id              uuid primary key default uuid_generate_v4(),
+    event           text not null,              -- 'pageview', 'click', 'search', 'error', 'order'
+    page            text,
+    session_id      text,
+    ts              bigint,                     -- JS timestamp (Date.now())
+    properties      jsonb,
+    created_at      timestamptz not null default now()
+);
+
+alter table public.analytics_events enable row level security;
+
+create policy "Admin read analytics events"
+    on public.analytics_events for select
+    to authenticated
+    using (true);
+
+create policy "Admin insert analytics events"
+    on public.analytics_events for insert
+    to authenticated
+    with check (true);
+
+create policy "Admin delete analytics events"
+    on public.analytics_events for delete
+    to authenticated
+    using (true);
+
+-- ============================================================
+-- API CALL LOGS (client-side API monitoring)
+-- ============================================================
+create table if not exists public.api_call_logs (
+    id              uuid primary key default uuid_generate_v4(),
+    endpoint        text,
+    status          text,
+    response_time   int,
+    success         boolean,
+    error_message   text,
+    ts              bigint,                     -- JS timestamp (Date.now())
+    created_at      timestamptz not null default now()
+);
+
+alter table public.api_call_logs enable row level security;
+
+create policy "Admin read api call logs"
+    on public.api_call_logs for select
+    to authenticated
+    using (true);
+
+create policy "Admin insert api call logs"
+    on public.api_call_logs for insert
+    to authenticated
+    with check (true);
+
+create policy "Admin delete api call logs"
+    on public.api_call_logs for delete
+    to authenticated
+    using (true);

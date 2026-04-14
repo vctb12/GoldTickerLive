@@ -1044,62 +1044,181 @@
     <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <script type="module">
-      import { logActivity, logout, requireAuth } from '../auth.js';
+      import { logout, requireAuth, getSupabase, logActivity } from '../supabase-auth.js';
 
       // ── Auth guard ──────────────────────────────────────────
       if (!(await requireAuth())) throw new Error('redirect');
 
-      // ── Storage ────────────────────────────────────────────
+      // ── Supabase Data Layer (with localStorage cache fallback) ──
       const STORAGE_KEY = 'gp_blog_posts';
 
-      function loadPosts() {
+      /** Map admin UI post → Supabase row. */
+      function toDbRow(post) {
+        return {
+          title: post.title || '',
+          title_ar: post.titleAr || null,
+          slug: post.slug || null,
+          body: post.body || null,
+          body_ar: post.bodyAr || null,
+          excerpt: post.excerpt || null,
+          category: post.category || null,
+          tags: Array.isArray(post.tags) ? post.tags : [],
+          status: post.status || 'draft',
+          publish_date: post.publishDate || null,
+          read_time: post.readTime ?? null,
+          author: post.author || null,
+        };
+      }
+
+      /** Map Supabase row → admin UI shape. */
+      function fromDbRow(row) {
+        return {
+          id: row.id,
+          title: row.title || '',
+          titleAr: row.title_ar || '',
+          slug: row.slug || '',
+          body: row.body || '',
+          bodyAr: row.body_ar || '',
+          excerpt: row.excerpt || '',
+          category: row.category || '',
+          tags: row.tags || [],
+          status: row.status || 'draft',
+          publishDate: row.publish_date || '',
+          readTime: row.read_time,
+          author: row.author || '',
+          createdAt: row.created_at,
+          updatedAt: row.updated_at,
+        };
+      }
+
+      /** Cache posts to localStorage for offline resilience. */
+      function cachePosts(posts) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(posts)); } catch {}
+      }
+
+      /** Read cached posts from localStorage. */
+      function readCachedPosts() {
         try {
           const raw = localStorage.getItem(STORAGE_KEY);
           if (!raw) return [];
           const parsed = JSON.parse(raw);
           return Array.isArray(parsed) ? parsed : [];
-        } catch {
-          return [];
-        }
+        } catch { return []; }
       }
 
-      function savePosts(posts) {
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-        } catch {
-          showToast('Storage error — could not save posts.', 'error');
+      /**
+       * Load all posts. Tries Supabase first; falls back to localStorage cache.
+       */
+      async function loadPosts() {
+        const sb = getSupabase();
+        if (sb) {
+          try {
+            const { data, error } = await sb
+              .from('content_posts')
+              .select('*')
+              .order('created_at', { ascending: false });
+            if (!error && Array.isArray(data)) {
+              const posts = data.map(fromDbRow);
+              cachePosts(posts);
+              return posts;
+            }
+            console.warn('[content] Supabase read error, falling back to cache:', error?.message);
+          } catch (err) {
+            console.warn('[content] Supabase unreachable, falling back to cache:', err.message);
+          }
         }
+        return readCachedPosts();
       }
 
-      function createPost(data) {
-        const posts = loadPosts();
+      /** Batch-save all posts (for sample data init). */
+      async function savePosts(posts) {
+        const sb = getSupabase();
+        if (sb) {
+          try {
+            const rows = posts.map(toDbRow);
+            const { error } = await sb.from('content_posts').upsert(rows);
+            if (error) console.warn('[content] Supabase batch upsert error:', error.message);
+          } catch (err) {
+            console.warn('[content] Supabase batch upsert failed:', err.message);
+          }
+        }
+        cachePosts(posts);
+      }
+
+      async function createPost(data) {
+        const sb = getSupabase();
+        if (sb) {
+          const row = toDbRow(data);
+          const { data: inserted, error } = await sb
+            .from('content_posts')
+            .insert(row)
+            .select()
+            .single();
+          if (!error && inserted) {
+            const post = fromDbRow(inserted);
+            const cached = readCachedPosts();
+            cached.unshift(post);
+            cachePosts(cached);
+            logActivity('post_create', post.title || '(untitled)');
+            return post;
+          }
+          if (error) console.warn('[content] Supabase insert error:', error.message);
+        }
+        // Fallback: localStorage only
         const post = {
           ...data,
           id: 'post_' + Date.now(),
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
-        posts.unshift(post);
-        savePosts(posts);
+        const cached = readCachedPosts();
+        cached.unshift(post);
+        cachePosts(cached);
         logActivity('post_create', post.title || '(untitled)');
         return post;
       }
 
-      function updatePost(id, data) {
-        const posts = loadPosts();
+      async function updatePost(id, data) {
+        const sb = getSupabase();
+        if (sb) {
+          const row = toDbRow(data);
+          const { data: updated, error } = await sb
+            .from('content_posts')
+            .update(row)
+            .eq('id', id)
+            .select()
+            .single();
+          if (!error && updated) {
+            const post = fromDbRow(updated);
+            const cached = readCachedPosts();
+            const idx = cached.findIndex((p) => p.id === id);
+            if (idx !== -1) cached[idx] = post;
+            cachePosts(cached);
+            logActivity('post_update', post.title || '(untitled)');
+            return post;
+          }
+          if (error) console.warn('[content] Supabase update error:', error.message);
+        }
+        // Fallback: localStorage only
+        const posts = readCachedPosts();
         const idx = posts.findIndex((p) => p.id === id);
         if (idx === -1) return null;
         posts[idx] = { ...posts[idx], ...data, id, updatedAt: new Date().toISOString() };
-        savePosts(posts);
+        cachePosts(posts);
         logActivity('post_update', posts[idx].title || '(untitled)');
         return posts[idx];
       }
 
-      function deletePost(id) {
-        const posts = loadPosts();
+      async function deletePost(id) {
+        const sb = getSupabase();
+        if (sb) {
+          const { error } = await sb.from('content_posts').delete().eq('id', id);
+          if (error) console.warn('[content] Supabase delete error:', error.message);
+        }
+        const posts = readCachedPosts();
         const post = posts.find((p) => p.id === id);
         const filtered = posts.filter((p) => p.id !== id);
-        savePosts(filtered);
+        cachePosts(filtered);
         if (post) logActivity('post_delete', post.title || '(untitled)');
         return filtered;
       }
@@ -1423,7 +1542,7 @@
         };
       }
 
-      function savePost(status) {
+      async function savePost(status) {
         if (!currentPostId) return;
         const data = collectFormData(status);
 
@@ -1434,25 +1553,15 @@
 
         const existing = allPosts.find((p) => p.id === currentPostId);
         if (existing && existing.createdAt && !existing.id.startsWith('post_new_')) {
-          updatePost(currentPostId, data);
+          await updatePost(currentPostId, data);
         } else {
           // new post — replace temp in-memory entry with a real saved one
           allPosts = allPosts.filter((p) => p.id !== currentPostId);
-          const now = new Date().toISOString();
-          const saved = {
-            ...data,
-            id: currentPostId.startsWith('post_new_') ? 'post_' + Date.now() : currentPostId,
-            createdAt: now,
-            updatedAt: now,
-          };
-          const posts = loadPosts();
-          posts.unshift(saved);
-          savePosts(posts);
-          logActivity('post_create', data.title);
+          const saved = await createPost(data);
           currentPostId = saved.id;
         }
 
-        allPosts = loadPosts();
+        allPosts = await loadPosts();
         isDirty = false;
         document.getElementById('unsaved-indicator').classList.add('hidden');
         renderPostsList();
@@ -1552,11 +1661,11 @@
       // ── Auto-save ──────────────────────────────────────────
       function scheduleAutoSave() {
         clearTimeout(autoSaveTimer);
-        autoSaveTimer = setTimeout(() => {
+        autoSaveTimer = setTimeout(async () => {
           if (isDirty && currentPostId) {
             const data = collectFormData(currentStatus);
             if (data.title) {
-              savePost(currentStatus);
+              await savePost(currentStatus);
               showToast('Auto-saved.', 'info');
             }
           }
@@ -1572,9 +1681,9 @@
         document.getElementById('delete-modal').classList.remove('hidden');
       }
 
-      function confirmDelete() {
+      async function confirmDelete() {
         if (!pendingDeleteId) return;
-        allPosts = deletePost(pendingDeleteId);
+        allPosts = await deletePost(pendingDeleteId);
         if (currentPostId === pendingDeleteId) {
           currentPostId = null;
           isDirty = false;
@@ -1607,37 +1716,31 @@
         ctxTargetId = null;
       }
 
-      function duplicatePost(id) {
+      async function duplicatePost(id) {
         const post = allPosts.find((p) => p.id === id);
         if (!post) return;
-        const newId = 'post_' + Date.now();
         const copy = {
           ...post,
-          id: newId,
           title: (post.title || '') + ' (Copy)',
           slug: slugify((post.title || '') + '-copy'),
           status: 'draft',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
         };
-        const posts = loadPosts();
-        posts.unshift(copy);
-        savePosts(posts);
-        logActivity('post_create', copy.title);
-        allPosts = loadPosts();
+        delete copy.id; // let Supabase generate a new UUID
+        const saved = await createPost(copy);
+        allPosts = await loadPosts();
         renderPostsList();
-        openPost(newId);
+        openPost(saved.id);
         showToast('Post duplicated.', 'success');
       }
 
       // ── Init ───────────────────────────────────────────────
-      function init() {
-        allPosts = loadPosts();
+      async function init() {
+        allPosts = await loadPosts();
 
         if (allPosts.length === 0) {
           const samples = buildSamplePosts();
-          savePosts(samples);
-          allPosts = loadPosts();
+          await savePosts(samples);
+          allPosts = await loadPosts();
         }
 
         renderPostsList();

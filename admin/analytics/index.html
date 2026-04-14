@@ -277,7 +277,7 @@
         </header>
 
         <main class="content-area" id="main-content">
-          <!-- Analytics is fully client-side (localStorage) -->
+          <!-- Analytics is stored in Supabase (with localStorage cache) -->
         </main>
       </div>
       <!-- /.main-area -->
@@ -287,7 +287,7 @@
     <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
     <script type="module">
-      import { logout as supabaseLogout, requireAuth } from '../supabase-auth.js';
+      import { logout as supabaseLogout, requireAuth, getSupabase } from '../supabase-auth.js';
 
       // ── Auth guard ──────────────────────────────────────────
       if (!(await requireAuth())) throw new Error('redirect');
@@ -309,21 +309,89 @@
         }, 3500);
       }
 
-      /* ── Data helpers ───────────────────────────────────────── */
-      function loadEvents() {
-        try {
-          return JSON.parse(localStorage.getItem(EVENTS_KEY)) || [];
-        } catch {
-          return [];
-        }
+      /* ── Supabase Data Layer (with localStorage cache fallback) ── */
+
+      /** Cache events to localStorage for offline resilience. */
+      function cacheEvents(events) {
+        try { localStorage.setItem(EVENTS_KEY, JSON.stringify(events)); } catch {}
       }
 
-      function loadApiLog() {
-        try {
-          return JSON.parse(localStorage.getItem(API_LOG_KEY)) || [];
-        } catch {
-          return [];
+      /** Read cached events from localStorage. */
+      function readCachedEvents() {
+        try { return JSON.parse(localStorage.getItem(EVENTS_KEY)) || []; } catch { return []; }
+      }
+
+      /** Cache API logs to localStorage for offline resilience. */
+      function cacheApiLog(logs) {
+        try { localStorage.setItem(API_LOG_KEY, JSON.stringify(logs)); } catch {}
+      }
+
+      /** Read cached API logs from localStorage. */
+      function readCachedApiLog() {
+        try { return JSON.parse(localStorage.getItem(API_LOG_KEY)) || []; } catch { return []; }
+      }
+
+      /**
+       * Load analytics events. Tries Supabase first; falls back to localStorage cache.
+       */
+      async function loadEvents() {
+        const sb = getSupabase();
+        if (sb) {
+          try {
+            const { data, error } = await sb
+              .from('analytics_events')
+              .select('*')
+              .order('created_at', { ascending: false })
+              .limit(500);
+            if (!error && Array.isArray(data)) {
+              const events = data.map((row) => ({
+                event: row.event,
+                page: row.page || '',
+                sessionId: row.session_id || '',
+                ts: row.ts ?? new Date(row.created_at).getTime(),
+                properties: row.properties || {},
+              }));
+              cacheEvents(events);
+              return events;
+            }
+            console.warn('[analytics] Supabase events read error, falling back to cache:', error?.message);
+          } catch (err) {
+            console.warn('[analytics] Supabase unreachable, falling back to cache:', err.message);
+          }
         }
+        return readCachedEvents();
+      }
+
+      /**
+       * Load API call logs. Tries Supabase first; falls back to localStorage cache.
+       */
+      async function loadApiLog() {
+        const sb = getSupabase();
+        if (sb) {
+          try {
+            const { data, error } = await sb
+              .from('api_call_logs')
+              .select('*')
+              .order('created_at', { ascending: false })
+              .limit(500);
+            if (!error && Array.isArray(data)) {
+              const logs = data.map((row) => ({
+                endpoint: row.endpoint || '',
+                status: row.status || '',
+                response_time: row.response_time,
+                success: row.success,
+                error_message: row.error_message || '',
+                ts: row.ts ?? new Date(row.created_at).getTime(),
+              }));
+              cacheApiLog(logs);
+              return logs;
+            }
+            console.warn('[analytics] Supabase API log read error, falling back to cache:', error?.message);
+          } catch (err) {
+            console.warn('[analytics] Supabase unreachable for API logs, falling back to cache:', err.message);
+          }
+        }
+        return readCachedApiLog();
       }
 
       function relativeTime(ts) {
@@ -369,7 +437,7 @@
         frontendSection.innerHTML = `
         <div class="source-notice">
           ℹ Analytics data is collected when users visit public pages with the analytics module loaded.
-          Data is stored in <code>localStorage</code> on the user's browser and is not sent to any external service.
+          Data is stored in <code>localStorage</code> on the user's browser and synced to Supabase when available.
         </div>
         <div class="card">
           <div class="card-body empty-state-page">
@@ -377,7 +445,7 @@
             <h2>No analytics data yet</h2>
             <p>Visit your public Gold Prices pages to start collecting analytics data.
                Events like page views, searches, and clicks are automatically tracked when the analytics module is loaded.</p>
-            <p style="margin-top:12px;">Data is stored in <code>gp_analytics_events</code> in localStorage and displayed here.</p>
+            <p style="margin-top:12px;">Data is stored in Supabase (with localStorage cache) and displayed here.</p>
             <div style="margin-top:20px;">
               <a class="btn btn-primary" href="../../index.html" target="_blank">Visit Homepage</a>
               <a class="btn btn-ghost" href="../../tracker.html" target="_blank" style="margin-left:8px;">Open Tracker</a>
@@ -389,7 +457,7 @@
       }
 
       /* ── Full dashboard ─────────────────────────────────────── */
-      function renderDashboard(events) {
+      async function renderDashboard(events) {
         const content = document.getElementById('main-content');
         const pageviews = events.filter((e) => e.event === 'pageview');
         const totalViews = pageviews.length;
@@ -410,7 +478,7 @@
           : '—';
 
         // API success rate
-        const apiLog = loadApiLog();
+        const apiLog = await loadApiLog();
         let apiRateLabel = 'N/A';
         if (apiLog.length > 0) {
           const successes = apiLog.filter(
@@ -510,7 +578,7 @@
         frontendSection.innerHTML = `
         <div class="source-notice">
           ℹ Analytics data is collected when users visit public pages with the analytics module loaded.
-          Data is stored in localStorage on the user's device and is not transmitted to any external service.
+          Data is stored in Supabase (with localStorage cache) on the user's device.
         </div>
 
         <!-- Summary stats -->
@@ -607,7 +675,7 @@
           URL.revokeObjectURL(url);
         });
 
-        document.getElementById('clear-events-btn').addEventListener('click', () => {
+        document.getElementById('clear-events-btn').addEventListener('click', async () => {
           const btn = document.getElementById('clear-events-btn');
           if (!clearPending) {
             clearPending = true;
@@ -620,27 +688,31 @@
             }, 3000);
           } else {
             clearPending = false;
-            try {
-              localStorage.removeItem(EVENTS_KEY);
-            } catch {}
+            // Clear from Supabase
+            const sb = getSupabase();
+            if (sb) {
+              try { await sb.from('analytics_events').delete().gte('created_at', '1970-01-01'); } catch {}
+              try { await sb.from('api_call_logs').delete().gte('created_at', '1970-01-01'); } catch {}
+            }
+            try { localStorage.removeItem(EVENTS_KEY); } catch {}
             showToast('Analytics data cleared.', 'info');
-            renderPage();
+            await renderPage();
           }
         });
       }
 
       /* ── Main render ────────────────────────────────────────── */
-      function renderPage() {
-        const events = loadEvents();
+      async function renderPage() {
+        const events = await loadEvents();
         if (events.length === 0) {
           renderEmptyState();
         } else {
-          renderDashboard(events);
+          await renderDashboard(events);
         }
       }
 
       /* ── Init ───────────────────────────────────────────────── */
-      function init() {
+      async function init() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
         document.getElementById('sidebar-toggle').addEventListener('click', () => {
@@ -661,7 +733,7 @@
           if (location.href.includes(a.href.split('/Gold-Prices').pop())) a.classList.add('active');
         });
 
-        renderPage();
+        await renderPage();
       }
 
       init();
