@@ -22,7 +22,6 @@ const BASE_URL = (() => {
 
 // Directories/pages to exclude from the sitemap
 const EXCLUDE = new Set([
-  'admin.html',
   'offline.html',
   'dist',
   'node_modules',

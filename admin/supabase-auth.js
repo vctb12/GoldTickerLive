@@ -28,6 +28,29 @@ function getClient() {
 }
 
 // ---------------------------------------------------------------------------
+// Internal helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Resolve the email for a Supabase user.
+ * GitHub OAuth may not populate `user.email` if the email is set to private.
+ * Falls back to identity data and user_metadata.
+ * @param {object} user — Supabase user object
+ * @returns {string|null}
+ */
+function resolveEmail(user) {
+  if (!user) return null;
+  // Primary email (set when GitHub email is public)
+  if (user.email) return user.email;
+  // user_metadata.email is populated from the GitHub profile
+  if (user.user_metadata?.email) return user.user_metadata.email;
+  // Check identity data (GitHub provider identity)
+  const ghIdentity = user.identities?.find((id) => id.provider === 'github');
+  if (ghIdentity?.identity_data?.email) return ghIdentity.identity_data.email;
+  return null;
+}
+
+// ---------------------------------------------------------------------------
 // Auth helpers
 // ---------------------------------------------------------------------------
 
@@ -39,21 +62,31 @@ function getClient() {
  */
 export async function loginWithGitHub(redirectTo) {
   const sb = getClient();
-  if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh.' };
+  if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
 
   // Default redirect: go to admin root (one level up from /login/)
   const target =
     redirectTo || window.location.origin + window.location.pathname.replace(/\/login\/?$/, '/');
 
-  const { error } = await sb.auth.signInWithOAuth({
-    provider: 'github',
-    options: { redirectTo: target },
-  });
+  try {
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: target,
+        scopes: 'user:email',
+      },
+    });
 
-  if (error) {
-    return { success: false, message: error.message || 'GitHub login failed.' };
+    if (error) {
+      return { success: false, message: error.message || 'GitHub login failed.' };
+    }
+    return { success: true };
+  } catch (err) {
+    if (err?.message?.includes('fetch') || err?.message?.includes('network')) {
+      return { success: false, message: 'Network error — cannot reach Supabase. Check your connection.' };
+    }
+    return { success: false, message: err?.message || 'An unexpected error occurred.' };
   }
-  return { success: true };
 }
 
 /**
@@ -69,7 +102,19 @@ export async function login() {
  */
 export async function logout() {
   const sb = getClient();
-  if (sb) await sb.auth.signOut();
+  if (sb) {
+    try {
+      await sb.auth.signOut();
+    } catch {
+      // signOut may fail if session is already expired — clear local storage as fallback
+      try {
+        const keys = Object.keys(localStorage);
+        keys
+          .filter((k) => k.startsWith('sb-') && k.endsWith('-auth-token'))
+          .forEach((k) => localStorage.removeItem(k));
+      } catch {}
+    }
+  }
 }
 
 /**
@@ -78,8 +123,12 @@ export async function logout() {
 export async function getSession() {
   const sb = getClient();
   if (!sb) return null;
-  const { data } = await sb.auth.getSession();
-  return data?.session || null;
+  try {
+    const { data } = await sb.auth.getSession();
+    return data?.session || null;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -91,13 +140,26 @@ export async function getUser() {
 }
 
 /**
+ * Resolve the email address of the currently authenticated user.
+ * Handles the case where GitHub email is set to private.
+ * @returns {Promise<string|null>}
+ */
+export async function getUserEmail() {
+  const session = await getSession();
+  if (!session) return null;
+  return resolveEmail(session.user);
+}
+
+/**
  * Check if the current session belongs to the allowed admin email.
+ * Uses resolveEmail() to handle private GitHub emails.
  * @returns {Promise<boolean>}
  */
 export async function isAdminUser() {
   const session = await getSession();
   if (!session) return false;
-  return session.user.email === ALLOWED_EMAIL;
+  const email = resolveEmail(session.user);
+  return email === ALLOWED_EMAIL;
 }
 
 /**
@@ -131,10 +193,15 @@ export function hasStoredSession() {
  */
 export async function requireAuth(redirectTo = '../login/') {
   const session = await getSession();
+  if (!session) {
+    window.location.replace(redirectTo);
+    return false;
+  }
 
-  if (!session || session.user.email !== ALLOWED_EMAIL) {
+  const email = resolveEmail(session.user);
+  if (email !== ALLOWED_EMAIL) {
     // If logged in with the wrong account, sign them out first
-    if (session) await logout();
+    await logout();
     window.location.replace(redirectTo);
     return false;
   }
@@ -152,3 +219,10 @@ export function logActivity() {}
 export function getSupabase() {
   return getClient();
 }
+
+/**
+ * Resolve the email for a user object (exposed for use in login pages).
+ * @param {object} user
+ * @returns {string|null}
+ */
+export { resolveEmail };

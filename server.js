@@ -102,9 +102,9 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Serve admin panel
+// Redirect /admin to the Supabase-integrated admin panel
 app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
+  res.redirect(301, '/admin/');
 });
 
 // Handle SPA routing for country pages and other nested routes

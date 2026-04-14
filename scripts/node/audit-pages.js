@@ -32,7 +32,7 @@ const SKIP_DIRS = new Set([
   'build',
   'scripts',
 ]);
-const SKIP_FILES = new Set(['admin.html', 'offline.html']);
+const SKIP_FILES = new Set(['offline.html']);
 
 function walkHtml(dir, results = []) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {

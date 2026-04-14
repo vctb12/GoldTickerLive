@@ -36,7 +36,7 @@ function findHtmlFiles(dir, base = '') {
       )
         continue;
       results.push(...findHtmlFiles(path.join(dir, entry.name), rel));
-    } else if (entry.name.endsWith('.html') && entry.name !== 'admin.html') {
+    } else if (entry.name.endsWith('.html')) {
       results.push(rel);
     }
   }
