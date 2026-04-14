@@ -109,7 +109,7 @@ practical steps for working on GoldPrices.
 
 ```bash
 npm install           # Required for some test dependencies
-npm test              # Runs 66+ tests
+npm test              # Runs 205+ tests
 npm run preflight     # Runs audit-pages + check-links
 npm run seo-audit     # Validates SEO metadata
 ```
@@ -125,7 +125,21 @@ Tests run with `--test-concurrency=1` to prevent file races on shared JSON data.
   disclaimers
 - **Service worker version** must be bumped in `sw.js` when precache URLs change
 - **Dark mode** uses `[data-theme="dark"]` attribute — test both themes
-- **No admin credentials in source** — all secrets go in GitHub repository settings
+- **Admin auth uses Supabase GitHub OAuth** — configure allowed email in `admin/supabase-config.js`
+
+---
+
+## Supabase Development
+
+The admin panel uses Supabase for authentication and data persistence.
+
+- **Config**: `admin/supabase-config.js` — Supabase URL, anon key, allowed email
+- **Auth**: `admin/supabase-auth.js` — GitHub OAuth flow
+- **Schema**: `supabase/schema.sql` — run in Supabase SQL Editor to create tables
+- **Environment**: Copy `.env.example` to `.env` and fill in your Supabase credentials
+- **Tables**: `shops`, `site_settings`, `audit_logs`, `user_profiles`, `gold_prices`, `fetch_logs`
+
+See [`docs/SUPABASE_SETUP.md`](docs/SUPABASE_SETUP.md) for the full setup guide.
 
 ---
 
