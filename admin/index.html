@@ -298,10 +298,10 @@
             <div class="stat-card" role="listitem">
               <div class="stat-icon" aria-hidden="true">🏪</div>
               <div class="stat-label">Shops Listed</div>
-              <div class="stat-number" id="stat-events" aria-live="polite">
+              <div class="stat-number" id="stat-shops" aria-live="polite">
                 <span class="inline-spinner" aria-hidden="true"></span>
               </div>
-              <div class="stat-sub" id="stat-events-sub">from database</div>
+              <div class="stat-sub" id="stat-shops-sub">from database</div>
             </div>
 
             <!-- Posts Generated -->
@@ -586,19 +586,19 @@
               .from('shops')
               .select('*', { count: 'exact', head: true });
             if (!shopErr && shopCount !== null) {
-              qs('#stat-events').textContent = shopCount.toLocaleString();
-              qs('#stat-events-sub').textContent = 'total in database';
+              qs('#stat-shops').textContent = shopCount.toLocaleString();
+              qs('#stat-shops-sub').textContent = 'total in database';
             } else {
-              qs('#stat-events').textContent = '—';
-              qs('#stat-events-sub').textContent = 'database error';
+              qs('#stat-shops').textContent = '—';
+              qs('#stat-shops-sub').textContent = 'database error';
             }
           } catch {
-            qs('#stat-events').textContent = '—';
-            qs('#stat-events-sub').textContent = 'could not connect';
+            qs('#stat-shops').textContent = '—';
+            qs('#stat-shops-sub').textContent = 'could not connect';
           }
         } else {
-          qs('#stat-events').textContent = '—';
-          qs('#stat-events-sub').textContent = 'Supabase not connected';
+          qs('#stat-shops').textContent = '—';
+          qs('#stat-shops-sub').textContent = 'Supabase not connected';
         }
 
         // ── Posts Generated ──────────────────────────────────

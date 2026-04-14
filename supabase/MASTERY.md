@@ -127,7 +127,7 @@ WHERE table_schema = 'public'
 ORDER BY table_name;
 ```
 
-You should see these 11 tables:
+You should see these 12 tables:
 
 | Table | Purpose |
 |-------|---------|
@@ -141,6 +141,7 @@ You should see these 11 tables:
 | `pricing_overrides` | Admin manual price adjustments |
 | `shops` | Gold shop directory |
 | `site_settings` | Public feature flags (single row) |
+| `social_posts` | Social media post generation history |
 | `user_profiles` | Admin user profiles |
 
 Also run the full verification file for a detailed health check:
@@ -307,7 +308,7 @@ After running the schema and logging in, test each page:
 
 **What it does:**
 - Shows live gold spot price (fetched from gold-api.com)
-- Shows total shops count and analytics events count from Supabase
+- Shows total shops count and social posts count from Supabase
 - Shows API health status for gold-api.com and exchangerate-api.com
 
 **How to verify:**

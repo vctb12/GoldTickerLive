@@ -12,7 +12,7 @@ SELECT
     WHEN table_name IN (
       'analytics_events', 'api_call_logs', 'audit_logs', 'content_posts',
       'fetch_logs', 'gold_prices', 'orders', 'pricing_overrides',
-      'shops', 'site_settings', 'user_profiles'
+      'shops', 'site_settings', 'social_posts', 'user_profiles'
     ) THEN '✅ expected'
     ELSE '⚠️  unexpected'
   END AS status
@@ -20,7 +20,7 @@ FROM information_schema.tables
 WHERE table_schema = 'public'
 ORDER BY table_name;
 
--- Expected output: 11 rows, all marked ✅ expected.
+-- Expected output: 12 rows, all marked ✅ expected.
 -- If any expected table is missing, re-run schema.sql.
 
 
@@ -33,7 +33,7 @@ FROM pg_class
 WHERE relname IN (
   'analytics_events', 'api_call_logs', 'audit_logs', 'content_posts',
   'fetch_logs', 'gold_prices', 'orders', 'pricing_overrides',
-  'shops', 'site_settings', 'user_profiles'
+  'shops', 'site_settings', 'social_posts', 'user_profiles'
 )
 AND relkind = 'r'
 ORDER BY relname;
