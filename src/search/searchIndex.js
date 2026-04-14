@@ -5,7 +5,7 @@
  */
 import { COUNTRIES } from '../config/countries.js';
 import { KARATS } from '../config/karats.js';
-import { SHOPS } from '../data/shops.js';
+import { SHOPS } from '../../data/shops.js';
 
 const BASE_URL = 'https://vctb12.github.io/Gold-Prices';
 

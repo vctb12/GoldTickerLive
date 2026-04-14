@@ -1,14 +1,14 @@
-import { COUNTRIES } from '../../config/countries.js';
+import { COUNTRIES } from '../config/countries.js';
 import { SHOPS as FALLBACK_SHOPS } from '../../data/shops.js';
-import { fetchShops as fetchSupabaseShops } from '../../lib/supabase-data.js';
-import { injectNav, updateNavLang } from '../../components/nav.js';
-import { injectFooter } from '../../components/footer.js';
-import { injectTicker, updateTicker, updateTickerLang } from '../../components/ticker.js';
-import { injectBreadcrumbs } from '../../components/breadcrumbs.js';
-import * as cache from '../../lib/cache.js';
-import { renderAdSlot } from '../../components/adSlot.js';
-import { CONSTANTS } from '../../config/index.js';
-import { KARATS } from '../../config/index.js';
+import { fetchShops as fetchSupabaseShops } from '../lib/supabase-data.js';
+import { injectNav, updateNavLang } from '../components/nav.js';
+import { injectFooter } from '../components/footer.js';
+import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
+import { injectBreadcrumbs } from '../components/breadcrumbs.js';
+import * as cache from '../lib/cache.js';
+import { renderAdSlot } from '../components/adSlot.js';
+import { CONSTANTS } from '../config/index.js';
+import { KARATS } from '../config/index.js';
 
 /**
  * Mutable shops array — starts with hardcoded fallback data,

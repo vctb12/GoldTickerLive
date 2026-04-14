@@ -691,8 +691,8 @@
     </main>
 
     <script type="module">
-      import { injectNav, updateNavLang } from '../components/nav.js';
-      import { injectFooter } from '../components/footer.js';
+      import { injectNav, updateNavLang } from '../src/components/nav.js';
+      import { injectFooter } from '../src/components/footer.js';
 
       const lang = new URLSearchParams(location.search).get('lang') === 'ar' ? 'ar' : 'en';
       if (lang === 'ar') document.documentElement.setAttribute('dir', 'rtl');

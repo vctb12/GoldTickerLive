@@ -1,28 +1,29 @@
 /**
- * Terms of Service page entry point.
+ * Privacy Policy page entry point.
  * Injects shared nav/footer and wires language toggle.
  */
 
-import { injectNav, updateNavLang } from '../../components/nav.js';
-import { injectFooter } from '../../components/footer.js';
-import { injectTicker, updateTickerLang } from '../../components/ticker.js';
-import { injectBreadcrumbs } from '../../components/breadcrumbs.js';
+import { injectNav, updateNavLang } from '../components/nav.js';
+import { injectFooter } from '../components/footer.js';
+import { injectTicker, updateTickerLang } from '../components/ticker.js';
+import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 
 const STATE = { lang: 'en' };
 
 const T = {
   en: {
     'legal-hero-tag': 'Legal',
-    'legal-h1': 'Terms of Service',
-    'legal-sub': 'Please read these terms carefully before using GoldPrices.app.',
+    'legal-h1': 'Privacy Policy',
+    'legal-sub': 'How GoldPrices.app handles your data and privacy.',
     'legal-toc-label': 'Sections',
-    'toc-acceptance': 'Acceptance',
-    'toc-service': 'The Service',
-    'toc-disclaimer': 'Disclaimer',
-    'toc-data': 'Data & Sources',
-    'toc-use': 'Acceptable Use',
-    'toc-ip': 'Intellectual Property',
-    'toc-liability': 'Liability',
+    'toc-overview': 'Overview',
+    'toc-data': 'Data Collected',
+    'toc-storage': 'Local Storage',
+    'toc-third': 'Third Parties',
+    'toc-analytics': 'Analytics',
+    'toc-rights': 'Your Rights',
+    'toc-security': 'Security',
+    'toc-children': 'Children',
     'toc-changes': 'Changes',
     'toc-contact': 'Contact',
     'meta-effective-label': 'Effective:',
@@ -31,16 +32,17 @@ const T = {
   },
   ar: {
     'legal-hero-tag': 'قانوني',
-    'legal-h1': 'شروط الخدمة',
-    'legal-sub': 'يرجى قراءة هذه الشروط بعناية قبل استخدام GoldPrices.app.',
+    'legal-h1': 'سياسة الخصوصية',
+    'legal-sub': 'كيف تتعامل GoldPrices.app مع بياناتك وخصوصيتك.',
     'legal-toc-label': 'الأقسام',
-    'toc-acceptance': 'القبول',
-    'toc-service': 'الخدمة',
-    'toc-disclaimer': 'إخلاء المسؤولية',
-    'toc-data': 'البيانات والمصادر',
-    'toc-use': 'الاستخدام المقبول',
-    'toc-ip': 'الملكية الفكرية',
-    'toc-liability': 'المسؤولية',
+    'toc-overview': 'نظرة عامة',
+    'toc-data': 'البيانات المجمّعة',
+    'toc-storage': 'التخزين المحلي',
+    'toc-third': 'أطراف ثالثة',
+    'toc-analytics': 'التحليلات',
+    'toc-rights': 'حقوقك',
+    'toc-security': 'الأمان',
+    'toc-children': 'الأطفال',
     'toc-changes': 'التغييرات',
     'toc-contact': 'التواصل',
     'meta-effective-label': 'تاريخ السريان:',
@@ -67,7 +69,7 @@ function init() {
   if (saved === 'ar' || saved === 'en') STATE.lang = saved;
 
   const navCtrl = injectNav(STATE.lang, 0);
-  injectBreadcrumbs('terms');
+  injectBreadcrumbs('privacy');
   navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';

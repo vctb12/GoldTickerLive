@@ -208,7 +208,7 @@ function checkImports(jsFile) {
   }
 }
 
-const CRITICAL_DIRS = ['scripts/pages', 'lib', 'config', 'components', 'tracker'];
+const CRITICAL_DIRS = ['src/pages', 'src/lib', 'src/config', 'src/components', 'src/tracker'];
 for (const d of CRITICAL_DIRS) {
   const dirPath = path.join(ROOT, d);
   if (!fs.existsSync(dirPath)) continue;

@@ -571,15 +571,15 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script type="module">
-      import { injectNav, updateNavLang } from '../components/nav.js';
-      import { injectFooter } from '../components/footer.js';
-      import { fetchGold } from '../lib/api.js';
+      import { injectNav, updateNavLang } from '../src/components/nav.js';
+      import { injectFooter } from '../src/components/footer.js';
+      import { fetchGold } from '../src/lib/api.js';
       import {
         getBaselineHistory,
         filterByRange,
         getHistoryStats,
         toChartData,
-      } from '../lib/historical-data.js';
+      } from '../src/lib/historical-data.js';
 
       // ── i18n ──────────────────────────────────────────────────────────────────
       const STRINGS = {

@@ -78,10 +78,10 @@ export default defineConfig({
             return 'vendor';
           }
           if (
-            id.includes('/lib/cache.js') ||
-            id.includes('/lib/api.js') ||
-            id.includes('/lib/price-calculator.js') ||
-            id.includes('/lib/formatter.js')
+            id.includes('/src/lib/cache.js') ||
+            id.includes('/src/lib/api.js') ||
+            id.includes('/src/lib/price-calculator.js') ||
+            id.includes('/src/lib/formatter.js')
           ) {
             return 'utils';
           }
