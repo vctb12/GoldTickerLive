@@ -17,21 +17,21 @@
       name="description"
       content="Calculate zakat on your gold holdings. Check the 85 g nisab threshold, compute 2.5% obligation, and see estimated values in USD and AED. Free Islamic gold zakat tool."
     />
-    <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/tools/zakat-calculator.html" />
+    <link rel="canonical" href="https://vctb12.github.io/Gold-Prices/content/tools/zakat-calculator.html" />
     <link
       rel="alternate"
       hreflang="x-default"
-      href="https://vctb12.github.io/Gold-Prices/tools/zakat-calculator.html"
+      href="https://vctb12.github.io/Gold-Prices/content/tools/zakat-calculator.html"
     />
     <link
       rel="alternate"
       hreflang="en"
-      href="https://vctb12.github.io/Gold-Prices/tools/zakat-calculator.html"
+      href="https://vctb12.github.io/Gold-Prices/content/tools/zakat-calculator.html"
     />
     <link
       rel="alternate"
       hreflang="ar"
-      href="https://vctb12.github.io/Gold-Prices/tools/zakat-calculator.html?lang=ar"
+      href="https://vctb12.github.io/Gold-Prices/content/tools/zakat-calculator.html?lang=ar"
     />
     <link rel="manifest" href="../manifest.json" />
     <meta name="theme-color" content="#d4a017" />
@@ -44,7 +44,7 @@
     <meta property="og:type" content="website" />
     <meta
       property="og:url"
-      content="https://vctb12.github.io/Gold-Prices/tools/zakat-calculator.html"
+      content="https://vctb12.github.io/Gold-Prices/content/tools/zakat-calculator.html"
     />
     <meta property="og:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -57,7 +57,7 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="../styles/global.css" />
+    <link rel="stylesheet" href="../../styles/global.css" />
     <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png" />
@@ -77,13 +77,13 @@
             "@type": "ListItem",
             "position": 2,
             "name": "Tools",
-            "item": "https://vctb12.github.io/Gold-Prices/tools/"
+            "item": "https://vctb12.github.io/Gold-Prices/content/tools/"
           },
           {
             "@type": "ListItem",
             "position": 3,
             "name": "Zakat Calculator",
-            "item": "https://vctb12.github.io/Gold-Prices/tools/zakat-calculator.html"
+            "item": "https://vctb12.github.io/Gold-Prices/content/tools/zakat-calculator.html"
           }
         ]
       }
@@ -691,8 +691,8 @@
     </main>
 
     <script type="module">
-      import { injectNav, updateNavLang } from '../src/components/nav.js';
-      import { injectFooter } from '../src/components/footer.js';
+      import { injectNav, updateNavLang } from '../../src/components/nav.js';
+      import { injectFooter } from '../../src/components/footer.js';
 
       const lang = new URLSearchParams(location.search).get('lang') === 'ar' ? 'ar' : 'en';
       if (lang === 'ar') document.documentElement.setAttribute('dir', 'rtl');

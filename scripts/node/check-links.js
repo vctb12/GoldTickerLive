@@ -19,7 +19,7 @@ const path = require('path');
 // ── CLI args ────────────────────────────────────────────────────────────────
 const args = process.argv.slice(2);
 const dirArg = args.indexOf('--dir');
-const rootDir = dirArg >= 0 ? path.resolve(args[dirArg + 1]) : path.resolve(__dirname, '..');
+const rootDir = dirArg >= 0 ? path.resolve(args[dirArg + 1]) : path.resolve(__dirname, '../..');
 const failOnErr = args.includes('--fail-on-error');
 
 // ── Asset extensions to skip (not navigational links) ───────────────────────

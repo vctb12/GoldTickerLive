@@ -17,7 +17,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = path.resolve(__dirname, '..');
+const ROOT = path.resolve(__dirname, '../..');
 const FAIL = process.argv.includes('--fail-on-error');
 
 const SKIP_DIRS = new Set([

@@ -10,7 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const REPO_ROOT = path.resolve(__dirname, '..');
+const REPO_ROOT = path.resolve(__dirname, '../..');
 const BASE_URL = 'https://vctb12.github.io/Gold-Prices/';
 
 // ─────────────────────────────────────────────────────────────────────

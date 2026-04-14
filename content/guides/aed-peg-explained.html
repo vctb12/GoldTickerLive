@@ -19,22 +19,22 @@
     />
     <link
       rel="canonical"
-      href="https://vctb12.github.io/Gold-Prices/guides/aed-peg-explained.html"
+      href="https://vctb12.github.io/Gold-Prices/content/guides/aed-peg-explained.html"
     />
     <link
       rel="alternate"
       hreflang="x-default"
-      href="https://vctb12.github.io/Gold-Prices/guides/aed-peg-explained.html"
+      href="https://vctb12.github.io/Gold-Prices/content/guides/aed-peg-explained.html"
     />
     <link
       rel="alternate"
       hreflang="en"
-      href="https://vctb12.github.io/Gold-Prices/guides/aed-peg-explained.html"
+      href="https://vctb12.github.io/Gold-Prices/content/guides/aed-peg-explained.html"
     />
     <link
       rel="alternate"
       hreflang="ar"
-      href="https://vctb12.github.io/Gold-Prices/guides/aed-peg-explained.html?lang=ar"
+      href="https://vctb12.github.io/Gold-Prices/content/guides/aed-peg-explained.html?lang=ar"
     />
     <meta
       property="og:title"
@@ -47,7 +47,7 @@
     <meta property="og:type" content="article" />
     <meta
       property="og:url"
-      content="https://vctb12.github.io/Gold-Prices/guides/aed-peg-explained.html"
+      content="https://vctb12.github.io/Gold-Prices/content/guides/aed-peg-explained.html"
     />
     <meta property="og:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
     <meta name="twitter:card" content="summary" />
@@ -62,11 +62,11 @@
     <meta name="twitter:image" content="https://vctb12.github.io/Gold-Prices/assets/og-image.png" />
     <link rel="manifest" href="../manifest.json" />
     <meta name="theme-color" content="#d4a017" />
-    <link rel="stylesheet" href="../styles/global.css" />
+    <link rel="stylesheet" href="../../styles/global.css" />
     <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png" />
-    <link rel="stylesheet" href="../styles/guide-page.css" />
+    <link rel="stylesheet" href="../../styles/guide-page.css" />
 
     <script type="application/ld+json">
       {
@@ -83,13 +83,13 @@
             "@type": "ListItem",
             "position": 2,
             "name": "Guides",
-            "item": "https://vctb12.github.io/Gold-Prices/guides/"
+            "item": "https://vctb12.github.io/Gold-Prices/content/guides/"
           },
           {
             "@type": "ListItem",
             "position": 3,
             "name": "AED Peg Explained",
-            "item": "https://vctb12.github.io/Gold-Prices/guides/aed-peg-explained.html"
+            "item": "https://vctb12.github.io/Gold-Prices/content/guides/aed-peg-explained.html"
           }
         ]
       }
@@ -450,10 +450,10 @@
     <div id="ticker-root"></div>
 
     <script type="module">
-      import { injectNav } from '../src/components/nav.js';
-      import { injectFooter } from '../src/components/footer.js';
-      import { injectTicker } from '../src/components/ticker.js';
-      import { renderBreadcrumbs } from '../src/components/breadcrumbs.js';
+      import { injectNav } from '../../src/components/nav.js';
+      import { injectFooter } from '../../src/components/footer.js';
+      import { injectTicker } from '../../src/components/ticker.js';
+      import { renderBreadcrumbs } from '../../src/components/breadcrumbs.js';
 
       const lang = new URLSearchParams(location.search).get('lang') === 'ar' ? 'ar' : 'en';
       document.documentElement.lang = lang;
