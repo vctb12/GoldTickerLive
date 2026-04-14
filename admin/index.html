@@ -294,20 +294,24 @@
               <div class="stat-sub" id="stat-gold-sub"></div>
             </div>
 
-            <!-- Analytics Events -->
+            <!-- Shops Listed -->
             <div class="stat-card" role="listitem">
-              <div class="stat-icon" aria-hidden="true">📊</div>
-              <div class="stat-label">Analytics Events</div>
-              <div class="stat-number" id="stat-events" aria-live="polite">—</div>
-              <div class="stat-sub" id="stat-events-sub">from localStorage</div>
+              <div class="stat-icon" aria-hidden="true">🏪</div>
+              <div class="stat-label">Shops Listed</div>
+              <div class="stat-number" id="stat-events" aria-live="polite">
+                <span class="inline-spinner" aria-hidden="true"></span>
+              </div>
+              <div class="stat-sub" id="stat-events-sub">from database</div>
             </div>
 
             <!-- Posts Generated -->
             <div class="stat-card" role="listitem">
               <div class="stat-icon" aria-hidden="true">📣</div>
               <div class="stat-label">Posts Generated</div>
-              <div class="stat-number" id="stat-posts" aria-live="polite">—</div>
-              <div class="stat-sub" id="stat-posts-sub">social post history</div>
+              <div class="stat-number" id="stat-posts" aria-live="polite">
+                <span class="inline-spinner" aria-hidden="true"></span>
+              </div>
+              <div class="stat-sub" id="stat-posts-sub">from database</div>
             </div>
 
             <!-- Admin User -->
@@ -446,7 +450,7 @@
     <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
     <script type="module">
-      import { logout as supabaseLogout, requireAuth, getSession } from './supabase-auth.js';
+      import { logout as supabaseLogout, requireAuth, getSession, getSupabase } from './supabase-auth.js';
       import { ALLOWED_EMAIL } from './supabase-config.js';
       import { CONSTANTS } from '../config/constants.js';
 
@@ -571,33 +575,64 @@
       }
       loadUserInfo();
 
-      // ── Load & render dashboard stats (from localStorage) ──
-      function loadStats() {
-        // Analytics events
-        try {
-          const events = JSON.parse(storageGet('gp_analytics_events') || '[]');
-          qs('#stat-events').textContent = events.length.toLocaleString();
-          if (events.length > 0) {
-            const latest = new Date(events[events.length - 1].ts);
-            qs('#stat-events-sub').textContent = `last: ${relativeTime(latest.toISOString())}`;
+      // ── Load & render dashboard stats (Supabase-first, localStorage fallback) ──
+      async function loadSupabaseStats() {
+        const sb = getSupabase();
+
+        // ── Shops Listed ────────────────────────────────────
+        if (sb) {
+          try {
+            const { count: shopCount, error: shopErr } = await sb
+              .from('shops')
+              .select('*', { count: 'exact', head: true });
+            if (!shopErr && shopCount !== null) {
+              qs('#stat-events').textContent = shopCount.toLocaleString();
+              qs('#stat-events-sub').textContent = 'total in database';
+            } else {
+              qs('#stat-events').textContent = '—';
+              qs('#stat-events-sub').textContent = 'database error';
+            }
+          } catch {
+            qs('#stat-events').textContent = '—';
+            qs('#stat-events-sub').textContent = 'could not connect';
           }
-        } catch {
-          qs('#stat-events').textContent = '0';
+        } else {
+          qs('#stat-events').textContent = '—';
+          qs('#stat-events-sub').textContent = 'Supabase not connected';
         }
 
-        // Social post history
-        try {
-          const posts = JSON.parse(storageGet('gp_post_history') || '[]');
-          qs('#stat-posts').textContent = posts.length.toLocaleString();
-          if (posts.length > 0) {
-            const latest = new Date(posts[0].generatedAt);
-            qs('#stat-posts-sub').textContent = `last: ${relativeTime(latest.toISOString())}`;
+        // ── Posts Generated ──────────────────────────────────
+        if (sb) {
+          try {
+            const { count: postCount, error: postErr } = await sb
+              .from('social_posts')
+              .select('*', { count: 'exact', head: true });
+            if (!postErr && postCount !== null) {
+              qs('#stat-posts').textContent = postCount.toLocaleString();
+              // Get latest post timestamp
+              const { data: latest } = await sb
+                .from('social_posts')
+                .select('created_at')
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .maybeSingle();
+              qs('#stat-posts-sub').textContent = latest
+                ? `last: ${relativeTime(latest.created_at)}`
+                : 'no posts yet';
+            } else {
+              qs('#stat-posts').textContent = '—';
+              qs('#stat-posts-sub').textContent = 'database error';
+            }
+          } catch {
+            qs('#stat-posts').textContent = '—';
+            qs('#stat-posts-sub').textContent = 'could not connect';
           }
-        } catch {
-          qs('#stat-posts').textContent = '0';
+        } else {
+          qs('#stat-posts').textContent = '—';
+          qs('#stat-posts-sub').textContent = 'Supabase not connected';
         }
       }
-      loadStats();
+      loadSupabaseStats();
 
       // ── Gold Ticker ──────────────────────────────────────────
       async function updateTicker() {
