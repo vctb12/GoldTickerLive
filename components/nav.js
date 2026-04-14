@@ -13,6 +13,7 @@
  */
 
 import { NAV_DATA } from './nav-data.js';
+import { applyFeatureFlags } from '../lib/site-settings.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -450,6 +451,11 @@ export function injectNav(lang = 'en', depth = 0) {
       closeDropdown(openDd, btn);
       btn.focus();
     }
+  });
+
+  // ── Apply site-level feature flags (async — runs after current call stack) ─
+  applyFeatureFlags().catch((err) => {
+    console.warn('[nav] Failed to apply feature flags:', err);
   });
 
   return _buildReturnValue();
