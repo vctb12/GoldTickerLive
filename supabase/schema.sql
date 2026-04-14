@@ -193,3 +193,42 @@ create policy "Admin update profiles"
 create trigger user_profiles_set_updated_at
     before update on public.user_profiles
     for each row execute procedure public.set_updated_at();
+
+-- ============================================================
+-- GOLD PRICES (used by @GoldTickerLive posting system)
+-- ============================================================
+-- Stores every gold price fetched by the automated posting workflows.
+-- The service role key bypasses RLS, so no public policies are needed for the bot.
+
+create table if not exists public.gold_prices (
+    id          uuid primary key default uuid_generate_v4(),
+    spot_usd    numeric not null,
+    change_pct  numeric,
+    open_usd    numeric,
+    high_usd    numeric,
+    low_usd     numeric,
+    k24_aed     numeric,
+    k22_aed     numeric,
+    k21_aed     numeric,
+    fetched_at  timestamptz not null default now()
+);
+
+alter table public.gold_prices enable row level security;
+
+-- ============================================================
+-- FETCH LOGS (used by @GoldTickerLive posting system)
+-- ============================================================
+-- Logs every workflow run — successes, skips, and failures.
+-- Used for duplicate detection, spike rate-limiting, and health monitoring.
+
+create table if not exists public.fetch_logs (
+    id              uuid primary key default uuid_generate_v4(),
+    status          text not null,          -- 'success', 'error', 'skipped'
+    mode            text not null,          -- 'hourly', 'market_event', 'spike_alert', 'health_check'
+    price_usd       numeric,
+    tweet_id        text,
+    error_message   text,
+    created_at      timestamptz not null default now()
+);
+
+alter table public.fetch_logs enable row level security;
