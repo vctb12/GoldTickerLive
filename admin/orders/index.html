@@ -767,7 +767,7 @@
         const sb = getSupabase();
         if (sb) {
           const row = toDbRow(order);
-          const { error } = await sb.from('orders').upsert(row).eq('id', order.id);
+          const { error } = await sb.from('orders').upsert(row);
           if (error) console.warn('[orders] Supabase upsert error:', error.message);
         }
         // Always update local cache

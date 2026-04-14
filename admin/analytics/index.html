@@ -348,7 +348,7 @@
                 event: row.event,
                 page: row.page || '',
                 sessionId: row.session_id || '',
-                ts: row.ts || new Date(row.created_at).getTime(),
+                ts: row.ts ?? new Date(row.created_at).getTime(),
                 properties: row.properties || {},
               }));
               cacheEvents(events);
@@ -381,7 +381,7 @@
                 response_time: row.response_time,
                 success: row.success,
                 error_message: row.error_message || '',
-                ts: row.ts || new Date(row.created_at).getTime(),
+                ts: row.ts ?? new Date(row.created_at).getTime(),
               }));
               cacheApiLog(logs);
               return logs;
@@ -691,8 +691,8 @@
             // Clear from Supabase
             const sb = getSupabase();
             if (sb) {
-              try { await sb.from('analytics_events').delete().neq('id', '00000000-0000-0000-0000-000000000000'); } catch {}
-              try { await sb.from('api_call_logs').delete().neq('id', '00000000-0000-0000-0000-000000000000'); } catch {}
+              try { await sb.from('analytics_events').delete().gte('created_at', '1970-01-01'); } catch {}
+              try { await sb.from('api_call_logs').delete().gte('created_at', '1970-01-01'); } catch {}
             }
             try { localStorage.removeItem(EVENTS_KEY); } catch {}
             showToast('Analytics data cleared.', 'info');

@@ -1831,7 +1831,7 @@
                 language: row.language || 'en',
                 text: row.text || '',
                 platform: row.platform || '',
-                generatedAt: row.generated_at || new Date(row.created_at).getTime(),
+                generatedAt: row.generated_at ?? new Date(row.created_at).getTime(),
               }));
               cacheHistory(entries);
               return entries;
@@ -2170,7 +2170,7 @@
             // Clear from Supabase
             const sb = getSupabase();
             if (sb) {
-              try { await sb.from('social_posts').delete().neq('id', '00000000-0000-0000-0000-000000000000'); } catch {}
+              try { await sb.from('social_posts').delete().gte('created_at', '1970-01-01'); } catch {}
             }
             try { localStorage.removeItem(HISTORY_KEY); } catch {}
             await renderHistory();

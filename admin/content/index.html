@@ -1135,7 +1135,7 @@
         const sb = getSupabase();
         if (sb) {
           try {
-            const rows = posts.map((p) => ({ ...toDbRow(p) }));
+            const rows = posts.map(toDbRow);
             const { error } = await sb.from('content_posts').upsert(rows);
             if (error) console.warn('[content] Supabase batch upsert error:', error.message);
           } catch (err) {
