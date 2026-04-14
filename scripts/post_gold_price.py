@@ -81,15 +81,19 @@ def format_tweet(data):
         return f'{gram_usd * AED_RATE:.2f}'
 
     tweet = (
-        f"🥇 Gold Prices Today — {date_str}\n"
+        f"🥇 Gold Prices Today - {date_str}\n"
+        f"\n"
         f"🕐 {time_str} UAE (GMT+4)\n"
         f"\n"
-        f"24K: ${price:,.2f}/oz{change_str}\n"
-        f"🇦🇪 UAE (AED/g):\n"
-        f"24K: {aed(g24)} | 22K: {aed(g22)}\n"
-        f"21K: {aed(g21)} | 18K: {aed(g18)}\n"
+        f"Spot: 24K - ${price:,.2f}/oz{change_str}\n"
         f"\n"
-        f"{trend} goldprices.ae\n"
+        f"🇦🇪 UAE (AED/g):\n"
+        f"24K: {aed(g24)} AED/g\n"
+        f"22K: {aed(g22)} AED/g\n"
+        f"21K: {aed(g21)} AED/g\n"
+        f"18K: {aed(g18)} AED/g\n"
+        f"\n"
+        f"{trend} https://vctb12.github.io/Gold-Prices/\n"
         f"\n"
         f"#GoldPrice #Gold #UAE #Dubai"
     )
