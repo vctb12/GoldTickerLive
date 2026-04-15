@@ -5,20 +5,20 @@
 /* ── Hero ─────────────────────────────────────────── */
 .learn-hero {
   background: linear-gradient(135deg, #0f0d07 0%, var(--color-gold-deep) 50%, #0f0d07 100%);
-  padding: 3rem 1.5rem 2.5rem;
+  padding: var(--space-7) var(--space-5) 2.5rem;
   text-align: center;
 }
 
 .learn-hero-inner {
   max-width: 640px;
-  margin: 0 auto;
+  margin-inline: auto;
 }
 
 .learn-hero h1 {
   font-size: clamp(1.9rem, 4.5vw, 2.8rem);
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   color: var(--color-gold-light);
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-2);
 }
 
 .learn-hero p {
@@ -30,7 +30,7 @@
 .learn-toc {
   background: var(--color-surface-1);
   border-bottom: 1px solid var(--color-border);
-  padding: 0.75rem 1.5rem;
+  padding: var(--space-3) var(--space-5);
   position: sticky;
   top: var(--nav-height, 56px);
   z-index: 90;
@@ -38,10 +38,10 @@
 
 .learn-toc-inner {
   max-width: 860px;
-  margin: 0 auto;
+  margin-inline: auto;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-4);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -53,7 +53,7 @@
 
 .learn-toc-label {
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--color-text-muted);
@@ -63,7 +63,7 @@
 
 .learn-toc-list {
   display: flex;
-  gap: 1rem;
+  gap: var(--space-4);
   list-style: none;
   padding: 0;
   margin: 0;
@@ -72,7 +72,7 @@
 
 .learn-toc-list a {
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   color: var(--color-text-muted);
   text-decoration: none;
   white-space: nowrap;
@@ -92,7 +92,7 @@
 /* ── Body layout ────────────────────────────────────── */
 .learn-body {
   max-width: 800px;
-  margin: 0 auto;
+  margin-inline: auto;
   padding: 2rem 1.5rem 4rem;
   display: flex;
   flex-direction: column;
@@ -110,18 +110,18 @@
 }
 
 .learn-section h2 {
-  font-size: 1.5rem;
-  font-weight: 800;
-  margin-bottom: 0.75rem;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-extrabold);
+  margin-bottom: var(--space-3);
   color: var(--color-text);
-  scroll-margin-top: 4rem;
+  scroll-margin-top: var(--space-8);
 }
 
 .learn-section h3 {
   font-size: 1.05rem;
-  font-weight: 700;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
+  font-weight: var(--weight-bold);
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-2);
   color: var(--color-text);
 }
 
@@ -129,12 +129,12 @@
   font-size: 0.95rem;
   line-height: 1.75;
   color: var(--color-text-secondary, var(--color-text));
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-3);
 }
 
 .learn-section ul {
-  padding-left: 1.4rem;
-  margin-bottom: 0.75rem;
+  padding-inline-start: 1.4rem;
+  margin-bottom: var(--space-3);
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -155,7 +155,7 @@
 .learn-callout {
   background: rgb(201 168 76 / 8%);
   border: 1px solid rgb(201 168 76 / 30%);
-  border-left: 3px solid var(--color-gold);
+  border-inline-start: 3px solid var(--color-gold);
   border-radius: var(--radius-sm);
   padding: 1rem 1.2rem;
   margin-top: 1.25rem;
@@ -170,7 +170,7 @@
 .learn-callout strong {
   display: block;
   font-size: 0.82rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--color-gold-muted);
@@ -204,12 +204,12 @@
 .learn-karat-table th {
   background: var(--color-surface-2);
   padding: 0.65rem 1rem;
-  text-align: left;
-  font-size: 0.75rem;
-  font-weight: 700;
+  text-align: start;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
   color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-wider);
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -236,7 +236,7 @@
   width: 80px;
   height: 8px;
   background: var(--color-surface-2);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   overflow: hidden;
 }
 
@@ -244,7 +244,7 @@
   display: block;
   height: 100%;
   background: var(--color-gold);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
 }
 
 /* ── RTL ────────────────────────────────────────────── */
@@ -257,8 +257,7 @@
 }
 
 [dir='rtl'] .learn-callout {
-  border-left: none;
-  border-right: 3px solid var(--color-gold);
+  border-inline-start: 3px solid var(--color-gold);
 }
 
 [dir='rtl'] .learn-callout--info {
@@ -266,13 +265,12 @@
 }
 
 [dir='rtl'] .learn-section ul {
-  padding-left: 0;
-  padding-right: 1.4rem;
+  padding-inline-start: 1.4rem;
 }
 
 [dir='rtl'] .learn-karat-table th,
 [dir='rtl'] .learn-karat-table td {
-  text-align: right;
+  text-align: start;
 }
 
 /* ── Mobile Responsive Fixes ── */
@@ -329,7 +327,7 @@
 /* ── Related tools footer section ── */
 .learn-tools-section {
   max-width: 760px;
-  margin: 0 auto;
+  margin-inline: auto;
   padding: 2rem 1.5rem 3rem;
   border-top: 1px solid var(--color-border);
 }
