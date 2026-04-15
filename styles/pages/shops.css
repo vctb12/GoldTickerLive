@@ -26,9 +26,9 @@
   background:
     radial-gradient(circle at 85% 15%, rgb(240 200 74 / 18%), transparent 42%),
     radial-gradient(circle at 10% 80%, rgb(180 100 0 / 12%), transparent 50%),
-    linear-gradient(145deg, #19140e 0%, #2a1f10 55%, #5b4117 100%);
+    linear-gradient(145deg, var(--color-gold-deep) 0%, #2a1f10 55%, #5b4117 100%);
   border-radius: var(--radius-panel);
-  color: #fff8ea;
+  color: var(--text-on-dark);
   padding: clamp(1.6rem, 4vw, 2.8rem);
   box-shadow:
     var(--elev-5),
@@ -109,7 +109,7 @@
   letter-spacing: -0.015em;
   margin-bottom: 0.7rem;
   font-weight: 800;
-  color: #fff8ea;
+  color: var(--text-on-dark);
   position: relative;
 }
 
@@ -148,7 +148,7 @@
 .shops-stat-value {
   font-size: 1.3rem;
   font-weight: 800;
-  color: #ffd98c;
+  color: var(--color-gold-light);
   line-height: 1;
 }
 
@@ -203,7 +203,7 @@
 .shops-chip:focus-visible {
   background: rgb(212 160 23 / 20%);
   border-color: rgb(212 160 23 / 50%);
-  color: #ffd98c;
+  color: var(--color-gold-light);
   outline: none;
 }
 
@@ -239,7 +239,7 @@
 .shops-quick-action-btn:hover {
   background: rgb(212 160 23 / 15%);
   border-color: rgb(212 160 23 / 50%);
-  color: #ffd98c;
+  color: var(--color-gold-light);
   transform: translateY(-1px);
 }
 
@@ -1925,13 +1925,13 @@
 }
 
 .shops-nearme-status--info {
-  background: #eff6ff;
-  color: #1d4ed8;
+  background: var(--color-fixed-bg);
+  color: var(--color-fixed);
 }
 
 .shops-nearme-status--error {
-  background: #fef2f2;
-  color: #b91c1c;
+  background: var(--color-error-bg);
+  color: var(--color-error);
 }
 
 .shops-nearme-results {

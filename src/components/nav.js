@@ -167,13 +167,13 @@ export function injectNav(lang = 'en', depth = 0) {
       <button id="nav-search-btn"
               type="button"
               aria-label="Search"
-              style="background:none;border:none;cursor:pointer;padding:0.4rem;font-size:1.1rem;color:#64748b;display:flex;align-items:center;line-height:1;"
+              class="nav-icon-btn"
       >🔍</button>
 
       <button id="nav-theme-toggle"
               type="button"
               aria-label="Switch to dark mode"
-              style="background:none;border:none;cursor:pointer;padding:0.4rem;font-size:1.1rem;color:var(--color-text-muted);display:flex;align-items:center;line-height:1;"
+              class="nav-icon-btn"
       >🌙</button>
 
       <button id="nav-lang-toggle"
@@ -196,10 +196,10 @@ export function injectNav(lang = 'en', depth = 0) {
   </div>
 
   <!-- Search overlay -->
-  <div id="nav-search-overlay" style="display:none;position:absolute;top:100%;right:0;left:0;background:white;border-bottom:1px solid #e2e8f0;padding:0.75rem 1rem;z-index:1000;">
+  <div id="nav-search-overlay" class="nav-search-overlay">
     <input id="nav-search-input" type="search" placeholder="Search countries, cities, karats..." autocomplete="off"
-      style="width:100%;max-width:480px;padding:0.5rem 0.75rem;border:1px solid #e2e8f0;border-radius:6px;font-size:0.875rem;outline:none;display:block;margin:0 auto;" />
-    <div id="nav-search-dropdown" style="max-width:480px;margin:0.25rem auto 0;background:white;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);max-height:300px;overflow-y:auto;"></div>
+      class="nav-search-input" />
+    <div id="nav-search-dropdown" class="nav-search-dropdown"></div>
   </div>
 
   <!-- Mobile off-canvas drawer -->
@@ -703,18 +703,18 @@ export function initNavSearch(basePath = '/') {
   let debounceTimer = null;
 
   function openOverlay() {
-    overlay.style.display = 'block';
+    overlay.classList.add('is-open');
     input.focus();
   }
 
   function closeOverlay() {
-    overlay.style.display = 'none';
+    overlay.classList.remove('is-open');
     if (dropdown) dropdown.innerHTML = '';
   }
 
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
-    overlay.style.display === 'block' ? closeOverlay() : openOverlay();
+    overlay.classList.contains('is-open') ? closeOverlay() : openOverlay();
   });
 
   // Close on outside click
@@ -775,26 +775,28 @@ export function initNavSearch(basePath = '/') {
       const mod = await getSearch();
       if (!mod) {
         dropdown.innerHTML =
-          '<div style="padding:0.75rem 1rem;color:#64748b;font-size:0.875rem;">Search unavailable</div>';
+          '<div class="nav-search-msg">Search unavailable</div>';
         return;
       }
       const results = mod.search(q);
       if (!results.length) {
         dropdown.innerHTML =
-          '<div style="padding:0.75rem 1rem;color:#64748b;font-size:0.875rem;">No results found</div>';
+          '<div class="nav-search-msg">No results found</div>';
         return;
       }
       const base = basePath.replace(/\/$/, '');
       dropdown.innerHTML = results
         .map((r) => {
           const href = base + r.url;
-          return `<a href="${href}" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 1rem;text-decoration:none;color:#1e293b;font-size:0.875rem;border-bottom:1px solid #f1f5f9;" tabindex="0">
-          <span style="font-size:1rem;">${r.icon || '🔍'}</span>
+          return `<a href="${href}" class="nav-search-result" tabindex="0">
+          <span class="nav-search-result-icon">${r.icon || '🔍'}</span>
           <span>
-            <span style="font-weight:500;">${r.label}</span>
-            <span style="font-size:0.75rem;color:#94a3b8;margin-left:0.4rem;">${r.type}</span>
+            <span class="nav-search-result-label">${r.label}</span>
+            <span class="nav-search-result-type">${r.type}</span>
           </span>
         </a>`;
+        })
+        .join('');
         })
         .join('');
     }, 200);

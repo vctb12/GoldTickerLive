@@ -6,10 +6,10 @@
 .insights-hero {
   background: linear-gradient(
     150deg,
-    #0b0907 0%,
-    #2a1d06 35%,
+    var(--color-bg) 0%,
+    var(--color-gold-deep) 35%,
     var(--color-gold-deep) 65%,
-    #1a1005 100%
+    var(--surface-canvas) 100%
   );
   padding: 3.5rem 1.5rem 3rem;
   text-align: center;
@@ -906,7 +906,7 @@
 
 .insights-article-cta:hover {
   background: var(--color-gold);
-  color: #fff;
+  color: var(--color-white);
 }
 
 /* ── Bottom banner ──────────────────────────────────── */

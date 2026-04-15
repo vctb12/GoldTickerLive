@@ -86,7 +86,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #4ade80;
+  background: var(--color-live);
   flex-shrink: 0;
   animation: pulse-live 2s ease-in-out infinite;
 }
@@ -169,7 +169,7 @@
     var(--color-gold, #c99a3e) 0%,
     var(--color-gold-light, #e5c96e) 100%
   );
-  color: #1e0e03;
+  color: var(--color-gold-deep);
   border-color: var(--color-gold, #c99a3e);
   text-shadow: 0 1px 0 rgb(255 255 255 / 15%);
 }
@@ -177,7 +177,7 @@
 .hero .btn-primary:hover {
   background: linear-gradient(135deg, var(--color-gold-light, #e5c96e) 0%, #f0d070 100%);
   border-color: var(--color-gold-light, #e5c96e);
-  color: #1a0c02;
+  color: var(--color-gold-deep);
   text-decoration: none;
   transform: translateY(-2px);
   box-shadow:
@@ -316,13 +316,13 @@
 
 .hlc-change.badge-up {
   background: rgb(26 122 56 / 20%);
-  color: #5dd887;
+  color: var(--color-up);
   border: 1px solid rgb(26 122 56 / 30%);
 }
 
 .hlc-change.badge-down {
   background: rgb(220 38 38 / 18%);
-  color: #f87171;
+  color: var(--color-down);
   border: 1px solid rgb(220 38 38 / 25%);
 }
 
@@ -334,7 +334,7 @@
 }
 
 .hlc-market--open {
-  color: #86efac;
+  color: var(--color-up);
   background: rgb(34 197 94 / 15%);
   border: 1px solid rgb(34 197 94 / 28%);
 }
@@ -409,7 +409,7 @@
    LIVE KARAT PRICE STRIP
    ══════════════════════════════════════════════════════════════ */
 .karat-strip {
-  background: linear-gradient(180deg, #1a1206 0%, #1e1608 100%);
+  background: linear-gradient(180deg, var(--color-gold-deep) 0%, var(--surface-canvas) 100%);
   border-top: 1px solid rgb(196 153 62 / 15%);
   border-bottom: 1px solid rgb(0 0 0 / 30%);
   padding: 0.6rem 1.5rem;
@@ -483,7 +483,7 @@
 .karat-strip-v {
   font-size: 0.82rem;
   font-weight: 700;
-  color: #f0d070;
+  color: var(--color-gold-bright);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.01em;
 }

@@ -21,29 +21,13 @@ export function showStorageQuotaWarning() {
   const banner = document.createElement('div');
   banner.id = 'cache-quota-warning';
   banner.setAttribute('role', 'alert');
-  banner.style.cssText = [
-    'position:fixed',
-    'bottom:1rem',
-    'left:50%',
-    'transform:translateX(-50%)',
-    'max-width:420px',
-    'width:calc(100% - 2rem)',
-    'background:#b91c1c',
-    'color:#fff',
-    'padding:0.75rem 2.5rem 0.75rem 1rem',
-    'border-radius:8px',
-    'font-size:0.875rem',
-    'line-height:1.4',
-    'z-index:10000',
-    'box-shadow:0 4px 12px rgba(0,0,0,0.35)',
-  ].join(';');
+  banner.className = 'cache-quota-warning';
   banner.innerHTML =
     "<strong>Storage full</strong> — your browser's storage is nearly full. " +
     'Price alerts or settings may not have been saved. ' +
     'Try clearing your browser cache or disabling other extensions.<button ' +
     'aria-label="Dismiss" ' +
-    'style="position:absolute;top:0.5rem;right:0.625rem;background:none;border:none;' +
-    'color:#fff;cursor:pointer;font-size:1.125rem;line-height:1;padding:0" ' +
+    'class="cache-quota-warning__dismiss" ' +
     'onclick="this.parentElement.remove()">✕</button>';
   document.body?.appendChild(banner);
 }
