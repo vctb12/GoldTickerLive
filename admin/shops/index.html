@@ -17,59 +17,6 @@
     <link rel="stylesheet" href="../../styles/admin.css" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <style>
-      /* ── Stat grid ──────────────────────────────────────────── */
-      .stat-grid {
-        display: grid;
-        gap: 16px;
-        grid-template-columns: repeat(4, 1fr);
-        margin-bottom: 24px;
-      }
-      @media (max-width: 900px) {
-        .stat-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-      @media (max-width: 480px) {
-        .stat-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      /* ── Toolbar ────────────────────────────────────────────── */
-      .toolbar {
-        align-items: center;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 16px;
-      }
-      .toolbar .search-wrap {
-        flex: 1 1 200px;
-        position: relative;
-      }
-      .toolbar .search-wrap .search-icon {
-        color: var(--text-dim);
-        left: 10px;
-        pointer-events: none;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-      }
-      .toolbar .search-wrap .form-input {
-        padding-left: 32px;
-      }
-      .toolbar .form-select {
-        flex: 0 1 160px;
-        min-width: 120px;
-      }
-      .toolbar-actions {
-        align-items: center;
-        display: flex;
-        flex-shrink: 0;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
       /* ── Table extras ───────────────────────────────────────── */
       .shop-name-cell {
         display: flex;
@@ -96,38 +43,6 @@
       .rating-empty {
         color: var(--text-dim);
       }
-      .row-actions {
-        align-items: center;
-        display: flex;
-        gap: 4px;
-      }
-      .btn-icon {
-        align-items: center;
-        background: none;
-        border: 1px solid transparent;
-        border-radius: var(--radius-sm);
-        color: var(--text-muted);
-        cursor: pointer;
-        display: inline-flex;
-        height: 30px;
-        justify-content: center;
-        padding: 0;
-        transition:
-          background 0.15s,
-          color 0.15s,
-          border-color 0.15s;
-        width: 30px;
-      }
-      .btn-icon:hover {
-        background: var(--surface-2);
-        color: var(--text);
-        border-color: var(--border);
-      }
-      .btn-icon.btn-icon-danger:hover {
-        background: rgba(239, 68, 68, 0.12);
-        color: var(--danger);
-        border-color: rgba(239, 68, 68, 0.3);
-      }
       tbody tr {
         cursor: pointer;
       }
@@ -150,19 +65,6 @@
       .delete-confirm span {
         color: var(--danger);
         font-weight: 500;
-      }
-
-      /* ── Empty state ────────────────────────────────────────── */
-      .empty-state {
-        color: var(--text-dim);
-        font-size: 0.9375rem;
-        padding: 48px 24px;
-        text-align: center;
-      }
-      .empty-state p {
-        margin-top: 8px;
-        font-size: 0.8125rem;
-        color: var(--text-muted);
       }
 
       /* ── Modal tabs ─────────────────────────────────────────── */
@@ -409,8 +311,9 @@
             </select>
             <div class="toolbar-actions">
               <button class="btn btn-gold" id="add-btn" type="button">+ Add Shop</button>
+              <button class="btn btn-ghost btn-sm" id="import-csv-btn" type="button">⬆ Import CSV</button>
               <button class="btn btn-ghost" id="import-btn" type="button">⬆ Import JSON</button>
-              <button class="btn btn-ghost" id="export-btn" type="button">⬇ Export CSV</button>
+              <button class="btn btn-ghost btn-sm" id="export-csv-btn" type="button">⬇ Export CSV</button>
             </div>
           </div>
 
@@ -423,17 +326,18 @@
             <table id="shops-table" aria-label="Shops list">
               <thead>
                 <tr>
-                  <th>Name / Country</th>
-                  <th>City / Area</th>
+                  <th class="sort-th" data-col="name">Name / Country <span class="sort-icon"></span></th>
+                  <th class="sort-th" data-col="city">City / Area <span class="sort-icon"></span></th>
                   <th>Phone</th>
-                  <th>Rating</th>
+                  <th class="sort-th" data-col="rating">Rating <span class="sort-icon"></span></th>
                   <th>Status</th>
+                  <th>Map</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="shops-tbody">
                 <tr>
-                  <td colspan="6">
+                  <td colspan="7">
                     <div class="empty-state">
                       🏪 No shops found.
                       <p>Add your first shop or import JSON.</p>
@@ -445,30 +349,7 @@
           </div>
 
           <!-- ── Pagination ────────────────────────────────────── -->
-          <div
-            class="pagination hidden"
-            id="pagination"
-            role="navigation"
-            aria-label="Shops pagination"
-          >
-            <button
-              class="btn btn-ghost btn-sm"
-              id="page-prev"
-              type="button"
-              aria-label="Previous page"
-            >
-              ‹ Prev
-            </button>
-            <span class="page-info" id="page-info"></span>
-            <button
-              class="btn btn-ghost btn-sm"
-              id="page-next"
-              type="button"
-              aria-label="Next page"
-            >
-              Next ›
-            </button>
-          </div>
+          <div id="shops-pagination"></div>
         </main>
       </div>
       <!-- /.main-area -->
@@ -800,16 +681,55 @@
       </div>
     </div>
 
+    <!-- ── Import CSV Modal ──────────────────────────────────── -->
+    <div
+      class="modal-backdrop hidden"
+      id="import-csv-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="import-csv-modal-title"
+    >
+      <div class="modal" style="max-width:600px">
+        <div class="modal-header">
+          <h2 id="import-csv-modal-title">Import Shops from CSV</h2>
+          <button class="modal-close" id="import-csv-close" aria-label="Close" type="button">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted text-sm" style="margin-bottom:12px">
+            Paste CSV with headers: <code>name, name_ar, city, country, phone, address, rating, verified</code>. First row must be column headers.
+          </p>
+          <div class="form-group">
+            <label class="form-label" for="csv-input">CSV Data</label>
+            <textarea
+              class="form-textarea"
+              id="csv-input"
+              placeholder="Paste CSV here..."
+              style="min-height:140px;font-family:monospace;font-size:0.8125rem"
+            ></textarea>
+          </div>
+          <div id="csv-preview" class="import-result" style="margin-top:12px"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" id="import-csv-cancel" type="button">Cancel</button>
+          <button class="btn btn-ghost" id="csv-parse-btn" type="button">Parse</button>
+          <button class="btn btn-primary" id="csv-import-confirm" type="button" disabled>Import shops</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ── Toast container ──────────────────────────────────── -->
     <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
     <script type="module">
       import { logout as supabaseLogout, requireAuth, getSupabase, getSession } from '../supabase-auth.js';
-      import { initAdminShell } from '../shared/admin-shell.js';
+      import { initAdminShell, renderBreadcrumb } from '../shared/admin-shell.js';
+      import { showToast, renderPagination, downloadCSV, debounce } from '../shared/admin-utils.js';
+      import { ICONS } from '../shared/icons.js';
 
       // ── Auth guard ──────────────────────────────────────────
       if (!(await requireAuth())) throw new Error('redirect');
       await initAdminShell({ logout: supabaseLogout, getSession });
+      renderBreadcrumb('Shops');
 
       /* ─────────────────────────────────────────────────────────
        Config
@@ -841,22 +761,7 @@
       let totalShops = 0;
       let deleteTargetId = null;
       let isLoading = false;
-
-      /* ─────────────────────────────────────────────────────────
-       Toast
-    ───────────────────────────────────────────────────────── */
-      function showToast(msg, type = 'info') {
-        const icons = { success: '✅', warning: '⚠️', danger: '❌', info: 'ℹ️' };
-        const container = document.getElementById('toast-container');
-        const toast = document.createElement('div');
-        toast.className = `toast toast--${type}`;
-        toast.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span>${msg}</span>`;
-        container.appendChild(toast);
-        setTimeout(() => {
-          toast.classList.add('toast-hide');
-          toast.addEventListener('animationend', () => toast.remove(), { once: true });
-        }, 4000);
-      }
+      let sortState = { col: null, dir: 'asc' };
 
       /* ─────────────────────────────────────────────────────────
        Supabase Data Layer (with localStorage cache fallback)
@@ -1071,15 +976,39 @@
           );
         if (country) shops = shops.filter((s) => s.country === country);
         if (verified === 'verified') shops = shops.filter((s) => s.verified);
+        if (verified === 'unverified') shops = shops.filter((s) => !s.verified);
 
-        // Sort
-        const sortFns = {
-          name_asc: (a, b) => (a.name || '').localeCompare(b.name || ''),
-          name_desc: (a, b) => (b.name || '').localeCompare(a.name || ''),
-          country: (a, b) => (a.country || '').localeCompare(b.country || ''),
-          recent: (a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''),
-        };
-        if (sortFns[sortVal]) shops.sort(sortFns[sortVal]);
+        // Sort — column header sort takes precedence over dropdown
+        if (sortState.col) {
+          const dir = sortState.dir === 'asc' ? 1 : -1;
+          shops.sort((a, b) => {
+            const av = (a[sortState.col] ?? '').toString().toLowerCase();
+            const bv = (b[sortState.col] ?? '').toString().toLowerCase();
+            if (sortState.col === 'rating') {
+              return dir * ((parseFloat(a.rating) || 0) - (parseFloat(b.rating) || 0));
+            }
+            return dir * av.localeCompare(bv);
+          });
+        } else {
+          const sortFns = {
+            name_asc: (a, b) => (a.name || '').localeCompare(b.name || ''),
+            name_desc: (a, b) => (b.name || '').localeCompare(a.name || ''),
+            country: (a, b) => (a.country || '').localeCompare(b.country || ''),
+            recent: (a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''),
+          };
+          if (sortFns[sortVal]) shops.sort(sortFns[sortVal]);
+        }
+
+        // Update sort icons in headers
+        document.querySelectorAll('.sort-th').forEach((th) => {
+          const icon = th.querySelector('.sort-icon');
+          if (!icon) return;
+          if (sortState.col === th.dataset.col) {
+            icon.textContent = sortState.dir === 'asc' ? ' ▲' : ' ▼';
+          } else {
+            icon.textContent = '';
+          }
+        });
 
         totalShops = shops.length;
         totalPages = Math.max(1, Math.ceil(totalShops / PAGE_SIZE));
@@ -1092,14 +1021,21 @@
         const pageShops = shops.slice(start, start + PAGE_SIZE);
 
         renderShops(pageShops);
-        updatePagination();
+
+        renderPagination(document.getElementById('shops-pagination'), {
+          total: totalShops,
+          page: currentPage,
+          perPage: PAGE_SIZE,
+          onChange: (p) => { currentPage = p; renderTable(p); },
+        });
+
         isLoading = false;
       }
 
       function renderShops(shops) {
         const tbody = document.getElementById('shops-tbody');
         if (shops.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">🏪 No shops found.<p>Add your first shop or import JSON.</p></div></td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">🏪 No shops found.<p>Add your first shop or import JSON.</p></div></td></tr>`;
           return;
         }
         tbody.innerHTML = shops
@@ -1109,18 +1045,24 @@
             const country = COUNTRIES[s.country] || s.country || '—';
             const cityArea = [s.city, s.area].filter(Boolean).join(' · ') || '—';
 
-            // API returns `verified` (bool) OR `status === 'active'` depending on backend.
             const isVerified = s.verified || s.status === 'active';
             const isFeatured = !!s.featured;
             const verifiedBadge = isVerified
-              ? `<span class="badge badge-success">✓ Verified</span>`
+              ? `<span class="badge badge-success" title="Verified">✓ Verified</span>`
               : `<span class="badge badge-neutral">Unverified</span>`;
             const featuredBadge = isFeatured
               ? `<span class="badge badge-warning" style="margin-left:4px">★ Featured</span>`
               : '';
 
-            // API may return `id`, `_id`, or `shopId` depending on storage backend.
             const id = s.id || s._id || s.shopId;
+
+            // Map pin cell
+            const lat = s.latitude ?? s.lat;
+            const lng = s.longitude ?? s.lng;
+            const mapCell = (lat != null && lng != null)
+              ? `<a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" rel="noopener" title="View on map" class="btn-icon">${ICONS.mapPin}</a>`
+              : `<span style="color:var(--text-dim);font-size:0.75rem">—</span>`;
+
             const isDeleting = deleteTargetId === id;
             const actions = isDeleting
               ? `<div class="delete-confirm" onclick="event.stopPropagation()">
@@ -1130,6 +1072,7 @@
              </div>`
               : `<div class="row-actions" onclick="event.stopPropagation()">
                <button class="btn-icon" data-action="edit" data-id="${id}" title="Edit shop" type="button" aria-label="Edit ${nameDisplay}">✏️</button>
+               ${!isVerified ? `<button class="btn-icon" data-action="verify" data-id="${id}" title="Mark as verified" type="button" aria-label="Verify ${nameDisplay}">✓</button>` : ''}
                <button class="btn-icon btn-icon-danger" data-action="delete" data-id="${id}" title="Delete shop" type="button" aria-label="Delete ${nameDisplay}">🗑️</button>
              </div>`;
 
@@ -1145,25 +1088,11 @@
           <td>${s.phone ? `<a href="tel:${s.phone}" onclick="event.stopPropagation()">${s.phone}</a>` : '—'}</td>
           <td>${renderStars(ratingVal)}</td>
           <td>${verifiedBadge}${featuredBadge}</td>
+          <td>${mapCell}</td>
           <td>${actions}</td>
         </tr>`;
           })
           .join('');
-      }
-
-      function updatePagination() {
-        const pag = document.getElementById('pagination');
-        const prev = document.getElementById('page-prev');
-        const next = document.getElementById('page-next');
-        const info = document.getElementById('page-info');
-        if (totalPages <= 1) {
-          pag?.classList.add('hidden');
-          return;
-        }
-        pag?.classList.remove('hidden');
-        info.textContent = `Page ${currentPage} of ${totalPages}`;
-        if (prev) prev.disabled = currentPage <= 1;
-        if (next) next.disabled = currentPage >= totalPages;
       }
 
       /* ─────────────────────────────────────────────────────────
@@ -1256,7 +1185,7 @@
       }
 
       /* ─────────────────────────────────────────────────────────
-       Export CSV (from Supabase / cache)
+       Export CSV (via shared downloadCSV util)
     ───────────────────────────────────────────────────────── */
       async function exportCSV() {
         const shops = await loadAllShops();
@@ -1264,41 +1193,12 @@
           showToast('No shops to export.', 'warning');
           return;
         }
-        const headers = [
-          'id',
-          'name',
-          'country',
-          'city',
-          'address',
-          'phone',
-          'website',
-          'latitude',
-          'longitude',
-          'hours',
-          'rating',
-          'verified',
-          'featured',
-          'tags',
-          'description',
-          'createdAt',
-          'updatedAt',
-        ];
-        const rows = shops.map((s) =>
-          headers.map((h) => {
-            let v = s[h] ?? '';
-            if (Array.isArray(v)) v = v.join('|');
-            const str = String(v).replace(/"/g, '""');
-            return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str}"` : str;
-          })
-        );
-        const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `shops-${new Date().toISOString().slice(0, 10)}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
+        downloadCSV(`shops-${new Date().toISOString().slice(0, 10)}.csv`, shops, [
+          'id', 'name', 'nameAr', 'country', 'city', 'area',
+          'address', 'phone', 'website', 'latitude', 'longitude',
+          'hours', 'rating', 'verified', 'featured',
+          'tags', 'description', 'createdAt', 'updatedAt',
+        ]);
         showToast(`Exported ${shops.length} shops.`, 'success');
       }
 
@@ -1352,17 +1252,6 @@
       }
 
       /* ─────────────────────────────────────────────────────────
-       Debounce
-    ───────────────────────────────────────────────────────── */
-      function debounce(fn, ms) {
-        let timer;
-        return (...args) => {
-          clearTimeout(timer);
-          timer = setTimeout(() => fn(...args), ms);
-        };
-      }
-
-      /* ─────────────────────────────────────────────────────────
        Event wiring
     ───────────────────────────────────────────────────────── */
       async function init() {
@@ -1378,7 +1267,74 @@
         document.getElementById('header-add-btn').addEventListener('click', () => openModal(null));
 
         // Export
-        document.getElementById('export-btn').addEventListener('click', () => exportCSV());
+        document.getElementById('export-csv-btn').addEventListener('click', () => exportCSV());
+
+        // Sort column headers
+        document.querySelectorAll('.sort-th').forEach((th) => {
+          th.addEventListener('click', () => {
+            const col = th.dataset.col;
+            if (sortState.col === col) {
+              sortState.dir = sortState.dir === 'asc' ? 'desc' : 'asc';
+            } else {
+              sortState.col = col;
+              sortState.dir = 'asc';
+            }
+            renderTable(1);
+          });
+        });
+
+        // Import CSV modal
+        document.getElementById('import-csv-btn').addEventListener('click', () => {
+          document.getElementById('csv-input').value = '';
+          document.getElementById('csv-preview').innerHTML = '';
+          document.getElementById('import-csv-modal').classList.remove('hidden');
+        });
+        document.getElementById('import-csv-close').addEventListener('click', () =>
+          document.getElementById('import-csv-modal').classList.add('hidden')
+        );
+        document.getElementById('import-csv-cancel').addEventListener('click', () =>
+          document.getElementById('import-csv-modal').classList.add('hidden')
+        );
+        document.getElementById('import-csv-modal').addEventListener('click', (e) => {
+          if (e.target === e.currentTarget)
+            document.getElementById('import-csv-modal').classList.add('hidden');
+        });
+
+        let parsedCsvShops = [];
+        document.getElementById('csv-parse-btn').addEventListener('click', () => {
+          const raw = document.getElementById('csv-input').value.trim();
+          const lines = raw.split('\n').filter(Boolean);
+          if (lines.length < 2) { showToast('CSV must have a header row and at least one data row.', 'warning'); return; }
+          const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+          parsedCsvShops = lines.slice(1).map(line => {
+            const vals = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+            const obj = {};
+            headers.forEach((h, i) => { obj[h] = vals[i] ?? ''; });
+            return obj;
+          }).filter(o => o.name?.trim());
+          const preview = document.getElementById('csv-preview');
+          if (parsedCsvShops.length === 0) { preview.innerHTML = '<span class="text-warning">No valid rows found (name required).</span>'; return; }
+          preview.innerHTML = `<p class="text-muted text-sm" style="margin-bottom:8px">Parsed <strong>${parsedCsvShops.length}</strong> shop(s):</p>
+            <div style="max-height:160px;overflow-y:auto;font-size:0.8125rem">
+              ${parsedCsvShops.map(s => `<div style="padding:2px 0;border-bottom:1px solid var(--border)">${s.name} — ${s.country || ''} ${s.city || ''}</div>`).join('')}
+            </div>`;
+          document.getElementById('csv-import-confirm').textContent = `Import ${parsedCsvShops.length} shops`;
+          document.getElementById('csv-import-confirm').disabled = false;
+        });
+
+        document.getElementById('csv-import-confirm').addEventListener('click', async () => {
+          if (!parsedCsvShops.length) { showToast('Parse CSV first.', 'warning'); return; }
+          try {
+            await insertManyShops(parsedCsvShops);
+            document.getElementById('import-csv-modal').classList.add('hidden');
+            showToast(`Imported ${parsedCsvShops.length} shops.`, 'success');
+            parsedCsvShops = [];
+            await renderTable(1);
+            await updateStats();
+          } catch (err) {
+            showToast('CSV import failed: ' + err.message, 'danger');
+          }
+        });
 
         // Import modal open/close
         document.getElementById('import-btn').addEventListener('click', () => {
@@ -1466,6 +1422,20 @@
             else showToast('Shop not found.', 'danger');
             return;
           }
+          if (action === 'verify') {
+            try {
+              const sb = getSupabase();
+              if (!sb) throw new Error('Supabase not available');
+              const { error } = await sb.from('shops').update({ verified: true }).eq('id', id);
+              if (error) throw new Error(error.message);
+              showToast('Shop verified.', 'success');
+              await renderTable(currentPage);
+              await updateStats();
+            } catch (err) {
+              showToast('Verify failed: ' + err.message, 'danger');
+            }
+            return;
+          }
           if (action === 'delete') {
             deleteTargetId = id;
             await renderTable(currentPage);
@@ -1501,19 +1471,12 @@
           if (shop) openModal(shop);
         });
 
-        // Pagination
-        document.getElementById('page-prev')?.addEventListener('click', () => {
-          if (currentPage > 1) renderTable(currentPage - 1);
-        });
-        document.getElementById('page-next')?.addEventListener('click', () => {
-          if (currentPage < totalPages) renderTable(currentPage + 1);
-        });
-
         // Keyboard: ESC closes modals
         document.addEventListener('keydown', (e) => {
           if (e.key === 'Escape') {
             closeModal();
             document.getElementById('import-modal').classList.add('hidden');
+            document.getElementById('import-csv-modal').classList.add('hidden');
             deleteTargetId = null;
           }
         });

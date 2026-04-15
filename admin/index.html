@@ -236,6 +236,7 @@
               <div class="stat-number" id="stat-gold" aria-live="polite">
                 <span class="inline-spinner" aria-hidden="true"></span>
               </div>
+              <canvas id="gold-sparkline" class="sparkline-canvas" width="80" height="28" style="display:block;margin-top:6px"></canvas>
               <div class="stat-sub" id="stat-gold-sub"></div>
             </div>
 
@@ -249,29 +250,26 @@
               <div class="stat-sub" id="stat-shops-sub">from database</div>
             </div>
 
-            <!-- Posts Generated -->
+            <!-- Pending Orders -->
             <div class="stat-card" role="listitem">
-              <div class="stat-icon" aria-hidden="true">📣</div>
-              <div class="stat-label">Posts Generated</div>
+              <div class="stat-icon" aria-hidden="true">
+                📦 <span id="stat-orders-dot" style="display:none;width:8px;height:8px;border-radius:50%;background:#ef4444;vertical-align:middle;margin-left:4px"></span>
+              </div>
+              <div class="stat-label">Pending Orders</div>
+              <div class="stat-number" id="stat-orders" aria-live="polite">
+                <span class="inline-spinner" aria-hidden="true"></span>
+              </div>
+              <div class="stat-sub" id="stat-orders-sub">from database</div>
+            </div>
+
+            <!-- Published Posts -->
+            <div class="stat-card" role="listitem">
+              <div class="stat-icon" aria-hidden="true">📝</div>
+              <div class="stat-label">Published Posts</div>
               <div class="stat-number" id="stat-posts" aria-live="polite">
                 <span class="inline-spinner" aria-hidden="true"></span>
               </div>
               <div class="stat-sub" id="stat-posts-sub">from database</div>
-            </div>
-
-            <!-- Admin User -->
-            <div class="stat-card" role="listitem">
-              <div class="stat-icon" aria-hidden="true">🔐</div>
-              <div class="stat-label">Logged In As</div>
-              <div
-                class="stat-number"
-                id="stat-user"
-                aria-live="polite"
-                style="font-size: 0.9rem; word-break: break-all"
-              >
-                —
-              </div>
-              <div class="stat-sub" id="stat-user-sub"></div>
             </div>
           </div>
 
@@ -282,9 +280,10 @@
                 <h2 class="card-title" id="api-status-title">API Status</h2>
                 <span class="api-last-checked" id="api-last-checked"></span>
               </div>
-              <button class="btn btn-ghost btn-sm" id="api-check-btn" type="button">
-                Check Now
-              </button>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="color:var(--text-dim);font-size:0.75rem">auto-refresh in <span id="api-countdown">60</span>s</span>
+                <button class="btn btn-ghost btn-sm" id="api-check-btn" type="button">Check Now</button>
+              </div>
             </div>
             <div class="table-wrap">
               <table aria-label="API service status">
@@ -315,76 +314,27 @@
           <section class="section" aria-label="Quick actions">
             <div class="quick-actions">
               <button class="btn btn-primary" id="qa-force-refresh" type="button">
-                ⚡ Force Refresh Prices
+                <span style="vertical-align:middle;margin-right:4px" aria-hidden="true" id="qa-refresh-icon"></span> Force Refresh Prices
               </button>
               <button class="btn btn-ghost" id="qa-clear-cache" type="button">
-                🗑 Clear Cache
+                <span style="vertical-align:middle;margin-right:4px" aria-hidden="true" id="qa-trash-icon"></span> Clear Cache
               </button>
-              <a class="btn btn-ghost" href="./shops/"> 🏪 Manage Shops </a>
-              <a class="btn btn-ghost" href="./orders/"> 📦 View Orders </a>
+              <a class="btn btn-ghost" href="./content/">
+                <span style="vertical-align:middle;margin-right:4px" aria-hidden="true" id="qa-post-icon"></span> New Post
+              </a>
+              <a class="btn btn-ghost" href="./shops/">
+                <span style="vertical-align:middle;margin-right:4px" aria-hidden="true" id="qa-shop-icon"></span> Add Shop
+              </a>
             </div>
           </section>
 
           <!-- ── Recent Activity ─────────────────────────────── -->
           <section class="section card" aria-labelledby="activity-title">
             <div class="card-header">
-              <h2 class="card-title" id="activity-title">Quick Links</h2>
+              <h2 class="card-title" id="activity-title">Recent Activity</h2>
             </div>
-            <div class="activity-list" id="activity-list">
-              <div class="activity-item" role="listitem">
-                <div class="activity-icon" aria-hidden="true">🏪</div>
-                <div class="activity-body">
-                  <a href="./shops/" class="activity-action" style="color: var(--primary)"
-                    >Manage Shops</a
-                  >
-                  <div class="activity-details">Add, edit, and verify gold shop listings</div>
-                </div>
-              </div>
-              <div class="activity-item" role="listitem">
-                <div class="activity-icon" aria-hidden="true">📣</div>
-                <div class="activity-body">
-                  <a href="./social/" class="activity-action" style="color: var(--primary)"
-                    >Social Post Generator</a
-                  >
-                  <div class="activity-details">Create and schedule social media posts</div>
-                </div>
-              </div>
-              <div class="activity-item" role="listitem">
-                <div class="activity-icon" aria-hidden="true">💰</div>
-                <div class="activity-body">
-                  <a href="./pricing/" class="activity-action" style="color: var(--primary)"
-                    >Pricing Overrides</a
-                  >
-                  <div class="activity-details">View live prices and manage overrides</div>
-                </div>
-              </div>
-              <div class="activity-item" role="listitem">
-                <div class="activity-icon" aria-hidden="true">📝</div>
-                <div class="activity-body">
-                  <a href="./content/" class="activity-action" style="color: var(--primary)"
-                    >Content Editor</a
-                  >
-                  <div class="activity-details">Create and manage educational content</div>
-                </div>
-              </div>
-              <div class="activity-item" role="listitem">
-                <div class="activity-icon" aria-hidden="true">📊</div>
-                <div class="activity-body">
-                  <a href="./analytics/" class="activity-action" style="color: var(--primary)"
-                    >Analytics</a
-                  >
-                  <div class="activity-details">View page views and user engagement</div>
-                </div>
-              </div>
-              <div class="activity-item" role="listitem">
-                <div class="activity-icon" aria-hidden="true">⚙️</div>
-                <div class="activity-body">
-                  <a href="./settings/" class="activity-action" style="color: var(--primary)"
-                    >Settings</a
-                  >
-                  <div class="activity-details">Configure site settings and preferences</div>
-                </div>
-              </div>
+            <div class="activity-list" id="activity-list" role="list">
+              <!-- populated by JS -->
             </div>
           </section>
         </main>
@@ -396,108 +346,90 @@
 
     <script type="module">
       import { logout as supabaseLogout, requireAuth, getSession, getSupabase } from './supabase-auth.js';
-      import { ALLOWED_EMAIL } from './supabase-config.js';
       import { CONSTANTS } from '../config/constants.js';
       import { initAdminShell } from './shared/admin-shell.js';
+      import { showToast, qs, relativeTime, storageGet, storageSet, storageRemove, drawSparkline, skeletonRows } from './shared/admin-utils.js';
+      import { ICONS } from './shared/icons.js';
 
-      // ── Auth guard: verify session + email ──────────────────
+      // ── Auth guard ───────────────────────────────────────────
       if (!(await requireAuth('./login/'))) throw new Error('redirect');
 
       // ── Initialise shared sidebar / shell ───────────────────
       await initAdminShell({ logout: supabaseLogout, getSession });
 
       const API_GOLD_URL = CONSTANTS.API_GOLD_URL;
-      const API_FX_URL = CONSTANTS.API_FX_URL;
+      const API_FX_URL   = CONSTANTS.API_FX_URL;
       const API_TIMEOUT_MS = CONSTANTS.GOLD_FETCH_TIMEOUT;
 
-      // ── Helpers ──────────────────────────────────────────────
-
-      function qs(sel) {
-        return document.querySelector(sel);
-      }
-
-      /** @param {string} message @param {'info'|'success'|'error'|'warning'} type */
-      function showToast(message, type = 'info') {
-        const container = qs('#toast-container');
-        const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
-        const cls = {
-          success: 'toast--success',
-          error: 'toast--danger',
-          warning: 'toast--warning',
-          info: 'toast--info',
-        };
-        const toast = document.createElement('div');
-        toast.className = `toast ${cls[type] || cls.info}`;
-        toast.innerHTML = `<span class="toast-icon" aria-hidden="true">${icons[type] || icons.info}</span><span>${message}</span>`;
-        container.appendChild(toast);
-        setTimeout(() => {
-          toast.classList.add('toast-hide');
-          toast.addEventListener('animationend', () => toast.remove(), { once: true });
-        }, 4000);
-      }
-
-      function relativeTime(isoString) {
-        const diff = Date.now() - new Date(isoString).getTime();
-        const sec = Math.floor(diff / 1000);
-        if (sec < 60) return `${sec}s ago`;
-        const min = Math.floor(sec / 60);
-        if (min < 60) return `${min} min ago`;
-        const hr = Math.floor(min / 60);
-        if (hr < 24) return `${hr} hour${hr !== 1 ? 's' : ''} ago`;
-        const days = Math.floor(hr / 24);
-        return `${days} day${days !== 1 ? 's' : ''} ago`;
-      }
-
-      function storageGet(key) {
+      // ── Gold Ticker + sparkline ──────────────────────────────
+      async function updateTicker() {
+        const badge     = qs('#ticker-badge');
+        const dot       = qs('#ticker-dot');
+        const tickerTxt = qs('#ticker-text');
         try {
-          return localStorage.getItem(key);
+          const res   = await fetch(API_GOLD_URL);
+          const data  = await res.json();
+          const price = data.price ?? data.Price ?? null;
+          if (price) {
+            const formatted = new Intl.NumberFormat('en-US', {
+              style: 'currency', currency: 'USD', maximumFractionDigits: 2,
+            }).format(price);
+            tickerTxt.textContent = `XAU: ${formatted}`;
+            dot.className = 'ticker-dot ticker-dot--green';
+            badge.classList.remove('ticker-loading');
+            storageSet('gp_ticker_ts', Date.now().toString());
+
+            // Stat card value
+            qs('#stat-gold').textContent = formatted;
+
+            const change    = data.ch  ?? data.change         ?? null;
+            const changePct = data.chp ?? data.change_percent ?? null;
+            let trendHtml = '';
+            if (change !== null && changePct !== null) {
+              const sign  = change >= 0 ? '+' : '';
+              const arrow = change >= 0 ? '▲' : '▼';
+              const color = change >= 0 ? 'var(--success)' : 'var(--danger, #ef4444)';
+              trendHtml = `<span style="color:${color};font-size:0.8125rem">${arrow} ${sign}${Number(changePct).toFixed(2)}%</span>`;
+            }
+            const sub = qs('#stat-gold-sub');
+            if (sub) sub.innerHTML = trendHtml || 'live spot price';
+
+            // Persist price history and draw sparkline
+            let history = [];
+            try { history = JSON.parse(storageGet('gp_price_history') || '[]'); } catch { history = []; }
+            if (!Array.isArray(history)) history = [];
+            history.push(price);
+            if (history.length > 20) history = history.slice(-20);
+            storageSet('gp_price_history', JSON.stringify(history));
+
+            const canvas = qs('#gold-sparkline');
+            if (canvas) {
+              const sparkData = history.length >= 2 ? history : Array.from({ length: 7 }, (_, i) => price * (0.99 + i * 0.002));
+              drawSparkline(canvas, sparkData, { color: change >= 0 ? '#10b981' : '#ef4444', fill: true });
+            }
+          }
         } catch {
-          return null;
+          tickerTxt.textContent = 'XAU: unavailable';
+          dot.className = 'ticker-dot ticker-dot--yellow';
+          qs('#stat-gold').textContent = 'Unavailable';
+          const sub = qs('#stat-gold-sub');
+          if (sub) sub.textContent = 'could not fetch price';
         }
       }
-      function storageSet(key, value) {
-        try {
-          localStorage.setItem(key, value);
-          return true;
-        } catch {
-          return false;
-        }
-      }
-      function storageRemove(...keys) {
-        keys.forEach((k) => {
-          try {
-            localStorage.removeItem(k);
-          } catch {}
-        });
-      }
+      updateTicker();
 
-      // ── Show user in stat card ───────────────────────────────
-      async function loadUserInfo() {
-        const session = await getSession();
-        if (!session) return;
-        const user = session.user;
-        qs('#stat-user').textContent = user?.email || '—';
-        qs('#stat-user-sub').textContent = 'admin · authenticated via GitHub';
-      }
-      loadUserInfo();
-
-      // ── Load & render dashboard stats (Supabase-first, localStorage fallback) ──
+      // ── Supabase stats ──────────────────────────────────────
       async function loadSupabaseStats() {
         const sb = getSupabase();
+        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
-        // ── Shops Listed ────────────────────────────────────
+        // Shops
         if (sb) {
           try {
-            const { count: shopCount, error: shopErr } = await sb
-              .from('shops')
-              .select('*', { count: 'exact', head: true });
-            if (!shopErr && shopCount !== null) {
-              qs('#stat-shops').textContent = shopCount.toLocaleString();
-              qs('#stat-shops-sub').textContent = 'total in database';
-            } else {
-              qs('#stat-shops').textContent = '—';
-              qs('#stat-shops-sub').textContent = 'database error';
-            }
+            const { count: total } = await sb.from('shops').select('*', { count: 'exact', head: true });
+            const { count: newCount } = await sb.from('shops').select('*', { count: 'exact', head: true }).gte('created_at', weekAgo);
+            qs('#stat-shops').textContent = (total ?? '—').toLocaleString?.() ?? total ?? '—';
+            qs('#stat-shops-sub').textContent = newCount > 0 ? `+${newCount} new this week` : 'total in database';
           } catch {
             qs('#stat-shops').textContent = '—';
             qs('#stat-shops-sub').textContent = 'could not connect';
@@ -507,28 +439,30 @@
           qs('#stat-shops-sub').textContent = 'Supabase not connected';
         }
 
-        // ── Posts Generated ──────────────────────────────────
+        // Pending orders
         if (sb) {
           try {
-            const { count: postCount, error: postErr } = await sb
-              .from('social_posts')
-              .select('*', { count: 'exact', head: true });
-            if (!postErr && postCount !== null) {
-              qs('#stat-posts').textContent = postCount.toLocaleString();
-              // Get latest post timestamp
-              const { data: latest } = await sb
-                .from('social_posts')
-                .select('created_at')
-                .order('created_at', { ascending: false })
-                .limit(1)
-                .maybeSingle();
-              qs('#stat-posts-sub').textContent = latest
-                ? `last: ${relativeTime(latest.created_at)}`
-                : 'no posts yet';
-            } else {
-              qs('#stat-posts').textContent = '—';
-              qs('#stat-posts-sub').textContent = 'database error';
-            }
+            const { count: pending } = await sb.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'pending');
+            const val = pending ?? 0;
+            qs('#stat-orders').textContent = val.toLocaleString();
+            const dot = qs('#stat-orders-dot');
+            if (dot) dot.style.display = val > 0 ? 'inline-block' : 'none';
+            qs('#stat-orders-sub').textContent = val > 0 ? 'awaiting action' : 'all clear';
+          } catch {
+            qs('#stat-orders').textContent = '—';
+            qs('#stat-orders-sub').textContent = 'could not connect';
+          }
+        } else {
+          qs('#stat-orders').textContent = '—';
+          qs('#stat-orders-sub').textContent = 'Supabase not connected';
+        }
+
+        // Published posts
+        if (sb) {
+          try {
+            const { count: published } = await sb.from('content_posts').select('*', { count: 'exact', head: true }).eq('status', 'published');
+            qs('#stat-posts').textContent = (published ?? '—').toLocaleString?.() ?? published ?? '—';
+            qs('#stat-posts-sub').textContent = 'published articles';
           } catch {
             qs('#stat-posts').textContent = '—';
             qs('#stat-posts-sub').textContent = 'could not connect';
@@ -540,62 +474,84 @@
       }
       loadSupabaseStats();
 
-      // ── Gold Ticker ──────────────────────────────────────────
-      async function updateTicker() {
-        const badge = qs('#ticker-badge');
-        const dot = qs('#ticker-dot');
-        const tickerTxt = qs('#ticker-text');
-        try {
-          const res = await fetch(API_GOLD_URL);
-          const data = await res.json();
-          const price = data.price ?? data.Price ?? null;
-          if (price) {
-            const formatted = new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-              maximumFractionDigits: 2,
-            }).format(price);
-            tickerTxt.textContent = `XAU: ${formatted}`;
-            dot.className = 'ticker-dot ticker-dot--green';
-            badge.classList.remove('ticker-loading');
-            storageSet('gp_ticker_ts', Date.now().toString());
-            // Update stat card
-            qs('#stat-gold').textContent = formatted;
-            const change = data.ch ?? data.change ?? null;
-            const changePct = data.chp ?? data.change_percent ?? null;
-            if (change !== null && changePct !== null) {
-              const sign = change >= 0 ? '+' : '';
-              qs('#stat-gold-sub').textContent =
-                `${sign}${Number(change).toFixed(2)} (${sign}${Number(changePct).toFixed(2)}%)`;
-            } else {
-              qs('#stat-gold-sub').textContent = 'live spot price';
-            }
+      // ── Recent activity feed ─────────────────────────────────
+      async function loadActivity() {
+        const list = qs('#activity-list');
+        if (!list) return;
+        list.innerHTML = skeletonRows(5, 1);
+
+        const sb = getSupabase();
+        let rows = [];
+
+        if (sb) {
+          try {
+            const { data } = await sb
+              .from('audit_log')
+              .select('id,action,target_type,target_id,actor,created_at')
+              .order('created_at', { ascending: false })
+              .limit(15);
+            if (data?.length) rows = data;
+          } catch { /* fall through to synthesis */ }
+
+          if (!rows.length) {
+            // Synthesise from recent records across tables
+            const sources = await Promise.allSettled([
+              sb.from('shops').select('id,name,created_at').order('created_at', { ascending: false }).limit(5),
+              sb.from('orders').select('id,status,created_at').order('created_at', { ascending: false }).limit(5),
+              sb.from('content_posts').select('id,title,created_at').order('created_at', { ascending: false }).limit(5),
+            ]);
+            const [shopsRes, ordersRes, postsRes] = sources;
+            (shopsRes.value?.data || []).forEach(s => rows.push({ action: 'Shop added', target_type: 'shop', actor: s.name || 'unknown', created_at: s.created_at }));
+            (ordersRes.value?.data || []).forEach(o => rows.push({ action: `Order ${o.status}`, target_type: 'order', actor: `#${o.id}`, created_at: o.created_at }));
+            (postsRes.value?.data || []).forEach(p => rows.push({ action: 'Post created', target_type: 'content', actor: p.title || 'untitled', created_at: p.created_at }));
+            rows.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            rows = rows.slice(0, 15);
           }
-        } catch {
-          tickerTxt.textContent = 'XAU: unavailable';
-          dot.className = 'ticker-dot ticker-dot--yellow';
-          qs('#stat-gold').textContent = 'Unavailable';
-          qs('#stat-gold-sub').textContent = 'could not fetch price';
         }
+
+        if (!rows.length) {
+          list.innerHTML = `<div class="activity-empty">
+            No activity yet. <a href="./shops/" style="color:var(--primary)">Add a shop</a> to get started.
+          </div>`;
+          return;
+        }
+
+        const iconMap = { shop: ICONS.shops, order: ICONS.orders, content: ICONS.content, default: ICONS.edit };
+        list.innerHTML = rows.map(r => {
+          const icon = iconMap[r.target_type] || iconMap.default;
+          return `<div class="activity-item" role="listitem">
+            <div class="activity-icon" aria-hidden="true">${icon}</div>
+            <div class="activity-body">
+              <div class="activity-action">${r.action || '—'}</div>
+              <div class="activity-details">${r.actor || ''}</div>
+            </div>
+            <div class="activity-time">${relativeTime(r.created_at)}</div>
+          </div>`;
+        }).join('');
       }
-      updateTicker();
+      loadActivity();
 
       // ── API Status checks ────────────────────────────────────
       const SERVICES = [
-        { name: 'Gold API (gold-api.com)', url: API_GOLD_URL },
+        { name: 'Gold API (gold-api.com)',     url: API_GOLD_URL },
         { name: 'Exchange Rates (er-api.com)', url: API_FX_URL },
       ];
 
       let lastCheckedAt = null;
+      let countdownInterval = null;
+      let autoRefreshInterval = null;
+
+      function respBar(ms) {
+        const w   = Math.min(ms / 5, 80);
+        const bg  = ms < 200 ? '#10b981' : ms < 500 ? '#f59e0b' : '#ef4444';
+        return `<span class="resp-bar" style="display:inline-block;height:8px;width:${w}px;background:${bg};border-radius:2px;vertical-align:middle;margin-right:4px"></span>${ms} ms`;
+      }
 
       async function checkService(service) {
         const start = performance.now();
         try {
-          const res = await fetch(service.url, {
-            cache: 'no-store',
-            signal: AbortSignal.timeout(API_TIMEOUT_MS),
-          });
-          const ms = Math.round(performance.now() - start);
+          const res = await fetch(service.url, { cache: 'no-store', signal: AbortSignal.timeout(API_TIMEOUT_MS) });
+          const ms  = Math.round(performance.now() - start);
           return { name: service.name, ok: res.ok, status: res.status, ms };
         } catch {
           const ms = Math.round(performance.now() - start);
@@ -603,66 +559,89 @@
         }
       }
 
-      function renderApiTable(results) {
-        const tbody = qs('#api-table-body');
-        const now = new Date().toLocaleTimeString();
-        tbody.innerHTML = results
-          .map(
-            (r) => `
-        <tr>
-          <td>${r.name}</td>
-          <td>${r.ok ? '🟢 ' + r.status + ' OK' : '🔴 ' + r.status}</td>
-          <td>${now}</td>
-          <td>${r.ms} ms</td>
-        </tr>
-      `
-          )
-          .join('');
+      async function checkSupabaseDb() {
+        const sb = getSupabase();
+        if (!sb) return { name: 'Supabase DB', ok: false, status: 'Not configured', ms: 0 };
+        const start = performance.now();
+        try {
+          const { error } = await sb.from('shops').select('*', { count: 'exact', head: true });
+          const ms = Math.round(performance.now() - start);
+          return { name: 'Supabase DB', ok: !error, status: error ? 'Error' : 200, ms };
+        } catch {
+          const ms = Math.round(performance.now() - start);
+          return { name: 'Supabase DB', ok: false, status: 'Error', ms };
+        }
       }
 
-      function updateHealthStat(results) {
-        const allOk = results.every((r) => r.ok);
-        const el = qs('#stat-health');
-        if (el) el.textContent = allOk ? '🟢 All OK' : '🔴 Issues Detected';
+      function renderApiTable(results) {
+        const tbody = qs('#api-table-body');
+        const now   = new Date().toLocaleTimeString();
+        tbody.innerHTML = results.map(r => `<tr>
+          <td>${r.name}</td>
+          <td><span style="color:${r.ok ? 'var(--success)' : 'var(--danger,#ef4444)'}">${r.ok ? '● ' + r.status + ' OK' : '● ' + r.status}</span></td>
+          <td>${now}</td>
+          <td>${respBar(r.ms)}</td>
+        </tr>`).join('');
+      }
+
+      function resetCountdown() {
+        clearInterval(countdownInterval);
+        let secs = 60;
+        const el = qs('#api-countdown');
+        if (el) el.textContent = secs;
+        countdownInterval = setInterval(() => {
+          secs--;
+          if (el) el.textContent = secs;
+          if (secs <= 0) {
+            clearInterval(countdownInterval);
+            runApiChecks();
+          }
+        }, 1000);
       }
 
       async function runApiChecks() {
-        const tbody = qs('#api-table-body');
+        const tbody    = qs('#api-table-body');
         const checkBtn = qs('#api-check-btn');
-        const lastEl = qs('#api-last-checked');
+        const lastEl   = qs('#api-last-checked');
 
-        checkBtn.disabled = true;
+        if (checkBtn) checkBtn.disabled = true;
         tbody.innerHTML = `<tr><td colspan="4" style="color:var(--text-dim);text-align:center;padding:20px">
-        <span class="inline-spinner" aria-hidden="true"></span> Checking…
-      </td></tr>`;
+          <span class="inline-spinner" aria-hidden="true"></span> Checking…
+        </td></tr>`;
 
-        const results = await Promise.all(SERVICES.map(checkService));
+        const results = await Promise.all([...SERVICES.map(checkService), checkSupabaseDb()]);
         lastCheckedAt = Date.now();
 
         renderApiTable(results);
-        updateHealthStat(results);
-        checkBtn.disabled = false;
-        lastEl.textContent = 'Last checked: just now';
+        if (checkBtn) checkBtn.disabled = false;
+        if (lastEl) lastEl.textContent = 'Last checked: just now';
+
+        resetCountdown();
       }
 
       runApiChecks();
-      qs('#api-check-btn').addEventListener('click', runApiChecks);
+      qs('#api-check-btn')?.addEventListener('click', runApiChecks);
 
       setInterval(() => {
         if (!lastCheckedAt) return;
-        const sec = Math.floor((Date.now() - lastCheckedAt) / 1000);
+        const sec   = Math.floor((Date.now() - lastCheckedAt) / 1000);
         const lastEl = qs('#api-last-checked');
+        if (!lastEl) return;
         if (sec < 60) lastEl.textContent = `Last checked: ${sec}s ago`;
         else lastEl.textContent = `Last checked: ${Math.floor(sec / 60)} min ago`;
       }, 5000);
 
+      // ── Inject SVG icons into Quick Action buttons ──────────
+      const qaIcons = { 'qa-refresh-icon': ICONS.refresh, 'qa-trash-icon': ICONS.trash, 'qa-post-icon': ICONS.content, 'qa-shop-icon': ICONS.shops };
+      Object.entries(qaIcons).forEach(([id, svg]) => { const el = qs('#' + id); if (el) el.innerHTML = svg; });
+
       // ── Quick Actions ────────────────────────────────────────
-      qs('#qa-force-refresh').addEventListener('click', () => {
+      qs('#qa-force-refresh')?.addEventListener('click', () => {
         storageSet('gp_force_refresh', Date.now().toString());
-        showToast('Cache cleared — prices will refresh on next visit', 'success');
+        showToast('Force refresh flagged — prices will reload on next public visit', 'success');
       });
 
-      qs('#qa-clear-cache').addEventListener('click', () => {
+      qs('#qa-clear-cache')?.addEventListener('click', () => {
         storageRemove('gp_cache_gold', 'goldprice_cache', 'gp_fx_cache');
         showToast('Cache cleared', 'success');
       });
