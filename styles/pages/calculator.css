@@ -25,7 +25,7 @@
 
 .calc-hero-inner {
   max-width: 640px;
-  margin: 0 auto;
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -34,7 +34,7 @@
 
 .calc-hero-title {
   font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   color: var(--color-gold-light);
   margin: 0;
 }
@@ -78,7 +78,7 @@
 }
 
 #calc-spot-price {
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   font-variant-numeric: tabular-nums;
 }
 
@@ -129,10 +129,10 @@
   border-bottom: 2.5px solid transparent;
   padding: 1rem 1.4rem;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   color: var(--color-text-muted);
   cursor: pointer;
-  transition: all 0.2s ease-out;
+  transition: all var(--transition);
   white-space: nowrap;
   min-height: 48px;
   display: flex;
@@ -154,7 +154,7 @@
 .calc-tab.active {
   color: var(--color-gold-deep);
   border-bottom-color: var(--color-gold);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
 }
 
 /* ── Panel ─────────────────────────────────────────── */
@@ -187,15 +187,15 @@
 }
 
 .calc-card-title {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
   margin-bottom: 0.4rem;
 }
 
 .calc-card-desc {
   font-size: 0.85rem;
   color: var(--color-text-muted);
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-5);
 }
 
 /* ── Form ──────────────────────────────────────────── */
@@ -203,7 +203,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-5);
 }
 
 .calc-field {
@@ -214,15 +214,15 @@
 
 .calc-field label {
   font-size: 0.82rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-wider);
 }
 
 .calc-input-row {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .calc-input {
@@ -232,10 +232,10 @@
   border: 1.25px solid var(--color-border);
   border-radius: var(--radius-sm);
   padding: 0.7rem 0.9rem;
-  font-size: 1rem;
+  font-size: var(--text-base);
   color: var(--color-text);
   font-variant-numeric: tabular-nums;
-  transition: all 0.2s ease-out;
+  transition: all var(--transition);
   min-height: 44px;
   box-shadow: inset 0 1px 2px rgb(0 0 0 / 2%);
 }
@@ -258,7 +258,7 @@
   font-size: 0.88rem;
   color: var(--color-text);
   cursor: pointer;
-  transition: all 0.2s ease-out;
+  transition: all var(--transition);
   flex-shrink: 0;
   min-height: 44px;
   box-shadow: inset 0 1px 2px rgb(0 0 0 / 2%);
