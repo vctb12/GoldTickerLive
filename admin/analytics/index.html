@@ -129,7 +129,7 @@
       }
       .badge-default {
         background: rgba(100, 116, 139, 0.15);
-        color: #94a3b8;
+        color: var(--text-muted);
       }
 
       /* ── Progress bar for top pages ────────────────────────── */
@@ -220,6 +220,12 @@
           grid-template-columns: 1fr !important;
         }
       }
+      /* ── Premium Enhancements ─────────────────────────────── */
+      .card-title { font-weight: 700; letter-spacing: -0.01em; }
+      .section-heading h2 { font-weight: 700; letter-spacing: -0.01em; }
+      .toolbar { padding-bottom: 14px; }
+      .tab-panel.active { animation: fade-in 0.2s ease both; }
+      @keyframes fade-in { from { opacity: 0.6; } to { opacity: 1; } }
     </style>
   </head>
   <body>
@@ -687,7 +693,7 @@
             const t = e.event || 'unknown';
             eventCounts[t] = (eventCounts[t] || 0) + 1;
           });
-          const DONUT_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4', '#64748b'];
+          const DONUT_COLORS = ['#6366f1', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4', '#64748b'];
           const segments = Object.entries(eventCounts)
             .sort((a, b) => b[1] - a[1])
             .slice(0, 6)
