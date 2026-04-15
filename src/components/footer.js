@@ -1,3 +1,5 @@
+import { FORMSPREE_ENDPOINT } from '../config/index.js';
+
 /**
  * Shared footer component — 5-column dark premium.
  * Call injectFooter(lang, depth) from any page entry point.
@@ -92,6 +94,23 @@ export function injectFooter(lang = 'en', depth = 0) {
 
     </div>
   </div>
+
+  ${FORMSPREE_ENDPOINT ? `
+  <div class="footer-newsletter">
+    <div class="footer-inner">
+      <div class="footer-newsletter-inner">
+        <div class="footer-newsletter-text">
+          <strong>${isAr ? '📬 النشرة الإخبارية' : '📬 Gold Price Alerts'}</strong>
+          <span>${isAr ? 'احصل على تحديثات أسعار الذهب الأسبوعية' : 'Get weekly gold price updates delivered to your inbox'}</span>
+        </div>
+        <form class="footer-newsletter-form" action="${FORMSPREE_ENDPOINT}" method="POST" aria-label="${isAr ? 'اشتراك النشرة' : 'Newsletter signup'}">
+          <input type="email" name="email" placeholder="${isAr ? 'بريدك الإلكتروني' : 'Your email address'}" required aria-label="${isAr ? 'البريد الإلكتروني' : 'Email address'}" autocomplete="email" />
+          <button type="submit" class="btn btn-primary">${isAr ? 'اشتراك' : 'Subscribe'}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  ` : ''}
 
   <div class="footer-bottom">
     <div class="footer-inner">

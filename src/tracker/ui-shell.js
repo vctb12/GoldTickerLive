@@ -2,6 +2,7 @@
 import { injectNav, updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
+import { injectSpotBar, updateSpotBar, updateSpotBarLang } from '../components/spotBar.js';
 import {
   syncUrlFromState,
   persistState,
@@ -15,6 +16,7 @@ const BASE_MODES = ['live', 'compare', 'archive', 'exports', 'method'];
 
 export function mountShell(state, els, onModeChange, onLangChange) {
   // Mount shared shell
+  injectSpotBar(state.lang, 0);
   const navCtrl = injectNav(state.lang, 0);
   navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -24,6 +26,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
       document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
       updateNavLang(state.lang);
       updateTickerLang(state.lang);
+      updateSpotBarLang(state.lang);
       if (els.language) els.language.value = state.lang;
       onLangChange();
     });
@@ -206,11 +209,13 @@ export function mountShell(state, els, onModeChange, onLangChange) {
 
 export function updateShellTickerFromState(state, spot, priceFor) {
   if (!spot) return;
+  const aed24 = priceFor({ currency: 'AED', karat: '24', unit: 'gram', spot });
   updateTicker({
     xauUsd: spot,
-    uae24k: priceFor({ currency: 'AED', karat: '24', unit: 'gram', spot }),
+    uae24k: aed24,
     uae22k: priceFor({ currency: 'AED', karat: '22', unit: 'gram', spot }),
     uae21k: priceFor({ currency: 'AED', karat: '21', unit: 'gram', spot }),
     uae18k: priceFor({ currency: 'AED', karat: '18', unit: 'gram', spot }),
   });
+  updateSpotBar({ xauUsd: spot, aed24kGram: aed24, updatedAt: state.freshness?.goldUpdatedAt });
 }

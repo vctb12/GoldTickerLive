@@ -1,4 +1,3 @@
-```
 # Compiled and build artifacts
 *.js.map
 *.min.js
@@ -81,4 +80,6 @@ build/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
-```
+
+# macOS
+.DS_Store

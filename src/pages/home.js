@@ -11,6 +11,7 @@ import * as fmt from '../lib/formatter.js';
 import { injectNav, updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
+import { injectSpotBar, updateSpotBar, updateSpotBarLang } from '../components/spotBar.js';
 import { renderAdSlot } from '../components/adSlot.js';
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -109,6 +110,9 @@ function renderHeroCard() {
   const aed22g = usd22g * CONSTANTS.AED_PEG;
   const usd21g = calc.usdPerGram(goldPrice, k21.purity);
 
+  // Update sticky spot bar
+  updateSpotBar({ xauUsd: usd24oz, aed24kGram: aed24g, updatedAt: goldUpdatedAt });
+
   const priceEl = document.getElementById('hlc-price');
   if (priceEl) {
     priceEl.textContent = fmt.formatPrice(usd24oz, 'USD', 2);
@@ -120,7 +124,20 @@ function renderHeroCard() {
   set('hlc-aed22', fmt.formatPrice(aed22g, 'AED', 2));
   set('hlc-usd21', fmt.formatPrice(usd21g, 'USD', 2));
   const freshnessTime = goldUpdatedAt || new Date().toISOString();
-  const sourceText = priceSourceLabel === 'live' ? 'Live' : 'Cached/Fallback';
+  const ageMs = goldUpdatedAt ? Date.now() - new Date(goldUpdatedAt).getTime() : 0;
+  const isStaleByAge = ageMs > 10 * 60 * 1000; // >10 minutes
+  const isLive = priceSourceLabel === 'live' && !isStaleByAge;
+  let sourceText;
+  if (isLive) {
+    sourceText = 'Live';
+  } else if (isStaleByAge && goldUpdatedAt) {
+    const mins = Math.floor(ageMs / 60000);
+    sourceText = mins >= 60
+      ? `Stale (${Math.floor(mins / 60)}h ${mins % 60}m ago)`
+      : `Stale (${mins}m ago)`;
+  } else {
+    sourceText = 'Cached/Fallback';
+  }
   set(
     'hlc-updated',
     `${tx('updated')}: ${fmt.formatTimestampShort(freshnessTime, lang)} · ${tx('source')}: ${sourceText}`
@@ -162,10 +179,10 @@ function renderHeroCard() {
   const bar = document.getElementById('home-freshness-bar');
   const barText = document.getElementById('hfb-text');
   if (bar && barText) {
-    const isStale = priceSourceLabel !== 'live';
+    const stale = !isLive;
     const timeStr = goldUpdatedAt ? fmt.formatTimestampShort(goldUpdatedAt, lang) : '—';
-    bar.classList.toggle('home-freshness-bar--stale', isStale);
-    barText.textContent = isStale
+    bar.classList.toggle('home-freshness-bar--stale', stale);
+    barText.textContent = stale
       ? `Cached data · Last updated: ${timeStr}`
       : `Live · Updated: ${timeStr}`;
     bar.removeAttribute('hidden');
@@ -364,11 +381,20 @@ async function fetchLiveData() {
   if (goldRes.status === 'fulfilled') {
     goldPrice = goldRes.value.price;
     goldUpdatedAt = goldRes.value.updatedAt || new Date().toISOString();
-    priceSourceLabel = 'live';
+    priceSourceLabel = goldRes.value.source === 'cache-fallback' ? 'cached/fallback' : 'live';
     cache.saveGoldPrice(goldRes.value.price, goldRes.value.updatedAt);
     renderHeroCard();
   } else if (!goldPrice) {
-    priceSourceLabel = 'cached/fallback';
+    priceSourceLabel = 'unavailable';
+    // Show explicit unavailable state in hero
+    const priceEl = document.getElementById('hlc-price');
+    if (priceEl) {
+      priceEl.classList.remove('hlc-price--loading');
+      priceEl.textContent = '—';
+    }
+    const updEl = document.getElementById('hlc-updated');
+    if (updEl) updEl.textContent = 'Price unavailable — check API key';
+    document.getElementById('hero-live-card')?.removeAttribute('aria-busy');
   }
 
   if (fxRes.status === 'fulfilled') {
@@ -389,7 +415,8 @@ async function init() {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
 
-  // Nav + footer
+  // Nav + footer + spot bar
+  injectSpotBar(lang, 0);
   const navCtrl = injectNav(lang, 0);
   navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -397,6 +424,7 @@ async function init() {
       saveLang(lang);
       updateNavLang(lang);
       updateTickerLang(lang);
+      updateSpotBarLang(lang);
       applyLangToPage();
     });
   });

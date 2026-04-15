@@ -30,12 +30,23 @@ Go to **Settings → Secrets and variables → Actions → New repository secret
 
 ## Workflows
 
-> **JS vs Python posting systems:** Two X/Twitter posting systems exist. The original JavaScript
-> system (`scripts/tweet-gold-price.js` + `gold-price-tweet.yml`) and a newer Python system
-> (`scripts/gold_poster.py` + `hourly_post.yml`). The Python system is recommended for new setups
-> as it supports market events, spike alerts, health checks, and Supabase logging. Both can coexist
-> and share the same Twitter API credentials. See `docs/twitter_bot_architecture.md` for the Python
-> system's full architecture.
+> ### ⚠️ Dual Twitter Bot Systems — Action Required
+>
+> Two X/Twitter posting systems exist and overlap:
+>
+> | System | Script | Workflow | Status |
+> |--------|--------|----------|--------|
+> | **Node.js** (original) | `scripts/node/tweet-gold-price.js` | `gold-price-tweet.yml` | Active — simple hourly tweet with 10 rotating templates |
+> | **Python** (newer) | `scripts/python/gold_poster.py` | `hourly_post.yml`, `market_events.yml`, `spike_alert.yml`, `health_check.yml` | Active — richer templates, Supabase logging, market events, spike alerts |
+>
+> **Recommendation:** Keep the **Python** system active. It is more capable (supports market events,
+> spike alerts, health checks, and Supabase logging). Deactivate the Node.js system by disabling
+> `gold-price-tweet.yml` in GitHub Actions (or deleting it). Both systems use the same Twitter API
+> credentials (`CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET`). Running
+> both will cause duplicate tweets.
+>
+> See `docs/twitter_bot_architecture.md` for the Python system's full architecture.
+> See `MANUAL_INPUTS.md` item for deactivation instructions.
 
 ### 1. Hourly X/Twitter posts (JS) — `gold-price-tweet.yml`
 

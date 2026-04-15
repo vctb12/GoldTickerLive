@@ -1,17 +1,19 @@
 /**
  * components/adSlot.js
  * Lazy-loading Google AdSense ad slot component.
+ * - Reads publisher ID and slot IDs from src/config/constants.js (AD_CONFIG)
+ * - Renders nothing silently if publisher ID is empty (no broken ad frames)
  * - Reserves fixed space before ad loads (prevents CLS)
  * - Uses IntersectionObserver for lazy load
  * - Skips on admin pages
- * - Placeholder publisher ID: ca-pub-XXXXXXXXXX (to be replaced)
  */
 
-const AD_PUBLISHER_ID = 'ca-pub-8578581906562588';
+import { AD_CONFIG } from '../config/index.js';
 
 const AD_DIMENSIONS = {
   leaderboard: { width: 728, height: 90, mobileWidth: 320, mobileHeight: 50 },
   rectangle: { width: 300, height: 250, mobileWidth: 300, mobileHeight: 250 },
+  banner: { width: 728, height: 90, mobileWidth: 320, mobileHeight: 50 },
   skyscraper: { width: 160, height: 600, mobileWidth: 0, mobileHeight: 0 },
 };
 
@@ -21,10 +23,13 @@ const isAdminPage = () => window.location.pathname.includes('/admin');
 /**
  * Render an AdSense slot in the given container.
  * @param {string} containerId  ID of the container element
- * @param {'leaderboard'|'rectangle'|'skyscraper'} adFormat
- * @param {string} adSlotId   AdSense slot ID (from AdSense dashboard)
+ * @param {'leaderboard'|'rectangle'|'banner'|'skyscraper'} adFormat
+ * @param {string} [adSlotId]   AdSense slot ID — if omitted, reads from AD_CONFIG.AD_SLOTS
+ * @param {string} [slotKey]    Key in AD_CONFIG.AD_SLOTS to look up the slot ID
  */
-export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '') {
+export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '', slotKey = '') {
+  // Silently skip if no publisher ID configured
+  if (!AD_CONFIG.ADSENSE_PUBLISHER_ID) return;
   if (isAdminPage()) return;
   if (typeof IntersectionObserver === 'undefined') return;
 
@@ -33,6 +38,9 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '')
 
   const dims = AD_DIMENSIONS[adFormat];
   if (!dims) return;
+
+  // Resolve slot ID from config if not passed directly
+  const resolvedSlotId = adSlotId || (slotKey && AD_CONFIG.AD_SLOTS[slotKey]) || '';
 
   const mobile = isMobile();
   const w = mobile && dims.mobileWidth ? dims.mobileWidth : dims.width;
@@ -48,9 +56,9 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '')
   container.style.display = 'flex';
   container.style.alignItems = 'center';
   container.style.justifyContent = 'center';
-  container.style.background = '#f8fafc';
-  container.style.border = '1px solid #f1f5f9';
-  container.style.borderRadius = '4px';
+  container.style.background = 'var(--color-surface-2, #f8fafc)';
+  container.style.border = '1px solid var(--color-border-subtle, #f1f5f9)';
+  container.style.borderRadius = 'var(--radius-xs, 4px)';
   container.style.overflow = 'hidden';
   container.setAttribute('aria-label', 'Advertisement');
   container.dataset.adFormat = adFormat;
@@ -62,7 +70,7 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '')
       if (entries[0].isIntersecting && !loaded) {
         loaded = true;
         observer.disconnect();
-        _loadAd(container, adSlotId, adFormat);
+        _loadAd(container, resolvedSlotId, adFormat);
       }
     },
     { rootMargin: '200px' }
@@ -72,12 +80,15 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '')
 }
 
 function _loadAd(container, slotId, adFormat) {
+  const publisherId = AD_CONFIG.ADSENSE_PUBLISHER_ID;
+  if (!publisherId) return;
+
   // Ensure AdSense script is loaded
   if (!document.querySelector('script[data-adsense]')) {
     const script = document.createElement('script');
     script.async = true;
     script.defer = true;
-    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${AD_PUBLISHER_ID}`;
+    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`;
     script.crossOrigin = 'anonymous';
     script.dataset.adsense = 'true';
     document.head.appendChild(script);
@@ -89,7 +100,7 @@ function _loadAd(container, slotId, adFormat) {
   const ins = document.createElement('ins');
   ins.className = 'adsbygoogle';
   ins.style.display = 'block';
-  ins.dataset.adClient = AD_PUBLISHER_ID;
+  ins.dataset.adClient = publisherId;
   ins.dataset.adSlot = slotId || '';
   ins.dataset.adFormat = 'auto';
   ins.dataset.fullWidthResponsive = 'true';

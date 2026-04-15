@@ -6,7 +6,7 @@
  * All precache URLs must include the /Gold-Prices/ prefix.
  */
 
-const CACHE_NAME = 'goldprices-v12';
+const CACHE_NAME = 'goldprices-v13';
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 1 day
 
 // Static assets to pre-cache on install - MUST use /Gold-Prices/ prefix for GitHub Pages
