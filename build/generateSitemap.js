@@ -9,7 +9,7 @@ const fs   = require('fs');
 const path = require('path');
 
 const ROOT     = path.resolve(__dirname, '..');
-const SITE_URL = 'https://vctb12.github.io/Gold-Prices';
+const SITE_URL = 'https://goldtickerlive.com';
 const TODAY    = new Date().toISOString().slice(0, 10);
 
 const { COUNTRIES } = (() => {

@@ -28,7 +28,7 @@ const depth = _relPath ? _relPath.split('/').filter(Boolean).length : 0;
 
 const AED_PEG = CONSTANTS.AED_PEG;
 const TROY_OZ_GRAMS = CONSTANTS.TROY_OZ_GRAMS;
-const BASE_URL = 'https://vctb12.github.io/Gold-Prices';
+const BASE_URL = 'https://goldtickerlive.com';
 
 function getLang() {
   try {
@@ -41,7 +41,7 @@ function getLang() {
 }
 
 function getCountryFromPath() {
-  const path = location.pathname.replace('/Gold-Prices', '').replace(/^\/|\/$/g, '');
+  const path = location.pathname.replace(/^\/|\/$/g, '');
   const parts = path.split('/');
   const countrySlug = parts[0];
   const citySlug = parts[1];

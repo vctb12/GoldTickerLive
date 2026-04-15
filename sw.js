@@ -2,70 +2,69 @@
  * GoldPrices Service Worker
  * Strategy: cache-first for static assets, network-first for API calls.
  *
- * Deployment base path: '/Gold-Prices/' (GitHub Pages project site).
- * All precache URLs must include the /Gold-Prices/ prefix.
+ * Deployment base path: '/' (custom domain goldtickerlive.com).
  */
 
-const CACHE_NAME = 'goldprices-v13';
+const CACHE_NAME = 'goldprices-v14';
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 1 day
 
-// Static assets to pre-cache on install - MUST use /Gold-Prices/ prefix for GitHub Pages
+// Static assets to pre-cache on install - MUST use / prefix for GitHub Pages
 const PRECACHE_URLS = [
-  '/Gold-Prices/',
-  '/Gold-Prices/tracker.html',
-  '/Gold-Prices/shops.html',
-  '/Gold-Prices/calculator.html',
-  '/Gold-Prices/learn.html',
-  '/Gold-Prices/insights.html',
-  '/Gold-Prices/methodology.html',
-  '/Gold-Prices/invest.html',
-  '/Gold-Prices/countries/index.html',
+  '/',
+  '/tracker.html',
+  '/shops.html',
+  '/calculator.html',
+  '/learn.html',
+  '/insights.html',
+  '/methodology.html',
+  '/invest.html',
+  '/countries/index.html',
   // Country pages (now at countries/{slug}/index.html)
-  '/Gold-Prices/countries/uae/',
-  '/Gold-Prices/countries/saudi-arabia/',
-  '/Gold-Prices/countries/kuwait/',
-  '/Gold-Prices/countries/qatar/',
-  '/Gold-Prices/countries/bahrain/',
-  '/Gold-Prices/countries/oman/',
-  '/Gold-Prices/countries/egypt/',
-  '/Gold-Prices/countries/jordan/',
-  '/Gold-Prices/countries/morocco/',
-  '/Gold-Prices/countries/india/',
-  '/Gold-Prices/countries/lebanon/',
-  '/Gold-Prices/countries/tunisia/',
-  '/Gold-Prices/countries/algeria/',
-  '/Gold-Prices/countries/libya/',
-  '/Gold-Prices/countries/sudan/',
+  '/countries/uae/',
+  '/countries/saudi-arabia/',
+  '/countries/kuwait/',
+  '/countries/qatar/',
+  '/countries/bahrain/',
+  '/countries/oman/',
+  '/countries/egypt/',
+  '/countries/jordan/',
+  '/countries/morocco/',
+  '/countries/india/',
+  '/countries/lebanon/',
+  '/countries/tunisia/',
+  '/countries/algeria/',
+  '/countries/libya/',
+  '/countries/sudan/',
   // Guides
-  '/Gold-Prices/content/guides/buying-guide.html',
+  '/content/guides/buying-guide.html',
   // Tool pages
-  '/Gold-Prices/content/gold-price-history/',
-  '/Gold-Prices/content/order-gold/',
-  '/Gold-Prices/content/social/x-post-generator.html',
-  '/Gold-Prices/content/search/',
-  '/Gold-Prices/content/tools/weight-converter.html',
-  '/Gold-Prices/content/tools/zakat-calculator.html',
-  '/Gold-Prices/content/tools/investment-return.html',
+  '/content/gold-price-history/',
+  '/content/order-gold/',
+  '/content/social/x-post-generator.html',
+  '/content/search/',
+  '/content/tools/weight-converter.html',
+  '/content/tools/zakat-calculator.html',
+  '/content/tools/investment-return.html',
   // City pages
-  '/Gold-Prices/countries/uae/cities/dubai.html',
-  '/Gold-Prices/countries/uae/cities/abu-dhabi.html',
-  '/Gold-Prices/countries/saudi-arabia/cities/riyadh.html',
-  '/Gold-Prices/countries/egypt/cities/cairo.html',
-  '/Gold-Prices/countries/qatar/cities/doha.html',
+  '/countries/uae/cities/dubai.html',
+  '/countries/uae/cities/abu-dhabi.html',
+  '/countries/saudi-arabia/cities/riyadh.html',
+  '/countries/egypt/cities/cairo.html',
+  '/countries/qatar/cities/doha.html',
   // Market pages
-  '/Gold-Prices/countries/uae/markets/dubai-gold-souk.html',
-  '/Gold-Prices/countries/egypt/markets/khan-el-khalili-cairo.html',
+  '/countries/uae/markets/dubai-gold-souk.html',
+  '/countries/egypt/markets/khan-el-khalili-cairo.html',
   // Key leaf pages (now under countries/)
-  '/Gold-Prices/countries/uae/gold-price/',
-  '/Gold-Prices/countries/uae/dubai/gold-prices/',
-  '/Gold-Prices/countries/uae/dubai/gold-rate/24-karat/',
-  '/Gold-Prices/countries/uae/dubai/gold-rate/22-karat/',
-  '/Gold-Prices/countries/uae/dubai/gold-rate/21-karat/',
-  '/Gold-Prices/countries/uae/dubai/gold-rate/18-karat/',
-  '/Gold-Prices/countries/uae/abu-dhabi/gold-prices/',
-  '/Gold-Prices/countries/uae/sharjah/gold-prices/',
+  '/countries/uae/gold-price/',
+  '/countries/uae/dubai/gold-prices/',
+  '/countries/uae/dubai/gold-rate/24-karat/',
+  '/countries/uae/dubai/gold-rate/22-karat/',
+  '/countries/uae/dubai/gold-rate/21-karat/',
+  '/countries/uae/dubai/gold-rate/18-karat/',
+  '/countries/uae/abu-dhabi/gold-prices/',
+  '/countries/uae/sharjah/gold-prices/',
   // Offline fallback
-  '/Gold-Prices/offline.html',
+  '/offline.html',
 ];
 
 // External origins that should bypass the cache (live data APIs)
@@ -148,9 +147,9 @@ async function networkFirstWithFallback(request) {
     if (cached) return cached;
 
     // Resilient offline fallback for navigation
-    const offlinePage = await caches.match('/Gold-Prices/offline.html');
+    const offlinePage = await caches.match('/offline.html');
     if (offlinePage) return offlinePage;
-    const shell = await caches.match('/Gold-Prices/');
+    const shell = await caches.match('/');
     if (shell) return shell;
 
     return new Response('Offline — cached version unavailable.', {

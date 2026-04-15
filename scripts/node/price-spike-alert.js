@@ -26,7 +26,7 @@
 const https = require('https');
 const crypto = require('crypto');
 
-const SITE_URL = 'https://vctb12.github.io/Gold-Prices/';
+const SITE_URL = 'https://goldtickerlive.com/';
 const GOLD_API_URL = 'https://api.gold-api.com/price/XAU';
 const AED_PEG = 3.6725;
 const TROY_OZ = 31.1035;
@@ -178,7 +178,7 @@ async function sendDiscord(spot, changePct, changeAbs, sign) {
   const k24aed = (spot / TROY_OZ) * AED_PEG;
   await httpsPost(DISCORD_WEBHOOK, {
     username: 'GoldPrices Alert',
-    avatar_url: 'https://vctb12.github.io/Gold-Prices/assets/favicon-192x192.png',
+    avatar_url: 'https://goldtickerlive.com/assets/favicon-192x192.png',
     embeds: [
       {
         title: `🚨 Gold Price Spike Alert ${arrow}`,

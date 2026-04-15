@@ -35,7 +35,7 @@ const { KARATS } = (() => {
   return { KARATS: new Function('return ' + match[1])() };
 })();
 
-const SITE_URL = 'https://vctb12.github.io/Gold-Prices';
+const SITE_URL = 'https://goldtickerlive.com';
 
 function mkdirSync(dir) {
   fs.mkdirSync(dir, { recursive: true });

@@ -60,6 +60,8 @@ jobs:
           # Robots.txt and .htaccess must live at root for GitHub Pages / servers
           cp robots.txt dist/
           [ -f .htaccess ] && cp .htaccess dist/ || true
+          # CNAME for custom domain (goldtickerlive.com)
+          [ -f CNAME ] && cp CNAME dist/ || true
           # Copy freshly-generated sitemap and RSS feed
           cp sitemap.xml dist/ || true
           cp feed.xml dist/ || true

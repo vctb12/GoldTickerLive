@@ -11,4 +11,4 @@ Disallow: /supabase/
 Disallow: /repositories/
 Disallow: /dist/
 
-Sitemap: https://vctb12.github.io/Gold-Prices/sitemap.xml
+Sitemap: https://goldtickerlive.com/sitemap.xml

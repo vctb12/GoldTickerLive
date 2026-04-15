@@ -7,7 +7,7 @@
  * Dependencies: none (pure functions)
  */
 
-const SITE_URL = 'https://vctb12.github.io/Gold-Prices/';
+const SITE_URL = 'https://goldtickerlive.com/';
 // X wraps any URL to this length (t.co shortening)
 const X_URL_LENGTH = 23;
 

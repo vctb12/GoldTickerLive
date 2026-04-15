@@ -5,7 +5,7 @@
  */
 
 const SITE_NAME = 'GoldPrices';
-const SITE_URL = 'https://vctb12.github.io/Gold-Prices';
+const SITE_URL = 'https://goldtickerlive.com';
 const OG_IMAGE = `${SITE_URL}/assets/og-image.png`;
 
 /**
@@ -212,7 +212,7 @@ function buildJsonLd(routeType, { title, description, canonical, breadcrumbs }) 
         seller: {
           '@type': 'Organization',
           name: 'GoldPrices',
-          url: 'https://vctb12.github.io/Gold-Prices/',
+          url: 'https://goldtickerlive.com/',
         },
       },
     };

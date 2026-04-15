@@ -17,7 +17,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '../..');
 const BASE_URL = (() => {
   const i = process.argv.indexOf('--base');
-  return i >= 0 ? process.argv[i + 1] : 'https://vctb12.github.io/Gold-Prices';
+  return i >= 0 ? process.argv[i + 1] : 'https://goldtickerlive.com';
 })();
 
 // Directories/pages to exclude from the sitemap

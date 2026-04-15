@@ -29,5 +29,5 @@ jobs:
           TELEGRAM_BOT_TOKEN:  ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          SITE_URL: 'https://vctb12.github.io/Gold-Prices/'
+          SITE_URL: 'https://goldtickerlive.com/'
         run: node scripts/node/uptime-check.js

@@ -6,7 +6,7 @@
  * (non-200 response or timeout). Used by .github/workflows/uptime-monitor.yml.
  *
  * Required env vars:
- *   SITE_URL             – URL to ping (default: https://vctb12.github.io/Gold-Prices/)
+ *   SITE_URL             – URL to ping (default: https://goldtickerlive.com/)
  *   TELEGRAM_BOT_TOKEN   – optional
  *   TELEGRAM_CHANNEL_ID  – optional
  *   DISCORD_WEBHOOK_URL  – optional
@@ -16,7 +16,7 @@
 
 const https = require('https');
 
-const SITE_URL = process.env.SITE_URL || 'https://vctb12.github.io/Gold-Prices/';
+const SITE_URL = process.env.SITE_URL || 'https://goldtickerlive.com/';
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const TELEGRAM_CHANNEL = process.env.TELEGRAM_CHANNEL_ID || '';
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL || '';
