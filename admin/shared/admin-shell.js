@@ -72,9 +72,9 @@ function getActiveSlug() {
   return remainder;
 }
 
-/** Strip HTML tags from a string (used for command palette icon labels). */
+/** Strip HTML tags from a string — used only for plain-text representations. */
 function stripHtml(html) {
-  return html.replace(/<[^>]*>/g, '');
+  return html.replace(/<[^>]*>|\s+/g, ' ').trim();
 }
 
 // ── Sidebar HTML builder ─────────────────────────────────────────────────────
@@ -93,7 +93,7 @@ function buildSidebarHTML(adminBase, activeSlug) {
     const aria = isActive ? ' aria-current="page"' : '';
     // Orders link gets a badge placeholder for pending count
     const badge = item.slug === 'orders'
-      ? '<span class="notification-badge" id="orders-badge" style="display:none"></span>'
+      ? '<span class="notification-badge" id="orders-badge" aria-label="pending orders count" style="display:none"></span>'
       : '';
     return `<a class="${cls}" href="${href}"${aria}><span class="nav-icon">${ICONS[item.iconKey]}</span><span class="nav-label">${item.label}</span>${badge}</a>`;
   }).join('\n          ');
@@ -136,7 +136,7 @@ function injectBottomNav(adminBase, activeSlug, openSidebarFn) {
   const items = BOTTOM_NAV_ITEMS.map((item) => {
     const href = adminBase + (item.slug ? item.slug + '/' : '');
     const isActive = item.slug === activeSlug;
-    return `<a class="bottom-nav-item${isActive ? ' active' : ''}" href="${href}" aria-current="${isActive ? 'page' : 'false'}">
+    return `<a class="bottom-nav-item${isActive ? ' active' : ''}" href="${href}"${isActive ? ' aria-current="page"' : ''}>
       <span class="bottom-nav-icon">${ICONS[item.iconKey]}</span>
       <span class="bottom-nav-label">${item.label}</span>
     </a>`;
@@ -317,7 +317,7 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
   // ── Command palette ──────────────────────────────────────
   const paletteItems = NAV_ITEMS.map((item) => ({
     label: item.label,
-    icon: stripHtml(ICONS[item.iconKey] || ''),
+    icon: ICONS[item.iconKey] || '',
     href: adminBase + (item.slug ? item.slug + '/' : ''),
   }));
   initCommandPalette(paletteItems);
