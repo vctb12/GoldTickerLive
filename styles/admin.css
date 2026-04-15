@@ -160,7 +160,6 @@ ol {
 
 .sidebar-header .logo-text {
   background: linear-gradient(135deg, var(--color-white) 0%, var(--adm-gold) 100%);
-  background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-size: 0.9rem;

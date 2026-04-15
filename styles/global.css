@@ -5454,3 +5454,246 @@ body > * {
   color: var(--text-tertiary);
   margin-inline-start: 0.4rem;
 }
+
+/* ═══════════════════════════════════════════════
+   Skeleton size tokens for homepage
+   ═══════════════════════════════════════════════ */
+.skeleton-price-hero {
+  width: 160px;
+  height: 2.2rem;
+}
+
+.karat-strip-skel {
+  width: 56px;
+  height: 1.1em;
+}
+
+/* ═══════════════════════════════════════════════
+   Country Quick-links Pill Row
+   ═══════════════════════════════════════════════ */
+.home-country-pills {
+  padding-block: var(--space-4);
+}
+
+.country-pill-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding-block-end: var(--space-2);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.country-pill-row::-webkit-scrollbar {
+  display: none;
+}
+
+.country-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  background: var(--color-gold-tint);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+  flex-shrink: 0;
+}
+
+.country-pill:hover {
+  background: var(--color-gold-bg);
+  border-color: var(--color-gold);
+  color: var(--color-gold-dark);
+  text-decoration: none;
+}
+
+.country-pill:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.country-pill--more {
+  background: var(--color-gold);
+  color: var(--color-white);
+  border-color: var(--color-gold);
+  font-weight: var(--weight-semibold);
+}
+
+.country-pill--more:hover {
+  background: var(--color-gold-dark);
+  border-color: var(--color-gold-dark);
+  color: var(--color-white);
+}
+
+/* ═══════════════════════════════════════════════
+   Share Button (btn-share)
+   ═══════════════════════════════════════════════ */
+.btn-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  cursor: pointer;
+  font-family: var(--font-main);
+  transition:
+    background var(--transition),
+    border-color var(--transition);
+}
+
+.btn-share:hover {
+  background: var(--color-gold-tint);
+  border-color: var(--color-gold);
+}
+
+.btn-share:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ═══════════════════════════════════════════════
+   PWA Install Banner
+   ═══════════════════════════════════════════════ */
+#pwa-install-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: var(--color-gold-deep);
+  color: var(--color-white);
+  border-top: 2px solid var(--color-gold);
+  padding: 0.75rem 1rem;
+  box-shadow: var(--shadow-lg);
+  animation: pwaSlideUp 0.3s ease;
+}
+
+@media (width <= 640px) {
+  #pwa-install-banner {
+    bottom: 60px;
+  }
+}
+
+@keyframes pwaSlideUp {
+  from { transform: translateY(100%); }
+
+  to { transform: translateY(0); }
+}
+
+.pwa-banner-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.pwa-banner-icon {
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+}
+
+.pwa-banner-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.pwa-banner-text strong {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+}
+
+.pwa-banner-text span {
+  font-size: var(--text-xs);
+  color: rgb(255 255 255 / 70%);
+}
+
+.pwa-banner-install {
+  flex-shrink: 0;
+  background: var(--color-gold);
+  color: var(--color-white);
+  border: none;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: var(--font-main);
+  transition: background var(--transition);
+}
+
+.pwa-banner-install:hover {
+  background: var(--color-gold-light);
+}
+
+.pwa-banner-dismiss {
+  background: none;
+  border: none;
+  color: rgb(255 255 255 / 60%);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.25rem 0.5rem;
+  flex-shrink: 0;
+  transition: color var(--transition);
+}
+
+.pwa-banner-dismiss:hover {
+  color: var(--color-white);
+}
+
+/* ═══════════════════════════════════════════════
+   Homepage social section helpers
+   ═══════════════════════════════════════════════ */
+.home-section-inner--centered {
+  text-align: center;
+}
+
+.home-social-lead {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.btn-x-follow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Homepage skip-link (static in HTML, matches injected skip-to-main) */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-4);
+  background: var(--color-gold);
+  color: var(--color-white);
+  padding: 0.5rem 1rem;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  text-decoration: none;
+  z-index: 9999;
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}

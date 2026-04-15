@@ -540,6 +540,9 @@ async function init() {
   // PWA install prompt — capture the beforeinstallprompt event and show a
   // subtle banner after 30 seconds if the user hasn't dismissed it before.
   initPwaInstallPrompt();
+
+  // Web Share API — show share button if supported
+  initShareButton();
   // Skeleton timeout: if price still loading after 8s, show unavailable state
   setTimeout(() => {
     const priceEl = document.getElementById('hlc-price');
@@ -600,50 +603,10 @@ function showPwaBanner(deferredPrompt) {
         <strong>Add GoldPrices to your home screen</strong>
         <span>Live gold prices — works offline too</span>
       </div>
-      <button class="pwa-banner-install btn btn-primary btn-sm" id="pwa-install-btn">Install</button>
+      <button class="pwa-banner-install" id="pwa-install-btn">Install</button>
       <button class="pwa-banner-dismiss" id="pwa-dismiss-btn" aria-label="Dismiss install prompt">✕</button>
     </div>
   `;
-
-  // Inject styles
-  if (!document.getElementById('pwa-banner-styles')) {
-    const style = document.createElement('style');
-    style.id = 'pwa-banner-styles';
-    style.textContent = `
-      #pwa-install-banner {
-        position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
-        background: #1e293b; color: #f8fafc;
-        border-top: 2px solid #d4a017;
-        padding: 0.75rem 1rem;
-        box-shadow: 0 -4px 24px rgba(0,0,0,0.3);
-        animation: pwaSlideUp 0.3s ease;
-      }
-      @media (max-width: 640px) {
-        #pwa-install-banner { bottom: 60px; }
-      }
-      @keyframes pwaSlideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-      .pwa-banner-inner {
-        display: flex; align-items: center; gap: 0.75rem;
-        max-width: 960px; margin: 0 auto;
-      }
-      .pwa-banner-icon { flex-shrink: 0; border-radius: 8px; }
-      .pwa-banner-text { flex: 1; min-width: 0; }
-      .pwa-banner-text strong { display: block; font-size: 0.875rem; font-weight: 700; }
-      .pwa-banner-text span { font-size: 0.78rem; color: #94a3b8; }
-      .pwa-banner-install {
-        flex-shrink: 0; background: #d4a017; color: #fff; border: none;
-        padding: 0.45rem 1rem; border-radius: 6px; font-size: 0.8rem;
-        font-weight: 700; cursor: pointer; white-space: nowrap;
-      }
-      .pwa-banner-install:hover { background: #b8860b; }
-      .pwa-banner-dismiss {
-        background: none; border: none; color: #94a3b8; cursor: pointer;
-        font-size: 1rem; padding: 0.25rem 0.5rem; flex-shrink: 0;
-      }
-      .pwa-banner-dismiss:hover { color: #f8fafc; }
-    `;
-    document.head.appendChild(style);
-  }
 
   document.body.appendChild(banner);
 
@@ -661,5 +624,27 @@ function showPwaBanner(deferredPrompt) {
     banner.remove();
     localStorage.setItem('pwa_install_dismissed', '1');
     deferredPrompt = null;
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Web Share API
+// ---------------------------------------------------------------------------
+function initShareButton() {
+  if (!navigator.share) return;
+  const btn = document.getElementById('hero-share-btn');
+  if (!btn) return;
+  btn.removeAttribute('hidden');
+  btn.addEventListener('click', async () => {
+    const priceText = document.getElementById('hlc-price')?.textContent?.trim() || '';
+    const title = 'Gold Price Today';
+    const text = priceText
+      ? `Gold spot price: ${priceText} — Live on GoldPrices`
+      : 'Live gold prices for UAE, GCC & Arab World — Free & updated every 90s';
+    try {
+      await navigator.share({ title, text, url: window.location.href });
+    } catch (e) {
+      // User cancelled share or error — silently ignore
+    }
   });
 }

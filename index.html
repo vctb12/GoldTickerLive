@@ -186,6 +186,13 @@
               <a href="tracker.html" class="btn btn-primary" id="hero-cta-tracker"
                 >View Live Tracker</a
               >
+              <button
+                type="button"
+                class="btn btn-share"
+                id="hero-share-btn"
+                aria-label="Share current gold price"
+                hidden
+              >Share Price</button>
             </div>
             <div class="hero-ctas-secondary">
               <a href="countries/index.html" class="hero-secondary-link" id="hero-cta-countries"
@@ -216,7 +223,7 @@
               <span class="hlc-badge" id="hlc-badge">XAU/USD</span>
             </div>
             <div class="hlc-price hlc-price--loading" id="hlc-price">
-              <span class="skeleton-inline" style="width: 160px; height: 2.2rem"></span>
+              <span class="skeleton-inline skeleton-price-hero" id="hlc-price-skel"></span>
             </div>
             <div class="hlc-sub" id="hlc-sub">per troy ounce</div>
             <div class="hlc-indicators">
@@ -269,8 +276,7 @@
             <div class="karat-strip-item" id="kstrip-24">
               <span class="karat-strip-k">24K</span>
               <span
-                class="karat-strip-v skeleton-inline"
-                style="width: 56px; height: 1.1em"
+                class="karat-strip-v skeleton-inline karat-strip-skel"
                 id="kstrip-24-val"
                 >—</span
               >
@@ -278,8 +284,7 @@
             <div class="karat-strip-item" id="kstrip-22">
               <span class="karat-strip-k">22K</span>
               <span
-                class="karat-strip-v skeleton-inline"
-                style="width: 56px; height: 1.1em"
+                class="karat-strip-v skeleton-inline karat-strip-skel"
                 id="kstrip-22-val"
                 >—</span
               >
@@ -287,8 +292,7 @@
             <div class="karat-strip-item" id="kstrip-21">
               <span class="karat-strip-k">21K</span>
               <span
-                class="karat-strip-v skeleton-inline"
-                style="width: 56px; height: 1.1em"
+                class="karat-strip-v skeleton-inline karat-strip-skel"
                 id="kstrip-21-val"
                 >—</span
               >
@@ -296,8 +300,7 @@
             <div class="karat-strip-item" id="kstrip-18">
               <span class="karat-strip-k">18K</span>
               <span
-                class="karat-strip-v skeleton-inline"
-                style="width: 56px; height: 1.1em"
+                class="karat-strip-v skeleton-inline karat-strip-skel"
                 id="kstrip-18-val"
                 >—</span
               >
@@ -460,7 +463,22 @@
         </div>
       </section>
 
-      <!-- ═══════ HISTORY & DATA TEASER ═══════ -->
+      <!-- ═══════ GCC COUNTRY QUICK-LINKS ═══════ -->
+      <section class="home-section home-country-pills" aria-label="Country quick links">
+        <div class="home-section-inner">
+          <nav class="country-pill-row" aria-label="Quick access to country gold prices">
+            <a href="countries/uae/" class="country-pill">🇦🇪 UAE</a>
+            <a href="countries/saudi-arabia/" class="country-pill">🇸🇦 Saudi Arabia</a>
+            <a href="countries/kuwait/" class="country-pill">🇰🇼 Kuwait</a>
+            <a href="countries/qatar/" class="country-pill">🇶🇦 Qatar</a>
+            <a href="countries/bahrain/" class="country-pill">🇧🇭 Bahrain</a>
+            <a href="countries/oman/" class="country-pill">🇴🇲 Oman</a>
+            <a href="countries/egypt/" class="country-pill">🇪🇬 Egypt</a>
+            <a href="countries/jordan/" class="country-pill">🇯🇴 Jordan</a>
+            <a href="countries/index.html" class="country-pill country-pill--more">All Countries →</a>
+          </nav>
+        </div>
+      </section>
       <!-- Removed: chart, archive, CSV download, and date lookup are accessible from the Live Tracker -->
 
       <!-- ═══════ TOOLS ═══════ -->
@@ -629,15 +647,14 @@
 
       <!-- ═══════ SOCIAL FOLLOW CTA ═══════ -->
       <section class="home-section home-section--social" aria-label="Follow us on social media">
-        <div class="home-section-inner home-section-inner--narrow" style="text-align: center;">
-          <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 0.75rem;">
+        <div class="home-section-inner home-section-inner--narrow home-section-inner--centered">
+          <p class="home-social-lead">
             Get gold price updates on X/Twitter
           </p>
           <a href="https://x.com/GoldTickerLive"
              target="_blank"
              rel="noopener noreferrer"
-             class="btn btn-primary"
-             style="display: inline-flex; align-items: center; gap: 0.5rem;"
+             class="btn btn-primary btn-x-follow"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             Follow @GoldTickerLive
