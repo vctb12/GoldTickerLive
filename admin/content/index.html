@@ -349,6 +349,58 @@
         color: var(--text-dim);
       }
 
+      /* ── Editor toolbar ─────────────────────────────────────── */
+      .editor-toolbar {
+        align-items: center;
+        border: 1px solid var(--border);
+        border-bottom: none;
+        border-radius: var(--radius) var(--radius) 0 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px;
+        padding: 6px 8px;
+        background: var(--surface-2);
+      }
+      .toolbar-btn {
+        align-items: center;
+        background: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        color: var(--text-muted);
+        cursor: pointer;
+        display: inline-flex;
+        font-size: 0.8125rem;
+        height: 26px;
+        justify-content: center;
+        min-width: 28px;
+        padding: 0 6px;
+        transition: background 0.15s, color 0.15s, border-color 0.15s;
+        white-space: nowrap;
+      }
+      .toolbar-btn:hover {
+        background: var(--surface);
+        border-color: var(--border);
+        color: var(--text);
+      }
+      .toolbar-sep {
+        background: var(--border);
+        display: inline-block;
+        height: 18px;
+        margin: 0 4px;
+        width: 1px;
+      }
+      .word-count-badge {
+        color: var(--text-dim);
+        font-size: 0.75rem;
+        margin-left: auto;
+        padding: 0 4px;
+        white-space: nowrap;
+      }
+      .body-textarea.with-toolbar {
+        border-radius: 0 0 var(--radius) var(--radius);
+        border-top: none;
+      }
+
       /* ── Body textarea ──────────────────────────────────────── */
       .body-textarea {
         background: var(--surface-2);
@@ -791,8 +843,21 @@
                     aria-label="English title"
                     autocomplete="off"
                   />
+                  <!-- Editor toolbar -->
+                  <div class="editor-toolbar" role="toolbar" aria-label="Formatting shortcuts">
+                    <button class="toolbar-btn" data-action="bold" title="Bold (**text**)" type="button" aria-label="Bold"><strong>B</strong></button>
+                    <button class="toolbar-btn" data-action="italic" title="Italic (*text*)" type="button" aria-label="Italic"><em>I</em></button>
+                    <button class="toolbar-btn" data-action="h2" title="Heading 2 (## heading)" type="button" aria-label="Heading 2">H2</button>
+                    <button class="toolbar-btn" data-action="h3" title="Heading 3 (### heading)" type="button" aria-label="Heading 3">H3</button>
+                    <span class="toolbar-sep"></span>
+                    <button class="toolbar-btn" data-action="link" title="Insert link [text](url)" type="button" aria-label="Insert link">🔗</button>
+                    <button class="toolbar-btn" data-action="ul" title="Bullet list" type="button" aria-label="Bullet list">• List</button>
+                    <button class="toolbar-btn" data-action="hr" title="Horizontal rule" type="button" aria-label="Horizontal rule">—</button>
+                    <span class="toolbar-sep"></span>
+                    <span class="word-count-badge" id="word-count-badge" aria-live="polite" title="Word count">0 words</span>
+                  </div>
                   <textarea
-                    class="body-textarea"
+                    class="body-textarea with-toolbar"
                     id="field-body"
                     placeholder="Write your post in Markdown…"
                     aria-label="English body"
@@ -1024,11 +1089,23 @@
 
     <script type="module">
       import { logout, requireAuth, getSupabase, getSession, logActivity } from '../supabase-auth.js';
-      import { initAdminShell } from '../shared/admin-shell.js';
+      import { initAdminShell, renderBreadcrumb } from '../shared/admin-shell.js';
+      import { showToast, confirmDialog, initCommandPalette, downloadCSV } from '../shared/admin-utils.js';
+      import { ICONS } from '../shared/icons.js';
 
       // ── Auth guard ──────────────────────────────────────────
       if (!(await requireAuth())) throw new Error('redirect');
       await initAdminShell({ logout, getSession });
+      renderBreadcrumb([{ label: 'Content' }]);
+      initCommandPalette([
+        { label: 'Dashboard', href: '../', icon: ICONS.dashboard },
+        { label: 'Orders', href: '../orders/', icon: ICONS.orders },
+        { label: 'Pricing', href: '../pricing/', icon: ICONS.pricing },
+        { label: 'Analytics', href: '../analytics/', icon: ICONS.analytics },
+        { label: 'Content', href: './', icon: ICONS.content },
+        { label: 'Social', href: '../social/', icon: ICONS.social },
+        { label: 'Settings', href: '../settings/', icon: ICONS.settings },
+      ]);
 
       // ── Supabase Data Layer (with localStorage cache fallback) ──
       const STORAGE_KEY = 'gp_blog_posts';
@@ -1271,16 +1348,6 @@
           .replace(/\*(.+?)\*/g, '<em>$1</em>');
       }
 
-      // ── Toast ──────────────────────────────────────────────
-      function showToast(msg, type = 'info') {
-        const c = document.getElementById('toast-container');
-        const t = document.createElement('div');
-        t.className = `toast toast-${type}`;
-        t.textContent = msg;
-        c.appendChild(t);
-        setTimeout(() => t.remove(), 4000);
-      }
-
       // ── Sample posts ───────────────────────────────────────
       function buildSamplePosts() {
         const now = new Date();
@@ -1427,6 +1494,7 @@
         renderTags();
         updateStatusPill();
         updateBodyMeta();
+        updateWordCount();
         updateExcerptMeta();
 
         // Show editor
@@ -1479,6 +1547,7 @@
         renderTags();
         updateStatusPill();
         updateBodyMeta();
+        updateWordCount();
         updateExcerptMeta();
 
         document.getElementById('editor-welcome').classList.add('hidden');
@@ -1650,7 +1719,16 @@
               showToast('Auto-saved.', 'info');
             }
           }
-        }, 30000);
+        }, 2000);
+      }
+
+      // ── Word count ─────────────────────────────────────────
+      function updateWordCount() {
+        const badge = document.getElementById('word-count-badge');
+        if (!badge) return;
+        const text = (document.getElementById('field-body')?.value || '').trim();
+        const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
+        badge.textContent = `${words.toLocaleString()} word${words !== 1 ? 's' : ''}`;
       }
 
       // ── Delete ─────────────────────────────────────────────
@@ -1831,7 +1909,41 @@
 
         document.getElementById('field-body').addEventListener('input', () => {
           updateBodyMeta();
+          updateWordCount();
+          markDirty();
+          scheduleAutoSave();
         });
+
+        // ── Editor toolbar
+        const toolbar = document.querySelector('.editor-toolbar');
+        if (toolbar) {
+          toolbar.addEventListener('click', (e) => {
+            const btn = e.target.closest('.toolbar-btn');
+            if (!btn) return;
+            const textarea = document.getElementById('field-body');
+            const action = btn.dataset.action;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const sel = textarea.value.substring(start, end);
+            let insert = '';
+            let cursorOffset = 0;
+            if (action === 'bold') { insert = `**${sel || 'text'}**`; cursorOffset = sel ? insert.length : 2; }
+            else if (action === 'italic') { insert = `*${sel || 'text'}*`; cursorOffset = sel ? insert.length : 1; }
+            else if (action === 'h2') { insert = `\n## ${sel || 'Heading'}\n`; cursorOffset = insert.length; }
+            else if (action === 'h3') { insert = `\n### ${sel || 'Heading'}\n`; cursorOffset = insert.length; }
+            else if (action === 'link') { const url = prompt('URL:', 'https://'); if (!url) return; insert = `[${sel || 'link text'}](${url})`; cursorOffset = insert.length; }
+            else if (action === 'ul') { insert = `\n- ${sel || 'Item'}\n`; cursorOffset = insert.length; }
+            else if (action === 'hr') { insert = `\n---\n`; cursorOffset = insert.length; }
+            if (!insert) return;
+            textarea.setRangeText(insert, start, end, 'end');
+            textarea.selectionStart = textarea.selectionEnd = start + cursorOffset;
+            textarea.focus();
+            updateBodyMeta();
+            updateWordCount();
+            markDirty();
+            scheduleAutoSave();
+          });
+        }
         document.getElementById('field-body-ar').addEventListener('input', updateBodyArMeta);
         document.getElementById('field-excerpt').addEventListener('input', updateExcerptMeta);
 
