@@ -24,11 +24,11 @@
   --tp-blue-soft: rgb(20 85 164 / 8%);
   --tp-shadow-1: 0 10px 28px rgb(61 46 21 / 7%), 0 2px 6px rgb(61 46 21 / 3%);
   --tp-shadow-2: 0 16px 40px rgb(61 46 21 / 10%), 0 4px 10px rgb(196 153 62 / 6%);
-  --tp-radius-xl: 24px;
-  --tp-radius-lg: 18px;
+  --tp-radius-xl: var(--radius-xl);
+  --tp-radius-lg: var(--radius-lg);
   --tp-radius-md: 14px;
   --tp-radius-sm: 10px;
-  --tp-radius-pill: 999px;
+  --tp-radius-pill: var(--radius-pill);
   --tp-shell: min(1400px, calc(100% - 32px));
 }
 
@@ -92,7 +92,7 @@ body.tracker-pro-page {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   transition:
     background 0.15s,
     color 0.15s;
@@ -155,7 +155,7 @@ body.tracker-pro-page {
 .tracker-hero-card::after {
   content: '';
   position: absolute;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   z-index: -1;
   pointer-events: none;
 }
@@ -190,7 +190,7 @@ body.tracker-pro-page {
   padding: 0.35rem 0.8rem;
   border-radius: var(--tp-radius-pill);
   border: 1px solid var(--tp-border);
-  background: #fff;
+  background: var(--color-white);
   font-size: 0.76rem;
   font-weight: 700;
   color: var(--tp-text-muted);
@@ -269,7 +269,7 @@ body.tracker-pro-page {
 .tracker-mini-item {
   border-radius: var(--tp-radius-lg);
   border: 1px solid var(--tp-border);
-  background: linear-gradient(180deg, #fff 0%, #fbf7ef 100%);
+  background: linear-gradient(180deg, var(--color-white) 0%, #fbf7ef 100%);
   padding: 0.9rem;
 }
 
@@ -278,7 +278,7 @@ body.tracker-pro-page {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: linear-gradient(135deg, #fff 0%, #fbf9f6 100%);
+  background: linear-gradient(135deg, var(--color-white) 0%, #fbf9f6 100%);
   border-width: 1.25px;
   transition: all 0.22s ease-out;
 }
@@ -397,7 +397,7 @@ body.tracker-pro-page {
   padding: 0 0.8rem;
   border-radius: var(--tp-radius-sm);
   border: 1px solid var(--tp-border);
-  background: #fff;
+  background: var(--color-white);
   font-size: 0.9rem;
   color: var(--tp-text);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 50%);
@@ -424,7 +424,7 @@ body.tracker-pro-page {
 
 .tracker-chip {
   border: 1px solid var(--tp-border);
-  background: #fff;
+  background: var(--color-white);
   min-height: 38px;
   padding: 0.35rem 0.8rem;
   border-radius: var(--tp-radius-pill);
@@ -519,7 +519,7 @@ body.tracker-pro-page {
 
 .tracker-wire-refresh {
   border: 1px solid var(--tp-border);
-  background: #fff;
+  background: var(--color-white);
   min-height: 38px;
   padding: 0.35rem 0.75rem;
   border-radius: var(--tp-radius-pill);
@@ -693,7 +693,7 @@ body.tracker-pro-page {
   padding: 0.75rem 0.85rem;
   border-radius: var(--tp-radius-md);
   background: rgb(22 17 12 / 96%);
-  color: #fff;
+  color: var(--color-white);
   box-shadow: 0 18px 44px rgb(0 0 0 / 22%);
   pointer-events: none;
   z-index: 4;
@@ -790,7 +790,7 @@ body.tracker-pro-page {
   padding: 0.35rem 0.85rem;
   border-radius: var(--tp-radius-pill);
   border: 1.25px solid var(--tp-border);
-  background: #fff;
+  background: var(--color-white);
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--tp-text-muted);
@@ -927,7 +927,7 @@ body.tracker-pro-page {
   min-height: 38px;
   border-radius: var(--tp-radius-pill);
   border: 1px solid var(--tp-border);
-  background: #fff;
+  background: var(--color-white);
   padding: 0 0.75rem;
   font-size: 0.76rem;
   font-weight: 700;
@@ -1061,7 +1061,7 @@ body.tracker-pro-page {
   padding: 1rem;
   border-radius: var(--tp-radius-lg);
   border: 1px dashed var(--tp-border-strong);
-  background: #fff;
+  background: var(--color-white);
   text-align: center;
   color: var(--tp-text-muted);
   font-size: 0.88rem;
@@ -1084,7 +1084,7 @@ body.tracker-pro-page {
 .tracker-toast {
   border-radius: var(--tp-radius-lg);
   background: rgb(23 18 12 / 96%);
-  color: #fff;
+  color: var(--color-white);
   border: 1px solid rgb(255 255 255 / 10%);
   padding: 0.85rem 0.9rem;
   box-shadow: 0 18px 42px rgb(0 0 0 / 22%);
@@ -1115,7 +1115,7 @@ body.tracker-pro-page {
 .tracker-skeleton {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(90deg, #f0eadc 25%, #fff 50%, #f0eadc 75%);
+  background: linear-gradient(90deg, #f0eadc 25%, var(--color-white) 50%, #f0eadc 75%);
   background-size: 400px 100%;
   animation: tracker-skeleton 1.4s linear infinite;
   border-radius: var(--tp-radius-sm);
@@ -1223,9 +1223,9 @@ body.tracker-pro-page {
   min-width: 24px;
   min-height: 24px;
   padding: 0 0.35rem;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--tp-border);
-  background: #fff;
+  background: var(--color-white);
   font-size: 0.74rem;
   font-weight: 800;
   color: var(--tp-text-muted);
@@ -1359,7 +1359,7 @@ body.tracker-pro-page {
   .tracker-subpanel,
   .tracker-method-card {
     padding: 0.95rem;
-    border-radius: 18px;
+    border-radius: var(--radius-lg);
   }
 
   .tracker-control-grid {
@@ -1485,7 +1485,7 @@ body.tracker-pro-page {
   font-weight: 700;
   letter-spacing: 0.04em;
   border: 1px solid var(--tp-border);
-  background: #fff;
+  background: var(--color-white);
   color: var(--tp-text-muted);
   white-space: nowrap;
 }
@@ -1545,7 +1545,7 @@ body.tracker-pro-page {
 
 .tracker-toast {
   background: var(--tp-text);
-  color: #fff;
+  color: var(--color-white);
   padding: 0.6rem 1rem;
   border-radius: var(--tp-radius-md);
   font-size: 0.84rem;
@@ -1807,7 +1807,7 @@ body.tracker-workspace-basic .tracker-modes {
     scrollbar-width: none;
     gap: 0.3rem;
     padding: 0.4rem;
-    border-radius: 18px;
+    border-radius: var(--radius-lg);
   }
 
   .tracker-modes::-webkit-scrollbar {
@@ -2101,7 +2101,7 @@ body.tracker-workspace-basic .tracker-modes {
   width: 100%;
   padding: 0.75rem 1.5rem;
   background: var(--gradient-gold);
-  color: #fff;
+  color: var(--color-white);
   font-weight: 700;
   font-size: 1rem;
   border: none;
