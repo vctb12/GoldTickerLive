@@ -15,7 +15,7 @@ import { SUPABASE_URL, SUPABASE_ANON_KEY, ALLOWED_EMAIL } from './supabase-confi
 let _supabase = null;
 
 /**
- * Lazy-init the Supabase client.  Waits for the CDN script to load.
+ * Lazy-init the Supabase client (synchronous — returns null if CDN not ready).
  * @returns {object|null}
  */
 function getClient() {
@@ -25,6 +25,33 @@ function getClient() {
     return _supabase;
   }
   return null;
+}
+
+/**
+ * Wait for the Supabase CDN script to load and initialise the client.
+ * Polls every 50 ms, up to 3 seconds.  Resolves with the client or null.
+ * @returns {Promise<object|null>}
+ */
+function ensureClient() {
+  const existing = getClient();
+  if (existing) return Promise.resolve(existing);
+
+  return new Promise((resolve) => {
+    let elapsed = 0;
+    const interval = 50;
+    const maxWait = 3000;
+    const timer = setInterval(() => {
+      elapsed += interval;
+      const client = getClient();
+      if (client) {
+        clearInterval(timer);
+        resolve(client);
+      } else if (elapsed >= maxWait) {
+        clearInterval(timer);
+        resolve(null);
+      }
+    }, interval);
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -61,7 +88,7 @@ function resolveEmail(user) {
  * @returns {Promise<{ success: boolean, message?: string }>}
  */
 export async function loginWithGitHub(redirectTo) {
-  const sb = getClient();
+  const sb = await ensureClient();
   if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
 
   // Default redirect: go to admin root (one level up from /login/)
@@ -101,7 +128,7 @@ export async function login() {
  * Sign out and clear session.
  */
 export async function logout() {
-  const sb = getClient();
+  const sb = await ensureClient();
   if (sb) {
     try {
       await sb.auth.signOut();
@@ -119,9 +146,10 @@ export async function logout() {
 
 /**
  * Get the current Supabase session (null if not logged in).
+ * Waits for the CDN to load before checking.
  */
 export async function getSession() {
-  const sb = getClient();
+  const sb = await ensureClient();
   if (!sb) return null;
   try {
     const { data } = await sb.auth.getSession();
@@ -215,9 +243,19 @@ export function logActivity() {}
 
 /**
  * Return the Supabase client for direct use (e.g. querying tables).
+ * Returns synchronously — may be null if CDN hasn't loaded yet.
+ * Prefer calling this after requireAuth() has resolved.
  */
 export function getSupabase() {
   return getClient();
+}
+
+/**
+ * Async version of getSupabase — waits for CDN to load.
+ * @returns {Promise<object|null>}
+ */
+export async function getSupabaseAsync() {
+  return ensureClient();
 }
 
 /**
