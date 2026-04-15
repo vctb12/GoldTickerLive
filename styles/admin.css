@@ -1,31 +1,44 @@
 /* ==========================================================================
    admin/admin.css
-   Shared styles for all admin panel pages — dark navy theme.
+   Shared styles for all admin panel pages — premium dark theme.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
    1. CSS Variables
    -------------------------------------------------------------------------- */
 :root {
-  --bg: #0f172a;
-  --surface: #1e293b;
-  --surface-2: #263348;
-  --border: #334155;
-  --text: #f1f5f9;
-  --text-muted: #94a3b8;
-  --text-dim: #64748b;
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
+  --bg: #080f1a;
+  --surface: #0d1526;
+  --surface-2: #121e33;
+  --surface-3: #172340;
+  --border: #1e2f4a;
+  --border-light: #243759;
+  --text: #eef2ff;
+  --text-muted: #8ba3c7;
+  --text-dim: #4d6a94;
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-glow: rgba(99, 102, 241, 0.25);
   --gold: #f59e0b;
   --gold-hover: #d97706;
+  --gold-glow: rgba(245, 158, 11, 0.2);
+  --gold-soft: rgba(245, 158, 11, 0.1);
   --success: #10b981;
+  --success-glow: rgba(16, 185, 129, 0.2);
   --warning: #f59e0b;
   --danger: #ef4444;
-  --info: #3b82f6;
-  --sidebar-w: 240px;
-  --header-h: 56px;
-  --radius: 8px;
-  --radius-sm: 4px;
+  --danger-glow: rgba(239, 68, 68, 0.2);
+  --info: #6366f1;
+  --sidebar-w: 248px;
+  --header-h: 60px;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.6);
+  --glow-gold: 0 0 24px rgba(245, 158, 11, 0.15);
+  --sidebar-gradient: linear-gradient(180deg, #0a1628 0%, #080f1a 100%);
 }
 
 /* --------------------------------------------------------------------------
@@ -103,7 +116,7 @@ ol {
    4. Sidebar
    -------------------------------------------------------------------------- */
 .sidebar {
-  background: var(--surface);
+  background: var(--sidebar-gradient);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
@@ -113,7 +126,18 @@ ol {
   top: 0;
   width: var(--sidebar-w);
   z-index: 200;
-  transition: transform 0.25s ease;
+  transition: transform 0.25s ease, width 0.25s ease;
+}
+
+.sidebar::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--gold-glow) 30%, var(--gold-glow) 70%, transparent);
+  pointer-events: none;
 }
 
 .sidebar-header {
@@ -122,22 +146,28 @@ ol {
   display: flex;
   gap: 10px;
   height: var(--header-h);
-  padding: 0 20px;
+  padding: 0 16px;
   flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, transparent 60%);
 }
 
 .sidebar-header .logo-icon {
   color: var(--gold);
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1;
+  filter: drop-shadow(0 0 6px var(--gold-glow));
 }
 
 .sidebar-header .logo-text {
-  color: var(--text);
+  background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-weight: 800;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  flex: 1;
 }
 
 .sidebar-nav {
@@ -152,7 +182,7 @@ ol {
 }
 
 .sidebar-nav::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 
 .sidebar-nav::-webkit-scrollbar-track {
@@ -166,10 +196,10 @@ ol {
 
 .nav-section-label {
   color: var(--text-dim);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  margin: 12px 10px 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin: 14px 10px 4px;
   text-transform: uppercase;
 }
 
@@ -179,22 +209,25 @@ ol {
   color: var(--text-muted);
   display: flex;
   gap: 10px;
-  padding: 8px 10px;
+  padding: 9px 10px;
   text-decoration: none;
   transition:
-    background 0.15s,
-    color 0.15s;
+    background 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
   font-size: 0.875rem;
   white-space: nowrap;
   overflow: hidden;
+  position: relative;
 }
 
 .nav-link .nav-icon {
   flex-shrink: 0;
   font-size: 16px;
-  opacity: 0.75;
+  opacity: 0.7;
   width: 18px;
   text-align: center;
+  transition: opacity 0.2s;
 }
 
 .nav-link:hover {
@@ -208,9 +241,10 @@ ol {
 }
 
 .nav-link.active {
-  background: rgb(245 158 11 / 12%);
+  background: linear-gradient(90deg, var(--gold-soft) 0%, rgba(245,158,11,0.05) 100%);
   color: var(--gold);
   font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--gold);
 }
 
 .nav-link.active .nav-icon {
@@ -224,6 +258,7 @@ ol {
   flex-direction: column;
   gap: 2px;
   padding: 10px;
+  background: linear-gradient(0deg, rgba(245,158,11,0.03) 0%, transparent 100%);
 }
 
 /* Hamburger button (hidden on desktop) */
@@ -233,16 +268,18 @@ ol {
   justify-content: center;
   background: none;
   border: none;
-  color: var(--text);
+  color: var(--text-muted);
   cursor: pointer;
-  height: 36px;
-  width: 36px;
+  height: 38px;
+  width: 38px;
   border-radius: var(--radius-sm);
-  transition: background 0.15s;
+  transition: background 0.15s, color 0.15s;
+  font-size: 20px;
 }
 
 .sidebar-toggle:hover {
   background: var(--surface-2);
+  color: var(--text);
 }
 
 /* --------------------------------------------------------------------------
@@ -250,27 +287,29 @@ ol {
    -------------------------------------------------------------------------- */
 .page-header {
   align-items: center;
-  background: var(--surface);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
   border-bottom: 1px solid var(--border);
   display: flex;
   gap: 12px;
   height: var(--header-h);
-  padding: 0 24px;
+  padding: 0 28px;
   position: sticky;
   top: 0;
   z-index: 100;
   flex-shrink: 0;
+  backdrop-filter: blur(12px);
 }
 
 .page-title {
   color: var(--text);
   flex: 1 1 0%;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.0625rem;
+  font-weight: 700;
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: -0.01em;
 }
 
 .header-actions {
@@ -298,6 +337,13 @@ ol {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 20px 24px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  border-color: var(--border-light);
+  box-shadow: var(--shadow-md);
 }
 
 .card-header {
@@ -311,27 +357,56 @@ ol {
 .card-title {
   color: var(--text);
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .stat-card {
-  background: var(--surface);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 20px 24px;
+  padding: 22px 24px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--primary));
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.stat-card:hover {
+  border-color: var(--border-light);
+  box-shadow: var(--shadow-md), var(--glow-gold);
+  transform: translateY(-2px);
+}
+
+.stat-card:hover::before {
+  opacity: 1;
 }
 
 .stat-card .stat-number {
   color: var(--text);
   font-size: 1.875rem;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.1;
   margin-bottom: 4px;
+  letter-spacing: -0.03em;
 }
 
 .stat-card .stat-label {
   color: var(--text-muted);
   font-size: 0.8125rem;
+  font-weight: 500;
 }
 
 .stat-card .stat-delta {
@@ -339,17 +414,17 @@ ol {
   font-size: 0.75rem;
   font-weight: 600;
   margin-top: 8px;
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  border-radius: 999px;
 }
 
 .stat-card .stat-delta.up {
-  background: rgb(16 185 129 / 15%);
+  background: rgba(16, 185, 129, 0.15);
   color: var(--success);
 }
 
 .stat-card .stat-delta.down {
-  background: rgb(239 68 68 / 15%);
+  background: rgba(239, 68, 68, 0.15);
   color: var(--danger);
 }
 
@@ -368,62 +443,74 @@ ol {
   cursor: pointer;
   display: inline-flex;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   gap: 6px;
   justify-content: center;
   line-height: 1;
-  padding: 9px 16px;
+  padding: 9px 18px;
   text-decoration: none;
   transition:
-    background 0.15s,
-    border-color 0.15s,
-    color 0.15s,
-    opacity 0.15s;
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s,
+    opacity 0.2s,
+    box-shadow 0.2s,
+    transform 0.1s;
   user-select: none;
   white-space: nowrap;
+}
+
+.btn:active {
+  transform: translateY(1px);
 }
 
 .btn:disabled,
 .btn[aria-disabled='true'] {
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 0.45;
 }
 
 .btn-primary {
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
   color: #fff;
+  box-shadow: 0 2px 12px var(--primary-glow);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--primary-hover);
+  background: linear-gradient(135deg, #7577f3 0%, var(--primary) 100%);
+  box-shadow: 0 4px 20px var(--primary-glow);
 }
 
 .btn-gold {
-  background: var(--gold);
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   color: #0f172a;
+  box-shadow: 0 2px 12px var(--gold-glow);
 }
 
 .btn-gold:hover:not(:disabled) {
-  background: var(--gold-hover);
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  box-shadow: 0 4px 20px var(--gold-glow);
 }
 
 .btn-danger {
-  background: var(--danger);
+  background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
   color: #fff;
+  box-shadow: 0 2px 10px var(--danger-glow);
 }
 
 .btn-danger:hover:not(:disabled) {
-  background: #dc2626;
+  background: linear-gradient(135deg, #f87171 0%, var(--danger) 100%);
 }
 
 .btn-ghost {
   background: transparent;
-  border-color: var(--border);
+  border-color: var(--border-light);
   color: var(--text-muted);
 }
 
 .btn-ghost:hover:not(:disabled) {
   background: var(--surface-2);
+  border-color: var(--border-light);
   color: var(--text);
 }
 
@@ -444,7 +531,8 @@ ol {
 .form-label {
   color: var(--text-muted);
   font-size: 0.8125rem;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 .form-input,
@@ -457,8 +545,9 @@ ol {
   color: var(--text);
   padding: 9px 12px;
   transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
   width: 100%;
 }
 
@@ -471,7 +560,8 @@ ol {
 .form-select:focus,
 .form-textarea:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgb(59 130 246 / 20%);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  background: var(--surface-3);
   outline: none;
 }
 
@@ -599,13 +689,14 @@ tbody td {
    -------------------------------------------------------------------------- */
 .modal-backdrop {
   align-items: center;
-  background: rgb(0 0 0 / 60%);
+  background: rgba(0, 0, 0, 0.75);
   inset: 0;
   display: flex;
   justify-content: center;
   padding: 16px;
   position: fixed;
   z-index: 500;
+  backdrop-filter: blur(4px);
 }
 
 .modal-backdrop.hidden {
@@ -614,14 +705,20 @@ tbody td {
 
 .modal {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: 0 20px 60px rgb(0 0 0 / 50%);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg), 0 0 40px rgba(99, 102, 241, 0.08);
   display: flex;
   flex-direction: column;
   max-height: calc(100vh - 48px);
   max-width: 560px;
   width: 100%;
+  animation: modal-appear 0.2s ease both;
+}
+
+@keyframes modal-appear {
+  from { opacity: 0; transform: scale(0.96) translateY(-8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .modal-header {
@@ -630,14 +727,14 @@ tbody td {
   display: flex;
   gap: 12px;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 18px 22px;
 }
 
 .modal-header h2,
 .modal-header h3 {
   color: var(--text);
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .modal-close {
@@ -648,12 +745,12 @@ tbody td {
   color: var(--text-muted);
   cursor: pointer;
   display: flex;
-  height: 28px;
+  height: 30px;
   justify-content: center;
   transition:
     background 0.15s,
     color 0.15s;
-  width: 28px;
+  width: 30px;
 }
 
 .modal-close:hover {
@@ -663,7 +760,7 @@ tbody td {
 
 .modal-body {
   overflow-y: auto;
-  padding: 20px;
+  padding: 22px;
 }
 
 .modal-footer {
@@ -672,7 +769,7 @@ tbody td {
   display: flex;
   gap: 8px;
   justify-content: flex-end;
-  padding: 14px 20px;
+  padding: 14px 22px;
 }
 
 /* --------------------------------------------------------------------------
@@ -789,7 +886,7 @@ tbody td {
 .skeleton {
   background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 50%, var(--surface) 75%);
   background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
+  animation: shimmer 1.6s infinite;
   border-radius: var(--radius-sm);
   display: block;
 }
@@ -1624,13 +1721,14 @@ textarea:focus-visible {
    -------------------------------------------------------------------------- */
 .cmd-palette-overlay {
   align-items: flex-start;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   inset: 0;
   justify-content: center;
   padding-top: 15vh;
   position: fixed;
   z-index: 900;
+  backdrop-filter: blur(6px);
 }
 
 .cmd-palette-overlay.hidden {
@@ -1639,12 +1737,13 @@ textarea:focus-visible {
 
 .cmd-palette {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
-  max-width: 520px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg), 0 0 50px rgba(99, 102, 241, 0.15);
+  max-width: 540px;
   overflow: hidden;
   width: 100%;
+  animation: modal-appear 0.18s ease both;
 }
 
 .cmd-palette-input {
@@ -1652,9 +1751,9 @@ textarea:focus-visible {
   border: none;
   border-bottom: 1px solid var(--border);
   color: var(--text);
-  font-size: 1rem;
+  font-size: 1.0625rem;
   outline: none;
-  padding: 16px 20px;
+  padding: 18px 22px;
   width: 100%;
 }
 
@@ -1674,8 +1773,8 @@ textarea:focus-visible {
   display: flex;
   font-size: 0.9375rem;
   gap: 12px;
-  padding: 10px 20px;
-  transition: background 0.1s;
+  padding: 10px 22px;
+  transition: background 0.1s, color 0.1s;
 }
 
 .cmd-result:hover,
@@ -1693,7 +1792,7 @@ textarea:focus-visible {
 .cmd-palette-empty {
   color: var(--text-dim);
   font-size: 0.875rem;
-  padding: 24px 20px;
+  padding: 24px 22px;
   text-align: center;
 }
 
@@ -1703,7 +1802,7 @@ textarea:focus-visible {
   display: flex;
   font-size: 0.75rem;
   gap: 16px;
-  padding: 8px 20px;
+  padding: 10px 22px;
 }
 
 /* --------------------------------------------------------------------------
@@ -1715,11 +1814,12 @@ textarea:focus-visible {
   border-top: 1px solid var(--border);
   bottom: 0;
   display: none;
-  height: 56px;
+  height: 60px;
   left: 0;
   position: fixed;
   right: 0;
   z-index: 250;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .admin-bottom-nav-item {
@@ -1769,13 +1869,14 @@ textarea:focus-visible {
    -------------------------------------------------------------------------- */
 .confirm-dialog-overlay {
   align-items: center;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.75);
   display: flex;
   inset: 0;
   justify-content: center;
   padding: 16px;
   position: fixed;
   z-index: 800;
+  backdrop-filter: blur(4px);
 }
 
 .confirm-dialog-overlay.hidden {
@@ -1784,12 +1885,13 @@ textarea:focus-visible {
 
 .confirm-dialog {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   max-width: 420px;
-  padding: 24px;
+  padding: 28px;
   width: 100%;
+  animation: modal-appear 0.2s ease both;
 }
 
 .confirm-dialog-title {
@@ -2022,4 +2124,209 @@ textarea:focus-visible {
 .pagination-info {
   color: var(--text-muted);
   font-size: 0.8125rem;
+}
+
+/* --------------------------------------------------------------------------
+   31. Premium Enhancements — Glow effects, gradients, animations
+   -------------------------------------------------------------------------- */
+
+/* Gold glow on hover for tables */
+tbody tr:hover td {
+  color: var(--text);
+}
+
+/* Admin layout transition for sidebar collapse */
+.admin-layout {
+  transition: none;
+}
+
+/* Elevated focus ring */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Premium page transition */
+.main-area {
+  animation: fade-in 0.3s ease both;
+}
+
+@keyframes fade-in {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+/* Sidebar collapsed extras */
+.sidebar--collapsed .logo-text {
+  display: none;
+}
+
+.sidebar--collapsed .sidebar-footer .sidebar-user-email,
+.sidebar--collapsed .role-badge {
+  display: none;
+}
+
+/* Pill filter active state */
+.pill-filter:hover {
+  border-color: var(--primary);
+  color: var(--text);
+}
+
+.pill-filter.active {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Better table header */
+thead {
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+
+thead th {
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  padding: 10px 16px;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Shine effect on brand icon on login page */
+@keyframes brand-pulse {
+  0%, 100% { box-shadow: 0 4px 24px rgba(245, 158, 11, 0.4), 0 1px 3px rgba(0,0,0,0.3); }
+  50% { box-shadow: 0 4px 32px rgba(245, 158, 11, 0.7), 0 1px 3px rgba(0,0,0,0.3); }
+}
+
+/* Drawer premium */
+.drawer {
+  background: var(--surface);
+  border-left: 1px solid var(--border-light);
+  box-shadow: -12px 0 48px rgba(0, 0, 0, 0.5), -2px 0 8px rgba(0,0,0,0.3);
+}
+
+/* Improved user avatar */
+.user-avatar {
+  background: linear-gradient(135deg, var(--gold) 0%, #ef4444 100%);
+  box-shadow: 0 2px 8px rgba(245,158,11,0.35);
+}
+
+/* Improved notification badge */
+.notification-badge {
+  background: linear-gradient(135deg, var(--danger), #dc2626);
+  box-shadow: 0 0 8px var(--danger-glow);
+}
+
+/* Bottom nav items */
+.bottom-nav-item {
+  align-items: center;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  font-size: 0.65rem;
+  font-weight: 600;
+  gap: 2px;
+  justify-content: center;
+  padding: 4px 0;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.bottom-nav-item:hover,
+.bottom-nav-item.active {
+  color: var(--gold);
+}
+
+.bottom-nav-icon {
+  line-height: 1;
+}
+
+.bottom-nav-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+/* Admin access page PIN input styles */
+.pin-input-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.pin-digit {
+  width: 52px;
+  height: 60px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: var(--surface-2);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  caret-color: var(--gold);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-text-security: disc;
+}
+
+.pin-digit:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+  outline: none;
+}
+
+.pin-digit.filled {
+  border-color: var(--border-light);
+}
+
+/* Konami / Easter-egg admin access button (injected into main site footer) */
+.admin-secret-access {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  z-index: 9999;
+  background: linear-gradient(135deg, #080f1a, #0d1526);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 20px var(--gold-glow);
+  padding: 16px 20px;
+  max-width: 280px;
+  animation: access-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes access-pop {
+  from { opacity: 0; transform: scale(0.85) translateY(12px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.admin-secret-access.visible {
+  display: block;
+}
+
+/* Scrollbar styling for content areas */
+.content-area {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.content-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.content-area::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
 }

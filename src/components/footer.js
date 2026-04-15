@@ -112,7 +112,7 @@ export function injectFooter(lang = 'en', depth = 0) {
     ? 'قيم تقديرية مكافئة للسبيكة فقط. قد تختلف أسعار التجزئة والمجوهرات. ليست نصيحة مالية.'
     : 'Estimated bullion-equivalent values only. Retail and jewellery prices may differ. Not financial advice.'
 }</p>
-        <p class="footer-copy">© ${year} GoldPrices · <a href="${r('../terms.html')}">${isAr ? 'شروط الخدمة' : 'Terms'}</a> · <a href="${r('../privacy.html')}">${isAr ? 'الخصوصية' : 'Privacy'}</a></p>
+        <p class="footer-copy">© ${year} GoldPrices · <a href="${r('../terms.html')}">${isAr ? 'شروط الخدمة' : 'Terms'}</a> · <a href="${r('../privacy.html')}">${isAr ? 'الخصوصية' : 'Privacy'}</a> · <span class="footer-copy-trigger" id="footer-admin-trigger" aria-hidden="true" style="cursor:default;user-select:none">⚡</span></p>
       </div>
     </div>
   </div>
@@ -138,4 +138,135 @@ export function injectFooter(lang = 'en', depth = 0) {
       }
     }
   } catch (_) {}
+
+  // ── Admin Access Methods (Easter Eggs) ──────────────────────────────────────
+  // Method 3: Triple-click on ⚡ symbol in footer
+  // Method 4: Keyboard shortcut Ctrl+Shift+A
+  // Method 5: Konami code ↑↑↓↓←→←→BA
+  _initAdminAccessMethods(depth);
+}
+
+/**
+ * Computes the admin URL relative to the current page depth.
+ * @param {number} depth
+ * @returns {string}
+ */
+function _getAdminUrl(depth) {
+  if (depth === 0) return 'admin/login/';
+  return '../'.repeat(depth) + 'admin/login/';
+}
+
+/**
+ * Show admin quick-access popup then redirect.
+ * @param {string} adminUrl
+ */
+function _showAdminPopup(adminUrl) {
+  // Don't show if already on an admin page
+  if (window.location.pathname.includes('/admin/')) return;
+
+  let popup = document.getElementById('gp-admin-secret-popup');
+  if (popup) { popup.remove(); }
+
+  popup = document.createElement('div');
+  popup.id = 'gp-admin-secret-popup';
+  popup.setAttribute('role', 'dialog');
+  popup.setAttribute('aria-label', 'Admin panel access');
+  popup.style.cssText = [
+    'position:fixed',
+    'bottom:80px',
+    'right:20px',
+    'z-index:99999',
+    'background:linear-gradient(135deg,#0a1628,#0d1526)',
+    'border:1px solid rgba(245,158,11,0.55)',
+    'border-radius:16px',
+    'box-shadow:0 12px 48px rgba(0,0,0,0.7),0 0 30px rgba(245,158,11,0.12)',
+    'padding:20px 24px',
+    'max-width:280px',
+    'animation:gp-admin-pop 0.3s cubic-bezier(0.34,1.56,0.64,1) both',
+    'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
+  ].join(';');
+
+  popup.innerHTML = `
+    <style>
+      @keyframes gp-admin-pop {
+        from { opacity:0; transform:scale(0.82) translateY(14px); }
+        to   { opacity:1; transform:scale(1) translateY(0); }
+      }
+    </style>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <span style="font-size:22px;line-height:1">⚙️</span>
+      <strong style="color:#f1f5f9;font-size:0.9375rem;letter-spacing:-0.01em">GoldAdmin</strong>
+      <button id="gp-admin-popup-close" style="margin-left:auto;background:none;border:none;color:#64748b;cursor:pointer;font-size:18px;line-height:1;padding:0" aria-label="Close">✕</button>
+    </div>
+    <p style="color:#8ba3c7;font-size:0.8125rem;line-height:1.5;margin-bottom:14px">
+      Admin panel access detected. Click below to sign in.
+    </p>
+    <a href="${adminUrl}" style="display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#0f172a;font-weight:700;font-size:0.875rem;border-radius:8px;padding:10px 16px;text-decoration:none;justify-content:center;box-shadow:0 2px 12px rgba(245,158,11,0.3)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Open Admin Panel
+    </a>`;
+
+  document.body.appendChild(popup);
+
+  const closeBtn = document.getElementById('gp-admin-popup-close');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => popup.remove());
+  }
+
+  // Auto-close after 8 seconds
+  setTimeout(() => { if (popup.parentNode) popup.remove(); }, 8000);
+
+  // Close on click outside
+  setTimeout(() => {
+    document.addEventListener('click', function onDocClick(e) {
+      if (!popup.contains(e.target)) {
+        popup.remove();
+        document.removeEventListener('click', onDocClick);
+      }
+    });
+  }, 300);
+}
+
+function _initAdminAccessMethods(depth) {
+  const adminUrl = _getAdminUrl(depth);
+
+  // Method 3: Triple-click on ⚡ footer trigger
+  const trigger = document.getElementById('footer-admin-trigger');
+  if (trigger) {
+    let clicks = 0;
+    let clickTimer;
+    trigger.addEventListener('click', () => {
+      clicks++;
+      clearTimeout(clickTimer);
+      if (clicks >= 3) {
+        clicks = 0;
+        _showAdminPopup(adminUrl);
+      } else {
+        clickTimer = setTimeout(() => { clicks = 0; }, 600);
+      }
+    });
+  }
+
+  // Method 4: Keyboard shortcut Ctrl+Shift+A
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'A') {
+      e.preventDefault();
+      _showAdminPopup(adminUrl);
+    }
+  });
+
+  // Method 5: Konami code ↑↑↓↓←→←→BA
+  const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  let konamiIdx = 0;
+  document.addEventListener('keydown', (e) => {
+    if (e.key === KONAMI[konamiIdx]) {
+      konamiIdx++;
+      if (konamiIdx === KONAMI.length) {
+        konamiIdx = 0;
+        _showAdminPopup(adminUrl);
+      }
+    } else {
+      konamiIdx = e.key === KONAMI[0] ? 1 : 0;
+    }
+  });
 }

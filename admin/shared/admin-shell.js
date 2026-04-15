@@ -23,48 +23,62 @@ import { ICONS } from './icons.js';
 import { initCommandPalette } from './admin-utils.js';
 
 // ── Chevron SVGs for collapse button ────────────────────────────────────────
-const CHEVRON_LEFT = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>`;
-const CHEVRON_RIGHT = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>`;
+const CHEVRON_LEFT = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>`;
+const CHEVRON_RIGHT = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>`;
 
 const SIDEBAR_COLLAPSED_KEY = 'gp_admin_sidebar_collapsed';
 
-// ── Nav items ────────────────────────────────────────────────────────────────
-const NAV_ITEMS = [
-  { iconKey: 'dashboard', label: 'Dashboard', slug: '' },
-  { iconKey: 'shops',     label: 'Shops',     slug: 'shops' },
-  { iconKey: 'pricing',   label: 'Pricing',   slug: 'pricing' },
-  { iconKey: 'orders',    label: 'Orders',    slug: 'orders' },
-  { iconKey: 'content',   label: 'Content',   slug: 'content' },
-  { iconKey: 'social',    label: 'Social',    slug: 'social' },
-  { iconKey: 'settings',  label: 'Settings',  slug: 'settings' },
-  { iconKey: 'analytics', label: 'Analytics', slug: 'analytics' },
+// ── Nav items (grouped) ──────────────────────────────────────────────────────
+const NAV_GROUPS = [
+  {
+    label: 'Overview',
+    items: [
+      { iconKey: 'dashboard', label: 'Dashboard', slug: '' },
+      { iconKey: 'analytics', label: 'Analytics', slug: 'analytics' },
+    ],
+  },
+  {
+    label: 'Commerce',
+    items: [
+      { iconKey: 'shops',   label: 'Shops',   slug: 'shops' },
+      { iconKey: 'pricing', label: 'Pricing', slug: 'pricing' },
+      { iconKey: 'orders',  label: 'Orders',  slug: 'orders' },
+    ],
+  },
+  {
+    label: 'Content',
+    items: [
+      { iconKey: 'content', label: 'Content', slug: 'content' },
+      { iconKey: 'social',  label: 'Social',  slug: 'social' },
+    ],
+  },
+  {
+    label: 'System',
+    items: [
+      { iconKey: 'settings', label: 'Settings', slug: 'settings' },
+    ],
+  },
 ];
+
+// Flat list for command palette / breadcrumb
+const NAV_ITEMS = NAV_GROUPS.flatMap(g => g.items);
 
 // Bottom nav shows the four most-used sections + a More button
 const BOTTOM_NAV_ITEMS = [
-  { iconKey: 'dashboard', label: 'Dashboard', slug: '' },
-  { iconKey: 'shops',     label: 'Shops',     slug: 'shops' },
-  { iconKey: 'orders',    label: 'Orders',    slug: 'orders' },
-  { iconKey: 'social',    label: 'Social',    slug: 'social' },
+  { iconKey: 'dashboard', label: 'Home', slug: '' },
+  { iconKey: 'shops',     label: 'Shops', slug: 'shops' },
+  { iconKey: 'orders',    label: 'Orders', slug: 'orders' },
+  { iconKey: 'analytics', label: 'Stats', slug: 'analytics' },
 ];
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-/**
- * Compute the admin base path from the current URL.
- * Supports both GitHub Pages (/Gold-Prices/admin/) and custom domains (/admin/).
- * @returns {string} e.g. "/Gold-Prices/admin/" or "/admin/"
- */
 function getAdminBase() {
   const path = window.location.pathname;
   const match = path.match(/^(.*\/admin\/)/);
   return match ? match[1] : '/admin/';
 }
 
-/**
- * Determine which nav slug is active based on the current URL.
- * @returns {string} slug ('' for dashboard, 'shops' for shops, etc.)
- */
 function getActiveSlug() {
   const path = window.location.pathname;
   const base = getAdminBase();
@@ -72,56 +86,58 @@ function getActiveSlug() {
   return remainder;
 }
 
-/** Strip HTML tags from a string — used only for plain-text representations. */
 function stripHtml(html) {
   return html.replace(/<[^>]*>|\s+/g, ' ').trim();
 }
 
 // ── Sidebar HTML builder ─────────────────────────────────────────────────────
 
-/**
- * Build the inner HTML for the sidebar <aside>.
- * @param {string} adminBase — e.g. "/Gold-Prices/admin/"
- * @param {string} activeSlug — e.g. "shops" or ""
- * @returns {string}
- */
 function buildSidebarHTML(adminBase, activeSlug) {
-  const navLinks = NAV_ITEMS.map((item) => {
-    const href = adminBase + (item.slug ? item.slug + '/' : '');
-    const isActive = item.slug === activeSlug;
-    const cls = 'nav-link' + (isActive ? ' active' : '');
-    const aria = isActive ? ' aria-current="page"' : '';
-    // Orders link gets a badge placeholder for pending count
-    const badge = item.slug === 'orders'
-      ? '<span class="notification-badge" id="orders-badge" aria-label="pending orders count" style="display:none"></span>'
-      : '';
-    return `<a class="${cls}" href="${href}"${aria}><span class="nav-icon">${ICONS[item.iconKey]}</span><span class="nav-label">${item.label}</span>${badge}</a>`;
+  const navSections = NAV_GROUPS.map(group => {
+    const links = group.items.map((item) => {
+      const href = adminBase + (item.slug ? item.slug + '/' : '');
+      const isActive = item.slug === activeSlug;
+      const cls = 'nav-link' + (isActive ? ' active' : '');
+      const aria = isActive ? ' aria-current="page"' : '';
+      const badge = item.slug === 'orders'
+        ? '<span class="notification-badge" id="orders-badge" aria-label="pending orders count" style="display:none;margin-left:auto"></span>'
+        : '';
+      return `<a class="${cls}" href="${href}"${aria}><span class="nav-icon">${ICONS[item.iconKey]}</span><span class="nav-label">${item.label}</span>${badge}</a>`;
+    }).join('\n          ');
+
+    return `<div class="nav-section-label" aria-hidden="true">${group.label}</div>
+          ${links}`;
   }).join('\n          ');
 
   return `
         <div class="sidebar-header">
-          <span class="logo-icon" aria-hidden="true">⚙</span>
+          <span class="logo-icon" aria-hidden="true">✦</span>
           <span class="logo-text">GoldAdmin</span>
           <button class="sidebar-collapse-btn" id="sidebar-collapse-btn" title="Collapse sidebar" aria-label="Collapse sidebar">${CHEVRON_LEFT}</button>
         </div>
 
         <nav class="sidebar-nav" aria-label="Main menu">
-          ${navLinks}
+          ${navSections}
         </nav>
 
         <div class="sidebar-footer">
           <div class="sidebar-user-row" id="sidebar-user"
                style="display:flex;align-items:center;gap:8px;padding:0 0 10px;border-bottom:1px solid var(--border);margin-bottom:10px">
-            <div class="user-avatar" id="sidebar-avatar">?</div>
+            <div class="user-avatar" id="sidebar-avatar" style="width:32px;height:32px;font-size:0.875rem">?</div>
             <div style="min-width:0;flex:1">
               <div class="sidebar-user-email" id="sidebar-email"
-                   style="font-size:0.8125rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
+                   style="font-size:0.8rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
               <div class="role-badge role-badge--admin" style="display:inline-block;margin-top:2px">admin</div>
             </div>
           </div>
-          <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">
-            <span class="nav-icon">${ICONS.logout}</span><span class="nav-label"> Sign Out</span>
-          </button>
+          <div style="display:flex;gap:4px">
+            <a href="${adminBase}" class="btn btn-ghost btn-sm" style="flex:1;font-size:0.78rem;justify-content:center" title="Dashboard">
+              <span class="nav-icon" style="opacity:0.6">${ICONS.dashboard}</span><span class="nav-label">Home</span>
+            </a>
+            <button class="btn btn-ghost btn-sm" id="logout-btn" type="button" style="flex:1;font-size:0.78rem" title="Sign Out">
+              <span class="nav-icon" style="opacity:0.6">${ICONS.logout}</span><span class="nav-label">Sign Out</span>
+            </button>
+          </div>
         </div>`;
 }
 
@@ -156,14 +172,8 @@ function injectBottomNav(adminBase, activeSlug, openSidebarFn) {
 
 // ── Breadcrumb ───────────────────────────────────────────────────────────────
 
-/**
- * Render a breadcrumb nav after the page-header element.
- * Pass no pageName (or undefined) to skip rendering (e.g. Dashboard).
- * @param {string} [pageName]
- */
 export function renderBreadcrumb(pageName) {
   if (!pageName) return;
-  // Accept array [{label, href?}, ...] or plain string
   const crumbs = Array.isArray(pageName)
     ? pageName
     : [{ label: String(pageName) }];
@@ -180,7 +190,6 @@ export function renderBreadcrumb(pageName) {
     header.insertAdjacentElement('afterend', bc);
   }
 
-  // Build trail: "GoldAdmin > [crumb1] > ... > currentPage"
   const parts = [`<a href="${adminBase}">GoldAdmin</a>`];
   crumbs.forEach((c, i) => {
     parts.push(`<span class="breadcrumb-sep" aria-hidden="true">›</span>`);
@@ -195,14 +204,6 @@ export function renderBreadcrumb(pageName) {
 
 // ── Main init function ───────────────────────────────────────────────────────
 
-/**
- * Initialise the admin shell: populate sidebar, wire events, show user info.
- *
- * @param {object} opts
- * @param {() => Promise<void>} opts.logout — supabase logout function
- * @param {() => Promise<object|null>} opts.getSession — returns current session
- * @param {string} [opts.loginPath] — override login redirect (auto-computed if omitted)
- */
 export async function initAdminShell({ logout, getSession, loginPath } = {}) {
   const adminBase = getAdminBase();
   const activeSlug = getActiveSlug();
@@ -230,7 +231,6 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
     }
   }
 
-  // Restore persisted state
   try {
     const saved = localStorage.getItem(SIDEBAR_COLLAPSED_KEY);
     if (saved === 'true') setCollapsed(true);
@@ -282,6 +282,8 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
   const logoutBtn = document.getElementById('logout-btn');
   if (logoutBtn && logout) {
     logoutBtn.addEventListener('click', async () => {
+      logoutBtn.textContent = 'Signing out…';
+      logoutBtn.disabled = true;
       await logout();
       window.location.replace(login);
     });
@@ -304,13 +306,12 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
         }
       }
     } catch {
-      // Non-critical — user info display is a nice-to-have
+      // Non-critical
     }
   }
 
   // ── Pending orders badge ─────────────────────────────────
   try {
-    // Dynamically import to avoid hard dependency if supabase-auth is missing
     const { getSupabase } = await import('../supabase-auth.js');
     const sb = getSupabase();
     if (sb) {
@@ -327,7 +328,7 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
       }
     }
   } catch {
-    // Non-critical — badge is a nice-to-have
+    // Non-critical
   }
 
   // ── Command palette ──────────────────────────────────────
