@@ -1709,6 +1709,7 @@
       }
 
       // ── Auto-save ──────────────────────────────────────────
+      // 2-second debounce: saves shortly after the user stops typing (not on every keystroke)
       function scheduleAutoSave() {
         clearTimeout(autoSaveTimer);
         autoSaveTimer = setTimeout(async () => {

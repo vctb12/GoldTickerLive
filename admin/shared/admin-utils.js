@@ -24,7 +24,14 @@ export function showToast(message, type = 'info') {
   const toast = document.createElement('div');
   toast.className = `toast ${TOAST_TYPES[type] || TOAST_TYPES.info}`;
   toast.setAttribute('role', 'alert');
-  toast.innerHTML = `<span class="toast-icon" aria-hidden="true">${TOAST_ICONS[type] || TOAST_ICONS.info}</span><span>${message}</span>`;
+  const iconSpan = document.createElement('span');
+  iconSpan.className = 'toast-icon';
+  iconSpan.setAttribute('aria-hidden', 'true');
+  iconSpan.innerHTML = TOAST_ICONS[type] || TOAST_ICONS.info; // icons are trusted constants
+  const msgSpan = document.createElement('span');
+  msgSpan.textContent = message; // sanitize message via textContent
+  toast.appendChild(iconSpan);
+  toast.appendChild(msgSpan);
   container.appendChild(toast);
   setTimeout(() => {
     toast.classList.add('toast-hide');

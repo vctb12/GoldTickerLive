@@ -19,6 +19,8 @@
     <style>
       body {
         align-items: center;
+        background-color: var(--bg, #0f172a);
+        background-image: radial-gradient(ellipse at 60% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 60%);
         display: flex;
         justify-content: center;
         min-height: 100vh;
@@ -26,8 +28,14 @@
       }
 
       .login-wrap {
+        animation: login-fadeup 0.4s ease both;
         width: 100%;
         max-width: 400px;
+      }
+
+      @keyframes login-fadeup {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
       }
 
       .login-brand {
@@ -41,29 +49,37 @@
 
       .brand-icon {
         align-items: center;
-        background: linear-gradient(135deg, #f59e0b, #d97706);
-        border-radius: 14px;
-        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 60%, #b45309 100%);
+        border-radius: 18px;
+        box-shadow: 0 4px 24px rgba(245, 158, 11, 0.4), 0 1px 3px rgba(0,0,0,0.3);
         color: #0f172a;
         display: flex;
-        font-size: 28px;
-        height: 60px;
+        font-size: 30px;
+        height: 64px;
         justify-content: center;
-        width: 60px;
+        width: 64px;
+        transition: box-shadow 0.2s;
       }
 
       .brand-name {
         color: var(--text);
-        font-size: 1.25rem;
-        font-weight: 700;
-        letter-spacing: 0.04em;
+        font-size: 1.375rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+      }
+
+      .brand-tagline {
+        color: var(--text-muted);
+        font-size: 0.8125rem;
+        margin-top: -4px;
       }
 
       .login-card {
         background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 32px;
+        border-radius: calc(var(--radius) + 4px);
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.15);
+        padding: 36px;
       }
 
       .login-card h1 {
@@ -77,6 +93,12 @@
         color: var(--text-muted);
         font-size: 0.875rem;
         margin-bottom: 28px;
+      }
+
+      .login-divider {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 24px 0;
       }
 
       .login-alert {
@@ -129,16 +151,23 @@
         font-weight: 600;
         gap: 10px;
         justify-content: center;
-        padding: 12px 20px;
+        padding: 13px 20px;
         transition:
           background 0.15s,
-          border-color 0.15s;
+          border-color 0.15s,
+          box-shadow 0.15s;
         width: 100%;
       }
 
       .btn-github:hover {
         background: #2d333b;
         border-color: #768390;
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+      }
+
+      .btn-github:focus-visible {
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.4);
+        outline: none;
       }
 
       .btn-github:disabled {
@@ -160,7 +189,10 @@
       }
 
       .spinner {
+        align-items: center;
         display: none;
+        gap: 8px;
+        justify-content: center;
         margin: 16px auto;
         text-align: center;
         color: var(--text-muted);
@@ -168,7 +200,39 @@
       }
 
       .spinner.visible {
-        display: block;
+        display: flex;
+      }
+
+      .spinner-ring {
+        animation: spin 0.8s linear infinite;
+        border: 2px solid var(--border);
+        border-top-color: var(--primary, #3b82f6);
+        border-radius: 50%;
+        flex-shrink: 0;
+        height: 16px;
+        width: 16px;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      .login-features {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
+
+      .login-feature-pill {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        padding: 3px 10px;
+        white-space: nowrap;
       }
     </style>
   </head>
@@ -194,13 +258,14 @@
 
     <div class="login-wrap">
       <div class="login-brand">
-        <div class="brand-icon" aria-hidden="true">⚙</div>
+        <div class="brand-icon" aria-hidden="true">✦</div>
         <span class="brand-name">GoldAdmin</span>
+        <span class="brand-tagline">Gold Prices Admin Panel</span>
       </div>
 
       <div class="login-card">
-        <h1>Admin Login</h1>
-        <p class="login-sub">Gold Prices Admin Panel</p>
+        <h1>Welcome back</h1>
+        <p class="login-sub">Sign in to manage your gold prices platform.</p>
 
         <div class="login-alert login-alert--error" id="login-error" role="alert"></div>
         <div class="login-alert login-alert--denied" id="login-denied" role="alert">
@@ -219,12 +284,22 @@
               d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
             />
           </svg>
-          Sign in with GitHub
+          Continue with GitHub
         </button>
 
-        <div class="spinner" id="login-spinner">Checking authentication…</div>
+        <div class="spinner" id="login-spinner">
+          <span class="spinner-ring" aria-hidden="true"></span>
+          Checking authentication…
+        </div>
 
-        <p class="login-help">Admin-only · Authenticated via GitHub + Supabase</p>
+        <hr class="login-divider" />
+
+        <div class="login-features">
+          <span class="login-feature-pill">🔒 GitHub OAuth</span>
+          <span class="login-feature-pill">☁️ Supabase auth</span>
+          <span class="login-feature-pill">👤 Admin-only</span>
+        </div>
+        <p class="login-help">Access restricted to authorised administrators only.</p>
       </div>
     </div>
 

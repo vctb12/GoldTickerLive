@@ -1324,15 +1324,15 @@
             await renderOverridesTable();
             return;
           }
-          const updated = { ...ov };
+          let dbPatch;
           if (field === 'overridePrice') {
             const num = parseFloat(newVal);
             if (isNaN(num) || num < 0) { showToast('Invalid price value.', 'warning'); await renderOverridesTable(); return; }
-            updated.overridePrice = num;
+            dbPatch = { override_price: num };
           } else {
-            updated.reason = newVal;
+            dbPatch = { reason: newVal };
           }
-          await updateOverride(id, field === 'overridePrice' ? { override_price: num } : { reason: newVal });
+          await updateOverride(id, dbPatch);
           await renderOverridesTable();
           renderLiveTable();
           showToast('Override updated.', 'success');

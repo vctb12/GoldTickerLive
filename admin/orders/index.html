@@ -1069,9 +1069,9 @@
               : '';
             const isSelected = selectedIds.has(o.id);
 
-            return `<tr data-id="${o.id}" tabindex="0" role="row" aria-label="Order ${o.id}"${isSelected ? ' class="row-selected"' : ''}>
-          <td class="chk-td"><input type="checkbox" class="row-chk" data-id="${o.id}" aria-label="Select order ${o.id}"${isSelected ? ' checked' : ''} /></td>
-          <td class="order-id-cell"><strong>${o.id}</strong></td>
+            return `<tr data-id="${escHtml(o.id)}" tabindex="0" role="row" aria-label="Order ${escHtml(o.id)}"${isSelected ? ' class="row-selected"' : ''}>
+          <td class="chk-td"><input type="checkbox" class="row-chk" data-id="${escHtml(o.id)}" aria-label="Select order ${escHtml(o.id)}"${isSelected ? ' checked' : ''} /></td>
+          <td class="order-id-cell"><strong>${escHtml(o.id)}</strong></td>
           <td>${formatDate(o.createdAt)}</td>
           <td><div class="customer-cell">
             <span class="customer-name">${escHtml(o.customer?.name || '—')}</span>
@@ -1080,9 +1080,9 @@
           <td class="items-summary">${escHtml(itemsSummary(o.items))}</td>
           <td class="total-cell">${formatAed(o.pricing?.total)}</td>
           <td>${badgeHtml(o.status)}</td>
-          <td class="actions-td"><div class="row-actions" role="group" aria-label="Actions for ${o.id}">
-            <button class="btn-icon view-btn" data-id="${o.id}" aria-label="View order ${o.id}" title="View details" type="button">${ICONS.eye}</button>
-            ${hasPhone ? `<a class="btn-icon btn-icon-success" href="${waHref}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp ${escHtml(o.customer?.name || '')}" title="Contact via WhatsApp">${ICONS.externalLink}</a>` : ''}
+          <td class="actions-td"><div class="row-actions" role="group" aria-label="Actions for ${escHtml(o.id)}">
+            <button class="btn-icon view-btn" data-id="${escHtml(o.id)}" aria-label="View order ${escHtml(o.id)}" title="View details" type="button">${ICONS.eye}</button>
+            ${hasPhone ? `<a class="btn-icon btn-icon-success" href="${escHtml(waHref)}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp ${escHtml(o.customer?.name || '')}" title="Contact via WhatsApp">${ICONS.externalLink}</a>` : ''}
           </div></td>
         </tr>`;
           })
@@ -1180,7 +1180,7 @@
             </div>
             <div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;">
               <input class="form-input" id="drawer-status-note" type="text" placeholder="Add a note (optional)" style="flex:1;" aria-label="Status note" />
-              <button class="btn btn-primary btn-sm" id="drawer-update-status-btn" data-id="${o.id}" type="button">Update Status</button>
+              <button class="btn btn-primary btn-sm" id="drawer-update-status-btn" data-id="${escHtml(o.id)}" type="button">Update Status</button>
             </div>
           </div>`
           : `<p style="color:var(--text-dim);font-size:0.8125rem;margin-top:4px;">No further status transitions available.</p>`;
@@ -1193,8 +1193,8 @@
             <div class="detail-item"><div class="detail-label">Status</div><div class="detail-value">${badgeHtml(o.status)}</div></div>
             <div class="detail-item"><div class="detail-label">Created</div><div class="detail-value">${formatDatetime(o.createdAt)}</div></div>
             <div class="detail-item"><div class="detail-label">Last Updated</div><div class="detail-value">${formatDatetime(o.updatedAt)}</div></div>
-            <div class="detail-item"><div class="detail-label">Gold Spot at Order</div><div class="detail-value">USD ${o.goldSpotAtOrder != null ? Number(o.goldSpotAtOrder).toLocaleString('en-US', { minimumFractionDigits: 2 }) : '—'}/oz</div></div>
-            <div class="detail-item"><div class="detail-label">FX Rate at Order</div><div class="detail-value">1 USD = ${o.fxRateAtOrder != null ? o.fxRateAtOrder : '—'} AED</div></div>
+            <div class="detail-item"><div class="detail-label">Gold Spot at Order</div><div class="detail-value">USD ${o.goldSpotAtOrder != null ? escHtml(Number(o.goldSpotAtOrder).toLocaleString('en-US', { minimumFractionDigits: 2 })) : '—'}/oz</div></div>
+            <div class="detail-item"><div class="detail-label">FX Rate at Order</div><div class="detail-value">1 USD = ${escHtml(o.fxRateAtOrder != null ? String(o.fxRateAtOrder) : '—')} AED</div></div>
           </div>
         </div>
 
