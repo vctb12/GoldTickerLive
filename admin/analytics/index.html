@@ -231,34 +231,14 @@
           )
             window.location.replace('../login/');
         } catch (e) {
-          window.location.replace('../login/');
+          // On storage error, let the async guard handle it
         }
       })();
     </script>
 
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
       <!-- Sidebar -->
-      <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
-        <div class="sidebar-header">
-          <span class="logo-icon" aria-hidden="true">⚙</span>
-          <span class="logo-text">GoldAdmin</span>
-        </div>
-        <nav class="sidebar-nav" aria-label="Main menu">
-          <a href="../" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a>
-          <a href="../shops/" class="nav-link"><span class="nav-icon">🏪</span> Shops</a>
-          <a href="../pricing/" class="nav-link"><span class="nav-icon">💰</span> Pricing</a>
-          <a href="../orders/" class="nav-link"><span class="nav-icon">📦</span> Orders</a>
-          <a href="../content/" class="nav-link"><span class="nav-icon">📝</span> Content</a>
-          <a href="../social/" class="nav-link"><span class="nav-icon">📱</span> Social</a>
-          <a href="../settings/" class="nav-link"><span class="nav-icon">⚙</span> Settings</a>
-          <a href="../analytics/" class="nav-link"><span class="nav-icon">📈</span> Analytics</a>
-        </nav>
-        <div class="sidebar-footer">
-          <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">
-            ↩ Sign Out
-          </button>
-        </div>
-      </aside>
+      <aside class="sidebar" id="sidebar" aria-label="Admin navigation"></aside>
 
       <!-- Main area -->
       <div class="main-area">
@@ -286,10 +266,12 @@
     <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
     <script type="module">
-      import { logout as supabaseLogout, requireAuth, getSupabase } from '../supabase-auth.js';
+      import { logout as supabaseLogout, requireAuth, getSupabase, getSession } from '../supabase-auth.js';
+      import { initAdminShell } from '../shared/admin-shell.js';
 
       // ── Auth guard ──────────────────────────────────────────
       if (!(await requireAuth())) throw new Error('redirect');
+      await initAdminShell({ logout: supabaseLogout, getSession });
 
       const EVENTS_KEY = 'gp_analytics_events';
       const API_LOG_KEY = 'gp_api_call_log';
@@ -712,26 +694,6 @@
 
       /* ── Init ───────────────────────────────────────────────── */
       async function init() {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-        document.getElementById('sidebar-toggle').addEventListener('click', () => {
-          sidebar.classList.toggle('sidebar--open');
-          overlay.classList.toggle('sidebar-overlay--visible');
-        });
-        overlay.addEventListener('click', () => {
-          sidebar.classList.remove('sidebar--open');
-          overlay.classList.remove('sidebar-overlay--visible');
-        });
-
-        document.getElementById('logout-btn').addEventListener('click', async () => {
-          await supabaseLogout();
-          window.location.replace('../login/');
-        });
-
-        document.querySelectorAll('.nav-link').forEach((a) => {
-          if (location.href.includes(a.href.split('/Gold-Prices').pop())) a.classList.add('active');
-        });
-
         await renderPage();
       }
 

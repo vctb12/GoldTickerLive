@@ -175,7 +175,7 @@
     </style>
   </head>
   <body>
-    <!-- Flash prevention: redirect to login if no token present -->
+    <!-- Auth: hide page until session is verified (async requireAuth handles redirect) -->
     <script>
       (function () {
         try {
@@ -184,14 +184,15 @@
           if (window.location.hash && window.location.hash.includes('access_token')) return;
 
           var k = Object.keys(localStorage);
-          if (
-            !k.some(function (x) {
-              return x.startsWith('sb-') && x.endsWith('-auth-token');
-            })
-          )
+          var hasToken = k.some(function (x) {
+            return x.startsWith('sb-') && x.endsWith('-auth-token');
+          });
+          if (!hasToken) {
+            // No session token at all — safe to redirect immediately
             window.location.replace('./login/');
+          }
         } catch (e) {
-          window.location.replace('./login/');
+          // On storage error, let the async guard handle it
         }
       })();
     </script>
@@ -200,68 +201,8 @@
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
     <div class="admin-layout">
-      <!-- ── Sidebar ──────────────────────────────────────────── -->
-      <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
-        <div class="sidebar-header">
-          <span class="logo-icon" aria-hidden="true">⚙</span>
-          <span class="logo-text">GoldAdmin</span>
-        </div>
-
-        <nav class="sidebar-nav" aria-label="Main menu">
-          <a class="nav-link" href="./" data-path="/Gold-Prices/admin/">
-            <span class="nav-icon">🏠</span> Dashboard
-          </a>
-          <a class="nav-link" href="./shops/" data-path="/Gold-Prices/admin/shops/">
-            <span class="nav-icon">🏪</span> Shops
-          </a>
-          <a class="nav-link" href="./pricing/" data-path="/Gold-Prices/admin/pricing/">
-            <span class="nav-icon">💰</span> Pricing
-          </a>
-          <a class="nav-link" href="./orders/" data-path="/Gold-Prices/admin/orders/">
-            <span class="nav-icon">📦</span> Orders
-          </a>
-          <a class="nav-link" href="./content/" data-path="/Gold-Prices/admin/content/">
-            <span class="nav-icon">📝</span> Content
-          </a>
-          <a class="nav-link" href="./social/" data-path="/Gold-Prices/admin/social/">
-            <span class="nav-icon">📣</span> Social
-          </a>
-          <a class="nav-link" href="./settings/" data-path="/Gold-Prices/admin/settings/">
-            <span class="nav-icon">⚙️</span> Settings
-          </a>
-          <a class="nav-link" href="./analytics/" data-path="/Gold-Prices/admin/analytics/">
-            <span class="nav-icon">📊</span> Analytics
-          </a>
-        </nav>
-
-        <div class="sidebar-footer">
-          <div
-            class="sidebar-user"
-            id="sidebar-user"
-            style="
-              display: none;
-              padding: 0 0 10px;
-              border-bottom: 1px solid var(--border);
-              margin-bottom: 10px;
-            "
-          >
-            <div
-              style="
-                font-size: 0.8125rem;
-                color: var(--text-muted);
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-              "
-              id="sidebar-email"
-            ></div>
-            <span class="role-badge" id="sidebar-role-badge"></span>
-          </div>
-          <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">
-            <span aria-hidden="true">🚪</span> Sign Out
-          </button>
-        </div>
-      </aside>
+      <!-- ── Sidebar (injected by admin-shell.js) ───────────────── -->
+      <aside class="sidebar" id="sidebar" aria-label="Admin navigation"></aside>
 
       <!-- ── Main area ────────────────────────────────────────── -->
       <div class="main-area">
@@ -457,9 +398,13 @@
       import { logout as supabaseLogout, requireAuth, getSession, getSupabase } from './supabase-auth.js';
       import { ALLOWED_EMAIL } from './supabase-config.js';
       import { CONSTANTS } from '../config/constants.js';
+      import { initAdminShell } from './shared/admin-shell.js';
 
       // ── Auth guard: verify session + email ──────────────────
       if (!(await requireAuth('./login/'))) throw new Error('redirect');
+
+      // ── Initialise shared sidebar / shell ───────────────────
+      await initAdminShell({ logout: supabaseLogout, getSession });
 
       const API_GOLD_URL = CONSTANTS.API_GOLD_URL;
       const API_FX_URL = CONSTANTS.API_FX_URL;
@@ -526,54 +471,11 @@
         });
       }
 
-      // ── Offline / online banner ──────────────────────────────
-      // (no backend — removed offline event listeners)
-
-      // ── Active nav link ──────────────────────────────────────
-      const currentPath = window.location.pathname.replace(/\/+$/, '') + '/';
-      document.querySelectorAll('.nav-link[data-path]').forEach((a) => {
-        const p = a.dataset.path.replace(/\/+$/, '') + '/';
-        if (currentPath === p || (p.endsWith('/admin/') && currentPath.endsWith('/admin/'))) {
-          a.classList.add('active');
-          a.setAttribute('aria-current', 'page');
-        }
-      });
-
-      // ── Sidebar mobile toggle ────────────────────────────────
-      const sidebar = qs('#sidebar');
-      const sidebarOverlay = qs('#sidebar-overlay');
-      qs('#sidebar-toggle').addEventListener('click', () => {
-        sidebar.classList.toggle('sidebar--open');
-        sidebarOverlay.classList.toggle('sidebar-overlay--visible');
-      });
-      sidebarOverlay.addEventListener('click', () => {
-        sidebar.classList.remove('sidebar--open');
-        sidebarOverlay.classList.remove('sidebar-overlay--visible');
-      });
-
-      // ── Logout ───────────────────────────────────────────────
-      qs('#logout-btn').addEventListener('click', async () => {
-        await supabaseLogout();
-        window.location.replace('./login/');
-      });
-
-      // ── Show user info from Supabase session ─────────────────
+      // ── Show user in stat card ───────────────────────────────
       async function loadUserInfo() {
         const session = await getSession();
         if (!session) return;
         const user = session.user;
-        const emailEl = qs('#sidebar-email');
-        const badgeEl = qs('#sidebar-role-badge');
-        const userEl = qs('#sidebar-user');
-        if (emailEl && user?.email) {
-          emailEl.textContent = user.email;
-          if (badgeEl) {
-            badgeEl.textContent = 'admin';
-            badgeEl.className = 'role-badge role-badge--admin';
-          }
-          if (userEl) userEl.style.display = '';
-        }
-        // Also update the stat card
         qs('#stat-user').textContent = user?.email || '—';
         qs('#stat-user-sub').textContent = 'admin · authenticated via GitHub';
       }
