@@ -19,16 +19,33 @@
  *   </div>
  */
 
+import { ICONS } from './icons.js';
+import { initCommandPalette } from './admin-utils.js';
+
+// ── Chevron SVGs for collapse button ────────────────────────────────────────
+const CHEVRON_LEFT = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>`;
+const CHEVRON_RIGHT = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>`;
+
+const SIDEBAR_COLLAPSED_KEY = 'gp_admin_sidebar_collapsed';
+
 // ── Nav items ────────────────────────────────────────────────────────────────
 const NAV_ITEMS = [
-  { icon: '🏠', label: 'Dashboard', slug: '' },
-  { icon: '🏪', label: 'Shops', slug: 'shops' },
-  { icon: '💰', label: 'Pricing', slug: 'pricing' },
-  { icon: '📦', label: 'Orders', slug: 'orders' },
-  { icon: '📝', label: 'Content', slug: 'content' },
-  { icon: '📣', label: 'Social', slug: 'social' },
-  { icon: '⚙️', label: 'Settings', slug: 'settings' },
-  { icon: '📊', label: 'Analytics', slug: 'analytics' },
+  { iconKey: 'dashboard', label: 'Dashboard', slug: '' },
+  { iconKey: 'shops',     label: 'Shops',     slug: 'shops' },
+  { iconKey: 'pricing',   label: 'Pricing',   slug: 'pricing' },
+  { iconKey: 'orders',    label: 'Orders',    slug: 'orders' },
+  { iconKey: 'content',   label: 'Content',   slug: 'content' },
+  { iconKey: 'social',    label: 'Social',    slug: 'social' },
+  { iconKey: 'settings',  label: 'Settings',  slug: 'settings' },
+  { iconKey: 'analytics', label: 'Analytics', slug: 'analytics' },
+];
+
+// Bottom nav shows the four most-used sections + a More button
+const BOTTOM_NAV_ITEMS = [
+  { iconKey: 'dashboard', label: 'Dashboard', slug: '' },
+  { iconKey: 'shops',     label: 'Shops',     slug: 'shops' },
+  { iconKey: 'orders',    label: 'Orders',    slug: 'orders' },
+  { iconKey: 'social',    label: 'Social',    slug: 'social' },
 ];
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -40,7 +57,6 @@ const NAV_ITEMS = [
  */
 function getAdminBase() {
   const path = window.location.pathname;
-  // Match up to and including /admin/
   const match = path.match(/^(.*\/admin\/)/);
   return match ? match[1] : '/admin/';
 }
@@ -52,9 +68,13 @@ function getAdminBase() {
 function getActiveSlug() {
   const path = window.location.pathname;
   const base = getAdminBase();
-  // Strip the base to get the remainder, e.g. "shops/index.html" or "shops/" or ""
   const remainder = path.slice(base.length).replace(/index\.html$/, '').replace(/\/+$/, '');
   return remainder;
+}
+
+/** Strip HTML tags from a string (used for command palette icon labels). */
+function stripHtml(html) {
+  return html.replace(/<[^>]*>/g, '');
 }
 
 // ── Sidebar HTML builder ─────────────────────────────────────────────────────
@@ -71,13 +91,18 @@ function buildSidebarHTML(adminBase, activeSlug) {
     const isActive = item.slug === activeSlug;
     const cls = 'nav-link' + (isActive ? ' active' : '');
     const aria = isActive ? ' aria-current="page"' : '';
-    return `<a class="${cls}" href="${href}"${aria}><span class="nav-icon">${item.icon}</span> ${item.label}</a>`;
+    // Orders link gets a badge placeholder for pending count
+    const badge = item.slug === 'orders'
+      ? '<span class="notification-badge" id="orders-badge" style="display:none"></span>'
+      : '';
+    return `<a class="${cls}" href="${href}"${aria}><span class="nav-icon">${ICONS[item.iconKey]}</span><span class="nav-label">${item.label}</span>${badge}</a>`;
   }).join('\n          ');
 
   return `
         <div class="sidebar-header">
           <span class="logo-icon" aria-hidden="true">⚙</span>
           <span class="logo-text">GoldAdmin</span>
+          <button class="sidebar-collapse-btn" id="sidebar-collapse-btn" title="Collapse sidebar" aria-label="Collapse sidebar">${CHEVRON_LEFT}</button>
         </div>
 
         <nav class="sidebar-nav" aria-label="Main menu">
@@ -85,15 +110,71 @@ function buildSidebarHTML(adminBase, activeSlug) {
         </nav>
 
         <div class="sidebar-footer">
-          <div class="sidebar-user" id="sidebar-user"
-               style="display:none;padding:0 0 10px;border-bottom:1px solid var(--border);margin-bottom:10px">
-            <div style="font-size:0.8125rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
-                 id="sidebar-email"></div>
+          <div class="sidebar-user-row" id="sidebar-user"
+               style="display:flex;align-items:center;gap:8px;padding:0 0 10px;border-bottom:1px solid var(--border);margin-bottom:10px">
+            <div class="user-avatar" id="sidebar-avatar">?</div>
+            <div style="min-width:0;flex:1">
+              <div class="sidebar-user-email" id="sidebar-email"
+                   style="font-size:0.8125rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
+              <div class="role-badge role-badge--admin" style="display:inline-block;margin-top:2px">admin</div>
+            </div>
           </div>
           <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">
-            <span aria-hidden="true">🚪</span> Sign Out
+            <span class="nav-icon">${ICONS.logout}</span><span class="nav-label"> Sign Out</span>
           </button>
         </div>`;
+}
+
+// ── Mobile bottom nav ────────────────────────────────────────────────────────
+
+function injectBottomNav(adminBase, activeSlug, openSidebarFn) {
+  if (document.querySelector('.admin-bottom-nav')) return;
+  const nav = document.createElement('nav');
+  nav.className = 'admin-bottom-nav';
+  nav.setAttribute('aria-label', 'Mobile navigation');
+
+  const items = BOTTOM_NAV_ITEMS.map((item) => {
+    const href = adminBase + (item.slug ? item.slug + '/' : '');
+    const isActive = item.slug === activeSlug;
+    return `<a class="bottom-nav-item${isActive ? ' active' : ''}" href="${href}" aria-current="${isActive ? 'page' : 'false'}">
+      <span class="bottom-nav-icon">${ICONS[item.iconKey]}</span>
+      <span class="bottom-nav-label">${item.label}</span>
+    </a>`;
+  });
+
+  // More button opens the sidebar
+  items.push(`<button class="bottom-nav-item" id="bottom-nav-more" type="button" aria-label="More navigation options">
+    <span class="bottom-nav-icon">${ICONS.menu}</span>
+    <span class="bottom-nav-label">More</span>
+  </button>`);
+
+  nav.innerHTML = items.join('');
+  document.body.appendChild(nav);
+
+  document.getElementById('bottom-nav-more')?.addEventListener('click', openSidebarFn);
+}
+
+// ── Breadcrumb ───────────────────────────────────────────────────────────────
+
+/**
+ * Render a breadcrumb nav after the page-header element.
+ * Pass no pageName (or undefined) to skip rendering (e.g. Dashboard).
+ * @param {string} [pageName]
+ */
+export function renderBreadcrumb(pageName) {
+  if (!pageName) return;
+  const adminBase = getAdminBase();
+  const header = document.querySelector('header.page-header');
+  if (!header) return;
+
+  let bc = header.nextElementSibling;
+  if (!bc || !bc.classList.contains('breadcrumb')) {
+    bc = document.createElement('nav');
+    bc.className = 'breadcrumb';
+    bc.setAttribute('aria-label', 'Breadcrumb');
+    header.insertAdjacentElement('afterend', bc);
+  }
+  bc.innerHTML = `<a href="${adminBase}">GoldAdmin</a><span class="breadcrumb-sep" aria-hidden="true">›</span><span class="breadcrumb-current">${pageName}</span>`;
 }
 
 // ── Main init function ───────────────────────────────────────────────────────
@@ -116,6 +197,34 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
   if (sidebarEl) {
     sidebarEl.innerHTML = buildSidebarHTML(adminBase, activeSlug);
   }
+
+  // ── Collapse / expand sidebar ──────────────────────────
+  const mainArea = document.querySelector('.main-area');
+  const collapseBtn = document.getElementById('sidebar-collapse-btn');
+
+  function setCollapsed(collapsed) {
+    if (collapsed) {
+      sidebarEl?.classList.add('sidebar--collapsed');
+      mainArea?.classList.add('main-area--collapsed');
+      if (collapseBtn) collapseBtn.innerHTML = CHEVRON_RIGHT;
+    } else {
+      sidebarEl?.classList.remove('sidebar--collapsed');
+      mainArea?.classList.remove('main-area--collapsed');
+      if (collapseBtn) collapseBtn.innerHTML = CHEVRON_LEFT;
+    }
+  }
+
+  // Restore persisted state
+  try {
+    const saved = localStorage.getItem(SIDEBAR_COLLAPSED_KEY);
+    if (saved === 'true') setCollapsed(true);
+  } catch { /* storage unavailable */ }
+
+  collapseBtn?.addEventListener('click', () => {
+    const willCollapse = !sidebarEl?.classList.contains('sidebar--collapsed');
+    setCollapsed(willCollapse);
+    try { localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(willCollapse)); } catch { /* ignore */ }
+  });
 
   // ── Mobile sidebar toggle ───────────────────────────────
   const overlay = document.getElementById('sidebar-overlay');
@@ -140,17 +249,18 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
 
   overlay?.addEventListener('click', closeSidebar);
 
-  // Close sidebar on Escape key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && sidebarEl?.classList.contains('sidebar--open')) {
       closeSidebar();
     }
   });
 
-  // Close sidebar when a nav link is clicked (mobile UX)
   sidebarEl?.querySelectorAll('.nav-link').forEach((link) => {
     link.addEventListener('click', closeSidebar);
   });
+
+  // ── Mobile bottom nav ───────────────────────────────────
+  injectBottomNav(adminBase, activeSlug, openSidebar);
 
   // ── Logout button ──────────────────────────────────────
   const logoutBtn = document.getElementById('logout-btn');
@@ -161,7 +271,7 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
     });
   }
 
-  // ── Show user email in sidebar footer ───────────────────
+  // ── Show user info in sidebar footer ────────────────────
   if (getSession) {
     try {
       const session = await getSession();
@@ -171,14 +281,44 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
           session.user.user_metadata?.email ||
           session.user.identities?.find((id) => id.provider === 'github')?.identity_data?.email;
         const emailEl = document.getElementById('sidebar-email');
-        const userEl = document.getElementById('sidebar-user');
-        if (emailEl && email) {
-          emailEl.textContent = email;
-          if (userEl) userEl.style.display = '';
+        const avatarEl = document.getElementById('sidebar-avatar');
+        if (email) {
+          if (emailEl) emailEl.textContent = email;
+          if (avatarEl) avatarEl.textContent = email[0].toUpperCase();
         }
       }
     } catch {
       // Non-critical — user info display is a nice-to-have
     }
   }
+
+  // ── Pending orders badge ─────────────────────────────────
+  try {
+    // Dynamically import to avoid hard dependency if supabase-auth is missing
+    const { getSupabase } = await import('../supabase-auth.js');
+    const sb = getSupabase();
+    if (sb) {
+      const { count } = await sb
+        .from('orders')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'pending');
+      if (count > 0) {
+        const badge = document.getElementById('orders-badge');
+        if (badge) {
+          badge.textContent = count;
+          badge.style.display = '';
+        }
+      }
+    }
+  } catch {
+    // Non-critical — badge is a nice-to-have
+  }
+
+  // ── Command palette ──────────────────────────────────────
+  const paletteItems = NAV_ITEMS.map((item) => ({
+    label: item.label,
+    icon: stripHtml(ICONS[item.iconKey] || ''),
+    href: adminBase + (item.slug ? item.slug + '/' : ''),
+  }));
+  initCommandPalette(paletteItems);
 }
