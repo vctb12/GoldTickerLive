@@ -7,7 +7,6 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-M14N2GP8ZQ');
     </script>
     <meta charset="UTF-8" />
@@ -17,98 +16,166 @@
     <link rel="stylesheet" href="../../styles/admin.css" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <style>
+      /* ── Canvas background ─────────────────────────────── */
       body {
         align-items: center;
-        background-color: var(--bg, #0f172a);
-        background-image: radial-gradient(ellipse at 60% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 60%);
+        background-color: var(--bg);
         display: flex;
         justify-content: center;
         min-height: 100vh;
         padding: 16px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      #particle-canvas {
+        inset: 0;
+        pointer-events: none;
+        position: fixed;
+        z-index: 0;
       }
 
       .login-wrap {
-        animation: login-fadeup 0.4s ease both;
+        animation: login-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
         width: 100%;
-        max-width: 400px;
+        max-width: 420px;
+        position: relative;
+        z-index: 1;
       }
 
-      @keyframes login-fadeup {
-        from { opacity: 0; transform: translateY(16px); }
-        to   { opacity: 1; transform: translateY(0); }
+      @keyframes login-rise {
+        from { opacity: 0; transform: translateY(28px) scale(0.97); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
       }
 
+      /* ── Brand ─────────────────────────────────────────── */
       .login-brand {
         align-items: center;
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        margin-bottom: 32px;
+        gap: 12px;
+        margin-bottom: 36px;
         text-align: center;
       }
 
       .brand-icon {
         align-items: center;
         background: linear-gradient(135deg, #f59e0b 0%, #d97706 60%, #b45309 100%);
-        border-radius: 18px;
-        box-shadow: 0 4px 24px rgba(245, 158, 11, 0.4), 0 1px 3px rgba(0,0,0,0.3);
+        border-radius: 22px;
+        box-shadow: 0 4px 32px rgba(245, 158, 11, 0.5), 0 0 60px rgba(245, 158, 11, 0.15), 0 1px 3px rgba(0,0,0,0.4);
         color: #0f172a;
         display: flex;
-        font-size: 30px;
-        height: 64px;
+        font-size: 32px;
+        height: 72px;
         justify-content: center;
-        width: 64px;
-        transition: box-shadow 0.2s;
+        width: 72px;
+        animation: brand-pulse 3s ease-in-out infinite;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .brand-icon::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -60%;
+        width: 50%;
+        height: 200%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+        transform: skewX(-20deg);
+        animation: brand-shine 3s ease-in-out infinite 1s;
+      }
+
+      @keyframes brand-shine {
+        0%, 100% { left: -60%; }
+        40%, 60% { left: 120%; }
+      }
+
+      @keyframes brand-pulse {
+        0%, 100% { box-shadow: 0 4px 32px rgba(245,158,11,0.5), 0 0 60px rgba(245,158,11,0.15), 0 1px 3px rgba(0,0,0,0.4); }
+        50% { box-shadow: 0 4px 48px rgba(245,158,11,0.75), 0 0 80px rgba(245,158,11,0.25), 0 1px 3px rgba(0,0,0,0.4); }
       }
 
       .brand-name {
-        color: var(--text);
-        font-size: 1.375rem;
+        background: linear-gradient(135deg, #fff 0%, #f59e0b 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 1.5rem;
         font-weight: 800;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.04em;
+        line-height: 1.1;
       }
 
       .brand-tagline {
-        color: var(--text-muted);
+        color: var(--text-dim);
         font-size: 0.8125rem;
-        margin-top: -4px;
+        margin-top: -6px;
       }
 
+      /* ── Card ──────────────────────────────────────────── */
       .login-card {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: calc(var(--radius) + 4px);
-        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.15);
-        padding: 36px;
+        background: linear-gradient(135deg, rgba(13,21,38,0.95) 0%, rgba(9,15,26,0.98) 100%);
+        border: 1px solid var(--border-light);
+        border-radius: 20px;
+        box-shadow:
+          0 24px 80px rgba(0, 0, 0, 0.6),
+          0 2px 12px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255,255,255,0.05);
+        padding: 40px;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .login-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        opacity: 0.6;
       }
 
       .login-card h1 {
         color: var(--text);
-        font-size: 1.25rem;
-        font-weight: 700;
+        font-size: 1.375rem;
+        font-weight: 800;
         margin-bottom: 6px;
+        letter-spacing: -0.02em;
       }
 
       .login-sub {
         color: var(--text-muted);
         font-size: 0.875rem;
-        margin-bottom: 28px;
+        margin-bottom: 32px;
+        line-height: 1.5;
       }
 
       .login-divider {
         border: none;
         border-top: 1px solid var(--border);
-        margin: 24px 0;
+        margin: 28px 0;
       }
 
+      /* ── Alerts ────────────────────────────────────────── */
       .login-alert {
         align-items: flex-start;
         border-radius: var(--radius-sm);
         display: none;
         font-size: 0.8125rem;
         gap: 8px;
-        padding: 10px 14px;
-        margin-bottom: 16px;
+        padding: 12px 14px;
+        margin-bottom: 18px;
+        animation: alert-slide 0.25s ease both;
+      }
+
+      @keyframes alert-slide {
+        from { opacity: 0; transform: translateY(-6px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       .login-alert.visible {
@@ -117,62 +184,85 @@
 
       .login-alert--error {
         background: rgba(239, 68, 68, 0.1);
-        border: 1px solid rgba(239, 68, 68, 0.3);
+        border: 1px solid rgba(239, 68, 68, 0.35);
         color: var(--danger);
       }
 
       .login-alert--offline {
         background: rgba(245, 158, 11, 0.1);
-        border: 1px solid rgba(245, 158, 11, 0.3);
+        border: 1px solid rgba(245, 158, 11, 0.35);
         color: var(--warning);
       }
 
       .login-alert--denied {
         background: rgba(239, 68, 68, 0.1);
-        border: 1px solid rgba(239, 68, 68, 0.3);
+        border: 1px solid rgba(239, 68, 68, 0.35);
         color: var(--danger);
       }
 
       .login-alert--info {
-        background: rgba(59, 130, 246, 0.1);
-        border: 1px solid rgba(59, 130, 246, 0.3);
-        color: var(--info, #3b82f6);
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px solid rgba(99, 102, 241, 0.35);
+        color: var(--primary);
       }
 
+      /* ── GitHub Button ─────────────────────────────────── */
       .btn-github {
         align-items: center;
-        background: #24292f;
-        border: 1px solid #444c56;
+        background: linear-gradient(135deg, #1a1f27 0%, #24292f 100%);
+        border: 1px solid #3d444d;
         border-radius: var(--radius);
         color: #fff;
         cursor: pointer;
         display: flex;
         font-size: 1rem;
-        font-weight: 600;
-        gap: 10px;
+        font-weight: 700;
+        gap: 12px;
         justify-content: center;
-        padding: 13px 20px;
+        padding: 14px 24px;
         transition:
-          background 0.15s,
-          border-color 0.15s,
-          box-shadow 0.15s;
+          background 0.2s,
+          border-color 0.2s,
+          box-shadow 0.2s,
+          transform 0.1s;
         width: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-github::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+        opacity: 0;
+        transition: opacity 0.2s;
       }
 
       .btn-github:hover {
-        background: #2d333b;
-        border-color: #768390;
-        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+        background: linear-gradient(135deg, #24292f 0%, #2d333b 100%);
+        border-color: #6e7681;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06);
+        transform: translateY(-1px);
+      }
+
+      .btn-github:hover::before {
+        opacity: 1;
+      }
+
+      .btn-github:active {
+        transform: translateY(0);
       }
 
       .btn-github:focus-visible {
-        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.4);
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.45);
         outline: none;
       }
 
       .btn-github:disabled {
         cursor: not-allowed;
-        opacity: 0.6;
+        opacity: 0.55;
+        transform: none;
       }
 
       .btn-github svg {
@@ -181,48 +271,43 @@
         width: 20px;
       }
 
-      .login-help {
-        color: var(--text-dim);
-        font-size: 0.8rem;
-        margin-top: 20px;
-        text-align: center;
-      }
-
-      .spinner {
+      /* ── Spinner ───────────────────────────────────────── */
+      .login-spinner {
         align-items: center;
         display: none;
-        gap: 8px;
+        gap: 10px;
         justify-content: center;
-        margin: 16px auto;
+        margin: 18px auto;
         text-align: center;
         color: var(--text-muted);
         font-size: 0.875rem;
       }
 
-      .spinner.visible {
+      .login-spinner.visible {
         display: flex;
       }
 
       .spinner-ring {
-        animation: spin 0.8s linear infinite;
+        animation: spin 0.75s linear infinite;
         border: 2px solid var(--border);
-        border-top-color: var(--primary, #3b82f6);
+        border-top-color: var(--gold);
         border-radius: 50%;
         flex-shrink: 0;
-        height: 16px;
-        width: 16px;
+        height: 18px;
+        width: 18px;
       }
 
       @keyframes spin {
         to { transform: rotate(360deg); }
       }
 
+      /* ── Feature pills ─────────────────────────────────── */
       .login-features {
         display: flex;
-        gap: 12px;
+        gap: 8px;
         justify-content: center;
         flex-wrap: wrap;
-        margin-top: 8px;
+        margin-top: 10px;
       }
 
       .login-feature-pill {
@@ -230,14 +315,38 @@
         border: 1px solid var(--border);
         border-radius: 999px;
         color: var(--text-muted);
-        font-size: 0.75rem;
+        font-size: 0.72rem;
         padding: 3px 10px;
         white-space: nowrap;
+        font-weight: 500;
+      }
+
+      .login-help {
+        color: var(--text-dim);
+        font-size: 0.78rem;
+        margin-top: 18px;
+        text-align: center;
+        line-height: 1.5;
+      }
+
+      /* ── Shake animation for denied ────────────────────── */
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        15%       { transform: translateX(-7px); }
+        30%       { transform: translateX(7px); }
+        45%       { transform: translateX(-5px); }
+        60%       { transform: translateX(5px); }
+        75%       { transform: translateX(-3px); }
+        90%       { transform: translateX(3px); }
+      }
+
+      .login-card.shake {
+        animation: shake 0.45s ease both;
       }
     </style>
   </head>
   <body>
-    <!-- Flash prevention: redirect immediately if already authenticated via Supabase -->
+    <!-- Flash prevention -->
     <script>
       (function () {
         try {
@@ -245,16 +354,15 @@
           var hasSession = keys.some(function (k) {
             return k.startsWith('sb-') && k.endsWith('-auth-token');
           });
-          // Only redirect if we have a session AND no OAuth hash fragment
-          // (if there's a hash fragment, we need to let Supabase process it)
           if (hasSession && !window.location.hash) {
             window.location.replace('../');
           }
-        } catch (e) {
-          // not authenticated
-        }
+        } catch (e) {}
       })();
     </script>
+
+    <!-- Particle canvas background -->
+    <canvas id="particle-canvas" aria-hidden="true"></canvas>
 
     <div class="login-wrap">
       <div class="login-brand">
@@ -263,31 +371,29 @@
         <span class="brand-tagline">Gold Prices Admin Panel</span>
       </div>
 
-      <div class="login-card">
+      <div class="login-card" id="login-card">
         <h1>Welcome back</h1>
         <p class="login-sub">Sign in to manage your gold prices platform.</p>
 
         <div class="login-alert login-alert--error" id="login-error" role="alert"></div>
         <div class="login-alert login-alert--denied" id="login-denied" role="alert">
-          <span>🚫</span>
+          <span aria-hidden="true">🚫</span>
           <span>Access denied. Only the admin account can access this panel.</span>
         </div>
         <div class="login-alert login-alert--offline" id="login-offline" role="alert">
-          <span>⚠️</span>
+          <span aria-hidden="true">⚠️</span>
           <span>Could not reach Supabase. Check your internet connection.</span>
         </div>
         <div class="login-alert login-alert--info" id="login-info" role="status"></div>
 
         <button type="button" class="btn-github" id="github-login-btn">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path
-              d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
-            />
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
           </svg>
           Continue with GitHub
         </button>
 
-        <div class="spinner" id="login-spinner">
+        <div class="login-spinner" id="login-spinner">
           <span class="spinner-ring" aria-hidden="true"></span>
           Checking authentication…
         </div>
@@ -303,6 +409,70 @@
       </div>
     </div>
 
+    <!-- Particle animation -->
+    <script>
+      (function () {
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let W, H, particles;
+
+        function resize() {
+          W = canvas.width = window.innerWidth;
+          H = canvas.height = window.innerHeight;
+        }
+
+        function rand(min, max) {
+          return Math.random() * (max - min) + min;
+        }
+
+        function createParticles() {
+          const count = Math.min(60, Math.floor((W * H) / 18000));
+          particles = Array.from({ length: count }, () => ({
+            x: rand(0, W),
+            y: rand(0, H),
+            r: rand(1, 3.5),
+            vx: rand(-0.25, 0.25),
+            vy: rand(-0.35, -0.08),
+            alpha: rand(0.15, 0.55),
+            gold: Math.random() > 0.5,
+          }));
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, W, H);
+          particles.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = p.gold
+              ? `rgba(245,158,11,${p.alpha})`
+              : `rgba(99,102,241,${p.alpha * 0.6})`;
+            ctx.fill();
+
+            p.x += p.vx;
+            p.y += p.vy;
+
+            if (p.y < -10) { p.y = H + 10; p.x = rand(0, W); }
+            if (p.x < -10) p.x = W + 10;
+            if (p.x > W + 10) p.x = -10;
+          });
+
+          // Subtle radial glow center-ish
+          const grd = ctx.createRadialGradient(W * 0.55, H * 0.3, 0, W * 0.55, H * 0.3, Math.min(W, H) * 0.6);
+          grd.addColorStop(0, 'rgba(245,158,11,0.04)');
+          grd.addColorStop(1, 'transparent');
+          ctx.fillStyle = grd;
+          ctx.fillRect(0, 0, W, H);
+
+          requestAnimationFrame(draw);
+        }
+
+        resize();
+        createParticles();
+        draw();
+        window.addEventListener('resize', () => { resize(); createParticles(); });
+      })();
+    </script>
+
     <script type="module">
       import { loginWithGitHub, getSession, logout, resolveEmail } from '../supabase-auth.js';
       import { ALLOWED_EMAIL } from '../supabase-config.js';
@@ -313,8 +483,16 @@
       const offlineEl = document.getElementById('login-offline');
       const infoEl = document.getElementById('login-info');
       const spinnerEl = document.getElementById('login-spinner');
+      const cardEl = document.getElementById('login-card');
 
-      const GITHUB_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:20px;height:20px"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>';
+      const GITHUB_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:20px;height:20px;flex-shrink:0"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>';
+
+      function triggerShake() {
+        cardEl.classList.remove('shake');
+        void cardEl.offsetWidth; // reflow to restart animation
+        cardEl.classList.add('shake');
+        cardEl.addEventListener('animationend', () => cardEl.classList.remove('shake'), { once: true });
+      }
 
       function showError(msg) {
         errorEl.textContent = msg;
@@ -322,6 +500,7 @@
         deniedEl.classList.remove('visible');
         offlineEl.classList.remove('visible');
         infoEl.classList.remove('visible');
+        triggerShake();
       }
 
       function showDenied() {
@@ -329,6 +508,7 @@
         errorEl.classList.remove('visible');
         offlineEl.classList.remove('visible');
         infoEl.classList.remove('visible');
+        triggerShake();
       }
 
       function showOffline() {
@@ -336,6 +516,7 @@
         errorEl.classList.remove('visible');
         deniedEl.classList.remove('visible');
         infoEl.classList.remove('visible');
+        triggerShake();
       }
 
       function clearAlerts() {
@@ -350,10 +531,7 @@
         githubBtn.innerHTML = GITHUB_SVG + ' Sign in with GitHub';
       }
 
-      // ── Check if user just returned from GitHub OAuth ────────────
       async function checkPostOAuthReturn() {
-        // If the URL has a hash fragment, Supabase might be processing OAuth tokens.
-        // The Supabase client's getSession() handles extracting tokens from the hash.
         const hasHashTokens = window.location.hash &&
           (window.location.hash.includes('access_token') || window.location.hash.includes('error'));
 
@@ -361,52 +539,43 @@
           spinnerEl.classList.add('visible');
           githubBtn.disabled = true;
 
-          // Check for OAuth error in the hash (e.g. provider not configured)
           const hashParams = new URLSearchParams(window.location.hash.substring(1));
           const hashError = hashParams.get('error_description') || hashParams.get('error');
           if (hashError) {
             spinnerEl.classList.remove('visible');
             resetButton();
             showError(decodeURIComponent(hashError));
-            // Clean the hash
             window.history.replaceState(null, '', window.location.pathname);
             return;
           }
         }
 
-        // Give Supabase client a moment to parse the hash and establish session
         const session = await getSession();
         if (!session) {
-          // No session — check if there was an error in the URL params (some providers use query params)
           const urlParams = new URLSearchParams(window.location.search);
           const urlError = urlParams.get('error_description') || urlParams.get('error');
           if (urlError) {
             showError(decodeURIComponent(urlError));
           }
           if (hasHashTokens) {
-            // Had hash tokens but no session — something went wrong
             spinnerEl.classList.remove('visible');
             resetButton();
             showError('Authentication failed. Please try again.');
             window.history.replaceState(null, '', window.location.pathname);
           }
-          return; // Not logged in, show the button
+          return;
         }
 
         spinnerEl.classList.add('visible');
         githubBtn.disabled = true;
 
-        // Resolve email (handles private GitHub emails)
         const email = resolveEmail(session.user);
 
-        // Check if this user is the allowed admin
         if (email === ALLOWED_EMAIL) {
-          // Authorized — go to admin dashboard
           window.location.replace('../');
           return;
         }
 
-        // Wrong account — sign them out and show denial
         await logout();
         spinnerEl.classList.remove('visible');
         resetButton();
@@ -420,17 +589,15 @@
           showDenied();
         }
 
-        // Clean the hash fragment
         if (window.location.hash) {
           window.history.replaceState(null, '', window.location.pathname);
         }
       }
 
-      // ── GitHub login button ──────────────────────────────────────
       githubBtn.addEventListener('click', async () => {
         clearAlerts();
         githubBtn.disabled = true;
-        githubBtn.textContent = 'Redirecting to GitHub…';
+        githubBtn.innerHTML = '<span class="spinner-ring" style="border-top-color:#fff;display:inline-block;width:16px;height:16px;margin-right:8px;vertical-align:middle"></span> Redirecting to GitHub…';
 
         const result = await loginWithGitHub();
 
@@ -445,10 +612,8 @@
             showError(result.message || 'GitHub login failed.');
           }
         }
-        // If success, the page will redirect to GitHub OAuth
       });
 
-      // Run post-OAuth check on page load
       checkPostOAuthReturn();
     </script>
   </body>

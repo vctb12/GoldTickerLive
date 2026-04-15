@@ -20,30 +20,26 @@
       /* ── Stat grid ─────────────────────────────────────────── */
       .stat-grid {
         display: grid;
-        gap: 16px;
+        gap: 18px;
         grid-template-columns: repeat(4, 1fr);
-        margin-bottom: 28px;
+        margin-bottom: 32px;
       }
       @media (max-width: 900px) {
-        .stat-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
+        .stat-grid { grid-template-columns: repeat(2, 1fr); }
       }
       @media (max-width: 480px) {
-        .stat-grid {
-          grid-template-columns: 1fr;
-        }
+        .stat-grid { grid-template-columns: 1fr; }
       }
 
       .stat-card .stat-icon {
-        font-size: 1.5rem;
+        font-size: 1.625rem;
         line-height: 1;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
       }
       .stat-card .stat-sub {
         color: var(--text-dim);
         font-size: 0.75rem;
-        margin-top: 4px;
+        margin-top: 6px;
       }
 
       /* ── Sections ───────────────────────────────────────────── */
@@ -51,15 +47,48 @@
         margin-bottom: 28px;
       }
 
+      /* ── Welcome banner ─────────────────────────────────────── */
+      .welcome-banner {
+        align-items: center;
+        background: linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(99,102,241,0.06) 100%);
+        border: 1px solid rgba(245,158,11,0.18);
+        border-radius: var(--radius-lg);
+        display: flex;
+        gap: 16px;
+        justify-content: space-between;
+        margin-bottom: 28px;
+        padding: 20px 24px;
+        flex-wrap: wrap;
+      }
+      .welcome-banner-left {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .welcome-title {
+        color: var(--text);
+        font-size: 1.125rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      .welcome-sub {
+        color: var(--text-muted);
+        font-size: 0.8125rem;
+      }
+      .welcome-banner-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
       /* ── API Status table ───────────────────────────────────── */
       .api-status-header {
         align-items: center;
         display: flex;
-        gap: 12px;
+        gap: 8px;
         justify-content: space-between;
         margin-bottom: 16px;
         flex-wrap: wrap;
-        gap: 8px;
       }
       .api-last-checked {
         color: var(--text-dim);
@@ -67,11 +96,53 @@
       }
 
       /* ── Quick actions ──────────────────────────────────────── */
-      .quick-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
+      .quick-actions-grid {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         margin-bottom: 28px;
+      }
+      .quick-action-card {
+        align-items: center;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        cursor: pointer;
+        display: flex;
+        gap: 12px;
+        padding: 16px 18px;
+        text-decoration: none;
+        transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      }
+      .quick-action-card:hover {
+        border-color: var(--border-light);
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+        text-decoration: none;
+      }
+      .quick-action-icon {
+        align-items: center;
+        background: var(--surface-2);
+        border-radius: var(--radius-sm);
+        display: flex;
+        flex-shrink: 0;
+        height: 36px;
+        justify-content: center;
+        width: 36px;
+      }
+      .quick-action-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .quick-action-label {
+        color: var(--text);
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+      .quick-action-desc {
+        color: var(--text-dim);
+        font-size: 0.75rem;
       }
 
       /* ── Activity timeline ──────────────────────────────────── */
@@ -85,20 +156,21 @@
         border-bottom: 1px solid var(--border);
         display: flex;
         gap: 12px;
-        padding: 12px 0;
+        padding: 13px 0;
       }
       .activity-item:last-child {
         border-bottom: none;
       }
       .activity-icon {
+        align-items: center;
         background: var(--surface-2);
         border-radius: 50%;
+        border: 1px solid var(--border);
+        display: flex;
         flex-shrink: 0;
-        font-size: 14px;
-        height: 32px;
-        line-height: 32px;
-        text-align: center;
-        width: 32px;
+        height: 34px;
+        justify-content: center;
+        width: 34px;
       }
       .activity-body {
         flex: 1;
@@ -107,7 +179,7 @@
       .activity-action {
         color: var(--text);
         font-size: 0.875rem;
-        font-weight: 500;
+        font-weight: 600;
       }
       .activity-details {
         color: var(--text-muted);
@@ -227,6 +299,22 @@
 
         <!-- Content -->
         <main class="content-area">
+          <!-- ── Welcome banner ──────────────────────────────── -->
+          <div class="welcome-banner" id="welcome-banner">
+            <div class="welcome-banner-left">
+              <div class="welcome-title" id="welcome-title">Good morning ☀️</div>
+              <div class="welcome-sub" id="welcome-sub">Here's what's happening with your platform today.</div>
+            </div>
+            <div class="welcome-banner-actions">
+              <button class="btn btn-ghost btn-sm" id="qa-force-refresh" type="button">
+                <span id="qa-refresh-icon" aria-hidden="true"></span> Refresh Prices
+              </button>
+              <button class="btn btn-gold btn-sm" id="qa-new-post-btn" type="button">
+                <span id="qa-post-icon" aria-hidden="true"></span> New Post
+              </button>
+            </div>
+          </div>
+
           <!-- ── Stat cards ──────────────────────────────────── -->
           <div class="stat-grid" role="list" aria-label="Key metrics">
             <!-- Gold Spot -->
@@ -273,6 +361,56 @@
             </div>
           </div>
 
+          <!-- ── Quick Actions ───────────────────────────────── -->
+          <section class="section" aria-label="Quick actions">
+            <h2 class="card-title" style="margin-bottom:14px;font-size:0.9rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;font-weight:700">Quick Actions</h2>
+            <div class="quick-actions-grid" id="quick-actions-grid">
+              <!-- Populated by JS with icons -->
+              <a class="quick-action-card" href="./shops/" aria-label="Manage shops">
+                <div class="quick-action-icon" id="qa-shops-icon" aria-hidden="true"></div>
+                <div class="quick-action-text">
+                  <span class="quick-action-label">Manage Shops</span>
+                  <span class="quick-action-desc">Add or edit listings</span>
+                </div>
+              </a>
+              <a class="quick-action-card" href="./pricing/" aria-label="Update pricing">
+                <div class="quick-action-icon" id="qa-pricing-icon" aria-hidden="true"></div>
+                <div class="quick-action-text">
+                  <span class="quick-action-label">Update Pricing</span>
+                  <span class="quick-action-desc">Karat overrides</span>
+                </div>
+              </a>
+              <a class="quick-action-card" href="./orders/" aria-label="View orders">
+                <div class="quick-action-icon" id="qa-orders-icon" aria-hidden="true"></div>
+                <div class="quick-action-text">
+                  <span class="quick-action-label">View Orders</span>
+                  <span class="quick-action-desc">Check pending items</span>
+                </div>
+              </a>
+              <a class="quick-action-card" href="./analytics/" aria-label="View analytics">
+                <div class="quick-action-icon" id="qa-analytics-icon" aria-hidden="true"></div>
+                <div class="quick-action-text">
+                  <span class="quick-action-label">Analytics</span>
+                  <span class="quick-action-desc">Traffic and events</span>
+                </div>
+              </a>
+              <button class="quick-action-card" id="qa-clear-cache" type="button" aria-label="Clear site cache">
+                <div class="quick-action-icon" id="qa-trash-icon" aria-hidden="true"></div>
+                <div class="quick-action-text">
+                  <span class="quick-action-label">Clear Cache</span>
+                  <span class="quick-action-desc">Flush all caches</span>
+                </div>
+              </button>
+              <a class="quick-action-card" href="./settings/" aria-label="Admin settings">
+                <div class="quick-action-icon" id="qa-settings-icon" aria-hidden="true"></div>
+                <div class="quick-action-text">
+                  <span class="quick-action-label">Settings</span>
+                  <span class="quick-action-desc">Platform config</span>
+                </div>
+              </a>
+            </div>
+          </section>
+
           <!-- ── API Status ──────────────────────────────────── -->
           <section class="section card" aria-labelledby="api-status-title">
             <div class="api-status-header">
@@ -281,7 +419,7 @@
                 <span class="api-last-checked" id="api-last-checked"></span>
               </div>
               <div style="display:flex;align-items:center;gap:10px">
-                <span style="color:var(--text-dim);font-size:0.75rem">auto-refresh in <span id="api-countdown">60</span>s</span>
+                <span style="color:var(--text-dim);font-size:0.75rem">refresh in <span id="api-countdown">60</span>s</span>
                 <button class="btn btn-ghost btn-sm" id="api-check-btn" type="button">Check Now</button>
               </div>
             </div>
@@ -297,34 +435,13 @@
                 </thead>
                 <tbody id="api-table-body">
                   <tr>
-                    <td
-                      colspan="4"
-                      style="color: var(--text-dim); text-align: center; padding: 20px"
-                    >
+                    <td colspan="4" style="color: var(--text-dim); text-align: center; padding: 20px">
                       <span class="inline-spinner" aria-hidden="true"></span>
                       Checking services…
                     </td>
                   </tr>
                 </tbody>
               </table>
-            </div>
-          </section>
-
-          <!-- ── Quick Actions ───────────────────────────────── -->
-          <section class="section" aria-label="Quick actions">
-            <div class="quick-actions">
-              <button class="btn btn-primary" id="qa-force-refresh" type="button">
-                <span style="vertical-align:middle;margin-right:4px" aria-hidden="true" id="qa-refresh-icon"></span> Force Refresh Prices
-              </button>
-              <button class="btn btn-ghost" id="qa-clear-cache" type="button">
-                <span style="vertical-align:middle;margin-right:4px" aria-hidden="true" id="qa-trash-icon"></span> Clear Cache
-              </button>
-              <a class="btn btn-ghost" href="./content/">
-                <span style="vertical-align:middle;margin-right:4px" aria-hidden="true" id="qa-post-icon"></span> New Post
-              </a>
-              <a class="btn btn-ghost" href="./shops/">
-                <span style="vertical-align:middle;margin-right:4px" aria-hidden="true" id="qa-shop-icon"></span> Add Shop
-              </a>
             </div>
           </section>
 
@@ -642,13 +759,37 @@
       }, 5000);
 
       // ── Inject SVG icons into Quick Action buttons ──────────
-      const qaIcons = { 'qa-refresh-icon': ICONS.refresh, 'qa-trash-icon': ICONS.trash, 'qa-post-icon': ICONS.content, 'qa-shop-icon': ICONS.shops };
-      Object.entries(qaIcons).forEach(([id, svg]) => { const el = qs('#' + id); if (el) el.innerHTML = svg; });
+      const qaIcons = {
+        'qa-refresh-icon': ICONS.refresh,
+        'qa-trash-icon': ICONS.trash,
+        'qa-post-icon': ICONS.content,
+        'qa-shops-icon': ICONS.shops,
+        'qa-pricing-icon': ICONS.pricing,
+        'qa-orders-icon': ICONS.orders,
+        'qa-analytics-icon': ICONS.analytics,
+        'qa-settings-icon': ICONS.settings,
+      };
+      Object.entries(qaIcons).forEach(([id, svg]) => {
+        const el = qs('#' + id);
+        if (el) el.innerHTML = svg;
+      });
+
+      // ── Welcome banner greeting ──────────────────────────────
+      (function() {
+        const h = new Date().getHours();
+        const greet = h < 12 ? 'Good morning ☀️' : h < 17 ? 'Good afternoon ⚡' : 'Good evening 🌙';
+        const titleEl = qs('#welcome-title');
+        if (titleEl) titleEl.textContent = greet;
+      })();
 
       // ── Quick Actions ────────────────────────────────────────
       qs('#qa-force-refresh')?.addEventListener('click', () => {
         storageSet('gp_force_refresh', Date.now().toString());
         showToast('Force refresh flagged — prices will reload on next public visit', 'success');
+      });
+
+      qs('#qa-new-post-btn')?.addEventListener('click', () => {
+        window.location.href = './content/';
       });
 
       qs('#qa-clear-cache')?.addEventListener('click', () => {
