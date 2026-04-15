@@ -31,7 +31,7 @@ const url = require('url');
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
-const SITE_URL = 'https://vctb12.github.io/Gold-Prices/';
+const SITE_URL = 'https://goldtickerlive.com/';
 const GOLD_API_URL = 'https://api.gold-api.com/price/XAU';
 const TWEET_URL = 'https://api.twitter.com/2/tweets';
 const AED_PEG = 3.6725;

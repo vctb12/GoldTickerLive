@@ -23,7 +23,7 @@ const https = require('https');
 
 const ROOT = path.resolve(__dirname, '../..');
 const OUT_FILE = path.join(ROOT, 'feed.xml');
-const SITE_URL = 'https://vctb12.github.io/Gold-Prices';
+const SITE_URL = 'https://goldtickerlive.com';
 const AED_PEG = 3.6725;
 const TROY_OZ = 31.1035;
 

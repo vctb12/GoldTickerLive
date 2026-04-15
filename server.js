@@ -55,7 +55,7 @@ app.use(
 
 // CORS — restrict origins in production.
 // In production, always set CORS_ORIGINS (comma-separated) to avoid allowing all origins.
-// Example: CORS_ORIGINS=https://vctb12.github.io,https://goldprices.com
+// Example: CORS_ORIGINS=https://goldtickerlive.com,https://goldprices.com
 const ALLOWED_ORIGINS = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(',').map((o) => o.trim())
   : null; // null → allow all (development only)
@@ -83,8 +83,7 @@ app.use(morgan(IS_PROD ? 'combined' : 'dev'));
 app.use(express.json({ limit: '256kb' }));
 app.use(express.urlencoded({ extended: true, limit: '256kb' }));
 
-// Static file serving for dist folder (GitHub Pages build output)
-app.use('/Gold-Prices', express.static(path.join(__dirname, 'dist')));
+// Static file serving for dist folder
 app.use('/', express.static(path.join(__dirname, 'dist')));
 
 // Also serve source files for development

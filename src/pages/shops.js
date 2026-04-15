@@ -1520,14 +1520,14 @@ init();
       {
         city: 'Dubai',
         name: 'Dubai Gold Souk',
-        page: '/Gold-Prices/countries/uae/markets/dubai-gold-souk.html',
+        page: '/countries/uae/markets/dubai-gold-souk.html',
         lat: 25.2881,
         lng: 55.3021,
       },
       {
         city: 'Dubai',
         name: 'Deira Gold Market',
-        page: '/Gold-Prices/shops.html?country=AE&city=Dubai',
+        page: '/shops.html?country=AE&city=Dubai',
         lat: 25.2721,
         lng: 55.311,
       },
@@ -1536,7 +1536,7 @@ init();
       {
         city: 'Cairo',
         name: 'Khan el-Khalili Gold Market',
-        page: '/Gold-Prices/countries/egypt/markets/khan-el-khalili-cairo.html',
+        page: '/countries/egypt/markets/khan-el-khalili-cairo.html',
         lat: 30.0478,
         lng: 31.2625,
       },
@@ -1545,14 +1545,14 @@ init();
       {
         city: 'Riyadh',
         name: 'Riyadh Gold Market',
-        page: '/Gold-Prices/shops.html?country=SA&city=Riyadh',
+        page: '/shops.html?country=SA&city=Riyadh',
         lat: 24.697,
         lng: 46.7206,
       },
       {
         city: 'Jeddah',
         name: 'Jeddah Gold Souk',
-        page: '/Gold-Prices/shops.html?country=SA&city=Jeddah',
+        page: '/shops.html?country=SA&city=Jeddah',
         lat: 21.4858,
         lng: 39.1925,
       },
@@ -1561,7 +1561,7 @@ init();
       {
         city: 'Kuwait City',
         name: 'Kuwait Gold Souk',
-        page: '/Gold-Prices/shops.html?country=KW',
+        page: '/shops.html?country=KW',
         lat: 29.3697,
         lng: 47.9783,
       },
@@ -1570,7 +1570,7 @@ init();
       {
         city: 'Doha',
         name: 'Doha Gold Souk',
-        page: '/Gold-Prices/shops.html?country=QA',
+        page: '/shops.html?country=QA',
         lat: 25.2854,
         lng: 51.531,
       },
@@ -1579,7 +1579,7 @@ init();
       {
         city: 'Manama',
         name: 'Manama Gold Souk',
-        page: '/Gold-Prices/shops.html?country=BH',
+        page: '/shops.html?country=BH',
         lat: 26.2175,
         lng: 50.5905,
       },
@@ -1588,7 +1588,7 @@ init();
       {
         city: 'Muscat',
         name: 'Muscat Gold Souk (Muttrah)',
-        page: '/Gold-Prices/shops.html?country=OM',
+        page: '/shops.html?country=OM',
         lat: 23.6166,
         lng: 58.5922,
       },
@@ -1597,7 +1597,7 @@ init();
       {
         city: 'Amman',
         name: 'Amman Gold Market',
-        page: '/Gold-Prices/shops.html?country=JO',
+        page: '/shops.html?country=JO',
         lat: 31.9519,
         lng: 35.93,
       },

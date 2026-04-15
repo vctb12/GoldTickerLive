@@ -16,7 +16,7 @@ const assert = require('node:assert/strict');
 // Inline constants (mirrors config/constants.js)
 // ---------------------------------------------------------------------------
 
-const BASE_PATH = '/Gold-Prices/';
+const BASE_PATH = '/';
 
 // Subset of countries for testing (mirrors config/countries.js structure)
 const COUNTRIES = [
@@ -87,7 +87,7 @@ function buildShopsRoute(country, city) {
   return `${BASE_PATH}${country}/${city}/gold-shops`;
 }
 
-function buildCanonicalURL(path, domain = 'https://vctb12.github.io') {
+function buildCanonicalURL(path, domain = 'https://goldtickerlive.com') {
   if (!path) return null;
   const fullPath = path.startsWith(BASE_PATH) ? path : `${BASE_PATH}${path}`;
   return `${domain}${fullPath}`;
@@ -154,16 +154,16 @@ function validateRoute({ country, city, karat } = {}) {
 
 describe('buildRoute', () => {
   test('homepage', () => {
-    assert.equal(buildRoute({ page: 'home' }), '/Gold-Prices/');
+    assert.equal(buildRoute({ page: 'home' }), '/');
   });
 
   test('static pages', () => {
-    assert.equal(buildRoute({ page: 'calculator' }), '/Gold-Prices/calculator.html');
-    assert.equal(buildRoute({ page: 'tracker' }), '/Gold-Prices/tracker.html');
-    assert.equal(buildRoute({ page: 'shops' }), '/Gold-Prices/shops.html');
-    assert.equal(buildRoute({ page: 'order' }), '/Gold-Prices/order-gold');
-    assert.equal(buildRoute({ page: 'terms' }), '/Gold-Prices/terms.html');
-    assert.equal(buildRoute({ page: 'privacy' }), '/Gold-Prices/privacy.html');
+    assert.equal(buildRoute({ page: 'calculator' }), '/calculator.html');
+    assert.equal(buildRoute({ page: 'tracker' }), '/tracker.html');
+    assert.equal(buildRoute({ page: 'shops' }), '/shops.html');
+    assert.equal(buildRoute({ page: 'order' }), '/order-gold');
+    assert.equal(buildRoute({ page: 'terms' }), '/terms.html');
+    assert.equal(buildRoute({ page: 'privacy' }), '/privacy.html');
   });
 
   test('unknown static page returns null', () => {
@@ -171,21 +171,21 @@ describe('buildRoute', () => {
   });
 
   test('country landing page', () => {
-    assert.equal(buildRoute({ country: 'uae' }), '/Gold-Prices/uae/gold-price');
-    assert.equal(buildRoute({ country: 'saudi-arabia' }), '/Gold-Prices/saudi-arabia/gold-price');
+    assert.equal(buildRoute({ country: 'uae' }), '/uae/gold-price');
+    assert.equal(buildRoute({ country: 'saudi-arabia' }), '/saudi-arabia/gold-price');
   });
 
   test('city gold prices page', () => {
     assert.equal(
       buildRoute({ country: 'uae', city: 'dubai' }),
-      '/Gold-Prices/uae/dubai/gold-prices'
+      '/uae/dubai/gold-prices'
     );
   });
 
   test('karat-specific page', () => {
     assert.equal(
       buildRoute({ country: 'uae', city: 'dubai', karat: '22' }),
-      '/Gold-Prices/uae/dubai/gold-rate/22-karat'
+      '/uae/dubai/gold-rate/22-karat'
     );
   });
 
@@ -197,7 +197,7 @@ describe('buildRoute', () => {
 
 describe('buildShopsRoute', () => {
   test('builds correct shops URL', () => {
-    assert.equal(buildShopsRoute('uae', 'dubai'), '/Gold-Prices/uae/dubai/gold-shops');
+    assert.equal(buildShopsRoute('uae', 'dubai'), '/uae/dubai/gold-shops');
   });
 });
 
@@ -206,7 +206,7 @@ describe('buildCanonicalURL', () => {
     const path = buildRoute({ country: 'uae', city: 'dubai' });
     assert.equal(
       buildCanonicalURL(path),
-      'https://vctb12.github.io/Gold-Prices/uae/dubai/gold-prices'
+      'https://goldtickerlive.com/uae/dubai/gold-prices'
     );
   });
 

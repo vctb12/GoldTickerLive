@@ -5,7 +5,7 @@
  */
 import { COUNTRIES } from '../config/countries.js';
 
-const BASE_URL = 'https://vctb12.github.io/Gold-Prices';
+const BASE_URL = 'https://goldtickerlive.com';
 
 /**
  * Generate HTML for internal link blocks.

@@ -116,7 +116,7 @@ export function injectBreadcrumbs(pageName, extra = {}) {
  * @param {string} baseUrl
  * @returns {string} script tag HTML
  */
-export function generateBreadcrumbSchema(items, baseUrl = 'https://vctb12.github.io/Gold-Prices') {
+export function generateBreadcrumbSchema(items, baseUrl = 'https://goldtickerlive.com') {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',

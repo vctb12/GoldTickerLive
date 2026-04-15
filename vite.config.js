@@ -40,8 +40,8 @@ function discoverHtmlEntries() {
 
 export default defineConfig({
   root,
-  // Production (GitHub Pages) needs the repo sub-path; local/CI builds use '/'.
-  base: process.env.NODE_ENV === 'production' ? '/Gold-Prices/' : '/',
+  // Custom domain (goldtickerlive.com) serves from root '/'.
+  base: '/',
   publicDir: 'public',
   build: {
     outDir: 'dist',

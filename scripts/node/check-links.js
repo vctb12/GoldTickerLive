@@ -53,8 +53,8 @@ function isAsset(url) {
 }
 
 // ── Strip deployment base path so absolute links resolve under rootDir ───────
-// Handles builds produced with base: '/Gold-Prices/' (GitHub Pages production).
-const BASE_PATH_PREFIX = '/Gold-Prices/';
+// Custom domain serves from root '/'.
+const BASE_PATH_PREFIX = '/';
 
 function normalizePath(url) {
   if (url.startsWith(BASE_PATH_PREFIX)) {

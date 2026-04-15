@@ -55,8 +55,8 @@ export function getKaratSlugs() {
  * @returns {{ type, country, city, karat, countryObj, cityObj } | null}
  */
 export function resolveRoute(path) {
-  // Strip /Gold-Prices/ prefix and leading/trailing slashes
-  const clean = path.replace(/^\/Gold-Prices/, '').replace(/^\/+|\/+$/g, '');
+  // Strip leading/trailing slashes
+  const clean = path.replace(/^\/+|\/+$/g, '');
   const parts = clean.split('/');
 
   // /:country/gold-price

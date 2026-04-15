@@ -21,7 +21,7 @@
 
 const https = require('https');
 
-const SITE_URL = 'https://vctb12.github.io/Gold-Prices/';
+const SITE_URL = 'https://goldtickerlive.com/';
 const GOLD_API_URL = 'https://api.gold-api.com/price/XAU';
 const AED_PEG = 3.6725;
 const TROY_OZ = 31.1035;
@@ -168,7 +168,7 @@ async function main() {
 
   const payload = {
     username: 'GoldPrices Bot',
-    avatar_url: 'https://vctb12.github.io/Gold-Prices/assets/favicon-192x192.png',
+    avatar_url: 'https://goldtickerlive.com/assets/favicon-192x192.png',
     embeds: [embed],
   };
 

@@ -1,7 +1,7 @@
 // BASE_PATH: the root path under which the site is served.
-// '/' for Replit/root deployment; '/Gold-Prices/' for GitHub Pages.
+// '/' for custom domain (goldtickerlive.com) or Replit; '/Gold-Prices/' for GitHub Pages sub-path.
 // Must match vite.config.js `base` and the service worker scope.
-export const BASE_PATH = '/Gold-Prices/';
+export const BASE_PATH = '/';
 
 export const CONSTANTS = {
   API_GOLD_URL: 'https://api.gold-api.com/price/XAU',

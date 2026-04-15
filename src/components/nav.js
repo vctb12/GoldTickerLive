@@ -46,7 +46,7 @@ function isPageMatch(href) {
     .replace(/\.html$/, '');
 
   if (base === 'index') {
-    return path.endsWith('/') || path.endsWith('/index.html') || /\/Gold-Prices\/?$/.test(path);
+    return path === '/' || path.endsWith('/index.html') || path.endsWith('/');
   }
   return path.includes(base);
 }
@@ -681,9 +681,9 @@ export function updateNavLang(lang) {
 /**
  * Initialize the nav search bar.
  * Called once per page, after injectNav().
- * @param {string} basePath  Base URL path (e.g. '/Gold-Prices')
+ * @param {string} basePath  Base URL path (e.g. '/')
  */
-export function initNavSearch(basePath = '/Gold-Prices') {
+export function initNavSearch(basePath = '/') {
   // Lazy-load the search engine only when the user first interacts
   let searchModule = null;
 

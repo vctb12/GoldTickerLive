@@ -76,7 +76,7 @@ export function buildShopsRoute(country, city) {
  * @param {string} [domain]  Domain override
  * @returns {string}
  */
-export function buildCanonicalURL(path, domain = 'https://vctb12.github.io') {
+export function buildCanonicalURL(path, domain = 'https://goldtickerlive.com') {
   if (!path) return null;
   // Avoid double base path
   const fullPath = path.startsWith(BASE_PATH) ? path : `${BASE_PATH}${path}`;
