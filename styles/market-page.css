@@ -5,21 +5,21 @@
 /* ── Market Hero ───────────────────────────────────── */
 .mkt-hero {
   background: linear-gradient(135deg, var(--color-gold-deep) 0%, #2a1a04 60%, #100c04 100%);
-  padding: 3rem 1.5rem 2.5rem;
+  padding: var(--space-7) var(--space-5) 2.5rem;
 }
 
 .mkt-hero-inner {
   max-width: 860px;
-  margin: 0 auto;
+  margin-inline: auto;
 }
 
 .mkt-hero-badge {
   display: inline-block;
-  background: rgb(196 153 62 / 15%);
+  background: var(--color-gold-glow);
   border: 1px solid rgb(196 153 62 / 40%);
   color: var(--color-gold-light);
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   padding: 0.2rem 0.65rem;
   border-radius: var(--radius-xs);
   text-transform: uppercase;
@@ -29,7 +29,7 @@
 
 .mkt-hero-title {
   font-size: 1.7rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--color-gold-light);
   text-shadow: 0 1px 4px rgb(0 0 0 / 50%);
   line-height: 1.25;
@@ -46,7 +46,7 @@
 
 .mkt-hero-meta {
   display: flex;
-  gap: 1.5rem;
+  gap: var(--space-5);
   flex-wrap: wrap;
 }
 
@@ -58,7 +58,7 @@
 
 .mkt-hero-meta-label {
   font-size: 0.68rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: rgb(224 184 74 / 50%);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -66,13 +66,13 @@
 
 .mkt-hero-meta-value {
   font-size: 0.88rem;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   color: var(--color-gold-light);
 }
 
 /* ── Sections ──────────────────────────────────────── */
 .mkt-section {
-  padding: 2rem 1.5rem;
+  padding: var(--space-6) var(--space-5);
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
@@ -82,12 +82,12 @@
 
 .mkt-inner {
   max-width: 860px;
-  margin: 0 auto;
+  margin-inline: auto;
 }
 
 .mkt-section-title {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
   color: var(--color-text);
   margin-bottom: 0.8rem;
 }
@@ -117,12 +117,12 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 1rem 1.1rem;
+  padding: var(--space-4) 1.1rem;
 }
 
 .mkt-info-card-label {
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--color-text-faint);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -131,7 +131,7 @@
 
 .mkt-info-card-value {
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   color: var(--color-text);
 }
 
@@ -140,7 +140,7 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-2);
   margin-top: 0.8rem;
 }
 
@@ -151,7 +151,7 @@
   padding: 0.7rem 0.9rem;
   background: var(--color-surface-2);
   border-radius: var(--radius-sm);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: var(--color-text-muted);
   line-height: 1.6;
 }
@@ -159,7 +159,7 @@
 .mkt-tips-list li::before {
   content: '→';
   color: var(--color-gold);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   flex-shrink: 0;
 }
 
@@ -179,7 +179,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   color: var(--color-text);
   text-decoration: none;
   background: var(--color-surface);
@@ -196,7 +196,7 @@
 .mkt-link-btn-primary {
   background: var(--color-gold);
   border-color: var(--color-gold);
-  color: #fff;
+  color: var(--text-on-dark);
 }
 
 /* ── Related Markets ────────────────────────────────── */
@@ -204,14 +204,14 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 0.9rem;
-  margin-top: 1rem;
+  margin-top: var(--space-4);
 }
 
 .mkt-related-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 1rem 1.1rem;
+  padding: var(--space-4) 1.1rem;
   text-decoration: none;
   color: inherit;
   transition:
@@ -227,13 +227,13 @@
 
 .mkt-related-card-name {
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--color-text);
   margin-bottom: 0.2rem;
 }
 
 .mkt-related-card-loc {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   color: var(--color-text-muted);
 }
 
@@ -242,7 +242,7 @@
   background: rgb(196 153 62 / 7%);
   border: 1px solid rgb(196 153 62 / 20%);
   border-radius: var(--radius-sm);
-  padding: 0.75rem 1rem;
+  padding: var(--space-3) var(--space-4);
   font-size: 0.78rem;
   color: var(--color-text-muted);
   line-height: 1.6;
@@ -251,7 +251,7 @@
 
 /* ── Breadcrumbs for market pages ───────────────────── */
 .mkt-breadcrumbs {
-  padding: 0.65rem 1.5rem;
+  padding: 0.65rem var(--space-5);
   background: var(--color-surface-2);
   border-bottom: 1px solid var(--color-border-subtle);
   font-size: 0.78rem;

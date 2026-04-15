@@ -24,7 +24,7 @@
 
 .cp-hero-main {
   max-width: 860px;
-  margin: 0 auto;
+  margin-inline: auto;
 }
 
 .cp-hero-main.stale {
@@ -34,13 +34,13 @@
 .cp-hero-row {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-4);
   margin-bottom: 1.2rem;
 }
 
 .cp-hero-flag {
   font-size: 2.8rem;
-  line-height: 1;
+  line-height: var(--leading-none);
   flex-shrink: 0;
 }
 
@@ -52,7 +52,7 @@
 
 .cp-hero-title {
   font-size: 1.15rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--color-gold-light);
   text-shadow: 0 1px 4px rgb(0 0 0 / 50%);
 }
@@ -68,8 +68,8 @@
   border: 1px solid var(--color-gold);
   color: var(--color-gold-light);
   font-size: 0.7rem;
-  font-weight: 700;
-  padding: 0.15rem 0.5rem;
+  font-weight: var(--weight-bold);
+  padding: 0.15rem var(--space-2);
   border-radius: var(--radius-xs);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -80,8 +80,8 @@
   border: 1px solid #3b82f6;
   color: #93c5fd;
   font-size: 0.7rem;
-  font-weight: 700;
-  padding: 0.15rem 0.5rem;
+  font-weight: var(--weight-bold);
+  padding: 0.15rem var(--space-2);
   border-radius: var(--radius-xs);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -90,8 +90,8 @@
 .cp-prices-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
 }
 
 .cp-price-card {
@@ -106,15 +106,15 @@
 
 .cp-price-label {
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--color-gold-muted);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-wider);
 }
 
 .cp-price-value {
   font-size: clamp(1.25rem, 3vw, 1.75rem);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--color-gold-light);
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
@@ -123,7 +123,7 @@
 .cp-change-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
   margin-bottom: 0.6rem;
 }
 
@@ -160,7 +160,7 @@
 /* ── Page body sections ─────────────────────────────── */
 .cp-section {
   max-width: 860px;
-  margin: 0 auto;
+  margin-inline: auto;
   padding: var(--space-6) var(--space-5);
 }
 
@@ -176,7 +176,7 @@
 
 .cp-table-header h2 {
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   margin-bottom: 0.3rem;
 }
 
@@ -200,19 +200,19 @@
 
 .cp-table th {
   background: var(--color-surface-2);
-  padding: 0.75rem 1rem;
-  text-align: left;
-  font-size: 0.75rem;
-  font-weight: 700;
+  padding: var(--space-3) var(--space-4);
+  text-align: start;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
   color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-wider);
   white-space: nowrap;
   border-bottom: 1px solid var(--color-border);
 }
 
 .cp-table td {
-  padding: 0.85rem 1rem;
+  padding: 0.85rem var(--space-4);
   border-bottom: 1px solid var(--color-border);
   white-space: nowrap;
 }
@@ -228,7 +228,7 @@
 .cp-karat-name {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .cp-karat-pct {
@@ -242,7 +242,7 @@
 
 .cp-price-cell {
   font-variant-numeric: tabular-nums;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
 }
 
 .cp-usd-col {
@@ -258,28 +258,28 @@
 /* ── Related countries ──────────────────────────────── */
 #cp-related h2 {
   font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+  font-weight: var(--weight-bold);
+  margin-bottom: var(--space-4);
 }
 
 .cp-related-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 0.75rem;
+  gap: var(--space-3);
 }
 
 .cp-related-card {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.75rem 1rem;
+  padding: var(--space-3) var(--space-4);
   background: var(--color-surface-1);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   text-decoration: none;
   color: var(--color-text);
   font-size: 0.88rem;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   transition:
     border-color 0.15s,
     background 0.15s;
@@ -292,15 +292,15 @@
 
 .cp-related-flag {
   font-size: 1.4rem;
-  line-height: 1;
+  line-height: var(--leading-none);
   flex-shrink: 0;
 }
 
 /* ── FAQ ────────────────────────────────────────────── */
 #cp-faq h2 {
   font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+  font-weight: var(--weight-bold);
+  margin-bottom: var(--space-4);
 }
 
 /* ── RTL overrides ──────────────────────────────────── */
@@ -330,7 +330,7 @@
 
 [dir='rtl'] .cp-table th,
 [dir='rtl'] .cp-table td {
-  text-align: right;
+  text-align: end;
 }
 
 /* ═══════════════════════════════════════════════
@@ -360,14 +360,14 @@
 .cp-hero-prices {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
 }
 
 .cp-price-chip {
   display: flex;
   flex-direction: column;
-  padding: 0.75rem 1.1rem;
+  padding: var(--space-3) 1.1rem;
   background: rgb(255 255 255 / 7%);
   border: 1px solid rgb(255 255 255 / 12%);
   border-radius: var(--radius-md);
@@ -378,16 +378,16 @@
 .cp-price-chip-label {
   font-size: 0.72rem;
   color: rgb(255 255 255 / 50%);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: 0.25rem;
+  margin-bottom: var(--space-1);
 }
 
 .cp-price-chip-value {
   font-size: 1.15rem;
-  font-weight: 800;
-  color: #fff;
+  font-weight: var(--weight-extrabold);
+  color: var(--text-on-dark);
   font-variant-numeric: tabular-nums;
 }
 
@@ -395,13 +395,13 @@
 .cp-related-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
   padding: 0.55rem 1.1rem;
   background: var(--color-surface);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-pill);
   font-size: 0.84rem;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   color: var(--color-text-muted);
   text-decoration: none;
   transition: all 0.18s ease;
@@ -425,21 +425,21 @@
 }
 
 .cp-faq-item > summary {
-  padding: 1rem 1.25rem;
-  font-weight: 700;
+  padding: var(--space-4) 1.25rem;
+  font-weight: var(--weight-bold);
   cursor: pointer;
   list-style: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--space-4);
   font-size: 0.95rem;
 }
 
 .cp-faq-item > summary::after {
   content: '+';
   font-size: 1.2rem;
-  font-weight: 400;
+  font-weight: var(--weight-normal);
   color: var(--color-gold);
   flex-shrink: 0;
   transition: transform 0.2s ease;
@@ -454,10 +454,10 @@
 }
 
 .cp-faq-item .cp-faq-answer {
-  padding: 0 1.25rem 1rem;
+  padding: 0 1.25rem var(--space-4);
   font-size: 0.9rem;
   color: var(--color-text-muted);
-  line-height: 1.7;
+  line-height: var(--leading-relaxed);
 }
 
 /* Inner tools row */
@@ -472,16 +472,16 @@
 .cp-trust-note {
   font-size: 0.78rem;
   color: var(--color-text-faint);
-  padding: 0.75rem 1rem;
+  padding: var(--space-3) var(--space-4);
   background: var(--color-surface-2);
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-subtle);
-  margin-top: 0.75rem;
+  margin-top: var(--space-3);
 }
 
 @media (width <= 640px) {
   .cp-hero-prices {
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
 
   .cp-price-chip {
@@ -490,7 +490,7 @@
   }
 
   .cp-price-chip-value {
-    font-size: 1rem;
+    font-size: var(--text-base);
   }
 }
 
@@ -501,7 +501,7 @@
   }
 
   .cp-section {
-    padding: 1.5rem 1rem !important;
+    padding: var(--space-5) var(--space-4) !important;
   }
 
   .cp-price-chips-grid {
@@ -511,12 +511,12 @@
 
 @media (width <= 480px) {
   .cp-hero {
-    padding: 2rem 1rem 1.5rem !important;
+    padding: var(--space-6) var(--space-4) var(--space-5) !important;
   }
 
   .cp-hero-prices {
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
 
   .cp-price-chip {
@@ -544,7 +544,7 @@
 
   .cp-faq-item summary {
     font-size: 0.88rem;
-    padding: 0.85rem 1rem;
+    padding: 0.85rem var(--space-4);
   }
 
   .cp-tools-row {
@@ -554,7 +554,7 @@
 
 @media (width <= 380px) {
   .cp-price-chip {
-    min-width: calc(50% - 0.25rem);
+    min-width: calc(50% - var(--space-1));
   }
 
   .cp-hero {
@@ -572,7 +572,7 @@
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-pill);
   font-size: 0.83rem;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   color: var(--color-text-muted);
   text-decoration: none;
   transition:
@@ -596,7 +596,7 @@
 
 @media (width <= 560px) {
   .cp-tools-row {
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
 
   .related-tool-link {

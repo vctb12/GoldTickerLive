@@ -5,19 +5,19 @@
 /* ── City Overview Section ─────────────────────────── */
 .city-overview {
   max-width: 860px;
-  margin: 0 auto;
+  margin-inline: auto;
 }
 
 .city-overview h2 {
   font-size: 1.35rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--color-text);
   margin-bottom: 0.8rem;
 }
 
 .city-overview p {
   color: var(--color-text-muted);
-  line-height: 1.7;
+  line-height: var(--leading-relaxed);
   margin-bottom: 0.8rem;
 }
 
@@ -25,9 +25,9 @@
 .city-markets-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1rem;
+  gap: var(--space-4);
   max-width: 860px;
-  margin: 0 auto;
+  margin-inline: auto;
 }
 
 .city-market-card {
@@ -37,7 +37,7 @@
   padding: 1.2rem 1.3rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-2);
   transition:
     box-shadow var(--transition),
     border-color var(--transition);
@@ -52,7 +52,7 @@
 
 .city-market-card-name {
   font-size: 0.97rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--color-text);
 }
 
@@ -68,11 +68,11 @@
   border: 1px solid var(--color-gold-bg);
   color: var(--color-gold-dark);
   font-size: 0.7rem;
-  font-weight: 700;
-  padding: 0.15rem 0.5rem;
+  font-weight: var(--weight-bold);
+  padding: 0.15rem var(--space-2);
   border-radius: var(--radius-xs);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-wider);
   align-self: flex-start;
 }
 
@@ -80,16 +80,16 @@
 .city-areas-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 0.75rem;
+  gap: var(--space-3);
   max-width: 860px;
-  margin: 0 auto;
+  margin-inline: auto;
 }
 
 .city-area-card {
   background: var(--color-surface-2);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-sm);
-  padding: 0.9rem 1rem;
+  padding: 0.9rem var(--space-4);
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
@@ -97,7 +97,7 @@
 
 .city-area-name {
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--color-text);
 }
 
@@ -111,7 +111,7 @@
 .city-tips-list {
   list-style: none;
   max-width: 860px;
-  margin: 0 auto;
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -119,13 +119,13 @@
 
 .city-tips-list li {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--space-3);
   align-items: flex-start;
   background: var(--color-surface);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-sm);
-  padding: 0.75rem 1rem;
-  font-size: 0.875rem;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
   color: var(--color-text-muted);
   line-height: 1.6;
 }
@@ -133,7 +133,7 @@
 .city-tips-list li::before {
   content: '✓';
   color: var(--color-gold);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   font-size: 0.9rem;
   flex-shrink: 0;
   margin-top: 0.05rem;
@@ -142,18 +142,19 @@
 /* ── Section Headers ────────────────────────────────── */
 .city-section-header {
   max-width: 860px;
-  margin: 0 auto 1.2rem;
+  margin-block: 0 1.2rem;
+  margin-inline: auto;
 }
 
 .city-section-header h2 {
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--color-text);
   margin-bottom: 0.3rem;
 }
 
 .city-section-header p {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
 
@@ -162,18 +163,18 @@
   background: linear-gradient(135deg, var(--color-gold-tint) 0%, var(--color-gold-bg) 100%);
   border: 1px solid var(--color-gold);
   border-radius: var(--radius-md);
-  padding: 1.5rem 1.8rem;
+  padding: var(--space-5) 1.8rem;
   max-width: 860px;
-  margin: 0 auto;
+  margin-inline: auto;
   display: flex;
-  gap: 1.5rem;
+  gap: var(--space-5);
   align-items: center;
   flex-wrap: wrap;
 }
 
 .city-cta-text h3 {
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
   color: var(--color-text);
   margin-bottom: 0.2rem;
 }
@@ -197,7 +198,7 @@
   padding: 0.55rem 1.1rem;
   border-radius: var(--radius-sm);
   font-size: 0.82rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   text-decoration: none;
   transition: opacity var(--transition);
 }
@@ -208,7 +209,7 @@
 
 .city-cta-btn-primary {
   background: var(--color-gold);
-  color: #fff;
+  color: var(--text-on-dark);
 }
 
 .city-cta-btn-secondary {
@@ -220,10 +221,10 @@
 /* ── Related Cities Row ─────────────────────────────── */
 .city-related-cities {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--space-3);
   flex-wrap: wrap;
   max-width: 860px;
-  margin: 0 auto;
+  margin-inline: auto;
 }
 
 .city-related-link {
@@ -234,7 +235,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   color: var(--color-text);
   text-decoration: none;
   background: var(--color-surface);
@@ -260,7 +261,7 @@
 
   .city-cta-banner {
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-4);
   }
 
   .cp-prices-row {
