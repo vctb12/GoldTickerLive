@@ -326,7 +326,7 @@
           )
             window.location.replace('../login/');
         } catch (e) {
-          window.location.replace('../login/');
+          // On storage error, let the async guard handle it
         }
       })();
     </script>
@@ -336,27 +336,7 @@
 
     <div class="admin-layout">
       <!-- ── Sidebar ──────────────────────────────────────────── -->
-      <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
-        <div class="sidebar-header">
-          <span class="logo-icon" aria-hidden="true">⚙</span>
-          <span class="logo-text">GoldAdmin</span>
-        </div>
-        <nav class="sidebar-nav" aria-label="Main menu">
-          <a href="../" class="nav-link"><span class="nav-icon">📊</span> Dashboard</a>
-          <a href="../shops/" class="nav-link"><span class="nav-icon">🏪</span> Shops</a>
-          <a href="../pricing/" class="nav-link"><span class="nav-icon">💰</span> Pricing</a>
-          <a href="../orders/" class="nav-link"><span class="nav-icon">📦</span> Orders</a>
-          <a href="../content/" class="nav-link"><span class="nav-icon">📝</span> Content</a>
-          <a href="../social/" class="nav-link"><span class="nav-icon">📱</span> Social</a>
-          <a href="../settings/" class="nav-link"><span class="nav-icon">⚙</span> Settings</a>
-          <a href="../analytics/" class="nav-link"><span class="nav-icon">📈</span> Analytics</a>
-        </nav>
-        <div class="sidebar-footer">
-          <button class="btn btn-ghost btn-sm w-full" id="logout-btn" type="button">
-            ↩ Sign Out
-          </button>
-        </div>
-      </aside>
+      <aside class="sidebar" id="sidebar" aria-label="Admin navigation"></aside>
 
       <!-- ── Main area ────────────────────────────────────────── -->
       <div class="main-area">
@@ -676,10 +656,12 @@
     <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
     <script type="module">
-      import { logout, requireAuth, getSupabase, logActivity } from '../supabase-auth.js';
+      import { logout, requireAuth, getSupabase, getSession, logActivity } from '../supabase-auth.js';
+      import { initAdminShell } from '../shared/admin-shell.js';
 
       // ── Auth guard ──────────────────────────────────────────
       if (!(await requireAuth())) throw new Error('redirect');
+      await initAdminShell({ logout, getSession });
 
       /* ─────────────────────────────────────────────────────────
        Config
@@ -1223,30 +1205,6 @@
        Event wiring
     ───────────────────────────────────────────────────────── */
       async function init() {
-        // Sidebar mobile toggle
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-        document.getElementById('sidebar-toggle').addEventListener('click', () => {
-          sidebar.classList.toggle('sidebar--open');
-          overlay.classList.toggle('sidebar-overlay--visible');
-        });
-        overlay.addEventListener('click', () => {
-          sidebar.classList.remove('sidebar--open');
-          overlay.classList.remove('sidebar-overlay--visible');
-        });
-
-        // Logout
-        document.getElementById('logout-btn').addEventListener('click', () => {
-          logout();
-          window.location.replace('../login/');
-        });
-
-        // Active nav link
-        document.querySelectorAll('.nav-link').forEach((a) => {
-          if (window.location.pathname.includes(a.getAttribute('href').replace('../', '')))
-            a.classList.add('active');
-        });
-
         // Refresh live prices
         document.getElementById('refresh-btn').addEventListener('click', () => fetchLivePrices());
 
