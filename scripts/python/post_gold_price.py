@@ -136,7 +136,7 @@ def format_market_open_tweet(data):
         f"18K  {_aed(g18)} AED/g\n"
         f"\n"
         f"New week. Track live prices 👇\n"
-        f"{SITE_URL}\n"
+        f"📲: goldtickerlive.com\n"
         f"\n"
         f"#GoldPrice #Gold #XAU #UAE #Dubai"
     )
@@ -157,7 +157,7 @@ def format_market_close_tweet(data):
         f"18K  {_aed(g18)} AED/g\n"
         f"\n"
         f"Reopens Monday 1:00 AM 🌙\n"
-        f"{SITE_URL}\n"
+        f"🖥️: goldtickerlive.com\n"
         f"\n"
         f"#GoldPrice #Gold #XAU #UAE #Dubai"
     )
