@@ -347,8 +347,8 @@
     <script type="module">
       import { logout as supabaseLogout, requireAuth, getSession, getSupabase } from './supabase-auth.js';
       import { CONSTANTS } from '../config/constants.js';
-      import { initAdminShell } from './shared/admin-shell.js';
-      import { showToast, qs, relativeTime, storageGet, storageSet, storageRemove, drawSparkline, skeletonRows } from './shared/admin-utils.js';
+      import { initAdminShell, renderBreadcrumb } from './shared/admin-shell.js';
+      import { showToast, qs, relativeTime, storageGet, storageSet, storageRemove, drawSparkline, skeletonRows, initCommandPalette } from './shared/admin-utils.js';
       import { ICONS } from './shared/icons.js';
 
       // ── Auth guard ───────────────────────────────────────────
@@ -356,6 +356,16 @@
 
       // ── Initialise shared sidebar / shell ───────────────────
       await initAdminShell({ logout: supabaseLogout, getSession });
+      renderBreadcrumb([]);
+      initCommandPalette([
+        { label: 'Dashboard', href: './', icon: ICONS.dashboard },
+        { label: 'Orders', href: './orders/', icon: ICONS.orders },
+        { label: 'Pricing', href: './pricing/', icon: ICONS.pricing },
+        { label: 'Analytics', href: './analytics/', icon: ICONS.analytics },
+        { label: 'Content', href: './content/', icon: ICONS.content },
+        { label: 'Social', href: './social/', icon: ICONS.social },
+        { label: 'Settings', href: './settings/', icon: ICONS.settings },
+      ]);
 
       const API_GOLD_URL = CONSTANTS.API_GOLD_URL;
       const API_FX_URL   = CONSTANTS.API_FX_URL;

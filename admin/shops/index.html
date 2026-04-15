@@ -723,13 +723,23 @@
     <script type="module">
       import { logout as supabaseLogout, requireAuth, getSupabase, getSession } from '../supabase-auth.js';
       import { initAdminShell, renderBreadcrumb } from '../shared/admin-shell.js';
-      import { showToast, renderPagination, downloadCSV, debounce } from '../shared/admin-utils.js';
+      import { showToast, renderPagination, downloadCSV, debounce, initCommandPalette } from '../shared/admin-utils.js';
       import { ICONS } from '../shared/icons.js';
 
       // ── Auth guard ──────────────────────────────────────────
       if (!(await requireAuth())) throw new Error('redirect');
       await initAdminShell({ logout: supabaseLogout, getSession });
-      renderBreadcrumb('Shops');
+      renderBreadcrumb([{ label: 'Shops' }]);
+      initCommandPalette([
+        { label: 'Dashboard', href: '../', icon: ICONS.dashboard },
+        { label: 'Shops', href: './', icon: ICONS.shops },
+        { label: 'Orders', href: '../orders/', icon: ICONS.orders },
+        { label: 'Pricing', href: '../pricing/', icon: ICONS.pricing },
+        { label: 'Analytics', href: '../analytics/', icon: ICONS.analytics },
+        { label: 'Content', href: '../content/', icon: ICONS.content },
+        { label: 'Social', href: '../social/', icon: ICONS.social },
+        { label: 'Settings', href: '../settings/', icon: ICONS.settings },
+      ]);
 
       /* ─────────────────────────────────────────────────────────
        Config
