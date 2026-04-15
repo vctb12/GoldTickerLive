@@ -215,6 +215,11 @@
         gap: 10px;
         margin-bottom: 6px;
       }
+      @media (max-width: 700px) {
+        .analytics-two-col {
+          grid-template-columns: 1fr !important;
+        }
+      }
     </style>
   </head>
   <body>
@@ -237,6 +242,8 @@
     </script>
 
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="admin-layout">
       <!-- Sidebar -->
       <aside class="sidebar" id="sidebar" aria-label="Admin navigation"></aside>
 
@@ -256,7 +263,20 @@
         </header>
 
         <main class="content-area" id="main-content">
-          <!-- Analytics is stored in Supabase (with localStorage cache) -->
+          <!-- Date range filter -->
+          <div class="toolbar" style="margin-bottom:20px;" role="search" aria-label="Filter analytics">
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <label style="font-size:0.8125rem;color:var(--text-muted);white-space:nowrap;" for="analytics-date-from">From:</label>
+              <input class="form-input date-input" id="analytics-date-from" type="date" aria-label="Start date" style="flex:0 1 140px;" />
+              <label style="font-size:0.8125rem;color:var(--text-muted);white-space:nowrap;" for="analytics-date-to">To:</label>
+              <input class="form-input date-input" id="analytics-date-to" type="date" aria-label="End date" style="flex:0 1 140px;" />
+              <button class="btn btn-ghost btn-sm" id="analytics-date-clear" type="button">Clear</button>
+            </div>
+            <div style="margin-left:auto;display:flex;gap:8px;">
+              <button class="btn btn-ghost btn-sm" id="analytics-refresh-btn" type="button">⟳ Refresh</button>
+            </div>
+          </div>
+          <!-- Dynamic analytics content rendered by JS -->
         </main>
       </div>
       <!-- /.main-area -->
@@ -267,28 +287,26 @@
 
     <script type="module">
       import { logout as supabaseLogout, requireAuth, getSupabase, getSession } from '../supabase-auth.js';
-      import { initAdminShell } from '../shared/admin-shell.js';
+      import { initAdminShell, renderBreadcrumb } from '../shared/admin-shell.js';
+      import { showToast, downloadCSV, confirmDialog, initCommandPalette, drawSparkline, drawDonut } from '../shared/admin-utils.js';
+      import { ICONS } from '../shared/icons.js';
 
       // ── Auth guard ──────────────────────────────────────────
       if (!(await requireAuth())) throw new Error('redirect');
       await initAdminShell({ logout: supabaseLogout, getSession });
+      renderBreadcrumb([{ label: 'Analytics' }]);
+      initCommandPalette([
+        { label: 'Dashboard', href: '../', icon: ICONS.dashboard },
+        { label: 'Orders', href: '../orders/', icon: ICONS.orders },
+        { label: 'Pricing', href: '../pricing/', icon: ICONS.pricing },
+        { label: 'Analytics', href: './', icon: ICONS.analytics },
+        { label: 'Content', href: '../content/', icon: ICONS.content },
+        { label: 'Social', href: '../social/', icon: ICONS.social },
+        { label: 'Settings', href: '../settings/', icon: ICONS.settings },
+      ]);
 
       const EVENTS_KEY = 'gp_analytics_events';
       const API_LOG_KEY = 'gp_api_call_log';
-
-      /* ── Toast ──────────────────────────────────────────────── */
-      function showToast(msg, type = 'info') {
-        const icons = { success: '✓', error: '✕', warning: '⚠', info: 'ℹ' };
-        const container = document.getElementById('toast-container');
-        const toast = document.createElement('div');
-        toast.className = `toast toast--${type}`;
-        toast.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span>${msg}</span>`;
-        container.appendChild(toast);
-        setTimeout(() => {
-          toast.classList.add('toast-hide');
-          toast.addEventListener('animationend', () => toast.remove(), { once: true });
-        }, 3500);
-      }
 
       /* ── Supabase Data Layer (with localStorage cache fallback) ── */
 
@@ -582,7 +600,7 @@
           </div>
         </div>
 
-        <!-- Bar chart -->
+        <!-- Bar chart (14-day trend) -->
         <div class="card" style="margin-bottom:20px;">
           <div class="card-header">
             <h2 class="card-title">Page Views — Last 14 Days</h2>
@@ -593,22 +611,32 @@
               <span><span class="legend-dot" style="background:var(--primary);"></span>Page views</span>
               <span><span class="legend-dot" style="background:var(--gold);"></span>Today</span>
             </div>
+            <!-- Canvas trend line overlay -->
+            <canvas id="trend-canvas" width="480" height="60" style="width:100%;height:60px;display:block;margin-top:8px;" aria-label="Page view trend sparkline"></canvas>
           </div>
         </div>
 
-        <!-- Top pages -->
-        <div class="card" style="margin-bottom:20px;">
-          <div class="card-header">
-            <h2 class="card-title">Top Pages</h2>
-          </div>
-          <div class="card-body" style="padding:0;">
-            <div style="overflow-x:auto;">
-              <table class="table">
-                <thead><tr><th>Page</th><th style="text-align:right;">Views</th><th style="text-align:right;">% of Total</th></tr></thead>
-                <tbody>${topPageRows}</tbody>
-              </table>
+        <!-- Event type breakdown (donut) + Top pages side by side -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;" class="analytics-two-col">
+          <div class="card">
+            <div class="card-header"><h2 class="card-title">Event Types</h2></div>
+            <div class="card-body" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+              <canvas id="donut-canvas" width="120" height="120" style="flex-shrink:0;" aria-label="Event type distribution donut chart"></canvas>
+              <div id="donut-legend" style="display:flex;flex-direction:column;gap:6px;font-size:0.8125rem;"></div>
             </div>
-            ${sortedPages.length === 0 ? `<div class="empty-state">No page view data recorded yet. Data appears here as users visit public pages.</div>` : ''}
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h2 class="card-title">Top Pages</h2></div>
+            <div class="card-body" style="padding:0;">
+              <div style="overflow-x:auto;">
+                <table class="table">
+                  <thead><tr><th>Page</th><th style="text-align:right;">Views</th><th style="text-align:right;">%</th></tr></thead>
+                  <tbody>${topPageRows}</tbody>
+                </table>
+              </div>
+              ${sortedPages.length === 0 ? `<div class="empty-state">No page view data recorded yet.</div>` : ''}
+            </div>
           </div>
         </div>
 
@@ -635,6 +663,7 @@
           <div class="card-body">
             <div class="actions-row">
               <button class="btn btn-secondary btn-sm" id="export-events-btn" type="button">⬇ Export Events JSON</button>
+              <button class="btn btn-secondary btn-sm" id="export-csv-btn" type="button">⬇ Export CSV</button>
               <button class="btn btn-ghost btn-sm" id="clear-events-btn" type="button" style="color:var(--danger);">🗑 Clear Analytics Data</button>
             </div>
             ${datePeriod ? `<div class="data-period">Data period: ${datePeriod}</div>` : ''}
@@ -643,9 +672,37 @@
 
         content.appendChild(frontendSection);
 
-        /* ── Wire data management actions ───────────────────────── */
-        let clearPending = false;
+        /* ── Draw canvas trend sparkline ────────────────────────── */
+        const trendCanvas = document.getElementById('trend-canvas');
+        if (trendCanvas) {
+          drawSparkline(trendCanvas, days14.map((d) => d.count), { color: 'var(--primary)' });
+        }
 
+        /* ── Draw donut chart ────────────────────────────────────── */
+        const donutCanvas = document.getElementById('donut-canvas');
+        const donutLegend = document.getElementById('donut-legend');
+        if (donutCanvas) {
+          const eventCounts = {};
+          events.forEach((e) => {
+            const t = e.event || 'unknown';
+            eventCounts[t] = (eventCounts[t] || 0) + 1;
+          });
+          const DONUT_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4', '#64748b'];
+          const segments = Object.entries(eventCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 6)
+            .map(([label, value], i) => ({ label, value, color: DONUT_COLORS[i % DONUT_COLORS.length] }));
+          const total = segments.reduce((s, g) => s + g.value, 0);
+          drawDonut(donutCanvas, segments);
+          donutLegend.innerHTML = segments.map((s) => `
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="background:${s.color};border-radius:2px;display:inline-block;flex-shrink:0;height:10px;width:10px;"></span>
+              <span style="color:var(--text-muted);">${s.label}</span>
+              <span style="color:var(--text);font-weight:600;margin-left:auto;padding-left:8px;">${s.value.toLocaleString()}</span>
+            </div>`).join('');
+        }
+
+        /* ── Wire data management actions ───────────────────────── */
         document.getElementById('export-events-btn').addEventListener('click', () => {
           const blob = new Blob([JSON.stringify(events, null, 2)], { type: 'application/json' });
           const url = URL.createObjectURL(blob);
@@ -654,37 +711,55 @@
           a.download = 'gp_analytics_events.json';
           a.click();
           URL.revokeObjectURL(url);
+          showToast('Events exported as JSON.', 'success');
+        });
+
+        document.getElementById('export-csv-btn').addEventListener('click', () => {
+          const cols = ['event', 'page', 'ts', 'sessionId'];
+          const rows = events.map((e) => ({ event: e.event, page: e.page || '', ts: e.ts ? new Date(e.ts).toISOString() : '', sessionId: e.sessionId || '' }));
+          downloadCSV(`analytics-${new Date().toISOString().slice(0, 10)}.csv`, rows, cols);
+          showToast('Events exported as CSV.', 'success');
         });
 
         document.getElementById('clear-events-btn').addEventListener('click', async () => {
-          const btn = document.getElementById('clear-events-btn');
-          if (!clearPending) {
-            clearPending = true;
-            btn.textContent = '⚠ Confirm Clear';
-            btn.style.background = 'rgba(239,68,68,0.15)';
-            setTimeout(() => {
-              clearPending = false;
-              btn.textContent = '🗑 Clear Analytics Data';
-              btn.style.background = '';
-            }, 3000);
-          } else {
-            clearPending = false;
-            // Clear from Supabase
-            const sb = getSupabase();
-            if (sb) {
-              try { await sb.from('analytics_events').delete().gte('created_at', '1970-01-01'); } catch {}
-              try { await sb.from('api_call_logs').delete().gte('created_at', '1970-01-01'); } catch {}
-            }
-            try { localStorage.removeItem(EVENTS_KEY); } catch {}
-            showToast('Analytics data cleared.', 'info');
-            await renderPage();
+          const confirmed = await confirmDialog('This will permanently delete all analytics data. This cannot be undone.', {
+            title: 'Clear analytics data?', confirmLabel: 'Clear Data',
+          });
+          if (!confirmed) return;
+          const sb = getSupabase();
+          if (sb) {
+            try { await sb.from('analytics_events').delete().gte('created_at', '1970-01-01'); } catch {}
+            try { await sb.from('api_call_logs').delete().gte('created_at', '1970-01-01'); } catch {}
           }
+          try { localStorage.removeItem(EVENTS_KEY); } catch {}
+          showToast('Analytics data cleared.', 'info');
+          await renderPage();
+        });
+      }
+
+      /* ── Date range filter ──────────────────────────────────── */
+      function getDateRange() {
+        const from = document.getElementById('analytics-date-from')?.value;
+        const to = document.getElementById('analytics-date-to')?.value;
+        return { from, to };
+      }
+
+      function filterEventsByDate(events) {
+        const { from, to } = getDateRange();
+        if (!from && !to) return events;
+        return events.filter((e) => {
+          const ts = e.ts || (e.created_at ? new Date(e.created_at).getTime() : null);
+          if (!ts) return true;
+          if (from && ts < new Date(from).getTime()) return false;
+          if (to && ts > new Date(to + 'T23:59:59').getTime()) return false;
+          return true;
         });
       }
 
       /* ── Main render ────────────────────────────────────────── */
       async function renderPage() {
-        const events = await loadEvents();
+        const allEvents = await loadEvents();
+        const events = filterEventsByDate(allEvents);
         if (events.length === 0) {
           renderEmptyState();
         } else {
@@ -695,6 +770,17 @@
       /* ── Init ───────────────────────────────────────────────── */
       async function init() {
         await renderPage();
+
+        // Wire date range controls
+        ['analytics-date-from', 'analytics-date-to'].forEach((id) => {
+          document.getElementById(id)?.addEventListener('change', renderPage);
+        });
+        document.getElementById('analytics-date-clear')?.addEventListener('click', () => {
+          document.getElementById('analytics-date-from').value = '';
+          document.getElementById('analytics-date-to').value = '';
+          renderPage();
+        });
+        document.getElementById('analytics-refresh-btn')?.addEventListener('click', renderPage);
       }
 
       init();

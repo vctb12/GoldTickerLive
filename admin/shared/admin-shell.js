@@ -163,6 +163,11 @@ function injectBottomNav(adminBase, activeSlug, openSidebarFn) {
  */
 export function renderBreadcrumb(pageName) {
   if (!pageName) return;
+  // Accept array [{label, href?}, ...] or plain string
+  const crumbs = Array.isArray(pageName)
+    ? pageName
+    : [{ label: String(pageName) }];
+  if (!crumbs.length) return;
   const adminBase = getAdminBase();
   const header = document.querySelector('header.page-header');
   if (!header) return;
@@ -174,7 +179,18 @@ export function renderBreadcrumb(pageName) {
     bc.setAttribute('aria-label', 'Breadcrumb');
     header.insertAdjacentElement('afterend', bc);
   }
-  bc.innerHTML = `<a href="${adminBase}">GoldAdmin</a><span class="breadcrumb-sep" aria-hidden="true">›</span><span class="breadcrumb-current">${pageName}</span>`;
+
+  // Build trail: "GoldAdmin > [crumb1] > ... > currentPage"
+  const parts = [`<a href="${adminBase}">GoldAdmin</a>`];
+  crumbs.forEach((c, i) => {
+    parts.push(`<span class="breadcrumb-sep" aria-hidden="true">›</span>`);
+    if (c.href && i < crumbs.length - 1) {
+      parts.push(`<a href="${adminBase}${c.href}">${c.label}</a>`);
+    } else {
+      parts.push(`<span class="breadcrumb-current">${c.label}</span>`);
+    }
+  });
+  bc.innerHTML = parts.join('');
 }
 
 // ── Main init function ───────────────────────────────────────────────────────

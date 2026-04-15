@@ -24,7 +24,14 @@ export function showToast(message, type = 'info') {
   const toast = document.createElement('div');
   toast.className = `toast ${TOAST_TYPES[type] || TOAST_TYPES.info}`;
   toast.setAttribute('role', 'alert');
-  toast.innerHTML = `<span class="toast-icon" aria-hidden="true">${TOAST_ICONS[type] || TOAST_ICONS.info}</span><span>${message}</span>`;
+  const iconSpan = document.createElement('span');
+  iconSpan.className = 'toast-icon';
+  iconSpan.setAttribute('aria-hidden', 'true');
+  iconSpan.innerHTML = TOAST_ICONS[type] || TOAST_ICONS.info; // icons are trusted constants
+  const msgSpan = document.createElement('span');
+  msgSpan.textContent = message; // sanitize message via textContent
+  toast.appendChild(iconSpan);
+  toast.appendChild(msgSpan);
   container.appendChild(toast);
   setTimeout(() => {
     toast.classList.add('toast-hide');
@@ -249,6 +256,37 @@ export function drawSparkline(canvas, data, { color = '#3b82f6', fill = true } =
     ctx.fillStyle = color + '26'; // hex alpha 0x26 = 38/255 ≈ 15% opacity
     ctx.fill();
   }
+}
+
+// ── Donut chart ───────────────────────────────────────────────────────────────
+
+/**
+ * Draw a donut chart on a canvas element.
+ * @param {HTMLCanvasElement} canvas
+ * @param {{ label: string, value: number, color: string }[]} segments
+ */
+export function drawDonut(canvas, segments) {
+  if (!canvas || !segments?.length) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const cx = w / 2, cy = h / 2;
+  const r = Math.min(w, h) / 2 - 4;
+  const ir = r * 0.55;
+  const total = segments.reduce((s, g) => s + g.value, 0);
+  if (!total) return;
+  ctx.clearRect(0, 0, w, h);
+  let startAngle = -Math.PI / 2;
+  segments.forEach((seg) => {
+    const sweep = (seg.value / total) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(cx + ir * Math.cos(startAngle), cy + ir * Math.sin(startAngle));
+    ctx.arc(cx, cy, r, startAngle, startAngle + sweep);
+    ctx.arc(cx, cy, ir, startAngle + sweep, startAngle, true);
+    ctx.closePath();
+    ctx.fillStyle = seg.color;
+    ctx.fill();
+    startAngle += sweep;
+  });
 }
 
 // ── Command palette ───────────────────────────────────────────────────────────

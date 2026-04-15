@@ -44,6 +44,41 @@
       }
 
       /* ── Live prices table ──────────────────────────────────── */
+      /* ── Karat cards ────────────────────────────────────────── */
+      .karat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        position: relative;
+        transition: border-color 0.15s;
+      }
+      .karat-card:hover {
+        border-color: var(--primary);
+      }
+      .karat-card-label {
+        color: var(--text-dim);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+      }
+      .karat-card-price {
+        color: var(--text);
+        font-size: 1.125rem;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+      .karat-card-currency {
+        color: var(--text-dim);
+        font-size: 0.75rem;
+        margin-top: 2px;
+      }
+      .karat-card-sparkline {
+        margin-top: 8px;
+      }
+
       .live-header {
         align-items: center;
         display: flex;
@@ -186,6 +221,18 @@
         font-size: 0.9375rem;
         padding: 36px 24px;
         text-align: center;
+      }
+
+      /* ── Inline edit cells ──────────────────────────────────── */
+      .price-inline-cell,
+      .reason-inline-cell {
+        cursor: pointer;
+        position: relative;
+      }
+      .price-inline-cell:hover .inline-val,
+      .reason-inline-cell:hover .inline-val {
+        outline: 1px dashed var(--primary);
+        border-radius: 2px;
       }
 
       /* ── Row actions ────────────────────────────────────────── */
@@ -366,6 +413,9 @@
             <span class="banner-icon">⚠️</span>
             <span class="banner-text" id="override-banner-text"></span>
           </div>
+
+          <!-- ── Karat Cards ───────────────────────────────────── -->
+          <div class="karat-cards-grid" id="karat-cards-grid" aria-label="Karat price cards" role="list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px;"></div>
 
           <!-- ── Live Prices ───────────────────────────────────── -->
           <section class="section card" aria-labelledby="live-prices-title">
@@ -657,11 +707,23 @@
 
     <script type="module">
       import { logout, requireAuth, getSupabase, getSession, logActivity } from '../supabase-auth.js';
-      import { initAdminShell } from '../shared/admin-shell.js';
+      import { initAdminShell, renderBreadcrumb } from '../shared/admin-shell.js';
+      import { showToast, confirmDialog, initCommandPalette, drawSparkline } from '../shared/admin-utils.js';
+      import { ICONS } from '../shared/icons.js';
 
       // ── Auth guard ──────────────────────────────────────────
       if (!(await requireAuth())) throw new Error('redirect');
       await initAdminShell({ logout, getSession });
+      renderBreadcrumb([{ label: 'Pricing' }]);
+      initCommandPalette([
+        { label: 'Dashboard', href: '../', icon: ICONS.dashboard },
+        { label: 'Orders', href: '../orders/', icon: ICONS.orders },
+        { label: 'Pricing', href: './', icon: ICONS.pricing },
+        { label: 'Analytics', href: '../analytics/', icon: ICONS.analytics },
+        { label: 'Content', href: '../content/', icon: ICONS.content },
+        { label: 'Social', href: '../social/', icon: ICONS.social },
+        { label: 'Settings', href: '../settings/', icon: ICONS.settings },
+      ]);
 
       /* ─────────────────────────────────────────────────────────
        Config
@@ -680,22 +742,6 @@
         { code: '18', label: '18K', purity: 18 / 24 },
       ];
       const LIVE_CURRENCIES = ['USD', 'AED', 'SAR', 'KWD'];
-
-      /* ─────────────────────────────────────────────────────────
-       Toast
-    ───────────────────────────────────────────────────────── */
-      function showToast(msg, type = 'info') {
-        const icons = { success: '✅', warning: '⚠️', danger: '❌', info: 'ℹ️' };
-        const container = document.getElementById('toast-container');
-        const toast = document.createElement('div');
-        toast.className = `toast toast--${type}`;
-        toast.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span>${msg}</span>`;
-        container.appendChild(toast);
-        setTimeout(() => {
-          toast.classList.add('toast-hide');
-          toast.addEventListener('animationend', () => toast.remove(), { once: true });
-        }, 4000);
-      }
 
       /* ─────────────────────────────────────────────────────────
        Supabase Data Layer (with localStorage cache fallback)
@@ -877,6 +923,21 @@
       /* ─────────────────────────────────────────────────────────
        Live price fetch
     ───────────────────────────────────────────────────────── */
+      const PRICE_HISTORY_KEY = 'gp_spot_price_history';
+      const MAX_HISTORY_POINTS = 20;
+
+      function loadPriceHistory() {
+        try { return JSON.parse(localStorage.getItem(PRICE_HISTORY_KEY)) || []; } catch { return []; }
+      }
+
+      function appendPriceHistory(spotUsd) {
+        if (!spotUsd) return;
+        const history = loadPriceHistory();
+        history.push({ price: spotUsd, ts: Date.now() });
+        if (history.length > MAX_HISTORY_POINTS) history.splice(0, history.length - MAX_HISTORY_POINTS);
+        try { localStorage.setItem(PRICE_HISTORY_KEY, JSON.stringify(history)); } catch {}
+      }
+
       let liveState = { spotUsd: null, rates: {}, fetchedAt: null, error: null };
 
       async function fetchLivePrices() {
@@ -894,6 +955,7 @@
           liveState.rates.AED = AED_PEG; // always use peg
           liveState.fetchedAt = Date.now();
           liveState.error = null;
+          appendPriceHistory(liveState.spotUsd);
         } catch (err) {
           liveState.error = err.message || 'Fetch failed';
         }
@@ -956,15 +1018,48 @@
 
       function renderLiveTable() {
         const tbody = document.getElementById('live-tbody');
+        const cardsGrid = document.getElementById('karat-cards-grid');
+
         if (!liveState.spotUsd && !liveState.error) {
           tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-dim)"><span class="inline-spin"></span> Loading…</td></tr>`;
+          if (cardsGrid) cardsGrid.innerHTML = '';
           return;
         }
         if (liveState.error && !liveState.spotUsd) {
           tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--danger)">Could not load live prices.</td></tr>`;
+          if (cardsGrid) cardsGrid.innerHTML = '';
           return;
         }
 
+        // ── Karat cards (AED primary, with sparkline) ──────────
+        if (cardsGrid) {
+          cardsGrid.innerHTML = KARATS.map((k) => {
+            const usdPerGram = getUsdPerGram(k);
+            const aedPrice = getPriceInCurrency(usdPerGram, 'AED');
+            const priceStr = aedPrice != null ? aedPrice.toFixed(2) : '—';
+            return `<div class="karat-card stat-card" role="listitem" aria-label="${k.label} price">
+              <div class="karat-card-label">${k.label}</div>
+              <div class="karat-card-price">${priceStr}</div>
+              <div class="karat-card-currency">AED / gram</div>
+              <div class="karat-card-sparkline"><canvas id="spark-${k.code}" width="120" height="32" style="width:100%;height:32px;" aria-label="${k.label} price trend"></canvas></div>
+            </div>`;
+          }).join('');
+
+          // Draw sparklines using price history
+          const priceHistory = loadPriceHistory();
+          KARATS.forEach((k) => {
+            const canvas = document.getElementById(`spark-${k.code}`);
+            if (canvas && priceHistory.length > 1) {
+              const values = priceHistory.map((h) => (h.price / 31.1035) * k.purity * AED_PEG);
+              drawSparkline(canvas, values, { color: '#f59e0b' });
+            } else if (canvas && liveState.spotUsd) {
+              const price = (liveState.spotUsd / 31.1035) * k.purity * AED_PEG;
+              drawSparkline(canvas, [price], { color: '#f59e0b' });
+            }
+          });
+        }
+
+        // ── Live prices table ──────────────────────────────────
         tbody.innerHTML = KARATS.map((k) => {
           const usdPerGram = getUsdPerGram(k);
           const cells = LIVE_CURRENCIES.map((cur) => {
@@ -1040,20 +1135,20 @@
                <button class="btn btn-ghost btn-sm" data-action="delete-ov-cancel" type="button">Cancel</button>
              </div>`
               : `<div class="row-actions">
-               <button class="btn-icon" data-action="edit-ov" data-id="${ov.id}" title="Edit override" aria-label="Edit override" type="button">✏️</button>
+               <button class="btn-icon" data-action="edit-ov" data-id="${ov.id}" title="Edit override" aria-label="Edit override" type="button">${ICONS.edit || '✏️'}</button>
                ${
                  canDeactivate
                    ? `<button class="btn-icon btn-icon-warn" data-action="deactivate-ov" data-id="${ov.id}" title="Deactivate" aria-label="Deactivate override" type="button">⏸</button>`
                    : ''
                }
-               <button class="btn-icon btn-icon-danger" data-action="delete-ov" data-id="${ov.id}" title="Delete override" aria-label="Delete override" type="button">🗑️</button>
+               <button class="btn-icon btn-icon-danger" data-action="delete-ov" data-id="${ov.id}" title="Delete override" aria-label="Delete override" type="button">${ICONS.trash || '🗑️'}</button>
              </div>`;
             return `<tr>
           <td><strong>${ov.karat}K</strong></td>
           <td>${ov.currency}</td>
           <td>${ov.unit}</td>
-          <td class="text-right"><strong>${Number(ov.overridePrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</strong></td>
-          <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${ov.reason || ''}">${ov.reason || '<span class="text-dim">—</span>'}</td>
+          <td class="text-right price-inline-cell" data-id="${ov.id}" data-field="overridePrice" title="Click to edit price"><strong class="inline-val">${Number(ov.overridePrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</strong></td>
+          <td class="reason-inline-cell" data-id="${ov.id}" data-field="reason" title="Click to edit reason" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><span class="inline-val">${ov.reason || '<span class="text-dim">—</span>'}</span></td>
           <td>${formatExpiry(ov.expiresAt)}</td>
           <td><span class="${cls}">${label}</span></td>
           <td>${actions}</td>
@@ -1202,6 +1297,55 @@
       }
 
       /* ─────────────────────────────────────────────────────────
+       Inline edit helper
+    ───────────────────────────────────────────────────────── */
+      function startInlineEdit(cell) {
+        const id = cell.dataset.id;
+        const field = cell.dataset.field;
+        const ov = _overridesCache.find((o) => o.id === id);
+        if (!ov) return;
+
+        const currentVal = field === 'overridePrice' ? String(ov.overridePrice) : (ov.reason || '');
+        const input = document.createElement('input');
+        input.className = 'form-input';
+        input.type = field === 'overridePrice' ? 'number' : 'text';
+        input.value = currentVal;
+        input.style.cssText = 'width:100%;padding:3px 6px;font-size:0.8125rem;height:28px;';
+        input.setAttribute('aria-label', `Edit ${field}`);
+
+        cell.innerHTML = '';
+        cell.appendChild(input);
+        input.focus();
+        input.select();
+
+        async function commit() {
+          const newVal = input.value.trim();
+          if (newVal === currentVal) {
+            await renderOverridesTable();
+            return;
+          }
+          let dbPatch;
+          if (field === 'overridePrice') {
+            const num = parseFloat(newVal);
+            if (isNaN(num) || num < 0) { showToast('Invalid price value.', 'warning'); await renderOverridesTable(); return; }
+            dbPatch = { override_price: num };
+          } else {
+            dbPatch = { reason: newVal };
+          }
+          await updateOverride(id, dbPatch);
+          await renderOverridesTable();
+          renderLiveTable();
+          showToast('Override updated.', 'success');
+        }
+
+        input.addEventListener('blur', commit);
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+          if (e.key === 'Escape') { e.preventDefault(); input.removeEventListener('blur', commit); renderOverridesTable(); }
+        });
+      }
+
+      /* ─────────────────────────────────────────────────────────
        Event wiring
     ───────────────────────────────────────────────────────── */
       async function init() {
@@ -1241,9 +1385,15 @@
           resetAddForm();
         });
 
-        // Overrides table delegation
+        // Overrides table delegation (including inline edit)
         document.getElementById('overrides-tbody').addEventListener('click', async (e) => {
           const btn = e.target.closest('[data-action]');
+          // Inline edit click on price or reason cell
+          const inlineCell = e.target.closest('[data-field]');
+          if (inlineCell && !btn && !inlineCell.querySelector('input')) {
+            startInlineEdit(inlineCell);
+            return;
+          }
           if (!btn) return;
           const id = btn.dataset.id;
           const ov = _overridesCache.find((o) => o.id === id);
@@ -1260,8 +1410,16 @@
             return;
           }
           if (btn.dataset.action === 'delete-ov') {
-            deleteOvTargetId = id;
+            const confirmed = await confirmDialog(
+              `Delete override for ${_overridesCache.find((o) => o.id === id)?.karat}K ${_overridesCache.find((o) => o.id === id)?.currency}?`,
+              { title: 'Delete override?', confirmLabel: 'Delete' }
+            );
+            if (!confirmed) return;
+            await deleteOverride(id);
+            deleteOvTargetId = null;
+            showToast('Override deleted.', 'info');
             await renderOverridesTable();
+            renderLiveTable();
             return;
           }
           if (btn.dataset.action === 'delete-ov-confirm') {

@@ -52,6 +52,43 @@
       .settings-card {
         margin-bottom: 20px;
       }
+      .settings-card--danger .card-header {
+        border-bottom-color: rgba(239, 68, 68, 0.25);
+      }
+      .collapsible-header {
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        user-select: none;
+      }
+      .collapsible-header:hover .card-title {
+        opacity: 0.85;
+      }
+      .collapse-arrow {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        transition: transform 0.2s;
+      }
+      .collapsible-header[aria-expanded="true"] .collapse-arrow {
+        transform: rotate(90deg);
+      }
+      .danger-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .danger-action-row {
+        align-items: center;
+        background: rgba(239, 68, 68, 0.05);
+        border: 1px solid rgba(239, 68, 68, 0.15);
+        border-radius: var(--radius);
+        display: flex;
+        gap: 16px;
+        justify-content: space-between;
+        padding: 12px 16px;
+        flex-wrap: wrap;
+      }
       .settings-grid {
         display: grid;
         gap: 16px;
@@ -553,6 +590,33 @@
             </div>
           </div>
 
+          <!-- Danger Zone -->
+          <div class="card settings-card settings-card--danger" id="danger-zone-section">
+            <div class="card-header collapsible-header" id="danger-zone-toggle" role="button" tabindex="0" aria-expanded="false" aria-controls="danger-zone-body">
+              <h2 class="card-title" style="color:var(--danger);">⚠ Danger Zone</h2>
+              <span class="collapse-arrow" aria-hidden="true">▸</span>
+            </div>
+            <div class="card-body collapsible-body" id="danger-zone-body" style="display:none;">
+              <p style="color:var(--text-muted);font-size:0.875rem;margin-bottom:16px;">These actions are permanent and cannot be undone. Proceed with caution.</p>
+              <div class="danger-actions">
+                <div class="danger-action-row">
+                  <div>
+                    <div style="font-weight:600;font-size:0.875rem;color:var(--text);">Clear All Settings</div>
+                    <div style="font-size:0.8125rem;color:var(--text-muted);">Reset all settings to factory defaults and clear localStorage cache.</div>
+                  </div>
+                  <button class="btn btn-sm" id="danger-clear-settings-btn" type="button" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);color:var(--danger);white-space:nowrap;">Clear All Settings</button>
+                </div>
+                <div class="danger-action-row">
+                  <div>
+                    <div style="font-weight:600;font-size:0.875rem;color:var(--text);">Clear Analytics Cache</div>
+                    <div style="font-size:0.8125rem;color:var(--text-muted);">Remove locally-cached analytics events from this browser.</div>
+                  </div>
+                  <button class="btn btn-sm" id="danger-clear-analytics-btn" type="button" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);color:var(--danger);white-space:nowrap;">Clear Analytics</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Import file (hidden, triggered by button) -->
           <input type="file" id="import-file" accept=".json" style="display: none" />
         </main>
@@ -570,6 +634,7 @@
           <button class="btn btn-ghost btn-sm" id="export-btn" type="button">⬇ Export JSON</button>
           <button class="btn btn-ghost btn-sm" id="import-btn" type="button">⬆ Import JSON</button>
           <div class="save-bar-spacer"></div>
+          <span class="unsaved-indicator hidden" id="settings-unsaved" aria-live="polite" style="color:var(--warning,#f59e0b);font-size:0.8125rem;white-space:nowrap;">● Unsaved changes</span>
           <span class="last-saved-text" id="last-saved-text"></span>
           <button class="btn btn-gold" id="save-btn" type="button">💾 Save Settings</button>
         </div>
@@ -588,11 +653,23 @@
         getSession,
         logActivity,
       } from '../supabase-auth.js';
-      import { initAdminShell } from '../shared/admin-shell.js';
+      import { initAdminShell, renderBreadcrumb } from '../shared/admin-shell.js';
+      import { showToast, confirmDialog, initCommandPalette } from '../shared/admin-utils.js';
+      import { ICONS } from '../shared/icons.js';
 
       // ── Auth guard ──────────────────────────────────────────
       if (!(await requireAuth())) throw new Error('redirect');
       await initAdminShell({ logout: supabaseLogout, getSession });
+      renderBreadcrumb([{ label: 'Settings' }]);
+      initCommandPalette([
+        { label: 'Dashboard', href: '../', icon: ICONS.dashboard },
+        { label: 'Orders', href: '../orders/', icon: ICONS.orders },
+        { label: 'Pricing', href: '../pricing/', icon: ICONS.pricing },
+        { label: 'Analytics', href: '../analytics/', icon: ICONS.analytics },
+        { label: 'Content', href: '../content/', icon: ICONS.content },
+        { label: 'Social', href: '../social/', icon: ICONS.social },
+        { label: 'Settings', href: './', icon: ICONS.settings },
+      ]);
 
       const SETTINGS_CACHE_KEY = 'gp_settings';
       const LAST_SAVED_KEY = 'gp_settings_saved_at';
@@ -614,20 +691,6 @@
         apiKeys: { goldApi: '', fxApi: '', adsensePublisherId: '' },
         adminNotes: '',
       };
-
-      /* ── Toast ──────────────────────────────────────────────── */
-      function showToast(msg, type = 'info') {
-        const icons = { success: '✓', error: '✕', warning: '⚠', info: 'ℹ' };
-        const container = document.getElementById('toast-container');
-        const toast = document.createElement('div');
-        toast.className = `toast toast--${type}`;
-        toast.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span>${msg}</span>`;
-        container.appendChild(toast);
-        setTimeout(() => {
-          toast.classList.add('toast-hide');
-          toast.addEventListener('animationend', () => toast.remove(), { once: true });
-        }, 3500);
-      }
 
       /* ── Load / save (Supabase with localStorage cache) ───── */
 
@@ -820,9 +883,6 @@
         reader.readAsText(file);
       }
 
-      /* ── Reset confirm ──────────────────────────────────────── */
-      let resetPending = false;
-
       /* ── Load current user info from Supabase ─────────────── */
       async function loadAdminUser() {
         try {
@@ -864,24 +924,13 @@
         });
 
         // Reset
-        document.getElementById('reset-btn').addEventListener('click', () => {
-          if (!resetPending) {
-            resetPending = true;
-            const btn = document.getElementById('reset-btn');
-            btn.textContent = '⚠ Confirm Reset';
-            btn.style.background = 'rgba(239,68,68,0.15)';
-            setTimeout(() => {
-              resetPending = false;
-              btn.textContent = '↺ Reset to Defaults';
-              btn.style.background = '';
-            }, 3000);
-          } else {
-            resetPending = false;
-            populateForm(structuredClone(DEFAULTS));
-            document.getElementById('reset-btn').textContent = '↺ Reset to Defaults';
-            document.getElementById('reset-btn').style.background = '';
-            showToast('Form reset to defaults. Click Save to apply.', 'info');
-          }
+        document.getElementById('reset-btn').addEventListener('click', async () => {
+          const confirmed = await confirmDialog('Reset all settings to factory defaults? Unsaved changes will be lost.', {
+            title: 'Reset to defaults?', confirmLabel: 'Reset',
+          });
+          if (!confirmed) return;
+          populateForm(structuredClone(DEFAULTS));
+          showToast('Form reset to defaults. Click Save to apply.', 'info');
         });
 
         // Export
@@ -905,6 +954,54 @@
             input.type = input.type === 'password' ? 'text' : 'password';
             btn.textContent = input.type === 'password' ? '👁' : '🙈';
           });
+        });
+
+        // ── Collapsible sections ──────────────────────────────
+        document.querySelectorAll('.collapsible-header').forEach((header) => {
+          const bodyId = header.getAttribute('aria-controls');
+          const body = bodyId ? document.getElementById(bodyId) : null;
+          if (!body) return;
+          header.addEventListener('click', () => {
+            const isOpen = header.getAttribute('aria-expanded') === 'true';
+            header.setAttribute('aria-expanded', String(!isOpen));
+            body.style.display = isOpen ? 'none' : '';
+          });
+          header.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); header.click(); }
+          });
+        });
+
+        // ── Unsaved indicator ────────────────────────────────
+        const unsavedIndicator = document.getElementById('settings-unsaved');
+        const allInputs = document.getElementById('settings-main').querySelectorAll('input, textarea, select');
+        allInputs.forEach((el) => {
+          el.addEventListener('input', () => unsavedIndicator?.classList.remove('hidden'));
+          el.addEventListener('change', () => unsavedIndicator?.classList.remove('hidden'));
+        });
+
+        // Hide unsaved on save
+        document.getElementById('save-btn').addEventListener('click', () => {
+          unsavedIndicator?.classList.add('hidden');
+        }, { capture: true });
+
+        // ── Danger zone ──────────────────────────────────────
+        document.getElementById('danger-clear-settings-btn')?.addEventListener('click', async () => {
+          const confirmed = await confirmDialog('This will clear all settings from localStorage and reset to defaults. Supabase data is not affected.', {
+            title: 'Clear all settings?', confirmLabel: 'Clear',
+          });
+          if (!confirmed) return;
+          try { localStorage.removeItem('gp_settings'); localStorage.removeItem('gp_settings_saved_at'); } catch {}
+          populateForm(structuredClone(DEFAULTS));
+          showToast('Settings cleared and reset to defaults.', 'info');
+        });
+
+        document.getElementById('danger-clear-analytics-btn')?.addEventListener('click', async () => {
+          const confirmed = await confirmDialog('This will clear locally-cached analytics events from this browser. Supabase data is not affected.', {
+            title: 'Clear analytics cache?', confirmLabel: 'Clear',
+          });
+          if (!confirmed) return;
+          try { localStorage.removeItem('gp_analytics_events'); localStorage.removeItem('gp_api_call_log'); } catch {}
+          showToast('Analytics cache cleared.', 'info');
         });
       }
 
