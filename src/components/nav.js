@@ -62,6 +62,7 @@ function groupIsActive(items) {
 
 function buildDropdown(group, depth) {
   const active = groupIsActive(group.items);
+  const isMega = group.items.length >= 6;
 
   const itemsHtml = group.items
     .map((item) => {
@@ -73,6 +74,7 @@ function buildDropdown(group, depth) {
     .join('');
 
   const btnClass = 'nav-dropdown-btn' + (active ? ' nav-dropdown-btn--active' : '');
+  const panelClass = 'nav-dropdown-panel' + (isMega ? ' nav-dropdown-panel--mega' : '');
 
   return `
     <div class="nav-dropdown" data-group="${group.key}">
@@ -82,9 +84,11 @@ function buildDropdown(group, depth) {
               aria-expanded="false"
               data-group="${group.key}"
       >${group.label}<span class="nav-dropdown-caret" aria-hidden="true"></span></button>
-      <div class="nav-dropdown-panel" role="menu" aria-label="${group.label}">
+      <div class="${panelClass}" role="menu" aria-label="${group.label}">
         ${group.description ? `<div class="nav-dropdown-panel-header"><span class="nav-dropdown-panel-title">${group.label}</span><span class="nav-dropdown-panel-desc">${group.description}</span></div>` : ''}
-        ${itemsHtml}
+        <div class="nav-dropdown-items">
+          ${itemsHtml}
+        </div>
       </div>
     </div>`;
 }
@@ -131,6 +135,7 @@ export function injectNav(lang = 'en', depth = 0) {
   const mobileGroupsHtml = data.groups.map((g) => buildDrawerGroup(g, depth)).join('');
 
   const html = `
+<a href="#main-content" class="skip-to-main">Skip to main content</a>
 <nav class="site-nav" role="navigation" aria-label="${data.mainNav}" dir="${isRtl ? 'rtl' : 'ltr'}">
   <div class="nav-inner">
 
@@ -247,9 +252,12 @@ export function injectNav(lang = 'en', depth = 0) {
   // Mount nav before the first child of body (or before <main>)
   const wrapper = document.createElement('div');
   wrapper.innerHTML = html.trim();
-  const navEl = wrapper.firstElementChild;
+  // Insert all children (skip-link + nav)
   const anchor = document.querySelector('main') || document.body.firstElementChild;
-  document.body.insertBefore(navEl, anchor);
+  while (wrapper.firstElementChild) {
+    document.body.insertBefore(wrapper.firstElementChild, anchor);
+  }
+  const navEl = document.querySelector('.site-nav');
 
   // ── Mobile bottom navigation bar ──────────────────────────────────────────
   _injectMobileBottomNav(lang, depth);
@@ -454,6 +462,29 @@ export function injectNav(lang = 'en', depth = 0) {
     }
   });
 
+  // ── Sticky scroll-hide / scroll-reveal behavior ─────────────────────────────
+  let _lastScrollY = window.scrollY;
+  let _scrollTicking = false;
+  function _onScroll() {
+    if (_scrollTicking) return;
+    _scrollTicking = true;
+    requestAnimationFrame(() => {
+      const currentScrollY = window.scrollY;
+      const scrollingDown = currentScrollY > _lastScrollY;
+      const pastThreshold = currentScrollY > 80;
+
+      if (scrollingDown && pastThreshold) {
+        navEl.classList.add('nav--hidden');
+      } else {
+        navEl.classList.remove('nav--hidden');
+      }
+      navEl.classList.toggle('nav--scrolled', currentScrollY > 10);
+      _lastScrollY = currentScrollY;
+      _scrollTicking = false;
+    });
+  }
+  window.addEventListener('scroll', _onScroll, { passive: true });
+
   // ── Apply site-level feature flags (async — runs after current call stack) ─
   applyFeatureFlags().catch((err) => {
     console.warn('[nav] Failed to apply feature flags:', err);
@@ -524,7 +555,7 @@ function _injectMobileBottomNav(lang, depth) {
         </button>`;
       }
 
-      return `<a href="${item.href}" class="${cls}" data-mobile-nav="${item.key}">
+      return `<a href="${item.href}" class="${cls}" data-mobile-nav="${item.key}"${isActive ? ' aria-current="page"' : ''}>
         <span class="mobile-bottom-nav-icon" aria-hidden="true">${item.icon}</span>
         <span class="mobile-bottom-nav-label">${item.label}</span>
       </a>`;

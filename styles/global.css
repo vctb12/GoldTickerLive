@@ -545,6 +545,17 @@ body.has-spot-bar .site-nav {
   box-shadow:
     0 1px 0 rgb(201 168 76 / 10%),
     0 4px 20px rgb(0 0 0 / 5%);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.site-nav.nav--hidden {
+  transform: translateY(-100%);
+}
+
+.site-nav.nav--scrolled {
+  box-shadow:
+    0 1px 0 rgb(201 168 76 / 15%),
+    0 6px 28px rgb(0 0 0 / 10%);
 }
 
 .site-nav::after {
@@ -573,6 +584,28 @@ body.has-spot-bar .site-nav {
   display: flex;
   align-items: center;
   gap: 0;
+}
+
+/* --- Skip-to-content link --- */
+.skip-to-main {
+  position: absolute;
+  top: -100%;
+  left: var(--space-4);
+  background: var(--color-gold);
+  color: var(--color-white);
+  padding: 0.5rem 1rem;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  text-decoration: none;
+  z-index: 9999;
+  transition: top 0.15s ease;
+}
+
+.skip-to-main:focus {
+  top: 0;
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
 }
 
 /* --- Brand lockup --- */
@@ -3374,6 +3407,27 @@ details[open] > .faq-q::after {
 .nav-dropdown-btn--active {
   color: var(--color-gold-dark);
   background: var(--color-gold-tint);
+}
+
+/* Mega-menu panel (2-column grid for groups with 6+ items) */
+.nav-dropdown-panel--mega {
+  min-width: 440px;
+}
+
+.nav-dropdown-panel--mega .nav-dropdown-items {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+}
+
+/* Regular panel items wrapper (single column) */
+.nav-dropdown-panel:not(.nav-dropdown-panel--mega) .nav-dropdown-items {
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme='dark'] .nav-dropdown-panel--mega {
+  background: var(--color-surface-2);
 }
 
 /* Mobile drawer groups */
