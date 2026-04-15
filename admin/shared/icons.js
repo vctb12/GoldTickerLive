@@ -1,7 +1,7 @@
 /**
  * admin/shared/icons.js
  * SVG icon library for the admin panel.
- * All icons are 20×20 viewBox, outline style, currentColor stroke.
+ * All icons render at 20×20 px using a 24-unit coordinate system (standard feather/heroicons pattern).
  */
 
 const icon = (path, extra = '') =>

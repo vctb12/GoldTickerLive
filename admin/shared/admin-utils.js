@@ -246,7 +246,7 @@ export function drawSparkline(canvas, data, { color = '#3b82f6', fill = true } =
     ctx.lineTo(pts[pts.length - 1].x, h);
     ctx.lineTo(pts[0].x, h);
     ctx.closePath();
-    ctx.fillStyle = color + '26'; // ~15% opacity hex
+    ctx.fillStyle = color + '26'; // hex alpha 0x26 = 38/255 ≈ 15% opacity
     ctx.fill();
   }
 }
