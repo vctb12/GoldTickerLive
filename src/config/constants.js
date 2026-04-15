@@ -23,3 +23,23 @@ export const CONSTANTS = {
     alerts: 'gold_price_alerts',
   },
 };
+
+// ── Ad monetization config ──────────────────────────────────────────────────
+// Fill in after Google AdSense approval. Leave empty to silently hide all ads.
+export const AD_CONFIG = {
+  ADSENSE_PUBLISHER_ID: '', // e.g. 'ca-pub-1234567890'
+  AD_SLOTS: {
+    homeLeaderboard: '',    // 728x90 below hero
+    homeRectangle: '',      // 300x250 in tool cards sidebar
+    trackerSidebar: '',     // 300x250 sticky sidebar
+    calculatorResult: '',   // 300x250 below results
+    countryBanner: '',      // 728x90 above FAQ
+    learnRectangle: '',     // 300x250 after 3rd section
+    toolBanner: '',         // 728x90 bottom of tool pages
+    guideMidContent: '',    // 300x250 after 2nd section
+  },
+};
+
+// ── Newsletter / Formspree ──────────────────────────────────────────────────
+// Fill in after Formspree signup. Leave empty to hide newsletter form.
+export const FORMSPREE_ENDPOINT = ''; // e.g. 'https://formspree.io/f/xyzabc'
