@@ -38,17 +38,19 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   // Wire main mode tabs (Live / Compare / Archive / Exports / Method only)
   const tabs = Array.from(document.querySelectorAll('.tracker-mode-tab[data-mode]'));
   const panels = Array.from(document.querySelectorAll('.tracker-mode-panel[data-mode-panel]'));
-  const workspaceToggle = els.workspaceToggle || document.getElementById('tp-workspace-toggle');
+  const presetChips = Array.from(document.querySelectorAll('.tracker-preset-chip[data-preset]'));
   const isAdvancedMode = () => state.workspaceLevel === 'advanced';
 
   function applyWorkspaceLevel() {
     const advanced = isAdvancedMode();
-    document.body.classList.toggle('tracker-workspace-basic', !advanced);
+    document.body.classList.toggle('tracker-workspace-basic', state.workspaceLevel === 'basic');
+    document.body.classList.toggle('tracker-workspace-gcc', state.workspaceLevel === 'gcc-overview');
     document.body.classList.toggle('tracker-workspace-advanced', advanced);
-    if (workspaceToggle) {
-      workspaceToggle.textContent = advanced ? 'Use basic workspace' : 'Open advanced workspace';
-      workspaceToggle.setAttribute('aria-pressed', advanced ? 'true' : 'false');
-    }
+    presetChips.forEach((chip) => {
+      const active = chip.dataset.preset === state.workspaceLevel;
+      chip.classList.toggle('is-active', active);
+      chip.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
     if (!advanced && state.mode !== 'live') {
       setMode('live');
     }
@@ -58,7 +60,8 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   }
 
   function setWorkspaceLevel(level = 'basic') {
-    state.workspaceLevel = level === 'advanced' ? 'advanced' : 'basic';
+    const validLevels = ['basic', 'gcc-overview', 'advanced'];
+    state.workspaceLevel = validLevels.includes(level) ? level : 'basic';
     persistState(state);
     applyWorkspaceLevel();
     if (typeof onModeChange === 'function') onModeChange(state.mode);
@@ -200,8 +203,10 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     }
   });
 
-  workspaceToggle?.addEventListener('click', () => {
-    setWorkspaceLevel(isAdvancedMode() ? 'basic' : 'advanced');
+  presetChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      setWorkspaceLevel(chip.dataset.preset);
+    });
   });
 
   return { setMode, openOverlay, closeOverlay };

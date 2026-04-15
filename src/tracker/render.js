@@ -398,15 +398,19 @@ export function renderAlerts() {
           }
         }
         return `<div class="tracker-stack-item${hit ? ' is-triggered' : ''}${proximityClass}">
-          <div style="flex:1">
+          <div class="tracker-stack-item-body">
             <span>${a.scope} ${a.direction} <strong>$${a.target}</strong>${hit ? ' ✓ triggered' : ''}</span>
-            ${proximity ? `<div style="font-size:0.8rem;color:var(--tp-text-muted);margin-top:0.25rem">${proximity}</div>` : ''}
+            ${proximity ? `<div class="tracker-alert-proximity">${proximity}</div>` : ''}
           </div>
           <button data-idx="${i}" class="tracker-remove-btn" aria-label="Delete alert">×</button>
         </div>`;
       })
       .join('')
-    : '<p style="color:var(--tp-text-muted);font-size:0.85rem">No alerts set.</p>';
+    : `<div class="tracker-empty-state">
+        <span class="tracker-empty-state-icon" aria-hidden="true">🔔</span>
+        <p class="tracker-empty-state-msg">No alerts set yet.</p>
+        <p class="tracker-empty-state-hint">Add an alert above to be notified when gold hits your target price.</p>
+      </div>`;
 }
 
 export function renderPresets() {
@@ -421,11 +425,11 @@ export function renderPresets() {
             _state.selectedUnit === p.unit &&
             _state.range === p.range;
         return `<div class="tracker-stack-item${isCurrent ? ' is-highlight' : ''}">
-        <div style="flex:1">
+        <div class="tracker-stack-item-body">
           <div><strong>${p.name}</strong></div>
-          <div style="font-size:0.8rem;color:var(--tp-text-muted);margin-top:0.25rem">
+          <div class="tracker-preset-meta">
             ${p.karat}K · ${p.currency}/${p.unit} · ${p.range} range
-            ${isCurrent ? ' · <span style="color:var(--tp-accent)">● current</span>' : ''}
+            ${isCurrent ? ' · <span class="tracker-preset-current">● current</span>' : ''}
           </div>
         </div>
         <span>
@@ -435,7 +439,11 @@ export function renderPresets() {
       </div>`;
       })
       .join('')
-    : '<p style="color:var(--tp-text-muted);font-size:0.85rem">No presets saved. Save the current view via the form above.</p>';
+    : `<div class="tracker-empty-state">
+        <span class="tracker-empty-state-icon" aria-hidden="true">⭐</span>
+        <p class="tracker-empty-state-msg">No presets saved yet.</p>
+        <p class="tracker-empty-state-hint">Save the current view via the form above.</p>
+      </div>`;
 }
 
 export function renderPlanners() {

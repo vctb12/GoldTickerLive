@@ -28,7 +28,6 @@ function ui() {
     refreshBtn: document.getElementById('tp-refresh-btn'),
     shareBtn: document.getElementById('tp-share-btn'),
     resetBtn: document.getElementById('tp-reset-btn'),
-    workspaceToggle: document.getElementById('tp-workspace-toggle'),
     language: document.getElementById('tp-language'),
     currency: document.getElementById('tp-currency'),
     karat: document.getElementById('tp-karat'),

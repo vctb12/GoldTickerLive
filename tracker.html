@@ -228,14 +228,28 @@
               <button class="btn btn-outline" id="tp-share-btn" type="button">Copy brief</button>
               <button class="btn btn-ghost" id="tp-reset-btn" type="button">Reset</button>
               <a class="btn btn-ghost" href="#mode-live" id="tp-jump-chart">Chart ↓</a>
+            </div>
+
+            <!-- Workspace preset chips -->
+            <div class="tracker-preset-chips" role="group" aria-label="Workspace preset">
               <button
-                class="btn btn-ghost"
-                id="tp-workspace-toggle"
+                class="tracker-preset-chip is-active"
+                data-preset="basic"
+                type="button"
+                aria-pressed="true"
+              >Basic</button>
+              <button
+                class="tracker-preset-chip"
+                data-preset="gcc-overview"
                 type="button"
                 aria-pressed="false"
-              >
-                Advanced ⋯
-              </button>
+              >GCC Overview</button>
+              <button
+                class="tracker-preset-chip"
+                data-preset="advanced"
+                type="button"
+                aria-pressed="false"
+              >Advanced</button>
             </div>
 
             <!-- Compact hint chips (replaces verbose onboarding steps) -->
