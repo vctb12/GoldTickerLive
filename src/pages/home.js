@@ -11,6 +11,7 @@ import * as fmt from '../lib/formatter.js';
 import { injectNav, updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
+import { injectSpotBar, updateSpotBar, updateSpotBarLang } from '../components/spotBar.js';
 import { renderAdSlot } from '../components/adSlot.js';
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -108,6 +109,9 @@ function renderHeroCard() {
   const usd22g = calc.usdPerGram(goldPrice, k22.purity);
   const aed22g = usd22g * CONSTANTS.AED_PEG;
   const usd21g = calc.usdPerGram(goldPrice, k21.purity);
+
+  // Update sticky spot bar
+  updateSpotBar({ xauUsd: usd24oz, aed24kGram: aed24g, updatedAt: goldUpdatedAt });
 
   const priceEl = document.getElementById('hlc-price');
   if (priceEl) {
@@ -411,7 +415,8 @@ async function init() {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
 
-  // Nav + footer
+  // Nav + footer + spot bar
+  injectSpotBar(lang, 0);
   const navCtrl = injectNav(lang, 0);
   navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -419,6 +424,7 @@ async function init() {
       saveLang(lang);
       updateNavLang(lang);
       updateTickerLang(lang);
+      updateSpotBarLang(lang);
       applyLangToPage();
     });
   });

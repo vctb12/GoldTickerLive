@@ -13,6 +13,7 @@ import * as cache from './cache.js';
 import { formatPrice, formatFreshness } from './formatter.js';
 import { injectNav, updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
+import { injectSpotBar, updateSpotBar } from '../components/spotBar.js';
 
 // Determine depth by comparing import.meta.url (this module) to the page URL.
 // This module lives at {root}/src/lib/page-hydrator.js (2 dirs from root).
@@ -134,6 +135,7 @@ function renderDisclaimer(country, pageUrl) {
 
 async function hydrate() {
   const lang = getLang();
+  injectSpotBar(lang, depth);
   injectNav(lang, depth);
   injectFooter(lang, depth);
 
@@ -166,6 +168,10 @@ async function hydrate() {
     karatsEl.innerHTML = renderKaratCards(gold.price, rate, country.currency, karatSlug || null);
   if (freshEl) freshEl.innerHTML = renderFreshnessBadge(gold.updatedAt);
   if (disclaimerEl) disclaimerEl.innerHTML = renderDisclaimer(country, location.href);
+
+  // Update sticky spot bar with live prices
+  const aed24g = (gold.price / CONSTANTS.TROY_OZ_GRAMS) * AED_PEG;
+  updateSpotBar({ xauUsd: gold.price, aed24kGram: aed24g, updatedAt: gold.updatedAt });
 
   if (displayEl) displayEl.style.display = '';
   if (loadingEl) loadingEl.style.display = 'none';

@@ -11,6 +11,7 @@ import { formatPrice } from '../lib/formatter.js';
 import { injectNav, updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
+import { injectSpotBar, updateSpotBar, updateSpotBarLang } from '../components/spotBar.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { renderAdSlot } from '../components/adSlot.js';
 
@@ -602,13 +603,15 @@ async function fetchLiveData() {
     if (STATE.spotUsdPerOz) {
       const TROY = CONSTANTS.TROY_OZ_GRAMS;
       const AED = CONSTANTS.AED_PEG;
+      const aed24 = ((STATE.spotUsdPerOz * 1) / TROY) * AED;
       updateTicker({
         xauUsd: STATE.spotUsdPerOz,
-        uae24k: ((STATE.spotUsdPerOz * 1) / TROY) * AED,
+        uae24k: aed24,
         uae22k: ((STATE.spotUsdPerOz * (22 / 24)) / TROY) * AED,
         uae21k: ((STATE.spotUsdPerOz * (21 / 24)) / TROY) * AED,
         uae18k: ((STATE.spotUsdPerOz * (18 / 24)) / TROY) * AED,
       });
+      updateSpotBar({ xauUsd: STATE.spotUsdPerOz, aed24kGram: aed24, updatedAt: STATE.freshness.goldUpdatedAt });
     }
   } catch (e) {
     console.warn('Calculator fetch error:', e);
@@ -679,6 +682,7 @@ async function init() {
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
 
+  injectSpotBar(STATE.lang, 0);
   const navResult = injectNav(STATE.lang, 0);
   injectBreadcrumbs('calculator');
   injectFooter(STATE.lang, 0);
@@ -691,6 +695,7 @@ async function init() {
       cache.savePreference('lang', STATE.lang);
       updateNavLang(STATE.lang);
       updateTickerLang(STATE.lang);
+      updateSpotBarLang(STATE.lang);
       applyLang();
       updateSpotBadge();
     });

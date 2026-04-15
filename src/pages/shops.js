@@ -4,6 +4,7 @@ import { fetchShops as fetchSupabaseShops } from '../lib/supabase-data.js';
 import { injectNav, updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
+import { injectSpotBar, updateSpotBarLang } from '../components/spotBar.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import * as cache from '../lib/cache.js';
 import { renderAdSlot } from '../components/adSlot.js';
@@ -1382,6 +1383,7 @@ function init() {
   if (_pVerified) STATE.verifiedOnly = true;
   if (_pLang === 'ar' || _pLang === 'en') STATE.lang = _pLang;
 
+  injectSpotBar(STATE.lang, 0);
   const navResult = injectNav(STATE.lang, 0);
   injectBreadcrumbs('shops');
   injectFooter(STATE.lang, 0);
@@ -1411,6 +1413,7 @@ function init() {
       cache.savePreference('lang', STATE.lang);
       updateNavLang(STATE.lang);
       updateTickerLang(STATE.lang);
+      updateSpotBarLang(STATE.lang);
       updateLanguage();
     });
   });
