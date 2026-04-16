@@ -23,8 +23,8 @@ import { ICONS } from './icons.js';
 import { initCommandPalette } from './admin-utils.js';
 
 // ── Chevron SVGs for collapse button ────────────────────────────────────────
-const CHEVRON_LEFT = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>`;
-const CHEVRON_RIGHT = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>`;
+const CHEVRON_LEFT = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>';
+const CHEVRON_RIGHT = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>';
 
 const SIDEBAR_COLLAPSED_KEY = 'gp_admin_sidebar_collapsed';
 
@@ -192,7 +192,7 @@ export function renderBreadcrumb(pageName) {
 
   const parts = [`<a href="${adminBase}">GoldAdmin</a>`];
   crumbs.forEach((c, i) => {
-    parts.push(`<span class="breadcrumb-sep" aria-hidden="true">›</span>`);
+    parts.push('<span class="breadcrumb-sep" aria-hidden="true">›</span>');
     if (c.href && i < crumbs.length - 1) {
       parts.push(`<a href="${adminBase}${c.href}">${c.label}</a>`);
     } else {
