@@ -11,6 +11,31 @@ import { renderAdSlot } from '../components/adSlot.js';
 import { CONSTANTS } from '../config/index.js';
 import { KARATS } from '../config/index.js';
 
+/** Escape a string for safe inclusion in HTML (XSS prevention). */
+function esc(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/** Return the URL only if it uses a safe protocol (http/https), otherwise ''. */
+function safeUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return '';
+}
+
+/** Return a tel:-safe phone string (digits, +, -, spaces only). */
+function safeTel(phone) {
+  if (!phone || typeof phone !== 'string') return '';
+  const cleaned = phone.replace(/[^\d+\-() ]/g, '').replace(/\s+/g, '');
+  return cleaned;
+}
+
 /**
  * Mutable shops array — starts with hardcoded fallback data,
  * replaced by Supabase data once it loads.
@@ -372,7 +397,7 @@ function openModal(shop) {
   const modal = document.getElementById('shops-modal');
   const country = countryByCode(shop.countryCode);
   const specialties = (shop.specialties || [])
-    .map((item) => `<span class="shop-tag">${item}</span>`)
+    .map((item) => `<span class="shop-tag">${esc(item)}</span>`)
     .join('');
   const inList = isInShortlist(shop.id);
 
@@ -380,25 +405,25 @@ function openModal(shop) {
   const actionsHTML = `
     <div class="modal-actions">
       <button class="modal-action-btn modal-action-btn--shortlist ${inList ? 'is-saved' : ''}" 
-              type="button" data-shop-id="${shop.id}" aria-label="${inList ? t('removeFromShortlist') : t('saveToShortlist')}">
+              type="button" data-shop-id="${esc(shop.id)}" aria-label="${inList ? t('removeFromShortlist') : t('saveToShortlist')}">
         <span class="modal-action-icon">${inList ? '✓' : '+'}</span>
         <span class="modal-action-label">${inList ? t('saved') : t('saveToShortlist')}</span>
       </button>
-      <button class="modal-action-btn modal-action-btn--share" type="button" data-shop-id="${shop.id}" aria-label="${t('shareShop')}">
+      <button class="modal-action-btn modal-action-btn--share" type="button" data-shop-id="${esc(shop.id)}" aria-label="${t('shareShop')}">
         <span class="modal-action-icon">↗</span>
         <span class="modal-action-label">${t('shareShop')}</span>
       </button>
       ${
   shop.phone
-    ? `<a href="tel:${shop.phone.replace(/\s+/g, '')}" class="modal-action-btn modal-action-btn--call" aria-label="${t('callShop')}">
+    ? `<a href="tel:${esc(safeTel(shop.phone))}" class="modal-action-btn modal-action-btn--call" aria-label="${t('callShop')}">
         <span class="modal-action-icon">📞</span>
         <span class="modal-action-label">${t('callShop')}</span>
       </a>`
     : ''
 }
       ${
-  shop.website
-    ? `<a href="${shop.website}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--website" aria-label="${t('visitWebsite')}">
+  safeUrl(shop.website)
+    ? `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--website" aria-label="${t('visitWebsite')}">
         <span class="modal-action-icon">🌐</span>
         <span class="modal-action-label">${t('visitWebsite')}</span>
       </a>`
@@ -410,8 +435,8 @@ function openModal(shop) {
   const contactHTML =
     shop.phone || shop.website
       ? `<div class="modal-contact">
-      ${shop.phone ? `<p><strong>${t('phone')}:</strong> ${shop.phone}</p>` : ''}
-      ${shop.website ? `<p><a href="${shop.website}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')} →</a></p>` : ''}
+      ${shop.phone ? `<p><strong>${t('phone')}:</strong> ${esc(shop.phone)}</p>` : ''}
+      ${safeUrl(shop.website) ? `<p><a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')} →</a></p>` : ''}
     </div>`
       : `<p class="modal-no-contact">${t('noContact')}</p>`;
 
@@ -421,16 +446,16 @@ function openModal(shop) {
     ? `<span class="modal-cluster-badge">${t('marketCluster')}</span>`
     : '';
   const listingTypeBadge = `<span class="modal-listing-type ${isCluster ? 'modal-listing-type--market' : 'modal-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
-  const confidenceBadgeHTML = `<span class="modal-confidence-badge modal-confidence-${confidenceBadge.level}" style="--confidence-color: var(--color-${confidenceBadge.color})">${t('detailsConfidence')}: ${confidenceBadge.label}</span>`;
+  const confidenceBadgeHTML = `<span class="modal-confidence-badge modal-confidence-${esc(confidenceBadge.level)}" style="--confidence-color: var(--color-${esc(confidenceBadge.color)})">${t('detailsConfidence')}: ${esc(confidenceBadge.label)}</span>`;
 
   document.getElementById('shops-modal-body').innerHTML = `
     <div class="modal-head">
-      <h2 id="shops-modal-title">${shop.name}</h2>
+      <h2 id="shops-modal-title">${esc(shop.name)}</h2>
       <div class="modal-badges">
         ${clusterBadge}
         ${listingTypeBadge}
         ${confidenceBadgeHTML}
-        <span class="modal-details-badge modal-details-${shop.detailsAvailability}">${t('detailsSignal')}: ${detailsAvailabilityLabel(shop.detailsAvailability)}</span>
+        <span class="modal-details-badge modal-details-${esc(shop.detailsAvailability)}">${t('detailsSignal')}: ${detailsAvailabilityLabel(shop.detailsAvailability)}</span>
         ${shop.featured ? `<span class="modal-featured-badge">★ ${t('featured')}</span>` : ''}
       </div>
     </div>
@@ -440,15 +465,15 @@ function openModal(shop) {
     <div class="modal-meta">
       <div class="modal-meta-item">
         <span class="modal-meta-label">${t('location')}</span>
-        <span class="modal-meta-value">${shop.city}, ${countryName(country)} · ${regionName(country.group)}</span>
+        <span class="modal-meta-value">${esc(shop.city)}, ${countryName(country)} · ${regionName(country.group)}</span>
       </div>
       <div class="modal-meta-item">
         <span class="modal-meta-label">${t('market')}</span>
-        <span class="modal-meta-value">${shop.market}</span>
+        <span class="modal-meta-value">${esc(shop.market)}</span>
       </div>
       <div class="modal-meta-item">
         <span class="modal-meta-label">${t('category')}</span>
-        <span class="modal-meta-value">${shop.category}</span>
+        <span class="modal-meta-value">${esc(shop.category)}</span>
       </div>
     </div>
 
@@ -462,7 +487,7 @@ function openModal(shop) {
 }
 
     <div class="modal-notes">
-      <p>${shop.notes}</p>
+      <p>${esc(shop.notes)}</p>
     </div>
     <div class="modal-next-step" role="note" aria-label="${t('nextStepTitle')}">
       <strong>${t('nextStepTitle')}</strong>
@@ -675,7 +700,7 @@ function buildFilters() {
   console.log('[shops] buildFilters(): Found', cities.length, 'cities:', cities.slice(0, 5));
 
   citySelect.innerHTML = `<option value="all">${t('allCities')}</option>${cities
-    .map((city) => `<option value="${city}">${city}</option>`)
+    .map((city) => `<option value="${esc(city)}">${esc(city)}</option>`)
     .join('')}`;
 
   const specialties = [
@@ -689,7 +714,7 @@ function buildFilters() {
   );
 
   specialtySelect.innerHTML = `<option value="all">${t('allSpecialties')}</option>${specialties
-    .map((item) => `<option value="${item}">${item}</option>`)
+    .map((item) => `<option value="${esc(item)}">${esc(item)}</option>`)
     .join('')}`;
 
   regionSelect.value = STATE.region;
@@ -722,8 +747,8 @@ function populatePopularChips() {
   const featured = SHOPS.filter((shop) => shop.featured).slice(0, 6);
   box.innerHTML = featured
     .map((shop) => {
-      const label = `${shop.market} · ${shop.city}`;
-      return `<button class="shops-chip" type="button" data-country="${shop.countryCode}" data-city="${shop.city}">${label}</button>`;
+      const label = `${esc(shop.market)} · ${esc(shop.city)}`;
+      return `<button class="shops-chip" type="button" data-country="${esc(shop.countryCode)}" data-city="${esc(shop.city)}">${label}</button>`;
     })
     .join('');
 
@@ -832,7 +857,7 @@ function renderCards(shops) {
     .map((shop, idx) => {
       const country = countryByCode(shop.countryCode);
       const specialties = (shop.specialties || [])
-        .map((item) => `<span class="shop-tag">${item}</span>`)
+        .map((item) => `<span class="shop-tag">${esc(item)}</span>`)
         .join('');
       const isCluster = isMarketArea(shop);
       const confidenceBadge = calculateConfidenceBadge(shop);
@@ -850,18 +875,18 @@ function renderCards(shops) {
       const contactQualityLabel = contactQualityLabel(shop);
 
       const contactParts = [];
-      if (shop.phone) contactParts.push(`${t('phone')}: ${shop.phone}`);
-      if (shop.website) {
+      if (shop.phone) contactParts.push(`${t('phone')}: ${esc(shop.phone)}`);
+      if (safeUrl(shop.website)) {
         contactParts.push(
-          `<a href="${shop.website}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')}</a>`
+          `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')}</a>`
         );
       }
 
       return `
-      <article class="shop-card${shop.featured ? ' shop-card--featured' : ''}${isCluster ? ' shop-card--cluster' : ''}" data-shop-id="${shop.id}">
+      <article class="shop-card${shop.featured ? ' shop-card--featured' : ''}${isCluster ? ' shop-card--cluster' : ''}" data-shop-id="${esc(shop.id)}">
         <header class="shop-card-head">
           <div>
-            <h3>${shop.name}</h3>
+            <h3>${esc(shop.name)}</h3>
             <div class="shop-card-badges">
               ${clusterBadge}
               ${listingTypeBadge}
@@ -879,7 +904,7 @@ function renderCards(shops) {
             </p>
             <p class="shop-confidence-item">
               <span>${t('detailsConfidence')}</span>
-              <strong class="shop-signal shop-signal--${confidenceBadge.level}" style="--confidence-color: var(--color-${confidenceBadge.color})">${confidenceBadge.label}</strong>
+              <strong class="shop-signal shop-signal--${esc(confidenceBadge.level)}" style="--confidence-color: var(--color-${esc(confidenceBadge.color)})">${esc(confidenceBadge.label)}</strong>
             </p>
             <p class="shop-confidence-item">
               <span>${t('contactQuality')}</span>
@@ -889,9 +914,9 @@ function renderCards(shops) {
         </section>
 
         <div class="shop-meta-grid">
-          <p class="shop-meta"><span>${t('location')}</span><strong>${shop.city}, ${countryName(country)} · ${regionName(country.group)}</strong></p>
-          <p class="shop-meta"><span>${t('market')}</span><strong>${shop.market}</strong></p>
-          <p class="shop-meta"><span>${t('category')}</span><strong>${shop.category}</strong></p>
+          <p class="shop-meta"><span>${t('location')}</span><strong>${esc(shop.city)}, ${countryName(country)} · ${regionName(country.group)}</strong></p>
+          <p class="shop-meta"><span>${t('market')}</span><strong>${esc(shop.market)}</strong></p>
+          <p class="shop-meta"><span>${t('category')}</span><strong>${esc(shop.category)}</strong></p>
         </div>
 
         <div class="shop-tags-wrap">
@@ -899,13 +924,13 @@ function renderCards(shops) {
           ${specialties || '<span class="shop-tag">—</span>'}
         </div>
 
-        <p class="shop-notes">${shop.notes}</p>
+        <p class="shop-notes">${esc(shop.notes)}</p>
         
         <div class="shop-next-action-label">${nextActionLabel}</div>
         <div class="shop-actions-row shop-actions-row--primary">
           ${
   isCluster
-    ? `<a href="${areaGuideUrl}" class="shop-action-btn shop-action-btn--guide" aria-label="${t('areaGuide')}: ${shop.market}">
+    ? `<a href="${esc(areaGuideUrl)}" class="shop-action-btn shop-action-btn--guide" aria-label="${t('areaGuide')}: ${esc(shop.market)}">
             <span class="shop-action-icon">🧭</span>
             <span class="shop-action-label">${t('areaGuide')}</span>
           </a>`
@@ -913,15 +938,15 @@ function renderCards(shops) {
 }
           ${
   !isCluster && shop.phone
-    ? `<a href="tel:${shop.phone.replace(/\s+/g, '')}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
+    ? `<a href="tel:${esc(safeTel(shop.phone))}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
             <span class="shop-action-icon">📞</span>
             <span class="shop-action-label">${t('callShop')}</span>
           </a>`
     : ''
 }
           ${
-  !isCluster && shop.website
-    ? `<a href="${shop.website}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--website" aria-label="${t('visitWebsite')}">
+  !isCluster && safeUrl(shop.website)
+    ? `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--website" aria-label="${t('visitWebsite')}">
             <span class="shop-action-icon">🌐</span>
             <span class="shop-action-label">${t('visitWebsite')}</span>
           </a>`
@@ -929,7 +954,7 @@ function renderCards(shops) {
 }
           ${
   !isCluster
-    ? `<a href="${directionsUrl}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--directions" aria-label="${t('directions')}">
+    ? `<a href="${esc(directionsUrl)}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--directions" aria-label="${t('directions')}">
             <span class="shop-action-icon">🧭</span>
             <span class="shop-action-label">${t('directions')}</span>
           </a>`
@@ -947,11 +972,11 @@ function renderCards(shops) {
 
         <div class="shop-actions-row shop-actions-row--secondary">
           <button class="shop-action-btn shop-action-btn--save ${inShortlist ? 'is-saved' : ''}" 
-                  type="button" data-shop-id="${shop.id}" aria-label="${inShortlist ? t('removeFromShortlist') : t('saveToShortlist')}">
+                  type="button" data-shop-id="${esc(shop.id)}" aria-label="${inShortlist ? t('removeFromShortlist') : t('saveToShortlist')}">
             <span class="shop-action-icon">${inShortlist ? '✓' : '+'}</span>
             <span class="shop-action-label">${inShortlist ? t('saved') : t('saveToShortlist')}</span>
           </button>
-          <button class="shop-action-btn shop-action-btn--share" type="button" data-shop-id="${shop.id}" aria-label="${t('shareShop')}">
+          <button class="shop-action-btn shop-action-btn--share" type="button" data-shop-id="${esc(shop.id)}" aria-label="${t('shareShop')}">
             <span class="shop-action-icon">↗</span>
             <span class="shop-action-label">${t('shareShop')}</span>
           </button>
@@ -1028,15 +1053,15 @@ function renderFeaturedSection() {
       const country = countryByCode(shop.countryCode);
       const specialties = (shop.specialties || [])
         .slice(0, 2)
-        .map((item) => `<span class="featured-tag">${item}</span>`)
+        .map((item) => `<span class="featured-tag">${esc(item)}</span>`)
         .join('');
       return `
-      <article class="featured-card" data-shop-id="${shop.id}" style="cursor: pointer;">
+      <article class="featured-card" data-shop-id="${esc(shop.id)}" style="cursor: pointer;">
         <div class="featured-header">
-          <h3>${shop.name}</h3>
-          <span class="featured-location">${shop.city} · ${countryName(country)}</span>
+          <h3>${esc(shop.name)}</h3>
+          <span class="featured-location">${esc(shop.city)} · ${countryName(country)}</span>
         </div>
-        <p class="featured-market">${shop.market}</p>
+        <p class="featured-market">${esc(shop.market)}</p>
         <div class="featured-tags">${specialties}</div>
       </article>
     `;

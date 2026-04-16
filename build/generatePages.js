@@ -13,8 +13,14 @@
 
 const fs   = require('fs');
 const path = require('path');
+const vm   = require('vm');
 
 const ROOT = path.resolve(__dirname, '..');
+
+/** Safely evaluate a JS array literal from a trusted local config file. */
+function evalConfigArray(src) {
+  return vm.runInNewContext(`(${src})`, Object.create(null), { timeout: 2000 });
+}
 
 // Load config (CommonJS-compatible inline data since config is ES modules)
 const { COUNTRIES } = (() => {
@@ -23,16 +29,14 @@ const { COUNTRIES } = (() => {
   const raw = fs.readFileSync(path.join(ROOT, 'src/config/countries.js'), 'utf8');
   const match = raw.match(/export const COUNTRIES\s*=\s*(\[[\s\S]*?\]);/);
   if (!match) throw new Error('Could not parse COUNTRIES from config/countries.js');
-   
-  return { COUNTRIES: new Function('return ' + match[1])() };
+  return { COUNTRIES: evalConfigArray(match[1]) };
 })();
 
 const { KARATS } = (() => {
   const raw = fs.readFileSync(path.join(ROOT, 'src/config/karats.js'), 'utf8');
   const match = raw.match(/export const KARATS\s*=\s*(\[[\s\S]*?\]);/);
   if (!match) throw new Error('Could not parse KARATS from config/karats.js');
-   
-  return { KARATS: new Function('return ' + match[1])() };
+  return { KARATS: evalConfigArray(match[1]) };
 })();
 
 const SITE_URL = 'https://goldtickerlive.com';
