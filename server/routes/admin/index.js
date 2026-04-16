@@ -4,6 +4,7 @@
  */
 
 const express = require('express');
+const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const router = express.Router();
 const auth = require('../../lib/auth');
@@ -226,13 +227,10 @@ router.post('/auth/verify-pin', (req, res) => {
     return res.status(400).json({ success: false, message: 'Invalid PIN format.' });
   }
 
-  // Constant-time comparison to avoid timing attacks
-  const expected = String(pin).padEnd(6, '0').slice(0, 6);
-  const submitted = submittedPin.padEnd(6, '0').slice(0, 6);
-  let match = true;
-  for (let i = 0; i < 6; i++) {
-    if (expected[i] !== submitted[i]) match = false;
-  }
+  // Constant-time comparison using Node.js crypto to prevent timing attacks
+  const expectedBuf = Buffer.from(String(pin).padEnd(6, '0').slice(0, 6), 'utf8');
+  const submittedBuf = Buffer.from(submittedPin.padEnd(6, '0').slice(0, 6), 'utf8');
+  const match = crypto.timingSafeEqual(expectedBuf, submittedBuf);
 
   if (match) {
     pinAttempts.delete(ip);
