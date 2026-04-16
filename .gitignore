@@ -81,5 +81,9 @@ build/
 *.tar.xz
 *.tar.zst
 
+# Generated at deploy time by CI
+sitemap.xml
+feed.xml
+
 # macOS
 .DS_Store

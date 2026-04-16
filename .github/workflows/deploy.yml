@@ -43,6 +43,7 @@ jobs:
       - name: Build
         run: NODE_ENV=production npm run build
 
+      # sitemap.xml and feed.xml are generated here and NOT committed to the repo
       - name: Regenerate sitemap.xml
         run: node scripts/node/generate-sitemap.js
 
