@@ -2,26 +2,25 @@
 
 ## Summary
 
-Gold Prices is a **zero-dependency, static multi-page front-end** gold pricing platform for
-GCC/Arab markets, written in vanilla ES6 modules — no bundler framework, no package manager for
-browser code.
+Gold Prices is a **zero-dependency, static multi-page front-end** gold pricing platform for GCC/Arab
+markets, written in vanilla ES6 modules — no bundler framework, no package manager for browser code.
 
 It is served via **GitHub Pages** (primary) or an optional **Express server** (adds JWT-secured
 admin API and server-side data persistence).
 
 ### Key Stats
 
-| Metric | Value |
-|--------|-------|
-| HTML pages | 70+ root/guide/tool pages + 400+ generated leaf pages |
-| Countries | 15 (UAE, Saudi Arabia, Qatar, Kuwait, Bahrain, Oman, Jordan, Lebanon, Egypt, Morocco, Algeria, Tunisia, Libya, Sudan, India) |
-| Cities | 50+ |
-| Karat grades | 7 (24K, 22K, 21K, 18K, 14K, 12K, 10K) |
-| Languages | English + Arabic (full RTL support) |
-| CSS lines | ~17,000 across 16 files |
-| JS modules | 75+ |
-| Test suites | 10 files, 205 tests |
-| External APIs | gold-api.com (gold spot), exchangerate-api.com (FX), DataHub (historical) |
+| Metric        | Value                                                                                                                        |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| HTML pages    | 70+ root/guide/tool pages + 400+ generated leaf pages                                                                        |
+| Countries     | 15 (UAE, Saudi Arabia, Qatar, Kuwait, Bahrain, Oman, Jordan, Lebanon, Egypt, Morocco, Algeria, Tunisia, Libya, Sudan, India) |
+| Cities        | 50+                                                                                                                          |
+| Karat grades  | 7 (24K, 22K, 21K, 18K, 14K, 12K, 10K)                                                                                        |
+| Languages     | English + Arabic (full RTL support)                                                                                          |
+| CSS lines     | ~17,000 across 16 files                                                                                                      |
+| JS modules    | 75+                                                                                                                          |
+| Test suites   | 10 files, 205 tests                                                                                                          |
+| External APIs | gold-api.com (gold spot), exchangerate-api.com (FX), DataHub (historical)                                                    |
 
 ---
 
@@ -302,19 +301,19 @@ POST /api/admin/auth/login
 
 ### URL Patterns
 
-| Pattern | Example | Pages |
-|---------|---------|-------|
-| Root pages | `/`, `/tracker.html`, `/calculator.html` | 12 |
-| Country overview | `/{country}/gold-price/` | 15 |
-| City prices | `/{country}/{city}/gold-prices/` | ~55 |
-| City shops | `/{country}/{city}/gold-shops/` | ~55 |
-| Karat rates | `/{country}/{city}/gold-rate/{karat}-karat/` | ~220 |
-| Legacy country | `/countries/{country}.html` | 15 |
-| Legacy city | `/countries/{country}/cities/{city}.html` | 5 |
-| Legacy market | `/countries/{country}/markets/{market}.html` | 2 |
-| Guides | `/guides/*.html` | 7 |
-| Tools | `/tools/*.html` | 3 |
-| Admin | `/admin/*` | 9 |
+| Pattern          | Example                                      | Pages |
+| ---------------- | -------------------------------------------- | ----- |
+| Root pages       | `/`, `/tracker.html`, `/calculator.html`     | 12    |
+| Country overview | `/{country}/gold-price/`                     | 15    |
+| City prices      | `/{country}/{city}/gold-prices/`             | ~55   |
+| City shops       | `/{country}/{city}/gold-shops/`              | ~55   |
+| Karat rates      | `/{country}/{city}/gold-rate/{karat}-karat/` | ~220  |
+| Legacy country   | `/countries/{country}.html`                  | 15    |
+| Legacy city      | `/countries/{country}/cities/{city}.html`    | 5     |
+| Legacy market    | `/countries/{country}/markets/{market}.html` | 2     |
+| Guides           | `/guides/*.html`                             | 7     |
+| Tools            | `/tools/*.html`                              | 3     |
+| Admin            | `/admin/*`                                   | 9     |
 
 ### Navigation Components
 
@@ -331,10 +330,10 @@ All internal URLs should be generated via `src/utils/routeBuilder.js`:
 ```js
 import { buildRoute } from '../src/utils/routeBuilder.js';
 
-buildRoute({ page: 'tracker' })           // → '/tracker.html'
-buildRoute({ country: 'uae' })            // → '/uae/gold-price/'
-buildRoute({ country: 'uae', city: 'dubai' }) // → '/uae/dubai/gold-prices/'
-buildRoute({ country: 'uae', city: 'dubai', karat: '24' }) // → '/uae/dubai/gold-rate/24-karat/'
+buildRoute({ page: 'tracker' }); // → '/tracker.html'
+buildRoute({ country: 'uae' }); // → '/uae/gold-price/'
+buildRoute({ country: 'uae', city: 'dubai' }); // → '/uae/dubai/gold-prices/'
+buildRoute({ country: 'uae', city: 'dubai', karat: '24' }); // → '/uae/dubai/gold-rate/24-karat/'
 ```
 
 ---
@@ -390,15 +389,15 @@ npm run build       → Vite build → dist/ (minified HTML/CSS/JS, vendor chunk
 
 ### CI/CD Workflows
 
-| Workflow | Trigger | Purpose |
-|----------|---------|---------|
-| `ci.yml` | PR to main | Lint, test, validate, build |
-| `deploy.yml` | Push to main | Build + deploy to GitHub Pages |
-| `hourly_post.yml` | Cron (hourly) | Python gold price posting to X |
-| `gold-price-tweet.yml` | Cron | Node.js gold price tweet |
-| `market_events.yml` | Cron | Market event detection |
-| `spike_alert.yml` | Cron | Price spike alerts |
-| `health_check.yml` | Cron | Site uptime monitoring |
+| Workflow               | Trigger       | Purpose                        |
+| ---------------------- | ------------- | ------------------------------ |
+| `ci.yml`               | PR to main    | Lint, test, validate, build    |
+| `deploy.yml`           | Push to main  | Build + deploy to GitHub Pages |
+| `hourly_post.yml`      | Cron (hourly) | Python gold price posting to X |
+| `gold-price-tweet.yml` | Cron          | Node.js gold price tweet       |
+| `market_events.yml`    | Cron          | Market event detection         |
+| `spike_alert.yml`      | Cron          | Price spike alerts             |
+| `health_check.yml`     | Cron          | Site uptime monitoring         |
 
 ---
 

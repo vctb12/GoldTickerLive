@@ -5,7 +5,9 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3GNY9M8TE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag('js', new Date());
 
       gtag('config', 'G-K3GNY9M8TE');
@@ -203,9 +205,17 @@
         font-size: 0.7rem;
         margin-left: 4px;
       }
-      th[data-sort].sort-asc .sort-icon::after { content: '↑'; color: var(--primary); }
-      th[data-sort].sort-desc .sort-icon::after { content: '↓'; color: var(--primary); }
-      th[data-sort]:not(.sort-asc):not(.sort-desc) .sort-icon::after { content: '⇅'; }
+      th[data-sort].sort-asc .sort-icon::after {
+        content: '↑';
+        color: var(--primary);
+      }
+      th[data-sort].sort-desc .sort-icon::after {
+        content: '↓';
+        color: var(--primary);
+      }
+      th[data-sort]:not(.sort-asc):not(.sort-desc) .sort-icon::after {
+        content: '⇅';
+      }
 
       /* ── Bulk action bar ────────────────────────────────────── */
       .bulk-bar {
@@ -219,7 +229,9 @@
         margin-bottom: 12px;
         padding: 8px 12px;
       }
-      .bulk-bar.hidden { display: none; }
+      .bulk-bar.hidden {
+        display: none;
+      }
       .bulk-count {
         color: var(--text-muted);
         font-size: 0.8125rem;
@@ -410,11 +422,28 @@
       }
 
       /* ── Premium Enhancements ─────────────────────────────── */
-      .card-title { font-weight: 700; letter-spacing: -0.01em; }
-      .section-heading h2 { font-weight: 700; letter-spacing: -0.01em; }
-      .toolbar { padding-bottom: 14px; }
-      .tab-panel.active { animation: fade-in 0.2s ease both; }
-      @keyframes fade-in { from { opacity: 0.6; } to { opacity: 1; } }
+      .card-title {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .section-heading h2 {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .toolbar {
+        padding-bottom: 14px;
+      }
+      .tab-panel.active {
+        animation: fade-in 0.2s ease both;
+      }
+      @keyframes fade-in {
+        from {
+          opacity: 0.6;
+        }
+        to {
+          opacity: 1;
+        }
+      }
     </style>
   </head>
   <body>
@@ -544,21 +573,33 @@
           <!-- Bulk action bar (visible when rows selected) -->
           <div class="bulk-bar hidden" id="bulk-bar" role="toolbar" aria-label="Bulk actions">
             <span class="bulk-count" id="bulk-count"></span>
-            <button class="btn btn-ghost btn-sm" id="bulk-export-btn" type="button">⬇ Export Selected</button>
-            <button class="btn btn-ghost btn-sm" id="bulk-deselect-btn" type="button">✕ Deselect All</button>
+            <button class="btn btn-ghost btn-sm" id="bulk-export-btn" type="button">
+              ⬇ Export Selected
+            </button>
+            <button class="btn btn-ghost btn-sm" id="bulk-deselect-btn" type="button">
+              ✕ Deselect All
+            </button>
           </div>
 
           <div class="table-wrap">
             <table class="data-table" id="orders-table" aria-label="Orders list">
               <thead>
                 <tr>
-                  <th class="chk-td"><input type="checkbox" id="select-all-chk" aria-label="Select all orders" /></th>
-                  <th data-sort="id">Order ID <span class="sort-icon" aria-hidden="true"></span></th>
+                  <th class="chk-td">
+                    <input type="checkbox" id="select-all-chk" aria-label="Select all orders" />
+                  </th>
+                  <th data-sort="id">
+                    Order ID <span class="sort-icon" aria-hidden="true"></span>
+                  </th>
                   <th data-sort="date">Date <span class="sort-icon" aria-hidden="true"></span></th>
                   <th>Customer</th>
                   <th>Items</th>
-                  <th data-sort="total">Total (AED) <span class="sort-icon" aria-hidden="true"></span></th>
-                  <th data-sort="status">Status <span class="sort-icon" aria-hidden="true"></span></th>
+                  <th data-sort="total">
+                    Total (AED) <span class="sort-icon" aria-hidden="true"></span>
+                  </th>
+                  <th data-sort="status">
+                    Status <span class="sort-icon" aria-hidden="true"></span>
+                  </th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -588,7 +629,9 @@
           id="order-drawer-close"
           aria-label="Close order details"
           type="button"
-        >✕</button>
+        >
+          ✕
+        </button>
       </div>
       <div class="drawer-body" id="order-drawer-body">
         <!-- populated by JS -->
@@ -599,9 +642,22 @@
     <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <script type="module">
-      import { logout, requireAuth, getSupabase, getSession, logActivity } from '../supabase-auth.js';
+      import {
+        logout,
+        requireAuth,
+        getSupabase,
+        getSession,
+        logActivity,
+      } from '../supabase-auth.js';
       import { initAdminShell, renderBreadcrumb } from '../shared/admin-shell.js';
-      import { showToast, renderPagination, downloadCSV, confirmDialog, initCommandPalette, skeletonRows } from '../shared/admin-utils.js';
+      import {
+        showToast,
+        renderPagination,
+        downloadCSV,
+        confirmDialog,
+        initCommandPalette,
+        skeletonRows,
+      } from '../shared/admin-utils.js';
       import { ICONS } from '../shared/icons.js';
 
       // ── Auth guard ──────────────────────────────────────────
@@ -655,7 +711,9 @@
 
       /** Cache orders to localStorage for offline resilience. */
       function cacheOrders(orders) {
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(orders)); } catch {}
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+        } catch {}
       }
 
       /** Read cached orders from localStorage. */
@@ -665,7 +723,9 @@
           if (!raw) return [];
           const parsed = JSON.parse(raw);
           return Array.isArray(parsed) ? parsed : [];
-        } catch { return []; }
+        } catch {
+          return [];
+        }
       }
 
       /**
@@ -953,7 +1013,9 @@
         document.getElementById('stat-pending').textContent = pending;
         document.getElementById('stat-today-rev').textContent = formatAed(todayRev);
         document.getElementById('stat-total-rev').textContent = formatAed(totalRev);
-        document.getElementById('stat-avg').textContent = revOrders.length ? formatAed(avgRev) : '—';
+        document.getElementById('stat-avg').textContent = revOrders.length
+          ? formatAed(avgRev)
+          : '—';
       }
 
       // ── Filter & sort ──────────────────────────────────────
@@ -988,13 +1050,16 @@
           const asc = colSort.dir === 'asc' ? 1 : -1;
           if (colSort.key === 'id') return asc * a.id.localeCompare(b.id);
           if (colSort.key === 'date') return asc * (new Date(a.createdAt) - new Date(b.createdAt));
-          if (colSort.key === 'total') return asc * ((a.pricing?.total || 0) - (b.pricing?.total || 0));
+          if (colSort.key === 'total')
+            return asc * ((a.pricing?.total || 0) - (b.pricing?.total || 0));
           if (colSort.key === 'status') return asc * a.status.localeCompare(b.status);
           // fallback to toolbar sort
           if (toolbarSort === 'newest') return new Date(b.createdAt) - new Date(a.createdAt);
           if (toolbarSort === 'oldest') return new Date(a.createdAt) - new Date(b.createdAt);
-          if (toolbarSort === 'amount-desc') return (b.pricing?.total || 0) - (a.pricing?.total || 0);
-          if (toolbarSort === 'amount-asc') return (a.pricing?.total || 0) - (b.pricing?.total || 0);
+          if (toolbarSort === 'amount-desc')
+            return (b.pricing?.total || 0) - (a.pricing?.total || 0);
+          if (toolbarSort === 'amount-asc')
+            return (a.pricing?.total || 0) - (b.pricing?.total || 0);
           return 0;
         });
 
@@ -1057,7 +1122,12 @@
           📦 ${noOrders ? 'No orders yet.' : 'No orders match your filters.'}
           <p>${noOrders ? 'Orders submitted on /order-gold will appear here.' : 'Try adjusting your search or filters.'}</p>
         </div></td></tr>`;
-          renderPagination(document.getElementById('pagination-wrap'), { total: 0, page: 1, perPage: PER_PAGE, onChange: () => {} });
+          renderPagination(document.getElementById('pagination-wrap'), {
+            total: 0,
+            page: 1,
+            perPage: PER_PAGE,
+            onChange: () => {},
+          });
           updateBulkBar();
           return;
         }
@@ -1098,7 +1168,10 @@
           total: filteredOrders.length,
           page: currentPage,
           perPage: PER_PAGE,
-          onChange: (p) => { currentPage = p; renderTable(); },
+          onChange: (p) => {
+            currentPage = p;
+            renderTable();
+          },
         });
         updateBulkBar();
       }
@@ -1277,17 +1350,42 @@
 
       // ── CSV export ─────────────────────────────────────────
       function exportOrdersCsv(orders) {
-        const cols = ['id', 'createdAt', 'customerName', 'customerPhone', 'customerEmail',
-          'delivery', 'notes', 'items', 'basePrice', 'margin', 'subtotal', 'vat', 'total', 'currency', 'status'];
+        const cols = [
+          'id',
+          'createdAt',
+          'customerName',
+          'customerPhone',
+          'customerEmail',
+          'delivery',
+          'notes',
+          'items',
+          'basePrice',
+          'margin',
+          'subtotal',
+          'vat',
+          'total',
+          'currency',
+          'status',
+        ];
         const rows = orders.map((o) => {
           const p = o.pricing || {};
           const c = o.customer || {};
           return {
-            id: o.id, createdAt: o.createdAt,
-            customerName: c.name || '', customerPhone: c.phone || '', customerEmail: c.email || '',
-            delivery: c.delivery || '', notes: c.notes || '', items: JSON.stringify(o.items || []),
-            basePrice: p.basePrice || 0, margin: p.margin || 0, subtotal: p.subtotal || 0,
-            vat: p.vat || 0, total: p.total || 0, currency: p.currency || 'AED', status: o.status,
+            id: o.id,
+            createdAt: o.createdAt,
+            customerName: c.name || '',
+            customerPhone: c.phone || '',
+            customerEmail: c.email || '',
+            delivery: c.delivery || '',
+            notes: c.notes || '',
+            items: JSON.stringify(o.items || []),
+            basePrice: p.basePrice || 0,
+            margin: p.margin || 0,
+            subtotal: p.subtotal || 0,
+            vat: p.vat || 0,
+            total: p.total || 0,
+            currency: p.currency || 'AED',
+            status: o.status,
           };
         });
         downloadCSV(`orders-${new Date().toISOString().slice(0, 10)}.csv`, rows, cols);
@@ -1308,7 +1406,13 @@
         applyFilters();
 
         // Toolbar events
-        ['search-input', 'filter-status', 'filter-date-from', 'filter-date-to', 'sort-select'].forEach((id) => {
+        [
+          'search-input',
+          'filter-status',
+          'filter-date-from',
+          'filter-date-to',
+          'sort-select',
+        ].forEach((id) => {
           document.getElementById(id).addEventListener('input', applyFilters);
           document.getElementById(id).addEventListener('change', applyFilters);
         });

@@ -523,8 +523,7 @@ function _injectMobileBottomNav(lang, depth) {
 
   const itemsHtml = items
     .map((item) => {
-      const isActive =
-        !item.action && typeof item.href === 'string' && isPageMatch(item.href);
+      const isActive = !item.action && typeof item.href === 'string' && isPageMatch(item.href);
       const cls = 'mobile-bottom-nav-item' + (isActive ? ' is-active' : '');
 
       if (item.action === 'menu') {

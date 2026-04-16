@@ -26,8 +26,8 @@
   latency for price loading.
 - **Mitigation**: Dual-layer localStorage cache reduces redundant API calls. Service worker caches
   responses network-first.
-- **Ideal fix**: Server-side price caching proxy that refreshes prices centrally and serves them
-  to all visitors.
+- **Ideal fix**: Server-side price caching proxy that refreshes prices centrally and serves them to
+  all visitors.
 
 ### 2. Static Page Generation
 
@@ -43,8 +43,8 @@
 
 - **Issue**: All pages are static HTML. Prices shown to search engine crawlers are placeholder
   values or empty, not live data.
-- **Impact**: Search engines don't index actual gold prices. Rich snippets with prices won't
-  show in search results.
+- **Impact**: Search engines don't index actual gold prices. Rich snippets with prices won't show in
+  search results.
 - **Mitigation**: Structured data (JSON-LD) is present but with static/generic values.
 - **Ideal fix**: SSR or pre-rendering with actual price data at build time.
 
@@ -59,8 +59,8 @@
 ### 5. GitHub Pages Cannot Set HTTP Headers
 
 - **Issue**: GitHub Pages does not support custom HTTP headers (CSP, HSTS, etc.).
-- **Impact**: Security headers are limited to `<meta>` equivalents, which have reduced
-  effectiveness compared to HTTP headers.
+- **Impact**: Security headers are limited to `<meta>` equivalents, which have reduced effectiveness
+  compared to HTTP headers.
 - **Mitigation**: Meta-equivalent headers for `X-Content-Type-Options`, `X-Frame-Options`,
   `Referrer-Policy`. Express server adds proper headers when used.
 - **Ideal fix**: Deploy to a platform that supports custom headers (Vercel, Netlify, Cloudflare
@@ -77,7 +77,8 @@
 - **Impact**: Every page loads the entire CSS file even if it only uses a fraction.
 - **Mitigation**: Vite minifies CSS in production. Page-specific CSS files exist for additional
   styles.
-- **Ideal fix**: Split `styles/global.css` into smaller modules; use CSS containment or code-splitting.
+- **Ideal fix**: Split `styles/global.css` into smaller modules; use CSS containment or
+  code-splitting.
 
 ### 2. No Image Optimization Pipeline
 
@@ -128,8 +129,8 @@
 
 ### 3. Chart Interaction on Mobile
 
-- **Issue**: The price chart uses pointer events that may not translate well to touch on all
-  mobile devices.
+- **Issue**: The price chart uses pointer events that may not translate well to touch on all mobile
+  devices.
 - **Impact**: Some touch interactions may be imprecise.
 - **Mitigation**: Basic touch support is present.
 - **Ideal fix**: Test and optimize chart touch interactions on various devices.
@@ -153,8 +154,8 @@
 
 ### 2. Static Price Data in Structured Data
 
-- **Issue**: JSON-LD structured data on leaf pages may contain static/placeholder prices rather
-  than live values.
+- **Issue**: JSON-LD structured data on leaf pages may contain static/placeholder prices rather than
+  live values.
 - **Impact**: Rich snippets in search results may show stale prices.
 - **Ideal fix**: Server-side rendering to inject live prices into structured data at request time.
 
@@ -218,8 +219,8 @@
 
 ### 3. No Database for Public Data
 
-- **Issue**: Public shop data is hardcoded in `data/shops.js`. Adding/editing shops requires
-  code changes.
+- **Issue**: Public shop data is hardcoded in `data/shops.js`. Adding/editing shops requires code
+  changes.
 - **Impact**: Non-technical users cannot manage shop data without developer help.
 - **Mitigation**: Admin panel with Supabase integration exists for verified shops.
 

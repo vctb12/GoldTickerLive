@@ -29,27 +29,27 @@ The admin panel uses **Supabase GitHub OAuth**. Only the email address configure
 
 ### Key Auth Files
 
-| File                      | Purpose                                              |
-| ------------------------- | ---------------------------------------------------- |
-| `admin/supabase-config.js`| Supabase URL, anon key, and allowed admin email      |
-| `admin/supabase-auth.js`  | Auth helpers: login, logout, session check, guard    |
-| `admin/login/index.html`  | Login page with "Sign in with GitHub" button         |
+| File                       | Purpose                                           |
+| -------------------------- | ------------------------------------------------- |
+| `admin/supabase-config.js` | Supabase URL, anon key, and allowed admin email   |
+| `admin/supabase-auth.js`   | Auth helpers: login, logout, session check, guard |
+| `admin/login/index.html`   | Login page with "Sign in with GitHub" button      |
 
 ---
 
 ## Admin Page Matrix
 
-| Page        | Path                  | Status                | Data Source        |
-| ----------- | --------------------- | --------------------- | ------------------ |
-| Login       | `admin/login/`        | ✅ Working             | Supabase Auth      |
-| Dashboard   | `admin/` (index)      | ⚠️ Partial (UI shell) | localStorage       |
-| Shops       | `admin/shops/`        | ✅ Working (CRUD)      | Supabase `shops`   |
-| Settings    | `admin/settings/`     | ✅ Working (read/write)| Supabase `site_settings` |
-| Pricing     | `admin/pricing/`      | 🔲 UI shell only       | localStorage       |
-| Orders      | `admin/orders/`       | 🔲 UI shell only       | localStorage       |
-| Content     | `admin/content/`      | 🔲 UI shell only       | localStorage       |
-| Social      | `admin/social/`       | 🔲 UI shell only       | localStorage       |
-| Analytics   | `admin/analytics/`    | 🔲 UI shell only       | localStorage       |
+| Page      | Path               | Status                  | Data Source              |
+| --------- | ------------------ | ----------------------- | ------------------------ |
+| Login     | `admin/login/`     | ✅ Working              | Supabase Auth            |
+| Dashboard | `admin/` (index)   | ⚠️ Partial (UI shell)   | localStorage             |
+| Shops     | `admin/shops/`     | ✅ Working (CRUD)       | Supabase `shops`         |
+| Settings  | `admin/settings/`  | ✅ Working (read/write) | Supabase `site_settings` |
+| Pricing   | `admin/pricing/`   | 🔲 UI shell only        | localStorage             |
+| Orders    | `admin/orders/`    | 🔲 UI shell only        | localStorage             |
+| Content   | `admin/content/`   | 🔲 UI shell only        | localStorage             |
+| Social    | `admin/social/`    | 🔲 UI shell only        | localStorage             |
+| Analytics | `admin/analytics/` | 🔲 UI shell only        | localStorage             |
 
 **✅ Working** = reads/writes Supabase tables.  
 **⚠️ Partial** = has some real data but still relies on localStorage for parts.  
@@ -131,10 +131,10 @@ The client is initialized lazily in `supabase-auth.js` via `window.supabase.crea
 
 ### Database Tables
 
-| Table            | Used By          | Operations         |
-| ---------------- | ---------------- | ------------------ |
-| `shops`          | Shops page       | Full CRUD          |
-| `site_settings`  | Settings page    | Read / Write       |
+| Table           | Used By       | Operations   |
+| --------------- | ------------- | ------------ |
+| `shops`         | Shops page    | Full CRUD    |
+| `site_settings` | Settings page | Read / Write |
 
 ### Legacy Express Server
 

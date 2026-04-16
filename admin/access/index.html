@@ -5,7 +5,9 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3GNY9M8TE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag('js', new Date());
       gtag('config', 'G-K3GNY9M8TE');
     </script>
@@ -19,8 +21,8 @@
         align-items: center;
         background-color: var(--bg);
         background-image:
-          radial-gradient(ellipse at 30% 20%, rgba(245,158,11,0.06) 0%, transparent 55%),
-          radial-gradient(ellipse at 70% 80%, rgba(99,102,241,0.05) 0%, transparent 55%);
+          radial-gradient(ellipse at 30% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 55%),
+          radial-gradient(ellipse at 70% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 55%);
         display: flex;
         justify-content: center;
         min-height: 100vh;
@@ -28,14 +30,20 @@
       }
 
       .access-wrap {
-        animation: rise 0.45s cubic-bezier(0.22,1,0.36,1) both;
+        animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
         width: 100%;
         max-width: 400px;
       }
 
       @keyframes rise {
-        from { opacity: 0; transform: translateY(20px) scale(0.97); }
-        to   { opacity: 1; transform: translateY(0) scale(1); }
+        from {
+          opacity: 0;
+          transform: translateY(20px) scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
       }
 
       .access-brand {
@@ -51,7 +59,9 @@
         align-items: center;
         background: linear-gradient(135deg, #f59e0b 0%, #d97706 60%, #b45309 100%);
         border-radius: 20px;
-        box-shadow: 0 4px 28px rgba(245,158,11,0.45), 0 1px 3px rgba(0,0,0,0.35);
+        box-shadow:
+          0 4px 28px rgba(245, 158, 11, 0.45),
+          0 1px 3px rgba(0, 0, 0, 0.35);
         color: #0f172a;
         display: flex;
         font-size: 28px;
@@ -71,10 +81,12 @@
       }
 
       .access-card {
-        background: linear-gradient(135deg, rgba(13,21,38,0.95), rgba(9,15,26,0.98));
+        background: linear-gradient(135deg, rgba(13, 21, 38, 0.95), rgba(9, 15, 26, 0.98));
         border: 1px solid var(--border-light);
         border-radius: 20px;
-        box-shadow: 0 24px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05);
+        box-shadow:
+          0 24px 80px rgba(0, 0, 0, 0.55),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
         padding: 40px;
         position: relative;
         overflow: hidden;
@@ -125,7 +137,10 @@
         border-radius: var(--radius);
         color: var(--text);
         caret-color: var(--gold);
-        transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s,
+          transform 0.1s;
         -webkit-text-security: disc;
         text-security: disc;
       }
@@ -163,7 +178,10 @@
         gap: 8px;
         justify-content: center;
         padding: 14px 24px;
-        transition: box-shadow 0.2s, transform 0.1s, opacity 0.2s;
+        transition:
+          box-shadow 0.2s,
+          transform 0.1s,
+          opacity 0.2s;
         width: 100%;
       }
 
@@ -172,7 +190,9 @@
         transform: translateY(-1px);
       }
 
-      .btn-access:active { transform: translateY(0); }
+      .btn-access:active {
+        transform: translateY(0);
+      }
 
       .btn-access:disabled {
         cursor: not-allowed;
@@ -181,8 +201,8 @@
       }
 
       .access-error {
-        background: rgba(239,68,68,0.1);
-        border: 1px solid rgba(239,68,68,0.35);
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.35);
         border-radius: var(--radius-sm);
         color: var(--danger);
         font-size: 0.8125rem;
@@ -192,24 +212,49 @@
         animation: alert-slide 0.2s ease both;
       }
 
-      .access-error.visible { display: block; }
+      .access-error.visible {
+        display: block;
+      }
 
       @keyframes alert-slide {
-        from { opacity: 0; transform: translateY(-4px); }
-        to   { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(-4px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       @keyframes shake {
-        0%,100% { transform: translateX(0); }
-        15%     { transform: translateX(-7px); }
-        30%     { transform: translateX(7px); }
-        45%     { transform: translateX(-5px); }
-        60%     { transform: translateX(5px); }
-        75%     { transform: translateX(-3px); }
-        90%     { transform: translateX(3px); }
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        15% {
+          transform: translateX(-7px);
+        }
+        30% {
+          transform: translateX(7px);
+        }
+        45% {
+          transform: translateX(-5px);
+        }
+        60% {
+          transform: translateX(5px);
+        }
+        75% {
+          transform: translateX(-3px);
+        }
+        90% {
+          transform: translateX(3px);
+        }
       }
 
-      .access-card.shake { animation: shake 0.45s ease both; }
+      .access-card.shake {
+        animation: shake 0.45s ease both;
+      }
 
       .access-divider {
         border: none;
@@ -230,7 +275,9 @@
         font-weight: 600;
       }
 
-      .access-alt-link a:hover { text-decoration: underline; }
+      .access-alt-link a:hover {
+        text-decoration: underline;
+      }
 
       .access-attempts {
         color: var(--text-dim);
@@ -269,23 +316,86 @@
         <div class="access-error" id="access-error" role="alert"></div>
 
         <div class="pin-input-group" id="pin-group" role="group" aria-label="PIN entry">
-          <input class="pin-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="PIN digit 1" data-index="0" />
-          <input class="pin-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="PIN digit 2" data-index="1" />
-          <input class="pin-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="PIN digit 3" data-index="2" />
-          <input class="pin-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="PIN digit 4" data-index="3" />
-          <input class="pin-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="PIN digit 5" data-index="4" />
-          <input class="pin-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="PIN digit 6" data-index="5" />
+          <input
+            class="pin-digit"
+            maxlength="1"
+            inputmode="numeric"
+            pattern="[0-9]"
+            autocomplete="off"
+            aria-label="PIN digit 1"
+            data-index="0"
+          />
+          <input
+            class="pin-digit"
+            maxlength="1"
+            inputmode="numeric"
+            pattern="[0-9]"
+            autocomplete="off"
+            aria-label="PIN digit 2"
+            data-index="1"
+          />
+          <input
+            class="pin-digit"
+            maxlength="1"
+            inputmode="numeric"
+            pattern="[0-9]"
+            autocomplete="off"
+            aria-label="PIN digit 3"
+            data-index="2"
+          />
+          <input
+            class="pin-digit"
+            maxlength="1"
+            inputmode="numeric"
+            pattern="[0-9]"
+            autocomplete="off"
+            aria-label="PIN digit 4"
+            data-index="3"
+          />
+          <input
+            class="pin-digit"
+            maxlength="1"
+            inputmode="numeric"
+            pattern="[0-9]"
+            autocomplete="off"
+            aria-label="PIN digit 5"
+            data-index="4"
+          />
+          <input
+            class="pin-digit"
+            maxlength="1"
+            inputmode="numeric"
+            pattern="[0-9]"
+            autocomplete="off"
+            aria-label="PIN digit 6"
+            data-index="5"
+          />
         </div>
         <p class="pin-hint">Enter 6 digits to proceed</p>
 
         <button class="btn-access" id="verify-btn" type="button" disabled>
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
           Verify PIN
         </button>
         <p class="access-attempts" id="attempts-text"></p>
 
         <hr class="access-divider" />
-        <span class="access-alt-link">Prefer OAuth? <a href="../login/">Sign in with GitHub →</a></span>
+        <span class="access-alt-link"
+          >Prefer OAuth? <a href="../login/">Sign in with GitHub →</a></span
+        >
       </div>
     </div>
 
@@ -302,29 +412,34 @@
       function updateAttemptsUI() {
         if (attempts > 0) {
           const remaining = MAX_ATTEMPTS - attempts;
-          attemptsEl.textContent = remaining > 0
-            ? `${remaining} attempt${remaining !== 1 ? 's' : ''} remaining`
-            : 'No more attempts. Please use GitHub login.';
+          attemptsEl.textContent =
+            remaining > 0
+              ? `${remaining} attempt${remaining !== 1 ? 's' : ''} remaining`
+              : 'No more attempts. Please use GitHub login.';
         }
       }
 
       updateAttemptsUI();
 
       if (attempts >= MAX_ATTEMPTS) {
-        digits.forEach(d => { d.disabled = true; });
+        digits.forEach((d) => {
+          d.disabled = true;
+        });
         verifyBtn.disabled = true;
         showError('Too many attempts. Use GitHub login below.');
       }
 
       function getPin() {
-        return digits.map(d => d.value).join('');
+        return digits.map((d) => d.value).join('');
       }
 
       function triggerShake() {
         cardEl.classList.remove('shake');
         void cardEl.offsetWidth;
         cardEl.classList.add('shake');
-        cardEl.addEventListener('animationend', () => cardEl.classList.remove('shake'), { once: true });
+        cardEl.addEventListener('animationend', () => cardEl.classList.remove('shake'), {
+          once: true,
+        });
       }
 
       function showError(msg) {
@@ -366,7 +481,10 @@
 
         input.addEventListener('paste', (e) => {
           e.preventDefault();
-          const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+          const pasted = (e.clipboardData || window.clipboardData)
+            .getData('text')
+            .replace(/\D/g, '')
+            .slice(0, 6);
           pasted.split('').forEach((ch, j) => {
             if (digits[j]) {
               digits[j].value = ch;
@@ -392,7 +510,8 @@
 
           if (data.success) {
             sessionStorage.removeItem('gp_access_attempts');
-            verifyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Access granted!';
+            verifyBtn.innerHTML =
+              '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Access granted!';
             verifyBtn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
             setTimeout(() => window.location.replace('../login/'), 700);
             return;
@@ -410,12 +529,17 @@
           updateAttemptsUI();
 
           if (resp.status === 429 || attempts >= MAX_ATTEMPTS) {
-            digits.forEach(d => { d.disabled = true; });
+            digits.forEach((d) => {
+              d.disabled = true;
+            });
             verifyBtn.disabled = true;
             showError('Too many incorrect attempts. Please use GitHub login below.');
           } else {
             showError(data.message || 'Incorrect PIN. Please try again.');
-            digits.forEach(d => { d.value = ''; d.classList.remove('filled'); });
+            digits.forEach((d) => {
+              d.value = '';
+              d.classList.remove('filled');
+            });
             verifyBtn.disabled = true;
             digits[0].focus();
           }

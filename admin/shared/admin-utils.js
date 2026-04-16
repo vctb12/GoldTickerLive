@@ -16,7 +16,12 @@ export function qsa(sel, root = document) {
 // ── Toast notifications ──────────────────────────────────────────────────────
 
 const TOAST_ICONS = { success: '✓', error: '✕', warning: '⚠', info: 'ℹ' };
-const TOAST_TYPES = { success: 'toast--success', error: 'toast--danger', warning: 'toast--warning', info: 'toast--info' };
+const TOAST_TYPES = {
+  success: 'toast--success',
+  error: 'toast--danger',
+  warning: 'toast--warning',
+  info: 'toast--info',
+};
 
 export function showToast(message, type = 'info') {
   const container = document.getElementById('toast-container');
@@ -58,15 +63,28 @@ export function relativeTime(isoString) {
 // ── localStorage helpers ──────────────────────────────────────────────────────
 
 export function storageGet(key) {
-  try { return localStorage.getItem(key); } catch { return null; }
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
 }
 
 export function storageSet(key, value) {
-  try { localStorage.setItem(key, value); return true; } catch { return false; }
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function storageRemove(...keys) {
-  keys.forEach(k => { try { localStorage.removeItem(k); } catch {} });
+  keys.forEach((k) => {
+    try {
+      localStorage.removeItem(k);
+    } catch {}
+  });
 }
 
 // ── Number formatting ─────────────────────────────────────────────────────────
@@ -78,7 +96,11 @@ export function formatNumber(n, opts = {}) {
 
 export function formatCurrency(n, currency = 'USD') {
   if (n == null || isNaN(n)) return '—';
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: 2 }).format(n);
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+    maximumFractionDigits: 2,
+  }).format(n);
 }
 
 // ── Debounce ──────────────────────────────────────────────────────────────────
@@ -112,9 +134,12 @@ function _ensureConfirmDialog() {
   document.body.appendChild(_confirmEl);
 }
 
-export function confirmDialog(message, { title = 'Are you sure?', confirmLabel = 'Confirm', confirmClass = 'btn-danger' } = {}) {
+export function confirmDialog(
+  message,
+  { title = 'Are you sure?', confirmLabel = 'Confirm', confirmClass = 'btn-danger' } = {}
+) {
   _ensureConfirmDialog();
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const overlay = document.getElementById('confirm-dialog-overlay');
     const titleEl = document.getElementById('confirm-title');
     const msgEl = document.getElementById('confirm-msg');
@@ -138,7 +163,9 @@ export function confirmDialog(message, { title = 'Are you sure?', confirmLabel =
     }
     const onOk = () => close(true);
     const onCancel = () => close(false);
-    const onKey = e => { if (e.key === 'Escape') close(false); };
+    const onKey = (e) => {
+      if (e.key === 'Escape') close(false);
+    };
 
     okBtn.addEventListener('click', onOk);
     cancelBtn.addEventListener('click', onCancel);
@@ -149,16 +176,24 @@ export function confirmDialog(message, { title = 'Are you sure?', confirmLabel =
 // ── Focus trap for modals ─────────────────────────────────────────────────────
 
 export function trapFocus(el) {
-  const focusable = 'button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])';
+  const focusable =
+    'button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])';
   function handler(e) {
     if (e.key !== 'Tab') return;
-    const els = Array.from(el.querySelectorAll(focusable)).filter(n => n.offsetParent !== null);
+    const els = Array.from(el.querySelectorAll(focusable)).filter((n) => n.offsetParent !== null);
     if (!els.length) return;
-    const first = els[0], last = els[els.length - 1];
+    const first = els[0],
+      last = els[els.length - 1];
     if (e.shiftKey) {
-      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      if (document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      }
     } else {
-      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      if (document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     }
   }
   el.addEventListener('keydown', handler);
@@ -174,7 +209,10 @@ export function trapFocus(el) {
  */
 export function renderPagination(container, { total, page, perPage, onChange }) {
   const totalPages = Math.max(1, Math.ceil(total / perPage));
-  if (totalPages <= 1) { container.innerHTML = ''; return; }
+  if (totalPages <= 1) {
+    container.innerHTML = '';
+    return;
+  }
 
   const start = (page - 1) * perPage + 1;
   const end = Math.min(page * perPage, total);
@@ -193,10 +231,14 @@ export function renderPagination(container, { total, page, perPage, onChange }) 
 // ── Skeleton loader helpers ───────────────────────────────────────────────────
 
 export function skeletonRows(count = 5, cols = 4) {
-  return Array.from({ length: count }, () =>
-    `<tr>${Array.from({ length: cols }, () =>
-      `<td><span class="skeleton" style="height:14px;display:block;width:${60 + Math.random() * 30}%"></span></td>`
-    ).join('')}</tr>`
+  return Array.from(
+    { length: count },
+    () =>
+      `<tr>${Array.from(
+        { length: cols },
+        () =>
+          `<td><span class="skeleton" style="height:14px;display:block;width:${60 + Math.random() * 30}%"></span></td>`
+      ).join('')}</tr>`
   ).join('');
 }
 
@@ -209,17 +251,21 @@ export function skeletonStatCard() {
 // ── CSV export helper ─────────────────────────────────────────────────────────
 
 export function downloadCSV(filename, rows, headers) {
-  const escape = v => {
+  const escape = (v) => {
     if (v == null) return '';
     const s = String(v);
-    return s.includes(',') || s.includes('"') || s.includes('\n') ? `"${s.replace(/"/g, '""')}"` : s;
+    return s.includes(',') || s.includes('"') || s.includes('\n')
+      ? `"${s.replace(/"/g, '""')}"`
+      : s;
   };
   const lines = [headers.map(escape).join(',')];
-  rows.forEach(row => lines.push(headers.map(h => escape(row[h])).join(',')));
+  rows.forEach((row) => lines.push(headers.map((h) => escape(row[h])).join(',')));
   const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = filename; a.click();
+  a.href = url;
+  a.download = filename;
+  a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
@@ -234,22 +280,24 @@ export function downloadCSV(filename, rows, headers) {
 export function drawSparkline(canvas, data, { color = '#3b82f6', fill = true } = {}) {
   if (!canvas || !data?.length) return;
   const ctx = canvas.getContext('2d');
-  const w = canvas.width, h = canvas.height;
-  const min = Math.min(...data), max = Math.max(...data);
+  const w = canvas.width,
+    h = canvas.height;
+  const min = Math.min(...data),
+    max = Math.max(...data);
   const range = max - min || 1;
   ctx.clearRect(0, 0, w, h);
   const pts = data.map((v, i) => ({
     x: (i / (data.length - 1)) * w,
-    y: h - ((v - min) / range) * (h - 4) - 2
+    y: h - ((v - min) / range) * (h - 4) - 2,
   }));
   ctx.beginPath();
   ctx.strokeStyle = color;
   ctx.lineWidth = 1.5;
-  pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+  pts.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
   ctx.stroke();
   if (fill) {
     ctx.beginPath();
-    pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+    pts.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
     ctx.lineTo(pts[pts.length - 1].x, h);
     ctx.lineTo(pts[0].x, h);
     ctx.closePath();
@@ -268,8 +316,10 @@ export function drawSparkline(canvas, data, { color = '#3b82f6', fill = true } =
 export function drawDonut(canvas, segments) {
   if (!canvas || !segments?.length) return;
   const ctx = canvas.getContext('2d');
-  const w = canvas.width, h = canvas.height;
-  const cx = w / 2, cy = h / 2;
+  const w = canvas.width,
+    h = canvas.height;
+  const cx = w / 2,
+    cy = h / 2;
   const r = Math.min(w, h) / 2 - 4;
   const ir = r * 0.55;
   const total = segments.reduce((s, g) => s + g.value, 0);
@@ -315,10 +365,12 @@ export function initCommandPalette(items) {
     const input = document.getElementById('cmd-palette-input');
     input.addEventListener('input', _renderCmdResults);
     input.addEventListener('keydown', _cmdKeyHandler);
-    el.addEventListener('click', e => { if (e.target === el) closeCmdPalette(); });
+    el.addEventListener('click', (e) => {
+      if (e.target === el) closeCmdPalette();
+    });
   }
 
-  document.addEventListener('keydown', e => {
+  document.addEventListener('keydown', (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
       e.preventDefault();
       openCmdPalette();
@@ -328,21 +380,28 @@ export function initCommandPalette(items) {
 
 function _renderCmdResults() {
   const q = (document.getElementById('cmd-palette-input')?.value || '').toLowerCase();
-  const filtered = q ? _cmdPaletteItems.filter(i => i.label.toLowerCase().includes(q)) : _cmdPaletteItems;
+  const filtered = q
+    ? _cmdPaletteItems.filter((i) => i.label.toLowerCase().includes(q))
+    : _cmdPaletteItems;
   const container = document.getElementById('cmd-palette-results');
   if (!container) return;
   if (!filtered.length) {
     container.innerHTML = '<div class="cmd-palette-empty">No results</div>';
     return;
   }
-  container.innerHTML = filtered.map((item, i) =>
-    `<div class="cmd-result${i === 0 ? ' active' : ''}" data-href="${item.href || ''}" role="option" tabindex="-1">
+  container.innerHTML = filtered
+    .map(
+      (item, i) =>
+        `<div class="cmd-result${i === 0 ? ' active' : ''}" data-href="${item.href || ''}" role="option" tabindex="-1">
       <span class="cmd-result-icon" aria-hidden="true">${item.icon || ''}</span>
       <span>${item.label}</span>
     </div>`
-  ).join('');
-  container.querySelectorAll('.cmd-result').forEach(el => {
-    el.addEventListener('click', () => { window.location.href = el.dataset.href; });
+    )
+    .join('');
+  container.querySelectorAll('.cmd-result').forEach((el) => {
+    el.addEventListener('click', () => {
+      window.location.href = el.dataset.href;
+    });
   });
 }
 
@@ -350,7 +409,7 @@ function _cmdKeyHandler(e) {
   const results = document.getElementById('cmd-palette-results');
   if (!results) return;
   const items = Array.from(results.querySelectorAll('.cmd-result'));
-  const activeIdx = items.findIndex(i => i.classList.contains('active'));
+  const activeIdx = items.findIndex((i) => i.classList.contains('active'));
   if (e.key === 'ArrowDown') {
     e.preventDefault();
     const next = (activeIdx + 1) % items.length;
@@ -377,7 +436,10 @@ export function openCmdPalette() {
   if (!overlay) return;
   overlay.classList.remove('hidden');
   const input = document.getElementById('cmd-palette-input');
-  if (input) { input.value = ''; input.focus(); }
+  if (input) {
+    input.value = '';
+    input.focus();
+  }
   _renderCmdResults();
 }
 

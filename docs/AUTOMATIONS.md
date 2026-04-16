@@ -8,23 +8,22 @@ All automation runs via GitHub Actions and requires only GitHub Secrets — no p
 
 Go to **Settings → Secrets and variables → Actions → New repository secret** for each:
 
-| Secret                        | Used by                      | How to get it                                        |
-| ----------------------------- | ---------------------------- | ---------------------------------------------------- |
-| `GOLD_API_KEY`                | All price scripts            | Sign up at https://gold-api.com                      |
-| `CONSUMER_KEY`                | X/Twitter posts              | X Developer Portal: API Key (Consumer Key)           |
-| `CONSUMER_SECRET`             | X/Twitter posts              | X Developer Portal: API Key Secret                   |
-| `ACCESS_TOKEN`                | X/Twitter posts              | X Developer Portal: Access Token (read-write)        |
-| `ACCESS_TOKEN_SECRET`         | X/Twitter posts              | X Developer Portal: Access Token Secret              |
-| `SUPABASE_URL`                | Python poster, DB sync       | Supabase project → Settings → API → URL              |
-| `SUPABASE_SERVICE_ROLE_KEY`   | Python poster, DB sync       | Supabase project → Settings → API → service_role key |
-| `TELEGRAM_BOT_TOKEN`          | Telegram posts & alerts      | @BotFather on Telegram                               |
-| `TELEGRAM_CHANNEL_ID`         | Telegram posts & alerts      | Channel username e.g. `@mygoldchannel` or numeric ID |
-| `DISCORD_WEBHOOK_URL`         | Discord posts & alerts       | Discord channel → Integrations → Webhooks            |
+| Secret                      | Used by                 | How to get it                                        |
+| --------------------------- | ----------------------- | ---------------------------------------------------- |
+| `GOLD_API_KEY`              | All price scripts       | Sign up at https://gold-api.com                      |
+| `CONSUMER_KEY`              | X/Twitter posts         | X Developer Portal: API Key (Consumer Key)           |
+| `CONSUMER_SECRET`           | X/Twitter posts         | X Developer Portal: API Key Secret                   |
+| `ACCESS_TOKEN`              | X/Twitter posts         | X Developer Portal: Access Token (read-write)        |
+| `ACCESS_TOKEN_SECRET`       | X/Twitter posts         | X Developer Portal: Access Token Secret              |
+| `SUPABASE_URL`              | Python poster, DB sync  | Supabase project → Settings → API → URL              |
+| `SUPABASE_SERVICE_ROLE_KEY` | Python poster, DB sync  | Supabase project → Settings → API → service_role key |
+| `TELEGRAM_BOT_TOKEN`        | Telegram posts & alerts | @BotFather on Telegram                               |
+| `TELEGRAM_CHANNEL_ID`       | Telegram posts & alerts | Channel username e.g. `@mygoldchannel` or numeric ID |
+| `DISCORD_WEBHOOK_URL`       | Discord posts & alerts  | Discord channel → Integrations → Webhooks            |
 
 > **Note on Twitter secrets:** Workflows map these GitHub secrets to environment variables named
-> `TWITTER_API_KEY`, `TWITTER_API_SECRET`, `TWITTER_ACCESS_TOKEN`, and
-> `TWITTER_ACCESS_TOKEN_SECRET` inside the workflow YAML files. The actual GitHub secret names are
-> the shorter forms listed above.
+> `TWITTER_API_KEY`, `TWITTER_API_SECRET`, `TWITTER_ACCESS_TOKEN`, and `TWITTER_ACCESS_TOKEN_SECRET`
+> inside the workflow YAML files. The actual GitHub secret names are the shorter forms listed above.
 
 ---
 
@@ -34,10 +33,10 @@ Go to **Settings → Secrets and variables → Actions → New repository secret
 >
 > Two X/Twitter posting systems exist and overlap:
 >
-> | System | Script | Workflow | Status |
-> |--------|--------|----------|--------|
-> | **Node.js** (original) | `scripts/node/tweet-gold-price.js` | `gold-price-tweet.yml` | Active — simple hourly tweet with 10 rotating templates |
-> | **Python** (newer) | `scripts/python/gold_poster.py` | `hourly_post.yml`, `market_events.yml`, `spike_alert.yml`, `health_check.yml` | Active — richer templates, Supabase logging, market events, spike alerts |
+> | System                 | Script                             | Workflow                                                                      | Status                                                                   |
+> | ---------------------- | ---------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+> | **Node.js** (original) | `scripts/node/tweet-gold-price.js` | `gold-price-tweet.yml`                                                        | Active — simple hourly tweet with 10 rotating templates                  |
+> | **Python** (newer)     | `scripts/python/gold_poster.py`    | `hourly_post.yml`, `market_events.yml`, `spike_alert.yml`, `health_check.yml` | Active — richer templates, Supabase logging, market events, spike alerts |
 >
 > **Recommendation:** Keep the **Python** system active. It is more capable (supports market events,
 > spike alerts, health checks, and Supabase logging). Deactivate the Node.js system by disabling
@@ -45,8 +44,8 @@ Go to **Settings → Secrets and variables → Actions → New repository secret
 > credentials (`CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET`). Running
 > both will cause duplicate tweets.
 >
-> See `docs/twitter_bot_architecture.md` for the Python system's full architecture.
-> See `MANUAL_INPUTS.md` item for deactivation instructions.
+> See `docs/twitter_bot_architecture.md` for the Python system's full architecture. See
+> `MANUAL_INPUTS.md` item for deactivation instructions.
 
 ### 1. Hourly X/Twitter posts (JS) — `gold-price-tweet.yml`
 

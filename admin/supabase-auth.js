@@ -117,7 +117,8 @@ function resolveEmail(user) {
  */
 export async function loginWithOAuth(provider, redirectTo) {
   const sb = await ensureClient();
-  if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
+  if (!sb)
+    return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
 
   const target = redirectTo || buildRedirect();
   try {
@@ -132,7 +133,10 @@ export async function loginWithOAuth(provider, redirectTo) {
     return { success: true };
   } catch (err) {
     if (err?.message?.toLowerCase().includes('network')) {
-      return { success: false, message: 'Network error — cannot reach Supabase. Check your connection.' };
+      return {
+        success: false,
+        message: 'Network error — cannot reach Supabase. Check your connection.',
+      };
     }
     return { success: false, message: err?.message || 'An unexpected error occurred.' };
   }
@@ -150,7 +154,8 @@ export async function loginWithGitHub(redirectTo) {
  */
 export async function loginWithMagicLink(email, redirectTo) {
   const sb = await ensureClient();
-  if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
+  if (!sb)
+    return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
   if (!email) return { success: false, message: 'Email is required.' };
 
   const target = redirectTo || buildRedirect();
@@ -167,7 +172,8 @@ export async function loginWithMagicLink(email, redirectTo) {
  */
 export async function loginWithPassword(email, password) {
   const sb = await ensureClient();
-  if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
+  if (!sb)
+    return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
   if (!email || !password) return { success: false, message: 'Email and password are required.' };
 
   const { error } = await sb.auth.signInWithPassword({ email, password });
@@ -180,7 +186,8 @@ export async function loginWithPassword(email, password) {
  */
 export async function sendPhoneOtp(phone) {
   const sb = await ensureClient();
-  if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
+  if (!sb)
+    return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
   if (!phone || !phone.startsWith('+971')) {
     return { success: false, message: 'Phone must start with +971.' };
   }
@@ -194,7 +201,8 @@ export async function sendPhoneOtp(phone) {
  */
 export async function verifyPhoneOtp({ phone, token }) {
   const sb = await ensureClient();
-  if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
+  if (!sb)
+    return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
   if (!phone || !token) return { success: false, message: 'Phone and code are required.' };
   const { error } = await sb.auth.verifyOtp({ phone, token, type: 'sms' });
   if (error) return { success: false, message: error.message || 'Invalid or expired code.' };
@@ -206,9 +214,11 @@ export async function verifyPhoneOtp({ phone, token }) {
  */
 export async function enrollTotp() {
   const sb = await ensureClient();
-  if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
+  if (!sb)
+    return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
   const { data, error } = await sb.auth.mfa.enroll({ factorType: 'totp' });
-  if (error) return { success: false, message: error.message || 'Could not start TOTP enrollment.' };
+  if (error)
+    return { success: false, message: error.message || 'Could not start TOTP enrollment.' };
   return { success: true, data };
 }
 
@@ -218,7 +228,8 @@ export async function enrollTotp() {
  */
 export async function verifyTotp({ factorId, code }) {
   const sb = await ensureClient();
-  if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
+  if (!sb)
+    return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
   if (!factorId || !code) return { success: false, message: 'Code is required.' };
 
   const challenge = await sb.auth.mfa.challenge({ factorId });

@@ -166,14 +166,14 @@ function renderHero(cfg) {
         </div>
       </div>
       ${
-  changeVal !== null
-    ? `
+        changeVal !== null
+          ? `
       <div class="cp-change-row">
         <span class="badge ${changeClass}">${changeSign}${changeVal.toFixed(2)}%</span>
         <span class="cp-change-label">${t('from')}</span>
       </div>`
-    : ''
-}
+          : ''
+      }
       <div class="cp-update-time">${t('lastUpdate')}: ${STATE.status.goldStale ? 'Cached/Fallback' : 'Live'} · ${STATE.freshness.goldUpdatedAt ? new Date(STATE.freshness.goldUpdatedAt).toLocaleString(STATE.lang === 'ar' ? 'ar-AE' : 'en-AE', { timeZone: cfg.timezone, hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'} · Source: gold-api.com</div>
     </div>`;
 }
@@ -327,16 +327,16 @@ function renderFaq(cfg) {
     <h2>${t('faq')}</h2>
     <div itemscope itemtype="https://schema.org/FAQPage">
       ${faqList
-    .map(
-      (item, i) => `
+        .map(
+          (item, i) => `
         <details class="faq-item" ${i === 0 ? 'open' : ''} itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
           <summary class="faq-question" itemprop="name">${item.q}</summary>
           <div class="faq-answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
             <p itemprop="text">${item.a}</p>
           </div>
         </details>`
-    )
-    .join('')}
+        )
+        .join('')}
     </div>`;
 }
 

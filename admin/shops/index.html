@@ -5,7 +5,9 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3GNY9M8TE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag('js', new Date());
 
       gtag('config', 'G-K3GNY9M8TE');
@@ -317,9 +319,13 @@
             </select>
             <div class="toolbar-actions">
               <button class="btn btn-gold" id="add-btn" type="button">+ Add Shop</button>
-              <button class="btn btn-ghost btn-sm" id="import-csv-btn" type="button">⬆ Import CSV</button>
+              <button class="btn btn-ghost btn-sm" id="import-csv-btn" type="button">
+                ⬆ Import CSV
+              </button>
               <button class="btn btn-ghost" id="import-btn" type="button">⬆ Import JSON</button>
-              <button class="btn btn-ghost btn-sm" id="export-csv-btn" type="button">⬇ Export CSV</button>
+              <button class="btn btn-ghost btn-sm" id="export-csv-btn" type="button">
+                ⬇ Export CSV
+              </button>
             </div>
           </div>
 
@@ -332,8 +338,12 @@
             <table id="shops-table" aria-label="Shops list">
               <thead>
                 <tr>
-                  <th class="sort-th" data-col="name">Name / Country <span class="sort-icon"></span></th>
-                  <th class="sort-th" data-col="city">City / Area <span class="sort-icon"></span></th>
+                  <th class="sort-th" data-col="name">
+                    Name / Country <span class="sort-icon"></span>
+                  </th>
+                  <th class="sort-th" data-col="city">
+                    City / Area <span class="sort-icon"></span>
+                  </th>
                   <th>Phone</th>
                   <th class="sort-th" data-col="rating">Rating <span class="sort-icon"></span></th>
                   <th>Status</th>
@@ -695,14 +705,18 @@
       aria-modal="true"
       aria-labelledby="import-csv-modal-title"
     >
-      <div class="modal" style="max-width:600px">
+      <div class="modal" style="max-width: 600px">
         <div class="modal-header">
           <h2 id="import-csv-modal-title">Import Shops from CSV</h2>
-          <button class="modal-close" id="import-csv-close" aria-label="Close" type="button">✕</button>
+          <button class="modal-close" id="import-csv-close" aria-label="Close" type="button">
+            ✕
+          </button>
         </div>
         <div class="modal-body">
-          <p class="text-muted text-sm" style="margin-bottom:12px">
-            Paste CSV with headers: <code>name, name_ar, city, country, phone, address, rating, verified</code>. First row must be column headers.
+          <p class="text-muted text-sm" style="margin-bottom: 12px">
+            Paste CSV with headers:
+            <code>name, name_ar, city, country, phone, address, rating, verified</code>. First row
+            must be column headers.
           </p>
           <div class="form-group">
             <label class="form-label" for="csv-input">CSV Data</label>
@@ -710,15 +724,17 @@
               class="form-textarea"
               id="csv-input"
               placeholder="Paste CSV here..."
-              style="min-height:140px;font-family:monospace;font-size:0.8125rem"
+              style="min-height: 140px; font-family: monospace; font-size: 0.8125rem"
             ></textarea>
           </div>
-          <div id="csv-preview" class="import-result" style="margin-top:12px"></div>
+          <div id="csv-preview" class="import-result" style="margin-top: 12px"></div>
         </div>
         <div class="modal-footer">
           <button class="btn btn-ghost" id="import-csv-cancel" type="button">Cancel</button>
           <button class="btn btn-ghost" id="csv-parse-btn" type="button">Parse</button>
-          <button class="btn btn-primary" id="csv-import-confirm" type="button" disabled>Import shops</button>
+          <button class="btn btn-primary" id="csv-import-confirm" type="button" disabled>
+            Import shops
+          </button>
         </div>
       </div>
     </div>
@@ -727,9 +743,20 @@
     <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
     <script type="module">
-      import { logout as supabaseLogout, requireAuth, getSupabase, getSession } from '../supabase-auth.js';
+      import {
+        logout as supabaseLogout,
+        requireAuth,
+        getSupabase,
+        getSession,
+      } from '../supabase-auth.js';
       import { initAdminShell, renderBreadcrumb } from '../shared/admin-shell.js';
-      import { showToast, renderPagination, downloadCSV, debounce, initCommandPalette } from '../shared/admin-utils.js';
+      import {
+        showToast,
+        renderPagination,
+        downloadCSV,
+        debounce,
+        initCommandPalette,
+      } from '../shared/admin-utils.js';
       import { ICONS } from '../shared/icons.js';
 
       // ── Auth guard ──────────────────────────────────────────
@@ -1042,7 +1069,10 @@
           total: totalShops,
           page: currentPage,
           perPage: PAGE_SIZE,
-          onChange: (p) => { currentPage = p; renderTable(p); },
+          onChange: (p) => {
+            currentPage = p;
+            renderTable(p);
+          },
         });
 
         isLoading = false;
@@ -1075,9 +1105,10 @@
             // Map pin cell
             const lat = s.latitude ?? s.lat;
             const lng = s.longitude ?? s.lng;
-            const mapCell = (lat != null && lng != null)
-              ? `<a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" rel="noopener" title="View on map" class="btn-icon">${ICONS.mapPin}</a>`
-              : `<span style="color:var(--text-dim);font-size:0.75rem">—</span>`;
+            const mapCell =
+              lat != null && lng != null
+                ? `<a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" rel="noopener" title="View on map" class="btn-icon">${ICONS.mapPin}</a>`
+                : `<span style="color:var(--text-dim);font-size:0.75rem">—</span>`;
 
             const isDeleting = deleteTargetId === id;
             const actions = isDeleting
@@ -1210,10 +1241,25 @@
           return;
         }
         downloadCSV(`shops-${new Date().toISOString().slice(0, 10)}.csv`, shops, [
-          'id', 'name', 'nameAr', 'country', 'city', 'area',
-          'address', 'phone', 'website', 'latitude', 'longitude',
-          'hours', 'rating', 'verified', 'featured',
-          'tags', 'description', 'createdAt', 'updatedAt',
+          'id',
+          'name',
+          'nameAr',
+          'country',
+          'city',
+          'area',
+          'address',
+          'phone',
+          'website',
+          'latitude',
+          'longitude',
+          'hours',
+          'rating',
+          'verified',
+          'featured',
+          'tags',
+          'description',
+          'createdAt',
+          'updatedAt',
         ]);
         showToast(`Exported ${shops.length} shops.`, 'success');
       }
@@ -1305,12 +1351,16 @@
           document.getElementById('csv-preview').innerHTML = '';
           document.getElementById('import-csv-modal').classList.remove('hidden');
         });
-        document.getElementById('import-csv-close').addEventListener('click', () =>
-          document.getElementById('import-csv-modal').classList.add('hidden')
-        );
-        document.getElementById('import-csv-cancel').addEventListener('click', () =>
-          document.getElementById('import-csv-modal').classList.add('hidden')
-        );
+        document
+          .getElementById('import-csv-close')
+          .addEventListener('click', () =>
+            document.getElementById('import-csv-modal').classList.add('hidden')
+          );
+        document
+          .getElementById('import-csv-cancel')
+          .addEventListener('click', () =>
+            document.getElementById('import-csv-modal').classList.add('hidden')
+          );
         document.getElementById('import-csv-modal').addEventListener('click', (e) => {
           if (e.target === e.currentTarget)
             document.getElementById('import-csv-modal').classList.add('hidden');
@@ -1320,26 +1370,42 @@
         document.getElementById('csv-parse-btn').addEventListener('click', () => {
           const raw = document.getElementById('csv-input').value.trim();
           const lines = raw.split('\n').filter(Boolean);
-          if (lines.length < 2) { showToast('CSV must have a header row and at least one data row.', 'warning'); return; }
-          const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
-          parsedCsvShops = lines.slice(1).map(line => {
-            const vals = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
-            const obj = {};
-            headers.forEach((h, i) => { obj[h] = vals[i] ?? ''; });
-            return obj;
-          }).filter(o => o.name?.trim());
+          if (lines.length < 2) {
+            showToast('CSV must have a header row and at least one data row.', 'warning');
+            return;
+          }
+          const headers = lines[0].split(',').map((h) => h.trim().replace(/^"|"$/g, ''));
+          parsedCsvShops = lines
+            .slice(1)
+            .map((line) => {
+              const vals = line.split(',').map((v) => v.trim().replace(/^"|"$/g, ''));
+              const obj = {};
+              headers.forEach((h, i) => {
+                obj[h] = vals[i] ?? '';
+              });
+              return obj;
+            })
+            .filter((o) => o.name?.trim());
           const preview = document.getElementById('csv-preview');
-          if (parsedCsvShops.length === 0) { preview.innerHTML = '<span class="text-warning">No valid rows found (name required).</span>'; return; }
+          if (parsedCsvShops.length === 0) {
+            preview.innerHTML =
+              '<span class="text-warning">No valid rows found (name required).</span>';
+            return;
+          }
           preview.innerHTML = `<p class="text-muted text-sm" style="margin-bottom:8px">Parsed <strong>${parsedCsvShops.length}</strong> shop(s):</p>
             <div style="max-height:160px;overflow-y:auto;font-size:0.8125rem">
-              ${parsedCsvShops.map(s => `<div style="padding:2px 0;border-bottom:1px solid var(--border)">${s.name} — ${s.country || ''} ${s.city || ''}</div>`).join('')}
+              ${parsedCsvShops.map((s) => `<div style="padding:2px 0;border-bottom:1px solid var(--border)">${s.name} — ${s.country || ''} ${s.city || ''}</div>`).join('')}
             </div>`;
-          document.getElementById('csv-import-confirm').textContent = `Import ${parsedCsvShops.length} shops`;
+          document.getElementById('csv-import-confirm').textContent =
+            `Import ${parsedCsvShops.length} shops`;
           document.getElementById('csv-import-confirm').disabled = false;
         });
 
         document.getElementById('csv-import-confirm').addEventListener('click', async () => {
-          if (!parsedCsvShops.length) { showToast('Parse CSV first.', 'warning'); return; }
+          if (!parsedCsvShops.length) {
+            showToast('Parse CSV first.', 'warning');
+            return;
+          }
           try {
             await insertManyShops(parsedCsvShops);
             document.getElementById('import-csv-modal').classList.add('hidden');

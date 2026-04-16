@@ -611,7 +611,11 @@ async function fetchLiveData() {
         uae21k: ((STATE.spotUsdPerOz * (21 / 24)) / TROY) * AED,
         uae18k: ((STATE.spotUsdPerOz * (18 / 24)) / TROY) * AED,
       });
-      updateSpotBar({ xauUsd: STATE.spotUsdPerOz, aed24kGram: aed24, updatedAt: STATE.freshness.goldUpdatedAt });
+      updateSpotBar({
+        xauUsd: STATE.spotUsdPerOz,
+        aed24kGram: aed24,
+        updatedAt: STATE.freshness.goldUpdatedAt,
+      });
     }
   } catch (e) {
     console.warn('Calculator fetch error:', e);

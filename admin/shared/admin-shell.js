@@ -23,8 +23,10 @@ import { ICONS } from './icons.js';
 import { initCommandPalette } from './admin-utils.js';
 
 // ── Chevron SVGs for collapse button ────────────────────────────────────────
-const CHEVRON_LEFT = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>';
-const CHEVRON_RIGHT = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>';
+const CHEVRON_LEFT =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>';
+const CHEVRON_RIGHT =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>';
 
 const SIDEBAR_COLLAPSED_KEY = 'gp_admin_sidebar_collapsed';
 
@@ -40,34 +42,32 @@ const NAV_GROUPS = [
   {
     label: 'Commerce',
     items: [
-      { iconKey: 'shops',   label: 'Shops',   slug: 'shops' },
+      { iconKey: 'shops', label: 'Shops', slug: 'shops' },
       { iconKey: 'pricing', label: 'Pricing', slug: 'pricing' },
-      { iconKey: 'orders',  label: 'Orders',  slug: 'orders' },
+      { iconKey: 'orders', label: 'Orders', slug: 'orders' },
     ],
   },
   {
     label: 'Content',
     items: [
       { iconKey: 'content', label: 'Content', slug: 'content' },
-      { iconKey: 'social',  label: 'Social',  slug: 'social' },
+      { iconKey: 'social', label: 'Social', slug: 'social' },
     ],
   },
   {
     label: 'System',
-    items: [
-      { iconKey: 'settings', label: 'Settings', slug: 'settings' },
-    ],
+    items: [{ iconKey: 'settings', label: 'Settings', slug: 'settings' }],
   },
 ];
 
 // Flat list for command palette / breadcrumb
-const NAV_ITEMS = NAV_GROUPS.flatMap(g => g.items);
+const NAV_ITEMS = NAV_GROUPS.flatMap((g) => g.items);
 
 // Bottom nav shows the four most-used sections + a More button
 const BOTTOM_NAV_ITEMS = [
   { iconKey: 'dashboard', label: 'Home', slug: '' },
-  { iconKey: 'shops',     label: 'Shops', slug: 'shops' },
-  { iconKey: 'orders',    label: 'Orders', slug: 'orders' },
+  { iconKey: 'shops', label: 'Shops', slug: 'shops' },
+  { iconKey: 'orders', label: 'Orders', slug: 'orders' },
   { iconKey: 'analytics', label: 'Stats', slug: 'analytics' },
 ];
 
@@ -82,7 +82,10 @@ function getAdminBase() {
 function getActiveSlug() {
   const path = window.location.pathname;
   const base = getAdminBase();
-  const remainder = path.slice(base.length).replace(/index\.html$/, '').replace(/\/+$/, '');
+  const remainder = path
+    .slice(base.length)
+    .replace(/index\.html$/, '')
+    .replace(/\/+$/, '');
   return remainder;
 }
 
@@ -93,17 +96,20 @@ function stripHtml(html) {
 // ── Sidebar HTML builder ─────────────────────────────────────────────────────
 
 function buildSidebarHTML(adminBase, activeSlug) {
-  const navSections = NAV_GROUPS.map(group => {
-    const links = group.items.map((item) => {
-      const href = adminBase + (item.slug ? item.slug + '/' : '');
-      const isActive = item.slug === activeSlug;
-      const cls = 'nav-link' + (isActive ? ' active' : '');
-      const aria = isActive ? ' aria-current="page"' : '';
-      const badge = item.slug === 'orders'
-        ? '<span class="notification-badge" id="orders-badge" aria-label="pending orders count" style="display:none;margin-left:auto"></span>'
-        : '';
-      return `<a class="${cls}" href="${href}"${aria}><span class="nav-icon">${ICONS[item.iconKey]}</span><span class="nav-label">${item.label}</span>${badge}</a>`;
-    }).join('\n          ');
+  const navSections = NAV_GROUPS.map((group) => {
+    const links = group.items
+      .map((item) => {
+        const href = adminBase + (item.slug ? item.slug + '/' : '');
+        const isActive = item.slug === activeSlug;
+        const cls = 'nav-link' + (isActive ? ' active' : '');
+        const aria = isActive ? ' aria-current="page"' : '';
+        const badge =
+          item.slug === 'orders'
+            ? '<span class="notification-badge" id="orders-badge" aria-label="pending orders count" style="display:none;margin-left:auto"></span>'
+            : '';
+        return `<a class="${cls}" href="${href}"${aria}><span class="nav-icon">${ICONS[item.iconKey]}</span><span class="nav-label">${item.label}</span>${badge}</a>`;
+      })
+      .join('\n          ');
 
     return `<div class="nav-section-label" aria-hidden="true">${group.label}</div>
           ${links}`;
@@ -174,9 +180,7 @@ function injectBottomNav(adminBase, activeSlug, openSidebarFn) {
 
 export function renderBreadcrumb(pageName) {
   if (!pageName) return;
-  const crumbs = Array.isArray(pageName)
-    ? pageName
-    : [{ label: String(pageName) }];
+  const crumbs = Array.isArray(pageName) ? pageName : [{ label: String(pageName) }];
   if (!crumbs.length) return;
   const adminBase = getAdminBase();
   const header = document.querySelector('header.page-header');
@@ -234,12 +238,18 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
   try {
     const saved = localStorage.getItem(SIDEBAR_COLLAPSED_KEY);
     if (saved === 'true') setCollapsed(true);
-  } catch { /* storage unavailable */ }
+  } catch {
+    /* storage unavailable */
+  }
 
   collapseBtn?.addEventListener('click', () => {
     const willCollapse = !sidebarEl?.classList.contains('sidebar--collapsed');
     setCollapsed(willCollapse);
-    try { localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(willCollapse)); } catch { /* ignore */ }
+    try {
+      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(willCollapse));
+    } catch {
+      /* ignore */
+    }
   });
 
   // ── Mobile sidebar toggle ───────────────────────────────

@@ -108,9 +108,9 @@ export function loadState(STATE) {
   // Compute cache health score (0–1)
   const goldAge = STATE.freshness.goldUpdatedAt
     ? Math.max(
-      0,
-      1 - (Date.now() - new Date(STATE.freshness.goldUpdatedAt).getTime()) / (3600000 * 24)
-    )
+        0,
+        1 - (Date.now() - new Date(STATE.freshness.goldUpdatedAt).getTime()) / (3600000 * 24)
+      )
     : 0;
   STATE.cacheHealthScore = Math.round(goldAge * 100);
 }

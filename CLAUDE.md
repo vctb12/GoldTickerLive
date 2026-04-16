@@ -33,8 +33,8 @@ HTML page
 
 ### Key Modules
 
-| Path                      | Role                                                                                                                                      |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Path                          | Role                                                                                                                                      |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/config/constants.js`     | API URLs, timeouts, refresh interval (90 s), cache key names, AED peg (3.6725), troy-oz divisor                                           |
 | `src/config/countries.js`     | 24+ countries with codes, names (EN/AR), currencies, flags, regional groups, peg flags                                                    |
 | `src/config/karats.js`        | 7 karat definitions (24K–14K) with purity fractions and EN/AR labels                                                                      |
@@ -56,10 +56,10 @@ HTML page
 ### State Management
 
 - **Homepage** (`index.html` / `src/pages/home.js`): global `STATE` object in `app.js`
-- **Tracker** (`tracker.html` / `src/pages/tracker-pro.js`): `src/tracker/state.js` module; state also serialised
-  into the URL hash for shareability
-- **Persistence**: `src/lib/cache.js` wraps `localStorage` for gold price, FX rates, history, and user
-  preferences
+- **Tracker** (`tracker.html` / `src/pages/tracker-pro.js`): `src/tracker/state.js` module; state
+  also serialised into the URL hash for shareability
+- **Persistence**: `src/lib/cache.js` wraps `localStorage` for gold price, FX rates, history, and
+  user preferences
 
 ### Resilience
 
@@ -81,7 +81,8 @@ HTML page
    applicable)
 2. Create `countries/<slug>/index.html` — follow an existing country page as a template; it uses
    `src/pages/country-page.js` / `styles/country-page.css`
-3. Update `sitemap.xml` and the navigation in `src/components/nav.js` if the page should appear in menus
+3. Update `sitemap.xml` and the navigation in `src/components/nav.js` if the page should appear in
+   menus
 
 ### External Data Sources
 

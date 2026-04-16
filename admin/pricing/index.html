@@ -5,7 +5,9 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3GNY9M8TE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag('js', new Date());
 
       gtag('config', 'G-K3GNY9M8TE');
@@ -358,11 +360,28 @@
         text-align: right;
       }
       /* ── Premium Enhancements ─────────────────────────────── */
-      .card-title { font-weight: 700; letter-spacing: -0.01em; }
-      .section-heading h2 { font-weight: 700; letter-spacing: -0.01em; }
-      .toolbar { padding-bottom: 14px; }
-      .tab-panel.active { animation: fade-in 0.2s ease both; }
-      @keyframes fade-in { from { opacity: 0.6; } to { opacity: 1; } }
+      .card-title {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .section-heading h2 {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .toolbar {
+        padding-bottom: 14px;
+      }
+      .tab-panel.active {
+        animation: fade-in 0.2s ease both;
+      }
+      @keyframes fade-in {
+        from {
+          opacity: 0.6;
+        }
+        to {
+          opacity: 1;
+        }
+      }
     </style>
   </head>
   <body>
@@ -421,7 +440,18 @@
           </div>
 
           <!-- ── Karat Cards ───────────────────────────────────── -->
-          <div class="karat-cards-grid" id="karat-cards-grid" aria-label="Karat price cards" role="list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px;"></div>
+          <div
+            class="karat-cards-grid"
+            id="karat-cards-grid"
+            aria-label="Karat price cards"
+            role="list"
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+              gap: 12px;
+              margin-bottom: 20px;
+            "
+          ></div>
 
           <!-- ── Live Prices ───────────────────────────────────── -->
           <section class="section card" aria-labelledby="live-prices-title">
@@ -712,9 +742,20 @@
     <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
     <script type="module">
-      import { logout, requireAuth, getSupabase, getSession, logActivity } from '../supabase-auth.js';
+      import {
+        logout,
+        requireAuth,
+        getSupabase,
+        getSession,
+        logActivity,
+      } from '../supabase-auth.js';
       import { initAdminShell, renderBreadcrumb } from '../shared/admin-shell.js';
-      import { showToast, confirmDialog, initCommandPalette, drawSparkline } from '../shared/admin-utils.js';
+      import {
+        showToast,
+        confirmDialog,
+        initCommandPalette,
+        drawSparkline,
+      } from '../shared/admin-utils.js';
       import { ICONS } from '../shared/icons.js';
 
       // ── Auth guard ──────────────────────────────────────────
@@ -784,12 +825,18 @@
 
       /** Cache overrides to localStorage for offline resilience. */
       function cacheOverrides(overrides) {
-        try { localStorage.setItem(LS_KEY, JSON.stringify(overrides)); } catch {}
+        try {
+          localStorage.setItem(LS_KEY, JSON.stringify(overrides));
+        } catch {}
       }
 
       /** Read cached overrides from localStorage. */
       function readCachedOverrides() {
-        try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch { return []; }
+        try {
+          return JSON.parse(localStorage.getItem(LS_KEY)) || [];
+        } catch {
+          return [];
+        }
       }
 
       /**
@@ -860,7 +907,12 @@
           const cached = readCachedOverrides();
           cached.unshift(result);
           cacheOverrides(cached);
-          logActivity('pricing_override', { id: result.id, karat: result.karat, currency: result.currency, price: result.overridePrice });
+          logActivity('pricing_override', {
+            id: result.id,
+            karat: result.karat,
+            currency: result.currency,
+            price: result.overridePrice,
+          });
           return result;
         }
         // Fallback: localStorage only
@@ -869,7 +921,12 @@
         const cached = readCachedOverrides();
         cached.push(ov);
         cacheOverrides(cached);
-        logActivity('pricing_override', { id: ov.id, karat: ov.karat, currency: ov.currency, price: ov.overridePrice });
+        logActivity('pricing_override', {
+          id: ov.id,
+          karat: ov.karat,
+          currency: ov.currency,
+          price: ov.overridePrice,
+        });
         return ov;
       }
 
@@ -898,7 +955,12 @@
           const idx = cached.findIndex((o) => o.id === id);
           if (idx !== -1) cached[idx] = result;
           cacheOverrides(cached);
-          logActivity('pricing_override', { action: 'update', id, karat: result.karat, currency: result.currency });
+          logActivity('pricing_override', {
+            action: 'update',
+            id,
+            karat: result.karat,
+            currency: result.currency,
+          });
           return result;
         }
         // Fallback: localStorage only
@@ -907,7 +969,12 @@
         if (idx === -1) return null;
         overrides[idx] = { ...overrides[idx], ...data, id };
         cacheOverrides(overrides);
-        logActivity('pricing_override', { action: 'update', id, karat: overrides[idx].karat, currency: overrides[idx].currency });
+        logActivity('pricing_override', {
+          action: 'update',
+          id,
+          karat: overrides[idx].karat,
+          currency: overrides[idx].currency,
+        });
         return overrides[idx];
       }
 
@@ -933,15 +1000,22 @@
       const MAX_HISTORY_POINTS = 20;
 
       function loadPriceHistory() {
-        try { return JSON.parse(localStorage.getItem(PRICE_HISTORY_KEY)) || []; } catch { return []; }
+        try {
+          return JSON.parse(localStorage.getItem(PRICE_HISTORY_KEY)) || [];
+        } catch {
+          return [];
+        }
       }
 
       function appendPriceHistory(spotUsd) {
         if (!spotUsd) return;
         const history = loadPriceHistory();
         history.push({ price: spotUsd, ts: Date.now() });
-        if (history.length > MAX_HISTORY_POINTS) history.splice(0, history.length - MAX_HISTORY_POINTS);
-        try { localStorage.setItem(PRICE_HISTORY_KEY, JSON.stringify(history)); } catch {}
+        if (history.length > MAX_HISTORY_POINTS)
+          history.splice(0, history.length - MAX_HISTORY_POINTS);
+        try {
+          localStorage.setItem(PRICE_HISTORY_KEY, JSON.stringify(history));
+        } catch {}
       }
 
       let liveState = { spotUsd: null, rates: {}, fetchedAt: null, error: null };
@@ -1311,7 +1385,7 @@
         const ov = _overridesCache.find((o) => o.id === id);
         if (!ov) return;
 
-        const currentVal = field === 'overridePrice' ? String(ov.overridePrice) : (ov.reason || '');
+        const currentVal = field === 'overridePrice' ? String(ov.overridePrice) : ov.reason || '';
         const input = document.createElement('input');
         input.className = 'form-input';
         input.type = field === 'overridePrice' ? 'number' : 'text';
@@ -1333,7 +1407,11 @@
           let dbPatch;
           if (field === 'overridePrice') {
             const num = parseFloat(newVal);
-            if (isNaN(num) || num < 0) { showToast('Invalid price value.', 'warning'); await renderOverridesTable(); return; }
+            if (isNaN(num) || num < 0) {
+              showToast('Invalid price value.', 'warning');
+              await renderOverridesTable();
+              return;
+            }
             dbPatch = { override_price: num };
           } else {
             dbPatch = { reason: newVal };
@@ -1346,8 +1424,15 @@
 
         input.addEventListener('blur', commit);
         input.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
-          if (e.key === 'Escape') { e.preventDefault(); input.removeEventListener('blur', commit); renderOverridesTable(); }
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            input.blur();
+          }
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            input.removeEventListener('blur', commit);
+            renderOverridesTable();
+          }
         });
       }
 
