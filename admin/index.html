@@ -5,7 +5,9 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3GNY9M8TE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag('js', new Date());
 
       gtag('config', 'G-K3GNY9M8TE');
@@ -25,10 +27,14 @@
         margin-bottom: 32px;
       }
       @media (max-width: 900px) {
-        .stat-grid { grid-template-columns: repeat(2, 1fr); }
+        .stat-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
       }
       @media (max-width: 480px) {
-        .stat-grid { grid-template-columns: 1fr; }
+        .stat-grid {
+          grid-template-columns: 1fr;
+        }
       }
 
       .stat-card .stat-icon {
@@ -50,8 +56,12 @@
       /* ── Welcome banner ─────────────────────────────────────── */
       .welcome-banner {
         align-items: center;
-        background: linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(99,102,241,0.06) 100%);
-        border: 1px solid rgba(245,158,11,0.18);
+        background: linear-gradient(
+          135deg,
+          rgba(245, 158, 11, 0.08) 0%,
+          rgba(99, 102, 241, 0.06) 100%
+        );
+        border: 1px solid rgba(245, 158, 11, 0.18);
         border-radius: var(--radius-lg);
         display: flex;
         gap: 16px;
@@ -112,7 +122,10 @@
         gap: 12px;
         padding: 16px 18px;
         text-decoration: none;
-        transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s,
+          transform 0.15s;
       }
       .quick-action-card:hover {
         border-color: var(--border-light);
@@ -303,7 +316,9 @@
           <div class="welcome-banner" id="welcome-banner">
             <div class="welcome-banner-left">
               <div class="welcome-title" id="welcome-title">Good morning ☀️</div>
-              <div class="welcome-sub" id="welcome-sub">Here's what's happening with your platform today.</div>
+              <div class="welcome-sub" id="welcome-sub">
+                Here's what's happening with your platform today.
+              </div>
             </div>
             <div class="welcome-banner-actions">
               <button class="btn btn-ghost btn-sm" id="qa-force-refresh" type="button">
@@ -324,7 +339,13 @@
               <div class="stat-number" id="stat-gold" aria-live="polite">
                 <span class="inline-spinner" aria-hidden="true"></span>
               </div>
-              <canvas id="gold-sparkline" class="sparkline-canvas" width="80" height="28" style="display:block;margin-top:6px"></canvas>
+              <canvas
+                id="gold-sparkline"
+                class="sparkline-canvas"
+                width="80"
+                height="28"
+                style="display: block; margin-top: 6px"
+              ></canvas>
               <div class="stat-sub" id="stat-gold-sub"></div>
             </div>
 
@@ -341,7 +362,19 @@
             <!-- Pending Orders -->
             <div class="stat-card" role="listitem">
               <div class="stat-icon" aria-hidden="true">
-                📦 <span id="stat-orders-dot" style="display:none;width:8px;height:8px;border-radius:50%;background:#ef4444;vertical-align:middle;margin-left:4px"></span>
+                📦
+                <span
+                  id="stat-orders-dot"
+                  style="
+                    display: none;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: #ef4444;
+                    vertical-align: middle;
+                    margin-left: 4px;
+                  "
+                ></span>
               </div>
               <div class="stat-label">Pending Orders</div>
               <div class="stat-number" id="stat-orders" aria-live="polite">
@@ -363,7 +396,19 @@
 
           <!-- ── Quick Actions ───────────────────────────────── -->
           <section class="section" aria-label="Quick actions">
-            <h2 class="card-title" style="margin-bottom:14px;font-size:0.9rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;font-weight:700">Quick Actions</h2>
+            <h2
+              class="card-title"
+              style="
+                margin-bottom: 14px;
+                font-size: 0.9rem;
+                color: var(--text-dim);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                font-weight: 700;
+              "
+            >
+              Quick Actions
+            </h2>
             <div class="quick-actions-grid" id="quick-actions-grid">
               <!-- Populated by JS with icons -->
               <a class="quick-action-card" href="./shops/" aria-label="Manage shops">
@@ -394,7 +439,12 @@
                   <span class="quick-action-desc">Traffic and events</span>
                 </div>
               </a>
-              <button class="quick-action-card" id="qa-clear-cache" type="button" aria-label="Clear site cache">
+              <button
+                class="quick-action-card"
+                id="qa-clear-cache"
+                type="button"
+                aria-label="Clear site cache"
+              >
                 <div class="quick-action-icon" id="qa-trash-icon" aria-hidden="true"></div>
                 <div class="quick-action-text">
                   <span class="quick-action-label">Clear Cache</span>
@@ -418,9 +468,13 @@
                 <h2 class="card-title" id="api-status-title">API Status</h2>
                 <span class="api-last-checked" id="api-last-checked"></span>
               </div>
-              <div style="display:flex;align-items:center;gap:10px">
-                <span style="color:var(--text-dim);font-size:0.75rem">refresh in <span id="api-countdown">60</span>s</span>
-                <button class="btn btn-ghost btn-sm" id="api-check-btn" type="button">Check Now</button>
+              <div style="display: flex; align-items: center; gap: 10px">
+                <span style="color: var(--text-dim); font-size: 0.75rem"
+                  >refresh in <span id="api-countdown">60</span>s</span
+                >
+                <button class="btn btn-ghost btn-sm" id="api-check-btn" type="button">
+                  Check Now
+                </button>
               </div>
             </div>
             <div class="table-wrap">
@@ -435,7 +489,10 @@
                 </thead>
                 <tbody id="api-table-body">
                   <tr>
-                    <td colspan="4" style="color: var(--text-dim); text-align: center; padding: 20px">
+                    <td
+                      colspan="4"
+                      style="color: var(--text-dim); text-align: center; padding: 20px"
+                    >
                       <span class="inline-spinner" aria-hidden="true"></span>
                       Checking services…
                     </td>
@@ -462,10 +519,25 @@
     <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
     <script type="module">
-      import { logout as supabaseLogout, requireAuth, getSession, getSupabase } from './supabase-auth.js';
+      import {
+        logout as supabaseLogout,
+        requireAuth,
+        getSession,
+        getSupabase,
+      } from './supabase-auth.js';
       import { CONSTANTS } from '../config/constants.js';
       import { initAdminShell, renderBreadcrumb } from './shared/admin-shell.js';
-      import { showToast, qs, relativeTime, storageGet, storageSet, storageRemove, drawSparkline, skeletonRows, initCommandPalette } from './shared/admin-utils.js';
+      import {
+        showToast,
+        qs,
+        relativeTime,
+        storageGet,
+        storageSet,
+        storageRemove,
+        drawSparkline,
+        skeletonRows,
+        initCommandPalette,
+      } from './shared/admin-utils.js';
       import { ICONS } from './shared/icons.js';
 
       // ── Auth guard ───────────────────────────────────────────
@@ -485,21 +557,23 @@
       ]);
 
       const API_GOLD_URL = CONSTANTS.API_GOLD_URL;
-      const API_FX_URL   = CONSTANTS.API_FX_URL;
+      const API_FX_URL = CONSTANTS.API_FX_URL;
       const API_TIMEOUT_MS = CONSTANTS.GOLD_FETCH_TIMEOUT;
 
       // ── Gold Ticker + sparkline ──────────────────────────────
       async function updateTicker() {
-        const badge     = qs('#ticker-badge');
-        const dot       = qs('#ticker-dot');
+        const badge = qs('#ticker-badge');
+        const dot = qs('#ticker-dot');
         const tickerTxt = qs('#ticker-text');
         try {
-          const res   = await fetch(API_GOLD_URL);
-          const data  = await res.json();
+          const res = await fetch(API_GOLD_URL);
+          const data = await res.json();
           const price = data.price ?? data.Price ?? null;
           if (price) {
             const formatted = new Intl.NumberFormat('en-US', {
-              style: 'currency', currency: 'USD', maximumFractionDigits: 2,
+              style: 'currency',
+              currency: 'USD',
+              maximumFractionDigits: 2,
             }).format(price);
             tickerTxt.textContent = `XAU: ${formatted}`;
             dot.className = 'ticker-dot ticker-dot--green';
@@ -509,11 +583,11 @@
             // Stat card value
             qs('#stat-gold').textContent = formatted;
 
-            const change    = data.ch  ?? data.change         ?? null;
+            const change = data.ch ?? data.change ?? null;
             const changePct = data.chp ?? data.change_percent ?? null;
             let trendHtml = '';
             if (change !== null && changePct !== null) {
-              const sign  = change >= 0 ? '+' : '';
+              const sign = change >= 0 ? '+' : '';
               const arrow = change >= 0 ? '▲' : '▼';
               const color = change >= 0 ? 'var(--success)' : 'var(--danger, #ef4444)';
               trendHtml = `<span style="color:${color};font-size:0.8125rem">${arrow} ${sign}${Number(changePct).toFixed(2)}%</span>`;
@@ -523,7 +597,11 @@
 
             // Persist price history and draw sparkline
             let history = [];
-            try { history = JSON.parse(storageGet('gp_price_history') || '[]'); } catch { history = []; }
+            try {
+              history = JSON.parse(storageGet('gp_price_history') || '[]');
+            } catch {
+              history = [];
+            }
             if (!Array.isArray(history)) history = [];
             history.push(price);
             if (history.length > 20) history = history.slice(-20);
@@ -531,8 +609,14 @@
 
             const canvas = qs('#gold-sparkline');
             if (canvas) {
-              const sparkData = history.length >= 2 ? history : Array.from({ length: 7 }, (_, i) => price * (0.99 + i * 0.002));
-              drawSparkline(canvas, sparkData, { color: change >= 0 ? '#10b981' : '#ef4444', fill: true });
+              const sparkData =
+                history.length >= 2
+                  ? history
+                  : Array.from({ length: 7 }, (_, i) => price * (0.99 + i * 0.002));
+              drawSparkline(canvas, sparkData, {
+                color: change >= 0 ? '#10b981' : '#ef4444',
+                fill: true,
+              });
             }
           }
         } catch {
@@ -553,10 +637,16 @@
         // Shops
         if (sb) {
           try {
-            const { count: total } = await sb.from('shops').select('*', { count: 'exact', head: true });
-            const { count: newCount } = await sb.from('shops').select('*', { count: 'exact', head: true }).gte('created_at', weekAgo);
+            const { count: total } = await sb
+              .from('shops')
+              .select('*', { count: 'exact', head: true });
+            const { count: newCount } = await sb
+              .from('shops')
+              .select('*', { count: 'exact', head: true })
+              .gte('created_at', weekAgo);
             qs('#stat-shops').textContent = (total ?? '—').toLocaleString?.() ?? total ?? '—';
-            qs('#stat-shops-sub').textContent = newCount > 0 ? `+${newCount} new this week` : 'total in database';
+            qs('#stat-shops-sub').textContent =
+              newCount > 0 ? `+${newCount} new this week` : 'total in database';
           } catch {
             qs('#stat-shops').textContent = '—';
             qs('#stat-shops-sub').textContent = 'could not connect';
@@ -569,7 +659,10 @@
         // Pending orders
         if (sb) {
           try {
-            const { count: pending } = await sb.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'pending');
+            const { count: pending } = await sb
+              .from('orders')
+              .select('*', { count: 'exact', head: true })
+              .eq('status', 'pending');
             const val = pending ?? 0;
             qs('#stat-orders').textContent = val.toLocaleString();
             const dot = qs('#stat-orders-dot');
@@ -587,8 +680,12 @@
         // Published posts
         if (sb) {
           try {
-            const { count: published } = await sb.from('content_posts').select('*', { count: 'exact', head: true }).eq('status', 'published');
-            qs('#stat-posts').textContent = (published ?? '—').toLocaleString?.() ?? published ?? '—';
+            const { count: published } = await sb
+              .from('content_posts')
+              .select('*', { count: 'exact', head: true })
+              .eq('status', 'published');
+            qs('#stat-posts').textContent =
+              (published ?? '—').toLocaleString?.() ?? published ?? '—';
             qs('#stat-posts-sub').textContent = 'published articles';
           } catch {
             qs('#stat-posts').textContent = '—';
@@ -618,19 +715,54 @@
               .order('created_at', { ascending: false })
               .limit(15);
             if (data?.length) rows = data;
-          } catch { /* fall through to synthesis */ }
+          } catch {
+            /* fall through to synthesis */
+          }
 
           if (!rows.length) {
             // Synthesise from recent records across tables
             const sources = await Promise.allSettled([
-              sb.from('shops').select('id,name,created_at').order('created_at', { ascending: false }).limit(5),
-              sb.from('orders').select('id,status,created_at').order('created_at', { ascending: false }).limit(5),
-              sb.from('content_posts').select('id,title,created_at').order('created_at', { ascending: false }).limit(5),
+              sb
+                .from('shops')
+                .select('id,name,created_at')
+                .order('created_at', { ascending: false })
+                .limit(5),
+              sb
+                .from('orders')
+                .select('id,status,created_at')
+                .order('created_at', { ascending: false })
+                .limit(5),
+              sb
+                .from('content_posts')
+                .select('id,title,created_at')
+                .order('created_at', { ascending: false })
+                .limit(5),
             ]);
             const [shopsRes, ordersRes, postsRes] = sources;
-            (shopsRes.value?.data || []).forEach(s => rows.push({ action: 'Shop added', target_type: 'shop', actor: s.name || 'unknown', created_at: s.created_at }));
-            (ordersRes.value?.data || []).forEach(o => rows.push({ action: `Order ${o.status}`, target_type: 'order', actor: `#${o.id}`, created_at: o.created_at }));
-            (postsRes.value?.data || []).forEach(p => rows.push({ action: 'Post created', target_type: 'content', actor: p.title || 'untitled', created_at: p.created_at }));
+            (shopsRes.value?.data || []).forEach((s) =>
+              rows.push({
+                action: 'Shop added',
+                target_type: 'shop',
+                actor: s.name || 'unknown',
+                created_at: s.created_at,
+              })
+            );
+            (ordersRes.value?.data || []).forEach((o) =>
+              rows.push({
+                action: `Order ${o.status}`,
+                target_type: 'order',
+                actor: `#${o.id}`,
+                created_at: o.created_at,
+              })
+            );
+            (postsRes.value?.data || []).forEach((p) =>
+              rows.push({
+                action: 'Post created',
+                target_type: 'content',
+                actor: p.title || 'untitled',
+                created_at: p.created_at,
+              })
+            );
             rows.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
             rows = rows.slice(0, 15);
           }
@@ -643,10 +775,16 @@
           return;
         }
 
-        const iconMap = { shop: ICONS.shops, order: ICONS.orders, content: ICONS.content, default: ICONS.edit };
-        list.innerHTML = rows.map(r => {
-          const icon = iconMap[r.target_type] || iconMap.default;
-          return `<div class="activity-item" role="listitem">
+        const iconMap = {
+          shop: ICONS.shops,
+          order: ICONS.orders,
+          content: ICONS.content,
+          default: ICONS.edit,
+        };
+        list.innerHTML = rows
+          .map((r) => {
+            const icon = iconMap[r.target_type] || iconMap.default;
+            return `<div class="activity-item" role="listitem">
             <div class="activity-icon" aria-hidden="true">${icon}</div>
             <div class="activity-body">
               <div class="activity-action">${r.action || '—'}</div>
@@ -654,13 +792,14 @@
             </div>
             <div class="activity-time">${relativeTime(r.created_at)}</div>
           </div>`;
-        }).join('');
+          })
+          .join('');
       }
       loadActivity();
 
       // ── API Status checks ────────────────────────────────────
       const SERVICES = [
-        { name: 'Gold API (gold-api.com)',     url: API_GOLD_URL },
+        { name: 'Gold API (gold-api.com)', url: API_GOLD_URL },
         { name: 'Exchange Rates (er-api.com)', url: API_FX_URL },
       ];
 
@@ -669,16 +808,19 @@
       let autoRefreshInterval = null;
 
       function respBar(ms) {
-        const w   = Math.min(ms / 5, 80);
-        const bg  = ms < 200 ? '#10b981' : ms < 500 ? '#f59e0b' : '#ef4444';
+        const w = Math.min(ms / 5, 80);
+        const bg = ms < 200 ? '#10b981' : ms < 500 ? '#f59e0b' : '#ef4444';
         return `<span class="resp-bar" style="display:inline-block;height:8px;width:${w}px;background:${bg};border-radius:2px;vertical-align:middle;margin-right:4px"></span>${ms} ms`;
       }
 
       async function checkService(service) {
         const start = performance.now();
         try {
-          const res = await fetch(service.url, { cache: 'no-store', signal: AbortSignal.timeout(API_TIMEOUT_MS) });
-          const ms  = Math.round(performance.now() - start);
+          const res = await fetch(service.url, {
+            cache: 'no-store',
+            signal: AbortSignal.timeout(API_TIMEOUT_MS),
+          });
+          const ms = Math.round(performance.now() - start);
           return { name: service.name, ok: res.ok, status: res.status, ms };
         } catch {
           const ms = Math.round(performance.now() - start);
@@ -702,13 +844,17 @@
 
       function renderApiTable(results) {
         const tbody = qs('#api-table-body');
-        const now   = new Date().toLocaleTimeString();
-        tbody.innerHTML = results.map(r => `<tr>
+        const now = new Date().toLocaleTimeString();
+        tbody.innerHTML = results
+          .map(
+            (r) => `<tr>
           <td>${r.name}</td>
           <td><span style="color:${r.ok ? 'var(--success)' : 'var(--danger,#ef4444)'}">${r.ok ? '● ' + r.status + ' OK' : '● ' + r.status}</span></td>
           <td>${now}</td>
           <td>${respBar(r.ms)}</td>
-        </tr>`).join('');
+        </tr>`
+          )
+          .join('');
       }
 
       function resetCountdown() {
@@ -727,9 +873,9 @@
       }
 
       async function runApiChecks() {
-        const tbody    = qs('#api-table-body');
+        const tbody = qs('#api-table-body');
         const checkBtn = qs('#api-check-btn');
-        const lastEl   = qs('#api-last-checked');
+        const lastEl = qs('#api-last-checked');
 
         if (checkBtn) checkBtn.disabled = true;
         tbody.innerHTML = `<tr><td colspan="4" style="color:var(--text-dim);text-align:center;padding:20px">
@@ -751,7 +897,7 @@
 
       setInterval(() => {
         if (!lastCheckedAt) return;
-        const sec   = Math.floor((Date.now() - lastCheckedAt) / 1000);
+        const sec = Math.floor((Date.now() - lastCheckedAt) / 1000);
         const lastEl = qs('#api-last-checked');
         if (!lastEl) return;
         if (sec < 60) lastEl.textContent = `Last checked: ${sec}s ago`;
@@ -775,7 +921,7 @@
       });
 
       // ── Welcome banner greeting ──────────────────────────────
-      (function() {
+      (function () {
         const h = new Date().getHours();
         const greet = h < 12 ? 'Good morning ☀️' : h < 17 ? 'Good afternoon ⚡' : 'Good evening 🌙';
         const titleEl = qs('#welcome-title');

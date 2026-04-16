@@ -4,28 +4,33 @@
 
 ## Overview
 
-This document outlines accessibility standards, patterns, and requirements for the Gold-Prices platform. We aim for WCAG 2.1 Level AA compliance across all pages and components.
+This document outlines accessibility standards, patterns, and requirements for the Gold-Prices
+platform. We aim for WCAG 2.1 Level AA compliance across all pages and components.
 
 ## Core Principles
 
 ### 1. Perceivable
+
 - All information must be presentable to users in ways they can perceive
 - Provide text alternatives for non-text content
 - Ensure sufficient color contrast
 - Make content adaptable to different presentations
 
 ### 2. Operable
+
 - All functionality must be available from a keyboard
 - Provide sufficient time for users to complete tasks
 - Do not design content that could cause seizures
 - Help users navigate and find content
 
 ### 3. Understandable
+
 - Text must be readable and understandable
 - Web pages must appear and operate in predictable ways
 - Help users avoid and correct mistakes
 
 ### 4. Robust
+
 - Content must be robust enough to be interpreted by a wide variety of user agents
 - Maximize compatibility with current and future tools
 
@@ -34,29 +39,32 @@ This document outlines accessibility standards, patterns, and requirements for t
 ### Color Contrast
 
 **Minimum Requirements:**
+
 - Normal text: 4.5:1 contrast ratio
 - Large text (18pt+ or 14pt+ bold): 3:1 contrast ratio
 - UI components and graphics: 3:1 contrast ratio
 
 **Status:**
+
 ```css
 /* ✅ Good contrast examples */
---color-text: #1a1612 on --color-surface: #fff (16.9:1)
---color-gold-dark: #8a6420 on --color-surface: #fff (5.2:1)
-
+/* --color-text: #1a1612 on --color-surface: #fff (16.9:1) */
+/* --color-gold-dark: #8a6420 on --color-surface: #fff (5.2:1) */
 /* ⚠️ Needs review */
---color-text-faint: #78685a on --color-surface: #fff (4.4:1) /* Close to minimum */
+/* --color-text-faint: #78685a on --color-surface: #fff (4.4:1) */
 ```
 
 ### Keyboard Navigation
 
 **Requirements:**
+
 - All interactive elements must be keyboard accessible
 - Focus order must be logical and intuitive
 - Focus indicators must be clearly visible
 - No keyboard traps
 
 **Implementation:**
+
 ```css
 /* Standard focus ring */
 *:focus-visible {
@@ -86,22 +94,21 @@ This document outlines accessibility standards, patterns, and requirements for t
 **Required ARIA Attributes:**
 
 #### Navigation
+
 ```html
 <nav aria-label="Main navigation">
-  <button aria-expanded="false" aria-controls="mobile-menu">
-    Menu
-  </button>
+  <button aria-expanded="false" aria-controls="mobile-menu">Menu</button>
 </nav>
 ```
 
 #### Live Regions
+
 ```html
-<div aria-live="polite" aria-atomic="true" role="status">
-  Gold price updated: $2,450.00
-</div>
+<div aria-live="polite" aria-atomic="true" role="status">Gold price updated: $2,450.00</div>
 ```
 
 #### Form Labels
+
 ```html
 <label for="country-select">Select Country</label>
 <select id="country-select" aria-describedby="country-help">
@@ -111,6 +118,7 @@ This document outlines accessibility standards, patterns, and requirements for t
 ```
 
 #### Buttons
+
 ```html
 <button aria-label="Close dialog" onclick="closeDialog()">
   <span aria-hidden="true">×</span>
@@ -120,6 +128,7 @@ This document outlines accessibility standards, patterns, and requirements for t
 ### Semantic HTML
 
 **Structure:**
+
 ```html
 <header><!-- Site header --></header>
 <nav><!-- Main navigation --></nav>
@@ -136,6 +145,7 @@ This document outlines accessibility standards, patterns, and requirements for t
 ### Screen Reader Support
 
 **Best Practices:**
+
 - Use semantic HTML elements
 - Provide text alternatives for images
 - Label form controls properly
@@ -143,6 +153,7 @@ This document outlines accessibility standards, patterns, and requirements for t
 - Announce live updates appropriately
 
 **Example:**
+
 ```html
 <!-- Price card with screen reader support -->
 <div class="price-card" role="region" aria-labelledby="gold-24k-label">
@@ -174,12 +185,13 @@ This document outlines accessibility standards, patterns, and requirements for t
 ### Touch Target Size
 
 **Minimum Requirements:**
+
 - Touch targets should be at least 44×44px
 - Spacing between adjacent targets should be at least 8px
 
 ```css
 .button,
-.link,
+.link-button,
 .interactive {
   min-height: 44px;
   min-width: 44px;
@@ -199,6 +211,7 @@ This document outlines accessibility standards, patterns, and requirements for t
 ### Bilingual Considerations
 
 **RTL Support:**
+
 ```css
 [dir='rtl'] .component {
   /* RTL-specific styles */
@@ -211,28 +224,22 @@ This document outlines accessibility standards, patterns, and requirements for t
 ### Form Validation
 
 **Accessible Error Messages:**
+
 ```html
 <label for="email">Email Address</label>
-<input
-  type="email"
-  id="email"
-  aria-invalid="true"
-  aria-describedby="email-error"
-  required
->
-<span id="email-error" role="alert">
-  Please enter a valid email address
-</span>
+<input type="email" id="email" aria-invalid="true" aria-describedby="email-error" required />
+<span id="email-error" role="alert"> Please enter a valid email address </span>
 ```
 
 ### Modal Dialogs
 
 **Focus Management:**
+
 ```javascript
 // Trap focus inside modal
 function trapFocus(element) {
   const focusableElements = element.querySelectorAll(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"]'
   );
 
   const firstFocusable = focusableElements[0];
@@ -263,9 +270,12 @@ function trapFocus(element) {
 ### Data Tables
 
 **Accessible Table Structure:**
+
 ```html
 <table>
-  <caption>Gold Prices by Karat</caption>
+  <caption>
+    Gold Prices by Karat
+  </caption>
   <thead>
     <tr>
       <th scope="col">Karat</th>
@@ -286,6 +296,7 @@ function trapFocus(element) {
 ### Charts and Visualizations
 
 **Requirements:**
+
 - Provide text alternatives
 - Use patterns in addition to color
 - Ensure keyboard navigation
@@ -295,14 +306,16 @@ function trapFocus(element) {
 <figure role="img" aria-labelledby="chart-title" aria-describedby="chart-desc">
   <figcaption id="chart-title">Gold Price Trend (7 Days)</figcaption>
   <div id="chart-desc" class="visually-hidden">
-    Gold prices have increased from $2,400 to $2,450 over the past week,
-    with a peak of $2,470 on Day 5.
+    Gold prices have increased from $2,400 to $2,450 over the past week, with a peak of $2,470 on
+    Day 5.
   </div>
   <canvas id="price-chart"></canvas>
   <!-- Provide data table alternative -->
   <details>
     <summary>View data table</summary>
-    <table><!-- Accessible data table --></table>
+    <table>
+      <!-- Accessible data table -->
+    </table>
   </details>
 </figure>
 ```
@@ -310,6 +323,7 @@ function trapFocus(element) {
 ## Testing Checklist
 
 ### Manual Testing
+
 - [ ] Keyboard navigation works for all interactive elements
 - [ ] Focus indicators are clearly visible
 - [ ] Skip to content link works
@@ -320,18 +334,24 @@ function trapFocus(element) {
 - [ ] Content works in both light and dark mode
 
 ### Screen Reader Testing
+
+At minimum, test with at least one free screen reader (NVDA or VoiceOver). The list below includes
+recommended options when available.
+
 - [ ] Test with NVDA (Windows)
 - [ ] Test with JAWS (Windows)
 - [ ] Test with VoiceOver (macOS/iOS)
 - [ ] Test with TalkBack (Android)
 
 ### Automated Testing
+
 - [ ] Run Lighthouse accessibility audit (score 95+)
 - [ ] Run axe DevTools scan (0 violations)
 - [ ] Run WAVE browser extension
 - [ ] Validate HTML with W3C validator
 
 ### Browser Testing
+
 - [ ] Chrome + ChromeVox
 - [ ] Firefox
 - [ ] Safari + VoiceOver
@@ -340,21 +360,26 @@ function trapFocus(element) {
 ## Common Issues and Fixes
 
 ### Issue: Low Contrast
+
 **Fix:** Use design tokens with verified contrast ratios
 
 ### Issue: Missing Alt Text
+
 **Fix:** Add descriptive alt attributes to all images
 
 ### Issue: Non-Descriptive Links
-**Bad:** `<a href="/learn">Click here</a>`
-**Good:** `<a href="/learn">Learn about gold investing</a>`
+
+**Bad:** `<a href="/learn">Click here</a>` **Good:**
+`<a href="/learn">Learn about gold investing</a>`
 
 ### Issue: No Focus Indicators
+
 **Fix:** Ensure `:focus-visible` styles are applied globally
 
 ### Issue: Empty Button Labels
-**Bad:** `<button><i class="icon-close"></i></button>`
-**Good:** `<button aria-label="Close dialog"><i class="icon-close" aria-hidden="true"></i></button>`
+
+**Bad:** `<button><i class="icon-close"></i></button>` **Good:**
+`<button aria-label="Close dialog"><i class="icon-close" aria-hidden="true"></i></button>`
 
 ## Resources
 
@@ -366,7 +391,8 @@ function trapFocus(element) {
 
 ## Accessibility Statement
 
-We are committed to ensuring digital accessibility for people with disabilities. We are continually improving the user experience for everyone and applying relevant accessibility standards.
+We are committed to ensuring digital accessibility for people with disabilities. We are continually
+improving the user experience for everyone and applying relevant accessibility standards.
 
 If you encounter accessibility barriers, please contact us at accessibility@goldtickerlive.com.
 

@@ -168,8 +168,8 @@ practice**, combining:
 └─────────────────────────────────────────────────────────────┘
 ```
 
-**Data flow:** HTML page → page JS → `src/lib/api.js` → `src/lib/cache.js` (dual-layer localStorage) →
-`src/lib/price-calculator.js` → `src/lib/formatter.js` → DOM
+**Data flow:** HTML page → page JS → `src/lib/api.js` → `src/lib/cache.js` (dual-layer localStorage)
+→ `src/lib/price-calculator.js` → `src/lib/formatter.js` → DOM
 
 ---
 
@@ -241,8 +241,8 @@ npm run seo-audit    # Validates SEO metadata across all pages
 
 ### Tools & Features
 
-| Tool                  | URL                                                                                                  | Description                                    |
-| --------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| Tool                  | URL                                                                                                                  | Description                                    |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
 | **Order Gold**        | [`/content/order-gold/`](https://vctb12.github.io/Gold-Prices/content/order-gold/)                                   | Order 1g–100g bars with live pricing + UAE VAT |
 | **X Post Generator**  | [`/content/social/x-post-generator.html`](https://vctb12.github.io/Gold-Prices/content/social/x-post-generator.html) | Generate ready-to-post X/Twitter updates       |
 | **Price History**     | [`/content/gold-price-history/`](https://vctb12.github.io/Gold-Prices/content/gold-price-history/)                   | Historical gold price data and charts          |
@@ -254,8 +254,8 @@ npm run seo-audit    # Validates SEO metadata across all pages
 
 ### Guides
 
-| Guide                 | URL                                                                                                            |
-| --------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Guide                 | URL                                                                                                                            |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | How to Buy Gold       | [`/content/guides/buying-guide.html`](https://vctb12.github.io/Gold-Prices/content/guides/buying-guide.html)                   |
 | 24K vs 22K Gold       | [`/content/guides/24k-vs-22k.html`](https://vctb12.github.io/Gold-Prices/content/guides/24k-vs-22k.html)                       |
 | Gold Karat Comparison | [`/content/guides/gold-karat-comparison.html`](https://vctb12.github.io/Gold-Prices/content/guides/gold-karat-comparison.html) |
@@ -377,8 +377,8 @@ GoldPrices runs **8 GitHub Actions workflows** for automated operations:
 
 ### Tweet template rotation
 
-The tweet script (`scripts/node/tweet-gold-price.js`) rotates across 10+ templates based on time of day
-(Dubai timezone):
+The tweet script (`scripts/node/tweet-gold-price.js`) rotates across 10+ templates based on time of
+day (Dubai timezone):
 
 - 🌅 Morning update (06:00)
 - 🕐 Hourly snapshot
@@ -663,24 +663,24 @@ Gold-Prices/
 
 ## Developer Documentation
 
-| Document | Purpose |
-|----------|---------|
-| **[`docs/TEARDOWN.md`](docs/TEARDOWN.md)** | **📖 Complete technical teardown — every file, system, limitation, and production guide** |
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Full system architecture, data flow, component dependencies |
-| [`docs/FILES_GUIDE.md`](docs/FILES_GUIDE.md) | Every major file — what it does, when to edit it |
-| [`docs/EDIT_GUIDE.md`](docs/EDIT_GUIDE.md) | "If you want to change X → go to Y" quick reference |
-| [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md) | Technical limitations, bottlenecks, UX/SEO weaknesses |
-| [`docs/ERROR_REPORT.md`](docs/ERROR_REPORT.md) | Error audit findings, root causes, and fixes |
-| [`docs/environment-variables.md`](docs/environment-variables.md) | Environment variable reference |
-| [`docs/SUPABASE_SETUP.md`](docs/SUPABASE_SETUP.md) | Supabase migration guide |
-| [`docs/SEO_CHECKLIST.md`](docs/SEO_CHECKLIST.md) | SEO optimization checklist |
-| [`docs/AUTOMATIONS.md`](docs/AUTOMATIONS.md) | CI/CD workflow documentation |
-| [`docs/ADMIN_GUIDE.md`](docs/ADMIN_GUIDE.md) | Admin dashboard usage guide |
-| [`docs/ADMIN_SETUP.md`](docs/ADMIN_SETUP.md) | Admin setup instructions |
-| [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) | Contribution guidelines |
-| [`docs/DEPENDENCIES.md`](docs/DEPENDENCIES.md) | Dependency documentation |
-| [`docs/CHANGELOG.md`](docs/CHANGELOG.md) | Version history |
-| [`.env.example`](.env.example) | Environment variable template — copy to `.env` |
+| Document                                                         | Purpose                                                                                   |
+| ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| **[`docs/TEARDOWN.md`](docs/TEARDOWN.md)**                       | **📖 Complete technical teardown — every file, system, limitation, and production guide** |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)                   | Full system architecture, data flow, component dependencies                               |
+| [`docs/FILES_GUIDE.md`](docs/FILES_GUIDE.md)                     | Every major file — what it does, when to edit it                                          |
+| [`docs/EDIT_GUIDE.md`](docs/EDIT_GUIDE.md)                       | "If you want to change X → go to Y" quick reference                                       |
+| [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md)                     | Technical limitations, bottlenecks, UX/SEO weaknesses                                     |
+| [`docs/ERROR_REPORT.md`](docs/ERROR_REPORT.md)                   | Error audit findings, root causes, and fixes                                              |
+| [`docs/environment-variables.md`](docs/environment-variables.md) | Environment variable reference                                                            |
+| [`docs/SUPABASE_SETUP.md`](docs/SUPABASE_SETUP.md)               | Supabase migration guide                                                                  |
+| [`docs/SEO_CHECKLIST.md`](docs/SEO_CHECKLIST.md)                 | SEO optimization checklist                                                                |
+| [`docs/AUTOMATIONS.md`](docs/AUTOMATIONS.md)                     | CI/CD workflow documentation                                                              |
+| [`docs/ADMIN_GUIDE.md`](docs/ADMIN_GUIDE.md)                     | Admin dashboard usage guide                                                               |
+| [`docs/ADMIN_SETUP.md`](docs/ADMIN_SETUP.md)                     | Admin setup instructions                                                                  |
+| [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md)                   | Contribution guidelines                                                                   |
+| [`docs/DEPENDENCIES.md`](docs/DEPENDENCIES.md)                   | Dependency documentation                                                                  |
+| [`docs/CHANGELOG.md`](docs/CHANGELOG.md)                         | Version history                                                                           |
+| [`.env.example`](.env.example)                                   | Environment variable template — copy to `.env`                                            |
 
 ---
 

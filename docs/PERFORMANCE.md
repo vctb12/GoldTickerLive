@@ -4,11 +4,13 @@
 
 ## Overview
 
-This document outlines performance optimization strategies, techniques, and best practices for the Gold-Prices platform.
+This document outlines performance optimization strategies, techniques, and best practices for the
+Gold-Prices platform.
 
 ## Performance Budgets
 
 ### Target Metrics
+
 - **First Contentful Paint (FCP):** < 1.2s
 - **Largest Contentful Paint (LCP):** < 2.5s
 - **Total Blocking Time (TBT):** < 200ms
@@ -17,6 +19,7 @@ This document outlines performance optimization strategies, techniques, and best
 - **Time to Interactive (TTI):** < 3.5s
 
 ### Resource Budgets
+
 - Total page weight: < 500KB (gzipped)
 - JavaScript bundle: < 150KB (gzipped)
 - CSS: < 50KB (gzipped)
@@ -33,14 +36,25 @@ This document outlines performance optimization strategies, techniques, and best
 <head>
   <style>
     /* Critical CSS - inlined */
-    :root { /* Design tokens */ }
-    body { /* Base styles */ }
-    .hero { /* Above-fold hero */ }
+    :root {
+      /* Design tokens */
+    }
+    body {
+      /* Base styles */
+    }
+    .hero {
+      /* Above-fold hero */
+    }
   </style>
 
   <!-- Defer non-critical CSS -->
-  <link rel="preload" href="styles/global.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="styles/global.css"></noscript>
+  <link
+    rel="preload"
+    href="styles/global.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript><link rel="stylesheet" href="styles/global.css" /></noscript>
 </head>
 ```
 
@@ -48,18 +62,24 @@ This document outlines performance optimization strategies, techniques, and best
 
 ```html
 <!-- DNS Prefetch -->
-<link rel="dns-prefetch" href="//fonts.googleapis.com">
-<link rel="dns-prefetch" href="//api.gold-api.com">
+<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+<link rel="dns-prefetch" href="//api.gold-api.com" />
 
 <!-- Preconnect -->
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
 <!-- Preload Critical Assets -->
-<link rel="preload" as="font" href="/fonts/cairo-v1.woff2" type="font/woff2" crossorigin>
-<link rel="preload" as="script" href="src/pages/home.js" type="module">
+<link
+  rel="preload"
+  as="font"
+  href="/fonts/cairo-v1.woff2"
+  type="font/woff2"
+  crossorigin="anonymous"
+/>
+<link rel="preload" as="script" href="src/pages/home.js" type="module" />
 
 <!-- Prefetch Next Pages -->
-<link rel="prefetch" href="/tracker.html" as="document">
+<link rel="prefetch" href="/tracker.html" as="document" />
 ```
 
 ## JavaScript Optimization
@@ -81,6 +101,7 @@ button.addEventListener('click', async () => {
 ### 2. Tree Shaking
 
 **Ensure ES modules for optimal tree shaking:**
+
 ```javascript
 // ✅ Good - Named exports
 export { formatPrice, formatDate, formatKarat };
@@ -122,9 +143,9 @@ worker.onmessage = (e) => {
 
 ```html
 <picture>
-  <source srcset="hero.avif" type="image/avif">
-  <source srcset="hero.webp" type="image/webp">
-  <img src="hero.jpg" alt="Gold bars" loading="lazy" width="800" height="450">
+  <source srcset="hero.avif" type="image/avif" />
+  <source srcset="hero.webp" type="image/webp" />
+  <img src="hero.jpg" alt="Gold bars" loading="lazy" width="800" height="450" />
 </picture>
 ```
 
@@ -132,39 +153,35 @@ worker.onmessage = (e) => {
 
 ```html
 <img
-  srcset="
-    gold-400w.jpg 400w,
-    gold-800w.jpg 800w,
-    gold-1200w.jpg 1200w
-  "
+  srcset="gold-400w.jpg 400w, gold-800w.jpg 800w, gold-1200w.jpg 1200w"
   sizes="(max-width: 640px) 400px, (max-width: 1024px) 800px, 1200px"
   src="gold-800w.jpg"
   alt="Gold price chart"
   loading="lazy"
   decoding="async"
->
+/>
 ```
 
 ### 3. Lazy Loading
 
 ```html
 <!-- Native lazy loading -->
-<img src="below-fold.jpg" loading="lazy" alt="Description">
+<img src="below-fold.jpg" loading="lazy" alt="Description" />
 
 <!-- Intersection Observer for custom lazy loading -->
 <script>
-const images = document.querySelectorAll('img[data-src]');
-const imageObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const img = entry.target;
-      img.src = img.dataset.src;
-      imageObserver.unobserve(img);
-    }
+  const images = document.querySelectorAll('img[data-src]');
+  const imageObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        img.src = img.dataset.src;
+        imageObserver.unobserve(img);
+      }
+    });
   });
-});
 
-images.forEach(img => imageObserver.observe(img));
+  images.forEach((img) => imageObserver.observe(img));
 </script>
 ```
 
@@ -186,7 +203,10 @@ images.forEach(img => imageObserver.observe(img));
 
 ```html
 <!-- Load only Latin + Arabic subsets -->
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap&subset=latin,arabic" rel="stylesheet">
+<link
+  href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap&subset=latin,arabic"
+  rel="stylesheet"
+/>
 ```
 
 ### 3. Variable Fonts
@@ -207,12 +227,7 @@ images.forEach(img => imageObserver.observe(img));
 ```javascript
 // sw.js
 const CACHE_NAME = 'gold-prices-v1';
-const STATIC_ASSETS = [
-  '/',
-  '/styles/global.css',
-  '/src/pages/home.js',
-  '/manifest.json'
-];
+const STATIC_ASSETS = ['/', '/styles/global.css', '/src/pages/home.js', '/manifest.json'];
 
 // Cache-first for static assets
 self.addEventListener('fetch', (event) => {
@@ -257,12 +272,12 @@ self.addEventListener('fetch', (event) => {
 ```javascript
 // Batch multiple price requests
 async function batchFetch(endpoints) {
-  return Promise.all(endpoints.map(url => fetch(url)));
+  return Promise.all(endpoints.map((url) => fetch(url)));
 }
 
 const [goldData, fxData] = await batchFetch([
   'https://api.gold-api.com/price',
-  'https://open.er-api.com/v6/latest/USD'
+  'https://open.er-api.com/v6/latest/USD',
 ]);
 ```
 
@@ -277,7 +292,7 @@ async function fetchWithDedup(url) {
     return inflightRequests.get(url);
   }
 
-  const promise = fetch(url).then(r => r.json());
+  const promise = fetch(url).then((r) => r.json());
   inflightRequests.set(url, promise);
 
   promise.finally(() => inflightRequests.delete(url));
@@ -291,13 +306,9 @@ async function fetchWithDedup(url) {
 ```javascript
 // Prefetch likely next pages
 const prefetchPages = () => {
-  const prefetchLinks = [
-    '/tracker.html',
-    '/calculator.html',
-    '/countries/uae.html'
-  ];
+  const prefetchLinks = ['/tracker.html', '/calculator.html', '/countries/uae.html'];
 
-  prefetchLinks.forEach(url => {
+  prefetchLinks.forEach((url) => {
     const link = document.createElement('link');
     link.rel = 'prefetch';
     link.href = url;
@@ -350,12 +361,12 @@ import debounce from 'lodash/debounce';
 
 ```javascript
 // ❌ Bad - Forces multiple reflows
-elements.forEach(el => {
+elements.forEach((el) => {
   el.style.width = el.offsetWidth + 10 + 'px'; // Read then write
 });
 
 // ✅ Good - Batch reads, then batch writes
-const widths = elements.map(el => el.offsetWidth);
+const widths = elements.map((el) => el.offsetWidth);
 elements.forEach((el, i) => {
   el.style.width = widths[i] + 10 + 'px';
 });
@@ -415,7 +426,7 @@ function loadAnalytics() {
 }
 
 // Load on first interaction
-['click', 'scroll', 'keydown'].forEach(event => {
+['click', 'scroll', 'keydown'].forEach((event) => {
   window.addEventListener(event, loadAnalytics, { once: true });
 });
 ```
@@ -425,18 +436,18 @@ function loadAnalytics() {
 ```html
 <!-- Replace heavy embed with lightweight facade -->
 <div class="video-facade" data-video-id="abc123">
-  <img src="thumbnail.jpg" alt="Video thumbnail">
+  <img src="thumbnail.jpg" alt="Video thumbnail" />
   <button>Play Video</button>
 </div>
 
 <script>
-document.querySelectorAll('.video-facade').forEach(facade => {
-  facade.addEventListener('click', () => {
-    const iframe = document.createElement('iframe');
-    iframe.src = `https://youtube.com/embed/${facade.dataset.videoId}`;
-    facade.replaceWith(iframe);
+  document.querySelectorAll('.video-facade').forEach((facade) => {
+    facade.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://youtube.com/embed/${facade.dataset.videoId}`;
+      facade.replaceWith(iframe);
+    });
   });
-});
 </script>
 ```
 
@@ -476,6 +487,7 @@ observer.observe({ entryTypes: ['measure', 'navigation'] });
 ## Performance Testing
 
 ### Automated Testing
+
 ```bash
 # Lighthouse CI
 npm install -g @lhci/cli
@@ -486,6 +498,7 @@ npx webpagetest test https://goldtickerlive.com
 ```
 
 ### Performance Budget Check
+
 ```javascript
 // performance-budget.json
 {

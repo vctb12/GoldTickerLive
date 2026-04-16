@@ -51,7 +51,7 @@ export default [
       'no-console': 'off',
       semi: ['error', 'always'],
       quotes: ['error', 'single', { avoidEscape: true }],
-      indent: ['error', 2, { SwitchCase: 1 }],
+      indent: 'off',
       'no-var': 'error',
       'prefer-const': 'error',
     },

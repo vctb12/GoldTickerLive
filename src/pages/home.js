@@ -132,9 +132,8 @@ function renderHeroCard() {
     sourceText = 'Live';
   } else if (isStaleByAge && goldUpdatedAt) {
     const mins = Math.floor(ageMs / 60000);
-    sourceText = mins >= 60
-      ? `Stale (${Math.floor(mins / 60)}h ${mins % 60}m ago)`
-      : `Stale (${mins}m ago)`;
+    sourceText =
+      mins >= 60 ? `Stale (${Math.floor(mins / 60)}h ${mins % 60}m ago)` : `Stale (${mins}m ago)`;
   } else {
     sourceText = 'Cached/Fallback';
   }

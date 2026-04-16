@@ -48,14 +48,14 @@ This creates:
 
 All tables have RLS **enabled**. The policies enforce:
 
-| Table           | Unauthenticated    | Authenticated user | Admin              |
-| --------------- | ------------------ | ------------------ | ------------------ |
-| `shops`         | Read verified only | Read all           | Full CRUD          |
-| `audit_logs`    | No access          | Read own           | Read all           |
-| `user_profiles` | No access          | Read own profile   | Read/update all    |
-| `site_settings` | Public read        | Public read        | Admin write        |
-| `gold_prices`   | No access          | No access          | Service-role only  |
-| `fetch_logs`    | No access          | No access          | Service-role only  |
+| Table           | Unauthenticated    | Authenticated user | Admin             |
+| --------------- | ------------------ | ------------------ | ----------------- |
+| `shops`         | Read verified only | Read all           | Full CRUD         |
+| `audit_logs`    | No access          | Read own           | Read all          |
+| `user_profiles` | No access          | Read own profile   | Read/update all   |
+| `site_settings` | Public read        | Public read        | Admin write       |
+| `gold_prices`   | No access          | No access          | Service-role only |
+| `fetch_logs`    | No access          | No access          | Service-role only |
 
 Writes to `audit_logs` are performed server-side using the **service-role key**, which bypasses RLS.
 Never expose the service-role key to the browser.
@@ -132,18 +132,21 @@ See [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) for the full storage abstraction d
 The admin panel uses **Supabase GitHub OAuth** for authentication:
 
 1. Enable **GitHub** provider in Supabase → Authentication → Providers.
-2. Create a GitHub OAuth App at https://github.com/settings/developers and set the callback URL to your Supabase project's auth callback URL.
+2. Create a GitHub OAuth App at https://github.com/settings/developers and set the callback URL to
+   your Supabase project's auth callback URL.
 3. Enter the GitHub OAuth Client ID and Secret in the Supabase provider settings.
 4. Set `ALLOWED_EMAIL` in `admin/supabase-config.js` to match the email on your GitHub account.
 
 The login flow:
+
 - User clicks "Sign in with GitHub" on `/admin/login/`
 - Supabase redirects to GitHub for OAuth
 - On success, Supabase creates a session
 - `admin/supabase-auth.js` checks `session.user.email === ALLOWED_EMAIL`
 - If the email doesn't match, the user is signed out and shown an error
 
-The legacy JWT flow in `lib/auth.js` and `server/routes/admin/index.js` is still available for self-hosted Express deployments.
+The legacy JWT flow in `lib/auth.js` and `server/routes/admin/index.js` is still available for
+self-hosted Express deployments.
 
 ---
 

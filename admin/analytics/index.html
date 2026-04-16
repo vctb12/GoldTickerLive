@@ -5,7 +5,9 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3GNY9M8TE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag('js', new Date());
 
       gtag('config', 'G-K3GNY9M8TE');
@@ -221,11 +223,28 @@
         }
       }
       /* ── Premium Enhancements ─────────────────────────────── */
-      .card-title { font-weight: 700; letter-spacing: -0.01em; }
-      .section-heading h2 { font-weight: 700; letter-spacing: -0.01em; }
-      .toolbar { padding-bottom: 14px; }
-      .tab-panel.active { animation: fade-in 0.2s ease both; }
-      @keyframes fade-in { from { opacity: 0.6; } to { opacity: 1; } }
+      .card-title {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .section-heading h2 {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .toolbar {
+        padding-bottom: 14px;
+      }
+      .tab-panel.active {
+        animation: fade-in 0.2s ease both;
+      }
+      @keyframes fade-in {
+        from {
+          opacity: 0.6;
+        }
+        to {
+          opacity: 1;
+        }
+      }
     </style>
   </head>
   <body>
@@ -270,16 +289,45 @@
 
         <main class="content-area" id="main-content">
           <!-- Date range filter -->
-          <div class="toolbar" style="margin-bottom:20px;" role="search" aria-label="Filter analytics">
-            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-              <label style="font-size:0.8125rem;color:var(--text-muted);white-space:nowrap;" for="analytics-date-from">From:</label>
-              <input class="form-input date-input" id="analytics-date-from" type="date" aria-label="Start date" style="flex:0 1 140px;" />
-              <label style="font-size:0.8125rem;color:var(--text-muted);white-space:nowrap;" for="analytics-date-to">To:</label>
-              <input class="form-input date-input" id="analytics-date-to" type="date" aria-label="End date" style="flex:0 1 140px;" />
-              <button class="btn btn-ghost btn-sm" id="analytics-date-clear" type="button">Clear</button>
+          <div
+            class="toolbar"
+            style="margin-bottom: 20px"
+            role="search"
+            aria-label="Filter analytics"
+          >
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap">
+              <label
+                style="font-size: 0.8125rem; color: var(--text-muted); white-space: nowrap"
+                for="analytics-date-from"
+                >From:</label
+              >
+              <input
+                class="form-input date-input"
+                id="analytics-date-from"
+                type="date"
+                aria-label="Start date"
+                style="flex: 0 1 140px"
+              />
+              <label
+                style="font-size: 0.8125rem; color: var(--text-muted); white-space: nowrap"
+                for="analytics-date-to"
+                >To:</label
+              >
+              <input
+                class="form-input date-input"
+                id="analytics-date-to"
+                type="date"
+                aria-label="End date"
+                style="flex: 0 1 140px"
+              />
+              <button class="btn btn-ghost btn-sm" id="analytics-date-clear" type="button">
+                Clear
+              </button>
             </div>
-            <div style="margin-left:auto;display:flex;gap:8px;">
-              <button class="btn btn-ghost btn-sm" id="analytics-refresh-btn" type="button">⟳ Refresh</button>
+            <div style="margin-left: auto; display: flex; gap: 8px">
+              <button class="btn btn-ghost btn-sm" id="analytics-refresh-btn" type="button">
+                ⟳ Refresh
+              </button>
             </div>
           </div>
           <!-- Dynamic analytics content rendered by JS -->
@@ -292,9 +340,21 @@
     <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
     <script type="module">
-      import { logout as supabaseLogout, requireAuth, getSupabase, getSession } from '../supabase-auth.js';
+      import {
+        logout as supabaseLogout,
+        requireAuth,
+        getSupabase,
+        getSession,
+      } from '../supabase-auth.js';
       import { initAdminShell, renderBreadcrumb } from '../shared/admin-shell.js';
-      import { showToast, downloadCSV, confirmDialog, initCommandPalette, drawSparkline, drawDonut } from '../shared/admin-utils.js';
+      import {
+        showToast,
+        downloadCSV,
+        confirmDialog,
+        initCommandPalette,
+        drawSparkline,
+        drawDonut,
+      } from '../shared/admin-utils.js';
       import { ICONS } from '../shared/icons.js';
 
       // ── Auth guard ──────────────────────────────────────────
@@ -318,22 +378,34 @@
 
       /** Cache events to localStorage for offline resilience. */
       function cacheEvents(events) {
-        try { localStorage.setItem(EVENTS_KEY, JSON.stringify(events)); } catch {}
+        try {
+          localStorage.setItem(EVENTS_KEY, JSON.stringify(events));
+        } catch {}
       }
 
       /** Read cached events from localStorage. */
       function readCachedEvents() {
-        try { return JSON.parse(localStorage.getItem(EVENTS_KEY)) || []; } catch { return []; }
+        try {
+          return JSON.parse(localStorage.getItem(EVENTS_KEY)) || [];
+        } catch {
+          return [];
+        }
       }
 
       /** Cache API logs to localStorage for offline resilience. */
       function cacheApiLog(logs) {
-        try { localStorage.setItem(API_LOG_KEY, JSON.stringify(logs)); } catch {}
+        try {
+          localStorage.setItem(API_LOG_KEY, JSON.stringify(logs));
+        } catch {}
       }
 
       /** Read cached API logs from localStorage. */
       function readCachedApiLog() {
-        try { return JSON.parse(localStorage.getItem(API_LOG_KEY)) || []; } catch { return []; }
+        try {
+          return JSON.parse(localStorage.getItem(API_LOG_KEY)) || [];
+        } catch {
+          return [];
+        }
       }
 
       /**
@@ -359,7 +431,10 @@
               cacheEvents(events);
               return events;
             }
-            console.warn('[analytics] Supabase events read error, falling back to cache:', error?.message);
+            console.warn(
+              '[analytics] Supabase events read error, falling back to cache:',
+              error?.message
+            );
           } catch (err) {
             console.warn('[analytics] Supabase unreachable, falling back to cache:', err.message);
           }
@@ -391,9 +466,15 @@
               cacheApiLog(logs);
               return logs;
             }
-            console.warn('[analytics] Supabase API log read error, falling back to cache:', error?.message);
+            console.warn(
+              '[analytics] Supabase API log read error, falling back to cache:',
+              error?.message
+            );
           } catch (err) {
-            console.warn('[analytics] Supabase unreachable for API logs, falling back to cache:', err.message);
+            console.warn(
+              '[analytics] Supabase unreachable for API logs, falling back to cache:',
+              err.message
+            );
           }
         }
         return readCachedApiLog();
@@ -681,7 +762,11 @@
         /* ── Draw canvas trend sparkline ────────────────────────── */
         const trendCanvas = document.getElementById('trend-canvas');
         if (trendCanvas) {
-          drawSparkline(trendCanvas, days14.map((d) => d.count), { color: 'var(--primary)' });
+          drawSparkline(
+            trendCanvas,
+            days14.map((d) => d.count),
+            { color: 'var(--primary)' }
+          );
         }
 
         /* ── Draw donut chart ────────────────────────────────────── */
@@ -693,19 +778,35 @@
             const t = e.event || 'unknown';
             eventCounts[t] = (eventCounts[t] || 0) + 1;
           });
-          const DONUT_COLORS = ['#6366f1', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4', '#64748b'];
+          const DONUT_COLORS = [
+            '#6366f1',
+            '#10b981',
+            '#f59e0b',
+            '#8b5cf6',
+            '#ef4444',
+            '#06b6d4',
+            '#64748b',
+          ];
           const segments = Object.entries(eventCounts)
             .sort((a, b) => b[1] - a[1])
             .slice(0, 6)
-            .map(([label, value], i) => ({ label, value, color: DONUT_COLORS[i % DONUT_COLORS.length] }));
+            .map(([label, value], i) => ({
+              label,
+              value,
+              color: DONUT_COLORS[i % DONUT_COLORS.length],
+            }));
           const total = segments.reduce((s, g) => s + g.value, 0);
           drawDonut(donutCanvas, segments);
-          donutLegend.innerHTML = segments.map((s) => `
+          donutLegend.innerHTML = segments
+            .map(
+              (s) => `
             <div style="display:flex;align-items:center;gap:6px;">
               <span style="background:${s.color};border-radius:2px;display:inline-block;flex-shrink:0;height:10px;width:10px;"></span>
               <span style="color:var(--text-muted);">${s.label}</span>
               <span style="color:var(--text);font-weight:600;margin-left:auto;padding-left:8px;">${s.value.toLocaleString()}</span>
-            </div>`).join('');
+            </div>`
+            )
+            .join('');
         }
 
         /* ── Wire data management actions ───────────────────────── */
@@ -722,22 +823,37 @@
 
         document.getElementById('export-csv-btn').addEventListener('click', () => {
           const cols = ['event', 'page', 'ts', 'sessionId'];
-          const rows = events.map((e) => ({ event: e.event, page: e.page || '', ts: e.ts ? new Date(e.ts).toISOString() : '', sessionId: e.sessionId || '' }));
+          const rows = events.map((e) => ({
+            event: e.event,
+            page: e.page || '',
+            ts: e.ts ? new Date(e.ts).toISOString() : '',
+            sessionId: e.sessionId || '',
+          }));
           downloadCSV(`analytics-${new Date().toISOString().slice(0, 10)}.csv`, rows, cols);
           showToast('Events exported as CSV.', 'success');
         });
 
         document.getElementById('clear-events-btn').addEventListener('click', async () => {
-          const confirmed = await confirmDialog('This will permanently delete all analytics data. This cannot be undone.', {
-            title: 'Clear analytics data?', confirmLabel: 'Clear Data',
-          });
+          const confirmed = await confirmDialog(
+            'This will permanently delete all analytics data. This cannot be undone.',
+            {
+              title: 'Clear analytics data?',
+              confirmLabel: 'Clear Data',
+            }
+          );
           if (!confirmed) return;
           const sb = getSupabase();
           if (sb) {
-            try { await sb.from('analytics_events').delete().gte('created_at', '1970-01-01'); } catch {}
-            try { await sb.from('api_call_logs').delete().gte('created_at', '1970-01-01'); } catch {}
+            try {
+              await sb.from('analytics_events').delete().gte('created_at', '1970-01-01');
+            } catch {}
+            try {
+              await sb.from('api_call_logs').delete().gte('created_at', '1970-01-01');
+            } catch {}
           }
-          try { localStorage.removeItem(EVENTS_KEY); } catch {}
+          try {
+            localStorage.removeItem(EVENTS_KEY);
+          } catch {}
           showToast('Analytics data cleared.', 'info');
           await renderPage();
         });

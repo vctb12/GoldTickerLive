@@ -98,7 +98,6 @@ class RateLimitError extends AppError {
  * Mount as the **last** middleware: `app.use(errorHandler);`
  */
 function errorHandler(err, _req, res, _next) {
-   
   // ── Known AppError subclass ────────────────────────────────────────────
   if (err instanceof AppError) {
     if (err instanceof RateLimitError && err.retryAfter) {

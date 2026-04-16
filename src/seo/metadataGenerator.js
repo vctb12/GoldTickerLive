@@ -32,7 +32,8 @@ export function generateMetadata(routeType, params = {}) {
   switch (routeType) {
     case 'home':
       title = `Live Gold Prices Today — UAE, GCC & Arab World | ${SITE_NAME}`;
-      description = 'Track live gold spot prices in 24 countries across GCC, Levant and Africa. 24K, 22K, 21K, 18K per gram. Updated every 90 seconds. Free.';
+      description =
+        'Track live gold spot prices in 24 countries across GCC, Levant and Africa. 24K, 22K, 21K, 18K per gram. Updated every 90 seconds. Free.';
       canonical = `${SITE_URL}/`;
       breadcrumbs = [{ name: 'Home', url: canonical }];
       break;
@@ -83,7 +84,8 @@ export function generateMetadata(routeType, params = {}) {
 
     case 'calculator':
       title = `Gold Price Calculator — Grams, Ounces, Tolas | ${SITE_NAME}`;
-      description = 'Calculate gold value by weight, karat and currency. Live gold prices. 24K, 22K, 21K, 18K. Converts grams, ounces, tolas for UAE and 20+ countries.';
+      description =
+        'Calculate gold value by weight, karat and currency. Live gold prices. 24K, 22K, 21K, 18K. Converts grams, ounces, tolas for UAE and 20+ countries.';
       canonical = `${SITE_URL}/calculator.html`;
       breadcrumbs = [
         { name: 'Home', url: `${SITE_URL}/` },
@@ -93,7 +95,8 @@ export function generateMetadata(routeType, params = {}) {
 
     case 'history':
       title = `Gold Price History & Charts — 30 Days to 5 Years | ${SITE_NAME}`;
-      description = 'Gold price history charts from 1 month to 5 years. See ATH, ATL, YTD and 1-year returns. Compare karat performance. Download CSV data.';
+      description =
+        'Gold price history charts from 1 month to 5 years. See ATH, ATL, YTD and 1-year returns. Compare karat performance. Download CSV data.';
       canonical = `${SITE_URL}/gold-price-history/`;
       breadcrumbs = [
         { name: 'Home', url: `${SITE_URL}/` },
@@ -103,7 +106,8 @@ export function generateMetadata(routeType, params = {}) {
 
     case 'order':
       title = `Order Gold Online — 1g to 100g Bars & Coins | ${SITE_NAME}`;
-      description = 'Buy gold bars and coins online. 1g to 100g, 24K to 18K. Live prices updated every 90 seconds. Order via WhatsApp. UAE 5% VAT included.';
+      description =
+        'Buy gold bars and coins online. 1g to 100g, 24K to 18K. Live prices updated every 90 seconds. Order via WhatsApp. UAE 5% VAT included.';
       canonical = `${SITE_URL}/order-gold/`;
       breadcrumbs = [
         { name: 'Home', url: `${SITE_URL}/` },
@@ -113,7 +117,8 @@ export function generateMetadata(routeType, params = {}) {
 
     case 'tracker':
       title = `Gold Tracker Pro — Live Price Workspace | UAE, GCC | ${SITE_NAME}`;
-      description = 'Live gold price tracker: 24 countries, 7 karats, historical chart, alerts, planners and CSV exports. Updated every 90 seconds.';
+      description =
+        'Live gold price tracker: 24 countries, 7 karats, historical chart, alerts, planners and CSV exports. Updated every 90 seconds.';
       canonical = `${SITE_URL}/tracker.html`;
       breadcrumbs = [
         { name: 'Home', url: `${SITE_URL}/` },
@@ -123,7 +128,8 @@ export function generateMetadata(routeType, params = {}) {
 
     case 'shops':
       title = `Gold Shops Directory — GCC & Arab World | ${SITE_NAME}`;
-      description = 'Directory of gold shops, dealers and markets across UAE, Saudi Arabia, Egypt and 15+ countries. Bilingual listings with contact details.';
+      description =
+        'Directory of gold shops, dealers and markets across UAE, Saudi Arabia, Egypt and 15+ countries. Bilingual listings with contact details.';
       canonical = `${SITE_URL}/shops.html`;
       breadcrumbs = [
         { name: 'Home', url: `${SITE_URL}/` },

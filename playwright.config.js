@@ -1,0 +1,30 @@
+module.exports = {
+  testDir: './tests/e2e',
+  testMatch: '**/*.spec.js',
+  use: {
+    baseURL: 'http://localhost:8080',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+  },
+  projects: [
+    {
+      name: 'chromium',
+      use: { browserName: 'chromium' },
+    },
+    {
+      name: 'firefox',
+      use: { browserName: 'firefox' },
+    },
+    {
+      name: 'webkit',
+      use: { browserName: 'webkit' },
+    },
+  ],
+  webServer: {
+    command: 'python3 -m http.server 8080',
+    port: 8080,
+    reuseExistingServer: true,
+  },
+  reporter: [['html'], ['list']],
+};

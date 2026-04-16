@@ -53,11 +53,18 @@ export function updateSpotBar(data = {}) {
   if (!_barEl) return;
   if (data.xauUsd != null) {
     const el = _barEl.querySelector('[data-spot-value="xau"]');
-    if (el) el.textContent = '$' + data.xauUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (el)
+      el.textContent =
+        '$' +
+        data.xauUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
   if (data.aed24kGram != null) {
     const el = _barEl.querySelector('[data-spot-value="aed"]');
-    if (el) el.textContent = data.aed24kGram.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (el)
+      el.textContent = data.aed24kGram.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
   }
   if (data.updatedAt) {
     const el = _barEl.querySelector('[data-spot-ts]');

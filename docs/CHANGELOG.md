@@ -7,9 +7,11 @@ All notable changes to the Gold-Prices platform are documented here.
 ### Admin Panel — Supabase Migration
 
 - Migrated admin authentication from JWT/Express to **Supabase GitHub OAuth**
-- Admin panel now at `/admin/` with dedicated login, dashboard, shops, settings, pricing, orders, content, social, and analytics pages
+- Admin panel now at `/admin/` with dedicated login, dashboard, shops, settings, pricing, orders,
+  content, social, and analytics pages
 - **Shops** and **Settings** pages fully connected to Supabase database
-- Pricing, Orders, Content, Social, and Analytics pages are UI shells (localStorage) pending Supabase migration
+- Pricing, Orders, Content, Social, and Analytics pages are UI shells (localStorage) pending
+  Supabase migration
 - Deprecated `admin/api-client.js` (Express JWT client) — no admin page imports it
 - Added `admin/supabase-auth.js` and `admin/supabase-config.js` for Supabase integration
 
@@ -21,14 +23,17 @@ All notable changes to the Gold-Prices platform are documented here.
   - Price spike alerts
   - System health checks
 - Added Supabase logging to `gold_prices` and `fetch_logs` tables
-- Added GitHub Actions workflows: `hourly_post.yml`, `market_events.yml`, `spike_alert.yml`, `health_check.yml`
+- Added GitHub Actions workflows: `hourly_post.yml`, `market_events.yml`, `spike_alert.yml`,
+  `health_check.yml`
 - Original JavaScript system (`scripts/tweet-gold-price.js`) retained for compatibility
 
 ### Infrastructure & Bug Fixes
 
-- Fixed `sync-db-to-git.yml`: corrected secret name (`SUPABASE_SERVICE_KEY` → `SUPABASE_SERVICE_ROLE_KEY`) and output format (CommonJS → ES module)
+- Fixed `sync-db-to-git.yml`: corrected secret name (`SUPABASE_SERVICE_KEY` →
+  `SUPABASE_SERVICE_ROLE_KEY`) and output format (CommonJS → ES module)
 - Created `.env.example` template with all required environment variables
-- Added `supabase/schema.sql` with 6 tables: `shops`, `site_settings`, `audit_logs`, `user_profiles`, `gold_prices`, `fetch_logs`
+- Added `supabase/schema.sql` with 6 tables: `shops`, `site_settings`, `audit_logs`,
+  `user_profiles`, `gold_prices`, `fetch_logs`
 - Upgraded Vite to ^8.0.8, express-rate-limit to ^8.3.2 (0 npm audit vulnerabilities)
 
 ### Documentation Overhaul

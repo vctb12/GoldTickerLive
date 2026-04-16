@@ -29,37 +29,37 @@ app.use(
   helmet({
     contentSecurityPolicy: IS_PROD
       ? {
-        directives: {
-          defaultSrc: ["'self'"],
-          scriptSrc: [
-            "'self'",
-            "'unsafe-inline'",
-            'https://cdn.jsdelivr.net',
-            'https://www.googletagmanager.com',
-            'https://www.clarity.ms',
-            'https://pagead2.googlesyndication.com',
-            'https://www.google-analytics.com',
-          ],
-          styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-          fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-          imgSrc: ["'self'", 'data:', 'https:'],
-          connectSrc: [
-            "'self'",
-            'https://api.gold-api.com',
-            'https://data-asg.goldprice.org',
-            'https://open.er-api.com',
-            'https://www.google-analytics.com',
-            'https://*.supabase.co',
-            'https://www.clarity.ms',
-            'https://nominatim.openstreetmap.org',
-          ],
-          frameSrc: ["'self'", 'https://pagead2.googlesyndication.com'],
-          objectSrc: ["'none'"],
-          baseUri: ["'self'"],
-          formAction: ["'self'"],
-          upgradeInsecureRequests: [],
-        },
-      }
+          directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: [
+              "'self'",
+              "'unsafe-inline'",
+              'https://cdn.jsdelivr.net',
+              'https://www.googletagmanager.com',
+              'https://www.clarity.ms',
+              'https://pagead2.googlesyndication.com',
+              'https://www.google-analytics.com',
+            ],
+            styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+            fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+            imgSrc: ["'self'", 'data:', 'https:'],
+            connectSrc: [
+              "'self'",
+              'https://api.gold-api.com',
+              'https://data-asg.goldprice.org',
+              'https://open.er-api.com',
+              'https://www.google-analytics.com',
+              'https://*.supabase.co',
+              'https://www.clarity.ms',
+              'https://nominatim.openstreetmap.org',
+            ],
+            frameSrc: ["'self'", 'https://pagead2.googlesyndication.com'],
+            objectSrc: ["'none'"],
+            baseUri: ["'self'"],
+            formAction: ["'self'"],
+            upgradeInsecureRequests: [],
+          },
+        }
       : false,
     crossOriginEmbedderPolicy: false,
   })
@@ -82,20 +82,20 @@ app.use(
   cors(
     ALLOWED_ORIGINS
       ? {
-        origin(origin, cb) {
-          // Allow requests with no origin (server-to-server, curl, etc.)
-          if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
-          cb(new Error('Not allowed by CORS'));
-        },
-      }
-      : IS_PROD
-        ? {
-          // In production without explicit origins, reject all cross-origin requests
           origin(origin, cb) {
-            if (!origin) return cb(null, true); // same-origin / server-to-server
+            // Allow requests with no origin (server-to-server, curl, etc.)
+            if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
             cb(new Error('Not allowed by CORS'));
           },
         }
+      : IS_PROD
+        ? {
+            // In production without explicit origins, reject all cross-origin requests
+            origin(origin, cb) {
+              if (!origin) return cb(null, true); // same-origin / server-to-server
+              cb(new Error('Not allowed by CORS'));
+            },
+          }
         : undefined // development: allow all
   )
 );

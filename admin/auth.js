@@ -17,6 +17,15 @@ export {
   getUserEmail,
   getSupabase,
   resolveEmail,
+  loginWithOAuth,
+  loginWithMagicLink,
+  loginWithPassword,
+  sendPhoneOtp,
+  verifyPhoneOtp,
+  enrollTotp,
+  verifyTotp,
+  getTotpFactorId,
+  ADMIN_BASE,
 } from './supabase-auth.js';
 
 /**

@@ -64,16 +64,16 @@ async function fetchPrices() {
       goldRes.status === 'fulfilled'
         ? goldRes.value
         : (() => {
-          const fb = cache.getFallbackGoldPrice();
-          return fb ? { price: fb.price, updatedAt: fb.updatedAt } : null;
-        })();
+            const fb = cache.getFallbackGoldPrice();
+            return fb ? { price: fb.price, updatedAt: fb.updatedAt } : null;
+          })();
     const fx =
       fxRes.status === 'fulfilled'
         ? fxRes.value
         : (() => {
-          const fb = cache.getFallbackFXRates();
-          return fb ? { rates: fb.rates } : { rates: {} };
-        })();
+            const fb = cache.getFallbackFXRates();
+            return fb ? { rates: fb.rates } : { rates: {} };
+          })();
     return { gold, fx };
   } catch {
     const fb = cache.getFallbackGoldPrice();

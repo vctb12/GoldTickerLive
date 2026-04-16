@@ -5,7 +5,9 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3GNY9M8TE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag('js', new Date());
 
       gtag('config', 'G-K3GNY9M8TE');
@@ -70,7 +72,7 @@
         font-size: 0.875rem;
         transition: transform 0.2s;
       }
-      .collapsible-header[aria-expanded="true"] .collapse-arrow {
+      .collapsible-header[aria-expanded='true'] .collapse-arrow {
         transform: rotate(90deg);
       }
       .danger-actions {
@@ -258,11 +260,28 @@
         margin-top: 4px;
       }
       /* ── Premium Enhancements ─────────────────────────────── */
-      .card-title { font-weight: 700; letter-spacing: -0.01em; }
-      .section-heading h2 { font-weight: 700; letter-spacing: -0.01em; }
-      .toolbar { padding-bottom: 14px; }
-      .tab-panel.active { animation: fade-in 0.2s ease both; }
-      @keyframes fade-in { from { opacity: 0.6; } to { opacity: 1; } }
+      .card-title {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .section-heading h2 {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .toolbar {
+        padding-bottom: 14px;
+      }
+      .tab-panel.active {
+        animation: fade-in 0.2s ease both;
+      }
+      @keyframes fade-in {
+        from {
+          opacity: 0.6;
+        }
+        to {
+          opacity: 1;
+        }
+      }
     </style>
   </head>
   <body>
@@ -598,26 +617,67 @@
 
           <!-- Danger Zone -->
           <div class="card settings-card settings-card--danger" id="danger-zone-section">
-            <div class="card-header collapsible-header" id="danger-zone-toggle" role="button" tabindex="0" aria-expanded="false" aria-controls="danger-zone-body">
-              <h2 class="card-title" style="color:var(--danger);">⚠ Danger Zone</h2>
+            <div
+              class="card-header collapsible-header"
+              id="danger-zone-toggle"
+              role="button"
+              tabindex="0"
+              aria-expanded="false"
+              aria-controls="danger-zone-body"
+            >
+              <h2 class="card-title" style="color: var(--danger)">⚠ Danger Zone</h2>
               <span class="collapse-arrow" aria-hidden="true">▸</span>
             </div>
-            <div class="card-body collapsible-body" id="danger-zone-body" style="display:none;">
-              <p style="color:var(--text-muted);font-size:0.875rem;margin-bottom:16px;">These actions are permanent and cannot be undone. Proceed with caution.</p>
+            <div class="card-body collapsible-body" id="danger-zone-body" style="display: none">
+              <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 16px">
+                These actions are permanent and cannot be undone. Proceed with caution.
+              </p>
               <div class="danger-actions">
                 <div class="danger-action-row">
                   <div>
-                    <div style="font-weight:600;font-size:0.875rem;color:var(--text);">Clear All Settings</div>
-                    <div style="font-size:0.8125rem;color:var(--text-muted);">Reset all settings to factory defaults and clear localStorage cache.</div>
+                    <div style="font-weight: 600; font-size: 0.875rem; color: var(--text)">
+                      Clear All Settings
+                    </div>
+                    <div style="font-size: 0.8125rem; color: var(--text-muted)">
+                      Reset all settings to factory defaults and clear localStorage cache.
+                    </div>
                   </div>
-                  <button class="btn btn-sm" id="danger-clear-settings-btn" type="button" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);color:var(--danger);white-space:nowrap;">Clear All Settings</button>
+                  <button
+                    class="btn btn-sm"
+                    id="danger-clear-settings-btn"
+                    type="button"
+                    style="
+                      background: rgba(239, 68, 68, 0.12);
+                      border: 1px solid rgba(239, 68, 68, 0.35);
+                      color: var(--danger);
+                      white-space: nowrap;
+                    "
+                  >
+                    Clear All Settings
+                  </button>
                 </div>
                 <div class="danger-action-row">
                   <div>
-                    <div style="font-weight:600;font-size:0.875rem;color:var(--text);">Clear Analytics Cache</div>
-                    <div style="font-size:0.8125rem;color:var(--text-muted);">Remove locally-cached analytics events from this browser.</div>
+                    <div style="font-weight: 600; font-size: 0.875rem; color: var(--text)">
+                      Clear Analytics Cache
+                    </div>
+                    <div style="font-size: 0.8125rem; color: var(--text-muted)">
+                      Remove locally-cached analytics events from this browser.
+                    </div>
                   </div>
-                  <button class="btn btn-sm" id="danger-clear-analytics-btn" type="button" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);color:var(--danger);white-space:nowrap;">Clear Analytics</button>
+                  <button
+                    class="btn btn-sm"
+                    id="danger-clear-analytics-btn"
+                    type="button"
+                    style="
+                      background: rgba(239, 68, 68, 0.12);
+                      border: 1px solid rgba(239, 68, 68, 0.35);
+                      color: var(--danger);
+                      white-space: nowrap;
+                    "
+                  >
+                    Clear Analytics
+                  </button>
                 </div>
               </div>
             </div>
@@ -640,7 +700,13 @@
           <button class="btn btn-ghost btn-sm" id="export-btn" type="button">⬇ Export JSON</button>
           <button class="btn btn-ghost btn-sm" id="import-btn" type="button">⬆ Import JSON</button>
           <div class="save-bar-spacer"></div>
-          <span class="unsaved-indicator hidden" id="settings-unsaved" aria-live="polite" style="color:var(--warning,#f59e0b);font-size:0.8125rem;white-space:nowrap;">● Unsaved changes</span>
+          <span
+            class="unsaved-indicator hidden"
+            id="settings-unsaved"
+            aria-live="polite"
+            style="color: var(--warning, #f59e0b); font-size: 0.8125rem; white-space: nowrap"
+            >● Unsaved changes</span
+          >
           <span class="last-saved-text" id="last-saved-text"></span>
           <button class="btn btn-gold" id="save-btn" type="button">💾 Save Settings</button>
         </div>
@@ -931,9 +997,13 @@
 
         // Reset
         document.getElementById('reset-btn').addEventListener('click', async () => {
-          const confirmed = await confirmDialog('Reset all settings to factory defaults? Unsaved changes will be lost.', {
-            title: 'Reset to defaults?', confirmLabel: 'Reset',
-          });
+          const confirmed = await confirmDialog(
+            'Reset all settings to factory defaults? Unsaved changes will be lost.',
+            {
+              title: 'Reset to defaults?',
+              confirmLabel: 'Reset',
+            }
+          );
           if (!confirmed) return;
           populateForm(structuredClone(DEFAULTS));
           showToast('Form reset to defaults. Click Save to apply.', 'info');
@@ -973,42 +1043,69 @@
             body.style.display = isOpen ? 'none' : '';
           });
           header.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); header.click(); }
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              header.click();
+            }
           });
         });
 
         // ── Unsaved indicator ────────────────────────────────
         const unsavedIndicator = document.getElementById('settings-unsaved');
-        const allInputs = document.getElementById('settings-main').querySelectorAll('input, textarea, select');
+        const allInputs = document
+          .getElementById('settings-main')
+          .querySelectorAll('input, textarea, select');
         allInputs.forEach((el) => {
           el.addEventListener('input', () => unsavedIndicator?.classList.remove('hidden'));
           el.addEventListener('change', () => unsavedIndicator?.classList.remove('hidden'));
         });
 
         // Hide unsaved on save
-        document.getElementById('save-btn').addEventListener('click', () => {
-          unsavedIndicator?.classList.add('hidden');
-        }, { capture: true });
+        document.getElementById('save-btn').addEventListener(
+          'click',
+          () => {
+            unsavedIndicator?.classList.add('hidden');
+          },
+          { capture: true }
+        );
 
         // ── Danger zone ──────────────────────────────────────
-        document.getElementById('danger-clear-settings-btn')?.addEventListener('click', async () => {
-          const confirmed = await confirmDialog('This will clear all settings from localStorage and reset to defaults. Supabase data is not affected.', {
-            title: 'Clear all settings?', confirmLabel: 'Clear',
+        document
+          .getElementById('danger-clear-settings-btn')
+          ?.addEventListener('click', async () => {
+            const confirmed = await confirmDialog(
+              'This will clear all settings from localStorage and reset to defaults. Supabase data is not affected.',
+              {
+                title: 'Clear all settings?',
+                confirmLabel: 'Clear',
+              }
+            );
+            if (!confirmed) return;
+            try {
+              localStorage.removeItem('gp_settings');
+              localStorage.removeItem('gp_settings_saved_at');
+            } catch {}
+            populateForm(structuredClone(DEFAULTS));
+            showToast('Settings cleared and reset to defaults.', 'info');
           });
-          if (!confirmed) return;
-          try { localStorage.removeItem('gp_settings'); localStorage.removeItem('gp_settings_saved_at'); } catch {}
-          populateForm(structuredClone(DEFAULTS));
-          showToast('Settings cleared and reset to defaults.', 'info');
-        });
 
-        document.getElementById('danger-clear-analytics-btn')?.addEventListener('click', async () => {
-          const confirmed = await confirmDialog('This will clear locally-cached analytics events from this browser. Supabase data is not affected.', {
-            title: 'Clear analytics cache?', confirmLabel: 'Clear',
+        document
+          .getElementById('danger-clear-analytics-btn')
+          ?.addEventListener('click', async () => {
+            const confirmed = await confirmDialog(
+              'This will clear locally-cached analytics events from this browser. Supabase data is not affected.',
+              {
+                title: 'Clear analytics cache?',
+                confirmLabel: 'Clear',
+              }
+            );
+            if (!confirmed) return;
+            try {
+              localStorage.removeItem('gp_analytics_events');
+              localStorage.removeItem('gp_api_call_log');
+            } catch {}
+            showToast('Analytics cache cleared.', 'info');
           });
-          if (!confirmed) return;
-          try { localStorage.removeItem('gp_analytics_events'); localStorage.removeItem('gp_api_call_log'); } catch {}
-          showToast('Analytics cache cleared.', 'info');
-        });
       }
 
       init();

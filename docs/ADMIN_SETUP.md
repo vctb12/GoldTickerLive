@@ -34,8 +34,8 @@ configured admin email can access the panel.
    - Paste the **Client ID** and **Client Secret** from step 1
    - Save
 
-> **Important:** The callback URL in GitHub must exactly match your Supabase project reference.
-> For example: `https://nebdpxjazlnsrfmlpgeq.supabase.co/auth/v1/callback`
+> **Important:** The callback URL in GitHub must exactly match your Supabase project reference. For
+> example: `https://nebdpxjazlnsrfmlpgeq.supabase.co/auth/v1/callback`
 
 ### 4. Configure the Admin Panel
 
@@ -47,7 +47,8 @@ export const SUPABASE_ANON_KEY = '<your-anon-public-key>';
 export const ALLOWED_EMAIL = 'your-github-email@example.com';
 ```
 
-`ALLOWED_EMAIL` must match the **primary email** on your GitHub account (GitHub → Settings → Emails).
+`ALLOWED_EMAIL` must match the **primary email** on your GitHub account (GitHub → Settings →
+Emails).
 
 > **Private email?** If your GitHub email is set to private, the admin panel uses fallback
 > resolution: it checks `user_metadata.email` and identity data from the GitHub provider. Make sure
@@ -64,17 +65,17 @@ admin dashboard.
 
 ## What Works Today
 
-| Page        | Path                  | Status                | Data Source            |
-| ----------- | --------------------- | --------------------- | ---------------------- |
-| Login       | `admin/login/`        | ✅ Working             | Supabase Auth          |
-| Dashboard   | `admin/` (index)      | ⚠️ Partial (UI shell) | localStorage           |
-| Shops       | `admin/shops/`        | ✅ Full CRUD           | Supabase `shops`       |
-| Settings    | `admin/settings/`     | ✅ Read/Write          | Supabase `site_settings` |
-| Pricing     | `admin/pricing/`      | 🔲 UI shell            | localStorage           |
-| Orders      | `admin/orders/`       | 🔲 UI shell            | localStorage           |
-| Content     | `admin/content/`      | 🔲 UI shell            | localStorage           |
-| Social      | `admin/social/`       | 🔲 UI shell            | localStorage           |
-| Analytics   | `admin/analytics/`    | 🔲 UI shell            | localStorage           |
+| Page      | Path               | Status                | Data Source              |
+| --------- | ------------------ | --------------------- | ------------------------ |
+| Login     | `admin/login/`     | ✅ Working            | Supabase Auth            |
+| Dashboard | `admin/` (index)   | ⚠️ Partial (UI shell) | localStorage             |
+| Shops     | `admin/shops/`     | ✅ Full CRUD          | Supabase `shops`         |
+| Settings  | `admin/settings/`  | ✅ Read/Write         | Supabase `site_settings` |
+| Pricing   | `admin/pricing/`   | 🔲 UI shell           | localStorage             |
+| Orders    | `admin/orders/`    | 🔲 UI shell           | localStorage             |
+| Content   | `admin/content/`   | 🔲 UI shell           | localStorage             |
+| Social    | `admin/social/`    | 🔲 UI shell           | localStorage             |
+| Analytics | `admin/analytics/` | 🔲 UI shell           | localStorage             |
 
 ---
 
@@ -104,9 +105,9 @@ admin dashboard.
 ### Flash Prevention
 
 All admin pages include an inline `<script>` that redirects to `/admin/login/` if no Supabase
-session token exists in localStorage. This prevents a flash of admin content before the async
-auth check completes. The script skips the redirect if an OAuth hash fragment (`#access_token=…`)
-is present, allowing the Supabase client to process the callback.
+session token exists in localStorage. This prevents a flash of admin content before the async auth
+check completes. The script skips the redirect if an OAuth hash fragment (`#access_token=…`) is
+present, allowing the Supabase client to process the callback.
 
 ---
 
@@ -132,8 +133,8 @@ Run `supabase/schema.sql` to create all required tables and RLS policies. The sc
 1. Set `ALLOWED_EMAIL` to your GitHub account's primary email
 2. Keep RLS policies enabled — they restrict data access even with the anon key
 3. Use HTTPS (GitHub Pages provides this by default)
-4. Do not commit service role keys to the repo — the anon key is safe to commit because RLS
-   protects the data
+4. Do not commit service role keys to the repo — the anon key is safe to commit because RLS protects
+   the data
 5. Periodically review Supabase Auth logs (Authentication → Logs) for unusual activity
 
 ---
@@ -142,16 +143,14 @@ Run `supabase/schema.sql` to create all required tables and RLS policies. The sc
 
 ### Cannot Login / "Sign in with GitHub" Does Nothing
 
-1. **GitHub OAuth provider not enabled in Supabase:**
-   Go to Supabase Dashboard → Authentication → Providers → GitHub and verify it is enabled with
-   the correct Client ID and Client Secret from your GitHub OAuth App.
+1. **GitHub OAuth provider not enabled in Supabase:** Go to Supabase Dashboard → Authentication →
+   Providers → GitHub and verify it is enabled with the correct Client ID and Client Secret from
+   your GitHub OAuth App.
 
-2. **Wrong callback URL in GitHub:**
-   The Authorization callback URL in your GitHub OAuth App must be exactly:
-   `https://<your-project-ref>.supabase.co/auth/v1/callback`
+2. **Wrong callback URL in GitHub:** The Authorization callback URL in your GitHub OAuth App must be
+   exactly: `https://<your-project-ref>.supabase.co/auth/v1/callback`
 
-3. **Browser errors:**
-   Open DevTools → Console and look for error messages. Common ones:
+3. **Browser errors:** Open DevTools → Console and look for error messages. Common ones:
    - `"provider is not enabled"` — Enable GitHub in Supabase Providers
    - `"redirect_uri_mismatch"` — Fix the callback URL in GitHub OAuth App settings
    - Network errors — Check internet connection and Supabase project status

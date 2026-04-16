@@ -1,8 +1,7 @@
 # Supabase Mastery Guide — Gold-Prices Platform
 
-> **This is your single source of truth for everything Supabase in this project.**
-> Read it top to bottom the first time. After that, use the Table of Contents to jump to the
-> section you need.
+> **This is your single source of truth for everything Supabase in this project.** Read it top to
+> bottom the first time. After that, use the Table of Contents to jump to the section you need.
 
 ---
 
@@ -28,11 +27,11 @@
 
 Supabase provides three things for this platform:
 
-| Feature | Used for |
-|---------|----------|
-| **Postgres Database** | Shops, orders, pricing overrides, content posts, social posts, analytics events, gold prices, site settings |
-| **Auth** (GitHub OAuth) | Admin login — only your GitHub account (`vctb12@gmail.com`) can access the admin panel |
-| **REST API** (auto-generated) | All admin pages talk directly to the database from the browser using the Supabase JS client |
+| Feature                       | Used for                                                                                                    |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Postgres Database**         | Shops, orders, pricing overrides, content posts, social posts, analytics events, gold prices, site settings |
+| **Auth** (GitHub OAuth)       | Admin login — only your GitHub account (`vctb12@gmail.com`) can access the admin panel                      |
+| **REST API** (auto-generated) | All admin pages talk directly to the database from the browser using the Supabase JS client                 |
 
 There is **no separate backend server** involved in the admin panel. The Supabase JS client connects
 directly from the browser to your Supabase project using the **anon public key**. Row Level Security
@@ -113,8 +112,8 @@ localStorage.
 You should see: `Success. No rows returned`
 
 > ⚠️ **If you see errors**, the most common cause is running it a second time. The schema uses
-> `CREATE TABLE IF NOT EXISTS` and `IF NOT EXISTS` for all objects, so it is safe to re-run.
-> Errors about "already exists" on trigger names are harmless — skip them.
+> `CREATE TABLE IF NOT EXISTS` and `IF NOT EXISTS` for all objects, so it is safe to re-run. Errors
+> about "already exists" on trigger names are harmless — skip them.
 
 ### 3.3 Verify the Tables Were Created
 
@@ -129,23 +128,22 @@ ORDER BY table_name;
 
 You should see these 12 tables:
 
-| Table | Purpose |
-|-------|---------|
-| `analytics_events` | Client-side event tracking |
-| `api_call_logs` | API monitoring logs |
-| `audit_logs` | Admin action history |
-| `content_posts` | Blog / educational articles |
-| `fetch_logs` | Gold price fetch history (Twitter bot) |
-| `gold_prices` | Historical gold price snapshots |
-| `orders` | Gold purchase orders |
-| `pricing_overrides` | Admin manual price adjustments |
-| `shops` | Gold shop directory |
-| `site_settings` | Public feature flags (single row) |
-| `social_posts` | Social media post generation history |
-| `user_profiles` | Admin user profiles |
+| Table               | Purpose                                |
+| ------------------- | -------------------------------------- |
+| `analytics_events`  | Client-side event tracking             |
+| `api_call_logs`     | API monitoring logs                    |
+| `audit_logs`        | Admin action history                   |
+| `content_posts`     | Blog / educational articles            |
+| `fetch_logs`        | Gold price fetch history (Twitter bot) |
+| `gold_prices`       | Historical gold price snapshots        |
+| `orders`            | Gold purchase orders                   |
+| `pricing_overrides` | Admin manual price adjustments         |
+| `shops`             | Gold shop directory                    |
+| `site_settings`     | Public feature flags (single row)      |
+| `social_posts`      | Social media post generation history   |
+| `user_profiles`     | Admin user profiles                    |
 
-Also run the full verification file for a detailed health check:
-→ See `supabase/verify.sql`
+Also run the full verification file for a detailed health check: → See `supabase/verify.sql`
 
 ---
 
@@ -160,10 +158,10 @@ OAuth flow. This is the only way to access the admin panel.
 2. Click **OAuth Apps** → **New OAuth App**
 3. Fill in the form:
 
-   | Field | Value |
-   |-------|-------|
-   | Application name | `Gold-Prices Admin` |
-   | Homepage URL | `https://vctb12.github.io/Gold-Prices` |
+   | Field                      | Value                                                       |
+   | -------------------------- | ----------------------------------------------------------- |
+   | Application name           | `Gold-Prices Admin`                                         |
+   | Homepage URL               | `https://vctb12.github.io/Gold-Prices`                      |
    | Authorization callback URL | `https://nebdpxjazlnsrfmlpgeq.supabase.co/auth/v1/callback` |
 
 4. Click **Register application**
@@ -185,8 +183,9 @@ OAuth flow. This is the only way to access the admin panel.
 Your admin panel only allows one email: `vctb12@gmail.com` (set in `admin/supabase-config.js`).
 
 After login, `admin/supabase-auth.js` checks:
+
 ```javascript
-session.user.email === ALLOWED_EMAIL  // vctb12@gmail.com
+session.user.email === ALLOWED_EMAIL; // vctb12@gmail.com
 ```
 
 If the email doesn't match, the user is immediately signed out and redirected to the login page.
@@ -226,21 +225,21 @@ In Supabase, go to **Settings** → **API**. You will see:
 2. Click **Settings** → **Secrets and variables** → **Actions**
 3. Click **New repository secret** for each:
 
-| Secret Name | Value |
-|-------------|-------|
-| `SUPABASE_URL` | `https://nebdpxjazlnsrfmlpgeq.supabase.co` |
-| `SUPABASE_ANON_KEY` | The `anon` / `public` key from Supabase Settings → API |
-| `SUPABASE_SERVICE_ROLE_KEY` | The `service_role` key from Supabase Settings → API |
+| Secret Name                 | Value                                                  |
+| --------------------------- | ------------------------------------------------------ |
+| `SUPABASE_URL`              | `https://nebdpxjazlnsrfmlpgeq.supabase.co`             |
+| `SUPABASE_ANON_KEY`         | The `anon` / `public` key from Supabase Settings → API |
+| `SUPABASE_SERVICE_ROLE_KEY` | The `service_role` key from Supabase Settings → API    |
 
-> ⚠️ **Never** put the `service_role` key in any file committed to the repository. It bypasses
-> all RLS policies and gives full database access.
+> ⚠️ **Never** put the `service_role` key in any file committed to the repository. It bypasses all
+> RLS policies and gives full database access.
 
 ### 5.3 Which Workflows Use These Secrets
 
-| Workflow | Secrets Used | Purpose |
-|----------|-------------|---------|
-| `sync-db-to-git.yml` | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Reads verified shops and commits `data/shops.js` to the repo automatically |
-| `deploy.yml` | None (Supabase credentials are baked into client-side JS) | Deploys site to GitHub Pages |
+| Workflow             | Secrets Used                                              | Purpose                                                                    |
+| -------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `sync-db-to-git.yml` | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`               | Reads verified shops and commits `data/shops.js` to the repo automatically |
+| `deploy.yml`         | None (Supabase credentials are baked into client-side JS) | Deploys site to GitHub Pages                                               |
 
 ---
 
@@ -274,11 +273,13 @@ In Supabase, go to **Settings** → **API**. You will see:
 ### 6.3 Session Persistence
 
 The Supabase session is stored in `localStorage` under:
+
 ```
 sb-nebdpxjazlnsrfmlpgeq-auth-token
 ```
 
 It auto-refreshes. You stay logged in until you:
+
 - Click Sign Out
 - Clear browser localStorage
 - The session expires (default: 1 week)
@@ -290,7 +291,11 @@ Each admin page has an inline `<script>` at the top that runs synchronously befo
 ```javascript
 (function () {
   var k = Object.keys(localStorage);
-  if (!k.some(function (x) { return x.startsWith('sb-') && x.endsWith('-auth-token'); }))
+  if (
+    !k.some(function (x) {
+      return x.startsWith('sb-') && x.endsWith('-auth-token');
+    })
+  )
     window.location.replace('./login/');
 })();
 ```
@@ -307,11 +312,13 @@ After running the schema and logging in, test each page:
 ### Dashboard — `/admin/`
 
 **What it does:**
+
 - Shows live gold spot price (fetched from gold-api.com)
 - Shows total shops count and social posts count from Supabase
 - Shows API health status for gold-api.com and exchangerate-api.com
 
 **How to verify:**
+
 1. Log in — you should see your email in the sidebar
 2. The gold price ticker in the header should show a live price
 3. The "Shops Listed" stat card should show a number (0 if no shops yet)
@@ -323,11 +330,13 @@ After running the schema and logging in, test each page:
 ### Shops — `/admin/shops/`
 
 **What it does:**
+
 - Full CRUD for gold shop listings
 - Reads/writes `shops` table in Supabase
 - Displays verified vs unverified shops
 
 **How to verify:**
+
 1. Open the page — it should load any existing shops from Supabase
 2. Click **Add Shop** → fill in details → Save
 3. The shop should appear in the list
@@ -342,11 +351,13 @@ After running the schema and logging in, test each page:
 ### Pricing — `/admin/pricing/`
 
 **What it does:**
+
 - Shows live gold prices for 24K/22K/21K/20K/18K in AED, USD, SAR, KWD
 - Allows creating manual price overrides with expiry dates
 - Reads/writes `pricing_overrides` table
 
 **How to verify:**
+
 1. Open the page — live prices should load within 2–3 seconds
 2. Click **Add Override** → choose karat/currency → enter a price → Save
 3. The override should appear in the table with status "Active"
@@ -357,11 +368,13 @@ After running the schema and logging in, test each page:
 ### Orders — `/admin/orders/`
 
 **What it does:**
+
 - Lists all gold purchase orders
 - Allows updating order status (pending → confirmed → processing → completed)
 - Reads/writes `orders` table
 
 **How to verify:**
+
 1. Open the page — the table should be empty (no orders yet)
 2. If you want test data, run `supabase/seed-test-data.sql` in the SQL Editor
 3. After seeding, refresh the page — test orders should appear
@@ -372,11 +385,13 @@ After running the schema and logging in, test each page:
 ### Content — `/admin/content/`
 
 **What it does:**
+
 - Full blog/article editor with English and Arabic fields
 - Drafts and publishing workflow
 - Reads/writes `content_posts` table
 
 **How to verify:**
+
 1. Click **New Post** → fill in the title and body → Save as Draft
 2. The post should appear in the left panel list
 3. Change status to **Published** → Save
@@ -388,12 +403,14 @@ After running the schema and logging in, test each page:
 ### Social — `/admin/social/`
 
 **What it does:**
+
 - Generate social media post copy (gold prices, market updates)
 - Post history log
 - Reads/writes `social_posts` table for history
 - The `fetch_logs` table records what the Twitter bot has posted
 
 **How to verify:**
+
 1. Click **Generate Post** → choose a template → generate
 2. The generated post should appear in the History section
 3. Open Supabase **Table Editor** → **social_posts** — confirm the record
@@ -403,17 +420,19 @@ After running the schema and logging in, test each page:
 ### Analytics — `/admin/analytics/`
 
 **What it does:**
+
 - Shows page view counts and event logs
 - Reads from `analytics_events` and `api_call_logs` tables
 - The public site writes events to these tables as users interact
 
 **How to verify:**
+
 1. Open the page — stats should load from Supabase
 2. Visit the public site (homepage, tracker, shops) to generate events
 3. Refresh the analytics page — new events should appear
 
-> **Note:** The public site writes events using the anon key + an authenticated insert policy.
-> If you see 0 events, ensure the public site's event tracking is writing to Supabase (not just
+> **Note:** The public site writes events using the anon key + an authenticated insert policy. If
+> you see 0 events, ensure the public site's event tracking is writing to Supabase (not just
 > localStorage). This requires `lib/analytics.js` to be configured with the Supabase client.
 
 ---
@@ -421,15 +440,17 @@ After running the schema and logging in, test each page:
 ### Settings — `/admin/settings/`
 
 **What it does:**
+
 - Edit site-wide settings stored in `site_settings` table (single row, keyed `'default'`)
 - Controls feature flags: `darkMode`, `orderGold`, `priceAlerts`
 - The public site reads these settings via `lib/site-settings.js`
 
 **How to verify:**
+
 1. Toggle a setting (e.g., enable `priceAlerts`)
 2. Click Save
-3. Open Supabase **Table Editor** → **site_settings** → the `value` JSONB column should contain
-   your settings
+3. Open Supabase **Table Editor** → **site_settings** → the `value` JSONB column should contain your
+   settings
 4. Open the public site — the feature flag should take effect within 5 minutes (cache TTL)
 
 ---
@@ -441,6 +462,7 @@ The public site can read settings from Supabase to dynamically toggle features.
 **How it works:**
 
 `lib/site-settings.js` calls:
+
 ```
 GET https://nebdpxjazlnsrfmlpgeq.supabase.co/rest/v1/site_settings?id=eq.default
 ```
@@ -451,13 +473,14 @@ The response is cached in `localStorage` for 5 minutes. After that, a fresh read
 
 **Feature flags available:**
 
-| Flag | Effect when `true` |
-|------|--------------------|
-| `darkMode` | Enables dark mode toggle visibility |
-| `orderGold` | Shows the "Order Gold" section / CTA |
-| `priceAlerts` | Shows price alert UI in the tracker |
+| Flag          | Effect when `true`                   |
+| ------------- | ------------------------------------ |
+| `darkMode`    | Enables dark mode toggle visibility  |
+| `orderGold`   | Shows the "Order Gold" section / CTA |
+| `priceAlerts` | Shows price alert UI in the tracker  |
 
 **To activate a feature on the public site:**
+
 1. Go to `/admin/settings/`
 2. Enable the desired flag
 3. Click Save
@@ -472,19 +495,19 @@ someone has your anon key, they cannot access data that RLS denies.
 
 **Policy summary:**
 
-| Table | Anonymous (public) | Authenticated admin |
-|-------|-------------------|---------------------|
-| `shops` | Read verified shops only (`verified = true`) | Read all, insert, update, delete |
-| `site_settings` | Read (feature flags are public) | Insert, update |
-| `content_posts` | Read published posts only (`status = 'published'`) | Read all, insert, update, delete |
-| `pricing_overrides` | No access | Full CRUD |
-| `orders` | No access | Full CRUD |
-| `social_posts` | No access | Read, insert, delete |
-| `analytics_events` | No access | Read, insert, delete |
-| `api_call_logs` | No access | Read, insert, delete |
-| `audit_logs` | No access | Read |
-| `gold_prices` | No access | (written by service role) |
-| `fetch_logs` | No access | (written by service role) |
+| Table               | Anonymous (public)                                 | Authenticated admin              |
+| ------------------- | -------------------------------------------------- | -------------------------------- |
+| `shops`             | Read verified shops only (`verified = true`)       | Read all, insert, update, delete |
+| `site_settings`     | Read (feature flags are public)                    | Insert, update                   |
+| `content_posts`     | Read published posts only (`status = 'published'`) | Read all, insert, update, delete |
+| `pricing_overrides` | No access                                          | Full CRUD                        |
+| `orders`            | No access                                          | Full CRUD                        |
+| `social_posts`      | No access                                          | Read, insert, delete             |
+| `analytics_events`  | No access                                          | Read, insert, delete             |
+| `api_call_logs`     | No access                                          | Read, insert, delete             |
+| `audit_logs`        | No access                                          | Read                             |
+| `gold_prices`       | No access                                          | (written by service role)        |
+| `fetch_logs`        | No access                                          | (written by service role)        |
 
 **How "authenticated" is determined:**
 
@@ -496,6 +519,7 @@ function returns a non-null value.
 **Testing RLS from the SQL Editor:**
 
 To test as an anonymous user:
+
 ```sql
 SET LOCAL ROLE anon;
 SELECT * FROM public.shops;  -- should only return verified = true rows
@@ -503,6 +527,7 @@ SELECT * FROM public.orders; -- should return 0 rows (no public policy)
 ```
 
 To test as an authenticated user (you):
+
 ```sql
 -- Auth is always bypassed in the SQL Editor when you're logged in as the project owner
 SELECT * FROM public.orders; -- returns all rows
@@ -677,8 +702,8 @@ async function loadData() {
         .select('*')
         .order('created_at', { ascending: false });
       if (!error && Array.isArray(data)) {
-        const rows = data.map(fromDbRow);   // transform DB shape → UI shape
-        cacheToLocalStorage(rows);          // update local cache
+        const rows = data.map(fromDbRow); // transform DB shape → UI shape
+        cacheToLocalStorage(rows); // update local cache
         return rows;
       }
       console.warn('[page] Supabase error, using cache:', error?.message);
@@ -686,19 +711,15 @@ async function loadData() {
       console.warn('[page] Supabase unreachable, using cache:', err.message);
     }
   }
-  return readFromLocalStorage();           // localStorage fallback
+  return readFromLocalStorage(); // localStorage fallback
 }
 
 // 3. Write data — Supabase first, always update localStorage
 async function saveData(item) {
   const sb = getSupabase();
   if (sb) {
-    const row = toDbRow(item);             // transform UI shape → DB shape
-    const { data, error } = await sb
-      .from('table_name')
-      .insert(row)
-      .select()
-      .single();
+    const row = toDbRow(item); // transform UI shape → DB shape
+    const { data, error } = await sb.from('table_name').insert(row).select().single();
     if (error) throw new Error(error.message);
     const result = fromDbRow(data);
     updateLocalCache(result);
@@ -713,8 +734,8 @@ async function saveData(item) {
 
 ### Pattern: Row mappers (toDbRow / fromDbRow)
 
-The database uses `snake_case` column names. The admin UI JavaScript uses `camelCase` property names.
-The mapper functions translate between them.
+The database uses `snake_case` column names. The admin UI JavaScript uses `camelCase` property
+names. The mapper functions translate between them.
 
 ```javascript
 // DB row → UI object
@@ -722,9 +743,9 @@ function fromDbRow(row) {
   return {
     id: row.id,
     karat: row.karat,
-    overridePrice: row.override_price,   // snake → camel
-    expiresAt: row.expires_at,           // snake → camel
-    createdAt: row.created_at,           // snake → camel
+    overridePrice: row.override_price, // snake → camel
+    expiresAt: row.expires_at, // snake → camel
+    createdAt: row.created_at, // snake → camel
   };
 }
 
@@ -732,8 +753,8 @@ function fromDbRow(row) {
 function toDbRow(obj) {
   return {
     karat: obj.karat,
-    override_price: Number(obj.overridePrice),  // camel → snake
-    expires_at: obj.expiresAt || null,           // camel → snake
+    override_price: Number(obj.overridePrice), // camel → snake
+    expires_at: obj.expiresAt || null, // camel → snake
     active: obj.active !== false,
   };
 }
@@ -744,9 +765,7 @@ function toDbRow(obj) {
 ```javascript
 const sb = getSupabase();
 if (sb) {
-  const { count } = await sb
-    .from('table_name')
-    .select('*', { count: 'exact', head: true });  // head: true = don't return rows
+  const { count } = await sb.from('table_name').select('*', { count: 'exact', head: true }); // head: true = don't return rows
   console.log('Total:', count);
 }
 ```
@@ -764,8 +783,8 @@ if (sb) {
 
 ### Logged in but immediately redirected back to login
 
-- Check your GitHub account's primary email. It must be `vctb12@gmail.com`.
-  If not, update `ALLOWED_EMAIL` in `admin/supabase-config.js`.
+- Check your GitHub account's primary email. It must be `vctb12@gmail.com`. If not, update
+  `ALLOWED_EMAIL` in `admin/supabase-config.js`.
 - Open browser console on the login page — look for: `requireAuth: email mismatch`
 
 ### Admin page loads but shows 0 data / empty tables
@@ -784,17 +803,19 @@ Most likely the schema has not been run yet.
 Supabase is unreachable and the page fell back to localStorage.
 
 Check in browser console for:
+
 - `[pricing] Supabase unreachable`
 - `[orders] Supabase read error`
 
 Causes:
+
 - Network error / Supabase project paused (Supabase pauses free-tier projects after 1 week inactive)
 - The `getSupabase()` function returned `null` because the CDN script didn't load
 
-**Supabase project paused?**
-Go to `https://supabase.com` → your project → if it shows "Paused", click **Restore project**.
-Free-tier projects auto-pause after 7 days of inactivity. Upgrading to Pro ($25/month) prevents
-this. Alternatively, add a GitHub Actions workflow that pings the project weekly.
+**Supabase project paused?** Go to `https://supabase.com` → your project → if it shows "Paused",
+click **Restore project**. Free-tier projects auto-pause after 7 days of inactivity. Upgrading to
+Pro ($25/month) prevents this. Alternatively, add a GitHub Actions workflow that pings the project
+weekly.
 
 ### Data saved in localStorage but not showing in Supabase table
 
@@ -802,18 +823,20 @@ The admin page saved to localStorage (fallback) instead of Supabase. Once Supaba
 again, the page will read from Supabase on next load, but the locally-saved data won't auto-sync.
 
 To manually sync local data:
+
 1. Open the admin page
 2. If the Supabase connection is restored, the page will now load from Supabase (empty or with
    server data)
 3. The local fallback data is still in localStorage — you can view it with:
    ```javascript
-   JSON.parse(localStorage.getItem('gp_orders'))  // or gp_pricing_overrides, etc.
+   JSON.parse(localStorage.getItem('gp_orders')); // or gp_pricing_overrides, etc.
    ```
 4. Re-enter the important items through the admin UI to save them to Supabase
 
 ### `sync-db-to-git.yml` workflow fails
 
 Check the GitHub Actions log. Common causes:
+
 - `SUPABASE_SERVICE_ROLE_KEY` secret is missing or wrong
 - `SUPABASE_URL` secret is missing
 - The `shops` table doesn't exist yet (schema not run)
@@ -833,18 +856,19 @@ This means you are trying to write data without being authenticated.
 When you need to add a new column or table:
 
 1. **Write the SQL** — use `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` for new columns:
+
    ```sql
    ALTER TABLE public.shops ADD COLUMN IF NOT EXISTS whatsapp text;
    ```
 
-2. **Add it to `supabase/schema.sql`** — put it under the relevant table section so the file
-   always represents the full current schema
+2. **Add it to `supabase/schema.sql`** — put it under the relevant table section so the file always
+   represents the full current schema
 
 3. **Test locally first** — run your SQL in Supabase SQL Editor, verify it works, then add to
    `schema.sql`
 
-4. **Update `toDbRow`/`fromDbRow`** in the relevant admin page — add the new column to both
-   mapping functions
+4. **Update `toDbRow`/`fromDbRow`** in the relevant admin page — add the new column to both mapping
+   functions
 
 5. **Run `supabase/verify.sql`** after changes to confirm everything is still consistent
 

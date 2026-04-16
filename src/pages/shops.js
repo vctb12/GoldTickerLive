@@ -414,21 +414,21 @@ function openModal(shop) {
         <span class="modal-action-label">${t('shareShop')}</span>
       </button>
       ${
-  shop.phone
-    ? `<a href="tel:${esc(safeTel(shop.phone))}" class="modal-action-btn modal-action-btn--call" aria-label="${t('callShop')}">
+        shop.phone
+          ? `<a href="tel:${esc(safeTel(shop.phone))}" class="modal-action-btn modal-action-btn--call" aria-label="${t('callShop')}">
         <span class="modal-action-icon">📞</span>
         <span class="modal-action-label">${t('callShop')}</span>
       </a>`
-    : ''
-}
+          : ''
+      }
       ${
-  safeUrl(shop.website)
-    ? `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--website" aria-label="${t('visitWebsite')}">
+        safeUrl(shop.website)
+          ? `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--website" aria-label="${t('visitWebsite')}">
         <span class="modal-action-icon">🌐</span>
         <span class="modal-action-label">${t('visitWebsite')}</span>
       </a>`
-    : ''
-}
+          : ''
+      }
     </div>
   `;
 
@@ -478,13 +478,13 @@ function openModal(shop) {
     </div>
 
     ${
-  specialties
-    ? `<div class="modal-tags">
+      specialties
+        ? `<div class="modal-tags">
       <span class="modal-tags-label">${t('specialties')}</span>
       <div class="modal-tags-wrap">${specialties}</div>
     </div>`
-    : ''
-}
+        : ''
+    }
 
     <div class="modal-notes">
       <p>${esc(shop.notes)}</p>
@@ -545,15 +545,15 @@ function applyStaticText() {
   const dateStr =
     STATE.lang === 'ar'
       ? reviewedDate.toLocaleDateString('ar-EG', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      })
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        })
       : reviewedDate.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      });
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        });
   const trustEl = document.getElementById('shops-last-updated');
   const trustLabelEl = document.getElementById('shops-trust-label');
   if (trustLabelEl) trustLabelEl.textContent = t('trustLabel');
@@ -929,45 +929,45 @@ function renderCards(shops) {
         <div class="shop-next-action-label">${nextActionLabel}</div>
         <div class="shop-actions-row shop-actions-row--primary">
           ${
-  isCluster
-    ? `<a href="${esc(areaGuideUrl)}" class="shop-action-btn shop-action-btn--guide" aria-label="${t('areaGuide')}: ${esc(shop.market)}">
+            isCluster
+              ? `<a href="${esc(areaGuideUrl)}" class="shop-action-btn shop-action-btn--guide" aria-label="${t('areaGuide')}: ${esc(shop.market)}">
             <span class="shop-action-icon">🧭</span>
             <span class="shop-action-label">${t('areaGuide')}</span>
           </a>`
-    : ''
-}
+              : ''
+          }
           ${
-  !isCluster && shop.phone
-    ? `<a href="tel:${esc(safeTel(shop.phone))}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
+            !isCluster && shop.phone
+              ? `<a href="tel:${esc(safeTel(shop.phone))}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
             <span class="shop-action-icon">📞</span>
             <span class="shop-action-label">${t('callShop')}</span>
           </a>`
-    : ''
-}
+              : ''
+          }
           ${
-  !isCluster && safeUrl(shop.website)
-    ? `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--website" aria-label="${t('visitWebsite')}">
+            !isCluster && safeUrl(shop.website)
+              ? `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--website" aria-label="${t('visitWebsite')}">
             <span class="shop-action-icon">🌐</span>
             <span class="shop-action-label">${t('visitWebsite')}</span>
           </a>`
-    : ''
-}
+              : ''
+          }
           ${
-  !isCluster
-    ? `<a href="${esc(directionsUrl)}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--directions" aria-label="${t('directions')}">
+            !isCluster
+              ? `<a href="${esc(directionsUrl)}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--directions" aria-label="${t('directions')}">
             <span class="shop-action-icon">🧭</span>
             <span class="shop-action-label">${t('directions')}</span>
           </a>`
-    : ''
-}
+              : ''
+          }
           ${
-  countryUrl
-    ? `<a href="${countryUrl}" class="shop-action-btn shop-action-btn--country" aria-label="${t('viewCountryPage')}: ${countryName(country)}">
+            countryUrl
+              ? `<a href="${countryUrl}" class="shop-action-btn shop-action-btn--country" aria-label="${t('viewCountryPage')}: ${countryName(country)}">
             <span class="shop-action-icon">📄</span>
             <span class="shop-action-label">${countryName(country)}</span>
           </a>`
-    : ''
-}
+              : ''
+          }
         </div>
 
         <div class="shop-actions-row shop-actions-row--secondary">
@@ -1703,8 +1703,8 @@ init();
       <p class="nearme-intro">Closest gold markets in our directory:</p>
       <ul class="nearme-list">
         ${nearby
-    .map(
-      (m) => `
+          .map(
+            (m) => `
           <li class="nearme-item">
             <a href="${m.page}" class="nearme-link">
               <span class="nearme-name">${m.name}</span>
@@ -1712,8 +1712,8 @@ init();
             </a>
           </li>
         `
-    )
-    .join('')}
+          )
+          .join('')}
       </ul>
       <div class="nearme-map-links" style="margin-top:0.75rem">
         <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=13/${lat}/${lng}" target="_blank" rel="noopener noreferrer" class="nearme-map-btn">

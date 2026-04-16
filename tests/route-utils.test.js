@@ -176,10 +176,7 @@ describe('buildRoute', () => {
   });
 
   test('city gold prices page', () => {
-    assert.equal(
-      buildRoute({ country: 'uae', city: 'dubai' }),
-      '/uae/dubai/gold-prices'
-    );
+    assert.equal(buildRoute({ country: 'uae', city: 'dubai' }), '/uae/dubai/gold-prices');
   });
 
   test('karat-specific page', () => {
@@ -204,10 +201,7 @@ describe('buildShopsRoute', () => {
 describe('buildCanonicalURL', () => {
   test('generates full canonical URL', () => {
     const path = buildRoute({ country: 'uae', city: 'dubai' });
-    assert.equal(
-      buildCanonicalURL(path),
-      'https://goldtickerlive.com/uae/dubai/gold-prices'
-    );
+    assert.equal(buildCanonicalURL(path), 'https://goldtickerlive.com/uae/dubai/gold-prices');
   });
 
   test('returns null for null path', () => {

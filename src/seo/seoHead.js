@@ -88,11 +88,11 @@ export function buildSeoMeta(cfg) {
         { name: 'Home', url: `${SITE_URL}/` },
         ...(countrySlug
           ? [
-            {
-              name: `${country} Gold`,
-              url: `${SITE_URL}/countries/${countrySlug}/gold-price/`,
-            },
-          ]
+              {
+                name: `${country} Gold`,
+                url: `${SITE_URL}/countries/${countrySlug}/gold-price/`,
+              },
+            ]
           : []),
         { name: `Gold Shops in ${city || country}`, url: canonical },
       ];
@@ -123,7 +123,11 @@ export function buildSeoMeta(cfg) {
   const hreflang = [
     { rel: 'alternate', hreflang: 'x-default', href: canonical },
     { rel: 'alternate', hreflang: 'en', href: canonical },
-    { rel: 'alternate', hreflang: 'ar', href: `${canonical}${canonical.includes('?') ? '&' : '?'}lang=ar` },
+    {
+      rel: 'alternate',
+      hreflang: 'ar',
+      href: `${canonical}${canonical.includes('?') ? '&' : '?'}lang=ar`,
+    },
   ];
 
   const og = {
@@ -143,7 +147,17 @@ export function buildSeoMeta(cfg) {
     'twitter:image': OG_IMAGE,
   };
 
-  const jsonLd = buildJsonLd({ type, title, description, canonical, breadcrumbs, price, currency, date, faq });
+  const jsonLd = buildJsonLd({
+    type,
+    title,
+    description,
+    canonical,
+    breadcrumbs,
+    price,
+    currency,
+    date,
+    faq,
+  });
 
   return { title, description, canonical, hreflang, og, twitter, jsonLd };
 }
@@ -152,7 +166,17 @@ export function buildSeoMeta(cfg) {
  * Build JSON-LD structured data for the page.
  * Emits BreadcrumbList + optional FAQPage + optional PriceSpecification.
  */
-function buildJsonLd({ type, title, description, canonical, breadcrumbs, price, currency, date, faq }) {
+function buildJsonLd({
+  type,
+  title,
+  description,
+  canonical,
+  breadcrumbs,
+  price,
+  currency,
+  date,
+  faq,
+}) {
   const graph = [];
 
   // WebPage

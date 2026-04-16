@@ -12,7 +12,7 @@ a shops directory.
 - Start from `main` only unless explicitly told otherwise.
 - Before making changes, check whether the current branch is behind `main`.
 - If the branch is behind `main`, sync with `main` before editing.
-- Keep PRs wide and task-specific.
+- Keep PRs appropriately scoped and task-specific (single feature or tightly related fixes/docs).
 - Before opening a PR, compare against base branch `main` and check for merge-conflict risk.
 - If there is conflict risk with `main`, stop and report it before opening the PR.
 - Do not open a PR until the branch is up to date with `main`.

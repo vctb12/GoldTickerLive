@@ -4,54 +4,61 @@
 
 ## Overview
 
-This document describes the comprehensive design token system implemented across the Gold-Prices platform. All tokens are defined in `styles/global.css` and should be used consistently throughout the codebase.
+This document describes the comprehensive design token system implemented across the Gold-Prices
+platform. All tokens are defined in `styles/global.css` and should be used consistently throughout
+the codebase.
 
 ## Color Tokens
 
 ### Surface Colors
+
 ```css
---color-bg: #f5f2eb;              /* Canvas background */
---color-surface: #fff;             /* Primary surface */
---color-surface-2: #f9f6f0;        /* Secondary surface */
---color-surface-3: #f2ede0;        /* Tertiary surface */
---color-border: #e8e2d0;           /* Default border */
---color-border-subtle: #ede8da;    /* Subtle border */
+--color-bg: #f5f2eb; /* Canvas background */
+--color-surface: #fff; /* Primary surface */
+--color-surface-2: #f9f6f0; /* Secondary surface */
+--color-surface-3: #f2ede0; /* Tertiary surface */
+--color-border: #e8e2d0; /* Default border */
+--color-border-subtle: #ede8da; /* Subtle border */
 ```
 
 ### Text Colors
+
 ```css
---color-text: #1a1612;            /* Primary text */
---color-text-muted: #6b5f4e;      /* Muted text */
---color-text-faint: #78685a;      /* Faint text */
+--color-text: #1a1612; /* Primary text */
+--color-text-muted: #6b5f4e; /* Muted text */
+--color-text-faint: #78685a; /* Faint text */
 ```
 
 ### Gold Palette
+
 ```css
---color-gold: #c4993e;            /* Primary gold */
---color-gold-light: #e0b84a;      /* Light gold */
---color-gold-bright: #f0c84a;     /* Bright gold */
---color-gold-dark: #8a6420;       /* Dark gold */
---color-gold-deep: #5e4210;       /* Deep gold */
---color-gold-bg: #fdf8ee;         /* Gold background */
---color-gold-tint: #faf4e2;       /* Gold tint */
---color-gold-glow: rgb(196 153 62 / 15%);  /* Gold glow */
+--color-gold: #c4993e; /* Primary gold */
+--color-gold-light: #e0b84a; /* Light gold */
+--color-gold-bright: #f0c84a; /* Bright gold */
+--color-gold-dark: #8a6420; /* Dark gold */
+--color-gold-deep: #5e4210; /* Deep gold */
+--color-gold-bg: #fdf8ee; /* Gold background */
+--color-gold-tint: #faf4e2; /* Gold tint */
+--color-gold-glow: rgb(196 153 62 / 15%); /* Gold glow */
 ```
 
 ### Status Colors
+
 ```css
---color-live: #1a7a32;            /* Live indicator */
+--color-live: #1a7a32; /* Live indicator */
 --color-live-bg: rgb(26 122 50 / 9%);
 --color-live-border: rgb(26 122 50 / 25%);
 
---color-stale: #a84000;           /* Stale indicator */
---color-up: #176832;              /* Price up */
---color-down: #b81428;            /* Price down */
---color-error: #b81428;           /* Error state */
+--color-stale: #a84000; /* Stale indicator */
+--color-up: #176832; /* Price up */
+--color-down: #b81428; /* Price down */
+--color-error: #b81428; /* Error state */
 ```
 
 ## Semantic Tokens
 
 ### Semantic Surfaces
+
 ```css
 --surface-canvas: var(--color-bg);
 --surface-primary: var(--color-surface);
@@ -61,6 +68,7 @@ This document describes the comprehensive design token system implemented across
 ```
 
 ### Semantic Text
+
 ```css
 --text-primary: var(--color-text);
 --text-secondary: var(--color-text-muted);
@@ -70,6 +78,7 @@ This document describes the comprehensive design token system implemented across
 ```
 
 ### Semantic Borders
+
 ```css
 --border-default: var(--color-border);
 --border-subtle: var(--color-border-subtle);
@@ -80,25 +89,28 @@ This document describes the comprehensive design token system implemented across
 ## Typography Tokens
 
 ### Font Stacks
+
 ```css
 --font-main: 'Cairo', -apple-system, blinkmacsystemfont, 'Segoe UI', sans-serif;
 --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
 ```
 
 ### Type Scale (Minor-third ~1.2× ratio)
+
 ```css
---text-2xs: 0.625rem;   /* 10px */
---text-xs: 0.75rem;     /* 12px */
---text-sm: 0.875rem;    /* 14px */
---text-base: 1rem;      /* 16px */
---text-md: 1.125rem;    /* 18px */
---text-lg: 1.25rem;     /* 20px */
---text-xl: 1.5rem;      /* 24px */
---text-2xl: 1.875rem;   /* 30px */
---text-3xl: 2.25rem;    /* 36px */
+--text-2xs: 0.625rem; /* 10px */
+--text-xs: 0.75rem; /* 12px */
+--text-sm: 0.875rem; /* 14px */
+--text-base: 1rem; /* 16px */
+--text-md: 1.125rem; /* 18px */
+--text-lg: 1.25rem; /* 20px */
+--text-xl: 1.5rem; /* 24px */
+--text-2xl: 1.875rem; /* 30px */
+--text-3xl: 2.25rem; /* 36px */
 ```
 
 ### Font Weights
+
 ```css
 --weight-light: 300;
 --weight-normal: 400;
@@ -109,6 +121,7 @@ This document describes the comprehensive design token system implemented across
 ```
 
 ### Line Heights
+
 ```css
 --leading-none: 1;
 --leading-tight: 1.2;
@@ -119,6 +132,7 @@ This document describes the comprehensive design token system implemented across
 ```
 
 ### Letter Spacing
+
 ```css
 --tracking-tight: -0.02em;
 --tracking-normal: 0;
@@ -128,18 +142,20 @@ This document describes the comprehensive design token system implemented across
 ```
 
 ## Spacing Scale
+
 ```css
---space-1: 0.25rem;   /* 4px */
---space-2: 0.5rem;    /* 8px */
---space-3: 0.75rem;   /* 12px */
---space-4: 1rem;      /* 16px */
---space-5: 1.5rem;    /* 24px */
---space-6: 2rem;      /* 32px */
---space-7: 3rem;      /* 48px */
---space-8: 4rem;      /* 64px */
+--space-1: 0.25rem; /* 4px */
+--space-2: 0.5rem; /* 8px */
+--space-3: 0.75rem; /* 12px */
+--space-4: 1rem; /* 16px */
+--space-5: 1.5rem; /* 24px */
+--space-6: 2rem; /* 32px */
+--space-7: 3rem; /* 48px */
+--space-8: 4rem; /* 64px */
 ```
 
 ## Border Radius
+
 ```css
 --radius-xs: 4px;
 --radius-sm: 8px;
@@ -150,14 +166,16 @@ This document describes the comprehensive design token system implemented across
 ```
 
 ### Semantic Radius
+
 ```css
---radius-control: var(--radius-sm);   /* Inputs, buttons */
---radius-card: var(--radius-lg);      /* Cards */
---radius-panel: var(--radius-xl);     /* Large panels */
---radius-badge: var(--radius-pill);   /* Badges, pills */
+--radius-control: var(--radius-sm); /* Inputs, buttons */
+--radius-card: var(--radius-lg); /* Cards */
+--radius-panel: var(--radius-xl); /* Large panels */
+--radius-badge: var(--radius-pill); /* Badges, pills */
 ```
 
 ## Shadows
+
 ```css
 --shadow-xs: 0 1px 2px rgb(0 0 0 / 4%), 0 1px 1px rgb(0 0 0 / 2%);
 --shadow-sm: 0 1px 3px rgb(0 0 0 / 6%), 0 2px 8px rgb(0 0 0 / 3%);
@@ -169,6 +187,7 @@ This document describes the comprehensive design token system implemented across
 ```
 
 ### Semantic Elevation
+
 ```css
 --elev-1: var(--shadow-xs);
 --elev-2: var(--shadow-sm);
@@ -180,6 +199,7 @@ This document describes the comprehensive design token system implemented across
 ```
 
 ## Gradients
+
 ```css
 --gradient-gold: linear-gradient(135deg, #c4993e 0%, #e0b84a 50%, #c4993e 100%);
 --gradient-gold-subtle: linear-gradient(135deg, rgb(196 153 62 / 8%) 0%, rgb(224 184 74 / 4%) 100%);
@@ -188,6 +208,7 @@ This document describes the comprehensive design token system implemented across
 ```
 
 ## Layout
+
 ```css
 --content-max-width: 1280px;
 --page-gutter: 1.5rem;
@@ -195,6 +216,7 @@ This document describes the comprehensive design token system implemented across
 ```
 
 ## Focus Ring
+
 ```css
 --focus-ring-color: var(--color-gold);
 --focus-ring-width: 3px;
@@ -204,6 +226,7 @@ This document describes the comprehensive design token system implemented across
 ## Transitions
 
 ### Durations
+
 ```css
 --duration-fast: 0.12s;
 --duration-normal: 0.2s;
@@ -212,6 +235,7 @@ This document describes the comprehensive design token system implemented across
 ```
 
 ### Easing Curves
+
 ```css
 --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
 --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -219,6 +243,7 @@ This document describes the comprehensive design token system implemented across
 ```
 
 ### Combined Transitions
+
 ```css
 --transition: 0.2s ease;
 --transition-md: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -227,6 +252,7 @@ This document describes the comprehensive design token system implemented across
 ```
 
 ## Breakpoints (Reference)
+
 ```css
 --bp-xs: 380px;
 --bp-sm: 480px;
@@ -238,17 +264,20 @@ This document describes the comprehensive design token system implemented across
 
 ## Dark Mode
 
-All color tokens automatically adapt when `[data-theme='dark']` or `prefers-color-scheme: dark` is active.
+All color tokens automatically adapt when `[data-theme='dark']` or `prefers-color-scheme: dark` is
+active.
 
 ## Usage Guidelines
 
 ### ✅ DO
+
 - Use semantic tokens (`--surface-primary`, `--text-secondary`) over direct color tokens
 - Use spacing scale tokens instead of hardcoded values
 - Use typography scale tokens for consistent sizing
 - Leverage easing and duration tokens for smooth transitions
 
 ### ❌ DON'T
+
 - Hardcode colors (use tokens instead)
 - Create page-specific color variables that duplicate global tokens
 - Use arbitrary spacing values (stick to the scale)
@@ -257,6 +286,7 @@ All color tokens automatically adapt when `[data-theme='dark']` or `prefers-colo
 ## Migration Guide
 
 ### Before
+
 ```css
 .card {
   background: #fff;
@@ -271,6 +301,7 @@ All color tokens automatically adapt when `[data-theme='dark']` or `prefers-colo
 ```
 
 ### After
+
 ```css
 .card {
   background: var(--surface-primary);
@@ -295,9 +326,11 @@ All color tokens automatically adapt when `[data-theme='dark']` or `prefers-colo
 
 ## Token Status
 
-✅ **Completed**: global.css, city-page.css, market-page.css, country-page.css, guide-page.css, terms.css, learn.css, methodology.css, calculator.css
+✅ **Completed**: global.css, city-page.css, market-page.css, country-page.css, guide-page.css,
+terms.css, learn.css, methodology.css, calculator.css
 
-🚧 **In Progress**: insights.css, invest.css, home.css, shops.css, tracker-pro.css, order.css, admin.css
+🚧 **In Progress**: insights.css, invest.css, home.css, shops.css, tracker-pro.css, order.css,
+admin.css
 
 ---
 

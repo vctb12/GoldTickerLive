@@ -86,4 +86,5 @@ sitemap.xml
 feed.xml
 
 # macOS
-.DS_Storedata/audit-logs.json
+.DS_Store
+data/audit-logs.json

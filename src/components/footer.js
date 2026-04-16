@@ -28,10 +28,10 @@ export function injectFooter(lang = 'en', depth = 0) {
           <span class="footer-brand-name">${isAr ? 'أسعار الذهب' : 'GoldPrices'}</span>
         </a>
         <p class="footer-tagline">${
-  isAr
-    ? 'تقديرات الذهب المباشرة للخليج والعالم العربي'
-    : 'Live gold estimates for the Gulf &amp; Arab world'
-}</p>
+          isAr
+            ? 'تقديرات الذهب المباشرة للخليج والعالم العربي'
+            : 'Live gold estimates for the Gulf &amp; Arab world'
+        }</p>
         <div class="footer-brand-badges">
           <span class="footer-badge">${isAr ? '24+ دولة' : '24+ Countries'}</span>
           <span class="footer-badge">${isAr ? '7 عيارات' : '7 Karats'}</span>
@@ -95,7 +95,9 @@ export function injectFooter(lang = 'en', depth = 0) {
     </div>
   </div>
 
-  ${FORMSPREE_ENDPOINT ? `
+  ${
+    FORMSPREE_ENDPOINT
+      ? `
   <div class="footer-newsletter">
     <div class="footer-inner">
       <div class="footer-newsletter-inner">
@@ -110,7 +112,9 @@ export function injectFooter(lang = 'en', depth = 0) {
       </div>
     </div>
   </div>
-  ` : ''}
+  `
+      : ''
+  }
 
   <div class="footer-bottom">
     <div class="footer-inner">
@@ -127,10 +131,10 @@ export function injectFooter(lang = 'en', depth = 0) {
       </div>
       <div class="footer-bottom-row">
         <p class="footer-disclaimer">${
-  isAr
-    ? 'قيم تقديرية مكافئة للسبيكة فقط. قد تختلف أسعار التجزئة والمجوهرات. ليست نصيحة مالية.'
-    : 'Estimated bullion-equivalent values only. Retail and jewellery prices may differ. Not financial advice.'
-}</p>
+          isAr
+            ? 'قيم تقديرية مكافئة للسبيكة فقط. قد تختلف أسعار التجزئة والمجوهرات. ليست نصيحة مالية.'
+            : 'Estimated bullion-equivalent values only. Retail and jewellery prices may differ. Not financial advice.'
+        }</p>
         <p class="footer-copy">© ${year} GoldPrices · <a href="${r('../terms.html')}">${isAr ? 'شروط الخدمة' : 'Terms'}</a> · <a href="${r('../privacy.html')}">${isAr ? 'الخصوصية' : 'Privacy'}</a> · <span class="footer-copy-trigger" id="footer-admin-trigger" aria-hidden="true" style="cursor:default;user-select:none">⚡</span></p>
       </div>
     </div>
@@ -184,7 +188,9 @@ function _showAdminPopup(adminUrl) {
   if (window.location.pathname.includes('/admin/')) return;
 
   let popup = document.getElementById('gp-admin-secret-popup');
-  if (popup) { popup.remove(); }
+  if (popup) {
+    popup.remove();
+  }
 
   popup = document.createElement('div');
   popup.id = 'gp-admin-secret-popup';
@@ -233,7 +239,9 @@ function _showAdminPopup(adminUrl) {
   }
 
   // Auto-close after 8 seconds
-  setTimeout(() => { if (popup.parentNode) popup.remove(); }, 8000);
+  setTimeout(() => {
+    if (popup.parentNode) popup.remove();
+  }, 8000);
 
   // Close on click outside
   setTimeout(() => {
@@ -261,7 +269,9 @@ function _initAdminAccessMethods(depth) {
         clicks = 0;
         _showAdminPopup(adminUrl);
       } else {
-        clickTimer = setTimeout(() => { clicks = 0; }, 600);
+        clickTimer = setTimeout(() => {
+          clicks = 0;
+        }, 600);
       }
     });
   }
@@ -275,7 +285,18 @@ function _initAdminAccessMethods(depth) {
   });
 
   // Method 5: Konami code ↑↑↓↓←→←→BA
-  const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  const KONAMI = [
+    'ArrowUp',
+    'ArrowUp',
+    'ArrowDown',
+    'ArrowDown',
+    'ArrowLeft',
+    'ArrowRight',
+    'ArrowLeft',
+    'ArrowRight',
+    'b',
+    'a',
+  ];
   let konamiIdx = 0;
   document.addEventListener('keydown', (e) => {
     if (e.key === KONAMI[konamiIdx]) {

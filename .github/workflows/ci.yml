@@ -90,7 +90,7 @@ jobs:
         run: |
           cd dist && python3 -m http.server 8080 &
           sleep 2
-          npx playwright test --config=playwright.config.yml --project=chromium
+          npx playwright test --config=playwright.config.js --project=chromium
 
       - name: Upload Playwright report
         if: failure()

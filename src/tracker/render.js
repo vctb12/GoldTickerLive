@@ -382,30 +382,30 @@ export function renderAlerts() {
   const spot = _currentSpot();
   _el.alertList.innerHTML = alerts.length
     ? alerts
-      .map((a, i) => {
-        const hit = spot && (a.direction === 'above' ? spot > a.target : spot < a.target);
-        let proximity = '';
-        let proximityClass = '';
-        if (spot) {
-          const distance = Math.abs(spot - a.target);
-          const pct = (distance / a.target) * 100;
-          if (pct < 1) {
-            proximity = '⚡ very close';
-            proximityClass = ' is-alert-imminent';
-          } else if (pct < 3) {
-            proximity = '● nearby';
-            proximityClass = ' is-alert-close';
+        .map((a, i) => {
+          const hit = spot && (a.direction === 'above' ? spot > a.target : spot < a.target);
+          let proximity = '';
+          let proximityClass = '';
+          if (spot) {
+            const distance = Math.abs(spot - a.target);
+            const pct = (distance / a.target) * 100;
+            if (pct < 1) {
+              proximity = '⚡ very close';
+              proximityClass = ' is-alert-imminent';
+            } else if (pct < 3) {
+              proximity = '● nearby';
+              proximityClass = ' is-alert-close';
+            }
           }
-        }
-        return `<div class="tracker-stack-item${hit ? ' is-triggered' : ''}${proximityClass}">
+          return `<div class="tracker-stack-item${hit ? ' is-triggered' : ''}${proximityClass}">
           <div style="flex:1">
             <span>${a.scope} ${a.direction} <strong>$${a.target}</strong>${hit ? ' ✓ triggered' : ''}</span>
             ${proximity ? `<div style="font-size:0.8rem;color:var(--tp-text-muted);margin-top:0.25rem">${proximity}</div>` : ''}
           </div>
           <button data-idx="${i}" class="tracker-remove-btn" aria-label="Delete alert">×</button>
         </div>`;
-      })
-      .join('')
+        })
+        .join('')
     : '<p style="color:var(--tp-text-muted);font-size:0.85rem">No alerts set.</p>';
 }
 
@@ -414,13 +414,13 @@ export function renderPresets() {
   const presets = _state.presets || [];
   _el.presetList.innerHTML = presets.length
     ? presets
-      .map((p, i) => {
-        const isCurrent =
+        .map((p, i) => {
+          const isCurrent =
             _state.selectedCurrency === p.currency &&
             _state.selectedKarat === p.karat &&
             _state.selectedUnit === p.unit &&
             _state.range === p.range;
-        return `<div class="tracker-stack-item${isCurrent ? ' is-highlight' : ''}">
+          return `<div class="tracker-stack-item${isCurrent ? ' is-highlight' : ''}">
         <div style="flex:1">
           <div><strong>${p.name}</strong></div>
           <div style="font-size:0.8rem;color:var(--tp-text-muted);margin-top:0.25rem">
@@ -433,8 +433,8 @@ export function renderPresets() {
           <button data-idx="${i}" class="tracker-remove-btn" aria-label="Delete preset">×</button>
         </span>
       </div>`;
-      })
-      .join('')
+        })
+        .join('')
     : '<p style="color:var(--tp-text-muted);font-size:0.85rem">No presets saved. Save the current view via the form above.</p>';
 }
 
