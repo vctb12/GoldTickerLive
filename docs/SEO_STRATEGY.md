@@ -253,6 +253,7 @@ guidelines to achieve top search rankings for gold price queries across GCC and 
   <!-- Homepage - High priority, frequent changes -->
   <url>
     <loc>https://goldtickerlive.com/</loc>
+    <!-- lastmod values should be generated in YYYY-MM-DD format -->
     <lastmod>YYYY-MM-DD</lastmod>
     <changefreq>hourly</changefreq>
     <priority>1.0</priority>
