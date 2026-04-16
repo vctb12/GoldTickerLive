@@ -4,11 +4,13 @@
 
 ## Overview
 
-This comprehensive SEO strategy document outlines techniques, best practices, and implementation guidelines to achieve top search rankings for gold price queries across GCC and Arab markets.
+This comprehensive SEO strategy document outlines techniques, best practices, and implementation
+guidelines to achieve top search rankings for gold price queries across GCC and Arab markets.
 
 ## Target Keywords
 
 ### Primary Keywords
+
 - Gold price today [Country]
 - Gold rate [City]
 - [Karat] gold price
@@ -16,6 +18,7 @@ This comprehensive SEO strategy document outlines techniques, best practices, an
 - Gold price per gram [Currency]
 
 ### Long-Tail Keywords
+
 - 24k gold price Dubai today
 - Gold rate in UAE per gram
 - How much is gold today in Saudi Arabia
@@ -23,6 +26,7 @@ This comprehensive SEO strategy document outlines techniques, best practices, an
 - Where to buy gold in [City]
 
 ### Arabic Keywords
+
 - سعر الذهب اليوم
 - أسعار الذهب في الإمارات
 - سعر جرام الذهب عيار 24
@@ -35,6 +39,7 @@ This comprehensive SEO strategy document outlines techniques, best practices, an
 **Format:** `[Primary Keyword] | [Secondary Info] | Brand`
 
 **Examples:**
+
 ```html
 <!-- Homepage -->
 <title>Live Gold Prices Today — UAE, GCC & Arab World | GoldTickerLive</title>
@@ -50,6 +55,7 @@ This comprehensive SEO strategy document outlines techniques, best practices, an
 ```
 
 **Best Practices:**
+
 - Keep under 60 characters
 - Include primary keyword near the beginning
 - Make it compelling for click-through
@@ -60,11 +66,16 @@ This comprehensive SEO strategy document outlines techniques, best practices, an
 **Format:** Value proposition + Keywords + Call to action
 
 **Examples:**
+
 ```html
-<meta name="description" content="Current 24K gold price in Dubai: AED 250.00/gram. Updated every 90 seconds. Compare 22K, 21K, 18K rates. Free live tracker with history and alerts.">
+<meta
+  name="description"
+  content="Current 24K gold price in Dubai: AED 250.00/gram. Updated every 90 seconds. Compare 22K, 21K, 18K rates. Free live tracker with history and alerts."
+/>
 ```
 
 **Best Practices:**
+
 - 150-160 characters
 - Include target keyword naturally
 - Show clear value proposition
@@ -87,6 +98,7 @@ This comprehensive SEO strategy document outlines techniques, best practices, an
 ```
 
 **Best Practices:**
+
 - One H1 per page with primary keyword
 - Use H2 for major sections
 - Use H3 for subsections
@@ -96,6 +108,7 @@ This comprehensive SEO strategy document outlines techniques, best practices, an
 ### URL Structure
 
 **Best Practices:**
+
 ```
 ✅ Good URLs:
 /countries/uae/dubai/gold-prices/
@@ -109,6 +122,7 @@ This comprehensive SEO strategy document outlines techniques, best practices, an
 ```
 
 **Guidelines:**
+
 - Use hyphens, not underscores
 - Keep URLs short and descriptive
 - Include target keywords
@@ -118,14 +132,14 @@ This comprehensive SEO strategy document outlines techniques, best practices, an
 ### Internal Linking
 
 **Strategy:**
+
 ```html
 <!-- Contextual links from homepage to country pages -->
 <a href="/countries/uae/">Gold price in UAE</a>
 
 <!-- Breadcrumb navigation -->
 <nav aria-label="breadcrumb">
-  <a href="/">Home</a> >
-  <a href="/countries/uae/">UAE</a> >
+  <a href="/">Home</a> > <a href="/countries/uae/">UAE</a> >
   <span>Dubai</span>
 </nav>
 
@@ -138,6 +152,7 @@ This comprehensive SEO strategy document outlines techniques, best practices, an
 ```
 
 **Best Practices:**
+
 - Link to related content naturally
 - Use descriptive anchor text
 - Create hub pages for major topics
@@ -149,6 +164,7 @@ This comprehensive SEO strategy document outlines techniques, best practices, an
 ### Structured Data (JSON-LD)
 
 #### Homepage
+
 ```json
 {
   "@context": "https://schema.org",
@@ -164,6 +180,7 @@ This comprehensive SEO strategy document outlines techniques, best practices, an
 ```
 
 #### Country/City Pages
+
 ```json
 {
   "@context": "https://schema.org",
@@ -181,6 +198,7 @@ This comprehensive SEO strategy document outlines techniques, best practices, an
 ```
 
 #### Breadcrumb List
+
 ```json
 {
   "@context": "https://schema.org",
@@ -209,6 +227,7 @@ This comprehensive SEO strategy document outlines techniques, best practices, an
 ```
 
 #### FAQPage
+
 ```json
 {
   "@context": "https://schema.org",
@@ -269,12 +288,11 @@ This comprehensive SEO strategy document outlines techniques, best practices, an
 
 ```html
 <!-- Specify canonical version -->
-<link rel="canonical" href="https://goldtickerlive.com/countries/uae/dubai/gold-prices/">
+<link rel="canonical" href="https://goldtickerlive.com/countries/uae/dubai/gold-prices/" />
 
 <!-- Avoid duplicate content -->
 <!-- ❌ Bad: Both URLs accessible -->
-/countries/uae/dubai
-/countries/uae/dubai/
+/countries/uae/dubai /countries/uae/dubai/
 
 <!-- ✅ Good: Redirect to canonical -->
 Redirect 301 /countries/uae/dubai /countries/uae/dubai/
@@ -284,13 +302,13 @@ Redirect 301 /countries/uae/dubai /countries/uae/dubai/
 
 ```html
 <!-- English version -->
-<link rel="alternate" hreflang="en" href="https://goldtickerlive.com/countries/uae/">
+<link rel="alternate" hreflang="en" href="https://goldtickerlive.com/countries/uae/" />
 
 <!-- Arabic version -->
-<link rel="alternate" hreflang="ar" href="https://goldtickerlive.com/countries/uae/?lang=ar">
+<link rel="alternate" hreflang="ar" href="https://goldtickerlive.com/countries/uae/?lang=ar" />
 
 <!-- Default fallback -->
-<link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/countries/uae/">
+<link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/countries/uae/" />
 ```
 
 ### Robots.txt
@@ -319,6 +337,7 @@ Crawl-delay: 1
 ### Fresh Content Signals
 
 **Techniques:**
+
 1. Show last updated timestamp
 2. Display "Today" in titles and headings
 3. Include current date in meta descriptions
@@ -326,18 +345,18 @@ Crawl-delay: 1
 5. Frequent content updates
 
 **Example:**
+
 ```html
 <article>
   <h1>Gold Price in Dubai Today — April 16, 2026</h1>
-  <time datetime="2026-04-16T11:30:00+04:00">
-    Updated 2 minutes ago
-  </time>
+  <time datetime="2026-04-16T11:30:00+04:00"> Updated 2 minutes ago </time>
 </article>
 ```
 
 ### Content Depth
 
 **Guidelines:**
+
 - Minimum 300 words per page
 - Include comprehensive information
 - Answer common questions
@@ -347,6 +366,7 @@ Crawl-delay: 1
 ### User-Generated Content
 
 **Opportunities:**
+
 - Shop reviews and ratings
 - Price alerts shared by users
 - Community insights
@@ -357,6 +377,7 @@ Crawl-delay: 1
 ### Google My Business
 
 **Optimization:**
+
 - Claim and verify listing
 - Complete all profile sections
 - Add accurate business hours
@@ -367,6 +388,7 @@ Crawl-delay: 1
 ### Local Citations
 
 **Directory Submissions:**
+
 - Google My Business
 - Bing Places
 - Apple Maps
@@ -376,6 +398,7 @@ Crawl-delay: 1
 ### Location Pages
 
 **Template:**
+
 ```html
 <h1>[City] Gold Prices Today</h1>
 
@@ -405,6 +428,7 @@ Crawl-delay: 1
 ### Mobile-First Indexing
 
 **Requirements:**
+
 - Responsive design
 - Fast mobile load times
 - Touch-friendly interface
@@ -414,6 +438,7 @@ Crawl-delay: 1
 ### Core Web Vitals
 
 **Targets:**
+
 - LCP < 2.5s
 - FID < 100ms
 - CLS < 0.1
@@ -423,6 +448,7 @@ Crawl-delay: 1
 ### Keyword Density
 
 **Guidelines:**
+
 - Primary keyword: 1-2% density
 - Natural integration
 - Include in H1, first paragraph, and conclusion
@@ -431,6 +457,7 @@ Crawl-delay: 1
 ### E-A-T (Expertise, Authoritativeness, Trustworthiness)
 
 **Signals:**
+
 - About page with credentials
 - Author bios
 - Data source transparency
@@ -444,6 +471,7 @@ Crawl-delay: 1
 ### Quality Backlinks
 
 **Strategies:**
+
 1. Create link-worthy content (guides, tools)
 2. Guest posting on relevant blogs
 3. Digital PR and press releases
@@ -454,6 +482,7 @@ Crawl-delay: 1
 ### Toxic Link Cleanup
 
 **Process:**
+
 1. Audit backlink profile
 2. Identify spammy/low-quality links
 3. Request removal
@@ -464,6 +493,7 @@ Crawl-delay: 1
 ### Key Metrics
 
 **Track:**
+
 - Organic traffic
 - Keyword rankings
 - Click-through rates
@@ -483,12 +513,14 @@ Crawl-delay: 1
 ### Regular Audits
 
 **Monthly:**
+
 - Keyword ranking changes
 - Traffic trends
 - Core Web Vitals
 - Backlink profile
 
 **Quarterly:**
+
 - Full technical SEO audit
 - Content gap analysis
 - Competitor analysis
@@ -497,6 +529,7 @@ Crawl-delay: 1
 ## SEO Checklist
 
 ### Technical
+
 - [ ] XML sitemap submitted
 - [ ] Robots.txt configured
 - [ ] HTTPS enabled
@@ -509,6 +542,7 @@ Crawl-delay: 1
 - [ ] URL structure optimized
 
 ### On-Page
+
 - [ ] Unique title tags (< 60 chars)
 - [ ] Compelling meta descriptions (150-160 chars)
 - [ ] H1 tags with primary keywords
@@ -520,6 +554,7 @@ Crawl-delay: 1
 - [ ] E-A-T signals
 
 ### Content
+
 - [ ] Keyword research complete
 - [ ] Content calendar established
 - [ ] Regular updates scheduled
@@ -528,6 +563,7 @@ Crawl-delay: 1
 - [ ] Local content optimized
 
 ### Off-Page
+
 - [ ] Backlink strategy defined
 - [ ] Guest posting opportunities identified
 - [ ] Social media presence active
