@@ -253,7 +253,7 @@ guidelines to achieve top search rankings for gold price queries across GCC and 
   <!-- Homepage - High priority, frequent changes -->
   <url>
     <loc>https://goldtickerlive.com/</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>YYYY-MM-DD</lastmod>
     <changefreq>hourly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -261,7 +261,7 @@ guidelines to achieve top search rankings for gold price queries across GCC and 
   <!-- Country pages - High priority -->
   <url>
     <loc>https://goldtickerlive.com/countries/uae/</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>YYYY-MM-DD</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -269,7 +269,7 @@ guidelines to achieve top search rankings for gold price queries across GCC and 
   <!-- City pages - Medium-high priority -->
   <url>
     <loc>https://goldtickerlive.com/countries/uae/dubai/gold-prices/</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>YYYY-MM-DD</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -277,7 +277,7 @@ guidelines to achieve top search rankings for gold price queries across GCC and 
   <!-- Static pages - Medium priority -->
   <url>
     <loc>https://goldtickerlive.com/calculator.html</loc>
-    <lastmod>2026-04-10</lastmod>
+    <lastmod>YYYY-MM-DD</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

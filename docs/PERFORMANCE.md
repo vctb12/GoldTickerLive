@@ -69,7 +69,13 @@ Gold-Prices platform.
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
 <!-- Preload Critical Assets -->
-<link rel="preload" as="font" href="/fonts/cairo-v1.woff2" type="font/woff2" crossorigin />
+<link
+  rel="preload"
+  as="font"
+  href="/fonts/cairo-v1.woff2"
+  type="font/woff2"
+  crossorigin="anonymous"
+/>
 <link rel="preload" as="script" href="src/pages/home.js" type="module" />
 
 <!-- Prefetch Next Pages -->
