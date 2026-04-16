@@ -122,9 +122,26 @@ function renderFreshnessBadge(updatedAt) {
   </span>`;
 }
 
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function renderDisclaimer(country, pageUrl) {
+  // Sanitize pageUrl to canonical origin+pathname (strip user-controlled hash/query)
+  let safeUrl;
+  try {
+    const parsed = new URL(pageUrl);
+    safeUrl = parsed.origin + parsed.pathname;
+  } catch {
+    safeUrl = BASE_URL;
+  }
   const waText = encodeURIComponent(
-    `Gold prices in ${country.nameEn} — check live rates: ${pageUrl}`
+    `Gold prices in ${country.nameEn} — check live rates: ${safeUrl}`
   );
   const waUrl = `https://wa.me/?text=${waText}`;
   return `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem 1rem;margin-top:1rem;font-size:0.78rem;color:#64748b;display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;justify-content:space-between;">

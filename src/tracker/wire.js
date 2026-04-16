@@ -20,50 +20,41 @@ function safeParseWirePayload(payload) {
 }
 
 export async function fetchWire(existingItems = []) {
-  return new Promise((resolve) => {
-    const callbackName = `__wire_${Date.now().toString(36)}`;
-    const script = document.createElement('script');
-    let settled = false;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), WIRE_CONFIG.timeoutMs);
 
-    function cleanup() {
-      if (settled) return;
-      settled = true;
-      delete window[callbackName];
-      script.remove();
+  const query = encodeURIComponent(WIRE_CONFIG.query);
+  const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${query}&mode=artlist&maxrecords=${WIRE_CONFIG.maxrecords}&timespan=${WIRE_CONFIG.timespan}&format=json`;
+
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
     }
 
-    const timeoutId = setTimeout(() => {
-      cleanup();
-      // Fallback to previous items or static explainer
-      if (existingItems.length) {
-        resolve({ items: existingItems, fromCache: true });
-      } else {
-        resolve({
-          items: [
-            {
-              title: 'Wire unavailable — using local prices and history only',
-              url: '',
-              domain: 'local',
-              seenDate: new Date().toISOString(),
-            },
-          ],
-          fromCache: false,
-        });
-      }
-    }, WIRE_CONFIG.timeoutMs);
-
-    window[callbackName] = (payload) => {
-      clearTimeout(timeoutId);
-      const items = safeParseWirePayload(payload);
-      cleanup();
-      resolve({ items, fromCache: false });
+    const payload = await response.json();
+    const items = safeParseWirePayload(payload);
+    return { items, fromCache: false };
+  } catch {
+    clearTimeout(timeoutId);
+    // Fallback to previous items or static explainer
+    if (existingItems.length) {
+      return { items: existingItems, fromCache: true };
+    }
+    return {
+      items: [
+        {
+          title: 'Wire unavailable — using local prices and history only',
+          url: '',
+          domain: 'local',
+          seenDate: new Date().toISOString(),
+        },
+      ],
+      fromCache: false,
     };
-
-    const query = encodeURIComponent(WIRE_CONFIG.query);
-    script.src = `https://api.gdeltproject.org/api/v2/doc/doc?query=${query}&mode=artlist&maxrecords=${WIRE_CONFIG.maxrecords}&timespan=${WIRE_CONFIG.timespan}&format=jsonp&callback=${callbackName}`;
-    script.async = true;
-    document.body.appendChild(script);
-  });
+  }
 }
 
 export function renderWire(els, state) {

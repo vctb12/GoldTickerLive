@@ -290,8 +290,6 @@
     </div>
 
     <script type="module">
-      import { ADMIN_ACCESS_PIN } from '../supabase-config.js';
-
       const digits = Array.from(document.querySelectorAll('.pin-digit'));
       const verifyBtn = document.getElementById('verify-btn');
       const errorEl = document.getElementById('access-error');
@@ -380,36 +378,50 @@
         });
       });
 
-      verifyBtn.addEventListener('click', () => {
+      verifyBtn.addEventListener('click', async () => {
         const pin = getPin();
-        const correctPin = (typeof ADMIN_ACCESS_PIN !== 'undefined' && ADMIN_ACCESS_PIN) ? String(ADMIN_ACCESS_PIN) : null;
+        verifyBtn.disabled = true;
 
-        if (!correctPin) {
-          // If PIN not configured, just redirect to login
-          window.location.replace('../login/');
-          return;
-        }
+        try {
+          const resp = await fetch('/api/admin/auth/verify-pin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pin }),
+          });
+          const data = await resp.json();
 
-        if (pin === correctPin) {
-          sessionStorage.removeItem('gp_access_attempts');
-          verifyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Access granted!';
-          verifyBtn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
-          setTimeout(() => window.location.replace('../login/'), 700);
-        } else {
+          if (data.success) {
+            sessionStorage.removeItem('gp_access_attempts');
+            verifyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Access granted!';
+            verifyBtn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
+            setTimeout(() => window.location.replace('../login/'), 700);
+            return;
+          }
+
+          if (data.redirect) {
+            // PIN not configured — go straight to login
+            window.location.replace('../login/');
+            return;
+          }
+
+          // Failed attempt
           attempts++;
           sessionStorage.setItem('gp_access_attempts', String(attempts));
           updateAttemptsUI();
 
-          if (attempts >= MAX_ATTEMPTS) {
+          if (resp.status === 429 || attempts >= MAX_ATTEMPTS) {
             digits.forEach(d => { d.disabled = true; });
             verifyBtn.disabled = true;
             showError('Too many incorrect attempts. Please use GitHub login below.');
           } else {
-            showError('Incorrect PIN. Please try again.');
+            showError(data.message || 'Incorrect PIN. Please try again.');
             digits.forEach(d => { d.value = ''; d.classList.remove('filled'); });
             verifyBtn.disabled = true;
             digits[0].focus();
           }
+        } catch {
+          showError('Network error — could not verify PIN. Try again.');
+          verifyBtn.disabled = getPin().length < 6;
         }
       });
 

@@ -54,14 +54,17 @@ app.use(
 );
 
 // CORS — restrict origins in production.
-// In production, always set CORS_ORIGINS (comma-separated) to avoid allowing all origins.
+// In production, always set CORS_ORIGINS (comma-separated) to avoid rejecting all cross-origin requests.
 // Example: CORS_ORIGINS=https://goldtickerlive.com,https://goldprices.com
 const ALLOWED_ORIGINS = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(',').map((o) => o.trim())
   : null; // null → allow all (development only)
 
 if (IS_PROD && !ALLOWED_ORIGINS) {
-  console.warn('[server] WARNING: CORS_ORIGINS is not set. All origins will be allowed.');
+  console.warn(
+    '[server] WARNING: CORS_ORIGINS is not set in production. ' +
+      'Cross-origin requests will be rejected.'
+  );
 }
 app.use(
   cors(
@@ -73,7 +76,15 @@ app.use(
           cb(new Error('Not allowed by CORS'));
         },
       }
-      : undefined
+      : IS_PROD
+        ? {
+          // In production without explicit origins, reject all cross-origin requests
+          origin(origin, cb) {
+            if (!origin) return cb(null, true); // same-origin / server-to-server
+            cb(new Error('Not allowed by CORS'));
+          },
+        }
+        : undefined // development: allow all
   )
 );
 
@@ -86,8 +97,10 @@ app.use(express.urlencoded({ extended: true, limit: '256kb' }));
 // Static file serving for dist folder
 app.use('/', express.static(path.join(__dirname, 'dist')));
 
-// Also serve source files for development
-app.use('/src', express.static(__dirname));
+// Serve source files for development only — scoped to the src/ subdirectory.
+if (!IS_PROD) {
+  app.use('/src', express.static(path.join(__dirname, 'src')));
+}
 
 // Admin API routes
 app.use('/api/admin', adminRoutes);
@@ -97,7 +110,6 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
   });
 });
 

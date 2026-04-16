@@ -19,6 +19,16 @@ import { applyFeatureFlags } from '../lib/site-settings.js';
 // Helpers
 // ─────────────────────────────────────────────────────────────────────────────
 
+/** Escape a string for safe inclusion in HTML. */
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 /**
  * Resolve href depth: strip leading `../` then prepend the correct number
  * of `../` segments for the page's actual depth from the site root.
@@ -788,11 +798,11 @@ export function initNavSearch(basePath = '/') {
       dropdown.innerHTML = results
         .map((r) => {
           const href = base + r.url;
-          return `<a href="${href}" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 1rem;text-decoration:none;color:#1e293b;font-size:0.875rem;border-bottom:1px solid #f1f5f9;" tabindex="0">
-          <span style="font-size:1rem;">${r.icon || '🔍'}</span>
+          return `<a href="${escapeHtml(href)}" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 1rem;text-decoration:none;color:#1e293b;font-size:0.875rem;border-bottom:1px solid #f1f5f9;" tabindex="0">
+          <span style="font-size:1rem;">${escapeHtml(r.icon || '🔍')}</span>
           <span>
-            <span style="font-weight:500;">${r.label}</span>
-            <span style="font-size:0.75rem;color:#94a3b8;margin-left:0.4rem;">${r.type}</span>
+            <span style="font-weight:500;">${escapeHtml(r.label)}</span>
+            <span style="font-size:0.75rem;color:#94a3b8;margin-left:0.4rem;">${escapeHtml(r.type)}</span>
           </span>
         </a>`;
         })

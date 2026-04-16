@@ -6,37 +6,24 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-const DEFAULT_SECRET = 'gold-prices-secret-key-change-in-production';
-const JWT_SECRET = process.env.JWT_SECRET || DEFAULT_SECRET;
+// JWT_SECRET is required in all environments — no insecure default.
+const JWT_SECRET = process.env.JWT_SECRET;
 const TOKEN_EXPIRY = '24h';
 
-if (JWT_SECRET === DEFAULT_SECRET) {
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error(
-      '[auth] FATAL: JWT_SECRET is using the insecure default value. ' +
-        'Set a strong JWT_SECRET environment variable before deploying to production.'
-    );
-  }
-  console.warn(
-    '[auth] WARNING: JWT_SECRET is using the insecure default value. ' +
-      'Set a strong JWT_SECRET environment variable before deploying.'
+if (!JWT_SECRET) {
+  throw new Error(
+    '[auth] FATAL: JWT_SECRET environment variable is not set. ' +
+      'Set a strong, random JWT_SECRET before starting the server.'
   );
 }
 
-// IMPORTANT: The default admin password below is only a bootstrap placeholder.
-// Set ADMIN_PASSWORD env var, or update the hashed value, before deploying.
-const DEFAULT_ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+// ADMIN_PASSWORD is required in all environments — no insecure default.
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
-if (DEFAULT_ADMIN_PASSWORD === 'admin123') {
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error(
-      '[auth] FATAL: ADMIN_PASSWORD is using the insecure default "admin123". ' +
-        'Set a strong ADMIN_PASSWORD environment variable before deploying to production.'
-    );
-  }
-  console.warn(
-    '[auth] WARNING: ADMIN_PASSWORD is using the insecure default. ' +
-      'Set ADMIN_PASSWORD environment variable before deploying.'
+if (!ADMIN_PASSWORD) {
+  throw new Error(
+    '[auth] FATAL: ADMIN_PASSWORD environment variable is not set. ' +
+      'Set a strong ADMIN_PASSWORD before starting the server.'
   );
 }
 
@@ -45,7 +32,7 @@ let users = [
   {
     id: 'admin_1',
     email: 'admin@goldprices.com',
-    password: bcrypt.hashSync(DEFAULT_ADMIN_PASSWORD, 10),
+    password: bcrypt.hashSync(ADMIN_PASSWORD, 12),
     name: 'Administrator',
     role: 'admin',
     createdAt: new Date().toISOString(),
@@ -165,7 +152,7 @@ async function createUser(userData, createdBy) {
     return { success: false, message: 'Email already exists' };
   }
 
-  const hashedPassword = await bcrypt.hash(userData.password, 10);
+  const hashedPassword = await bcrypt.hash(userData.password, 12);
   const newUser = {
     id: 'user_' + Date.now(),
     email: userData.email,
@@ -191,7 +178,7 @@ async function updateUser(userId, updates, updatedBy) {
   }
 
   if (updates.password) {
-    updates.password = await bcrypt.hash(updates.password, 10);
+    updates.password = await bcrypt.hash(updates.password, 12);
   }
 
   users[index] = {
