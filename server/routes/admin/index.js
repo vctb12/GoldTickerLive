@@ -4,6 +4,7 @@
  */
 
 const express = require('express');
+const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const router = express.Router();
 const auth = require('../../lib/auth');
@@ -185,6 +186,73 @@ router.get('/auth/verify', authMiddleware(), (req, res) => {
   });
 });
 
+// ---------------------------------------------------------------------------
+// PIN verification endpoint (server-side check).
+// The ADMIN_ACCESS_PIN env var controls the quick-access PIN.
+// If not set, PIN access is disabled and the endpoint tells the client.
+// Rate-limited to prevent brute-force attacks on the 6-digit PIN.
+// ---------------------------------------------------------------------------
+const PIN_MAX_ATTEMPTS = 5;
+const PIN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const pinAttempts = new Map(); // ip -> { count, firstAttemptAt }
+
+router.post('/auth/verify-pin', (req, res) => {
+  const pin = process.env.ADMIN_ACCESS_PIN;
+
+  // If PIN not configured, tell client to skip to OAuth login
+  if (!pin) {
+    return res.json({ success: false, redirect: true, message: 'PIN access is disabled.' });
+  }
+
+  const ip = req.ip || req.socket?.remoteAddress || 'unknown';
+  const now = Date.now();
+  const record = pinAttempts.get(ip);
+
+  // Check rate limit
+  if (record) {
+    if (now - record.firstAttemptAt > PIN_WINDOW_MS) {
+      pinAttempts.delete(ip);
+    } else if (record.count >= PIN_MAX_ATTEMPTS) {
+      const retryAfterSec = Math.ceil((PIN_WINDOW_MS - (now - record.firstAttemptAt)) / 1000);
+      res.set('Retry-After', String(retryAfterSec));
+      return res.status(429).json({
+        success: false,
+        message: 'Too many PIN attempts. Please use GitHub login.',
+      });
+    }
+  }
+
+  const { pin: submittedPin } = req.body;
+  if (!submittedPin || typeof submittedPin !== 'string' || !/^\d{6}$/.test(submittedPin)) {
+    return res.status(400).json({ success: false, message: 'Invalid PIN format.' });
+  }
+
+  // Constant-time comparison using Node.js crypto to prevent timing attacks
+  const expectedBuf = Buffer.from(String(pin).padEnd(6, '0').slice(0, 6), 'utf8');
+  const submittedBuf = Buffer.from(submittedPin.padEnd(6, '0').slice(0, 6), 'utf8');
+  const match = crypto.timingSafeEqual(expectedBuf, submittedBuf);
+
+  if (match) {
+    pinAttempts.delete(ip);
+    return res.json({ success: true });
+  }
+
+  // Record failed attempt
+  const rec = pinAttempts.get(ip);
+  if (!rec || now - rec.firstAttemptAt > PIN_WINDOW_MS) {
+    pinAttempts.set(ip, { count: 1, firstAttemptAt: now });
+  } else {
+    rec.count += 1;
+  }
+
+  const remaining = PIN_MAX_ATTEMPTS - (pinAttempts.get(ip)?.count || 0);
+  return res.status(401).json({
+    success: false,
+    message: 'Incorrect PIN.',
+    remaining: Math.max(0, remaining),
+  });
+});
+
 // ===== SHOP ROUTES =====
 
 // Get all shops with filters
@@ -341,8 +409,8 @@ router.get('/audit-logs', authMiddleware(), (req, res) => {
       action: sanitizeString(req.query.action, 50),
       entityType: sanitizeString(req.query.entityType, 50),
       actor: sanitizeString(req.query.actor, 200),
-      startDate: req.query.startDate,
-      endDate: req.query.endDate,
+      startDate: sanitizeString(req.query.startDate, 30),
+      endDate: sanitizeString(req.query.endDate, 30),
       page: parseIntParam(req.query.page, 1, 1, 10000),
       limit: parseIntParam(req.query.limit, 50, 1, 200),
     };
@@ -509,7 +577,7 @@ router.get('/stats', adminRateLimiter, authMiddleware(), async (req, res) => {
           recentEntries: recentLogs.logs,
           total: recentLogs.total,
         },
-        storageBackend: process.env.STORAGE_BACKEND || 'file',
+        storageBackend: 'configured',
       },
     });
   } catch (err) {
