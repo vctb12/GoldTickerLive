@@ -20,6 +20,11 @@ const adminRoutes = require('./server/routes/admin');
 // Middleware — Security headers
 // CSP is intentionally disabled in development for ease of debugging.
 // In production (NODE_ENV=production), a strict CSP is enforced.
+//
+// NOTE: 'unsafe-inline' is currently required for scriptSrc because the site
+// embeds Google Analytics and Microsoft Clarity inline snippets in static HTML.
+// To remove 'unsafe-inline', those snippets must be moved to external .js files
+// and a nonce-based CSP injected at serve-time via middleware.
 app.use(
   helmet({
     contentSecurityPolicy: IS_PROD
@@ -31,6 +36,7 @@ app.use(
             "'unsafe-inline'",
             'https://cdn.jsdelivr.net',
             'https://www.googletagmanager.com',
+            'https://www.clarity.ms',
             'https://pagead2.googlesyndication.com',
             'https://www.google-analytics.com',
           ],
@@ -44,8 +50,14 @@ app.use(
             'https://open.er-api.com',
             'https://www.google-analytics.com',
             'https://*.supabase.co',
+            'https://www.clarity.ms',
+            'https://nominatim.openstreetmap.org',
           ],
           frameSrc: ["'self'", 'https://pagead2.googlesyndication.com'],
+          objectSrc: ["'none'"],
+          baseUri: ["'self'"],
+          formAction: ["'self'"],
+          upgradeInsecureRequests: [],
         },
       }
       : false,

@@ -10,6 +10,10 @@
  *
  *     The anon key is designed to be used in client-side code (gated by RLS).
  *     ALLOWED_EMAIL controls which GitHub OAuth user can access the admin panel.
+ *
+ *     SECURITY NOTE: ALLOWED_EMAIL is a client-side hint only. Actual authorization
+ *     must be enforced server-side via Supabase RLS policies. Do not rely solely
+ *     on this value for access control — a malicious client can bypass it.
  */
 
 export const SUPABASE_URL = 'https://nebdpxjazlnsrfmlpgeq.supabase.co';
