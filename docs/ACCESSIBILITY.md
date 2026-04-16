@@ -239,7 +239,7 @@ platform. We aim for WCAG 2.1 Level AA compliance across all pages and component
 // Trap focus inside modal
 function trapFocus(element) {
   const focusableElements = element.querySelectorAll(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"]'
   );
 
   const firstFocusable = focusableElements[0];
@@ -334,6 +334,9 @@ function trapFocus(element) {
 - [ ] Content works in both light and dark mode
 
 ### Screen Reader Testing
+
+At minimum, test with at least one free screen reader (NVDA or VoiceOver). The list below includes
+recommended options when available.
 
 - [ ] Test with NVDA (Windows)
 - [ ] Test with JAWS (Windows)
