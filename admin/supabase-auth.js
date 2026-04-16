@@ -2,8 +2,10 @@
  * admin/supabase-auth.js
  * Supabase-based authentication for the GoldAdmin panel.
  *
- * Uses Supabase Auth with GitHub OAuth for admin login.
- * Only the ALLOWED_EMAIL (your GitHub email) can access the panel.
+ * Uses Supabase Auth with multiple providers (GitHub, Google, Microsoft,
+ * email magic link, email/password, phone OTP) and supports TOTP MFA.
+ * The legacy ALLOWED_EMAIL remains as a client-side fallback; real
+ * authorization should be enforced server-side (RLS / Edge function).
  * The Supabase JS client is loaded from the CDN — no build step needed.
  *
  * Config is loaded from admin/supabase-config.js which must export
@@ -13,6 +15,33 @@
 import { SUPABASE_URL, SUPABASE_ANON_KEY, ALLOWED_EMAIL } from './supabase-config.js';
 
 let _supabase = null;
+
+/**
+ * Compute the admin base URL (origin + /admin/ prefix), handling subpaths.
+ * @returns {string}
+ */
+function getAdminBaseUrl() {
+  try {
+    const { origin, pathname } = window.location;
+    const idx = pathname.indexOf('/admin/');
+    if (idx >= 0) {
+      return origin + pathname.slice(0, idx + '/admin/'.length);
+    }
+    return origin + '/admin/';
+  } catch {
+    return '/admin/';
+  }
+}
+
+/**
+ * Build an absolute redirect URL inside the admin area.
+ * @param {string} [path=''] e.g. '', 'login/', 'orders/'
+ */
+function buildRedirect(path = '') {
+  const base = getAdminBaseUrl();
+  const trimmed = path ? path.replace(/^\/+/, '') : '';
+  return trimmed ? base + trimmed : base;
+}
 
 /**
  * Lazy-init the Supabase client (synchronous — returns null if CDN not ready).
@@ -82,34 +111,27 @@ function resolveEmail(user) {
 // ---------------------------------------------------------------------------
 
 /**
- * Sign in via GitHub OAuth using Supabase Auth.
- * Redirects the user to GitHub's authorization page.
- * @param {string} [redirectTo] — URL to return to after login (defaults to admin root)
- * @returns {Promise<{ success: boolean, message?: string }>}
+ * OAuth login (GitHub/Google/Microsoft).
+ * @param {'github'|'google'|'azure'} provider
+ * @param {string} [redirectTo]
  */
-export async function loginWithGitHub(redirectTo) {
+export async function loginWithOAuth(provider, redirectTo) {
   const sb = await ensureClient();
   if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
 
-  // Default redirect: go to admin root (one level up from /login/)
-  const target =
-    redirectTo || window.location.origin + window.location.pathname.replace(/\/login\/?$/, '/');
-
+  const target = redirectTo || buildRedirect();
   try {
     const { error } = await sb.auth.signInWithOAuth({
-      provider: 'github',
+      provider,
       options: {
         redirectTo: target,
-        scopes: 'user:email',
+        scopes: provider === 'github' ? 'user:email' : undefined,
       },
     });
-
-    if (error) {
-      return { success: false, message: error.message || 'GitHub login failed.' };
-    }
+    if (error) return { success: false, message: error.message || 'OAuth login failed.' };
     return { success: true };
   } catch (err) {
-    if (err?.message?.includes('fetch') || err?.message?.includes('network')) {
+    if (err?.message?.toLowerCase().includes('network')) {
       return { success: false, message: 'Network error — cannot reach Supabase. Check your connection.' };
     }
     return { success: false, message: err?.message || 'An unexpected error occurred.' };
@@ -117,8 +139,120 @@ export async function loginWithGitHub(redirectTo) {
 }
 
 /**
+ * GitHub convenience wrapper.
+ */
+export async function loginWithGitHub(redirectTo) {
+  return loginWithOAuth('github', redirectTo);
+}
+
+/**
+ * Magic link login (email).
+ */
+export async function loginWithMagicLink(email, redirectTo) {
+  const sb = await ensureClient();
+  if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
+  if (!email) return { success: false, message: 'Email is required.' };
+
+  const target = redirectTo || buildRedirect();
+  const { error } = await sb.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: target, shouldCreateUser: false },
+  });
+  if (error) return { success: false, message: error.message || 'Could not send magic link.' };
+  return { success: true };
+}
+
+/**
+ * Email/password login.
+ */
+export async function loginWithPassword(email, password) {
+  const sb = await ensureClient();
+  if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
+  if (!email || !password) return { success: false, message: 'Email and password are required.' };
+
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) return { success: false, message: error.message || 'Invalid credentials.' };
+  return { success: true };
+}
+
+/**
+ * Send phone OTP (restricted to +971).
+ */
+export async function sendPhoneOtp(phone) {
+  const sb = await ensureClient();
+  if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
+  if (!phone || !phone.startsWith('+971')) {
+    return { success: false, message: 'Phone must start with +971.' };
+  }
+  const { error } = await sb.auth.signInWithOtp({ phone, options: { channel: 'sms' } });
+  if (error) return { success: false, message: error.message || 'Could not send OTP.' };
+  return { success: true };
+}
+
+/**
+ * Verify phone OTP.
+ */
+export async function verifyPhoneOtp({ phone, token }) {
+  const sb = await ensureClient();
+  if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
+  if (!phone || !token) return { success: false, message: 'Phone and code are required.' };
+  const { error } = await sb.auth.verifyOtp({ phone, token, type: 'sms' });
+  if (error) return { success: false, message: error.message || 'Invalid or expired code.' };
+  return { success: true };
+}
+
+/**
+ * TOTP enrollment.
+ */
+export async function enrollTotp() {
+  const sb = await ensureClient();
+  if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
+  const { data, error } = await sb.auth.mfa.enroll({ factorType: 'totp' });
+  if (error) return { success: false, message: error.message || 'Could not start TOTP enrollment.' };
+  return { success: true, data };
+}
+
+/**
+ * Verify TOTP code for a given factor.
+ * @param {{ factorId: string, code: string }} params
+ */
+export async function verifyTotp({ factorId, code }) {
+  const sb = await ensureClient();
+  if (!sb) return { success: false, message: 'Supabase client not loaded. Please refresh the page.' };
+  if (!factorId || !code) return { success: false, message: 'Code is required.' };
+
+  const challenge = await sb.auth.mfa.challenge({ factorId });
+  if (challenge.error) {
+    return { success: false, message: challenge.error.message || 'Could not start verification.' };
+  }
+
+  const verify = await sb.auth.mfa.verify({
+    factorId,
+    challengeId: challenge.data.id,
+    code,
+  });
+
+  if (verify.error) {
+    return { success: false, message: verify.error.message || 'Invalid TOTP code.' };
+  }
+
+  return { success: true };
+}
+
+/**
+ * Get the first enrolled TOTP factor id (if any).
+ */
+export async function getTotpFactorId() {
+  const sb = await ensureClient();
+  if (!sb) return null;
+  const res = await sb.auth.mfa.listFactors();
+  if (res.error) return null;
+  const factor = res.data?.totp?.find(Boolean);
+  return factor?.id || null;
+}
+
+/**
  * Legacy login stub — kept for backward compatibility.
- * GitHub OAuth is the primary method; email/password is no longer used.
  */
 export async function login() {
   return loginWithGitHub();
@@ -178,21 +312,41 @@ export async function getUserEmail() {
   return resolveEmail(session.user);
 }
 
+async function fetchAdminStatus() {
+  const sb = await ensureClient();
+  if (!sb) return { ok: false };
+  try {
+    const { data, error } = await sb.functions.invoke('admin-guard', {
+      body: {},
+    });
+    if (error) return { ok: false, error };
+    return { ok: true, data };
+  } catch (err) {
+    return { ok: false, error: err };
+  }
+}
+
 /**
- * Check if the current session belongs to the allowed admin email.
- * Uses resolveEmail() to handle private GitHub emails.
- * @returns {Promise<boolean>}
+ * Check if the current session belongs to an admin (server-side edge function preferred).
+ * Falls back to ALLOWED_EMAIL if the edge function is unavailable.
  */
 export async function isAdminUser() {
   const session = await getSession();
   if (!session) return false;
+
+  // Prefer server-side verdict
+  const status = await fetchAdminStatus();
+  if (status.ok && status.data) {
+    return Boolean(status.data.isAdmin);
+  }
+
+  // Fallback: client hint
   const email = resolveEmail(session.user);
   return email === ALLOWED_EMAIL;
 }
 
 /**
- * Check if user is authenticated AND is the allowed admin.
- * @returns {Promise<boolean>}
+ * Check if user is authenticated AND is admin.
  */
 export async function isAuthenticated() {
   return await isAdminUser();
@@ -215,7 +369,7 @@ export function hasStoredSession() {
 }
 
 /**
- * Async auth guard — redirects to login if no session or wrong email.
+ * Async auth guard — redirects to login if no session or not admin.
  * Call this at the top of every admin page module.
  * @param {string} [redirectTo='../login/']
  */
@@ -226,13 +380,25 @@ export async function requireAuth(redirectTo = '../login/') {
     return false;
   }
 
+  const status = await fetchAdminStatus();
+  if (status.ok && status.data) {
+    if (!status.data.isAdmin) {
+      await logout();
+      window.location.replace(redirectTo);
+      return false;
+    }
+    // If MFA required but not satisfied, let caller prompt.
+    return true;
+  }
+
+  // Fallback to client email check to avoid locking out if edge function is down
   const email = resolveEmail(session.user);
   if (email !== ALLOWED_EMAIL) {
-    // If logged in with the wrong account, sign them out first
     await logout();
     window.location.replace(redirectTo);
     return false;
   }
+
   return true;
 }
 
@@ -264,3 +430,6 @@ export async function getSupabaseAsync() {
  * @returns {string|null}
  */
 export { resolveEmail };
+
+// Expose admin base helper for login page
+export const ADMIN_BASE = { get: getAdminBaseUrl, buildRedirect };

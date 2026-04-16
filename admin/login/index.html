@@ -343,6 +343,43 @@
       .login-card.shake {
         animation: shake 0.45s ease both;
       }
+
+      /* ── Tabs & forms ───────────────────────────────────── */
+      .tab-list {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 6px;
+        margin-bottom: 16px;
+      }
+      .tab-btn {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-muted);
+        cursor: pointer;
+        padding: 10px 8px;
+        font-weight: 600;
+        transition: border-color 0.2s, color 0.2s, background 0.2s;
+      }
+      .tab-btn.active {
+        border-color: var(--gold);
+        color: var(--text);
+        background: rgba(245,158,11,0.08);
+      }
+      .tab-panels { margin-bottom: 12px; }
+      .tab-panel { display: none; }
+      .tab-panel.active { display: block; }
+      .stack { display: flex; flex-direction: column; gap: 12px; }
+      .stack-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; }
+      .field { display: flex; flex-direction: column; gap: 6px; color: var(--text-muted); font-size: 0.85rem; }
+      .field input {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        color: var(--text);
+        padding: 10px 12px;
+      }
+      .btn.full { width: 100%; }
     </style>
   </head>
   <body>
@@ -386,24 +423,89 @@
         </div>
         <div class="login-alert login-alert--info" id="login-info" role="status"></div>
 
-        <button type="button" class="btn-github" id="github-login-btn">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-          </svg>
-          Continue with GitHub
-        </button>
+        <div class="tab-list" role="tablist" aria-label="Sign-in methods">
+          <button class="tab-btn active" data-tab="oauth" role="tab" aria-selected="true">OAuth</button>
+          <button class="tab-btn" data-tab="magic" role="tab" aria-selected="false">Magic link</button>
+          <button class="tab-btn" data-tab="password" role="tab" aria-selected="false">Password</button>
+          <button class="tab-btn" data-tab="phone" role="tab" aria-selected="false">Phone OTP</button>
+          <button class="tab-btn" data-tab="mfa" role="tab" aria-selected="false">MFA</button>
+        </div>
+
+        <div class="tab-panels">
+          <section class="tab-panel active" id="tab-oauth" role="tabpanel">
+            <div class="stack">
+              <button type="button" class="btn-github" id="github-login-btn">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+                Continue with GitHub
+              </button>
+              <button type="button" class="btn btn-ghost full" id="google-login-btn">Continue with Google</button>
+              <button type="button" class="btn btn-ghost full" id="ms-login-btn">Continue with Microsoft</button>
+            </div>
+          </section>
+
+          <section class="tab-panel" id="tab-magic" role="tabpanel">
+            <form id="magic-form" class="stack">
+              <label class="field">
+                <span>Email</span>
+                <input type="email" id="magic-email" required autocomplete="email" placeholder="you@example.com" />
+              </label>
+              <button type="submit" class="btn btn-primary full" id="magic-submit">Send magic link</button>
+            </form>
+          </section>
+
+          <section class="tab-panel" id="tab-password" role="tabpanel">
+            <form id="password-form" class="stack">
+              <label class="field">
+                <span>Email</span>
+                <input type="email" id="pw-email" required autocomplete="email" />
+              </label>
+              <label class="field">
+                <span>Password</span>
+                <input type="password" id="pw-password" required autocomplete="current-password" />
+              </label>
+              <button type="submit" class="btn btn-primary full" id="pw-submit">Sign in</button>
+            </form>
+          </section>
+
+          <section class="tab-panel" id="tab-phone" role="tabpanel">
+            <form id="phone-form" class="stack">
+              <label class="field">
+                <span>Phone (+971 only)</span>
+                <input type="tel" id="phone-number" required placeholder="+9715xxxxxxx" />
+              </label>
+              <div class="stack-row">
+                <button type="button" class="btn btn-primary" id="phone-send">Send OTP</button>
+                <input type="text" id="phone-code" placeholder="Enter code" aria-label="OTP code" />
+                <button type="button" class="btn btn-ghost" id="phone-verify">Verify</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="tab-panel" id="tab-mfa" role="tabpanel">
+            <form id="mfa-form" class="stack">
+              <label class="field">
+                <span>TOTP code</span>
+                <input type="text" id="mfa-code" inputmode="numeric" autocomplete="one-time-code" />
+              </label>
+              <button type="submit" class="btn btn-primary full" id="mfa-submit">Verify MFA</button>
+            </form>
+          </section>
+        </div>
 
         <div class="login-spinner" id="login-spinner">
           <span class="spinner-ring" aria-hidden="true"></span>
-          Checking authentication…
+          Working…
         </div>
 
         <hr class="login-divider" />
 
         <div class="login-features">
-          <span class="login-feature-pill">🔒 GitHub OAuth</span>
-          <span class="login-feature-pill">☁️ Supabase auth</span>
-          <span class="login-feature-pill">👤 Admin-only</span>
+          <span class="login-feature-pill">🔒 Multi-provider OAuth</span>
+          <span class="login-feature-pill">📧 Magic link & password</span>
+          <span class="login-feature-pill">📱 +971 phone OTP</span>
+          <span class="login-feature-pill">🔑 TOTP MFA</span>
         </div>
         <p class="login-help">Access restricted to authorised administrators only.</p>
       </div>
@@ -474,10 +576,24 @@
     </script>
 
     <script type="module">
-      import { loginWithGitHub, getSession, logout, resolveEmail } from '../supabase-auth.js';
+      import {
+        ADMIN_BASE,
+        loginWithOAuth,
+        loginWithMagicLink,
+        loginWithPassword,
+        sendPhoneOtp,
+        verifyPhoneOtp,
+        verifyTotp,
+        getTotpFactorId,
+        getSession,
+        logout,
+        resolveEmail,
+      } from '../supabase-auth.js';
       import { ALLOWED_EMAIL } from '../supabase-config.js';
 
-      const githubBtn = document.getElementById('github-login-btn');
+      const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+      const panels = Array.from(document.querySelectorAll('.tab-panel'));
+
       const errorEl = document.getElementById('login-error');
       const deniedEl = document.getElementById('login-denied');
       const offlineEl = document.getElementById('login-offline');
@@ -485,13 +601,34 @@
       const spinnerEl = document.getElementById('login-spinner');
       const cardEl = document.getElementById('login-card');
 
-      const GITHUB_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:20px;height:20px;flex-shrink:0"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>';
+      const githubBtn = document.getElementById('github-login-btn');
+      const googleBtn = document.getElementById('google-login-btn');
+      const msBtn = document.getElementById('ms-login-btn');
+      const magicForm = document.getElementById('magic-form');
+      const magicEmail = document.getElementById('magic-email');
+      const passwordForm = document.getElementById('password-form');
+      const pwEmail = document.getElementById('pw-email');
+      const pwPassword = document.getElementById('pw-password');
+      const phoneForm = document.getElementById('phone-form');
+      const phoneInput = document.getElementById('phone-number');
+      const phoneSend = document.getElementById('phone-send');
+      const phoneCode = document.getElementById('phone-code');
+      const phoneVerify = document.getElementById('phone-verify');
+      const mfaForm = document.getElementById('mfa-form');
+      const mfaCode = document.getElementById('mfa-code');
 
       function triggerShake() {
         cardEl.classList.remove('shake');
-        void cardEl.offsetWidth; // reflow to restart animation
+        void cardEl.offsetWidth;
         cardEl.classList.add('shake');
         cardEl.addEventListener('animationend', () => cardEl.classList.remove('shake'), { once: true });
+      }
+
+      function clearAlerts() {
+        errorEl.classList.remove('visible');
+        deniedEl.classList.remove('visible');
+        offlineEl.classList.remove('visible');
+        infoEl.classList.remove('visible');
       }
 
       function showError(msg) {
@@ -519,31 +656,48 @@
         triggerShake();
       }
 
-      function clearAlerts() {
+      function showInfo(msg) {
+        infoEl.textContent = msg;
+        infoEl.classList.add('visible');
         errorEl.classList.remove('visible');
         deniedEl.classList.remove('visible');
         offlineEl.classList.remove('visible');
-        infoEl.classList.remove('visible');
       }
 
-      function resetButton() {
-        githubBtn.disabled = false;
-        githubBtn.innerHTML = GITHUB_SVG + ' Sign in with GitHub';
+      function setLoading(isLoading, text) {
+        if (isLoading) {
+          spinnerEl.classList.add('visible');
+          spinnerEl.lastChild.textContent = text || 'Working…';
+        } else {
+          spinnerEl.classList.remove('visible');
+        }
       }
+
+      function switchTab(tab) {
+        tabs.forEach(btn => {
+          const active = btn.dataset.tab === tab;
+          btn.classList.toggle('active', active);
+          btn.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach(panel => {
+          panel.classList.toggle('active', panel.id === `tab-${tab}`);
+        });
+      }
+
+      tabs.forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      });
 
       async function checkPostOAuthReturn() {
         const hasHashTokens = window.location.hash &&
           (window.location.hash.includes('access_token') || window.location.hash.includes('error'));
 
         if (hasHashTokens) {
-          spinnerEl.classList.add('visible');
-          githubBtn.disabled = true;
-
+          setLoading(true, 'Finalizing sign-in…');
           const hashParams = new URLSearchParams(window.location.hash.substring(1));
           const hashError = hashParams.get('error_description') || hashParams.get('error');
           if (hashError) {
-            spinnerEl.classList.remove('visible');
-            resetButton();
+            setLoading(false);
             showError(decodeURIComponent(hashError));
             window.history.replaceState(null, '', window.location.pathname);
             return;
@@ -554,63 +708,131 @@
         if (!session) {
           const urlParams = new URLSearchParams(window.location.search);
           const urlError = urlParams.get('error_description') || urlParams.get('error');
-          if (urlError) {
-            showError(decodeURIComponent(urlError));
-          }
+          if (urlError) showError(decodeURIComponent(urlError));
           if (hasHashTokens) {
-            spinnerEl.classList.remove('visible');
-            resetButton();
+            setLoading(false);
             showError('Authentication failed. Please try again.');
             window.history.replaceState(null, '', window.location.pathname);
           }
           return;
         }
 
-        spinnerEl.classList.add('visible');
-        githubBtn.disabled = true;
-
+        setLoading(true, 'Redirecting…');
         const email = resolveEmail(session.user);
-
         if (email === ALLOWED_EMAIL) {
-          window.location.replace('../');
+          window.location.replace(ADMIN_BASE.buildRedirect());
           return;
         }
 
         await logout();
-        spinnerEl.classList.remove('visible');
-        resetButton();
-
+        setLoading(false);
         if (!email) {
-          showError(
-            'Could not read your GitHub email. Make sure your email is not set to private ' +
-            'in GitHub Settings → Emails, or add the allowed email to your GitHub account.'
-          );
+          showError('Could not read your account email. Please retry with a public email.');
         } else {
           showDenied();
         }
-
         if (window.location.hash) {
           window.history.replaceState(null, '', window.location.pathname);
         }
       }
 
-      githubBtn.addEventListener('click', async () => {
+      async function handleOAuth(provider, btn) {
         clearAlerts();
-        githubBtn.disabled = true;
-        githubBtn.innerHTML = '<span class="spinner-ring" style="border-top-color:#fff;display:inline-block;width:16px;height:16px;margin-right:8px;vertical-align:middle"></span> Redirecting to GitHub…';
-
-        const result = await loginWithGitHub();
-
-        if (!result.success) {
-          resetButton();
-
-          if (result.message && (result.message.includes('fetch') || result.message.includes('network') || result.message.includes('Network'))) {
+        btn.disabled = true;
+        setLoading(true, 'Redirecting…');
+        const res = await loginWithOAuth(provider);
+        if (!res.success) {
+          btn.disabled = false;
+          setLoading(false);
+          if (res.message?.toLowerCase().includes('network')) {
             showOffline();
-          } else if (result.message && result.message.includes('provider')) {
-            showError('GitHub login is not configured. Check Supabase Authentication → Providers → GitHub.');
+          } else if (res.message?.includes('provider')) {
+            showError(`${provider} login is not configured in Supabase.`);
           } else {
-            showError(result.message || 'GitHub login failed.');
+            showError(res.message || `${provider} login failed.`);
           }
+        }
+      }
+
+      githubBtn.addEventListener('click', () => handleOAuth('github', githubBtn));
+      googleBtn.addEventListener('click', () => handleOAuth('google', googleBtn));
+      msBtn.addEventListener('click', () => handleOAuth('azure', msBtn));
+
+      magicForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearAlerts();
+        setLoading(true, 'Sending magic link…');
+        const res = await loginWithMagicLink(magicEmail.value.trim());
+        setLoading(false);
+        if (res.success) {
+          showInfo('Magic link sent. Check your inbox.');
+        } else if (res.message?.toLowerCase().includes('network')) {
+          showOffline();
+        } else {
+          showError(res.message || 'Could not send magic link.');
+        }
+      });
+
+      passwordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearAlerts();
+        setLoading(true, 'Signing in…');
+        const res = await loginWithPassword(pwEmail.value.trim(), pwPassword.value);
+        setLoading(false);
+        if (res.success) {
+          window.location.replace(ADMIN_BASE.buildRedirect());
+        } else if (res.message?.toLowerCase().includes('network')) {
+          showOffline();
+        } else {
+          showError(res.message || 'Invalid credentials.');
+        }
+      });
+
+      phoneSend.addEventListener('click', async () => {
+        clearAlerts();
+        setLoading(true, 'Sending code…');
+        const res = await sendPhoneOtp(phoneInput.value.trim());
+        setLoading(false);
+        if (res.success) {
+          showInfo('OTP sent. Enter the code to verify.');
+          switchTab('phone');
+        } else if (res.message?.toLowerCase().includes('network')) {
+          showOffline();
+        } else {
+          showError(res.message || 'Could not send OTP.');
+        }
+      });
+
+      phoneVerify.addEventListener('click', async () => {
+        clearAlerts();
+        setLoading(true, 'Verifying…');
+        const res = await verifyPhoneOtp({ phone: phoneInput.value.trim(), token: phoneCode.value.trim() });
+        setLoading(false);
+        if (res.success) {
+          window.location.replace(ADMIN_BASE.buildRedirect());
+        } else if (res.message?.toLowerCase().includes('network')) {
+          showOffline();
+        } else {
+          showError(res.message || 'Invalid code.');
+        }
+      });
+
+      mfaForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearAlerts();
+        setLoading(true, 'Verifying MFA…');
+        const factorId = await getTotpFactorId();
+        if (!factorId) {
+          setLoading(false);
+          showError('No TOTP factor found. Enroll first in Settings.');
+          return;
+        }
+        const res = await verifyTotp({ factorId, code: mfaCode.value.trim() });
+        setLoading(false);
+        if (res.success) {
+          window.location.replace(ADMIN_BASE.buildRedirect());
+        } else {
+          showError(res.message || 'MFA verification failed.');
         }
       });
 
