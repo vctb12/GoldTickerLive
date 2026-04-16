@@ -19,6 +19,30 @@ RewriteRule ^markets/khan-el-khalili-cairo\.html$ countries/egypt/markets/khan-e
 </IfModule>
 
 # ═══════════════════════════════════════════════════════════════
+# Security Headers
+# ═══════════════════════════════════════════════════════════════
+
+<IfModule mod_headers.c>
+  # Prevent MIME-type sniffing
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Block clickjacking
+  Header always set X-Frame-Options "DENY"
+
+  # Enforce HTTPS (1 year, includeSubDomains)
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+  # Control referrer information
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Restrict browser features the site does not use
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+
+  # Prevent cross-origin information leakage
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+</IfModule>
+
+# ═══════════════════════════════════════════════════════════════
 # Service Worker & Static Assets Caching
 # ═══════════════════════════════════════════════════════════════
 
