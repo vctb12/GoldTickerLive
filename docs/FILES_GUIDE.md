@@ -261,20 +261,20 @@ Each file is the entry point for one HTML page, loaded via `<script type="module
 
 ## Configuration Files
 
-| File                    | Purpose                                                         | When to Edit                                        |
-| ----------------------- | --------------------------------------------------------------- | --------------------------------------------------- |
-| `package.json`          | Dependencies, scripts, metadata                                 | Add dependencies or scripts                         |
-| `vite.config.js`        | Vite build configuration: entry points, chunking, excluded dirs | Change build behavior                               |
-| `eslint.config.mjs`     | ESLint rules                                                    | Change linting rules                                |
-| `.prettierrc.json`      | Prettier formatting rules                                       | Change code formatting                              |
-| `.stylelintrc.json`     | Stylelint CSS rules                                             | Change CSS linting rules                            |
-| `.htaccess`             | Apache redirect rules (legacy → hierarchical URLs)              | Add redirects                                       |
-| `manifest.json`         | PWA manifest (app name, icons, theme)                           | Change PWA settings                                 |
-| `robots.txt`            | Search engine crawl directives                                  | Change crawl rules                                  |
-| `sw.js`                 | Service worker: cache-first for static, network-first for API   | Change offline behavior                             |
-| `sitemap.xml`           | XML sitemap for search engines                                  | Regenerate with `npm run generate-sitemap`          |
-| `feed.xml`              | RSS feed                                                        | Regenerate with `node scripts/node/generate-rss.js` |
-| `playwright.config.yml` | End-to-end test configuration                                   | Change E2E test settings                            |
+| File                   | Purpose                                                         | When to Edit                                        |
+| ---------------------- | --------------------------------------------------------------- | --------------------------------------------------- |
+| `package.json`         | Dependencies, scripts, metadata                                 | Add dependencies or scripts                         |
+| `vite.config.js`       | Vite build configuration: entry points, chunking, excluded dirs | Change build behavior                               |
+| `eslint.config.mjs`    | ESLint rules                                                    | Change linting rules                                |
+| `.prettierrc.json`     | Prettier formatting rules                                       | Change code formatting                              |
+| `.stylelintrc.json`    | Stylelint CSS rules                                             | Change CSS linting rules                            |
+| `.htaccess`            | Apache redirect rules (legacy → hierarchical URLs)              | Add redirects                                       |
+| `manifest.json`        | PWA manifest (app name, icons, theme)                           | Change PWA settings                                 |
+| `robots.txt`           | Search engine crawl directives                                  | Change crawl rules                                  |
+| `sw.js`                | Service worker: cache-first for static, network-first for API   | Change offline behavior                             |
+| `sitemap.xml`          | XML sitemap for search engines                                  | Regenerate with `npm run generate-sitemap`          |
+| `feed.xml`             | RSS feed                                                        | Regenerate with `node scripts/node/generate-rss.js` |
+| `playwright.config.js` | End-to-end test configuration                                   | Change E2E test settings                            |
 
 ---
 

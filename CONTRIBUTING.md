@@ -105,7 +105,7 @@ End-to-end tests use Playwright. To run them locally:
 ```bash
 npx playwright install --with-deps chromium
 npm run build
-npx playwright test --config=playwright.config.yml --project=chromium
+npx playwright test --config=playwright.config.js --project=chromium
 ```
 
 E2E test files live in `tests/e2e/` and follow the `*.spec.js` naming convention.
