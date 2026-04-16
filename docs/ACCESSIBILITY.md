@@ -48,9 +48,10 @@ platform. We aim for WCAG 2.1 Level AA compliance across all pages and component
 
 ```css
 /* ✅ Good contrast examples */
---color-text: #1a1612 on --color-surface: #fff (16.9: 1) --color-gold-dark: #8a6420 on
-  --color-surface: #fff (5.2: 1) /* ⚠️ Needs review */ --color-text-faint: #78685a on
-  --color-surface: #fff (4.4: 1) /* Close to minimum */;
+/* --color-text: #1a1612 on --color-surface: #fff (16.9:1) */
+/* --color-gold-dark: #8a6420 on --color-surface: #fff (5.2:1) */
+/* ⚠️ Needs review */
+/* --color-text-faint: #78685a on --color-surface: #fff (4.4:1) */
 ```
 
 ### Keyboard Navigation
