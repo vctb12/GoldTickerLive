@@ -332,7 +332,7 @@ function _renderCmdResults() {
   const container = document.getElementById('cmd-palette-results');
   if (!container) return;
   if (!filtered.length) {
-    container.innerHTML = `<div class="cmd-palette-empty">No results</div>`;
+    container.innerHTML = '<div class="cmd-palette-empty">No results</div>';
     return;
   }
   container.innerHTML = filtered.map((item, i) =>
