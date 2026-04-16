@@ -21,6 +21,21 @@ function esc(str) {
     .replace(/'/g, '&#39;');
 }
 
+/** Return the URL only if it uses a safe protocol (http/https), otherwise ''. */
+function safeUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return '';
+}
+
+/** Return a tel:-safe phone string (digits, +, -, spaces only). */
+function safeTel(phone) {
+  if (!phone || typeof phone !== 'string') return '';
+  const cleaned = phone.replace(/[^\d+\-() ]/g, '').replace(/\s+/g, '');
+  return cleaned;
+}
+
 /**
  * Mutable shops array — starts with hardcoded fallback data,
  * replaced by Supabase data once it loads.
@@ -400,15 +415,15 @@ function openModal(shop) {
       </button>
       ${
   shop.phone
-    ? `<a href="tel:${esc(shop.phone.replace(/\s+/g, ''))}" class="modal-action-btn modal-action-btn--call" aria-label="${t('callShop')}">
+    ? `<a href="tel:${esc(safeTel(shop.phone))}" class="modal-action-btn modal-action-btn--call" aria-label="${t('callShop')}">
         <span class="modal-action-icon">📞</span>
         <span class="modal-action-label">${t('callShop')}</span>
       </a>`
     : ''
 }
       ${
-  shop.website
-    ? `<a href="${esc(shop.website)}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--website" aria-label="${t('visitWebsite')}">
+  safeUrl(shop.website)
+    ? `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--website" aria-label="${t('visitWebsite')}">
         <span class="modal-action-icon">🌐</span>
         <span class="modal-action-label">${t('visitWebsite')}</span>
       </a>`
@@ -421,7 +436,7 @@ function openModal(shop) {
     shop.phone || shop.website
       ? `<div class="modal-contact">
       ${shop.phone ? `<p><strong>${t('phone')}:</strong> ${esc(shop.phone)}</p>` : ''}
-      ${shop.website ? `<p><a href="${esc(shop.website)}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')} →</a></p>` : ''}
+      ${safeUrl(shop.website) ? `<p><a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')} →</a></p>` : ''}
     </div>`
       : `<p class="modal-no-contact">${t('noContact')}</p>`;
 
@@ -861,9 +876,9 @@ function renderCards(shops) {
 
       const contactParts = [];
       if (shop.phone) contactParts.push(`${t('phone')}: ${esc(shop.phone)}`);
-      if (shop.website) {
+      if (safeUrl(shop.website)) {
         contactParts.push(
-          `<a href="${esc(shop.website)}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')}</a>`
+          `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')}</a>`
         );
       }
 
@@ -923,15 +938,15 @@ function renderCards(shops) {
 }
           ${
   !isCluster && shop.phone
-    ? `<a href="tel:${esc(shop.phone.replace(/\s+/g, ''))}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
+    ? `<a href="tel:${esc(safeTel(shop.phone))}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
             <span class="shop-action-icon">📞</span>
             <span class="shop-action-label">${t('callShop')}</span>
           </a>`
     : ''
 }
           ${
-  !isCluster && shop.website
-    ? `<a href="${esc(shop.website)}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--website" aria-label="${t('visitWebsite')}">
+  !isCluster && safeUrl(shop.website)
+    ? `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--website" aria-label="${t('visitWebsite')}">
             <span class="shop-action-icon">🌐</span>
             <span class="shop-action-label">${t('visitWebsite')}</span>
           </a>`
