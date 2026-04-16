@@ -23,6 +23,10 @@ const CURRENCY_SYMBOLS = {
   GBP: '£',
   EUR: '€',
   INR: '₹',
+  IQD: 'ع.د',
+  YER: 'ر.ي',
+  TRY: '₺',
+  PKR: '₨',
 };
 
 export function formatPrice(amount, currency, decimals = 2) {

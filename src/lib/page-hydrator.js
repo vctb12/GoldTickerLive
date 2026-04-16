@@ -43,10 +43,12 @@ function getLang() {
 function getCountryFromPath() {
   const path = location.pathname.replace(/^\/|\/$/g, '');
   const parts = path.split('/');
-  const countrySlug = parts[0];
-  const citySlug = parts[1];
-  const type = parts[2]; // 'gold-price', 'gold-prices', 'gold-shops', 'gold-rate'
-  const karatSlug = parts[3]; // '22-karat'
+  // Pages live under /countries/{slug}/… — strip the leading 'countries' segment
+  const offset = parts[0] === 'countries' ? 1 : 0;
+  const countrySlug = parts[offset];
+  const citySlug = parts[offset + 1];
+  const type = parts[offset + 2]; // 'gold-price', 'gold-prices', 'gold-shops', 'gold-rate'
+  const karatSlug = parts[offset + 3]; // '22-karat'
   return { countrySlug, citySlug, type, karatSlug, parts };
 }
 

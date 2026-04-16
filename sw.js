@@ -35,6 +35,12 @@ const PRECACHE_URLS = [
   '/countries/algeria/',
   '/countries/libya/',
   '/countries/sudan/',
+  '/countries/iraq/',
+  '/countries/syria/',
+  '/countries/palestine/',
+  '/countries/yemen/',
+  '/countries/turkey/',
+  '/countries/pakistan/',
   // Guides
   '/content/guides/buying-guide.html',
   // Tool pages
