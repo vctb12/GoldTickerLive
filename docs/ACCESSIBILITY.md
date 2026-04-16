@@ -191,7 +191,7 @@ platform. We aim for WCAG 2.1 Level AA compliance across all pages and component
 
 ```css
 .button,
-.link,
+.link-button,
 .interactive {
   min-height: 44px;
   min-width: 44px;
