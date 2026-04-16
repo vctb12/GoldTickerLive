@@ -88,11 +88,11 @@ export function buildSeoMeta(cfg) {
         { name: 'Home', url: `${SITE_URL}/` },
         ...(countrySlug
           ? [
-              {
-                name: `${country} Gold`,
-                url: `${SITE_URL}/countries/${countrySlug}/gold-price/`,
-              },
-            ]
+            {
+              name: `${country} Gold`,
+              url: `${SITE_URL}/countries/${countrySlug}/gold-price/`,
+            },
+          ]
           : []),
         { name: `Gold Shops in ${city || country}`, url: canonical },
       ];
