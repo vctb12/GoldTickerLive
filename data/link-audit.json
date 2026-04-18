@@ -1,0 +1,2736 @@
+{
+  "scanned": 683,
+  "checkedAt": "2026-04-18T13:59:39.803Z",
+  "issues": [
+    {
+      "file": "admin/orders/index.html",
+      "link": "${escHtml(waHref)}",
+      "resolved": "admin/orders/${escHtml(waHref)}"
+    },
+    {
+      "file": "admin/orders/index.html",
+      "link": "${waHref}",
+      "resolved": "admin/orders/${waHref}"
+    },
+    {
+      "file": "content/gold-price-history/index.html",
+      "link": "../manifest.json",
+      "resolved": "content/manifest.json"
+    },
+    {
+      "file": "content/gold-price-history/index.html",
+      "link": "../favicon.svg",
+      "resolved": "content/favicon.svg"
+    },
+    {
+      "file": "content/gold-price-history/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "content/assets/favicon-32x32.png"
+    },
+    {
+      "file": "content/gold-price-history/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "content/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "content/gold-price-history/index.html",
+      "link": "../methodology.html",
+      "resolved": "content/methodology.html"
+    },
+    {
+      "file": "content/guides/24k-vs-22k.html",
+      "link": "../manifest.json",
+      "resolved": "content/manifest.json"
+    },
+    {
+      "file": "content/guides/24k-vs-22k.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "content/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "content/guides/24k-vs-22k.html",
+      "link": "../favicon.svg",
+      "resolved": "content/favicon.svg"
+    },
+    {
+      "file": "content/guides/24k-vs-22k.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "content/assets/favicon-32x32.png"
+    },
+    {
+      "file": "content/guides/24k-vs-22k.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/guides/24k-vs-22k.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/24k-vs-22k.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/guides/24k-vs-22k.html",
+      "link": "../learn.html",
+      "resolved": "content/learn.html"
+    },
+    {
+      "file": "content/guides/aed-peg-explained.html",
+      "link": "../manifest.json",
+      "resolved": "content/manifest.json"
+    },
+    {
+      "file": "content/guides/aed-peg-explained.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "content/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "content/guides/aed-peg-explained.html",
+      "link": "../favicon.svg",
+      "resolved": "content/favicon.svg"
+    },
+    {
+      "file": "content/guides/aed-peg-explained.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "content/assets/favicon-32x32.png"
+    },
+    {
+      "file": "content/guides/aed-peg-explained.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/aed-peg-explained.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/aed-peg-explained.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/guides/aed-peg-explained.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/aed-peg-explained.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/guides/aed-peg-explained.html",
+      "link": "../methodology.html",
+      "resolved": "content/methodology.html"
+    },
+    {
+      "file": "content/guides/aed-peg-explained.html",
+      "link": "../learn.html",
+      "resolved": "content/learn.html"
+    },
+    {
+      "file": "content/guides/aed-peg-explained.html",
+      "link": "../countries/uae.html",
+      "resolved": "content/countries/uae.html"
+    },
+    {
+      "file": "content/guides/buying-guide.html",
+      "link": "../manifest.json",
+      "resolved": "content/manifest.json"
+    },
+    {
+      "file": "content/guides/buying-guide.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "content/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "content/guides/buying-guide.html",
+      "link": "../favicon.svg",
+      "resolved": "content/favicon.svg"
+    },
+    {
+      "file": "content/guides/buying-guide.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "content/assets/favicon-32x32.png"
+    },
+    {
+      "file": "content/guides/buying-guide.html",
+      "link": "../countries/uae/cities/dubai.html",
+      "resolved": "content/countries/uae/cities/dubai.html"
+    },
+    {
+      "file": "content/guides/buying-guide.html",
+      "link": "../countries/uae/markets/dubai-gold-souk.html",
+      "resolved": "content/countries/uae/markets/dubai-gold-souk.html"
+    },
+    {
+      "file": "content/guides/buying-guide.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/buying-guide.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/buying-guide.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/buying-guide.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/guides/buying-guide.html",
+      "link": "../countries/uae/cities/dubai.html",
+      "resolved": "content/countries/uae/cities/dubai.html"
+    },
+    {
+      "file": "content/guides/buying-guide.html",
+      "link": "../countries/uae/markets/dubai-gold-souk.html",
+      "resolved": "content/countries/uae/markets/dubai-gold-souk.html"
+    },
+    {
+      "file": "content/guides/buying-guide.html",
+      "link": "../shops.html",
+      "resolved": "content/shops.html"
+    },
+    {
+      "file": "content/guides/buying-guide.html",
+      "link": "../learn.html",
+      "resolved": "content/learn.html"
+    },
+    {
+      "file": "content/guides/buying-guide.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/guides/gcc-market-hours.html",
+      "link": "../manifest.json",
+      "resolved": "content/manifest.json"
+    },
+    {
+      "file": "content/guides/gcc-market-hours.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "content/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "content/guides/gcc-market-hours.html",
+      "link": "../favicon.svg",
+      "resolved": "content/favicon.svg"
+    },
+    {
+      "file": "content/guides/gcc-market-hours.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "content/assets/favicon-32x32.png"
+    },
+    {
+      "file": "content/guides/gcc-market-hours.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/gcc-market-hours.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/gcc-market-hours.html",
+      "link": "../methodology.html",
+      "resolved": "content/methodology.html"
+    },
+    {
+      "file": "content/guides/gcc-market-hours.html",
+      "link": "../learn.html",
+      "resolved": "content/learn.html"
+    },
+    {
+      "file": "content/guides/gold-karat-comparison.html",
+      "link": "../manifest.json",
+      "resolved": "content/manifest.json"
+    },
+    {
+      "file": "content/guides/gold-karat-comparison.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "content/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "content/guides/gold-karat-comparison.html",
+      "link": "../favicon.svg",
+      "resolved": "content/favicon.svg"
+    },
+    {
+      "file": "content/guides/gold-karat-comparison.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "content/assets/favicon-32x32.png"
+    },
+    {
+      "file": "content/guides/gold-karat-comparison.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/guides/gold-karat-comparison.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/guides/gold-karat-comparison.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/guides/gold-karat-comparison.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/gold-karat-comparison.html",
+      "link": "../learn.html",
+      "resolved": "content/learn.html"
+    },
+    {
+      "file": "content/guides/invest-in-gold-gcc.html",
+      "link": "../manifest.json",
+      "resolved": "content/manifest.json"
+    },
+    {
+      "file": "content/guides/invest-in-gold-gcc.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "content/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "content/guides/invest-in-gold-gcc.html",
+      "link": "../favicon.svg",
+      "resolved": "content/favicon.svg"
+    },
+    {
+      "file": "content/guides/invest-in-gold-gcc.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "content/assets/favicon-32x32.png"
+    },
+    {
+      "file": "content/guides/invest-in-gold-gcc.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/invest-in-gold-gcc.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/guides/invest-in-gold-gcc.html",
+      "link": "../shops.html",
+      "resolved": "content/shops.html"
+    },
+    {
+      "file": "content/guides/invest-in-gold-gcc.html",
+      "link": "../learn.html",
+      "resolved": "content/learn.html"
+    },
+    {
+      "file": "content/guides/invest-in-gold-gcc.html",
+      "link": "../insights.html",
+      "resolved": "content/insights.html"
+    },
+    {
+      "file": "content/guides/zakat-gold-guide.html",
+      "link": "../manifest.json",
+      "resolved": "content/manifest.json"
+    },
+    {
+      "file": "content/guides/zakat-gold-guide.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "content/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "content/guides/zakat-gold-guide.html",
+      "link": "../favicon.svg",
+      "resolved": "content/favicon.svg"
+    },
+    {
+      "file": "content/guides/zakat-gold-guide.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "content/assets/favicon-32x32.png"
+    },
+    {
+      "file": "content/guides/zakat-gold-guide.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/zakat-gold-guide.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/zakat-gold-guide.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/guides/zakat-gold-guide.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/guides/zakat-gold-guide.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/zakat-gold-guide.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/zakat-gold-guide.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/guides/zakat-gold-guide.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/guides/zakat-gold-guide.html",
+      "link": "../learn.html",
+      "resolved": "content/learn.html"
+    },
+    {
+      "file": "content/order-gold/index.html",
+      "link": "../manifest.json",
+      "resolved": "content/manifest.json"
+    },
+    {
+      "file": "content/order-gold/index.html",
+      "link": "../favicon.svg",
+      "resolved": "content/favicon.svg"
+    },
+    {
+      "file": "content/order-gold/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "content/assets/favicon-32x32.png"
+    },
+    {
+      "file": "content/order-gold/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "content/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "content/search/index.html",
+      "link": "../manifest.json",
+      "resolved": "content/manifest.json"
+    },
+    {
+      "file": "content/search/index.html",
+      "link": "../favicon.svg",
+      "resolved": "content/favicon.svg"
+    },
+    {
+      "file": "content/search/index.html",
+      "link": "${resolveUrl(r.url)}",
+      "resolved": "content/search/${resolveUrl(r.url)}"
+    },
+    {
+      "file": "content/social/x-post-generator.html",
+      "link": "../favicon.svg",
+      "resolved": "content/favicon.svg"
+    },
+    {
+      "file": "content/tools/investment-return.html",
+      "link": "../manifest.json",
+      "resolved": "content/manifest.json"
+    },
+    {
+      "file": "content/tools/investment-return.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "content/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "content/tools/investment-return.html",
+      "link": "../favicon.svg",
+      "resolved": "content/favicon.svg"
+    },
+    {
+      "file": "content/tools/investment-return.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "content/assets/favicon-32x32.png"
+    },
+    {
+      "file": "content/tools/investment-return.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/tools/investment-return.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/tools/weight-converter.html",
+      "link": "../manifest.json",
+      "resolved": "content/manifest.json"
+    },
+    {
+      "file": "content/tools/weight-converter.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "content/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "content/tools/weight-converter.html",
+      "link": "../favicon.svg",
+      "resolved": "content/favicon.svg"
+    },
+    {
+      "file": "content/tools/weight-converter.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "content/assets/favicon-32x32.png"
+    },
+    {
+      "file": "content/tools/weight-converter.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/tools/weight-converter.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "content/tools/weight-converter.html",
+      "link": "../learn.html",
+      "resolved": "content/learn.html"
+    },
+    {
+      "file": "content/tools/zakat-calculator.html",
+      "link": "../manifest.json",
+      "resolved": "content/manifest.json"
+    },
+    {
+      "file": "content/tools/zakat-calculator.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "content/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "content/tools/zakat-calculator.html",
+      "link": "../favicon.svg",
+      "resolved": "content/favicon.svg"
+    },
+    {
+      "file": "content/tools/zakat-calculator.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "content/assets/favicon-32x32.png"
+    },
+    {
+      "file": "content/tools/zakat-calculator.html",
+      "link": "../calculator.html",
+      "resolved": "content/calculator.html"
+    },
+    {
+      "file": "content/tools/zakat-calculator.html",
+      "link": "../tracker.html",
+      "resolved": "content/tracker.html"
+    },
+    {
+      "file": "countries/algeria/algiers/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/algiers/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/algiers/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/algiers/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/algiers/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/algiers/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/constantine/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/constantine/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/constantine/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/constantine/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/constantine/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/constantine/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/gold-price/index.html",
+      "link": "../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/index.html",
+      "link": "../manifest.json",
+      "resolved": "countries/manifest.json"
+    },
+    {
+      "file": "countries/algeria/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "countries/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "countries/algeria/index.html",
+      "link": "../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "countries/assets/favicon-32x32.png"
+    },
+    {
+      "file": "countries/algeria/oran/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/oran/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/oran/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/oran/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/oran/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/algeria/oran/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/gold-price/index.html",
+      "link": "../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "countries/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "countries/bahrain/index.html",
+      "link": "../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "countries/assets/favicon-32x32.png"
+    },
+    {
+      "file": "countries/bahrain/manama/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/manama/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/manama/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/manama/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/manama/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/manama/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/muharraq/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/muharraq/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/muharraq/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/muharraq/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/muharraq/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/muharraq/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/rifaa/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/rifaa/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/rifaa/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/rifaa/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/rifaa/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/bahrain/rifaa/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/alexandria/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/alexandria/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/alexandria/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/alexandria/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/alexandria/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/alexandria/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/cairo/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/cairo/gold-prices/index.html",
+      "link": "../../../guides/buying-guide.html",
+      "resolved": "countries/guides/buying-guide.html"
+    },
+    {
+      "file": "countries/egypt/cairo/gold-prices/index.html",
+      "link": "../../../guides/24k-vs-22k.html",
+      "resolved": "countries/guides/24k-vs-22k.html"
+    },
+    {
+      "file": "countries/egypt/cairo/gold-prices/index.html",
+      "link": "../../../guides/gold-karat-comparison.html",
+      "resolved": "countries/guides/gold-karat-comparison.html"
+    },
+    {
+      "file": "countries/egypt/cairo/gold-prices/index.html",
+      "link": "../../../calculator.html",
+      "resolved": "countries/calculator.html"
+    },
+    {
+      "file": "countries/egypt/cairo/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/cairo/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/cairo/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/cairo/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/cairo/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/cities/cairo.html",
+      "link": "../../../guides/buying-guide.html",
+      "resolved": "guides/buying-guide.html"
+    },
+    {
+      "file": "countries/egypt/cities/cairo.html",
+      "link": "../../../countries/egypt.html",
+      "resolved": "countries/egypt.html"
+    },
+    {
+      "file": "countries/egypt/cities/cairo.html",
+      "link": "../../../countries/egypt.html",
+      "resolved": "countries/egypt.html"
+    },
+    {
+      "file": "countries/egypt/cities/cairo.html",
+      "link": "../../../countries/jordan.html",
+      "resolved": "countries/jordan.html"
+    },
+    {
+      "file": "countries/egypt/giza/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/giza/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/giza/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/giza/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/giza/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/giza/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/gold-price/index.html",
+      "link": "../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "countries/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "countries/egypt/index.html",
+      "link": "../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/egypt/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "countries/assets/favicon-32x32.png"
+    },
+    {
+      "file": "countries/egypt/markets/khan-el-khalili-cairo.html",
+      "link": "../../../countries/egypt.html",
+      "resolved": "countries/egypt.html"
+    },
+    {
+      "file": "countries/egypt/markets/khan-el-khalili-cairo.html",
+      "link": "../../../guides/buying-guide.html",
+      "resolved": "guides/buying-guide.html"
+    },
+    {
+      "file": "countries/egypt/markets/khan-el-khalili-cairo.html",
+      "link": "../../../countries/egypt.html",
+      "resolved": "countries/egypt.html"
+    },
+    {
+      "file": "countries/egypt/markets/khan-el-khalili-cairo.html",
+      "link": "../../../guides/buying-guide.html",
+      "resolved": "guides/buying-guide.html"
+    },
+    {
+      "file": "countries/index.html",
+      "link": "../guides/buying-guide.html",
+      "resolved": "guides/buying-guide.html"
+    },
+    {
+      "file": "countries/india/chennai/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/chennai/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/chennai/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/chennai/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/chennai/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/chennai/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/delhi/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/delhi/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/delhi/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/delhi/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/delhi/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/delhi/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/gold-price/index.html",
+      "link": "../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "countries/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "countries/india/index.html",
+      "link": "../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "countries/assets/favicon-32x32.png"
+    },
+    {
+      "file": "countries/india/mumbai/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/mumbai/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/mumbai/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/mumbai/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/mumbai/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/india/mumbai/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/amman/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/amman/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/amman/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/amman/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/amman/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/amman/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/gold-price/index.html",
+      "link": "../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "countries/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "countries/jordan/index.html",
+      "link": "../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "countries/assets/favicon-32x32.png"
+    },
+    {
+      "file": "countries/jordan/irbid/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/irbid/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/irbid/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/irbid/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/irbid/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/irbid/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/zarqa/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/zarqa/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/zarqa/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/zarqa/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/zarqa/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/jordan/zarqa/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/gold-price/index.html",
+      "link": "../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/hawalli/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/hawalli/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/hawalli/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/hawalli/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/hawalli/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/hawalli/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "countries/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "countries/kuwait/index.html",
+      "link": "../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "countries/assets/favicon-32x32.png"
+    },
+    {
+      "file": "countries/kuwait/kuwait-city/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/kuwait-city/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/kuwait-city/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/kuwait-city/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/kuwait-city/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/kuwait-city/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/salmiya/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/salmiya/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/salmiya/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/salmiya/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/salmiya/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/kuwait/salmiya/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/beirut/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/beirut/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/beirut/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/beirut/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/beirut/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/beirut/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/gold-price/index.html",
+      "link": "../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/index.html",
+      "link": "../manifest.json",
+      "resolved": "countries/manifest.json"
+    },
+    {
+      "file": "countries/lebanon/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "countries/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "countries/lebanon/index.html",
+      "link": "../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "countries/assets/favicon-32x32.png"
+    },
+    {
+      "file": "countries/lebanon/sidon/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/sidon/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/sidon/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/sidon/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/sidon/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/sidon/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/tripoli/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/tripoli/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/tripoli/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/tripoli/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/tripoli/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/lebanon/tripoli/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/benghazi/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/benghazi/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/benghazi/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/benghazi/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/benghazi/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/benghazi/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/gold-price/index.html",
+      "link": "../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/index.html",
+      "link": "../manifest.json",
+      "resolved": "countries/manifest.json"
+    },
+    {
+      "file": "countries/libya/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "countries/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "countries/libya/index.html",
+      "link": "../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "countries/assets/favicon-32x32.png"
+    },
+    {
+      "file": "countries/libya/misrata/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/misrata/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/misrata/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/misrata/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/misrata/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/misrata/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/tripoli/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/tripoli/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/tripoli/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/tripoli/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/tripoli/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/libya/tripoli/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/casablanca/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/casablanca/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/casablanca/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/casablanca/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/casablanca/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/casablanca/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/gold-price/index.html",
+      "link": "../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "countries/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "countries/morocco/index.html",
+      "link": "../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "countries/assets/favicon-32x32.png"
+    },
+    {
+      "file": "countries/morocco/marrakech/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/marrakech/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/marrakech/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/marrakech/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/marrakech/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/marrakech/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/rabat/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/rabat/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/rabat/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/rabat/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/rabat/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/morocco/rabat/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/gold-price/index.html",
+      "link": "../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "countries/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "countries/oman/index.html",
+      "link": "../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "countries/assets/favicon-32x32.png"
+    },
+    {
+      "file": "countries/oman/muscat/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/muscat/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/muscat/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/muscat/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/muscat/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/muscat/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/salalah/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/salalah/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/salalah/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/salalah/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/salalah/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/salalah/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/sohar/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/sohar/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/sohar/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/sohar/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/sohar/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/oman/sohar/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/al-rayyan/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/al-rayyan/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/al-rayyan/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/al-rayyan/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/al-rayyan/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/al-rayyan/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/al-wakrah/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/al-wakrah/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/al-wakrah/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/al-wakrah/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/al-wakrah/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/al-wakrah/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/cities/doha.html",
+      "link": "../../../guides/buying-guide.html",
+      "resolved": "guides/buying-guide.html"
+    },
+    {
+      "file": "countries/qatar/cities/doha.html",
+      "link": "../../../countries/qatar.html",
+      "resolved": "countries/qatar.html"
+    },
+    {
+      "file": "countries/qatar/cities/doha.html",
+      "link": "../../../countries/qatar.html",
+      "resolved": "countries/qatar.html"
+    },
+    {
+      "file": "countries/qatar/doha/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/doha/gold-prices/index.html",
+      "link": "../../../guides/buying-guide.html",
+      "resolved": "countries/guides/buying-guide.html"
+    },
+    {
+      "file": "countries/qatar/doha/gold-prices/index.html",
+      "link": "../../../guides/24k-vs-22k.html",
+      "resolved": "countries/guides/24k-vs-22k.html"
+    },
+    {
+      "file": "countries/qatar/doha/gold-prices/index.html",
+      "link": "../../../guides/gold-karat-comparison.html",
+      "resolved": "countries/guides/gold-karat-comparison.html"
+    },
+    {
+      "file": "countries/qatar/doha/gold-prices/index.html",
+      "link": "../../../calculator.html",
+      "resolved": "countries/calculator.html"
+    },
+    {
+      "file": "countries/qatar/doha/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/doha/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/doha/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/doha/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/doha/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/gold-price/index.html",
+      "link": "../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "countries/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "countries/qatar/index.html",
+      "link": "../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/qatar/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "countries/assets/favicon-32x32.png"
+    },
+    {
+      "file": "countries/saudi-arabia/cities/riyadh.html",
+      "link": "../../../guides/buying-guide.html",
+      "resolved": "guides/buying-guide.html"
+    },
+    {
+      "file": "countries/saudi-arabia/cities/riyadh.html",
+      "link": "../../../countries/saudi-arabia.html",
+      "resolved": "countries/saudi-arabia.html"
+    },
+    {
+      "file": "countries/saudi-arabia/cities/riyadh.html",
+      "link": "../../../countries/saudi-arabia.html",
+      "resolved": "countries/saudi-arabia.html"
+    },
+    {
+      "file": "countries/saudi-arabia/dammam/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/dammam/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/dammam/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/dammam/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/dammam/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/dammam/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/gold-price/index.html",
+      "link": "../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "countries/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "countries/saudi-arabia/index.html",
+      "link": "../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "countries/assets/favicon-32x32.png"
+    },
+    {
+      "file": "countries/saudi-arabia/jeddah/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/jeddah/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/jeddah/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/jeddah/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/jeddah/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/jeddah/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/mecca/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/mecca/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/mecca/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/mecca/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/mecca/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/mecca/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/medina/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/medina/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/medina/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/medina/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/medina/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/medina/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/riyadh/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/riyadh/gold-prices/index.html",
+      "link": "../../../guides/buying-guide.html",
+      "resolved": "countries/guides/buying-guide.html"
+    },
+    {
+      "file": "countries/saudi-arabia/riyadh/gold-prices/index.html",
+      "link": "../../../guides/24k-vs-22k.html",
+      "resolved": "countries/guides/24k-vs-22k.html"
+    },
+    {
+      "file": "countries/saudi-arabia/riyadh/gold-prices/index.html",
+      "link": "../../../guides/gold-karat-comparison.html",
+      "resolved": "countries/guides/gold-karat-comparison.html"
+    },
+    {
+      "file": "countries/saudi-arabia/riyadh/gold-prices/index.html",
+      "link": "../../../calculator.html",
+      "resolved": "countries/calculator.html"
+    },
+    {
+      "file": "countries/saudi-arabia/riyadh/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/riyadh/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/riyadh/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/riyadh/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/saudi-arabia/riyadh/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/gold-price/index.html",
+      "link": "../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/index.html",
+      "link": "../manifest.json",
+      "resolved": "countries/manifest.json"
+    },
+    {
+      "file": "countries/sudan/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "countries/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "countries/sudan/index.html",
+      "link": "../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "countries/assets/favicon-32x32.png"
+    },
+    {
+      "file": "countries/sudan/khartoum/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/khartoum/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/khartoum/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/khartoum/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/khartoum/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/khartoum/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/omdurman/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/omdurman/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/omdurman/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/omdurman/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/omdurman/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/omdurman/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/port-sudan/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/port-sudan/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/port-sudan/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/port-sudan/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/port-sudan/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/sudan/port-sudan/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/gold-price/index.html",
+      "link": "../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/index.html",
+      "link": "../manifest.json",
+      "resolved": "countries/manifest.json"
+    },
+    {
+      "file": "countries/tunisia/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "countries/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "countries/tunisia/index.html",
+      "link": "../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "countries/assets/favicon-32x32.png"
+    },
+    {
+      "file": "countries/tunisia/sfax/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/sfax/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/sfax/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/sfax/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/sfax/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/sfax/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/sousse/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/sousse/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/sousse/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/sousse/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/sousse/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/sousse/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/tunis/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/tunis/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/tunis/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/tunis/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/tunis/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/tunisia/tunis/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/abu-dhabi/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/abu-dhabi/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/abu-dhabi/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/abu-dhabi/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/abu-dhabi/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/abu-dhabi/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/ajman/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/ajman/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/ajman/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/ajman/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/ajman/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/ajman/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/cities/abu-dhabi.html",
+      "link": "../../../guides/buying-guide.html",
+      "resolved": "guides/buying-guide.html"
+    },
+    {
+      "file": "countries/uae/cities/abu-dhabi.html",
+      "link": "../../../countries/uae.html",
+      "resolved": "countries/uae.html"
+    },
+    {
+      "file": "countries/uae/cities/dubai.html",
+      "link": "../../../guides/buying-guide.html",
+      "resolved": "guides/buying-guide.html"
+    },
+    {
+      "file": "countries/uae/cities/dubai.html",
+      "link": "../../../countries/uae.html",
+      "resolved": "countries/uae.html"
+    },
+    {
+      "file": "countries/uae/cities/dubai.html",
+      "link": "../../../countries/uae.html",
+      "resolved": "countries/uae.html"
+    },
+    {
+      "file": "countries/uae/dubai/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/dubai/gold-prices/index.html",
+      "link": "../../../guides/buying-guide.html",
+      "resolved": "countries/guides/buying-guide.html"
+    },
+    {
+      "file": "countries/uae/dubai/gold-prices/index.html",
+      "link": "../../../guides/24k-vs-22k.html",
+      "resolved": "countries/guides/24k-vs-22k.html"
+    },
+    {
+      "file": "countries/uae/dubai/gold-prices/index.html",
+      "link": "../../../guides/gold-karat-comparison.html",
+      "resolved": "countries/guides/gold-karat-comparison.html"
+    },
+    {
+      "file": "countries/uae/dubai/gold-prices/index.html",
+      "link": "../../../calculator.html",
+      "resolved": "countries/calculator.html"
+    },
+    {
+      "file": "countries/uae/dubai/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/dubai/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/dubai/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/dubai/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/dubai/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/fujairah/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/fujairah/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/fujairah/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/fujairah/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/fujairah/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/fujairah/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/gold-price/index.html",
+      "link": "../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/index.html",
+      "link": "../manifest.json",
+      "resolved": "countries/manifest.json"
+    },
+    {
+      "file": "countries/uae/index.html",
+      "link": "../assets/apple-touch-icon.png",
+      "resolved": "countries/assets/apple-touch-icon.png"
+    },
+    {
+      "file": "countries/uae/index.html",
+      "link": "../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/index.html",
+      "link": "../assets/favicon-32x32.png",
+      "resolved": "countries/assets/favicon-32x32.png"
+    },
+    {
+      "file": "countries/uae/index.html",
+      "link": "../calculator.html",
+      "resolved": "countries/calculator.html"
+    },
+    {
+      "file": "countries/uae/index.html",
+      "link": "../tracker.html",
+      "resolved": "countries/tracker.html"
+    },
+    {
+      "file": "countries/uae/index.html",
+      "link": "../learn.html",
+      "resolved": "countries/learn.html"
+    },
+    {
+      "file": "countries/uae/index.html",
+      "link": "../methodology.html",
+      "resolved": "countries/methodology.html"
+    },
+    {
+      "file": "countries/uae/markets/dubai-gold-souk.html",
+      "link": "../../../countries/uae.html",
+      "resolved": "countries/uae.html"
+    },
+    {
+      "file": "countries/uae/markets/dubai-gold-souk.html",
+      "link": "../../../guides/buying-guide.html",
+      "resolved": "guides/buying-guide.html"
+    },
+    {
+      "file": "countries/uae/markets/dubai-gold-souk.html",
+      "link": "../../../countries/uae.html",
+      "resolved": "countries/uae.html"
+    },
+    {
+      "file": "countries/uae/markets/dubai-gold-souk.html",
+      "link": "../../../guides/buying-guide.html",
+      "resolved": "guides/buying-guide.html"
+    },
+    {
+      "file": "countries/uae/ras-al-khaimah/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/ras-al-khaimah/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/ras-al-khaimah/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/ras-al-khaimah/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/ras-al-khaimah/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/ras-al-khaimah/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/sharjah/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/sharjah/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/sharjah/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/sharjah/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/sharjah/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/sharjah/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/umm-al-quwain/gold-prices/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/umm-al-quwain/gold-rate/18-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/umm-al-quwain/gold-rate/21-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/umm-al-quwain/gold-rate/22-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/umm-al-quwain/gold-rate/24-karat/index.html",
+      "link": "../../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "countries/uae/umm-al-quwain/gold-shops/index.html",
+      "link": "../../../favicon.svg",
+      "resolved": "countries/favicon.svg"
+    },
+    {
+      "file": "index.html",
+      "link": "countries/uae.html",
+      "resolved": "countries/uae.html"
+    },
+    {
+      "file": "index.html",
+      "link": "countries/uae.html",
+      "resolved": "countries/uae.html"
+    },
+    {
+      "file": "index.html",
+      "link": "countries/saudi-arabia.html",
+      "resolved": "countries/saudi-arabia.html"
+    },
+    {
+      "file": "index.html",
+      "link": "countries/kuwait.html",
+      "resolved": "countries/kuwait.html"
+    },
+    {
+      "file": "index.html",
+      "link": "countries/qatar.html",
+      "resolved": "countries/qatar.html"
+    },
+    {
+      "file": "index.html",
+      "link": "countries/bahrain.html",
+      "resolved": "countries/bahrain.html"
+    },
+    {
+      "file": "index.html",
+      "link": "countries/oman.html",
+      "resolved": "countries/oman.html"
+    },
+    {
+      "file": "index.html",
+      "link": "countries/egypt.html",
+      "resolved": "countries/egypt.html"
+    },
+    {
+      "file": "index.html",
+      "link": "countries/jordan.html",
+      "resolved": "countries/jordan.html"
+    },
+    {
+      "file": "index.html",
+      "link": "countries/morocco.html",
+      "resolved": "countries/morocco.html"
+    },
+    {
+      "file": "index.html",
+      "link": "countries/india.html",
+      "resolved": "countries/india.html"
+    },
+    {
+      "file": "index.html",
+      "link": "countries/uae.html",
+      "resolved": "countries/uae.html"
+    },
+    {
+      "file": "insights.html",
+      "link": "guides/aed-peg-explained.html",
+      "resolved": "guides/aed-peg-explained.html"
+    },
+    {
+      "file": "insights.html",
+      "link": "guides/24k-vs-22k.html",
+      "resolved": "guides/24k-vs-22k.html"
+    },
+    {
+      "file": "insights.html",
+      "link": "guides/gcc-market-hours.html",
+      "resolved": "guides/gcc-market-hours.html"
+    },
+    {
+      "file": "insights.html",
+      "link": "countries/uae.html",
+      "resolved": "countries/uae.html"
+    },
+    {
+      "file": "learn.html",
+      "link": "countries/uae.html",
+      "resolved": "countries/uae.html"
+    },
+    {
+      "file": "methodology.html",
+      "link": "countries/uae.html",
+      "resolved": "countries/uae.html"
+    },
+    {
+      "file": "shops.html",
+      "link": "countries/uae.html",
+      "resolved": "countries/uae.html"
+    },
+    {
+      "file": "shops.html",
+      "link": "guides/buying-guide.html",
+      "resolved": "guides/buying-guide.html"
+    },
+    {
+      "file": "shops.html",
+      "link": "guides/24k-vs-22k.html",
+      "resolved": "guides/24k-vs-22k.html"
+    },
+    {
+      "file": "shops.html",
+      "link": "guides/gold-karat-comparison.html",
+      "resolved": "guides/gold-karat-comparison.html"
+    }
+  ]
+}
