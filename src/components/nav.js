@@ -37,6 +37,16 @@ function escapeHtml(str) {
  * @param {number} depth — 0 = root, 1 = one dir deep, 2 = two dirs deep, etc.
  */
 function resolveHref(href, depth) {
+  // If href is absolute (starts with '/'), return it as-is.
+  if (href.startsWith('/')) return href;
+
+  // If the href is already root-relative without leading slash, normalize it.
+  if (href.startsWith('./')) {
+    const stripped = href.replace(/^\.\//, '');
+    return depth === 0 ? stripped : '../'.repeat(depth) + stripped;
+  }
+
+  // Default: treat '../' segments as relative to current depth.
   const stripped = href.replace(/^\.\.\//, '');
   if (depth === 0) return stripped;
   return '../'.repeat(depth) + stripped;
@@ -47,18 +57,14 @@ function resolveHref(href, depth) {
  * Hash anchors on the same file count as a match for the base file.
  */
 function isPageMatch(href) {
-  const path = location.pathname;
-  // Strip hash / query to get the base file name
-  const base = href
-    .split('#')[0]
-    .split('?')[0]
-    .replace(/^\.\.\//, '')
-    .replace(/\.html$/, '');
-
-  if (base === 'index') {
-    return path === '/' || path.endsWith('/index.html') || path.endsWith('/');
-  }
-  return path.includes(base);
+  const loc = location.pathname;
+  const base = href.split('#')[0].split('?')[0];
+  // Normalize leading ../ or ./ and leading slash
+  let norm = base.replace(/^\.\.\//, '').replace(/^\.\//, '');
+  if (!norm.startsWith('/')) norm = (norm === 'index.html' ? '/index.html' : '/' + norm);
+  // Remove trailing index.html for comparison
+  const cmp = norm.replace(/index\.html$/, '');
+  return loc === cmp || loc.startsWith(cmp);
 }
 
 /** True if any item in the group matches the current page. */

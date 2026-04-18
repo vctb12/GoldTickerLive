@@ -1,6 +1,47 @@
 name: CI
 
 on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linters and format checks
+        run: npm run quality
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Run link-check
+        run: node scripts/node/check-links.js --dir dist --fail-on-error
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+name: CI
+
+on:
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -34,6 +75,22 @@ jobs:
 
       - name: Production build
         run: NODE_ENV=production npm run build
+
+      - name: Run SEO audit
+        run: npm run seo-audit
+
+      - name: Run accessibility (pa11y)
+        run: |
+          cd dist && python3 -m http.server 8080 &
+          sleep 2
+          npx pa11y-ci --config ../.pa11yci.js --reporter html --output pa11y-report.html || true
+
+      - name: Upload pa11y report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pa11y-report
+          path: dist/pa11y-report.html
 
       - name: Verify dist output
         run: |

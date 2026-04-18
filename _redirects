@@ -1,0 +1,7 @@
+/*    /index.html   200
+/admin /admin/ 301
+/admin/*  /admin/:splat  200
+
+# Common legacy redirects
+/old-shops    /shops.html   301
+/old-tracker  /tracker.html 301

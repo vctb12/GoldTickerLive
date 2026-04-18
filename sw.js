@@ -107,6 +107,14 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// Allow clients to trigger an update (e.g., from the page when a new SW is available)
+self.addEventListener('message', (event) => {
+  if (!event.data) return;
+  if (event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
 // ─────────────────────────────────────────────────────────────────────────────
 // FETCH — routing strategy
 // ─────────────────────────────────────────────────────────────────────────────

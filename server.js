@@ -8,6 +8,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
+const fs = require('fs');
 const { errorHandler } = require('./server/lib/errors');
 
 const app = express();
@@ -130,22 +131,33 @@ app.get('/admin', (req, res) => {
   res.redirect(301, '/admin/');
 });
 
-// Handle SPA routing for country pages and other nested routes
-app.get('/{*path}', (req, res, next) => {
-  const filePath = path.join(__dirname, 'dist', req.path);
+// Handle static file serving and SPA fallback with explicit 404 handling
+app.get('*', (req, res, next) => {
+  // Normalize and prevent path traversal
+  const safePath = path.normalize(req.path).replace(/^\/+/, '');
+  const filePath = path.join(__dirname, 'dist', safePath);
 
-  // If the path is a file, serve it
+  // If the request targets a static file extension, try to serve it and
+  // fall back to the 404 page when missing.
   if (path.extname(req.path)) {
-    return res.sendFile(filePath, (err) => {
-      if (err) {
-        res.status(404).json({ error: 'File not found' });
-      }
-    });
+    if (fs.existsSync(filePath)) {
+      return res.sendFile(filePath);
+    }
+    return res.status(404).sendFile(path.join(__dirname, 'dist', '404.html'));
   }
 
-  // Otherwise, try to serve index.html for SPA routing
+  // If path is a directory-like request (no extension), prefer index.html
+  const indexCandidate = path.join(filePath, 'index.html');
+  if (fs.existsSync(indexCandidate)) {
+    return res.sendFile(indexCandidate);
+  }
+
+  // SPA fallback: if `dist/index.html` exists, serve it so client-side routes load.
   const indexPath = path.join(__dirname, 'dist', 'index.html');
-  res.sendFile(indexPath);
+  if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
+
+  // Last resort: serve 404 page.
+  return res.status(404).sendFile(path.join(__dirname, 'dist', '404.html'));
 });
 
 // Centralized error handling middleware (must be last)
