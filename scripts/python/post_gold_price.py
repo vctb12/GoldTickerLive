@@ -6,7 +6,6 @@ Fetches live gold price from GoldAPI (goldapi.io) and posts to X / Twitter
 using tweepy. Includes AED conversion for UAE-focused audience.
 
 Required environment variables (set as GitHub Secrets):
-  GOLD_API_KEY              – goldapi.io API key
   TWITTER_API_KEY           – X Developer Portal: API Key (Consumer Key)
   TWITTER_API_SECRET        – X Developer Portal: API Key Secret
   TWITTER_ACCESS_TOKEN      – X Developer Portal: Access Token (read-write)
@@ -24,10 +23,9 @@ from datetime import datetime, timezone, timedelta
 
 # ── Config ────────────────────────────────────────────────────────────────────
 AED_RATE = 3.6725  # UAE Dirham is pegged to USD
-SITE_URL  = "https://vctb12.github.io/Gold-Prices/"
+SITE_URL  = "https://goldtickerlive.com/"
 UAE_TZ    = timezone(timedelta(hours=4))
 
-GOLD_API_KEY = os.environ.get('GOLD_API_KEY', '')
 TWITTER_API_KEY = os.environ.get('TWITTER_API_KEY', '')
 TWITTER_API_SECRET = os.environ.get('TWITTER_API_SECRET', '')
 TWITTER_ACCESS_TOKEN = os.environ.get('TWITTER_ACCESS_TOKEN', '')
@@ -36,15 +34,28 @@ TWITTER_ACCESS_TOKEN_SECRET = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET', '')
 
 # ── Step 1: Fetch gold price ─────────────────────────────────────────────────
 def get_gold_price():
-    """Fetch XAU/USD from goldapi.io. Returns the JSON response dict."""
-    url = "https://www.goldapi.io/api/XAU/USD"
-    headers = {
-        "x-access-token": GOLD_API_KEY,
-        "Content-Type": "application/json",
-    }
-    response = requests.get(url, headers=headers, timeout=15)
+    """Fetch XAU from gold-api.com and convert it into your script's expected shape."""
+    url = "https://api.gold-api.com/price/XAU"
+    response = requests.get(url, timeout=15)
     response.raise_for_status()
-    return response.json()
+    raw = response.json()
+
+    price = float(raw["price"])  # USD per troy ounce
+
+    ounce_to_gram = 31.1034768
+    g24 = price / ounce_to_gram
+    g22 = g24 * (22 / 24)
+    g21 = g24 * (21 / 24)
+    g18 = g24 * (18 / 24)
+
+    return {
+        "price": price,
+        "price_gram_24k": g24,
+        "price_gram_22k": g22,
+        "price_gram_21k": g21,
+        "price_gram_18k": g18,
+        "chp": None,
+    }
 
 
 # ── Step 2: Format the tweet ─────────────────────────────────────────────────
@@ -191,7 +202,6 @@ def main():
     # Check for required secrets
     missing = []
     for name, value in [
-        ('GOLD_API_KEY', GOLD_API_KEY),
         ('TWITTER_API_KEY', TWITTER_API_KEY),
         ('TWITTER_API_SECRET', TWITTER_API_SECRET),
         ('TWITTER_ACCESS_TOKEN', TWITTER_ACCESS_TOKEN),
@@ -208,7 +218,7 @@ def main():
         sys.exit(0)  # Exit 0 so the workflow doesn't report as failed
 
     # Fetch gold price
-    print("📡 Fetching gold price from goldapi.io…")
+    print("📡 Fetching gold price from gold-api.com…")
     data = get_gold_price()
     print(f"   Spot: ${data['price']:,.2f}/oz")
 
