@@ -1,0 +1,36 @@
+name: Lighthouse CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build
+
+      - name: Start preview server
+        run: |
+          nohup npm run preview -- --port 4173 > /tmp/preview.log 2>&1 &
+          sleep 5
+
+      - name: Install LHCI
+        run: npm install -g @lhci/cli@0.11
+
+      - name: Run LHCI autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx @lhci/cli autorun --collect.url=http://localhost:4173 --upload.target=temporary-public-storage
