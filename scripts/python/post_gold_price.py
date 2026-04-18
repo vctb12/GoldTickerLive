@@ -59,7 +59,7 @@ def get_gold_price():
     previous_price = _load_last_price()
     chp = None
     if previous_price and previous_price > 0:
-    chp = ((price - previous_price) / previous_price) * 100
+      chp = ((price - previous_price) / previous_price) * 100
 
     ounce_to_gram = 31.1034768
     g24 = price / ounce_to_gram
