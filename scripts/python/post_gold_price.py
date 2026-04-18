@@ -19,12 +19,15 @@ Workflow cron schedule (.github/workflows/post_gold.yml):
 import os
 import sys
 import requests
+import json
+from pathlib import Path
 from datetime import datetime, timezone, timedelta
 
 # ── Config ────────────────────────────────────────────────────────────────────
 AED_RATE = 3.6725  # UAE Dirham is pegged to USD
 SITE_URL  = "https://goldtickerlive.com/"
 UAE_TZ    = timezone(timedelta(hours=4))
+STATE_FILE = Path("data/last_gold_price.json")
 
 TWITTER_API_KEY = os.environ.get('TWITTER_API_KEY', '')
 TWITTER_API_SECRET = os.environ.get('TWITTER_API_SECRET', '')
@@ -33,6 +36,18 @@ TWITTER_ACCESS_TOKEN_SECRET = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET', '')
 
 
 # ── Step 1: Fetch gold price ─────────────────────────────────────────────────
+def _load_last_price():
+    if not STATE_FILE.exists():
+        return None
+    try:
+        return json.loads(STATE_FILE.read_text()).get("price")
+    except Exception:
+        return None
+
+def _save_last_price(price):
+    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    STATE_FILE.write_text(json.dumps({"price": price}))
+  
 def get_gold_price():
     """Fetch XAU from gold-api.com and convert it into your script's expected shape."""
     url = "https://api.gold-api.com/price/XAU"
@@ -41,6 +56,10 @@ def get_gold_price():
     raw = response.json()
 
     price = float(raw["price"])  # USD per troy ounce
+    previous_price = _load_last_price()
+    chp = None
+    if previous_price and previous_price > 0:
+    chp = ((price - previous_price) / previous_price) * 100
 
     ounce_to_gram = 31.1034768
     g24 = price / ounce_to_gram
@@ -54,7 +73,7 @@ def get_gold_price():
         "price_gram_22k": g22,
         "price_gram_21k": g21,
         "price_gram_18k": g18,
-        "chp": None,
+        "chp": chp,
     }
 
 
@@ -230,6 +249,7 @@ def main():
 
     # Post
     post_tweet(tweet)
+    _save_last_price(data["price"])
 
 
 if __name__ == '__main__':
