@@ -1,6 +1,7 @@
 # Revamp Plan — 30 Phases
 
-This document enumerates the 30 phased changes for the full-site revamp and 404 elimination. Each phase is intended to be a single commit in the big PR `revamp/404-hardening`.
+This document enumerates the 30 phased changes for the full-site revamp and 404 elimination. Each
+phase is intended to be a single commit in the big PR `revamp/404-hardening`.
 
 Phases (commit message prefix `phx/NN:`):
 

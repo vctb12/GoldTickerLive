@@ -1,10 +1,19 @@
 export default [
   {
-    ignores: ['dist/**', 'node_modules/**', 'coverage/**', '**/*.min.js', 'package-lock.json'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'coverage/**',
+      '**/*.min.js',
+      'package-lock.json',
+      // Uses import-attribute syntax (`assert { type: 'json' }`) which espree
+      // does not yet parse. The file is served as-is to modern browsers.
+      'src/lib/historical-data.js',
+    ],
   },
   {
     languageOptions: {
-      ecmaVersion: 2022,
+      ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
         window: 'readonly',

@@ -20,7 +20,10 @@ function summarize() {
   }
   walk(DIST);
   if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
-  fs.writeFileSync(path.join(OUT_DIR, 'release-manifest.json'), JSON.stringify({ files, generatedAt: new Date().toISOString() }, null, 2));
+  fs.writeFileSync(
+    path.join(OUT_DIR, 'release-manifest.json'),
+    JSON.stringify({ files, generatedAt: new Date().toISOString() }, null, 2)
+  );
   console.log('Wrote release/release-manifest.json');
 }
 

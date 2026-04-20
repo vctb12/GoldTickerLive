@@ -1,6 +1,6 @@
-#!/bin/sh
-. "/usr/bin/env bash"
+#!/usr/bin/env sh
 
-# Run lint-staged to check and fix staged files before commit
+# Husky v9 pre-commit hook.
+# Runs lint-staged on staged files only. Full test suite runs in CI, not here,
+# to keep local commits fast and unblock work-in-progress branches.
 npx --no-install lint-staged
-npm test

@@ -5,7 +5,10 @@ const assert = require('node:assert/strict');
 const baseline = JSON.parse(fs.readFileSync('src/data/historical-baseline.json', 'utf8'));
 
 function toChartData(records) {
-  return records.map((r) => ({ time: r.date.length === 7 ? `${r.date}-01` : r.date, value: r.price }));
+  return records.map((r) => ({
+    time: r.date.length === 7 ? `${r.date}-01` : r.date,
+    value: r.price,
+  }));
 }
 
 function filterByRange(records, range) {
@@ -58,19 +61,26 @@ describe('historical-data (inline helpers)', () => {
   });
 
   test('filterByRange returns an array', () => {
-    const records = baseline.map((r) => ({ date: r.date.length === 7 ? `${r.date}-01` : r.date, price: r.price }));
+    const records = baseline.map((r) => ({
+      date: r.date.length === 7 ? `${r.date}-01` : r.date,
+      price: r.price,
+    }));
     const out = filterByRange(records, '30D');
     assert.ok(Array.isArray(out));
   });
 
   test('computeYoYChange returns number or null', () => {
-    const recs = baseline.slice(-14).map((r) => ({ date: r.date.length === 7 ? `${r.date}-01` : r.date, price: r.price }));
+    const recs = baseline
+      .slice(-14)
+      .map((r) => ({ date: r.date.length === 7 ? `${r.date}-01` : r.date, price: r.price }));
     const val = computeYoYChange(recs);
     if (val !== null) assert.equal(typeof val, 'number');
   });
 
   test('getHistoryStats returns stats keys', () => {
-    const recs = baseline.slice(0, 12).map((r) => ({ date: r.date.length === 7 ? `${r.date}-01` : r.date, price: r.price }));
+    const recs = baseline
+      .slice(0, 12)
+      .map((r) => ({ date: r.date.length === 7 ? `${r.date}-01` : r.date, price: r.price }));
     const s = getHistoryStats(recs);
     assert.ok('allTimeHigh' in s && 'latest' in s);
   });

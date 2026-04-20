@@ -61,7 +61,7 @@ function isPageMatch(href) {
   const base = href.split('#')[0].split('?')[0];
   // Normalize leading ../ or ./ and leading slash
   let norm = base.replace(/^\.\.\//, '').replace(/^\.\//, '');
-  if (!norm.startsWith('/')) norm = (norm === 'index.html' ? '/index.html' : '/' + norm);
+  if (!norm.startsWith('/')) norm = norm === 'index.html' ? '/index.html' : '/' + norm;
   // Remove trailing index.html for comparison
   const cmp = norm.replace(/index\.html$/, '');
   return loc === cmp || loc.startsWith(cmp);

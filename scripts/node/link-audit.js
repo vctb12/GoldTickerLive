@@ -11,11 +11,11 @@ const path = require('path');
 const args = process.argv.slice(2);
 const rootArg = (() => {
   const i = args.indexOf('--root');
-  return i >= 0 ? path.resolve(args[i+1]) : path.resolve(__dirname, '../');
+  return i >= 0 ? path.resolve(args[i + 1]) : path.resolve(__dirname, '../');
 })();
 const outArg = (() => {
   const i = args.indexOf('--out');
-  return i >= 0 ? path.resolve(args[i+1]) : path.join(rootArg, 'data', 'link-audit.json');
+  return i >= 0 ? path.resolve(args[i + 1]) : path.join(rootArg, 'data', 'link-audit.json');
 })();
 
 function walk(dir, results = []) {

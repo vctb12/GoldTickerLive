@@ -23,12 +23,14 @@ const report = JSON.parse(fs.readFileSync(REPORT, 'utf8'));
 const images = (report.assets || []).filter((a) => /\.(png|jpg|jpeg)$/i.test(a.path || a.name));
 
 const threshold = 200 * 1024; // 200 KB
-const heavy = images.filter((i) => (i.size || 0) >= threshold).map((i) => ({
-  path: i.path || i.name,
-  size: i.size || 0,
-  humanSize: human(i.size || 0),
-  suggestion: 'convert to AVIF/WebP and resize to target display size',
-}));
+const heavy = images
+  .filter((i) => (i.size || 0) >= threshold)
+  .map((i) => ({
+    path: i.path || i.name,
+    size: i.size || 0,
+    humanSize: human(i.size || 0),
+    suggestion: 'convert to AVIF/WebP and resize to target display size',
+  }));
 
 const out = { generatedAt: new Date().toISOString(), threshold, heavy };
 fs.writeFileSync(OUT, JSON.stringify(out, null, 2), 'utf8');

@@ -3,6 +3,12 @@
 *.min.js
 dist/
 
+# Test and report outputs
+playwright-report/
+test-results/
+coverage/
+pa11y-report.html
+
 # Dependencies
 node_modules/
 
