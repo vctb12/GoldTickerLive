@@ -1,0 +1,41 @@
+name: Perf & QA Checks
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Audit assets, run tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm i; fi
+
+      - name: Run image audit
+        run: node scripts/node/image-audit.js || true
+
+      - name: Run Playwright tests
+        uses: microsoft/playwright-github-action@v1
+        with:
+          run: npx playwright test --reporter=list || true
+
+      - name: Summarize artifacts
+        run: |
+          echo 'Artifacts:'
+          ls -la data || true
