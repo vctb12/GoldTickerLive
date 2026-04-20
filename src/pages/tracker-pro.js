@@ -2,23 +2,16 @@
 import { CONSTANTS, KARATS, COUNTRIES } from '../config/index.js';
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
-import * as exp from '../lib/export.js';
 import { createInitialState, persistState } from '../tracker/state.js';
-import { mountShell } from '../tracker/ui-shell.js';
-import { fetchWire, renderWire as renderWireModule } from '../tracker/wire.js';
-import { getUnifiedHistory } from '../lib/historical-data.js';
-import {
-  initRender,
-  renderAll,
-  renderChart,
-  renderMarkets,
-  renderAlerts,
-  renderPresets,
-  renderPlanners,
-  renderArchive,
-} from '../tracker/render.js';
-import { initEvents, bindCoreEvents } from '../tracker/events.js';
-import { renderAdSlot } from '../components/adSlot.js';
+// Lazy-load heavy UI modules (ui-shell, events, wire, adSlot) inside init()
+let mountShell;
+let fetchWire, renderWireModule;
+let initEvents, bindCoreEvents;
+let renderAdSlot;
+// Note: load `export` and `historical-data` lazily to reduce initial parse and network cost
+// Render helpers are lazy-loaded inside init() to reduce initial module parse
+let initRender, renderAll, renderChart, renderMarkets, renderAlerts, renderPresets, renderPlanners, renderArchive;
+// render helpers are assigned during init()
 
 const state = createInitialState();
 const el = {};
@@ -161,7 +154,7 @@ function checkAlerts() {
   });
 }
 
-function exportArchiveData() {
+async function exportArchiveData() {
   if (!state.history.length) {
     showToast('No archive data available.');
     return;
@@ -172,14 +165,20 @@ function exportArchiveData() {
     source: r.source,
     granularity: r.granularity,
   }));
-  exp.exportHistoricalCSV(records, state.selectedKarat);
+  try {
+    const expMod = await import('../lib/export.js');
+    expMod.exportHistoricalCSV(records, state.selectedKarat);
+  } catch (e) {
+    showToast('Export failed');
+  }
 }
 
 function exportHistoryData() {
+  // keep synchronous facade; archive export is async but not awaited here
   exportArchiveData();
 }
 
-function exportChartData() {
+async function exportChartData() {
   if (!state.history.length) {
     showToast('No chart data available yet.');
     return;
@@ -193,13 +192,17 @@ function exportChartData() {
   }));
   const spot = currentSpot();
   const rows = flat.filter(Boolean);
-  if (spot)
-    rows.push({ date: new Date().toISOString().slice(0, 10), spot, price: spot, source: 'live' });
-  exp.exportChartCSV(rows, state.range, state.selectedKarat);
-  showToast('Chart CSV downloaded');
+  if (spot) rows.push({ date: new Date().toISOString().slice(0, 10), spot, price: spot, source: 'live' });
+  try {
+    const expMod = await import('../lib/export.js');
+    expMod.exportChartCSV(rows, state.range, state.selectedKarat);
+    showToast('Chart CSV downloaded');
+  } catch (e) {
+    showToast('Export failed');
+  }
 }
 
-function exportWatchlistData() {
+async function exportWatchlistData() {
   const spot = currentSpot();
   if (!spot) {
     showToast('Waiting for live price data.');
@@ -209,49 +212,64 @@ function exportWatchlistData() {
     showToast('No favorites in watchlist. Add currencies via Compare tab.');
     return;
   }
-  exp.exportWatchlistCSV({
-    favorites: state.favorites,
-    countries: COUNTRIES,
-    karatCode: state.selectedKarat,
-    priceFor,
-    spot,
-    selectedUnit: state.selectedUnit,
-    selectedCurrency: state.selectedCurrency,
-    lang: state.lang,
-  });
-  showToast('Watchlist CSV downloaded');
+  try {
+    const expMod = await import('../lib/export.js');
+    expMod.exportWatchlistCSV({
+      favorites: state.favorites,
+      countries: COUNTRIES,
+      karatCode: state.selectedKarat,
+      priceFor,
+      spot,
+      selectedUnit: state.selectedUnit,
+      selectedCurrency: state.selectedCurrency,
+      lang: state.lang,
+    });
+    showToast('Watchlist CSV downloaded');
+  } catch (e) {
+    showToast('Export failed');
+  }
 }
 
-function exportCurrentViewData() {
+async function exportCurrentViewData() {
   const spot = currentSpot();
   if (!spot) {
     showToast('Waiting for live price data.');
     return;
   }
-  exp.exportCurrentViewCSV({
-    countries: COUNTRIES,
-    karatCode: state.selectedKarat,
-    priceFor,
-    spot,
-    selectedUnit: state.selectedUnit,
-    selectedCurrency: state.selectedCurrency,
-    lang: state.lang,
-  });
-  showToast('Current view CSV downloaded');
+  try {
+    const expMod = await import('../lib/export.js');
+    expMod.exportCurrentViewCSV({
+      countries: COUNTRIES,
+      karatCode: state.selectedKarat,
+      priceFor,
+      spot,
+      selectedUnit: state.selectedUnit,
+      selectedCurrency: state.selectedCurrency,
+      lang: state.lang,
+    });
+    showToast('Current view CSV downloaded');
+  } catch (e) {
+    showToast('Export failed');
+  }
 }
 
-function exportBriefData() {
+async function exportBriefData() {
   const headline = el.briefHeadline?.textContent;
   const body = el.briefCopy?.textContent;
   if (!headline || headline.startsWith('Waiting')) {
     showToast('Waiting for live data.');
     return;
   }
-  exp.exportBriefText(headline, body);
-  showToast('Brief downloaded');
+  try {
+    const expMod = await import('../lib/export.js');
+    expMod.exportBriefText(headline, body);
+    showToast('Brief downloaded');
+  } catch (e) {
+    showToast('Export failed');
+  }
 }
 
-function exportJsonData() {
+async function exportJsonData() {
   const spot = currentSpot();
   const prices = {};
   if (spot) {
@@ -272,7 +290,12 @@ function exportJsonData() {
     rates: state.rates,
     lang: state.lang,
   };
-  exp.exportJSON(exportState, prices);
+  try {
+    const expMod = await import('../lib/export.js');
+    expMod.exportJSON(exportState, prices);
+  } catch (e) {
+    showToast('Export failed');
+  }
 }
 
 // ── Auto-refresh ──────────────────────────────────────────────────────────────
@@ -356,12 +379,20 @@ function populateSelects() {
 
 // ── Data fetch ────────────────────────────────────────────────────────────────
 
-async function refreshData(forceLive = true) {
+async function refreshData(forceLive = true, includeWire = true) {
   const tasks = [];
   if (forceLive) tasks.push(fetchLive());
   tasks.push(ensureUnifiedHistory());
-  tasks.push(refreshWire());
+  if (includeWire) tasks.push(refreshWire());
   await Promise.all(tasks);
+  // If advanced chart is loaded, give it the updated unified history
+  try {
+    if (window.__GOLD_CHART && typeof window.__GOLD_CHART.setDailyHistory === 'function') {
+      window.__GOLD_CHART.setDailyHistory(state.history || []);
+    }
+  } catch (e) {
+    console.warn('[chart-hook] setDailyHistory failed', e);
+  }
   persistState(state);
 }
 
@@ -387,6 +418,12 @@ async function fetchLive() {
       if (fb) {
         state.live = { price: fb.price, updatedAt: fb.updatedAt, raw: fb };
         state.hasLiveFailure = true;
+        // Push fallback into advanced chart if present
+        try {
+          if (window.__GOLD_CHART && typeof window.__GOLD_CHART.addPoint === 'function') {
+            window.__GOLD_CHART.addPoint(fb.price, fb.updatedAt || Date.now());
+          }
+        } catch (e) {}
       } else {
         state.hasLiveFailure = true;
       }
@@ -405,10 +442,19 @@ async function fetchLive() {
     console.warn('[tracker] refreshData failed', e);
     state.hasLiveFailure = true;
   }
+  // When live price arrives, update advanced chart if it's loaded
+  try {
+    if (window.__GOLD_CHART && state.live && typeof window.__GOLD_CHART.addPoint === 'function') {
+      window.__GOLD_CHART.addPoint(state.live.price, state.live.updatedAt || Date.now());
+    }
+  } catch (e) {
+    // non-fatal
+  }
 }
 
 async function ensureUnifiedHistory() {
   const cachedDaily = Array.isArray(state.snapshots) ? state.snapshots : [];
+  const { getUnifiedHistory } = await import('../lib/historical-data.js');
   const unified = await getUnifiedHistory(cachedDaily);
   state.history = unified
     .map((row) => ({
@@ -438,6 +484,20 @@ async function init() {
 
   document.documentElement.lang = state.lang;
   document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+  // Lazy-load render helpers and UI modules to reduce initial parse cost
+  const [renderMod, uiMod, eventsMod, wireMod, adMod] = await Promise.all([
+    import('../tracker/render.js'),
+    import('../tracker/ui-shell.js'),
+    import('../tracker/events.js'),
+    import('../tracker/wire.js'),
+    import('../components/adSlot.js'),
+  ]);
+
+  ({ initRender, renderAll, renderChart, renderMarkets, renderAlerts, renderPresets, renderPlanners, renderArchive } = renderMod);
+  ({ mountShell } = uiMod);
+  ({ initEvents, bindCoreEvents } = eventsMod);
+  ({ fetchWire, renderWire: renderWireModule } = wireMod);
+  ({ renderAdSlot } = adMod);
 
   // Init sub-modules with their dependencies
   initRender({ state, el, priceFor, currentSpot, showToast });
@@ -491,10 +551,31 @@ async function init() {
     btn.classList.toggle('is-active', isActive);
   });
 
-  await refreshData(false);
+  // Skip fetching the market wire during initial load to reduce critical path
+  await refreshData(false, false);
   renderAll();
   if (state.autoRefresh) startAutoRefresh();
   startCountdown();
+
+  // Render ads (ad slot renderer was lazy-loaded above)
+  try {
+    if (renderAdSlot) {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => renderAdSlot('ad-bottom', 'rectangle'), { timeout: 5000 });
+      } else {
+        setTimeout(() => renderAdSlot('ad-bottom', 'rectangle'), 1500);
+      }
+    }
+  } catch (e) {
+    console.warn('[ads] failed to render ad slot', e);
+  }
+
+  // Install the chart loader non-blocking; loader itself will lazy-load the heavy chart
+  try {
+    import('./tracker-chart-loader.js').then((m) => m.installChartLoader({ state, el })).catch(() => {});
+  } catch (e) {
+    // silent
+  }
 
   // Mobile swipe for region tabs
   const marketBoard = document.getElementById('tp-market-board');
@@ -618,4 +699,3 @@ function initOnboarding() {
 init();
 initShareButtons();
 initOnboarding();
-renderAdSlot('ad-bottom', 'rectangle');
