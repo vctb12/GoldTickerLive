@@ -4,7 +4,6 @@
  * generic kebab-case only for karats and units.
  */
 import { COUNTRIES } from '../config/countries.js';
-import { KARATS } from '../config/karats.js';
 
 /**
  * Convert karat code to URL slug.

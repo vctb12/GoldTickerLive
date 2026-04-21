@@ -11,7 +11,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Point shop-manager at a temporary file
-const TMP_SHOPS_FILE = path.join(require('os').tmpdir(), 'gp_test_shops_data.json');
+const _TMP_SHOPS_FILE = path.join(require('os').tmpdir(), 'gp_test_shops_data.json');
 
 // Patch before requiring the module
 const REAL_SHOPS_FILE = path.join(__dirname, '../data/shops-data.json');

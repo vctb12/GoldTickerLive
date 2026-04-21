@@ -146,7 +146,7 @@ export function renderChart() {
   }
 
   if (_el.chartStats) {
-    const stats = getHistoryStats(flatHistory);
+    const _stats = getHistoryStats(flatHistory);
     _el.chartStats.innerHTML = `
       <div class="tracker-stat-card"><div class="tracker-stat-k">Points shown</div><div class="tracker-stat-v">${rows.length}</div><div class="tracker-stat-s">${_state.range || 'ALL'}</div></div>
       <div class="tracker-stat-card"><div class="tracker-stat-k">Data source</div><div class="tracker-stat-v">${sourceLabel}</div><div class="tracker-stat-s">LBMA baseline 2019–Aug 2025 + session</div></div>

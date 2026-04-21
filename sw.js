@@ -6,7 +6,7 @@
  */
 
 const CACHE_NAME = 'goldprices-v14';
-const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 1 day
+const _CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 1 day
 
 // Static assets to pre-cache on install - MUST use / prefix for GitHub Pages
 const PRECACHE_URLS = [

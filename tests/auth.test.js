@@ -5,7 +5,7 @@
  * Run with:  npm test
  */
 
-const { test, describe, beforeEach, before, after } = require('node:test');
+const { test, describe, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('path');
 const fs = require('fs');
