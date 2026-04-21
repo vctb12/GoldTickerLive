@@ -4,6 +4,7 @@ Allow: /
 # Block non-public pages
 Disallow: /admin.html
 Disallow: /admin/
+Disallow: /api/
 Disallow: /server/
 Disallow: /tests/
 Disallow: /node_modules/

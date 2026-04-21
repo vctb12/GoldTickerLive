@@ -39,6 +39,8 @@
   --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.6);
   --glow-gold: 0 0 24px rgba(245, 158, 11, 0.15);
   --sidebar-gradient: linear-gradient(180deg, #0a1628 0%, #080f1a 100%);
+  --dark-navy: #0f172a;
+  --blue-400: #60a5fa;
 }
 
 /* --------------------------------------------------------------------------
@@ -267,6 +269,69 @@ ol {
   gap: 2px;
   padding: 10px;
   background: linear-gradient(0deg, rgba(245, 158, 11, 0.03) 0%, transparent 100%);
+}
+
+/* Sidebar footer sub-components (class-based, no inline styles) */
+.sidebar-user-row-inner {
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 0 0 10px;
+}
+
+.sidebar-user-avatar {
+  font-size: 0.875rem;
+  height: 32px;
+  width: 32px;
+}
+
+.sidebar-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar-user-email {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-footer-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.sidebar-footer-link,
+.sidebar-footer-btn {
+  flex: 1;
+  font-size: 0.78rem;
+}
+
+.sidebar-footer-link {
+  justify-content: center;
+}
+
+.sidebar-footer-icon {
+  opacity: 0.6;
+}
+
+.orders-badge-hidden {
+  display: none;
+  margin-left: auto;
+}
+
+.stat-orders-dot-indicator {
+  background: var(--danger);
+  border-radius: 50%;
+  display: inline-block;
+  height: 8px;
+  margin-left: 4px;
+  vertical-align: middle;
+  width: 8px;
 }
 
 /* Hamburger button (hidden on desktop) */
@@ -498,7 +563,7 @@ ol {
 
 .btn-gold {
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  color: #0f172a;
+  color: var(--dark-navy);
   box-shadow: 0 2px 12px var(--gold-glow);
 }
 
@@ -900,6 +965,17 @@ tbody td {
   width: 36px;
 }
 
+.btn-spinner {
+  animation: spin 0.75s linear infinite;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: currentcolor;
+  display: inline-block;
+  height: 14px;
+  vertical-align: middle;
+  width: 14px;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -1166,7 +1242,7 @@ tbody td {
 
 .role-badge--editor {
   background: rgb(59 130 246 / 15%);
-  color: #60a5fa;
+  color: var(--blue-400);
 }
 
 .role-badge--viewer {
@@ -2052,7 +2128,7 @@ textarea:focus-visible {
   align-items: center;
   background: linear-gradient(135deg, var(--gold), var(--primary));
   border-radius: 50%;
-  color: #0f172a;
+  color: var(--dark-navy);
   display: inline-flex;
   flex-shrink: 0;
   font-size: 0.75rem;

@@ -5338,3 +5338,16 @@ body > * {
     display: none !important;
   }
 }
+
+/* ── Spot bar price direction indicators ── */
+.spot-change-up {
+  color: var(--success, #16a34a);
+}
+
+.spot-change-down {
+  color: var(--danger, #dc2626);
+}
+
+.spot-change-neutral {
+  color: inherit;
+}

@@ -82,9 +82,10 @@ function buildDropdown(group, depth) {
   const itemsHtml = group.items
     .map((item) => {
       const href = resolveHref(item.href, depth);
-      const itemClass =
-        'nav-dropdown-item' + (isPageMatch(href) ? ' nav-dropdown-item--active' : '');
-      return `<a href="${href}" class="${itemClass}" role="menuitem">${item.label}</a>`;
+      const isActive = isPageMatch(href);
+      const itemClass = 'nav-dropdown-item' + (isActive ? ' nav-dropdown-item--active' : '');
+      const ariaCurrent = isActive ? ' aria-current="page"' : '';
+      return `<a href="${href}" class="${itemClass}"${ariaCurrent} role="menuitem">${item.label}</a>`;
     })
     .join('');
 
@@ -109,8 +110,10 @@ function buildDrawerGroup(group, depth) {
   const itemsHtml = group.items
     .map((item) => {
       const href = resolveHref(item.href, depth);
-      const itemClass = 'nav-drawer-link' + (isPageMatch(href) ? ' nav-link--active' : '');
-      return `<a href="${href}" class="${itemClass}">${item.label}</a>`;
+      const isActive = isPageMatch(href);
+      const itemClass = 'nav-drawer-link' + (isActive ? ' nav-link--active' : '');
+      const ariaCurrent = isActive ? ' aria-current="page"' : '';
+      return `<a href="${href}" class="${itemClass}"${ariaCurrent}>${item.label}</a>`;
     })
     .join('');
 
@@ -161,12 +164,14 @@ export function injectNav(lang = 'en', depth = 0) {
       <a href="${homeHref}"
          class="nav-link${homeActive ? ' nav-link--active' : ''}"
          role="listitem"
+         ${homeActive ? 'aria-current="page"' : ''}
       >${data.home.label}</a>
 
       <a href="${shopsHref}"
          class="nav-link nav-link--shops${shopsActive ? ' nav-link--active' : ''}"
          role="listitem"
          data-nav-key="shops"
+         ${shopsActive ? 'aria-current="page"' : ''}
       >${data.shops.label}</a>
 
       ${desktopDropdownsHtml}
@@ -175,6 +180,7 @@ export function injectNav(lang = 'en', depth = 0) {
          class="nav-link${investActive ? ' nav-link--active' : ''}"
          role="listitem"
          data-nav-key="invest"
+         ${investActive ? 'aria-current="page"' : ''}
       >${data.invest.label}</a>
     </div>
 
@@ -230,12 +236,14 @@ export function injectNav(lang = 'en', depth = 0) {
       <!-- Home (direct) -->
       <a href="${homeHref}"
          class="nav-drawer-link${homeActive ? ' nav-link--active' : ''}"
+         ${homeActive ? 'aria-current="page"' : ''}
       >${data.home.label}</a>
 
       <!-- Shops (direct) -->
       <a href="${shopsHref}"
          class="nav-drawer-link${shopsActive ? ' nav-link--active' : ''}"
          data-nav-key="shops"
+         ${shopsActive ? 'aria-current="page"' : ''}
       >${data.shops.label}</a>
 
       <!-- Grouped sections -->
@@ -245,6 +253,7 @@ export function injectNav(lang = 'en', depth = 0) {
       <a href="${investHref}"
          class="nav-drawer-link${investActive ? ' nav-link--active' : ''}"
          data-nav-key="invest"
+         ${investActive ? 'aria-current="page"' : ''}
       >${data.invest.label}</a>
 
       <!-- Language toggle -->
