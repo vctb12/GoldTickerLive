@@ -335,47 +335,6 @@
             </div>
           </div>
 
-          <!-- ── Bulk Actions Bar (shown when rows selected) ───── -->
-          <div
-            class="hidden"
-            id="bulk-bar"
-            style="
-              align-items: center;
-              background: rgba(201, 162, 39, 0.07);
-              border: 1px solid rgba(201, 162, 39, 0.2);
-              border-radius: var(--radius);
-              display: flex;
-              flex-wrap: wrap;
-              gap: 10px;
-              margin-bottom: 12px;
-              padding: 10px 16px;
-            "
-            aria-live="polite"
-          >
-            <span
-              id="bulk-count"
-              style="color: var(--gold); font-size: 0.875rem; font-weight: 600"
-            ></span>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap">
-              <button class="btn btn-ghost btn-sm" id="bulk-verify-btn" type="button">
-                ✓ Mark Verified
-              </button>
-              <button class="btn btn-ghost btn-sm" id="bulk-feature-btn" type="button">
-                ⭐ Toggle Featured
-              </button>
-              <button class="btn btn-danger btn-sm" id="bulk-delete-btn" type="button">
-                ✕ Delete Selected
-              </button>
-            </div>
-            <button
-              class="btn btn-ghost btn-sm"
-              id="bulk-clear-btn"
-              type="button"
-              style="margin-left: auto"
-            >
-              Clear
-            </button>
-          </div>
 
           <!-- ── Table ─────────────────────────────────────────── -->
           <div class="section-heading">
@@ -1613,20 +1572,6 @@
             document.getElementById('import-csv-modal').classList.add('hidden');
             deleteTargetId = null;
           }
-        });
-
-        // Bulk bar actions (UI-only — actual Supabase operations wired per button)
-        document.getElementById('bulk-clear-btn')?.addEventListener('click', () => {
-          document.getElementById('bulk-bar').classList.add('hidden');
-        });
-        document.getElementById('bulk-verify-btn')?.addEventListener('click', () => {
-          showToast('Bulk verify not yet connected.', 'info');
-        });
-        document.getElementById('bulk-feature-btn')?.addEventListener('click', () => {
-          showToast('Bulk feature toggle not yet connected.', 'info');
-        });
-        document.getElementById('bulk-delete-btn')?.addEventListener('click', () => {
-          showToast('Bulk delete not yet connected.', 'warning');
         });
 
         // Initial render

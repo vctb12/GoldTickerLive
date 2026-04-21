@@ -97,9 +97,8 @@ jobs:
 
       - name: Serve dist and run E2E tests
         run: |
-          cd dist && python3 -m http.server 8080 &
+          python3 -m http.server 8080 --directory dist &
           sleep 2
-          cd ..
           npx playwright test --config=playwright.config.js --project=chromium
 
       - name: Upload Playwright report

@@ -583,7 +583,7 @@ async function init() {
       }
     }
   } catch (_e) {
-    console.warn('[ads] failed to render ad slot', e);
+    console.warn('[ads] failed to render ad slot', _e);
   }
 
   // Install the chart loader non-blocking; loader itself will lazy-load the heavy chart
