@@ -175,7 +175,7 @@ async function exportArchiveData() {
   try {
     const expMod = await import('../lib/export.js');
     expMod.exportHistoricalCSV(records, state.selectedKarat);
-  } catch (e) {
+  } catch (_e) {
     showToast('Export failed');
   }
 }
@@ -190,7 +190,6 @@ async function exportChartData() {
     showToast('No chart data available yet.');
     return;
   }
-  const { filterByRange } = window.__trackerHistLib || {};
   const flat = state.history.map((r) => ({
     date: r.date instanceof Date ? r.date.toISOString().slice(0, 10) : String(r.date),
     spot: r.spot,
@@ -205,7 +204,7 @@ async function exportChartData() {
     const expMod = await import('../lib/export.js');
     expMod.exportChartCSV(rows, state.range, state.selectedKarat);
     showToast('Chart CSV downloaded');
-  } catch (e) {
+  } catch (_e) {
     showToast('Export failed');
   }
 }
@@ -233,7 +232,7 @@ async function exportWatchlistData() {
       lang: state.lang,
     });
     showToast('Watchlist CSV downloaded');
-  } catch (e) {
+  } catch (_e) {
     showToast('Export failed');
   }
 }
@@ -256,7 +255,7 @@ async function exportCurrentViewData() {
       lang: state.lang,
     });
     showToast('Current view CSV downloaded');
-  } catch (e) {
+  } catch (_e) {
     showToast('Export failed');
   }
 }
@@ -272,7 +271,7 @@ async function exportBriefData() {
     const expMod = await import('../lib/export.js');
     expMod.exportBriefText(headline, body);
     showToast('Brief downloaded');
-  } catch (e) {
+  } catch (_e) {
     showToast('Export failed');
   }
 }
@@ -301,7 +300,7 @@ async function exportJsonData() {
   try {
     const expMod = await import('../lib/export.js');
     expMod.exportJSON(exportState, prices);
-  } catch (e) {
+  } catch (_e) {
     showToast('Export failed');
   }
 }
@@ -398,7 +397,7 @@ async function refreshData(forceLive = true, includeWire = true) {
     if (window.__GOLD_CHART && typeof window.__GOLD_CHART.setDailyHistory === 'function') {
       window.__GOLD_CHART.setDailyHistory(state.history || []);
     }
-  } catch (e) {
+  } catch (_e) {
     console.warn('[chart-hook] setDailyHistory failed', e);
   }
   persistState(state);
@@ -431,7 +430,7 @@ async function fetchLive() {
           if (window.__GOLD_CHART && typeof window.__GOLD_CHART.addPoint === 'function') {
             window.__GOLD_CHART.addPoint(fb.price, fb.updatedAt || Date.now());
           }
-        } catch (e) {}
+        } catch (_e) {}
       } else {
         state.hasLiveFailure = true;
       }
@@ -446,7 +445,7 @@ async function fetchLive() {
       };
       cache.saveFXRates(state.rates, state.fxMeta);
     }
-  } catch (e) {
+  } catch (_e) {
     console.warn('[tracker] refreshData failed', e);
     state.hasLiveFailure = true;
   }
@@ -455,7 +454,7 @@ async function fetchLive() {
     if (window.__GOLD_CHART && state.live && typeof window.__GOLD_CHART.addPoint === 'function') {
       window.__GOLD_CHART.addPoint(state.live.price, state.live.updatedAt || Date.now());
     }
-  } catch (e) {
+  } catch (_e) {
     // non-fatal
   }
 }
@@ -583,7 +582,7 @@ async function init() {
         setTimeout(() => renderAdSlot('ad-bottom', 'rectangle'), 1500);
       }
     }
-  } catch (e) {
+  } catch (_e) {
     console.warn('[ads] failed to render ad slot', e);
   }
 
@@ -592,7 +591,7 @@ async function init() {
     import('./tracker-chart-loader.js')
       .then((m) => m.installChartLoader({ state, el }))
       .catch(() => {});
-  } catch (e) {
+  } catch (_e) {
     // silent
   }
 

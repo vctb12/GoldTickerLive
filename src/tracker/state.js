@@ -5,7 +5,7 @@ function read() {
   try {
     const raw = localStorage.getItem(KEY);
     return raw ? JSON.parse(raw) : { initialized: true };
-  } catch (e) {
+  } catch (_e) {
     return { initialized: true };
   }
 }
@@ -13,7 +13,7 @@ function read() {
 function write(state) {
   try {
     localStorage.setItem(KEY, JSON.stringify(state));
-  } catch (e) {
+  } catch (_e) {
     // ignore
   }
 }
@@ -175,7 +175,7 @@ export function persistState(state) {
   writeLocal(STORAGE_KEYS.wire, state.wireItems.slice(0, 32));
 }
 
-export function syncUrlFromState(state, panel = null) {
+export function syncUrlFromState(state, _panel = null) {
   const url = new URL(window.location.href);
   const params = new URLSearchParams();
   params.set('mode', VALID_MODES.has(state.mode) ? state.mode : 'live');
