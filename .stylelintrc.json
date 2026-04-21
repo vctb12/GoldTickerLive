@@ -61,7 +61,26 @@
         "ignore": ["consecutive-duplicates-with-different-values"]
       }
     ],
-    "declaration-block-no-shorthand-property-overrides": null
+    "declaration-block-no-shorthand-property-overrides": null,
+    "value-keyword-case": [
+      "lower",
+      {
+        "ignoreProperties": ["/^(font|font-family)$/"],
+        "ignoreKeywords": [
+          "Arial",
+          "Helvetica",
+          "Roboto",
+          "Cairo",
+          "Tahoma",
+          "Verdana",
+          "Georgia",
+          "Times",
+          "Courier",
+          "Segoe",
+          "Noto"
+        ]
+      }
+    ]
   },
   "ignoreFiles": [
     "dist/**/*.css",

@@ -2,16 +2,21 @@ name: Perf & QA Checks
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: perf-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   audit:
-    name: Audit assets, run tests
+    name: Audit assets, run Playwright
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -21,19 +26,20 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 20
+          cache: npm
 
       - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ]; then npm ci; else npm i; fi
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
 
       - name: Run image audit
         run: node scripts/node/image-audit.js || true
 
       - name: Run Playwright tests
-        uses: microsoft/playwright-github-action@v1
-        with:
-          run: npx playwright test --reporter=list || true
+        run: npx playwright test --project=chromium --reporter=list || true
 
       - name: Summarize artifacts
         run: |

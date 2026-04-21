@@ -32,7 +32,7 @@
     "preflight": "npm run audit-pages && npm run check-links",
     "validate": "node scripts/node/validate-build.js",
     "security": "npm audit && npm outdated",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.2",

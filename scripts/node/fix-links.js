@@ -31,7 +31,7 @@ const files = walkHtml(root);
 let changed = 0;
 
 for (const f of files) {
-  let src = fs.readFileSync(f, 'utf8');
+  const src = fs.readFileSync(f, 'utf8');
   const updated = src.replace(/href="\.\.\/(.*?)"/g, (m, p1) => {
     return `href="/${p1.replace(/"/g, '')}"`;
   });

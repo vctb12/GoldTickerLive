@@ -10,7 +10,14 @@ let initEvents, bindCoreEvents;
 let renderAdSlot;
 // Note: load `export` and `historical-data` lazily to reduce initial parse and network cost
 // Render helpers are lazy-loaded inside init() to reduce initial module parse
-let initRender, renderAll, renderChart, renderMarkets, renderAlerts, renderPresets, renderPlanners, renderArchive;
+let initRender,
+  renderAll,
+  renderChart,
+  renderMarkets,
+  renderAlerts,
+  renderPresets,
+  renderPlanners,
+  renderArchive;
 // render helpers are assigned during init()
 
 const state = createInitialState();
@@ -192,7 +199,8 @@ async function exportChartData() {
   }));
   const spot = currentSpot();
   const rows = flat.filter(Boolean);
-  if (spot) rows.push({ date: new Date().toISOString().slice(0, 10), spot, price: spot, source: 'live' });
+  if (spot)
+    rows.push({ date: new Date().toISOString().slice(0, 10), spot, price: spot, source: 'live' });
   try {
     const expMod = await import('../lib/export.js');
     expMod.exportChartCSV(rows, state.range, state.selectedKarat);
@@ -493,7 +501,16 @@ async function init() {
     import('../components/adSlot.js'),
   ]);
 
-  ({ initRender, renderAll, renderChart, renderMarkets, renderAlerts, renderPresets, renderPlanners, renderArchive } = renderMod);
+  ({
+    initRender,
+    renderAll,
+    renderChart,
+    renderMarkets,
+    renderAlerts,
+    renderPresets,
+    renderPlanners,
+    renderArchive,
+  } = renderMod);
   ({ mountShell } = uiMod);
   ({ initEvents, bindCoreEvents } = eventsMod);
   ({ fetchWire, renderWire: renderWireModule } = wireMod);
@@ -572,7 +589,9 @@ async function init() {
 
   // Install the chart loader non-blocking; loader itself will lazy-load the heavy chart
   try {
-    import('./tracker-chart-loader.js').then((m) => m.installChartLoader({ state, el })).catch(() => {});
+    import('./tracker-chart-loader.js')
+      .then((m) => m.installChartLoader({ state, el }))
+      .catch(() => {});
   } catch (e) {
     // silent
   }

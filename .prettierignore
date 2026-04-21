@@ -6,3 +6,20 @@ coverage/
 package-lock.json
 .vscode/
 .github/
+
+# HTML pages are authored by hand and by content scripts — prettier reformat
+# can alter whitespace inside <pre>, <textarea>, inline <script>, and <style>
+# in ways that change rendering. Lint them via validate-build.js instead.
+*.html
+
+# Generated data files (written by workflows / scripts)
+data/last_gold_price.json
+data/audit-logs.json
+data/link-audit.json
+data/shops-data.json
+src/data/historical-baseline.json
+
+# Playwright / test reports
+playwright-report/
+test-results/
+pa11y-report.html
