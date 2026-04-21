@@ -398,7 +398,7 @@ async function refreshData(forceLive = true, includeWire = true) {
       window.__GOLD_CHART.setDailyHistory(state.history || []);
     }
   } catch (_e) {
-    console.warn('[chart-hook] setDailyHistory failed', e);
+    console.warn('[chart-hook] setDailyHistory failed', _e);
   }
   persistState(state);
 }
@@ -446,7 +446,7 @@ async function fetchLive() {
       cache.saveFXRates(state.rates, state.fxMeta);
     }
   } catch (_e) {
-    console.warn('[tracker] refreshData failed', e);
+    console.warn('[tracker] refreshData failed', _e);
     state.hasLiveFailure = true;
   }
   // When live price arrives, update advanced chart if it's loaded
