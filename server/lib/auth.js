@@ -136,7 +136,7 @@ function getUserById(id) {
 
 // Get all users (without passwords)
 function getAllUsers() {
-  return users.map(({ password, ...user }) => user);
+  return users.map(({ password: _password, ...user }) => user);
 }
 
 // Create new user
@@ -166,7 +166,7 @@ async function createUser(userData, createdBy) {
   users.push(newUser);
   saveUsers();
 
-  const { password, ...userWithoutPassword } = newUser;
+  const { password: _password, ...userWithoutPassword } = newUser;
   return { success: true, user: userWithoutPassword };
 }
 
@@ -190,12 +190,12 @@ async function updateUser(userId, updates, updatedBy) {
 
   saveUsers();
 
-  const { password, ...userWithoutPassword } = users[index];
+  const { password: _password, ...userWithoutPassword } = users[index];
   return { success: true, user: userWithoutPassword };
 }
 
 // Delete user
-function deleteUser(userId, deletedBy) {
+function deleteUser(userId, _deletedBy) {
   const index = users.findIndex((u) => u.id === userId);
   if (index === -1) {
     return { success: false, message: 'User not found' };

@@ -11,7 +11,7 @@ import { KARATS } from '../config/karats.js';
 import * as api from './api.js';
 import * as cache from './cache.js';
 import { formatPrice, formatFreshness } from './formatter.js';
-import { injectNav, updateNavLang } from '../components/nav.js';
+import { injectNav, updateNavLang as _updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
 import { injectSpotBar, updateSpotBar } from '../components/spotBar.js';
 
@@ -122,15 +122,6 @@ function renderFreshnessBadge(updatedAt) {
   </span>`;
 }
 
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
 function renderDisclaimer(country, pageUrl) {
   // Sanitize pageUrl to canonical origin+pathname (strip user-controlled hash/query)
   let safeUrl;
@@ -162,7 +153,7 @@ async function hydrate() {
   const country = COUNTRIES.find((c) => c.slug === countrySlug);
   if (!country) return;
 
-  const city = citySlug ? (country.cities || []).find((ci) => ci.slug === citySlug) : null;
+  const _city = citySlug ? (country.cities || []).find((ci) => ci.slug === citySlug) : null;
 
   const loadingEl = document.getElementById('price-loading');
   const displayEl = document.getElementById('price-display');

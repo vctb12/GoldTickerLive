@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import { resolve, relative } from 'path';
+import { resolve } from 'path';
 import { globSync } from 'node:fs';
 
 const root = resolve(__dirname);

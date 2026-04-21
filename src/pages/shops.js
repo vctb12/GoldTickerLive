@@ -288,7 +288,7 @@ function contactQualityScore(shop) {
   return 1;
 }
 
-function contactQualityLabel(shop) {
+function _contactQualityLabel(shop) {
   const score = contactQualityScore(shop);
   if (score === 3) return t('rankFull');
   if (score === 2) return t('rankPartial');
@@ -329,7 +329,7 @@ function isMarketArea(shop) {
   );
 }
 
-function isDirectShop(shop) {
+function _isDirectShop(shop) {
   if (shop.type === 'direct') return true;
   if (shop.type === 'market') return false;
 
@@ -607,14 +607,14 @@ function shopsMatchingPrimaryFilters() {
   });
 }
 
-function allCountriesInData() {
+function _allCountriesInData() {
   const codes = new Set(SHOPS.map((s) => s.countryCode));
   return COUNTRIES.filter((c) => codes.has(c.code)).sort((a, b) =>
     countryName(a).localeCompare(countryName(b), STATE.lang)
   );
 }
 
-function shopsForCountryFilter() {
+function _shopsForCountryFilter() {
   if (STATE.region === 'all') return SHOPS;
   return SHOPS.filter((shop) => {
     const country = countryByCode(shop.countryCode);
@@ -622,7 +622,7 @@ function shopsForCountryFilter() {
   });
 }
 
-function shopsForCityFilter() {
+function _shopsForCityFilter() {
   return SHOPS.filter((shop) => {
     const country = countryByCode(shop.countryCode);
     if (!country) return false;
@@ -854,7 +854,7 @@ function renderCards(shops) {
   }
 
   grid.innerHTML = shops
-    .map((shop, idx) => {
+    .map((shop, _idx) => {
       const country = countryByCode(shop.countryCode);
       const specialties = (shop.specialties || [])
         .map((item) => `<span class="shop-tag">${esc(item)}</span>`)
@@ -869,10 +869,10 @@ function renderCards(shops) {
       const countryUrl = country?.slug ? `countries/${country.slug}.html` : '';
       const areaGuideUrl = `${location.pathname}?country=${encodeURIComponent(shop.countryCode)}&search=${encodeURIComponent(shop.market)}`;
       const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${shop.name}, ${shop.market}, ${shop.city}`)}`;
-      const confidenceTier = detailsConfidenceTier(shop.detailsAvailability);
-      const detailsLabel = detailsAvailabilityLabel(shop.detailsAvailability);
+      const _confidenceTier = detailsConfidenceTier(shop.detailsAvailability);
+      const _detailsLabel = detailsAvailabilityLabel(shop.detailsAvailability);
       const nextActionLabel = isCluster ? t('nextActionsMarket') : t('nextActionsStore');
-      const contactQualityLabel = contactQualityLabel(shop);
+      const contactQualityLabel = _contactQualityLabel(shop);
 
       const contactParts = [];
       if (shop.phone) contactParts.push(`${t('phone')}: ${esc(shop.phone)}`);
@@ -1417,7 +1417,7 @@ function init() {
 
   // Populate ticker from cache so it never shows all-dashes
   const cachedGold = cache.getFallbackGoldPrice();
-  const cachedFX = cache.getFallbackFXRates();
+  const _cachedFX = cache.getFallbackFXRates();
   if (cachedGold?.price) {
     const spot = cachedGold.price;
     const aedRate = CONSTANTS.AED_PEG;
@@ -1667,7 +1667,7 @@ init();
 
   async function findNearestMarkets(lat, lng) {
     // Reverse geocode via Nominatim to get country code
-    let countryCode = null;
+    let _countryCode = null;
     try {
       const r = await fetch(
         `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
@@ -1675,7 +1675,7 @@ init();
       );
       if (r.ok) {
         const data = await r.json();
-        countryCode = (data.address?.country_code || '').toUpperCase();
+        _countryCode = (data.address?.country_code || '').toUpperCase();
       }
     } catch {
       // silently continue without country match
@@ -1742,7 +1742,7 @@ init();
         try {
           await findNearestMarkets(lat, lng);
           status.hidden = true;
-        } catch (e) {
+        } catch (_e) {
           setStatus('Could not load nearby markets. Please try again.', 'error');
           showFallback(lat, lng);
         }

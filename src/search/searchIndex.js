@@ -7,7 +7,7 @@ import { COUNTRIES } from '../config/countries.js';
 import { KARATS } from '../config/karats.js';
 import { SHOPS } from '../../data/shops.js';
 
-const BASE_URL = 'https://goldtickerlive.com';
+const _BASE_URL = 'https://goldtickerlive.com';
 
 function buildIndex() {
   const entries = [];

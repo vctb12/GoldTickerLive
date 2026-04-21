@@ -3,7 +3,6 @@
  * Injects shared nav/footer and wires language toggle.
  */
 
-import * as cache from '../lib/cache.js';
 import { injectNav, updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
 import { injectTicker, updateTickerLang } from '../components/ticker.js';

@@ -289,7 +289,7 @@ export function exportWatchlistCSV({
 
   const karat = KARATS.find((k) => k.code === String(karatCode));
   const karatLabel = lang === 'ar' ? karat?.labelAr : karat?.labelEn;
-  const purity = parseInt(karatCode, 10) / 24;
+  const _purity = parseInt(karatCode, 10) / 24;
 
   const lines = [
     `# GoldPrices — Market Watchlist (${karatCode}K, ${selectedUnit})`,

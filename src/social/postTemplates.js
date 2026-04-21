@@ -31,7 +31,7 @@ function fmt(n, decimals = 2) {
  * @param {number} pct     Percentage change
  * @returns {string}
  */
-function fmtChange(change, pct) {
+function _fmtChange(change, pct) {
   if (change == null || isNaN(change)) return '—';
   const sign = change >= 0 ? '+' : '';
   return `${sign}${fmt(change)} (${sign}${fmt(pct)}%)`;
@@ -128,7 +128,7 @@ function generateDaily(data) {
 // Template: Price Alert (big move)
 // ---------------------------------------------------------------------------
 function generateAlert(data) {
-  const { spotUsdPerOz, dayOpenUsdPerOz, generatedAt } = data;
+  const { spotUsdPerOz, dayOpenUsdPerOz, generatedAt: _generatedAt } = data;
   const AED_PEG = 3.6725;
 
   const k24 = calcKarat(spotUsdPerOz, 1.0, AED_PEG);
@@ -306,7 +306,13 @@ function generateArabic(data) {
 // Template: Investment Angle
 // ---------------------------------------------------------------------------
 function generateInvestment(data) {
-  const { spotUsdPerOz, dayOpenUsdPerOz, weekLowUsdPerOz, weekHighUsdPerOz, generatedAt } = data;
+  const {
+    spotUsdPerOz,
+    dayOpenUsdPerOz,
+    weekLowUsdPerOz,
+    weekHighUsdPerOz,
+    generatedAt: _generatedAt,
+  } = data;
   const AED_PEG = 3.6725;
 
   const k24 = calcKarat(spotUsdPerOz, 1.0, AED_PEG);
@@ -320,7 +326,7 @@ function generateInvestment(data) {
   const fromWeekHigh = weekHighUsdPerOz
     ? ((spotUsdPerOz - weekHighUsdPerOz) / weekHighUsdPerOz) * 100
     : null;
-  const fromWeekLow = weekLowUsdPerOz
+  const _fromWeekLow = weekLowUsdPerOz
     ? ((spotUsdPerOz - weekLowUsdPerOz) / weekLowUsdPerOz) * 100
     : null;
 
@@ -374,7 +380,13 @@ function generateMilestone(data) {
 // Template: Weekend Edition (Friday/Saturday summary)
 // ---------------------------------------------------------------------------
 function generateWeekend(data) {
-  const { spotUsdPerOz, weekHistory, weekHighUsdPerOz, weekLowUsdPerOz, generatedAt } = data;
+  const {
+    spotUsdPerOz,
+    weekHistory,
+    weekHighUsdPerOz,
+    weekLowUsdPerOz,
+    generatedAt: _generatedAt,
+  } = data;
   const AED_PEG = 3.6725;
 
   const k24 = calcKarat(spotUsdPerOz, 1.0, AED_PEG);
