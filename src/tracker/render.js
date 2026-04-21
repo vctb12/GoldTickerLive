@@ -2,7 +2,7 @@
 import { CONSTANTS, KARATS, COUNTRIES } from '../config/index.js';
 import { persistState } from './state.js';
 import { updateShellTickerFromState } from './ui-shell.js';
-import { filterByRange, getHistoryStats } from '../lib/historical-data.js';
+import { filterByRange } from '../lib/historical-data.js';
 
 let _state, _el, _priceFor, _currentSpot, _showToast;
 

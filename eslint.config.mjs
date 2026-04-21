@@ -3,7 +3,11 @@ export default [
     ignores: [
       'dist/**',
       'node_modules/**',
+      'build/**',
+      '.husky/**',
+      '.vscode/**',
       'coverage/**',
+      'assets/screenshots/**',
       '**/*.min.js',
       'package-lock.json',
       // Uses import-attribute syntax (`assert { type: 'json' }`) which espree

@@ -202,10 +202,12 @@
         </div>
       </section>
 
-      <!-- Hero / Live desk -->
-      <section class="tracker-shell tracker-hero-shell" aria-labelledby="tp-hero-title">
-        <div class="tracker-hero-card">
-          <div class="tracker-hero-copy">
+      <!-- ── Hero — dark full-bleed ──────────────────────────── -->
+      <section class="tracker-hero-wrap" aria-labelledby="tp-hero-title">
+        <div class="tracker-hero-inner">
+          <!-- Main hero content -->
+          <div class="tracker-hero-main">
+            <!-- Live status badges -->
             <div class="tracker-badge-row">
               <span class="tracker-badge tracker-badge-live" id="tp-live-badge">
                 <span class="tracker-badge-dot" aria-hidden="true"></span>
@@ -229,14 +231,43 @@
               90 seconds.
             </p>
 
+            <!-- Key metrics — rendered by JS -->
+            <div class="tracker-hero-grid" id="tp-hero-stats" aria-label="Key live metrics"></div>
+
+            <!-- Inline selectors -->
+            <div class="tracker-hero-selectors">
+              <label class="tracker-hero-field">
+                <span>Language</span>
+                <select id="tp-language" aria-label="Language">
+                  <option value="en">English</option>
+                  <option value="ar">العربية</option>
+                </select>
+              </label>
+              <label class="tracker-hero-field">
+                <span>Currency</span>
+                <select id="tp-currency" aria-label="Currency"></select>
+              </label>
+              <label class="tracker-hero-field">
+                <span>Karat</span>
+                <select id="tp-karat" aria-label="Karat"></select>
+              </label>
+              <label class="tracker-hero-field">
+                <span>Unit</span>
+                <select id="tp-unit" aria-label="Unit"></select>
+              </label>
+            </div>
+
+            <!-- Action buttons -->
             <div class="tracker-hero-actions">
-              <button class="btn btn-primary" id="tp-refresh-btn" type="button">↻ Refresh</button>
+              <button class="btn btn-primary" id="tp-refresh-btn" type="button">
+                ↻ Refresh
+              </button>
               <button class="btn btn-outline" id="tp-share-btn" type="button">Copy brief</button>
               <button class="btn btn-ghost" id="tp-reset-btn" type="button">Reset</button>
               <a class="btn btn-ghost" href="#mode-live" id="tp-jump-chart">Chart ↓</a>
             </div>
 
-            <!-- Compact hint chips (replaces verbose onboarding steps) -->
+            <!-- Quick-use chips -->
             <div class="tracker-hint-chips" id="tracker-hint-chips" aria-label="Quick usage hints">
               <span class="tracker-hint-chip"
                 ><span aria-hidden="true">📡</span> Live data · refreshes every 90s</span
@@ -252,14 +283,13 @@
               >
             </div>
 
-            <div class="tracker-hero-grid" id="tp-hero-stats" aria-label="Key live metrics"></div>
-
             <div class="tracker-hero-hints" id="tp-hero-hints" aria-hidden="true">
               <span>Keyboard: R refresh · H Live · C Compare · A Alerts · P Planner</span>
             </div>
           </div>
 
-          <aside class="tracker-hero-side" aria-label="Live desk summary">
+          <!-- Hero aside — live desk + explore links -->
+          <aside class="tracker-hero-aside" aria-label="Live desk summary">
             <div class="tracker-side-block">
               <h2 id="tp-live-summary-heading">Live desk</h2>
               <div
@@ -294,7 +324,7 @@
         </div>
       </section>
 
-      <!-- Workspace tabs / mode bar -->
+      <!-- ── Workspace tab bar ──────────────────────────────── -->
       <section class="tracker-shell tracker-mode-shell" aria-label="Tracker workspace modes">
         <nav class="tracker-modes" role="tablist" aria-orientation="horizontal">
           <button
@@ -305,7 +335,7 @@
             id="tab-live"
             data-mode="live"
           >
-            Live
+            📡 Live
           </button>
           <button
             class="tracker-mode-tab"
@@ -315,17 +345,17 @@
             id="tab-compare"
             data-mode="compare"
           >
-            Compare
+            🌍 Compare
           </button>
           <button
-            class="tracker-mode-tab"
+            class="tracker-mode-tab tracker-advanced-only"
             role="tab"
             aria-selected="false"
             aria-controls="mode-archive"
             id="tab-archive"
             data-mode="archive"
           >
-            Archive
+            🗂 Archive
           </button>
           <button
             class="tracker-mode-tab tracker-overlay-btn"
@@ -335,7 +365,7 @@
             aria-expanded="false"
             aria-controls="tp-overlay-alerts"
           >
-            Alerts
+            🔔 Alerts
           </button>
           <button
             class="tracker-mode-tab tracker-overlay-btn"
@@ -345,7 +375,7 @@
             aria-expanded="false"
             aria-controls="tp-overlay-planner"
           >
-            Planner
+            📋 Planner
           </button>
           <button
             class="tracker-mode-tab tracker-advanced-only"
@@ -355,7 +385,7 @@
             id="tab-exports"
             data-mode="exports"
           >
-            Exports
+            ⬇ Exports
           </button>
           <button
             class="tracker-mode-tab tracker-advanced-only"
@@ -365,7 +395,7 @@
             id="tab-method"
             data-mode="method"
           >
-            Method
+            📖 Method
           </button>
           <button
             class="tracker-workspace-badge"
@@ -378,7 +408,7 @@
         </nav>
       </section>
 
-      <!-- MODE: LIVE -->
+      <!-- ── MODE: LIVE ─────────────────────────────────────── -->
       <section
         class="tracker-shell tracker-main-shell tracker-mode-panel"
         id="mode-live"
@@ -386,7 +416,7 @@
         aria-labelledby="tab-live"
         data-mode-panel="live"
       >
-        <!-- Top toolbar -->
+        <!-- Compact toolbar — range + toggles only (selectors moved to hero) -->
         <div class="tracker-toolbar-card">
           <div class="tracker-control-grid">
             <label class="tracker-field">
@@ -412,9 +442,6 @@
               <span>Compare market</span>
               <select id="tp-compare-country"></select>
             </label>
-          </div>
-
-          <div class="tracker-toolbar-secondary">
             <div class="tracker-range-pills" id="tp-range-pills" aria-label="Chart range">
               <button type="button" class="tracker-pill is-active" data-range="24H">24H</button>
               <button type="button" class="tracker-pill" data-range="7D">7D</button>
@@ -425,32 +452,32 @@
               <button type="button" class="tracker-pill" data-range="5Y">5Y</button>
               <button type="button" class="tracker-pill" data-range="ALL">All</button>
             </div>
-            <div class="tracker-chip-row">
-              <button type="button" class="tracker-chip" id="tp-auto-refresh">
-                Auto refresh: on
-              </button>
-              <button type="button" class="tracker-chip is-active" data-metric="selected">
-                Selected view
-              </button>
-              <button type="button" class="tracker-chip" data-metric="spot">Spot only</button>
-              <button
-                type="button"
-                class="tracker-chip tracker-advanced-only"
-                data-metric="compare"
-              >
-                Compare market
-              </button>
-              <button type="button" class="tracker-chip tracker-advanced-only" data-toggle="wire">
-                Wire headlines
-              </button>
-              <button type="button" class="tracker-chip" data-toggle="favorites">
-                Favorites only
-              </button>
-            </div>
+          </div>
+          <div class="tracker-chip-row">
+            <button type="button" class="tracker-chip" id="tp-auto-refresh">
+              Auto refresh: on
+            </button>
+            <button type="button" class="tracker-chip is-active" data-metric="selected">
+              Selected view
+            </button>
+            <button type="button" class="tracker-chip" data-metric="spot">Spot only</button>
+            <button
+              type="button"
+              class="tracker-chip tracker-advanced-only"
+              data-metric="compare"
+            >
+              Compare market
+            </button>
+            <button type="button" class="tracker-chip tracker-advanced-only" data-toggle="wire">
+              Wire headlines
+            </button>
+            <button type="button" class="tracker-chip" data-toggle="favorites">
+              Favorites only
+            </button>
           </div>
         </div>
 
-        <!-- Market wire -->
+        <!-- Market wire (advanced) -->
         <section class="tracker-wire-shell tracker-advanced-only" aria-label="Market wire">
           <div class="tracker-wire-card">
             <div class="tracker-wire-label">Market wire</div>
@@ -478,7 +505,7 @@
           </div>
         </section>
 
-        <!-- Live chart + ladder + watchlist -->
+        <!-- Live chart + karat ladder + watchlist -->
         <section class="tracker-main-grid" id="section-chart">
           <section class="tracker-panel">
             <div class="tracker-panel-head">
@@ -519,7 +546,12 @@
 
             <div class="tracker-chart-wrap" aria-label="Gold price chart" role="group">
               <svg id="tp-chart" viewBox="0 0 1200 430"></svg>
-              <div class="tracker-tooltip" id="tp-tooltip" role="status" aria-live="polite"></div>
+              <div
+                class="tracker-tooltip"
+                id="tp-tooltip"
+                role="status"
+                aria-live="polite"
+              ></div>
               <div class="tracker-chart-empty" id="tp-chart-empty" hidden>
                 <p>Waiting for live and history data…</p>
               </div>
@@ -553,7 +585,9 @@
             <div class="tracker-panel-head compact">
               <div>
                 <h2>Karat ladder &amp; watchlist</h2>
-                <p>Fast context for your selected view across major karats and favorite markets.</p>
+                <p>
+                  Fast context for your selected view across major karats and favorite markets.
+                </p>
               </div>
             </div>
 
@@ -595,7 +629,7 @@
         </section>
       </section>
 
-      <!-- MODE: COMPARE -->
+      <!-- ── MODE: COMPARE ──────────────────────────────────── -->
       <section
         class="tracker-shell tracker-compare-shell tracker-mode-panel tracker-advanced-only"
         id="mode-compare"
@@ -665,7 +699,7 @@
         </div>
       </section>
 
-      <!-- OVERLAY: ALERTS & PRESETS (slide-in panel, independent of main view) -->
+      <!-- ── OVERLAY: ALERTS & PRESETS ─────────────────────── -->
       <div
         class="tp-overlay tracker-advanced-only"
         id="tp-overlay-alerts"
@@ -724,7 +758,9 @@
                 </label>
               </div>
               <div class="tracker-inline-actions">
-                <button class="btn btn-primary" type="button" id="tp-save-alert">Save alert</button>
+                <button class="btn btn-primary" type="button" id="tp-save-alert">
+                  Save alert
+                </button>
                 <button class="btn btn-outline" type="button" id="tp-enable-notifications">
                   Enable notifications
                 </button>
@@ -742,7 +778,11 @@
               <div class="tracker-form-grid">
                 <label class="tracker-field">
                   <span>Preset name</span>
-                  <input type="text" id="tp-preset-name" placeholder="Example: UAE 24K per gram" />
+                  <input
+                    type="text"
+                    id="tp-preset-name"
+                    placeholder="Example: UAE 24K per gram"
+                  />
                 </label>
               </div>
               <div class="tracker-inline-actions">
@@ -765,7 +805,7 @@
         <div class="tp-overlay-backdrop" aria-hidden="true"></div>
       </div>
 
-      <!-- OVERLAY: PLANNER (slide-in panel, independent of main view) -->
+      <!-- ── OVERLAY: PLANNER ───────────────────────────────── -->
       <div
         class="tp-overlay tracker-advanced-only"
         id="tp-overlay-planner"
@@ -858,11 +898,23 @@
               <div class="tracker-form-grid">
                 <label class="tracker-field">
                   <span>Monthly contribution</span>
-                  <input type="number" id="tp-accum-monthly" min="0" step="0.01" value="2000" />
+                  <input
+                    type="number"
+                    id="tp-accum-monthly"
+                    min="0"
+                    step="0.01"
+                    value="2000"
+                  />
                 </label>
                 <label class="tracker-field">
                   <span>Target quantity (g)</span>
-                  <input type="number" id="tp-accum-target" min="0" step="0.0001" value="100" />
+                  <input
+                    type="number"
+                    id="tp-accum-target"
+                    min="0"
+                    step="0.0001"
+                    value="100"
+                  />
                 </label>
               </div>
               <div class="tracker-result-grid" id="tp-accum-results"></div>
@@ -877,7 +929,7 @@
         <div class="tp-overlay-backdrop" aria-hidden="true"></div>
       </div>
 
-      <!-- MODE: ARCHIVE -->
+      <!-- ── MODE: ARCHIVE ──────────────────────────────────── -->
       <section
         class="tracker-shell tracker-archive-shell tracker-mode-panel tracker-advanced-only"
         id="mode-archive"
@@ -951,8 +1003,8 @@
             <article class="tracker-subpanel">
               <div class="tracker-subpanel-head"><h3>Date lookup</h3></div>
               <p style="font-size: 0.85rem; color: var(--tp-text-muted); margin-bottom: 1rem">
-                Find the closest data point for any date in the archive. Searches baseline + session
-                data.
+                Find the closest data point for any date in the archive. Searches baseline +
+                session data.
               </p>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
@@ -978,7 +1030,7 @@
         </div>
       </section>
 
-      <!-- MODE: EXPORTS -->
+      <!-- ── MODE: EXPORTS ──────────────────────────────────── -->
       <section
         class="tracker-shell tracker-exports-shell tracker-mode-panel tracker-advanced-only"
         id="mode-exports"
@@ -1061,7 +1113,7 @@
         </section>
       </section>
 
-      <!-- MODE: METHOD -->
+      <!-- ── MODE: METHOD ───────────────────────────────────── -->
       <section
         class="tracker-shell tracker-method-shell tracker-mode-panel tracker-advanced-only"
         id="mode-method"
@@ -1085,8 +1137,8 @@
             <article class="tracker-method-card">
               <h3>Live spot layer</h3>
               <p>
-                Live spot is pulled from Gold API in XAU/USD and refreshed roughly every 90 seconds,
-                with retries and fallbacks from cache when networks fail.
+                Live spot is pulled from Gold API in XAU/USD and refreshed roughly every 90
+                seconds, with retries and fallbacks from cache when networks fail.
               </p>
               <a href="https://gold-api.com/docs" target="_blank" rel="noopener noreferrer"
                 >Gold API docs</a
@@ -1096,7 +1148,7 @@
             <article class="tracker-method-card">
               <h3>FX conversion layer</h3>
               <p>
-                FX conversion comes from ExchangeRate-API’s USD base feed. AED uses the fixed
+                FX conversion comes from ExchangeRate-API's USD base feed. AED uses the fixed
                 central-bank peg stored in the site constants, not the API feed.
               </p>
               <a
@@ -1110,8 +1162,8 @@
             <article class="tracker-method-card">
               <h3>Historical layer</h3>
               <p>
-                Short ranges draw on recent live snapshots cached in your browser. Longer ranges use
-                a monthly baseline merged with those snapshots to avoid gaps and keep exports
+                Short ranges draw on recent live snapshots cached in your browser. Longer ranges
+                use a monthly baseline merged with those snapshots to avoid gaps and keep exports
                 stable.
               </p>
               <a
@@ -1125,8 +1177,8 @@
             <article class="tracker-method-card">
               <h3>Retail vs bullion</h3>
               <p>
-                All prices are bullion-equivalent estimates based on spot. Actual jewelry and retail
-                prices can differ due to making charges, premiums, and taxes.
+                All prices are bullion-equivalent estimates based on spot. Actual jewelry and
+                retail prices can differ due to making charges, premiums, and taxes.
               </p>
               <a href="methodology.html" class="tracker-link">Read full site methodology</a>
             </article>
@@ -1149,7 +1201,7 @@
         </section>
       </section>
 
-      <!-- Global market brief section (shared across modes) -->
+      <!-- ── Market brief (shared across modes) ────────────── -->
       <section class="tracker-shell tracker-brief-shell" aria-label="Market brief">
         <section class="tracker-panel">
           <div class="tracker-panel-head">
@@ -1227,7 +1279,12 @@
         <div class="onb-header">
           <span class="onb-icon" aria-hidden="true">📈</span>
           <h2 id="onb-title" class="onb-title">Welcome to Gold Tracker Pro</h2>
-          <button id="onb-close" class="onb-close" type="button" aria-label="Close introduction">
+          <button
+            id="onb-close"
+            class="onb-close"
+            type="button"
+            aria-label="Close introduction"
+          >
             ×
           </button>
         </div>
@@ -1243,7 +1300,9 @@
             <span class="onb-step-icon" aria-hidden="true">🌍</span>
             <div>
               <strong>Compare Countries</strong>
-              <p>Switch to Compare mode to see gold prices across 24 countries side by side.</p>
+              <p>
+                Switch to Compare mode to see gold prices across 24 countries side by side.
+              </p>
             </div>
           </div>
           <div class="onb-step">
@@ -1251,7 +1310,8 @@
             <div>
               <strong>Price Alerts</strong>
               <p>
-                Set a target price — we'll notify you in the browser when gold hits your threshold.
+                Set a target price — we'll notify you in the browser when gold hits your
+                threshold.
               </p>
             </div>
           </div>

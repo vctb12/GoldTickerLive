@@ -79,7 +79,7 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '',
   observer.observe(container);
 }
 
-function _loadAd(container, slotId, adFormat) {
+function _loadAd(container, slotId, _adFormat) {
   const publisherId = AD_CONFIG.ADSENSE_PUBLISHER_ID;
   if (!publisherId) return;
 

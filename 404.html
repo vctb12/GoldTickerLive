@@ -1,25 +1,131 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Page not found — Gold Prices</title>
-    <meta name="robots" content="noindex" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page Not Found — GoldPrices</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#d4a017" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles/global.css" />
     <style>
-      body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;margin:0;background:#f8fafc;color:#0f172a;display:flex;align-items:center;justify-content:center;height:100vh}
-      .card{max-width:720px;padding:2rem;border-radius:12px;background:#fff;box-shadow:0 10px 30px rgba(2,6,23,0.08);text-align:center}
-      a{color:#0366d6;text-decoration:none}
+      .notfound-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 60vh;
+        padding: 2rem 1rem;
+        text-align: center;
+      }
+      .notfound-code {
+        font-size: clamp(5rem, 20vw, 9rem);
+        font-weight: 800;
+        line-height: 1;
+        color: #d4a017;
+        letter-spacing: -0.04em;
+        margin: 0 0 0.25rem;
+      }
+      .notfound-title {
+        font-size: clamp(1.2rem, 4vw, 1.75rem);
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 0.75rem;
+      }
+      .notfound-desc {
+        color: #64748b;
+        font-size: 1rem;
+        max-width: 440px;
+        margin: 0 auto 2rem;
+        line-height: 1.6;
+      }
+      .notfound-search {
+        display: flex;
+        gap: 0.5rem;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto 2.5rem;
+      }
+      .notfound-search input {
+        flex: 1;
+        padding: 0.65rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      .notfound-search input:focus {
+        border-color: #d4a017;
+      }
+      .notfound-search button {
+        padding: 0.65rem 1.2rem;
+        background: #d4a017;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .notfound-search button:hover {
+        background: #b8891a;
+      }
+      .notfound-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: center;
+      }
+      .notfound-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.55rem 1.1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #0f172a;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: border-color 0.15s, background 0.15s;
+      }
+      .notfound-link:hover {
+        border-color: #d4a017;
+        background: #fffbeb;
+      }
     </style>
   </head>
   <body>
-    <div class="card">
-      <h1>404 — Page not found</h1>
-      <p>We couldn't find the page you were looking for.</p>
-      <p>
-        - Try the <a href="/index.html">home page</a>
-        - Search from the <a href="/content/search/">site search</a>
-      </p>
-      <p>If you reached this from an internal link, please open an issue.</p>
-    </div>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <main id="main-content">
+      <div class="notfound-wrap">
+        <div class="notfound-code">404</div>
+        <h1 class="notfound-title">Page not found</h1>
+        <p class="notfound-desc">
+          We couldn't find the page you were looking for. It may have moved, or the link might be
+          incorrect.
+        </p>
+        <form class="notfound-search" action="/content/search/" method="get">
+          <input
+            type="search"
+            name="q"
+            placeholder="Search gold prices, karats, countries…"
+            aria-label="Search"
+          />
+          <button type="submit">Search</button>
+        </form>
+        <nav class="notfound-links" aria-label="Quick navigation">
+          <a href="/" class="notfound-link">🏠 Home</a>
+          <a href="/tracker.html" class="notfound-link">📈 Tracker</a>
+          <a href="/calculator.html" class="notfound-link">🧮 Calculator</a>
+          <a href="/shops.html" class="notfound-link">🏪 Shops</a>
+        </nav>
+      </div>
+    </main>
+
+    <script type="module" src="/src/pages/not-found.js"></script>
   </body>
 </html>

@@ -58,10 +58,10 @@
         align-items: center;
         background: linear-gradient(
           135deg,
-          rgba(245, 158, 11, 0.08) 0%,
+          rgba(201, 162, 39, 0.08) 0%,
           rgba(99, 102, 241, 0.06) 100%
         );
-        border: 1px solid rgba(245, 158, 11, 0.18);
+        border: 1px solid rgba(201, 162, 39, 0.18);
         border-radius: var(--radius-lg);
         display: flex;
         gap: 16px;
@@ -827,7 +827,7 @@
 
       function respBar(ms) {
         const w = Math.min(ms / 5, 80);
-        const bg = ms < 200 ? '#10b981' : ms < 500 ? '#f59e0b' : '#ef4444';
+        const bg = ms < 200 ? '#10b981' : ms < 500 ? '#c9a227' : '#ef4444';
         return `<span class="resp-bar" style="display:inline-block;height:8px;width:${w}px;background:${bg};border-radius:2px;vertical-align:middle;margin-right:4px"></span>${ms} ms`;
       }
 
