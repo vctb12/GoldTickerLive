@@ -166,6 +166,7 @@
         margin-top: 16px;
       }
 
+      .pagination-info {
         color: var(--text-muted);
         font-size: 0.875rem;
       }
@@ -236,7 +237,7 @@
           >
             ☰
           </button>
-          <h1 class="page-title">🏪 Shops</h1>
+          <h1 class="page-title">Shops</h1>
           <div class="header-actions">
             <button class="btn btn-gold btn-sm" id="header-add-btn" type="button">
               + Add Shop
@@ -302,9 +303,19 @@
               aria-label="Filter by verified status"
               style="flex: 0 1 140px"
             >
-              <option value="">All</option>
-              <option value="verified">Verified</option>
+              <option value="">All Status</option>
+              <option value="verified">✓ Verified</option>
               <option value="unverified">Unverified</option>
+            </select>
+            <select
+              class="form-select"
+              id="filter-featured"
+              aria-label="Filter by featured status"
+              style="flex: 0 1 140px"
+            >
+              <option value="">All Listings</option>
+              <option value="featured">⭐ Featured</option>
+              <option value="standard">Standard</option>
             </select>
             <select
               class="form-select"
@@ -327,6 +338,48 @@
                 ⬇ Export CSV
               </button>
             </div>
+          </div>
+
+          <!-- ── Bulk Actions Bar (shown when rows selected) ───── -->
+          <div
+            class="hidden"
+            id="bulk-bar"
+            style="
+              align-items: center;
+              background: rgba(201, 162, 39, 0.07);
+              border: 1px solid rgba(201, 162, 39, 0.2);
+              border-radius: var(--radius);
+              display: flex;
+              flex-wrap: wrap;
+              gap: 10px;
+              margin-bottom: 12px;
+              padding: 10px 16px;
+            "
+            aria-live="polite"
+          >
+            <span
+              id="bulk-count"
+              style="color: var(--gold); font-size: 0.875rem; font-weight: 600"
+            ></span>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap">
+              <button class="btn btn-ghost btn-sm" id="bulk-verify-btn" type="button">
+                ✓ Mark Verified
+              </button>
+              <button class="btn btn-ghost btn-sm" id="bulk-feature-btn" type="button">
+                ⭐ Toggle Featured
+              </button>
+              <button class="btn btn-danger btn-sm" id="bulk-delete-btn" type="button">
+                ✕ Delete Selected
+              </button>
+            </div>
+            <button
+              class="btn btn-ghost btn-sm"
+              id="bulk-clear-btn"
+              type="button"
+              style="margin-left: auto"
+            >
+              Clear
+            </button>
           </div>
 
           <!-- ── Table ─────────────────────────────────────────── -->
@@ -1009,6 +1062,7 @@
         const q = (document.getElementById('search-input').value || '').trim().toLowerCase();
         const country = document.getElementById('filter-country').value;
         const verified = document.getElementById('filter-verified').value;
+        const featured = document.getElementById('filter-featured')?.value ?? '';
         const sortVal = document.getElementById('sort-select').value;
 
         // Filter
@@ -1020,6 +1074,8 @@
         if (country) shops = shops.filter((s) => s.country === country);
         if (verified === 'verified') shops = shops.filter((s) => s.verified);
         if (verified === 'unverified') shops = shops.filter((s) => !s.verified);
+        if (featured === 'featured') shops = shops.filter((s) => s.featured);
+        if (featured === 'standard') shops = shops.filter((s) => !s.featured);
 
         // Sort — column header sort takes precedence over dropdown
         if (sortState.col) {
@@ -1322,6 +1378,7 @@
         document.getElementById('search-input').addEventListener('input', rerender);
         document.getElementById('filter-country').addEventListener('change', () => renderTable(1));
         document.getElementById('filter-verified').addEventListener('change', () => renderTable(1));
+        document.getElementById('filter-featured')?.addEventListener('change', () => renderTable(1));
         document.getElementById('sort-select').addEventListener('change', () => renderTable(1));
 
         // Add buttons
@@ -1561,6 +1618,20 @@
             document.getElementById('import-csv-modal').classList.add('hidden');
             deleteTargetId = null;
           }
+        });
+
+        // Bulk bar actions (UI-only — actual Supabase operations wired per button)
+        document.getElementById('bulk-clear-btn')?.addEventListener('click', () => {
+          document.getElementById('bulk-bar').classList.add('hidden');
+        });
+        document.getElementById('bulk-verify-btn')?.addEventListener('click', () => {
+          showToast('Bulk verify not yet connected.', 'info');
+        });
+        document.getElementById('bulk-feature-btn')?.addEventListener('click', () => {
+          showToast('Bulk feature toggle not yet connected.', 'info');
+        });
+        document.getElementById('bulk-delete-btn')?.addEventListener('click', () => {
+          showToast('Bulk delete not yet connected.', 'warning');
         });
 
         // Initial render

@@ -119,7 +119,7 @@
         text-align: center;
       }
       .sg-header.today {
-        background: rgba(245, 158, 11, 0.15);
+        background: rgba(201, 162, 39, 0.15);
         color: var(--gold);
       }
       .sg-time {
@@ -147,10 +147,10 @@
         background: var(--surface-2);
       }
       .sg-cell.today-col {
-        background: rgba(245, 158, 11, 0.04);
+        background: rgba(201, 162, 39, 0.04);
       }
       .sg-cell.today-col:hover {
-        background: rgba(245, 158, 11, 0.08);
+        background: rgba(201, 162, 39, 0.08);
       }
       .sg-chip {
         border-radius: 4px;
@@ -173,7 +173,7 @@
         background: #8b5cf6;
       }
       .sg-chip.t-morning {
-        background: #f59e0b;
+        background: #c9a227;
         color: #000;
       }
       .sg-chip.t-arabic {
@@ -349,8 +349,8 @@
         color: #34d399;
       }
       .char-warn {
-        background: rgba(245, 158, 11, 0.15);
-        color: #f59e0b;
+        background: rgba(201, 162, 39, 0.15);
+        color: #c9a227;
       }
       .char-over {
         background: rgba(239, 68, 68, 0.15);
@@ -609,8 +609,8 @@
 
       /* ── Next post banner ──────────────────────────────────── */
       .next-post-banner {
-        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.02));
-        border: 1px solid rgba(245, 158, 11, 0.25);
+        background: linear-gradient(135deg, rgba(201, 162, 39, 0.1), rgba(201, 162, 39, 0.02));
+        border: 1px solid rgba(201, 162, 39, 0.25);
         border-radius: var(--radius);
         display: flex;
         align-items: center;
@@ -786,7 +786,7 @@
                 <span class="legend-dot" style="background: #8b5cf6"></span> Daily
               </div>
               <div class="legend-item">
-                <span class="legend-dot" style="background: #f59e0b"></span> Morning
+                <span class="legend-dot" style="background: #c9a227"></span> Morning
               </div>
               <div class="legend-item">
                 <span class="legend-dot" style="background: #10b981"></span> Arabic
@@ -1385,7 +1385,7 @@
       const TEMPLATE_INFO = {
         hourly: { color: '#3b82f6', label: 'Hourly Snapshot', emoji: '⏰' },
         daily: { color: '#8b5cf6', label: 'Daily Breakdown', emoji: '🥇' },
-        morning: { color: '#f59e0b', label: 'Morning Open', emoji: '☀️' },
+        morning: { color: '#c9a227', label: 'Morning Open', emoji: '☀️' },
         arabic: { color: '#10b981', label: 'Arabic Edition', emoji: '🇦🇪' },
         country: { color: '#ef4444', label: 'Country Spotlight', emoji: '🌍' },
         comparison: { color: '#06b6d4', label: 'Karat Comparison', emoji: '📊' },
@@ -2031,8 +2031,8 @@
           remaining.style.color = 'var(--danger)';
           remaining.textContent = String(rem); // negative
         } else if (len > limit * 0.8) {
-          progress.style.stroke = 'var(--warning, #f59e0b)';
-          remaining.style.color = 'var(--warning, #f59e0b)';
+          progress.style.stroke = 'var(--warning, #c9a227)';
+          remaining.style.color = 'var(--warning, #c9a227)';
           remaining.textContent = String(rem);
         } else {
           progress.style.stroke = 'var(--primary)';
