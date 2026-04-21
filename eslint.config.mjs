@@ -3,7 +3,11 @@ export default [
     ignores: [
       'dist/**',
       'node_modules/**',
+      'build/**',
+      '.husky/**',
+      '.vscode/**',
       'coverage/**',
+      'assets/screenshots/**',
       '**/*.min.js',
       'package-lock.json',
       // Uses import-attribute syntax (`assert { type: 'json' }`) which espree
@@ -56,7 +60,14 @@ export default [
       },
     },
     rules: {
-      'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      'no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
       'no-console': 'off',
       semi: ['error', 'always'],
       quotes: ['error', 'single', { avoidEscape: true }],

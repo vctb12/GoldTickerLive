@@ -132,7 +132,7 @@ app.get('/admin', (req, res) => {
 });
 
 // Handle static file serving and SPA fallback with explicit 404 handling
-app.get('*', (req, res, next) => {
+app.get('*', (req, res, _next) => {
   // Normalize and prevent path traversal
   const safePath = path.normalize(req.path).replace(/^\/+/, '');
   const filePath = path.join(__dirname, 'dist', safePath);

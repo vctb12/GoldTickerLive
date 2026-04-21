@@ -1,7 +1,0 @@
-node_modules/
-dist/
-build/
-.husky/
-.vscode/
-coverage/
-assets/screenshots/

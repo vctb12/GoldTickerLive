@@ -82,7 +82,7 @@ function generateToken(user) {
 function verifyToken(token) {
   try {
     return jwt.verify(token, JWT_SECRET);
-  } catch (err) {
+  } catch (_err) {
     return null;
   }
 }
@@ -128,7 +128,7 @@ async function authenticate(email, password) {
 function getUserById(id) {
   const user = users.find((u) => u.id === id);
   if (user) {
-    const { password, ...userWithoutPassword } = user;
+    const { password: _password, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }
   return null;
