@@ -108,7 +108,7 @@
           We couldn't find the page you were looking for. It may have moved, or the link might be
           incorrect.
         </p>
-        <form class="notfound-search" action="/" method="get" onsubmit="return handleSearch(this)">
+        <form class="notfound-search" action="/content/search/" method="get">
           <input
             type="search"
             name="q"
@@ -127,16 +127,5 @@
     </main>
 
     <script type="module" src="/src/pages/not-found.js"></script>
-    <script>
-      function handleSearch(form) {
-        const q = form.q.value.trim();
-        if (q) {
-          window.location.href = '/content/search/?q=' + encodeURIComponent(q);
-        } else {
-          window.location.href = '/';
-        }
-        return false;
-      }
-    </script>
   </body>
 </html>

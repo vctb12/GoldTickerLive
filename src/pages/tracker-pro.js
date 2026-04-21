@@ -197,7 +197,10 @@ async function exportChartData() {
     source: r.source,
   }));
   const spot = currentSpot();
-  const rows = flat.filter(Boolean);
+  // Filter to the visible range before exporting so the CSV matches what the user sees
+  const { filterByRange } = await import('../lib/historical-data.js');
+  const rangeFiltered = state.range ? filterByRange(flat, state.range) : flat;
+  const rows = rangeFiltered.filter(Boolean);
   if (spot)
     rows.push({ date: new Date().toISOString().slice(0, 10), spot, price: spot, source: 'live' });
   try {
