@@ -95,7 +95,7 @@ body.invest-page {
   border: 1px solid rgb(255 255 255 / 8%);
   color: var(--invest-muted);
   font-size: 0.86rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   letter-spacing: 0.02em;
   margin-bottom: 1rem;
 }
@@ -142,7 +142,7 @@ body.invest-page {
 .invest-point strong {
   display: block;
   color: #fff2cc;
-  font-size: 1rem;
+  font-size: var(--text-base);
   margin-bottom: 0.25rem;
 }
 
@@ -196,7 +196,7 @@ body.invest-page {
   min-height: 2.5rem;
   padding: 0.55rem 0.85rem;
   border-radius: var(--invest-radius-pill);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   font-size: 0.86rem;
   border: 1px solid rgb(255 255 255 / 8%);
   background: rgb(255 255 255 / 6%);
@@ -241,7 +241,7 @@ body.invest-page {
 .invest-stat-value {
   font-size: 1.55rem;
   line-height: 1.1;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   color: #fff4d2;
   margin: 0.4rem 0 0.25rem;
   word-break: break-word;
@@ -268,7 +268,7 @@ body.invest-page {
 .invest-inline-link {
   color: var(--invest-gold-2);
   text-decoration: none;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
 }
 
 .invest-inline-link:hover {
@@ -303,7 +303,7 @@ body.invest-page {
   border: 1px solid rgb(255 255 255 / 9%);
   background: rgb(255 255 255 / 5%);
   color: var(--invest-text);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   transition:
     transform var(--invest-transition),
     border-color var(--invest-transition),
@@ -339,7 +339,7 @@ body.invest-page {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 0.55rem;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
 }
 
 .invest-section-title {
@@ -354,7 +354,7 @@ body.invest-page {
   max-width: 66ch;
   color: var(--invest-muted);
   line-height: 1.7;
-  font-size: 1rem;
+  font-size: var(--text-base);
 }
 
 .invest-card-grid {
@@ -415,7 +415,7 @@ body.invest-page {
 
 .invest-goal-title {
   font-size: 1.12rem;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   color: #fff4d2;
   margin-bottom: 0.35rem;
 }
@@ -437,7 +437,7 @@ body.invest-page {
 
 .invest-advice-title {
   font-size: 1.18rem;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   color: #fff4d2;
   margin: 0 0 0.55rem;
 }
@@ -493,7 +493,7 @@ body.invest-page {
 
 .invest-label {
   font-size: 0.92rem;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   color: #2a2010;
 }
 
@@ -511,7 +511,7 @@ body.invest-page {
   padding: 0.85rem 1rem;
   font: inherit;
   font-size: 1.15rem;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   background: #fff;
   color: #1a1a1a;
   outline: none;
@@ -541,7 +541,7 @@ body.invest-page {
   background: #fff;
   color: #1b1b1b;
   font: inherit;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   cursor: pointer;
   transition:
     border-color var(--invest-transition),
@@ -583,7 +583,7 @@ body.invest-page {
   margin-top: 0.35rem;
   font-size: clamp(1.25rem, 2vw, 1.7rem);
   line-height: 1.15;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   color: #fff4d2;
 }
 
@@ -621,7 +621,7 @@ body.invest-page {
   border: 1px solid rgb(255 255 255 / 8%);
   color: var(--invest-muted);
   font-size: 0.84rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
 }
 
 .invest-compare-card {
@@ -641,7 +641,7 @@ body.invest-page {
 .invest-compare-title {
   margin: 0;
   font-size: 1.12rem;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   color: #1d1608;
 }
 
@@ -654,7 +654,7 @@ body.invest-page {
   background: #fff4d2;
   color: #7b5904;
   font-size: 0.8rem;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   border: 1px solid rgb(201 168 76 / 28%);
 }
 
@@ -688,7 +688,7 @@ body.invest-page {
   background: rgb(255 255 255 / 4%);
   color: var(--invest-text);
   font: inherit;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   cursor: pointer;
   transition:
     transform var(--invest-transition),
@@ -739,7 +739,7 @@ body.invest-page {
   border: 1px solid rgb(201 168 76 / 22%);
   color: #f0d491;
   font-size: 0.82rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
 }
 
 .invest-guide-grid {
@@ -791,7 +791,7 @@ body.invest-page {
   justify-content: center;
   background: rgb(201 168 76 / 16%);
   color: #fff0c3;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   margin-bottom: 0.75rem;
   border: 1px solid rgb(201 168 76 / 24%);
 }
@@ -800,7 +800,7 @@ body.invest-page {
   margin: 0 0 0.35rem;
   color: #fff4d2;
   font-size: 1.04rem;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
 }
 
 .invest-mistake-copy {
@@ -830,7 +830,7 @@ body.invest-page {
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 1.15rem;
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   color: #fff4d2;
 }
 
