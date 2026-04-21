@@ -311,18 +311,6 @@ function renderFaq(cfg) {
 
   injectFaqSchema(cfg.faqEn);
 
-  const items = faqList
-    .map(
-      (item, i) => `
-    <details class="faq-item" ${i === 0 ? 'open' : ''}>
-      <summary class="faq-question" itemprop="name">${item.q}</summary>
-      <div class="faq-answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
-        <p itemprop="text">${item.a}</p>
-      </div>
-    </details>`
-    )
-    .join('');
-
   el.innerHTML = `
     <h2>${t('faq')}</h2>
     <div itemscope itemtype="https://schema.org/FAQPage">

@@ -32,7 +32,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
@@ -83,7 +83,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
@@ -97,9 +97,10 @@ jobs:
 
       - name: Serve dist and run E2E tests
         run: |
-          cd dist && python3 -m http.server 8080 &
+          # Copy country leaf pages (excluded from Vite build, served as-is in deploy)
+          cp -r countries dist/
+          python3 -m http.server 8080 --directory dist &
           sleep 2
-          cd ..
           npx playwright test --config=playwright.config.js --project=chromium
 
       - name: Upload Playwright report

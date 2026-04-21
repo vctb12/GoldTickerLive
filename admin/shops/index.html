@@ -166,10 +166,6 @@
         margin-top: 16px;
       }
 
-        color: var(--text-muted);
-        font-size: 0.875rem;
-      }
-
       /* ── Section heading ────────────────────────────────────── */
       .section-heading {
         align-items: center;
@@ -236,7 +232,7 @@
           >
             ☰
           </button>
-          <h1 class="page-title">🏪 Shops</h1>
+          <h1 class="page-title">Shops</h1>
           <div class="header-actions">
             <button class="btn btn-gold btn-sm" id="header-add-btn" type="button">
               + Add Shop
@@ -302,9 +298,19 @@
               aria-label="Filter by verified status"
               style="flex: 0 1 140px"
             >
-              <option value="">All</option>
-              <option value="verified">Verified</option>
+              <option value="">All Status</option>
+              <option value="verified">✓ Verified</option>
               <option value="unverified">Unverified</option>
+            </select>
+            <select
+              class="form-select"
+              id="filter-featured"
+              aria-label="Filter by featured status"
+              style="flex: 0 1 140px"
+            >
+              <option value="">All Listings</option>
+              <option value="featured">⭐ Featured</option>
+              <option value="standard">Standard</option>
             </select>
             <select
               class="form-select"
@@ -328,6 +334,7 @@
               </button>
             </div>
           </div>
+
 
           <!-- ── Table ─────────────────────────────────────────── -->
           <div class="section-heading">
@@ -1009,6 +1016,7 @@
         const q = (document.getElementById('search-input').value || '').trim().toLowerCase();
         const country = document.getElementById('filter-country').value;
         const verified = document.getElementById('filter-verified').value;
+        const featured = document.getElementById('filter-featured')?.value ?? '';
         const sortVal = document.getElementById('sort-select').value;
 
         // Filter
@@ -1020,6 +1028,8 @@
         if (country) shops = shops.filter((s) => s.country === country);
         if (verified === 'verified') shops = shops.filter((s) => s.verified);
         if (verified === 'unverified') shops = shops.filter((s) => !s.verified);
+        if (featured === 'featured') shops = shops.filter((s) => s.featured);
+        if (featured === 'standard') shops = shops.filter((s) => !s.featured);
 
         // Sort — column header sort takes precedence over dropdown
         if (sortState.col) {
@@ -1322,6 +1332,7 @@
         document.getElementById('search-input').addEventListener('input', rerender);
         document.getElementById('filter-country').addEventListener('change', () => renderTable(1));
         document.getElementById('filter-verified').addEventListener('change', () => renderTable(1));
+        document.getElementById('filter-featured')?.addEventListener('change', () => renderTable(1));
         document.getElementById('sort-select').addEventListener('change', () => renderTable(1));
 
         // Add buttons

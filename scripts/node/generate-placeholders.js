@@ -32,7 +32,7 @@ function ensurePlaceholder(dir) {
   try {
     fs.writeFileSync(idx, content, { flag: 'wx' });
     return true;
-  } catch (e) {
+  } catch (_e) {
     return false;
   }
 }

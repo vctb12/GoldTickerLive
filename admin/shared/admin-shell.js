@@ -89,7 +89,7 @@ function getActiveSlug() {
   return remainder;
 }
 
-function stripHtml(html) {
+function _stripHtml(html) {
   return html.replace(/<[^>]*>|\s+/g, ' ').trim();
 }
 

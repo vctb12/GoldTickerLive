@@ -29,7 +29,7 @@ export function installChartLoader({ state, el } = {}) {
 
   async function loadChart() {
     try {
-      const container = createContainer();
+      const _container = createContainer();
       const mod = await import('../components/chart.js');
       const GoldChart = mod && mod.GoldChart ? mod.GoldChart : mod.default;
       if (!GoldChart) return;
@@ -47,7 +47,7 @@ export function installChartLoader({ state, el } = {}) {
       const obs = new MutationObserver(() => {
         try {
           if (chart.setLang) chart.setLang(state?.lang || 'en');
-        } catch (e) {}
+        } catch (_e) {}
       });
       obs.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 
@@ -55,7 +55,7 @@ export function installChartLoader({ state, el } = {}) {
       try {
         const svg = document.getElementById('tp-chart');
         if (svg) svg.style.display = 'none';
-      } catch (e) {}
+      } catch (_e) {}
     } catch (e) {
       console.warn('[chart-loader] failed to load GoldChart', e);
     }

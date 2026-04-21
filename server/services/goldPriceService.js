@@ -51,7 +51,10 @@ function readCache(key) {
 export async function fetchGoldPrice() {
   for (const provider of PROVIDERS) {
     try {
-      const { data, timestamp } = await apiFetch(provider.url, { timeoutMs: 8000, maxRetries: 2 });
+      const { data, timestamp: _timestamp } = await apiFetch(provider.url, {
+        timeoutMs: 8000,
+        maxRetries: 2,
+      });
       const parsed = provider.parse(data);
       return { ...parsed, source: provider.name, fromCache: false };
     } catch {
