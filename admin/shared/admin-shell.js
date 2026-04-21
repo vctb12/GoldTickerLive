@@ -89,10 +89,6 @@ function getActiveSlug() {
   return remainder;
 }
 
-function stripHtml(html) {
-  return html.replace(/<[^>]*>|\s+/g, ' ').trim();
-}
-
 // ── Sidebar HTML builder ─────────────────────────────────────────────────────
 
 function buildSidebarHTML(adminBase, activeSlug) {

@@ -90,7 +90,6 @@ function formatDate(ms) {
 const pages = walk(ROOT);
 
 // Always add root
-const rootStat = fs.statSync(path.join(ROOT, 'index.html'));
 const rootEntry = { urlPath: '', file: path.join(ROOT, 'index.html') };
 
 const allEntries = [rootEntry, ...pages].sort((a, b) => {

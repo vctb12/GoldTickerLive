@@ -60,9 +60,9 @@ function httpsPost(url, payload) {
       headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
     };
     const req = https.request(opts, (res) => {
-      let data = '';
+      let _data = '';
       res.on('data', (c) => {
-        data += c;
+        _data += c;
       });
       res.on('end', () => resolve({ statusCode: res.statusCode }));
     });

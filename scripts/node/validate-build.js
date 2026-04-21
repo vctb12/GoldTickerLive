@@ -28,8 +28,8 @@ function error(msg) {
   errors++;
 }
 
-function warn(msg) {
-  console.warn(`  \u26A0\uFE0F  ${msg}`);
+function _warn(msg) {
+  console.warn(`  ⚠️  ${msg}`);
   warnings++;
 }
 
