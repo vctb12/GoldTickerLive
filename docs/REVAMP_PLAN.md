@@ -906,3 +906,71 @@ work are summarised here and now live as reference docs._
 > rolled into §22 Production-revamp tracks as concrete phases, or (c) deferred
 > to §24 Product roadmap. See git history of `docs/REVAMP_EXECUTION_SUMMARY.md`
 > for the original long-form prose.
+
+---
+
+## 24. Product roadmap
+
+_Absorbs `docs/ROADMAP_IMPLEMENTATION.md`. Multi-phase roadmap for features
+beyond the current revamp. Full implementation notes (env vars, code
+templates, SQL, cost projections) are preserved in git history; the active
+deliverable inventory lives here._
+
+### Phase 1 — Foundation & quick wins (current)
+
+| Feature            | Status                             | Blocker                                      |
+| ------------------ | ---------------------------------- | -------------------------------------------- |
+| Premium tier       | Infra complete, code stubs present | Stripe account + price IDs, `npm i stripe`   |
+| Email newsletter   | Infra complete, workflows present  | Resend account + verified sender domain      |
+| Portfolio tracker  | DB schema ready, UI pending        | Supabase Auth enabled; `portfolio.html` + `src/components/auth-modal.js` + `src/lib/portfolio-calculator.js` |
+
+**Newsletter cadence** (when live): daily 07:00 Dubai (03:00 UTC) via
+`daily-newsletter.yml`; weekly Sunday 18:00 Dubai (14:00 UTC) via
+`weekly-newsletter.yml`.
+
+### Phase 2 — Data & social (4–6 months)
+
+- [ ] **Multi-source price aggregation** — Kitco, LBMA, weighted average,
+      ±2% outlier detection, "Price Sources" transparency modal.
+- [ ] **Silver / platinum / palladium expansion** — generalise
+      `price-calculator.js` to `metal-price-calculator.js`, add metal selector
+      on tracker, create `silver.html` / `platinum.html` / `palladium.html`.
+- [ ] **Instagram & LinkedIn automation** — visual-content generator
+      (Puppeteer), posting scripts + workflows.
+
+### Phase 3 — Platform evolution (12+ months)
+
+- [ ] **Premium developer API** — `/api/v1/spot`, `/api/v1/price/:country/:karat`,
+      `/api/v1/historical`, `/api/v1/markets`. Tiered rate limits (Free / Basic /
+      Pro). Redis-backed rate limiting. API-key generation system. OpenAPI docs.
+- [ ] **Interactive heatmap** — regional price heat map.
+- [ ] **Crypto correlation** — gold vs BTC / ETH overlay.
+- [ ] **WhatsApp / Google Sheets integrations, push notifications, multi-language
+      expansion** — detail to be specified per feature.
+
+### Packages to install when activating roadmap items
+
+> Run `gh-advisory-database` before adding any of these.
+
+| Package                  | Phase | For                           |
+| ------------------------ | ----- | ----------------------------- |
+| `stripe`                 | 1     | Premium tier                  |
+| `resend`                 | 1     | Newsletter                    |
+| `@supabase/supabase-js`  | 1     | Portfolio, shops, settings    |
+| `puppeteer`              | 2     | Visual content generation     |
+| `redis` / `ioredis`      | 3     | API rate limiting             |
+| `swagger-ui-express`     | 3     | Developer-API docs            |
+
+### External inputs blocking roadmap delivery
+
+| Phase           | Blocker                                    |
+| --------------- | ------------------------------------------ |
+| Premium tier    | Stripe account + Price IDs                 |
+| Newsletter      | Resend API key + verified domain           |
+| Portfolio       | Supabase Auth enabled (email / OAuth)      |
+| Multi-source    | Kitco / LBMA API keys                      |
+| Social (Ph. 2)  | Instagram Graph + LinkedIn OAuth           |
+| API (Ph. 3)     | Deployment target + Redis instance         |
+
+See `docs/SUPABASE_SCHEMA.md` for the database migration workflow that supports
+these features.
