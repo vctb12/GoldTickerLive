@@ -18,8 +18,8 @@
 >    §1 or one of the tracks in §2, stop and raise it in the PR description rather than
 >    silently expanding scope.
 >
-> **Last updated:** 2026-04-22 · **Round:** 1 (Track A foundation + Track C/D reveal
-> wiring landed) · **Branch:** `copilot/revamp-tracker-html-page`
+> **Last updated:** 2026-04-22 · **Round:** 2 (Track A focus-ring audit cleanup in flight)
+> · **Branch:** `copilot/revamp-tracker-html-page` (successor: `copilot/continue-working-in-the-plan`)
 
 ---
 
@@ -120,7 +120,10 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
 - [ ] **Heading scale confirmation.** Ensure heading scale is applied via classes
       (`.h1`…`.h6`) not ad-hoc sizes.
 - [ ] **Focus ring token audit.** Confirm `--focus-ring` / `--focus-ring-offset` wired
-      through every `:focus-visible` site.
+      through every `:focus-visible` site. _(In progress: duplicate global
+      `:focus-visible` with hardcoded `2px solid var(--color-gold)` that shadowed the
+      token-based baseline removed — page-level sites (`calc-tab`, `stub-*`,
+      `tracker-mode-tab`, `shops-*`, `methodology-link`, `.btn`) still to audit.)_
 
 ## 5. Track B — Navigation rebuild
 
@@ -431,6 +434,12 @@ commits into the "Merged" section below.
 | `39138e7e` | `wiring`    | Tracker imports shared `reveal.js`                               |
 | `1e484954` | `motion`    | Opt tracker wire + brief sections into `[data-reveal]`           |
 | `0a3c7591` | `wiring`    | count-up: robust numeric parse + named `FLASH_DURATION_MS`       |
+
+### Round 2 — Track A focus-ring audit + follow-ups (in-branch, pending merge)
+
+| SHA        | Bucket      | Summary                                                          |
+| ---------- | ----------- | ---------------------------------------------------------------- |
+| _pending_  | `cleanup`   | Remove duplicate `:focus-visible` in `global.css` that shadowed the token-based baseline with hardcoded values |
 
 ### Merged PRs
 
