@@ -650,13 +650,13 @@ body.tracker-pro-page {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--tp-gold), #e1be71);
-  box-shadow: 0 0 0 4px rgb(196 154 68 / 14%);
+  background: var(--gradient-gold);
+  box-shadow: 0 0 0 4px var(--color-gold-glow);
 }
 
 .tracker-legend-dot.compare {
-  background: linear-gradient(135deg, #3b87e0, #1455a4);
-  box-shadow: 0 0 0 4px rgb(20 85 164 / 14%);
+  background: linear-gradient(135deg, var(--color-fixed) 0%, var(--color-fixed) 100%);
+  box-shadow: 0 0 0 4px var(--color-fixed-bg);
 }
 
 .tracker-mini-strip {
