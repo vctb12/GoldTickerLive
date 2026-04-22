@@ -30,6 +30,7 @@
     "check-links": "node scripts/node/check-links.js",
     "linkcheck": "linkinator index.html --recurse --skip \"^https?://(?!localhost|127\\.0\\.0\\.1),node_modules,^dist/,playwright-report,test-results,^\\.git/\" --format json",
     "linkcheck:report": "mkdir -p reports && npm run linkcheck --silent > reports/links-initial.json || true",
+    "linkcheck:dist": "mkdir -p reports && linkinator dist --recurse --skip \"^https?://(?!localhost|127\\.0\\.0\\.1)\" --format json > reports/links-dist.json || true",
     "audit-pages": "node scripts/node/audit-pages.js",
     "generate-sitemap": "node scripts/node/generate-sitemap.js",
     "enrich-placeholders": "node scripts/node/enrich-placeholder-pages.js",

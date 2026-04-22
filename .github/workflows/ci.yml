@@ -75,6 +75,17 @@ jobs:
       - name: Run link-check
         run: node scripts/node/check-links.js --dir dist --fail-on-error || true
 
+      - name: Run linkinator (baseline, non-blocking)
+        run: npm run linkcheck:dist
+
+      - name: Upload link-check report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: link-check-reports
+          path: reports/
+          retention-days: 14
+
       - name: Upload build artifact
         if: success()
         uses: actions/upload-artifact@v7
@@ -146,3 +157,14 @@ jobs:
 
       - name: Check links
         run: node scripts/node/check-links.js --dir dist --fail-on-error || true
+
+      - name: Run linkinator (nightly baseline)
+        run: npm run linkcheck:dist
+
+      - name: Upload nightly link-check report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: link-check-nightly
+          path: reports/
+          retention-days: 30
