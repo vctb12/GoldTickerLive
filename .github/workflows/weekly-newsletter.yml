@@ -6,6 +6,9 @@ on:
     - cron: '0 14 * * 0'
   workflow_dispatch: # Allow manual trigger
 
+permissions:
+  contents: read
+
 jobs:
   send-weekly-newsletter:
     runs-on: ubuntu-latest
