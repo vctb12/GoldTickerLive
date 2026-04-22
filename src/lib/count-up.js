@@ -21,8 +21,21 @@ const prefersReducedMotion = () =>
 
 const activeAnimations = new WeakMap();
 
+/** Directional-flash duration. Must match the `flash-up` / `flash-down`
+ *  keyframe duration in `styles/global.css`. */
+const FLASH_DURATION_MS = 1000;
+
 function defaultFormat(n, decimals) {
   return Number.isFinite(n) ? n.toFixed(decimals) : String(n);
+}
+
+/** Parse the current numeric value out of a formatted price string. Accepts
+ *  digits, an optional leading sign, a single decimal separator, and ignores
+ *  thousands separators / currency symbols. Returns `NaN` for anything else. */
+function parseCurrentValue(text) {
+  if (typeof text !== 'string' || !text) return NaN;
+  const match = text.replace(/,/g, '').match(/-?\d+(?:\.\d+)?/);
+  return match ? parseFloat(match[0]) : NaN;
 }
 
 /**
@@ -44,7 +57,7 @@ export function countUp(el, target, options = {}) {
   const maxDurationMs = options.maxDurationMs ?? 800;
   const unitsPerMs = options.unitsPerMs ?? 1.5;
 
-  const prev = parseFloat(String(el.textContent || '').replace(/[^\d.\-+eE]/g, ''));
+  const prev = parseCurrentValue(String(el.textContent || ''));
   const start = Number.isFinite(prev) ? prev : target;
   const diff = target - start;
 
@@ -54,7 +67,7 @@ export function countUp(el, target, options = {}) {
     const dir = flash === 'auto' ? (diff > 0 ? 'up' : 'down') : flash;
     el.setAttribute('data-flash', dir);
     // Let the animation complete once, then clear.
-    window.setTimeout(() => el.removeAttribute('data-flash'), 1000);
+    window.setTimeout(() => el.removeAttribute('data-flash'), FLASH_DURATION_MS);
   }
 
   if (prefersReducedMotion() || start === target) {
