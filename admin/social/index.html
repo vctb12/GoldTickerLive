@@ -1987,8 +1987,8 @@
                 : '<span class="event-badge badge-en">EN</span>';
             return `<tr>
           <td style="white-space:nowrap;color:var(--text-dim);font-size:0.8125rem;">${ts}</td>
-          <td>${GEN_TEMPLATE_LABELS[e.template] || e.template}</td>
-          <td>${langBadge} <span style="color:var(--text-dim);font-size:0.8125rem;">${e.platform || ''}</span></td>
+          <td>${escapeHtml((GEN_TEMPLATE_LABELS[e.template] || e.template || '').toString())}</td>
+          <td>${langBadge} <span style="color:var(--text-dim);font-size:0.8125rem;">${escapeHtml((e.platform || '').toString())}</span></td>
           <td class="history-text-preview" title="${escapeHtml(e.text || '')}">${escapeHtml(preview)}</td>
           <td><button class="btn btn-ghost btn-sm" data-reuse="${i}" type="button">Re-use</button></td>
         </tr>`;
