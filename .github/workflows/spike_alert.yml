@@ -1,3 +1,7 @@
+# ------------------------------------------------------------------
+# Spike Alert (Python) — informational. Detects price spikes every
+# 15 min and posts an alert. NOT a required merge gate.
+# ------------------------------------------------------------------
 name: Gold Price Spike Alert (Python)
 
 on:
@@ -8,6 +12,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: spike-alert
+  cancel-in-progress: true
 
 jobs:
   check:

@@ -7,12 +7,13 @@
 
 const express = require('express');
 const router = express.Router();
-const crypto = require('crypto');
 
 // Resend will be installed separately: npm install resend
-// For now, we'll structure the routes to be ready for integration
-
-const RESEND_CONFIG = {
+// For now, we'll structure the routes to be ready for integration.
+// `_RESEND_CONFIG` is intentionally prefixed with an underscore so lint
+// recognizes it as reserved-for-future-use. It is referenced by the
+// commented Resend integration block in `sendVerificationEmail` below.
+const _RESEND_CONFIG = {
   apiKey: process.env.RESEND_API_KEY || '',
   fromEmail: process.env.RESEND_FROM_EMAIL || 'newsletter@goldprices.com',
   fromName: 'Gold Prices Platform',
@@ -173,16 +174,18 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
 }
 
-async function sendVerificationEmail(email, token) {
+// Stub helper reserved for the future Resend-backed verification flow.
+// Underscore prefix signals intentional unused binding to ESLint.
+async function _sendVerificationEmail(email, token) {
   const verifyUrl = `${process.env.SITE_URL || 'http://localhost:3000'}/api/newsletter/verify/${token}`;
 
   // TODO: Send email via Resend
   /*
   const { Resend } = require('resend');
-  const resend = new Resend(RESEND_CONFIG.apiKey);
+  const resend = new Resend(_RESEND_CONFIG.apiKey);
 
   await resend.emails.send({
-    from: `${RESEND_CONFIG.fromName} <${RESEND_CONFIG.fromEmail}>`,
+    from: `${_RESEND_CONFIG.fromName} <${_RESEND_CONFIG.fromEmail}>`,
     to: email,
     subject: 'Confirm your newsletter subscription',
     html: `

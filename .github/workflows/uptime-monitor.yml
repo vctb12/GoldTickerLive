@@ -1,3 +1,7 @@
+# ------------------------------------------------------------------
+# Uptime Monitor — informational. Pings public site every 30 min.
+# NOT a required merge gate.
+# ------------------------------------------------------------------
 name: Uptime Monitor
 
 on:
@@ -8,6 +12,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: uptime-monitor
+  cancel-in-progress: true
 
 jobs:
   ping:

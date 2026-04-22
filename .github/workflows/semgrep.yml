@@ -8,6 +8,10 @@
 #
 # See https://semgrep.dev/docs
 
+# ------------------------------------------------------------------
+# Semgrep — informational static-analysis scan. Reports to the
+# Security tab. NOT a required merge gate.
+# ------------------------------------------------------------------
 name: Semgrep
 
 on:
@@ -22,6 +26,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: semgrep-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   semgrep:
     permissions:
@@ -30,6 +38,7 @@ jobs:
       actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
     name: Scan
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       # Checkout project source
       - uses: actions/checkout@v4
