@@ -143,8 +143,6 @@ export function injectNav(lang = 'en', depth = 0) {
   const homeActive = isPageMatch(homeHref);
   const shopsHref = resolveHref(data.shops.href, depth);
   const shopsActive = isPageMatch(shopsHref);
-  const investHref = resolveHref(data.invest.href, depth);
-  const investActive = isPageMatch(investHref);
 
   const desktopDropdownsHtml = data.groups.map((g) => buildDropdown(g, depth)).join('');
   const mobileGroupsHtml = data.groups.map((g) => buildDrawerGroup(g, depth)).join('');
@@ -175,13 +173,6 @@ export function injectNav(lang = 'en', depth = 0) {
       >${data.shops.label}</a>
 
       ${desktopDropdownsHtml}
-
-      <a href="${investHref}"
-         class="nav-link${investActive ? ' nav-link--active' : ''}"
-         role="listitem"
-         data-nav-key="invest"
-         ${investActive ? 'aria-current="page"' : ''}
-      >${data.invest.label}</a>
     </div>
 
     <!-- Right-side actions -->
@@ -194,9 +185,11 @@ export function injectNav(lang = 'en', depth = 0) {
 
       <button id="nav-theme-toggle"
               type="button"
-              aria-label="Switch to dark mode"
+              aria-label="Theme: auto"
+              title="Theme: auto"
+              data-theme-mode="auto"
               style="background:none;border:none;cursor:pointer;padding:0.4rem;font-size:1.1rem;color:var(--color-text-muted);display:flex;align-items:center;line-height:1;"
-      >🌙</button>
+      >🌓</button>
 
       <button id="nav-lang-toggle"
               class="nav-lang-btn"
@@ -249,13 +242,6 @@ export function injectNav(lang = 'en', depth = 0) {
       <!-- Grouped sections -->
       ${mobileGroupsHtml}
 
-      <!-- Invest (direct) -->
-      <a href="${investHref}"
-         class="nav-drawer-link${investActive ? ' nav-link--active' : ''}"
-         data-nav-key="invest"
-         ${investActive ? 'aria-current="page"' : ''}
-      >${data.invest.label}</a>
-
       <!-- Language toggle -->
       <button id="nav-lang-toggle-mobile"
               class="nav-lang-btn nav-lang-btn--drawer"
@@ -279,32 +265,68 @@ export function injectNav(lang = 'en', depth = 0) {
   // ── Mobile bottom navigation bar ──────────────────────────────────────────
   _injectMobileBottomNav(lang, depth);
 
-  // ── Theme (dark/light) toggle ────────────────────────────────────────────
+  // ── Theme (auto/light/dark) tri-state toggle ─────────────────────────────
   const themeBtn = document.getElementById('nav-theme-toggle');
   if (themeBtn) {
-    function _applyTheme(t) {
-      document.documentElement.setAttribute('data-theme', t);
-      themeBtn.textContent = t === 'dark' ? '☀️' : '🌙';
-      themeBtn.setAttribute(
-        'aria-label',
-        t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
-      );
+    const THEME_CYCLE = ['auto', 'light', 'dark'];
+    const THEME_ICON = { auto: '🌓', light: '☀️', dark: '🌙' };
+    const THEME_LABEL = {
+      auto: 'Theme: auto (click to switch to light)',
+      light: 'Theme: light (click to switch to dark)',
+      dark: 'Theme: dark (click to switch to auto)',
+    };
+    const mql =
+      typeof window.matchMedia === 'function'
+        ? window.matchMedia('(prefers-color-scheme: dark)')
+        : null;
+
+    function _resolvedTheme(mode) {
+      if (mode === 'light' || mode === 'dark') return mode;
+      return mql && mql.matches ? 'dark' : 'light';
     }
+
+    function _applyTheme(mode) {
+      const resolved = _resolvedTheme(mode);
+      document.documentElement.setAttribute('data-theme', resolved);
+      document.documentElement.setAttribute('data-theme-mode', mode);
+      themeBtn.textContent = THEME_ICON[mode] || THEME_ICON.auto;
+      themeBtn.setAttribute('aria-label', THEME_LABEL[mode] || THEME_LABEL.auto);
+      themeBtn.setAttribute('title', THEME_LABEL[mode] || THEME_LABEL.auto);
+      themeBtn.setAttribute('data-theme-mode', mode);
+    }
+
+    function _currentMode() {
+      const m = themeBtn.getAttribute('data-theme-mode') || 'auto';
+      return THEME_CYCLE.includes(m) ? m : 'auto';
+    }
+
     try {
       const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
       const saved = prefs.theme;
-      if (saved) {
-        _applyTheme(saved);
-      } else {
-        _applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      }
+      const initial = THEME_CYCLE.includes(saved) ? saved : 'auto';
+      _applyTheme(initial);
     } catch (e) {
       console.warn('theme init', e);
+      _applyTheme('auto');
+    }
+
+    // Live-follow system preference while in "auto" mode.
+    if (mql) {
+      const _onSystemChange = () => {
+        if (_currentMode() === 'auto') _applyTheme('auto');
+      };
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', _onSystemChange);
+      } else if (typeof mql.addListener === 'function') {
+        // Safari <14 fallback
+        mql.addListener(_onSystemChange);
+      }
     }
 
     themeBtn.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme') || 'light';
-      const next = current === 'dark' ? 'light' : 'dark';
+      const current = _currentMode();
+      const idx = THEME_CYCLE.indexOf(current);
+      const next = THEME_CYCLE[(idx + 1) % THEME_CYCLE.length];
       _applyTheme(next);
       try {
         const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');

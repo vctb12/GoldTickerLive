@@ -1,0 +1,151 @@
+/* styles/pages/stub.css — shared styling for "Coming soon" stub pages */
+
+.stub-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 5rem;
+}
+
+.stub-card {
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 16px;
+  padding: 2.5rem 1.75rem;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.stub-icon {
+  font-size: 2.75rem;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.stub-eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #92400e;
+  background: #fef3c7;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  margin-bottom: 0.9rem;
+}
+
+.stub-title {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 800;
+  color: var(--color-text, #0f172a);
+  margin: 0 0 0.6rem;
+  line-height: 1.15;
+}
+
+.stub-subtitle {
+  font-size: 1rem;
+  color: var(--color-text-muted, #475569);
+  margin: 0 auto 1.75rem;
+  max-width: 520px;
+  line-height: 1.55;
+}
+
+.stub-related {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.stub-related h2 {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, #64748b);
+  margin: 0 0 0.75rem;
+  text-align: center;
+}
+
+.stub-related-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+@media (min-width: 540px) {
+  .stub-related-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.stub-related-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--color-surface-alt, #f8fafc);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 10px;
+  color: var(--color-text, #0f172a);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 500;
+  transition:
+    border-color 0.15s,
+    transform 0.1s,
+    box-shadow 0.15s;
+}
+
+.stub-related-link:hover,
+.stub-related-link:focus-visible {
+  border-color: #d4a017;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(212, 160, 23, 0.1);
+}
+
+.stub-related-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.stub-cta {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  background: #d4a017;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.stub-cta:hover,
+.stub-cta:focus-visible {
+  background: #b8860b;
+}
+
+.stub-meta {
+  margin-top: 1.25rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted, #94a3b8);
+}
+
+[data-theme='dark'] .stub-card {
+  background: var(--color-surface, #1e293b);
+  border-color: var(--color-border, #334155);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme='dark'] .stub-eyebrow {
+  background: #422006;
+  color: #fcd34d;
+}
+
+[data-theme='dark'] .stub-related-link {
+  background: var(--color-surface-alt, #0f172a);
+  border-color: var(--color-border, #334155);
+}
