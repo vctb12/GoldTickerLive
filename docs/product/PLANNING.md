@@ -1,34 +1,13 @@
-# Planning
+# Planning — consolidated
 
-## Current phase
-
-Phase 6 — QA and rollout governance
-
-## Current goals
-
-- Finish tracker interaction and state reliability
-- Improve historical readability and exports
-- Rebuild shops data trust model
-- Improve mobile layout and page clarity
-- Fix metadata/canonical/sitemap issues
-
-## In scope now
-
-- tracker.html / tracker-pro.js / tracker CSS
-- shops.html / shops.js / shops.css
-- metadata and sitemap cleanup
-- country/city internal linking
-
-## Out of scope now
-
-- full framework migration
-- unnecessary backend rewrite
-- unrelated visual redesigns
-
-## Success criteria
-
-- Key flows work on mobile and desktop
-- No broken buttons in target pages
-- Data labeling is clear
-- Metadata is correct
-- Internal links resolve correctly
+> 🛑 **This content has moved.** Current-phase status, in-scope, out-of-scope,
+> and success criteria are now spread across the master plan:
+>
+> - **Current status & in-scope** → [`../REVAMP_PLAN.md` §3 Status at a glance](../REVAMP_PLAN.md#3-status-at-a-glance)
+> - **Current tracks (A–J)** → [`../REVAMP_PLAN.md` §4–§13](../REVAMP_PLAN.md#4-track-a--cross-cutting-foundation)
+> - **Explicit non-goals** → [`../REVAMP_PLAN.md` §14 Explicit non-goals](../REVAMP_PLAN.md#14-explicit-non-goals)
+> - **Production-revamp phases** → [`../REVAMP_PLAN.md` §22 Production-revamp tracks](../REVAMP_PLAN.md#22-production-revamp-tracks-30-phase)
+> - **Roadmap** → [`../REVAMP_PLAN.md` §24 Product roadmap](../REVAMP_PLAN.md#24-product-roadmap)
+>
+> Edit the master plan instead of this file. This pointer exists so any
+> external link to `docs/product/PLANNING.md` still resolves.

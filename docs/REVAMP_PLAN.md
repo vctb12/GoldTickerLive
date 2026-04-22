@@ -3,7 +3,8 @@
 > 🛑 **START HERE — READ BEFORE DOING ANY WORK ON THIS REVAMP.**
 >
 > This file is the **single source of truth** for the homepage + global nav + tracker
-> revamp. It consolidates every previous plan. Do **not** reintroduce or fork another plan.
+> revamp **and** for the consolidated production tracks. It absorbs every previous plan.
+> Do **not** reintroduce or fork another plan.
 >
 > ### 📌 Mandatory session protocol
 >
@@ -18,12 +19,213 @@
 >    §1 or one of the tracks in §2, stop and raise it in the PR description rather than
 >    silently expanding scope.
 >
-> **Last updated:** 2026-04-22 · **Round:** 1 (Track A foundation + Track C/D reveal
-> wiring landed) · **Branch:** `copilot/revamp-tracker-html-page`
+> **Last updated:** 2026-04-22 · **Round:** 2 (Track A focus-ring audit + docs
+> consolidation sweep) · **Branch:** `copilot/revamp-tracker-html-page`
+> (successor: `copilot/continue-working-in-the-plan`)
+
+> **📚 Master consolidation index.** This file is the single consolidated plan
+> for the entire revamp *and* for the pre-existing production/admin tracks that
+> used to live in other docs. Every planning-style file in `docs/` now points
+> here. Sections §0–§18 own the homepage + nav + tracker revamp; §19–§28 own
+> the consolidated production tracks, decisions, governance, roadmaps, risks,
+> and historical logs. See [`docs/README.md`](./README.md) for the pointer map.
+
+| §       | Owns                                                                  | Absorbed from                                             |
+| ------- | --------------------------------------------------------------------- | --------------------------------------------------------- |
+| §0      | Product context (mission, users, jobs, pillars)                       | `product/PRD.md`                                          |
+| §0.1    | Trust guardrails (labels, required elements)                          | `product/PHASE0_GUARDRAILS.md`                            |
+| §0.2    | Reusable trust copy snippets                                          | `product/TRUST_SNIPPETS.md`                               |
+| §1–§18  | Homepage + nav + tracker revamp (current work)                        | _native to this file_                                     |
+| §19     | Decisions log                                                         | `product/DECISIONS.md`                                    |
+| §20     | Project memory                                                        | `product/MEMORY.md`                                       |
+| §21     | Rollout governance (release waves, merge gate)                        | `product/ROLLOUT_GOVERNANCE.md`                           |
+| §22     | Production-revamp tracks (30-phase, post-homepage)                    | `REVAMP_STATUS.md`                                        |
+| §23     | Historical execution summary (20-phase)                               | `REVAMP_EXECUTION_SUMMARY.md`                             |
+| §24     | Product roadmap (monetization, newsletter, portfolio, API)            | `ROADMAP_IMPLEMENTATION.md`                               |
+| §25     | Known issues, risks, open items                                       | `issues-found.md` + `risks.md` + `pr-audit.md` + `LIMITATIONS.md` |
+| §26     | Codebase architecture snapshot                                        | `codebase-audit.md`                                       |
+| §27     | Historical execution log                                              | `execution-log.md`                                        |
+| §28     | Task backlog                                                          | `product/TASKS.md`                                        |
 
 ---
 
-## 0. Non-negotiables
+---
+
+## 0. Product context
+
+_Absorbs `docs/product/PRD.md`._
+
+### Product
+
+Gold-Prices website — a bilingual (EN/AR), multi-page, mostly-static site with
+live data, tools, country/city/market pages, educational content, and a shops
+directory.
+
+### Mission
+
+Help users quickly and confidently understand gold prices, historical movement,
+market context, and where/how to buy.
+
+### Primary users
+
+- Retail users checking today's prices
+- Users comparing countries / cities / karats
+- Users looking for gold shops / markets
+- Users researching gold buying and pricing
+- SEO users landing on country / city / guide pages
+
+### Core jobs to be done
+
+- See the current gold price clearly
+- Compare karats and currencies
+- Browse historical data with confidence
+- Find relevant local market / shop information
+- Understand the difference between spot and retail pricing
+- Use calculators and educational pages without confusion
+
+### Product pillars
+
+1. Trust and clarity
+2. Speed
+3. Mobile-first UX
+4. SEO depth
+5. Clean information architecture
+
+### Core sections
+
+- Homepage
+- Tracker / historical prices
+- Country pages
+- City pages
+- Markets / famous gold souks
+- Shops directory
+- Calculators
+- Learn / methodology / guides
+
+### Product non-negotiables
+
+- Label estimated, fallback, and derived values clearly
+- Preserve internal linking between pages
+- No fake "live" claims without support
+- No weak SEO duplication
+- No misleading store verification
+
+---
+
+## 0.1 Trust guardrails
+
+_Absorbs `docs/product/PHASE0_GUARDRAILS.md`. These are non-negotiable product
+rules for trust language that must land before any broad visual or UX change._
+
+### Purpose
+
+Keep the site explicit about what prices represent and what they do **not**
+represent. Applies to all pages that show prices, rates, listings, or market
+comparisons.
+
+### Core trust rules
+
+1. **Always separate reference prices from retail outcomes.**
+   - Use "spot-linked reference estimate" for computed values.
+   - Never label computed values as "shop price" unless sourced from a real
+     store feed.
+2. **Always label data freshness and source layer.**
+   - Every critical price surface must indicate one of: `Live`, `Cached`,
+     `Fallback`, `Derived estimate`.
+3. **Always expose timing context.**
+   - Show timestamp / age where possible (e.g., "Updated 3 min ago").
+   - If stale, show "Delayed" or "Stale" state explicitly.
+4. **Never imply store verification without evidence.**
+   - For market clusters or area listings, use wording such as
+     "Market-area listing" or "Directory reference profile".
+5. **Always include user next-step guidance.**
+   - On shops / listings surfaces, include:
+     "Confirm final prices, making charges, and VAT directly with seller."
+
+### Global label taxonomy
+
+Canonical labels to use across UI:
+
+- `Spot/reference estimate`
+- `Retail price (from seller)`
+- `Live data`
+- `Cached data`
+- `Fallback value`
+- `Derived value`
+- `Last reviewed`
+- `Methodology`
+
+Avoid ambiguous terms: "accurate retail now", "verified price" (unless
+provenance is explicit), "official market price" (unless the source is named).
+
+### Required trust elements by page type
+
+**Tracker pages** must include:
+- source-layer label (live / cached / fallback)
+- methodology link
+- spot-vs-retail distinction
+- timestamp or age indicator
+
+**Shops directory and listing detail modal** must include:
+- listing-type clarity (store vs market area)
+- details availability badge (full / partial / limited)
+- "confirm directly with seller" disclaimer
+- last-reviewed date for directory content
+
+**Country / city / market guide pages** must include:
+- clear separation between benchmark prices and local retail variability
+- links to methodology and relevant tracker / shops pages
+
+### Copy pattern rules
+
+- Short, explicit sentences over marketing-heavy claims.
+- Prefer "estimate", "reference", "indicative", "derived" where applicable.
+- Keep disclaimers informative and actionable.
+- Avoid fear language and avoid overconfidence claims.
+
+### PR review checklist (Phase 0 gate)
+
+For any PR touching pricing / listing UI, reviewers must confirm:
+
+- [ ] Spot/reference vs retail is explicit on the changed surface.
+- [ ] Live / cached / fallback / derived status is visible where relevant.
+- [ ] Timestamp or recency context is present or intentionally not applicable.
+- [ ] Trust disclaimer is present and not vague.
+- [ ] Methodology link remains discoverable.
+- [ ] No wording implies verification without supporting data.
+
+If any item fails, the PR must not be marked complete.
+
+---
+
+## 0.2 Reusable trust copy snippets
+
+_Absorbs `docs/product/TRUST_SNIPPETS.md`. Use these as defaults for banners,
+cards, and modals. Adapt wording to context without changing meaning._
+
+| Id | Use                              | Copy                                                                                          |
+| -- | -------------------------------- | --------------------------------------------------------------------------------------------- |
+| A  | Spot/reference estimate banner   | "These are spot-linked reference estimates, not final retail jewelry prices."                 |
+| B  | Retail variance helper           | "Final shop prices can include making charges, premiums, and local taxes."                    |
+| C1 | Source-layer badge — live        | "Live source"                                                                                 |
+| C2 | Source-layer badge — cached      | "Cached value"                                                                                |
+| C3 | Source-layer badge — fallback    | "Fallback value"                                                                              |
+| C4 | Source-layer badge — derived     | "Derived estimate"                                                                            |
+| D  | Shops directory disclaimer       | "Directory listings may represent market areas or dealer clusters unless direct business details are shown." |
+| E  | Seller-confirmation CTA          | "Before purchasing, confirm final price, making charges, and tax directly with the seller."   |
+| F  | Freshness label                  | "Last reviewed: {date}"                                                                       |
+| G  | Staleness label                  | "Data may be delayed. Check timestamp before relying on this value."                          |
+| H  | Method transparency link text    | "See methodology and data sources"                                                            |
+
+### Usage notes
+
+- Keep one primary trust sentence near the top of each critical page.
+- Do not stack multiple long disclaimers above the fold.
+- For mobile, prefer concise labels + expandable detail text.
+
+---
+
+## 0.3 Engineering non-negotiables
 
 - **One PR, many tiny commits.** Each commit is single-purpose and reversible with
   `git revert`.
@@ -120,7 +322,10 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
 - [ ] **Heading scale confirmation.** Ensure heading scale is applied via classes
       (`.h1`…`.h6`) not ad-hoc sizes.
 - [ ] **Focus ring token audit.** Confirm `--focus-ring` / `--focus-ring-offset` wired
-      through every `:focus-visible` site.
+      through every `:focus-visible` site. _(In progress: duplicate global
+      `:focus-visible` with hardcoded `2px solid var(--color-gold)` that shadowed the
+      token-based baseline removed — page-level sites (`calc-tab`, `stub-*`,
+      `tracker-mode-tab`, `shops-*`, `methodology-link`, `.btn`) still to audit.)_
 
 ## 5. Track B — Navigation rebuild
 
@@ -377,6 +582,63 @@ Before marking the PR ready for review:
 - [ ] PR body lists: what was verified, what wasn't (Lighthouse needs deploy), known
       risks, known remaining scope.
 
+### 13.1 Per-PR verification checklist
+
+_Absorbs `docs/product/VERIFICATION.md`. Use this before merging any PR that
+affects user-facing pages._
+
+#### Functional checks
+
+- [ ] Primary buttons / CTAs work on target pages.
+- [ ] Filters / search / sort controls update results correctly.
+- [ ] Deep links and query-parameter state restore as expected.
+- [ ] Local state persistence (where used) behaves correctly after refresh.
+- [ ] Modal / dialog behaviour works with click, Escape, and focus flow.
+
+#### UX and accessibility checks
+
+- [ ] Mobile layout verified at narrow width (≥ 360 px).
+- [ ] Empty / loading / error states are visible and understandable.
+- [ ] Keyboard tab order is usable and skip-link path is valid.
+- [ ] Focus indicators are visible on interactive controls.
+- [ ] Contrast and readable hierarchy are acceptable for core flows.
+
+#### SEO and metadata checks
+
+- [ ] Unique `<title>` and `<meta name="description">` on changed pages.
+- [ ] Canonical URL is present and points to the intended final URL.
+- [ ] Open Graph + Twitter metadata are present and aligned.
+- [ ] Internal links resolve from actual file depth (no broken relatives).
+- [ ] Structured data (if present) matches page reality.
+- [ ] Sitemap / robots impact reviewed when adding new indexable pages.
+
+#### Trust and product clarity checks
+
+- [ ] Spot / reference values are clearly distinguished from retail / jewelry
+      pricing.
+- [ ] Estimated / derived / cached / fallback states are labelled where
+      relevant.
+- [ ] Freshness / review-date labels are visible and not misleading.
+- [ ] Shops / market listings do not overstate verification status.
+- [ ] Methodology / disclaimer links remain discoverable.
+
+#### Performance and resilience checks
+
+- [ ] `npm run build` passes.
+- [ ] Service-worker changes validated for cache version and fallback
+      behaviour.
+- [ ] No accidental broad asset / cache growth from query-param caching.
+
+#### Final report format (required)
+
+Every implementation update must explicitly separate:
+
+1. **What was verified**
+2. **What was not verified**
+3. **Remaining risks**
+
+Do not claim "fixed" unless the relevant checks were actually run.
+
 ---
 
 ## 14. Explicit non-goals
@@ -432,6 +694,12 @@ commits into the "Merged" section below.
 | `1e484954` | `motion`    | Opt tracker wire + brief sections into `[data-reveal]`           |
 | `0a3c7591` | `wiring`    | count-up: robust numeric parse + named `FLASH_DURATION_MS`       |
 
+### Round 2 — Track A focus-ring audit + follow-ups (in-branch, pending merge)
+
+| SHA        | Bucket      | Summary                                                          |
+| ---------- | ----------- | ---------------------------------------------------------------- |
+| _pending_  | `cleanup`   | Remove duplicate `:focus-visible` in `global.css` that shadowed the token-based baseline with hardcoded values |
+
 ### Merged PRs
 
 _None yet._ Populate when the first revamp PR merges: PR number, merge date, branch name,
@@ -457,3 +725,561 @@ range of SHAs covered, any follow-ups.
 
 > This file replaces `docs/REVAMP_STATUS.md` for the homepage + nav + tracker revamp.
 > Legacy tracks from that file remain valid for their respective scopes.
+
+---
+
+## 19. Decisions log
+
+_Absorbs `docs/product/DECISIONS.md`. Append-only. One entry per architectural
+or product decision that future agents need to know about._
+
+### 2026-04-04 — Keep the current static architecture
+
+- **Decision.** Keep current static multi-page architecture for now.
+- **Why.** The biggest issues are trust, UX, state reliability, and SEO — not
+  framework limitations.
+- **Consequence.** Prefer targeted refactors over migrations.
+
+### 2026-04-04 — Spot/reference vs retail, always distinguished
+
+- **Decision.** Always distinguish spot/reference prices from retail shop
+  prices.
+- **Why.** This is core to trust.
+- **Consequence.** UI labels, methodology notes, and page copy must reflect
+  this. Codified in §0.1 Trust guardrails and §0.2 trust snippets.
+
+### 2026-04-22 — REVAMP_PLAN.md is the single source of truth
+
+- **Decision.** Consolidate every planning / status / roadmap / task / audit
+  doc into `docs/REVAMP_PLAN.md`. Source files become thin pointers.
+- **Why.** Multiple overlapping plan docs caused drift and confusion about
+  which file to update when reporting progress.
+- **Consequence.** All planning edits land here. `docs/README.md` maps the
+  pointer index. Reference docs (ARCHITECTURE, DESIGN_TOKENS, SEO_STRATEGY,
+  etc.) stay independent.
+
+---
+
+## 20. Project memory
+
+_Absorbs `docs/product/MEMORY.md`. Long-lived project-level facts that future
+contributors need. Repository-wide memory lives in the agent memory store; this
+section is for facts that benefit every contributor (human or agent)._
+
+- Users care a lot about trust wording.
+- Avoid generic "AI-looking" page layouts.
+- Do not overbuild. Small reliable improvements beat broad rewrites.
+- Tracker and shops pages are high priority.
+- Country / city pages need strong SEO and internal linking.
+- Any fallback / estimated data must be clearly labeled.
+- When reviewing code, inspect relevant files before proposing architecture
+  changes.
+- Always separate review, plan, debug, and build modes.
+- `buildFilters()` on the shops page already validates each dropdown value and
+  resets invalid ones to `'all'` — lean on that safety net rather than
+  duplicating validation upstream.
+
+---
+
+## 21. Rollout governance
+
+_Absorbs `docs/product/ROLLOUT_GOVERNANCE.md`. Defines a safe rollout sequence
+and release gate for multi-PR revamp work._
+
+### Release waves
+
+#### Wave 1 — Shops
+
+Scope: `shops.html`, `shops.js`, `shops.css`.
+
+Gate to move forward:
+- Functional and trust checks pass for shops flows.
+- No unresolved accessibility blockers in modal / filter path.
+
+#### Wave 2 — Tracker
+
+Scope: `tracker.html`, `tracker-pro.js`, `tracker-pro.css`, `tracker/` modules
+touched by tracker PRs.
+
+Gate to move forward:
+- Onboarding and source-state clarity validated.
+- Compare / archive / planner critical paths verified.
+
+#### Wave 3 — Country / City / Market templates
+
+Scope: country / city / market HTML templates and metadata / canonical /
+internal-link consistency.
+
+Gate to move forward:
+- Metadata parity (title / description / canonical / OG / Twitter).
+- Internal links and depth-relative assets verified.
+
+### Merge gate checklist (all waves)
+
+- [ ] PR is narrow and task-specific.
+- [ ] Verification checklist completed (§13 Track J — Final QA).
+- [ ] Risks are documented (not hidden in summary copy).
+- [ ] No unrelated cleanup / refactors included.
+
+### Post-merge monitoring
+
+After each wave merge:
+
+1. Validate key pages render with expected assets.
+2. Confirm no high-severity console / runtime breakage.
+3. Confirm trust labels and disclaimers still present.
+4. Confirm service-worker update behavior is stable after refresh.
+
+### Rollback guidance
+
+Rollback if any of the following appears in production checks:
+
+- Broken primary navigation or blocked core flow.
+- Misleading trust wording (spot vs retail ambiguity).
+- Major SEO regression (missing canonical / title / meta).
+- Unrecoverable JS error affecting primary page content.
+
+Prefer reverting the smallest offending PR, then re-shipping a focused fix.
+
+---
+
+## 22. Production-revamp tracks (30-phase)
+
+_Absorbs `docs/REVAMP_STATUS.md`. This is the longer-running production track
+that runs in parallel with the homepage + nav + tracker revamp in §1–§18.
+Status rolls into `CHANGELOG.md` at Phase 30 (launch)._
+
+### Track A — Stabilize
+
+- [x] Phase 1 — Repo hygiene
+  - [x] Untrack `dist/`, `playwright-report/`, `test-results/`
+  - [x] Deduplicate Prettier config → `.prettierrc.json` is canonical
+  - [x] Deduplicate ESLint config → `eslint.config.mjs` is canonical
+- [x] Phase 2 — Workflow triage
+  - [x] Fix invalid `ci.yml` (previously two concatenated YAML docs → zero jobs ran)
+  - [x] Fix `perf-check.yml` (deprecated `microsoft/playwright-github-action@v1`)
+  - [x] Pin Node 20 LTS across CI workflows
+  - [x] `post_gold.yml` untouched (user directive)
+- [x] Phase 3 — Testing foundation
+  - [x] CI provides test-only `JWT_SECRET` / `ADMIN_PASSWORD` / `ADMIN_ACCESS_PIN`
+  - [x] Smoke suite covers 404 + country page
+- [x] Phase 4 — Lint / format single source of truth
+  - [x] Husky v9 pre-commit hook (lint-staged only; `npm test` removed from hook)
+- [x] Phase 5 — CSP hardening
+  - [x] Externalised inline gtag/clarity snippets to `assets/analytics.js` via
+        `scripts/node/externalize-analytics.js` codemod (501 HTML files rewritten; 189
+        no-analytics files untouched). Idempotent `--check` mode wired into
+        `npm run validate`.
+  - [x] Dropped `'unsafe-inline'` from `scriptSrc` in `server.js` CSP.
+
+### Track B — Backend, auth & users (not started)
+
+- [ ] Phase 6 — Backend architecture decision & scaffolding
+- [ ] Phase 7 — Supabase schema & migrations
+- [ ] Phase 8 — Auth system (email OTP + OAuth)
+- [ ] Phase 9 — Server API surface (`/api/v1/*`, OpenAPI spec)
+- [ ] Phase 10 — User data flows (alerts, watchlist, preferences)
+- [ ] Phase 11 — Admin panel consolidation + RBAC
+- [ ] Phase 12 — Background jobs (price poll, alert eval, aggregates)
+- [ ] Phase 13 — Notifications (email + web push)
+
+### Track C — Product polish & trust (in progress)
+
+- [ ] Phase 14 — Trust & labeling audit (in progress)
+- [ ] Phase 15 — Shops directory trust pass (in progress — featured-section editorial
+      footnote + "Directory last reviewed" label added; bilingual copy wired in
+      `src/pages/shops.js`)
+- [ ] Phase 16 — Tracker UX polish (in progress — `renderSeasonal()` now populates
+      `#tp-seasonal-results` with monthly high/low/spread from `state.history`)
+- [ ] Phase 17 — Calculator polish
+- [ ] Phase 18 — Country / city / market pages
+- [ ] Phase 19 — Educational / Learn pages
+- [ ] Phase 20 — Design system completion
+- [ ] Phase 21 — Accessibility audit
+
+### Track D — Performance, SEO, monetisation (not started)
+
+- [ ] Phase 22 — Performance budgets
+- [ ] Phase 23 — SEO comprehensive pass
+- [ ] Phase 24 — Ads integration (AdSense, consent banner, `ads.txt`)
+- [ ] Phase 25 — Analytics & observability (Sentry, health / ready)
+- [ ] Phase 26 — Deployment hardening (Docker, zero-downtime, secret scanning)
+
+### Track E — Launch readiness (not started)
+
+- [ ] Phase 27 — Load & resilience testing (k6, chaos, backup drill)
+- [ ] Phase 28 — Legal & compliance (GDPR export / delete, cookie policy)
+- [ ] Phase 29 — Docs & runbooks
+- [ ] Phase 30 — Launch (tag v1.0.0, flip DNS, 48h enhanced monitoring)
+
+### Items blocked on external inputs
+
+These items cannot be completed without credentials or third-party accounts.
+Surface them to the project owner before the associated phase starts.
+
+| Phase | Blocker                                    |
+| ----- | ------------------------------------------ |
+| 7–13  | Supabase project URL + service role key    |
+| 8     | OAuth client IDs (Google)                  |
+| 13    | Email provider (Resend / Postmark) API key |
+| 24    | AdSense publisher ID                       |
+| 25    | Sentry DSNs (frontend + backend)           |
+| 26    | Deployment target (Render / Fly / Railway) |
+
+---
+
+## 23. Historical execution summary (20-phase revamp)
+
+_Absorbs `docs/REVAMP_EXECUTION_SUMMARY.md`. Condensed snapshot of the earlier
+20-phase mega-revamp. Full prose originally lived in the source file and is
+preserved in git history; the material deliverables that matter for future
+work are summarised here and now live as reference docs._
+
+| Phase | Area                                   | Primary deliverable(s)                                                          |
+| ----- | -------------------------------------- | ------------------------------------------------------------------------------- |
+| 1     | Foundation & design-system completion  | `docs/DESIGN_TOKENS.md` (196 tokens catalogued)                                |
+| 2     | Accessibility overhaul                 | `docs/ACCESSIBILITY.md` — WCAG 2.1 AA patterns                                  |
+| 3     | Performance optimisation               | `docs/PERFORMANCE.md` — budgets, critical-CSS, SW caching                       |
+| 4     | SEO & metadata                         | `docs/SEO_STRATEGY.md`, `docs/SEO_CHECKLIST.md`, `docs/SEO_SITEMAP_GUIDE.md`    |
+| 5     | Mobile-first UX refinement             | Breakpoint spec at 320 / 375 / 414 / 768 / 1024 px; 44 × 44 touch targets       |
+| 6     | Component library                      | Canonical `.btn`, `.card`, badge, input, modal, toast, skeleton patterns        |
+| 7     | State-management modernisation         | `src/tracker/state.js` + URL-hash synchronisation                               |
+| 8     | Data-layer enhancement                 | `services/goldPriceService.js`, `services/fxService.js`, circuit breakers       |
+| 9     | Testing expansion                      | 231+ Node `node:test` suites under `tests/*.test.js`; target ≥ 80% coverage     |
+| 10    | Error handling & resilience            | `src/lib/errors.js`, retry with backoff, fallback UI, EN/AR error copy          |
+| 11    | i18n enhancement                       | `src/config/translations.js`, RTL CSS, locale-aware formatters                  |
+| 12    | Admin-panel modernisation              | `admin/*` (9 pages) on Supabase GitHub OAuth + RBAC groundwork                  |
+| 13    | CMS                                    | Markdown-based content pipeline (architecture planned, not shipped)             |
+| 14    | Analytics & monitoring                 | GA4 snippet, uptime / health / spike-alert workflows                            |
+| 15    | Security hardening                     | Helmet CSP, rate-limit, bcrypt auth, secret scanning, `utils/inputValidation.js`|
+| 16    | DevEx & tooling                        | ESLint flat config, Prettier, Stylelint, Husky v9 + lint-staged                 |
+| 17    | Documentation overhaul                 | The `docs/` tree itself (now consolidated into this master plan)                |
+| 18    | Content enhancement                    | Guides, learn, invest, insights pages                                           |
+| 19    | Deployment & DevOps                    | GitHub Actions CI + Pages deploy; see `.github/workflows/README.md`             |
+| 20    | Quality assurance                      | Pre-commit hooks + CI merge gate + `npm run validate` DOM-safety baseline       |
+
+> **Note.** All "design-specifications" / "architecture-planned" / "roadmap-defined"
+> items from the original summary are either (a) already shipped as code, (b)
+> rolled into §22 Production-revamp tracks as concrete phases, or (c) deferred
+> to §24 Product roadmap. See git history of `docs/REVAMP_EXECUTION_SUMMARY.md`
+> for the original long-form prose.
+
+---
+
+## 24. Product roadmap
+
+_Absorbs `docs/ROADMAP_IMPLEMENTATION.md`. Multi-phase roadmap for features
+beyond the current revamp. Full implementation notes (env vars, code
+templates, SQL, cost projections) are preserved in git history; the active
+deliverable inventory lives here._
+
+### Phase 1 — Foundation & quick wins (current)
+
+| Feature            | Status                             | Blocker                                      |
+| ------------------ | ---------------------------------- | -------------------------------------------- |
+| Premium tier       | Infra complete, code stubs present | Stripe account + price IDs, `npm i stripe`   |
+| Email newsletter   | Infra complete, workflows present  | Resend account + verified sender domain      |
+| Portfolio tracker  | DB schema ready, UI pending        | Supabase Auth enabled; `portfolio.html` + `src/components/auth-modal.js` + `src/lib/portfolio-calculator.js` |
+
+**Newsletter cadence** (when live): daily 07:00 Dubai (03:00 UTC) via
+`daily-newsletter.yml`; weekly Sunday 18:00 Dubai (14:00 UTC) via
+`weekly-newsletter.yml`.
+
+### Phase 2 — Data & social (4–6 months)
+
+- [ ] **Multi-source price aggregation** — Kitco, LBMA, weighted average,
+      ±2% outlier detection, "Price Sources" transparency modal.
+- [ ] **Silver / platinum / palladium expansion** — generalise
+      `price-calculator.js` to `metal-price-calculator.js`, add metal selector
+      on tracker, create `silver.html` / `platinum.html` / `palladium.html`.
+- [ ] **Instagram & LinkedIn automation** — visual-content generator
+      (Puppeteer), posting scripts + workflows.
+
+### Phase 3 — Platform evolution (12+ months)
+
+- [ ] **Premium developer API** — `/api/v1/spot`, `/api/v1/price/:country/:karat`,
+      `/api/v1/historical`, `/api/v1/markets`. Tiered rate limits (Free / Basic /
+      Pro). Redis-backed rate limiting. API-key generation system. OpenAPI docs.
+- [ ] **Interactive heatmap** — regional price heat map.
+- [ ] **Crypto correlation** — gold vs BTC / ETH overlay.
+- [ ] **WhatsApp / Google Sheets integrations, push notifications, multi-language
+      expansion** — detail to be specified per feature.
+
+### Packages to install when activating roadmap items
+
+> Run `gh-advisory-database` before adding any of these.
+
+| Package                  | Phase | For                           |
+| ------------------------ | ----- | ----------------------------- |
+| `stripe`                 | 1     | Premium tier                  |
+| `resend`                 | 1     | Newsletter                    |
+| `@supabase/supabase-js`  | 1     | Portfolio, shops, settings    |
+| `puppeteer`              | 2     | Visual content generation     |
+| `redis` / `ioredis`      | 3     | API rate limiting             |
+| `swagger-ui-express`     | 3     | Developer-API docs            |
+
+### External inputs blocking roadmap delivery
+
+| Phase           | Blocker                                    |
+| --------------- | ------------------------------------------ |
+| Premium tier    | Stripe account + Price IDs                 |
+| Newsletter      | Resend API key + verified domain           |
+| Portfolio       | Supabase Auth enabled (email / OAuth)      |
+| Multi-source    | Kitco / LBMA API keys                      |
+| Social (Ph. 2)  | Instagram Graph + LinkedIn OAuth           |
+| API (Ph. 3)     | Deployment target + Redis instance         |
+
+See `docs/SUPABASE_SCHEMA.md` for the database migration workflow that supports
+these features.
+
+---
+
+## 25. Known issues, risks, open items
+
+_Absorbs `docs/issues-found.md`, `docs/risks.md`, and `docs/pr-audit.md`. For
+deeper technical limitations see the reference doc `docs/LIMITATIONS.md` —
+that file is not folded here because it is a stable reference inventory, not
+an actionable backlog._
+
+### 25.1 Active issues (actionable)
+
+| #  | Severity | Area      | Issue                                                                         | Owner / Next step                                        |
+| -- | -------- | --------- | ----------------------------------------------------------------------------- | -------------------------------------------------------- |
+| A1 | Low      | Ads       | `components/adSlot.js` uses placeholder `AD_PUBLISHER_ID = 'ca-pub-XXXXXXXXXX'` | Site owner must supply real AdSense publisher ID.       |
+| A2 | Low      | SEO       | Legacy country pages (`countries/*.html`, 15 files) coexist with new hierarchical pages. | Add canonical tags pointing legacy → new, or 301 redirects. |
+| A3 | Low      | PR state  | PR #77 (revert of master revamp) left **open** but no longer needed.           | Close PR #77 — PR #76 changes are stable.                |
+| A4 | Info     | Cache     | `services/cacheLayer.js` referenced in Phase 3 spec was never created.         | No action — `src/lib/cache.js` is functional and covers the need. |
+
+### 25.2 Active risks (carry forward)
+
+| #  | Risk                                               | Mitigation                                                                                 | Residual impact                            |
+| -- | -------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------ |
+| R1 | AdSense integration incomplete                     | Placeholder code already in place; flips live when owner supplies publisher ID.            | Low — monetisation only, no UX impact      |
+| R2 | Supabase anon key is committed in `config/supabase.js` | Anon key is designed for client-side use; Row-Level Security only exposes verified rows.  | Low — intended Supabase architecture       |
+| R3 | Vite / esbuild moderate vuln (≤ 0.24.2)            | Only affects local dev server; prod build is unaffected.                                   | None in production                         |
+| R4 | GitHub Pages cannot set HTTP security headers      | Meta-equivalents in `.htaccess` + proper headers on Express server when self-hosted.       | Medium — CSP / HSTS meta is limited        |
+| R5 | Dual routing (legacy flat `/countries/uae.html` + hierarchical `/uae/gold-price/`) | `.htaccess` redirects cover some paths; canonical tags on 97% of pages.              | Medium — possible split link equity        |
+
+### 25.3 PR-reconciliation audit (snapshot 2026-04-13)
+
+- **PRs analysed:** 95 (PR #1 – #95)
+- **Open at audit time:** 1 (PR #77 — revert, no longer needed)
+- **Changes reflected in code:** ≈ 95 %
+- **Gaps found:** only the three items in §25.1 (all Low severity)
+
+> See `docs/pr-audit.md` (pointer) and git history for the full table. No
+> Critical or High severity items were found in that audit.
+
+### 25.4 Open questions (carry forward until answered)
+
+Duplicated from §16 for convenience — see §16 for defaults.
+
+1. Ship nav search in the current PR or defer? (JS weight trade-off.)
+2. Drop any existing homepage sections entirely or re-rank + tighten?
+3. Bilingual strings for all new homepage copy now or follow-up?
+4. Is the tracker sticky control bar OK to ship if it changes the visual
+   identity of the page materially?
+
+---
+
+## 26. Codebase architecture snapshot
+
+_Absorbs `docs/codebase-audit.md`. A concise snapshot. For long-form module
+catalogues and deep architecture notes see the reference doc
+`docs/ARCHITECTURE.md`. For design tokens see `docs/DESIGN_TOKENS.md`._
+
+### Routing
+
+File-based static site with Vite build. Clean URLs via `index.html`:
+
+| Pattern                                      | Example                                                 |
+| -------------------------------------------- | ------------------------------------------------------- |
+| Homepage                                     | `/`                                                     |
+| Country gold price                           | `/{country}/gold-price/`                                |
+| City gold prices                             | `/{country}/{city}/gold-prices/`                        |
+| City gold shops                              | `/{country}/{city}/gold-shops/`                         |
+| Karat rate per city                          | `/{country}/{city}/gold-rate/{karat}-karat/`            |
+| Legacy country / city / market               | `/countries/*.html` (kept; see §25.1 A2)                |
+| Tools (calc, tracker, history, order, shops) | `/calculator.html`, `/tracker.html`, etc.               |
+| Admin                                        | `/admin/*` (9 pages, Supabase OAuth)                    |
+
+Route helpers: `utils/routeBuilder.js`, `utils/routeValidator.js`,
+`routes/routeRegistry.js`.
+
+### Build
+
+Vite 8 + Terser. `vite.config.js` excludes the 15 country directories,
+`admin/`, `embed/`, `dist/`, `node_modules/`. Those are copied as-is by the
+deploy workflow. Manual chunks: `vendor` (lightweight-charts) and `utils`
+(cache, api, price-calculator, formatter). See `docs/DEPENDENCIES.md` for the
+version matrix.
+
+### External APIs
+
+| Domain                             | Purpose                                             |
+| ---------------------------------- | --------------------------------------------------- |
+| `api.gold-api.com`                 | Primary XAU/USD spot (`goldPriceService.js`)        |
+| `data-asg.goldprice.org`           | Fallback gold price (`lib/api.js`)                  |
+| `open.er-api.com`                  | FX rates (USD base) (`fxService.js`)                |
+| Supabase project URL               | Shops / settings / auth (`lib/supabase-data.js`)    |
+| `api.gdeltproject.org`             | Market news (`scripts/pages/insights.js`)           |
+| `raw.githubusercontent.com`        | DataHub historical baseline (`lib/historical-data.js`) |
+
+Waterfall on gold price: primary → fallback → cache → last-known with label.
+
+### State management
+
+- Homepage: `STATE` object in `src/pages/home.js`.
+- Tracker: `src/tracker/state.js`, URL-hash serialised
+  (`#mode=live&cur=AED&k=24&u=gram`).
+- Shops: filter / shortlist state in `src/pages/shops.js`.
+- Persistence: `src/lib/cache.js` wraps `localStorage`.
+
+Key `localStorage` namespaces: `goldprices_gold_*`, `goldprices_fx_*`,
+`user_prefs`, `gp_pref_lang`, `shops_shortlist`, `tracker_*`, `sb-*-auth-token`,
+`gp_admin_shops`.
+
+### SEO layer
+
+Canonical coverage ≈ 97 %. Sitemap at `/sitemap.xml` with hreflang alternates.
+JSON-LD: `WebSite` + `SearchAction` + `Organization` on home; `BreadcrumbList`
+sitewide; `FAQPage`, `HowTo`, `Dataset` on specific pages. `robots.txt` blocks
+admin, server, tests, node_modules, supabase, repositories, dist.
+
+### Dependencies
+
+See `docs/DEPENDENCIES.md` for the full version matrix. Production deps:
+bcryptjs, cors, express 5, express-rate-limit, helmet, jsonwebtoken, lowdb,
+morgan, uuid. Dev: terser, vite 8.
+
+### CI / CD
+
+15+ GitHub Actions workflows grouped in four tiers:
+
+1. **Merge gate** — `ci.yml`
+2. **Informational scans** — `codeql.yml`, `semgrep.yml`, `perf-check.yml`,
+   `lighthouse.yml`
+3. **Production deploy** — `deploy.yml`
+4. **Content / sync bots** — `post_gold.yml`, `daily-newsletter.yml`,
+   `weekly-newsletter.yml`, `uptime-monitor.yml`, `health_check.yml`,
+   `spike_alert.yml`, `sync-db-to-git.yml`
+
+Only `ci.yml` blocks merges. See `.github/workflows/README.md`.
+
+---
+
+## 27. Historical execution log
+
+_Absorbs `docs/execution-log.md`. Snapshot of completed phases of the earlier
+multi-phase audit. The active progress tracking continues in §17 (current
+revamp) and §22 (production tracks)._
+
+### Phase 0 — Repository audit + PR reconciliation ✅
+
+- **0A — Git history & PR audit.** 95 PRs analysed (1 open: PR #77 — revert,
+  no longer needed). ≈ 95 % of PR changes reflected in codebase. Gap: AdSense
+  placeholder publisher ID. Original output: `docs/pr-audit.md` (now pointer).
+- **0B — Codebase structural audit.** 380 HTML pages, 68 JS files, 16 CSS
+  files. Vite build. 15+ workflows. Supabase for admin + shops. Bilingual
+  EN/AR. 369/380 pages have canonicals & unique descriptions. 205 tests
+  passing at the time. Two moderate vulns in esbuild (no prod impact).
+  Original output: `docs/codebase-audit.md` (now pointer).
+- **0C — Performance baseline.** Expected Lighthouse 85–95. No blocking JS
+  for initial paint. Service worker cache-first for assets, network-first
+  for HTML. Output: `docs/performance-baseline.json` (retained as
+  reference data).
+
+### Phase 1 — PR reconciliation ✅
+
+No Critical or High severity items found. Only the three items in §25.1
+remain as Low-severity gaps.
+
+### Phase 2 — URL architecture ✅
+
+- `utils/routeBuilder.js` — single source of truth for URL generation
+  (`buildRoute`, `buildShopsRoute`, `buildCanonicalURL`, `generateAllRoutes`).
+- `utils/routeValidator.js` — validates country / city / karat param combos.
+- `tests/route-utils.test.js` — 27 tests covering every route type.
+- Hierarchical URLs already in place (`/{country}/{city}/gold-prices/`).
+
+### Phase 12 — Accessibility + performance (partial) ✅
+
+- Security meta headers (`X-Content-Type-Options: nosniff`, `X-Frame-Options:
+  DENY`, `Referrer-Policy: strict-origin-when-cross-origin`) added to 6 main
+  pages.
+- All pages carry `lang="en"` + `dir="ltr"` (RTL switched via CSS).
+- No `tabindex > 0` anywhere; no `<img>` missing alt text (flags are emoji,
+  not images).
+
+### Phase 13 — Security hardening (partial) ✅
+
+- `server.js` CSP extended for AdSense, GA4, Supabase.
+- `utils/inputValidation.js` — shared validators (UAE phone, email, numeric
+  range, text sanitisation, URL-param sanitisation, price-alert validation).
+- `tests/input-validation.test.js` — 31 tests.
+- `.env.example` created; `docs/environment-variables.md` retained as
+  reference.
+
+### Phase 15 — CI/CD + tests (partial) ✅
+
+- `ci.yml` runs on PR to `main`; `deploy.yml` on push to `main`.
+- 205 tests passing at audit time (now 231+; see §26 CI / CD).
+- 15+ workflows across CI, deploy, monitoring, social posting.
+
+### Phases 3–11, 14 — status at audit
+
+Already substantially implemented — see `services/`, `lib/cache.js`,
+`lib/api.js`, `components/chart.js`, 380 pages with prices, shops, charts,
+`seo/metadataGenerator.js` (97 % canonical coverage), 9 admin pages with
+Supabase auth, `order-gold/` with WhatsApp + Supabase,
+`social/postTemplates.js` (10 templates), `search/searchEngine.js` (bilingual
+fuzzy), `config/translations.js` + RTL CSS. Only Phase 11 (monetisation)
+remains partial — blocked on a real AdSense publisher ID (see §25.1 A1).
+
+---
+
+## 28. Task backlog
+
+_Absorbs `docs/product/TASKS.md`. Near-term, narrowly-scoped backlog. Wider
+roadmap items live in §24; production tracks in §22; current revamp work in
+§17._
+
+### Ready
+
+- [ ] Fix tracker tab switching and state persistence.
+- [ ] Audit every tracker button and disable / remove unfinished controls.
+- [ ] Rebuild shops featured / filter behavior.
+- [x] Parse and honour query params on shops page.
+- [ ] Improve compare / archive readability on mobile.
+- [ ] Review canonical / meta tags across main pages.
+- [ ] Add sitemap verification checklist.
+- [ ] Migrate admin dashboard to pull real stats from Supabase.
+- [ ] Create `pricing_overrides` Supabase table and migrate `admin/pricing/`.
+- [ ] Create `orders` Supabase table and migrate `admin/orders/`.
+- [ ] Migrate `admin/social/` to read from Supabase `fetch_logs`.
+- [ ] Read `site_settings` from Supabase on public pages for dynamic
+      feature flags.
+
+### In progress
+
+- [ ] Master docs update — **consolidation sweep** folding every planning doc
+      into this master plan. See Round 2 progress log in §17.
+
+### Blocked
+
+- [ ] Admin panel full Supabase migration — needs the Supabase schema
+      confirmed running.
+- [ ] Public-site dynamic settings — needs `site_settings` populated in
+      Supabase.
+
+### Done
+
+- [x] Fix `sync-db-to-git.yml` secret name (`SUPABASE_SERVICE_KEY` →
+      `SUPABASE_SERVICE_ROLE_KEY`) and ES-module output format.
+- [x] Create `.env.example`.
+- [x] Deprecate dead `admin/api-client.js`.
+- [x] Rewrite `ADMIN_GUIDE.md` for Supabase auth.
+- [x] Rewrite `ADMIN_SETUP.md` for Supabase auth.
+- [x] Update `DEPENDENCIES.md` with correct versions.
+- [x] Update all automation docs.
+- [x] Fix Vite version across all docs.

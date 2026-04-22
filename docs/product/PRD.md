@@ -1,54 +1,14 @@
-# Product Requirements Document
+# Product Requirements Document — consolidated
 
-## Product
+> 🛑 **This content has moved.** The product mission, primary users, core
+> jobs-to-be-done, product pillars, core sections, and product non-negotiables
+> now live in [`../REVAMP_PLAN.md` §0 Product context](../REVAMP_PLAN.md#0-product-context).
+>
+> Edit the master plan instead of this file. This pointer exists so any
+> external link to `docs/product/PRD.md` still resolves.
 
-Gold-Prices website
+See also:
 
-## Mission
-
-Help users quickly and confidently understand gold prices, historical movement, market context, and
-where/how to buy.
-
-## Primary users
-
-- Retail users checking today’s prices
-- Users comparing countries/cities/karats
-- Users looking for gold shops/markets
-- Users researching gold buying and pricing
-- SEO users landing on country/city/guide pages
-
-## Core jobs to be done
-
-- See current gold price clearly
-- Compare karats and currencies
-- Browse historical data with confidence
-- Find relevant local market/shop information
-- Understand the difference between spot and retail pricing
-- Use calculators and educational pages without confusion
-
-## Product pillars
-
-- Trust and clarity
-- Speed
-- Mobile-first UX
-- SEO depth
-- Clean information architecture
-
-## Core sections
-
-- Homepage
-- Tracker / historical prices
-- Country pages
-- City pages
-- Markets / famous gold souks
-- Shops directory
-- Calculators
-- Learn / methodology / guides
-
-## Non-negotiables
-
-- Label estimated, fallback, and derived values clearly
-- Preserve internal linking between pages
-- No fake “live” claims without support
-- No weak SEO duplication
-- No misleading store verification
+- [`../REVAMP_PLAN.md` §0.1 Trust guardrails](../REVAMP_PLAN.md#01-trust-guardrails)
+- [`../REVAMP_PLAN.md` §0.2 Reusable trust copy](../REVAMP_PLAN.md#02-reusable-trust-copy-snippets)
+- [`../REVAMP_PLAN.md` §0.3 Engineering non-negotiables](../REVAMP_PLAN.md#03-engineering-non-negotiables)

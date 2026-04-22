@@ -13,8 +13,9 @@
 
 | Variable                    | Required    | Description                                  | Example                       |
 | --------------------------- | ----------- | -------------------------------------------- | ----------------------------- |
-| `JWT_SECRET`                | Server only | Secret for signing JWT admin tokens          | `[random 64-char hex string]` |
-| `ADMIN_PASSWORD`            | Server only | Admin panel password for Express server auth | `[strong password]`           |
+| `JWT_SECRET`                | Server/test | Secret for signing JWT admin tokens (32+ chars) | `[random 64-char hex string]` |
+| `ADMIN_PASSWORD`            | Server/test | Admin panel password (bcrypt-hashed at startup) | `[strong password]`         |
+| `ADMIN_ACCESS_PIN`          | Server/test | 6+ digit numeric PIN gating the admin login  | `123456`                      |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server/CI   | Supabase service-role key (bypasses RLS)     | `eyJhbGciOi...`               |
 | `STORAGE_BACKEND`           | No          | `file` (default) or `supabase`               | `supabase`                    |
 | `GA4_MEASUREMENT_ID`        | No          | Google Analytics 4 measurement ID            | `G-XXXXXXXXXX`                |
@@ -22,6 +23,12 @@
 | `CORS_ORIGINS`              | No          | Allowed CORS origins (comma-separated)       | `https://example.com`         |
 | `NODE_ENV`                  | No          | Environment mode                             | `production`                  |
 | `PORT`                      | No          | Server port (default: 3000)                  | `3000`                        |
+
+> **Note.** `JWT_SECRET`, `ADMIN_PASSWORD`, and `ADMIN_ACCESS_PIN` are
+> **required at module load** by `server/lib/auth.js` — without them the
+> server throws at startup and `npm test` fails immediately. CI sets
+> test-only values for these via job-level `env:`. Locally, export them
+> before running `npm start` or `npm test`.
 
 ## GitHub Actions Secrets
 
