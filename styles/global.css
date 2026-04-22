@@ -5494,3 +5494,147 @@ body > * {
   --color-warning-border: rgb(212 160 23 / 45%);
   --color-warning-text: #e8c76a;
 }
+
+/* ═══════════════════════════════════════════════
+   Motion Primitives — shared by nav, home, tracker
+   Every @keyframes has a reduced-motion no-op.
+   ═══════════════════════════════════════════════ */
+
+/* Section reveal-on-scroll: elements start hidden, `.is-in-view` fades them in. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
+  will-change: opacity, transform;
+}
+
+[data-reveal].is-in-view {
+  opacity: 1;
+  transform: none;
+}
+
+/* Directional price-change flash: caller toggles `data-flash="up"` / "down"
+   for ~1s, then clears. */
+@keyframes flash-up {
+  0% {
+    background-color: var(--color-up-bg);
+    color: var(--color-up);
+  }
+
+  100% {
+    background-color: transparent;
+    color: inherit;
+  }
+}
+
+@keyframes flash-down {
+  0% {
+    background-color: var(--color-down-bg);
+    color: var(--color-down);
+  }
+
+  100% {
+    background-color: transparent;
+    color: inherit;
+  }
+}
+
+[data-flash='up'] {
+  animation: flash-up 1s var(--ease-out);
+}
+
+[data-flash='down'] {
+  animation: flash-down 1s var(--ease-out);
+}
+
+/* Pulse-dot: small live-indicator heartbeat. */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.55;
+    transform: scale(0.88);
+  }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2.4s var(--ease-in-out) infinite;
+}
+
+/* Underline slide — nav hover affordance. */
+@keyframes underline-slide {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Drawer slide — mobile nav open. */
+@keyframes drawer-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+[dir='rtl'] @keyframes drawer-slide-in {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+/* Reveal-up: explicit reveal keyframe for opt-in reveals. */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Global reduced-motion reset — every motion primitive above becomes static. */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  [data-flash='up'],
+  [data-flash='down'] {
+    animation: none;
+  }
+
+  .pulse-dot {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
