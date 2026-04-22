@@ -1400,15 +1400,35 @@
             })
             .filter((o) => o.name?.trim());
           const preview = document.getElementById('csv-preview');
+          preview.innerHTML = '';
           if (parsedCsvShops.length === 0) {
-            preview.innerHTML =
-              '<span class="text-warning">No valid rows found (name required).</span>';
+            const warning = document.createElement('span');
+            warning.className = 'text-warning';
+            warning.textContent = 'No valid rows found (name required).';
+            preview.appendChild(warning);
             return;
           }
-          preview.innerHTML = `<p class="text-muted text-sm" style="margin-bottom:8px">Parsed <strong>${parsedCsvShops.length}</strong> shop(s):</p>
-            <div style="max-height:160px;overflow-y:auto;font-size:0.8125rem">
-              ${parsedCsvShops.map((s) => `<div style="padding:2px 0;border-bottom:1px solid var(--border)">${s.name} — ${s.country || ''} ${s.city || ''}</div>`).join('')}
-            </div>`;
+
+          const summary = document.createElement('p');
+          summary.className = 'text-muted text-sm';
+          summary.style.marginBottom = '8px';
+          summary.textContent = `Parsed ${parsedCsvShops.length} shop(s):`;
+          preview.appendChild(summary);
+
+          const list = document.createElement('div');
+          list.style.maxHeight = '160px';
+          list.style.overflowY = 'auto';
+          list.style.fontSize = '0.8125rem';
+
+          parsedCsvShops.forEach((s) => {
+            const row = document.createElement('div');
+            row.style.padding = '2px 0';
+            row.style.borderBottom = '1px solid var(--border)';
+            row.textContent = `${s.name} — ${s.country || ''} ${s.city || ''}`;
+            list.appendChild(row);
+          });
+
+          preview.appendChild(list);
           document.getElementById('csv-import-confirm').textContent =
             `Import ${parsedCsvShops.length} shops`;
           document.getElementById('csv-import-confirm').disabled = false;
