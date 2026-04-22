@@ -33,12 +33,12 @@ const newsletterRoutes = require('./server/routes/newsletter');
 // CSP is intentionally disabled in development for ease of debugging.
 // In production (NODE_ENV=production), a strict CSP is enforced.
 //
-// NOTE on `'unsafe-inline'` in scriptSrc: the static HTML pages embed Google
-// Analytics and Microsoft Clarity loader snippets inline. Removing these
-// requires moving those snippets to external `.js` files and/or injecting a
-// per-request nonce via middleware. That work is tracked separately; the
-// current directive list is explicit and every origin is pinned to an HTTPS
-// host rather than using a wildcard.
+// NOTE: Inline analytics (gtag + Clarity) were externalized to
+// `assets/analytics.js` by `scripts/node/externalize-analytics.js`, so
+// `'unsafe-inline'` is no longer required in `scriptSrc`. The only inline
+// HTML we still serve is structured-data JSON-LD, which lives in
+// `<script type="application/ld+json">` blocks — those are ignored by CSP
+// because they are not executable scripts.
 app.use(
   helmet({
     contentSecurityPolicy: IS_PROD
@@ -47,7 +47,6 @@ app.use(
             defaultSrc: ["'self'"],
             scriptSrc: [
               "'self'",
-              "'unsafe-inline'",
               'https://cdn.jsdelivr.net',
               'https://www.googletagmanager.com',
               'https://www.clarity.ms',
