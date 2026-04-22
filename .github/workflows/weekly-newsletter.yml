@@ -1,0 +1,41 @@
+name: Weekly Newsletter
+
+on:
+  schedule:
+    # Run every Sunday at 6:00 PM Dubai time (14:00 UTC)
+    - cron: '0 14 * * 0'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: read
+
+jobs:
+  send-weekly-newsletter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Send weekly newsletter
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM_EMAIL: ${{ secrets.RESEND_FROM_EMAIL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SITE_URL: https://goldprices.com
+        run: node scripts/node/send-newsletter.js weekly
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "Weekly newsletter send failed"
+          # TODO: Add Slack/Discord notification
