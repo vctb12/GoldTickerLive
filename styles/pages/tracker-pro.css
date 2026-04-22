@@ -882,7 +882,7 @@ body.tracker-pro-page {
 .tracker-market-card {
   border-radius: var(--radius-lg);
   border: 1px solid var(--tp-border);
-  background: linear-gradient(180deg, #fffefb 0%, #f8f2e8 100%);
+  background: linear-gradient(180deg, var(--surface-primary) 0%, var(--surface-accent) 100%);
   padding: 0.9rem;
   transition:
     transform 0.22s ease-out,
@@ -892,10 +892,8 @@ body.tracker-pro-page {
 
 .tracker-market-card:hover {
   transform: translateY(-2px);
-  border-color: rgb(196 154 68 / 35%);
-  box-shadow:
-    0 6px 20px rgb(61 46 21 / 10%),
-    0 2px 6px rgb(196 154 68 / 8%);
+  border-color: var(--border-accent);
+  box-shadow: var(--elev-accent);
 }
 
 .tracker-watch-top,
@@ -1044,7 +1042,7 @@ body.tracker-pro-page {
 .tracker-brief-block {
   border-radius: var(--radius-lg);
   border: 1px solid var(--tp-border);
-  background: linear-gradient(180deg, #fffefb 0%, #f8f2e8 100%);
+  background: linear-gradient(180deg, var(--surface-primary) 0%, var(--surface-accent) 100%);
   padding: 0.9rem;
 }
 
