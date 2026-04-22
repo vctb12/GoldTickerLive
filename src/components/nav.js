@@ -33,38 +33,77 @@ function escapeHtml(str) {
  * Resolve href depth: strip leading `../` then prepend the correct number
  * of `../` segments for the page's actual depth from the site root.
  *
- * @param {string} href  — href from NAV_DATA (always starts with `../`)
+ * Hardened behaviour:
+ *   - Empty / non-string inputs return '#' (safe no-op anchor).
+ *   - Absolute paths (`/foo`), full URLs (`https://…`), `mailto:`, `tel:`,
+ *     and protocol-relative (`//host/…`) are returned unchanged.
+ *   - Hash-only (`#anchor`) and query-only (`?k=v`) inputs return unchanged.
+ *
+ * @param {string} href  — href from NAV_DATA (`/foo`, `./foo`, `../foo`, `foo`)
  * @param {number} depth — 0 = root, 1 = one dir deep, 2 = two dirs deep, etc.
  */
 function resolveHref(href, depth) {
-  // If href is absolute (starts with '/'), return it as-is.
-  if (href.startsWith('/')) return href;
+  if (typeof href !== 'string' || href === '') return '#';
 
-  // If the href is already root-relative without leading slash, normalize it.
-  if (href.startsWith('./')) {
-    const stripped = href.replace(/^\.\//, '');
-    return depth === 0 ? stripped : '../'.repeat(depth) + stripped;
+  // Full URLs and non-http schemes pass through untouched.
+  if (
+    href.startsWith('/') ||
+    href.startsWith('//') ||
+    href.startsWith('#') ||
+    href.startsWith('?') ||
+    /^[a-z][a-z0-9+.-]*:/i.test(href)
+  ) {
+    return href;
   }
 
-  // Default: treat '../' segments as relative to current depth.
+  const d = Math.max(0, Number.isFinite(depth) ? Math.floor(depth) : 0);
+
+  if (href.startsWith('./')) {
+    const stripped = href.replace(/^\.\//, '');
+    return d === 0 ? stripped : '../'.repeat(d) + stripped;
+  }
+
+  // '../foo' — strip exactly one '../' segment (NAV_DATA convention), then re-prepend for depth.
   const stripped = href.replace(/^\.\.\//, '');
-  if (depth === 0) return stripped;
-  return '../'.repeat(depth) + stripped;
+  return d === 0 ? stripped : '../'.repeat(d) + stripped;
 }
 
 /**
  * Return true if the given href's base path matches the current page URL.
  * Hash anchors on the same file count as a match for the base file.
+ *
+ * Hardened behaviour:
+ *   - Non-string or empty hrefs never match.
+ *   - Hash-only / query-only hrefs never match (they're same-page fragments).
+ *   - External (full-URL, protocol-relative, mailto:, tel:) hrefs never match.
+ *   - Root `/` only matches the exact homepage, never every page.
+ *   - Directory matches (cmp ending in `/`) use startsWith; file matches require equality.
  */
 function isPageMatch(href) {
-  const loc = location.pathname;
+  if (typeof href !== 'string' || href === '') return false;
+  if (href.startsWith('#') || href.startsWith('?')) return false;
+  if (href.startsWith('//') || /^[a-z][a-z0-9+.-]*:\/\//i.test(href)) return false;
+  if (href.startsWith('mailto:') || href.startsWith('tel:')) return false;
+
+  const loc = location.pathname || '/';
   const base = href.split('#')[0].split('?')[0];
-  // Normalize leading ../ or ./ and leading slash
+  if (!base) return false;
+
+  // Normalize to a root-absolute path.
   let norm = base.replace(/^\.\.\//, '').replace(/^\.\//, '');
-  if (!norm.startsWith('/')) norm = norm === 'index.html' ? '/index.html' : '/' + norm;
-  // Remove trailing index.html for comparison
-  const cmp = norm.replace(/index\.html$/, '');
-  return loc === cmp || loc.startsWith(cmp);
+  if (!norm.startsWith('/')) norm = '/' + norm;
+
+  // Treat `/index.html` and `/` as equivalent for the homepage case.
+  const cmp = norm.replace(/\/index\.html$/, '/');
+
+  // Exact match is the primary case. Root (`/`) only matches the exact homepage.
+  if (cmp === '/') return loc === '/' || loc === '/index.html';
+  if (loc === cmp) return true;
+
+  // Directory-style hrefs (trailing slash) match any page inside that directory.
+  if (cmp.endsWith('/') && loc.startsWith(cmp)) return true;
+
+  return false;
 }
 
 /** True if any item in the group matches the current page. */
