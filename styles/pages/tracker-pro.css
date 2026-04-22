@@ -331,7 +331,7 @@ body.tracker-pro-page {
 
 .tracker-hero-stat:hover {
   border-color: var(--tp-gold);
-  box-shadow: 0 4px 16px rgb(196 154 68 / 14%);
+  box-shadow: var(--elev-accent);
   transform: translateY(-2px);
 }
 
@@ -343,7 +343,7 @@ body.tracker-pro-page {
 .tracker-side-block {
   border-radius: var(--radius-lg);
   border: 1px solid var(--tp-border);
-  background: linear-gradient(180deg, #fffdfb 0%, #f8f2e7 100%);
+  background: linear-gradient(180deg, var(--surface-primary) 0%, var(--surface-accent) 100%);
   padding: 1rem;
 }
 
