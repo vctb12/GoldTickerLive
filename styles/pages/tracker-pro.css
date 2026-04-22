@@ -139,7 +139,7 @@ body.tracker-pro-page {
 .tracker-wire-card,
 .tracker-subpanel,
 .tracker-method-card {
-  background: linear-gradient(180deg, var(--surface-primary) 0%, #fdfaf4 100%);
+  background: linear-gradient(180deg, var(--surface-primary) 0%, var(--surface-secondary) 100%);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-panel);
   box-shadow: var(--elev-2);
