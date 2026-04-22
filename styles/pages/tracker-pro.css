@@ -293,7 +293,7 @@ body.tracker-pro-page {
 .tracker-mini-item {
   border-radius: var(--radius-lg);
   border: 1px solid var(--tp-border);
-  background: linear-gradient(180deg, var(--color-white) 0%, #fbf7ef 100%);
+  background: linear-gradient(180deg, var(--color-white) 0%, var(--surface-secondary) 100%);
   padding: 0.9rem;
 }
 
@@ -302,7 +302,7 @@ body.tracker-pro-page {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: linear-gradient(135deg, var(--color-white) 0%, #fbf9f6 100%);
+  background: linear-gradient(135deg, var(--color-white) 0%, var(--surface-secondary) 100%);
   border-width: 1.25px;
   transition: all 0.22s ease-out;
 }
