@@ -30,7 +30,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.12'
+          python-version: '3.11'
 
       - name: Cache pip dependencies
         uses: actions/cache@v5
@@ -41,7 +41,7 @@ jobs:
             ${{ runner.os }}-pip-poster-
 
       - name: Install dependencies
-        run: pip install requests tweepy supabase
+        run: pip install -r scripts/python/requirements.txt
 
       - name: Run gold poster (spike_alert mode)
         env:

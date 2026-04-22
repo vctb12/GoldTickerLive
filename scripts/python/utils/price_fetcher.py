@@ -16,7 +16,7 @@ from typing import Any, Dict, List
 
 import requests
 
-from scripts.utils.logger import get_logger
+from utils.logger import get_logger
 
 log = get_logger("price_fetcher")
 

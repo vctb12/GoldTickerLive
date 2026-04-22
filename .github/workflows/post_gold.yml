@@ -34,9 +34,11 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: '3.11'
+          cache: pip
+          cache-dependency-path: scripts/python/requirements.txt
 
       - name: Install dependencies
-        run: pip install requests tweepy
+        run: pip install -r scripts/python/requirements.txt
 
       - name: Run posting script
         env:

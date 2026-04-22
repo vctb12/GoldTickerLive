@@ -11,7 +11,7 @@ from typing import Optional
 
 import tweepy
 
-from scripts.utils.logger import get_logger
+from utils.logger import get_logger
 
 log = get_logger("twitter_client")
 

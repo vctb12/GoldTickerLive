@@ -15,28 +15,27 @@ All logic is delegated to utility modules in scripts/utils/.
 import os
 import sys
 
-# Ensure the repo root is on sys.path so `scripts.utils.*` imports resolve
+# Ensure `scripts/python/` is on sys.path so `utils.*` imports resolve
 # regardless of the working directory used by GitHub Actions.
-_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-if _REPO_ROOT not in sys.path:
-    sys.path.insert(0, _REPO_ROOT)
+_PYTHON_DIR = os.path.dirname(os.path.abspath(__file__))
+if _PYTHON_DIR not in sys.path:
+    sys.path.insert(0, _PYTHON_DIR)
 
-from scripts.utils.logger import get_logger
-from scripts.utils.market_hours import (
+from utils.logger import get_logger
+from utils.market_hours import (
     get_market_status_text,
     get_session_event,
-    is_any_market_open,
 )
-from scripts.utils.price_fetcher import PriceFetchError, fetch_gold_price
-from scripts.utils.spike_detector import detect_spike
-from scripts.utils.supabase_client import (
+from utils.price_fetcher import PriceFetchError, fetch_gold_price
+from utils.spike_detector import detect_spike
+from utils.supabase_client import (
     get_last_post_for_mode,
     get_latest_price,
     insert_fetch_log,
     insert_price,
 )
-from scripts.utils.tweet_formatter import format_tweet
-from scripts.utils.twitter_client import (
+from utils.tweet_formatter import format_tweet
+from utils.twitter_client import (
     TwitterAuthError,
     TwitterDuplicateError,
     TwitterPostError,

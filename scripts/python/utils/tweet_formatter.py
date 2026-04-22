@@ -9,8 +9,8 @@ import json
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from scripts.utils.logger import get_logger
-from scripts.utils.market_hours import format_time_gst, get_market_status_text
+from utils.logger import get_logger
+from utils.market_hours import format_time_gst, get_market_status_text
 
 log = get_logger("tweet_formatter")
 

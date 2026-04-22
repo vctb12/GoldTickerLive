@@ -47,7 +47,7 @@ def _load_last_price():
 def _save_last_price(price):
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
     STATE_FILE.write_text(json.dumps({"price": price}))
-  
+
 def get_gold_price():
     """Fetch XAU from gold-api.com and convert it into your script's expected shape."""
     url = "https://api.gold-api.com/price/XAU"
