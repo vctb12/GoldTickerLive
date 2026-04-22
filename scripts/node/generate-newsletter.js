@@ -10,6 +10,7 @@ const https = require('https');
 // Configuration
 const GOLD_API_URL = 'https://api.gold-api.com/price/XAU';
 const FX_API_URL = 'https://open.er-api.com/v6/latest/USD';
+const SITE_URL = (process.env.SITE_URL || 'https://goldtickerlive.com').replace(/\/$/, '');
 
 async function fetchJson(url) {
   return new Promise((resolve, reject) => {
@@ -207,7 +208,7 @@ async function generateDailyDigest() {
           <!-- CTA Button -->
           <tr>
             <td style="padding: 0 30px 30px; text-align: center;">
-              <a href="https://goldprices.com/tracker.html?utm_source=newsletter&utm_medium=email&utm_campaign=daily_digest" style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%); color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">
+              <a href="${SITE_URL}/tracker.html?utm_source=newsletter&utm_medium=email&utm_campaign=daily_digest" style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%); color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">
                 View Live Tracker
               </a>
             </td>
@@ -220,9 +221,9 @@ async function generateDailyDigest() {
                 You're receiving this because you subscribed to Gold Prices newsletter.
               </p>
               <p style="margin: 0; font-size: 14px;">
-                <a href="https://goldprices.com/api/newsletter/unsubscribe?email={{email}}" style="color: #3b82f6; text-decoration: none;">Unsubscribe</a>
+                <a href="${SITE_URL}/api/newsletter/unsubscribe?email={{email}}" style="color: #3b82f6; text-decoration: none;">Unsubscribe</a>
                 |
-                <a href="https://goldprices.com/newsletter/preferences?email={{email}}" style="color: #3b82f6; text-decoration: none;">Manage Preferences</a>
+                <a href="${SITE_URL}/newsletter/preferences?email={{email}}" style="color: #3b82f6; text-decoration: none;">Manage Preferences</a>
               </p>
             </td>
           </tr>
@@ -249,10 +250,10 @@ ${Object.entries(sarPrices)
   .map(([karat, prices]) => `${karat}: SAR ${prices.perGram}/g`)
   .join('\n')}
 
-View live tracker: https://goldprices.com/tracker.html
+View live tracker: ${SITE_URL}/tracker.html
 
 ---
-Unsubscribe: https://goldprices.com/api/newsletter/unsubscribe?email={{email}}
+Unsubscribe: ${SITE_URL}/api/newsletter/unsubscribe?email={{email}}
   `.trim();
 
   return {
