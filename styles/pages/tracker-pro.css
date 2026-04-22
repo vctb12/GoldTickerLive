@@ -385,7 +385,6 @@ body.tracker-pro-page {
 
 .tracker-toolbar-card {
   padding: var(--space-5) var(--space-5) var(--space-4);
-  background: linear-gradient(135deg, var(--surface-primary) 0%, rgb(255 255 255 / 98%) 100%);
   border-width: 1.5px;
 }
 
