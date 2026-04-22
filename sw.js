@@ -51,6 +51,14 @@ const PRECACHE_URLS = [
   '/content/tools/weight-converter.html',
   '/content/tools/zakat-calculator.html',
   '/content/tools/investment-return.html',
+  // Phase 1 "Coming soon" stubs
+  '/content/todays-best-rates/',
+  '/content/premium-watch/',
+  '/content/compare-countries/',
+  '/content/news/',
+  '/content/faq/',
+  '/content/submit-shop/',
+  '/content/changelog/',
   // City pages
   '/countries/uae/cities/dubai.html',
   '/countries/uae/cities/abu-dhabi.html',
