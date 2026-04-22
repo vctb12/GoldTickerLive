@@ -668,3 +668,35 @@ range of SHAs covered, any follow-ups.
 
 > This file replaces `docs/REVAMP_STATUS.md` for the homepage + nav + tracker revamp.
 > Legacy tracks from that file remain valid for their respective scopes.
+
+---
+
+## 19. Decisions log
+
+_Absorbs `docs/product/DECISIONS.md`. Append-only. One entry per architectural
+or product decision that future agents need to know about._
+
+### 2026-04-04 — Keep the current static architecture
+
+- **Decision.** Keep current static multi-page architecture for now.
+- **Why.** The biggest issues are trust, UX, state reliability, and SEO — not
+  framework limitations.
+- **Consequence.** Prefer targeted refactors over migrations.
+
+### 2026-04-04 — Spot/reference vs retail, always distinguished
+
+- **Decision.** Always distinguish spot/reference prices from retail shop
+  prices.
+- **Why.** This is core to trust.
+- **Consequence.** UI labels, methodology notes, and page copy must reflect
+  this. Codified in §0.1 Trust guardrails and §0.2 trust snippets.
+
+### 2026-04-22 — REVAMP_PLAN.md is the single source of truth
+
+- **Decision.** Consolidate every planning / status / roadmap / task / audit
+  doc into `docs/REVAMP_PLAN.md`. Source files become thin pointers.
+- **Why.** Multiple overlapping plan docs caused drift and confusion about
+  which file to update when reporting progress.
+- **Consequence.** All planning edits land here. `docs/README.md` maps the
+  pointer index. Reference docs (ARCHITECTURE, DESIGN_TOKENS, SEO_STRATEGY,
+  etc.) stay independent.

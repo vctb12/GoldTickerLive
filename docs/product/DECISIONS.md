@@ -1,31 +1,7 @@
-# Decisions Log
+# Decisions Log — consolidated
 
-## 2026-04-04
-
-### Decision
-
-Keep current static architecture for now.
-
-### Why
-
-The biggest issues are trust, UX, state reliability, and SEO, not framework limitations.
-
-### Consequence
-
-Prefer targeted refactors over migrations.
-
----
-
-## 2026-04-04
-
-### Decision
-
-Always distinguish spot/reference prices from retail shop prices.
-
-### Why
-
-This is core to trust.
-
-### Consequence
-
-UI labels, methodology notes, and page copy must reflect this.
+> 🛑 **This content has moved.** The running decisions log now lives in
+> [`../REVAMP_PLAN.md` §19 Decisions log](../REVAMP_PLAN.md#19-decisions-log).
+>
+> Append new decisions to the master plan instead of this file. This pointer
+> exists so any external link to `docs/product/DECISIONS.md` still resolves.
