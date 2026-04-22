@@ -2,6 +2,7 @@
 import { CONSTANTS, KARATS, COUNTRIES } from '../config/index.js';
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
+import '../lib/reveal.js';
 import { createInitialState, persistState } from '../tracker/state.js';
 // Lazy-load heavy UI modules (ui-shell, events, wire, adSlot) inside init()
 let mountShell;
