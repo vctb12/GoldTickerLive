@@ -789,14 +789,16 @@
         const orders = await loadOrders();
         const idx = orders.findIndex((o) => o.id === id);
         if (idx === -1) return null;
+        const normalizedStatus = String(newStatus || '').toLowerCase();
+        if (!ORDER_STATUSES.includes(normalizedStatus)) return null;
         const now = new Date().toISOString();
-        const entry = { status: newStatus, timestamp: now, note: note || '' };
+        const entry = { status: normalizedStatus, timestamp: now, note: note || '' };
         if (!Array.isArray(orders[idx].statusHistory)) orders[idx].statusHistory = [];
         orders[idx].statusHistory.push(entry);
-        orders[idx].status = newStatus;
+        orders[idx].status = normalizedStatus;
         orders[idx].updatedAt = now;
         await saveOrder(orders[idx]);
-        logActivity('order_status', `Order ${id} → ${newStatus}${note ? ': ' + note : ''}`);
+        logActivity('order_status', `Order ${id} → ${normalizedStatus}${note ? ': ' + note : ''}`);
         return orders[idx];
       }
 
