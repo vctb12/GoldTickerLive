@@ -3,12 +3,19 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this
 repository.
 
-> **🛑 Revamp work?** If the task is part of the homepage / nav / tracker revamp
-> (branch `copilot/revamp-tracker-html-page` or successor), open and read
-> [`docs/REVAMP_PLAN.md`](docs/REVAMP_PLAN.md) **before doing anything else**. That file
-> is the single source of truth for the revamp's scope, commit discipline, done/pending
-> status, and the update protocol. Every `report_progress` call and every merged PR on
-> the revamp must update it in the same commit.
+> **🛑 Revamp work?** If the task is part of the homepage / nav / tracker revamp (branch
+> `copilot/revamp-tracker-html-page` or successor), open and read
+> [`docs/REVAMP_PLAN.md`](docs/REVAMP_PLAN.md) **before doing anything else**. That file is the
+> single source of truth for the revamp's scope, commit discipline, done/pending status, and the
+> update protocol. Every `report_progress` call and every merged PR on the revamp must update it in
+> the same commit.
+>
+> **🗂️ Any new prompt / channel?** Before acting, read
+> [`docs/plans/README.md`](docs/plans/README.md) and then
+> [`docs/REVAMP_PLAN.md`](docs/REVAMP_PLAN.md). All plans live under `docs/`. Raw proposals from
+> prompts are captured in `docs/plans/` and are **not executable** until they have been reconciled
+> via the priority matrix in `docs/plans/README.md` and slotted into the master plan. If a task is
+> not already in `REVAMP_PLAN.md`, stop and reconcile it first.
 
 ## Running Locally
 

@@ -100,6 +100,24 @@ function main() {
       errors.push(`${rel}: canonical does not use https://goldtickerlive.com/ (got ${canonUrl})`);
     }
 
+    // Public page — must have a non-empty <title>
+    if (!/<title[^>]*>[^<]{3,}<\/title>/i.test(html)) {
+      errors.push(`${rel}: missing or empty <title>`);
+    }
+
+    // Public page — must have a meta description of at least 10 chars
+    if (!/<meta[^>]*name="description"[^>]*content="[^"]{10,}"/i.test(html)) {
+      errors.push(`${rel}: missing <meta name="description"> (or content < 10 chars)`);
+    }
+
+    // Public page — must have og:url pointing at production host
+    const ogUrlMatch = html.match(/<meta[^>]*property="og:url"[^>]*content="([^"]+)"/i);
+    if (!ogUrlMatch) {
+      errors.push(`${rel}: missing <meta property="og:url">`);
+    } else if (!/^https:\/\/goldtickerlive\.com\//.test(ogUrlMatch[1])) {
+      errors.push(`${rel}: og:url does not use https://goldtickerlive.com/ (got ${ogUrlMatch[1]})`);
+    }
+
     // Redirect stubs don't require hreflang
     if (isRedirectStub(html)) continue;
 

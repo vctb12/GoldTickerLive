@@ -9,10 +9,10 @@ posts using thresholds.json.
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
-from scripts.utils.logger import get_logger
-from scripts.utils.supabase_client import (
+from utils.logger import get_logger
+from utils.supabase_client import (
     count_spike_posts_last_24h,
     get_last_spike_post_time,
     get_latest_price,

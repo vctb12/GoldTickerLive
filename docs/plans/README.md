@@ -1,0 +1,139 @@
+# `docs/plans/` — Plans consolidation & priority matrix
+
+> 🛑 **READ THIS FOLDER (and [`../REVAMP_PLAN.md`](../REVAMP_PLAN.md)) BEFORE STARTING ANY WORK IN
+> FUTURE PROMPTS OR CHANNELS.**
+>
+> Every agent / contributor session — regardless of the channel it came from — **must open this
+> README first**, then the master plan, then any proposal in this folder that is relevant to the
+> requested task. No work is to be executed from a raw prompt if that prompt has not been reconciled
+> here first.
+
+---
+
+## How plans are organized in this repo
+
+The repo has **one** authoritative plan and a small set of proposals / idea inventories. Nothing
+else in `docs/` is allowed to host a planning backlog.
+
+| Layer               | File                                                           | Role                                                                                |
+| ------------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| **Master plan**     | [`docs/REVAMP_PLAN.md`](../REVAMP_PLAN.md)                     | Single source of truth. All scope, status, decisions, governance, backlog, history. |
+| **Docs index**      | [`docs/README.md`](../README.md)                               | Pointer map for every file in `docs/`.                                              |
+| **This folder**     | `docs/plans/`                                                  | Raw proposals captured from prompts / Slack / channels, awaiting reconciliation.    |
+| **Priority matrix** | _this file_                                                    | The reprioritized ordering across all pending proposals.                            |
+| **Agent rules**     | [`AGENTS.md`](../../AGENTS.md), [`CLAUDE.md`](../../CLAUDE.md) | Operating constraints that override anything in a proposal.                         |
+
+### Reading order before acting
+
+1. `AGENTS.md` and `CLAUDE.md` (scope + safety guardrails).
+2. `docs/README.md` (what lives where).
+3. `docs/REVAMP_PLAN.md` (current active work, its commit discipline, and its update protocol).
+4. This file — `docs/plans/README.md` (priority matrix).
+5. The specific proposal file in this folder, if the task maps to one.
+
+**If a requested task is not already represented in `REVAMP_PLAN.md`, do not execute it.** First
+reconcile it here (move the affected matrix rows from _Proposed_ to _Approved_) and add the
+corresponding section / checklist into `REVAMP_PLAN.md`, then open a scoped PR for the smallest
+correct slice.
+
+---
+
+## Pending proposals
+
+| File                                                             | Origin / date             | Status                    |
+| ---------------------------------------------------------------- | ------------------------- | ------------------------- |
+| [`PLATFORM_UPGRADE_PROPOSAL.md`](./PLATFORM_UPGRADE_PROPOSAL.md) | Agent prompt · 2026-04-22 | 📥 Pending reconciliation |
+
+---
+
+## Priority matrix
+
+All tasks below are sourced from the pending proposals. Each is scored on two axes:
+
+- **Impact** (1–5): severity / importance. 5 = product-critical (trust, correctness, broken
+  workflows). 1 = nice-to-have polish.
+- **Effort** (1–5): how huge / hard / risky. 5 = touches many files, regression-prone, requires new
+  subsystems. 1 = a single file, an hour or two.
+
+**Score = Impact − Effort**. Rows are sorted by score (desc), then by Impact (desc), then by Effort
+(asc). The top of Wave 1 is always the cheapest way to move trust / correctness forward.
+
+### Legend
+
+| Marker | Meaning                                                                             |
+| ------ | ----------------------------------------------------------------------------------- |
+| ⬜     | Pending — ready to execute once slotted into `REVAMP_PLAN.md`.                      |
+| ✅     | Already satisfied by existing code / docs — no work required unless a gap is found. |
+| ⚠︎      | Gated — conflicts with architecture / scope guardrails. Needs owner approval.       |
+
+### Wave 1 — Quick wins, high importance (do first)
+
+Sorted strictly by score (impact − effort) descending.
+
+| #   | Task                                                                                                          | Impact | Effort | Score | Status      | Notes                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| --- | ------------------------------------------------------------------------------------------------------------- | :----: | :----: | :---: | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Pin Python dependencies via `scripts/python/requirements.txt` and update workflows to `pip install -r`        |   4    |   1    |   3   | ✅ done     | Shipped — `scripts/python/requirements.txt` pins `requests`, `tweepy`, `supabase`. `post_gold.yml`, `spike_alert.yml`, `health_check.yml` now install from it; `post_gold.yml` picked up the shared pip cache too.                                                                                                                                                                                                        |
+| 2   | Document admin-owned WhatsApp number (public-config surface) — no new floating button, no architecture change |   3    |   1    |   2   | ✅ done     | Shipped — [`docs/ADMIN_GUIDE.md`](../ADMIN_GUIDE.md) now documents the canonical source (admin Settings → `whatsappNumber` → Supabase `site_settings`) and flags the known gap that [`content/order-gold/`](../../content/order-gold/index.html) opens `wa.me/` without a destination.                                                                                                                                    |
+| 3   | `SECRETS.md` inventory (every env var, which workflow needs it)                                               |   3    |   1    |   2   | ✅ done     | Already covered by [`docs/environment-variables.md`](../environment-variables.md). Close the proposal item; no new file.                                                                                                                                                                                                                                                                                                  |
+| 4   | `UPGRADE_SUMMARY.md` handoff doc                                                                              |   2    |   1    |   1   | ⬜ deferred | Write **after** upgrade work lands, not before. Keep parked.                                                                                                                                                                                                                                                                                                                                                              |
+| 5   | Order page (karat + weight selector → WhatsApp handoff + "estimate only" disclaimer)                          |   4    |   2    |   2   | ✅ done     | Already live at [`content/order-gold/index.html`](../../content/order-gold/index.html) with WhatsApp handoff + VAT disclaimer.                                                                                                                                                                                                                                                                                            |
+| 6   | `pyproject.toml` + `ruff` + Python lint job in CI                                                             |   3    |   2    |   1   | ✅ done     | Shipped — [`pyproject.toml`](../../pyproject.toml) adds a narrow ruff config (F/E9/W). `python-lint` job added to [`ci.yml`](../../.github/workflows/ci.yml) as a **blocking** check. Fixed 3 dead-code findings (`gold_poster.py`, `spike_detector.py`, `supabase_client.py`) + 1 whitespace nit. Ruff is green today.                                                                                                   |
+| 7   | `AGENT_AUDIT.md` working-memory doc                                                                           |   2    |   2    |   0   | ⬜ deferred | `AGENTS.md` forbids broad repo audits unless explicitly asked. Owner must opt in before we write this.                                                                                                                                                                                                                                                                                                                    |
+| 8   | Fix every currently-failing GitHub Actions workflow                                                           |   5    |   3    |   2   | 🟡 partial  | **Static audit complete.** Shipped: (a) `spike_alert.yml` + `health_check.yml` imports fixed last turn; (b) deprecated `returntocorp/semgrep-action@<sha>` → `semgrep/semgrep` official container; (c) Python version drift fixed — all three poster workflows now pin `3.11` so they share a single pip cache. Remaining items (deprecation drift, live run failures) need Actions run-history access, not static fixes. |
+| 9   | `code-review.yml` PR quality gate (SEO/meta/canonical check + sitemap coverage comment)                       |   4    |   3    |   1   | ✅ done     | **Sitemap coverage gate shipped** as [`scripts/node/check-sitemap-coverage.js`](../../scripts/node/check-sitemap-coverage.js), wired into [`ci.yml`](../../.github/workflows/ci.yml) as a blocking step after build. SEO/meta/canonical enforcement lives in `check-seo-meta.js` (Wave 2 #12). A separate "PR summary comment" workflow was **rejected** — it duplicates GitHub's native check-run UI.                    |
+| 10  | Unified nav across every page                                                                                 |   3    |   3    |   0   | ✅ done     | `src/components/nav.js` + `nav-data.js` already drives every page. If drift is found, fix inside the existing system — don't fork a partial.                                                                                                                                                                                                                                                                              |
+
+### Wave 2 — High impact, larger scope
+
+Do **not** start until Wave 1 is green. Same sort rule.
+
+| #   | Task                                                                                                                                | Impact | Effort | Score | Status      | Notes                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------- | :----: | :----: | :---: | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 11  | Live charts standardization (one chart lib, dark theme, gold accent, skeleton on load, reuse on home / karat / order)               |   4    |   3    |   1   | ❌ rejected | **Audit reversed the recommendation.** The two libs serve two distinct use cases: `lightweight-charts` is purpose-built for single-series tick/OHLC data (tracker), while `chart.js` is purpose-built for multi-series toggleable line charts (history page: 24K/22K/21K/18K overlay). Forcing one library would produce **worse** UX in one of the two surfaces. Keep both. Any future chart work should follow this split, not fight it. |
+| 12  | SEO pass + `scripts/validate_seo.py` (title, meta, canonical, og:url, schema)                                                       |   4    |   3    |   1   | ✅ done     | Extended the existing Node guard ([`scripts/node/check-seo-meta.js`](../../scripts/node/check-seo-meta.js)) instead of forking a parallel Python validator — "reuse existing patterns" per `AGENTS.md`. Now enforces title + meta description + og:url on top of the pre-existing canonical + hreflang checks, across all 483 public pages. Runs on every PR via `npm run validate`.                                                       |
+| 13  | Homepage rebuild (above-fold karats in AED/gram, freshness label, day sparkline, spot-vs-retail copy, CTA row)                      |   5    |   4    |   1   | ⬜ pending  | Must land inside an existing `REVAMP_PLAN.md` section. Respect trust guardrails — no banners, no urgency, labeled reference prices.                                                                                                                                                                                                                                                                                                        |
+| 14  | Tracker page rebuild (hero stats, multi-timeframe chart, karat sparklines, currency compare, alerts, paginated history table + CSV) |   5    |   5    |   0   | ⬜ pending  | `REVAMP_PLAN.md` already owns the tracker revamp. Slot into that section, don't fork a new plan.                                                                                                                                                                                                                                                                                                                                           |
+| 15  | URL hierarchy + `redirects.json` + legacy-link handling                                                                             |   4    |   4    |   0   | ⚠︎ gated     | Changes canonical URLs → SEO regression risk. Needs a staged rollout + full 301 map before any file move.                                                                                                                                                                                                                                                                                                                                  |
+
+### Wave 3 — Structural / risky (owner approval required)
+
+"Huge and hard" items — architecture-level. Gated by design.
+
+| #   | Task                                                                                                                                      | Impact | Effort | Score | Status  | Notes                                                                                                                                                                              |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------- | :----: | :----: | :---: | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 16  | Python layer migration (JS→Python where safe, extract inline YAML scripts, retries + structured logging)                                  |   3    |   3    |   0   | ⚠︎ gated | Migrating working JS to Python just for uniformity is a scope violation. Approve case by case.                                                                                     |
+| 17  | Admin panel expansion (shops CRUD, announcements banner, manual price refresh, workflow dashboard, GitHub Issues form, analytics summary) |   4    |   5    |  −1   | ⚠︎ gated | Admin backend already exists (`server.js`, `server/`, `admin/`). Extend it; do not replace. Auth story must match `server/lib/auth.js`, not a new bcrypt file.                     |
+| 18  | Repo directory reorganization (`assets/`, `pages/`, `scripts/`, `data/`, …)                                                               |   4    |   5    |  −1   | ⚠︎ gated | Conflicts with "preserve static multi-page architecture unless explicitly asked". Full-repo move → guaranteed link/SEO/CI regressions. Owner must sign off + sequence the rollout. |
+
+### Wave 4 — Nice-to-have
+
+Ship only when Waves 1–3 are stable.
+
+| #   | Task                                                                                    | Impact | Effort | Score | Status     | Notes                                                                                  |
+| --- | --------------------------------------------------------------------------------------- | :----: | :----: | :---: | ---------- | -------------------------------------------------------------------------------------- |
+| 19  | X post generator page (live preview, one-click copy, web-intent URL, optional PNG card) |   3    |   2    |   1   | ⬜ pending | Reuse existing Twitter automation config where possible.                               |
+| 20  | Currency converter widget (AED ↔ majors, using current gold price as base)              |   2    |   2    |   0   | ⬜ pending | Auto-updates when price updates.                                                       |
+| 21  | Data-aware chatbot (guided flow, quick replies, WhatsApp handoff on dead-end)           |   3    |   3    |   0   | ⬜ pending | Not an LLM. Reads latest price from the existing data file. Must pass DOM-safety gate. |
+
+---
+
+## Execution protocol (when a wave item is approved)
+
+1. Open `REVAMP_PLAN.md` and add / update the relevant checklist under the correct section (§1–§18
+   for revamp work, §22 for production tracks, §28 for backlog).
+2. Create a scoped branch off `main` following the naming convention in `AGENTS.md`.
+3. Make the smallest correct change. No opportunistic cleanup.
+4. Run `npm test`, `npm run lint`, `npm run validate`, `npm run quality`, and `npm run build` as
+   applicable. Report what was verified and what was not.
+5. In the same commit as any `report_progress`, update the checklist in `REVAMP_PLAN.md` and (if the
+   matrix row moved) this file.
+6. Open the PR against `main` once the branch is rebased and conflict-free.
+
+## When a new plan arrives
+
+- Drop the raw prompt into `docs/plans/<NAME>_PROPOSAL.md` verbatim, with a "Pending reconciliation"
+  banner.
+- Add a row to the _Pending proposals_ table above.
+- Score each of its tasks on impact × effort and slot them into the wave table.
+- Do **not** start execution until the owner has reviewed this file and the scope has been
+  reconciled into `REVAMP_PLAN.md`.

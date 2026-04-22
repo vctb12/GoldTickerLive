@@ -10,7 +10,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from scripts.utils.logger import get_logger
+from utils.logger import get_logger
 
 log = get_logger("market_hours")
 

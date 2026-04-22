@@ -13,7 +13,7 @@ import os
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
-from scripts.utils.logger import get_logger
+from utils.logger import get_logger
 
 log = get_logger("supabase_client")
 
@@ -85,7 +85,7 @@ def insert_price(price_data: Dict[str, Any]) -> bool:
             elif kp["code"] == "21K":
                 row["k21_aed"] = kp["aed_per_gram"]
 
-        result = client.table("gold_prices").insert(row).execute()
+        client.table("gold_prices").insert(row).execute()
         log.info("Price saved to Supabase: $%.2f", row["spot_usd"])
         return True
     except Exception as exc:

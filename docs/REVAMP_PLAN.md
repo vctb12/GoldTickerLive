@@ -27,6 +27,11 @@
 > planning-style file in `docs/` now points here. Sections §0–§18 own the homepage + nav + tracker
 > revamp; §19–§28 own the consolidated production tracks, decisions, governance, roadmaps, risks,
 > and historical logs. See [`docs/README.md`](./README.md) for the pointer map.
+>
+> **📥 Plan intake.** Raw proposals captured from prompts or channels live under
+> [`docs/plans/`](./plans/) with a priority matrix in [`docs/plans/README.md`](./plans/README.md).
+> Proposals are **not executable** until they have been reprioritized there and reconciled into this
+> master plan. Agents must read `docs/plans/README.md` before starting any new task.
 
 | §      | Owns                                                       | Absorbed from                                                     |
 | ------ | ---------------------------------------------------------- | ----------------------------------------------------------------- |

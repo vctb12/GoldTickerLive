@@ -1,0 +1,18 @@
+# Python runtime dependencies for scripts/python/*
+#
+# Used by the following workflows (all install with `pip install -r`):
+#   - .github/workflows/post_gold.yml
+#   - .github/workflows/spike_alert.yml
+#   - .github/workflows/health_check.yml
+#
+# Pin exact versions for reproducibility. The pip cache key in each workflow
+# already hashes on `**/requirements*.txt`, so a change here invalidates the
+# cache automatically.
+#
+# If you add a dependency, also:
+#   1. Update the workflow file(s) that need it (no ad-hoc `pip install` lines).
+#   2. Update docs/environment-variables.md if the package needs a new secret.
+
+requests==2.32.3
+tweepy==4.14.0
+supabase==2.9.1

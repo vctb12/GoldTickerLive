@@ -72,6 +72,12 @@ jobs:
           du -sh dist/
           echo "HTML files generated: $(find dist -name '*.html' | wc -l)"
 
+      - name: Regenerate sitemap.xml (matches deploy.yml)
+        run: node scripts/node/generate-sitemap.js
+
+      - name: Enforce sitemap coverage
+        run: node scripts/node/check-sitemap-coverage.js
+
       - name: Run link-check
         run: node scripts/node/check-links.js --dir dist --fail-on-error || true
 
@@ -96,6 +102,25 @@ jobs:
           name: dist
           path: dist
           retention-days: 7
+
+  python-lint:
+    name: Python lint (ruff)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install ruff
+        run: pip install ruff==0.9.2
+
+      - name: Run ruff
+        run: ruff check scripts/python
 
   e2e:
     name: Playwright smoke

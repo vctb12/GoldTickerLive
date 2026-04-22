@@ -1,0 +1,32 @@
+# ------------------------------------------------------------------
+# Python tooling config for the Gold-Prices repo.
+#
+# Scope: lint-only. The Python code in this repo lives under
+# scripts/python/ and is executed by GitHub Actions workflows; it is
+# not packaged or installed. This file exists so `ruff` has a stable
+# configuration and CI can run the same checks locally.
+#
+# See docs/plans/README.md → Wave 1 #6 for the roll-in plan.
+# ------------------------------------------------------------------
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+# Start narrow: only the rules we are confident are bug-catchers. We
+# can widen this once the Python surface grows.
+#   F  — pyflakes (unused imports, undefined names, unused vars)
+#   E9 — syntax / runtime-breaking errors
+#   W  — pycodestyle warnings (deprecated constructs, trailing whitespace)
+[tool.ruff.lint]
+select = ["F", "E9", "W"]
+
+# Paths ruff should never look at.
+exclude = [
+    ".git",
+    "node_modules",
+    "dist",
+    "build",
+    ".venv",
+    "venv",
+]
