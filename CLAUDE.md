@@ -3,6 +3,13 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this
 repository.
 
+> **🛑 Revamp work?** If the task is part of the homepage / nav / tracker revamp
+> (branch `copilot/revamp-tracker-html-page` or successor), open and read
+> [`docs/REVAMP_PLAN.md`](docs/REVAMP_PLAN.md) **before doing anything else**. That file
+> is the single source of truth for the revamp's scope, commit discipline, done/pending
+> status, and the update protocol. Every `report_progress` call and every merged PR on
+> the revamp must update it in the same commit.
+
 ## Running Locally
 
 The public site is static and can be browsed without a build for quick inspection:

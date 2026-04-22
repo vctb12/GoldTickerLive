@@ -408,28 +408,9 @@
         aria-labelledby="tab-live"
         data-mode-panel="live"
       >
-        <!-- Compact toolbar — range + toggles only (selectors moved to hero) -->
+        <!-- Compact toolbar — range + toggles only (selectors live in hero) -->
         <div class="tracker-toolbar-card">
           <div class="tracker-control-grid">
-            <label class="tracker-field">
-              <span>Language</span>
-              <select id="tp-language">
-                <option value="en">English</option>
-                <option value="ar">العربية</option>
-              </select>
-            </label>
-            <label class="tracker-field">
-              <span>Currency</span>
-              <select id="tp-currency" class="tp-control-select"></select>
-            </label>
-            <label class="tracker-field">
-              <span>Karat</span>
-              <select id="tp-karat" class="tp-control-select"></select>
-            </label>
-            <label class="tracker-field">
-              <span>Unit</span>
-              <select id="tp-unit" class="tp-control-select"></select>
-            </label>
             <label class="tracker-field tracker-advanced-only">
               <span>Compare market</span>
               <select id="tp-compare-country"></select>
@@ -470,7 +451,7 @@
         </div>
 
         <!-- Market wire (advanced) -->
-        <section class="tracker-wire-shell tracker-advanced-only" aria-label="Market wire">
+        <section class="tracker-wire-shell tracker-advanced-only" aria-label="Market wire" data-reveal>
           <div class="tracker-wire-card">
             <div class="tracker-wire-label">Market wire</div>
             <div class="tracker-wire-meta" id="tp-wire-meta">
@@ -994,7 +975,7 @@
 
             <article class="tracker-subpanel">
               <div class="tracker-subpanel-head"><h3>Date lookup</h3></div>
-              <p style="font-size: 0.85rem; color: var(--tp-text-muted); margin-bottom: 1rem">
+              <p class="tracker-subpanel-intro">
                 Find the closest data point for any date in the archive. Searches baseline +
                 session data.
               </p>
@@ -1194,7 +1175,7 @@
       </section>
 
       <!-- ── Market brief (shared across modes) ────────────── -->
-      <section class="tracker-shell tracker-brief-shell" aria-label="Market brief">
+      <section class="tracker-shell tracker-brief-shell" aria-label="Market brief" data-reveal>
         <section class="tracker-panel">
           <div class="tracker-panel-head">
             <div>

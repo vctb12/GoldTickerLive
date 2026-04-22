@@ -13,6 +13,8 @@ import { injectFooter } from '../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
 import { injectSpotBar, updateSpotBar, updateSpotBarLang } from '../components/spotBar.js';
 import { renderAdSlot } from '../components/adSlot.js';
+import '../lib/reveal.js';
+import { countUp } from '../lib/count-up.js';
 
 // ── Constants ──────────────────────────────────────────────────────────────
 const LANG_KEY = 'user_prefs';
@@ -211,7 +213,11 @@ function renderKaratStrip(k18Ref) {
     const el = document.getElementById(`kstrip-${k}-val`);
     if (el) {
       el.className = 'karat-strip-v';
-      el.textContent = fmt.formatPrice(v, 'AED', 2);
+      // Smooth count-up with directional flash when price changes.
+      countUp(el, v, {
+        decimals: 2,
+        format: (n) => fmt.formatPrice(n, 'AED', 2),
+      });
     }
   }
 }
