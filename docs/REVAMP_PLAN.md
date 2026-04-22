@@ -3,7 +3,8 @@
 > 🛑 **START HERE — READ BEFORE DOING ANY WORK ON THIS REVAMP.**
 >
 > This file is the **single source of truth** for the homepage + global nav + tracker
-> revamp. It consolidates every previous plan. Do **not** reintroduce or fork another plan.
+> revamp **and** for the consolidated production tracks. It absorbs every previous plan.
+> Do **not** reintroduce or fork another plan.
 >
 > ### 📌 Mandatory session protocol
 >
@@ -50,7 +51,68 @@
 
 ---
 
-## 0. Non-negotiables
+## 0. Product context
+
+_Absorbs `docs/product/PRD.md`._
+
+### Product
+
+Gold-Prices website — a bilingual (EN/AR), multi-page, mostly-static site with
+live data, tools, country/city/market pages, educational content, and a shops
+directory.
+
+### Mission
+
+Help users quickly and confidently understand gold prices, historical movement,
+market context, and where/how to buy.
+
+### Primary users
+
+- Retail users checking today's prices
+- Users comparing countries / cities / karats
+- Users looking for gold shops / markets
+- Users researching gold buying and pricing
+- SEO users landing on country / city / guide pages
+
+### Core jobs to be done
+
+- See the current gold price clearly
+- Compare karats and currencies
+- Browse historical data with confidence
+- Find relevant local market / shop information
+- Understand the difference between spot and retail pricing
+- Use calculators and educational pages without confusion
+
+### Product pillars
+
+1. Trust and clarity
+2. Speed
+3. Mobile-first UX
+4. SEO depth
+5. Clean information architecture
+
+### Core sections
+
+- Homepage
+- Tracker / historical prices
+- Country pages
+- City pages
+- Markets / famous gold souks
+- Shops directory
+- Calculators
+- Learn / methodology / guides
+
+### Product non-negotiables
+
+- Label estimated, fallback, and derived values clearly
+- Preserve internal linking between pages
+- No fake "live" claims without support
+- No weak SEO duplication
+- No misleading store verification
+
+---
+
+## 0.3 Engineering non-negotiables
 
 - **One PR, many tiny commits.** Each commit is single-purpose and reversible with
   `git revert`.
