@@ -1,0 +1,4 @@
+{
+  "//": "Scopes src/**/*.js to ESM parsing so Node's test runner can `import()` modules without renaming them to .mjs. Vite already treats these files as ESM; this file only affects direct Node loading.",
+  "type": "module"
+}

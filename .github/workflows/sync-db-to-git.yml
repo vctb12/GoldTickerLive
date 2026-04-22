@@ -4,42 +4,77 @@ on:
   repository_dispatch:
     types: [sync-shops]
 
+# Least-privilege default; the one job that commits elevates `contents: write`.
+permissions:
+  contents: read
+
 jobs:
   update-shops-file:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Only this job needs write access to commit the regenerated file.
+    permissions:
+      contents: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fetch Data from Supabase
+      - name: Fetch data from Supabase
         id: fetch
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        # Write the response to a file on disk rather than stuffing it through
+        # `$GITHUB_OUTPUT`. The previous approach concatenated an arbitrary
+        # JSON payload into a HEREDOC, which (a) can exceed the output size
+        # limit and (b) breaks on any payload containing the literal `EOF`
+        # line. Storing on disk and reading it in the next step is safer.
         run: |
-          RESPONSE=$(curl -s "$SUPABASE_URL/rest/v1/shops?select=*&order=confidence.desc" \
+          set -euo pipefail
+          mkdir -p .sync-cache
+          curl -sS --fail \
+            "$SUPABASE_URL/rest/v1/shops?select=*&order=confidence.desc" \
             -H "apikey: $SUPABASE_KEY" \
-            -H "Authorization: Bearer $SUPABASE_KEY")
-          echo "DATA<<EOF" >> $GITHUB_OUTPUT
-          echo "$RESPONSE" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            -o .sync-cache/shops.json
+          # Validate that we got parseable JSON before we try to use it.
+          node -e "JSON.parse(require('fs').readFileSync('.sync-cache/shops.json','utf8'))"
+          echo "✅ Fetched $(wc -c < .sync-cache/shops.json) bytes of shop data"
 
-      - name: Generate shops.js
+      - name: Generate data/shops.js
+        # Build the output file in Node to avoid any shell-metacharacter /
+        # `sed` substitution issues when the DB payload contains `|`, `&`,
+        # `/`, newlines, or other characters that break streaming text tools.
         run: |
-          cat > data/shops.js << 'SHOPS_EOF'
-          // AUTO-GENERATED FROM SUPABASE — DO NOT EDIT MANUALLY
-          // Last synced: SYNC_TIMESTAMP
-          export const SHOPS = SHOPS_DATA_PLACEHOLDER;
-          SHOPS_EOF
-          # Inject actual timestamp and data
-          sed -i "s|SYNC_TIMESTAMP|$(date -u +"%Y-%m-%dT%H:%M:%SZ")|" data/shops.js
-          sed -i "s|SHOPS_DATA_PLACEHOLDER|${{ steps.fetch.outputs.DATA }}|" data/shops.js
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            const raw = fs.readFileSync('.sync-cache/shops.json', 'utf8');
+            const shops = JSON.parse(raw);
+            if (!Array.isArray(shops)) {
+              throw new Error('Expected shops payload to be a JSON array, got ' + typeof shops);
+            }
+            const header =
+              '// AUTO-GENERATED FROM SUPABASE — DO NOT EDIT MANUALLY\n' +
+              '// Last synced: ' + new Date().toISOString() + '\n' +
+              'export const SHOPS = ';
+            const body = JSON.stringify(shops, null, 2) + ';\n';
+            fs.mkdirSync('data', { recursive: true });
+            fs.writeFileSync(path.join('data', 'shops.js'), header + body);
+            console.log('✅ Wrote data/shops.js with ' + shops.length + ' entries');
+          "
 
-      - name: Commit and Push
+      - name: Commit and push
         run: |
+          set -euo pipefail
           git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.name  "GitHub Action"
           git add data/shops.js
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: sync shops from admin panel" && git push)
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: sync shops from admin panel"
+            git push
+          fi

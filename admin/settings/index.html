@@ -535,7 +535,7 @@
             </div>
             <div class="card-body">
               <div class="settings-grid" style="margin-bottom: 16px">
-                <div class="form-group" style="margin-bottom: 0">
+                <div class="form-group">
                   <label class="form-label" for="k-gold-api">Gold API Key</label>
                   <div class="api-key-wrap">
                     <input
@@ -554,6 +554,11 @@
                       👁
                     </button>
                   </div>
+                  <div
+                    class="form-help"
+                    id="k-gold-api-status"
+                    aria-live="polite"
+                  ></div>
                 </div>
                 <div class="form-group" style="margin-bottom: 0">
                   <label class="form-label" for="k-fx-api">FX API Key</label>
@@ -574,6 +579,11 @@
                       👁
                     </button>
                   </div>
+                  <div
+                    class="form-help"
+                    id="k-fx-api-status"
+                    aria-live="polite"
+                  ></div>
                 </div>
                 <div class="form-group" style="margin-bottom: 0">
                   <label class="form-label" for="k-adsense">AdSense Publisher ID</label>
@@ -587,9 +597,12 @@
                 </div>
               </div>
               <div class="notice-box">
-                ℹ API keys are stored in Supabase along with other settings. They are synced across
-                devices. Keys are never exposed to public visitors — only authenticated admins can
-                read them.
+                ℹ API keys are stored in Supabase. The admin panel never caches
+                raw key values in your browser — only a "configured / not
+                configured" flag. Leave a field unchanged to keep the current
+                key; type a new value to rotate it. Exports exclude key
+                material; rotate in Supabase if you must move keys between
+                environments.
               </div>
             </div>
           </div>
@@ -768,26 +781,100 @@
 
       /* ── Load / save (Supabase with localStorage cache) ───── */
 
-      /** Cache settings in localStorage for offline resilience. */
+      /* ── Cache-safe sentinel ──────────────────────────────────
+       * API keys must NEVER be written to localStorage or serialised to
+       * exported JSON: any XSS, any stolen laptop, any synced browser
+       * profile becomes a full key compromise. We use a per-load random
+       * sentinel that the save logic recognises as "user did not change
+       * this key — keep the value already in Supabase".
+       *
+       * The sentinel is randomised per page load so that even if an
+       * attacker (via stored XSS, or a user accidentally typing the
+       * literal placeholder) submits the string, it will not match this
+       * session's sentinel and will therefore be treated as a legitimate
+       * rotation rather than a no-op.
+       */
+      const SECRET_PLACEHOLDER = (() => {
+        // Per-page-load sentinel so a stored XSS cannot pre-set a field to
+        // a hard-coded value and trick the save path into skipping a key
+        // rotation. Uses Web Crypto for the entropy — `Math.random()` is
+        // not a security-grade RNG and is flagged by static analysis.
+        const buf = new Uint8Array(16);
+        (window.crypto || window.msCrypto).getRandomValues(buf);
+        const hex = Array.from(buf, (b) => b.toString(16).padStart(2, '0')).join('');
+        return '__GP_UNCHANGED__' + hex;
+      })();
+
+      /** Build a cache-safe copy of settings with raw secrets removed.
+       *  We explicitly destructure and name-check the sensitive fields
+       *  outside the object literal that will end up in localStorage, so
+       *  no `apiKeys.*` property access appears in the same expression as
+       *  `JSON.stringify(...)`. This makes it obvious — to both human
+       *  reviewers and taint-tracking static analysis — that raw key
+       *  material cannot reach disk through this path. */
+      function statusForApiKeys(apiKeys) {
+        // Intentionally consume the sensitive object up-front and return a
+        // tiny status summary. Nothing from the original object survives
+        // past this function boundary.
+        const ak = apiKeys || {};
+        return Object.freeze({
+          goldApiConfigured: typeof ak.goldApi === 'string' && ak.goldApi.length > 0,
+          fxApiConfigured: typeof ak.fxApi === 'string' && ak.fxApi.length > 0,
+          // AdSense publisher ID is a *public* identifier that already
+          // ships inside the site's HTML, so it is safe to persist.
+          adsensePublisherId:
+            typeof ak.adsensePublisherId === 'string' ? ak.adsensePublisherId : '',
+        });
+      }
+
+      function buildCacheable(s) {
+        const keyStatus = statusForApiKeys(s.apiKeys);
+        return {
+          marginPercent: s.marginPercent,
+          vatRate: s.vatRate,
+          whatsappNumber: s.whatsappNumber,
+          siteName: s.siteName,
+          tagline: s.tagline,
+          socialLinks: s.socialLinks,
+          features: s.features,
+          adminNotes: s.adminNotes,
+          // ---- key material is NEVER written to localStorage ----
+          apiKeysStatus: {
+            goldApi: keyStatus.goldApiConfigured ? 'configured' : 'unset',
+            fxApi: keyStatus.fxApiConfigured ? 'configured' : 'unset',
+          },
+          adsensePublisherId: keyStatus.adsensePublisherId,
+        };
+      }
+
+      /** Cache a safe, secret-free settings snapshot in localStorage. */
       function cacheSettings(s) {
         try {
-          localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify(s));
+          localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify(buildCacheable(s)));
           localStorage.setItem(LAST_SAVED_KEY, String(Date.now()));
         } catch {}
       }
 
-      /** Read cached settings from localStorage. */
+      /** Read cached settings from localStorage. The cached shape never
+       *  contains raw API keys — only status flags and the public AdSense
+       *  ID — so we reconstruct an apiKeys object where the two secret
+       *  slots are the sentinel, which the UI renders as "configured". */
       function readCachedSettings() {
         try {
           const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
           if (!raw) return null;
           const saved = JSON.parse(raw);
+          const status = saved.apiKeysStatus || {};
           return {
             ...DEFAULTS,
             ...saved,
             socialLinks: { ...DEFAULTS.socialLinks, ...(saved.socialLinks || {}) },
             features: { ...DEFAULTS.features, ...(saved.features || {}) },
-            apiKeys: { ...DEFAULTS.apiKeys, ...(saved.apiKeys || {}) },
+            apiKeys: {
+              goldApi: status.goldApi === 'configured' ? SECRET_PLACEHOLDER : '',
+              fxApi: status.fxApi === 'configured' ? SECRET_PLACEHOLDER : '',
+              adsensePublisherId: saved.adsensePublisherId || '',
+            },
           };
         } catch {
           return null;
@@ -864,14 +951,62 @@
         document.getElementById('f-portfolio').checked = !!s.features?.portfolioTracker;
         document.getElementById('f-order-gold').checked = !!s.features?.orderGold;
         document.getElementById('f-price-alerts').checked = !!s.features?.priceAlerts;
-        document.getElementById('k-gold-api').value = s.apiKeys?.goldApi ?? '';
-        document.getElementById('k-fx-api').value = s.apiKeys?.fxApi ?? '';
+        // API keys render as status metadata, not raw values. The input holds
+        // the opaque SECRET_PLACEHOLDER so that save logic can detect whether
+        // the admin typed a new value or left the existing key alone.
+        renderSecretField('k-gold-api', 'k-gold-api-status', s.apiKeys?.goldApi);
+        renderSecretField('k-fx-api', 'k-fx-api-status', s.apiKeys?.fxApi);
         document.getElementById('k-adsense').value = s.apiKeys?.adsensePublisherId ?? '';
         document.getElementById('s-notes').value = s.adminNotes ?? '';
       }
 
+      function renderSecretField(inputId, statusId, currentValue) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        const hasValue = !!(currentValue && currentValue !== SECRET_PLACEHOLDER);
+        const isPlaceholder = currentValue === SECRET_PLACEHOLDER;
+        if (hasValue || isPlaceholder) {
+          input.value = SECRET_PLACEHOLDER;
+          input.dataset.hasSecret = '1';
+          input.setAttribute('aria-describedby', statusId || '');
+        } else {
+          input.value = '';
+          input.dataset.hasSecret = '';
+        }
+        const status = statusId ? document.getElementById(statusId) : null;
+        if (status) {
+          status.textContent = input.dataset.hasSecret
+            ? 'Key configured — leave unchanged or type a new key to rotate.'
+            : 'No key configured.';
+        }
+        // Clear sentinel on first edit so we capture the new value.
+        input.addEventListener(
+          'input',
+          () => {
+            if (input.value !== SECRET_PLACEHOLDER) input.dataset.hasSecret = '';
+          },
+          { once: true }
+        );
+      }
+
+      function readSecretField(inputId, previousValue) {
+        const input = document.getElementById(inputId);
+        if (!input) return previousValue || '';
+        const value = input.value;
+        // If the field still holds the sentinel, the user did not rotate the
+        // key — keep whatever Supabase currently has.
+        if (value === SECRET_PLACEHOLDER) return previousValue || '';
+        return value;
+      }
+
+      // The settings object most recently loaded from Supabase. When the user
+      // saves without re-typing an API key, we carry the stored value forward
+      // from here rather than from the form (which holds a sentinel).
+      let _lastLoadedSettings = null;
+
       /* ── Read form into settings object ────────────────────── */
       function readForm() {
+        const prev = _lastLoadedSettings?.apiKeys || {};
         return {
           marginPercent: parseFloat(document.getElementById('s-margin').value) || 3,
           vatRate: parseFloat(document.getElementById('s-vat').value) || 5,
@@ -891,8 +1026,8 @@
             priceAlerts: document.getElementById('f-price-alerts').checked,
           },
           apiKeys: {
-            goldApi: document.getElementById('k-gold-api').value,
-            fxApi: document.getElementById('k-fx-api').value,
+            goldApi: readSecretField('k-gold-api', prev.goldApi),
+            fxApi: readSecretField('k-fx-api', prev.fxApi),
             adsensePublisherId: document.getElementById('k-adsense').value.trim(),
           },
           adminNotes: document.getElementById('s-notes').value,
@@ -927,7 +1062,11 @@
       /* ── Export / Import ────────────────────────────────────── */
       function exportSettings() {
         const s = readForm();
-        const blob = new Blob([JSON.stringify(s, null, 2)], { type: 'application/json' });
+        // Scrub secrets from the exported file. Exported JSON should be
+        // shareable between admins without leaking credentials. Reuse the
+        // same cacheable shape we use for localStorage.
+        const safe = buildCacheable(s);
+        const blob = new Blob([JSON.stringify(safe, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -941,12 +1080,29 @@
         reader.onload = (e) => {
           try {
             const parsed = JSON.parse(e.target.result);
+            // Imported files must never provide raw API key material —
+            // exports scrub them and manual edits should too. Merge status
+            // flags if present; otherwise preserve whatever is currently
+            // configured in Supabase.
+            const prev = _lastLoadedSettings?.apiKeys || {};
+            const status = parsed.apiKeysStatus || {};
             const merged = {
               ...DEFAULTS,
               ...parsed,
               socialLinks: { ...DEFAULTS.socialLinks, ...(parsed.socialLinks || {}) },
               features: { ...DEFAULTS.features, ...(parsed.features || {}) },
-              apiKeys: { ...DEFAULTS.apiKeys, ...(parsed.apiKeys || {}) },
+              apiKeys: {
+                goldApi:
+                  status.goldApi === 'configured' || prev.goldApi
+                    ? SECRET_PLACEHOLDER
+                    : '',
+                fxApi:
+                  status.fxApi === 'configured' || prev.fxApi
+                    ? SECRET_PLACEHOLDER
+                    : '',
+                adsensePublisherId:
+                  parsed.adsensePublisherId || prev.adsensePublisherId || '',
+              },
             };
             populateForm(merged);
             showToast('Settings imported. Click Save to apply.', 'success');
@@ -976,7 +1132,9 @@
         loadAdminUser();
 
         // Populate form on load
-        populateForm(await loadSettings());
+        const loaded = await loadSettings();
+        _lastLoadedSettings = loaded;
+        populateForm(loaded);
         updateLastSaved();
         setInterval(updateLastSaved, 30000);
 

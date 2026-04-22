@@ -14,6 +14,26 @@ import { injectTicker, updateTicker, updateTickerLang } from '../components/tick
 import { injectSpotBar, updateSpotBar, updateSpotBarLang } from '../components/spotBar.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { renderAdSlot } from '../components/adSlot.js';
+import { el, clear } from '../lib/safe-dom.js';
+
+/**
+ * Helper: render a list of {label, value} rows into a container using safe
+ * DOM construction. Replaces the previous `innerHTML = \`<div>…</div>\``
+ * pattern so that even if a future change slipped an unescaped string into
+ * the label/value, no HTML parser is invoked.
+ */
+function renderBreakdownRows(container, rows) {
+  if (!container) return;
+  clear(container);
+  for (const [label, value] of rows) {
+    container.appendChild(
+      el('div', { class: 'calc-result-row' }, [
+        el('span', null, [label]),
+        el('strong', null, [value]),
+      ])
+    );
+  }
+}
 
 // ── State ───────────────────────────────────────────────────────────────────
 const STATE = {
@@ -225,14 +245,12 @@ function calcValue() {
   );
 
   const breakdown = document.getElementById('val-result-breakdown');
-  if (breakdown) {
-    breakdown.innerHTML = `
-      <div class="calc-result-row"><span>Weight</span><strong>${weightGrams.toFixed(3)} g</strong></div>
-      <div class="calc-result-row"><span>Purity (${karat}K)</span><strong>${(purity * 100).toFixed(1)}%</strong></div>
-      <div class="calc-result-row"><span>Spot price per gram (${currency})</span><strong>${formatPrice(gramPriceUsd * rate, currency, decimals)}</strong></div>
-      <div class="calc-result-row"><span>USD equivalent</span><strong>${formatPrice(totalUsd, 'USD', 2)}</strong></div>
-    `;
-  }
+  renderBreakdownRows(breakdown, [
+    ['Weight', `${weightGrams.toFixed(3)} g`],
+    [`Purity (${karat}K)`, `${(purity * 100).toFixed(1)}%`],
+    [`Spot price per gram (${currency})`, formatPrice(gramPriceUsd * rate, currency, decimals)],
+    ['USD equivalent', formatPrice(totalUsd, 'USD', 2)],
+  ]);
 
   result.hidden = false;
 }
@@ -326,18 +344,19 @@ function calcZakat() {
   if (grams24kEquiv < NISAB_GRAMS_24K) {
     if (valueEl) valueEl.textContent = formatPrice(0, currency, decimals);
     if (belowNisab) belowNisab.hidden = false;
-    if (breakdown)
-      breakdown.innerHTML = `<div class="calc-result-row"><span>24K equivalent</span><strong>${grams24kEquiv.toFixed(2)} g</strong></div><div class="calc-result-row"><span>Nisab</span><strong>${NISAB_GRAMS_24K} g</strong></div>`;
+    renderBreakdownRows(breakdown, [
+      ['24K equivalent', `${grams24kEquiv.toFixed(2)} g`],
+      ['Nisab', `${NISAB_GRAMS_24K} g`],
+    ]);
   } else {
     const zakatLocal = totalLocal * 0.025;
     if (valueEl) valueEl.textContent = formatPrice(zakatLocal, currency, decimals);
     if (belowNisab) belowNisab.hidden = true;
-    if (breakdown)
-      breakdown.innerHTML = `
-      <div class="calc-result-row"><span>Total gold value</span><strong>${formatPrice(totalLocal, currency, decimals)}</strong></div>
-      <div class="calc-result-row"><span>24K equivalent</span><strong>${grams24kEquiv.toFixed(2)} g</strong></div>
-      <div class="calc-result-row"><span>Nisab threshold</span><strong>${NISAB_GRAMS_24K} g (${formatPrice(nisabLocal, currency, decimals)})</strong></div>
-    `;
+    renderBreakdownRows(breakdown, [
+      ['Total gold value', formatPrice(totalLocal, currency, decimals)],
+      ['24K equivalent', `${grams24kEquiv.toFixed(2)} g`],
+      ['Nisab threshold', `${NISAB_GRAMS_24K} g (${formatPrice(nisabLocal, currency, decimals)})`],
+    ]);
   }
 
   result.hidden = false;
@@ -373,13 +392,18 @@ function calcBuying() {
   if (valueEl) valueEl.textContent = `${gramsYouGet.toFixed(3)} g`;
 
   const breakdown = document.getElementById('buy-result-breakdown');
-  if (breakdown) {
-    breakdown.innerHTML = `
-      <div class="calc-result-row"><span>In troy ounces</span><strong>${ozYouGet.toFixed(4)} ozt</strong></div>
-      <div class="calc-result-row"><span>In tolas</span><strong>${tolaYouGet.toFixed(3)} tola</strong></div>
-      <div class="calc-result-row"><span>Price per gram (${karat}K)</span><strong>${formatPrice(gramPriceLocal, currency, ['KWD', 'BHD', 'OMR', 'JOD'].includes(currency) ? 3 : 2)}</strong></div>
-    `;
-  }
+  renderBreakdownRows(breakdown, [
+    ['In troy ounces', `${ozYouGet.toFixed(4)} ozt`],
+    ['In tolas', `${tolaYouGet.toFixed(3)} tola`],
+    [
+      `Price per gram (${karat}K)`,
+      formatPrice(
+        gramPriceLocal,
+        currency,
+        ['KWD', 'BHD', 'OMR', 'JOD'].includes(currency) ? 3 : 2
+      ),
+    ],
+  ]);
 
   result.hidden = false;
 }
@@ -400,15 +424,17 @@ function calcConvert() {
   const inGrams = toGrams(amount, from);
   const entries = Object.entries(UNIT_TO_GRAMS).filter(([unit]) => unit !== from);
 
-  grid.innerHTML = entries
-    .map(
-      ([unit, factor]) => `
-    <div class="conv-row">
-      <span class="conv-row-label">${UNIT_LABELS[unit] ?? unit}</span>
-      <span class="conv-row-value">${(inGrams / factor).toLocaleString('en-US', { maximumFractionDigits: 6 })}</span>
-    </div>`
-    )
-    .join('');
+  clear(grid);
+  for (const [unit, factor] of entries) {
+    grid.appendChild(
+      el('div', { class: 'conv-row' }, [
+        el('span', { class: 'conv-row-label' }, [UNIT_LABELS[unit] ?? unit]),
+        el('span', { class: 'conv-row-value' }, [
+          (inGrams / factor).toLocaleString('en-US', { maximumFractionDigits: 6 }),
+        ]),
+      ])
+    );
+  }
 
   convResults.hidden = false;
 }

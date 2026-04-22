@@ -19,6 +19,10 @@ on:
   schedule:
     - cron: '25 18 * * 2'
 
+# Workflow-level least-privilege default. Individual jobs elevate only what they need.
+permissions:
+  contents: read
+
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
