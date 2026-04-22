@@ -77,7 +77,20 @@ app.use(
             upgradeInsecureRequests: [],
           },
         }
-      : false,
+      : {
+          directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https:'],
+            styleSrc: ["'self'", "'unsafe-inline'", 'https:'],
+            imgSrc: ["'self'", 'data:', 'blob:', 'https:'],
+            fontSrc: ["'self'", 'data:', 'https:'],
+            connectSrc: ["'self'", 'http://localhost:*', 'ws://localhost:*', 'https:'],
+            objectSrc: ["'none'"],
+            frameAncestors: ["'none'"],
+            baseUri: ["'self'"],
+            formAction: ["'self'"],
+          },
+        },
     crossOriginEmbedderPolicy: false,
     // Explicit cross-origin isolation knobs rather than Helmet defaults, so the
     // intent is visible at the server entry-point.
