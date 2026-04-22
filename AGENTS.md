@@ -9,12 +9,17 @@ a shops directory.
 
 ## How Codex should work in this repo
 
+- **Before acting on ANY new prompt or channel, read [`docs/plans/README.md`](docs/plans/README.md)
+  first, then [`docs/REVAMP_PLAN.md`](docs/REVAMP_PLAN.md).** All plans live under `docs/`. Raw
+  proposals captured from prompts go into `docs/plans/` and are not executable until they have been
+  reconciled (see the priority matrix in `docs/plans/README.md`) and slotted into the master plan.
+  If a requested task is not already represented in `REVAMP_PLAN.md`, stop and reconcile it before
+  writing code.
 - **If the task is part of the homepage / nav / tracker revamp (branch
   `copilot/revamp-tracker-html-page` or any successor), read
-  [`docs/REVAMP_PLAN.md`](docs/REVAMP_PLAN.md) in full before making any changes.**
-  That file is the single source of truth for scope, commit discipline, done/pending
-  status, and the update protocol. Every `report_progress` call and every merged PR on
-  the revamp must update it in the same commit.
+  [`docs/REVAMP_PLAN.md`](docs/REVAMP_PLAN.md) in full before making any changes.** That file is the
+  single source of truth for scope, commit discipline, done/pending status, and the update protocol.
+  Every `report_progress` call and every merged PR on the revamp must update it in the same commit.
 - Start from `main` only unless explicitly told otherwise.
 - Before making changes, check whether the current branch is behind `main`.
 - If the branch is behind `main`, sync with `main` before editing.

@@ -81,6 +81,23 @@ The admin panel uses **Supabase GitHub OAuth**. Only the email address configure
 - Cache management
 - Data export functionality
 
+#### Canonical WhatsApp number
+
+The public-facing WhatsApp contact number is managed here:
+
+- **UI:** `admin/settings/` → `whatsappNumber` field (format `+<country><number>`, validated by
+  `/^\+\d{7,15}$/`).
+- **Storage:** `site_settings` table in Supabase (key: `whatsappNumber`).
+- **Default / placeholder:** `+971501234567` (see `admin/settings/index.html`).
+
+> ⚠️ **Known gap.** The public order flow at
+> [`content/order-gold/index.html`](../content/order-gold/index.html) currently opens
+> `https://wa.me/?text=…` **without a destination number**, which forces the user to pick a contact
+> manually on their device. Wiring the admin- configured `whatsappNumber` into the order page (and
+> any future floating WhatsApp button) is tracked in [`docs/plans/README.md`](./plans/README.md) →
+> Wave 1 #2 / Wave 4 chatbot. Do not hardcode a number in HTML — read it from `site_settings` at
+> build or runtime, keeping the single source of truth in admin Settings.
+
 ### 4. UI Shell Pages (localStorage)
 
 The following pages render a functional-looking UI but are not yet backed by Supabase:
