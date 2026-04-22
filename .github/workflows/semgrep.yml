@@ -43,12 +43,16 @@ jobs:
       # Checkout project source
       - uses: actions/checkout@v6
 
-      # Scan code using project's configuration on https://semgrep.dev/manage
-      - uses: returntocorp/semgrep-action@713efdd345f3035192eaa63f56867b88e63e4e5d
+      # Run semgrep CLI directly. The old `returntocorp/semgrep-action` was
+      # rebranded — the canonical image is now `semgrep/semgrep`. Running the
+      # CLI in its official container avoids chasing action releases and
+      # keeps the integration explicit.
+      - name: Run Semgrep
+        uses: docker://semgrep/semgrep:latest
         with:
-          publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
-          publishDeployment: ${{ secrets.SEMGREP_DEPLOYMENT_ID }}
-          generateSarif: "1"
+          args: semgrep ci --sarif --output=semgrep.sarif
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 
       # Upload SARIF file generated in previous step
       - name: Upload SARIF file
