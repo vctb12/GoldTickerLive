@@ -974,3 +974,51 @@ deliverable inventory lives here._
 
 See `docs/SUPABASE_SCHEMA.md` for the database migration workflow that supports
 these features.
+
+---
+
+## 25. Known issues, risks, open items
+
+_Absorbs `docs/issues-found.md`, `docs/risks.md`, and `docs/pr-audit.md`. For
+deeper technical limitations see the reference doc `docs/LIMITATIONS.md` —
+that file is not folded here because it is a stable reference inventory, not
+an actionable backlog._
+
+### 25.1 Active issues (actionable)
+
+| #  | Severity | Area      | Issue                                                                         | Owner / Next step                                        |
+| -- | -------- | --------- | ----------------------------------------------------------------------------- | -------------------------------------------------------- |
+| A1 | Low      | Ads       | `components/adSlot.js` uses placeholder `AD_PUBLISHER_ID = 'ca-pub-XXXXXXXXXX'` | Site owner must supply real AdSense publisher ID.       |
+| A2 | Low      | SEO       | Legacy country pages (`countries/*.html`, 15 files) coexist with new hierarchical pages. | Add canonical tags pointing legacy → new, or 301 redirects. |
+| A3 | Low      | PR state  | PR #77 (revert of master revamp) left **open** but no longer needed.           | Close PR #77 — PR #76 changes are stable.                |
+| A4 | Info     | Cache     | `services/cacheLayer.js` referenced in Phase 3 spec was never created.         | No action — `src/lib/cache.js` is functional and covers the need. |
+
+### 25.2 Active risks (carry forward)
+
+| #  | Risk                                               | Mitigation                                                                                 | Residual impact                            |
+| -- | -------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------ |
+| R1 | AdSense integration incomplete                     | Placeholder code already in place; flips live when owner supplies publisher ID.            | Low — monetisation only, no UX impact      |
+| R2 | Supabase anon key is committed in `config/supabase.js` | Anon key is designed for client-side use; Row-Level Security only exposes verified rows.  | Low — intended Supabase architecture       |
+| R3 | Vite / esbuild moderate vuln (≤ 0.24.2)            | Only affects local dev server; prod build is unaffected.                                   | None in production                         |
+| R4 | GitHub Pages cannot set HTTP security headers      | Meta-equivalents in `.htaccess` + proper headers on Express server when self-hosted.       | Medium — CSP / HSTS meta is limited        |
+| R5 | Dual routing (legacy flat `/countries/uae.html` + hierarchical `/uae/gold-price/`) | `.htaccess` redirects cover some paths; canonical tags on 97% of pages.              | Medium — possible split link equity        |
+
+### 25.3 PR-reconciliation audit (snapshot 2026-04-13)
+
+- **PRs analysed:** 95 (PR #1 – #95)
+- **Open at audit time:** 1 (PR #77 — revert, no longer needed)
+- **Changes reflected in code:** ≈ 95 %
+- **Gaps found:** only the three items in §25.1 (all Low severity)
+
+> See `docs/pr-audit.md` (pointer) and git history for the full table. No
+> Critical or High severity items were found in that audit.
+
+### 25.4 Open questions (carry forward until answered)
+
+Duplicated from §16 for convenience — see §16 for defaults.
+
+1. Ship nav search in the current PR or defer? (JS weight trade-off.)
+2. Drop any existing homepage sections entirely or re-rank + tighten?
+3. Bilingual strings for all new homepage copy now or follow-up?
+4. Is the tracker sticky control bar OK to ship if it changes the visual
+   identity of the page materially?
