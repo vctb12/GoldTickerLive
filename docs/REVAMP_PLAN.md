@@ -1108,3 +1108,73 @@ morgan, uuid. Dev: terser, vite 8.
    `spike_alert.yml`, `sync-db-to-git.yml`
 
 Only `ci.yml` blocks merges. See `.github/workflows/README.md`.
+
+---
+
+## 27. Historical execution log
+
+_Absorbs `docs/execution-log.md`. Snapshot of completed phases of the earlier
+multi-phase audit. The active progress tracking continues in §17 (current
+revamp) and §22 (production tracks)._
+
+### Phase 0 — Repository audit + PR reconciliation ✅
+
+- **0A — Git history & PR audit.** 95 PRs analysed (1 open: PR #77 — revert,
+  no longer needed). ≈ 95 % of PR changes reflected in codebase. Gap: AdSense
+  placeholder publisher ID. Original output: `docs/pr-audit.md` (now pointer).
+- **0B — Codebase structural audit.** 380 HTML pages, 68 JS files, 16 CSS
+  files. Vite build. 15+ workflows. Supabase for admin + shops. Bilingual
+  EN/AR. 369/380 pages have canonicals & unique descriptions. 205 tests
+  passing at the time. Two moderate vulns in esbuild (no prod impact).
+  Original output: `docs/codebase-audit.md` (now pointer).
+- **0C — Performance baseline.** Expected Lighthouse 85–95. No blocking JS
+  for initial paint. Service worker cache-first for assets, network-first
+  for HTML. Output: `docs/performance-baseline.json` (retained as
+  reference data).
+
+### Phase 1 — PR reconciliation ✅
+
+No Critical or High severity items found. Only the three items in §25.1
+remain as Low-severity gaps.
+
+### Phase 2 — URL architecture ✅
+
+- `utils/routeBuilder.js` — single source of truth for URL generation
+  (`buildRoute`, `buildShopsRoute`, `buildCanonicalURL`, `generateAllRoutes`).
+- `utils/routeValidator.js` — validates country / city / karat param combos.
+- `tests/route-utils.test.js` — 27 tests covering every route type.
+- Hierarchical URLs already in place (`/{country}/{city}/gold-prices/`).
+
+### Phase 12 — Accessibility + performance (partial) ✅
+
+- Security meta headers (`X-Content-Type-Options: nosniff`, `X-Frame-Options:
+  DENY`, `Referrer-Policy: strict-origin-when-cross-origin`) added to 6 main
+  pages.
+- All pages carry `lang="en"` + `dir="ltr"` (RTL switched via CSS).
+- No `tabindex > 0` anywhere; no `<img>` missing alt text (flags are emoji,
+  not images).
+
+### Phase 13 — Security hardening (partial) ✅
+
+- `server.js` CSP extended for AdSense, GA4, Supabase.
+- `utils/inputValidation.js` — shared validators (UAE phone, email, numeric
+  range, text sanitisation, URL-param sanitisation, price-alert validation).
+- `tests/input-validation.test.js` — 31 tests.
+- `.env.example` created; `docs/environment-variables.md` retained as
+  reference.
+
+### Phase 15 — CI/CD + tests (partial) ✅
+
+- `ci.yml` runs on PR to `main`; `deploy.yml` on push to `main`.
+- 205 tests passing at audit time (now 231+; see §26 CI / CD).
+- 15+ workflows across CI, deploy, monitoring, social posting.
+
+### Phases 3–11, 14 — status at audit
+
+Already substantially implemented — see `services/`, `lib/cache.js`,
+`lib/api.js`, `components/chart.js`, 380 pages with prices, shops, charts,
+`seo/metadataGenerator.js` (97 % canonical coverage), 9 admin pages with
+Supabase auth, `order-gold/` with WhatsApp + Supabase,
+`social/postTemplates.js` (10 templates), `search/searchEngine.js` (bilingual
+fuzzy), `config/translations.js` + RTL CSS. Only Phase 11 (monetisation)
+remains partial — blocked on a real AdSense publisher ID (see §25.1 A1).
