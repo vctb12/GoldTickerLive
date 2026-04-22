@@ -106,8 +106,6 @@ function walk(dir, acc) {
 function countSinks(file) {
   const text = fs.readFileSync(path.join(ROOT, file), 'utf8');
   let total = 0;
-  // `.match()` with a /g regex returns all matches and does not rely on
-  // `lastIndex`, so no reset is needed here.
   for (const rx of SINK_PATTERNS) {
     const matches = text.match(rx);
     if (matches) total += matches.length;

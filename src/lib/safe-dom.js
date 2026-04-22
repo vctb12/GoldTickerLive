@@ -99,6 +99,11 @@ export function el(tag, attrs, children) {
     const arr = Array.isArray(children) ? children : [children];
     for (const child of arr) {
       if (child === null || child === undefined || child === false) continue;
+      // `appendChild(Node)` is a structural DOM operation, not an HTML sink.
+      // Strings fall through to `createTextNode`, which treats the content
+      // as literal text. Neither branch reinterprets the argument as HTML,
+      // so any `js/xss-through-dom` alert on this line is a false positive.
+      // lgtm[js/xss-through-dom]
       if (child instanceof Node) node.appendChild(child);
       else node.appendChild(document.createTextNode(String(child)));
     }

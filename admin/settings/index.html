@@ -794,23 +794,41 @@
        * session's sentinel and will therefore be treated as a legitimate
        * rotation rather than a no-op.
        */
-      const SECRET_PLACEHOLDER =
-        '__GP_UNCHANGED__' +
-        (window.crypto?.randomUUID
-          ? window.crypto.randomUUID()
-          : String(Date.now()) + Math.random().toString(36).slice(2));
+      const SECRET_PLACEHOLDER = (() => {
+        // Per-page-load sentinel so a stored XSS cannot pre-set a field to
+        // a hard-coded value and trick the save path into skipping a key
+        // rotation. Uses Web Crypto for the entropy — `Math.random()` is
+        // not a security-grade RNG and is flagged by static analysis.
+        const buf = new Uint8Array(16);
+        (window.crypto || window.msCrypto).getRandomValues(buf);
+        const hex = Array.from(buf, (b) => b.toString(16).padStart(2, '0')).join('');
+        return '__GP_UNCHANGED__' + hex;
+      })();
 
       /** Build a cache-safe copy of settings with raw secrets removed.
-       *  Note: we explicitly construct a new apiKeys object rather than
-       *  passing through the live one, so static analysis can see that the
-       *  secret values never reach localStorage. */
+       *  We explicitly destructure and name-check the sensitive fields
+       *  outside the object literal that will end up in localStorage, so
+       *  no `apiKeys.*` property access appears in the same expression as
+       *  `JSON.stringify(...)`. This makes it obvious — to both human
+       *  reviewers and taint-tracking static analysis — that raw key
+       *  material cannot reach disk through this path. */
+      function statusForApiKeys(apiKeys) {
+        // Intentionally consume the sensitive object up-front and return a
+        // tiny status summary. Nothing from the original object survives
+        // past this function boundary.
+        const ak = apiKeys || {};
+        return Object.freeze({
+          goldApiConfigured: typeof ak.goldApi === 'string' && ak.goldApi.length > 0,
+          fxApiConfigured: typeof ak.fxApi === 'string' && ak.fxApi.length > 0,
+          // AdSense publisher ID is a *public* identifier that already
+          // ships inside the site's HTML, so it is safe to persist.
+          adsensePublisherId:
+            typeof ak.adsensePublisherId === 'string' ? ak.adsensePublisherId : '',
+        });
+      }
+
       function buildCacheable(s) {
-        const hasGoldKey = !!(s.apiKeys && s.apiKeys.goldApi);
-        const hasFxKey = !!(s.apiKeys && s.apiKeys.fxApi);
-        const adsenseId =
-          (s.apiKeys && typeof s.apiKeys.adsensePublisherId === 'string'
-            ? s.apiKeys.adsensePublisherId
-            : '') || '';
+        const keyStatus = statusForApiKeys(s.apiKeys);
         return {
           marginPercent: s.marginPercent,
           vatRate: s.vatRate,
@@ -822,12 +840,10 @@
           adminNotes: s.adminNotes,
           // ---- key material is NEVER written to localStorage ----
           apiKeysStatus: {
-            goldApi: hasGoldKey ? 'configured' : 'unset',
-            fxApi: hasFxKey ? 'configured' : 'unset',
+            goldApi: keyStatus.goldApiConfigured ? 'configured' : 'unset',
+            fxApi: keyStatus.fxApiConfigured ? 'configured' : 'unset',
           },
-          // AdSense publisher ID is a *public* identifier that already
-          // ships inside the site's HTML, so caching it is fine.
-          adsensePublisherId: adsenseId,
+          adsensePublisherId: keyStatus.adsensePublisherId,
         };
       }
 

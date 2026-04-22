@@ -54,8 +54,7 @@ jobs:
             const raw = fs.readFileSync('.sync-cache/shops.json', 'utf8');
             const shops = JSON.parse(raw);
             if (!Array.isArray(shops)) {
-              const kind = Array.isArray(shops) ? 'array' : typeof shops;
-              throw new Error('Expected shops payload to be a JSON array, got ' + kind);
+              throw new Error('Expected shops payload to be a JSON array, got ' + typeof shops);
             }
             const header =
               '// AUTO-GENERATED FROM SUPABASE — DO NOT EDIT MANUALLY\n' +
