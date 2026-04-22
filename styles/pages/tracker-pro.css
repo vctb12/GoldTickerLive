@@ -772,7 +772,7 @@ body.tracker-pro-page {
   overflow: auto;
   border: 1px solid var(--tp-border);
   border-radius: var(--radius-lg);
-  background: linear-gradient(180deg, var(--surface-primary) 0%, var(--surface-secondary) 100%);
+  background: var(--surface-primary);
 }
 
 .tracker-table {
