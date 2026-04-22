@@ -34,58 +34,16 @@ const RESEND_CONFIG = {
  */
 router.post('/subscribe', async (req, res) => {
   try {
-    const { email, preferences = {} } = req.body;
+    const { email } = req.body;
 
     // Validate email
     if (!email || !isValidEmail(email)) {
       return res.status(400).json({ error: 'Valid email required' });
     }
 
-    const normalizedEmail = email.toLowerCase().trim();
-
-    // Generate verification token
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-
-    // Default preferences
-    const defaultPreferences = {
-      frequency: 'weekly',
-      metals: ['gold'],
-      countries: ['UAE'],
-      digest_time: '07:00',
-      language: 'en',
-      ...preferences,
-    };
-
-    // TODO: Insert into Supabase newsletter_subscribers table
-    /*
-    const { createClient } = require('@supabase/supabase-js');
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
-    );
-
-    const { data, error } = await supabase
-      .from('newsletter_subscribers')
-      .upsert({
-        email: normalizedEmail,
-        preferences: defaultPreferences,
-        status: 'pending',
-        verification_token: verificationToken,
-      }, {
-        onConflict: 'email'
-      })
-      .select()
-      .single();
-
-    if (error) throw error;
-    */
-
-    // Send verification email
-    await sendVerificationEmail(normalizedEmail, verificationToken);
-
-    return res.json({
-      success: true,
-      message: 'Verification email sent. Please check your inbox.',
+    return res.status(501).json({
+      error: 'Newsletter subscription is not implemented',
+      message: 'Subscription persistence and verification delivery are not configured yet.',
     });
   } catch (error) {
     console.error('Error subscribing to newsletter:', error);
@@ -99,34 +57,7 @@ router.post('/subscribe', async (req, res) => {
  */
 router.get('/verify/:token', async (req, res) => {
   try {
-    const { token } = req.params;
-
-    // TODO: Update subscription status in Supabase
-    /*
-    const { createClient } = require('@supabase/supabase-js');
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
-    );
-
-    const { data, error } = await supabase
-      .from('newsletter_subscribers')
-      .update({
-        status: 'active',
-        verified_at: new Date().toISOString(),
-        verification_token: null,
-      })
-      .eq('verification_token', token)
-      .select()
-      .single();
-
-    if (error || !data) {
-      return res.status(400).send('Invalid or expired verification link');
-    }
-    */
-
-    // Redirect to success page
-    return res.redirect('/subscription/verified');
+    return res.status(501).send('Newsletter verification is not implemented');
   } catch (error) {
     console.error('Error verifying subscription:', error);
     return res.status(500).send('Verification failed');
