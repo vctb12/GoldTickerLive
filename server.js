@@ -105,6 +105,10 @@ app.use(
 
 app.use(morgan(IS_PROD ? 'combined' : 'dev'));
 
+// Stripe webhooks require the raw request body for signature verification.
+// This must be registered before the global JSON body parser.
+app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
+
 // Body parsing with size limits
 app.use(express.json({ limit: '256kb' }));
 app.use(express.urlencoded({ extended: true, limit: '256kb' }));
