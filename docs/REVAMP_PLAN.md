@@ -1178,3 +1178,51 @@ Supabase auth, `order-gold/` with WhatsApp + Supabase,
 `social/postTemplates.js` (10 templates), `search/searchEngine.js` (bilingual
 fuzzy), `config/translations.js` + RTL CSS. Only Phase 11 (monetisation)
 remains partial — blocked on a real AdSense publisher ID (see §25.1 A1).
+
+---
+
+## 28. Task backlog
+
+_Absorbs `docs/product/TASKS.md`. Near-term, narrowly-scoped backlog. Wider
+roadmap items live in §24; production tracks in §22; current revamp work in
+§17._
+
+### Ready
+
+- [ ] Fix tracker tab switching and state persistence.
+- [ ] Audit every tracker button and disable / remove unfinished controls.
+- [ ] Rebuild shops featured / filter behavior.
+- [x] Parse and honour query params on shops page.
+- [ ] Improve compare / archive readability on mobile.
+- [ ] Review canonical / meta tags across main pages.
+- [ ] Add sitemap verification checklist.
+- [ ] Migrate admin dashboard to pull real stats from Supabase.
+- [ ] Create `pricing_overrides` Supabase table and migrate `admin/pricing/`.
+- [ ] Create `orders` Supabase table and migrate `admin/orders/`.
+- [ ] Migrate `admin/social/` to read from Supabase `fetch_logs`.
+- [ ] Read `site_settings` from Supabase on public pages for dynamic
+      feature flags.
+
+### In progress
+
+- [ ] Master docs update — **consolidation sweep** folding every planning doc
+      into this master plan. See Round 2 progress log in §17.
+
+### Blocked
+
+- [ ] Admin panel full Supabase migration — needs the Supabase schema
+      confirmed running.
+- [ ] Public-site dynamic settings — needs `site_settings` populated in
+      Supabase.
+
+### Done
+
+- [x] Fix `sync-db-to-git.yml` secret name (`SUPABASE_SERVICE_KEY` →
+      `SUPABASE_SERVICE_ROLE_KEY`) and ES-module output format.
+- [x] Create `.env.example`.
+- [x] Deprecate dead `admin/api-client.js`.
+- [x] Rewrite `ADMIN_GUIDE.md` for Supabase auth.
+- [x] Rewrite `ADMIN_SETUP.md` for Supabase auth.
+- [x] Update `DEPENDENCIES.md` with correct versions.
+- [x] Update all automation docs.
+- [x] Fix Vite version across all docs.
