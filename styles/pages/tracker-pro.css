@@ -1303,8 +1303,8 @@ body.tracker-pro-page {
 
 .tracker-stack-item.is-triggered {
   border-color: var(--tp-accent);
-  background: rgb(196 154 68 / 12%);
-  font-weight: 500;
+  background: var(--color-gold-glow);
+  font-weight: var(--weight-medium);
 }
 
 .tracker-table td.tracker-cell-strong {
