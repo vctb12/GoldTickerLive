@@ -146,7 +146,7 @@ practice**, combining:
 │                        HTML Pages                           │
 │  index.html · tracker.html · calculator.html · shops.html   │
 │  learn.html · insights.html · methodology.html · invest.html│
-│  countries/*.html · content/guides/ · content/order-gold/    │
+│  countries/*.html · content/guides/ · content/order-gold/   │
 ├─────────────────────────────────────────────────────────────┤
 │              Page-specific JS (src/pages/)                  │
 │  home.js · tracker-pro.js · calculator.js · shops.js · …    │
