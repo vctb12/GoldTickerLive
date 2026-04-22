@@ -868,3 +868,41 @@ Surface them to the project owner before the associated phase starts.
 | 24    | AdSense publisher ID                       |
 | 25    | Sentry DSNs (frontend + backend)           |
 | 26    | Deployment target (Render / Fly / Railway) |
+
+---
+
+## 23. Historical execution summary (20-phase revamp)
+
+_Absorbs `docs/REVAMP_EXECUTION_SUMMARY.md`. Condensed snapshot of the earlier
+20-phase mega-revamp. Full prose originally lived in the source file and is
+preserved in git history; the material deliverables that matter for future
+work are summarised here and now live as reference docs._
+
+| Phase | Area                                   | Primary deliverable(s)                                                          |
+| ----- | -------------------------------------- | ------------------------------------------------------------------------------- |
+| 1     | Foundation & design-system completion  | `docs/DESIGN_TOKENS.md` (196 tokens catalogued)                                |
+| 2     | Accessibility overhaul                 | `docs/ACCESSIBILITY.md` — WCAG 2.1 AA patterns                                  |
+| 3     | Performance optimisation               | `docs/PERFORMANCE.md` — budgets, critical-CSS, SW caching                       |
+| 4     | SEO & metadata                         | `docs/SEO_STRATEGY.md`, `docs/SEO_CHECKLIST.md`, `docs/SEO_SITEMAP_GUIDE.md`    |
+| 5     | Mobile-first UX refinement             | Breakpoint spec at 320 / 375 / 414 / 768 / 1024 px; 44 × 44 touch targets       |
+| 6     | Component library                      | Canonical `.btn`, `.card`, badge, input, modal, toast, skeleton patterns        |
+| 7     | State-management modernisation         | `src/tracker/state.js` + URL-hash synchronisation                               |
+| 8     | Data-layer enhancement                 | `services/goldPriceService.js`, `services/fxService.js`, circuit breakers       |
+| 9     | Testing expansion                      | 231+ Node `node:test` suites under `tests/*.test.js`; target ≥ 80% coverage     |
+| 10    | Error handling & resilience            | `src/lib/errors.js`, retry with backoff, fallback UI, EN/AR error copy          |
+| 11    | i18n enhancement                       | `src/config/translations.js`, RTL CSS, locale-aware formatters                  |
+| 12    | Admin-panel modernisation              | `admin/*` (9 pages) on Supabase GitHub OAuth + RBAC groundwork                  |
+| 13    | CMS                                    | Markdown-based content pipeline (architecture planned, not shipped)             |
+| 14    | Analytics & monitoring                 | GA4 snippet, uptime / health / spike-alert workflows                            |
+| 15    | Security hardening                     | Helmet CSP, rate-limit, bcrypt auth, secret scanning, `utils/inputValidation.js`|
+| 16    | DevEx & tooling                        | ESLint flat config, Prettier, Stylelint, Husky v9 + lint-staged                 |
+| 17    | Documentation overhaul                 | The `docs/` tree itself (now consolidated into this master plan)                |
+| 18    | Content enhancement                    | Guides, learn, invest, insights pages                                           |
+| 19    | Deployment & DevOps                    | GitHub Actions CI + Pages deploy; see `.github/workflows/README.md`             |
+| 20    | Quality assurance                      | Pre-commit hooks + CI merge gate + `npm run validate` DOM-safety baseline       |
+
+> **Note.** All "design-specifications" / "architecture-planned" / "roadmap-defined"
+> items from the original summary are either (a) already shipped as code, (b)
+> rolled into §22 Production-revamp tracks as concrete phases, or (c) deferred
+> to §24 Product roadmap. See git history of `docs/REVAMP_EXECUTION_SUMMARY.md`
+> for the original long-form prose.
