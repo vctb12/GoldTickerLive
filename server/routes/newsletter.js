@@ -232,39 +232,9 @@ router.put('/preferences', async (req, res) => {
 
 /**
  * GET /api/newsletter/stats
- * Get newsletter statistics (admin only)
+ * Admin-only endpoint intentionally removed until admin authentication
+ * and authorization middleware is applied.
  */
-router.get('/stats', async (req, res) => {
-  try {
-    // TODO: Get stats from Supabase
-    /*
-    const { createClient } = require('@supabase/supabase-js');
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
-    );
-
-    const [
-      { count: totalSubscribers },
-      { count: activeSubscribers },
-      { data: recentCampaigns }
-    ] = await Promise.all([
-      supabase.from('newsletter_subscribers').select('*', { count: 'exact', head: true }),
-      supabase.from('newsletter_subscribers').select('*', { count: 'exact', head: true }).eq('status', 'active'),
-      supabase.from('newsletter_campaigns').select('*').order('sent_at', { ascending: false }).limit(5)
-    ]);
-    */
-
-    return res.json({
-      totalSubscribers: 0,
-      activeSubscribers: 0,
-      recentCampaigns: [],
-    });
-  } catch (error) {
-    console.error('Error fetching stats:', error);
-    return res.status(500).json({ error: 'Failed to fetch stats' });
-  }
-});
 
 // Helper functions
 
