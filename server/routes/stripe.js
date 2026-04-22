@@ -16,12 +16,23 @@ const STRIPE_CONFIG = {
   secretKey: process.env.STRIPE_SECRET_KEY || '',
   webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
   prices: {
-    proMonthly: process.env.STRIPE_PRICE_PRO_MONTHLY || 'price_xxx',
-    proAnnual: process.env.STRIPE_PRICE_PRO_ANNUAL || 'price_yyy',
-    apiMonthly: process.env.STRIPE_PRICE_API_MONTHLY || 'price_zzz',
-    apiAnnual: process.env.STRIPE_PRICE_API_ANNUAL || 'price_aaa',
+    proMonthly: process.env.STRIPE_PRICE_PRO_MONTHLY || '',
+    proAnnual: process.env.STRIPE_PRICE_PRO_ANNUAL || '',
+    apiMonthly: process.env.STRIPE_PRICE_API_MONTHLY || '',
+    apiAnnual: process.env.STRIPE_PRICE_API_ANNUAL || '',
   },
 };
+
+function getMissingStripePriceConfig() {
+  const requiredPrices = {
+    STRIPE_PRICE_PRO_MONTHLY: STRIPE_CONFIG.prices.proMonthly,
+    STRIPE_PRICE_PRO_ANNUAL: STRIPE_CONFIG.prices.proAnnual,
+    STRIPE_PRICE_API_MONTHLY: STRIPE_CONFIG.prices.apiMonthly,
+    STRIPE_PRICE_API_ANNUAL: STRIPE_CONFIG.prices.apiAnnual,
+  };
+
+  return Object.keys(requiredPrices).filter((key) => !requiredPrices[key]);
+}
 
 /**
  * POST /api/stripe/create-checkout
@@ -43,6 +54,14 @@ router.post('/create-checkout', async (req, res) => {
 
     if (!['month', 'year'].includes(interval)) {
       return res.status(400).json({ error: 'Invalid interval' });
+    }
+
+    const missingPriceConfig = getMissingStripePriceConfig();
+    if (missingPriceConfig.length > 0) {
+      return res.status(500).json({
+        error: 'Stripe price configuration is missing',
+        missing: missingPriceConfig,
+      });
     }
 
     // Determine price ID
