@@ -187,6 +187,7 @@ export function injectNav(lang = 'en', depth = 0) {
   const mobileGroupsHtml = data.groups.map((g) => buildDrawerGroup(g, depth)).join('');
 
   const html = `
+<a class="nav-skip-link" href="#main-content">${lang === 'ar' ? 'تخطي إلى المحتوى' : 'Skip to main content'}</a>
 <nav class="site-nav" role="navigation" aria-label="${data.mainNav}" dir="${isRtl ? 'rtl' : 'ltr'}">
   <div class="nav-inner">
 
@@ -297,9 +298,25 @@ export function injectNav(lang = 'en', depth = 0) {
   // Mount nav before the first child of body (or before <main>)
   const wrapper = document.createElement('div');
   wrapper.innerHTML = html.trim();
-  const navEl = wrapper.firstElementChild;
+  // Move every rendered top-level node (skip link + nav) before the anchor, in order.
+  const nodes = Array.from(wrapper.children);
   const anchor = document.querySelector('main') || document.body.firstElementChild;
-  document.body.insertBefore(navEl, anchor);
+  for (const n of nodes) document.body.insertBefore(n, anchor);
+  const navEl =
+    nodes.find((n) => n.matches && n.matches('nav.site-nav')) || nodes[nodes.length - 1];
+
+  // Skip-link fallback: if #main-content is missing, focus <main> directly.
+  const skipLink = nodes.find((n) => n.matches && n.matches('.nav-skip-link'));
+  if (skipLink) {
+    skipLink.addEventListener('click', (e) => {
+      const target = document.getElementById('main-content') || document.querySelector('main');
+      if (!target) return;
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+      e.preventDefault();
+      target.focus();
+      target.scrollIntoView({ block: 'start' });
+    });
+  }
 
   // ── Mobile bottom navigation bar ──────────────────────────────────────────
   _injectMobileBottomNav(lang, depth);
@@ -537,6 +554,24 @@ export function injectNav(lang = 'en', depth = 0) {
       const btn = openDd.querySelector('.nav-dropdown-btn');
       closeDropdown(openDd, btn);
       btn.focus();
+    }
+  });
+
+  // ── Focus trap inside the open drawer ──────────────────────────────────────
+  drawer.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab' || !navEl.classList.contains('nav--open')) return;
+    const focusables = drawer.querySelectorAll(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
     }
   });
 

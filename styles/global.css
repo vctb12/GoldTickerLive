@@ -596,6 +596,28 @@ body.has-spot-bar .site-nav {
    Shared Navigation (injected via components/nav.js)
    ═══════════════════════════════════════════════ */
 
+/* --- Skip link (WCAG 2.4.1) --- */
+.nav-skip-link {
+  position: absolute;
+  top: -48px;
+  left: 8px;
+  z-index: 1000;
+  padding: 10px 16px;
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 0 0 6px 6px;
+  transition: top 120ms ease-out;
+}
+
+.nav-skip-link:focus,
+.nav-skip-link:focus-visible {
+  top: 0;
+  outline: 2px solid #c9a84c;
+  outline-offset: 2px;
+}
+
 /* --- Base nav bar --- */
 .site-nav {
   position: sticky;
@@ -2515,6 +2537,7 @@ main {
 /* ═══════════════════════════════════════════════
    Focus & Accessibility
    ═══════════════════════════════════════════════ */
+
 /* Canonical `:focus-visible` baseline lives earlier in this file and uses
    --focus-ring-width/--focus-ring-color/--focus-ring-offset tokens. Do not
    reintroduce a hardcoded duplicate here. */
@@ -2537,7 +2560,10 @@ main {
   padding: 0;
   margin: -1px;
   overflow: hidden;
+
+  /* stylelint-disable-next-line property-no-deprecated -- required for legacy sr-only fallback */
   clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
 }
