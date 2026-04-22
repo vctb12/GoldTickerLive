@@ -46,7 +46,7 @@
   --tp-radius-sm: var(--radius-sm);
 
   /* Layout */
-  --tp-shell: min(var(--content-max-width, 1400px), calc(100% - 2 * var(--page-gutter, 16px)));
+  --tp-shell: min(var(--content-max-width), calc(100% - 2 * var(--page-gutter)));
 }
 
 body.tracker-pro-page {
@@ -655,7 +655,7 @@ body.tracker-pro-page {
 }
 
 .tracker-legend-dot.compare {
-  background: linear-gradient(135deg, var(--color-fixed) 0%, var(--color-fixed) 100%);
+  background: var(--color-fixed);
   box-shadow: 0 0 0 4px var(--color-fixed-bg);
 }
 
@@ -1319,8 +1319,8 @@ body.tracker-pro-page {
 .tracker-subpanel-intro {
   font-size: var(--text-sm);
   color: var(--tp-text-muted);
-  margin-bottom: var(--space-4, 1rem);
-  line-height: var(--leading-relaxed, 1.55);
+  margin-bottom: var(--space-4);
+  line-height: var(--leading-relaxed);
 }
 
 .tracker-pro-page .gold-ticker {
