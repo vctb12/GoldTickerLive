@@ -94,3 +94,4 @@ feed.xml
 # macOS
 .DS_Store
 data/audit-logs.json
+data/404-logs.json
