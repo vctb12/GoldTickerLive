@@ -1,4 +1,5 @@
 import { CONSTANTS } from '../config/index.js';
+import { getFallbackGoldPrice } from './cache.js';
 
 class NetworkError extends Error {
   constructor(msg) {
@@ -102,7 +103,6 @@ export async function fetchGold() {
     // Secondary also failed — return cached fallback
   }
 
-  const { getFallbackGoldPrice } = await import('./cache.js');
   const cached = getFallbackGoldPrice();
   if (cached) {
     return {
