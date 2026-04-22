@@ -15,8 +15,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const IS_PROD = process.env.NODE_ENV === 'production';
 
-// Import admin routes
+// Import routes
 const adminRoutes = require('./server/routes/admin');
+const stripeRoutes = require('./server/routes/stripe');
+const newsletterRoutes = require('./server/routes/newsletter');
 
 // Middleware — Security headers
 // CSP is intentionally disabled in development for ease of debugging.
@@ -115,8 +117,10 @@ if (!IS_PROD) {
   app.use('/src', express.static(path.join(__dirname, 'src')));
 }
 
-// Admin API routes
+// API routes
 app.use('/api/admin', adminRoutes);
+app.use('/api/stripe', stripeRoutes);
+app.use('/api/newsletter', newsletterRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
