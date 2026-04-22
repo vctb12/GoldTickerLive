@@ -52,37 +52,37 @@ const EXCLUDED_DIRS = new Set([
 // Helper: body of an inline <script> that doesn't contain a closing </script>.
 // Using `(?:(?!<\/script>)[\s\S])*?` prevents greedy / lazy regex from
 // jumping across an adjacent unrelated <script> block (e.g. JSON-LD).
-const SCRIPT_BODY = "(?:(?!<\\/script>)[\\s\\S])*?";
+const SCRIPT_BODY = '(?:(?!<\\/script>)[\\s\\S])*?';
 
 // 1. Google tag remote loader tag:
 //    <script async src="https://www.googletagmanager.com/gtag/js?id=..."></script>
 //    (optionally preceded by "<!-- Google tag (gtag.js) -->")
 const REMOTE_GTAG_LOADER_RE = new RegExp(
-  "[ \\t]*(?:<!--\\s*Google tag[^>]*?-->[\\t ]*\\r?\\n[ \\t]*)?" +
-    "<script[^>]*\\bsrc\\s*=\\s*[\"']https:\\/\\/www\\.googletagmanager\\.com\\/gtag\\/js\\?id=[^\"']+[\"'][^>]*>" +
-    "\\s*<\\/script>[\\t ]*\\r?\\n?",
-  'gi',
+  '[ \\t]*(?:<!--\\s*Google tag[^>]*?-->[\\t ]*\\r?\\n[ \\t]*)?' +
+    '<script[^>]*\\bsrc\\s*=\\s*["\']https:\\/\\/www\\.googletagmanager\\.com\\/gtag\\/js\\?id=[^"\']+["\'][^>]*>' +
+    '\\s*<\\/script>[\\t ]*\\r?\\n?',
+  'gi'
 );
 
 // 2. Inline gtag init:
 //    <script>window.dataLayer = window.dataLayer || [];function gtag(){...}...
 const INLINE_GTAG_RE = new RegExp(
-  "[ \\t]*<script(?![^>]*\\bsrc\\b)[^>]*>\\s*window\\.dataLayer\\s*=" +
+  '[ \\t]*<script(?![^>]*\\bsrc\\b)[^>]*>\\s*window\\.dataLayer\\s*=' +
     SCRIPT_BODY +
-    "<\\/script>[\\t ]*\\r?\\n?",
-  'gi',
+    '<\\/script>[\\t ]*\\r?\\n?',
+  'gi'
 );
 
 // 3. Inline Clarity loader IIFE (both `type="text/javascript"` and no-attr forms).
 //    Must contain the literal `'clarity'` argument string; `SCRIPT_BODY` stops
 //    at the first `</script>` so JSON-LD blocks nearby are never consumed.
 const INLINE_CLARITY_RE = new RegExp(
-  "[ \\t]*<script(?![^>]*\\bsrc\\b)[^>]*>\\s*\\(function\\s*\\(c,\\s*l,\\s*a,\\s*r,\\s*i" +
+  '[ \\t]*<script(?![^>]*\\bsrc\\b)[^>]*>\\s*\\(function\\s*\\(c,\\s*l,\\s*a,\\s*r,\\s*i' +
     SCRIPT_BODY +
     "'clarity'" +
     SCRIPT_BODY +
-    "<\\/script>[\\t ]*\\r?\\n?",
-  'gi',
+    '<\\/script>[\\t ]*\\r?\\n?',
+  'gi'
 );
 
 // 4. If we already inserted the external tag, match it so we don't insert twice.
@@ -207,23 +207,23 @@ function main() {
   const total = files.length;
   if (CHECK_ONLY) {
     console.log(
-      `[externalize-analytics:check] html=${total} needsRewrite=${changed} clean=${untouched} noAnalytics=${skipped}`,
+      `[externalize-analytics:check] html=${total} needsRewrite=${changed} clean=${untouched} noAnalytics=${skipped}`
     );
     if (changed > 0) {
       console.error(
-        `\n❌ ${changed} HTML file(s) still contain inline analytics. Run:\n   node scripts/node/externalize-analytics.js\n`,
+        `\n❌ ${changed} HTML file(s) still contain inline analytics. Run:\n   node scripts/node/externalize-analytics.js\n`
       );
       if (VERBOSE || wouldRewrite.length <= 10) {
         for (const p of wouldRewrite) console.error('   - ' + path.relative(ROOT, p));
       }
       process.exit(1);
     }
-    console.log('✅  No inline analytics found. CSP can drop \'unsafe-inline\'.');
+    console.log("✅  No inline analytics found. CSP can drop 'unsafe-inline'.");
     return;
   }
 
   console.log(
-    `[externalize-analytics] html=${total} rewrote=${changed} alreadyClean=${untouched} noAnalytics=${skipped}`,
+    `[externalize-analytics] html=${total} rewrote=${changed} alreadyClean=${untouched} noAnalytics=${skipped}`
   );
 }
 

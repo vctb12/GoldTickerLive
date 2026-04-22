@@ -5,7 +5,7 @@
   "type": "commonjs",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/node/extract-baseline.js && node scripts/node/normalize-shops.js && vite build",
+    "build": "node scripts/node/extract-baseline.js && node scripts/node/normalize-shops.js && node build/generateSitemap.js && vite build",
     "extract-baseline": "node scripts/node/extract-baseline.js",
     "normalize-shops": "node scripts/node/normalize-shops.js",
     "release:package": "node scripts/node/package-release.js",

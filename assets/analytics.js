@@ -21,7 +21,7 @@
   }
 
   // ── Google Analytics 4 (gtag.js) ─────────────────────────────────────────
-  var GA_ID = 'G-K3GNY9M8TE';
+  const GA_ID = 'G-K3GNY9M8TE';
   window.dataLayer = window.dataLayer || [];
   function gtag() {
     window.dataLayer.push(arguments);
@@ -32,15 +32,12 @@
 
   // Inject the gtag loader if it isn't already present.
   try {
-    var gaSrc = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
-    var exists = Array.prototype.some.call(
-      document.getElementsByTagName('script'),
-      function (s) {
-        return s.src && s.src.indexOf('googletagmanager.com/gtag/js') !== -1;
-      },
-    );
+    const gaSrc = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    const exists = Array.prototype.some.call(document.getElementsByTagName('script'), function (s) {
+      return s.src && s.src.indexOf('googletagmanager.com/gtag/js') !== -1;
+    });
     if (!exists) {
-      var s = document.createElement('script');
+      const s = document.createElement('script');
       s.async = true;
       s.src = gaSrc;
       document.head.appendChild(s);
@@ -56,10 +53,10 @@
       function () {
         (c[a].q = c[a].q || []).push(arguments);
       };
-    var t = l.createElement(r);
+    const t = l.createElement(r);
     t.async = 1;
     t.src = 'https://www.clarity.ms/tag/' + i;
-    var y = l.getElementsByTagName(r)[0];
+    const y = l.getElementsByTagName(r)[0];
     if (y && y.parentNode) y.parentNode.insertBefore(t, y);
     else l.head.appendChild(t);
   })(window, document, 'clarity', 'script', 'w4e0nhdxt5');
