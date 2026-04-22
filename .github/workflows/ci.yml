@@ -78,6 +78,9 @@ jobs:
       - name: Run linkinator (baseline, non-blocking)
         run: npm run linkcheck:dist
 
+      - name: Enforce no broken internal links (phx/22)
+        run: node scripts/node/enforce-linkcheck.js reports/links-dist.json
+
       - name: Upload link-check report
         if: always()
         uses: actions/upload-artifact@v7
