@@ -1,0 +1,190 @@
+{
+  "links": [
+    {
+      "url": "index.html",
+      "status": 200,
+      "state": "OK",
+      "failureDetails": []
+    },
+    {
+      "url": "assets/analytics.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "styles/critical.css",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "styles/global.css",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "styles/pages/home.css",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "src/pages/home.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "countries/index.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "assets/apple-touch-icon.png",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "favicon.svg",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "assets/favicon-32x32.png",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "manifest.json",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "tracker.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "shops.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "methodology.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "calculator.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "countries/uae.html",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "index.html"
+    },
+    {
+      "url": "learn.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "invest.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "insights.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "countries/saudi-arabia.html",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "index.html"
+    },
+    {
+      "url": "countries/bahrain.html",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "index.html"
+    },
+    {
+      "url": "countries/kuwait.html",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "index.html"
+    },
+    {
+      "url": "countries/jordan.html",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "index.html"
+    },
+    {
+      "url": "countries/qatar.html",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "index.html"
+    },
+    {
+      "url": "countries/oman.html",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "index.html"
+    },
+    {
+      "url": "countries/egypt.html",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "index.html"
+    },
+    {
+      "url": "countries/morocco.html",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "index.html"
+    },
+    {
+      "url": "countries/india.html",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "index.html"
+    }
+  ],
+  "passed": false
+}
