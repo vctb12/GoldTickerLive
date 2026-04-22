@@ -39,6 +39,15 @@ const EXCLUDE = new Set([
 ]);
 
 // ── Walk filesystem ──────────────────────────────────────────────────────────
+function isNoindex(filePath) {
+  try {
+    const head = fs.readFileSync(filePath, 'utf8');
+    return /<meta\s+name=["']robots["']\s+content=["'][^"']*noindex/i.test(head);
+  } catch {
+    return false;
+  }
+}
+
 function walk(dir, base = '', results = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const rel = base ? `${base}/${entry.name}` : entry.name;
@@ -48,12 +57,12 @@ function walk(dir, base = '', results = []) {
 
     if (entry.isDirectory()) {
       const idx = path.join(full, 'index.html');
-      if (fs.existsSync(idx)) {
+      if (fs.existsSync(idx) && !isNoindex(idx)) {
         results.push({ urlPath: rel + '/', file: idx });
       }
       walk(full, rel, results);
     } else if (entry.name.endsWith('.html') && entry.name !== 'index.html') {
-      if (!EXCLUDE.has(entry.name)) {
+      if (!EXCLUDE.has(entry.name) && !isNoindex(full)) {
         results.push({ urlPath: rel, file: full });
       }
     }

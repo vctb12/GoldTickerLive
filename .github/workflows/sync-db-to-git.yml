@@ -1,3 +1,10 @@
+# ------------------------------------------------------------------
+# Sync Database to Git — content / sync bot.
+# Triggered by `repository_dispatch: sync-shops`. Pulls the latest
+# shops data from the admin database and commits `data/shops.json`.
+# NOT a required merge gate.
+# Tier: content / sync bot
+# ------------------------------------------------------------------
 name: Sync Database to Git
 
 on:

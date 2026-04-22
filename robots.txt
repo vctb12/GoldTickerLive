@@ -12,4 +12,4 @@ Disallow: /supabase/
 Disallow: /repositories/
 Disallow: /dist/
 
-Sitemap: https://www.goldtickerlive.com/sitemap.xml
+Sitemap: https://goldtickerlive.com/sitemap.xml

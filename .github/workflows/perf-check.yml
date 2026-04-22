@@ -1,3 +1,10 @@
+# ------------------------------------------------------------------
+# Perf & QA — informational Playwright + image-audit run.
+# Runs on every push/PR for visibility but uses `|| true` on the core
+# steps so it does NOT block merges. Graduate a step to fail-hard in
+# ci.yml before relying on it as a merge gate.
+# Tier: informational scan
+# ------------------------------------------------------------------
 name: Perf & QA Checks
 
 on:

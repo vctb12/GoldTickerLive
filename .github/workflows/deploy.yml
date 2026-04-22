@@ -1,3 +1,9 @@
+# ------------------------------------------------------------------
+# Deploy — production deploy.
+# Builds the Vite bundle, regenerates sitemap.xml / feed.xml, and
+# publishes `dist/` to GitHub Pages on every push to `main`.
+# Tier: production deploy (not a merge gate — runs after merge)
+# ------------------------------------------------------------------
 name: Deploy to GitHub Pages
 
 on:

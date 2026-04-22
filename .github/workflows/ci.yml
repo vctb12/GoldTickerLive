@@ -1,3 +1,10 @@
+# ------------------------------------------------------------------
+# CI — required merge gate.
+# Runs on every push to `main` and every pull request. The
+# `validate-and-build` job must pass before a PR can merge; `e2e` is
+# blocking; `link-check` only runs on the nightly schedule.
+# Tier: merge gate
+# ------------------------------------------------------------------
 name: CI
 
 on:
