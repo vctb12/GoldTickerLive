@@ -700,3 +700,24 @@ or product decision that future agents need to know about._
 - **Consequence.** All planning edits land here. `docs/README.md` maps the
   pointer index. Reference docs (ARCHITECTURE, DESIGN_TOKENS, SEO_STRATEGY,
   etc.) stay independent.
+
+---
+
+## 20. Project memory
+
+_Absorbs `docs/product/MEMORY.md`. Long-lived project-level facts that future
+contributors need. Repository-wide memory lives in the agent memory store; this
+section is for facts that benefit every contributor (human or agent)._
+
+- Users care a lot about trust wording.
+- Avoid generic "AI-looking" page layouts.
+- Do not overbuild. Small reliable improvements beat broad rewrites.
+- Tracker and shops pages are high priority.
+- Country / city pages need strong SEO and internal linking.
+- Any fallback / estimated data must be clearly labeled.
+- When reviewing code, inspect relevant files before proposing architecture
+  changes.
+- Always separate review, plan, debug, and build modes.
+- `buildFilters()` on the shops page already validates each dropdown value and
+  resets invalid ones to `'all'` — lean on that safety net rather than
+  duplicating validation upstream.
