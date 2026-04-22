@@ -880,7 +880,15 @@
       /** Cache shops to localStorage for offline resilience. */
       function cacheShops(shops) {
         try {
-          localStorage.setItem(SHOPS_CACHE_KEY, JSON.stringify(shops));
+          const safeShops = Array.isArray(shops)
+            ? shops.map((shop) => ({
+                ...shop,
+                // Avoid persisting precise coordinates in cleartext localStorage.
+                latitude: null,
+                longitude: null,
+              }))
+            : [];
+          localStorage.setItem(SHOPS_CACHE_KEY, JSON.stringify(safeShops));
         } catch {}
       }
 
