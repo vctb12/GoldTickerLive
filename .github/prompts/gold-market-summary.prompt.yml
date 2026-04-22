@@ -1,0 +1,45 @@
+name: Gold Market Summary
+description: Generates a short, factual summary for Gold Prices using structured market input.
+model: openai/gpt-4o-mini
+modelParameters:
+  temperature: 0.2
+
+messages:
+  - role: system
+    content: |
+      You are writing short, factual summaries for a gold price website.
+      Rules:
+      - Be clear and concise.
+      - Do not give financial advice.
+      - Do not invent causes if they are not in the input.
+      - If the input is incomplete, say so briefly.
+      - Keep the tone neutral and trustworthy.
+      - Output in plain English.
+
+  - role: user
+    content: |
+      Write a 3-5 sentence market summary for the Gold Prices website.
+
+      Input data:
+      {{input}}
+
+      Requirements:
+      - Mention the current spot price if present.
+      - Mention whether gold is up, down, or flat if present.
+      - Mention AED or USD if present.
+      - Mention karat-related context only if provided.
+      - End with one short line that says this is informational only.
+
+testData:
+  - input: |
+      Spot gold: 3348.20 USD/oz
+      24K UAE estimate: 395.10 AED/g
+      Day change: +0.8%
+      Notes: USD softened during the session.
+    expected: |
+      Gold moved higher today, with spot gold around 3348.20 USD per ounce. In the UAE, 24K gold is estimated near 395.10 AED per gram. The move reflects a positive session, with a softer U.S. dollar noted in the input. Informational only.
+
+evaluators:
+  - name: Mentions informational-only line
+    string:
+      contains: Informational only
