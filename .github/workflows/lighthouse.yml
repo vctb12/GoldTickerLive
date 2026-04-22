@@ -1,3 +1,9 @@
+# ------------------------------------------------------------------
+# Lighthouse CI — informational performance scan.
+# Manual-only (`workflow_dispatch`); reports Core Web Vitals to the
+# LHCI temporary public storage. NOT a required merge gate.
+# Tier: informational scan
+# ------------------------------------------------------------------
 name: Lighthouse CI
 
 on:
