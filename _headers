@@ -1,0 +1,42 @@
+# Netlify / Cloudflare Pages _headers file
+# -----------------------------------------------------------------------------
+# Static-asset caching and per-path hardening. Values chosen to be safe
+# defaults for a multi-page static site with a separate admin app on a
+# different host. If deploying admin/ to the same host, tighten admin-specific
+# headers below.
+
+# Long-cache immutable static assets (fingerprinted by Vite).
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/styles/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/src/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Short-cache, must-revalidate HTML.
+/*.html
+  Cache-Control: public, max-age=300, must-revalidate
+
+/
+  Cache-Control: public, max-age=300, must-revalidate
+
+# Service worker must never be cached long — revalidation is essential.
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/manifest.json
+  Cache-Control: public, max-age=3600
+
+# Global security headers applied to every response.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
+
+# Admin panel: stricter framing and no-indexing.
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: private, no-store

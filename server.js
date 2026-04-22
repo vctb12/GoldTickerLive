@@ -187,7 +187,43 @@ const DIST_DIR = path.resolve(__dirname, 'dist');
 const SRC_DIR = path.resolve(__dirname, 'src');
 const NOT_FOUND_PAGE = path.join(DIST_DIR, '404.html');
 
-function send404(res) {
+// phx/21: dev-mode 404 logging. Writes a ring buffer of recent 404 requests to
+// data/404-logs.json so we can spot broken-link patterns during development.
+// No-op in production (avoids disk writes on hot paths and accidental PII).
+const NOT_FOUND_LOG_PATH = path.join(__dirname, 'data', '404-logs.json');
+const NOT_FOUND_LOG_MAX = 500;
+function logNotFound(req) {
+  if (IS_PROD) return;
+  try {
+    let entries = [];
+    if (fs.existsSync(NOT_FOUND_LOG_PATH)) {
+      try {
+        const raw = fs.readFileSync(NOT_FOUND_LOG_PATH, 'utf8');
+        entries = JSON.parse(raw);
+        if (!Array.isArray(entries)) entries = [];
+      } catch {
+        entries = [];
+      }
+    }
+    entries.push({
+      ts: new Date().toISOString(),
+      method: req.method,
+      path: req.originalUrl || req.url,
+      referer: req.get('referer') || null,
+      ua: (req.get('user-agent') || '').slice(0, 200),
+    });
+    if (entries.length > NOT_FOUND_LOG_MAX) {
+      entries = entries.slice(-NOT_FOUND_LOG_MAX);
+    }
+    fs.mkdirSync(path.dirname(NOT_FOUND_LOG_PATH), { recursive: true });
+    fs.writeFileSync(NOT_FOUND_LOG_PATH, JSON.stringify(entries, null, 2));
+  } catch {
+    // logging must never break the response
+  }
+}
+
+function send404(res, req) {
+  if (req) logNotFound(req);
   if (fs.existsSync(NOT_FOUND_PAGE)) return res.status(404).sendFile(NOT_FOUND_PAGE);
   return res.status(404).type('text/plain').send('Not Found');
 }
@@ -265,7 +301,7 @@ app.use((req, res, _next) => {
 
   const resolved = safeResolveUnderRoot(DIST_DIR, req.path);
   if (!resolved) {
-    return send404(res);
+    return send404(res, req);
   }
 
   // If the request targets a static file extension, try to serve it and
@@ -276,10 +312,10 @@ app.use((req, res, _next) => {
     try {
       stat = fs.statSync(resolved);
     } catch {
-      return send404(res);
+      return send404(res, req);
     }
     if (stat.isFile()) return res.sendFile(resolved);
-    return send404(res);
+    return send404(res, req);
   }
 
   // Directory-like requests prefer index.html. Re-resolve through the root
@@ -297,7 +333,7 @@ app.use((req, res, _next) => {
   // rather than silently returning the homepage. Returning index.html here
   // would (a) confuse SEO crawlers with soft-404s and (b) turn every
   // nonexistent URL into a 200, which defeats path-traversal guards.
-  return send404(res);
+  return send404(res, req);
 });
 
 // Centralized error handling middleware (must be last)

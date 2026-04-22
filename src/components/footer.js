@@ -43,7 +43,7 @@ export function injectFooter(lang = 'en', depth = 0) {
       <div class="footer-col footer-col--links">
         <h4 class="footer-col-heading">${isAr ? 'الأسواق' : 'Markets'}</h4>
         <a href="${r('../tracker.html')}">${isAr ? 'تتبع مباشر' : 'Live Tracker'}</a>
-        <a href="${r('../countries/uae.html')}">${isAr ? 'ذهب الإمارات اليوم' : 'UAE Gold Today'}</a>
+        <a href="${r('../countries/uae/')}">${isAr ? 'ذهب الإمارات اليوم' : 'UAE Gold Today'}</a>
         <a href="${r('../tracker.html#mode=compare')}">${isAr ? 'مقارنة دول الخليج' : 'GCC Compare'}</a>
         <a href="${r('../tracker.html#mode=archive')}">${isAr ? 'البيانات التاريخية' : 'History &amp; Data'}</a>
         <a href="${r('../shops.html')}">${isAr ? 'دليل المحلات' : 'Shop Directory'}</a>
@@ -66,21 +66,21 @@ export function injectFooter(lang = 'en', depth = 0) {
       <!-- GCC column -->
       <div class="footer-col footer-col--links">
         <h4 class="footer-col-heading">${isAr ? 'دول الخليج' : 'GCC Prices'}</h4>
-        <a href="${r('../countries/uae.html')}">${isAr ? 'الإمارات' : 'UAE'}</a>
-        <a href="${r('../countries/saudi-arabia.html')}">${isAr ? 'السعودية' : 'Saudi Arabia'}</a>
-        <a href="${r('../countries/kuwait.html')}">${isAr ? 'الكويت' : 'Kuwait'}</a>
-        <a href="${r('../countries/qatar.html')}">${isAr ? 'قطر' : 'Qatar'}</a>
-        <a href="${r('../countries/bahrain.html')}">${isAr ? 'البحرين' : 'Bahrain'}</a>
-        <a href="${r('../countries/oman.html')}">${isAr ? 'عُمان' : 'Oman'}</a>
+        <a href="${r('../countries/uae/')}">${isAr ? 'الإمارات' : 'UAE'}</a>
+        <a href="${r('../countries/saudi-arabia/')}">${isAr ? 'السعودية' : 'Saudi Arabia'}</a>
+        <a href="${r('../countries/kuwait/')}">${isAr ? 'الكويت' : 'Kuwait'}</a>
+        <a href="${r('../countries/qatar/')}">${isAr ? 'قطر' : 'Qatar'}</a>
+        <a href="${r('../countries/bahrain/')}">${isAr ? 'البحرين' : 'Bahrain'}</a>
+        <a href="${r('../countries/oman/')}">${isAr ? 'عُمان' : 'Oman'}</a>
       </div>
 
       <!-- More Regions + Learn column -->
       <div class="footer-col footer-col--links">
         <h4 class="footer-col-heading">${isAr ? 'مناطق أخرى' : 'More Regions'}</h4>
-        <a href="${r('../countries/egypt.html')}">${isAr ? 'مصر' : 'Egypt'}</a>
-        <a href="${r('../countries/jordan.html')}">${isAr ? 'الأردن' : 'Jordan'}</a>
-        <a href="${r('../countries/morocco.html')}">${isAr ? 'المغرب' : 'Morocco'}</a>
-        <a href="${r('../countries/india.html')}">${isAr ? 'الهند' : 'India'}</a>
+        <a href="${r('../countries/egypt/')}">${isAr ? 'مصر' : 'Egypt'}</a>
+        <a href="${r('../countries/jordan/')}">${isAr ? 'الأردن' : 'Jordan'}</a>
+        <a href="${r('../countries/morocco/')}">${isAr ? 'المغرب' : 'Morocco'}</a>
+        <a href="${r('../countries/india/')}">${isAr ? 'الهند' : 'India'}</a>
         <h4 class="footer-col-heading footer-col-heading--mt">${isAr ? 'مدن رئيسية' : 'Top Cities'}</h4>
         <a href="${r('../countries/uae/cities/dubai.html')}">${isAr ? 'دبي' : 'Dubai'}</a>
         <a href="${r('../countries/saudi-arabia/cities/riyadh.html')}">${isAr ? 'الرياض' : 'Riyadh'}</a>
