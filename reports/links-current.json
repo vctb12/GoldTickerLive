@@ -21,14 +21,14 @@
       "failureDetails": []
     },
     {
-      "url": "styles/global.css",
+      "url": "styles/pages/home.css",
       "status": 200,
       "state": "OK",
       "parent": "index.html",
       "failureDetails": []
     },
     {
-      "url": "styles/pages/home.css",
+      "url": "styles/global.css",
       "status": 200,
       "state": "OK",
       "parent": "index.html",
@@ -77,14 +77,14 @@
       "failureDetails": []
     },
     {
-      "url": "tracker.html",
+      "url": "shops.html",
       "status": 200,
       "state": "OK",
       "parent": "index.html",
       "failureDetails": []
     },
     {
-      "url": "shops.html",
+      "url": "tracker.html",
       "status": 200,
       "state": "OK",
       "parent": "index.html",
@@ -140,14 +140,14 @@
       "failureDetails": []
     },
     {
-      "url": "countries/kuwait/",
+      "url": "countries/qatar/",
       "status": 200,
       "state": "OK",
       "parent": "index.html",
       "failureDetails": []
     },
     {
-      "url": "countries/qatar/",
+      "url": "countries/kuwait/",
       "status": 200,
       "state": "OK",
       "parent": "index.html",
@@ -168,13 +168,6 @@
       "failureDetails": []
     },
     {
-      "url": "countries/jordan/",
-      "status": 200,
-      "state": "OK",
-      "parent": "index.html",
-      "failureDetails": []
-    },
-    {
       "url": "countries/oman/",
       "status": 200,
       "state": "OK",
@@ -183,6 +176,13 @@
     },
     {
       "url": "countries/morocco/",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "countries/jordan/",
       "status": 200,
       "state": "OK",
       "parent": "index.html",
