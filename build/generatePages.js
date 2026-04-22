@@ -55,7 +55,7 @@ function relPrefix(depth) {
  * @param {{ title, description, canonical, h1, introText, depth, jsonLd }} opts
  * @returns {string} full HTML
  */
-function buildPage({ title, description, canonical, h1, introText, depth, jsonLd, breadcrumbs: _breadcrumbs, relatedLinks, lang = 'en' }) {
+function buildPage({ title, description, canonical, h1, introText, depth, jsonLd, relatedLinks, lang = 'en' }) {
   const rel = relPrefix(depth);
   const hreflangAr = canonical + '?lang=ar';
   const jsonLdStr = JSON.stringify(jsonLd, null, 2);

@@ -213,11 +213,19 @@
                 <span class="tracker-badge-dot" aria-hidden="true"></span>
                 <span id="tp-live-badge-text">Preparing live feed</span>
               </span>
+              <span class="tracker-badge tracker-badge-xauusd" id="tp-xauusd-badge" aria-label="XAU/USD spot price">
+                <span aria-hidden="true">🏅</span>
+                <span>XAU/USD</span>
+                <strong id="tp-xauusd-value">—</strong>
+              </span>
               <span class="tracker-badge" id="tp-market-badge">Gold market</span>
               <span class="tracker-badge" id="tp-refresh-badge">Waiting for first sync</span>
             </div>
 
-            <h1 id="tp-hero-title">Gold Tracker Pro</h1>
+            <h1 id="tp-hero-title">
+              Gold Tracker Pro
+              <span class="tracker-hero-title-sub" aria-hidden="true">Live workspace</span>
+            </h1>
             <p id="tp-hero-copy">
               Live spot-linked gold reference prices across 24+ countries, 7 karats, updated every
               90 seconds.
@@ -257,14 +265,6 @@
               <button class="btn btn-outline" id="tp-share-btn" type="button">Copy brief</button>
               <button class="btn btn-ghost" id="tp-reset-btn" type="button">Reset</button>
               <a class="btn btn-ghost" href="#mode-live" id="tp-jump-chart">Chart ↓</a>
-              <button
-                class="btn btn-ghost"
-                id="tp-workspace-toggle"
-                type="button"
-                aria-pressed="false"
-              >
-                Advanced ⋯
-              </button>
             </div>
 
             <!-- Quick-use chips -->
@@ -397,6 +397,14 @@
           >
             📖 Method
           </button>
+          <button
+            class="tracker-workspace-badge"
+            id="tp-workspace-toggle"
+            type="button"
+            aria-pressed="false"
+          >
+            Advanced ⋯
+          </button>
         </nav>
       </section>
 
@@ -410,7 +418,26 @@
       >
         <!-- Compact toolbar — range + toggles only (selectors moved to hero) -->
         <div class="tracker-toolbar-card">
-          <div class="tracker-toolbar-row">
+          <div class="tracker-control-grid">
+            <label class="tracker-field">
+              <span>Language</span>
+              <select id="tp-language">
+                <option value="en">English</option>
+                <option value="ar">العربية</option>
+              </select>
+            </label>
+            <label class="tracker-field">
+              <span>Currency</span>
+              <select id="tp-currency" class="tp-control-select"></select>
+            </label>
+            <label class="tracker-field">
+              <span>Karat</span>
+              <select id="tp-karat" class="tp-control-select"></select>
+            </label>
+            <label class="tracker-field">
+              <span>Unit</span>
+              <select id="tp-unit" class="tp-control-select"></select>
+            </label>
             <label class="tracker-field tracker-advanced-only">
               <span>Compare market</span>
               <select id="tp-compare-country"></select>
@@ -695,6 +722,7 @@
             </button>
           </div>
           <div class="tp-overlay-body">
+            <div class="tp-drawer-inner">
             <p class="tp-overlay-intro">
               Browser-based price alerts and view presets — stored locally. The live chart and
               prices remain visible behind this panel.
@@ -771,6 +799,7 @@
               <div class="tracker-subpanel-head"><h3>Saved presets</h3></div>
               <div class="tracker-stack-list" id="tp-preset-list"></div>
             </article>
+            </div><!-- /.tp-drawer-inner -->
           </div>
         </div>
         <div class="tp-overlay-backdrop" aria-hidden="true"></div>
@@ -799,6 +828,7 @@
             </button>
           </div>
           <div class="tp-overlay-body">
+            <div class="tp-drawer-inner">
             <p class="tp-overlay-intro">
               Turn live prices into decisions. The chart and prices remain visible behind this
               panel.
@@ -893,6 +923,7 @@
             <div class="tracker-panel-footer-link">
               <a href="calculator.html" class="tracker-link">Open full calculator →</a>
             </div>
+            </div><!-- /.tp-drawer-inner -->
           </div>
         </div>
         <div class="tp-overlay-backdrop" aria-hidden="true"></div>
@@ -991,6 +1022,10 @@
               <div class="tracker-subpanel-head"><h3>Seasonal patterns</h3></div>
               <div class="tracker-result-grid" id="tp-seasonal-results"></div>
             </article>
+          </div>
+
+          <div class="tracker-empty" id="tp-archive-empty" hidden>
+            No archive data available for the selected range. Try expanding the range or refreshing.
           </div>
         </div>
       </section>
@@ -1184,6 +1219,38 @@
           </div>
         </section>
       </section>
+
+      <!-- Keyboard shortcuts help overlay -->
+      <div
+        id="tp-keyboard-help"
+        class="tp-keyboard-help"
+        hidden
+        aria-modal="true"
+        role="dialog"
+        aria-label="Keyboard shortcuts"
+      >
+        <div class="tp-keyboard-help-panel">
+          <button class="tp-keyboard-help-close" type="button" id="tp-keyboard-help-close" aria-label="Close keyboard shortcuts">✕</button>
+          <h2>Keyboard shortcuts</h2>
+          <table class="tp-keyboard-table">
+            <thead>
+              <tr>
+                <th>Key</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><kbd class="tracker-kbd">R</kbd></td><td>Refresh prices</td></tr>
+              <tr><td><kbd class="tracker-kbd">H</kbd></td><td>Switch to Live mode</td></tr>
+              <tr><td><kbd class="tracker-kbd">C</kbd></td><td>Switch to Compare mode</td></tr>
+              <tr><td><kbd class="tracker-kbd">A</kbd></td><td>Open Alerts panel</td></tr>
+              <tr><td><kbd class="tracker-kbd">P</kbd></td><td>Open Planner panel</td></tr>
+              <tr><td><kbd class="tracker-kbd">Esc</kbd></td><td>Close open panel</td></tr>
+              <tr><td><kbd class="tracker-kbd">?</kbd></td><td>Show this help</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </main>
 
     <!-- ═══════ AD: Rectangle (below tracker) ═══════ -->

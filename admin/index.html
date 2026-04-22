@@ -312,6 +312,35 @@
 
         <!-- Content -->
         <main class="content-area">
+        <!-- ── Dismissible admin welcome banner ───────────────── -->
+          <div class="welcome-banner" id="admin-welcome-banner" role="alert" aria-label="Welcome message">
+            <div class="welcome-banner-left">
+              <div class="welcome-title">👋 Welcome to GoldAdmin</div>
+              <div class="welcome-sub">
+                Manage your gold prices platform from this dashboard. Use the sidebar to navigate.
+              </div>
+            </div>
+            <button
+              class="btn btn-ghost btn-sm"
+              id="admin-welcome-close"
+              type="button"
+              aria-label="Dismiss welcome banner"
+              onclick="localStorage.setItem('gp_admin_welcome_dismissed','1');document.getElementById('admin-welcome-banner').hidden=true;"
+            >
+              ✕ Dismiss
+            </button>
+          </div>
+          <script>
+            (function () {
+              try {
+                if (localStorage.getItem('gp_admin_welcome_dismissed') === '1') {
+                  var el = document.getElementById('admin-welcome-banner');
+                  if (el) el.hidden = true;
+                }
+              } catch (e) {}
+            })();
+          </script>
+
           <!-- ── Welcome banner ──────────────────────────────── -->
           <div class="welcome-banner" id="welcome-banner">
             <div class="welcome-banner-left">
@@ -333,7 +362,7 @@
           <!-- ── Stat cards ──────────────────────────────────── -->
           <div class="stat-grid" role="list" aria-label="Key metrics">
             <!-- Gold Spot -->
-            <div class="stat-card" role="listitem">
+            <div class="card stat-card" role="listitem">
               <div class="stat-icon" aria-hidden="true">🥇</div>
               <div class="stat-label">Gold Spot (XAU)</div>
               <div class="stat-number" id="stat-gold" aria-live="polite">
@@ -350,7 +379,7 @@
             </div>
 
             <!-- Shops Listed -->
-            <div class="stat-card" role="listitem">
+            <div class="card stat-card" role="listitem">
               <div class="stat-icon" aria-hidden="true">🏪</div>
               <div class="stat-label">Shops Listed</div>
               <div class="stat-number" id="stat-shops" aria-live="polite">
@@ -360,21 +389,10 @@
             </div>
 
             <!-- Pending Orders -->
-            <div class="stat-card" role="listitem">
+            <div class="card stat-card" role="listitem">
               <div class="stat-icon" aria-hidden="true">
                 📦
-                <span
-                  id="stat-orders-dot"
-                  style="
-                    display: none;
-                    width: 8px;
-                    height: 8px;
-                    border-radius: 50%;
-                    background: #ef4444;
-                    vertical-align: middle;
-                    margin-left: 4px;
-                  "
-                ></span>
+                <span id="stat-orders-dot" class="stat-orders-dot-indicator" hidden></span>
               </div>
               <div class="stat-label">Pending Orders</div>
               <div class="stat-number" id="stat-orders" aria-live="polite">
@@ -384,7 +402,7 @@
             </div>
 
             <!-- Published Posts -->
-            <div class="stat-card" role="listitem">
+            <div class="card stat-card" role="listitem">
               <div class="stat-icon" aria-hidden="true">📝</div>
               <div class="stat-label">Published Posts</div>
               <div class="stat-number" id="stat-posts" aria-live="polite">
@@ -666,7 +684,7 @@
             const val = pending ?? 0;
             qs('#stat-orders').textContent = val.toLocaleString();
             const dot = qs('#stat-orders-dot');
-            if (dot) dot.style.display = val > 0 ? 'inline-block' : 'none';
+            if (dot) dot.hidden = val <= 0;
             qs('#stat-orders-sub').textContent = val > 0 ? 'awaiting action' : 'all clear';
           } catch {
             qs('#stat-orders').textContent = '—';

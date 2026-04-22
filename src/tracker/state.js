@@ -1,31 +1,3 @@
-// Lightweight tracker UI state module to centralize state read/write
-const KEY = 'tracker.state.v1';
-
-function read() {
-  try {
-    const raw = localStorage.getItem(KEY);
-    return raw ? JSON.parse(raw) : { initialized: true };
-  } catch (_e) {
-    return { initialized: true };
-  }
-}
-
-function write(state) {
-  try {
-    localStorage.setItem(KEY, JSON.stringify(state));
-  } catch (_e) {
-    // ignore
-  }
-}
-
-function update(fn) {
-  const s = read();
-  const next = fn(s) || s;
-  write(next);
-  return next;
-}
-
-export { read, write, update };
 // tracker/state.js
 import { CONSTANTS } from '../config/index.js';
 import * as cache from '../lib/cache.js';

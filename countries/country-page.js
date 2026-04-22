@@ -260,6 +260,27 @@ function normalizeRelatedCountryUrl(file) {
   }
 }
 
+// ── Render related cities ────────────────────────────────────────────────────
+function renderRelatedCities(cfg) {
+  const cities = cfg.cities;
+  if (!cities?.length) return;
+  const el = document.getElementById('cp-related-cities');
+  if (!el) return;
+
+  const cards = cities
+    .map(
+      (city) => `
+    <a href="../${city.slug}/gold-prices/" class="cp-related-card">
+      <span class="cp-related-name">Gold price in ${city.nameEn}</span>
+    </a>`
+    )
+    .join('');
+
+  el.innerHTML = `
+    <h2>${STATE.lang === 'ar' ? 'المدن' : 'Related Cities'}</h2>
+    <div class="cp-related-grid">${cards}</div>`;
+}
+
 // ── Render related countries ─────────────────────────────────────────────────
 function renderRelated(cfg) {
   const el = document.getElementById('cp-related');
@@ -333,6 +354,7 @@ function renderAll(cfg) {
   renderHero(cfg);
   renderKaratTable(cfg);
   renderRelated(cfg);
+  renderRelatedCities(cfg);
   renderFaq(cfg);
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';

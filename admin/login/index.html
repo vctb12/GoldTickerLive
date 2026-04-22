@@ -528,6 +528,7 @@
                   />
                 </svg>
                 Continue with GitHub
+                <span class="btn-spinner" aria-hidden="true" hidden></span>
               </button>
               <button type="button" class="btn btn-ghost full" id="google-login-btn">
                 Continue with Google
@@ -552,6 +553,7 @@
               </label>
               <button type="submit" class="btn btn-primary full" id="magic-submit">
                 Send magic link
+                <span class="btn-spinner" aria-hidden="true" hidden></span>
               </button>
             </form>
           </section>
@@ -566,7 +568,10 @@
                 <span>Password</span>
                 <input type="password" id="pw-password" required autocomplete="current-password" />
               </label>
-              <button type="submit" class="btn btn-primary full" id="pw-submit">Sign in</button>
+              <button type="submit" class="btn btn-primary full" id="pw-submit">
+                Sign in
+                <span class="btn-spinner" aria-hidden="true" hidden></span>
+              </button>
             </form>
           </section>
 
@@ -957,6 +962,17 @@
       });
 
       checkPostOAuthReturn();
+
+      // Focus management: focus the first visible interactive element on page load
+      document.addEventListener('DOMContentLoaded', () => {
+        const firstInput = document.querySelector('.tab-panel.active input, .tab-panel.active button:not([disabled])');
+        if (firstInput) firstInput.focus();
+      });
+      // If DOMContentLoaded already fired (module scripts run after parsing)
+      if (document.readyState !== 'loading') {
+        const firstInput = document.querySelector('.tab-panel.active input, .tab-panel.active button:not([disabled])');
+        if (firstInput) firstInput.focus();
+      }
     </script>
   </body>
 </html>

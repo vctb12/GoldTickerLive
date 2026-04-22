@@ -13,7 +13,7 @@
  * backup/restore.  Concurrent execution would cause data races between files.
  */
 
-const { test, describe, before, after, beforeEach: _beforeEach } = require('node:test');
+const { test, describe, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('fs');
 const path = require('path');

@@ -69,8 +69,9 @@ const PRECACHE_URLS = [
   '/countries/uae/dubai/gold-rate/18-karat/',
   '/countries/uae/abu-dhabi/gold-prices/',
   '/countries/uae/sharjah/gold-prices/',
-  // Offline fallback
+  // Offline fallback + error pages
   '/offline.html',
+  '/404.html',
 ];
 
 // External origins that should bypass the cache (live data APIs)

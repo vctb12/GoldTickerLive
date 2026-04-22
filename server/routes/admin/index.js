@@ -558,6 +558,19 @@ router.delete('/users/:id', adminRateLimiter, authMiddleware('admin'), (req, res
 
 // ===== DASHBOARD STATS =====
 
+// GET /counts — lightweight summary counts for the admin dashboard
+router.get('/counts', adminRateLimiter, authMiddleware(), (req, res) => {
+  const pendingOrders = 0;
+  let totalShops = 0;
+  try {
+    const result = shopManager.getFilteredShops({ page: 1, limit: 1 });
+    totalShops = typeof result.total === 'number' ? result.total : 0;
+  } catch {
+    // Non-critical — return default 0
+  }
+  res.json({ pendingOrders, totalShops });
+});
+
 // GET /stats — aggregate metrics for the admin dashboard
 router.get('/stats', adminRateLimiter, authMiddleware(), async (req, res) => {
   try {

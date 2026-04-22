@@ -128,6 +128,7 @@ export function injectFooter(lang = 'en', depth = 0) {
         <span>${isAr ? 'أونصة ترويوا:' : 'Troy oz:'} 31.1035 g</span>
         <span class="footer-sep" aria-hidden="true">·</span>
         <span class="footer-freshness"></span>
+        <span class="footer-data-updated"></span>
       </div>
       <div class="footer-bottom-row">
         <p class="footer-disclaimer">${
@@ -157,6 +158,22 @@ export function injectFooter(lang = 'en', depth = 0) {
           document.documentElement.lang === 'ar' || document.documentElement.dir === 'rtl';
         freshnessEl.textContent =
           (isAr2 ? 'آخر تحديث: ' : 'Gold: ') +
+          d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+    }
+  } catch (_) {}
+
+  // Populate "Data last updated" from goldUpdatedAt key
+  try {
+    const updatedAt = localStorage.getItem('goldUpdatedAt');
+    const dataUpdatedEl = footerEl.querySelector('.footer-data-updated');
+    if (dataUpdatedEl && updatedAt) {
+      const d = new Date(updatedAt);
+      if (!isNaN(d.getTime())) {
+        const isAr2 =
+          document.documentElement.lang === 'ar' || document.documentElement.dir === 'rtl';
+        dataUpdatedEl.textContent =
+          (isAr2 ? '· آخر تحديث البيانات: ' : '· Data last updated: ') +
           d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       }
     }

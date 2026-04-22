@@ -89,10 +89,6 @@ function getActiveSlug() {
   return remainder;
 }
 
-function _stripHtml(html) {
-  return html.replace(/<[^>]*>|\s+/g, ' ').trim();
-}
-
 // ── Sidebar HTML builder ─────────────────────────────────────────────────────
 
 function buildSidebarHTML(adminBase, activeSlug) {
@@ -105,7 +101,7 @@ function buildSidebarHTML(adminBase, activeSlug) {
         const aria = isActive ? ' aria-current="page"' : '';
         const badge =
           item.slug === 'orders'
-            ? '<span class="notification-badge" id="orders-badge" aria-label="pending orders count" style="display:none;margin-left:auto"></span>'
+            ? '<span class="notification-badge orders-badge-hidden" id="orders-badge" aria-label="pending orders count"></span>'
             : '';
         return `<a class="${cls}" href="${href}"${aria}><span class="nav-icon">${ICONS[item.iconKey]}</span><span class="nav-label">${item.label}</span>${badge}</a>`;
       })
@@ -127,21 +123,19 @@ function buildSidebarHTML(adminBase, activeSlug) {
         </nav>
 
         <div class="sidebar-footer">
-          <div class="sidebar-user-row" id="sidebar-user"
-               style="display:flex;align-items:center;gap:8px;padding:0 0 10px;border-bottom:1px solid var(--border);margin-bottom:10px">
-            <div class="user-avatar" id="sidebar-avatar" style="width:32px;height:32px;font-size:0.875rem">?</div>
-            <div style="min-width:0;flex:1">
-              <div class="sidebar-user-email" id="sidebar-email"
-                   style="font-size:0.8rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
-              <div class="role-badge role-badge--admin" style="display:inline-block;margin-top:2px">admin</div>
+          <div class="sidebar-user-row sidebar-user-row-inner" id="sidebar-user">
+            <div class="user-avatar sidebar-user-avatar" id="sidebar-avatar">?</div>
+            <div class="sidebar-user-info">
+              <div class="sidebar-user-email" id="sidebar-email"></div>
+              <div class="role-badge role-badge--admin">admin</div>
             </div>
           </div>
-          <div style="display:flex;gap:4px">
-            <a href="${adminBase}" class="btn btn-ghost btn-sm" style="flex:1;font-size:0.78rem;justify-content:center" title="Dashboard">
-              <span class="nav-icon" style="opacity:0.6">${ICONS.dashboard}</span><span class="nav-label">Home</span>
+          <div class="sidebar-footer-actions">
+            <a href="${adminBase}" class="btn btn-ghost btn-sm sidebar-footer-link" title="Dashboard">
+              <span class="nav-icon sidebar-footer-icon">${ICONS.dashboard}</span><span class="nav-label">Home</span>
             </a>
-            <button class="btn btn-ghost btn-sm" id="logout-btn" type="button" style="flex:1;font-size:0.78rem" title="Sign Out">
-              <span class="nav-icon" style="opacity:0.6">${ICONS.logout}</span><span class="nav-label">Sign Out</span>
+            <button class="btn btn-ghost btn-sm sidebar-footer-btn" id="logout-btn" type="button" title="Sign Out">
+              <span class="nav-icon sidebar-footer-icon">${ICONS.logout}</span><span class="nav-label">Sign Out</span>
             </button>
           </div>
         </div>`;
@@ -237,7 +231,7 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
 
   try {
     const saved = localStorage.getItem(SIDEBAR_COLLAPSED_KEY);
-    if (saved === 'true') setCollapsed(true);
+    if (saved === '1') setCollapsed(true);
   } catch {
     /* storage unavailable */
   }
@@ -246,7 +240,7 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
     const willCollapse = !sidebarEl?.classList.contains('sidebar--collapsed');
     setCollapsed(willCollapse);
     try {
-      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(willCollapse));
+      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, willCollapse ? '1' : '0');
     } catch {
       /* ignore */
     }
@@ -333,7 +327,7 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
         const badge = document.getElementById('orders-badge');
         if (badge) {
           badge.textContent = count;
-          badge.style.display = '';
+          badge.classList.remove('orders-badge-hidden');
         }
       }
     }

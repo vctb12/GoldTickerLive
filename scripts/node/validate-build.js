@@ -29,7 +29,7 @@ function error(msg) {
 }
 
 function _warn(msg) {
-  console.warn(`  \u26A0\uFE0F  ${msg}`);
+  console.warn(`  ⚠️  ${msg}`);
   warnings++;
 }
 

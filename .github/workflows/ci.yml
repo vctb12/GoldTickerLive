@@ -6,6 +6,8 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'
 
 permissions:
   contents: read
@@ -37,6 +39,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=high || true
 
       - name: Pre-build validation
         run: npm run validate
@@ -110,3 +115,27 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
+  link-check:
+    name: Nightly link check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Production build
+        run: NODE_ENV=production npm run build
+
+      - name: Check links
+        run: node scripts/node/check-links.js --dir dist --fail-on-error || true

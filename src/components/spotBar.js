@@ -9,6 +9,7 @@
  */
 
 let _barEl = null;
+let _prevXauUsd = null;
 
 export function injectSpotBar(lang = 'en', depth = 0) {
   if (document.getElementById('spot-price-bar')) return;
@@ -53,10 +54,20 @@ export function updateSpotBar(data = {}) {
   if (!_barEl) return;
   if (data.xauUsd != null) {
     const el = _barEl.querySelector('[data-spot-value="xau"]');
-    if (el)
+    if (el) {
       el.textContent =
         '$' +
         data.xauUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      el.classList.remove('spot-change-up', 'spot-change-down', 'spot-change-neutral');
+      if (_prevXauUsd === null) {
+        el.classList.add('spot-change-neutral');
+      } else if (data.xauUsd > _prevXauUsd) {
+        el.classList.add('spot-change-up');
+      } else if (data.xauUsd < _prevXauUsd) {
+        el.classList.add('spot-change-down');
+      }
+      _prevXauUsd = data.xauUsd;
+    }
   }
   if (data.aed24kGram != null) {
     const el = _barEl.querySelector('[data-spot-value="aed"]');

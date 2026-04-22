@@ -12,7 +12,6 @@ import {
 } from './state.js';
 
 let _openPanel = null;
-const _BASE_MODES = ['live', 'compare', 'archive', 'exports', 'method'];
 
 export function mountShell(state, els, onModeChange, onLangChange) {
   // Mount shared shell
