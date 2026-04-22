@@ -1316,6 +1316,13 @@ body.tracker-pro-page {
   color: var(--tp-text-muted);
 }
 
+.tracker-subpanel-intro {
+  font-size: var(--text-sm);
+  color: var(--tp-text-muted);
+  margin-bottom: var(--space-4, 1rem);
+  line-height: var(--leading-relaxed, 1.55);
+}
+
 .tracker-pro-page .gold-ticker {
   z-index: 280;
 }
