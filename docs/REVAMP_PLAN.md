@@ -1022,3 +1022,89 @@ Duplicated from §16 for convenience — see §16 for defaults.
 3. Bilingual strings for all new homepage copy now or follow-up?
 4. Is the tracker sticky control bar OK to ship if it changes the visual
    identity of the page materially?
+
+---
+
+## 26. Codebase architecture snapshot
+
+_Absorbs `docs/codebase-audit.md`. A concise snapshot. For long-form module
+catalogues and deep architecture notes see the reference doc
+`docs/ARCHITECTURE.md`. For design tokens see `docs/DESIGN_TOKENS.md`._
+
+### Routing
+
+File-based static site with Vite build. Clean URLs via `index.html`:
+
+| Pattern                                      | Example                                                 |
+| -------------------------------------------- | ------------------------------------------------------- |
+| Homepage                                     | `/`                                                     |
+| Country gold price                           | `/{country}/gold-price/`                                |
+| City gold prices                             | `/{country}/{city}/gold-prices/`                        |
+| City gold shops                              | `/{country}/{city}/gold-shops/`                         |
+| Karat rate per city                          | `/{country}/{city}/gold-rate/{karat}-karat/`            |
+| Legacy country / city / market               | `/countries/*.html` (kept; see §25.1 A2)                |
+| Tools (calc, tracker, history, order, shops) | `/calculator.html`, `/tracker.html`, etc.               |
+| Admin                                        | `/admin/*` (9 pages, Supabase OAuth)                    |
+
+Route helpers: `utils/routeBuilder.js`, `utils/routeValidator.js`,
+`routes/routeRegistry.js`.
+
+### Build
+
+Vite 8 + Terser. `vite.config.js` excludes the 15 country directories,
+`admin/`, `embed/`, `dist/`, `node_modules/`. Those are copied as-is by the
+deploy workflow. Manual chunks: `vendor` (lightweight-charts) and `utils`
+(cache, api, price-calculator, formatter). See `docs/DEPENDENCIES.md` for the
+version matrix.
+
+### External APIs
+
+| Domain                             | Purpose                                             |
+| ---------------------------------- | --------------------------------------------------- |
+| `api.gold-api.com`                 | Primary XAU/USD spot (`goldPriceService.js`)        |
+| `data-asg.goldprice.org`           | Fallback gold price (`lib/api.js`)                  |
+| `open.er-api.com`                  | FX rates (USD base) (`fxService.js`)                |
+| Supabase project URL               | Shops / settings / auth (`lib/supabase-data.js`)    |
+| `api.gdeltproject.org`             | Market news (`scripts/pages/insights.js`)           |
+| `raw.githubusercontent.com`        | DataHub historical baseline (`lib/historical-data.js`) |
+
+Waterfall on gold price: primary → fallback → cache → last-known with label.
+
+### State management
+
+- Homepage: `STATE` object in `src/pages/home.js`.
+- Tracker: `src/tracker/state.js`, URL-hash serialised
+  (`#mode=live&cur=AED&k=24&u=gram`).
+- Shops: filter / shortlist state in `src/pages/shops.js`.
+- Persistence: `src/lib/cache.js` wraps `localStorage`.
+
+Key `localStorage` namespaces: `goldprices_gold_*`, `goldprices_fx_*`,
+`user_prefs`, `gp_pref_lang`, `shops_shortlist`, `tracker_*`, `sb-*-auth-token`,
+`gp_admin_shops`.
+
+### SEO layer
+
+Canonical coverage ≈ 97 %. Sitemap at `/sitemap.xml` with hreflang alternates.
+JSON-LD: `WebSite` + `SearchAction` + `Organization` on home; `BreadcrumbList`
+sitewide; `FAQPage`, `HowTo`, `Dataset` on specific pages. `robots.txt` blocks
+admin, server, tests, node_modules, supabase, repositories, dist.
+
+### Dependencies
+
+See `docs/DEPENDENCIES.md` for the full version matrix. Production deps:
+bcryptjs, cors, express 5, express-rate-limit, helmet, jsonwebtoken, lowdb,
+morgan, uuid. Dev: terser, vite 8.
+
+### CI / CD
+
+15+ GitHub Actions workflows grouped in four tiers:
+
+1. **Merge gate** — `ci.yml`
+2. **Informational scans** — `codeql.yml`, `semgrep.yml`, `perf-check.yml`,
+   `lighthouse.yml`
+3. **Production deploy** — `deploy.yml`
+4. **Content / sync bots** — `post_gold.yml`, `daily-newsletter.yml`,
+   `weekly-newsletter.yml`, `uptime-monitor.yml`, `health_check.yml`,
+   `spike_alert.yml`, `sync-db-to-git.yml`
+
+Only `ci.yml` blocks merges. See `.github/workflows/README.md`.
