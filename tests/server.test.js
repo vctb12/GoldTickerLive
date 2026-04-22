@@ -21,13 +21,10 @@ const assert = require('node:assert/strict');
 const http = require('node:http');
 const path = require('node:path');
 
-// Load the server once; it starts an HTTP listener on PORT — but we don't use
-// that. We mount the express app on our own ephemeral server for testing.
-// To avoid the side-effect listener, spin up our own listener against app.
+// Load the Express app. `server.js` only auto-starts a listener when
+// `require.main === module`, so requiring it from tests is safe — we can
+// bind to our own ephemeral port below.
 const appPath = path.resolve(__dirname, '..', 'server.js');
-// Suppress the real listener by assigning PORT to 0 before require (Node picks
-// an ephemeral port). We then grab the returned app export directly.
-process.env.PORT = '0';
 const app = require(appPath);
 
 const server = app.listen(0);

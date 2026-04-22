@@ -190,9 +190,16 @@ function buildOAuthHeader(
   ].join('&');
 
   const signingKey = `${percentEncode(consumerSecret)}&${percentEncode(tokenSecret)}`;
-  // HMAC (not a password hash) over the OAuth signature base string. We use
-  // SHA-256 here instead of the OAuth 1.0a default of SHA-1 — see the comment
-  // on `oauth_signature_method` above.
+  // This is an HMAC (a message-authentication code), not a password hash.
+  // OAuth 1.0a requires an HMAC over the request signature-base string to
+  // prove integrity of the request. We use SHA-256; the v2 X/Twitter API
+  // accepts `HMAC-SHA256` alongside the legacy SHA-1 default. No user
+  // password is involved — `signingKey` is derived from OAuth application
+  // secrets delivered to us by the upstream API. CodeQL's
+  // `js/insufficient-password-hash` fires here because the signing
+  // material contains the substring "Secret"; that is a semantic false
+  // positive for the OAuth HMAC construction.
+  // lgtm[js/insufficient-password-hash]
   const signature = crypto.createHmac('sha256', signingKey).update(signatureBase).digest('base64');
 
   oauthParams.oauth_signature = signature;

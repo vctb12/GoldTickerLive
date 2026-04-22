@@ -29,7 +29,14 @@ export function escape(value) {
     .replace(/'/g, '&#39;');
 }
 
-/** Return the URL only if it uses a safe http(s) protocol, otherwise ''. */
+/** Return the URL only if it is safe to use as an `<a href>` value in a
+ *  browser context. Allows http(s), root-relative, relative (`./` / `../`),
+ *  and fragment-only URLs. Explicitly rejects `javascript:`, `data:`,
+ *  `vbscript:`, `file:`, and any other non-allowlisted scheme.
+ *
+ *  ⚠️ This is for *navigation URLs in the browser only*. It is NOT a
+ *  filesystem-path sanitizer — do not pass its output to `fs.*` calls or
+ *  to server-side path resolution. */
 export function safeHref(url) {
   if (!url || typeof url !== 'string') return '';
   const trimmed = url.trim();
@@ -100,16 +107,8 @@ export function el(tag, attrs, children) {
 }
 
 /**
- * Assign a previously-escaped, trusted HTML string to an element.
- *
- * ⚠️ The caller is responsible for ensuring the string was built entirely from
- * `escape()`-wrapped fragments or from hard-coded literals. Do NOT pass raw
- * user input. This helper exists so the CI regression guard can allowlist a
- * single named function instead of every ad-hoc `.innerHTML =` assignment.
+ * NOTE: this module intentionally does not export a `setTrustedHTML`
+ * helper. Scattering trusted-HTML sinks tends to metastasize — every
+ * caller becomes a new thing to audit. If a genuine bulk-HTML use case
+ * emerges, prefer building a `DocumentFragment` via `el()` instead.
  */
-export function setTrustedHTML(node, html) {
-  // Intentional: caller guarantees `html` is safe (built from `escape()` output
-  // or hardcoded literals). The per-file baseline in
-  // scripts/node/check-unsafe-dom.js is how we regression-gate this.
-  if (node) node.innerHTML = html;
-}

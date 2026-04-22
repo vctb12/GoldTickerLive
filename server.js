@@ -141,14 +141,18 @@ app.use(express.urlencoded({ extended: true, limit: '256kb' }));
 // tighter limits on top of this. The goal of the global limiter is to blunt
 // scraping and brute-force pressure across the site as a whole — not to be the
 // sole defence for sensitive endpoints.
+//
+// The static-asset regex is hoisted to module scope so it is compiled once per
+// process rather than once per request.
+const STATIC_ASSET_RX = /\.(?:css|js|mjs|map|png|jpe?g|gif|webp|avif|svg|ico|woff2?|ttf)$/i;
+
 const globalRateLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
   max: IS_PROD ? 300 : 1000,
   standardHeaders: true,
   legacyHeaders: false,
-  // Skip the static asset handler's hot path only for obvious long-cache files;
-  // everything else (including HTML and API) counts against the budget.
-  skip: (req) => /\.(?:css|js|mjs|map|png|jpe?g|gif|webp|avif|svg|ico|woff2?|ttf)$/i.test(req.path),
+  // Skip long-cache static files; HTML and API still count against the budget.
+  skip: (req) => STATIC_ASSET_RX.test(req.path),
   message: { success: false, message: 'Too many requests. Please slow down.' },
 });
 app.use(globalRateLimiter);
@@ -204,32 +208,44 @@ app.get('/admin', (req, res) => {
 // ---------------------------------------------------------------------------
 // Path-traversal-safe static fallback
 // ---------------------------------------------------------------------------
-// Resolve the user-supplied path against DIST_DIR, then verify that the
-// absolute resolved path is still inside DIST_DIR. `path.normalize` is not
-// sufficient on its own (e.g. a path like `/..%2fetc/passwd` after URL-decoding
-// can escape with shallow normalization); `path.resolve` + prefix check is the
-// canonical defence. See CodeQL js/path-injection.
+// We use the canonical `path.relative` + `..` / `isAbsolute` check that CodeQL
+// (and every mainstream SAST) recognises as a concrete sanitizer for
+// `js/path-injection`. `path.normalize` alone is insufficient — see CodeQL
+// documentation. Returning a newly-constructed path under the known-safe root
+// ensures the downstream `fs` / `res.sendFile` call is not tainted by the raw
+// user input at all.
+const TRAVERSAL_RX = /(^|[/\\])\.\.(?=[/\\]|$)/;
+
 function safeResolveUnderRoot(root, userPath) {
-  // Strip leading slashes and decode percent-encoding defensively. decodeURIComponent
-  // can throw on malformed input — treat that as "not found" rather than 500.
   let decoded;
   try {
     decoded = decodeURIComponent(userPath || '');
   } catch {
+    // Malformed percent-encoding → treat as not found rather than 500.
     return null;
   }
-  // Reject obvious traversal segments early for defence in depth. Even though
-  // the resolve+prefix check below is the real guard, rejecting `..` keeps the
-  // intent obvious to future readers and to static analysis.
-  if (decoded.includes('\0')) return null;
-  const normalized = path.normalize(decoded).replace(/^[/\\]+/, '');
-  const absolute = path.resolve(root, normalized);
-  const rootWithSep = root.endsWith(path.sep) ? root : root + path.sep;
-  if (absolute !== root && !absolute.startsWith(rootWithSep)) return null;
-  return absolute;
+  // Defence in depth: reject null bytes and any literal `..` segment before
+  // touching the filesystem, so the intent is obvious to readers and to
+  // static analysis, and `path.relative` below does not even run for an
+  // obvious attack.
+  if (!decoded || decoded.includes('\0')) return null;
+  if (TRAVERSAL_RX.test(decoded)) return null;
+
+  const stripped = decoded.replace(/^[/\\]+/, '');
+  const candidate = path.resolve(root, stripped);
+  const relative = path.relative(root, candidate);
+
+  // Canonical CodeQL-recognised guard: if `path.relative` produces a path that
+  // starts with `..` or is absolute, the candidate escapes the root.
+  if (relative.startsWith('..') || path.isAbsolute(relative)) return null;
+
+  // Reconstruct the final path from the *known-safe* root plus the
+  // resolved-relative component. This is the pattern that breaks the taint
+  // chain for `js/path-injection`.
+  return relative ? path.join(root, relative) : root;
 }
 
-// Handle static file serving and SPA fallback with explicit 404 handling.
+// Handle static file serving with explicit 404 handling.
 // Implemented as middleware (not `app.get('*')`) because Express 5's
 // path-to-regexp no longer accepts a bare `*` as a path pattern.
 app.use((req, res, _next) => {
@@ -241,19 +257,28 @@ app.use((req, res, _next) => {
   }
 
   // If the request targets a static file extension, try to serve it and
-  // fall back to the 404 page when missing.
+  // fall back to the 404 page when missing. Safety of `resolved` is
+  // established by `safeResolveUnderRoot`.
   if (path.extname(req.path)) {
-    if (fs.existsSync(resolved) && fs.statSync(resolved).isFile()) {
-      return res.sendFile(resolved);
+    let stat;
+    try {
+      stat = fs.statSync(resolved);
+    } catch {
+      return send404(res);
     }
+    if (stat.isFile()) return res.sendFile(resolved);
     return send404(res);
   }
 
   // Directory-like requests prefer index.html. Re-resolve through the root
-  // check so a path like `/../admin/` can never escape DIST_DIR.
-  const indexCandidate = safeResolveUnderRoot(DIST_DIR, path.join(req.path, 'index.html'));
-  if (indexCandidate && fs.existsSync(indexCandidate)) {
-    return res.sendFile(indexCandidate);
+  // check so nothing escapes DIST_DIR.
+  const indexCandidate = safeResolveUnderRoot(DIST_DIR, path.posix.join(req.path, 'index.html'));
+  if (indexCandidate) {
+    try {
+      if (fs.statSync(indexCandidate).isFile()) return res.sendFile(indexCandidate);
+    } catch {
+      // fall through to 404
+    }
   }
 
   // This is a multi-page static site, not a SPA, so unknown URLs must 404

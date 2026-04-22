@@ -784,49 +784,81 @@
       /* ── Cache-safe sentinel ──────────────────────────────────
        * API keys must NEVER be written to localStorage or serialised to
        * exported JSON: any XSS, any stolen laptop, any synced browser
-       * profile becomes a full key compromise. We use a sentinel string
-       * that the save logic recognises as "user did not change this key —
-       * keep the value already in Supabase".
+       * profile becomes a full key compromise. We use a per-load random
+       * sentinel that the save logic recognises as "user did not change
+       * this key — keep the value already in Supabase".
+       *
+       * The sentinel is randomised per page load so that even if an
+       * attacker (via stored XSS, or a user accidentally typing the
+       * literal placeholder) submits the string, it will not match this
+       * session's sentinel and will therefore be treated as a legitimate
+       * rotation rather than a no-op.
        */
-      const SECRET_PLACEHOLDER = '__GP_UNCHANGED__';
+      const SECRET_PLACEHOLDER =
+        '__GP_UNCHANGED__' +
+        (window.crypto?.randomUUID
+          ? window.crypto.randomUUID()
+          : String(Date.now()) + Math.random().toString(36).slice(2));
 
-      function stripSecrets(s) {
+      /** Build a cache-safe copy of settings with raw secrets removed.
+       *  Note: we explicitly construct a new apiKeys object rather than
+       *  passing through the live one, so static analysis can see that the
+       *  secret values never reach localStorage. */
+      function buildCacheable(s) {
+        const hasGoldKey = !!(s.apiKeys && s.apiKeys.goldApi);
+        const hasFxKey = !!(s.apiKeys && s.apiKeys.fxApi);
+        const adsenseId =
+          (s.apiKeys && typeof s.apiKeys.adsensePublisherId === 'string'
+            ? s.apiKeys.adsensePublisherId
+            : '') || '';
         return {
-          ...s,
-          apiKeys: s.apiKeys
-            ? {
-                // Persist only whether the key is set, not its value.
-                goldApi: s.apiKeys.goldApi ? SECRET_PLACEHOLDER : '',
-                fxApi: s.apiKeys.fxApi ? SECRET_PLACEHOLDER : '',
-                // AdSense publisher ID is a *public* identifier (it ships
-                // inside the site's HTML), so caching it is fine.
-                adsensePublisherId: s.apiKeys.adsensePublisherId || '',
-              }
-            : { goldApi: '', fxApi: '', adsensePublisherId: '' },
+          marginPercent: s.marginPercent,
+          vatRate: s.vatRate,
+          whatsappNumber: s.whatsappNumber,
+          siteName: s.siteName,
+          tagline: s.tagline,
+          socialLinks: s.socialLinks,
+          features: s.features,
+          adminNotes: s.adminNotes,
+          // ---- key material is NEVER written to localStorage ----
+          apiKeysStatus: {
+            goldApi: hasGoldKey ? 'configured' : 'unset',
+            fxApi: hasFxKey ? 'configured' : 'unset',
+          },
+          // AdSense publisher ID is a *public* identifier that already
+          // ships inside the site's HTML, so caching it is fine.
+          adsensePublisherId: adsenseId,
         };
       }
 
-      /** Cache settings in localStorage for offline resilience. */
+      /** Cache a safe, secret-free settings snapshot in localStorage. */
       function cacheSettings(s) {
         try {
-          // Strip raw secrets before writing to disk-backed storage.
-          localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify(stripSecrets(s)));
+          localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify(buildCacheable(s)));
           localStorage.setItem(LAST_SAVED_KEY, String(Date.now()));
         } catch {}
       }
 
-      /** Read cached settings from localStorage. */
+      /** Read cached settings from localStorage. The cached shape never
+       *  contains raw API keys — only status flags and the public AdSense
+       *  ID — so we reconstruct an apiKeys object where the two secret
+       *  slots are the sentinel, which the UI renders as "configured". */
       function readCachedSettings() {
         try {
           const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
           if (!raw) return null;
           const saved = JSON.parse(raw);
+          const status = saved.apiKeysStatus || {};
           return {
             ...DEFAULTS,
             ...saved,
             socialLinks: { ...DEFAULTS.socialLinks, ...(saved.socialLinks || {}) },
             features: { ...DEFAULTS.features, ...(saved.features || {}) },
-            apiKeys: { ...DEFAULTS.apiKeys, ...(saved.apiKeys || {}) },
+            apiKeys: {
+              goldApi: status.goldApi === 'configured' ? SECRET_PLACEHOLDER : '',
+              fxApi: status.fxApi === 'configured' ? SECRET_PLACEHOLDER : '',
+              adsensePublisherId: saved.adsensePublisherId || '',
+            },
           };
         } catch {
           return null;
@@ -1015,8 +1047,9 @@
       function exportSettings() {
         const s = readForm();
         // Scrub secrets from the exported file. Exported JSON should be
-        // shareable between admins without leaking credentials.
-        const safe = stripSecrets(s);
+        // shareable between admins without leaking credentials. Reuse the
+        // same cacheable shape we use for localStorage.
+        const safe = buildCacheable(s);
         const blob = new Blob([JSON.stringify(safe, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -1031,12 +1064,29 @@
         reader.onload = (e) => {
           try {
             const parsed = JSON.parse(e.target.result);
+            // Imported files must never provide raw API key material —
+            // exports scrub them and manual edits should too. Merge status
+            // flags if present; otherwise preserve whatever is currently
+            // configured in Supabase.
+            const prev = _lastLoadedSettings?.apiKeys || {};
+            const status = parsed.apiKeysStatus || {};
             const merged = {
               ...DEFAULTS,
               ...parsed,
               socialLinks: { ...DEFAULTS.socialLinks, ...(parsed.socialLinks || {}) },
               features: { ...DEFAULTS.features, ...(parsed.features || {}) },
-              apiKeys: { ...DEFAULTS.apiKeys, ...(parsed.apiKeys || {}) },
+              apiKeys: {
+                goldApi:
+                  status.goldApi === 'configured' || prev.goldApi
+                    ? SECRET_PLACEHOLDER
+                    : '',
+                fxApi:
+                  status.fxApi === 'configured' || prev.fxApi
+                    ? SECRET_PLACEHOLDER
+                    : '',
+                adsensePublisherId:
+                  parsed.adsensePublisherId || prev.adsensePublisherId || '',
+              },
             };
             populateForm(merged);
             showToast('Settings imported. Click Save to apply.', 'success');
