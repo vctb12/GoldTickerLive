@@ -1087,7 +1087,7 @@ function renderFilterPills() {
     pills.push({
       type: 'search',
       value: '',
-      label: `"${esc(q)}"`,
+      label: `"${q}"`,
       ariaLabel: `Remove "${q}" search filter`,
     });
   }
@@ -1107,8 +1107,8 @@ function renderFilterPills() {
       .map((pill) => {
         const ariaLabel = pill.ariaLabel || `Remove ${pill.label} filter`;
         return `
-      <button class="shops-filter-pill" data-type="${pill.type}" data-value="${pill.value || ''}" type="button" aria-label="${ariaLabel}">
-        ${pill.label}
+      <button class="shops-filter-pill" data-type="${esc(String(pill.type || ''))}" data-value="${esc(String(pill.value || ''))}" type="button" aria-label="${esc(String(ariaLabel || ''))}">
+        ${esc(String(pill.label || ''))}
         <span class="shops-filter-pill-remove" aria-hidden="true">×</span>
       </button>
     `;
