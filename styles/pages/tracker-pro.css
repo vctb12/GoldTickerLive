@@ -343,7 +343,7 @@ body.tracker-pro-page {
 .tracker-side-block {
   border-radius: var(--radius-lg);
   border: 1px solid var(--tp-border);
-  background: linear-gradient(180deg, var(--surface-primary) 0%, var(--surface-accent) 100%);
+  background: var(--surface-accent);
   padding: 1rem;
 }
 
