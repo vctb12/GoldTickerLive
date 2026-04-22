@@ -18,8 +18,35 @@
 >    §1 or one of the tracks in §2, stop and raise it in the PR description rather than
 >    silently expanding scope.
 >
-> **Last updated:** 2026-04-22 · **Round:** 2 (Track A focus-ring audit cleanup in flight)
-> · **Branch:** `copilot/revamp-tracker-html-page` (successor: `copilot/continue-working-in-the-plan`)
+> **Last updated:** 2026-04-22 · **Round:** 2 (Track A focus-ring audit + docs
+> consolidation sweep) · **Branch:** `copilot/revamp-tracker-html-page`
+> (successor: `copilot/continue-working-in-the-plan`)
+
+> **📚 Master consolidation index.** This file is the single consolidated plan
+> for the entire revamp *and* for the pre-existing production/admin tracks that
+> used to live in other docs. Every planning-style file in `docs/` now points
+> here. Sections §0–§18 own the homepage + nav + tracker revamp; §19–§28 own
+> the consolidated production tracks, decisions, governance, roadmaps, risks,
+> and historical logs. See [`docs/README.md`](./README.md) for the pointer map.
+
+| §       | Owns                                                                  | Absorbed from                                             |
+| ------- | --------------------------------------------------------------------- | --------------------------------------------------------- |
+| §0      | Product context (mission, users, jobs, pillars)                       | `product/PRD.md`                                          |
+| §0.1    | Trust guardrails (labels, required elements)                          | `product/PHASE0_GUARDRAILS.md`                            |
+| §0.2    | Reusable trust copy snippets                                          | `product/TRUST_SNIPPETS.md`                               |
+| §1–§18  | Homepage + nav + tracker revamp (current work)                        | _native to this file_                                     |
+| §19     | Decisions log                                                         | `product/DECISIONS.md`                                    |
+| §20     | Project memory                                                        | `product/MEMORY.md`                                       |
+| §21     | Rollout governance (release waves, merge gate)                        | `product/ROLLOUT_GOVERNANCE.md`                           |
+| §22     | Production-revamp tracks (30-phase, post-homepage)                    | `REVAMP_STATUS.md`                                        |
+| §23     | Historical execution summary (20-phase)                               | `REVAMP_EXECUTION_SUMMARY.md`                             |
+| §24     | Product roadmap (monetization, newsletter, portfolio, API)            | `ROADMAP_IMPLEMENTATION.md`                               |
+| §25     | Known issues, risks, open items                                       | `issues-found.md` + `risks.md` + `pr-audit.md` + `LIMITATIONS.md` |
+| §26     | Codebase architecture snapshot                                        | `codebase-audit.md`                                       |
+| §27     | Historical execution log                                              | `execution-log.md`                                        |
+| §28     | Task backlog                                                          | `product/TASKS.md`                                        |
+
+---
 
 ---
 
