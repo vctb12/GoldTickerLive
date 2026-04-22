@@ -4,29 +4,49 @@
 */
 
 :root {
-  --tp-bg: linear-gradient(180deg, #faf6ef 0%, #f7f2e7 48%, #f3ede1 100%);
-  --tp-panel: #fffdf9;
-  --tp-panel-2: #f9f5eb;
-  --tp-border: #e7dcc4;
-  --tp-border-strong: #dac59a;
-  --tp-text: #1e1811;
-  --tp-text-muted: #6f624f;
-  --tp-text-faint: #9d8c72;
-  --tp-gold: #c49a44;
-  --tp-gold-strong: #9c7325;
-  --tp-gold-soft: rgb(196 154 68 / 12%);
-  --tp-accent: #9c7325;
-  --tp-live: #1b7b3a;
-  --tp-live-soft: rgb(27 123 58 / 10%);
-  --tp-danger: #b3272f;
-  --tp-danger-soft: rgb(179 39 47 / 8%);
-  --tp-blue: #1455a4;
-  --tp-blue-soft: rgb(20 85 164 / 8%);
-  --tp-shadow-1: 0 10px 28px rgb(61 46 21 / 7%), 0 2px 6px rgb(61 46 21 / 3%);
-  --tp-shadow-2: 0 16px 40px rgb(61 46 21 / 10%), 0 4px 10px rgb(196 153 62 / 6%);
-  --tp-radius-md: 14px;
-  --tp-radius-sm: 10px;
-  --tp-shell: min(1400px, calc(100% - 32px));
+  /* Tracker-local tokens are aliases of canonical site tokens defined in
+     styles/global.css. This keeps the tracker visually coherent with the
+     rest of the site — same palette, same radii, same elevation. Do not
+     re-introduce hand-picked hex values here. */
+
+  /* Surfaces */
+  --tp-bg: var(--surface-canvas);
+  --tp-panel: var(--surface-primary);
+  --tp-panel-2: var(--surface-secondary);
+
+  /* Borders */
+  --tp-border: var(--border-default);
+  --tp-border-strong: var(--border-strong);
+
+  /* Text */
+  --tp-text: var(--text-primary);
+  --tp-text-muted: var(--text-secondary);
+  --tp-text-faint: var(--text-tertiary);
+
+  /* Gold / accent — unified with site gold palette */
+  --tp-gold: var(--color-gold);
+  --tp-gold-strong: var(--color-gold-dark);
+  --tp-gold-soft: var(--color-gold-glow);
+  --tp-accent: var(--color-gold-dark);
+
+  /* Status — live / danger / info */
+  --tp-live: var(--color-live);
+  --tp-live-soft: var(--color-live-bg);
+  --tp-danger: var(--color-error);
+  --tp-danger-soft: var(--color-error-bg);
+  --tp-blue: var(--color-fixed);
+  --tp-blue-soft: var(--color-fixed-bg);
+
+  /* Elevation */
+  --tp-shadow-1: var(--shadow-sm);
+  --tp-shadow-2: var(--shadow-md);
+
+  /* Radii */
+  --tp-radius-md: var(--radius-md);
+  --tp-radius-sm: var(--radius-sm);
+
+  /* Layout */
+  --tp-shell: min(var(--content-max-width, 1400px), calc(100% - 2 * var(--page-gutter, 16px)));
 }
 
 body.tracker-pro-page {
@@ -2467,7 +2487,7 @@ body.tracker-workspace-basic .tracker-modes {
   .tracker-subpanel {
     box-shadow: none;
     border: 1px solid #d0c8b8;
-    page-break-inside: avoid;
+    break-inside: avoid;
   }
 
   .tracker-hero-copy h1 {
