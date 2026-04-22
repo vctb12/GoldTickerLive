@@ -374,6 +374,25 @@
   gap: 0.9rem;
 }
 
+/* Footnote under the featured markets grid — makes the "Featured" semantics
+   explicit (editorial, not paid). Muted but legible. */
+.shops-featured-note {
+  margin: 0.85rem 0 0;
+  font-size: var(--text-xs, 0.78rem);
+  line-height: var(--leading-normal, 1.5);
+  color: var(--color-text-muted, rgb(232 224 204 / 65%));
+  font-style: italic;
+  max-width: 62ch;
+}
+
+/* Directory-reviewed date under the "Listings" heading inside the filter bar.
+   Mirrors the hero trust banner for trust + freshness at the point of filter. */
+.shops-directory-reviewed {
+  margin: 0.25rem 0 0.5rem;
+  font-size: var(--text-xs, 0.78rem);
+  color: var(--color-text-muted, rgb(232 224 204 / 65%));
+}
+
 .featured-card {
   background: var(--color-surface, #1a1814);
   border: 1px solid rgb(212 160 23 / 28%);

@@ -593,6 +593,87 @@ export function renderArchive() {
       : 'baseline';
     _el.archiveMeta.textContent = `${rows.length}/${_state.history.length} records · ${sourceInfo} · 2019–present · filter by date or source`;
   }
+
+  renderSeasonal();
+}
+
+/**
+ * Seasonal patterns — average spot USD/oz by calendar month across the full
+ * history window. Highlights the monthly min/max months so users can see
+ * typical seasonal skew at a glance. Uses baseline + session data.
+ */
+export function renderSeasonal() {
+  if (!_el.seasonalResults) return;
+  const history = Array.isArray(_state.history) ? _state.history : [];
+  if (!history.length) {
+    _el.seasonalResults.replaceChildren();
+    return;
+  }
+
+  // Aggregate sum + count per month (0-indexed: Jan=0, Dec=11).
+  const sums = new Array(12).fill(0);
+  const counts = new Array(12).fill(0);
+  for (const r of history) {
+    const d = r.date instanceof Date ? r.date : new Date(r.date);
+    if (!Number.isFinite(d.getTime())) continue;
+    const v = Number(r.spot);
+    if (!Number.isFinite(v) || v <= 0) continue;
+    const m = d.getMonth();
+    sums[m] += v;
+    counts[m] += 1;
+  }
+
+  const monthNames = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  const monthly = [];
+  for (let m = 0; m < 12; m++) {
+    if (counts[m] > 0) monthly.push({ m, label: monthNames[m], avg: sums[m] / counts[m] });
+  }
+
+  if (!monthly.length) {
+    _el.seasonalResults.replaceChildren();
+    return;
+  }
+
+  const avgs = monthly.map((x) => x.avg);
+  const minAvg = Math.min(...avgs);
+  const maxAvg = Math.max(...avgs);
+  const minMonth = monthly.find((x) => x.avg === minAvg);
+  const maxMonth = monthly.find((x) => x.avg === maxAvg);
+  const overall = avgs.reduce((a, b) => a + b, 0) / avgs.length;
+  const range = maxAvg - minAvg;
+  const pctSpread = (range / overall) * 100;
+
+  const yearsSpan = (() => {
+    const times = history
+      .map((r) => (r.date instanceof Date ? r.date : new Date(r.date)).getTime())
+      .filter(Number.isFinite);
+    if (!times.length) return '';
+    const years = (Math.max(...times) - Math.min(...times)) / (365.25 * 24 * 3600 * 1000);
+    return years >= 1 ? ` over ${years.toFixed(1)} yrs` : '';
+  })();
+
+  // Build result cards: overall + each month with rel-to-average delta.
+  const cards = [
+    `<div class="tracker-result-card"><div class="tracker-result-k">Typical high month</div><div class="tracker-result-v">${maxMonth.label}</div><div class="tracker-result-s">$${maxAvg.toFixed(0)} avg spot</div></div>`,
+    `<div class="tracker-result-card"><div class="tracker-result-k">Typical low month</div><div class="tracker-result-v">${minMonth.label}</div><div class="tracker-result-s">$${minAvg.toFixed(0)} avg spot</div></div>`,
+    `<div class="tracker-result-card"><div class="tracker-result-k">Seasonal spread</div><div class="tracker-result-v">${pctSpread.toFixed(1)}%</div><div class="tracker-result-s">high vs low month${yearsSpan}</div></div>`,
+  ];
+
+  _el.seasonalResults.innerHTML = cards.join('');
 }
 
 export function renderBrief() {

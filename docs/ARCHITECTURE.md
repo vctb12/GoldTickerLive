@@ -193,7 +193,11 @@ admin API and server-side data persistence).
 │   ├── audit-pages.js  → Page structure audit
 │   ├── check-links.js  → Link checker
 │   ├── seo-audit.js    → SEO audit
-│   ├── generate-sitemap.js → Sitemap generator
+│   ├── generate-sitemap.js → Sitemap generator (parity tested in `tests/sitemap.test.js`)
+│   ├── externalize-analytics.js → Codemod that moves inline gtag/Clarity snippets
+│   │                              into `assets/analytics.js` so CSP can drop
+│   │                              `'unsafe-inline'`. Runs in `--check` mode via
+│   │                              `npm run validate`.
 │   └── …               → Notifications, alerts, social posting
 │
 ├── server/             → Server-side code

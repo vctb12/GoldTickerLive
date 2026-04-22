@@ -3,18 +3,8 @@
   <head>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578581906562588"
          crossorigin="anonymous"></script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3GNY9M8TE"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-
-      gtag('config', 'G-K3GNY9M8TE');
-    </script>
     <meta charset="UTF-8" />
+    <script src="assets/analytics.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta http-equiv="X-Frame-Options" content="DENY" />
@@ -258,6 +248,10 @@
         <div class="shops-results-inner">
           <h2 id="shops-featured-title" class="shops-featured-title">Featured Markets</h2>
           <div id="shops-featured-grid" class="shops-featured-grid"></div>
+          <p id="shops-featured-note" class="shops-featured-note">
+            Featured: editorially selected markets for this region. Not a paid placement and not
+            an endorsement of any individual shop inside the market.
+          </p>
         </div>
       </section>
 
@@ -266,6 +260,7 @@
           <div class="shops-results-head">
             <div class="shops-results-head-left">
               <h2 id="shops-results-title">Listings</h2>
+              <p id="shops-directory-reviewed" class="shops-directory-reviewed" hidden></p>
               <div id="shops-filter-pills" class="shops-filter-pills"></div>
               <p id="shops-active-filters" class="shops-active-filters"></p>
               <p id="shops-results-legend" class="shops-results-legend">

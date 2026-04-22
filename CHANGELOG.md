@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Track A, Phase 5 — CSP hardening
+
+- feat(security): externalize inline analytics to `assets/analytics.js` (gtag loader + Clarity
+  IIFE + DNT/opt-out gate). A new CJS codemod `scripts/node/externalize-analytics.js` walks every
+  `.html` file in the repo and swaps the three legacy inline blocks for a single
+  `<script src="…/assets/analytics.js" defer></script>`, computing the correct relative depth per
+  file. Idempotent; `--check` mode.
+- feat(security): drop `'unsafe-inline'` from `scriptSrc` in `server.js` CSP now that all inline
+  analytics is externalized.
+- chore(ci): `npm run validate` now runs `externalize-analytics --check` so a regression adding new
+  inline analytics fails CI.
+
+### Track C — Product polish
+
+- feat(tracker): `renderSeasonal()` in `src/tracker/render.js` populates the previously-dead
+  `#tp-seasonal-results` with typical-high month, typical-low month, and seasonal spread (%),
+  derived from monthly averages over `state.history`.
+- feat(shops): bilingual "Featured: editorially selected markets…" footnote under the featured grid
+  (`#shops-featured-note`) plus "Directory last reviewed {date}" label inside the filter bar
+  (`#shops-directory-reviewed`). Both wired through `applyLang()` in `src/pages/shops.js`.
+- feat(design): new site-wide trust utilities in `styles/global.css` — `.trust-banner` (+
+  `--success` variant), `.freshness-label` (+ `--live` / `--cached` / `--stale` / `--delayed` /
+  `--estimated` / `--baseline`), `.methodology-link`, `.disclaimer` (+ `--inline`), backed by new
+  `--color-warning*` tokens (amber for stale/cached/delayed data, not red) with explicit dark-mode
+  overrides.
+
+### Tests
+
+- test(sitemap): new `tests/sitemap.test.js` (6 assertions) — runs the sitemap generator, asserts
+  every `<loc>` uses the canonical apex origin (no www, no http), that core static pages and every
+  on-disk country page are covered, that `<loc>` values are unique, and that `offline.html` is not
+  in the sitemap.
+- docs: new `docs/SEO_SITEMAP_GUIDE.md` documents how to add URLs and how the sitemap is verified.
+
 ### Track A — Stabilize (production revamp foundations)
 
 - chore(repo): remove tracked build artifacts (`dist/`, `playwright-report/`, `test-results/`) from

@@ -53,6 +53,9 @@ const TXT = {
     lead: 'Browse directory listings across countries covered on GoldPrices. Use filters to narrow by region, country, city, and specialty. Shop information is for reference, and business details are shown where available.',
     trustLabel: 'Directory reference listings',
     trustDate: 'Last content review {date}',
+    directoryReviewed: 'Directory last reviewed {date}',
+    featuredNote:
+      'Featured: editorially selected markets for this region. Not a paid placement and not an endorsement of any individual shop inside the market.',
     statListings: 'Listed markets',
     statCountries: 'Countries',
     statRegions: 'Regions',
@@ -141,6 +144,9 @@ const TXT = {
     lead: 'تصفح إدراجات الدليل ضمن الدول التي يغطيها GoldPrices. استخدم الفلاتر حسب المنطقة والدولة والمدينة والتخصص. معلومات المحلات مرجعية، وتظهر تفاصيل النشاط حيثما كانت متاحة.',
     trustLabel: 'إدراجات مرجعية للدليل',
     trustDate: 'آخر مراجعة للمحتوى {date}',
+    directoryReviewed: 'آخر مراجعة للدليل {date}',
+    featuredNote:
+      'مختارة: أسواق مختارة تحريرياً لهذه المنطقة. ليست إعلاناً مدفوعاً ولا تزكية لأي محل بعينه داخل السوق.',
     statListings: 'الأسواق المدرجة',
     statCountries: 'الدول',
     statRegions: 'المناطق',
@@ -536,6 +542,17 @@ function applyStaticText() {
   if (trustEl) {
     trustEl.textContent = t('trustDate').replace('{date}', dateStr);
   }
+
+  // Directory-reviewed label in filter bar (separate from hero trust banner)
+  const directoryReviewedEl = document.getElementById('shops-directory-reviewed');
+  if (directoryReviewedEl) {
+    directoryReviewedEl.textContent = t('directoryReviewed').replace('{date}', dateStr);
+    directoryReviewedEl.hidden = false;
+  }
+
+  // Featured section footnote (bilingual)
+  const featuredNoteEl = document.getElementById('shops-featured-note');
+  if (featuredNoteEl) featuredNoteEl.textContent = t('featuredNote');
 
   document.getElementById('shops-popular-label').textContent = t('popularMarkets');
   document.getElementById('shops-search-label').textContent = t('searchLabel');

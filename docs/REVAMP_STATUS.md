@@ -19,9 +19,11 @@ Tracking carry-over debt during the 30-phase production revamp. **This file is d
   - [x] Smoke suite covers 404 + country page
 - [x] Phase 4 — Lint / format single source of truth
   - [x] Husky v9 pre-commit hook (lint-staged only; `npm test` removed from hook)
-- [ ] Phase 5 — CSP hardening
-  - [ ] Remove inline `<script>` gtag/clarity snippets (deferred to follow-up PR)
-  - [ ] Drop `'unsafe-inline'` from `scriptSrc` after report-only bake-in
+- [x] Phase 5 — CSP hardening
+  - [x] Externalized inline gtag/clarity snippets to `assets/analytics.js` via
+        `scripts/node/externalize-analytics.js` codemod (501 HTML files rewritten; 189 no-analytics
+        files untouched). Idempotent `--check` mode wired into `npm run validate`.
+  - [x] Dropped `'unsafe-inline'` from `scriptSrc` in `server.js` CSP.
 
 ## Track B — Backend, Auth & Users (not started)
 
@@ -34,11 +36,13 @@ Tracking carry-over debt during the 30-phase production revamp. **This file is d
 - [ ] Phase 12 — Background jobs (price poll, alert eval, aggregates)
 - [ ] Phase 13 — Notifications (email + web push)
 
-## Track C — Product polish & Trust (not started)
+## Track C — Product polish & Trust (in progress)
 
-- [ ] Phase 14 — Trust & labeling audit
-- [ ] Phase 15 — Shops directory trust pass
-- [ ] Phase 16 — Tracker UX polish
+- [ ] Phase 14 — Trust & labeling audit (in progress)
+- [ ] Phase 15 — Shops directory trust pass (in progress — featured-section editorial footnote +
+      "Directory last reviewed" label added; bilingual copy wired in `src/pages/shops.js`)
+- [ ] Phase 16 — Tracker UX polish (in progress — `renderSeasonal()` now populates
+      `#tp-seasonal-results` with monthly high/low/spread from `state.history`)
 - [ ] Phase 17 — Calculator polish
 - [ ] Phase 18 — Country / city / market pages
 - [ ] Phase 19 — Educational / Learn pages
