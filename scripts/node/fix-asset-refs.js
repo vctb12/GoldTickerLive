@@ -10,7 +10,6 @@
 // refs to root-safe absolute paths so they resolve correctly regardless of
 // page depth.
 const fs = require('fs');
-const path = require('path');
 const { execSync } = require('child_process');
 
 const TARGETS = [
@@ -33,7 +32,7 @@ const filesTouched = new Set();
 
 for (const f of files) {
   let s = fs.readFileSync(f, 'utf8');
-  let before = s;
+  const before = s;
 
   for (const { file, replacement } of TARGETS) {
     // Match ../ (1-6 times) + file, within href="" or src="" attributes.
@@ -47,8 +46,8 @@ for (const f of files) {
   if (s !== before) {
     fs.writeFileSync(f, s);
     filesTouched.add(f);
-    totalChanges += before.split('\n').length - s.split('\n').length; // rough
+    totalChanges += 1;
   }
 }
 
-console.log(`Files touched: ${filesTouched.size}`);
+console.log(`Files touched: ${filesTouched.size} (${totalChanges} edits)`);
