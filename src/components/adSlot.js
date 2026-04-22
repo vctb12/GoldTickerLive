@@ -105,8 +105,7 @@ function _loadAd(container, slotId, _adFormat) {
   ins.dataset.adFormat = 'auto';
   ins.dataset.fullWidthResponsive = 'true';
 
-  container.innerHTML = '';
-  container.appendChild(ins);
+  container.replaceChildren(ins);
 
   try {
     (window.adsbygoogle = window.adsbygoogle || []).push({});

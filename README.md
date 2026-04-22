@@ -85,8 +85,14 @@ country pages, and Arabic-first accessibility.
 
 ## Overview
 
-**GoldPrices** is a zero-dependency, static front-end gold pricing platform built for the UAE, GCC,
-the wider Arab world, and selected global reference markets.
+**GoldPrices** is a bilingual, multi-page gold pricing platform built for the UAE, GCC, the wider
+Arab world, and selected global reference markets.
+
+The front-end is a static, multi-page site (no SPA, no heavy framework) authored as vanilla ES
+modules and styled with hand-written CSS. It is bundled for production with Vite and deployed as
+static assets. An optional Node/Express surface (`server.js` + `server/`) backs the admin area —
+authentication, shop/order/content management, and rate-limited API proxying — and is **not**
+required for the public pages, which remain 100% static.
 
 > Most gold sites are either too narrow, too messy, too static, too ad-heavy, or too unclear about
 > how their numbers are formed.
@@ -696,7 +702,8 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for:
 
 ### Quick rules
 
-- **No frameworks** — vanilla ES6 modules only
+- **No frameworks** — vanilla ES6 modules only on the front-end (admin surface uses Express
+  server-side)
 - **All UI strings** in `src/config/translations.js` (never hard-code)
 - **Bilingual** — all user-facing features must support EN + AR
 - **Test your changes** — `npm test` must pass

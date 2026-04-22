@@ -46,32 +46,32 @@ const SKIP = [
 // and explaining why in the PR description — that review friction is the
 // regression barrier.
 //
-// Baselined on 2026-04-22. To refresh: run `node scripts/node/check-unsafe-dom.js --print`.
+// Baselined on 2026-04-22. Tightened after `innerHTML = ''` → `replaceChildren()`
+// migration (no behavior change; removes HTML-parser invocation on empty
+// clears). To refresh: run `node scripts/node/check-unsafe-dom.js --print`.
 const BASELINE = {
   'admin/access/index.html': 1,
   'admin/analytics/index.html': 3,
   'admin/content/index.html': 4,
   'admin/index.html': 7,
   'admin/orders/index.html': 3,
-  'admin/pricing/index.html': 11,
+  'admin/pricing/index.html': 8,
   'admin/shared/admin-shell.js': 5,
-  'admin/shared/admin-utils.js': 7,
-  'admin/shops/index.html': 10,
+  'admin/shared/admin-utils.js': 6,
+  'admin/shops/index.html': 7,
   'admin/social/index.html': 4,
-  'src/components/adSlot.js': 1,
   'src/components/breadcrumbs.js': 2,
-  'src/components/chart.js': 1,
   'src/components/footer.js': 2,
-  'src/components/nav.js': 7,
+  'src/components/nav.js': 5,
   'src/components/spotBar.js': 1,
   'src/components/ticker.js': 1,
   'src/lib/cache.js': 1,
   'src/lib/page-hydrator.js': 3,
   'src/pages/home.js': 2,
-  'src/pages/shops.js': 15,
+  'src/pages/shops.js': 13,
   'src/pages/tracker-pro.js': 4,
   'src/tracker/events.js': 2,
-  'src/tracker/render.js': 24,
+  'src/tracker/render.js': 23,
   'src/tracker/wire.js': 3,
 };
 
