@@ -772,7 +772,7 @@ body.tracker-pro-page {
   overflow: auto;
   border: 1px solid var(--tp-border);
   border-radius: var(--radius-lg);
-  background: linear-gradient(180deg, #fffefc 0%, #fbf6ed 100%);
+  background: linear-gradient(180deg, var(--surface-primary) 0%, var(--surface-secondary) 100%);
 }
 
 .tracker-table {
@@ -784,7 +784,7 @@ body.tracker-pro-page {
 .tracker-table th,
 .tracker-table td {
   padding: 0.75rem 0.85rem;
-  border-bottom: 1px solid rgb(231 220 196 / 85%);
+  border-bottom: 1px solid var(--border-subtle);
   text-align: left;
   font-size: 0.86rem;
   vertical-align: middle;
@@ -794,7 +794,7 @@ body.tracker-pro-page {
   position: sticky;
   top: 0;
   z-index: 1;
-  background: #f7f2e8;
+  background: var(--surface-secondary);
   color: var(--tp-text-faint);
   font-size: 0.72rem;
   font-weight: var(--weight-extrabold);
