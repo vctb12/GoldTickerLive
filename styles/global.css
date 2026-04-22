@@ -58,6 +58,8 @@
   --surface-secondary: var(--color-surface-2);
   --surface-tertiary: var(--color-surface-3);
   --surface-accent: var(--color-gold-bg);
+  --surface-glass: rgb(255 255 255 / 78%);
+  --surface-glass-border: rgb(255 255 255 / 55%);
 
   /* Semantic text tiers (canonical) */
   --text-primary: var(--color-text);
@@ -124,6 +126,12 @@
   --space-6: 2rem;
   --space-7: 3rem;
   --space-8: 4rem;
+
+  /* Rhythm — section / block / inline cadence shared by all pages */
+  --rhythm-inline: var(--space-3);
+  --rhythm-block: var(--space-5);
+  --rhythm-section: var(--space-7);
+  --rhythm-section-lg: var(--space-8);
 
   /* Typography — font stacks */
   --font-main: 'Cairo', -apple-system, blinkmacsystemfont, 'Segoe UI', sans-serif;
@@ -255,6 +263,8 @@
     --surface-secondary: #211a12;
     --surface-tertiary: #2a2018;
     --surface-accent: #1e1808;
+    --surface-glass: rgb(20 16 10 / 72%);
+    --surface-glass-border: rgb(58 48 32 / 60%);
     --text-primary: #f0ebe0;
     --text-secondary: #c8b99a;
     --text-tertiary: #8a7a62;
