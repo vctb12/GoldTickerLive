@@ -41,6 +41,15 @@ const FORBIDDEN_ORIGINS = [
   'http://www.goldtickerlive.com',
 ];
 
+function isCanonicalOriginUrl(candidate) {
+  try {
+    const u = new URL(candidate);
+    return u.protocol === 'https:' && u.hostname === 'goldtickerlive.com';
+  } catch {
+    return false;
+  }
+}
+
 // Directories that are never shipped as public pages.
 const SKIP_DIRS = new Set([
   'node_modules',
@@ -161,7 +170,7 @@ test('every "noindex,follow" and meta-refresh stub has a canonical and a title',
   const bad = [];
   for (const p of followableStubs) {
     if (!p.canonical) bad.push(`${p.file} — missing canonical`);
-    else if (!p.canonical.startsWith(CANONICAL_ORIGIN))
+    else if (!isCanonicalOriginUrl(p.canonical))
       bad.push(`${p.file} — canonical "${p.canonical}" not on canonical origin`);
     if (!p.title) bad.push(`${p.file} — missing <title>`);
   }
@@ -179,7 +188,7 @@ test('every indexable HTML page has canonical + hreflang(x-default,en,ar) + titl
       bad.push(`${p.file} — missing canonical`);
       continue;
     }
-    if (!p.canonical.startsWith(CANONICAL_ORIGIN + '/') && p.canonical !== CANONICAL_ORIGIN + '/') {
+    if (!isCanonicalOriginUrl(p.canonical)) {
       bad.push(`${p.file} — canonical "${p.canonical}" not on canonical origin`);
     }
     // Hreflang triple
