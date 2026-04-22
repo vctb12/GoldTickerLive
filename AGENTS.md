@@ -9,6 +9,12 @@ a shops directory.
 
 ## How Codex should work in this repo
 
+- **If the task is part of the homepage / nav / tracker revamp (branch
+  `copilot/revamp-tracker-html-page` or any successor), read
+  [`docs/REVAMP_PLAN.md`](docs/REVAMP_PLAN.md) in full before making any changes.**
+  That file is the single source of truth for scope, commit discipline, done/pending
+  status, and the update protocol. Every `report_progress` call and every merged PR on
+  the revamp must update it in the same commit.
 - Start from `main` only unless explicitly told otherwise.
 - Before making changes, check whether the current branch is behind `main`.
 - If the branch is behind `main`, sync with `main` before editing.

@@ -1,39 +1,459 @@
-# Revamp Plan — 30 Phases
+# Gold-Prices Site Revamp — Consolidated Master Plan
 
-This document enumerates the 30 phased changes for the full-site revamp and 404 elimination. Each
-phase is intended to be a single commit in the big PR `revamp/404-hardening`.
+> 🛑 **START HERE — READ BEFORE DOING ANY WORK ON THIS REVAMP.**
+>
+> This file is the **single source of truth** for the homepage + global nav + tracker
+> revamp. It consolidates every previous plan. Do **not** reintroduce or fork another plan.
+>
+> ### 📌 Mandatory session protocol
+>
+> 1. **Every new agent / contributor session** working on the revamp (branch
+>    `copilot/revamp-tracker-html-page` or any successor branch) **must open and read this
+>    file in full before making changes**. No exceptions.
+> 2. **Every `report_progress` call** must update the "Progress log" and the relevant track
+>    checklists in this file, in the same commit as the code change.
+> 3. **Every merged PR** targeting the revamp must bump the "Last updated" line below and
+>    move the affected checklist items from `[ ]` to `[x]` with the commit SHA.
+> 4. **Scope guard:** if a proposed change does not fit one of the commit buckets in
+>    §1 or one of the tracks in §2, stop and raise it in the PR description rather than
+>    silently expanding scope.
+>
+> **Last updated:** 2026-04-22 · **Round:** 1 (Track A foundation + Track C/D reveal
+> wiring landed) · **Branch:** `copilot/revamp-tracker-html-page`
 
-Phases (commit message prefix `phx/NN:`):
+---
 
-1. phx/01: Run initial link-check and add `reports/links-initial.json` (scan output).
-2. phx/02: Add `404.html` and user-friendly fallback page.
-3. phx/03: Improve server fallback handling in `server.js` to serve `404.html` when missing.
-4. phx/04: Add Netlify `_redirects` entries for SPA and common legacy paths.
-5. phx/05: Integrate link-check into CI (`.github/workflows/ci.yml`).
-6. phx/06: Standardize `nav` links in `src/components/nav-data.js` (root-safe paths).
-7. phx/07: Harden `resolveHref` and `isPageMatch` in `src/components/nav.js`.
-8. phx/08: Generate missing `index.html` placeholders for country pages (script).
-9. phx/09: Fix top-level pages and authoritative links (index, shops, tracker, learn).
-10. phx/10: Repair missing `content/tools/*` and `content/guides/*` pages or add redirects.
-11. phx/11: Add `_headers` or server redirect table for admin and legacy paths.
-12. phx/12: Add Playwright smoke tests for main nav and country index pages.
-13. phx/13: Add tests for JS-driven links (search, tracker deep-links).
-14. phx/14: Asset audit — confirm all `img`, `script`, and `link` assets exist.
-15. phx/15: Add sitemap fixes and ensure `build/generateSitemap.js` includes all pages.
-16. phx/16: Add canonical and hreflang meta fixes for SEO consistency.
-17. phx/17: Accessibility fixes on navigation, focus management, ARIA.
-18. phx/18: Mobile UX fixes — drawer and bottom nav behavior and deep-linking.
-19. phx/19: Add `scripts/node/generate-placeholders.js` to create missing minimal pages.
-20. phx/20: Add `scripts/node/fix-links.js` helper to rewrite broken `../` hrefs.
-21. phx/21: Add monitoring hooks — log 404s server-side to `data/404-logs.json` (dev mode).
-22. phx/22: Add scheduled CI job to run link-check nightly and upload reports.
-23. phx/23: Run lint/format across site and apply `eslint --fix` + `prettier --write`.
-24. phx/24: Add `husky` + `lint-staged` enforcement for pre-commit checks.
-25. phx/25: Add performance optimizations (defer noncritical scripts, lazy images).
-26. phx/26: Ensure service worker and `offline.html` handle missing cached assets gracefully.
-27. phx/27: Update docs: `README.md`, `docs/ADMIN_GUIDE.md`, developer onboarding steps.
-28. phx/28: Security and dependency audit, pin vulnerable packages and add Dependabot.
-29. phx/29: Add release/deploy automation with canary rollout and rollback steps.
-30. phx/30: PR polish, consolidate reports, and add final changelog for the revamp.
+## 0. Non-negotiables
 
-Estimated: Each phase is designed to be small; overall effort ~ several days to a few weeks.
+- **One PR, many tiny commits.** Each commit is single-purpose and reversible with
+  `git revert`.
+- **Preserve static multi-page architecture.** "Not static at all" = motion, liveness,
+  micro-interactions, progressive disclosure. Not an SPA.
+- **Priority order:** trust → UX → mobile → SEO → perf → polish.
+- **No new libraries** unless strictly justified (advisory-DB checked first).
+- **Canonical tokens only.** Everything resolves to `styles/global.css`:
+  `--color-*`, `--surface-*`, `--space-*`, `--text-*`, `--radius-*`, `--shadow-*`,
+  `--ease-*`, `--duration-*`, `--weight-*`, `--leading-*`. No hand-picked hex or rem.
+- **DOM safety strict.** All new DOM via `src/lib/safe-dom.js`
+  (`el`, `clear`, `escape`, `safeHref`, `safeTel`). No new `innerHTML` sinks.
+  `check-unsafe-dom` baseline tightens when old sinks are replaced.
+- **Motion respects `prefers-reduced-motion: reduce`** — every animation has a zero-motion
+  path.
+- **RTL parity.** Arabic locale must work for every new layout.
+- **Trust rules.** Always distinguish spot/reference vs retail. Always label
+  cached/estimated/delayed/fallback values.
+
+## 1. Commit discipline — single concern per commit
+
+Every commit fits **exactly one** of these narrow buckets. If a change does not fit one
+bucket, split it.
+
+| Bucket       | Example                                                   |
+| ------------ | --------------------------------------------------------- |
+| `tokens`     | Add/align one CSS custom-property group                   |
+| `layout`     | Change grid/flex/gap on one section                       |
+| `spacing`    | Adjust padding/margin rhythm on one component             |
+| `typography` | Heading scale, weight, leading on one area                |
+| `color`      | Swap a bespoke color for a canonical token                |
+| `surface`    | Card background/border/shadow on one component            |
+| `radius`     | Normalize corner-radius on one component                  |
+| `motion`     | One keyframe + one application site                       |
+| `a11y`       | Focus ring, aria, keyboard handler — one concern          |
+| `mobile`     | Breakpoint behavior for one component                     |
+| `content`    | Copy rewrite for one section (no structural change)       |
+| `structure`  | IA / DOM reorder for one section                          |
+| `wiring`     | JS data wire-up for one section                           |
+| `cleanup`    | Remove one dead rule / duplicate id / unused export       |
+| `seo`        | One metadata element                                      |
+| `perf`       | One observable perf win (lazy, defer, split)              |
+| `safe-dom`   | Replace one `innerHTML` sink with helpers                 |
+| `docs`       | One doc or comment update                                 |
+
+## 2. Shipping order
+
+Rounds of ~6–8 commits, cycling the tracks in order: **A → B → C → D → E → F → G → H → I → J**.
+Expect ~10 rounds across the PR, target 80–120 commits total.
+
+---
+
+## 3. Status at a glance
+
+| Track                              | Status          | Notes                                              |
+| ---------------------------------- | --------------- | -------------------------------------------------- |
+| **A** Cross-cutting foundation     | 🟢 **shipped**  | tokens, motion primitives, surface utilities, reveal.js, count-up.js |
+| **B** Navigation rebuild           | ⚪ not started  | —                                                  |
+| **C** Homepage revamp              | 🟡 in progress  | sections opted into `[data-reveal]`; karat strip uses `countUp` |
+| **D** Tracker continuation         | 🟡 in progress  | reveal.js imported; wire + brief sections opted in |
+| **E** Motion & liveness layer      | 🟡 in progress  | primitives live; most application sites still pending |
+| **F** Mobile & tablet pass         | ⚪ not started  | —                                                  |
+| **G** Accessibility pass           | ⚪ not started  | —                                                  |
+| **H** SEO & metadata pass          | ⚪ not started  | —                                                  |
+| **I** Perf & cleanup               | ⚪ not started  | —                                                  |
+| **J** Final QA                     | ⚪ not started  | continuous `npm test` / `validate` checks passing  |
+
+Legend: 🟢 shipped · 🟡 in progress · ⚪ not started · 🔴 blocked
+
+---
+
+## 4. Track A — Cross-cutting foundation
+
+Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
+
+- [x] **Motion primitives** in `styles/global.css`: `[data-reveal]` reveal-up, `flash-up`,
+      `flash-down`, `pulse-dot`, `underline-slide`, `drawer-slide-in`, `reveal-up`, plus
+      a global `prefers-reduced-motion: reduce` reset. (commit `788feb14`)
+- [x] **Surface utility classes** `.surface-elevated` / `.surface-subtle` /
+      `.surface-accent` / `.surface-glass` consumed by nav/home/tracker. (`0d2c40c8`)
+- [x] **Spacing rhythm tokens** `--rhythm-inline` / `--rhythm-block` / `--rhythm-section` /
+      `--rhythm-section-lg`, plus `--surface-glass` token (light + dark). (`ab3f8dc3`)
+- [x] **`IntersectionObserver` primitive** `src/lib/reveal.js` — one shared observer,
+      `WeakSet` dedup, auto-runs on DOMContentLoaded, IO-missing fallback reveals
+      immediately. (`82b8d77c`)
+- [x] **`count-up` primitive** `src/lib/count-up.js` — rAF easeOutQuad, duration
+      magnitude-capped 180–800 ms, auto directional `data-flash`, reduced-motion no-op,
+      robust numeric parse. (`0b03c603`, `0a3c7591`)
+- [ ] **Token audit.** Inventory current `--tp-*`, `--home-*`, `--nav-*`, `--shops-*`
+      bespoke palettes; alias each to canonical tokens.
+- [ ] **Canonical card consolidation.** Merge near-duplicate `.card` / `.panel` /
+      `.section-card` rules into the canonical `.card` + `.card--accent` + `.card--compact`
+      set.
+- [ ] **Heading scale confirmation.** Ensure heading scale is applied via classes
+      (`.h1`…`.h6`) not ad-hoc sizes.
+- [ ] **Focus ring token audit.** Confirm `--focus-ring` / `--focus-ring-offset` wired
+      through every `:focus-visible` site.
+
+## 5. Track B — Navigation rebuild
+
+### B.1 IA & data shape
+- [ ] Keep 5-group IA (Home · Prices · Tools · Learn · More, solo Shops) but **split "More"**
+      — move high-value items up where possible. Audit for ambiguity.
+- [ ] Enforce `description` on every group child in `nav-data.js`; trim labels for
+      parallelism; ensure bilingual pairs.
+- [ ] Tag **primary destinations** (Tracker, Calculator, Shops, Countries) vs **secondary**
+      (Learn articles) so the UI can emphasize them.
+
+### B.2 Desktop shell
+- [ ] Sticky top bar, glass surface (`backdrop-filter: blur`, `--surface-glass`), bottom
+      hairline `--border-default`.
+- [ ] Left: brand lockup. Center: group links. Right: utility cluster
+      (search trigger · language · theme · CTA "Live Tracker").
+- [ ] Group links as buttons opening dropdown on hover **and** click/Enter/Space/Down.
+      Touch users get click (no hover trap).
+- [ ] 44 px minimum tap targets; visible `:focus-visible` rings using `--focus-ring`.
+
+### B.3 Active state
+- [ ] On page load, compute current URL → find matching group + sub-item; add
+      `aria-current="page"` to the item and `data-active="true"` to its parent group.
+- [ ] Animated underline that slides between groups on hover/focus, snaps to active on
+      mouseleave. Disabled under reduced motion.
+
+### B.4 Dropdown panels
+- [ ] Two-column layout for Prices + Tools, one-column for Learn + More.
+- [ ] Each item: label + one-line description from `nav-data.js`, optional leading icon.
+- [ ] Open: fade + translate-Y 4 px, 180 ms `--ease-out`. Close: 120 ms. Reduced-motion:
+      instant.
+- [ ] First item receives focus on open. `Escape` closes and returns focus to trigger.
+      `ArrowUp`/`ArrowDown` cycle. `Tab` exits.
+
+### B.5 Command-palette search
+- [ ] Progressive enhancement: `<a href="/content/search/">Search</a>` is the fallback.
+- [ ] JS-enhanced overlay triggered by search icon, `/`, or `Ctrl/Cmd+K`.
+- [ ] Queries page titles + country/city/market slugs + tool names via `src/lib/search.js`.
+- [ ] Keyboard-first: arrow keys, Enter, Esc. Results grouped
+      (Pages · Countries · Markets · Tools).
+- [ ] Recent searches in `localStorage` namespaced `nav.search.recent`, capped.
+
+### B.6 Mobile drawer
+- [ ] Slide-in from inline-end, full-height using `100svh` with `100vh` fallback.
+- [ ] Sections with group headings, dividers, large tap targets. Expandable groups
+      (`<details>` or custom with `aria-expanded`), not a flat stack.
+- [ ] Top: search input (progressive enhancement). Bottom: theme toggle + language
+      switcher + primary CTA.
+- [ ] `body` scroll lock while open. Close on: Escape, backdrop tap, route change.
+- [ ] Focus trap inside drawer. Return focus to hamburger on close.
+
+### B.7 Scroll behavior
+- [ ] Hide on scroll down (> 8 px threshold, after 120 px), reveal on scroll up.
+      Throttled via `requestAnimationFrame`. Disabled under reduced motion.
+      Suspended while drawer open or focused element is in nav.
+
+### B.8 Micro-interactions
+- [ ] Underline slide on hover, group fade+slide on open, theme-toggle icon cycle
+      (auto → light → dark, rotate 180 ms).
+- [ ] Active-dropdown chevron flip.
+
+### B.9 Touch behavior
+- [ ] No hover-only dropdowns on touch. First tap opens, tap outside closes. Tap on
+      active trigger closes.
+
+### B.10 Dark-mode parity
+- [ ] All nav surfaces resolved via `--surface-*` and `--color-text-*`. Manual sweep only
+      if token misuse found.
+
+## 6. Track C — Homepage revamp
+
+### C.1 IA & section order (first-scroll priority)
+Target order:
+1. Hero — live spot + freshness + trust + 2 CTAs.
+2. Karat reference strip — live per-karat prices, unit toggle, copy.
+3. Trust band — methodology / sources / estimated vs live legend.
+4. Tools strip — Tracker · Calculator · Converter · Zakat · Alerts · Order.
+5. Countries quick-picker — flag grid, searchable inline.
+6. Markets highlights — top 3–6 markets with freshness.
+7. Explainer strip — scannable bullets.
+8. FAQ — condensed, reveal-on-scroll.
+9. Social strip — minimal.
+10. Deep-link footer rail.
+
+- [ ] Dedup the overlapping "Live Gold Prices" (`gcc-section-title`) and "Karat strip"
+      sections into one canonical live-price block.
+
+### C.2 Hero rebuild
+- [ ] Headline + subhead + primary CTA "Open Live Tracker" + secondary "Open Calculator".
+- [ ] Inline live XAU/USD (large), delta vs prev close, 24 h high/low, freshness pill
+      ("updated 42 s ago"), market-open/closed chip, trust line
+      ("spot reference — not a retail quote").
+- [ ] Mobile: stacks vertically, price block prominent, CTAs full-width.
+- [ ] Canonical hero surface + gold inset ring; no bespoke gradients.
+
+### C.3 Karat reference strip
+- [ ] Per-karat cards (24K, 22K, 21K, 18K, 14K): gram price, unit toggle (g / tola / oz),
+      copy-to-clipboard.
+- [x] **Count-up on update.** Directional flash (green up / red down). (home only, via
+      `countUp` — `14d365cc`)
+- [ ] Skeleton shimmer on first load.
+- [ ] Clear "reference only" framing on the strip header.
+
+### C.4 Country quick-picker
+- [ ] Flag grid deep-linking to country pages. Inline searchable (filters as you type).
+      Keyboard navigable.
+- [ ] Cached/stale state clearly labeled.
+
+### C.5 Tools strip
+- [ ] One row/grid, each tool: icon + name + one-line value prop + CTA. No duplicates.
+      Primary tools weighted larger.
+
+### C.6 Trust band
+- [ ] Methodology link. Data-source list. AED peg note. "Estimated vs live" legend.
+      Links to `methodology.html`, `about.html`.
+
+### C.7 Markets highlights
+- [ ] 3–6 top markets as cards with freshness + "reference price" framing. Deep-links to
+      market pages.
+
+### C.8 Explainer strip
+- [ ] Scannable bullets, not paragraphs. Reveal-on-scroll.
+
+### C.9 FAQ
+- [ ] Tight copy, each item collapsible via `<details>`/custom with `aria-expanded`.
+      One-open-at-a-time optional.
+
+### C.10 Social + footer rail
+- [ ] Minimal social; footer rail provides deep-links without duplicating nav.
+
+### C.11 Liveness
+- [x] **Section reveal-on-scroll** on trust-strip, trust-banner, tools, countries-quick,
+      explainer, FAQ, social via `[data-reveal]`. (`e19aae33`)
+- [ ] Hero + karat cards count-up on update (duration proportional to delta, capped).
+      (karat strip done · hero pending.)
+- [ ] Freshness pill re-computes exact age every second; color shifts amber → red as
+      staleness crosses thresholds.
+- [ ] Gentle hero-backdrop parallax (transform-only). Reduced-motion bypass.
+
+### C.12 Content density & rhythm
+- [ ] Rebalance H1/H2/H3 scale using canonical tokens. Cap body width to
+      `--content-max-width`. Consistent `--rhythm-section` between sections. Remove dead
+      space + low-signal filler.
+
+## 7. Track D — Tracker continuation
+
+Resume the 15-phase tracker plan in small commits:
+
+- [ ] **Phase 2** — Trust & freshness framing (exact-age pill, AED-peg note,
+      stale/cached/fallback labeling with icon + tooltip).
+- [ ] **Phase 3** — Single sticky control bar
+      (currency/karat/unit/compare/range/auto-refresh/language).
+- [ ] **Phase 4** — Hero rebuild (large price, delta vs prev close, high/low, 24 h change,
+      sparkline). Mobile-safe at 320 px.
+- [ ] **Phase 5** — Chart UX (snap-to-point tooltip, per-range source labels,
+      main-vs-compare legend, empty/error/stale states).
+- [ ] **Phase 6** — Karat table (sticky header, `scope` attrs, bilingual labels,
+      tap-to-copy per row).
+- [ ] **Phase 7** — Markets grid (filter/sort/view correctness, empty states, per-country
+      freshness, reference-price framing).
+- [ ] **Phase 8** — Alerts/presets/planners as tabbed cards with real add/edit/delete
+      affordances. Disabled-not-broken.
+- [ ] **Phase 9** — Wire + archive collapsible, lazy-rendered, paginated archive,
+      loading states.
+- [ ] **Phase 12** — Replace remaining `innerHTML` sinks in `src/tracker/render.js` (24),
+      `tracker-pro.js` (4), `events.js` (2), `wire.js` (3) with `safe-dom.js` helpers.
+      Tighten `check-unsafe-dom` baseline in same commit block.
+- [ ] **Phase 13** — Split 2,541-line `tracker-pro.css` into per-section files or prune
+      dead rules. `IntersectionObserver`-gated rendering of below-fold sections.
+- [x] Side-effect import of shared `reveal.js` from `src/pages/tracker-pro.js`.
+      (`39138e7e`)
+- [x] Wire + brief sections opted into `[data-reveal]`. (`1e484954`)
+
+## 8. Track E — Motion & liveness layer
+
+Applied on top of primitives from Track A. Rules:
+- Every effect must have a **purpose**: feedback, continuity, or attention — never decorative.
+- Every effect has a **reduced-motion path** that no-ops.
+
+- [x] Price-change directional flash (green up, red down, 1 s fade). Primitive live;
+      applied on karat strip. Pending on hero + tracker hero + market cards.
+- [x] Number animations: count-up duration ∝ magnitude, capped 800 ms. Primitive live.
+- [x] Section reveal: fade + translate-Y 8 px, 300 ms, single shared observer.
+- [ ] Card hover: translate-Y 2 px + shadow-up, 200 ms `--ease-out`.
+- [ ] Skeletons on every async surface.
+- [ ] Dropdown open: fade + slide 4 px, 180 ms.
+- [ ] Drawer slide in 220 ms.
+- [ ] Freshness pill pulse once per tick, capped 1 per 90 s.
+- [ ] Hero parallax: transform-only on inner backdrop layer only.
+
+## 9. Track F — Mobile & tablet
+
+- [ ] 320–480 px no horizontal overflow on home/tracker/nav.
+- [ ] 481–700 px phone-landscape & small-tablet spacing compression rules instead of
+      premature desktop layout.
+- [ ] 700–1024 px tablet layout — no awkward scaling, no oversized gaps, no premature
+      column drops.
+- [ ] Sticky controls with safe-area insets (`env(safe-area-inset-*)`).
+- [ ] Tap targets ≥ 44 × 44 px across nav, drawer, CTA, cards.
+- [ ] Chart pinch/pan sane on tracker.
+- [ ] Drawer `100svh` with `100vh` fallback (iOS Safari-safe).
+- [ ] Freshness pills, CTAs, and pickers legible at smallest breakpoint.
+
+## 10. Track G — Accessibility
+
+- [ ] `:focus-visible` rings everywhere via `--focus-ring-*`.
+- [ ] Keyboard nav on groups, dropdowns, range pills, tabs, command palette.
+- [ ] `aria-live="polite"` on live price cells (hero, karat strip, tracker hero).
+- [ ] `aria-current="page"` on active nav item + group.
+- [ ] `aria-label` on icon-only buttons; `aria-expanded`/`aria-controls` on toggles.
+- [ ] Semantic HTML: `nav`, `main`, `section[aria-labelledby]`, one `h1` per page.
+- [ ] Contrast audit light + dark, EN + AR.
+- [ ] Touch-without-hover fallback for every hover-dependent UI.
+- [ ] `role="dialog"` + focus trap on drawer + palette.
+
+## 11. Track H — SEO & metadata
+
+- [ ] Unique `<title>` + `<meta name="description">` preserved on every page touched.
+- [ ] Canonical `https://goldtickerlive.com/...` (apex, no www, no trailing slash
+      inconsistencies).
+- [ ] Structured data reflects each page's real purpose:
+  - Home: `WebSite` + `SearchAction` + `BreadcrumbList` + `Organization`.
+  - Tracker: `WebApplication`.
+  - No `Product` schema on non-product pages.
+- [ ] Internal linking: home ↔ tracker, calculator, shops, top country pages.
+      Tracker ↔ calculator, methodology, country pages, shops.
+- [ ] `sitemap.xml` correctness preserved; existing sitewide canonical test must still
+      pass.
+
+## 12. Track I — Perf & cleanup
+
+- [ ] Measure initial JS + CSS for tracker and home before/after.
+- [ ] Split oversized CSS files or prune dead rules (`tracker-pro.css` at 2,541 lines).
+- [ ] `IntersectionObserver`-gated rendering for below-fold sections (tracker wire +
+      archive, home FAQ + social + explainer).
+- [ ] `loading="lazy"` + `decoding="async"` on non-critical images.
+- [ ] Preconnect to data origins (`gold-api.com`, `exchangerate-api.com`) — verified
+      present.
+- [ ] Verify `sw.js` still caches revamped assets correctly.
+- [ ] Remove duplicate inline styles once systemized into classes.
+
+## 13. Track J — Final QA
+
+Before marking the PR ready for review:
+
+- [ ] `npm test` — all suites pass (requires `JWT_SECRET`, `ADMIN_PASSWORD`,
+      `ADMIN_ACCESS_PIN`). Latest: **271 / 271 pass**.
+- [ ] `npm run validate` — HTML + imports + DOM-sink check green; baseline tightened where
+      sinks were removed. Latest: **0 errors**.
+- [ ] `npm run quality` — ESLint + Prettier + Stylelint green.
+- [ ] `npm run build` — Vite production build succeeds; bundle sizes reported in PR body.
+- [ ] Visual screenshot diff on desktop + mobile, light + dark, EN + AR for hero, nav,
+      drawer, karat strip, tools strip.
+- [ ] PR body lists: what was verified, what wasn't (Lighthouse needs deploy), known
+      risks, known remaining scope.
+
+---
+
+## 14. Explicit non-goals
+
+- **No** SPA conversion. No client-side router.
+- **No** chart-library swap.
+- **No** CSS/JS framework introduction (no Tailwind, React, Vue, Alpine).
+- **No** rewrite of `server.js` or the admin backend.
+- **No** new third-party runtime dependencies unless specifically justified
+  (advisory-DB consulted first).
+- **No** re-opening of already-completed work unless a regression is found.
+- **No** mass content rewrites outside the sections listed here.
+
+## 15. Reversibility & risk management
+
+- Every commit is narrow, so `git revert <sha>` undoes exactly that concern.
+- The PR can land in stages if reviewers prefer chunked review.
+- Visual regressions caught via screenshot-diff in Track J; structural regressions via
+  tests.
+- Any new dependency or new DOM-sink pattern triggers a hard stop and re-evaluation.
+
+## 16. Open questions (carry forward until answered)
+
+1. Should the nav search be shipped in this PR or deferred (adds meaningful JS)?
+   **Default:** ship behind progressive enhancement.
+2. Should the homepage drop any existing sections entirely (e.g., social strip) or just
+   de-emphasize? **Default:** keep all, re-rank + tighten.
+3. Are bilingual strings for all new homepage copy expected in this PR or a follow-up?
+   **Default:** English now, stub Arabic for follow-up.
+4. Is the tracker sticky control bar OK to ship if it changes the visual identity of the
+   page materially? **Default:** ship it.
+
+---
+
+## 17. Progress log (append-only)
+
+Append one row per commit on the revamp branch. Keep commit SHA short (8 chars). When a
+PR merges, update the "Last updated" banner at the top of the file and copy the merged
+commits into the "Merged" section below.
+
+### Round 1 — Track A foundation + Track C/D reveal wiring (in-branch, pending merge)
+
+| SHA        | Bucket      | Summary                                                          |
+| ---------- | ----------- | ---------------------------------------------------------------- |
+| `ab3f8dc3` | `tokens`    | Add `--surface-glass` and `--rhythm-*` scale                     |
+| `788feb14` | `motion`    | Reveal/flash/pulse/drawer primitives + reduced-motion reset      |
+| `0d2c40c8` | `surface`   | `.surface-elevated/subtle/accent/glass` utility classes          |
+| `82b8d77c` | `wiring`    | `src/lib/reveal.js` shared `IntersectionObserver`                |
+| `0b03c603` | `wiring`    | `src/lib/count-up.js` numeric count-up primitive                 |
+| `e19aae33` | `motion`    | Opt home sections into `[data-reveal]` reveal-on-scroll          |
+| `14d365cc` | `wiring`    | Count-up + directional flash on karat strip prices               |
+| `39138e7e` | `wiring`    | Tracker imports shared `reveal.js`                               |
+| `1e484954` | `motion`    | Opt tracker wire + brief sections into `[data-reveal]`           |
+| `0a3c7591` | `wiring`    | count-up: robust numeric parse + named `FLASH_DURATION_MS`       |
+
+### Merged PRs
+
+_None yet._ Populate when the first revamp PR merges: PR number, merge date, branch name,
+range of SHAs covered, any follow-ups.
+
+---
+
+## 18. Update protocol (how to keep this file honest)
+
+1. **On every `report_progress` call**, edit this file in the same commit:
+   - Tick checkboxes that completed.
+   - Append a row to §17 "Progress log" with the new commit SHA and one-line summary.
+   - Bump the "Last updated" banner (top of file) and "Round" counter if applicable.
+2. **On PR merge**, add an entry to §17 "Merged PRs" with PR number, date, branch,
+   SHA range, and migrate in-branch rows from "Round N (pending merge)" into the merged
+   round's table.
+3. **If a new track or bucket is required**, add it in the relevant section; do not
+   invent a side document.
+4. **If scope changes**, record the change here before coding. A scope change without
+   a doc update is a scope violation.
+5. **If this file is deleted, renamed, or forked**, treat that as a scope violation and
+   restore it.
+
+> This file replaces `docs/REVAMP_STATUS.md` for the homepage + nav + tracker revamp.
+> Legacy tracks from that file remain valid for their respective scopes.
