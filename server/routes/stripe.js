@@ -166,7 +166,9 @@ router.post('/create-portal', async (req, res) => {
  */
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   try {
-    const sig = req.headers['stripe-signature'];
+    // `_sig` captured for the future webhook verification flow below.
+    // Prefixed to signal intentional unused binding until Stripe SDK is wired up.
+    const _sig = req.headers['stripe-signature'];
 
     // TODO: Verify webhook signature and handle events
     /*
@@ -177,7 +179,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     try {
       event = stripe.webhooks.constructEvent(
         req.body,
-        sig,
+        _sig,
         STRIPE_CONFIG.webhookSecret
       );
     } catch (err) {

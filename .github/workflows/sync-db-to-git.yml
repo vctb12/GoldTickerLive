@@ -15,6 +15,10 @@ jobs:
     # Only this job needs write access to commit the regenerated file.
     permissions:
       contents: write
+    # Serialize concurrent dispatches so two runs can't race on the same commit.
+    concurrency:
+      group: sync-db-to-git
+      cancel-in-progress: false
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6

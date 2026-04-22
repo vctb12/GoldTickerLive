@@ -1,3 +1,7 @@
+# ------------------------------------------------------------------
+# Weekly Newsletter — informational / operational scheduled job.
+# NOT a required merge gate. Failures surface via job logs only.
+# ------------------------------------------------------------------
 name: Weekly Newsletter
 
 on:
@@ -9,9 +13,14 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: weekly-newsletter
+  cancel-in-progress: false
+
 jobs:
   send-weekly-newsletter:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6

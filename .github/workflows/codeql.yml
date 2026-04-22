@@ -9,6 +9,12 @@
 # the `language` matrix defined below to confirm you have the correct set of
 # supported CodeQL languages.
 #
+# ------------------------------------------------------------------
+# CodeQL Advanced — informational security scan.
+# This workflow is a *reporting* gate that publishes findings to the
+# Security tab. It is NOT a required merge gate; individual alerts are
+# triaged separately.
+# ------------------------------------------------------------------
 name: "CodeQL Advanced"
 
 on:
@@ -23,6 +29,11 @@ on:
 permissions:
   contents: read
 
+# Prevent pile-ups when multiple pushes hit main in quick succession.
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
@@ -32,6 +43,7 @@ jobs:
     #   - https://gh.io/using-larger-runners (GitHub.com only)
     # Consider using larger runners or machines with greater resources for possible analysis time improvements.
     runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    timeout-minutes: 30
     permissions:
       # required for all workflows
       security-events: write

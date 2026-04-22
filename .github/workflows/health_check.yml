@@ -1,3 +1,7 @@
+# ------------------------------------------------------------------
+# Daily Health Check — informational. Smoke-tests key public URLs
+# + upstream API availability. NOT a required merge gate.
+# ------------------------------------------------------------------
 name: Daily Health Check
 
 on:
@@ -8,6 +12,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: health-check
+  cancel-in-progress: true
 
 jobs:
   health:

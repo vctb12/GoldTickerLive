@@ -1,3 +1,7 @@
+# ------------------------------------------------------------------
+# Daily Newsletter — informational / operational scheduled job.
+# NOT a required merge gate. Failures surface via job logs only.
+# ------------------------------------------------------------------
 name: Daily Newsletter
 
 on:
@@ -9,17 +13,22 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: daily-newsletter
+  cancel-in-progress: false
+
 jobs:
   send-daily-newsletter:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '22'
+          node-version: '24'
           cache: 'npm'
 
       - name: Install dependencies

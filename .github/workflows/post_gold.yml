@@ -1,3 +1,8 @@
+# ------------------------------------------------------------------
+# Post Gold Price to X — informational social-posting bot. Requires
+# `contents: write` because it rotates a small state file commit.
+# NOT a required merge gate.
+# ------------------------------------------------------------------
 name: Post Gold Price to X (Python)
 
 on:
@@ -9,6 +14,11 @@ on:
 
 permissions:
   contents: write
+
+concurrency:
+  # Serialize tweet runs so two crons can't race on the state-file commit.
+  group: post-gold
+  cancel-in-progress: false
 
 jobs:
   post:

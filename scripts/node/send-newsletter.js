@@ -17,7 +17,7 @@ const RESEND_CONFIG = {
   batchSize: 1000, // Resend's batch limit
 };
 
-async function getActiveSubscribers(preferences = {}) {
+async function getActiveSubscribers(_preferences = {}) {
   // TODO: Fetch from Supabase
   /*
   const { createClient } = require('@supabase/supabase-js');
@@ -50,7 +50,7 @@ async function getActiveSubscribers(preferences = {}) {
   return [];
 }
 
-async function sendBatch(emails, subject, html, text) {
+async function sendBatch(emails, subject, _html, _text) {
   if (emails.length === 0) return { sent: 0, failed: 0 };
 
   // TODO: Send via Resend batch API
@@ -61,8 +61,8 @@ async function sendBatch(emails, subject, html, text) {
     from: `${RESEND_CONFIG.fromName} <${RESEND_CONFIG.fromEmail}>`,
     to: email,
     subject,
-    html: html.replace(/\{\{email\}\}/g, email),
-    text: text.replace(/\{\{email\}\}/g, email),
+    html: _html.replace(/\{\{email\}\}/g, email),
+    text: _text.replace(/\{\{email\}\}/g, email),
     tags: {
       category: 'newsletter',
       batch: new Date().toISOString(),
@@ -108,7 +108,9 @@ async function recordCampaign(type, subject, stats) {
   });
   */
 
-  console.log(`[Newsletter] Campaign recorded: ${type} - ${stats.sent} sent, ${stats.failed} failed`);
+  console.log(
+    `[Newsletter] Campaign recorded: ${type} - ${stats.sent} sent, ${stats.failed} failed`
+  );
 }
 
 async function sendNewsletter(type = 'daily') {
@@ -126,8 +128,7 @@ async function sendNewsletter(type = 'daily') {
     console.log(`[Newsletter] Found ${subscribers.length} active subscribers`);
 
     // Generate content
-    const content =
-      type === 'weekly' ? await generateWeeklyRecap() : await generateDailyDigest();
+    const content = type === 'weekly' ? await generateWeeklyRecap() : await generateDailyDigest();
 
     console.log(`[Newsletter] Generated content: ${content.subject}`);
 
