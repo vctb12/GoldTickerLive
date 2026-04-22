@@ -535,7 +535,7 @@
             </div>
             <div class="card-body">
               <div class="settings-grid" style="margin-bottom: 16px">
-                <div class="form-group" style="margin-bottom: 0">
+                <div class="form-group">
                   <label class="form-label" for="k-gold-api">Gold API Key</label>
                   <div class="api-key-wrap">
                     <input
@@ -554,6 +554,11 @@
                       👁
                     </button>
                   </div>
+                  <div
+                    class="form-help"
+                    id="k-gold-api-status"
+                    aria-live="polite"
+                  ></div>
                 </div>
                 <div class="form-group" style="margin-bottom: 0">
                   <label class="form-label" for="k-fx-api">FX API Key</label>
@@ -574,6 +579,11 @@
                       👁
                     </button>
                   </div>
+                  <div
+                    class="form-help"
+                    id="k-fx-api-status"
+                    aria-live="polite"
+                  ></div>
                 </div>
                 <div class="form-group" style="margin-bottom: 0">
                   <label class="form-label" for="k-adsense">AdSense Publisher ID</label>
@@ -587,9 +597,12 @@
                 </div>
               </div>
               <div class="notice-box">
-                ℹ API keys are stored in Supabase along with other settings. They are synced across
-                devices. Keys are never exposed to public visitors — only authenticated admins can
-                read them.
+                ℹ API keys are stored in Supabase. The admin panel never caches
+                raw key values in your browser — only a "configured / not
+                configured" flag. Leave a field unchanged to keep the current
+                key; type a new value to rotate it. Exports exclude key
+                material; rotate in Supabase if you must move keys between
+                environments.
               </div>
             </div>
           </div>
@@ -768,10 +781,36 @@
 
       /* ── Load / save (Supabase with localStorage cache) ───── */
 
+      /* ── Cache-safe sentinel ──────────────────────────────────
+       * API keys must NEVER be written to localStorage or serialised to
+       * exported JSON: any XSS, any stolen laptop, any synced browser
+       * profile becomes a full key compromise. We use a sentinel string
+       * that the save logic recognises as "user did not change this key —
+       * keep the value already in Supabase".
+       */
+      const SECRET_PLACEHOLDER = '__GP_UNCHANGED__';
+
+      function stripSecrets(s) {
+        return {
+          ...s,
+          apiKeys: s.apiKeys
+            ? {
+                // Persist only whether the key is set, not its value.
+                goldApi: s.apiKeys.goldApi ? SECRET_PLACEHOLDER : '',
+                fxApi: s.apiKeys.fxApi ? SECRET_PLACEHOLDER : '',
+                // AdSense publisher ID is a *public* identifier (it ships
+                // inside the site's HTML), so caching it is fine.
+                adsensePublisherId: s.apiKeys.adsensePublisherId || '',
+              }
+            : { goldApi: '', fxApi: '', adsensePublisherId: '' },
+        };
+      }
+
       /** Cache settings in localStorage for offline resilience. */
       function cacheSettings(s) {
         try {
-          localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify(s));
+          // Strip raw secrets before writing to disk-backed storage.
+          localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify(stripSecrets(s)));
           localStorage.setItem(LAST_SAVED_KEY, String(Date.now()));
         } catch {}
       }
@@ -864,14 +903,62 @@
         document.getElementById('f-portfolio').checked = !!s.features?.portfolioTracker;
         document.getElementById('f-order-gold').checked = !!s.features?.orderGold;
         document.getElementById('f-price-alerts').checked = !!s.features?.priceAlerts;
-        document.getElementById('k-gold-api').value = s.apiKeys?.goldApi ?? '';
-        document.getElementById('k-fx-api').value = s.apiKeys?.fxApi ?? '';
+        // API keys render as status metadata, not raw values. The input holds
+        // the opaque SECRET_PLACEHOLDER so that save logic can detect whether
+        // the admin typed a new value or left the existing key alone.
+        renderSecretField('k-gold-api', 'k-gold-api-status', s.apiKeys?.goldApi);
+        renderSecretField('k-fx-api', 'k-fx-api-status', s.apiKeys?.fxApi);
         document.getElementById('k-adsense').value = s.apiKeys?.adsensePublisherId ?? '';
         document.getElementById('s-notes').value = s.adminNotes ?? '';
       }
 
+      function renderSecretField(inputId, statusId, currentValue) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        const hasValue = !!(currentValue && currentValue !== SECRET_PLACEHOLDER);
+        const isPlaceholder = currentValue === SECRET_PLACEHOLDER;
+        if (hasValue || isPlaceholder) {
+          input.value = SECRET_PLACEHOLDER;
+          input.dataset.hasSecret = '1';
+          input.setAttribute('aria-describedby', statusId || '');
+        } else {
+          input.value = '';
+          input.dataset.hasSecret = '';
+        }
+        const status = statusId ? document.getElementById(statusId) : null;
+        if (status) {
+          status.textContent = input.dataset.hasSecret
+            ? 'Key configured — leave unchanged or type a new key to rotate.'
+            : 'No key configured.';
+        }
+        // Clear sentinel on first edit so we capture the new value.
+        input.addEventListener(
+          'input',
+          () => {
+            if (input.value !== SECRET_PLACEHOLDER) input.dataset.hasSecret = '';
+          },
+          { once: true }
+        );
+      }
+
+      function readSecretField(inputId, previousValue) {
+        const input = document.getElementById(inputId);
+        if (!input) return previousValue || '';
+        const value = input.value;
+        // If the field still holds the sentinel, the user did not rotate the
+        // key — keep whatever Supabase currently has.
+        if (value === SECRET_PLACEHOLDER) return previousValue || '';
+        return value;
+      }
+
+      // The settings object most recently loaded from Supabase. When the user
+      // saves without re-typing an API key, we carry the stored value forward
+      // from here rather than from the form (which holds a sentinel).
+      let _lastLoadedSettings = null;
+
       /* ── Read form into settings object ────────────────────── */
       function readForm() {
+        const prev = _lastLoadedSettings?.apiKeys || {};
         return {
           marginPercent: parseFloat(document.getElementById('s-margin').value) || 3,
           vatRate: parseFloat(document.getElementById('s-vat').value) || 5,
@@ -891,8 +978,8 @@
             priceAlerts: document.getElementById('f-price-alerts').checked,
           },
           apiKeys: {
-            goldApi: document.getElementById('k-gold-api').value,
-            fxApi: document.getElementById('k-fx-api').value,
+            goldApi: readSecretField('k-gold-api', prev.goldApi),
+            fxApi: readSecretField('k-fx-api', prev.fxApi),
             adsensePublisherId: document.getElementById('k-adsense').value.trim(),
           },
           adminNotes: document.getElementById('s-notes').value,
@@ -927,7 +1014,10 @@
       /* ── Export / Import ────────────────────────────────────── */
       function exportSettings() {
         const s = readForm();
-        const blob = new Blob([JSON.stringify(s, null, 2)], { type: 'application/json' });
+        // Scrub secrets from the exported file. Exported JSON should be
+        // shareable between admins without leaking credentials.
+        const safe = stripSecrets(s);
+        const blob = new Blob([JSON.stringify(safe, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -976,7 +1066,9 @@
         loadAdminUser();
 
         // Populate form on load
-        populateForm(await loadSettings());
+        const loaded = await loadSettings();
+        _lastLoadedSettings = loaded;
+        populateForm(loaded);
         updateLastSaved();
         setInterval(updateLastSaved, 30000);
 

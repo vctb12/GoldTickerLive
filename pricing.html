@@ -237,12 +237,12 @@
     <div id="footer-container"></div>
 
     <script type="module">
-      import { renderNav } from './src/components/nav.js';
-      import { renderFooter } from './src/components/footer.js';
+      import { injectNav } from './src/components/nav.js';
+      import { injectFooter } from './src/components/footer.js';
 
       // Render navigation and footer
-      renderNav(document.getElementById('nav-container'));
-      renderFooter(document.getElementById('footer-container'));
+      injectNav('en');
+      injectFooter('en');
 
       // Billing toggle logic
       const billingToggle = document.getElementById('billing-annual');

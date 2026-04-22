@@ -22,6 +22,7 @@
     "style": "stylelint '**/*.css'",
     "style:fix": "stylelint '**/*.css' --fix",
     "quality": "npm run lint && npm run format:check && npm run style",
+    "check-unsafe-dom": "node scripts/node/check-unsafe-dom.js",
     "seo-audit": "node scripts/node/seo-audit.js",
     "a11y": "pa11y-ci --config .pa11yci.js",
     "image-audit": "node scripts/node/image-audit.js",
@@ -30,7 +31,7 @@
     "audit-pages": "node scripts/node/audit-pages.js",
     "generate-sitemap": "node scripts/node/generate-sitemap.js",
     "preflight": "npm run audit-pages && npm run check-links",
-    "validate": "node scripts/node/validate-build.js",
+    "validate": "node scripts/node/validate-build.js && node scripts/node/check-unsafe-dom.js",
     "security": "npm audit && npm outdated",
     "prepare": "husky"
   },

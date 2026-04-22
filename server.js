@@ -9,25 +9,36 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
 const fs = require('fs');
+const rateLimit = require('express-rate-limit');
 const { errorHandler } = require('./server/lib/errors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const IS_PROD = process.env.NODE_ENV === 'production';
 
+// Trust the first proxy hop when running behind a reverse proxy / load balancer
+// (Vercel, Cloudflare, Nginx). Without this, express-rate-limit keys on the
+// proxy IP and the whole internet shares one bucket. Only enable in production
+// where a known proxy terminates TLS.
+if (IS_PROD) app.set('trust proxy', 1);
+
 // Import routes
 const adminRoutes = require('./server/routes/admin');
 const stripeRoutes = require('./server/routes/stripe');
 const newsletterRoutes = require('./server/routes/newsletter');
 
-// Middleware — Security headers
+// ---------------------------------------------------------------------------
+// Security headers (Helmet)
+// ---------------------------------------------------------------------------
 // CSP is intentionally disabled in development for ease of debugging.
 // In production (NODE_ENV=production), a strict CSP is enforced.
 //
-// NOTE: 'unsafe-inline' is currently required for scriptSrc because the site
-// embeds Google Analytics and Microsoft Clarity inline snippets in static HTML.
-// To remove 'unsafe-inline', those snippets must be moved to external .js files
-// and a nonce-based CSP injected at serve-time via middleware.
+// NOTE on `'unsafe-inline'` in scriptSrc: the static HTML pages embed Google
+// Analytics and Microsoft Clarity loader snippets inline. Removing these
+// requires moving those snippets to external `.js` files and/or injecting a
+// per-request nonce via middleware. That work is tracked separately; the
+// current directive list is explicit and every origin is pinned to an HTTPS
+// host rather than using a wildcard.
 app.use(
   helmet({
     contentSecurityPolicy: IS_PROD
@@ -57,14 +68,23 @@ app.use(
               'https://nominatim.openstreetmap.org',
             ],
             frameSrc: ["'self'", 'https://pagead2.googlesyndication.com'],
+            frameAncestors: ["'none'"],
             objectSrc: ["'none'"],
             baseUri: ["'self'"],
             formAction: ["'self'"],
+            workerSrc: ["'self'", 'blob:'],
+            manifestSrc: ["'self'"],
             upgradeInsecureRequests: [],
           },
         }
       : false,
     crossOriginEmbedderPolicy: false,
+    // Explicit cross-origin isolation knobs rather than Helmet defaults, so the
+    // intent is visible at the server entry-point.
+    crossOriginOpenerPolicy: { policy: 'same-origin' },
+    crossOriginResourcePolicy: { policy: 'same-origin' },
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+    hsts: IS_PROD ? { maxAge: 31536000, includeSubDomains: true, preload: true } : false,
   })
 );
 
@@ -113,12 +133,54 @@ app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json({ limit: '256kb' }));
 app.use(express.urlencoded({ extended: true, limit: '256kb' }));
 
-// Static file serving for dist folder
-app.use('/', express.static(path.join(__dirname, 'dist')));
+// ---------------------------------------------------------------------------
+// Global rate limiter
+// ---------------------------------------------------------------------------
+// Broad per-IP ceiling that sits in front of every route. Route-level limiters
+// (login, PIN verify, admin mutations) live alongside their handlers and apply
+// tighter limits on top of this. The goal of the global limiter is to blunt
+// scraping and brute-force pressure across the site as a whole — not to be the
+// sole defence for sensitive endpoints.
+const globalRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: IS_PROD ? 300 : 1000,
+  standardHeaders: true,
+  legacyHeaders: false,
+  // Skip the static asset handler's hot path only for obvious long-cache files;
+  // everything else (including HTML and API) counts against the budget.
+  skip: (req) => /\.(?:css|js|mjs|map|png|jpe?g|gif|webp|avif|svg|ico|woff2?|ttf)$/i.test(req.path),
+  message: { success: false, message: 'Too many requests. Please slow down.' },
+});
+app.use(globalRateLimiter);
+
+// Slightly tighter limiter for the whole /api surface. Admin routes layer a
+// third limiter on top for authenticated mutations.
+const apiRateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: IS_PROD ? 120 : 600,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many API requests. Please slow down.' },
+});
+app.use('/api/', apiRateLimiter);
+
+// ---------------------------------------------------------------------------
+// Static file serving
+// ---------------------------------------------------------------------------
+const DIST_DIR = path.resolve(__dirname, 'dist');
+const SRC_DIR = path.resolve(__dirname, 'src');
+const NOT_FOUND_PAGE = path.join(DIST_DIR, '404.html');
+
+function send404(res) {
+  if (fs.existsSync(NOT_FOUND_PAGE)) return res.status(404).sendFile(NOT_FOUND_PAGE);
+  return res.status(404).type('text/plain').send('Not Found');
+}
+
+app.use('/', express.static(DIST_DIR));
 
 // Serve source files for development only — scoped to the src/ subdirectory.
 if (!IS_PROD) {
-  app.use('/src', express.static(path.join(__dirname, 'src')));
+  app.use('/src', express.static(SRC_DIR));
 }
 
 // API routes
@@ -139,45 +201,81 @@ app.get('/admin', (req, res) => {
   res.redirect(301, '/admin/');
 });
 
-// Handle static file serving and SPA fallback with explicit 404 handling
-app.get('*', (req, res, _next) => {
-  // Normalize and prevent path traversal
-  const safePath = path.normalize(req.path).replace(/^\/+/, '');
-  const filePath = path.join(__dirname, 'dist', safePath);
+// ---------------------------------------------------------------------------
+// Path-traversal-safe static fallback
+// ---------------------------------------------------------------------------
+// Resolve the user-supplied path against DIST_DIR, then verify that the
+// absolute resolved path is still inside DIST_DIR. `path.normalize` is not
+// sufficient on its own (e.g. a path like `/..%2fetc/passwd` after URL-decoding
+// can escape with shallow normalization); `path.resolve` + prefix check is the
+// canonical defence. See CodeQL js/path-injection.
+function safeResolveUnderRoot(root, userPath) {
+  // Strip leading slashes and decode percent-encoding defensively. decodeURIComponent
+  // can throw on malformed input — treat that as "not found" rather than 500.
+  let decoded;
+  try {
+    decoded = decodeURIComponent(userPath || '');
+  } catch {
+    return null;
+  }
+  // Reject obvious traversal segments early for defence in depth. Even though
+  // the resolve+prefix check below is the real guard, rejecting `..` keeps the
+  // intent obvious to future readers and to static analysis.
+  if (decoded.includes('\0')) return null;
+  const normalized = path.normalize(decoded).replace(/^[/\\]+/, '');
+  const absolute = path.resolve(root, normalized);
+  const rootWithSep = root.endsWith(path.sep) ? root : root + path.sep;
+  if (absolute !== root && !absolute.startsWith(rootWithSep)) return null;
+  return absolute;
+}
+
+// Handle static file serving and SPA fallback with explicit 404 handling.
+// Implemented as middleware (not `app.get('*')`) because Express 5's
+// path-to-regexp no longer accepts a bare `*` as a path pattern.
+app.use((req, res, _next) => {
+  if (req.method !== 'GET' && req.method !== 'HEAD') return res.status(405).end();
+
+  const resolved = safeResolveUnderRoot(DIST_DIR, req.path);
+  if (!resolved) {
+    return send404(res);
+  }
 
   // If the request targets a static file extension, try to serve it and
   // fall back to the 404 page when missing.
   if (path.extname(req.path)) {
-    if (fs.existsSync(filePath)) {
-      return res.sendFile(filePath);
+    if (fs.existsSync(resolved) && fs.statSync(resolved).isFile()) {
+      return res.sendFile(resolved);
     }
-    return res.status(404).sendFile(path.join(__dirname, 'dist', '404.html'));
+    return send404(res);
   }
 
-  // If path is a directory-like request (no extension), prefer index.html
-  const indexCandidate = path.join(filePath, 'index.html');
-  if (fs.existsSync(indexCandidate)) {
+  // Directory-like requests prefer index.html. Re-resolve through the root
+  // check so a path like `/../admin/` can never escape DIST_DIR.
+  const indexCandidate = safeResolveUnderRoot(DIST_DIR, path.join(req.path, 'index.html'));
+  if (indexCandidate && fs.existsSync(indexCandidate)) {
     return res.sendFile(indexCandidate);
   }
 
-  // SPA fallback: if `dist/index.html` exists, serve it so client-side routes load.
-  const indexPath = path.join(__dirname, 'dist', 'index.html');
-  if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
-
-  // Last resort: serve 404 page.
-  return res.status(404).sendFile(path.join(__dirname, 'dist', '404.html'));
+  // This is a multi-page static site, not a SPA, so unknown URLs must 404
+  // rather than silently returning the homepage. Returning index.html here
+  // would (a) confuse SEO crawlers with soft-404s and (b) turn every
+  // nonexistent URL into a 200, which defeats path-traversal guards.
+  return send404(res);
 });
 
 // Centralized error handling middleware (must be last)
 app.use(errorHandler);
 
-// Start server
-app.listen(PORT, () => {
-  console.log('\n🚀 Gold Prices Platform Server');
-  console.log(`   Local:   http://localhost:${PORT}`);
-  console.log(`   Admin:   http://localhost:${PORT}/admin`);
-  console.log(`   API:     http://localhost:${PORT}/api/admin`);
-  console.log(`   Health:  http://localhost:${PORT}/api/health\n`);
-});
+// Start server only when this module is run directly (not when required by
+// tests). This keeps `require('./server')` a pure side-effect-free export.
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log('\n🚀 Gold Prices Platform Server');
+    console.log(`   Local:   http://localhost:${PORT}`);
+    console.log(`   Admin:   http://localhost:${PORT}/admin`);
+    console.log(`   API:     http://localhost:${PORT}/api/admin`);
+    console.log(`   Health:  http://localhost:${PORT}/api/health\n`);
+  });
+}
 
 module.exports = app;

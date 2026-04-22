@@ -10,31 +10,7 @@ import * as cache from '../lib/cache.js';
 import { renderAdSlot } from '../components/adSlot.js';
 import { CONSTANTS } from '../config/index.js';
 import { KARATS } from '../config/index.js';
-
-/** Escape a string for safe inclusion in HTML (XSS prevention). */
-function esc(str) {
-  return String(str ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-/** Return the URL only if it uses a safe protocol (http/https), otherwise ''. */
-function safeUrl(url) {
-  if (!url || typeof url !== 'string') return '';
-  const trimmed = url.trim();
-  if (/^https?:\/\//i.test(trimmed)) return trimmed;
-  return '';
-}
-
-/** Return a tel:-safe phone string (digits, +, -, spaces only). */
-function safeTel(phone) {
-  if (!phone || typeof phone !== 'string') return '';
-  const cleaned = phone.replace(/[^\d+\-() ]/g, '').replace(/\s+/g, '');
-  return cleaned;
-}
+import { escape as esc, safeHref as safeUrl, safeTel } from '../lib/safe-dom.js';
 
 /**
  * Mutable shops array — starts with hardcoded fallback data,

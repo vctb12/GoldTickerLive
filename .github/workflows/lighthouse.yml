@@ -3,9 +3,16 @@ name: Lighthouse CI
 on:
   workflow_dispatch:
 
+# Manual best-effort performance reporting — no write scope required.
+permissions:
+  contents: read
+
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
+    # Lighthouse runs are bounded; hard timeout prevents hung preview servers from
+    # tying up minutes indefinitely.
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v6
