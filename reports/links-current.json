@@ -1,0 +1,200 @@
+{
+  "links": [
+    {
+      "url": "index.html",
+      "status": 200,
+      "state": "OK",
+      "failureDetails": []
+    },
+    {
+      "url": "assets/analytics.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "styles/critical.css",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "styles/global.css",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "styles/pages/home.css",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "src/pages/home.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "countries/index.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "assets/apple-touch-icon.png",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "favicon.svg",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "assets/favicon-32x32.png",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "manifest.json",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "tracker.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "shops.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "calculator.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "methodology.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "countries/uae/",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "insights.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "learn.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "countries/saudi-arabia/",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "invest.html",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "countries/kuwait/",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "countries/qatar/",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "countries/bahrain/",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "countries/egypt/",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "countries/jordan/",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "countries/oman/",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "countries/morocco/",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    },
+    {
+      "url": "countries/india/",
+      "status": 200,
+      "state": "OK",
+      "parent": "index.html",
+      "failureDetails": []
+    }
+  ],
+  "passed": true
+}
