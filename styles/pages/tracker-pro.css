@@ -695,7 +695,7 @@ body.tracker-pro-page {
   min-height: 460px;
   border-radius: var(--radius-xl);
   border: 1.5px solid var(--tp-border);
-  background: linear-gradient(180deg, var(--surface-primary) 0%, var(--surface-accent) 100%);
+  background: var(--surface-primary);
   overflow: hidden;
   box-shadow: var(--elev-2);
   transition: all 0.3s ease;
