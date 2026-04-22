@@ -1552,16 +1552,16 @@ body.tracker-pro-page {
 
 /* cached — amber */
 .tracker-source-badge--cached {
-  background: rgb(180 110 0 / 8%);
-  border-color: rgb(180 110 0 / 25%);
-  color: #8a5500;
+  background: var(--color-warning-bg);
+  border-color: var(--color-warning-border);
+  color: var(--color-warning-text);
 }
 
 /* estimated — orange warning */
 .tracker-source-badge--estimated {
-  background: rgb(200 80 0 / 8%);
-  border-color: rgb(200 80 0 / 25%);
-  color: #b84800;
+  background: var(--color-stale-bg);
+  border-color: var(--color-stale-bg);
+  color: var(--color-stale);
 }
 
 /* triggered alert highlight */
