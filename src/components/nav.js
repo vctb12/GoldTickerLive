@@ -587,49 +587,19 @@ export function injectNav(lang = 'en', depth = 0) {
 // Mobile bottom navigation bar
 // ─────────────────────────────────────────────────────────────────────────────
 
-function _injectMobileBottomNav(lang, depth) {
+function _injectMobileBottomNav(lang, _depth) {
   // Guard against double-injection
   if (document.querySelector('.mobile-bottom-nav')) return;
 
   const isAr = lang === 'ar';
 
-  function r(href) {
-    const base = href.replace(/^\.\.\//, '');
-    if (depth === 0) return base;
-    return '../'.repeat(depth) + base;
-  }
-
+  // Bottom nav uses root-safe absolute hrefs (matches phx/06 AR-nav pattern).
   const items = [
-    {
-      href: r('../index.html'),
-      icon: '🏠',
-      label: isAr ? 'الرئيسية' : 'Home',
-      key: 'home',
-    },
-    {
-      href: r('../tracker.html'),
-      icon: '📈',
-      label: isAr ? 'تتبع' : 'Tracker',
-      key: 'tracker',
-    },
-    {
-      href: r('../calculator.html'),
-      icon: '🧮',
-      label: isAr ? 'حاسبة' : 'Calc',
-      key: 'calculator',
-    },
-    {
-      href: r('../shops.html'),
-      icon: '🏪',
-      label: isAr ? 'المحلات' : 'Shops',
-      key: 'shops',
-    },
-    {
-      action: 'menu',
-      icon: '☰',
-      label: isAr ? 'القائمة' : 'More',
-      key: 'menu',
-    },
+    { href: '/', icon: '🏠', label: isAr ? 'الرئيسية' : 'Home', key: 'home' },
+    { href: '/tracker.html', icon: '📈', label: isAr ? 'تتبع' : 'Tracker', key: 'tracker' },
+    { href: '/calculator.html', icon: '🧮', label: isAr ? 'حاسبة' : 'Calc', key: 'calculator' },
+    { href: '/shops.html', icon: '🏪', label: isAr ? 'المحلات' : 'Shops', key: 'shops' },
+    { action: 'menu', icon: '☰', label: isAr ? 'القائمة' : 'More', key: 'menu' },
   ];
 
   const itemsHtml = items
