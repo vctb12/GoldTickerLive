@@ -755,7 +755,7 @@ export function initNavSearch(basePath = '/') {
 
   function closeOverlay() {
     overlay.style.display = 'none';
-    if (dropdown) dropdown.innerHTML = '';
+    if (dropdown) dropdown.replaceChildren();
   }
 
   btn.addEventListener('click', (e) => {
@@ -813,7 +813,7 @@ export function initNavSearch(basePath = '/') {
     clearTimeout(debounceTimer);
     const q = input.value.trim();
     if (q.length < 2) {
-      dropdown.innerHTML = '';
+      dropdown.replaceChildren();
       return;
     }
 

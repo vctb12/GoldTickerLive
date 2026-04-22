@@ -210,7 +210,7 @@ export function trapFocus(el) {
 export function renderPagination(container, { total, page, perPage, onChange }) {
   const totalPages = Math.max(1, Math.ceil(total / perPage));
   if (totalPages <= 1) {
-    container.innerHTML = '';
+    container.replaceChildren();
     return;
   }
 

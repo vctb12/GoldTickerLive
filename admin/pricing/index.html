@@ -1104,12 +1104,12 @@
 
         if (!liveState.spotUsd && !liveState.error) {
           tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-dim)"><span class="inline-spin"></span> Loading…</td></tr>`;
-          if (cardsGrid) cardsGrid.innerHTML = '';
+          if (cardsGrid) cardsGrid.replaceChildren();
           return;
         }
         if (liveState.error && !liveState.spotUsd) {
           tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--danger)">Could not load live prices.</td></tr>`;
-          if (cardsGrid) cardsGrid.innerHTML = '';
+          if (cardsGrid) cardsGrid.replaceChildren();
           return;
         }
 
@@ -1395,8 +1395,7 @@
         input.style.cssText = 'width:100%;padding:3px 6px;font-size:0.8125rem;height:28px;';
         input.setAttribute('aria-label', `Edit ${field}`);
 
-        cell.innerHTML = '';
-        cell.appendChild(input);
+        cell.replaceChildren(input);
         input.focus();
         input.select();
 

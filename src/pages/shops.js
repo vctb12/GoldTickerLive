@@ -1093,7 +1093,7 @@ function renderFilterPills() {
   }
 
   if (!pills.length) {
-    pillsContainer.innerHTML = '';
+    pillsContainer.replaceChildren();
     return;
   }
 
@@ -1209,7 +1209,7 @@ function render() {
 
   if (!shops.length) {
     console.log('[shops] No shops to render, showing empty state');
-    document.getElementById('shops-grid').innerHTML = '';
+    document.getElementById('shops-grid').replaceChildren();
     empty.hidden = false;
     return;
   }

@@ -83,7 +83,7 @@ export class GoldChart {
     const container = document.getElementById(this.containerId);
     if (!container) return;
 
-    container.innerHTML = '';
+    container.replaceChildren();
 
     this._chart = this._LW.createChart(container, {
       width: container.clientWidth,

@@ -93,6 +93,34 @@ Before claiming work is complete:
 
 Never say “fixed” or “done” unless you verified it.
 
+### Commands
+
+```bash
+npm install                      # installs all deps (node_modules is not committed)
+
+# Required env vars for the test suite and `npm start`.
+# server/lib/auth.js throws at module-load without these.
+export JWT_SECRET=<random 32+ char string>
+export ADMIN_PASSWORD=<any string>
+export ADMIN_ACCESS_PIN=<6+ digit PIN>
+
+npm test                         # 231+ node:test suites under tests/*.test.js
+npm run lint                     # ESLint flat config (eslint.config.mjs)
+npm run validate                 # validate-build.js + check-unsafe-dom.js
+npm run quality                  # lint + prettier --check + stylelint
+npm run build                    # Vite production build → dist/
+```
+
+### DOM safety gate
+
+`npm run validate` also runs `scripts/node/check-unsafe-dom.js`. This script has a per-file baseline
+for `innerHTML` / `outerHTML` / `insertAdjacentHTML` / `document.write` sinks. **Adding a new sink
+fails CI**; removing sinks is encouraged and the baseline should be tightened in the same PR. Use
+`node scripts/node/check-unsafe-dom.js --print` to regenerate the table.
+
+Prefer `node.replaceChildren()` (or `clear(node)` from `src/lib/safe-dom.js`) over
+`node.innerHTML = ''`.
+
 Use this reporting format in final responses:
 
 1. Task understanding

@@ -5,11 +5,35 @@ repository.
 
 ## Running Locally
 
-No build step is required. Serve the static files directly:
+The public site is static and can be browsed without a build for quick inspection:
 
 ```bash
 python3 -m http.server 8080
 # Then open http://localhost:8080
+```
+
+For the full developer experience (HMR, ES-module bundling, Vite plugins) use:
+
+```bash
+npm install
+npm run dev       # Vite dev server (recommended for editing)
+```
+
+Production bundle and preview:
+
+```bash
+npm run build     # runs extract-baseline → normalize-shops → vite build → dist/
+npm run preview
+```
+
+The Node/Express admin backend runs separately:
+
+```bash
+# Required env vars — server/lib/auth.js throws at startup if any is missing
+export JWT_SECRET=<random 32+ char string>
+export ADMIN_PASSWORD=<bcrypt-hash-able string>
+export ADMIN_ACCESS_PIN=<6+ digit numeric PIN>
+npm start         # node server.js — Express admin API on :3000
 ```
 
 Append `?debug=true` to any page URL to enable the debug panel (simulates API failures, clears
@@ -17,41 +41,66 @@ cache, inspects live state).
 
 ## Architecture Overview
 
-This is a **zero-dependency, static front-end** gold pricing platform for GCC/Arab markets, written
-in vanilla ES6 modules — no bundler, no framework, no package manager.
+GoldPrices is a **bilingual, multi-page static front-end** (vanilla ES modules, no SPA) plus an
+**optional Node/Express admin backend**. The public site is 100% static after `npm run build`; the
+server is only required for the admin surface.
 
-### Data Flow
+- **Front-end build:** Vite 8 bundles HTML + ES modules from repo root into `dist/`. Pre-build Node
+  scripts (`scripts/node/extract-baseline.js`, `scripts/node/normalize-shops.js`) seed data files
+  that are then consumed at runtime.
+- **Front-end runtime:** vanilla ES6 modules under `src/`, loaded directly by each page's HTML.
+- **Admin backend:** Express 5 app in `server.js` + `server/` (auth via JWT + bcrypt, Helmet CSP,
+  `express-rate-limit`, `lowdb` JSON store). Mounted at `/api/*` and `/admin/*`.
+- **Deploy:** `.github/workflows/deploy.yml` runs `npm ci` → `npm run build` → publishes `dist/` to
+  GitHub Pages. The admin server is **not** deployed via Pages — it is self-hosted or run inside a
+  dedicated environment.
+
+### Data Flow (public pages)
 
 ```
 HTML page
   → page-specific JS (src/pages/home.js, src/pages/tracker-pro.js, src/pages/calculator.js, …)
-    → src/lib/ (api.js → cache.js → price-calculator.js → formatter.js)
+    → src/lib/ (api.js → cache.js → price-calculator.js → formatter.js → safe-dom.js)
     → src/config/ (constants, countries, karats, translations)
-    → src/components/ (nav, footer, ticker, chart)
+    → src/components/ (nav, footer, ticker, chart, breadcrumbs)
       → External APIs (gold-api.com for XAU/USD, exchangerate-api.com for FX)
 ```
 
 ### Key Modules
 
-| Path                          | Role                                                                                                                                      |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/config/constants.js`     | API URLs, timeouts, refresh interval (90 s), cache key names, AED peg (3.6725), troy-oz divisor                                           |
-| `src/config/countries.js`     | 24+ countries with codes, names (EN/AR), currencies, flags, regional groups, peg flags                                                    |
-| `src/config/karats.js`        | 7 karat definitions (24K–14K) with purity fractions and EN/AR labels                                                                      |
-| `src/config/translations.js`  | All UI strings in English and Arabic                                                                                                      |
-| `src/lib/api.js`              | Fetch with timeout, retry, and simulation hooks for gold price and FX rates                                                               |
-| `src/lib/cache.js`            | Dual-layer localStorage persistence (primary + fallback) with stale recovery                                                              |
-| `src/lib/price-calculator.js` | Core formulas: `usdPerGram(karat) = (spotUsdPerOz / 31.1035) × purity`; local price = USD × FX rate                                       |
-| `src/lib/formatter.js`        | Price, date, time, and label formatting                                                                                                   |
-| `src/lib/export.js`           | CSV / JSON / brief export generators                                                                                                      |
-| `src/lib/alerts.js`           | Browser-side price alert logic                                                                                                            |
-| `src/lib/historical-data.js`  | Merges session history with DataHub baseline dataset                                                                                      |
-| `src/lib/search.js`           | Bilingual (EN/AR) search and filtering                                                                                                    |
-| `src/tracker/state.js`        | Tracker workspace state (mode, currency, karat, range, alerts, presets, favorites); synced to URL hash (`#mode=live&cur=AED&k=24&u=gram`) |
-| `src/tracker/ui-shell.js`     | UI orchestration for the tracker page                                                                                                     |
-| `src/components/chart.js`     | Interactive price chart                                                                                                                   |
-| `src/components/nav.js`       | Bilingual navigation bar                                                                                                                  |
-| `data/shops.js`               | Hardcoded shop reference data                                                                                                             |
+| Path                            | Role                                                                                                                                      |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/config/constants.js`       | API URLs, timeouts, refresh interval (90 s), cache key names, AED peg (3.6725), troy-oz divisor                                           |
+| `src/config/countries.js`       | 24+ countries with codes, names (EN/AR), currencies, flags, regional groups, peg flags                                                    |
+| `src/config/karats.js`          | 7 karat definitions (24K–14K) with purity fractions and EN/AR labels                                                                      |
+| `src/config/translations.js`    | All UI strings in English and Arabic                                                                                                      |
+| `src/lib/api.js`                | Fetch with timeout, retry, and simulation hooks for gold price and FX rates                                                               |
+| `src/lib/cache.js`              | Dual-layer localStorage persistence (primary + fallback) with stale recovery                                                              |
+| `src/lib/price-calculator.js`   | Core formulas: `usdPerGram(karat) = (spotUsdPerOz / 31.1035) × purity`; local price = USD × FX rate                                       |
+| `src/lib/formatter.js`          | Price, date, time, and label formatting                                                                                                   |
+| `src/lib/export.js`             | CSV / JSON / brief export generators                                                                                                      |
+| `src/lib/safe-dom.js`           | Canonical escape/safeHref/safeTel/el helpers — the single allowed home for `innerHTML`                                                    |
+| `src/lib/historical-data.js`    | Merges session history with DataHub baseline dataset                                                                                      |
+| `src/lib/search.js`             | Bilingual (EN/AR) search and filtering                                                                                                    |
+| `src/tracker/state.js`          | Tracker workspace state (mode, currency, karat, range, alerts, presets, favorites); synced to URL hash (`#mode=live&cur=AED&k=24&u=gram`) |
+| `src/tracker/ui-shell.js`       | UI orchestration for the tracker page                                                                                                     |
+| `src/components/nav.js`         | Bilingual navigation bar — consumes `src/components/nav-data.js`                                                                          |
+| `src/components/nav-data.js`    | Nav IA: solo links (home, shops) + groups (prices, tools, learn, more) in EN + AR                                                         |
+| `src/components/chart.js`       | Interactive price chart                                                                                                                   |
+| `server/lib/auth.js`            | JWT + bcrypt auth for admin; requires `JWT_SECRET`, `ADMIN_PASSWORD`, `ADMIN_ACCESS_PIN`                                                  |
+| `server/lib/circuit-breaker.js` | CLOSED→OPEN→HALF_OPEN breaker for upstream API calls                                                                                      |
+| `data/shops.js`                 | Hardcoded shop reference data                                                                                                             |
+
+### Security / DOM Safety
+
+- **Never add new `innerHTML`, `outerHTML`, `insertAdjacentHTML`, or `document.write` call sites
+  without updating the baseline in `scripts/node/check-unsafe-dom.js`.** The regression guard
+  (`npm run validate` → `check-unsafe-dom`) counts sinks per file; new sinks fail CI.
+- Use helpers from `src/lib/safe-dom.js` (`escape`, `safeHref`, `safeTel`, `el`, `clear`) when you
+  need to build HTML from untrusted data. For empty-clear use `node.replaceChildren()`, not
+  `node.innerHTML = ''`.
+- Admin pages under `admin/` never store raw API keys in localStorage — secrets flow through server
+  routes only.
 
 ### State Management
 
@@ -92,3 +141,25 @@ HTML page
 | exchangerate-api.com | Currency conversion rates               |
 | datahub.io           | Historical baseline dataset             |
 | GDELT DOC API        | Market news headlines                   |
+
+### Tests / Lint / Validate / Build
+
+- `npm test` — runs 231+ Node `node:test` suites under `tests/*.test.js`. Requires `JWT_SECRET`,
+  `ADMIN_PASSWORD`, `ADMIN_ACCESS_PIN` env vars (server/lib/auth.js throws at startup otherwise).
+- `npm run validate` — runs `scripts/node/validate-build.js` (HTML integrity + module imports) and
+  `scripts/node/check-unsafe-dom.js` (DOM-sink regression guard).
+- `npm run lint` — ESLint over all JS/MJS via the flat config `eslint.config.mjs`.
+- `npm run quality` — lint + `prettier --check` + stylelint.
+- `npm run build` — full Vite build.
+
+### Workflows
+
+Key `.github/workflows/` entries:
+
+- `ci.yml` — tests, lint, validate on every push/PR.
+- `deploy.yml` — `npm ci` → `npm run build` → publish `dist/` to GitHub Pages.
+- `codeql.yml` — JavaScript/TypeScript code scanning.
+- `semgrep.yml` — complementary static analysis.
+- `lighthouse.yml`, `perf-check.yml` — performance monitoring.
+- `post_gold.yml`, `daily-newsletter.yml`, `weekly-newsletter.yml`, `spike_alert.yml`,
+  `uptime-monitor.yml`, `health_check.yml`, `sync-db-to-git.yml` — scheduled content / ops jobs.

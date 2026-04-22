@@ -361,7 +361,7 @@ export function renderDecisionCues() {
   if (!_el.decisionCues) return;
   const spot = _currentSpot();
   if (!spot) {
-    _el.decisionCues.innerHTML = '';
+    _el.decisionCues.replaceChildren();
     return;
   }
   const lines = [

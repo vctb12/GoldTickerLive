@@ -1369,7 +1369,7 @@
         // Import CSV modal
         document.getElementById('import-csv-btn').addEventListener('click', () => {
           document.getElementById('csv-input').value = '';
-          document.getElementById('csv-preview').innerHTML = '';
+          document.getElementById('csv-preview').replaceChildren();
           document.getElementById('import-csv-modal').classList.remove('hidden');
         });
         document
@@ -1408,7 +1408,7 @@
             })
             .filter((o) => o.name?.trim());
           const preview = document.getElementById('csv-preview');
-          preview.innerHTML = '';
+          preview.replaceChildren();
           if (parsedCsvShops.length === 0) {
             const warning = document.createElement('span');
             warning.className = 'text-warning';
