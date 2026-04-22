@@ -65,8 +65,8 @@ body.tracker-pro-page {
 }
 
 .tracker-data-trust-banner {
-  background: linear-gradient(135deg, rgb(255 248 240 / 90%) 0%, rgb(255 251 245 / 70%) 100%);
-  border-bottom: 2px solid #f0dac9;
+  background: var(--surface-accent);
+  border-bottom: 1px solid var(--border-default);
   padding: 0.95rem 1.5rem;
   display: flex;
   align-items: center;
