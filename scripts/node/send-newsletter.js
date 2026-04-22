@@ -115,12 +115,6 @@ async function sendNewsletter(type = 'daily') {
   try {
     console.log(`[Newsletter] Starting ${type} newsletter send...`);
 
-    // Generate content
-    const content =
-      type === 'weekly' ? await generateWeeklyRecap() : await generateDailyDigest();
-
-    console.log(`[Newsletter] Generated content: ${content.subject}`);
-
     // Get active subscribers
     const subscribers = await getActiveSubscribers({ frequency: type });
 
@@ -130,6 +124,12 @@ async function sendNewsletter(type = 'daily') {
     }
 
     console.log(`[Newsletter] Found ${subscribers.length} active subscribers`);
+
+    // Generate content
+    const content =
+      type === 'weekly' ? await generateWeeklyRecap() : await generateDailyDigest();
+
+    console.log(`[Newsletter] Generated content: ${content.subject}`);
 
     // Send in batches
     let totalSent = 0;
