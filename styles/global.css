@@ -44,6 +44,14 @@
   --color-error: #b81428;
   --color-error-bg: rgb(184 20 40 / 8%);
 
+  /* Warning / stale-data palette — used by freshness badges, "cached (API
+     unavailable)" banners, and delayed-quote labels. Amber, not red, so the
+     user isn't misled into thinking the page is broken. */
+  --color-warning: #a0671c;
+  --color-warning-bg: rgb(212 160 23 / 10%);
+  --color-warning-border: rgb(212 160 23 / 35%);
+  --color-warning-text: #7a4f15;
+
   /* Semantic surfaces (canonical) */
   --surface-canvas: var(--color-bg);
   --surface-primary: var(--color-surface);
@@ -5350,4 +5358,129 @@ body > * {
 
 .spot-change-neutral {
   color: inherit;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Trust & freshness utility classes
+   ═══════════════════════════════════════════════════════════════════════════
+
+   Promoted from per-page CSS so every tracker / country / city / shops /
+   tools page speaks the same trust language. Use these classes on any
+   element that surfaces the freshness or provenance of price/listing data.
+
+   - `.trust-banner`    — hero/top-of-page banner announcing review date /
+                          data source. Subtle background, clear border.
+   - `.freshness-label` — inline chip/label on a price card: live, cached,
+                          delayed, estimated, baseline.
+   - `.freshness-label--live`   — green, reserved for real-time API data.
+   - `.freshness-label--cached` — amber, for stale/cached/fallback data.
+   - `.freshness-label--stale`  — same amber as cached; alternate name.
+   - `.freshness-label--estimated` — amber, for derived/computed values.
+   - `.methodology-link` — consistent styling for the "See methodology"
+                           link shown next to any price display.
+   - `.disclaimer` / `.disclaimer--inline` — standardised small-print tone
+                           for "confirm directly with seller" / "not advice"
+                           copy.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.trust-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--radius-md, 10px);
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  color: var(--color-warning-text);
+  font-size: var(--text-xs, 0.78rem);
+  font-weight: var(--weight-semibold, 600);
+  line-height: 1.4;
+}
+
+.trust-banner--success {
+  background: var(--color-up-bg);
+  border-color: rgb(23 104 50 / 30%);
+  color: var(--color-up);
+}
+
+.freshness-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: var(--text-2xs, 0.7rem);
+  font-weight: var(--weight-semibold, 600);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps, 0.04em);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-text-muted);
+}
+
+.freshness-label--live {
+  background: var(--color-up-bg);
+  border-color: rgb(23 104 50 / 35%);
+  color: var(--color-up);
+}
+
+.freshness-label--cached,
+.freshness-label--stale,
+.freshness-label--delayed,
+.freshness-label--estimated,
+.freshness-label--baseline {
+  background: var(--color-warning-bg);
+  border-color: var(--color-warning-border);
+  color: var(--color-warning-text);
+}
+
+.methodology-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: var(--text-xs, 0.78rem);
+  font-weight: var(--weight-medium, 500);
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  transition: color var(--duration-fast, 120ms) var(--ease-out, ease-out);
+}
+
+.methodology-link:hover,
+.methodology-link:focus-visible {
+  color: var(--color-gold, #c89b30);
+  text-decoration-style: solid;
+}
+
+.disclaimer {
+  font-size: var(--text-xs, 0.78rem);
+  line-height: var(--leading-normal, 1.5);
+  color: var(--color-text-muted);
+  font-style: italic;
+  max-width: 62ch;
+}
+
+.disclaimer--inline {
+  display: inline;
+  font-style: normal;
+}
+
+/* Dark-mode tone for warning / trust utility classes so they remain legible
+   on the darker surfaces. Scoped to :root.dark / [data-theme='dark'] so
+   the tri-state theme toggle controls it. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-warning: #d4a017;
+    --color-warning-bg: rgb(212 160 23 / 15%);
+    --color-warning-border: rgb(212 160 23 / 45%);
+    --color-warning-text: #e8c76a;
+  }
+}
+
+:root[data-theme='dark'] {
+  --color-warning: #d4a017;
+  --color-warning-bg: rgb(212 160 23 / 15%);
+  --color-warning-border: rgb(212 160 23 / 45%);
+  --color-warning-text: #e8c76a;
 }
