@@ -1,7 +1,41 @@
-/*    /index.html   200
-/admin /admin/ 301
-/admin/*  /admin/:splat  200
+# Netlify / Cloudflare Pages _redirects file
+# -----------------------------------------------------------------------------
+# This site is a MULTI-PAGE STATIC SITE, not a SPA. Do NOT add a catch-all
+# to /index.html 200 — that produces soft-404s and confuses crawlers.
+# Unknown URLs must fall through to /404.html with a 404 status.
 
-# Common legacy redirects
-/old-shops    /shops.html   301
-/old-tracker  /tracker.html 301
+# --- Admin panel ------------------------------------------------------------
+/admin        /admin/          301
+/admin/*      /admin/:splat    200
+
+# --- Legacy shop/tracker paths ---------------------------------------------
+/old-shops    /shops.html      301
+/old-tracker  /tracker.html    301
+
+# --- Country pages: /countries/<slug>.html → /countries/<slug>/ -------------
+# Baseline scan (reports/links-initial.json) shows several internal links use
+# the flat `.html` form while actual files live at `/countries/<slug>/index.html`.
+/countries/uae.html            /countries/uae/             301
+/countries/saudi-arabia.html   /countries/saudi-arabia/    301
+/countries/bahrain.html        /countries/bahrain/         301
+/countries/kuwait.html         /countries/kuwait/          301
+/countries/jordan.html         /countries/jordan/          301
+/countries/qatar.html          /countries/qatar/           301
+/countries/oman.html           /countries/oman/            301
+/countries/egypt.html          /countries/egypt/           301
+/countries/morocco.html        /countries/morocco/         301
+/countries/india.html          /countries/india/           301
+/countries/pakistan.html       /countries/pakistan/        301
+/countries/turkey.html         /countries/turkey/          301
+/countries/iraq.html           /countries/iraq/            301
+/countries/syria.html          /countries/syria/           301
+/countries/lebanon.html        /countries/lebanon/         301
+/countries/palestine.html      /countries/palestine/       301
+/countries/yemen.html          /countries/yemen/           301
+/countries/sudan.html          /countries/sudan/           301
+/countries/libya.html          /countries/libya/           301
+/countries/tunisia.html        /countries/tunisia/         301
+/countries/algeria.html        /countries/algeria/         301
+
+# --- Explicit 404 fallback (defensive — Netlify does this by default) -------
+/*            /404.html        404
