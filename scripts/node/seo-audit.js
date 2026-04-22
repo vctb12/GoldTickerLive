@@ -56,6 +56,9 @@ function extract(html, file) {
   const hreflangCount = (html.match(/hreflang=/g) || []).length;
   // Detect noindex — skip full SEO checks for private/utility pages
   const isNoindex = /<meta\s+name="robots"\s+content="[^"]*noindex/i.test(html);
+  // Detect meta-refresh redirect stubs — canonical points to the redirect target,
+  // which differs from the stub URL by design.
+  const isRefreshStub = /<meta\s+http-equiv=["']refresh["'][^>]*>/i.test(html);
   const ogTitle = (html.match(/<meta\s+property="og:title"\s+content="([^"]*)"/s) || [])[1] || '—';
   const twitterCard =
     (html.match(/<meta\s+name="twitter:card"\s+content="([^"]*)"/s) || [])[1] || '—';
@@ -87,8 +90,10 @@ function extract(html, file) {
   }
 
   const issues = [];
-  // Skip detailed SEO checks for noindex pages (admin, offline, embed, etc.)
-  if (!isNoindex) {
+  // Skip detailed SEO checks for noindex or meta-refresh redirect stubs.
+  // These are transient pages; their canonical is expected to point to the
+  // real destination rather than self, and hreflang/schema are optional.
+  if (!isNoindex && !isRefreshStub) {
     if (title === '❌ MISSING') issues.push('Missing title');
     if (desc === '❌ MISSING') issues.push('Missing meta description');
     if (canonical === '❌ MISSING') issues.push('Missing canonical');
@@ -121,7 +126,12 @@ function extract(html, file) {
 
 function validateSitemap(htmlFiles) {
   const sitemapPath = path.join(REPO_ROOT, 'sitemap.xml');
-  if (!fs.existsSync(sitemapPath)) return ['❌ sitemap.xml not found'];
+  if (!fs.existsSync(sitemapPath)) {
+    // sitemap.xml is generated at deploy time (see .github/workflows/deploy.yml),
+    // not committed to the repo. Skip this validation locally unless the file
+    // exists — CI environments that generate it first will still see real issues.
+    return { issues: [], skipped: true };
+  }
 
   const sitemap = fs.readFileSync(sitemapPath, 'utf-8');
   const sitemapUrls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => m[1]);
@@ -132,6 +142,7 @@ function validateSitemap(htmlFiles) {
   for (const file of htmlFiles) {
     const content = fs.readFileSync(path.join(REPO_ROOT, file), 'utf-8');
     if (/<meta\s+name="robots"\s+content="[^"]*noindex/i.test(content)) continue;
+    if (/<meta\s+http-equiv=["']refresh["'][^>]*>/i.test(content)) continue;
     // Build canonical URL for the file (same logic as extract())
     let url;
     if (file === 'index.html') {
@@ -167,11 +178,8 @@ function validateSitemap(htmlFiles) {
     }
   }
 
-  return issues;
+  return { issues, skipped: false };
 }
-
-// ─────────────────────────────────────────────────────────────────────
-// robots.txt validation
 // ─────────────────────────────────────────────────────────────────────
 
 function validateRobots() {
@@ -239,11 +247,14 @@ if (allIssues.length > 0) {
 
 // Sitemap
 console.log('\n## Sitemap Validation');
-const sitemapIssues = validateSitemap(htmlFiles);
-if (sitemapIssues.length === 0) {
+const sitemapResult = validateSitemap(htmlFiles);
+if (sitemapResult.skipped) {
+  console.log('ℹ Skipped: sitemap.xml is generated at deploy time and not present locally.');
+  console.log('  Run `npm run generate-sitemap` first to validate sitemap membership.');
+} else if (sitemapResult.issues.length === 0) {
   console.log('✅ All pages found in sitemap, all sitemap URLs have matching files.');
 } else {
-  for (const issue of sitemapIssues) {
+  for (const issue of sitemapResult.issues) {
     console.log(`- ${issue}`);
   }
 }
@@ -262,7 +273,7 @@ if (robotsIssues.length === 0) {
 // Exit code
 const totalIssues =
   allIssues.reduce((sum, r) => sum + r.issues.length, 0) +
-  sitemapIssues.length +
+  (sitemapResult.skipped ? 0 : sitemapResult.issues.length) +
   robotsIssues.length;
 if (totalIssues > 0) {
   console.log(`\n⚠ Total issues: ${totalIssues}`);

@@ -30,8 +30,9 @@
     "check-links": "node scripts/node/check-links.js",
     "audit-pages": "node scripts/node/audit-pages.js",
     "generate-sitemap": "node scripts/node/generate-sitemap.js",
+    "enrich-placeholders": "node scripts/node/enrich-placeholder-pages.js",
     "preflight": "npm run audit-pages && npm run check-links",
-    "validate": "node scripts/node/validate-build.js && node scripts/node/check-unsafe-dom.js",
+    "validate": "node scripts/node/validate-build.js && node scripts/node/check-unsafe-dom.js && node scripts/node/enrich-placeholder-pages.js --check",
     "security": "npm audit && npm outdated",
     "prepare": "husky"
   },
