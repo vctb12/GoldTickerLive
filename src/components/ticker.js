@@ -194,9 +194,12 @@ export function updateTicker(data = {}) {
       });
   });
 
-  // Freshness pill (§6.2). Callers may omit updatedAt, in which case we
-  // leave whatever state was last rendered — never silently regress to
-  // "live" without a fresh timestamp to back it.
+  // Freshness pill (§6.2). Three-way contract on `data-updatedAt`:
+  //   - truthy ISO string  → recompute freshness from it
+  //   - explicit `null`    → reset the pill to "unavailable"
+  //   - omitted / undefined → preserve last-rendered state (never silently
+  //                          regress to "live" without a fresh timestamp
+  //                          to back it)
   const bar = _tickerEl || document.getElementById('gold-ticker');
   if (!bar) return;
   if (data.updatedAt) {
@@ -244,6 +247,11 @@ export function updateTickerLang(lang) {
       });
   });
   // Re-translate the status pill label to the current freshness key.
+  // Note: this updates the short label (e.g. "Cached" → "مخزن مؤقتاً")
+  // but deliberately does NOT touch the title tooltip, which carries the
+  // timestamp + age text set by updateTicker() — a subsequent updateTicker()
+  // call rebuilds that in the active language. Updating title here without
+  // access to the original {timeText, ageText} would strip that detail.
   const bar = _tickerEl || document.getElementById('gold-ticker');
   if (!bar) return;
   const key = bar.getAttribute('data-freshness') || 'unavailable';
@@ -252,6 +260,9 @@ export function updateTickerLang(lang) {
   const labelEl = bar.querySelector('[data-ticker-status-label]');
   if (labelEl) labelEl.textContent = label;
   if (statusEl) {
+    // Keep title + aria-label in sync; both fall back to the short label
+    // until the next updateTicker() call restores the timestamped tooltip.
+    statusEl.setAttribute('title', label);
     statusEl.setAttribute('aria-label', label);
   }
 }

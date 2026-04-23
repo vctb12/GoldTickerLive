@@ -197,12 +197,7 @@ test('ticker freshness updates language label when updateTickerLang is called', 
   });
   const bar = dom.getTicker();
   const labelBefore = bar.querySelector('[data-ticker-status-label]');
-  // In EN + live state, label is "Live"
-  assert.equal(
-    /live/i.test(String((labelBefore && labelBefore.textContent) || '')),
-    true,
-    'EN label should say Live'
-  );
+  assert.equal(labelBefore && labelBefore.textContent, 'Live');
   updateTickerLang('ar');
   const labelAfter = bar.querySelector('[data-ticker-status-label]');
   assert.equal(labelAfter && labelAfter.textContent, 'مباشر');
