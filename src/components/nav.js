@@ -355,6 +355,9 @@ export function injectNav(lang = 'en', depth = 0) {
   // ── Mobile bottom navigation bar ──────────────────────────────────────────
   _injectMobileBottomNav(lang, depth);
 
+  // ── Scroll state: is-scrolled + hide/reveal on scroll (Track B §5.B.7) ───
+  _initNavScrollBehavior(navEl);
+
   // ── Theme (auto/light/dark) tri-state toggle ─────────────────────────────
   const themeBtn = document.getElementById('nav-theme-toggle');
   if (themeBtn) {
@@ -615,6 +618,68 @@ export function injectNav(lang = 'en', depth = 0) {
   });
 
   return _buildReturnValue();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Scroll behavior: is-scrolled + hide/reveal (Track B §5.B.7)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function _initNavScrollBehavior(navEl) {
+  if (!navEl || typeof window === 'undefined') return;
+  const HIDE_DELTA = 6;
+  const SHOW_NEAR_TOP = 64;
+
+  const reduceMotion =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let lastY = window.scrollY || 0;
+  let ticking = false;
+
+  function update() {
+    ticking = false;
+    const y = window.scrollY || 0;
+
+    // Scrolled state (for shadow/border tint) — always tracked.
+    if (y > 4) {
+      navEl.setAttribute('data-scrolled', 'true');
+    } else {
+      navEl.removeAttribute('data-scrolled');
+    }
+
+    // Never hide while drawer/dropdown open, or near the top, or when reduced motion.
+    if (reduceMotion || y < SHOW_NEAR_TOP || navEl.classList.contains('nav--open')) {
+      navEl.removeAttribute('data-nav-hidden');
+      lastY = y;
+      return;
+    }
+    if (navEl.querySelector('.nav-dropdown.is-open')) {
+      navEl.removeAttribute('data-nav-hidden');
+      lastY = y;
+      return;
+    }
+
+    const delta = y - lastY;
+    if (delta > HIDE_DELTA) {
+      navEl.setAttribute('data-nav-hidden', 'true');
+    } else if (delta < -HIDE_DELTA) {
+      navEl.removeAttribute('data-nav-hidden');
+    }
+    lastY = y;
+  }
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    },
+    { passive: true }
+  );
+
+  // Initial sync (e.g., if page loaded mid-scroll).
+  update();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

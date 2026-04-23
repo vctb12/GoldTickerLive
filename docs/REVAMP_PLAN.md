@@ -360,9 +360,14 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
 > anatomy (icon + label + description + primary emphasis + layout hint), B.5 command-palette
 > shortcuts (`/`, `Ctrl/Cmd+K`) + recent-searches + safe-DOM result rendering, B.6 details-based
 > mobile drawer groups, and B.10 dark-mode-aware nav tokens are shipped in this branch. The
-> `src/components/nav.js` unsafe-DOM baseline tightened from 5 → 2 sinks. Remaining items
-> (sticky-glass shell polish, animated underline slide, scroll hide/reveal, full a11y Playwright
-> sweep) are staged for a follow-up commit in the same track.
+> `src/components/nav.js` unsafe-DOM baseline tightened from 5 → 2 sinks.
+>
+> **Progress note (Track B polish pass):** B.2 scrolled-state elevation, B.3 animated underline
+> slide under group triggers (reduced-motion aware), B.4 split 180 ms open / 120 ms close panel
+> timings, B.6 drawer `100svh` fallback + bottom-cluster slot, B.7 scroll hide/reveal with
+> `data-nav-hidden` + rAF throttling (suspended while dropdown/drawer open, reduced-motion, or near
+> top), and B.8 theme-toggle icon rotate per mode are shipped in the same branch. Full Playwright
+> a11y sweep remains deferred.
 
 ### B.1 IA & data shape
 
@@ -376,8 +381,9 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
 
 ### B.2 Desktop shell
 
-- [ ] Sticky top bar, glass surface (`backdrop-filter: blur`, `--surface-glass`), bottom hairline
-      `--border-default`.
+- [x] Sticky top bar, glass surface (`backdrop-filter: blur`, `--surface-glass`), bottom hairline
+      `--border-default`. _(`.site-nav[data-scrolled='true']` elevates shadow + border tint; base
+      blur already in place)_
 - [ ] Left: brand lockup. Center: group links. Right: utility cluster (search trigger · language ·
       theme · CTA "Live Tracker").
 - [x] Group links as buttons opening dropdown on hover **and** click/Enter/Space/Down. Touch users
@@ -390,8 +396,9 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
 - [x] On page load, compute current URL → find matching group + sub-item; add `aria-current="page"`
       to the item and `data-active="true"` to its parent group. _(data-active now set by
       `buildDropdown`)_
-- [ ] Animated underline that slides between groups on hover/focus, snaps to active on mouseleave.
-      Disabled under reduced motion.
+- [x] Animated underline that slides between groups on hover/focus, snaps to active on mouseleave.
+      Disabled under reduced motion. _(`.nav-link::after` / `.nav-dropdown-btn::after` scaleX
+      transition; gated by `prefers-reduced-motion`)_
 
 ### B.4 Dropdown panels
 
@@ -399,7 +406,8 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
       `group.layout` hint + `.nav-dropdown-panel-items[data-layout]` CSS grid)_
 - [x] Each item: label + one-line description from `nav-data.js`, optional leading icon. _(rendered
       as `nav-dropdown-item-icon` + `nav-dropdown-item-body`)_
-- [ ] Open: fade + translate-Y 4 px, 180 ms `--ease-out`. Close: 120 ms. Reduced-motion: instant.
+- [x] Open: fade + translate-Y 4 px, 180 ms `--ease-out`. Close: 120 ms. Reduced-motion: instant.
+      _(split transitions on `.nav-dropdown-panel` vs `.nav-dropdown.is-open .nav-dropdown-panel`)_
 - [x] First item receives focus on open. `Escape` closes and returns focus to trigger.
       `ArrowUp`/`ArrowDown` cycle. `Tab` exits. _(already wired in
       `navEl.querySelectorAll('.nav-dropdown-panel')` keydown handlers)_
@@ -420,25 +428,29 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
 
 ### B.6 Mobile drawer
 
-- [ ] Slide-in from inline-end, full-height using `100svh` with `100vh` fallback.
+- [x] Slide-in from inline-end, full-height using `100svh` with `100vh` fallback. _(`100dvh` base +
+      `@supports (height: 100svh)` override)_
 - [x] Sections with group headings, dividers, large tap targets. Expandable groups (`<details>` or
       custom with `aria-expanded`), not a flat stack. _(now uses native `<details>/<summary>` with
       caret chevron)_
 - [ ] Top: search input (progressive enhancement). Bottom: theme toggle + language switcher +
-      primary CTA.
+      primary CTA. _(bottom-cluster CSS slot `.nav-drawer-bottom` shipped; markup rewiring to move
+      theme + lang into the cluster is the next step)_
 - [x] `body` scroll lock while open. Close on: Escape, backdrop tap, route change.
 - [x] Focus trap inside drawer. Return focus to hamburger on close.
 
 ### B.7 Scroll behavior
 
-- [ ] Hide on scroll down (> 8 px threshold, after 120 px), reveal on scroll up. Throttled via
-      `requestAnimationFrame`. Disabled under reduced motion. Suspended while drawer open or focused
-      element is in nav.
+- [x] Hide on scroll down (> 6 px delta, after 64 px), reveal on scroll up. Throttled via
+      `requestAnimationFrame`. Disabled under reduced motion. Suspended while drawer open or an open
+      dropdown is present. _(`_initNavScrollBehavior` in `nav.js`; `data-nav-hidden` on `.site-nav`
+      translates the shell offscreen)_
 
 ### B.8 Micro-interactions
 
-- [ ] Underline slide on hover, group fade+slide on open, theme-toggle icon cycle (auto → light →
-      dark, rotate 180 ms).
+- [x] Underline slide on hover, group fade+slide on open, theme-toggle icon cycle (auto → light →
+      dark, rotate 180 ms). _(theme icon rotates to a distinct angle per mode via
+      `[data-theme-mode]` attribute selectors; rotation disabled under reduced motion)_
 - [x] Active-dropdown chevron flip. _(caret rotation gated by `prefers-reduced-motion`)_
 
 ### B.9 Touch behavior

@@ -6054,3 +6054,191 @@ details.nav-drawer-group[open] .nav-drawer-group-caret {
   color: var(--color-text, #e2e8f0);
   border-color: var(--border-default, #334155);
 }
+
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/*  Track B — Navigation polish (REVAMP_PLAN §5.B.2/B.3/B.4/B.6/B.7/B.8)      */
+
+/*  Appended after the Track B metadata/structure pass:                       */
+
+/*   • B.2 Sticky-glass shell: scrolled state elevates shadow + border tint.  */
+
+/*   • B.3 Animated underline slide under dropdown triggers & nav links.      */
+
+/*   • B.4 Exact 180 ms open / 120 ms close fade+translate on panels.         */
+
+/*   • B.6 Drawer 100svh fallback + bottom utility cluster slot.              */
+
+/*   • B.7 Scroll hide/reveal: data-nav-hidden translates nav offscreen.      */
+
+/*   • B.8 Theme-toggle icon rotates 180 ms on mode change.                   */
+
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/* B.2 — Scrolled elevation & base shell refinements ----------------------- */
+.site-nav {
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 200ms ease,
+    background-color 200ms ease,
+    border-bottom-color 200ms ease;
+  will-change: transform;
+}
+
+.site-nav[data-scrolled='true'] {
+  background: rgb(255 255 255 / 94%);
+  border-bottom-color: rgb(201 168 76 / 28%);
+  box-shadow:
+    0 1px 0 rgb(201 168 76 / 14%),
+    0 8px 32px rgb(0 0 0 / 8%);
+}
+
+[data-theme='dark'] .site-nav[data-scrolled='true'] {
+  background: rgb(15 23 42 / 92%);
+  border-bottom-color: rgb(201 168 76 / 24%);
+  box-shadow:
+    0 1px 0 rgb(201 168 76 / 18%),
+    0 8px 24px rgb(0 0 0 / 40%);
+}
+
+/* B.7 — Hide/reveal on scroll -------------------------------------------- */
+.site-nav[data-nav-hidden='true'] {
+  transform: translateY(-100%);
+}
+
+/* Respect the spot bar offset: when both are present, nav hides above spot bar. */
+body.has-spot-bar .site-nav[data-nav-hidden='true'] {
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-nav {
+    transition: none;
+  }
+  .site-nav[data-nav-hidden='true'] {
+    transform: none;
+  }
+}
+
+/* B.3 — Animated underline slide under dropdown triggers & top-level links */
+.nav-link,
+.nav-dropdown-btn {
+  position: relative;
+}
+
+.nav-link::after,
+.nav-dropdown-btn::after {
+  content: '';
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 6px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-gold-dark), var(--color-gold-deep));
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after,
+.nav-link--active::after,
+.nav-dropdown-btn:hover::after,
+.nav-dropdown-btn:focus-visible::after,
+.nav-dropdown.is-open .nav-dropdown-btn::after,
+.nav-dropdown[data-active='true'] .nav-dropdown-btn::after {
+  transform: scaleX(1);
+}
+
+/* B.4 — Split open/close timing on dropdown panel ------------------------ */
+.nav-dropdown-panel {
+  transition:
+    opacity 120ms cubic-bezier(0.4, 0, 1, 1),
+    transform 120ms cubic-bezier(0.4, 0, 1, 1),
+    visibility 0s linear 120ms;
+}
+
+.nav-dropdown.is-open .nav-dropdown-panel {
+  transition:
+    opacity 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link::after,
+  .nav-dropdown-btn::after,
+  .nav-dropdown-panel {
+    transition: none;
+  }
+}
+
+/* B.6 — Drawer 100svh fallback + bottom utility cluster slot -------------- */
+@supports (height: 100svh) {
+  .nav-drawer {
+    height: 100svh;
+  }
+}
+
+.nav-drawer-inner {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0) + var(--space-6));
+}
+
+.nav-drawer-bottom {
+  margin-top: auto;
+  padding-top: var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+[data-theme='dark'] .nav-drawer-bottom {
+  border-top-color: var(--border-subtle, #334155);
+}
+
+.nav-drawer-bottom .nav-icon-btn,
+.nav-drawer-bottom .nav-lang-btn {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+/* B.8 — Theme-toggle icon rotate on mode change -------------------------- */
+.nav-icon-btn--theme {
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-icon-btn--theme:active {
+  transform: rotate(12deg) scale(0.96);
+}
+
+/* Rotate the icon glyph 180° when mode switches. Driven by data-theme-mode
+ * change: each mode lands the icon at a distinct rotation, so the natural
+ * attribute update produces a rotate transition. */
+.nav-icon-btn--theme {
+  will-change: transform;
+}
+
+.nav-icon-btn--theme[data-theme-mode='auto'] {
+  transform: rotate(0deg);
+}
+.nav-icon-btn--theme[data-theme-mode='light'] {
+  transform: rotate(180deg);
+}
+.nav-icon-btn--theme[data-theme-mode='dark'] {
+  transform: rotate(360deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-icon-btn--theme {
+    transition:
+      background-color 180ms ease,
+      color 180ms ease;
+    transform: none !important;
+  }
+}
