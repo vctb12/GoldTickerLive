@@ -334,9 +334,13 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
       `--text-*` scale in `styles/global.css` drifts from the one documented in
       [`docs/DESIGN_TOKENS.md`](DESIGN_TOKENS.md) (e.g. `--text-3xl` is `1.875rem` in code but
       `2.25rem` in docs). Split into three sequenced slices: (1) `tokens` — reconcile `--text-*`
-      scale with DESIGN_TOKENS.md and add display-tier tokens; (2) `typography` — add canonical
+      scale with DESIGN*TOKENS.md and add display-tier tokens; (2) `typography` — add canonical
       `.h1`…`.h6` utility classes + base `h1..h6` baseline; (3) `cleanup` — migrate per-page
-      hand-sized heading selectors to the canonical classes, one page per commit.
+      hand-sized heading selectors to the canonical classes, one page per commit. \_Slice 1 (tokens)
+      shipped:* added `--text-4xl: 2.25rem` / `--text-5xl: 3rem` display-tier tokens to
+      `styles/global.css`; reconciled `docs/DESIGN_TOKENS.md` to match the implemented body scale
+      (doc→code, the safer direction — the shipped tight 17–20 px body scale is intentional for
+      dense price-data UI). Slices 2 and 3 still pending.
 - [x] **Focus ring token audit.** Canonical `:focus-visible` baseline in `styles/global.css` uses
       `--focus-ring-width` / `--focus-ring-color` / `--focus-ring-offset`. Page-level outline
       overrides normalized to the same tokens: `.calc-tab`, `.tracker-mode-tab`,
