@@ -324,6 +324,86 @@ a:hover {
   text-decoration: underline;
 }
 
+/* ═══════════════════════════════════════════════
+   Canonical heading scale
+   ═══════════════════════════════════════════════
+   Utility classes only — no base h1..h6 element rules here, to avoid
+   regressing the ~40 page-level bespoke heading selectors (e.g.
+   `.tracker-hero-copy h1`, `.pricing-hero-content h1`, `.legal-hero h1`).
+   New markup should prefer these classes. Page selectors will be migrated
+   one page per commit in Slice 3 of REVAMP_PLAN.md §4 Track A.
+
+   Scale:
+     .display-1 → --text-5xl (48px)  hero / display
+     .h1        → --text-4xl (36px)  display, hero
+     .h2        → --text-3xl (30px)  section heading
+     .h3        → --text-2xl (24px)  subsection
+     .h4        → --text-xl  (20px)  card / block
+     .h5        → --text-lg  (18px)  minor block
+     .h6        → --text-base (16px) label / eyebrow
+   ═══════════════════════════════════════════════ */
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-family: inherit;
+  color: inherit;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.h1 {
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+.h2 {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+.h3 {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+}
+
+.h4 {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+}
+
+.h5 {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+}
+
+.h6 {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+/* Display tier — opt-in for hero surfaces that need larger than .h1. */
+.display-1 {
+  font-size: var(--text-5xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
+  margin: 0;
+}
+
 button,
 select,
 input {
