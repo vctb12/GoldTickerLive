@@ -18,9 +18,9 @@
 > 4. **Scope guard:** if a proposed change does not fit one of the commit buckets in §1 or one of
 >    the tracks in §2, stop and raise it in the PR description rather than silently expanding scope.
 >
-> **Last updated:** 2026-04-23 · **Round:** 3 (404-hardening track — link checker, root-safe hrefs,
-> SEO guard, nav a11y, CI enforcement) · **Branch:** `revamp/404-hardening` (based on `main`;
-> successor to `copilot/revamp-tracker-html-page`)
+> **Last updated:** 2026-04-23 · **Round:** 4 (§22b reconciled — 30-phase tracker/home/admin revamp
+> baseline + URL-hash contract) · **Branch:** `copilot/explore-codebase-implementation-plan-again`
+> (based on `main`; successor to `revamp/404-hardening`)
 
 > **📚 Master consolidation index.** This file is the single consolidated plan for the entire revamp
 > _and_ for the pre-existing production/admin tracks that used to live in other docs. Every
@@ -790,6 +790,14 @@ update the "Last updated" banner at the top of the file and copy the merged comm
 | --------- | ------- | ---------------------------------------------------------------------------------------------- |
 | _pending_ | `trust` | Finish tracker Phase 2 trust/freshness framing and reduce touched `innerHTML` sinks in tracker |
 
+### Round 4 — §22b 30-phase tracker/home/admin revamp (this PR)
+
+| SHA       | Bucket   | Summary                                                                                                    |
+| --------- | -------- | ---------------------------------------------------------------------------------------------------------- |
+| _pending_ | `plan`   | Reconcile 30-phase plan into `REVAMP_PLAN.md` §22b and `docs/plans/README.md` matrix                       |
+| _pending_ | `phase1` | Phase 1 baseline snapshots: `reports/baseline-{tracker,home,admin}.json` (sink counts, LOC, CSS size)      |
+| _pending_ | `phase7` | Phase 7 tracker URL-hash contract: `docs/tracker-state.md` + `tests/tracker-hash.test.js` round-trip tests |
+
 ### Merged PRs
 
 _None yet._ Populate when the first revamp PR merges: PR number, merge date, branch name, range of
@@ -1067,6 +1075,111 @@ project owner before the associated phase starts.
 | 24    | AdSense publisher ID                       |
 | 25    | Sentry DSNs (frontend + backend)           |
 | 26    | Deployment target (Render / Fly / Railway) |
+
+---
+
+## 22b. Tracker + Homepage + Admin revamp (30-phase)
+
+_Reconciled from [`docs/plans/PLATFORM_UPGRADE_PROPOSAL.md`](./plans/PLATFORM_UPGRADE_PROPOSAL.md)
+and the 2026-04-23 agent proposal. Surface-scoped supplement to §22: §22 owns cross-cutting
+production phases (repo hygiene → backend/auth → launch); §22b owns the three highest-traffic UI
+surfaces (`tracker.html`, `index.html`, `admin/`). Phases ship as single-concern commits per §1._
+
+**Scope guards (non-negotiable):**
+
+- No new backend, Supabase schema, or auth changes (preserves §14 non-goals and Wave-3 gates).
+- No chart library swap (`plans/README.md` matrix row #11 rejected — keep `lightweight-charts` on
+  tracker, `chart.js` on history).
+- No URL hierarchy changes (matrix row #15 gated).
+- No new `innerHTML` / `outerHTML` / `insertAdjacentHTML` / `document.write` sinks — every phase
+  must **not raise** the baseline in `scripts/node/check-unsafe-dom.js`. Reduction is encouraged
+  wherever a phase's surface touches existing sinks (notably Phases 5, 11, 24).
+- No opportunistic cleanup outside a phase's surface.
+
+**Per-phase definition of done (every commit):**
+
+1. Update this §22b checklist and §17 "Progress log" with the commit SHA in the same commit.
+2. `npm test`, `npm run lint`, `npm run validate`, `npm run quality`, `npm run build` all green.
+3. Do not regress Phase 1 baseline counters (bundle size, sinks, a11y violations).
+4. Ship bilingual (EN + AR) copy or explicitly defer with a tracked follow-up row.
+5. Add/update at least one `node:test` or Playwright test for new behavior.
+
+### Track 1 — Shared foundation
+
+- [x] **Phase 1** — Baseline audit & telemetry snapshot. `reports/baseline-tracker.json`,
+      `reports/baseline-home.json`, `reports/baseline-admin.json` record current `innerHTML` sink
+      counts, LOC, and CSS size. Used as the regression yardstick for every later phase.
+- [ ] **Phase 2** — Shared design-token completeness. Audit `--tp-*`, homepage hero tokens,
+      `admin.css` variables against `styles/global.css`; promote redefined tokens up. No visual
+      change.
+- [ ] **Phase 3** — Shared chrome parity (nav/footer/skip-link, RTL, mobile drawer focus-trap).
+- [ ] **Phase 4** — Trust/freshness primitive unification via `src/lib/live-status.js`. Replace
+      ad-hoc freshness strings on the three surfaces without redesigning them.
+- [ ] **Phase 5** — DOM-safety baseline tightening for the highest-churn `innerHTML` sinks touched
+      by later phases; lower the numbers in `scripts/node/check-unsafe-dom.js`.
+
+### Track 2 — Tracker
+
+- [ ] **Phase 6** — Hero trust framing (`#tp-live-badge`, `#tp-xauusd-badge`, `#tp-hero-stats`) via
+      the Phase 4 primitive.
+- [x] **Phase 7** — State/URL-hash contract freeze. Document `src/tracker/state.js` hash schema in
+      [`docs/tracker-state.md`](./tracker-state.md); add round-trip tests in
+      `tests/tracker-hash.test.js`.
+- [ ] **Phase 8** — Mode-tabs refactor (extract `#tab-*` wiring from `ui-shell.js` into `modes.js`).
+- [ ] **Phase 9** — Live-mode polish (loading skeleton, mobile pinch/pan, `aria-live="polite"`).
+- [ ] **Phase 10** — Compare mode (multi-select, `el()`-only results table, spot-linked reference).
+- [ ] **Phase 11** — Archive mode (pagination + CSV export; retire `innerHTML` sinks in
+      `src/tracker/render.js`).
+- [ ] **Phase 12** — Alerts mode (local-only, explicit "Browser-only reminder" disclaimer).
+- [ ] **Phase 13** — Planner + Exports + Method (CSV/JSON/brief polish; Method links into
+      `methodology.html`).
+- [ ] **Phase 14** — `styles/pages/tracker-pro.css` split into per-mode files + dead-rule prune.
+
+### Track 3 — Homepage
+
+- [ ] **Phase 15** — Above-the-fold rebuild (§6 Track C scope) with `WebSite` + `BreadcrumbList`
+      JSON-LD.
+- [ ] **Phase 16** — `#hero-live-card` trust pass (`formatRelativeAge`, explicit stale state).
+- [ ] **Phase 17** — Karat strip `countUp` parity across 24K–14K with directional flash.
+- [ ] **Phase 18** — Day sparkline (one per karat, IntersectionObserver-gated, no new chart lib).
+- [ ] **Phase 19** — Tools strip (Tracker · Calculator · Converter · Zakat · Alerts · Order) with
+      root-safe `/` hrefs and bilingual labels from `translations.js`.
+- [ ] **Phase 20** — Country/city linking block (8–12 curated cards, EN + AR).
+- [ ] **Phase 21** — Trust & methodology band re-using §0.2 snippets.
+- [ ] **Phase 22** — `src/pages/home.js` dead-import audit + below-fold lazy-load.
+
+### Track 4 — Admin (UI-only, no server/auth changes)
+
+- [ ] **Phase 23** — Admin chrome consolidation: `admin/shared/chrome.js` shared sidebar/header.
+      Reuse `admin/supabase-auth.js`. Ship behind a shared-chrome feature gate; roll subpages in one
+      at a time if parity is at risk.
+- [ ] **Phase 24** — `admin/index.html` dashboard rebuild: move inline `<style>` →
+      `styles/admin.css`, clean stat grid, workflow-status tiles; no new `innerHTML` sinks (current
+      baseline = 7).
+- [ ] **Phase 25** — `admin/login/` flow polish (honest errors, rate-limit wording matching
+      `server.js` `express-rate-limit`; PIN flow matches `server/routes/admin/index.js:189-205`).
+- [ ] **Phase 26** — Settings + Pricing admin pages (CRUD forms via `safe-dom.js`; "Estimate-only"
+      disclaimer on overrides — admin-side echo of §0.1).
+- [ ] **Phase 27** — Shops + Orders admin pages (virtualize tables > 200 rows; WhatsApp field per
+      `docs/ADMIN_GUIDE.md` and matrix row #2).
+- [ ] **Phase 28** — Analytics + Content + Social admin pages (read-only panels, "Last synced" label
+      reusing Phase 4 primitive).
+
+### Track 5 — Finish line
+
+- [ ] **Phase 29** — A11y + perf final pass (Pa11y on three surfaces, Lighthouse ≥ 90 mobile, CSS/JS
+      budgets in `perf-check.yml`, DOM-safety baseline tightened).
+- [ ] **Phase 30** — Docs, changelog, rollout. Update `CHANGELOG.md`, this section, and
+      `docs/ADMIN_GUIDE.md`; bump "Last updated"; tag release per §21 Rollout Governance.
+
+### §22b-specific risks (mirror in §25)
+
+- **Phase 14** — Tracker CSS split is the highest regression risk; visual-diff screenshots required
+  before merge.
+- **Phase 23** — Admin chrome consolidation touches all admin subsurfaces; gated behind the
+  shared-chrome toggle.
+- **Phase 15** — Homepage above-fold rebuild must preserve canonical / `og:url` or sitewide
+  `tests/seo-sitewide.test.js` + `scripts/node/check-seo-meta.js` will fail.
 
 ---
 

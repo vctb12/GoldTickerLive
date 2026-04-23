@@ -1,0 +1,33 @@
+{
+  "surface": "tracker",
+  "phase": "§22b/Phase 1",
+  "capturedAt": "2026-04-23T13:30:00Z",
+  "branch": "copilot/explore-codebase-implementation-plan-again",
+  "description": "Regression yardstick for §22b tracker phases (6–14). Do not raise any counter without an accompanying REVAMP_PLAN.md entry explaining why.",
+  "files": {
+    "tracker.html": { "lines": 1312, "bytes": 53176 },
+    "src/pages/tracker-pro.js": { "lines": 716, "bytes": 25484 },
+    "src/tracker/render.js": { "lines": 1031 },
+    "src/tracker/state.js": { "lines": 270 },
+    "src/tracker/ui-shell.js": { "lines": 220 },
+    "src/tracker/events.js": { "lines": 308 },
+    "src/tracker/wire.js": { "lines": 98 },
+    "styles/pages/tracker-pro.css": { "lines": 2577, "bytes": 51981 }
+  },
+  "unsafeDomSinks": {
+    "src/tracker/render.js": 18,
+    "src/tracker/events.js": 2,
+    "src/tracker/wire.js": 3,
+    "src/pages/tracker-pro.js": 4,
+    "total": 27,
+    "source": "scripts/node/check-unsafe-dom.js baseline on commit bab45a4"
+  },
+  "modes": ["live", "compare", "archive", "exports", "method"],
+  "panels": ["alerts", "planner"],
+  "urlHashKeys": ["mode", "cur", "k", "u", "r", "cmp", "lang", "panel"],
+  "notes": [
+    "CSS at 2,577 lines — Phase 14 must split per-mode without regressing visuals.",
+    "Phase 11 archive mode refactor should retire sinks in render.js; target ≤ 10 after Phase 11.",
+    "Phase 7 freezes the hash contract before mode refactor (Phase 8)."
+  ]
+}
