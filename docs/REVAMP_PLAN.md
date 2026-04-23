@@ -356,14 +356,23 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
 
 ## 5. Track B — Navigation rebuild
 
+> **Progress note (Track B data + dropdown enrichment pass):** B.1 data model, B.4 dropdown row
+> anatomy (icon + label + description + primary emphasis + layout hint), B.5 command-palette
+> shortcuts (`/`, `Ctrl/Cmd+K`) + recent-searches + safe-DOM result rendering, B.6 details-based
+> mobile drawer groups, and B.10 dark-mode-aware nav tokens are shipped in this branch. The
+> `src/components/nav.js` unsafe-DOM baseline tightened from 5 → 2 sinks. Remaining items
+> (sticky-glass shell polish, animated underline slide, scroll hide/reveal, full a11y Playwright
+> sweep) are staged for a follow-up commit in the same track.
+
 ### B.1 IA & data shape
 
-- [ ] Keep 5-group IA (Home · Prices · Tools · Learn · More, solo Shops) but **split "More"** — move
+- [x] Keep 5-group IA (Home · Prices · Tools · Learn · More, solo Shops) but **split "More"** — move
       high-value items up where possible. Audit for ambiguity.
-- [ ] Enforce `description` on every group child in `nav-data.js`; trim labels for parallelism;
-      ensure bilingual pairs.
-- [ ] Tag **primary destinations** (Tracker, Calculator, Shops, Countries) vs **secondary** (Learn
-      articles) so the UI can emphasize them.
+- [x] Enforce `description` on every group child in `nav-data.js`; trim labels for parallelism;
+      ensure bilingual pairs. _(tests/nav-data.test.js now enforces EN/AR parity + non-empty
+      description on every item)_
+- [x] Tag **primary destinations** (Tracker, Calculator, Shops, Countries) vs **secondary** (Learn
+      articles) so the UI can emphasize them. _(primary flag parity enforced in tests)_
 
 ### B.2 Desktop shell
 
@@ -371,42 +380,54 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
       `--border-default`.
 - [ ] Left: brand lockup. Center: group links. Right: utility cluster (search trigger · language ·
       theme · CTA "Live Tracker").
-- [ ] Group links as buttons opening dropdown on hover **and** click/Enter/Space/Down. Touch users
-      get click (no hover trap).
-- [ ] 44 px minimum tap targets; visible `:focus-visible` rings using `--focus-ring`.
+- [x] Group links as buttons opening dropdown on hover **and** click/Enter/Space/Down. Touch users
+      get click (no hover trap). _(shipped; hover handled via CSS `:hover .nav-dropdown-panel`)_
+- [x] 44 px minimum tap targets; visible `:focus-visible` rings using `--focus-ring`. _(applied to
+      `.nav-icon-btn`, `.nav-dropdown-item`, `.nav-search-*`)_
 
 ### B.3 Active state
 
-- [ ] On page load, compute current URL → find matching group + sub-item; add `aria-current="page"`
-      to the item and `data-active="true"` to its parent group.
+- [x] On page load, compute current URL → find matching group + sub-item; add `aria-current="page"`
+      to the item and `data-active="true"` to its parent group. _(data-active now set by
+      `buildDropdown`)_
 - [ ] Animated underline that slides between groups on hover/focus, snaps to active on mouseleave.
       Disabled under reduced motion.
 
 ### B.4 Dropdown panels
 
-- [ ] Two-column layout for Prices + Tools, one-column for Learn + More.
-- [ ] Each item: label + one-line description from `nav-data.js`, optional leading icon.
+- [x] Two-column layout for Prices + Tools, one-column for Learn + More. _(data-driven via
+      `group.layout` hint + `.nav-dropdown-panel-items[data-layout]` CSS grid)_
+- [x] Each item: label + one-line description from `nav-data.js`, optional leading icon. _(rendered
+      as `nav-dropdown-item-icon` + `nav-dropdown-item-body`)_
 - [ ] Open: fade + translate-Y 4 px, 180 ms `--ease-out`. Close: 120 ms. Reduced-motion: instant.
-- [ ] First item receives focus on open. `Escape` closes and returns focus to trigger.
-      `ArrowUp`/`ArrowDown` cycle. `Tab` exits.
+- [x] First item receives focus on open. `Escape` closes and returns focus to trigger.
+      `ArrowUp`/`ArrowDown` cycle. `Tab` exits. _(already wired in
+      `navEl.querySelectorAll('.nav-dropdown-panel')` keydown handlers)_
 
 ### B.5 Command-palette search
 
-- [ ] Progressive enhancement: `<a href="/content/search/">Search</a>` is the fallback.
-- [ ] JS-enhanced overlay triggered by search icon, `/`, or `Ctrl/Cmd+K`.
-- [ ] Queries page titles + country/city/market slugs + tool names via `src/lib/search.js`.
-- [ ] Keyboard-first: arrow keys, Enter, Esc. Results grouped (Pages · Countries · Markets · Tools).
-- [ ] Recent searches in `localStorage` namespaced `nav.search.recent`, capped.
+- [x] Progressive enhancement: `<a href="/content/search/">Search</a>` is the fallback. _(still
+      present in Tools group)_
+- [x] JS-enhanced overlay triggered by search icon, `/`, or `Ctrl/Cmd+K`. _(`/` and `Ctrl/Cmd+K`
+      listeners added in `initNavSearch`; ignored while focus is in an
+      input/textarea/contentEditable)_
+- [x] Queries page titles + country/city/market slugs + tool names via `src/lib/search.js`. _(via
+      the existing `src/search/searchEngine.js` lazy import)_
+- [x] Keyboard-first: arrow keys, Enter, Esc. Results grouped (Pages · Countries · Markets · Tools).
+      _(grouping now keyed on `result.type`)_
+- [x] Recent searches in `localStorage` namespaced `nav.search.recent`, capped. _(cap 8, shown when
+      the overlay opens with an empty query)_
 
 ### B.6 Mobile drawer
 
 - [ ] Slide-in from inline-end, full-height using `100svh` with `100vh` fallback.
-- [ ] Sections with group headings, dividers, large tap targets. Expandable groups (`<details>` or
-      custom with `aria-expanded`), not a flat stack.
+- [x] Sections with group headings, dividers, large tap targets. Expandable groups (`<details>` or
+      custom with `aria-expanded`), not a flat stack. _(now uses native `<details>/<summary>` with
+      caret chevron)_
 - [ ] Top: search input (progressive enhancement). Bottom: theme toggle + language switcher +
       primary CTA.
-- [ ] `body` scroll lock while open. Close on: Escape, backdrop tap, route change.
-- [ ] Focus trap inside drawer. Return focus to hamburger on close.
+- [x] `body` scroll lock while open. Close on: Escape, backdrop tap, route change.
+- [x] Focus trap inside drawer. Return focus to hamburger on close.
 
 ### B.7 Scroll behavior
 
@@ -418,17 +439,18 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
 
 - [ ] Underline slide on hover, group fade+slide on open, theme-toggle icon cycle (auto → light →
       dark, rotate 180 ms).
-- [ ] Active-dropdown chevron flip.
+- [x] Active-dropdown chevron flip. _(caret rotation gated by `prefers-reduced-motion`)_
 
 ### B.9 Touch behavior
 
-- [ ] No hover-only dropdowns on touch. First tap opens, tap outside closes. Tap on active trigger
-      closes.
+- [x] No hover-only dropdowns on touch. First tap opens, tap outside closes. Tap on active trigger
+      closes. _(click-to-toggle on `.nav-dropdown-btn`; outside click listener on document)_
 
 ### B.10 Dark-mode parity
 
-- [ ] All nav surfaces resolved via `--surface-*` and `--color-text-*`. Manual sweep only if token
-      misuse found.
+- [x] All nav surfaces resolved via `--surface-*` and `--color-text-*`. Manual sweep only if token
+      misuse found. _(new nav CSS block in `styles/global.css` uses tokens with safe fallbacks;
+      dark-mode overrides for search overlay shipped)_
 
 ## 6. Track C — Homepage revamp
 

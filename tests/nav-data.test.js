@@ -96,6 +96,84 @@ test('NAV_DATA groups contain no duplicate hrefs within a group', async () => {
   }
 });
 
+test('NAV_DATA has no duplicate hrefs across groups (ignoring anchors/query)', async () => {
+  const { NAV_DATA } = await loadNav();
+  for (const lang of ['en', 'ar']) {
+    const seen = new Map();
+    for (const group of NAV_DATA[lang].groups) {
+      for (const item of group.items) {
+        // Anchors/query variants of the same tracker mode are intentionally distinct entries.
+        const key = item.href;
+        if (seen.has(key)) {
+          throw new Error(
+            `Duplicate href across groups in ${lang}: ${key} ` +
+              `(first in ${seen.get(key)}, again in ${group.key})`
+          );
+        }
+        seen.set(key, group.key);
+      }
+    }
+  }
+});
+
+test('NAV_DATA every group has a layout hint (two-col | one-col)', async () => {
+  const { NAV_DATA } = await loadNav();
+  for (const lang of ['en', 'ar']) {
+    for (const group of NAV_DATA[lang].groups) {
+      assert.ok(
+        group.layout === 'two-col' || group.layout === 'one-col',
+        `${lang}.${group.key} missing/invalid layout: ${JSON.stringify(group.layout)}`
+      );
+    }
+  }
+});
+
+test('NAV_DATA every dropdown item has a non-empty description', async () => {
+  const { NAV_DATA } = await loadNav();
+  for (const lang of ['en', 'ar']) {
+    for (const group of NAV_DATA[lang].groups) {
+      for (const item of group.items) {
+        assert.ok(
+          typeof item.description === 'string' && item.description.length > 0,
+          `${lang}.${group.key} item "${item.label}" missing description`
+        );
+      }
+    }
+  }
+});
+
+test('NAV_DATA primary flag exists in prices and tools for both locales', async () => {
+  const { NAV_DATA } = await loadNav();
+  for (const lang of ['en', 'ar']) {
+    for (const key of ['prices', 'tools']) {
+      const group = NAV_DATA[lang].groups.find((g) => g.key === key);
+      assert.ok(group, `${lang}.${key} group missing`);
+      const primaryCount = group.items.filter((it) => it.primary === true).length;
+      assert.ok(
+        primaryCount >= 1,
+        `${lang}.${key} should have at least one primary item, found ${primaryCount}`
+      );
+    }
+  }
+});
+
+test('NAV_DATA primary flag membership matches across locales per group', async () => {
+  const { NAV_DATA } = await loadNav();
+  for (let i = 0; i < NAV_DATA.en.groups.length; i += 1) {
+    const en = NAV_DATA.en.groups[i];
+    const ar = NAV_DATA.ar.groups[i];
+    for (let j = 0; j < en.items.length; j += 1) {
+      const enP = Boolean(en.items[j].primary);
+      const arP = Boolean(ar.items[j].primary);
+      assert.equal(
+        enP,
+        arP,
+        `Primary flag mismatch at ${en.key}[${j}] (en=${enP}, ar=${arP}): ${en.items[j].label} / ${ar.items[j].label}`
+      );
+    }
+  }
+});
+
 test('NAV_DATA labels are present (langToggle, openMenu, closeMenu, mainNav)', async () => {
   const { NAV_DATA } = await loadNav();
   for (const lang of ['en', 'ar']) {
