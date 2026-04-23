@@ -97,7 +97,7 @@ the codebase.
 
 ### Type Scale
 
-Implemented in [`styles/global.css`](../styles/global.css). Body scale is tight (17–20 px) for dense
+Implemented in [`styles/global.css`](../styles/global.css). Body scale is tight (16–20 px) for dense
 price-data UI; display tier (`--text-4xl` / `--text-5xl`) is reserved for hero headings.
 
 ```css
