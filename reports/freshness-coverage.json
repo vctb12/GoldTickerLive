@@ -1,0 +1,451 @@
+{
+  "schemaVersion": 1,
+  "generatedAtDate": "2026-04-23",
+  "scopeNote": "Static analysis only. Does not audit §6.1 spot-vs-retail mixing. Advisory, not a gate.",
+  "summary": {
+    "totalSurfaces": 29,
+    "consumersWithAllThreeBranches": 1,
+    "consumersMissingStale": 2,
+    "consumersMissingCached": 1,
+    "consumersMissingLive": 0,
+    "priceRenderersWithoutLiveStatus": 26
+  },
+  "records": [
+    {
+      "path": "src/components/nav-data.js",
+      "kind": "component",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/components/spotBar.js",
+      "kind": "component",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": true,
+      "notes": [
+        "renders price-like content but no live-status import"
+      ]
+    },
+    {
+      "path": "src/components/ticker.js",
+      "kind": "component",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/config/countries.js",
+      "kind": "config",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/config/translations.js",
+      "kind": "config",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/lib/api.js",
+      "kind": "lib",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": true,
+      "notes": [
+        "renders price-like content but no live-status import"
+      ]
+    },
+    {
+      "path": "src/lib/count-up.js",
+      "kind": "lib",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/lib/export.js",
+      "kind": "lib",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/lib/formatter.js",
+      "kind": "lib",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live",
+        "cached",
+        "stale"
+      ],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": true,
+      "notes": [
+        "renders price-like content but no live-status import"
+      ]
+    },
+    {
+      "path": "src/lib/live-status.js",
+      "kind": "live-status-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [
+        "GOLD_MARKET",
+        "formatRelativeAge",
+        "getAgeMs",
+        "getLiveFreshness",
+        "getMarketStatus"
+      ],
+      "rendersPriceLike": false,
+      "freshnessKeysMatched": [
+        "live",
+        "cached",
+        "stale",
+        "unavailable"
+      ],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": true,
+      "notes": []
+    },
+    {
+      "path": "src/lib/page-hydrator.js",
+      "kind": "lib",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "cached",
+        "stale"
+      ],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": true,
+      "notes": [
+        "renders price-like content but no live-status import"
+      ]
+    },
+    {
+      "path": "src/lib/price-calculator.js",
+      "kind": "lib",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/pages/calculator.js",
+      "kind": "page-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live"
+      ],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": true,
+      "notes": [
+        "renders price-like content but no live-status import"
+      ]
+    },
+    {
+      "path": "src/pages/home.js",
+      "kind": "page-module",
+      "importsLiveStatus": true,
+      "usedSymbols": [
+        "getMarketStatus"
+      ],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live",
+        "unavailable"
+      ],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": true,
+      "notes": [
+        "missing 'cached' branch literal",
+        "missing 'stale' branch literal"
+      ]
+    },
+    {
+      "path": "src/pages/learn.js",
+      "kind": "page-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/pages/methodology.js",
+      "kind": "page-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/pages/shops.js",
+      "kind": "page-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/pages/tracker-pro.js",
+      "kind": "page-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live"
+      ],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": true,
+      "notes": [
+        "renders price-like content but no live-status import"
+      ]
+    },
+    {
+      "path": "src/routes/routeRegistry.js",
+      "kind": "other",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/search/searchIndex.js",
+      "kind": "search",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live"
+      ],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/seo/metadataGenerator.js",
+      "kind": "other",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/seo/seoHead.js",
+      "kind": "other",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/social/postTemplates.js",
+      "kind": "other",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/tracker/events.js",
+      "kind": "tracker-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live"
+      ],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/tracker/render.js",
+      "kind": "tracker-module",
+      "importsLiveStatus": true,
+      "usedSymbols": [
+        "getLiveFreshness",
+        "getMarketStatus"
+      ],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live",
+        "cached",
+        "unavailable"
+      ],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": true,
+      "notes": [
+        "missing 'stale' branch literal"
+      ]
+    },
+    {
+      "path": "src/tracker/state.js",
+      "kind": "tracker-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live"
+      ],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": true,
+      "notes": [
+        "renders price-like content but no live-status import"
+      ]
+    },
+    {
+      "path": "src/tracker/ui-shell.js",
+      "kind": "tracker-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live"
+      ],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": true,
+      "notes": [
+        "renders price-like content but no live-status import"
+      ]
+    },
+    {
+      "path": "src/utils/inputValidation.js",
+      "kind": "other",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    },
+    {
+      "path": "src/utils/slugify.js",
+      "kind": "other",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic"
+      ]
+    }
+  ]
+}
