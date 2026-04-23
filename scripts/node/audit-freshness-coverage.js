@@ -80,6 +80,74 @@ const PRICE_TOKENS = [
 const FRESHNESS_KEYS = ['live', 'cached', 'stale', 'unavailable'];
 
 // ---------------------------------------------------------------------------
+// Audit exemptions
+// ---------------------------------------------------------------------------
+// Files classified by the heuristics above as "renders price-like content"
+// but which a human reviewer has confirmed do not actually render a live
+// gold price on a user-facing surface. Each entry carries a reason string
+// that is copied into the report so the exemption is visible and
+// reviewable as a plain diff — this is the §6.3 discipline applied to the
+// audit itself: the decision is a product element, not decoration.
+//
+// The set is intentionally small. Reviewers adding an entry must document
+// the reason in a single sentence. Entries are only valid for files that
+// truly never call `updateSpotBar` / `updateTicker` / any renderer that
+// surfaces a price value to the DOM.
+const AUDIT_EXEMPTIONS = {
+  'src/components/nav-data.js':
+    'Nav-link metadata; "22k"/"24k" strings are category labels, not prices.',
+  'src/config/countries.js': 'Static country/currency config table; no live values.',
+  'src/config/translations.js': 'i18n string catalogue; no live values.',
+  'src/lib/count-up.js': 'Generic number-animation utility; currency-agnostic.',
+  'src/lib/export.js': 'CSV/JSON export helper; ships user-triggered snapshots, not live values.',
+  'src/lib/formatter.js':
+    'Pure formatter (locale/currency/time); callers own freshness. The three freshness keys appear in source.* translation keys, not as renderer branches.',
+  'src/lib/price-calculator.js':
+    'Pure math library (purity × grams × spot); no DOM, no time dimension.',
+  'src/routes/routeRegistry.js':
+    'Static route metadata (paths, titles, descriptions); no runtime prices.',
+  'src/search/searchIndex.js':
+    'Search index generator; "live" is an entity-type label, not a freshness key.',
+  'src/seo/metadataGenerator.js':
+    'Server-side SEO meta builder (titles, descriptions); static per-page.',
+  'src/seo/seoHead.js': 'SEO head snippet emitter; static metadata.',
+  'src/social/postTemplates.js':
+    'Social post copy templates; rendered by scripts/python at post time, not in the browser.',
+  'src/tracker/events.js':
+    "'live' is the tracker mode-name (VALID_MODES), not a freshness key. Tracker freshness is owned by src/tracker/render.js.",
+  'src/tracker/state.js':
+    "'live' is the default tracker mode-name; tracker freshness lives on _state.live.updatedAt and is consumed by render.js.",
+  'src/tracker/ui-shell.js':
+    "'live' references are mode-name checks; now forwards hasLiveFailure into updateSpotBar, which owns the freshness label.",
+  'src/utils/inputValidation.js':
+    'Input validators (regex); tokens like "karat" appear in validator names/messages, not prices.',
+  'src/utils/slugify.js': 'String utility; currency-agnostic.',
+  'src/pages/learn.js': 'Static educational content page; no live prices.',
+  'src/pages/methodology.js': 'Static methodology page; no live prices.',
+};
+
+// Real gaps not yet remediated. Each entry links to a follow-up plan file
+// so the audit surfaces them without noise. Removing an entry means the
+// gap has been closed and the file either got a live-status import or a
+// new exemption with reason.
+const KNOWN_GAPS = {
+  'src/components/ticker.js':
+    'Ticker marquee renders spot prices but has no freshness label. Tracked for a follow-up plan.',
+  'src/lib/api.js':
+    'Price fetch layer; source is already tagged ("live" vs "cache-fallback"). Freshness ownership sits with callers who render.',
+  'src/lib/page-hydrator.js':
+    'Country/city hydrator; now threads hasLiveFailure into updateSpotBar but the karat-card grid itself has no stale badge. Tracked for a follow-up plan.',
+  'src/pages/calculator.js':
+    'Calculator already tracks STATE.spotSource and feeds hasLiveFailure into updateSpotBar. Internal result panels do not yet carry per-panel freshness.',
+  'src/pages/home.js':
+    'Hero card already exposes freshness; surrounding GCC grid and country carousel do not carry freshness branches.',
+  'src/pages/shops.js':
+    'Shops directory page shows spot bar and list cards. Shop cards do not render live prices; page passes through updateSpotBar only.',
+  'src/pages/tracker-pro.js':
+    'Tracker-pro workspace; per-panel freshness coverage tracked by follow-up plan.',
+};
+
+// ---------------------------------------------------------------------------
 
 function walk(dir, acc = []) {
   if (!fs.existsSync(dir)) return acc;
@@ -153,6 +221,9 @@ function recordFor(absPath) {
   const freshnessKeysMatched = detectFreshnessKeys(source);
   const labels = detectLabelHeuristics(source);
 
+  const exemptionReason = AUDIT_EXEMPTIONS[rel] || null;
+  const knownGapReason = KNOWN_GAPS[rel] || null;
+
   const notes = [];
   if (usage.any) {
     for (const key of ['live', 'cached', 'stale']) {
@@ -161,12 +232,14 @@ function recordFor(absPath) {
       }
     }
   }
-  if (renders && !usage.any && kind !== 'live-status-module') {
+  if (renders && !usage.any && kind !== 'live-status-module' && !exemptionReason) {
     notes.push('renders price-like content but no live-status import');
   }
-  if (renders && !labels.hasTimestampLabel) {
+  if (renders && !labels.hasTimestampLabel && !exemptionReason) {
     notes.push('renders price-like content but no timestamp label heuristic');
   }
+  if (exemptionReason) notes.push(`EXEMPT: ${exemptionReason}`);
+  if (knownGapReason) notes.push(`KNOWN GAP: ${knownGapReason}`);
 
   // Only include files that are either live-status consumers OR price-like
   // renderers OR the module itself. Everything else is dropped so the
@@ -185,6 +258,10 @@ function recordFor(absPath) {
     freshnessKeysMatched,
     hasSourceLabel: labels.hasSourceLabel,
     hasTimestampLabel: labels.hasTimestampLabel,
+    exempt: Boolean(exemptionReason),
+    exemptReason: exemptionReason,
+    knownGap: Boolean(knownGapReason),
+    knownGapReason,
     notes,
   };
 }
@@ -195,6 +272,8 @@ function summarize(records) {
   let consumersMissingCached = 0;
   let consumersMissingLive = 0;
   let rendersWithoutLiveStatus = 0;
+  let exemptCount = 0;
+  let knownGapCount = 0;
   for (const r of records) {
     const usesLiveStatus = r.importsLiveStatus || (r.usedSymbols && r.usedSymbols.length > 0);
     if (usesLiveStatus) {
@@ -204,9 +283,11 @@ function summarize(records) {
       if (!has('cached')) consumersMissingCached += 1;
       if (!has('live')) consumersMissingLive += 1;
     }
-    if (r.rendersPriceLike && !usesLiveStatus && r.kind !== 'live-status-module') {
+    if (r.rendersPriceLike && !usesLiveStatus && r.kind !== 'live-status-module' && !r.exempt) {
       rendersWithoutLiveStatus += 1;
     }
+    if (r.exempt) exemptCount += 1;
+    if (r.knownGap) knownGapCount += 1;
   }
   return {
     totalSurfaces: records.length,
@@ -215,6 +296,8 @@ function summarize(records) {
     consumersMissingCached,
     consumersMissingLive,
     priceRenderersWithoutLiveStatus: rendersWithoutLiveStatus,
+    documentedExemptions: exemptCount,
+    knownGapsTracked: knownGapCount,
   };
 }
 
@@ -262,8 +345,10 @@ function renderMarkdown(report) {
   lines.push(`- Consumers missing \`cached\` literal: **${s.consumersMissingCached}**`);
   lines.push(`- Consumers missing \`live\` literal: **${s.consumersMissingLive}**`);
   lines.push(
-    `- Price-like renderers without any live-status import: **${s.priceRenderersWithoutLiveStatus}**`
+    `- Price-like renderers without any live-status import (after exemptions): **${s.priceRenderersWithoutLiveStatus}**`
   );
+  lines.push(`- Documented false-positive exemptions: **${s.documentedExemptions}**`);
+  lines.push(`- Known real gaps tracked for follow-up: **${s.knownGapsTracked}**`);
   lines.push('');
   lines.push('## Per-surface details');
   lines.push('');
@@ -348,6 +433,8 @@ module.exports = {
   summarize,
   buildReport,
   renderMarkdown,
+  AUDIT_EXEMPTIONS,
+  KNOWN_GAPS,
 };
 
 if (require.main === module) main();

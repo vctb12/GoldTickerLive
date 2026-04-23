@@ -45,7 +45,7 @@ test('extractMetaByName handles attribute order variance', () => {
 });
 
 test('extractMetaByProperty handles og:* with colons', () => {
-  const html = `<meta property="og:url" content="https://example.com/">`;
+  const html = '<meta property="og:url" content="https://example.com/">';
   assert.equal(extractMetaByProperty(html, 'og:url'), 'https://example.com/');
   assert.equal(extractMetaByProperty(html, 'og:image'), null);
 });

@@ -2,18 +2,28 @@
  * components/spotBar.js — Sticky top bar showing XAU/USD and 24K AED/gram.
  * Present on every page. Updates on each successful price fetch.
  *
+ * Honors AGENTS.md §6.2: cached / stale / unavailable values are visibly
+ * labelled. The bar's `data-freshness` attribute reflects
+ * `getLiveFreshness()` ('live' | 'cached' | 'stale' | 'unavailable') and
+ * the timestamp slot renders both the clock time and a relative age
+ * (e.g. "2 min ago") so staleness is legible without hover.
+ *
  * API:
  *   injectSpotBar(lang, depth) — create & mount the bar
- *   updateSpotBar(data)        — update {xauUsd, aed24kGram}
+ *   updateSpotBar(data)        — update {xauUsd, aed24kGram, updatedAt, hasLiveFailure}
  *   updateSpotBarLang(lang)    — switch language
  */
 
+import { getLiveFreshness } from '../lib/live-status.js';
+
 let _barEl = null;
 let _prevXauUsd = null;
+let _currentLang = 'en';
 
 export function injectSpotBar(lang = 'en', depth = 0) {
   if (document.getElementById('spot-price-bar')) return;
 
+  _currentLang = lang;
   const isAr = lang === 'ar';
   const trackerHref = depth === 0 ? 'tracker.html' : '../'.repeat(depth) + 'tracker.html';
 
@@ -23,6 +33,7 @@ export function injectSpotBar(lang = 'en', depth = 0) {
   bar.setAttribute('role', 'status');
   bar.setAttribute('aria-live', 'polite');
   bar.setAttribute('aria-label', isAr ? 'أسعار الذهب الفورية' : 'Live gold spot prices');
+  bar.setAttribute('data-freshness', 'unavailable');
   bar.innerHTML = `
     <div class="spot-bar-inner">
       <a href="${trackerHref}" class="spot-bar-item" data-spot="xau">
@@ -80,14 +91,40 @@ export function updateSpotBar(data = {}) {
   if (data.updatedAt) {
     const el = _barEl.querySelector('[data-spot-ts]');
     if (el) {
-      const d = new Date(data.updatedAt);
-      el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const fresh = getLiveFreshness({
+        updatedAt: data.updatedAt,
+        lang: _currentLang,
+        hasLiveFailure: Boolean(data.hasLiveFailure),
+      });
+      _barEl.setAttribute('data-freshness', fresh.key);
+      el.textContent = `${fresh.timeText} · ${fresh.ageText}`;
+      el.setAttribute('title', freshnessLabel(fresh.key, _currentLang));
     }
+  } else if (data.updatedAt === null) {
+    _barEl.setAttribute('data-freshness', 'unavailable');
+    const el = _barEl.querySelector('[data-spot-ts]');
+    if (el) el.textContent = '—';
+  }
+}
+
+function freshnessLabel(key, lang) {
+  const isAr = lang === 'ar';
+  switch (key) {
+    case 'live':
+      return isAr ? 'مباشر' : 'Live';
+    case 'cached':
+      return isAr ? 'مخزن مؤقتاً' : 'Cached';
+    case 'stale':
+      return isAr ? 'قديم' : 'Stale';
+    case 'unavailable':
+    default:
+      return isAr ? 'غير متاح' : 'Unavailable';
   }
 }
 
 export function updateSpotBarLang(lang) {
   if (!_barEl) return;
+  _currentLang = lang;
   const isAr = lang === 'ar';
   const labelEl = _barEl.querySelector('[data-spot-label="aed"]');
   if (labelEl) labelEl.textContent = isAr ? '24K / غ AED' : '24K AED/g';

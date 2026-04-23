@@ -19,6 +19,13 @@ data/link-audit.json
 data/shops-data.json
 src/data/historical-baseline.json
 
+# Auto-generated audit reports — produced deterministically by their own
+# --check-capable scripts. Prettier's array-compaction fights the
+# generators' output and the files are not hand-edited.
+reports/seo/inventory.json
+reports/freshness-coverage.json
+reports/freshness-coverage.md
+
 # Playwright / test reports
 playwright-report/
 test-results/
