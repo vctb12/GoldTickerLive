@@ -1545,3 +1545,112 @@ _Absorbs `docs/product/TASKS.md`. Near-term, narrowly-scoped backlog. Wider road
 - [x] Update `DEPENDENCIES.md` with correct versions.
 - [x] Update all automation docs.
 - [x] Fix Vite version across all docs.
+
+---
+
+## 29. Repo hygiene pass
+
+_Reconciled from [`docs/plans/REPO_CLEANUP_PROPOSAL.md`](./plans/REPO_CLEANUP_PROPOSAL.md) on
+2026-04-23. Audit-first / delete-last. Phases 2+ are gated by owner sign-off on
+`reports/cleanup-audit/CANDIDATES.md`._
+
+**Branch:** `copilot/clean-repo-files-dead-code`
+
+### Scope
+
+Reduce dead code, dead files, and stale artifacts across the repo without altering any public URL,
+breaking any CI gate, or weakening SEO/trust surfaces. Preserve the static multi-page architecture.
+
+### Guardrails (binding for every PR in this track)
+
+- Never delete `**/*.html` under `countries/`, `content/`, `admin/`, or repo root as cleanup.
+- Never delete anything listed in `sitemap.xml`, `_redirects`, `_headers`, `.htaccess`,
+  `robots.txt`, `manifest.json`, `sw.js`, `CNAME`.
+- Never modify `data/shops.js`, DataHub baseline CSVs, or pre-build outputs (`assets/`, `config/`,
+  `data/`) as cleanup.
+- One subsystem per PR. ≤ ~50 files per removal PR.
+- Never force-push; never rewrite history.
+- DOM-safety baseline (`check-unsafe-dom`) and SEO/sitemap gates must stay green or tighten.
+- Out of scope: version bumps, architecture changes, directory reorgs, content rewrites, new
+  features, new pages, URL changes.
+
+### Phase checklists
+
+#### Phase 0 — Reconcile into the plan system
+
+- [x] `docs/plans/REPO_CLEANUP_PROPOSAL.md` created with raw prompt + plan
+- [x] Row added to "Pending proposals" in `docs/plans/README.md`
+- [x] Sub-tasks scored into the priority matrix (rows 15a–15g, Wave 2/3)
+- [x] This subsection (§29) added to `REVAMP_PLAN.md`
+
+#### Phase 1 — Baseline audit (read-only, zero deletions)
+
+- [ ] Inventory: full file list with size + last-modified + last-touched commit SHA
+- [ ] Reachability graph (HTML→assets, JS imports, CSS imports, config refs, runtime refs, test
+      refs, workflow refs, dynamic refs)
+- [ ] Keep-list per `REPO_CLEANUP_PROPOSAL.md` §Phase 1.3
+- [ ] Candidate-list bucketed A / B / C
+- [ ] Dead-code-inside-live-files audit: knip (or ts-prune), depcheck, purgecss (report-only),
+      ruff F401/F811/F841, eslint unused-vars (non-blocking)
+- [ ] `reports/cleanup-audit/CANDIDATES.md` committed with empty checkboxes for owner sign-off
+- [ ] PR opened: "repo hygiene: audit-only (no deletions)"
+- [ ] **STOP — owner reviews `CANDIDATES.md` and checks off approvals before Phase 2+**
+
+#### Phase 2 — Trivially safe removals (Bucket A only, owner-approved)
+
+- [ ] One category per commit (`.DS_Store`, editor swaps, zero-byte, orphan `.map`, byte-identical
+      duplicates)
+- [ ] `.gitignore` hardened (`Thumbs.db`, `*~` confirmed; `.DS_Store` and `*.swp` already present)
+- [ ] Per-PR gates: `npm run lint`, `npm run validate`, `npm test`, `npm run build`,
+      `npm run quality`
+- [ ] No public HTML changed
+
+#### Phase 3 — Script & module orphans (Bucket B, one-at-a-time)
+
+- [ ] Re-verify each file unreferenced at HEAD
+- [ ] Dynamic-ref grep across repo + workflows + docs + `dist/`
+- [ ] `npm run build` output byte-diff acceptable
+- [ ] One subsystem per PR; one-line `CHANGELOG.md` "Internal" entry per removal
+
+#### Phase 4 — Dead exports inside live files (no file removal)
+
+- [ ] Per knip / ts-prune output, confirm zero consumers (incl. tests + workflows)
+- [ ] Remove export; remove body if no internal consumer
+- [ ] Group edits by module
+- [ ] **Do not** touch `src/lib/safe-dom.js` or `src/lib/cache.js` fallback paths
+
+#### Phase 5 — Dependencies
+
+- [ ] depcheck-flagged unused deps removed; cross-checked against workflow refs
+- [ ] `npm audit` + full test + build green
+- [ ] No version bumps
+
+#### Phase 6 — CSS / style hygiene (report-first)
+
+- [ ] purgecss-flagged class selectors removed (class-based only)
+- [ ] Protected primitives kept: `hover-lift`, `data-freshness-pulse`, `data-reveal`,
+      `flash-up/down`, `pulse-dot`, `drawer-slide-in`
+- [ ] Playwright visual smoke (where available) green on home / tracker / shops / country-page
+
+#### Phase 7 — Docs hygiene (non-destructive)
+
+- [ ] Identify clearly superseded docs vs `REVAMP_PLAN.md`
+- [ ] **Archive** under `docs/archive/YYYY-MM/`, do not delete
+- [ ] `docs/README.md` index updated
+- [ ] Governance files never archived: `AGENTS.md`, `CLAUDE.md`, `REVAMP_PLAN.md`,
+      `plans/README.md`
+
+#### Phase 8 — Formatting-only pass (default skip)
+
+- [ ] _Default: skip._ Run only if explicitly requested (`chore: format only (no semantic
+      changes)`).
+
+#### Phase 9 — Final validation
+
+- [ ] `npm test`, `npm run lint`, `npm run validate`, `npm run quality`, `npm run build`,
+      `npm run perf:ci`, `npm run check-links`, `npm run a11y`, `npm run seo-audit`
+- [ ] `dist/` sitemap diff: every public URL still ships
+- [ ] DOM-safety baseline untouched or tightened
+- [ ] Deploy preview smoke: home, tracker, shops, calculator, insights, one country, one city, one
+      market, 404, offline
+
