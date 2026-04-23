@@ -2,7 +2,6 @@
 applyTo: "docs/**"
 ---
 
-- /docs is the source of truth for planned work.
-- Keep plan files and progress checklists aligned with actual implementation.
-- When a plan item is completed in code, update the matching docs item in the same branch.
-- Do not leave /docs stale after implementation.
+When you edit code, update the matching doc in the same PR if it becomes inaccurate. When you edit a plan file, update the specific checklist item you touched — not the whole plan.
+
+Agent rules don't live here. See [`AGENTS.md`](../../AGENTS.md) at the repo root.

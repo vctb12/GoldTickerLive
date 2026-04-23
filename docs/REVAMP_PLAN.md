@@ -1,37 +1,19 @@
-# Gold-Prices Site Revamp — Consolidated Master Plan
+# Gold-Prices Site Revamp — master plan
 
-> 🛑 **START HERE — READ BEFORE DOING ANY WORK ON THIS REVAMP.**
->
-> This file is the **single source of truth** for the homepage + global nav + tracker revamp **and**
-> for the consolidated production tracks. It absorbs every previous plan. Do **not** reintroduce or
-> fork another plan.
->
-> ### 📌 Mandatory session protocol
->
-> 1. **Every new agent / contributor session** working on the revamp (branch
->    `copilot/revamp-tracker-html-page` or any successor branch) **must open and read this file in
->    full before making changes**. No exceptions.
-> 2. **Every `report_progress` call** must update the "Progress log" and the relevant track
->    checklists in this file, in the same commit as the code change.
-> 3. **Every merged PR** targeting the revamp must bump the "Last updated" line below and move the
->    affected checklist items from `[ ]` to `[x]` with the commit SHA.
-> 4. **Scope guard:** if a proposed change does not fit one of the commit buckets in §1 or one of
->    the tracks in §2, stop and raise it in the PR description rather than silently expanding scope.
->
-> **Last updated:** 2026-04-23 · **Round:** 4 (§22b reconciled — 30-phase tracker/home/admin revamp
-> baseline + URL-hash contract) · **Branch:** `copilot/explore-codebase-implementation-plan-again`
-> (based on `main`; successor to `revamp/404-hardening`)
+This is the active plan. It owns the homepage / nav / tracker revamp (§0–§18) and the consolidated
+production tracks (§19–§28). New proposals are captured under [`docs/plans/`](./plans/); reconcile
+them into the right section here before execution. Agent operating rules are in
+[`AGENTS.md`](../AGENTS.md) — this file is the plan, not the charter.
 
-> **📚 Master consolidation index.** This file is the single consolidated plan for the entire revamp
-> _and_ for the pre-existing production/admin tracks that used to live in other docs. Every
-> planning-style file in `docs/` now points here. Sections §0–§18 own the homepage + nav + tracker
-> revamp; §19–§28 own the consolidated production tracks, decisions, governance, roadmaps, risks,
-> and historical logs. See [`docs/README.md`](./README.md) for the pointer map.
->
-> **📥 Plan intake.** Raw proposals captured from prompts or channels live under
-> [`docs/plans/`](./plans/) with a priority matrix in [`docs/plans/README.md`](./plans/README.md).
-> Proposals are **not executable** until they have been reprioritized there and reconciled into this
-> master plan. Agents must read `docs/plans/README.md` before starting any new task.
+**How to use this file**
+
+- Open the section that matches your task; update its checklist in the same PR that ships the code.
+- If a task doesn't fit any existing section, add a subsection rather than starting a parallel plan
+  file.
+- Keep completed items as `[x]` with enough context to serve as a record. Don't re-open closed items
+  to pad status; don't invent new phases to look ambitious.
+
+**Last updated:** 2026-04-23.
 
 | §      | Owns                                                       | Absorbed from                                                     |
 | ------ | ---------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -228,54 +210,22 @@ Adapt wording to context without changing meaning._
 
 ---
 
-## 0.3 Engineering non-negotiables
+## 0.3 Engineering notes specific to the revamp
 
-- **One PR, many tiny commits.** Each commit is single-purpose and reversible with `git revert`.
-- **Preserve static multi-page architecture.** "Not static at all" = motion, liveness,
-  micro-interactions, progressive disclosure. Not an SPA.
-- **Priority order:** trust → UX → mobile → SEO → perf → polish.
-- **No new libraries** unless strictly justified (advisory-DB checked first).
-- **Canonical tokens only.** Everything resolves to `styles/global.css`: `--color-*`, `--surface-*`,
+General engineering conventions (tokens, DOM safety, motion, RTL, priority order) live in
+[`AGENTS.md`](../AGENTS.md) — not repeated here. Revamp-specific notes:
+
+- Canonical tokens for this work resolve in `styles/global.css` under `--color-*`, `--surface-*`,
   `--space-*`, `--text-*`, `--radius-*`, `--shadow-*`, `--ease-*`, `--duration-*`, `--weight-*`,
-  `--leading-*`. No hand-picked hex or rem.
-- **DOM safety strict.** All new DOM via `src/lib/safe-dom.js` (`el`, `clear`, `escape`, `safeHref`,
-  `safeTel`). No new `innerHTML` sinks. `check-unsafe-dom` baseline tightens when old sinks are
-  replaced.
-- **Motion respects `prefers-reduced-motion: reduce`** — every animation has a zero-motion path.
-- **RTL parity.** Arabic locale must work for every new layout.
-- **Trust rules.** Always distinguish spot/reference vs retail. Always label
-  cached/estimated/delayed/fallback values.
+  `--leading-*`. Don't introduce bespoke scales alongside them.
+- Treat each track (A–J) as a reversible unit. Keep commits focused per concern (tokens / layout /
+  motion / a11y / …) so bisection stays cheap, but don't split mechanically into trivial commits
+  when one cohesive change is clearer.
 
-## 1. Commit discipline — single concern per commit
+## 1. Shipping order
 
-Every commit fits **exactly one** of these narrow buckets. If a change does not fit one bucket,
-split it.
-
-| Bucket       | Example                                             |
-| ------------ | --------------------------------------------------- |
-| `tokens`     | Add/align one CSS custom-property group             |
-| `layout`     | Change grid/flex/gap on one section                 |
-| `spacing`    | Adjust padding/margin rhythm on one component       |
-| `typography` | Heading scale, weight, leading on one area          |
-| `color`      | Swap a bespoke color for a canonical token          |
-| `surface`    | Card background/border/shadow on one component      |
-| `radius`     | Normalize corner-radius on one component            |
-| `motion`     | One keyframe + one application site                 |
-| `a11y`       | Focus ring, aria, keyboard handler — one concern    |
-| `mobile`     | Breakpoint behavior for one component               |
-| `content`    | Copy rewrite for one section (no structural change) |
-| `structure`  | IA / DOM reorder for one section                    |
-| `wiring`     | JS data wire-up for one section                     |
-| `cleanup`    | Remove one dead rule / duplicate id / unused export |
-| `seo`        | One metadata element                                |
-| `perf`       | One observable perf win (lazy, defer, split)        |
-| `safe-dom`   | Replace one `innerHTML` sink with helpers           |
-| `docs`       | One doc or comment update                           |
-
-## 2. Shipping order
-
-Rounds of ~6–8 commits, cycling the tracks in order: **A → B → C → D → E → F → G → H → I → J**.
-Expect ~10 rounds across the PR, target 80–120 commits total.
+Cycle tracks **A → B → C → D → E → F → G → H → I → J** across rounds. No target commit count; ship
+what the next round of work honestly produces.
 
 ---
 
@@ -1590,8 +1540,8 @@ breaking any CI gate, or weakening SEO/trust surfaces. Preserve the static multi
       refs, workflow refs, dynamic refs)
 - [ ] Keep-list per `REPO_CLEANUP_PROPOSAL.md` §Phase 1.3
 - [ ] Candidate-list bucketed A / B / C
-- [ ] Dead-code-inside-live-files audit: knip (or ts-prune), depcheck, purgecss (report-only),
-      ruff F401/F811/F841, eslint unused-vars (non-blocking)
+- [ ] Dead-code-inside-live-files audit: knip (or ts-prune), depcheck, purgecss (report-only), ruff
+      F401/F811/F841, eslint unused-vars (non-blocking)
 - [ ] `reports/cleanup-audit/CANDIDATES.md` committed with empty checkboxes for owner sign-off
 - [ ] PR opened: "repo hygiene: audit-only (no deletions)"
 - [ ] **STOP — owner reviews `CANDIDATES.md` and checks off approvals before Phase 2+**
@@ -1637,13 +1587,12 @@ breaking any CI gate, or weakening SEO/trust surfaces. Preserve the static multi
 - [ ] Identify clearly superseded docs vs `REVAMP_PLAN.md`
 - [ ] **Archive** under `docs/archive/YYYY-MM/`, do not delete
 - [ ] `docs/README.md` index updated
-- [ ] Governance files never archived: `AGENTS.md`, `CLAUDE.md`, `REVAMP_PLAN.md`,
-      `plans/README.md`
+- [ ] Governance files never archived: `AGENTS.md`, `CLAUDE.md`, `REVAMP_PLAN.md`, `plans/README.md`
 
 #### Phase 8 — Formatting-only pass (default skip)
 
-- [ ] _Default: skip._ Run only if explicitly requested (`chore: format only (no semantic
-      changes)`).
+- [ ] _Default: skip._ Run only if explicitly requested
+      (`chore: format only (no semantic     changes)`).
 
 #### Phase 9 — Final validation
 
@@ -1653,4 +1602,3 @@ breaking any CI gate, or weakening SEO/trust surfaces. Preserve the static multi
 - [ ] DOM-safety baseline untouched or tightened
 - [ ] Deploy preview smoke: home, tracker, shops, calculator, insights, one country, one city, one
       market, 404, offline
-

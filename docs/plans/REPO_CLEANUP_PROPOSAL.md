@@ -13,26 +13,19 @@
 ## Origin
 
 Captured from the prompt: _"full repo files cleaning, remove dead code, dead files and clean all
-files and be extra conservative and be careful"_ (2026-04-23). Reconciled with the
-audit-first / delete-last plan agreed in the same conversation.
+files and be extra conservative and be careful"_ (2026-04-23). Reconciled with the audit-first /
+delete-last plan agreed in the same conversation.
 
-## Governing constraints (from `AGENTS.md` / `CLAUDE.md`)
+## Governing constraints
 
-- Static multi-page architecture is preserved. **No public URL is removed as cleanup.**
-- "Do not do broad repo audits unless explicitly asked" — this prompt **is** the explicit ask.
-- Trust / correctness > working UX > everything else. SEO surfaces, freshness banners, methodology,
-  and disclaimers are part of the product and must not be touched as "cleanup".
-- DOM-safety baseline (`scripts/node/check-unsafe-dom.js`) must not regress.
-- Sitemap coverage gate (`scripts/node/check-sitemap-coverage.js`) and SEO meta gate
-  (`scripts/node/check-seo-meta.js`) must stay green.
-- No version bumps, no architecture moves, no directory reorgs (Wave 3 #18 owns those, gated
-  separately).
-- Small PRs, one subsystem per PR, ≤ ~50 files per removal PR.
+See [`AGENTS.md`](../../AGENTS.md) — product-trust guardrails apply. In particular for cleanup: no
+public URL removed as cleanup, no sitemap / SEO regression, DOM-safety baseline doesn't regress, and
+small scoped PRs (≤ ~50 files per removal PR).
 
 ## Goal
 
-Safely reduce dead code, dead files, and stale artifacts across the repo without altering any
-public URL, breaking any CI gate, or weakening SEO/trust surfaces.
+Safely reduce dead code, dead files, and stale artifacts across the repo without altering any public
+URL, breaking any CI gate, or weakening SEO/trust surfaces.
 
 ---
 
@@ -51,8 +44,8 @@ public URL, breaking any CI gate, or weakening SEO/trust surfaces.
 
 ### Phase 1 — Baseline audit (read-only, zero deletions)
 
-Produce a single audit artifact under `reports/cleanup-audit/` (working copies gitignored,
-committed summary only). No files are changed in this phase.
+Produce a single audit artifact under `reports/cleanup-audit/` (working copies gitignored, committed
+summary only). No files are changed in this phase.
 
 1. **Inventory** — full file list with size, last-modified, last-commit-touching SHA. Language /
    extension breakdown. Flag obvious candidates (empty files, files >6 months untouched, `.bak`,
@@ -104,8 +97,8 @@ committed summary only). No files are changed in this phase.
 6. **Deliverable**: `reports/cleanup-audit/CANDIDATES.md` with Bucket A/B/C tables, knip / depcheck
    / purgecss reports inlined or linked, and an empty checkbox per row for owner sign-off.
 
-> **STOP** here. Phases 2+ run only after the owner reviews `CANDIDATES.md` and checks off
-> approved removals.
+> **STOP** here. Phases 2+ run only after the owner reviews `CANDIDATES.md` and checks off approved
+> removals.
 
 ### Phase 2 — Trivially safe removals (Bucket A only, owner-approved)
 
@@ -113,9 +106,8 @@ committed summary only). No files are changed in this phase.
    byte-identical duplicates).
 2. Each PR must pass `npm run lint`, `npm run validate`, `npm test`, `npm run build`,
    `npm run quality`.
-3. `.gitignore` hardened to prevent re-committing OS / editor junk
-   (`.DS_Store`, `Thumbs.db`, `*.swp`, `*~` — `.DS_Store` and `*.swp` are already ignored; verify
-   the rest).
+3. `.gitignore` hardened to prevent re-committing OS / editor junk (`.DS_Store`, `Thumbs.db`,
+   `*.swp`, `*~` — `.DS_Store` and `*.swp` are already ignored; verify the rest).
 4. No changes to any public HTML page.
 
 ### Phase 3 — Script & module orphans (Bucket B, one-at-a-time, owner-approved)
@@ -169,8 +161,8 @@ that must not be touched as cleanup. For everything else:
 1. Identify clearly superseded docs (e.g. `REVAMP_STATUS.md` and `REVAMP_EXECUTION_SUMMARY.md`
    relative to `REVAMP_PLAN.md`; `issues-found.md`, `pr-audit.md`, `risks.md` if duplicated by the
    master plan).
-2. Propose **archival** under `docs/archive/YYYY-MM/` rather than deletion. Update
-   `docs/README.md` index.
+2. Propose **archival** under `docs/archive/YYYY-MM/` rather than deletion. Update `docs/README.md`
+   index.
 3. Owner approves each archival individually. Governance files are never archived.
 
 ### Phase 8 — Formatting-only pass (optional, default skip)
@@ -191,8 +183,8 @@ After every PR and at the end of the effort:
 - Diff `dist/` sitemap before/after; verify every public URL still ships.
 - Verify no new `innerHTML` / `outerHTML` / `insertAdjacentHTML` / `document.write` sinks
   (`check-unsafe-dom` baseline untouched or tightened).
-- Deploy preview smoke test: home, tracker, shops, calculator, insights, one country, one city,
-  one market, 404, offline.
+- Deploy preview smoke test: home, tracker, shops, calculator, insights, one country, one city, one
+  market, 404, offline.
 
 ---
 

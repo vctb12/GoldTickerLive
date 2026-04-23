@@ -26,24 +26,11 @@ engineering engagement touching repo structure, CI, Python layer, navigation, ro
 tracker, SEO, admin panel, chatbot, WhatsApp flow, orders, X post generator, charts, and currency
 converter.
 
-## Governing constraints (from `AGENTS.md` / `CLAUDE.md`)
+## Governing constraints
 
-These override anything in the raw proposal below:
-
-- **Preserve the static / multi-page architecture** unless explicitly asked to change it.
-- **Avoid over-engineering.** Only make changes that are directly requested or clearly necessary.
-- **Do not do broad repo audits unless explicitly asked.**
-- **Keep PRs appropriately scoped and task-specific** (single feature or tightly related
-  fixes/docs).
-- **DOM safety gate:** no new `innerHTML` / `outerHTML` / `insertAdjacentHTML` / `document.write`
-  call sites without updating the baseline in `scripts/node/check-unsafe-dom.js`.
-- **Trust + correctness first**, then working UX, then mobile usability, then SEO, then performance,
-  then polish, then new features.
-- **Never claim "done" or "fixed" without verification** — `npm test`, `npm run lint`,
-  `npm run validate`, `npm run quality`, `npm run build` as applicable.
-
-Any item in the proposal that conflicts with these constraints is automatically downgraded until the
-owner explicitly approves it.
+See [`AGENTS.md`](../../AGENTS.md) — product-trust guardrails, static-architecture preservation,
+DOM-safety baseline, honest verification. Anything in the raw proposal below that conflicts with
+those guardrails is downgraded until the owner explicitly approves it.
 
 ---
 
