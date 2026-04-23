@@ -314,8 +314,15 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
 - [x] **`count-up` primitive** `src/lib/count-up.js` — rAF easeOutQuad, duration magnitude-capped
       180–800 ms, auto directional `data-flash`, reduced-motion no-op, robust numeric parse.
       (`0b03c603`, `0a3c7591`)
-- [ ] **Token audit.** Inventory current `--tp-*`, `--home-*`, `--nav-*`, `--shops-*` bespoke
-      palettes; alias each to canonical tokens.
+- [x] **Token audit.** Inventoried per-prefix: `--tp-*` in `styles/pages/tracker-pro.css` is already
+      fully aliased to canonical site tokens (`--surface-*`, `--border-*`, `--text-*`,
+      `--color-gold*`, `--color-live*`, `--color-error*`, `--color-fixed*`, `--shadow-*`,
+      `--radius-*`); `--home-*`, `--nav-*`, and `--shops-*` color palettes do not exist (only a
+      single `--nav-height` sizing token in `styles/global.css`). `--invest-*` in
+      `styles/pages/invest.css` is an intentional dark-premium page identity that differs from the
+      canonical dark mode on purpose — not drift. `styles/critical.css` intentionally inlines
+      fallback hex for `--tp-bg` / `--tp-text` / `--tp-accent` so above-the-fold paint doesn't
+      depend on the deferred global-token sheet.
 - [ ] **Canonical card consolidation.** Merge near-duplicate `.card` / `.panel` / `.section-card`
       rules into the canonical `.card` + `.card--accent` + `.card--compact` set.
 - [ ] **Heading scale confirmation.** Ensure heading scale is applied via classes (`.h1`…`.h6`) not
