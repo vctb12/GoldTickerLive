@@ -90,7 +90,12 @@ function renderHeroCard() {
   const usd21g = calc.usdPerGram(goldPrice, k21.purity);
 
   // Update sticky spot bar
-  updateSpotBar({ xauUsd: usd24oz, aed24kGram: aed24g, updatedAt: goldUpdatedAt });
+  updateSpotBar({
+    xauUsd: usd24oz,
+    aed24kGram: aed24g,
+    updatedAt: goldUpdatedAt,
+    hasLiveFailure: priceSourceLabel !== 'live',
+  });
 
   const priceEl = document.getElementById('hlc-price');
   if (priceEl) {

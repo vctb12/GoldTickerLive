@@ -181,7 +181,12 @@ async function hydrate() {
 
   // Update sticky spot bar with live prices
   const aed24g = (gold.price / CONSTANTS.TROY_OZ_GRAMS) * AED_PEG;
-  updateSpotBar({ xauUsd: gold.price, aed24kGram: aed24g, updatedAt: gold.updatedAt });
+  updateSpotBar({
+    xauUsd: gold.price,
+    aed24kGram: aed24g,
+    updatedAt: gold.updatedAt,
+    hasLiveFailure: gold.source === 'cache-fallback',
+  });
 
   if (displayEl) displayEl.style.display = '';
   if (loadingEl) loadingEl.style.display = 'none';

@@ -1,0 +1,565 @@
+{
+  "schemaVersion": 1,
+  "generatedAtDate": "2026-04-23",
+  "scopeNote": "Static analysis only. Does not audit §6.1 spot-vs-retail mixing. Advisory, not a gate.",
+  "summary": {
+    "totalSurfaces": 29,
+    "consumersWithAllThreeBranches": 2,
+    "consumersMissingStale": 2,
+    "consumersMissingCached": 1,
+    "consumersMissingLive": 0,
+    "priceRenderersWithoutLiveStatus": 6,
+    "documentedExemptions": 19,
+    "knownGapsTracked": 7
+  },
+  "records": [
+    {
+      "path": "src/components/nav-data.js",
+      "kind": "component",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "Nav-link metadata; \"22k\"/\"24k\" strings are category labels, not prices.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: Nav-link metadata; \"22k\"/\"24k\" strings are category labels, not prices."
+      ]
+    },
+    {
+      "path": "src/components/spotBar.js",
+      "kind": "component",
+      "importsLiveStatus": true,
+      "usedSymbols": [
+        "getLiveFreshness"
+      ],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live",
+        "cached",
+        "stale",
+        "unavailable"
+      ],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": true,
+      "exempt": false,
+      "exemptReason": null,
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": []
+    },
+    {
+      "path": "src/components/ticker.js",
+      "kind": "component",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "exempt": false,
+      "exemptReason": null,
+      "knownGap": true,
+      "knownGapReason": "Ticker marquee renders spot prices but has no freshness label. Tracked for a follow-up plan.",
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic",
+        "KNOWN GAP: Ticker marquee renders spot prices but has no freshness label. Tracked for a follow-up plan."
+      ]
+    },
+    {
+      "path": "src/config/countries.js",
+      "kind": "config",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "Static country/currency config table; no live values.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: Static country/currency config table; no live values."
+      ]
+    },
+    {
+      "path": "src/config/translations.js",
+      "kind": "config",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "i18n string catalogue; no live values.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: i18n string catalogue; no live values."
+      ]
+    },
+    {
+      "path": "src/lib/api.js",
+      "kind": "lib",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": true,
+      "exempt": false,
+      "exemptReason": null,
+      "knownGap": true,
+      "knownGapReason": "Price fetch layer; source is already tagged (\"live\" vs \"cache-fallback\"). Freshness ownership sits with callers who render.",
+      "notes": [
+        "renders price-like content but no live-status import",
+        "KNOWN GAP: Price fetch layer; source is already tagged (\"live\" vs \"cache-fallback\"). Freshness ownership sits with callers who render."
+      ]
+    },
+    {
+      "path": "src/lib/count-up.js",
+      "kind": "lib",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "Generic number-animation utility; currency-agnostic.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: Generic number-animation utility; currency-agnostic."
+      ]
+    },
+    {
+      "path": "src/lib/export.js",
+      "kind": "lib",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "CSV/JSON export helper; ships user-triggered snapshots, not live values.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: CSV/JSON export helper; ships user-triggered snapshots, not live values."
+      ]
+    },
+    {
+      "path": "src/lib/formatter.js",
+      "kind": "lib",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live",
+        "cached",
+        "stale"
+      ],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": true,
+      "exempt": true,
+      "exemptReason": "Pure formatter (locale/currency/time); callers own freshness. The three freshness keys appear in source.* translation keys, not as renderer branches.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: Pure formatter (locale/currency/time); callers own freshness. The three freshness keys appear in source.* translation keys, not as renderer branches."
+      ]
+    },
+    {
+      "path": "src/lib/live-status.js",
+      "kind": "live-status-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [
+        "GOLD_MARKET",
+        "formatRelativeAge",
+        "getAgeMs",
+        "getLiveFreshness",
+        "getMarketStatus"
+      ],
+      "rendersPriceLike": false,
+      "freshnessKeysMatched": [
+        "live",
+        "cached",
+        "stale",
+        "unavailable"
+      ],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": true,
+      "exempt": false,
+      "exemptReason": null,
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": []
+    },
+    {
+      "path": "src/lib/page-hydrator.js",
+      "kind": "lib",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "cached",
+        "stale"
+      ],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": true,
+      "exempt": false,
+      "exemptReason": null,
+      "knownGap": true,
+      "knownGapReason": "Country/city hydrator; now threads hasLiveFailure into updateSpotBar but the karat-card grid itself has no stale badge. Tracked for a follow-up plan.",
+      "notes": [
+        "renders price-like content but no live-status import",
+        "KNOWN GAP: Country/city hydrator; now threads hasLiveFailure into updateSpotBar but the karat-card grid itself has no stale badge. Tracked for a follow-up plan."
+      ]
+    },
+    {
+      "path": "src/lib/price-calculator.js",
+      "kind": "lib",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "Pure math library (purity × grams × spot); no DOM, no time dimension.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: Pure math library (purity × grams × spot); no DOM, no time dimension."
+      ]
+    },
+    {
+      "path": "src/pages/calculator.js",
+      "kind": "page-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live"
+      ],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": true,
+      "exempt": false,
+      "exemptReason": null,
+      "knownGap": true,
+      "knownGapReason": "Calculator already tracks STATE.spotSource and feeds hasLiveFailure into updateSpotBar. Internal result panels do not yet carry per-panel freshness.",
+      "notes": [
+        "renders price-like content but no live-status import",
+        "KNOWN GAP: Calculator already tracks STATE.spotSource and feeds hasLiveFailure into updateSpotBar. Internal result panels do not yet carry per-panel freshness."
+      ]
+    },
+    {
+      "path": "src/pages/home.js",
+      "kind": "page-module",
+      "importsLiveStatus": true,
+      "usedSymbols": [
+        "getMarketStatus"
+      ],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live",
+        "unavailable"
+      ],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": true,
+      "exempt": false,
+      "exemptReason": null,
+      "knownGap": true,
+      "knownGapReason": "Hero card already exposes freshness; surrounding GCC grid and country carousel do not carry freshness branches.",
+      "notes": [
+        "missing 'cached' branch literal",
+        "missing 'stale' branch literal",
+        "KNOWN GAP: Hero card already exposes freshness; surrounding GCC grid and country carousel do not carry freshness branches."
+      ]
+    },
+    {
+      "path": "src/pages/learn.js",
+      "kind": "page-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "Static educational content page; no live prices.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: Static educational content page; no live prices."
+      ]
+    },
+    {
+      "path": "src/pages/methodology.js",
+      "kind": "page-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "Static methodology page; no live prices.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: Static methodology page; no live prices."
+      ]
+    },
+    {
+      "path": "src/pages/shops.js",
+      "kind": "page-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": false,
+      "exempt": false,
+      "exemptReason": null,
+      "knownGap": true,
+      "knownGapReason": "Shops directory page shows spot bar and list cards. Shop cards do not render live prices; page passes through updateSpotBar only.",
+      "notes": [
+        "renders price-like content but no live-status import",
+        "renders price-like content but no timestamp label heuristic",
+        "KNOWN GAP: Shops directory page shows spot bar and list cards. Shop cards do not render live prices; page passes through updateSpotBar only."
+      ]
+    },
+    {
+      "path": "src/pages/tracker-pro.js",
+      "kind": "page-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live"
+      ],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": true,
+      "exempt": false,
+      "exemptReason": null,
+      "knownGap": true,
+      "knownGapReason": "Tracker-pro workspace; per-panel freshness coverage tracked by follow-up plan.",
+      "notes": [
+        "renders price-like content but no live-status import",
+        "KNOWN GAP: Tracker-pro workspace; per-panel freshness coverage tracked by follow-up plan."
+      ]
+    },
+    {
+      "path": "src/routes/routeRegistry.js",
+      "kind": "other",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "Static route metadata (paths, titles, descriptions); no runtime prices.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: Static route metadata (paths, titles, descriptions); no runtime prices."
+      ]
+    },
+    {
+      "path": "src/search/searchIndex.js",
+      "kind": "search",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live"
+      ],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "Search index generator; \"live\" is an entity-type label, not a freshness key.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: Search index generator; \"live\" is an entity-type label, not a freshness key."
+      ]
+    },
+    {
+      "path": "src/seo/metadataGenerator.js",
+      "kind": "other",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "Server-side SEO meta builder (titles, descriptions); static per-page.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: Server-side SEO meta builder (titles, descriptions); static per-page."
+      ]
+    },
+    {
+      "path": "src/seo/seoHead.js",
+      "kind": "other",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "SEO head snippet emitter; static metadata.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: SEO head snippet emitter; static metadata."
+      ]
+    },
+    {
+      "path": "src/social/postTemplates.js",
+      "kind": "other",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "Social post copy templates; rendered by scripts/python at post time, not in the browser.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: Social post copy templates; rendered by scripts/python at post time, not in the browser."
+      ]
+    },
+    {
+      "path": "src/tracker/events.js",
+      "kind": "tracker-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live"
+      ],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "'live' is the tracker mode-name (VALID_MODES), not a freshness key. Tracker freshness is owned by src/tracker/render.js.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: 'live' is the tracker mode-name (VALID_MODES), not a freshness key. Tracker freshness is owned by src/tracker/render.js."
+      ]
+    },
+    {
+      "path": "src/tracker/render.js",
+      "kind": "tracker-module",
+      "importsLiveStatus": true,
+      "usedSymbols": [
+        "getLiveFreshness",
+        "getMarketStatus"
+      ],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live",
+        "cached",
+        "unavailable"
+      ],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": true,
+      "exempt": false,
+      "exemptReason": null,
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "missing 'stale' branch literal"
+      ]
+    },
+    {
+      "path": "src/tracker/state.js",
+      "kind": "tracker-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live"
+      ],
+      "hasSourceLabel": true,
+      "hasTimestampLabel": true,
+      "exempt": true,
+      "exemptReason": "'live' is the default tracker mode-name; tracker freshness lives on _state.live.updatedAt and is consumed by render.js.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: 'live' is the default tracker mode-name; tracker freshness lives on _state.live.updatedAt and is consumed by render.js."
+      ]
+    },
+    {
+      "path": "src/tracker/ui-shell.js",
+      "kind": "tracker-module",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [
+        "live"
+      ],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": true,
+      "exempt": true,
+      "exemptReason": "'live' references are mode-name checks; now forwards hasLiveFailure into updateSpotBar, which owns the freshness label.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: 'live' references are mode-name checks; now forwards hasLiveFailure into updateSpotBar, which owns the freshness label."
+      ]
+    },
+    {
+      "path": "src/utils/inputValidation.js",
+      "kind": "other",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "Input validators (regex); tokens like \"karat\" appear in validator names/messages, not prices.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: Input validators (regex); tokens like \"karat\" appear in validator names/messages, not prices."
+      ]
+    },
+    {
+      "path": "src/utils/slugify.js",
+      "kind": "other",
+      "importsLiveStatus": false,
+      "usedSymbols": [],
+      "rendersPriceLike": true,
+      "freshnessKeysMatched": [],
+      "hasSourceLabel": false,
+      "hasTimestampLabel": false,
+      "exempt": true,
+      "exemptReason": "String utility; currency-agnostic.",
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": [
+        "EXEMPT: String utility; currency-agnostic."
+      ]
+    }
+  ]
+}

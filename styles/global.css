@@ -653,6 +653,31 @@ svg {
   white-space: nowrap;
 }
 
+/* Freshness state — see AGENTS.md §6.2. Colors reuse existing tokens so
+   the indicator is visible but non-alarming. Mobile hides the timestamp
+   slot entirely (see media query below); desktop shows a subtle dot. */
+.spot-bar[data-freshness='cached'] .spot-bar-ts::before,
+.spot-bar[data-freshness='stale'] .spot-bar-ts::before,
+.spot-bar[data-freshness='unavailable'] .spot-bar-ts::before {
+  content: '';
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  margin-inline-end: 0.3rem;
+  vertical-align: middle;
+  background: var(--color-warning, #d97706);
+}
+.spot-bar[data-freshness='stale'] .spot-bar-ts::before,
+.spot-bar[data-freshness='unavailable'] .spot-bar-ts::before {
+  background: var(--color-danger, #dc2626);
+}
+.spot-bar[data-freshness='cached'] .spot-bar-ts,
+.spot-bar[data-freshness='stale'] .spot-bar-ts,
+.spot-bar[data-freshness='unavailable'] .spot-bar-ts {
+  opacity: 0.9;
+}
+
 body.has-spot-bar .site-nav {
   top: 28px;
 }

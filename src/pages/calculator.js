@@ -641,6 +641,7 @@ async function fetchLiveData() {
         xauUsd: STATE.spotUsdPerOz,
         aed24kGram: aed24,
         updatedAt: STATE.freshness.goldUpdatedAt,
+        hasLiveFailure: STATE.spotSource !== 'live',
       });
     }
   } catch (e) {
