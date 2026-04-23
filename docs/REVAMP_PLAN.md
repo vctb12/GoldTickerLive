@@ -520,8 +520,10 @@ Target order:
 
 Resume the 15-phase tracker plan in small commits:
 
-- [ ] **Phase 2** — Trust & freshness framing (exact-age pill, AED-peg note, stale/cached/fallback
-      labeling with icon + tooltip).
+- [x] **Phase 2** — Trust & freshness framing (exact-age pill, AED-peg note, stale/cached/fallback
+      labeling with icon + tooltip). _(working tree: tracker hero, live desk summary, market/watch
+      cards, and shared shell freshness now read from the same live timestamp; touched render paths
+      switched to `safe-dom` helpers.)_
 - [ ] **Phase 3** — Single sticky control bar
       (currency/karat/unit/compare/range/auto-refresh/language).
 - [ ] **Phase 4** — Hero rebuild (large price, delta vs prev close, high/low, 24 h change,
@@ -736,6 +738,12 @@ update the "Last updated" banner at the top of the file and copy the merged comm
 | SHA       | Bucket    | Summary                                                                                                        |
 | --------- | --------- | -------------------------------------------------------------------------------------------------------------- |
 | _pending_ | `cleanup` | Remove duplicate `:focus-visible` in `global.css` that shadowed the token-based baseline with hardcoded values |
+
+### Round 3 — Tracker trust & freshness framing (working tree, pending commit)
+
+| SHA       | Bucket  | Summary                                                                                        |
+| --------- | ------- | ---------------------------------------------------------------------------------------------- |
+| _pending_ | `trust` | Finish tracker Phase 2 trust/freshness framing and reduce touched `innerHTML` sinks in tracker |
 
 ### Merged PRs
 

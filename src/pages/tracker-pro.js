@@ -38,6 +38,7 @@ function ui() {
     rangePills: document.querySelectorAll('.tracker-pill[data-range]'),
     autoRefresh: document.getElementById('tp-auto-refresh'),
     liveBadgeText: document.getElementById('tp-live-badge-text'),
+    xauUsdValue: document.getElementById('tp-xauusd-value'),
     marketBadge: document.getElementById('tp-market-badge'),
     refreshBadge: document.getElementById('tp-refresh-badge'),
     heroStats: document.getElementById('tp-hero-stats'),
@@ -339,14 +340,6 @@ function startAutoRefresh() {
     await fetchLive();
     checkAlerts();
     renderAll();
-    if (el.refreshBadge) {
-      const stamp = state.live?.updatedAt
-        ? new Date(state.live.updatedAt).toLocaleTimeString()
-        : new Date().toLocaleTimeString();
-      el.refreshBadge.textContent = state.hasLiveFailure
-        ? `Cached/Fallback · ${stamp}`
-        : `Live · updated ${stamp}`;
-    }
   }, CONSTANTS.GOLD_REFRESH_MS);
 }
 
@@ -424,19 +417,19 @@ async function fetchLive() {
           { date: today, price: data.price, timestamp: Date.now() },
         ];
       }
-    } else if (!state.live) {
-      const fb = cache.getFallbackGoldPrice();
-      if (fb) {
-        state.live = { price: fb.price, updatedAt: fb.updatedAt, raw: fb };
-        state.hasLiveFailure = true;
-        // Push fallback into advanced chart if present
-        try {
-          if (window.__GOLD_CHART && typeof window.__GOLD_CHART.addPoint === 'function') {
-            window.__GOLD_CHART.addPoint(fb.price, fb.updatedAt || Date.now());
-          }
-        } catch (_e) {}
-      } else {
-        state.hasLiveFailure = true;
+    } else {
+      state.hasLiveFailure = true;
+      if (!state.live) {
+        const fb = cache.getFallbackGoldPrice();
+        if (fb) {
+          state.live = { price: fb.price, updatedAt: fb.updatedAt, raw: fb };
+          // Push fallback into advanced chart if present
+          try {
+            if (window.__GOLD_CHART && typeof window.__GOLD_CHART.addPoint === 'function') {
+              window.__GOLD_CHART.addPoint(fb.price, fb.updatedAt || Date.now());
+            }
+          } catch (_e) {}
+        }
       }
     }
 

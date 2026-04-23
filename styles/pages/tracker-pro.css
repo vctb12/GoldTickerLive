@@ -228,6 +228,24 @@ body.tracker-pro-page {
   color: var(--tp-live);
 }
 
+.tracker-badge--cached {
+  background: var(--color-warning-bg);
+  border-color: var(--color-warning-border);
+  color: var(--color-warning-text);
+}
+
+.tracker-badge--stale {
+  background: var(--color-stale-bg);
+  border-color: rgb(214 119 32 / 24%);
+  color: var(--color-stale);
+}
+
+.tracker-badge--unavailable {
+  background: var(--tp-danger-soft);
+  border-color: rgb(179 39 47 / 20%);
+  color: var(--tp-danger);
+}
+
 .tracker-badge-dot {
   width: 8px;
   height: 8px;
@@ -943,6 +961,18 @@ body.tracker-pro-page {
   color: var(--tp-text-faint);
 }
 
+.tracker-watch-meta,
+.tracker-market-meta {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.tracker-card-note {
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: var(--tp-text-faint);
+}
+
 .tracker-market-bottom {
   margin-top: 0.75rem;
   align-items: center;
@@ -1561,6 +1591,12 @@ body.tracker-pro-page {
   background: var(--color-warning-bg);
   border-color: var(--color-warning-border);
   color: var(--color-warning-text);
+}
+
+.tracker-source-badge--unavailable {
+  background: var(--tp-danger-soft);
+  border-color: rgb(179 39 47 / 20%);
+  color: var(--tp-danger);
 }
 
 /* estimated — orange warning */
