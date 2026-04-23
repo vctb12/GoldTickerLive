@@ -1,0 +1,56 @@
+{
+  "dependencies": ["lowdb", "uuid"],
+  "devDependencies": ["stylelint-config-standard"],
+  "missing": {
+    "@supabase/supabase-js": [
+      "/home/runner/work/Gold-Prices/Gold-Prices/server/lib/supabase-client.js"
+    ]
+  },
+  "using": {
+    "@playwright/test": [
+      "/home/runner/work/Gold-Prices/Gold-Prices/package.json",
+      "/home/runner/work/Gold-Prices/Gold-Prices/tests/e2e/homepage.spec.js",
+      "/home/runner/work/Gold-Prices/Gold-Prices/tests/e2e/js-links.spec.js",
+      "/home/runner/work/Gold-Prices/Gold-Prices/tests/e2e/nav-smoke.spec.js",
+      "/home/runner/work/Gold-Prices/Gold-Prices/tests/e2e/smoke.spec.js"
+    ],
+    "eslint": ["/home/runner/work/Gold-Prices/Gold-Prices/package.json"],
+    "husky": ["/home/runner/work/Gold-Prices/Gold-Prices/package.json"],
+    "linkinator": ["/home/runner/work/Gold-Prices/Gold-Prices/package.json"],
+    "prettier": ["/home/runner/work/Gold-Prices/Gold-Prices/package.json"],
+    "stylelint": ["/home/runner/work/Gold-Prices/Gold-Prices/package.json"],
+    "vite": [
+      "/home/runner/work/Gold-Prices/Gold-Prices/package.json",
+      "/home/runner/work/Gold-Prices/Gold-Prices/vite.config.js"
+    ],
+    "terser": [
+      "/home/runner/work/Gold-Prices/Gold-Prices/package.json",
+      "/home/runner/work/Gold-Prices/Gold-Prices/vite.config.js"
+    ],
+    "lint-staged": ["/home/runner/work/Gold-Prices/Gold-Prices/package.json"],
+    "express": [
+      "/home/runner/work/Gold-Prices/Gold-Prices/server.js",
+      "/home/runner/work/Gold-Prices/Gold-Prices/server/routes/newsletter.js",
+      "/home/runner/work/Gold-Prices/Gold-Prices/server/routes/stripe.js",
+      "/home/runner/work/Gold-Prices/Gold-Prices/server/routes/admin/index.js"
+    ],
+    "cors": ["/home/runner/work/Gold-Prices/Gold-Prices/server.js"],
+    "helmet": ["/home/runner/work/Gold-Prices/Gold-Prices/server.js"],
+    "morgan": ["/home/runner/work/Gold-Prices/Gold-Prices/server.js"],
+    "express-rate-limit": [
+      "/home/runner/work/Gold-Prices/Gold-Prices/server.js",
+      "/home/runner/work/Gold-Prices/Gold-Prices/server/routes/admin/index.js"
+    ],
+    "jsonwebtoken": [
+      "/home/runner/work/Gold-Prices/Gold-Prices/server/lib/auth.js"
+    ],
+    "bcryptjs": [
+      "/home/runner/work/Gold-Prices/Gold-Prices/server/lib/auth.js"
+    ],
+    "@supabase/supabase-js": [
+      "/home/runner/work/Gold-Prices/Gold-Prices/server/lib/supabase-client.js"
+    ]
+  },
+  "invalidFiles": {},
+  "invalidDirs": {}
+}
