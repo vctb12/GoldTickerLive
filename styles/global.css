@@ -334,12 +334,13 @@ a:hover {
    one page per commit in Slice 3 of REVAMP_PLAN.md §4 Track A.
 
    Scale:
-     .h1 → --text-4xl (36px)  display, hero
-     .h2 → --text-3xl (30px)  section heading
-     .h3 → --text-2xl (24px)  subsection
-     .h4 → --text-xl  (20px)  card / block
-     .h5 → --text-lg  (18px)  minor block
-     .h6 → --text-base (16px) label / eyebrow
+     .display-1 → --text-5xl (48px)  hero / display
+     .h1        → --text-4xl (36px)  display, hero
+     .h2        → --text-3xl (30px)  section heading
+     .h3        → --text-2xl (24px)  subsection
+     .h4        → --text-xl  (20px)  card / block
+     .h5        → --text-lg  (18px)  minor block
+     .h6        → --text-base (16px) label / eyebrow
    ═══════════════════════════════════════════════ */
 .h1,
 .h2,
@@ -347,8 +348,8 @@ a:hover {
 .h4,
 .h5,
 .h6 {
-  font-family: var(--font-main);
-  color: var(--color-text);
+  font-family: inherit;
+  color: inherit;
   text-wrap: balance;
   margin: 0;
 }
