@@ -590,11 +590,22 @@ Applied on top of primitives from Track A. Rules:
       karat strip. Pending on hero + tracker hero + market cards.
 - [x] Number animations: count-up duration ∝ magnitude, capped 800 ms. Primitive live.
 - [x] Section reveal: fade + translate-Y 8 px, 300 ms, single shared observer.
-- [ ] Card hover: translate-Y 2 px + shadow-up, 200 ms `--ease-out`.
+- [x] Card hover: translate-Y 2 px + shadow-up, 200 ms `--ease-out`. _(canonical `.hover-lift`
+      utility in [`styles/global.css`](../styles/global.css) Motion Primitives block; opt-in,
+      reduced-motion no-op.)_
 - [ ] Skeletons on every async surface.
-- [ ] Dropdown open: fade + slide 4 px, 180 ms.
-- [ ] Drawer slide in 220 ms.
-- [ ] Freshness pill pulse once per tick, capped 1 per 90 s.
+- [x] Dropdown open: fade + slide 4 px, 180 ms. _(applied on `.nav-dropdown-panel` in
+      [`styles/global.css`](../styles/global.css) — `translateY(-4px) → 0`, 0.18 s
+      `cubic-bezier(0.4, 0, 0.2, 1)`.)_
+- [x] Drawer slide in 220 ms. _(applied on `.nav-drawer` in
+      [`styles/global.css`](../styles/global.css) — `translateX(100%) → 0`, 0.22 s
+      `cubic-bezier(0.4, 0, 0.2, 1)`, visibility paired.)_
+- [x] Freshness pill pulse once per tick, capped 1 per 90 s. _(primitive
+      [`styles/global.css`](../styles/global.css) `@keyframes freshness-pulse` +
+      `[data-freshness-pulse]` attribute; throttled helper
+      [`src/lib/freshness-pulse.js`](../src/lib/freshness-pulse.js) — `pulseFreshness(el)` enforces
+      90 s per-element cap, auto-clears attr after 600 ms, reduced-motion no-op. Tests:
+      [`tests/freshness-pulse.test.js`](../tests/freshness-pulse.test.js).)_
 - [ ] Hero parallax: transform-only on inner backdrop layer only.
 
 ## 9. Track F — Mobile & tablet
