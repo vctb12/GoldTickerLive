@@ -26,7 +26,7 @@ format, spike thresholds, or market sessions requires editing JSON files only.
                ┌────────────────┼────────────────┐
                ▼                ▼                ▼
          scripts/utils/   config/twitter_bot/   External APIs
-         ├── price_fetcher.py   ├── market_sessions.json   ├── GoldAPI (goldapi.io)
+         ├── price_fetcher.py   ├── market_sessions.json   ├── GoldPriceZ (data/gold_price.json)
          ├── market_hours.py    ├── karat_weights.json      ├── X / Twitter API v2
          ├── tweet_formatter.py ├── thresholds.json         └── Supabase
          ├── twitter_client.py  └── tweet_templates.json

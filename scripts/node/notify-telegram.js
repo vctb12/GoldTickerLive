@@ -54,27 +54,6 @@ function calcAedPerGram(spotUsdPerOz, purity) {
   return (spotUsdPerOz / TROY_OZ) * purity * AED_PEG;
 }
 
-function httpsGet(url, headers = {}) {
-  return new Promise((resolve, reject) => {
-    const req = https.get(url, { headers }, (res) => {
-      let body = '';
-      res.on('data', (c) => {
-        body += c;
-      });
-      res.on('end', () => {
-        if (res.statusCode !== 200) return reject(new Error(`HTTP ${res.statusCode}: ${body}`));
-        try {
-          resolve(JSON.parse(body));
-        } catch (e) {
-          reject(e);
-        }
-      });
-    });
-    req.on('error', reject);
-    req.setTimeout(10000, () => req.destroy(new Error('Timeout')));
-  });
-}
-
 function httpsPost(url, payload, headers = {}) {
   return new Promise((resolve, reject) => {
     const body = JSON.stringify(payload);

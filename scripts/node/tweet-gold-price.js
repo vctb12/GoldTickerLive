@@ -90,31 +90,6 @@ function calcKarat(spotUsdPerOz, purity) {
 // ---------------------------------------------------------------------------
 // HTTP helpers
 // ---------------------------------------------------------------------------
-function httpsGet(targetUrl, headers = {}) {
-  return new Promise((resolve, reject) => {
-    const req = https.get(targetUrl, { headers }, (res) => {
-      let body = '';
-      res.on('data', (chunk) => {
-        body += chunk;
-      });
-      res.on('end', () => {
-        if (res.statusCode !== 200) {
-          return reject(new Error(`HTTP ${res.statusCode} from ${targetUrl}: ${body}`));
-        }
-        try {
-          resolve(JSON.parse(body));
-        } catch (e) {
-          reject(new Error(`JSON parse error: ${e.message}`));
-        }
-      });
-    });
-    req.on('error', reject);
-    req.setTimeout(10000, () => {
-      req.destroy(new Error('Request timed out'));
-    });
-  });
-}
-
 function httpsPost(targetUrl, payload, headers = {}) {
   return new Promise((resolve, reject) => {
     const body = JSON.stringify(payload);

@@ -65,27 +65,6 @@ function fmt(n, d = 2) {
   return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
 }
 
-function httpsGet(url, headers = {}) {
-  return new Promise((resolve, reject) => {
-    const req = https.get(url, { headers }, (res) => {
-      let body = '';
-      res.on('data', (c) => {
-        body += c;
-      });
-      res.on('end', () => {
-        if (res.statusCode !== 200) return reject(new Error(`HTTP ${res.statusCode}: ${body}`));
-        try {
-          resolve(JSON.parse(body));
-        } catch (e) {
-          reject(e);
-        }
-      });
-    });
-    req.on('error', reject);
-    req.setTimeout(10000, () => req.destroy(new Error('Timeout')));
-  });
-}
-
 function httpsPost(url, payload, headers = {}) {
   return new Promise((resolve, reject) => {
     const body = JSON.stringify(payload);

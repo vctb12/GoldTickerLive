@@ -20,7 +20,7 @@
   "knownRisks": [
     "Ad slots (adSlot.js) may cause CLS if min-height is insufficient",
     "Chart.js / lightweight-charts lazy loading may delay chart render",
-    "External API calls (gold-api.com, open.er-api.com) add network latency",
+    "External API calls (goldpricez.com, open.er-api.com) add network latency",
     "Service worker precaches 50+ URLs — first install may be slow"
   ],
   "vulnerabilities": {

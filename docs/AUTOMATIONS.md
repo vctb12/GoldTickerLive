@@ -10,7 +10,7 @@ Go to **Settings → Secrets and variables → Actions → New repository secret
 
 | Secret                      | Used by                 | How to get it                                        |
 | --------------------------- | ----------------------- | ---------------------------------------------------- |
-| `GOLD_API_KEY`              | All price scripts       | Sign up at https://gold-api.com                      |
+| `GOLDPRICEZ_API_KEY`        | All price scripts       | Sign up at https://goldpricez.com                    |
 | `CONSUMER_KEY`              | X/Twitter posts         | X Developer Portal: API Key (Consumer Key)           |
 | `CONSUMER_SECRET`           | X/Twitter posts         | X Developer Portal: API Key Secret                   |
 | `ACCESS_TOKEN`              | X/Twitter posts         | X Developer Portal: Access Token (read-write)        |
@@ -59,7 +59,7 @@ Posts every hour. Rotates 10 templates by Dubai time.
 Posts at **07:00, 12:00, 18:00 UTC** (11:00, 16:00, 22:00 Dubai).
 
 - Script: `scripts/notify-telegram.js`
-- Secrets needed: `GOLD_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHANNEL_ID`
+- Secrets needed: `GOLDPRICEZ_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHANNEL_ID`
 
 **Telegram setup:**
 
@@ -75,7 +75,7 @@ Posts at **07:00, 12:00, 18:00 UTC** (11:00, 16:00, 22:00 Dubai).
 Posts a rich embed daily at **08:00 UTC** (noon Dubai).
 
 - Script: `scripts/notify-discord.js`
-- Secrets needed: `GOLD_API_KEY`, `DISCORD_WEBHOOK_URL`
+- Secrets needed: `GOLDPRICEZ_API_KEY`, `DISCORD_WEBHOOK_URL`
 
 **Discord setup:**
 
@@ -119,7 +119,7 @@ supports richer templates, Supabase logging, and integrates with the broader Pyt
 
 - Script: `scripts/gold_poster.py`
 - Secrets needed: `CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET`,
-  `GOLD_API_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
+  `GOLDPRICEZ_API_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
 - See `docs/twitter_bot_architecture.md` for full architecture details.
 
 ### 9. Market events — `market_events.yml`

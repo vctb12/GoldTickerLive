@@ -313,9 +313,9 @@ After running the schema and logging in, test each page:
 
 **What it does:**
 
-- Shows live gold spot price (fetched from gold-api.com)
+- Shows live gold spot price (fetched from goldpricez.com)
 - Shows total shops count and social posts count from Supabase
-- Shows API health status for gold-api.com and exchangerate-api.com
+- Shows API health status for goldpricez.com and exchangerate-api.com
 
 **How to verify:**
 
