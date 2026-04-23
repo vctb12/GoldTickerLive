@@ -920,8 +920,8 @@ body.has-spot-bar .site-nav {
   box-shadow: -6px 0 32px rgb(0 0 0 / 14%);
   transform: translateX(100%);
   transition:
-    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-    visibility 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 0.22s cubic-bezier(0.4, 0, 0.2, 1);
   visibility: hidden;
   z-index: 400;
   overflow-y: auto;
@@ -3482,7 +3482,7 @@ details[open] > .faq-q::after {
   padding: 6px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-6px);
+  transform: translateY(-4px);
   transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 400;
 }
@@ -5739,6 +5739,50 @@ body > * {
   }
 }
 
+/* Card hover lift: opt-in `.hover-lift` utility for card-like surfaces.
+   Raises the card by 2 px and deepens the shadow in 200 ms `--ease-out`.
+   Caller must set a base `box-shadow` (or accept the fallback) and a
+   `transform` baseline (none) so the transition kicks in. */
+.hover-lift {
+  transition:
+    transform var(--duration-normal, 200ms) var(--ease-out),
+    box-shadow var(--duration-normal, 200ms) var(--ease-out);
+  will-change: transform;
+}
+
+.hover-lift:hover,
+.hover-lift:focus-visible {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 24px rgb(0 0 0 / 10%),
+    0 2px 6px rgb(0 0 0 / 6%);
+}
+
+/* Freshness pulse: single-shot attention pulse for a just-refreshed
+   indicator (e.g. freshness pill on tick). Caller sets
+   `data-freshness-pulse=""` (or toggles it) for ~600 ms then clears it;
+   the animation is throttle-capped by the caller to 1 per 90 s. */
+@keyframes freshness-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgb(201 168 76 / 55%);
+  }
+
+  60% {
+    transform: scale(1.06);
+    box-shadow: 0 0 0 8px rgb(201 168 76 / 0%);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgb(201 168 76 / 0%);
+  }
+}
+
+[data-freshness-pulse] {
+  animation: freshness-pulse 0.6s var(--ease-out);
+}
+
 /* Global reduced-motion reset — every motion primitive above becomes static. */
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] {
@@ -5753,6 +5797,20 @@ body > * {
   }
 
   .pulse-dot {
+    animation: none;
+  }
+
+  .hover-lift {
+    transition: none;
+  }
+
+  .hover-lift:hover,
+  .hover-lift:focus-visible {
+    transform: none;
+    box-shadow: none;
+  }
+
+  [data-freshness-pulse] {
     animation: none;
   }
 
