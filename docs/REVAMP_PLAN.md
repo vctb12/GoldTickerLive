@@ -320,11 +320,15 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
       rules into the canonical `.card` + `.card--accent` + `.card--compact` set.
 - [ ] **Heading scale confirmation.** Ensure heading scale is applied via classes (`.h1`…`.h6`) not
       ad-hoc sizes.
-- [ ] **Focus ring token audit.** Confirm `--focus-ring` / `--focus-ring-offset` wired through every
-      `:focus-visible` site. _(In progress: duplicate global `:focus-visible` with hardcoded
-      `2px solid var(--color-gold)` that shadowed the token-based baseline removed — page-level
-      sites (`calc-tab`, `stub-*`, `tracker-mode-tab`, `shops-*`, `methodology-link`, `.btn`) still
-      to audit.)_
+- [x] **Focus ring token audit.** Canonical `:focus-visible` baseline in `styles/global.css` uses
+      `--focus-ring-width` / `--focus-ring-color` / `--focus-ring-offset`. Page-level outline
+      overrides normalized to the same tokens: `.calc-tab`, `.tracker-mode-tab`,
+      `.shops-control--checkbox input[type='checkbox']`, `.shops-filter-toggle`, and `.btn`.
+      `.methodology-link` relies on the baseline (no override). _Follow-up (separate concern, not
+      this audit):_ sites that intentionally suppress `outline` in favor of a custom box-shadow or
+      color-only cue — `.karat-pill`, `.shops-chip`, `.shops-clear-btn`, `.modal-close-cta`,
+      `.stub-cta`, `.stub-related-link` — need a dedicated a11y review to decide whether the
+      alternative ring is visible enough.
 
 ## 5. Track B — Navigation rebuild
 
