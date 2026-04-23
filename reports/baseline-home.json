@@ -1,0 +1,26 @@
+{
+  "surface": "home",
+  "phase": "§22b/Phase 1",
+  "capturedAt": "2026-04-23T13:30:00Z",
+  "branch": "copilot/explore-codebase-implementation-plan-again",
+  "description": "Regression yardstick for §22b homepage phases (15–22). Do not raise any counter without an accompanying REVAMP_PLAN.md entry explaining why.",
+  "files": {
+    "index.html": { "lines": 810, "bytes": 36660 },
+    "src/pages/home.js": { "lines": 670, "bytes": 25243 }
+  },
+  "unsafeDomSinks": {
+    "src/pages/home.js": 2,
+    "total": 2,
+    "source": "scripts/node/check-unsafe-dom.js baseline on commit bab45a4"
+  },
+  "aboveFoldSections": [
+    "#home-freshness-bar",
+    "section.hero (#hero-headline, #hero-live-card)",
+    "section.karat-strip (7 karats 24K–14K)"
+  ],
+  "notes": [
+    "Phase 15 above-fold rebuild must preserve canonical + og:url (enforced by tests/seo-sitewide.test.js and scripts/node/check-seo-meta.js).",
+    "Phase 17 countUp parity and Phase 18 sparkline should not raise total JS bytes > 10% vs this baseline.",
+    "Phase 22 JS trim is the formal reconciliation of any temporary regressions."
+  ]
+}

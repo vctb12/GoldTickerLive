@@ -181,7 +181,7 @@ export function applyUrlState(state) {
   return parsed;
 }
 
-function parseHash(hash) {
+export function parseHash(hash) {
   const raw = (hash || '').trim();
   if (!raw) {
     return {

@@ -40,9 +40,10 @@ correct slice.
 
 ## Pending proposals
 
-| File                                                             | Origin / date             | Status                    |
-| ---------------------------------------------------------------- | ------------------------- | ------------------------- |
-| [`PLATFORM_UPGRADE_PROPOSAL.md`](./PLATFORM_UPGRADE_PROPOSAL.md) | Agent prompt · 2026-04-22 | 📥 Pending reconciliation |
+| File                                                             | Origin / date             | Status                                                       |
+| ---------------------------------------------------------------- | ------------------------- | ------------------------------------------------------------ |
+| [`PLATFORM_UPGRADE_PROPOSAL.md`](./PLATFORM_UPGRADE_PROPOSAL.md) | Agent prompt · 2026-04-22 | 📥 Pending reconciliation                                    |
+| 30-phase tracker / homepage / admin revamp                       | Agent prompt · 2026-04-23 | ✅ Reconciled into `REVAMP_PLAN.md` §22b (supplement to §22) |
 
 ---
 

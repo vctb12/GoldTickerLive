@@ -1,0 +1,42 @@
+{
+  "surface": "admin",
+  "phase": "§22b/Phase 1",
+  "capturedAt": "2026-04-23T13:30:00Z",
+  "branch": "copilot/explore-codebase-implementation-plan-again",
+  "description": "Regression yardstick for §22b admin phases (23–28). UI-only scope — no server/auth/Supabase changes. Do not raise any counter without an accompanying REVAMP_PLAN.md entry explaining why.",
+  "files": {
+    "admin/index.html": { "lines": 957, "bytes": 36803 },
+    "styles/admin.css": { "lines": 2477, "bytes": 46504 }
+  },
+  "unsafeDomSinks": {
+    "admin/access/index.html": 1,
+    "admin/analytics/index.html": 3,
+    "admin/content/index.html": 4,
+    "admin/index.html": 7,
+    "admin/orders/index.html": 3,
+    "admin/pricing/index.html": 8,
+    "admin/shared/admin-shell.js": 5,
+    "admin/shared/admin-utils.js": 6,
+    "admin/shops/index.html": 7,
+    "admin/social/index.html": 4,
+    "total": 48,
+    "source": "scripts/node/check-unsafe-dom.js baseline on commit bab45a4"
+  },
+  "subsurfaces": [
+    "admin/index.html",
+    "admin/access/",
+    "admin/analytics/",
+    "admin/content/",
+    "admin/login/",
+    "admin/orders/",
+    "admin/pricing/",
+    "admin/settings/",
+    "admin/shops/",
+    "admin/social/"
+  ],
+  "notes": [
+    "Phase 23 chrome consolidation should not raise admin/shared/*.js sink counts; prefer safe-dom helpers (el, clear).",
+    "Phase 24 dashboard rebuild must move admin/index.html inline <style> block into styles/admin.css.",
+    "Admin already carries X-Robots-Tag: noindex via _headers (phx/11) — preserve."
+  ]
+}
