@@ -326,21 +326,24 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
 - [ ] **Canonical card consolidation.** Merge near-duplicate `.card` / `.panel` / `.section-card`
       rules into the canonical `.card` + `.card--accent` + `.card--compact` set.
 - [ ] **Heading scale confirmation.** Ensure heading scale is applied via classes (`.h1`…`.h6`) not
-      ad-hoc sizes. _Audit (2026-04-23):_ the `.h1`…`.h6` class system does **not** exist yet, and
-      base `h1`..`h6` element selectors are not styled in `styles/global.css`. Every page hand-sizes
-      headings via bespoke selectors (~40 sites, e.g. `.tracker-hero-copy h1`,
+      ad-hoc sizes. _Audit (2026-04-23):_ the `.h1`…`.h6` class system does **not** exist yet
+      (pre-audit), and base `h1`..`h6` element selectors are not styled in `styles/global.css`.
+      Every page hand-sizes headings via bespoke selectors (~40 sites, e.g. `.tracker-hero-copy h1`,
       `.pricing-hero-content h1`, `.legal-hero h1`, `.method-section h2`, `.learn-section h3`).
       Token gaps: no display-tier sizes (`--text-4xl` / `--text-5xl`) for hero headings, and the
       `--text-*` scale in `styles/global.css` drifts from the one documented in
       [`docs/DESIGN_TOKENS.md`](DESIGN_TOKENS.md) (e.g. `--text-3xl` is `1.875rem` in code but
-      `2.25rem` in docs). Split into three sequenced slices: (1) `tokens` — reconcile `--text-*`
-      scale with DESIGN*TOKENS.md and add display-tier tokens; (2) `typography` — add canonical
-      `.h1`…`.h6` utility classes + base `h1..h6` baseline; (3) `cleanup` — migrate per-page
-      hand-sized heading selectors to the canonical classes, one page per commit. \_Slice 1 (tokens)
-      shipped:* added `--text-4xl: 2.25rem` / `--text-5xl: 3rem` display-tier tokens to
-      `styles/global.css`; reconciled `docs/DESIGN_TOKENS.md` to match the implemented body scale
-      (doc→code, the safer direction — the shipped tight 17–20 px body scale is intentional for
-      dense price-data UI). Slices 2 and 3 still pending.
+      `2.25rem` in docs). Split into four sequenced slices: - [x] **Slice 1 (tokens).** Added
+      `--text-4xl: 2.25rem` / `--text-5xl: 3rem` display-tier tokens to `styles/global.css`;
+      reconciled `docs/DESIGN_TOKENS.md` to match the implemented body scale (doc→code — the shipped
+      tight 17–20 px body scale is intentional for dense price-data UI). - [x] **Slice 2a
+      (typography — utility classes).** Added `.h1`…`.h6` utility classes plus a `.display-1` opt-in
+      class in `styles/global.css`. Purely additive — no base `h1..h6` element rules, no existing
+      selectors touched. New markup should prefer these classes. - [ ] **Slice 2b (typography — base
+      element baseline).** Add base `h1..h6` element rules that match the class scale, scoped to
+      resets/layouts where no page override exists. Must be preceded by a per-page audit because the
+      ~40 bespoke selectors already dominate specificity. - [ ] **Slice 3 (cleanup).** Migrate
+      per-page hand-sized heading selectors to the canonical classes, one page per commit.
 - [x] **Focus ring token audit.** Canonical `:focus-visible` baseline in `styles/global.css` uses
       `--focus-ring-width` / `--focus-ring-color` / `--focus-ring-offset`. Page-level outline
       overrides normalized to the same tokens: `.calc-tab`, `.tracker-mode-tab`,
