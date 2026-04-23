@@ -792,11 +792,12 @@ update the "Last updated" banner at the top of the file and copy the merged comm
 
 ### Round 4 — §22b 30-phase tracker/home/admin revamp (this PR)
 
-| SHA       | Bucket   | Summary                                                                                                    |
-| --------- | -------- | ---------------------------------------------------------------------------------------------------------- |
-| _pending_ | `plan`   | Reconcile 30-phase plan into `REVAMP_PLAN.md` §22b and `docs/plans/README.md` matrix                       |
-| _pending_ | `phase1` | Phase 1 baseline snapshots: `reports/baseline-{tracker,home,admin}.json` (sink counts, LOC, CSS size)      |
-| _pending_ | `phase7` | Phase 7 tracker URL-hash contract: `docs/tracker-state.md` + `tests/tracker-hash.test.js` round-trip tests |
+| SHA       | Bucket   | Summary                                                                                                                                                           |
+| --------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _pending_ | `plan`   | Reconcile 30-phase plan into `REVAMP_PLAN.md` §22b and `docs/plans/README.md` matrix                                                                              |
+| _pending_ | `phase1` | Phase 1 baseline snapshots: `reports/baseline-{tracker,home,admin}.json` (sink counts, LOC, CSS size)                                                             |
+| _pending_ | `phase7` | Phase 7 tracker URL-hash contract: `docs/tracker-state.md` + `tests/tracker-hash.test.js` round-trip tests                                                        |
+| _pending_ | `phase4` | Phase 4 (homepage slice) — dedupe `src/pages/home.js` `getMarketStatus` → shared `src/lib/live-status.js`; add equivalence guard test over a full week of samples |
 
 ### Merged PRs
 
@@ -1114,7 +1115,9 @@ surfaces (`tracker.html`, `index.html`, `admin/`). Phases ship as single-concern
       change.
 - [ ] **Phase 3** — Shared chrome parity (nav/footer/skip-link, RTL, mobile drawer focus-trap).
 - [ ] **Phase 4** — Trust/freshness primitive unification via `src/lib/live-status.js`. Replace
-      ad-hoc freshness strings on the three surfaces without redesigning them.
+      ad-hoc freshness strings on the three surfaces without redesigning them. _Homepage
+      `getMarketStatus` dedup landed (commit of this PR); tracker `render.js` + admin `pricing`
+      call-sites to migrate alongside Phases 6 and 28 respectively._
 - [ ] **Phase 5** — DOM-safety baseline tightening for the highest-churn `innerHTML` sinks touched
       by later phases; lower the numbers in `scripts/node/check-unsafe-dom.js`.
 

@@ -8,6 +8,7 @@ import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import * as calc from '../lib/price-calculator.js';
 import * as fmt from '../lib/formatter.js';
+import { getMarketStatus } from '../lib/live-status.js';
 import { injectNav, updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
@@ -47,33 +48,9 @@ function saveLang(l) {
 }
 
 // ── Market status ──────────────────────────────────────────────────────────
-// Gold trades 24/5 (Sun 22:00 UTC – Fri 21:00 UTC approx)
-function getMarketStatus() {
-  const now = new Date();
-  const utcDay = now.getUTCDay(); // 0=Sun, 5=Fri, 6=Sat
-  const utcHour = now.getUTCHours();
-  const utcMin = now.getUTCMinutes();
-  const utcTime = utcHour * 60 + utcMin;
-
-  const OPEN_SUN = 22 * 60; // Sun 22:00 UTC
-  const CLOSE_FRI = 21 * 60; // Fri 21:00 UTC
-
-  let isOpen = false;
-  if (utcDay === 6) {
-    isOpen = false;
-  } // Saturday always closed
-  else if (utcDay === 5) {
-    isOpen = utcTime < CLOSE_FRI;
-  } // Friday: open until 21:00
-  else if (utcDay === 0) {
-    isOpen = utcTime >= OPEN_SUN;
-  } // Sunday: open from 22:00
-  else {
-    isOpen = true;
-  } // Mon–Thu always open
-
-  return isOpen ? 'open' : 'closed';
-}
+// Canonical gold-market schedule (Sun 22:00 UTC – Fri 21:00 UTC) lives in
+// `src/lib/live-status.js`. Phase 4 of §22b removed the duplicate local
+// implementation; this page consumes the shared primitive directly.
 
 // ── Translations ────────────────────────────────────────────────────────────
 function tx(key) {
@@ -157,10 +134,9 @@ function renderHeroCard() {
   // Market status
   const statusEl = document.getElementById('hlc-market-status');
   if (statusEl) {
-    const status = getMarketStatus();
-    statusEl.textContent = status === 'open' ? tx('marketOpen') : tx('marketClosed');
-    statusEl.className =
-      'hlc-market ' + (status === 'open' ? 'hlc-market--open' : 'hlc-market--closed');
+    const { isOpen } = getMarketStatus();
+    statusEl.textContent = isOpen ? tx('marketOpen') : tx('marketClosed');
+    statusEl.className = 'hlc-market ' + (isOpen ? 'hlc-market--open' : 'hlc-market--closed');
   }
 
   // Update bottom ticker

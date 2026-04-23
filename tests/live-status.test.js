@@ -57,3 +57,37 @@ test('getLiveFreshness() classifies live, cached, stale, and unavailable states'
   const unavailable = getLiveFreshness({ updatedAt: null, hasLiveFailure: true });
   assert.equal(unavailable.key, 'unavailable');
 });
+
+// §22b Phase 4 — equivalence guard for the homepage's previously-duplicated
+// getMarketStatus() implementation. Ensures the shared primitive stays behavior-
+// compatible with the local impl that `src/pages/home.js` used to carry.
+test('getMarketStatus() matches the legacy home.js open/closed rules', async () => {
+  const { getMarketStatus } = await load();
+
+  // Replicates src/pages/home.js getMarketStatus() prior to Phase 4 dedup.
+  function legacy(now) {
+    const utcDay = now.getUTCDay();
+    const utcTime = now.getUTCHours() * 60 + now.getUTCMinutes();
+    const OPEN_SUN = 22 * 60;
+    const CLOSE_FRI = 21 * 60;
+    let isOpen = false;
+    if (utcDay === 6) isOpen = false;
+    else if (utcDay === 5) isOpen = utcTime < CLOSE_FRI;
+    else if (utcDay === 0) isOpen = utcTime >= OPEN_SUN;
+    else isOpen = true;
+    return isOpen;
+  }
+
+  // Sample every 30 minutes across a full week to catch schedule-edge drift.
+  const start = new Date('2026-04-19T00:00:00Z'); // Sunday 00:00 UTC
+  for (let minute = 0; minute < 7 * 24 * 60; minute += 30) {
+    const sample = new Date(start.getTime() + minute * 60_000);
+    const actual = getMarketStatus(sample).isOpen;
+    const expected = legacy(sample);
+    assert.equal(
+      actual,
+      expected,
+      `getMarketStatus mismatch at ${sample.toISOString()} (day=${sample.getUTCDay()}, min=${sample.getUTCHours() * 60 + sample.getUTCMinutes()})`
+    );
+  }
+});
