@@ -1,15 +1,20 @@
 {
   "surface": "tracker",
-  "phase": "§22b/Phase 1",
+  "phase": "§22b/Phase 1 + 20-phase Phase 1",
   "capturedAt": "2026-04-23T13:30:00Z",
-  "branch": "copilot/explore-codebase-implementation-plan-again",
-  "description": "Regression yardstick for §22b tracker phases (6–14). Do not raise any counter without an accompanying REVAMP_PLAN.md entry explaining why.",
+  "lastReviewed": "2026-04-23T14:45:00Z",
+  "branch": "copilot/explore-codebase-and-implement-redesign",
+  "description": "Regression yardstick for §22b tracker phases (6–14) and the 20-phase tracker redesign superset. Do not raise any counter without an accompanying REVAMP_PLAN.md entry explaining why.",
   "files": {
     "tracker.html": { "lines": 1312, "bytes": 53176 },
     "src/pages/tracker-pro.js": { "lines": 716, "bytes": 25484 },
     "src/tracker/render.js": { "lines": 1031 },
     "src/tracker/state.js": { "lines": 270 },
     "src/tracker/ui-shell.js": { "lines": 220 },
+    "src/tracker/modes.js": {
+      "lines": 172,
+      "note": "New in 20-phase Phase 7 — tab registry."
+    },
     "src/tracker/events.js": { "lines": 308 },
     "src/tracker/wire.js": { "lines": 98 },
     "styles/pages/tracker-pro.css": { "lines": 2577, "bytes": 51981 }
@@ -19,15 +24,22 @@
     "src/tracker/events.js": 2,
     "src/tracker/wire.js": 3,
     "src/pages/tracker-pro.js": 4,
+    "src/tracker/modes.js": 0,
     "total": 27,
     "source": "scripts/node/check-unsafe-dom.js baseline on commit bab45a4"
   },
   "modes": ["live", "compare", "archive", "exports", "method"],
   "panels": ["alerts", "planner"],
   "urlHashKeys": ["mode", "cur", "k", "u", "r", "cmp", "lang", "panel"],
+  "deliverables": {
+    "uxAudit": "reports/tracker-ux-audit.md",
+    "primitiveMap": "reports/tracker-primitive-map.md",
+    "iaContract": "docs/tracker-state.md#ia--mode-ordering-frozen-under-20-phase-phase-2"
+  },
   "notes": [
-    "CSS at 2,577 lines — Phase 14 must split per-mode without regressing visuals.",
+    "CSS at 2,577 lines — Phase 14 / 20-phase Phase 17 must split per-mode without regressing visuals.",
     "Phase 11 archive mode refactor should retire sinks in render.js; target ≤ 10 after Phase 11.",
-    "Phase 7 freezes the hash contract before mode refactor (Phase 8)."
+    "Phase 7 freezes the hash contract before mode refactor (Phase 8).",
+    "20-phase Phase 7 extracted src/tracker/modes.js as a pure registry; ui-shell.js now consumes it for overlays + keyboard shortcuts."
   ]
 }

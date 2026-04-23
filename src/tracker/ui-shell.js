@@ -10,6 +10,7 @@ import {
   VALID_MODES,
   VALID_PANELS,
 } from './state.js';
+import { TRACKER_PANELS, getShortcutMap } from './modes.js';
 
 let _openPanel = null;
 
@@ -94,11 +95,11 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   const safeMode = VALID_MODES.has(state.mode) ? state.mode : 'live';
   setMode(safeMode);
 
-  // Overlay system for Alerts and Planner
-  const overlays = {
-    alerts: document.getElementById('tp-overlay-alerts'),
-    planner: document.getElementById('tp-overlay-planner'),
-  };
+  // Overlay system for Alerts and Planner — built from the registry so adding
+  // a panel in modes.js is enough to wire it up.
+  const overlays = Object.fromEntries(
+    TRACKER_PANELS.map((panel) => [panel.id, document.getElementById(panel.panelId)])
+  );
 
   function openOverlay(name) {
     if (!VALID_PANELS.has(name)) return;
@@ -179,24 +180,25 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     if (parsed?.shouldCanonicalize) syncUrlFromState(state);
   });
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts — driven by the tracker-modes registry so the mapping
+  // is a single source of truth shared with tests and docs.
+  const shortcutMap = getShortcutMap();
   window.addEventListener('keydown', (evt) => {
     if (evt.altKey || evt.metaKey || evt.ctrlKey) return;
     if (['INPUT', 'TEXTAREA', 'SELECT'].includes(evt.target.tagName)) return;
     const key = evt.key.toLowerCase();
     if (key === 'escape') {
       if (_openPanel) closeOverlay(_openPanel);
-    } else if (key === 'r') {
-      els.refreshBtn?.click();
-    } else if (key === 'h') {
-      setMode('live');
-    } else if (key === 'c') {
-      setMode('compare');
-    } else if (key === 'a') {
-      toggleOverlay('alerts');
-    } else if (key === 'p') {
-      toggleOverlay('planner');
+      return;
     }
+    if (key === 'r') {
+      els.refreshBtn?.click();
+      return;
+    }
+    const tab = shortcutMap.get(key);
+    if (!tab) return;
+    if (tab.kind === 'mode') setMode(tab.id);
+    else if (tab.kind === 'panel') toggleOverlay(tab.id);
   });
 
   workspaceToggle?.addEventListener('click', () => {

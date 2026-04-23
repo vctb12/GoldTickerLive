@@ -90,3 +90,35 @@ hash. The URL wins if it is present, which is the contract that makes deep links
    case.
 3. Implement the change in [`src/tracker/state.js`](../src/tracker/state.js).
 4. Update §22b Phase 7 log in [`REVAMP_PLAN.md`](./REVAMP_PLAN.md) in the same commit.
+
+## IA & mode ordering (frozen under 20-phase Phase 2)
+
+The canonical order of modes and overlays is a **design contract** consumed by
+[`src/tracker/modes.js`](../src/tracker/modes.js) (the table-driven registry that `ui-shell.js`
+mounts). The registry is the single source of truth for the tab bar and the mode / panel wiring;
+`tracker.html` mirrors this order.
+
+| Order | Kind  | id        | Label (EN) | Label (AR) | Workspace | Notes                                             |
+| ----- | ----- | --------- | ---------- | ---------- | --------- | ------------------------------------------------- |
+| 1     | mode  | `live`    | 📡 Live    | مباشر      | basic     | Default. Shown in the basic workspace.            |
+| 2     | mode  | `compare` | 🌍 Compare | مقارنة     | basic     | Spot-linked reference. Shown in basic workspace.  |
+| 3     | mode  | `archive` | 🗂 Archive | الأرشيف    | advanced  | Hidden unless workspace is advanced.              |
+| 4     | panel | `alerts`  | 🔔 Alerts  | تنبيهات    | basic     | Modal overlay, not a mode; keyboard shortcut `a`. |
+| 5     | panel | `planner` | 📋 Planner | المخطط     | basic     | Modal overlay, not a mode; keyboard shortcut `p`. |
+| 6     | mode  | `exports` | ⬇ Exports  | تصدير      | advanced  | CSV / JSON / brief.                               |
+| 7     | mode  | `method`  | 📖 Method  | المنهجية   | advanced  | Deep-links into `methodology.html`.               |
+
+**Invariants enforced at render & test time:**
+
+1. Tab bar order in `tracker.html` matches the registry order exactly.
+2. `live` is the only mode ever shown in the basic workspace; selecting any other mode promotes the
+   workspace to advanced (see [`src/tracker/ui-shell.js`](../src/tracker/ui-shell.js)
+   `ensureAdvancedWorkspace`).
+3. Panels (`alerts`, `planner`) are independent of `mode` — they can be opened on any mode and the
+   hash serialises both.
+4. Keyboard shortcuts (`h=live`, `c=compare`, `a=alerts`, `p=planner`, `r=refresh`) are owned by the
+   registry; no handler may conflict with them.
+
+Any reordering of the tab bar **must** update this table, the registry in `src/tracker/modes.js`,
+the HTML order in `tracker.html`, and be covered by
+[`tests/tracker-modes.test.js`](../tests/tracker-modes.test.js) in the same commit.

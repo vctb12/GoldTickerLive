@@ -800,6 +800,26 @@ update the "Last updated" banner at the top of the file and copy the merged comm
 | _pending_ | `phase4` | Phase 4 (homepage slice) — dedupe `src/pages/home.js` `getMarketStatus` → shared `src/lib/live-status.js`; add equivalence guard test over a full week of samples                                                                                        |
 | _pending_ | `phase2` | Phase 2 closed — design-token completeness audit at `reports/token-audit.md`: tracker 100 % aliased, homepage consumes canonical directly, admin retains intentionally divergent dark-theme palette (rationale documented per token). Net promotable: 0. |
 
+### Round 5 — 20-phase tracker redesign supplement (this PR)
+
+_Reconciles the 20-phase tracker redesign
+(`tracker landing page, full redesign, refactor, restructure, revamp, debug`) as a superset of §22b
+Phases 6–14. Execution phases land in the order below; high-risk phases get their own scoped PRs
+(see §22b "specific risks"). Supersedes the earlier proposal row "30-phase tracker / homepage /
+admin revamp" for the tracker-only subset._
+
+| SHA        | Bucket    | Summary                                                                                                                                                                                                                                           |
+| ---------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _pending_  | `phase1`  | 20-phase Phase 1 — UX audit deliverable at [`reports/tracker-ux-audit.md`](../reports/tracker-ux-audit.md); per-mode defect log drives Phases 5–15.                                                                                               |
+| _pending_  | `phase2`  | 20-phase Phase 2 — IA + mode ordering frozen in [`docs/tracker-state.md`](./tracker-state.md) § "IA & mode ordering".                                                                                                                             |
+| _pending_  | `phase3`  | 20-phase Phase 3 — shared-primitive adoption map at [`reports/tracker-primitive-map.md`](../reports/tracker-primitive-map.md); drives Phases 4, 6, 9, 16, 18.                                                                                     |
+| _pending_  | `phase7`  | 20-phase Phase 7 — tab registry extracted into [`src/tracker/modes.js`](../src/tracker/modes.js); `ui-shell.js` consumes it for overlays + keyboard shortcuts. Contract tests in [`tests/tracker-modes.test.js`](../tests/tracker-modes.test.js). |
+| _pending_  | `phase6`  | 20-phase Phase 6 (partial) — welcome strip inner opts into `[data-reveal]`; full first-visit-only rework deferred to follow-up PR.                                                                                                                |
+| _deferred_ | `phase5`  | 20-phase Phase 5 (hero rebuild) — own PR; LCP-critical, visual-diff screenshots required.                                                                                                                                                         |
+| _deferred_ | `phase11` | 20-phase Phase 11 (archive rewrite) — own PR; biggest `innerHTML` reduction; behaviour-diff tests required.                                                                                                                                       |
+| _deferred_ | `phase14` | 20-phase Phase 14 / §22b Phase 14 (CSS split) — own PR; highest visual-regression risk.                                                                                                                                                           |
+| _deferred_ | `phase19` | 20-phase Phase 19 (lazy-mount) — own PR; Playwright deep-link smoke test per mode required.                                                                                                                                                       |
+
 ### Merged PRs
 
 _None yet._ Populate when the first revamp PR merges: PR number, merge date, branch name, range of
@@ -1133,7 +1153,11 @@ surfaces (`tracker.html`, `index.html`, `admin/`). Phases ship as single-concern
 - [x] **Phase 7** — State/URL-hash contract freeze. Document `src/tracker/state.js` hash schema in
       [`docs/tracker-state.md`](./tracker-state.md); add round-trip tests in
       `tests/tracker-hash.test.js`.
-- [ ] **Phase 8** — Mode-tabs refactor (extract `#tab-*` wiring from `ui-shell.js` into `modes.js`).
+- [x] **Phase 8** — Mode-tabs refactor (extract `#tab-*` wiring from `ui-shell.js` into `modes.js`).
+      Landed as [`src/tracker/modes.js`](../src/tracker/modes.js): pure registry of 7 tab entries (5
+      modes + 2 panels), bilingual labels, workspace gates, keyboard-shortcut map. `ui-shell.js`
+      consumes it for overlay construction and keyboard dispatch. Contract invariants enforced by
+      [`tests/tracker-modes.test.js`](../tests/tracker-modes.test.js).
 - [ ] **Phase 9** — Live-mode polish (loading skeleton, mobile pinch/pan, `aria-live="polite"`).
 - [ ] **Phase 10** — Compare mode (multi-select, `el()`-only results table, spot-linked reference).
 - [ ] **Phase 11** — Archive mode (pagination + CSV export; retire `innerHTML` sinks in
