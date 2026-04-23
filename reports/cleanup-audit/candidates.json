@@ -1,0 +1,218 @@
+{
+  "bucketA": [],
+  "bucketB": [
+    {
+      "path": "scripts/node/cleanup-audit.js",
+      "size": 20040,
+      "lastTouched": "",
+      "reason": "not reachable from any entrypoint; no grep hits for basename or stem"
+    },
+    {
+      "path": "scripts/node/generate-newsletter.js",
+      "size": 11208,
+      "lastTouched": "851d4d09\t2026-04-22T10:40:50+04:00",
+      "reason": "not reachable from any entrypoint; no grep hits for basename or stem"
+    },
+    {
+      "path": "src/seo/seoHead.js",
+      "size": 9623,
+      "lastTouched": "7f3ee446\t2026-04-16T13:17:51Z",
+      "reason": "not reachable from any entrypoint; no grep hits for basename or stem"
+    }
+  ],
+  "bucketC": [
+    {
+      "path": "admin/auth.js",
+      "size": 1681,
+      "lastTouched": "dc69baed\t2026-04-16T09:25:14Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "admin/shared/admin-shell.js",
+      "size": 13854,
+      "lastTouched": "5ed17ce2\t2026-04-21T20:06:03Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "admin/shared/admin-utils.js",
+      "size": 16650,
+      "lastTouched": "349d4150\t2026-04-22T08:48:10Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "admin/shared/icons.js",
+      "size": 4664,
+      "lastTouched": "0e9ac783\t2026-04-16T13:03:13Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "admin/supabase-auth.js",
+      "size": 13201,
+      "lastTouched": "0e9ac783\t2026-04-16T13:03:13Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "admin/supabase-config.js",
+      "size": 1214,
+      "lastTouched": "f6aea1d1\t2026-04-16T08:33:38Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "countries/country-page.js",
+      "size": 17906,
+      "lastTouched": "93387390\t2026-04-21T20:10:51Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "scripts/node/fix-asset-refs.js",
+      "size": 1846,
+      "lastTouched": "3c6f76a5\t2026-04-22T22:53:58+04:00",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "scripts/node/fix-broken-hrefs.js",
+      "size": 2761,
+      "lastTouched": "026d8354\t2026-04-22T22:53:18+04:00",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "scripts/node/fix-links.js",
+      "size": 1308,
+      "lastTouched": "49701bd0\t2026-04-20T20:57:11Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "scripts/node/generate-placeholders.js",
+      "size": 1705,
+      "lastTouched": "b18b0b71\t2026-04-21T19:29:59Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "scripts/node/link-audit.js",
+      "size": 2697,
+      "lastTouched": "49701bd0\t2026-04-20T20:57:11Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "scripts/node/notify-discord.js",
+      "size": 5533,
+      "lastTouched": "ab4af3da\t2026-04-15T14:15:31Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "scripts/node/notify-telegram.js",
+      "size": 6064,
+      "lastTouched": "ab4af3da\t2026-04-15T14:15:31Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "scripts/node/price-spike-alert.js",
+      "size": 10243,
+      "lastTouched": "ab4af3da\t2026-04-15T14:15:31Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "scripts/node/tweet-gold-price.js",
+      "size": 19461,
+      "lastTouched": "cffdf142\t2026-04-22T08:08:01Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "scripts/python/requirements.txt",
+      "size": 666,
+      "lastTouched": "e326100a\t2026-04-22T23:46:12+04:00",
+      "reason": "unreferenced (needs human review)"
+    },
+    {
+      "path": "scripts/python/utils/__init__.py",
+      "size": 75,
+      "lastTouched": "2f04cbe1\t2026-04-14T12:11:45Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "server/data/audit-logs.json",
+      "size": 27783,
+      "lastTouched": "0e9ac783\t2026-04-16T13:03:13Z",
+      "reason": "unreferenced (needs human review)"
+    },
+    {
+      "path": "server/data/shops-data.json",
+      "size": 5589,
+      "lastTouched": "0e9ac783\t2026-04-16T13:03:13Z",
+      "reason": "unreferenced (needs human review)"
+    },
+    {
+      "path": "server/data/users.json",
+      "size": 532,
+      "lastTouched": "0e9ac783\t2026-04-16T13:03:13Z",
+      "reason": "unreferenced (needs human review)"
+    },
+    {
+      "path": "src/components/internalLinks.js",
+      "size": 3404,
+      "lastTouched": "ab4af3da\t2026-04-15T14:15:31Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "src/lib/freshness-pulse.js",
+      "size": 1582,
+      "lastTouched": "f270fbb7\t2026-04-23T10:49:53Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "src/lib/search.js",
+      "size": 531,
+      "lastTouched": "6ee4c32f\t2026-04-14T12:01:11Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "src/package.json",
+      "size": 228,
+      "lastTouched": "eb2703c8\t2026-04-22T08:00:16Z",
+      "reason": "unreferenced (needs human review)"
+    },
+    {
+      "path": "src/routes/routeRegistry.js",
+      "size": 3626,
+      "lastTouched": "ab4af3da\t2026-04-15T14:15:31Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "src/seo/metadataGenerator.js",
+      "size": 8474,
+      "lastTouched": "0e9ac783\t2026-04-16T13:03:13Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "src/social/postTemplates.js",
+      "size": 19937,
+      "lastTouched": "eebf0220\t2026-04-21T20:20:41Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "src/utils/inputValidation.js",
+      "size": 2810,
+      "lastTouched": "6ee4c32f\t2026-04-14T12:01:11Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "src/utils/routeBuilder.js",
+      "size": 4508,
+      "lastTouched": "ab4af3da\t2026-04-15T14:15:31Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "src/utils/routeValidator.js",
+      "size": 3193,
+      "lastTouched": "6ee4c32f\t2026-04-14T12:01:11Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    },
+    {
+      "path": "src/utils/slugify.js",
+      "size": 1570,
+      "lastTouched": "f3c7c8c2\t2026-04-21T19:34:17Z",
+      "reason": "not statically reachable, but basename/stem is referenced elsewhere (dynamic ref likely)"
+    }
+  ],
+  "dupes": []
+}

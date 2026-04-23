@@ -1,0 +1,298 @@
+{
+  "files": [
+    "countries/country-page.js",
+    "admin/auth.js",
+    "admin/supabase-auth.js",
+    "admin/supabase-config.js",
+    "admin/shared/admin-shell.js",
+    "admin/shared/admin-utils.js",
+    "admin/shared/icons.js",
+    "src/components/breadcrumbs.js",
+    "src/components/chart.js",
+    "src/components/internalLinks.js",
+    "src/lib/export.js",
+    "src/lib/freshness-pulse.js",
+    "src/lib/historical-data.js",
+    "src/lib/page-hydrator.js",
+    "src/lib/safe-dom.js",
+    "src/lib/search.js",
+    "src/lib/supabase-data.js",
+    "src/pages/calculator.js",
+    "src/pages/insights.js",
+    "src/pages/learn.js",
+    "src/pages/methodology.js",
+    "src/pages/not-found.js",
+    "src/pages/privacy.js",
+    "src/pages/shops.js",
+    "src/pages/terms.js",
+    "src/pages/tracker-chart-loader.js",
+    "src/pages/tracker-pro.js",
+    "src/routes/routeRegistry.js",
+    "src/seo/metadataGenerator.js",
+    "src/seo/seoHead.js",
+    "src/social/postTemplates.js",
+    "src/tracker/events.js",
+    "src/tracker/modes.js",
+    "src/tracker/render.js",
+    "src/tracker/state.js",
+    "src/tracker/ui-shell.js",
+    "src/tracker/wire.js",
+    "src/utils/inputValidation.js",
+    "src/utils/routeBuilder.js",
+    "src/utils/routeValidator.js",
+    "src/utils/slugify.js"
+  ],
+  "issues": [
+    {
+      "file": "package.json",
+      "dependencies": [
+        { "name": "lowdb", "line": 62, "col": 6, "pos": 3153 },
+        { "name": "uuid", "line": 64, "col": 6, "pos": 3201 }
+      ],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "server/lib/supabase-client.js",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [
+        { "name": "@supabase/supabase-js", "line": 22, "col": 29, "pos": 757 }
+      ],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "server/services/fxService.js",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [
+        { "name": "../config/index.js", "line": 9, "col": 28, "pos": 259 }
+      ],
+      "exports": [],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "server/services/goldPriceService.js",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [
+        { "name": "../config/index.js", "line": 10, "col": 28, "pos": 342 }
+      ],
+      "exports": [],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "server/services/pricingEngine.js",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [
+        { "name": "../config/index.js", "line": 9, "col": 28, "pos": 302 },
+        { "name": "../config/countries.js", "line": 10, "col": 28, "pos": 350 },
+        { "name": "../config/karats.js", "line": 11, "col": 25, "pos": 399 }
+      ],
+      "exports": [],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/lib/api.js",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "_simulateGoldFail", "line": 24, "col": 12, "pos": 484 },
+        { "name": "_simulateFxFail", "line": 25, "col": 12, "pos": 522 },
+        { "name": "setSimulateGoldFail", "line": 26, "col": 17, "pos": 563 },
+        { "name": "setSimulateFxFail", "line": 29, "col": 17, "pos": 631 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/lib/cache.js",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        {
+          "name": "showStorageQuotaWarning",
+          "line": 18,
+          "col": 17,
+          "pos": 378
+        },
+        { "name": "getFallbackFXRates", "line": 142, "col": 17, "pos": 4855 },
+        { "name": "savePreference", "line": 146, "col": 17, "pos": 4969 },
+        { "name": "checkDayOpenReset", "line": 152, "col": 17, "pos": 5132 },
+        { "name": "saveHistorySnapshot", "line": 167, "col": 17, "pos": 5572 },
+        { "name": "clearAllCache", "line": 187, "col": 17, "pos": 6184 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/lib/price-calculator.js",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "usdPerOz", "line": 8, "col": 17, "pos": 221 },
+        { "name": "localPrice", "line": 13, "col": 17, "pos": 347 },
+        { "name": "calculateAllPrices", "line": 18, "col": 17, "pos": 466 },
+        { "name": "calculateVolatility", "line": 53, "col": 17, "pos": 1533 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/lib/formatter.js",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "formatTimestamp", "line": 42, "col": 17, "pos": 798 },
+        { "name": "formatCountdown", "line": 79, "col": 17, "pos": 1719 },
+        { "name": "formatPercentChange", "line": 88, "col": 17, "pos": 1968 },
+        { "name": "formatDate", "line": 101, "col": 17, "pos": 2433 },
+        { "name": "formatKarat", "line": 116, "col": 17, "pos": 2808 },
+        { "name": "formatCountryName", "line": 120, "col": 17, "pos": 2910 },
+        { "name": "formatFreshness", "line": 130, "col": 17, "pos": 3315 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/lib/live-status.js",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "GOLD_MARKET", "line": 3, "col": 14, "pos": 69 },
+        { "name": "getAgeMs", "line": 30, "col": 17, "pos": 863 },
+        { "name": "formatRelativeAge", "line": 36, "col": 17, "pos": 1046 },
+        { "name": "getLiveFreshness", "line": 58, "col": 17, "pos": 1789 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/components/nav.js",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "initNavSearch", "line": 899, "col": 17, "pos": 32442 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/lib/reveal.js",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "observeReveal", "line": 40, "col": 17, "pos": 1343 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/lib/site-settings.js",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [
+        { "name": "getCachedSiteSettings", "line": 50, "col": 17, "pos": 1613 },
+        { "name": "loadSiteSettings", "line": 83, "col": 23, "pos": 2484 }
+      ],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    },
+    {
+      "file": "src/search/searchEngine.js",
+      "dependencies": [],
+      "devDependencies": [],
+      "optionalPeerDependencies": [],
+      "unlisted": [],
+      "binaries": [],
+      "unresolved": [],
+      "exports": [{ "name": "search", "line": 73, "col": 17, "pos": 2397 }],
+      "types": [],
+      "enumMembers": {},
+      "duplicates": [],
+      "catalog": []
+    }
+  ]
+}
