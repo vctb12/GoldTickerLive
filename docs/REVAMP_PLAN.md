@@ -319,7 +319,17 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
 - [ ] **Canonical card consolidation.** Merge near-duplicate `.card` / `.panel` / `.section-card`
       rules into the canonical `.card` + `.card--accent` + `.card--compact` set.
 - [ ] **Heading scale confirmation.** Ensure heading scale is applied via classes (`.h1`…`.h6`) not
-      ad-hoc sizes.
+      ad-hoc sizes. _Audit (2026-04-23):_ the `.h1`…`.h6` class system does **not** exist yet, and
+      base `h1`..`h6` element selectors are not styled in `styles/global.css`. Every page hand-sizes
+      headings via bespoke selectors (~40 sites, e.g. `.tracker-hero-copy h1`,
+      `.pricing-hero-content h1`, `.legal-hero h1`, `.method-section h2`, `.learn-section h3`).
+      Token gaps: no display-tier sizes (`--text-4xl` / `--text-5xl`) for hero headings, and the
+      `--text-*` scale in `styles/global.css` drifts from the one documented in
+      [`docs/DESIGN_TOKENS.md`](DESIGN_TOKENS.md) (e.g. `--text-3xl` is `1.875rem` in code but
+      `2.25rem` in docs). Split into three sequenced slices: (1) `tokens` — reconcile `--text-*`
+      scale with DESIGN_TOKENS.md and add display-tier tokens; (2) `typography` — add canonical
+      `.h1`…`.h6` utility classes + base `h1..h6` baseline; (3) `cleanup` — migrate per-page
+      hand-sized heading selectors to the canonical classes, one page per commit.
 - [x] **Focus ring token audit.** Canonical `:focus-visible` baseline in `styles/global.css` uses
       `--focus-ring-width` / `--focus-ring-color` / `--focus-ring-offset`. Page-level outline
       overrides normalized to the same tokens: `.calc-tab`, `.tracker-mode-tab`,
