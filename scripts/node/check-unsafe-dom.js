@@ -62,7 +62,7 @@ const BASELINE = {
   'admin/social/index.html': 4,
   'src/components/breadcrumbs.js': 2,
   'src/components/footer.js': 2,
-  'src/components/nav.js': 5,
+  'src/components/nav.js': 2,
   'src/components/spotBar.js': 1,
   'src/components/ticker.js': 1,
   'src/lib/cache.js': 1,

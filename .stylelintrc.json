@@ -21,7 +21,9 @@
       "ms",
       "fr",
       "ch",
-      "dvh"
+      "dvh",
+      "svh",
+      "lvh"
     ],
     "color-function-notation": null,
     "alpha-value-notation": null,

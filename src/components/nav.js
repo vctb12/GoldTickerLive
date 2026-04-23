@@ -117,30 +117,51 @@ function groupIsActive(items) {
 
 function buildDropdown(group, depth) {
   const active = groupIsActive(group.items);
+  const layout = group.layout === 'two-col' ? 'two-col' : 'one-col';
 
   const itemsHtml = group.items
     .map((item) => {
       const href = resolveHref(item.href, depth);
       const isActive = isPageMatch(href);
-      const itemClass = 'nav-dropdown-item' + (isActive ? ' nav-dropdown-item--active' : '');
+      const classes = ['nav-dropdown-item'];
+      if (isActive) classes.push('nav-dropdown-item--active');
+      if (item.primary) classes.push('nav-dropdown-item--primary');
       const ariaCurrent = isActive ? ' aria-current="page"' : '';
-      return `<a href="${href}" class="${itemClass}"${ariaCurrent} role="menuitem">${item.label}</a>`;
+      const iconHtml = item.icon
+        ? `<span class="nav-dropdown-item-icon" aria-hidden="true">${escapeHtml(item.icon)}</span>`
+        : '';
+      const descHtml = item.description
+        ? `<span class="nav-dropdown-item-desc">${escapeHtml(item.description)}</span>`
+        : '';
+      return `<a href="${href}" class="${classes.join(' ')}"${ariaCurrent} role="menuitem">
+        ${iconHtml}
+        <span class="nav-dropdown-item-body">
+          <span class="nav-dropdown-item-label">${escapeHtml(item.label)}</span>
+          ${descHtml}
+        </span>
+      </a>`;
     })
     .join('');
 
   const btnClass = 'nav-dropdown-btn' + (active ? ' nav-dropdown-btn--active' : '');
 
   return `
-    <div class="nav-dropdown" data-group="${group.key}">
+    <div class="nav-dropdown" data-group="${group.key}" data-layout="${layout}"${active ? ' data-active="true"' : ''}>
       <button class="${btnClass}"
               type="button"
               aria-haspopup="true"
               aria-expanded="false"
               data-group="${group.key}"
-      >${group.label}<span class="nav-dropdown-caret" aria-hidden="true"></span></button>
-      <div class="nav-dropdown-panel" role="menu" aria-label="${group.label}">
-        ${group.description ? `<div class="nav-dropdown-panel-header"><span class="nav-dropdown-panel-title">${group.label}</span><span class="nav-dropdown-panel-desc">${group.description}</span></div>` : ''}
-        ${itemsHtml}
+      >${escapeHtml(group.label)}<span class="nav-dropdown-caret" aria-hidden="true"></span></button>
+      <div class="nav-dropdown-panel" role="menu" aria-label="${escapeHtml(group.label)}" data-layout="${layout}">
+        ${
+          group.description
+            ? `<div class="nav-dropdown-panel-header"><span class="nav-dropdown-panel-title">${escapeHtml(group.label)}</span><span class="nav-dropdown-panel-desc">${escapeHtml(group.description)}</span></div>`
+            : ''
+        }
+        <div class="nav-dropdown-panel-items" data-layout="${layout}">
+          ${itemsHtml}
+        </div>
       </div>
     </div>`;
 }
@@ -150,17 +171,29 @@ function buildDrawerGroup(group, depth) {
     .map((item) => {
       const href = resolveHref(item.href, depth);
       const isActive = isPageMatch(href);
-      const itemClass = 'nav-drawer-link' + (isActive ? ' nav-link--active' : '');
+      const classes = ['nav-drawer-link'];
+      if (isActive) classes.push('nav-link--active');
+      if (item.primary) classes.push('nav-drawer-link--primary');
       const ariaCurrent = isActive ? ' aria-current="page"' : '';
-      return `<a href="${href}" class="${itemClass}"${ariaCurrent}>${item.label}</a>`;
+      const iconHtml = item.icon
+        ? `<span class="nav-drawer-link-icon" aria-hidden="true">${escapeHtml(item.icon)}</span>`
+        : '';
+      return `<a href="${href}" class="${classes.join(' ')}"${ariaCurrent}>
+        ${iconHtml}<span class="nav-drawer-link-label">${escapeHtml(item.label)}</span>
+      </a>`;
     })
     .join('');
 
   return `
-    <div class="nav-drawer-group">
-      <div class="nav-drawer-group-label" aria-hidden="true">${group.label}</div>
-      ${itemsHtml}
-    </div>`;
+    <details class="nav-drawer-group" open>
+      <summary class="nav-drawer-group-label">
+        <span>${escapeHtml(group.label)}</span>
+        <span class="nav-drawer-group-caret" aria-hidden="true"></span>
+      </summary>
+      <div class="nav-drawer-group-items">
+        ${itemsHtml}
+      </div>
+    </details>`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -218,17 +251,17 @@ export function injectNav(lang = 'en', depth = 0) {
     <!-- Right-side actions -->
     <div class="nav-actions">
       <button id="nav-search-btn"
+              class="nav-icon-btn"
               type="button"
               aria-label="Search"
-              style="background:none;border:none;cursor:pointer;padding:0.4rem;font-size:1.1rem;color:#64748b;display:flex;align-items:center;line-height:1;"
       >🔍</button>
 
       <button id="nav-theme-toggle"
+              class="nav-icon-btn nav-icon-btn--theme"
               type="button"
               aria-label="Theme: auto"
               title="Theme: auto"
               data-theme-mode="auto"
-              style="background:none;border:none;cursor:pointer;padding:0.4rem;font-size:1.1rem;color:var(--color-text-muted);display:flex;align-items:center;line-height:1;"
       >🌓</button>
 
       <button id="nav-lang-toggle"
@@ -251,10 +284,11 @@ export function injectNav(lang = 'en', depth = 0) {
   </div>
 
   <!-- Search overlay -->
-  <div id="nav-search-overlay" style="display:none;position:absolute;top:100%;right:0;left:0;background:white;border-bottom:1px solid #e2e8f0;padding:0.75rem 1rem;z-index:1000;">
-    <input id="nav-search-input" type="search" placeholder="Search countries, cities, karats..." autocomplete="off"
-      style="width:100%;max-width:480px;padding:0.5rem 0.75rem;border:1px solid #e2e8f0;border-radius:6px;font-size:0.875rem;outline:none;display:block;margin:0 auto;" />
-    <div id="nav-search-dropdown" style="max-width:480px;margin:0.25rem auto 0;background:white;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);max-height:300px;overflow-y:auto;"></div>
+  <div id="nav-search-overlay" class="nav-search-overlay" hidden>
+    <input id="nav-search-input" class="nav-search-input" type="search"
+      placeholder="Search countries, cities, karats..." autocomplete="off"
+      aria-label="Search" />
+    <div id="nav-search-dropdown" class="nav-search-dropdown" role="listbox"></div>
   </div>
 
   <!-- Mobile off-canvas drawer -->
@@ -320,6 +354,9 @@ export function injectNav(lang = 'en', depth = 0) {
 
   // ── Mobile bottom navigation bar ──────────────────────────────────────────
   _injectMobileBottomNav(lang, depth);
+
+  // ── Scroll state: is-scrolled + hide/reveal on scroll (Track B §5.B.7) ───
+  _initNavScrollBehavior(navEl);
 
   // ── Theme (auto/light/dark) tri-state toggle ─────────────────────────────
   const themeBtn = document.getElementById('nav-theme-toggle');
@@ -584,6 +621,68 @@ export function injectNav(lang = 'en', depth = 0) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Scroll behavior: is-scrolled + hide/reveal (Track B §5.B.7)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function _initNavScrollBehavior(navEl) {
+  if (!navEl || typeof window === 'undefined') return;
+  const HIDE_DELTA = 6;
+  const SHOW_NEAR_TOP = 64;
+
+  const reduceMotion =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let lastY = window.scrollY || 0;
+  let ticking = false;
+
+  function update() {
+    ticking = false;
+    const y = window.scrollY || 0;
+
+    // Scrolled state (for shadow/border tint) — always tracked.
+    if (y > 4) {
+      navEl.setAttribute('data-scrolled', 'true');
+    } else {
+      navEl.removeAttribute('data-scrolled');
+    }
+
+    // Never hide while drawer/dropdown open, or near the top, or when reduced motion.
+    if (reduceMotion || y < SHOW_NEAR_TOP || navEl.classList.contains('nav--open')) {
+      navEl.removeAttribute('data-nav-hidden');
+      lastY = y;
+      return;
+    }
+    if (navEl.querySelector('.nav-dropdown.is-open')) {
+      navEl.removeAttribute('data-nav-hidden');
+      lastY = y;
+      return;
+    }
+
+    const delta = y - lastY;
+    if (delta > HIDE_DELTA) {
+      navEl.setAttribute('data-nav-hidden', 'true');
+    } else if (delta < -HIDE_DELTA) {
+      navEl.removeAttribute('data-nav-hidden');
+    }
+    lastY = y;
+  }
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    },
+    { passive: true }
+  );
+
+  // Initial sync (e.g., if page loaded mid-scroll).
+  update();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Mobile bottom navigation bar
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -714,21 +813,38 @@ export function updateNavLang(lang) {
       });
     }
 
-    // Desktop panel items
+    // Desktop panel items (label + description live inside nav-dropdown-item-body)
     const panel = nav.querySelector(`.nav-dropdown[data-group="${group.key}"] .nav-dropdown-panel`);
     if (panel) {
       panel.querySelectorAll('.nav-dropdown-item').forEach((el, i) => {
-        if (group.items[i]) el.textContent = group.items[i].label;
+        const src = group.items[i];
+        if (!src) return;
+        const labelEl = el.querySelector('.nav-dropdown-item-label');
+        if (labelEl) labelEl.textContent = src.label;
+        const descEl = el.querySelector('.nav-dropdown-item-desc');
+        if (descEl && src.description) descEl.textContent = src.description;
       });
+      const panelTitle = panel.querySelector('.nav-dropdown-panel-title');
+      if (panelTitle) panelTitle.textContent = group.label;
+      const panelDesc = panel.querySelector('.nav-dropdown-panel-desc');
+      if (panelDesc && group.description) panelDesc.textContent = group.description;
     }
 
-    // Mobile drawer group
+    // Mobile drawer group (<details><summary><span>LABEL</span><caret/></summary>…)
     const drawerGroups = nav.querySelectorAll('.nav-drawer-group');
     if (drawerGroups[gi]) {
-      const labelEl = drawerGroups[gi].querySelector('.nav-drawer-group-label');
-      if (labelEl) labelEl.textContent = group.label;
+      const summary = drawerGroups[gi].querySelector('.nav-drawer-group-label');
+      if (summary) {
+        const labelSpan = summary.querySelector('span:not(.nav-drawer-group-caret)');
+        if (labelSpan) labelSpan.textContent = group.label;
+        else summary.textContent = group.label;
+      }
       drawerGroups[gi].querySelectorAll('.nav-drawer-link').forEach((el, i) => {
-        if (group.items[i]) el.textContent = group.items[i].label;
+        const src = group.items[i];
+        if (!src) return;
+        const labelEl = el.querySelector('.nav-drawer-link-label');
+        if (labelEl) labelEl.textContent = src.label;
+        else el.textContent = src.label;
       });
     }
   });
@@ -771,6 +887,13 @@ export function updateNavLang(lang) {
 /**
  * Initialize the nav search bar.
  * Called once per page, after injectNav().
+ *
+ * Track B (§5.B.5) enhancements:
+ *   - Keyboard shortcuts: `/` and `Ctrl/Cmd+K` open the overlay (ignored inside inputs).
+ *   - Recent searches persisted in localStorage under `nav.search.recent` (cap 8).
+ *   - All result rows built via safe DOM (createElement + textContent); no innerHTML sinks.
+ *   - Progressive enhancement: the `/content/search/` link in Tools stays as the no-JS fallback.
+ *
  * @param {string} basePath  Base URL path (e.g. '/')
  */
 export function initNavSearch(basePath = '/') {
@@ -790,26 +913,111 @@ export function initNavSearch(basePath = '/') {
 
   if (!btn || !overlay || !input) return;
 
+  const RECENT_KEY = 'nav.search.recent';
+  const RECENT_CAP = 8;
+
+  function readRecent() {
+    try {
+      const raw = localStorage.getItem(RECENT_KEY);
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr)
+        ? arr.filter((s) => typeof s === 'string').slice(0, RECENT_CAP)
+        : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function pushRecent(q) {
+    if (!q || q.length < 2) return;
+    try {
+      const list = readRecent().filter((s) => s !== q);
+      list.unshift(q);
+      localStorage.setItem(RECENT_KEY, JSON.stringify(list.slice(0, RECENT_CAP)));
+    } catch {
+      /* ignore */
+    }
+  }
+
+  function clearResults() {
+    if (dropdown) dropdown.replaceChildren();
+  }
+
+  function showMessage(text) {
+    if (!dropdown) return;
+    dropdown.replaceChildren();
+    const msg = document.createElement('div');
+    msg.className = 'nav-search-message';
+    msg.textContent = text;
+    dropdown.appendChild(msg);
+  }
+
+  function isOpen() {
+    return !overlay.hasAttribute('hidden');
+  }
+
   let debounceTimer = null;
 
   function openOverlay() {
-    overlay.style.display = 'block';
+    overlay.removeAttribute('hidden');
     input.focus();
+    // If the input is empty, surface recent searches (if any).
+    if (!input.value.trim()) renderRecent();
   }
 
   function closeOverlay() {
-    overlay.style.display = 'none';
-    if (dropdown) dropdown.replaceChildren();
+    overlay.setAttribute('hidden', '');
+    clearResults();
+  }
+
+  function renderRecent() {
+    const recents = readRecent();
+    if (!recents.length) {
+      clearResults();
+      return;
+    }
+    dropdown.replaceChildren();
+    const header = document.createElement('div');
+    header.className = 'nav-search-message nav-search-section-head';
+    header.textContent = 'Recent searches';
+    dropdown.appendChild(header);
+    for (const q of recents) {
+      const btnEl = document.createElement('button');
+      btnEl.type = 'button';
+      btnEl.className = 'nav-search-recent';
+      btnEl.textContent = q;
+      btnEl.addEventListener('click', () => {
+        input.value = q;
+        input.dispatchEvent(new Event('input'));
+      });
+      dropdown.appendChild(btnEl);
+    }
   }
 
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
-    overlay.style.display === 'block' ? closeOverlay() : openOverlay();
+    if (isOpen()) closeOverlay();
+    else openOverlay();
+  });
+
+  // Global keyboard shortcuts: `/` and Ctrl/Cmd+K
+  document.addEventListener('keydown', (e) => {
+    const ae = document.activeElement;
+    const inField =
+      ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.isContentEditable);
+    const isSlash = e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey && !inField;
+    const isCmdK = (e.ctrlKey || e.metaKey) && !e.altKey && (e.key === 'k' || e.key === 'K');
+    if (isSlash || isCmdK) {
+      e.preventDefault();
+      if (!isOpen()) openOverlay();
+      else input.focus();
+    }
   });
 
   // Close on outside click
   document.addEventListener('click', (e) => {
-    if (!overlay.contains(e.target) && e.target !== btn) {
+    if (!overlay.contains(e.target) && e.target !== btn && isOpen()) {
       closeOverlay();
     }
   });
@@ -817,13 +1025,17 @@ export function initNavSearch(basePath = '/') {
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       closeOverlay();
+      btn.focus();
     }
     if (e.key === 'Enter') {
       const first = dropdown.querySelector('a');
-      if (first) first.click();
+      if (first) {
+        pushRecent(input.value.trim());
+        first.click();
+      }
     }
     if (e.key === 'ArrowDown') {
-      const items = Array.from(dropdown.querySelectorAll('a'));
+      const items = Array.from(dropdown.querySelectorAll('a, button'));
       if (items.length) {
         items[0].focus();
         e.preventDefault();
@@ -832,7 +1044,7 @@ export function initNavSearch(basePath = '/') {
   });
 
   dropdown.addEventListener('keydown', (e) => {
-    const items = Array.from(dropdown.querySelectorAll('a'));
+    const items = Array.from(dropdown.querySelectorAll('a, button'));
     const idx = items.indexOf(document.activeElement);
     if (e.key === 'ArrowDown' && idx < items.length - 1) {
       items[idx + 1].focus();
@@ -849,44 +1061,85 @@ export function initNavSearch(basePath = '/') {
     }
     if (e.key === 'Escape') {
       closeOverlay();
-      input.focus();
+      btn.focus();
     }
   });
+
+  function renderResults(results, q) {
+    const base = basePath.replace(/\/$/, '');
+    dropdown.replaceChildren();
+
+    // Group results by `type` if available.
+    const groups = new Map();
+    for (const r of results) {
+      const key = r.type || 'Pages';
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(r);
+    }
+
+    for (const [typeLabel, entries] of groups) {
+      const head = document.createElement('div');
+      head.className = 'nav-search-message nav-search-section-head';
+      head.textContent = typeLabel;
+      dropdown.appendChild(head);
+
+      for (const r of entries) {
+        const href = base + r.url;
+        const a = document.createElement('a');
+        a.href = href;
+        a.className = 'nav-search-result';
+        a.setAttribute('tabindex', '0');
+        a.setAttribute('role', 'option');
+
+        const icon = document.createElement('span');
+        icon.className = 'nav-search-result-icon';
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = r.icon || '🔍';
+        a.appendChild(icon);
+
+        const body = document.createElement('span');
+        body.className = 'nav-search-result-body';
+
+        const label = document.createElement('span');
+        label.className = 'nav-search-result-label';
+        label.textContent = r.label || '';
+        body.appendChild(label);
+
+        if (r.type) {
+          const type = document.createElement('span');
+          type.className = 'nav-search-result-type';
+          type.textContent = r.type;
+          body.appendChild(type);
+        }
+
+        a.appendChild(body);
+        a.addEventListener('click', () => pushRecent(q));
+        dropdown.appendChild(a);
+      }
+    }
+  }
 
   input.addEventListener('input', () => {
     clearTimeout(debounceTimer);
     const q = input.value.trim();
     if (q.length < 2) {
-      dropdown.replaceChildren();
+      // Empty/too-short query: show recent searches instead of results.
+      renderRecent();
       return;
     }
 
     debounceTimer = setTimeout(async () => {
       const mod = await getSearch();
       if (!mod) {
-        dropdown.innerHTML =
-          '<div style="padding:0.75rem 1rem;color:#64748b;font-size:0.875rem;">Search unavailable</div>';
+        showMessage('Search unavailable');
         return;
       }
       const results = mod.search(q);
       if (!results.length) {
-        dropdown.innerHTML =
-          '<div style="padding:0.75rem 1rem;color:#64748b;font-size:0.875rem;">No results found</div>';
+        showMessage('No results found');
         return;
       }
-      const base = basePath.replace(/\/$/, '');
-      dropdown.innerHTML = results
-        .map((r) => {
-          const href = base + r.url;
-          return `<a href="${escapeHtml(href)}" style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 1rem;text-decoration:none;color:#1e293b;font-size:0.875rem;border-bottom:1px solid #f1f5f9;" tabindex="0">
-          <span style="font-size:1rem;">${escapeHtml(r.icon || '🔍')}</span>
-          <span>
-            <span style="font-weight:500;">${escapeHtml(r.label)}</span>
-            <span style="font-size:0.75rem;color:#94a3b8;margin-left:0.4rem;">${escapeHtml(r.type)}</span>
-          </span>
-        </a>`;
-        })
-        .join('');
+      renderResults(results, q);
     }, 200);
   });
 }
