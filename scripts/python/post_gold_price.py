@@ -33,6 +33,8 @@ TWITTER_API_KEY = os.environ.get('TWITTER_API_KEY', '')
 TWITTER_API_SECRET = os.environ.get('TWITTER_API_SECRET', '')
 TWITTER_ACCESS_TOKEN = os.environ.get('TWITTER_ACCESS_TOKEN', '')
 TWITTER_ACCESS_TOKEN_SECRET = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET', '')
+GOLD_API_KEY = os.environ.get('GOLD_API_KEY', '')  # ← add this line
+
 
 
 # ── Step 1: Fetch gold price ─────────────────────────────────────────────────
@@ -51,9 +53,11 @@ def _save_last_price(price):
 def get_gold_price():
     """Fetch XAU from gold-api.com and convert it into your script's expected shape."""
     url = "https://api.gold-api.com/price/XAU"
-    response = requests.get(url, timeout=15)
+    headers = {"x-access-token": GOLD_API_KEY} if GOLD_API_KEY else {}
+    response = requests.get(url, headers=headers, timeout=15)
     response.raise_for_status()
     raw = response.json()
+
 
     price = float(raw["price"])  # USD per troy ounce
     previous_price = _load_last_price()
@@ -221,6 +225,7 @@ def main():
     # Check for required secrets
     missing = []
     for name, value in [
+        ('GOLD_API_KEY', GOLD_API_KEY),          # ← add this
         ('TWITTER_API_KEY', TWITTER_API_KEY),
         ('TWITTER_API_SECRET', TWITTER_API_SECRET),
         ('TWITTER_ACCESS_TOKEN', TWITTER_ACCESS_TOKEN),
