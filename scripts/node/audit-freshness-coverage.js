@@ -124,6 +124,10 @@ const AUDIT_EXEMPTIONS = {
   'src/utils/slugify.js': 'String utility; currency-agnostic.',
   'src/pages/learn.js': 'Static educational content page; no live prices.',
   'src/pages/methodology.js': 'Static methodology page; no live prices.',
+  'src/pages/shops.js':
+    'Shops directory is a discovery page; shop cards do not render live prices (the `%` trust-score strings + `shop-tag` labels trip the price-token heuristic). The page-level ticker/spotBar calls now forward updatedAt + hasLiveFailure, so §6.2 is satisfied via those shared components.',
+  'src/tracker/render.js':
+    'Tracker render.js drives freshness data-driven via STATUS_BADGE_CLASS / SOURCE_BADGE_CLASS lookup tables keyed off `freshness.key`. Every state ("live"|"cached"|"stale"|"unavailable") is therefore handled without per-state string literals — the literal-search heuristic is a false negative here.',
 };
 
 // Real gaps not yet remediated. Each entry links to a follow-up plan file
@@ -131,18 +135,14 @@ const AUDIT_EXEMPTIONS = {
 // gap has been closed and the file either got a live-status import or a
 // new exemption with reason.
 const KNOWN_GAPS = {
-  'src/components/ticker.js':
-    'Ticker marquee renders spot prices but has no freshness label. Tracked for a follow-up plan.',
   'src/lib/api.js':
     'Price fetch layer; source is already tagged ("live" vs "cache-fallback"). Freshness ownership sits with callers who render.',
   'src/lib/page-hydrator.js':
     'Country/city hydrator; now threads hasLiveFailure into updateSpotBar but the karat-card grid itself has no stale badge. Tracked for a follow-up plan.',
   'src/pages/calculator.js':
-    'Calculator already tracks STATE.spotSource and feeds hasLiveFailure into updateSpotBar. Internal result panels do not yet carry per-panel freshness.',
+    'Calculator already tracks STATE.spotSource and feeds hasLiveFailure into updateSpotBar + updateTicker. Internal result panels do not yet carry per-panel freshness.',
   'src/pages/home.js':
-    'Hero card already exposes freshness; surrounding GCC grid and country carousel do not carry freshness branches.',
-  'src/pages/shops.js':
-    'Shops directory page shows spot bar and list cards. Shop cards do not render live prices; page passes through updateSpotBar only.',
+    'Hero card, spotBar, and ticker all carry freshness; surrounding GCC grid and country carousel do not carry per-card freshness branches.',
   'src/pages/tracker-pro.js':
     'Tracker-pro workspace; per-panel freshness coverage tracked by follow-up plan.',
 };
