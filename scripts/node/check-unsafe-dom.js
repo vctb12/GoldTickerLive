@@ -71,7 +71,7 @@ const BASELINE = {
   'src/pages/shops.js': 13,
   'src/pages/tracker-pro.js': 4,
   'src/tracker/events.js': 2,
-  'src/tracker/render.js': 24,
+  'src/tracker/render.js': 18,
   'src/tracker/wire.js': 3,
 };
 

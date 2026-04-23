@@ -334,10 +334,10 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
       `--text-*` scale in `styles/global.css` drifts from the one documented in
       [`docs/DESIGN_TOKENS.md`](DESIGN_TOKENS.md) (e.g. `--text-3xl` is `1.875rem` in code but
       `2.25rem` in docs). Split into three sequenced slices: (1) `tokens` — reconcile `--text-*`
-      scale with DESIGN_TOKENS.md and add display-tier tokens; (2) `typography` — add canonical
+      scale with DESIGN*TOKENS.md and add display-tier tokens; (2) `typography` — add canonical
       `.h1`…`.h6` utility classes + base `h1..h6` baseline; (3) `cleanup` — migrate per-page
-      hand-sized heading selectors to the canonical classes, one page per commit. _Slice 1 (tokens)
-      shipped:_ added `--text-4xl: 2.25rem` / `--text-5xl: 3rem` display-tier tokens to
+      hand-sized heading selectors to the canonical classes, one page per commit. \_Slice 1 (tokens)
+      shipped:* added `--text-4xl: 2.25rem` / `--text-5xl: 3rem` display-tier tokens to
       `styles/global.css`; reconciled `docs/DESIGN_TOKENS.md` to match the implemented body scale
       (doc→code, the safer direction — the shipped tight 17–20 px body scale is intentional for
       dense price-data UI). Slices 2 and 3 still pending.
@@ -517,8 +517,10 @@ Target order:
 
 Resume the 15-phase tracker plan in small commits:
 
-- [ ] **Phase 2** — Trust & freshness framing (exact-age pill, AED-peg note, stale/cached/fallback
-      labeling with icon + tooltip).
+- [x] **Phase 2** — Trust & freshness framing (exact-age pill, AED-peg note, stale/cached/fallback
+      labeling with icon + tooltip). _(working tree: tracker hero, live desk summary, market/watch
+      cards, and shared shell freshness now read from the same live timestamp; touched render paths
+      switched to `safe-dom` helpers.)_
 - [ ] **Phase 3** — Single sticky control bar
       (currency/karat/unit/compare/range/auto-refresh/language).
 - [ ] **Phase 4** — Hero rebuild (large price, delta vs prev close, high/low, 24 h change,
@@ -733,6 +735,12 @@ update the "Last updated" banner at the top of the file and copy the merged comm
 | SHA       | Bucket    | Summary                                                                                                        |
 | --------- | --------- | -------------------------------------------------------------------------------------------------------------- |
 | _pending_ | `cleanup` | Remove duplicate `:focus-visible` in `global.css` that shadowed the token-based baseline with hardcoded values |
+
+### Round 3 — Tracker trust & freshness framing (working tree, pending commit)
+
+| SHA       | Bucket  | Summary                                                                                        |
+| --------- | ------- | ---------------------------------------------------------------------------------------------- |
+| _pending_ | `trust` | Finish tracker Phase 2 trust/freshness framing and reduce touched `innerHTML` sinks in tracker |
 
 ### Merged PRs
 

@@ -203,15 +203,17 @@
             <div class="tracker-badge-row">
               <span class="tracker-badge tracker-badge-live" id="tp-live-badge">
                 <span class="tracker-badge-dot" aria-hidden="true"></span>
-                <span id="tp-live-badge-text">Preparing live feed</span>
+                <span id="tp-live-badge-text" aria-live="polite">Preparing live feed</span>
               </span>
               <span class="tracker-badge tracker-badge-xauusd" id="tp-xauusd-badge" aria-label="XAU/USD spot price">
                 <span aria-hidden="true">🏅</span>
                 <span>XAU/USD</span>
-                <strong id="tp-xauusd-value">—</strong>
+                <strong id="tp-xauusd-value" aria-live="polite">—</strong>
               </span>
               <span class="tracker-badge" id="tp-market-badge">Gold market</span>
-              <span class="tracker-badge" id="tp-refresh-badge">Waiting for first sync</span>
+              <span class="tracker-badge" id="tp-refresh-badge" role="status" aria-live="polite"
+                >Waiting for first sync</span
+              >
             </div>
 
             <h1 id="tp-hero-title">
@@ -288,6 +290,7 @@
                 class="tracker-side-list"
                 id="tp-summary-list"
                 aria-describedby="tp-live-summary-heading"
+                aria-live="polite"
               ></div>
             </div>
 

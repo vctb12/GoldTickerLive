@@ -5646,16 +5646,6 @@ body > * {
   }
 }
 
-[dir='rtl'] @keyframes drawer-slide-in {
-  from {
-    transform: translateX(-100%);
-  }
-
-  to {
-    transform: none;
-  }
-}
-
 /* Reveal-up: explicit reveal keyframe for opt-in reveals. */
 @keyframes reveal-up {
   from {

@@ -1,10 +1,30 @@
 // tracker/render.js — all DOM render functions for tracker-pro
-import { CONSTANTS, KARATS, COUNTRIES } from '../config/index.js';
+import { CONSTANTS, KARATS, COUNTRIES, TRANSLATIONS } from '../config/index.js';
 import { persistState } from './state.js';
 import { updateShellTickerFromState } from './ui-shell.js';
 import { filterByRange } from '../lib/historical-data.js';
+import { clear, el, setText } from '../lib/safe-dom.js';
+import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
 
 let _state, _el, _priceFor, _currentSpot, _showToast;
+const TRACKER_BADGE_CLASSES = [
+  'tracker-badge-live',
+  'tracker-badge--cached',
+  'tracker-badge--stale',
+  'tracker-badge--unavailable',
+];
+const SOURCE_BADGE_CLASS = {
+  live: 'tracker-source-badge--live',
+  cached: 'tracker-source-badge--cached',
+  stale: 'tracker-source-badge--estimated',
+  unavailable: 'tracker-source-badge--unavailable',
+};
+const STATUS_BADGE_CLASS = {
+  live: 'tracker-badge-live',
+  cached: 'tracker-badge--cached',
+  stale: 'tracker-badge--stale',
+  unavailable: 'tracker-badge--unavailable',
+};
 
 export function initRender({ state, el, priceFor, currentSpot, showToast }) {
   _state = state;
@@ -14,50 +34,211 @@ export function initRender({ state, el, priceFor, currentSpot, showToast }) {
   _showToast = showToast;
 }
 
+function tx(key, params = {}) {
+  const fullKey = `tracker.${key}`;
+  const template = TRANSLATIONS[_state.lang]?.[fullKey] ?? TRANSLATIONS.en?.[fullKey] ?? fullKey;
+  return Object.entries(params).reduce(
+    (text, [token, value]) => text.replaceAll(`{${token}}`, String(value)),
+    template
+  );
+}
+
+function formatUsd(value, decimals = 2) {
+  if (!Number.isFinite(value)) return '—';
+  return `$${value.toLocaleString('en', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  })}`;
+}
+
+function formatUnitLabel(unit) {
+  if (_state.lang !== 'ar') return unit;
+  if (unit === 'gram') return 'غرام';
+  if (unit === 'oz') return 'أوقية';
+  return unit;
+}
+
+function getFreshnessModel() {
+  const freshness = getLiveFreshness({
+    updatedAt: _state.live?.updatedAt,
+    lang: _state.lang,
+    hasLiveFailure: _state.hasLiveFailure,
+  });
+  const sourceLabel = tx(`source.${freshness.key}`);
+  const tooltip =
+    freshness.key === 'unavailable'
+      ? tx('liveUnavailable')
+      : tx('summary.freshnessCopy', {
+          source: sourceLabel,
+          age: freshness.ageText,
+          time: freshness.timeText,
+        });
+
+  return {
+    ...freshness,
+    sourceLabel,
+    sourceBadgeClass: SOURCE_BADGE_CLASS[freshness.key] || SOURCE_BADGE_CLASS.cached,
+    badgeClass: STATUS_BADGE_CLASS[freshness.key] || STATUS_BADGE_CLASS.cached,
+    tooltip,
+  };
+}
+
+function applyStatusBadge(node, freshness, text) {
+  if (!node) return;
+  node.classList.remove(...TRACKER_BADGE_CLASSES);
+  node.classList.add(freshness.badgeClass);
+  node.title = freshness.tooltip;
+  node.setAttribute('aria-label', freshness.tooltip);
+  if (typeof text === 'string') setText(node, text);
+}
+
+function buildSourceBadge(freshness) {
+  return el(
+    'span',
+    {
+      class: `tracker-source-badge ${freshness.sourceBadgeClass}`,
+      title: freshness.tooltip,
+      'aria-label': freshness.tooltip,
+    },
+    freshness.sourceLabel
+  );
+}
+
+function buildHeroStatCard(label, value, sub) {
+  return el('div', { class: 'tracker-hero-stat' }, [
+    el('div', { class: 'tracker-hero-k' }, label),
+    el('div', { class: 'tracker-hero-v' }, value),
+    el('div', { class: 'tracker-hero-s' }, sub),
+  ]);
+}
+
+function buildStackItem(title, copy, badge = null) {
+  const headerChildren = [el('strong', null, title)];
+  if (badge) headerChildren.push(badge);
+  return el('div', { class: 'tracker-stack-item' }, [
+    el('div', { class: 'tracker-stack-top' }, headerChildren),
+    el('p', null, copy),
+  ]);
+}
+
 export function renderHero() {
   const spot = _currentSpot();
+  const freshness = getFreshnessModel();
+  const liveBadge = document.getElementById('tp-live-badge');
+  const summaryHeading = document.getElementById('tp-live-summary-heading');
+  const isConnecting = !spot && !_state.hasLiveFailure;
+  const summaryFreshness = isConnecting
+    ? {
+        ...freshness,
+        key: 'live',
+        sourceLabel: tx('source.live'),
+        sourceBadgeClass: SOURCE_BADGE_CLASS.live,
+        badgeClass: STATUS_BADGE_CLASS.live,
+        tooltip: tx('connecting'),
+      }
+    : freshness;
+
+  if (summaryHeading) setText(summaryHeading, tx('liveDeskTitle'));
+
+  if (liveBadge) {
+    liveBadge.classList.remove(...TRACKER_BADGE_CLASSES);
+    liveBadge.classList.add(isConnecting ? 'tracker-badge-live' : freshness.badgeClass);
+    const liveBadgeLabel = isConnecting ? tx('connecting') : freshness.tooltip;
+    liveBadge.title = liveBadgeLabel;
+    liveBadge.setAttribute('aria-label', liveBadgeLabel);
+  }
 
   if (_el.liveBadgeText) {
     if (spot) {
-      _el.liveBadgeText.textContent = _state.hasLiveFailure
-        ? `Cached/Fallback · XAU/USD ${spot.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-        : `Live · XAU/USD ${spot.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      setText(
+        _el.liveBadgeText,
+        tx('refreshBadge', {
+          source: freshness.sourceLabel,
+          age: freshness.ageText,
+        })
+      );
     } else {
-      _el.liveBadgeText.textContent = _state.hasLiveFailure
-        ? 'Live feed unavailable — no cached data'
-        : 'Connecting to API…';
+      setText(_el.liveBadgeText, _state.hasLiveFailure ? tx('liveUnavailable') : tx('connecting'));
     }
   }
-  if (_el.marketBadge) {
-    const now = new Date();
-    const day = now.getUTCDay();
-    const h = now.getUTCHours() * 60 + now.getUTCMinutes();
-    const open = !(day === 6 || (day === 5 && h >= 21 * 60) || (day === 0 && h < 22 * 60));
-    _el.marketBadge.textContent = open ? '● Market open' : '○ Market closed';
+
+  if (_el.xauUsdValue) setText(_el.xauUsdValue, spot ? formatUsd(spot) : '—');
+  const xauBadge = document.getElementById('tp-xauusd-badge');
+  if (xauBadge) {
+    xauBadge.title = freshness.tooltip;
+    xauBadge.setAttribute('aria-label', `XAU/USD · ${freshness.tooltip}`);
   }
+
+  if (_el.marketBadge) {
+    const market = getMarketStatus();
+    setText(_el.marketBadge, market.isOpen ? tx('marketOpen') : tx('marketClosed'));
+  }
+
+  if (_el.refreshBadge) {
+    const refreshText = spot
+      ? tx('refreshBadgeDetailed', {
+          age: freshness.ageText,
+          time: freshness.timeText,
+        })
+      : _state.hasLiveFailure
+        ? tx('liveUnavailable')
+        : tx('connecting');
+    if (isConnecting) {
+      _el.refreshBadge.classList.remove(...TRACKER_BADGE_CLASSES);
+      _el.refreshBadge.classList.add('tracker-badge-live');
+      _el.refreshBadge.title = tx('connecting');
+      _el.refreshBadge.setAttribute('aria-label', tx('connecting'));
+      setText(_el.refreshBadge, refreshText);
+    } else {
+      applyStatusBadge(_el.refreshBadge, freshness, refreshText);
+    }
+  }
+
+  if (_el.heroStats) {
+    clear(_el.heroStats);
+  }
+
   if (_el.heroStats && spot) {
     const aed24 = _priceFor({ currency: 'AED', karat: '24', unit: 'gram', spot });
     const aed22 = _priceFor({ currency: 'AED', karat: '22', unit: 'gram', spot });
     const usd24g =
       (spot / CONSTANTS.TROY_OZ_GRAMS) * (KARATS.find((k) => k.code === '24')?.purity ?? 1);
-    _el.heroStats.innerHTML = [
-      {
-        label: 'XAU/USD',
-        value: `$${spot.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-        sub: 'per troy oz · live',
-      },
-      { label: 'UAE 24K', value: aed24 ? `AED ${aed24.toFixed(2)}` : '—', sub: 'per gram' },
-      { label: 'UAE 22K', value: aed22 ? `AED ${aed22.toFixed(2)}` : '—', sub: 'per gram' },
-      { label: 'USD/g 24K', value: usd24g ? `$${usd24g.toFixed(3)}` : '—', sub: 'per gram' },
-    ]
-      .map(
-        (item) => `<div class="tracker-hero-stat">
-      <div class="tracker-hero-k">${item.label}</div>
-      <div class="tracker-hero-v">${item.value}</div>
-      <div class="tracker-hero-s">${item.sub}</div>
-    </div>`
-      )
-      .join('');
+    const stats = [
+      buildHeroStatCard(
+        'XAU/USD',
+        formatUsd(spot),
+        tx('heroStatSpotSub', { source: freshness.sourceLabel })
+      ),
+      buildHeroStatCard('UAE 24K', aed24 ? `AED ${aed24.toFixed(2)}` : '—', tx('heroStatGramSub')),
+      buildHeroStatCard('UAE 22K', aed22 ? `AED ${aed22.toFixed(2)}` : '—', tx('heroStatGramSub')),
+      buildHeroStatCard('USD/g 24K', usd24g ? formatUsd(usd24g, 3) : '—', tx('heroStatGramSub')),
+    ];
+    _el.heroStats.append(...stats);
+  }
+
+  if (_el.summaryList) {
+    clear(_el.summaryList);
+
+    const summaryItems = [
+      buildStackItem(tx('summary.referenceTitle'), tx('summary.referenceCopy')),
+      buildStackItem(
+        tx('summary.freshnessTitle'),
+        spot
+          ? tx('summary.freshnessCopy', {
+              source: summaryFreshness.sourceLabel,
+              age: summaryFreshness.ageText,
+              time: summaryFreshness.timeText,
+            })
+          : _state.hasLiveFailure
+            ? tx('liveUnavailable')
+            : tx('connecting'),
+        buildSourceBadge(summaryFreshness)
+      ),
+      buildStackItem(tx('summary.aedPegTitle'), tx('summary.aedPegCopy')),
+      buildStackItem(tx('summary.historyTitle'), tx('summary.historyCopy')),
+    ];
+
+    _el.summaryList.append(...summaryItems);
   }
 }
 
@@ -65,7 +246,7 @@ export function renderMiniStrip() {
   if (!_el.miniStrip) return;
   const spot = _currentSpot();
   if (!spot) {
-    _el.miniStrip.textContent = 'Waiting for live data…';
+    _el.miniStrip.textContent = tx('waitingLive');
     return;
   }
   const selected = _priceFor({
@@ -189,9 +370,21 @@ export function renderKaratTable() {
 export function renderMarkets() {
   if (!_el.marketBoard) return;
   const spot = _currentSpot();
+  const freshness = getFreshnessModel();
   if (!spot) {
-    _el.marketBoard.innerHTML =
-      '<p style="padding:1rem;color:var(--tp-text-muted)">Waiting for live data…</p>';
+    clear(_el.marketBoard);
+    _el.marketBoard.append(
+      el(
+        'p',
+        {
+          style: {
+            padding: '1rem',
+            color: 'var(--tp-text-muted)',
+          },
+        },
+        tx('waitingLive')
+      )
+    );
     return;
   }
 
@@ -274,41 +467,33 @@ export function renderMarkets() {
 
   filtered = filtered.slice(0, 30);
 
-  _el.marketBoard.innerHTML = filtered
-    .map((c) => {
-      const cur = c.currency;
-      const p = _priceFor({
-        currency: cur,
-        karat: _state.selectedKarat,
-        unit: _state.selectedUnit,
-        spot,
-      });
-      const isFav = (_state.favorites || []).includes(cur);
-      const name = _state.lang === 'ar' ? c.nameAr || c.nameEn : c.nameEn;
-      return `<div class="tracker-market-card${isFav ? ' is-highlight' : ''}">
-      <div class="tracker-market-top">
-        <div class="tracker-market-title">
-          <strong>${c.flag ?? ''} ${name}</strong>
-          <span>${cur}</span>
-        </div>
-        <div class="tracker-market-value">
-          <strong>${p ? p.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}</strong>
-          <span>${_state.selectedKarat}K / ${_state.selectedUnit}</span>
-        </div>
-      </div>
-      <div class="tracker-market-bottom">
-        <button type="button" class="tracker-icon-btn${isFav ? ' is-favorite' : ''}" data-currency="${cur}" aria-label="Toggle favorite" aria-pressed="${isFav ? 'true' : 'false'}">★</button>
-      </div>
-    </div>`;
-    })
-    .join('');
+  const fragment = document.createDocumentFragment();
+  filtered.forEach((country) => {
+    const cur = country.currency;
+    const price = _priceFor({
+      currency: cur,
+      karat: _state.selectedKarat,
+      unit: _state.selectedUnit,
+      spot,
+    });
+    const isFav = (_state.favorites || []).includes(cur);
+    const name = _state.lang === 'ar' ? country.nameAr || country.nameEn : country.nameEn;
 
-  _el.marketBoard?.querySelectorAll('.tracker-icon-btn[data-currency]').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const cur = btn.dataset.currency;
+    const button = el(
+      'button',
+      {
+        type: 'button',
+        class: `tracker-icon-btn${isFav ? ' is-favorite' : ''}`,
+        dataset: { currency: cur },
+        'aria-label': tx('favoriteToggle', { name }),
+        'aria-pressed': isFav ? 'true' : 'false',
+      },
+      '★'
+    );
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
       if ((_state.favorites || []).includes(cur)) {
-        _state.favorites = _state.favorites.filter((c) => c !== cur);
+        _state.favorites = _state.favorites.filter((code) => code !== cur);
       } else {
         _state.favorites = [...(_state.favorites || []), cur];
       }
@@ -316,7 +501,56 @@ export function renderMarkets() {
       renderMarkets();
       renderWatchlist();
     });
+
+    const card = el('div', { class: `tracker-market-card${isFav ? ' is-highlight' : ''}` }, [
+      el('div', { class: 'tracker-market-top' }, [
+        el('div', { class: 'tracker-market-title' }, [
+          el('strong', null, `${country.flag ?? ''} ${name}`.trim()),
+          el('span', null, cur),
+        ]),
+        el('div', { class: 'tracker-market-value' }, [
+          el(
+            'strong',
+            null,
+            price
+              ? price.toLocaleString('en', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })
+              : '—'
+          ),
+          el(
+            'span',
+            null,
+            tx('marketMeta', {
+              karat: _state.selectedKarat,
+              unit: formatUnitLabel(_state.selectedUnit),
+            })
+          ),
+        ]),
+      ]),
+      el('div', { class: 'tracker-market-bottom' }, [
+        el('div', { class: 'tracker-market-meta' }, [
+          buildSourceBadge(freshness),
+          el(
+            'span',
+            { class: 'tracker-card-note' },
+            `${tx('marketTrust')} · ${tx('marketFreshness', {
+              source: freshness.sourceLabel,
+              age: freshness.ageText,
+            })}`
+          ),
+        ]),
+        button,
+      ]),
+    ]);
+
+    card.title = freshness.tooltip;
+    fragment.append(card);
   });
+
+  clear(_el.marketBoard);
+  _el.marketBoard.append(fragment);
 
   if (_el.marketEmpty) _el.marketEmpty.hidden = filtered.length > 0;
 }
@@ -325,55 +559,121 @@ export function renderWatchlist() {
   if (!_el.watchlistGrid) return;
   const spot = _currentSpot();
   const favs = _state.favorites || [];
-  if (!favs.length || !spot) {
-    _el.watchlistGrid.innerHTML =
-      '<p style="color:var(--tp-text-muted);font-size:0.85rem">No favorites set. Add currencies via the Compare tab. Your watchlist will appear here for quick reference.</p>';
+  const freshness = getFreshnessModel();
+  if (!favs.length) {
+    clear(_el.watchlistGrid);
+    _el.watchlistGrid.append(
+      el(
+        'p',
+        {
+          style: {
+            color: 'var(--tp-text-muted)',
+            fontSize: '0.85rem',
+          },
+        },
+        tx('noFavorites')
+      )
+    );
     return;
   }
-  _el.watchlistGrid.innerHTML = favs
-    .map((cur) => {
-      const country = COUNTRIES.find((c) => c.currency === cur);
-      const p = _priceFor({
-        currency: cur,
-        karat: _state.selectedKarat,
-        unit: _state.selectedUnit,
-        spot,
-      });
-      const name = _state.lang === 'ar' ? country?.nameAr || country?.nameEn : country?.nameEn;
-      const isCurrent = _state.selectedCurrency === cur;
-      return `<div class="tracker-watch-card${isCurrent ? ' is-highlight' : ''}">
-      <div class="tracker-watch-top">
-        <div class="tracker-watch-title">
-          <strong>${country?.flag ?? ''} ${name ?? cur}</strong>
-          <span>${cur}${isCurrent ? ' · selected' : ''}</span>
-        </div>
-        <div class="tracker-watch-value">
-          <strong>${p ? p.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—'}</strong>
-          <span>${_state.selectedKarat}K / ${_state.selectedUnit}</span>
-        </div>
-      </div>
-    </div>`;
-    })
-    .join('');
+  if (!spot) {
+    clear(_el.watchlistGrid);
+    _el.watchlistGrid.append(
+      el(
+        'p',
+        {
+          style: {
+            color: 'var(--tp-text-muted)',
+            fontSize: '0.85rem',
+          },
+        },
+        tx('waitingLive')
+      )
+    );
+    return;
+  }
+  const fragment = document.createDocumentFragment();
+  favs.forEach((cur) => {
+    const country = COUNTRIES.find((item) => item.currency === cur);
+    const price = _priceFor({
+      currency: cur,
+      karat: _state.selectedKarat,
+      unit: _state.selectedUnit,
+      spot,
+    });
+    const name = _state.lang === 'ar' ? country?.nameAr || country?.nameEn : country?.nameEn;
+    const isCurrent = _state.selectedCurrency === cur;
+
+    const card = el('div', { class: `tracker-watch-card${isCurrent ? ' is-highlight' : ''}` }, [
+      el('div', { class: 'tracker-watch-top' }, [
+        el('div', { class: 'tracker-watch-title' }, [
+          el('strong', null, `${country?.flag ?? ''} ${name ?? cur}`.trim()),
+          el('span', null, `${cur}${isCurrent ? ` · ${tx('selected')}` : ''}`),
+        ]),
+        el('div', { class: 'tracker-watch-value' }, [
+          el(
+            'strong',
+            null,
+            price
+              ? price.toLocaleString('en', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })
+              : '—'
+          ),
+          el(
+            'span',
+            null,
+            tx('marketMeta', {
+              karat: _state.selectedKarat,
+              unit: formatUnitLabel(_state.selectedUnit),
+            })
+          ),
+        ]),
+      ]),
+      el('div', { class: 'tracker-watch-meta' }, [
+        buildSourceBadge(freshness),
+        el(
+          'span',
+          { class: 'tracker-card-note' },
+          `${tx('marketTrust')} · ${tx('marketFreshness', {
+            source: freshness.sourceLabel,
+            age: freshness.ageText,
+          })}`
+        ),
+      ]),
+    ]);
+
+    card.title = freshness.tooltip;
+    fragment.append(card);
+  });
+
+  clear(_el.watchlistGrid);
+  _el.watchlistGrid.append(fragment);
 }
 
 export function renderDecisionCues() {
   if (!_el.decisionCues) return;
   const spot = _currentSpot();
+  const freshness = getFreshnessModel();
   if (!spot) {
     _el.decisionCues.replaceChildren();
     return;
   }
-  const lines = [
-    `Live spot: $${spot.toFixed(2)} / troy oz`,
-    _state.hasLiveFailure
-      ? '⚠ Data source: Cached/Fallback — using cache (API unreachable — live may return soon)'
-      : '✓ Data source: live · last API fetch successful',
-    `History coverage: 2019–Aug 2025 (LBMA baseline) + ${_state.snapshots?.length || 0} session snapshots`,
-  ];
-  _el.decisionCues.innerHTML = lines
-    .map((l) => `<div class="tracker-note-item">${l}</div>`)
-    .join('');
+  clear(_el.decisionCues);
+  _el.decisionCues.append(
+    el('div', { class: 'tracker-note-item' }, tx('liveSpotNote', { spot: spot.toFixed(2) })),
+    el(
+      'div',
+      { class: 'tracker-note-item' },
+      tx('dataSourceNote', { source: freshness.sourceLabel, age: freshness.ageText })
+    ),
+    el(
+      'div',
+      { class: 'tracker-note-item' },
+      tx('historyNote', { count: _state.snapshots?.length || 0 })
+    )
+  );
 }
 
 export function renderAlerts() {
@@ -679,20 +979,23 @@ export function renderSeasonal() {
 export function renderBrief() {
   if (!_el.briefHeadline || !_el.briefCopy) return;
   const spot = _currentSpot();
+  const freshness = getFreshnessModel();
   if (!spot) {
-    _el.briefHeadline.textContent = 'Waiting for live data';
-    _el.briefCopy.textContent =
-      'Gold price data is loading. If this persists, the API may be temporarily unavailable — last cached price will be shown when available.';
+    _el.briefHeadline.textContent = tx('briefWaitingHeadline');
+    _el.briefCopy.textContent = tx('briefWaitingBody');
     return;
   }
   const aed24 = _priceFor({ currency: 'AED', karat: '24', unit: 'gram', spot });
-  const src = _state.hasLiveFailure ? 'cached (API unavailable)' : 'live';
-  _el.briefHeadline.textContent = `Gold at $${spot.toFixed(2)} / troy oz — ${src}`;
-  _el.briefCopy.textContent =
-    `UAE 24K: AED ${aed24 ? aed24.toFixed(2) : '—'}/g. ` +
-    `Selected view: ${_state.selectedKarat}K in ${_state.selectedCurrency} per ${_state.selectedUnit}. ` +
-    'FX source: open.er-api.com (AED uses fixed peg 3.6725). ' +
-    'History: LBMA monthly baseline 2019–Aug 2025 + session snapshots.';
+  _el.briefHeadline.textContent = tx('briefHeadline', {
+    spot: spot.toFixed(2),
+    source: freshness.sourceLabel,
+  });
+  _el.briefCopy.textContent = tx('briefBody', {
+    aed24: aed24 ? aed24.toFixed(2) : '—',
+    karat: _state.selectedKarat,
+    currency: _state.selectedCurrency,
+    unit: formatUnitLabel(_state.selectedUnit),
+  });
 }
 
 export function renderAll() {
