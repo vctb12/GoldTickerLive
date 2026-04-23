@@ -95,18 +95,23 @@ the codebase.
 --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
 ```
 
-### Type Scale (Minor-third ~1.2× ratio)
+### Type Scale
+
+Implemented in [`styles/global.css`](../styles/global.css). Body scale is tight (16–20 px) for dense
+price-data UI; display tier (`--text-4xl` / `--text-5xl`) is reserved for hero headings.
 
 ```css
 --text-2xs: 0.625rem; /* 10px */
 --text-xs: 0.75rem; /* 12px */
 --text-sm: 0.875rem; /* 14px */
 --text-base: 1rem; /* 16px */
---text-md: 1.125rem; /* 18px */
---text-lg: 1.25rem; /* 20px */
---text-xl: 1.5rem; /* 24px */
---text-2xl: 1.875rem; /* 30px */
---text-3xl: 2.25rem; /* 36px */
+--text-md: 1.0625rem; /* 17px */
+--text-lg: 1.125rem; /* 18px */
+--text-xl: 1.25rem; /* 20px */
+--text-2xl: 1.5rem; /* 24px */
+--text-3xl: 1.875rem; /* 30px */
+--text-4xl: 2.25rem; /* 36px — display tier, hero headings */
+--text-5xl: 3rem; /* 48px — display tier, hero headings */
 ```
 
 ### Font Weights

@@ -147,6 +147,8 @@
   --text-xl: 1.25rem; /* 20px */
   --text-2xl: 1.5rem; /* 24px */
   --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem; /* 36px — display tier, hero headings */
+  --text-5xl: 3rem; /* 48px — display tier, hero headings */
 
   /* Typography — font weights */
   --weight-light: 300;
