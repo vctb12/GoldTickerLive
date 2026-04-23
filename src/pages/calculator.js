@@ -537,8 +537,8 @@ function updateSpotBadge() {
             : 'Cached/Fallback';
       freshnessEl.textContent =
         STATE.lang === 'ar'
-          ? `حداثة البيانات: ${sourceLabel} · ${stamp} · المصدر: gold-api.com`
-          : `Freshness: ${sourceLabel} · ${stamp} · Source: gold-api.com`;
+          ? `حداثة البيانات: ${sourceLabel} · ${stamp} · المصدر: goldpricez.com`
+          : `Freshness: ${sourceLabel} · ${stamp} · Source: goldpricez.com`;
     }
   }
 }

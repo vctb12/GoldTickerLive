@@ -64,7 +64,7 @@ const CONTENT = {
     'pricing-markets-h3': 'Where is the price set?',
     'callout-spot-title': 'Our Price Data',
     'callout-spot-body':
-      'We fetch XAU/USD from gold-api.com every 90 seconds. Exchange rates from open.er-api.com. All prices are estimates for reference — not for trade execution.',
+      'We fetch XAU/USD from goldpricez.com every 6 minutes (committed to the repo as data/gold_price.json). Exchange rates from open.er-api.com. All prices are estimates for reference — not for trade execution.',
     'aed-h2': 'The AED–USD Fixed Peg',
     'aed-intro':
       'The UAE Dirham (AED) has been fixed at exactly 3.6725 AED per US Dollar since November 1997.',
@@ -130,7 +130,7 @@ const CONTENT = {
     'pricing-markets-h3': 'أين يُحدَّد السعر؟',
     'callout-spot-title': 'بيانات أسعارنا',
     'callout-spot-body':
-      'نجلب سعر XAU/USD من gold-api.com كل 90 ثانية. أسعار الصرف من open.er-api.com. جميع الأسعار تقديرية للمرجعية — وليست للتنفيذ التجاري.',
+      'نجلب سعر XAU/USD من goldpricez.com كل 6 دقائق (يُحفظ في المستودع كـ data/gold_price.json). أسعار الصرف من open.er-api.com. جميع الأسعار تقديرية للمرجعية — وليست للتنفيذ التجاري.',
     'aed-h2': 'الربط الثابت للدرهم الإماراتي بالدولار',
     'aed-intro':
       'يرتبط الدرهم الإماراتي (AED) بسعر ثابت قدره 3.6725 درهم لكل دولار أمريكي منذ نوفمبر 1997.',

@@ -119,7 +119,7 @@ export function injectFooter(lang = 'en', depth = 0) {
   <div class="footer-bottom">
     <div class="footer-inner">
       <div class="footer-sources">
-        <span>${isAr ? 'بيانات الذهب:' : 'Gold data:'} <a href="https://gold-api.com" target="_blank" rel="noopener">gold-api.com</a></span>
+        <span>${isAr ? 'بيانات الذهب:' : 'Gold data:'} <a href="https://goldpricez.com" target="_blank" rel="nofollow noopener">goldpricez.com</a></span>
         <span class="footer-sep" aria-hidden="true">·</span>
         <span>${isAr ? 'أسعار الصرف:' : 'FX data:'} <a href="https://open.er-api.com" target="_blank" rel="noopener">open.er-api.com</a></span>
         <span class="footer-sep" aria-hidden="true">·</span>

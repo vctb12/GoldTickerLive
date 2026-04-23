@@ -4,25 +4,25 @@
  *
  * Generates feed.xml — an RSS 2.0 feed for gold price updates.
  *
- * The feed contains one item per day, using static price milestones to
- * demonstrate format. In production the deploy workflow auto-runs this on
- * every deploy, and the gold API could be called here to add a live item.
+ * The feed contains one item per day. When data/gold_price.json is present
+ * (written every 6 min by gold-price-fetch.yml from goldpricez.com), we
+ * include a live-price item for today. Otherwise the feed falls back to
+ * the static "about" item only.
  *
  * Output: feed.xml (in repo root, copied to dist/ by deploy.yml)
  *
  * Usage:
  *   node scripts/generate-rss.js
- *   node scripts/generate-rss.js --gold-api-key <key>   (fetches live price)
  */
 
 'use strict';
 
 const fs = require('fs');
 const path = require('path');
-const https = require('https');
 
 const ROOT = path.resolve(__dirname, '../..');
 const OUT_FILE = path.join(ROOT, 'feed.xml');
+const GOLD_PRICE_FILE = path.join(ROOT, 'data', 'gold_price.json');
 const SITE_URL = 'https://goldtickerlive.com';
 const AED_PEG = 3.6725;
 const TROY_OZ = 31.1035;
@@ -48,25 +48,18 @@ function rfc822(date) {
   return new Date(date).toUTCString();
 }
 
-function httpsGet(url, headers = {}) {
-  return new Promise((resolve, reject) => {
-    const req = https.get(url, { headers }, (res) => {
-      let body = '';
-      res.on('data', (c) => {
-        body += c;
-      });
-      res.on('end', () => {
-        if (res.statusCode !== 200) return reject(new Error(`HTTP ${res.statusCode}`));
-        try {
-          resolve(JSON.parse(body));
-        } catch (e) {
-          reject(e);
-        }
-      });
-    });
-    req.on('error', reject);
-    req.setTimeout(8000, () => req.destroy(new Error('Timeout')));
-  });
+function readLocalGoldPrice() {
+  try {
+    if (!fs.existsSync(GOLD_PRICE_FILE)) return null;
+    const raw = fs.readFileSync(GOLD_PRICE_FILE, 'utf8');
+    const parsed = JSON.parse(raw);
+    const price = parsed?.gold?.ounce_usd;
+    if (typeof price !== 'number' || price <= 0) return null;
+    return price;
+  } catch (e) {
+    console.warn('⚠️  Could not read data/gold_price.json:', e.message);
+    return null;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -76,25 +69,9 @@ async function buildItems() {
   const items = [];
   const now = new Date();
 
-  // Try to fetch live price for today's item
-  const goldApiKey =
-    process.env.GOLD_API_KEY ||
-    (() => {
-      const i = process.argv.indexOf('--gold-api-key');
-      return i >= 0 ? process.argv[i + 1] : '';
-    })();
-
-  let liveSpot = null;
-  if (goldApiKey) {
-    try {
-      const data = await httpsGet('https://api.gold-api.com/price/XAU', {
-        'x-access-token': goldApiKey,
-      });
-      if (typeof data.price === 'number' && data.price > 0) liveSpot = data.price;
-    } catch (e) {
-      console.warn('⚠️  Could not fetch live price for RSS item:', e.message);
-    }
-  }
+  // Try to read today's live price from the canonical data file
+  // (written every 6 min by gold-price-fetch.yml from goldpricez.com).
+  const liveSpot = readLocalGoldPrice();
 
   if (liveSpot) {
     const k24 = (liveSpot / TROY_OZ) * AED_PEG;

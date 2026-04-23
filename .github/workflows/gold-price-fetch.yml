@@ -1,0 +1,51 @@
+# ------------------------------------------------------------------
+# Gold Price Fetch — pulls live gold/AED rates from goldpricez.com
+# every 6 minutes and commits data/gold_price.json if it changed.
+# NOT a required merge gate.
+# ------------------------------------------------------------------
+name: Gold Price Fetch (goldpricez.com)
+
+on:
+  schedule:
+    - cron: '*/6 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gold-price-fetch
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    name: Fetch goldpricez.com → data/gold_price.json
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: scripts/python/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r scripts/python/requirements.txt
+
+      - name: Fetch gold price
+        env:
+          GOLDPRICEZ_API_KEY: ${{ secrets.GOLDPRICEZ_API_KEY }}
+        run: python scripts/fetch_gold_price.py
+
+      - name: Commit data/gold_price.json if changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore(data): update gold price [skip ci]'
+          file_pattern: data/gold_price.json
+          commit_user_name: github-actions[bot]
+          commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com

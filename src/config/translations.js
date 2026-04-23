@@ -57,7 +57,7 @@ export const TRANSLATIONS = {
     'status.noData': 'No data available. Please check your connection and retry.',
     'status.retry': 'Retry',
     'status.cacheHealth': 'Data freshness:',
-    'footer.goldSource': 'Gold data: Gold API (gold-api.com)',
+    'footer.goldSource': 'Gold data: GoldPriceZ (goldpricez.com)',
     'footer.fxSource': 'FX data: ExchangeRate-API (open.er-api.com)',
     'footer.disclaimer':
       'Estimated bullion-equivalent values only. Retail and jewelry prices may differ significantly. Not financial advice.',
@@ -284,7 +284,7 @@ export const TRANSLATIONS = {
     'status.noData': 'لا تتوفر بيانات. تحقق من اتصالك وأعد المحاولة.',
     'status.retry': 'إعادة المحاولة',
     'status.cacheHealth': 'حداثة البيانات:',
-    'footer.goldSource': 'بيانات الذهب: Gold API (gold-api.com)',
+    'footer.goldSource': 'بيانات الذهب: GoldPriceZ (goldpricez.com)',
     'footer.fxSource': 'بيانات أسعار الصرف: ExchangeRate-API (open.er-api.com)',
     'footer.disclaimer':
       'قيم تقديرية مكافئة للسبيكة فقط. قد تختلف أسعار التجزئة والمجوهرات. ليست نصيحة مالية.',

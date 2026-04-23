@@ -768,7 +768,7 @@
        Config
     ───────────────────────────────────────────────────────── */
       const LS_KEY = 'gp_pricing_overrides';
-      const GOLD_API_URL = 'https://api.gold-api.com/price/XAU';
+      const GOLD_API_URL = '/data/gold_price.json';
       const FX_API_URL = 'https://open.er-api.com/v6/latest/USD';
       const AED_PEG = 3.6725;
       const TROY_OZ = 31.1035;
@@ -1016,12 +1016,12 @@
         setFreshnessLoading();
         try {
           const [goldRes, fxRes] = await Promise.all([
-            fetch(GOLD_API_URL, { signal: AbortSignal.timeout(8000) }),
+            fetch(GOLD_API_URL, { signal: AbortSignal.timeout(8000), cache: 'no-store' }),
             fetch(FX_API_URL, { signal: AbortSignal.timeout(8000) }),
           ]);
           const goldData = await goldRes.json();
           const fxData = await fxRes.json();
-          liveState.spotUsd = goldData.price ?? goldData.ask ?? goldData.xau ?? null;
+          liveState.spotUsd = goldData?.gold?.ounce_usd ?? null;
           liveState.rates = fxData.rates ?? {};
           liveState.rates.USD = 1;
           liveState.rates.AED = AED_PEG; // always use peg

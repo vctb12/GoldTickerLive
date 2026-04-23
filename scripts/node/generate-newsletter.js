@@ -2,13 +2,17 @@
  * scripts/node/generate-newsletter.js
  *
  * Generate HTML email content for daily/weekly newsletters.
- * Fetches live gold prices and formats them into responsive email templates.
+ * Reads the canonical gold price from data/gold_price.json (committed
+ * every 6 min by gold-price-fetch.yml, source: goldpricez.com) and
+ * fetches live FX rates from open.er-api.com.
  */
 
 const https = require('https');
+const fs = require('fs');
+const path = require('path');
 
 // Configuration
-const GOLD_API_URL = 'https://api.gold-api.com/price/XAU';
+const GOLD_PRICE_FILE = path.resolve(__dirname, '..', '..', 'data', 'gold_price.json');
 const FX_API_URL = 'https://open.er-api.com/v6/latest/USD';
 const SITE_URL = (process.env.SITE_URL || 'https://goldtickerlive.com').replace(/\/$/, '');
 
@@ -32,14 +36,19 @@ async function fetchJson(url) {
 
 async function fetchGoldPrice() {
   try {
-    const data = await fetchJson(GOLD_API_URL);
+    const raw = fs.readFileSync(GOLD_PRICE_FILE, 'utf8');
+    const data = JSON.parse(raw);
+    const price = data?.gold?.ounce_usd;
+    if (typeof price !== 'number' || price <= 0) {
+      throw new Error('gold_price.json missing or invalid gold.ounce_usd');
+    }
     return {
-      price: data.price,
-      change24h: data.change_24h || 0,
-      updatedAt: data.updatedAt || new Date().toISOString(),
+      price,
+      change24h: 0,
+      updatedAt: data.fetched_at_utc || new Date().toISOString(),
     };
   } catch (error) {
-    console.error('Error fetching gold price:', error);
+    console.error('Error reading gold price from data file:', error);
     throw error;
   }
 }

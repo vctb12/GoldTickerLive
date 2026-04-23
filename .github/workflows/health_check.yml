@@ -46,7 +46,6 @@ jobs:
       - name: Run health check
         env:
           POST_MODE: health_check
-          GOLD_API_KEY: ${{ secrets.GOLD_API_KEY }}
           TWITTER_API_KEY: ${{ secrets.CONSUMER_KEY }}
           TWITTER_API_SECRET: ${{ secrets.CONSUMER_SECRET }}
           TWITTER_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}

@@ -82,8 +82,10 @@ const PRECACHE_URLS = [
   '/404.html',
 ];
 
-// External origins that should bypass the cache (live data APIs)
-const BYPASS_ORIGINS = ['gold-api.com', 'open.er-api.com'];
+// External origins that should bypass the cache (live data APIs).
+// Gold data is now served from the same-origin committed file
+// /data/gold_price.json, so only FX remains external.
+const BYPASS_ORIGINS = ['open.er-api.com'];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // INSTALL — pre-cache static shell

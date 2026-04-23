@@ -8,7 +8,7 @@
  * Runs hourly via .github/workflows/gold-price-spike.yml.
  *
  * Required GitHub Secrets:
- *   GOLD_API_KEY                 – api.gold-api.com key
+ *   (reads data/gold_price.json — the gold-price-fetch workflow is the only place the goldpricez key is used)
  *   TELEGRAM_BOT_TOKEN           – (optional) for Telegram alerts
  *   TELEGRAM_CHANNEL_ID          – (optional) for Telegram alerts
  *   DISCORD_WEBHOOK_URL          – (optional) for Discord alerts
@@ -25,14 +25,15 @@
 
 const https = require('https');
 const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
 
 const SITE_URL = 'https://goldtickerlive.com/';
-const GOLD_API_URL = 'https://api.gold-api.com/price/XAU';
+const GOLD_PRICE_FILE = path.resolve(__dirname, '..', '..', 'data', 'gold_price.json');
 const AED_PEG = 3.6725;
 const TROY_OZ = 31.1035;
 const TWEET_URL = 'https://api.twitter.com/2/tweets';
 
-const GOLD_API_KEY = process.env.GOLD_API_KEY || '';
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const TELEGRAM_CHANNEL_ID = process.env.TELEGRAM_CHANNEL_ID || '';
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL || '';
@@ -41,6 +42,20 @@ const TWITTER_API_SECRET = process.env.TWITTER_API_SECRET || '';
 const TWITTER_ACCESS_TOKEN = process.env.TWITTER_ACCESS_TOKEN || '';
 const TWITTER_ACCESS_TOKEN_SECRET = process.env.TWITTER_ACCESS_TOKEN_SECRET || '';
 const THRESHOLD = parseFloat(process.env.SPIKE_THRESHOLD_PCT || '2.0');
+
+function readGoldPrice() {
+  const raw = fs.readFileSync(GOLD_PRICE_FILE, 'utf8');
+  const data = JSON.parse(raw);
+  const price = data?.gold?.ounce_usd;
+  if (typeof price !== 'number' || price <= 0) {
+    throw new Error('data/gold_price.json missing or invalid gold.ounce_usd');
+  }
+  return {
+    price,
+    prev_close_price: data?.gold?.day_low_usd || null,
+    updatedAt: data.fetched_at_utc || new Date().toISOString(),
+  };
+}
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -238,24 +253,17 @@ async function sendTweet(spot, changePct, changeAbs, sign) {
 // Main
 // ---------------------------------------------------------------------------
 async function main() {
-  if (!GOLD_API_KEY) {
-    console.log(
-      '⚠️  GOLD_API_KEY not set — skipping spike check (configure in repo Settings → Secrets).'
-    );
-    process.exit(0);
-  }
-
-  console.log(`📡 Fetching gold price (spike threshold: ±${THRESHOLD}%)…`);
+  console.log(`📡 Reading gold price from data/gold_price.json (spike threshold: ±${THRESHOLD}%)…`);
   let goldData;
   try {
-    goldData = await httpsGet(GOLD_API_URL, { 'x-access-token': GOLD_API_KEY });
+    goldData = readGoldPrice();
   } catch (err) {
-    console.error('❌ Gold API error:', err.message);
+    console.error('❌ Gold price data file error:', err.message);
     process.exit(1);
   }
 
   const spot = goldData.price;
-  const open = goldData.prev_close_price || goldData.open_price || null;
+  const open = goldData.prev_close_price || null;
 
   if (typeof spot !== 'number' || spot <= 0) {
     console.error('❌ Invalid price:', goldData);

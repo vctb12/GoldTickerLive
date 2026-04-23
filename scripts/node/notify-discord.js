@@ -6,7 +6,7 @@
  * channel using a webhook (no bot token needed).
  *
  * Required GitHub Secrets:
- *   GOLD_API_KEY          – api.gold-api.com key
+ *   (reads data/gold_price.json — the gold-price-fetch workflow is the only place the goldpricez key is used)
  *   DISCORD_WEBHOOK_URL   – Discord channel webhook URL
  *
  * Setup:
@@ -20,14 +20,29 @@
 'use strict';
 
 const https = require('https');
+const fs = require('fs');
+const path = require('path');
 
 const SITE_URL = 'https://goldtickerlive.com/';
-const GOLD_API_URL = 'https://api.gold-api.com/price/XAU';
+const GOLD_PRICE_FILE = path.resolve(__dirname, '..', '..', 'data', 'gold_price.json');
 const AED_PEG = 3.6725;
 const TROY_OZ = 31.1035;
 
-const GOLD_API_KEY = process.env.GOLD_API_KEY || '';
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL || '';
+
+function readGoldPrice() {
+  const raw = fs.readFileSync(GOLD_PRICE_FILE, 'utf8');
+  const data = JSON.parse(raw);
+  const price = data?.gold?.ounce_usd;
+  if (typeof price !== 'number' || price <= 0) {
+    throw new Error('data/gold_price.json missing or invalid gold.ounce_usd');
+  }
+  return {
+    price,
+    prev_close_price: data?.gold?.day_low_usd || null,
+    updatedAt: data.fetched_at_utc || new Date().toISOString(),
+  };
+}
 
 function fmt(n, decimals = 2) {
   if (n == null || isNaN(n)) return '—';
@@ -92,7 +107,6 @@ function httpsPost(url, payload) {
 
 async function main() {
   const missing = [
-    ['GOLD_API_KEY', GOLD_API_KEY],
     ['DISCORD_WEBHOOK_URL', DISCORD_WEBHOOK],
   ]
     .filter(([, v]) => !v)
@@ -106,12 +120,12 @@ async function main() {
     process.exit(0);
   }
 
-  console.log('📡 Fetching gold price…');
+  console.log('📡 Reading gold price from data/gold_price.json (goldpricez.com)…');
   let goldData;
   try {
-    goldData = await httpsGet(GOLD_API_URL, { 'x-access-token': GOLD_API_KEY });
+    goldData = readGoldPrice();
   } catch (err) {
-    console.error('❌ Gold API error:', err.message);
+    console.error('❌ Gold price data file error:', err.message);
     process.exit(1);
   }
 

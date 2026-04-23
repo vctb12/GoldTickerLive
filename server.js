@@ -58,8 +58,6 @@ app.use(
             imgSrc: ["'self'", 'data:', 'https:'],
             connectSrc: [
               "'self'",
-              'https://api.gold-api.com',
-              'https://data-asg.goldprice.org',
               'https://open.er-api.com',
               'https://www.google-analytics.com',
               'https://*.supabase.co',
