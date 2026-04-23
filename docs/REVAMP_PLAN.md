@@ -792,12 +792,13 @@ update the "Last updated" banner at the top of the file and copy the merged comm
 
 ### Round 4 — §22b 30-phase tracker/home/admin revamp (this PR)
 
-| SHA       | Bucket   | Summary                                                                                                                                                           |
-| --------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| _pending_ | `plan`   | Reconcile 30-phase plan into `REVAMP_PLAN.md` §22b and `docs/plans/README.md` matrix                                                                              |
-| _pending_ | `phase1` | Phase 1 baseline snapshots: `reports/baseline-{tracker,home,admin}.json` (sink counts, LOC, CSS size)                                                             |
-| _pending_ | `phase7` | Phase 7 tracker URL-hash contract: `docs/tracker-state.md` + `tests/tracker-hash.test.js` round-trip tests                                                        |
-| _pending_ | `phase4` | Phase 4 (homepage slice) — dedupe `src/pages/home.js` `getMarketStatus` → shared `src/lib/live-status.js`; add equivalence guard test over a full week of samples |
+| SHA       | Bucket   | Summary                                                                                                                                                                                                                                                  |
+| --------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _pending_ | `plan`   | Reconcile 30-phase plan into `REVAMP_PLAN.md` §22b and `docs/plans/README.md` matrix                                                                                                                                                                     |
+| _pending_ | `phase1` | Phase 1 baseline snapshots: `reports/baseline-{tracker,home,admin}.json` (sink counts, LOC, CSS size)                                                                                                                                                    |
+| _pending_ | `phase7` | Phase 7 tracker URL-hash contract: `docs/tracker-state.md` + `tests/tracker-hash.test.js` round-trip tests                                                                                                                                               |
+| _pending_ | `phase4` | Phase 4 (homepage slice) — dedupe `src/pages/home.js` `getMarketStatus` → shared `src/lib/live-status.js`; add equivalence guard test over a full week of samples                                                                                        |
+| _pending_ | `phase2` | Phase 2 closed — design-token completeness audit at `reports/token-audit.md`: tracker 100 % aliased, homepage consumes canonical directly, admin retains intentionally divergent dark-theme palette (rationale documented per token). Net promotable: 0. |
 
 ### Merged PRs
 
@@ -1110,9 +1111,13 @@ surfaces (`tracker.html`, `index.html`, `admin/`). Phases ship as single-concern
 - [x] **Phase 1** — Baseline audit & telemetry snapshot. `reports/baseline-tracker.json`,
       `reports/baseline-home.json`, `reports/baseline-admin.json` record current `innerHTML` sink
       counts, LOC, and CSS size. Used as the regression yardstick for every later phase.
-- [ ] **Phase 2** — Shared design-token completeness. Audit `--tp-*`, homepage hero tokens,
+- [x] **Phase 2** — Shared design-token completeness. Audit `--tp-*`, homepage hero tokens,
       `admin.css` variables against `styles/global.css`; promote redefined tokens up. No visual
-      change.
+      change. _Audit deliverable: [`reports/token-audit.md`](../reports/token-audit.md). Finding:
+      tracker is 100 % aliased to canonical; homepage consumes canonical directly; admin retains an
+      intentionally divergent dark-theme palette (documented with per-token rationale). Net
+      promotable tokens: 0; closed without a mechanical substitution to preserve no-visual-change
+      guarantee._
 - [ ] **Phase 3** — Shared chrome parity (nav/footer/skip-link, RTL, mobile drawer focus-trap).
 - [ ] **Phase 4** — Trust/freshness primitive unification via `src/lib/live-status.js`. Replace
       ad-hoc freshness strings on the three surfaces without redesigning them. _Homepage
