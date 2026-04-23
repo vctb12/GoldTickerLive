@@ -304,8 +304,8 @@
 }
 
 .shops-control--checkbox input[type='checkbox']:focus-visible {
-  outline: 2px solid rgb(212 160 23 / 60%);
-  outline-offset: 2px;
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .shops-control-help {
@@ -1526,8 +1526,8 @@
 }
 
 .shops-filter-toggle:focus-visible {
-  outline: 2px solid rgb(196 153 62 / 85%);
-  outline-offset: 2px;
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
   border-color: rgb(196 153 62 / 70%);
   box-shadow: 0 0 0 3px rgb(196 153 62 / 20%);
 }
