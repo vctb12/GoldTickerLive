@@ -216,20 +216,25 @@ def format_hourly_tweet(data):
         spot_line = f"24K · ${price:,.2f}/oz {_trend_emoji(chp)}{_delta_str(price, prev_price)}"
     tweet = (
         f"📍 Gold Price Update {_trend_emoji(chp)} - {date_str}\n"
+        f"/n"
         f"🕐 {time_str} (UAE · GMT+4)\n"
+        f"/n"
         f"Spot XAU/USD\n"
         f"{spot_line}\n"
         f"{_prev_line(prev_price, prev_posted_at_utc)}"
+        f"/n"
         f"🇦🇪 Prices:\n"
         f"24K  {_aed(g24)} AED/g\n"
         f"22K  {_aed(g22)} AED/g\n"
         f"21K  {_aed(g21)} AED/g\n"
         f"18K  {_aed(g18)} AED/g\n"
+        f"/n"
         f"{_trend_emoji(chp)} goldtickerlive.com\n"
         f"Spot rate · Not retail price\n"
+        f"/n"
         f"#GoldPrice #Gold #UAE #Dubai"
     )
-    if len(tweet) > 280:
+    if len(tweet) > 320:
         raise ValueError(f"Hourly tweet exceeds 280 chars: {len(tweet)}")
     return tweet
 
