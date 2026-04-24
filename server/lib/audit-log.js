@@ -14,17 +14,23 @@ if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
 
-// Initialize audit logs file if not exists
+// Initialize audit logs file if not exists. Throws on I/O failure so callers
+// inside a try/catch are informed and can return a safe fallback value.
 function initAuditLog() {
   if (!fs.existsSync(AUDIT_LOG_FILE)) {
-    fs.writeFileSync(AUDIT_LOG_FILE, JSON.stringify([], null, 2));
+    try {
+      fs.writeFileSync(AUDIT_LOG_FILE, JSON.stringify([], null, 2));
+    } catch (err) {
+      console.error('[audit-log] Failed to initialise audit log file:', err.message);
+      throw err;
+    }
   }
 }
 
 // Read all audit logs
 function getAuditLogs() {
-  initAuditLog();
   try {
+    initAuditLog();
     const data = fs.readFileSync(AUDIT_LOG_FILE, 'utf8');
     return JSON.parse(data);
   } catch (err) {
@@ -35,8 +41,8 @@ function getAuditLogs() {
 
 // Write audit log entry
 function addAuditLog(entry) {
-  initAuditLog();
   try {
+    initAuditLog();
     const logs = getAuditLogs();
     logs.push({
       id: 'log_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
@@ -145,7 +151,12 @@ function clearOldLogs(daysToKeep = 90) {
   const filtered = logs.filter((log) => new Date(log.timestamp) >= cutoff);
 
   if (filtered.length !== logs.length) {
-    fs.writeFileSync(AUDIT_LOG_FILE, JSON.stringify(filtered, null, 2));
+    try {
+      fs.writeFileSync(AUDIT_LOG_FILE, JSON.stringify(filtered, null, 2));
+    } catch (err) {
+      console.error('[audit-log] Failed to write pruned audit log file:', err.message);
+      throw err;
+    }
     return logs.length - filtered.length;
   }
 

@@ -144,52 +144,58 @@ function renderDisclaimer(country, pageUrl) {
 }
 
 async function hydrate() {
-  const lang = getLang();
-  injectSpotBar(lang, depth);
-  injectNav(lang, depth);
-  injectFooter(lang, depth);
+  try {
+    const lang = getLang();
+    injectSpotBar(lang, depth);
+    injectNav(lang, depth);
+    injectFooter(lang, depth);
 
-  const { countrySlug, citySlug, karatSlug } = getCountryFromPath();
-  const country = COUNTRIES.find((c) => c.slug === countrySlug);
-  if (!country) return;
+    const { countrySlug, citySlug, karatSlug } = getCountryFromPath();
+    const country = COUNTRIES.find((c) => c.slug === countrySlug);
+    if (!country) return;
 
-  const _city = citySlug ? (country.cities || []).find((ci) => ci.slug === citySlug) : null;
+    const _city = citySlug ? (country.cities || []).find((ci) => ci.slug === citySlug) : null;
 
-  const loadingEl = document.getElementById('price-loading');
-  const displayEl = document.getElementById('price-display');
-  const karatsEl = document.getElementById('karat-cards');
-  const freshEl = document.getElementById('freshness-badge');
-  const disclaimerEl = document.getElementById('price-disclaimer');
+    const loadingEl = document.getElementById('price-loading');
+    const displayEl = document.getElementById('price-display');
+    const karatsEl = document.getElementById('karat-cards');
+    const freshEl = document.getElementById('freshness-badge');
+    const disclaimerEl = document.getElementById('price-disclaimer');
 
-  const { gold, fx } = await fetchPrices();
+    const { gold, fx } = await fetchPrices();
 
-  if (!gold) {
-    if (loadingEl) loadingEl.textContent = 'Unable to fetch prices. Please try again.';
-    return;
+    if (!gold) {
+      if (loadingEl) loadingEl.textContent = 'Unable to fetch prices. Please try again.';
+      return;
+    }
+
+    const rate = country.currency === 'AED' ? AED_PEG : (fx.rates?.[country.currency] ?? null);
+    if (!rate) {
+      if (loadingEl) loadingEl.textContent = `FX rate for ${country.currency} unavailable.`;
+      return;
+    }
+
+    if (karatsEl)
+      karatsEl.innerHTML = renderKaratCards(gold.price, rate, country.currency, karatSlug || null);
+    if (freshEl) freshEl.innerHTML = renderFreshnessBadge(gold.updatedAt);
+    if (disclaimerEl) disclaimerEl.innerHTML = renderDisclaimer(country, location.href);
+
+    // Update sticky spot bar with live prices
+    const aed24g = (gold.price / CONSTANTS.TROY_OZ_GRAMS) * AED_PEG;
+    updateSpotBar({
+      xauUsd: gold.price,
+      aed24kGram: aed24g,
+      updatedAt: gold.updatedAt,
+      hasLiveFailure: gold.source === 'cache-fallback',
+    });
+
+    if (displayEl) displayEl.style.display = '';
+    if (loadingEl) loadingEl.style.display = 'none';
+  } catch (err) {
+    console.error('[page-hydrator] Hydration error:', err);
+    const loadingEl = document.getElementById('price-loading');
+    if (loadingEl) loadingEl.textContent = 'Unable to load prices. Please refresh the page.';
   }
-
-  const rate = country.currency === 'AED' ? AED_PEG : (fx.rates?.[country.currency] ?? null);
-  if (!rate) {
-    if (loadingEl) loadingEl.textContent = `FX rate for ${country.currency} unavailable.`;
-    return;
-  }
-
-  if (karatsEl)
-    karatsEl.innerHTML = renderKaratCards(gold.price, rate, country.currency, karatSlug || null);
-  if (freshEl) freshEl.innerHTML = renderFreshnessBadge(gold.updatedAt);
-  if (disclaimerEl) disclaimerEl.innerHTML = renderDisclaimer(country, location.href);
-
-  // Update sticky spot bar with live prices
-  const aed24g = (gold.price / CONSTANTS.TROY_OZ_GRAMS) * AED_PEG;
-  updateSpotBar({
-    xauUsd: gold.price,
-    aed24kGram: aed24g,
-    updatedAt: gold.updatedAt,
-    hasLiveFailure: gold.source === 'cache-fallback',
-  });
-
-  if (displayEl) displayEl.style.display = '';
-  if (loadingEl) loadingEl.style.display = 'none';
 }
 
 document.addEventListener('DOMContentLoaded', hydrate);
