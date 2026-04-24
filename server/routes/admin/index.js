@@ -16,6 +16,20 @@ const auditRepo = require('../../repositories/audit.repository');
 const { ValidationError, NotFoundError: _NotFoundError } = require('../../lib/errors');
 
 // ---------------------------------------------------------------------------
+// Admin responses carry sensitive data (audit logs, user records, shop
+// drafts). Force every admin reply to be uncacheable — this prevents
+// intermediate proxies, browser disk cache, or a shared CDN from storing a
+// stale (or leaked) authenticated response and serving it to a later user.
+// Track B #6 in docs/plans/2026-04-24_security-performance-deps-audit.md.
+// ---------------------------------------------------------------------------
+router.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store');
+  res.set('Pragma', 'no-cache'); // HTTP/1.0 proxies
+  res.set('Expires', '0');
+  next();
+});
+
+// ---------------------------------------------------------------------------
 // Simple in-memory rate limiter for the login endpoint
 // Tracks *failed* attempts per IP; blocks after MAX_ATTEMPTS within WINDOW_MS.
 // Uses a custom implementation so it only counts failures, not all requests.
@@ -33,8 +47,9 @@ const LOGIN_SWEEP_MS = 60 * 1000; // prune expired entries every minute
 const loginAttempts = new Map(); // ip -> { count, firstAttemptAt }
 
 function sweepExpiredAttempts(map, windowMs) {
-  // Safe to delete during `for..of` iteration of a Map — the iterator
-  // tolerates concurrent modification.
+  // Deleting entries during synchronous Map iteration is safe — per spec, a
+  // Map iterator tolerates in-loop `.delete()` calls on already-visited or
+  // current keys without skipping or throwing.
   const now = Date.now();
   for (const [key, record] of map) {
     if (now - record.firstAttemptAt > windowMs) {

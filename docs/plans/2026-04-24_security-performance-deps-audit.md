@@ -1,7 +1,8 @@
 # 2026-04-24 — Security / Performance / Dependencies audit & remediation
 
-**Status:** 🟢 In progress — PR A-1 (security high-severity) landing now. Perf and deps tracks
-follow as separate PRs.
+**Status:** 🟢 In progress — PR A-1 (security high-severity) landed as commit 81667b3. PR B-1
+(async stat), PR B-2 partial (admin no-store cache-control), PR C-1 (lowdb removal), and PR A-2
+(shops/rendering.js innerHTML burn-down) landing in the follow-up commit.
 
 **Owner:** audit agent · **Scope:** Express admin backend, static site, CI, deps. **Guardrails:**
 [`AGENTS.md §6`](../../AGENTS.md#6-product-trust-guardrails). No SPA migration, no silent
