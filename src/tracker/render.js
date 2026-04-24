@@ -322,10 +322,12 @@ export function renderChart() {
       const clampedIdx = Math.max(0, Math.min(idx, _latestChartRows.length - 1));
       const row = _latestChartRows[clampedIdx];
       const tooltip = _el.tooltip;
-      tooltip.innerHTML = `
-        <strong>$${row.spot.toFixed(2)}</strong>
-        <div>${row.date.toLocaleDateString()} · ${row.source}</div>
-      `;
+      // Use DOM construction instead of innerHTML to avoid any XSS risk.
+      const strong = document.createElement('strong');
+      strong.textContent = `$${row.spot.toFixed(2)}`;
+      const div = document.createElement('div');
+      div.textContent = `${row.date.toLocaleDateString()} · ${row.source}`;
+      tooltip.replaceChildren(strong, div);
       tooltip.style.left = x + 'px';
       tooltip.style.top = '0px';
       tooltip.style.display = 'block';
