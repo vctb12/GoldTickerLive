@@ -22,7 +22,6 @@ its step into `ci.yml` after it has been stable for a while.
 | File | What it reports |
 | ---- | ---- |
 | `codeql.yml` | CodeQL static analysis (JS/TS), findings in Security tab |
-| `semgrep.yml` | Semgrep static analysis, findings in Security tab |
 | `perf-check.yml` | Playwright + image-audit, visibility only (uses `\|\| true`) |
 | `lighthouse.yml` | Manual-only Lighthouse CI run (`workflow_dispatch`) |
 

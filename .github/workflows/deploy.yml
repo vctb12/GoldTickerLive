@@ -54,6 +54,9 @@ jobs:
       - name: Regenerate sitemap.xml
         run: node scripts/node/generate-sitemap.js
 
+      - name: Enforce sitemap coverage
+        run: node scripts/node/check-sitemap-coverage.js
+
       - name: Generate RSS feed
         run: node scripts/node/generate-rss.js
 
