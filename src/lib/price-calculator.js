@@ -44,7 +44,8 @@ export function localPrice(usdPrice, fxRate) {
  * never derived from the `rates` object, which explicitly excludes AED.
  *
  * @param {number}   spotUsdPerOz  XAU/USD spot price in USD per troy ounce.
- * @param {Record<string, number>} rates  FX rates (currency code → USD rate). Must not contain AED.
+ * @param {Record<string, number>} rates  FX rates (currency code → USD rate). Must not contain AED;
+ *   AED is always computed from the hardcoded `CONSTANTS.AED_PEG` peg to prevent API drift.
  * @param {Array<{ code: string, purity: number }>} karats  Karat definitions.
  * @param {Array<{ currency: string }>}              countries  Country definitions.
  * @returns {Record<string, Record<string, { gram: number, oz: number } | null>>}

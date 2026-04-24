@@ -160,6 +160,8 @@ export async function fetchGold() {
  * @throws {NetworkError|DataError} When the API is unreachable or the response is malformed.
  */
 export async function fetchFX() {
+  if (_simulateFxFail) throw new NetworkError('Simulated FX API failure');
+
   return retryWithBackoff(async () => {
     const res = await fetchWithTimeout(CONSTANTS.API_FX_URL, CONSTANTS.FX_FETCH_TIMEOUT);
     const data = await res.json();
