@@ -100,8 +100,8 @@ function getProductSchema(options) {
     description = 'Current spot gold price',
     price = null,
     currency = 'AED',
-    country = 'UAE',
-    karat = '24K',
+    _country = 'UAE',
+    _karat = '24K',
   } = options;
 
   const schema = {
@@ -131,13 +131,7 @@ function getProductSchema(options) {
  * @param {Object} options
  */
 function getArticleSchema(options) {
-  const {
-    headline,
-    description,
-    datePublished,
-    dateModified,
-    url,
-  } = options;
+  const { headline, description, datePublished, dateModified, url } = options;
 
   return {
     '@context': 'https://schema.org',
@@ -166,18 +160,29 @@ function getArticleSchema(options) {
 // ── URL to Breadcrumb Parser ────────────────────────────────────────────────
 
 /**
- * Generate breadcrumb items from URL path
- * @param {string} urlPath - e.g., "/countries/uae/dubai/gold-price-24k"
+ * Generate breadcrumb items from URL path.
+ *
+ * The last item uses `canonicalUrl` when provided so the schema item URL
+ * matches the page's `<link rel="canonical">` exactly (preserving `.html`
+ * extensions where required by the host).
+ *
+ * @param {string} urlPath     - e.g. "/tracker" (extension already stripped)
+ * @param {string|null} [canonicalUrl] - Canonical URL for the current page,
+ *   extracted from `<link rel="canonical">`. Used for the final breadcrumb
+ *   item so schema URLs align with canonicals.
  * @returns {Array<{name: string, url: string}>}
  */
-function generateBreadcrumbs(urlPath) {
+function generateBreadcrumbs(urlPath, canonicalUrl = null) {
   const items = [{ name: 'Home', url: SITE_URL }];
 
   if (urlPath === '/' || urlPath === '/index.html') {
     return items;
   }
 
-  const parts = urlPath.replace(/\.html$/, '').split('/').filter(Boolean);
+  const parts = urlPath
+    .replace(/\.html$/, '')
+    .split('/')
+    .filter(Boolean);
   let currentPath = '';
 
   for (let i = 0; i < parts.length; i++) {
@@ -187,13 +192,15 @@ function generateBreadcrumbs(urlPath) {
     // Humanize the part (replace hyphens, capitalize)
     const name = part
       .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
 
-    items.push({
-      name,
-      url: `${SITE_URL}${currentPath}`,
-    });
+    // For the last crumb, prefer the canonical URL so the item URL matches
+    // the page's own canonical (e.g. "…/tracker.html" not "…/tracker").
+    const isLast = i === parts.length - 1;
+    const url = isLast && canonicalUrl ? canonicalUrl : `${SITE_URL}${currentPath}`;
+
+    items.push({ name, url });
   }
 
   return items;
@@ -207,11 +214,12 @@ function generateBreadcrumbs(urlPath) {
  * @param {string} content
  * @returns {string} - 'homepage' | 'country' | 'city' | 'price' | 'article' | 'generic'
  */
-function detectPageType(filePath, content) {
+function detectPageType(filePath, _content) {
   const relativePath = path.relative(ROOT, filePath);
 
   if (relativePath === 'index.html') return 'homepage';
-  if (relativePath.includes('/countries/') && !relativePath.includes('/gold-price')) return 'country';
+  if (relativePath.includes('/countries/') && !relativePath.includes('/gold-price'))
+    return 'country';
   if (relativePath.includes('/gold-price')) return 'price';
   if (relativePath.includes('/guides/') || relativePath.includes('/content/')) return 'article';
   if (relativePath.includes('/calculator') || relativePath.includes('/tools')) return 'tool';
@@ -243,6 +251,11 @@ function generateSchemasForPage(filePath, content) {
   const descMatch = content.match(/<meta\s+name=["']description["']\s+content=["']([^"']+)["']/);
   const pageDescription = descMatch ? descMatch[1] : '';
 
+  // Extract canonical URL from <link rel="canonical"> — used to align
+  // BreadcrumbList item URLs with the page's own canonical declaration.
+  const canonicalMatch = content.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i);
+  const canonicalUrl = canonicalMatch ? canonicalMatch[1] : null;
+
   // Homepage gets Organization + WebSite schemas
   if (pageType === 'homepage') {
     schemas.push(getOrganizationSchema());
@@ -251,7 +264,7 @@ function generateSchemasForPage(filePath, content) {
 
   // All pages get breadcrumb schema (except homepage)
   if (pageType !== 'homepage') {
-    const breadcrumbs = generateBreadcrumbs(urlPath);
+    const breadcrumbs = generateBreadcrumbs(urlPath, canonicalUrl);
     if (breadcrumbs.length > 1) {
       schemas.push(getBreadcrumbSchema(breadcrumbs));
     }
@@ -263,12 +276,14 @@ function generateSchemasForPage(filePath, content) {
     const countryMatch = relativePath.match(/countries\/([^\/]+)/);
     const karatMatch = relativePath.match(/(\d+k)/i);
 
-    schemas.push(getProductSchema({
-      name: pageTitle,
-      description: pageDescription,
-      country: countryMatch ? countryMatch[1].toUpperCase() : 'UAE',
-      karat: karatMatch ? karatMatch[1].toUpperCase() : '24K',
-    }));
+    schemas.push(
+      getProductSchema({
+        name: pageTitle,
+        description: pageDescription,
+        country: countryMatch ? countryMatch[1].toUpperCase() : 'UAE',
+        karat: karatMatch ? karatMatch[1].toUpperCase() : '24K',
+      })
+    );
   }
 
   // Article pages get Article schema
@@ -277,13 +292,15 @@ function generateSchemasForPage(filePath, content) {
     const stats = fs.statSync(filePath);
     const dateModified = stats.mtime.toISOString().split('T')[0];
 
-    schemas.push(getArticleSchema({
-      headline: pageTitle,
-      description: pageDescription,
-      url: `${SITE_URL}${urlPath}`,
-      datePublished: dateModified,
-      dateModified,
-    }));
+    schemas.push(
+      getArticleSchema({
+        headline: pageTitle,
+        description: pageDescription,
+        url: `${SITE_URL}${urlPath}`,
+        datePublished: dateModified,
+        dateModified,
+      })
+    );
   }
 
   return schemas;
@@ -305,10 +322,12 @@ function injectSchemas(content, schemas) {
   }
 
   // Generate schema script tags
-  const schemaScripts = schemas.map(schema => {
-    const json = JSON.stringify(schema, null, 2);
-    return `  <script type="application/ld+json">\n${json}\n  </script>`;
-  }).join('\n');
+  const schemaScripts = schemas
+    .map((schema) => {
+      const json = JSON.stringify(schema, null, 2);
+      return `  <script type="application/ld+json">\n${json}\n  </script>`;
+    })
+    .join('\n');
 
   // Inject before </head>
   const headEndIndex = content.indexOf('</head>');
@@ -318,11 +337,7 @@ function injectSchemas(content, schemas) {
   }
 
   return (
-    content.slice(0, headEndIndex) +
-    '\n' +
-    schemaScripts +
-    '\n  ' +
-    content.slice(headEndIndex)
+    content.slice(0, headEndIndex) + '\n' + schemaScripts + '\n  ' + content.slice(headEndIndex)
   );
 }
 
