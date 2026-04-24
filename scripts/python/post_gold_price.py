@@ -21,6 +21,7 @@ Workflow cron schedule (.github/workflows/post_gold.yml):
   - cron: '0 21 * * 0'        # Market OPEN  — Sun 9PM UTC = Mon 1AM UAE
   - cron: '0 21 * * 5'        # Market CLOSE — Fri 9PM UTC = Sat 1AM UAE"""
 
+import hashlib
 import os
 import sys
 import json
@@ -45,36 +46,49 @@ TWITTER_ACCESS_TOKEN_SECRET = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET', '')
 
 
 
-# ── Step 1: Load gold price from the canonical data file ────────────────────
-def _load_last_price():
-    """Return (price, posted_at_utc) from STATE_FILE.
+# ── Content hash ──────────────────────────────────────────────────────────────
+def compute_content_hash(text):
+    """Return first 12 chars of SHA256 hex digest of text."""
+    return hashlib.sha256(text.encode()).hexdigest()[:12]
 
-    Missing file, corrupt JSON, non-dict, or missing/invalid price → (None, None).
-    Old schema with only `price` → (price, None).
-    New schema with both fields → (price, posted_at_utc_iso_string).
+
+# ── State file I/O ─────────────────────────────────────────────────────────────
+def _load_last_price():
+    """Return (price, posted_at_utc, content_hash) from STATE_FILE.
+
+    Missing file, corrupt JSON, non-dict, or missing/invalid price → (None, None, None).
+    Old schema with only `price` → (price, None, None).
+    New schema → (price, posted_at_utc_iso_string, content_hash_or_None).
     """
     if not STATE_FILE.exists():
-        return (None, None)
+        return (None, None, None)
     try:
         raw = json.loads(STATE_FILE.read_text())
     except Exception:
         print("⚠️  last_gold_price.json is corrupt; ignoring previous-price state.")
-        return (None, None)
+        return (None, None, None)
     if not isinstance(raw, dict):
-        return (None, None)
+        return (None, None, None)
     price = raw.get("price")
     if not isinstance(price, (int, float)) or price <= 0:
-        return (None, None)
+        return (None, None, None)
     posted_at_utc = raw.get("posted_at_utc")
     if not isinstance(posted_at_utc, str) or not posted_at_utc:
         posted_at_utc = None
-    return (float(price), posted_at_utc)
+    content_hash = raw.get("content_hash")
+    if not isinstance(content_hash, str) or not content_hash:
+        content_hash = None
+    return (float(price), posted_at_utc, content_hash)
 
-def _save_last_price(price, posted_at_utc=None):
+
+def _save_last_price(price, posted_at_utc=None, content_hash=None):
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
     if posted_at_utc is None:
         posted_at_utc = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-    STATE_FILE.write_text(json.dumps({"price": price, "posted_at_utc": posted_at_utc}))
+    payload = {"price": price, "posted_at_utc": posted_at_utc}
+    if content_hash is not None:
+        payload["content_hash"] = content_hash
+    STATE_FILE.write_text(json.dumps(payload))
 
 def get_gold_price():
     """Read gold price from data/gold_price.json (written by
@@ -96,7 +110,7 @@ def get_gold_price():
         raise ValueError("gold_price.json missing or invalid gold.ounce_usd")
     price = float(price)
 
-    previous_price, previous_posted_at_utc = _load_last_price()
+    previous_price, previous_posted_at_utc, previous_content_hash = _load_last_price()
     chp = None
     if previous_price and previous_price > 0:
         chp = ((price - previous_price) / previous_price) * 100
@@ -121,7 +135,96 @@ def get_gold_price():
         "chp": chp,
         "prev_price": previous_price,
         "prev_posted_at_utc": previous_posted_at_utc,
+        "prev_content_hash": previous_content_hash,
     }
+
+
+# ── Staleness check ────────────────────────────────────────────────────────────
+def check_staleness(raw_data, _now=None):
+    """Check whether upstream gold price data is too old to post.
+
+    Reads `source_updated_at_gmt` from raw_data (format: "DD-MM-YYYY HH:MM:SS am/pm", GMT).
+
+    Returns (action, message):
+      'ok'          – age ≤ 4 h, no action needed.
+      'warn'        – 4 h < age ≤ 12 h, caller should log and continue.
+      'skip'        – age > 12 h, caller should log and skip posting.
+      'parse_error' – could not parse field, caller should log and continue.
+
+    Pass `_now` (a tz-aware UTC datetime) to pin the clock in tests.
+    """
+    value = raw_data.get("source_updated_at_gmt") if isinstance(raw_data, dict) else None
+    if not value:
+        msg = f"WARN: could not parse source_updated_at_gmt={value!r} (missing field)"
+        return ('parse_error', msg)
+    try:
+        parsed = datetime.strptime(str(value).strip().upper(), "%d-%m-%Y %I:%M:%S %p")
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    except Exception:
+        msg = f"WARN: could not parse source_updated_at_gmt={value!r}"
+        return ('parse_error', msg)
+
+    now = _now if _now is not None else datetime.now(timezone.utc)
+    age = now - parsed
+    age_secs = age.total_seconds()
+    age_hours = age_secs / 3600
+    iso = parsed.strftime('%Y-%m-%dT%H:%M:%SZ')
+    h = int(age_secs // 3600)
+    m = int((age_secs % 3600) // 60)
+    age_str = f"{h}:{m:02d}"
+
+    if age_hours <= 4:
+        return ('ok', None)
+    if age_hours <= 12:
+        msg = f"WARN: UPSTREAM STALE: goldpricez source_updated_at_gmt is {age_str} old (last: {iso})"
+        return ('warn', msg)
+    msg = f"ERROR: UPSTREAM SEVERELY STALE: goldpricez source_updated_at_gmt is {age_str} old (last: {iso})"
+    return ('skip', msg)
+
+
+# ── Duplicate guard ────────────────────────────────────────────────────────────
+def check_duplicate_guard(price, prev_price, prev_posted_at_utc, post_type, _now=None):
+    """Check if this post would duplicate the previous one.
+
+    Returns (should_skip, reason_str).
+
+    Skips only when ALL of:
+      - post_type == 'hourly'
+      - prev_price is not None
+      - round(price, 2) == round(prev_price, 2)
+      - last post was < 55 minutes ago
+
+    market_open and market_close never skip.
+    Pass `_now` (a tz-aware UTC datetime) to pin the clock in tests.
+    """
+    if post_type in ('market_open', 'market_close'):
+        return (False, None)
+    if prev_price is None:
+        return (False, None)
+    if round(price, 2) != round(prev_price, 2):
+        return (False, None)
+    if prev_posted_at_utc is None:
+        return (False, None)
+    try:
+        ts = prev_posted_at_utc
+        if ts.endswith('Z'):
+            ts = ts[:-1] + '+00:00'
+        last_dt = datetime.fromisoformat(ts)
+        if last_dt.tzinfo is None:
+            last_dt = last_dt.replace(tzinfo=timezone.utc)
+    except Exception:
+        return (False, None)
+
+    now = _now if _now is not None else datetime.now(timezone.utc)
+    minutes_ago = (now - last_dt).total_seconds() / 60
+    if minutes_ago >= 55:
+        return (False, None)
+
+    reason = (
+        f"SKIP: duplicate guard — price ${price:,.2f} unchanged since "
+        f"{last_dt.strftime('%Y-%m-%dT%H:%M:%SZ')} ({int(minutes_ago)} min ago)"
+    )
+    return (True, reason)
 
 
 # ── Step 2: Format the tweet ─────────────────────────────────────────────────
@@ -280,8 +383,7 @@ def format_market_close_tweet(data):
         f"#GoldPrice #Gold #XAU #UAE #Dubai"
     )
 
-def format_tweet(data):
-    post_type = get_post_type()
+def format_tweet(data, post_type):
     print(f"   Post type: {post_type}")
     if post_type == 'market_open':
         return format_market_open_tweet(data)
@@ -290,7 +392,28 @@ def format_tweet(data):
     return format_hourly_tweet(data)
 
 # ── Step 3: Post to X / Twitter ──────────────────────────────────────────────
-def post_tweet(text):
+def _log_tweet_error(exc, text, post_type):
+    """Log structured diagnostic info for a Tweepy exception. Never logs secrets."""
+    sha = os.environ.get('GITHUB_SHA', '')
+    sha_short = sha[:7] if sha else 'local'
+    resp = getattr(exc, 'response', None)
+    print("=== TWEET ERROR ===")
+    print(f"  exception:     {type(exc).__name__}")
+    print(f"  status_code:   {getattr(resp, 'status_code', 'n/a')}")
+    print(f"  response_body: {getattr(resp, 'text', 'n/a')}")
+    print(f"  api_errors:    {getattr(exc, 'api_errors', 'n/a')}")
+    print(f"  api_messages:  {getattr(exc, 'api_messages', 'n/a')}")
+    print(f"  api_codes:     {getattr(exc, 'api_codes', 'n/a')}")
+    print(f"  post_length:   {len(text)}")
+    print(f"  post_type:     {post_type}")
+    print(f"  event:         {os.environ.get('GITHUB_EVENT_NAME', 'local')}")
+    print(f"  actor:         {os.environ.get('GITHUB_ACTOR', 'local')}")
+    print(f"  sha:           {sha_short}")
+    print(f"  content_hash:  {compute_content_hash(text)}")
+    print("===================")
+
+
+def post_tweet(text, post_type='hourly'):
     """Post the tweet using tweepy (X API v2)."""
     import tweepy
 
@@ -300,13 +423,37 @@ def post_tweet(text):
         access_token=TWITTER_ACCESS_TOKEN,
         access_token_secret=TWITTER_ACCESS_TOKEN_SECRET,
     )
-    client.create_tweet(text=text)
-    print("✅ Tweet posted successfully")
+    try:
+        client.create_tweet(text=text)
+        print("✅ Tweet posted successfully")
+    except tweepy.errors.Forbidden as exc:
+        _log_tweet_error(exc, text, post_type)
+        print("   Likely cause: duplicate/near-duplicate content, or automation-rule violation."
+              " Check recent posts from @GoldTickerLive.")
+        raise
+    except tweepy.errors.Unauthorized as exc:
+        _log_tweet_error(exc, text, post_type)
+        print("   Likely cause: invalid or revoked credentials."
+              " Regenerate tokens in the X Developer Portal.")
+        raise
+    except tweepy.errors.BadRequest as exc:
+        _log_tweet_error(exc, text, post_type)
+        raise
+    except tweepy.errors.TooManyRequests as exc:
+        _log_tweet_error(exc, text, post_type)
+        resp = getattr(exc, 'response', None)
+        retry_after = getattr(resp, 'headers', {}).get('Retry-After') if resp is not None else None
+        if retry_after is not None:
+            print(f"   Retry-After: {retry_after}s")
+        raise
+    except tweepy.errors.TweepyException as exc:
+        _log_tweet_error(exc, text, post_type)
+        raise
 
 
 # ── Main ─────────────────────────────────────────────────────────────────────
 def main():
-    # Check for required secrets
+    # 1. Validate env vars
     missing = []
     for name, value in [
         ('TWITTER_API_KEY', TWITTER_API_KEY),
@@ -324,20 +471,90 @@ def main():
         print("   Skipping tweet.")
         sys.exit(0)  # Exit 0 so the workflow doesn't report as failed
 
-    # Load gold price from the canonical data file
+    # 2. Load raw gold price data
+    if not GOLD_PRICE_FILE.exists():
+        print(f"⚠️  {GOLD_PRICE_FILE} not found."
+              " The gold-price-fetch.yml workflow must run first to populate it.")
+        sys.exit(0)
+    raw_data = json.loads(GOLD_PRICE_FILE.read_text(encoding="utf-8"))
+    source_ts = raw_data.get("source_updated_at_gmt", "n/a") if isinstance(raw_data, dict) else "n/a"
+
+    # 3. Compute post type
+    post_type = get_post_type()
+
+    # 4. Print RUN CONTEXT block
+    sha = os.environ.get('GITHUB_SHA', '')
+    print("=== RUN CONTEXT ===")
+    print(f"event:        {os.environ.get('GITHUB_EVENT_NAME', 'local')}")
+    print(f"sha:          {sha[:7] if sha else 'local'}")
+    print(f"actor:        {os.environ.get('GITHUB_ACTOR', 'local')}")
+    print(f"post_type:    {post_type}")
+    print("data_file:    data/gold_price.json")
+    print(f"source_ts:    {source_ts}")
+    print("===================")
+
+    # 5. Staleness check
+    staleness_action, staleness_msg = check_staleness(raw_data)
+    if staleness_msg:
+        print(staleness_msg)
+    if staleness_action == 'skip':
+        sys.exit(0)
+
+    # 6. Load gold price (includes previous-state fields)
     print("📡 Reading gold price from data/gold_price.json (goldpricez.com)…")
     data = get_gold_price()
     print(f"   Spot: ${data['price']:,.2f}/oz")
 
-    # Format
-    tweet = format_tweet(data)
+    # 7. Duplicate price+time guard
+    skip, reason = check_duplicate_guard(
+        data['price'],
+        data['prev_price'],
+        data['prev_posted_at_utc'],
+        post_type,
+    )
+    if skip:
+        print(reason)
+        sys.exit(0)
+
+    # 8. Format tweet
+    tweet = format_tweet(data, post_type)
     print("📝 Generated tweet:")
     print(tweet)
     print(f"   ({len(tweet)} characters)")
 
-    # Post
-    post_tweet(tweet)
-    _save_last_price(data["price"])
+    # 9. Content-hash guard
+    tweet_hash = compute_content_hash(tweet)
+    prev_hash = data.get('prev_content_hash')
+    if (
+        prev_hash is not None
+        and tweet_hash == prev_hash
+        and post_type == 'hourly'
+        and data['prev_posted_at_utc'] is not None
+    ):
+        try:
+            ts = data['prev_posted_at_utc']
+            if ts.endswith('Z'):
+                ts = ts[:-1] + '+00:00'
+            last_dt = datetime.fromisoformat(ts)
+            if last_dt.tzinfo is None:
+                last_dt = last_dt.replace(tzinfo=timezone.utc)
+            minutes_ago = (datetime.now(timezone.utc) - last_dt).total_seconds() / 60
+            if minutes_ago < 55:
+                print(
+                    f"SKIP: content-hash guard — tweet content identical to last post"
+                    f" (hash {tweet_hash}, {int(minutes_ago)} min ago)"
+                )
+                sys.exit(0)
+        except Exception:
+            pass  # parse failure → do not skip
+
+    # 10. Length guard (enforced inside format_hourly_tweet; no extra check needed here)
+
+    # 11. Post tweet
+    post_tweet(tweet, post_type=post_type)
+
+    # 12. Save state (only reached on successful post)
+    _save_last_price(data["price"], content_hash=tweet_hash)
 
 
 if __name__ == '__main__':
