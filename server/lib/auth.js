@@ -48,9 +48,14 @@ function loadUsers() {
   if (fs.existsSync(USERS_FILE)) {
     try {
       const data = fs.readFileSync(USERS_FILE, 'utf8');
-      users = JSON.parse(data);
+      const loaded = JSON.parse(data);
+      if (!Array.isArray(loaded)) throw new Error('users.json is not an array');
+      // Ensure the seeded admin is always present, even if the persisted file
+      // was written before the admin existed or became corrupt.
+      const hasAdmin = loaded.some((u) => u.id === 'admin_1');
+      users = hasAdmin ? loaded : [users[0], ...loaded];
     } catch (err) {
-      console.error('Error loading users:', err);
+      console.error('Error loading users — keeping defaults:', err);
     }
   }
 }

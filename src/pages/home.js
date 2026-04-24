@@ -232,10 +232,32 @@ function renderGCCGrid() {
         );
       }
       const name = lang === 'ar' ? c.nameAr : c.nameEn;
-      const slug =
-        { AE: 'uae', SA: 'saudi-arabia', KW: 'kuwait', QA: 'qatar', BH: 'bahrain', OM: 'oman' }[
-          c.code
-        ] ?? c.code.toLowerCase();
+      // Complete map of country-code → countries/ directory slug.
+      // Only codes listed here have a dedicated page; the rest are omitted.
+      const COUNTRY_SLUGS = {
+        AE: 'uae',
+        SA: 'saudi-arabia',
+        KW: 'kuwait',
+        QA: 'qatar',
+        BH: 'bahrain',
+        OM: 'oman',
+        JO: 'jordan',
+        LB: 'lebanon',
+        IQ: 'iraq',
+        SY: 'syria',
+        PS: 'palestine',
+        YE: 'yemen',
+        EG: 'egypt',
+        LY: 'libya',
+        TN: 'tunisia',
+        DZ: 'algeria',
+        MA: 'morocco',
+        SD: 'sudan',
+        TR: 'turkey',
+        PK: 'pakistan',
+        IN: 'india',
+      };
+      const slug = COUNTRY_SLUGS[c.code] ?? null;
 
       // Change badge from day open
       let changeBadge = '';
@@ -247,7 +269,9 @@ function renderGCCGrid() {
       }
 
       return `<div class="gcc-card-wrapper">
-      <a href="countries/${slug}.html" class="gcc-card">
+      ${slug
+        ? `<a href="countries/${slug}.html" class="gcc-card">`
+        : `<div class="gcc-card gcc-card--no-link">`}
         <div class="gcc-card-header">
           <span class="gcc-flag" aria-hidden="true">${c.flag}</span>
           <div class="gcc-meta">
@@ -258,7 +282,7 @@ function renderGCCGrid() {
         </div>
         <div class="gcc-price">${price}</div>
         <div class="gcc-unit">${tx('perGram')} · 22K</div>
-      </a>
+      ${slug ? `</a>` : `</div>`}
       <button class="gcc-copy-btn" data-copy="${price}" aria-label="Copy ${name} price" type="button">⎘</button>
     </div>`;
     })

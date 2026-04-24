@@ -86,7 +86,7 @@ export function formatCountdown(ms) {
 }
 
 export function formatPercentChange(change, base) {
-  if (!change || !base || base === 0) return { text: '—', direction: 'neutral' };
+  if (change == null || !base) return { text: '—', direction: 'neutral' };
   const pct = (change / base) * 100;
   const sign = change > 0 ? '+' : '';
   const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '—';

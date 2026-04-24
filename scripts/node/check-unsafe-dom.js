@@ -74,7 +74,7 @@ const BASELINE = {
   'src/pages/shops/rendering.js': 2, // Extracted from shops.js: card rendering with esc() wrappers
   'src/pages/tracker-pro.js': 4,
   'src/tracker/events.js': 2,
-  'src/tracker/render.js': 18,
+  'src/tracker/render.js': 17,
   'src/tracker/wire.js': 3,
 };
 

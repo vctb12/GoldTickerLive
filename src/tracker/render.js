@@ -3,10 +3,14 @@ import { CONSTANTS, KARATS, COUNTRIES, TRANSLATIONS } from '../config/index.js';
 import { persistState } from './state.js';
 import { updateShellTickerFromState } from './ui-shell.js';
 import { filterByRange } from '../lib/historical-data.js';
-import { clear, el, setText } from '../lib/safe-dom.js';
+import { clear, el, setText, escape } from '../lib/safe-dom.js';
 import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
 
 let _state, _el, _priceFor, _currentSpot, _showToast;
+let _chartListenersAttached = false;
+// Holds the latest chart rows so the chart mousemove handler (attached once)
+// can always read the most-current data without re-registering on every render.
+let _latestChartRows = [];
 const TRACKER_BADGE_CLASSES = [
   'tracker-badge-live',
   'tracker-badge--cached',
@@ -304,19 +308,26 @@ export function renderChart() {
     <text x="${W - 8}" y="${H - 6}" text-anchor="end" fill="#9d8c72" font-size="11">Source: ${sourceLabel} · ${rows.length} points</text>
   `;
 
-  if (_el.chartWrap) {
+  // Keep the module-level snapshot up to date so the once-registered
+  // mousemove handler always uses the latest rows without re-attaching.
+  _latestChartRows = rows;
+
+  if (_el.chartWrap && !_chartListenersAttached) {
+    _chartListenersAttached = true;
     _el.chartWrap.addEventListener('mousemove', (e) => {
-      if (!_el.tooltip || rows.length < 2) return;
+      if (!_el.tooltip || _latestChartRows.length < 2) return;
       const rect = _el.chart.getBoundingClientRect();
       const x = e.clientX - rect.left;
-      const idx = Math.round((x / rect.width) * (rows.length - 1));
-      const clampedIdx = Math.max(0, Math.min(idx, rows.length - 1));
-      const row = rows[clampedIdx];
+      const idx = Math.round((x / rect.width) * (_latestChartRows.length - 1));
+      const clampedIdx = Math.max(0, Math.min(idx, _latestChartRows.length - 1));
+      const row = _latestChartRows[clampedIdx];
       const tooltip = _el.tooltip;
-      tooltip.innerHTML = `
-        <strong>$${row.spot.toFixed(2)}</strong>
-        <div>${row.date.toLocaleDateString()} · ${row.source}</div>
-      `;
+      // Use DOM construction instead of innerHTML to avoid any XSS risk.
+      const strong = document.createElement('strong');
+      strong.textContent = `$${row.spot.toFixed(2)}`;
+      const div = document.createElement('div');
+      div.textContent = `${row.date.toLocaleDateString()} · ${row.source}`;
+      tooltip.replaceChildren(strong, div);
       tooltip.style.left = x + 'px';
       tooltip.style.top = '0px';
       tooltip.style.display = 'block';
@@ -327,12 +338,14 @@ export function renderChart() {
   }
 
   if (_el.chartStats) {
-    const _stats = getHistoryStats(flatHistory);
+    const stats = getHistoryStats(flatHistory);
     _el.chartStats.innerHTML = `
       <div class="tracker-stat-card"><div class="tracker-stat-k">Points shown</div><div class="tracker-stat-v">${rows.length}</div><div class="tracker-stat-s">${_state.range || 'ALL'}</div></div>
       <div class="tracker-stat-card"><div class="tracker-stat-k">Data source</div><div class="tracker-stat-v">${sourceLabel}</div><div class="tracker-stat-s">LBMA baseline 2019–Aug 2025 + session</div></div>
       <div class="tracker-stat-card"><div class="tracker-stat-k">Range high</div><div class="tracker-stat-v">$${Math.max(...rows.map((r) => r.spot)).toLocaleString('en', { maximumFractionDigits: 0 })}</div><div class="tracker-stat-s">within selected range</div></div>
       <div class="tracker-stat-card"><div class="tracker-stat-k">Range low</div><div class="tracker-stat-v">$${Math.min(...rows.map((r) => r.spot)).toLocaleString('en', { maximumFractionDigits: 0 })}</div><div class="tracker-stat-s">within selected range</div></div>
+      ${stats.ytdChange != null ? `<div class="tracker-stat-card"><div class="tracker-stat-k">YTD change</div><div class="tracker-stat-v">${stats.ytdChange >= 0 ? '+' : ''}${stats.ytdChange.toFixed(1)}%</div><div class="tracker-stat-s">vs Jan 1</div></div>` : ''}
+      ${stats.yoyChange != null ? `<div class="tracker-stat-card"><div class="tracker-stat-k">1Y change</div><div class="tracker-stat-v">${stats.yoyChange >= 0 ? '+' : ''}${stats.yoyChange.toFixed(1)}%</div><div class="tracker-stat-s">year over year</div></div>` : ''}
     `;
   }
 }
@@ -720,11 +733,18 @@ export function renderPresets() {
             _state.selectedKarat === p.karat &&
             _state.selectedUnit === p.unit &&
             _state.range === p.range;
+          // escape p.name — it comes from a free-text input and is stored in
+          // state/localStorage, so it must be sanitised before innerHTML insertion.
+          const safeName = escape(p.name);
+          const safeKarat = escape(p.karat);
+          const safeCurrency = escape(p.currency);
+          const safeUnit = escape(p.unit);
+          const safeRange = escape(p.range);
           return `<div class="tracker-stack-item${isCurrent ? ' is-highlight' : ''}">
         <div style="flex:1">
-          <div><strong>${p.name}</strong></div>
+          <div><strong>${safeName}</strong></div>
           <div style="font-size:0.8rem;color:var(--tp-text-muted);margin-top:0.25rem">
-            ${p.karat}K · ${p.currency}/${p.unit} · ${p.range} range
+            ${safeKarat}K · ${safeCurrency}/${safeUnit} · ${safeRange} range
             ${isCurrent ? ' · <span style="color:var(--tp-accent)">● current</span>' : ''}
           </div>
         </div>

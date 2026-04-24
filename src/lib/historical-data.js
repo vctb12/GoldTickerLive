@@ -148,7 +148,12 @@ export function filterByRange(records, range) {
   if (!days) return records;
   const cutoffDate = new Date(now.getTime() - days * 86400000);
   const cutoffStr = cutoffDate.toISOString().slice(0, 10); // 'YYYY-MM-DD'
-  return records.filter((r) => r.date >= cutoffStr);
+  return records.filter((r) => {
+    // Monthly records have 'YYYY-MM' keys (7 chars); normalise to 'YYYY-MM-01'
+    // so the comparison is always between two YYYY-MM-DD strings.
+    const dateStr = r.date.length === 7 ? `${r.date}-01` : r.date;
+    return dateStr >= cutoffStr;
+  });
 }
 
 /**

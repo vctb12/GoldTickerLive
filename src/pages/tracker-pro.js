@@ -315,18 +315,25 @@ async function exportJsonData() {
 let _autoRefreshTimer = null;
 let _countdownTimer = null;
 let _countdownValue = 0;
+let _fetchInFlight = false; // guard against overlapping auto-refresh ticks
 
 function startCountdown() {
   clearInterval(_countdownTimer);
   _countdownValue = Math.floor(CONSTANTS.GOLD_REFRESH_MS / 1000);
 
+  // Query once; reused by every tick and the initial paint.
+  const el_countdown = document.getElementById('tp-countdown');
+
+  // Display the initial value immediately so the user sees the full countdown.
+  if (el_countdown) el_countdown.textContent = `Next update in ${_countdownValue}s`;
+
   function tick() {
     _countdownValue--;
     if (_countdownValue <= 0) {
       clearInterval(_countdownTimer);
+      if (el_countdown) el_countdown.textContent = '';
       return;
     }
-    const el_countdown = document.getElementById('tp-countdown');
     if (el_countdown) el_countdown.textContent = `Next update in ${_countdownValue}s`;
   }
   _countdownTimer = setInterval(tick, 1000);
@@ -336,10 +343,17 @@ function startAutoRefresh() {
   if (_autoRefreshTimer) return;
   _autoRefreshTimer = setInterval(async () => {
     if (!state.autoRefresh) return;
+    // Skip this tick if the previous fetch hasn't finished yet.
+    if (_fetchInFlight) return;
+    _fetchInFlight = true;
     startCountdown();
-    await fetchLive();
-    checkAlerts();
-    renderAll();
+    try {
+      await fetchLive();
+      checkAlerts();
+      renderAll();
+    } finally {
+      _fetchInFlight = false;
+    }
   }, CONSTANTS.GOLD_REFRESH_MS);
 }
 
