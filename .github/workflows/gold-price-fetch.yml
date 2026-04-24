@@ -7,7 +7,7 @@ name: Gold Price Fetch (goldpricez.com)
 
 on:
   schedule:
-    - cron: '*/6 * * * *'
+    - cron: '*/15 * * * *'
   workflow_dispatch:
 
 permissions:
