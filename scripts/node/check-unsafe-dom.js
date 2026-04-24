@@ -70,6 +70,8 @@ const BASELINE = {
   'src/pages/home.js': 2,
   'src/pages/shops.js': 13,
   'src/pages/shops/filters.js': 4, // Extracted from shops.js: safe <option> building with esc()
+  'src/pages/shops/modal.js': 1, // Extracted from shops.js: modal HTML with esc() wrappers
+  'src/pages/shops/rendering.js': 2, // Extracted from shops.js: card rendering with esc() wrappers
   'src/pages/tracker-pro.js': 4,
   'src/tracker/events.js': 2,
   'src/tracker/render.js': 18,
