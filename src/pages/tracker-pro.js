@@ -315,6 +315,7 @@ async function exportJsonData() {
 let _autoRefreshTimer = null;
 let _countdownTimer = null;
 let _countdownValue = 0;
+let _fetchInFlight = false; // guard against overlapping auto-refresh ticks
 
 function startCountdown() {
   clearInterval(_countdownTimer);
@@ -341,10 +342,17 @@ function startAutoRefresh() {
   if (_autoRefreshTimer) return;
   _autoRefreshTimer = setInterval(async () => {
     if (!state.autoRefresh) return;
+    // Skip this tick if the previous fetch hasn't finished yet.
+    if (_fetchInFlight) return;
+    _fetchInFlight = true;
     startCountdown();
-    await fetchLive();
-    checkAlerts();
-    renderAll();
+    try {
+      await fetchLive();
+      checkAlerts();
+      renderAll();
+    } finally {
+      _fetchInFlight = false;
+    }
   }, CONSTANTS.GOLD_REFRESH_MS);
 }
 

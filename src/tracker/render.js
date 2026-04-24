@@ -338,12 +338,14 @@ export function renderChart() {
   }
 
   if (_el.chartStats) {
-    const _stats = getHistoryStats(flatHistory);
+    const stats = getHistoryStats(flatHistory);
     _el.chartStats.innerHTML = `
       <div class="tracker-stat-card"><div class="tracker-stat-k">Points shown</div><div class="tracker-stat-v">${rows.length}</div><div class="tracker-stat-s">${_state.range || 'ALL'}</div></div>
       <div class="tracker-stat-card"><div class="tracker-stat-k">Data source</div><div class="tracker-stat-v">${sourceLabel}</div><div class="tracker-stat-s">LBMA baseline 2019–Aug 2025 + session</div></div>
       <div class="tracker-stat-card"><div class="tracker-stat-k">Range high</div><div class="tracker-stat-v">$${Math.max(...rows.map((r) => r.spot)).toLocaleString('en', { maximumFractionDigits: 0 })}</div><div class="tracker-stat-s">within selected range</div></div>
       <div class="tracker-stat-card"><div class="tracker-stat-k">Range low</div><div class="tracker-stat-v">$${Math.min(...rows.map((r) => r.spot)).toLocaleString('en', { maximumFractionDigits: 0 })}</div><div class="tracker-stat-s">within selected range</div></div>
+      ${stats.ytdChange != null ? `<div class="tracker-stat-card"><div class="tracker-stat-k">YTD change</div><div class="tracker-stat-v">${stats.ytdChange >= 0 ? '+' : ''}${stats.ytdChange.toFixed(1)}%</div><div class="tracker-stat-s">vs Jan 1</div></div>` : ''}
+      ${stats.yoyChange != null ? `<div class="tracker-stat-card"><div class="tracker-stat-k">1Y change</div><div class="tracker-stat-v">${stats.yoyChange >= 0 ? '+' : ''}${stats.yoyChange.toFixed(1)}%</div><div class="tracker-stat-s">year over year</div></div>` : ''}
     `;
   }
 }
