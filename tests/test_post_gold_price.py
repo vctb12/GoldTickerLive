@@ -2,7 +2,9 @@
 import json
 import re
 import sys
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 # Make scripts/python importable (matches repo convention for Python entrypoints)
 _REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -59,9 +61,10 @@ def test_load_last_price_old_schema(tmp_path, monkeypatch):
     state_file = tmp_path / "last_gold_price.json"
     state_file.write_text(json.dumps({"price": 100.0}))
     monkeypatch.setattr(pg, "STATE_FILE", state_file)
-    price, posted_at_utc = pg._load_last_price()
+    price, posted_at_utc, content_hash = pg._load_last_price()
     assert price == 100.0
     assert posted_at_utc is None
+    assert content_hash is None
 
 
 def test_load_last_price_corrupt(tmp_path, monkeypatch, capsys):
@@ -69,9 +72,10 @@ def test_load_last_price_corrupt(tmp_path, monkeypatch, capsys):
     state_file.write_text("{{{")
     monkeypatch.setattr(pg, "STATE_FILE", state_file)
     # Must not raise.
-    price, posted_at_utc = pg._load_last_price()
+    price, posted_at_utc, content_hash = pg._load_last_price()
     assert price is None
     assert posted_at_utc is None
+    assert content_hash is None
 
 
 # ── format_hourly_tweet ───────────────────────────────────────────────────────
@@ -123,3 +127,221 @@ def test_hourly_tweet_first_run_omits_prev_and_delta():
     assert "Prev:" not in tweet
     assert "(+" not in tweet
     assert "(-" not in tweet
+
+
+# ── _load_last_price 3-tuple ──────────────────────────────────────────────────
+def test_load_last_price_returns_three_tuple(tmp_path, monkeypatch):
+    state_file = tmp_path / "last_gold_price.json"
+    state_file.write_text(json.dumps({"price": 100.0}))
+    monkeypatch.setattr(pg, "STATE_FILE", state_file)
+    result = pg._load_last_price()
+    assert len(result) == 3
+    assert result[0] == 100.0
+    assert result[1] is None
+    assert result[2] is None
+
+
+# ── Duplicate guard tests ─────────────────────────────────────────────────────
+_NOW = datetime(2026, 4, 24, 13, 0, 0, tzinfo=timezone.utc)
+_30_MIN_AGO = (_NOW - timedelta(minutes=30)).strftime('%Y-%m-%dT%H:%M:%SZ')
+_70_MIN_AGO = (_NOW - timedelta(minutes=70)).strftime('%Y-%m-%dT%H:%M:%SZ')
+
+
+def test_duplicate_guard_same_price_recent_hourly():
+    skip, reason = pg.check_duplicate_guard(
+        price=4701.73,
+        prev_price=4701.73,
+        prev_posted_at_utc=_30_MIN_AGO,
+        post_type='hourly',
+        _now=_NOW,
+    )
+    assert skip is True
+    assert "4,701.73" in reason
+    assert "SKIP: duplicate guard" in reason
+
+
+def test_duplicate_guard_same_price_old_hourly():
+    skip, _ = pg.check_duplicate_guard(
+        price=4701.73,
+        prev_price=4701.73,
+        prev_posted_at_utc=_70_MIN_AGO,
+        post_type='hourly',
+        _now=_NOW,
+    )
+    assert skip is False
+
+
+def test_duplicate_guard_price_changed_recent_hourly():
+    skip, _ = pg.check_duplicate_guard(
+        price=4701.75,
+        prev_price=4701.73,
+        prev_posted_at_utc=_30_MIN_AGO,
+        post_type='hourly',
+        _now=_NOW,
+    )
+    assert skip is False
+
+
+def test_duplicate_guard_market_open_never_skips():
+    skip, _ = pg.check_duplicate_guard(
+        price=4701.73,
+        prev_price=4701.73,
+        prev_posted_at_utc=_30_MIN_AGO,
+        post_type='market_open',
+        _now=_NOW,
+    )
+    assert skip is False
+
+
+def test_duplicate_guard_market_close_never_skips():
+    skip, _ = pg.check_duplicate_guard(
+        price=4701.73,
+        prev_price=4701.73,
+        prev_posted_at_utc=_30_MIN_AGO,
+        post_type='market_close',
+        _now=_NOW,
+    )
+    assert skip is False
+
+
+def test_duplicate_guard_no_previous_state():
+    skip, _ = pg.check_duplicate_guard(
+        price=4701.73,
+        prev_price=None,
+        prev_posted_at_utc=None,
+        post_type='hourly',
+        _now=_NOW,
+    )
+    assert skip is False
+
+
+# ── Content-hash tests ────────────────────────────────────────────────────────
+def test_content_hash_computed_stable():
+    h1 = pg.compute_content_hash("hello world")
+    h2 = pg.compute_content_hash("hello world")
+    assert h1 == h2
+    assert len(h1) == 12
+    assert h1 != pg.compute_content_hash("different text")
+
+
+def test_content_hash_stored_on_save(tmp_path, monkeypatch):
+    state_file = tmp_path / "last_gold_price.json"
+    monkeypatch.setattr(pg, "STATE_FILE", state_file)
+    pg._save_last_price(4701.73, content_hash="abc123def456")
+    payload = json.loads(state_file.read_text())
+    assert payload["content_hash"] == "abc123def456"
+
+
+def test_content_hash_missing_in_old_state(tmp_path, monkeypatch):
+    state_file = tmp_path / "last_gold_price.json"
+    state_file.write_text(json.dumps({"price": 4701.73, "posted_at_utc": "2026-04-24T12:00:00Z"}))
+    monkeypatch.setattr(pg, "STATE_FILE", state_file)
+    price, posted_at_utc, content_hash = pg._load_last_price()
+    assert price == 4701.73
+    assert posted_at_utc == "2026-04-24T12:00:00Z"
+    assert content_hash is None  # graceful, no crash
+
+
+# ── Staleness tests ───────────────────────────────────────────────────────────
+def _staleness_ts(hours_ago, now=None):
+    """Return source_updated_at_gmt string for `hours_ago` hours before `now`."""
+    if now is None:
+        now = _NOW
+    ts = now - timedelta(hours=hours_ago)
+    # Format matches goldpricez: "DD-MM-YYYY HH:MM:SS am/pm"
+    return ts.strftime("%d-%m-%Y %I:%M:%S %p").lower()
+
+
+def test_staleness_fresh():
+    raw = {"source_updated_at_gmt": _staleness_ts(0.5)}
+    action, msg = pg.check_staleness(raw, _now=_NOW)
+    assert action == 'ok'
+    assert msg is None
+
+
+def test_staleness_warn_zone(capsys):
+    raw = {"source_updated_at_gmt": _staleness_ts(6)}
+    action, msg = pg.check_staleness(raw, _now=_NOW)
+    assert action == 'warn'
+    assert msg is not None
+    assert "WARN: UPSTREAM STALE" in msg
+    assert "6:00" in msg or "6:" in msg
+
+
+def test_staleness_severe():
+    raw = {"source_updated_at_gmt": _staleness_ts(24)}
+    action, msg = pg.check_staleness(raw, _now=_NOW)
+    assert action == 'skip'
+    assert msg is not None
+    assert "ERROR: UPSTREAM SEVERELY STALE" in msg
+
+
+def test_staleness_unparseable():
+    raw = {"source_updated_at_gmt": "not-a-date"}
+    action, msg = pg.check_staleness(raw, _now=_NOW)
+    assert action == 'parse_error'
+    assert msg is not None
+    assert "WARN: could not parse" in msg
+    assert "not-a-date" in msg
+
+
+def test_staleness_missing_field():
+    raw = {}  # no source_updated_at_gmt key
+    action, msg = pg.check_staleness(raw, _now=_NOW)
+    assert action == 'parse_error'
+    assert msg is not None
+    assert "WARN: could not parse" in msg
+
+
+# ── Error-logging tests ───────────────────────────────────────────────────────
+def test_tweet_403_logs_response_body(capsys, monkeypatch):
+    import tweepy
+
+    mock_response = MagicMock()
+    mock_response.status_code = 403
+    mock_response.text = '{"detail":"This request looks automated"}'
+    mock_response.headers = {}
+
+    exc = tweepy.errors.Forbidden(response=mock_response)
+
+    mock_client = MagicMock()
+    mock_client.create_tweet.side_effect = exc
+
+    with patch('tweepy.Client', return_value=mock_client):
+        try:
+            pg.post_tweet("test tweet text", post_type='hourly')
+        except tweepy.errors.Forbidden:
+            pass
+        else:
+            raise AssertionError("Expected Forbidden to be re-raised")
+
+    out = capsys.readouterr().out
+    assert '{"detail":"This request looks automated"}' in out
+    assert "Likely cause: duplicate" in out
+    assert "=== TWEET ERROR ===" in out
+
+
+def test_tweet_429_logs_retry_after(capsys, monkeypatch):
+    import tweepy
+
+    mock_response = MagicMock()
+    mock_response.status_code = 429
+    mock_response.text = '{"detail":"Too Many Requests"}'
+    mock_response.headers = {'Retry-After': '60'}
+
+    exc = tweepy.errors.TooManyRequests(response=mock_response)
+
+    mock_client = MagicMock()
+    mock_client.create_tweet.side_effect = exc
+
+    with patch('tweepy.Client', return_value=mock_client):
+        try:
+            pg.post_tweet("test tweet text", post_type='hourly')
+        except tweepy.errors.TooManyRequests:
+            pass
+        else:
+            raise AssertionError("Expected TooManyRequests to be re-raised")
+
+    out = capsys.readouterr().out
+    assert "Retry-After: 60s" in out
+    assert "=== TWEET ERROR ===" in out
