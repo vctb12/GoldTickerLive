@@ -176,9 +176,24 @@ describe('authMiddleware', () => {
     assert.equal(res._status, 401);
   });
 
-  test('accepts a valid token and calls next', () => {
+  test('accepts a valid token and calls next', async () => {
+    // Seed a real user so the tokenVersion check in authMiddleware finds a
+    // matching record. See Track A #3 in
+    // docs/plans/2026-04-24_security-performance-deps-audit.md.
+    const email = `mw-admin-${Date.now()}@b.com`;
+    const created = await auth.createUser(
+      { email, password: 'password12345', role: 'admin', name: 'mw-admin' },
+      'test'
+    );
+    assert.ok(created.success, created.message);
+    const userRecord = auth.getUserById(created.user.id);
     const middleware = auth.authMiddleware();
-    const token = auth.generateToken({ id: 'u1', email: 'a@b.com', role: 'admin' });
+    const token = auth.generateToken({
+      id: created.user.id,
+      email,
+      role: 'admin',
+      tokenVersion: userRecord.tokenVersion,
+    });
     const req = { headers: { authorization: `Bearer ${token}` } };
     const res = makeRes();
     let nextCalled = false;
@@ -189,9 +204,21 @@ describe('authMiddleware', () => {
     assert.equal(req.user.role, 'admin');
   });
 
-  test('rejects insufficient role (viewer trying editor route)', () => {
+  test('rejects insufficient role (viewer trying editor route)', async () => {
+    const email = `mw-viewer-${Date.now()}@b.com`;
+    const created = await auth.createUser(
+      { email, password: 'password12345', role: 'viewer', name: 'mw-viewer' },
+      'test'
+    );
+    assert.ok(created.success, created.message);
+    const userRecord = auth.getUserById(created.user.id);
     const middleware = auth.authMiddleware('editor');
-    const token = auth.generateToken({ id: 'u2', email: 'v@b.com', role: 'viewer' });
+    const token = auth.generateToken({
+      id: created.user.id,
+      email,
+      role: 'viewer',
+      tokenVersion: userRecord.tokenVersion,
+    });
     const req = { headers: { authorization: `Bearer ${token}` } };
     const res = makeRes();
     middleware(req, res, () => {});

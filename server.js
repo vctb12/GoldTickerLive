@@ -294,7 +294,11 @@ function safeResolveUnderRoot(root, userPath) {
 // Handle static file serving with explicit 404 handling.
 // Implemented as middleware (not `app.get('*')`) because Express 5's
 // path-to-regexp no longer accepts a bare `*` as a path pattern.
-app.use((req, res, _next) => {
+//
+// Disk I/O here uses `fs.promises.stat` (not `fs.statSync`) so that 404-heavy
+// scraping workloads no longer block the event loop per request. See
+// docs/plans/2026-04-24_security-performance-deps-audit.md Track B #1.
+app.use(async (req, res, _next) => {
   if (req.method !== 'GET' && req.method !== 'HEAD') return res.status(405).end();
 
   const resolved = safeResolveUnderRoot(DIST_DIR, req.path);
@@ -308,7 +312,7 @@ app.use((req, res, _next) => {
   if (path.extname(req.path)) {
     let stat;
     try {
-      stat = fs.statSync(resolved);
+      stat = await fs.promises.stat(resolved);
     } catch {
       return send404(res, req);
     }
@@ -321,7 +325,8 @@ app.use((req, res, _next) => {
   const indexCandidate = safeResolveUnderRoot(DIST_DIR, path.posix.join(req.path, 'index.html'));
   if (indexCandidate) {
     try {
-      if (fs.statSync(indexCandidate).isFile()) return res.sendFile(indexCandidate);
+      const indexStat = await fs.promises.stat(indexCandidate);
+      if (indexStat.isFile()) return res.sendFile(indexCandidate);
     } catch {
       // fall through to 404
     }

@@ -18,6 +18,20 @@
 
 'use strict';
 
+// Hard guard — this module holds the Supabase *service-role* key, which
+// bypasses Row-Level Security. If it is ever imported from a bundle that
+// ends up in the browser, the key ships to every visitor. Throwing here
+// turns that into an immediate build-time failure rather than a silent leak.
+// Pairs with the ESLint `no-restricted-imports` rule in `eslint.config.mjs`
+// that blocks `server/**` imports from `src/**`.
+if (typeof window !== 'undefined') {
+  throw new Error(
+    '[supabase-client] server/lib/supabase-client.js was imported in a ' +
+      'browser context. This module holds the service-role key and must ' +
+      'never be bundled for the client.'
+  );
+}
+
 let _client = null;
 let _initAttempted = false;
 

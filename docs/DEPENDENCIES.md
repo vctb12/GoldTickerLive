@@ -15,9 +15,14 @@ upgrade strategies, security practices, and maintenance procedures.
 - **express-rate-limit** `^8.3.2` - ✅ Up to date - Rate limiting
 - **helmet** `^8.1.0` - ✅ Up to date - Security headers
 - **jsonwebtoken** `^9.0.3` - ✅ Up to date - JWT authentication
-- **lowdb** `^1.0.0` - ⚠️ **MAJOR UPGRADE NEEDED: 7.0.1** - File-based database
 - **morgan** `^1.10.1` - ✅ Up to date - HTTP request logger
 - **uuid** `^13.0.0` - ✅ Up to date - UUID generation
+
+> `lowdb` was removed in the 2026-04-24 dependency audit (PR C-1). It was not
+> imported anywhere in `server/` — persistence is via plain `fs.readFileSync`
+> / `fs.writeFileSync` in `server/lib/auth.js` and the per-repository helpers
+> under `server/repositories/`. If the project ever needs structured file-
+> based persistence, re-add `lowdb` intentionally with a migration note.
 
 ### Development Dependencies
 
@@ -46,11 +51,8 @@ npm test
 **Priority:** MEDIUM - Breaking changes, requires testing
 
 ```bash
-# lowdb 1.x → 7.x is a major rewrite
-# Research migration path and test thoroughly
-npm install lowdb@^7.0.1
-# Update all code using lowdb API
-npm test
+# All production majors are on latest; no pending major upgrades.
+# Re-run `npm outdated` to refresh.
 ```
 
 ## Upgrade Policy

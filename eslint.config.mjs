@@ -76,4 +76,26 @@ export default [
       'prefer-const': 'error',
     },
   },
+  {
+    // Browser-facing source must not import server-only modules. The
+    // server/ directory holds the service-role Supabase key and other
+    // secrets; leaking even one import would ship them to the client
+    // bundle. See docs/plans/2026-04-24_security-performance-deps-audit.md
+    // Track A #6.
+    files: ['src/**/*.js', 'src/**/*.mjs'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/server/**', '../server/**', '../../server/**', '../../../server/**'],
+              message:
+                'Do not import server/** modules from src/**. Server modules may hold secrets (e.g. service-role keys) and must not ship to the browser bundle.',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ];

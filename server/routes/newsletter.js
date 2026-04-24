@@ -7,6 +7,7 @@
 
 const express = require('express');
 const router = express.Router();
+const { buildUrl } = require('../lib/site-url');
 
 // Resend will be installed separately: npm install resend
 // For now, we'll structure the routes to be ready for integration.
@@ -177,7 +178,7 @@ function isValidEmail(email) {
 // Stub helper reserved for the future Resend-backed verification flow.
 // Underscore prefix signals intentional unused binding to ESLint.
 async function _sendVerificationEmail(email, token) {
-  const verifyUrl = `${process.env.SITE_URL || 'http://localhost:3000'}/api/newsletter/verify/${token}`;
+  const verifyUrl = buildUrl(`/api/newsletter/verify/${encodeURIComponent(token)}`);
 
   // TODO: Send email via Resend
   /*
