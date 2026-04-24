@@ -29,6 +29,15 @@ const CURRENCY_SYMBOLS = {
   PKR: '₨',
 };
 
+/**
+ * Format a numeric price with a currency symbol.
+ * Returns `'—'` for `null`, `undefined`, or `NaN` inputs.
+ *
+ * @param {number|null|undefined} amount    Numeric price value.
+ * @param {string}                currency  ISO 4217 currency code (e.g. `'AED'`, `'USD'`).
+ * @param {number}               [decimals=2]  Number of decimal places.
+ * @returns {string}  Formatted string like `"3 245.12  د.إ"`.
+ */
 export function formatPrice(amount, currency, decimals = 2) {
   if (amount === null || amount === undefined || isNaN(amount)) return '—';
   const sym = CURRENCY_SYMBOLS[currency] || currency;
@@ -39,6 +48,16 @@ export function formatPrice(amount, currency, decimals = 2) {
   return `${formatted} ${sym}`;
 }
 
+/**
+ * Format a UTC timestamp as a human-readable date-time string in the given
+ * language and timezone. Defaults to `Asia/Dubai`.
+ * Returns `'—'` for missing or invalid inputs.
+ *
+ * @param {string|null|undefined} utcString  ISO-8601 UTC string.
+ * @param {'en'|'ar'}            [lang]      Display language.
+ * @param {string}               [timezone]  IANA timezone identifier.
+ * @returns {string}
+ */
 export function formatTimestamp(utcString, lang, timezone = 'Asia/Dubai') {
   if (!utcString) return '—';
   try {
@@ -59,6 +78,16 @@ export function formatTimestamp(utcString, lang, timezone = 'Asia/Dubai') {
   }
 }
 
+/**
+ * Format a UTC timestamp as a short HH:MM:SS time string (no date).
+ * Defaults to `Asia/Dubai`.
+ * Returns `'—'` for missing or invalid inputs.
+ *
+ * @param {string|null|undefined} utcString  ISO-8601 UTC string.
+ * @param {'en'|'ar'}            [lang]      Display language.
+ * @param {string}               [timezone]  IANA timezone identifier.
+ * @returns {string}
+ */
 export function formatTimestampShort(utcString, lang, timezone = 'Asia/Dubai') {
   if (!utcString) return '—';
   try {
@@ -76,6 +105,13 @@ export function formatTimestampShort(utcString, lang, timezone = 'Asia/Dubai') {
   }
 }
 
+/**
+ * Format a millisecond countdown as a human-readable string (`"2m 30s"` or `"45s"`).
+ * Returns `'0s'` for zero or negative values.
+ *
+ * @param {number} ms  Duration in milliseconds.
+ * @returns {string}
+ */
 export function formatCountdown(ms) {
   if (!ms || ms <= 0) return '0s';
   const totalSec = Math.floor(ms / 1000);
@@ -85,6 +121,14 @@ export function formatCountdown(ms) {
   return `${sec}s`;
 }
 
+/**
+ * Format a price change as a signed percentage with directional arrow.
+ * Returns `{ text: '—', direction: 'neutral' }` when the change or base is missing.
+ *
+ * @param {number|null} change  Absolute price change (new − old).
+ * @param {number|null} base    Original / reference price.
+ * @returns {{ text: string, value: string, direction: 'up'|'down'|'neutral' }}
+ */
 export function formatPercentChange(change, base) {
   if (change == null || !base) return { text: '—', direction: 'neutral' };
   const pct = (change / base) * 100;
@@ -98,6 +142,16 @@ export function formatPercentChange(change, base) {
   };
 }
 
+/**
+ * Format a UTC timestamp as a short date string (`"Apr 24"` style).
+ * Defaults to `Asia/Dubai`.
+ * Returns `'—'` for missing or invalid inputs.
+ *
+ * @param {string|null|undefined} utcString  ISO-8601 UTC string.
+ * @param {'en'|'ar'}            [lang]      Display language.
+ * @param {string}               [timezone]  IANA timezone identifier.
+ * @returns {string}
+ */
 export function formatDate(utcString, lang, timezone = 'Asia/Dubai') {
   if (!utcString) return '—';
   try {
@@ -113,10 +167,24 @@ export function formatDate(utcString, lang, timezone = 'Asia/Dubai') {
   }
 }
 
+/**
+ * Return the localised label for a karat (e.g. `"22K"` in English, `"٢٢ قيراط"` in Arabic).
+ *
+ * @param {{ labelEn: string, labelAr: string }} karat
+ * @param {'en'|'ar'} lang
+ * @returns {string}
+ */
 export function formatKarat(karat, lang) {
   return lang === 'ar' ? karat.labelAr : karat.labelEn;
 }
 
+/**
+ * Return the localised name for a country.
+ *
+ * @param {{ nameEn: string, nameAr: string }} country
+ * @param {'en'|'ar'} lang
+ * @returns {string}
+ */
 export function formatCountryName(country, lang) {
   return lang === 'ar' ? country.nameAr : country.nameEn;
 }

@@ -1,5 +1,12 @@
 import { formatTimestampShort } from './formatter.js';
 
+/**
+ * Gold-market timing constants.
+ *
+ * - `OPEN_SUN_MINUTES`: minutes past midnight UTC when the market re-opens on Sunday.
+ * - `CLOSE_FRI_MINUTES`: minutes past midnight UTC when the market closes on Friday.
+ * - `STALE_AFTER_MS`: age in ms after which a price is considered stale (10 minutes).
+ */
 export const GOLD_MARKET = {
   OPEN_SUN_MINUTES: 22 * 60,
   CLOSE_FRI_MINUTES: 21 * 60,
@@ -13,6 +20,13 @@ function toDate(value) {
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
+/**
+ * Determine whether the global gold market (LBMA / London Fix schedule) is
+ * currently open. The market is closed from 21:00 UTC Friday to 22:00 UTC Sunday.
+ *
+ * @param {Date} [now=new Date()]  Reference timestamp (defaults to current time).
+ * @returns {{ isOpen: boolean, key: 'open'|'closed' }}
+ */
 export function getMarketStatus(now = new Date()) {
   const date = toDate(now) || new Date();
   const utcDay = date.getUTCDay();
@@ -27,12 +41,29 @@ export function getMarketStatus(now = new Date()) {
   return { isOpen, key: isOpen ? 'open' : 'closed' };
 }
 
+/**
+ * Return the age of `updatedAt` in milliseconds relative to `now`.
+ * Returns `Number.POSITIVE_INFINITY` when `updatedAt` is absent or invalid.
+ *
+ * @param {string|Date|number|null} updatedAt  Timestamp of the last update.
+ * @param {number}                 [now]       Reference epoch ms (default: `Date.now()`).
+ * @returns {number}
+ */
 export function getAgeMs(updatedAt, now = Date.now()) {
   const date = toDate(updatedAt);
   if (!date) return Number.POSITIVE_INFINITY;
   return Math.max(0, now - date.getTime());
 }
 
+/**
+ * Format `ageMs` as a human-readable relative-time string using
+ * `Intl.RelativeTimeFormat` (e.g. `"2 min. ago"`, `"منذ دقيقتين"`).
+ * Returns `'—'` for non-finite values.
+ *
+ * @param {number}      ageMs  Age in milliseconds (must be ≥ 0).
+ * @param {'en'|'ar'} [lang]   Display language (default `'en'`).
+ * @returns {string}
+ */
 export function formatRelativeAge(ageMs, lang = 'en') {
   if (!Number.isFinite(ageMs)) return '—';
 
@@ -55,6 +86,18 @@ export function formatRelativeAge(ageMs, lang = 'en') {
   return formatter.format(-totalDays, 'day');
 }
 
+/**
+ * Derive the freshness key and human-readable age text for a price timestamp.
+ *
+ * Freshness keys:
+ * - `'live'`        — data is within `staleAfterMs` and no live fetch failure.
+ * - `'cached'`      — data is within `staleAfterMs` but a live fetch failure occurred.
+ * - `'stale'`       — data is older than `staleAfterMs`.
+ * - `'unavailable'` — `updatedAt` is absent.
+ *
+ * @param {{ updatedAt?: string|Date|number|null, lang?: 'en'|'ar', hasLiveFailure?: boolean, staleAfterMs?: number }} [options]
+ * @returns {{ key: 'live'|'cached'|'stale'|'unavailable', ageMs: number, ageText: string, timeText: string, updatedAt: string|Date|number|null }}
+ */
 export function getLiveFreshness({
   updatedAt,
   lang = 'en',

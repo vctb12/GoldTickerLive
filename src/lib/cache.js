@@ -15,6 +15,11 @@ function safeGet(key) {
   }
 }
 
+/**
+ * Display a fixed-position browser banner warning the user that their local
+ * storage is nearly full. Safe to call multiple times — the banner is only
+ * created once per page load.
+ */
 export function showStorageQuotaWarning() {
   if (typeof document === 'undefined') return;
   if (document.getElementById('cache-quota-warning')) return;
@@ -57,6 +62,14 @@ function safeSet(key, value) {
   }
 }
 
+/**
+ * Populate `STATE` with all persisted values from localStorage (gold price,
+ * FX rates, day-open price, user preferences, and price history). Silently
+ * skips any key that is missing or corrupt; the STATE fields retain their
+ * default values in that case.
+ *
+ * @param {object} STATE  The shared page-level state object (mutated in place).
+ */
 export function loadState(STATE) {
   // Gold price
   const gold = safeGet(CACHE_KEYS.goldPrice) || safeGet(CACHE_KEYS.goldFallback);
@@ -115,6 +128,14 @@ export function loadState(STATE) {
   STATE.cacheHealthScore = Math.round(goldAge * 100);
 }
 
+/**
+ * Persist a new gold spot price to localStorage. The previous primary entry is
+ * demoted to the fallback slot before writing so the last-known-good price is
+ * always recoverable even if the write is interrupted.
+ *
+ * @param {number} price      XAU/USD price in USD per troy ounce.
+ * @param {string} updatedAt  ISO-8601 timestamp from the data source.
+ */
 export function saveGoldPrice(price, updatedAt) {
   const payload = { price, updatedAt, fetchedAt: Date.now() };
   // Promote old primary → fallback before overwriting
@@ -123,6 +144,13 @@ export function saveGoldPrice(price, updatedAt) {
   safeSet(CACHE_KEYS.goldPrice, payload);
 }
 
+/**
+ * Persist FX rates to localStorage. The previous primary entry is demoted to
+ * the fallback slot before writing.
+ *
+ * @param {Record<string, number>} rates  Map of currency code → USD exchange rate.
+ * @param {{ lastUpdateUtc: string, nextUpdateUtc: string|number }} fxMeta  Metadata from the FX API.
+ */
 export function saveFXRates(rates, fxMeta) {
   const payload = {
     rates,
@@ -135,20 +163,48 @@ export function saveFXRates(rates, fxMeta) {
   safeSet(CACHE_KEYS.fxRates, payload);
 }
 
+/**
+ * Return the most-recently persisted gold price payload, preferring the
+ * fallback slot (which holds the previous-good value) over the primary slot.
+ * Returns `null` when no cached data exists.
+ *
+ * @returns {{ price: number, updatedAt: string, fetchedAt: number } | null}
+ */
 export function getFallbackGoldPrice() {
   return safeGet(CACHE_KEYS.goldFallback) || safeGet(CACHE_KEYS.goldPrice);
 }
 
+/**
+ * Return the most-recently persisted FX rates payload, preferring the fallback
+ * slot over the primary slot. Returns `null` when no cached data exists.
+ *
+ * @returns {{ rates: Record<string, number>, time_last_update_utc: string, fetchedAt: number } | null}
+ */
 export function getFallbackFXRates() {
   return safeGet(CACHE_KEYS.fxFallback) || safeGet(CACHE_KEYS.fxRates);
 }
 
+/**
+ * Persist a single user-preference key/value pair. The full preferences object
+ * is read-modify-written atomically.
+ *
+ * @param {string} key    Preference key (e.g. `'lang'`, `'selectedKarat'`).
+ * @param {*}      value  Serialisable value.
+ */
 export function savePreference(key, value) {
   const prefs = safeGet(CACHE_KEYS.userPrefs) || {};
   prefs[key] = value;
   safeSet(CACHE_KEYS.userPrefs, prefs);
 }
 
+/**
+ * Seed the day-open price when a new Dubai calendar day begins. Called once
+ * per page load after `loadState`. Returns `true` if the day-open entry was
+ * newly written (i.e. a new day has started or no prior entry existed).
+ *
+ * @param {object} STATE  The shared page-level state object (mutated in place).
+ * @returns {boolean}
+ */
 export function checkDayOpenReset(STATE) {
   const today = getDubaiDateString();
   const stored = safeGet(CACHE_KEYS.dayOpen);
@@ -164,6 +220,14 @@ export function checkDayOpenReset(STATE) {
   return false;
 }
 
+/**
+ * Append today's gold price snapshot to the rolling daily history stored in
+ * localStorage. Deduplicates by Dubai calendar date and trims the array to
+ * `CONSTANTS.HISTORY_DAYS` entries. No-ops if `STATE.goldPriceUsdPerOz` is
+ * falsy.
+ *
+ * @param {object} STATE  The shared page-level state object (mutated in place via `STATE.history`).
+ */
 export function saveHistorySnapshot(STATE) {
   if (STATE.goldPriceUsdPerOz == null || STATE.goldPriceUsdPerOz === 0) return;
   const today = getDubaiDateString();
@@ -185,6 +249,10 @@ export function saveHistorySnapshot(STATE) {
   STATE.history = history;
 }
 
+/**
+ * Remove all GoldPrices-owned localStorage entries. Used by the debug panel
+ * and the "Clear cache" button in the tracker. Silently ignores storage errors.
+ */
 export function clearAllCache() {
   Object.values(CACHE_KEYS).forEach((key) => {
     try {

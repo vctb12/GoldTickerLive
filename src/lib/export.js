@@ -37,6 +37,15 @@ function isoDate() {
 // CURRENT PRICE SNAPSHOT
 // ─────────────────────────────────────────────────────────────────────────────
 
+/**
+ * Export the current gold price snapshot for all countries as a CSV file and
+ * trigger a browser download.
+ *
+ * @param {Array<{ nameEn: string, nameAr: string, currency: string, decimals: number }>} countries
+ * @param {string}  karatCode  Karat code to export (e.g. `'24'`).
+ * @param {Record<string, Record<string, { gram: number, oz: number }|null>>} prices  Output from `calculateAllPrices`.
+ * @param {'en'|'ar'} [lang='en']
+ */
 export function exportCSV(countries, karatCode, prices, lang = 'en') {
   if (!prices || !prices[karatCode]) return;
   const karat = KARATS.find((k) => k.code === karatCode);
@@ -82,6 +91,13 @@ export function exportCSV(countries, karatCode, prices, lang = 'en') {
 // JSON SNAPSHOT
 // ─────────────────────────────────────────────────────────────────────────────
 
+/**
+ * Export a full structured JSON snapshot (spot price, FX rates, all karat×country
+ * prices, disclaimer) and trigger a browser download.
+ *
+ * @param {object} STATE  The shared page-level state object.
+ * @param {Record<string, Record<string, { gram: number, oz: number }|null>>} prices
+ */
 export function exportJSON(STATE, prices) {
   const payload = {
     exportedAt: new Date().toISOString(),
@@ -108,6 +124,14 @@ export function exportJSON(STATE, prices) {
 // ARCHIVE CSV — daily cached snapshots (up to 90 days)
 // ─────────────────────────────────────────────────────────────────────────────
 
+/**
+ * Export the user's locally-cached daily price history (up to 90 days) as a
+ * CSV file. Calls `alert()` and returns early if no history exists.
+ *
+ * @param {Array<{ date: string, price: number }>} history  Daily snapshot array from `STATE.history`.
+ * @param {string} [karatCode='24']            Karat to compute prices for.
+ * @param {number} [aedPeg=CONSTANTS.AED_PEG]  AED/USD peg rate.
+ */
 export function exportArchiveCSV(history, karatCode = '24', aedPeg = CONSTANTS.AED_PEG) {
   if (!history?.length) {
     alert(
@@ -168,6 +192,14 @@ export function exportArchiveCSV(history, karatCode = '24', aedPeg = CONSTANTS.A
 // HISTORICAL BASELINE CSV — monthly 2019-present + daily cache merged
 // ─────────────────────────────────────────────────────────────────────────────
 
+/**
+ * Export the unified historical price dataset (LBMA monthly baseline merged
+ * with locally-cached daily snapshots) as a CSV file.
+ *
+ * @param {Array<{ date: string, price: number, granularity: string, source: string }>} records
+ *   Normalised history records from `getUnifiedHistory()`.
+ * @param {string} [karatCode='24']  Karat to compute prices for.
+ */
 export function exportHistoricalCSV(records, karatCode = '24') {
   if (!records?.length) return;
 
