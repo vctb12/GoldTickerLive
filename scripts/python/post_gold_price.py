@@ -47,16 +47,34 @@ TWITTER_ACCESS_TOKEN_SECRET = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET', '')
 
 # ── Step 1: Load gold price from the canonical data file ────────────────────
 def _load_last_price():
-    if not STATE_FILE.exists():
-        return None
-    try:
-        return json.loads(STATE_FILE.read_text()).get("price")
-    except Exception:
-        return None
+    """Return (price, posted_at_utc) from STATE_FILE.
 
-def _save_last_price(price):
+    Missing file, corrupt JSON, non-dict, or missing/invalid price → (None, None).
+    Old schema with only `price` → (price, None).
+    New schema with both fields → (price, posted_at_utc_iso_string).
+    """
+    if not STATE_FILE.exists():
+        return (None, None)
+    try:
+        raw = json.loads(STATE_FILE.read_text())
+    except Exception:
+        print("⚠️  last_gold_price.json is corrupt; ignoring previous-price state.")
+        return (None, None)
+    if not isinstance(raw, dict):
+        return (None, None)
+    price = raw.get("price")
+    if not isinstance(price, (int, float)) or price <= 0:
+        return (None, None)
+    posted_at_utc = raw.get("posted_at_utc")
+    if not isinstance(posted_at_utc, str) or not posted_at_utc:
+        posted_at_utc = None
+    return (float(price), posted_at_utc)
+
+def _save_last_price(price, posted_at_utc=None):
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    STATE_FILE.write_text(json.dumps({"price": price}))
+    if posted_at_utc is None:
+        posted_at_utc = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+    STATE_FILE.write_text(json.dumps({"price": price, "posted_at_utc": posted_at_utc}))
 
 def get_gold_price():
     """Read gold price from data/gold_price.json (written by
@@ -78,7 +96,7 @@ def get_gold_price():
         raise ValueError("gold_price.json missing or invalid gold.ounce_usd")
     price = float(price)
 
-    previous_price = _load_last_price()
+    previous_price, previous_posted_at_utc = _load_last_price()
     chp = None
     if previous_price and previous_price > 0:
         chp = ((price - previous_price) / previous_price) * 100
@@ -101,6 +119,8 @@ def get_gold_price():
         "price_gram_21k": g21,
         "price_gram_18k": g18,
         "chp": chp,
+        "prev_price": previous_price,
+        "prev_posted_at_utc": previous_posted_at_utc,
     }
 
 
@@ -127,6 +147,37 @@ def _change_str(chp):
         return ''
     sign = '+' if chp >= 0 else ''
     return f' ({sign}{chp:.2f}%)'
+
+def _delta_str(price, prev_price):
+    """Absolute $ delta + % delta suffix for the hourly 24K line.
+
+    Returns "" if prev_price is None, " ±$0.00 (0.00%)" if abs delta < $0.01,
+    otherwise " +$X.XX (+Y.YY%)" or " -$X.XX (-Y.YY%)".
+    """
+    if prev_price is None:
+        return ''
+    delta = price - prev_price
+    if abs(delta) < 0.01:
+        return ' ±$0.00 (0.00%)'
+    pct = (delta / prev_price) * 100 if prev_price else 0.0
+    sign = '+' if delta > 0 else '-'
+    return f' {sign}${abs(delta):,.2f} ({sign}{abs(pct):.2f}%)'
+
+def _prev_line(prev_price, prev_posted_at_utc):
+    """"Prev: $X,XXX.XX at H:MM AM/PM\\n\\n" line, or "" if unavailable."""
+    if prev_price is None or prev_posted_at_utc is None:
+        return ''
+    try:
+        ts = prev_posted_at_utc
+        if ts.endswith('Z'):
+            ts = ts[:-1] + '+00:00'
+        dt = datetime.fromisoformat(ts)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        uae_time_str = dt.astimezone(UAE_TZ).strftime('%I:%M %p').lstrip('0')
+    except Exception:
+        return ''
+    return f'Prev: ${prev_price:,.2f} at {uae_time_str}\n\n'
 
 def _trend_emoji(chp):
     if chp is None: return '📊'
@@ -156,26 +207,31 @@ def get_post_type():
 # ── Tweet templates ───────────────────────────────────────────────────────────
 def format_hourly_tweet(data):
     price, g24, g22, g21, g18, chp = _parse_fields(data)
+    prev_price = data.get('prev_price')
+    prev_posted_at_utc = data.get('prev_posted_at_utc')
     date_str, time_str = _uae_datetime()
-    return (
+    if prev_price is None:
+        spot_line = f"24K · ${price:,.2f}/oz"
+    else:
+        spot_line = f"24K · ${price:,.2f}/oz {_trend_emoji(chp)}{_delta_str(price, prev_price)}"
+    tweet = (
         f"📍 Gold Price Update {_trend_emoji(chp)} - {date_str}\n"
-        f"\n"
         f"🕐 {time_str} (UAE · GMT+4)\n"
-        f"\n"
         f"Spot XAU/USD\n"
-        f"24K · ${price:,.2f}/oz{_change_str(chp)} {_trend_emoji(chp)}\n"
-        f"\n"
+        f"{spot_line}\n"
+        f"{_prev_line(prev_price, prev_posted_at_utc)}"
         f"🇦🇪 Prices:\n"
         f"24K  {_aed(g24)} AED/g\n"
         f"22K  {_aed(g22)} AED/g\n"
         f"21K  {_aed(g21)} AED/g\n"
         f"18K  {_aed(g18)} AED/g\n"
-        f"\n"
         f"{_trend_emoji(chp)} goldtickerlive.com\n"
         f"Spot rate · Not retail price\n"
-        f"\n"
         f"#GoldPrice #Gold #UAE #Dubai"
     )
+    if len(tweet) > 280:
+        raise ValueError(f"Hourly tweet exceeds 280 chars: {len(tweet)}")
+    return tweet
 
 def format_market_open_tweet(data):
     price, g24, g22, g21, g18, chp = _parse_fields(data)
