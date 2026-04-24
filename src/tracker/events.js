@@ -317,8 +317,12 @@ export function bindCoreEvents() {
       if (!livePanel) return;
       const heading = livePanel.querySelector('h2');
       if (!heading) return;
-      if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
+      const hadTabindex = heading.hasAttribute('tabindex');
+      if (!hadTabindex) heading.setAttribute('tabindex', '-1');
       heading.focus({ preventScroll: true });
+      if (!hadTabindex) {
+        heading.addEventListener('blur', () => heading.removeAttribute('tabindex'), { once: true });
+      }
     });
   }
 }

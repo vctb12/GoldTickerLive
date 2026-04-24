@@ -34,6 +34,7 @@ function isoDate() {
 }
 
 function isoTimestamp() {
+  // Colons are not safe in Windows filenames; replace with hyphens for portability.
   return new Date().toISOString().replace(/:/g, '-').slice(0, 19) + 'Z';
 }
 

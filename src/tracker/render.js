@@ -988,7 +988,7 @@ function _renderArchivePagination(page, totalPages, total) {
     type: 'button',
     class: 'btn btn-sm btn-ghost tracker-pagination-btn',
     'aria-label': 'Previous page',
-    disabled: page === 0 ? '' : null,
+    disabled: page === 0 ? true : null,
   }, '← Prev');
   prevBtn.addEventListener('click', () => { _archivePage--; renderArchive(); });
 
@@ -998,7 +998,7 @@ function _renderArchivePagination(page, totalPages, total) {
     type: 'button',
     class: 'btn btn-sm btn-ghost tracker-pagination-btn',
     'aria-label': 'Next page',
-    disabled: page >= totalPages - 1 ? '' : null,
+    disabled: page >= totalPages - 1 ? true : null,
   }, 'Next →');
   nextBtn.addEventListener('click', () => { _archivePage++; renderArchive(); });
 
