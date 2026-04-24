@@ -393,6 +393,8 @@ async function fetchLiveData(cfg) {
         uae22k: ((p * 22) / 24 / TROY) * AED_PEG,
         uae21k: ((p * 21) / 24 / TROY) * AED_PEG,
         uae18k: ((p * 18) / 24 / TROY) * AED_PEG,
+        updatedAt: STATE.freshness?.goldUpdatedAt || null,
+        hasLiveFailure: Boolean(STATE.status?.goldStale),
       });
     }
   } catch (e) {

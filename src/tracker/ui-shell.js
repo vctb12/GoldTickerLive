@@ -217,6 +217,8 @@ export function updateShellTickerFromState(state, spot, priceFor) {
     uae22k: priceFor({ currency: 'AED', karat: '22', unit: 'gram', spot }),
     uae21k: priceFor({ currency: 'AED', karat: '21', unit: 'gram', spot }),
     uae18k: priceFor({ currency: 'AED', karat: '18', unit: 'gram', spot }),
+    updatedAt: state.live?.updatedAt,
+    hasLiveFailure: Boolean(state.hasLiveFailure),
   });
   updateSpotBar({
     xauUsd: spot,

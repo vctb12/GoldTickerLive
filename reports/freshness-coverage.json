@@ -4,13 +4,13 @@
   "scopeNote": "Static analysis only. Does not audit §6.1 spot-vs-retail mixing. Advisory, not a gate.",
   "summary": {
     "totalSurfaces": 29,
-    "consumersWithAllThreeBranches": 2,
+    "consumersWithAllThreeBranches": 3,
     "consumersMissingStale": 2,
     "consumersMissingCached": 1,
     "consumersMissingLive": 0,
-    "priceRenderersWithoutLiveStatus": 6,
-    "documentedExemptions": 19,
-    "knownGapsTracked": 7
+    "priceRenderersWithoutLiveStatus": 4,
+    "documentedExemptions": 21,
+    "knownGapsTracked": 5
   },
   "records": [
     {
@@ -55,21 +55,24 @@
     {
       "path": "src/components/ticker.js",
       "kind": "component",
-      "importsLiveStatus": false,
-      "usedSymbols": [],
+      "importsLiveStatus": true,
+      "usedSymbols": [
+        "getLiveFreshness"
+      ],
       "rendersPriceLike": true,
-      "freshnessKeysMatched": [],
+      "freshnessKeysMatched": [
+        "live",
+        "cached",
+        "stale",
+        "unavailable"
+      ],
       "hasSourceLabel": false,
-      "hasTimestampLabel": false,
+      "hasTimestampLabel": true,
       "exempt": false,
       "exemptReason": null,
-      "knownGap": true,
-      "knownGapReason": "Ticker marquee renders spot prices but has no freshness label. Tracked for a follow-up plan.",
-      "notes": [
-        "renders price-like content but no live-status import",
-        "renders price-like content but no timestamp label heuristic",
-        "KNOWN GAP: Ticker marquee renders spot prices but has no freshness label. Tracked for a follow-up plan."
-      ]
+      "knownGap": false,
+      "knownGapReason": null,
+      "notes": []
     },
     {
       "path": "src/config/countries.js",
@@ -256,10 +259,10 @@
       "exempt": false,
       "exemptReason": null,
       "knownGap": true,
-      "knownGapReason": "Calculator already tracks STATE.spotSource and feeds hasLiveFailure into updateSpotBar. Internal result panels do not yet carry per-panel freshness.",
+      "knownGapReason": "Calculator already tracks STATE.spotSource and feeds hasLiveFailure into updateSpotBar + updateTicker. Internal result panels do not yet carry per-panel freshness.",
       "notes": [
         "renders price-like content but no live-status import",
-        "KNOWN GAP: Calculator already tracks STATE.spotSource and feeds hasLiveFailure into updateSpotBar. Internal result panels do not yet carry per-panel freshness."
+        "KNOWN GAP: Calculator already tracks STATE.spotSource and feeds hasLiveFailure into updateSpotBar + updateTicker. Internal result panels do not yet carry per-panel freshness."
       ]
     },
     {
@@ -279,11 +282,11 @@
       "exempt": false,
       "exemptReason": null,
       "knownGap": true,
-      "knownGapReason": "Hero card already exposes freshness; surrounding GCC grid and country carousel do not carry freshness branches.",
+      "knownGapReason": "Hero card, spotBar, and ticker all carry freshness; surrounding GCC grid and country carousel do not carry per-card freshness branches.",
       "notes": [
         "missing 'cached' branch literal",
         "missing 'stale' branch literal",
-        "KNOWN GAP: Hero card already exposes freshness; surrounding GCC grid and country carousel do not carry freshness branches."
+        "KNOWN GAP: Hero card, spotBar, and ticker all carry freshness; surrounding GCC grid and country carousel do not carry per-card freshness branches."
       ]
     },
     {
@@ -328,15 +331,13 @@
       "rendersPriceLike": true,
       "freshnessKeysMatched": [],
       "hasSourceLabel": true,
-      "hasTimestampLabel": false,
-      "exempt": false,
-      "exemptReason": null,
-      "knownGap": true,
-      "knownGapReason": "Shops directory page shows spot bar and list cards. Shop cards do not render live prices; page passes through updateSpotBar only.",
+      "hasTimestampLabel": true,
+      "exempt": true,
+      "exemptReason": "Shops directory is a discovery page; shop cards do not render live prices (the `%` trust-score strings + `shop-tag` labels trip the price-token heuristic). The page-level ticker/spotBar calls now forward updatedAt + hasLiveFailure, so §6.2 is satisfied via those shared components.",
+      "knownGap": false,
+      "knownGapReason": null,
       "notes": [
-        "renders price-like content but no live-status import",
-        "renders price-like content but no timestamp label heuristic",
-        "KNOWN GAP: Shops directory page shows spot bar and list cards. Shop cards do not render live prices; page passes through updateSpotBar only."
+        "EXEMPT: Shops directory is a discovery page; shop cards do not render live prices (the `%` trust-score strings + `shop-tag` labels trip the price-token heuristic). The page-level ticker/spotBar calls now forward updatedAt + hasLiveFailure, so §6.2 is satisfied via those shared components."
       ]
     },
     {
@@ -481,12 +482,13 @@
       ],
       "hasSourceLabel": true,
       "hasTimestampLabel": true,
-      "exempt": false,
-      "exemptReason": null,
+      "exempt": true,
+      "exemptReason": "Tracker render.js drives freshness data-driven via STATUS_BADGE_CLASS / SOURCE_BADGE_CLASS lookup tables keyed off `freshness.key`. Every state (\"live\"|\"cached\"|\"stale\"|\"unavailable\") is therefore handled without per-state string literals — the literal-search heuristic is a false negative here.",
       "knownGap": false,
       "knownGapReason": null,
       "notes": [
-        "missing 'stale' branch literal"
+        "missing 'stale' branch literal",
+        "EXEMPT: Tracker render.js drives freshness data-driven via STATUS_BADGE_CLASS / SOURCE_BADGE_CLASS lookup tables keyed off `freshness.key`. Every state (\"live\"|\"cached\"|\"stale\"|\"unavailable\") is therefore handled without per-state string literals — the literal-search heuristic is a false negative here."
       ]
     },
     {

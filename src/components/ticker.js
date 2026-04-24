@@ -2,11 +2,20 @@
  * components/ticker.js — Premium bottom gold price ticker.
  * Slim fixed bar with smooth scrolling gold prices.
  *
+ * Honors AGENTS.md §6.2: the ticker's `data-freshness` attribute reflects
+ * `getLiveFreshness()` ('live' | 'cached' | 'stale' | 'unavailable'), a
+ * status pill surfaces the label + relative age next to the close button,
+ * and the pill's tooltip discloses the source timestamp. Pass `updatedAt`
+ * + `hasLiveFailure` in `updateTicker()` so callers that already track
+ * those can forward them unchanged.
+ *
  * API:
  *   injectTicker(lang, depth)    — create & mount the ticker
- *   updateTicker(data)           — update displayed values
+ *   updateTicker(data)           — update displayed values + freshness state
  *   updateTickerLang(lang)       — switch language labels live
  */
+
+import { getLiveFreshness } from '../lib/live-status.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Config
@@ -48,6 +57,24 @@ const TICKER_ITEMS = [
 
 const DISMISSED_KEY = 'gp-ticker-dismissed';
 
+let _tickerEl = null;
+let _currentLang = 'en';
+
+function freshnessLabel(key, lang) {
+  const isAr = lang === 'ar';
+  switch (key) {
+    case 'live':
+      return isAr ? 'مباشر' : 'Live';
+    case 'cached':
+      return isAr ? 'مخزن مؤقتاً' : 'Cached';
+    case 'stale':
+      return isAr ? 'قديم' : 'Stale';
+    case 'unavailable':
+    default:
+      return isAr ? 'غير متاح' : 'Unavailable';
+  }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────────────────────────────────────
@@ -74,10 +101,12 @@ function buildCopyHtml(lang, trackerHref) {
 export function injectTicker(lang = 'en', depth = 0) {
   if (document.getElementById('gold-ticker')) return; // already injected
 
+  _currentLang = lang;
   const isAr = lang === 'ar';
   const trackerHref = depth === 0 ? 'tracker.html' : '../'.repeat(depth) + 'tracker.html';
   const dismissLabel = isAr ? 'إغلاق الشريط' : 'Dismiss ticker';
   const ariaLabel = isAr ? 'شريط أسعار الذهب' : 'Live gold price ticker';
+  const unavailableLabel = freshnessLabel('unavailable', lang);
 
   // Two identical copies so the animation creates a seamless loop
   const copy1 = buildCopyHtml(lang, trackerHref);
@@ -89,12 +118,19 @@ export function injectTicker(lang = 'en', depth = 0) {
   ticker.setAttribute('role', 'status');
   ticker.setAttribute('aria-live', 'polite');
   ticker.setAttribute('aria-label', ariaLabel);
+  ticker.setAttribute('data-freshness', 'unavailable');
   ticker.innerHTML =
+    '<span class="ticker-status" data-ticker-status ' +
+    `title="${unavailableLabel}" aria-label="${unavailableLabel}">` +
+    '<span class="ticker-status-dot" aria-hidden="true"></span>' +
+    `<span class="ticker-status-label" data-ticker-status-label>${unavailableLabel}</span>` +
+    '</span>' +
     `<div class="ticker-track">${copy1}${copy2}</div>` +
     `<button class="ticker-close" id="ticker-close" aria-label="${dismissLabel}" title="${dismissLabel}">×</button>`;
 
   document.body.appendChild(ticker);
   document.body.classList.add('has-ticker');
+  _tickerEl = ticker;
 
   // Restore dismissed state from sessionStorage
   try {
@@ -157,6 +193,42 @@ export function updateTicker(data = {}) {
         el.textContent = formatted;
       });
   });
+
+  // Freshness pill (§6.2). Three-way contract on `data-updatedAt`:
+  //   - truthy ISO string  → recompute freshness from it
+  //   - explicit `null`    → reset the pill to "unavailable"
+  //   - omitted / undefined → preserve last-rendered state (never silently
+  //                          regress to "live" without a fresh timestamp
+  //                          to back it)
+  const bar = _tickerEl || document.getElementById('gold-ticker');
+  if (!bar) return;
+  if (data.updatedAt) {
+    const fresh = getLiveFreshness({
+      updatedAt: data.updatedAt,
+      lang: _currentLang,
+      hasLiveFailure: Boolean(data.hasLiveFailure),
+    });
+    bar.setAttribute('data-freshness', fresh.key);
+    const label = freshnessLabel(fresh.key, _currentLang);
+    const statusEl = bar.querySelector('[data-ticker-status]');
+    const labelEl = bar.querySelector('[data-ticker-status-label]');
+    if (labelEl) labelEl.textContent = label;
+    if (statusEl) {
+      const tooltip = `${label} · ${fresh.timeText} (${fresh.ageText})`;
+      statusEl.setAttribute('title', tooltip);
+      statusEl.setAttribute('aria-label', tooltip);
+    }
+  } else if (data.updatedAt === null) {
+    bar.setAttribute('data-freshness', 'unavailable');
+    const label = freshnessLabel('unavailable', _currentLang);
+    const statusEl = bar.querySelector('[data-ticker-status]');
+    const labelEl = bar.querySelector('[data-ticker-status-label]');
+    if (labelEl) labelEl.textContent = label;
+    if (statusEl) {
+      statusEl.setAttribute('title', label);
+      statusEl.setAttribute('aria-label', label);
+    }
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -164,6 +236,7 @@ export function updateTicker(data = {}) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function updateTickerLang(lang) {
+  _currentLang = lang;
   const isAr = lang === 'ar';
   TICKER_ITEMS.forEach((item) => {
     const label = isAr ? item.labelAr : item.labelEn;
@@ -173,4 +246,23 @@ export function updateTickerLang(lang) {
         el.textContent = label;
       });
   });
+  // Re-translate the status pill label to the current freshness key.
+  // Note: this updates the short label (e.g. "Cached" → "مخزن مؤقتاً")
+  // but deliberately does NOT touch the title tooltip, which carries the
+  // timestamp + age text set by updateTicker() — a subsequent updateTicker()
+  // call rebuilds that in the active language. Updating title here without
+  // access to the original {timeText, ageText} would strip that detail.
+  const bar = _tickerEl || document.getElementById('gold-ticker');
+  if (!bar) return;
+  const key = bar.getAttribute('data-freshness') || 'unavailable';
+  const label = freshnessLabel(key, lang);
+  const statusEl = bar.querySelector('[data-ticker-status]');
+  const labelEl = bar.querySelector('[data-ticker-status-label]');
+  if (labelEl) labelEl.textContent = label;
+  if (statusEl) {
+    // Keep title + aria-label in sync; both fall back to the short label
+    // until the next updateTicker() call restores the timestamped tooltip.
+    statusEl.setAttribute('title', label);
+    statusEl.setAttribute('aria-label', label);
+  }
 }

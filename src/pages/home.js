@@ -152,6 +152,8 @@ function renderHeroCard() {
     uae22k: calc.usdPerGram(goldPrice, k22.purity) * CONSTANTS.AED_PEG,
     uae21k: calc.usdPerGram(goldPrice, k21.purity) * CONSTANTS.AED_PEG,
     uae18k: calc.usdPerGram(goldPrice, k18?.purity ?? 0.75) * CONSTANTS.AED_PEG,
+    updatedAt: goldUpdatedAt,
+    hasLiveFailure: priceSourceLabel !== 'live',
   });
 
   // Update karat strip

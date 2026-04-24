@@ -636,6 +636,8 @@ async function fetchLiveData() {
         uae22k: ((STATE.spotUsdPerOz * (22 / 24)) / TROY) * AED,
         uae21k: ((STATE.spotUsdPerOz * (21 / 24)) / TROY) * AED,
         uae18k: ((STATE.spotUsdPerOz * (18 / 24)) / TROY) * AED,
+        updatedAt: STATE.freshness.goldUpdatedAt,
+        hasLiveFailure: STATE.spotSource !== 'live',
       });
       updateSpotBar({
         xauUsd: STATE.spotUsdPerOz,

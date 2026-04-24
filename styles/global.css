@@ -3712,6 +3712,67 @@ details[open] > .faq-q::after {
   color: rgb(255 255 255 / 72%);
 }
 
+/* Ticker freshness status pill — mirrors spotBar's §6.2 contract.
+   Visible label + colored dot + hover tooltip with source timestamp.
+   States are driven by `.gold-ticker[data-freshness="..."]` at runtime. */
+.ticker-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  padding: 0 0.75rem 0 0.85rem;
+  height: 38px;
+  font-size: 0.68rem;
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 55%);
+  border-right: 1px solid rgb(196 153 62 / 15%);
+  cursor: help;
+}
+
+.ticker-status-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 35%);
+  flex-shrink: 0;
+}
+
+.gold-ticker[data-freshness='live'] .ticker-status {
+  color: rgb(141 217 159 / 90%);
+}
+
+.gold-ticker[data-freshness='live'] .ticker-status-dot {
+  background: #4ade80;
+  box-shadow: 0 0 6px rgb(74 222 128 / 55%);
+}
+
+.gold-ticker[data-freshness='cached'] .ticker-status {
+  color: rgb(224 184 74 / 95%);
+}
+
+.gold-ticker[data-freshness='cached'] .ticker-status-dot {
+  background: #e0b84a;
+}
+
+.gold-ticker[data-freshness='stale'] .ticker-status {
+  color: rgb(242 172 89 / 95%);
+}
+
+.gold-ticker[data-freshness='stale'] .ticker-status-dot {
+  background: #f2ac59;
+}
+
+.gold-ticker[data-freshness='unavailable'] .ticker-status {
+  color: rgb(220 120 120 / 85%);
+}
+
+.gold-ticker[data-freshness='unavailable'] .ticker-status-dot {
+  background: #dc7878;
+}
+
 /* Body padding when ticker is present */
 body.has-ticker {
   padding-bottom: 38px;

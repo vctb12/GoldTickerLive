@@ -1422,6 +1422,9 @@ function init() {
       uae22k: aedGram('22'),
       uae21k: aedGram('21'),
       uae18k: aedGram('18'),
+      updatedAt: cachedGold.updatedAt || null,
+      // Cached fallback data is, by definition, not a live response.
+      hasLiveFailure: true,
     });
   }
 
