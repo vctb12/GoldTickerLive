@@ -44,72 +44,6 @@
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
     <link rel="stylesheet" href="../../styles/global.css" />
 
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": "Gold Price History & Charts",
-        "description": "Interactive gold price history charts spanning 30 days to 5 years with ATH, ATL, and karat comparisons.",
-        "url": "https://goldtickerlive.com/content/gold-price-history/",
-        "breadcrumb": {
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": "https://goldtickerlive.com/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Gold Price History",
-              "item": "https://goldtickerlive.com/content/gold-price-history/"
-            }
-          ]
-        }
-      }
-    </script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Dataset",
-        "name": "Gold Price Historical Data — XAU/USD and Multi-Currency",
-        "description": "Historical gold price data covering 30 days to 5 years. XAU/USD spot price with karat comparisons (24K, 22K, 21K, 18K) and multi-currency conversion including AED, SAR, KWD, QAR, BHD, OMR, EGP, JOD.",
-        "url": "https://goldtickerlive.com/content/gold-price-history/",
-        "temporalCoverage": "2019/..",
-        "variableMeasured": [
-          {
-            "@type": "PropertyValue",
-            "name": "XAU/USD spot price",
-            "unitText": "USD per troy ounce"
-          },
-          { "@type": "PropertyValue", "name": "24K gold per gram", "unitText": "AED" },
-          { "@type": "PropertyValue", "name": "22K gold per gram", "unitText": "AED" }
-        ],
-        "creator": {
-          "@type": "Organization",
-          "name": "GoldPrices",
-          "url": "https://goldtickerlive.com/"
-        },
-        "license": "https://creativecommons.org/licenses/by/4.0/",
-        "distribution": [
-          {
-            "@type": "DataDownload",
-            "encodingFormat": "text/csv",
-            "contentUrl": "https://goldtickerlive.com/content/gold-price-history/"
-          }
-        ],
-        "keywords": [
-          "gold price history",
-          "XAU USD historical",
-          "gold price chart",
-          "gold rate UAE",
-          "سعر الذهب تاريخي"
-        ]
-      }
-    </script>
-
     <style>
       /* ── Page layout ── */
       .hist-page {
@@ -433,6 +367,48 @@
         text-align: right;
       }
     </style>
+  
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://goldtickerlive.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Content",
+      "item": "https://goldtickerlive.com/content"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Gold Price History",
+      "item": "https://goldtickerlive.com/content/gold-price-history"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Gold Price History & Charts — 30 Days to 5 Years | GoldPrices",
+  "description": "Interactive gold price history charts spanning 30 days to 5 years. View ATH, ATL, YTD performance, karat comparisons, and download historical data.",
+  "category": "Precious Metals",
+  "offers": {
+    "@type": "AggregateOffer",
+    "priceCurrency": "AED",
+    "availability": "https://schema.org/InStock",
+    "itemCondition": "https://schema.org/NewCondition"
+  }
+}
+  </script>
   </head>
   <body>
     <div id="nav-root"></div>
