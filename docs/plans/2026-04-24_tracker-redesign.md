@@ -1,238 +1,274 @@
-# Tracker.html Redesign Plan
+# Tracker.html Redesign Plan — 20-Phase Track
 
-**Created:** 2026-04-24 **Task:** Redesign tracker.html UI/UX to fix scattered data and information
-architecture **Issue:** [BUG] tracker.html page has scattered data and info
+**Created:** 2026-04-24  
+**Source reports:** [`reports/tracker-ux-audit.md`](../../reports/tracker-ux-audit.md) (Phase 1
+deliverable), [`reports/token-audit.md`](../../reports/token-audit.md) (Phase 2 deliverable),
+[`reports/tracker-primitive-map.md`](../../reports/tracker-primitive-map.md) (Phase 3 deliverable).  
+**Master plan section:** `docs/REVAMP_PLAN.md` §22b.  
+**Status:** ⬜ Pending — Phase 1–3 audit reports complete; implementation Phases 4–20 awaiting slot
+into `REVAMP_PLAN.md`.
+
+---
 
 ## Problem Statement
 
 The tracker.html page has become overly complex and scattered through multiple iterations by
 different agents and developers. The current implementation has:
 
-1. **241 tracker-specific CSS classes** — indicating significant fragmentation
-2. **Overly dense hero section** with too many competing elements:
-   - 4 status badges
-   - Title and subtitle
-   - Description
-   - Hero stats grid
-   - 4 selector dropdowns
-   - 4 action buttons
-   - 4 hint chips
-   - Keyboard shortcuts hint
-   - Live desk sidebar
-   - Explore links sidebar
-3. **Scattered information architecture**:
-   - Trust banner separate from hero
-   - Welcome strip (conditionally shown)
-   - Hero split between main and aside
-   - Mode tabs immediately after hero
-   - Multiple overlapping toolbars
-4. **Visual hierarchy issues**:
-   - Too many elements competing for attention
-   - Inconsistent spacing and grouping
-   - Unclear primary action flow
-   - Badge overload in hero
+1. **241 tracker-specific CSS classes** — indicating significant fragmentation.
+2. **Overly dense hero section** with too many competing elements: 4 status badges, title + subtitle,
+   description, hero stats grid, 4 selector dropdowns, 4 action buttons, 4 hint chips, keyboard
+   shortcuts hint, live-desk sidebar, explore-links sidebar.
+3. **Scattered information architecture**: trust banner separate from hero, welcome strip
+   conditionally shown, hero split between main and aside, mode tabs immediately after hero, multiple
+   overlapping toolbars.
+4. **27 `innerHTML` / `outerHTML` / `insertAdjacentHTML` sinks** across 4 tracker files — the
+   largest DOM-safety surface in the repo.
 
-## Design Goals
+---
 
-Per the Autonomy Contract in AGENTS.md §4–§5, we will:
+## Surface footprint (from `reports/tracker-ux-audit.md` §1)
 
-1. **Simplify visual hierarchy** — establish clear primary/secondary/tertiary levels
-2. **Consolidate related controls** — group selectors, reduce redundancy
-3. **Improve information flow** — guide users from overview → action → data
-4. **Maintain all functionality** — no features removed, only reorganized
-5. **Preserve product-trust guardrails** — all §6 trust elements stay visible
-6. **Enhance mobile experience** — better responsive behavior at 360px+
-7. **Improve bilingual parity** — verify EN/AR RTL consistency
+| File                           | LOC   | Notes                                                                               |
+| ------------------------------ | ----- | ----------------------------------------------------------------------------------- |
+| `tracker.html`                 | 1,312 | 7 modes (live · compare · archive · alerts · planner · exports · method) + hero + trust |
+| `src/pages/tracker-pro.js`     | 716   | Orchestrator; lazy-loads render / events / wire / ad-slot                           |
+| `src/tracker/render.js`        | 1,031 | Biggest `innerHTML` concentration (18 sinks)                                        |
+| `src/tracker/state.js`         | 270   | URL-hash contract frozen in `docs/tracker-state.md`                                 |
+| `src/tracker/ui-shell.js`      | 220   | Tab + overlay wiring (target of Phase 7 extraction)                                 |
+| `src/tracker/events.js`        | 308   | Trust / welcome-strip / keyboard                                                    |
+| `src/tracker/wire.js`          | 98    | Live headlines belt                                                                  |
+| `styles/pages/tracker-pro.css` | 2,577 | Target of Phase 17 split                                                            |
 
-## Measurable Outcomes
+### DOM-safety baseline (must not increase; reductions require tightening the per-file baseline)
 
-- Lighthouse Performance ≥ current baseline
-- No new DOM-safety sinks
-- Zero test regressions
-- Hero section reduced from ~140 lines to ~80 lines
-- Visual hierarchy scores improved (via manual assessment)
-- Mobile viewport usability improved (via 360px testing)
-- Build and validation green
+| File                       | Current sinks |
+| -------------------------- | :-----------: |
+| `src/tracker/render.js`    | 18            |
+| `src/tracker/events.js`    | 2             |
+| `src/tracker/wire.js`      | 3             |
+| `src/pages/tracker-pro.js` | 4             |
+| **Total tracker surface**  | **27**        |
 
-## Implementation Strategy
+---
 
-### Phase 1: Hero Section Redesign
+## Token audit summary (from `reports/token-audit.md` — Phase 2 deliverable)
 
-**Files:** `tracker.html` (lines 197–320), `styles/pages/tracker-pro.css`
+**Finding: nothing to promote.** All three surfaces audited are already in the correct state:
 
-**Changes:**
+- **Tracker (`styles/pages/tracker-pro.css`)** — `:root` block is a thin alias layer; every `--tp-*`
+  maps through `var(--…)` to a canonical token in `styles/global.css`. No hand-picked hex values.
+  Alias layer deliberately kept for future "pro dark" theme capability.
+- **Homepage** — no page-scoped `:root` of hero tokens; `index.html` + `src/pages/home.js` consume
+  `--surface-*`, `--text-*`, `--color-gold-*`, `--shadow-*`, `--radius-*` directly.
+- **Admin (`styles/admin.css`)** — intentionally divergent palette (always dark-themed, tighter
+  radius scale, indigo primary accent, heavier shadows). Divergence documented with rationale; do
+  **not** promote. Rename to `--admin-*` prefix in Phases 23–28.
 
-1. Consolidate status badges from 4 to 2:
-   - Keep: Live status badge, XAU/USD price badge
-   - Move: Market status → inline with refresh time
-   - Remove: Redundant refresh badge (show in live badge)
-2. Simplify hero content structure:
-   - Title + subtitle: keep
-   - Description: tighten to 1 line
-   - Hero stats: keep but redesign as 3-column instead of grid
-   - Selectors: consolidate into single row with better labels
-   - Actions: reduce to 2 primary buttons (Refresh + Chart scroll)
-   - Hint chips: reduce from 4 to 2, move non-critical to methodology link
-3. Redesign hero aside:
-   - Merge "Live desk" and "Explore more" into single sidebar
-   - Reduce vertical height
-   - Better visual separation from main content
+**Phase 2 follow-up rows:**
+- Phase 14 (CSS split): keep the `--tp-*` alias `:root` block in the shared file.
+- Phases 15–22 (homepage rebuild): wire count-up and sparkline colors via `--color-up*` / `--color-down*`.
+- Phases 23–28 (admin revamp): rename admin tokens to `--admin-*` prefix.
 
-**Result:** Hero section from 140 lines → ~80 lines, clearer visual flow
+---
 
-### Phase 2: Information Architecture Consolidation
+## Shared-primitive adoption map (from `reports/tracker-primitive-map.md` — Phase 3 deliverable)
 
-**Files:** `tracker.html`, `styles/pages/tracker-pro.css`
+Primitives in play:
 
-**Changes:**
+| Primitive | Surface role |
+| --- | --- |
+| `src/lib/live-status.js` (`getLiveFreshness`, `getMarketStatus`, `formatRelativeAge`) | Canonical freshness / market-open / relative-age strings |
+| `src/lib/freshness-pulse.js` (`pulseFreshness`) | 600 ms attribute toggle, 90 s throttle, reduced-motion safe |
+| `src/lib/reveal.js` (`observeReveal`, auto-init) | Fade-in-up for `[data-reveal]` via one shared `IntersectionObserver` |
+| `src/lib/count-up.js` (`countUp`) | rAF easeOutQuad numeric counter, auto directional `data-flash=up/down` |
+| `src/lib/safe-dom.js` (`el`, `clear`, `escape`, `safeHref`, `safeTel`) | DOM-safe builders — the only home for `innerHTML` |
 
-1. Trust banner:
-   - Keep at top but reduce vertical padding
-   - Simplify copy while maintaining §6.2 compliance
-2. Welcome strip:
-   - Keep conditional logic
-   - Reduce visual weight when shown
-3. Mode navigation:
-   - Improve tab visual design
-   - Better active state indication
-   - Clearer workspace level toggle
+Adoption status per site:
 
-**Result:** Clearer page-level hierarchy, reduced visual noise
+| Site | Target primitive | Status | Phase |
+| --- | --- | --- | --- |
+| `render.js` — hero badges | `getLiveFreshness` + `getMarketStatus` | ✅ Adopted | — |
+| `tracker-pro.js` — reveal import | `observeReveal` auto-init | ✅ Adopted | — |
+| Mode-tab registry | `src/tracker/modes.js` | ✅ Shipped | 7 |
+| Sections below the fold | `[data-reveal]` HTML attribute | ✅ Shipped | 7 |
+| `render.js` — `#tp-xauusd-value` | `countUp` | ⚠️ Not adopted | 17 |
+| `render.js` — karat strip cells | `countUp` + `pulseFreshness` | ⚠️ Not adopted | 17 |
+| `render.js` — `#tp-chart-stats` | `countUp` | ⚠️ Not adopted | 9 / 17 |
+| Tracker "just-refreshed" cells (hero + karat strip + compare) | `pulseFreshness(el, {})` | ⚠️ Not adopted | 9 / 18 |
+| `wire.js` — live-wire items | `safe-dom.el()` + `formatRelativeAge` | ⚠️ 3 sinks pending | 9 |
+| `render.js` — archive table | `safe-dom.el()` + `clear()` | ❌ Ad-hoc `innerHTML` | 11 |
+| `render.js` — compare results table | `safe-dom.el()` | ❌ Ad-hoc `innerHTML` | 10 |
+| `events.js` — welcome-strip | `observeReveal` (`[data-reveal]` opt-in) | ⚠️ No tag yet | 6 |
 
-### Phase 3: Component Design Refinement
+**Invariant:** Any future change on the tracker surface must check this map before introducing a local
+helper. If the primitive does not cover the new case, add a row and extend the primitive — do not
+fork a sibling in `src/tracker/`.
 
-**Files:** `styles/pages/tracker-pro.css`, `tracker.html`
+---
 
-**Changes:**
+## Defect log (from `reports/tracker-ux-audit.md` §2)
 
-1. Update design tokens usage:
-   - Use `--text-4xl` and `--text-5xl` for display-level headings
-   - Apply `--space-*` tokens consistently
-   - Use `--radius-*` tokens for all border-radius
-2. Improve card/panel hierarchy:
-   - Reduce shadow weight on non-critical panels
-   - Better border treatment
-   - Consistent padding scale
-3. Typography rhythm:
-   - Apply heading scale consistently
-   - Improve line-height for readability
-   - Better text color contrast
+Each defect is mapped to the phase that owns it. Severity: 🟥 critical, 🟧 serious, 🟨 polish.
 
-**Result:** More cohesive visual design, better token usage
+### Hero + trust (Phase 5, Phase 16)
 
-### Phase 4: Responsive Optimization
+- 🟧 Badge row wraps awkwardly on 320 px widths (overflow-x hidden hides the XAU/USD tail).
+- 🟧 `#tp-hero-stats` is built via `el()` but has no loading skeleton; first paint shows an empty
+  grid until prices resolve.
+- 🟨 Selectors row (language · currency · karat · unit) does not stick on scroll on mobile — users
+  lose the unit context when reading the chart.
+- 🟨 `#tp-jump-chart` anchors to `#mode-live` but does not set focus on the chart heading; keyboard
+  users jump visually without landing on a focusable target.
 
-**Files:** `styles/pages/tracker-pro.css`
+### Welcome + orientation (Phase 6)
 
-**Changes:**
+- 🟧 `#tracker-welcome-strip` renders on every first-paint before JS decides whether to hide it
+  (FOUC on slow connections).
+- 🟨 Chips do not reveal progressively; all three animate in lockstep.
 
-1. Mobile-first breakpoints:
-   - Test at 360px, 768px, 1024px, 1440px
-   - Improve hero stacking on mobile
-   - Better selector layout on narrow viewports
-2. Touch targets:
-   - Ensure 44px minimum for interactive elements
-   - Better spacing between controls
-3. RTL support:
-   - Verify all flexbox/grid layouts work in RTL
-   - Test Arabic language rendering
-   - Fix any mirroring issues
+### Mode tabs (Phase 7, Phase 8)
 
-**Result:** Flawless mobile experience, better RTL support
+- 🟧 Tab wiring, overlay wiring, keyboard shortcuts, hashchange handling, and workspace-level toggle
+  are all co-located in `ui-shell.js`. Extracting a registry makes each mode independently testable
+  and unlocks lazy-mount in Phase 19.
+- 🟨 `aria-controls` on `#tab-alerts` / `#tab-planner` points at overlay IDs, not mode panels —
+  correct today, but the shape differs from other tabs and is confusing.
 
-### Phase 5: Motion and Interaction Polish
+### Live mode (Phase 9)
 
-**Files:** `styles/pages/tracker-pro.css`, `src/tracker/render.js`
+- 🟧 No explicit loading skeleton — chart-empty state only shows _after_ a first successful fetch.
+- 🟧 Pinch/pan on mobile chart is fiddly; two-finger pan competes with page scroll.
+- 🟨 `#tp-chart-stats` numbers do not pulse/flash on refresh, making it unclear whether a value
+  actually changed.
 
-**Changes:**
+### Compare mode (Phase 10)
 
-1. Apply motion primitives from `styles/global.css`:
-   - Use `[data-reveal]` for progressive disclosure
-   - Apply `data-flash` for value changes
-   - Respect `prefers-reduced-motion`
-2. Improve interactive states:
-   - Better hover/focus states on buttons
-   - Clearer active states on selectors
-   - Smooth transitions (use `--ease-*` and `--duration-*`)
+- 🟧 Results are built via `innerHTML` concatenation — part of the `render.js` 18-sink count.
+  Semantic `<table>` via `el()` needed.
+- 🟨 Spot vs retail framing isn't explicit per row; users can misread the comparison as retail.
 
-**Result:** Polished, accessible interactions
+### Archive mode (Phase 11) — largest single debug target
 
-## Impacted Files
+- 🟥 Pagination is missing; loading a long range renders every row (LCP regression on mobile).
+- 🟥 Sort state is not reflected in the hash → users can't share a sorted view.
+- 🟧 Largest `innerHTML` concentration in the tracker; refactor to `el()` must bring `render.js`
+  from 18 → ≤ 10 sinks.
 
-### HTML
+### Alerts mode (Phase 12)
 
-- `tracker.html` (lines 140–410 primarily)
+- 🟧 No disclaimer that alerts are browser-only — risk of user thinking they're SMS/email.
+- 🟨 No `aria-live` on the fire-notification strip.
 
-### CSS
+### Planner mode (Phase 13)
 
-- `styles/pages/tracker-pro.css` (hero section, panels, responsive)
+- 🟧 Retail-vs-spot switch is buried; the disclaimer must be re-used from the sitewide §0.2 snippet.
+- 🟨 Zakat calculator inputs do not round-trip in the hash.
 
-### JavaScript (minimal changes)
+### Exports mode (Phase 14)
 
-- `src/pages/tracker-pro.js` (element references if needed)
-- `src/tracker/ui-shell.js` (verify no breaking changes)
+- 🟧 CSV filename does not include ISO timestamp + karat + currency — brittle for repeat exports.
+- 🟨 "Copy brief" uses HTML templating; consolidate into a tested generator.
 
-### Tests
+### Method mode (Phase 15)
 
-- `tests/tracker-hash.test.js` (verify URL state still works)
-- `tests/tracker-modes.test.js` (verify mode registry intact)
+- 🟨 Method tab is a static block; does not deep-link to `methodology.html` anchors.
 
-## Rollback Points
+---
 
-1. After Phase 1: Hero redesign can be reverted as single commit
-2. After Phase 2: Info arch changes can be reverted independently
-3. After Phase 3: Design token updates can be reverted
-4. After Phase 4: Responsive changes isolated in media queries
-5. After Phase 5: Motion polish is additive only
+## A11y / performance baselines to beat
 
-## Done Checklist
+- **Pa11y (mobile):** owed — Phase 20 defines the "clean" bar.
+- **Lighthouse (mobile):** previous LCP ≈ 2.8 s on 4G emulation — Phase 19 + Phase 5 must not regress.
+- **DOM-safety baseline:** tightened on Phase 11 (archive) and Phase 5 (hero).
 
-- [ ] Phase 1: Hero section redesigned and simplified
-- [ ] Phase 2: Information architecture consolidated
-- [ ] Phase 3: Component design tokens applied
-- [ ] Phase 4: Responsive behavior verified at 360px, 768px, 1024px
-- [ ] Phase 5: Motion primitives applied
-- [ ] `npm test` passes (no test regressions)
-- [ ] `npm run lint` passes
-- [ ] `npm run validate` passes (no DOM-safety regression)
-- [ ] `npm run build` succeeds
-- [ ] Before/after screenshots captured (desktop 1440px + mobile 360px)
-- [ ] RTL spot-check completed (Arabic language + dir=rtl)
-- [ ] Lighthouse performance ≥ baseline
-- [ ] Trust elements verified per §6.2 (freshness labels, disclaimers)
-- [ ] Bilingual EN/AR parity confirmed
-- [ ] Manual testing: all modes (Live, Compare, Archive, Exports, Method)
-- [ ] Manual testing: all overlays (Alerts, Planner)
-- [ ] Manual testing: keyboard shortcuts still work
-- [ ] Manual testing: responsive behavior smooth
+---
 
-## Evidence
+## Implementation phases
 
-Screenshots to capture:
+All 20 phases are defined by `REVAMP_PLAN.md` §22b. The table below maps each phase to the defects
+it resolves and the primitives it must adopt. Phases 1–3 are already shipped (audit deliverables).
 
-1. Hero section before/after (desktop 1440px)
-2. Hero section before/after (mobile 360px)
-3. Full page before/after (desktop, scrolled)
-4. RTL mode verification (Arabic)
-5. Mode navigation before/after
-6. Trust banner before/after
+| Phase | Title | Defects resolved | Primitive targets | Status |
+| --- | --- | --- | --- | --- |
+| 1 | Surface audit | — | — | ✅ Done — `reports/tracker-ux-audit.md` |
+| 2 | Token audit | — | — | ✅ Done — `reports/token-audit.md` |
+| 3 | Primitive adoption map | — | — | ✅ Done — `reports/tracker-primitive-map.md` |
+| 4 | Audit tooling gate | — | `check-unsafe-dom.js` baseline | ⬜ Pending |
+| 5 | Hero + trust redesign | Hero 🟧×2, 🟨×2 | `el()` skeleton, badge layout | ⬜ Pending |
+| 6 | Welcome strip FOUC + progressive chips | Welcome 🟧, 🟨 | `[data-reveal]` opt-in | ⬜ Pending |
+| 7 | Mode-tab registry extraction | Tabs 🟧, 🟨 | `modes.js` registry | ✅ Shipped |
+| 8 | Keyboard + hash wiring cleanup | Tabs wiring | `ui-shell.js` refactor | ⬜ Pending |
+| 9 | Live mode: skeleton + touch + pulse | Live 🟧×2, 🟨 | `countUp`, `pulseFreshness`, 3 `wire.js` sinks | ⬜ Pending |
+| 10 | Compare mode: safe-dom table + retail framing | Compare 🟧, 🟨 | `safe-dom.el()` | ⬜ Pending |
+| 11 | Archive mode: pagination + sort hash + sink reduction | Archive 🟥×2, 🟧 | `safe-dom.el()` + `clear()` | ⬜ Pending |
+| 12 | Alerts mode: browser-only disclaimer + aria-live | Alerts 🟧, 🟨 | `aria-live` region | ⬜ Pending |
+| 13 | Planner mode: retail disclaimer + hash round-trip | Planner 🟧, 🟨 | §0.2 snippet reuse | ⬜ Pending |
+| 14 | Exports mode: CSV filename + copy-brief generator | Exports 🟧, 🟨 | — | ⬜ Pending |
+| 15 | Method mode: deep-links to methodology.html | Method 🟨 | — | ⬜ Pending |
+| 16 | Hero stats: count-up animation | Hero polish | `countUp` on hero stats | ⬜ Pending |
+| 17 | Karat strip + XAU/USD: count-up + pulse | — | `countUp`, `pulseFreshness` on strip | ⬜ Pending |
+| 18 | Pulse all "just-refreshed" cells | — | `pulseFreshness` sitewide on tracker | ⬜ Pending |
+| 19 | Performance: lazy-mount below-fold modes | — | — | ⬜ Pending |
+| 20 | Pa11y audit + final Lighthouse baseline | — | — | ⬜ Pending |
+
+---
+
+## Hard guards (out of scope — never)
+
+From `reports/tracker-ux-audit.md` §4:
+
+- **No chart-lib swap** — `docs/plans/README.md` matrix row #11 rejected. `lightweight-charts` stays
+  for tick/OHLC (tracker); `chart.js` stays for multi-series overlay (history page).
+- **No URL-hash contract change** — frozen in `docs/tracker-state.md`.
+- **No new backend / Supabase / auth.**
+- **No opportunistic edits outside the tracker surface.**
+- **No new URL paths** — matrix row #15 gated behind owner approval.
+
+---
+
+## Design goals
+
+1. **Simplify visual hierarchy** — establish clear primary/secondary/tertiary levels.
+2. **Consolidate related controls** — group selectors, reduce redundancy.
+3. **Improve information flow** — guide users from overview → action → data.
+4. **Maintain all functionality** — no features removed, only reorganised.
+5. **Preserve product-trust guardrails** — all §6 trust elements stay visible; freshness labels and
+   disclaimers are product elements, not decoration.
+6. **Enhance mobile experience** — better responsive behaviour at 360 px+; 44 px touch targets.
+7. **Improve bilingual parity** — verify EN/AR RTL consistency on every changed surface.
+
+---
+
+## Done criteria
+
+- All 20 phase rows ticked in the table above.
+- `render.js` sink count ≤ 10 (down from 18) after Phase 11.
+- DOM-safety baseline in `check-unsafe-dom.js` tightened to match reduced counts.
+- Lighthouse LCP on mobile ≤ 2.8 s (does not regress).
+- Pa11y mobile clean bar established (Phase 20).
+- `npm test`, `npm run lint`, `npm run validate`, `npm run build` all green.
+- Before/after screenshots at 360 px + 1440 px for every phase that touches visible surfaces.
+- RTL spot-check (Arabic + `dir=rtl`) for Phases 5, 6, 9, 10, 11.
+- All §6 product-trust guardrails intact (freshness labels, spot-vs-retail framing, disclaimer copy).
+
+---
+
+## Rollback strategy
+
+Each phase ships as a standalone commit. Phases 5–15 (defect fixes) are fully reversible because
+they touch a bounded set of files within the tracker surface. Phase 11 (archive pagination) carries
+the highest regression risk — land it behind a feature flag or as the last phase before Phase 20
+verification.
+
+---
 
 ## Risks
 
-1. **Breaking URL state** — hash-based state might be affected
-   - Mitigation: Keep all state.js logic unchanged, only UI changes
-2. **Test failures** — existing tests might expect specific DOM structure
-   - Mitigation: Run tests early, update only if structure changed semantically
-3. **Bilingual regression** — RTL layout might break
-   - Mitigation: Test Arabic mode explicitly at each phase
-4. **Mobile usability regression** — hero might not stack well
-   - Mitigation: Mobile-first approach, test at 360px throughout
-
-## Notes
-
-- This is a **visual and UX redesign only** — no functional changes
-- All existing features preserved (modes, overlays, charts, exports, etc.)
-- Focus is on **consolidation and hierarchy**, not feature addition
-- Follows AGENTS.md §4 Autonomy Contract: Explore → Expand → Plan → Implement → Verify → Ship
-- Preserves all §6 product-trust guardrails
-- Maintains static multi-page architecture (§6.5)
+| Risk | Mitigation |
+| --- | --- |
+| Breaking URL hash state | `state.js` is untouched; test with `tests/tracker-hash.test.js` after every phase |
+| Raising DOM-safety sink count | Run `npm run validate` after every phase; revert if count increases |
+| LCP regression on mobile | Run Lighthouse before Phase 19 and after Phase 20 |
+| Bilingual regression (RTL) | Test Arabic mode at every phase that touches `tracker.html` |
+| Archive pagination edge cases | Gate Phase 11 behind a feature flag; load-test with 365-day range |
