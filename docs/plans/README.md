@@ -29,6 +29,7 @@ update) the section in `REVAMP_PLAN.md`, and open a scoped PR for the first slic
 | [`REPO_CLEANUP_PROPOSAL.md`](./REPO_CLEANUP_PROPOSAL.md)                                           | Agent prompt · 2026-04-23 | 🟡 Phase 0 reconciled into `REVAMP_PLAN.md` §29; Phase 1 (audit-only) in progress |
 | [`2026-04-24_revenue-focused-growth-plan.md`](./2026-04-24_revenue-focused-growth-plan.md)         | User prompt · 2026-04-24  | 🆕 NEW — 6-month revenue plan (100K visitors, $100/mo, no migration)              |
 | [`2026-04-24_security-performance-deps-audit.md`](./2026-04-24_security-performance-deps-audit.md) | User prompt · 2026-04-24  | 🟢 In progress — Track A PR A-1 (security high-sev fixes) landing; B/C to follow. |
+| [`2026-04-24_navbar-audit-and-redesign.md`](./2026-04-24_navbar-audit-and-redesign.md)             | Agent audit · 2026-04-24  | 🆕 NEW — 23-issue navbar audit; 3-phase plan (bugs → CSS → IA). Awaiting owner review before Phase 1 PR. |
 
 ---
 
