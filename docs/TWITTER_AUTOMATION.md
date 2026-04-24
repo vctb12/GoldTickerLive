@@ -26,7 +26,7 @@ This repo contains **two** X/Twitter posting systems:
 
 1. The workflow (`.github/workflows/gold-price-tweet.yml`) runs on a cron **every hour at :00**.
 2. It executes `scripts/tweet-gold-price.js`, which:
-   - Fetches the live XAU/USD spot from **gold-api.com**.
+   - Fetches the live XAU/USD spot from **goldpricez.com**.
    - Picks a template based on the hour (Dubai time / UTC+4).
    - Signs the request with **OAuth 1.0a** and posts to the X API v2.
 
@@ -43,9 +43,9 @@ This repo contains **two** X/Twitter posting systems:
 
 ---
 
-## Step 1 — Get a Gold API key
+## Step 1 — Get a GoldPriceZ key
 
-1. Sign up at **https://gold-api.com** (free tier available).
+1. Sign up at **https://goldpricez.com** (free tier available).
 2. Copy your API key from the dashboard.
 
 ---
@@ -75,7 +75,7 @@ In your repository on GitHub:
 
 | Secret name           | Value                        |
 | --------------------- | ---------------------------- |
-| `GOLD_API_KEY`        | Your gold-api.com API key    |
+| `GOLDPRICEZ_API_KEY`  | Your goldpricez.com API key  |
 | `CONSUMER_KEY`        | X App API Key (Consumer Key) |
 | `CONSUMER_SECRET`     | X App API Key Secret         |
 | `ACCESS_TOKEN`        | X Access Token (read-write)  |

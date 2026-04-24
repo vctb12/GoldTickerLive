@@ -306,9 +306,20 @@
       }
 
       async function fetchSpot() {
-        const r = await fetch('https://api.gold-api.com/price/XAU');
+        // Canonical gold-price file — written every 6 min by
+        // .github/workflows/gold-price-fetch.yml from goldpricez.com.
+        // Using the absolute URL so this embed works as an iframe AND as
+        // a drop-in script on external sites.
+        const r = await fetch('https://goldtickerlive.com/data/gold_price.json', {
+          cache: 'no-store',
+        });
         if (!r.ok) throw new Error('API ' + r.status);
-        return r.json();
+        const raw = await r.json();
+        const price = raw?.gold?.ounce_usd;
+        if (typeof price !== 'number' || price <= 0) {
+          throw new Error('Invalid gold price data');
+        }
+        return { price, updatedAt: raw.fetched_at_utc };
       }
 
       async function fetchFX() {

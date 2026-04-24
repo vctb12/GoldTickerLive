@@ -601,7 +601,7 @@ Applied on top of primitives from Track A. Rules:
 - [ ] `IntersectionObserver`-gated rendering for below-fold sections (tracker wire + archive, home
       FAQ + social + explainer).
 - [ ] `loading="lazy"` + `decoding="async"` on non-critical images.
-- [ ] Preconnect to data origins (`gold-api.com`, `exchangerate-api.com`) — verified present.
+- [ ] Preconnect to data origins (`goldpricez.com`, `exchangerate-api.com`) — verified present.
 - [ ] Verify `sw.js` still caches revamped assets correctly.
 - [ ] Remove duplicate inline styles once systemized into classes.
 
@@ -1347,8 +1347,8 @@ Vite 8 + Terser. `vite.config.js` excludes the 15 country directories, `admin/`,
 
 | Domain                      | Purpose                                                |
 | --------------------------- | ------------------------------------------------------ |
-| `api.gold-api.com`          | Primary XAU/USD spot (`goldPriceService.js`)           |
-| `data-asg.goldprice.org`    | Fallback gold price (`lib/api.js`)                     |
+| `api.goldpricez.com`        | Primary XAU/USD spot (`goldPriceService.js`)           |
+| `goldpricez.com`            | Fallback gold price (`lib/api.js`)                     |
 | `open.er-api.com`           | FX rates (USD base) (`fxService.js`)                   |
 | Supabase project URL        | Shops / settings / auth (`lib/supabase-data.js`)       |
 | `api.gdeltproject.org`      | Market news (`scripts/pages/insights.js`)              |

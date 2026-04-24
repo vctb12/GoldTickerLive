@@ -55,7 +55,7 @@ this site from static prototype to production._
 **GoldPrices** is a bilingual (English/Arabic) gold pricing platform serving 15 countries across the
 GCC, Levant, North Africa, and India. It provides:
 
-- **Live spot-linked pricing** (refreshed every 90 seconds via gold-api.com)
+- **Live spot-linked pricing** (refreshed every 90 seconds via goldpricez.com)
 - **24+ currency conversions** (via exchangerate-api.com)
 - **7 karat grades** (24K, 22K, 21K, 18K, 14K, 12K, 10K)
 - **380+ SEO-optimized pages** (country → city → karat → shops)
@@ -117,7 +117,7 @@ GCC, Levant, North Africa, and India. It provides:
 │  └──────────┘                                                   │
 │       │              ┌──────────────────────────┐               │
 │       │              │ External APIs             │               │
-│       └─────────────▶│ ├── gold-api.com (XAU)   │               │
+│       └─────────────▶│ ├── goldpricez.com (XAU)   │               │
 │                      │ ├── er-api.com (FX)       │               │
 │                      │ └── DataHub (historical)  │               │
 │                      └──────────────────────────┘               │
@@ -212,7 +212,7 @@ These are the heart of the application — shared modules imported by every page
 
 | File                               | Lines   | What It Does                                                                                                                                                                | Key Exports                                                                                  |
 | ---------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `src/lib/api.js`                   | ~136    | Fetches gold spot price (XAU/USD) and FX rates with timeout, retry, and simulation hooks. Multi-provider: primary gold-api.com, fallback goldprice.org.                     | `fetchGold()`, `fetchFX()`, `setSimulateGoldFailure()`, `setSimulateFXFailure()`             |
+| `src/lib/api.js`                   | ~136    | Fetches gold spot price (XAU/USD) and FX rates with timeout, retry, and simulation hooks. Multi-provider: primary goldpricez.com, fallback goldprice.org.                   | `fetchGold()`, `fetchFX()`, `setSimulateGoldFailure()`, `setSimulateFXFailure()`             |
 | `src/lib/cache.js`                 | ~193    | Dual-layer localStorage cache with TTL (time-to-live). Primary + fallback keys prevent data loss on storage errors. Stale recovery returns expired data when API fails.     | `get(key)`, `set(key, value, ttl)`, `clear()`, `showStorageQuotaWarning()`                   |
 | `src/lib/price-calculator.js`      | ~63     | Core pricing formulas. `usdPerGram(karat) = (spotUsdPerOz / 31.1035) × purity`. Local price = USD × FX rate.                                                                | `usdPerGram(spot, karat)`, `localPerGram(spot, karat, fxRate)`                               |
 | `src/lib/formatter.js`             | ~142    | Formats prices with currency symbols, decimal places, and locale. Also formats dates, times, and karat labels for both EN and AR.                                           | `formatPrice(value, currency, lang)`, `formatDate()`, `formatKarat()`, `formatCountryName()` |
@@ -266,7 +266,7 @@ Higher-level abstraction over `src/lib/api.js`. Used by newer code paths.
 
 | File                               | What It Does                                                                                                                     |
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `src/services/goldPriceService.js` | Multi-provider gold spot price fetcher. Primary: gold-api.com, fallback: goldprice.org. Returns `{ price, updatedAt }`.          |
+| `src/services/goldPriceService.js` | Multi-provider gold spot price fetcher. Primary: goldpricez.com, fallback: goldprice.org. Returns `{ price, updatedAt }`.        |
 | `src/services/fxService.js`        | Multi-provider FX rate fetcher. Primary: exchangerate-api.com, fallback: openexchangerates.org. Returns currency rate map.       |
 | `src/services/apiAdapter.js`       | Shared HTTP client with retry logic, timeout handling, and typed errors (`DataError`, `NetworkError`).                           |
 | `src/services/pricingEngine.js`    | Single-source-of-truth price calculator. Takes spot USD/oz + FX rates → outputs keyed prices for all country×karat combinations. |
@@ -604,7 +604,7 @@ server adds admin API capabilities and server-side data persistence.
 1. Timer fires (90s interval)
        │
 2. lib/api.js → fetchGold()
-       │  ├── Try: api.gold-api.com/v1/XAU/USD
+       │  ├── Try: api.goldpricez.com/v1/XAU/USD
        │  └── Fallback: goldprice.org
        │
 3. lib/api.js → fetchFX()
@@ -689,13 +689,13 @@ API Available?
 
 ### 🔴 Critical Limitations
 
-| #   | Limitation                                | Impact                                                                                                                                       | Where                                       |
-| --- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| 1   | **Client-side API keys exposed**          | Gold-api.com and FX API keys are in client-side JS, visible to anyone inspecting the page. Rate limits and costs are borne by the key owner. | `src/lib/api.js`, `src/config/constants.js` |
-| 2   | **No server-side rendering**              | Every page load requires client-side JS to fetch prices and hydrate content. Bad for SEO crawlers that don't execute JS.                     | All pages                                   |
-| 3   | **Single point of failure: gold-api.com** | If primary API goes down and fallback also fails, prices show "Unavailable". No queued retry or server-side caching.                         | `src/lib/api.js`                            |
-| 4   | **No rate limiting on client**            | Every page load fires 2 API calls (gold + FX). 1000 concurrent visitors = 2000 API calls in 90 seconds.                                      | `src/lib/api.js`                            |
-| 5   | **localStorage as database**              | User preferences, alerts, and watchlist are stored in browser localStorage. Cleared by browser = data lost.                                  | `src/lib/cache.js`, `src/tracker/state.js`  |
+| #   | Limitation                                  | Impact                                                                                                                                       | Where                                       |
+| --- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| 1   | **Client-side API keys exposed**            | Gold-api.com and FX API keys are in client-side JS, visible to anyone inspecting the page. Rate limits and costs are borne by the key owner. | `src/lib/api.js`, `src/config/constants.js` |
+| 2   | **No server-side rendering**                | Every page load requires client-side JS to fetch prices and hydrate content. Bad for SEO crawlers that don't execute JS.                     | All pages                                   |
+| 3   | **Single point of failure: goldpricez.com** | If primary API goes down and fallback also fails, prices show "Unavailable". No queued retry or server-side caching.                         | `src/lib/api.js`                            |
+| 4   | **No rate limiting on client**              | Every page load fires 2 API calls (gold + FX). 1000 concurrent visitors = 2000 API calls in 90 seconds.                                      | `src/lib/api.js`                            |
+| 5   | **localStorage as database**                | User preferences, alerts, and watchlist are stored in browser localStorage. Cleared by browser = data lost.                                  | `src/lib/cache.js`, `src/tracker/state.js`  |
 
 ### 🟡 Major Limitations
 
@@ -783,7 +783,7 @@ API Available?
 
 ```
 Browser → GitHub Pages (static HTML/JS/CSS)
-  └── JS fetches → External APIs (gold-api.com, er-api.com)
+  └── JS fetches → External APIs (goldpricez.com, er-api.com)
        └── Results cached in localStorage
 ```
 
@@ -811,7 +811,7 @@ Browser → CDN → Express Server (Node.js)
 
 1. Move `server.js` to be the primary entry point
 2. Add server-side price fetching with in-memory cache (Redis or node-cache)
-3. Create API proxy: `/api/gold-price` → fetches from gold-api.com with server key
+3. Create API proxy: `/api/gold-price` → fetches from goldpricez.com with server key
 4. Create API proxy: `/api/fx-rates` → fetches from er-api.com with server key
 5. Add template rendering (EJS or Handlebars) for SSR
 6. Update client JS to call `/api/gold-price` instead of external APIs

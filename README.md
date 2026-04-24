@@ -169,7 +169,7 @@ practice**, combining:
 │  constants.js · countries.js · karats.js · translations.js  │
 ├─────────────────────────────────────────────────────────────┤
 │                External APIs                                │
-│  gold-api.com (XAU/USD) · open.er-api.com (FX rates)        │
+│  goldpricez.com (XAU/USD) · open.er-api.com (FX rates)        │
 │  datahub.io (historical) · GDELT (news headlines)           │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -331,7 +331,7 @@ npm run seo-audit    # Validates SEO metadata across all pages
 
 | Source                                                                       | Used for                | Notes                       |
 | ---------------------------------------------------------------------------- | ----------------------- | --------------------------- |
-| [Gold API](https://gold-api.com/docs)                                        | Live XAU/USD spot price | Primary live market layer   |
+| [GoldPriceZ](https://goldpricez.com/docs)                                    | Live XAU/USD spot price | Primary live market layer   |
 | [ExchangeRate-API](https://www.exchangerate-api.com/docs/free)               | Currency conversion     | FX layer                    |
 | Hardcoded `3.6725`                                                           | UAE pricing             | Official AED/USD peg        |
 | [DataHub Gold Prices](https://datahub.io/core/gold-prices)                   | Historical baseline     | Long-range historical layer |
@@ -372,7 +372,7 @@ GoldPrices runs **8 GitHub Actions workflows** for automated operations:
 
 | Secret                        | Used by                                         |
 | ----------------------------- | ----------------------------------------------- |
-| `GOLD_API_KEY`                | Tweet, Telegram, Discord, Spike alert workflows |
+| `GOLDPRICEZ_API_KEY`          | Tweet, Telegram, Discord, Spike alert workflows |
 | `TWITTER_API_KEY`             | Tweet workflow                                  |
 | `TWITTER_API_SECRET`          | Tweet workflow                                  |
 | `TWITTER_ACCESS_TOKEN`        | Tweet workflow                                  |
@@ -412,7 +412,7 @@ X account. Runs via four additional GitHub Actions workflows.
 #### Quick Start
 
 1. **Set up secrets** — add these in GitHub → Settings → Secrets → Actions:
-   - `GOLD_API_KEY` — from [goldapi.io](https://www.goldapi.io)
+   - `GOLDPRICEZ_API_KEY` — from [goldapi.io](https://www.goldapi.io)
    - `CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET` — from
      [X Developer Portal](https://developer.twitter.com)
    - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` — from your Supabase project dashboard
@@ -508,12 +508,14 @@ npm start  # Starts Express server on port 3000
 
 ## API Setup
 
-### Gold API (required for live prices)
+### GoldPriceZ (required for live prices)
 
-1. Sign up at [gold-api.com](https://gold-api.com)
+1. Sign up at [goldpricez.com](https://goldpricez.com)
 2. Get your API key
-3. Add as GitHub Secret: `GOLD_API_KEY`
-4. The frontend uses this key via `src/config/constants.js`
+3. Add as GitHub Secret: `GOLDPRICEZ_API_KEY`
+4. The `gold-price-fetch` workflow (`.github/workflows/gold-price-fetch.yml`) calls goldpricez.com
+   every 6 minutes and commits the response to `data/gold_price.json`. The frontend and all bots
+   read from that committed file — the key never ships to the browser.
 
 ### ExchangeRate API (required for FX conversion)
 
@@ -716,7 +718,7 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for:
 ### Pages show "No data available"
 
 - Check browser console for API errors
-- Verify Gold API key is valid at [gold-api.com](https://gold-api.com)
+- Verify GoldPriceZ key is valid at [goldpricez.com](https://goldpricez.com)
 - Try `?debug=true` to use the debug panel
 - Clear localStorage: `localStorage.clear()` then refresh
 

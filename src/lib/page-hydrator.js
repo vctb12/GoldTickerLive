@@ -115,7 +115,7 @@ function renderFreshnessBadge(updatedAt) {
         ⚠️ Prices may be delayed. Last known data shown. <a href="${BASE_URL}/methodology.html" style="color:#92400e;font-weight:600;">Learn more</a>
        </div>`
     : '';
-  return `${staleBanner}<span style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.8rem;color:${color};font-weight:500;" title="Source: gold-api.com / open.er-api.com">
+  return `${staleBanner}<span style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.8rem;color:${color};font-weight:500;" title="Source: goldpricez.com / open.er-api.com">
     <span style="width:7px;height:7px;border-radius:50%;background:${color};display:inline-block;"></span>
     ${label}
     <span style="color:#cbd5e1;font-size:0.75rem;">· spot-linked estimate</span>

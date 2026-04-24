@@ -62,45 +62,35 @@ async function retryWithBackoff(fn, maxRetries = 2) {
   throw lastErr;
 }
 
-const GOLD_FALLBACK_URL = 'https://data-asg.goldprice.org/dbXRates/USD';
+const GOLD_DATA_URL = '/data/gold_price.json';
 
 export async function fetchGold() {
   if (_simulateGoldFail) throw new NetworkError('Simulated gold API failure');
 
-  // Try primary provider (gold-api.com) with retry/backoff
+  // Data comes from a single, committed file written every 6 min by
+  // .github/workflows/gold-price-fetch.yml (source: goldpricez.com).
+  // We fetch same-origin with cache-busting so the freshness timestamp
+  // in the payload is the truth.
   try {
     return await retryWithBackoff(async () => {
-      const res = await fetchWithTimeout(CONSTANTS.API_GOLD_URL, CONSTANTS.GOLD_FETCH_TIMEOUT);
+      const res = await fetchWithTimeout(
+        `${GOLD_DATA_URL}?t=${Date.now()}`,
+        CONSTANTS.GOLD_FETCH_TIMEOUT
+      );
       const data = await res.json();
-      if (typeof data.price !== 'number' || data.price <= 0) {
-        throw new DataError('Invalid gold price response');
-      }
-      return {
-        price: data.price,
-        updatedAt: data.updatedAt || new Date().toISOString(),
-        source: 'gold-api',
-      };
-    });
-  } catch {
-    // Primary failed — try secondary provider (goldprice.org)
-  }
-
-  try {
-    return await retryWithBackoff(async () => {
-      const res = await fetchWithTimeout(GOLD_FALLBACK_URL, CONSTANTS.GOLD_FETCH_TIMEOUT);
-      const data = await res.json();
-      const price = data?.items?.[0]?.xauPrice;
+      const price = data?.gold?.ounce_usd;
       if (typeof price !== 'number' || price <= 0) {
-        throw new DataError('Invalid goldprice-org response');
+        throw new DataError('Invalid gold price data file');
       }
       return {
         price,
-        updatedAt: new Date().toISOString(),
-        source: 'goldprice-org',
+        updatedAt: data.fetched_at_utc || new Date().toISOString(),
+        source: 'goldpricez',
+        raw: data,
       };
     });
   } catch {
-    // Secondary also failed — return cached fallback
+    // Fetching the static data file failed — fall through to cached fallback.
   }
 
   const cached = getFallbackGoldPrice();
@@ -111,7 +101,7 @@ export async function fetchGold() {
       source: 'cache-fallback',
     };
   }
-  throw new NetworkError('Gold price unavailable — all providers failed');
+  throw new NetworkError('Gold price unavailable — data file could not be read');
 }
 
 export async function fetchFX() {

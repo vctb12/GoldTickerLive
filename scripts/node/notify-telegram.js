@@ -6,7 +6,7 @@
  * to a Telegram channel/group using the Bot API.
  *
  * Required GitHub Secrets:
- *   GOLD_API_KEY         – api.gold-api.com key
+ *   (reads data/gold_price.json — the gold-price-fetch workflow is the only place the goldpricez key is used)
  *   TELEGRAM_BOT_TOKEN   – from @BotFather on Telegram
  *   TELEGRAM_CHANNEL_ID  – e.g. "@goldprices_channel" or "-100123456789"
  *
@@ -21,15 +21,26 @@
 'use strict';
 
 const https = require('https');
+const fs = require('fs');
+const path = require('path');
 
 const SITE_URL = 'https://goldtickerlive.com/';
-const GOLD_API_URL = 'https://api.gold-api.com/price/XAU';
+const GOLD_PRICE_FILE = path.resolve(__dirname, '..', '..', 'data', 'gold_price.json');
 const AED_PEG = 3.6725;
 const TROY_OZ = 31.1035;
 
-const GOLD_API_KEY = process.env.GOLD_API_KEY || '';
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const TELEGRAM_CHANNEL_ID = process.env.TELEGRAM_CHANNEL_ID || '';
+
+function readGoldPrice() {
+  const raw = fs.readFileSync(GOLD_PRICE_FILE, 'utf8');
+  const data = JSON.parse(raw);
+  const price = data?.gold?.ounce_usd;
+  if (typeof price !== 'number' || price <= 0) {
+    throw new Error('data/gold_price.json missing or invalid gold.ounce_usd');
+  }
+  return { price, updatedAt: data.fetched_at_utc || new Date().toISOString() };
+}
 
 function fmt(n, decimals = 2) {
   if (n == null || isNaN(n)) return '—';
@@ -41,27 +52,6 @@ function fmt(n, decimals = 2) {
 
 function calcAedPerGram(spotUsdPerOz, purity) {
   return (spotUsdPerOz / TROY_OZ) * purity * AED_PEG;
-}
-
-function httpsGet(url, headers = {}) {
-  return new Promise((resolve, reject) => {
-    const req = https.get(url, { headers }, (res) => {
-      let body = '';
-      res.on('data', (c) => {
-        body += c;
-      });
-      res.on('end', () => {
-        if (res.statusCode !== 200) return reject(new Error(`HTTP ${res.statusCode}: ${body}`));
-        try {
-          resolve(JSON.parse(body));
-        } catch (e) {
-          reject(e);
-        }
-      });
-    });
-    req.on('error', reject);
-    req.setTimeout(10000, () => req.destroy(new Error('Timeout')));
-  });
 }
 
 function httpsPost(url, payload, headers = {}) {
@@ -104,7 +94,6 @@ function httpsPost(url, payload, headers = {}) {
 
 async function main() {
   const missing = [
-    ['GOLD_API_KEY', GOLD_API_KEY],
     ['TELEGRAM_BOT_TOKEN', TELEGRAM_BOT_TOKEN],
     ['TELEGRAM_CHANNEL_ID', TELEGRAM_CHANNEL_ID],
   ]
@@ -119,12 +108,12 @@ async function main() {
     process.exit(0);
   }
 
-  console.log('📡 Fetching gold price…');
+  console.log('📡 Reading gold price from data/gold_price.json (goldpricez.com)…');
   let goldData;
   try {
-    goldData = await httpsGet(GOLD_API_URL, { 'x-access-token': GOLD_API_KEY });
+    goldData = readGoldPrice();
   } catch (err) {
-    console.error('❌ Gold API error:', err.message);
+    console.error('❌ Gold price data file error:', err.message);
     process.exit(1);
   }
 

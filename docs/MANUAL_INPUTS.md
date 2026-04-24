@@ -5,12 +5,12 @@ where to get it, which file to edit, and what breaks without it.
 
 ---
 
-## 1. GOLD_API_KEY — REQUIRED (~5 min)
+## 1. GOLDPRICEZ_API_KEY — REQUIRED (~5 min)
 
 - **What:** API key for fetching live gold spot prices in server-side scripts (tweet bots, alerts).
-- **Where to get it:** Sign up at https://gold-api.com — the free tier gives 500 requests/month.
+- **Where to get it:** Sign up at https://goldpricez.com — the free tier gives 500 requests/month.
 - **Where to set it:** Add as a GitHub repository secret: Settings → Secrets → Actions →
-  `GOLD_API_KEY`.
+  `GOLDPRICEZ_API_KEY`.
 - **What breaks without it:** The automated Twitter/Telegram/Discord posting scripts will fail to
   fetch prices. The client-side homepage uses the public endpoint and does not need this key.
 

@@ -719,13 +719,15 @@
 
       async function fetchLivePrice() {
         try {
-          const res = await fetch('https://api.gold-api.com/price/XAU', {
+          const res = await fetch('/data/gold_price.json', {
             signal: AbortSignal.timeout(6000),
+            cache: 'no-store',
           });
           if (!res.ok) return;
           const data = await res.json();
-          if (data && typeof data.price === 'number' && data.price > 0) {
-            fetchedPrice = data.price / TROY_OZ_G;
+          const price = data?.gold?.ounce_usd;
+          if (typeof price === 'number' && price > 0) {
+            fetchedPrice = price / TROY_OZ_G;
             if (!priceInput.value) {
               priceInput.value = fetchedPrice.toFixed(2);
               priceHint.textContent = `Live price loaded: $${fetchedPrice.toFixed(2)}/g (24K). You can override this.`;

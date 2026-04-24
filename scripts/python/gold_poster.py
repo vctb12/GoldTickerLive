@@ -47,7 +47,7 @@ log = get_logger("gold_poster")
 
 # ── Required environment variables by mode ───────────────────────────────────
 REQUIRED_ENV = {
-    "all": ["GOLD_API_KEY"],
+    "all": [],
     "twitter": [
         "TWITTER_API_KEY",
         "TWITTER_API_SECRET",

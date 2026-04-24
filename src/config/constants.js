@@ -4,7 +4,7 @@
 export const BASE_PATH = '/';
 
 export const CONSTANTS = {
-  API_GOLD_URL: 'https://api.gold-api.com/price/XAU',
+  API_GOLD_URL: '/data/gold_price.json',
   API_FX_URL: 'https://open.er-api.com/v6/latest/USD',
   AED_PEG: 3.6725,
   TROY_OZ_GRAMS: 31.1035,

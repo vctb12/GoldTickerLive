@@ -1794,14 +1794,15 @@
       async function fetchGoldPrice() {
         const cached = getCachedPrice();
         if (cached) return cached;
-        const res = await fetch('https://api.gold-api.com/price/XAU', {
+        const res = await fetch('/data/gold_price.json', {
           signal: AbortSignal.timeout(8000),
+          cache: 'no-store',
         });
         if (!res.ok) throw new Error(`API ${res.status}`);
         const data = await res.json();
-        const price = data.price || data.Price || data.ask || data.Ask;
+        const price = data?.gold?.ounce_usd;
         if (!price) throw new Error('No price in response');
-        const prev = data.prev_close || data.prevClosePrice || price;
+        const prev = data?.gold?.day_low_usd || price;
         setCachedPrice(price, prev);
         return { price, prev, ts: Date.now() };
       }

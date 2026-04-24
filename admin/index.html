@@ -576,9 +576,9 @@
         const dot = qs('#ticker-dot');
         const tickerTxt = qs('#ticker-text');
         try {
-          const res = await fetch(API_GOLD_URL);
+          const res = await fetch(API_GOLD_URL, { cache: 'no-store' });
           const data = await res.json();
-          const price = data.price ?? data.Price ?? null;
+          const price = data?.gold?.ounce_usd ?? null;
           if (price) {
             const formatted = new Intl.NumberFormat('en-US', {
               style: 'currency',
@@ -809,7 +809,7 @@
 
       // ── API Status checks ────────────────────────────────────
       const SERVICES = [
-        { name: 'Gold API (gold-api.com)', url: API_GOLD_URL },
+        { name: 'Gold data (goldpricez.com)', url: API_GOLD_URL },
         { name: 'Exchange Rates (er-api.com)', url: API_FX_URL },
       ];
 

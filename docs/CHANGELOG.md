@@ -106,5 +106,5 @@ All notable changes to the Gold-Prices platform are documented here.
 
 #### index.html
 
-- Added `<link rel="preconnect">` hints for `https://api.gold-api.com` and `https://open.er-api.com`
-  to reduce latency on first API call after page load.
+- Added `<link rel="preconnect">` hints for `https://api.goldpricez.com` and
+  `https://open.er-api.com` to reduce latency on first API call after page load.

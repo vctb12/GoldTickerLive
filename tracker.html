@@ -85,7 +85,7 @@
             "name": "How often does the gold price update?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "The tracker refreshes live gold prices every 90 seconds using the XAU/USD spot price from gold-api.com and current exchange rates. Prices are shown with a freshness timestamp so you always know when data was last fetched."
+              "text": "The tracker refreshes live gold prices using the XAU/USD spot price from goldpricez.com (updated every 6 minutes and committed to the repository) and current exchange rates. Prices are shown with a freshness timestamp so you always know when data was last fetched."
             }
           },
           {
@@ -1113,11 +1113,12 @@
             <article class="tracker-method-card">
               <h3>Live spot layer</h3>
               <p>
-                Live spot is pulled from Gold API in XAU/USD and refreshed roughly every 90
-                seconds, with retries and fallbacks from cache when networks fail.
+                Live spot is pulled from GoldPriceZ in XAU/USD every 6 minutes and committed
+                to the repository as <code>data/gold_price.json</code>, with retries and
+                fallbacks from cache when networks fail.
               </p>
-              <a href="https://gold-api.com/docs" target="_blank" rel="noopener noreferrer"
-                >Gold API docs</a
+              <a href="https://goldpricez.com/about/api" target="_blank" rel="nofollow noopener noreferrer"
+                >GoldPriceZ API docs</a
               >
             </article>
 

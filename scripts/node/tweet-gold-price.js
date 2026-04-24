@@ -2,13 +2,14 @@
 /**
  * scripts/tweet-gold-price.js
  *
- * Fetches the live XAU/USD spot price from gold-api.com and posts a
+ * Reads the live XAU/USD spot price from data/gold_price.json (written every 6 min
+ * by the gold-price-fetch workflow, source: goldpricez.com) and posts a
  * formatted tweet via the X / Twitter API v2.
  *
  * Runs from .github/workflows/gold-price-tweet.yml on a hourly schedule.
  *
  * Required GitHub Secrets (set in Settings → Secrets → Actions):
- *   GOLD_API_KEY                – api.gold-api.com key
+ *   (no gold API key needed — the fetch workflow is the only place the goldpricez key is used)
  *   TWITTER_API_KEY             – X Developer Portal: API Key (Consumer Key)
  *   TWITTER_API_SECRET          – X Developer Portal: API Key Secret
  *   TWITTER_ACCESS_TOKEN        – X Developer Portal: Access Token (read-write)
@@ -32,17 +33,33 @@ const url = require('url');
 // Config
 // ---------------------------------------------------------------------------
 const SITE_URL = 'https://goldtickerlive.com/';
-const GOLD_API_URL = 'https://api.gold-api.com/price/XAU';
+const GOLD_PRICE_FILE = require('path').resolve(__dirname, '..', '..', 'data', 'gold_price.json');
 const TWEET_URL = 'https://api.twitter.com/2/tweets';
 const AED_PEG = 3.6725;
 const TROY_OZ = 31.1035;
 
 // Credentials from environment
-const GOLD_API_KEY = process.env.GOLD_API_KEY || '';
 const TWITTER_API_KEY = process.env.TWITTER_API_KEY || '';
 const TWITTER_API_SECRET = process.env.TWITTER_API_SECRET || '';
 const TWITTER_ACCESS_TOKEN = process.env.TWITTER_ACCESS_TOKEN || '';
 const TWITTER_ACCESS_TOKEN_SECRET = process.env.TWITTER_ACCESS_TOKEN_SECRET || '';
+
+// Read the canonical gold-price payload (written every 6 min by
+// .github/workflows/gold-price-fetch.yml from goldpricez.com).
+function readGoldPrice() {
+  const fs = require('fs');
+  const raw = fs.readFileSync(GOLD_PRICE_FILE, 'utf8');
+  const data = JSON.parse(raw);
+  const price = data?.gold?.ounce_usd;
+  if (typeof price !== 'number' || price <= 0) {
+    throw new Error('data/gold_price.json missing or invalid gold.ounce_usd');
+  }
+  return {
+    price,
+    prev_close_price: data?.gold?.day_low_usd || null,
+    updatedAt: data.fetched_at_utc || new Date().toISOString(),
+  };
+}
 
 // ---------------------------------------------------------------------------
 // Utilities
@@ -73,31 +90,6 @@ function calcKarat(spotUsdPerOz, purity) {
 // ---------------------------------------------------------------------------
 // HTTP helpers
 // ---------------------------------------------------------------------------
-function httpsGet(targetUrl, headers = {}) {
-  return new Promise((resolve, reject) => {
-    const req = https.get(targetUrl, { headers }, (res) => {
-      let body = '';
-      res.on('data', (chunk) => {
-        body += chunk;
-      });
-      res.on('end', () => {
-        if (res.statusCode !== 200) {
-          return reject(new Error(`HTTP ${res.statusCode} from ${targetUrl}: ${body}`));
-        }
-        try {
-          resolve(JSON.parse(body));
-        } catch (e) {
-          reject(new Error(`JSON parse error: ${e.message}`));
-        }
-      });
-    });
-    req.on('error', reject);
-    req.setTimeout(10000, () => {
-      req.destroy(new Error('Request timed out'));
-    });
-  });
-}
-
 function httpsPost(targetUrl, payload, headers = {}) {
   return new Promise((resolve, reject) => {
     const body = JSON.stringify(payload);
@@ -481,7 +473,6 @@ function buildTweetText(templateId, data) {
 async function main() {
   // Validate credentials
   const missing = [
-    ['GOLD_API_KEY', GOLD_API_KEY],
     ['TWITTER_API_KEY', TWITTER_API_KEY],
     ['TWITTER_API_SECRET', TWITTER_API_SECRET],
     ['TWITTER_ACCESS_TOKEN', TWITTER_ACCESS_TOKEN],
@@ -497,24 +488,24 @@ async function main() {
     process.exit(0);
   }
 
-  // 1. Fetch gold price
-  console.log('📡 Fetching gold price from gold-api.com…');
+  // 1. Load gold price from the canonical data file
+  console.log('📡 Reading gold price from data/gold_price.json (goldpricez.com)…');
   let goldData;
   try {
-    goldData = await httpsGet(GOLD_API_URL, { 'x-access-token': GOLD_API_KEY });
+    goldData = readGoldPrice();
   } catch (err) {
-    console.error('❌ Failed to fetch gold price:', err.message);
+    console.error('❌ Failed to read gold price data file:', err.message);
     process.exit(1);
   }
 
   const spotUsdPerOz = goldData.price;
   if (typeof spotUsdPerOz !== 'number' || spotUsdPerOz <= 0) {
-    console.error('❌ Invalid price from gold-api.com:', goldData);
+    console.error('❌ Invalid price in data/gold_price.json:', goldData);
     process.exit(1);
   }
 
   const generatedAt = new Date().toISOString();
-  const dayOpenUsdPerOz = goldData.prev_close_price || goldData.open_price || null;
+  const dayOpenUsdPerOz = goldData.prev_close_price || null;
 
   console.log(`✅ Spot price: $${fmt(spotUsdPerOz)}/oz`);
 

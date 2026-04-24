@@ -7,9 +7,9 @@ secret values are stored here — only names and descriptions.**
 
 ## Gold Price API
 
-| Secret Name    | Purpose                                                       | Where to Get It                                             | What Happens if Missing                           |
-| -------------- | ------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------- |
-| `GOLD_API_KEY` | API key for GoldAPI (goldapi.io) to fetch XAU/USD spot prices | Sign up at https://www.goldapi.io — copy key from dashboard | All workflows fail — no price data can be fetched |
+| Secret Name          | Purpose                                                       | Where to Get It                                             | What Happens if Missing                           |
+| -------------------- | ------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------- |
+| `GOLDPRICEZ_API_KEY` | API key for GoldAPI (goldapi.io) to fetch XAU/USD spot prices | Sign up at https://www.goldapi.io — copy key from dashboard | All workflows fail — no price data can be fetched |
 
 ---
 
@@ -54,12 +54,12 @@ Used for price logging, spike detection rate limiting, and health monitoring.
 
 ## Workflow → Secret Mapping
 
-| Workflow            | Secrets Used                                                                                                                          |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `hourly_post.yml`   | `GOLD_API_KEY`, `CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` |
-| `market_events.yml` | Same as hourly                                                                                                                        |
-| `spike_alert.yml`   | Same as hourly + `SPIKE_THRESHOLD` (variable)                                                                                         |
-| `health_check.yml`  | Same as hourly                                                                                                                        |
+| Workflow            | Secrets Used                                                                                                                                |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hourly_post.yml`   | `GOLDPRICEZ_API_KEY`, `CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` |
+| `market_events.yml` | Same as hourly                                                                                                                              |
+| `spike_alert.yml`   | Same as hourly + `SPIKE_THRESHOLD` (variable)                                                                                               |
+| `health_check.yml`  | Same as hourly                                                                                                                              |
 
 ---
 

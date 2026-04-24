@@ -133,19 +133,19 @@
 
           <div class="method-source-card-row">
             <div class="method-source-card">
-              <div class="method-source-card-name">gold-api.com</div>
+              <div class="method-source-card-name">goldpricez.com</div>
               <div class="method-source-card-role" id="source-gold-role">
                 Gold spot price (XAU/USD)
               </div>
               <div class="method-source-card-freq" id="source-gold-freq">
-                Fetched every 90 seconds
+                Fetched every 6 minutes
               </div>
               <a
-                href="https://gold-api.com"
+                href="https://goldpricez.com"
                 target="_blank"
-                rel="noopener"
+                rel="nofollow noopener"
                 class="method-source-card-link"
-                >↗ gold-api.com</a
+                >↗ goldpricez.com</a
               >
             </div>
             <div class="method-source-card">
@@ -172,9 +172,13 @@
           <h3 id="gold-data-source-h3">Source</h3>
           <p id="gold-data-source-p">
             We fetch the XAU/USD spot price from
-            <a href="https://gold-api.com" target="_blank" rel="noopener">gold-api.com</a>, a
-            dedicated precious metals data API. The price represents the current market spot rate
-            for one troy ounce of pure gold (99.9% fineness / 24K), denominated in US Dollars.
+            <a href="https://goldpricez.com" target="_blank" rel="nofollow noopener">goldpricez.com</a>
+            (<a href="https://goldpricez.com/about/api" target="_blank" rel="nofollow noopener">API documentation</a>),
+            a dedicated precious metals data API. The price represents the current market spot rate
+            for one troy ounce of pure gold (99.9% fineness / 24K), denominated in US Dollars. The
+            response is fetched server-side every 6 minutes by a GitHub Actions workflow and
+            committed to this repository as <code>data/gold_price.json</code>; the website reads
+            that single file so the API key never reaches the browser.
           </p>
 
           <h3 id="gold-data-update-h3">Update Frequency</h3>
@@ -450,7 +454,7 @@
               <div class="method-tier-badge">Tier 1</div>
               <div class="method-tier-label" id="tier-1-label">Live API</div>
               <div class="method-tier-desc" id="tier-1-desc">
-                gold-api.com responds within 8 seconds — fresh real-time price
+                data/gold_price.json is present and fresh — price sourced from goldpricez.com
               </div>
             </div>
             <div class="method-fallback-tier method-fallback-tier--2">

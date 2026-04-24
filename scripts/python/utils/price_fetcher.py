@@ -1,20 +1,19 @@
 """
-scripts/utils/price_fetcher.py
+scripts/python/utils/price_fetcher.py
 
-Fetches live XAU/USD spot price from GoldAPI (goldapi.io) and calculates
-per-gram prices for all karats and AED conversion.
+Reads the canonical gold-price payload from ``data/gold_price.json``
+(written every 6 minutes by ``scripts/fetch_gold_price.py`` against
+goldpricez.com) and reshapes it into the dict the rest of the
+twitter-bot code expects.
 
-All behaviour is driven by config files — no hardcoded values except the
-AED peg rate (3.6725), which is a true constant.
+This module intentionally no longer calls any external gold-price API.
+All live fetching is centralized in the gold-price-fetch workflow so
+that the key (``GOLDPRICEZ_API_KEY``) is used from one place only.
 """
 
 import json
-import os
-import time
 from pathlib import Path
 from typing import Any, Dict, List
-
-import requests
 
 from utils.logger import get_logger
 
@@ -23,14 +22,17 @@ log = get_logger("price_fetcher")
 # ── Constants ────────────────────────────────────────────────────────────────
 AED_PEG = 3.6725
 TROY_OZ_GRAMS = 31.1035
-GOLDAPI_URL = "https://www.goldapi.io/api/XAU/USD"
+
+# Repo root: scripts/python/utils/price_fetcher.py → go up 3 levels.
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+GOLD_PRICE_FILE = _REPO_ROOT / "data" / "gold_price.json"
 
 # ── Config paths ─────────────────────────────────────────────────────────────
 _CONFIG_DIR = Path(__file__).resolve().parent.parent.parent / "config" / "twitter_bot"
 
 
 class PriceFetchError(Exception):
-    """Raised when the price cannot be fetched after all retries."""
+    """Raised when the price cannot be loaded from the data file."""
 
 
 def _load_json(filename: str) -> Any:
@@ -39,110 +41,87 @@ def _load_json(filename: str) -> Any:
         return json.load(fh)
 
 
-def _get_thresholds() -> Dict[str, Any]:
-    return _load_json("thresholds.json")
-
-
 def _get_karats() -> List[Dict[str, Any]]:
     data = _load_json("karat_weights.json")
     return data["karats"]
 
 
 def fetch_gold_price() -> Dict[str, Any]:
-    """
-    Fetch live XAU/USD from GoldAPI with retry logic.
+    """Read the latest gold price from ``data/gold_price.json``.
 
     Returns a dictionary:
-        spot_usd        – raw USD price per troy ounce
-        change_pct      – percentage change from previous close
-        open_usd        – day open price
+        spot_usd        – USD price per troy ounce
+        change_pct      – 0.0 (not computed here — the fetch workflow does not
+                          currently track a previous close; callers that need
+                          a delta should compare against Supabase themselves)
+        open_usd        – day low (best proxy available from goldpricez ``all``)
         high_usd        – day high
         low_usd         – day low
-        prev_close_usd  – previous close
-        timestamp       – ISO-8601 timestamp of the fetch
+        prev_close_usd  – None (not provided by goldpricez ``all`` endpoint)
+        timestamp       – fetched_at_utc from the data file (ISO-8601, Z suffix)
         karat_prices    – list of per-karat per-gram prices (USD + AED)
         aed_rate        – the AED peg rate used
     """
-    api_key = os.environ.get("GOLD_API_KEY", "")
-    if not api_key:
-        raise PriceFetchError("GOLD_API_KEY environment variable is not set")
+    if not GOLD_PRICE_FILE.exists():
+        raise PriceFetchError(
+            f"{GOLD_PRICE_FILE} not found. The gold-price-fetch workflow "
+            "must run first to populate it."
+        )
 
-    thresholds = _get_thresholds()
-    max_retries = thresholds.get("api_retry_attempts", 3)
-    retry_delay = thresholds.get("api_retry_delay_seconds", 5)
+    try:
+        raw = json.loads(GOLD_PRICE_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise PriceFetchError(f"Failed to read {GOLD_PRICE_FILE}: {exc}")
 
-    headers = {
-        "x-access-token": api_key,
-        "Content-Type": "application/json",
+    if not isinstance(raw, dict):
+        raise PriceFetchError("gold_price.json is not a JSON object")
+
+    gold = raw.get("gold") or {}
+    spot = gold.get("ounce_usd")
+    if not isinstance(spot, (int, float)) or spot <= 0:
+        raise PriceFetchError(
+            f"Invalid or missing 'gold.ounce_usd' in {GOLD_PRICE_FILE}: {raw}"
+        )
+    spot = float(spot)
+
+    day_high = gold.get("day_high_usd")
+    day_low = gold.get("day_low_usd")
+    timestamp = raw.get("fetched_at_utc")
+
+    # Per-karat per-gram prices. Prefer whatever is already in the payload
+    # for AED, compute USD locally from spot so callers that only care
+    # about USD still work.
+    karats_aed = raw.get("karats_aed_per_gram") or {}
+    karats = _get_karats()
+    karat_prices = []
+    for k in karats:
+        usd_per_gram = (spot / TROY_OZ_GRAMS) * k["purity"]
+        # Prefer the committed AED value (already rounded) when available,
+        # otherwise fall back to the peg-based calculation.
+        aed_per_gram = karats_aed.get(k["code"])
+        if not isinstance(aed_per_gram, (int, float)) or aed_per_gram <= 0:
+            aed_per_gram = usd_per_gram * AED_PEG
+        karat_prices.append(
+            {
+                "code": k["code"],
+                "label": k["label"],
+                "purity": k["purity"],
+                "usd_per_gram": round(usd_per_gram, 2),
+                "aed_per_gram": round(float(aed_per_gram), 2),
+            }
+        )
+
+    result = {
+        "spot_usd": round(spot, 2),
+        "change_pct": 0.0,
+        "open_usd": round(day_low, 2) if day_low else None,
+        "high_usd": round(day_high, 2) if day_high else None,
+        "low_usd": round(day_low, 2) if day_low else None,
+        "prev_close_usd": None,
+        "timestamp": timestamp,
+        "karat_prices": karat_prices,
+        "aed_rate": AED_PEG,
     }
 
-    last_error = None
-    for attempt in range(1, max_retries + 1):
-        log.info("Fetch attempt %d/%d from GoldAPI", attempt, max_retries)
-        try:
-            response = requests.get(GOLDAPI_URL, headers=headers, timeout=15)
-            response.raise_for_status()
-            data = response.json()
-
-            # Validate required fields
-            spot = data.get("price")
-            if spot is None or not isinstance(spot, (int, float)) or spot <= 0:
-                raise ValueError(
-                    f"Invalid or missing 'price' field in GoldAPI response: {data}"
-                )
-
-            open_price = data.get("open_price")
-            prev_close = data.get("prev_close_price")
-            high_price = data.get("high_price")
-            low_price = data.get("low_price")
-
-            # Calculate change from previous close
-            change_pct = 0.0
-            reference = prev_close or open_price
-            if reference and reference > 0:
-                change_pct = ((spot - reference) / reference) * 100
-
-            # Calculate per-karat per-gram prices
-            karats = _get_karats()
-            karat_prices = []
-            for k in karats:
-                usd_per_gram = (spot / TROY_OZ_GRAMS) * k["purity"]
-                aed_per_gram = usd_per_gram * AED_PEG
-                karat_prices.append(
-                    {
-                        "code": k["code"],
-                        "label": k["label"],
-                        "purity": k["purity"],
-                        "usd_per_gram": round(usd_per_gram, 2),
-                        "aed_per_gram": round(aed_per_gram, 2),
-                    }
-                )
-
-            result = {
-                "spot_usd": round(spot, 2),
-                "change_pct": round(change_pct, 2),
-                "open_usd": round(open_price, 2) if open_price else None,
-                "high_usd": round(high_price, 2) if high_price else None,
-                "low_usd": round(low_price, 2) if low_price else None,
-                "prev_close_usd": round(prev_close, 2) if prev_close else None,
-                "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-                "karat_prices": karat_prices,
-                "aed_rate": AED_PEG,
-            }
-
-            log.info("Price fetched successfully: $%.2f/oz", spot)
-            return result
-
-        except Exception as exc:
-            last_error = exc
-            log.warning(
-                "Attempt %d failed: %s", attempt, str(exc)
-            )
-            if attempt < max_retries:
-                log.info("Retrying in %d seconds...", retry_delay)
-                time.sleep(retry_delay)
-
-    raise PriceFetchError(
-        f"Failed to fetch gold price after {max_retries} attempts. "
-        f"Last error: {last_error}"
-    )
+    log.info("Price loaded from data file: $%.2f/oz", spot)
+    return result

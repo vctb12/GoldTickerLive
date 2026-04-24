@@ -627,14 +627,14 @@
           btn.innerHTML = '<span class="spinner"></span> Fetching…';
           btn.disabled = true;
 
-          fetch('https://api.gold-api.com/price/XAU')
+          fetch('/data/gold_price.json', { cache: 'no-store' })
             .then(function (res) {
               if (!res.ok) throw new Error('API ' + res.status);
               return res.json();
             })
             .then(function (data) {
-              var spot = data.price || data.Price || data.rate;
-              var dayOpen = data.open || data.openPrice || data.prev_close || null;
+              var spot = data && data.gold ? data.gold.ounce_usd : null;
+              var dayOpen = data && data.gold ? data.gold.day_low_usd : null;
               var now = new Date().toISOString();
               fetchedAt = now;
 

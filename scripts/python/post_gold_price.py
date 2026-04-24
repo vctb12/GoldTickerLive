@@ -2,8 +2,13 @@
 """
 scripts/post_gold_price.py
 
-Fetches live gold price from GoldAPI (goldapi.io) and posts to X / Twitter
-using tweepy. Includes AED conversion for UAE-focused audience.
+Reads the canonical gold-price data file written by
+`scripts/fetch_gold_price.py` (from goldpricez.com) and posts a
+formatted update to X / Twitter using tweepy.
+
+This script does NOT call any gold-price API directly. It reads
+`data/gold_price.json`, which is committed by the
+`.github/workflows/gold-price-fetch.yml` workflow every 6 minutes.
 
 Required environment variables (set as GitHub Secrets):
   TWITTER_API_KEY           – X Developer Portal: API Key (Consumer Key)
@@ -18,7 +23,6 @@ Workflow cron schedule (.github/workflows/post_gold.yml):
 
 import os
 import sys
-import requests
 import json
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
@@ -27,17 +31,21 @@ from datetime import datetime, timezone, timedelta
 AED_RATE = 3.6725  # UAE Dirham is pegged to USD
 SITE_URL  = "https://goldtickerlive.com/"
 UAE_TZ    = timezone(timedelta(hours=4))
-STATE_FILE = Path("data/last_gold_price.json")
+TROY_OZ_GRAMS = 31.1034768
+
+# Canonical data file written by scripts/fetch_gold_price.py
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+GOLD_PRICE_FILE = _REPO_ROOT / "data" / "gold_price.json"
+STATE_FILE = _REPO_ROOT / "data" / "last_gold_price.json"
 
 TWITTER_API_KEY = os.environ.get('TWITTER_API_KEY', '')
 TWITTER_API_SECRET = os.environ.get('TWITTER_API_SECRET', '')
 TWITTER_ACCESS_TOKEN = os.environ.get('TWITTER_ACCESS_TOKEN', '')
 TWITTER_ACCESS_TOKEN_SECRET = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET', '')
-GOLD_API_KEY = os.environ.get('GOLD_API_KEY', '')  # ← add this line
 
 
 
-# ── Step 1: Fetch gold price ─────────────────────────────────────────────────
+# ── Step 1: Load gold price from the canonical data file ────────────────────
 def _load_last_price():
     if not STATE_FILE.exists():
         return None
@@ -51,22 +59,37 @@ def _save_last_price(price):
     STATE_FILE.write_text(json.dumps({"price": price}))
 
 def get_gold_price():
-    """Fetch XAU from gold-api.com and convert it into your script's expected shape."""
-    url = "https://api.gold-api.com/price/XAU"
-    headers = {"x-access-token": GOLD_API_KEY} if GOLD_API_KEY else {}
-    response = requests.get(url, headers=headers, timeout=15)
-    response.raise_for_status()
-    raw = response.json()
+    """Read gold price from data/gold_price.json (written by
+    scripts/fetch_gold_price.py from goldpricez.com) and shape it
+    the way the rest of this file expects."""
+    if not GOLD_PRICE_FILE.exists():
+        raise FileNotFoundError(
+            f"{GOLD_PRICE_FILE} not found. "
+            "The gold-price-fetch.yml workflow must run first to populate it."
+        )
 
+    raw = json.loads(GOLD_PRICE_FILE.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict):
+        raise ValueError("gold_price.json is not a JSON object")
 
-    price = float(raw["price"])  # USD per troy ounce
+    gold = raw.get("gold") or {}
+    price = gold.get("ounce_usd")
+    if not isinstance(price, (int, float)) or price <= 0:
+        raise ValueError("gold_price.json missing or invalid gold.ounce_usd")
+    price = float(price)
+
     previous_price = _load_last_price()
     chp = None
     if previous_price and previous_price > 0:
-      chp = ((price - previous_price) / previous_price) * 100
+        chp = ((price - previous_price) / previous_price) * 100
 
-    ounce_to_gram = 31.1034768
-    g24 = price / ounce_to_gram
+    # Prefer the per-gram AED value already computed by the fetcher; fall
+    # back to local math if absent.
+    g24_aed = gold.get("gram_aed")
+    if isinstance(g24_aed, (int, float)) and g24_aed > 0:
+        g24 = float(g24_aed) / AED_RATE  # USD/g to keep downstream _aed() happy
+    else:
+        g24 = price / TROY_OZ_GRAMS
     g22 = g24 * (22 / 24)
     g21 = g24 * (21 / 24)
     g18 = g24 * (18 / 24)
@@ -93,7 +116,7 @@ def _parse_fields(data):
     g18   = data.get('price_gram_18k')
     chp   = data.get('chp')
     if not all([price, g24, g22, g21, g18]):
-        raise ValueError("GoldAPI response missing required price fields")
+        raise ValueError("gold_price.json missing required price fields")
     return price, g24, g22, g21, g18, chp
 
 def _aed(gram_usd):
@@ -225,7 +248,6 @@ def main():
     # Check for required secrets
     missing = []
     for name, value in [
-        ('GOLD_API_KEY', GOLD_API_KEY),          # ← add this
         ('TWITTER_API_KEY', TWITTER_API_KEY),
         ('TWITTER_API_SECRET', TWITTER_API_SECRET),
         ('TWITTER_ACCESS_TOKEN', TWITTER_ACCESS_TOKEN),
@@ -241,8 +263,8 @@ def main():
         print("   Skipping tweet.")
         sys.exit(0)  # Exit 0 so the workflow doesn't report as failed
 
-    # Fetch gold price
-    print("📡 Fetching gold price from gold-api.com…")
+    # Load gold price from the canonical data file
+    print("📡 Reading gold price from data/gold_price.json (goldpricez.com)…")
     data = get_gold_price()
     print(f"   Spot: ${data['price']:,.2f}/oz")
 

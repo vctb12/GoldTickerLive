@@ -47,7 +47,7 @@ export function exportCSV(countries, karatCode, prices, lang = 'en') {
   const header = [
     `# GoldPrices — ${karatLabel} Snapshot`,
     `# Exported: ${ts}`,
-    '# Source: gold-api.com / open.er-api.com',
+    '# Source: goldpricez.com / open.er-api.com',
     `# AED peg: ${CONSTANTS.AED_PEG} fixed (UAE Central Bank)`,
     '# Note: Estimated bullion-equivalent values. Not financial advice.',
     '',
@@ -88,7 +88,7 @@ export function exportJSON(STATE, prices) {
     goldPriceUsdPerOz: STATE.goldPriceUsdPerOz,
     goldUpdatedAt: STATE.freshness.goldUpdatedAt,
     fxUpdatedAt: STATE.freshness.fxUpdatedAt,
-    dataSource: 'gold-api.com / open.er-api.com',
+    dataSource: 'goldpricez.com / open.er-api.com',
     aedPeg: CONSTANTS.AED_PEG,
     aedPegNote: 'Fixed UAE Central Bank rate since 1997',
     troyOzGrams: CONSTANTS.TROY_OZ_GRAMS,
@@ -387,7 +387,7 @@ export function exportBriefText(headline, body) {
     '',
     body || '',
     '',
-    'Source: gold-api.com / open.er-api.com · Not financial advice.',
+    'Source: goldpricez.com / open.er-api.com · Not financial advice.',
   ].join('\n');
   downloadFile(content, `gold-brief-${isoDate()}.txt`, 'text/plain;charset=utf-8;');
 }

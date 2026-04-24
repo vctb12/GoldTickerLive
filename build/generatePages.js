@@ -82,7 +82,6 @@ function buildPage({ title, description, canonical, h1, introText, depth, jsonLd
   <title>${title}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://api.gold-api.com" />
   <link rel="preconnect" href="https://open.er-api.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="${rel}styles/global.css" />
