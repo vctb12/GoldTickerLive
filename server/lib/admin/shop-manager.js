@@ -37,7 +37,12 @@ function getAllShops() {
 // Save all shops
 function saveAllShops(shops) {
   initShopsFile();
-  fs.writeFileSync(SHOPS_FILE, JSON.stringify(shops, null, 2));
+  try {
+    fs.writeFileSync(SHOPS_FILE, JSON.stringify(shops, null, 2));
+  } catch (err) {
+    console.error('[shop-manager] Failed to write shops file:', err.message);
+    throw err;
+  }
 }
 
 // Calculate confidence score based on shop data completeness

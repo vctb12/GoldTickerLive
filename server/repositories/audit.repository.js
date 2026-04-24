@@ -42,7 +42,12 @@ function _readFile() {
 
 function _writeFile(logs) {
   _ensureFile();
-  fs.writeFileSync(AUDIT_FILE, JSON.stringify(logs, null, 2));
+  try {
+    fs.writeFileSync(AUDIT_FILE, JSON.stringify(logs, null, 2));
+  } catch (err) {
+    console.error('[audit.repository] Failed to write audit log file:', err.message);
+    throw err;
+  }
 }
 
 // ---------------------------------------------------------------------------

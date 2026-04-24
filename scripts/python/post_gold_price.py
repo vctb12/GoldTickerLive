@@ -88,7 +88,11 @@ def _save_last_price(price, posted_at_utc=None, content_hash=None):
     payload = {"price": price, "posted_at_utc": posted_at_utc}
     if content_hash is not None:
         payload["content_hash"] = content_hash
-    STATE_FILE.write_text(json.dumps(payload))
+    try:
+        STATE_FILE.write_text(json.dumps(payload))
+    except Exception as err:
+        print(f"⚠️  Failed to save state to {STATE_FILE}: {err}")
+        print("   The tweet was posted successfully but duplicate-guard state was not saved.")
 
 def get_gold_price():
     """Read gold price from data/gold_price.json (written by

@@ -48,7 +48,12 @@ function _readFile() {
 
 function _writeFile(shops) {
   _ensureFile();
-  fs.writeFileSync(SHOPS_FILE, JSON.stringify(shops, null, 2));
+  try {
+    fs.writeFileSync(SHOPS_FILE, JSON.stringify(shops, null, 2));
+  } catch (err) {
+    console.error('[shops.repository] Failed to write shops file:', err.message);
+    throw err;
+  }
 }
 
 // ---------------------------------------------------------------------------

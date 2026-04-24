@@ -17,7 +17,11 @@ if (!fs.existsSync(dataDir)) {
 // Initialize audit logs file if not exists
 function initAuditLog() {
   if (!fs.existsSync(AUDIT_LOG_FILE)) {
-    fs.writeFileSync(AUDIT_LOG_FILE, JSON.stringify([], null, 2));
+    try {
+      fs.writeFileSync(AUDIT_LOG_FILE, JSON.stringify([], null, 2));
+    } catch (err) {
+      console.error('[audit-log] Failed to initialise audit log file:', err.message);
+    }
   }
 }
 
@@ -145,7 +149,12 @@ function clearOldLogs(daysToKeep = 90) {
   const filtered = logs.filter((log) => new Date(log.timestamp) >= cutoff);
 
   if (filtered.length !== logs.length) {
-    fs.writeFileSync(AUDIT_LOG_FILE, JSON.stringify(filtered, null, 2));
+    try {
+      fs.writeFileSync(AUDIT_LOG_FILE, JSON.stringify(filtered, null, 2));
+    } catch (err) {
+      console.error('[audit-log] Failed to write pruned audit log file:', err.message);
+      throw err;
+    }
     return logs.length - filtered.length;
   }
 

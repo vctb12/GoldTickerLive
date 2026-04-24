@@ -572,7 +572,11 @@ async function init() {
   }, SKELETON_TIMEOUT_MS);
 }
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+  init().catch((err) => {
+    console.error('[home] Initialisation error:', err);
+  });
+});
 
 // ---------------------------------------------------------------------------
 // PWA Install Prompt
