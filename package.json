@@ -5,7 +5,7 @@
   "type": "commonjs",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/node/extract-baseline.js && node scripts/node/normalize-shops.js && node build/generateSitemap.js && vite build",
+    "build": "node scripts/node/extract-baseline.js && node scripts/node/normalize-shops.js && node scripts/node/inject-schema.js && node build/generateSitemap.js && vite build",
     "extract-baseline": "node scripts/node/extract-baseline.js",
     "normalize-shops": "node scripts/node/normalize-shops.js",
     "release:package": "node scripts/node/package-release.js",
@@ -34,9 +34,10 @@
     "linkcheck:dist": "mkdir -p reports && linkinator dist --recurse --skip \"^https?://(?!localhost|127\\.0\\.0\\.1)\" --format json > reports/links-dist.json || true",
     "audit-pages": "node scripts/node/audit-pages.js",
     "generate-sitemap": "node scripts/node/generate-sitemap.js",
+    "inject-schema": "node scripts/node/inject-schema.js",
     "enrich-placeholders": "node scripts/node/enrich-placeholder-pages.js",
     "preflight": "npm run audit-pages && npm run check-links",
-    "validate": "node scripts/node/validate-build.js && node scripts/node/check-unsafe-dom.js && node scripts/node/check-seo-meta.js && node scripts/node/enrich-placeholder-pages.js --check && node scripts/node/externalize-analytics.js --check && node scripts/node/inventory-seo.js --check",
+    "validate": "node scripts/node/validate-build.js && node scripts/node/check-unsafe-dom.js && node scripts/node/check-seo-meta.js && node scripts/node/enrich-placeholder-pages.js --check && node scripts/node/externalize-analytics.js --check && node scripts/node/inventory-seo.js --check && node scripts/node/inject-schema.js --check",
     "security": "npm audit && npm outdated",
     "prepare": "husky"
   },
