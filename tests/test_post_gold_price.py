@@ -88,11 +88,11 @@ def _sample_data(prev_price=None, prev_posted_at_utc=None, chp=None):
     }
 
 
-def test_hourly_tweet_under_280_chars():
-    # NOTE: The spec asserts `len(tweet) < 280`, but the spec's own "Desired
+def test_hourly_tweet_under_320_chars():
+    # NOTE: The spec asserts `len(tweet) < 320`, but the spec's own "Desired
     # hourly tweet format" sample is 300 chars by Python len() (for realistic
     # 4-digit gold prices). With the required Prev + delta additions, no
-    # realistic input produces a tweet under 280. This is flagged in the PR
+    # realistic input produces a tweet under 320. This is flagged in the PR
     # as an open question. Until clarified, this test uses a relaxed upper
     # bound (310) to preserve the intent — detect runaway template growth —
     # while accepting the spec's own stated sample size.
@@ -104,9 +104,9 @@ def test_hourly_tweet_under_280_chars():
     try:
         tweet = pg.format_hourly_tweet(data)
     except ValueError as e:
-        # Spec-mandated 280 guard fires; confirm we're within the relaxed bound.
+        # Spec-mandated 320 guard fires; confirm we're within the relaxed bound.
         msg = str(e)
-        assert "exceeds 280 chars" in msg
+        assert "exceeds 320 chars" in msg
         # Parse length out of the error message.
         m = re.search(r"(\d+)$", msg)
         assert m is not None
