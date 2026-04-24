@@ -136,13 +136,13 @@
       >
         <div class="tracker-welcome-inner" data-reveal>
           <div class="tracker-welcome-chips">
-            <span class="tracker-welcome-chip"
+            <span class="tracker-welcome-chip" style="--chip-i:0"
               >📈 <strong>Live tab</strong> — current prices for 24+ countries</span
             >
-            <span class="tracker-welcome-chip"
+            <span class="tracker-welcome-chip" style="--chip-i:1"
               >⚖️ <strong>Compare tab</strong> — compare regions side-by-side</span
             >
-            <span class="tracker-welcome-chip"
+            <span class="tracker-welcome-chip" style="--chip-i:2"
               >📋 <strong>Planner</strong> — budget &amp; Zakat calculators</span
             >
           </div>
@@ -189,8 +189,29 @@
               24+ markets · 7 karats · Live spot-linked prices updated every 90 seconds
             </p>
 
-            <!-- Key metrics — rendered by JS -->
-            <div class="tracker-hero-stats" id="tp-hero-stats" aria-label="Key live metrics"></div>
+            <!-- Key metrics — rendered by JS; skeletons shown until first render -->
+            <div class="tracker-hero-stats" id="tp-hero-stats" aria-label="Key live metrics" aria-busy="true">
+              <div class="tracker-hero-stat tracker-hero-stat--skeleton" aria-hidden="true">
+                <div class="tracker-hero-k">XAU/USD</div>
+                <div class="tracker-hero-v tracker-skeleton-pulse">—</div>
+                <div class="tracker-hero-s">Connecting…</div>
+              </div>
+              <div class="tracker-hero-stat tracker-hero-stat--skeleton" aria-hidden="true">
+                <div class="tracker-hero-k">UAE 24K</div>
+                <div class="tracker-hero-v tracker-skeleton-pulse">—</div>
+                <div class="tracker-hero-s">per gram</div>
+              </div>
+              <div class="tracker-hero-stat tracker-hero-stat--skeleton" aria-hidden="true">
+                <div class="tracker-hero-k">UAE 22K</div>
+                <div class="tracker-hero-v tracker-skeleton-pulse">—</div>
+                <div class="tracker-hero-s">per gram</div>
+              </div>
+              <div class="tracker-hero-stat tracker-hero-stat--skeleton" aria-hidden="true">
+                <div class="tracker-hero-k">USD/g 24K</div>
+                <div class="tracker-hero-v tracker-skeleton-pulse">—</div>
+                <div class="tracker-hero-s">per gram</div>
+              </div>
+            </div>
 
             <!-- Consolidated controls -->
             <div class="tracker-hero-controls">
@@ -645,9 +666,17 @@
           <div class="tp-overlay-body">
             <div class="tp-drawer-inner">
             <p class="tp-overlay-intro">
-              Browser-based price alerts and view presets — stored locally. The live chart and
-              prices remain visible behind this panel.
+              Browser-based price alerts and view presets — stored locally in your browser only. No
+              SMS, email, or server-side notifications. The live chart and prices remain visible
+              behind this panel.
             </p>
+            <div
+              id="tp-alert-live-region"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              class="sr-only"
+            ></div>
 
             <article class="tracker-subpanel">
               <div class="tracker-subpanel-head"><h3>New alert</h3></div>
@@ -753,6 +782,12 @@
             <p class="tp-overlay-intro">
               Turn live prices into decisions. The chart and prices remain visible behind this
               panel.
+            </p>
+            <p class="tracker-help-text">
+              ⚠ All calculations use <strong>spot-linked reference prices</strong> — not retail
+              or jewelry quotes. Actual purchase prices include making charges, dealer premiums,
+              and applicable taxes.
+              <a href="methodology.html" class="tracker-inline-link">Methodology →</a>
             </p>
 
             <article class="tracker-subpanel">
@@ -1064,7 +1099,8 @@
               </p>
               <a href="https://goldpricez.com/about/api" target="_blank" rel="nofollow noopener noreferrer"
                 >GoldPriceZ API docs</a
-              >
+              > ·
+              <a href="methodology.html#gold-data" class="tracker-inline-link">Site methodology →</a>
             </article>
 
             <article class="tracker-method-card">
@@ -1078,7 +1114,8 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 >ExchangeRate-API docs</a
-              >
+              > ·
+              <a href="methodology.html#fx-rates" class="tracker-inline-link">Site methodology →</a>
             </article>
 
             <article class="tracker-method-card">
@@ -1093,7 +1130,8 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 >DataHub gold dataset</a
-              >
+              > ·
+              <a href="methodology.html#fallback" class="tracker-inline-link">Site methodology →</a>
             </article>
 
             <article class="tracker-method-card">
@@ -1102,7 +1140,7 @@
                 All prices are bullion-equivalent estimates based on spot. Actual jewelry and
                 retail prices can differ due to making charges, premiums, and taxes.
               </p>
-              <a href="methodology.html" class="tracker-link">Read full site methodology</a>
+              <a href="methodology.html#not-included" class="tracker-inline-link">Read full site methodology →</a>
             </article>
 
             <article class="tracker-method-card">

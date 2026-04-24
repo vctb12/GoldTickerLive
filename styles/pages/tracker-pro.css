@@ -471,6 +471,27 @@ body.tracker-pro-page {
   transform: translateY(-2px);
 }
 
+.tracker-hero-stat--skeleton {
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.tracker-skeleton-pulse {
+  color: var(--tp-text-faint);
+  animation: tracker-skeleton-flash 1.4s ease-in-out infinite;
+}
+
+@keyframes tracker-skeleton-flash {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tracker-skeleton-pulse {
+    animation: none;
+  }
+}
+
 .tracker-hero-side {
   display: grid;
   gap: var(--space-4);
@@ -966,6 +987,20 @@ body.tracker-pro-page {
 
 .tracker-table tbody tr:hover {
   background: rgb(196 154 68 / 6%);
+}
+
+.tracker-pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  justify-content: center;
+}
+
+.tracker-pagination-label {
+  font-size: 0.8rem;
+  color: var(--tp-text-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .tracker-tag,
@@ -2215,6 +2250,19 @@ body.tracker-workspace-basic .tracker-modes {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   padding: 0.3rem 0.65rem;
+  animation: welcome-chip-in 0.35s var(--ease-out) both;
+  animation-delay: calc(var(--chip-i, 0) * 120ms);
+}
+
+@keyframes welcome-chip-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tracker-welcome-chip {
+    animation: none;
+  }
 }
 
 .tracker-welcome-close {

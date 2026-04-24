@@ -5,6 +5,7 @@ import { updateShellTickerFromState } from './ui-shell.js';
 import { filterByRange } from '../lib/historical-data.js';
 import { clear, el, setText, escape } from '../lib/safe-dom.js';
 import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
+import { pulseFreshness } from '../lib/freshness-pulse.js';
 
 let _state, _el, _priceFor, _currentSpot, _showToast;
 let _chartListenersAttached = false;
@@ -116,6 +117,14 @@ function buildHeroStatCard(label, value, sub) {
   ]);
 }
 
+function buildStatCard(label, value, sub) {
+  return el('div', { class: 'tracker-stat-card' }, [
+    el('div', { class: 'tracker-stat-k' }, label),
+    el('div', { class: 'tracker-stat-v' }, value),
+    el('div', { class: 'tracker-stat-s' }, sub),
+  ]);
+}
+
 function buildStackItem(title, copy, badge = null) {
   const headerChildren = [el('strong', null, title)];
   if (badge) headerChildren.push(badge);
@@ -200,6 +209,7 @@ export function renderHero() {
 
   if (_el.heroStats) {
     clear(_el.heroStats);
+    _el.heroStats.removeAttribute('aria-busy');
   }
 
   if (_el.heroStats && spot) {
@@ -339,14 +349,21 @@ export function renderChart() {
 
   if (_el.chartStats) {
     const stats = getHistoryStats(flatHistory);
-    _el.chartStats.innerHTML = `
-      <div class="tracker-stat-card"><div class="tracker-stat-k">Points shown</div><div class="tracker-stat-v">${rows.length}</div><div class="tracker-stat-s">${_state.range || 'ALL'}</div></div>
-      <div class="tracker-stat-card"><div class="tracker-stat-k">Data source</div><div class="tracker-stat-v">${sourceLabel}</div><div class="tracker-stat-s">LBMA baseline 2019–Aug 2025 + session</div></div>
-      <div class="tracker-stat-card"><div class="tracker-stat-k">Range high</div><div class="tracker-stat-v">$${Math.max(...rows.map((r) => r.spot)).toLocaleString('en', { maximumFractionDigits: 0 })}</div><div class="tracker-stat-s">within selected range</div></div>
-      <div class="tracker-stat-card"><div class="tracker-stat-k">Range low</div><div class="tracker-stat-v">$${Math.min(...rows.map((r) => r.spot)).toLocaleString('en', { maximumFractionDigits: 0 })}</div><div class="tracker-stat-s">within selected range</div></div>
-      ${stats.ytdChange != null ? `<div class="tracker-stat-card"><div class="tracker-stat-k">YTD change</div><div class="tracker-stat-v">${stats.ytdChange >= 0 ? '+' : ''}${stats.ytdChange.toFixed(1)}%</div><div class="tracker-stat-s">vs Jan 1</div></div>` : ''}
-      ${stats.yoyChange != null ? `<div class="tracker-stat-card"><div class="tracker-stat-k">1Y change</div><div class="tracker-stat-v">${stats.yoyChange >= 0 ? '+' : ''}${stats.yoyChange.toFixed(1)}%</div><div class="tracker-stat-s">year over year</div></div>` : ''}
-    `;
+    const rangeMax = Math.max(...rows.map((r) => r.spot));
+    const rangeMin = Math.min(...rows.map((r) => r.spot));
+    const cards = [
+      buildStatCard('Points shown', String(rows.length), _state.range || 'ALL'),
+      buildStatCard('Data source', sourceLabel, 'LBMA baseline 2019–Aug 2025 + session'),
+      buildStatCard('Range high', `$${rangeMax.toLocaleString('en', { maximumFractionDigits: 0 })}`, 'within selected range'),
+      buildStatCard('Range low', `$${rangeMin.toLocaleString('en', { maximumFractionDigits: 0 })}`, 'within selected range'),
+    ];
+    if (stats.ytdChange != null)
+      cards.push(buildStatCard('YTD change', `${stats.ytdChange >= 0 ? '+' : ''}${stats.ytdChange.toFixed(1)}%`, 'vs Jan 1'));
+    if (stats.yoyChange != null)
+      cards.push(buildStatCard('1Y change', `${stats.yoyChange >= 0 ? '+' : ''}${stats.yoyChange.toFixed(1)}%`, 'year over year'));
+    clear(_el.chartStats);
+    _el.chartStats.append(...cards);
+    pulseFreshness(_el.chartStats);
   }
 }
 
@@ -354,7 +371,8 @@ export function renderKaratTable() {
   if (!_el.karatTable) return;
   const spot = _currentSpot();
   if (!spot) {
-    _el.karatTable.innerHTML = '<tr><td colspan="4">Waiting for live data…</td></tr>';
+    clear(_el.karatTable);
+    _el.karatTable.append(el('tr', null, [el('td', { colspan: '4' }, 'Waiting for live data…')]));
     return;
   }
   const price24 = _priceFor({
@@ -363,7 +381,8 @@ export function renderKaratTable() {
     unit: _state.selectedUnit,
     spot,
   });
-  _el.karatTable.innerHTML = KARATS.map((k) => {
+  const fragment = document.createDocumentFragment();
+  for (const k of KARATS) {
     const p = _priceFor({
       currency: _state.selectedCurrency,
       karat: k.code,
@@ -371,13 +390,17 @@ export function renderKaratTable() {
       spot,
     });
     const vs = price24 && p ? `${((p / price24) * 100).toFixed(1)}%` : '—';
-    return `<tr>
-      <td>${k.code}K</td>
-      <td>${(k.purity * 100).toFixed(1)}%</td>
-      <td>${p ? p.toFixed(2) : '—'} ${_state.selectedCurrency}</td>
-      <td>${vs}</td>
-    </tr>`;
-  }).join('');
+    fragment.append(
+      el('tr', null, [
+        el('td', null, `${k.code}K`),
+        el('td', null, `${(k.purity * 100).toFixed(1)}%`),
+        el('td', null, `${p ? p.toFixed(2) : '—'} ${_state.selectedCurrency}`),
+        el('td', null, vs),
+      ])
+    );
+  }
+  clear(_el.karatTable);
+  _el.karatTable.append(fragment);
 }
 
 export function renderMarkets() {
@@ -693,69 +716,81 @@ export function renderAlerts() {
   if (!_el.alertList) return;
   const alerts = _state.alerts || [];
   const spot = _currentSpot();
-  _el.alertList.innerHTML = alerts.length
-    ? alerts
-        .map((a, i) => {
-          const hit = spot && (a.direction === 'above' ? spot > a.target : spot < a.target);
-          let proximity = '';
-          let proximityClass = '';
-          if (spot) {
-            const distance = Math.abs(spot - a.target);
-            const pct = (distance / a.target) * 100;
-            if (pct < 1) {
-              proximity = '⚡ very close';
-              proximityClass = ' is-alert-imminent';
-            } else if (pct < 3) {
-              proximity = '● nearby';
-              proximityClass = ' is-alert-close';
-            }
-          }
-          return `<div class="tracker-stack-item${hit ? ' is-triggered' : ''}${proximityClass}">
-          <div style="flex:1">
-            <span>${a.scope} ${a.direction} <strong>$${a.target}</strong>${hit ? ' ✓ triggered' : ''}</span>
-            ${proximity ? `<div style="font-size:0.8rem;color:var(--tp-text-muted);margin-top:0.25rem">${proximity}</div>` : ''}
-          </div>
-          <button data-idx="${i}" class="tracker-remove-btn" aria-label="Delete alert">×</button>
-        </div>`;
-        })
-        .join('')
-    : '<p style="color:var(--tp-text-muted);font-size:0.85rem">No alerts set.</p>';
+  clear(_el.alertList);
+  if (!alerts.length) {
+    _el.alertList.append(
+      el('p', { style: { color: 'var(--tp-text-muted)', fontSize: '0.85rem' } }, 'No alerts set.')
+    );
+    return;
+  }
+  const fragment = document.createDocumentFragment();
+  alerts.forEach((a, i) => {
+    const hit = spot && (a.direction === 'above' ? spot > a.target : spot < a.target);
+    let proximityText = '';
+    let proximityClass = '';
+    if (spot) {
+      const pct = (Math.abs(spot - a.target) / a.target) * 100;
+      if (pct < 1) { proximityText = '⚡ very close'; proximityClass = 'is-alert-imminent'; }
+      else if (pct < 3) { proximityText = '● nearby'; proximityClass = 'is-alert-close'; }
+    }
+    const classes = ['tracker-stack-item', hit && 'is-triggered', proximityClass]
+      .filter(Boolean)
+      .join(' ');
+    const labelChildren = [
+      `${a.scope} ${a.direction} `,
+      el('strong', null, `$${a.target}`),
+      ...(hit ? [' ✓ triggered'] : []),
+    ];
+    const bodyChildren = [el('span', null, labelChildren)];
+    if (proximityText)
+      bodyChildren.push(
+        el('div', { style: { fontSize: '0.8rem', color: 'var(--tp-text-muted)', marginTop: '0.25rem' } }, proximityText)
+      );
+    fragment.append(
+      el('div', { class: classes }, [
+        el('div', { style: { flex: '1' } }, bodyChildren),
+        el('button', { dataset: { idx: String(i) }, class: 'tracker-remove-btn', 'aria-label': 'Delete alert' }, '×'),
+      ])
+    );
+  });
+  _el.alertList.append(fragment);
 }
 
 export function renderPresets() {
   if (!_el.presetList) return;
   const presets = _state.presets || [];
-  _el.presetList.innerHTML = presets.length
-    ? presets
-        .map((p, i) => {
-          const isCurrent =
-            _state.selectedCurrency === p.currency &&
-            _state.selectedKarat === p.karat &&
-            _state.selectedUnit === p.unit &&
-            _state.range === p.range;
-          // escape p.name — it comes from a free-text input and is stored in
-          // state/localStorage, so it must be sanitised before innerHTML insertion.
-          const safeName = escape(p.name);
-          const safeKarat = escape(p.karat);
-          const safeCurrency = escape(p.currency);
-          const safeUnit = escape(p.unit);
-          const safeRange = escape(p.range);
-          return `<div class="tracker-stack-item${isCurrent ? ' is-highlight' : ''}">
-        <div style="flex:1">
-          <div><strong>${safeName}</strong></div>
-          <div style="font-size:0.8rem;color:var(--tp-text-muted);margin-top:0.25rem">
-            ${safeKarat}K · ${safeCurrency}/${safeUnit} · ${safeRange} range
-            ${isCurrent ? ' · <span style="color:var(--tp-accent)">● current</span>' : ''}
-          </div>
-        </div>
-        <span>
-          <button data-idx="${i}" class="tracker-load-btn tracker-pill">Load</button>
-          <button data-idx="${i}" class="tracker-remove-btn" aria-label="Delete preset">×</button>
-        </span>
-      </div>`;
-        })
-        .join('')
-    : '<p style="color:var(--tp-text-muted);font-size:0.85rem">No presets saved. Save the current view via the form above.</p>';
+  clear(_el.presetList);
+  if (!presets.length) {
+    _el.presetList.append(
+      el('p', { style: { color: 'var(--tp-text-muted)', fontSize: '0.85rem' } }, 'No presets saved. Save the current view via the form above.')
+    );
+    return;
+  }
+  const fragment = document.createDocumentFragment();
+  presets.forEach((p, i) => {
+    const isCurrent =
+      _state.selectedCurrency === p.currency &&
+      _state.selectedKarat === p.karat &&
+      _state.selectedUnit === p.unit &&
+      _state.range === p.range;
+    const metaParts = [
+      `${escape(p.karat)}K · ${escape(p.currency)}/${escape(p.unit)} · ${escape(p.range)} range`,
+      ...(isCurrent ? [' · ', el('span', { style: { color: 'var(--tp-accent)' } }, '● current')] : []),
+    ];
+    fragment.append(
+      el('div', { class: `tracker-stack-item${isCurrent ? ' is-highlight' : ''}` }, [
+        el('div', { style: { flex: '1' } }, [
+          el('div', null, [el('strong', null, p.name)]),
+          el('div', { style: { fontSize: '0.8rem', color: 'var(--tp-text-muted)', marginTop: '0.25rem' } }, metaParts),
+        ]),
+        el('span', null, [
+          el('button', { dataset: { idx: String(i) }, class: 'tracker-load-btn tracker-pill' }, 'Load'),
+          el('button', { dataset: { idx: String(i) }, class: 'tracker-remove-btn', 'aria-label': 'Delete preset' }, '×'),
+        ]),
+      ])
+    );
+  });
+  _el.presetList.append(fragment);
 }
 
 export function renderPlanners() {
@@ -857,8 +892,13 @@ export function renderPlanners() {
   }
 }
 
-export function renderArchive() {
+const ARCHIVE_PAGE_SIZE = 50;
+let _archivePage = 0;
+
+export function renderArchive(resetPage = false) {
   if (!_el.archiveBody) return;
+  if (resetPage) _archivePage = 0;
+
   let rows = _state.history.slice().reverse();
 
   const range = _el.archiveRange?.value || 'ALL';
@@ -880,41 +920,89 @@ export function renderArchive() {
     });
   }
 
-  rows = rows.slice(0, 200);
+  const totalFiltered = rows.length;
+  const totalPages = Math.max(1, Math.ceil(totalFiltered / ARCHIVE_PAGE_SIZE));
+  _archivePage = Math.min(_archivePage, totalPages - 1);
+  const pageStart = _archivePage * ARCHIVE_PAGE_SIZE;
+  const pageRows = rows.slice(pageStart, pageStart + ARCHIVE_PAGE_SIZE);
 
-  if (!rows.length) {
-    _el.archiveBody.innerHTML = '<tr><td colspan="5">No records match filters.</td></tr>';
+  clear(_el.archiveBody);
+
+  if (!pageRows.length) {
+    _el.archiveBody.append(el('tr', null, [el('td', { colspan: '5' }, 'No records match filters.')]));
     if (_el.archiveMeta) _el.archiveMeta.textContent = '';
+    _renderArchivePagination(0, 1, 0);
     return;
   }
-  _el.archiveBody.innerHTML = rows
-    .map((r) => {
-      const aed24 = _priceFor({ currency: 'AED', karat: '24', unit: 'gram', spot: r.spot });
-      const selected = _priceFor({
-        currency: _state.selectedCurrency,
-        karat: _state.selectedKarat,
-        unit: _state.selectedUnit,
-        spot: r.spot,
-      });
-      return `<tr>
-      <td>${r.date instanceof Date ? r.date.toISOString().slice(0, 10) : r.date}</td>
-      <td>$${r.spot.toFixed(2)}</td>
-      <td>${selected ? selected.toFixed(2) : '—'}</td>
-      <td>${aed24 ? aed24.toFixed(2) : '—'}</td>
-      <td><span class="tracker-source-badge tracker-source-badge--${r.source}">${r.source}${r.granularity ? ' · ' + r.granularity : ''}</span></td>
-    </tr>`;
-    })
-    .join('');
+
+  const fragment = document.createDocumentFragment();
+  for (const r of pageRows) {
+    const aed24 = _priceFor({ currency: 'AED', karat: '24', unit: 'gram', spot: r.spot });
+    const selected = _priceFor({
+      currency: _state.selectedCurrency,
+      karat: _state.selectedKarat,
+      unit: _state.selectedUnit,
+      spot: r.spot,
+    });
+    const dateStr = r.date instanceof Date ? r.date.toISOString().slice(0, 10) : String(r.date);
+    const sourceLabel = r.source + (r.granularity ? ' · ' + r.granularity : '');
+    fragment.append(
+      el('tr', null, [
+        el('td', null, dateStr),
+        el('td', null, `$${r.spot.toFixed(2)}`),
+        el('td', null, selected ? selected.toFixed(2) : '—'),
+        el('td', null, aed24 ? aed24.toFixed(2) : '—'),
+        el('td', null, [
+          el('span', { class: `tracker-source-badge tracker-source-badge--${r.source}` }, sourceLabel),
+        ]),
+      ])
+    );
+  }
+  _el.archiveBody.append(fragment);
+
   if (_el.archiveMeta) {
     const sourceInfo = _state.history.some(
       (r) => r.source === 'live' || r.source === 'session-cache'
     )
       ? 'session + baseline'
       : 'baseline';
-    _el.archiveMeta.textContent = `${rows.length}/${_state.history.length} records · ${sourceInfo} · 2019–present · filter by date or source`;
+    _el.archiveMeta.textContent = `${pageStart + 1}–${pageStart + pageRows.length} of ${totalFiltered} records · ${sourceInfo} · 2019–present`;
   }
 
+  _renderArchivePagination(_archivePage, totalPages, totalFiltered);
   renderSeasonal();
+}
+
+function _renderArchivePagination(page, totalPages, total) {
+  let paginationEl = document.getElementById('tp-archive-pagination');
+  if (!paginationEl) {
+    const tableFooter = _el.archiveMeta?.parentElement;
+    if (!tableFooter) return;
+    paginationEl = el('div', { id: 'tp-archive-pagination', class: 'tracker-pagination', 'aria-label': 'Archive pages' });
+    tableFooter.after(paginationEl);
+  }
+  clear(paginationEl);
+  if (total <= ARCHIVE_PAGE_SIZE) return;
+
+  const prevBtn = el('button', {
+    type: 'button',
+    class: 'btn btn-sm btn-ghost tracker-pagination-btn',
+    'aria-label': 'Previous page',
+    disabled: page === 0 ? '' : null,
+  }, '← Prev');
+  prevBtn.addEventListener('click', () => { _archivePage--; renderArchive(); });
+
+  const pageLabel = el('span', { class: 'tracker-pagination-label' }, `Page ${page + 1} / ${totalPages}`);
+
+  const nextBtn = el('button', {
+    type: 'button',
+    class: 'btn btn-sm btn-ghost tracker-pagination-btn',
+    'aria-label': 'Next page',
+    disabled: page >= totalPages - 1 ? '' : null,
+  }, 'Next →');
+  nextBtn.addEventListener('click', () => { _archivePage++; renderArchive(); });
+
+  paginationEl.append(prevBtn, pageLabel, nextBtn);
 }
 
 /**

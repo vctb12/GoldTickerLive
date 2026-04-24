@@ -1,4 +1,6 @@
 // tracker/wire.js
+import { clear, el, escape, safeHref } from '../lib/safe-dom.js';
+
 const WIRE_CONFIG = {
   query: '(gold OR bullion OR "gold price" OR "gold prices" OR XAU OR "precious metals")',
   timespan: '24h',
@@ -63,36 +65,38 @@ export function renderWire(els, state) {
   if (!track) return;
 
   if (!state.wireItems.length) {
-    track.innerHTML = '<span class="tracker-wire-item">No recent wire headlines available.</span>';
+    clear(track);
+    track.append(el('span', { class: 'tracker-wire-item' }, 'No recent wire headlines available.'));
     if (meta) meta.textContent = 'Wire unavailable';
     return;
   }
 
-  const html = state.wireItems
-    .map((item) => {
-      const domain = item.domain
-        ? `<span class="tracker-wire-domain">${escapeHtml(item.domain)}</span>`
-        : '';
-      const content = `${escapeHtml(item.title)}${domain ? ' · ' + domain : ''}`;
-      return item.url
-        ? `<a href="${escapeHtml(item.url)}" class="tracker-wire-item" target="_blank" rel="noopener noreferrer">${content}</a>`
-        : `<span class="tracker-wire-item">${content}</span>`;
-    })
-    .join('');
-
-  track.innerHTML = html;
+  const fragment = document.createDocumentFragment();
+  for (const item of state.wireItems) {
+    const domainEl = item.domain
+      ? el('span', { class: 'tracker-wire-domain' }, item.domain)
+      : null;
+    const children = [item.title, ...(domainEl ? [' · ', domainEl] : [])];
+    if (item.url) {
+      fragment.append(
+        el('a', {
+          href: safeHref(item.url),
+          class: 'tracker-wire-item',
+          target: '_blank',
+          rel: 'noopener noreferrer',
+        }, children)
+      );
+    } else {
+      fragment.append(el('span', { class: 'tracker-wire-item' }, children));
+    }
+  }
+  clear(track);
+  track.append(fragment);
 
   if (meta) {
     const last = state.wireItems[0]?.seenDate || new Date().toISOString();
-    meta.innerHTML = `Headlines · updated <time>${escapeHtml(new Date(last).toLocaleString())}</time>`;
+    const timeEl = el('time', null, new Date(last).toLocaleString());
+    clear(meta);
+    meta.append('Headlines · updated ', timeEl);
   }
-}
-
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
 }
