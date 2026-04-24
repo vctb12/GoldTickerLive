@@ -22,12 +22,13 @@ update) the section in `REVAMP_PLAN.md`, and open a scoped PR for the first slic
 
 ## Pending proposals
 
-| File                                                                               | Origin / date             | Status                                                                            |
-| ---------------------------------------------------------------------------------- | ------------------------- | --------------------------------------------------------------------------------- |
-| [`PLATFORM_UPGRADE_PROPOSAL.md`](./PLATFORM_UPGRADE_PROPOSAL.md)                   | Agent prompt · 2026-04-22 | 📥 Pending reconciliation                                                         |
-| 30-phase tracker / homepage / admin revamp                                         | Agent prompt · 2026-04-23 | ✅ Reconciled into `REVAMP_PLAN.md` §22b (supplement to §22)                      |
-| [`REPO_CLEANUP_PROPOSAL.md`](./REPO_CLEANUP_PROPOSAL.md)                           | Agent prompt · 2026-04-23 | 🟡 Phase 0 reconciled into `REVAMP_PLAN.md` §29; Phase 1 (audit-only) in progress |
-| [`2026-04-24_revenue-focused-growth-plan.md`](./2026-04-24_revenue-focused-growth-plan.md) | User prompt · 2026-04-24  | 🆕 NEW — 6-month revenue plan (100K visitors, $100/mo, no migration)              |
+| File                                                                                               | Origin / date             | Status                                                                            |
+| -------------------------------------------------------------------------------------------------- | ------------------------- | --------------------------------------------------------------------------------- |
+| [`PLATFORM_UPGRADE_PROPOSAL.md`](./PLATFORM_UPGRADE_PROPOSAL.md)                                   | Agent prompt · 2026-04-22 | 📥 Pending reconciliation                                                         |
+| 30-phase tracker / homepage / admin revamp                                                         | Agent prompt · 2026-04-23 | ✅ Reconciled into `REVAMP_PLAN.md` §22b (supplement to §22)                      |
+| [`REPO_CLEANUP_PROPOSAL.md`](./REPO_CLEANUP_PROPOSAL.md)                                           | Agent prompt · 2026-04-23 | 🟡 Phase 0 reconciled into `REVAMP_PLAN.md` §29; Phase 1 (audit-only) in progress |
+| [`2026-04-24_revenue-focused-growth-plan.md`](./2026-04-24_revenue-focused-growth-plan.md)         | User prompt · 2026-04-24  | 🆕 NEW — 6-month revenue plan (100K visitors, $100/mo, no migration)              |
+| [`2026-04-24_security-performance-deps-audit.md`](./2026-04-24_security-performance-deps-audit.md) | User prompt · 2026-04-24  | 🟢 In progress — Track A PR A-1 (security high-sev fixes) landing; B/C to follow. |
 
 ---
 

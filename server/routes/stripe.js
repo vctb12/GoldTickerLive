@@ -7,6 +7,9 @@
 
 const express = require('express');
 const router = express.Router();
+// `_buildUrl` unused until the commented Stripe SDK block below is enabled
+// (Track A #1 in docs/plans/2026-04-24_security-performance-deps-audit.md).
+const { buildUrl: _buildUrl } = require('../lib/site-url');
 
 // Stripe SDK will be installed separately: npm install stripe
 // For now, we'll structure the routes to be ready for integration
@@ -22,6 +25,20 @@ const STRIPE_CONFIG = {
     apiAnnual: process.env.STRIPE_PRICE_API_ANNUAL || '',
   },
 };
+
+/**
+ * Fail-closed check for the secrets required to actually talk to Stripe.
+ * Called from handlers that would (in the non-stub implementation) call the
+ * Stripe SDK. Kept as a runtime check because the module is wired up before
+ * the Stripe integration is live; throwing at module-load would break every
+ * deploy that hasn't finished the Stripe rollout.
+ */
+function getMissingStripeSecrets() {
+  const missing = [];
+  if (!STRIPE_CONFIG.secretKey) missing.push('STRIPE_SECRET_KEY');
+  if (!STRIPE_CONFIG.webhookSecret) missing.push('STRIPE_WEBHOOK_SECRET');
+  return missing;
+}
 
 function getMissingStripePriceConfig() {
   const requiredPrices = {
@@ -86,8 +103,8 @@ router.post('/create-checkout', async (req, res) => {
         price: priceId,
         quantity: 1,
       }],
-      success_url: `${process.env.SITE_URL}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.SITE_URL}/pricing`,
+      success_url: _buildUrl('/subscription/success?session_id={CHECKOUT_SESSION_ID}'),
+      cancel_url: _buildUrl('/pricing'),
       client_reference_id: userId,
       subscription_data: {
         trial_period_days: 7, // 7-day free trial
@@ -138,7 +155,7 @@ router.post('/create-portal', async (req, res) => {
     const stripe = require('stripe')(STRIPE_CONFIG.secretKey);
     const session = await stripe.billingPortal.sessions.create({
       customer: subscription.stripeCustomerId,
-      return_url: `${process.env.SITE_URL}/account`,
+      return_url: _buildUrl('/account'),
     });
 
     return res.json({ url: session.url });
@@ -166,6 +183,22 @@ router.post('/create-portal', async (req, res) => {
  */
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   try {
+    // Fail closed if the secrets required to verify the webhook signature
+    // are not configured. Without this guard, a future refactor that
+    // unconditionally calls `stripe.webhooks.constructEvent(...)` against an
+    // empty string secret could silently accept forged events. See
+    // docs/plans/2026-04-24_security-performance-deps-audit.md Track A #5.
+    const missing = getMissingStripeSecrets();
+    if (missing.length > 0) {
+      console.error(
+        '[stripe/webhook] rejecting event — required secrets are missing:',
+        missing.join(', ')
+      );
+      return res.status(503).json({
+        error: 'Stripe webhook handler is not configured',
+      });
+    }
+
     // `_sig` captured for the future webhook verification flow below.
     // Prefixed to signal intentional unused binding until Stripe SDK is wired up.
     const _sig = req.headers['stripe-signature'];

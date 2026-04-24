@@ -19,11 +19,49 @@ const { ValidationError, NotFoundError: _NotFoundError } = require('../../lib/er
 // Simple in-memory rate limiter for the login endpoint
 // Tracks *failed* attempts per IP; blocks after MAX_ATTEMPTS within WINDOW_MS.
 // Uses a custom implementation so it only counts failures, not all requests.
+//
+// Bounds: a periodic sweep drops expired windows and a hard size cap evicts
+// the oldest entry when the map grows beyond LOGIN_MAX_ENTRIES. Without these
+// an attacker cycling source IPs can balloon the Map until the process OOMs.
+// See docs/plans/2026-04-24_security-performance-deps-audit.md Track A #2.
 // ---------------------------------------------------------------------------
 const LOGIN_MAX_ATTEMPTS = 10;
 const LOGIN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const LOGIN_MAX_ENTRIES = 10_000;
+const LOGIN_SWEEP_MS = 60 * 1000; // prune expired entries every minute
 
 const loginAttempts = new Map(); // ip -> { count, firstAttemptAt }
+
+function sweepExpiredAttempts(map, windowMs) {
+  // Safe to delete during `for..of` iteration of a Map — the iterator
+  // tolerates concurrent modification.
+  const now = Date.now();
+  for (const [key, record] of map) {
+    if (now - record.firstAttemptAt > windowMs) {
+      map.delete(key);
+    }
+  }
+}
+
+function evictIfOverCap(map, cap) {
+  if (map.size <= cap) return;
+  // Map iteration order is insertion order — the first key is the oldest.
+  // Drop oldest entries until we're back under the cap.
+  const toDrop = map.size - cap;
+  const it = map.keys();
+  for (let i = 0; i < toDrop; i++) {
+    const { value } = it.next();
+    if (value === undefined) break;
+    map.delete(value);
+  }
+}
+
+// Hold onto the timer so tests can clear it via `.unref()` and the process
+// does not hang on shutdown.
+const loginSweepTimer = setInterval(() => {
+  sweepExpiredAttempts(loginAttempts, LOGIN_WINDOW_MS);
+}, LOGIN_SWEEP_MS);
+if (typeof loginSweepTimer.unref === 'function') loginSweepTimer.unref();
 
 function loginRateLimiter(req, res, next) {
   const ip = req.ip || req.socket?.remoteAddress || 'unknown';
@@ -53,6 +91,7 @@ function recordFailedLogin(ip) {
   } else {
     record.count += 1;
   }
+  evictIfOverCap(loginAttempts, LOGIN_MAX_ENTRIES);
 }
 
 function clearLoginAttempts(ip) {
@@ -194,7 +233,14 @@ router.get('/auth/verify', authMiddleware(), (req, res) => {
 // ---------------------------------------------------------------------------
 const PIN_MAX_ATTEMPTS = 5;
 const PIN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const PIN_MAX_ENTRIES = 10_000;
 const pinAttempts = new Map(); // ip -> { count, firstAttemptAt }
+
+// Periodic sweep mirrors loginAttempts — see Track A #2 in the plan file.
+const pinSweepTimer = setInterval(() => {
+  sweepExpiredAttempts(pinAttempts, PIN_WINDOW_MS);
+}, LOGIN_SWEEP_MS);
+if (typeof pinSweepTimer.unref === 'function') pinSweepTimer.unref();
 
 router.post('/auth/verify-pin', (req, res) => {
   const pin = process.env.ADMIN_ACCESS_PIN;
@@ -244,6 +290,7 @@ router.post('/auth/verify-pin', (req, res) => {
   } else {
     rec.count += 1;
   }
+  evictIfOverCap(pinAttempts, PIN_MAX_ENTRIES);
 
   const remaining = PIN_MAX_ATTEMPTS - (pinAttempts.get(ip)?.count || 0);
   return res.status(401).json({

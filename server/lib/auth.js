@@ -27,7 +27,10 @@ if (!ADMIN_PASSWORD) {
   );
 }
 
-// In-memory user store (replace with database in production)
+// In-memory user store (replace with database in production).
+// `tokenVersion` defaults to 1 and is bumped on password change or delete;
+// authMiddleware rejects tokens whose embedded version is behind the user
+// record, so stolen tokens stop being valid the moment credentials change.
 let users = [
   {
     id: 'admin_1',
@@ -35,6 +38,7 @@ let users = [
     password: bcrypt.hashSync(ADMIN_PASSWORD, 12),
     name: 'Administrator',
     role: 'admin',
+    tokenVersion: 1,
     createdAt: new Date().toISOString(),
   },
 ];
@@ -50,6 +54,13 @@ function loadUsers() {
       const data = fs.readFileSync(USERS_FILE, 'utf8');
       const loaded = JSON.parse(data);
       if (!Array.isArray(loaded)) throw new Error('users.json is not an array');
+      // Backfill tokenVersion for records persisted before the field existed,
+      // so authMiddleware can always compare a number against a number.
+      for (const u of loaded) {
+        if (u && typeof u === 'object' && typeof u.tokenVersion !== 'number') {
+          u.tokenVersion = 1;
+        }
+      }
       // Ensure the seeded admin is always present, even if the persisted file
       // was written before the admin existed or became corrupt.
       const hasAdmin = loaded.some((u) => u.id === 'admin_1');
@@ -62,10 +73,26 @@ function loadUsers() {
 
 function saveUsers() {
   const dataDir = path.dirname(USERS_FILE);
+  // 0o700 on the parent dir + 0o600 on the file keeps the bcrypt hashes out
+  // of reach of other local users on multi-tenant hosts. See
+  // docs/plans/2026-04-24_security-performance-deps-audit.md Track A #4.
   if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
+    fs.mkdirSync(dataDir, { recursive: true, mode: 0o700 });
+  } else {
+    // Best-effort tighten of an existing directory; ignore failures on
+    // platforms (e.g. Windows) where chmod is a no-op.
+    try {
+      fs.chmodSync(dataDir, 0o700);
+    } catch {
+      /* non-POSIX filesystem — best effort */
+    }
   }
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), { mode: 0o600 });
+  try {
+    fs.chmodSync(USERS_FILE, 0o600);
+  } catch {
+    /* non-POSIX filesystem — best effort */
+  }
 }
 
 loadUsers();
@@ -77,6 +104,11 @@ function generateToken(user) {
       id: user.id,
       email: user.email,
       role: user.role,
+      // `tokenVersion` binds the JWT to a specific generation of the user
+      // record. Bumping `users[i].tokenVersion` on password change / delete
+      // causes authMiddleware to reject every token issued before the bump.
+      // See docs/plans/2026-04-24_security-performance-deps-audit.md Track A #3.
+      tv: typeof user.tokenVersion === 'number' ? user.tokenVersion : 1,
     },
     JWT_SECRET,
     { expiresIn: TOKEN_EXPIRY }
@@ -164,6 +196,7 @@ async function createUser(userData, createdBy) {
     password: hashedPassword,
     name: userData.name || userData.email,
     role: userData.role || 'viewer',
+    tokenVersion: 1,
     createdAt: new Date().toISOString(),
     createdBy,
   };
@@ -184,6 +217,11 @@ async function updateUser(userId, updates, updatedBy) {
 
   if (updates.password) {
     updates.password = await bcrypt.hash(updates.password, 12);
+    // Invalidate every JWT issued before this password change. The new
+    // `tokenVersion` is stamped into the user record; authMiddleware rejects
+    // any token whose `tv` claim does not match the persisted version.
+    const prev = typeof users[index].tokenVersion === 'number' ? users[index].tokenVersion : 1;
+    updates.tokenVersion = prev + 1;
   }
 
   users[index] = {
@@ -237,6 +275,25 @@ function authMiddleware(requiredRole = null) {
       return res.status(401).json({
         success: false,
         message: 'Invalid or expired token',
+      });
+    }
+
+    // tokenVersion check: reject tokens that predate the user's current
+    // generation (issued before a password change / role revocation).
+    // Missing user → 401; missing `tv` claim on an older token → treat as 1.
+    const currentUser = users.find((u) => u.id === decoded.id);
+    if (!currentUser) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid or expired token',
+      });
+    }
+    const tokenTv = typeof decoded.tv === 'number' ? decoded.tv : 1;
+    const userTv = typeof currentUser.tokenVersion === 'number' ? currentUser.tokenVersion : 1;
+    if (tokenTv !== userTv) {
+      return res.status(401).json({
+        success: false,
+        message: 'Session has been invalidated. Please log in again.',
       });
     }
 
