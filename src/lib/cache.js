@@ -165,6 +165,7 @@ export function checkDayOpenReset(STATE) {
 }
 
 export function saveHistorySnapshot(STATE) {
+  if (!STATE.goldPriceUsdPerOz) return;
   const today = getDubaiDateString();
   let history = safeGet(CACHE_KEYS.history) || [];
   // Remove any existing entry for today

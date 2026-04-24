@@ -14,10 +14,13 @@ export function bindCoreEvents() {
   _el.refreshBtn?.addEventListener('click', async () => {
     _el.refreshBtn.disabled = true;
     _el.refreshBtn.textContent = 'Refreshing…';
-    await _cb.refreshData(true);
-    _cb.renderAll();
-    _el.refreshBtn.disabled = false;
-    _el.refreshBtn.textContent = '↻ Refresh';
+    try {
+      await _cb.refreshData(true);
+      _cb.renderAll();
+    } finally {
+      _el.refreshBtn.disabled = false;
+      _el.refreshBtn.textContent = '↻ Refresh';
+    }
   });
 
   // Reset view
