@@ -137,9 +137,24 @@ def _request(endpoint: str, api_key: str) -> dict:
 
         if status == 200:
             try:
-                return resp.json()
+                data = resp.json()
             except ValueError:
                 raise FetchError(f"invalid JSON response from {endpoint}")
+            # goldpricez.com sometimes returns a JSON-encoded string instead
+            # of a JSON object. Unwrap one level if so.
+            if isinstance(data, str):
+                try:
+                    data = json.loads(data)
+                except ValueError:
+                    raise FetchError(
+                        f"invalid inner JSON string from {endpoint}"
+                    )
+            if not isinstance(data, dict):
+                raise FetchError(
+                    f"unexpected payload type from {endpoint}: "
+                    f"{type(data).__name__}"
+                )
+            return data
 
         # Non-retryable client errors.
         if status in (401, 403):
