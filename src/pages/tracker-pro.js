@@ -321,13 +321,14 @@ function startCountdown() {
   clearInterval(_countdownTimer);
   _countdownValue = Math.floor(CONSTANTS.GOLD_REFRESH_MS / 1000);
 
+  // Query once; reused by every tick and the initial paint.
+  const el_countdown = document.getElementById('tp-countdown');
+
   // Display the initial value immediately so the user sees the full countdown.
-  const el_countdown_init = document.getElementById('tp-countdown');
-  if (el_countdown_init) el_countdown_init.textContent = `Next update in ${_countdownValue}s`;
+  if (el_countdown) el_countdown.textContent = `Next update in ${_countdownValue}s`;
 
   function tick() {
     _countdownValue--;
-    const el_countdown = document.getElementById('tp-countdown');
     if (_countdownValue <= 0) {
       clearInterval(_countdownTimer);
       if (el_countdown) el_countdown.textContent = '';
