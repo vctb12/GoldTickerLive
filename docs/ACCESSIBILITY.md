@@ -398,4 +398,30 @@ If you encounter accessibility barriers, please contact us at accessibility@gold
 
 ---
 
-Last updated: Phase 2 - Accessibility Overhaul
+## 2026 Audit Findings & Fixes
+
+The following issues were identified and addressed during the April 2026 accessibility pass.
+
+### Fixed
+
+| Page              | Issue                                                                                                                        | Fix                                                                  | WCAG Criterion                       |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ------------------------------------ |
+| `calculator.html` | `.badge-dot` decorative pulsing dot lacked `aria-hidden="true"`, causing screen readers to announce it as unlabelled content | Added `aria-hidden="true"` to the `<span class="badge-dot">` element | **1.1.1 Non-text Content** (Level A) |
+
+### Confirmed present and correct
+
+| Feature                                    | Pages                             | Notes                                                                                                                                               |
+| ------------------------------------------ | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Skip-to-content link                       | All main pages                    | `<a class="skip-link" href="#main-content">` renders before the nav on every page                                                                   |
+| `lang` + `dir` on `<html>`                 | All pages                         | Switches to `ar` / `rtl` when Arabic language is active                                                                                             |
+| `aria-live="polite"` on price regions      | All pages                         | Hero live card, spot bar, karat strip, ticker                                                                                                       |
+| `aria-hidden="true"` on decorative icons   | All pages                         | Trust icons, separator dots, emoji in badges                                                                                                        |
+| Tab bar `role="tablist"` + `aria-selected` | `tracker.html`                    | Tabs have correct ARIA roles; overlay-trigger buttons (`Alerts`, `Planner`) correctly use `aria-expanded` / `aria-controls` instead of `role="tab"` |
+| Form labels paired with controls           | `tracker.html`, `calculator.html` | Language, Currency, Karat, Unit selects use `<label>` wrapping                                                                                      |
+| `aria-label` on icon-only buttons          | All pages                         | Dismiss buttons, copy buttons, close buttons all carry `aria-label`                                                                                 |
+| Heading hierarchy                          | All pages                         | Single `<h1>` per page, `<h2>`–`<h4>` nested correctly                                                                                              |
+| `prefers-reduced-motion`                   | All animated elements             | `countUp`, freshness pulse, reveal, flash keyframes all no-op under reduce-motion media query                                                       |
+
+---
+
+Last updated: April 2026 — accessibility audit pass

@@ -11,16 +11,16 @@ live spot-linked pricing, market comparison, calculator tools, historical views,
 country pages, and Arabic-first accessibility.
 
 <p>
-  <a href="https://vctb12.github.io/Gold-Prices/">
+  <a href="https://goldtickerlive.com/">
     <img src="https://img.shields.io/badge/Live%20Site-Open%20Now-C9A227?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Site" />
   </a>
-  <a href="https://vctb12.github.io/Gold-Prices/tracker.html">
+  <a href="https://goldtickerlive.com/tracker.html">
     <img src="https://img.shields.io/badge/Tracker-Live%20Workspace-1F6FEB?style=for-the-badge&logo=dependabot&logoColor=white" alt="Tracker Workspace" />
   </a>
-  <a href="https://vctb12.github.io/Gold-Prices/calculator.html">
+  <a href="https://goldtickerlive.com/calculator.html">
     <img src="https://img.shields.io/badge/Calculator-Gold%20Tools-2DA44E?style=for-the-badge&logo=calculator&logoColor=white" alt="Calculator" />
   </a>
-  <a href="https://vctb12.github.io/Gold-Prices/shops.html">
+  <a href="https://goldtickerlive.com/shops.html">
     <img src="https://img.shields.io/badge/Shops-Directory-E67E22?style=for-the-badge&logo=google-maps&logoColor=white" alt="Shops" />
   </a>
   <a href="https://github.com/vctb12/Gold-Prices/wiki">
@@ -218,7 +218,7 @@ Append `?debug=true` to any page URL to expose a debug panel for:
 
 ```bash
 npm install
-npm test             # Runs 205 tests across 10 test suites
+npm test             # Runs 343 tests across 30 test suites
 ```
 
 ### Run preflight checks
@@ -479,14 +479,15 @@ The site deploys automatically to GitHub Pages on push to `main` via `.github/wo
 3. Copies static assets, country pages, and ES modules to `dist/`
 4. Deploys to GitHub Pages
 
-**Live URL:** `https://vctb12.github.io/Gold-Prices/`
+**Live URL:** `https://goldtickerlive.com/`
 
 ### Custom domain
 
-To use a custom domain:
+The site is served from the custom domain `goldtickerlive.com` (configured via the `CNAME` file). To
+set up your own custom domain:
 
-1. Add a CNAME file to the repo root with your domain
-2. Configure DNS: CNAME record pointing to `vctb12.github.io`
+1. Add a `CNAME` file to the repo root with your domain name
+2. Configure DNS: `CNAME` record pointing to `vctb12.github.io`
 3. Enable "Enforce HTTPS" in GitHub Pages settings
 
 ### Self-hosted
@@ -596,7 +597,10 @@ Gold-Prices/
 │   ├── export.js              # CSV / JSON / brief export
 │   ├── historical-data.js     # Merges session history with DataHub baseline
 │   ├── search.js              # Bilingual search and filtering
-│   └── alerts.js              # Browser-side price alert logic
+│   ├── live-status.js         # Market status, freshness helpers
+│   ├── count-up.js            # Animated numeric transitions
+│   ├── freshness-pulse.js     # One-shot freshness-pulse animation primitive
+│   └── reveal.js              # IntersectionObserver scroll-reveal helper
 │
 ├── src/components/            # Shared UI components
 │   ├── nav.js                 # Bilingual navigation bar (desktop dropdowns + mobile drawer)

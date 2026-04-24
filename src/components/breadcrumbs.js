@@ -1,9 +1,24 @@
 /**
- * Breadcrumbs Component
- * Renders breadcrumb navigation with schema.org markup
- * Usage: renderBreadcrumbs(element, breadcrumbArray)
+ * Breadcrumbs Component — renders accessible breadcrumb navigation with
+ * schema.org microdata markup.
+ *
+ * Public API:
+ *   renderBreadcrumbs(container, items) — mount breadcrumb `<nav>` into a DOM node
+ *   getBreadcrumbs(pageName, extra)     — resolve item list for a known page name
+ *   injectBreadcrumbs(pageName, extra)  — convenience wrapper: resolve + render
+ *   generateBreadcrumbSchema(items)     — generate a JSON-LD BreadcrumbList script tag
  */
 
+/**
+ * Render breadcrumb navigation with schema.org `BreadcrumbList` microdata
+ * into `container`. The last item is rendered as plain text (current page);
+ * all preceding items are rendered as links.
+ *
+ * @param {Element|null} container  Target DOM element to append the `<nav>` into.
+ * @param {Array<{label: string, url?: string}>} items
+ *   Ordered breadcrumb items. Each entry needs at minimum a `label`. Items with a
+ *   `url` and that are not the last entry are rendered as links.
+ */
 export function renderBreadcrumbs(container, items) {
   if (!container || !items || items.length === 0) {
     return;
@@ -66,8 +81,14 @@ export function renderBreadcrumbs(container, items) {
 }
 
 /**
- * Get breadcrumbs for common pages
- * Returns array of { label, url } objects
+ * Return the breadcrumb item list for a named page.
+ * Always starts with a "Home" entry.
+ *
+ * @param {'shops'|'calculator'|'learn'|'insights'|'methodology'|'terms'|'privacy'|'invest'|'tracker'|'country'|string} pageName
+ *   Well-known page identifier. Unknown names produce `[Home]` only.
+ * @param {{ countryName?: string, countryUrl?: string }} [extra]
+ *   Extra context used by the `'country'` page type.
+ * @returns {Array<{label: string, url: string}>}
  */
 export function getBreadcrumbs(pageName, extra = {}) {
   const breadcrumbs = [{ label: 'Home', url: '/' }];
@@ -96,8 +117,11 @@ export function getBreadcrumbs(pageName, extra = {}) {
 }
 
 /**
- * Auto-inject breadcrumbs into a page
- * Call at top of page-specific JS (after nav injection)
+ * Convenience helper: resolve the breadcrumb list for `pageName` and render
+ * it into the `.page-breadcrumbs` container. Call after nav injection.
+ *
+ * @param {string} pageName  See {@link getBreadcrumbs} for accepted values.
+ * @param {object} [extra]   Extra context forwarded to {@link getBreadcrumbs}.
  */
 export function injectBreadcrumbs(pageName, extra = {}) {
   // Wait for nav to be injected if needed
@@ -111,10 +135,14 @@ export function injectBreadcrumbs(pageName, extra = {}) {
 }
 
 /**
- * Generate JSON-LD BreadcrumbList from breadcrumb items.
- * @param {Array<{label: string, href: string}>} items
- * @param {string} baseUrl
- * @returns {string} script tag HTML
+ * Generate a `<script type="application/ld+json">` tag containing a
+ * schema.org `BreadcrumbList` for server-side or build-time injection.
+ *
+ * @param {Array<{label?: string, name?: string, href?: string}>} items
+ *   Breadcrumb items. `label` or `name` is used for the display name;
+ *   `href` is resolved against `baseUrl` when relative.
+ * @param {string} [baseUrl]  Site origin, defaults to `'https://goldtickerlive.com'`.
+ * @returns {string}  HTML `<script>` tag string.
  */
 export function generateBreadcrumbSchema(items, baseUrl = 'https://goldtickerlive.com') {
   const schema = {

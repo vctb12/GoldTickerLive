@@ -269,9 +269,11 @@ function renderGCCGrid() {
       }
 
       return `<div class="gcc-card-wrapper">
-      ${slug
-        ? `<a href="countries/${slug}.html" class="gcc-card">`
-        : `<div class="gcc-card gcc-card--no-link">`}
+      ${
+        slug
+          ? `<a href="countries/${slug}.html" class="gcc-card">`
+          : '<div class="gcc-card gcc-card--no-link">'
+      }
         <div class="gcc-card-header">
           <span class="gcc-flag" aria-hidden="true">${c.flag}</span>
           <div class="gcc-meta">
@@ -282,7 +284,7 @@ function renderGCCGrid() {
         </div>
         <div class="gcc-price">${price}</div>
         <div class="gcc-unit">${tx('perGram')} · 22K</div>
-      ${slug ? `</a>` : `</div>`}
+      ${slug ? '</a>' : '</div>'}
       <button class="gcc-copy-btn" data-copy="${price}" aria-label="Copy ${name} price" type="button">⎘</button>
     </div>`;
     })
