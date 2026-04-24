@@ -108,8 +108,7 @@ def test_hourly_tweet_under_280_chars():
         msg = str(e)
         assert "exceeds 280 chars" in msg
         # Parse length out of the error message.
-        import re as _re
-        m = _re.search(r"(\d+)$", msg)
+        m = re.search(r"(\d+)$", msg)
         assert m is not None
         length = int(m.group(1))
         assert length < 310, f"Tweet is {length} chars; runaway growth"

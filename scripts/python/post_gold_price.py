@@ -164,7 +164,7 @@ def _delta_str(price, prev_price):
     return f' {sign}${abs(delta):,.2f} ({sign}{abs(pct):.2f}%)'
 
 def _prev_line(prev_price, prev_posted_at_utc):
-    """"Prev: $X,XXX.XX at H:MM AM/PM\\n\\n" line, or "" if unavailable."""
+    """Return the "Prev: $X,XXX.XX at H:MM AM/PM\\n\\n" line, or "" if unavailable."""
     if prev_price is None or prev_posted_at_utc is None:
         return ''
     try:
