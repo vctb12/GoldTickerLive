@@ -147,11 +147,9 @@
         <div class="tracker-data-trust-banner">
           <div class="tracker-trust-icon" aria-hidden="true">ℹ</div>
           <div class="tracker-trust-content">
-            <strong>Reference estimates only</strong> — spot-linked calculations, not retail or
-            jewelry quotes. AED uses the UAE Central Bank peg (3.6725). Prices marked
-            <strong>Live</strong>, <strong>Cached/Fallback</strong>, <strong>Estimated</strong>, or
-            <strong>Historical baseline</strong> — freshness is always visible.
-            <a href="methodology.html">Methodology &amp; sources →</a>
+            <strong>Reference prices only</strong> — Spot-linked calculations, not retail quotes.
+            Freshness always visible (Live / Cached / Estimated / Historical).
+            <a href="methodology.html">Methodology →</a>
           </div>
           <button
             class="tracker-trust-close"
@@ -199,120 +197,102 @@
         <div class="tracker-hero-inner">
           <!-- Main hero content -->
           <div class="tracker-hero-main">
-            <!-- Live status badges -->
+            <!-- Consolidated status badges -->
             <div class="tracker-badge-row">
               <span class="tracker-badge tracker-badge-live" id="tp-live-badge">
                 <span class="tracker-badge-dot" aria-hidden="true"></span>
                 <span id="tp-live-badge-text" aria-live="polite">Preparing live feed</span>
+                <span class="tracker-badge-separator" aria-hidden="true">·</span>
+                <span id="tp-refresh-badge" role="status" aria-live="polite">Waiting for first sync</span>
               </span>
               <span class="tracker-badge tracker-badge-xauusd" id="tp-xauusd-badge" aria-label="XAU/USD spot price">
                 <span aria-hidden="true">🏅</span>
                 <span>XAU/USD</span>
                 <strong id="tp-xauusd-value" aria-live="polite">—</strong>
               </span>
-              <span class="tracker-badge" id="tp-market-badge">Gold market</span>
-              <span class="tracker-badge" id="tp-refresh-badge" role="status" aria-live="polite"
-                >Waiting for first sync</span
-              >
+              <span class="tracker-badge tracker-badge-market" id="tp-market-badge">
+                <span aria-hidden="true">📊</span>
+                <span>Gold market</span>
+              </span>
             </div>
 
-            <h1 id="tp-hero-title">
+            <h1 id="tp-hero-title" class="tracker-hero-title">
               Gold Tracker Pro
-              <span class="tracker-hero-title-sub" aria-hidden="true">Live workspace</span>
+              <span class="tracker-hero-title-sub">Live workspace</span>
             </h1>
-            <p id="tp-hero-copy">
-              Live spot-linked gold reference prices across 24+ countries, 7 karats, updated every
-              90 seconds.
+            <p id="tp-hero-copy" class="tracker-hero-description">
+              24+ markets · 7 karats · Live spot-linked prices updated every 90 seconds
             </p>
 
             <!-- Key metrics — rendered by JS -->
-            <div class="tracker-hero-grid" id="tp-hero-stats" aria-label="Key live metrics"></div>
+            <div class="tracker-hero-stats" id="tp-hero-stats" aria-label="Key live metrics"></div>
 
-            <!-- Inline selectors -->
-            <div class="tracker-hero-selectors">
-              <label class="tracker-hero-field">
-                <span>Language</span>
-                <select id="tp-language" aria-label="Language">
-                  <option value="en">English</option>
-                  <option value="ar">العربية</option>
-                </select>
-              </label>
-              <label class="tracker-hero-field">
-                <span>Currency</span>
-                <select id="tp-currency" aria-label="Currency"></select>
-              </label>
-              <label class="tracker-hero-field">
-                <span>Karat</span>
-                <select id="tp-karat" aria-label="Karat"></select>
-              </label>
-              <label class="tracker-hero-field">
-                <span>Unit</span>
-                <select id="tp-unit" aria-label="Unit"></select>
-              </label>
+            <!-- Consolidated controls -->
+            <div class="tracker-hero-controls">
+              <div class="tracker-hero-selectors">
+                <label class="tracker-hero-field">
+                  <span class="tracker-field-label">Language</span>
+                  <select id="tp-language" aria-label="Language">
+                    <option value="en">English</option>
+                    <option value="ar">العربية</option>
+                  </select>
+                </label>
+                <label class="tracker-hero-field">
+                  <span class="tracker-field-label">Currency</span>
+                  <select id="tp-currency" aria-label="Currency"></select>
+                </label>
+                <label class="tracker-hero-field">
+                  <span class="tracker-field-label">Karat</span>
+                  <select id="tp-karat" aria-label="Karat"></select>
+                </label>
+                <label class="tracker-hero-field">
+                  <span class="tracker-field-label">Unit</span>
+                  <select id="tp-unit" aria-label="Unit"></select>
+                </label>
+              </div>
+
+              <!-- Primary actions -->
+              <div class="tracker-hero-actions">
+                <button class="btn btn-primary" id="tp-refresh-btn" type="button">
+                  <span aria-hidden="true">↻</span> Refresh
+                </button>
+                <a class="btn btn-outline" href="#mode-live" id="tp-jump-chart">
+                  View chart <span aria-hidden="true">↓</span>
+                </a>
+                <button class="btn btn-ghost" id="tp-share-btn" type="button">Copy brief</button>
+                <button class="btn btn-ghost" id="tp-reset-btn" type="button">Reset</button>
+              </div>
             </div>
 
-            <!-- Action buttons -->
-            <div class="tracker-hero-actions">
-              <button class="btn btn-primary" id="tp-refresh-btn" type="button">
-                ↻ Refresh
-              </button>
-              <button class="btn btn-outline" id="tp-share-btn" type="button">Copy brief</button>
-              <button class="btn btn-ghost" id="tp-reset-btn" type="button">Reset</button>
-              <a class="btn btn-ghost" href="#mode-live" id="tp-jump-chart">Chart ↓</a>
-            </div>
-
-            <!-- Quick-use chips -->
-            <div class="tracker-hint-chips" id="tracker-hint-chips" aria-label="Quick usage hints">
-              <span class="tracker-hint-chip"
-                ><span aria-hidden="true">📡</span> Live data · refreshes every 90s</span
-              >
-              <span class="tracker-hint-chip"
-                ><span aria-hidden="true">🌍</span> 24+ countries · 7 karats</span
-              >
-              <span class="tracker-hint-chip"
-                ><span aria-hidden="true">📊</span> Chart · compare · alerts · planner</span
-              >
-              <span class="tracker-hint-chip tracker-hint-chip--note"
-                ><span aria-hidden="true">⚠</span> Spot-linked estimates · not retail quotes</span
-              >
-            </div>
-
-            <div class="tracker-hero-hints" id="tp-hero-hints" aria-hidden="true">
-              <span>Keyboard: R refresh · H Live · C Compare · A Alerts · P Planner</span>
+            <!-- Simplified footer hints -->
+            <div class="tracker-hero-footer">
+              <span class="tracker-hint-text">
+                <span aria-hidden="true">⚠</span> Spot-linked reference prices · not retail quotes ·
+                <a href="methodology.html" class="tracker-inline-link">Methodology</a>
+              </span>
+              <span class="tracker-hint-text tracker-hint-keyboard" id="tp-hero-hints" aria-hidden="true">
+                Keyboard: <kbd>R</kbd> refresh · <kbd>H</kbd> live · <kbd>C</kbd> compare · <kbd>?</kbd> help
+              </span>
             </div>
           </div>
 
-          <!-- Hero aside — live desk + explore links -->
-          <aside class="tracker-hero-aside" aria-label="Live desk summary">
-            <div class="tracker-side-block">
-              <h2 id="tp-live-summary-heading">Live desk</h2>
+          <!-- Hero aside — consolidated -->
+          <aside class="tracker-hero-aside" aria-label="Quick navigation">
+            <div class="tracker-side-card">
+              <h2 class="tracker-side-heading">Live desk</h2>
               <div
                 class="tracker-side-list"
                 id="tp-summary-list"
-                aria-describedby="tp-live-summary-heading"
                 aria-live="polite"
               ></div>
             </div>
 
-            <div class="tracker-side-block tracker-side-block--tips">
-              <h2>Explore more</h2>
+            <div class="tracker-side-card tracker-side-card--links">
+              <h3 class="tracker-side-subheading">Explore</h3>
               <ul class="tracker-side-ul">
-                <li>
-                  <a href="calculator.html" class="tracker-inline-link">Gold calculator</a> —
-                  weight, karat &amp; budget tools
-                </li>
-                <li>
-                  <a href="countries/index.html" class="tracker-inline-link">Country prices</a> —
-                  UAE, Saudi Arabia, Kuwait &amp; more
-                </li>
-                <li>
-                  <a href="shops.html" class="tracker-inline-link">Gold shops</a> — directory for
-                  GCC &amp; Arab markets
-                </li>
-                <li>
-                  <a href="methodology.html" class="tracker-inline-link">Methodology</a> — how
-                  prices are calculated
-                </li>
+                <li><a href="calculator.html" class="tracker-inline-link">Calculator</a></li>
+                <li><a href="countries/index.html" class="tracker-inline-link">Countries</a></li>
+                <li><a href="shops.html" class="tracker-inline-link">Shops directory</a></li>
               </ul>
             </div>
           </aside>
