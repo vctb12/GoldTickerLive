@@ -14,7 +14,7 @@ import {
   contactQualityLabel,
 } from './helpers.js';
 
-export function renderCards(shops, STATE, SHOPS, t, isInShortlist, openModal) {
+export function renderCards(shops, STATE, SHOPS, t, isInShortlist) {
   const grid = document.getElementById('shops-grid');
   if (!grid) {
     console.warn('[shops] Element #shops-grid not found');
