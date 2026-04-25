@@ -187,8 +187,66 @@ If an upgrade causes issues:
 - **npm audit docs:** https://docs.npmjs.com/cli/v10/commands/npm-audit
 - **Snyk advisor:** https://snyk.io/advisor/
 
+## External APIs
+
+Third-party APIs consumed by the site. None of these require keys visible in the browser (FX is
+an unauthenticated public endpoint; gold price is fetched server-side via GitHub Actions).
+
+| API                              | Used for                                  | Auth                        | Consumer        | Free-tier limit |
+| -------------------------------- | ----------------------------------------- | --------------------------- | --------------- | --------------- |
+| `goldpricez.com`                 | Gold spot price (XAU/USD) data refresh    | `GOLDPRICEZ_API_KEY` secret | GHA workflow    | Unknown         |
+| `open.er-api.com/v6/latest/USD`  | Live FX exchange rates                    | None                        | Browser         | 1 500 req/month |
+| `X / Twitter API v2`             | Hourly automated gold-price posts         | OAuth 1.0a (4 secrets)      | GHA workflow    | Rate limited    |
+| `Supabase REST + Auth`           | Admin GitHub OAuth, newsletter, settings  | `SUPABASE_URL` + keys       | Both            | Free tier       |
+| `Stripe` (routed, not yet live)  | Premium subscription payments             | `STRIPE_SECRET_KEY`         | Server          | N/A             |
+| Discord webhook (optional)       | Spike / health alert notifications        | `DISCORD_WEBHOOK_URL`       | GHA workflow    | —               |
+| Telegram Bot API (optional)      | Spike / health alert notifications        | `TELEGRAM_BOT_TOKEN`        | GHA workflow    | —               |
+
+> **FX rate limit:** `open.er-api.com` free tier is 1 500 requests/month. Under significant traffic
+> the per-browser fetch model could exhaust this. See weak spot W-13 in
+> [`docs/plans/2026-04-25_codebase-analysis.md`](./plans/2026-04-25_codebase-analysis.md) for a
+> proposed mitigation (commit FX data to `/data/fx_rates.json` on a schedule, same as gold price).
+
+## CDN, fonts, and third-party scripts
+
+Loaded on every public page via `assets/analytics.js` (deferred) and `<head>` tags.
+
+| Resource                                    | Purpose                                         | Privacy impact                        |
+| ------------------------------------------- | ----------------------------------------------- | ------------------------------------- |
+| `fonts.googleapis.com` — Cairo CSS          | Primary typeface (Latin + Arabic)               | Google logs font-fetch IP             |
+| `fonts.gstatic.com` — Cairo binaries        | Font file CDN delivery                          | Google CDN                            |
+| `pagead2.googlesyndication.com/adsbygoogle` | Google AdSense ad delivery                      | Sets cookies; tracks users            |
+| `www.googletagmanager.com/gtag/js`          | Google Analytics 4 (`G-K3GNY9M8TE`)            | Tracks page views; anonymize_ip=true  |
+| `www.clarity.ms/tag/w4e0nhdxt5`             | Microsoft Clarity heatmaps and session replay   | Tracks mouse/scroll behaviour         |
+
+Analytics and Clarity load only when `navigator.doNotTrack !== '1'` and
+`localStorage.getItem('gp_no_analytics') !== '1'`. Changing analytics IDs or the AdSense publisher
+ID (`ca-pub-8578581906562588`) requires a code edit + deploy.
+
+## Python runtime dependencies
+
+Pinned in `scripts/python/requirements.txt`. All three workflows that use Python install from this
+file (`post_gold.yml`, `spike_alert.yml`, `health_check.yml`).
+
+| Package    | Version  | Purpose                                         |
+| ---------- | -------- | ----------------------------------------------- |
+| `requests` | ==2.32.3 | HTTP requests (gold price fetch, health probes) |
+| `tweepy`   | ==4.14.0 | Twitter/X API v2 client (OAuth 1.0a)            |
+| `supabase` | ==2.9.1  | Supabase Python client (newsletter, DB sync)    |
+
+## GitHub Actions dependencies
+
+| Action                                  | Version | Purpose                              |
+| --------------------------------------- | ------- | ------------------------------------ |
+| `actions/checkout`                      | v6      | Repository checkout                  |
+| `actions/setup-node`                    | v6      | Node.js environment                  |
+| `actions/setup-python`                  | v6      | Python environment                   |
+| `actions/upload-pages-artifact`         | v5      | Bundle GitHub Pages deploy artifact  |
+| `actions/deploy-pages`                  | v5      | Publish `dist/` to GitHub Pages      |
+| `stefanzweifel/git-auto-commit-action`  | v5      | Auto-commit data file changes in GHA |
+
 ## Last Updated
 
-- **Date:** 2026-04-14
-- **Updated By:** Phase 1.1 Implementation
-- **Next Review:** 2026-05-14
+- **Date:** 2026-04-25
+- **Updated By:** Codebase analysis (2026-04-25) — added External APIs, CDN/scripts, Python, GHA sections
+- **Next Review:** 2026-05-25
