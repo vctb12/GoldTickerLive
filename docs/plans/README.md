@@ -31,6 +31,7 @@ update) the section in `REVAMP_PLAN.md`, and open a scoped PR for the first slic
 | [`2026-04-24_security-performance-deps-audit.md`](./2026-04-24_security-performance-deps-audit.md) | User prompt · 2026-04-24  | 🟢 In progress — Track A PR A-1 (security high-sev fixes) landing; B/C to follow. |
 | [`2026-04-24_navbar-audit-and-redesign.md`](./2026-04-24_navbar-audit-and-redesign.md)             | Agent audit · 2026-04-24  | 🆕 NEW — 23-issue navbar audit; 3-phase plan (bugs → CSS → IA). Awaiting owner review before Phase 1 PR. |
 | [`2026-04-25_codebase-analysis.md`](./2026-04-25_codebase-analysis.md)                             | Agent audit · 2026-04-25  | 🆕 NEW — Four-part read-only analysis: repo overview, data-flow trace, full external-deps list, 14 ranked weak spots (W-1…W-14). No code changes. |
+| [`2026-04-25_multi-track-quality.md`](./2026-04-25_multi-track-quality.md)                         | User prompt · 2026-04-25  | 🆕 NEW — 20-task program across 6 tracks (UX/a11y, SEO, testing, docs, CI/CD, release). Three-wave sequencing (audit → fix → larger pass). Each task lands as a scoped PR. |
 
 ---
 
