@@ -121,11 +121,15 @@ test('production disables unused browser capabilities with Permissions-Policy', 
   const policy = res.headers['permissions-policy'] || '';
 
   for (const directive of [
+    'accelerometer=()',
     'camera=()',
-    'microphone=()',
     'geolocation=()',
+    'gyroscope=()',
+    'magnetometer=()',
+    'microphone=()',
     'payment=()',
     'usb=()',
+    'interest-cohort=()',
   ]) {
     assert.ok(
       policy.includes(directive),

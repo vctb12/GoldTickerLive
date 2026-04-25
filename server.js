@@ -15,6 +15,17 @@ const { errorHandler } = require('./server/lib/errors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const IS_PROD = process.env.NODE_ENV === 'production';
+const PERMISSIONS_POLICY_HEADER = [
+  'accelerometer=()',
+  'camera=()',
+  'geolocation=()',
+  'gyroscope=()',
+  'magnetometer=()',
+  'microphone=()',
+  'payment=()',
+  'usb=()',
+  'interest-cohort=()',
+].join(', ');
 
 // Trust the first proxy hop when running behind a reverse proxy / load balancer
 // (Vercel, Cloudflare, Nginx). Without this, express-rate-limit keys on the
@@ -99,10 +110,7 @@ app.use(
 );
 
 app.use((_req, res, next) => {
-  res.setHeader(
-    'Permissions-Policy',
-    'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()'
-  );
+  res.setHeader('Permissions-Policy', PERMISSIONS_POLICY_HEADER);
   next();
 });
 
