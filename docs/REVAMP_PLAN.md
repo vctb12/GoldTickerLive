@@ -13,7 +13,7 @@ them into the right section here before execution. Agent operating rules are in
 - Keep completed items as `[x]` with enough context to serve as a record. Don't re-open closed items
   to pad status; don't invent new phases to look ambitious.
 
-**Last updated:** 2026-04-23.
+**Last updated:** 2026-04-25.
 
 | §      | Owns                                                       | Absorbed from                                                     |
 | ------ | ---------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -583,6 +583,8 @@ Applied on top of primitives from Track A. Rules:
 - [ ] `role="dialog"` + focus trap on drawer + palette.
 
 ## 11. Track H — SEO & metadata
+
+> **Audit input (2026-04-25):** [`reports/seo-audit.md`](../reports/seo-audit.md) — site-wide audit produced by the multi-track quality program ([`docs/plans/2026-04-25_multi-track-quality.md`](./plans/2026-04-25_multi-track-quality.md), Track 2 Wave A). 100% presence on `<title>` / meta-desc / canonical / `og:*` / `twitter:*` / hreflang / JSON-LD. Three Wave B fix PRs identified: (B-1) title-length trim on 394 long titles + 13 long descriptions + Tripoli disambiguation; (B-2) `FAQPage` / `WebApplication` schema + `Product`-vs-trust-label alignment + `check-jsonld-dom.js` validator; (B-3) `og:locale[:alternate]` capture + `og:url === canonical` cross-check + `og:image` dimension check.
 
 - [ ] Unique `<title>` + `<meta name="description">` preserved on every page touched.
 - [ ] Canonical `https://goldtickerlive.com/...` (apex, no www, no trailing slash inconsistencies).

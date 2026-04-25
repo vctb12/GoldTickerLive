@@ -116,6 +116,10 @@ function main() {
       errors.push(`${rel}: missing <meta property="og:url">`);
     } else if (!/^https:\/\/goldtickerlive\.com\//.test(ogUrlMatch[1])) {
       errors.push(`${rel}: og:url does not use https://goldtickerlive.com/ (got ${ogUrlMatch[1]})`);
+    } else if (canonUrl && ogUrlMatch[1] !== canonUrl) {
+      // og:url and canonical must agree — otherwise social shares and search engines
+      // see two different "true" URLs for the page (Track 2.4 of the multi-track plan).
+      errors.push(`${rel}: og:url (${ogUrlMatch[1]}) does not match canonical (${canonUrl})`);
     }
 
     // Redirect stubs don't require hreflang
