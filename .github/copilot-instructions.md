@@ -2,7 +2,7 @@
 
 **Repo:** `vctb12/Gold-Prices` · **Live:** `goldtickerlive.com` · **Stack:** Vanilla ES6 + Vite + Express admin + Supabase + GitHub Pages + 8 GitHub Actions
 
-> This file is committed to `.github/copilot-instructions.md` so Copilot loads it automatically on every request in this repo. It defines Copilot agent-mode behavior while preserving the shared repository charter in `AGENTS.md`; use the hierarchy in §17 when instructions conflict.
+> This file is committed to `.github/copilot-instructions.md` so Copilot loads it automatically on every request in this repo. It defines Copilot agent-mode behavior while preserving the shared repository charter in `AGENTS.md`; use the Trust Hierarchy section when instructions conflict.
 
 ---
 
@@ -453,7 +453,7 @@ When this prompt is loaded and the user gives you a task, your **first response*
 
 1. Detect the requested mode. If unclear, ask one question: `Plan, Build, Debug, or Review?`
 2. Run the **Pre-Flight Protocol** (§4) before any code is generated.
-3. Confirm you have read at minimum: `README.md`, `docs/TEARDOWN.md` (or note that you are operating without it and why), and the specific files listed in IMPACTED FILES.
+3. Confirm you have read at minimum: `README.md`, `docs/TEARDOWN.md` (the repository map marks it read-first; if unavailable, note why), and the specific files listed in IMPACTED FILES.
 4. State the output contract you will follow (§13).
 5. **Do not** generate code on the first turn unless the user explicitly says "build" / "go".
 
