@@ -244,13 +244,13 @@ export const TRANSLATIONS = {
     'home.socialFollowCta': 'Follow @GoldTickerLive',
     'home.explainerSpotTitle': 'Spot Price',
     'home.explainerSpotDesc':
-      'XAU/USD is the global benchmark for one troy ounce of pure gold on international markets.',
+      'XAU/USD is the global benchmark price for one troy ounce of pure gold, traded continuously on international markets.',
     'home.explainerKaratTitle': 'Karat Purity',
     'home.explainerKaratDesc':
-      '24K is nearly pure gold; 22K, 21K, and 18K scale by purity for reference pricing.',
+      '24K is 99.9% pure gold; 22K is 91.7%; 18K is 75%. Lower karats contain other metals, reducing purity and price proportionally.',
     'home.explainerLocalTitle': 'Your Local Price',
     'home.explainerLocalDesc':
-      'We convert the USD spot price with FX rates so you can compare estimated gram prices locally.',
+      'We convert the USD spot price using live FX rates so you see the estimated gram price in your local currency instantly.',
     'home.faqTitle': 'Common Questions',
     'home.faqMore': 'More questions answered on the Learn page →',
     'home.trackerLink': 'Full Tracker →',
@@ -506,13 +506,13 @@ export const TRANSLATIONS = {
     'home.socialFollowCta': 'تابع @GoldTickerLive',
     'home.explainerSpotTitle': 'السعر الفوري',
     'home.explainerSpotDesc':
-      'XAU/USD هو المعيار العالمي لأوقية تروي واحدة من الذهب الخالص في الأسواق الدولية.',
+      'XAU/USD هو السعر المرجعي العالمي لأوقية تروي واحدة من الذهب الخالص، ويتم تداوله باستمرار في الأسواق الدولية.',
     'home.explainerKaratTitle': 'نقاء العيار',
     'home.explainerKaratDesc':
-      'عيار 24 شبه نقي؛ أما 22 و21 و18 فتتغير قيمتها حسب نسبة النقاء في التسعير المرجعي.',
+      'عيار 24 هو ذهب نقي بنسبة 99.9%؛ وعيار 22 بنسبة 91.7%؛ وعيار 18 بنسبة 75%. تحتوي العيارات الأقل على معادن أخرى، فينخفض النقاء والسعر بالتناسب.',
     'home.explainerLocalTitle': 'سعرك المحلي',
     'home.explainerLocalDesc':
-      'نحوّل السعر الفوري بالدولار باستخدام أسعار الصرف لتقارن تقديرات الغرام محليًا.',
+      'نحوّل السعر الفوري بالدولار باستخدام أسعار صرف مباشرة حتى ترى تقدير سعر الغرام بعملتك المحلية فورًا.',
     'home.faqTitle': 'أسئلة شائعة',
     'home.faqMore': 'المزيد من الأسئلة المجاب عنها في صفحة التعلّم ←',
     'home.trackerLink': 'التتبع الكامل ←',
