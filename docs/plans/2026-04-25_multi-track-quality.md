@@ -1,8 +1,8 @@
 # Multi-track quality, SEO, testing, docs, CI & release plan
 
 **Origin:** User prompt · 2026-04-25
-**Status:** 🆕 NEW — intake captured; PR 1 (this file) is the bootstrap. Waves A→B→C land as separate scoped PRs.
-**Reconcile into:** [`docs/REVAMP_PLAN.md`](../REVAMP_PLAN.md) — each track folds into its matching section as PRs land (§22 production tracks owns most of it; §6.x guardrails apply to all).
+**Status:** 🟡 IN PROGRESS — PR 1 (this file + intake row) ✅ landed. PR 2 (SEO audit · Wave A) ✅ landed → [`reports/seo-audit.md`](../../reports/seo-audit.md). PR 3+ pending.
+**Reconcile into:** [`docs/REVAMP_PLAN.md`](../REVAMP_PLAN.md) — each track folds into its matching section as PRs land (§22 production tracks owns most of it; §6.x guardrails apply to all). Track 2 SEO results feed §11 (Track H — SEO & metadata).
 
 This proposal captures a 20-task program that spans frontend/UX, SEO, testing, documentation, CI/CD, and release shipping. Trying to do all 20 in one PR would itself violate the autonomy contract — huge churn, uninspectable diff. The plan below sequences them into reviewable slices, each shippable independently, with audits landing first so the owner can redirect cheaply.
 
