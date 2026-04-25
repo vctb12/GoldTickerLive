@@ -67,7 +67,7 @@ const BASELINE = {
   'src/components/ticker.js': 1,
   'src/lib/cache.js': 1,
   'src/lib/page-hydrator.js': 3,
-  'src/pages/home.js': 2,
+  'src/pages/home.js': 0, // Homepage revamp migrated GCC grid + PWA banner rendering to el()/DocumentFragment on 2026-04-25.
   'src/pages/shops.js': 13,
   'src/pages/shops/filters.js': 4, // Extracted from shops.js: safe <option> building with esc()
   'src/pages/shops/modal.js': 1, // Extracted from shops.js: modal HTML with esc() wrappers

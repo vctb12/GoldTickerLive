@@ -169,9 +169,15 @@
               Live spot-linked gold estimates across 24+ countries in 7 karats — from 24K pure to
               14K — in local currencies. Free, transparent, updated every 90 seconds.
             </p>
+            <p class="hero-trust-line" id="hero-trust-line">
+              Spot-linked reference estimate — not a final retail jewelry quote.
+            </p>
             <div class="hero-ctas">
               <a href="tracker.html" class="btn btn-primary" id="hero-cta-tracker"
                 >View Live Tracker</a
+              >
+              <a href="calculator.html" class="btn btn-outline-light" id="hero-cta-calculator"
+                >Open Calculator</a
               >
             </div>
             <div class="hero-ctas-secondary">
@@ -210,6 +216,9 @@
               <span class="hlc-change" id="hlc-change" hidden>—</span>
               <span class="hlc-market" id="hlc-market-status"></span>
             </div>
+            <p class="hlc-trust-line" id="hlc-trust-line">
+              Spot/reference estimate · final shop prices vary
+            </p>
             <div class="hlc-grid">
               <div class="hlc-item">
                 <span class="hlc-item-label" id="hlc-label-aed24">24K / gram (AED)</span>
@@ -244,9 +253,15 @@
       </section>
 
       <!-- ═══════ LIVE KARAT PRICE STRIP ═══════ -->
-      <section class="karat-strip" aria-label="Live karat reference prices">
+      <section class="karat-strip" aria-labelledby="karat-strip-title">
         <div class="karat-strip-inner">
-          <span class="karat-strip-label" id="karat-strip-label">AED / gram</span>
+          <div class="karat-strip-copy">
+            <span class="karat-strip-label" id="karat-strip-label">AED / gram</span>
+            <h2 class="karat-strip-title" id="karat-strip-title">Live reference prices by karat</h2>
+            <p class="karat-strip-sub" id="karat-strip-sub">
+              Spot-linked AED gram estimates. Retail jewelry can include making charges and tax.
+            </p>
+          </div>
           <div
             class="karat-strip-prices"
             id="karat-strip-prices"
@@ -289,8 +304,20 @@
                 >—</span
               >
             </div>
+            <div class="karat-strip-item" id="kstrip-14">
+              <span class="karat-strip-k">14K</span>
+              <span
+                class="karat-strip-v skeleton-inline"
+                style="width: 56px; height: 1.1em"
+                id="kstrip-14-val"
+                >—</span
+              >
+            </div>
           </div>
-          <a href="tracker.html" class="karat-strip-link" id="karat-strip-cta">Full tracker →</a>
+          <div class="karat-strip-actions">
+            <span class="karat-strip-updated" id="karat-strip-updated">Loading freshness…</span>
+            <a href="tracker.html" class="karat-strip-link" id="karat-strip-cta">Full tracker →</a>
+          </div>
         </div>
       </section>
 
@@ -354,15 +381,17 @@
           <div class="trust-banner-box">
             <div class="trust-banner-icon">⚠️</div>
             <div class="trust-banner-content">
-              <h3>About Our Data</h3>
+              <h3 id="trust-banner-title">About Our Data</h3>
               <p>
-                These are <strong>spot-linked reference estimates</strong>, not final retail jewelry
-                prices. Retail quotes usually add making charges, dealer/shop margins, and local
-                taxes (where applicable). Freshness labels use one shared vocabulary sitewide:
-                <strong>Live</strong>, <strong>Delayed</strong>, <strong>Cached/Fallback</strong>,
-                <strong>Estimated</strong>, and <strong>Historical baseline</strong>. Source:
+                <span id="trust-banner-copy"
+                  >These are spot-linked reference estimates, not final retail jewelry prices.
+                  Retail quotes usually add making charges, dealer/shop margins, and local taxes
+                  (where applicable). Freshness labels use one shared vocabulary sitewide: Live,
+                  Delayed, Cached/Fallback, Estimated, and Historical baseline. Source:</span
+                >
                 <a href="https://goldpricez.com" target="_blank" rel="nofollow noopener">goldpricez.com</a> for
-                XAU/USD plus FX conversion rules. <a href="methodology.html">Full methodology →</a>
+                <span id="trust-banner-source-tail">XAU/USD plus FX conversion rules.</span>
+                <a href="methodology.html" id="trust-banner-methodology">Full methodology →</a>
               </p>
             </div>
           </div>
@@ -617,7 +646,10 @@
       <!-- ═══════ SOCIAL FOLLOW CTA ═══════ -->
       <section class="home-section home-section--social" aria-label="Follow us on social media" data-reveal>
         <div class="home-section-inner home-section-inner--narrow" style="text-align: center">
-          <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 0.75rem">
+          <p
+            id="social-follow-text"
+            style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 0.75rem"
+          >
             Get gold price updates on X/Twitter
           </p>
           <a
@@ -632,7 +664,7 @@
                 d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
               />
             </svg>
-            Follow @GoldTickerLive
+            <span id="social-follow-cta">Follow @GoldTickerLive</span>
           </a>
         </div>
       </section>
@@ -644,22 +676,22 @@
             <div class="explainer-strip-item">
               <span class="explainer-strip-icon" aria-hidden="true">📊</span>
               <div class="explainer-strip-body">
-                <strong class="explainer-strip-title">Spot Price</strong>
-                <p class="explainer-strip-desc">XAU/USD is the global benchmark price for one troy ounce of pure gold, traded continuously on international markets.</p>
+                <strong class="explainer-strip-title" id="explainer-spot-title">Spot Price</strong>
+                <p class="explainer-strip-desc" id="explainer-spot-desc">XAU/USD is the global benchmark price for one troy ounce of pure gold, traded continuously on international markets.</p>
               </div>
             </div>
             <div class="explainer-strip-item">
               <span class="explainer-strip-icon" aria-hidden="true">⚖️</span>
               <div class="explainer-strip-body">
-                <strong class="explainer-strip-title">Karat Purity</strong>
-                <p class="explainer-strip-desc">24K is 99.9% pure gold; 22K is 91.7%; 18K is 75%. Lower karats contain other metals, reducing purity and price proportionally.</p>
+                <strong class="explainer-strip-title" id="explainer-karat-title">Karat Purity</strong>
+                <p class="explainer-strip-desc" id="explainer-karat-desc">24K is 99.9% pure gold; 22K is 91.7%; 18K is 75%. Lower karats contain other metals, reducing purity and price proportionally.</p>
               </div>
             </div>
             <div class="explainer-strip-item">
               <span class="explainer-strip-icon" aria-hidden="true">💱</span>
               <div class="explainer-strip-body">
-                <strong class="explainer-strip-title">Your Local Price</strong>
-                <p class="explainer-strip-desc">We convert the USD spot price using live FX rates so you see the estimated gram price in your local currency instantly.</p>
+                <strong class="explainer-strip-title" id="explainer-local-title">Your Local Price</strong>
+                <p class="explainer-strip-desc" id="explainer-local-desc">We convert the USD spot price using live FX rates so you see the estimated gram price in your local currency instantly.</p>
               </div>
             </div>
           </div>

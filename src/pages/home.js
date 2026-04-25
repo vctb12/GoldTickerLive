@@ -16,6 +16,7 @@ import { injectSpotBar, updateSpotBar, updateSpotBarLang } from '../components/s
 import { renderAdSlot } from '../components/adSlot.js';
 import '../lib/reveal.js';
 import { countUp } from '../lib/count-up.js';
+import { clear, el, safeHref } from '../lib/safe-dom.js';
 
 // ── Constants ──────────────────────────────────────────────────────────────
 const LANG_KEY = 'user_prefs';
@@ -62,6 +63,31 @@ function tx(key) {
 const GCC = COUNTRIES.filter((c) => c.group === 'gcc');
 const MENA = COUNTRIES.filter((c) => ['gcc', 'levant', 'africa'].includes(c.group));
 const GLOBAL = COUNTRIES;
+// Complete map of country-code → countries/ directory slug.
+// Only codes listed here have a dedicated page; the rest are rendered without a link.
+const COUNTRY_SLUGS = {
+  AE: 'uae',
+  SA: 'saudi-arabia',
+  KW: 'kuwait',
+  QA: 'qatar',
+  BH: 'bahrain',
+  OM: 'oman',
+  JO: 'jordan',
+  LB: 'lebanon',
+  IQ: 'iraq',
+  SY: 'syria',
+  PS: 'palestine',
+  YE: 'yemen',
+  EG: 'egypt',
+  LY: 'libya',
+  TN: 'tunisia',
+  DZ: 'algeria',
+  MA: 'morocco',
+  SD: 'sudan',
+  TR: 'turkey',
+  PK: 'pakistan',
+  IN: 'india',
+};
 let homeRegion = (() => {
   try {
     return JSON.parse(localStorage.getItem('user_prefs') || '{}').homeRegion || 'gcc';
@@ -71,9 +97,31 @@ let homeRegion = (() => {
 })();
 
 // ── Render helpers ─────────────────────────────────────────────────────────
-function set(id, text) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = text;
+function setTextById(id, text) {
+  const target = document.getElementById(id);
+  if (target) target.textContent = text;
+}
+
+function getFreshnessMeta() {
+  const freshnessTime = goldUpdatedAt || new Date().toISOString();
+  const ageMs = goldUpdatedAt ? Date.now() - new Date(goldUpdatedAt).getTime() : 0;
+  const isStaleByAge = ageMs > 10 * 60 * 1000; // >10 minutes
+  const isLive = priceSourceLabel === 'live' && !isStaleByAge;
+  let sourceText;
+  if (isLive) {
+    sourceText = tx('sourceLive');
+  } else if (isStaleByAge && goldUpdatedAt) {
+    const mins = Math.floor(ageMs / 60000);
+    sourceText =
+      mins >= 60
+        ? `${tx('sourceStale')} (${Math.floor(mins / 60)}h ${mins % 60}m ago)`
+        : `${tx('sourceStale')} (${mins}m ago)`;
+  } else if (priceSourceLabel === 'unavailable') {
+    sourceText = tx('sourceUnavailable');
+  } else {
+    sourceText = tx('sourceCached');
+  }
+  return { freshnessTime, isLive, sourceText };
 }
 
 // ── Render hero live card ──────────────────────────────────────────────────
@@ -103,27 +151,18 @@ function renderHeroCard() {
     priceEl.classList.remove('hlc-price--loading');
   }
   document.getElementById('hero-live-card')?.removeAttribute('aria-busy');
-  set('hlc-aed24', fmt.formatPrice(aed24g, 'AED', 2));
-  set('hlc-usd22', fmt.formatPrice(usd22g, 'USD', 2));
-  set('hlc-aed22', fmt.formatPrice(aed22g, 'AED', 2));
-  set('hlc-usd21', fmt.formatPrice(usd21g, 'USD', 2));
-  const freshnessTime = goldUpdatedAt || new Date().toISOString();
-  const ageMs = goldUpdatedAt ? Date.now() - new Date(goldUpdatedAt).getTime() : 0;
-  const isStaleByAge = ageMs > 10 * 60 * 1000; // >10 minutes
-  const isLive = priceSourceLabel === 'live' && !isStaleByAge;
-  let sourceText;
-  if (isLive) {
-    sourceText = 'Live';
-  } else if (isStaleByAge && goldUpdatedAt) {
-    const mins = Math.floor(ageMs / 60000);
-    sourceText =
-      mins >= 60 ? `Stale (${Math.floor(mins / 60)}h ${mins % 60}m ago)` : `Stale (${mins}m ago)`;
-  } else {
-    sourceText = 'Cached/Fallback';
-  }
-  set(
+  setTextById('hlc-aed24', fmt.formatPrice(aed24g, 'AED', 2));
+  setTextById('hlc-usd22', fmt.formatPrice(usd22g, 'USD', 2));
+  setTextById('hlc-aed22', fmt.formatPrice(aed22g, 'AED', 2));
+  setTextById('hlc-usd21', fmt.formatPrice(usd21g, 'USD', 2));
+  const { freshnessTime, isLive, sourceText } = getFreshnessMeta();
+  setTextById(
     'hlc-updated',
     `${tx('updated')}: ${fmt.formatTimestampShort(freshnessTime, lang)} · ${tx('source')}: ${sourceText}`
+  );
+  setTextById(
+    'karat-strip-updated',
+    `${tx('updated')}: ${fmt.formatTimestampShort(freshnessTime, lang)} · ${sourceText}`
   );
 
   // Change vs day open
@@ -167,8 +206,8 @@ function renderHeroCard() {
     const timeStr = goldUpdatedAt ? fmt.formatTimestampShort(goldUpdatedAt, lang) : '—';
     bar.classList.toggle('home-freshness-bar--stale', stale);
     barText.textContent = stale
-      ? `Cached data · Last updated: ${timeStr}`
-      : `Live · Updated: ${timeStr}`;
+      ? `${tx('sourceCached')} · ${tx('updated')}: ${timeStr}`
+      : `${tx('sourceLive')} · ${tx('updated')}: ${timeStr}`;
     bar.removeAttribute('hidden');
   }
 }
@@ -181,8 +220,9 @@ function renderKaratStrip(k18Ref) {
   const k21 = KARATS.find((k) => k.code === '21');
   const k22 = KARATS.find((k) => k.code === '22');
   const k24 = KARATS.find((k) => k.code === '24');
+  const k14 = KARATS.find((k) => k.code === '14');
 
-  // Skip rendering if required karat data is not available
+  // Skip rendering if required core karat data is not available; 14K is optional.
   if (!k18 || !k21 || !k22 || !k24) return;
 
   const prices = {
@@ -191,13 +231,14 @@ function renderKaratStrip(k18Ref) {
     21: calc.usdPerGram(goldPrice, k21.purity) * AED,
     18: calc.usdPerGram(goldPrice, k18.purity) * AED,
   };
+  if (k14) prices[14] = calc.usdPerGram(goldPrice, k14.purity) * AED;
 
   for (const [k, v] of Object.entries(prices)) {
-    const el = document.getElementById(`kstrip-${k}-val`);
-    if (el) {
-      el.className = 'karat-strip-v';
+    const valueElement = document.getElementById(`kstrip-${k}-val`);
+    if (valueElement) {
+      valueElement.className = 'karat-strip-v';
       // Smooth count-up with directional flash when price changes.
-      countUp(el, v, {
+      countUp(valueElement, v, {
         decimals: 2,
         format: (n) => fmt.formatPrice(n, 'AED', 2),
       });
@@ -214,81 +255,67 @@ function renderGCCGrid() {
   // Select countries based on current region filter
   const regionLists = { gcc: GCC, mena: MENA, global: GLOBAL };
   const countries = regionLists[homeRegion] || GCC;
+  const { sourceText } = getFreshnessMeta();
+  const fragment = document.createDocumentFragment();
 
-  grid.innerHTML = countries
-    .map((c) => {
-      let price = '—';
-      if (c.currency === 'AED') {
-        price = fmt.formatPrice(
-          calc.usdPerGram(goldPrice, k22.purity) * CONSTANTS.AED_PEG,
-          'AED',
-          2
-        );
-      } else if (rates[c.currency]) {
-        price = fmt.formatPrice(
-          calc.usdPerGram(goldPrice, k22.purity) * rates[c.currency],
-          c.currency,
-          c.decimals
-        );
-      }
-      const name = lang === 'ar' ? c.nameAr : c.nameEn;
-      // Complete map of country-code → countries/ directory slug.
-      // Only codes listed here have a dedicated page; the rest are omitted.
-      const COUNTRY_SLUGS = {
-        AE: 'uae',
-        SA: 'saudi-arabia',
-        KW: 'kuwait',
-        QA: 'qatar',
-        BH: 'bahrain',
-        OM: 'oman',
-        JO: 'jordan',
-        LB: 'lebanon',
-        IQ: 'iraq',
-        SY: 'syria',
-        PS: 'palestine',
-        YE: 'yemen',
-        EG: 'egypt',
-        LY: 'libya',
-        TN: 'tunisia',
-        DZ: 'algeria',
-        MA: 'morocco',
-        SD: 'sudan',
-        TR: 'turkey',
-        PK: 'pakistan',
-        IN: 'india',
-      };
-      const slug = COUNTRY_SLUGS[c.code] ?? null;
+  clear(grid);
+  countries.forEach((c) => {
+    let price = '—';
+    if (c.currency === 'AED') {
+      price = fmt.formatPrice(calc.usdPerGram(goldPrice, k22.purity) * CONSTANTS.AED_PEG, 'AED', 2);
+    } else if (rates[c.currency]) {
+      price = fmt.formatPrice(
+        calc.usdPerGram(goldPrice, k22.purity) * rates[c.currency],
+        c.currency,
+        c.decimals
+      );
+    }
+    const name = lang === 'ar' ? c.nameAr : c.nameEn;
+    const slug = COUNTRY_SLUGS[c.code] ?? null;
 
-      // Change badge from day open
-      let changeBadge = '';
-      if (dayOpenPrice && goldPrice) {
-        const chg = ((goldPrice - dayOpenPrice) / dayOpenPrice) * 100;
-        const sign = chg >= 0 ? '+' : '';
-        const cls = chg >= 0 ? 'badge-up' : 'badge-down';
-        changeBadge = `<span class="gcc-change badge ${cls}">${sign}${chg.toFixed(2)}%</span>`;
-      }
+    const headerChildren = [
+      el('span', { class: 'gcc-flag', 'aria-hidden': 'true' }, c.flag),
+      el('div', { class: 'gcc-meta' }, [
+        el('span', { class: 'gcc-name' }, name),
+        el('span', { class: 'gcc-currency' }, c.currency),
+      ]),
+    ];
+    if (dayOpenPrice && goldPrice) {
+      const chg = ((goldPrice - dayOpenPrice) / dayOpenPrice) * 100;
+      const sign = chg >= 0 ? '+' : '';
+      const cls = chg >= 0 ? 'badge-up' : 'badge-down';
+      headerChildren.push(
+        el('span', { class: `gcc-change badge ${cls}` }, `${sign}${chg.toFixed(2)}%`)
+      );
+    }
 
-      return `<div class="gcc-card-wrapper">
-      ${
-        slug
-          ? `<a href="countries/${slug}.html" class="gcc-card">`
-          : '<div class="gcc-card gcc-card--no-link">'
-      }
-        <div class="gcc-card-header">
-          <span class="gcc-flag" aria-hidden="true">${c.flag}</span>
-          <div class="gcc-meta">
-            <span class="gcc-name">${name}</span>
-            <span class="gcc-currency">${c.currency}</span>
-          </div>
-          ${changeBadge}
-        </div>
-        <div class="gcc-price">${price}</div>
-        <div class="gcc-unit">${tx('perGram')} · 22K</div>
-      ${slug ? '</a>' : '</div>'}
-      <button class="gcc-copy-btn" data-copy="${price}" aria-label="Copy ${name} price" type="button">⎘</button>
-    </div>`;
-    })
-    .join('');
+    const cardChildren = [
+      el('div', { class: 'gcc-card-header' }, headerChildren),
+      el('div', { class: 'gcc-price' }, price),
+      el('div', { class: 'gcc-unit' }, `${tx('perGram')} · 22K`),
+      el('div', { class: 'gcc-source' }, sourceText),
+    ];
+    const card = slug
+      ? el('a', { href: safeHref(`./countries/${slug}/`), class: 'gcc-card' }, cardChildren)
+      : el('div', { class: 'gcc-card gcc-card--no-link' }, cardChildren);
+
+    fragment.append(
+      el('div', { class: 'gcc-card-wrapper' }, [
+        card,
+        el(
+          'button',
+          {
+            class: 'gcc-copy-btn',
+            dataset: { copy: price },
+            'aria-label': `${tx('copyPrice')} ${name}`,
+            type: 'button',
+          },
+          '⎘'
+        ),
+      ])
+    );
+  });
+  grid.append(fragment);
 }
 
 // ── Apply full page language ───────────────────────────────────────────────
@@ -297,71 +324,92 @@ function applyLangToPage() {
   document.documentElement.lang = lang;
   document.documentElement.dir = isAr ? 'rtl' : 'ltr';
 
-  set('hero-live-label', tx('heroLive'));
-  set('hero-title-main', tx('heroTitle'));
-  set('hero-title-sub', tx('heroSub'));
-  set('hero-lead', tx('heroLead'));
-  set('hero-cta-tracker', tx('heroCta1'));
-  set('hero-cta-countries', tx('heroCta2'));
-  set('hero-cta-shops', tx('heroCta4'));
-  set('hero-cta-alert', tx('heroCta5'));
-  set('hlc-tracker-link', tx('trackerLink'));
-  set('hlc-title', tx('spotTitle'));
-  set('hlc-sub', tx('perOz'));
-  set('hlc-label-aed24', tx('lbl24aed'));
-  set('hlc-label-usd22', tx('lbl22usd'));
-  set('hlc-label-aed22', tx('lbl22aed'));
-  set('hlc-label-usd21', tx('lbl21usd'));
-  set('hlc-updated', tx('fetching'));
-  set('gcc-section-title', tx('gccLiveTitle'));
-  set('gcc-section-sub', tx('gccLiveSub'));
-  set('gcc-see-all', tx('seeAll'));
-  set('trust-live', tx('trustLive'));
-  set('trust-live-sub', tx('trustLiveSub'));
-  set('trust-countries', tx('trustCountries'));
-  set('trust-countries-sub', tx('trustCountriesSub'));
-  set('trust-karats', tx('trustKarats'));
-  set('trust-karats-sub', tx('trustKaratsSub'));
-  set('trust-aed', tx('trustAed'));
-  set('trust-aed-sub', tx('trustAedSub'));
-  set('trust-bilingual', tx('trustBilingual'));
-  set('trust-bilingual-sub', tx('trustBilingualSub'));
-  set('trust-offline', tx('trustOffline'));
-  set('trust-offline-sub', tx('trustOfflineSub'));
-  set('karat-strip-label', tx('karatStripLabel'));
-  set('karat-strip-cta', tx('karatStripCta'));
-  set('tools-title', tx('toolsTitle'));
-  set('tools-sub', tx('toolsSub'));
-  set('tool-tracker-title', tx('toolTrackerTitle'));
-  set('tool-tracker-desc', tx('toolTrackerDesc'));
-  set('tool-tracker-cta', tx('toolTrackerCta'));
-  set('tool-calc-title', tx('toolCalcTitle'));
-  set('tool-calc-desc', tx('toolCalcDesc'));
-  set('tool-calc-cta', tx('toolCalcCta'));
-  set('tool-uae-title', tx('toolUaeTitle'));
-  set('tool-uae-desc', tx('toolUaeDesc'));
-  set('tool-uae-cta', tx('toolUaeCta'));
-  set('tool-shops-title', tx('toolShopsTitle'));
-  set('tool-shops-desc', tx('toolShopsDesc'));
-  set('tool-shops-cta', tx('toolShopsCta'));
-  set('tool-countries-title', tx('toolCountriesTitle'));
-  set('tool-countries-desc', tx('toolCountriesDesc'));
-  set('tool-countries-cta', tx('toolCountriesCta'));
-  set('tool-learn-title', tx('toolLearnTitle'));
-  set('tool-learn-desc', tx('toolLearnDesc'));
-  set('tool-learn-cta', tx('toolLearnCta'));
-  set('tool-insights-title', tx('toolInsightsTitle'));
-  set('tool-insights-desc', tx('toolInsightsDesc'));
-  set('tool-insights-cta', tx('toolInsightsCta'));
-  set('tool-method-title', tx('toolMethodTitle'));
-  set('tool-method-desc', tx('toolMethodDesc'));
-  set('tool-method-cta', tx('toolMethodCta'));
-  set('tools-alert-text', tx('alertRowText'));
-  set('tools-alert-btn', tx('alertBtn'));
-  set('countries-quick-title', tx('countriesTitle'));
-  set('countries-quick-sub', tx('countriesSub'));
-  set('countries-see-all', tx('seeAllCountries'));
-  set('faq-more-link', tx('faqMore'));
+  setTextById('hero-live-label', tx('heroLive'));
+  setTextById('hero-title-main', tx('heroTitle'));
+  setTextById('hero-title-sub', tx('heroSub'));
+  setTextById('hero-lead', tx('heroLead'));
+  setTextById('hero-cta-tracker', tx('heroCta1'));
+  setTextById('hero-cta-calculator', tx('heroCtaCalculator'));
+  setTextById('hero-cta-countries', tx('heroCta2'));
+  setTextById('hero-cta-shops', tx('heroCta4'));
+  setTextById('hero-cta-alert', tx('heroCta5'));
+  setTextById('hero-trust-line', tx('heroTrustLine'));
+  setTextById('hlc-trust-line', tx('heroTrustShort'));
+  setTextById('hlc-tracker-link', tx('trackerLink'));
+  setTextById('hlc-title', tx('spotTitle'));
+  setTextById('hlc-sub', tx('perOz'));
+  setTextById('hlc-label-aed24', tx('lbl24aed'));
+  setTextById('hlc-label-usd22', tx('lbl22usd'));
+  setTextById('hlc-label-aed22', tx('lbl22aed'));
+  setTextById('hlc-label-usd21', tx('lbl21usd'));
+  setTextById('hlc-updated', tx('fetching'));
+  setTextById('gcc-section-title', tx('gccLiveTitle'));
+  setTextById('gcc-section-sub', tx('gccLiveSub'));
+  setTextById('gcc-see-all', tx('seeAll'));
+  setTextById('trust-live', tx('trustLive'));
+  setTextById('trust-live-sub', tx('trustLiveSub'));
+  setTextById('trust-countries', tx('trustCountries'));
+  setTextById('trust-countries-sub', tx('trustCountriesSub'));
+  setTextById('trust-karats', tx('trustKarats'));
+  setTextById('trust-karats-sub', tx('trustKaratsSub'));
+  setTextById('trust-aed', tx('trustAed'));
+  setTextById('trust-aed-sub', tx('trustAedSub'));
+  setTextById('trust-bilingual', tx('trustBilingual'));
+  setTextById('trust-bilingual-sub', tx('trustBilingualSub'));
+  setTextById('trust-offline', tx('trustOffline'));
+  setTextById('trust-offline-sub', tx('trustOfflineSub'));
+  setTextById('karat-strip-label', tx('karatStripLabel'));
+  setTextById('karat-strip-title', tx('karatStripTitle'));
+  setTextById('karat-strip-sub', tx('karatStripSub'));
+  setTextById('karat-strip-cta', tx('karatStripCta'));
+  setTextById('tools-title', tx('toolsTitle'));
+  setTextById('tools-sub', tx('toolsSub'));
+  setTextById('tool-tracker-title', tx('toolTrackerTitle'));
+  setTextById('tool-tracker-desc', tx('toolTrackerDesc'));
+  setTextById('tool-tracker-cta', tx('toolTrackerCta'));
+  setTextById('tool-calc-title', tx('toolCalcTitle'));
+  setTextById('tool-calc-desc', tx('toolCalcDesc'));
+  setTextById('tool-calc-cta', tx('toolCalcCta'));
+  setTextById('tool-uae-title', tx('toolUaeTitle'));
+  setTextById('tool-uae-desc', tx('toolUaeDesc'));
+  setTextById('tool-uae-cta', tx('toolUaeCta'));
+  setTextById('tool-shops-title', tx('toolShopsTitle'));
+  setTextById('tool-shops-desc', tx('toolShopsDesc'));
+  setTextById('tool-shops-cta', tx('toolShopsCta'));
+  setTextById('tool-countries-title', tx('toolCountriesTitle'));
+  setTextById('tool-countries-desc', tx('toolCountriesDesc'));
+  setTextById('tool-countries-cta', tx('toolCountriesCta'));
+  setTextById('tool-learn-title', tx('toolLearnTitle'));
+  setTextById('tool-learn-desc', tx('toolLearnDesc'));
+  setTextById('tool-learn-cta', tx('toolLearnCta'));
+  setTextById('tool-insights-title', tx('toolInsightsTitle'));
+  setTextById('tool-insights-desc', tx('toolInsightsDesc'));
+  setTextById('tool-insights-cta', tx('toolInsightsCta'));
+  setTextById('tool-method-title', tx('toolMethodTitle'));
+  setTextById('tool-method-desc', tx('toolMethodDesc'));
+  setTextById('tool-method-cta', tx('toolMethodCta'));
+  setTextById('tool-invest-title', tx('toolInvestTitle'));
+  setTextById('tool-invest-desc', tx('toolInvestDesc'));
+  setTextById('tool-invest-cta', tx('toolInvestCta'));
+  setTextById('tools-alert-text', tx('alertRowText'));
+  setTextById('tools-alert-btn', tx('alertBtn'));
+  setTextById('trust-banner-title', tx('trustBannerTitle'));
+  setTextById('trust-banner-copy', tx('trustBannerCopy'));
+  setTextById('trust-banner-source-tail', tx('trustBannerSourceTail'));
+  setTextById('trust-banner-methodology', tx('trustBannerMethodology'));
+  setTextById('countries-quick-title', tx('countriesTitle'));
+  setTextById('countries-quick-sub', tx('countriesSub'));
+  setTextById('countries-see-all', tx('seeAllCountries'));
+  setTextById('social-follow-text', tx('socialFollowText'));
+  setTextById('social-follow-cta', tx('socialFollowCta'));
+  setTextById('explainer-spot-title', tx('explainerSpotTitle'));
+  setTextById('explainer-spot-desc', tx('explainerSpotDesc'));
+  setTextById('explainer-karat-title', tx('explainerKaratTitle'));
+  setTextById('explainer-karat-desc', tx('explainerKaratDesc'));
+  setTextById('explainer-local-title', tx('explainerLocalTitle'));
+  setTextById('explainer-local-desc', tx('explainerLocalDesc'));
+  setTextById('faq-title', tx('faqTitle'));
+  setTextById('faq-more-link', tx('faqMore'));
 
   // Country tiles — use localised names from COUNTRIES data
   const countryMap = {
@@ -378,9 +426,9 @@ function applyLangToPage() {
   };
   for (const [elId, code] of Object.entries(countryMap)) {
     const c = COUNTRIES.find((x) => x.code === code);
-    if (c) set(elId, isAr ? c.nameAr : c.nameEn);
+    if (c) setTextById(elId, isAr ? c.nameAr : c.nameEn);
   }
-  set('ct-more', tx('seeAllCountries'));
+  setTextById('ct-more', tx('seeAllCountries'));
 
   renderHeroCard();
   renderGCCGrid();
@@ -407,7 +455,7 @@ async function fetchLiveData() {
       priceEl.textContent = '—';
     }
     const updEl = document.getElementById('hlc-updated');
-    if (updEl) updEl.textContent = 'Price unavailable — check API key';
+    if (updEl) updEl.textContent = tx('priceUnavailableApi');
     document.getElementById('hero-live-card')?.removeAttribute('aria-busy');
   }
 
@@ -561,7 +609,7 @@ async function init() {
       priceEl.classList.remove('hlc-price--loading');
       priceEl.textContent = '—';
       const updEl = document.getElementById('hlc-updated');
-      if (updEl) updEl.textContent = 'Price unavailable — check connection';
+      if (updEl) updEl.textContent = tx('priceUnavailableConnection');
       document.getElementById('hero-live-card')?.removeAttribute('aria-busy');
     }
     // GCC grid skeleton timeout
@@ -610,18 +658,42 @@ function showPwaBanner(deferredPrompt) {
   const banner = document.createElement('div');
   banner.id = 'pwa-install-banner';
   banner.setAttribute('role', 'region');
-  banner.setAttribute('aria-label', 'Install app');
-  banner.innerHTML = `
-    <div class="pwa-banner-inner">
-      <img src="${BASE_PATH}favicon.svg" width="32" height="32" alt="" aria-hidden="true" class="pwa-banner-icon" />
-      <div class="pwa-banner-text">
-        <strong>Add GoldPrices to your home screen</strong>
-        <span>Live gold prices — works offline too</span>
-      </div>
-      <button class="pwa-banner-install btn btn-primary btn-sm" id="pwa-install-btn">Install</button>
-      <button class="pwa-banner-dismiss" id="pwa-dismiss-btn" aria-label="Dismiss install prompt">✕</button>
-    </div>
-  `;
+  banner.setAttribute('aria-label', tx('pwaInstallLabel'));
+  banner.append(
+    el('div', { class: 'pwa-banner-inner' }, [
+      el('img', {
+        src: safeHref(`${BASE_PATH}favicon.svg`),
+        width: '32',
+        height: '32',
+        alt: '',
+        'aria-hidden': 'true',
+        class: 'pwa-banner-icon',
+      }),
+      el('div', { class: 'pwa-banner-text' }, [
+        el('strong', null, tx('pwaTitle')),
+        el('span', null, tx('pwaSubtitle')),
+      ]),
+      el(
+        'button',
+        {
+          class: 'pwa-banner-install btn btn-primary btn-sm',
+          id: 'pwa-install-btn',
+          type: 'button',
+        },
+        tx('pwaInstall')
+      ),
+      el(
+        'button',
+        {
+          class: 'pwa-banner-dismiss',
+          id: 'pwa-dismiss-btn',
+          'aria-label': tx('pwaDismiss'),
+          type: 'button',
+        },
+        '✕'
+      ),
+    ])
+  );
 
   // Inject styles
   if (!document.getElementById('pwa-banner-styles')) {

@@ -118,6 +118,16 @@
   max-width: 500px;
 }
 
+.hero-trust-line {
+  max-width: 520px;
+  margin: var(--space-4) 0 0;
+  color: rgb(255 255 255 / 78%);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  border-inline-start: 3px solid var(--color-gold-light);
+  padding-inline-start: var(--space-3);
+}
+
 /* ── Hero CTAs ── */
 .hero-ctas {
   display: flex;
@@ -129,6 +139,11 @@
 .hero-ctas .btn-primary {
   font-size: var(--text-base);
   padding: 0.95rem 2rem;
+}
+
+.hero-ctas .btn-outline-light {
+  font-size: var(--text-base);
+  padding: 0.95rem 1.45rem;
 }
 
 .hero-ctas-secondary {
@@ -307,6 +322,17 @@
   flex-wrap: wrap;
 }
 
+.hlc-trust-line {
+  margin: 0 0 var(--space-4);
+  padding: var(--space-3);
+  color: rgb(255 255 255 / 72%);
+  background: rgb(196 153 62 / 10%);
+  border: 1px solid rgb(196 153 62 / 20%);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+}
+
 .hlc-change {
   font-size: var(--text-xs);
   font-weight: var(--weight-bold);
@@ -409,44 +435,49 @@
    LIVE KARAT PRICE STRIP
    ══════════════════════════════════════════════════════════════ */
 .karat-strip {
-  background: linear-gradient(180deg, #1a1206 0%, #1e1608 100%);
-  border-top: 1px solid rgb(196 153 62 / 15%);
-  border-bottom: 1px solid rgb(0 0 0 / 30%);
-  padding: 0.6rem 1.5rem;
+  background: var(--surface-primary);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-5);
 }
 
 .karat-strip-inner {
   max-width: 1200px;
   margin: 0 auto;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.4fr) auto;
   align-items: center;
-  gap: 0.75rem;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.karat-strip-inner::-webkit-scrollbar {
-  display: none;
+  gap: var(--space-4);
 }
 
 .karat-strip-label {
   font-size: 0.68rem;
   font-weight: var(--weight-bold);
-  color: rgb(196 153 62 / 60%);
+  color: var(--text-accent);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  flex-shrink: 0;
-  white-space: nowrap;
+}
+
+.karat-strip-title {
+  margin: var(--space-1) 0;
+  color: var(--text-primary);
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight);
+}
+
+.karat-strip-sub,
+.karat-strip-updated {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
 }
 
 .karat-strip-prices {
   display: flex;
-  gap: 0.5rem;
-  flex: 1;
+  gap: var(--space-2);
   overflow-x: auto;
   scrollbar-width: none;
+  padding: var(--space-1);
 }
 
 .karat-strip-prices::-webkit-scrollbar {
@@ -455,12 +486,16 @@
 
 .karat-strip-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.45rem;
-  background: rgb(255 255 255 / 4%);
-  border: 1px solid rgb(196 153 62 / 15%);
-  border-radius: var(--radius-pill, 999px);
-  padding: 0.3rem 0.8rem;
+  justify-content: center;
+  gap: var(--space-1);
+  min-width: 104px;
+  min-height: 72px;
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  padding: var(--space-3) var(--space-4);
   white-space: nowrap;
   flex-shrink: 0;
   transition:
@@ -469,35 +504,40 @@
 }
 
 .karat-strip-item:hover {
-  background: rgb(196 153 62 / 10%);
-  border-color: rgb(196 153 62 / 35%);
+  background: var(--surface-accent);
+  border-color: var(--border-accent);
 }
 
 .karat-strip-k {
   font-size: 0.7rem;
   font-weight: var(--weight-bold);
-  color: rgb(196 153 62 / 70%);
+  color: var(--text-secondary);
   letter-spacing: 0.02em;
 }
 
 .karat-strip-v {
-  font-size: 0.82rem;
+  font-size: var(--text-base);
   font-weight: var(--weight-bold);
-  color: #f0d070;
+  color: var(--text-accent);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.01em;
 }
 
+.karat-strip-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+  text-align: end;
+}
+
 .karat-strip-link {
-  font-size: 0.7rem;
+  font-size: var(--text-sm);
   font-weight: var(--weight-bold);
-  color: rgb(196 153 62 / 55%);
+  color: var(--text-accent);
   text-decoration: none;
   white-space: nowrap;
-  flex-shrink: 0;
-  margin-left: auto;
   transition: color 0.15s;
-  padding: 0.3rem 0.5rem;
 }
 
 .karat-strip-link:hover {
@@ -506,11 +546,7 @@
 
 @media (width <= 480px) {
   .karat-strip {
-    padding: 0.5rem 0.85rem;
-  }
-
-  .karat-strip-link {
-    display: none;
+    padding: var(--space-4) var(--space-3);
   }
 }
 
@@ -844,6 +880,14 @@
   color: var(--color-text-muted, #6b7280);
 }
 
+.gcc-source {
+  color: var(--text-tertiary);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+}
+
 .gcc-change {
   font-size: 0.68rem;
   font-weight: var(--weight-bold);
@@ -1145,6 +1189,16 @@
   .tools-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .karat-strip-inner {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .karat-strip-actions {
+    align-items: flex-start;
+    text-align: start;
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1173,6 +1227,10 @@
     width: 100%;
     justify-content: center;
     text-align: center;
+  }
+
+  .hero-trust-line {
+    font-size: var(--text-xs);
   }
 
   .hero-ctas-secondary {
@@ -1223,6 +1281,11 @@
 
   .tools-grid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .karat-strip-prices {
+    margin-inline: calc(var(--space-3) * -1);
+    padding-inline: var(--space-3);
   }
 
   .tools-alert-row {
@@ -1318,6 +1381,10 @@
 }
 
 [dir='rtl'] .hero-lead {
+  text-align: right;
+}
+
+[dir='rtl'] .hero-trust-line {
   text-align: right;
 }
 

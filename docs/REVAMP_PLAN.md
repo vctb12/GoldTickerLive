@@ -431,15 +431,16 @@ Target order:
 9. Social strip — minimal.
 10. Deep-link footer rail.
 
-- [ ] Dedup the overlapping "Live Gold Prices" (`gcc-section-title`) and "Karat strip" sections into
-      one canonical live-price block.
+- [x] Dedup the overlapping "Live Gold Prices" (`gcc-section-title`) and "Karat strip" sections into
+      one clearer live-price journey: hero spot card → karat reference rail → country reference
+      grid.
 
 ### C.2 Hero rebuild
 
-- [ ] Headline + subhead + primary CTA "Open Live Tracker" + secondary "Open Calculator".
+- [x] Headline + subhead + primary CTA "Open Live Tracker" + secondary "Open Calculator".
 - [ ] Inline live XAU/USD (large), delta vs prev close, 24 h high/low, freshness pill ("updated 42 s
       ago"), market-open/closed chip, trust line ("spot reference — not a retail quote").
-- [ ] Mobile: stacks vertically, price block prominent, CTAs full-width.
+- [x] Mobile: stacks vertically, price block prominent, CTAs full-width.
 - [ ] Canonical hero surface + gold inset ring; no bespoke gradients.
 
 ### C.3 Karat reference strip
@@ -448,14 +449,14 @@ Target order:
       copy-to-clipboard.
 - [x] **Count-up on update.** Directional flash (green up / red down). (home only, via `countUp` —
       `14d365cc`)
-- [ ] Skeleton shimmer on first load.
-- [ ] Clear "reference only" framing on the strip header.
+- [x] Skeleton shimmer on first load.
+- [x] Clear "reference only" framing on the strip header.
 
 ### C.4 Country quick-picker
 
 - [ ] Flag grid deep-linking to country pages. Inline searchable (filters as you type). Keyboard
       navigable.
-- [ ] Cached/stale state clearly labeled.
+- [x] Cached/stale state clearly labeled.
 
 ### C.5 Tools strip
 
@@ -465,7 +466,8 @@ Target order:
 ### C.6 Trust band
 
 - [ ] Methodology link. Data-source list. AED peg note. "Estimated vs live" legend. Links to
-      `methodology.html`, `about.html`.
+      `methodology.html`, `about.html`. _(methodology/data-source placement shipped on home;
+      `about.html` remains pending.)_
 
 ### C.7 Markets highlights
 
@@ -474,7 +476,7 @@ Target order:
 
 ### C.8 Explainer strip
 
-- [ ] Scannable bullets, not paragraphs. Reveal-on-scroll.
+- [x] Scannable bullets, not paragraphs. Reveal-on-scroll.
 
 ### C.9 FAQ
 
@@ -584,7 +586,14 @@ Applied on top of primitives from Track A. Rules:
 
 ## 11. Track H — SEO & metadata
 
-> **Audit input (2026-04-25):** [`reports/seo-audit.md`](../reports/seo-audit.md) — site-wide audit produced by the multi-track quality program ([`docs/plans/2026-04-25_multi-track-quality.md`](./plans/2026-04-25_multi-track-quality.md), Track 2 Wave A). 100% presence on `<title>` / meta-desc / canonical / `og:*` / `twitter:*` / hreflang / JSON-LD. Three Wave B fix PRs identified: (B-1) title-length trim on 394 long titles + 13 long descriptions + Tripoli disambiguation; (B-2) `FAQPage` / `WebApplication` schema + `Product`-vs-trust-label alignment + `check-jsonld-dom.js` validator; (B-3) `og:locale[:alternate]` capture + `og:url === canonical` cross-check + `og:image` dimension check.
+> **Audit input (2026-04-25):** [`reports/seo-audit.md`](../reports/seo-audit.md) — site-wide audit
+> produced by the multi-track quality program
+> ([`docs/plans/2026-04-25_multi-track-quality.md`](./plans/2026-04-25_multi-track-quality.md),
+> Track 2 Wave A). 100% presence on `<title>` / meta-desc / canonical / `og:*` / `twitter:*` /
+> hreflang / JSON-LD. Three Wave B fix PRs identified: (B-1) title-length trim on 394 long titles +
+> 13 long descriptions + Tripoli disambiguation; (B-2) `FAQPage` / `WebApplication` schema +
+> `Product`-vs-trust-label alignment + `check-jsonld-dom.js` validator; (B-3)
+> `og:locale[:alternate]` capture + `og:url === canonical` cross-check + `og:image` dimension check.
 
 - [ ] Unique `<title>` + `<meta name="description">` preserved on every page touched.
 - [ ] Canonical `https://goldtickerlive.com/...` (apex, no www, no trailing slash inconsistencies).
