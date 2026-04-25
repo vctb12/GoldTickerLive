@@ -176,8 +176,8 @@ export function bindCoreEvents() {
   });
 
   // Archive search
-  _el.archiveSearch?.addEventListener('input', () => _cb.renderArchive());
-  _el.archiveRange?.addEventListener('change', () => _cb.renderArchive());
+  _el.archiveSearch?.addEventListener('input', () => _cb.renderArchive(true));
+  _el.archiveRange?.addEventListener('change', () => _cb.renderArchive(true));
 
   // Date lookup
   _el.runLookup?.addEventListener('click', () => {
@@ -306,6 +306,23 @@ export function bindCoreEvents() {
     welcomeClose.addEventListener('click', () => {
       welcomeStrip.hidden = true;
       localStorage.setItem('tracker_first_visit', 'seen');
+    });
+  }
+
+  // "View chart" jump link — land keyboard focus on the live mode heading after scroll
+  const jumpChart = document.getElementById('tp-jump-chart');
+  if (jumpChart) {
+    jumpChart.addEventListener('click', () => {
+      const livePanel = document.getElementById('mode-live');
+      if (!livePanel) return;
+      const heading = livePanel.querySelector('h2');
+      if (!heading) return;
+      const hadTabindex = heading.hasAttribute('tabindex');
+      if (!hadTabindex) heading.setAttribute('tabindex', '-1');
+      heading.focus({ preventScroll: true });
+      if (!hadTabindex) {
+        heading.addEventListener('blur', () => heading.removeAttribute('tabindex'), { once: true });
+      }
     });
   }
 }

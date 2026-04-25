@@ -74,8 +74,8 @@ const BASELINE = {
   'src/pages/shops/rendering.js': 0, // Migrated to el()/DocumentFragment on 2026-04-24 (PR A-2). Kept in baseline as 0-ceiling regression guard.
   'src/pages/tracker-pro.js': 4,
   'src/tracker/events.js': 2,
-  'src/tracker/render.js': 17,
-  'src/tracker/wire.js': 3,
+  'src/tracker/render.js': 10, // Phase 9–11: migrated chartStats, karatTable, alertList, presetList, archiveBody to el() (was 17)
+  'src/tracker/wire.js': 0, // Phase 9: fully migrated to el() + safeHref (was 3)
 };
 
 // Patterns considered "unsafe DOM sinks" for this check.

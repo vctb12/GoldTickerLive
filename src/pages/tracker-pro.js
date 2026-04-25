@@ -153,14 +153,25 @@ function showToast(msg, durationMs = 3500) {
 function checkAlerts() {
   const spot = currentSpot();
   if (!spot || !state.alerts?.length) return;
+  const triggered = [];
   state.alerts.forEach((a) => {
     const hit = a.direction === 'above' ? spot > a.target : spot < a.target;
-    if (hit && 'Notification' in window && Notification.permission === 'granted') {
-      new Notification('Gold Price Alert', {
-        body: `XAU/USD ${a.direction} ${a.target}: now $${spot.toFixed(2)}`,
-      });
+    if (hit) {
+      triggered.push(`${a.scope} ${a.direction} $${a.target}`);
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('Gold Price Alert', {
+          body: `XAU/USD ${a.direction} ${a.target}: now $${spot.toFixed(2)}`,
+        });
+      }
     }
   });
+  // Announce triggered alerts to screen readers via the aria-live region
+  if (triggered.length) {
+    const liveRegion = document.getElementById('tp-alert-live-region');
+    if (liveRegion) {
+      liveRegion.textContent = `Alert triggered: ${triggered.join(', ')} — current price $${spot.toFixed(2)}`;
+    }
+  }
 }
 
 async function exportArchiveData() {

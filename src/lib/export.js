@@ -33,6 +33,11 @@ function isoDate() {
   return new Date().toISOString().slice(0, 10);
 }
 
+function isoTimestamp() {
+  // Colons are not safe in Windows filenames; replace with hyphens for portability.
+  return new Date().toISOString().replace(/:/g, '-').slice(0, 19) + 'Z';
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // CURRENT PRICE SNAPSHOT
 // ─────────────────────────────────────────────────────────────────────────────
@@ -183,7 +188,7 @@ export function exportArchiveCSV(history, karatCode = '24', aedPeg = CONSTANTS.A
 
   downloadFile(
     lines.join('\n'),
-    `gold-archive-${karatCode}k-${isoDate()}.csv`,
+    `gold-archive-${karatCode}k-${isoTimestamp()}.csv`,
     'text/csv;charset=utf-8;'
   );
 }
@@ -242,7 +247,7 @@ export function exportHistoricalCSV(records, karatCode = '24') {
 
   downloadFile(
     lines.join('\n'),
-    `gold-history-${karatCode}k-${isoDate()}.csv`,
+    `gold-history-${karatCode}k-${isoTimestamp()}.csv`,
     'text/csv;charset=utf-8;'
   );
 }
@@ -298,7 +303,7 @@ export function exportChartCSV(rows, range, karatCode = '24') {
 
   downloadFile(
     lines.join('\n'),
-    `gold-chart-${karatCode}k-${range || 'all'}-${isoDate()}.csv`,
+    `gold-chart-${karatCode}k-${range || 'all'}-${isoTimestamp()}.csv`,
     'text/csv;charset=utf-8;'
   );
 }
@@ -351,7 +356,7 @@ export function exportWatchlistCSV({
 
   downloadFile(
     lines.join('\n'),
-    `gold-watchlist-${karatCode}k-${isoDate()}.csv`,
+    `gold-watchlist-${karatCode}k-${selectedCurrency}-${isoTimestamp()}.csv`,
     'text/csv;charset=utf-8;'
   );
 }
@@ -400,7 +405,7 @@ export function exportCurrentViewCSV({
 
   downloadFile(
     lines.join('\n'),
-    `gold-current-view-${karatCode}k-${isoDate()}.csv`,
+    `gold-current-view-${karatCode}k-${selectedCurrency}-${isoTimestamp()}.csv`,
     'text/csv;charset=utf-8;'
   );
 }
