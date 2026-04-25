@@ -29,17 +29,20 @@ RewriteRule ^markets/khan-el-khalili-cairo\.html$ countries/egypt/markets/khan-e
   # Block clickjacking
   Header always set X-Frame-Options "DENY"
 
-  # Enforce HTTPS (1 year, includeSubDomains)
-  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  # Enforce HTTPS (1 year, includeSubDomains, preload-eligible).
+  # Matches Helmet hsts() in server.js for the dynamic admin/API host.
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 
   # Control referrer information
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
 
-  # Restrict browser features the site does not use
-  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  # Restrict browser features the site does not use. Kept in sync with
+  # Helmet's default Permissions-Policy footprint and the _headers file.
+  Header always set Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()"
 
   # Prevent cross-origin information leakage
   Header always set Cross-Origin-Opener-Policy "same-origin"
+  Header always set Cross-Origin-Resource-Policy "same-origin"
 </IfModule>
 
 # ═══════════════════════════════════════════════════════════════
