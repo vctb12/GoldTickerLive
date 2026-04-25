@@ -115,3 +115,21 @@ test('production sets frame-ancestors none and X-Content-Type-Options', async ()
   );
   assert.equal(res.headers['x-content-type-options'], 'nosniff');
 });
+
+test('production disables unused browser capabilities with Permissions-Policy', async () => {
+  const res = await get('/api/health');
+  const policy = res.headers['permissions-policy'] || '';
+
+  for (const directive of [
+    'camera=()',
+    'microphone=()',
+    'geolocation=()',
+    'payment=()',
+    'usb=()',
+  ]) {
+    assert.ok(
+      policy.includes(directive),
+      `Permissions-Policy missing directive "${directive}". Full header: ${policy}`
+    );
+  }
+});

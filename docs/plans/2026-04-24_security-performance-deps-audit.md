@@ -102,8 +102,9 @@ These are filed here with remediation notes so any future PR can pick one off wi
 - [ ] **#13 — Schema validation for `users.json` at load.** Validate each record (`email` non-empty,
       `role ∈ {admin, editor, viewer}`, `password` bcrypt-shaped `$2[aby]$..`). Reject file on
       schema mismatch rather than trusting disk.
-- [ ] **#14 — `Permissions-Policy` header.** Explicitly disable `camera`, `microphone`,
-      `geolocation`, `payment`, `usb` in Helmet + `_headers`.
+- [x] **#14 — `Permissions-Policy` header.** Explicitly disables `camera`, `microphone`,
+      `geolocation`, `payment`, `usb` for the dynamic Express surface; `_headers` and `.htaccess`
+      already ship matching static-tier coverage.
 - [ ] **#15 — Login log timing parity.** Confirmed: `authenticate()` returns the same message for
       unknown user vs bad password; bcrypt compare dominates timing. No change needed — record in a
       test.

@@ -98,6 +98,14 @@ app.use(
   })
 );
 
+app.use((_req, res, next) => {
+  res.setHeader(
+    'Permissions-Policy',
+    'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()'
+  );
+  next();
+});
+
 // CORS — restrict origins in production.
 // In production, always set CORS_ORIGINS (comma-separated) to avoid rejecting all cross-origin requests.
 // Example: CORS_ORIGINS=https://goldtickerlive.com,https://goldprices.com
