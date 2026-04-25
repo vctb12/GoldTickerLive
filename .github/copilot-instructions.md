@@ -413,13 +413,28 @@ You **never**:
 MODE: Plan
 
 RESTATEMENT
-  <file>: <file>: …
+  <one sentence task restatement>
 
-PROPOSED PLAN
-  Step 1 —
+IMPACTED FILES
+  - path/to/file_a.js (will read/edit)
+  - path/to/file_b.html (will read only)
 
-FINDINGS (sorted by severity)
-  P0 —
+PLAN
+  1. …
+  2. …
+  3. …
+
+ASSUMPTIONS
+  - <assumed | verified> : <statement>
+
+RISKS / TRADEOFFS
+  - <risk> → <mitigation>
+
+QUESTIONS
+  - <question or none>
+
+DONE CRITERIA
+  - <observable completion criterion>
 ```
 
 ---
