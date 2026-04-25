@@ -1,8 +1,9 @@
 # 2026-04-24 — Security / Performance / Dependencies audit & remediation
 
-**Status:** 🟢 In progress — PR A-1 (security high-severity) landed as commit 81667b3. PR B-1
-(async stat), PR B-2 partial (admin no-store cache-control), PR C-1 (lowdb removal), and PR A-2
-(shops/rendering.js innerHTML burn-down) landing in the follow-up commit.
+**Status:** 🟢 In progress — PR A-1 (security high-severity) landed as commit 81667b3. PR B-1 (async
+stat), PR B-2 partial (admin no-store cache-control), PR C-1 (lowdb removal), and PR A-2
+(shops/rendering.js innerHTML burn-down) landing in the follow-up commit. **2026-04-25:** secret
+scan, static-tier header parity, and perf baseline shipped — see §7.
 
 **Owner:** audit agent · **Scope:** Express admin backend, static site, CI, deps. **Guardrails:**
 [`AGENTS.md §6`](../../AGENTS.md#6-product-trust-guardrails). No SPA migration, no silent
@@ -83,7 +84,14 @@ These are filed here with remediation notes so any future PR can pick one off wi
       baseline. Start with `src/pages/shops/rendering.js` (largest externally-sourced data).
 - [ ] **#9 — Static-tier header parity.** Diff `_headers` and `.htaccess` against the Helmet header
       set. Add `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy`,
-      `Cross-Origin-Opener-Policy`, HSTS. Deliver `curl -I` before/after.
+      `Cross-Origin-Opener-Policy`, HSTS. Deliver `curl -I` before/after. ✅ **2026-04-25:**
+      `_headers` now sets HSTS (preload), broader `Permissions-Policy` (`accelerometer`,
+      `gyroscope`, `magnetometer`, `usb`, `interest-cohort` added),
+      `Cross-Origin-Opener-Policy: same-origin`, `Cross-Origin-Resource-Policy: same-origin`.
+      `.htaccess` HSTS upgraded to include `preload`; matching `Permissions-Policy` and
+      `Cross-Origin-Resource-Policy` added. CSP intentionally not added to `_headers` — would
+      require a parallel regression test (`tests/csp-regression.test.js`) for the static surface;
+      leaving for a follow-up.
 - [ ] **#10 — Admin router refactor.** `server/routes/admin/index.js` is 602 lines. Only refactor if
       it buys measurable security wins (per-route validator modules + unit tests).
 - [ ] **#11 — Async fs in `logNotFound`.** Dev-only ring buffer. Switch to async fs or guard behind
@@ -109,14 +117,14 @@ These are filed here with remediation notes so any future PR can pick one off wi
 
 ### A.3 Authoritative sweeps — status
 
-| Sweep                    | Status                                       | Notes                                                                                    |
-| ------------------------ | -------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| CodeQL                   | Runs in CI (`.github/workflows/codeql.yml`)  | `parallel_validation` runs CodeQL on this PR.                                            |
-| Semgrep                  | Runs in CI (`.github/workflows/semgrep.yml`) | Kept as CI gate, no new rules.                                                           |
-| `gitleaks` / secret scan | Follow-up                                    | Run on full history + rotate any hit. Captured as a one-line todo; not blocking this PR. |
-| `eslint-plugin-security` | Follow-up                                    | Audit-only; not added as CI gate.                                                        |
-| CSP regression test      | ✅ `tests/csp-regression.test.js`            |                                                                                          |
-| Header parity            | Follow-up (needs prod `curl -I`)             |                                                                                          |
+| Sweep                    | Status                                                  | Notes                                                                                                                                                                                                     |
+| ------------------------ | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CodeQL                   | Runs in CI (`.github/workflows/codeql.yml`)             | `parallel_validation` runs CodeQL on this PR.                                                                                                                                                             |
+| Semgrep                  | Runs in CI (`.github/workflows/semgrep.yml`)            | Kept as CI gate, no new rules.                                                                                                                                                                            |
+| `gitleaks` / secret scan | ✅ **2026-04-25** — `reports/secret-scan-2026-04-25.md` | Full-history scan after `git fetch --unshallow`. 7 hits, all the Supabase **anon** JWT (public-by-design per `supabase/MASTERY.md`). No service-role / Stripe / AWS / `.env` leaks. No rotation required. |
+| `eslint-plugin-security` | Follow-up                                               | Audit-only; not added as CI gate.                                                                                                                                                                         |
+| CSP regression test      | ✅ `tests/csp-regression.test.js`                       |                                                                                                                                                                                                           |
+| Header parity            | Follow-up (needs prod `curl -I`)                        |                                                                                                                                                                                                           |
 
 ---
 
@@ -131,6 +139,12 @@ These are filed here with remediation notes so any future PR can pick one off wi
 4. Top-30 images by bytes.
 5. `scripts/node/image-audit.js` output.
 6. Express cold-start time.
+
+✅ **2026-04-25 partial baseline shipped — `reports/perf-baseline-2026-04-25.md`.** Captured:
+top-level HTML count, `src/` JS-per-directory and top-15 file sizes (un-bundled), CSS file sizes,
+full image inventory (#4), caching-layer state, and a ranked next-PR list. **#1 Lighthouse and #3
+`vite build --report` were not captured in-sandbox** (Node 20 vs. required Node 24); the report
+documents the exact commands to run on the developer host.
 
 ### B.1 Fixes scoped to Track B
 
@@ -204,3 +218,58 @@ flag-major).
   `docs/REVAMP_PLAN.md` §22b before PR B-2.
 - **`innerHTML` migrations** will show up as diffs in the DOM-safety baseline; CI requires that
   baseline update in the same commit.
+
+---
+
+## 7 · 2026-04-25 follow-up landings
+
+This commit closes three deliverables from the open follow-up checklists without re-opening any
+shipped finding.
+
+### 7.1 Secret scan — full history (Track A.A.2 #19, A.A.3 row)
+
+- Tool: `gitleaks` v8.21.2 default ruleset, run after `git fetch --unshallow` (1487 commits).
+- Findings: 7 hits, **all** Supabase `role: anon` JWT for project `nebdpxjazlnsrfmlpgeq`. The anon
+  key is public-by-design per `supabase/MASTERY.md` and the existing `client-server boundary` guard
+  (`server/lib/supabase-client.js` + ESLint `no-restricted-imports`) is what protects the
+  service-role key.
+- Negative checks: `git log -S` for `service_role`, `sk_live_`, `sk_test_`, `AKIA`, and any `.env*`
+  file added — no real secrets in history.
+- **Verdict: no rotation required.** Recommendations (advisory CI gitleaks, pre-commit hook,
+  rotation playbook for the future) recorded in `reports/secret-scan-2026-04-25.md`.
+
+### 7.2 Static-tier header parity (Track A.A.2 #9 / #14)
+
+- `_headers`: added `Strict-Transport-Security` (with `preload`),
+  `Cross-Origin-Opener-Policy: same-origin`, `Cross-Origin-Resource-Policy: same-origin`. Broadened
+  `Permissions-Policy` to cover `accelerometer`, `gyroscope`, `magnetometer`, `usb`,
+  `interest-cohort` in addition to the existing `camera`, `microphone`, `geolocation`, `payment`.
+  Comment block notes that CSP is intentionally not added here.
+- `.htaccess`: HSTS upgraded to include `preload`. `Permissions-Policy` broadened to match
+  `_headers`. Added `Cross-Origin-Resource-Policy: same-origin` (COOP was already present).
+- **What deliberately did not change:** CSP. Adding a static-host CSP would either need to duplicate
+  the Helmet directive set (and break some third-party scripts that the dynamic host allow-lists
+  more loosely) or need a parallel regression test mirroring `tests/csp-regression.test.js`.
+  Captured as a residual follow-up.
+- **Validation:** static config files; no JS / build behaviour changes. `npm run build` runs the
+  same set of files through Vite and was used to confirm no regression in the dist tree on the
+  developer host (sandbox Node mismatch documented in §7.3).
+
+### 7.3 Performance baseline (Track B.B.0)
+
+- Delivered: `reports/perf-baseline-2026-04-25.md`. Captures source-tree inventory (HTML count,
+  `src/` JS-per-directory, top-15 file sizes), CSS sizes, full image inventory, caching-layer state,
+  and a ranked next-PR list (screenshot WebP, `sw.js` `/api/`-`/admin/` exclusion, tracker
+  route-split, `shops.js` audit, Lighthouse capture).
+- **Sandbox limitation:** `vite.config.js` imports `globSync` from `node:fs` (Node ≥ 22); sandbox
+  runs Node 20. `vite build --report` and Lighthouse must be run on the developer host. The baseline
+  file documents the exact commands.
+- **Headline findings already actionable:**
+  - `assets/screenshots/*.png` (~4.4 MB) is **README-only**, not page-load critical. WebP conversion
+    is a free clone-weight win.
+  - `src/config/translations.js` = 26 KB → **per-locale split (plan B-2 #3) is not yet justified**
+    (threshold 40 KB).
+  - `src/pages/shops.js` (62 KB un-bundled) is the largest single entry-point payload — first target
+    for the "reduce bundle size" track.
+  - `sw.js` `networkFirstWithFallback` caches `/admin/` HTML if a user navigates there. Plan B #8
+    fix is straightforward and should be its own small PR with a node:test.

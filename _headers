@@ -30,11 +30,20 @@
   Cache-Control: public, max-age=3600
 
 # Global security headers applied to every response.
+# Kept in parity with the Helmet header set at server.js:42–99 so the static
+# tier (Netlify / Cloudflare Pages) ships the same hardening as the dynamic
+# admin tier. Note: CSP is intentionally NOT set here — production CSP is
+# enforced by Helmet for the admin/API host and is locked by
+# tests/csp-regression.test.js. Adding a static-host CSP would require a
+# parallel regression test in the same commit (plan item A.A.2 #9).
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
 
 # Admin panel: stricter framing and no-indexing.
 /admin/*
