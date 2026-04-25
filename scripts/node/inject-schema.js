@@ -318,7 +318,10 @@ function injectSchemas(content, schemas) {
   // Check if schemas already exist
   if (content.includes('application/ld+json')) {
     // Remove existing schemas first
-    content = content.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>\s*/gi, '');
+    content = content.replace(
+      /\s*<script type="application\/ld\+json">[\s\S]*?<\/script>\s*/gi,
+      '\n'
+    );
   }
 
   // Generate schema script tags
@@ -336,9 +339,8 @@ function injectSchemas(content, schemas) {
     return content;
   }
 
-  return (
-    content.slice(0, headEndIndex) + '\n' + schemaScripts + '\n  ' + content.slice(headEndIndex)
-  );
+  const beforeHeadEnd = content.slice(0, headEndIndex).replace(/\s*$/, '\n');
+  return beforeHeadEnd + schemaScripts + '\n  ' + content.slice(headEndIndex);
 }
 
 /**
