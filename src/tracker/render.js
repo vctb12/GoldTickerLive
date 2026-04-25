@@ -354,13 +354,33 @@ export function renderChart() {
     const cards = [
       buildStatCard('Points shown', String(rows.length), _state.range || 'ALL'),
       buildStatCard('Data source', sourceLabel, 'LBMA baseline 2019–Aug 2025 + session'),
-      buildStatCard('Range high', `$${rangeMax.toLocaleString('en', { maximumFractionDigits: 0 })}`, 'within selected range'),
-      buildStatCard('Range low', `$${rangeMin.toLocaleString('en', { maximumFractionDigits: 0 })}`, 'within selected range'),
+      buildStatCard(
+        'Range high',
+        `$${rangeMax.toLocaleString('en', { maximumFractionDigits: 0 })}`,
+        'within selected range'
+      ),
+      buildStatCard(
+        'Range low',
+        `$${rangeMin.toLocaleString('en', { maximumFractionDigits: 0 })}`,
+        'within selected range'
+      ),
     ];
     if (stats.ytdChange != null)
-      cards.push(buildStatCard('YTD change', `${stats.ytdChange >= 0 ? '+' : ''}${stats.ytdChange.toFixed(1)}%`, 'vs Jan 1'));
+      cards.push(
+        buildStatCard(
+          'YTD change',
+          `${stats.ytdChange >= 0 ? '+' : ''}${stats.ytdChange.toFixed(1)}%`,
+          'vs Jan 1'
+        )
+      );
     if (stats.yoyChange != null)
-      cards.push(buildStatCard('1Y change', `${stats.yoyChange >= 0 ? '+' : ''}${stats.yoyChange.toFixed(1)}%`, 'year over year'));
+      cards.push(
+        buildStatCard(
+          '1Y change',
+          `${stats.yoyChange >= 0 ? '+' : ''}${stats.yoyChange.toFixed(1)}%`,
+          'year over year'
+        )
+      );
     clear(_el.chartStats);
     _el.chartStats.append(...cards);
     pulseFreshness(_el.chartStats);
@@ -459,37 +479,16 @@ export function renderMarkets() {
   });
 
   const sortValue = _el.marketSort?.value || 'high';
-  if (sortValue === 'high') {
-    filtered.sort(
-      (a, b) =>
-        (_priceFor({
-          currency: b.currency,
-          karat: _state.selectedKarat,
-          unit: _state.selectedUnit,
-          spot,
-        }) || 0) -
-        (_priceFor({
-          currency: a.currency,
-          karat: _state.selectedKarat,
-          unit: _state.selectedUnit,
-          spot,
-        }) || 0)
-    );
-  } else if (sortValue === 'low') {
-    filtered.sort(
-      (a, b) =>
-        (_priceFor({
-          currency: a.currency,
-          karat: _state.selectedKarat,
-          unit: _state.selectedUnit,
-          spot,
-        }) || 0) -
-        (_priceFor({
-          currency: b.currency,
-          karat: _state.selectedKarat,
-          unit: _state.selectedUnit,
-          spot,
-        }) || 0)
+  if (sortValue === 'high' || sortValue === 'low') {
+    const getPrice = (c) =>
+      _priceFor({
+        currency: c.currency,
+        karat: _state.selectedKarat,
+        unit: _state.selectedUnit,
+        spot,
+      }) || 0;
+    filtered.sort((a, b) =>
+      sortValue === 'high' ? getPrice(b) - getPrice(a) : getPrice(a) - getPrice(b)
     );
   } else if (sortValue === 'alpha') {
     filtered.sort((a, b) => a.nameEn.localeCompare(b.nameEn));
@@ -730,8 +729,13 @@ export function renderAlerts() {
     let proximityClass = '';
     if (spot) {
       const pct = (Math.abs(spot - a.target) / a.target) * 100;
-      if (pct < 1) { proximityText = '⚡ very close'; proximityClass = 'is-alert-imminent'; }
-      else if (pct < 3) { proximityText = '● nearby'; proximityClass = 'is-alert-close'; }
+      if (pct < 1) {
+        proximityText = '⚡ very close';
+        proximityClass = 'is-alert-imminent';
+      } else if (pct < 3) {
+        proximityText = '● nearby';
+        proximityClass = 'is-alert-close';
+      }
     }
     const classes = ['tracker-stack-item', hit && 'is-triggered', proximityClass]
       .filter(Boolean)
@@ -744,12 +748,24 @@ export function renderAlerts() {
     const bodyChildren = [el('span', null, labelChildren)];
     if (proximityText)
       bodyChildren.push(
-        el('div', { style: { fontSize: '0.8rem', color: 'var(--tp-text-muted)', marginTop: '0.25rem' } }, proximityText)
+        el(
+          'div',
+          { style: { fontSize: '0.8rem', color: 'var(--tp-text-muted)', marginTop: '0.25rem' } },
+          proximityText
+        )
       );
     fragment.append(
       el('div', { class: classes }, [
         el('div', { style: { flex: '1' } }, bodyChildren),
-        el('button', { dataset: { idx: String(i) }, class: 'tracker-remove-btn', 'aria-label': 'Delete alert' }, '×'),
+        el(
+          'button',
+          {
+            dataset: { idx: String(i) },
+            class: 'tracker-remove-btn',
+            'aria-label': 'Delete alert',
+          },
+          '×'
+        ),
       ])
     );
   });
@@ -762,7 +778,11 @@ export function renderPresets() {
   clear(_el.presetList);
   if (!presets.length) {
     _el.presetList.append(
-      el('p', { style: { color: 'var(--tp-text-muted)', fontSize: '0.85rem' } }, 'No presets saved. Save the current view via the form above.')
+      el(
+        'p',
+        { style: { color: 'var(--tp-text-muted)', fontSize: '0.85rem' } },
+        'No presets saved. Save the current view via the form above.'
+      )
     );
     return;
   }
@@ -775,17 +795,35 @@ export function renderPresets() {
       _state.range === p.range;
     const metaParts = [
       `${escape(p.karat)}K · ${escape(p.currency)}/${escape(p.unit)} · ${escape(p.range)} range`,
-      ...(isCurrent ? [' · ', el('span', { style: { color: 'var(--tp-accent)' } }, '● current')] : []),
+      ...(isCurrent
+        ? [' · ', el('span', { style: { color: 'var(--tp-accent)' } }, '● current')]
+        : []),
     ];
     fragment.append(
       el('div', { class: `tracker-stack-item${isCurrent ? ' is-highlight' : ''}` }, [
         el('div', { style: { flex: '1' } }, [
           el('div', null, [el('strong', null, p.name)]),
-          el('div', { style: { fontSize: '0.8rem', color: 'var(--tp-text-muted)', marginTop: '0.25rem' } }, metaParts),
+          el(
+            'div',
+            { style: { fontSize: '0.8rem', color: 'var(--tp-text-muted)', marginTop: '0.25rem' } },
+            metaParts
+          ),
         ]),
         el('span', null, [
-          el('button', { dataset: { idx: String(i) }, class: 'tracker-load-btn tracker-pill' }, 'Load'),
-          el('button', { dataset: { idx: String(i) }, class: 'tracker-remove-btn', 'aria-label': 'Delete preset' }, '×'),
+          el(
+            'button',
+            { dataset: { idx: String(i) }, class: 'tracker-load-btn tracker-pill' },
+            'Load'
+          ),
+          el(
+            'button',
+            {
+              dataset: { idx: String(i) },
+              class: 'tracker-remove-btn',
+              'aria-label': 'Delete preset',
+            },
+            '×'
+          ),
         ]),
       ])
     );
@@ -929,7 +967,9 @@ export function renderArchive(resetPage = false) {
   clear(_el.archiveBody);
 
   if (!pageRows.length) {
-    _el.archiveBody.append(el('tr', null, [el('td', { colspan: '5' }, 'No records match filters.')]));
+    _el.archiveBody.append(
+      el('tr', null, [el('td', { colspan: '5' }, 'No records match filters.')])
+    );
     if (_el.archiveMeta) _el.archiveMeta.textContent = '';
     _renderArchivePagination(0, 1, 0);
     return;
@@ -953,7 +993,11 @@ export function renderArchive(resetPage = false) {
         el('td', null, selected ? selected.toFixed(2) : '—'),
         el('td', null, aed24 ? aed24.toFixed(2) : '—'),
         el('td', null, [
-          el('span', { class: `tracker-source-badge tracker-source-badge--${r.source}` }, sourceLabel),
+          el(
+            'span',
+            { class: `tracker-source-badge tracker-source-badge--${r.source}` },
+            sourceLabel
+          ),
         ]),
       ])
     );
@@ -978,29 +1022,51 @@ function _renderArchivePagination(page, totalPages, total) {
   if (!paginationEl) {
     const tableFooter = _el.archiveMeta?.parentElement;
     if (!tableFooter) return;
-    paginationEl = el('div', { id: 'tp-archive-pagination', class: 'tracker-pagination', 'aria-label': 'Archive pages' });
+    paginationEl = el('div', {
+      id: 'tp-archive-pagination',
+      class: 'tracker-pagination',
+      'aria-label': 'Archive pages',
+    });
     tableFooter.after(paginationEl);
   }
   clear(paginationEl);
   if (total <= ARCHIVE_PAGE_SIZE) return;
 
-  const prevBtn = el('button', {
-    type: 'button',
-    class: 'btn btn-sm btn-ghost tracker-pagination-btn',
-    'aria-label': 'Previous page',
-    disabled: page === 0 ? true : null,
-  }, '← Prev');
-  prevBtn.addEventListener('click', () => { _archivePage--; renderArchive(); });
+  const prevBtn = el(
+    'button',
+    {
+      type: 'button',
+      class: 'btn btn-sm btn-ghost tracker-pagination-btn',
+      'aria-label': 'Previous page',
+      disabled: page === 0 ? true : null,
+    },
+    '← Prev'
+  );
+  prevBtn.addEventListener('click', () => {
+    _archivePage--;
+    renderArchive();
+  });
 
-  const pageLabel = el('span', { class: 'tracker-pagination-label' }, `Page ${page + 1} / ${totalPages}`);
+  const pageLabel = el(
+    'span',
+    { class: 'tracker-pagination-label' },
+    `Page ${page + 1} / ${totalPages}`
+  );
 
-  const nextBtn = el('button', {
-    type: 'button',
-    class: 'btn btn-sm btn-ghost tracker-pagination-btn',
-    'aria-label': 'Next page',
-    disabled: page >= totalPages - 1 ? true : null,
-  }, 'Next →');
-  nextBtn.addEventListener('click', () => { _archivePage++; renderArchive(); });
+  const nextBtn = el(
+    'button',
+    {
+      type: 'button',
+      class: 'btn btn-sm btn-ghost tracker-pagination-btn',
+      'aria-label': 'Next page',
+      disabled: page >= totalPages - 1 ? true : null,
+    },
+    'Next →'
+  );
+  nextBtn.addEventListener('click', () => {
+    _archivePage++;
+    renderArchive();
+  });
 
   paginationEl.append(prevBtn, pageLabel, nextBtn);
 }

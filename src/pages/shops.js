@@ -256,52 +256,32 @@ function detailsAvailabilityRank(value) {
   return 1;
 }
 
-function detailsConfidenceTier(value) {
-  if (value === 'full') return t('rankFull');
-  if (value === 'partial') return t('rankPartial');
-  return t('rankLimited');
-}
-
-// NEW: Contact quality scoring based on new data model
 function contactQualityScore(shop) {
-  // Use explicit contactQuality field if available (0-100 scale mapped to high/medium/low)
   if (shop.contactQuality === 'high') return 3;
   if (shop.contactQuality === 'medium') return 2;
   return 1;
 }
 
-function _contactQualityLabel(shop) {
+function contactQualityLabel(shop) {
   const score = contactQualityScore(shop);
   if (score === 3) return t('rankFull');
   if (score === 2) return t('rankPartial');
   return t('rankLimited');
 }
 
-// NEW: Confidence badge calculation combining multiple signals
 function calculateConfidenceBadge(shop) {
-  // Combine confidence score (0-100), verification status, and contact quality
   let score = shop.confidence || 50;
-
-  // Boost for verified shops
   if (shop.verified) score = Math.min(100, score + 10);
-
-  // Boost for high contact quality
   if (shop.contactQuality === 'high') score = Math.min(100, score + 5);
   if (shop.contactQuality === 'low') score = Math.max(0, score - 5);
-
-  // Determine badge level
   if (score >= 90) return { level: 'high', label: `${score}%`, color: 'green' };
   if (score >= 70) return { level: 'medium', label: `${score}%`, color: 'amber' };
   return { level: 'low', label: `${score}%`, color: 'red' };
 }
 
-// NEW: Market-area vs direct-shop distinction
 function isMarketArea(shop) {
-  // Explicit type field takes precedence
   if (shop.type === 'market') return true;
   if (shop.type === 'direct') return false;
-
-  // Fallback to legacy detection
   return (
     !shop.phone &&
     !shop.website &&
@@ -309,14 +289,6 @@ function isMarketArea(shop) {
       shop.notes?.toLowerCase().includes('concentration') ||
       shop.notes?.toLowerCase().includes('area'))
   );
-}
-
-function _isDirectShop(shop) {
-  if (shop.type === 'direct') return true;
-  if (shop.type === 'market') return false;
-
-  // Fallback: has direct contact info
-  return !!(shop.phone || shop.website);
 }
 
 function listingTypeLabel(shop) {
@@ -600,32 +572,6 @@ function shopsMatchingPrimaryFilters() {
   });
 }
 
-function _allCountriesInData() {
-  const codes = new Set(SHOPS.map((s) => s.countryCode));
-  return COUNTRIES.filter((c) => codes.has(c.code)).sort((a, b) =>
-    countryName(a).localeCompare(countryName(b), STATE.lang)
-  );
-}
-
-function _shopsForCountryFilter() {
-  if (STATE.region === 'all') return SHOPS;
-  return SHOPS.filter((shop) => {
-    const country = countryByCode(shop.countryCode);
-    return country?.group === STATE.region;
-  });
-}
-
-function _shopsForCityFilter() {
-  return SHOPS.filter((shop) => {
-    const country = countryByCode(shop.countryCode);
-    if (!country) return false;
-    if (STATE.region !== 'all' && country.group !== STATE.region) return false;
-    if (STATE.country !== 'all' && shop.countryCode !== STATE.country) return false;
-    if (STATE.city !== 'all' && shop.city !== STATE.city) return false;
-    return true;
-  });
-}
-
 function buildFilters() {
   const regionSelect = document.getElementById('shops-region-filter');
   const countrySelect = document.getElementById('shops-country-filter');
@@ -645,36 +591,17 @@ function buildFilters() {
     throw new Error(errorMsg);
   }
 
-  console.log('[shops] buildFilters(): Building filter dropdowns with state:', {
-    region: STATE.region,
-    country: STATE.country,
-    city: STATE.city,
-    specialty: STATE.specialty,
-  });
-
   regionSelect.innerHTML = `<option value="all">${t('allRegions')}</option>${Object.entries(REGIONS)
     .map(([code, labels]) => `<option value="${code}">${labels[STATE.lang]}</option>`)
     .join('')}`;
 
   const countryCodes = [...new Set(shopsMatchingPrimaryFilters().map((shop) => shop.countryCode))];
-  console.log(
-    '[shops] buildFilters(): Found',
-    countryCodes.length,
-    'country codes in filtered shops:',
-    countryCodes
-  );
 
   const allCountries = COUNTRIES.filter((country) =>
     SHOPS.some((shop) => shop.countryCode === country.code)
   )
     .filter((country) => STATE.region === 'all' || country.group === STATE.region)
     .sort((a, b) => countryName(a).localeCompare(countryName(b), STATE.lang));
-
-  console.log(
-    '[shops] buildFilters(): Populating country filter with',
-    allCountries.length,
-    'countries'
-  );
 
   countrySelect.innerHTML = `<option value="all">${t('allCountries')}</option>${allCountries
     .filter((country) => countryCodes.includes(country.code) || STATE.country === 'all')
@@ -690,7 +617,6 @@ function buildFilters() {
   });
 
   const cities = [...new Set(cityPool.map((shop) => shop.city))].sort((a, b) => a.localeCompare(b));
-  console.log('[shops] buildFilters(): Found', cities.length, 'cities:', cities.slice(0, 5));
 
   citySelect.innerHTML = `<option value="all">${t('allCities')}</option>${cities
     .map((city) => `<option value="${esc(city)}">${esc(city)}</option>`)
@@ -699,12 +625,6 @@ function buildFilters() {
   const specialties = [
     ...new Set(shopsMatchingPrimaryFilters().flatMap((shop) => shop.specialties || [])),
   ].sort((a, b) => a.localeCompare(b));
-  console.log(
-    '[shops] buildFilters(): Found',
-    specialties.length,
-    'specialties:',
-    specialties.slice(0, 5)
-  );
 
   specialtySelect.innerHTML = `<option value="all">${t('allSpecialties')}</option>${specialties
     .map((item) => `<option value="${esc(item)}">${esc(item)}</option>`)
@@ -726,13 +646,6 @@ function buildFilters() {
     STATE.specialty = 'all';
   }
   specialtySelect.value = STATE.specialty;
-
-  console.log('[shops] buildFilters(): Final state after validation:', {
-    region: STATE.region,
-    country: STATE.country,
-    city: STATE.city,
-    specialty: STATE.specialty,
-  });
 }
 
 function populatePopularChips() {
@@ -792,13 +705,6 @@ function filterShops() {
     return haystack.includes(q);
   });
 
-  console.log(
-    '[shops] filterShops():',
-    SHOPS.length,
-    'total ->',
-    filtered.length,
-    'after filtering'
-  );
   return filtered;
 }
 
@@ -862,10 +768,8 @@ function renderCards(shops) {
       const countryUrl = country?.slug ? `countries/${country.slug}.html` : '';
       const areaGuideUrl = `${location.pathname}?country=${encodeURIComponent(shop.countryCode)}&search=${encodeURIComponent(shop.market)}`;
       const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${shop.name}, ${shop.market}, ${shop.city}`)}`;
-      const _confidenceTier = detailsConfidenceTier(shop.detailsAvailability);
-      const _detailsLabel = detailsAvailabilityLabel(shop.detailsAvailability);
       const nextActionLabel = isCluster ? t('nextActionsMarket') : t('nextActionsStore');
-      const contactQualityLabel = _contactQualityLabel(shop);
+      const qualityLabel = contactQualityLabel(shop);
 
       const contactParts = [];
       if (shop.phone) contactParts.push(`${t('phone')}: ${esc(shop.phone)}`);
@@ -901,7 +805,7 @@ function renderCards(shops) {
             </p>
             <p class="shop-confidence-item">
               <span>${t('contactQuality')}</span>
-              <strong>${contactQualityLabel}</strong>
+              <strong>${qualityLabel}</strong>
             </p>
           </div>
         </section>
@@ -1084,8 +988,6 @@ function bindFeaturedCardHandlers() {
 
 function renderFilterPills() {
   const pillsContainer = document.getElementById('shops-filter-pills');
-  const esc = (s) =>
-    s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const pills = [];
 
   if (STATE.region !== 'all')
@@ -1124,8 +1026,8 @@ function renderFilterPills() {
       .map((pill) => {
         const ariaLabel = pill.ariaLabel || `Remove ${pill.label} filter`;
         return `
-      <button class="shops-filter-pill" data-type="${esc(String(pill.type || ''))}" data-value="${esc(String(pill.value || ''))}" type="button" aria-label="${esc(String(ariaLabel || ''))}">
-        ${esc(String(pill.label || ''))}
+      <button class="shops-filter-pill" data-type="${esc(pill.type)}" data-value="${esc(pill.value)}" type="button" aria-label="${esc(ariaLabel)}">
+        ${esc(pill.label)}
         <span class="shops-filter-pill-remove" aria-hidden="true">×</span>
       </button>
     `;
@@ -1205,17 +1107,6 @@ function render() {
   syncUrlToState();
   const shops = sortedShops(filterShops());
 
-  // Debug logging for render pipeline
-  console.log('[shops] render() called with', shops.length, 'shops after filtering');
-  console.log('[shops] Current filter state:', {
-    region: STATE.region,
-    country: STATE.country,
-    city: STATE.city,
-    specialty: STATE.specialty,
-    verifiedOnly: STATE.verifiedOnly,
-    search: STATE.search,
-  });
-
   const empty = document.getElementById('shops-empty');
   const count = document.getElementById('shops-count');
   if (count) count.textContent = t('count')(shops.length);
@@ -1225,13 +1116,11 @@ function render() {
   renderShortlistBar();
 
   if (!shops.length) {
-    console.log('[shops] No shops to render, showing empty state');
     document.getElementById('shops-grid').replaceChildren();
     empty.hidden = false;
     return;
   }
 
-  console.log('[shops] Rendering', shops.length, 'shop cards');
   empty.hidden = true;
   renderCards(shops);
 }
@@ -1371,13 +1260,6 @@ function init() {
     throw new Error(errorMsg);
   }
 
-  // Log data loading for debugging
-  console.log('[shops] Initializing with', SHOPS.length, 'shops');
-  console.log(
-    '[shops] Sample shop IDs:',
-    SHOPS.slice(0, 3).map((s) => s.id)
-  );
-
   try {
     const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
     if (prefs.lang === 'ar' || prefs.lang === 'en') STATE.lang = prefs.lang;
@@ -1503,14 +1385,10 @@ init();
     const remote = await fetchSupabaseShops();
     if (remote && Array.isArray(remote) && remote.length > 0) {
       SHOPS = remote;
-      console.log('[shops] Upgraded to Supabase live data:', SHOPS.length, 'shops');
-      // Re-build filters and re-render with live data
       buildFilters();
       updateHeaderStats();
       populatePopularChips();
       render();
-    } else {
-      console.log('[shops] Supabase returned no shops; keeping fallback data.');
     }
   } catch (err) {
     console.warn('[shops] Could not fetch Supabase data; using fallback:', err.message);
