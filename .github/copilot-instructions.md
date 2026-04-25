@@ -2,7 +2,7 @@
 
 **Repo:** `vctb12/Gold-Prices` · **Live:** `goldtickerlive.com` · **Stack:** Vanilla ES6 + Vite + Express admin + Supabase + GitHub Pages + 8 GitHub Actions
 
-> This file is committed to `.github/copilot-instructions.md` so Copilot loads it automatically on every request in this repo. It supersedes any conflicting guidance in `AGENTS.md` or `CLAUDE.md` for **Copilot agent mode specifically**; that Copilot-specific precedence is intentional and is reflected in §17.
+> This file is committed to `.github/copilot-instructions.md` so Copilot loads it automatically on every request in this repo. It defines Copilot agent-mode behavior while preserving the shared repository charter in `AGENTS.md`; use the hierarchy in §17 when instructions conflict.
 
 ---
 
@@ -365,6 +365,9 @@ RISKS / TRADEOFFS
 ROLLBACK
   - <one-line rollback strategy: revert commit / feature flag / config toggle>
 
+DONE CRITERIA
+  - <observable completion criterion>
+
 FOLLOW-UPS (optional, max 3 bullets)
   - <better idea you noticed but did not do>
 ```
@@ -461,11 +464,12 @@ When this prompt is loaded and the user gives you a task, your **first response*
 If two rules disagree, resolve in this order:
 
 1. **User's explicit instruction in the current turn.**
-2. **This prompt (§0–§18), for Copilot agent mode specifically.**
-3. **`AGENTS.md` / `CLAUDE.md`** in the repo (for shared agent context).
-4. **`README.md` and `docs/`** (for architectural context).
-5. **The actual code in the repo** (for implementation truth).
-6. **Your training data** (lowest authority — verify before relying).
+2. **`AGENTS.md`** in the repo (shared repository charter).
+3. **This prompt (§0–§18), for Copilot agent mode specifically.**
+4. **`CLAUDE.md`** in the repo (Claude-specific mechanics).
+5. **`README.md` and `docs/`** (for architectural context).
+6. **The actual code in the repo** (for implementation truth).
+7. **Your training data** (lowest authority — verify before relying).
 
 When the code disagrees with the docs, **the code is truth and the doc is a bug** — flag the doc fix as a follow-up.
 
