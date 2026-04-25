@@ -231,6 +231,8 @@ export const TRANSLATIONS = {
     'home.toolInvestDesc':
       'Bars vs jewellery, ETFs, Zakat on investments, storage costs — everything for GCC investors.',
     'home.toolInvestCta': 'Read Guide →',
+    // Trust banner copy is split around fixed safe links in index.html:
+    // copy → goldpricez.com link → source tail → methodology link.
     'home.trustBannerTitle': 'About Our Data',
     'home.trustBannerCopy':
       'These are spot-linked reference estimates, not final retail jewelry prices. Retail quotes usually add making charges, dealer/shop margins, and local taxes (where applicable). Freshness labels use one shared vocabulary sitewide: Live, Delayed, Cached/Fallback, Estimated, and Historical baseline. Source:',
@@ -255,7 +257,7 @@ export const TRANSLATIONS = {
     'home.faqMore': 'More questions answered on the Learn page →',
     'home.trackerLink': 'Full Tracker →',
     'home.karatStripLabel': 'AED / gram',
-    'home.karatStripTitle': 'Reference prices by karat',
+    'home.karatStripTitle': 'Live reference prices by karat',
     'home.karatStripSub':
       'Spot-linked AED gram estimates. Retail jewelry can include making charges and tax.',
     'home.karatStripCta': 'Full tracker →',
@@ -493,6 +495,8 @@ export const TRANSLATIONS = {
     'home.toolInvestDesc':
       'السبائك مقابل المجوهرات، الصناديق، زكاة الاستثمار، وتكاليف التخزين لمستثمري الخليج.',
     'home.toolInvestCta': 'اقرأ الدليل ←',
+    // Trust banner copy is split around fixed safe links in index.html:
+    // copy → goldpricez.com link → source tail → methodology link.
     'home.trustBannerTitle': 'حول بياناتنا',
     'home.trustBannerCopy':
       'هذه تقديرات مرجعية مرتبطة بالسعر الفوري، وليست أسعار تجزئة نهائية للمجوهرات. عادةً تضيف عروض التجزئة المصنعية وهوامش المتاجر والضرائب المحلية عند تطبيقها. تستخدم تسميات الحداثة مفردات موحدة: مباشر، متأخر، مخزن/احتياطي، تقديري، وخط أساس تاريخي. المصدر:',
@@ -517,7 +521,7 @@ export const TRANSLATIONS = {
     'home.faqMore': 'المزيد من الأسئلة المجاب عنها في صفحة التعلّم ←',
     'home.trackerLink': 'التتبع الكامل ←',
     'home.karatStripLabel': 'درهم / غرام',
-    'home.karatStripTitle': 'أسعار مرجعية حسب العيار',
+    'home.karatStripTitle': 'أسعار مرجعية مباشرة حسب العيار',
     'home.karatStripSub':
       'تقديرات غرام بالدرهم مرتبطة بالسعر الفوري. قد تشمل المجوهرات المصنعية والضريبة.',
     'home.karatStripCta': 'المتتبع الكامل ←',
