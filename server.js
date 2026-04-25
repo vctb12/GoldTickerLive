@@ -50,6 +50,11 @@ const newsletterRoutes = require('./server/routes/newsletter');
 // HTML we still serve is structured-data JSON-LD, which lives in
 // `<script type="application/ld+json">` blocks — those are ignored by CSP
 // because they are not executable scripts.
+app.use((_req, res, next) => {
+  res.setHeader('Permissions-Policy', PERMISSIONS_POLICY_HEADER);
+  next();
+});
+
 app.use(
   helmet({
     contentSecurityPolicy: IS_PROD
@@ -108,11 +113,6 @@ app.use(
     hsts: IS_PROD ? { maxAge: 31536000, includeSubDomains: true, preload: true } : false,
   })
 );
-
-app.use((_req, res, next) => {
-  res.setHeader('Permissions-Policy', PERMISSIONS_POLICY_HEADER);
-  next();
-});
 
 // CORS — restrict origins in production.
 // In production, always set CORS_ORIGINS (comma-separated) to avoid rejecting all cross-origin requests.
