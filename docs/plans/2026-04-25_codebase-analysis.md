@@ -32,7 +32,7 @@ full RTL layout support.
 
 | Layer           | Technology                                                                                         |
 | --------------- | -------------------------------------------------------------------------------------------------- |
-| Frontend        | Vanilla ES6 modules — no framework, no bundler framework; Vite 8 for production bundle            |
+| Frontend        | Vanilla ES6 modules — no framework; Vite 8 for production bundle                                   |
 | Styling         | Hand-authored CSS with design tokens (`styles/global.css`); per-page CSS under `styles/pages/`    |
 | Backend (opt.)  | Node/Express 5 — JWT + bcrypt auth, Helmet, CORS, rate limiting, flat-JSON + Supabase persistence |
 | Python auto.    | `scripts/python/` — tweepy, supabase-py, requests; linted with ruff                               |
@@ -77,7 +77,7 @@ full RTL layout support.
 │   └── utils/        → shared utilities
 │
 ├── styles/
-│   ├── global.css    → ~17 000 lines; design tokens + primitives + motion + component styles
+│   ├── global.css    → ~17,000 lines; design tokens + primitives + motion + component styles
 │   └── pages/        → per-page CSS (16 files)
 │
 ├── server/ + server.js  → Express 5 admin API (JWT, bcrypt, Helmet, CORS, rate limiting)
@@ -119,7 +119,7 @@ full RTL layout support.
 ```
 ┌─ npm run build ────────────────────────────────────────────────────────────┐
 │  1. extract-baseline.js   — snapshot DOM-safety sink counts                │
-│  2. normalize-shops.js    — normalise data/shops-data.json                 │
+│  2. normalize-shops.js    — normalize data/shops-data.json                 │
 │  3. inject-schema.js      — inject JSON-LD schema into HTML pages          │
 │  4. build/generateSitemap.js — generate sitemap.xml                        │
 │  5. vite build            — bundle src/ → dist/                            │
