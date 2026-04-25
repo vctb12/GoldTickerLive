@@ -1,5 +1,5 @@
 // tracker/wire.js
-import { clear, el, escape, safeHref } from '../lib/safe-dom.js';
+import { clear, el, safeHref } from '../lib/safe-dom.js';
 
 const WIRE_CONFIG = {
   query: '(gold OR bullion OR "gold price" OR "gold prices" OR XAU OR "precious metals")',
@@ -73,18 +73,20 @@ export function renderWire(els, state) {
 
   const fragment = document.createDocumentFragment();
   for (const item of state.wireItems) {
-    const domainEl = item.domain
-      ? el('span', { class: 'tracker-wire-domain' }, item.domain)
-      : null;
+    const domainEl = item.domain ? el('span', { class: 'tracker-wire-domain' }, item.domain) : null;
     const children = [item.title, ...(domainEl ? [' · ', domainEl] : [])];
     if (item.url) {
       fragment.append(
-        el('a', {
-          href: safeHref(item.url),
-          class: 'tracker-wire-item',
-          target: '_blank',
-          rel: 'noopener noreferrer',
-        }, children)
+        el(
+          'a',
+          {
+            href: safeHref(item.url),
+            class: 'tracker-wire-item',
+            target: '_blank',
+            rel: 'noopener noreferrer',
+          },
+          children
+        )
       );
     } else {
       fragment.append(el('span', { class: 'tracker-wire-item' }, children));
