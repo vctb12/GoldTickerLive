@@ -769,7 +769,7 @@ function renderCards(shops) {
       const areaGuideUrl = `${location.pathname}?country=${encodeURIComponent(shop.countryCode)}&search=${encodeURIComponent(shop.market)}`;
       const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${shop.name}, ${shop.market}, ${shop.city}`)}`;
       const nextActionLabel = isCluster ? t('nextActionsMarket') : t('nextActionsStore');
-      const shopContactQualityLabel = contactQualityLabel(shop);
+      const qualityLabel = contactQualityLabel(shop);
 
       const contactParts = [];
       if (shop.phone) contactParts.push(`${t('phone')}: ${esc(shop.phone)}`);
@@ -805,7 +805,7 @@ function renderCards(shops) {
             </p>
             <p class="shop-confidence-item">
               <span>${t('contactQuality')}</span>
-              <strong>${shopContactQualityLabel}</strong>
+              <strong>${qualityLabel}</strong>
             </p>
           </div>
         </section>
