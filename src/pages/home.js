@@ -98,8 +98,8 @@ let homeRegion = (() => {
 
 // ── Render helpers ─────────────────────────────────────────────────────────
 function set(id, text) {
-  const node = document.getElementById(id);
-  if (node) node.textContent = text;
+  const target = document.getElementById(id);
+  if (target) target.textContent = text;
 }
 
 function getFreshnessMeta() {
@@ -222,7 +222,7 @@ function renderKaratStrip(k18Ref) {
   const k24 = KARATS.find((k) => k.code === '24');
   const k14 = KARATS.find((k) => k.code === '14');
 
-  // Skip rendering if required karat data is not available
+  // Skip rendering if required core karat data is not available; 14K is optional.
   if (!k18 || !k21 || !k22 || !k24) return;
 
   const prices = {
