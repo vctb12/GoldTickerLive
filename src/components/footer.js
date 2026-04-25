@@ -54,12 +54,12 @@ export function injectFooter(lang = 'en', depth = 0) {
       <div class="footer-col footer-col--links">
         <h4 class="footer-col-heading">${isAr ? 'الأدوات' : 'Tools'}</h4>
         <a href="${r('../calculator.html')}">${isAr ? 'حاسبة الذهب' : 'Gold Calculator'}</a>
-        <a href="${r('../tools/weight-converter.html')}">${isAr ? 'محول الأوزان' : 'Weight Converter'}</a>
-        <a href="${r('../tools/zakat-calculator.html')}">${isAr ? 'حاسبة الزكاة' : 'Zakat Calculator'}</a>
-        <a href="${r('../tools/investment-return.html')}">${isAr ? 'عائد الاستثمار' : 'Investment Return'}</a>
+        <a href="${r('../content/tools/weight-converter.html')}">${isAr ? 'محول الأوزان' : 'Weight Converter'}</a>
+        <a href="${r('../content/tools/zakat-calculator.html')}">${isAr ? 'حاسبة الزكاة' : 'Zakat Calculator'}</a>
+        <a href="${r('../content/tools/investment-return.html')}">${isAr ? 'عائد الاستثمار' : 'Investment Return'}</a>
         <a href="${r('../tracker.html#mode=live&panel=alerts')}">${isAr ? 'تنبيهات السعر' : 'Price Alerts'}</a>
-        <a href="${r('../gold-price-history/')}">${isAr ? 'سجل الأسعار' : 'Price History'}</a>
-        <a href="${r('../order-gold/')}">${isAr ? 'اطلب الذهب' : 'Order Gold'}</a>
+        <a href="${r('../content/gold-price-history/')}">${isAr ? 'سجل الأسعار' : 'Price History'}</a>
+        <a href="${r('../content/order-gold/')}">${isAr ? 'اطلب الذهب' : 'Order Gold'}</a>
         <a href="${r('../invest.html')}">${isAr ? 'دليل الاستثمار' : 'Investing Guide'}</a>
       </div>
 
@@ -87,7 +87,7 @@ export function injectFooter(lang = 'en', depth = 0) {
         <a href="${r('../countries/egypt/cities/cairo.html')}">${isAr ? 'القاهرة' : 'Cairo'}</a>
         <h4 class="footer-col-heading footer-col-heading--mt">${isAr ? 'تعلّم وتحليلات' : 'Learn &amp; Insights'}</h4>
         <a href="${r('../learn.html')}">${isAr ? 'دليل الذهب' : 'Gold Guide'}</a>
-        <a href="${r('../guides/buying-guide.html')}">${isAr ? 'دليل الشراء' : 'Buying Guide'}</a>
+        <a href="${r('../content/guides/buying-guide.html')}">${isAr ? 'دليل الشراء' : 'Buying Guide'}</a>
         <a href="${r('../methodology.html')}">${isAr ? 'المنهجية' : 'Methodology'}</a>
         <a href="${r('../insights.html')}">${isAr ? 'تحليلات' : 'Insights'}</a>
       </div>
@@ -125,7 +125,7 @@ export function injectFooter(lang = 'en', depth = 0) {
         <span class="footer-sep" aria-hidden="true">·</span>
         <span>${isAr ? 'الدرهم الإماراتي:' : 'AED peg:'} <a href="${r('../methodology.html')}">${isAr ? '3.6725 ثابت' : '3.6725 fixed'}</a></span>
         <span class="footer-sep" aria-hidden="true">·</span>
-        <span>${isAr ? 'أونصة ترويوا:' : 'Troy oz:'} 31.1035 g</span>
+        <span>${isAr ? 'الأونصة التروية:' : 'Troy oz:'} 31.1035 g</span>
         <span class="footer-sep" aria-hidden="true">·</span>
         <span class="footer-freshness"></span>
         <span class="footer-data-updated"></span>
