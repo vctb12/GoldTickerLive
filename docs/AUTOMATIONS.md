@@ -112,15 +112,19 @@ Pings the site every **30 minutes**. Alerts via Telegram and/or Discord if site 
 
 - Script: `scripts/uptime-check.js`
 
-### 8. Python hourly posts — `hourly_post.yml`
+### 8. Python X/Twitter posts — `post_gold.yml`
 
-Posts gold prices to X/Twitter every hour using the Python system. More capable than the JS system —
-supports richer templates, Supabase logging, and integrates with the broader Python bot ecosystem.
+Runs every 6 minutes while the global gold market is open (Sunday 21:00 UTC through Friday 20:59
+UTC), but posts only when the committed spot price changes. Manual runs use the same staleness,
+market-hours, price-change, and duplicate-content guards; they are not force posts.
 
-- Script: `scripts/gold_poster.py`
+- Script: `scripts/python/post_gold_price.py`
 - Secrets needed: `CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET`,
-  `GOLDPRICEZ_API_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
-- See `docs/twitter_bot_architecture.md` for full architecture details.
+  `GOLDPRICEZ_API_KEY`
+- State file: `data/last_gold_price.json` records the last successful post and is ignored by the
+  deploy workflow to avoid redeploying the site for tweet-state-only commits.
+- Market open/close tweets use explicit cron entries so delayed GitHub scheduled starts do not
+  repeat event tweets throughout the hour.
 
 ### 9. Market events — `market_events.yml`
 

@@ -157,18 +157,19 @@ def test_duplicate_guard_same_price_recent_hourly():
     )
     assert skip is True
     assert "4,701.73" in reason
-    assert "SKIP: duplicate guard" in reason
+    assert "SKIP: price-change guard" in reason
 
 
-def test_duplicate_guard_same_price_old_hourly():
-    skip, _ = pg.check_duplicate_guard(
+def test_duplicate_guard_same_price_old_hourly_still_skips():
+    skip, reason = pg.check_duplicate_guard(
         price=4701.73,
         prev_price=4701.73,
         prev_posted_at_utc=_70_MIN_AGO,
         post_type='hourly',
         _now=_NOW,
     )
-    assert skip is False
+    assert skip is True
+    assert "unchanged" in reason
 
 
 def test_duplicate_guard_price_changed_recent_hourly():
@@ -182,26 +183,28 @@ def test_duplicate_guard_price_changed_recent_hourly():
     assert skip is False
 
 
-def test_duplicate_guard_market_open_never_skips():
-    skip, _ = pg.check_duplicate_guard(
+def test_duplicate_guard_market_open_same_price_skips():
+    skip, reason = pg.check_duplicate_guard(
         price=4701.73,
         prev_price=4701.73,
         prev_posted_at_utc=_30_MIN_AGO,
         post_type='market_open',
         _now=_NOW,
     )
-    assert skip is False
+    assert skip is True
+    assert "market_open" in reason
 
 
-def test_duplicate_guard_market_close_never_skips():
-    skip, _ = pg.check_duplicate_guard(
+def test_duplicate_guard_market_close_same_price_skips():
+    skip, reason = pg.check_duplicate_guard(
         price=4701.73,
         prev_price=4701.73,
         prev_posted_at_utc=_30_MIN_AGO,
         post_type='market_close',
         _now=_NOW,
     )
-    assert skip is False
+    assert skip is True
+    assert "market_close" in reason
 
 
 def test_duplicate_guard_no_previous_state():
@@ -213,6 +216,44 @@ def test_duplicate_guard_no_previous_state():
         _now=_NOW,
     )
     assert skip is False
+
+
+# ── 24/5 market cadence tests ─────────────────────────────────────────────────
+def test_get_post_type_uses_intended_schedule_for_delayed_market_close():
+    delayed = datetime(2026, 4, 24, 21, 52, 0, tzinfo=timezone.utc)
+    assert pg.get_post_type(
+        _now=delayed,
+        schedule_cron=pg.MARKET_CLOSE_EVENT_CRON,
+    ) == 'market_close'
+
+
+def test_get_post_type_does_not_repeat_market_close_after_first_window():
+    delayed = datetime(2026, 4, 24, 21, 52, 0, tzinfo=timezone.utc)
+    assert pg.get_post_type(_now=delayed) == 'hourly'
+
+
+def test_get_post_type_manual_event_window_is_narrow():
+    event_time = datetime(2026, 4, 24, 21, 5, 0, tzinfo=timezone.utc)
+    after_window = datetime(2026, 4, 24, 21, 6, 0, tzinfo=timezone.utc)
+    assert pg.get_post_type(_now=event_time) == 'market_close'
+    assert pg.get_post_type(_now=after_window) == 'hourly'
+
+
+def test_market_open_time_covers_24_5_window():
+    assert pg.is_market_open_time(datetime(2026, 4, 26, 20, 59, 0, tzinfo=timezone.utc)) is False
+    assert pg.is_market_open_time(datetime(2026, 4, 26, 21, 0, 0, tzinfo=timezone.utc)) is True
+    assert pg.is_market_open_time(datetime(2026, 4, 29, 12, 0, 0, tzinfo=timezone.utc)) is True
+    assert pg.is_market_open_time(datetime(2026, 5, 1, 20, 59, 0, tzinfo=timezone.utc)) is True
+    assert pg.is_market_open_time(datetime(2026, 5, 1, 21, 0, 0, tzinfo=timezone.utc)) is False
+    assert pg.is_market_open_time(datetime(2026, 5, 2, 12, 0, 0, tzinfo=timezone.utc)) is False
+
+
+def test_market_closed_guard_skips_regular_hourly_posts_only():
+    saturday = datetime(2026, 5, 2, 12, 0, 0, tzinfo=timezone.utc)
+    skip, reason = pg.should_skip_market_closed('hourly', now=saturday)
+    assert skip is True
+    assert "market closed" in reason
+    assert pg.should_skip_market_closed('market_close', now=saturday) == (False, None)
 
 
 # ── Content-hash tests ────────────────────────────────────────────────────────
