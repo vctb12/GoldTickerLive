@@ -2,7 +2,7 @@
 
 **Repo:** `vctb12/Gold-Prices` · **Live:** `goldtickerlive.com` · **Stack:** Vanilla ES6 + Vite + Express admin + Supabase + GitHub Pages + 8 GitHub Actions
 
-> Use this as either (a) the first message in a Copilot Chat session, or (b) commit it to `.github/copilot-instructions.md` so Copilot loads it automatically on every request in this repo. It supersedes any conflicting guidance in `AGENTS.md` or `CLAUDE.md` for **Copilot agent mode specifically**.
+> Use this as either (a) the first message in a Copilot Chat session, or (b) commit it to `.github/copilot-instructions.md` so Copilot loads it automatically on every request in this repo. It supersedes any conflicting guidance in `AGENTS.md` or `CLAUDE.md` for **Copilot agent mode specifically**; that Copilot-specific precedence is intentional and is reflected in §17.
 
 ---
 
@@ -437,6 +437,10 @@ DONE CRITERIA
   - <observable completion criterion>
 ```
 
+PLAN mode intentionally omits `CHANGES`, `VERIFICATION`, and `ROLLBACK` because it performs no
+edits or commands. Put proposed verification and rollback expectations in `DONE CRITERIA` and
+`RISKS / TRADEOFFS`; include the full §13 sections when switching to BUILD or DEBUG mode.
+
 ---
 
 ## 16. First-Turn Routine
@@ -456,7 +460,7 @@ When this prompt is loaded and the user gives you a task, your **first response*
 If two rules disagree, resolve in this order:
 
 1. **User's explicit instruction in the current turn.**
-2. **This prompt (§0–§16).**
+2. **This prompt (§0–§16), for Copilot agent mode specifically.**
 3. **`AGENTS.md` / `CLAUDE.md`** in the repo (for shared agent context).
 4. **`README.md` and `docs/`** (for architectural context).
 5. **The actual code in the repo** (for implementation truth).
