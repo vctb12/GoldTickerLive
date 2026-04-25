@@ -1,13 +1,13 @@
 {
   "source": "goldpricez.com",
-  "fetched_at_utc": "2026-04-24T23:45:35Z",
-  "source_updated_at_gmt": "24-04-2026 11:45:32 pm",
+  "fetched_at_utc": "2026-04-25T02:06:37Z",
+  "source_updated_at_gmt": "25-04-2026 02:06:34 am",
   "currency_primary": "AED",
   "gold": {
     "ounce_usd": 4709.26,
     "ounce_aed": 17297.1,
     "gram_aed": 555.24,
-    "kg_aed": 556113.76,
+    "kg_aed": 556113.77,
     "tola_india_aed": 6486.41,
     "ask_usd": 4709.26,
     "bid_usd": 4709.26,
