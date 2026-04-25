@@ -166,7 +166,7 @@ function buildDropdown(group, depth) {
     </div>`;
 }
 
-function buildDrawerGroup(group, depth) {
+function buildDrawerGroup(group, depth, index = 0) {
   const itemsHtml = group.items
     .map((item) => {
       const href = resolveHref(item.href, depth);
@@ -184,8 +184,11 @@ function buildDrawerGroup(group, depth) {
     })
     .join('');
 
+  const shouldOpen =
+    index === 0 || group.items.some((item) => isPageMatch(resolveHref(item.href, depth)));
+
   return `
-    <details class="nav-drawer-group" open>
+    <details class="nav-drawer-group"${shouldOpen ? ' open' : ''}>
       <summary class="nav-drawer-group-label">
         <span>${escapeHtml(group.label)}</span>
         <span class="nav-drawer-group-caret" aria-hidden="true"></span>
@@ -217,7 +220,9 @@ export function injectNav(lang = 'en', depth = 0) {
   const shopsActive = isPageMatch(shopsHref);
 
   const desktopDropdownsHtml = data.groups.map((g) => buildDropdown(g, depth)).join('');
-  const mobileGroupsHtml = data.groups.map((g) => buildDrawerGroup(g, depth)).join('');
+  const mobileGroupsHtml = data.groups
+    .map((g, index) => buildDrawerGroup(g, depth, index))
+    .join('');
 
   const html = `
 <a class="nav-skip-link" href="#main-content">${lang === 'ar' ? 'تخطي إلى المحتوى' : 'Skip to main content'}</a>
@@ -225,7 +230,7 @@ export function injectNav(lang = 'en', depth = 0) {
   <div class="nav-inner">
 
     <!-- Brand -->
-    <a href="${homeHref}" class="nav-brand" aria-label="GoldPrices Home">
+    <a href="${homeHref}" class="nav-brand" aria-label="${escapeHtml(data.brandLabel)}">
       <span class="nav-brand-icon" aria-hidden="true">◈</span>
       <span class="nav-brand-text">GoldPrices</span>
     </a>
@@ -253,21 +258,24 @@ export function injectNav(lang = 'en', depth = 0) {
       <button id="nav-search-btn"
               class="nav-icon-btn"
               type="button"
-              aria-label="Search"
+               aria-label="${escapeHtml(data.searchLabel)}"
+               aria-expanded="false"
+               aria-controls="nav-search-overlay"
       >🔍</button>
 
       <button id="nav-theme-toggle"
               class="nav-icon-btn nav-icon-btn--theme"
               type="button"
-              aria-label="Theme: auto"
-              title="Theme: auto"
+              aria-label="${escapeHtml(data.themeLabels.auto)}"
+              title="${escapeHtml(data.themeLabels.auto)}"
               data-theme-mode="auto"
+              data-nav-theme-toggle
       >🌓</button>
 
       <button id="nav-lang-toggle"
               class="nav-lang-btn"
               type="button"
-              aria-label="Toggle language"
+              aria-label="${escapeHtml(data.toggleLanguage)}"
       >${data.langToggle}</button>
 
       <button id="nav-hamburger"
@@ -286,8 +294,8 @@ export function injectNav(lang = 'en', depth = 0) {
   <!-- Search overlay -->
   <div id="nav-search-overlay" class="nav-search-overlay" hidden>
     <input id="nav-search-input" class="nav-search-input" type="search"
-      placeholder="Search countries, cities, karats..." autocomplete="off"
-      aria-label="Search" />
+      placeholder="${escapeHtml(data.searchPlaceholder)}" autocomplete="off"
+      aria-label="${escapeHtml(data.searchLabel)}" />
     <div id="nav-search-dropdown" class="nav-search-dropdown" role="listbox"></div>
   </div>
 
@@ -316,12 +324,22 @@ export function injectNav(lang = 'en', depth = 0) {
       <!-- Grouped sections -->
       ${mobileGroupsHtml}
 
-      <!-- Language toggle -->
-      <button id="nav-lang-toggle-mobile"
-              class="nav-lang-btn nav-lang-btn--drawer"
-              type="button"
-              aria-label="Toggle language"
-      >${data.langToggle}</button>
+      <div class="nav-drawer-bottom">
+        <button id="nav-theme-toggle-mobile"
+                class="nav-icon-btn nav-icon-btn--theme"
+                type="button"
+                aria-label="${escapeHtml(data.themeLabels.auto)}"
+                title="${escapeHtml(data.themeLabels.auto)}"
+                data-theme-mode="auto"
+                data-nav-theme-toggle
+        >🌓</button>
+
+        <button id="nav-lang-toggle-mobile"
+                class="nav-lang-btn nav-lang-btn--drawer"
+                type="button"
+                aria-label="${escapeHtml(data.toggleLanguage)}"
+        >${data.langToggle}</button>
+      </div>
     </div>
   </div>
 
@@ -359,15 +377,10 @@ export function injectNav(lang = 'en', depth = 0) {
   _initNavScrollBehavior(navEl);
 
   // ── Theme (auto/light/dark) tri-state toggle ─────────────────────────────
-  const themeBtn = document.getElementById('nav-theme-toggle');
-  if (themeBtn) {
+  const themeBtns = Array.from(document.querySelectorAll('[data-nav-theme-toggle]'));
+  if (themeBtns.length) {
     const THEME_CYCLE = ['auto', 'light', 'dark'];
     const THEME_ICON = { auto: '🌓', light: '☀️', dark: '🌙' };
-    const THEME_LABEL = {
-      auto: 'Theme: auto (click to switch to light)',
-      light: 'Theme: light (click to switch to dark)',
-      dark: 'Theme: dark (click to switch to auto)',
-    };
     const mql =
       typeof window.matchMedia === 'function'
         ? window.matchMedia('(prefers-color-scheme: dark)')
@@ -379,16 +392,21 @@ export function injectNav(lang = 'en', depth = 0) {
     }
 
     function _applyTheme(mode) {
+      const d = NAV_DATA[_currentLang] || NAV_DATA.en;
+      const labels = d.themeLabels || NAV_DATA.en.themeLabels;
       const resolved = _resolvedTheme(mode);
       document.documentElement.setAttribute('data-theme', resolved);
       document.documentElement.setAttribute('data-theme-mode', mode);
-      themeBtn.textContent = THEME_ICON[mode] || THEME_ICON.auto;
-      themeBtn.setAttribute('aria-label', THEME_LABEL[mode] || THEME_LABEL.auto);
-      themeBtn.setAttribute('title', THEME_LABEL[mode] || THEME_LABEL.auto);
-      themeBtn.setAttribute('data-theme-mode', mode);
+      for (const themeBtn of themeBtns) {
+        themeBtn.textContent = THEME_ICON[mode] || THEME_ICON.auto;
+        themeBtn.setAttribute('aria-label', labels[mode] || labels.auto);
+        themeBtn.setAttribute('title', labels[mode] || labels.auto);
+        themeBtn.setAttribute('data-theme-mode', mode);
+      }
     }
 
     function _currentMode() {
+      const themeBtn = themeBtns[0];
       const m = themeBtn.getAttribute('data-theme-mode') || 'auto';
       return THEME_CYCLE.includes(m) ? m : 'auto';
     }
@@ -416,18 +434,20 @@ export function injectNav(lang = 'en', depth = 0) {
       }
     }
 
-    themeBtn.addEventListener('click', () => {
-      const current = _currentMode();
-      const idx = THEME_CYCLE.indexOf(current);
-      const next = THEME_CYCLE[(idx + 1) % THEME_CYCLE.length];
-      _applyTheme(next);
-      try {
-        const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
-        prefs.theme = next;
-        localStorage.setItem('user_prefs', JSON.stringify(prefs));
-      } catch (e) {
-        console.warn('theme save', e);
-      }
+    themeBtns.forEach((themeBtn) => {
+      themeBtn.addEventListener('click', () => {
+        const current = _currentMode();
+        const idx = THEME_CYCLE.indexOf(current);
+        const next = THEME_CYCLE[(idx + 1) % THEME_CYCLE.length];
+        _applyTheme(next);
+        try {
+          const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
+          prefs.theme = next;
+          localStorage.setItem('user_prefs', JSON.stringify(prefs));
+        } catch (e) {
+          console.warn('theme save', e);
+        }
+      });
     });
   }
 
@@ -446,6 +466,7 @@ export function injectNav(lang = 'en', depth = 0) {
     backdrop.removeAttribute('aria-hidden');
     burger.setAttribute('aria-expanded', 'true');
     burger.setAttribute('aria-label', d.closeMenu);
+    document.querySelector('[data-mobile-nav="menu"]')?.setAttribute('aria-expanded', 'true');
     burger.classList.add('is-open');
     document.body.style.overflow = 'hidden';
     const firstFocusable = drawer.querySelector('a, button');
@@ -461,6 +482,7 @@ export function injectNav(lang = 'en', depth = 0) {
     backdrop.setAttribute('aria-hidden', 'true');
     burger.setAttribute('aria-expanded', 'false');
     burger.setAttribute('aria-label', d.openMenu);
+    document.querySelector('[data-mobile-nav="menu"]')?.setAttribute('aria-expanded', 'false');
     burger.classList.remove('is-open');
     // Defer overflow reset so the slide-out CSS transition finishes first
     setTimeout(() => {
@@ -691,14 +713,16 @@ function _injectMobileBottomNav(lang, _depth) {
   if (document.querySelector('.mobile-bottom-nav')) return;
 
   const isAr = lang === 'ar';
+  const data = NAV_DATA[lang] || NAV_DATA.en;
+  const labels = data.bottomNav || NAV_DATA.en.bottomNav;
 
   // Bottom nav uses root-safe absolute hrefs (matches phx/06 AR-nav pattern).
   const items = [
-    { href: '/', icon: '🏠', label: isAr ? 'الرئيسية' : 'Home', key: 'home' },
-    { href: '/tracker.html', icon: '📈', label: isAr ? 'تتبع' : 'Tracker', key: 'tracker' },
-    { href: '/calculator.html', icon: '🧮', label: isAr ? 'حاسبة' : 'Calc', key: 'calculator' },
-    { href: '/shops.html', icon: '🏪', label: isAr ? 'المحلات' : 'Shops', key: 'shops' },
-    { action: 'menu', icon: '☰', label: isAr ? 'القائمة' : 'More', key: 'menu' },
+    { href: '/', icon: '🏠', label: labels.home, key: 'home' },
+    { href: '/tracker.html', icon: '📈', label: labels.tracker, key: 'tracker' },
+    { href: '/calculator.html', icon: '🧮', label: labels.calculator, key: 'calculator' },
+    { href: '/shops.html', icon: '🏪', label: labels.shops, key: 'shops' },
+    { action: 'menu', icon: '☰', label: labels.menu, key: 'menu' },
   ];
 
   const itemsHtml = items
@@ -707,7 +731,7 @@ function _injectMobileBottomNav(lang, _depth) {
       const cls = 'mobile-bottom-nav-item' + (isActive ? ' is-active' : '');
 
       if (item.action === 'menu') {
-        return `<button class="${cls}" data-mobile-nav="menu" type="button" aria-label="${item.label}">
+        return `<button class="${cls}" data-mobile-nav="menu" type="button" aria-label="${item.label}" aria-expanded="false" aria-controls="nav-drawer">
           <span class="mobile-bottom-nav-icon" aria-hidden="true">${item.icon}</span>
           <span class="mobile-bottom-nav-label">${item.label}</span>
         </button>`;
@@ -721,7 +745,7 @@ function _injectMobileBottomNav(lang, _depth) {
     .join('');
 
   const bottomNavHtml = `
-    <div class="mobile-bottom-nav" role="navigation" aria-label="${isAr ? 'التنقل السريع' : 'Quick navigation'}" dir="${isAr ? 'rtl' : 'ltr'}">
+    <div class="mobile-bottom-nav" role="navigation" aria-label="${data.quickNav}" dir="${isAr ? 'rtl' : 'ltr'}">
       <div class="mobile-bottom-nav-inner">
         ${itemsHtml}
       </div>
@@ -736,7 +760,10 @@ function _injectMobileBottomNav(lang, _depth) {
   if (menuBtn) {
     menuBtn.addEventListener('click', () => {
       const burger = document.getElementById('nav-hamburger');
-      if (burger) burger.click();
+      if (burger) {
+        burger.click();
+        menuBtn.setAttribute('aria-expanded', burger.getAttribute('aria-expanded') || 'false');
+      }
     });
   }
 }
@@ -780,7 +807,11 @@ export function updateNavLang(lang) {
   // Language toggle buttons
   document.querySelectorAll('#nav-lang-toggle, #nav-lang-toggle-mobile').forEach((btn) => {
     btn.textContent = data.langToggle;
+    btn.setAttribute('aria-label', data.toggleLanguage);
   });
+
+  const brand = nav.querySelector('.nav-brand');
+  if (brand) brand.setAttribute('aria-label', data.brandLabel);
 
   // Home — match by href ending in index.html or just /
   nav.querySelectorAll('.nav-link[href], .nav-drawer-link[href]').forEach((a) => {
@@ -796,11 +827,6 @@ export function updateNavLang(lang) {
   // Shops
   nav.querySelectorAll('[data-nav-key="shops"]').forEach((el) => {
     el.textContent = data.shops.label;
-  });
-
-  // Invest
-  nav.querySelectorAll('[data-nav-key="invest"]').forEach((el) => {
-    el.textContent = data.invest.label;
   });
 
   // Dropdown groups
@@ -860,18 +886,26 @@ export function updateNavLang(lang) {
   const drawer = document.getElementById('nav-drawer');
   if (drawer) drawer.setAttribute('aria-label', data.mainNav);
 
+  const searchBtn = document.getElementById('nav-search-btn');
+  if (searchBtn) searchBtn.setAttribute('aria-label', data.searchLabel);
+  const searchInput = document.getElementById('nav-search-input');
+  if (searchInput) {
+    searchInput.setAttribute('aria-label', data.searchLabel);
+    searchInput.setAttribute('placeholder', data.searchPlaceholder);
+  }
+  document.querySelectorAll('[data-nav-theme-toggle]').forEach((btn) => {
+    const mode = btn.getAttribute('data-theme-mode') || 'auto';
+    const labels = data.themeLabels || NAV_DATA.en.themeLabels;
+    btn.setAttribute('aria-label', labels[mode] || labels.auto);
+    btn.setAttribute('title', labels[mode] || labels.auto);
+  });
+
   // Mobile bottom nav language update
   const bottomNav = document.querySelector('.mobile-bottom-nav');
   if (bottomNav) {
     bottomNav.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
-    bottomNav.setAttribute('aria-label', isRtl ? 'التنقل السريع' : 'Quick navigation');
-    const labels = {
-      home: isRtl ? 'الرئيسية' : 'Home',
-      tracker: isRtl ? 'تتبع' : 'Tracker',
-      calculator: isRtl ? 'حاسبة' : 'Calc',
-      shops: isRtl ? 'المحلات' : 'Shops',
-      menu: isRtl ? 'القائمة' : 'More',
-    };
+    bottomNav.setAttribute('aria-label', data.quickNav);
+    const labels = data.bottomNav || NAV_DATA.en.bottomNav;
     bottomNav.querySelectorAll('[data-mobile-nav]').forEach((el) => {
       const key = el.dataset.mobileNav;
       const lbl = el.querySelector('.mobile-bottom-nav-label');
@@ -961,6 +995,7 @@ export function initNavSearch(basePath = '/') {
 
   function openOverlay() {
     overlay.removeAttribute('hidden');
+    btn.setAttribute('aria-expanded', 'true');
     input.focus();
     // If the input is empty, surface recent searches (if any).
     if (!input.value.trim()) renderRecent();
@@ -968,6 +1003,7 @@ export function initNavSearch(basePath = '/') {
 
   function closeOverlay() {
     overlay.setAttribute('hidden', '');
+    btn.setAttribute('aria-expanded', 'false');
     clearResults();
   }
 
@@ -980,7 +1016,7 @@ export function initNavSearch(basePath = '/') {
     dropdown.replaceChildren();
     const header = document.createElement('div');
     header.className = 'nav-search-message nav-search-section-head';
-    header.textContent = 'Recent searches';
+    header.textContent = (NAV_DATA[_currentLang] || NAV_DATA.en).recentSearches;
     dropdown.appendChild(header);
     for (const q of recents) {
       const btnEl = document.createElement('button');
@@ -1131,12 +1167,12 @@ export function initNavSearch(basePath = '/') {
     debounceTimer = setTimeout(async () => {
       const mod = await getSearch();
       if (!mod) {
-        showMessage('Search unavailable');
+        showMessage((NAV_DATA[_currentLang] || NAV_DATA.en).searchUnavailable);
         return;
       }
       const results = mod.search(q);
       if (!results.length) {
-        showMessage('No results found');
+        showMessage((NAV_DATA[_currentLang] || NAV_DATA.en).noSearchResults);
         return;
       }
       renderResults(results, q);

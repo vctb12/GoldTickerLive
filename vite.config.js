@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'path';
-import { globSync } from 'node:fs';
+import { readdirSync } from 'node:fs';
+import { join, resolve, relative } from 'node:path';
 
 const root = resolve(__dirname);
 
@@ -24,10 +24,21 @@ const EXCLUDE_DIRS = [
  * Excludes leaf-page trees that are copied as-is by the deploy workflow.
  */
 function discoverHtmlEntries() {
-  const htmlFiles = globSync('**/*.html', {
-    cwd: root,
-    exclude: (path) => EXCLUDE_DIRS.some((d) => path === d || path.startsWith(d + '/')),
-  });
+  const htmlFiles = [];
+
+  function walk(dir) {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      const rel = relative(root, full).replace(/\\/g, '/');
+      if (entry.isDirectory()) {
+        if (!EXCLUDE_DIRS.some((d) => rel === d || rel.startsWith(d + '/'))) walk(full);
+      } else if (entry.isFile() && entry.name.endsWith('.html')) {
+        htmlFiles.push(rel);
+      }
+    }
+  }
+
+  walk(root);
 
   const entries = {};
   for (const file of htmlFiles) {

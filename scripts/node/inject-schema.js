@@ -345,14 +345,15 @@ function injectSchemas(content, schemas) {
  * Process a single HTML file
  * @param {string} filePath
  * @param {boolean} checkOnly
- * @returns {boolean} true if modified
+ * @returns {boolean} true when the file satisfies the schema contract in check mode,
+ *   or true when modified in write mode
  */
 function processFile(filePath, checkOnly = false) {
   const content = fs.readFileSync(filePath, 'utf8');
 
   // Skip files with noindex
   if (/<meta\s+name=["']robots["']\s+content=["'][^"']*noindex/i.test(content)) {
-    return false;
+    return checkOnly;
   }
 
   const schemas = generateSchemasForPage(filePath, content);
@@ -364,7 +365,7 @@ function processFile(filePath, checkOnly = false) {
       console.log(`Missing schema: ${relativePath}`);
       return false;
     }
-    return hasSchema;
+    return true;
   }
 
   if (schemas.length === 0) {
@@ -407,8 +408,8 @@ function processDirectory(dir, checkOnly = false) {
       } else if (entry.isFile() && entry.name.endsWith('.html')) {
         stats.processed++;
         try {
-          const modified = processFile(fullPath, checkOnly);
-          if (modified) stats.modified++;
+          const result = processFile(fullPath, checkOnly);
+          if (result) stats.modified++;
           else stats.skipped++;
         } catch (err) {
           console.error(`Error processing ${fullPath}:`, err.message);
@@ -452,15 +453,20 @@ function main() {
 
   console.log('\n' + '─'.repeat(50));
   console.log(`Processed: ${stats.processed} files`);
-  console.log(`Modified:  ${stats.modified} files`);
-  console.log(`Skipped:   ${stats.skipped} files`);
+  if (checkOnly) {
+    console.log(`Passed:    ${stats.modified} files`);
+    console.log(`Failed:    ${stats.skipped} files`);
+  } else {
+    console.log(`Modified:  ${stats.modified} files`);
+    console.log(`Skipped:   ${stats.skipped} files`);
+  }
   console.log('─'.repeat(50));
 
-  if (checkOnly && stats.modified === 0) {
+  if (checkOnly && stats.skipped === 0) {
     console.log('\n✓ All pages have appropriate schemas');
     process.exit(0);
   } else if (checkOnly) {
-    console.log(`\n⚠ ${stats.processed - stats.modified} pages missing schemas`);
+    console.log(`\n⚠ ${stats.skipped} pages missing schemas`);
     process.exit(1);
   } else {
     console.log('\n✓ Schema injection complete');

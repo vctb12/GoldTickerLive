@@ -12,6 +12,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
+const SITE_ORIGIN = 'https://goldtickerlive.com/';
 
 // Paths that are treated as non-public (must be noindex, no canonical/hreflang required).
 const INTERNAL_PREFIXES = [
@@ -66,6 +67,18 @@ function isInternal(rel) {
   return INTERNAL_PREFIXES.some((p) => rel.startsWith(p));
 }
 
+function localOgImageDimensions(ogImage) {
+  if (!ogImage || !ogImage.startsWith(SITE_ORIGIN)) return null;
+  const imagePath = ogImage.slice(SITE_ORIGIN.length).split(/[?#]/)[0];
+  const full = path.join(ROOT, imagePath);
+  if (!fs.existsSync(full)) return null;
+  const buf = fs.readFileSync(full);
+  if (buf.length >= 24 && buf.subarray(0, 8).equals(Buffer.from('\x89PNG\r\n\x1a\n', 'binary'))) {
+    return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+  }
+  return null;
+}
+
 function main() {
   const files = walk(ROOT);
   const errors = [];
@@ -114,12 +127,40 @@ function main() {
     const ogUrlMatch = html.match(/<meta[^>]*property="og:url"[^>]*content="([^"]+)"/i);
     if (!ogUrlMatch) {
       errors.push(`${rel}: missing <meta property="og:url">`);
-    } else if (!/^https:\/\/goldtickerlive\.com\//.test(ogUrlMatch[1])) {
+    } else if (!ogUrlMatch[1].startsWith(SITE_ORIGIN)) {
       errors.push(`${rel}: og:url does not use https://goldtickerlive.com/ (got ${ogUrlMatch[1]})`);
     } else if (canonUrl && ogUrlMatch[1] !== canonUrl) {
       // og:url and canonical must agree — otherwise social shares and search engines
       // see two different "true" URLs for the page (Track 2.4 of the multi-track plan).
       errors.push(`${rel}: og:url (${ogUrlMatch[1]}) does not match canonical (${canonUrl})`);
+    }
+
+    const htmlLang = (html.match(/<html[^>]*\blang="([^"]+)"/i) || [])[1] || 'en';
+    const expectedLocale = htmlLang.toLowerCase().startsWith('ar') ? 'ar_AE' : 'en_US';
+    const expectedAlternate = expectedLocale === 'ar_AE' ? 'en_US' : 'ar_AE';
+    const ogLocale = (html.match(/<meta[^>]*property="og:locale"[^>]*content="([^"]+)"/i) || [])[1];
+    if (ogLocale !== expectedLocale) {
+      errors.push(`${rel}: og:locale must be ${expectedLocale} (got ${ogLocale || 'none'})`);
+    }
+    const ogLocaleAlternates = Array.from(
+      html.matchAll(/<meta[^>]*property="og:locale:alternate"[^>]*content="([^"]+)"/gi)
+    ).map((m) => m[1]);
+    if (!ogLocaleAlternates.includes(expectedAlternate)) {
+      errors.push(`${rel}: missing og:locale:alternate=${expectedAlternate}`);
+    }
+
+    const ogImage = (html.match(/<meta[^>]*property="og:image"[^>]*content="([^"]+)"/i) || [])[1];
+    if (!ogImage) {
+      errors.push(`${rel}: missing <meta property="og:image">`);
+    } else if (!ogImage.startsWith(SITE_ORIGIN)) {
+      errors.push(`${rel}: og:image must use ${SITE_ORIGIN} (got ${ogImage})`);
+    } else {
+      const dims = localOgImageDimensions(ogImage);
+      if (!dims) {
+        errors.push(`${rel}: og:image does not resolve to a local PNG asset (${ogImage})`);
+      } else if (dims.width !== 1200 || dims.height !== 630) {
+        errors.push(`${rel}: og:image must be 1200x630 (got ${dims.width}x${dims.height})`);
+      }
     }
 
     // Redirect stubs don't require hreflang

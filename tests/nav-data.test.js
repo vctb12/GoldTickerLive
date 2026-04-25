@@ -174,12 +174,26 @@ test('NAV_DATA primary flag membership matches across locales per group', async 
   }
 });
 
-test('NAV_DATA labels are present (langToggle, openMenu, closeMenu, mainNav)', async () => {
+test('NAV_DATA labels are present for shell, search, theme, and bottom nav', async () => {
   const { NAV_DATA } = await loadNav();
   for (const lang of ['en', 'ar']) {
+    assert.ok(NAV_DATA[lang].brandLabel, `${lang}.brandLabel missing`);
     assert.ok(NAV_DATA[lang].langToggle, `${lang}.langToggle missing`);
+    assert.ok(NAV_DATA[lang].toggleLanguage, `${lang}.toggleLanguage missing`);
     assert.ok(NAV_DATA[lang].openMenu, `${lang}.openMenu missing`);
     assert.ok(NAV_DATA[lang].closeMenu, `${lang}.closeMenu missing`);
     assert.ok(NAV_DATA[lang].mainNav, `${lang}.mainNav missing`);
+    assert.ok(NAV_DATA[lang].quickNav, `${lang}.quickNav missing`);
+    assert.ok(NAV_DATA[lang].searchLabel, `${lang}.searchLabel missing`);
+    assert.ok(NAV_DATA[lang].searchPlaceholder, `${lang}.searchPlaceholder missing`);
+    assert.ok(NAV_DATA[lang].recentSearches, `${lang}.recentSearches missing`);
+    assert.ok(NAV_DATA[lang].searchUnavailable, `${lang}.searchUnavailable missing`);
+    assert.ok(NAV_DATA[lang].noSearchResults, `${lang}.noSearchResults missing`);
+    for (const mode of ['auto', 'light', 'dark']) {
+      assert.ok(NAV_DATA[lang].themeLabels?.[mode], `${lang}.themeLabels.${mode} missing`);
+    }
+    for (const key of ['home', 'tracker', 'calculator', 'shops', 'menu']) {
+      assert.ok(NAV_DATA[lang].bottomNav?.[key], `${lang}.bottomNav.${key} missing`);
+    }
   }
 });

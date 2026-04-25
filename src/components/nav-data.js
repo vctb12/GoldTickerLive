@@ -33,6 +33,7 @@
 
 export const NAV_DATA = {
   en: {
+    brandLabel: 'GoldTickerLive home',
     home: { href: '/index.html', label: 'Home', description: 'Live gold overview & country picks' },
     shops: {
       href: '/shops.html',
@@ -362,12 +363,32 @@ export const NAV_DATA = {
       },
     ],
     langToggle: 'العربية',
+    toggleLanguage: 'Toggle language',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
     mainNav: 'Main navigation',
+    quickNav: 'Quick navigation',
+    searchLabel: 'Search',
+    searchPlaceholder: 'Search countries, cities, karats...',
+    recentSearches: 'Recent searches',
+    searchUnavailable: 'Search unavailable',
+    noSearchResults: 'No results found',
+    themeLabels: {
+      auto: 'Theme: auto (click to switch to light)',
+      light: 'Theme: light (click to switch to dark)',
+      dark: 'Theme: dark (click to switch to auto)',
+    },
+    bottomNav: {
+      home: 'Home',
+      tracker: 'Tracker',
+      calculator: 'Calc',
+      shops: 'Shops',
+      menu: 'More',
+    },
   },
 
   ar: {
+    brandLabel: 'الصفحة الرئيسية لـ GoldTickerLive',
     home: { href: '/index.html', label: 'الرئيسية', description: 'نظرة حية على الذهب وأهم الدول' },
     shops: {
       href: '/shops.html',
@@ -696,8 +717,27 @@ export const NAV_DATA = {
       },
     ],
     langToggle: 'English',
+    toggleLanguage: 'تبديل اللغة',
     openMenu: 'فتح القائمة',
     closeMenu: 'إغلاق القائمة',
     mainNav: 'التنقل الرئيسي',
+    quickNav: 'التنقل السريع',
+    searchLabel: 'بحث',
+    searchPlaceholder: 'ابحث عن الدول والمدن والعيارات...',
+    recentSearches: 'عمليات البحث الأخيرة',
+    searchUnavailable: 'البحث غير متاح',
+    noSearchResults: 'لا توجد نتائج',
+    themeLabels: {
+      auto: 'المظهر: تلقائي (اضغط للتبديل إلى الفاتح)',
+      light: 'المظهر: فاتح (اضغط للتبديل إلى الداكن)',
+      dark: 'المظهر: داكن (اضغط للتبديل إلى التلقائي)',
+    },
+    bottomNav: {
+      home: 'الرئيسية',
+      tracker: 'تتبع',
+      calculator: 'حاسبة',
+      shops: 'المحلات',
+      menu: 'القائمة',
+    },
   },
 };
