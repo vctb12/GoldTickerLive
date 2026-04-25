@@ -115,8 +115,9 @@ Pings the site every **30 minutes**. Alerts via Telegram and/or Discord if site 
 ### 8. Python X/Twitter posts — `post_gold.yml`
 
 Runs every 6 minutes while the global gold market is open (Sunday 21:00 UTC through Friday 20:59
-UTC), but posts only when the committed spot price changes. Manual runs use the same staleness,
-market-hours, price-change, and duplicate-content guards; they are not force posts.
+UTC), offset a few minutes after the fetch workflow so it reads freshly committed data. It posts
+only when the committed spot price changes. Manual runs use the same staleness, market-hours,
+price-change, and duplicate-content guards; they are not force posts.
 
 - Script: `scripts/python/post_gold_price.py`
 - Secrets needed: `CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET`,

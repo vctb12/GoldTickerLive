@@ -33,8 +33,8 @@ AED_RATE = 3.6725  # UAE Dirham is pegged to USD
 SITE_URL  = "https://goldtickerlive.com/"
 UAE_TZ    = timezone(timedelta(hours=4))
 TROY_OZ_GRAMS = 31.1034768
-MARKET_OPEN_EVENT_CRON = '0 21 * * 0'
-MARKET_CLOSE_EVENT_CRON = '0 21 * * 5'
+MARKET_OPEN_EVENT_CRON = '3 21 * * 0'
+MARKET_CLOSE_EVENT_CRON = '3 21 * * 5'
 
 # Canonical data file written by scripts/fetch_gold_price.py
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
