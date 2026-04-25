@@ -442,8 +442,9 @@ DONE CRITERIA
 
 PLAN mode intentionally omits `CHANGES`, `VERIFICATION`, and `ROLLBACK` because it performs no
 edits or commands. Put proposed verification and rollback expectations in `DONE CRITERIA` and
-`RISKS / TRADEOFFS`; when switching to BUILD or DEBUG mode, include the §13 `CHANGES`,
-`VERIFICATION`, and `ROLLBACK` sections plus any other applicable §13 sections.
+`RISKS / TRADEOFFS`; when switching to BUILD or DEBUG mode, include the `CHANGES`,
+`VERIFICATION`, and `ROLLBACK` sections from the §13 template, plus any other applicable sections
+from that template.
 
 ---
 
