@@ -17,9 +17,9 @@ Required environment variables (set as GitHub Secrets):
   TWITTER_ACCESS_TOKEN_SECRET – X Developer Portal: Access Token Secret
 
 Workflow cron schedule (.github/workflows/post_gold.yml):
-  - cron: '0 4-18 * * 1-5'   # Hourly 8AM–10PM UAE, Mon–Fri only
-  - cron: '0 21 * * 0'        # Market OPEN  — Sun 9PM UTC = Mon 1AM UAE
-  - cron: '0 21 * * 5'        # Market CLOSE — Fri 9PM UTC = Sat 1AM UAE"""
+  - every 6 minutes while the global gold market is open
+  - posts only when the committed spot price changes
+  - keeps explicit market open/close schedule entries for event tweets"""
 
 import hashlib
 import os
@@ -33,6 +33,8 @@ AED_RATE = 3.6725  # UAE Dirham is pegged to USD
 SITE_URL  = "https://goldtickerlive.com/"
 UAE_TZ    = timezone(timedelta(hours=4))
 TROY_OZ_GRAMS = 31.1034768
+MARKET_OPEN_EVENT_CRON = '3 21 * * 0'
+MARKET_CLOSE_EVENT_CRON = '3 21 * * 5'
 
 # Canonical data file written by scripts/fetch_gold_price.py
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -192,43 +194,73 @@ def check_duplicate_guard(price, prev_price, prev_posted_at_utc, post_type, _now
 
     Returns (should_skip, reason_str).
 
-    Skips only when ALL of:
-      - post_type == 'hourly'
-      - prev_price is not None
-      - round(price, 2) == round(prev_price, 2)
-      - last post was < 55 minutes ago
+    The X bot is price-change driven: scheduled and manual runs should
+    publish only when the committed spot price differs from the previous
+    successful post. Market open/close event copy is still duplicate-guarded
+    so a delayed or repeated scheduled event cannot repost the same price.
 
-    market_open and market_close never skip.
     Pass `_now` (a tz-aware UTC datetime) to pin the clock in tests.
     """
-    if post_type in ('market_open', 'market_close'):
-        return (False, None)
     if prev_price is None:
         return (False, None)
     if round(price, 2) != round(prev_price, 2):
         return (False, None)
-    if prev_posted_at_utc is None:
-        return (False, None)
-    try:
-        ts = prev_posted_at_utc
-        if ts.endswith('Z'):
-            ts = ts[:-1] + '+00:00'
-        last_dt = datetime.fromisoformat(ts)
-        if last_dt.tzinfo is None:
-            last_dt = last_dt.replace(tzinfo=timezone.utc)
-    except Exception:
-        return (False, None)
 
-    now = _now if _now is not None else datetime.now(timezone.utc)
-    minutes_ago = (now - last_dt).total_seconds() / 60
-    if minutes_ago >= 55:
-        return (False, None)
+    age_note = ""
+    try:
+        if prev_posted_at_utc:
+            ts = prev_posted_at_utc
+            if ts.endswith('Z'):
+                ts = ts[:-1] + '+00:00'
+            last_dt = datetime.fromisoformat(ts)
+            if last_dt.tzinfo is None:
+                last_dt = last_dt.replace(tzinfo=timezone.utc)
+            now = _now if _now is not None else datetime.now(timezone.utc)
+            minutes_ago = (now - last_dt).total_seconds() / 60
+            age_note = (
+                f" since {last_dt.strftime('%Y-%m-%dT%H:%M:%SZ')}"
+                f" ({int(minutes_ago)} min ago)"
+            )
+    except Exception:
+        age_note = ""
 
     reason = (
-        f"SKIP: duplicate guard — price ${price:,.2f} unchanged since "
-        f"{last_dt.strftime('%Y-%m-%dT%H:%M:%SZ')} ({int(minutes_ago)} min ago)"
+        f"SKIP: price-change guard — {post_type} price ${price:,.2f}"
+        f" unchanged{age_note}"
     )
     return (True, reason)
+
+
+def is_market_open_time(now=None):
+    """Return True from Sunday 21:00 UTC through Friday 20:59:59 UTC."""
+    if now is None:
+        now = datetime.now(timezone.utc)
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=timezone.utc)
+    now = now.astimezone(timezone.utc)
+    weekday = now.weekday()  # 0=Mon … 6=Sun
+    hour = now.hour
+
+    if weekday in (0, 1, 2, 3):
+        return True
+    if weekday == 4:
+        return hour < 21
+    if weekday == 6:
+        return hour >= 21
+    return False
+
+
+def should_skip_market_closed(post_type, now=None):
+    """Skip regular price posts outside 24/5 market hours."""
+    if post_type in ('market_open', 'market_close'):
+        return (False, None)
+    if is_market_open_time(now):
+        return (False, None)
+    return (
+        True,
+        "SKIP: market closed — regular 6-minute price posts run only "
+        "from Sunday 21:00 UTC through Friday 20:59 UTC",
+    )
 
 
 # ── Step 2: Format the tweet ─────────────────────────────────────────────────
@@ -300,13 +332,23 @@ def _uae_datetime():
 
 
 # ── Detect post type ──────────────────────────────────────────────────────────
-def get_post_type():
-    now     = datetime.now(timezone.utc)
-    weekday = now.weekday()  # 0=Mon … 6=Sun
-    hour    = now.hour
-    if weekday == 6 and hour == 21:
+def get_post_type(_now=None, schedule_cron=None):
+    """Return event type based on the intended schedule, not delayed start time."""
+    if schedule_cron == MARKET_OPEN_EVENT_CRON:
         return 'market_open'
-    if weekday == 4 and hour == 21:
+    if schedule_cron == MARKET_CLOSE_EVENT_CRON:
+        return 'market_close'
+
+    now = _now if _now is not None else datetime.now(timezone.utc)
+    weekday = now.weekday()  # 0=Mon … 6=Sun
+    hour = now.hour
+    minute = now.minute
+
+    # Local/manual fallback: only classify the first few minutes of the event
+    # hour as an event to avoid repeated event tweets on a 6-minute cadence.
+    if weekday == 6 and hour == 21 and minute < 6:
+        return 'market_open'
+    if weekday == 4 and hour == 21 and minute < 6:
         return 'market_close'
     return 'hourly'
 
@@ -483,8 +525,11 @@ def main():
     raw_data = json.loads(GOLD_PRICE_FILE.read_text(encoding="utf-8"))
     source_ts = raw_data.get("source_updated_at_gmt", "n/a") if isinstance(raw_data, dict) else "n/a"
 
-    # 3. Compute post type
-    post_type = get_post_type()
+    # 3. Compute post type from the intended cron schedule when available.
+    # GitHub scheduled workflows can start late, so using github.event.schedule
+    # prevents repeated event tweets during the whole delayed start hour.
+    schedule_cron = os.environ.get('GITHUB_EVENT_SCHEDULE', '').strip() or None
+    post_type = get_post_type(schedule_cron=schedule_cron)
 
     # 4. Print RUN CONTEXT block
     sha = os.environ.get('GITHUB_SHA', '')
@@ -492,6 +537,7 @@ def main():
     print(f"event:        {os.environ.get('GITHUB_EVENT_NAME', 'local')}")
     print(f"sha:          {sha[:7] if sha else 'local'}")
     print(f"actor:        {os.environ.get('GITHUB_ACTOR', 'local')}")
+    print(f"schedule:     {schedule_cron or 'manual/local'}")
     print(f"post_type:    {post_type}")
     print("data_file:    data/gold_price.json")
     print(f"source_ts:    {source_ts}")
@@ -508,8 +554,18 @@ def main():
     print("📡 Reading gold price from data/gold_price.json (goldpricez.com)…")
     data = get_gold_price()
     print(f"   Spot: ${data['price']:,.2f}/oz")
+    if data.get('prev_price') is not None:
+        print(f"   Previous post: ${data['prev_price']:,.2f}/oz at {data.get('prev_posted_at_utc') or 'n/a'}")
+    else:
+        print("   Previous post: none")
 
-    # 7. Duplicate price+time guard
+    # 7. 24/5 market-hours guard for regular price posts
+    skip, reason = should_skip_market_closed(post_type)
+    if skip:
+        print(reason)
+        sys.exit(0)
+
+    # 8. Price-change guard
     skip, reason = check_duplicate_guard(
         data['price'],
         data['prev_price'],
@@ -520,44 +576,32 @@ def main():
         print(reason)
         sys.exit(0)
 
-    # 8. Format tweet
+    # 9. Format tweet
     tweet = format_tweet(data, post_type)
     print("📝 Generated tweet:")
     print(tweet)
     print(f"   ({len(tweet)} characters)")
 
-    # 9. Content-hash guard
+    # 10. Content-hash guard
     tweet_hash = compute_content_hash(tweet)
     prev_hash = data.get('prev_content_hash')
     if (
         prev_hash is not None
         and tweet_hash == prev_hash
-        and post_type == 'hourly'
         and data['prev_posted_at_utc'] is not None
     ):
-        try:
-            ts = data['prev_posted_at_utc']
-            if ts.endswith('Z'):
-                ts = ts[:-1] + '+00:00'
-            last_dt = datetime.fromisoformat(ts)
-            if last_dt.tzinfo is None:
-                last_dt = last_dt.replace(tzinfo=timezone.utc)
-            minutes_ago = (datetime.now(timezone.utc) - last_dt).total_seconds() / 60
-            if minutes_ago < 55:
-                print(
-                    f"SKIP: content-hash guard — tweet content identical to last post"
-                    f" (hash {tweet_hash}, {int(minutes_ago)} min ago)"
-                )
-                sys.exit(0)
-        except Exception:
-            pass  # parse failure → do not skip
+        print(
+            f"SKIP: content-hash guard — tweet content identical to last post"
+            f" (hash {tweet_hash})"
+        )
+        sys.exit(0)
 
-    # 10. Length guard (enforced inside format_hourly_tweet; no extra check needed here)
+    # 11. Length guard (enforced inside format_hourly_tweet; no extra check needed here)
 
-    # 11. Post tweet
+    # 12. Post tweet
     post_tweet(tweet, post_type=post_type)
 
-    # 12. Save state (only reached on successful post)
+    # 13. Save state (only reached on successful post)
     _save_last_price(data["price"], content_hash=tweet_hash)
 
 

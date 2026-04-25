@@ -12,6 +12,7 @@ on:
     paths-ignore:
       - '.github/workflows/setup-mcp.yml'
       - '.github/copilot/**'
+      - 'data/last_gold_price.json'
       - 'docs/**'
       - '*.md'
       - 'scripts/python/**'

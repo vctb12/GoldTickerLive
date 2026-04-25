@@ -44,7 +44,7 @@ commit derived data; others only read and post to external APIs.
 | `health_check.yml` | daily | smoke-tests public URLs + upstream APIs |
 | `uptime-monitor.yml` | every 30 min | pings live site, reports failures |
 | `spike_alert.yml` | every 15 min | detects price spikes, posts alerts |
-| `post_gold.yml` | hourly-ish | posts gold price to X (content bot) |
+| `post_gold.yml` | every 6 min while markets are open | posts changed gold prices to X (content bot) |
 | `daily-newsletter.yml` | daily | generates + dispatches daily digest |
 | `weekly-newsletter.yml` | weekly | generates + dispatches weekly digest |
 | `sync-db-to-git.yml` | `repository_dispatch` | syncs admin DB to `data/shops.json` |
