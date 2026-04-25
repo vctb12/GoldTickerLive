@@ -85,7 +85,11 @@ export function el(tag, attrs, children) {
       else if (key === 'dataset' && typeof value === 'object') {
         for (const [dk, dv] of Object.entries(value)) node.dataset[dk] = String(dv);
       } else if (key === 'style' && typeof value === 'object') {
-        for (const [sk, sv] of Object.entries(value)) node.style[sk] = String(sv);
+        for (const [sk, sv] of Object.entries(value)) {
+          if (sv === null || sv === undefined) continue;
+          if (sk.startsWith('--')) node.style.setProperty(sk, String(sv));
+          else node.style[sk] = String(sv);
+        }
       } else if (key.startsWith('on') && typeof value === 'function') {
         node.addEventListener(key.slice(2).toLowerCase(), value);
       } else if (value === true) {

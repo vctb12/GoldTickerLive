@@ -72,3 +72,45 @@ test('safeTel() strips non-phone characters', async () => {
   assert.equal(safeTel('tel:+97150'), '+97150');
   assert.equal(safeTel(null), '');
 });
+
+test('el() applies normal styles and CSS custom properties', async () => {
+  const originalDocument = global.document;
+  const originalNode = global.Node;
+  const customProperties = {};
+  const style = {
+    setProperty(name, value) {
+      customProperties[name] = value;
+    },
+  };
+
+  global.Node = class Node {};
+  global.document = {
+    createElement(tag) {
+      return {
+        tag,
+        style,
+        setAttribute() {},
+        appendChild() {},
+      };
+    },
+    createTextNode(value) {
+      return String(value);
+    },
+  };
+
+  try {
+    const { el } = await load();
+    const node = el('span', {
+      style: {
+        color: 'var(--color-text)',
+        '--confidence-color': 'var(--color-success)',
+      },
+    });
+
+    assert.equal(node.style.color, 'var(--color-text)');
+    assert.equal(customProperties['--confidence-color'], 'var(--color-success)');
+  } finally {
+    global.document = originalDocument;
+    global.Node = originalNode;
+  }
+});
