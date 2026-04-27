@@ -1,0 +1,107 @@
+/**
+ * admin/shared/admin-data.js
+ * Small, defensive data helpers for the static admin panel.
+ */
+
+export const ADMIN_DATA_CONSTANTS = {
+  API_GOLD_URL: '/data/gold_price.json',
+  API_FX_URL: 'https://open.er-api.com/v6/latest/USD',
+  API_TIMEOUT_MS: 8000,
+};
+
+export function readJsonCache(key, fallback = null) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+export function writeJsonCache(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function readLegacyAdminToken() {
+  try {
+    return localStorage.getItem('gp_admin_token');
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchJsonWithTimeout(
+  url,
+  options = {},
+  timeoutMs = ADMIN_DATA_CONSTANTS.API_TIMEOUT_MS
+) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { ...options, signal: controller.signal });
+    const data = await response.json().catch(() => null);
+    return { ok: response.ok, status: response.status, data };
+  } catch (error) {
+    return { ok: false, status: 'Error', error };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export async function fetchServerAdminStats() {
+  const token = readLegacyAdminToken();
+  if (!token) {
+    return { ok: false, skipped: true, reason: 'No legacy API token available' };
+  }
+
+  const result = await fetchJsonWithTimeout('/api/admin/stats', {
+    cache: 'no-store',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!result.ok || !result.data?.success) {
+    return {
+      ok: false,
+      status: result.status,
+      reason: result.data?.message || 'Server stats unavailable',
+    };
+  }
+
+  return { ok: true, stats: result.data.stats };
+}
+
+export async function countSupabaseRows(sb, table, queryBuilder) {
+  if (!sb) return { ok: false, count: null, reason: 'Supabase not connected' };
+  try {
+    let query = sb.from(table).select('*', { count: 'exact', head: true });
+    if (queryBuilder) query = queryBuilder(query);
+    const { count, error } = await query;
+    if (error) return { ok: false, count: null, reason: error.message || 'Query failed' };
+    return { ok: true, count: count ?? 0 };
+  } catch (error) {
+    return { ok: false, count: null, reason: error?.message || 'Query failed' };
+  }
+}
+
+export async function fetchSupabaseRows(sb, table, queryBuilder) {
+  if (!sb) return { ok: false, rows: [], reason: 'Supabase not connected' };
+  try {
+    let query = sb.from(table).select('*');
+    if (queryBuilder) query = queryBuilder(query);
+    const { data, error } = await query;
+    if (error) return { ok: false, rows: [], reason: error.message || 'Query failed' };
+    return { ok: true, rows: Array.isArray(data) ? data : [] };
+  } catch (error) {
+    return { ok: false, rows: [], reason: error?.message || 'Query failed' };
+  }
+}
+
+export function formatCount(value) {
+  if (value == null || Number.isNaN(Number(value))) return '—';
+  return Number(value).toLocaleString('en-US');
+}

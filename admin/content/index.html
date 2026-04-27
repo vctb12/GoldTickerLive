@@ -1285,7 +1285,7 @@
         return readCachedPosts();
       }
 
-      /** Batch-save all posts (for sample data init). */
+      /** Batch-save all posts. Kept for imports/migrations; init never creates demo posts. */
       async function savePosts(posts) {
         const sb = getSupabase();
         if (sb) {
@@ -1445,7 +1445,7 @@
           .replace(/\*(.+?)\*/g, '<em>$1</em>');
       }
 
-      // ── Sample posts ───────────────────────────────────────
+      // ── Legacy sample builder (not used by init; retained only for manual local testing) ─────
       function buildSamplePosts() {
         const now = new Date();
         const twoWeeksAgo = new Date(now);
@@ -1536,7 +1536,11 @@
         });
 
         if (filtered.length === 0) {
-          list.innerHTML = `<div class="posts-empty">${allPosts.length === 0 ? '📝 No posts yet.' : 'No posts match your search.'}</div>`;
+          list.innerHTML = `<div class="posts-empty">${
+            allPosts.length === 0
+              ? '📝 No real posts yet. Click “New Post”, write the article, then save it as published to fill this panel and update the website.'
+              : 'No posts match your search.'
+          }</div>`;
           return;
         }
 
@@ -1893,12 +1897,6 @@
       // ── Init ───────────────────────────────────────────────
       async function init() {
         allPosts = await loadPosts();
-
-        if (allPosts.length === 0) {
-          const samples = buildSamplePosts();
-          await savePosts(samples);
-          allPosts = await loadPosts();
-        }
 
         renderPostsList();
 
