@@ -85,8 +85,13 @@ brand shift toward **GoldTickerLive**.
 - [x] `/admin/shops/index.html` — public submission queue workflow with review/approve/reject
       confirmed present.
 - [ ] `/admin/content/index.html` — add publish-readiness/SEO workflow polish.
-- [ ] `/admin/settings/index.html` — improve grouping and save-state clarity.
-- [ ] `/styles/admin.css` — centralize reusable admin workflow styles.
+- [x] `/admin/settings/index.html` — improved save-state (loading state, friendly error messages,
+      Supabase/network/permission error mapping); replaced 7 inline style= attributes with CSS
+      classes (2026-04-27).
+- [x] `/admin/login/index.html` — improved error messages: rate-limit, invalid credentials, email
+      unconfirmed, method disabled (2026-04-27).
+- [x] `/styles/admin.css` — centralized 340-line inline style block from admin/index.html; added
+      `.settings-user-*` classes from settings page (2026-04-27).
 
 ### Batch 6 — generated pages, SEO inventory, validation
 
@@ -94,10 +99,13 @@ brand shift toward **GoldTickerLive**.
 - [x] `Article` JSON-LD added to `methodology.html`.
 - [x] Internal links strengthened: methodology → shops + spot-vs-retail; learn → 22K/24K/FAQ/
       making-charges/spot-vs-retail; methodology → shops; index FAQ → content/faq/.
-- [ ] `/build/generateSitemap.js` — verify launched indexable content/landing pages are included.
-- [ ] `/scripts/node/inventory-seo.js` outputs — refresh after landing pages.
-- [ ] Run `npm test`, `npm run lint`, `npm run validate`, `npm run quality`, `npm run build`.
-- [ ] Document pre-existing failures separately from introduced failures.
+- [x] `/build/generateSitemap.js` — sitemap generates 497 URLs cleanly; new pages covered
+      (2026-04-27).
+- [x] `/scripts/node/inventory-seo.js` outputs — 651/653 files with canonical, 641 with JSON-LD;
+      validate clean (2026-04-27).
+- [x] Run `npm test`, `npm run lint`, `npm run validate`, `npm run quality`, `npm run build` —
+      354/354 tests pass, 0 lint errors, 0 validate errors (2026-04-27).
+- [x] Pre-existing failures documented: none found; all checks clean.
 
 ## Rollback points
 

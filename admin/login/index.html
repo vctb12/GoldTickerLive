@@ -746,7 +746,31 @@
       }
 
       function showError(msg) {
-        errorEl.textContent = msg;
+        let friendly = msg;
+        if (
+          msg?.toLowerCase().includes('rate limit') ||
+          msg?.toLowerCase().includes('too many') ||
+          msg?.toLowerCase().includes('429')
+        ) {
+          friendly = 'Too many sign-in attempts. Please wait a minute and try again.';
+        } else if (
+          msg?.toLowerCase().includes('invalid login') ||
+          msg?.toLowerCase().includes('invalid credentials') ||
+          msg?.toLowerCase().includes('wrong password') ||
+          msg?.toLowerCase().includes('incorrect') ||
+          msg?.toLowerCase().includes('user not found')
+        ) {
+          friendly = 'Incorrect email or password. Please check your details and try again.';
+        } else if (msg?.toLowerCase().includes('email not confirmed')) {
+          friendly = 'Your email is not confirmed. Check your inbox for a verification link.';
+        } else if (
+          msg?.toLowerCase().includes('disabled') ||
+          msg?.toLowerCase().includes('not allowed') ||
+          msg?.toLowerCase().includes('not enabled')
+        ) {
+          friendly = 'This sign-in method is not enabled. Try a different option.';
+        }
+        errorEl.textContent = friendly;
         errorEl.classList.add('visible');
         deniedEl.classList.remove('visible');
         offlineEl.classList.remove('visible');

@@ -238,10 +238,11 @@ export const TRANSLATIONS = {
     'home.toolInvestCta': 'Read Guide →',
     // Trust banner copy is split around fixed safe links in index.html:
     // copy → goldpricez.com link → source tail → methodology link.
-    'home.trustBannerTitle': 'About Our Data',
+    'home.trustBannerTitle': 'About Our Prices',
     'home.trustBannerCopy':
-      'These are spot-linked reference estimates, not final retail jewelry prices. Retail quotes usually add making charges, dealer/shop margins, and local taxes (where applicable). Freshness labels use one shared vocabulary sitewide: Live, Delayed, Cached/Fallback, Estimated, and Historical baseline. Source:',
-    'home.trustBannerSourceTail': 'XAU/USD plus FX conversion rules.',
+      'These are spot-linked reference estimates, not final retail or jewelry prices. Retail quotes usually include making charges, dealer margins, and local taxes. Freshness labels follow one vocabulary sitewide: Live, Delayed, Cached/Fallback, Estimated, and Historical baseline. Price source:',
+    'home.trustBannerSourceTail':
+      'XAU/USD · live FX from ExchangeRate-API · AED at fixed peg 3.6725.',
     'home.trustBannerMethodology': 'Full methodology →',
     'home.countriesTitle': 'Browse by Country',
     'home.countriesSub': 'Dedicated pages with local context for every major market',
@@ -506,10 +507,11 @@ export const TRANSLATIONS = {
     'home.toolInvestCta': 'اقرأ الدليل ←',
     // Trust banner copy is split around fixed safe links in index.html:
     // copy → goldpricez.com link → source tail → methodology link.
-    'home.trustBannerTitle': 'حول بياناتنا',
+    'home.trustBannerTitle': 'حول أسعارنا',
     'home.trustBannerCopy':
-      'هذه تقديرات مرجعية مرتبطة بالسعر الفوري، وليست أسعار تجزئة نهائية للمجوهرات. عادةً تضيف عروض التجزئة المصنعية وهوامش المتاجر والضرائب المحلية عند تطبيقها. تستخدم تسميات الحداثة مفردات موحدة: مباشر، متأخر، مخزن/احتياطي، تقديري، وخط أساس تاريخي. المصدر:',
-    'home.trustBannerSourceTail': 'لـ XAU/USD وقواعد تحويل العملات.',
+      'هذه تقديرات مرجعية مرتبطة بالسعر الفوري، وليست أسعار تجزئة نهائية للمجوهرات. عادةً تشمل أسعار التجزئة المصنعية وهوامش التاجر والضرائب المحلية. تتبع تسميات الحداثة مفردات موحدة: مباشر، متأخر، مخزن/احتياطي، تقديري، وخط أساس تاريخي. مصدر السعر:',
+    'home.trustBannerSourceTail':
+      'XAU/USD · أسعار العملات من ExchangeRate-API · الدرهم بسعر ثابت 3.6725.',
     'home.trustBannerMethodology': 'المنهجية الكاملة ←',
     'home.countriesTitle': 'تصفح حسب البلد',
     'home.countriesSub': 'صفحات مخصصة بسياق محلي لكل سوق رئيسية',

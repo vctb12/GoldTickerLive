@@ -1305,6 +1305,16 @@ body.tracker-pro-page {
   text-decoration: underline;
 }
 
+.tracker-method-footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--tp-border);
+}
+
 .tracker-empty {
   padding: 1rem;
   border-radius: var(--radius-lg);
@@ -1453,6 +1463,24 @@ body.tracker-pro-page {
 
 .tracker-inline-link:hover {
   text-decoration: underline;
+}
+
+.tracker-help-text {
+  font-size: 0.8rem;
+  color: var(--tp-text-muted);
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.tracker-browser-only-note {
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  border-radius: var(--tp-radius-sm);
+  color: var(--color-warning-text);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 0.75rem;
 }
 
 .tracker-field input[type='date']::-webkit-calendar-picker-indicator {

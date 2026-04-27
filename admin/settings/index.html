@@ -316,36 +316,26 @@
           <div class="header-actions"></div>
         </header>
 
-        <main class="content-area" style="padding-bottom: 80px" id="settings-main">
+        <main class="content-area settings-content-area" id="settings-main">
           <!-- ── Admin Account Info ──────────────────────────── -->
           <div class="card settings-card" id="users-section">
             <div class="card-header">
               <h2 class="card-title">Admin Account</h2>
             </div>
             <div class="card-body">
-              <div
-                id="admin-user-info"
-                style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap"
-              >
-                <div style="flex: 1; min-width: 200px">
-                  <div style="font-size: 0.8125rem; color: var(--text-dim); margin-bottom: 4px">
-                    Logged in as
-                  </div>
-                  <div id="settings-user-email" style="font-size: 1rem; font-weight: 600">
-                    Loading…
-                  </div>
-                  <div
-                    id="settings-user-provider"
-                    style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 2px"
-                  >
+              <div id="admin-user-info" class="settings-user-info">
+                <div class="settings-user-details">
+                  <div class="settings-user-label">Logged in as</div>
+                  <div id="settings-user-email" class="settings-user-email">Loading…</div>
+                  <div id="settings-user-provider" class="settings-user-provider">
                     GitHub OAuth via Supabase
                   </div>
                 </div>
                 <div>
-                  <span class="badge badge-warning" style="font-size: 0.8125rem">admin</span>
+                  <span class="badge badge-warning settings-admin-badge">admin</span>
                 </div>
               </div>
-              <div class="notice-box" style="margin-top: 16px">
+              <div class="notice-box settings-notice">
                 ℹ Admin access is controlled by the <code>ALLOWED_EMAIL</code> in
                 <code>admin/supabase-config.js</code>. Only the configured email can access this
                 panel. To change the admin email, edit that file and push to <code>main</code>. User
@@ -1136,12 +1126,33 @@
             showToast(err, 'error');
             return;
           }
+          const saveBtn = document.getElementById('save-btn');
+          saveBtn.disabled = true;
+          saveBtn.setAttribute('aria-busy', 'true');
+          saveBtn.textContent = '⏳ Saving…';
           try {
             await saveSettings(s);
             updateLastSaved();
-            showToast('Settings saved to Supabase.', 'success');
+            showToast('Settings saved successfully.', 'success');
           } catch (e) {
-            showToast('Save error: ' + e.message, 'error');
+            const msg = e.message || '';
+            let friendly;
+            if (msg.includes('Supabase client not available')) {
+              friendly = 'Saved locally — Supabase unavailable. Settings will sync when reconnected.';
+              showToast(friendly, 'warning');
+            } else if (msg.toLowerCase().includes('network') || msg.toLowerCase().includes('fetch')) {
+              friendly = 'Network error. Check your connection and try again.';
+              showToast(friendly, 'error');
+            } else if (msg.toLowerCase().includes('permission') || msg.toLowerCase().includes('rls')) {
+              friendly = 'Permission denied. Ensure you are signed in as the admin account.';
+              showToast(friendly, 'error');
+            } else {
+              showToast('Save failed: ' + msg, 'error');
+            }
+          } finally {
+            saveBtn.disabled = false;
+            saveBtn.removeAttribute('aria-busy');
+            saveBtn.textContent = '💾 Save Settings';
           }
         });
 

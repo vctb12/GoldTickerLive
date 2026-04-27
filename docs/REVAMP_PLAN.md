@@ -38,9 +38,16 @@ GoldTickerLive brand consistency.
       `methodology.html`; CSS nav duplicate block removed; dark-mode nav icon hover fixed; spot-bar
       nav-hidden offset corrected; internal links strengthened across learn/methodology/calculator/
       shops/404.
-- [ ] Homepage/tracker/calculator/shops visible UX pass.
-- [ ] Admin command-center and shop-submission review workflow pass.
-- [ ] Sitemap/SEO inventory refresh and full validation.
+- [x] Homepage/tracker/calculator/shops visible UX pass (partial, 2026-04-27): trust banner copy,
+      social section inline-style removal, trust-banner aria-labelledby, tracker method mode
+      deep-links + karat card, tracker alerts browser-only disclaimer, admin settings + login page
+      UX polish.
+- [x] Admin command-center and shop-submission review workflow pass (partial, 2026-04-27):
+      admin/index.html 340-line inline `<style>` migrated to `styles/admin.css`; settings inline
+      styles replaced with CSS classes; login error messages improved; settings save button state
+      management improved.
+- [x] Sitemap/SEO inventory refresh and full validation (2026-04-27): `npm run validate` clean, 497
+      URLs in sitemap, 0 errors.
 
 | §      | Owns                                                       | Absorbed from                                                     |
 | ------ | ---------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -315,12 +322,12 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
       (doc→code — the shipped tight 17–20 px body scale is intentional for dense price-data UI). -
       [x] **Slice 2a (typography — utility classes).** Added `.h1`…`.h6` utility classes plus a
       `.display-1` opt-in class in `styles/global.css`. Purely additive — no base `h1..h6` element
-      rules, no existing selectors touched. New markup should prefer these classes. - [ ] **Slice 2b
-      (typography — base element baseline).** Add base `h1..h6` element rules that match the class
-      scale, scoped to resets/layouts where no page override exists. Must be preceded by a per-page
-      audit because the ~40 bespoke selectors already dominate specificity. - [ ] **Slice 3
-      (cleanup).** Migrate per-page hand-sized heading selectors to the canonical classes, one page
-      per commit.
+      rules, no existing selectors touched. New markup should prefer these classes. - [x] **Slice 2b
+      (typography — base element baseline, 2026-04-27).** Added `h1`–`h6` element rules to
+      `styles/global.css` as low-specificity fallbacks. The ~40 bespoke page-level selectors
+      (`.tracker-hero-copy h1`, etc.) continue to dominate by specificity — no regression. - [ ]
+      **Slice 3 (cleanup).** Migrate per-page hand-sized heading selectors to the canonical classes,
+      one page per commit.
 - [x] **Focus ring token audit.** Canonical `:focus-visible` baseline in `styles/global.css` uses
       `--focus-ring-width` / `--focus-ring-color` / `--focus-ring-offset`. Page-level outline
       overrides normalized to the same tokens: `.calc-tab`, `.tracker-mode-tab`,

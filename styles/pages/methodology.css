@@ -231,7 +231,7 @@ code.method-formula {
   font-size: 0.92rem;
   color: var(--color-gold-light, #e8c040);
   white-space: pre-wrap;
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 /* Formula breakdown list */

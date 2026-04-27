@@ -1583,3 +1583,20 @@
     gap: 1.5rem;
   }
 }
+
+/* Social follow section */
+.home-social-wrap {
+  text-align: center;
+}
+
+.home-social-text {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.home-social-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
