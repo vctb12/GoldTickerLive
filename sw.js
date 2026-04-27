@@ -139,6 +139,12 @@ self.addEventListener('fetch', (event) => {
   // Bypass chrome-extension and non-http(s) schemes
   if (!url.protocol.startsWith('http')) return;
 
+  // Never cache admin or API routes — always go straight to the network.
+  if (url.pathname.startsWith('/admin/') || url.pathname.startsWith('/api/')) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
   // Network-first for navigation (HTML pages) — ensures fresh content
   if (request.mode === 'navigate') {
     event.respondWith(networkFirstWithFallback(request));

@@ -482,8 +482,13 @@ body.tracker-pro-page {
 }
 
 @keyframes tracker-skeleton-flash {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -632,7 +637,7 @@ body.tracker-pro-page {
 .tracker-chip {
   border: 1px solid var(--tp-border);
   background: var(--color-white);
-  min-height: 38px;
+  min-height: 44px;
   padding: 0.35rem 0.8rem;
   border-radius: var(--radius-pill);
   font-size: 0.78rem;
@@ -727,7 +732,7 @@ body.tracker-pro-page {
 .tracker-wire-refresh {
   border: 1px solid var(--tp-border);
   background: var(--color-white);
-  min-height: 38px;
+  min-height: 44px;
   padding: 0.35rem 0.75rem;
   border-radius: var(--radius-pill);
   font-size: 0.78rem;
@@ -1709,7 +1714,7 @@ body.tracker-pro-page {
   .tracker-market-links a,
   .tracker-market-links button,
   .tracker-icon-btn {
-    min-height: 36px;
+    min-height: 44px;
     font-size: 0.74rem;
   }
 
@@ -2255,8 +2260,14 @@ body.tracker-workspace-basic .tracker-modes {
 }
 
 @keyframes welcome-chip-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

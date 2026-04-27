@@ -144,6 +144,7 @@ export const TRANSLATIONS = {
     'alerts.save': 'Save Alert',
     'alerts.cancel': 'Cancel',
     'alerts.empty': 'No alerts set yet. Add one above to get notified.',
+    'alerts.browserOnly': "Alerts are browser-only. Close this tab and you won't receive them.",
 
     /* ── Homepage (home.js) ── */
     'home.heroLive': 'Live · Updated every 90s',
@@ -412,6 +413,8 @@ export const TRANSLATIONS = {
     'alerts.save': 'حفظ التنبيه',
     'alerts.cancel': 'إلغاء',
     'alerts.empty': 'لا توجد تنبيهات بعد. أضف تنبيهًا أعلاه لتلقّي الإشعارات.',
+    'alerts.browserOnly':
+      'التنبيهات تعمل في المتصفح فقط. إذا أغلقت هذا التبويب، لن تصلك الإشعارات.',
 
     /* ── Homepage (home.js) ── */
     'home.heroLive': 'مباشر · تحديث كل 90 ثانية',

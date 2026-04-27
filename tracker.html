@@ -83,6 +83,7 @@
   
   
   
+  
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -191,6 +192,7 @@
             <p id="tp-hero-copy" class="tracker-hero-description">
               Compare 24+ markets, 7 karats, and key currencies with visible freshness, source, and
               retail-price context.
+              <a href="methodology.html#spot-vs-retail" class="tracker-inline-link">How we calculate prices →</a>
             </p>
 
             <!-- Key metrics — rendered by JS; skeletons shown until first render -->
@@ -749,7 +751,8 @@
 
             <article class="tracker-subpanel">
               <div class="tracker-subpanel-head"><h3>Saved alerts</h3></div>
-              <div class="tracker-stack-list" id="tp-alert-list"></div>
+              <p class="tracker-help-text" style="font-size:0.8rem;margin-bottom:0.5rem;" id="tp-alert-browser-note">Alerts are browser-only. Close this tab and you won't receive them.</p>
+              <div class="tracker-stack-list" id="tp-alert-list" aria-live="polite"></div>
             </article>
 
             <article class="tracker-subpanel">
@@ -1170,6 +1173,7 @@
                 retail prices can differ due to making charges, premiums, and taxes.
               </p>
               <a href="methodology.html#not-included" class="tracker-inline-link">Read full site methodology →</a>
+              · <a href="methodology.html#spot-vs-retail" class="tracker-inline-link">Spot vs retail explained →</a>
             </article>
 
             <article class="tracker-method-card">

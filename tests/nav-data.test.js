@@ -202,5 +202,10 @@ test('NAV_DATA labels are present (langToggle, openMenu, closeMenu, mainNav)', a
     assert.ok(NAV_DATA[lang].openMenu, `${lang}.openMenu missing`);
     assert.ok(NAV_DATA[lang].closeMenu, `${lang}.closeMenu missing`);
     assert.ok(NAV_DATA[lang].mainNav, `${lang}.mainNav missing`);
+    assert.ok(NAV_DATA[lang].brandLabel, `${lang}.brandLabel missing`);
+    assert.ok(NAV_DATA[lang].recentSearches, `${lang}.recentSearches missing`);
+    assert.ok(NAV_DATA[lang].themeLabels?.auto, `${lang}.themeLabels.auto missing`);
+    assert.ok(NAV_DATA[lang].themeLabels?.light, `${lang}.themeLabels.light missing`);
+    assert.ok(NAV_DATA[lang].themeLabels?.dark, `${lang}.themeLabels.dark missing`);
   }
 });

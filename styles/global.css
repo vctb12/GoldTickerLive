@@ -708,6 +708,7 @@ body.has-spot-bar .site-nav {
   position: absolute;
   top: -48px;
   left: 8px;
+  inset-inline-start: 8px;
   z-index: 1000;
   padding: 10px 16px;
   background: #111;
@@ -3545,33 +3546,6 @@ details[open] > .faq-q::after {
   border-bottom-color: var(--border-subtle);
 }
 
-.nav-dropdown-item {
-  display: flex;
-  align-items: center;
-  padding: 0.55rem 1rem;
-  min-height: 40px;
-  border-radius: var(--radius-sm);
-  font-size: 0.88rem;
-  color: var(--color-text);
-  text-decoration: none;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease;
-  white-space: nowrap;
-}
-
-.nav-dropdown-item:hover {
-  background: var(--color-gold-tint);
-  color: var(--color-gold-deep);
-  text-decoration: none;
-}
-
-.nav-dropdown-item.nav-dropdown-item--active {
-  background: var(--color-gold-bg);
-  color: var(--color-gold-dark);
-  font-weight: var(--weight-semibold);
-}
-
 .nav-dropdown-btn--active {
   color: var(--color-gold-dark);
   background: var(--color-gold-tint);
@@ -5971,6 +5945,7 @@ body > * {
   align-items: flex-start;
   gap: 0.65rem;
   padding: 0.55rem 0.75rem;
+  min-height: 44px;
   border-radius: var(--radius-sm, 6px);
   text-decoration: none;
   color: var(--color-text, #1e293b);

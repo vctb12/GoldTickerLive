@@ -30,11 +30,6 @@ const RAW_NAV_DATA = {
       description: 'Find gold shops and market areas',
       primary: true,
     },
-    invest: {
-      href: '/invest.html',
-      label: 'Invest',
-      description: 'Gold investing guide',
-    },
     primaryLinks: [
       {
         key: 'live-prices',
@@ -484,6 +479,13 @@ const RAW_NAV_DATA = {
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
     mainNav: 'Main navigation',
+    brandLabel: 'GoldTickerLive Home',
+    recentSearches: 'Recent searches',
+    themeLabels: {
+      auto: 'Theme: auto (click to switch to light)',
+      light: 'Theme: light (click to switch to dark)',
+      dark: 'Theme: dark (click to switch to auto)',
+    },
   },
 
   ar: {
@@ -493,11 +495,6 @@ const RAW_NAV_DATA = {
       label: 'المحلات',
       description: 'ابحث عن محلات ومناطق أسواق الذهب',
       primary: true,
-    },
-    invest: {
-      href: '/invest.html',
-      label: 'الاستثمار',
-      description: 'دليل الاستثمار في الذهب',
     },
     primaryLinks: [
       {
@@ -948,6 +945,13 @@ const RAW_NAV_DATA = {
     openMenu: 'فتح القائمة',
     closeMenu: 'إغلاق القائمة',
     mainNav: 'التنقل الرئيسي',
+    brandLabel: 'GoldTickerLive الرئيسية',
+    recentSearches: 'عمليات البحث الأخيرة',
+    themeLabels: {
+      auto: 'المظهر: تلقائي (اضغط للتبديل إلى الفاتح)',
+      light: 'المظهر: فاتح (اضغط للتبديل إلى الداكن)',
+      dark: 'المظهر: داكن (اضغط للتبديل إلى التلقائي)',
+    },
   },
 };
 
