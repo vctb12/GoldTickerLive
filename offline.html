@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <script src="assets/analytics.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>You're Offline — GoldPrices</title>
+    <title>Offline Gold Prices — GoldTickerLive</title>
     <meta name="robots" content="noindex" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="styles/global.css" />
@@ -104,19 +104,20 @@
   <body>
     <div class="offline-card">
       <div class="offline-icon">📡</div>
-      <h1 id="offline-title">You're Offline</h1>
+      <h1 id="offline-title">Gold prices are offline</h1>
       <p id="offline-body">
-        No internet connection detected. Here are the last known gold prices from your cache:
+        No internet connection detected. If cached values are available, they are shown below as
+        last-known reference prices, not live retail quotes.
       </p>
 
       <div id="cached-section" class="cached-price-section" style="display: none">
-        <div class="cached-label" id="cached-label">Last known prices (cached)</div>
+        <div class="cached-label" id="cached-label">Last known reference prices (cached)</div>
         <div class="cached-rows" id="cached-rows"></div>
         <div class="cached-timestamp" id="cached-ts"></div>
       </div>
 
       <p class="no-cache-msg" id="no-cache-msg" style="display: none">
-        No cached prices available yet. Visit the site while online first.
+        No cached prices are available yet. Visit GoldTickerLive while online first.
       </p>
 
       <button class="btn-retry" onclick="window.location.reload()">🔄 Try Again</button>

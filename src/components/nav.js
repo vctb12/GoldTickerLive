@@ -166,6 +166,38 @@ function buildDropdown(group, depth) {
     </div>`;
 }
 
+function buildPrimaryLink(item, depth) {
+  const href = resolveHref(item.href, depth);
+  const isActive = isPageMatch(href);
+  const classes = ['nav-link'];
+  if (item.key === 'shops') classes.push('nav-link--shops');
+  if (isActive) classes.push('nav-link--active');
+  const ariaCurrent = isActive ? ' aria-current="page"' : '';
+  return `<a href="${href}"
+     class="${classes.join(' ')}"
+     role="listitem"
+     data-nav-primary="${escapeHtml(item.key || item.label)}"
+     ${ariaCurrent}
+  >${escapeHtml(item.label)}</a>`;
+}
+
+function buildDrawerPrimaryLink(item, depth) {
+  const href = resolveHref(item.href, depth);
+  const isActive = isPageMatch(href);
+  const classes = ['nav-drawer-link'];
+  if (isActive) classes.push('nav-link--active');
+  if (item.primary) classes.push('nav-drawer-link--primary');
+  const ariaCurrent = isActive ? ' aria-current="page"' : '';
+  const iconHtml = item.icon
+    ? `<span class="nav-drawer-link-icon" aria-hidden="true">${escapeHtml(item.icon)}</span>`
+    : '';
+  return `<a href="${href}"
+     class="${classes.join(' ')}"
+     data-nav-primary="${escapeHtml(item.key || item.label)}"
+     ${ariaCurrent}
+  >${iconHtml}<span class="nav-drawer-link-label">${escapeHtml(item.label)}</span></a>`;
+}
+
 function buildDrawerGroup(group, depth) {
   const itemsHtml = group.items
     .map((item) => {
@@ -212,11 +244,17 @@ export function injectNav(lang = 'en', depth = 0) {
   const data = NAV_DATA[lang] || NAV_DATA.en;
   const isRtl = lang === 'ar';
   const homeHref = resolveHref(data.home.href, depth);
-  const homeActive = isPageMatch(homeHref);
-  const shopsHref = resolveHref(data.shops.href, depth);
-  const shopsActive = isPageMatch(shopsHref);
+  const primaryLinks = Array.isArray(data.primaryLinks)
+    ? data.primaryLinks
+    : [data.home, data.shops].filter(Boolean);
 
+  const desktopPrimaryLinksHtml = primaryLinks
+    .map((item) => buildPrimaryLink(item, depth))
+    .join('');
   const desktopDropdownsHtml = data.groups.map((g) => buildDropdown(g, depth)).join('');
+  const mobilePrimaryLinksHtml = primaryLinks
+    .map((item) => buildDrawerPrimaryLink(item, depth))
+    .join('');
   const mobileGroupsHtml = data.groups.map((g) => buildDrawerGroup(g, depth)).join('');
 
   const html = `
@@ -232,19 +270,7 @@ export function injectNav(lang = 'en', depth = 0) {
 
     <!-- Desktop links -->
     <div class="nav-links" role="list">
-      <a href="${homeHref}"
-         class="nav-link${homeActive ? ' nav-link--active' : ''}"
-         role="listitem"
-         ${homeActive ? 'aria-current="page"' : ''}
-      >${data.home.label}</a>
-
-      <a href="${shopsHref}"
-         class="nav-link nav-link--shops${shopsActive ? ' nav-link--active' : ''}"
-         role="listitem"
-         data-nav-key="shops"
-         ${shopsActive ? 'aria-current="page"' : ''}
-      >${data.shops.label}</a>
-
+      ${desktopPrimaryLinksHtml}
       ${desktopDropdownsHtml}
     </div>
 
@@ -300,18 +326,8 @@ export function injectNav(lang = 'en', depth = 0) {
        aria-hidden="true"
   >
     <div class="nav-drawer-inner">
-      <!-- Home (direct) -->
-      <a href="${homeHref}"
-         class="nav-drawer-link${homeActive ? ' nav-link--active' : ''}"
-         ${homeActive ? 'aria-current="page"' : ''}
-      >${data.home.label}</a>
-
-      <!-- Shops (direct) -->
-      <a href="${shopsHref}"
-         class="nav-drawer-link${shopsActive ? ' nav-link--active' : ''}"
-         data-nav-key="shops"
-         ${shopsActive ? 'aria-current="page"' : ''}
-      >${data.shops.label}</a>
+      <!-- Primary journeys -->
+      ${mobilePrimaryLinksHtml}
 
       <!-- Grouped sections -->
       ${mobileGroupsHtml}
@@ -782,25 +798,19 @@ export function updateNavLang(lang) {
     btn.textContent = data.langToggle;
   });
 
-  // Home — match by href ending in index.html or just /
-  nav.querySelectorAll('.nav-link[href], .nav-drawer-link[href]').forEach((a) => {
-    const href = a.getAttribute('href');
-    if (
-      href &&
-      (href === 'index.html' || href.endsWith('/index.html') || href === '../index.html')
-    ) {
-      a.textContent = data.home.label;
-    }
-  });
+  // Primary journey links
+  if (Array.isArray(data.primaryLinks)) {
+    data.primaryLinks.forEach((item) => {
+      nav.querySelectorAll(`[data-nav-primary="${item.key || item.label}"]`).forEach((el) => {
+        const labelEl = el.querySelector('.nav-drawer-link-label');
+        if (labelEl) labelEl.textContent = item.label;
+        else el.textContent = item.label;
+      });
+    });
+  }
 
-  // Shops
   nav.querySelectorAll('[data-nav-key="shops"]').forEach((el) => {
     el.textContent = data.shops.label;
-  });
-
-  // Invest
-  nav.querySelectorAll('[data-nav-key="invest"]').forEach((el) => {
-    el.textContent = data.invest.label;
   });
 
   // Dropdown groups
