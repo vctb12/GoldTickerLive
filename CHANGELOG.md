@@ -4,7 +4,52 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
-### Track A, Phase 5 — CSP hardening
+### Multi-track polish — 2026-04-27 session
+
+**CSS / nav fixes (items from navbar-audit plan Phase 2):**
+
+- fix(css): consolidate duplicate `.nav-dropdown-item` CSS block — the older flex-based rule at line
+  ~5943 has been removed; sub-element styles (`.nav-dropdown-item-icon`, `.nav-dropdown-item-body`,
+  `.nav-dropdown-item--primary .nav-dropdown-item-label`,
+  `[data-theme='dark'] .nav-dropdown-item--primary`) are now merged into the enriched grid-layout
+  block, removing property leaks and conflicting `display` declarations (S1, S2).
+- fix(css): add dark-mode override for `.nav-icon-btn:hover` and `:focus-visible` — the default
+  `rgba(0,0,0,0.04)` tint is invisible against a dark nav surface; replaced with
+  `rgb(255 255 255 / 0.08)` (S5).
+- fix(css): `body.has-spot-bar .site-nav[data-nav-hidden='true']` now uses
+  `translateY(calc(-100% - var(--spot-bar-height, 36px)))` so the nav slides fully above the
+  spot-bar on scroll-down instead of leaving a gap (S7).
+
+**SEO / structured data:**
+
+- feat(seo): add `og:locale` + `og:locale:alternate` meta tags to 17 content pages that were missing
+  them (faq, news, premium-watch, changelog, compare-countries, dubai-gold-rate-guide,
+  gcc-gold-price-comparison, gold-making-charges-guide, gold-price-history, guides, order-gold,
+  spot-vs-retail-gold-price, submit-shop, todays-best-rates, tools, 22k-guide, 24k-guide).
+- feat(seo): add `og:image:alt` to content/gold-price-history and content/order-gold pages.
+- feat(seo): add `FAQPage` JSON-LD structured data to `content/faq/index.html` covering the four
+  most common questions (shop price, freshness, AED peg, karat differences).
+- feat(seo): add `Article` JSON-LD structured data block to `methodology.html`.
+
+**Trust / copy improvements:**
+
+- feat(trust): `shops.html` disclaimer now explicitly says "Always confirm prices, hours, and
+  details directly with the seller before visiting or purchasing."
+- feat(trust): `calculator.html` hero disclaimer simplified — plain English, links to the
+  spot-vs-retail content guide for users who want to understand the gap.
+
+**Internal linking:**
+
+- feat(links): `methodology.html` related-tools row now includes Shops and Spot vs Retail links.
+- feat(links): `learn.html` related-tools row now includes 22K guide, 24K guide, Spot vs Retail,
+  Making Charges, and Full FAQ links.
+- feat(links): `index.html` FAQ "more questions" link now points to `content/faq/` instead of
+  `learn.html`.
+
+**Navigation (404 page):**
+
+- feat(nav): `404.html` now includes "Countries" and "Learn" quick navigation links alongside the
+  existing Home / Live Prices / UAE Prices / Calculator / Shops / Methodology links.
 
 - feat(security): externalize inline analytics to `assets/analytics.js` (gtag loader + Clarity
   IIFE + DNT/opt-out gate). A new CJS codemod `scripts/node/externalize-analytics.js` walks every

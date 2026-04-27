@@ -5940,58 +5940,8 @@ body > * {
   }
 }
 
-.nav-dropdown-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.65rem;
-  padding: 0.55rem 0.75rem;
-  min-height: 44px;
-  border-radius: var(--radius-sm, 6px);
-  text-decoration: none;
-  color: var(--color-text, #1e293b);
-}
-.nav-dropdown-item:hover,
-.nav-dropdown-item:focus-visible {
-  background: var(--surface-subtle, rgb(0, 0, 0, 0.04));
-  color: var(--color-text-strong, #0f172a);
-}
-.nav-dropdown-item:focus-visible {
-  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #2563eb);
-  outline-offset: 1px;
-}
-.nav-dropdown-item-icon {
-  flex: 0 0 auto;
-  font-size: 1rem;
-  line-height: 1.3;
-  width: 1.25rem;
-  text-align: center;
-}
-.nav-dropdown-item-body {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-.nav-dropdown-item-label {
-  font-weight: 500;
-  font-size: 0.9rem;
-  line-height: 1.3;
-}
-.nav-dropdown-item-desc {
-  font-size: 0.75rem;
-  color: var(--color-text-muted, #64748b);
-  line-height: 1.4;
-  margin-top: 0.1rem;
-}
-.nav-dropdown-item--primary .nav-dropdown-item-label {
-  font-weight: 600;
-  color: var(--color-accent, #b45309);
-}
-[data-theme='dark'] .nav-dropdown-item--primary .nav-dropdown-item-label {
-  color: var(--color-accent-strong, #fbbf24);
-}
-.nav-dropdown-item--active {
-  background: var(--surface-accent-subtle, rgb(180, 83, 9, 0.08));
-}
+/* Removed: earlier .nav-dropdown-item rule block consolidated into the enriched
+   grid-layout block below (search for ".nav-dropdown-item {" ~line 6690). */
 
 /* --- Caret animation gated by reduced motion ------------------------------- */
 .nav-dropdown-caret {
@@ -6225,9 +6175,11 @@ details.nav-drawer-group[open] .nav-drawer-group-caret {
   transform: translateY(-100%);
 }
 
-/* Respect the spot bar offset: when both are present, nav hides above spot bar. */
+/* Respect the spot bar offset: when both are present, nav hides above spot bar.
+   Translate nav by its own height PLUS the spot-bar height so the bar
+   isn't left hanging over the spot bar on scroll-down. */
 body.has-spot-bar .site-nav[data-nav-hidden='true'] {
-  transform: translateY(-100%);
+  transform: translateY(calc(-100% - var(--spot-bar-height, 36px)));
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -6732,6 +6684,40 @@ body[data-shell='market'] {
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 62%);
 }
 
+/* text-decoration, color, focus ring and sub-element layout (consolidated from earlier block) */
+.nav-dropdown-item {
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.nav-dropdown-item:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color);
+  outline-offset: 1px;
+}
+
+.nav-dropdown-item-icon {
+  flex: 0 0 auto;
+  font-size: 1rem;
+  line-height: 1.3;
+  width: 1.25rem;
+  text-align: center;
+}
+
+.nav-dropdown-item-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.nav-dropdown-item--primary .nav-dropdown-item-label {
+  font-weight: var(--weight-semibold);
+  color: var(--color-accent);
+}
+
+[data-theme='dark'] .nav-dropdown-item--primary .nav-dropdown-item-label {
+  color: var(--color-accent-strong);
+}
+
 .nav-drawer {
   z-index: calc(var(--nav-z) + 30);
   width: min(420px, 92vw);
@@ -6944,4 +6930,12 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 [data-theme='dark'] .nav-dropdown-item:focus-visible,
 [data-theme='dark'] .nav-dropdown-item--active {
   background: rgb(33 26 18 / 82%);
+}
+
+/* S5: Dark nav bar — icon button hover/focus needs a light-on-dark tint instead of
+   the default rgba(0,0,0,0.04) which is invisible against the dark nav surface. */
+[data-theme='dark'] .nav-icon-btn:hover,
+[data-theme='dark'] .nav-icon-btn:focus-visible {
+  background: rgb(255 255 255 / 0.08);
+  color: var(--color-text);
 }

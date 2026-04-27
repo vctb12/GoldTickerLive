@@ -13,7 +13,7 @@ them into the right section here before execution. Agent operating rules are in
 - Keep completed items as `[x]` with enough context to serve as a record. Don't re-open closed items
   to pad status; don't invent new phases to look ambitious.
 
-**Last updated:** 2026-04-25.
+**Last updated:** 2026-04-27.
 
 ### 2026-04-27 full-site UX/admin/content revamp intake
 
@@ -33,6 +33,11 @@ GoldTickerLive brand consistency.
 - [x] Phase 1 page-purpose map created: [`docs/revamp-page-map.md`](./revamp-page-map.md).
 - [x] Shared nav/footer GoldTickerLive brand and information architecture pass for the Phase 1
       journey labels.
+- [x] SEO pass: `og:locale` + `og:locale:alternate` added to 17 content pages; `og:image:alt` added
+      where missing; `FAQPage` JSON-LD added to `content/faq/`; `Article` JSON-LD added to
+      `methodology.html`; CSS nav duplicate block removed; dark-mode nav icon hover fixed; spot-bar
+      nav-hidden offset corrected; internal links strengthened across learn/methodology/calculator/
+      shops/404.
 - [ ] Homepage/tracker/calculator/shops visible UX pass.
 - [ ] Admin command-center and shop-submission review workflow pass.
 - [ ] Sitemap/SEO inventory refresh and full validation.
