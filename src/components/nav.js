@@ -179,6 +179,7 @@ function buildDropdown(group, depth) {
       </a>`
     : '';
 
+  // Fallback keeps legacy flat groups renderable if a future partial nav-data migration omits sections.
   const sectionsHtml = (
     group.sections || [{ key: 'links', label: group.label, items: group.items }]
   )
@@ -237,10 +238,6 @@ function buildDropdown(group, depth) {
      </div>`;
 }
 
-function buildOptionalDescription(description, className) {
-  return description ? `<span class="${className}">${escapeHtml(description)}</span>` : '';
-}
-
 function buildPrimaryLink(item, depth) {
   const href = resolveHref(item.href, depth);
   const isActive = isPageMatch(href);
@@ -284,7 +281,9 @@ function buildDrawerGroup(group, depth) {
     const iconHtml = item.icon
       ? `<span class="nav-drawer-link-icon" aria-hidden="true">${escapeHtml(item.icon)}</span>`
       : '';
-    const descHtml = buildOptionalDescription(item.description, 'nav-drawer-link-desc');
+    const descHtml = item.description
+      ? `<span class="nav-drawer-link-desc">${escapeHtml(item.description)}</span>`
+      : '';
     return `<a href="${href}" class="${classes.join(' ')}"${ariaCurrent}>
         ${iconHtml}<span class="nav-drawer-link-body"><span class="nav-drawer-link-label">${escapeHtml(item.label)}</span>${descHtml}</span>
       </a>`;

@@ -1,6 +1,7 @@
 import { FORMSPREE_ENDPOINT } from '../config/index.js';
 import { NAV_DATA } from './nav-data.js';
 
+// Keep the shared footer useful without turning mobile layouts into a full mega-menu repeat.
 const MAX_FOOTER_LINKS_PER_SECTION = 3;
 
 /**
