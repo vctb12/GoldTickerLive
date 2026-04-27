@@ -343,6 +343,7 @@ export function drawDonut(canvas, segments) {
 
 let _cmdPaletteEl = null;
 let _cmdPaletteItems = [];
+let _cmdPaletteKeyboardBound = false;
 
 export function initCommandPalette(items) {
   _cmdPaletteItems = items;
@@ -370,12 +371,15 @@ export function initCommandPalette(items) {
     });
   }
 
-  document.addEventListener('keydown', (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-      e.preventDefault();
-      openCmdPalette();
-    }
-  });
+  if (!_cmdPaletteKeyboardBound) {
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        openCmdPalette();
+      }
+    });
+    _cmdPaletteKeyboardBound = true;
+  }
 }
 
 function _renderCmdResults() {

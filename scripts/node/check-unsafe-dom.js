@@ -53,7 +53,7 @@ const BASELINE = {
   'admin/access/index.html': 1,
   'admin/analytics/index.html': 3,
   'admin/content/index.html': 4,
-  'admin/index.html': 7,
+  'admin/index.html': 6,
   'admin/orders/index.html': 3,
   'admin/pricing/index.html': 8,
   'admin/shared/admin-shell.js': 5,

@@ -150,6 +150,94 @@
         font-size: 0.75rem;
       }
 
+      .dashboard-grid {
+        display: grid;
+        gap: 18px;
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+        margin-bottom: 28px;
+      }
+
+      .insight-list,
+      .setup-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .insight-item,
+      .setup-item {
+        align-items: flex-start;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        display: flex;
+        gap: 12px;
+        padding: 12px 14px;
+      }
+
+      .insight-icon,
+      .setup-step {
+        align-items: center;
+        background: rgba(245, 158, 11, 0.12);
+        border-radius: 999px;
+        color: var(--gold);
+        display: inline-flex;
+        flex: 0 0 auto;
+        font-size: 0.8rem;
+        font-weight: 800;
+        height: 28px;
+        justify-content: center;
+        width: 28px;
+      }
+
+      .insight-title,
+      .setup-title {
+        color: var(--text);
+        font-size: 0.875rem;
+        font-weight: 700;
+      }
+
+      .insight-copy,
+      .setup-copy {
+        color: var(--text-muted);
+        font-size: 0.8125rem;
+        margin-top: 2px;
+      }
+
+      .data-source-row {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .data-pill {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: var(--text-muted);
+        display: inline-flex;
+        font-size: 0.75rem;
+        font-weight: 600;
+        gap: 6px;
+        padding: 4px 10px;
+      }
+
+      .data-pill--ok {
+        color: var(--success);
+      }
+
+      .data-pill--warn {
+        color: var(--warning);
+      }
+
+      @media (max-width: 900px) {
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
       /* ── Activity timeline ──────────────────────────────────── */
       .activity-list {
         display: flex;
@@ -414,6 +502,57 @@
             </div>
           </div>
 
+          <div class="dashboard-grid">
+            <section class="section card" aria-labelledby="attention-title">
+              <div class="card-header">
+                <h2 class="card-title" id="attention-title">Needs attention</h2>
+                <a class="btn btn-ghost btn-sm" href="./shops/#submissions">Open submissions</a>
+              </div>
+              <div class="insight-list" id="attention-list" aria-live="polite">
+                <div class="insight-item">
+                  <span class="insight-icon" aria-hidden="true">…</span>
+                  <div>
+                    <div class="insight-title">Checking admin queues…</div>
+                    <div class="insight-copy">This panel will show real tasks once Supabase responds.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="data-source-row" aria-label="Dashboard data sources">
+                <span class="data-pill data-pill--warn" id="source-supabase">Supabase: checking</span>
+                <span class="data-pill data-pill--warn" id="source-server">Server stats: optional</span>
+              </div>
+            </section>
+
+            <section class="section card" aria-labelledby="setup-title">
+              <div class="card-header">
+                <h2 class="card-title" id="setup-title">No real data yet?</h2>
+              </div>
+              <div class="setup-list">
+                <div class="setup-item">
+                  <span class="setup-step">1</span>
+                  <div>
+                    <div class="setup-title">Add shop listings</div>
+                    <div class="setup-copy">Use Shops → Add Shop or Import JSON. Approved rows feed the public shops directory.</div>
+                  </div>
+                </div>
+                <div class="setup-item">
+                  <span class="setup-step">2</span>
+                  <div>
+                    <div class="setup-title">Collect real orders</div>
+                    <div class="setup-copy">Orders appear here only after visitors submit the public order flow. Demo orders are not auto-created.</div>
+                  </div>
+                </div>
+                <div class="setup-item">
+                  <span class="setup-step">3</span>
+                  <div>
+                    <div class="setup-title">Publish content and social posts</div>
+                    <div class="setup-copy">Create posts in Content or Social; published content is the source for live website updates.</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
           <!-- ── Quick Actions ───────────────────────────────── -->
           <section class="section" aria-label="Quick actions">
             <h2
@@ -552,286 +691,215 @@
         getSession,
         getSupabase,
       } from './supabase-auth.js';
-      import { CONSTANTS } from '../config/constants.js';
       import { initAdminShell, renderBreadcrumb } from './shared/admin-shell.js';
       import {
         showToast,
         qs,
         relativeTime,
-        storageGet,
-        storageSet,
         storageRemove,
         drawSparkline,
-        skeletonRows,
-        initCommandPalette,
       } from './shared/admin-utils.js';
       import { ICONS } from './shared/icons.js';
+      import {
+        ADMIN_DATA_CONSTANTS,
+        countSupabaseRows,
+        fetchJsonWithTimeout,
+        fetchServerAdminStats,
+        fetchSupabaseRows,
+        formatCount,
+        readJsonCache,
+        writeJsonCache,
+      } from './shared/admin-data.js';
+      import { escape as escapeHtml, safeHref } from '../src/lib/safe-dom.js';
 
       // ── Auth guard ───────────────────────────────────────────
       if (!(await requireAuth('./login/'))) throw new Error('redirect');
 
-      // ── Initialise shared sidebar / shell ───────────────────
+      // ── Initialise shared sidebar / shell before non-critical widgets ─────
       await initAdminShell({ logout: supabaseLogout, getSession });
       renderBreadcrumb([]);
-      initCommandPalette([
-        { label: 'Dashboard', href: './', icon: ICONS.dashboard },
-        { label: 'Orders', href: './orders/', icon: ICONS.orders },
-        { label: 'Pricing', href: './pricing/', icon: ICONS.pricing },
-        { label: 'Analytics', href: './analytics/', icon: ICONS.analytics },
-        { label: 'Content', href: './content/', icon: ICONS.content },
-        { label: 'Social', href: './social/', icon: ICONS.social },
-        { label: 'Settings', href: './settings/', icon: ICONS.settings },
-      ]);
 
-      const API_GOLD_URL = CONSTANTS.API_GOLD_URL;
-      const API_FX_URL = CONSTANTS.API_FX_URL;
-      const API_TIMEOUT_MS = CONSTANTS.GOLD_FETCH_TIMEOUT;
+      const GOLD_CACHE_KEY = 'gp_admin_last_gold';
+      const PRICE_HISTORY_KEY = 'gp_price_history';
+      const SPARKLINE_FALLBACK_START = 0.995;
+      const SPARKLINE_FALLBACK_STEP = 0.001;
+      const dashboardState = {
+        counts: {
+          shops: null,
+          shopSubmissions: null,
+          orders: null,
+          posts: null,
+        },
+        source: {
+          supabase: false,
+          server: false,
+        },
+      };
+
+      function updateTextContent(selector, value) {
+        const node = qs(selector);
+        if (node) node.textContent = value;
+      }
+
+      function setStat(numberSelector, subSelector, value, subtext) {
+        updateTextContent(numberSelector, value);
+        updateTextContent(subSelector, subtext);
+      }
+
+      function setSourcePill(id, ok, label) {
+        const node = qs(id);
+        if (!node) return;
+        node.textContent = label;
+        node.classList.toggle('data-pill--ok', ok);
+        node.classList.toggle('data-pill--warn', !ok);
+      }
+
+      function formatUsd(value) {
+        if (value == null || Number.isNaN(Number(value))) return 'Unavailable';
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          maximumFractionDigits: 2,
+        }).format(value);
+      }
+
+      function normalizeCount(result, serverValue = null) {
+        if (result?.ok) return { value: result.count ?? 0, source: 'Supabase' };
+        if (typeof serverValue === 'number') return { value: serverValue, source: 'server stats' };
+        return { value: null, source: result?.reason || 'not available' };
+      }
 
       // ── Gold Ticker + sparkline ──────────────────────────────
       async function updateTicker() {
         const badge = qs('#ticker-badge');
         const dot = qs('#ticker-dot');
         const tickerTxt = qs('#ticker-text');
-        try {
-          const res = await fetch(API_GOLD_URL, { cache: 'no-store' });
-          const data = await res.json();
-          const price = data?.gold?.ounce_usd ?? null;
-          if (price) {
-            const formatted = new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-              maximumFractionDigits: 2,
-            }).format(price);
-            tickerTxt.textContent = `XAU: ${formatted}`;
-            dot.className = 'ticker-dot ticker-dot--green';
-            badge.classList.remove('ticker-loading');
-            storageSet('gp_ticker_ts', Date.now().toString());
+        const result = await fetchJsonWithTimeout(ADMIN_DATA_CONSTANTS.API_GOLD_URL, { cache: 'no-store' });
+        const price = result.data?.gold?.ounce_usd ?? result.data?.price ?? null;
+        const cache = readJsonCache(GOLD_CACHE_KEY, null);
+        const usablePrice = price || cache?.price || null;
+        const usingCache = !price && cache?.price;
 
-            // Stat card value
-            qs('#stat-gold').textContent = formatted;
-
-            const change = data.ch ?? data.change ?? null;
-            const changePct = data.chp ?? data.change_percent ?? null;
-            let trendHtml = '';
-            if (change !== null && changePct !== null) {
-              const sign = change >= 0 ? '+' : '';
-              const arrow = change >= 0 ? '▲' : '▼';
-              const color = change >= 0 ? 'var(--success)' : 'var(--danger, #ef4444)';
-              trendHtml = `<span style="color:${color};font-size:0.8125rem">${arrow} ${sign}${Number(changePct).toFixed(2)}%</span>`;
-            }
-            const sub = qs('#stat-gold-sub');
-            if (sub) sub.innerHTML = trendHtml || 'live spot price';
-
-            // Persist price history and draw sparkline
-            let history = [];
-            try {
-              history = JSON.parse(storageGet('gp_price_history') || '[]');
-            } catch {
-              history = [];
-            }
-            if (!Array.isArray(history)) history = [];
-            history.push(price);
-            if (history.length > 20) history = history.slice(-20);
-            storageSet('gp_price_history', JSON.stringify(history));
-
-            const canvas = qs('#gold-sparkline');
-            if (canvas) {
-              const sparkData =
-                history.length >= 2
-                  ? history
-                  : Array.from({ length: 7 }, (_, i) => price * (0.99 + i * 0.002));
-              drawSparkline(canvas, sparkData, {
-                color: change >= 0 ? '#10b981' : '#ef4444',
-                fill: true,
-              });
-            }
-          }
-        } catch {
+        if (!usablePrice) {
           tickerTxt.textContent = 'XAU: unavailable';
           dot.className = 'ticker-dot ticker-dot--yellow';
-          qs('#stat-gold').textContent = 'Unavailable';
-          const sub = qs('#stat-gold-sub');
-          if (sub) sub.textContent = 'could not fetch price';
+          badge.classList.remove('ticker-loading');
+          setStat('#stat-gold', '#stat-gold-sub', 'Unavailable', 'no live or cached price');
+          return;
+        }
+
+        const formatted = formatUsd(usablePrice);
+        tickerTxt.textContent = usingCache ? `XAU: ${formatted} cached` : `XAU: ${formatted}`;
+        dot.className = `ticker-dot ticker-dot--${usingCache ? 'yellow' : 'green'}`;
+        badge.classList.remove('ticker-loading');
+        setStat('#stat-gold', '#stat-gold-sub', formatted, usingCache ? 'cached spot reference' : 'live spot reference');
+
+        if (price) writeJsonCache(GOLD_CACHE_KEY, { price, ts: Date.now() });
+
+        let history = readJsonCache(PRICE_HISTORY_KEY, []);
+        if (!Array.isArray(history)) history = [];
+        history.push(usablePrice);
+        if (history.length > 20) history = history.slice(-20);
+        writeJsonCache(PRICE_HISTORY_KEY, history);
+
+        const canvas = qs('#gold-sparkline');
+        if (canvas) {
+          const sparkData =
+            history.length >= 2
+              ? history
+              : Array.from(
+                  { length: 7 },
+                  (_, i) => usablePrice * (SPARKLINE_FALLBACK_START + i * SPARKLINE_FALLBACK_STEP)
+                );
+          drawSparkline(canvas, sparkData, { color: '#10b981', fill: true });
         }
       }
-      updateTicker();
 
-      // ── Supabase stats ──────────────────────────────────────
-      async function loadSupabaseStats() {
+      async function loadDashboardCounts() {
         const sb = getSupabase();
-        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+        const serverStats = await fetchServerAdminStats();
+        dashboardState.source.server = Boolean(serverStats.ok);
+        dashboardState.source.supabase = Boolean(sb);
+        setSourcePill('#source-server', serverStats.ok, serverStats.ok ? 'Server stats: connected' : 'Server stats: optional fallback');
 
-        // Shops
-        if (sb) {
-          try {
-            const { count: total } = await sb
-              .from('shops')
-              .select('*', { count: 'exact', head: true });
-            const { count: newCount } = await sb
-              .from('shops')
-              .select('*', { count: 'exact', head: true })
-              .gte('created_at', weekAgo);
-            qs('#stat-shops').textContent = (total ?? '—').toLocaleString?.() ?? total ?? '—';
-            qs('#stat-shops-sub').textContent =
-              newCount > 0 ? `+${newCount} new this week` : 'total in database';
-          } catch {
-            qs('#stat-shops').textContent = '—';
-            qs('#stat-shops-sub').textContent = 'could not connect';
-          }
-        } else {
-            qs('#stat-shops').textContent = '—';
-            qs('#stat-shops-sub').textContent = 'Supabase not connected';
-        }
+        const [shops, submissions, orders, posts] = await Promise.all([
+          countSupabaseRows(sb, 'shops'),
+          countSupabaseRows(sb, 'shop_submissions', (q) => q.eq('status', 'pending')),
+          countSupabaseRows(sb, 'orders', (q) => q.eq('status', 'pending')),
+          countSupabaseRows(sb, 'content_posts', (q) => q.eq('status', 'published')),
+        ]);
 
-        // Public shop submissions waiting for editorial review
-        if (sb) {
-          try {
-            const { count: pendingSubmissions, error } = await sb
-              .from('shop_submissions')
-              .select('*', { count: 'exact', head: true })
-              .eq('status', 'pending');
-            if (error) throw error;
-            const val = pendingSubmissions ?? 0;
-            qs('#stat-shop-submissions').textContent = val.toLocaleString();
-            qs('#stat-shop-submissions-sub').textContent =
-              val > 0 ? 'needs editorial review' : 'review queue clear';
-          } catch {
-            qs('#stat-shop-submissions').textContent = '—';
-            qs('#stat-shop-submissions-sub').textContent = 'queue unavailable';
-          }
-        } else {
-          qs('#stat-shop-submissions').textContent = '—';
-          qs('#stat-shop-submissions-sub').textContent = 'Supabase not connected';
-        }
+        const shopServerValue = serverStats.stats?.shops?.total ?? null;
+        const shopsCount = normalizeCount(shops, shopServerValue);
+        const submissionsCount = normalizeCount(submissions);
+        const ordersCount = normalizeCount(orders);
+        const postsCount = normalizeCount(posts);
 
-        // Pending orders
-        if (sb) {
-          try {
-            const { count: pending } = await sb
-              .from('orders')
-              .select('*', { count: 'exact', head: true })
-              .eq('status', 'pending');
-            const val = pending ?? 0;
-            qs('#stat-orders').textContent = val.toLocaleString();
-            const dot = qs('#stat-orders-dot');
-            if (dot) dot.hidden = val <= 0;
-            qs('#stat-orders-sub').textContent = val > 0 ? 'awaiting action' : 'all clear';
-          } catch {
-            qs('#stat-orders').textContent = '—';
-            qs('#stat-orders-sub').textContent = 'could not connect';
-          }
-        } else {
-          qs('#stat-orders').textContent = '—';
-          qs('#stat-orders-sub').textContent = 'Supabase not connected';
-        }
+        dashboardState.counts = {
+          shops: shopsCount.value,
+          shopSubmissions: submissionsCount.value,
+          orders: ordersCount.value,
+          posts: postsCount.value,
+        };
 
-        // Published posts
-        if (sb) {
-          try {
-            const { count: published } = await sb
-              .from('content_posts')
-              .select('*', { count: 'exact', head: true })
-              .eq('status', 'published');
-            qs('#stat-posts').textContent =
-              (published ?? '—').toLocaleString?.() ?? published ?? '—';
-            qs('#stat-posts-sub').textContent = 'published articles';
-          } catch {
-            qs('#stat-posts').textContent = '—';
-            qs('#stat-posts-sub').textContent = 'could not connect';
-          }
-        } else {
-          qs('#stat-posts').textContent = '—';
-          qs('#stat-posts-sub').textContent = 'Supabase not connected';
-        }
+        setSourcePill('#source-supabase', Boolean(sb), sb ? 'Supabase: connected' : 'Supabase: not connected');
+        setStat('#stat-shops', '#stat-shops-sub', formatCount(shopsCount.value), shopsCount.value == null ? shopsCount.source : `${shopsCount.source} · real listings`);
+        setStat('#stat-shop-submissions', '#stat-shop-submissions-sub', formatCount(submissionsCount.value), submissionsCount.value == null ? submissionsCount.source : (submissionsCount.value > 0 ? 'needs editorial review' : 'review queue clear'));
+        setStat('#stat-orders', '#stat-orders-sub', formatCount(ordersCount.value), ordersCount.value == null ? ordersCount.source : (ordersCount.value > 0 ? 'awaiting action' : 'all clear'));
+        setStat('#stat-posts', '#stat-posts-sub', formatCount(postsCount.value), postsCount.value == null ? postsCount.source : 'published articles');
+
+        const dot = qs('#stat-orders-dot');
+        if (dot) dot.hidden = !(ordersCount.value > 0);
+        renderAttention();
       }
-      loadSupabaseStats();
 
-      // ── Recent activity feed ─────────────────────────────────
+      function renderAttention() {
+        const list = qs('#attention-list');
+        if (!list) return;
+        const items = [];
+        const { shops, shopSubmissions, orders, posts } = dashboardState.counts;
+
+        if (orders > 0) {
+          items.push({ icon: '📦', title: `${orders} pending order${orders !== 1 ? 's' : ''}`, copy: 'Open Orders to confirm customer details and update the status.', href: './orders/' });
+        }
+        if (shopSubmissions > 0) {
+          items.push({ icon: '📥', title: `${shopSubmissions} shop submission${shopSubmissions !== 1 ? 's' : ''}`, copy: 'Review public suggestions before they appear in the directory.', href: './shops/#submissions' });
+        }
+        if (shops === 0) {
+          items.push({ icon: '🏪', title: 'No real shops yet', copy: 'Add verified shop listings or import JSON to power the public shops directory.', href: './shops/' });
+        }
+        if (posts === 0) {
+          items.push({ icon: '📝', title: 'No published content yet', copy: 'Create and publish content to make the website feel active.', href: './content/' });
+        }
+
+        if (!items.length) {
+          items.push({ icon: '✓', title: 'No urgent admin tasks', copy: 'Queues are clear. Use the quick actions below to update content, shops, or pricing.', href: './analytics/' });
+        }
+
+        list.innerHTML = items
+          .map(
+            (item) => `<a class="insight-item" href="${safeHref(item.href)}">
+              <span class="insight-icon" aria-hidden="true">${item.icon}</span>
+              <span>
+                <span class="insight-title">${escapeHtml(item.title)}</span>
+                <span class="insight-copy">${escapeHtml(item.copy)}</span>
+              </span>
+            </a>`
+          )
+          .join('');
+      }
+
       async function loadActivity() {
         const list = qs('#activity-list');
         if (!list) return;
-        list.innerHTML = skeletonRows(5, 1);
-
         const sb = getSupabase();
-        let rows = [];
+        const result = await fetchSupabaseRows(sb, 'audit_log', (q) =>
+          q.select('id,action,target_type,target_id,actor,created_at').order('created_at', { ascending: false }).limit(12)
+        );
 
-        if (sb) {
-          try {
-            const { data } = await sb
-              .from('audit_log')
-              .select('id,action,target_type,target_id,actor,created_at')
-              .order('created_at', { ascending: false })
-              .limit(15);
-            if (data?.length) rows = data;
-          } catch {
-            /* fall through to synthesis */
-          }
-
-          if (!rows.length) {
-            // Synthesise from recent records across tables
-            const sources = await Promise.allSettled([
-              sb
-                .from('shop_submissions')
-                .select('id,shop_name,city,status,created_at')
-                .order('created_at', { ascending: false })
-                .limit(5),
-              sb
-                .from('shops')
-                .select('id,name,created_at')
-                .order('created_at', { ascending: false })
-                .limit(5),
-              sb
-                .from('orders')
-                .select('id,status,created_at')
-                .order('created_at', { ascending: false })
-                .limit(5),
-              sb
-                .from('content_posts')
-                .select('id,title,created_at')
-                .order('created_at', { ascending: false })
-                .limit(5),
-            ]);
-            const [submissionsRes, shopsRes, ordersRes, postsRes] = sources;
-            (submissionsRes.value?.data || []).forEach((s) =>
-              rows.push({
-                action: `Shop submission ${s.status || 'pending'}`,
-                target_type: 'submission',
-                actor: `${s.shop_name || 'unnamed'}${s.city ? ' · ' + s.city : ''}`,
-                created_at: s.created_at,
-              })
-            );
-            (shopsRes.value?.data || []).forEach((s) =>
-              rows.push({
-                action: 'Shop added',
-                target_type: 'shop',
-                actor: s.name || 'unknown',
-                created_at: s.created_at,
-              })
-            );
-            (ordersRes.value?.data || []).forEach((o) =>
-              rows.push({
-                action: `Order ${o.status}`,
-                target_type: 'order',
-                actor: `#${o.id}`,
-                created_at: o.created_at,
-              })
-            );
-            (postsRes.value?.data || []).forEach((p) =>
-              rows.push({
-                action: 'Post created',
-                target_type: 'content',
-                actor: p.title || 'untitled',
-                created_at: p.created_at,
-              })
-            );
-            rows.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-            rows = rows.slice(0, 15);
-          }
-        }
-
-        if (!rows.length) {
+        if (!result.ok || result.rows.length === 0) {
           list.innerHTML = `<div class="activity-empty">
-            No activity yet. <a href="./shops/" style="color:var(--primary)">Add a shop</a> to get started.
+            No real activity yet. Add shops, publish content, or process orders and the audit feed will appear here.
           </div>`;
           return;
         }
@@ -843,31 +911,28 @@
           content: ICONS.content,
           default: ICONS.edit,
         };
-        list.innerHTML = rows
-          .map((r) => {
-            const icon = iconMap[r.target_type] || iconMap.default;
+        list.innerHTML = result.rows
+          .map((row) => {
+            const icon = iconMap[row.target_type] || iconMap.default;
             return `<div class="activity-item" role="listitem">
-            <div class="activity-icon" aria-hidden="true">${icon}</div>
-            <div class="activity-body">
-              <div class="activity-action">${r.action || '—'}</div>
-              <div class="activity-details">${r.actor || ''}</div>
-            </div>
-            <div class="activity-time">${relativeTime(r.created_at)}</div>
-          </div>`;
+              <div class="activity-icon" aria-hidden="true">${icon}</div>
+              <div class="activity-body">
+                <div class="activity-action">${escapeHtml(row.action || 'Activity')}</div>
+                <div class="activity-details">${escapeHtml(row.actor || row.target_id || '')}</div>
+              </div>
+              <div class="activity-time">${relativeTime(row.created_at)}</div>
+            </div>`;
           })
           .join('');
       }
-      loadActivity();
 
       // ── API Status checks ────────────────────────────────────
       const SERVICES = [
-        { name: 'Gold data (goldpricez.com)', url: API_GOLD_URL },
-        { name: 'Exchange Rates (er-api.com)', url: API_FX_URL },
+        { name: 'Gold data', url: ADMIN_DATA_CONSTANTS.API_GOLD_URL },
+        { name: 'Exchange rates', url: ADMIN_DATA_CONSTANTS.API_FX_URL },
       ];
-
       let lastCheckedAt = null;
       let countdownInterval = null;
-      let autoRefreshInterval = null;
 
       function respBar(ms) {
         const w = Math.min(ms / 5, 80);
@@ -877,31 +942,16 @@
 
       async function checkService(service) {
         const start = performance.now();
-        try {
-          const res = await fetch(service.url, {
-            cache: 'no-store',
-            signal: AbortSignal.timeout(API_TIMEOUT_MS),
-          });
-          const ms = Math.round(performance.now() - start);
-          return { name: service.name, ok: res.ok, status: res.status, ms };
-        } catch {
-          const ms = Math.round(performance.now() - start);
-          return { name: service.name, ok: false, status: 'Error', ms };
-        }
+        const result = await fetchJsonWithTimeout(service.url, { cache: 'no-store' });
+        const ms = Math.round(performance.now() - start);
+        return { name: service.name, ok: result.ok, status: result.status, ms };
       }
 
       async function checkSupabaseDb() {
-        const sb = getSupabase();
-        if (!sb) return { name: 'Supabase DB', ok: false, status: 'Not configured', ms: 0 };
         const start = performance.now();
-        try {
-          const { error } = await sb.from('shops').select('*', { count: 'exact', head: true });
-          const ms = Math.round(performance.now() - start);
-          return { name: 'Supabase DB', ok: !error, status: error ? 'Error' : 200, ms };
-        } catch {
-          const ms = Math.round(performance.now() - start);
-          return { name: 'Supabase DB', ok: false, status: 'Error', ms };
-        }
+        const result = await countSupabaseRows(getSupabase(), 'shops');
+        const ms = Math.round(performance.now() - start);
+        return { name: 'Supabase DB', ok: result.ok, status: result.ok ? 200 : result.reason, ms };
       }
 
       function renderApiTable(results) {
@@ -910,11 +960,11 @@
         tbody.innerHTML = results
           .map(
             (r) => `<tr>
-          <td>${r.name}</td>
-          <td><span style="color:${r.ok ? 'var(--success)' : 'var(--danger,#ef4444)'}">${r.ok ? '● ' + r.status + ' OK' : '● ' + r.status}</span></td>
-          <td>${now}</td>
-          <td>${respBar(r.ms)}</td>
-        </tr>`
+              <td>${escapeHtml(r.name)}</td>
+              <td><span style="color:${r.ok ? 'var(--success)' : 'var(--danger,#ef4444)'}">${escapeHtml(r.ok ? '● ' + r.status + ' OK' : '● ' + r.status)}</span></td>
+              <td>${now}</td>
+              <td>${respBar(r.ms)}</td>
+            </tr>`
           )
           .join('');
       }
@@ -925,7 +975,7 @@
         const el = qs('#api-countdown');
         if (el) el.textContent = secs;
         countdownInterval = setInterval(() => {
-          secs--;
+          secs -= 1;
           if (el) el.textContent = secs;
           if (secs <= 0) {
             clearInterval(countdownInterval);
@@ -938,35 +988,24 @@
         const tbody = qs('#api-table-body');
         const checkBtn = qs('#api-check-btn');
         const lastEl = qs('#api-last-checked');
-
         if (checkBtn) checkBtn.disabled = true;
         tbody.innerHTML = `<tr><td colspan="4" style="color:var(--text-dim);text-align:center;padding:20px">
-          <span class="inline-spinner" aria-hidden="true"></span> Checking…
+          <span class="inline-spinner" aria-hidden="true"></span> Checking real data sources…
         </td></tr>`;
 
         const results = await Promise.all([...SERVICES.map(checkService), checkSupabaseDb()]);
         lastCheckedAt = Date.now();
-
         renderApiTable(results);
         if (checkBtn) checkBtn.disabled = false;
         if (lastEl) lastEl.textContent = 'Last checked: just now';
-
         resetCountdown();
       }
 
-      runApiChecks();
-      qs('#api-check-btn')?.addEventListener('click', runApiChecks);
+      async function refreshDashboard() {
+        await Promise.all([updateTicker(), loadDashboardCounts(), loadActivity(), runApiChecks()]);
+      }
 
-      setInterval(() => {
-        if (!lastCheckedAt) return;
-        const sec = Math.floor((Date.now() - lastCheckedAt) / 1000);
-        const lastEl = qs('#api-last-checked');
-        if (!lastEl) return;
-        if (sec < 60) lastEl.textContent = `Last checked: ${sec}s ago`;
-        else lastEl.textContent = `Last checked: ${Math.floor(sec / 60)} min ago`;
-      }, 5000);
-
-      // ── Inject SVG icons into Quick Action buttons ──────────
+      // ── Icons, greeting, actions ─────────────────────────────
       const qaIcons = {
         'qa-refresh-icon': ICONS.refresh,
         'qa-trash-icon': ICONS.trash,
@@ -982,18 +1021,18 @@
         if (el) el.innerHTML = svg;
       });
 
-      // ── Welcome banner greeting ──────────────────────────────
-      (function () {
-        const h = new Date().getHours();
-        const greet = h < 12 ? 'Good morning ☀️' : h < 17 ? 'Good afternoon ⚡' : 'Good evening 🌙';
-        const titleEl = qs('#welcome-title');
-        if (titleEl) titleEl.textContent = greet;
-      })();
+      const h = new Date().getHours();
+      updateTextContent(
+        '#welcome-title',
+        h < 12 ? 'Good morning ☀️' : h < 17 ? 'Good afternoon ⚡' : 'Good evening 🌙'
+      );
 
-      // ── Quick Actions ────────────────────────────────────────
-      qs('#qa-force-refresh')?.addEventListener('click', () => {
-        storageSet('gp_force_refresh', Date.now().toString());
-        showToast('Force refresh flagged — prices will reload on next public visit', 'success');
+      qs('#qa-force-refresh')?.addEventListener('click', async () => {
+        const btn = qs('#qa-force-refresh');
+        btn.disabled = true;
+        await refreshDashboard();
+        btn.disabled = false;
+        showToast('Dashboard refreshed from live sources where available.', 'success');
       });
 
       qs('#qa-new-post-btn')?.addEventListener('click', () => {
@@ -1001,9 +1040,21 @@
       });
 
       qs('#qa-clear-cache')?.addEventListener('click', () => {
-        storageRemove('gp_cache_gold', 'goldprice_cache', 'gp_fx_cache');
-        showToast('Cache cleared', 'success');
+        storageRemove('gp_cache_gold', 'goldprice_cache', 'gp_fx_cache', GOLD_CACHE_KEY, PRICE_HISTORY_KEY);
+        showToast('Admin/browser cache cleared. Real Supabase data was not changed.', 'success');
       });
+
+      qs('#api-check-btn')?.addEventListener('click', runApiChecks);
+
+      setInterval(() => {
+        if (!lastCheckedAt) return;
+        const sec = Math.floor((Date.now() - lastCheckedAt) / 1000);
+        const lastEl = qs('#api-last-checked');
+        if (!lastEl) return;
+        lastEl.textContent = sec < 60 ? `Last checked: ${sec}s ago` : `Last checked: ${Math.floor(sec / 60)} min ago`;
+      }, 5000);
+
+      refreshDashboard();
     </script>
   </body>
 </html>

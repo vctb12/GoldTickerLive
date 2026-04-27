@@ -478,9 +478,9 @@
         </header>
 
         <main class="content-area">
-          <!-- Sample data notice -->
+          <!-- Real data notice -->
           <div class="sample-notice hidden" id="sample-notice" role="status">
-            📦 Sample Data Loaded — these are demo orders. Real orders come from /order-gold.
+            📦 No real orders yet — orders appear after visitors submit the public order flow.
           </div>
 
           <!-- ── Stats ────────────────────────────────────────── -->
@@ -760,7 +760,7 @@
         cacheOrders(cached);
       }
 
-      /** Batch-save all orders (for sample data init). */
+      /** Batch-save all orders. Kept for imports/migrations; init never creates demo orders. */
       async function saveOrders(orders) {
         const sb = getSupabase();
         if (sb) {
@@ -792,7 +792,7 @@
         return orders[idx];
       }
 
-      // ── Sample data ────────────────────────────────────────
+      // ── Legacy sample builder (not used by init; retained only for manual local testing) ─────
       function buildSampleOrders() {
         const now = new Date();
         const yesterday = new Date(now);
@@ -1113,8 +1113,8 @@
         if (filteredOrders.length === 0) {
           const noOrders = allOrders.length === 0;
           tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state">
-          📦 ${noOrders ? 'No orders yet.' : 'No orders match your filters.'}
-          <p>${noOrders ? 'Orders submitted on /order-gold will appear here.' : 'Try adjusting your search or filters.'}</p>
+          📦 ${noOrders ? 'No real orders yet.' : 'No orders match your filters.'}
+          <p>${noOrders ? 'Orders submitted on /order-gold will appear here. To fill this page, publish the public order form and let real customers submit requests.' : 'Try adjusting your search or filters.'}</p>
         </div></td></tr>`;
           renderPagination(document.getElementById('pagination-wrap'), {
             total: 0,
@@ -1391,8 +1391,6 @@
         allOrders = await loadOrders();
 
         if (allOrders.length === 0) {
-          allOrders = buildSampleOrders();
-          await saveOrders(allOrders);
           document.getElementById('sample-notice').classList.remove('hidden');
         }
 

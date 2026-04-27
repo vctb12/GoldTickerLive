@@ -131,6 +131,9 @@ function buildSidebarHTML(adminBase, activeSlug) {
             </div>
           </div>
           <div class="sidebar-footer-actions">
+            <a href="/" class="btn btn-ghost btn-sm sidebar-footer-link" title="View public website">
+              <span class="nav-icon sidebar-footer-icon">${ICONS.externalLink}</span><span class="nav-label">Site</span>
+            </a>
             <a href="${adminBase}" class="btn btn-ghost btn-sm sidebar-footer-link" title="Dashboard">
               <span class="nav-icon sidebar-footer-icon">${ICONS.dashboard}</span><span class="nav-label">Home</span>
             </a>
@@ -250,14 +253,25 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
   const overlay = document.getElementById('sidebar-overlay');
   const toggleBtn = document.getElementById('sidebar-toggle');
 
+  function syncSidebarExpanded() {
+    toggleBtn?.setAttribute(
+      'aria-expanded',
+      sidebarEl?.classList.contains('sidebar--open') ? 'true' : 'false'
+    );
+  }
+
   function openSidebar() {
     sidebarEl?.classList.add('sidebar--open');
     overlay?.classList.add('sidebar-overlay--visible');
+    syncSidebarExpanded();
   }
   function closeSidebar() {
     sidebarEl?.classList.remove('sidebar--open');
     overlay?.classList.remove('sidebar-overlay--visible');
+    syncSidebarExpanded();
   }
+
+  syncSidebarExpanded();
 
   toggleBtn?.addEventListener('click', () => {
     if (sidebarEl?.classList.contains('sidebar--open')) {
