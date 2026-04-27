@@ -44,6 +44,13 @@ jobs:
           node-version: 24
           cache: npm
 
+      - name: Cache Vite build artifacts
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.vite
+          key: vite-${{ runner.os }}-${{ hashFiles('vite.config.js', 'package-lock.json') }}
+          restore-keys: vite-${{ runner.os }}-
+
       - name: Install dependencies
         run: npm ci
 

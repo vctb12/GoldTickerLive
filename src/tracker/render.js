@@ -294,7 +294,15 @@ export function renderChart() {
   if (spot) rows.push({ date: new Date(), spot, source: 'live' });
   if (rows.length < 2) {
     const msg = _state.lang === 'ar' ? 'جمع البيانات…' : 'Collecting data…';
-    _el.chart.innerHTML = `<text x="50%" y="50%" text-anchor="middle" fill="#9d8c72" font-size="14">${msg}</text>`;
+    const svgNs = 'http://www.w3.org/2000/svg';
+    const t = document.createElementNS(svgNs, 'text');
+    t.setAttribute('x', '50%');
+    t.setAttribute('y', '50%');
+    t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('fill', '#9d8c72');
+    t.setAttribute('font-size', '14');
+    t.textContent = msg;
+    _el.chart.replaceChildren(t);
     return;
   }
   const prices = rows.map((r) => r.spot);
@@ -311,12 +319,46 @@ export function renderChart() {
     })
     .join(' ');
   const sourceLabel = _state.hasLiveFailure ? 'cached' : 'live';
-  _el.chart.innerHTML = `
-    <polyline points="${pts}" fill="none" stroke="#c49a44" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-    <text x="8" y="18" fill="#9d8c72" font-size="11">High: ${max.toFixed(0)}</text>
-    <text x="8" y="${H - 6}" fill="#9d8c72" font-size="11">Low: ${min.toFixed(0)}</text>
-    <text x="${W - 8}" y="${H - 6}" text-anchor="end" fill="#9d8c72" font-size="11">Source: ${sourceLabel} · ${rows.length} points</text>
-  `;
+  const svgNs = 'http://www.w3.org/2000/svg';
+  function svgEl(tag, attrs, textContent) {
+    const node = document.createElementNS(svgNs, tag);
+    for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+    if (textContent !== undefined) node.textContent = textContent;
+    return node;
+  }
+  const frag = document.createDocumentFragment();
+  frag.append(
+    svgEl('polyline', {
+      points: pts,
+      fill: 'none',
+      stroke: '#c49a44',
+      'stroke-width': '2.5',
+      'stroke-linejoin': 'round',
+      'stroke-linecap': 'round',
+    }),
+    svgEl(
+      'text',
+      { x: '8', y: '18', fill: '#9d8c72', 'font-size': '11' },
+      `High: ${max.toFixed(0)}`
+    ),
+    svgEl(
+      'text',
+      { x: '8', y: String(H - 6), fill: '#9d8c72', 'font-size': '11' },
+      `Low: ${min.toFixed(0)}`
+    ),
+    svgEl(
+      'text',
+      {
+        x: String(W - 8),
+        y: String(H - 6),
+        'text-anchor': 'end',
+        fill: '#9d8c72',
+        'font-size': '11',
+      },
+      `Source: ${sourceLabel} · ${rows.length} points`
+    )
+  );
+  _el.chart.replaceChildren(frag);
 
   // Keep the module-level snapshot up to date so the once-registered
   // mousemove handler always uses the latest rows without re-attaching.
@@ -835,6 +877,17 @@ export function renderPlanners() {
   const spot = _currentSpot();
   if (!spot) return;
 
+  // Helper: build a .tracker-result-item row from safe DOM
+  function _resultItem(label, value, valueStyle) {
+    return el('div', { class: 'tracker-result-item' }, [
+      el('span', {}, [label]),
+      el('strong', valueStyle ? { style: valueStyle } : {}, [value]),
+    ]);
+  }
+  function _emptyMsg(msg) {
+    return el('p', { style: { color: 'var(--tp-text-muted)' } }, [msg]);
+  }
+
   if (_el.budgetResults) {
     const budget = parseFloat(_el.budgetAmount?.value) || 0;
     const fee = parseFloat(_el.budgetFee?.value) || 0;
@@ -845,11 +898,21 @@ export function renderPlanners() {
       unit: 'gram',
       spot,
     });
-    _el.budgetResults.innerHTML =
+    _el.budgetResults.replaceChildren(
       p && net
-        ? `<div class="tracker-result-item"><span>Net budget</span><strong>${net.toFixed(2)} ${_state.selectedCurrency}</strong></div>
-         <div class="tracker-result-item"><span>Gold you can buy</span><strong>${(net / p).toFixed(3)} g (${_state.selectedKarat}K)</strong></div>`
-        : '<p style="color:var(--tp-text-muted)">Enter a budget above.</p>';
+        ? (() => {
+            const f = document.createDocumentFragment();
+            f.append(
+              _resultItem('Net budget', `${net.toFixed(2)} ${escape(_state.selectedCurrency)}`),
+              _resultItem(
+                'Gold you can buy',
+                `${(net / p).toFixed(3)} g (${escape(_state.selectedKarat)}K)`
+              )
+            );
+            return f;
+          })()
+        : _emptyMsg('Enter a budget above.')
+    );
   }
 
   if (_el.positionResults) {
@@ -866,12 +929,24 @@ export function renderPlanners() {
       const currentValue = p * qty;
       const gainLoss = currentValue - entryValue;
       const gainLossPercent = (gainLoss / entryValue) * 100;
-      _el.positionResults.innerHTML = `<div class="tracker-result-item"><span>Entry value</span><strong>${entryValue.toFixed(2)} ${_state.selectedCurrency}</strong></div>
-        <div class="tracker-result-item"><span>Current value</span><strong>${currentValue.toFixed(2)} ${_state.selectedCurrency}</strong></div>
-        <div class="tracker-result-item"><span>Gain / loss</span><strong style="color:${gainLoss >= 0 ? 'var(--tp-live)' : 'var(--tp-danger)'}">${gainLoss >= 0 ? '+' : ''}${gainLoss.toFixed(2)} ${_state.selectedCurrency} (${gainLossPercent >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%)</strong></div>`;
+      const gainColor = gainLoss >= 0 ? 'var(--tp-live)' : 'var(--tp-danger)';
+      const gainPrefix = gainLoss >= 0 ? '+' : '';
+      const frag = document.createDocumentFragment();
+      frag.append(
+        _resultItem('Entry value', `${entryValue.toFixed(2)} ${escape(_state.selectedCurrency)}`),
+        _resultItem(
+          'Current value',
+          `${currentValue.toFixed(2)} ${escape(_state.selectedCurrency)}`
+        ),
+        _resultItem(
+          'Gain / loss',
+          `${gainPrefix}${gainLoss.toFixed(2)} ${escape(_state.selectedCurrency)} (${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%)`,
+          { color: gainColor }
+        )
+      );
+      _el.positionResults.replaceChildren(frag);
     } else {
-      _el.positionResults.innerHTML =
-        '<p style="color:var(--tp-text-muted)">Enter entry price and quantity above.</p>';
+      _el.positionResults.replaceChildren(_emptyMsg('Enter entry price and quantity above.'));
     }
   }
 
@@ -895,15 +970,21 @@ export function renderPlanners() {
       const subtotal = goldValue + makingTotal + premiumTotal;
       const vatAmount = subtotal * vat;
       const total = subtotal + vatAmount;
-      _el.jewelryResults.innerHTML = `<div class="tracker-result-item"><span>Gold value</span><strong>${goldValue.toFixed(2)} ${_state.selectedCurrency}</strong></div>
-        <div class="tracker-result-item"><span>Making charge</span><strong>${makingTotal.toFixed(2)} ${_state.selectedCurrency}</strong></div>
-        ${premium ? `<div class="tracker-result-item"><span>Premium</span><strong>${premiumTotal.toFixed(2)} ${_state.selectedCurrency}</strong></div>` : ''}
-        <div class="tracker-result-item"><span>Subtotal</span><strong>${subtotal.toFixed(2)} ${_state.selectedCurrency}</strong></div>
-        ${vat ? `<div class="tracker-result-item"><span>VAT (5%)</span><strong>${vatAmount.toFixed(2)} ${_state.selectedCurrency}</strong></div>` : ''}
-        <div class="tracker-result-item"><span>Total</span><strong style="color:var(--tp-accent)">${total.toFixed(2)} ${_state.selectedCurrency}</strong></div>`;
+      const cur = escape(_state.selectedCurrency);
+      const frag = document.createDocumentFragment();
+      frag.append(
+        _resultItem('Gold value', `${goldValue.toFixed(2)} ${cur}`),
+        _resultItem('Making charge', `${makingTotal.toFixed(2)} ${cur}`)
+      );
+      if (premium) frag.append(_resultItem('Premium', `${premiumTotal.toFixed(2)} ${cur}`));
+      frag.append(_resultItem('Subtotal', `${subtotal.toFixed(2)} ${cur}`));
+      if (vat) frag.append(_resultItem('VAT (5%)', `${vatAmount.toFixed(2)} ${cur}`));
+      frag.append(
+        _resultItem('Total', `${total.toFixed(2)} ${cur}`, { color: 'var(--tp-accent)' })
+      );
+      _el.jewelryResults.replaceChildren(frag);
     } else {
-      _el.jewelryResults.innerHTML =
-        '<p style="color:var(--tp-text-muted)">Enter weight and select karat above.</p>';
+      _el.jewelryResults.replaceChildren(_emptyMsg('Enter weight and select karat above.'));
     }
   }
 
@@ -920,12 +1001,17 @@ export function renderPlanners() {
       const gramsPerMonth = monthly / p;
       const months = target / gramsPerMonth;
       const years = months / 12;
-      _el.accumResults.innerHTML = `<div class="tracker-result-item"><span>Grams / month</span><strong>${gramsPerMonth.toFixed(3)} g</strong></div>
-        <div class="tracker-result-item"><span>Months to target</span><strong>${months.toFixed(1)}</strong></div>
-        <div class="tracker-result-item"><span>Years to target</span><strong>${years.toFixed(2)}</strong></div>`;
+      const frag = document.createDocumentFragment();
+      frag.append(
+        _resultItem('Grams / month', `${gramsPerMonth.toFixed(3)} g`),
+        _resultItem('Months to target', `${months.toFixed(1)}`),
+        _resultItem('Years to target', `${years.toFixed(2)}`)
+      );
+      _el.accumResults.replaceChildren(frag);
     } else {
-      _el.accumResults.innerHTML =
-        '<p style="color:var(--tp-text-muted)">Enter monthly contribution and target quantity above.</p>';
+      _el.accumResults.replaceChildren(
+        _emptyMsg('Enter monthly contribution and target quantity above.')
+      );
     }
   }
 }
@@ -1141,13 +1227,21 @@ export function renderSeasonal() {
   })();
 
   // Build result cards: overall + each month with rel-to-average delta.
-  const cards = [
-    `<div class="tracker-result-card"><div class="tracker-result-k">Typical high month</div><div class="tracker-result-v">${maxMonth.label}</div><div class="tracker-result-s">$${maxAvg.toFixed(0)} avg spot</div></div>`,
-    `<div class="tracker-result-card"><div class="tracker-result-k">Typical low month</div><div class="tracker-result-v">${minMonth.label}</div><div class="tracker-result-s">$${minAvg.toFixed(0)} avg spot</div></div>`,
-    `<div class="tracker-result-card"><div class="tracker-result-k">Seasonal spread</div><div class="tracker-result-v">${pctSpread.toFixed(1)}%</div><div class="tracker-result-s">high vs low month${yearsSpan}</div></div>`,
-  ];
+  function _resultCard(label, value, sub) {
+    return el('div', { class: 'tracker-result-card' }, [
+      el('div', { class: 'tracker-result-k' }, [label]),
+      el('div', { class: 'tracker-result-v' }, [value]),
+      el('div', { class: 'tracker-result-s' }, [sub]),
+    ]);
+  }
 
-  _el.seasonalResults.innerHTML = cards.join('');
+  const frag = document.createDocumentFragment();
+  frag.append(
+    _resultCard('Typical high month', maxMonth.label, `$${maxAvg.toFixed(0)} avg spot`),
+    _resultCard('Typical low month', minMonth.label, `$${minAvg.toFixed(0)} avg spot`),
+    _resultCard('Seasonal spread', `${pctSpread.toFixed(1)}%`, `high vs low month${yearsSpan}`)
+  );
+  _el.seasonalResults.replaceChildren(frag);
 }
 
 export function renderBrief() {

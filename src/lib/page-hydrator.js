@@ -14,6 +14,7 @@ import { formatPrice, formatFreshness } from './formatter.js';
 import { injectNav, updateNavLang as _updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
 import { injectSpotBar, updateSpotBar } from '../components/spotBar.js';
+import { el, safeHref, escape } from './safe-dom.js';
 
 // Determine depth by comparing import.meta.url (this module) to the page URL.
 // This module lives at {root}/src/lib/page-hydrator.js (2 dirs from root).
@@ -65,19 +66,19 @@ async function fetchPrices() {
         ? goldRes.value
         : (() => {
             const fb = cache.getFallbackGoldPrice();
-            return fb ? { price: fb.price, updatedAt: fb.updatedAt } : null;
+            return fb
+              ? { price: fb.price, updatedAt: fb.updatedAt, source: 'cache-fallback' }
+              : null;
           })();
-    const fx =
-      fxRes.status === 'fulfilled'
-        ? fxRes.value
-        : (() => {
-            const fb = cache.getFallbackFXRates();
-            return fb ? { rates: fb.rates } : { rates: {} };
-          })();
+    // fetchFX() now handles its own cache fallback and returns source: 'cache-fallback' when used.
+    const fx = fxRes.status === 'fulfilled' ? fxRes.value : { rates: {}, source: 'unavailable' };
     return { gold, fx };
   } catch {
     const fb = cache.getFallbackGoldPrice();
-    return { gold: fb ? { price: fb.price, updatedAt: fb.updatedAt } : null, fx: { rates: {} } };
+    return {
+      gold: fb ? { price: fb.price, updatedAt: fb.updatedAt, source: 'cache-fallback' } : null,
+      fx: { rates: {}, source: 'unavailable' },
+    };
   }
 }
 
@@ -86,41 +87,67 @@ function renderKaratCards(spot, fxRate, currency, karatFilter = null) {
     ? KARATS.filter((k) => k.code === String(karatFilter).replace('-karat', ''))
     : KARATS.filter((k) => ['24', '22', '21', '18'].includes(k.code));
 
-  return karatsToShow
-    .map((k) => {
-      const price = calcLocalPrice(spot, k.purity, fxRate);
-      const priceStr = formatPrice(price, currency, 2);
-      // Styles in styles/global.css `.ph-karat-card` (W-6 token migration).
-      return `<div class="ph-karat-card">
-      <div class="ph-karat-card__label">${k.code}K Gold</div>
-      <div class="ph-karat-card__price">${priceStr}</div>
-      <div class="ph-karat-card__unit">per gram</div>
-    </div>`;
-    })
-    .join('');
+  // Styles in styles/global.css `.ph-karat-card` (W-6 token migration, W-1 safe-dom migration).
+  const frag = document.createDocumentFragment();
+  for (const k of karatsToShow) {
+    const price = calcLocalPrice(spot, k.purity, fxRate);
+    const priceStr = formatPrice(price, currency, 2);
+    frag.appendChild(
+      el('div', { class: 'ph-karat-card' }, [
+        el('div', { class: 'ph-karat-card__label' }, [`${escape(k.code)}K Gold`]),
+        el('div', { class: 'ph-karat-card__price' }, [priceStr]),
+        el('div', { class: 'ph-karat-card__unit' }, ['per gram']),
+      ])
+    );
+  }
+  return frag;
 }
 
 function renderFreshnessBadge(updatedAt) {
   const { label, state } = formatFreshness(updatedAt);
-  const colors = {
-    live: '#10b981',
-    recent: '#f59e0b',
-    stale: '#f97316',
-    cached: '#ef4444',
-    error: '#6b7280',
+  const colorMap = {
+    live: 'var(--color-live, #10b981)',
+    recent: 'var(--color-warning, #f59e0b)',
+    stale: 'var(--color-stale, #f97316)',
+    cached: 'var(--color-error, #ef4444)',
+    error: 'var(--text-tertiary, #6b7280)',
   };
-  const color = colors[state] || '#6b7280';
+  const color = colorMap[state] || 'var(--text-tertiary, #6b7280)';
   const isStale = state === 'stale' || state === 'cached' || state === 'error';
-  const staleBanner = isStale
-    ? `<div style="background:#fef9c3;border:1px solid #fde68a;border-radius:8px;padding:0.5rem 0.75rem;font-size:0.8rem;color:#92400e;margin-bottom:0.75rem;">
-        ⚠️ Prices may be delayed. Last known data shown. <a href="${BASE_URL}/methodology.html" style="color:#92400e;font-weight:600;">Learn more</a>
-       </div>`
-    : '';
-  return `${staleBanner}<span style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.8rem;color:${color};font-weight:500;" title="Source: goldpricez.com / open.er-api.com">
-    <span style="width:7px;height:7px;border-radius:50%;background:${color};display:inline-block;"></span>
-    ${label}
-    <span style="color:#cbd5e1;font-size:0.75rem;">· spot-linked estimate</span>
-  </span>`;
+  const frag = document.createDocumentFragment();
+  if (isStale) {
+    frag.appendChild(
+      el(
+        'div',
+        {
+          class: 'ph-freshness-banner',
+          role: 'alert',
+        },
+        [
+          '⚠️ Prices may be delayed. Last known data shown. ',
+          el('a', { href: safeHref(`${BASE_URL}/methodology.html`), class: 'ph-freshness-link' }, [
+            'Learn more',
+          ]),
+        ]
+      )
+    );
+  }
+  frag.appendChild(
+    el(
+      'span',
+      {
+        class: 'ph-freshness-badge',
+        title: 'Source: goldpricez.com / open.er-api.com',
+        style: { color },
+      },
+      [
+        el('span', { class: 'ph-freshness-dot', style: { background: color } }),
+        label,
+        el('span', { class: 'ph-freshness-suffix' }, ['· spot-linked estimate']),
+      ]
+    )
+  );
+  return frag;
 }
 
 function renderDisclaimer(country, pageUrl) {
@@ -133,15 +160,29 @@ function renderDisclaimer(country, pageUrl) {
     safeUrl = BASE_URL;
   }
   const waText = encodeURIComponent(
-    `Gold prices in ${country.nameEn} — check live rates: ${safeUrl}`
+    `Gold prices in ${escape(country.nameEn)} — check live rates: ${safeUrl}`
   );
   const waUrl = `https://wa.me/?text=${waText}`;
-  return `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:0.75rem 1rem;margin-top:1rem;font-size:0.78rem;color:#64748b;display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;justify-content:space-between;">
-    <span>⚠️ <strong>Reference rates only.</strong> Actual retail prices vary. <a href="${BASE_URL}/methodology.html" style="color:#d4a017;font-weight:600;">Methodology</a></span>
-    <a href="${waUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.3rem 0.65rem;background:#25D366;color:white;border-radius:6px;font-weight:600;text-decoration:none;font-size:0.75rem;">
-      <span>📲</span> Share on WhatsApp
-    </a>
-  </div>`;
+  return el('div', { class: 'ph-disclaimer' }, [
+    el('span', {}, [
+      '⚠️ ',
+      el('strong', {}, ['Reference rates only.']),
+      ' Actual retail prices vary. ',
+      el('a', { href: safeHref(`${BASE_URL}/methodology.html`), class: 'ph-disclaimer-link' }, [
+        'Methodology',
+      ]),
+    ]),
+    el(
+      'a',
+      {
+        href: safeHref(waUrl),
+        target: '_blank',
+        rel: 'noopener noreferrer',
+        class: 'ph-disclaimer-share',
+      },
+      ['📲 Share on WhatsApp']
+    ),
+  ]);
 }
 
 async function hydrate() {
@@ -177,9 +218,11 @@ async function hydrate() {
     }
 
     if (karatsEl)
-      karatsEl.innerHTML = renderKaratCards(gold.price, rate, country.currency, karatSlug || null);
-    if (freshEl) freshEl.innerHTML = renderFreshnessBadge(gold.updatedAt);
-    if (disclaimerEl) disclaimerEl.innerHTML = renderDisclaimer(country, location.href);
+      karatsEl.replaceChildren(
+        renderKaratCards(gold.price, rate, country.currency, karatSlug || null)
+      );
+    if (freshEl) freshEl.replaceChildren(renderFreshnessBadge(gold.updatedAt));
+    if (disclaimerEl) disclaimerEl.replaceChildren(renderDisclaimer(country, location.href));
 
     // Update sticky spot bar with live prices
     const aed24g = (gold.price / CONSTANTS.TROY_OZ_GRAMS) * AED_PEG;

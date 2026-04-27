@@ -66,7 +66,7 @@ const BASELINE = {
   'src/components/spotBar.js': 1,
   'src/components/ticker.js': 1,
   'src/lib/cache.js': 1,
-  'src/lib/page-hydrator.js': 3,
+  'src/lib/page-hydrator.js': 0, // W-1: migrated renderKaratCards/renderFreshnessBadge/renderDisclaimer to safe-dom el() + replaceChildren().
   'src/pages/home.js': 0, // Homepage revamp migrated GCC grid + PWA banner rendering to el()/DocumentFragment on 2026-04-25.
   'src/pages/shops.js': 13,
   'src/pages/shops/filters.js': 4, // Extracted from shops.js: safe <option> building with esc()
@@ -74,7 +74,7 @@ const BASELINE = {
   'src/pages/shops/rendering.js': 0, // Migrated to el()/DocumentFragment on 2026-04-24 (PR A-2). Kept in baseline as 0-ceiling regression guard.
   'src/pages/tracker-pro.js': 4,
   'src/tracker/events.js': 2,
-  'src/tracker/render.js': 10, // Phase 9–11: migrated chartStats, karatTable, alertList, presetList, archiveBody to el() (was 17)
+  'src/tracker/render.js': 0, // Phase 9–11 + Phase 12: fully migrated all sinks to el() / SVG DOM (was 17 → 10 → 0).
   'src/tracker/wire.js': 0, // Phase 9: fully migrated to el() + safeHref (was 3)
 };
 

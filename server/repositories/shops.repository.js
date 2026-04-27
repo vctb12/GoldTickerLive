@@ -23,6 +23,7 @@
 const fs = require('fs');
 const path = require('path');
 const { getSupabaseClient } = require('../lib/supabase-client');
+const { atomicWriteJSON } = require('../lib/fs-atomic.js');
 
 const SHOPS_FILE = path.join(__dirname, '../../data/shops-data.json');
 const getBackend = () => process.env.STORAGE_BACKEND || 'file';
@@ -49,7 +50,8 @@ function _readFile() {
 function _writeFile(shops) {
   _ensureFile();
   try {
-    fs.writeFileSync(SHOPS_FILE, JSON.stringify(shops, null, 2));
+    // Atomic write-to-temp → rename (W-4). Prevents torn writes.
+    atomicWriteJSON(SHOPS_FILE, shops);
   } catch (err) {
     console.error('[shops.repository] Failed to write shops file:', err.message);
     throw err;

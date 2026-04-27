@@ -217,7 +217,7 @@
           <div class="invest-planner">
             <div class="invest-planner-panel">
               <div class="invest-field">
-                <label class="invest-label" for="budget-input" id="budget-label"></label>
+                <label class="invest-label" for="budget-input" id="budget-label" data-i18n="budgetLabel">Investment Budget</label>
                 <div class="invest-input-row">
                   <input
                     type="number"
@@ -226,6 +226,7 @@
                     min="250"
                     step="50"
                     value="10000"
+                    aria-labelledby="budget-label"
                   />
                 </div>
                 <input
@@ -236,6 +237,8 @@
                   max="200000"
                   step="250"
                   value="10000"
+                  aria-label="Investment budget slider"
+                  aria-labelledby="budget-label"
                 />
               </div>
 

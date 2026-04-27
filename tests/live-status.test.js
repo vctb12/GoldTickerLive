@@ -121,3 +121,32 @@ test('getMarketStatus() matches the legacy home.js open/closed rules', async () 
     );
   }
 });
+
+test('getFXFreshness() classifies live, cached, stale, and unavailable FX states (W-3)', async () => {
+  const { getFXFreshness, FX_MARKET } = await load();
+
+  const now = Date.now();
+
+  // Live: within FX_STALE_AFTER_MS, no cache failure
+  const live = getFXFreshness({ fxUpdatedAt: new Date(now - 1 * 60 * 60 * 1000).toISOString() });
+  assert.equal(live.key, 'live');
+  assert.ok(Number.isFinite(live.ageMs));
+
+  // Cached: within FX_STALE_AFTER_MS but hasCacheFailure
+  const cached = getFXFreshness({
+    fxUpdatedAt: new Date(now - 1 * 60 * 60 * 1000).toISOString(),
+    hasCacheFailure: true,
+  });
+  assert.equal(cached.key, 'cached');
+
+  // Stale: older than FX_STALE_AFTER_MS (26 h)
+  const stale = getFXFreshness({
+    fxUpdatedAt: new Date(now - FX_MARKET.FX_STALE_AFTER_MS - 60_000).toISOString(),
+  });
+  assert.equal(stale.key, 'stale');
+
+  // Unavailable: missing timestamp
+  const unavailable = getFXFreshness({ fxUpdatedAt: null });
+  assert.equal(unavailable.key, 'unavailable');
+  assert.equal(unavailable.ageMs, Infinity);
+});

@@ -46,6 +46,7 @@ let users = [
 // Load users from file if exists
 const fs = require('fs');
 const path = require('path');
+const { atomicWriteJSON } = require('./fs-atomic.js');
 const USERS_FILE = path.join(__dirname, '../../data/users.json');
 
 function loadUsers() {
@@ -87,12 +88,8 @@ function saveUsers() {
       /* non-POSIX filesystem — best effort */
     }
   }
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), { mode: 0o600 });
-  try {
-    fs.chmodSync(USERS_FILE, 0o600);
-  } catch {
-    /* non-POSIX filesystem — best effort */
-  }
+  // Atomic write-to-temp → rename (W-4). Prevents torn writes under concurrent requests.
+  atomicWriteJSON(USERS_FILE, users, { mode: 0o600 });
 }
 
 loadUsers();
