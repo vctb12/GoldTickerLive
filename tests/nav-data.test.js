@@ -43,6 +43,10 @@ test('NAV_DATA group keys match between locales', async () => {
   const { NAV_DATA } = await loadNav();
   const enKeys = NAV_DATA.en.groups.map((g) => g.key);
   const arKeys = NAV_DATA.ar.groups.map((g) => g.key);
+  // Top-level order is intentional IA: primary price checking, tools, buying, markets.
+  const expectedKeys = ['prices', 'tools', 'buy-gold', 'markets'];
+  assert.deepEqual(enKeys, expectedKeys);
+  assert.deepEqual(arKeys, expectedKeys);
   assert.deepEqual(
     enKeys,
     arKeys,
@@ -121,7 +125,7 @@ test('NAV_DATA every group has a layout hint (two-col | one-col)', async () => {
   for (const lang of ['en', 'ar']) {
     for (const group of NAV_DATA[lang].groups) {
       assert.ok(
-        group.layout === 'two-col' || group.layout === 'one-col',
+        group.layout === 'two-col' || group.layout === 'one-col' || group.layout === 'mega',
         `${lang}.${group.key} missing/invalid layout: ${JSON.stringify(group.layout)}`
       );
     }
@@ -132,6 +136,23 @@ test('NAV_DATA every dropdown item has a non-empty description', async () => {
   const { NAV_DATA } = await loadNav();
   for (const lang of ['en', 'ar']) {
     for (const group of NAV_DATA[lang].groups) {
+      assert.ok(group.key, `${lang} group missing key`);
+      assert.ok(group.label, `${lang}.${group.key} missing label`);
+      assert.ok(group.description, `${lang}.${group.key} missing description`);
+      assert.ok(group.layout, `${lang}.${group.key} missing layout`);
+      assert.ok(Array.isArray(group.sections), `${lang}.${group.key} missing sections`);
+      assert.ok(group.sections.length > 0, `${lang}.${group.key} has no sections`);
+      assert.ok(group.featured?.href, `${lang}.${group.key} missing featured link`);
+      assert.ok(group.featured?.label, `${lang}.${group.key} missing featured label`);
+      assert.ok(group.featured?.description, `${lang}.${group.key} missing featured description`);
+      assert.ok(group.cta?.href, `${lang}.${group.key} missing contextual CTA`);
+      assert.ok(group.cta?.label, `${lang}.${group.key} missing CTA label`);
+      assert.ok(group.cta?.description, `${lang}.${group.key} missing CTA description`);
+      for (const section of group.sections) {
+        assert.ok(section.key, `${lang}.${group.key} section missing key`);
+        assert.ok(section.label, `${lang}.${group.key}.${section.key} missing label`);
+        assert.ok(section.items.length > 0, `${lang}.${group.key}.${section.key} has no items`);
+      }
       for (const item of group.items) {
         assert.ok(
           typeof item.description === 'string' && item.description.length > 0,
