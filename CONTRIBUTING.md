@@ -2,6 +2,11 @@
 
 Thank you for your interest in contributing! This guide will help you get up and running quickly.
 
+> **Looking for the canonical agent charter?** Read [`AGENTS.md`](./AGENTS.md). It defines the
+> Autonomy Contract, the product-trust guardrails (§6), and the verification expectations every
+> contributor — human or AI — must follow. The points in this file are a quick-start; `AGENTS.md` is
+> the source of truth and supersedes anything here on conflict.
+
 ## Project Overview
 
 Gold-Prices is a bilingual (English / Arabic) gold price tracking platform for GCC and Arab markets.
@@ -139,6 +144,18 @@ E2E test files live in `tests/e2e/` and follow the `*.spec.js` naming convention
 
 6. **PR-only, no direct push, no force-push** — `main` is protected and the live site deploys from
    it.
+
+7. **Adding or upgrading a dependency** — check the
+   [GitHub Advisory Database](https://github.com/advisories) for known vulnerabilities first,
+   justify the addition in the PR body (alternatives considered, bundle-size impact, license), and
+   pin the major version. The repo prefers vanilla ES modules over new frameworks; framework
+   migrations require explicit owner approval per
+   [`AGENTS.md`](./AGENTS.md#6-product-trust-guardrails) §6.5.
+
+8. **Don't change product-trust surfaces silently** — spot-vs-retail labelling, freshness pills,
+   methodology copy, canonical URLs, `robots.txt`, `og:*` / `twitter:*` tags, sitemap structure, and
+   `CNAME` are tracked under [`AGENTS.md`](./AGENTS.md#6-product-trust-guardrails) §6.1–§6.4. Any
+   change to these surfaces must be flagged in the PR body and ship with the rationale.
 
 ## Project Structure
 

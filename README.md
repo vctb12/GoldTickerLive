@@ -218,7 +218,10 @@ Append `?debug=true` to any page URL to expose a debug panel for:
 
 ```bash
 npm install
-npm test             # Runs 343 tests across 30 test suites
+npm test             # ~350 unit tests across the suite
+npm run lint         # ESLint (flat config in eslint.config.mjs)
+npm run validate     # build integrity + DOM safety + SEO + sitemap + sw-coverage gates
+npm run quality      # lint + prettier --check + stylelint
 ```
 
 ### Run preflight checks
@@ -227,6 +230,13 @@ npm test             # Runs 343 tests across 30 test suites
 npm run preflight    # Runs audit-pages + check-links
 npm run seo-audit    # Validates SEO metadata across all pages
 ```
+
+### Environment variables
+
+The Express admin backend (`server.js`) refuses to start without `JWT_SECRET`, `ADMIN_PASSWORD`, and
+`ADMIN_ACCESS_PIN`. The full env-var matrix — including optional Supabase, newsletter, and Stripe
+keys — lives in [`docs/environment-variables.md`](./docs/environment-variables.md). A `.env.example`
+template ships in repo root.
 
 ---
 
