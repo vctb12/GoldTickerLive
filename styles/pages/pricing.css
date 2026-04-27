@@ -40,7 +40,7 @@
   gap: 0.75rem;
   cursor: pointer;
   padding: 0.75rem 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(255, 255, 255, 0.1);
   border-radius: 50px;
   backdrop-filter: blur(10px);
 }
@@ -49,7 +49,7 @@
   width: 48px;
   height: 24px;
   appearance: none;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgb(255, 255, 255, 0.3);
   border-radius: 12px;
   position: relative;
   cursor: pointer;
@@ -57,7 +57,7 @@
 }
 
 .toggle-label input:checked {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgb(255, 255, 255, 0.5);
 }
 
 .toggle-label input::before {
@@ -104,14 +104,16 @@
   background: white;
   border-radius: 16px;
   padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 6px rgb(0, 0, 0, 0.07);
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
   position: relative;
 }
 
 .pricing-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 24px rgb(0, 0, 0, 0.12);
 }
 
 .pricing-card-featured {
@@ -134,7 +136,7 @@
   border-radius: 20px;
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
-  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 8px rgb(59, 130, 246, 0.3);
 }
 
 .pricing-card-header h2 {
@@ -174,7 +176,7 @@
 .pricing-features {
   list-style: none;
   padding: 0;
-  margin: 0 0 2rem 0;
+  margin: 0 0 2rem;
 }
 
 .pricing-features li {
@@ -208,22 +210,22 @@
 .pricing-cta-pro {
   background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgb(59, 130, 246, 0.3);
 }
 
 .pricing-cta-pro:hover {
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 6px 16px rgb(59, 130, 246, 0.4);
   transform: translateY(-2px);
 }
 
 .pricing-cta-api {
   background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 4px 12px rgb(139, 92, 246, 0.3);
 }
 
 .pricing-cta-api:hover {
-  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 6px 16px rgb(139, 92, 246, 0.4);
   transform: translateY(-2px);
 }
 
@@ -252,13 +254,13 @@
   background: white;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgb(0, 0, 0, 0.05);
   cursor: pointer;
   transition: box-shadow 0.3s;
 }
 
 .faq-item:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgb(0, 0, 0, 0.1);
 }
 
 .faq-item summary {
@@ -310,7 +312,7 @@
   overflow-x: auto;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 8px rgb(0, 0, 0, 0.05);
 }
 
 .comparison-table {

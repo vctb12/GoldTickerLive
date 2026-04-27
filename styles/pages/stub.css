@@ -12,7 +12,7 @@
   border-radius: 16px;
   padding: 2.5rem 1.75rem;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 20px rgb(0, 0, 0, 0.04);
 }
 
 .stub-icon {
@@ -102,7 +102,7 @@
 .stub-related-link:focus-visible {
   border-color: #d4a017;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(212, 160, 23, 0.1);
+  box-shadow: 0 4px 12px rgb(212, 160, 23, 0.1);
 }
 
 .stub-related-icon {
@@ -137,7 +137,7 @@
 [data-theme='dark'] .stub-card {
   background: var(--color-surface, #1e293b);
   border-color: var(--color-border, #334155);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 20px rgb(0, 0, 0, 0.25);
 }
 
 [data-theme='dark'] .stub-eyebrow {
