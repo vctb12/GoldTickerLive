@@ -264,7 +264,10 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
     toggleBtn?.setAttribute('aria-expanded', 'false');
   }
 
-  toggleBtn?.setAttribute('aria-expanded', 'false');
+  toggleBtn?.setAttribute(
+    'aria-expanded',
+    sidebarEl?.classList.contains('sidebar--open') ? 'true' : 'false'
+  );
 
   toggleBtn?.addEventListener('click', () => {
     if (sidebarEl?.classList.contains('sidebar--open')) {

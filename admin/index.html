@@ -710,6 +710,7 @@
         readJsonCache,
         writeJsonCache,
       } from './shared/admin-data.js';
+      import { escape as escapeHtml, safeHref } from '../src/lib/safe-dom.js';
 
       // ── Auth guard ───────────────────────────────────────────
       if (!(await requireAuth('./login/'))) throw new Error('redirect');
@@ -764,15 +765,6 @@
         if (result?.ok) return { value: result.count ?? 0, source: 'Supabase' };
         if (typeof serverValue === 'number') return { value: serverValue, source: 'server stats' };
         return { value: null, source: result?.reason || 'not available' };
-      }
-
-      function escapeHtml(value) {
-        return String(value ?? '')
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#39;');
       }
 
       // ── Gold Ticker + sparkline ──────────────────────────────
@@ -878,11 +870,11 @@
 
         list.innerHTML = items
           .map(
-            (item) => `<a class="insight-item" href="${item.href}">
+            (item) => `<a class="insight-item" href="${safeHref(item.href)}">
               <span class="insight-icon" aria-hidden="true">${item.icon}</span>
               <span>
-                <span class="insight-title">${item.title}</span>
-                <span class="insight-copy">${item.copy}</span>
+                <span class="insight-title">${escapeHtml(item.title)}</span>
+                <span class="insight-copy">${escapeHtml(item.copy)}</span>
               </span>
             </a>`
           )
