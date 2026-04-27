@@ -37,7 +37,7 @@
     "inject-schema": "node scripts/node/inject-schema.js",
     "enrich-placeholders": "node scripts/node/enrich-placeholder-pages.js",
     "preflight": "npm run audit-pages && npm run check-links",
-    "validate": "node scripts/node/validate-build.js && node scripts/node/check-unsafe-dom.js && node scripts/node/check-seo-meta.js && node scripts/node/enrich-placeholder-pages.js --check && node scripts/node/externalize-analytics.js --check && node scripts/node/inventory-seo.js --check && node scripts/node/inject-schema.js --check",
+    "validate": "node scripts/node/validate-build.js && node scripts/node/check-unsafe-dom.js && node scripts/node/check-seo-meta.js && node scripts/node/check-sw-coverage.js && node scripts/node/enrich-placeholder-pages.js --check && node scripts/node/externalize-analytics.js --check && node scripts/node/inventory-seo.js --check && node scripts/node/inject-schema.js --check",
     "security": "npm audit && npm outdated",
     "prepare": "husky"
   },
@@ -60,8 +60,7 @@
     "express-rate-limit": "^8.3.2",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
-    "morgan": "^1.10.1",
-    "uuid": "^14.0.0"
+    "morgan": "^1.10.1"
   },
   "lint-staged": {
     "*.js": [

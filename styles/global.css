@@ -6939,3 +6939,42 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
   background: rgb(255 255 255 / 0.08);
   color: var(--color-text);
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   page-hydrator karat cards (W-6) — extracted from inline styles in
+   src/lib/page-hydrator.js renderKaratCards(). Tokenised via styles/global.css
+   so future theme/dark-mode changes apply automatically.
+   ───────────────────────────────────────────────────────────────────────── */
+.ph-karat-card {
+  background: var(--surface-secondary, var(--color-surface-2));
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  text-align: center;
+  min-height: 90px;
+}
+
+.ph-karat-card__label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ph-karat-card__price {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: var(--space-1) 0;
+}
+
+.ph-karat-card__unit {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+[data-theme='dark'] .ph-karat-card {
+  background: rgb(33 26 18 / 60%);
+  border-color: rgb(255 255 255 / 0.08);
+}

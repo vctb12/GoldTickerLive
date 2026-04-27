@@ -23,27 +23,28 @@ P0 items graduate into plan PRs under [`docs/plans/`](./plans/), per
 
 ### Detected stack
 
-| Area          | Detected                                                                                                                  | Source                                                    |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| Frontend      | Vanilla ES modules under `src/`, static multi-page HTML at repo root and in `countries/`, `content/`                      | [`AGENTS.md` §1, §3](../AGENTS.md), `package.json`        |
-| Build         | Vite 8 (`vite build`), preceded by `scripts/node/extract-baseline.js` → `normalize-shops.js` → `build/generateSitemap.js` | `package.json` `scripts.build`                            |
-| Styling       | Hand-authored CSS with tokens (`styles/global.css`) + per-page files under `styles/pages/`; stylelint-config-standard 40  | `package.json`, `styles/`                                 |
-| Backend       | Node/Express 5 admin API in `server/` + `server.js`; `fs.readFileSync/writeFileSync` for JSON persistence; Helmet, CORS, rate-limit, JWT, bcrypt | `package.json` dependencies |
-| Python        | Automation in `scripts/python/` (gold poster, newsletters, Supabase client, spike detector); linted with ruff 0.9.2       | `pyproject.toml`, `scripts/python/`, `ci.yml` python-lint |
-| Hosting       | GitHub Pages for the static site (see `deploy.yml`); `CNAME` + `goldtickerlive.com`                                       | `.github/workflows/deploy.yml`, `CNAME`                   |
-| Admin OAuth   | Supabase GitHub OAuth (admin panel)                                                                                       | `admin/`, `supabase/`                                     |
-| Module system | Root `package.json` `"type": "commonjs"`; `src/package.json` `"type": "module"` so `src/**/*.js` loads as ESM             | `package.json`, `src/package.json`                        |
+| Area          | Detected                                                                                                                                         | Source                                                    |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- |
+| Frontend      | Vanilla ES modules under `src/`, static multi-page HTML at repo root and in `countries/`, `content/`                                             | [`AGENTS.md` §1, §3](../AGENTS.md), `package.json`        |
+| Build         | Vite 8 (`vite build`), preceded by `scripts/node/extract-baseline.js` → `normalize-shops.js` → `build/generateSitemap.js`                        | `package.json` `scripts.build`                            |
+| Styling       | Hand-authored CSS with tokens (`styles/global.css`) + per-page files under `styles/pages/`; stylelint-config-standard 40                         | `package.json`, `styles/`                                 |
+| Backend       | Node/Express 5 admin API in `server/` + `server.js`; `fs.readFileSync/writeFileSync` for JSON persistence; Helmet, CORS, rate-limit, JWT, bcrypt | `package.json` dependencies                               |
+| Python        | Automation in `scripts/python/` (gold poster, newsletters, Supabase client, spike detector); linted with ruff 0.9.2                              | `pyproject.toml`, `scripts/python/`, `ci.yml` python-lint |
+| Hosting       | GitHub Pages for the static site (see `deploy.yml`); `CNAME` + `goldtickerlive.com`                                                              | `.github/workflows/deploy.yml`, `CNAME`                   |
+| Admin OAuth   | Supabase GitHub OAuth (admin panel)                                                                                                              | `admin/`, `supabase/`                                     |
+| Module system | Root `package.json` `"type": "commonjs"`; `src/package.json` `"type": "module"` so `src/**/*.js` loads as ESM                                    | `package.json`, `src/package.json`                        |
 
 ### Dependency health (snapshot from `package.json`)
 
 Runtime deps are on current major versions at audit time:
 
 - `express ^5.2.1`, `helmet ^8.1.0`, `express-rate-limit ^8.3.2`, `cors ^2.8.6`, `morgan ^1.10.1`
-- `jsonwebtoken ^9.0.3`, `bcryptjs ^3.0.3`, `uuid ^14.0.0`
+- `jsonwebtoken ^9.0.3`, `bcryptjs ^3.0.3`
 
-> **Note:** `lowdb` was listed here at the time of this audit but was removed in the 2026-04-24
-> dependency audit. Persistence is via plain `fs.readFileSync` / `fs.writeFileSync` in
-> `server/repositories/`. See `docs/DEPENDENCIES.md` for the current snapshot.
+> **Note:** Persistence is via plain `fs.readFileSync` / `fs.writeFileSync` in
+> `server/repositories/`. `lowdb` was previously listed here but was removed in the 2026-04-24
+> dependency audit; `uuid` was removed in the 2026-04-27 follow-up (replaced with
+> `crypto.randomUUID()` where applicable). See `docs/DEPENDENCIES.md` for the current snapshot.
 
 Dev deps likewise on current majors: `vite ^8.0.9`, `eslint ^10.2.1`, `prettier ^3.8.3`,
 `stylelint ^17.8.0`, `@playwright/test ^1.48.2`, `terser ^5.46.1`, `linkinator ^7.6.1`,

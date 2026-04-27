@@ -58,6 +58,36 @@ test('getLiveFreshness() classifies live, cached, stale, and unavailable states'
   assert.equal(unavailable.key, 'unavailable');
 });
 
+// W-2 regression — STALE_AFTER_MS must give the freshness pill at least one
+// missed cron-tick of safety margin over the gold-price-fetch workflow's
+// `*/6` cadence. If the workflow cadence ever drops below 12 minutes, this
+// assertion intentionally fails so the threshold is reconsidered together.
+test('GOLD_MARKET.STALE_AFTER_MS exceeds the gold-price-fetch cron cadence', async () => {
+  const { GOLD_MARKET, getLiveFreshness } = await load();
+  const cronCadenceMs = 6 * 60 * 1000;
+
+  assert.ok(
+    GOLD_MARKET.STALE_AFTER_MS >= 2 * cronCadenceMs,
+    `STALE_AFTER_MS (${GOLD_MARKET.STALE_AFTER_MS}ms) must allow at least one missed cron tick`
+  );
+
+  // Boundary: a price that is just under the threshold must still be "live".
+  const now = Date.now();
+  const justFresh = getLiveFreshness({
+    updatedAt: new Date(now - (GOLD_MARKET.STALE_AFTER_MS - 1_000)).toISOString(),
+    hasLiveFailure: false,
+  });
+  assert.equal(justFresh.key, 'live');
+
+  // Boundary: a price just past the threshold must classify as "stale", even
+  // when the live fetch reportedly succeeded.
+  const justStale = getLiveFreshness({
+    updatedAt: new Date(now - (GOLD_MARKET.STALE_AFTER_MS + 1_000)).toISOString(),
+    hasLiveFailure: false,
+  });
+  assert.equal(justStale.key, 'stale');
+});
+
 // §22b Phase 4 — equivalence guard for the homepage's previously-duplicated
 // getMarketStatus() implementation. Ensures the shared primitive stays behavior-
 // compatible with the local impl that `src/pages/home.js` used to carry.

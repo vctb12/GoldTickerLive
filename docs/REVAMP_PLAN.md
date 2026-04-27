@@ -808,6 +808,24 @@ admin revamp" for the tracker-only subset._
 | _deferred_ | `phase14` | 20-phase Phase 14 / §22b Phase 14 (CSS split) — own PR; highest visual-regression risk.                                                                                                                                                           |
 | _deferred_ | `phase19` | 20-phase Phase 19 (lazy-mount) — own PR; Playwright deep-link smoke test per mode required.                                                                                                                                                       |
 
+### Round 6 — 20-item low-risk multi-batch rollout · 2026-04-27 (this PR)
+
+_Cross-cuts three pending proposals (`2026-04-25_codebase-analysis.md`,
+`2026-04-25_multi-track-quality.md`, `2026-04-27_full-site-ux-admin-revamp.md`) with a
+non-architectural slice that does not touch price math, dependencies, or canonical URLs. See PR
+description for the full sequencing._
+
+| SHA       | Bucket | Summary                                                                                                                                                                                                                                                            |
+| --------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| _pending_ | `plan` | Group D · Reconcile §17 (this row) and §29 statuses + flag W-2/W-6/W-9/W-10/W-11/W-12/W-14 as "Resolved (2026-04-27)" in `docs/plans/2026-04-25_codebase-analysis.md`                                                                                              |
+| `85f904c` | `weak` | Group A · W-2 (`STALE_AFTER_MS` 10 → 12 min + cron-comment fix), W-6 (karat-cards inline → `.ph-karat-card`), W-9 (sitemap-parity guard test), W-10 (lowdb refs out), W-11 (drop `uuid`), W-12 (analytics IDs in `EDIT_GUIDE`), W-14 (sw-coverage script + report) |
+| `ad2108e` | `docs` | Group B · README quickstart refresh, CONTRIBUTING ↔ AGENTS.md alignment, `src/lib/` comment audit (clean), `reports/env-audit.md`, `reports/internal-linking.md`, `reports/ux-friction.md`                                                                         |
+| `2e813ae` | `seo`  | Group C · 130 over-length meta descriptions tightened (template + existing pages), `og:locale` / `og:locale:alternate` on `privacy.html` + `terms.html`, error-state copy softened in EN+AR                                                                        |
+
+**Verification (Round 6):** `npm test` (354 ✓), `npm run validate` (incl. new sitemap-parity +
+sw-coverage gates ✓), `npx prettier --write` on touched files. Pre-existing `npm run style` failures
+(53 `rgb`/`rgba` style errors in unrelated CSS) carried forward; not caused by this slice.
+
 ### Merged PRs
 
 _None yet._ Populate when the first revamp PR merges: PR number, merge date, branch name, range of

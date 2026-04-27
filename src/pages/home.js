@@ -105,7 +105,7 @@ function setTextById(id, text) {
 function getFreshnessMeta() {
   const freshnessTime = goldUpdatedAt || new Date().toISOString();
   const ageMs = goldUpdatedAt ? Date.now() - new Date(goldUpdatedAt).getTime() : 0;
-  const isStaleByAge = ageMs > 10 * 60 * 1000; // >10 minutes
+  const isStaleByAge = ageMs > 12 * 60 * 1000; // >12 minutes (matches GOLD_MARKET.STALE_AFTER_MS)
   const isLive = priceSourceLabel === 'live' && !isStaleByAge;
   let sourceText;
   if (isLive) {

@@ -141,9 +141,8 @@ function buildCityHub(country, city, relFile) {
   const ccy = country.currency;
   const title = `Gold Prices in ${cityEn}, ${countryEn} — 24K, 22K, 21K, 18K | GoldPrices`;
   const desc =
-    `Live 24K, 22K, 21K and 18K gold prices in ${cityEn}, ${countryEn} today — ` +
-    `per gram in ${ccy}, updated continuously. Jump to live rates, city gold shops, ` +
-    'or specific karat pages.';
+    `Live 24K, 22K, 21K and 18K gold prices in ${cityEn}, ${countryEn} — ` +
+    `per gram in ${ccy}. Live rates, city shops, or specific karat pages.`;
   const dir = path.join(ROOT, path.dirname(relFile));
   const existing = (p) => fs.existsSync(path.join(dir, p));
   const links = [];
@@ -227,8 +226,8 @@ function buildCityKaratHub(country, city, relFile) {
   const ccy = country.currency;
   const title = `Gold Rate by Karat in ${cityEn}, ${countryEn} — 24K, 22K, 21K, 18K | GoldPrices`;
   const desc =
-    `Today's gold rate in ${cityEn}, ${countryEn} by karat — 24-karat, 22-karat, 21-karat ` +
-    `and 18-karat live prices per gram in ${ccy}, refreshed from the international spot market.`;
+    `Today's gold rate in ${cityEn}, ${countryEn} by karat — 24K, 22K, 21K ` +
+    `and 18K live prices per gram in ${ccy}, refreshed from the spot market.`;
   const dir = path.join(ROOT, path.dirname(relFile));
   const existing = (p) => fs.existsSync(path.join(dir, p));
   const karats = [

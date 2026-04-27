@@ -5,12 +5,16 @@ import { formatTimestampShort } from './formatter.js';
  *
  * - `OPEN_SUN_MINUTES`: minutes past midnight UTC when the market re-opens on Sunday.
  * - `CLOSE_FRI_MINUTES`: minutes past midnight UTC when the market closes on Friday.
- * - `STALE_AFTER_MS`: age in ms after which a price is considered stale (10 minutes).
+ * - `STALE_AFTER_MS`: age in ms after which a price is considered stale (12 minutes).
+ *   The gold-price-fetch workflow runs every 6 minutes while markets are open.
+ *   A 12-minute threshold tolerates one missed cron tick before the "Live"
+ *   pill flips to "stale", preventing the UI from claiming "Live" data that
+ *   is actually two cron windows old.
  */
 export const GOLD_MARKET = {
   OPEN_SUN_MINUTES: 22 * 60,
   CLOSE_FRI_MINUTES: 21 * 60,
-  STALE_AFTER_MS: 10 * 60 * 1000,
+  STALE_AFTER_MS: 12 * 60 * 1000,
 };
 
 function toDate(value) {
