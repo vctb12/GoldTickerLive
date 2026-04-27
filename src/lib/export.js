@@ -29,10 +29,6 @@ function csvRow(cells) {
   return cells.map((c) => `"${String(c ?? '').replace(/"/g, '""')}"`).join(',');
 }
 
-function isoDate() {
-  return new Date().toISOString().slice(0, 10);
-}
-
 function isoTimestamp() {
   // Colons are not safe in Windows filenames; replace with hyphens for portability.
   return new Date().toISOString().replace(/:/g, '-').slice(0, 19) + 'Z';
@@ -59,7 +55,7 @@ export function exportCSV(countries, karatCode, prices, lang = 'en') {
   const purity = ((parseInt(karatCode, 10) / 24) * 100).toFixed(1);
 
   const header = [
-    `# GoldPrices — ${karatLabel} Snapshot`,
+    `# GoldTickerLive — ${karatLabel} Snapshot`,
     `# Exported: ${ts}`,
     '# Source: goldpricez.com / open.er-api.com',
     `# AED peg: ${CONSTANTS.AED_PEG} fixed (UAE Central Bank)`,
@@ -87,7 +83,7 @@ export function exportCSV(countries, karatCode, prices, lang = 'en') {
 
   downloadFile(
     [...header, ...dataRows].join('\n'),
-    `gold-prices-${karatCode}k-${isoDate()}.csv`,
+    `gold-prices-${karatCode}k-${isoTimestamp()}.csv`,
     'text/csv;charset=utf-8;'
   );
 }
@@ -120,7 +116,7 @@ export function exportJSON(STATE, prices) {
   };
   downloadFile(
     JSON.stringify(payload, null, 2),
-    `gold-prices-${isoDate()}.json`,
+    `gold-prices-${isoTimestamp()}.json`,
     'application/json'
   );
 }
@@ -149,7 +145,7 @@ export function exportArchiveCSV(history, karatCode = '24', aedPeg = CONSTANTS.A
   const purity = parseInt(karatCode, 10) / 24;
 
   const lines = [
-    `# GoldPrices — Daily Archive (${karatCode}K)`,
+    `# GoldTickerLive — Daily Archive (${karatCode}K)`,
     `# Exported: ${new Date().toISOString()}`,
     '# Source: locally cached snapshots (up to 90 days)',
     `# AED peg: ${aedPeg} fixed (UAE Central Bank)`,
@@ -213,7 +209,7 @@ export function exportHistoricalCSV(records, karatCode = '24') {
   const purity = parseInt(karatCode, 10) / 24;
 
   const lines = [
-    `# GoldPrices — Historical Gold Prices (${karatCode}K)`,
+    `# GoldTickerLive — Historical Gold Prices (${karatCode}K)`,
     `# Exported: ${new Date().toISOString()}`,
     '# Monthly averages: LBMA PM fix (2019–present, public domain records)',
     '# Daily entries: locally cached snapshots (recent 90 days)',
@@ -263,7 +259,7 @@ export function exportChartCSV(rows, range, karatCode = '24') {
   const purity = parseInt(karatCode, 10) / 24;
 
   const lines = [
-    `# GoldPrices — Visible Chart Slice (${karatCode}K, ${range || 'ALL'})`,
+    `# GoldTickerLive — Visible Chart Slice (${karatCode}K, ${range || 'ALL'})`,
     `# Exported: ${new Date().toISOString()}`,
     `# Range filter: ${range || 'ALL'} · points: ${rows.length}`,
     `# AED peg: ${AED} fixed (UAE Central Bank)`,
@@ -329,7 +325,7 @@ export function exportWatchlistCSV({
   const _purity = parseInt(karatCode, 10) / 24;
 
   const lines = [
-    `# GoldPrices — Market Watchlist (${karatCode}K, ${selectedUnit})`,
+    `# GoldTickerLive — Market Watchlist (${karatCode}K, ${selectedUnit})`,
     `# Exported: ${new Date().toISOString()}`,
     `# XAU/USD at export time: ${spot.toFixed(2)}`,
     `# Karat: ${karatLabel || karatCode + 'K'} · Unit: ${selectedUnit}`,
@@ -380,7 +376,7 @@ export function exportCurrentViewCSV({
   const karatLabel = lang === 'ar' ? karat?.labelAr : karat?.labelEn;
 
   const lines = [
-    `# GoldPrices — Current View Snapshot (${karatCode}K, ${selectedUnit})`,
+    `# GoldTickerLive — Current View Snapshot (${karatCode}K, ${selectedUnit})`,
     `# Exported: ${new Date().toISOString()}`,
     `# XAU/USD at export time: ${spot.toFixed(2)}`,
     `# Karat: ${karatLabel || karatCode + 'K'} · Unit: ${selectedUnit}`,
@@ -417,7 +413,7 @@ export function exportCurrentViewCSV({
 export function exportBriefText(headline, body) {
   if (!headline) return;
   const content = [
-    'GoldPrices — Market Brief',
+    'GoldTickerLive — Market Brief',
     `Exported: ${new Date().toISOString()}`,
     '',
     headline,
@@ -426,5 +422,5 @@ export function exportBriefText(headline, body) {
     '',
     'Source: goldpricez.com / open.er-api.com · Not financial advice.',
   ].join('\n');
-  downloadFile(content, `gold-brief-${isoDate()}.txt`, 'text/plain;charset=utf-8;');
+  downloadFile(content, `gold-brief-${isoTimestamp()}.txt`, 'text/plain;charset=utf-8;');
 }

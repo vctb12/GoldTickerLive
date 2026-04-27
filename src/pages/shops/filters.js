@@ -44,11 +44,15 @@ export function buildFilterDropdowns(SHOPS, STATE, COUNTRIES, t) {
     SHOPS.some((shop) => shop.countryCode === country.code)
   )
     .filter((country) => STATE.region === 'all' || country.group === STATE.region)
-    .sort((a, b) => countryName(a, STATE.lang).localeCompare(countryName(b, STATE.lang), STATE.lang));
+    .sort((a, b) =>
+      countryName(a, STATE.lang).localeCompare(countryName(b, STATE.lang), STATE.lang)
+    );
 
   countrySelect.innerHTML = `<option value="all">${t('allCountries')}</option>${allCountries
     .filter((country) => countryCodes.includes(country.code) || STATE.country === 'all')
-    .map((country) => `<option value="${country.code}">${countryName(country, STATE.lang)}</option>`)
+    .map(
+      (country) => `<option value="${country.code}">${countryName(country, STATE.lang)}</option>`
+    )
     .join('')}`;
 
   // Build city dropdown
@@ -143,6 +147,5 @@ export function filterShops(SHOPS, STATE) {
     return haystack.includes(q);
   });
 
-  console.log('[shops] filterShops:', SHOPS.length, 'total ->', filtered.length, 'after filtering');
   return filtered;
 }

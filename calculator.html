@@ -26,6 +26,8 @@
       content="Calculate gold value, scrap price, Zakat, and buying power using live gold rates."
     />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ar_AE" />
     <meta property="og:url" content="https://goldtickerlive.com/calculator.html" />
     <meta property="og:image" content="https://goldtickerlive.com/assets/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -109,12 +111,13 @@
       </section>
 
       <!-- Calculator Tabs -->
-      <div class="calc-nav-tabs" role="tablist">
+      <div class="calc-nav-tabs" role="tablist" aria-label="Calculator tools">
         <button
           class="calc-tab active"
           data-calc="value"
           role="tab"
           aria-selected="true"
+          aria-controls="panel-value"
           id="calc-value-title"
           title="Calculate the current market value of gold by weight and karat"
         >
@@ -125,6 +128,7 @@
           data-calc="scrap"
           role="tab"
           aria-selected="false"
+          aria-controls="panel-scrap"
           id="calc-scrap-title"
           title="Find what your scrap or old gold is worth at today's spot price"
         >
@@ -135,6 +139,7 @@
           data-calc="zakat"
           role="tab"
           aria-selected="false"
+          aria-controls="panel-zakat"
           id="calc-zakat-title"
           title="Calculate the Zakat obligation on your gold holdings"
         >
@@ -145,6 +150,7 @@
           data-calc="buying"
           role="tab"
           aria-selected="false"
+          aria-controls="panel-buying"
           id="calc-buying-title"
           title="See how much gold you can buy with a given budget"
         >
@@ -155,6 +161,7 @@
           data-calc="convert"
           role="tab"
           aria-selected="false"
+          aria-controls="panel-convert"
           id="calc-convert-title"
           title="Convert between grams, troy ounces, tolas, mashas, and more"
         >
@@ -163,7 +170,7 @@
       </div>
 
       <!-- ── Calculator 1: Gold Value ── -->
-      <section class="calc-panel active" id="panel-value" role="tabpanel">
+      <section class="calc-panel active" id="panel-value" role="tabpanel" aria-labelledby="calc-value-title">
         <div class="calc-card">
           <h2 class="calc-card-title" id="calc-value-h2">How much is my gold worth?</h2>
           <p class="calc-card-desc" id="calc-value-desc">
@@ -253,7 +260,7 @@
       </section>
 
       <!-- ── Calculator 2: Scrap Gold ── -->
-      <section class="calc-panel" id="panel-scrap" role="tabpanel" hidden>
+      <section class="calc-panel" id="panel-scrap" role="tabpanel" aria-labelledby="calc-scrap-title" hidden>
         <div class="calc-card">
           <h2 class="calc-card-title" id="calc-scrap-h2">Scrap Gold Calculator</h2>
           <p class="calc-card-desc" id="calc-scrap-desc">
@@ -343,7 +350,7 @@
       </section>
 
       <!-- ── Calculator 3: Zakat ── -->
-      <section class="calc-panel" id="panel-zakat" role="tabpanel" hidden>
+      <section class="calc-panel" id="panel-zakat" role="tabpanel" aria-labelledby="calc-zakat-title" hidden>
         <div class="calc-card">
           <h2 class="calc-card-title" id="calc-zakat-h2">Zakat on Gold Calculator</h2>
           <p class="calc-card-desc" id="calc-zakat-desc">
@@ -417,7 +424,7 @@
       </section>
 
       <!-- ── Calculator 4: Buying Power ── -->
-      <section class="calc-panel" id="panel-buying" role="tabpanel" hidden>
+      <section class="calc-panel" id="panel-buying" role="tabpanel" aria-labelledby="calc-buying-title" hidden>
         <div class="calc-card">
           <h2 class="calc-card-title" id="calc-buying-h2">Buying Power Calculator</h2>
           <p class="calc-card-desc" id="calc-buying-desc">
@@ -470,7 +477,7 @@
       </section>
 
       <!-- ── Calculator 5: Unit Converter ── -->
-      <section class="calc-panel" id="panel-convert" role="tabpanel" hidden>
+      <section class="calc-panel" id="panel-convert" role="tabpanel" aria-labelledby="calc-convert-title" hidden>
         <div class="calc-card">
           <h2 class="calc-card-title" id="calc-convert-h2">Gold Weight Unit Converter</h2>
           <p class="calc-card-desc" id="calc-convert-desc">

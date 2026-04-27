@@ -25,18 +25,18 @@
         font-size: clamp(5rem, 20vw, 9rem);
         font-weight: 800;
         line-height: 1;
-        color: #d4a017;
+        color: var(--color-gold, #c4993e);
         letter-spacing: -0.04em;
         margin: 0 0 0.25rem;
       }
       .notfound-title {
         font-size: clamp(1.2rem, 4vw, 1.75rem);
         font-weight: 700;
-        color: #0f172a;
+        color: var(--text-primary, #0f172a);
         margin: 0 0 0.75rem;
       }
       .notfound-desc {
-        color: #64748b;
+        color: var(--text-secondary, #64748b);
         font-size: 1rem;
         max-width: 440px;
         margin: 0 auto 2rem;
@@ -52,18 +52,18 @@
       .notfound-search input {
         flex: 1;
         padding: 0.65rem 1rem;
-        border: 2px solid #e2e8f0;
+        border: 2px solid var(--border-default, #e2e8f0);
         border-radius: 8px;
         font-size: 0.95rem;
         outline: none;
         transition: border-color 0.15s;
       }
       .notfound-search input:focus {
-        border-color: #d4a017;
+        border-color: var(--color-gold, #c4993e);
       }
       .notfound-search button {
         padding: 0.65rem 1.2rem;
-        background: #d4a017;
+        background: var(--color-gold, #c4993e);
         color: #fff;
         border: none;
         border-radius: 8px;
@@ -73,7 +73,7 @@
         transition: background 0.15s;
       }
       .notfound-search button:hover {
-        background: #b8891a;
+        background: var(--color-gold-dark, #8a6420);
       }
       .notfound-links {
         display: flex;
@@ -86,17 +86,17 @@
         align-items: center;
         gap: 0.4rem;
         padding: 0.55rem 1.1rem;
-        border: 2px solid #e2e8f0;
+        border: 2px solid var(--border-default, #e2e8f0);
         border-radius: 8px;
         text-decoration: none;
-        color: #0f172a;
+        color: var(--text-primary, #0f172a);
         font-size: 0.9rem;
         font-weight: 500;
         transition: border-color 0.15s, background 0.15s;
       }
       .notfound-link:hover {
-        border-color: #d4a017;
-        background: #fffbeb;
+        border-color: var(--color-gold, #c4993e);
+        background: var(--color-gold-tint, #faf4e2);
       }
     </style>
   </head>
