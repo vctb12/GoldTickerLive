@@ -247,6 +247,45 @@
   transform: translateY(0);
 }
 
+.shops-guides-heading {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-3);
+}
+
+.shops-resource-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.shops-resource-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.45rem 0.9rem;
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+}
+
+.shops-resource-chip--primary {
+  background: var(--color-warning-bg);
+  border-color: var(--color-warning-border);
+  color: var(--color-warning-text);
+}
+
+.shops-resource-chip:hover,
+.shops-resource-chip:focus-visible {
+  border-color: var(--color-gold);
+  color: var(--color-gold-dark);
+  text-decoration: none;
+}
+
 .shops-quick-action-icon {
   font-size: 1.1rem;
   line-height: 1;

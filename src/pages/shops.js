@@ -50,7 +50,7 @@ const TXT = {
   en: {
     kicker: 'Shops by region',
     title: 'Explore Gold Shops & Known Gold Markets',
-    lead: 'Browse directory listings across countries covered on GoldPrices. Use filters to narrow by region, country, city, and specialty. Shop information is for reference, and business details are shown where available.',
+    lead: 'Browse directory listings across countries covered on GoldTickerLive. Use filters to narrow by region, country, city, and specialty. Shop information is for reference, and business details are shown where available.',
     trustLabel: 'Directory reference listings',
     trustDate: 'Last content review {date}',
     directoryReviewed: 'Directory last reviewed {date}',
@@ -79,7 +79,12 @@ const TXT = {
     verifiedFilterLabel: 'verified details only',
     emptyTitle: 'No listings match your filters',
     emptyText: 'Try clearing one filter or searching with a broader term.',
+    emptySubmitCta: 'Suggest a shop for review',
     clearFilters: 'Clear filters',
+    clearAllFilters: 'Clear all filters',
+    clearAllFiltersShort: 'Clear all',
+    removeFilter: (value) => `Remove ${value} filter`,
+    removeSearchFilter: (value) => `Remove "${value}" search filter`,
     location: 'Location',
     market: 'Market',
     category: 'Category',
@@ -100,6 +105,9 @@ const TXT = {
     removeFromShortlist: 'Remove from shortlist',
     saved: 'Saved',
     shortlistCount: (n) => `${n} saved`,
+    shortlistLabel: 'Quick comparison list',
+    shortlistClear: 'Clear all',
+    shortlistReview: 'Review saved',
     shareShop: 'Share',
     directions: 'Directions',
     callShop: 'Call',
@@ -133,15 +141,20 @@ const TXT = {
     quickActionsCalc: 'Calculate Value',
     quickActionsRates: 'Live Rates',
     quickActionsUAE: 'UAE Market',
+    nearmeTitle: '📍 Find Gold Souqs Near You',
+    nearmeLead:
+      'Allow location access to discover which listed gold markets and souqs are closest to your current position. No account required.',
+    nearmeButton: 'Find shops near me',
+    resourcesTitle: 'Buying Guides & Resources',
     freshnessSemantics:
-      'Freshness semantics: Live / Delayed / Cached-Fallback / Estimated / Historical baseline (used consistently across GoldPrices). Directory source: editorial review timestamp.',
+      'Freshness semantics: Live / Delayed / Cached-Fallback / Estimated / Historical baseline (used consistently across GoldTickerLive). Directory source: editorial review timestamp.',
     priceDisclaimer:
       'Listings support discovery only. Spot-linked reference prices are separate from final retail jewelry quotes.',
   },
   ar: {
     kicker: 'محلات حسب المنطقة',
     title: 'استكشف محلات الذهب والأسواق المعروفة',
-    lead: 'تصفح إدراجات الدليل ضمن الدول التي يغطيها GoldPrices. استخدم الفلاتر حسب المنطقة والدولة والمدينة والتخصص. معلومات المحلات مرجعية، وتظهر تفاصيل النشاط حيثما كانت متاحة.',
+    lead: 'تصفح إدراجات الدليل ضمن الدول التي يغطيها GoldTickerLive. استخدم الفلاتر حسب المنطقة والدولة والمدينة والتخصص. معلومات المحلات مرجعية، وتظهر تفاصيل النشاط حيثما كانت متاحة.',
     trustLabel: 'إدراجات مرجعية للدليل',
     trustDate: 'آخر مراجعة للمحتوى {date}',
     directoryReviewed: 'آخر مراجعة للدليل {date}',
@@ -170,7 +183,12 @@ const TXT = {
     verifiedFilterLabel: 'تفاصيل موثقة فقط',
     emptyTitle: 'لا توجد إدراجات مطابقة',
     emptyText: 'جرّب إلغاء أحد الفلاتر أو استخدام كلمات أوسع في البحث.',
+    emptySubmitCta: 'اقترح محلاً للمراجعة',
     clearFilters: 'مسح الفلاتر',
+    clearAllFilters: 'مسح كل الفلاتر',
+    clearAllFiltersShort: 'مسح الكل',
+    removeFilter: (value) => `إزالة فلتر ${value}`,
+    removeSearchFilter: (value) => `إزالة فلتر البحث "${value}"`,
     location: 'الموقع',
     market: 'السوق',
     category: 'الفئة',
@@ -191,6 +209,9 @@ const TXT = {
     removeFromShortlist: 'إزالة من القائمة',
     saved: 'محفوظ',
     shortlistCount: (n) => `${n} محفوظة`,
+    shortlistLabel: 'قائمة مقارنة سريعة',
+    shortlistClear: 'مسح الكل',
+    shortlistReview: 'مراجعة المحفوظ',
     shareShop: 'مشاركة',
     directions: 'الاتجاهات',
     callShop: 'اتصال',
@@ -221,8 +242,13 @@ const TXT = {
     quickActionsCalc: 'احسب القيمة',
     quickActionsRates: 'الأسعار المباشرة',
     quickActionsUAE: 'سوق الإمارات',
+    nearmeTitle: '📍 ابحث عن أسواق الذهب القريبة',
+    nearmeLead:
+      'اسمح بالوصول إلى الموقع لمعرفة أقرب أسواق ومحلات الذهب المدرجة إلى موقعك الحالي. لا تحتاج إلى حساب.',
+    nearmeButton: 'ابحث عن محلات قريبة',
+    resourcesTitle: 'أدلة الشراء والموارد',
     freshnessSemantics:
-      'دلالات حداثة البيانات: مباشر / متأخر / مخزن-احتياطي / تقديري / خط أساس تاريخي (موحدة عبر GoldPrices). مصدر الدليل: تاريخ مراجعة تحريرية.',
+      'دلالات حداثة البيانات: مباشر / متأخر / مخزن-احتياطي / تقديري / خط أساس تاريخي (موحدة عبر GoldTickerLive). مصدر الدليل: تاريخ مراجعة تحريرية.',
     priceDisclaimer:
       'هذه الإدراجات للاكتشاف فقط. الأسعار المرجعية المرتبطة بالسعر الفوري منفصلة عن سعر التجزئة النهائي للمجوهرات.',
   },
@@ -537,7 +563,16 @@ function applyStaticText() {
   document.getElementById('shops-verified-help').textContent = t('verifiedHelp');
   document.getElementById('shops-results-title').textContent = t('listed');
   document.getElementById('shops-empty-title').textContent = t('emptyTitle');
-  document.getElementById('shops-empty-text').textContent = t('emptyText');
+  const emptyTextEl = document.getElementById('shops-empty-text');
+  if (emptyTextEl) {
+    emptyTextEl.textContent = `${t('emptyText')} `;
+    const submitLink = document.createElement('a');
+    submitLink.href = 'content/submit-shop/';
+    submitLink.className = 'ses-link';
+    submitLink.textContent = t('emptySubmitCta');
+    emptyTextEl.appendChild(submitLink);
+    emptyTextEl.appendChild(document.createTextNode('.'));
+  }
   document.getElementById('shops-clear-filters').textContent = t('clearFilters');
   document.getElementById('shops-stat-listings-label').textContent = t('statListings');
   document.getElementById('shops-stat-countries-label').textContent = t('statCountries');
@@ -553,6 +588,13 @@ function applyStaticText() {
   document.getElementById('shops-results-disclaimer').textContent = t('resultsDisclaimer');
   document.getElementById('shops-freshness-semantics').textContent = t('freshnessSemantics');
   document.getElementById('shops-price-disclaimer').textContent = t('priceDisclaimer');
+  document.getElementById('shops-shortlist-label').textContent = t('shortlistLabel');
+  document.getElementById('shops-shortlist-clear').textContent = t('shortlistClear');
+  document.getElementById('shops-shortlist-compare').textContent = t('shortlistReview');
+  document.getElementById('shops-nearme-title').textContent = t('nearmeTitle');
+  document.querySelector('.shops-nearme-lead').textContent = t('nearmeLead');
+  document.getElementById('shops-nearme-btn').lastChild.textContent = t('nearmeButton');
+  document.getElementById('shops-guides-heading').textContent = t('resourcesTitle');
 
   const modalCloseBtn = document.querySelector('.shops-modal-close');
   if (modalCloseBtn) {
@@ -1007,7 +1049,7 @@ function renderFilterPills() {
       type: 'search',
       value: '',
       label: `"${q}"`,
-      ariaLabel: `Remove "${q}" search filter`,
+      ariaLabel: t('removeSearchFilter')(q),
     });
   }
 
@@ -1018,13 +1060,13 @@ function renderFilterPills() {
 
   const clearAllHtml =
     pills.length > 1
-      ? '<button class="shops-filter-pill shops-filter-pill--clear-all" data-type="clear-all" type="button" aria-label="Clear all filters">Clear all ×</button>'
+      ? `<button class="shops-filter-pill shops-filter-pill--clear-all" data-type="clear-all" type="button" aria-label="${esc(t('clearAllFilters'))}">${esc(t('clearAllFiltersShort'))} ×</button>`
       : '';
 
   pillsContainer.innerHTML =
     pills
       .map((pill) => {
-        const ariaLabel = pill.ariaLabel || `Remove ${pill.label} filter`;
+        const ariaLabel = pill.ariaLabel || t('removeFilter')(pill.label);
         return `
       <button class="shops-filter-pill" data-type="${esc(pill.type)}" data-value="${esc(pill.value)}" type="button" aria-label="${esc(ariaLabel)}">
         ${esc(pill.label)}

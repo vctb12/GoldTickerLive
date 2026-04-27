@@ -59,7 +59,7 @@ const STATE = {
 const T = {
   en: {
     pageTitle: 'Gold Calculator',
-    pageSub: 'Live prices · Multiple karats · AED & USD',
+    pageSub: 'Spot-linked estimates · Multiple karats · AED & USD',
     spotLabel: 'Spot:',
     tab_value: 'Gold Value',
     tab_scrap: 'Scrap Gold',
@@ -73,7 +73,7 @@ const T = {
     val_currency: 'Currency',
     val_result_label: 'Estimated Value',
     val_disclaimer:
-      'Indicative estimate only. Does not include making charges, dealer markup or taxes.',
+      'Spot-linked reference estimate only. Final retail prices can include making charges, dealer margins, and taxes.',
     scrap_title: 'Scrap Gold Calculator',
     scrap_desc:
       'Estimate the refinery value of your scrap gold. Dealers typically pay 80–95% of spot value.',
@@ -84,7 +84,8 @@ const T = {
     scrap_currency: 'Currency',
     scrap_label_spot: 'Spot Value',
     scrap_label_dealer: 'Dealer Payout',
-    scrap_disclaimer: 'Actual dealer prices vary. Always get multiple quotes.',
+    scrap_disclaimer:
+      'Actual dealer prices vary with assay, condition, payout policy, and local taxes. Always get multiple quotes.',
     zakat_title: 'Zakat on Gold Calculator',
     zakat_desc:
       'Calculate your Zakat obligation on gold holdings. Zakat is 2.5% of gold above the nisab threshold (85g of 24K gold or equivalent).',
@@ -102,7 +103,7 @@ const T = {
     buy_karat: 'Karat',
     buy_result_label: 'You can buy approximately',
     buy_disclaimer:
-      'Spot rate estimate only. Does not include making charges, VAT, or dealer markup.',
+      'Spot rate estimate only. It does not include making charges, VAT, premiums, or dealer markup.',
     convert_title: 'Gold Weight Unit Converter',
     convert_desc: 'Convert between grams, troy ounces, tolas, mashas, and more.',
     conv_amount: 'Amount',
@@ -110,11 +111,13 @@ const T = {
     conv_results_title: 'Equivalent weights',
     freshness_waiting: 'Freshness: waiting for source timestamp…',
     trust_note:
-      'Labels used across GoldPrices: Live, Delayed, Cached/Fallback, Estimated, Historical baseline. Calculator outputs are spot-linked reference estimates, not final retail jewelry quotes.',
+      'Labels used across GoldTickerLive: Live, Delayed, Cached/Fallback, Estimated, Historical baseline. Calculator outputs are spot-linked reference estimates, not final retail jewelry quotes.',
+    copy_result: 'Copy result',
+    copied_result: 'Copied!',
   },
   ar: {
     pageTitle: 'حاسبة الذهب',
-    pageSub: 'أسعار مباشرة · عيارات متعددة · درهم ودولار',
+    pageSub: 'تقديرات مرجعية فورية · عيارات متعددة · درهم ودولار',
     spotLabel: 'السعر الفوري:',
     tab_value: 'قيمة الذهب',
     tab_scrap: 'ذهب مستعمل',
@@ -127,7 +130,8 @@ const T = {
     val_karat: 'العيار',
     val_currency: 'العملة',
     val_result_label: 'القيمة التقديرية',
-    val_disclaimer: 'تقدير استرشادي فقط. لا يشمل رسوم الصنعة أو هامش التاجر أو الضرائب.',
+    val_disclaimer:
+      'تقدير مرجعي مرتبط بالسعر الفوري فقط. قد تشمل أسعار التجزئة النهائية المصنعية وهوامش التجار والضرائب.',
     scrap_title: 'حاسبة الذهب المستعمل',
     scrap_desc: 'احسب القيمة المعدنية لذهبك المستعمل. يدفع التجار عادةً 80–95% من قيمة السوق.',
     scrap_weight: 'الوزن',
@@ -137,7 +141,8 @@ const T = {
     scrap_currency: 'العملة',
     scrap_label_spot: 'قيمة السوق',
     scrap_label_dealer: 'مبلغ التاجر',
-    scrap_disclaimer: 'تختلف أسعار التجار. احصل دائماً على عروض متعددة.',
+    scrap_disclaimer:
+      'تختلف أسعار التجار حسب الفحص والحالة وسياسة الدفع والضرائب المحلية. احصل دائماً على عروض متعددة.',
     zakat_title: 'حاسبة زكاة الذهب',
     zakat_desc:
       'احسب زكاة ذهبك. الزكاة 2.5% من الذهب الزائد عن النصاب (85 غرام من الذهب عيار 24 أو ما يعادله).',
@@ -153,7 +158,8 @@ const T = {
     buy_amount: 'الميزانية',
     buy_karat: 'العيار',
     buy_result_label: 'يمكنك شراء ما يقارب',
-    buy_disclaimer: 'تقدير بسعر السوق فقط. لا يشمل رسوم الصنعة أو الضريبة.',
+    buy_disclaimer:
+      'تقدير بالسعر الفوري فقط. لا يشمل المصنعية أو الضريبة أو الهامش أو علاوات البيع.',
     convert_title: 'محوّل وحدات الذهب',
     convert_desc: 'حوّل بين الغرام والأوقية التروي والتولة والمثقال وغيرها.',
     conv_amount: 'الكمية',
@@ -161,7 +167,9 @@ const T = {
     conv_results_title: 'الأوزان المكافئة',
     freshness_waiting: 'حداثة البيانات: بانتظار الطابع الزمني من المصدر…',
     trust_note:
-      'التسميات الموحدة عبر GoldPrices: مباشر، متأخر، مخزن/احتياطي، تقديري، وخط أساس تاريخي. نتائج الحاسبة تقديرات مرجعية مرتبطة بالسعر الفوري وليست سعر تجزئة نهائي للمجوهرات.',
+      'التسميات الموحدة عبر GoldTickerLive: مباشر، متأخر، مخزن/احتياطي، تقديري، وخط أساس تاريخي. نتائج الحاسبة تقديرات مرجعية مرتبطة بالسعر الفوري وليست سعر تجزئة نهائي للمجوهرات.',
+    copy_result: 'نسخ النتيجة',
+    copied_result: 'تم النسخ!',
   },
 };
 
@@ -492,6 +500,10 @@ function applyLang() {
   set('conv-results-title', t('conv_results_title'));
   set('calc-freshness-note', t('freshness_waiting'));
   set('calc-trust-note', t('trust_note'));
+  document.querySelectorAll('.calc-copy-btn').forEach((btn) => {
+    btn.textContent = t('copy_result');
+    btn.setAttribute('aria-label', t('copy_result'));
+  });
 
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
@@ -659,10 +671,12 @@ function initCopyBtn() {
     if (!resultEl) return;
     const text = resultEl.textContent.trim();
     const done = () => {
-      btn.textContent = 'Copied!';
+      btn.textContent = t('copied_result');
+      btn.setAttribute('aria-label', t('copied_result'));
       btn.classList.add('copied');
       setTimeout(() => {
-        btn.textContent = 'Copy Result';
+        btn.textContent = t('copy_result');
+        btn.setAttribute('aria-label', t('copy_result'));
         btn.classList.remove('copied');
       }, 1500);
     };

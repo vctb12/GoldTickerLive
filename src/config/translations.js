@@ -156,6 +156,7 @@ export const TRANSLATIONS = {
     'home.heroCta2': 'Browse Countries',
     'home.heroCta4': 'Find Gold Shops',
     'home.heroCta5': 'Set Alert',
+    'home.heroCtaMethodology': 'How prices work',
     'home.heroTrustLine': 'Spot-linked reference estimate — not a final retail jewelry quote.',
     'home.heroTrustShort': 'Spot/reference estimate · final shop prices vary',
     'home.spotTitle': 'Gold Spot Price',
@@ -200,7 +201,7 @@ export const TRANSLATIONS = {
     'home.toolTrackerCta': 'Open Tracker →',
     'home.toolCalcTitle': 'Gold Calculator',
     'home.toolCalcDesc':
-      'Gold value, scrap, Zakat, buying power and unit conversion — all in one tool.',
+      'Estimate value, scrap payout, Zakat, buying power and units using the same spot reference.',
     'home.toolCalcCta': 'Open Calculator →',
     'home.toolUaeTitle': 'UAE Gold Prices',
     'home.toolUaeDesc':
@@ -208,7 +209,7 @@ export const TRANSLATIONS = {
     'home.toolUaeCta': 'UAE Prices →',
     'home.toolShopsTitle': 'Find Gold Shops',
     'home.toolShopsDesc':
-      'Browse listed gold shops across UAE, GCC & Arab world. Filter by region, city, and specialty.',
+      'Discover market areas and listed shops, then confirm final prices, making charges, and VAT directly.',
     'home.toolShopsCta': 'Browse Shops →',
     'home.toolCountriesTitle': 'Browse Countries',
     'home.toolCountriesDesc':
@@ -216,14 +217,15 @@ export const TRANSLATIONS = {
     'home.toolCountriesCta': 'All Countries →',
     'home.toolLearnTitle': 'Learn & Glossary',
     'home.toolLearnDesc':
-      'What is 22K? Why does spot differ from retail? How does the AED peg work?',
+      'Understand karats, spot vs retail, AED peg logic, making charges, and buyer basics.',
     'home.toolLearnCta': 'Read Guide →',
     'home.toolInsightsTitle': 'Gold Insights',
-    'home.toolInsightsDesc': 'Market analysis, price drivers, and context for GCC gold buyers.',
+    'home.toolInsightsDesc':
+      'Plain-language market context and price drivers for UAE and GCC gold buyers.',
     'home.toolInsightsCta': 'Read Insights →',
     'home.toolMethodTitle': 'Methodology',
     'home.toolMethodDesc':
-      'Full transparency on data sources, AED peg, karat math, and freshness logic.',
+      'See the data sources, AED peg, karat purity math, cache labels, and known limits.',
     'home.toolMethodCta': 'Read Methodology →',
     'home.alertRowText': 'Set a price alert — free, stored locally, no account needed.',
     'home.alertBtn': 'Set Alert →',
@@ -422,6 +424,7 @@ export const TRANSLATIONS = {
     'home.heroCta2': 'تصفح الدول',
     'home.heroCta4': 'ابحث عن محلات الذهب',
     'home.heroCta5': 'اضبط تنبيهاً',
+    'home.heroCtaMethodology': 'كيف نحسب الأسعار',
     'home.heroTrustLine': 'تقدير مرجعي مرتبط بالسعر الفوري — وليس عرض سعر تجزئة نهائي للمجوهرات.',
     'home.heroTrustShort': 'تقدير مرجعي فوري · أسعار المحلات النهائية تختلف',
     'home.spotTitle': 'السعر الفوري للذهب',
@@ -466,14 +469,14 @@ export const TRANSLATIONS = {
     'home.toolTrackerCta': 'افتح المتتبع ←',
     'home.toolCalcTitle': 'حاسبة الذهب',
     'home.toolCalcDesc':
-      'قيمة الذهب، الخردة، الزكاة، القوة الشرائية، وتحويل الوحدات — في أداة واحدة.',
+      'قدّر القيمة، عائد الذهب المستعمل، الزكاة، القوة الشرائية، والوحدات اعتماداً على نفس السعر المرجعي.',
     'home.toolCalcCta': 'افتح الحاسبة ←',
     'home.toolUaeTitle': 'أسعار الذهب في الإمارات',
     'home.toolUaeDesc': 'صفحة مخصصة للإمارات بجميع العيارات بالدرهم والدولار، مع سياق لمشتري دبي.',
     'home.toolUaeCta': 'أسعار الإمارات ←',
     'home.toolShopsTitle': 'ابحث عن محلات الذهب',
     'home.toolShopsDesc':
-      'تصفح محلات الذهب المدرجة في الإمارات والخليج والعالم العربي. صفّ حسب المنطقة والمدينة.',
+      'استكشف مناطق الأسواق والمحلات المدرجة، ثم أكّد السعر النهائي والمصنعية والضريبة مباشرة.',
     'home.toolShopsCta': 'تصفح المحلات ←',
     'home.toolCountriesTitle': 'تصفح الدول',
     'home.toolCountriesDesc':
@@ -481,13 +484,14 @@ export const TRANSLATIONS = {
     'home.toolCountriesCta': 'كل الدول ←',
     'home.toolLearnTitle': 'تعلّم والمسرد',
     'home.toolLearnDesc':
-      'ما هو عيار 22؟ لماذا يختلف السعر الفوري عن التجزئة؟ كيف يعمل ربط الدرهم؟',
+      'افهم العيارات، الفرق بين السعر الفوري والتجزئة، ربط الدرهم، المصنعية، وأساسيات الشراء.',
     'home.toolLearnCta': 'اقرأ الدليل ←',
     'home.toolInsightsTitle': 'رؤى الذهب',
-    'home.toolInsightsDesc': 'تحليل السوق ومحركات الأسعار وسياق لمشتري الذهب في الخليج.',
+    'home.toolInsightsDesc': 'سياق مبسط لمحركات السعر وأسواق الذهب في الإمارات والخليج.',
     'home.toolInsightsCta': 'اقرأ الرؤى ←',
     'home.toolMethodTitle': 'المنهجية',
-    'home.toolMethodDesc': 'شفافية كاملة حول مصادر البيانات وربط الدرهم وحسابات العيار.',
+    'home.toolMethodDesc':
+      'تعرّف على مصادر البيانات، ربط الدرهم، نقاء العيارات، تسميات التخزين، والحدود.',
     'home.toolMethodCta': 'اقرأ المنهجية ←',
     'home.alertRowText': 'اضبط تنبيه سعر — مجاني ومحلي، لا حساب مطلوب.',
     'home.alertBtn': 'اضبط تنبيهاً ←',

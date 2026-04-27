@@ -186,11 +186,12 @@
             </div>
 
             <h1 id="tp-hero-title" class="tracker-hero-title">
-              Gold Tracker Pro
-              <span class="tracker-hero-title-sub">Live workspace</span>
+              Live Gold Price Tracker
+              <span class="tracker-hero-title-sub">Spot-linked reference workspace</span>
             </h1>
             <p id="tp-hero-copy" class="tracker-hero-description">
-              24+ markets · 7 karats · Live spot-linked prices updated every 90 seconds
+              Compare 24+ markets, 7 karats, and key currencies with visible freshness, source, and
+              retail-price context.
             </p>
 
             <!-- Key metrics — rendered by JS; skeletons shown until first render -->
@@ -243,14 +244,38 @@
 
               <!-- Primary actions -->
               <div class="tracker-hero-actions">
-                <button class="btn btn-primary" id="tp-refresh-btn" type="button">
+                <button
+                  class="btn btn-primary"
+                  id="tp-refresh-btn"
+                  type="button"
+                  aria-label="Refresh live reference prices"
+                >
                   <span aria-hidden="true">↻</span> Refresh
                 </button>
-                <a class="btn btn-outline" href="#mode-live" id="tp-jump-chart">
+                <a
+                  class="btn btn-outline"
+                  href="#mode-live"
+                  id="tp-jump-chart"
+                  aria-label="Jump to the live price chart"
+                >
                   View chart <span aria-hidden="true">↓</span>
                 </a>
-                <button class="btn btn-ghost" id="tp-share-btn" type="button">Copy brief</button>
-                <button class="btn btn-ghost" id="tp-reset-btn" type="button">Reset</button>
+                <button
+                  class="btn btn-ghost"
+                  id="tp-share-btn"
+                  type="button"
+                  aria-label="Copy a short market brief"
+                >
+                  Copy brief
+                </button>
+                <button
+                  class="btn btn-ghost"
+                  id="tp-reset-btn"
+                  type="button"
+                  aria-label="Reset tracker filters and view"
+                >
+                  Reset
+                </button>
               </div>
             </div>
 
@@ -283,6 +308,7 @@
                 <li><a href="calculator.html" class="tracker-inline-link">Calculator</a></li>
                 <li><a href="countries/index.html" class="tracker-inline-link">Countries</a></li>
                 <li><a href="shops.html" class="tracker-inline-link">Shops directory</a></li>
+                <li><a href="methodology.html" class="tracker-inline-link">Methodology</a></li>
               </ul>
             </div>
           </aside>
