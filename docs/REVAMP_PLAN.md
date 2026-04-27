@@ -22,7 +22,8 @@ more complete: stronger navigation, real content instead of coming-soon pages, i
 pages, public Supabase-backed shop submissions, admin workflow improvements, and broader
 GoldTickerLive brand consistency.
 
-- [x] Plan captured in [`docs/plans/2026-04-27_full-site-ux-admin-revamp.md`](./plans/2026-04-27_full-site-ux-admin-revamp.md).
+- [x] Plan captured in
+      [`docs/plans/2026-04-27_full-site-ux-admin-revamp.md`](./plans/2026-04-27_full-site-ux-admin-revamp.md).
 - [x] First content slice launched: premium watch, compare countries, news, best rates, changelog,
       FAQ, and submit-shop pages.
 - [x] New indexable landing pages launched for UAE buying, Dubai rates, GCC comparison, spot vs

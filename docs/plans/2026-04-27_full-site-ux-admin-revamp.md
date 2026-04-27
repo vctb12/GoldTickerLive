@@ -2,19 +2,21 @@
 
 ## Origin
 
-User asked for a point-by-point implementation of a broad website upgrade: navbar, admin panel,
-all HTML pages, conversion of coming-soon pages into real content, new landing pages, stronger UI/UX,
-a real Supabase-backed Submit Shop workflow, immediate indexability for launched landing pages, and a
+User asked for a point-by-point implementation of a broad website upgrade: navbar, admin panel, all
+HTML pages, conversion of coming-soon pages into real content, new landing pages, stronger UI/UX, a
+real Supabase-backed Submit Shop workflow, immediate indexability for launched landing pages, and a
 brand shift toward **GoldTickerLive**.
 
 ## Guardrails
 
-- Keep price formulas, AED peg, karat purities, and source handling unchanged unless a separate bug is proven.
+- Keep price formulas, AED peg, karat purities, and source handling unchanged unless a separate bug
+  is proven.
 - Keep static multi-page architecture; no framework migration.
 - No fake live data, fake shop data, fake testimonials, or guaranteed price language.
 - User-facing price copy must preserve spot/reference vs retail distinction.
 - Public shop submissions go to a review queue; they are not published automatically.
-- New launched content pages are indexable immediately, with canonical, hreflang, OG, and internal links.
+- New launched content pages are indexable immediately, with canonical, hreflang, OG, and internal
+  links.
 
 ## File-by-file implementation sequence
 
@@ -23,8 +25,10 @@ brand shift toward **GoldTickerLive**.
 - [x] `/content/premium-watch/index.html` — replace coming-soon stub with real retail-premium guide.
 - [x] `/content/compare-countries/index.html` — replace coming-soon stub with real comparison guide.
 - [x] `/content/news/index.html` — replace coming-soon stub with curated market-updates hub.
-- [x] `/content/todays-best-rates/index.html` — replace coming-soon stub with best-rates usage guide.
-- [x] `/content/changelog/index.html` — replace coming-soon stub with transparent product/status page.
+- [x] `/content/todays-best-rates/index.html` — replace coming-soon stub with best-rates usage
+      guide.
+- [x] `/content/changelog/index.html` — replace coming-soon stub with transparent product/status
+      page.
 - [x] `/content/faq/index.html` — replace coming-soon stub with real FAQ content.
 - [x] `/content/submit-shop/index.html` — replace coming-soon stub with real public form.
 - [x] `/src/pages/submit-shop.js` — submit public shop suggestions to Supabase `shop_submissions`.
@@ -77,4 +81,3 @@ brand shift toward **GoldTickerLive**.
 2. Revert Supabase submission queue if RLS policy needs owner adjustment.
 3. Revert nav/footer brand changes independently.
 4. Revert admin workflow polish independently.
-
