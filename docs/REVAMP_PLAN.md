@@ -30,7 +30,9 @@ GoldTickerLive brand consistency.
       retail, making charges, 22K, and 24K.
 - [x] Supabase `shop_submissions` intake queue added for public shop suggestions pending admin
       review.
-- [ ] Shared nav/footer GoldTickerLive brand and information architecture pass.
+- [x] Phase 1 page-purpose map created: [`docs/revamp-page-map.md`](./revamp-page-map.md).
+- [x] Shared nav/footer GoldTickerLive brand and information architecture pass for the Phase 1
+      journey labels.
 - [ ] Homepage/tracker/calculator/shops visible UX pass.
 - [ ] Admin command-center and shop-submission review workflow pass.
 - [ ] Sitemap/SEO inventory refresh and full validation.
