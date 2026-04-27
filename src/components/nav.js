@@ -237,6 +237,10 @@ function buildDropdown(group, depth) {
      </div>`;
 }
 
+function buildOptionalDescription(description, className) {
+  return description ? `<span class="${className}">${escapeHtml(description)}</span>` : '';
+}
+
 function buildPrimaryLink(item, depth) {
   const href = resolveHref(item.href, depth);
   const isActive = isPageMatch(href);
@@ -280,9 +284,7 @@ function buildDrawerGroup(group, depth) {
     const iconHtml = item.icon
       ? `<span class="nav-drawer-link-icon" aria-hidden="true">${escapeHtml(item.icon)}</span>`
       : '';
-    const descHtml = item.description
-      ? `<span class="nav-drawer-link-desc">${escapeHtml(item.description)}</span>`
-      : '';
+    const descHtml = buildOptionalDescription(item.description, 'nav-drawer-link-desc');
     return `<a href="${href}" class="${classes.join(' ')}"${ariaCurrent}>
         ${iconHtml}<span class="nav-drawer-link-body"><span class="nav-drawer-link-label">${escapeHtml(item.label)}</span>${descHtml}</span>
       </a>`;
@@ -594,13 +596,13 @@ export function injectNav(lang = 'en', depth = 0) {
   }
 
   // ── Dropdown button events ──────────────────────────────────────────────────
+  const canHover =
+    typeof window.matchMedia !== 'function' ||
+    window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
   navEl.querySelectorAll('.nav-dropdown-btn').forEach((btn) => {
     const groupEl = btn.closest('.nav-dropdown');
     let hoverTimer = null;
-
-    const canHover =
-      typeof window.matchMedia !== 'function' ||
-      window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     btn.addEventListener('click', (e) => {
       e.stopPropagation();

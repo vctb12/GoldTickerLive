@@ -3,6 +3,8 @@
 // accents all derive from this file.
 
 function flattenGroups(locale) {
+  // Keep authored dropdowns section-based for mega-menu rendering while
+  // preserving the flat `items` array consumed by active-state logic and tests.
   return {
     ...locale,
     groups: locale.groups.map((group) => ({

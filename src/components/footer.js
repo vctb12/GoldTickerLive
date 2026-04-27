@@ -1,6 +1,8 @@
 import { FORMSPREE_ENDPOINT } from '../config/index.js';
 import { NAV_DATA } from './nav-data.js';
 
+const MAX_FOOTER_LINKS_PER_SECTION = 3;
+
 /**
  * Shared footer component — 5-column dark premium.
  * Call injectFooter(lang, depth) from any page entry point.
@@ -32,7 +34,7 @@ export function injectFooter(lang = 'en', depth = 0) {
       const sectionLinks = group.sections
         .map((section) => {
           const links = section.items
-            .slice(0, 3)
+            .slice(0, MAX_FOOTER_LINKS_PER_SECTION)
             .map((item) => `<a href="${r(item.href)}">${esc(item.label)}</a>`)
             .join('');
           return `<div class="footer-link-section">
