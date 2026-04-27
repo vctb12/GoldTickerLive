@@ -6,6 +6,8 @@ function flattenGroups(locale) {
   // Keep authored dropdowns section-based for mega-menu rendering while
   // preserving the flat `items` array consumed by active-state logic and tests.
   // Compatibility shim: future callers should prefer `sections` for rendering.
+  // Remove only after active-state, mobile-bottom, and legacy tests no longer
+  // consume `group.items`.
   return {
     ...locale,
     groups: locale.groups.map((group) => ({

@@ -1,5 +1,6 @@
 import { FORMSPREE_ENDPOINT } from '../config/index.js';
 import { NAV_DATA } from './nav-data.js';
+import { escapeHtml, resolveHref } from './nav/helpers.js';
 
 // Keep the shared footer useful without turning mobile layouts into a full mega-menu repeat.
 const MAX_FOOTER_LINKS_PER_SECTION = 3;
@@ -14,19 +15,7 @@ export function injectFooter(lang = 'en', depth = 0) {
   const navData = NAV_DATA[lang] || NAV_DATA.en;
 
   function r(href) {
-    if (href.startsWith('/') || /^[a-z][a-z0-9+.-]*:/i.test(href)) return href;
-    const base = href.replace(/^\.\.\//, '');
-    if (depth === 0) return base;
-    return '../'.repeat(depth) + base;
-  }
-
-  function esc(value) {
-    return String(value)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+    return resolveHref(href, depth);
   }
 
   const year = new Date().getFullYear();
@@ -36,18 +25,18 @@ export function injectFooter(lang = 'en', depth = 0) {
         .map((section) => {
           const links = section.items
             .slice(0, MAX_FOOTER_LINKS_PER_SECTION)
-            .map((item) => `<a href="${r(item.href)}">${esc(item.label)}</a>`)
+            .map((item) => `<a href="${r(item.href)}">${escapeHtml(item.label)}</a>`)
             .join('');
           return `<div class="footer-link-section">
-            <h5 class="footer-section-heading">${esc(section.label)}</h5>
+            <h5 class="footer-section-heading">${escapeHtml(section.label)}</h5>
             ${links}
           </div>`;
         })
         .join('');
 
       return `<div class="footer-col footer-col--links">
-        <h4 class="footer-col-heading">${esc(group.label)}</h4>
-        <p class="footer-col-note">${esc(group.description)}</p>
+        <h4 class="footer-col-heading">${escapeHtml(group.label)}</h4>
+        <p class="footer-col-note">${escapeHtml(group.description)}</p>
         ${sectionLinks}
       </div>`;
     })

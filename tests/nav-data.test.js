@@ -136,6 +136,10 @@ test('NAV_DATA every dropdown item has a non-empty description', async () => {
   const { NAV_DATA } = await loadNav();
   for (const lang of ['en', 'ar']) {
     for (const group of NAV_DATA[lang].groups) {
+      assert.ok(group.key, `${lang} group missing key`);
+      assert.ok(group.label, `${lang}.${group.key} missing label`);
+      assert.ok(group.description, `${lang}.${group.key} missing description`);
+      assert.ok(group.layout, `${lang}.${group.key} missing layout`);
       assert.ok(Array.isArray(group.sections), `${lang}.${group.key} missing sections`);
       assert.ok(group.sections.length > 0, `${lang}.${group.key} has no sections`);
       assert.ok(group.featured?.href, `${lang}.${group.key} missing featured link`);

@@ -6397,6 +6397,7 @@ body.has-spot-bar .site-nav[data-nav-hidden='true'] {
   --nav-panel-bg: rgb(255 253 248 / 96%);
   --nav-panel-border: rgb(196 153 62 / 22%);
   --nav-panel-shadow: 0 24px 70px rgb(36 24 6 / 18%), 0 8px 22px rgb(36 24 6 / 10%);
+  --nav-icon-on-gold: #2d1b05;
   --shell-accent: var(--color-gold);
   --shell-accent-soft: var(--color-gold-bg);
 }
@@ -6413,7 +6414,7 @@ body[data-section='buy-gold'] {
 }
 
 body[data-shell='editorial'] {
-  --shell-accent: #8a6420;
+  --shell-accent: var(--color-gold-dark);
   --shell-accent-soft: rgb(196 153 62 / 9%);
 }
 
@@ -6615,7 +6616,7 @@ body[data-shell='market'] {
   height: 2.35rem;
   border-radius: 0.85rem;
   background: var(--gradient-gold);
-  color: #2d1b05;
+  color: var(--nav-icon-on-gold);
 }
 
 .nav-dropdown-featured-body,
