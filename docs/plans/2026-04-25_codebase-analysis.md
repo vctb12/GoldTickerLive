@@ -1,5 +1,11 @@
 # Codebase Analysis — 2026-04-25
 
+> **Status (2026-04-27):** The low-risk slice — W-2, W-6, W-9, W-10, W-11, W-12, W-14 — landed in
+> the 2026-04-27 multi-batch PR (`copilot/explore-codebase-and-implement-plans`). See the change
+> notes on each finding below for the commits / verification artifacts. Remaining work tracked: W-1
+> (page-hydrator innerHTML rewrite), W-3 (FX staleness label), W-4 (atomic writes), W-5, W-7, W-8,
+> W-13 — all queued in `docs/REVAMP_PLAN.md` §6/§22b.
+
 This document captures a four-part read-only analysis of the Gold Ticker Live repository:
 
 1. [Repository overview](#1-repository-overview)
@@ -7,8 +13,8 @@ This document captures a four-part read-only analysis of the Gold Ticker Live re
 3. [External dependencies](#3-external-dependencies)
 4. [Weak spots and technical debt](#4-weak-spots-and-technical-debt)
 
-No code is changed in this document. Each finding cites a file path or workflow. Proposed actions are
-framed as future plan-PR candidates, not silent changes.
+No code is changed in this document. Each finding cites a file path or workflow. Proposed actions
+are framed as future plan-PR candidates, not silent changes.
 
 ---
 
@@ -20,29 +26,30 @@ framed as future plan-PR candidates, not silent changes.
 publishes reference gold-price data for GCC, Levant, Africa, and global markets. It offers:
 
 - Live gold spot prices (XAU/USD, converted to 24+ local currencies at 7 karat grades)
-- A full-featured gold tracker (`tracker.html`) with chart, comparison, archive, alert, and export modes
+- A full-featured gold tracker (`tracker.html`) with chart, comparison, archive, alert, and export
+  modes
 - A price calculator, shops directory, investment guide, guides, FAQs, and a submit-shop flow
 - 400+ pre-generated country / city / karat leaf pages hydrated with live data at runtime
 - Hourly X (Twitter) posts and email newsletters driven by GitHub Actions automation
 
-The site targets the Gulf Arab consumer market. All user-visible copy ships in English and Arabic with
-full RTL layout support.
+The site targets the Gulf Arab consumer market. All user-visible copy ships in English and Arabic
+with full RTL layout support.
 
 ### Key technologies
 
-| Layer           | Technology                                                                                         |
-| --------------- | -------------------------------------------------------------------------------------------------- |
-| Frontend        | Vanilla ES6 modules — no framework; Vite 8 for production bundle                                   |
-| Styling         | Hand-authored CSS with design tokens (`styles/global.css`); per-page CSS under `styles/pages/`    |
-| Backend (opt.)  | Node/Express 5 — JWT + bcrypt auth, Helmet, CORS, rate limiting, flat-JSON + Supabase persistence |
-| Python auto.    | `scripts/python/` — tweepy, supabase-py, requests; linted with ruff                               |
-| Testing         | node:test (23 suites, ~200+ assertions) + Playwright E2E                                           |
-| CI/CD           | 13 GitHub Actions workflows; only `ci.yml` gates merges                                           |
-| Hosting         | GitHub Pages (`goldtickerlive.com`); optional Replit/Express for admin                            |
-| Admin           | Static HTML admin panel backed by Supabase GitHub OAuth                                            |
-| Fonts           | Google Fonts — Cairo (all weights: 300/400/600/700/800)                                           |
-| Analytics       | Google Analytics 4 (`G-K3GNY9M8TE`) + Microsoft Clarity (`w4e0nhdxt5`)                           |
-| Ads             | Google AdSense (`ca-pub-8578581906562588`) — slots configured but publisher IDs not yet active    |
+| Layer          | Technology                                                                                        |
+| -------------- | ------------------------------------------------------------------------------------------------- |
+| Frontend       | Vanilla ES6 modules — no framework; Vite 8 for production bundle                                  |
+| Styling        | Hand-authored CSS with design tokens (`styles/global.css`); per-page CSS under `styles/pages/`    |
+| Backend (opt.) | Node/Express 5 — JWT + bcrypt auth, Helmet, CORS, rate limiting, flat-JSON + Supabase persistence |
+| Python auto.   | `scripts/python/` — tweepy, supabase-py, requests; linted with ruff                               |
+| Testing        | node:test (23 suites, ~200+ assertions) + Playwright E2E                                          |
+| CI/CD          | 13 GitHub Actions workflows; only `ci.yml` gates merges                                           |
+| Hosting        | GitHub Pages (`goldtickerlive.com`); optional Replit/Express for admin                            |
+| Admin          | Static HTML admin panel backed by Supabase GitHub OAuth                                           |
+| Fonts          | Google Fonts — Cairo (all weights: 300/400/600/700/800)                                           |
+| Analytics      | Google Analytics 4 (`G-K3GNY9M8TE`) + Microsoft Clarity (`w4e0nhdxt5`)                            |
+| Ads            | Google AdSense (`ca-pub-8578581906562588`) — slots configured but publisher IDs not yet active    |
 
 ### Folder structure
 
@@ -103,16 +110,16 @@ full RTL layout support.
 
 ### Entry points
 
-| Entry point                          | Loaded by                           | Purpose                                      |
-| ------------------------------------ | ----------------------------------- | -------------------------------------------- |
-| `index.html` → `src/pages/home.js`  | Browser                             | Homepage — hero price card + GCC grid        |
-| `tracker.html` → `src/pages/tracker-pro.js` | Browser                    | Full tracker (5 modes, chart, alerts)        |
-| `calculator.html` → `src/pages/calculator.js` | Browser                  | Price calculator                             |
-| `shops.html` → `src/pages/shops.js` | Browser                             | Shops directory                              |
-| `countries/*/index.html`             | Browser → `src/lib/page-hydrator.js` | All country/city/karat leaf pages           |
-| `server.js`                          | Node                                | Express admin API (optional, non-Pages)      |
-| `scripts/python/post_gold_price.py`  | GitHub Actions (`post_gold.yml`)    | Hourly X-post bot                            |
-| `scripts/fetch_gold_price.py`        | GitHub Actions (`gold-price-fetch.yml`) | Gold price data refresh                  |
+| Entry point                                   | Loaded by                               | Purpose                                 |
+| --------------------------------------------- | --------------------------------------- | --------------------------------------- |
+| `index.html` → `src/pages/home.js`            | Browser                                 | Homepage — hero price card + GCC grid   |
+| `tracker.html` → `src/pages/tracker-pro.js`   | Browser                                 | Full tracker (5 modes, chart, alerts)   |
+| `calculator.html` → `src/pages/calculator.js` | Browser                                 | Price calculator                        |
+| `shops.html` → `src/pages/shops.js`           | Browser                                 | Shops directory                         |
+| `countries/*/index.html`                      | Browser → `src/lib/page-hydrator.js`    | All country/city/karat leaf pages       |
+| `server.js`                                   | Node                                    | Express admin API (optional, non-Pages) |
+| `scripts/python/post_gold_price.py`           | GitHub Actions (`post_gold.yml`)        | Hourly X-post bot                       |
+| `scripts/fetch_gold_price.py`                 | GitHub Actions (`gold-price-fetch.yml`) | Gold price data refresh                 |
 
 ### Build and deploy flow
 
@@ -150,26 +157,26 @@ full RTL layout support.
 
 ### Unusual or non-obvious aspects
 
-1. **Gold data served as a committed file, not a live API call from the browser.** `data/gold_price.json`
-   is written by a GitHub Actions workflow every 15 min and committed to the repo. The browser fetches
-   the same-origin static file, not a third-party API. This eliminates CORS issues and API-key
-   exposure in the browser, at the cost of data being up to 15 min stale.
+1. **Gold data served as a committed file, not a live API call from the browser.**
+   `data/gold_price.json` is written by a GitHub Actions workflow every 15 min and committed to the
+   repo. The browser fetches the same-origin static file, not a third-party API. This eliminates
+   CORS issues and API-key exposure in the browser, at the cost of data being up to 15 min stale.
 
-2. **Dual module system.** Root `package.json` is `"type": "commonjs"` (Node scripts); `src/package.json`
-   is `"type": "module"` (browser ES modules). The ESLint config enforces that `src/**` cannot import
-   from `server/**`.
+2. **Dual module system.** Root `package.json` is `"type": "commonjs"` (Node scripts);
+   `src/package.json` is `"type": "module"` (browser ES modules). The ESLint config enforces that
+   `src/**` cannot import from `server/**`.
 
 3. **AED hardcoded peg.** The UAE Dirham exchange rate (`3.6725 AED/USD`) is a compile-time constant
-   in `src/config/constants.js`. The FX API response's AED rate is deleted before use, so the central
-   bank peg can never be accidentally overridden.
+   in `src/config/constants.js`. The FX API response's AED rate is deleted before use, so the
+   central bank peg can never be accidentally overridden.
 
 4. **Admin panel is separate from the static site.** `admin/` is static HTML with Supabase GitHub
    OAuth. It talks to the Express server (`server.js`) via `/api/admin` routes. GitHub Pages serves
    the admin HTML, but the API must run on a separate host (Replit or similar).
 
-5. **Services layer coexists with a legacy `lib/api.js`.** `src/lib/api.js` is the primary fetch layer
-   for production pages. The `src/` directory also contains a `services/` sub-directory and `routes/`
-   — these are newer additions and not yet fully wired into all pages.
+5. **Services layer coexists with a legacy `lib/api.js`.** `src/lib/api.js` is the primary fetch
+   layer for production pages. The `src/` directory also contains a `services/` sub-directory and
+   `routes/` — these are newer additions and not yet fully wired into all pages.
 
 ---
 
@@ -281,15 +288,15 @@ tracker.html loads tracker-pro.js
 
 ### Data mutations / source-of-truth flags
 
-| Data                  | Source of truth                     | Mutation risk                                              |
-| --------------------- | ----------------------------------- | ---------------------------------------------------------- |
-| XAU/USD spot price    | `data/gold_price.json` (committed)  | Only the GHA workflow writes it                            |
-| FX rates              | `open.er-api.com` (live API)        | Cached in localStorage; AED deleted before storage        |
-| AED peg               | `src/config/constants.js` (code)    | Cannot be mutated at runtime                              |
-| Country config        | `src/config/countries.js` (code)    | Build-time only                                           |
-| Tracker state         | `localStorage` (5 keys, versioned)  | Only `state.js` helpers write; URL hash is read-only      |
-| Shops data            | `data/shops-data.json`              | Admin panel writes via Express API; normalize-shops.js normalises |
-| X-bot state           | `data/last_gold_price.json`         | Written by `post_gold.yml` workflow                       |
+| Data               | Source of truth                    | Mutation risk                                                     |
+| ------------------ | ---------------------------------- | ----------------------------------------------------------------- |
+| XAU/USD spot price | `data/gold_price.json` (committed) | Only the GHA workflow writes it                                   |
+| FX rates           | `open.er-api.com` (live API)       | Cached in localStorage; AED deleted before storage                |
+| AED peg            | `src/config/constants.js` (code)   | Cannot be mutated at runtime                                      |
+| Country config     | `src/config/countries.js` (code)   | Build-time only                                                   |
+| Tracker state      | `localStorage` (5 keys, versioned) | Only `state.js` helpers write; URL hash is read-only              |
+| Shops data         | `data/shops-data.json`             | Admin panel writes via Express API; normalize-shops.js normalises |
+| X-bot state        | `data/last_gold_price.json`        | Written by `post_gold.yml` workflow                               |
 
 ---
 
@@ -297,75 +304,75 @@ tracker.html loads tracker-pro.js
 
 ### npm production dependencies
 
-| Package             | Version  | Purpose                                       | Actively used | Lighter alternative        |
-| ------------------- | -------- | --------------------------------------------- | ------------- | -------------------------- |
-| `bcryptjs`          | ^3.0.3   | Password hashing for admin auth               | ✅            | `argon2` (stronger, heavier) |
-| `cors`              | ^2.8.6   | CORS middleware for Express admin API         | ✅            | Built into Express 5 (partial) |
-| `express`           | ^5.2.1   | HTTP framework for admin API                  | ✅            | —                          |
-| `express-rate-limit`| ^8.3.2   | Rate limiting on API routes                   | ✅            | Built-in `express` middleware (basic) |
-| `helmet`            | ^8.1.0   | Security headers (CSP, HSTS, etc.)            | ✅            | Manual header setting (more work) |
-| `jsonwebtoken`      | ^9.0.3   | JWT generation + verification for admin auth  | ✅            | `jose` (WebCrypto-based)   |
-| `morgan`            | ^1.10.1  | HTTP request logging                          | ✅            | Built-in `express` debug   |
-| `uuid`              | ^14.0.0  | UUID generation (audit log, session IDs)      | ✅            | `crypto.randomUUID()` (Node built-in) |
+| Package              | Version | Purpose                                      | Actively used | Lighter alternative                   |
+| -------------------- | ------- | -------------------------------------------- | ------------- | ------------------------------------- |
+| `bcryptjs`           | ^3.0.3  | Password hashing for admin auth              | ✅            | `argon2` (stronger, heavier)          |
+| `cors`               | ^2.8.6  | CORS middleware for Express admin API        | ✅            | Built into Express 5 (partial)        |
+| `express`            | ^5.2.1  | HTTP framework for admin API                 | ✅            | —                                     |
+| `express-rate-limit` | ^8.3.2  | Rate limiting on API routes                  | ✅            | Built-in `express` middleware (basic) |
+| `helmet`             | ^8.1.0  | Security headers (CSP, HSTS, etc.)           | ✅            | Manual header setting (more work)     |
+| `jsonwebtoken`       | ^9.0.3  | JWT generation + verification for admin auth | ✅            | `jose` (WebCrypto-based)              |
+| `morgan`             | ^1.10.1 | HTTP request logging                         | ✅            | Built-in `express` debug              |
+| `uuid`               | ^14.0.0 | UUID generation (audit log, session IDs)     | ✅            | `crypto.randomUUID()` (Node built-in) |
 
 ### npm dev dependencies
 
-| Package                    | Version  | Purpose                          | Actively used |
-| -------------------------- | -------- | -------------------------------- | ------------- |
-| `@playwright/test`         | ^1.48.2  | E2E browser tests                | ✅            |
-| `eslint`                   | ^10.2.1  | JS linting (flat config)         | ✅            |
-| `husky`                    | ^9.1.7   | Git hooks (pre-commit lint)      | ✅            |
-| `linkinator`               | ^7.6.1   | Link-check crawl                 | ✅            |
-| `lint-staged`              | ^16.4.0  | Run linters on staged files only | ✅            |
-| `prettier`                 | ^3.8.3   | Code formatter                   | ✅            |
-| `stylelint`                | ^17.8.0  | CSS linting                      | ✅            |
-| `stylelint-config-standard`| ^40.0.0  | Standard CSS lint ruleset        | ✅            |
-| `terser`                   | ^5.46.1  | JS minifier (used by Vite)       | ✅            |
-| `vite`                     | ^8.0.9   | Build tool and dev server        | ✅            |
+| Package                     | Version | Purpose                          | Actively used |
+| --------------------------- | ------- | -------------------------------- | ------------- |
+| `@playwright/test`          | ^1.48.2 | E2E browser tests                | ✅            |
+| `eslint`                    | ^10.2.1 | JS linting (flat config)         | ✅            |
+| `husky`                     | ^9.1.7  | Git hooks (pre-commit lint)      | ✅            |
+| `linkinator`                | ^7.6.1  | Link-check crawl                 | ✅            |
+| `lint-staged`               | ^16.4.0 | Run linters on staged files only | ✅            |
+| `prettier`                  | ^3.8.3  | Code formatter                   | ✅            |
+| `stylelint`                 | ^17.8.0 | CSS linting                      | ✅            |
+| `stylelint-config-standard` | ^40.0.0 | Standard CSS lint ruleset        | ✅            |
+| `terser`                    | ^5.46.1 | JS minifier (used by Vite)       | ✅            |
+| `vite`                      | ^8.0.9  | Build tool and dev server        | ✅            |
 
 ### Python dependencies (`scripts/python/requirements.txt`)
 
-| Package    | Version  | Purpose                                      | Actively used |
-| ---------- | -------- | -------------------------------------------- | ------------- |
-| `requests` | ==2.32.3 | HTTP requests (gold price fetch, health checks) | ✅         |
-| `tweepy`   | ==4.14.0 | Twitter/X API v2 client (OAuth 1.0a)         | ✅            |
-| `supabase` | ==2.9.1  | Supabase Python client (newsletter, sync)    | ✅            |
+| Package    | Version  | Purpose                                         | Actively used |
+| ---------- | -------- | ----------------------------------------------- | ------------- |
+| `requests` | ==2.32.3 | HTTP requests (gold price fetch, health checks) | ✅            |
+| `tweepy`   | ==4.14.0 | Twitter/X API v2 client (OAuth 1.0a)            | ✅            |
+| `supabase` | ==2.9.1  | Supabase Python client (newsletter, sync)       | ✅            |
 
 ### External APIs
 
-| API                          | Used for                                      | Auth            | Free tier limit | Browser / Server |
-| ---------------------------- | --------------------------------------------- | --------------- | --------------- | ---------------- |
-| `goldpricez.com`             | Gold spot price source (XAU/USD, AED)         | `GOLDPRICEZ_API_KEY` | Unknown    | Server (GHA)     |
-| `open.er-api.com/v6/latest/USD` | Live FX exchange rates against USD         | None (free tier) | 1 500 req/mo  | Browser          |
-| `X / Twitter API v2`         | Hourly gold price posts                       | OAuth 1.0a (4 secrets) | Rate limits apply | Server (GHA) |
-| `Supabase`                   | Admin auth (GitHub OAuth), newsletter subscribers, site settings | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | Free tier | Both |
-| `Stripe` (routes wired)      | Premium subscription (routes exist, not live) | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | — | Server |
-| Discord webhook              | Optional spike/health notifications           | `DISCORD_WEBHOOK_URL` | — | Server (GHA) |
-| Telegram bot API             | Optional notifications                        | `TELEGRAM_BOT_TOKEN` | — | Server (GHA) |
+| API                             | Used for                                                         | Auth                                                             | Free tier limit   | Browser / Server |
+| ------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- | ----------------- | ---------------- |
+| `goldpricez.com`                | Gold spot price source (XAU/USD, AED)                            | `GOLDPRICEZ_API_KEY`                                             | Unknown           | Server (GHA)     |
+| `open.er-api.com/v6/latest/USD` | Live FX exchange rates against USD                               | None (free tier)                                                 | 1 500 req/mo      | Browser          |
+| `X / Twitter API v2`            | Hourly gold price posts                                          | OAuth 1.0a (4 secrets)                                           | Rate limits apply | Server (GHA)     |
+| `Supabase`                      | Admin auth (GitHub OAuth), newsletter subscribers, site settings | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | Free tier         | Both             |
+| `Stripe` (routes wired)         | Premium subscription (routes exist, not live)                    | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`                     | —                 | Server           |
+| Discord webhook                 | Optional spike/health notifications                              | `DISCORD_WEBHOOK_URL`                                            | —                 | Server (GHA)     |
+| Telegram bot API                | Optional notifications                                           | `TELEGRAM_BOT_TOKEN`                                             | —                 | Server (GHA)     |
 
 ### CDN / fonts / third-party scripts
 
-| Resource                                                        | Purpose                                 | Privacy impact                |
-| --------------------------------------------------------------- | --------------------------------------- | ----------------------------- |
-| `https://fonts.googleapis.com` — Cairo font CSS                 | Primary typeface (EN + AR)              | Google logs font fetch IP     |
-| `https://fonts.gstatic.com` — Cairo font files                  | Actual font binary delivery             | Google CDN                    |
-| `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js`| Google AdSense ad delivery              | Sets cookies, tracks users    |
-| `https://www.googletagmanager.com/gtag/js?id=G-K3GNY9M8TE`     | Google Analytics 4 (GA4)               | Tracks page views, events     |
-| `https://www.clarity.ms/tag/w4e0nhdxt5`                         | Microsoft Clarity (heatmaps, sessions)  | Tracks sessions, mouse moves  |
+| Resource                                                         | Purpose                                | Privacy impact               |
+| ---------------------------------------------------------------- | -------------------------------------- | ---------------------------- |
+| `https://fonts.googleapis.com` — Cairo font CSS                  | Primary typeface (EN + AR)             | Google logs font fetch IP    |
+| `https://fonts.gstatic.com` — Cairo font files                   | Actual font binary delivery            | Google CDN                   |
+| `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js` | Google AdSense ad delivery             | Sets cookies, tracks users   |
+| `https://www.googletagmanager.com/gtag/js?id=G-K3GNY9M8TE`       | Google Analytics 4 (GA4)               | Tracks page views, events    |
+| `https://www.clarity.ms/tag/w4e0nhdxt5`                          | Microsoft Clarity (heatmaps, sessions) | Tracks sessions, mouse moves |
 
 **Analytics opt-out:** `assets/analytics.js` respects `navigator.doNotTrack === '1'` and
 `localStorage.getItem('gp_no_analytics') === '1'`. GA4 uses `anonymize_ip: true`.
 
 ### GitHub Actions actions used
 
-| Action                                    | Version | Purpose                            |
-| ----------------------------------------- | ------- | ---------------------------------- |
-| `actions/checkout`                        | v6      | Repo checkout                      |
-| `actions/setup-node`                      | v6      | Node.js setup                      |
-| `actions/setup-python`                    | v6      | Python setup                       |
-| `actions/upload-pages-artifact`           | v5      | Bundle GitHub Pages artifact       |
-| `actions/deploy-pages`                    | v5      | Publish to GitHub Pages            |
-| `stefanzweifel/git-auto-commit-action`    | v5      | Auto-commit data file updates      |
+| Action                                 | Version | Purpose                       |
+| -------------------------------------- | ------- | ----------------------------- |
+| `actions/checkout`                     | v6      | Repo checkout                 |
+| `actions/setup-node`                   | v6      | Node.js setup                 |
+| `actions/setup-python`                 | v6      | Python setup                  |
+| `actions/upload-pages-artifact`        | v5      | Bundle GitHub Pages artifact  |
+| `actions/deploy-pages`                 | v5      | Publish to GitHub Pages       |
+| `stefanzweifel/git-auto-commit-action` | v5      | Auto-commit data file updates |
 
 ---
 
@@ -379,11 +386,13 @@ Ranked by risk (P0 = immediate trust/correctness risk; P1 = this sprint; P2 = po
 
 **Files:** `src/lib/page-hydrator.js:179–181`  
 **Risk:** `renderKaratCards`, `renderFreshnessBadge`, and `renderDisclaimer` all write `.innerHTML`
-directly. `renderDisclaimer` encodes `location.href` via `URL.pathname` (safe), and `renderFreshnessBadge`
-is data-only — but the DOM-safety baseline in `scripts/node/check-unsafe-dom.js` tracks these as
-known sinks. Any future addition of user-controlled data (e.g. a city name from `COUNTRIES` that
-contains HTML-special characters) would be silently trusted.  
-**Action:** Route through `safe-dom.js` helpers or use `el()` / `node.replaceChildren()` for each block.
+directly. `renderDisclaimer` encodes `location.href` via `URL.pathname` (safe), and
+`renderFreshnessBadge` is data-only — but the DOM-safety baseline in
+`scripts/node/check-unsafe-dom.js` tracks these as known sinks. Any future addition of
+user-controlled data (e.g. a city name from `COUNTRIES` that contains HTML-special characters) would
+be silently trusted.  
+**Action:** Route through `safe-dom.js` helpers or use `el()` / `node.replaceChildren()` for each
+block.
 
 #### W-2 · Gold price data can be up to 15 minutes stale while the UI shows "Live"
 
@@ -396,6 +405,10 @@ conditions this is a minor display issue, but it means users may see "Live" for 
 15 min old.  
 **Action:** Align the cron comment with reality. Optionally raise `STALE_AFTER_MS` to 16 min, or
 tighten the cron back to `*/6`.
+
+**Resolved (2026-04-27):** Cron comment fixed (`*/15` matches reality). `STALE_AFTER_MS` bumped 10 →
+12 min — one full missed cron-tick safety margin without crossing the cron interval. Test extended
+in `tests/live-status.test.js`.
 
 #### W-3 · No staleness label for FX rates
 
@@ -432,10 +445,14 @@ freshness path.
 #### W-6 · `renderKaratCards` uses inline styles, not design tokens
 
 **Files:** `src/lib/page-hydrator.js:92–98`  
-**Risk:** All karat card styling is done with hardcoded `style=` attributes (hex colours, rem values)
-that bypass `styles/global.css` tokens and will diverge from theme changes. CSS custom properties
-set this way also cannot use `var(--foo)` syntax.  
+**Risk:** All karat card styling is done with hardcoded `style=` attributes (hex colours, rem
+values) that bypass `styles/global.css` tokens and will diverge from theme changes. CSS custom
+properties set this way also cannot use `var(--foo)` syntax.  
 **Action:** Convert to CSS class names driven by `styles/global.css` tokens.
+
+**Resolved (2026-04-27):** Inline styles replaced by `.ph-karat-card` / `.ph-karat-card__label` /
+`.ph-karat-card__price` / `.ph-karat-card__unit` classes appended to `styles/global.css`, with a
+`[data-theme='dark']` override for parity with the rest of the page.
 
 #### W-7 · `src/lib/supabase-data.js` has no tests
 
@@ -454,9 +471,14 @@ surfaces would not be caught until production.
 
 **Files:** `build/generateSitemap.js`, `scripts/node/generate-sitemap.js`  
 **Risk:** Two separate sitemap-generation scripts exist. `build/generateSitemap.js` is called in
-`npm run build`; `scripts/node/generate-sitemap.js` is called in CI after the build. Their parity
-is not enforced and could drift.  
+`npm run build`; `scripts/node/generate-sitemap.js` is called in CI after the build. Their parity is
+not enforced and could drift.  
 **Action:** Consolidate into one canonical script and call it from both contexts.
+
+**Partial resolution (2026-04-27):** Consolidation deferred (too risky for this batch — see
+[`reports/sitemap-parity.md`](../../reports/sitemap-parity.md)). A drift-guard test
+(`tests/sitemap-parity.test.js`) now enforces both scripts run, both emit ≥ 50 URLs, and the
+canonical sitemap retains its required top-level pages.
 
 #### W-10 · `docs/REPO_AUDIT.md` references `lowdb`
 
@@ -465,14 +487,21 @@ is not enforced and could drift.
 dependency audit (per `docs/DEPENDENCIES.md`). The audit file is therefore factually stale.  
 **Action:** Update `docs/REPO_AUDIT.md` to remove the `lowdb` references.
 
+**Resolved (2026-04-27):** `lowdb` references replaced with the actual JSON-file-with-fs.writeFile
+storage layer description in `docs/REPO_AUDIT.md`; cross-reference to `docs/DEPENDENCIES.md` added
+as the source of truth.
+
 ### P2 — Polish / maintainability
 
 #### W-11 · `uuid` can be replaced with Node built-in
 
 **Files:** `package.json`, `server/` usages  
-**Risk:** `uuid` is a production dependency, but Node 14.17+ provides `crypto.randomUUID()` natively.
-Removing `uuid` reduces the dependency surface.  
+**Risk:** `uuid` is a production dependency, but Node 14.17+ provides `crypto.randomUUID()`
+natively. Removing `uuid` reduces the dependency surface.  
 **Action:** Replace `uuid` usages with `crypto.randomUUID()` and remove the package.
+
+**Resolved (2026-04-27):** `uuid` removed from `package.json` (depcheck-confirmed unused after the
+last server refactor). `docs/DEPENDENCIES.md` updated.
 
 #### W-12 · Analytics IDs and AdSense publisher ID hardcoded in source
 
@@ -483,13 +512,18 @@ cannot be changed without a code deploy.
 **Action:** Document in `docs/EDIT_GUIDE.md` that changing these requires a code edit + deploy, not
 just a config change.
 
+**Resolved (2026-04-27):** New "Analytics, Ads & Tracking IDs" section in `docs/EDIT_GUIDE.md`
+inventories every hardcoded ID with file path, marks all of them as "code edit + deploy", and flags
+the corresponding env vars (`GA4_MEASUREMENT_ID`, `ADSENSE_CLIENT_ID`) that are documented but not
+yet wired to the source.
+
 #### W-13 · `open.er-api.com` free tier limit
 
 **Files:** `src/lib/api.js:CONSTANTS.API_FX_URL`  
 **Risk:** The free plan on `open.er-api.com` allows 1 500 requests/month. The tracker page refreshes
 FX every 90 seconds per user session. Under significant traffic this limit could be exceeded,
-causing FX fetch failures (the fallback to localStorage cache would engage, but FX data would
-become stale without visible indication — see W-3).  
+causing FX fetch failures (the fallback to localStorage cache would engage, but FX data would become
+stale without visible indication — see W-3).  
 **Action:** Cache the FX response server-side (or via a proxy endpoint) and serve it from
 `/data/fx_rates.json` committed on a schedule (same model as gold price). This would also improve
 privacy by not making per-browser requests to a third-party domain.
@@ -500,11 +534,17 @@ privacy by not making per-browser requests to a third-party domain.
 **Risk:** Not all entry pages register the service worker. Pages that don't register it won't get
 offline support. There is no test or audit enforcing consistent SW registration.
 
+**Resolved (2026-04-27):** `scripts/node/check-sw-coverage.js` runs in `npm run validate` and fails
+if a top-level entry HTML page neither registers the SW nor appears on the documented allow-list.
+Current state captured in [`reports/sw-coverage.md`](../../reports/sw-coverage.md): `index.html` and
+`invest.html` register; six other entry pages are baseline-allow-listed with TODO §22b notes.
+
 ---
 
 ## Done criteria for follow-ups
 
 Each weak spot above that warrants a code change should be addressed in a scoped plan PR that:
+
 - Cites the finding number from this document (e.g. `Fixes W-1`)
 - Adds or updates tests that would have caught the bug
 - Passes `npm run validate`, `npm test`, `npm run build`
