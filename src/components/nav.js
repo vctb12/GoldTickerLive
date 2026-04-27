@@ -808,11 +808,6 @@ export function updateNavLang(lang) {
       });
     });
   }
-
-  nav.querySelectorAll('[data-nav-key="shops"]').forEach((el) => {
-    el.textContent = data.shops.label;
-  });
-
   // Dropdown groups
   data.groups.forEach((group, gi) => {
     // Desktop button — preserve the caret <span>
