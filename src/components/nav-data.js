@@ -55,7 +55,7 @@ export const NAV_DATA = {
         href: '/countries/uae/',
         label: 'UAE Prices',
         description: 'AED prices and Dubai context',
-        icon: '🇦��',
+        icon: '🇦🇪',
         primary: true,
       },
       {
