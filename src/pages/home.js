@@ -333,6 +333,7 @@ function applyLangToPage() {
   setTextById('hero-cta-countries', tx('heroCta2'));
   setTextById('hero-cta-shops', tx('heroCta4'));
   setTextById('hero-cta-alert', tx('heroCta5'));
+  setTextById('hero-cta-methodology', tx('heroCtaMethodology'));
   setTextById('hero-trust-line', tx('heroTrustLine'));
   setTextById('hlc-trust-line', tx('heroTrustShort'));
   setTextById('hlc-tracker-link', tx('trackerLink'));
