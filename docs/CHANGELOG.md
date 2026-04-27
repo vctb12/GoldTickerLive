@@ -4,6 +4,78 @@ All notable changes to the Gold-Prices platform are documented here.
 
 ## [Unreleased]
 
+### 2026-04-27 — Multi-batch UX, admin, CSS, and trust improvements
+
+#### Stylelint
+
+- Fixed 53 stylelint errors across `styles/admin.css`, `styles/global.css`,
+  `styles/pages/tracker-pro.css`, `styles/pages/home.css`, `styles/pages/methodology.css`,
+  `styles/pages/pricing.css`, `styles/pages/stub.css`: all `rgba()` calls converted to modern
+  `rgb(... / ...)` syntax; deprecated `clip:` replaced with `clip-path:`; deprecated
+  `overflow-wrap: break-word` replaced with `overflow-wrap: anywhere`.
+
+#### Admin Dashboard (`admin/index.html`)
+
+- Migrated 340-line inline `<style>` block to `styles/admin.css` (sections 20+): `.welcome-banner`,
+  `.quick-action-card`, `.dashboard-grid`, `.activity-list`, `.ticker-badge`, `.insight-list`,
+  `.data-pill` and all related modifiers.
+
+#### Admin Login (`admin/login/index.html`)
+
+- Improved `showError()` to map raw Supabase/server error strings to friendly user-facing copy:
+  rate-limit (429/too-many), invalid credentials, email not confirmed, method not enabled.
+
+#### Admin Settings (`admin/settings/index.html`)
+
+- Save button now shows "⏳ Saving…" loading state during async save and disables itself to prevent
+  double-submission.
+- Save failure messages now map to readable descriptions: Supabase unavailability (local cache
+  note), network error, permission/RLS denied.
+- Replaced 6 inline `style=` attributes on the account-info card with CSS classes in
+  `styles/admin.css` (`.settings-user-info`, `.settings-user-details`, `.settings-user-email`,
+  `.settings-user-provider`, `.settings-admin-badge`, `.settings-notice`).
+- Removed remaining inline `style="padding-bottom: 80px"` replaced with `.settings-content-area`.
+
+#### Tracker (`tracker.html`)
+
+- Method mode: added a **Karat purity** explanation card with the formula for 24K/22K/21K/18K/14K
+  purity scaling.
+- Method mode: improved FX card copy to name the AED peg (3.6725) explicitly.
+- Method mode: added `.tracker-method-footer` bar with "Read full methodology →" CTA + anchored
+  links to freshness and disclaimer sections on `methodology.html`.
+- Fixed all methodology deep-links: `#karat-purity` → `#karat-conversion`, `#spot-vs-retail` →
+  `#not-included`, `#freshness` → `#gold-data`, `#limitations` → `#disclaimer`.
+- Alerts mode: promoted browser-only disclaimer to a `.tracker-browser-only-note` styled warning box
+  (amber background, border, bold label). Removed inline `style=` attribute.
+
+#### Homepage (`index.html`)
+
+- Social follow section: replaced 3 inline `style=` attributes with CSS classes `.home-social-wrap`,
+  `.home-social-text`, `.home-social-btn` in `styles/pages/home.css`.
+- Trust banner: added `aria-labelledby="trust-banner-title"` to the section element, updated copy to
+  be clearer about source chain ("XAU/USD · live FX from ExchangeRate-API · AED at fixed peg
+  3.6725"), changed title to "About Our Prices", added `aria-hidden="true"` to icon.
+- Trust banner: updated translations in `src/config/translations.js` (EN + AR) to match.
+
+#### Typography (`styles/global.css`)
+
+- Added base `h1`–`h6` element rules as low-specificity fallbacks. The ~40 bespoke page-level
+  selectors continue to dominate by specificity — no regression risk. REVAMP_PLAN.md Slice 2b
+  complete.
+
+#### Tracker CSS (`styles/pages/tracker-pro.css`)
+
+- Added `.tracker-help-text`, `.tracker-browser-only-note` utility classes.
+- Added `.tracker-method-footer` for the methodology footer bar.
+
+#### Validation
+
+- All 354 unit tests pass.
+- `npm run lint` — clean.
+- `npm run style` (stylelint) — clean.
+- `npm run validate` — clean (0 errors, 0 warnings; 497-URL sitemap; 696 HTML files; 0 unsafe DOM
+  sinks).
+
 ### Admin Panel — Supabase Migration
 
 - Migrated admin authentication from JWT/Express to **Supabase GitHub OAuth**

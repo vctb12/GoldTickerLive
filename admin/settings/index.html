@@ -1128,6 +1128,7 @@
           }
           const saveBtn = document.getElementById('save-btn');
           saveBtn.disabled = true;
+          saveBtn.setAttribute('aria-busy', 'true');
           saveBtn.textContent = '⏳ Saving…';
           try {
             await saveSettings(s);
@@ -1150,6 +1151,7 @@
             }
           } finally {
             saveBtn.disabled = false;
+            saveBtn.removeAttribute('aria-busy');
             saveBtn.textContent = '💾 Save Settings';
           }
         });
