@@ -6491,6 +6491,19 @@ body[data-shell='market'] {
   transform: translateX(-50%) translateY(0) scale(1);
 }
 
+.nav-dropdown[data-group='buy-gold'] .nav-dropdown-panel,
+.nav-dropdown[data-group='markets'] .nav-dropdown-panel {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  transform: translateY(-6px) scale(0.985);
+  transform-origin: top right;
+}
+
+.nav-dropdown[data-group='buy-gold'].is-open .nav-dropdown-panel,
+.nav-dropdown[data-group='markets'].is-open .nav-dropdown-panel {
+  transform: translateY(0) scale(1);
+}
+
 .nav-dropdown-panel::before {
   content: '';
   position: absolute;
