@@ -86,6 +86,72 @@ alter table public.shops add column if not exists address_ar text;
 alter table public.shops add column if not exists rating     numeric;
 
 -- ============================================================
+-- SHOP SUBMISSIONS
+-- ============================================================
+-- Public intake queue for content/submit-shop/. Rows are not
+-- public directory listings until an authenticated admin reviews
+-- and copies/approves the details into public.shops.
+create table if not exists public.shop_submissions (
+    id              uuid primary key default uuid_generate_v4(),
+    shop_name       text not null,
+    owner_name      text,
+    contact_email   text not null,
+    contact_phone   text,
+    country_code    text not null,
+    city            text not null,
+    market          text,
+    website         text,
+    specialty       text,
+    notes           text,
+    status          text not null default 'pending'
+                    check (status in ('pending', 'reviewing', 'approved', 'rejected', 'duplicate')),
+    source          text not null default 'public-submit-shop',
+    page_path       text,
+    reviewed_by     text,
+    reviewed_at     timestamptz,
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now()
+);
+
+create index if not exists idx_shop_submissions_status
+    on public.shop_submissions(status, created_at desc);
+create index if not exists idx_shop_submissions_country_city
+    on public.shop_submissions(country_code, city);
+
+alter table public.shop_submissions enable row level security;
+
+-- Anyone may submit a shop suggestion, but cannot read the queue.
+create policy "Public insert shop submissions"
+    on public.shop_submissions for insert
+    with check (
+        status = 'pending'
+        and char_length(shop_name) between 2 and 120
+        and char_length(contact_email) between 5 and 160
+        and char_length(country_code) between 2 and 3
+        and char_length(city) between 2 and 100
+    );
+
+-- Authenticated admins can review and manage the queue.
+create policy "Admin read shop submissions"
+    on public.shop_submissions for select
+    to authenticated
+    using (true);
+
+create policy "Admin update shop submissions"
+    on public.shop_submissions for update
+    to authenticated
+    using (true);
+
+create policy "Admin delete shop submissions"
+    on public.shop_submissions for delete
+    to authenticated
+    using (true);
+
+create trigger shop_submissions_set_updated_at
+    before update on public.shop_submissions
+    for each row execute procedure public.set_updated_at();
+
+-- ============================================================
 -- SITE SETTINGS (single-row config, JSON value)
 -- ============================================================
 create table if not exists public.site_settings (

@@ -23,14 +23,14 @@ export function injectFooter(lang = 'en', depth = 0) {
 
       <!-- Brand column -->
       <div class="footer-col footer-col--brand">
-        <a href="${r('../index.html')}" class="footer-brand-link" aria-label="GoldPrices Home">
+        <a href="${r('../index.html')}" class="footer-brand-link" aria-label="GoldTickerLive Home">
           <span class="footer-brand-icon" aria-hidden="true">◈</span>
-          <span class="footer-brand-name">${isAr ? 'أسعار الذهب' : 'GoldPrices'}</span>
+          <span class="footer-brand-name">${isAr ? 'GoldTickerLive' : 'GoldTickerLive'}</span>
         </a>
         <p class="footer-tagline">${
           isAr
-            ? 'تقديرات الذهب المباشرة للخليج والعالم العربي'
-            : 'Live gold estimates for the Gulf &amp; Arab world'
+            ? 'أسعار ذهب مرجعية مباشرة للخليج والعالم العربي'
+            : 'Live spot-linked gold reference prices for the Gulf &amp; Arab world'
         }</p>
         <div class="footer-brand-badges">
           <span class="footer-badge">${isAr ? '24+ دولة' : '24+ Countries'}</span>
@@ -47,6 +47,8 @@ export function injectFooter(lang = 'en', depth = 0) {
         <a href="${r('../tracker.html#mode=compare')}">${isAr ? 'مقارنة دول الخليج' : 'GCC Compare'}</a>
         <a href="${r('../tracker.html#mode=archive')}">${isAr ? 'البيانات التاريخية' : 'History &amp; Data'}</a>
         <a href="${r('../shops.html')}">${isAr ? 'دليل المحلات' : 'Shop Directory'}</a>
+        <a href="${r('../content/todays-best-rates/')}">${isAr ? 'أفضل الأسعار اليوم' : "Today's Best Rates"}</a>
+        <a href="${r('../content/compare-countries/')}">${isAr ? 'مقارنة الدول' : 'Compare Countries'}</a>
         <a href="${r('../countries/index.html')}">${isAr ? 'جميع الدول' : 'All Countries'}</a>
       </div>
 
@@ -61,6 +63,8 @@ export function injectFooter(lang = 'en', depth = 0) {
         <a href="${r('../content/gold-price-history/')}">${isAr ? 'سجل الأسعار' : 'Price History'}</a>
         <a href="${r('../content/order-gold/')}">${isAr ? 'اطلب الذهب' : 'Order Gold'}</a>
         <a href="${r('../invest.html')}">${isAr ? 'دليل الاستثمار' : 'Investing Guide'}</a>
+        <a href="${r('../content/submit-shop/')}">${isAr ? 'أضف محلاً' : 'Submit a Shop'}</a>
+        <a href="${r('../content/premium-watch/')}">${isAr ? 'مراقبة العلاوة' : 'Premium Watch'}</a>
       </div>
 
       <!-- GCC column -->
@@ -87,6 +91,8 @@ export function injectFooter(lang = 'en', depth = 0) {
         <a href="${r('../countries/egypt/cities/cairo.html')}">${isAr ? 'القاهرة' : 'Cairo'}</a>
         <h4 class="footer-col-heading footer-col-heading--mt">${isAr ? 'تعلّم وتحليلات' : 'Learn &amp; Insights'}</h4>
         <a href="${r('../learn.html')}">${isAr ? 'دليل الذهب' : 'Gold Guide'}</a>
+        <a href="${r('../content/faq/')}">${isAr ? 'الأسئلة الشائعة' : 'FAQ'}</a>
+        <a href="${r('../content/spot-vs-retail-gold-price/')}">${isAr ? 'السعر الفوري والتجزئة' : 'Spot vs Retail'}</a>
         <a href="${r('../content/guides/buying-guide.html')}">${isAr ? 'دليل الشراء' : 'Buying Guide'}</a>
         <a href="${r('../methodology.html')}">${isAr ? 'المنهجية' : 'Methodology'}</a>
         <a href="${r('../insights.html')}">${isAr ? 'تحليلات' : 'Insights'}</a>
@@ -134,9 +140,9 @@ export function injectFooter(lang = 'en', depth = 0) {
         <p class="footer-disclaimer">${
           isAr
             ? 'قيم تقديرية مكافئة للسبيكة فقط. قد تختلف أسعار التجزئة والمجوهرات. ليست نصيحة مالية.'
-            : 'Estimated bullion-equivalent values only. Retail and jewellery prices may differ. Not financial advice.'
+            : 'Spot-linked reference estimates only. Retail and jewellery prices may include making charges, premiums, and tax. Not financial advice.'
         }</p>
-        <p class="footer-copy">© ${year} GoldPrices · <a href="${r('../terms.html')}">${isAr ? 'شروط الخدمة' : 'Terms'}</a> · <a href="${r('../privacy.html')}">${isAr ? 'الخصوصية' : 'Privacy'}</a> · <span class="footer-copy-trigger" id="footer-admin-trigger" aria-hidden="true" style="cursor:default;user-select:none">⚡</span></p>
+        <p class="footer-copy">© ${year} GoldTickerLive · <a href="${r('../terms.html')}">${isAr ? 'شروط الخدمة' : 'Terms'}</a> · <a href="${r('../privacy.html')}">${isAr ? 'الخصوصية' : 'Privacy'}</a> · <span class="footer-copy-trigger" id="footer-admin-trigger" aria-hidden="true" style="cursor:default;user-select:none">⚡</span></p>
       </div>
     </div>
   </div>

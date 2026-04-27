@@ -2,6 +2,67 @@
 
 This document contains all SQL migrations for the Gold Prices platform roadmap features.
 
+## Public Shop Submissions
+
+```sql
+-- Public intake queue for content/submit-shop/.
+-- Rows are not public directory listings until an authenticated admin reviews
+-- and copies/approves the details into public.shops.
+CREATE TABLE IF NOT EXISTS shop_submissions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  shop_name TEXT NOT NULL,
+  owner_name TEXT,
+  contact_email TEXT NOT NULL,
+  contact_phone TEXT,
+  country_code TEXT NOT NULL,
+  city TEXT NOT NULL,
+  market TEXT,
+  website TEXT,
+  specialty TEXT,
+  notes TEXT,
+  status TEXT NOT NULL DEFAULT 'pending'
+    CHECK (status IN ('pending', 'reviewing', 'approved', 'rejected', 'duplicate')),
+  source TEXT NOT NULL DEFAULT 'public-submit-shop',
+  page_path TEXT,
+  reviewed_by TEXT,
+  reviewed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_shop_submissions_status
+  ON shop_submissions(status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_shop_submissions_country_city
+  ON shop_submissions(country_code, city);
+
+ALTER TABLE shop_submissions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public insert shop submissions"
+  ON shop_submissions FOR INSERT
+  WITH CHECK (
+    status = 'pending'
+    AND char_length(shop_name) BETWEEN 2 AND 120
+    AND char_length(contact_email) BETWEEN 5 AND 160
+    AND char_length(country_code) BETWEEN 2 AND 3
+    AND char_length(city) BETWEEN 2 AND 100
+  );
+
+CREATE POLICY "Admin read shop submissions"
+  ON shop_submissions FOR SELECT
+  TO authenticated
+  USING (true);
+
+CREATE POLICY "Admin update shop submissions"
+  ON shop_submissions FOR UPDATE
+  TO authenticated
+  USING (true);
+
+CREATE POLICY "Admin delete shop submissions"
+  ON shop_submissions FOR DELETE
+  TO authenticated
+  USING (true);
+```
+
 ## Premium Subscriptions
 
 ```sql

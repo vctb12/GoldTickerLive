@@ -225,9 +225,9 @@ export function injectNav(lang = 'en', depth = 0) {
   <div class="nav-inner">
 
     <!-- Brand -->
-    <a href="${homeHref}" class="nav-brand" aria-label="GoldPrices Home">
+    <a href="${homeHref}" class="nav-brand" aria-label="GoldTickerLive Home">
       <span class="nav-brand-icon" aria-hidden="true">◈</span>
-      <span class="nav-brand-text">GoldPrices</span>
+      <span class="nav-brand-text">GoldTickerLive</span>
     </a>
 
     <!-- Desktop links -->

@@ -252,7 +252,45 @@
               <div class="stat-label">Updated Today</div>
               <div class="stat-number" id="stat-today">—</div>
             </div>
+            <div class="stat-card" role="listitem">
+              <div class="stat-label">Public Submissions</div>
+              <div class="stat-number" id="stat-submissions">—</div>
+            </div>
           </div>
+
+          <section class="card settings-card" id="submissions" aria-labelledby="shop-submissions-title">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title" id="shop-submissions-title">Public shop submissions</h2>
+                <p class="text-muted text-sm">
+                  Suggestions from the public Submit Shop form. Review details before creating or updating any public directory listing.
+                </p>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="refresh-submissions-btn" type="button">
+                Refresh queue
+              </button>
+            </div>
+            <div class="table-wrap">
+              <table aria-label="Public shop submissions review queue">
+                <thead>
+                  <tr>
+                    <th>Shop</th>
+                    <th>Location</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="submissions-tbody">
+                  <tr>
+                    <td colspan="5">
+                      <div class="empty-state">📥 Loading public submissions…</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
 
           <!-- ── Toolbar ──────────────────────────────────────── -->
           <div class="toolbar" role="search" aria-label="Filter shops">
@@ -809,6 +847,15 @@
     ───────────────────────────────────────────────────────── */
       const SHOPS_CACHE_KEY = 'gp_admin_shops';
 
+      function escapeHtml(value) {
+        return String(value ?? '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
       /**
        * Map admin form / cache data to Supabase column names.
        */
@@ -987,6 +1034,130 @@
         document.getElementById('stat-today').textContent = shops.filter((s) =>
           (s.updatedAt || s.createdAt || '').startsWith(today)
         ).length;
+        document.getElementById('stat-submissions').textContent = await countPendingSubmissions();
+      }
+
+      async function countPendingSubmissions() {
+        const sb = getSupabase();
+        if (!sb) return '—';
+        try {
+          const { count, error } = await sb
+            .from('shop_submissions')
+            .select('*', { count: 'exact', head: true })
+            .eq('status', 'pending');
+          if (error) throw error;
+          return count ?? 0;
+        } catch {
+          return '—';
+        }
+      }
+
+      async function updateSubmissionStatus(id, status) {
+        const sb = getSupabase();
+        if (!sb) throw new Error('Supabase client not available.');
+        const { error } = await sb
+          .from('shop_submissions')
+          .update({ status, reviewed_at: new Date().toISOString() })
+          .eq('id', id);
+        if (error) throw new Error(error.message);
+      }
+
+      async function loadSubmissionQueue() {
+        const tbody = document.getElementById('submissions-tbody');
+        const sb = getSupabase();
+        if (!tbody) return;
+        const renderEmpty = (message, detail = '') => {
+          const tr = document.createElement('tr');
+          const td = document.createElement('td');
+          td.colSpan = 5;
+          const box = document.createElement('div');
+          box.className = 'empty-state';
+          box.textContent = message;
+          if (detail) {
+            const p = document.createElement('p');
+            p.textContent = detail;
+            box.appendChild(p);
+          }
+          td.appendChild(box);
+          tr.appendChild(td);
+          tbody.replaceChildren(tr);
+        };
+        if (!sb) {
+          renderEmpty('Supabase is not connected.');
+          return;
+        }
+        try {
+          const { data, error } = await sb
+            .from('shop_submissions')
+            .select('id,shop_name,contact_email,contact_phone,country_code,city,market,website,specialty,notes,status,created_at')
+            .order('created_at', { ascending: false })
+            .limit(20);
+          if (error) throw error;
+          if (!data?.length) {
+            renderEmpty(
+              '📥 No public submissions yet.',
+              'New entries from the Submit Shop form will appear here.'
+            );
+            return;
+          }
+          const rows = data.map((s) => {
+            const tr = document.createElement('tr');
+            const nameTd = document.createElement('td');
+            const strong = document.createElement('strong');
+            strong.textContent = s.shop_name || '—';
+            const br = document.createElement('br');
+            const note = document.createElement('span');
+            note.className = 'text-dim text-xs';
+            note.textContent = [s.specialty, s.notes].filter(Boolean).join(' — ') || 'No notes';
+            nameTd.append(strong, br, note);
+
+            const locationTd = document.createElement('td');
+            locationTd.textContent = [s.city, s.market, s.country_code].filter(Boolean).join(' · ') || '—';
+
+            const contactTd = document.createElement('td');
+            contactTd.textContent = [s.contact_email, s.contact_phone].filter(Boolean).join(' · ') || '—';
+            if (typeof s.website === 'string' && /^https?:\/\//i.test(s.website)) {
+              contactTd.append(' ');
+              const link = document.createElement('a');
+              link.href = s.website;
+              link.target = '_blank';
+              link.rel = 'noopener';
+              link.textContent = 'website';
+              link.addEventListener('click', (event) => event.stopPropagation());
+              contactTd.appendChild(link);
+            }
+
+            const statusTd = document.createElement('td');
+            const badge = document.createElement('span');
+            badge.className = `badge ${s.status === 'pending' ? 'badge-warning' : 'badge-neutral'}`;
+            badge.textContent = s.status || 'pending';
+            statusTd.appendChild(badge);
+
+            const actionsTd = document.createElement('td');
+            const actions = document.createElement('div');
+            actions.className = 'row-actions';
+            [
+              ['reviewing', 'Reviewing', 'btn btn-ghost btn-sm'],
+              ['approved', 'Approve', 'btn btn-gold btn-sm'],
+              ['duplicate', 'Duplicate', 'btn btn-ghost btn-sm'],
+            ].forEach(([action, label, className]) => {
+              const btn = document.createElement('button');
+              btn.className = className;
+              btn.type = 'button';
+              btn.dataset.submissionAction = action;
+              btn.dataset.id = s.id;
+              btn.textContent = label;
+              actions.appendChild(btn);
+            });
+            actionsTd.appendChild(actions);
+
+            tr.append(nameTd, locationTd, contactTd, statusTd, actionsTd);
+            return tr;
+          });
+          tbody.replaceChildren(...rows);
+        } catch (err) {
+          renderEmpty('Could not load submissions.', err.message);
+        }
       }
 
       /* ─────────────────────────────────────────────────────────
@@ -1340,6 +1511,21 @@
 
         // Export
         document.getElementById('export-csv-btn').addEventListener('click', () => exportCSV());
+        document
+          .getElementById('refresh-submissions-btn')
+          ?.addEventListener('click', () => loadSubmissionQueue());
+        document.getElementById('submissions-tbody')?.addEventListener('click', async (e) => {
+          const btn = e.target.closest('[data-submission-action]');
+          if (!btn) return;
+          try {
+            await updateSubmissionStatus(btn.dataset.id, btn.dataset.submissionAction);
+            showToast(`Submission marked ${btn.dataset.submissionAction}.`, 'success');
+            await loadSubmissionQueue();
+            await updateStats();
+          } catch (err) {
+            showToast('Could not update submission: ' + err.message, 'danger');
+          }
+        });
 
         // Sort column headers
         document.querySelectorAll('.sort-th').forEach((th) => {
@@ -1594,6 +1780,7 @@
         });
 
         // Initial render
+        await loadSubmissionQueue();
         await renderTable(1);
         await updateStats();
       }

@@ -380,6 +380,16 @@
               <div class="stat-sub" id="stat-shops-sub">from database</div>
             </div>
 
+            <!-- Pending Shop Submissions -->
+            <div class="card stat-card" role="listitem">
+              <div class="stat-icon" aria-hidden="true">📥</div>
+              <div class="stat-label">Shop Submissions</div>
+              <div class="stat-number" id="stat-shop-submissions" aria-live="polite">
+                <span class="inline-spinner" aria-hidden="true"></span>
+              </div>
+              <div class="stat-sub" id="stat-shop-submissions-sub">pending review queue</div>
+            </div>
+
             <!-- Pending Orders -->
             <div class="card stat-card" role="listitem">
               <div class="stat-icon" aria-hidden="true">
@@ -426,6 +436,13 @@
                 <div class="quick-action-text">
                   <span class="quick-action-label">Manage Shops</span>
                   <span class="quick-action-desc">Add or edit listings</span>
+                </div>
+              </a>
+              <a class="quick-action-card" href="./shops/#submissions" aria-label="Review shop submissions">
+                <div class="quick-action-icon" aria-hidden="true">📥</div>
+                <div class="quick-action-text">
+                  <span class="quick-action-label">Review Submissions</span>
+                  <span class="quick-action-desc">Approve public suggestions</span>
                 </div>
               </a>
               <a class="quick-action-card" href="./pricing/" aria-label="Update pricing">
@@ -662,8 +679,29 @@
             qs('#stat-shops-sub').textContent = 'could not connect';
           }
         } else {
-          qs('#stat-shops').textContent = '—';
-          qs('#stat-shops-sub').textContent = 'Supabase not connected';
+            qs('#stat-shops').textContent = '—';
+            qs('#stat-shops-sub').textContent = 'Supabase not connected';
+        }
+
+        // Public shop submissions waiting for editorial review
+        if (sb) {
+          try {
+            const { count: pendingSubmissions, error } = await sb
+              .from('shop_submissions')
+              .select('*', { count: 'exact', head: true })
+              .eq('status', 'pending');
+            if (error) throw error;
+            const val = pendingSubmissions ?? 0;
+            qs('#stat-shop-submissions').textContent = val.toLocaleString();
+            qs('#stat-shop-submissions-sub').textContent =
+              val > 0 ? 'needs editorial review' : 'review queue clear';
+          } catch {
+            qs('#stat-shop-submissions').textContent = '—';
+            qs('#stat-shop-submissions-sub').textContent = 'queue unavailable';
+          }
+        } else {
+          qs('#stat-shop-submissions').textContent = '—';
+          qs('#stat-shop-submissions-sub').textContent = 'Supabase not connected';
         }
 
         // Pending orders
@@ -733,6 +771,11 @@
             // Synthesise from recent records across tables
             const sources = await Promise.allSettled([
               sb
+                .from('shop_submissions')
+                .select('id,shop_name,city,status,created_at')
+                .order('created_at', { ascending: false })
+                .limit(5),
+              sb
                 .from('shops')
                 .select('id,name,created_at')
                 .order('created_at', { ascending: false })
@@ -748,7 +791,15 @@
                 .order('created_at', { ascending: false })
                 .limit(5),
             ]);
-            const [shopsRes, ordersRes, postsRes] = sources;
+            const [submissionsRes, shopsRes, ordersRes, postsRes] = sources;
+            (submissionsRes.value?.data || []).forEach((s) =>
+              rows.push({
+                action: `Shop submission ${s.status || 'pending'}`,
+                target_type: 'submission',
+                actor: `${s.shop_name || 'unnamed'}${s.city ? ' · ' + s.city : ''}`,
+                created_at: s.created_at,
+              })
+            );
             (shopsRes.value?.data || []).forEach((s) =>
               rows.push({
                 action: 'Shop added',
@@ -786,6 +837,7 @@
         }
 
         const iconMap = {
+          submission: '📥',
           shop: ICONS.shops,
           order: ICONS.orders,
           content: ICONS.content,
