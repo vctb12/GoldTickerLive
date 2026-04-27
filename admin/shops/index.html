@@ -847,15 +847,6 @@
     ───────────────────────────────────────────────────────── */
       const SHOPS_CACHE_KEY = 'gp_admin_shops';
 
-      function escapeHtml(value) {
-        return String(value ?? '')
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#39;');
-      }
-
       /**
        * Map admin form / cache data to Supabase column names.
        */
