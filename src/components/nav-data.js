@@ -1,33 +1,18 @@
-// components/nav-data.js — bilingual nav menu content data
-// Edit this file to update public information architecture labels and dropdown contents.
-//
-// Phase 1 IA contract:
-//   - The header follows the main user journey: check prices, understand price,
-//     calculate value, compare countries, find shops, set alerts, learn/invest.
-//   - Direct desktop links stay short and intent-led.
-//   - Dropdowns are reserved for useful grouped discovery: Countries, Tools, Learn.
-//   - Descriptions are intentionally short so dropdown rows stay scannable.
+// components/nav-data.js — single source of truth for public navigation IA.
+// The shared nav, mobile drawer, footer sitemap, active states, and page shell
+// accents all derive from this file.
 
-/**
- * @typedef {Object} NavItem
- * @property {string} href
- * @property {string} label
- * @property {string} description
- * @property {string} [key]
- * @property {string} [icon]
- * @property {boolean} [primary]
- */
+function flattenGroups(locale) {
+  return {
+    ...locale,
+    groups: locale.groups.map((group) => ({
+      ...group,
+      items: group.sections.flatMap((section) => section.items),
+    })),
+  };
+}
 
-/**
- * @typedef {Object} NavGroup
- * @property {string} key
- * @property {string} label
- * @property {string} description
- * @property {'two-col'|'one-col'} layout
- * @property {NavItem[]} items
- */
-
-export const NAV_DATA = {
+const RAW_NAV_DATA = {
   en: {
     home: {
       href: '/index.html',
@@ -51,7 +36,6 @@ export const NAV_DATA = {
         href: '/tracker.html',
         label: 'Live Prices',
         description: 'Open the live price workspace',
-        icon: '📈',
         primary: true,
       },
       {
@@ -59,7 +43,6 @@ export const NAV_DATA = {
         href: '/countries/uae/',
         label: 'UAE Prices',
         description: 'AED prices and Dubai context',
-        icon: '🇦🇪',
         primary: true,
       },
       {
@@ -67,7 +50,6 @@ export const NAV_DATA = {
         href: '/calculator.html',
         label: 'Calculator',
         description: 'Calculate value by weight and karat',
-        icon: '🧮',
         primary: true,
       },
       {
@@ -75,260 +57,420 @@ export const NAV_DATA = {
         href: '/shops.html',
         label: 'Shops',
         description: 'Browse shops and gold markets',
-        icon: '🏪',
-      },
-      {
-        key: 'methodology',
-        href: '/methodology.html',
-        label: 'Methodology',
-        description: 'Understand sources and formulas',
-        icon: '🧭',
       },
     ],
     groups: [
       {
         key: 'prices',
-        label: 'Countries',
-        description: 'Compare country, city, and market price pages',
-        layout: 'two-col',
-        items: [
+        label: 'Prices',
+        eyebrow: 'Reference rates',
+        description: 'Live tools, country pages, history, and comparisons.',
+        layout: 'mega',
+        featured: {
+          href: '/tracker.html',
+          label: 'Open live price workspace',
+          description: 'Spot-linked XAU/USD references with source and freshness labels.',
+          icon: 'LIVE',
+        },
+        cta: {
+          href: '/methodology.html',
+          label: 'How prices are calculated',
+          description: 'Spot, karat purity, FX, AED peg, cache, and limits.',
+        },
+        sections: [
           {
-            href: '/countries/index.html',
-            label: 'All Countries',
-            description: 'Every market we track',
-            icon: '🗺️',
-            primary: true,
+            key: 'live-tools',
+            label: 'Live price tools',
+            description: 'Fast reference surfaces for daily checking.',
+            items: [
+              {
+                href: '/tracker.html#mode=live',
+                label: 'Live tracker',
+                description: 'Main price workspace',
+                icon: 'LIVE',
+                primary: true,
+              },
+              {
+                href: '/content/todays-best-rates/',
+                label: "Today's best rates",
+                description: 'Compare references safely',
+                icon: 'RATE',
+              },
+              {
+                href: '/content/gold-price-history/',
+                label: 'Price history',
+                description: 'Historical context and trends',
+                icon: 'HIST',
+              },
+            ],
           },
           {
-            href: '/countries/uae/',
-            label: 'UAE Gold Today',
-            description: 'AED prices and peg context',
-            icon: '🇦🇪',
-            primary: true,
+            key: 'country-city',
+            label: 'Country & city pages',
+            description: 'Local market pages with currency context.',
+            items: [
+              {
+                href: '/countries/index.html',
+                label: 'All countries',
+                description: 'Every market we cover',
+                icon: 'GLB',
+                primary: true,
+              },
+              {
+                href: '/countries/uae/',
+                label: 'UAE gold prices',
+                description: 'AED prices and Dubai context',
+                icon: 'AE',
+                primary: true,
+              },
+              {
+                href: '/countries/uae/cities/dubai.html',
+                label: 'Dubai',
+                description: 'Dubai rates and souks',
+                icon: 'DXB',
+              },
+              {
+                href: '/countries/egypt/cities/cairo.html',
+                label: 'Cairo',
+                description: 'Egypt market reference',
+                icon: 'CAI',
+              },
+            ],
           },
           {
-            href: '/countries/uae/cities/dubai.html',
-            label: 'Dubai',
-            description: 'Dubai rates and souks',
-            icon: '🏙️',
-          },
-          {
-            href: '/countries/uae/cities/abu-dhabi.html',
-            label: 'Abu Dhabi',
-            description: 'Abu Dhabi gold rates',
-            icon: '🏙️',
-          },
-          {
-            href: '/countries/saudi-arabia/',
-            label: 'Saudi Arabia',
-            description: 'SAR gold references',
-            icon: '🇸🇦',
-          },
-          {
-            href: '/countries/kuwait/',
-            label: 'Kuwait',
-            description: 'KWD gold references',
-            icon: '🇰🇼',
-          },
-          {
-            href: '/countries/qatar/',
-            label: 'Qatar',
-            description: 'QAR gold references',
-            icon: '🇶🇦',
-          },
-          {
-            href: '/countries/bahrain/',
-            label: 'Bahrain',
-            description: 'BHD gold references',
-            icon: '🇧🇭',
-          },
-          {
-            href: '/countries/oman/',
-            label: 'Oman',
-            description: 'OMR gold references',
-            icon: '🇴🇲',
-          },
-          {
-            href: '/countries/egypt/',
-            label: 'Egypt',
-            description: 'EGP gold references',
-            icon: '🇪🇬',
-          },
-          {
-            href: '/content/compare-countries/',
-            label: 'Compare Countries',
-            description: 'Country comparison guide',
-            icon: '📊',
-          },
-          {
-            href: '/content/gcc-gold-price-comparison/',
-            label: 'GCC Comparison',
-            description: 'Compare Gulf markets',
-            icon: '🌍',
-          },
-          {
-            href: '/countries/uae/markets/dubai-gold-souk.html',
-            label: 'Dubai Gold Souk',
-            description: 'Deira market guide',
-            icon: '🛒',
-          },
-          {
-            href: '/countries/egypt/markets/khan-el-khalili-cairo.html',
-            label: 'Khan el-Khalili',
-            description: 'Cairo market guide',
-            icon: '🛒',
+            key: 'comparison',
+            label: 'Compare markets',
+            description: 'Understand differences between references.',
+            items: [
+              {
+                href: '/content/compare-countries/',
+                label: 'Compare countries',
+                description: 'Side-by-side country guide',
+                icon: 'CMP',
+              },
+              {
+                href: '/content/gcc-gold-price-comparison/',
+                label: 'GCC comparison',
+                description: 'Gulf market overview',
+                icon: 'GCC',
+              },
+              {
+                href: '/content/spot-vs-retail-gold-price/',
+                label: 'Spot vs retail',
+                description: 'Why shop quotes differ',
+                icon: 'SPOT',
+              },
+            ],
           },
         ],
       },
       {
         key: 'tools',
         label: 'Tools',
-        description: 'Calculate, set alerts, export, and search',
-        layout: 'two-col',
-        items: [
+        eyebrow: 'Calculate & monitor',
+        description: 'Calculators, alerts, converters, and methodology.',
+        layout: 'mega',
+        featured: {
+          href: '/calculator.html',
+          label: 'Use the gold calculator',
+          description: 'Estimate value by weight, karat, currency, and payout assumptions.',
+          icon: 'CALC',
+        },
+        cta: {
+          href: '/learn.html',
+          label: 'Learn before you calculate',
+          description: 'Karats, purity, spot references, and buyer basics.',
+        },
+        sections: [
           {
-            href: '/calculator.html',
-            label: 'Gold Calculator',
-            description: 'Value by weight and karat',
-            icon: '🧮',
-            primary: true,
+            key: 'calculators',
+            label: 'Calculators',
+            description: 'Estimate value without changing formulas.',
+            items: [
+              {
+                href: '/calculator.html',
+                label: 'Gold calculator',
+                description: 'Weight, karat, AED and USD',
+                icon: 'CALC',
+                primary: true,
+              },
+              {
+                href: '/content/tools/zakat-calculator.html',
+                label: 'Zakat calculator',
+                description: 'Estimate Zakat on gold',
+                icon: 'ZKT',
+              },
+              {
+                href: '/content/tools/investment-return.html',
+                label: 'Return model',
+                description: 'Model gold performance',
+                icon: 'ROI',
+              },
+            ],
           },
           {
-            href: '/tracker.html#mode=live&panel=alerts',
-            label: 'Set Alert',
-            description: 'Local price alerts',
-            icon: '🔔',
-            primary: true,
+            key: 'monitor',
+            label: 'Monitor & export',
+            description: 'Watch prices and move data out.',
+            items: [
+              {
+                href: '/tracker.html#mode=live&panel=alerts',
+                label: 'Price alerts',
+                description: 'Local browser alerts',
+                icon: 'ALRT',
+                primary: true,
+              },
+              {
+                href: '/tracker.html#mode=exports',
+                label: 'Exports',
+                description: 'CSV and JSON downloads',
+                icon: 'CSV',
+              },
+              {
+                href: '/content/embed/gold-ticker.html',
+                label: 'Embed widgets',
+                description: 'Ticker for your website',
+                icon: 'EMBD',
+              },
+            ],
           },
           {
-            href: '/content/tools/weight-converter.html',
-            label: 'Weight Converter',
-            description: 'Grams, tola, ounces',
-            icon: '⚖️',
-          },
-          {
-            href: '/content/tools/zakat-calculator.html',
-            label: 'Zakat Calculator',
-            description: 'Estimate Zakat on gold',
-            icon: '🕌',
-          },
-          {
-            href: '/content/tools/investment-return.html',
-            label: 'Investment Return',
-            description: 'Model gold performance',
-            icon: '📈',
-          },
-          {
-            href: '/tracker.html#mode=exports',
-            label: 'Exports',
-            description: 'CSV and JSON downloads',
-            icon: '⬇️',
-          },
-          {
-            href: '/content/todays-best-rates/',
-            label: "Today's Best Rates",
-            description: 'Use comparisons safely',
-            icon: '⭐',
-          },
-          {
-            href: '/content/premium-watch/',
-            label: 'Premium Watch',
-            description: 'Retail premiums over spot',
-            icon: '👁️',
-          },
-          {
-            href: '/content/search/',
-            label: 'Search',
-            description: 'Find countries and guides',
-            icon: '🔍',
-          },
-          {
-            href: '/content/embed/gold-ticker.html',
-            label: 'Embed Widgets',
-            description: 'Ticker for your site',
-            icon: '🧩',
+            key: 'reference',
+            label: 'Reference tools',
+            description: 'Method and units for clearer decisions.',
+            items: [
+              {
+                href: '/content/tools/weight-converter.html',
+                label: 'Weight converter',
+                description: 'Grams, tola, ounces',
+                icon: 'WGT',
+              },
+              {
+                href: '/methodology.html',
+                label: 'Methodology',
+                description: 'Sources, formulas and limits',
+                icon: 'MTH',
+                primary: true,
+              },
+              {
+                href: '/content/search/',
+                label: 'Site search',
+                description: 'Find countries and guides',
+                icon: 'SRCH',
+              },
+            ],
           },
         ],
       },
       {
-        key: 'learn',
-        label: 'Learn',
-        description: 'Understand spot, retail, karats, AED, and investing',
-        layout: 'two-col',
-        items: [
+        key: 'buy-gold',
+        label: 'Buy Gold',
+        eyebrow: 'Directory & guides',
+        description: 'Shop directory, UAE markets, buyer guides, and premiums.',
+        layout: 'mega',
+        featured: {
+          href: '/shops.html',
+          label: 'Browse shop directory',
+          description: 'Reference listings and known market areas. Not endorsements.',
+          icon: 'SHOP',
+        },
+        cta: {
+          href: '/content/submit-shop/',
+          label: 'Submit a shop listing',
+          description: 'Help improve the public directory with real business details.',
+        },
+        sections: [
           {
-            href: '/learn.html',
-            label: 'Gold Guide',
-            description: 'Core gold knowledge',
-            icon: '📖',
-            primary: true,
+            key: 'directory',
+            label: 'Directory',
+            description: 'Find listings and market areas.',
+            items: [
+              {
+                href: '/shops.html',
+                label: 'Shop directory',
+                description: 'Browse markets and listings',
+                icon: 'SHOP',
+                primary: true,
+              },
+              {
+                href: '/countries/uae/markets/dubai-gold-souk.html',
+                label: 'Dubai Gold Souk',
+                description: 'Deira market guide',
+                icon: 'SOUK',
+                primary: true,
+              },
+              {
+                href: '/countries/egypt/markets/khan-el-khalili-cairo.html',
+                label: 'Khan el-Khalili',
+                description: 'Cairo market guide',
+                icon: 'KHAN',
+              },
+            ],
           },
           {
-            href: '/methodology.html',
-            label: 'Methodology',
-            description: 'Sources and formulas',
-            icon: '🧭',
-            primary: true,
+            key: 'buyer-guides',
+            label: 'Buyer guides',
+            description: 'Practical context before visiting shops.',
+            items: [
+              {
+                href: '/content/guides/buying-guide.html',
+                label: 'Buying guide',
+                description: 'Questions to ask before buying',
+                icon: 'BUY',
+                primary: true,
+              },
+              {
+                href: '/content/uae-gold-buying-guide/',
+                label: 'UAE buying guide',
+                description: 'Dubai and UAE buyer context',
+                icon: 'UAE',
+              },
+              {
+                href: '/content/dubai-gold-rate-guide/',
+                label: 'Dubai rate guide',
+                description: 'How to read Dubai prices',
+                icon: 'DXB',
+              },
+            ],
           },
           {
-            href: '/insights.html',
-            label: 'Insights',
-            description: 'Market analysis and context',
-            icon: '💡',
+            key: 'premiums',
+            label: 'Premiums & charges',
+            description: 'Separate spot references from retail quotes.',
+            items: [
+              {
+                href: '/content/premium-watch/',
+                label: 'Premium watch',
+                description: 'Retail premium concepts',
+                icon: 'PRM',
+              },
+              {
+                href: '/content/gold-making-charges-guide/',
+                label: 'Making charges',
+                description: 'Jewellery fees explained',
+                icon: 'FEE',
+              },
+              {
+                href: '/content/order-gold/',
+                label: 'Order gold safely',
+                description: 'Checklist-style buying resource',
+                icon: 'ORD',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        key: 'markets',
+        label: 'Markets',
+        eyebrow: 'Regions & insights',
+        description: 'UAE, GCC, Arab markets, global references, and analysis.',
+        layout: 'mega',
+        featured: {
+          href: '/countries/uae/',
+          label: 'Start with UAE markets',
+          description: 'AED references, Dubai context, and market pages.',
+          icon: 'AE',
+        },
+        cta: {
+          href: '/insights.html',
+          label: 'Read market insights',
+          description: 'Context for spot moves, retail gaps, and regional pricing.',
+        },
+        sections: [
+          {
+            key: 'gcc',
+            label: 'UAE & GCC',
+            description: 'Gulf country references.',
+            items: [
+              {
+                href: '/countries/saudi-arabia/',
+                label: 'Saudi Arabia',
+                description: 'SAR reference prices',
+                icon: 'SA',
+              },
+              {
+                href: '/countries/kuwait/',
+                label: 'Kuwait',
+                description: 'KWD reference prices',
+                icon: 'KW',
+              },
+              {
+                href: '/countries/qatar/',
+                label: 'Qatar',
+                description: 'QAR reference prices',
+                icon: 'QA',
+              },
+              {
+                href: '/countries/bahrain/',
+                label: 'Bahrain',
+                description: 'BHD reference prices',
+                icon: 'BH',
+              },
+              {
+                href: '/countries/oman/',
+                label: 'Oman',
+                description: 'OMR reference prices',
+                icon: 'OM',
+              },
+            ],
           },
           {
-            href: '/invest.html',
-            label: 'Invest',
-            description: 'Gold investing guide',
-            icon: '💼',
+            key: 'arab-markets',
+            label: 'Arab markets',
+            description: 'Regional pages across MENA.',
+            items: [
+              {
+                href: '/countries/egypt/',
+                label: 'Egypt',
+                description: 'EGP reference prices',
+                icon: 'EG',
+              },
+              {
+                href: '/countries/jordan/',
+                label: 'Jordan',
+                description: 'JOD reference prices',
+                icon: 'JO',
+              },
+              {
+                href: '/countries/morocco/',
+                label: 'Morocco',
+                description: 'MAD reference prices',
+                icon: 'MA',
+              },
+              {
+                href: '/countries/turkey/',
+                label: 'Turkey',
+                description: 'TRY reference prices',
+                icon: 'TR',
+              },
+            ],
           },
           {
-            href: '/content/spot-vs-retail-gold-price/',
-            label: 'Spot vs Retail',
-            description: 'Why shop quotes differ',
-            icon: '🧾',
-          },
-          {
-            href: '/content/gold-making-charges-guide/',
-            label: 'Making Charges',
-            description: 'Jewellery fees explained',
-            icon: '🔨',
-          },
-          {
-            href: '/content/24k-gold-price-guide/',
-            label: '24K Guide',
-            description: 'Pure gold and bullion',
-            icon: '🏅',
-          },
-          {
-            href: '/content/22k-gold-price-guide/',
-            label: '22K Guide',
-            description: 'GCC jewellery baseline',
-            icon: '💍',
-          },
-          {
-            href: '/content/guides/buying-guide.html',
-            label: 'Buying Guide',
-            description: 'How to buy safely',
-            icon: '🛒',
-          },
-          {
-            href: '/content/guides/zakat-gold-guide.html',
-            label: 'Zakat on Gold',
-            description: 'Rules and examples',
-            icon: '🕌',
-          },
-          {
-            href: '/content/faq/',
-            label: 'FAQ',
-            description: 'Common questions',
-            icon: '❓',
-          },
-          {
-            href: '/content/news/',
-            label: 'News',
-            description: 'Curated gold updates',
-            icon: '📰',
+            key: 'global-context',
+            label: 'Global context',
+            description: 'Reference markets and editorial context.',
+            items: [
+              {
+                href: '/insights.html',
+                label: 'Insights',
+                description: 'Market context and analysis',
+                icon: 'VIEW',
+                primary: true,
+              },
+              {
+                href: '/invest.html',
+                label: 'Investing guide',
+                description: 'Long-term gold context',
+                icon: 'INV',
+              },
+              {
+                href: '/content/news/',
+                label: 'Gold news',
+                description: 'Curated market updates',
+                icon: 'NEWS',
+              },
+            ],
           },
         ],
       },
@@ -358,7 +500,6 @@ export const NAV_DATA = {
         href: '/tracker.html',
         label: 'الأسعار المباشرة',
         description: 'افتح مساحة الأسعار المباشرة',
-        icon: '📈',
         primary: true,
       },
       {
@@ -366,7 +507,6 @@ export const NAV_DATA = {
         href: '/countries/uae/',
         label: 'أسعار الإمارات',
         description: 'أسعار الدرهم وسياق دبي',
-        icon: '🇦🇪',
         primary: true,
       },
       {
@@ -374,7 +514,6 @@ export const NAV_DATA = {
         href: '/calculator.html',
         label: 'الحاسبة',
         description: 'احسب القيمة حسب الوزن والعيار',
-        icon: '🧮',
         primary: true,
       },
       {
@@ -382,260 +521,420 @@ export const NAV_DATA = {
         href: '/shops.html',
         label: 'المحلات',
         description: 'تصفح المحلات وأسواق الذهب',
-        icon: '🏪',
-      },
-      {
-        key: 'methodology',
-        href: '/methodology.html',
-        label: 'المنهجية',
-        description: 'افهم المصادر والمعادلات',
-        icon: '🧭',
       },
     ],
     groups: [
       {
         key: 'prices',
-        label: 'الدول',
-        description: 'قارن صفحات الدول والمدن والأسواق',
-        layout: 'two-col',
-        items: [
+        label: 'الأسعار',
+        eyebrow: 'أسعار مرجعية',
+        description: 'أدوات مباشرة وصفحات دول وسجل ومقارنات.',
+        layout: 'mega',
+        featured: {
+          href: '/tracker.html',
+          label: 'افتح مساحة الأسعار المباشرة',
+          description: 'أسعار مرجعية مبنية على XAU/USD مع المصدر وحالة التحديث.',
+          icon: 'LIVE',
+        },
+        cta: {
+          href: '/methodology.html',
+          label: 'كيف نحسب الأسعار',
+          description: 'السعر الفوري والعيار والصرف وربط الدرهم والتخزين المؤقت والحدود.',
+        },
+        sections: [
           {
-            href: '/countries/index.html',
-            label: 'كل الدول',
-            description: 'كل الأسواق التي نغطيها',
-            icon: '🗺️',
-            primary: true,
+            key: 'live-tools',
+            label: 'أدوات السعر المباشر',
+            description: 'واجهات سريعة للمتابعة اليومية.',
+            items: [
+              {
+                href: '/tracker.html#mode=live',
+                label: 'متتبع الأسعار',
+                description: 'مساحة الأسعار الرئيسية',
+                icon: 'LIVE',
+                primary: true,
+              },
+              {
+                href: '/content/todays-best-rates/',
+                label: 'أفضل الأسعار اليوم',
+                description: 'قارن المراجع بأمان',
+                icon: 'RATE',
+              },
+              {
+                href: '/content/gold-price-history/',
+                label: 'سجل الأسعار',
+                description: 'سياق تاريخي واتجاهات',
+                icon: 'HIST',
+              },
+            ],
           },
           {
-            href: '/countries/uae/',
-            label: 'ذهب الإمارات اليوم',
-            description: 'أسعار الدرهم وسياق الربط',
-            icon: '🇦🇪',
-            primary: true,
+            key: 'country-city',
+            label: 'صفحات الدول والمدن',
+            description: 'صفحات محلية مع سياق العملة.',
+            items: [
+              {
+                href: '/countries/index.html',
+                label: 'كل الدول',
+                description: 'كل الأسواق التي نغطيها',
+                icon: 'GLB',
+                primary: true,
+              },
+              {
+                href: '/countries/uae/',
+                label: 'أسعار الإمارات',
+                description: 'أسعار الدرهم وسياق دبي',
+                icon: 'AE',
+                primary: true,
+              },
+              {
+                href: '/countries/uae/cities/dubai.html',
+                label: 'دبي',
+                description: 'أسعار دبي والأسواق',
+                icon: 'DXB',
+              },
+              {
+                href: '/countries/egypt/cities/cairo.html',
+                label: 'القاهرة',
+                description: 'مرجع السوق المصري',
+                icon: 'CAI',
+              },
+            ],
           },
           {
-            href: '/countries/uae/cities/dubai.html',
-            label: 'دبي',
-            description: 'أسعار دبي والأسواق',
-            icon: '🏙️',
-          },
-          {
-            href: '/countries/uae/cities/abu-dhabi.html',
-            label: 'أبوظبي',
-            description: 'أسعار ذهب أبوظبي',
-            icon: '🏙️',
-          },
-          {
-            href: '/countries/saudi-arabia/',
-            label: 'السعودية',
-            description: 'مراجع الذهب بالريال',
-            icon: '🇸🇦',
-          },
-          {
-            href: '/countries/kuwait/',
-            label: 'الكويت',
-            description: 'مراجع الذهب بالدينار',
-            icon: '🇰🇼',
-          },
-          {
-            href: '/countries/qatar/',
-            label: 'قطر',
-            description: 'مراجع الذهب بالريال',
-            icon: '🇶🇦',
-          },
-          {
-            href: '/countries/bahrain/',
-            label: 'البحرين',
-            description: 'مراجع الذهب بالدينار',
-            icon: '🇧🇭',
-          },
-          {
-            href: '/countries/oman/',
-            label: 'عُمان',
-            description: 'مراجع الذهب بالريال',
-            icon: '🇴🇲',
-          },
-          {
-            href: '/countries/egypt/',
-            label: 'مصر',
-            description: 'مراجع الذهب بالجنيه',
-            icon: '🇪🇬',
-          },
-          {
-            href: '/content/compare-countries/',
-            label: 'مقارنة الدول',
-            description: 'دليل مقارنة الدول',
-            icon: '📊',
-          },
-          {
-            href: '/content/gcc-gold-price-comparison/',
-            label: 'مقارنة الخليج',
-            description: 'قارن أسواق الخليج',
-            icon: '🌍',
-          },
-          {
-            href: '/countries/uae/markets/dubai-gold-souk.html',
-            label: 'سوق الذهب بدبي',
-            description: 'دليل سوق ديرة',
-            icon: '🛒',
-          },
-          {
-            href: '/countries/egypt/markets/khan-el-khalili-cairo.html',
-            label: 'خان الخليلي',
-            description: 'دليل سوق القاهرة',
-            icon: '🛒',
+            key: 'comparison',
+            label: 'مقارنة الأسواق',
+            description: 'افهم الفروق بين المراجع.',
+            items: [
+              {
+                href: '/content/compare-countries/',
+                label: 'مقارنة الدول',
+                description: 'دليل مقارنة جنباً إلى جنب',
+                icon: 'CMP',
+              },
+              {
+                href: '/content/gcc-gold-price-comparison/',
+                label: 'مقارنة الخليج',
+                description: 'نظرة على أسواق الخليج',
+                icon: 'GCC',
+              },
+              {
+                href: '/content/spot-vs-retail-gold-price/',
+                label: 'الفوري مقابل التجزئة',
+                description: 'لماذا تختلف أسعار المحلات',
+                icon: 'SPOT',
+              },
+            ],
           },
         ],
       },
       {
         key: 'tools',
         label: 'الأدوات',
-        description: 'احسب واضبط التنبيهات وصدّر وابحث',
-        layout: 'two-col',
-        items: [
+        eyebrow: 'احسب وتابع',
+        description: 'حاسبات وتنبيهات ومحولات ومنهجية.',
+        layout: 'mega',
+        featured: {
+          href: '/calculator.html',
+          label: 'استخدم حاسبة الذهب',
+          description: 'قدّر القيمة حسب الوزن والعيار والعملة وافتراضات الدفع.',
+          icon: 'CALC',
+        },
+        cta: {
+          href: '/learn.html',
+          label: 'تعلّم قبل الحساب',
+          description: 'العيارات والنقاء والسعر الفوري وأساسيات الشراء.',
+        },
+        sections: [
           {
-            href: '/calculator.html',
-            label: 'حاسبة الذهب',
-            description: 'القيمة حسب الوزن والعيار',
-            icon: '🧮',
-            primary: true,
+            key: 'calculators',
+            label: 'الحاسبات',
+            description: 'قدّر القيمة من دون تغيير المعادلات.',
+            items: [
+              {
+                href: '/calculator.html',
+                label: 'حاسبة الذهب',
+                description: 'الوزن والعيار والدرهم والدولار',
+                icon: 'CALC',
+                primary: true,
+              },
+              {
+                href: '/content/tools/zakat-calculator.html',
+                label: 'حاسبة الزكاة',
+                description: 'تقدير زكاة الذهب',
+                icon: 'ZKT',
+              },
+              {
+                href: '/content/tools/investment-return.html',
+                label: 'نموذج العائد',
+                description: 'نمذجة أداء الذهب',
+                icon: 'ROI',
+              },
+            ],
           },
           {
-            href: '/tracker.html#mode=live&panel=alerts',
-            label: 'اضبط تنبيهاً',
-            description: 'تنبيهات أسعار محلية',
-            icon: '🔔',
-            primary: true,
+            key: 'monitor',
+            label: 'المتابعة والتصدير',
+            description: 'راقب الأسعار وانقل البيانات.',
+            items: [
+              {
+                href: '/tracker.html#mode=live&panel=alerts',
+                label: 'تنبيهات السعر',
+                description: 'تنبيهات محلية في المتصفح',
+                icon: 'ALRT',
+                primary: true,
+              },
+              {
+                href: '/tracker.html#mode=exports',
+                label: 'التصدير',
+                description: 'تنزيل CSV وJSON',
+                icon: 'CSV',
+              },
+              {
+                href: '/content/embed/gold-ticker.html',
+                label: 'أدوات التضمين',
+                description: 'شريط أسعار لموقعك',
+                icon: 'EMBD',
+              },
+            ],
           },
           {
-            href: '/content/tools/weight-converter.html',
-            label: 'محول الأوزان',
-            description: 'جرام وتولة وأونصة',
-            icon: '⚖️',
-          },
-          {
-            href: '/content/tools/zakat-calculator.html',
-            label: 'حاسبة الزكاة',
-            description: 'تقدير زكاة الذهب',
-            icon: '🕌',
-          },
-          {
-            href: '/content/tools/investment-return.html',
-            label: 'عائد الاستثمار',
-            description: 'نمذجة أداء الذهب',
-            icon: '📈',
-          },
-          {
-            href: '/tracker.html#mode=exports',
-            label: 'التصدير',
-            description: 'تنزيل CSV وJSON',
-            icon: '⬇️',
-          },
-          {
-            href: '/content/todays-best-rates/',
-            label: 'أفضل الأسعار اليوم',
-            description: 'استخدم المقارنات بأمان',
-            icon: '⭐',
-          },
-          {
-            href: '/content/premium-watch/',
-            label: 'مراقبة العلاوة',
-            description: 'علاوات التجزئة فوق الفوري',
-            icon: '👁️',
-          },
-          {
-            href: '/content/search/',
-            label: 'بحث',
-            description: 'ابحث عن الدول والأدلة',
-            icon: '🔍',
-          },
-          {
-            href: '/content/embed/gold-ticker.html',
-            label: 'أدوات التضمين',
-            description: 'شريط أسعار لموقعك',
-            icon: '🧩',
+            key: 'reference',
+            label: 'أدوات مرجعية',
+            description: 'المنهجية والوحدات لقرارات أوضح.',
+            items: [
+              {
+                href: '/content/tools/weight-converter.html',
+                label: 'محول الأوزان',
+                description: 'جرام وتولة وأونصة',
+                icon: 'WGT',
+              },
+              {
+                href: '/methodology.html',
+                label: 'المنهجية',
+                description: 'المصادر والمعادلات والحدود',
+                icon: 'MTH',
+                primary: true,
+              },
+              {
+                href: '/content/search/',
+                label: 'بحث الموقع',
+                description: 'ابحث عن الدول والأدلة',
+                icon: 'SRCH',
+              },
+            ],
           },
         ],
       },
       {
-        key: 'learn',
-        label: 'تعلّم',
-        description: 'افهم السعر الفوري والتجزئة والعيارات والدرهم والاستثمار',
-        layout: 'two-col',
-        items: [
+        key: 'buy-gold',
+        label: 'شراء الذهب',
+        eyebrow: 'دليل ومحلات',
+        description: 'دليل المحلات وأسواق الإمارات وأدلة الشراء والعلاوات.',
+        layout: 'mega',
+        featured: {
+          href: '/shops.html',
+          label: 'تصفح دليل المحلات',
+          description: 'قوائم مرجعية ومناطق أسواق معروفة، وليست توصيات.',
+          icon: 'SHOP',
+        },
+        cta: {
+          href: '/content/submit-shop/',
+          label: 'أضف بيانات محل',
+          description: 'ساعد في تحسين الدليل العام بتفاصيل أعمال حقيقية.',
+        },
+        sections: [
           {
-            href: '/learn.html',
-            label: 'دليل الذهب',
-            description: 'أساسيات معرفة الذهب',
-            icon: '📖',
-            primary: true,
+            key: 'directory',
+            label: 'الدليل',
+            description: 'ابحث عن قوائم ومناطق أسواق.',
+            items: [
+              {
+                href: '/shops.html',
+                label: 'دليل المحلات',
+                description: 'تصفح الأسواق والقوائم',
+                icon: 'SHOP',
+                primary: true,
+              },
+              {
+                href: '/countries/uae/markets/dubai-gold-souk.html',
+                label: 'سوق الذهب بدبي',
+                description: 'دليل سوق ديرة',
+                icon: 'SOUK',
+                primary: true,
+              },
+              {
+                href: '/countries/egypt/markets/khan-el-khalili-cairo.html',
+                label: 'خان الخليلي',
+                description: 'دليل سوق القاهرة',
+                icon: 'KHAN',
+              },
+            ],
           },
           {
-            href: '/methodology.html',
-            label: 'المنهجية',
-            description: 'المصادر والمعادلات',
-            icon: '🧭',
-            primary: true,
+            key: 'buyer-guides',
+            label: 'أدلة الشراء',
+            description: 'سياق عملي قبل زيارة المحلات.',
+            items: [
+              {
+                href: '/content/guides/buying-guide.html',
+                label: 'دليل الشراء',
+                description: 'أسئلة مهمة قبل الشراء',
+                icon: 'BUY',
+                primary: true,
+              },
+              {
+                href: '/content/uae-gold-buying-guide/',
+                label: 'دليل شراء الإمارات',
+                description: 'سياق دبي والإمارات للمشتري',
+                icon: 'UAE',
+              },
+              {
+                href: '/content/dubai-gold-rate-guide/',
+                label: 'دليل أسعار دبي',
+                description: 'كيف تقرأ أسعار دبي',
+                icon: 'DXB',
+              },
+            ],
           },
           {
-            href: '/insights.html',
-            label: 'التحليلات',
-            description: 'تحليل وسياق السوق',
-            icon: '💡',
+            key: 'premiums',
+            label: 'العلاوات والمصنعية',
+            description: 'افصل السعر المرجعي عن عرض المحل.',
+            items: [
+              {
+                href: '/content/premium-watch/',
+                label: 'مراقبة العلاوة',
+                description: 'فكرة علاوة التجزئة',
+                icon: 'PRM',
+              },
+              {
+                href: '/content/gold-making-charges-guide/',
+                label: 'المصنعية',
+                description: 'شرح رسوم المجوهرات',
+                icon: 'FEE',
+              },
+              {
+                href: '/content/order-gold/',
+                label: 'طلب الذهب بأمان',
+                description: 'مورد شراء بنمط قائمة تحقق',
+                icon: 'ORD',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        key: 'markets',
+        label: 'الأسواق',
+        eyebrow: 'مناطق وتحليلات',
+        description: 'الإمارات والخليج والأسواق العربية والمراجع العالمية والتحليلات.',
+        layout: 'mega',
+        featured: {
+          href: '/countries/uae/',
+          label: 'ابدأ بأسواق الإمارات',
+          description: 'مراجع الدرهم وسياق دبي وصفحات الأسواق.',
+          icon: 'AE',
+        },
+        cta: {
+          href: '/insights.html',
+          label: 'اقرأ تحليلات السوق',
+          description: 'سياق حركة السعر الفوري وفروق التجزئة والتسعير الإقليمي.',
+        },
+        sections: [
+          {
+            key: 'gcc',
+            label: 'الإمارات والخليج',
+            description: 'مراجع دول الخليج.',
+            items: [
+              {
+                href: '/countries/saudi-arabia/',
+                label: 'السعودية',
+                description: 'أسعار مرجعية بالريال',
+                icon: 'SA',
+              },
+              {
+                href: '/countries/kuwait/',
+                label: 'الكويت',
+                description: 'أسعار مرجعية بالدينار',
+                icon: 'KW',
+              },
+              {
+                href: '/countries/qatar/',
+                label: 'قطر',
+                description: 'أسعار مرجعية بالريال',
+                icon: 'QA',
+              },
+              {
+                href: '/countries/bahrain/',
+                label: 'البحرين',
+                description: 'أسعار مرجعية بالدينار',
+                icon: 'BH',
+              },
+              {
+                href: '/countries/oman/',
+                label: 'عُمان',
+                description: 'أسعار مرجعية بالريال',
+                icon: 'OM',
+              },
+            ],
           },
           {
-            href: '/invest.html',
-            label: 'الاستثمار',
-            description: 'دليل الاستثمار في الذهب',
-            icon: '💼',
+            key: 'arab-markets',
+            label: 'أسواق عربية',
+            description: 'صفحات إقليمية عبر الشرق الأوسط وشمال أفريقيا.',
+            items: [
+              {
+                href: '/countries/egypt/',
+                label: 'مصر',
+                description: 'أسعار مرجعية بالجنيه',
+                icon: 'EG',
+              },
+              {
+                href: '/countries/jordan/',
+                label: 'الأردن',
+                description: 'أسعار مرجعية بالدينار',
+                icon: 'JO',
+              },
+              {
+                href: '/countries/morocco/',
+                label: 'المغرب',
+                description: 'أسعار مرجعية بالدرهم',
+                icon: 'MA',
+              },
+              {
+                href: '/countries/turkey/',
+                label: 'تركيا',
+                description: 'أسعار مرجعية بالليرة',
+                icon: 'TR',
+              },
+            ],
           },
           {
-            href: '/content/spot-vs-retail-gold-price/',
-            label: 'الفوري مقابل التجزئة',
-            description: 'لماذا تختلف أسعار المحلات',
-            icon: '🧾',
-          },
-          {
-            href: '/content/gold-making-charges-guide/',
-            label: 'المصنعية',
-            description: 'شرح رسوم المجوهرات',
-            icon: '🔨',
-          },
-          {
-            href: '/content/24k-gold-price-guide/',
-            label: 'دليل 24 قيراط',
-            description: 'ذهب نقي وسبائك',
-            icon: '🏅',
-          },
-          {
-            href: '/content/22k-gold-price-guide/',
-            label: 'دليل 22 قيراط',
-            description: 'مرجع مجوهرات الخليج',
-            icon: '💍',
-          },
-          {
-            href: '/content/guides/buying-guide.html',
-            label: 'دليل الشراء',
-            description: 'كيف تشتري بأمان',
-            icon: '🛒',
-          },
-          {
-            href: '/content/guides/zakat-gold-guide.html',
-            label: 'زكاة الذهب',
-            description: 'الأحكام والأمثلة',
-            icon: '🕌',
-          },
-          {
-            href: '/content/faq/',
-            label: 'الأسئلة الشائعة',
-            description: 'إجابات الأسئلة المتكررة',
-            icon: '❓',
-          },
-          {
-            href: '/content/news/',
-            label: 'الأخبار',
-            description: 'تحديثات ذهب منتقاة',
-            icon: '📰',
+            key: 'global-context',
+            label: 'سياق عالمي',
+            description: 'أسواق مرجعية وسياق تحريري.',
+            items: [
+              {
+                href: '/insights.html',
+                label: 'التحليلات',
+                description: 'سياق وتحليل السوق',
+                icon: 'VIEW',
+                primary: true,
+              },
+              {
+                href: '/invest.html',
+                label: 'دليل الاستثمار',
+                description: 'سياق طويل الأجل للذهب',
+                icon: 'INV',
+              },
+              {
+                href: '/content/news/',
+                label: 'أخبار الذهب',
+                description: 'تحديثات سوق منتقاة',
+                icon: 'NEWS',
+              },
+            ],
           },
         ],
       },
@@ -646,3 +945,68 @@ export const NAV_DATA = {
     mainNav: 'التنقل الرئيسي',
   },
 };
+
+export const NAV_DATA = {
+  en: flattenGroups(RAW_NAV_DATA.en),
+  ar: flattenGroups(RAW_NAV_DATA.ar),
+};
+
+export const PAGE_SHELLS = [
+  {
+    page: 'home',
+    section: 'home',
+    shell: 'landing',
+    accent: 'gold',
+    patterns: ['/', '/index.html'],
+  },
+  {
+    page: 'tracker',
+    section: 'prices',
+    shell: 'workspace',
+    accent: 'live',
+    patterns: ['/tracker.html'],
+  },
+  {
+    page: 'calculator',
+    section: 'tools',
+    shell: 'tool',
+    accent: 'calculator',
+    patterns: ['/calculator.html'],
+  },
+  {
+    page: 'shops',
+    section: 'buy-gold',
+    shell: 'directory',
+    accent: 'market',
+    patterns: ['/shops.html', '/content/submit-shop/', '/content/order-gold/'],
+  },
+  {
+    page: 'learn',
+    section: 'tools',
+    shell: 'editorial',
+    accent: 'guide',
+    patterns: ['/learn.html', '/methodology.html', '/content/tools/', '/content/guides/'],
+  },
+  {
+    page: 'insights',
+    section: 'markets',
+    shell: 'editorial',
+    accent: 'insight',
+    patterns: ['/insights.html', '/invest.html', '/content/news/'],
+  },
+  {
+    page: 'country',
+    section: 'markets',
+    shell: 'market',
+    accent: 'local',
+    patterns: ['/countries/'],
+  },
+  {
+    page: 'content',
+    section: 'tools',
+    shell: 'editorial',
+    accent: 'guide',
+    patterns: ['/content/'],
+  },
+  { page: 'admin', section: 'admin', shell: 'dashboard', accent: 'ops', patterns: ['/admin/'] },
+];

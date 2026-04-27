@@ -12,7 +12,7 @@
  * @param {number}   depth  Number of directory levels from the site root (0 = root pages, 1 = /countries/, 2 = /content/guides/, etc.)
  */
 
-import { NAV_DATA } from './nav-data.js';
+import { NAV_DATA, PAGE_SHELLS } from './nav-data.js';
 import { applyFeatureFlags } from '../lib/site-settings.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -111,37 +111,102 @@ function groupIsActive(items) {
   return items.some((item) => isPageMatch(item.href));
 }
 
+function getPageShell() {
+  const path = location.pathname || '/';
+  return (
+    PAGE_SHELLS.find((shell) =>
+      shell.patterns.some((pattern) => {
+        if (pattern === '/') return path === '/' || path === '/index.html';
+        return pattern.endsWith('/') ? path.startsWith(pattern) : path === pattern;
+      })
+    ) || PAGE_SHELLS.find((shell) => shell.page === 'content')
+  );
+}
+
+function applyPageShell(navEl) {
+  const shell = getPageShell();
+  if (!shell || !document.body) return;
+
+  if (!document.body.dataset.page) document.body.dataset.page = shell.page;
+  if (!document.body.dataset.section) document.body.dataset.section = shell.section;
+  if (!document.body.dataset.shell) document.body.dataset.shell = shell.shell;
+  if (!document.body.dataset.accent) document.body.dataset.accent = shell.accent;
+
+  if (navEl) {
+    navEl.dataset.page = document.body.dataset.page;
+    navEl.dataset.section = document.body.dataset.section;
+    navEl.dataset.shell = document.body.dataset.shell;
+  }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // HTML builders
 // ─────────────────────────────────────────────────────────────────────────────
 
 function buildDropdown(group, depth) {
   const active = groupIsActive(group.items);
-  const layout = group.layout === 'two-col' ? 'two-col' : 'one-col';
+  const layout = group.layout || 'mega';
 
-  const itemsHtml = group.items
-    .map((item) => {
-      const href = resolveHref(item.href, depth);
-      const isActive = isPageMatch(href);
-      const classes = ['nav-dropdown-item'];
-      if (isActive) classes.push('nav-dropdown-item--active');
-      if (item.primary) classes.push('nav-dropdown-item--primary');
-      const ariaCurrent = isActive ? ' aria-current="page"' : '';
-      const iconHtml = item.icon
-        ? `<span class="nav-dropdown-item-icon" aria-hidden="true">${escapeHtml(item.icon)}</span>`
-        : '';
-      const descHtml = item.description
-        ? `<span class="nav-dropdown-item-desc">${escapeHtml(item.description)}</span>`
-        : '';
-      return `<a href="${href}" class="${classes.join(' ')}"${ariaCurrent} role="menuitem">
+  const buildItem = (item) => {
+    const href = resolveHref(item.href, depth);
+    const isActive = isPageMatch(href);
+    const classes = ['nav-dropdown-item'];
+    if (isActive) classes.push('nav-dropdown-item--active');
+    if (item.primary) classes.push('nav-dropdown-item--primary');
+    const ariaCurrent = isActive ? ' aria-current="page"' : '';
+    const iconHtml = item.icon
+      ? `<span class="nav-dropdown-item-icon" aria-hidden="true">${escapeHtml(item.icon)}</span>`
+      : '';
+    const descHtml = item.description
+      ? `<span class="nav-dropdown-item-desc">${escapeHtml(item.description)}</span>`
+      : '';
+    return `<a href="${href}" class="${classes.join(' ')}"${ariaCurrent} role="menuitem">
         ${iconHtml}
         <span class="nav-dropdown-item-body">
           <span class="nav-dropdown-item-label">${escapeHtml(item.label)}</span>
           ${descHtml}
         </span>
       </a>`;
+  };
+
+  const featuredHtml = group.featured
+    ? `<a href="${resolveHref(group.featured.href, depth)}" class="nav-dropdown-featured" role="menuitem">
+        <span class="nav-dropdown-featured-icon" aria-hidden="true">${escapeHtml(group.featured.icon || '')}</span>
+        <span class="nav-dropdown-featured-body">
+          <span class="nav-dropdown-featured-label">${escapeHtml(group.featured.label)}</span>
+          <span class="nav-dropdown-featured-desc">${escapeHtml(group.featured.description)}</span>
+        </span>
+      </a>`
+    : '';
+
+  const sectionsHtml = (
+    group.sections || [{ key: 'links', label: group.label, items: group.items }]
+  )
+    .map((section) => {
+      const descHtml = section.description
+        ? `<span class="nav-dropdown-section-desc">${escapeHtml(section.description)}</span>`
+        : '';
+      return `<section class="nav-dropdown-section" aria-labelledby="nav-${escapeHtml(group.key)}-${escapeHtml(section.key)}">
+        <div class="nav-dropdown-section-head">
+          <span id="nav-${escapeHtml(group.key)}-${escapeHtml(section.key)}" class="nav-dropdown-section-title">${escapeHtml(section.label)}</span>
+          ${descHtml}
+        </div>
+        <div class="nav-dropdown-section-items">
+          ${section.items.map(buildItem).join('')}
+        </div>
+      </section>`;
     })
     .join('');
+
+  const ctaHtml = group.cta
+    ? `<a href="${resolveHref(group.cta.href, depth)}" class="nav-dropdown-cta" role="menuitem">
+        <span class="nav-dropdown-cta-text">
+          <span class="nav-dropdown-cta-label">${escapeHtml(group.cta.label)}</span>
+          <span class="nav-dropdown-cta-desc">${escapeHtml(group.cta.description)}</span>
+        </span>
+        <span class="nav-dropdown-cta-arrow" aria-hidden="true">→</span>
+      </a>`
+    : '';
 
   const btnClass = 'nav-dropdown-btn' + (active ? ' nav-dropdown-btn--active' : '');
 
@@ -153,17 +218,23 @@ function buildDropdown(group, depth) {
               aria-expanded="false"
               data-group="${group.key}"
       >${escapeHtml(group.label)}<span class="nav-dropdown-caret" aria-hidden="true"></span></button>
-      <div class="nav-dropdown-panel" role="menu" aria-label="${escapeHtml(group.label)}" data-layout="${layout}">
-        ${
-          group.description
-            ? `<div class="nav-dropdown-panel-header"><span class="nav-dropdown-panel-title">${escapeHtml(group.label)}</span><span class="nav-dropdown-panel-desc">${escapeHtml(group.description)}</span></div>`
-            : ''
-        }
-        <div class="nav-dropdown-panel-items" data-layout="${layout}">
-          ${itemsHtml}
-        </div>
-      </div>
-    </div>`;
+       <div class="nav-dropdown-panel" role="menu" aria-label="${escapeHtml(group.label)}" data-layout="${layout}">
+         <div class="nav-dropdown-panel-header">
+           ${group.eyebrow ? `<span class="nav-dropdown-panel-kicker">${escapeHtml(group.eyebrow)}</span>` : ''}
+           <span class="nav-dropdown-panel-title">${escapeHtml(group.label)}</span>
+           ${group.description ? `<span class="nav-dropdown-panel-desc">${escapeHtml(group.description)}</span>` : ''}
+         </div>
+         <div class="nav-dropdown-panel-body">
+           <div class="nav-dropdown-panel-aside">
+             ${featuredHtml}
+             ${ctaHtml}
+           </div>
+           <div class="nav-dropdown-panel-sections">
+             ${sectionsHtml}
+           </div>
+         </div>
+       </div>
+     </div>`;
 }
 
 function buildPrimaryLink(item, depth) {
@@ -199,27 +270,42 @@ function buildDrawerPrimaryLink(item, depth) {
 }
 
 function buildDrawerGroup(group, depth) {
-  const itemsHtml = group.items
-    .map((item) => {
-      const href = resolveHref(item.href, depth);
-      const isActive = isPageMatch(href);
-      const classes = ['nav-drawer-link'];
-      if (isActive) classes.push('nav-link--active');
-      if (item.primary) classes.push('nav-drawer-link--primary');
-      const ariaCurrent = isActive ? ' aria-current="page"' : '';
-      const iconHtml = item.icon
-        ? `<span class="nav-drawer-link-icon" aria-hidden="true">${escapeHtml(item.icon)}</span>`
-        : '';
-      return `<a href="${href}" class="${classes.join(' ')}"${ariaCurrent}>
-        ${iconHtml}<span class="nav-drawer-link-label">${escapeHtml(item.label)}</span>
+  const buildDrawerItem = (item) => {
+    const href = resolveHref(item.href, depth);
+    const isActive = isPageMatch(href);
+    const classes = ['nav-drawer-link'];
+    if (isActive) classes.push('nav-link--active');
+    if (item.primary) classes.push('nav-drawer-link--primary');
+    const ariaCurrent = isActive ? ' aria-current="page"' : '';
+    const iconHtml = item.icon
+      ? `<span class="nav-drawer-link-icon" aria-hidden="true">${escapeHtml(item.icon)}</span>`
+      : '';
+    const descHtml = item.description
+      ? `<span class="nav-drawer-link-desc">${escapeHtml(item.description)}</span>`
+      : '';
+    return `<a href="${href}" class="${classes.join(' ')}"${ariaCurrent}>
+        ${iconHtml}<span class="nav-drawer-link-body"><span class="nav-drawer-link-label">${escapeHtml(item.label)}</span>${descHtml}</span>
       </a>`;
-    })
+  };
+
+  const itemsHtml = (group.sections || [{ key: 'links', items: group.items }])
+    .map(
+      (section) => `<div class="nav-drawer-section">
+        <span class="nav-drawer-section-label">${escapeHtml(section.label)}</span>
+        ${section.items.map(buildDrawerItem).join('')}
+      </div>`
+    )
     .join('');
 
+  const active = groupIsActive(group.items);
+
   return `
-    <details class="nav-drawer-group" open>
+    <details class="nav-drawer-group" ${active ? 'open' : ''}>
       <summary class="nav-drawer-group-label">
-        <span>${escapeHtml(group.label)}</span>
+        <span class="nav-drawer-group-copy">
+          <span>${escapeHtml(group.label)}</span>
+          <small>${escapeHtml(group.description)}</small>
+        </span>
         <span class="nav-drawer-group-caret" aria-hidden="true"></span>
       </summary>
       <div class="nav-drawer-group-items">
@@ -354,6 +440,7 @@ export function injectNav(lang = 'en', depth = 0) {
   for (const n of nodes) document.body.insertBefore(n, anchor);
   const navEl =
     nodes.find((n) => n.matches && n.matches('nav.site-nav')) || nodes[nodes.length - 1];
+  applyPageShell(navEl);
 
   // Skip-link fallback: if #main-content is missing, focus <main> directly.
   const skipLink = nodes.find((n) => n.matches && n.matches('.nav-skip-link'));
@@ -509,6 +596,11 @@ export function injectNav(lang = 'en', depth = 0) {
   // ── Dropdown button events ──────────────────────────────────────────────────
   navEl.querySelectorAll('.nav-dropdown-btn').forEach((btn) => {
     const groupEl = btn.closest('.nav-dropdown');
+    let hoverTimer = null;
+
+    const canHover =
+      typeof window.matchMedia !== 'function' ||
+      window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -532,6 +624,28 @@ export function injectNav(lang = 'en', depth = 0) {
         btn.focus();
       }
     });
+
+    if (canHover) {
+      groupEl.addEventListener('pointerenter', () => {
+        window.clearTimeout(hoverTimer);
+        openDropdown(groupEl, btn);
+      });
+
+      groupEl.addEventListener('pointerleave', () => {
+        hoverTimer = window.setTimeout(() => closeDropdown(groupEl, btn), 120);
+      });
+
+      groupEl.addEventListener('focusin', () => {
+        window.clearTimeout(hoverTimer);
+        openDropdown(groupEl, btn);
+      });
+
+      groupEl.addEventListener('focusout', () => {
+        hoverTimer = window.setTimeout(() => {
+          if (!groupEl.contains(document.activeElement)) closeDropdown(groupEl, btn);
+        }, 80);
+      });
+    }
   });
 
   // ── Keyboard nav inside dropdown panels ────────────────────────────────────
@@ -822,6 +936,32 @@ export function updateNavLang(lang) {
     // Desktop panel items (label + description live inside nav-dropdown-item-body)
     const panel = nav.querySelector(`.nav-dropdown[data-group="${group.key}"] .nav-dropdown-panel`);
     if (panel) {
+      const featured = panel.querySelector('.nav-dropdown-featured');
+      if (featured && group.featured) {
+        featured.setAttribute('href', resolveHref(group.featured.href, 0));
+        const featuredIcon = featured.querySelector('.nav-dropdown-featured-icon');
+        if (featuredIcon) featuredIcon.textContent = group.featured.icon || '';
+        const featuredLabel = featured.querySelector('.nav-dropdown-featured-label');
+        if (featuredLabel) featuredLabel.textContent = group.featured.label;
+        const featuredDesc = featured.querySelector('.nav-dropdown-featured-desc');
+        if (featuredDesc) featuredDesc.textContent = group.featured.description;
+      }
+      const cta = panel.querySelector('.nav-dropdown-cta');
+      if (cta && group.cta) {
+        cta.setAttribute('href', resolveHref(group.cta.href, 0));
+        const ctaLabel = cta.querySelector('.nav-dropdown-cta-label');
+        if (ctaLabel) ctaLabel.textContent = group.cta.label;
+        const ctaDesc = cta.querySelector('.nav-dropdown-cta-desc');
+        if (ctaDesc) ctaDesc.textContent = group.cta.description;
+      }
+      panel.querySelectorAll('.nav-dropdown-section').forEach((sectionEl, sectionIndex) => {
+        const srcSection = group.sections?.[sectionIndex];
+        if (!srcSection) return;
+        const title = sectionEl.querySelector('.nav-dropdown-section-title');
+        if (title) title.textContent = srcSection.label;
+        const desc = sectionEl.querySelector('.nav-dropdown-section-desc');
+        if (desc) desc.textContent = srcSection.description || '';
+      });
       panel.querySelectorAll('.nav-dropdown-item').forEach((el, i) => {
         const src = group.items[i];
         if (!src) return;
@@ -841,16 +981,27 @@ export function updateNavLang(lang) {
     if (drawerGroups[gi]) {
       const summary = drawerGroups[gi].querySelector('.nav-drawer-group-label');
       if (summary) {
-        const labelSpan = summary.querySelector('span:not(.nav-drawer-group-caret)');
+        const labelSpan = summary.querySelector('.nav-drawer-group-copy > span');
         if (labelSpan) labelSpan.textContent = group.label;
         else summary.textContent = group.label;
+        const descSmall = summary.querySelector('.nav-drawer-group-copy > small');
+        if (descSmall) descSmall.textContent = group.description;
       }
+      drawerGroups[gi]
+        .querySelectorAll('.nav-drawer-section')
+        .forEach((sectionEl, sectionIndex) => {
+          const srcSection = group.sections?.[sectionIndex];
+          const sectionLabel = sectionEl.querySelector('.nav-drawer-section-label');
+          if (sectionLabel && srcSection) sectionLabel.textContent = srcSection.label;
+        });
       drawerGroups[gi].querySelectorAll('.nav-drawer-link').forEach((el, i) => {
         const src = group.items[i];
         if (!src) return;
         const labelEl = el.querySelector('.nav-drawer-link-label');
         if (labelEl) labelEl.textContent = src.label;
         else el.textContent = src.label;
+        const descEl = el.querySelector('.nav-drawer-link-desc');
+        if (descEl) descEl.textContent = src.description;
       });
     }
   });

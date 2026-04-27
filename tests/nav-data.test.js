@@ -43,6 +43,7 @@ test('NAV_DATA group keys match between locales', async () => {
   const { NAV_DATA } = await loadNav();
   const enKeys = NAV_DATA.en.groups.map((g) => g.key);
   const arKeys = NAV_DATA.ar.groups.map((g) => g.key);
+  assert.deepEqual(enKeys, ['prices', 'tools', 'buy-gold', 'markets']);
   assert.deepEqual(
     enKeys,
     arKeys,
@@ -121,7 +122,7 @@ test('NAV_DATA every group has a layout hint (two-col | one-col)', async () => {
   for (const lang of ['en', 'ar']) {
     for (const group of NAV_DATA[lang].groups) {
       assert.ok(
-        group.layout === 'two-col' || group.layout === 'one-col',
+        group.layout === 'two-col' || group.layout === 'one-col' || group.layout === 'mega',
         `${lang}.${group.key} missing/invalid layout: ${JSON.stringify(group.layout)}`
       );
     }
@@ -132,6 +133,9 @@ test('NAV_DATA every dropdown item has a non-empty description', async () => {
   const { NAV_DATA } = await loadNav();
   for (const lang of ['en', 'ar']) {
     for (const group of NAV_DATA[lang].groups) {
+      assert.ok(Array.isArray(group.sections), `${lang}.${group.key} missing sections`);
+      assert.ok(group.featured?.href, `${lang}.${group.key} missing featured link`);
+      assert.ok(group.cta?.href, `${lang}.${group.key} missing contextual CTA`);
       for (const item of group.items) {
         assert.ok(
           typeof item.description === 'string' && item.description.length > 0,

@@ -1,4 +1,5 @@
 import { FORMSPREE_ENDPOINT } from '../config/index.js';
+import { NAV_DATA } from './nav-data.js';
 
 /**
  * Shared footer component — 5-column dark premium.
@@ -7,14 +8,47 @@ import { FORMSPREE_ENDPOINT } from '../config/index.js';
 
 export function injectFooter(lang = 'en', depth = 0) {
   const isAr = lang === 'ar';
+  const navData = NAV_DATA[lang] || NAV_DATA.en;
 
   function r(href) {
+    if (href.startsWith('/') || /^[a-z][a-z0-9+.-]*:/i.test(href)) return href;
     const base = href.replace(/^\.\.\//, '');
     if (depth === 0) return base;
     return '../'.repeat(depth) + base;
   }
 
+  function esc(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   const year = new Date().getFullYear();
+  const footerColumnsHtml = navData.groups
+    .map((group) => {
+      const sectionLinks = group.sections
+        .map((section) => {
+          const links = section.items
+            .slice(0, 3)
+            .map((item) => `<a href="${r(item.href)}">${esc(item.label)}</a>`)
+            .join('');
+          return `<div class="footer-link-section">
+            <h5 class="footer-section-heading">${esc(section.label)}</h5>
+            ${links}
+          </div>`;
+        })
+        .join('');
+
+      return `<div class="footer-col footer-col--links">
+        <h4 class="footer-col-heading">${esc(group.label)}</h4>
+        <p class="footer-col-note">${esc(group.description)}</p>
+        ${sectionLinks}
+      </div>`;
+    })
+    .join('');
 
   const html = `
 <footer class="site-footer-global">
@@ -39,60 +73,7 @@ export function injectFooter(lang = 'en', depth = 0) {
         </div>
       </div>
 
-      <!-- Prices column -->
-      <div class="footer-col footer-col--links">
-        <h4 class="footer-col-heading">${isAr ? 'الأسعار' : 'Prices'}</h4>
-        <a href="${r('../tracker.html')}">${isAr ? 'الأسعار المباشرة' : 'Live Prices'}</a>
-        <a href="${r('../countries/uae/')}">${isAr ? 'أسعار الإمارات' : 'UAE Prices'}</a>
-        <a href="${r('../tracker.html#mode=compare')}">${isAr ? 'قارن الأسواق' : 'Compare Markets'}</a>
-        <a href="${r('../tracker.html#mode=archive')}">${isAr ? 'سجل الأسعار' : 'Price History'}</a>
-        <a href="${r('../content/todays-best-rates/')}">${isAr ? 'أفضل الأسعار اليوم' : "Today's Best Rates"}</a>
-      </div>
-
-      <!-- Tools column -->
-      <div class="footer-col footer-col--links">
-        <h4 class="footer-col-heading">${isAr ? 'الأدوات' : 'Tools'}</h4>
-        <a href="${r('../calculator.html')}">${isAr ? 'حاسبة الذهب' : 'Gold Calculator'}</a>
-        <a href="${r('../tracker.html#mode=live&panel=alerts')}">${isAr ? 'تنبيهات السعر' : 'Price Alerts'}</a>
-        <a href="${r('../content/tools/weight-converter.html')}">${isAr ? 'محول الأوزان' : 'Weight Converter'}</a>
-        <a href="${r('../content/tools/zakat-calculator.html')}">${isAr ? 'حاسبة الزكاة' : 'Zakat Calculator'}</a>
-        <a href="${r('../content/tools/investment-return.html')}">${isAr ? 'عائد الاستثمار' : 'Investment Return'}</a>
-        <a href="${r('../content/premium-watch/')}">${isAr ? 'مراقبة العلاوة' : 'Premium Watch'}</a>
-        <a href="${r('../content/search/')}">${isAr ? 'بحث' : 'Search'}</a>
-      </div>
-
-      <!-- Countries column -->
-      <div class="footer-col footer-col--links">
-        <h4 class="footer-col-heading">${isAr ? 'الدول' : 'Countries'}</h4>
-        <a href="${r('../countries/index.html')}">${isAr ? 'كل الدول' : 'All Countries'}</a>
-        <a href="${r('../countries/uae/')}">${isAr ? 'الإمارات' : 'UAE'}</a>
-        <a href="${r('../countries/saudi-arabia/')}">${isAr ? 'السعودية' : 'Saudi Arabia'}</a>
-        <a href="${r('../countries/kuwait/')}">${isAr ? 'الكويت' : 'Kuwait'}</a>
-        <a href="${r('../countries/qatar/')}">${isAr ? 'قطر' : 'Qatar'}</a>
-        <a href="${r('../countries/bahrain/')}">${isAr ? 'البحرين' : 'Bahrain'}</a>
-        <a href="${r('../countries/oman/')}">${isAr ? 'عُمان' : 'Oman'}</a>
-        <a href="${r('../content/compare-countries/')}">${isAr ? 'مقارنة الدول' : 'Compare Countries'}</a>
-        <h4 class="footer-col-heading footer-col-heading--mt">${isAr ? 'المحلات' : 'Shops'}</h4>
-        <a href="${r('../shops.html')}">${isAr ? 'دليل المحلات' : 'Shop Directory'}</a>
-        <a href="${r('../content/submit-shop/')}">${isAr ? 'أضف محلاً' : 'Submit a Shop'}</a>
-        <a href="${r('../countries/uae/markets/dubai-gold-souk.html')}">${isAr ? 'سوق الذهب بدبي' : 'Dubai Gold Souk'}</a>
-      </div>
-
-      <!-- Learn + trust column -->
-      <div class="footer-col footer-col--links">
-        <h4 class="footer-col-heading">${isAr ? 'تعلّم' : 'Learn'}</h4>
-        <a href="${r('../learn.html')}">${isAr ? 'دليل الذهب' : 'Gold Guide'}</a>
-        <a href="${r('../insights.html')}">${isAr ? 'تحليلات' : 'Insights'}</a>
-        <a href="${r('../invest.html')}">${isAr ? 'دليل الاستثمار' : 'Investing Guide'}</a>
-        <a href="${r('../content/spot-vs-retail-gold-price/')}">${isAr ? 'الفوري مقابل التجزئة' : 'Spot vs Retail'}</a>
-        <a href="${r('../content/gold-making-charges-guide/')}">${isAr ? 'المصنعية' : 'Making Charges'}</a>
-        <a href="${r('../content/faq/')}">${isAr ? 'الأسئلة الشائعة' : 'FAQ'}</a>
-        <h4 class="footer-col-heading footer-col-heading--mt">${isAr ? 'الثقة' : 'Trust'}</h4>
-        <a href="${r('../methodology.html')}">${isAr ? 'المنهجية' : 'Methodology'}</a>
-        <h4 class="footer-col-heading footer-col-heading--mt">${isAr ? 'القانوني' : 'Legal'}</h4>
-        <a href="${r('../terms.html')}">${isAr ? 'الشروط' : 'Terms'}</a>
-        <a href="${r('../privacy.html')}">${isAr ? 'الخصوصية' : 'Privacy'}</a>
-      </div>
+      ${footerColumnsHtml}
 
     </div>
   </div>
