@@ -176,7 +176,7 @@ function buildPrimaryLink(item, depth) {
   return `<a href="${href}"
      class="${classes.join(' ')}"
      role="listitem"
-     data-nav-primary="${escapeHtml(item.key || item.label)}"
+     data-nav-primary="${escapeHtml(item.key)}"
      ${ariaCurrent}
   >${escapeHtml(item.label)}</a>`;
 }
@@ -193,7 +193,7 @@ function buildDrawerPrimaryLink(item, depth) {
     : '';
   return `<a href="${href}"
      class="${classes.join(' ')}"
-     data-nav-primary="${escapeHtml(item.key || item.label)}"
+     data-nav-primary="${escapeHtml(item.key)}"
      ${ariaCurrent}
   >${iconHtml}<span class="nav-drawer-link-label">${escapeHtml(item.label)}</span></a>`;
 }
@@ -801,7 +801,8 @@ export function updateNavLang(lang) {
   // Primary journey links
   if (Array.isArray(data.primaryLinks)) {
     data.primaryLinks.forEach((item) => {
-      nav.querySelectorAll(`[data-nav-primary="${item.key || item.label}"]`).forEach((el) => {
+      if (!item.key) return;
+      nav.querySelectorAll(`[data-nav-primary="${item.key}"]`).forEach((el) => {
         const labelEl = el.querySelector('.nav-drawer-link-label');
         if (labelEl) labelEl.textContent = item.label;
         else el.textContent = item.label;
