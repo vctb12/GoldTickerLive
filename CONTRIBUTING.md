@@ -120,10 +120,25 @@ E2E test files live in `tests/e2e/` and follow the `*.spec.js` naming convention
 2. **Before opening a PR:**
    - Run `npm run quality` and ensure it passes
    - Run `npm test` and ensure all tests pass
-   - Write a clear PR description explaining what changed and why
+   - Run `npm run validate` and ensure it passes (checks DOM safety, SEO meta, placeholder pages,
+     sitemap, and analytics gating)
+   - Run `npm run build` to confirm the production bundle is clean
+   - Write a clear PR description using the **What / Why / How / Proof / Risks** format
 
-3. **CI must be green** — the CI pipeline runs validation, build, tests, quality checks, coverage,
+3. **Bilingual EN / AR parity** — every user-visible string change must ship in both English and
+   Arabic via `src/config/translations.js`. Hard-coding UI text in HTML or JS without a translations
+   entry is a bug.
+
+4. **DOM-safety baseline** — use helpers from `src/lib/safe-dom.js` (`el`, `clear`, `escape`,
+   `safeHref`, `safeTel`) for any dynamic HTML. Do not add new `innerHTML` / `outerHTML` /
+   `insertAdjacentHTML` / `document.write` sinks — `npm run validate` will fail the build if the
+   per-file baseline grows.
+
+5. **CI must be green** — the CI pipeline runs validation, build, tests, quality checks, coverage,
    and E2E tests. All checks must pass before merging.
+
+6. **PR-only, no direct push, no force-push** — `main` is protected and the live site deploys from
+   it.
 
 ## Project Structure
 

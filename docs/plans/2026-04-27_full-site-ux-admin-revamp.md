@@ -49,12 +49,21 @@ brand shift toward **GoldTickerLive**.
 ### Batch 3 — shared navigation, footer, and brand consistency
 
 - [ ] `/src/components/nav.js` — update shared brand label to GoldTickerLive.
-- [ ] `/src/components/nav-data.js` — add Buy Gold / Markets grouping and promote new pages.
-- [ ] `/src/components/footer.js` — add trust-center links and GoldTickerLive brand language.
-- [ ] Core page metadata — shift visible brand strings toward GoldTickerLive where safe.
+- [x] `/src/components/nav-data.js` — add 22K and 24K karat guide pages to Prices → Comparison
+      section (EN + AR).
+- [x] `/src/components/footer.js` — add Methodology link to footer legal row (Terms · Privacy ·
+      Methodology).
+- [x] Core page metadata — added `og:locale` + `og:locale:alternate` (en_US / ar_AE) to all main
+      pages: index, tracker, calculator, shops, methodology, learn, insights, invest, pricing.
 
 ### Batch 4 — homepage, tracker, calculator, shops polish
 
+- [x] export.js — `exportCSV` and `exportBriefText` filenames now use `isoTimestamp()` for
+      consistency.
+- [x] `/shops.html` — empty-state "suggest a shop" link now points to `/content/submit-shop/`
+      instead of outdated email.
+- [x] `/404.html` — replaced hardcoded hex colors with CSS design-token variables (`--color-gold`,
+      `--text-primary`, `--text-secondary`, `--border-default`, `--color-gold-tint`).
 - [ ] `/index.html`, `/src/pages/home.js`, `/styles/pages/home.css`
 - [ ] `/tracker.html`, `/src/tracker/*`, `/styles/pages/tracker-pro.css`
 - [ ] `/calculator.html`, `/src/pages/calculator*`, `/styles/pages/calculator.css`
