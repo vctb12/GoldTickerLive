@@ -721,6 +721,8 @@
 
       const GOLD_CACHE_KEY = 'gp_admin_last_gold';
       const PRICE_HISTORY_KEY = 'gp_price_history';
+      const SPARKLINE_FALLBACK_START = 0.995;
+      const SPARKLINE_FALLBACK_STEP = 0.001;
       const dashboardState = {
         counts: {
           shops: null,
@@ -734,14 +736,14 @@
         },
       };
 
-      function setText(selector, value) {
+      function updateTextContent(selector, value) {
         const node = qs(selector);
         if (node) node.textContent = value;
       }
 
       function setStat(numberSelector, subSelector, value, subtext) {
-        setText(numberSelector, value);
-        setText(subSelector, subtext);
+        updateTextContent(numberSelector, value);
+        updateTextContent(subSelector, subtext);
       }
 
       function setSourcePill(id, ok, label) {
@@ -802,7 +804,13 @@
 
         const canvas = qs('#gold-sparkline');
         if (canvas) {
-          const sparkData = history.length >= 2 ? history : Array.from({ length: 7 }, (_, i) => usablePrice * (0.995 + i * 0.001));
+          const sparkData =
+            history.length >= 2
+              ? history
+              : Array.from(
+                  { length: 7 },
+                  (_, i) => usablePrice * (SPARKLINE_FALLBACK_START + i * SPARKLINE_FALLBACK_STEP)
+                );
           drawSparkline(canvas, sparkData, { color: '#10b981', fill: true });
         }
       }
@@ -1014,7 +1022,10 @@
       });
 
       const h = new Date().getHours();
-      setText('#welcome-title', h < 12 ? 'Good morning ☀️' : h < 17 ? 'Good afternoon ⚡' : 'Good evening 🌙');
+      updateTextContent(
+        '#welcome-title',
+        h < 12 ? 'Good morning ☀️' : h < 17 ? 'Good afternoon ⚡' : 'Good evening 🌙'
+      );
 
       qs('#qa-force-refresh')?.addEventListener('click', async () => {
         const btn = qs('#qa-force-refresh');

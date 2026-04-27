@@ -253,21 +253,25 @@ export async function initAdminShell({ logout, getSession, loginPath } = {}) {
   const overlay = document.getElementById('sidebar-overlay');
   const toggleBtn = document.getElementById('sidebar-toggle');
 
+  function syncSidebarExpanded() {
+    toggleBtn?.setAttribute(
+      'aria-expanded',
+      sidebarEl?.classList.contains('sidebar--open') ? 'true' : 'false'
+    );
+  }
+
   function openSidebar() {
     sidebarEl?.classList.add('sidebar--open');
     overlay?.classList.add('sidebar-overlay--visible');
-    toggleBtn?.setAttribute('aria-expanded', 'true');
+    syncSidebarExpanded();
   }
   function closeSidebar() {
     sidebarEl?.classList.remove('sidebar--open');
     overlay?.classList.remove('sidebar-overlay--visible');
-    toggleBtn?.setAttribute('aria-expanded', 'false');
+    syncSidebarExpanded();
   }
 
-  toggleBtn?.setAttribute(
-    'aria-expanded',
-    sidebarEl?.classList.contains('sidebar--open') ? 'true' : 'false'
-  );
+  syncSidebarExpanded();
 
   toggleBtn?.addEventListener('click', () => {
     if (sidebarEl?.classList.contains('sidebar--open')) {
