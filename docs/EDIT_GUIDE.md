@@ -85,6 +85,27 @@
 
 ---
 
+## Analytics, Ads & Tracking IDs
+
+These IDs are public on every rendered page (loaded by the browser into third-party scripts), but
+they are still hardcoded in source — changing them requires a code edit + deploy, **not** an admin
+panel toggle or env-var swap. There is no runtime override.
+
+| I want to…                               | Go to…                                                                        |
+| ---------------------------------------- | ----------------------------------------------------------------------------- |
+| Change the GA4 Measurement ID            | `assets/analytics.js` → `GA_ID` constant (currently `G-K3GNY9M8TE`)           |
+| Change the Microsoft Clarity project ID  | `assets/analytics.js` → Clarity loader (currently `w4e0nhdxt5`)               |
+| Change the Google AdSense publisher ID   | `index.html` → `<script async src="…?client=ca-pub-…">` (and any ad slot tag) |
+| Disable analytics on a single page       | Remove the `<script src="/assets/analytics.js">` reference from that page     |
+| Add a new analytics or experiment script | Externalise it under `assets/` and link from the relevant HTML `<head>`       |
+
+> These are tracked as W-12 in
+> [`docs/plans/2026-04-25_codebase-analysis.md`](./plans/2026-04-25_codebase-analysis.md): they are
+> not secrets, but they require a deploy to change. If routine rotation is ever needed, promote them
+> to a runtime config surface instead of editing the table above silently.
+
+---
+
 ## Translations & RTL
 
 | I want to…                             | Go to…                                                       |

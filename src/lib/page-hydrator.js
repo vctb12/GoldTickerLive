@@ -90,10 +90,11 @@ function renderKaratCards(spot, fxRate, currency, karatFilter = null) {
     .map((k) => {
       const price = calcLocalPrice(spot, k.purity, fxRate);
       const priceStr = formatPrice(price, currency, 2);
-      return `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:1.25rem;text-align:center;min-height:90px;">
-      <div style="font-size:0.8rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;">${k.code}K Gold</div>
-      <div style="font-size:1.5rem;font-weight:700;color:#1e293b;margin:0.25rem 0;">${priceStr}</div>
-      <div style="font-size:0.75rem;color:#94a3b8;">per gram</div>
+      // Styles in styles/global.css `.ph-karat-card` (W-6 token migration).
+      return `<div class="ph-karat-card">
+      <div class="ph-karat-card__label">${k.code}K Gold</div>
+      <div class="ph-karat-card__price">${priceStr}</div>
+      <div class="ph-karat-card__unit">per gram</div>
     </div>`;
     })
     .join('');

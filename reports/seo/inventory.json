@@ -281,8 +281,7 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -23235,7 +23234,6 @@
         }
       ],
       "jsonLdTypes": [
-        "Article",
         "BreadcrumbList"
       ],
       "hasStructuredData": true,

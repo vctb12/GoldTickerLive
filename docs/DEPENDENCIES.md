@@ -16,13 +16,15 @@ upgrade strategies, security practices, and maintenance procedures.
 - **helmet** `^8.1.0` - ✅ Up to date - Security headers
 - **jsonwebtoken** `^9.0.3` - ✅ Up to date - JWT authentication
 - **morgan** `^1.10.1` - ✅ Up to date - HTTP request logger
-- **uuid** `^13.0.0` - ✅ Up to date - UUID generation
 
-> `lowdb` was removed in the 2026-04-24 dependency audit (PR C-1). It was not
-> imported anywhere in `server/` — persistence is via plain `fs.readFileSync`
-> / `fs.writeFileSync` in `server/lib/auth.js` and the per-repository helpers
-> under `server/repositories/`. If the project ever needs structured file-
-> based persistence, re-add `lowdb` intentionally with a migration note.
+> `uuid` was removed in the 2026-04-27 cleanup. It was not imported anywhere in the runtime tree
+> (verified with `npx depcheck`); IDs are generated via Node's built-in `crypto.randomUUID()` where
+> needed. Re-add the package intentionally if a non-RFC4122 variant is ever required.
+>
+> `lowdb` was removed in the 2026-04-24 dependency audit (PR C-1). It was not imported anywhere in
+> `server/` — persistence is via plain `fs.readFileSync` / `fs.writeFileSync` in
+> `server/lib/auth.js` and the per-repository helpers under `server/repositories/`. If the project
+> ever needs structured file- based persistence, re-add `lowdb` intentionally with a migration note.
 
 ### Development Dependencies
 
@@ -189,18 +191,18 @@ If an upgrade causes issues:
 
 ## External APIs
 
-Third-party APIs consumed by the site. None of these require keys visible in the browser (FX is
-an unauthenticated public endpoint; gold price is fetched server-side via GitHub Actions).
+Third-party APIs consumed by the site. None of these require keys visible in the browser (FX is an
+unauthenticated public endpoint; gold price is fetched server-side via GitHub Actions).
 
-| API                              | Used for                                  | Auth                        | Consumer        | Free-tier limit |
-| -------------------------------- | ----------------------------------------- | --------------------------- | --------------- | --------------- |
-| `goldpricez.com`                 | Gold spot price (XAU/USD) data refresh    | `GOLDPRICEZ_API_KEY` secret | GHA workflow    | Unknown         |
-| `open.er-api.com/v6/latest/USD`  | Live FX exchange rates                    | None                        | Browser         | 1 500 req/month |
-| `X / Twitter API v2`             | Hourly automated gold-price posts         | OAuth 1.0a (4 secrets)      | GHA workflow    | Rate limited    |
-| `Supabase REST + Auth`           | Admin GitHub OAuth, newsletter, settings  | `SUPABASE_URL` + keys       | Both            | Free tier       |
-| `Stripe` (routed, not yet live)  | Premium subscription payments             | `STRIPE_SECRET_KEY`         | Server          | N/A             |
-| Discord webhook (optional)       | Spike / health alert notifications        | `DISCORD_WEBHOOK_URL`       | GHA workflow    | —               |
-| Telegram Bot API (optional)      | Spike / health alert notifications        | `TELEGRAM_BOT_TOKEN`        | GHA workflow    | —               |
+| API                             | Used for                                 | Auth                        | Consumer     | Free-tier limit |
+| ------------------------------- | ---------------------------------------- | --------------------------- | ------------ | --------------- |
+| `goldpricez.com`                | Gold spot price (XAU/USD) data refresh   | `GOLDPRICEZ_API_KEY` secret | GHA workflow | Unknown         |
+| `open.er-api.com/v6/latest/USD` | Live FX exchange rates                   | None                        | Browser      | 1 500 req/month |
+| `X / Twitter API v2`            | Hourly automated gold-price posts        | OAuth 1.0a (4 secrets)      | GHA workflow | Rate limited    |
+| `Supabase REST + Auth`          | Admin GitHub OAuth, newsletter, settings | `SUPABASE_URL` + keys       | Both         | Free tier       |
+| `Stripe` (routed, not yet live) | Premium subscription payments            | `STRIPE_SECRET_KEY`         | Server       | N/A             |
+| Discord webhook (optional)      | Spike / health alert notifications       | `DISCORD_WEBHOOK_URL`       | GHA workflow | —               |
+| Telegram Bot API (optional)     | Spike / health alert notifications       | `TELEGRAM_BOT_TOKEN`        | GHA workflow | —               |
 
 > **FX rate limit:** `open.er-api.com` free tier is 1 500 requests/month. Under significant traffic
 > the per-browser fetch model could exhaust this. See weak spot W-13 in
@@ -211,13 +213,13 @@ an unauthenticated public endpoint; gold price is fetched server-side via GitHub
 
 Loaded on every public page via `assets/analytics.js` (deferred) and `<head>` tags.
 
-| Resource                                    | Purpose                                         | Privacy impact                        |
-| ------------------------------------------- | ----------------------------------------------- | ------------------------------------- |
-| `fonts.googleapis.com` — Cairo CSS          | Primary typeface (Latin + Arabic)               | Google logs font-fetch IP             |
-| `fonts.gstatic.com` — Cairo binaries        | Font file CDN delivery                          | Google CDN                            |
-| `pagead2.googlesyndication.com/adsbygoogle` | Google AdSense ad delivery                      | Sets cookies; tracks users            |
-| `www.googletagmanager.com/gtag/js`          | Google Analytics 4 (`G-K3GNY9M8TE`)            | Tracks page views; anonymize_ip=true  |
-| `www.clarity.ms/tag/w4e0nhdxt5`             | Microsoft Clarity heatmaps and session replay   | Tracks mouse/scroll behaviour         |
+| Resource                                    | Purpose                                       | Privacy impact                       |
+| ------------------------------------------- | --------------------------------------------- | ------------------------------------ |
+| `fonts.googleapis.com` — Cairo CSS          | Primary typeface (Latin + Arabic)             | Google logs font-fetch IP            |
+| `fonts.gstatic.com` — Cairo binaries        | Font file CDN delivery                        | Google CDN                           |
+| `pagead2.googlesyndication.com/adsbygoogle` | Google AdSense ad delivery                    | Sets cookies; tracks users           |
+| `www.googletagmanager.com/gtag/js`          | Google Analytics 4 (`G-K3GNY9M8TE`)           | Tracks page views; anonymize_ip=true |
+| `www.clarity.ms/tag/w4e0nhdxt5`             | Microsoft Clarity heatmaps and session replay | Tracks mouse/scroll behaviour        |
 
 Analytics and Clarity load only when `navigator.doNotTrack !== '1'` and
 `localStorage.getItem('gp_no_analytics') !== '1'`. Changing analytics IDs or the AdSense publisher
@@ -236,17 +238,18 @@ file (`post_gold.yml`, `spike_alert.yml`, `health_check.yml`).
 
 ## GitHub Actions dependencies
 
-| Action                                  | Version | Purpose                              |
-| --------------------------------------- | ------- | ------------------------------------ |
-| `actions/checkout`                      | v6      | Repository checkout                  |
-| `actions/setup-node`                    | v6      | Node.js environment                  |
-| `actions/setup-python`                  | v6      | Python environment                   |
-| `actions/upload-pages-artifact`         | v5      | Bundle GitHub Pages deploy artifact  |
-| `actions/deploy-pages`                  | v5      | Publish `dist/` to GitHub Pages      |
-| `stefanzweifel/git-auto-commit-action`  | v5      | Auto-commit data file changes in GHA |
+| Action                                 | Version | Purpose                              |
+| -------------------------------------- | ------- | ------------------------------------ |
+| `actions/checkout`                     | v6      | Repository checkout                  |
+| `actions/setup-node`                   | v6      | Node.js environment                  |
+| `actions/setup-python`                 | v6      | Python environment                   |
+| `actions/upload-pages-artifact`        | v5      | Bundle GitHub Pages deploy artifact  |
+| `actions/deploy-pages`                 | v5      | Publish `dist/` to GitHub Pages      |
+| `stefanzweifel/git-auto-commit-action` | v5      | Auto-commit data file changes in GHA |
 
 ## Last Updated
 
 - **Date:** 2026-04-25
-- **Updated By:** Codebase analysis (2026-04-25) — added External APIs, CDN/scripts, Python, GHA sections
+- **Updated By:** Codebase analysis (2026-04-25) — added External APIs, CDN/scripts, Python, GHA
+  sections
 - **Next Review:** 2026-05-25
