@@ -301,7 +301,7 @@ function buildDrawerGroup(group, depth) {
   const active = groupIsActive(group.items);
 
   return `
-    <details class="nav-drawer-group" ${active ? 'open' : ''}>
+    <details class="nav-drawer-group" ${active || group.key === 'prices' ? 'open' : ''}>
       <summary class="nav-drawer-group-label">
         <span class="nav-drawer-group-copy">
           <span>${escapeHtml(group.label)}</span>
@@ -350,7 +350,7 @@ export function injectNav(lang = 'en', depth = 0) {
   <div class="nav-inner">
 
     <!-- Brand -->
-    <a href="${homeHref}" class="nav-brand" aria-label="GoldTickerLive Home">
+    <a href="${homeHref}" class="nav-brand" aria-label="${escapeHtml(data.brandLabel || 'GoldTickerLive Home')}">
       <span class="nav-brand-icon" aria-hidden="true">◈</span>
       <span class="nav-brand-text">GoldTickerLive</span>
     </a>
@@ -367,6 +367,8 @@ export function injectNav(lang = 'en', depth = 0) {
               class="nav-icon-btn"
               type="button"
               aria-label="Search"
+              aria-expanded="false"
+              aria-controls="nav-search-overlay"
       >🔍</button>
 
       <button id="nav-theme-toggle"
@@ -467,15 +469,21 @@ export function injectNav(lang = 'en', depth = 0) {
   if (themeBtn) {
     const THEME_CYCLE = ['auto', 'light', 'dark'];
     const THEME_ICON = { auto: '🌓', light: '☀️', dark: '🌙' };
-    const THEME_LABEL = {
-      auto: 'Theme: auto (click to switch to light)',
-      light: 'Theme: light (click to switch to dark)',
-      dark: 'Theme: dark (click to switch to auto)',
-    };
     const mql =
       typeof window.matchMedia === 'function'
         ? window.matchMedia('(prefers-color-scheme: dark)')
         : null;
+
+    function _getThemeLabels() {
+      const d = NAV_DATA[_currentLang] || NAV_DATA.en;
+      return (
+        d.themeLabels || {
+          auto: 'Theme: auto (click to switch to light)',
+          light: 'Theme: light (click to switch to dark)',
+          dark: 'Theme: dark (click to switch to auto)',
+        }
+      );
+    }
 
     function _resolvedTheme(mode) {
       if (mode === 'light' || mode === 'dark') return mode;
@@ -484,6 +492,7 @@ export function injectNav(lang = 'en', depth = 0) {
 
     function _applyTheme(mode) {
       const resolved = _resolvedTheme(mode);
+      const THEME_LABEL = _getThemeLabels();
       document.documentElement.setAttribute('data-theme', resolved);
       document.documentElement.setAttribute('data-theme-mode', mode);
       themeBtn.textContent = THEME_ICON[mode] || THEME_ICON.auto;
@@ -552,6 +561,8 @@ export function injectNav(lang = 'en', depth = 0) {
     burger.setAttribute('aria-label', d.closeMenu);
     burger.classList.add('is-open');
     document.body.style.overflow = 'hidden';
+    const moreBtn = document.querySelector('[data-mobile-nav="menu"]');
+    if (moreBtn) moreBtn.setAttribute('aria-expanded', 'true');
     const firstFocusable = drawer.querySelector('a, button');
     if (firstFocusable) firstFocusable.focus();
   }
@@ -566,6 +577,8 @@ export function injectNav(lang = 'en', depth = 0) {
     burger.setAttribute('aria-expanded', 'false');
     burger.setAttribute('aria-label', d.openMenu);
     burger.classList.remove('is-open');
+    const moreBtn = document.querySelector('[data-mobile-nav="menu"]');
+    if (moreBtn) moreBtn.setAttribute('aria-expanded', 'false');
     // Defer overflow reset so the slide-out CSS transition finishes first
     setTimeout(() => {
       document.body.style.overflow = '';
@@ -838,7 +851,7 @@ function _injectMobileBottomNav(lang, _depth) {
       const cls = 'mobile-bottom-nav-item' + (isActive ? ' is-active' : '');
 
       if (item.action === 'menu') {
-        return `<button class="${cls}" data-mobile-nav="menu" type="button" aria-label="${item.label}">
+        return `<button class="${cls}" data-mobile-nav="menu" type="button" aria-label="${item.label}" aria-expanded="false" aria-controls="nav-drawer">
           <span class="mobile-bottom-nav-icon" aria-hidden="true">${item.icon}</span>
           <span class="mobile-bottom-nav-label">${item.label}</span>
         </button>`;
@@ -868,6 +881,10 @@ function _injectMobileBottomNav(lang, _depth) {
     menuBtn.addEventListener('click', () => {
       const burger = document.getElementById('nav-hamburger');
       if (burger) burger.click();
+      // Mirror the hamburger's aria-expanded state onto the bottom-bar button
+      const expanded =
+        document.getElementById('nav-hamburger')?.getAttribute('aria-expanded') === 'true';
+      menuBtn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
     });
   }
 }
@@ -1014,6 +1031,21 @@ export function updateNavLang(lang) {
     burger.setAttribute('aria-label', isExpanded ? data.closeMenu : data.openMenu);
   }
 
+  // Brand aria-label
+  const brand = document.querySelector('.nav-brand');
+  if (brand && data.brandLabel) brand.setAttribute('aria-label', data.brandLabel);
+
+  // Theme toggle aria-label (re-apply for current mode)
+  const themeBtn = document.getElementById('nav-theme-toggle');
+  if (themeBtn && data.themeLabels) {
+    const currentMode = themeBtn.getAttribute('data-theme-mode') || 'auto';
+    const label = data.themeLabels[currentMode] || data.themeLabels.auto;
+    if (label) {
+      themeBtn.setAttribute('aria-label', label);
+      themeBtn.setAttribute('title', label);
+    }
+  }
+
   // Drawer aria-label
   const drawer = document.getElementById('nav-drawer');
   if (drawer) drawer.setAttribute('aria-label', data.mainNav);
@@ -1034,6 +1066,8 @@ export function updateNavLang(lang) {
       const key = el.dataset.mobileNav;
       const lbl = el.querySelector('.mobile-bottom-nav-label');
       if (lbl && labels[key]) lbl.textContent = labels[key];
+      // Keep aria-label in sync for the "More" button
+      if (key === 'menu' && labels[key]) el.setAttribute('aria-label', labels[key]);
     });
   }
 }
@@ -1119,6 +1153,7 @@ export function initNavSearch(basePath = '/') {
 
   function openOverlay() {
     overlay.removeAttribute('hidden');
+    btn.setAttribute('aria-expanded', 'true');
     input.focus();
     // If the input is empty, surface recent searches (if any).
     if (!input.value.trim()) renderRecent();
@@ -1126,8 +1161,14 @@ export function initNavSearch(basePath = '/') {
 
   function closeOverlay() {
     overlay.setAttribute('hidden', '');
+    btn.setAttribute('aria-expanded', 'false');
     clearResults();
   }
+
+  const _recentSearchesLabel = () => {
+    const d = NAV_DATA[_currentLang] || NAV_DATA.en;
+    return d.recentSearches || 'Recent searches';
+  };
 
   function renderRecent() {
     const recents = readRecent();
@@ -1138,7 +1179,7 @@ export function initNavSearch(basePath = '/') {
     dropdown.replaceChildren();
     const header = document.createElement('div');
     header.className = 'nav-search-message nav-search-section-head';
-    header.textContent = 'Recent searches';
+    header.textContent = _recentSearchesLabel();
     dropdown.appendChild(header);
     for (const q of recents) {
       const btnEl = document.createElement('button');

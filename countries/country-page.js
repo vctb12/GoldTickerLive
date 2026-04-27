@@ -147,7 +147,7 @@ function renderHero(cfg) {
       <div class="cp-hero-row">
         <span class="cp-hero-flag">${cfg.flag}</span>
         <div class="cp-hero-labels">
-          <span class="cp-hero-title">${t('livePrice')} — ${STATE.lang === 'ar' ? cfg.nameAr : cfg.nameEn}</span>
+          <h1 class="cp-hero-title">${t('livePrice')} — ${STATE.lang === 'ar' ? cfg.nameAr : cfg.nameEn}</h1>
           <div class="cp-hero-badges">${staleHtml}${pegHtml}</div>
         </div>
       </div>
