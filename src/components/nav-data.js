@@ -29,7 +29,11 @@
 
 export const NAV_DATA = {
   en: {
-    home: { href: '/index.html', label: 'Home', description: 'GoldTickerLive overview' },
+    home: {
+      href: '/index.html',
+      label: 'Home',
+      description: 'Platform overview and price snapshot',
+    },
     shops: {
       href: '/shops.html',
       label: 'Shops',
@@ -336,7 +340,7 @@ export const NAV_DATA = {
   },
 
   ar: {
-    home: { href: '/index.html', label: 'الرئيسية', description: 'نظرة GoldTickerLive العامة' },
+    home: { href: '/index.html', label: 'الرئيسية', description: 'نظرة عامة على المنصة والأسعار' },
     shops: {
       href: '/shops.html',
       label: 'المحلات',
