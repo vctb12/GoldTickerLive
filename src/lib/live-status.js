@@ -28,6 +28,9 @@ export const FX_MARKET = {
   FX_STALE_AFTER_MS: 26 * 60 * 60 * 1000,
 };
 
+/** Sentinel ageMs value for an unavailable / unresolvable timestamp. */
+const UNAVAILABLE_AGE_MS = Number.POSITIVE_INFINITY;
+
 function toDate(value) {
   if (value === null || value === undefined || value === '') return null;
   if (value instanceof Date) return value;
@@ -66,7 +69,7 @@ export function getMarketStatus(now = new Date()) {
  */
 export function getAgeMs(updatedAt, now = Date.now()) {
   const date = toDate(updatedAt);
-  if (!date) return Number.POSITIVE_INFINITY;
+  if (!date) return UNAVAILABLE_AGE_MS;
   return Math.max(0, now - date.getTime());
 }
 
@@ -122,7 +125,7 @@ export function getLiveFreshness({
   if (!updatedAt) {
     return {
       key: 'unavailable',
-      ageMs: Number.POSITIVE_INFINITY,
+      ageMs: UNAVAILABLE_AGE_MS,
       ageText: '—',
       timeText: '—',
       updatedAt: null,
@@ -161,7 +164,7 @@ export function getFXFreshness({
   if (!fxUpdatedAt) {
     return {
       key: 'unavailable',
-      ageMs: Number.POSITIVE_INFINITY,
+      ageMs: UNAVAILABLE_AGE_MS,
       ageText: '—',
       timeText: '—',
     };

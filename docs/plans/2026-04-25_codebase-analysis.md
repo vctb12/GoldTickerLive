@@ -1,10 +1,22 @@
 # Codebase Analysis — 2026-04-25
 
-> **Status (2026-04-27):** The low-risk slice — W-2, W-6, W-9, W-10, W-11, W-12, W-14 — landed in
-> the 2026-04-27 multi-batch PR (`copilot/explore-codebase-and-implement-plans`). See the change
-> notes on each finding below for the commits / verification artifacts. Remaining work tracked: W-1
-> (page-hydrator innerHTML rewrite), W-3 (FX staleness label), W-4 (atomic writes), W-5, W-7, W-8,
-> W-13 — all queued in `docs/REVAMP_PLAN.md` §6/§22b.
+> **Status (2026-04-27-round7):** W-1, W-3, W-4, W-7, W-8 resolved in round 7 (this PR).
+>
+> - W-1 — `page-hydrator.js` all 3 `innerHTML` sinks → `safe-dom` `el()` / `replaceChildren()`;
+>   baseline 3→0.
+> - W-3 — `getFXFreshness()` + `FX_MARKET` constants added to `live-status.js`; test added.
+> - W-4 — `server/lib/fs-atomic.js` atomic write helper created; `auth.js`, `shops.repository.js`,
+>   `audit.repository.js`, `audit-log.js`, `shop-manager.js` updated. Tests in
+>   `tests/fs-atomic.test.js`.
+> - W-7 — `tests/supabase-data.test.js` covers mapRow, network error, 401, empty rows, missing
+>   fields.
+> - W-8 — `tests/e2e/calculator.spec.js` and `tests/e2e/shops-search.spec.js` added.
+> - Track D Phase 12 — `render.js` all 10 remaining `innerHTML` sinks (planner results + SVG chart)
+>   fully migrated; baseline 10→0.
+>
+> **Previously resolved (2026-04-27):** W-2, W-6, W-9, W-10, W-11, W-12, W-14.
+>
+> **Remaining tracked work:** W-5, W-13 — queued in `docs/REVAMP_PLAN.md`.
 
 This document captures a four-part read-only analysis of the Gold Ticker Live repository:
 
@@ -394,6 +406,10 @@ be silently trusted.
 **Action:** Route through `safe-dom.js` helpers or use `el()` / `node.replaceChildren()` for each
 block.
 
+**Resolved (2026-04-27 round 7):** All 3 `innerHTML` sinks in `page-hydrator.js` migrated to `el()`
+and `replaceChildren()` from `safe-dom.js`. Baseline updated from 3→0. Verified by
+`npm run validate`.
+
 #### W-2 · Gold price data can be up to 15 minutes stale while the UI shows "Live"
 
 **Files:** `.github/workflows/gold-price-fetch.yml` cron `*/15`; `src/lib/live-status.js` stale
@@ -420,6 +436,10 @@ labelling cached/estimated values.
 **Action:** Track `fxUpdatedAt` (from `time_last_update_utc`) and show a stale FX label when rates
 are from cache and older than a threshold.
 
+**Resolved (2026-04-27 round 7):** `getFXFreshness()` function and `FX_MARKET` constants added to
+`src/lib/live-status.js`. `fetchFX()` in `src/lib/api.js` now passes `fxUpdatedAt` and `source`
+through on cache hits. Test added in `tests/live-status.test.js`.
+
 #### W-4 · Flat-JSON persistence has no atomic writes
 
 **Files:** `server/repositories/`, `server/lib/auth.js`  
@@ -429,6 +449,11 @@ torn writes or corrupt JSON. Under the current single-admin model this is low pr
 an un-bounded data corruption path.  
 **Action:** Wrap writes in a mutex (e.g. `async-mutex` npm package) or switch to atomic
 write-to-temp → rename (POSIX atomic on Linux). Or migrate to Supabase exclusively.
+
+**Resolved (2026-04-27 round 7):** `server/lib/fs-atomic.js` created with `atomicWriteJSON()` —
+write-to-temp then `fs.renameSync()` pattern (POSIX atomic). Updated callers: `server/lib/auth.js`,
+`server/repositories/shops.repository.js`, `server/repositories/audit.repository.js`,
+`server/lib/audit-log.js`, `server/lib/admin/shop-manager.js`. Tests in `tests/fs-atomic.test.js`.
 
 ### P1 — Correctness / coverage gaps
 
@@ -460,12 +485,21 @@ properties set this way also cannot use `var(--foo)` syntax.
 **Risk:** The client-side Supabase integration is not covered by any test suite. Regressions in data
 fetching or error handling would not be caught by CI.
 
+**Resolved (2026-04-27 round 7):** `tests/supabase-data.test.js` added with 6 test cases covering:
+network error → null, 401 → null, empty array → null, non-array → null, mapRow camelCase conversion,
+and safe defaults for missing fields.
+
 #### W-8 · Playwright E2E is thin
 
 **Files:** `tests/e2e/`, `playwright.config.js`  
 **Risk:** The E2E suite covers the homepage smoke; country/city leaf pages, calculator, shops, and
 tracker are not covered. The suite is blocking in CI (`ci.yml`), so a regression in the uncovered
 surfaces would not be caught until production.
+
+**Resolved (2026-04-27 round 7):** `tests/e2e/calculator.spec.js` (6 tests: page load, main
+landmark, input labels, links to tracker/methodology, JSON-LD WebApplication schema) and
+`tests/e2e/shops-search.spec.js` (5 tests: page load, main landmark, skip link, shop listing area,
+disclaimer notice) added.
 
 #### W-9 · `scripts/node/` tooling sprawl — two sitemap generators
 

@@ -132,10 +132,13 @@ if (!secretsFound) ok('No .env / secrets files found in repo root');
 
 // Also check that data/users.json (if present) is not world-readable
 const usersFile = join(ROOT, 'data/users.json');
+// 0o044 = group-read (4) + other-read (4). Any file used for admin credentials
+// should not be readable by group or world.
+const GROUP_OTHER_READ = 0o044;
 if (existsSync(usersFile)) {
   try {
     const mode = statSync(usersFile).mode & 0o777;
-    if (mode & 0o044) {
+    if (mode & GROUP_OTHER_READ) {
       warn(
         `data/users.json has world/group read permission (${mode.toString(8)})`,
         'run: chmod 600 data/users.json'

@@ -6,6 +6,7 @@
 const fs = require('fs');
 const path = require('path');
 const { logAction } = require('../audit-log');
+const { atomicWriteJSON } = require('../fs-atomic.js');
 
 const SHOPS_FILE = path.join(__dirname, '../../../data/shops-data.json');
 
@@ -38,7 +39,8 @@ function getAllShops() {
 function saveAllShops(shops) {
   initShopsFile();
   try {
-    fs.writeFileSync(SHOPS_FILE, JSON.stringify(shops, null, 2));
+    // Atomic write-to-temp → rename (W-4). Prevents torn writes.
+    atomicWriteJSON(SHOPS_FILE, shops);
   } catch (err) {
     console.error('[shop-manager] Failed to write shops file:', err.message);
     throw err;

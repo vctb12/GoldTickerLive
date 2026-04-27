@@ -45,8 +45,9 @@ function atomicWriteJSON(targetPath, data, { mode = 0o644, spaces = 2 } = {}) {
     // Ensure final mode is correct (rename may inherit the tmp inode on some FSes)
     try {
       fs.chmodSync(targetPath, mode);
-    } catch {
-      // Best-effort — chmod failure is non-fatal
+    } catch (chmodErr) {
+      // Non-fatal — but log so operators can diagnose filesystem permission issues.
+      console.debug('[fs-atomic] chmod failed on %s: %s', targetPath, chmodErr.message);
     }
   } catch (err) {
     // Clean up temp file on failure

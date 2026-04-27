@@ -5,6 +5,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWriteJSON } = require('./fs-atomic.js');
 
 const AUDIT_LOG_FILE = path.join(__dirname, '../../data/audit-logs.json');
 
@@ -49,7 +50,8 @@ function addAuditLog(entry) {
       timestamp: new Date().toISOString(),
       ...entry,
     });
-    fs.writeFileSync(AUDIT_LOG_FILE, JSON.stringify(logs, null, 2));
+    // Atomic write-to-temp → rename (W-4). Prevents torn writes.
+    atomicWriteJSON(AUDIT_LOG_FILE, logs);
     return logs[logs.length - 1];
   } catch (err) {
     console.error('Error writing audit log:', err);
@@ -152,7 +154,8 @@ function clearOldLogs(daysToKeep = 90) {
 
   if (filtered.length !== logs.length) {
     try {
-      fs.writeFileSync(AUDIT_LOG_FILE, JSON.stringify(filtered, null, 2));
+      // Atomic write-to-temp → rename (W-4). Prevents torn writes.
+      atomicWriteJSON(AUDIT_LOG_FILE, filtered);
     } catch (err) {
       console.error('[audit-log] Failed to write pruned audit log file:', err.message);
       throw err;
