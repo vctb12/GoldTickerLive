@@ -15,6 +15,26 @@ them into the right section here before execution. Agent operating rules are in
 
 **Last updated:** 2026-04-25.
 
+### 2026-04-27 full-site UX/admin/content revamp intake
+
+This workstream tracks the user-requested broad upgrade to make GoldTickerLive feel substantially
+more complete: stronger navigation, real content instead of coming-soon pages, indexable landing
+pages, public Supabase-backed shop submissions, admin workflow improvements, and broader
+GoldTickerLive brand consistency.
+
+- [x] Plan captured in
+      [`docs/plans/2026-04-27_full-site-ux-admin-revamp.md`](./plans/2026-04-27_full-site-ux-admin-revamp.md).
+- [x] First content slice launched: premium watch, compare countries, news, best rates, changelog,
+      FAQ, and submit-shop pages.
+- [x] New indexable landing pages launched for UAE buying, Dubai rates, GCC comparison, spot vs
+      retail, making charges, 22K, and 24K.
+- [x] Supabase `shop_submissions` intake queue added for public shop suggestions pending admin
+      review.
+- [ ] Shared nav/footer GoldTickerLive brand and information architecture pass.
+- [ ] Homepage/tracker/calculator/shops visible UX pass.
+- [ ] Admin command-center and shop-submission review workflow pass.
+- [ ] Sitemap/SEO inventory refresh and full validation.
+
 | §      | Owns                                                       | Absorbed from                                                     |
 | ------ | ---------------------------------------------------------- | ----------------------------------------------------------------- |
 | §0     | Product context (mission, users, jobs, pillars)            | `product/PRD.md`                                                  |

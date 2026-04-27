@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "generatedAtDate": "2026-04-25",
+  "generatedAtDate": "2026-04-27",
   "summary": {
-    "totalHtmlFiles": 646,
-    "withCanonical": 644,
+    "totalHtmlFiles": 653,
+    "withCanonical": 651,
     "withoutCanonical": 2,
-    "withOgImage": 490,
+    "withOgImage": 497,
     "withoutOgImage": 156,
-    "withJsonLd": 627,
-    "withoutJsonLd": 19,
-    "hreflangEnArPairs": 634,
-    "noindexCount": 163
+    "withJsonLd": 641,
+    "withoutJsonLd": 12,
+    "hreflangEnArPairs": 641,
+    "noindexCount": 156
   },
   "records": [
     {
@@ -39,7 +39,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Calculator — Value, Scrap, Zakat | GoldPrices",
+      "title": "Gold Calculator — Value, Scrap, Zakat | GoldTickerLive",
       "metaDescription": "Free gold calculator tools: calculate gold value by weight and karat, scrap gold price, Zakat on gold, and buying power. Live XAU/USD rates.",
       "canonical": "https://goldtickerlive.com/calculator.html",
       "robots": null,
@@ -71,20 +71,92 @@
       "jsonLdParseFailures": null
     },
     {
+      "path": "content/22k-gold-price-guide/index.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "22K Gold Price Guide — UAE & GCC Jewelry | GoldTickerLive",
+      "metaDescription": "A practical 22K gold guide for UAE and GCC jewelry buyers, including purity, AED per gram references and retail-price context.",
+      "canonical": "https://goldtickerlive.com/content/22k-gold-price-guide/",
+      "robots": null,
+      "ogTitle": "22K Gold Price Guide — UAE & GCC Jewelry | GoldTickerLive",
+      "ogDescription": "A practical 22K gold guide for UAE and GCC jewelry buyers, including purity, AED per gram references and retail-price context.",
+      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogUrl": "https://goldtickerlive.com/content/22k-gold-price-guide/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/content/22k-gold-price-guide/?lang=ar"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/content/22k-gold-price-guide/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/content/22k-gold-price-guide/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "content/24k-gold-price-guide/index.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "24K Gold Price Guide — Pure Gold, Bars & Coins | GoldTickerLive",
+      "metaDescription": "Understand 24K gold prices, pure gold reference values, bars, coins and how 24K differs from 22K jewelry in UAE and GCC markets.",
+      "canonical": "https://goldtickerlive.com/content/24k-gold-price-guide/",
+      "robots": null,
+      "ogTitle": "24K Gold Price Guide — Pure Gold, Bars & Coins | GoldTickerLive",
+      "ogDescription": "Understand 24K gold prices, pure gold reference values, bars, coins and how 24K differs from 22K jewelry in UAE and GCC markets.",
+      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogUrl": "https://goldtickerlive.com/content/24k-gold-price-guide/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/content/24k-gold-price-guide/?lang=ar"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/content/24k-gold-price-guide/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/content/24k-gold-price-guide/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
       "path": "content/changelog/index.html",
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Changelog & Status — Coming Soon | GoldPrices",
-      "metaDescription": "Track recent updates, data-source status, and upcoming features across GoldPrices — including new countries, cities, tools, and pricing sources.",
+      "title": "GoldTickerLive Changelog & Data Status",
+      "metaDescription": "Track GoldTickerLive product improvements, data-source transparency, freshness labels and major public-site updates.",
       "canonical": "https://goldtickerlive.com/content/changelog/",
-      "robots": "noindex, follow",
-      "ogTitle": "Changelog & Status — Coming Soon | GoldPrices",
-      "ogDescription": "GoldPrices changelog and site status.",
+      "robots": null,
+      "ogTitle": "GoldTickerLive Changelog & Data Status",
+      "ogDescription": "Track GoldTickerLive product improvements, data-source transparency, freshness labels and major public-site updates.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/changelog/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -100,8 +172,10 @@
           "href": "https://goldtickerlive.com/content/changelog/"
         }
       ],
-      "jsonLdTypes": [],
-      "hasStructuredData": false,
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
       "jsonLdParseFailures": null
     },
     {
@@ -109,16 +183,16 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Compare Gold Prices Across Countries — Coming Soon | GoldPrices",
-      "metaDescription": "Side-by-side comparison of gold rates, taxes, making charges, and retail premiums across multiple countries — see where gold is cheapest right now.",
+      "title": "Compare Gold Prices Across Countries | GoldTickerLive",
+      "metaDescription": "Compare spot-linked gold reference prices across UAE, GCC and Arab markets, then understand why final retail prices can still differ locally.",
       "canonical": "https://goldtickerlive.com/content/compare-countries/",
-      "robots": "noindex, follow",
-      "ogTitle": "Compare Gold Prices Across Countries — Coming Soon | GoldPrices",
-      "ogDescription": "Compare gold prices, taxes and making charges across countries.",
+      "robots": null,
+      "ogTitle": "Compare Gold Prices Across Countries | GoldTickerLive",
+      "ogDescription": "Compare spot-linked gold reference prices across UAE, GCC and Arab markets, then understand why final retail prices can still differ locally.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/compare-countries/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -134,8 +208,46 @@
           "href": "https://goldtickerlive.com/content/compare-countries/"
         }
       ],
-      "jsonLdTypes": [],
-      "hasStructuredData": false,
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "content/dubai-gold-rate-guide/index.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "Dubai Gold Rate Guide — 22K, 24K & Gold Souk Context | GoldTickerLive",
+      "metaDescription": "Understand Dubai gold rates, AED spot-linked references, Dubai Gold Souk shopping context, making charges and retail premium checks.",
+      "canonical": "https://goldtickerlive.com/content/dubai-gold-rate-guide/",
+      "robots": null,
+      "ogTitle": "Dubai Gold Rate Guide — 22K, 24K & Gold Souk Context | GoldTickerLive",
+      "ogDescription": "Understand Dubai gold rates, AED spot-linked references, Dubai Gold Souk shopping context, making charges and retail premium checks.",
+      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogUrl": "https://goldtickerlive.com/content/dubai-gold-rate-guide/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/content/dubai-gold-rate-guide/?lang=ar"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/content/dubai-gold-rate-guide/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/content/dubai-gold-rate-guide/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
       "jsonLdParseFailures": null
     },
     {
@@ -143,16 +255,16 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Prices — Frequently Asked Questions — Coming Soon | GoldPrices",
-      "metaDescription": "Clear, practical answers to the most common questions about buying, selling, tracking, and understanding gold prices in the GCC and Arab world.",
+      "title": "Gold Price FAQ — UAE, GCC & Arab Markets | GoldTickerLive",
+      "metaDescription": "Answers to common questions about live gold prices, 24K vs 22K, AED peg, shop prices, freshness labels, and GoldTickerLive methodology.",
       "canonical": "https://goldtickerlive.com/content/faq/",
-      "robots": "noindex, follow",
-      "ogTitle": "Gold Prices — Frequently Asked Questions — Coming Soon | GoldPrices",
-      "ogDescription": "Frequently asked questions about gold prices, buying and selling.",
+      "robots": null,
+      "ogTitle": "Gold Price FAQ — UAE, GCC & Arab Markets | GoldTickerLive",
+      "ogDescription": "Answers to common questions about live gold prices, 24K vs 22K, AED peg, shop prices, freshness labels, and GoldTickerLive methodology.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/faq/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -168,8 +280,82 @@
           "href": "https://goldtickerlive.com/content/faq/"
         }
       ],
-      "jsonLdTypes": [],
-      "hasStructuredData": false,
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "content/gcc-gold-price-comparison/index.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "GCC Gold Price Comparison — UAE, Saudi, Kuwait, Qatar | GoldTickerLive",
+      "metaDescription": "Compare GCC gold prices using spot-linked references for UAE, Saudi Arabia, Kuwait, Qatar, Bahrain and Oman.",
+      "canonical": "https://goldtickerlive.com/content/gcc-gold-price-comparison/",
+      "robots": null,
+      "ogTitle": "GCC Gold Price Comparison — UAE, Saudi, Kuwait, Qatar | GoldTickerLive",
+      "ogDescription": "Compare GCC gold prices using spot-linked references for UAE, Saudi Arabia, Kuwait, Qatar, Bahrain and Oman.",
+      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogUrl": "https://goldtickerlive.com/content/gcc-gold-price-comparison/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/content/gcc-gold-price-comparison/?lang=ar"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/content/gcc-gold-price-comparison/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/content/gcc-gold-price-comparison/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "content/gold-making-charges-guide/index.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "Gold Making Charges Guide — UAE & GCC Jewelry | GoldTickerLive",
+      "metaDescription": "Learn how gold making charges work, why jewelry prices differ from spot, and what to ask before buying in UAE and GCC shops.",
+      "canonical": "https://goldtickerlive.com/content/gold-making-charges-guide/",
+      "robots": null,
+      "ogTitle": "Gold Making Charges Guide — UAE & GCC Jewelry | GoldTickerLive",
+      "ogDescription": "Learn how gold making charges work, why jewelry prices differ from spot, and what to ask before buying in UAE and GCC shops.",
+      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogUrl": "https://goldtickerlive.com/content/gold-making-charges-guide/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/content/gold-making-charges-guide/?lang=ar"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/content/gold-making-charges-guide/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/content/gold-making-charges-guide/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
       "jsonLdParseFailures": null
     },
     {
@@ -515,16 +701,16 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold News — Coming Soon | GoldPrices",
-      "metaDescription": "Curated market-moving headlines for gold buyers and traders across the region — with clear source labels and freshness timestamps.",
+      "title": "Gold Market Updates for UAE & GCC | GoldTickerLive",
+      "metaDescription": "A curated GoldTickerLive market updates hub explaining gold price drivers without fake breaking-news claims or trading advice.",
       "canonical": "https://goldtickerlive.com/content/news/",
-      "robots": "noindex, follow",
-      "ogTitle": "Gold News — Coming Soon | GoldPrices",
-      "ogDescription": "Gold news — curated headlines for GCC and Arab-world markets.",
+      "robots": null,
+      "ogTitle": "Gold Market Updates for UAE & GCC | GoldTickerLive",
+      "ogDescription": "A curated GoldTickerLive market updates hub explaining gold price drivers without fake breaking-news claims or trading advice.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/news/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -540,8 +726,10 @@
           "href": "https://goldtickerlive.com/content/news/"
         }
       ],
-      "jsonLdTypes": [],
-      "hasStructuredData": false,
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
       "jsonLdParseFailures": null
     },
     {
@@ -585,16 +773,16 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Premium Watch — Coming Soon | GoldPrices",
-      "metaDescription": "Track the premium — the markup between retail jewelry prices and the spot reference — shop by shop, city by city, with clear labels for estimated vs verified values.",
+      "title": "Premium Watch — Retail Gold Premium Guide | GoldTickerLive",
+      "metaDescription": "Learn how retail gold premiums, making charges, VAT and shop margins sit above spot-linked gold reference prices in UAE and GCC markets.",
       "canonical": "https://goldtickerlive.com/content/premium-watch/",
-      "robots": "noindex, follow",
-      "ogTitle": "Premium Watch — Coming Soon | GoldPrices",
-      "ogDescription": "Premium Watch — retail vs spot markup, by shop and city.",
+      "robots": null,
+      "ogTitle": "Premium Watch — Retail Gold Premium Guide | GoldTickerLive",
+      "ogDescription": "Learn how retail gold premiums, making charges, VAT and shop margins sit above spot-linked gold reference prices in UAE and GCC markets.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/premium-watch/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -610,8 +798,10 @@
           "href": "https://goldtickerlive.com/content/premium-watch/"
         }
       ],
-      "jsonLdTypes": [],
-      "hasStructuredData": false,
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
       "jsonLdParseFailures": null
     },
     {
@@ -708,20 +898,56 @@
       "jsonLdParseFailures": null
     },
     {
+      "path": "content/spot-vs-retail-gold-price/index.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "Spot vs Retail Gold Price Explained | GoldTickerLive",
+      "metaDescription": "Understand the difference between spot-linked gold reference prices and final retail jewelry prices with premiums, VAT and making charges.",
+      "canonical": "https://goldtickerlive.com/content/spot-vs-retail-gold-price/",
+      "robots": null,
+      "ogTitle": "Spot vs Retail Gold Price Explained | GoldTickerLive",
+      "ogDescription": "Understand the difference between spot-linked gold reference prices and final retail jewelry prices with premiums, VAT and making charges.",
+      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogUrl": "https://goldtickerlive.com/content/spot-vs-retail-gold-price/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/content/spot-vs-retail-gold-price/?lang=ar"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/content/spot-vs-retail-gold-price/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/content/spot-vs-retail-gold-price/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
       "path": "content/submit-shop/index.html",
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Submit a Gold Shop — Coming Soon | GoldPrices",
-      "metaDescription": "Own or know a trusted gold shop? Submit it to appear in the GoldPrices directory. Listings are reviewed before they go live to keep the shops list trustworthy.",
+      "title": "Submit a Gold Shop for Review | GoldTickerLive",
+      "metaDescription": "Submit a real gold shop or market listing to GoldTickerLive for editorial review. Public listings are reviewed before publication and never imply endorsement.",
       "canonical": "https://goldtickerlive.com/content/submit-shop/",
-      "robots": "noindex, follow",
-      "ogTitle": "Submit a Gold Shop — Coming Soon | GoldPrices",
-      "ogDescription": "Submit a trusted gold shop to the GoldPrices directory.",
+      "robots": null,
+      "ogTitle": "Submit a Gold Shop for Review | GoldTickerLive",
+      "ogDescription": "Send a gold shop or souk listing to GoldTickerLive for review before it appears in the public directory.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/submit-shop/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -737,8 +963,10 @@
           "href": "https://goldtickerlive.com/content/submit-shop/"
         }
       ],
-      "jsonLdTypes": [],
-      "hasStructuredData": false,
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
       "jsonLdParseFailures": null
     },
     {
@@ -746,16 +974,16 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Today's Best Gold Rates — Coming Soon | GoldPrices",
-      "metaDescription": "A cross-country leaderboard of the best spot-linked 24K, 22K, 21K, and 18K rates across the GCC and the wider Arab world — updated live.",
+      "title": "Today&#x27;s Best Gold Rates — UAE, GCC & Arab Markets | GoldTickerLive",
+      "metaDescription": "Find the right way to compare today’s spot-linked gold reference rates across countries, karats and currencies on GoldTickerLive.",
       "canonical": "https://goldtickerlive.com/content/todays-best-rates/",
-      "robots": "noindex, follow",
-      "ogTitle": "Today's Best Gold Rates — Coming Soon | GoldPrices",
-      "ogDescription": "Today's best gold rates across GCC and Arab world — live leaderboard.",
+      "robots": null,
+      "ogTitle": "Today&#x27;s Best Gold Rates — UAE, GCC & Arab Markets | GoldTickerLive",
+      "ogDescription": "Find the right way to compare today’s spot-linked gold reference rates across countries, karats and currencies on GoldTickerLive.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/todays-best-rates/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -771,8 +999,10 @@
           "href": "https://goldtickerlive.com/content/todays-best-rates/"
         }
       ],
-      "jsonLdTypes": [],
-      "hasStructuredData": false,
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
       "jsonLdParseFailures": null
     },
     {
@@ -896,6 +1126,42 @@
         {
           "lang": "x-default",
           "href": "https://goldtickerlive.com/content/tools/zakat-calculator.html"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "content/uae-gold-buying-guide/index.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "UAE Gold Buying Guide — Dubai, Abu Dhabi & AED Prices | GoldTickerLive",
+      "metaDescription": "A practical UAE gold buying guide covering AED reference prices, Dubai and Abu Dhabi markets, making charges, VAT and safe comparison steps.",
+      "canonical": "https://goldtickerlive.com/content/uae-gold-buying-guide/",
+      "robots": null,
+      "ogTitle": "UAE Gold Buying Guide — Dubai, Abu Dhabi & AED Prices | GoldTickerLive",
+      "ogDescription": "A practical UAE gold buying guide covering AED reference prices, Dubai and Abu Dhabi markets, making charges, VAT and safe comparison steps.",
+      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogUrl": "https://goldtickerlive.com/content/uae-gold-buying-guide/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/content/uae-gold-buying-guide/?lang=ar"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/content/uae-gold-buying-guide/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/content/uae-gold-buying-guide/"
         }
       ],
       "jsonLdTypes": [
@@ -22838,7 +23104,7 @@
       "metaDescription": "Gold market insights, price analysis, and educational content for UAE, GCC and Arab world gold buyers.",
       "canonical": "https://goldtickerlive.com/insights.html",
       "robots": null,
-      "ogTitle": "Gold Market Insights & Analysis | GoldPrices",
+      "ogTitle": "Gold Market Insights & Analysis | GoldTickerLive",
       "ogDescription": "Gold market insights, price analysis, and educational content for UAE, GCC and Arab world gold buyers.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/insights.html",
@@ -22906,11 +23172,11 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Learn About Gold — Karats, Pricing, Zakat, History | GoldPrices",
+      "title": "Learn About Gold — Karats, Pricing, Zakat, History | GoldTickerLive",
       "metaDescription": "Learn everything about gold: karat grades, how prices are set, the AED peg, Zakat rules, hallmarking, and the history of gold in the Arab world.",
       "canonical": "https://goldtickerlive.com/learn.html",
       "robots": null,
-      "ogTitle": "Learn About Gold — Karats, Pricing, Zakat & History | GoldPrices",
+      "ogTitle": "Learn About Gold — Karats, Pricing, Zakat & History | GoldTickerLive",
       "ogDescription": "Gold karats explained, pricing methodology, AED peg, Zakat on gold, hallmarking and more.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/learn.html",
@@ -22942,11 +23208,11 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Data Sources & Methodology | GoldPrices",
-      "metaDescription": "How GoldPrices.app calculates gold prices, sources data, and handles AED fixed peg, karat conversions, and data freshness.",
+      "title": "Data Sources & Methodology | GoldTickerLive",
+      "metaDescription": "How GoldTickerLive calculates gold prices, sources data, and handles AED fixed peg, karat conversions, and data freshness.",
       "canonical": "https://goldtickerlive.com/methodology.html",
       "robots": null,
-      "ogTitle": "Data Sources & Methodology | GoldPrices",
+      "ogTitle": "Data Sources & Methodology | GoldTickerLive",
       "ogDescription": "Full transparency on how we calculate gold prices: data sources, AED peg, karat math, and fallback logic.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/methodology.html",
@@ -23071,11 +23337,11 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Shops & Markets Directory by Region | GoldPrices",
+      "title": "Gold Shops & Markets Directory by Region | GoldTickerLive",
       "metaDescription": "Listed gold shops and known gold markets by region, country, city, and specialty across GCC, Levant, Africa, and India. Compare dealers and clusters.",
       "canonical": "https://goldtickerlive.com/shops.html",
       "robots": null,
-      "ogTitle": "Gold Shops & Markets Directory by Region | GoldPrices",
+      "ogTitle": "Gold Shops & Markets Directory by Region | GoldTickerLive",
       "ogDescription": "Listed gold shops and known gold markets by region, country, city, and specialty across GCC, Levant, Africa, and India. Compare dealers and clusters.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/shops.html",

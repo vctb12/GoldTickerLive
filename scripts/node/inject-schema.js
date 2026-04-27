@@ -362,9 +362,9 @@ function processFile(filePath, checkOnly = false) {
     const relativePath = path.relative(ROOT, filePath);
     if (!hasSchema && schemas.length > 0) {
       console.log(`Missing schema: ${relativePath}`);
-      return false;
+      return true;
     }
-    return hasSchema;
+    return false;
   }
 
   if (schemas.length === 0) {
@@ -460,7 +460,7 @@ function main() {
     console.log('\n✓ All pages have appropriate schemas');
     process.exit(0);
   } else if (checkOnly) {
-    console.log(`\n⚠ ${stats.processed - stats.modified} pages missing schemas`);
+    console.log(`\n⚠ ${stats.modified} pages missing schemas`);
     process.exit(1);
   } else {
     console.log('\n✓ Schema injection complete');
