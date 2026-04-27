@@ -1,16 +1,16 @@
 {
   "source": "goldpricez.com",
-  "fetched_at_utc": "2026-04-27T07:54:51Z",
-  "source_updated_at_gmt": "27-04-2026 07:54:44 am",
+  "fetched_at_utc": "2026-04-27T10:10:17Z",
+  "source_updated_at_gmt": "27-04-2026 10:10:16 am",
   "currency_primary": "AED",
   "gold": {
-    "ounce_usd": 4710.73,
-    "ounce_aed": 17304.85,
-    "gram_aed": 555.49,
-    "kg_aed": 556363.07,
-    "tola_india_aed": 6489.32,
-    "ask_usd": 4710.73,
-    "bid_usd": 4710.73,
+    "ounce_usd": 4703.48,
+    "ounce_aed": 17278.26,
+    "gram_aed": 554.63,
+    "kg_aed": 555508.0,
+    "tola_india_aed": 6479.35,
+    "ask_usd": 4703.48,
+    "bid_usd": 4703.48,
     "day_low_usd": 4671.8,
     "day_high_usd": 4730.45
   },
@@ -19,10 +19,10 @@
     "gram_aed": 0.0
   },
   "karats_aed_per_gram": {
-    "24k": 555.49,
-    "22k": 509.21,
-    "21k": 486.05,
-    "18k": 416.61
+    "24k": 554.63,
+    "22k": 508.43,
+    "21k": 485.3,
+    "18k": 415.97
   },
   "status": "ok",
   "notes": "Spot/reference prices. Not UAE retail or jewelry shop prices."
