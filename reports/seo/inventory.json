@@ -281,7 +281,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "FAQPage"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -23100,7 +23101,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Market Insights & Analysis | أسعار الذهب",
+      "title": "Gold Market Insights & Analysis | GoldTickerLive",
       "metaDescription": "Gold market insights, price analysis, and educational content for UAE, GCC and Arab world gold buyers.",
       "canonical": "https://goldtickerlive.com/insights.html",
       "robots": null,
@@ -23136,7 +23137,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Investing Guide | Rational Gold Plan for UAE, Saudi & Egypt",
+      "title": "Gold Investing Guide — UAE, Saudi & Egypt | GoldTickerLive",
       "metaDescription": "A practical gold investing guide for UAE, Saudi Arabia, and Egypt. Build a live budget plan, compare bullion vs jewelry vs ETFs, and buy gold more rationally.",
       "canonical": "https://goldtickerlive.com/invest.html",
       "robots": null,
@@ -23234,6 +23235,7 @@
         }
       ],
       "jsonLdTypes": [
+        "Article",
         "BreadcrumbList"
       ],
       "hasStructuredData": true,
@@ -23265,11 +23267,11 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Pricing Plans — Gold Prices Platform | GoldTickerLive",
+      "title": "Pricing Plans — GoldTickerLive",
       "metaDescription": "Choose the perfect plan for gold price tracking. Free, Pro, and API tiers with ad-free experience, advanced alerts, and API access.",
       "canonical": "https://goldtickerlive.com/pricing.html",
       "robots": null,
-      "ogTitle": "Pricing Plans — Gold Prices Platform | GoldTickerLive",
+      "ogTitle": "Pricing Plans — GoldTickerLive",
       "ogDescription": "Choose the perfect plan for gold price tracking. Free, Pro, and API tiers with ad-free experience, advanced alerts, and API access.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/pricing.html",
@@ -23409,11 +23411,11 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Tracker Pro — Live Price Workspace | UAE, GCC & Arab World",
+      "title": "Live Gold Price Tracker — UAE, GCC & Arab World | GoldTickerLive",
       "metaDescription": "Live gold prices for UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual EN/AR, refreshed every 90s.",
       "canonical": "https://goldtickerlive.com/tracker.html",
       "robots": null,
-      "ogTitle": "Gold Tracker Pro — Live Workspace | GCC & Arab World",
+      "ogTitle": "Live Gold Price Tracker — UAE, GCC & Arab World | GoldTickerLive",
       "ogDescription": "Live gold prices for UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual EN/AR, refreshed every 90s.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/tracker.html",

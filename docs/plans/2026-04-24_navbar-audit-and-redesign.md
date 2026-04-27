@@ -3,7 +3,7 @@
 **Created:** 2026-04-24  
 **Source:** Full structural audit of `src/components/nav.js`, `src/components/nav-data.js`, and
 `styles/global.css` nav sections.  
-**Status:** 🆕 NEW — Pending owner review before any implementation slice.
+**Status:** 🟡 IN PROGRESS — Phase 2 CSS fixes (S1, S5, S7) shipped 2026-04-27.
 
 ---
 
@@ -18,44 +18,44 @@ accessibility gaps. They are grouped into three implementation phases below.
 
 ### Bug inventory (must fix)
 
-| ID | Severity | Issue |
-|----|----------|-------|
-| B1 | 🔴 | `#nav-search-btn` has no `aria-expanded` or `aria-controls="nav-search-overlay"`. Screen readers get no announcement when the search overlay opens or closes. `openOverlay()`/`closeOverlay()` do not set these attributes. |
-| B2 | 🔴 | `updateNavLang` (nav.js:802) queries `[data-nav-key="invest"]` — a selector that is never rendered by `injectNav`. This is a silent no-op on every language switch. The Invest item inside the More group is handled correctly by the generic group loop; only this legacy selector is broken. |
+| ID  | Severity | Issue                                                                                                                                                                                                                                                                                          |
+| --- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B1  | 🔴       | `#nav-search-btn` has no `aria-expanded` or `aria-controls="nav-search-overlay"`. Screen readers get no announcement when the search overlay opens or closes. `openOverlay()`/`closeOverlay()` do not set these attributes.                                                                    |
+| B2  | 🔴       | `updateNavLang` (nav.js:802) queries `[data-nav-key="invest"]` — a selector that is never rendered by `injectNav`. This is a silent no-op on every language switch. The Invest item inside the More group is handled correctly by the generic group loop; only this legacy selector is broken. |
 
 ### CSS issues
 
-| ID | Severity | Issue |
-|----|----------|-------|
-| S1 | 🟠 | `.nav-dropdown-item` rule block is defined **twice** (global.css:3548 and 5969) with conflicting properties. The later block wins for most properties, but `min-height: 40px`, `white-space: nowrap`, and `font-size: 0.88rem` leak forward from the earlier block into the effective style. |
-| S2 | 🟠 | Dropdown items `min-height: 40px` — 4px below the 44px WCAG touch target recommendation (applies on 641–820px tablet viewports where the dropdown is reachable by touch). |
-| S3 | 🟠 | `nav-link--shops` class is applied (nav.js:241) but has zero CSS rules — a no-op class. |
-| S4 | 🟠 | `.nav-drawer-bottom` (global.css:6333) and `.nav-drawer-search` (global.css:5239) are defined but never emitted by `injectNav` or `buildDrawerGroup` — dead CSS. |
-| S5 | 🟠 | `.nav-icon-btn:hover` background `var(--surface-subtle, rgb(0,0,0,0.04))` is invisible on the dark nav bar (`rgb(15 12 8 / 92%)`). No `[data-theme='dark'] .nav-icon-btn` override exists. |
-| S6 | 🟠 | `.nav-skip-link` uses `left: 8px` (global.css:708) instead of `inset-inline-start`. In RTL the skip link stays pinned to the physical left edge. No `[dir='rtl']` override. |
-| S7 | 🟠 | `body.has-spot-bar .site-nav[data-nav-hidden='true']` (global.css:6254) sets `transform: translateY(-100%)` — identical to the base rule at 6249. The intended offset (accounting for spot-bar height) was never added. |
+| ID  | Severity | Issue                                                                                                                                                                                                                                                                                        |
+| --- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| S1  | 🟠       | `.nav-dropdown-item` rule block is defined **twice** (global.css:3548 and 5969) with conflicting properties. The later block wins for most properties, but `min-height: 40px`, `white-space: nowrap`, and `font-size: 0.88rem` leak forward from the earlier block into the effective style. |
+| S2  | 🟠       | Dropdown items `min-height: 40px` — 4px below the 44px WCAG touch target recommendation (applies on 641–820px tablet viewports where the dropdown is reachable by touch).                                                                                                                    |
+| S3  | 🟠       | `nav-link--shops` class is applied (nav.js:241) but has zero CSS rules — a no-op class.                                                                                                                                                                                                      |
+| S4  | 🟠       | `.nav-drawer-bottom` (global.css:6333) and `.nav-drawer-search` (global.css:5239) are defined but never emitted by `injectNav` or `buildDrawerGroup` — dead CSS.                                                                                                                             |
+| S5  | 🟠       | `.nav-icon-btn:hover` background `var(--surface-subtle, rgb(0,0,0,0.04))` is invisible on the dark nav bar (`rgb(15 12 8 / 92%)`). No `[data-theme='dark'] .nav-icon-btn` override exists.                                                                                                   |
+| S6  | 🟠       | `.nav-skip-link` uses `left: 8px` (global.css:708) instead of `inset-inline-start`. In RTL the skip link stays pinned to the physical left edge. No `[dir='rtl']` override.                                                                                                                  |
+| S7  | 🟠       | `body.has-spot-bar .site-nav[data-nav-hidden='true']` (global.css:6254) sets `transform: translateY(-100%)` — identical to the base rule at 6249. The intended offset (accounting for spot-bar height) was never added.                                                                      |
 
 ### Information architecture issues
 
-| ID | Severity | Issue |
-|----|----------|-------|
-| IA1 | 🟡 | All 4 drawer groups render `<details open>`. Opening the drawer presents all 46 items expanded simultaneously — many scroll-lengths on a 375px phone. |
-| IA2 | 🟡 | Emoji icon collisions: 📈 appears in both Prices (Live Tracker) and Tools (Investment Return); 📰 appears twice in More; 🛒 appears in both Learn and Prices; 🏙️ is identical across 5 city entries; 🕌 appears in both Tools and Learn. |
-| IA3 | 🟡 | `NAV_DATA.en.invest` / `NAV_DATA.ar.invest` exist as a legacy top-level entry that is referenced by zero live HTML elements and duplicates the Invest item already inside the More group. |
-| IA4 | 🟡 | Learn dropdown mixes educational guide content (items 1–8) with site-meta pages: Methodology (`/methodology.html`) and FAQ (`/content/faq/`) are about how the site works, not gold education. |
-| IA5 | 🟡 | More dropdown mixes editorial (Insights, News), transactional (Invest, Submit a Shop), operational (Changelog), and legal (Privacy, Terms). Privacy and Terms are footer-appropriate, not primary nav. |
-| IA6 | 🟡 | Prices dropdown has 16 items in two columns. City/market links (items 8–14) are highly specific; they belong on country pages, not in a top-level nav dropdown. |
+| ID  | Severity | Issue                                                                                                                                                                                                                                    |
+| --- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| IA1 | 🟡       | All 4 drawer groups render `<details open>`. Opening the drawer presents all 46 items expanded simultaneously — many scroll-lengths on a 375px phone.                                                                                    |
+| IA2 | 🟡       | Emoji icon collisions: 📈 appears in both Prices (Live Tracker) and Tools (Investment Return); 📰 appears twice in More; 🛒 appears in both Learn and Prices; 🏙️ is identical across 5 city entries; 🕌 appears in both Tools and Learn. |
+| IA3 | 🟡       | `NAV_DATA.en.invest` / `NAV_DATA.ar.invest` exist as a legacy top-level entry that is referenced by zero live HTML elements and duplicates the Invest item already inside the More group.                                                |
+| IA4 | 🟡       | Learn dropdown mixes educational guide content (items 1–8) with site-meta pages: Methodology (`/methodology.html`) and FAQ (`/content/faq/`) are about how the site works, not gold education.                                           |
+| IA5 | 🟡       | More dropdown mixes editorial (Insights, News), transactional (Invest, Submit a Shop), operational (Changelog), and legal (Privacy, Terms). Privacy and Terms are footer-appropriate, not primary nav.                                   |
+| IA6 | 🟡       | Prices dropdown has 16 items in two columns. City/market links (items 8–14) are highly specific; they belong on country pages, not in a top-level nav dropdown.                                                                          |
 
 ### Accessibility gaps
 
-| ID | Severity | Issue |
-|----|----------|-------|
-| A1 | 🔵 | Search button `aria-expanded` / `aria-controls` (same as B1). |
-| A2 | 🔵 | All 4 drawer groups open by default; screen reader users must traverse all 46 items to reach the language toggle at the bottom of the drawer. |
-| A3 | 🔵 | Brand `aria-label="GoldPrices Home"` is hardcoded in English regardless of current language. |
-| A4 | 🔵 | Theme toggle `THEME_LABEL` strings are hardcoded in English; `updateNavLang` does not update the theme button label. |
-| A5 | 🔵 | "Recent searches" section header in the search dropdown is hardcoded in English even in AR mode. |
-| A6 | 🔵 | Mobile bottom bar "More" button triggers the drawer but has no `aria-expanded` or `aria-controls="nav-drawer"`. |
+| ID  | Severity | Issue                                                                                                                                         |
+| --- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| A1  | 🔵       | Search button `aria-expanded` / `aria-controls` (same as B1).                                                                                 |
+| A2  | 🔵       | All 4 drawer groups open by default; screen reader users must traverse all 46 items to reach the language toggle at the bottom of the drawer. |
+| A3  | 🔵       | Brand `aria-label="GoldPrices Home"` is hardcoded in English regardless of current language.                                                  |
+| A4  | 🔵       | Theme toggle `THEME_LABEL` strings are hardcoded in English; `updateNavLang` does not update the theme button label.                          |
+| A5  | 🔵       | "Recent searches" section header in the search dropdown is hardcoded in English even in AR mode.                                              |
+| A6  | 🔵       | Mobile bottom bar "More" button triggers the drawer but has no `aria-expanded` or `aria-controls="nav-drawer"`.                               |
 
 ---
 
@@ -79,9 +79,9 @@ In `injectNav`, add `aria-expanded="false"` and `aria-controls="nav-search-overl
 
 #### P1-2 — Remove dead `[data-nav-key="invest"]` selector (B2)
 
-In `updateNavLang` (nav.js:802), delete the `nav.querySelectorAll('[data-nav-key="invest"]')`
-block. The Invest item in the More group is already handled correctly by the generic group-item loop
-above it. No data or behaviour changes.
+In `updateNavLang` (nav.js:802), delete the `nav.querySelectorAll('[data-nav-key="invest"]')` block.
+The Invest item in the More group is already handled correctly by the generic group-item loop above
+it. No data or behaviour changes.
 
 #### P1-3 — Add `aria-expanded` / `aria-controls` to mobile bottom-bar "More" button (A6)
 
@@ -108,25 +108,27 @@ menu button template. In the `menuBtn.addEventListener('click', …)` handler, m
 **Gate:** `npm run lint`, `npm run build`, manual visual check at 360px / 768px / 1280px in light
 and dark mode, RTL spot-check.
 
-#### P2-1 — Deduplicate `.nav-dropdown-item` (S1, S2)
+#### P2-1 — Deduplicate `.nav-dropdown-item` (S1, S2) ✅ DONE 2026-04-27
 
-Remove the earlier `.nav-dropdown-item` rule block at line 3548 and its associated hover/active
-rules (3563–3578). Merge any properties that are not already in the later block (5969) into that
-block. Raise `min-height` from `40px` to `44px` in the surviving block.
+Earlier `.nav-dropdown-item` block removed; sub-element styles (icon, body, primary modifier,
+dark-mode primary label) merged into the enriched grid-layout block. `min-height` verified at `58px`
+in surviving block (exceeds 44px WCAG minimum).
 
 #### P2-2 — Remove dead CSS rules (S3, S4)
 
 Remove `.nav-link--shops` mentions from `nav.js` template (or add real CSS — confirm with owner
-which). Remove `.nav-drawer-bottom` and `.nav-drawer-search` rule blocks from `global.css` (they
-are never rendered; confirm with `grep` before deleting).
+which). Remove `.nav-drawer-bottom` and `.nav-drawer-search` rule blocks from `global.css` (they are
+never rendered; confirm with `grep` before deleting).
 
-#### P2-3 — Fix dark-mode icon button hover (S5)
+#### P2-3 — Fix dark-mode icon button hover (S5) ✅ DONE 2026-04-27
 
-Add:
+Added:
+
 ```css
 [data-theme='dark'] .nav-icon-btn:hover,
 [data-theme='dark'] .nav-icon-btn:focus-visible {
   background: rgb(255 255 255 / 0.08);
+  color: var(--color-text);
 }
 ```
 
@@ -134,11 +136,10 @@ Add:
 
 Replace `left: 8px` with `inset-inline-start: 8px` on `.nav-skip-link` (global.css:708).
 
-#### P2-5 — Fix spot-bar nav-hidden offset (S7)
+#### P2-5 — Fix spot-bar nav-hidden offset (S7) ✅ DONE 2026-04-27
 
-Determine the correct spot-bar height variable (e.g. `var(--spot-bar-height, 38px)`) and update
-`body.has-spot-bar .site-nav[data-nav-hidden='true']` to use
-`transform: translateY(calc(-100% - var(--spot-bar-height, 38px)))`.
+`body.has-spot-bar .site-nav[data-nav-hidden='true']` now uses
+`transform: translateY(calc(-100% - var(--spot-bar-height, 36px)))`.
 
 ---
 
@@ -166,13 +167,13 @@ correctly inside the More group already.
 
 Assign distinct icons to items that currently share glyphs across groups:
 
-| Item | Current | Proposed |
-|------|---------|----------|
-| Investment Return (Tools) | 📈 | 💹 |
-| Why Gold Moved Today (More) second 📰 | 📰 | 📡 |
-| How to Buy Gold (Learn) | 🛒 | 📖 |
-| Zakat on Gold (Learn) | 🕌 | 🌙 |
-| All 5 city entries (Prices) | 🏙️ | City-specific flags (🇦🇪 Dubai, 🇦🇪 Abu Dhabi, 🇸🇦 Riyadh, 🇪🇬 Cairo, 🇶🇦 Doha) |
+| Item                                  | Current | Proposed                                                                   |
+| ------------------------------------- | ------- | -------------------------------------------------------------------------- |
+| Investment Return (Tools)             | 📈      | 💹                                                                         |
+| Why Gold Moved Today (More) second 📰 | 📰      | 📡                                                                         |
+| How to Buy Gold (Learn)               | 🛒      | 📖                                                                         |
+| Zakat on Gold (Learn)                 | 🕌      | 🌙                                                                         |
+| All 5 city entries (Prices)           | 🏙️      | City-specific flags (🇦🇪 Dubai, 🇦🇪 Abu Dhabi, 🇸🇦 Riyadh, 🇪🇬 Cairo, 🇶🇦 Doha) |
 
 Both EN and AR entries must be updated in sync (the tests enforce EN/AR parity by position, not by
 icon, so this is safe).
@@ -202,11 +203,11 @@ assertion is hardcoded.
 
 ## Files impacted per phase
 
-| Phase | Files touched |
-|-------|--------------|
-| P1 | `src/components/nav.js`, `src/components/nav-data.js` (string additions only) |
-| P2 | `styles/global.css` |
-| P3 | `src/components/nav-data.js`, `tests/nav-data.test.js` (count updates if needed) |
+| Phase | Files touched                                                                    |
+| ----- | -------------------------------------------------------------------------------- |
+| P1    | `src/components/nav.js`, `src/components/nav-data.js` (string additions only)    |
+| P2    | `styles/global.css`                                                              |
+| P3    | `src/components/nav-data.js`, `tests/nav-data.test.js` (count updates if needed) |
 
 ---
 

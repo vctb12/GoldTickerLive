@@ -48,13 +48,19 @@ brand shift toward **GoldTickerLive**.
 
 ### Batch 3 — shared navigation, footer, and brand consistency
 
-- [ ] `/src/components/nav.js` — update shared brand label to GoldTickerLive.
+- [x] `/src/components/nav.js` — nav brand label uses `data.brandLabel` from `nav-data.js` (already
+      done; plan item was stale).
 - [x] `/src/components/nav-data.js` — add 22K and 24K karat guide pages to Prices → Comparison
       section (EN + AR).
 - [x] `/src/components/footer.js` — add Methodology link to footer legal row (Terms · Privacy ·
       Methodology).
 - [x] Core page metadata — added `og:locale` + `og:locale:alternate` (en_US / ar_AE) to all main
       pages: index, tracker, calculator, shops, methodology, learn, insights, invest, pricing.
+- [x] SEO extended to content/ pages — added `og:locale` + `og:locale:alternate` to 17 content pages
+      missing them (faq, news, premium-watch, changelog, compare-countries, dubai-gold-rate-guide,
+      gcc-gold-price-comparison, gold-making-charges-guide, gold-price-history, guides, order-gold,
+      spot-vs-retail-gold-price, submit-shop, todays-best-rates, tools, 22k-guide, 24k-guide).
+- [x] `og:image:alt` added to `content/gold-price-history/` and `content/order-gold/` pages.
 
 ### Batch 4 — homepage, tracker, calculator, shops polish
 
@@ -64,22 +70,31 @@ brand shift toward **GoldTickerLive**.
       instead of outdated email.
 - [x] `/404.html` — replaced hardcoded hex colors with CSS design-token variables (`--color-gold`,
       `--text-primary`, `--text-secondary`, `--border-default`, `--color-gold-tint`).
-- [ ] `/index.html`, `/src/pages/home.js`, `/styles/pages/home.css`
+- [x] `/404.html` — added "Countries" and "Learn" quick navigation links.
+- [x] `/calculator.html` — hero disclaimer simplified with link to spot-vs-retail guide.
+- [x] `/shops.html` — strengthened trust disclaimer to explicitly advise confirming with seller.
+- [x] `/index.html` — FAQ "more questions" link updated to point to `content/faq/`.
+- [ ] `/index.html`, `/src/pages/home.js`, `/styles/pages/home.css` — deeper UX pass
 - [ ] `/tracker.html`, `/src/tracker/*`, `/styles/pages/tracker-pro.css`
-- [ ] `/calculator.html`, `/src/pages/calculator*`, `/styles/pages/calculator.css`
-- [ ] `/shops.html`, `/src/pages/shops/*`, `/styles/pages/shops.css`
+- [ ] `/shops.html`, `/src/pages/shops/*`, `/styles/pages/shops.css` — deeper UI pass
 
 ### Batch 5 — admin command-center workflow
 
-- [ ] `/admin/index.html` — add shop-submissions stat/attention item and clearer command center.
-- [ ] `/admin/shops/index.html` — expose public submission queue workflow.
+- [x] `/admin/index.html` — shop-submissions stat/attention item confirmed present (stat card counts
+      pending submissions; submissions table in admin/shops).
+- [x] `/admin/shops/index.html` — public submission queue workflow with review/approve/reject
+      confirmed present.
 - [ ] `/admin/content/index.html` — add publish-readiness/SEO workflow polish.
 - [ ] `/admin/settings/index.html` — improve grouping and save-state clarity.
 - [ ] `/styles/admin.css` — centralize reusable admin workflow styles.
 
 ### Batch 6 — generated pages, SEO inventory, validation
 
-- [ ] `/build/generateSitemap.js` — include launched indexable content/landing pages.
+- [x] `FAQPage` JSON-LD added to `content/faq/index.html`.
+- [x] `Article` JSON-LD added to `methodology.html`.
+- [x] Internal links strengthened: methodology → shops + spot-vs-retail; learn → 22K/24K/FAQ/
+      making-charges/spot-vs-retail; methodology → shops; index FAQ → content/faq/.
+- [ ] `/build/generateSitemap.js` — verify launched indexable content/landing pages are included.
 - [ ] `/scripts/node/inventory-seo.js` outputs — refresh after landing pages.
 - [ ] Run `npm test`, `npm run lint`, `npm run validate`, `npm run quality`, `npm run build`.
 - [ ] Document pre-existing failures separately from introduced failures.
