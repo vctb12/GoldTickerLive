@@ -429,8 +429,21 @@
   color: var(--color-amber, #f59e0b);
 }
 
+/* Add a non-color visual cue for cached/stale so color-blind users can distinguish */
+.hlc-updated[data-freshness-key='cached']::before {
+  content: '⚠ ';
+}
+
+.hlc-updated[data-freshness-key='stale']::before {
+  content: '⚠ ';
+}
+
 .hlc-updated[data-freshness-key='unavailable'] {
   color: var(--color-stale, #a84000);
+}
+
+.hlc-updated[data-freshness-key='unavailable']::before {
+  content: '✕ ';
 }
 
 .karat-strip-updated[data-freshness-key='cached'],
@@ -438,8 +451,20 @@
   color: var(--color-amber, #f59e0b);
 }
 
+.karat-strip-updated[data-freshness-key='cached']::before {
+  content: '⚠ ';
+}
+
+.karat-strip-updated[data-freshness-key='stale']::before {
+  content: '⚠ ';
+}
+
 .karat-strip-updated[data-freshness-key='unavailable'] {
   color: var(--color-stale, #a84000);
+}
+
+.karat-strip-updated[data-freshness-key='unavailable']::before {
+  content: '✕ ';
 }
 
 .hlc-tracker-link {

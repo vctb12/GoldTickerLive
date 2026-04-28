@@ -10,10 +10,12 @@ duplicate Tripoli title disambiguation, 13 over-length meta descriptions trimmed
 [`reports/ux-friction.md`](../../reports/ux-friction.md), Track 2.3
 [`reports/internal-linking.md`](../../reports/internal-linking.md), Track 4.1 README quickstart
 refresh, Track 4.3 CONTRIBUTING ↔ AGENTS.md alignment, Track 4.4 narrow `src/lib/` audit, Track 5.4
-[`reports/env-audit.md`](../../reports/env-audit.md)) ✅ landed. PR 6+ pending. **Reconcile into:**
-[`docs/REVAMP_PLAN.md`](../REVAMP_PLAN.md) — each track folds into its matching section as PRs land
-(§22 production tracks owns most of it; §6.x guardrails apply to all). Track 2 SEO results feed §11
-(Track H — SEO & metadata).
+[`reports/env-audit.md`](../../reports/env-audit.md)) ✅ landed. PR 6 (2026-04-28 Round 9 — Track
+3.2 E2E flows: `lang-toggle.spec.js` + `tracker-flow.spec.js` for flows 1 + 2 from the
+critical-flows list; Track 1.3 freshness coverage: `tests/freshness-coverage.test.js`) ✅ landed. PR
+7+ pending. **Reconcile into:** [`docs/REVAMP_PLAN.md`](../REVAMP_PLAN.md) — each track folds into
+its matching section as PRs land (§22 production tracks owns most of it; §6.x guardrails apply to
+all). Track 2 SEO results feed §11 (Track H — SEO & metadata).
 
 This proposal captures a 20-task program that spans frontend/UX, SEO, testing, documentation, CI/CD,
 and release shipping. Trying to do all 20 in one PR would itself violate the autonomy contract —
@@ -180,8 +182,9 @@ Each PR follows the Autonomy Contract in [`AGENTS.md`](../../AGENTS.md) §4: exp
 
 - **Framework:** Playwright is already configured (`playwright.config.js`). Reuse it.
 - **Critical flows (5):**
-  1. Home → tracker → karat selection → calculator → result.
-  2. Language toggle EN ↔ AR persists across navigation; key strings render in AR.
+  1. ✅ Home → tracker → mode tabs → method panel (Round 9 · `tests/e2e/tracker-flow.spec.js`).
+  2. ✅ Language toggle EN ↔ AR persists across navigation; key strings render in AR (Round 9 ·
+     `tests/e2e/lang-toggle.spec.js`).
   3. Shops directory: search, filter, open detail.
   4. Admin login (with test creds via env), edit a piece of content, see it reflected.
   5. Hourly freshness state: simulate live → cached → stale and assert pill + ARIA states.

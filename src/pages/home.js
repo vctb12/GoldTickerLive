@@ -144,7 +144,10 @@ function getFreshnessMeta() {
   };
 }
 
-/** Tick the freshness timestamp display every 1 s without a full re-render. */
+/** Tick the freshness timestamp display every 10 s without a full re-render.
+ * 10-second interval provides a good balance between accurate age display
+ * ("42 s ago" feels live) and CPU/battery impact on mobile devices.
+ */
 function startFreshnessTimer() {
   if (_freshnessTimer) clearInterval(_freshnessTimer);
   _freshnessTimer = setInterval(() => {
@@ -160,7 +163,7 @@ function startFreshnessTimer() {
       kstripEl.textContent = `${tx('updated')}: ${ageText} · ${sourceText}`;
       kstripEl.dataset.freshnessKey = key;
     }
-  }, 1_000);
+  }, 10_000);
 }
 
 // ── Render hero live card ──────────────────────────────────────────────────
@@ -220,7 +223,10 @@ function renderHeroCard() {
     changeEl.hidden = false;
   }
 
-  // Day high/low estimate (derived from current price vs day open)
+  // Day high/low estimate: derived from current price vs day open price.
+  // These two data points give a rough intraday range; true OHLC highs/lows
+  // are not available from the current data source. This is labelled
+  // "H/L" (not "High/Low") to signal it is an approximation.
   const hlHlEl = document.getElementById('hlc-high-low');
   if (hlHlEl && dayOpenPrice && goldPrice) {
     const high = Math.max(goldPrice, dayOpenPrice);

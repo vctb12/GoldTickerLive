@@ -43,7 +43,7 @@ describe('freshness coverage', () => {
     assert.ok(usesFreshness, 'tracker/render.js must use freshness data');
   });
 
-  it('no price-rendering surface exposes getLiveFreshness directly as a raw timestamp without labelling', () => {
+  it('home.js renderHeroCard uses getFreshnessMeta() wrapper rather than raw updatedAt', () => {
     // getFreshnessMeta wraps getLiveFreshness — verify the wrapper is used in home.js
     const src = readFileSync(join(root, 'src/pages/home.js'), 'utf8');
     assert.ok(
