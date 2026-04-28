@@ -1,7 +1,7 @@
 {
-  "name": "GoldPrices — Live Gold Tracker",
-  "short_name": "GoldPrices",
-  "description": "Live gold prices for UAE, GCC and the Arab world. Track 24K, 22K, 21K, 18K gold in 24+ currencies.",
+  "name": "Gold Ticker Live — Live Gold Price Tracker",
+  "short_name": "Gold Ticker Live",
+  "description": "Gold Ticker Live — live gold prices for the UAE, GCC and the Arab world. Track 24K, 22K, 21K, 18K gold in 24+ currencies.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

@@ -108,7 +108,7 @@ function generateDaily(data) {
   const trend = trendEmoji(changePct);
 
   const lines = [
-    `🥇 Gold Prices Today — ${date}`,
+    `🥇 Gold Ticker Live — Gold Prices Today, ${date}`,
     `24K: $${fmt(k24.usdPerOz)}/oz${changeStr}`,
     `22K: $${fmt(k22.usdPerOz)}/oz`,
     `21K: $${fmt(k21.usdPerOz)}/oz`,

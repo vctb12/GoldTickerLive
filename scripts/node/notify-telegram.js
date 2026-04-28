@@ -156,7 +156,7 @@ async function main() {
 
   // Telegram uses HTML parse mode — keep it clean
   const lines = [
-    `🥇 <b>Gold Prices</b> — ${date} (${time} UAE) ${trend}`,
+    `🥇 <b>Gold Ticker Live</b> — Gold Prices ${date} (${time} UAE) ${trend}`,
     '',
     `📌 Spot: <b>$${fmt(spot)}/oz</b>${change != null ? `  ${sign}${fmt(changePct)}%` : ''}`,
     '',
@@ -164,7 +164,7 @@ async function main() {
     `24K: <b>${fmt(k24)}</b>  |  22K: <b>${fmt(k22)}</b>`,
     `21K: <b>${fmt(k21)}</b>  |  18K: <b>${fmt(k18)}</b>`,
     '',
-    `📊 <a href="${SITE_URL}">Track live on GoldPrices</a>`,
+    `📊 <a href="${SITE_URL}">Track live on Gold Ticker Live</a>`,
     '#GoldPrice #Gold #UAE #Dubai #GCC',
   ];
 

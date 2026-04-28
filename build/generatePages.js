@@ -164,7 +164,7 @@ for (const country of COUNTRIES) {
   const file = path.join(dir, 'index.html');
   const canonical = `${SITE_URL}/${country.slug}/gold-price`;
 
-  const title       = `Gold Price in ${country.nameEn} Today — 24K, 22K, 21K, 18K | GoldPrices`;
+  const title       = `Gold Price in ${country.nameEn} Today — 24K, 22K, 21K, 18K | Gold Ticker Live`;
   const description = `Live gold prices in ${country.nameEn} today. 24K, 22K, 21K and 18K gold rates in ${country.currency} per gram and per ounce. Updated every 90 seconds.`;
   const h1          = `Gold Price in ${country.nameEn} Today`;
   const introText   = `Live and updated gold prices for ${country.nameEn} (${country.currency}). All karats, updated every 90 seconds.`;
@@ -194,7 +194,7 @@ for (const country of COUNTRIES) {
     const cityPricesFile = path.join(cityPricesDir, 'index.html');
     const cityCanonical  = `${SITE_URL}/${country.slug}/${city.slug}/gold-prices`;
 
-    const cityTitle       = `Gold Price in ${city.nameEn} Today — 24K, 22K, 21K, 18K in ${country.currency} | GoldPrices`;
+    const cityTitle       = `Gold Price in ${city.nameEn} Today — 24K, 22K, 21K, 18K in ${country.currency} | Gold Ticker Live`;
     const cityDescription = `Live 24K, 22K, 21K, 18K gold prices in ${city.nameEn}, ${country.nameEn} today. Compare rates in ${country.currency} per gram. Updated every 90 seconds.`;
     const cityH1          = `Gold Price in ${city.nameEn}, ${country.nameEn} Today`;
     const cityIntro       = `Current gold rates for ${city.nameEn} in ${country.currency}. All karats, updated every 90 seconds.`;
@@ -227,7 +227,7 @@ for (const country of COUNTRIES) {
     const cityShopsFile = path.join(cityShopsDir, 'index.html');
     const cityShopsCanonical = `${SITE_URL}/${country.slug}/${city.slug}/gold-shops`;
 
-    const shopsTitle = `Gold Shops in ${city.nameEn} — Dealers & Jewellers | GoldPrices`;
+    const shopsTitle = `Gold Shops in ${city.nameEn} — Dealers & Jewellers | Gold Ticker Live`;
     const shopsDesc  = `Find gold shops, dealers and jewellers in ${city.nameEn}, ${country.nameEn}. Browse verified listings with contact information.`;
     const shopsH1    = `Gold Shops in ${city.nameEn}`;
     const shopsIntro = `Directory of gold shops and dealers in ${city.nameEn}, ${country.nameEn}.`;
@@ -267,7 +267,7 @@ for (const country of COUNTRIES) {
       const karatFile = path.join(karatDir, 'index.html');
       const karatCanonical = `${SITE_URL}/${country.slug}/${city.slug}/gold-rate/${karatSlug}`;
 
-      const karatTitle = `${karat.code} Karat Gold Price in ${city.nameEn} Today — ${country.currency} per Gram | GoldPrices`;
+      const karatTitle = `${karat.code} Karat Gold Price in ${city.nameEn} Today — ${country.currency} per Gram | Gold Ticker Live`;
       const karatDesc  = `Live ${karat.code}K gold price in ${city.nameEn}, ${country.nameEn} today. ${country.currency} per gram, per ounce and per tola. Updated every 90 seconds.`;
       const karatH1    = `${karat.code}K Gold Price in ${city.nameEn} Today`;
       const karatIntro = `Current ${karat.code} karat (${(karat.purity * 100).toFixed(1)}% pure) gold price in ${city.nameEn}, ${country.nameEn}.`;

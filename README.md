@@ -1,6 +1,6 @@
 <div align="center">
 
-# GoldPrices
+# Gold Ticker Live
 
 ### Live Gold Intelligence Platform for UAE, GCC, Arab Markets & Global Reference Pricing
 
@@ -85,8 +85,8 @@ country pages, and Arabic-first accessibility.
 
 ## Overview
 
-**GoldPrices** is a bilingual, multi-page gold pricing platform built for the UAE, GCC, the wider
-Arab world, and selected global reference markets.
+**Gold Ticker Live** is a bilingual, multi-page gold pricing platform built for the UAE, GCC, the
+wider Arab world, and selected global reference markets.
 
 The front-end is a static, multi-page site (no SPA, no heavy framework) authored as vanilla ES
 modules and styled with hand-written CSS. It is bundled for production with Vite and deployed as
@@ -97,7 +97,7 @@ required for the public pages, which remain 100% static.
 > Most gold sites are either too narrow, too messy, too static, too ad-heavy, or too unclear about
 > how their numbers are formed.
 
-GoldPrices is built to be **cleaner, more transparent, more bilingual, and more useful in
+Gold Ticker Live is built to be **cleaner, more transparent, more bilingual, and more useful in
 practice**, combining:
 
 - Live **XAU/USD spot-linked pricing** refreshed every 90 seconds
@@ -365,7 +365,7 @@ AED price         = usdPrice × 3.6725 (fixed peg)
 
 ## Automation & Social Posting
 
-GoldPrices runs **8 GitHub Actions workflows** for automated operations:
+Gold Ticker Live runs **8 GitHub Actions workflows** for automated operations:
 
 | Workflow                  | Schedule        | Description                                                 |
 | ------------------------- | --------------- | ----------------------------------------------------------- |

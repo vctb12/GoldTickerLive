@@ -1,4 +1,4 @@
-# GoldPrices — Automation Setup Guide
+# Gold Ticker Live — Automation Setup Guide
 
 All automation runs via GitHub Actions and requires only GitHub Secrets — no paid hosting.
 

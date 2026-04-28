@@ -1,11 +1,11 @@
 /**
- * GoldPrices Service Worker
+ * Gold Ticker Live Service Worker
  * Strategy: cache-first for static assets, network-first for API calls.
  *
  * Deployment base path: '/' (custom domain goldtickerlive.com).
  */
 
-const CACHE_NAME = 'goldprices-v14';
+const CACHE_NAME = 'goldtickerlive-v15';
 const _CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 1 day
 
 // Static assets to pre-cache on install - MUST use / prefix for GitHub Pages

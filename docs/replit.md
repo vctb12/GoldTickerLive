@@ -1,4 +1,4 @@
-# GoldPrices
+# Gold Ticker Live
 
 A bilingual (English and Arabic) live gold intelligence platform focused on the UAE, GCC, and
 broader Arab markets.

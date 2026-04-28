@@ -55,7 +55,7 @@ export function exportCSV(countries, karatCode, prices, lang = 'en') {
   const purity = ((parseInt(karatCode, 10) / 24) * 100).toFixed(1);
 
   const header = [
-    `# GoldTickerLive — ${karatLabel} Snapshot`,
+    `# Gold Ticker Live — ${karatLabel} Snapshot`,
     `# Exported: ${ts}`,
     '# Source: goldpricez.com / open.er-api.com',
     `# AED peg: ${CONSTANTS.AED_PEG} fixed (UAE Central Bank)`,
@@ -145,7 +145,7 @@ export function exportArchiveCSV(history, karatCode = '24', aedPeg = CONSTANTS.A
   const purity = parseInt(karatCode, 10) / 24;
 
   const lines = [
-    `# GoldTickerLive — Daily Archive (${karatCode}K)`,
+    `# Gold Ticker Live — Daily Archive (${karatCode}K)`,
     `# Exported: ${new Date().toISOString()}`,
     '# Source: locally cached snapshots (up to 90 days)',
     `# AED peg: ${aedPeg} fixed (UAE Central Bank)`,
@@ -209,7 +209,7 @@ export function exportHistoricalCSV(records, karatCode = '24') {
   const purity = parseInt(karatCode, 10) / 24;
 
   const lines = [
-    `# GoldTickerLive — Historical Gold Prices (${karatCode}K)`,
+    `# Gold Ticker Live — Historical Gold Prices (${karatCode}K)`,
     `# Exported: ${new Date().toISOString()}`,
     '# Monthly averages: LBMA PM fix (2019–present, public domain records)',
     '# Daily entries: locally cached snapshots (recent 90 days)',
@@ -259,7 +259,7 @@ export function exportChartCSV(rows, range, karatCode = '24') {
   const purity = parseInt(karatCode, 10) / 24;
 
   const lines = [
-    `# GoldTickerLive — Visible Chart Slice (${karatCode}K, ${range || 'ALL'})`,
+    `# Gold Ticker Live — Visible Chart Slice (${karatCode}K, ${range || 'ALL'})`,
     `# Exported: ${new Date().toISOString()}`,
     `# Range filter: ${range || 'ALL'} · points: ${rows.length}`,
     `# AED peg: ${AED} fixed (UAE Central Bank)`,
@@ -325,7 +325,7 @@ export function exportWatchlistCSV({
   const _purity = parseInt(karatCode, 10) / 24;
 
   const lines = [
-    `# GoldTickerLive — Market Watchlist (${karatCode}K, ${selectedUnit})`,
+    `# Gold Ticker Live — Market Watchlist (${karatCode}K, ${selectedUnit})`,
     `# Exported: ${new Date().toISOString()}`,
     `# XAU/USD at export time: ${spot.toFixed(2)}`,
     `# Karat: ${karatLabel || karatCode + 'K'} · Unit: ${selectedUnit}`,
@@ -376,7 +376,7 @@ export function exportCurrentViewCSV({
   const karatLabel = lang === 'ar' ? karat?.labelAr : karat?.labelEn;
 
   const lines = [
-    `# GoldTickerLive — Current View Snapshot (${karatCode}K, ${selectedUnit})`,
+    `# Gold Ticker Live — Current View Snapshot (${karatCode}K, ${selectedUnit})`,
     `# Exported: ${new Date().toISOString()}`,
     `# XAU/USD at export time: ${spot.toFixed(2)}`,
     `# Karat: ${karatLabel || karatCode + 'K'} · Unit: ${selectedUnit}`,
@@ -413,7 +413,7 @@ export function exportCurrentViewCSV({
 export function exportBriefText(headline, body) {
   if (!headline) return;
   const content = [
-    'GoldTickerLive — Market Brief',
+    'Gold Ticker Live — Market Brief',
     `Exported: ${new Date().toISOString()}`,
     '',
     headline,

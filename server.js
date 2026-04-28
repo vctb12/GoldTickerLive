@@ -1,5 +1,5 @@
 /**
- * Express Server for Gold Prices Platform
+ * Express Server for Gold Ticker Live
  * Includes admin API routes and static file serving
  */
 
@@ -371,7 +371,7 @@ app.use(errorHandler);
 // tests). This keeps `require('./server')` a pure side-effect-free export.
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log('\n🚀 Gold Prices Platform Server');
+    console.log('\n🚀 Gold Ticker Live Server');
     console.log(`   Local:   http://localhost:${PORT}`);
     console.log(`   Admin:   http://localhost:${PORT}/admin`);
     console.log(`   API:     http://localhost:${PORT}/api/admin`);

@@ -28,7 +28,7 @@ function ensurePlaceholder(dir) {
   const idx = path.join(dir, 'index.html');
   if (fs.existsSync(idx)) return false;
   const title = path.relative(root, dir) || '/';
-  const content = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title} — Gold Prices</title></head><body><h1>Placeholder for ${title}</h1><p>This page was auto-generated as a placeholder. Please replace with real content.</p><p><a href="/index.html">Home</a></p></body></html>`;
+  const content = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title} — Gold Ticker Live</title></head><body><h1>Placeholder for ${title}</h1><p>This page was auto-generated as a placeholder. Please replace with real content.</p><p><a href="/index.html">Home</a></p></body></html>`;
   try {
     fs.writeFileSync(idx, content, { flag: 'wx' });
     return true;

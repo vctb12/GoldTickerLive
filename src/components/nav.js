@@ -349,9 +349,9 @@ export function injectNav(lang = 'en', depth = 0) {
   <div class="nav-inner">
 
     <!-- Brand -->
-    <a href="${homeHref}" class="nav-brand" aria-label="${escapeHtml(data.brandLabel || 'GoldTickerLive Home')}">
+    <a href="${homeHref}" class="nav-brand" aria-label="${escapeHtml(data.brandLabel || 'Gold Ticker Live Home')}">
       <span class="nav-brand-icon" aria-hidden="true">◈</span>
-      <span class="nav-brand-text">GoldTickerLive</span>
+      <span class="nav-brand-text">Gold Ticker Live</span>
     </a>
 
     <!-- Desktop links -->

@@ -83,23 +83,23 @@ async function buildItems() {
     });
 
     items.push({
-      title: `Gold Prices Today — ${dateStr}`,
+      title: `Gold Ticker Live — Gold Prices Today, ${dateStr}`,
       link: `${SITE_URL}/`,
       guid: `${SITE_URL}/gold-price-${now.toISOString().slice(0, 10)}`,
       pubDate: rfc822(now),
-      description: `Live gold spot price: $${fmt(liveSpot)}/oz. UAE prices: 24K AED ${fmt(k24)}/g, 22K AED ${fmt(k22)}/g. Track all karats and 24+ countries at GoldPrices.`,
+      description: `Live gold spot price: $${fmt(liveSpot)}/oz. UAE prices: 24K AED ${fmt(k24)}/g, 22K AED ${fmt(k22)}/g. Track all karats and 24+ countries at Gold Ticker Live.`,
       category: 'Gold Price Update',
     });
   }
 
   // Always include a static "about" item so the feed is never empty
   items.push({
-    title: 'Track Live Gold Prices — GCC & Arab World',
+    title: 'Gold Ticker Live — Track Live Gold Prices for GCC & Arab World',
     link: `${SITE_URL}/`,
     guid: `${SITE_URL}/gold-prices-tracker`,
     pubDate: rfc822(now),
     description:
-      'GoldPrices tracks live XAU/USD spot price and converts to 24+ currencies across the GCC and Arab world. 7 karats (24K to 14K), updated every 90 seconds. Free, bilingual English/Arabic.',
+      'Gold Ticker Live tracks live XAU/USD spot price and converts to 24+ currencies across the GCC and Arab world. 7 karats (24K to 14K), updated every 90 seconds. Free, bilingual English/Arabic.',
     category: 'Gold Tracker',
   });
 
@@ -148,7 +148,7 @@ function renderRss(items) {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>GoldPrices — Live Gold Price Updates</title>
+    <title>Gold Ticker Live — Live Gold Price Updates</title>
     <link>${SITE_URL}/</link>
     <description>Live gold prices for UAE, GCC and the Arab world. 24K, 22K, 21K, 18K per gram and per ounce. Updated every 90 seconds.</description>
     <language>en-us</language>
@@ -157,7 +157,7 @@ function renderRss(items) {
     <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>${SITE_URL}/assets/favicon-192x192.png</url>
-      <title>GoldPrices</title>
+      <title>Gold Ticker Live</title>
       <link>${SITE_URL}/</link>
     </image>${itemXml}
   </channel>

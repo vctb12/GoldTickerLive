@@ -52,7 +52,7 @@ accessibility gaps. They are grouped into three implementation phases below.
 | --- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | A1  | 🔵       | Search button `aria-expanded` / `aria-controls` (same as B1).                                                                                 |
 | A2  | 🔵       | All 4 drawer groups open by default; screen reader users must traverse all 46 items to reach the language toggle at the bottom of the drawer. |
-| A3  | 🔵       | Brand `aria-label="GoldPrices Home"` is hardcoded in English regardless of current language.                                                  |
+| A3  | 🔵       | Brand `aria-label="Gold Ticker Live Home"` is hardcoded in English regardless of current language.                                            |
 | A4  | 🔵       | Theme toggle `THEME_LABEL` strings are hardcoded in English; `updateNavLang` does not update the theme button label.                          |
 | A5  | 🔵       | "Recent searches" section header in the search dropdown is hardcoded in English even in AR mode.                                              |
 | A6  | 🔵       | Mobile bottom bar "More" button triggers the drawer but has no `aria-expanded` or `aria-controls="nav-drawer"`.                               |

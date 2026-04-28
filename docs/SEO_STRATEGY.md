@@ -42,16 +42,16 @@ guidelines to achieve top search rankings for gold price queries across GCC and 
 
 ```html
 <!-- Homepage -->
-<title>Live Gold Prices Today — UAE, GCC & Arab World | GoldTickerLive</title>
+<title>Live Gold Prices Today — UAE, GCC & Arab World | Gold Ticker Live</title>
 
 <!-- Country Page -->
-<title>Gold Price in UAE Today — 24K, 22K, 21K, 18K per Gram AED | GoldTickerLive</title>
+<title>Gold Price in UAE Today — 24K, 22K, 21K, 18K per Gram AED | Gold Ticker Live</title>
 
 <!-- City Page -->
-<title>Gold Price in Dubai Today — Live 24K Rate per Gram | GoldTickerLive</title>
+<title>Gold Price in Dubai Today — Live 24K Rate per Gram | Gold Ticker Live</title>
 
 <!-- Karat Page -->
-<title>24 Karat Gold Price in Dubai — AED per Gram, Troy Oz | GoldTickerLive</title>
+<title>24 Karat Gold Price in Dubai — AED per Gram, Troy Oz | Gold Ticker Live</title>
 ```
 
 **Best Practices:**
@@ -169,7 +169,7 @@ guidelines to achieve top search rankings for gold price queries across GCC and 
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "GoldTickerLive",
+  "name": "Gold Ticker Live",
   "url": "https://goldtickerlive.com/",
   "potentialAction": {
     "@type": "SearchAction",
