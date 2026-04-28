@@ -314,6 +314,9 @@ export const TRANSLATIONS = {
     'home.mktCairoCta': 'View Egypt prices →',
     'home.marketsNote':
       'Reference prices only — actual shop prices vary by location, making charges, and VAT.',
+    'home.countrySearchPlaceholder': 'Filter countries…',
+    'home.countrySearchEmpty': 'No countries match your search',
+    'home.toolPrimaryBadge': 'Core tool',
   },
   ar: {
     'header.title': 'أسعار الذهب المباشرة',
@@ -625,5 +628,8 @@ export const TRANSLATIONS = {
     'home.mktCairoCta': 'أسعار مصر ←',
     'home.marketsNote':
       'أسعار مرجعية فقط — تتفاوت الأسعار الفعلية في المحلات بحسب الموقع والمصنعية وضريبة القيمة المضافة.',
+    'home.countrySearchPlaceholder': 'تصفية الدول…',
+    'home.countrySearchEmpty': 'لا توجد دول تطابق بحثك',
+    'home.toolPrimaryBadge': 'أداة رئيسية',
   },
 };

@@ -696,7 +696,8 @@
   flex: 1;
 }
 
-.trust-banner-content h3 {
+.trust-banner-content h3,
+.trust-banner-content .h3 {
   font-size: 0.9rem;
   font-weight: var(--weight-bold);
   color: var(--color-text, #1a1612);
@@ -1072,6 +1073,40 @@
   color: var(--color-gold-deep, #5a3a0a);
 }
 
+/* ── Primary tool card variant (Tracker, Calculator) ── */
+.tool-card--primary {
+  background: var(--color-gold-bg, #fdf6e3);
+  border-color: rgb(196 153 62 / 45%);
+}
+
+.tool-card--primary::after {
+  content: '★';
+  position: absolute;
+  top: 0.65rem;
+  right: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--color-gold, #c99a3e);
+  line-height: 1;
+}
+
+.tool-card--primary .tool-card-icon {
+  font-size: 2.2rem;
+}
+
+.tool-card--primary .tool-card-title {
+  font-size: var(--text-md, 1.05rem);
+}
+
+.tool-card--primary:hover {
+  border-color: var(--color-gold, #c99a3e);
+  background: rgb(196 153 62 / 12%);
+}
+
+[dir='rtl'] .tool-card--primary::after {
+  right: auto;
+  left: 0.75rem;
+}
+
 /* ── Compact alert row at the bottom of the tools section ── */
 .tools-alert-row {
   display: flex;
@@ -1091,6 +1126,53 @@
 /* ══════════════════════════════════════════════════════════════
    COUNTRY TILES
    ══════════════════════════════════════════════════════════════ */
+
+/* ── Country search input ── */
+.country-search-wrap {
+  margin-bottom: 0.75rem;
+}
+
+.country-search-input {
+  width: 100%;
+  max-width: 320px;
+  padding: 0.5rem 0.95rem;
+  border: 1.5px solid var(--color-border-subtle, rgb(0 0 0 / 10%));
+  border-radius: var(--radius-pill);
+  font-size: 0.86rem;
+  font-family: inherit;
+  color: var(--color-text, #1a1a1a);
+  background: var(--color-surface, #fff);
+  outline: none;
+  transition: border-color 0.18s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.country-search-input::placeholder {
+  color: var(--color-text-muted, #9ca3af);
+}
+
+.country-search-input:focus-visible {
+  border-color: var(--color-gold, #c99a3e);
+  box-shadow: 0 0 0 var(--focus-ring-width, 2px) var(--color-gold-tint, rgb(196 153 62 / 20%));
+}
+
+/* Hide tiles that don't match the current filter query */
+.country-tile--filtered {
+  display: none !important;
+}
+
+.country-search-empty {
+  font-size: 0.84rem;
+  color: var(--color-text-muted, #6b7280);
+  padding: 0.4rem 0 0;
+  margin: 0;
+}
+
+[dir='rtl'] .country-search-input {
+  text-align: right;
+}
+
 .country-tiles {
   display: flex;
   flex-wrap: wrap;
@@ -1257,6 +1339,52 @@
 @media (width <= 768px) {
   .tools-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE — 700px (tablet / large phone landscape)
+   Fills the gap between 768 and 640 with tighter section padding,
+   markets grid collapse, and hero card max-width constraint.
+   ══════════════════════════════════════════════════════════════ */
+@media (width <= 700px) {
+  .markets-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero-live-card {
+    max-width: 100%;
+  }
+
+  .home-section {
+    padding-block: 2.2rem;
+  }
+
+  .home-section-title {
+    font-size: clamp(1.25rem, 4vw, 1.65rem);
+  }
+
+  .country-search-input {
+    max-width: 100%;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE — 560px (phone landscape / small tablet portrait)
+   ══════════════════════════════════════════════════════════════ */
+@media (width <= 560px) {
+  .hero-live-card {
+    padding: 1.25rem;
+  }
+
+  .karat-strip-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .tool-card--primary .tool-card-icon {
+    font-size: 1.9rem;
   }
 }
 

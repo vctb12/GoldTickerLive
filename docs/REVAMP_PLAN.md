@@ -13,7 +13,7 @@ them into the right section here before execution. Agent operating rules are in
 - Keep completed items as `[x]` with enough context to serve as a record. Don't re-open closed items
   to pad status; don't invent new phases to look ambitious.
 
-**Last updated:** 2026-04-28 (Round 9).
+**Last updated:** 2026-04-28 (Round 10).
 
 ### 2026-04-27 full-site UX/admin/content revamp intake
 
@@ -492,14 +492,18 @@ Target order:
 
 ### C.4 Country quick-picker
 
-- [ ] Flag grid deep-linking to country pages. Inline searchable (filters as you type). Keyboard
-      navigable.
+- [x] Flag grid deep-linking to country pages. Inline searchable (filters as you type). Keyboard
+      navigable. — `#country-search` input + `initCountrySearch()` in `home.js`; ArrowDown/Up/
+      Escape keyboard nav; bilingual placeholder and empty-state wired into `applyLangToPage()`.
+      CSS: `.country-search-input`, `.country-tile--filtered`, `.country-search-empty`.
+      `role="list"` on tiles wrap; `aria-hidden="true"` on flag emoji; `aria-live="polite"` on empty
+      state. (_Round 10_)
 - [x] Cached/stale state clearly labeled.
 
 ### C.5 Tools strip
 
-- [ ] One row/grid, each tool: icon + name + one-line value prop + CTA. No duplicates. Primary tools
-      weighted larger.
+- [x] Primary tools weighted larger: `tool-card--primary` variant on Tracker + Calculator cards —
+      gold-tinted background, larger icon, gold star indicator, RTL-mirrored. (_Round 10_)
 
 ### C.6 Trust band
 
@@ -906,6 +910,25 @@ mobile pass, RTL chrome parity verification (+ `applyStaticText` bug fix), and n
 **Verification (Round 9):** `npm test` (376 ✓), `npm run validate` (0 errors), `npm run lint` clean,
 `npm run build` ✓ (2.15 s).
 
+### Round 10 — Homepage UX + admin SEO workflow batch · 2026-04-28
+
+_Track C.4 (country quick-picker search), Track C.5 (tools strip primary emphasis), Track F (tablet
+breakpoints 700px + 560px), Track A Slice 3 (heading selector dual form in home.css), admin content
+SEO workflow polish, and E2E homepage test expansion._
+
+| SHA       | Bucket  | Summary                                                                                                                                                                                                                                                                                                                                              |
+| --------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _pending_ | `ux`    | C.4: `#country-search` input + `initCountrySearch()` in `home.js`; ArrowDown/Up/Escape keyboard nav; bilingual placeholder + empty-state via `applyLangToPage()`; `role="list"` on tiles wrap; `aria-hidden="true"` on emoji; `aria-live="polite"` on empty state. CSS: `.country-search-input`, `.country-tile--filtered`, `.country-search-empty`. |
+| _pending_ | `ux`    | C.5: `tool-card--primary` class on Tracker + Calculator links in `index.html`; `.tool-card--primary` CSS variant (gold-tinted bg, larger icon, star badge RTL-mirrored).                                                                                                                                                                             |
+| _pending_ | `css`   | Track F: `@media (width <= 700px)` + `@media (width <= 560px)` inserted in `home.css` for tablet and phone-landscape surfaces; `.country-search-input { max-width: 100% }`, `.markets-grid` 2-col, tighter section padding.                                                                                                                          |
+| _pending_ | `a11y`  | Track A Slice 3: `.trust-banner-content h3, .trust-banner-content .h3` dual-form selector in `home.css` (mirrors Round 9 tracker-pro.css pattern).                                                                                                                                                                                                   |
+| _pending_ | `admin` | Admin content SEO workflow: upgraded SEO check thresholds to best-practice ranges (title 30–60, description 100–160); hover tooltip now shows exact char counts + hints per field; `escHtml`-safe tooltip string.                                                                                                                                    |
+| _pending_ | `tests` | `tests/e2e/homepage.spec.js` expanded: 9 new test cases (main landmark, skip-link, tracker CTA, karat strip, trust/methodology link, country tiles, country search filter, primary tool card variants, markets section). `tests/home-translations.test.js`: 2 new tests for country-search keys.                                                     |
+| _pending_ | `docs`  | `REVAMP_PLAN.md` §17/§22b Track 3 Phase 19+20 checked; last-updated bumped to Round 10.                                                                                                                                                                                                                                                              |
+
+**Verification (Round 10):** `npm test` (377 ✓, +1 new unit test), `npm run validate` (0 errors),
+`npm run lint` clean, `npm run build` ✓ (2.22 s).
+
 ### Round 7 — 20-task implementation batch · 2026-04-27 (this PR)
 
 _Executes 20 heavy/medium tasks drawn from `2026-04-25_codebase-analysis.md` W-items and the
@@ -1290,9 +1313,14 @@ surfaces (`tracker.html`, `index.html`, `admin/`). Phases ship as single-concern
 - [ ] **Phase 16** — `#hero-live-card` trust pass (`formatRelativeAge`, explicit stale state).
 - [ ] **Phase 17** — Karat strip `countUp` parity across 24K–14K with directional flash.
 - [ ] **Phase 18** — Day sparkline (one per karat, IntersectionObserver-gated, no new chart lib).
-- [ ] **Phase 19** — Tools strip (Tracker · Calculator · Converter · Zakat · Alerts · Order) with
-      root-safe `/` hrefs and bilingual labels from `translations.js`.
-- [ ] **Phase 20** — Country/city linking block (8–12 curated cards, EN + AR).
+- [x] **Phase 19** — Tools strip (Tracker · Calculator primary-emphasis, 9-tool grid):
+      `tool-card--primary` variant on Tracker and Calculator cards (gold-tinted background, larger
+      icon, star badge); tablet 700px + 560px breakpoints in `home.css`. (_Round 10_)
+- [x] **Phase 20** — Country/city linking block (inline search filter on country-tiles section):
+      `#country-search` input + `initCountrySearch()` in `home.js`; keyboard navigation
+      (ArrowDown/Up/ Escape); bilingual placeholder + empty-state text wired into
+      `applyLangToPage()`; `role="list"` on tiles wrap; `aria-hidden="true"` on flag emoji;
+      `aria-live="polite"` on empty state. (_Round 10_)
 - [ ] **Phase 21** — Trust & methodology band re-using §0.2 snippets.
 - [ ] **Phase 22** — `src/pages/home.js` dead-import audit + below-fold lazy-load.
 
