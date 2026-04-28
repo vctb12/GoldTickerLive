@@ -75,9 +75,11 @@ PR A-1 also ships:
 
 These are filed here with remediation notes so any future PR can pick one off without re-auditing.
 
-- [ ] **#7 — `req.ip` without `trust proxy` in non-prod.** Document required `trust proxy` value per
+- [x] **#7 — `req.ip` without `trust proxy` in non-prod.** Document required `trust proxy` value per
       deployment in `docs/environment-variables.md`. Consider `keyGenerator` option on
-      `express-rate-limit` that normalises `X-Forwarded-For`.
+      `express-rate-limit` that normalises `X-Forwarded-For`. ✅ **2026-04-28:** Reverse-proxy /
+      `trust proxy` section added to [`docs/environment-variables.md`](../environment-variables.md)
+      covering single-proxy default, multi-proxy hop counts, and direct-exposure rate-limit risk.
 - [ ] **#8 — `innerHTML` burn-down** across `src/tracker/render.js`, `src/tracker/wire.js`,
       `src/pages/shops/rendering.js`, `src/components/{footer,breadcrumbs,spotBar,nav}.js`,
       `src/components/ticker.js`. One file per PR; each migration tightens the `check-unsafe-dom.js`
@@ -98,12 +100,16 @@ These are filed here with remediation notes so any future PR can pick one off wi
       `logNotFound()` now reads/writes via `fs.promises` and serialises concurrent writes through a
       single chained promise; the request handler fires-and-forgets so logging never blocks the
       response. (Also closes Track B #2.)
-- [ ] **#12 — ReDoS review of `isValidEmail`.** `server/lib/auth.js:96–102` is already linear (no
+- [x] **#12 — ReDoS review of `isValidEmail`.** `server/lib/auth.js:96–102` is already linear (no
       backtracking); `server/routes/newsletter.js:173–175` uses anchored regex with bounded char
-      classes — safe, document it.
-- [ ] **#13 — Schema validation for `users.json` at load.** Validate each record (`email` non-empty,
+      classes — safe, document it. ✅ **2026-04-28:** ReDoS-safety comment added inline at
+      `server/routes/newsletter.js` `isValidEmail` (anchored, non-overlapping negated classes); the
+      `auth.js` variant is already prose-documented as a linear check.
+- [x] **#13 — Schema validation for `users.json` at load.** Validate each record (`email` non-empty,
       `role ∈ {admin, editor, viewer}`, `password` bcrypt-shaped `$2[aby]$..`). Reject file on
-      schema mismatch rather than trusting disk.
+      schema mismatch rather than trusting disk. ✅ **2026-04-28:** `loadUsers()` in
+      `server/lib/auth.js` now drops malformed records via `isValidUserRecord()` and logs the
+      offending id. The seeded admin is preserved if the persisted file lost its admin row.
 - [x] **#14 — `Permissions-Policy` header.** ✅ **2026-04-28:** Explicit middleware in `server.js`
       now sets
       `Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(),     magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()`,
@@ -118,9 +124,14 @@ These are filed here with remediation notes so any future PR can pick one off wi
 - [x] **#17 — `cors` `optionsSuccessStatus: 204`.** ✅ **2026-04-28:** All three CORS branches
       (allowlist, prod-no-allowlist, dev) now pass `optionsSuccessStatus: 204` so preflights return
       204 No Content uniformly.
-- [ ] **#18 — Log rotation.** Not our concern (stdout).
-- [ ] **#19 — Audit `admin/` static directory** for embedded secrets in HTML.
-      `grep -R 'sk_\|service_role' admin/`.
+- [x] **#18 — Log rotation.** Not our concern (stdout). ✅ **2026-04-28:** Closed — `morgan` writes
+      to `process.stdout`; rotation is the deploy-platform's job (Vercel/Render/journald), not ours.
+- [x] **#19 — Audit `admin/` static directory** for embedded secrets in HTML.
+      `grep -R 'sk_\|service_role' admin/`. ✅ **2026-04-28:** Audit clean — only
+      `admin/supabase-config.js` exposes the **public anon JWT** (already documented as
+      public-by-design in
+      [`reports/secret-scan-2026-04-25.md`](../../reports/secret-scan-2026-04-25.md)). No
+      service-role / Stripe / AWS / private-key material in `admin/`.
 - [x] **#20 — Confirm 404 fallthrough is SEO-correct** (no soft-404s). ✅ Verified in
       `tests/server.test.js`.
 
@@ -201,7 +212,10 @@ documents the exact commands to run on the developer host.
 - [ ] GitHub Actions pins: verify all pinned to SHA for anything running on `pull_request_target`
       (none currently).
 - [ ] Husky + lint-staged: confirm hooks run end-to-end on a dummy commit.
-- [ ] `terser` — check if still referenced; Vite ships its own minifier.
+- [x] `terser` — check if still referenced; Vite ships its own minifier. ✅ **2026-04-28:** Still
+      required — `vite.config.js` sets `minify: 'terser'` with `terserOptions` (drop_console etc.),
+      and Vite only ships `esbuild` minification by default; Terser is opt-in and must be installed
+      explicitly when selected. Keep `terser` as a dev dependency.
 
 Deliverable: `reports/deps-audit-2026-04-24.md` with per-package verdict (keep / remove /
 flag-major).
