@@ -14,7 +14,7 @@ const T = {
   en: {
     'legal-hero-tag': 'Legal',
     'legal-h1': 'Privacy Policy',
-    'legal-sub': 'How GoldPrices.app handles your data and privacy.',
+    'legal-sub': 'How Gold Ticker Live handles your data and privacy.',
     'legal-toc-label': 'Sections',
     'toc-overview': 'Overview',
     'toc-data': 'Data Collected',
@@ -33,7 +33,7 @@ const T = {
   ar: {
     'legal-hero-tag': 'قانوني',
     'legal-h1': 'سياسة الخصوصية',
-    'legal-sub': 'كيف تتعامل GoldPrices.app مع بياناتك وخصوصيتك.',
+    'legal-sub': 'كيف تتعامل Gold Ticker Live مع بياناتك وخصوصيتك.',
     'legal-toc-label': 'الأقسام',
     'toc-overview': 'نظرة عامة',
     'toc-data': 'البيانات المجمّعة',

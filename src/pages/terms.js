@@ -14,7 +14,7 @@ const T = {
   en: {
     'legal-hero-tag': 'Legal',
     'legal-h1': 'Terms of Service',
-    'legal-sub': 'Please read these terms carefully before using GoldPrices.app.',
+    'legal-sub': 'Please read these terms carefully before using Gold Ticker Live.',
     'legal-toc-label': 'Sections',
     'toc-acceptance': 'Acceptance',
     'toc-service': 'The Service',
@@ -32,7 +32,7 @@ const T = {
   ar: {
     'legal-hero-tag': 'قانوني',
     'legal-h1': 'شروط الخدمة',
-    'legal-sub': 'يرجى قراءة هذه الشروط بعناية قبل استخدام GoldPrices.app.',
+    'legal-sub': 'يرجى قراءة هذه الشروط بعناية قبل استخدام Gold Ticker Live.',
     'legal-toc-label': 'الأقسام',
     'toc-acceptance': 'القبول',
     'toc-service': 'الخدمة',

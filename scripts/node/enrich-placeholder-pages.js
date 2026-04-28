@@ -139,7 +139,7 @@ function buildCityHub(country, city, relFile) {
   const countryEn = country.nameEn;
   const countryAr = country.nameAr;
   const ccy = country.currency;
-  const title = `Gold Prices in ${cityEn}, ${countryEn} — 24K, 22K, 21K, 18K | GoldPrices`;
+  const title = `Gold Prices in ${cityEn}, ${countryEn} — 24K, 22K, 21K, 18K | Gold Ticker Live`;
   const desc =
     `Live 24K, 22K, 21K and 18K gold prices in ${cityEn}, ${countryEn} — ` +
     `per gram in ${ccy}. Live rates, city shops, or specific karat pages.`;
@@ -224,7 +224,7 @@ function buildCityKaratHub(country, city, relFile) {
   const cityEn = city.nameEn;
   const countryEn = country.nameEn;
   const ccy = country.currency;
-  const title = `Gold Rate by Karat in ${cityEn}, ${countryEn} — 24K, 22K, 21K, 18K | GoldPrices`;
+  const title = `Gold Rate by Karat in ${cityEn}, ${countryEn} — 24K, 22K, 21K, 18K | Gold Ticker Live`;
   const desc =
     `Today's gold rate in ${cityEn}, ${countryEn} by karat — 24K, 22K, 21K ` +
     `and 18K live prices per gram in ${ccy}, refreshed from the spot market.`;
@@ -311,11 +311,11 @@ function buildCountryCitiesIndex(country, relFile, which) {
   const url = urlFor(relFile);
   const countryEn = country.nameEn;
   const label = which === 'markets' ? 'Gold markets' : 'Cities';
-  const title = `${label} in ${countryEn} | GoldPrices`;
+  const title = `${label} in ${countryEn} | Gold Ticker Live`;
   const desc =
     which === 'markets'
       ? `Gold trading markets and wholesale districts tracked for ${countryEn}.`
-      : `Cities covered by GoldPrices in ${countryEn} — live gold rates, shops and karat pages.`;
+      : `Cities covered by Gold Ticker Live in ${countryEn} — live gold rates, shops and karat pages.`;
   const breadcrumbs = [
     { name: 'Home', url: BASE_URL + '/' },
     { name: countryEn, url: `${BASE_URL}/countries/${country.slug}/` },
@@ -355,13 +355,13 @@ ${cityLinks || '        <li><em>No cities listed yet.</em></li>'}
 
 function buildInternalStub(relFile) {
   const url = urlFor(relFile);
-  const title = 'Not a public page — GoldPrices';
+  const title = 'Not a public page — Gold Ticker Live';
   const desc = 'This path is an internal directory index and is not intended for end users.';
   const body = `
     <main>
       <h1>Not a public page</h1>
       <p>This URL is an internal directory listing and has no public content.
-        Continue to the <a href="/">GoldPrices home page</a> instead.</p>
+        Continue to the <a href="/">Gold Ticker Live home page</a> instead.</p>
     </main>`.trim();
   return buildHtmlShell({
     url,

@@ -94,7 +94,7 @@ form?.addEventListener('submit', async (event) => {
     await submitShop(payload);
     form.reset();
     setStatus(
-      'Thanks — your shop has been submitted. The GoldTickerLive team will review details before any public listing appears.',
+      'Thanks — your shop has been submitted. The Gold Ticker Live team will review details before any public listing appears.',
       'success'
     );
   } catch (error) {

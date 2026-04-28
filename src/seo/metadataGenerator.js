@@ -4,7 +4,7 @@
  * Used at build time (page generator) and runtime (JSON-LD price updates).
  */
 
-const SITE_NAME = 'GoldPrices';
+const SITE_NAME = 'Gold Ticker Live';
 const SITE_URL = 'https://goldtickerlive.com';
 const OG_IMAGE = `${SITE_URL}/assets/og-image.png`;
 
@@ -217,7 +217,7 @@ function buildJsonLd(routeType, { title, description, canonical, breadcrumbs }) 
         availability: 'https://schema.org/InStock',
         seller: {
           '@type': 'Organization',
-          name: 'GoldPrices',
+          name: 'Gold Ticker Live',
           url: 'https://goldtickerlive.com/',
         },
       },

@@ -28,7 +28,7 @@ function ping(url) {
     const start = Date.now();
     const req = https.get(
       url,
-      { headers: { 'User-Agent': 'GoldPrices-UptimeMonitor/1.0' } },
+      { headers: { 'User-Agent': 'GoldTickerLive-UptimeMonitor/1.0' } },
       (res) => {
         const latency = Date.now() - start;
         res.resume(); // drain
@@ -85,7 +85,7 @@ async function alertTelegram(msg) {
 async function alertDiscord(msg, isDown) {
   if (!DISCORD_WEBHOOK) return;
   await httpsPost(DISCORD_WEBHOOK, {
-    username: 'GoldPrices Uptime',
+    username: 'Gold Ticker Live Uptime',
     embeds: [
       {
         title: isDown ? '🔴 Site Down Alert' : '🟢 Site Recovered',
@@ -108,8 +108,8 @@ async function main() {
   }
 
   const msg = result.error
-    ? `GoldPrices site is unreachable!\n\nURL: ${SITE_URL}\nError: ${result.error}`
-    : `GoldPrices site returned HTTP ${result.statusCode}!\n\nURL: ${SITE_URL}`;
+    ? `Gold Ticker Live site is unreachable!\n\nURL: ${SITE_URL}\nError: ${result.error}`
+    : `Gold Ticker Live site returned HTTP ${result.statusCode}!\n\nURL: ${SITE_URL}`;
 
   console.error(`❌ Site is DOWN: ${msg}`);
 
@@ -121,7 +121,7 @@ async function main() {
 
   await Promise.allSettled([
     alertTelegram(
-      `🔴 <b>GoldPrices site is down!</b>\n\n${result.error ? result.error : `HTTP ${result.statusCode}`}\n\n${SITE_URL}`
+      `🔴 <b>Gold Ticker Live site is down!</b>\n\n${result.error ? result.error : `HTTP ${result.statusCode}`}\n\n${SITE_URL}`
     ),
     alertDiscord(msg, true),
   ]);

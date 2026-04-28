@@ -1,7 +1,7 @@
-# Contributing to GoldPrices
+# Contributing to Gold Ticker Live
 
 Thank you for your interest in contributing! This guide covers the conventions, workflow, and
-practical steps for working on GoldPrices.
+practical steps for working on Gold Ticker Live.
 
 ---
 

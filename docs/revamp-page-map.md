@@ -1,4 +1,4 @@
-# GoldTickerLive revamp page map
+# Gold Ticker Live revamp page map
 
 Phase 1 goal: every public surface should support one clear journey instead of feeling like a loose
 set of pages.
@@ -46,7 +46,7 @@ Dropdowns are limited to areas where users need grouped discovery: **Countries**
 | `methodology.html`           | Trust and calculation transparency                      | Verify sources, formulas, freshness, and limitations               | Read Methodology  | Live Prices                      | This is the trust center; do not hide core assumptions elsewhere.                              |
 | `invest.html`                | Practical investing guide                               | Compare bullion, jewelry, ETFs, Zakat, and planning                | Build Plan        | Live Prices / Calculator         | Avoid advice guarantees; position as education and planning.                                   |
 | `pricing.html`               | Optional paid tiers / monetization                      | Understand paid features if available                              | Choose Plan       | Live Prices                      | Keep claims aligned with actual product availability.                                          |
-| `privacy.html`               | Privacy policy                                          | Understand data, analytics, local storage, and rights              | Review Privacy    | Terms                            | Brand as GoldTickerLive and keep legal language clear.                                         |
+| `privacy.html`               | Privacy policy                                          | Understand data, analytics, local storage, and rights              | Review Privacy    | Terms                            | Brand as Gold Ticker Live and keep legal language clear.                                       |
 | `terms.html`                 | Terms and disclaimers                                   | Understand acceptable use and price limitations                    | Review Terms      | Methodology / Privacy            | Maintain spot/reference and no-financial-advice guardrails.                                    |
 | `offline.html`               | Offline recovery state                                  | See cached prices or reconnect                                     | Try Again         | Cached prices                    | Make cached/stale wording visible and honest.                                                  |
 | `404.html`                   | Recovery from broken URLs                               | Search or navigate to useful pages                                 | Search            | Live Prices / Calculator / Shops | Quick links should match the main user journey.                                                |

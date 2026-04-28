@@ -111,7 +111,7 @@ const T = {
     conv_results_title: 'Equivalent weights',
     freshness_waiting: 'Freshness: waiting for source timestamp…',
     trust_note:
-      'Labels used across GoldTickerLive: Live, Delayed, Cached/Fallback, Estimated, Historical baseline. Calculator outputs are spot-linked reference estimates, not final retail jewelry quotes.',
+      'Labels used across Gold Ticker Live: Live, Delayed, Cached/Fallback, Estimated, Historical baseline. Calculator outputs are spot-linked reference estimates, not final retail jewelry quotes.',
     copy_result: 'Copy result',
     copied_result: 'Copied!',
   },
@@ -167,7 +167,7 @@ const T = {
     conv_results_title: 'الأوزان المكافئة',
     freshness_waiting: 'حداثة البيانات: بانتظار الطابع الزمني من المصدر…',
     trust_note:
-      'التسميات الموحدة عبر GoldTickerLive: مباشر، متأخر، مخزن/احتياطي، تقديري، وخط أساس تاريخي. نتائج الحاسبة تقديرات مرجعية مرتبطة بالسعر الفوري وليست سعر تجزئة نهائي للمجوهرات.',
+      'التسميات الموحدة عبر Gold Ticker Live: مباشر، متأخر، مخزن/احتياطي، تقديري، وخط أساس تاريخي. نتائج الحاسبة تقديرات مرجعية مرتبطة بالسعر الفوري وليست سعر تجزئة نهائي للمجوهرات.',
     copy_result: 'نسخ النتيجة',
     copied_result: 'تم النسخ!',
   },

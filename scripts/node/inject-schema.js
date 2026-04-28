@@ -23,7 +23,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '../..');
 const SITE_URL = 'https://goldtickerlive.com';
-const SITE_NAME = 'GoldTickerLive';
+const SITE_NAME = 'Gold Ticker Live';
 const SITE_DESCRIPTION = 'Live gold prices for GCC, Arab world and global markets';
 
 // ── Schema Templates ────────────────────────────────────────────────────────

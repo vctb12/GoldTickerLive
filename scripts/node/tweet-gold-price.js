@@ -283,7 +283,7 @@ function buildTweetText(templateId, data) {
       });
       const changeStr = change != null ? ` (${sign}${fmt(changePct)}%)` : '';
       return [
-        `🥇 Gold Prices Today — ${date}`,
+        `🥇 Gold Ticker Live — Gold Prices Today, ${date}`,
 
         `24K: $${fmt(spotUsdPerOz)}/oz${changeStr}`,
         '🇦🇪 UAE (AED/g):',

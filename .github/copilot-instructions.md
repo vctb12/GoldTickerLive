@@ -1,4 +1,4 @@
-# GoldTickerLive / Gold-Prices — GPT-5.5 Copilot Agent Execution Prompt
+# Gold Ticker Live / Gold-Prices — GPT-5.5 Copilot Agent Execution Prompt
 
 Repo: https://github.com/vctb12/Gold-Prices
 Live site: https://goldtickerlive.com/
@@ -759,7 +759,7 @@ Suggested commit groups:
 If only one commit is possible, make the commit message clear:
 
 ```text
-Improve GoldTickerLive UX, SEO, trust copy, docs, and validation
+Improve Gold Ticker Live UX, SEO, trust copy, docs, and validation
 ```
 
 The PR description should include:
@@ -773,7 +773,7 @@ The PR description should include:
 
 ---
 
-## 13. Specific GoldTickerLive Product Direction
+## 13. Specific Gold Ticker Live Product Direction
 
 The website should feel like:
 

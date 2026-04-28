@@ -49,9 +49,9 @@ export function injectFooter(lang = 'en', depth = 0) {
 
       <!-- Brand column -->
       <div class="footer-col footer-col--brand">
-        <a href="${r('../index.html')}" class="footer-brand-link" aria-label="GoldTickerLive Home">
+        <a href="${r('../index.html')}" class="footer-brand-link" aria-label="Gold Ticker Live Home">
           <span class="footer-brand-icon" aria-hidden="true">◈</span>
-          <span class="footer-brand-name">${isAr ? 'GoldTickerLive' : 'GoldTickerLive'}</span>
+          <span class="footer-brand-name">${isAr ? 'Gold Ticker Live' : 'Gold Ticker Live'}</span>
         </a>
         <p class="footer-tagline">${
           isAr
@@ -111,7 +111,7 @@ export function injectFooter(lang = 'en', depth = 0) {
             ? 'قيم تقديرية مكافئة للسبيكة فقط. قد تختلف أسعار التجزئة والمجوهرات. ليست نصيحة مالية.'
             : 'Spot-linked reference estimates only. Retail and jewellery prices may include making charges, premiums, and tax. Not financial advice.'
         }</p>
-        <p class="footer-copy">© ${year} GoldTickerLive · <a href="${r('../terms.html')}">${isAr ? 'شروط الخدمة' : 'Terms'}</a> · <a href="${r('../privacy.html')}">${isAr ? 'الخصوصية' : 'Privacy'}</a> · <a href="${r('../methodology.html')}">${isAr ? 'المنهجية' : 'Methodology'}</a> · <span class="footer-copy-trigger" id="footer-admin-trigger" aria-hidden="true" style="cursor:default;user-select:none">⚡</span></p>
+        <p class="footer-copy">© ${year} Gold Ticker Live · <a href="${r('../terms.html')}">${isAr ? 'شروط الخدمة' : 'Terms'}</a> · <a href="${r('../privacy.html')}">${isAr ? 'الخصوصية' : 'Privacy'}</a> · <a href="${r('../methodology.html')}">${isAr ? 'المنهجية' : 'Methodology'}</a> · <span class="footer-copy-trigger" id="footer-admin-trigger" aria-hidden="true" style="cursor:default;user-select:none">⚡</span></p>
       </div>
     </div>
   </div>

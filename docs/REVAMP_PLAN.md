@@ -18,10 +18,10 @@ CSS safe-area, token cleanup, methodology clarity).
 
 ### 2026-04-27 full-site UX/admin/content revamp intake
 
-This workstream tracks the user-requested broad upgrade to make GoldTickerLive feel substantially
+This workstream tracks the user-requested broad upgrade to make Gold Ticker Live feel substantially
 more complete: stronger navigation, real content instead of coming-soon pages, indexable landing
-pages, public Supabase-backed shop submissions, admin workflow improvements, and broader
-GoldTickerLive brand consistency.
+pages, public Supabase-backed shop submissions, admin workflow improvements, and broader Gold Ticker
+Live brand consistency.
 
 - [x] Plan captured in
       [`docs/plans/2026-04-27_full-site-ux-admin-revamp.md`](./plans/2026-04-27_full-site-ux-admin-revamp.md).
@@ -32,7 +32,7 @@ GoldTickerLive brand consistency.
 - [x] Supabase `shop_submissions` intake queue added for public shop suggestions pending admin
       review.
 - [x] Phase 1 page-purpose map created: [`docs/revamp-page-map.md`](./revamp-page-map.md).
-- [x] Shared nav/footer GoldTickerLive brand and information architecture pass for the Phase 1
+- [x] Shared nav/footer Gold Ticker Live brand and information architecture pass for the Phase 1
       journey labels.
 - [x] SEO pass: `og:locale` + `og:locale:alternate` added to 17 content pages; `og:image:alt` added
       where missing; `FAQPage` JSON-LD added to `content/faq/`; `Article` JSON-LD added to

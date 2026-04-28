@@ -50,7 +50,7 @@ const TXT = {
   en: {
     kicker: 'Shops by region',
     title: 'Explore Gold Shops & Known Gold Markets',
-    lead: 'Browse directory listings across countries covered on GoldTickerLive. Use filters to narrow by region, country, city, and specialty. Shop information is for reference, and business details are shown where available.',
+    lead: 'Browse directory listings across countries covered on Gold Ticker Live. Use filters to narrow by region, country, city, and specialty. Shop information is for reference, and business details are shown where available.',
     trustLabel: 'Directory reference listings',
     trustDate: 'Last content review {date}',
     directoryReviewed: 'Directory last reviewed {date}',
@@ -156,7 +156,7 @@ const TXT = {
   ar: {
     kicker: 'محلات حسب المنطقة',
     title: 'استكشف محلات الذهب والأسواق المعروفة',
-    lead: 'تصفح إدراجات الدليل ضمن الدول التي يغطيها GoldTickerLive. استخدم الفلاتر حسب المنطقة والدولة والمدينة والتخصص. معلومات المحلات مرجعية، وتظهر تفاصيل النشاط حيثما كانت متاحة.',
+    lead: 'تصفح إدراجات الدليل ضمن الدول التي يغطيها Gold Ticker Live. استخدم الفلاتر حسب المنطقة والدولة والمدينة والتخصص. معلومات المحلات مرجعية، وتظهر تفاصيل النشاط حيثما كانت متاحة.',
     trustLabel: 'إدراجات مرجعية للدليل',
     trustDate: 'آخر مراجعة للمحتوى {date}',
     directoryReviewed: 'آخر مراجعة للدليل {date}',

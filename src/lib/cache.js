@@ -259,7 +259,7 @@ export function saveHistorySnapshot(STATE) {
 }
 
 /**
- * Remove all GoldPrices-owned localStorage entries. Used by the debug panel
+ * Remove all Gold Ticker Live-owned localStorage entries. Used by the debug panel
  * and the "Clear cache" button in the tracker. Silently ignores storage errors.
  */
 export function clearAllCache() {

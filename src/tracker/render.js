@@ -1316,12 +1316,12 @@ export function renderAll() {
     document.title =
       _state.lang === 'ar'
         ? `${priceStr}$ XAU/USD | متتبع الذهب`
-        : `$${priceStr} XAU/USD | GoldTickerLive`;
+        : `$${priceStr} XAU/USD | Gold Ticker Live`;
   } else {
     document.title =
       _state.lang === 'ar'
         ? 'متتبع الذهب — أسعار مباشرة'
-        : 'Gold Tracker — Live Prices | GoldTickerLive';
+        : 'Gold Tracker — Live Prices | Gold Ticker Live';
   }
 
   renderHero();

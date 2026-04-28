@@ -227,7 +227,7 @@ async function generateDailyDigest() {
           <tr>
             <td style="padding: 30px; background-color: #f8fafc; text-align: center; border-top: 1px solid #e2e8f0;">
               <p style="margin: 0 0 10px; color: #64748b; font-size: 14px;">
-                You're receiving this because you subscribed to Gold Prices newsletter.
+                You're receiving this because you subscribed to Gold Ticker Live newsletter.
               </p>
               <p style="margin: 0; font-size: 14px;">
                 <a href="${SITE_URL}/api/newsletter/unsubscribe?email={{email}}" style="color: #3b82f6; text-decoration: none;">Unsubscribe</a>
@@ -290,8 +290,7 @@ if (require.main === module) {
 
   (async () => {
     try {
-      const content =
-        type === 'weekly' ? await generateWeeklyRecap() : await generateDailyDigest();
+      const content = type === 'weekly' ? await generateWeeklyRecap() : await generateDailyDigest();
 
       console.log(JSON.stringify(content, null, 2));
     } catch (error) {

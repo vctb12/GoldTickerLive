@@ -17,7 +17,7 @@ const { buildUrl } = require('../lib/site-url');
 const _RESEND_CONFIG = {
   apiKey: process.env.RESEND_API_KEY || '',
   fromEmail: process.env.RESEND_FROM_EMAIL || 'newsletter@goldprices.com',
-  fromName: 'Gold Prices Platform',
+  fromName: 'Gold Ticker Live',
 };
 
 /**
@@ -193,7 +193,7 @@ async function _sendVerificationEmail(email, token) {
     to: email,
     subject: 'Confirm your newsletter subscription',
     html: `
-      <h2>Welcome to Gold Prices Newsletter!</h2>
+      <h2>Welcome to the Gold Ticker Live Newsletter!</h2>
       <p>Please confirm your subscription by clicking the link below:</p>
       <p><a href="${verifyUrl}">Verify Email</a></p>
       <p>If you didn't request this, you can safely ignore this email.</p>

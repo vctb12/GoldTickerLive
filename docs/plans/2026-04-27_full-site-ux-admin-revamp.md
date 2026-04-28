@@ -5,7 +5,7 @@
 User asked for a point-by-point implementation of a broad website upgrade: navbar, admin panel, all
 HTML pages, conversion of coming-soon pages into real content, new landing pages, stronger UI/UX, a
 real Supabase-backed Submit Shop workflow, immediate indexability for launched landing pages, and a
-brand shift toward **GoldTickerLive**.
+brand shift toward **Gold Ticker Live**.
 
 ## Guardrails
 

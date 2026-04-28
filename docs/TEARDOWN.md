@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🏗️ GoldPrices — Complete Technical Teardown
+# 🏗️ Gold Ticker Live — Complete Technical Teardown
 
 ### The Definitive Guide to Every File, System, and Decision in This Repository
 
@@ -52,8 +52,8 @@ this site from static prototype to production._
 
 ## 1. Executive Summary
 
-**GoldPrices** is a bilingual (English/Arabic) gold pricing platform serving 15 countries across the
-GCC, Levant, North Africa, and India. It provides:
+**Gold Ticker Live** is a bilingual (English/Arabic) gold pricing platform serving 15 countries
+across the GCC, Levant, North Africa, and India. It provides:
 
 - **Live spot-linked pricing** (refreshed every 90 seconds via goldpricez.com)
 - **24+ currency conversions** (via exchangerate-api.com)
@@ -956,6 +956,6 @@ npm run security
 _This document is auto-maintained. For questions, check the [README](../README.md) or open an
 issue._
 
-**Built with ◈ by the GoldPrices team**
+**Built with ◈ by the Gold Ticker Live team**
 
 </div>

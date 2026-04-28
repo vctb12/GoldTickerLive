@@ -137,7 +137,7 @@ async function main() {
 
   // Discord rich embed
   const embed = {
-    title: `🥇 Gold Prices — ${date}`,
+    title: `🥇 Gold Ticker Live — Gold Prices ${date}`,
     url: SITE_URL,
     color,
     fields: [
@@ -151,12 +151,12 @@ async function main() {
       { name: '21K AED/g', value: `AED **${fmt(k21)}**`, inline: true },
       { name: '18K AED/g', value: `AED **${fmt(k18)}**`, inline: true },
     ],
-    footer: { text: `${time} UAE time  •  GoldPrices.io` },
+    footer: { text: `${time} UAE time  •  Gold Ticker Live` },
     timestamp: now.toISOString(),
   };
 
   const payload = {
-    username: 'GoldPrices Bot',
+    username: 'Gold Ticker Live Bot',
     avatar_url: 'https://goldtickerlive.com/assets/favicon-192x192.png',
     embeds: [embed],
   };

@@ -171,7 +171,7 @@ async function sendDiscord(spot, changePct, changeAbs, sign) {
   const arrow = changeAbs >= 0 ? '⬆️' : '⬇️';
   const k24aed = (spot / TROY_OZ) * AED_PEG;
   await httpsPost(DISCORD_WEBHOOK, {
-    username: 'GoldPrices Alert',
+    username: 'Gold Ticker Live Alert',
     avatar_url: 'https://goldtickerlive.com/assets/favicon-192x192.png',
     embeds: [
       {
@@ -188,7 +188,7 @@ async function sendDiscord(spot, changePct, changeAbs, sign) {
           },
           { name: '24K Dubai', value: `AED ${fmt(k24aed)}/g`, inline: true },
         ],
-        footer: { text: `GoldPrices Alert  •  Threshold: ±${THRESHOLD}%` },
+        footer: { text: `Gold Ticker Live Alert  •  Threshold: ±${THRESHOLD}%` },
         timestamp: new Date().toISOString(),
       },
     ],
@@ -280,7 +280,7 @@ async function main() {
     `Open:  $${fmt(open)}/oz`,
     `Change: ${sign}$${fmt(changeAbs)} (${sign}${fmt(changePct)}%)`,
     '',
-    `📊 <a href="${SITE_URL}">Track live → GoldPrices</a>`,
+    `📊 <a href="${SITE_URL}">Track live → Gold Ticker Live</a>`,
     '#GoldAlert #GoldPrice #XAU',
   ].join('\n');
 
