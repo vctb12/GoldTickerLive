@@ -479,8 +479,8 @@ Target order:
 
 ### C.3 Karat reference strip
 
-- [ ] Per-karat cards (24K, 22K, 21K, 18K, 14K): gram price, unit toggle (g / tola / oz),
-      copy-to-clipboard.
+- [x] Per-karat cards (24K, 22K, 21K, 18K, 14K): gram price, unit toggle (g / tola / oz),
+      copy-to-clipboard. (Round 8 — unit toggle + copy buttons shipped with bilingual labels)
 - [x] **Count-up on update.** Directional flash (green up / red down). (home only, via `countUp` —
       `14d365cc`)
 - [x] Skeleton shimmer on first load.
@@ -505,8 +505,9 @@ Target order:
 
 ### C.7 Markets highlights
 
-- [ ] 3–6 top markets as cards with freshness + "reference price" framing. Deep-links to market
-      pages.
+- [x] 3–6 top markets as cards with freshness + "reference price" framing. Deep-links to market
+      pages. (Round 8 — Dubai, Riyadh, Kuwait, Cairo cards with bilingual copy, responsive 4→2→1
+      grid, focus rings, `home-section--markets` with `data-reveal`)
 
 ### C.8 Explainer strip
 
@@ -514,8 +515,9 @@ Target order:
 
 ### C.9 FAQ
 
-- [ ] Tight copy, each item collapsible via `<details>`/custom with `aria-expanded`.
-      One-open-at-a-time optional.
+- [x] Tight copy, each item collapsible via `<details>`/custom with `aria-expanded`.
+      One-open-at-a-time optional. (Round 8 — one-open-at-a-time via `toggle` event listener; focus
+      ring added for keyboard access)
 
 ### C.10 Social + footer rail
 
@@ -835,6 +837,26 @@ description for the full sequencing._
 **Verification (Round 6):** `npm test` (354 ✓), `npm run validate` (incl. new sitemap-parity +
 sw-coverage gates ✓), `npx prettier --write` on touched files. Pre-existing `npm run style` failures
 (53 `rgb`/`rgba` style errors in unrelated CSS) carried forward; not caused by this slice.
+
+### Round 8 — 20-task heavy/medium improvement batch · 2026-04-28 (this PR)
+
+_Focuses on homepage UX polish, tracker bilingual improvements, freshness system upgrade, and
+accessibility. Draws from §22b Track C (homepage plan) and the freshness/trust backlog._
+
+| SHA       | Bucket      | Summary                                                                                                                                                                                                                                 |
+| --------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _pending_ | `home`      | C.3 karat strip: unit toggle (g / tola / oz) + copy-to-clipboard buttons. Bilingual labels. State persisted in `user_prefs` localStorage. 320 px mobile overflow fix.                                                                   |
+| _pending_ | `home`      | C.7 markets highlights: 4-card grid (Dubai, Riyadh, Kuwait, Cairo). Bilingual copy in 29 new translation keys. Responsive 4→2→1 grid. Focus rings. `data-reveal` scroll-in.                                                             |
+| _pending_ | `home`      | C.9 FAQ: one-open-at-a-time via `toggle` event delegation. Focus ring on `summary:focus-visible`.                                                                                                                                       |
+| _pending_ | `freshness` | §22b Phase 4: `home.js` `getFreshnessMeta()` now wraps `getLiveFreshness()`; shows `ageText` ("2 min. ago") instead of raw timestamp. `startFreshnessTimer()` ticks "Updated X min ago" labels every 30 s. Removed from `KNOWN_GAPS`.   |
+| _pending_ | `tracker`   | §22b Phase 6 (partial): `renderAll()` updates `document.title` with live XAU/USD price. Market badge carries explicit `aria-label` (EN+AR). Welcome strip `_localizeWelcomeStrip()` via safe `el()`/`replaceChildren()` — no innerHTML. |
+| _pending_ | `a11y`      | Focus rings: `.faq-item summary`, `.country-tile`, `.tool-card`, `.market-card`, `.kstrip-copy-btn`, `.kstrip-unit-btn`.                                                                                                                |
+| _pending_ | `trust`     | Calculator: added `methodology.html` internal link next to "Spot vs retail explained". Shops: improved trust disclaimer copy including making charges + methodology link.                                                               |
+| _pending_ | `tests`     | `tests/home-translations.test.js` — 4 new tests covering 36 new translation keys (EN/AR parity, karat label distinctness, market key coverage, `{karat}` placeholder).                                                                  |
+| _pending_ | `docs`      | `REVAMP_PLAN.md` C.3/C.7/C.9/Phase4/Phase6 marked done; Round 8 log added.                                                                                                                                                              |
+
+**Verification (Round 8):** `npm test` (370 ✓, +4 new), `npm run validate` (0 errors, baseline
+unchanged), `npm run lint` clean, `npm run build` ✓.
 
 ### Round 7 — 20-task implementation batch · 2026-04-27 (this PR)
 
@@ -1177,17 +1199,24 @@ surfaces (`tracker.html`, `index.html`, `admin/`). Phases ship as single-concern
       promotable tokens: 0; closed without a mechanical substitution to preserve no-visual-change
       guarantee._
 - [ ] **Phase 3** — Shared chrome parity (nav/footer/skip-link, RTL, mobile drawer focus-trap).
-- [ ] **Phase 4** — Trust/freshness primitive unification via `src/lib/live-status.js`. Replace
-      ad-hoc freshness strings on the three surfaces without redesigning them. _Homepage
-      `getMarketStatus` dedup landed (commit of this PR); tracker `render.js` + admin `pricing`
-      call-sites to migrate alongside Phases 6 and 28 respectively._
+- [x] **Phase 4** — Trust/freshness primitive unification via `src/lib/live-status.js`. Replace
+      ad-hoc freshness strings on the three surfaces without redesigning them. _Round 8: `home.js`
+      `getFreshnessMeta()` now wraps `getLiveFreshness()` directly; `ageText` shown instead of raw
+      `formatTimestampShort`; real-time freshness ticker (`startFreshnessTimer()`) ticks the
+      "Updated X min ago" labels every 30 s; `home.js` removed from `KNOWN_GAPS` in the freshness
+      coverage audit. Tracker `render.js` + admin `pricing` call-sites remain for a follow-up._
 - [ ] **Phase 5** — DOM-safety baseline tightening for the highest-churn `innerHTML` sinks touched
       by later phases; lower the numbers in `scripts/node/check-unsafe-dom.js`.
 
 ### Track 2 — Tracker
 
-- [ ] **Phase 6** — Hero trust framing (`#tp-live-badge`, `#tp-xauusd-badge`, `#tp-hero-stats`) via
-      the Phase 4 primitive.
+- [x] **Phase 6** — Hero trust framing (`#tp-live-badge`, `#tp-xauusd-badge`, `#tp-hero-stats`) via
+      the Phase 4 primitive. _Market badge now carries explicit `aria-label` (EN+AR) that strips
+      decorative bullets for screen readers (`tracker.marketOpenAriaLabel` /
+      `tracker.marketClosedAriaLabel`); `renderAll()` updates `document.title` with live XAU/USD
+      price; welcome strip chips localized via `_localizeWelcomeStrip()` using
+      `el()`/`replaceChildren()` — no new `innerHTML`. Prior hero badge / XAU badge trust framing
+      shipped in Round 7._
 - [x] **Phase 7** — State/URL-hash contract freeze. Document `src/tracker/state.js` hash schema in
       [`docs/tracker-state.md`](./tracker-state.md); add round-trip tests in
       `tests/tracker-hash.test.js`.

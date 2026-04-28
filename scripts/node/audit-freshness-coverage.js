@@ -141,8 +141,6 @@ const KNOWN_GAPS = {
     'Country/city hydrator; now threads hasLiveFailure into updateSpotBar but the karat-card grid itself has no stale badge. Tracked for a follow-up plan.',
   'src/pages/calculator.js':
     'Calculator already tracks STATE.spotSource and feeds hasLiveFailure into updateSpotBar + updateTicker. Internal result panels do not yet carry per-panel freshness.',
-  'src/pages/home.js':
-    'Hero card, spotBar, and ticker all carry freshness; surrounding GCC grid and country carousel do not carry per-card freshness branches.',
   'src/pages/tracker-pro.js':
     'Tracker-pro workspace; per-panel freshness coverage tracked by follow-up plan.',
 };
