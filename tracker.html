@@ -101,6 +101,9 @@
   
   
   
+  
+  
+  
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -178,12 +181,17 @@
         </div>
       </section>
 
-      <!-- ── Hero — dark full-bleed ──────────────────────────── -->
+      <!-- ── Hero — dark premium ──────────────────────────── -->
       <section class="tracker-hero-wrap" aria-labelledby="tp-hero-title">
+        <!-- Decorative background glow elements -->
+        <div class="tp-hero-glow tp-hero-glow--gold" aria-hidden="true"></div>
+        <div class="tp-hero-glow tp-hero-glow--blue" aria-hidden="true"></div>
+
         <div class="tracker-hero-inner">
           <!-- Main hero content -->
           <div class="tracker-hero-main">
-            <!-- Consolidated status badges -->
+
+            <!-- Status badges row -->
             <div class="tracker-badge-row">
               <span class="tracker-badge tracker-badge-live" id="tp-live-badge">
                 <span class="tracker-badge-dot" aria-hidden="true"></span>
@@ -207,9 +215,8 @@
               <span class="tracker-hero-title-sub">Spot-linked reference workspace</span>
             </h1>
             <p id="tp-hero-copy" class="tracker-hero-description">
-              Compare 24+ markets, 7 karats, and key currencies with visible freshness, source, and
-              retail-price context.
-              <a href="methodology.html#spot-vs-retail" class="tracker-inline-link">How we calculate prices →</a>
+              24+ markets · 7 karats · live freshness labels · bilingual EN/AR.
+              <a href="methodology.html#spot-vs-retail" class="tracker-inline-link">How prices are calculated →</a>
             </p>
 
             <!-- Key metrics — rendered by JS; skeletons shown until first render -->
@@ -236,7 +243,7 @@
               </div>
             </div>
 
-            <!-- Consolidated controls -->
+            <!-- Controls toolbar -->
             <div class="tracker-hero-controls">
               <div class="tracker-hero-selectors">
                 <label class="tracker-hero-field">
@@ -290,43 +297,46 @@
                   class="btn btn-ghost"
                   id="tp-reset-btn"
                   type="button"
-                  aria-label="Reset tracker filters and view"
+                  aria-label="Reset tracker to defaults"
                 >
                   Reset
                 </button>
               </div>
             </div>
 
-            <!-- Simplified footer hints -->
+            <!-- Footer hints bar -->
             <div class="tracker-hero-footer">
               <span class="tracker-hint-text">
-                <span aria-hidden="true">⚠</span> Spot-linked reference prices · not retail quotes ·
+                <span aria-hidden="true">⚠</span>
+                Spot-linked reference prices · not retail quotes ·
                 <a href="methodology.html" class="tracker-inline-link">Methodology</a>
               </span>
               <span class="tracker-hint-text tracker-hint-keyboard" id="tp-hero-hints" aria-hidden="true">
-                Keyboard: <kbd>R</kbd> refresh · <kbd>H</kbd> live · <kbd>C</kbd> compare · <kbd>?</kbd> help
+                <kbd>R</kbd> refresh · <kbd>H</kbd> live · <kbd>C</kbd> compare · <kbd>?</kbd> help
               </span>
+              <span class="tracker-hint-text tracker-hint-countdown" id="tp-countdown" aria-live="polite" aria-atomic="true"></span>
             </div>
           </div>
 
-          <!-- Hero aside — consolidated -->
-          <aside class="tracker-hero-aside" aria-label="Quick navigation">
+          <!-- Hero aside — live desk summary + nav -->
+          <aside class="tracker-hero-aside" aria-label="Quick reference">
             <div class="tracker-side-card">
-              <h2 class="tracker-side-heading">Live desk</h2>
+              <h2 class="tracker-side-heading" id="tp-live-summary-heading">Live desk</h2>
               <div
                 class="tracker-side-list"
                 id="tp-summary-list"
                 aria-live="polite"
+                aria-labelledby="tp-live-summary-heading"
               ></div>
             </div>
 
             <div class="tracker-side-card tracker-side-card--links">
-              <h3 class="tracker-side-subheading">Explore</h3>
+              <h3 class="tracker-side-subheading">Tools &amp; resources</h3>
               <ul class="tracker-side-ul">
-                <li><a href="calculator.html" class="tracker-inline-link">Calculator</a></li>
-                <li><a href="countries/index.html" class="tracker-inline-link">Countries</a></li>
-                <li><a href="shops.html" class="tracker-inline-link">Shops directory</a></li>
-                <li><a href="methodology.html" class="tracker-inline-link">Methodology</a></li>
+                <li><a href="calculator.html">⚖️ Calculator</a></li>
+                <li><a href="countries/index.html">🌍 Countries</a></li>
+                <li><a href="shops.html">🏪 Shops directory</a></li>
+                <li><a href="methodology.html">📖 Methodology</a></li>
               </ul>
             </div>
           </aside>
@@ -334,88 +344,111 @@
       </section>
 
       <!-- ── Workspace tab bar ──────────────────────────────── -->
-      <section class="tracker-shell tracker-mode-shell" aria-label="Tracker workspace modes">
-        <nav class="tracker-modes" role="tablist" aria-orientation="horizontal">
-          <button
-            class="tracker-mode-tab is-active"
-            role="tab"
-            aria-selected="true"
-            aria-controls="mode-live"
-            id="tab-live"
-            data-mode="live"
-          >
-            📡 Live
-          </button>
-          <button
-            class="tracker-mode-tab"
-            role="tab"
-            aria-selected="false"
-            aria-controls="mode-compare"
-            id="tab-compare"
-            data-mode="compare"
-          >
-            🌍 Compare
-          </button>
-          <button
-            class="tracker-mode-tab tracker-advanced-only"
-            role="tab"
-            aria-selected="false"
-            aria-controls="mode-archive"
-            id="tab-archive"
-            data-mode="archive"
-          >
-            🗂 Archive
-          </button>
-          <button
-            class="tracker-mode-tab tracker-overlay-btn"
-            type="button"
-            id="tab-alerts"
-            data-overlay="alerts"
-            aria-expanded="false"
-            aria-controls="tp-overlay-alerts"
-          >
-            🔔 Alerts
-          </button>
-          <button
-            class="tracker-mode-tab tracker-overlay-btn"
-            type="button"
-            id="tab-planner"
-            data-overlay="planner"
-            aria-expanded="false"
-            aria-controls="tp-overlay-planner"
-          >
-            📋 Planner
-          </button>
-          <button
-            class="tracker-mode-tab tracker-advanced-only"
-            role="tab"
-            aria-selected="false"
-            aria-controls="mode-exports"
-            id="tab-exports"
-            data-mode="exports"
-          >
-            ⬇ Exports
-          </button>
-          <button
-            class="tracker-mode-tab tracker-advanced-only"
-            role="tab"
-            aria-selected="false"
-            aria-controls="mode-method"
-            id="tab-method"
-            data-mode="method"
-          >
-            📖 Method
-          </button>
+      <div class="tracker-mode-shell" id="tp-mode-shell">
+        <div class="tracker-modes-wrap">
+          <nav class="tracker-modes" role="tablist" aria-orientation="horizontal" aria-label="Tracker workspace modes">
+            <!-- Primary modes -->
+            <div class="tracker-modes-primary">
+              <button
+                class="tracker-mode-tab is-active"
+                role="tab"
+                aria-selected="true"
+                aria-controls="mode-live"
+                id="tab-live"
+                data-mode="live"
+              >
+                <span class="tp-tab-icon" aria-hidden="true">📡</span>
+                <span class="tp-tab-label">Live</span>
+              </button>
+              <button
+                class="tracker-mode-tab"
+                role="tab"
+                aria-selected="false"
+                aria-controls="mode-compare"
+                id="tab-compare"
+                data-mode="compare"
+              >
+                <span class="tp-tab-icon" aria-hidden="true">🌍</span>
+                <span class="tp-tab-label">Compare</span>
+              </button>
+              <button
+                class="tracker-mode-tab tracker-advanced-only"
+                role="tab"
+                aria-selected="false"
+                aria-controls="mode-archive"
+                id="tab-archive"
+                data-mode="archive"
+              >
+                <span class="tp-tab-icon" aria-hidden="true">🗂</span>
+                <span class="tp-tab-label">Archive</span>
+              </button>
+            </div>
+
+            <!-- Divider -->
+            <div class="tracker-modes-divider" aria-hidden="true"></div>
+
+            <!-- Overlay panels -->
+            <div class="tracker-modes-overlays">
+              <button
+                class="tracker-mode-tab tracker-overlay-btn"
+                type="button"
+                id="tab-alerts"
+                data-overlay="alerts"
+                aria-expanded="false"
+                aria-controls="tp-overlay-alerts"
+              >
+                <span class="tp-tab-icon" aria-hidden="true">🔔</span>
+                <span class="tp-tab-label">Alerts</span>
+              </button>
+              <button
+                class="tracker-mode-tab tracker-overlay-btn"
+                type="button"
+                id="tab-planner"
+                data-overlay="planner"
+                aria-expanded="false"
+                aria-controls="tp-overlay-planner"
+              >
+                <span class="tp-tab-icon" aria-hidden="true">📋</span>
+                <span class="tp-tab-label">Planner</span>
+              </button>
+            </div>
+
+            <!-- Advanced modes (hidden in basic workspace) -->
+            <div class="tracker-modes-advanced tracker-advanced-only">
+              <button
+                class="tracker-mode-tab tracker-advanced-only"
+                role="tab"
+                aria-selected="false"
+                aria-controls="mode-exports"
+                id="tab-exports"
+                data-mode="exports"
+              >
+                <span class="tp-tab-icon" aria-hidden="true">⬇</span>
+                <span class="tp-tab-label">Exports</span>
+              </button>
+              <button
+                class="tracker-mode-tab tracker-advanced-only"
+                role="tab"
+                aria-selected="false"
+                aria-controls="mode-method"
+                id="tab-method"
+                data-mode="method"
+              >
+                <span class="tp-tab-icon" aria-hidden="true">📖</span>
+                <span class="tp-tab-label">Method</span>
+              </button>
+            </div>
+          </nav>
+
           <button
             class="tracker-workspace-badge"
             id="tp-workspace-toggle"
             type="button"
             aria-pressed="false"
-          >
-            Advanced ⋯
-          </button>
-        </nav>
-      </section>
+            title="Toggle advanced workspace features"
+          >Open advanced workspace</button>
+        </div>
+      </div>
 
       <!-- ── MODE: LIVE ─────────────────────────────────────── -->
       <section
