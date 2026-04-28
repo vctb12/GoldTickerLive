@@ -61,6 +61,7 @@ function formatUnitLabel(unit) {
   if (_state.lang !== 'ar') return unit;
   if (unit === 'gram') return 'غرام';
   if (unit === 'oz') return 'أوقية';
+  if (unit === 'tola') return 'تولة';
   return unit;
 }
 
@@ -202,14 +203,21 @@ export function renderHero() {
   }
 
   if (_el.refreshBadge) {
-    const refreshText = spot
-      ? tx('refreshBadgeDetailed', {
-          age: freshness.ageText,
-          time: freshness.timeText,
-        })
-      : _state.hasLiveFailure
-        ? tx('liveUnavailable')
+    let refreshText;
+    if (!spot) {
+      refreshText = _state.hasLiveFailure
+        ? freshness.timeText
+          ? tx('refreshBadgeUnavailable', { time: freshness.timeText })
+          : tx('liveUnavailable')
         : tx('connecting');
+    } else if (freshness.key === 'stale' || freshness.key === 'cached') {
+      refreshText = tx('refreshBadgeStale', { time: freshness.timeText });
+    } else {
+      refreshText = tx('refreshBadgeDetailed', {
+        age: freshness.ageText,
+        time: freshness.timeText,
+      });
+    }
     if (isConnecting) {
       _el.refreshBadge.classList.remove(...TRACKER_BADGE_CLASSES);
       _el.refreshBadge.classList.add('tracker-badge-live');
@@ -262,6 +270,7 @@ export function renderHero() {
             : tx('connecting'),
         buildSourceBadge(summaryFreshness)
       ),
+      buildStackItem(tx('summary.sourceTitle'), tx('summary.sourceCopy')),
       buildStackItem(tx('summary.aedPegTitle'), tx('summary.aedPegCopy')),
       buildStackItem(tx('summary.historyTitle'), tx('summary.historyCopy')),
     ];
@@ -1161,36 +1170,39 @@ function _renderArchivePagination(page, totalPages, total) {
   clear(paginationEl);
   if (total <= ARCHIVE_PAGE_SIZE) return;
 
+  const isRtl = _state.lang === 'ar';
+  const prevArrow = isRtl ? '→' : '←';
+  const nextArrow = isRtl ? '←' : '→';
+  const prevLabel = isRtl ? 'الصفحة السابقة' : 'Previous page';
+  const nextLabel = isRtl ? 'الصفحة التالية' : 'Next page';
+  const pageText = isRtl ? `صفحة ${page + 1} / ${totalPages}` : `Page ${page + 1} / ${totalPages}`;
+
   const prevBtn = el(
     'button',
     {
       type: 'button',
       class: 'btn btn-sm btn-ghost tracker-pagination-btn',
-      'aria-label': 'Previous page',
+      'aria-label': prevLabel,
       disabled: page === 0 ? true : null,
     },
-    '← Prev'
+    `${prevArrow} ${isRtl ? 'السابق' : 'Prev'}`
   );
   prevBtn.addEventListener('click', () => {
     _archivePage--;
     renderArchive();
   });
 
-  const pageLabel = el(
-    'span',
-    { class: 'tracker-pagination-label' },
-    `Page ${page + 1} / ${totalPages}`
-  );
+  const pageLabel = el('span', { class: 'tracker-pagination-label' }, pageText);
 
   const nextBtn = el(
     'button',
     {
       type: 'button',
       class: 'btn btn-sm btn-ghost tracker-pagination-btn',
-      'aria-label': 'Next page',
+      'aria-label': nextLabel,
       disabled: page >= totalPages - 1 ? true : null,
     },
-    'Next →'
+    `${isRtl ? 'التالي' : 'Next'} ${nextArrow}`
   );
   nextBtn.addEventListener('click', () => {
     _archivePage++;

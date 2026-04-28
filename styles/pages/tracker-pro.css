@@ -1677,6 +1677,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
   display: flex;
   gap: 0.45rem;
   flex-wrap: wrap;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tracker-region-pill {
@@ -2822,10 +2823,14 @@ body.tracker-workspace-basic .tracker-advanced-only {
     flex-wrap: nowrap;
     gap: 0.5rem;
     padding-bottom: 0.3rem;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    scroll-snap-type: x proximity;
   }
 
   .tracker-region-pill {
     flex-shrink: 0;
+    scroll-snap-align: start;
   }
 
   .tracker-board-grid {
@@ -2849,10 +2854,14 @@ body.tracker-workspace-basic .tracker-advanced-only {
     justify-content: flex-start;
     padding-bottom: 0.3rem;
     flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    scroll-snap-type: x proximity;
   }
 
   .tracker-range-pills .tracker-pill {
     flex-shrink: 0;
+    scroll-snap-align: start;
   }
 
   .tracker-stat-grid {
@@ -3094,6 +3103,14 @@ body.tracker-workspace-basic .tracker-advanced-only {
 [dir='rtl'] .tracker-side-ul {
   padding-left: 0;
   padding-right: 0;
+}
+
+[dir='rtl'] .tracker-compare-toolbar {
+  direction: rtl;
+}
+
+[dir='rtl'] .tracker-region-tabs {
+  direction: rtl;
 }
 
 [dir='rtl'] .tracker-table th,
