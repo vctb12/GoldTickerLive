@@ -184,7 +184,13 @@ export function renderHero() {
 
   if (_el.marketBadge) {
     const market = getMarketStatus();
-    setText(_el.marketBadge, market.isOpen ? tx('marketOpen') : tx('marketClosed'));
+    const marketText = market.isOpen ? tx('marketOpen') : tx('marketClosed');
+    setText(_el.marketBadge, marketText);
+    // Provide a clean aria-label without decorative bullet/circle for screen readers
+    _el.marketBadge.setAttribute(
+      'aria-label',
+      market.isOpen ? tx('marketOpenAriaLabel') : tx('marketClosedAriaLabel')
+    );
   }
 
   if (_el.refreshBadge) {
@@ -1267,10 +1273,19 @@ export function renderBrief() {
 }
 
 export function renderAll() {
-  document.title =
-    _state.lang === 'ar'
-      ? 'متتبع الذهب برو — مساحة العمل المباشرة'
-      : 'Gold Tracker Pro — Live Price Workspace';
+  const spotForTitle = _state.goldPriceUsdPerOz;
+  if (spotForTitle) {
+    const priceStr = Math.round(spotForTitle).toLocaleString();
+    document.title =
+      _state.lang === 'ar'
+        ? `${priceStr}$ XAU/USD | متتبع الذهب`
+        : `$${priceStr} XAU/USD | GoldTickerLive`;
+  } else {
+    document.title =
+      _state.lang === 'ar'
+        ? 'متتبع الذهب — أسعار مباشرة'
+        : 'Gold Tracker — Live Prices | GoldTickerLive';
+  }
 
   renderHero();
 
@@ -1294,6 +1309,26 @@ export function renderAll() {
 
   renderBrief();
 
+  // Localize welcome strip chips (bilingual parity — §6 rule 6).
+  _localizeWelcomeStrip();
+
   const spot = _currentSpot();
   updateShellTickerFromState(_state, spot, _priceFor);
+}
+
+/** Localize the first-visit orientation strip chips and dismiss button. */
+function _localizeWelcomeStrip() {
+  const chipEls = document.querySelectorAll('.tracker-welcome-chip');
+  const chipDefs = [
+    { bold: tx('welcome.chip1Bold'), rest: tx('welcome.chip1Rest'), icon: '📈' },
+    { bold: tx('welcome.chip2Bold'), rest: tx('welcome.chip2Rest'), icon: '⚖️' },
+    { bold: tx('welcome.chip3Bold'), rest: tx('welcome.chip3Rest'), icon: '📋' },
+  ];
+  chipEls.forEach((chip, i) => {
+    const def = chipDefs[i];
+    if (!def) return;
+    chip.replaceChildren(`${def.icon} `, el('strong', {}, def.bold), ` ${def.rest}`);
+  });
+  const closeBtn = document.getElementById('tracker-welcome-close');
+  if (closeBtn) setText(closeBtn, tx('welcome.dismiss'));
 }

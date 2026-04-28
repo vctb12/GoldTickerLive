@@ -102,6 +102,8 @@
   
   
   
+  
+  
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -276,6 +278,32 @@
             <p class="karat-strip-sub" id="karat-strip-sub">
               Spot-linked AED gram estimates. Retail jewelry can include making charges and tax.
             </p>
+            <!-- Unit toggle: gram / tola / troy oz -->
+            <div
+              class="kstrip-unit-toggle"
+              role="group"
+              id="kstrip-unit-group"
+              aria-label="Price unit"
+            >
+              <button
+                class="kstrip-unit-btn"
+                data-unit="gram"
+                type="button"
+                aria-pressed="true"
+              >g</button>
+              <button
+                class="kstrip-unit-btn"
+                data-unit="tola"
+                type="button"
+                aria-pressed="false"
+              >tola</button>
+              <button
+                class="kstrip-unit-btn"
+                data-unit="oz"
+                type="button"
+                aria-pressed="false"
+              >oz</button>
+            </div>
           </div>
           <div
             class="karat-strip-prices"
@@ -291,6 +319,13 @@
                 id="kstrip-24-val"
                 >—</span
               >
+              <button
+                class="kstrip-copy-btn"
+                id="kstrip-24-copy"
+                data-copy=""
+                aria-label="Copy 24K price"
+                type="button"
+              >⎘</button>
             </div>
             <div class="karat-strip-item" id="kstrip-22">
               <span class="karat-strip-k">22K</span>
@@ -300,6 +335,13 @@
                 id="kstrip-22-val"
                 >—</span
               >
+              <button
+                class="kstrip-copy-btn"
+                id="kstrip-22-copy"
+                data-copy=""
+                aria-label="Copy 22K price"
+                type="button"
+              >⎘</button>
             </div>
             <div class="karat-strip-item" id="kstrip-21">
               <span class="karat-strip-k">21K</span>
@@ -309,6 +351,13 @@
                 id="kstrip-21-val"
                 >—</span
               >
+              <button
+                class="kstrip-copy-btn"
+                id="kstrip-21-copy"
+                data-copy=""
+                aria-label="Copy 21K price"
+                type="button"
+              >⎘</button>
             </div>
             <div class="karat-strip-item" id="kstrip-18">
               <span class="karat-strip-k">18K</span>
@@ -318,6 +367,13 @@
                 id="kstrip-18-val"
                 >—</span
               >
+              <button
+                class="kstrip-copy-btn"
+                id="kstrip-18-copy"
+                data-copy=""
+                aria-label="Copy 18K price"
+                type="button"
+              >⎘</button>
             </div>
             <div class="karat-strip-item" id="kstrip-14">
               <span class="karat-strip-k">14K</span>
@@ -327,6 +383,13 @@
                 id="kstrip-14-val"
                 >—</span
               >
+              <button
+                class="kstrip-copy-btn"
+                id="kstrip-14-copy"
+                data-copy=""
+                aria-label="Copy 14K price"
+                type="button"
+              >⎘</button>
             </div>
           </div>
           <div class="karat-strip-actions">
@@ -702,6 +765,76 @@
 
       <!-- ═══════ ALERT CTA ═══════ -->
       <!-- Removed: compact alert prompt is now inline in the Tools section above -->
+
+      <!-- ═══════ MARKETS HIGHLIGHTS ═══════ -->
+      <section class="home-section home-section--markets" aria-labelledby="markets-title" data-reveal>
+        <div class="home-section-inner">
+          <div class="section-intro">
+            <div>
+              <h2 id="markets-title" class="home-section-title">Major Gold Markets</h2>
+              <p class="home-section-sub" id="markets-sub">
+                Key trading centres in the GCC and Arab world
+              </p>
+            </div>
+            <a href="tracker.html" class="section-link" id="markets-see-tracker"
+              >View all prices →</a
+            >
+          </div>
+          <div class="markets-grid">
+            <a href="countries/uae/" class="market-card hover-lift">
+              <div class="market-card-flag" aria-hidden="true">🇦🇪</div>
+              <div class="market-card-body">
+                <h3 class="market-card-name" id="mkt-dubai-name">Dubai Gold Souk</h3>
+                <p class="market-card-loc" id="mkt-dubai-loc">UAE — AED</p>
+                <p class="market-card-desc" id="mkt-dubai-desc">
+                  One of the world's largest gold trading centres, with hundreds of shops along
+                  the Dubai Creek and Deira.
+                </p>
+                <span class="market-card-cta" id="mkt-dubai-cta">View UAE prices →</span>
+              </div>
+            </a>
+            <a href="countries/saudi-arabia/" class="market-card hover-lift">
+              <div class="market-card-flag" aria-hidden="true">🇸🇦</div>
+              <div class="market-card-body">
+                <h3 class="market-card-name" id="mkt-riyadh-name">Riyadh Gold Market</h3>
+                <p class="market-card-loc" id="mkt-riyadh-loc">Saudi Arabia — SAR</p>
+                <p class="market-card-desc" id="mkt-riyadh-desc">
+                  Al-Dirah and Thumairy gold souqs offer traditional and modern gold jewelry for
+                  local and visiting buyers.
+                </p>
+                <span class="market-card-cta" id="mkt-riyadh-cta">View Saudi prices →</span>
+              </div>
+            </a>
+            <a href="countries/kuwait/" class="market-card hover-lift">
+              <div class="market-card-flag" aria-hidden="true">🇰🇼</div>
+              <div class="market-card-body">
+                <h3 class="market-card-name" id="mkt-kuwait-name">Kuwait Gold Souk</h3>
+                <p class="market-card-loc" id="mkt-kuwait-loc">Kuwait — KWD</p>
+                <p class="market-card-desc" id="mkt-kuwait-desc">
+                  Kuwait's gold district concentrates hundreds of jewelry shops in a compact
+                  trading area near the old city.
+                </p>
+                <span class="market-card-cta" id="mkt-kuwait-cta">View Kuwait prices →</span>
+              </div>
+            </a>
+            <a href="countries/egypt/" class="market-card hover-lift">
+              <div class="market-card-flag" aria-hidden="true">🇪🇬</div>
+              <div class="market-card-body">
+                <h3 class="market-card-name" id="mkt-cairo-name">Khan el-Khalili</h3>
+                <p class="market-card-loc" id="mkt-cairo-loc">Egypt — EGP</p>
+                <p class="market-card-desc" id="mkt-cairo-desc">
+                  Cairo's historic bazaar is one of the oldest gold markets in the Arab world,
+                  trading since the 14th century.
+                </p>
+                <span class="market-card-cta" id="mkt-cairo-cta">View Egypt prices →</span>
+              </div>
+            </a>
+          </div>
+          <p class="markets-note" id="markets-note">
+            Reference prices only — actual shop prices vary by location, making charges, and VAT.
+          </p>
+        </div>
+      </section>
 
       <!-- ═══════ INSIGHTS BANNER ═══════ -->
       <!-- Removed: Insights is already a card in the Tools grid above -->

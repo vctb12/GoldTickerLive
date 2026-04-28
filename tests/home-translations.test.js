@@ -1,0 +1,108 @@
+'use strict';
+
+/**
+ * Tests for new home page translation keys added in Round 8:
+ * - Karat strip unit toggle labels (gram / tola / oz)
+ * - Markets highlights section copy
+ *
+ * Ensures EN/AR parity so bilingual rendering stays consistent.
+ */
+
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const path = require('node:path');
+
+async function loadTranslations() {
+  const url = new URL(
+    'file://' + path.resolve(__dirname, '..', 'src', 'config', 'translations.js')
+  );
+  const mod = await import(url.href);
+  return mod.TRANSLATIONS;
+}
+
+// Keys that must be present in both EN and AR (bilingual parity).
+const REQUIRED_KEYS = [
+  // Karat strip unit toggle
+  'home.unitGram',
+  'home.unitTola',
+  'home.unitOz',
+  'home.unitToggleLabel',
+  'home.karatStripLabelGram',
+  'home.karatStripLabelTola',
+  'home.karatStripLabelOz',
+  'home.karatCopyAriaLabel',
+  // Markets highlights
+  'home.marketsTitle',
+  'home.marketsSub',
+  'home.marketsSeeAll',
+  'home.mktDubaiName',
+  'home.mktDubaiLoc',
+  'home.mktDubaiDesc',
+  'home.mktDubaiCta',
+  'home.mktRiyadhName',
+  'home.mktRiyadhLoc',
+  'home.mktRiyadhDesc',
+  'home.mktRiyadhCta',
+  'home.mktKuwaitName',
+  'home.mktKuwaitLoc',
+  'home.mktKuwaitDesc',
+  'home.mktKuwaitCta',
+  'home.mktCairoName',
+  'home.mktCairoLoc',
+  'home.mktCairoDesc',
+  'home.mktCairoCta',
+  'home.marketsNote',
+  // Tracker welcome strip
+  'tracker.welcome.chip1Bold',
+  'tracker.welcome.chip1Rest',
+  'tracker.welcome.chip2Bold',
+  'tracker.welcome.chip2Rest',
+  'tracker.welcome.chip3Bold',
+  'tracker.welcome.chip3Rest',
+  'tracker.welcome.dismiss',
+];
+
+test('new home translation keys exist in both EN and AR', async () => {
+  const t = await loadTranslations();
+  for (const key of REQUIRED_KEYS) {
+    assert.ok(
+      typeof t.en[key] === 'string' && t.en[key].length > 0,
+      `Missing EN translation for "${key}"`
+    );
+    assert.ok(
+      typeof t.ar[key] === 'string' && t.ar[key].length > 0,
+      `Missing AR translation for "${key}"`
+    );
+  }
+});
+
+test('karatCopyAriaLabel contains {karat} placeholder in both locales', async () => {
+  const t = await loadTranslations();
+  assert.ok(t.en['home.karatCopyAriaLabel'].includes('{karat}'), 'EN should have {karat}');
+  assert.ok(t.ar['home.karatCopyAriaLabel'].includes('{karat}'), 'AR should have {karat}');
+});
+
+test('karat strip label keys are distinct (gram ≠ tola ≠ oz)', async () => {
+  const t = await loadTranslations();
+  for (const locale of ['en', 'ar']) {
+    const gram = t[locale]['home.karatStripLabelGram'];
+    const tola = t[locale]['home.karatStripLabelTola'];
+    const oz = t[locale]['home.karatStripLabelOz'];
+    assert.notEqual(gram, tola, `${locale}: gram and tola labels must differ`);
+    assert.notEqual(gram, oz, `${locale}: gram and oz labels must differ`);
+    assert.notEqual(tola, oz, `${locale}: tola and oz labels must differ`);
+  }
+});
+
+test('markets section has 4 markets each with name, loc, desc, cta keys', async () => {
+  const t = await loadTranslations();
+  const markets = ['Dubai', 'Riyadh', 'Kuwait', 'Cairo'];
+  for (const mkt of markets) {
+    const prefix = `home.mkt${mkt}`;
+    for (const suffix of ['Name', 'Loc', 'Desc', 'Cta']) {
+      const key = `${prefix}${suffix}`;
+      assert.ok(typeof t.en[key] === 'string' && t.en[key].length > 0, `EN missing ${key}`);
+      assert.ok(typeof t.ar[key] === 'string' && t.ar[key].length > 0, `AR missing ${key}`);
+    }
+  }
+});

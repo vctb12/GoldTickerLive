@@ -8,7 +8,7 @@ import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import * as calc from '../lib/price-calculator.js';
 import * as fmt from '../lib/formatter.js';
-import { getMarketStatus } from '../lib/live-status.js';
+import { getMarketStatus, getLiveFreshness } from '../lib/live-status.js';
 import { injectNav, updateNavLang } from '../components/nav.js';
 import { injectFooter } from '../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
@@ -21,6 +21,22 @@ import { clear, el, safeHref } from '../lib/safe-dom.js';
 // ── Constants ──────────────────────────────────────────────────────────────
 const LANG_KEY = 'user_prefs';
 const SKELETON_TIMEOUT_MS = 8000;
+const TOLA_GRAMS = 11.6638; // 1 tola = 11.6638 grams (international standard)
+
+// Multiply per-gram AED price by this to get the chosen unit price.
+const KARAT_STRIP_UNIT_MULT = {
+  gram: 1,
+  tola: TOLA_GRAMS,
+  oz: CONSTANTS.TROY_OZ_GRAMS,
+};
+
+// Maps freshness key → home.source* translation key
+const SOURCE_TX_KEY = {
+  live: 'sourceLive',
+  cached: 'sourceCached',
+  stale: 'sourceStale',
+  unavailable: 'sourceUnavailable',
+};
 
 // ── State ──────────────────────────────────────────────────────────────────
 let lang = 'en';
@@ -30,6 +46,16 @@ let rates = {};
 let goldUpdatedAt = null;
 let priceSourceLabel = 'cached/fallback';
 let _refreshTimer = null;
+let _freshnessTimer = null;
+
+// Karat strip unit preference — persisted in user_prefs localStorage
+let karatStripUnit = (() => {
+  try {
+    return JSON.parse(localStorage.getItem(LANG_KEY) || '{}').karatStripUnit || 'gram';
+  } catch {
+    return 'gram';
+  }
+})();
 
 function getLang() {
   try {
@@ -103,25 +129,29 @@ function setTextById(id, text) {
 }
 
 function getFreshnessMeta() {
-  const freshnessTime = goldUpdatedAt || new Date().toISOString();
-  const ageMs = goldUpdatedAt ? Date.now() - new Date(goldUpdatedAt).getTime() : 0;
-  const isStaleByAge = ageMs > 12 * 60 * 1000; // >12 minutes (matches GOLD_MARKET.STALE_AFTER_MS)
-  const isLive = priceSourceLabel === 'live' && !isStaleByAge;
-  let sourceText;
-  if (isLive) {
-    sourceText = tx('sourceLive');
-  } else if (isStaleByAge && goldUpdatedAt) {
-    const mins = Math.floor(ageMs / 60000);
-    sourceText =
-      mins >= 60
-        ? `${tx('sourceStale')} (${Math.floor(mins / 60)}h ${mins % 60}m ago)`
-        : `${tx('sourceStale')} (${mins}m ago)`;
-  } else if (priceSourceLabel === 'unavailable') {
-    sourceText = tx('sourceUnavailable');
-  } else {
-    sourceText = tx('sourceCached');
-  }
-  return { freshnessTime, isLive, sourceText };
+  const freshness = getLiveFreshness({
+    updatedAt: goldUpdatedAt,
+    lang,
+    hasLiveFailure: priceSourceLabel !== 'live',
+  });
+  const sourceText = tx(SOURCE_TX_KEY[freshness.key] || 'sourceCached');
+  return {
+    freshnessTime: freshness.timeText,
+    ageText: freshness.ageText,
+    isLive: freshness.key === 'live',
+    sourceText,
+  };
+}
+
+/** Tick the freshness timestamp display every 30 s without a full re-render. */
+function startFreshnessTimer() {
+  if (_freshnessTimer) clearInterval(_freshnessTimer);
+  _freshnessTimer = setInterval(() => {
+    if (!goldPrice || !goldUpdatedAt) return;
+    const { ageText, sourceText } = getFreshnessMeta();
+    setTextById('hlc-updated', `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`);
+    setTextById('karat-strip-updated', `${tx('updated')}: ${ageText} · ${sourceText}`);
+  }, 30_000);
 }
 
 // ── Render hero live card ──────────────────────────────────────────────────
@@ -155,15 +185,9 @@ function renderHeroCard() {
   setTextById('hlc-usd22', fmt.formatPrice(usd22g, 'USD', 2));
   setTextById('hlc-aed22', fmt.formatPrice(aed22g, 'AED', 2));
   setTextById('hlc-usd21', fmt.formatPrice(usd21g, 'USD', 2));
-  const { freshnessTime, isLive, sourceText } = getFreshnessMeta();
-  setTextById(
-    'hlc-updated',
-    `${tx('updated')}: ${fmt.formatTimestampShort(freshnessTime, lang)} · ${tx('source')}: ${sourceText}`
-  );
-  setTextById(
-    'karat-strip-updated',
-    `${tx('updated')}: ${fmt.formatTimestampShort(freshnessTime, lang)} · ${sourceText}`
-  );
+  const { ageText, isLive, sourceText } = getFreshnessMeta();
+  setTextById('hlc-updated', `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`);
+  setTextById('karat-strip-updated', `${tx('updated')}: ${ageText} · ${sourceText}`);
 
   // Change vs day open
   const changeEl = document.getElementById('hlc-change');
@@ -225,13 +249,16 @@ function renderKaratStrip(k18Ref) {
   // Skip rendering if required core karat data is not available; 14K is optional.
   if (!k18 || !k21 || !k22 || !k24) return;
 
+  // Apply unit multiplier to base AED/gram price.
+  const mult = KARAT_STRIP_UNIT_MULT[karatStripUnit] || 1;
+
   const prices = {
-    24: calc.usdPerGram(goldPrice, k24.purity) * AED,
-    22: calc.usdPerGram(goldPrice, k22.purity) * AED,
-    21: calc.usdPerGram(goldPrice, k21.purity) * AED,
-    18: calc.usdPerGram(goldPrice, k18.purity) * AED,
+    24: calc.usdPerGram(goldPrice, k24.purity) * AED * mult,
+    22: calc.usdPerGram(goldPrice, k22.purity) * AED * mult,
+    21: calc.usdPerGram(goldPrice, k21.purity) * AED * mult,
+    18: calc.usdPerGram(goldPrice, k18.purity) * AED * mult,
   };
-  if (k14) prices[14] = calc.usdPerGram(goldPrice, k14.purity) * AED;
+  if (k14) prices[14] = calc.usdPerGram(goldPrice, k14.purity) * AED * mult;
 
   for (const [k, v] of Object.entries(prices)) {
     const valueElement = document.getElementById(`kstrip-${k}-val`);
@@ -243,7 +270,23 @@ function renderKaratStrip(k18Ref) {
         format: (n) => fmt.formatPrice(n, 'AED', 2),
       });
     }
+    // Update copy button's data-copy attribute so clipboard gets the current value.
+    const copyBtn = document.getElementById(`kstrip-${k}-copy`);
+    if (copyBtn) {
+      const formatted = fmt.formatPrice(v, 'AED', 2);
+      copyBtn.dataset.copy = formatted;
+      copyBtn.setAttribute('aria-label', tx('karatCopyAriaLabel').replace('{karat}', k));
+    }
   }
+
+  // Update the strip label to reflect the current unit.
+  const labelKey =
+    karatStripUnit === 'tola'
+      ? 'karatStripLabelTola'
+      : karatStripUnit === 'oz'
+        ? 'karatStripLabelOz'
+        : 'karatStripLabelGram';
+  setTextById('karat-strip-label', tx(labelKey));
 }
 
 // ── Render GCC grid ────────────────────────────────────────────────────────
@@ -412,6 +455,28 @@ function applyLangToPage() {
   setTextById('faq-title', tx('faqTitle'));
   setTextById('faq-more-link', tx('faqMore'));
 
+  // Markets highlights section
+  setTextById('markets-title', tx('marketsTitle'));
+  setTextById('markets-sub', tx('marketsSub'));
+  setTextById('markets-see-tracker', tx('marketsSeeAll'));
+  setTextById('mkt-dubai-name', tx('mktDubaiName'));
+  setTextById('mkt-dubai-loc', tx('mktDubaiLoc'));
+  setTextById('mkt-dubai-desc', tx('mktDubaiDesc'));
+  setTextById('mkt-dubai-cta', tx('mktDubaiCta'));
+  setTextById('mkt-riyadh-name', tx('mktRiyadhName'));
+  setTextById('mkt-riyadh-loc', tx('mktRiyadhLoc'));
+  setTextById('mkt-riyadh-desc', tx('mktRiyadhDesc'));
+  setTextById('mkt-riyadh-cta', tx('mktRiyadhCta'));
+  setTextById('mkt-kuwait-name', tx('mktKuwaitName'));
+  setTextById('mkt-kuwait-loc', tx('mktKuwaitLoc'));
+  setTextById('mkt-kuwait-desc', tx('mktKuwaitDesc'));
+  setTextById('mkt-kuwait-cta', tx('mktKuwaitCta'));
+  setTextById('mkt-cairo-name', tx('mktCairoName'));
+  setTextById('mkt-cairo-loc', tx('mktCairoLoc'));
+  setTextById('mkt-cairo-desc', tx('mktCairoDesc'));
+  setTextById('mkt-cairo-cta', tx('mktCairoCta'));
+  setTextById('markets-note', tx('marketsNote'));
+
   // Country tiles — use localised names from COUNTRIES data
   const countryMap = {
     'ct-uae': 'AE',
@@ -526,9 +591,9 @@ async function init() {
     document.getElementById('home-freshness-bar')?.setAttribute('hidden', '');
   });
 
-  // Copy price button (event delegation)
+  // Copy price button (event delegation — covers both GCC grid and karat strip)
   document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.gcc-copy-btn');
+    const btn = e.target.closest('.gcc-copy-btn, .kstrip-copy-btn');
     if (!btn) return;
     const text = btn.dataset.copy;
     if (!text || text === '—') return;
@@ -542,6 +607,42 @@ async function init() {
         }, 1500);
       })
       .catch(() => {});
+  });
+
+  // Karat strip unit toggle
+  document.querySelectorAll('.kstrip-unit-btn').forEach((btn) => {
+    const unit = btn.dataset.unit;
+    if (unit === karatStripUnit) {
+      btn.classList.add('is-active');
+      btn.setAttribute('aria-pressed', 'true');
+    } else {
+      btn.classList.remove('is-active');
+      btn.setAttribute('aria-pressed', 'false');
+    }
+    btn.addEventListener('click', () => {
+      karatStripUnit = unit;
+      try {
+        const p = JSON.parse(localStorage.getItem(LANG_KEY) || '{}');
+        p.karatStripUnit = unit;
+        localStorage.setItem(LANG_KEY, JSON.stringify(p));
+      } catch (_) {}
+      document.querySelectorAll('.kstrip-unit-btn').forEach((b) => {
+        b.classList.toggle('is-active', b.dataset.unit === unit);
+        b.setAttribute('aria-pressed', b.dataset.unit === unit ? 'true' : 'false');
+      });
+      renderKaratStrip();
+    });
+  });
+
+  // FAQ: one-open-at-a-time behaviour
+  document.querySelectorAll('.faq-item').forEach((item) => {
+    item.addEventListener('toggle', () => {
+      if (item.open) {
+        document.querySelectorAll('.faq-item').forEach((other) => {
+          if (other !== item) other.open = false;
+        });
+      }
+    });
   });
 
   // Load cache first for instant render
@@ -583,13 +684,20 @@ async function init() {
   if (_refreshTimer) clearInterval(_refreshTimer);
   _refreshTimer = setInterval(fetchLiveData, CONSTANTS.GOLD_REFRESH_MS);
 
-  // Clean up timer on page unload to prevent memory leaks
+  // Tick the "Updated X min ago" label every 30 s without a full price re-fetch.
+  startFreshnessTimer();
+
+  // Clean up timers on page unload to prevent memory leaks
   window.addEventListener(
     'pagehide',
     () => {
       if (_refreshTimer) {
         clearInterval(_refreshTimer);
         _refreshTimer = null;
+      }
+      if (_freshnessTimer) {
+        clearInterval(_freshnessTimer);
+        _freshnessTimer = null;
       }
     },
     { once: true }
