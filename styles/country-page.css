@@ -183,7 +183,6 @@
 
 .cp-table-scroll {
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
   border-radius: var(--radius-control);
   border: 1px solid var(--border-default);
 }
