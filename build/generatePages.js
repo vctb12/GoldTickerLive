@@ -57,7 +57,7 @@ function relPrefix(depth) {
  */
 function buildPage({ title, description, canonical, h1, introText, depth, jsonLd, relatedLinks, lang = 'en' }) {
   const rel = relPrefix(depth);
-  const hreflangAr = canonical + '?lang=ar';
+  const hreflangAr = canonical + '/?lang=ar';
   const jsonLdStr = JSON.stringify(jsonLd, null, 2);
 
   return `<!DOCTYPE html>
@@ -69,7 +69,7 @@ function buildPage({ title, description, canonical, h1, introText, depth, jsonLd
   <meta property="og:title" content="${title}" />
   <meta property="og:description" content="${description}" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="${canonical}" />
+  <meta property="og:url" content="${canonical}/" />
   <meta property="og:image" content="${SITE_URL}/assets/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${title}" />

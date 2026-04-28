@@ -19,7 +19,7 @@
  */
 
 const SITE_NAME = 'Gold Ticker Live';
-const SITE_URL = 'https://www.goldtickerlive.com';
+const SITE_URL = 'https://goldtickerlive.com';
 const OG_IMAGE = `${SITE_URL}/assets/og-image.png`;
 
 /**
