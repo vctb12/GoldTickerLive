@@ -49,23 +49,48 @@ const path = require('path');
 const { atomicWriteJSON } = require('./fs-atomic.js');
 const USERS_FILE = path.join(__dirname, '../../data/users.json');
 
+// Validate a single user record loaded from disk. Each persisted record must
+// have a non-empty string `email`, a `role` from the allowed set, and a
+// `password` that is shaped like a bcrypt hash (`$2[aby]$<cost>$<rest>`).
+// See docs/plans/2026-04-24_security-performance-deps-audit.md Track A.A.2 #13.
+const ALLOWED_ROLES = new Set(['admin', 'editor', 'viewer']);
+const BCRYPT_HASH_RX = /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/;
+
+function isValidUserRecord(u) {
+  if (!u || typeof u !== 'object') return false;
+  if (typeof u.email !== 'string' || u.email.length === 0) return false;
+  if (typeof u.role !== 'string' || !ALLOWED_ROLES.has(u.role)) return false;
+  if (typeof u.password !== 'string' || !BCRYPT_HASH_RX.test(u.password)) return false;
+  return true;
+}
+
 function loadUsers() {
   if (fs.existsSync(USERS_FILE)) {
     try {
       const data = fs.readFileSync(USERS_FILE, 'utf8');
       const loaded = JSON.parse(data);
       if (!Array.isArray(loaded)) throw new Error('users.json is not an array');
-      // Backfill tokenVersion for records persisted before the field existed,
-      // so authMiddleware can always compare a number against a number.
+      // Drop records that fail schema validation — a corrupted on-disk record
+      // must not be trusted as an authenticated user. The seeded in-memory
+      // admin below ensures the admin can still log in.
+      const valid = [];
       for (const u of loaded) {
-        if (u && typeof u === 'object' && typeof u.tokenVersion !== 'number') {
-          u.tokenVersion = 1;
+        if (!isValidUserRecord(u)) {
+          console.error(
+            '[auth] Dropping malformed user record on load (id=%s).',
+            u && typeof u === 'object' ? u.id || '<unknown>' : '<non-object>'
+          );
+          continue;
         }
+        // Backfill tokenVersion for records persisted before the field existed,
+        // so authMiddleware can always compare a number against a number.
+        if (typeof u.tokenVersion !== 'number') u.tokenVersion = 1;
+        valid.push(u);
       }
       // Ensure the seeded admin is always present, even if the persisted file
       // was written before the admin existed or became corrupt.
-      const hasAdmin = loaded.some((u) => u.id === 'admin_1');
-      users = hasAdmin ? loaded : [users[0], ...loaded];
+      const hasAdmin = valid.some((u) => u.id === 'admin_1');
+      users = hasAdmin ? valid : [users[0], ...valid];
     } catch (err) {
       console.error('Error loading users — keeping defaults:', err);
     }

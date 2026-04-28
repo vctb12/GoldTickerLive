@@ -172,6 +172,9 @@ router.put('/preferences', async (req, res) => {
 // Helper functions
 
 function isValidEmail(email) {
+  // Anchored regex with non-overlapping negated character classes — no
+  // catastrophic backtracking is possible. Reviewed in
+  // docs/plans/2026-04-24_security-performance-deps-audit.md Track A.A.2 #12.
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
 }
 

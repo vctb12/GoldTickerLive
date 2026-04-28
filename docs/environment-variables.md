@@ -29,6 +29,20 @@
 > immediately. CI sets test-only values for these via job-level `env:`. Locally, export them before
 > running `npm start` or `npm test`.
 
+### Reverse-proxy / `trust proxy`
+
+When `NODE_ENV=production`, `server.js` sets `app.set('trust proxy', 1)` so Express reads the client
+IP from the first `X-Forwarded-For` hop (Vercel, Cloudflare, Nginx, etc). Without this,
+`express-rate-limit` keys every request on the proxy IP and the whole internet shares one bucket.
+
+- **Single proxy in front of the app (default)** — keep `1`. This is correct for Vercel, Render,
+  Fly.io single-region, and a typical Nginx reverse proxy.
+- **Multiple proxies** (e.g., Cloudflare → Render) — set the trust hop count to match the number of
+  proxies in the chain. Edit `server.js` if your deployment has more than one trusted hop.
+- **Direct exposure (no proxy)** — leave `NODE_ENV` unset or non-`production`; the `trust proxy`
+  line is skipped and `req.ip` is the socket peer address. Misconfiguring this in a proxied
+  environment causes per-IP rate limits to misfire.
+
 ## GitHub Actions Secrets
 
 These are configured as repository secrets in GitHub (Settings → Secrets → Actions):
