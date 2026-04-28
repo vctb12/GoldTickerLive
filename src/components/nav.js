@@ -242,7 +242,6 @@ function buildPrimaryLink(item, depth) {
   const href = resolveHref(item.href, depth);
   const isActive = isPageMatch(href);
   const classes = ['nav-link'];
-  if (item.key === 'shops') classes.push('nav-link--shops');
   if (isActive) classes.push('nav-link--active');
   const ariaCurrent = isActive ? ' aria-current="page"' : '';
   return `<a href="${href}"
