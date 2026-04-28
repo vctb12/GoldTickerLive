@@ -1803,6 +1803,11 @@
   margin: 0;
 }
 
+.explainer-strip-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
 @media (width <= 680px) {
   .explainer-strip-items {
     grid-template-columns: 1fr;

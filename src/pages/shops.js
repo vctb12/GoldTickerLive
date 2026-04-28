@@ -56,7 +56,7 @@ const TXT = {
     directoryReviewed: 'Directory last reviewed {date}',
     featuredNote:
       'Featured: editorially selected markets for this region. Not a paid placement and not an endorsement of any individual shop inside the market.',
-    statListings: 'Listed markets',
+    statListings: 'Shops &amp; markets',
     statCountries: 'Countries',
     statRegions: 'Regions',
     popularMarkets: 'Popular markets',
@@ -162,7 +162,7 @@ const TXT = {
     directoryReviewed: 'آخر مراجعة للدليل {date}',
     featuredNote:
       'مختارة: أسواق مختارة تحريرياً لهذه المنطقة. ليست إعلاناً مدفوعاً ولا تزكية لأي محل بعينه داخل السوق.',
-    statListings: 'الأسواق المدرجة',
+    statListings: 'محلات وأسواق',
     statCountries: 'الدول',
     statRegions: 'المناطق',
     popularMarkets: 'أسواق شائعة',

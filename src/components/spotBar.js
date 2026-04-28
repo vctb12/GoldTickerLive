@@ -34,20 +34,42 @@ export function injectSpotBar(lang = 'en', depth = 0) {
   bar.setAttribute('aria-live', 'polite');
   bar.setAttribute('aria-label', isAr ? 'أسعار الذهب الفورية' : 'Live gold spot prices');
   bar.setAttribute('data-freshness', 'unavailable');
-  bar.innerHTML = `
-    <div class="spot-bar-inner">
-      <a href="${trackerHref}" class="spot-bar-item" data-spot="xau">
-        <span class="spot-bar-label" data-spot-label="xau">XAU/USD</span>
-        <span class="spot-bar-value" data-spot-value="xau">—</span>
-      </a>
-      <span class="spot-bar-sep" aria-hidden="true">|</span>
-      <a href="${trackerHref}" class="spot-bar-item" data-spot="aed">
-        <span class="spot-bar-label" data-spot-label="aed">${isAr ? '24K / غ AED' : '24K AED/g'}</span>
-        <span class="spot-bar-value" data-spot-value="aed">—</span>
-      </a>
-      <span class="spot-bar-sep spot-bar-sep--ts" aria-hidden="true">|</span>
-      <span class="spot-bar-ts" data-spot-ts></span>
-    </div>`;
+  // Build the inner structure via DOM to eliminate the innerHTML sink.
+  function makeSpotLink(spot, label, valueLabel) {
+    const a = document.createElement('a');
+    a.href = trackerHref;
+    a.className = 'spot-bar-item';
+    a.setAttribute('data-spot', spot);
+    const lbl = document.createElement('span');
+    lbl.className = 'spot-bar-label';
+    lbl.setAttribute('data-spot-label', spot);
+    lbl.textContent = label;
+    const val = document.createElement('span');
+    val.className = 'spot-bar-value';
+    val.setAttribute('data-spot-value', spot);
+    val.textContent = valueLabel;
+    a.appendChild(lbl);
+    a.appendChild(val);
+    return a;
+  }
+  function makeSep(extraClass) {
+    const s = document.createElement('span');
+    s.className = 'spot-bar-sep' + (extraClass ? ' ' + extraClass : '');
+    s.setAttribute('aria-hidden', 'true');
+    s.textContent = '|';
+    return s;
+  }
+  const inner = document.createElement('div');
+  inner.className = 'spot-bar-inner';
+  inner.appendChild(makeSpotLink('xau', 'XAU/USD', '\u2014'));
+  inner.appendChild(makeSep());
+  inner.appendChild(makeSpotLink('aed', isAr ? '24K / \u063A AED' : '24K AED/g', '\u2014'));
+  inner.appendChild(makeSep('spot-bar-sep--ts'));
+  const ts = document.createElement('span');
+  ts.className = 'spot-bar-ts';
+  ts.setAttribute('data-spot-ts', '');
+  inner.appendChild(ts);
+  bar.appendChild(inner);
 
   // Insert before nav or as first child of body
   const nav = document.querySelector('.site-nav');

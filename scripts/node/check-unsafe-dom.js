@@ -60,12 +60,12 @@ const BASELINE = {
   'admin/shared/admin-utils.js': 6,
   'admin/shops/index.html': 7,
   'admin/social/index.html': 4,
-  'src/components/breadcrumbs.js': 2,
+  'src/components/breadcrumbs.js': 0, // Migrated to pure DOM (createElement/textContent) on 2026-04-28. Caller-supplied label/url treated as text, not HTML.
   'src/components/footer.js': 2,
   'src/components/nav.js': 2,
-  'src/components/spotBar.js': 1,
-  'src/components/ticker.js': 1,
-  'src/lib/cache.js': 1,
+  'src/components/spotBar.js': 0, // Migrated to DOM construction on 2026-04-28 (was 1 sink, all values were safe computed strings).
+  'src/components/ticker.js': 0, // Migrated buildCopyNode + injectTicker to DOM construction on 2026-04-28 (was 1 sink).
+  'src/lib/cache.js': 0, // showStorageQuotaWarning migrated to DOM construction on 2026-04-28 (was 1 sink, all hardcoded strings).
   'src/lib/page-hydrator.js': 0, // W-1: migrated renderKaratCards/renderFreshnessBadge/renderDisclaimer to safe-dom el() + replaceChildren().
   'src/pages/home.js': 0, // Homepage revamp migrated GCC grid + PWA banner rendering to el()/DocumentFragment on 2026-04-25.
   'src/pages/shops.js': 13,

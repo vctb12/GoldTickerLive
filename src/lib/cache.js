@@ -42,14 +42,23 @@ export function showStorageQuotaWarning() {
     'z-index:10000',
     'box-shadow:0 4px 12px rgba(0,0,0,0.35)',
   ].join(';');
-  banner.innerHTML =
-    "<strong>Storage full</strong> — your browser's storage is nearly full. " +
-    'Price alerts or settings may not have been saved. ' +
-    'Try clearing your browser cache or disabling other extensions.<button ' +
-    'aria-label="Dismiss" ' +
-    'style="position:absolute;top:0.5rem;right:0.625rem;background:none;border:none;' +
-    'color:#fff;cursor:pointer;font-size:1.125rem;line-height:1;padding:0" ' +
-    'onclick="this.parentElement.remove()">✕</button>';
+  const strong = document.createElement('strong');
+  strong.textContent = 'Storage full';
+  const msg = document.createTextNode(
+    " \u2014 your browser's storage is nearly full. " +
+      'Price alerts or settings may not have been saved. ' +
+      'Try clearing your browser cache or disabling other extensions.'
+  );
+  const dismissBtn = document.createElement('button');
+  dismissBtn.setAttribute('aria-label', 'Dismiss');
+  dismissBtn.style.cssText =
+    'position:absolute;top:0.5rem;right:0.625rem;background:none;border:none;' +
+    'color:#fff;cursor:pointer;font-size:1.125rem;line-height:1;padding:0';
+  dismissBtn.textContent = '\u2715';
+  dismissBtn.addEventListener('click', () => banner.remove());
+  banner.appendChild(strong);
+  banner.appendChild(msg);
+  banner.appendChild(dismissBtn);
   document.body?.appendChild(banner);
 }
 

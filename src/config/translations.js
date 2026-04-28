@@ -257,7 +257,7 @@ export const TRANSLATIONS = {
     'home.countriesSub': 'Dedicated pages with local context for every major market',
     'home.seeAllCountries': 'See all countries →',
     'home.copyPrice': 'Copy price for',
-    'home.socialFollowText': 'Get gold price updates on X/Twitter',
+    'home.socialFollowText': 'Daily gold price updates on X — GCC &amp; Arab world',
     'home.socialFollowCta': 'Follow @GoldTickerLive',
     'home.explainerSpotTitle': 'Spot Price',
     'home.explainerSpotDesc':
@@ -269,7 +269,7 @@ export const TRANSLATIONS = {
     'home.explainerLocalDesc':
       'We convert the USD spot price using live FX rates so you see the estimated gram price in your local currency instantly.',
     'home.faqTitle': 'Common Questions',
-    'home.faqMore': 'More questions answered on the Learn page →',
+    'home.faqMore': 'More gold price questions answered →',
     'home.trackerLink': 'Full Tracker →',
     'home.karatStripLabel': 'AED / gram',
     'home.karatStripTitle': 'Live reference prices by karat',
@@ -590,7 +590,7 @@ export const TRANSLATIONS = {
     'home.countriesSub': 'صفحات مخصصة بسياق محلي لكل سوق رئيسية',
     'home.seeAllCountries': 'عرض كل الدول ←',
     'home.copyPrice': 'نسخ سعر',
-    'home.socialFollowText': 'احصل على تحديثات أسعار الذهب على X/Twitter',
+    'home.socialFollowText': 'تحديثات يومية لأسعار الذهب على X — الخليج والعالم العربي',
     'home.socialFollowCta': 'تابع @GoldTickerLive',
     'home.explainerSpotTitle': 'السعر الفوري',
     'home.explainerSpotDesc':
@@ -602,7 +602,7 @@ export const TRANSLATIONS = {
     'home.explainerLocalDesc':
       'نحوّل السعر الفوري بالدولار باستخدام أسعار صرف مباشرة حتى ترى تقدير سعر الغرام بعملتك المحلية فورًا.',
     'home.faqTitle': 'أسئلة شائعة',
-    'home.faqMore': 'المزيد من الأسئلة المجاب عنها في صفحة التعلّم ←',
+    'home.faqMore': 'المزيد من الأسئلة حول أسعار الذهب ←',
     'home.trackerLink': 'التتبع الكامل ←',
     'home.karatStripLabel': 'درهم / غرام',
     'home.karatStripTitle': 'أسعار مرجعية مباشرة حسب العيار',
