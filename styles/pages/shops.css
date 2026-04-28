@@ -909,7 +909,7 @@
 /* ── Empty state ─────────────────────────────────────────────────────────── */
 .shops-empty {
   margin-top: 0.5rem;
-  padding: 2rem 1.5rem;
+  padding: 2.5rem 1.5rem;
   border-radius: var(--radius-lg);
   border: 1px dashed rgb(212 160 23 / 20%);
   background: var(--color-surface, #1a1814);
@@ -917,13 +917,6 @@
   gap: 0.5rem;
   text-align: center;
   justify-items: center;
-}
-
-.shops-empty::before {
-  content: '◈';
-  font-size: 2rem;
-  color: var(--color-gold-dim, #4a3c10);
-  margin-bottom: 0.25rem;
 }
 
 #shops-empty-title {
@@ -1132,6 +1125,21 @@
 
   #shops-modal-title {
     font-size: 1.1rem;
+  }
+
+  /* Prevent long text (phone numbers, addresses, URLs) from overflowing cards */
+  .shop-notes,
+  .shop-contact,
+  .shop-meta strong,
+  .modal-meta-value,
+  .modal-notes p,
+  .modal-contact p {
+    overflow-wrap: break-word;
+  }
+
+  /* Allow action rows to wrap on very narrow screens */
+  .shop-actions-row {
+    flex-wrap: wrap;
   }
 }
 
@@ -2080,11 +2088,7 @@
   margin: 0 0 0.75rem;
 }
 
-/* ── Empty state ── */
-.shops-empty {
-  text-align: center;
-  padding: 3rem 1.5rem;
-}
+/* ── Empty state (duplicate block consolidated into primary definition above) ── */
 
 .ses-icon {
   font-size: 2.5rem;
@@ -2095,4 +2099,33 @@
 .ses-link {
   color: var(--color-gold-dark);
   text-decoration: underline;
+}
+
+/* ── Grid upgrade loading state ──────────────────────────────────────────── */
+
+/* Shown briefly while Supabase live data is being fetched to replace fallback */
+.shops-grid--upgrading {
+  position: relative;
+  pointer-events: none;
+}
+
+.shops-grid--upgrading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgb(19 18 16 / 40%);
+  border-radius: var(--radius-card);
+  animation: shops-upgrading-pulse 1.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shops-upgrading-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
 }

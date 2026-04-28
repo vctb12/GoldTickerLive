@@ -149,7 +149,8 @@ const TXT = {
     freshnessSemantics:
       'Freshness semantics: Live / Delayed / Cached-Fallback / Estimated / Historical baseline (used consistently across GoldTickerLive). Directory source: editorial review timestamp.',
     priceDisclaimer:
-      'Listings support discovery only. Spot-linked reference prices are separate from final retail jewelry quotes.',
+      'Listings are for discovery only and have NOT been independently verified — details may be outdated. Reference prices shown are spot-based estimates, not actual shop prices; retail quotes include making charges, dealer margins, and taxes.',
+    methodologyLinkText: 'How we calculate prices →',
   },
   ar: {
     kicker: 'محلات حسب المنطقة',
@@ -250,7 +251,8 @@ const TXT = {
     freshnessSemantics:
       'دلالات حداثة البيانات: مباشر / متأخر / مخزن-احتياطي / تقديري / خط أساس تاريخي (موحدة عبر GoldTickerLive). مصدر الدليل: تاريخ مراجعة تحريرية.',
     priceDisclaimer:
-      'هذه الإدراجات للاكتشاف فقط. الأسعار المرجعية المرتبطة بالسعر الفوري منفصلة عن سعر التجزئة النهائي للمجوهرات.',
+      'هذه الإدراجات للاكتشاف فقط ولم يتم التحقق منها بشكل مستقل — قد تكون التفاصيل قديمة. الأسعار المعروضة تقديرية مبنية على السعر الفوري وليست أسعار محلات فعلية؛ تشمل أسعار التجزئة المصنعية وهامش التاجر والضرائب.',
+    methodologyLinkText: 'كيف نحسب الأسعار →',
   },
 };
 
@@ -565,15 +567,9 @@ function applyStaticText() {
   document.getElementById('shops-empty-title').textContent = t('emptyTitle');
   const emptyTextEl = document.getElementById('shops-empty-text');
   if (emptyTextEl) {
-    emptyTextEl.textContent = `${t('emptyText')} `;
-    const submitLink = document.createElement('a');
-    submitLink.href = 'content/submit-shop/';
-    submitLink.className = 'ses-link';
-    submitLink.textContent = t('emptySubmitCta');
-    emptyTextEl.appendChild(submitLink);
-    emptyTextEl.appendChild(document.createTextNode('.'));
+    emptyTextEl.textContent = t('emptyText');
   }
-  document.getElementById('shops-clear-filters').textContent = t('clearFilters');
+  document.getElementById('shops-clear-filters').textContent = t('clearAllFilters');
   document.getElementById('shops-stat-listings-label').textContent = t('statListings');
   document.getElementById('shops-stat-countries-label').textContent = t('statCountries');
   document.getElementById('shops-stat-regions-label').textContent = t('statRegions');
@@ -587,7 +583,14 @@ function applyStaticText() {
   document.getElementById('shops-results-legend').textContent = t('resultsLegend');
   document.getElementById('shops-results-disclaimer').textContent = t('resultsDisclaimer');
   document.getElementById('shops-freshness-semantics').textContent = t('freshnessSemantics');
-  document.getElementById('shops-price-disclaimer').textContent = t('priceDisclaimer');
+  const priceDisclEl = document.getElementById('shops-price-disclaimer');
+  if (priceDisclEl) {
+    priceDisclEl.textContent = t('priceDisclaimer') + ' ';
+    const methodLink = document.createElement('a');
+    methodLink.href = 'methodology.html';
+    methodLink.textContent = t('methodologyLinkText');
+    priceDisclEl.appendChild(methodLink);
+  }
   document.getElementById('shops-shortlist-label').textContent = t('shortlistLabel');
   document.getElementById('shops-shortlist-clear').textContent = t('shortlistClear');
   document.getElementById('shops-shortlist-compare').textContent = t('shortlistReview');
@@ -1423,6 +1426,8 @@ init();
 // Supabase. If successful, replace SHOPS and re-render so users see the
 // most up-to-date directory without any visible delay.
 (async function upgradeToLiveData() {
+  const grid = document.getElementById('shops-grid');
+  if (grid) grid.classList.add('shops-grid--upgrading');
   try {
     const remote = await fetchSupabaseShops();
     if (remote && Array.isArray(remote) && remote.length > 0) {
@@ -1434,6 +1439,8 @@ init();
     }
   } catch (err) {
     console.warn('[shops] Could not fetch Supabase data; using fallback:', err.message);
+  } finally {
+    if (grid) grid.classList.remove('shops-grid--upgrading');
   }
 })();
 
