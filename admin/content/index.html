@@ -1567,17 +1567,27 @@
           .map((p) => {
             const date = p.publishDate || p.createdAt?.slice(0, 10) || '';
             const active = p.id === currentPostId ? ' active' : '';
-            const hasTitle = (p.title || '').length > 10;
-            const hasDesc = (p.excerpt || '').length > 50;
-            const seoIcon = hasTitle && hasDesc ? '✓' : hasTitle ? '⚠' : '✗';
-            const seoClass = hasTitle && hasDesc ? 'seo-ok' : hasTitle ? 'seo-warn' : 'seo-bad';
+            const titleLen = (p.title || '').length;
+            const descLen = (p.excerpt || '').length;
+            // SEO best-practice thresholds: title 30-60, description 100-160
+            const titleOk = titleLen >= 30 && titleLen <= 60;
+            const titleWarn = titleLen > 10 && (titleLen < 30 || titleLen > 60);
+            const descOk = descLen >= 100 && descLen <= 160;
+            const descWarn = descLen >= 50 && (descLen < 100 || descLen > 160);
+            const allOk = titleOk && descOk;
+            const anyBad = titleLen <= 10 || descLen < 50;
+            const seoIcon = allOk ? '✓' : anyBad ? '✗' : '⚠';
+            const seoClass = allOk ? 'seo-ok' : anyBad ? 'seo-bad' : 'seo-warn';
+            const titleHint = titleOk ? `title ${titleLen} chars ✓` : titleLen <= 10 ? `title too short (${titleLen})` : titleLen < 30 ? `title short (${titleLen}, aim 30–60)` : `title long (${titleLen}, aim ≤60)`;
+            const descHint = descOk ? `desc ${descLen} chars ✓` : descLen < 50 ? `desc too short (${descLen})` : descLen < 100 ? `desc short (${descLen}, aim 100–160)` : `desc long (${descLen}, aim ≤160)`;
+            const seoTitle = `SEO: ${titleHint} · ${descHint}`;
             return `<div class="post-item${active}" data-id="${p.id}" role="listitem" tabindex="0" aria-label="${escHtml(p.title || 'Untitled')}">
           <button class="post-item-menu" data-id="${p.id}" aria-label="Post actions for ${escHtml(p.title || 'Untitled')}" type="button">⋯</button>
           <div class="post-item-title">${escHtml(p.title || '(Untitled)')}</div>
           <div class="post-item-meta">
             <span class="badge badge-category">${escHtml(p.category || 'Uncategorised')}</span>
             <span class="badge badge-${p.status}">${p.status === 'published' ? 'Published' : 'Draft'}</span>
-            <span class="badge badge-seo ${seoClass}" title="SEO: title &amp; excerpt check">SEO ${seoIcon}</span>
+            <span class="badge badge-seo ${seoClass}" title="${escHtml(seoTitle)}">SEO ${seoIcon}</span>
           </div>
           <div class="post-item-meta">
             ${date ? `<span class="post-item-date">${date}</span>` : ''}

@@ -534,6 +534,16 @@ function applyLangToPage() {
   }
   setTextById('ct-more', tx('seeAllCountries'));
 
+  // Country search — update placeholder and empty-state text bilingually
+  const countrySearchInput = /** @type {HTMLInputElement|null} */ (
+    document.getElementById('country-search')
+  );
+  if (countrySearchInput) {
+    countrySearchInput.placeholder = tx('countrySearchPlaceholder');
+    countrySearchInput.setAttribute('aria-label', tx('countrySearchPlaceholder'));
+  }
+  setTextById('country-search-empty', tx('countrySearchEmpty'));
+
   renderHeroCard();
   renderGCCGrid();
 }
@@ -571,6 +581,72 @@ async function fetchLiveData() {
     });
     renderGCCGrid();
   }
+}
+
+// ── Country quick-picker search ────────────────────────────────────────────
+/**
+ * Wires up the inline search/filter on the country-tiles section (Track C.4).
+ * Progressive enhancement: graceful no-op if the elements are absent.
+ * Keyboard contract:
+ *   - While in the input: ArrowDown focuses the first visible tile; Escape clears.
+ *   - While in the tile list: ArrowDown/ArrowUp cycles; ArrowUp from first tile
+ *     returns focus to the input.
+ */
+function initCountrySearch() {
+  const input = /** @type {HTMLInputElement|null} */ (document.getElementById('country-search'));
+  const tilesWrap = document.querySelector('.country-tiles');
+  const emptyState = document.getElementById('country-search-empty');
+  if (!input || !tilesWrap) return;
+
+  // All searchable tiles — excludes the "See all" tile
+  const links = /** @type {HTMLAnchorElement[]} */ (
+    Array.from(tilesWrap.querySelectorAll('a.country-tile:not(.country-tile--more)'))
+  );
+
+  function getVisible() {
+    return links.filter((l) => !l.classList.contains('country-tile--filtered'));
+  }
+
+  function filterTiles(q) {
+    const query = q.trim().toLowerCase();
+    let visible = 0;
+    links.forEach((link) => {
+      const name = link.textContent.trim().toLowerCase();
+      const hide = Boolean(query && !name.includes(query));
+      link.classList.toggle('country-tile--filtered', hide);
+      if (!hide) visible++;
+    });
+    if (emptyState) emptyState.hidden = !query || visible > 0;
+  }
+
+  input.addEventListener('input', (e) =>
+    filterTiles(/** @type {HTMLInputElement} */ (e.target).value)
+  );
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const first = getVisible()[0];
+      if (first) first.focus();
+    } else if (e.key === 'Escape') {
+      input.value = '';
+      filterTiles('');
+    }
+  });
+
+  tilesWrap.addEventListener('keydown', (e) => {
+    const visible = getVisible();
+    const idx = visible.indexOf(/** @type {HTMLAnchorElement} */ (document.activeElement));
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const next = visible[idx + 1];
+      if (next) next.focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (idx <= 0) input.focus();
+      else visible[idx - 1].focus();
+    }
+  });
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
@@ -682,6 +758,9 @@ async function init() {
       }
     });
   });
+
+  // Country quick-picker inline search
+  initCountrySearch();
 
   // Load cache first for instant render
   const cacheState = {

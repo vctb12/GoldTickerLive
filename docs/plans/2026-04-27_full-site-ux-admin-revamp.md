@@ -84,7 +84,10 @@ brand shift toward **GoldTickerLive**.
       pending submissions; submissions table in admin/shops).
 - [x] `/admin/shops/index.html` — public submission queue workflow with review/approve/reject
       confirmed present.
-- [ ] `/admin/content/index.html` — add publish-readiness/SEO workflow polish.
+- [x] `/admin/content/index.html` — publish-readiness/SEO workflow polish: upgraded SEO badge check
+      to use best-practice thresholds (title 30–60 chars, description 100–160 chars); hover tooltip
+      now shows exact character counts and per-field hints (e.g. "title short (18, aim 30–60)")
+      using `escHtml`-safe tooltip string. Round 10 (2026-04-28).
 - [x] `/admin/settings/index.html` — improved save-state (loading state, friendly error messages,
       Supabase/network/permission error mapping); replaced 7 inline style= attributes with CSS
       classes (2026-04-27).

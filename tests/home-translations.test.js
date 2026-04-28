@@ -1,9 +1,10 @@
 'use strict';
 
 /**
- * Tests for new home page translation keys added in Round 8:
+ * Tests for new home page translation keys added in Round 8 and Round 10:
  * - Karat strip unit toggle labels (gram / tola / oz)
  * - Markets highlights section copy
+ * - Country search filter (Round 10)
  *
  * Ensures EN/AR parity so bilingual rendering stays consistent.
  */
@@ -60,6 +61,9 @@ const REQUIRED_KEYS = [
   'tracker.welcome.chip3Bold',
   'tracker.welcome.chip3Rest',
   'tracker.welcome.dismiss',
+  // Country search (Round 10)
+  'home.countrySearchPlaceholder',
+  'home.countrySearchEmpty',
 ];
 
 test('new home translation keys exist in both EN and AR', async () => {
@@ -104,5 +108,16 @@ test('markets section has 4 markets each with name, loc, desc, cta keys', async 
       assert.ok(typeof t.en[key] === 'string' && t.en[key].length > 0, `EN missing ${key}`);
       assert.ok(typeof t.ar[key] === 'string' && t.ar[key].length > 0, `AR missing ${key}`);
     }
+  }
+});
+
+test('country search keys are non-empty and bilingual', async () => {
+  const t = await loadTranslations();
+  const keys = ['home.countrySearchPlaceholder', 'home.countrySearchEmpty'];
+  for (const key of keys) {
+    assert.ok(typeof t.en[key] === 'string' && t.en[key].length > 0, `EN missing ${key}`);
+    assert.ok(typeof t.ar[key] === 'string' && t.ar[key].length > 0, `AR missing ${key}`);
+    // EN and AR should be different strings (not accidentally the same)
+    assert.notEqual(t.en[key], t.ar[key], `EN and AR should differ for ${key}`);
   }
 });

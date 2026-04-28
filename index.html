@@ -105,6 +105,7 @@
   
   
   
+  
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -571,7 +572,7 @@
             </div>
           </div>
           <div class="tools-grid">
-            <a href="tracker.html" class="tool-card">
+            <a href="tracker.html" class="tool-card tool-card--primary">
               <div class="tool-card-icon" aria-hidden="true">📈</div>
               <h3 class="tool-card-title" id="tool-tracker-title">Live Tracker</h3>
               <p class="tool-card-desc" id="tool-tracker-desc">
@@ -580,7 +581,7 @@
               </p>
               <span class="tool-card-cta" id="tool-tracker-cta">Open Tracker →</span>
             </a>
-            <a href="calculator.html" class="tool-card">
+            <a href="calculator.html" class="tool-card tool-card--primary">
               <div class="tool-card-icon" aria-hidden="true">🧮</div>
               <h3 class="tool-card-title" id="tool-calc-title">Gold Calculator</h3>
               <p class="tool-card-desc" id="tool-calc-desc">
@@ -724,41 +725,55 @@
               >See all countries →</a
             >
           </div>
-          <div class="country-tiles">
-            <a href="countries/uae/" class="country-tile"
-              ><span>🇦🇪</span><span id="ct-uae">UAE</span></a
+          <div class="country-search-wrap">
+            <input
+              type="search"
+              class="country-search-input"
+              id="country-search"
+              placeholder="Filter countries…"
+              aria-label="Filter countries"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+          <div class="country-tiles" role="list">
+            <a href="countries/uae/" class="country-tile" role="listitem"
+              ><span aria-hidden="true">🇦🇪</span><span id="ct-uae">UAE</span></a
             >
-            <a href="countries/saudi-arabia/" class="country-tile"
-              ><span>🇸🇦</span><span id="ct-sa">Saudi Arabia</span></a
+            <a href="countries/saudi-arabia/" class="country-tile" role="listitem"
+              ><span aria-hidden="true">🇸🇦</span><span id="ct-sa">Saudi Arabia</span></a
             >
-            <a href="countries/kuwait/" class="country-tile"
-              ><span>🇰🇼</span><span id="ct-kw">Kuwait</span></a
+            <a href="countries/kuwait/" class="country-tile" role="listitem"
+              ><span aria-hidden="true">🇰🇼</span><span id="ct-kw">Kuwait</span></a
             >
-            <a href="countries/qatar/" class="country-tile"
-              ><span>🇶🇦</span><span id="ct-qa">Qatar</span></a
+            <a href="countries/qatar/" class="country-tile" role="listitem"
+              ><span aria-hidden="true">🇶🇦</span><span id="ct-qa">Qatar</span></a
             >
-            <a href="countries/bahrain/" class="country-tile"
-              ><span>🇧🇭</span><span id="ct-bh">Bahrain</span></a
+            <a href="countries/bahrain/" class="country-tile" role="listitem"
+              ><span aria-hidden="true">🇧🇭</span><span id="ct-bh">Bahrain</span></a
             >
-            <a href="countries/oman/" class="country-tile"
-              ><span>🇴🇲</span><span id="ct-om">Oman</span></a
+            <a href="countries/oman/" class="country-tile" role="listitem"
+              ><span aria-hidden="true">🇴🇲</span><span id="ct-om">Oman</span></a
             >
-            <a href="countries/egypt/" class="country-tile"
-              ><span>🇪🇬</span><span id="ct-eg">Egypt</span></a
+            <a href="countries/egypt/" class="country-tile" role="listitem"
+              ><span aria-hidden="true">🇪🇬</span><span id="ct-eg">Egypt</span></a
             >
-            <a href="countries/jordan/" class="country-tile"
-              ><span>🇯🇴</span><span id="ct-jo">Jordan</span></a
+            <a href="countries/jordan/" class="country-tile" role="listitem"
+              ><span aria-hidden="true">🇯🇴</span><span id="ct-jo">Jordan</span></a
             >
-            <a href="countries/morocco/" class="country-tile"
-              ><span>🇲🇦</span><span id="ct-ma">Morocco</span></a
+            <a href="countries/morocco/" class="country-tile" role="listitem"
+              ><span aria-hidden="true">🇲🇦</span><span id="ct-ma">Morocco</span></a
             >
-            <a href="countries/india/" class="country-tile"
-              ><span>🇮🇳</span><span id="ct-in">India</span></a
+            <a href="countries/india/" class="country-tile" role="listitem"
+              ><span aria-hidden="true">🇮🇳</span><span id="ct-in">India</span></a
             >
             <a href="countries/index.html" class="country-tile country-tile--more"
-              ><span>+</span><span id="ct-more">See all countries</span></a
+              ><span aria-hidden="true">+</span><span id="ct-more">See all countries</span></a
             >
           </div>
+          <p class="country-search-empty" id="country-search-empty" aria-live="polite" hidden>
+            No countries match your search
+          </p>
         </div>
       </section>
 
