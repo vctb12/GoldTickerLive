@@ -275,7 +275,7 @@ export const TRANSLATIONS = {
     'home.karatStripTitle': 'Live reference prices by karat',
     'home.karatStripSub':
       'Spot-linked AED gram estimates. Retail jewelry can include making charges and tax.',
-    'home.karatStripCta': 'Full tracker →',
+    'home.karatStripCta': 'Full Tracker →',
     'home.pwaInstallLabel': 'Install app',
     'home.pwaTitle': 'Add Gold Ticker Live to your home screen',
     'home.pwaSubtitle': 'Live gold prices — works offline too',

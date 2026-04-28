@@ -812,7 +812,6 @@ body.tracker-pro-page {
   gap: 0.2rem;
   overflow-x: auto;
   scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
 }
 
 .tracker-modes::-webkit-scrollbar {

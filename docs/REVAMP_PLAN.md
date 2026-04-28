@@ -13,8 +13,10 @@ them into the right section here before execution. Agent operating rules are in
 - Keep completed items as `[x]` with enough context to serve as a record. Don't re-open closed items
   to pad status; don't invent new phases to look ambitious.
 
-**Last updated:** 2026-04-28 (Round 13 — content date fix, a11y table scope, 404 autofocus, mobile
-CSS safe-area, token cleanup, methodology clarity).
+**Last updated:** 2026-04-28 (Round 14 — sitewide UI/UX revamp: dark-mode surface token fixes, touch
+target a11y, deprecated CSS removal, explainer strip token cleanup, market-card hover consistency,
+RTL trust-banner and explainer-strip overrides, critical.css added to 5 pages, trust icon polish,
+stale hlc-updated aria-label removed, karatStripCta capitalisation fix).
 
 ### 2026-04-27 full-site UX/admin/content revamp intake
 
@@ -993,6 +995,32 @@ two-tier gold-data polling model made explicit in the Methodology page._
 **Verification (Round 13):** `npm test` (379 ✓), `npm run lint` clean, `npm run validate` (SEO
 inventory regenerated, 0 errors), `npm run build` ✓; all 5 modified files pass `prettier --check`;
 CodeQL + Code Review passed with no issues.
+
+### Round 14 — Sitewide UI/UX revamp: surface tokens, touch targets, deprecated CSS, RTL, critical.css · 2026-04-28
+
+_Focused batch addressing real dark-mode surface token bugs, WCAG touch-target violations,
+deprecated CSS, explainer-strip token misuse, hover inconsistency, RTL coverage gaps, and page-load
+FOUC prevention across five secondary pages._
+
+| Bucket    | Summary                                                                                                                                                                                                              |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tokens`  | `home.css`: `.kstrip-unit-btn` and `.market-card` backgrounds fixed from undefined `--surface-base`/`--surface-card` fallbacks → `--surface-primary`. Ensures correct dark-mode surface on both elements.            |
+| `tokens`  | `home.css`: `.home-explainer-strip` padding and border tokens corrected (`--surface-secondary`, `--border-subtle`, `var(--space-6)`, `var(--space-5)`). Titles/descriptions use `--text-primary`/`--text-secondary`. |
+| `tokens`  | `home.css`: `.markets-note` uses `--text-tertiary` (was undefined `--color-text-subtle`).                                                                                                                            |
+| `a11y`    | `home.css`: `.kstrip-unit-btn` and `.hfb-dismiss` gain `min-height: 44px; min-width: 44px` to meet WCAG 2.5.5.                                                                                                       |
+| `a11y`    | `shops.css`: `.shops-guide-chip` gains `min-height: 44px`.                                                                                                                                                           |
+| `a11y`    | `index.html`: stale `aria-label="Loading price update time"` removed from `#hlc-updated` (was overriding the live `textContent` for screen readers in the `aria-live` region).                                       |
+| `css`     | `home.css`: `.market-card:hover` adds `transform: translateY(-4px)` + gold box-shadow to match `gcc-card` / `tool-card` hover; `@media (prefers-reduced-motion: reduce)` guard added.                                |
+| `css`     | `home.css`: Removed redundant `[dir='rtl'] .market-card-cta { direction: rtl; }` that could cause layout issues.                                                                                                     |
+| `css`     | `home.css`, `global.css`, `tracker-pro.css`, `calculator.css`, `learn.css`, `country-page.css`: all `–webkit-overflow-scrolling: touch` declarations removed (deprecated, no-op in modern browsers).                 |
+| `rtl`     | `home.css`: Added `[dir='rtl']` overrides for `.trust-banner-box` and `.explainer-strip-item` (flex-direction row-reverse); text-align right for explainer title/desc.                                               |
+| `content` | `src/config/translations.js`: `home.karatStripCta` capitalised to "Full Tracker →" for consistency with `home.trackerLink`.                                                                                          |
+| `perf`    | `calculator.html`, `learn.html`, `insights.html`, `methodology.html`, `invest.html`: `critical.css` preload + link added to prevent FOUC (matching pattern used on `index.html`, `tracker.html`, `shops.html`).      |
+| `ux`      | `index.html`: trust-banner icon changed from `⚠️` to `ℹ️` — informative tone, not alarming.                                                                                                                          |
+
+**Verification (Round 14):** `npm test` (379 ✓), `npm run lint` clean, `npm run validate` (0
+errors), `npm run build` ✓; all changed files pass `prettier --check`. Pre-existing Prettier
+warnings (13 files, unchanged) not introduced by this round.
 
 ### Round 11 — Status reconciliation + small-batch wins · 2026-04-28
 
