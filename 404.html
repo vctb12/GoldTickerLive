@@ -110,14 +110,15 @@
           We couldn't find that GoldTickerLive page. Search the site or jump back into the main price
           journey.
         </p>
-        <form class="notfound-search" action="/content/search/" method="get">
+        <form class="notfound-search" action="/content/search/" method="get" aria-label="Search GoldTickerLive">
           <input
             type="search"
             name="q"
             placeholder="Search gold prices, karats, countries…"
             aria-label="Search"
+            autofocus
           />
-          <button type="submit">Search</button>
+          <button type="submit" aria-label="Submit search">Search</button>
         </form>
         <nav class="notfound-links" aria-label="Quick navigation">
           <a href="/" class="notfound-link">
