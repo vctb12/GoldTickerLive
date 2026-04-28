@@ -147,9 +147,10 @@ const TXT = {
     nearmeButton: 'Find shops near me',
     resourcesTitle: 'Buying Guides & Resources',
     freshnessSemantics:
-      'Freshness semantics: Live / Delayed / Cached-Fallback / Estimated / Historical baseline (used consistently across GoldTickerLive). Directory source: editorial review timestamp.',
+      'Directory listings were last reviewed editorially. Reference prices are spot-linked estimates and are refreshed periodically — they are not live retail quotes.',
     priceDisclaimer:
-      'Listings are for discovery only and have NOT been independently verified — details may be outdated. Reference prices shown are spot-based estimates, not actual shop prices; retail quotes include making charges, dealer margins, and taxes.',
+      'Listings are for discovery only and have not been independently verified — details may be outdated. Reference prices shown are spot-based estimates, not actual shop prices; retail quotes include making charges, dealer margins, and taxes. Always confirm prices, hours, and availability directly with the shop before visiting or purchasing.',
+    spotVsRetailLinkText: 'Why shop prices differ from spot →',
     methodologyLinkText: 'How we calculate prices →',
   },
   ar: {
@@ -249,9 +250,10 @@ const TXT = {
     nearmeButton: 'ابحث عن محلات قريبة',
     resourcesTitle: 'أدلة الشراء والموارد',
     freshnessSemantics:
-      'دلالات حداثة البيانات: مباشر / متأخر / مخزن-احتياطي / تقديري / خط أساس تاريخي (موحدة عبر GoldTickerLive). مصدر الدليل: تاريخ مراجعة تحريرية.',
+      'تمت مراجعة إدراجات الدليل تحريرياً. الأسعار المرجعية تقديرات مرتبطة بالسعر الفوري وتُحدَّث دورياً — وليست أسعار تجزئة مباشرة.',
     priceDisclaimer:
-      'هذه الإدراجات للاكتشاف فقط ولم يتم التحقق منها بشكل مستقل — قد تكون التفاصيل قديمة. الأسعار المعروضة تقديرية مبنية على السعر الفوري وليست أسعار محلات فعلية؛ تشمل أسعار التجزئة المصنعية وهامش التاجر والضرائب.',
+      'هذه الإدراجات للاكتشاف فقط ولم يتم التحقق منها بشكل مستقل — قد تكون التفاصيل قديمة. الأسعار المعروضة تقديرية مبنية على السعر الفوري وليست أسعار محلات فعلية؛ تشمل أسعار التجزئة المصنعية وهامش التاجر والضرائب. احرص دائماً على تأكيد الأسعار والأوقات والتوفر مباشرة مع المحل قبل الزيارة أو الشراء.',
+    spotVsRetailLinkText: 'لماذا تختلف أسعار المحلات عن السعر الفوري ←',
     methodologyLinkText: 'كيف نحسب الأسعار →',
   },
 };
@@ -586,10 +588,14 @@ function applyStaticText() {
   const priceDisclEl = document.getElementById('shops-price-disclaimer');
   if (priceDisclEl) {
     const textNode = document.createTextNode(t('priceDisclaimer') + ' ');
+    const spotLink = document.createElement('a');
+    spotLink.href = 'content/spot-vs-retail-gold-price/';
+    spotLink.textContent = t('spotVsRetailLinkText');
+    const sep = document.createTextNode(' · ');
     const methodLink = document.createElement('a');
     methodLink.href = 'methodology.html';
     methodLink.textContent = t('methodologyLinkText');
-    priceDisclEl.replaceChildren(textNode, methodLink);
+    priceDisclEl.replaceChildren(textNode, spotLink, sep, methodLink);
   }
   document.getElementById('shops-shortlist-label').textContent = t('shortlistLabel');
   document.getElementById('shops-shortlist-clear').textContent = t('shortlistClear');

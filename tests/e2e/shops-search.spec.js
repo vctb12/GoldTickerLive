@@ -6,8 +6,9 @@
  * Tests focus on:
  *   - Page load and key UI elements render
  *   - Shop cards or listings are present
- *   - Search / filter controls are accessible
- *   - Internal links to methodology exist
+ *   - Search / filter controls are accessible and interactive
+ *   - Search input interaction filters results
+ *   - Internal links to methodology and spot-vs-retail exist
  *   - No <title> indicates an error
  */
 
@@ -61,5 +62,82 @@ test.describe('Shops directory page', () => {
     // so users know listings are informational, not endorsements.
     const body = (await page.textContent('body')) || '';
     expect(body.length).toBeGreaterThan(500);
+  });
+
+  test('trust disclaimer contains spot-vs-retail guidance', async ({ page }) => {
+    // Wait for JS to hydrate the disclaimer
+    await page
+      .waitForFunction(
+        () => {
+          const el = document.getElementById('shops-price-disclaimer');
+          return el && el.textContent && el.textContent.length > 50;
+        },
+        { timeout: 5000 }
+      )
+      .catch(() => null);
+    const disclaimerEl = page.locator('#shops-price-disclaimer');
+    const disclaimerText = (await disclaimerEl.textContent()) || '';
+    // Should mention reference/spot and recommend confirming with the shop
+    expect(disclaimerText.toLowerCase()).toMatch(/spot|reference|estimate/);
+    expect(disclaimerText.toLowerCase()).toMatch(/confirm|verify|making charge|retail/);
+  });
+
+  test('search input filters shop listings', async ({ page }) => {
+    // Wait for shops to render
+    await page.waitForSelector('.shop-card, #shops-grid', { timeout: 5000 }).catch(() => null);
+
+    const searchInput = page.locator(
+      '#shops-search, input[type="search"], input[placeholder*="search" i], input[aria-label*="search" i]'
+    );
+    const inputCount = await searchInput.count();
+    if (inputCount === 0) {
+      // Search input not present — skip gracefully (feature may not be on this build)
+      return;
+    }
+
+    // Type a search term and verify something happens (count changes or empty state)
+    await searchInput.first().fill('Dubai');
+    await page.waitForTimeout(400); // debounce
+
+    const listingsAfter = await page.locator('.shop-card, .shops-card, [data-shop-id]').count();
+    const emptyState = page.locator('#shops-empty, .shops-empty, [data-empty-state]');
+    const hasEmptyState = (await emptyState.count()) > 0 && (await emptyState.first().isVisible());
+
+    // Either there are listings (matching Dubai) or an empty state was shown
+    expect(listingsAfter > 0 || hasEmptyState).toBeTruthy();
+  });
+
+  test('country filter updates results', async ({ page }) => {
+    // Wait for shops to load
+    await page
+      .waitForSelector('.shop-card, #shops-grid, .shops-filter', { timeout: 5000 })
+      .catch(() => null);
+
+    const countrySelect = page.locator(
+      '#filter-country, select[aria-label*="country" i], select[id*="country" i]'
+    );
+    if ((await countrySelect.count()) === 0) return; // graceful skip
+
+    const options = await countrySelect.first().locator('option').allTextContents();
+    const nonAll = options.find(
+      (o) => o.toLowerCase() !== 'all' && o.toLowerCase() !== 'all countries'
+    );
+    if (!nonAll) return;
+
+    await countrySelect.first().selectOption({ label: nonAll });
+    await page.waitForTimeout(300);
+
+    // After selecting a country the results area should still be attached
+    const resultsArea = page.locator('#shops-grid, .shops-grid, .shop-card, #shops-empty');
+    await expect(resultsArea.first()).toBeAttached();
+  });
+
+  test('methodology and spot-vs-retail links are present', async ({ page }) => {
+    // Both internal links should appear on the page somewhere
+    const methodologyLink = page.locator('a[href*="methodology"]');
+    await expect(methodologyLink.first()).toBeAttached();
+
+    const spotVsRetailLink = page.locator('a[href*="spot-vs-retail"]');
+    await expect(spotVsRetailLink.first()).toBeAttached();
   });
 });

@@ -317,6 +317,25 @@ export const TRANSLATIONS = {
     'home.countrySearchPlaceholder': 'Filter countries…',
     'home.countrySearchEmpty': 'No countries match your search',
     'home.toolPrimaryBadge': 'Core tool',
+    'home.nextStepTitle': 'What should I check next?',
+    'home.nextStepSub':
+      'Focused guides for buying, comparing, and understanding the gap between live reference prices and final shop quotes.',
+    'home.nextUaeTitle': 'UAE buying guide',
+    'home.nextUaeDesc':
+      'Start with AED reference prices, then compare making charges, VAT, and shop terms.',
+    'home.nextUaeCta': 'Read UAE guide →',
+    'home.nextDubaiTitle': 'Dubai gold rate guide',
+    'home.nextDubaiDesc':
+      'Understand Dubai rates, souk context, and what to confirm before paying.',
+    'home.nextDubaiCta': 'Open Dubai guide →',
+    'home.nextGccTitle': 'GCC comparison',
+    'home.nextGccDesc':
+      'Compare Gulf reference prices using the same karat, unit, and freshness context.',
+    'home.nextGccCta': 'Compare GCC markets →',
+    'home.nextSvrTitle': 'Spot vs retail',
+    'home.nextSvrDesc':
+      'Learn why live spot-linked estimates are not final jewelry or shop prices.',
+    'home.nextSvrCta': 'Understand the difference →',
   },
   ar: {
     'header.title': 'أسعار الذهب المباشرة',
@@ -631,5 +650,23 @@ export const TRANSLATIONS = {
     'home.countrySearchPlaceholder': 'تصفية الدول…',
     'home.countrySearchEmpty': 'لا توجد دول تطابق بحثك',
     'home.toolPrimaryBadge': 'أداة رئيسية',
+    'home.nextStepTitle': 'ماذا أتحقق بعد ذلك؟',
+    'home.nextStepSub':
+      'أدلة متخصصة للشراء والمقارنة وفهم الفارق بين الأسعار المرجعية المباشرة وأسعار المحلات النهائية.',
+    'home.nextUaeTitle': 'دليل الشراء في الإمارات',
+    'home.nextUaeDesc':
+      'ابدأ بالأسعار المرجعية بالدرهم، ثم قارن رسوم المصنعية وضريبة القيمة المضافة وشروط المحلات.',
+    'home.nextUaeCta': 'اقرأ دليل الإمارات ←',
+    'home.nextDubaiTitle': 'دليل أسعار ذهب دبي',
+    'home.nextDubaiDesc': 'افهم أسعار دبي وسياق الأسواق، وما الذي يجب التأكد منه قبل الدفع.',
+    'home.nextDubaiCta': 'افتح دليل دبي ←',
+    'home.nextGccTitle': 'مقارنة دول الخليج',
+    'home.nextGccDesc':
+      'قارن الأسعار المرجعية الخليجية باستخدام نفس العيار والوحدة وسياق حداثة البيانات.',
+    'home.nextGccCta': 'قارن أسواق الخليج ←',
+    'home.nextSvrTitle': 'السعر الفوري مقابل التجزئة',
+    'home.nextSvrDesc':
+      'تعرف على سبب اختلاف التقديرات الفورية عن الأسعار النهائية في محلات المجوهرات.',
+    'home.nextSvrCta': 'افهم الفرق ←',
   },
 };

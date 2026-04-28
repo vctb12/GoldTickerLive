@@ -522,6 +522,22 @@ function applyLangToPage() {
   setTextById('faq-title', tx('faqTitle'));
   setTextById('faq-more-link', tx('faqMore'));
 
+  // Next-step guides section
+  setTextById('next-step-title', tx('nextStepTitle'));
+  setTextById('next-step-sub', tx('nextStepSub'));
+  setTextById('next-uae-title', tx('nextUaeTitle'));
+  setTextById('next-uae-desc', tx('nextUaeDesc'));
+  setTextById('next-uae-cta', tx('nextUaeCta'));
+  setTextById('next-dubai-title', tx('nextDubaiTitle'));
+  setTextById('next-dubai-desc', tx('nextDubaiDesc'));
+  setTextById('next-dubai-cta', tx('nextDubaiCta'));
+  setTextById('next-gcc-title', tx('nextGccTitle'));
+  setTextById('next-gcc-desc', tx('nextGccDesc'));
+  setTextById('next-gcc-cta', tx('nextGccCta'));
+  setTextById('next-svr-title', tx('nextSvrTitle'));
+  setTextById('next-svr-desc', tx('nextSvrDesc'));
+  setTextById('next-svr-cta', tx('nextSvrCta'));
+
   // Markets highlights section
   setTextById('markets-title', tx('marketsTitle'));
   setTextById('markets-sub', tx('marketsSub'));
