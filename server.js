@@ -9,6 +9,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
 const fs = require('fs');
+const fsp = require('fs').promises;
 const rateLimit = require('express-rate-limit');
 const { errorHandler } = require('./server/lib/errors');
 
@@ -98,6 +99,18 @@ app.use(
   })
 );
 
+// Permissions-Policy — explicitly disable browser features we never use, in
+// parity with the static-tier `_headers` / `.htaccess` configuration. Helmet
+// does not yet expose a first-class option for Permissions-Policy, so this is
+// set as a small custom middleware. Plan: docs/plans/2026-04-24_security-
+// performance-deps-audit.md Track A #14.
+const PERMISSIONS_POLICY =
+  'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()';
+app.use((req, res, next) => {
+  res.setHeader('Permissions-Policy', PERMISSIONS_POLICY);
+  next();
+});
+
 // CORS — restrict origins in production.
 // In production, always set CORS_ORIGINS (comma-separated) to avoid rejecting all cross-origin requests.
 // Example: CORS_ORIGINS=https://goldtickerlive.com,https://goldprices.com
@@ -120,6 +133,7 @@ app.use(
             if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
             cb(new Error('Not allowed by CORS'));
           },
+          optionsSuccessStatus: 204,
         }
       : IS_PROD
         ? {
@@ -128,8 +142,9 @@ app.use(
               if (!origin) return cb(null, true); // same-origin / server-to-server
               cb(new Error('Not allowed by CORS'));
             },
+            optionsSuccessStatus: 204,
           }
-        : undefined // development: allow all
+        : { optionsSuccessStatus: 204 } // development: allow all, but normalise preflight status
   )
 );
 
@@ -139,9 +154,11 @@ app.use(morgan(IS_PROD ? 'combined' : 'dev'));
 // This must be registered before the global JSON body parser.
 app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
 
-// Body parsing with size limits
+// Body parsing with size limits.
+// urlencoded is intentionally tighter than json — no current route consumes
+// large form-urlencoded payloads (Track A #16).
 app.use(express.json({ limit: '256kb' }));
-app.use(express.urlencoded({ extended: true, limit: '256kb' }));
+app.use(express.urlencoded({ extended: true, limit: '16kb' }));
 
 // ---------------------------------------------------------------------------
 // Global rate limiter
@@ -188,36 +205,44 @@ const NOT_FOUND_PAGE = path.join(DIST_DIR, '404.html');
 // phx/21: dev-mode 404 logging. Writes a ring buffer of recent 404 requests to
 // data/404-logs.json so we can spot broken-link patterns during development.
 // No-op in production (avoids disk writes on hot paths and accidental PII).
+//
+// Async fs (Track A #11 / Track B #2): a tiny serial queue keeps concurrent
+// 404s from racing each other on the same file. We deliberately fire-and-forget
+// from the request path so logging cannot block the response.
 const NOT_FOUND_LOG_PATH = path.join(__dirname, 'data', '404-logs.json');
 const NOT_FOUND_LOG_MAX = 500;
+let _notFoundWriteChain = Promise.resolve();
+async function appendNotFoundEntry(entry) {
+  let entries = [];
+  try {
+    const raw = await fsp.readFile(NOT_FOUND_LOG_PATH, 'utf8');
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) entries = parsed;
+  } catch (err) {
+    if (err && err.code !== 'ENOENT') {
+      // Corrupt JSON or unreadable file — start fresh; never throw past here.
+      entries = [];
+    }
+  }
+  entries.push(entry);
+  if (entries.length > NOT_FOUND_LOG_MAX) {
+    entries = entries.slice(-NOT_FOUND_LOG_MAX);
+  }
+  await fsp.mkdir(path.dirname(NOT_FOUND_LOG_PATH), { recursive: true });
+  await fsp.writeFile(NOT_FOUND_LOG_PATH, JSON.stringify(entries, null, 2));
+}
 function logNotFound(req) {
   if (IS_PROD) return;
-  try {
-    let entries = [];
-    if (fs.existsSync(NOT_FOUND_LOG_PATH)) {
-      try {
-        const raw = fs.readFileSync(NOT_FOUND_LOG_PATH, 'utf8');
-        entries = JSON.parse(raw);
-        if (!Array.isArray(entries)) entries = [];
-      } catch {
-        entries = [];
-      }
-    }
-    entries.push({
-      ts: new Date().toISOString(),
-      method: req.method,
-      path: req.originalUrl || req.url,
-      referer: req.get('referer') || null,
-      ua: (req.get('user-agent') || '').slice(0, 200),
-    });
-    if (entries.length > NOT_FOUND_LOG_MAX) {
-      entries = entries.slice(-NOT_FOUND_LOG_MAX);
-    }
-    fs.mkdirSync(path.dirname(NOT_FOUND_LOG_PATH), { recursive: true });
-    fs.writeFileSync(NOT_FOUND_LOG_PATH, JSON.stringify(entries, null, 2));
-  } catch {
-    // logging must never break the response
-  }
+  const entry = {
+    ts: new Date().toISOString(),
+    method: req.method,
+    path: req.originalUrl || req.url,
+    referer: req.get('referer') || null,
+    ua: (req.get('user-agent') || '').slice(0, 200),
+  };
+  // Chain writes so concurrent 404s do not interleave. Swallow errors — logging
+  // must never break the response.
+  _notFoundWriteChain = _notFoundWriteChain.then(() => appendNotFoundEntry(entry)).catch(() => {});
 }
 
 function send404(res, req) {

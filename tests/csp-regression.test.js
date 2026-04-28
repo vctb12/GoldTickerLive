@@ -115,3 +115,23 @@ test('production sets frame-ancestors none and X-Content-Type-Options', async ()
   );
   assert.equal(res.headers['x-content-type-options'], 'nosniff');
 });
+
+// Track A #14 — Permissions-Policy parity with `_headers` / `.htaccess`.
+test('production sets Permissions-Policy disabling sensitive features', async () => {
+  const res = await get('/api/health');
+  const pp = res.headers['permissions-policy'] || '';
+  assert.ok(pp, 'Permissions-Policy header must be set');
+  for (const feature of [
+    'accelerometer=()',
+    'camera=()',
+    'geolocation=()',
+    'gyroscope=()',
+    'magnetometer=()',
+    'microphone=()',
+    'payment=()',
+    'usb=()',
+    'interest-cohort=()',
+  ]) {
+    assert.ok(pp.includes(feature), `Permissions-Policy missing "${feature}". Full header: ${pp}`);
+  }
+});

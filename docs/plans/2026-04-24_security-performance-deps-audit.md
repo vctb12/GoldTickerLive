@@ -94,25 +94,34 @@ These are filed here with remediation notes so any future PR can pick one off wi
       leaving for a follow-up.
 - [ ] **#10 — Admin router refactor.** `server/routes/admin/index.js` is 602 lines. Only refactor if
       it buys measurable security wins (per-route validator modules + unit tests).
-- [ ] **#11 — Async fs in `logNotFound`.** Dev-only ring buffer. Switch to async fs or guard behind
-      a counter.
+- [x] **#11 — Async fs in `logNotFound`.** Dev-only ring buffer. ✅ **2026-04-28:** `server.js`
+      `logNotFound()` now reads/writes via `fs.promises` and serialises concurrent writes through a
+      single chained promise; the request handler fires-and-forgets so logging never blocks the
+      response. (Also closes Track B #2.)
 - [ ] **#12 — ReDoS review of `isValidEmail`.** `server/lib/auth.js:96–102` is already linear (no
       backtracking); `server/routes/newsletter.js:173–175` uses anchored regex with bounded char
       classes — safe, document it.
 - [ ] **#13 — Schema validation for `users.json` at load.** Validate each record (`email` non-empty,
       `role ∈ {admin, editor, viewer}`, `password` bcrypt-shaped `$2[aby]$..`). Reject file on
       schema mismatch rather than trusting disk.
-- [ ] **#14 — `Permissions-Policy` header.** Explicitly disable `camera`, `microphone`,
-      `geolocation`, `payment`, `usb` in Helmet + `_headers`.
-- [ ] **#15 — Login log timing parity.** Confirmed: `authenticate()` returns the same message for
-      unknown user vs bad password; bcrypt compare dominates timing. No change needed — record in a
-      test.
-- [ ] **#16 — Lower `urlencoded` body limit** to `16kb`. No route uses form-urlencoded heavily.
-- [ ] **#17 — `cors` `optionsSuccessStatus: 204`.** Cosmetic, low priority.
+- [x] **#14 — `Permissions-Policy` header.** ✅ **2026-04-28:** Explicit middleware in `server.js`
+      now sets
+      `Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(),     magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()`,
+      in parity with `_headers` and `.htaccess`. Covered by a new assertion in
+      `tests/csp-regression.test.js`.
+- [x] **#15 — Login log timing parity.** ✅ **2026-04-28:** `authenticate()` returns the same
+      `'Invalid credentials'` message for unknown user, bad password, and bad email format; bcrypt
+      compare dominates timing for the user-found path. Recorded in `tests/auth.test.js`.
+- [x] **#16 — Lower `urlencoded` body limit** to `16kb`. ✅ **2026-04-28:** `server.js` now sets
+      `express.urlencoded({ extended: true, limit: '16kb' })`; `json` stays at `256kb` because admin
+      JSON payloads occasionally exceed the urlencoded ceiling.
+- [x] **#17 — `cors` `optionsSuccessStatus: 204`.** ✅ **2026-04-28:** All three CORS branches
+      (allowlist, prod-no-allowlist, dev) now pass `optionsSuccessStatus: 204` so preflights return
+      204 No Content uniformly.
 - [ ] **#18 — Log rotation.** Not our concern (stdout).
 - [ ] **#19 — Audit `admin/` static directory** for embedded secrets in HTML.
       `grep -R 'sk_\|service_role' admin/`.
-- [ ] **#20 — Confirm 404 fallthrough is SEO-correct** (no soft-404s). Already verified in
+- [x] **#20 — Confirm 404 fallthrough is SEO-correct** (no soft-404s). ✅ Verified in
       `tests/server.test.js`.
 
 ### A.3 Authoritative sweeps — status
@@ -158,11 +167,12 @@ documents the exact commands to run on the developer host.
 
 ### B.2 Follow-up checklist
 
-- [ ] **#2 — Async fs in `logNotFound`.** Also listed in Track A.
+- [x] **#2 — Async fs in `logNotFound`.** ✅ **2026-04-28:** Closed in tandem with Track A #11 — see
+      `server.js` `logNotFound()` (async `fs.promises` + chained-promise serialisation).
 - [ ] **#7 — `linkinator` runtime** in `npm run linkcheck`. Not runtime perf but CI. Reduce
       concurrency or split into nightly.
-- [ ] **#8 — Service worker (`sw.js`) audit** — verify no `/api/*` or `/admin/*` caching. Add a
-      test.
+- [x] **#8 — Service worker (`sw.js`) audit** — ✅ verified by `tests/sw-exclusions.test.js`:
+      `/api/*` and `/admin/*` paths are bypassed before the navigate handler.
 - [ ] **#9 — Route-split tracker bundle out of homepage.**
 - [ ] **#10 — `morgan` sync stdout writes.** Info only.
 - [ ] **#11 — `loadUsers()` sync at module load.** Low impact.
