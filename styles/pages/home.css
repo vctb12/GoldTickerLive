@@ -1382,6 +1382,12 @@
   .tools-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  /* 4-col market cards are too cramped on 700–768 px tablet;
+     step down to 3 before the 700 px rule drops them to 2 */
+  .markets-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════

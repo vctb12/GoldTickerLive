@@ -1649,6 +1649,29 @@ body.tracker-pro-page {
   }
 }
 
+/* ── 700 px — small-tablet / phone-landscape ────────────────────────────── */
+@media (width <= 700px) {
+  /* Compress panel padding one step so content breathes at narrow tablet */
+  .tracker-panel {
+    padding: var(--space-4);
+  }
+
+  /* Step hero stats from 4-across to 2-across before the full single-col at 900 */
+  .tracker-hero-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Keep selectors 2-column (900px rule already does this, but be explicit) */
+  .tracker-hero-selectors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Chip row wraps earlier to avoid horizontal overflow */
+  .tracker-chip-row {
+    flex-wrap: wrap;
+  }
+}
+
 @media (width <= 640px) {
   .tracker-shell {
     width: min(1400px, calc(100% - 18px));
