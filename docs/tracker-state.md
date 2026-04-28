@@ -131,12 +131,16 @@ The tracker live badge, refresh badge, and the hero summary panel all reflect a 
 derived by `getLiveFreshness()` in [`src/lib/live-status.js`](../src/lib/live-status.js). The four
 states and their copy keys are:
 
-| State         | `freshness.key` | Badge CSS class              | Meaning                                                    |
-| ------------- | --------------- | ---------------------------- | ---------------------------------------------------------- |
-| `live`        | `live`          | `tracker-badge-live`         | Data < 2 min old. Green pill.                              |
-| `cached`      | `cached`        | `tracker-badge--cached`      | Data ≥ 1 h old; shown with full timestamp ("as of HH:MM"). |
-| `stale`       | `stale`         | `tracker-badge--stale`       | Data 10–60 min old; shown with "Stale · as of HH:MM".      |
-| `unavailable` | `unavailable`   | `tracker-badge--unavailable` | API failed, no cached price available.                     |
+| State         | `freshness.key` | Badge CSS class              | Meaning                                                     |
+| ------------- | --------------- | ---------------------------- | ----------------------------------------------------------- |
+| `live`        | `live`          | `tracker-badge-live`         | Data ≤ 12 min old; no live-fetch failure. Green pill.       |
+| `cached`      | `cached`        | `tracker-badge--cached`      | Data ≤ 12 min old; live-fetch failure occurred. Amber pill. |
+| `stale`       | `stale`         | `tracker-badge--stale`       | Data > 12 min old. Shown with "Stale · as of HH:MM".        |
+| `unavailable` | `unavailable`   | `tracker-badge--unavailable` | `updatedAt` absent — no price available.                    |
+
+The 12-minute boundary (`STALE_AFTER_MS`) in `src/lib/live-status.js` tolerates one missed cron tick
+while markets are open (workflow runs every 6 minutes). `live` and `cached` share the same age
+window — they differ only by whether a live-fetch failure (`hasLiveFailure`) has occurred.
 
 ### Copy keys per state
 

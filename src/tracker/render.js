@@ -205,11 +205,13 @@ export function renderHero() {
   if (_el.refreshBadge) {
     let refreshText;
     if (!spot) {
-      refreshText = _state.hasLiveFailure
-        ? freshness.timeText
+      if (_state.hasLiveFailure) {
+        refreshText = freshness.timeText
           ? tx('refreshBadgeUnavailable', { time: freshness.timeText })
-          : tx('liveUnavailable')
-        : tx('connecting');
+          : tx('liveUnavailable');
+      } else {
+        refreshText = tx('connecting');
+      }
     } else if (freshness.key === 'stale' || freshness.key === 'cached') {
       refreshText = tx('refreshBadgeStale', { time: freshness.timeText });
     } else {
@@ -1170,39 +1172,36 @@ function _renderArchivePagination(page, totalPages, total) {
   clear(paginationEl);
   if (total <= ARCHIVE_PAGE_SIZE) return;
 
-  const isRtl = _state.lang === 'ar';
-  const prevArrow = isRtl ? '→' : '←';
-  const nextArrow = isRtl ? '←' : '→';
-  const prevLabel = isRtl ? 'الصفحة السابقة' : 'Previous page';
-  const nextLabel = isRtl ? 'الصفحة التالية' : 'Next page';
-  const pageText = isRtl ? `صفحة ${page + 1} / ${totalPages}` : `Page ${page + 1} / ${totalPages}`;
-
   const prevBtn = el(
     'button',
     {
       type: 'button',
       class: 'btn btn-sm btn-ghost tracker-pagination-btn',
-      'aria-label': prevLabel,
+      'aria-label': tx('pagination.prevLabel'),
       disabled: page === 0 ? true : null,
     },
-    `${prevArrow} ${isRtl ? 'السابق' : 'Prev'}`
+    tx('pagination.prev')
   );
   prevBtn.addEventListener('click', () => {
     _archivePage--;
     renderArchive();
   });
 
-  const pageLabel = el('span', { class: 'tracker-pagination-label' }, pageText);
+  const pageLabel = el(
+    'span',
+    { class: 'tracker-pagination-label' },
+    tx('pagination.page', { page: page + 1, total: totalPages })
+  );
 
   const nextBtn = el(
     'button',
     {
       type: 'button',
       class: 'btn btn-sm btn-ghost tracker-pagination-btn',
-      'aria-label': nextLabel,
+      'aria-label': tx('pagination.nextLabel'),
       disabled: page >= totalPages - 1 ? true : null,
     },
-    `${isRtl ? 'التالي' : 'Next'} ${nextArrow}`
+    tx('pagination.next')
   );
   nextBtn.addEventListener('click', () => {
     _archivePage++;

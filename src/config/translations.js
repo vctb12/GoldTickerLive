@@ -129,7 +129,7 @@ export const TRANSLATIONS = {
     'tracker.summary.aedPegCopy': 'AED conversions use the UAE Central Bank fixed peg 3.6725.',
     'tracker.summary.sourceTitle': 'Data source',
     'tracker.summary.sourceCopy':
-      'XAU/USD: open.er-api.com or server snapshot (data/gold_price.json). AED: fixed peg 3.6725 — no FX conversion applied.',
+      'XAU/USD: open.er-api.com (live) or local data cache (fallback). AED: UAE Central Bank fixed peg 3.6725 — no FX conversion applied.',
     'tracker.summary.historyTitle': 'History coverage',
     'tracker.summary.historyCopy': 'LBMA baseline 2019–Aug 2025 + session snapshots.',
     'tracker.marketMeta': '{karat}K / {unit}',
@@ -149,6 +149,11 @@ export const TRANSLATIONS = {
     'tracker.briefHeadline': 'Gold at ${spot} / troy oz — {source}',
     'tracker.briefBody':
       'UAE 24K: AED {aed24}/g. Selected view: {karat}K in {currency} per {unit}. FX source: open.er-api.com (AED uses fixed peg 3.6725). History: LBMA monthly baseline 2019–Aug 2025 + session snapshots.',
+    'tracker.pagination.prev': '← Prev',
+    'tracker.pagination.next': 'Next →',
+    'tracker.pagination.prevLabel': 'Previous page',
+    'tracker.pagination.nextLabel': 'Next page',
+    'tracker.pagination.page': 'Page {page} / {total}',
     'alerts.title': 'Price Alerts',
     'alerts.subtitle':
       'Get notified when gold crosses your target — stored locally, no account needed',
@@ -470,7 +475,7 @@ export const TRANSLATIONS = {
       'تحويلات الدرهم تعتمد الربط الثابت لمصرف الإمارات المركزي 3.6725.',
     'tracker.summary.sourceTitle': 'مصدر البيانات',
     'tracker.summary.sourceCopy':
-      'XAU/USD: open.er-api.com أو لقطة محلية (data/gold_price.json). الدرهم: ربط ثابت 3.6725 — لا تحويل صرف أجنبي.',
+      'XAU/USD: open.er-api.com (مباشر) أو ذاكرة بيانات محلية (احتياطي). الدرهم: ربط ثابت لمصرف الإمارات المركزي 3.6725 — لا تحويل صرف أجنبي.',
     'tracker.summary.historyTitle': 'نطاق السجل',
     'tracker.summary.historyCopy': 'متوسطات LBMA من 2019 حتى أغسطس 2025 مع لقطات الجلسة.',
     'tracker.marketMeta': '{karat} قيراط / {unit}',
@@ -490,6 +495,11 @@ export const TRANSLATIONS = {
     'tracker.briefHeadline': 'الذهب عند ${spot} لكل أوقية تروي — {source}',
     'tracker.briefBody':
       'عيار 24 في الإمارات: {aed24} درهم/غ. العرض المحدد: {karat} قيراط بعملة {currency} لكل {unit}. مصدر الصرف: open.er-api.com (مع ربط الدرهم الثابت 3.6725). السجل: متوسطات LBMA الشهرية من 2019 حتى أغسطس 2025 مع لقطات الجلسة.',
+    'tracker.pagination.prev': 'السابق ←',
+    'tracker.pagination.next': '→ التالي',
+    'tracker.pagination.prevLabel': 'الصفحة السابقة',
+    'tracker.pagination.nextLabel': 'الصفحة التالية',
+    'tracker.pagination.page': 'صفحة {page} / {total}',
     'alerts.title': 'تنبيهات الأسعار',
     'alerts.subtitle': 'احصل على إشعار عندما يتجاوز الذهب هدفك — محلي ومجاني، لا حساب مطلوب',
     'alerts.addBtn': '+ إضافة تنبيه',
