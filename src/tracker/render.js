@@ -6,6 +6,7 @@ import { filterByRange } from '../lib/historical-data.js';
 import { clear, el, setText, escape } from '../lib/safe-dom.js';
 import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
 import { pulseFreshness } from '../lib/freshness-pulse.js';
+import { countUp } from '../lib/count-up.js';
 
 let _state, _el, _priceFor, _currentSpot, _showToast;
 let _chartListenersAttached = false;
@@ -175,7 +176,14 @@ export function renderHero() {
     }
   }
 
-  if (_el.xauUsdValue) setText(_el.xauUsdValue, spot ? formatUsd(spot) : '—');
+  if (_el.xauUsdValue) {
+    if (spot) {
+      countUp(_el.xauUsdValue, spot, { decimals: 2, format: (n) => formatUsd(n) });
+      pulseFreshness(_el.xauUsdValue);
+    } else {
+      setText(_el.xauUsdValue, '—');
+    }
+  }
   const xauBadge = document.getElementById('tp-xauusd-badge');
   if (xauBadge) {
     xauBadge.title = freshness.tooltip;
@@ -449,26 +457,55 @@ export function renderKaratTable() {
     unit: _state.selectedUnit,
     spot,
   });
-  const fragment = document.createDocumentFragment();
-  for (const k of KARATS) {
-    const p = _priceFor({
-      currency: _state.selectedCurrency,
-      karat: k.code,
-      unit: _state.selectedUnit,
-      spot,
-    });
-    const vs = price24 && p ? `${((p / price24) * 100).toFixed(1)}%` : '—';
-    fragment.append(
-      el('tr', null, [
-        el('td', null, `${k.code}K`),
-        el('td', null, `${(k.purity * 100).toFixed(1)}%`),
-        el('td', null, `${p ? p.toFixed(2) : '—'} ${_state.selectedCurrency}`),
-        el('td', null, vs),
-      ])
-    );
+
+  // Build rows on first render; update price cells in-place on subsequent renders
+  // so countUp can animate from the previous value.
+  const isFirstRender = !_el.karatTable.querySelector('[data-karat-price]');
+
+  if (isFirstRender) {
+    const fragment = document.createDocumentFragment();
+    for (const k of KARATS) {
+      const p = _priceFor({
+        currency: _state.selectedCurrency,
+        karat: k.code,
+        unit: _state.selectedUnit,
+        spot,
+      });
+      const vs = price24 && p ? `${((p / price24) * 100).toFixed(1)}%` : '—';
+      const priceCell = el('td', { 'data-karat-price': k.code }, p ? p.toFixed(2) : '—');
+      const vsCell = el('td', { 'data-karat-vs': k.code }, vs);
+      fragment.append(
+        el('tr', null, [
+          el('td', null, `${k.code}K`),
+          el('td', null, `${(k.purity * 100).toFixed(1)}%`),
+          priceCell,
+          vsCell,
+        ])
+      );
+    }
+    clear(_el.karatTable);
+    _el.karatTable.append(fragment);
+  } else {
+    // In-place update: animate price cells with countUp, flash vs-cells
+    for (const k of KARATS) {
+      const p = _priceFor({
+        currency: _state.selectedCurrency,
+        karat: k.code,
+        unit: _state.selectedUnit,
+        spot,
+      });
+      const vs = price24 && p ? `${((p / price24) * 100).toFixed(1)}%` : '—';
+      const priceCell = _el.karatTable.querySelector(`[data-karat-price="${k.code}"]`);
+      const vsCell = _el.karatTable.querySelector(`[data-karat-vs="${k.code}"]`);
+      if (priceCell && p) {
+        countUp(priceCell, p, { decimals: 2, format: (n) => n.toFixed(2) });
+        pulseFreshness(priceCell);
+      } else if (priceCell) {
+        setText(priceCell, '—');
+      }
+      if (vsCell) setText(vsCell, vs);
+    }
   }
-  clear(_el.karatTable);
-  _el.karatTable.append(fragment);
 }
 
 export function renderMarkets() {
