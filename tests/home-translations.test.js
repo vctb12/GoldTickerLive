@@ -64,6 +64,21 @@ const REQUIRED_KEYS = [
   // Country search (Round 10)
   'home.countrySearchPlaceholder',
   'home.countrySearchEmpty',
+  // Next-step guides section (Round 12)
+  'home.nextStepTitle',
+  'home.nextStepSub',
+  'home.nextUaeTitle',
+  'home.nextUaeDesc',
+  'home.nextUaeCta',
+  'home.nextDubaiTitle',
+  'home.nextDubaiDesc',
+  'home.nextDubaiCta',
+  'home.nextGccTitle',
+  'home.nextGccDesc',
+  'home.nextGccCta',
+  'home.nextSvrTitle',
+  'home.nextSvrDesc',
+  'home.nextSvrCta',
 ];
 
 test('new home translation keys exist in both EN and AR', async () => {

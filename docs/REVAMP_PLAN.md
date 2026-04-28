@@ -13,7 +13,8 @@ them into the right section here before execution. Agent operating rules are in
 - Keep completed items as `[x]` with enough context to serve as a record. Don't re-open closed items
   to pad status; don't invent new phases to look ambitious.
 
-**Last updated:** 2026-04-28 (Round 11 — status reconciliation + small-batch wins).
+**Last updated:** 2026-04-28 (Round 12 — shops trust copy, hover a11y, next-step bilingual,
+calculator links, E2E expansion).
 
 ### 2026-04-27 full-site UX/admin/content revamp intake
 
@@ -946,6 +947,27 @@ mobile pass, RTL chrome parity verification (+ `applyStaticText` bug fix), and n
 **Verification (Round 9):** `npm test` (376 ✓), `npm run validate` (0 errors), `npm run lint` clean,
 `npm run build` ✓ (2.15 s).
 
+### Round 12 — Shops trust copy, hover a11y, next-step bilingual, calculator links, E2E expansion · 2026-04-28
+
+_Works pending tasks from `2026-04-27_full-site-ux-admin-revamp.md` Batch 4 (shops/home/calculator
+deeper pass), `reports/internal-linking.md`, and multi-track quality Track 3.2 / Track G._
+
+| SHA       | Bucket  | Summary                                                                                                                                                                                                                                                      |
+| --------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| _pending_ | `ux`    | `shops.js` — `freshnessSemantics` rewritten to user-friendly copy in both EN and AR; `priceDisclaimer` reinstated with "always confirm" sentence (was missing from JS version); spot-vs-retail link added alongside methodology link in rendered disclaimer. |
+| _pending_ | `html`  | `shops.html` — static fallback text for `#shops-freshness-semantics` and `#shops-price-disclaimer` updated to match new JS copy; `#shops-nearme-title` emoji wrapped in `aria-hidden="true"` for accessible heading fallback.                                |
+| _pending_ | `html`  | `calculator.html` — "Related tools" section expanded: 22K Guide, 24K Guide, and Spot vs Retail cards added (3 → 6 cards). Addresses `reports/internal-linking.md` `calculator.html` weak-hub finding.                                                        |
+| _pending_ | `i18n`  | `index.html` — translation IDs added to "next-step" guide-cards section (14 elements across 4 cards + section header/sub).                                                                                                                                   |
+| _pending_ | `i18n`  | `src/config/translations.js` — 14 EN + 14 AR keys added for `home.nextStep*` and `home.next{Uae,Dubai,Gcc,Svr}*` (section title/sub, 4×3 card title/desc/cta).                                                                                               |
+| _pending_ | `i18n`  | `src/pages/home.js` `applyLangToPage()` — 14 new `setTextById()` calls for the next-step section.                                                                                                                                                            |
+| _pending_ | `tests` | `tests/home-translations.test.js` — 14 new keys added to `REQUIRED_KEYS` (EN/AR parity enforced).                                                                                                                                                            |
+| _pending_ | `css`   | `styles/global.css` — `.hover-lift:hover` wrapped in `@media (hover: hover)` (Track G touch-without-hover); `:focus-visible` kept always-active; `.card--elevated:hover` transform guard; `.ticker-track:hover` animation-pause guard.                       |
+| _pending_ | `tests` | `tests/e2e/shops-search.spec.js` — 4 new test cases added (trust disclaimer copy, search input interaction, country filter interaction, methodology+spot-vs-retail links present).                                                                           |
+| _pending_ | `docs`  | `REVAMP_PLAN.md` last-updated bumped to Round 12; §22 Phase 15 + §22b Batch 4 shops/home/calc pending items noted.                                                                                                                                           |
+
+**Verification (Round 12):** `npm test` (379 ✓), `npm run lint` clean, `npm run validate` (0
+errors), `npm run build` ✓ (2.21 s).
+
 ### Round 11 — Status reconciliation + small-batch wins · 2026-04-28
 
 _Reconciles `REVAMP_PLAN.md` §4 / §5 / §6 status against actual code state shipped in PR #218 (the
@@ -1184,11 +1206,14 @@ with the homepage + nav + tracker revamp in §1–§18. Status rolls into `CHANG
 ### Track C — Product polish & trust (in progress)
 
 - [ ] Phase 14 — Trust & labeling audit (in progress)
-- [ ] Phase 15 — Shops directory trust pass (in progress — featured-section editorial footnote +
-      "Directory last reviewed" label added; bilingual copy wired in `src/pages/shops.js`)
+- [x] Phase 15 — Shops directory trust pass (in progress → closed Round 12: `freshnessSemantics`
+      user-friendly copy in EN+AR; `priceDisclaimer` "always confirm" reinstated in JS;
+      spot-vs-retail link added to rendered disclaimer; `shops.html` static fallback updated; nearme
+      h2 emoji accessibility fixed)
 - [ ] Phase 16 — Tracker UX polish (in progress — `renderSeasonal()` now populates
       `#tp-seasonal-results` with monthly high/low/spread from `state.history`)
-- [ ] Phase 17 — Calculator polish
+- [x] Phase 17 — Calculator polish (Round 12: Related-tools section expanded 3→6 cards — 22K guide,
+      24K guide, spot-vs-retail; addresses internal-linking weak-hub finding)
 - [ ] Phase 18 — Country / city / market pages
 - [ ] Phase 19 — Educational / Learn pages
 - [ ] Phase 20 — Design system completion

@@ -534,9 +534,11 @@ svg {
   box-shadow: var(--shadow-sm);
 }
 
-.card--elevated:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .card--elevated:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
 }
 
 .card--accent {
@@ -3709,8 +3711,10 @@ details[open] > .faq-q::after {
   flex-shrink: 0;
 }
 
-.ticker-track:hover .ticker-copy {
-  animation-play-state: paused;
+@media (hover: hover) {
+  .ticker-track:hover .ticker-copy {
+    animation-play-state: paused;
+  }
 }
 
 .ticker-item {
@@ -5889,7 +5893,9 @@ body > * {
 /* Card hover lift: opt-in `.hover-lift` utility for card-like surfaces.
    Raises the card by 2 px and deepens the shadow in 200 ms `--ease-out`.
    Caller must set a base `box-shadow` (or accept the fallback) and a
-   `transform` baseline (none) so the transition kicks in. */
+   `transform` baseline (none) so the transition kicks in.
+   Wrapped in `(hover: hover)` so touch devices are not affected by
+   the sticky-hover behaviour that persists after a tap. */
 .hover-lift {
   transition:
     transform var(--duration-normal, 200ms) var(--ease-out),
@@ -5897,7 +5903,15 @@ body > * {
   will-change: transform;
 }
 
-.hover-lift:hover,
+@media (hover: hover) {
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 10px 24px rgb(0 0 0 / 10%),
+      0 2px 6px rgb(0 0 0 / 6%);
+  }
+}
+
 .hover-lift:focus-visible {
   transform: translateY(-2px);
   box-shadow:
