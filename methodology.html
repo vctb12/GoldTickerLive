@@ -64,6 +64,7 @@
   
   
   
+  
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -143,7 +144,7 @@
                 Gold spot price (XAU/USD)
               </div>
               <div class="method-source-card-freq" id="source-gold-freq">
-                Fetched every 6 minutes
+                Server-side refresh: every 6 minutes · Client re-poll: every 90 s
               </div>
               <a
                 href="https://goldpricez.com"
@@ -188,9 +189,12 @@
 
           <h3 id="gold-data-update-h3">Update Frequency</h3>
           <p id="gold-data-update-p">
-            The gold price is fetched every <strong>90 seconds</strong> while a page is open and the
-            device is online. This provides near-real-time data with a potential lag of up to 90
-            seconds versus institutional trading platforms.
+            There are two refresh cycles. <strong>Server-side:</strong> a GitHub Actions workflow
+            fetches the latest XAU/USD spot price from goldpricez.com every 6 minutes and commits it
+            to <code>data/gold_price.json</code>. <strong>Client-side:</strong> the browser
+            re-downloads that file every <strong>90 seconds</strong> while a page is open and the
+            device is online. Combined, this means prices shown are at most ~90 seconds old relative
+            to the last server poll, and at most ~6–7 minutes old relative to the live market.
           </p>
 
           <h3 id="gold-data-cache-h3">Caching</h3>

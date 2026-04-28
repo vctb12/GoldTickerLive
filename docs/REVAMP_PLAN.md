@@ -13,8 +13,8 @@ them into the right section here before execution. Agent operating rules are in
 - Keep completed items as `[x]` with enough context to serve as a record. Don't re-open closed items
   to pad status; don't invent new phases to look ambitious.
 
-**Last updated:** 2026-04-28 (Round 12 — shops trust copy, hover a11y, next-step bilingual,
-calculator links, E2E expansion).
+**Last updated:** 2026-04-28 (Round 13 — content date fix, a11y table scope, 404 autofocus, mobile
+CSS safe-area, token cleanup, methodology clarity).
 
 ### 2026-04-27 full-site UX/admin/content revamp intake
 
@@ -338,7 +338,9 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
       etc.) continue to dominate by specificity — no regression. - [ ] **Slice 3 (cleanup).**
       Migrate per-page hand-sized heading selectors to the canonical classes, one page per commit.
       (Partial — Round 9: 10 `tracker-pro.css` heading selectors migrated to dual `.element/.h{N}`
-      form in `6e63e1f`. Remaining: home.css, shops.css, other pages.)
+      form in `6e63e1f`. Round 13: `home-section-sub` and `section-link` in `home.css` migrated from
+      raw `0.88/0.86rem` to `var(--text-sm)`. Remaining: major heading selectors in home.css,
+      shops.css, other pages.)
 - [x] **Focus ring token audit.** Canonical `:focus-visible` baseline in `styles/global.css` uses
       `--focus-ring-width` / `--focus-ring-color` / `--focus-ring-offset`. Page-level outline
       overrides normalized to the same tokens: `.calc-tab`, `.tracker-mode-tab`,
@@ -651,11 +653,15 @@ Applied on top of primitives from Track A. Rules:
       `.home-section`; `@media (width ≤ 360px)` block forces single-column on `hero-inner`,
       `tools-grid`, `markets-grid`, `karat-strip-inner`; `karat-strip-prices` scrollable. (`daf150a`
       Round 9)
+- [x] 481–640 px phone-landscape spacing: `home.css` 481–640 px query keeps hero CTAs in row layout
+      where there's horizontal room. `@supports (padding-bottom: env(safe-area-inset-bottom))` block
+      clears hero CTAs from iPhone home indicator. (`a1f1b6b` Round 13)
 - [ ] 481–700 px phone-landscape & small-tablet spacing compression rules instead of premature
-      desktop layout.
+      desktop layout (remaining: section-level gaps, karat strip, tracker controls).
 - [ ] 700–1024 px tablet layout — no awkward scaling, no oversized gaps, no premature column drops.
-- [ ] Sticky controls with safe-area insets (`env(safe-area-inset-*)`).
-- [ ] Tap targets ≥ 44 × 44 px across nav, drawer, CTA, cards.
+- [x] Sticky controls with safe-area insets (`env(safe-area-inset-*)`): hero CTA block gets
+      `padding-bottom: max(0px, env(safe-area-inset-bottom))` via `@supports` guard at `≤ 640px`.
+      (`a1f1b6b` Round 13)- [ ] Tap targets ≥ 44 × 44 px across nav, drawer, CTA, cards.
 - [ ] Chart pinch/pan sane on tracker.
 - [ ] Drawer `100svh` with `100vh` fallback (iOS Safari-safe).
 - [ ] Freshness pills, CTAs, and pickers legible at smallest breakpoint.
@@ -967,6 +973,26 @@ deeper pass), `reports/internal-linking.md`, and multi-track quality Track 3.2 /
 
 **Verification (Round 12):** `npm test` (379 ✓), `npm run lint` clean, `npm run validate` (0
 errors), `npm run build` ✓ (2.21 s).
+
+### Round 13 — Content date fix, a11y table scope, 404 autofocus, mobile CSS, token cleanup, methodology clarity · 2026-04-28
+
+_Small batch of safe cross-page improvements: stale date removed from featured article, table
+accessibility hardened, 404 page keyboard-focus fixed, hero CTAs cleared from iPhone notch,
+`home-section-sub` and `section-link` migrated to canonical tokens (Slice 3 partial), and the
+two-tier gold-data polling model made explicit in the Methodology page._
+
+| SHA       | Bucket    | Summary                                                                                                                                                                                     |
+| --------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `a1f1b6b` | `content` | `insights.html`: article date "March 2026" → "April 2026" in `<time datetime="2026-04">`; `og:type` corrected from `website` to `article`.                                                  |
+| `a1f1b6b` | `a11y`    | `learn.html`: `scope="col"` on all `<th>` column headers in karat and fineness tables; first-column karat/fineness cells promoted to `<th scope="row">`.                                    |
+| `a1f1b6b` | `a11y`    | `404.html`: `autofocus` on search input; `aria-label` on `<form>` and submit button.                                                                                                        |
+| `a1f1b6b` | `css`     | `home.css`: `@supports (padding-bottom: env(safe-area-inset-bottom))` block for hero CTAs; 481–640 px phone-landscape query keeps row layout.                                               |
+| `a1f1b6b` | `tokens`  | `home.css`: `.home-section-sub` and `.section-link` migrated from raw `0.88/0.86rem` to `var(--text-sm)` (Track A Slice 3 partial).                                                         |
+| `a1f1b6b` | `trust`   | `methodology.html`: source card frequency clarified to "Server-side refresh: every 6 minutes · Client re-poll: every 90 s"; Update Frequency paragraph explains the two-tier polling model. |
+
+**Verification (Round 13):** `npm test` (379 ✓), `npm run lint` clean, `npm run validate` (SEO
+inventory regenerated, 0 errors), `npm run build` ✓; all 5 modified files pass `prettier --check`;
+CodeQL + Code Review passed with no issues.
 
 ### Round 11 — Status reconciliation + small-batch wins · 2026-04-28
 
