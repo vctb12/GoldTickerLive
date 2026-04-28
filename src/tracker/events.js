@@ -340,16 +340,8 @@ export function bindCoreEvents() {
   const jumpChart = document.getElementById('tp-jump-chart');
   if (jumpChart) {
     jumpChart.addEventListener('click', () => {
-      const livePanel = document.getElementById('mode-live');
-      if (!livePanel) return;
-      const heading = livePanel.querySelector('h2');
-      if (!heading) return;
-      const hadTabindex = heading.hasAttribute('tabindex');
-      if (!hadTabindex) heading.setAttribute('tabindex', '-1');
-      heading.focus({ preventScroll: true });
-      if (!hadTabindex) {
-        heading.addEventListener('blur', () => heading.removeAttribute('tabindex'), { once: true });
-      }
+      const heading = document.getElementById('tp-chart-heading');
+      if (heading) heading.focus({ preventScroll: true });
     });
   }
 }

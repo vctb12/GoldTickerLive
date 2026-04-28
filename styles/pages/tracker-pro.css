@@ -1692,6 +1692,20 @@ body.tracker-pro-page {
 
   .tracker-badge {
     justify-content: center;
+    overflow-wrap: break-word;
+  }
+
+  /* Keep hero selectors pinned while scrolling on mobile */
+  .tracker-hero-controls {
+    position: sticky;
+    top: var(--nav-height, 64px);
+    z-index: 20;
+    background: var(--color-bg, #0a0a0a);
+    padding-block: var(--space-3);
+    margin-inline: calc(-1 * var(--space-4));
+    padding-inline: var(--space-4);
+    border-bottom: 1px solid var(--tp-border, rgb(255 255 255 / 8%));
+    box-shadow: 0 4px 12px rgb(0 0 0 / 40%);
   }
 
   .tracker-control-grid {
@@ -1740,6 +1754,12 @@ body.tracker-pro-page {
 
   .tracker-badge-row {
     gap: 0.4rem;
+  }
+
+  .tracker-badge strong,
+  .tracker-badge span {
+    min-width: 0;
+    overflow-wrap: break-word;
   }
 
   .tracker-badge,
