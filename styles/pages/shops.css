@@ -1034,6 +1034,20 @@
   margin: 0;
 }
 
+.shops-info-card p + p {
+  margin-top: 0.5rem;
+}
+
+.shops-info-link {
+  color: var(--color-accent, #d4a017);
+  text-decoration: none;
+  font-size: 0.8rem;
+}
+
+.shops-info-link:hover {
+  text-decoration: underline;
+}
+
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (width <= 1100px) {
   .shops-controls-inner {

@@ -65,6 +65,7 @@
   
   
   
+  
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -97,12 +98,12 @@
 
       <section class="shops-hero" aria-labelledby="shops-title">
         <div class="shops-hero-inner">
-          <p class="shops-kicker" id="shops-kicker">Shops by region</p>
-          <h1 id="shops-title">Explore Gold Shops & Known Gold Markets</h1>
+          <p class="shops-kicker" id="shops-kicker">Gold shops &amp; market directory</p>
+          <h1 id="shops-title">Browse Gold Shops &amp; Markets by Region</h1>
           <p class="shops-lead" id="shops-lead">
-            Browse directory listings across countries covered on GoldTickerLive. Use filters to narrow
-            by region, country, city, and specialty. Shop information is for reference, and business
-            details are shown where available.
+            Directory listings across countries covered on GoldTickerLive. Filter by region,
+            country, city, and specialty. Business details are shown where available — always
+            confirm current hours and prices directly with any shop before visiting.
           </p>
 
           <div class="shops-trust-banner" aria-label="Data freshness">
@@ -129,7 +130,7 @@
           <div class="shops-hero-stats" aria-label="Directory overview">
             <div class="shops-stat">
               <span class="shops-stat-value" id="shops-stat-listings">0</span>
-              <span class="shops-stat-label" id="shops-stat-listings-label">Listed markets</span>
+              <span class="shops-stat-label" id="shops-stat-listings-label">Shops &amp; markets</span>
             </div>
             <div class="shops-stat">
               <span class="shops-stat-value" id="shops-stat-countries">0</span>
@@ -281,9 +282,8 @@
               <div id="shops-filter-pills" class="shops-filter-pills"></div>
               <p id="shops-active-filters" class="shops-active-filters"></p>
               <p id="shops-results-legend" class="shops-results-legend">
-                Legend: Store profile = direct business listing; Market-area listing = cluster/area
-                reference. Details confidence reflects currently available contact details.
-              </p>
+            Cards marked as "Store profile" have direct business details. Cards marked "Market-area" represent a known gold souk or cluster, not a single shop.
+          </p>
               <p id="shops-results-disclaimer" class="shops-results-disclaimer">
                 Listings may represent market areas or dealer clusters unless direct contact details
                 are shown.
@@ -332,9 +332,10 @@
             <article class="shops-info-card">
               <h3 id="shops-info-3-title">Use as a shortlist</h3>
               <p id="shops-info-3-body">
-                This page is for reference and discovery. Always confirm current prices, charges,
-                and product details directly with shops.
+                Save listings to a shortlist for quick comparison. Always confirm current prices,
+                making charges, and opening hours directly with shops before visiting.
               </p>
+              <p><a href="methodology.html" class="shops-info-link">How we calculate reference prices →</a></p>
             </article>
           </div>
         </div>
@@ -345,8 +346,8 @@
         <div class="shops-nearme-inner">
           <h2 id="shops-nearme-title"><span aria-hidden="true">📍</span> Find Gold Souqs Near You</h2>
           <p class="shops-nearme-lead">
-            Allow location access to discover which gold markets and souqs are closest to your
-            current position. No account required.
+            Allow location access to discover which gold markets and souqs are closest to where
+            you are now. No account or sign-in required.
           </p>
           <button class="btn btn-primary shops-nearme-btn" id="shops-nearme-btn" type="button">
             <span class="shops-nearme-btn-icon" aria-hidden="true">📍</span>
