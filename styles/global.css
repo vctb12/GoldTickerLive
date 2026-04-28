@@ -904,6 +904,43 @@ body.has-spot-bar .site-nav {
   transform: none;
 }
 
+/* --- Nav CTA button (desktop right cluster — "Live Tracker") --- */
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.38rem var(--space-4);
+  border: 1.5px solid var(--color-gold);
+  border-radius: var(--radius-pill);
+  background: var(--color-gold-bg, #fdf6e3);
+  color: var(--color-gold-dark);
+  font-family: var(--font-main);
+  font-weight: var(--weight-bold);
+  font-size: 0.83rem;
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 36px;
+  text-decoration: none;
+  transition:
+    background 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-cta:hover {
+  background: var(--color-gold, #c99a3e);
+  color: var(--color-white, #fff);
+  box-shadow: 0 2px 10px rgb(201 168 76 / 35%);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+/* Hide desktop CTA on mobile (hamburger takes over) */
+@media (width <= 640px) {
+  .nav-cta {
+    display: none;
+  }
+}
+
 /* --- Nav actions (lang toggle + hamburger) --- */
 .nav-actions {
   display: flex;
@@ -6313,6 +6350,7 @@ body.has-spot-bar .site-nav[data-nav-hidden='true'] {
   padding-top: var(--space-5);
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--space-2);
   border-top: 1px solid var(--color-border-subtle);
 }
@@ -6325,6 +6363,78 @@ body.has-spot-bar .site-nav[data-nav-hidden='true'] {
 .nav-drawer-bottom .nav-lang-btn {
   flex: 1 1 auto;
   justify-content: center;
+}
+
+/* Drawer CTA (Live Tracker) — full width row below the icon buttons */
+.nav-drawer-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-gold, #c99a3e);
+  color: var(--color-white, #fff);
+  font-family: var(--font-main);
+  font-weight: var(--weight-bold);
+  font-size: 0.95rem;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  min-height: 44px;
+  margin-top: var(--space-1);
+}
+
+.nav-drawer-cta:hover {
+  background: var(--color-gold-dark, #8c6d24);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgb(196 153 62 / 35%);
+  text-decoration: none;
+  color: var(--color-white, #fff);
+}
+
+/* Drawer search input — top of the drawer panel */
+.nav-drawer-search {
+  padding: var(--space-2) 0 var(--space-3);
+  border-bottom: 1px solid var(--color-border-subtle);
+  margin-bottom: var(--space-2);
+}
+
+.nav-drawer-search-input {
+  width: 100%;
+  padding: 0.55rem 1rem;
+  border: 1.5px solid var(--color-border-subtle, rgb(0 0 0 / 10%));
+  border-radius: var(--radius-pill);
+  font-size: 0.88rem;
+  font-family: inherit;
+  color: var(--color-text, #1a1a1a);
+  background: var(--color-surface-2, #f9f7f3);
+  outline: none;
+  transition: border-color 0.18s;
+  appearance: none;
+  -webkit-appearance: none;
+  min-height: 44px;
+}
+
+.nav-drawer-search-input::placeholder {
+  color: var(--color-text-muted, #9ca3af);
+}
+
+.nav-drawer-search-input:focus-visible {
+  border-color: var(--color-gold, #c99a3e);
+  box-shadow: 0 0 0 var(--focus-ring-width, 2px) var(--color-gold-tint, rgb(196 153 62 / 20%));
+}
+
+[data-theme='dark'] .nav-drawer-search-input {
+  background: var(--color-surface, #1a1a1a);
+  color: var(--text-on-dark, #f5f5f5);
+  border-color: rgb(255 255 255 / 12%);
+}
+
+[dir='rtl'] .nav-drawer-search-input {
+  text-align: right;
 }
 
 /* B.8 — Theme-toggle icon rotate on mode change -------------------------- */

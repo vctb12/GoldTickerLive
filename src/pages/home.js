@@ -144,26 +144,49 @@ function getFreshnessMeta() {
   };
 }
 
-/** Tick the freshness timestamp display every 10 s without a full re-render.
- * 10-second interval provides a good balance between accurate age display
- * ("42 s ago" feels live) and CPU/battery impact on mobile devices.
+/** Derive the freshness CSS data attribute value based on exact age.
+ * More granular than the 4-tier key: adds 'amber' class when 5–30 min old.
+ * @param {number} ageMs
+ * @returns {'live'|'amber'|'stale'|'unavailable'}
+ */
+function freshnessAgeClass(ageMs) {
+  if (!Number.isFinite(ageMs)) return 'unavailable';
+  const MIN5 = 5 * 60 * 1000;
+  const MIN30 = 30 * 60 * 1000;
+  if (ageMs < MIN5) return 'live';
+  if (ageMs < MIN30) return 'amber';
+  return 'stale';
+}
+
+/** Tick the freshness timestamp display every second.
+ * DOM is only mutated when the displayed text or color class would change,
+ * keeping CPU/battery impact minimal on mobile devices.
  */
 function startFreshnessTimer() {
   if (_freshnessTimer) clearInterval(_freshnessTimer);
+  let prevHlcText = '';
+  let prevKstripText = '';
   _freshnessTimer = setInterval(() => {
     if (!goldPrice || !goldUpdatedAt) return;
     const { ageText, sourceText, key } = getFreshnessMeta();
+    const ageClass = freshnessAgeClass(getLiveFreshness({ updatedAt: goldUpdatedAt, lang }).ageMs);
+    const hlcText = `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`;
+    const kstripText = `${tx('updated')}: ${ageText} · ${sourceText}`;
     const hlcEl = document.getElementById('hlc-updated');
-    const kstripEl = document.getElementById('karat-strip-updated');
-    if (hlcEl) {
-      hlcEl.textContent = `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`;
+    if (hlcEl && hlcText !== prevHlcText) {
+      hlcEl.textContent = hlcText;
       hlcEl.dataset.freshnessKey = key;
+      hlcEl.dataset.freshnessAge = ageClass;
+      prevHlcText = hlcText;
     }
-    if (kstripEl) {
-      kstripEl.textContent = `${tx('updated')}: ${ageText} · ${sourceText}`;
+    const kstripEl = document.getElementById('karat-strip-updated');
+    if (kstripEl && kstripText !== prevKstripText) {
+      kstripEl.textContent = kstripText;
       kstripEl.dataset.freshnessKey = key;
+      kstripEl.dataset.freshnessAge = ageClass;
+      prevKstripText = kstripText;
     }
-  }, 10_000);
+  }, 1_000);
 }
 
 // ── Render hero live card ──────────────────────────────────────────────────
@@ -189,7 +212,10 @@ function renderHeroCard() {
 
   const priceEl = document.getElementById('hlc-price');
   if (priceEl) {
-    priceEl.textContent = fmt.formatPrice(usd24oz, 'USD', 2);
+    countUp(priceEl, usd24oz, {
+      decimals: 2,
+      format: (n) => fmt.formatPrice(n, 'USD', 2),
+    });
     priceEl.classList.remove('hlc-price--loading');
   }
   document.getElementById('hero-live-card')?.removeAttribute('aria-busy');
@@ -198,10 +224,12 @@ function renderHeroCard() {
   setTextById('hlc-aed22', fmt.formatPrice(aed22g, 'AED', 2));
   setTextById('hlc-usd21', fmt.formatPrice(usd21g, 'USD', 2));
   const { ageText, isLive, sourceText, key } = getFreshnessMeta();
+  const ageClass = freshnessAgeClass(getLiveFreshness({ updatedAt: goldUpdatedAt, lang }).ageMs);
   const hlcUpdatedEl = document.getElementById('hlc-updated');
   if (hlcUpdatedEl) {
     hlcUpdatedEl.textContent = `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`;
     hlcUpdatedEl.dataset.freshnessKey = key;
+    hlcUpdatedEl.dataset.freshnessAge = ageClass;
   } else {
     setTextById('hlc-updated', `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`);
   }
@@ -209,6 +237,7 @@ function renderHeroCard() {
   if (kstripUpdatedEl) {
     kstripUpdatedEl.textContent = `${tx('updated')}: ${ageText} · ${sourceText}`;
     kstripUpdatedEl.dataset.freshnessKey = key;
+    kstripUpdatedEl.dataset.freshnessAge = ageClass;
   } else {
     setTextById('karat-strip-updated', `${tx('updated')}: ${ageText} · ${sourceText}`);
   }
@@ -801,8 +830,33 @@ async function init() {
   if (_refreshTimer) clearInterval(_refreshTimer);
   _refreshTimer = setInterval(fetchLiveData, CONSTANTS.GOLD_REFRESH_MS);
 
-  // Tick the "Updated X min ago" label every 30 s without a full price re-fetch.
+  // Tick the "Updated X sec/min ago" label every second without a full price re-fetch.
   startFreshnessTimer();
+
+  // Gentle hero-backdrop parallax (transform-only, reduced-motion bypass)
+  const heroEl = document.querySelector('.hero');
+  if (heroEl) {
+    const prefersReduced =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReduced) {
+      let parallaxTicking = false;
+      window.addEventListener(
+        'scroll',
+        () => {
+          if (parallaxTicking) return;
+          parallaxTicking = true;
+          window.requestAnimationFrame(() => {
+            // Parallax offset: 30% of scroll position, capped at the hero height
+            const offset = Math.min(window.scrollY * 0.3, heroEl.offsetHeight);
+            heroEl.style.setProperty('--hero-parallax-y', `${offset}px`);
+            parallaxTicking = false;
+          });
+        },
+        { passive: true }
+      );
+    }
+  }
 
   // Clean up timers on page unload to prevent memory leaks
   window.addEventListener(

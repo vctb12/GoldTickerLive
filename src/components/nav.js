@@ -385,6 +385,12 @@ export function injectNav(lang = 'en', depth = 0) {
               aria-label="Toggle language"
       >${data.langToggle}</button>
 
+      <a id="nav-cta-tracker"
+         href="${resolveHref('/tracker.html', depth)}"
+         class="nav-cta"
+         aria-label="${escapeHtml(data.ctaLabel || 'Live Tracker')}"
+      >${escapeHtml(data.ctaLabel || 'Live Tracker')}</a>
+
       <button id="nav-hamburger"
               class="nav-hamburger"
               type="button"
@@ -406,7 +412,6 @@ export function injectNav(lang = 'en', depth = 0) {
     <div id="nav-search-dropdown" class="nav-search-dropdown" role="listbox"></div>
   </div>
 
-  <!-- Mobile off-canvas drawer -->
   <div id="nav-drawer"
        class="nav-drawer"
        role="dialog"
@@ -415,13 +420,24 @@ export function injectNav(lang = 'en', depth = 0) {
        aria-hidden="true"
   >
     <div class="nav-drawer-inner">
+      <!-- Drawer search (progressive enhancement) -->
+      <div class="nav-drawer-search">
+        <input id="nav-drawer-search-input"
+               class="nav-drawer-search-input"
+               type="search"
+               placeholder="${escapeHtml(data.drawerSearchPlaceholder || 'Search…')}"
+               autocomplete="off"
+               aria-label="${escapeHtml(data.drawerSearchPlaceholder || 'Search')}"
+        />
+      </div>
+
       <!-- Primary journeys -->
       ${mobilePrimaryLinksHtml}
 
       <!-- Grouped sections -->
       ${mobileGroupsHtml}
 
-      <!-- Bottom cluster: theme toggle + language switcher -->
+      <!-- Bottom cluster: theme toggle + language switcher + CTA -->
       <div class="nav-drawer-bottom">
         <button id="nav-theme-toggle-drawer"
                 class="nav-icon-btn nav-icon-btn--theme"
@@ -435,6 +451,10 @@ export function injectNav(lang = 'en', depth = 0) {
                 type="button"
                 aria-label="Toggle language"
         >${data.langToggle}</button>
+        <a id="nav-drawer-cta"
+           href="${resolveHref('/tracker.html', depth)}"
+           class="nav-drawer-cta"
+        >${escapeHtml(data.drawerCtaLabel || 'Live Tracker →')}</a>
       </div>
     </div>
   </div>
@@ -576,6 +596,32 @@ export function injectNav(lang = 'en', depth = 0) {
   const burger = document.getElementById('nav-hamburger');
   const drawer = document.getElementById('nav-drawer');
   const backdrop = document.getElementById('nav-backdrop');
+
+  // ── Drawer search — forward typed text to the main nav search overlay ───────
+  const drawerSearchInput = document.getElementById('nav-drawer-search-input');
+  if (drawerSearchInput) {
+    drawerSearchInput.addEventListener('input', (e) => {
+      const val = /** @type {HTMLInputElement} */ (e.target).value;
+      const navSearchBtn = document.getElementById('nav-search-btn');
+      const navSearchInput = /** @type {HTMLInputElement|null} */ (
+        document.getElementById('nav-search-input')
+      );
+      if (navSearchBtn && navSearchInput) {
+        // Close drawer first, then open the main search overlay with the typed value.
+        // We must update the input value before dispatching the event so the
+        // search handler sees the correct query.
+        closeDrawer();
+        navSearchInput.value = val;
+        navSearchBtn.click();
+        navSearchInput.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    });
+    drawerSearchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        /** @type {HTMLInputElement} */ (e.target).value = '';
+      }
+    });
+  }
 
   // ── Drawer helpers ──────────────────────────────────────────────────────────
   function openDrawer() {
@@ -1077,6 +1123,26 @@ export function updateNavLang(lang) {
   // Drawer aria-label
   const drawer = document.getElementById('nav-drawer');
   if (drawer) drawer.setAttribute('aria-label', data.mainNav);
+
+  // Desktop CTA label
+  const ctaEl = document.getElementById('nav-cta-tracker');
+  if (ctaEl && data.ctaLabel) {
+    ctaEl.textContent = data.ctaLabel;
+    ctaEl.setAttribute('aria-label', data.ctaLabel);
+  }
+
+  // Drawer search placeholder
+  const drawerSearch = /** @type {HTMLInputElement|null} */ (
+    document.getElementById('nav-drawer-search-input')
+  );
+  if (drawerSearch && data.drawerSearchPlaceholder) {
+    drawerSearch.placeholder = data.drawerSearchPlaceholder;
+    drawerSearch.setAttribute('aria-label', data.drawerSearchPlaceholder);
+  }
+
+  // Drawer CTA label
+  const drawerCta = document.getElementById('nav-drawer-cta');
+  if (drawerCta && data.drawerCtaLabel) drawerCta.textContent = data.drawerCtaLabel;
 
   // Mobile bottom nav language update
   const bottomNav = document.querySelector('.mobile-bottom-nav');
