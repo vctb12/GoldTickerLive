@@ -70,6 +70,24 @@ describe('authenticate', () => {
     const result = await auth.authenticate('', 'TestPass123!');
     assert.equal(result.success, false);
   });
+
+  // Track A #15 — login timing/message parity. Unknown user, bad password, and
+  // bad email format must all return the same opaque error message so an
+  // attacker cannot enumerate accounts via response copy. bcrypt.compare
+  // dominates wall-clock time for the user-found path; we don't try to assert
+  // on timing here, just on the response shape that's actually under our
+  // control.
+  test('returns the same opaque message for unknown user, bad password, and bad email format', async () => {
+    const a = await auth.authenticate('nobody@example.com', 'TestPass123!');
+    const b = await auth.authenticate('admin@goldprices.com', 'wrongpassword');
+    const c = await auth.authenticate('not-an-email', 'TestPass123!');
+    assert.equal(a.success, false);
+    assert.equal(b.success, false);
+    assert.equal(c.success, false);
+    assert.equal(a.message, b.message, 'unknown user vs bad password must share a message');
+    assert.equal(a.message, c.message, 'unknown user vs invalid email must share a message');
+    assert.equal(a.message, 'Invalid credentials');
+  });
 });
 
 describe('generateToken / verifyToken', () => {
