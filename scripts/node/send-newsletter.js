@@ -12,7 +12,7 @@ const { generateDailyDigest, generateWeeklyRecap } = require('./generate-newslet
 
 const RESEND_CONFIG = {
   apiKey: process.env.RESEND_API_KEY || '',
-  fromEmail: process.env.RESEND_FROM_EMAIL || 'newsletter@goldprices.com',
+  fromEmail: process.env.RESEND_FROM_EMAIL || 'newsletter@goldtickerlive.com',
   fromName: 'Gold Ticker Live',
   batchSize: 1000, // Resend's batch limit
 };

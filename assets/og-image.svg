@@ -24,7 +24,7 @@
   <text x="600" y="221" font-family="Georgia, serif" font-size="18" font-weight="700" fill="#1a1610" text-anchor="middle">999.9</text>
 
   <!-- Site name -->
-  <text x="600" y="320" font-family="Georgia, serif" font-size="68" font-weight="700" fill="#d4b05a" text-anchor="middle" letter-spacing="-1">GoldPrices</text>
+  <text x="600" y="320" font-family="Georgia, serif" font-size="58" font-weight="700" fill="#d4b05a" text-anchor="middle" letter-spacing="-1">Gold Ticker Live</text>
 
   <!-- Tagline -->
   <text x="600" y="372" font-family="-apple-system, Arial, sans-serif" font-size="22" fill="#9d8c72" text-anchor="middle" letter-spacing="2">LIVE · HISTORICAL · GCC &amp; ARAB MARKETS</text>
@@ -33,7 +33,7 @@
   <rect x="480" y="398" width="240" height="1" fill="#3a3020"/>
 
   <!-- Sub-label -->
-  <text x="600" y="432" font-family="-apple-system, Arial, sans-serif" font-size="18" fill="#6b5f4a" text-anchor="middle">vctb12.github.io/Gold-Prices</text>
+  <text x="600" y="432" font-family="-apple-system, Arial, sans-serif" font-size="18" fill="#6b5f4a" text-anchor="middle">goldtickerlive.com</text>
 
   <!-- Corner decoration - top right -->
   <text x="1100" y="60" font-family="Georgia, serif" font-size="48" fill="#c49a44" opacity="0.15" text-anchor="middle">Au</text>

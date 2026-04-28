@@ -113,7 +113,7 @@ app.use((req, res, next) => {
 
 // CORS — restrict origins in production.
 // In production, always set CORS_ORIGINS (comma-separated) to avoid rejecting all cross-origin requests.
-// Example: CORS_ORIGINS=https://goldtickerlive.com,https://goldprices.com
+// Example: CORS_ORIGINS=https://goldtickerlive.com,https://www.goldtickerlive.com
 const ALLOWED_ORIGINS = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(',').map((o) => o.trim())
   : null; // null → allow all (development only)
