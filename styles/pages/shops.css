@@ -957,6 +957,27 @@
   outline: none;
 }
 
+.shops-empty-submit {
+  font-size: 0.82rem;
+  color: var(--color-text-muted, #888);
+  margin: 0.25rem 0 0;
+}
+
+.shops-empty-submit-link {
+  color: var(--color-gold, #d4a017);
+  text-decoration: none;
+  font-weight: var(--weight-medium);
+}
+
+.shops-empty-submit-link:hover {
+  text-decoration: underline;
+}
+
+.shops-resource-chip--submit {
+  border-color: rgb(212 160 23 / 40%);
+  color: var(--color-gold, #d4a017);
+}
+
 /* ── Info section ────────────────────────────────────────────────────────── */
 .shops-info {
   padding-top: 0.75rem;

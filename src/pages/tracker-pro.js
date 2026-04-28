@@ -4,6 +4,7 @@ import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import '../lib/reveal.js';
 import { createInitialState, persistState } from '../tracker/state.js';
+import { el as safeEl } from '../lib/safe-dom.js';
 // Lazy-load heavy UI modules (ui-shell, events, wire, adSlot) inside init()
 let mountShell;
 let fetchWire, renderWireModule;
@@ -378,31 +379,41 @@ function stopAutoRefresh() {
 function populateSelects() {
   if (el.currency) {
     const currencies = [...new Set(COUNTRIES.map((c) => c.currency))].sort();
-    el.currency.innerHTML = currencies
-      .map(
-        (c) =>
-          `<option value="${c}"${c === state.selectedCurrency ? ' selected' : ''}>${c}</option>`
-      )
-      .join('');
+    const frag = document.createDocumentFragment();
+    currencies.forEach((c) => {
+      const opt = safeEl('option', { value: c }, [c]);
+      if (c === state.selectedCurrency) opt.selected = true;
+      frag.appendChild(opt);
+    });
+    el.currency.replaceChildren(frag);
   }
   if (el.karat) {
-    el.karat.innerHTML = KARATS.map(
-      (k) =>
-        `<option value="${k.code}"${k.code === state.selectedKarat ? ' selected' : ''}>${k.code}K — ${(k.purity * 100).toFixed(1)}%</option>`
-    ).join('');
+    const frag = document.createDocumentFragment();
+    KARATS.forEach((k) => {
+      const opt = safeEl('option', { value: k.code }, [
+        `${k.code}K — ${(k.purity * 100).toFixed(1)}%`,
+      ]);
+      if (k.code === state.selectedKarat) opt.selected = true;
+      frag.appendChild(opt);
+    });
+    el.karat.replaceChildren(frag);
   }
   if (el.unit) {
-    el.unit.innerHTML = ['gram', 'oz']
-      .map(
-        (u) => `<option value="${u}"${u === state.selectedUnit ? ' selected' : ''}>${u}</option>`
-      )
-      .join('');
+    const frag = document.createDocumentFragment();
+    ['gram', 'oz'].forEach((u) => {
+      const opt = safeEl('option', { value: u }, [u]);
+      if (u === state.selectedUnit) opt.selected = true;
+      frag.appendChild(opt);
+    });
+    el.unit.replaceChildren(frag);
   }
   if (el.language) el.language.value = state.lang;
   if (el.jewelryKarat) {
-    el.jewelryKarat.innerHTML = KARATS.map(
-      (k) => `<option value="${k.code}">${k.code}K</option>`
-    ).join('');
+    const frag = document.createDocumentFragment();
+    KARATS.forEach((k) => {
+      frag.appendChild(safeEl('option', { value: k.code }, [`${k.code}K`]));
+    });
+    el.jewelryKarat.replaceChildren(frag);
   }
 }
 

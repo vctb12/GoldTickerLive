@@ -72,8 +72,8 @@ const BASELINE = {
   'src/pages/shops/filters.js': 4, // Extracted from shops.js: safe <option> building with esc()
   'src/pages/shops/modal.js': 1, // Extracted from shops.js: modal HTML with esc() wrappers
   'src/pages/shops/rendering.js': 0, // Migrated to el()/DocumentFragment on 2026-04-24 (PR A-2). Kept in baseline as 0-ceiling regression guard.
-  'src/pages/tracker-pro.js': 4,
-  'src/tracker/events.js': 2,
+  'src/pages/tracker-pro.js': 0, // Phase 4: populateSelects migrated to safeEl()/DocumentFragment (was 4).
+  'src/tracker/events.js': 0, // Phase 4: date-lookup innerHTML migrated to el()/replaceChildren() (was 2).
   'src/tracker/render.js': 0, // Phase 9–11 + Phase 12: fully migrated all sinks to el() / SVG DOM (was 17 → 10 → 0).
   'src/tracker/wire.js': 0, // Phase 9: fully migrated to el() + safeHref (was 3)
 };

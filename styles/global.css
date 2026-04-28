@@ -758,7 +758,6 @@ body.has-spot-bar .site-nav {
 .nav-skip-link {
   position: absolute;
   top: -48px;
-  left: 8px;
   inset-inline-start: 8px;
   z-index: 1000;
   padding: 10px 16px;
