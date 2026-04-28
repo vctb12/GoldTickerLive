@@ -421,12 +421,21 @@ export function injectNav(lang = 'en', depth = 0) {
       <!-- Grouped sections -->
       ${mobileGroupsHtml}
 
-      <!-- Language toggle -->
-      <button id="nav-lang-toggle-mobile"
-              class="nav-lang-btn nav-lang-btn--drawer"
-              type="button"
-              aria-label="Toggle language"
-      >${data.langToggle}</button>
+      <!-- Bottom cluster: theme toggle + language switcher -->
+      <div class="nav-drawer-bottom">
+        <button id="nav-theme-toggle-drawer"
+                class="nav-icon-btn nav-icon-btn--theme"
+                type="button"
+                aria-label="Theme: auto"
+                title="Theme: auto"
+                data-theme-mode="auto"
+        >🌓</button>
+        <button id="nav-lang-toggle-mobile"
+                class="nav-lang-btn nav-lang-btn--drawer"
+                type="button"
+                aria-label="Toggle language"
+        >${data.langToggle}</button>
+      </div>
     </div>
   </div>
 
@@ -495,10 +504,20 @@ export function injectNav(lang = 'en', depth = 0) {
       const THEME_LABEL = _getThemeLabels();
       document.documentElement.setAttribute('data-theme', resolved);
       document.documentElement.setAttribute('data-theme-mode', mode);
-      themeBtn.textContent = THEME_ICON[mode] || THEME_ICON.auto;
-      themeBtn.setAttribute('aria-label', THEME_LABEL[mode] || THEME_LABEL.auto);
-      themeBtn.setAttribute('title', THEME_LABEL[mode] || THEME_LABEL.auto);
+      const icon = THEME_ICON[mode] || THEME_ICON.auto;
+      const label = THEME_LABEL[mode] || THEME_LABEL.auto;
+      themeBtn.textContent = icon;
+      themeBtn.setAttribute('aria-label', label);
+      themeBtn.setAttribute('title', label);
       themeBtn.setAttribute('data-theme-mode', mode);
+      // Sync the drawer theme button if present
+      const drawerBtn = document.getElementById('nav-theme-toggle-drawer');
+      if (drawerBtn) {
+        drawerBtn.textContent = icon;
+        drawerBtn.setAttribute('aria-label', label);
+        drawerBtn.setAttribute('title', label);
+        drawerBtn.setAttribute('data-theme-mode', mode);
+      }
     }
 
     function _currentMode() {
@@ -529,7 +548,7 @@ export function injectNav(lang = 'en', depth = 0) {
       }
     }
 
-    themeBtn.addEventListener('click', () => {
+    function _cycleTheme() {
       const current = _currentMode();
       const idx = THEME_CYCLE.indexOf(current);
       const next = THEME_CYCLE[(idx + 1) % THEME_CYCLE.length];
@@ -541,7 +560,16 @@ export function injectNav(lang = 'en', depth = 0) {
       } catch (e) {
         console.warn('theme save', e);
       }
-    });
+    }
+
+    themeBtn.addEventListener('click', _cycleTheme);
+
+    // Wire up the drawer theme button once the drawer markup is in the DOM.
+    // The drawer is injected synchronously so this is safe to do right away.
+    const drawerThemeBtn = document.getElementById('nav-theme-toggle-drawer');
+    if (drawerThemeBtn) {
+      drawerThemeBtn.addEventListener('click', _cycleTheme);
+    }
   }
 
   // ── DOM references ──────────────────────────────────────────────────────────
