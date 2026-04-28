@@ -1,5 +1,6 @@
 // tracker/events.js — all event bindings for tracker-pro
 import { persistState } from './state.js';
+import { el, escape } from '../lib/safe-dom.js';
 
 let _state, _el, _cb;
 
@@ -206,16 +207,42 @@ export function bindCoreEvents() {
       const daysAway = Math.round(minDaysDiff);
       const daysNote =
         daysAway === 0 ? 'exact match' : `${daysAway} day${daysAway !== 1 ? 's' : ''} away`;
-      _el.lookupResults.innerHTML = `
-        <div class="tracker-result-grid">
-          <div class="tracker-result-card"><div class="tracker-result-k">Found date</div><div class="tracker-result-v">${lookupDateIso}</div><div class="tracker-result-s">${daysNote}</div></div>
-          <div class="tracker-result-card"><div class="tracker-result-k">XAU/USD</div><div class="tracker-result-v">$${closest.spot.toFixed(2)}</div><div class="tracker-result-s">per troy oz</div></div>
-          <div class="tracker-result-card"><div class="tracker-result-k">UAE 24K/g</div><div class="tracker-result-v">${aed24 ? 'AED ' + aed24.toFixed(2) : '—'}</div><div class="tracker-result-s">AED peg 3.6725</div></div>
-          <div class="tracker-result-card"><div class="tracker-result-k">Source</div><div class="tracker-result-v"><span class="tracker-source-badge tracker-source-badge--${closest.source}">${closest.source}</span></div><div class="tracker-result-s">${closest.granularity || 'daily'}</div></div>
-        </div>`;
+      const sourceBadge = el(
+        'span',
+        {
+          class: `tracker-source-badge tracker-source-badge--${escape(closest.source)}`,
+        },
+        [escape(closest.source)]
+      );
+      const grid = el('div', { class: 'tracker-result-grid' }, [
+        el('div', { class: 'tracker-result-card' }, [
+          el('div', { class: 'tracker-result-k' }, ['Found date']),
+          el('div', { class: 'tracker-result-v' }, [lookupDateIso]),
+          el('div', { class: 'tracker-result-s' }, [daysNote]),
+        ]),
+        el('div', { class: 'tracker-result-card' }, [
+          el('div', { class: 'tracker-result-k' }, ['XAU/USD']),
+          el('div', { class: 'tracker-result-v' }, [`$${closest.spot.toFixed(2)}`]),
+          el('div', { class: 'tracker-result-s' }, ['per troy oz']),
+        ]),
+        el('div', { class: 'tracker-result-card' }, [
+          el('div', { class: 'tracker-result-k' }, ['UAE 24K/g']),
+          el('div', { class: 'tracker-result-v' }, [aed24 ? `AED ${aed24.toFixed(2)}` : '—']),
+          el('div', { class: 'tracker-result-s' }, ['AED peg 3.6725']),
+        ]),
+        el('div', { class: 'tracker-result-card' }, [
+          el('div', { class: 'tracker-result-k' }, ['Source']),
+          el('div', { class: 'tracker-result-v' }, [sourceBadge]),
+          el('div', { class: 'tracker-result-s' }, [closest.granularity || 'daily']),
+        ]),
+      ]);
+      _el.lookupResults.replaceChildren(grid);
     } else {
-      _el.lookupResults.innerHTML =
-        '<p style="color:var(--tp-text-muted)">No data available for that date. Archive covers 2019–present.</p>';
+      _el.lookupResults.replaceChildren(
+        el('p', { style: { color: 'var(--tp-text-muted)' } }, [
+          'No data available for that date. Archive covers 2019–present.',
+        ])
+      );
     }
   });
 
