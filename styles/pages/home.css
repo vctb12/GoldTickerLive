@@ -832,14 +832,14 @@
 }
 
 .home-section-sub {
-  font-size: 0.88rem;
+  font-size: var(--text-sm);
   color: var(--color-text-muted, #6b7280);
   margin-top: 0.3rem;
   line-height: 1.5;
 }
 
 .section-link {
-  font-size: 0.86rem;
+  font-size: var(--text-sm);
   font-weight: var(--weight-bold);
   color: var(--color-gold-dark, #8c6d24);
   text-decoration: none;
@@ -1524,6 +1524,28 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE — 481–640px (phone landscape / small portrait)
+   Fills the gap between 640 px and 480 px with tighter hero
+   padding and a touch-safe bottom inset for the CTA block.
+   ══════════════════════════════════════════════════════════════ */
+@media (width <= 640px) and (width >= 481px) {
+  .hero-ctas {
+    /* Keep CTAs as a row where there's still horizontal room */
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+/* ── Safe-area inset: hero CTA block clears the iPhone home indicator ── */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  @media (width <= 640px) {
+    .hero-ctas {
+      padding-bottom: max(0px, env(safe-area-inset-bottom));
+    }
   }
 }
 
