@@ -46,25 +46,26 @@ export function renderBreadcrumbs(container, items) {
     li.setAttribute('data-position', position);
 
     if (item.url && index < items.length - 1) {
-      // Link for non-current items
+      // Link for non-current items — built via DOM to avoid innerHTML sinks on caller-supplied strings.
+      const nameSpan = document.createElement('span');
+      nameSpan.setAttribute('itemprop', 'name');
+      nameSpan.textContent = item.label;
       const link = document.createElement('a');
       link.href = item.url;
       link.className = 'breadcrumbs-link';
-      link.textContent = item.label;
       link.setAttribute('itemprop', 'item');
-
-      li.innerHTML = `
-        <a href="${item.url}" class="breadcrumbs-link" itemprop="item">
-          <span itemprop="name">${item.label}</span>
-        </a>
-      `;
+      link.appendChild(nameSpan);
+      li.appendChild(link);
     } else {
       // Current item (no link)
-      li.innerHTML = `
-        <span class="breadcrumbs-current" itemprop="item">
-          <span itemprop="name">${item.label}</span>
-        </span>
-      `;
+      const nameSpan = document.createElement('span');
+      nameSpan.setAttribute('itemprop', 'name');
+      nameSpan.textContent = item.label;
+      const currentSpan = document.createElement('span');
+      currentSpan.className = 'breadcrumbs-current';
+      currentSpan.setAttribute('itemprop', 'item');
+      currentSpan.appendChild(nameSpan);
+      li.appendChild(currentSpan);
     }
 
     // Add position meta

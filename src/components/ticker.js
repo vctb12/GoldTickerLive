@@ -79,19 +79,34 @@ function freshnessLabel(key, lang) {
 // Helpers
 // ─────────────────────────────────────────────────────────────────────────────
 
-function buildCopyHtml(lang, trackerHref) {
+function buildCopyNode(lang, trackerHref) {
   const isAr = lang === 'ar';
-  const items = TICKER_ITEMS.map((item) => {
+  const div = document.createElement('div');
+  div.className = 'ticker-copy';
+  div.setAttribute('aria-hidden', 'true');
+  for (const item of TICKER_ITEMS) {
     const label = isAr ? item.labelAr : item.labelEn;
-    return (
-      `<a href="${trackerHref}" class="ticker-item" data-key="${item.key}" tabindex="-1">` +
-      `<span class="ticker-label">${label}</span>` +
-      '<span class="ticker-value">—</span>' +
-      '</a>' +
-      '<span class="ticker-sep" aria-hidden="true">◦</span>'
-    );
-  }).join('');
-  return `<div class="ticker-copy" aria-hidden="true">${items}</div>`;
+    const a = document.createElement('a');
+    a.href = trackerHref;
+    a.className = 'ticker-item';
+    a.setAttribute('data-key', item.key);
+    a.tabIndex = -1;
+    const lblSpan = document.createElement('span');
+    lblSpan.className = 'ticker-label';
+    lblSpan.textContent = label;
+    const valSpan = document.createElement('span');
+    valSpan.className = 'ticker-value';
+    valSpan.textContent = '\u2014';
+    a.appendChild(lblSpan);
+    a.appendChild(valSpan);
+    div.appendChild(a);
+    const sep = document.createElement('span');
+    sep.className = 'ticker-sep';
+    sep.setAttribute('aria-hidden', 'true');
+    sep.textContent = '\u25e6';
+    div.appendChild(sep);
+  }
+  return div;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -108,10 +123,8 @@ export function injectTicker(lang = 'en', depth = 0) {
   const ariaLabel = isAr ? 'شريط أسعار الذهب' : 'Live gold price ticker';
   const unavailableLabel = freshnessLabel('unavailable', lang);
 
-  // Two identical copies so the animation creates a seamless loop
-  const copy1 = buildCopyHtml(lang, trackerHref);
-  const copy2 = buildCopyHtml(lang, trackerHref);
-
+  // Two identical copies so the animation creates a seamless loop — built via
+  // DOM to eliminate the innerHTML sink.
   const ticker = document.createElement('div');
   ticker.id = 'gold-ticker';
   ticker.className = 'gold-ticker';
@@ -119,14 +132,37 @@ export function injectTicker(lang = 'en', depth = 0) {
   ticker.setAttribute('aria-live', 'polite');
   ticker.setAttribute('aria-label', ariaLabel);
   ticker.setAttribute('data-freshness', 'unavailable');
-  ticker.innerHTML =
-    '<span class="ticker-status" data-ticker-status ' +
-    `title="${unavailableLabel}" aria-label="${unavailableLabel}">` +
-    '<span class="ticker-status-dot" aria-hidden="true"></span>' +
-    `<span class="ticker-status-label" data-ticker-status-label>${unavailableLabel}</span>` +
-    '</span>' +
-    `<div class="ticker-track">${copy1}${copy2}</div>` +
-    `<button class="ticker-close" id="ticker-close" aria-label="${dismissLabel}" title="${dismissLabel}">×</button>`;
+
+  const statusSpan = document.createElement('span');
+  statusSpan.className = 'ticker-status';
+  statusSpan.setAttribute('data-ticker-status', '');
+  statusSpan.title = unavailableLabel;
+  statusSpan.setAttribute('aria-label', unavailableLabel);
+  const dot = document.createElement('span');
+  dot.className = 'ticker-status-dot';
+  dot.setAttribute('aria-hidden', 'true');
+  const statusLabel = document.createElement('span');
+  statusLabel.className = 'ticker-status-label';
+  statusLabel.setAttribute('data-ticker-status-label', '');
+  statusLabel.textContent = unavailableLabel;
+  statusSpan.appendChild(dot);
+  statusSpan.appendChild(statusLabel);
+
+  const track = document.createElement('div');
+  track.className = 'ticker-track';
+  track.appendChild(buildCopyNode(lang, trackerHref));
+  track.appendChild(buildCopyNode(lang, trackerHref));
+
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'ticker-close';
+  closeBtn.id = 'ticker-close';
+  closeBtn.setAttribute('aria-label', dismissLabel);
+  closeBtn.title = dismissLabel;
+  closeBtn.textContent = '\xd7';
+
+  ticker.appendChild(statusSpan);
+  ticker.appendChild(track);
+  ticker.appendChild(closeBtn);
 
   document.body.appendChild(ticker);
   document.body.classList.add('has-ticker');
@@ -142,8 +178,8 @@ export function injectTicker(lang = 'en', depth = 0) {
     /* storage blocked */
   }
 
-  // Close button
-  document.getElementById('ticker-close')?.addEventListener('click', () => {
+  // Close button — wire directly to the closeBtn reference (already in DOM tree)
+  closeBtn.addEventListener('click', () => {
     ticker.classList.add('ticker-dismissed');
     document.body.classList.remove('has-ticker');
     try {
@@ -153,8 +189,7 @@ export function injectTicker(lang = 'en', depth = 0) {
     }
   });
 
-  // Pause on hover (desktop)
-  const track = ticker.querySelector('.ticker-track');
+  // Pause on hover (desktop) — reuse the `track` node already in scope
   if (track) {
     track.addEventListener('mouseenter', () => {
       track.querySelectorAll('.ticker-copy').forEach((c) => {
