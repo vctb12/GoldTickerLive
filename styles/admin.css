@@ -2821,3 +2821,61 @@ thead th {
 .settings-notice {
   margin-top: 16px;
 }
+
+/* ── Utility classes extracted from inline styles ─────────── */
+
+.admin-stat-count-extra {
+  display: block;
+  margin-top: 6px;
+}
+
+.admin-flex-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-meta-dim {
+  color: var(--text-dim);
+  font-size: 0.75rem;
+}
+
+.admin-table-empty {
+  color: var(--text-dim);
+  text-align: center;
+  padding: 20px;
+}
+
+.admin-mt-14 {
+  margin-top: 14px;
+}
+
+.admin-mt-16 {
+  margin-top: 16px;
+}
+
+.admin-flex-240 {
+  flex: 2 1 240px;
+}
+
+.admin-flex-200 {
+  flex: 1 1 200px;
+}
+
+.admin-action-row {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+/* ── Pricing override disclaimer ──────────────────────────── */
+
+.admin-estimate-note {
+  font-size: 0.78rem;
+  color: var(--text-muted, var(--text-dim));
+  background: var(--bg-warn-subtle, rgb(245 158 11 / 8%));
+  border: 1px solid var(--border-warn, rgb(245 158 11 / 20%));
+  border-radius: var(--radius-sm, 4px);
+  padding: 0.5rem 0.75rem;
+  margin-top: 0.5rem;
+}

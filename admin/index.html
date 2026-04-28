@@ -122,10 +122,9 @@
               </div>
               <canvas
                 id="gold-sparkline"
-                class="sparkline-canvas"
+                class="sparkline-canvas admin-stat-count-extra"
                 width="80"
                 height="28"
-                style="display: block; margin-top: 6px"
               ></canvas>
               <div class="stat-sub" id="stat-gold-sub"></div>
             </div>
@@ -306,8 +305,8 @@
                 <h2 class="card-title" id="api-status-title">API Status</h2>
                 <span class="api-last-checked" id="api-last-checked"></span>
               </div>
-              <div style="display: flex; align-items: center; gap: 10px">
-                <span style="color: var(--text-dim); font-size: 0.75rem"
+              <div class="admin-flex-row">
+                <span class="admin-meta-dim"
                   >refresh in <span id="api-countdown">60</span>s</span
                 >
                 <button class="btn btn-ghost btn-sm" id="api-check-btn" type="button">
@@ -329,7 +328,7 @@
                   <tr>
                     <td
                       colspan="4"
-                      style="color: var(--text-dim); text-align: center; padding: 20px"
+                      class="admin-table-empty"
                     >
                       <span class="inline-spinner" aria-hidden="true"></span>
                       Checking services…

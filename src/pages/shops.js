@@ -585,11 +585,11 @@ function applyStaticText() {
   document.getElementById('shops-freshness-semantics').textContent = t('freshnessSemantics');
   const priceDisclEl = document.getElementById('shops-price-disclaimer');
   if (priceDisclEl) {
-    priceDisclEl.textContent = t('priceDisclaimer') + ' ';
+    const textNode = document.createTextNode(t('priceDisclaimer') + ' ');
     const methodLink = document.createElement('a');
     methodLink.href = 'methodology.html';
     methodLink.textContent = t('methodologyLinkText');
-    priceDisclEl.appendChild(methodLink);
+    priceDisclEl.replaceChildren(textNode, methodLink);
   }
   document.getElementById('shops-shortlist-label').textContent = t('shortlistLabel');
   document.getElementById('shops-shortlist-clear').textContent = t('shortlistClear');

@@ -448,7 +448,7 @@
           <!-- ── Live Prices ───────────────────────────────────── -->
           <section class="section card" aria-labelledby="live-prices-title">
             <div class="live-header">
-              <div style="display: flex; align-items: center; gap: 10px">
+              <div class="admin-flex-row">
                 <h2 id="live-prices-title">Live Prices</h2>
               </div>
               <button class="btn btn-ghost btn-sm" id="refresh-btn" type="button">⟳ Refresh</button>
@@ -586,8 +586,8 @@
                     >
                   </div>
                 </div>
-                <div class="input-row" style="margin-top: 14px">
-                  <div class="form-group" style="flex: 2 1 240px">
+                <div class="input-row admin-mt-14">
+                  <div class="form-group admin-flex-240">
                     <label class="form-label" for="ov-reason">Reason</label>
                     <input
                       class="form-input"
@@ -597,12 +597,12 @@
                       autocomplete="off"
                     />
                   </div>
-                  <div class="form-group" style="flex: 1 1 200px">
+                  <div class="form-group admin-flex-200">
                     <label class="form-label" for="ov-expires">Expires (optional)</label>
                     <input class="form-input" id="ov-expires" type="datetime-local" />
                   </div>
                 </div>
-                <div class="toggle-row" style="margin-top: 16px">
+                <div class="toggle-row admin-mt-16">
                   <input
                     class="toggle-switch"
                     id="ov-active"
@@ -612,7 +612,7 @@
                   />
                   <label class="toggle-label" for="ov-active">Active</label>
                 </div>
-                <div style="margin-top: 16px; display: flex; gap: 8px">
+                <div class="admin-action-row">
                   <button class="btn btn-primary" id="save-override-btn" type="button">
                     Save Override
                   </button>
@@ -625,6 +625,9 @@
                     Cancel Edit
                   </button>
                 </div>
+                <p class="admin-estimate-note">
+                  ⚠ Override values are estimate-only. They appear as reference figures on the public tracker and do not represent final retail or jewelry prices.
+                </p>
               </form>
             </div>
           </section>
@@ -701,7 +704,7 @@
               </select>
             </div>
           </div>
-          <div class="input-row" style="margin-top: 14px">
+          <div class="input-row admin-mt-14">
             <div class="form-group">
               <label class="form-label" for="em-price"
                 >Override Price <span style="color: var(--danger)">*</span></label
@@ -709,16 +712,16 @@
               <input class="form-input" id="em-price" type="number" min="0" step="any" />
               <span class="form-error hidden" id="em-price-err">Must be a positive number.</span>
             </div>
-            <div class="form-group" style="flex: 2 1 200px">
+            <div class="form-group admin-flex-200">
               <label class="form-label" for="em-reason">Reason</label>
               <input class="form-input" id="em-reason" type="text" autocomplete="off" />
             </div>
           </div>
-          <div class="form-group" style="margin-top: 14px">
+          <div class="form-group admin-mt-14">
             <label class="form-label" for="em-expires">Expires (optional)</label>
             <input class="form-input" id="em-expires" type="datetime-local" />
           </div>
-          <div class="toggle-row" style="margin-top: 16px">
+          <div class="toggle-row admin-mt-16">
             <input class="toggle-switch" id="em-active" type="checkbox" role="switch" />
             <label class="toggle-label" for="em-active">Active</label>
           </div>

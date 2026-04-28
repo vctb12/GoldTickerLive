@@ -165,6 +165,25 @@
         font-size: 0.63rem;
       }
 
+      .badge-seo {
+        font-size: 0.63rem;
+      }
+      .badge-seo.seo-ok {
+        background: rgba(16, 185, 129, 0.12);
+        color: var(--success);
+        border: 1px solid rgba(16, 185, 129, 0.25);
+      }
+      .badge-seo.seo-warn {
+        background: rgba(245, 158, 11, 0.12);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.25);
+      }
+      .badge-seo.seo-bad {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger, #ef4444);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+      }
+
       .posts-empty {
         color: var(--text-dim);
         font-size: 0.875rem;
@@ -1548,12 +1567,17 @@
           .map((p) => {
             const date = p.publishDate || p.createdAt?.slice(0, 10) || '';
             const active = p.id === currentPostId ? ' active' : '';
+            const hasTitle = (p.title || '').length > 10;
+            const hasDesc = (p.excerpt || '').length > 50;
+            const seoIcon = hasTitle && hasDesc ? '✓' : hasTitle ? '⚠' : '✗';
+            const seoClass = hasTitle && hasDesc ? 'seo-ok' : hasTitle ? 'seo-warn' : 'seo-bad';
             return `<div class="post-item${active}" data-id="${p.id}" role="listitem" tabindex="0" aria-label="${escHtml(p.title || 'Untitled')}">
           <button class="post-item-menu" data-id="${p.id}" aria-label="Post actions for ${escHtml(p.title || 'Untitled')}" type="button">⋯</button>
           <div class="post-item-title">${escHtml(p.title || '(Untitled)')}</div>
           <div class="post-item-meta">
             <span class="badge badge-category">${escHtml(p.category || 'Uncategorised')}</span>
             <span class="badge badge-${p.status}">${p.status === 'published' ? 'Published' : 'Draft'}</span>
+            <span class="badge badge-seo ${seoClass}" title="SEO: title &amp; excerpt check">SEO ${seoIcon}</span>
           </div>
           <div class="post-item-meta">
             ${date ? `<span class="post-item-date">${date}</span>` : ''}
