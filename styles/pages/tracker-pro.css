@@ -74,6 +74,19 @@ body.tracker-pro-page {
   margin: 0 auto var(--space-5);
 }
 
+/* Mode panels — shown/hidden by JS via [hidden] attribute */
+.tracker-mode-panel[hidden] {
+  display: none;
+}
+
+/* subpanel action row */
+.tracker-subpanel-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
 .tracker-anchor {
   position: relative;
   top: -110px;
@@ -1809,6 +1822,21 @@ body.tracker-workspace-basic .tracker-advanced-only {
 }
 
 /* ── Result cards (planners, archive) ────────────────────────────────────── */
+
+/* Planner tool grid — matches result-grid layout */
+.tracker-planner-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+/* Range notes rendered by JS below the range pills */
+.tracker-range-notes {
+  font-size: var(--text-xs);
+  color: var(--tp-text-faint);
+  line-height: 1.55;
+  margin-top: 0.4rem;
+}
 
 .tracker-result-grid {
   display: grid;
