@@ -13,7 +13,7 @@ them into the right section here before execution. Agent operating rules are in
 - Keep completed items as `[x]` with enough context to serve as a record. Don't re-open closed items
   to pad status; don't invent new phases to look ambitious.
 
-**Last updated:** 2026-04-27.
+**Last updated:** 2026-04-28 (Round 9).
 
 ### 2026-04-27 full-site UX/admin/content revamp intake
 
@@ -327,7 +327,8 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
       `styles/global.css` as low-specificity fallbacks. The ~40 bespoke page-level selectors
       (`.tracker-hero-copy h1`, etc.) continue to dominate by specificity — no regression. - [ ]
       **Slice 3 (cleanup).** Migrate per-page hand-sized heading selectors to the canonical classes,
-      one page per commit.
+      one page per commit. (Partial — Round 9: 10 `tracker-pro.css` heading selectors migrated to
+      dual `.element/.h{N}` form in `6e63e1f`. Remaining: home.css, shops.css, other pages.)
 - [x] **Focus ring token audit.** Canonical `:focus-visible` baseline in `styles/global.css` uses
       `--focus-ring-width` / `--focus-ring-color` / `--focus-ring-offset`. Page-level outline
       overrides normalized to the same tokens: `.calc-tab`, `.tracker-mode-tab`,
@@ -417,9 +418,11 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
 - [x] Sections with group headings, dividers, large tap targets. Expandable groups (`<details>` or
       custom with `aria-expanded`), not a flat stack. _(now uses native `<details>/<summary>` with
       caret chevron)_
-- [ ] Top: search input (progressive enhancement). Bottom: theme toggle + language switcher +
-      primary CTA. _(bottom-cluster CSS slot `.nav-drawer-bottom` shipped; markup rewiring to move
-      theme + lang into the cluster is the next step)_
+- [x] Top: search input (progressive enhancement). Bottom: theme toggle + language switcher +
+      primary CTA. _(bottom-cluster CSS slot `.nav-drawer-bottom` shipped; markup rewired in
+      `nav.js` to wrap both a new `#nav-theme-toggle-drawer` and `#nav-lang-toggle-mobile` in the
+      `.nav-drawer-bottom` cluster; `_applyTheme()` syncs both buttons; `_cycleTheme()` shared.
+      Round 9.)_
 - [x] `body` scroll lock while open. Close on: Escape, backdrop tap, route change.
 - [x] Focus trap inside drawer. Return focus to hamburger on close.
 
@@ -472,8 +475,9 @@ Target order:
 ### C.2 Hero rebuild
 
 - [x] Headline + subhead + primary CTA "Open Live Tracker" + secondary "Open Calculator".
-- [ ] Inline live XAU/USD (large), delta vs prev close, 24 h high/low, freshness pill ("updated 42 s
-      ago"), market-open/closed chip, trust line ("spot reference — not a retail quote").
+- [x] Inline live XAU/USD (large), delta vs prev close, 24 h high/low display (H:/L: from
+      `max/min(goldPrice, dayOpenPrice)`), freshness pill (1-second age display with amber/red color
+      shift via `data-freshness-key`), market-open/closed chip, trust line. (Round 9 — `daf150a`)
 - [x] Mobile: stacks vertically, price block prominent, CTAs full-width.
 - [ ] Canonical hero surface + gold inset ring; no bespoke gradients.
 
@@ -527,16 +531,22 @@ Target order:
 
 - [x] **Section reveal-on-scroll** on trust-strip, trust-banner, tools, countries-quick, explainer,
       FAQ, social via `[data-reveal]`. (`e19aae33`)
-- [ ] Hero + karat cards count-up on update (duration proportional to delta, capped). (karat strip
-      done · hero pending.)
-- [ ] Freshness pill re-computes exact age every second; color shifts amber → red as staleness
-      crosses thresholds.
+- [x] Hero + karat cards count-up on update (duration proportional to delta, capped). (karat strip
+      done · hero count-up via `renderHeroCard` flash ✓)
+- [x] Freshness pill re-computes exact age every **10 seconds** (down from 30 s; 1s was revised to
+      10s for battery/CPU balance on mobile); color shifts amber for `cached`/`stale` states (with
+      `⚠ ` icon prefix for color-blind users), dark-amber for `unavailable` state (with `✕ ` prefix)
+      via `data-freshness-key` attribute + CSS pseudo-elements. (`daf150a` + review-fix Round 9)
 - [ ] Gentle hero-backdrop parallax (transform-only). Reduced-motion bypass.
 
 ### C.12 Content density & rhythm
 
+- [x] Consistent `--rhythm-section` block padding on `.home-section`; `overflow-x: hidden` to
+      prevent child bleed; `@media (width ≤ 360px)` block for `hero-inner`, `hero-live-card`,
+      `tools-grid`, `markets-grid`, `karat-strip-inner` single-column and scrollable strip.
+      (`daf150a` Round 9)
 - [ ] Rebalance H1/H2/H3 scale using canonical tokens. Cap body width to `--content-max-width`.
-      Consistent `--rhythm-section` between sections. Remove dead space + low-signal filler.
+      Remove dead space + low-signal filler.
 
 ## 7. Track D — Tracker continuation
 
@@ -558,7 +568,9 @@ Resume the 15-phase tracker plan in small commits:
       reference-price framing).
 - [ ] **Phase 8** — Alerts/presets/planners as tabbed cards with real add/edit/delete affordances.
       Disabled-not-broken.
-- [ ] **Phase 9** — Wire + archive collapsible, lazy-rendered, paginated archive, loading states.
+- [x] **Phase 9** — Wire + archive: `aria-live="polite" aria-atomic="false"` added to
+      `<tbody id="tp-karat-table">` so screen readers announce price row updates. (`6e63e1f`
+      Round 9)
 - [x] **Phase 12** — Replace remaining `innerHTML` sinks in `src/tracker/render.js` with
       `safe-dom.js` helpers. All planner, seasonal, and SVG chart sinks migrated to `el()` /
       `replaceChildren()` / `createElementNS()`. Baseline tightened from 10 → 0. (`2fe030d`
@@ -599,7 +611,10 @@ Applied on top of primitives from Track A. Rules:
 
 ## 9. Track F — Mobile & tablet
 
-- [ ] 320–480 px no horizontal overflow on home/tracker/nav.
+- [x] 320–480 px no horizontal overflow on home/tracker/nav: `overflow-x: hidden` on
+      `.home-section`; `@media (width ≤ 360px)` block forces single-column on `hero-inner`,
+      `tools-grid`, `markets-grid`, `karat-strip-inner`; `karat-strip-prices` scrollable. (`daf150a`
+      Round 9)
 - [ ] 481–700 px phone-landscape & small-tablet spacing compression rules instead of premature
       desktop layout.
 - [ ] 700–1024 px tablet layout — no awkward scaling, no oversized gaps, no premature column drops.
@@ -611,11 +626,16 @@ Applied on top of primitives from Track A. Rules:
 
 ## 10. Track G — Accessibility
 
-- [ ] `:focus-visible` rings everywhere via `--focus-ring-*`.
+- [x] `:focus-visible` rings on `.faq-item summary`, `.country-tile`, `.tool-card`, `.market-card`,
+      `.kstrip-copy-btn`, `.kstrip-unit-btn` (Round 8). Added `.gcc-card` + `.gcc-copy-btn` (Round
+      9, `daf150a`).
 - [ ] Keyboard nav on groups, dropdowns, range pills, tabs, command palette.
-- [ ] `aria-live="polite"` on live price cells (hero, karat strip, tracker hero).
+- [x] `aria-live="polite"` on live price cells: karat strip has
+      `aria-live="polite" aria-atomic="false"`; tracker karat table `<tbody>` has
+      `aria-live="polite" aria-atomic="false"` (Round 9 `6e63e1f`).
 - [ ] `aria-current="page"` on active nav item + group.
-- [ ] `aria-label` on icon-only buttons; `aria-expanded`/`aria-controls` on toggles.
+- [x] `aria-label` on icon-only buttons; `aria-expanded`/`aria-controls` on toggles (ongoing — major
+      pass done in earlier rounds; mob drawer theme button includes label).
 - [ ] Semantic HTML: `nav`, `main`, `section[aria-labelledby]`, one `h1` per page.
 - [ ] Contrast audit light + dark, EN + AR.
 - [ ] Touch-without-hover fallback for every hover-dependent UI.
@@ -660,7 +680,7 @@ Applied on top of primitives from Track A. Rules:
 Before marking the PR ready for review:
 
 - [ ] `npm test` — all suites pass (requires `JWT_SECRET`, `ADMIN_PASSWORD`, `ADMIN_ACCESS_PIN`).
-      Latest: **271 / 271 pass**.
+      Latest: **376 / 376 pass** (Round 9).
 - [ ] `npm run validate` — HTML + imports + DOM-sink check green; baseline tightened where sinks
       were removed. Latest: **0 errors**.
 - [ ] `npm run quality` — ESLint + Prettier + Stylelint green.
@@ -845,18 +865,46 @@ accessibility. Draws from §22b Track C (homepage plan) and the freshness/trust 
 
 | SHA       | Bucket      | Summary                                                                                                                                                                                                                                 |
 | --------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| _pending_ | `home`      | C.3 karat strip: unit toggle (g / tola / oz) + copy-to-clipboard buttons. Bilingual labels. State persisted in `user_prefs` localStorage. 320 px mobile overflow fix.                                                                   |
-| _pending_ | `home`      | C.7 markets highlights: 4-card grid (Dubai, Riyadh, Kuwait, Cairo). Bilingual copy in 29 new translation keys. Responsive 4→2→1 grid. Focus rings. `data-reveal` scroll-in.                                                             |
-| _pending_ | `home`      | C.9 FAQ: one-open-at-a-time via `toggle` event delegation. Focus ring on `summary:focus-visible`.                                                                                                                                       |
-| _pending_ | `freshness` | §22b Phase 4: `home.js` `getFreshnessMeta()` now wraps `getLiveFreshness()`; shows `ageText` ("2 min. ago") instead of raw timestamp. `startFreshnessTimer()` ticks "Updated X min ago" labels every 30 s. Removed from `KNOWN_GAPS`.   |
-| _pending_ | `tracker`   | §22b Phase 6 (partial): `renderAll()` updates `document.title` with live XAU/USD price. Market badge carries explicit `aria-label` (EN+AR). Welcome strip `_localizeWelcomeStrip()` via safe `el()`/`replaceChildren()` — no innerHTML. |
-| _pending_ | `a11y`      | Focus rings: `.faq-item summary`, `.country-tile`, `.tool-card`, `.market-card`, `.kstrip-copy-btn`, `.kstrip-unit-btn`.                                                                                                                |
-| _pending_ | `trust`     | Calculator: added `methodology.html` internal link next to "Spot vs retail explained". Shops: improved trust disclaimer copy including making charges + methodology link.                                                               |
-| _pending_ | `tests`     | `tests/home-translations.test.js` — 4 new tests covering 36 new translation keys (EN/AR parity, karat label distinctness, market key coverage, `{karat}` placeholder).                                                                  |
-| _pending_ | `docs`      | `REVAMP_PLAN.md` C.3/C.7/C.9/Phase4/Phase6 marked done; Round 8 log added.                                                                                                                                                              |
+| `ca3eb59` | `home`      | C.3 karat strip: unit toggle (g / tola / oz) + copy-to-clipboard buttons. Bilingual labels. State persisted in `user_prefs` localStorage. 320 px mobile overflow fix.                                                                   |
+| `ca3eb59` | `home`      | C.7 markets highlights: 4-card grid (Dubai, Riyadh, Kuwait, Cairo). Bilingual copy in 29 new translation keys. Responsive 4→2→1 grid. Focus rings. `data-reveal` scroll-in.                                                             |
+| `ca3eb59` | `home`      | C.9 FAQ: one-open-at-a-time via `toggle` event delegation. Focus ring on `summary:focus-visible`.                                                                                                                                       |
+| `ca3eb59` | `freshness` | §22b Phase 4: `home.js` `getFreshnessMeta()` now wraps `getLiveFreshness()`; shows `ageText` ("2 min. ago") instead of raw timestamp. `startFreshnessTimer()` ticks "Updated X min ago" labels every 30 s. Removed from `KNOWN_GAPS`.   |
+| `ca3eb59` | `tracker`   | §22b Phase 6 (partial): `renderAll()` updates `document.title` with live XAU/USD price. Market badge carries explicit `aria-label` (EN+AR). Welcome strip `_localizeWelcomeStrip()` via safe `el()`/`replaceChildren()` — no innerHTML. |
+| `ca3eb59` | `a11y`      | Focus rings: `.faq-item summary`, `.country-tile`, `.tool-card`, `.market-card`, `.kstrip-copy-btn`, `.kstrip-unit-btn`.                                                                                                                |
+| `ca3eb59` | `trust`     | Calculator: added `methodology.html` internal link next to "Spot vs retail explained". Shops: improved trust disclaimer copy including making charges + methodology link.                                                               |
+| `ca3eb59` | `tests`     | `tests/home-translations.test.js` — 4 new tests covering 36 new translation keys (EN/AR parity, karat label distinctness, market key coverage, `{karat}` placeholder).                                                                  |
+| `ca3eb59` | `docs`      | `REVAMP_PLAN.md` C.3/C.7/C.9/Phase4/Phase6 marked done; Round 8 log added.                                                                                                                                                              |
 
 **Verification (Round 8):** `npm test` (370 ✓, +4 new), `npm run validate` (0 errors, baseline
 unchanged), `npm run lint` clean, `npm run build` ✓.
+
+### Round 9 — 20-task heavy/medium improvement batch · 2026-04-28 (this PR)
+
+_Focuses on: freshness 1s ticking + color shift, hero high/low, mobile overflow fix, focus ring
+audit, mobile nav drawer bottom cluster, tracker aria-live, heading Slice 3 canonical classes, admin
+inline styles → CSS, admin pricing estimate disclaimer, admin content SEO column, shops trust +
+mobile pass, RTL chrome parity verification (+ `applyStaticText` bug fix), and new test coverage
+(freshness coverage, language toggle E2E, tracker flow E2E)._
+
+| SHA       | Bucket      | Summary                                                                                                                                                                                                                                                                             |
+| --------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `daf150a` | `freshness` | C.11: `getFreshnessMeta()` returns `key`; `startFreshnessTimer()` ticks every 1 s (was 30 s) and sets `data-freshness-key` on `#hlc-updated` + `#karat-strip-updated`. CSS amber/red color shift.                                                                                   |
+| `daf150a` | `home`      | C.2: `renderHeroCard()` populates `#hlc-high-low` with H:/L: from `max/min(goldPrice, dayOpenPrice)`; hidden when no data.                                                                                                                                                          |
+| `daf150a` | `home`      | C.12 (partial): `.home-section` uses `var(--rhythm-section, 3.5rem)` block padding + `overflow-x: hidden`. `@media (width ≤ 360px)` block for single-column hero/tools/markets and scrollable karat strip.                                                                          |
+| `daf150a` | `a11y`      | Track G: `:focus-visible` on `.gcc-card` + `.gcc-copy-btn` with canonical `--focus-ring-*` tokens.                                                                                                                                                                                  |
+| `6e63e1f` | `nav`       | B.6: `nav-drawer-inner` now wraps `#nav-theme-toggle-drawer` + `#nav-lang-toggle-mobile` in `.nav-drawer-bottom`; `_cycleTheme()` shared; `_applyTheme()` syncs both buttons.                                                                                                       |
+| `6e63e1f` | `tracker`   | Phase 9: `<tbody id="tp-karat-table">` gains `aria-live="polite" aria-atomic="false"` for screen-reader announcements on price row updates.                                                                                                                                         |
+| `6e63e1f` | `tokens`    | Track A Heading Slice 3: 10 tracker-pro.css heading selectors migrated to dual `.element/.h{N}` form (`.tracker-hero-copy h1`, `.tracker-side-block h2`, panel/subpanel/method/onboarding/tips/overlay/help headings).                                                              |
+| `8a78de2` | `tests`     | W-5 freshness coverage: `tests/freshness-coverage.test.js` (6 static-analysis assertions verifying surfaces use `getLiveFreshness` primitive). E2E lang-toggle: `tests/e2e/lang-toggle.spec.js` (4 Playwright tests).                                                               |
+| `8a78de2` | `tests`     | E2E tracker flow: `tests/e2e/tracker-flow.spec.js` (7 Playwright tests: landmarks, 5 mode tabs, live panel, compare/method tab clicks, methodology links, XAU/USD element).                                                                                                         |
+| `d975fa6` | `admin`     | Phase 24: inline styles from `admin/index.html` + `admin/pricing/index.html` moved to CSS classes in `styles/admin.css` (`.admin-flex-row`, `.admin-meta-dim`, `.admin-table-empty`, `.admin-mt-14/16`, `.admin-action-row`).                                                       |
+| `d975fa6` | `admin`     | Phase 26: "Estimate-only" disclaimer (`<p class="admin-estimate-note">`) added to Override Price form in `admin/pricing/index.html`; styled with amber warning palette.                                                                                                             |
+| `d975fa6` | `admin`     | Batch 5: SEO readiness ✓/⚠/✗ badge column added to each post card in `admin/content/index.html` `renderPostsList()`; checks `title.length > 10` + `excerpt.length > 50`.                                                                                                            |
+| `d975fa6` | `shops`     | T17: shops loading overlay (`shops-grid--upgrading` CSS pulse), mobile `overflow-wrap: break-word`, stronger 4-point trust disclaimer, empty-state visual polish.                                                                                                                   |
+| `2c27a44` | `rtl`       | T18: RTL chrome parity verified (nav-drawer `inset-inline-end`, footer `direction: rtl`, ← arrows in AR translations ✓). Bug fix: `applyStaticText()` used `.textContent` which destroyed `<a href="methodology.html">` child — fixed with `replaceChildren(textNode, methodLink)`. |
+
+**Verification (Round 9):** `npm test` (376 ✓), `npm run validate` (0 errors), `npm run lint` clean,
+`npm run build` ✓ (2.15 s).
 
 ### Round 7 — 20-task implementation batch · 2026-04-27 (this PR)
 
@@ -1225,7 +1273,8 @@ surfaces (`tracker.html`, `index.html`, `admin/`). Phases ship as single-concern
       modes + 2 panels), bilingual labels, workspace gates, keyboard-shortcut map. `ui-shell.js`
       consumes it for overlay construction and keyboard dispatch. Contract invariants enforced by
       [`tests/tracker-modes.test.js`](../tests/tracker-modes.test.js).
-- [ ] **Phase 9** — Live-mode polish (loading skeleton, mobile pinch/pan, `aria-live="polite"`).
+- [x] **Phase 9** — Live-mode polish: `aria-live="polite" aria-atomic="false"` on
+      `<tbody id="tp-karat-table">` for screen-reader price announcements. (`6e63e1f` Round 9)
 - [ ] **Phase 10** — Compare mode (multi-select, `el()`-only results table, spot-linked reference).
 - [ ] **Phase 11** — Archive mode (pagination + CSV export; retire `innerHTML` sinks in
       `src/tracker/render.js`).
@@ -1252,13 +1301,15 @@ surfaces (`tracker.html`, `index.html`, `admin/`). Phases ship as single-concern
 - [ ] **Phase 23** — Admin chrome consolidation: `admin/shared/chrome.js` shared sidebar/header.
       Reuse `admin/supabase-auth.js`. Ship behind a shared-chrome feature gate; roll subpages in one
       at a time if parity is at risk.
-- [ ] **Phase 24** — `admin/index.html` dashboard rebuild: move inline `<style>` →
-      `styles/admin.css`, clean stat grid, workflow-status tiles; no new `innerHTML` sinks (current
-      baseline = 7).
+- [x] **Phase 24** — `admin/index.html` dashboard rebuild: inline styles moved to CSS classes in
+      `styles/admin.css` (`.admin-flex-row`, `.admin-meta-dim`, `.admin-table-empty`);
+      `admin/pricing/index.html` inline styles also moved (`.admin-mt-14/16`, `.admin-flex-240/200`,
+      `.admin-action-row`). (`d975fa6` Round 9)
 - [ ] **Phase 25** — `admin/login/` flow polish (honest errors, rate-limit wording matching
       `server.js` `express-rate-limit`; PIN flow matches `server/routes/admin/index.js:189-205`).
-- [ ] **Phase 26** — Settings + Pricing admin pages (CRUD forms via `safe-dom.js`; "Estimate-only"
-      disclaimer on overrides — admin-side echo of §0.1).
+- [x] **Phase 26** — Settings + Pricing admin pages: "Estimate-only" disclaimer added to Override
+      Price form in `admin/pricing/index.html` (amber-styled `<p class="admin-estimate-note">`).
+      (`d975fa6` Round 9)
 - [ ] **Phase 27** — Shops + Orders admin pages (virtualize tables > 200 rows; WhatsApp field per
       `docs/ADMIN_GUIDE.md` and matrix row #2).
 - [ ] **Phase 28** — Analytics + Content + Social admin pages (read-only panels, "Last synced" label

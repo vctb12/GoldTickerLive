@@ -352,6 +352,12 @@
   border: 1px solid rgb(220 38 38 / 25%);
 }
 
+.hlc-high-low {
+  font-size: 0.7rem;
+  color: rgb(255 255 255 / 40%);
+  font-variant-numeric: tabular-nums;
+}
+
 .hlc-market {
   font-size: 0.7rem;
   font-weight: var(--weight-bold);
@@ -416,6 +422,49 @@
 .hlc-updated {
   font-size: 0.7rem;
   color: rgb(255 255 255 / 38%);
+}
+
+.hlc-updated[data-freshness-key='cached'],
+.hlc-updated[data-freshness-key='stale'] {
+  color: var(--color-amber, #f59e0b);
+}
+
+/* Add a non-color visual cue for cached/stale so color-blind users can distinguish */
+.hlc-updated[data-freshness-key='cached']::before {
+  content: '⚠ ';
+}
+
+.hlc-updated[data-freshness-key='stale']::before {
+  content: '⚠ ';
+}
+
+.hlc-updated[data-freshness-key='unavailable'] {
+  color: var(--color-stale, #a84000);
+}
+
+.hlc-updated[data-freshness-key='unavailable']::before {
+  content: '✕ ';
+}
+
+.karat-strip-updated[data-freshness-key='cached'],
+.karat-strip-updated[data-freshness-key='stale'] {
+  color: var(--color-amber, #f59e0b);
+}
+
+.karat-strip-updated[data-freshness-key='cached']::before {
+  content: '⚠ ';
+}
+
+.karat-strip-updated[data-freshness-key='stale']::before {
+  content: '⚠ ';
+}
+
+.karat-strip-updated[data-freshness-key='unavailable'] {
+  color: var(--color-stale, #a84000);
+}
+
+.karat-strip-updated[data-freshness-key='unavailable']::before {
+  content: '✕ ';
 }
 
 .hlc-tracker-link {
@@ -677,7 +726,8 @@
    HOME SECTIONS — shared scaffolding
    ══════════════════════════════════════════════════════════════ */
 .home-section {
-  padding: var(--space-7) var(--space-5);
+  padding: var(--rhythm-section, 3.5rem) var(--page-gutter, 1.25rem);
+  overflow-x: hidden;
 }
 
 .home-section--alt {
@@ -1795,18 +1845,38 @@
   text-align: center;
 }
 
-/* ── Mobile overflow fix for karat strip at 320 px ────────────── */
+/* ── Mobile overflow fix for karat strip at 360 px ────────────── */
 @media (width <= 360px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-live-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .karat-strip-inner {
     padding-inline: 0.75rem;
+    grid-template-columns: 1fr;
   }
 
   .karat-strip-prices {
     flex-wrap: wrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .kstrip-unit-toggle {
     gap: 2px;
+  }
+
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .markets-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1830,4 +1900,15 @@
 
 [dir='rtl'] .market-card-cta {
   direction: rtl;
+}
+
+/* ── GCC cards and copy buttons: focus rings ────────────────── */
+.gcc-card:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--color-gold, #c99a3e));
+  outline-offset: var(--focus-ring-offset, 2px);
+}
+
+.gcc-copy-btn:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--color-gold, #c99a3e));
+  outline-offset: var(--focus-ring-offset, 2px);
 }

@@ -16,7 +16,9 @@
 >
 > **Previously resolved (2026-04-27):** W-2, W-6, W-9, W-10, W-11, W-12, W-14.
 >
-> **Remaining tracked work:** W-5, W-13 — queued in `docs/REVAMP_PLAN.md`.
+> **Resolved (2026-04-28 Round 9):** W-5 (freshness-coverage test added).
+>
+> **Remaining tracked work:** W-13 — queued in `docs/REVAMP_PLAN.md`.
 
 This document captures a four-part read-only analysis of the Gold Ticker Live repository:
 
@@ -466,6 +468,10 @@ write-to-temp then `fs.renameSync()` pattern (POSIX atomic). Updated callers: `s
 price-rendering surface passes through the canonical freshness primitive.  
 **Action:** A static-analysis pass or a freshness-coverage test that maps every price surface to its
 freshness path.
+
+**Resolved (2026-04-28 Round 9):** `tests/freshness-coverage.test.js` added with 6 static-analysis
+assertions verifying that `home.js`, `ticker.js`, `spotBar.js`, `page-hydrator.js`, and
+`tracker/render.js` all use the `getLiveFreshness` primitive (directly or via parameter).
 
 #### W-6 · `renderKaratCards` uses inline styles, not design tokens
 

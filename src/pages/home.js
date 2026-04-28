@@ -139,19 +139,31 @@ function getFreshnessMeta() {
     freshnessTime: freshness.timeText,
     ageText: freshness.ageText,
     isLive: freshness.key === 'live',
+    key: freshness.key,
     sourceText,
   };
 }
 
-/** Tick the freshness timestamp display every 30 s without a full re-render. */
+/** Tick the freshness timestamp display every 10 s without a full re-render.
+ * 10-second interval provides a good balance between accurate age display
+ * ("42 s ago" feels live) and CPU/battery impact on mobile devices.
+ */
 function startFreshnessTimer() {
   if (_freshnessTimer) clearInterval(_freshnessTimer);
   _freshnessTimer = setInterval(() => {
     if (!goldPrice || !goldUpdatedAt) return;
-    const { ageText, sourceText } = getFreshnessMeta();
-    setTextById('hlc-updated', `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`);
-    setTextById('karat-strip-updated', `${tx('updated')}: ${ageText} · ${sourceText}`);
-  }, 30_000);
+    const { ageText, sourceText, key } = getFreshnessMeta();
+    const hlcEl = document.getElementById('hlc-updated');
+    const kstripEl = document.getElementById('karat-strip-updated');
+    if (hlcEl) {
+      hlcEl.textContent = `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`;
+      hlcEl.dataset.freshnessKey = key;
+    }
+    if (kstripEl) {
+      kstripEl.textContent = `${tx('updated')}: ${ageText} · ${sourceText}`;
+      kstripEl.dataset.freshnessKey = key;
+    }
+  }, 10_000);
 }
 
 // ── Render hero live card ──────────────────────────────────────────────────
@@ -185,9 +197,21 @@ function renderHeroCard() {
   setTextById('hlc-usd22', fmt.formatPrice(usd22g, 'USD', 2));
   setTextById('hlc-aed22', fmt.formatPrice(aed22g, 'AED', 2));
   setTextById('hlc-usd21', fmt.formatPrice(usd21g, 'USD', 2));
-  const { ageText, isLive, sourceText } = getFreshnessMeta();
-  setTextById('hlc-updated', `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`);
-  setTextById('karat-strip-updated', `${tx('updated')}: ${ageText} · ${sourceText}`);
+  const { ageText, isLive, sourceText, key } = getFreshnessMeta();
+  const hlcUpdatedEl = document.getElementById('hlc-updated');
+  if (hlcUpdatedEl) {
+    hlcUpdatedEl.textContent = `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`;
+    hlcUpdatedEl.dataset.freshnessKey = key;
+  } else {
+    setTextById('hlc-updated', `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`);
+  }
+  const kstripUpdatedEl = document.getElementById('karat-strip-updated');
+  if (kstripUpdatedEl) {
+    kstripUpdatedEl.textContent = `${tx('updated')}: ${ageText} · ${sourceText}`;
+    kstripUpdatedEl.dataset.freshnessKey = key;
+  } else {
+    setTextById('karat-strip-updated', `${tx('updated')}: ${ageText} · ${sourceText}`);
+  }
 
   // Change vs day open
   const changeEl = document.getElementById('hlc-change');
@@ -197,6 +221,20 @@ function renderHeroCard() {
     changeEl.textContent = `${tx('changeLabel')}: ${sign}${chg.toFixed(2)}%`;
     changeEl.className = 'hlc-change ' + (chg >= 0 ? 'badge-up' : 'badge-down');
     changeEl.hidden = false;
+  }
+
+  // Day high/low estimate: derived from current price vs day open price.
+  // These two data points give a rough intraday range; true OHLC highs/lows
+  // are not available from the current data source. This is labelled
+  // "H/L" (not "High/Low") to signal it is an approximation.
+  const hlHlEl = document.getElementById('hlc-high-low');
+  if (hlHlEl && dayOpenPrice && goldPrice) {
+    const high = Math.max(goldPrice, dayOpenPrice);
+    const low = Math.min(goldPrice, dayOpenPrice);
+    const highFmt = fmt.formatPrice(high, 'USD', 2);
+    const lowFmt = fmt.formatPrice(low, 'USD', 2);
+    hlHlEl.textContent = `H: ${highFmt} · L: ${lowFmt}`;
+    hlHlEl.hidden = false;
   }
 
   // Market status

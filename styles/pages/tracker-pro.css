@@ -536,7 +536,8 @@ body.tracker-pro-page {
   padding: 1rem;
 }
 
-.tracker-side-block h2 {
+.tracker-side-block h2,
+.tracker-side-block .h2 {
   font-size: var(--text-base);
   margin-bottom: 0.75rem;
   color: var(--tp-gold-strong);
@@ -778,14 +779,16 @@ body.tracker-pro-page {
   margin-bottom: 0.8rem;
 }
 
-.tracker-panel-head h2 {
+.tracker-panel-head h2,
+.tracker-panel-head .h2 {
   font-size: clamp(1.25rem, 2vw, 1.8rem);
   line-height: 1.15;
   margin-bottom: 0.35rem;
   color: var(--tp-text);
 }
 
-.tracker-panel-head h3 {
+.tracker-panel-head h3,
+.tracker-panel-head .h3 {
   font-size: var(--text-base);
   margin: 0;
 }
@@ -811,7 +814,8 @@ body.tracker-pro-page {
   flex-wrap: wrap;
 }
 
-.tracker-subpanel-head h3 {
+.tracker-subpanel-head h3,
+.tracker-subpanel-head .h3 {
   font-size: var(--text-base);
   color: var(--tp-text);
 }
@@ -1282,7 +1286,8 @@ body.tracker-pro-page {
   min-height: 190px;
 }
 
-.tracker-method-card h3 {
+.tracker-method-card h3,
+.tracker-method-card .h3 {
   margin-bottom: 0.55rem;
   font-size: var(--text-base);
   color: var(--tp-gold-strong);
@@ -2333,7 +2338,8 @@ body.tracker-workspace-basic .tracker-modes {
   border-radius: var(--radius-md);
 }
 
-.tracker-onboarding-card h2 {
+.tracker-onboarding-card h2,
+.tracker-onboarding-card .h2 {
   margin: 0 0 0.5rem;
   font-size: 0.92rem;
   letter-spacing: 0.03em;
@@ -2390,7 +2396,8 @@ body.tracker-workspace-basic .tracker-modes {
   opacity: 0.85;
 }
 
-.tracker-side-block--tips h2 {
+.tracker-side-block--tips h2,
+.tracker-side-block--tips .h2 {
   font-size: 0.8rem;
 }
 
@@ -2627,7 +2634,8 @@ body.tracker-workspace-basic .tracker-modes {
   z-index: 1;
 }
 
-.tp-overlay-header h2 {
+.tp-overlay-header h2,
+.tp-overlay-header .h2 {
   font-size: clamp(1rem, 2vw, 1.3rem);
   color: var(--tp-text);
   margin: 0;
@@ -2718,7 +2726,8 @@ body.tracker-workspace-basic .tracker-modes {
   padding: var(--space-5);
 }
 
-.tp-keyboard-help-panel h2 {
+.tp-keyboard-help-panel h2,
+.tp-keyboard-help-panel .h2 {
   font-size: 1.1rem;
   color: var(--tp-text);
   margin: 0 0 1rem;
@@ -2806,7 +2815,8 @@ body.tracker-workspace-basic .tracker-modes {
     break-inside: avoid;
   }
 
-  .tracker-hero-copy h1 {
+  .tracker-hero-copy h1,
+  .tracker-hero-copy .h1 {
     font-size: 1.6rem;
   }
 
