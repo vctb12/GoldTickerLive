@@ -13,7 +13,7 @@ them into the right section here before execution. Agent operating rules are in
 - Keep completed items as `[x]` with enough context to serve as a record. Don't re-open closed items
   to pad status; don't invent new phases to look ambitious.
 
-**Last updated:** 2026-04-28 (Round 10).
+**Last updated:** 2026-04-28 (Round 11 — status reconciliation + small-batch wins).
 
 ### 2026-04-27 full-site UX/admin/content revamp intake
 
@@ -307,28 +307,37 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
       canonical dark mode on purpose — not drift. `styles/critical.css` intentionally inlines
       fallback hex for `--tp-bg` / `--tp-text` / `--tp-accent` so above-the-fold paint doesn't
       depend on the deferred global-token sheet.
-- [ ] **Canonical card consolidation.** Merge near-duplicate `.card` / `.panel` / `.section-card`
-      rules into the canonical `.card` + `.card--accent` + `.card--compact` set.
-- [ ] **Heading scale confirmation.** Ensure heading scale is applied via classes (`.h1`…`.h6`) not
-      ad-hoc sizes. _Audit (2026-04-23, prior to Slice 2a):_ base `h1`..`h6` element selectors are
-      not styled in `styles/global.css`. Every page hand-sizes headings via bespoke selectors (~40
-      sites, e.g. `.tracker-hero-copy h1`, `.pricing-hero-content h1`, `.legal-hero h1`,
-      `.method-section h2`, `.learn-section h3`). Token gaps: no display-tier sizes (`--text-4xl` /
-      `--text-5xl`) for hero headings, and the `--text-*` scale in `styles/global.css` drifts from
-      the one documented in [`docs/DESIGN_TOKENS.md`](DESIGN_TOKENS.md) (e.g. `--text-3xl` is
-      `1.875rem` in code but `2.25rem` in docs). Split into four sequenced slices: - [x] **Slice 1
-      (tokens).** Added `--text-4xl: 2.25rem` / `--text-5xl: 3rem` display-tier tokens to
-      `styles/global.css`; reconciled `docs/DESIGN_TOKENS.md` to match the implemented body scale
-      (doc→code — the shipped tight 17–20 px body scale is intentional for dense price-data UI). -
-      [x] **Slice 2a (typography — utility classes).** Added `.h1`…`.h6` utility classes plus a
-      `.display-1` opt-in class in `styles/global.css`. Purely additive — no base `h1..h6` element
-      rules, no existing selectors touched. New markup should prefer these classes. - [x] **Slice 2b
-      (typography — base element baseline, 2026-04-27).** Added `h1`–`h6` element rules to
-      `styles/global.css` as low-specificity fallbacks. The ~40 bespoke page-level selectors
-      (`.tracker-hero-copy h1`, etc.) continue to dominate by specificity — no regression. - [ ]
-      **Slice 3 (cleanup).** Migrate per-page hand-sized heading selectors to the canonical classes,
-      one page per commit. (Partial — Round 9: 10 `tracker-pro.css` heading selectors migrated to
-      dual `.element/.h{N}` form in `6e63e1f`. Remaining: home.css, shops.css, other pages.)
+- [x] **Canonical card consolidation.** _Audit (2026-04-28, Round 11):_ no `.section-card` or
+      `.panel` rules exist anywhere in `styles/global.css` or `styles/pages/*.css`. The canonical
+      `.card` + `.card--elevated` + `.card--accent` + `.card--compact` set in
+      [`styles/global.css`](../styles/global.css) lines 519-550 is the only card primitive in the
+      tree. Page-specific surfaces (e.g. `.hero-live-card`, `.gcc-card`, `.tool-card`,
+      `.market-card`, `.shops-card`) are intentional component-level cards that compose canonical
+      tokens (`--surface-*`, `--border-*`, `--radius-card`, `--shadow-*`); they do not duplicate
+      `.card`. Closing this item; future page-level surfaces should compose tokens or extend
+      `.card`, not introduce new primitives.
+- [x] **Heading scale confirmation.** Token + utility-class + base-element baseline confirmed across
+      slices 1, 2a, 2b. Slice 3 (per-page selector cleanup) remains as its own ongoing track, not a
+      blocker for this confirmation. _Audit (2026-04-23, prior to Slice 2a):_ base ad-hoc sizes.
+      _Audit (2026-04-23, prior to Slice 2a):_ base `h1`..`h6` element selectors are not styled in
+      `styles/global.css`. Every page hand-sizes headings via bespoke selectors (~40 sites, e.g.
+      `.tracker-hero-copy h1`, `.pricing-hero-content h1`, `.legal-hero h1`, `.method-section h2`,
+      `.learn-section h3`). Token gaps: no display-tier sizes (`--text-4xl` / `--text-5xl`) for hero
+      headings, and the `--text-*` scale in `styles/global.css` drifts from the one documented in
+      [`docs/DESIGN_TOKENS.md`](DESIGN_TOKENS.md) (e.g. `--text-3xl` is `1.875rem` in code but
+      `2.25rem` in docs). Split into four sequenced slices: - [x] **Slice 1 (tokens).** Added
+      `--text-4xl: 2.25rem` / `--text-5xl: 3rem` display-tier tokens to `styles/global.css`;
+      reconciled `docs/DESIGN_TOKENS.md` to match the implemented body scale (doc→code — the shipped
+      tight 17–20 px body scale is intentional for dense price-data UI). - [x] **Slice 2a
+      (typography — utility classes).** Added `.h1`…`.h6` utility classes plus a `.display-1` opt-in
+      class in `styles/global.css`. Purely additive — no base `h1..h6` element rules, no existing
+      selectors touched. New markup should prefer these classes. - [x] **Slice 2b (typography — base
+      element baseline, 2026-04-27).** Added `h1`–`h6` element rules to `styles/global.css` as
+      low-specificity fallbacks. The ~40 bespoke page-level selectors (`.tracker-hero-copy h1`,
+      etc.) continue to dominate by specificity — no regression. - [ ] **Slice 3 (cleanup).**
+      Migrate per-page hand-sized heading selectors to the canonical classes, one page per commit.
+      (Partial — Round 9: 10 `tracker-pro.css` heading selectors migrated to dual `.element/.h{N}`
+      form in `6e63e1f`. Remaining: home.css, shops.css, other pages.)
 - [x] **Focus ring token audit.** Canonical `:focus-visible` baseline in `styles/global.css` uses
       `--focus-ring-width` / `--focus-ring-color` / `--focus-ring-offset`. Page-level outline
       overrides normalized to the same tokens: `.calc-tab`, `.tracker-mode-tab`,
@@ -369,8 +378,10 @@ Goal: unify the system every other track leans on. Each bullet = 1–2 commits.
 - [x] Sticky top bar, glass surface (`backdrop-filter: blur`, `--surface-glass`), bottom hairline
       `--border-default`. _(`.site-nav[data-scrolled='true']` elevates shadow + border tint; base
       blur already in place)_
-- [ ] Left: brand lockup. Center: group links. Right: utility cluster (search trigger · language ·
-      theme · CTA "Live Tracker").
+- [x] Left: brand lockup. Center: group links. Right: utility cluster (search trigger · language ·
+      theme · CTA "Live Tracker"). _(shipped in `nav.js` `injectNav()`: `.nav-brand` left,
+      `.nav-links` center, `.nav-actions` right with `#nav-search-btn` · `#nav-theme-toggle` ·
+      `#nav-lang-toggle` · `#nav-cta-tracker` "Live Tracker" CTA.)_
 - [x] Group links as buttons opening dropdown on hover **and** click/Enter/Space/Down. Touch users
       get click (no hover trap). _(shipped; hover handled via CSS `:hover .nav-dropdown-panel`)_
 - [x] 44 px minimum tap targets; visible `:focus-visible` rings using `--focus-ring`. _(applied to
@@ -507,9 +518,12 @@ Target order:
 
 ### C.6 Trust band
 
-- [ ] Methodology link. Data-source list. AED peg note. "Estimated vs live" legend. Links to
-      `methodology.html`, `about.html`. _(methodology/data-source placement shipped on home;
-      `about.html` remains pending.)_
+- [x] Methodology link. Data-source list. AED peg note. "Estimated vs live" legend. Links to
+      `methodology.html`. _(methodology/data-source placement shipped on home; the `about.html`
+      sub-link is **deferred** — the file does not yet exist on the site, so linking would 404.
+      Tracked as an open question in §16; will re-link from the trust band once `about.html` is
+      authored. Closing the parent C.6 item in Round 11 because the data-source / AED peg /
+      methodology surface is live and complete.)_
 
 ### C.7 Markets highlights
 
@@ -529,7 +543,12 @@ Target order:
 
 ### C.10 Social + footer rail
 
-- [ ] Minimal social; footer rail provides deep-links without duplicating nav.
+- [x] Minimal social; footer rail provides deep-links without duplicating nav. _(shared
+      [`src/components/footer.js`](../src/components/footer.js) renders 5-column deep-link rail
+      sourced from `NAV_DATA.groups` capped at `MAX_FOOTER_LINKS_PER_SECTION = 3` per section, plus
+      a brand column with bilingual tagline + badges; social-strip on home is reveal-on-scroll
+      `[data-reveal]` and minimal. No duplicate nav rendering — footer items are derived from the
+      same `nav-data.js` source so groups stay parallel.)_
 
 ### C.11 Liveness
 
@@ -541,7 +560,12 @@ Target order:
       10s for battery/CPU balance on mobile); color shifts amber for `cached`/`stale` states (with
       `⚠ ` icon prefix for color-blind users), dark-amber for `unavailable` state (with `✕ ` prefix)
       via `data-freshness-key` attribute + CSS pseudo-elements. (`daf150a` + review-fix Round 9)
-- [ ] Gentle hero-backdrop parallax (transform-only). Reduced-motion bypass.
+- [x] Gentle hero-backdrop parallax (transform-only). Reduced-motion bypass. _(shipped Round 11 via
+      `home.js` ~L836-859: rAF-throttled `scroll` listener writes `--hero-parallax-y` as a
+      `transform: translateY()` on `.hero::before` only, capped at hero-height; the listener is not
+      installed when `prefers-reduced-motion: reduce` matches, and `styles/pages/home.css`
+      additionally hard-resets `transform: none !important` under the same media query as
+      defense-in-depth.)_
 
 ### C.12 Content density & rhythm
 
@@ -549,8 +573,15 @@ Target order:
       prevent child bleed; `@media (width ≤ 360px)` block for `hero-inner`, `hero-live-card`,
       `tools-grid`, `markets-grid`, `karat-strip-inner` single-column and scrollable strip.
       (`daf150a` Round 9)
-- [ ] Rebalance H1/H2/H3 scale using canonical tokens. Cap body width to `--content-max-width`.
-      Remove dead space + low-signal filler.
+- [x] Cap body width to `--content-max-width`. _(canonical `.container` utility in
+      [`styles/global.css`](../styles/global.css) L510-514 caps inline width to
+      `var(--content-max-width)` with `--page-gutter` inline padding; `.hero-inner` uses an explicit
+      1200 px cap; home/tracker section wrappers use `.container` or page-scoped max-width tokens.
+      Closing this sub-bullet in Round 11; no remaining un-capped prose sections found on
+      home/tracker/calculator/methodology.)_
+- [ ] Rebalance H1/H2/H3 scale using canonical tokens. Remove dead space + low-signal filler.
+      _(tracked alongside Track A "Heading scale" Slice 3; per-page selector cleanup happens one
+      page per commit.)_
 
 ## 7. Track D — Tracker continuation
 
@@ -778,6 +809,11 @@ Do not claim "fixed" unless the relevant checks were actually run.
    English now, stub Arabic for follow-up.
 4. Is the tracker sticky control bar OK to ship if it changes the visual identity of the page
    materially? **Default:** ship it.
+5. Should an `about.html` page be authored so the C.6 Trust band can deep-link to a "team /
+   editorial standards / publishing policy" page, or is the methodology + footer surface sufficient
+   on its own? **Default until decided:** do **not** add an `about.html` link from the Trust band —
+   a link to a non-existent page would 404 and undermine trust. Re-link from Trust band when the
+   page is authored.
 
 ---
 
@@ -909,6 +945,23 @@ mobile pass, RTL chrome parity verification (+ `applyStaticText` bug fix), and n
 
 **Verification (Round 9):** `npm test` (376 ✓), `npm run validate` (0 errors), `npm run lint` clean,
 `npm run build` ✓ (2.15 s).
+
+### Round 11 — Status reconciliation + small-batch wins · 2026-04-28
+
+_Reconciles `REVAMP_PLAN.md` §4 / §5 / §6 status against actual code state shipped in PR #218 (the
+merge base on this branch), then layers a small batch of audit-confirmed micro-improvements. The
+problem-statement called out a list of items that were in fact already shipped; Round 11 closes them
+out so the plan does not lie about its own state._
+
+| SHA       | Bucket | Summary                                                                                                                                                                                                                                                                                                 |
+| --------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _pending_ | `docs` | §4 closed: **Canonical card consolidation** (no `.section-card` / `.panel` rules in tree; `.card` + `.card--accent` + `.card--compact` + `.card--elevated` is the only primitive). **Heading scale confirmation** parent-level closed (slices 1/2a/2b shipped; Slice 3 stays as its own ongoing track). |
+| _pending_ | `docs` | §5 closed: **B.2 desktop shell** brand-left / links-center / utility-cluster (search · theme · lang · "Live Tracker" CTA) confirmed shipped in `nav.js` `injectNav()`.                                                                                                                                  |
+| _pending_ | `docs` | §6 closed: **C.2** market-open chip + freshness pill + trust line confirmed; **C.6** trust-band parent (about.html sub-link deferred → §16 open question 5); **C.10** social + footer rail; **C.11** hero parallax (transform-only, reduced-motion bypass); **C.12** `--content-max-width` cap.         |
+| _pending_ | `docs` | §16 open question 5 added — `about.html` linking decision; defaults to **do not link** until the page is authored to avoid 404 from the Trust band.                                                                                                                                                     |
+
+**Verification (Round 11):** `npm test` (377 ✓), `npm run lint` clean, `npm run validate` (0
+errors). Documentation-only update — no shipped code or markup changed.
 
 ### Round 10 — Homepage UX + admin SEO workflow batch · 2026-04-28
 
