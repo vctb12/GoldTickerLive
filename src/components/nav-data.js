@@ -493,6 +493,9 @@ const RAW_NAV_DATA = {
     mainNav: 'Main navigation',
     brandLabel: 'GoldTickerLive Home',
     recentSearches: 'Recent searches',
+    ctaLabel: 'Live Tracker',
+    drawerCtaLabel: 'Live Tracker →',
+    drawerSearchPlaceholder: 'Search countries, prices…',
     themeLabels: {
       auto: 'Theme: auto (click to switch to light)',
       light: 'Theme: light (click to switch to dark)',
@@ -971,6 +974,9 @@ const RAW_NAV_DATA = {
     mainNav: 'التنقل الرئيسي',
     brandLabel: 'GoldTickerLive الرئيسية',
     recentSearches: 'عمليات البحث الأخيرة',
+    ctaLabel: 'التتبع المباشر',
+    drawerCtaLabel: '← التتبع المباشر',
+    drawerSearchPlaceholder: 'ابحث عن دول وأسعار…',
     themeLabels: {
       auto: 'المظهر: تلقائي (اضغط للتبديل إلى الفاتح)',
       light: 'المظهر: فاتح (اضغط للتبديل إلى الداكن)',

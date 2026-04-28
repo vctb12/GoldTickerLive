@@ -30,14 +30,29 @@
   overflow: hidden;
 }
 
+/* Parallax backdrop layer — extra vertical overflow to avoid edge reveal. */
 .hero::before {
   content: '';
   position: absolute;
-  inset: 0;
+  top: -30%;
+  bottom: -30%;
+  left: 0;
+  right: 0;
   background:
     radial-gradient(ellipse 80% 60% at 20% 80%, rgb(196 153 62 / 6%) 0%, transparent 50%),
     radial-gradient(ellipse 40% 40% at 85% 20%, rgb(196 153 62 / 4%) 0%, transparent 50%);
   pointer-events: none;
+  will-change: transform;
+
+  /* Parallax: move the layer at 40 % of scroll speed (counter to scroll direction). */
+  transform: translateY(calc(var(--hero-parallax-y, 0px) * -0.4));
+}
+
+/* Reduced-motion: suppress parallax transform completely. */
+@media (prefers-reduced-motion: reduce) {
+  .hero::before {
+    transform: none !important;
+  }
 }
 
 .hero::after {
@@ -446,6 +461,26 @@
   content: '✕ ';
 }
 
+/* Granular age-based color shift (updated every second by home.js). */
+
+/* amber: 5–30 min — warmer than the default muted color */
+.hlc-updated[data-freshness-age='amber'] {
+  color: var(--color-amber, #f59e0b);
+}
+
+.hlc-updated[data-freshness-age='amber']::before {
+  content: '⚠ ';
+}
+
+/* stale: >30 min — escalate to danger red */
+.hlc-updated[data-freshness-age='stale'] {
+  color: var(--color-danger, #dc2626);
+}
+
+.hlc-updated[data-freshness-age='stale']::before {
+  content: '⚠ ';
+}
+
 .karat-strip-updated[data-freshness-key='cached'],
 .karat-strip-updated[data-freshness-key='stale'] {
   color: var(--color-amber, #f59e0b);
@@ -465,6 +500,23 @@
 
 .karat-strip-updated[data-freshness-key='unavailable']::before {
   content: '✕ ';
+}
+
+/* Granular age-based color shifts for karat strip */
+.karat-strip-updated[data-freshness-age='amber'] {
+  color: var(--color-amber, #f59e0b);
+}
+
+.karat-strip-updated[data-freshness-age='amber']::before {
+  content: '⚠ ';
+}
+
+.karat-strip-updated[data-freshness-age='stale'] {
+  color: var(--color-danger, #dc2626);
+}
+
+.karat-strip-updated[data-freshness-age='stale']::before {
+  content: '⚠ ';
 }
 
 .hlc-tracker-link {
@@ -738,7 +790,7 @@
 }
 
 .home-section-inner {
-  max-width: 1200px;
+  max-width: var(--content-max-width, 1200px);
   margin: 0 auto;
 }
 
@@ -766,11 +818,11 @@
 }
 
 .home-section-title {
-  font-size: clamp(1.4rem, 3vw, 1.95rem);
+  font-size: var(--text-3xl, 1.875rem);
   font-weight: var(--weight-extrabold);
   color: var(--color-gold-deep, #5a3a0a);
-  letter-spacing: -0.025em;
-  line-height: 1.15;
+  letter-spacing: var(--tracking-tight, -0.025em);
+  line-height: var(--leading-tight, 1.2);
 }
 
 .home-section-sub {
@@ -839,25 +891,21 @@
   gap: 1.25rem;
 }
 
-.gcc-card {
-  background: var(--gradient-surface);
-  border: 1.5px solid var(--color-border-subtle, rgb(0 0 0 / 7%));
-  border-radius: var(--radius-md);
-  padding: 1.3rem 1.4rem;
-  text-decoration: none;
-  color: var(--color-text, #1a1a1a);
+/* ── Shared interactive card surface (.gcc-card, .tool-card) ──
+   Hover lift + shadow + gold top-border reveal are identical across
+   both card types. Consolidated here to avoid duplication. ── */
+.gcc-card,
+.tool-card {
+  position: relative;
+  overflow: hidden;
   transition:
     transform 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     box-shadow 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     border-color 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  position: relative;
-  overflow: hidden;
 }
 
-.gcc-card::before {
+.gcc-card::before,
+.tool-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -869,18 +917,32 @@
   transition: opacity 0.3s;
 }
 
-.gcc-card:hover {
+.gcc-card:hover,
+.tool-card:hover {
   box-shadow:
     0 10px 32px rgb(196 153 62 / 22%),
     0 2px 8px rgb(0 0 0 / 6%);
   border-color: var(--color-gold, #c99a3e);
   transform: translateY(-4px);
   text-decoration: none;
-  color: var(--color-text, #1a1a1a);
+  color: inherit;
 }
 
-.gcc-card:hover::before {
+.gcc-card:hover::before,
+.tool-card:hover::before {
   opacity: 1;
+}
+
+.gcc-card {
+  background: var(--gradient-surface);
+  border: 1.5px solid var(--color-border-subtle, rgb(0 0 0 / 7%));
+  border-radius: var(--radius-md);
+  padding: 1.3rem 1.4rem;
+  text-decoration: none;
+  color: var(--color-text, #1a1a1a);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
 .gcc-card-header {
@@ -1004,38 +1066,12 @@
   gap: 0.6rem;
   text-decoration: none;
   color: inherit;
-  transition:
-    transform 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    box-shadow 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    border-color 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  position: relative;
-  overflow: hidden;
-}
-
-.tool-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--color-gold, #c99a3e), transparent);
-  opacity: 0;
-  transition: opacity 0.3s;
 }
 
 .tool-card:hover {
   box-shadow:
     0 10px 32px rgb(196 153 62 / 20%),
     0 2px 8px rgb(0 0 0 / 5%);
-  border-color: var(--color-gold, #c99a3e);
-  transform: translateY(-4px);
-  text-decoration: none;
-  color: inherit;
-}
-
-.tool-card:hover::before {
-  opacity: 1;
 }
 
 .tool-card-icon {
@@ -1361,7 +1397,7 @@
   }
 
   .home-section-title {
-    font-size: clamp(1.25rem, 4vw, 1.65rem);
+    font-size: clamp(1.25rem, 4vw, var(--text-3xl, 1.875rem));
   }
 
   .country-search-input {
