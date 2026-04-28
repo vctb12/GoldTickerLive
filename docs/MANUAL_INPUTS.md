@@ -74,7 +74,7 @@ where to get it, which file to edit, and what breaks without it.
 - **What:** A custom domain name instead of `vctb12.github.io/Gold-Prices/`.
 - **Where to get it:** Purchase a domain, then configure DNS to point to GitHub Pages.
 - **Where to set it:** Create a file called `CNAME` in the repo root containing your domain (e.g.
-  `goldprices.ae`). Then in your domain registrar, add a CNAME record pointing to
+  `goldtickerlive.com`). Then in your domain registrar, add a CNAME record pointing to
   `vctb12.github.io`.
 - **What breaks without it:** The site continues to work on the GitHub Pages URL.
 

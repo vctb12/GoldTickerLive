@@ -11,39 +11,48 @@ manual GitHub actions are needed if the repository itself is renamed.
 
 ## What changed
 
-| Surface                                     | Before                                                | After                                                                                  |
-| ------------------------------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| Brand identity (full)                       | `GoldPrices`, `GoldTickerLive` (one word)             | **Gold Ticker Live** (three words)                                                     |
-| Brand identity (compact)                    | `GoldPrices`, `GoldTickerLive`                        | **GTL** (used sparingly, only where space is tight)                                    |
-| Public site canonical domain                | `goldtickerlive.com`                                  | `goldtickerlive.com` (unchanged — already on the new domain)                           |
-| PWA `manifest.json` `name`                  | `GoldPrices — Live Gold Tracker`                      | `Gold Ticker Live — Live Gold Price Tracker`                                           |
-| PWA `manifest.json` `short_name`            | `GoldPrices`                                          | `Gold Ticker Live`                                                                     |
-| Service worker cache name                   | `goldprices-v14`                                      | `goldtickerlive-v15` (bumped to invalidate old caches cleanly)                         |
-| `<title>` brand suffix                      | `… \| GoldPrices` / `… \| GoldTickerLive`             | `… \| Gold Ticker Live`                                                                |
-| OG / Twitter card titles                    | `… \| GoldPrices` etc.                                | `… \| Gold Ticker Live`                                                                |
-| OG image `alt` text                         | `GoldTickerLive — live gold price tracker`            | `Gold Ticker Live — live gold price tracker`                                           |
-| JSON-LD Organization / WebSite `name`       | `GoldTickerLive` / `GoldPrices`                       | `Gold Ticker Live`                                                                     |
-| `src/seo/seoHead.js` `SITE_NAME`            | `GoldPrices`                                          | `Gold Ticker Live`                                                                     |
-| `src/seo/metadataGenerator.js` `SITE_NAME`  | `GoldPrices`                                          | `Gold Ticker Live`                                                                     |
-| `scripts/node/inject-schema.js` `SITE_NAME` | `GoldTickerLive`                                      | `Gold Ticker Live`                                                                     |
-| Nav brand label + footer                    | `GoldTickerLive` (compact)                            | `Gold Ticker Live`                                                                     |
-| Tracker `document.title`                    | `… \| GoldTickerLive`                                 | `… \| Gold Ticker Live`                                                                |
-| CSV / export brand header                   | `# GoldTickerLive — …`                                | `# Gold Ticker Live — …`                                                               |
-| Newsletter sender display                   | `Gold Prices Platform`                                | `Gold Ticker Live`                                                                     |
-| Server log banner                           | `🚀 Gold Prices Platform Server`                      | `🚀 Gold Ticker Live Server`                                                           |
-| X / Twitter post template                   | `🥇 Gold Prices Today — …`                            | `🥇 Gold Ticker Live — Gold Prices Today, …`                                           |
-| Discord / Telegram / Spike alerts           | `GoldPrices Bot`, `GoldPrices Alert`, `GoldPrices.io` | `Gold Ticker Live Bot`, `Gold Ticker Live Alert`, `Gold Ticker Live`                   |
-| Uptime check User-Agent                     | `GoldPrices-UptimeMonitor/1.0`                        | `GoldTickerLive-UptimeMonitor/1.0` (no-space identifier preserved as User-Agent token) |
-| RSS feed `<title>`                          | `GoldPrices — Live Gold Price Updates`                | `Gold Ticker Live — Live Gold Price Updates`                                           |
-| Privacy / Terms `legal-sub`                 | `… GoldPrices.app …`                                  | `… Gold Ticker Live …`                                                                 |
-| Stub `index.html` files                     | `Not a public page — GoldPrices`                      | `Not a public page — Gold Ticker Live`                                                 |
-| `package.json` `name`                       | `gold-prices`                                         | `gold-ticker-live`                                                                     |
-| `package-lock.json` `name`                  | `gold-prices`                                         | `gold-ticker-live`                                                                     |
-| `README.md` H1                              | `# GoldPrices`                                        | `# Gold Ticker Live`                                                                   |
-| `docs/CONTRIBUTING.md` H1                   | `# Contributing to GoldPrices`                        | `# Contributing to Gold Ticker Live`                                                   |
-| `docs/replit.md` H1                         | `# GoldPrices`                                        | `# Gold Ticker Live`                                                                   |
-| `docs/TEARDOWN.md` H1 + body                | `# 🏗️ GoldPrices …`, `**GoldPrices**`                 | `# 🏗️ Gold Ticker Live …`, `**Gold Ticker Live**`                                      |
-| `docs/AUTOMATIONS.md` H1                    | `# GoldPrices — Automation Setup Guide`               | `# Gold Ticker Live — Automation Setup Guide`                                          |
+| Surface                                      | Before                                                | After                                                                                                               |
+| -------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Brand identity (full)                        | `GoldPrices`, `GoldTickerLive` (one word)             | **Gold Ticker Live** (three words)                                                                                  |
+| Brand identity (compact)                     | `GoldPrices`, `GoldTickerLive`                        | **GTL** (used sparingly, only where space is tight)                                                                 |
+| Public site canonical domain                 | `goldtickerlive.com`                                  | `goldtickerlive.com` (unchanged — already on the new domain)                                                        |
+| PWA `manifest.json` `name`                   | `GoldPrices — Live Gold Tracker`                      | `Gold Ticker Live — Live Gold Price Tracker`                                                                        |
+| PWA `manifest.json` `short_name`             | `GoldPrices`                                          | `Gold Ticker Live`                                                                                                  |
+| Service worker cache name                    | `goldprices-v14`                                      | `goldtickerlive-v15` (bumped to invalidate old caches cleanly)                                                      |
+| `<title>` brand suffix                       | `… \| GoldPrices` / `… \| GoldTickerLive`             | `… \| Gold Ticker Live`                                                                                             |
+| OG / Twitter card titles                     | `… \| GoldPrices` etc.                                | `… \| Gold Ticker Live`                                                                                             |
+| OG image `alt` text                          | `GoldTickerLive — live gold price tracker`            | `Gold Ticker Live — live gold price tracker`                                                                        |
+| JSON-LD Organization / WebSite `name`        | `GoldTickerLive` / `GoldPrices`                       | `Gold Ticker Live`                                                                                                  |
+| `src/seo/seoHead.js` `SITE_NAME`             | `GoldPrices`                                          | `Gold Ticker Live`                                                                                                  |
+| `src/seo/metadataGenerator.js` `SITE_NAME`   | `GoldPrices`                                          | `Gold Ticker Live`                                                                                                  |
+| `scripts/node/inject-schema.js` `SITE_NAME`  | `GoldTickerLive`                                      | `Gold Ticker Live`                                                                                                  |
+| Nav brand label + footer                     | `GoldTickerLive` (compact)                            | `Gold Ticker Live`                                                                                                  |
+| Tracker `document.title`                     | `… \| GoldTickerLive`                                 | `… \| Gold Ticker Live`                                                                                             |
+| CSV / export brand header                    | `# GoldTickerLive — …`                                | `# Gold Ticker Live — …`                                                                                            |
+| Newsletter sender display                    | `Gold Prices Platform`                                | `Gold Ticker Live`                                                                                                  |
+| Server log banner                            | `🚀 Gold Prices Platform Server`                      | `🚀 Gold Ticker Live Server`                                                                                        |
+| X / Twitter post template                    | `🥇 Gold Prices Today — …`                            | `🥇 Gold Ticker Live — Gold Prices Today, …`                                                                        |
+| Discord / Telegram / Spike alerts            | `GoldPrices Bot`, `GoldPrices Alert`, `GoldPrices.io` | `Gold Ticker Live Bot`, `Gold Ticker Live Alert`, `Gold Ticker Live`                                                |
+| Uptime check User-Agent                      | `GoldPrices-UptimeMonitor/1.0`                        | `GoldTickerLive-UptimeMonitor/1.0` (no-space identifier preserved as User-Agent token)                              |
+| RSS feed `<title>`                           | `GoldPrices — Live Gold Price Updates`                | `Gold Ticker Live — Live Gold Price Updates`                                                                        |
+| Privacy / Terms `legal-sub`                  | `… GoldPrices.app …`                                  | `… Gold Ticker Live …`                                                                                              |
+| Stub `index.html` files                      | `Not a public page — GoldPrices`                      | `Not a public page — Gold Ticker Live`                                                                              |
+| `package.json` `name`                        | `gold-prices`                                         | `gold-ticker-live`                                                                                                  |
+| `package-lock.json` `name`                   | `gold-prices`                                         | `gold-ticker-live`                                                                                                  |
+| `README.md` H1                               | `# GoldPrices`                                        | `# Gold Ticker Live`                                                                                                |
+| `docs/CONTRIBUTING.md` H1                    | `# Contributing to GoldPrices`                        | `# Contributing to Gold Ticker Live`                                                                                |
+| `docs/replit.md` H1                          | `# GoldPrices`                                        | `# Gold Ticker Live`                                                                                                |
+| `docs/TEARDOWN.md` H1 + body                 | `# 🏗️ GoldPrices …`, `**GoldPrices**`                 | `# 🏗️ Gold Ticker Live …`, `**Gold Ticker Live**`                                                                   |
+| `docs/AUTOMATIONS.md` H1                     | `# GoldPrices — Automation Setup Guide`               | `# Gold Ticker Live — Automation Setup Guide`                                                                       |
+| `assets/og-image.svg` rendered text          | `GoldPrices` + `vctb12.github.io/Gold-Prices`         | `Gold Ticker Live` + `goldtickerlive.com` (verified 2026-04-28)                                                     |
+| `admin/social/index.html` post templates     | `goldprices.ae` URLs + `🥇 Gold Prices Today` daily   | `goldtickerlive.com` + `🥇 Gold Ticker Live — Gold Prices Today` (verified 2026-04-28)                              |
+| `content/order-gold/index.html` UTM + footer | `utm_source=goldprices`, `goldprices.ae/order`        | `utm_source=goldtickerlive`, `goldtickerlive.com/content/order-gold/` (2026-04-28)                                  |
+| `scripts/python/utils/tweet_formatter.py`    | `SITE_URL = "goldprices.ae"`                          | `SITE_URL = "goldtickerlive.com"` (verified 2026-04-28)                                                             |
+| Newsletter `RESEND_FROM_EMAIL` defaults      | `newsletter@goldprices.com`                           | `newsletter@goldtickerlive.com` in `scripts/node/send-newsletter.js` and `server/routes/newsletter.js` (2026-04-28) |
+| Newsletter workflows `SITE_URL` env          | `https://goldprices.com` (wrong domain)               | `https://goldtickerlive.com` in daily + weekly workflows (2026-04-28)                                               |
+| `supabase/schema.sql` header                 | `-- Gold Prices Platform — Supabase Schema`           | `-- Gold Ticker Live — Supabase Schema` (2026-04-28)                                                                |
+| `server.js` CORS comment example             | `https://goldtickerlive.com,https://goldprices.com`   | `https://goldtickerlive.com,https://www.goldtickerlive.com` (2026-04-28)                                            |
+| `docs/MANUAL_INPUTS.md` CNAME example        | `goldprices.ae`                                       | `goldtickerlive.com` (2026-04-28)                                                                                   |
 
 ## What was intentionally **not** changed
 
@@ -150,6 +159,12 @@ If something visibly breaks after deploy:
 3. localStorage is untouched, so user preferences survive the rollback.
 4. If only specific surfaces are broken (e.g. the manifest), cherry-pick a fix instead of reverting
    the whole rebrand.
+
+## Verification log
+
+A permanent post-migration QA log lives in
+[`docs/REBRAND_VERIFICATION_REPORT.md`](./REBRAND_VERIFICATION_REPORT.md). Append a dated section to
+that file every time **Prompt 12** is re-run.
 
 ## How to keep this in sync
 

@@ -1045,7 +1045,7 @@
                     class="form-input"
                     id="custom-textarea"
                     rows="6"
-                    placeholder="Write your custom post here…&#10;&#10;Example: 🥇 24K gold today: {A24} AED/gram — track live at goldprices.ae"
+                    placeholder="Write your custom post here…&#10;&#10;Example: 🥇 24K gold today: {A24} AED/gram — track live at goldtickerlive.com"
                   ></textarea>
                 </div>
                 <div class="custom-limit-row">
@@ -1645,7 +1645,7 @@
 
         const samples = {
           hourly: `🥇 Gold Now (${timeStr} UAE) 📈\nSpot: $${spotUsd.toLocaleString()}/oz ${sign}${changePct.toFixed(2)}%\n24K: AED ${k24aed}/g\n22K: AED ${k22aed}/g\n21K: AED ${k21aed}/g\n📊 ${SITE_URL}\n#GoldPrice #Gold #UAE #Dubai`,
-          daily: `🥇 Gold Prices Today — ${dateStr}\n24K: $${spotUsd.toLocaleString()}/oz (${sign}${changePct.toFixed(2)}%)\n🇦🇪 UAE (AED/g):\n24K: ${k24aed} | 22K: ${k22aed}\n21K: ${k21aed} | 18K: ${k18aed}\n📈 ${SITE_URL}\n#GoldPrice #Gold #UAE #Dubai`,
+          daily: `🥇 Gold Ticker Live — Gold Prices Today, ${dateStr}\n24K: $${spotUsd.toLocaleString()}/oz (${sign}${changePct.toFixed(2)}%)\n🇦🇪 UAE (AED/g):\n24K: ${k24aed} | 22K: ${k22aed}\n21K: ${k21aed} | 18K: ${k18aed}\n📈 ${SITE_URL}\n#GoldPrice #Gold #UAE #Dubai`,
           morning: `☀️ Good Morning — Gold Opens ${dateStr}\nSpot: $${spotUsd.toLocaleString()}/oz 📈\nvs Yesterday: ${sign}$${change.toFixed(2)} (${sign}${changePct.toFixed(2)}%)\n🇦🇪 24K UAE: AED ${k24aed}/g\n🇦🇪 22K UAE: AED ${k22aed}/g\nTrack live → ${SITE_URL}\n#GoldPrice #GoldMarket #Dubai #GCC`,
           arabic: `🥇 أسعار الذهب اليوم 📈\nعيار 24: ${k24aed} درهم/جرام\nعيار 22: ${k22aed} درهم/جرام\nعيار 21: ${k21aed} درهم/جرام\nعيار 18: ${k18aed} درهم/جرام\nالتغيير: ${sign}$${change.toFixed(2)} (${sign}${changePct.toFixed(2)}%)\n📊 ${SITE_URL}\n#سعر_الذهب #ذهب #الإمارات #دبي`,
           country: `🇦🇪 Gold in UAE Today 📈\n\n24K: AED ${k24aed}/g\n22K: AED ${k22aed}/g\nSpot: $${spotUsd.toLocaleString()}/oz\nChange: ${sign}${changePct.toFixed(2)}%\n\nFull prices → ${SITE_URL}countries/uae/\n#GoldPrice #UAE #Gold`,
@@ -1711,15 +1711,15 @@
        POST GENERATOR (from original social page)
        ══════════════════════════════════════════════════════════════ */
 
-      const DAILY_UPDATE_EN = `🥇 Gold Prices — {DAY}, {DATE}\n\n24K: \${P24}/oz ({D24})\n22K: \${P22}/oz\n21K: \${P21}/oz\n18K: \${P18}/oz\n\n🇦🇪 UAE (AED per gram):\n24K: {A24} • 22K: {A22}\n21K: {A21} • 18K: {A18}\n\n{TREND_EMOJI} {TREND_LINE}\n\n📊 Live prices → goldprices.ae\n#GoldPrice #Gold #UAE`;
+      const DAILY_UPDATE_EN = `🥇 Gold Ticker Live — Gold Prices Today, {DAY}, {DATE}\n\n24K: \${P24}/oz ({D24})\n22K: \${P22}/oz\n21K: \${P21}/oz\n18K: \${P18}/oz\n\n🇦🇪 UAE (AED per gram):\n24K: {A24} • 22K: {A22}\n21K: {A21} • 18K: {A18}\n\n{TREND_EMOJI} {TREND_LINE}\n\n📊 Live prices → goldtickerlive.com\n#GoldPrice #Gold #UAE`;
 
-      const DAILY_UPDATE_AR = `🥇 أسعار الذهب اليوم — {DATE_AR}\n\nعيار 24: {A24} د.إ/غرام\nعيار 22: {A22} د.إ/غرام\nعيار 21: {A21} د.إ/غرام\nعيار 18: {A18} د.إ/غرام\n\n{TREND_EMOJI} {TREND_LINE_AR}\n\n📊 الأسعار لحظياً → goldprices.ae\n#أسعار_الذهب #ذهب #الإمارات`;
+      const DAILY_UPDATE_AR = `🥇 أسعار الذهب اليوم — {DATE_AR}\n\nعيار 24: {A24} د.إ/غرام\nعيار 22: {A22} د.إ/غرام\nعيار 21: {A21} د.إ/غرام\nعيار 18: {A18} د.إ/غرام\n\n{TREND_EMOJI} {TREND_LINE_AR}\n\n📊 الأسعار لحظياً → goldtickerlive.com\n#أسعار_الذهب #ذهب #الإمارات`;
 
-      const PRICE_ALERT = `🚨 GOLD {DIRECTION} {PCT}% TODAY\n\nNow: \${CURRENT}/oz\nChange: {DELTA} ({DELTA_PCT})\n\n🇦🇪 24K Dubai: AED {AED24}/g\n\nTrack live → goldprices.ae\n#Gold #PriceAlert #UAE`;
+      const PRICE_ALERT = `🚨 GOLD {DIRECTION} {PCT}% TODAY\n\nNow: \${CURRENT}/oz\nChange: {DELTA} ({DELTA_PCT})\n\n🇦🇪 24K Dubai: AED {AED24}/g\n\nTrack live → goldtickerlive.com\n#Gold #PriceAlert #UAE`;
 
-      const WEEKLY_SUMMARY = `📊 Gold: Week in Review\n\n📈 Gold: {WEEK_DELTA} ({WEEK_PCT})\n🔺 High: \${HIGH}\n🔻 Low: \${LOW}\n\nFull charts → goldprices.ae/gold-price-history\n#GoldPrice #WeeklyUpdate`;
+      const WEEKLY_SUMMARY = `📊 Gold: Week in Review\n\n📈 Gold: {WEEK_DELTA} ({WEEK_PCT})\n🔺 High: \${HIGH}\n🔻 Low: \${LOW}\n\nFull charts → goldtickerlive.com/content/gold-price-history/\n#GoldPrice #WeeklyUpdate`;
 
-      const MILESTONE = `🏆 GOLD HITS \${MILESTONE}!\n24K gold crossed \${MILESTONE}/oz.\n\n🇦🇪 In AED: {AED24}/gram\n\nLive tracker → goldprices.ae/tracker\n#Gold #Milestone #Record`;
+      const MILESTONE = `🏆 GOLD HITS \${MILESTONE}!\n24K gold crossed \${MILESTONE}/oz.\n\n🇦🇪 In AED: {AED24}/gram\n\nLive tracker → goldtickerlive.com/tracker.html\n#Gold #Milestone #Record`;
 
       const UAE_FOCUSED_AR = DAILY_UPDATE_AR;
 

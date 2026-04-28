@@ -17,7 +17,7 @@ log = get_logger("tweet_formatter")
 _CONFIG_DIR = Path(__file__).resolve().parent.parent.parent / "config" / "twitter_bot"
 
 DISCLAIMER = "\u26a0\ufe0f Spot/reference rate \u00b7 Not retail"
-SITE_URL = "goldprices.ae"
+SITE_URL = "goldtickerlive.com"
 
 
 def _load_json(filename: str) -> Any:

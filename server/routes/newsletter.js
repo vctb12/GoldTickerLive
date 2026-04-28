@@ -16,7 +16,7 @@ const { buildUrl } = require('../lib/site-url');
 // commented Resend integration block in `sendVerificationEmail` below.
 const _RESEND_CONFIG = {
   apiKey: process.env.RESEND_API_KEY || '',
-  fromEmail: process.env.RESEND_FROM_EMAIL || 'newsletter@goldprices.com',
+  fromEmail: process.env.RESEND_FROM_EMAIL || 'newsletter@goldtickerlive.com',
   fromName: 'Gold Ticker Live',
 };
 

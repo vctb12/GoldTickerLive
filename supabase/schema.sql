@@ -1,4 +1,4 @@
--- Gold Prices Platform — Supabase Schema
+-- Gold Ticker Live — Supabase Schema
 -- Run this in the Supabase SQL Editor (project → SQL Editor → New query).
 -- Each table has Row Level Security (RLS) enabled.
 -- Policies follow a pattern: public reads are open, writes require auth.
