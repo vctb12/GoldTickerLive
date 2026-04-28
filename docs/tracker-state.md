@@ -122,3 +122,63 @@ mounts). The registry is the single source of truth for the tab bar and the mode
 Any reordering of the tab bar **must** update this table, the registry in `src/tracker/modes.js`,
 the HTML order in `tracker.html`, and be covered by
 [`tests/tracker-modes.test.js`](../tests/tracker-modes.test.js) in the same commit.
+
+---
+
+## Freshness state machine
+
+The tracker live badge, refresh badge, and the hero summary panel all reflect a **freshness state**
+derived by `getLiveFreshness()` in [`src/lib/live-status.js`](../src/lib/live-status.js). The four
+states and their copy keys are:
+
+| State         | `freshness.key` | Badge CSS class              | Meaning                                                     |
+| ------------- | --------------- | ---------------------------- | ----------------------------------------------------------- |
+| `live`        | `live`          | `tracker-badge-live`         | Data ≤ 12 min old; no live-fetch failure. Green pill.       |
+| `cached`      | `cached`        | `tracker-badge--cached`      | Data ≤ 12 min old; live-fetch failure occurred. Amber pill. |
+| `stale`       | `stale`         | `tracker-badge--stale`       | Data > 12 min old. Shown with "Stale · as of HH:MM".        |
+| `unavailable` | `unavailable`   | `tracker-badge--unavailable` | `updatedAt` absent — no price available.                    |
+
+The 12-minute boundary (`STALE_AFTER_MS`) in `src/lib/live-status.js` tolerates one missed cron tick
+while markets are open (workflow runs every 6 minutes). `live` and `cached` share the same age
+window — they differ only by whether a live-fetch failure (`hasLiveFailure`) has occurred.
+
+### Copy keys per state
+
+| State         | `#tp-live-badge-text`     | `#tp-refresh-badge` (role=status, aria-live=polite)                   |
+| ------------- | ------------------------- | --------------------------------------------------------------------- |
+| connecting    | `tracker.connecting`      | `tracker.connecting`                                                  |
+| `live`        | `tracker.refreshBadge`    | `tracker.refreshBadgeDetailed` → `"Updated {age} · {time}"`           |
+| `stale`       | `tracker.refreshBadge`    | `tracker.refreshBadgeStale` → `"Stale · as of {time}"`                |
+| `cached`      | `tracker.refreshBadge`    | `tracker.refreshBadgeStale` → `"Stale · as of {time}"`                |
+| `unavailable` | `tracker.liveUnavailable` | `tracker.refreshBadgeUnavailable` → `"No data — last cached: {time}"` |
+
+### Hero summary panel items (always rendered)
+
+The `.tracker-side-list` (id `tp-live-summary-list`) renders 5 items on every render:
+
+1. **Reference estimate** — `tracker.summary.referenceTitle` / `tracker.summary.referenceCopy`
+2. **Freshness** — `tracker.summary.freshnessTitle` / `tracker.summary.freshnessCopy` (with
+   freshness badge)
+3. **Data source** — `tracker.summary.sourceTitle` / `tracker.summary.sourceCopy` (XAU/USD source +
+   AED peg)
+4. **AED peg** — `tracker.summary.aedPegTitle` / `tracker.summary.aedPegCopy`
+5. **History coverage** — `tracker.summary.historyTitle` / `tracker.summary.historyCopy`
+
+### Unit labels
+
+The `formatUnitLabel(unit)` helper in `render.js` returns localised unit strings:
+
+| `unit` | EN     | AR      |
+| ------ | ------ | ------- |
+| `gram` | `gram` | `غرام`  |
+| `oz`   | `oz`   | `أوقية` |
+| `tola` | `tola` | `تولة`  |
+
+### Accessibility
+
+- `#tp-refresh-badge` carries `role="status"` and `aria-live="polite"` — the only live region for
+  price-update announcements. `#tp-live-badge-text` does **not** carry `aria-live` to prevent double
+  announcements.
+- `#tp-hero-stats` uses `aria-busy="true"` while loading and removes the attribute after first
+  render.
+- `#tp-karat-table` uses `aria-live="polite"` and `aria-atomic="false"` for incremental row updates.

@@ -108,6 +108,7 @@
   
   
   
+  
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -140,8 +141,8 @@
         <div class="tracker-data-trust-banner">
           <div class="tracker-trust-icon" aria-hidden="true">ℹ</div>
           <div class="tracker-trust-content">
-            <strong>Reference prices only</strong> — Spot-linked calculations, not retail quotes.
-            Freshness always visible (Live / Cached / Estimated / Historical).
+            <strong>Reference prices only</strong> — Spot-linked estimates derived from XAU/USD (open.er-api.com or server snapshot).
+            AED uses UAE Central Bank fixed peg 3.6725. Freshness labels always visible: Live · Cached · Stale.
             <a href="methodology.html">Methodology →</a>
           </div>
           <button
@@ -199,7 +200,7 @@
             <div class="tracker-badge-row">
               <span class="tracker-badge tracker-badge-live" id="tp-live-badge">
                 <span class="tracker-badge-dot" aria-hidden="true"></span>
-                <span id="tp-live-badge-text" aria-live="polite">Preparing live feed</span>
+                <span id="tp-live-badge-text">Preparing live feed</span>
                 <span class="tracker-badge-separator" aria-hidden="true">·</span>
                 <span id="tp-refresh-badge" role="status" aria-live="polite">Waiting for first sync</span>
               </span>

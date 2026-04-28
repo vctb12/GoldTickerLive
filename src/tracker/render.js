@@ -61,6 +61,7 @@ function formatUnitLabel(unit) {
   if (_state.lang !== 'ar') return unit;
   if (unit === 'gram') return 'غرام';
   if (unit === 'oz') return 'أوقية';
+  if (unit === 'tola') return 'تولة';
   return unit;
 }
 
@@ -202,14 +203,23 @@ export function renderHero() {
   }
 
   if (_el.refreshBadge) {
-    const refreshText = spot
-      ? tx('refreshBadgeDetailed', {
-          age: freshness.ageText,
-          time: freshness.timeText,
-        })
-      : _state.hasLiveFailure
-        ? tx('liveUnavailable')
-        : tx('connecting');
+    let refreshText;
+    if (!spot) {
+      if (_state.hasLiveFailure) {
+        refreshText = freshness.timeText
+          ? tx('refreshBadgeUnavailable', { time: freshness.timeText })
+          : tx('liveUnavailable');
+      } else {
+        refreshText = tx('connecting');
+      }
+    } else if (freshness.key === 'stale' || freshness.key === 'cached') {
+      refreshText = tx('refreshBadgeStale', { time: freshness.timeText });
+    } else {
+      refreshText = tx('refreshBadgeDetailed', {
+        age: freshness.ageText,
+        time: freshness.timeText,
+      });
+    }
     if (isConnecting) {
       _el.refreshBadge.classList.remove(...TRACKER_BADGE_CLASSES);
       _el.refreshBadge.classList.add('tracker-badge-live');
@@ -262,6 +272,7 @@ export function renderHero() {
             : tx('connecting'),
         buildSourceBadge(summaryFreshness)
       ),
+      buildStackItem(tx('summary.sourceTitle'), tx('summary.sourceCopy')),
       buildStackItem(tx('summary.aedPegTitle'), tx('summary.aedPegCopy')),
       buildStackItem(tx('summary.historyTitle'), tx('summary.historyCopy')),
     ];
@@ -1166,10 +1177,10 @@ function _renderArchivePagination(page, totalPages, total) {
     {
       type: 'button',
       class: 'btn btn-sm btn-ghost tracker-pagination-btn',
-      'aria-label': 'Previous page',
+      'aria-label': tx('pagination.prevLabel'),
       disabled: page === 0 ? true : null,
     },
-    '← Prev'
+    tx('pagination.prev')
   );
   prevBtn.addEventListener('click', () => {
     _archivePage--;
@@ -1179,7 +1190,7 @@ function _renderArchivePagination(page, totalPages, total) {
   const pageLabel = el(
     'span',
     { class: 'tracker-pagination-label' },
-    `Page ${page + 1} / ${totalPages}`
+    tx('pagination.page', { page: page + 1, total: totalPages })
   );
 
   const nextBtn = el(
@@ -1187,10 +1198,10 @@ function _renderArchivePagination(page, totalPages, total) {
     {
       type: 'button',
       class: 'btn btn-sm btn-ghost tracker-pagination-btn',
-      'aria-label': 'Next page',
+      'aria-label': tx('pagination.nextLabel'),
       disabled: page >= totalPages - 1 ? true : null,
     },
-    'Next →'
+    tx('pagination.next')
   );
   nextBtn.addEventListener('click', () => {
     _archivePage++;

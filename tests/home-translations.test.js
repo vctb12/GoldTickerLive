@@ -79,6 +79,18 @@ const REQUIRED_KEYS = [
   'home.nextSvrTitle',
   'home.nextSvrDesc',
   'home.nextSvrCta',
+  // Tracker pagination (bilingual via translations system)
+  'tracker.pagination.prev',
+  'tracker.pagination.next',
+  'tracker.pagination.prevLabel',
+  'tracker.pagination.nextLabel',
+  'tracker.pagination.page',
+  // Tracker freshness badge variants
+  'tracker.refreshBadgeStale',
+  'tracker.refreshBadgeUnavailable',
+  // Tracker summary data-source item
+  'tracker.summary.sourceTitle',
+  'tracker.summary.sourceCopy',
 ];
 
 test('new home translation keys exist in both EN and AR', async () => {
