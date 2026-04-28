@@ -7029,3 +7029,77 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
   background: rgb(33 26 18 / 60%);
   border-color: rgb(255 255 255 / 0.08);
 }
+
+/* W-1 page-hydrator freshness badge and disclaimer (safe-dom migration) */
+.ph-freshness-banner {
+  background: var(--color-warning-subtle, #fef9c3);
+  border: 1px solid var(--color-warning-border, #fde68a);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--color-warning-text, #92400e);
+  margin-bottom: var(--space-3);
+}
+
+.ph-freshness-link {
+  color: inherit;
+  font-weight: 600;
+}
+
+.ph-freshness-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--text-xs);
+  font-weight: 500;
+}
+
+.ph-freshness-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.ph-freshness-suffix {
+  color: var(--text-tertiary);
+  font-size: var(--text-2xs, 0.7rem);
+}
+
+.ph-disclaimer {
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--border-default, #e2e8f0);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  margin-top: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ph-disclaimer-link {
+  color: var(--color-gold, #d4a017);
+  font-weight: 600;
+}
+
+.ph-disclaimer-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: var(--space-1) var(--space-2-5, 0.65rem);
+  background: #25d366;
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: var(--text-2xs, 0.7rem);
+}
+
+.ph-disclaimer-share:hover {
+  background: #1fba58;
+}

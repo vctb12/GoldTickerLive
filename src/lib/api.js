@@ -1,5 +1,5 @@
 import { CONSTANTS } from '../config/index.js';
-import { getFallbackGoldPrice } from './cache.js';
+import { getFallbackGoldPrice, getFallbackFXRates } from './cache.js';
 
 class NetworkError extends Error {
   constructor(msg) {
@@ -162,20 +162,36 @@ export async function fetchGold() {
 export async function fetchFX() {
   if (_simulateFxFail) throw new NetworkError('Simulated FX API failure');
 
-  return retryWithBackoff(async () => {
-    const res = await fetchWithTimeout(CONSTANTS.API_FX_URL, CONSTANTS.FX_FETCH_TIMEOUT);
-    const data = await res.json();
-    if (!data.rates || typeof data.rates !== 'object') {
-      throw new DataError('Invalid FX rates response');
-    }
-    // Never allow AED from API — enforce hardcoded peg
-    const rates = { ...data.rates };
-    delete rates.AED;
+  try {
+    return await retryWithBackoff(async () => {
+      const res = await fetchWithTimeout(CONSTANTS.API_FX_URL, CONSTANTS.FX_FETCH_TIMEOUT);
+      const data = await res.json();
+      if (!data.rates || typeof data.rates !== 'object') {
+        throw new DataError('Invalid FX rates response');
+      }
+      // Never allow AED from API — enforce hardcoded peg
+      const rates = { ...data.rates };
+      delete rates.AED;
+      return {
+        rates,
+        time_last_update_utc: data.time_last_update_utc || new Date().toUTCString(),
+        time_next_update_utc:
+          data.time_next_update_utc || new Date(Date.now() + 86400000).toUTCString(),
+        source: 'live',
+      };
+    });
+  } catch {
+    // Live FX fetch failed — fall through to localStorage cache.
+  }
+
+  const cached = getFallbackFXRates();
+  if (cached && cached.rates) {
     return {
-      rates,
-      time_last_update_utc: data.time_last_update_utc || new Date().toUTCString(),
-      time_next_update_utc:
-        data.time_next_update_utc || new Date(Date.now() + 86400000).toUTCString(),
+      rates: cached.rates,
+      time_last_update_utc: cached.time_last_update_utc || null,
+      time_next_update_utc: cached.time_next_update_utc || null,
+      source: 'cache-fallback',
     };
-  });
+  }
+  throw new NetworkError('FX rates unavailable — live fetch and cache both failed');
 }

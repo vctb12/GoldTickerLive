@@ -17,6 +17,7 @@
 const fs = require('fs');
 const path = require('path');
 const { getSupabaseClient } = require('../lib/supabase-client');
+const { atomicWriteJSON } = require('../lib/fs-atomic.js');
 
 const AUDIT_FILE = path.join(__dirname, '../../data/audit-logs.json');
 const getBackend = () => process.env.STORAGE_BACKEND || 'file';
@@ -43,7 +44,8 @@ function _readFile() {
 function _writeFile(logs) {
   _ensureFile();
   try {
-    fs.writeFileSync(AUDIT_FILE, JSON.stringify(logs, null, 2));
+    // Atomic write-to-temp → rename (W-4). Prevents torn writes.
+    atomicWriteJSON(AUDIT_FILE, logs);
   } catch (err) {
     console.error('[audit.repository] Failed to write audit log file:', err.message);
     throw err;

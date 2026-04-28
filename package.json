@@ -38,6 +38,10 @@
     "enrich-placeholders": "node scripts/node/enrich-placeholder-pages.js",
     "preflight": "npm run audit-pages && npm run check-links",
     "validate": "node scripts/node/validate-build.js && node scripts/node/check-unsafe-dom.js && node scripts/node/check-seo-meta.js && node scripts/node/check-sw-coverage.js && node scripts/node/enrich-placeholder-pages.js --check && node scripts/node/externalize-analytics.js --check && node scripts/node/inventory-seo.js --check && node scripts/node/inject-schema.js --check",
+    "pre-deploy": "node scripts/node/pre-deploy-check.js",
+    "pre-deploy:ci": "node scripts/node/pre-deploy-check.js --ci",
+    "changelog": "node scripts/node/changelog.js",
+    "changelog:write": "node scripts/node/changelog.js --write",
     "security": "npm audit && npm outdated",
     "prepare": "husky"
   },

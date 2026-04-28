@@ -557,9 +557,10 @@ Resume the 15-phase tracker plan in small commits:
 - [ ] **Phase 8** — Alerts/presets/planners as tabbed cards with real add/edit/delete affordances.
       Disabled-not-broken.
 - [ ] **Phase 9** — Wire + archive collapsible, lazy-rendered, paginated archive, loading states.
-- [ ] **Phase 12** — Replace remaining `innerHTML` sinks in `src/tracker/render.js` (24),
-      `tracker-pro.js` (4), `events.js` (2), `wire.js` (3) with `safe-dom.js` helpers. Tighten
-      `check-unsafe-dom` baseline in same commit block.
+- [x] **Phase 12** — Replace remaining `innerHTML` sinks in `src/tracker/render.js` with
+      `safe-dom.js` helpers. All planner, seasonal, and SVG chart sinks migrated to `el()` /
+      `replaceChildren()` / `createElementNS()`. Baseline tightened from 10 → 0. (`2fe030d`
+      2026-04-27)
 - [ ] **Phase 13** — Split 2,541-line `tracker-pro.css` into per-section files or prune dead rules.
       `IntersectionObserver`-gated rendering of below-fold sections.
 - [x] Side-effect import of shared `reveal.js` from `src/pages/tracker-pro.js`. (`39138e7e`)
@@ -631,9 +632,10 @@ Applied on top of primitives from Track A. Rules:
 
 - [ ] Unique `<title>` + `<meta name="description">` preserved on every page touched.
 - [ ] Canonical `https://goldtickerlive.com/...` (apex, no www, no trailing slash inconsistencies).
-- [ ] Structured data reflects each page's real purpose:
-  - Home: `WebSite` + `SearchAction` + `BreadcrumbList` + `Organization`.
-  - Tracker: `WebApplication`.
+- [x] Structured data reflects each page's real purpose:
+  - Home: `WebSite` + `SearchAction` + `BreadcrumbList` + `Organization`. ✅ (was already present)
+  - Tracker: `WebApplication`. ✅ Added `tracker.html` (`2fe030d` 2026-04-27)
+  - Calculator: `WebApplication`. ✅ Added `calculator.html` (`2fe030d` 2026-04-27)
   - No `Product` schema on non-product pages.
 - [ ] Internal linking: home ↔ tracker, calculator, shops, top country pages. Tracker ↔ calculator,
       methodology, country pages, shops.
@@ -646,7 +648,8 @@ Applied on top of primitives from Track A. Rules:
 - [ ] `IntersectionObserver`-gated rendering for below-fold sections (tracker wire + archive, home
       FAQ + social + explainer).
 - [ ] `loading="lazy"` + `decoding="async"` on non-critical images.
-- [ ] Preconnect to data origins (`goldpricez.com`, `exchangerate-api.com`) — verified present.
+- [x] Preconnect to data origins — `open.er-api.com` preconnect+dns-prefetch added to `tracker.html`
+      and `calculator.html` (`2fe030d` 2026-04-27). Google Fonts already in both.
 - [ ] Verify `sw.js` still caches revamped assets correctly.
 - [ ] Remove duplicate inline styles once systemized into classes.
 
@@ -832,6 +835,28 @@ description for the full sequencing._
 **Verification (Round 6):** `npm test` (354 ✓), `npm run validate` (incl. new sitemap-parity +
 sw-coverage gates ✓), `npx prettier --write` on touched files. Pre-existing `npm run style` failures
 (53 `rgb`/`rgba` style errors in unrelated CSS) carried forward; not caused by this slice.
+
+### Round 7 — 20-task implementation batch · 2026-04-27 (this PR)
+
+_Executes 20 heavy/medium tasks drawn from `2026-04-25_codebase-analysis.md` W-items and the
+multi-track quality plan. Focus: DOM-safety (W-1, Track D Phase 12), FX staleness (W-3), atomic
+writes (W-4), SEO structured data, accessibility, performance, tests (W-7, W-8), CI hardening, new
+tooling scripts, and docs update._
+
+| SHA       | Bucket       | Summary                                                                                                                                                                                                                        |
+| --------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `2fe030d` | `dom-safety` | W-1: `page-hydrator.js` all 3 `innerHTML` → `safe-dom`; baseline 3→0. Track D Phase 12: `render.js` all 10 remaining sinks (planner + SVG chart) → `el()`/`replaceChildren()`/`createElementNS()`; baseline 10→0.              |
+| `2fe030d` | `trust`      | W-3: `getFXFreshness()` + `FX_MARKET` in `live-status.js`; `fetchFX()` passes `source:'cache-fallback'` on cache hit; test added.                                                                                              |
+| `2fe030d` | `safety`     | W-4: `server/lib/fs-atomic.js` atomicWriteJSON helper; `auth.js`, both repositories, `audit-log.js`, `shop-manager.js` updated; `tests/fs-atomic.test.js` 5 cases.                                                             |
+| `2fe030d` | `seo`        | Track H: `WebApplication` JSON-LD added to `tracker.html` and `calculator.html`. preconnect/dns-prefetch for `open.er-api.com` added to `tracker.html` and `calculator.html`. `dir="ltr"` on `content/embed/gold-ticker.html`. |
+| `2fe030d` | `a11y`       | Track G: empty `<label>` + missing `aria-labelledby`/`aria-label` on budget/range inputs in `invest.html` fixed.                                                                                                               |
+| `2fe030d` | `tests`      | W-7: `tests/supabase-data.test.js` 6 test cases (mock-fetch). W-8: `tests/e2e/calculator.spec.js` + `tests/e2e/shops-search.spec.js`. `tests/fs-atomic.test.js`.                                                               |
+| `2fe030d` | `ci`         | Vite build artifact cache (`node_modules/.vite`) added to `ci.yml`; `npm run pre-deploy` + `npm run changelog` added to `package.json`.                                                                                        |
+| `2fe030d` | `tooling`    | `scripts/node/pre-deploy-check.js`: 8-check go/no-go script. `scripts/node/changelog.js`: grouped conventional-commit CHANGELOG generator.                                                                                     |
+| _pending_ | `docs`       | `REVAMP_PLAN.md` §7/§17 updated; `docs/plans/2026-04-25_codebase-analysis.md` W-1/W-3/W-4/W-7/W-8 marked resolved.                                                                                                             |
+
+**Verification (Round 7):** `npm test` (366 ✓, +11 new), `npm run validate` (0 errors, baseline
+tighter), `npm run lint` clean.
 
 ### Merged PRs
 

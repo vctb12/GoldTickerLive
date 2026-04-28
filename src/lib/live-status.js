@@ -17,6 +17,20 @@ export const GOLD_MARKET = {
   STALE_AFTER_MS: 12 * 60 * 1000,
 };
 
+/**
+ * FX-freshness constants.
+ *
+ * `open.er-api.com` free tier updates FX rates approximately once per 24 hours.
+ * A rate older than `FX_STALE_AFTER_MS` (26 hours — one full day plus a margin)
+ * is considered stale and should be visibly labelled as a cached value.
+ */
+export const FX_MARKET = {
+  FX_STALE_AFTER_MS: 26 * 60 * 60 * 1000,
+};
+
+/** Sentinel ageMs value for an unavailable / unresolvable timestamp. */
+const UNAVAILABLE_AGE_MS = Number.POSITIVE_INFINITY;
+
 function toDate(value) {
   if (value === null || value === undefined || value === '') return null;
   if (value instanceof Date) return value;
@@ -55,7 +69,7 @@ export function getMarketStatus(now = new Date()) {
  */
 export function getAgeMs(updatedAt, now = Date.now()) {
   const date = toDate(updatedAt);
-  if (!date) return Number.POSITIVE_INFINITY;
+  if (!date) return UNAVAILABLE_AGE_MS;
   return Math.max(0, now - date.getTime());
 }
 
@@ -111,7 +125,7 @@ export function getLiveFreshness({
   if (!updatedAt) {
     return {
       key: 'unavailable',
-      ageMs: Number.POSITIVE_INFINITY,
+      ageMs: UNAVAILABLE_AGE_MS,
       ageText: '—',
       timeText: '—',
       updatedAt: null,
@@ -127,5 +141,42 @@ export function getLiveFreshness({
     ageText: formatRelativeAge(ageMs, lang),
     timeText: formatTimestampShort(updatedAt, lang),
     updatedAt,
+  };
+}
+
+/**
+ * Derive the freshness key for FX exchange rates.
+ *
+ * `open.er-api.com` free-tier rates update approximately once per 24 hours.
+ * When rates come from a local cache and are older than `FX_STALE_AFTER_MS`
+ * (26 hours), the returned key is `'stale'` so callers can show a visible
+ * label (AGENTS.md §6.2 — cached values must be labelled).
+ *
+ * @param {{ fxUpdatedAt?: string|Date|number|null, hasCacheFailure?: boolean, lang?: 'en'|'ar', staleAfterMs?: number }} [options]
+ * @returns {{ key: 'live'|'cached'|'stale'|'unavailable', ageMs: number, ageText: string, timeText: string }}
+ */
+export function getFXFreshness({
+  fxUpdatedAt,
+  hasCacheFailure = false,
+  lang = 'en',
+  staleAfterMs = FX_MARKET.FX_STALE_AFTER_MS,
+} = {}) {
+  if (!fxUpdatedAt) {
+    return {
+      key: 'unavailable',
+      ageMs: UNAVAILABLE_AGE_MS,
+      ageText: '—',
+      timeText: '—',
+    };
+  }
+
+  const ageMs = getAgeMs(fxUpdatedAt);
+  const key = ageMs > staleAfterMs ? 'stale' : hasCacheFailure ? 'cached' : 'live';
+
+  return {
+    key,
+    ageMs,
+    ageText: formatRelativeAge(ageMs, lang),
+    timeText: formatTimestampShort(fxUpdatedAt, lang),
   };
 }
