@@ -740,6 +740,1427 @@ touched, the grep deltas, and the entries you added to `docs/GOLD_TICKER_LIVE_RE
 
 ---
 
+## Prompt 13 — Homepage Hero and Above-the-Fold Pass
+
+```text
+You are upgrading the homepage hero and above-the-fold experience on Gold Ticker Live. The home
+page is the single biggest first-impression surface — the average visitor decides in under 5
+seconds whether the site is trustworthy. The hero must answer: what is this, is it live, what
+should I do next.
+
+INSPECT FIRST
+1. Read `index.html` end-to-end. Note every section in DOM order: hero, freshness pill,
+   `#hlc-updated`, karat strip (`#karat-strip`, `#karat-strip-updated`), `#country-search`,
+   `.country-tiles`, hero CTAs.
+2. Read `src/pages/home.js` — focus on `renderHeroCard`, `renderKaratStrip`,
+   `startFreshnessTimer` (ticks every 10s, sets `data-freshness-key` on `#hlc-updated` and
+   `#karat-strip-updated`), `initCountrySearch` (`#country-search` input, `.country-tile--filtered`
+   class, ArrowDown/Up/Escape keyboard nav), `KARAT_STRIP_UNIT_MULT`, `karatStripUnit`
+   localStorage in `user_prefs`.
+3. Read `styles/pages/home.css` — hero card, freshness pill `::before` pseudo-elements
+   (⚠/✕ for stale/unavailable, color-blind accessible), `.country-search-input`,
+   `.country-search-empty`, `.kstrip-unit-toggle`.
+4. Read `src/lib/live-status.js` — `STALE_AFTER_MS = 12 * 60 * 1000`, freshness states
+   `live | cached | stale | unavailable`.
+5. Read translations `home.*`, `home.karatStripLabelGram/Tola/Oz`, `gold.freshness.label`,
+   `gold.badge`, `aed.badge` in `src/config/translations.js`.
+
+WORK — hero
+- Make the hero answer in one glance: "Live UAE & GCC gold prices, derived from XAU/USD spot."
+  No corporate fluff, no hype, no "best price guaranteed" wording.
+- The freshness pill (`#hlc-updated`) must be visible above the fold on 360px width. Use the
+  existing `data-freshness-key` states (`live`, `cached`, `stale`, `unavailable`) and the
+  CSS `::before` icons. Do not move the threshold (12 min) without owner approval.
+- Primary CTA → tracker. Secondary CTA → calculator. Tertiary text link → methodology.
+  All three labels live in translations.
+- The hero AED + USD price card must surface its source line (e.g. "Spot · derived from
+  XAU/USD · AED at 3.6725 peg").
+
+WORK — karat strip
+- Verify the unit toggle (g / tola / oz) persists via `karatStripUnit` in `user_prefs`
+  localStorage. Default is grams. Active state is unambiguous.
+- Each karat row has a copy button that copies "X g 24K = AED Y · GoldTickerLive" (use
+  the existing handler; do not invent a new format).
+- Karat rows align cleanly at 360px — no overflow, no truncated numerals.
+
+WORK — country search
+- `#country-search` filters `.country-tiles` via `.country-tile--filtered`. Verify
+  ArrowDown/Up/Escape keyboard navigation still works and `applyLangToPage()` covers AR.
+- Empty state (`.country-search-empty`) reads naturally in EN + AR with the typed query.
+- Tap-target on each country tile ≥ 44×44 px on mobile.
+
+WORK — freshness timer hygiene
+- Confirm the 10s tick in `startFreshnessTimer` only writes when the rendered string
+  changes (avoid layout thrash and aria-live spam).
+- `aria-live="polite"` only on the freshness pill region — not on the price numerals.
+
+CONSTRAINTS
+- Do not change `STALE_AFTER_MS`, `AED_PEG`, or `GOLD_REFRESH_MS`.
+- Do not change the karat purity table, the troy-ounce constant, or `KARAT_STRIP_UNIT_MULT`.
+- Every user-visible string EN + AR via `src/config/translations.js`.
+- Do not introduce a new freshness state name without updating
+  `src/lib/live-status.js`, the CSS selectors keyed on `data-freshness-key`, and tests.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- Manual: throttle the network and confirm cached / stale / unavailable pills render.
+- Manual: tab through the hero — every interactive element is reachable and labeled.
+- Manual: 360px and 1440px in EN + AR; copy a karat row in each language.
+
+DELIVERABLE
+PR with focused commits (hero, freshness pill, karat strip, country search, RTL, tests).
+Update `docs/tracker-state.md` if you clarified any freshness copy.
+```
+
+---
+
+## Prompt 14 — Country & City Pages Deep Dive
+
+```text
+You are upgrading the country and city pages — the SEO long-tail and the second-largest
+surface in the repo. Pages live under `countries/<country>/` (top-level country page),
+`countries/<country>/<city>/gold-prices/` (city pages), and karat-specific pages where they
+exist. JSON-LD is injected by `scripts/node/inject-schema.js` (NOT idempotent — running build
+twice will produce diff noise; commit a clean state).
+
+INSPECT FIRST
+1. List every directory under `countries/`. Note which countries have city sub-pages
+   (e.g. `countries/uae/dubai/gold-prices/`) and which only have a country-level page.
+2. Read `countries/country-page.js` (the shared page hydrator) and `countries/index.html`
+   (the country index landing page).
+3. Read `scripts/node/inject-schema.js` — note that `fs.writeFileSync` modifies source HTML
+   directly (line ~377). Confirm it adds BreadcrumbList for country/city pages and check the
+   `--check` flag used by `npm run validate`.
+4. Read `src/components/breadcrumbs.js` and `src/components/internalLinks.js`.
+5. Read `scripts/node/check-sitemap-coverage.js` so you understand which routes must appear
+   in the sitemap and which are intentionally excluded.
+
+WORK — content
+- Country page: short city-aware intro (1–2 sentences in EN + AR), live price card for the
+  country's primary currency, karat table, list of cities with strong anchor text
+  ("Gold prices in <city>"), link to the calculator pre-filled with that country's currency,
+  link to methodology, link back to the country index.
+- City page: 1-paragraph intro that names the city, market hub if relevant (e.g. Gold Souk
+  for Dubai), live karat-by-karat table, top N shops in that city pulled from
+  `data/shops*.json`, breadcrumb (Home → Country → City), link back to the country page.
+- Karat-specific pages (where present): pure topical pages — explain the karat, show the
+  current karat-specific price for the relevant country, link to comparison guides.
+
+WORK — schema
+- BreadcrumbList JSON-LD on every country and city page, generated by `inject-schema.js`.
+- `Place` or `LocalBusiness` schema on city pages only when shop data is actually present.
+- Run `node scripts/node/inject-schema.js` once; commit the resulting HTML diff in a
+  separate commit titled "chore: refresh injected JSON-LD".
+
+WORK — internal linking & breadcrumbs
+- Every country page must link to all of its cities. Every city page must link back to its
+  country and to ≥ 1 sibling city. Use descriptive anchors, not "click here".
+- Breadcrumbs render via `src/components/breadcrumbs.js` and are mirrored in BreadcrumbList
+  JSON-LD. RTL parity required.
+
+WORK — bilingual & SEO
+- Each country/city page has unique `<title>` and `<meta name="description">`. Title pattern:
+  "Gold Prices in <City>, <Country> Today | Gold Ticker Live". Description ≤ 160 chars.
+- `hreflang` for `en` and `ar` plus `x-default`. Canonical points to self, never to the parent.
+
+CONSTRAINTS
+- Do NOT rename or remove any `countries/**/gold-prices/` URL path — they are indexed.
+- Do NOT change the canonical URL of any existing country/city page; if you find a bug,
+  document it in a separate plan.
+- `inject-schema.js` is not idempotent — keep its commit isolated to avoid diff noise.
+- Bilingual EN + AR for every user-visible string; AR copy must read naturally for GCC users.
+
+VERIFY
+- `npm run validate` (sitemap coverage, SEO meta, schema check).
+- `npm run check-links` and `npm run seo-audit`.
+- `npm test`.
+- `npm run build` then `npm run preview`; spot-check a country page and two city pages in EN + AR.
+
+DELIVERABLE
+PR with commits split (country page polish / city page polish / breadcrumbs / schema injection /
+internal links / sitemap). Update `docs/SEO_CHECKLIST.md` with newly green pages.
+```
+
+---
+
+## Prompt 15 — Content Guide Library
+
+```text
+You are upgrading the content guide library — the long-form SEO + trust layer of Gold Ticker
+Live. Guides live under `content/guides/*.html`, `content/22k-gold-price-guide/`,
+`content/24k-gold-price-guide/`, `content/spot-vs-retail-gold-price/`,
+`content/dubai-gold-rate-guide/`, `content/uae-gold-buying-guide/`,
+`content/gold-making-charges-guide/`, `content/gold-price-history/`,
+`content/premium-watch/`, `content/changelog/`. Each guide should read like a useful,
+trust-building public-utility article — not an SEO doorway page.
+
+INSPECT FIRST
+1. List every HTML file under `content/guides/` and the named guide directories above.
+2. Read `content/guides/24k-vs-22k.html`, `content/guides/aed-peg-explained.html`,
+   `content/guides/gold-karat-comparison.html`, `content/guides/buying-guide.html`,
+   `content/guides/zakat-gold-guide.html`, `content/guides/invest-in-gold-gcc.html`,
+   `content/guides/gcc-market-hours.html`. Note thin sections, weak intros, missing FAQ,
+   missing internal links.
+3. Read `content/22k-gold-price-guide/index.html` and the parallel 24K guide. Compare structure
+   for consistency (they're linked from `nav-data.js` Prices → Comparison section).
+4. Read `content/spot-vs-retail-gold-price/index.html` — the trust-cornerstone explainer.
+5. Read `content/dubai-gold-rate-guide/index.html` and `content/uae-gold-buying-guide/index.html`.
+6. Read `content/gold-making-charges-guide/index.html` and `content/gold-price-history/index.html`.
+
+WORK — structure
+- Each guide: H1, meta description, 1-paragraph TL;DR, 4–8 H2 sections, a "Key takeaways"
+  list, an FAQ (3–6 Q&As), a "Related" block linking to ≥ 3 other guides + the calculator
+  + the methodology page. Last-updated date visible at the top.
+- 22K vs 24K guide pair must read consistently — same section order, same comparison table
+  shape, same anchor IDs where relevant.
+- "Spot vs retail" guide is the trust cornerstone — link every freshness pill, every
+  disclaimer, every methodology mention back to it.
+
+WORK — copy
+- No marketing fluff. No "best", no "guaranteed", no "lowest price today" unless the data
+  page actually proves it.
+- Every example price is captioned as illustrative ("for example") if it's hard-coded.
+- Cross-link every guide to ≥ 3 others using descriptive anchor text.
+
+WORK — schema
+- FAQPage JSON-LD on guides that actually have an FAQ section (see Prompt 16).
+- BreadcrumbList JSON-LD on every guide via `inject-schema.js`.
+- Article schema with `datePublished` + `dateModified` if those dates are real and
+  trustworthy; do not fabricate dates.
+
+WORK — bilingual
+- Every guide ships in EN + AR. Translation keys for guide-shared chrome (TL;DR, Key
+  takeaways, FAQ heading, Related) live under `content.guides.*` in
+  `src/config/translations.js`.
+
+CONSTRAINTS
+- Do not invent statistics, expert quotes, or testimonials.
+- Do not change canonical URLs of guide pages.
+- Do not introduce English-only headings on AR pages.
+
+VERIFY
+- `npm run validate`, `npm run check-links`, `npm run seo-audit`, `npm test`,
+  `npm run lint`, `npm run build`.
+- Manual: read one guide end-to-end in EN and one in AR; both should read naturally aloud.
+
+DELIVERABLE
+PR with commits split per guide cluster (22K/24K, spot-vs-retail, Dubai/UAE buying, making
+charges, history, premium watch). Update `docs/SEO_STRATEGY.md` with the guide map.
+```
+
+---
+
+## Prompt 16 — FAQ + Structured Data
+
+```text
+You are unifying the FAQ experience and FAQPage JSON-LD across Gold Ticker Live. The hub
+FAQ lives at `content/faq/index.html`, and many guides + country pages have inline FAQ
+sections. JSON-LD is injected by `scripts/node/inject-schema.js`.
+
+INSPECT FIRST
+1. Read `content/faq/index.html`. List every Q&A and group them by topic (pricing,
+   methodology, shops, conversions, automation).
+2. Grep all guide HTML files for inline `<h2>FAQ</h2>` or similar sections; list every page
+   that has FAQ content.
+3. Read `scripts/node/inject-schema.js` — find the FAQPage branch (or add one if absent)
+   and the rule for including/excluding pages.
+4. Read translations under `faq.*` and any per-guide FAQ keys.
+
+WORK — content
+- Hub FAQ: comprehensive, grouped by topic, anchor-linkable IDs (`#faq-pricing-1`,
+  `#faq-methodology-3`). Each answer ≤ 4 sentences, plain language, EN + AR.
+- Per-page inline FAQs: 3–6 questions specific to that page. No copy-paste from the hub.
+- Every FAQ answer that touches money math links to `methodology.html` for context.
+- Every FAQ that touches retail vs spot links to `content/spot-vs-retail-gold-price/`.
+
+WORK — structured data
+- FAQPage JSON-LD ONLY on pages whose visible content actually contains the same Q&A pairs.
+  Schema-without-content is a Google penalty risk.
+- The hub FAQ emits one FAQPage JSON-LD covering all questions.
+- Inline FAQ sections on guide pages emit a scoped FAQPage JSON-LD with only that page's
+  questions.
+- Validate via `inject-schema.js --check` (the same flag `npm run validate` uses).
+
+WORK — accessibility
+- Use `<details>` / `<summary>` for collapsible Q&As, or accessible disclosure pattern with
+  `aria-expanded` and keyboard support. Don't trap focus.
+- Heading order: H1 page title → H2 topic group → H3 question.
+
+CONSTRAINTS
+- Do NOT add FAQPage schema to pages without visible Q&As.
+- Do NOT change existing FAQ anchor IDs that may be linked from outside.
+- Bilingual EN + AR.
+
+VERIFY
+- `npm run validate` (schema --check + SEO meta).
+- `npm run seo-audit`.
+- `npm test`.
+- Manual: paste 3 sample URLs into Google's Rich Results Test if available.
+
+DELIVERABLE
+PR with commits split (hub FAQ rewrite / inline FAQ updates / schema injection / a11y).
+Update `docs/SEO_CHECKLIST.md` and add a row in `docs/SEO_STRATEGY.md` listing FAQ-eligible
+pages.
+```
+
+---
+
+## Prompt 17 — Site Search
+
+```text
+You are improving the site search at `content/search/index.html`, hydrated by modules under
+`src/search/`. Search is one of the highest-signal UX surfaces — when it works, users find
+what they need; when it fails, they bounce.
+
+INSPECT FIRST
+1. Read `content/search/index.html` and every JS module under `src/search/`.
+2. Read `src/lib/search.js` if separate from `src/search/`.
+3. Read translations `search.*`. Check `nav-data.js` for the `recentSearches` label keys.
+4. Read the search-trigger code in `src/components/nav.js`.
+5. Note how the search index is built (likely a generated JSON of pages/guides/countries).
+
+WORK
+- Index coverage: every public page (top-level, country, city, guide, tool, shop list) has
+  a record with `{ title, description, url, locale, type }`. Build script lives under
+  `scripts/node/`; if missing, add one and wire it into `npm run build`.
+- Query UX: debounced input (150–200ms), top-N results grouped by type (Guides, Tools,
+  Countries, Cities, Shops), keyboard nav (ArrowUp/Down, Enter, Escape).
+- Empty state: friendly EN + AR copy with 3 suggested links (tracker, calculator, methodology).
+- Recent searches: local-only (`localStorage`), capped at 5, clearable. Use the
+  `recentSearches` translation key from `nav-data.js`.
+- Bilingual: when the page is in AR, search index queries AR titles/descriptions; when in
+  EN, queries EN. Cross-language match is OK as a fallback.
+- RTL: input alignment, result list direction, kbd hints all mirror correctly.
+- A11y: `role="combobox"`, `aria-expanded`, `aria-activedescendant`, `aria-live="polite"`
+  for result count.
+
+CONSTRAINTS
+- Do NOT add a heavy search dependency (no Algolia client SDK, no Lunr if not already in
+  the repo). Prefer a tiny in-memory index.
+- DOM-safety: render results via `el()` / `replaceChildren()`. No `innerHTML`.
+- Bilingual EN + AR for every label.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run build`.
+- Manual: type 5 queries in EN, 5 in AR. Tab through results. Open one with Enter.
+- DOM-safety baseline: `node scripts/node/check-unsafe-dom.js`.
+
+DELIVERABLE
+PR with commits split (index build / query UX / keyboard / RTL / tests).
+```
+
+---
+
+## Prompt 18 — Admin Panel UX
+
+```text
+You are upgrading the admin panel UX. The admin lives under `admin/` (auth via Supabase
+GitHub OAuth) with sub-areas `admin/shops/`, `admin/analytics/`, `admin/content/`,
+`admin/settings/`, `admin/orders/`, `admin/access/`, `admin/pricing/`, `admin/social/`.
+The admin is a private surface — never indexed, never cached by the SW.
+
+INSPECT FIRST
+1. Read `admin/index.html`, `admin/auth.js`, `admin/supabase-auth.js`,
+   `admin/supabase-config.js`.
+2. Read every sub-area's `index.html` and any companion JS under `admin/shared/`.
+3. Read `server/lib/admin/shop-manager.js`, `server/repositories/shops.repository.js`,
+   `server/lib/audit-log.js`, `server/lib/auth.js`.
+4. Read `tests/sw-exclusions.test.js` to confirm `/admin/*` is excluded from the SW cache.
+5. Read `robots.txt` to confirm `/admin/` is `Disallow`.
+
+WORK — shops admin
+- List view: sortable, filterable by city/specialty, paginated. Bulk-edit affordances if
+  the repo supports them.
+- Edit form: required-field validation, inline error messages, autosave to drafts (NOT
+  publish on every keystroke). Use `atomicWriteJSON()` from `server/lib/fs-atomic.js` for
+  any persistence path you change.
+- Audit log surface: show recent edits per shop with timestamp + actor.
+
+WORK — analytics
+- Surface the named events from `assets/analytics.js` in a clean dashboard. No raw SQL
+  pasted into the UI; aggregate sensibly.
+- Empty state when no events have fired yet — say "No events in this range".
+
+WORK — content
+- List of guides + country/city pages with last-modified dates and a "view live" link.
+- Edit affordances should be plan-only in this PR unless explicitly scoped.
+
+WORK — settings
+- Site settings (theme defaults, lang defaults, ad slots, formspree endpoint) in a single
+  panel. Save via `atomicWriteJSON()`. Show a clear "saved at <time>" toast.
+
+WORK — security
+- Confirm `/admin/*` is excluded from the SW cache (do NOT regress
+  `tests/sw-exclusions.test.js`).
+- Confirm every admin route is JWT + bcrypt + Helmet protected (see `server/lib/auth.js`).
+- Never echo `JWT_SECRET`, `ADMIN_PASSWORD`, or `ADMIN_ACCESS_PIN` to the client or logs.
+
+CONSTRAINTS
+- Do NOT weaken Helmet, rate-limiting, or CSRF protection.
+- Do NOT add the admin to the sitemap or `robots.txt` allow list.
+- Do NOT cache admin assets in the SW.
+- Bilingual is OPTIONAL inside the admin (it's an internal tool). Keep one consistent
+  language; document the choice.
+
+VERIFY
+- `npm test`, `npm run validate`, `npm run lint`, `npm run build`.
+- Manual: log in to the admin (with required env vars set: `JWT_SECRET`,
+  `ADMIN_PASSWORD`, `ADMIN_ACCESS_PIN`), edit a shop, confirm the audit log records it,
+  confirm the public site reflects the change.
+- Confirm `tests/sw-exclusions.test.js` passes.
+
+DELIVERABLE
+PR with commits split per admin area. Update `docs/ADMIN_GUIDE.md` and
+`docs/environment-variables.md` if you added or renamed any env var.
+```
+
+---
+
+## Prompt 19 — Newsletter & Alert System
+
+```text
+You are upgrading the newsletter and price-alert system. Newsletter lives in
+`server/routes/newsletter.js`, generated by `scripts/node/generate-newsletter.js`, and sent
+by `scripts/node/send-newsletter.js`. Daily/weekly cadence runs via
+`.github/workflows/daily-newsletter.yml` and `.github/workflows/weekly-newsletter.yml`.
+Price alerts use the `gold_price_alerts` localStorage key from `src/config/constants.js`.
+
+INSPECT FIRST
+1. Read `server/routes/newsletter.js` (subscribe endpoint, validation, persistence).
+2. Read `scripts/node/generate-newsletter.js` and `scripts/node/send-newsletter.js`.
+3. Read `.github/workflows/daily-newsletter.yml` and
+   `.github/workflows/weekly-newsletter.yml`.
+4. Read `src/config/constants.js` — `CACHE_KEYS.alerts` is `'gold_price_alerts'`.
+5. Find existing alert UI (likely on tracker or home). Read translations `alerts.*` and
+   `newsletter.*`.
+
+WORK — newsletter
+- Subscribe form: email validation, double-opt-in if currently single-opt, clear
+  unsubscribe link in every email. Honor the cadence the user picked.
+- Welcome email: brand "Gold Ticker Live", clear cadence expectation, methodology link,
+  unsubscribe link.
+- Daily/weekly content: top-of-mind countries' prices, freshness pill replicated as text,
+  link to tracker, link to methodology, "what changed" 1-paragraph summary.
+- Persist subscribers via `atomicWriteJSON()` (see Prompt 18).
+
+WORK — price alerts
+- UI on tracker: "Notify me when 24K AED/g crosses <threshold>" with direction (above/below).
+- Persist alerts in `localStorage` under the `gold_price_alerts` key (already in
+  `CACHE_KEYS`). Cap the number of active alerts per user (e.g. 5) with a clear message.
+- Alert evaluation runs client-side on each tracker price tick. When triggered, show a
+  non-blocking toast and optionally fire a `Notification` API prompt (only with
+  user-explicit consent).
+- Server-side delivery (email/push) is OUT of scope for this PR unless the repo already
+  ships it — leave a clearly named hook only.
+
+WORK — bilingual & a11y
+- Every newsletter/alert string EN + AR. AR email subject lines must read naturally.
+- Alert form is keyboard-navigable, errors are inline, and the toast respects
+  `prefers-reduced-motion`.
+
+CONSTRAINTS
+- Do NOT echo `FORMSPREE_ENDPOINT` or any secret in client bundles or logs.
+- Do NOT enable email delivery without owner-provided credentials.
+- Bilingual EN + AR.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run build`.
+- Manual: subscribe with a dev email, set an alert, confirm localStorage entry, simulate
+  threshold cross by editing the cached price.
+
+DELIVERABLE
+PR with commits split (subscribe / welcome email / daily template / weekly template /
+alert UI / alert evaluation / tests). Update `docs/AUTOMATIONS.md`.
+```
+
+---
+
+## Prompt 20 — X/Twitter Automation Polish
+
+```text
+You are polishing the hourly X-post automation. The workflow is
+`.github/workflows/post_gold.yml` — it runs on schedule and is LIVE in production. Python
+helpers live under `scripts/python/` (utils, fetcher, poster). The post template lives in
+`src/social/postTemplates.js` and `scripts/python/utils/*` provides shared formatting.
+
+INSPECT FIRST
+1. Read `.github/workflows/post_gold.yml` carefully. Note triggers, env vars, secrets,
+   the `sys.path` setup that imports `scripts/python/utils/*`.
+2. Read every file under `scripts/python/` (entrypoint + utils).
+3. Read `src/social/postTemplates.js` and `content/social/x-post-generator.html`.
+4. Read `scripts/node/tweet-gold-price.js` if Node is involved alongside Python.
+5. Check secret names referenced in workflow yaml — do not echo or log them.
+
+WORK — template
+- Headline: "UAE Gold Today · 24K AED/g · 22K AED/g".
+- Body: one line each for 24K and 22K (AED + USD), one line freshness ("as of HH:MM GST"),
+  one line source ("XAU/USD spot · AED at fixed peg 3.6725"), tracker link.
+- No emoji spam. ≤ 1 emoji if the existing template uses it.
+- Hashtags: 1–3 max, relevant only (#GoldPriceUAE, #GoldPriceDubai). Do not stuff.
+
+WORK — workflow safety
+- Keep the import path layout for `scripts/python/utils/*` intact (the workflow patches
+  `sys.path`).
+- Do NOT echo secrets in any `run:` step. Use `${{ secrets.* }}` only inside Python via
+  env-var passthrough.
+- Add a dry-run flag (env or CLI) so the script can render output without posting.
+  Wire CI to use the dry-run flag on PRs.
+- Concurrency: `concurrency: post-gold` to prevent overlapping runs.
+- Failure handling: if the price fetch fails, do NOT post a fallback or stale price —
+  log and exit non-zero.
+
+WORK — observability
+- On success, log a single redacted line: timestamp + 24K AED/g (no secrets).
+- On failure, set a workflow notice/error annotation so it's visible in the Actions UI.
+- Keep `scripts/node/notify-discord.js` / `notify-telegram.js` integration optional (only
+  fire if their respective webhooks are set).
+
+CONSTRAINTS
+- Do NOT change the post cadence without owner approval.
+- Do NOT post unverified or stale data; never label estimated as "live".
+- Do NOT introduce a new dependency without checking `gh-advisory-database`.
+
+VERIFY
+- Run the script locally with the dry-run flag and a test fixture.
+- `npm run validate`, `npm test`, `npm run lint`.
+- Open the workflow YAML in an Actions linter (yamllint) if available.
+
+DELIVERABLE
+PR with commits split (template / workflow safety / dry-run / observability). Update
+`docs/AUTOMATIONS.md` and `docs/twitter_bot_architecture.md`.
+```
+
+---
+
+## Prompt 21 — Service Worker & Offline Experience
+
+```text
+You are upgrading the service worker (`sw.js`) and the offline page (`offline.html`).
+The SW must continue to exclude `/admin/*` and `/api/*` from caching (enforced by
+`tests/sw-exclusions.test.js`).
+
+INSPECT FIRST
+1. Read `sw.js` end-to-end. Note `CACHE_NAME` (versioned, currently `goldtickerlive-vN`),
+   the precache list, the runtime fetch handler, and the `/admin/*` + `/api/*` bypass.
+2. Read `offline.html`. Note copy, branding, and any links it offers.
+3. Read `tests/sw-exclusions.test.js`.
+4. Read `_headers` and `_redirects` for any hosting-side cache rules.
+
+WORK — caching strategy
+- Precache: HTML shell, critical CSS, nav JS, freshness JS, fonts, logo. Keep the precache
+  list small.
+- Runtime cache (stale-while-revalidate): country/city HTML, guide HTML, images.
+- Network-first: `/data/gold_price.json`, FX endpoints (no SW cache for prices — too risky
+  for a freshness-sensitive product).
+- Bypass entirely: `/admin/*`, `/api/*`, anything with `?nocache`.
+- Bump `CACHE_NAME` to a new version (e.g. `goldtickerlive-vN+1`) and clean up old caches
+  in the `activate` event.
+
+WORK — offline page
+- "You're offline" headline, last-cached price card if available (read from the same
+  localStorage caches the live site uses), a "Try again" button, links to methodology and
+  to recent guides that are already in the runtime cache.
+- Bilingual EN + AR.
+
+WORK — install/update flow
+- Show a non-blocking "Update available — refresh to apply" toast when a new SW activates.
+- Honor `prefers-reduced-motion` for the toast.
+
+CONSTRAINTS
+- Do NOT cache `/admin/*` or `/api/*`. `tests/sw-exclusions.test.js` MUST stay green.
+- Do NOT cache the live price JSON.
+- Do NOT precache the entire `countries/**` tree — it's too large.
+- Bilingual EN + AR for the offline page.
+
+VERIFY
+- `npm test` (sw-exclusions + any new SW tests).
+- `npm run validate`.
+- Manual: build, preview, kill the network in devtools, reload — confirm offline page
+  renders with the cached price.
+- Manual: bump CACHE_NAME, reload, confirm old cache is purged.
+
+DELIVERABLE
+PR with commits split (cache strategy / cache version bump / offline page / update toast /
+tests).
+```
+
+---
+
+## Prompt 22 — Pricing & Invest Pages
+
+```text
+You are upgrading `pricing.html`, `invest.html`, and `src/pages/tracker-pro.js`. These
+pages discuss money — they need maximum trust copy and zero hype.
+
+INSPECT FIRST
+1. Read `pricing.html` end-to-end. Note any tier comparison tables, CTAs, and disclaimers.
+2. Read `invest.html`. Note any "performance" claims or historical assertions — flag
+   anything that lacks a citation.
+3. Read `src/pages/tracker-pro.js`. Check whether "pro" features are gated, free, or
+   placeholder.
+4. Read `content/guides/invest-in-gold-gcc.html` for tone reference.
+5. Read translations `pricing.*`, `invest.*`, `trackerPro.*`.
+
+WORK — pricing
+- Tier table: clear features per tier, monthly/annual toggle if used, no hidden fees.
+  If there is no real paid tier today, label everything as "Free for now" honestly.
+- Refund / cancellation copy if there is paid tier; link to terms.
+- Trust block: methodology link, sample data freshness, contact link.
+
+WORK — invest
+- Replace any unsourced performance claim with sourced or removed copy.
+- "Past performance is not indicative of future results" disclaimer — visible, not buried.
+- Link prominently to `content/guides/invest-in-gold-gcc.html` and methodology.
+- Calculator embed or link for hypothetical investment math; clearly labeled hypothetical.
+
+WORK — tracker-pro
+- If features are placeholder, label them "Coming soon" — don't show a fake gate.
+- If features exist, document them and link to pricing.
+
+CONSTRAINTS
+- No fabricated reviews, testimonials, or performance numbers.
+- No "guaranteed return" wording. No "best investment" wording.
+- Bilingual EN + AR.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- Manual: read every disclaimer aloud in EN and AR.
+
+DELIVERABLE
+PR with commits split (pricing / invest / tracker-pro / disclaimers / tests). Add a row in
+`docs/LIMITATIONS.md` noting any unimplemented tier.
+```
+
+---
+
+## Prompt 23 — Tools Suite: Weight Converter, Zakat, Investment Return
+
+```text
+You are upgrading the tools suite at `content/tools/index.html`,
+`content/tools/weight-converter.html`, `content/tools/zakat-calculator.html`, and
+`content/tools/investment-return.html`. Tools are returning-user magnets — they must be
+fast, accurate, mobile-friendly, and honest about what they do.
+
+INSPECT FIRST
+1. Read each of the four HTML files end-to-end and any module that hydrates them.
+2. Read `src/lib/price-calculator.js`, `src/config/karats.js`,
+   `src/config/constants.js` (TROY_OZ_GRAMS, AED_PEG).
+3. Read translations `tools.*`, `tools.weightConverter.*`, `tools.zakat.*`,
+   `tools.investmentReturn.*`.
+4. Read `src/lib/export.js` for share/export helpers.
+
+WORK — weight converter
+- Units: g, kg, oz, troy oz, tola, baht, mithqal, grain. Always pivot through grams
+  internally to avoid round-trip drift.
+- Precision: 4 decimal places by default, adjustable.
+- Show the source equation under the result ("1 tola = 11.6638 g").
+
+WORK — zakat calculator
+- Inputs: gold weight (with unit), purity (karat), additional cash, debts, currency.
+- Threshold: nisab in gold (~85g of 24K equivalent) computed from the live spot price;
+  show the current nisab value and the date.
+- Output: zakat due (2.5%) with a clear "consult a qualified scholar for personal
+  guidance" footnote.
+- Bilingual: AR copy must use proper religious terminology (الزكاة, النصاب).
+
+WORK — investment return
+- Inputs: amount, purchase date, sell date (or today), karat, currency.
+- Output: ROI %, absolute gain/loss, annualized return; explicit "hypothetical, before
+  fees and taxes" disclaimer.
+- Use historical price data only if available; if not, label as illustrative.
+
+WORK — shared
+- All inputs use `inputmode="decimal"` for numeric fields.
+- All results have a "Copy", "Share" (via `postTemplates.js`), and "Download CSV"
+  (via `src/lib/export.js`, filename uses `isoTimestamp()`, brand "GoldTickerLive").
+- Errors inline, not in console.
+- Mobile: single-column on 360px, no overflow.
+
+CONSTRAINTS
+- Do NOT alter `TROY_OZ_GRAMS`, `AED_PEG`, or the karat purity table.
+- DOM-safety: 0 sinks. Use `el()` / `replaceChildren()`.
+- Bilingual EN + AR.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- Manual: enter realistic values for each tool in each language, copy/share/export.
+
+DELIVERABLE
+PR with commits split per tool. Add unit tests for unit conversion math under `tests/`.
+```
+
+---
+
+## Prompt 24 — Chart Component
+
+```text
+You are upgrading the chart component (`src/components/chart.js`) and the SVG builders in
+`src/tracker/dom-builders.js`. The chart is one of the few moving visual elements on the
+site — it must be performant, accessible, and respect reduced motion.
+
+INSPECT FIRST
+1. Read `src/components/chart.js` end-to-end.
+2. Read `src/tracker/dom-builders.js` — note the SVG `createElementNS` builders that
+   replaced the legacy `innerHTML` sinks (DOM-safety baseline is 0 sinks).
+3. Read `src/lib/historical-data.js` for the data shape.
+4. Read translations `chart.*`.
+
+WORK — rendering
+- SVG only, built with `createElementNS`. No charting library.
+- Lines: 24K, 22K, 21K, 18K (toggle on/off via legend). Time range toggle: 24h, 7d, 30d, 90d.
+- Currency toggle: USD, AED.
+- Tooltip on hover/focus; `aria-describedby` for the focused point.
+
+WORK — accessibility
+- `role="img"` on the SVG with `aria-label` summarizing range + change %.
+- Alternative: a `<table>` fallback hidden visually but accessible to screen readers,
+  populated from the same data.
+- Keyboard: arrow keys move the focused datapoint; Home/End jump to start/end.
+
+WORK — reduced motion
+- `prefers-reduced-motion: reduce` → no draw-in animation, no hover-grow, instant
+  state changes.
+
+WORK — fallback
+- If `historical-data.js` returns nothing or stale data, render a clear "Historical data
+  unavailable" panel with a retry link, not a broken chart.
+
+CONSTRAINTS
+- DOM-safety baseline: 0 sinks. Do NOT introduce `innerHTML` / `outerHTML` /
+  `insertAdjacentHTML` in the chart code.
+- Do NOT add a charting library.
+- Bilingual EN + AR (axis labels, tooltip, legend).
+
+VERIFY
+- `node scripts/node/check-unsafe-dom.js`.
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- Manual: tab through the chart, toggle reduced motion in the OS, switch language.
+
+DELIVERABLE
+PR with commits split (rendering / a11y / reduced motion / fallback / tests).
+```
+
+---
+
+## Prompt 25 — Footer, Internal Links & Breadcrumbs
+
+```text
+You are upgrading the footer, internal-links component, and breadcrumbs.
+`src/components/footer.js`, `src/components/internalLinks.js`,
+`src/components/breadcrumbs.js`. These are repeated across the site — small improvements
+multiply.
+
+INSPECT FIRST
+1. Read each of the three components.
+2. Read `src/components/nav-data.js` to understand the canonical link map (used by both
+   nav and footer).
+3. Read translations `footer.*`, `internalLinks.*`, `breadcrumbs.*`.
+
+WORK — footer
+- Group links: Product (tracker, calculator, tools), Markets (countries, cities), Learn
+  (guides, FAQ, methodology), Company (about, privacy, terms, contact), Social (X, RSS).
+- Include the freshness pill summary: "Live · last updated <time>" mirroring the home page.
+- Year auto-updates. Brand: "Gold Ticker Live".
+- Source label: "Spot from XAU/USD · AED at 3.6725 fixed peg".
+
+WORK — internal links
+- The component picks contextually relevant links based on the current page type. From a
+  country page → the country's cities + calculator; from a guide → 3 sibling guides +
+  methodology; from the tracker → calculator + methodology + spot-vs-retail guide.
+- Anchor text is descriptive — never "click here".
+
+WORK — breadcrumbs
+- Render visible breadcrumbs and emit BreadcrumbList JSON-LD via `inject-schema.js`.
+- RTL parity: separators mirror correctly.
+- Truncation: on 360px, collapse middle items with an aria-labeled ellipsis.
+
+CONSTRAINTS
+- Do NOT hard-code strings; use `nav-data.js` and translations.
+- Bilingual EN + AR.
+- DOM-safety: `el()` / `replaceChildren()` only.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- Manual: open 5 different page types and confirm contextual links + breadcrumbs.
+
+DELIVERABLE
+PR with commits split (footer / internal links / breadcrumbs / tests).
+```
+
+---
+
+## Prompt 26 — Compare Countries & Today's Best Rates
+
+```text
+You are upgrading the comparison surfaces: `content/compare-countries/`,
+`content/todays-best-rates/`, and `content/gcc-gold-price-comparison/`. These pages turn
+static traffic into engagement — they must be live, fair, and clearly methodology-linked.
+
+INSPECT FIRST
+1. Read each of the three index pages and any companion JS.
+2. Read `src/pages/home.js` for the existing country-tile rendering patterns.
+3. Read `src/lib/price-calculator.js` and the country list source.
+4. Read translations `compare.*`, `bestRates.*`, `gccComparison.*`.
+
+WORK — compare countries
+- Multi-select up to N countries; show a side-by-side table of 24K/22K/21K/18K AED, USD,
+  and per-gram-local-currency.
+- Sort by price asc/desc, currency, freshness.
+- Mobile: collapses to a stacked card layout below 600px.
+- Methodology link prominent at the top.
+
+WORK — today's best rates
+- Auto-rank countries by 24K g price in a fixed reference currency (USD by default,
+  toggleable to AED).
+- Honest caveat: "Reference prices only. Local retail prices may differ. See methodology."
+- Last-updated pill mirrors the home page.
+
+WORK — GCC comparison
+- Focused subset: UAE, KSA, Kuwait, Qatar, Bahrain, Oman.
+- Adds market-hours awareness (link to `content/guides/gcc-market-hours.html`).
+- Currency-of-day-open delta if available.
+
+CONSTRAINTS
+- Do NOT fabricate "best deal" claims. Always say "reference price".
+- Bilingual EN + AR.
+- DOM-safety baseline.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- Manual: select 4 countries in compare, sort, switch currency, switch language.
+
+DELIVERABLE
+PR with commits split per page. Cross-link the three pages so users can move between them.
+```
+
+---
+
+## Prompt 27 — Social Sharing & Embed Widget
+
+```text
+You are upgrading the social sharing surfaces and the embed widget.
+`content/social/x-post-generator.html`, `content/embed/`, `src/social/postTemplates.js`.
+The embed widget is how third-party sites can show our live price — it must be lightweight,
+attribution-clear, and trustworthy.
+
+INSPECT FIRST
+1. Read `content/social/x-post-generator.html` and `src/social/postTemplates.js`.
+2. Read `content/embed/index.html` and the embed JS.
+3. Read translations `social.*`, `embed.*`.
+4. Read `_headers` for any iframe / CSP rules.
+
+WORK — sharing
+- One-click templates for X, Facebook, WhatsApp, LinkedIn — with a preview showing the
+  exact rendered text.
+- Default copy: 24K AED/g + 22K AED/g + freshness + tracker URL.
+- Use Web Share API where supported, fall back to copy-to-clipboard otherwise.
+
+WORK — embed widget
+- Iframe-friendly: lightweight HTML/CSS/JS, no admin code, no analytics that bleed into
+  parent.
+- Clear "Powered by Gold Ticker Live" attribution with a link.
+- Configurable via URL params: `?karat=24&currency=AED&size=compact|full&lang=en|ar`.
+- Auto-refresh respecting `GOLD_REFRESH_MS`. Show freshness pill.
+- CSP headers: ensure `_headers` allows the embed origin to be framed where appropriate
+  (or document the policy).
+
+CONSTRAINTS
+- Embed widget must NOT load admin code or any auth-dependent scripts.
+- DOM-safety in the embed.
+- No emoji spam in default share text.
+- Bilingual EN + AR.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run build`.
+- Manual: open the embed in an `<iframe>` on a test page; confirm freshness ticks; share
+  via X/WhatsApp/LinkedIn templates.
+
+DELIVERABLE
+PR with commits split (sharing UX / embed widget / attribution / docs). Update
+`docs/AUTOMATIONS.md` with the embed URL parameter spec.
+```
+
+---
+
+## Prompt 28 — Submit Shop & Order Gold Flows
+
+```text
+You are upgrading the user-submission flows: `content/submit-shop/index.html` and
+`content/order-gold/index.html`, backed by `server/repositories/shops.repository.js` and
+the admin shop manager.
+
+INSPECT FIRST
+1. Read both flow pages end-to-end.
+2. Read `server/repositories/shops.repository.js` — note `atomicWriteJSON()` usage and
+   the schema validation.
+3. Read `server/lib/admin/shop-manager.js`.
+4. Read translations `submitShop.*`, `orderGold.*`.
+
+WORK — submit shop
+- Multi-step form: location → contact → specialty → optional photos.
+- Field validation inline (email, phone, URL via `safeHref` / `safeTel` helpers).
+- "We review every submission before publishing" disclaimer; do NOT auto-publish.
+- Submit endpoint persists to a `pending_shops` JSON via `atomicWriteJSON()` and surfaces
+  the entry in the admin queue.
+
+WORK — order gold
+- This page is informational, not a marketplace. The flow connects users with verified
+  shops near them — it does NOT process payment.
+- Filter by city + karat + min weight; show ≥ 3 shop matches with phone/website links.
+- Footer disclaimer: "Gold Ticker Live is an information service. We don't sell or broker
+  gold."
+
+CONSTRAINTS
+- Do NOT introduce a payment integration without owner approval.
+- All persistence via `atomicWriteJSON()`.
+- DOM-safety; phone/URL via helpers.
+- Bilingual EN + AR.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- Manual: submit a fake shop; verify it lands in `pending_shops` and surfaces in the admin
+  queue; reject it from the admin and confirm the rejection is audited.
+
+DELIVERABLE
+PR with commits split (submit form / pending queue / order-gold / disclaimers / tests).
+Update `docs/EDIT_GUIDE.md` with the submission lifecycle.
+```
+
+---
+
+## Prompt 29 — Dark Mode & Theme System
+
+```text
+You are upgrading the dark mode and theme system. `src/lib/site-settings.js` persists the
+choice; `src/components/nav.js` `_cycleTheme()` and `_applyTheme()` handle the toggle and
+sync the desktop + drawer buttons; CSS uses a `data-theme` attribute on `<html>` (or
+`<body>`) to switch surface tokens.
+
+INSPECT FIRST
+1. Read `src/lib/site-settings.js`.
+2. Read `src/components/nav.js` — `_cycleTheme`, `_applyTheme`, the
+   `.nav-drawer-bottom` wrapper containing `#nav-theme-toggle-drawer`.
+3. Read `styles/global.css` — surface tokens (`--surface-primary`, `--surface-secondary`,
+   `--surface-tertiary`), text tokens (`--text-primary`, `--text-secondary`,
+   `--text-tertiary`). Note the dark-mode bug: `--surface-base` and `--surface-card` are
+   undefined and fall through to `#fff`.
+4. Read translations for `nav.theme.*` and the `themeLabels` per locale in `nav-data.js`.
+
+WORK
+- Themes: `light`, `dark`, `system`. Cycle order is documented and consistent.
+- Fix the `--surface-base` / `--surface-card` bug: either define them explicitly per theme
+  or migrate all references to the canonical `--surface-primary` / `--surface-secondary`.
+- Confirm every page surface uses tokens (not hand-picked hex). Audit `styles/pages/*.css`
+  for raw colors and convert to tokens.
+- The theme toggle must be reachable in both nav (desktop) and drawer (mobile). Both
+  buttons stay in sync via `_applyTheme()`.
+- `prefers-color-scheme` honored when theme is `system`.
+- A11y: `aria-pressed` reflects current state; `aria-label` localized via `themeLabels`.
+
+CONSTRAINTS
+- Do NOT introduce per-page theme overrides.
+- Do NOT regress dark-mode contrast on any page.
+- Bilingual aria-labels.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run quality`.
+- Manual: cycle theme on home, tracker, calculator, shops, a country page, a guide; both
+  EN and AR; confirm no `#fff` flash on dark.
+- Run a Lighthouse a11y audit on dark mode for the home page.
+
+DELIVERABLE
+PR with commits split (token fix / per-page audit / nav sync / a11y / tests). Update
+`docs/DESIGN_TOKENS.md` with the canonical surface/text token list.
+```
+
+---
+
+## Prompt 30 — Analytics Events Standardization
+
+```text
+You are standardizing the analytics event catalog in `assets/analytics.js`. Inconsistent
+event names make funnels useless.
+
+INSPECT FIRST
+1. Read `assets/analytics.js` — list every `track(...)` call site (grep across the repo).
+2. Read `admin/analytics/` to see what the dashboard expects.
+3. Read translations to confirm any event names that show up in the UI.
+
+WORK — catalog
+Standardize to these named events (snake_case), parameters in {}:
+
+- `page_view` { path, locale }
+- `tracker_view` { karat, country, currency }
+- `karat_change` { from, to }
+- `country_change` { from, to }
+- `unit_change` { from, to }
+- `currency_change` { from, to }
+- `calculator_use` { weight, unit, karat, currency }
+- `tool_use` { tool: 'weight'|'zakat'|'investment-return' }
+- `share_click` { surface, channel }
+- `copy_click` { surface, value_type }
+- `alert_set` { karat, threshold, direction, currency }
+- `alert_clear` { karat }
+- `newsletter_subscribe` { source, cadence }
+- `search_query` { length, result_count, locale }
+- `search_open` { ... }
+- `theme_change` { to }
+- `lang_change` { to }
+- `outbound_click` { url_host }
+- `error` { type, where }
+
+WORK — implementation
+- Replace ad-hoc strings with constants exported from `assets/analytics.js`.
+- Strip PII: never log email, phone, full search query if it could contain PII; truncate.
+- Sample-rate noisy events (`page_view`) consistently.
+
+CONSTRAINTS
+- Do NOT introduce a new analytics dependency.
+- Do NOT log secrets or PII.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- Manual: walk through home → tracker → calculator → newsletter; confirm each named event
+  fires once with the right parameters in devtools.
+
+DELIVERABLE
+PR with commits split (catalog constants / call-site migrations / dashboard updates / tests).
+Add `docs/ANALYTICS_EVENTS.md` documenting the catalog.
+```
+
+---
+
+## Prompt 31 — GitHub Actions Workflow Hardening
+
+```text
+You are hardening the GitHub Actions workflows. The workflow files live under
+`.github/workflows/`: `ci.yml`, `deploy.yml`, `codeql.yml`, `lighthouse.yml`,
+`perf-check.yml`, `daily-newsletter.yml`, `weekly-newsletter.yml`,
+`gold-price-fetch.yml`, `health_check.yml`, `post_gold.yml`, `spike_alert.yml`,
+`uptime-monitor.yml`, `sync-db-to-git.yml`.
+
+INSPECT FIRST
+1. Read every workflow file. List triggers, secrets, jobs, runners, permissions.
+2. Note current Node version and any pinned action SHAs.
+3. Read `.github/workflows/README.md` if present.
+
+WORK — security
+- Pin every third-party action to a full commit SHA (not a tag).
+- Set explicit `permissions:` per job (default to `contents: read`).
+- Use `concurrency:` keys to prevent duplicate runs (especially `post_gold`,
+  `gold-price-fetch`, `daily-newsletter`).
+- Never `echo` secrets in `run:` steps.
+- Verify the Python `sys.path` patching pattern in `post_gold.yml` is preserved exactly.
+
+WORK — reliability
+- `ci.yml`: must run `npm ci`, `npm run validate`, `npm run quality`, `npm test`,
+  `npm run build`, and Playwright smoke. (Already does — confirm and tighten.)
+- `deploy.yml`: only runs on `main` after CI is green. Uses GitHub Pages deploy.
+- `gold-price-fetch.yml`: failure must NOT publish a stale price.
+- `spike_alert.yml`, `uptime-monitor.yml`, `health_check.yml`: notify Discord/Telegram via
+  `scripts/node/notify-*.js` only when webhooks are configured.
+- All scheduled workflows: use a humane cron (no every-minute crons unless intentional).
+
+WORK — observability
+- Use `actions/upload-artifact@<sha>` for diagnostic outputs (lighthouse reports, audit
+  diffs).
+- Add a workflow `name:` and consistent badge URLs in `README.md` if missing.
+
+CONSTRAINTS
+- Do NOT change the cadence of `post_gold.yml` without owner approval — it is live in
+  production.
+- Do NOT introduce a paid action.
+- Run `gh-advisory-database` for any new action you add.
+
+VERIFY
+- yamllint locally.
+- Push the changes and confirm a single CI run succeeds.
+- For `post_gold.yml`, run with the dry-run flag (Prompt 20) before merging.
+
+DELIVERABLE
+PR with commits split per workflow concern (SHA pinning / permissions / concurrency /
+reliability / observability). Update `.github/workflows/README.md`.
+```
+
+---
+
+## Prompt 32 — Pre-deploy, Changelog & Release
+
+```text
+You are improving the pre-deploy + changelog + release pipeline.
+`scripts/node/pre-deploy-check.js` (`npm run pre-deploy`) runs 8 go/no-go checks;
+`scripts/node/changelog.js` (`npm run changelog`) generates a Conventional Commits
+changelog from git log; `scripts/node/package-release.js` packages a release artifact.
+
+INSPECT FIRST
+1. Read each of the three scripts and the corresponding `package.json` script entries.
+2. Read `CHANGELOG.md` to see the existing format.
+3. Read `docs/CHANGELOG.md` if it differs from the root.
+
+WORK — pre-deploy
+- The 8 checks should at minimum cover: build success, validate pass, tests pass, no
+  uncommitted changes, no DOM-safety regression, sitemap fresh, robots.txt unchanged,
+  CNAME unchanged. Confirm each — add anything missing.
+- Output is a summary with PASS/FAIL per check and a clear non-zero exit on any FAIL.
+
+WORK — changelog
+- Group by Conventional Commit type: feat, fix, perf, refactor, docs, chore, test, ci.
+- Include PR/commit SHAs for traceability.
+- Bilingual is NOT required for the changelog (engineering doc).
+
+WORK — release
+- `package-release.js`: produce a tarball of `dist/` + `CHANGELOG.md` + a small
+  `release.json` with brand, version, build SHA, build timestamp.
+- Tag the release in git (only on `main`, only via the workflow — not locally).
+
+CONSTRAINTS
+- Do NOT auto-publish a release. The packaging is artifact-only; promotion is a
+  human/owner step.
+- Do NOT remove existing CHANGELOG entries.
+
+VERIFY
+- `npm run pre-deploy` exits 0 on a clean main; introduce a deliberate failure to confirm
+  it exits non-zero.
+- `npm run changelog` produces output that diffs cleanly against the previous run.
+
+DELIVERABLE
+PR with commits split (pre-deploy checks / changelog grouping / release packaging /
+docs). Update `docs/CONTRIBUTING.md` and `CHANGELOG.md`.
+```
+
+---
+
+## Prompt 33 — E2E & Coverage
+
+```text
+You are upgrading the test suite. Unit tests live under `tests/*.test.js` (node:test).
+E2E lives under Playwright (`playwright.config.js`). CI runs validate / quality / unit /
+build / Playwright smoke, but does NOT currently run `test:coverage`.
+
+INSPECT FIRST
+1. Read `playwright.config.js` and the existing E2E specs.
+2. Read every file under `tests/`. Note which areas of `src/` are well-covered and which
+   are not.
+3. Read `package.json` test scripts: `test`, `test:coverage`, `test:e2e` (or equivalent).
+4. Read `.github/workflows/ci.yml` to see exactly which test commands run in CI.
+
+WORK — unit
+- Add tests for any module under `src/lib/` that currently has no tests, prioritizing
+  `live-status.js`, `price-calculator.js`, `formatter.js`, `cache.js`, `safe-dom.js`,
+  `export.js`.
+- For each new test, follow the existing node:test patterns and avoid network calls.
+
+WORK — E2E
+- Add Playwright specs covering: home renders, tracker renders, calculator computes a
+  realistic value, country page loads, language toggle persists, theme toggle persists,
+  search returns results, offline page renders when SW is active, admin login is gated.
+- Run on Chromium + WebKit + Firefox if the existing config supports it.
+
+WORK — coverage
+- Wire `npm run test:coverage` into a non-blocking CI job (informational only) so we can
+  see trends without making it a gate.
+- Set a minimum threshold per directory (e.g. `src/lib/` ≥ 70%) — only fail CI if the
+  threshold drops, not if it stays low.
+
+CONSTRAINTS
+- Do NOT introduce flaky time-dependent tests (use injected clocks).
+- Do NOT add tests that require live network calls.
+
+VERIFY
+- `npm test`, `npm run test:coverage`, `npx playwright test`.
+- CI passes.
+
+DELIVERABLE
+PR with commits split (unit tests / E2E specs / coverage CI / docs). Update
+`docs/CONTRIBUTING.md` with the test matrix.
+```
+
+---
+
+## Prompt 34 — Dependency Audit & Advisory Check
+
+```text
+You are auditing dependencies in `package.json` and `package-lock.json`. Use the
+`gh-advisory-database` tool BEFORE adding any new dependency, and audit existing ones for
+known vulnerabilities and abandoned packages.
+
+INSPECT FIRST
+1. Read `package.json` (root and `src/package.json` if present).
+2. Read `package-lock.json` lock pinning.
+3. Read `pyproject.toml` for Python deps used by `scripts/python/`.
+4. Read `reports/cleanup-audit/depcheck.json` if present — it lists likely-unused deps.
+
+WORK
+- For every direct dependency, run `gh-advisory-database` (npm ecosystem). Record any
+  advisory hits.
+- Remove dependencies flagged as unused by depcheck AND verified to be unreferenced via
+  grep.
+- Bump any dep with a known critical/high advisory to a fixed version, ONE PER COMMIT.
+- For dev-only tooling, prefer pinning to a known-good minor.
+- Document any advisory we accept (with reason) in `docs/DEPENDENCIES.md`.
+
+CONSTRAINTS
+- Do NOT bump a major version without testing across the validate/test/build pipeline.
+- Do NOT add a new heavy dependency (no charting libs, no CSS frameworks, no SPA libs).
+- Do NOT remove a dep without grepping every reference first.
+
+VERIFY
+- `npm ci`, `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- `gh-advisory-database` re-run shows zero high/critical advisories on direct deps.
+
+DELIVERABLE
+PR with commits split per dep change (one bump or one removal per commit). Update
+`docs/DEPENDENCIES.md`.
+```
+
+---
+
+## Prompt 35 — Placeholder & Stub Page Completion
+
+```text
+You are completing placeholder/stub pages. The repo uses
+`scripts/node/generate-placeholders.js` to scaffold pages and
+`scripts/node/enrich-placeholder-pages.js` to fill them out. Some scaffolded pages still
+read as thin or generic — they're SEO liabilities.
+
+INSPECT FIRST
+1. Read both scripts end-to-end.
+2. Run `node scripts/node/audit-pages.js` (if present) and inspect the output for thin
+   pages. Otherwise grep for telltale "Coming soon" / placeholder phrases.
+3. Cross-reference the sitemap to find indexed thin pages.
+
+WORK
+- For each thin page, fill in the unique intro paragraph, key facts, ≥ 3 internal links,
+  and an FAQ if relevant.
+- Refuse to invent content. Where data is genuinely unavailable (e.g. a city with no
+  shops yet), label honestly: "We're still adding shops in <City>. See nearby cities."
+  and provide alternatives.
+- If a page is truly unfit for indexing, add `noindex` and remove from the sitemap; add
+  a one-line note in `docs/SEO_CHECKLIST.md`.
+
+CONSTRAINTS
+- No fake content, no fake reviews, no fake "expert" quotes.
+- Bilingual EN + AR.
+
+VERIFY
+- `npm run validate` (sitemap coverage, SEO meta, placeholder check).
+- `npm run check-links`, `npm run seo-audit`.
+
+DELIVERABLE
+PR with commits split per page cluster. Update `docs/SEO_CHECKLIST.md` and the sitemap.
+```
+
+---
+
+## Prompt 36 — Mobile-First Layout Audit
+
+```text
+You are running a mobile-first layout audit at 320px–414px on every public page. Mobile
+is where the majority of UAE/GCC traffic lives.
+
+INSPECT FIRST
+1. Open each top-level page at 360px, 390px, 414px in devtools: `index.html`,
+   `tracker.html`, `calculator.html`, `shops.html`, `learn.html`, `insights.html`,
+   `methodology.html`, `invest.html`, `pricing.html`.
+2. Open one country page, one city page, one guide, one tool. Both EN and AR.
+3. Read `styles/global.css` and `styles/pages/*.css` for any `min-width` / `max-width`
+   breakpoints.
+
+WORK
+- No horizontal scroll on any page at 320px (allow up to 414px).
+- Tap targets ≥ 44×44 px for every interactive element. Spacing between targets ≥ 8 px.
+- Sticky elements (nav, freshness pill, CTA bar) do not overlap the page content's
+  primary actions; combined sticky height ≤ 30% of viewport.
+- Numerals (prices, percentages) never break across lines or truncate.
+- Tables → cards on small screens where the table has > 3 columns.
+- Mobile drawer dismisses on Escape and on backdrop tap; trap focus while open.
+- RTL parity at 360px on every page touched.
+
+CONSTRAINTS
+- No new media queries that don't extend existing breakpoint tokens.
+- Bilingual EN + AR.
+- DOM-safety baseline preserved.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run quality`, `npm run build`.
+- Manual checklist (above) per page; capture screenshots at 360px in EN + AR for the PR.
+- Lighthouse mobile score baseline must not regress.
+
+DELIVERABLE
+PR with commits split per page cluster (home / tracker / shops / countries / guides / tools).
+Attach before/after screenshots in the PR body.
+```
+
+---
+
+## Prompt 37 — RSS Feed & News
+
+```text
+You are upgrading the RSS feed and news section. `scripts/node/generate-rss.js` builds
+the feed; `content/news/` is the news landing page.
+
+INSPECT FIRST
+1. Read `scripts/node/generate-rss.js` end-to-end.
+2. Read `content/news/index.html` and any per-post pages.
+3. Read translations `news.*`, `rss.*`.
+4. Read the feed's current XML output (build, then check `dist/rss.xml` or wherever it lands).
+
+WORK — RSS
+- Title, description, language (`en` and `ar` separate feeds), `lastBuildDate`,
+  per-item `pubDate` (real, not `now()`), GUIDs that are stable URLs.
+- One item per news post + optionally one item per substantive guide update.
+- Atom + RSS 2.0 if the existing tooling supports both; one feed minimum.
+
+WORK — news landing
+- Reverse-chronological list, summary + read-time, link to per-post.
+- Per-post page: H1, dateline, body, share block (Prompt 27), related guides.
+- Article schema JSON-LD with real `datePublished` + `dateModified`.
+
+WORK — discovery
+- `<link rel="alternate" type="application/rss+xml">` in the `<head>` of every public page.
+- Footer link to RSS.
+
+CONSTRAINTS
+- No fabricated news posts. If there's no real news, surface only a "Latest from the
+  guides" feed.
+- Bilingual EN + AR.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run build`.
+- Manual: paste the feed URL into a feed reader; confirm 5 most recent items render.
+
+DELIVERABLE
+PR with commits split (generator / landing / per-post template / discovery / docs).
+```
+
+---
+
+## Prompt 38 — Supabase Data Sync
+
+```text
+You are upgrading the Supabase data sync. `supabase/` holds schema and seed; the sync
+workflow is `.github/workflows/sync-db-to-git.yml`; the runtime client is
+`server/lib/supabase-data.js`. The admin uses Supabase GitHub OAuth.
+
+INSPECT FIRST
+1. Read `supabase/` directory tree (migrations, schema SQL, seed).
+2. Read `.github/workflows/sync-db-to-git.yml` end-to-end.
+3. Read `server/lib/supabase-data.js`.
+4. Read `admin/supabase-config.js` and `admin/supabase-auth.js`.
+5. Read `docs/SUPABASE_SCHEMA.md`, `docs/SUPABASE_SETUP.md`.
+
+WORK
+- Schema: every table has a `created_at` and `updated_at` column with sensible defaults.
+- RLS: every table has explicit Row Level Security enabled. Public reads only on tables
+  meant to be public (e.g. `shops_public`).
+- Sync workflow: pulls public tables to Git as JSON; idempotent; commits only on diff.
+- Runtime client: never exposes the service-role key client-side. Anon key only.
+- Error handling: on Supabase outage, fall back to the last Git-committed JSON.
+
+CONSTRAINTS
+- Do NOT commit any service-role key or `.env` file.
+- Do NOT broaden RLS without owner approval.
+- Bilingual considerations apply to any user-facing data label, not the schema itself.
+
+VERIFY
+- `npm test`, `npm run validate`.
+- Manually run the sync workflow against a staging Supabase if available.
+
+DELIVERABLE
+PR with commits split (schema migrations / RLS / sync workflow / runtime client / docs).
+Update `docs/SUPABASE_SCHEMA.md` and `docs/environment-variables.md`.
+```
+
+---
+
+## Prompt 39 — 404 / Error Pages & Redirect Hygiene
+
+```text
+You are upgrading `404.html`, `_redirects`, and `src/pages/not-found.js`. Error pages are
+the unexpected meeting points — they should be helpful, branded, and honest.
+
+INSPECT FIRST
+1. Read `404.html` end-to-end.
+2. Read `_redirects` and `_headers`.
+3. Read `src/pages/not-found.js` and any router fallback.
+4. Run `npm run check-links` and inspect the report for broken outbound and internal
+   links.
+
+WORK — 404
+- Friendly copy: "We couldn't find that page. Here's what's nearby:" — list 3 most-likely
+  intents (tracker, calculator, country index, search) with descriptive anchors.
+- Live freshness pill mirroring the home page so the user can still get a price.
+- Search input that pre-fills with the failing slug if available.
+- Bilingual EN + AR.
+
+WORK — redirects
+- Preserve every legacy URL with a `301` to the canonical equivalent. Do NOT introduce a
+  redirect loop.
+- Common paths to consider: trailing slash normalization, country code aliases (e.g.
+  `/uae/` → `/countries/uae/`), legacy guide slugs.
+- Document every new redirect in `docs/REVAMP_PLAN.md`.
+
+WORK — error logging
+- If the SPA catches a render error, log a redacted analytics event (Prompt 30:
+  `error { type, where }`).
+
+CONSTRAINTS
+- Do NOT redirect indexed canonical URLs to themselves.
+- Do NOT remove any existing redirect without a documented rationale.
+- Bilingual EN + AR.
+
+VERIFY
+- `npm run check-links`, `npm run validate`, `npm test`.
+- Manual: visit /this-does-not-exist and confirm the page is helpful.
+
+DELIVERABLE
+PR with commits split (404 page / redirects / error logging / docs). Update
+`docs/REVAMP_PLAN.md`.
+```
+
+---
+
+## Prompt 40 — Image Audit & Asset Optimization
+
+```text
+You are auditing images and assets. `scripts/node/image-audit.js` (`npm run image-audit`)
+inspects asset sizes; assets live under `assets/`; the favicon is `favicon.svg`.
+
+INSPECT FIRST
+1. Run `npm run image-audit`. Read the report.
+2. List every `<img>` across the codebase. Note which lack `width`/`height` (CLS risk),
+   `alt` (a11y), `loading="lazy"`, or `decoding="async"`.
+3. Read `assets/` for oversized PNGs/JPGs.
+4. Read `favicon.svg` and confirm dark-mode parity.
+
+WORK
+- Every `<img>` has explicit `width` and `height` (or `aspect-ratio` CSS) — no CLS.
+- Every `<img>` has meaningful `alt` (or `alt=""` for decorative).
+- Below-the-fold images: `loading="lazy"` and `decoding="async"`.
+- Above-the-fold hero images: `fetchpriority="high"`, no `loading="lazy"`.
+- Convert oversized PNGs to WebP/AVIF where supported (only if the build pipeline already
+  produces them — do not add a new pipeline).
+- Favicon: SVG primary, PNG fallback at 32×32 and 192×192. Maskable icon for PWA.
+  Manifest references match (`manifest.json`).
+- OG/Twitter card images: 1200×630, branded, generated once and committed; do not
+  generate per-page in build.
+
+CONSTRAINTS
+- Do NOT introduce a runtime image-processing dep.
+- Do NOT remove an image referenced from any indexed page.
+- Bilingual considerations: alt text in EN + AR where pages are bilingual.
+
+VERIFY
+- `npm run image-audit`, `npm run validate`, `npm run build`.
+- Lighthouse: CLS ≤ baseline; LCP ≤ baseline.
+
+DELIVERABLE
+PR with commits split (alt + dimensions / lazy-load / favicon + manifest / OG image / docs).
+Update `docs/PERFORMANCE.md` with the new baseline.
+```
+
+---
+
 ## Appendix — Repo-Specific Reminders
 
 These reminders apply to every prompt above; they are baked into the prompts but listed here for
