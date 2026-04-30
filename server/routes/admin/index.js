@@ -14,6 +14,8 @@ const auditLog = require('../../lib/audit-log');
 const shopsRepo = require('../../repositories/shops.repository');
 const auditRepo = require('../../repositories/audit.repository');
 const { ValidationError, NotFoundError: _NotFoundError } = require('../../lib/errors');
+const pendingShopsRepo = require('../../repositories/pending-shops.repository');
+const shopsManager = require('../../lib/admin/shop-manager');
 
 // ---------------------------------------------------------------------------
 // Admin responses carry sensitive data (audit logs, user records, shop
@@ -624,13 +626,19 @@ router.delete('/users/:id', adminRateLimiter, authMiddleware('admin'), (req, res
 router.get('/counts', adminRateLimiter, authMiddleware(), (req, res) => {
   const pendingOrders = 0;
   let totalShops = 0;
+  let pendingSubmissions = 0;
   try {
     const result = shopManager.getFilteredShops({ page: 1, limit: 1 });
     totalShops = typeof result.total === 'number' ? result.total : 0;
   } catch {
     // Non-critical — return default 0
   }
-  res.json({ pendingOrders, totalShops });
+  try {
+    pendingSubmissions = pendingShopsRepo.getCounts().pending;
+  } catch {
+    // Non-critical — return default 0
+  }
+  res.json({ pendingOrders, totalShops, pendingSubmissions });
 });
 
 // GET /stats — aggregate metrics for the admin dashboard
@@ -658,6 +666,151 @@ router.get('/stats', adminRateLimiter, authMiddleware(), async (req, res) => {
   } catch (err) {
     console.error('Error fetching stats:', err);
     res.status(500).json({ success: false, message: 'Failed to fetch stats' });
+  }
+});
+
+// ===== PENDING SHOP SUBMISSIONS =====
+
+// GET /api/admin/pending-shops — list submissions (optionally filtered by status)
+router.get('/pending-shops', adminRateLimiter, authMiddleware('editor'), (req, res) => {
+  try {
+    const statusFilter = sanitizeString(req.query.status, 20);
+    let submissions = pendingShopsRepo.getAll();
+
+    if (statusFilter) {
+      submissions = submissions.filter((s) => s.status === statusFilter);
+    } else {
+      // Default: return pending only
+      submissions = submissions.filter((s) => s.status === 'pending');
+    }
+
+    // Sort newest first
+    submissions.sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+
+    const counts = pendingShopsRepo.getCounts();
+    res.json({ success: true, submissions, counts });
+  } catch (err) {
+    console.error('[admin] Error fetching pending shops:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch pending submissions' });
+  }
+});
+
+// GET /api/admin/pending-shops/:id — get a single submission
+router.get('/pending-shops/:id', adminRateLimiter, authMiddleware('editor'), (req, res) => {
+  try {
+    const sub = pendingShopsRepo.getById(req.params.id);
+    if (!sub) {
+      return res.status(404).json({ success: false, message: 'Submission not found' });
+    }
+    res.json({ success: true, submission: sub });
+  } catch (err) {
+    console.error('[admin] Error fetching submission:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch submission' });
+  }
+});
+
+// POST /api/admin/pending-shops/:id/approve
+// Moves the submission into the main shop directory and marks it approved.
+router.post(
+  '/pending-shops/:id/approve',
+  adminRateLimiter,
+  authMiddleware('editor'),
+  (req, res) => {
+    try {
+      const sub = pendingShopsRepo.getById(req.params.id);
+      if (!sub) {
+        return res.status(404).json({ success: false, message: 'Submission not found' });
+      }
+      if (sub.status !== 'pending') {
+        return res
+          .status(409)
+          .json({ success: false, message: `Submission is already ${sub.status}` });
+      }
+
+      // Create shop in the main directory using the shop manager
+      const shopData = {
+        name: sub.shop_name,
+        city: sub.city,
+        country: sub.country_code,
+        phone: sub.contact_phone || '',
+        email: sub.contact_email || '',
+        website: sub.website || '',
+        notes: sub.notes || '',
+        type: 'direct',
+        verified: false,
+      };
+      const createResult = shopsManager.createShop(shopData, req.user.email);
+
+      if (!createResult.success) {
+        return res.status(500).json({
+          success: false,
+          message: `Failed to create shop: ${createResult.message || 'unknown error'}`,
+        });
+      }
+
+      // Mark submission as approved
+      const now = new Date().toISOString();
+      pendingShopsRepo.update(sub.id, {
+        status: 'approved',
+        reviewed_at: now,
+        reviewed_by: req.user.email,
+        approved_shop_id: createResult.shop.id,
+      });
+
+      try {
+        auditLog.logAction(req.user.email, 'approve', 'pending_shop', sub.id, {
+          shop_name: sub.shop_name,
+          approved_shop_id: createResult.shop.id,
+        });
+      } catch (auditErr) {
+        console.error('[admin] Audit log failed after approve:', auditErr.message);
+      }
+
+      res.json({ success: true, shop: createResult.shop, submission: sub });
+    } catch (err) {
+      console.error('[admin] Error approving submission:', err);
+      res.status(500).json({ success: false, message: 'Failed to approve submission' });
+    }
+  }
+);
+
+// POST /api/admin/pending-shops/:id/reject
+// Marks the submission rejected and records the reason in the audit log.
+router.post('/pending-shops/:id/reject', adminRateLimiter, authMiddleware('editor'), (req, res) => {
+  try {
+    const sub = pendingShopsRepo.getById(req.params.id);
+    if (!sub) {
+      return res.status(404).json({ success: false, message: 'Submission not found' });
+    }
+    if (sub.status !== 'pending') {
+      return res
+        .status(409)
+        .json({ success: false, message: `Submission is already ${sub.status}` });
+    }
+
+    const reason = sanitizeString(req.body.reason, 500) || 'No reason provided';
+    const now = new Date().toISOString();
+
+    const updated = pendingShopsRepo.update(sub.id, {
+      status: 'rejected',
+      reviewed_at: now,
+      reviewed_by: req.user.email,
+      rejection_reason: reason,
+    });
+
+    try {
+      auditLog.logAction(req.user.email, 'reject', 'pending_shop', sub.id, {
+        shop_name: sub.shop_name,
+        reason,
+      });
+    } catch (auditErr) {
+      console.error('[admin] Audit log failed after reject:', auditErr.message);
+    }
+
+    res.json({ success: true, submission: updated });
+  } catch (err) {
+    console.error('[admin] Error rejecting submission:', err);
+    res.status(500).json({ success: false, message: 'Failed to reject submission' });
   }
 });
 

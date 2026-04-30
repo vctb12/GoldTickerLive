@@ -132,6 +132,56 @@ panel toggle or env-var swap. There is no runtime override.
 
 ---
 
+## Shop Submission Lifecycle
+
+Public users submit shop listings via `content/submit-shop/index.html`. Submissions are stored in
+`data/pending_shops.json` as `status: 'pending'` and are **never auto-published**.
+
+### Submission flow
+
+```
+User fills multi-step form (Location → Contact → Specialty)
+  ↓
+POST /api/submit-shop   (server/routes/submissions.js)
+  ↓ validation + honeypot check
+  ↓
+pendingShopsRepo.insert()  →  data/pending_shops.json
+  ↓
+Admin logs in and visits /admin
+  ↓
+GET /api/admin/pending-shops   (lists status: 'pending')
+```
+
+### Admin review actions
+
+| Action  | Endpoint                                    | Effect                                                                                             |
+| ------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Approve | `POST /api/admin/pending-shops/:id/approve` | Creates shop in `data/shops-data.json` via shop-manager; marks submission `approved`; audit-logged |
+| Reject  | `POST /api/admin/pending-shops/:id/reject`  | Marks submission `rejected` with a reason; audit-logged                                            |
+
+### Files involved
+
+| File                                              | Role                                    |
+| ------------------------------------------------- | --------------------------------------- |
+| `content/submit-shop/index.html`                  | Public multi-step submission form       |
+| `src/pages/submit-shop.js`                        | Step navigation, validation, POST logic |
+| `server/routes/submissions.js`                    | `POST /api/submit-shop` public endpoint |
+| `server/repositories/pending-shops.repository.js` | CRUD for `data/pending_shops.json`      |
+| `server/routes/admin/index.js`                    | Admin list / approve / reject routes    |
+| `data/pending_shops.json`                         | Pending submissions (not committed)     |
+| `tests/pending-shops.test.js`                     | Repository + lifecycle tests            |
+
+### Safety rules
+
+- **Never auto-publish.** All submissions land with `status: 'pending'` and require an explicit
+  admin approve action.
+- **Reject is audited.** `POST /api/admin/pending-shops/:id/reject` requires a `reason` field and is
+  written to `data/audit-logs.json` via `auditLog.logAction()`.
+- **Honeypot guard.** The form includes a hidden `company_website` field; if it is filled the server
+  silently succeeds without storing anything.
+
+---
+
 ## Admin Panel
 
 | I want to…                    | Go to…                                                                            |
