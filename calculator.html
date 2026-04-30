@@ -51,38 +51,6 @@
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
     <link rel="stylesheet" href="./styles/pages/calculator.css" />
     <meta name="msvalidate.01" content="E88623E4C36CDC8E8D44913FA9192725" />
-
-    
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -237,6 +205,8 @@
                   step="0.01"
                   placeholder="e.g. 10"
                   value=""
+                  inputmode="decimal"
+                  autocomplete="off"
                 />
                 <select id="val-unit" class="calc-select" aria-label="Weight unit">
                   <option value="gram">Gram</option>
@@ -308,6 +278,8 @@
                   min="0"
                   step="0.01"
                   placeholder="e.g. 5"
+                  inputmode="decimal"
+                  autocomplete="off"
                 />
                 <select id="scrap-unit" class="calc-select" aria-label="Weight unit">
                   <option value="gram">Gram</option>
@@ -339,6 +311,9 @@
                   max="100"
                   step="1"
                   value="90"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  aria-label="Dealer payout percentage"
                 />
                 <span class="calc-suffix">%</span>
               </div>
@@ -402,6 +377,8 @@
                   min="0"
                   step="0.01"
                   placeholder="e.g. 100"
+                  inputmode="decimal"
+                  autocomplete="off"
                 />
                 <select id="zakat-unit" class="calc-select" aria-label="Weight unit">
                   <option value="gram">Gram</option>
@@ -471,6 +448,8 @@
                   min="0"
                   step="1"
                   placeholder="e.g. 5000"
+                  inputmode="decimal"
+                  autocomplete="off"
                 />
                 <select id="buy-currency" class="calc-select" aria-label="Budget currency">
                   <option value="USD">USD</option>
@@ -523,6 +502,8 @@
                 min="0"
                 step="0.0001"
                 placeholder="Enter a value"
+                inputmode="decimal"
+                autocomplete="off"
               />
             </div>
             <div class="calc-field">

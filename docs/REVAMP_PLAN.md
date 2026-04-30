@@ -13,12 +13,13 @@ them into the right section here before execution. Agent operating rules are in
 - Keep completed items as `[x]` with enough context to serve as a record. Don't re-open closed items
   to pad status; don't invent new phases to look ambitious.
 
-**Last updated:** 2026-04-30 (Round 15 — prefers-reduced-motion guards added to shops.css,
-calculator.css, invest.css, tracker-pro.css; WCAG 2.5.5 touch target pass — all interactive elements
-raised to ≥44px across global.css, shops.css, calculator.css, tracker-pro.css, invest.css; complete
-canonical token sweep removing all legacy `--color-surface` / `--color-border-subtle` /
-`--color-text` / `--color-text-muted` fallback overrides across home.css, shops.css, calculator.css,
-stub.css, order.css, global.css).
+**Last updated:** 2026-04-30 (Round 16 — multi-area UX + a11y + SEO polish: fixed broken X social
+link URL in index.html, added `aria-pressed` to tracker range pills + sync from persisted state,
+added `aria-live="polite"` to karat-strip freshness span, improved region-tab aria attributes, added
+`inputmode="decimal"` + `autocomplete="off"` to all calculator inputs, added `autocomplete`
+
+- `aria-label` to shops search, fixed `<th scope="row">` in methodology karat table, updated sameAs
+  in Organization JSON-LD to include x.com URL, added regression test for X social link).
 
 ### 2026-04-27 full-site UX/admin/content revamp intake
 

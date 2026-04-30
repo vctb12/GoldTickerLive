@@ -4,58 +4,52 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
-### Pre-deploy / changelog / release pipeline — 2026-04-30
+### Multi-area polish — 2026-04-30 session (Round 16)
 
-**`scripts/node/pre-deploy-check.js`**
+**Bug fixes:**
 
-- fix: convert from broken ESM `import` syntax to CJS `require` — script was crashing with
-  `SyntaxError` at startup (`package.json` has `"type": "commonjs"`).
-- feat: add **check 9 — robots.txt** — fails if file is missing or lacks a `User-agent` directive.
-- feat: add **check 10 — unit tests** — runs `npm test`; pass `--skip-tests` for faster pre-flight.
-  Exits 1 on any test failure.
-- feat: add **check 11 — uncommitted changes** — fails if working tree is dirty (any staged or
-  unstaged files), preventing deploys from an unclean state.
-- fix: sitemap check now also verifies file age (warns if > 7 days old), not just URL count.
-- fix: build-output check now verifies `tracker.html`, `calculator.html`, and `shops.html` in
-  `dist/` in addition to `index.html`.
-- fix: CNAME check now fails (not warns) if the file is empty.
-- **breaking**: script now **always exits 1 on any failure**, not only in `--ci` mode. Use
-  `--skip-tests` for fast checks.
-- chore: `npm run pre-deploy:ci` alias removed; `npm run pre-deploy:fast` added (equivalent to
-  `--skip-tests`).
+- fix(index.html): correct broken X/Twitter social link (`https://x.com/Gold Ticker Live` had a
+  literal space in the URL making it invalid — fixed to `https://x.com/GoldTickerLive`).
 
-**`scripts/node/changelog.js`**
+**Accessibility:**
 
-- fix: convert from broken ESM `import` syntax to CJS `require`.
-- fix: replace the fragile hand-rolled CC regex with a named-group regex that correctly handles
-  `feat(scope)!: desc`, `fix: desc`, and `chore(ci): desc`.
-- feat: auto-detect the most recent git tag as the `--since` lower bound; falls back to the last 200
-  commits when no tags exist.
-- feat: add **`--all`** flag to include all commits without a count limit.
-- feat: add `breaking` category at the top of the output for `feat!:` / `fix!:` commits.
-- feat: generate clickable GitHub commit links (`[sha](…/commit/sha)`) when the remote origin is a
-  GitHub URL.
-- feat: print a brief header on stdout showing the since-ref and commit count.
-- chore: `npm run changelog:since` script alias added for convenience.
+- a11y(tracker): add `aria-pressed` to all chart range pills (`24H`–`ALL`) and keep them in sync via
+  `events.js` click handler; also sync on init from persisted state via `populateSelects()` so
+  screen readers always know which range is active.
+- a11y(tracker): add `role="group"` to range-pills container and improve `aria-label` to "Chart time
+  range".
+- a11y(home): add `aria-live="polite"` to karat-strip freshness update span so screen readers
+  announce "Updated X min ago" changes.
+- a11y(home): add unique `id` attrs to region tab buttons (`gcc-tab-gcc` etc.) for correct ARIA
+  tab/tabpanel wiring; improve tablist `aria-label` to "Filter gold prices by region".
+- a11y(home): add `title` attributes to karat-strip unit toggle buttons with descriptive text.
+- a11y(home): improve unit toggle group `aria-label` to "Select price unit".
+- a11y(methodology): fix karat conversion table body rows — first column changed from `<td>` to
+  `<th scope="row">` matching the pattern already used in `learn.html`.
 
-**`scripts/node/package-release.js`**
+**Calculator UX (mobile):**
 
-- feat: complete rewrite — was a 30-line stub that only wrote a manifest.
-- feat: writes `release/release.json` with `brand`, `version`, `buildSha`, `buildTimestamp`, and
-  `distFiles` list.
-- feat: copies `CHANGELOG.md` into `release/`.
-- feat: creates `release/gold-ticker-live-vX.Y.Z-SHA.tar.gz` containing the full `dist/` tree plus
-  `CHANGELOG.md` and `release.json`.
-- feat: `--dry-run` flag shows the plan without writing any files (works even without a `dist/`).
-- chore: tarball name includes version and short build SHA for unambiguous identification.
-- doc: script header explicitly states it does NOT tag git or publish anywhere.
+- feat(calculator): add `inputmode="decimal"` to all gold weight and budget amount inputs — triggers
+  the numeric/decimal keyboard on iOS and Android instead of the full text keyboard.
+- feat(calculator): add `autocomplete="off"` to all weight and price inputs to prevent browser
+  autofill on gold weight fields.
+- feat(calculator): add `aria-label` + `inputmode="numeric"` to scrap payout percentage input.
 
-**`docs/CONTRIBUTING.md`**
+**Shops:**
 
-- docs: add **Testing** section with all relevant `npm run` commands.
-- docs: add **Pre-Deploy Checks** section documenting all 11 checks and severity.
-- docs: add **Generating a Changelog Entry** section with CC format examples.
-- docs: add **Packaging a Release Artifact** section with output file table.
+- feat(shops): add `autocomplete="off"` and explicit `aria-label` to shops search input.
+
+**SEO / structured data:**
+
+- feat(seo): update `Organization` JSON-LD `sameAs` array in `index.html` to include
+  `https://x.com/GoldTickerLive` alongside the existing Twitter URL.
+- feat(seo): update `inject-schema.js` `getOrganizationSchema()` to emit the same dual sameAs array
+  so any future inject-schema run keeps both URLs.
+
+**Tests:**
+
+- test(seo-sitewide): add regression test for X social link — asserts no `x.com` URL in `index.html`
+  contains a space and that it starts with `https://x.com/`.
 
 **CSS / nav fixes (items from navbar-audit plan Phase 2):**
 
