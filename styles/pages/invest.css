@@ -615,7 +615,7 @@ body.invest-page {
 .invest-mini-chip {
   display: inline-flex;
   align-items: center;
-  min-height: 38px;
+  min-height: 44px;
   padding: 0.45rem 0.8rem;
   border-radius: var(--invest-radius-pill);
   background: rgb(255 255 255 / 6%);
@@ -649,7 +649,7 @@ body.invest-page {
 .invest-compare-tag {
   display: inline-flex;
   align-items: center;
-  min-height: 34px;
+  min-height: 44px;
   padding: 0.35rem 0.75rem;
   border-radius: var(--invest-radius-pill);
   background: #fff4d2;
@@ -733,7 +733,7 @@ body.invest-page {
 .invest-guide-pill {
   display: inline-flex;
   align-items: center;
-  min-height: 34px;
+  min-height: 44px;
   padding: 0.35rem 0.75rem;
   border-radius: var(--invest-radius-pill);
   background: rgb(201 168 76 / 13%);
