@@ -189,6 +189,7 @@ admin API and server-side data persistence).
 ├── scripts/            → Build, automation, and page scripts
 │   ├── node/           → Node.js automation scripts
 │   ├── python/         → Python automation scripts
+│   ├── archive/        → Retired scripts (kept for reference; not executed in any workflow)
 │   ├── validate-build.js → Pre-build validation
 │   ├── audit-pages.js  → Page structure audit
 │   ├── check-links.js  → Link checker
@@ -251,18 +252,18 @@ HTML loads page-specific JS (e.g. src/pages/home.js)
   ├──► Check localStorage cache (src/lib/cache.js)
   │    └── If fresh → use cached data → render immediately
   │
-  ├──► Fetch gold spot price (src/services/goldPriceService.js)
+  ├──► Fetch gold spot price (`src/lib/api.js` → provider chain)
   │    ├── Provider 1: api.goldpricez.com (primary)
   │    ├── Provider 2: goldpricez.com (fallback)
   │    └── On failure: use stale cache → show "stale data" badge
   │
-  ├──► Fetch FX rates (src/services/fxService.js)
+  ├──► Fetch FX rates (`src/lib/api.js`)
   │    ├── Source: open.er-api.com
   │    └── AED always uses fixed peg (3.6725) regardless of API
   │
-  ├──► Calculate prices (src/services/pricingEngine.js)
+  ├──► Calculate prices (`src/lib/price-calculator.js`)
   │    └── For each country × karat:
-  │         usdPerGram = (spotPerOz / 31.1035) × purity
+  │         usdPerGram = (spotPerOz / TROY_OZ_GRAMS) × purity
   │         localPerGram = usdPerGram × fxRate
   │
   ├──► Format for display (src/lib/formatter.js)
@@ -345,13 +346,9 @@ buildRoute({ country: 'uae', city: 'dubai', karat: '24' }); // → '/uae/dubai/g
 ## Component Dependencies
 
 ```
-Page Scripts ──► Services ──► API Adapter ──► External APIs
-     │              │
-     │              └──► Config (constants, countries, karats)
-     │
-     ├──► Core Library (api, cache, calculator, formatter)
-     │         │
-     │         └──► Config
+Page Scripts ──► Core Library (api, cache, calculator, formatter)
+     │                │
+     │                └──► Config (constants, countries, karats)
      │
      ├──► Components (nav, footer, chart, ticker, breadcrumbs)
      │         │
@@ -361,6 +358,10 @@ Page Scripts ──► Services ──► API Adapter ──► External APIs
                │
                └──► Config (countries, karats)
 ```
+
+> **Note:** `server/services/` (goldPriceService.js, fxService.js, pricingEngine.js) are
+> **server-side only** — used by the Node/Express admin backend and Python automation scripts.
+> Browser pages use `src/lib/api.js` directly.
 
 ---
 
@@ -372,6 +373,51 @@ Page Scripts ──► Services ──► API Adapter ──► External APIs
 - **Service worker** (`sw.js`): Cache-first for static assets, network-first for API calls
 - **AED fixed peg**: Always 3.6725 regardless of FX API (removes dependency for UAE prices)
 - **Skeleton loading**: Placeholder UI shown during data fetching
+
+---
+
+## Design Token System
+
+All visual values are centralized in `styles/global.css` under `:root`. Page-specific CSS files
+(`styles/pages/*.css`) **must use tokens** — no raw hex, rgb, or pixel values that duplicate a
+token.
+
+### Canonical token categories
+
+| Category     | Token prefix                                                  | Example                                  |
+| ------------ | ------------------------------------------------------------- | ---------------------------------------- |
+| Surfaces     | `--surface-*`                                                 | `--surface-primary`, `--surface-canvas`  |
+| Text tiers   | `--text-*`                                                    | `--text-primary`, `--text-secondary`     |
+| Borders      | `--border-*`                                                  | `--border-default`, `--border-accent`    |
+| Spacing      | `--space-*`                                                   | `--space-4`, `--space-6`                 |
+| Radius       | `--radius-*`                                                  | `--radius-card`, `--radius-pill`         |
+| Shadows      | `--shadow-*` / `--elev-*`                                     | `--elev-3`, `--shadow-gold`              |
+| Typography   | `--text-*`, `--weight-*`, `--leading-*`                       | `--text-sm`, `--weight-bold`             |
+| Gold palette | `--color-gold*`                                               | `--color-gold`, `--color-gold-dark`      |
+| Status       | `--color-live`, `--color-stale`, `--color-up`, `--color-down` | etc.                                     |
+| Freshness    | `--color-amber`, `--color-danger`                             | warm amber / danger red for age-based UI |
+
+### Semantic alias layer
+
+The `:root` also defines higher-level semantic aliases that wrap the primitive tokens:
+
+```css
+--surface-primary   → var(--color-surface)   /* card / panel background */
+--text-primary      → var(--color-text)      /* body text */
+--text-secondary    → var(--color-text-muted)/* muted / label text */
+--text-tertiary     → var(--color-text-faint)/* placeholder / hint text */
+--border-default    → var(--color-border)    /* standard divider */
+--color-accent      → var(--color-gold-dark) /* gold accent in light mode */
+--color-accent-strong → var(--color-gold-bright) /* bright gold for dark mode */
+--color-surface-raised → var(--color-surface-2) /* slightly elevated surface */
+--color-text-secondary → var(--color-text-muted) /* backward-compat alias */
+--color-gold-alpha  = rgb(196 153 62 / 12%)  /* subtle gold tint overlay */
+--color-amber       = #f59e0b                /* freshness warning (cached/slightly stale) */
+--color-danger      = #dc2626                /* freshness danger (very stale/unavailable) */
+```
+
+> **Agent rule:** If you need a color that exists in the semantic alias layer, always use the alias.
+> Never add a raw hex value to a page CSS file when an equivalent token exists.
 
 ---
 
