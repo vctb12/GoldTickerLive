@@ -87,12 +87,13 @@ function firstMatch(html, re) {
 function decode(str) {
   if (str == null) return null;
   // Only decode the five HTML entities likely to appear in SEO attributes.
+  // Decode `&amp;` last to avoid double-unescaping sequences like `&amp;quot;`.
   return str
-    .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'");
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, '&');
 }
 
 function attr(name) {
