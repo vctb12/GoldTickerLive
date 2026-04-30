@@ -1,14 +1,21 @@
 /**
- * Gold Ticker Live Service Worker
- * Strategy: cache-first for static assets, network-first for API calls.
+ * Gold Ticker Live Service Worker v16
+ *
+ * Caching strategy:
+ *   Precache    — main HTML shells, offline/404 pages (kept small).
+ *   Runtime SWR — country/city/guide HTML, images (added lazily on first visit).
+ *   Network-first — /data/gold_price.json (price freshness is critical).
+ *   Cache-first   — versioned static assets (CSS, JS, fonts, manifests).
+ *   Bypass        — /admin/*, /api/*, external FX APIs, ?nocache requests.
  *
  * Deployment base path: '/' (custom domain goldtickerlive.com).
  */
 
-const CACHE_NAME = 'goldtickerlive-v15';
-const _CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 1 day
+const CACHE_NAME = 'goldtickerlive-v16';
+const RUNTIME_CACHE = 'goldtickerlive-runtime-v16';
 
-// Static assets to pre-cache on install - MUST use / prefix for GitHub Pages
+// Static assets to pre-cache on install — kept intentionally small.
+// Country/city/guide pages are added lazily to RUNTIME_CACHE on first visit.
 const PRECACHE_URLS = [
   '/',
   '/tracker.html',
@@ -18,77 +25,19 @@ const PRECACHE_URLS = [
   '/insights.html',
   '/methodology.html',
   '/invest.html',
-  '/countries/index.html',
-  // Country pages (now at countries/{slug}/index.html)
-  '/countries/uae/',
-  '/countries/saudi-arabia/',
-  '/countries/kuwait/',
-  '/countries/qatar/',
-  '/countries/bahrain/',
-  '/countries/oman/',
-  '/countries/egypt/',
-  '/countries/jordan/',
-  '/countries/morocco/',
-  '/countries/india/',
-  '/countries/lebanon/',
-  '/countries/tunisia/',
-  '/countries/algeria/',
-  '/countries/libya/',
-  '/countries/sudan/',
-  '/countries/iraq/',
-  '/countries/syria/',
-  '/countries/palestine/',
-  '/countries/yemen/',
-  '/countries/turkey/',
-  '/countries/pakistan/',
-  // Guides
-  '/content/guides/buying-guide.html',
-  // Tool pages
-  '/content/gold-price-history/',
-  '/content/order-gold/',
-  '/content/social/x-post-generator.html',
-  '/content/search/',
-  '/content/tools/weight-converter.html',
-  '/content/tools/zakat-calculator.html',
-  '/content/tools/investment-return.html',
-  // Phase 1 "Coming soon" stubs
-  '/content/todays-best-rates/',
-  '/content/premium-watch/',
-  '/content/compare-countries/',
-  '/content/news/',
-  '/content/faq/',
-  '/content/submit-shop/',
-  '/content/changelog/',
-  // City pages
-  '/countries/uae/cities/dubai.html',
-  '/countries/uae/cities/abu-dhabi.html',
-  '/countries/saudi-arabia/cities/riyadh.html',
-  '/countries/egypt/cities/cairo.html',
-  '/countries/qatar/cities/doha.html',
-  // Market pages
-  '/countries/uae/markets/dubai-gold-souk.html',
-  '/countries/egypt/markets/khan-el-khalili-cairo.html',
-  // Key leaf pages (now under countries/)
-  '/countries/uae/gold-price/',
-  '/countries/uae/dubai/gold-prices/',
-  '/countries/uae/dubai/gold-rate/24-karat/',
-  '/countries/uae/dubai/gold-rate/22-karat/',
-  '/countries/uae/dubai/gold-rate/21-karat/',
-  '/countries/uae/dubai/gold-rate/18-karat/',
-  '/countries/uae/abu-dhabi/gold-prices/',
-  '/countries/uae/sharjah/gold-prices/',
-  // Offline fallback + error pages
   '/offline.html',
   '/404.html',
 ];
 
-// External origins that should bypass the cache (live data APIs).
-// Gold data is now served from the same-origin committed file
-// /data/gold_price.json, so only FX remains external.
+// External origins that bypass the SW entirely (live FX data).
 const BYPASS_ORIGINS = ['open.er-api.com'];
 
+// Same-origin paths that must always go to the network — no SW cache.
+// Gold price JSON is freshness-sensitive; caching it risks showing stale prices.
+const NETWORK_ONLY_PATHS = ['/data/gold_price.json', '/data/last_gold_price.json'];
+
 // ─────────────────────────────────────────────────────────────────────────────
-// INSTALL — pre-cache static shell
+// INSTALL — pre-cache the static shell
 // ─────────────────────────────────────────────────────────────────────────────
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -96,7 +45,7 @@ self.addEventListener('install', (event) => {
       .open(CACHE_NAME)
       .then((cache) =>
         cache.addAll(PRECACHE_URLS).catch((err) => {
-          // Don't fail install if some assets are missing (dev environment)
+          // Don't fail install if some assets are missing (e.g. dev environment)
           console.warn('[SW] Pre-cache partial failure:', err.message);
         })
       )
@@ -105,20 +54,34 @@ self.addEventListener('install', (event) => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ACTIVATE — clean up old caches
+// ACTIVATE — purge old caches, claim clients, notify tabs of the update
 // ─────────────────────────────────────────────────────────────────────────────
 self.addEventListener('activate', (event) => {
+  const currentCaches = new Set([CACHE_NAME, RUNTIME_CACHE]);
   event.waitUntil(
     caches
       .keys()
-      .then((keys) =>
-        Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+      .then((keys) => {
+        const stale = keys.filter((k) => !currentCaches.has(k));
+        const isUpdate = stale.length > 0;
+        return Promise.all(stale.map((k) => caches.delete(k))).then(() => isUpdate);
+      })
+      .then((isUpdate) =>
+        self.clients.claim().then(() => {
+          // Notify open tabs that a new SW version is active so the page can
+          // show a "refresh to apply" toast. Only fire on actual updates —
+          // not on the very first install — to avoid a spurious toast.
+          if (isUpdate) {
+            return self.clients.matchAll({ type: 'window' }).then((clients) => {
+              clients.forEach((client) => client.postMessage({ type: 'SW_UPDATED' }));
+            });
+          }
+        })
       )
-      .then(() => self.clients.claim())
   );
 });
 
-// Allow clients to trigger an update (e.g., from the page when a new SW is available)
+// Allow clients to trigger skipWaiting (e.g. from an "Update" button in the page).
 self.addEventListener('message', (event) => {
   if (!event.data) return;
   if (event.data.type === 'SKIP_WAITING') {
@@ -133,11 +96,14 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Always bypass for non-GET or external API calls
+  // Only handle GET requests.
   if (request.method !== 'GET') return;
-  if (BYPASS_ORIGINS.some((o) => url.hostname.includes(o))) return;
-  // Bypass chrome-extension and non-http(s) schemes
+  // Bypass non-http(s) schemes (chrome-extension, blob, data, …).
   if (!url.protocol.startsWith('http')) return;
+  // Bypass external FX/price API origins.
+  if (BYPASS_ORIGINS.some((o) => url.hostname.includes(o))) return;
+  // Bypass explicit ?nocache requests — let the browser go straight to network.
+  if (url.searchParams.has('nocache')) return;
 
   // Never cache admin or API routes — always go straight to the network.
   if (url.pathname.startsWith('/admin/') || url.pathname.startsWith('/api/')) {
@@ -145,26 +111,60 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Network-first for navigation (HTML pages) — ensures fresh content
+  // Network-only for price JSON — freshness is critical.
+  if (NETWORK_ONLY_PATHS.some((p) => url.pathname === p)) {
+    event.respondWith(networkOnly(request));
+    return;
+  }
+
+  // Navigation requests
   if (request.mode === 'navigate') {
-    event.respondWith(networkFirstWithFallback(request));
+    // Country, city, market, and guide pages — stale-while-revalidate so
+    // returning visitors load instantly and get a fresh copy in the background.
+    if (isRuntimeCacheCandidate(url)) {
+      event.respondWith(staleWhileRevalidate(request, RUNTIME_CACHE));
+    } else {
+      event.respondWith(networkFirstWithFallback(request));
+    }
     return;
   }
 
-  // For non-cacheable requests, use plain network fetch.
-  if (!shouldCacheRequest(request, url)) {
-    event.respondWith(fetch(request));
+  // Images — stale-while-revalidate via runtime cache.
+  if (request.destination === 'image') {
+    event.respondWith(staleWhileRevalidate(request, RUNTIME_CACHE));
     return;
   }
 
-  // Cache-first for static assets (JS, CSS, images, fonts)
-  event.respondWith(cacheFirstWithUpdate(request));
+  // Versioned static assets (CSS, JS, fonts, manifests) — cache-first.
+  if (shouldCacheRequest(request, url)) {
+    event.respondWith(cacheFirstWithUpdate(request));
+    return;
+  }
+
+  // Everything else: plain network fetch with a graceful 503 fallback.
+  event.respondWith(fetch(request).catch(() => new Response('', { status: 503 })));
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRATEGIES
 // ─────────────────────────────────────────────────────────────────────────────
 
+/** Network-only: no cache read or write (used for price JSON). */
+async function networkOnly(request) {
+  try {
+    return await fetch(request);
+  } catch {
+    return new Response(JSON.stringify({ error: 'offline' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+}
+
+/**
+ * Network-first: try network → fall back to cache → offline.html.
+ * Used for the main HTML shell pages.
+ */
 async function networkFirstWithFallback(request) {
   try {
     const response = await fetch(request);
@@ -190,14 +190,50 @@ async function networkFirstWithFallback(request) {
   }
 }
 
+/**
+ * Stale-while-revalidate: serve the cached copy immediately while fetching a
+ * fresh version in the background. Used for country/guide pages and images.
+ */
+async function staleWhileRevalidate(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  const cached = await cache.match(request);
+
+  // Kick off a background revalidation regardless of whether we have a cache
+  // hit — this is the "revalidate" half of stale-while-revalidate. Intentional:
+  // returning visitors load instantly from cache while the page is refreshed
+  // silently so the *next* visit is also fast and fresh.
+  const networkPromise = fetch(request)
+    .then((response) => {
+      if (response.ok) cache.put(request, response.clone());
+      return response;
+    })
+    .catch(() => null);
+
+  if (cached) return cached;
+
+  // No cached copy yet — wait for the network.
+  const networkResponse = await networkPromise;
+  if (networkResponse) return networkResponse;
+
+  // Offline and no cache — serve the offline fallback.
+  const offlinePage = await caches.match('/offline.html');
+  if (offlinePage) return offlinePage;
+  return new Response('Offline — cached version unavailable.', {
+    status: 503,
+    headers: { 'Content-Type': 'text/plain' },
+  });
+}
+
+/**
+ * Cache-first with background update.
+ * Used for versioned/fingerprinted static assets (CSS, JS, fonts).
+ */
 async function cacheFirstWithUpdate(request) {
   const cached = await caches.match(request);
   if (cached) {
-    // Serve from cache immediately, update in background
-    fetchAndCache(request);
+    fetchAndCache(request, CACHE_NAME);
     return cached;
   }
-  // No cache hit — fetch from network
   try {
     const response = await fetch(request);
     if (response.ok) {
@@ -210,23 +246,33 @@ async function cacheFirstWithUpdate(request) {
   }
 }
 
-function fetchAndCache(request) {
+function fetchAndCache(request, cacheName) {
   fetch(request)
     .then((response) => {
       if (response.ok) {
-        caches.open(CACHE_NAME).then((cache) => cache.put(request, response));
+        caches.open(cacheName).then((cache) => cache.put(request, response));
       }
     })
     .catch(() => {});
 }
 
-function shouldCacheRequest(request, url) {
-  // Only cache same-origin static assets to avoid opaque/cache-bloat issues.
-  if (url.origin !== self.location.origin) return false;
+/**
+ * Returns true for URL patterns that should use the runtime SWR cache:
+ * country, city, market, and content/guide pages.
+ */
+function isRuntimeCacheCandidate(url) {
+  const p = url.pathname;
+  return p.startsWith('/countries/') || p.startsWith('/content/');
+}
 
+/**
+ * Returns true if the request should use the cache-first strategy.
+ * Only same-origin, query-free style/script/font/manifest requests qualify.
+ */
+function shouldCacheRequest(request, url) {
+  if (url.origin !== self.location.origin) return false;
   // Query-param requests can explode cache cardinality; skip.
   if (url.search) return false;
-
-  const cacheableDestinations = new Set(['style', 'script', 'image', 'font', 'manifest']);
+  const cacheableDestinations = new Set(['style', 'script', 'font', 'manifest']);
   return cacheableDestinations.has(request.destination);
 }
