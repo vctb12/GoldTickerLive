@@ -1,9 +1,13 @@
 <!doctype html>
 <html lang="en" dir="ltr">
   <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578581906562588"
-         crossorigin="anonymous"></script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578581906562588"
+      crossorigin="anonymous"
+    ></script>
     <meta charset="UTF-8" />
+    <script src="assets/analytics.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Page Not Found — Gold Ticker Live</title>
     <meta name="robots" content="noindex, nofollow" />
@@ -18,9 +22,68 @@
         align-items: center;
         justify-content: center;
         min-height: 60vh;
-        padding: 2rem 1rem;
+        padding: 2rem 1rem 3rem;
         text-align: center;
       }
+
+      /* Live price pill — hidden until JS populates it */
+      .nf-price-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0 0 1.5rem;
+        padding: 0.4rem 0.9rem;
+        background: var(--surface-secondary, #f8f5ef);
+        border: 1px solid var(--border-subtle, #e2d9c8);
+        border-radius: 999px;
+        font-size: 0.8rem;
+      }
+
+      .nf-price-pill a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .nf-price-pill a:hover {
+        text-decoration: underline;
+      }
+
+      .nf-price-pill-label {
+        color: var(--text-secondary, #64748b);
+      }
+
+      .nf-price-pill-price {
+        color: var(--color-gold, #c4993e);
+        font-weight: 700;
+      }
+
+      .nf-price-pill-age {
+        color: var(--text-secondary, #64748b);
+      }
+
+      /* Age-based colour — mirrors home-page freshness states */
+      .nf-price-pill-age[data-freshness-key='cached'],
+      .nf-price-pill-age[data-freshness-key='stale'] {
+        color: var(--color-amber, #f59e0b);
+      }
+
+      .nf-price-pill-age[data-freshness-key='cached']::before,
+      .nf-price-pill-age[data-freshness-key='stale']::before {
+        content: '⚠ ';
+      }
+
+      .nf-price-pill-age[data-freshness-key='unavailable'] {
+        color: var(--color-danger, #dc2626);
+      }
+
+      .nf-price-pill-via {
+        color: var(--color-gold, #c4993e);
+        font-weight: 500;
+      }
+
       .notfound-code {
         font-size: clamp(5rem, 20vw, 9rem);
         font-weight: 800;
@@ -29,39 +92,47 @@
         letter-spacing: -0.04em;
         margin: 0 0 0.25rem;
       }
+
       .notfound-title {
         font-size: clamp(1.2rem, 4vw, 1.75rem);
         font-weight: 700;
         color: var(--text-primary, #0f172a);
-        margin: 0 0 0.75rem;
+        margin: 0 0 0.5rem;
       }
+
       .notfound-desc {
         color: var(--text-secondary, #64748b);
         font-size: 1rem;
-        max-width: 440px;
-        margin: 0 auto 2rem;
-        line-height: 1.6;
+        margin: 0 0 1.5rem;
       }
+
       .notfound-search {
         display: flex;
         gap: 0.5rem;
         width: 100%;
-        max-width: 400px;
-        margin: 0 auto 2.5rem;
+        max-width: 420px;
+        margin: 0 auto 2rem;
       }
+
       .notfound-search input {
         flex: 1;
+        min-height: 44px;
         padding: 0.65rem 1rem;
         border: 2px solid var(--border-default, #e2e8f0);
         border-radius: 8px;
         font-size: 0.95rem;
         outline: none;
         transition: border-color 0.15s;
+        background: var(--surface-primary, #fff);
+        color: var(--text-primary, #0f172a);
       }
+
       .notfound-search input:focus {
         border-color: var(--color-gold, #c4993e);
       }
+
       .notfound-search button {
+        min-height: 44px;
         padding: 0.65rem 1.2rem;
         background: var(--color-gold, #c4993e);
         color: #fff;
@@ -72,31 +143,111 @@
         cursor: pointer;
         transition: background 0.15s;
       }
+
       .notfound-search button:hover {
         background: var(--color-gold-dark, #8a6420);
       }
-      .notfound-links {
+
+      /* Primary card links (top 4 intents) */
+      .notfound-links--primary {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        width: 100%;
+        max-width: 540px;
+        margin: 0 auto 1.25rem;
+      }
+
+      @media (max-width: 480px) {
+        .notfound-links--primary {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .notfound-link--primary {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.6rem;
+        padding: 0.85rem 1rem;
+        border: 2px solid var(--border-default, #e2e8f0);
+        border-radius: 10px;
+        text-decoration: none;
+        color: var(--text-primary, #0f172a);
+        background: var(--surface-primary, #fff);
+        transition:
+          border-color 0.15s,
+          background 0.15s;
+        text-align: start;
+      }
+
+      .notfound-link--primary:hover {
+        border-color: var(--color-gold, #c4993e);
+        background: var(--color-gold-tint, #faf4e2);
+      }
+
+      .notfound-link-icon {
+        font-size: 1.25rem;
+        flex-shrink: 0;
+        line-height: 1.3;
+      }
+
+      .notfound-link-body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+      }
+
+      .notfound-link-body strong {
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .notfound-link-desc {
+        font-size: 0.78rem;
+        color: var(--text-secondary, #64748b);
+        line-height: 1.35;
+      }
+
+      /* Secondary chip links */
+      .notfound-links--secondary {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.75rem;
+        gap: 0.6rem;
         justify-content: center;
+        max-width: 540px;
+        margin: 0 auto;
       }
+
       .notfound-link {
         display: inline-flex;
         align-items: center;
-        gap: 0.4rem;
-        padding: 0.55rem 1.1rem;
-        border: 2px solid var(--border-default, #e2e8f0);
+        gap: 0.35rem;
+        min-height: 44px;
+        padding: 0.5rem 1rem;
+        border: 1.5px solid var(--border-default, #e2e8f0);
         border-radius: 8px;
         text-decoration: none;
         color: var(--text-primary, #0f172a);
-        font-size: 0.9rem;
+        font-size: 0.875rem;
         font-weight: 500;
-        transition: border-color 0.15s, background 0.15s;
+        background: var(--surface-primary, #fff);
+        transition:
+          border-color 0.15s,
+          background 0.15s;
       }
+
       .notfound-link:hover {
         border-color: var(--color-gold, #c4993e);
         background: var(--color-gold-tint, #faf4e2);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .notfound-search input,
+        .notfound-search button,
+        .notfound-link--primary,
+        .notfound-link {
+          transition: none;
+        }
       }
     </style>
   </head>
@@ -104,54 +255,106 @@
     <a class="skip-link" href="#main-content">Skip to main content</a>
     <main id="main-content">
       <div class="notfound-wrap">
-        <div class="notfound-code">404</div>
-        <h1 class="notfound-title">Page not found</h1>
-        <p class="notfound-desc">
-          We couldn't find that Gold Ticker Live page. Search the site or jump back into the main price
-          journey.
-        </p>
-        <form class="notfound-search" action="/content/search/" method="get" aria-label="Search Gold Ticker Live">
+        <!-- Live reference price pill (populated by not-found.js from local cache) -->
+        <div id="nf-freshness-pill" class="nf-price-pill" hidden aria-live="polite">
+          <a href="/tracker.html">
+            <span class="nf-price-pill-label" data-tx="notfound.freshness.label"
+              >Reference price</span
+            >
+            <strong class="nf-price-pill-price">
+              <span id="nf-spot-price">—</span>
+            </strong>
+            <span id="nf-freshness-age" class="nf-price-pill-age"></span>
+            <span class="nf-price-pill-via" data-tx="notfound.freshness.via">See live tracker →</span>
+          </a>
+        </div>
+
+        <div class="notfound-code" aria-hidden="true">404</div>
+        <h1 class="notfound-title" data-tx="notfound.heading">We couldn't find that page</h1>
+        <p class="notfound-desc" data-tx="notfound.desc">Here's what's nearby:</p>
+
+        <form
+          class="notfound-search"
+          action="/content/search/"
+          method="get"
+          aria-label="Search Gold Ticker Live"
+        >
           <input
+            id="nf-search-input"
             type="search"
             name="q"
             placeholder="Search gold prices, karats, countries…"
+            data-tx-placeholder="notfound.search.placeholder"
             aria-label="Search"
             autofocus
           />
-          <button type="submit" aria-label="Submit search">Search</button>
+          <button type="submit" data-tx="notfound.search.btn">Search</button>
         </form>
-        <nav class="notfound-links" aria-label="Quick navigation">
-          <a href="/" class="notfound-link">
-            <span aria-hidden="true">🏠</span>
-            Home
+
+        <!-- Primary intents: tracker · calculator · countries · search -->
+        <nav
+          class="notfound-links notfound-links--primary"
+          aria-label="Likely destinations"
+          data-tx-aria-label="notfound.nav.primary.label"
+        >
+          <a href="/tracker.html" class="notfound-link notfound-link--primary">
+            <span class="notfound-link-icon" aria-hidden="true">📈</span>
+            <span class="notfound-link-body">
+              <strong data-tx="notfound.link.tracker">Live Price Tracker</strong>
+              <span class="notfound-link-desc" data-tx="notfound.link.tracker.desc"
+                >Current prices for 24+ countries</span
+              >
+            </span>
           </a>
-          <a href="/tracker.html" class="notfound-link">
-            <span aria-hidden="true">📈</span>
-            Live Prices
+          <a href="/calculator.html" class="notfound-link notfound-link--primary">
+            <span class="notfound-link-icon" aria-hidden="true">🧮</span>
+            <span class="notfound-link-body">
+              <strong data-tx="notfound.link.calculator">Gold Calculator</strong>
+              <span class="notfound-link-desc" data-tx="notfound.link.calculator.desc"
+                >Estimate value, scrap payout &amp; Zakat</span
+              >
+            </span>
+          </a>
+          <a href="/countries/index.html" class="notfound-link notfound-link--primary">
+            <span class="notfound-link-icon" aria-hidden="true">🗺️</span>
+            <span class="notfound-link-body">
+              <strong data-tx="notfound.link.countries">Browse Countries</strong>
+              <span class="notfound-link-desc" data-tx="notfound.link.countries.desc"
+                >All 24+ dedicated market pages</span
+              >
+            </span>
+          </a>
+          <a href="/content/search/" class="notfound-link notfound-link--primary">
+            <span class="notfound-link-icon" aria-hidden="true">🔍</span>
+            <span class="notfound-link-body">
+              <strong data-tx="notfound.link.search">Search the site</strong>
+              <span class="notfound-link-desc" data-tx="notfound.link.search.desc"
+                >Find any page or country</span
+              >
+            </span>
+          </a>
+        </nav>
+
+        <!-- Secondary chips -->
+        <nav
+          class="notfound-links notfound-links--secondary"
+          aria-label="More pages"
+          data-tx-aria-label="notfound.nav.secondary.label"
+        >
+          <a href="/" class="notfound-link">
+            <span aria-hidden="true">🏠</span> Home
           </a>
           <a href="/countries/uae/" class="notfound-link">
-            <span aria-hidden="true">🇦🇪</span>
-            UAE Prices
-          </a>
-          <a href="/calculator.html" class="notfound-link">
-            <span aria-hidden="true">🧮</span>
-            Calculator
+            <span aria-hidden="true">🇦🇪</span> UAE Prices
           </a>
           <a href="/shops.html" class="notfound-link">
-            <span aria-hidden="true">🏪</span>
-            Shops
-          </a>
-          <a href="/countries/index.html" class="notfound-link">
-            <span aria-hidden="true">🗺️</span>
-            Countries
+            <span aria-hidden="true">🏪</span> Shops
           </a>
           <a href="/learn.html" class="notfound-link">
-            <span aria-hidden="true">📚</span>
-            Learn
+            <span aria-hidden="true">📚</span> Learn
           </a>
           <a href="/methodology.html" class="notfound-link">
-            <span aria-hidden="true">🧭</span>
-            Methodology
+            <span aria-hidden="true">🧭</span> Methodology
           </a>
         </nav>
       </div>
