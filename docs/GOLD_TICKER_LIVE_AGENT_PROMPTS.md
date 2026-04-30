@@ -4353,3 +4353,526 @@ PR with focused commits: UX, perf, schema, translations.
 - → [§42 Mobile-First Layout Audit](#42-mobile-first-layout-audit)
 
 ---
+
+## 33. Social Sharing & Embed Widget
+
+**Purpose:**
+Social-share buttons and an embed widget extend Gold Ticker Live beyond the site itself.
+Shares need clean OG/Twitter cards; embeds need a tiny script that renders a live price
+without taking down the host page. This prompt keeps both polished and safe.
+
+**When to use:**
+- Share buttons miss platforms or use stale OG data.
+- Embed widget renders heavy or breaks the host page's CSP.
+- A new share target (e.g. WhatsApp) is being added.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading social sharing and the embed widget on Gold Ticker Live. Lightweight,
+CSP-safe, branded.
+
+INSPECT FIRST
+1. Find share buttons: `rg -n 'share|twitter|whatsapp|facebook' src/pages/ src/components/`.
+2. Find the embed widget: likely `content/embed/` or `src/components/embed.js`
+   (verify path).
+3. Read OG/Twitter card emission in `src/seo/seoHead.js`.
+4. Read translations `share.*`, `embed.*`.
+
+WORK — share
+- Buttons: X/Twitter, WhatsApp, Telegram, Copy link.
+- Each opens an `https://*` intent URL with a pre-filled message that includes price
+  + AED/USD + source + canonical URL. Bilingual.
+- Buttons have aria-labels.
+
+WORK — OG/Twitter cards
+- Branded OG image, locale-aware title, description ≤ 200 chars.
+- Twitter `summary_large_image` card.
+- Card emission consistent across pages.
+
+WORK — embed
+- Tiny script (≤ 5 KB gzipped) renders a price card on a host page.
+- No external CSS imports — inline + scoped.
+- Works under strict CSP (`script-src 'self' goldtickerlive.com`).
+- Branded with a "Powered by Gold Ticker Live" link.
+
+CONSTRAINTS
+- No tracking pixels in the embed.
+- Bilingual (host page lang detected or via attribute).
+
+VERIFY
+- `npm run validate`, `npm run seo-audit`, `npm test`, `npm run build`.
+- Manual: paste embed snippet in a sandbox host; verify CSP behavior.
+
+DELIVERABLE
+PR with focused commits: share, OG/Twitter, embed, translations.
+```
+
+**Files / surfaces to inspect:**
+- `src/components/embed.js` (verify path), `content/embed/` (verify path).
+- `src/seo/seoHead.js`.
+- `src/config/translations.js` (`share.*`, `embed.*`).
+
+**Required checks:**
+- `npm run validate`, `npm run seo-audit`, `npm test`, `npm run build`.
+
+**Expected final report:**
+- Share targets covered.
+- OG/Twitter card sample verified.
+- Embed bundle size + CSP behavior.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Lightweight posture — embed must not pull external CSS or trackers.
+
+**Failure modes to watch for:**
+- Embed pulls jQuery from CDN.
+- Share message hardcodes a price (instantly stale).
+- OG image 404s.
+- WhatsApp share URL malformed.
+
+**Cross-references:**
+- → [§10 SEO and Indexing Prompt](#10-seo-and-indexing-prompt)
+- → [§28 X/Twitter Automation Polish](#28-xtwitter-automation-polish)
+- → [§31 Footer, Internal Links & Breadcrumbs](#31-footer-internal-links--breadcrumbs)
+
+---
+
+## 34. Submit Shop & Order Gold Flows
+
+**Purpose:**
+The submit-shop form (public) and order-gold flow are user-facing entry points that feed
+the admin panel and external partners. They must validate inputs, double-opt-in for
+contact, and keep submission data behind atomic writes.
+
+**When to use:**
+- Submission form rejects valid inputs or accepts invalid ones.
+- Pending shops queue grows but admin approve flow is broken.
+- Order-gold flow needs polish or a partner-handoff change.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the submit-shop and order-gold flows on Gold Ticker Live. Public-facing,
+atomic-write-backed, admin-reviewed.
+
+INSPECT FIRST
+1. Read the submit-shop form HTML and JS.
+2. Read `server/routes/submissions.js` (`POST /api/submit-shop`).
+3. Read `server/repositories/pending-shops.repository.js` (atomic writes to
+   `data/pending_shops.json`).
+4. Read `server/routes/admin/index.js` for the `/api/admin/pending-shops` review routes.
+5. Read translations `submitShop.*`, `order.*`.
+
+WORK — submit-shop
+- Required fields: shop name, city, country, contact (email or phone). Optional: hours,
+  evidence (photo URL).
+- Client + server validation (length, email/phone shape, URL safety).
+- Honeypot field for spam.
+- Success page explains "we'll review and contact you" with bilingual messaging.
+
+WORK — order-gold
+- Clear "this is a referral, not a checkout" disclaimer.
+- Partner handoff via an `https://` link with UTM params (track via analytics).
+- Bilingual EN + AR.
+
+WORK — admin review
+- List view: submitter, timestamp, location, evidence link, approve/reject.
+- Approve appends to `data/shops.json` (or the equivalent canonical store) with
+  `normalize-shops.js` re-run.
+- Reject removes from `pending_shops.json`.
+
+CONSTRAINTS
+- Atomic writes on the JSON store.
+- Bilingual.
+- Don't accept arbitrary URLs without safe-parse.
+
+VERIFY
+- `npm run validate`, `npm test` (`tests/repositories.test.js`, `tests/server*`),
+  `npm run lint`, `npm run build`.
+- Manual: submit a test shop end-to-end through admin.
+
+DELIVERABLE
+PR with focused commits: form, server routes, repository, admin UI, translations.
+```
+
+**Files / surfaces to inspect:**
+- Submit-shop form HTML + JS (verify path, often `content/submit-shop/`).
+- `server/routes/submissions.js`, `server/repositories/pending-shops.repository.js`,
+  `server/routes/admin/index.js`.
+- `data/pending_shops.json` (test fixture, never edit by hand).
+- `src/config/translations.js` (`submitShop.*`, `order.*`).
+
+**Required checks:**
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- Manual end-to-end submission + admin approval.
+
+**Expected final report:**
+- Validation matrix (client + server).
+- Spam mitigation in place.
+- Partner handoff verified.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Atomic writes on `data/pending_shops.json` are required to avoid corruption under
+  concurrent submissions.
+- Don't expose admin endpoints to public.
+
+**Failure modes to watch for:**
+- Server accepts a shop name with `<script>` tags (no escaping).
+- Honeypot missing — pending list fills with spam.
+- Approve button doesn't actually move the entry to `shops.json`.
+- AR copy reads as a literal translation.
+- Partner link opens in same tab without `rel="noopener"`.
+
+**Cross-references:**
+- → [§13 Shops Directory Prompt](#13-shops-directory-prompt)
+- → [§26 Admin Panel UX](#26-admin-panel-ux)
+- → [§44 Supabase Data Sync](#44-supabase-data-sync)
+
+---
+
+## 35. Dark Mode & Theme System
+
+**Purpose:**
+Dark mode is a major preference signal in 2026 and a baseline expectation for a
+data-display product. The theme system must respect OS preference, persist user choice,
+and not flash light-mode on first paint.
+
+**When to use:**
+- Theme toggle is missing, broken, or out-of-sync with OS preference.
+- FOUC (flash of unstyled content) on theme load.
+- Color tokens don't have dark-mode equivalents.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the theme system on Gold Ticker Live. Three states: light, dark, system.
+No FOUC, persisted, RTL-safe.
+
+INSPECT FIRST
+1. Read `styles/global.css` token definitions (`--surface-primary`, `--surface-secondary`,
+   `--text-primary`, `--text-secondary`, `--border-subtle`, `--color-accent`, etc.).
+2. Read `src/components/nav.js` `_cycleTheme()`, `_applyTheme()` (theme buttons in both
+   desktop and drawer).
+3. Look for an early inline theme-init script in `<head>` of every page (prevents FOUC).
+4. Read translations `theme.*`.
+
+WORK — system
+- Three states: `light`, `dark`, `system`. Default = `system`.
+- Persist to `user_prefs.theme` in localStorage.
+- Inline `<script>` in `<head>` reads `localStorage` and OS preference, sets
+  `data-theme` on `<html>` BEFORE first paint.
+- Listen to OS theme-change events when in `system`.
+
+WORK — tokens
+- Every color used in CSS comes from a token. Light + dark variants of every token live
+  in `styles/global.css`.
+- Removed legacy `var(--color-surface, #fff)` fallbacks (Round 15).
+
+WORK — toggle UI
+- Desktop button cycles light → dark → system.
+- Drawer button mirrored. Both update on `_applyTheme()`.
+- Tap target ≥ 44 px. aria-label changes per state.
+
+CONSTRAINTS
+- No FOUC.
+- All animations respect `prefers-reduced-motion: reduce`.
+- Bilingual (theme labels in EN + AR).
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`, `npm run a11y`.
+- Manual: cycle theme on home, tracker, calculator. Reload — no FOUC.
+
+DELIVERABLE
+PR with focused commits: tokens, init script, toggle, translations, tests.
+```
+
+**Files / surfaces to inspect:**
+- `styles/global.css` (tokens), `styles/pages/*.css` (theme overrides).
+- `src/components/nav.js` (`_cycleTheme`, `_applyTheme`).
+- Inline theme-init script (verify in `<head>` of `index.html`, etc.).
+- `src/config/translations.js` (`theme.*`).
+
+**Required checks:**
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`, `npm run a11y`.
+
+**Expected final report:**
+- Theme cycle verified (light/dark/system).
+- FOUC absent on cold load.
+- Token coverage (no hardcoded hex outside `styles/global.css`).
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Don't change localStorage key (`user_prefs`) — see [§50](#50-safety-rules-and-carve-outs).
+
+**Failure modes to watch for:**
+- FOUC on first paint.
+- Drawer button drifts from desktop button.
+- Tokens used in JS via `getComputedStyle` and not re-fetched on theme change.
+- Hardcoded `#fff` / `#000` outside the token system.
+- AR drawer toggle missing.
+
+**Cross-references:**
+- → [§8 Full UI/UX Revamp Prompt](#8-full-uiux-revamp-prompt)
+- → [§12 Arabic / RTL Quality Prompt](#12-arabic--rtl-quality-prompt)
+- → [§42 Mobile-First Layout Audit](#42-mobile-first-layout-audit)
+
+---
+
+## 36. Analytics Events Standardization
+
+**Purpose:**
+`src/lib/analytics.js` exports `EVENTS` (frozen constants) and `track(name, params)`.
+Consistent event names + payloads make funnel analysis possible. Drift breaks dashboards.
+
+**When to use:**
+- New event needs to be added.
+- Existing call sites pass mismatched payloads.
+- Non-module scripts need access to event names (`window.GP_EVENTS`).
+
+**Copy-paste prompt:**
+
+```text
+You are standardizing analytics events on Gold Ticker Live. `src/lib/analytics.js` is the
+single source of truth. `window.GP_EVENTS` mirrors constants for non-module scripts via
+`assets/analytics.js`.
+
+INSPECT FIRST
+1. Read `src/lib/analytics.js` (`EVENTS` frozen, `track(name, params)`).
+2. Read `assets/analytics.js` (`window.GP_EVENTS` mirror).
+3. Find call sites: `src/tracker/events.js`, `src/pages/tracker-pro.js`,
+   `src/pages/calculator.js`, `src/pages/home.js`, `src/components/nav.js`,
+   `src/components/footer.js`.
+4. Read `docs/ANALYTICS_EVENTS.md`.
+
+WORK — events
+- Add new event constants to `EVENTS` (frozen; freeze after add).
+- Mirror to `window.GP_EVENTS`.
+- Document each event in `docs/ANALYTICS_EVENTS.md` (name, when, payload schema).
+
+WORK — call sites
+- Every `track()` call uses an `EVENTS.*` constant — no string literals.
+- Payload follows the documented schema.
+
+WORK — privacy
+- No PII in payloads (no email, no phone, no precise location).
+- Aggregate or hash where needed.
+
+CONSTRAINTS
+- Don't rename existing event constants — analytics dashboards reference them.
+- No PII.
+- Bilingual labels are not events; events stay in canonical English snake_case.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- `rg "track\(['\"]" src/` — every match should be an `EVENTS.*` reference.
+
+DELIVERABLE
+PR with focused commits: events, mirror, call sites, docs.
+```
+
+**Files / surfaces to inspect:**
+- `src/lib/analytics.js`, `assets/analytics.js`.
+- Call sites listed above.
+- `docs/ANALYTICS_EVENTS.md`.
+
+**Required checks:**
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- Ripgrep audit for string-literal `track()` calls.
+
+**Expected final report:**
+- Events added/changed.
+- Call-site coverage.
+- Schema doc updated.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Renaming an event breaks dashboards — never do it without owner approval and a doc note.
+
+**Failure modes to watch for:**
+- New `track('something', …)` with a string literal instead of `EVENTS.SOMETHING`.
+- PII in payloads.
+- `window.GP_EVENTS` and `EVENTS` drift.
+- Doc not updated for new event.
+
+**Cross-references:**
+- → [§16 Docs and Governance Prompt](#16-docs-and-governance-prompt)
+- → [§37 GitHub Actions Workflow Hardening](#37-github-actions-workflow-hardening)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+
+---
+
+## 37. GitHub Actions Workflow Hardening
+
+**Purpose:**
+The repo has 13 workflows including the production hourly X-post (`post_gold.yml`),
+deploy, CI, lighthouse, perf, semgrep, codeql, sync-db-to-git, uptime, alerts. Hardening
+means SHA-pinned actions, minimal `permissions:`, no echoed secrets, fast feedback.
+
+**When to use:**
+- Adding a new workflow.
+- An action's tag was bumped without updating the SHA pin.
+- A workflow leaks logs or runs longer than necessary.
+
+**Copy-paste prompt:**
+
+```text
+You are hardening GitHub Actions workflows on Gold Ticker Live. SHA-pinned, minimal
+permissions, no secret echoes, fast.
+
+INSPECT FIRST
+1. Read `.github/workflows/README.md` — central SHA-pin reference table.
+2. Read every `.github/workflows/*.yml`. Confirm:
+   - All `uses:` refs are full commit SHAs with a `# vX` comment.
+   - `permissions:` block is minimal (default-deny, opt-in).
+   - No `echo $SECRET` or `run: echo "${{ secrets.* }}"` patterns.
+   - Concurrency groups present where useful.
+3. Note `.github/workflows/post_gold.yml` is LIVE; `tests/sw-exclusions.test.js`
+   gating must stay green.
+
+WORK — pinning
+- Every action pinned to a full 40-char SHA.
+- README table updated when a SHA is bumped.
+
+WORK — permissions
+- `contents: read` by default; `contents: write` only when committing.
+- `id-token: write` only when needed.
+
+WORK — secrets
+- Never echoed.
+- Used via `${{ secrets.X }}` directly in `with:` or env, not in `run:` shell expressions.
+
+WORK — performance
+- Cache `node_modules` via setup-node `cache: 'npm'`.
+- Concurrency group `cancel-in-progress: true` for PR builds.
+- Skip CI on `[skip ci]` commit prefix where appropriate (data sync).
+
+CONSTRAINTS
+- Don't change `post_gold.yml` cadence without owner approval.
+- Don't pin to a tag.
+- Don't echo secrets.
+
+VERIFY
+- `actionlint .github/workflows/` (verify installed).
+- Re-run all CI jobs on a no-op commit; confirm pass.
+
+DELIVERABLE
+PR with focused commits: pinning, permissions, secrets, perf, README table.
+```
+
+**Files / surfaces to inspect:**
+- `.github/workflows/*.yml` (all 13).
+- `.github/workflows/README.md` (SHA table).
+- `tests/sw-exclusions.test.js`.
+
+**Required checks:**
+- `actionlint` (verify installed).
+- Workflow re-run on a no-op commit.
+
+**Expected final report:**
+- SHA pins audited (count + any drift).
+- Permissions audit per workflow.
+- Secret echo audit.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- `post_gold.yml` is production — see [§50](#50-safety-rules-and-carve-outs).
+
+**Failure modes to watch for:**
+- A `uses:` got bumped to a tag.
+- `permissions: write-all` left over from copy-paste.
+- `run: echo "${{ secrets.GH_TOKEN }}"` left in for "debugging".
+- Concurrency group missing → duplicate deploys.
+- README SHA table drifted from workflow files.
+
+**Cross-references:**
+- → [§28 X/Twitter Automation Polish](#28-xtwitter-automation-polish)
+- → [§38 Pre-deploy, Changelog & Release](#38-pre-deploy-changelog--release)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+
+---
+
+## 38. Pre-deploy, Changelog & Release
+
+**Purpose:**
+`npm run pre-deploy` runs 11 go/no-go checks; `pre-deploy:fast` skips tests; the changelog
+script keeps `CHANGELOG.md` aligned with merged PRs; `release:package` bundles a release
+artifact. This prompt keeps the release pipeline reliable and documented.
+
+**When to use:**
+- Pre-deploy fails and the failure mode is unclear.
+- Changelog has drifted from PR history.
+- A new go/no-go check needs to be added.
+
+**Copy-paste prompt:**
+
+```text
+You are working on the pre-deploy / changelog / release pipeline on Gold Ticker Live.
+`scripts/node/*.js` are CJS (root `package.json` is `"type":"commonjs"`).
+
+INSPECT FIRST
+1. Read `scripts/node/pre-deploy-check.js` (11 checks; always exits 1 on failures).
+2. Read `scripts/node/changelog.js` and `package.json` `changelog`/`changelog:write`.
+3. Read `scripts/node/package-release.js`.
+4. Read `package.json` scripts (`pre-deploy`, `pre-deploy:fast`, `pre-deploy:ci`,
+   `changelog`, `release:package`).
+
+WORK — pre-deploy
+- Each of the 11 checks has a clear pass/fail message.
+- New checks added with the existing function-per-check pattern.
+- `--ci` mode skips interactive prompts; `--skip-tests` shaves time.
+
+WORK — changelog
+- Generated from PR titles since the last tag.
+- Manual edits preserved between regenerations.
+- AR not required for changelog (developer-facing).
+
+WORK — release
+- `release:package` produces a deterministic artifact (no timestamps in zipped files).
+- Artifact name includes version + git short-sha.
+
+CONSTRAINTS
+- CJS only in `scripts/node/`.
+- Don't break `pre-deploy:ci`.
+- Don't change exit-code conventions (always 1 on failures).
+
+VERIFY
+- `npm run pre-deploy:fast` (locally — must complete).
+- `npm run changelog` (must produce a clean diff or no-op).
+- `npm test`, `npm run lint`.
+
+DELIVERABLE
+PR with focused commits: checks, changelog, release packaging, docs.
+```
+
+**Files / surfaces to inspect:**
+- `scripts/node/pre-deploy-check.js`, `scripts/node/changelog.js`,
+  `scripts/node/package-release.js`.
+- `package.json` scripts.
+- `CHANGELOG.md`.
+
+**Required checks:**
+- `npm run pre-deploy:fast`, `npm run changelog`, `npm test`, `npm run lint`.
+
+**Expected final report:**
+- Checks added / fixed.
+- Changelog status.
+- Release artifact name + size.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- CJS in `scripts/node/` (root is `"type":"commonjs"`); ESM `import` syntax fails at runtime.
+
+**Failure modes to watch for:**
+- A check returns 0 on failure ("oops, exit code reversed").
+- ESM `import` statement added to a `scripts/node/*.js`.
+- Changelog overwrites manual edits.
+- Release artifact filename non-deterministic.
+
+**Cross-references:**
+- → [§7 Before New PR Prompt](#7-before-new-pr-prompt)
+- → [§20 Final Verification and Deploy Safety Prompt](#20-final-verification-and-deploy-safety-prompt)
+- → [§37 GitHub Actions Workflow Hardening](#37-github-actions-workflow-hardening)
+
+---
