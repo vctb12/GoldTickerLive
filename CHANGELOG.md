@@ -4,6 +4,55 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Repo cleanup — 2026-04-30 session
+
+**CSS token centralization:**
+
+- refactor(css): define 8 previously-undefined CSS tokens in `styles/global.css` — `--color-accent`,
+  `--color-accent-strong`, `--color-amber`, `--color-danger`, `--color-surface-1`,
+  `--color-surface-raised`, `--color-text-secondary`, `--color-gold-alpha`. Each token now has a
+  correct value in light mode and a corresponding dark-mode override.
+- refactor(css): remove ~60 incorrect dark-theme fallback values from `var()` calls in
+  `styles/pages/shops.css` — replaced with canonical semantic aliases (`--text-primary`,
+  `--text-secondary`, `--text-tertiary`, `--border-default`, `--surface-canvas`,
+  `--surface-primary`). The fallback values were stale vestiges of the old dark-only design and
+  pointed to the wrong colors in light mode.
+- fix(css): `styles/pages/terms.css` — `var(--color-surface-raised, #201e19)` now resolves via the
+  newly-defined `--color-surface-raised` token instead of falling back to a dark `#201e19` value.
+  Similarly, `var(--color-text-secondary, #c8bfa8)` now resolves correctly in light mode via
+  `--text-secondary`.
+- refactor(css): remove ~15 incorrect fallback values from `var()` calls in `styles/pages/terms.css`
+  (same pattern as shops.css).
+- docs(css): add **Design Token System** section to `docs/ARCHITECTURE.md` documenting canonical
+  token categories, the semantic alias layer, and the agent rule for future changes.
+
+**Constants cleanup:**
+
+- refactor(js): `src/pages/calculator.js` — replace magic literal `31.1035` (troy oz) with
+  `CONSTANTS.TROY_OZ_GRAMS` (already imported); eliminates duplication with the authoritative
+  constant in `src/config/constants.js`.
+- refactor(js): `src/pages/calculator/utils.js` — add `import { CONSTANTS }` from config index;
+  replace magic literal `31.1035` with `CONSTANTS.TROY_OZ_GRAMS`.
+
+**Dead-file archive:**
+
+- chore(archive): `scripts/node/cleanup-audit.js` → `scripts/archive/cleanup-audit.js`. This
+  one-shot audit script has no callers in any workflow or import graph; archived to reduce
+  maintenance surface.
+- chore(archive): `src/seo/seoHead.js` → `scripts/archive/seoHead.js`. The module has no imports or
+  dynamic requires anywhere in the codebase; archived rather than deleted to preserve the
+  implementation as reference.
+
+**Docs:**
+
+- docs(arch): `docs/ARCHITECTURE.md` — correct the "Data Flow" section which incorrectly referenced
+  `src/services/goldPriceService.js`, `src/services/fxService.js`, and
+  `src/services/pricingEngine.js` (those are under `server/services/`). The browser client uses
+  `src/lib/api.js` and `src/lib/price-calculator.js` directly.
+- docs(arch): fix formula comment in Data Flow from `31.1035` → `TROY_OZ_GRAMS` (uses the symbol now
+  that the constant is authoritative).
+- docs(arch): add `scripts/archive/` entry to the Folder Structure map.
+
 ### Multi-track polish — 2026-04-27 session
 
 **CSS / nav fixes (items from navbar-audit plan Phase 2):**

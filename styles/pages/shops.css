@@ -106,7 +106,7 @@
 .shops-kicker::before {
   content: '◆';
   font-size: 0.65rem;
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold);
 }
 
 #shops-title {
@@ -329,7 +329,7 @@
   font-weight: var(--weight-bold);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--color-text-muted, #888);
+  color: var(--text-secondary);
 }
 
 .shops-control--wide {
@@ -345,7 +345,7 @@
   height: 18px;
   min-height: 18px;
   margin: 0;
-  accent-color: var(--color-gold, #d4a017);
+  accent-color: var(--color-gold);
 }
 
 .shops-control--checkbox input[type='checkbox']:focus-visible {
@@ -355,16 +355,16 @@
 
 .shops-control-help {
   font-size: 0.74rem;
-  color: var(--color-text-muted, #888);
+  color: var(--text-secondary);
   line-height: 1.35;
 }
 
 .shops-control input:not([type='checkbox']),
 .shops-control select {
-  border: 1px solid var(--color-border, #2e2b24);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
-  background: var(--color-bg, #131210);
-  color: var(--color-text, #e8e0cc);
+  background: var(--surface-canvas);
+  color: var(--text-primary);
   padding: 0.68rem 0.8rem;
   font-size: 0.9rem;
   font-family: var(--font-main, inherit);
@@ -393,12 +393,12 @@
 .shops-control input:not([type='checkbox']):focus,
 .shops-control select:focus {
   outline: none;
-  border-color: var(--color-gold, #d4a017);
+  border-color: var(--color-gold);
   box-shadow: 0 0 0 3px rgb(212 160 23 / 14%);
 }
 
 .shops-control input:not([type='checkbox'])::placeholder {
-  color: var(--color-text-faint, #555);
+  color: var(--text-tertiary);
 }
 
 /* ── Featured section ───────────────────────────────────────────────────── */
@@ -409,7 +409,7 @@
 .shops-featured-title {
   font-size: clamp(1.1rem, 2.2vw, 1.3rem);
   font-weight: var(--weight-bold);
-  color: var(--color-text, #e8e0cc);
+  color: var(--text-primary);
   margin: 0 0 1rem;
 }
 
@@ -425,7 +425,7 @@
   margin: 0.85rem 0 0;
   font-size: var(--text-xs, 0.78rem);
   line-height: var(--leading-normal, 1.5);
-  color: var(--color-text-muted, rgb(232 224 204 / 65%));
+  color: var(--text-secondary);
   font-style: italic;
   max-width: 62ch;
 }
@@ -435,11 +435,11 @@
 .shops-directory-reviewed {
   margin: 0.25rem 0 0.5rem;
   font-size: var(--text-xs, 0.78rem);
-  color: var(--color-text-muted, rgb(232 224 204 / 65%));
+  color: var(--text-secondary);
 }
 
 .featured-card {
-  background: var(--color-surface, #1a1814);
+  background: var(--surface-primary);
   border: 1px solid rgb(212 160 23 / 28%);
   border-radius: var(--radius-lg);
   padding: 1rem;
@@ -468,20 +468,20 @@
 .featured-header h3 {
   font-size: 0.95rem;
   font-weight: var(--weight-bold);
-  color: var(--color-text, #e8e0cc);
+  color: var(--text-primary);
   margin: 0;
   line-height: 1.25;
 }
 
 .featured-location {
   font-size: var(--text-xs);
-  color: var(--color-text-muted, #888);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .featured-market {
   font-size: 0.82rem;
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold);
   font-weight: var(--weight-semibold);
   margin: 0;
 }
@@ -498,7 +498,7 @@
   background: rgb(212 160 23 / 8%);
   border: 1px solid rgb(212 160 23 / 20%);
   border-radius: var(--radius-pill);
-  color: var(--color-text-muted, #888);
+  color: var(--text-secondary);
   font-weight: var(--weight-semibold);
   white-space: nowrap;
 }
@@ -519,7 +519,7 @@
   background: rgb(212 160 23 / 12%);
   border: 1px solid rgb(212 160 23 / 28%);
   border-radius: var(--radius-pill);
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold);
   font-size: 0.78rem;
   font-weight: var(--weight-semibold);
   cursor: pointer;
@@ -548,14 +548,14 @@
 
 .shops-filter-pill--clear-all {
   background: transparent;
-  border-color: var(--color-text-muted, #888);
-  color: var(--color-text-muted, #888);
+  border-color: var(--text-secondary);
+  color: var(--text-secondary);
   font-weight: var(--weight-semibold);
 }
 
 .shops-filter-pill--clear-all:hover {
-  border-color: var(--color-error, #e57373);
-  color: var(--color-error, #e57373);
+  border-color: var(--color-error);
+  color: var(--color-error);
   background: transparent;
 }
 
@@ -581,18 +581,18 @@
 #shops-results-title {
   font-size: clamp(1.1rem, 2.2vw, 1.45rem);
   font-weight: var(--weight-bold);
-  color: var(--color-text, #e8e0cc);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .shops-active-filters {
-  color: var(--color-text-muted, #888);
+  color: var(--text-secondary);
   font-size: 0.82rem;
 }
 
 .shops-results-disclaimer {
   margin: 0.1rem 0 0;
-  color: var(--color-text-muted, #8e897b);
+  color: var(--text-secondary);
   font-size: 0.78rem;
   line-height: 1.45;
   max-width: 680px;
@@ -608,7 +608,7 @@
 }
 
 #shops-count {
-  color: var(--color-gold-dark, #b8860b);
+  color: var(--color-gold-dark);
   font-weight: var(--weight-bold);
   background: rgb(212 160 23 / 8%);
   border: 1px solid rgb(212 160 23 / 22%);
@@ -653,13 +653,13 @@
 .shop-card--featured {
   border-color: rgb(196 153 62 / 38%);
   border-left-width: 3px;
-  border-left-color: var(--color-gold, #d4a017);
+  border-left-color: var(--color-gold);
   padding-left: calc(1.15rem - 2px);
 }
 
 .shop-card--featured:hover {
   border-color: rgb(212 160 23 / 55%);
-  border-left-color: var(--color-gold, #d4a017);
+  border-left-color: var(--color-gold);
   box-shadow:
     0 8px 24px rgb(0 0 0 / 25%),
     0 0 0 1px rgb(212 160 23 / 18%),
@@ -668,9 +668,9 @@
 
 [dir='rtl'] .shop-card--featured {
   border-left-width: 1px;
-  border-left-color: var(--color-border, #2e2b24);
+  border-left-color: var(--border-default);
   border-right-width: 3px;
-  border-right-color: var(--color-gold, #d4a017);
+  border-right-color: var(--color-gold);
   padding-left: 1.15rem;
   padding-right: calc(1.15rem - 2px);
 }
@@ -694,7 +694,7 @@
 .shop-card h3 {
   font-size: 0.98rem;
   font-weight: var(--weight-bold);
-  color: var(--color-text, #e8e0cc);
+  color: var(--text-primary);
   line-height: 1.3;
   margin: 0;
 }
@@ -741,7 +741,7 @@
   gap: 0.25rem;
   font-size: 0.68rem;
   font-weight: var(--weight-bold);
-  color: var(--color-gold-dark, #b8860b);
+  color: var(--color-gold-dark);
   background: rgb(212 160 23 / 10%);
   border: 1px solid rgb(212 160 23 / 28%);
   border-radius: var(--radius-pill);
@@ -759,9 +759,9 @@
   align-items: center;
   font-size: 0.68rem;
   font-weight: var(--weight-bold);
-  color: var(--color-text, #e8e0cc);
+  color: var(--text-primary);
   background: rgb(255 255 255 / 4%);
-  border: 1px solid var(--color-border, #2e2b24);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-pill);
   padding: 0.28rem 0.65rem;
   white-space: normal;
@@ -822,7 +822,7 @@
 
 .shop-confidence-item span {
   font-size: 0.66rem;
-  color: var(--color-text-faint, #555);
+  color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: var(--weight-bold);
@@ -830,7 +830,7 @@
 
 .shop-confidence-item strong {
   font-size: 0.8rem;
-  color: var(--color-text, #e8e0cc);
+  color: var(--text-primary);
   font-weight: var(--weight-bold);
   line-height: 1.35;
 }
@@ -848,7 +848,7 @@
 
 .shop-meta span {
   font-size: 0.68rem;
-  color: var(--color-text-faint, #555);
+  color: var(--text-tertiary);
   font-weight: var(--weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -856,7 +856,7 @@
 
 .shop-meta strong {
   font-size: 0.88rem;
-  color: var(--color-text, #e8e0cc);
+  color: var(--text-primary);
   font-weight: 500;
   line-height: 1.35;
 }
@@ -873,15 +873,15 @@
   font-size: 0.72rem;
   padding: 0.22rem 0.6rem;
   background: rgb(255 255 255 / 4%);
-  border: 1px solid var(--color-border, #2e2b24);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-pill);
-  color: var(--color-text-muted, #888);
+  color: var(--text-secondary);
   font-weight: var(--weight-semibold);
   white-space: nowrap;
 }
 
 .shop-tag--muted {
-  color: var(--color-gold-dark, #b8860b);
+  color: var(--color-gold-dark);
   background: rgb(212 160 23 / 7%);
   border-color: rgb(212 160 23 / 20%);
 }
@@ -889,21 +889,21 @@
 /* ── Notes & contact ─────────────────────────────────────────────────────── */
 .shop-notes {
   font-size: 0.85rem;
-  color: var(--color-text-muted, #888);
+  color: var(--text-secondary);
   line-height: 1.55;
   margin: 0;
 }
 
 .shop-contact {
   font-size: 0.82rem;
-  color: var(--color-text-muted, #888);
-  border-top: 1px solid var(--color-border, #2e2b24);
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-default);
   padding-top: 0.6rem;
   margin: 0;
 }
 
 .shop-site-link {
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold);
   font-weight: var(--weight-semibold);
   text-decoration: none;
 }
@@ -918,7 +918,7 @@
   padding: 2.5rem 1.5rem;
   border-radius: var(--radius-lg);
   border: 1px dashed rgb(212 160 23 / 20%);
-  background: var(--color-surface, #1a1814);
+  background: var(--surface-primary);
   display: grid;
   gap: 0.5rem;
   text-align: center;
@@ -928,13 +928,13 @@
 #shops-empty-title {
   font-size: var(--text-base);
   font-weight: var(--weight-bold);
-  color: var(--color-text, #e8e0cc);
+  color: var(--text-primary);
   margin: 0;
 }
 
 #shops-empty-text {
   font-size: 0.88rem;
-  color: var(--color-text-muted, #888);
+  color: var(--text-secondary);
   margin: 0;
   max-width: 360px;
 }
@@ -947,7 +947,7 @@
   font-weight: var(--weight-bold);
   font-size: 0.85rem;
   background: transparent;
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold);
   cursor: pointer;
   min-height: 44px;
   font-family: var(--font-main, inherit);
@@ -959,18 +959,18 @@
 .shops-clear-btn:hover,
 .shops-clear-btn:focus-visible {
   background: rgb(212 160 23 / 10%);
-  border-color: var(--color-gold, #d4a017);
+  border-color: var(--color-gold);
   outline: none;
 }
 
 .shops-empty-submit {
   font-size: 0.82rem;
-  color: var(--color-text-muted, #888);
+  color: var(--text-secondary);
   margin: 0.25rem 0 0;
 }
 
 .shops-empty-submit-link {
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold);
   text-decoration: none;
   font-weight: var(--weight-medium);
 }
@@ -981,7 +981,7 @@
 
 .shops-resource-chip--submit {
   border-color: rgb(212 160 23 / 40%);
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold);
 }
 
 /* ── Info section ────────────────────────────────────────────────────────── */
@@ -1001,7 +1001,7 @@
   font-size: var(--text-base);
   font-weight: var(--weight-bold);
   margin: 0 0 1rem;
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold);
   letter-spacing: -0.01em;
 }
 
@@ -1012,7 +1012,7 @@
 }
 
 .shops-info-card {
-  border: 1px solid var(--color-border, #2e2b24);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
   background: rgb(255 255 255 / 2%);
   padding: 0.9rem 1rem;
@@ -1030,12 +1030,12 @@
   font-size: 0.88rem;
   font-weight: var(--weight-bold);
   margin: 0 0 0.4rem;
-  color: var(--color-text, #e8e0cc);
+  color: var(--text-primary);
 }
 
 .shops-info-card p {
   font-size: 0.82rem;
-  color: var(--color-text-muted, #888);
+  color: var(--text-secondary);
   line-height: 1.55;
   margin: 0;
 }
@@ -1045,7 +1045,7 @@
 }
 
 .shops-info-link {
-  color: var(--color-accent, #d4a017);
+  color: var(--color-accent);
   text-decoration: none;
   font-size: 0.8rem;
 }
@@ -1248,8 +1248,8 @@
 .shops-modal-content {
   position: relative;
   z-index: 1001;
-  background: var(--color-surface, #1a1814);
-  border: 1px solid var(--color-border, #2e2b24);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
   padding: 2rem;
   max-width: 600px;
@@ -1266,7 +1266,7 @@
   background: none;
   border: none;
   font-size: 1.8rem;
-  color: var(--color-text-muted, #888);
+  color: var(--text-secondary);
   cursor: pointer;
   padding: 0;
   width: 36px;
@@ -1278,7 +1278,7 @@
 }
 
 .shops-modal-close:hover {
-  color: var(--color-text, #e8e0cc);
+  color: var(--text-primary);
 }
 
 [dir='rtl'] .shops-modal-close {
@@ -1289,7 +1289,7 @@
 #shops-modal-title {
   font-size: 1.3rem;
   font-weight: var(--weight-extrabold);
-  color: var(--color-text, #e8e0cc);
+  color: var(--text-primary);
   margin: 0 0 0.5rem;
   line-height: 1.2;
 }
@@ -1372,7 +1372,7 @@
   gap: 0.25rem;
   font-size: 0.7rem;
   font-weight: var(--weight-bold);
-  color: var(--color-gold-dark, #b8860b);
+  color: var(--color-gold-dark);
   background: rgb(212 160 23 / 12%);
   border: 1px solid rgb(212 160 23 / 28%);
   border-radius: var(--radius-pill);
@@ -1386,7 +1386,7 @@
   margin-bottom: 1.5rem;
   padding: 1rem;
   background: rgb(255 255 255 / 2%);
-  border: 1px solid var(--color-border, #2e2b24);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
 }
 
@@ -1400,12 +1400,12 @@
   font-weight: var(--weight-bold);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--color-text-faint, #555);
+  color: var(--text-tertiary);
 }
 
 .modal-meta-value {
   font-size: 0.95rem;
-  color: var(--color-text, #e8e0cc);
+  color: var(--text-primary);
   line-height: 1.4;
 }
 
@@ -1419,7 +1419,7 @@
   font-weight: var(--weight-bold);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--color-text-faint, #555);
+  color: var(--text-tertiary);
   margin-bottom: 0.5rem;
 }
 
@@ -1435,7 +1435,7 @@
 
 .modal-notes {
   font-size: 0.95rem;
-  color: var(--color-text-muted, #888);
+  color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 1.5rem;
 }
@@ -1457,25 +1457,25 @@
   font-size: 0.82rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--color-text, #e8e0cc);
+  color: var(--text-primary);
   margin-bottom: 0.3rem;
 }
 
 .modal-next-step p {
   margin: 0;
   font-size: 0.88rem;
-  color: var(--color-text-muted, #8f836f);
+  color: var(--text-secondary);
   line-height: 1.5;
 }
 
 .modal-contact {
-  border-top: 1px solid var(--color-border, #2e2b24);
+  border-top: 1px solid var(--border-default);
   padding-top: 1.2rem;
 }
 
 .modal-contact p {
   font-size: 0.9rem;
-  color: var(--color-text, #e8e0cc);
+  color: var(--text-primary);
   margin: 0 0 0.5rem;
 }
 
@@ -1484,7 +1484,7 @@
 }
 
 .modal-contact .shop-site-link {
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold);
   font-weight: var(--weight-bold);
   text-decoration: none;
   display: inline-flex;
@@ -1498,8 +1498,8 @@
 
 .modal-no-contact {
   font-size: 0.88rem;
-  color: var(--color-text-muted, #888);
-  border-top: 1px solid var(--color-border, #2e2b24);
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-default);
   padding-top: 1.2rem;
   margin: 0;
 }
@@ -1511,9 +1511,9 @@
 }
 
 .modal-close-cta {
-  border: 1px solid var(--color-border, #2e2b24);
-  background: var(--color-bg, #131210);
-  color: var(--color-text, #e8e0cc);
+  border: 1px solid var(--border-default);
+  background: var(--surface-canvas);
+  color: var(--text-primary);
   border-radius: var(--radius-md);
   min-height: 44px;
   padding: 0.45rem 0.85rem;
@@ -1523,7 +1523,7 @@
 
 .modal-close-cta:hover,
 .modal-close-cta:focus-visible {
-  border-color: var(--color-gold, #d4a017);
+  border-color: var(--color-gold);
   box-shadow: 0 0 0 3px rgb(212 160 23 / 14%);
   outline: none;
 }
@@ -1561,8 +1561,8 @@
   padding: 0.55rem 1rem;
   min-height: 44px;
   border-radius: var(--radius-pill);
-  border: 1px solid var(--color-gold, #c4993e);
-  color: var(--color-gold-dark, #8a6420);
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold-dark);
   background: rgb(196 153 62 / 7%);
   font-weight: var(--weight-bold);
   font-size: 0.88rem;
@@ -1585,7 +1585,7 @@
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.85rem 1.1rem;
-  border: 1px solid var(--color-border, #e8e2d0);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
   background: var(--surface-primary);
   font: inherit;
@@ -1607,7 +1607,7 @@
   height: 1.4rem;
   padding: 0 0.35rem;
   border-radius: var(--radius-pill);
-  background: var(--color-gold, #c4993e);
+  background: var(--color-gold);
   color: var(--color-white);
   font-size: 0.78rem;
   font-weight: var(--weight-extrabold);
@@ -1657,7 +1657,7 @@
   .shops-filter-panel {
     display: none;
     padding-top: 0.75rem;
-    border-top: 1px solid var(--color-border, #e8e2d0);
+    border-top: 1px solid var(--border-default);
     margin-top: 0.75rem;
   }
 
@@ -1697,12 +1697,12 @@
 }
 
 #shops-shortlist-count {
-  color: var(--color-gold-dark, #b8860b);
+  color: var(--color-gold-dark);
   font-weight: var(--weight-bold);
 }
 
 .shops-shortlist-label {
-  color: var(--color-text-muted, #888);
+  color: var(--text-secondary);
   font-size: 0.8rem;
 }
 
@@ -1713,10 +1713,10 @@
 
 .shops-shortlist-clear-btn {
   padding: 0.4rem 0.9rem;
-  border: 1px solid var(--color-border, #2e2b24);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-pill);
   background: transparent;
-  color: var(--color-text-muted, #888);
+  color: var(--text-secondary);
   font-weight: var(--weight-semibold);
   font-size: 0.8rem;
   cursor: pointer;
@@ -1725,16 +1725,16 @@
 }
 
 .shops-shortlist-clear-btn:hover {
-  border-color: var(--color-gold, #d4a017);
-  color: var(--color-gold-dark, #b8860b);
+  border-color: var(--color-gold);
+  color: var(--color-gold-dark);
 }
 
 .shops-shortlist-compare-btn {
   padding: 0.4rem 0.9rem;
-  border: 1px solid var(--color-gold, #d4a017);
+  border: 1px solid var(--color-gold);
   border-radius: var(--radius-pill);
   background: rgb(212 160 23 / 10%);
-  color: var(--color-gold-dark, #b8860b);
+  color: var(--color-gold-dark);
   font-weight: var(--weight-bold);
   font-size: 0.8rem;
   text-decoration: none;
@@ -1757,7 +1757,7 @@
 
 .shop-actions-row--primary {
   padding-top: 0.5rem;
-  border-top: 1px solid var(--color-border, #2e2b24);
+  border-top: 1px solid var(--border-default);
 }
 
 .shop-actions-row--secondary {
@@ -1769,7 +1769,7 @@
   font-size: 0.66rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-text-faint, #555);
+  color: var(--text-tertiary);
   font-weight: var(--weight-bold);
 }
 
@@ -1778,10 +1778,10 @@
   align-items: center;
   gap: 0.3rem;
   padding: 0.35rem 0.65rem;
-  border: 1px solid var(--color-border, #2e2b24);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-pill);
   background: rgb(255 255 255 / 2%);
-  color: var(--color-text-muted, #888);
+  color: var(--text-secondary);
   font-weight: var(--weight-semibold);
   font-size: var(--text-xs);
   cursor: pointer;
@@ -1791,8 +1791,8 @@
 }
 
 .shop-action-btn:hover {
-  border-color: var(--color-gold, #d4a017);
-  color: var(--color-gold-dark, #b8860b);
+  border-color: var(--color-gold);
+  color: var(--color-gold-dark);
   background: rgb(212 160 23 / 6%);
 }
 
@@ -1868,8 +1868,8 @@
   gap: 0.5rem;
   margin: 1rem 0 1.25rem;
   padding: 0.75rem 0;
-  border-top: 1px solid var(--color-border, #2e2b24);
-  border-bottom: 1px solid var(--color-border, #2e2b24);
+  border-top: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--border-default);
 }
 
 .modal-action-btn {
@@ -1877,10 +1877,10 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.5rem 0.85rem;
-  border: 1px solid var(--color-border, #2e2b24);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
   background: rgb(255 255 255 / 2%);
-  color: var(--color-text, #e8e0cc);
+  color: var(--text-primary);
   font-weight: var(--weight-semibold);
   font-size: 0.85rem;
   cursor: pointer;
@@ -1890,8 +1890,8 @@
 }
 
 .modal-action-btn:hover {
-  border-color: var(--color-gold, #d4a017);
-  color: var(--color-gold-dark, #b8860b);
+  border-color: var(--color-gold);
+  color: var(--color-gold-dark);
   background: rgb(212 160 23 / 8%);
 }
 
@@ -1981,7 +1981,7 @@
   padding: 0.6rem 0;
   font-size: 0.82rem;
   color: var(--text-secondary);
-  border-bottom: 1px solid var(--color-border-subtle, #ede8da);
+  border-bottom: 1px solid var(--border-subtle);
   margin-bottom: 1rem;
 }
 
@@ -1999,8 +1999,8 @@
 
 /* ── Near Me Section ── */
 .shops-nearme {
-  background: var(--color-bg-subtle, #fafaf8);
-  border-top: 1px solid var(--color-border, #e8e0d0);
+  background: var(--surface-canvas);
+  border-top: 1px solid var(--border-default);
   padding: 2.5rem var(--page-gutter, 1.25rem);
 }
 
@@ -2082,7 +2082,7 @@
   justify-content: space-between;
   padding: 0.75rem 1rem;
   background: var(--color-white);
-  border: 1px solid var(--color-border, #e8e0d0);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-sm);
   text-decoration: none;
   color: var(--text-primary);
@@ -2093,7 +2093,7 @@
 }
 
 .nearme-link:hover {
-  border-color: var(--color-gold, #c49a3e);
+  border-color: var(--color-gold);
   box-shadow: 0 2px 8px rgb(196 153 62 / 12%);
 }
 
@@ -2103,7 +2103,7 @@
 
 .nearme-dist {
   font-size: 0.78rem;
-  color: var(--color-gold-dark, #9a7a1e);
+  color: var(--color-gold-dark);
   font-weight: 500;
   white-space: nowrap;
   margin-left: 0.5rem;
@@ -2120,8 +2120,8 @@
   align-items: center;
   gap: 0.3rem;
   padding: 0.5rem 0.9rem;
-  background: var(--color-bg-card, #fff);
-  border: 1px solid var(--color-border, #e8e0d0);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
   border-radius: 6px;
   text-decoration: none;
   color: var(--text-primary);
@@ -2131,7 +2131,7 @@
 }
 
 .nearme-map-btn:hover {
-  border-color: var(--color-gold, #c49a3e);
+  border-color: var(--color-gold);
 }
 
 .nearme-fallback p {
