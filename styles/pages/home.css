@@ -200,13 +200,9 @@
 
 /* Hero primary: gold background with dark text (for dark hero bg) */
 .hero .btn-primary {
-  background: linear-gradient(
-    135deg,
-    var(--color-gold, #c99a3e) 0%,
-    var(--color-gold-light, #e5c96e) 100%
-  );
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-light, #e5c96e) 100%);
   color: #1e0e03;
-  border-color: var(--color-gold, #c99a3e);
+  border-color: var(--color-gold);
   text-shadow: 0 1px 0 rgb(255 255 255 / 15%);
 }
 
@@ -758,19 +754,19 @@
 .trust-banner-content .h3 {
   font-size: 0.9rem;
   font-weight: var(--weight-bold);
-  color: var(--color-text, #1a1612);
+  color: var(--text-primary);
   margin-bottom: 0.3rem;
 }
 
 .trust-banner-content p {
   font-size: 0.82rem;
-  color: var(--color-text-muted, #6b7280);
+  color: var(--text-secondary);
   line-height: 1.6;
   margin: 0;
 }
 
 .trust-banner-content a {
-  color: var(--color-gold-dark, #8c6d24);
+  color: var(--color-gold-dark);
   font-weight: var(--weight-bold);
   text-decoration: none;
   border-bottom: 1px solid rgb(140 109 36 / 30%);
@@ -778,7 +774,7 @@
 }
 
 .trust-banner-content a:hover {
-  border-bottom-color: var(--color-gold-dark, #8c6d24);
+  border-bottom-color: var(--color-gold-dark);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -826,14 +822,14 @@
 .home-section-title {
   font-size: var(--text-3xl, 1.875rem);
   font-weight: var(--weight-extrabold);
-  color: var(--color-gold-deep, #5a3a0a);
+  color: var(--color-gold-deep);
   letter-spacing: var(--tracking-tight, -0.025em);
   line-height: var(--leading-tight, 1.2);
 }
 
 .home-section-sub {
   font-size: var(--text-sm);
-  color: var(--color-text-muted, #6b7280);
+  color: var(--text-secondary);
   margin-top: 0.3rem;
   line-height: 1.5;
 }
@@ -841,14 +837,14 @@
 .section-link {
   font-size: var(--text-sm);
   font-weight: var(--weight-bold);
-  color: var(--color-gold-dark, #8c6d24);
+  color: var(--color-gold-dark);
   text-decoration: none;
   white-space: nowrap;
   transition: color 0.15s;
 }
 
 .section-link:hover {
-  color: var(--color-gold-deep, #5a3a0a);
+  color: var(--color-gold-deep);
   text-decoration: underline;
 }
 
@@ -859,7 +855,7 @@
   display: flex;
   gap: 0.6rem;
   margin-bottom: 2rem;
-  border-bottom: 2px solid var(--color-border-subtle, rgb(0 0 0 / 7%));
+  border-bottom: 2px solid var(--border-subtle);
   padding-bottom: 1rem;
 }
 
@@ -869,7 +865,7 @@
   padding: 0.5rem 1.1rem;
   font-size: 0.9rem;
   font-weight: var(--weight-semibold);
-  color: var(--color-text-muted, #6b7280);
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s ease-out;
   position: relative;
@@ -879,13 +875,13 @@
 }
 
 .gcc-region-tab:hover {
-  color: var(--color-gold-dark, #8c6d24);
+  color: var(--color-gold-dark);
 }
 
 .gcc-region-tab.is-active {
-  color: var(--color-gold-deep, #5a3a0a);
+  color: var(--color-gold-deep);
   font-weight: var(--weight-bold);
-  border-bottom-color: var(--color-gold, #c99a3e);
+  border-bottom-color: var(--color-gold);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -991,7 +987,7 @@
 
 .gcc-currency {
   font-size: 0.67rem;
-  color: var(--color-text-muted, #6b7280);
+  color: var(--text-secondary);
   font-weight: var(--weight-semibold);
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -1000,7 +996,7 @@
 .gcc-price {
   font-size: var(--text-2xl);
   font-weight: var(--weight-extrabold);
-  color: var(--color-gold-deep, #5a3a0a);
+  color: var(--color-gold-deep);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.015em;
   line-height: 1.2;
@@ -1008,7 +1004,7 @@
 
 .gcc-unit {
   font-size: 0.68rem;
-  color: var(--color-text-muted, #6b7280);
+  color: var(--text-secondary);
 }
 
 .gcc-source {
@@ -1038,9 +1034,9 @@
   border-radius: var(--radius-xs);
   background: linear-gradient(
     90deg,
-    var(--color-border-subtle, #e5e7eb) 25%,
+    var(--border-subtle) 25%,
     rgb(255 255 255 / 60%) 50%,
-    var(--color-border-subtle, #e5e7eb) 75%
+    var(--border-subtle) 75%
   );
   background-size: 400px 100%;
   animation: skeleton-shimmer 1.4s ease-in-out infinite;
@@ -1117,19 +1113,19 @@
 .tool-card-cta {
   font-size: 0.82rem;
   font-weight: var(--weight-bold);
-  color: var(--color-gold-dark, #8c6d24);
+  color: var(--color-gold-dark);
   margin-top: 0.1rem;
   transition: color 0.15s;
 }
 
 .tool-card:hover .tool-card-cta {
   text-decoration: underline;
-  color: var(--color-gold-deep, #5a3a0a);
+  color: var(--color-gold-deep);
 }
 
 /* ── Primary tool card variant (Tracker, Calculator) ── */
 .tool-card--primary {
-  background: var(--color-gold-bg, #fdf6e3);
+  background: var(--color-gold-bg);
   border-color: rgb(196 153 62 / 45%);
 }
 
@@ -1139,7 +1135,7 @@
   top: 0.65rem;
   right: 0.75rem;
   font-size: 0.75rem;
-  color: var(--color-gold, #c99a3e);
+  color: var(--color-gold);
   line-height: 1;
 }
 
@@ -1152,7 +1148,7 @@
 }
 
 .tool-card--primary:hover {
-  border-color: var(--color-gold, #c99a3e);
+  border-color: var(--color-gold);
   background: rgb(196 153 62 / 12%);
 }
 
@@ -1170,11 +1166,11 @@
   flex-wrap: wrap;
   margin-top: 2rem;
   padding: 1rem 1.4rem;
-  background: var(--color-gold-bg, #fdf6e3);
+  background: var(--color-gold-bg);
   border: 1px solid rgb(196 153 62 / 28%);
   border-radius: var(--radius-md);
   font-size: 0.86rem;
-  color: var(--color-text-muted, #6b7280);
+  color: var(--text-secondary);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1218,7 +1214,7 @@
 
 .country-search-empty {
   font-size: 0.84rem;
-  color: var(--color-text-muted, #6b7280);
+  color: var(--text-secondary);
   padding: 0.4rem 0 0;
   margin: 0;
 }
@@ -1251,25 +1247,25 @@
 }
 
 .country-tile:hover {
-  border-color: var(--color-gold, #c99a3e);
+  border-color: var(--color-gold);
   background: var(--color-gold-tint, rgb(196 153 62 / 7%));
-  color: var(--color-gold-dark, #8c6d24);
+  color: var(--color-gold-dark);
   text-decoration: none;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgb(196 153 62 / 14%);
 }
 
 .country-tile--more {
-  background: var(--color-gold-bg, #fdf6e3);
-  color: var(--color-gold-dark, #8c6d24);
+  background: var(--color-gold-bg);
+  color: var(--color-gold-dark);
   border-color: rgb(196 153 62 / 35%);
   font-weight: var(--weight-bold);
 }
 
 .country-tile--more:hover {
-  background: var(--color-gold, #c99a3e);
+  background: var(--color-gold);
   color: var(--color-white);
-  border-color: var(--color-gold, #c99a3e);
+  border-color: var(--color-gold);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -2015,7 +2011,7 @@
   gap: 0.85rem;
   background: var(--surface-primary);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg, 12px);
+  border-radius: var(--radius-lg);
   padding: 1.4rem 1.2rem;
   text-decoration: none;
   color: inherit;
@@ -2065,23 +2061,23 @@
 }
 
 .market-card-name {
-  font-size: var(--text-base, 1rem);
-  font-weight: var(--weight-bold, 700);
-  color: var(--color-text, #1a1a1a);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
   margin: 0;
   line-height: 1.3;
 }
 
 .market-card-loc {
   font-size: 0.78rem;
-  font-weight: var(--weight-semibold, 600);
-  color: var(--color-gold-dark, #8c6d24);
+  font-weight: var(--weight-semibold);
+  color: var(--color-gold-dark);
   margin: 0;
 }
 
 .market-card-desc {
   font-size: 0.82rem;
-  color: var(--color-text-muted, #6b7280);
+  color: var(--text-secondary);
   line-height: 1.6;
   margin: 0;
   flex: 1;
@@ -2090,8 +2086,8 @@
 .market-card-cta {
   display: inline-block;
   font-size: 0.78rem;
-  font-weight: var(--weight-bold, 700);
-  color: var(--color-gold-dark, #8c6d24);
+  font-weight: var(--weight-bold);
+  color: var(--color-gold-dark);
   margin-top: 0.4rem;
 }
 
@@ -2160,11 +2156,11 @@
 
 /* ── GCC cards and copy buttons: focus rings ────────────────── */
 .gcc-card:focus-visible {
-  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--color-gold, #c99a3e));
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--color-gold));
   outline-offset: var(--focus-ring-offset, 2px);
 }
 
 .gcc-copy-btn:focus-visible {
-  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--color-gold, #c99a3e));
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--color-gold));
   outline-offset: var(--focus-ring-offset, 2px);
 }

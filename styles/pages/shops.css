@@ -1586,8 +1586,8 @@
   gap: 0.5rem;
   padding: 0.85rem 1.1rem;
   border: 1px solid var(--color-border, #e8e2d0);
-  border-radius: var(--radius-md, 12px);
-  background: var(--color-surface, #fff);
+  border-radius: var(--radius-md);
+  background: var(--surface-primary);
   font: inherit;
   font-weight: var(--weight-bold);
   font-size: 0.95rem;

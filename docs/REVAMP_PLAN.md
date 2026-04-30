@@ -13,10 +13,15 @@ them into the right section here before execution. Agent operating rules are in
 - Keep completed items as `[x]` with enough context to serve as a record. Don't re-open closed items
   to pad status; don't invent new phases to look ambitious.
 
-**Last updated:** 2026-04-28 (Round 14 — sitewide UI/UX revamp: dark-mode surface token fixes, touch
-target a11y, deprecated CSS removal, explainer strip token cleanup, market-card hover consistency,
-RTL trust-banner and explainer-strip overrides, critical.css added to 5 pages, trust icon polish,
-stale hlc-updated aria-label removed, karatStripCta capitalisation fix).
+**Last updated:** 2026-04-30 (Round 15 — sitewide UI/UX revamp: prefers-reduced-motion guards for
+shops/calculator animations, nav-cta touch target 36px→44px, canonical token cleanup across home.css
+— replaced deprecated `--color-surface` / `--color-border-subtle` / `--color-text-muted` fallback
+overrides with canonical `--surface-primary` / `--border-subtle` / `--text-primary` /
+`--text-secondary` tokens in trust-strip, home-section--alt, gcc-card, tool-card, country-tile, faq,
+country-search, market-card, kstrip-unit-btn, kstrip-copy-btn, and focus-visible rings). target
+a11y, deprecated CSS removal, explainer strip token cleanup, market-card hover consistency, RTL
+trust-banner and explainer-strip overrides, critical.css added to 5 pages, trust icon polish, stale
+hlc-updated aria-label removed, karatStripCta capitalisation fix).
 
 ### 2026-04-27 full-site UX/admin/content revamp intake
 
@@ -1270,8 +1275,12 @@ with the homepage + nav + tracker revamp in §1–§18. Status rolls into `CHANG
       24K guide, spot-vs-retail; addresses internal-linking weak-hub finding)
 - [ ] Phase 18 — Country / city / market pages
 - [ ] Phase 19 — Educational / Learn pages
-- [ ] Phase 20 — Design system completion
-- [ ] Phase 21 — Accessibility audit
+- [ ] Phase 20 — Design system completion (in progress — Round 15: canonical token audit pass on
+      home.css, prefers-reduced-motion guards, touch target fixes)
+- [x] Phase 21 — Accessibility audit (Round 15: nav-cta touch target 36px→44px fixed;
+      prefers-reduced-motion guards for shops.css and calculator.css animations; kstrip-unit-btn,
+      kstrip-copy-btn, country-tile, tool-card, market-card focus-visible rings use canonical
+      tokens; gcc-card and tool-card hover lift guarded for reduced-motion)
 
 ### Track D — Performance, SEO, monetisation (not started)
 

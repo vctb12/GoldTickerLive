@@ -609,9 +609,9 @@
   align-items: flex-start;
   gap: 0.85rem;
   padding: 1rem 1.1rem;
-  border-radius: var(--radius-lg, 18px);
+  border-radius: var(--radius-lg);
   border: 1px solid var(--color-border, #e8e2d0);
-  background: var(--color-surface, #fff);
+  background: var(--surface-primary);
   text-decoration: none;
   color: inherit;
   transition:
@@ -672,7 +672,7 @@
 }
 
 .calc-preset-chip {
-  background: var(--color-surface-2, #f9f6f0);
+  background: var(--surface-secondary);
   border: 1.25px solid var(--color-border, #e8e2d0);
   border-radius: var(--radius-pill, 999px);
   padding: 0.28rem 0.75rem;
@@ -777,16 +777,16 @@
   flex-direction: column;
   gap: 0.45rem;
   padding: 0.75rem 0.9rem;
-  background: var(--color-surface-2, #f9f6f0);
-  border-radius: var(--radius-sm, 8px);
+  background: var(--surface-secondary);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-subtle, #ede8da);
   font-size: 0.85rem;
 }
 
 .calc-result-secondary {
   padding: 0.75rem 0.9rem;
-  background: var(--color-surface-2, #f9f6f0);
-  border-radius: var(--radius-sm, 8px);
+  background: var(--surface-secondary);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-subtle, #ede8da);
   font-size: 0.85rem;
 }
@@ -806,7 +806,7 @@
   padding: 0.65rem 0.85rem;
   background: rgb(26 122 50 / 7%);
   border: 1px solid rgb(26 122 50 / 20%);
-  border-radius: var(--radius-sm, 8px);
+  border-radius: var(--radius-sm);
   font-size: 0.82rem;
   color: var(--color-live, #1a7a32);
   margin-top: 0.5rem;
