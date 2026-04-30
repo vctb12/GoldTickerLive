@@ -3827,3 +3827,529 @@ PR with focused commits: UI, server routes, auth, RLS, docs.
 - → [§52 Manual Follow-Up Reporting Expectations](#52-manual-follow-up-reporting-expectations)
 
 ---
+
+## 27. Newsletter & Alert System
+
+**Purpose:**
+Newsletter and price-spike alert systems are growth + retention surfaces. They run from
+GitHub Actions cron jobs, hit a JSON subscriber list, and post via email / Discord /
+Telegram. This prompt keeps them reliable, double-opt-in safe, and unsubscribe-honest.
+
+**When to use:**
+- Subscriber flow is broken or confusing on the public form.
+- Newsletter generator emits stale/duplicate content.
+- Spike-alert thresholds need tuning (do not change without owner approval).
+- A new alert channel (email / Discord / Telegram) is being added.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the newsletter and alert system on Gold Ticker Live. Cron-driven,
+JSON-list-backed, multi-channel. Double-opt-in honest. Unsubscribe always works.
+
+INSPECT FIRST
+1. Read `scripts/node/generate-newsletter.js` and `scripts/node/send-newsletter.js`.
+2. Read `scripts/node/price-spike-alert.js`, `scripts/node/notify-discord.js`,
+   `scripts/node/notify-telegram.js`.
+3. Read the relevant workflows in `.github/workflows/` (newsletter, alerts).
+4. Read the public subscribe form (likely `content/newsletter/`, `content/submit-*`).
+5. Read translations `newsletter.*`, `alerts.*` in `src/config/translations.js`.
+
+WORK — subscribe flow
+- Form clearly states: what you'll get, how often, how to unsubscribe.
+- Double-opt-in: confirmation email/link before adding to the list.
+- Unsubscribe link in every newsletter; one-click works without login.
+
+WORK — generator
+- Newsletter content includes: live price snapshot (with timestamp + source label),
+  one guide link, one tracker link. No invented news.
+- AR newsletter is a separate generator path, not a Google-translated EN.
+
+WORK — alerts
+- Spike threshold lives in a config (verify path); do not change without owner approval.
+- Discord/Telegram payloads include source + timestamp.
+- Rate-limit per channel — never more than 1 alert per 15 min.
+
+CONSTRAINTS
+- Don't store secrets in repo; use GitHub Secrets.
+- Don't mass-email; respect rate limits.
+- Don't change spike thresholds without owner approval.
+- Bilingual.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- Manual: run the newsletter generator with `--dry-run` (verify exists) and inspect output.
+
+DELIVERABLE
+PR with focused commits: subscribe form, generator, send pipeline, alerts, translations.
+```
+
+**Files / surfaces to inspect:**
+- `scripts/node/generate-newsletter.js`, `scripts/node/send-newsletter.js`,
+  `scripts/node/price-spike-alert.js`, `scripts/node/notify-discord.js`,
+  `scripts/node/notify-telegram.js`.
+- `.github/workflows/*newsletter*.yml`, `.github/workflows/*alert*.yml` (verify exists).
+- Subscribe form HTML (`content/newsletter/` or similar — verify path).
+- `src/config/translations.js` (`newsletter.*`, `alerts.*`).
+
+**Required checks:**
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- Dry-run generator if supported.
+
+**Expected final report:**
+- Subscribe flow status (double-opt-in, unsubscribe).
+- Generator output sample (EN + AR).
+- Alert channels verified.
+- Manual follow-up: GitHub Secrets / Discord webhook / Telegram bot tokens — see [§52](#52-manual-follow-up-reporting-expectations).
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Subscriber list is sensitive; treat the file like PII. Don't log emails.
+- Spike thresholds are owner-tunable carve-outs — see [§50](#50-safety-rules-and-carve-outs).
+
+**Failure modes to watch for:**
+- Single-opt-in (privacy + spam risk).
+- Unsubscribe link 404s or requires login.
+- AR newsletter is a literal translation of EN.
+- Discord webhook posted in workflow logs.
+- Spike alert fires every minute due to a missing rate limit.
+- Subscriber list committed to git.
+
+**Cross-references:**
+- → [§28 X/Twitter Automation Polish](#28-xtwitter-automation-polish)
+- → [§37 GitHub Actions Workflow Hardening](#37-github-actions-workflow-hardening)
+- → [§43 RSS Feed & News](#43-rss-feed--news)
+- → [§52 Manual Follow-Up Reporting Expectations](#52-manual-follow-up-reporting-expectations)
+
+---
+
+## 28. X/Twitter Automation Polish
+
+**Purpose:**
+The hourly X-post workflow (`.github/workflows/post_gold.yml`) is live in production and
+auto-posts gold prices every hour to `@GoldTickerLive`. It must never break the
+`scripts/python/utils/*` import path or the cron cadence without owner approval.
+
+**When to use:**
+- Tweet template needs polish (wording, AR variant, hashtags).
+- Workflow logs show failures (rate limit, auth, format).
+- A new X-post variant (e.g. spike alerts on X) is being added.
+
+**Copy-paste prompt:**
+
+```text
+You are polishing the X/Twitter automation on Gold Ticker Live. The hourly workflow
+`.github/workflows/post_gold.yml` is LIVE IN PRODUCTION. Breakage is public within the hour.
+
+INSPECT FIRST
+1. Read `.github/workflows/post_gold.yml` end-to-end. Confirm cron cadence and secrets list.
+2. Read `scripts/python/**` — note the entrypoint that adds `scripts/python/` to `sys.path`
+   and relative-imports `utils.*` via that path.
+3. Read `scripts/node/tweet-gold-price.js` (verify exists).
+4. Read `src/social/postTemplates.js` (post templates EN + AR).
+5. Read `docs/twitter_bot_architecture.md` and `docs/AUTOMATIONS.md`.
+
+WORK — templates
+- EN and AR variants. AR is idiomatic, not literal.
+- Each post includes: live price (AED + USD), karat (24K), source label, timestamp.
+- Hashtags: minimal, on-topic (`#GoldPrice`, `#UAE`, `#Gold`); no spam.
+- 280-char limit honored (URL counts).
+
+WORK — workflow
+- Pinned action SHAs (see `.github/workflows/README.md` table).
+- Secrets via GitHub Secrets only; never echoed.
+- Failure path posts to monitoring (Discord/Telegram) so silent breakage gets surfaced.
+
+CONSTRAINTS
+- Do not change cron cadence without owner approval.
+- Do not break `scripts/python/utils/*` import layout.
+- `@GoldTickerLive` handle is intact (identity carve-out).
+- No marketing fluff in the post template.
+
+VERIFY
+- `npm run lint`, `npm test`, `npm run build`.
+- Workflow lint: `actionlint .github/workflows/post_gold.yml` (verify installed).
+- Dry-run the post script if supported.
+
+DELIVERABLE
+PR with focused commits: template, workflow, secrets handling, docs.
+```
+
+**Files / surfaces to inspect:**
+- `.github/workflows/post_gold.yml`, `.github/workflows/README.md`.
+- `scripts/python/**`, `scripts/node/tweet-gold-price.js` (verify exists).
+- `src/social/postTemplates.js`.
+- `docs/twitter_bot_architecture.md`, `docs/AUTOMATIONS.md`.
+
+**Required checks:**
+- `npm run lint`, `npm test`, `npm run build`.
+- `actionlint` (verify installed).
+
+**Expected final report:**
+- Template diff (EN + AR).
+- Workflow diff (cron, permissions, secrets, action SHAs).
+- Dry-run output.
+- Manual follow-up: X API tokens, monitoring channels — see [§52](#52-manual-follow-up-reporting-expectations).
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Cron cadence + python import layout + `@GoldTickerLive` handle are carve-outs — see [§50](#50-safety-rules-and-carve-outs).
+- Production workflow: any error is public within an hour.
+
+**Failure modes to watch for:**
+- Agent renames a `scripts/python/utils/` module and breaks the import path.
+- Agent prints the API token via `echo` in a workflow `run:` step.
+- AR template is an autotranslated EN — reads weird.
+- Cron changed from hourly to every-15-min "for visibility" — rate-limited fast.
+- Action `uses:` reverts to a tag instead of a pinned SHA.
+
+**Cross-references:**
+- → [§27 Newsletter & Alert System](#27-newsletter--alert-system)
+- → [§37 GitHub Actions Workflow Hardening](#37-github-actions-workflow-hardening)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+- → [§52 Manual Follow-Up Reporting Expectations](#52-manual-follow-up-reporting-expectations)
+
+---
+
+## 29. Pricing & Invest Pages
+
+**Purpose:**
+`pricing.html` and `invest.html` are conversion-leaning pages — they explain costs,
+investment context, and what a buyer should think about. They must not become hype-y or
+make investment guarantees. This prompt keeps them honest, useful, and bilingual.
+
+**When to use:**
+- Pricing page is unclear, cluttered, or missing the spot-vs-retail explanation.
+- Invest page makes claims that could be read as financial advice.
+- Either page lacks AR or has weak structured data.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading `pricing.html` and `invest.html` on Gold Ticker Live. Honest, useful,
+bilingual. No hype, no guarantees, no "best investment" claims.
+
+INSPECT FIRST
+1. Read `pricing.html` and `invest.html` end-to-end.
+2. Read `styles/pages/pricing.css` and `styles/pages/invest.css`.
+3. Read translations `pricing.*`, `invest.*`.
+4. Read `docs/methodology.md` and `docs/LIMITATIONS.md`.
+
+WORK — pricing
+- Explain spot vs retail vs jeweler vs making charge in plain language with an example.
+- Show the AED peg and the troy-ounce constant with the formula:
+  `price_per_gram = (XAU/USD ÷ 31.1035) × purity × 3.6725`.
+- Link to the calculator and methodology.
+
+WORK — invest
+- Plain-language pros/cons of physical, ETF, futures.
+- Disclaimer: "Educational only — not financial advice." Bilingual.
+- No "guaranteed returns", no "best time to buy" claims.
+
+WORK — schema + SEO
+- Title + description per [§10](#10-seo-and-indexing-prompt).
+- WebPage + (optionally) Article schema; FAQPage if there is a unique FAQ.
+
+CONSTRAINTS
+- Do not change pricing math or peg.
+- Bilingual.
+- No financial-advice wording.
+- "Educational only" disclaimer present and visible.
+
+VERIFY
+- `npm run validate`, `npm run seo-audit`, `npm test`, `npm run build`.
+
+DELIVERABLE
+PR with focused commits: content, schema, translations, layout.
+```
+
+**Files / surfaces to inspect:**
+- `pricing.html`, `invest.html`.
+- `styles/pages/pricing.css`, `styles/pages/invest.css`.
+- `src/config/translations.js` (`pricing.*`, `invest.*`).
+- `docs/methodology.md`, `docs/LIMITATIONS.md`.
+
+**Required checks:**
+- `npm run validate`, `npm run seo-audit`, `npm test`, `npm run build`.
+
+**Expected final report:**
+- Content diffs.
+- Disclaimer presence.
+- Schema/SEO status.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Financial-advice wording is a legal + trust risk; "educational only" disclaimer is mandatory.
+- Pricing math, peg, troy-ounce constant are immutable — see [§50](#50-safety-rules-and-carve-outs).
+
+**Failure modes to watch for:**
+- "Best investment of 2026" hero copy.
+- Disclaimer hidden in the footer in 10 px gray.
+- AR page is a Google translation.
+- Pricing example uses a stale hardcoded AED peg.
+- Schema duplicated from another page.
+
+**Cross-references:**
+- → [§14 Calculator and Tools Prompt](#14-calculator-and-tools-prompt)
+- → [§15 Data Reliability and Methodology Prompt](#15-data-reliability-and-methodology-prompt)
+- → [§48 Monetization and Growth](#48-monetization-and-growth)
+
+---
+
+## 30. Chart Component
+
+**Purpose:**
+`src/components/chart.js` lazy-loads TradingView Lightweight Charts from a jsDelivr CDN
+and renders the historical price chart on the tracker. This prompt keeps it lightweight,
+accessible, and resilient when the CDN is slow or unreachable.
+
+**When to use:**
+- Chart fails to render or shows broken state on slow networks.
+- Range pills (24H–ALL) lose `aria-pressed` sync.
+- Chart needs a new range, new overlay, or improved fallback.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the chart component on Gold Ticker Live. Lazy CDN-loaded TradingView
+Lightweight Charts. Accessible, resilient, no heavy bundle.
+
+INSPECT FIRST
+1. Read `src/components/chart.js` (CDN +esm import).
+2. Read `src/pages/tracker-chart-loader.js` (lazy install path).
+3. Read `src/tracker/events.js` and `src/pages/tracker-pro.js` for range pills,
+   `aria-pressed` sync, persisted state.
+4. Read `src/lib/historical-data.js` (data source for the chart).
+5. Read translations `tracker.range.*`, `tracker.chart.*`.
+
+WORK — render
+- Range pills (24H, 7D, 30D, 1Y, ALL) have `aria-pressed`, persisted to user_prefs.
+- Container has `role="group"` and `aria-label="Chart time range"`.
+- Reduced-motion users get a non-animated chart (or static SVG fallback).
+
+WORK — resilience
+- CDN failure shows a clear message ("Chart unavailable — try again later") + retry.
+- Empty data shows "No data for this range" not a blank canvas.
+- Chart never blocks above-the-fold render — lazy install only after intersection.
+
+WORK — accessibility
+- Chart has a textual data table fallback for screen readers.
+- Range pills have ≥ 44 px tap targets.
+- No keyboard trap inside the chart canvas.
+
+CONSTRAINTS
+- No heavy charting dependency added to the bundle (lightweight posture).
+- Don't ship a non-CDN copy of TradingView (license + size).
+- Bilingual.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run build`, `npm run a11y`.
+- Manual: throttle CDN, verify fallback. Reduced-motion on.
+
+DELIVERABLE
+PR with focused commits: chart, range pills, fallback, accessibility, translations.
+```
+
+**Files / surfaces to inspect:**
+- `src/components/chart.js`, `src/pages/tracker-chart-loader.js`.
+- `src/tracker/events.js`, `src/pages/tracker-pro.js`.
+- `src/lib/historical-data.js`.
+- `src/config/translations.js` (`tracker.range.*`, `tracker.chart.*`).
+
+**Required checks:**
+- `npm run validate`, `npm test`, `npm run build`, `npm run a11y`.
+
+**Expected final report:**
+- Chart load behavior (cold / warm / CDN fail).
+- a11y verification (range pills, fallback table, reduced-motion).
+- Bundle size delta.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- CDN dependency is a known carve-out for chart only; do not extend it elsewhere.
+
+**Failure modes to watch for:**
+- CDN fail = silent blank canvas.
+- `aria-pressed` desync between click handler and persisted state.
+- Reduced-motion users get an animated chart anyway.
+- Chart canvas traps tab focus.
+- No data table fallback for screen readers.
+
+**Cross-references:**
+- → [§9 Live Tracker Upgrade Prompt](#9-live-tracker-upgrade-prompt)
+- → [§11 PWA / Service Worker / Performance Prompt](#11-pwa--service-worker--performance-prompt)
+- → [§42 Mobile-First Layout Audit](#42-mobile-first-layout-audit)
+
+---
+
+## 31. Footer, Internal Links & Breadcrumbs
+
+**Purpose:**
+The footer, internal-links block, and breadcrumbs are the connective tissue of the site.
+They drive SEO link equity, help users discover related content, and anchor every page in
+the site hierarchy. This prompt keeps them consistent, deduplicated, and accessible.
+
+**When to use:**
+- Footer link groups are inconsistent across pages.
+- Internal-links block on country/city/guide pages is missing or one-directional.
+- Breadcrumbs don't match canonical URL structure.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the footer, internal links, and breadcrumbs across Gold Ticker Live.
+Consistency, accessibility, SEO link equity.
+
+INSPECT FIRST
+1. Read `src/components/footer.js`, `src/components/internalLinks.js`,
+   `src/components/breadcrumbs.js`.
+2. Read `src/config/translations.js` `footer.*`, `breadcrumbs.*`, `internalLinks.*`.
+3. Sample 5 page types: home, tracker, calculator, country, city, guide. Verify the
+   footer is identical (rendered from the component, not duplicated HTML).
+4. Read `scripts/node/inject-schema.js` for BreadcrumbList JSON-LD emission.
+
+WORK — footer
+- Single source: one component, used by every page.
+- Groups: Product, Markets, Tools, Legal — each ≤ 6 links.
+- Lang switcher present, theme switcher optional; both have visible labels and aria-labels.
+- Bottom row: brand mark, copyright, methodology link, privacy link.
+
+WORK — internal links
+- Country page: links to its cities + sibling countries + tracker + calculator.
+- City page: links to its country + 2 sibling cities + tracker + calculator + methodology.
+- Guide: links to 3 related guides + 1 country/city + tracker.
+- Tracker / calculator / methodology: link to at least one country and one city.
+
+WORK — breadcrumbs
+- Render `BreadcrumbList` JSON-LD per [§24](#24-faq--structured-data).
+- Visible breadcrumb component matches JSON-LD exactly.
+- ARIA: `nav[aria-label="Breadcrumb"]` with ordered list semantics.
+
+CONSTRAINTS
+- One footer component, no duplicates.
+- Bilingual.
+- Don't break canonical URL structure.
+
+VERIFY
+- `npm run validate`, `npm run seo-audit`, `npm run check-links`, `npm test`, `npm run build`.
+- `node scripts/node/inject-schema.js --check`.
+
+DELIVERABLE
+PR with focused commits: footer, internal links, breadcrumbs, translations, schema.
+```
+
+**Files / surfaces to inspect:**
+- `src/components/footer.js`, `src/components/internalLinks.js`,
+  `src/components/breadcrumbs.js`.
+- `src/config/translations.js` (`footer.*`, `breadcrumbs.*`, `internalLinks.*`).
+- `scripts/node/inject-schema.js` (BreadcrumbList).
+
+**Required checks:**
+- `npm run validate`, `npm run seo-audit`, `npm run check-links`, `npm test`, `npm run build`.
+- `node scripts/node/inject-schema.js --check`.
+
+**Expected final report:**
+- Footer rendered from one component (verified).
+- Internal-links matrix (page type → outbound count).
+- Breadcrumb a11y verified.
+- Sitemap / link audit deltas.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Don't change canonical URL structure — see [§50](#50-safety-rules-and-carve-outs).
+
+**Failure modes to watch for:**
+- Footer hand-edited on one page, drifted from the component.
+- Breadcrumb visible text and JSON-LD disagree.
+- Internal-links block linked to a 404 city.
+- Lang switcher in footer has no aria-label.
+- Privacy link missing or 404.
+
+**Cross-references:**
+- → [§22 Country & City Pages Deep Dive](#22-country--city-pages-deep-dive)
+- → [§24 FAQ + Structured Data](#24-faq--structured-data)
+- → [§32 Compare Countries & Today's Best Rates](#32-compare-countries--todays-best-rates)
+
+---
+
+## 32. Compare Countries & Today's Best Rates
+
+**Purpose:**
+The compare-countries and today's-best-rates pages turn the country/city corpus into a
+decision tool. They're high-engagement, high-bounce-risk pages — they must load fast,
+sort sensibly, and label freshness honestly.
+
+**When to use:**
+- Compare table is slow, broken, or sorts incorrectly.
+- "Best rates" page mixes stale and live data without labels.
+- A new comparison axis (e.g. 22K specifically) is being added.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the compare-countries and today's-best-rates pages. Decision tools,
+honest about freshness.
+
+INSPECT FIRST
+1. Find the pages: `content/compare-countries/`, `content/todays-best-rates/`
+   (verify paths). Read their HTML and any associated JS.
+2. Read translations `compare.*`, `bestRates.*`.
+3. Read `src/lib/api.js`, `src/lib/cache.js` to understand the data the comparison reads from.
+
+WORK — UX
+- Sortable columns (24K AED, 22K AED, freshness).
+- Each row labels its freshness state (live/cached/stale/unavailable).
+- Empty/error states ("Data unavailable for X") are clear, bilingual.
+- Mobile: cards instead of a table at < 640 px.
+
+WORK — performance
+- Render only visible rows; lazy-load the rest.
+- No layout shift after data hydrates.
+
+WORK — schema
+- ItemList JSON-LD with country names + URLs.
+
+CONSTRAINTS
+- Bilingual.
+- Honest freshness — don't claim "live" if the row is cached.
+- Don't change pricing math.
+
+VERIFY
+- `npm run validate`, `npm run seo-audit`, `npm test`, `npm run build`,
+  `node scripts/node/inject-schema.js --check`.
+
+DELIVERABLE
+PR with focused commits: UX, perf, schema, translations.
+```
+
+**Files / surfaces to inspect:**
+- `content/compare-countries/`, `content/todays-best-rates/` (verify paths).
+- `src/lib/api.js`, `src/lib/cache.js`.
+- `src/config/translations.js` (`compare.*`, `bestRates.*`).
+
+**Required checks:**
+- `npm run validate`, `npm run seo-audit`, `npm test`, `npm run build`,
+  `node scripts/node/inject-schema.js --check`.
+
+**Expected final report:**
+- Sort behavior verified.
+- Freshness labels per row.
+- Mobile card view verified.
+- Schema status.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Freshness honesty is a trust carve-out — see [§50](#50-safety-rules-and-carve-outs).
+
+**Failure modes to watch for:**
+- Table sorts on stale data without labeling it stale.
+- Mobile renders a 7-col table that overflows.
+- Layout shift when data arrives.
+- ItemList schema duplicates BreadcrumbList.
+
+**Cross-references:**
+- → [§9 Live Tracker Upgrade Prompt](#9-live-tracker-upgrade-prompt)
+- → [§22 Country & City Pages Deep Dive](#22-country--city-pages-deep-dive)
+- → [§42 Mobile-First Layout Audit](#42-mobile-first-layout-audit)
+
+---
