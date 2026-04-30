@@ -198,7 +198,10 @@ async function staleWhileRevalidate(request, cacheName) {
   const cache = await caches.open(cacheName);
   const cached = await cache.match(request);
 
-  // Kick off a background revalidation regardless of whether we have a cache hit.
+  // Kick off a background revalidation regardless of whether we have a cache
+  // hit — this is the "revalidate" half of stale-while-revalidate. Intentional:
+  // returning visitors load instantly from cache while the page is refreshed
+  // silently so the *next* visit is also fast and fresh.
   const networkPromise = fetch(request)
     .then((response) => {
       if (response.ok) cache.put(request, response.clone());

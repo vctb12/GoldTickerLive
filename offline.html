@@ -304,12 +304,12 @@
           });
 
           if (updatedAt) {
-            var d2 = new Date(updatedAt);
-            if (!isNaN(d2.getTime())) {
+            var cachedDate = new Date(updatedAt);
+            if (!isNaN(cachedDate.getTime())) {
               tsEl.textContent =
                 t.asOf +
                 ' ' +
-                d2.toLocaleString(lang === 'ar' ? 'ar-AE' : 'en-US', {
+                cachedDate.toLocaleString(lang === 'ar' ? 'ar-AE' : 'en-US', {
                   dateStyle: 'medium',
                   timeStyle: 'short',
                 });

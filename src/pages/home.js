@@ -895,7 +895,7 @@ async function init() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
       .register(BASE_PATH + 'sw.js')
-      .then(() => initSwUpdateToast(getLang()))
+      .then(() => initSwUpdateToast())
       .catch(() => {});
   }
 

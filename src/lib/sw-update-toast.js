@@ -140,13 +140,20 @@ function dismiss(toast) {
 /**
  * Initialise the SW update toast listener.
  * Call once after registering the service worker.
- *
- * @param {string} [lang='en'] - Current UI language ('en' or 'ar').
  */
-export function initSwUpdateToast(lang = 'en') {
+export function initSwUpdateToast() {
   if (!('serviceWorker' in navigator)) return;
   navigator.serviceWorker.addEventListener('message', (event) => {
     if (event.data?.type === 'SW_UPDATED') {
+      // Read language fresh from localStorage so a language switch after page
+      // load is respected.
+      let lang = 'en';
+      try {
+        const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
+        if (prefs.lang === 'ar') lang = 'ar';
+      } catch {
+        // ignore
+      }
       showToast(lang);
     }
   });
