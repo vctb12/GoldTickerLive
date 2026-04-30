@@ -5348,3 +5348,864 @@ PR with focused commits: schema, RLS notes, sync, docs. Flag manual follow-up pe
 - → [§52 Manual Follow-Up Reporting Expectations](#52-manual-follow-up-reporting-expectations)
 
 ---
+
+## 45. 404 / Error Pages & Redirect Hygiene
+
+**Purpose:**
+404, 410, and redirect handling shape SEO health and user trust. A drift here leaks
+soft-404s and broken links into Google. This prompt keeps `404.html`, `_redirects`,
+`_headers`, and the offline page coherent.
+
+**When to use:**
+- A URL was retired without a redirect.
+- 404 page is generic / unbranded / EN-only.
+- Offline page renders broken outside SW scope.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading 404 / error pages and redirect hygiene on Gold Ticker Live. Honest,
+branded, bilingual, SEO-clean.
+
+INSPECT FIRST
+1. Read `404.html` and `offline.html`.
+2. Read `_redirects` and `_headers` (verify exists for the host).
+3. Read `robots.txt` and `sitemap.xml`.
+4. Read `src/pages/not-found.js` (404 enrichment script).
+
+WORK — 404
+- Branded layout, bilingual, search box, popular links (tracker, calculator, methodology,
+  shops, country index).
+- Server returns 404 status (not 200 with a 404 body — that's a soft-404).
+- Page itself is `noindex`.
+
+WORK — 410
+- Permanently removed pages return 410 via `_redirects` rule (preferred over 404).
+- Drop from sitemap.
+
+WORK — redirects
+- Old paths → new paths, 301.
+- No redirect chains > 1 hop.
+- No redirects to off-domain.
+
+WORK — offline
+- `offline.html` is bilingual, references the cached state, links to the homepage.
+- Asset references are absolute (works without network).
+
+CONSTRAINTS
+- Don't redirect canonicals.
+- Don't soft-404.
+- Bilingual.
+
+VERIFY
+- `npm run validate`, `npm run check-links`, `npm test`, `npm run build`.
+- Manual: hit a known-deleted URL, confirm 410.
+
+DELIVERABLE
+PR with focused commits: 404, 410, redirects, offline, sitemap.
+```
+
+**Files / surfaces to inspect:**
+- `404.html`, `offline.html`, `src/pages/not-found.js`.
+- `_redirects`, `_headers` (verify exists for host).
+- `robots.txt`, `sitemap.xml`.
+
+**Required checks:**
+- `npm run validate`, `npm run check-links`, `npm test`, `npm run build`.
+
+**Expected final report:**
+- 404 / 410 / 301 audit.
+- Soft-404 count (should be 0).
+- Sitemap delta.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Don't redirect away from canonicals.
+- Don't break the SW scope by relocating `offline.html`.
+
+**Failure modes to watch for:**
+- 404 page returns 200 status.
+- Redirect chains: A → B → C.
+- Off-domain redirect.
+- Offline page broken outside SW.
+
+**Cross-references:**
+- → [§10 SEO and Indexing Prompt](#10-seo-and-indexing-prompt)
+- → [§11 PWA / Service Worker / Performance Prompt](#11-pwa--service-worker--performance-prompt)
+- → [§41 Placeholder & Stub Page Completion](#41-placeholder--stub-page-completion)
+
+---
+
+## 46. Image Audit & Asset Optimization
+
+**Purpose:**
+Images move bytes, drive LCP, and need alt text. The image-audit script (`image-audit.js`)
+is the entry point. This prompt keeps the asset budget honest.
+
+**When to use:**
+- LCP regresses.
+- New images added without dimensions or alt.
+- Quarterly asset budget review.
+
+**Copy-paste prompt:**
+
+```text
+You are auditing images and assets on Gold Ticker Live. Modern formats, fixed dimensions,
+honest alt text, sane budget.
+
+INSPECT FIRST
+1. Read `scripts/node/image-audit.js`.
+2. Run `npm run image-audit` (capture report).
+3. List `assets/img/**` (verify path).
+4. Sample HTML pages for `<img>` and `<picture>` usage.
+
+WORK — formats
+- Prefer AVIF + WebP with PNG/JPG fallback via `<picture>`.
+- Lossy where possible; lossless only for logos/UI marks.
+
+WORK — sizing
+- `width` and `height` set on every `<img>` to prevent CLS.
+- `srcset` for hero / above-the-fold.
+- `loading="lazy"` for below-the-fold.
+- `decoding="async"` everywhere.
+
+WORK — alt text
+- Decorative images: `alt=""`.
+- Informative images: bilingual alt via translations or page-local strings.
+
+CONSTRAINTS
+- No images > 200 KB without explicit reason in the audit doc.
+- No external image hosts.
+
+VERIFY
+- `npm run image-audit`, `npm run perf:ci`, `npm run a11y`, `npm test`, `npm run build`.
+
+DELIVERABLE
+PR with focused commits: format, sizing, alt, budget. Update `scripts/node/image-audit.js`
+thresholds if owner-approved.
+```
+
+**Files / surfaces to inspect:**
+- `scripts/node/image-audit.js`.
+- `assets/img/**` (verify path).
+- HTML pages with `<img>` / `<picture>`.
+
+**Required checks:**
+- `npm run image-audit`, `npm run perf:ci`, `npm run a11y`, `npm test`, `npm run build`.
+
+**Expected final report:**
+- Image budget delta.
+- LCP delta.
+- alt-coverage status.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- No external image hosts (lightweight + privacy).
+
+**Failure modes to watch for:**
+- A 4 MB hero PNG.
+- `<img>` without `width`/`height` → CLS spike.
+- Decorative image with verbose alt.
+- AR alt missing.
+
+**Cross-references:**
+- → [§11 PWA / Service Worker / Performance Prompt](#11-pwa--service-worker--performance-prompt)
+- → [§42 Mobile-First Layout Audit](#42-mobile-first-layout-audit)
+
+---
+
+## 47. Repo Cleanup and Architecture
+
+**Purpose:**
+Periodic cleanup keeps the repo navigable: dead modules removed, dual-import-style
+inconsistencies resolved, doc placement consistent, archive/`_archive` clearly delineated
+from live code. This prompt prevents architectural sprawl without rewriting working code.
+
+**When to use:**
+- A new contributor reports the repo is hard to navigate.
+- Multiple modules duplicate the same logic.
+- Archive/dead-code accumulates.
+
+**Copy-paste prompt:**
+
+```text
+You are cleaning up the repo on Gold Ticker Live. Surgical, not architectural rewrite.
+Reduce sprawl; don't break working code.
+
+INSPECT FIRST
+1. Read `AGENTS.md` repository map.
+2. List top-level directories. Note any duplication.
+3. `rg -l "deprecated|legacy|TODO: remove" src/ scripts/`.
+4. Read `docs/ARCHITECTURE.md`.
+
+WORK — dead code
+- Remove modules with 0 imports verified by ripgrep.
+- Move historical content to `_archive/` if not yet archived.
+
+WORK — consistency
+- Root `package.json` `"type":"commonjs"`; `src/package.json` `"type":"module"`. Don't
+  flip either without an owner-approved migration.
+- ESLint flat config (`eslint.config.mjs`) — keep one config source.
+
+WORK — docs alignment
+- `docs/ARCHITECTURE.md` reflects current top-level layout.
+- `AGENTS.md` repository map matches.
+
+CONSTRAINTS
+- Don't change CJS/ESM split.
+- Don't move files that workflows reference.
+- Bilingual not relevant here (developer-facing).
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run lint`, `npm run quality`, `npm run build`.
+- `rg "<removed module>" .` → 0 hits.
+
+DELIVERABLE
+PR with focused commits: removals, archives, doc updates.
+```
+
+**Files / surfaces to inspect:**
+- `AGENTS.md`, `docs/ARCHITECTURE.md`.
+- Top-level dirs.
+- `eslint.config.mjs`, `package.json`, `src/package.json`.
+
+**Required checks:**
+- `npm run validate`, `npm test`, `npm run lint`, `npm run quality`, `npm run build`.
+
+**Expected final report:**
+- Removals list.
+- Archive moves.
+- Doc updates.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- CJS / ESM split is a carve-out.
+- Workflows that reference moved files break silently — search workflows before any move.
+
+**Failure modes to watch for:**
+- Workflow references a moved script.
+- A "dead" module is actually loaded dynamically.
+- ESLint config silently removed.
+
+**Cross-references:**
+- → [§16 Docs and Governance Prompt](#16-docs-and-governance-prompt)
+- → [§40 Dependency Audit & Advisory Check](#40-dependency-audit--advisory-check)
+
+---
+
+## 48. Monetization and Growth
+
+**Purpose:**
+Growth + monetization (newsletter, partner referrals, ad slots, premium watch) need to
+respect trust posture. No deceptive ads, no popovers blocking content, no fake scarcity.
+This prompt keeps growth tactics aligned with the product's credibility.
+
+**When to use:**
+- Owner-approved monetization experiment.
+- Ad slot is being added or moved.
+- Premium-watch / partner referral flow needs polish.
+
+**Copy-paste prompt:**
+
+```text
+You are working on monetization and growth on Gold Ticker Live. Owner-approved tactics
+only. Trust posture preserved.
+
+INSPECT FIRST
+1. Read `src/config/constants.js` `AD_CONFIG` and any premium-watch config.
+2. Read content/premium-watch (verify path), content/order-gold (verify path).
+3. Read `docs/REVAMP_PLAN.md` monetization section.
+
+WORK — ads
+- Ad slots labeled "Ad" / "إعلان" visibly.
+- No sticky / interstitial ads.
+- Ads excluded from above-the-fold and from admin/auth-gated pages.
+- Lazy-loaded.
+
+WORK — partner referrals
+- Disclosed in copy: "We may earn a referral fee when you order through this link."
+- UTMs preserved end-to-end.
+
+WORK — premium watch / alerts
+- Pricing page is honest about what's included (see [§29](#29-pricing--invest-pages)).
+- Feature gates do not break the public free experience.
+
+CONSTRAINTS
+- No deceptive UI.
+- No fake scarcity ("Only 3 left!").
+- Bilingual.
+
+VERIFY
+- `npm run validate`, `npm run a11y`, `npm run perf:ci`, `npm test`, `npm run build`.
+
+DELIVERABLE
+PR with focused commits: ad slots, referrals, premium, docs.
+```
+
+**Files / surfaces to inspect:**
+- `src/config/constants.js` (`AD_CONFIG`).
+- `content/premium-watch/`, `content/order-gold/` (verify paths).
+- `docs/REVAMP_PLAN.md`.
+
+**Required checks:**
+- `npm run validate`, `npm run a11y`, `npm run perf:ci`, `npm test`, `npm run build`.
+
+**Expected final report:**
+- Ad slots placement diff.
+- Referral disclosure presence.
+- Premium gating audit.
+- Manual follow-up: AdSense, partner contracts — see [§52](#52-manual-follow-up-reporting-expectations).
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Trust carve-outs (no fake scarcity, no deceptive UI) — see [§50](#50-safety-rules-and-carve-outs).
+
+**Failure modes to watch for:**
+- Sticky bottom ad blocks the calculator CTA.
+- Affiliate links missing disclosure.
+- Premium gate accidentally hides freshness pill.
+
+**Cross-references:**
+- → [§29 Pricing & Invest Pages](#29-pricing--invest-pages)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+- → [§52 Manual Follow-Up Reporting Expectations](#52-manual-follow-up-reporting-expectations)
+
+---
+
+# Reference Sections
+
+The remaining sections are references — cite them from prompts and use them as
+checklists in your final report. They are not copy-paste prompts.
+
+---
+
+## 49. Validation Commands Reference
+
+This is the canonical list of commands a Copilot Agent session may run on this repo.
+Commands marked **(verify exists)** are not currently in `package.json` or are environment-
+dependent — confirm before invoking.
+
+### Git status / diff (always cheap; run liberally)
+
+```bash
+git status --short
+git branch --show-current
+git diff --stat
+git diff --name-only
+git log --oneline -20
+```
+
+Use at session start (Required Session Protocol [§2](#2-required-session-protocol)) and
+before opening a PR ([§7](#7-before-new-pr-prompt)).
+
+### Core npm scripts (must exist; in `package.json`)
+
+```bash
+npm install
+npm test
+npm run lint
+npm run validate
+npm run quality
+npm run build
+```
+
+`validate` is the integrated gate (build integrity, DOM-safety, SEO meta, sitemap coverage,
+placeholder, analytics). `quality` runs lint + format check + stylelint. Run before any
+final report.
+
+### Extended npm scripts (verify per repo state)
+
+```bash
+npm run seo-audit
+npm run check-links
+npm run linkcheck
+npm run linkcheck:dist
+npm run image-audit
+npm run a11y
+npm run perf:ci
+npm run audit-pages
+npm run check-unsafe-dom
+npm run preview
+npm run pre-deploy
+npm run pre-deploy:fast
+npm run pre-deploy:ci
+npm run changelog
+npm run changelog:write
+npm run release:package
+npm run security
+npm run test:coverage
+npm run test:playwright
+npm run test:watch
+```
+
+`pre-deploy` runs 11 go/no-go checks (always exits 1 on failures). `pre-deploy:fast` adds
+`--skip-tests`. `pre-deploy:ci` is non-interactive. Use these from
+[§20 Final Verification](#20-final-verification-and-deploy-safety-prompt) and
+[§38 Pre-deploy, Changelog & Release](#38-pre-deploy-changelog--release).
+
+### Direct generator / checker scripts (CJS — `node` from repo root)
+
+```bash
+node scripts/node/check-unsafe-dom.js
+node scripts/node/inject-schema.js
+node scripts/node/inject-schema.js --check
+node scripts/node/generate-sitemap.js
+node scripts/node/check-sitemap-coverage.js
+node scripts/node/check-seo-meta.js
+node scripts/node/inventory-seo.js
+node scripts/node/seo-audit.js
+node scripts/node/normalize-shops.js
+node scripts/node/audit-pages.js
+node scripts/node/image-audit.js
+node scripts/node/enrich-placeholder-pages.js
+node scripts/node/generate-placeholders.js
+node scripts/node/generate-rss.js
+node scripts/node/generate-newsletter.js
+node scripts/node/send-newsletter.js
+node scripts/node/tweet-gold-price.js
+node scripts/node/notify-discord.js
+node scripts/node/notify-telegram.js
+node scripts/node/price-spike-alert.js
+node scripts/node/uptime-check.js
+node scripts/node/pre-deploy-check.js
+node scripts/node/changelog.js
+node scripts/node/package-release.js
+```
+
+`inject-schema.js --check` is the idempotency gate after Round 16 — must report 0
+modifications on a clean tree. Use from [§18 Generated Files](#18-generated-files-and-source-generator-prompt)
+and [§22 Country & City Pages Deep Dive](#22-country--city-pages-deep-dive).
+
+### Rebrand / consistency ripgrep sweeps
+
+```bash
+rg -n --hidden \
+  --glob '!node_modules' --glob '!dist' --glob '!coverage' --glob '!.git' \
+  "GoldPrices|GoldTickerLive|GoldPrices\.app|Gold-Prices|gold_prices|gold-prices|goldprices|goldtickerlive" .
+
+rg -n --hidden \
+  --glob '!node_modules' --glob '!dist' --glob '!coverage' --glob '!.git' \
+  "Gold Prices|Gold Price Tracker|Gold Prices Platform|Gold Prices UAE|Gold Price " .
+
+rg -n --hidden \
+  --glob '!node_modules' --glob '!dist' --glob '!coverage' --glob '!.git' \
+  "SITE_NAME|site_name|brandName|application-name|apple-mobile-web-app-title|og:title|twitter:title" .
+
+rg -n --hidden \
+  --glob '!node_modules' --glob '!dist' --glob '!coverage' --glob '!.git' \
+  "canonical|hreflang|JSON-LD|@type|sitemap|robots" .
+
+rg -n --hidden \
+  --glob '!node_modules' --glob '!dist' --glob '!coverage' --glob '!.git' \
+  "TODO|FIXME|HACK|temporary|placeholder|stub|coming soon" .
+
+rg -n --hidden \
+  --glob '!node_modules' --glob '!dist' --glob '!coverage' --glob '!.git' \
+  "innerHTML|outerHTML|insertAdjacentHTML" src/
+```
+
+Run the brand and SEO sweeps before any cross-cutting work; classify each match per
+[§17 Rebrand Maintenance](#17-rebrand-maintenance-prompt). The DOM-safety sweep gates
+the unsafe-dom baseline.
+
+### Workflow lint (verify installed)
+
+```bash
+actionlint .github/workflows/
+```
+
+Verify before any workflow change ([§37](#37-github-actions-workflow-hardening)).
+
+### Markdown / XML lint (verify installed)
+
+```bash
+markdownlint docs/
+xmllint --noout sitemap.xml
+xmllint --noout feed.xml
+```
+
+Use from [§16 Docs and Governance](#16-docs-and-governance-prompt) and
+[§43 RSS Feed & News](#43-rss-feed--news).
+
+---
+
+## 50. Safety Rules and Carve-Outs
+
+This section is the source of truth for what NOT to change. Every prompt cross-references
+back here. When the agent reports preserved carve-outs in [§51 Final-Report Format](#51-expected-final-report-format),
+cite the bullet from this section.
+
+### Inspection & editing discipline
+
+- Inspect before editing. Never blindly replace text.
+- For every match, decide: brand identity, SEO keyword phrase, route path, DB schema,
+  historical changelog, or backward-compat key.
+- Edit source generators BEFORE generated outputs.
+- Regenerate generated files only when generator logic changed.
+- Avoid shallow changes when the task requires broad repo awareness.
+- Document intentionally unchanged references in the final report.
+- Document any manual steps that must happen outside the repo ([§52](#52-manual-follow-up-reporting-expectations)).
+
+### Deployment carve-outs (do NOT change without explicit instruction)
+
+- `/Gold-Prices/` paths required for GitHub Pages project-path deployment compatibility.
+- `github.com/vctb12/Gold-Prices` references until the GitHub repo is actually renamed.
+- `vctb12.github.io/Gold-Prices/` historical/current Pages URL.
+- `CNAME` (`goldtickerlive.com`).
+- `vite.config.js` `base` (currently `'/'`).
+- `manifest.json` `start_url` (`'/'`) and `scope` (`'/'`).
+- `manifest.json` `name="Gold Ticker Live — Live Gold Price Tracker"` and
+  `short_name="Gold Ticker Live"`.
+- `.github/workflows/*` deploy/cron triggers.
+- `_headers`, `_redirects` (where present).
+
+### SEO carve-outs (preserve)
+
+- URL paths under `countries/**/gold-prices/`.
+- SEO topic phrases: "Gold Prices Today", "How Gold Prices Work",
+  "Why UAE Gold Prices Differ", "Gold Prices in Dubai", "Gold Prices in <City>", and
+  similar topic / keyword phrasing.
+- Existing canonical URLs of indexed pages.
+- `robots.txt` `Disallow: /admin/` and `Disallow: /api/`.
+- `sitemap.xml` deterministic ordering and `<lastmod>` derivation.
+- `hreflang` EN ↔ AR pairing on every bilingual surface.
+
+### Data / schema / state carve-outs
+
+- `gold_prices` database/table names — do not rename without a proper migration request.
+- localStorage / cache keys — `user_prefs`, `gold_price_alerts`, `karatStripUnit`,
+  `theme`, etc. — do not change without a migration plan.
+- Service-worker cache name — bump version (e.g. `goldtickerlive-v16` → `v17`), do NOT
+  rename the prefix; coordinate with `tests/sw-exclusions.test.js`.
+- Gold pricing formula
+  `price_per_gram = (XAU/USD ÷ 31.1035) × purity × 3.6725` — do not change unless
+  explicitly asked.
+- AED peg `3.6725` — do not change unless explicitly asked.
+- `TROY_OZ_GRAMS = 31.1035` — do not change.
+- Karat purity table (24K=0.999, 22K=0.916, 21K=0.875, 18K=0.750) — do not change.
+- FX logic — do not change unless explicitly asked.
+- `STALE_AFTER_MS = 12 * 60 * 1000` and `FX_STALE_AFTER_MS = 26 * 60 * 60 * 1000` — do
+  not change without owner approval.
+- `GOLD_REFRESH_MS = 90 * 1000` — do not change without owner approval.
+
+### Identity carve-outs
+
+- `@GoldTickerLive` X/Twitter handle — leave intact.
+- Historical changelog / rebrand-notes references to old names — leave intact as
+  historical record.
+- Email/contact addresses — verify they exist before changing.
+
+### Quality carve-outs (preserve)
+
+- Arabic / RTL parity for every user-visible string.
+- Mobile-first behavior at 320–414 px.
+- Trust language around live / cached / fallback / derived data (freshness states:
+  `live`, `cached`, `stale`, `unavailable`).
+- Lightweight, no-heavy-dependency posture (no React, no Next, no charting libs except
+  the lazy-loaded TradingView Lightweight Charts CDN, no CSS frameworks, no jQuery).
+- DOM-safety baseline (per `scripts/node/check-unsafe-dom.js` — 0 sinks in
+  `src/tracker/render.js`; total baseline must not increase).
+- WCAG 2.5.5 tap target ≥ 44 × 44 px (Round 15).
+- All animations respect `prefers-reduced-motion: reduce` (per-class guards Round 15
+  + global `*` rule in `styles/global.css`).
+- SEO intent while improving brand consistency.
+- `<details>` / disclosure semantics for FAQ.
+- Single source for nav, footer, breadcrumbs (one component each).
+
+### Workflow carve-outs
+
+- `.github/workflows/post_gold.yml` is live in production — never break the
+  `scripts/python/utils/*` import path; never change cadence without owner approval.
+- `tests/sw-exclusions.test.js` must stay green — `/admin/*` and `/api/*` excluded
+  from SW.
+- Pin third-party actions to commit SHAs; keep `.github/workflows/README.md` table in sync.
+- Never echo secrets in workflow `run:` steps.
+- `pre-deploy:ci` is the canonical non-interactive gate.
+
+### Reporting
+
+- Run [§49](#49-validation-commands-reference) checks before final response.
+- Produce the [§51](#51-expected-final-report-format) final report.
+- Cite this section (§50) when listing preserved carve-outs.
+- Flag manual follow-up per [§52](#52-manual-follow-up-reporting-expectations).
+
+---
+
+## 51. Expected Final-Report Format
+
+Every Copilot Agent session driven by any prompt in this library must produce the
+following report at the end of the task. Copy this template into the agent's final
+message; fill every line.
+
+```
+### Session Final Report — <date> — <branch>
+
+- Branch: <name> (base: main)
+- Files changed: <count>
+  - by area: docs (<n>), src (<n>), scripts (<n>), countries (<n>), content (<n>), workflows (<n>), config (<n>)
+- Summary of changes:
+  - <bulleted, by area, one line each>
+- Generators touched: <yes/no — list>
+- Generated files regenerated: <yes/no — list>
+- Commands run:
+  - git status --short → <result>
+  - npm ci / npm install → <result>
+  - npm test → <pass/fail count>
+  - npm run lint → <result>
+  - npm run validate → <result>
+  - npm run quality → <result>
+  - npm run build → <result>
+  - npm run seo-audit → <result, if relevant>
+  - npm run check-links → <result, if relevant>
+  - node scripts/node/check-unsafe-dom.js → <result, if relevant>
+  - node scripts/node/inject-schema.js --check → <result, if relevant>
+  - rebrand ripgrep sweep → <before count → after count, classified>
+- Skipped checks (and why): <list>
+- Carve-outs preserved: <bulleted, cite §50>
+- Manual follow-up required (outside repo): <bulleted, cite §52>
+- PR shape: <commit count, themes, draft vs ready>
+- Safe to deploy: <yes/no> — <one-paragraph reasoning>
+```
+
+**Rules for the report:**
+
+1. **Be honest about what was run.** If you didn't run a check, say so under "Skipped
+   checks". Do not paraphrase a check as run when you only inferred its likely result.
+2. **Quote real numbers.** "39 tests passed" not "tests passed". "Rebrand sweep: 412
+   matches before, 38 intentional carve-outs after" not "rebrand looks clean".
+3. **Cite §50 carve-outs by their bullet text** so the owner can scan the list.
+4. **Manual follow-up is mandatory** if any item from [§52](#52-manual-follow-up-reporting-expectations)
+   applies — never silently absorb a manual step.
+5. **`Safe to deploy: yes` is a strong claim.** Say `no` if the verification matrix is
+   incomplete or if `pre-deploy:ci` was not run.
+
+---
+
+## 52. Manual Follow-Up Reporting Expectations
+
+Some changes require manual action outside the repo. The agent must surface every such
+step in the [§51](#51-expected-final-report-format) "Manual follow-up required" bullet
+list. Never silently accept a state that requires owner action without flagging it.
+
+### Always-manual surfaces
+
+- **GitHub repository rename** (`vctb12/Gold-Prices` → anything else) — requires GitHub
+  admin action; agents do not perform this. If a session would benefit from a rename,
+  flag it; do not attempt.
+- **DNS / `CNAME` changes** — requires DNS provider action.
+- **GitHub Pages settings** (custom domain, HTTPS toggle) — requires repo admin.
+- **GitHub Secrets** — never commit; flag the secret name + owner action ("set
+  `X_API_TOKEN` in repo secrets").
+- **Supabase RLS / SQL migrations** — flag migration file path + apply step. See
+  [§44](#44-supabase-data-sync) and [§26](#26-admin-panel-ux).
+- **Supabase OAuth provider config** — manual.
+- **AdSense / monetization account config** — manual. See [§48](#48-monetization-and-growth).
+- **X / Twitter API tokens** — manual. See [§28](#28-xtwitter-automation-polish).
+- **Discord / Telegram webhook URLs** — manual. See [§27](#27-newsletter--alert-system).
+- **Formspree / form-relay endpoint config** — manual.
+- **Email provider config** (newsletter sending) — manual.
+- **Analytics provider account / property setup** — manual. See [§36](#36-analytics-events-standardization).
+- **Submitting `sitemap.xml` to Google Search Console / Bing Webmaster** — manual.
+- **Schema change apply on the live Supabase project** — manual.
+
+### Format
+
+Use the form: `<owner action> — <reason / link>`. Examples:
+
+- `Set X_API_TOKEN, X_API_SECRET, X_BEARER_TOKEN in repo secrets — required by post_gold.yml.`
+- `Apply migrations/2026-04-30-add-shop-evidence-url.sql to Supabase — adds shop_evidence_url column.`
+- `Submit sitemap.xml in Google Search Console for goldtickerlive.com — required after sitemap structure change.`
+- `Update Discord webhook URL in DISCORD_WEBHOOK secret — old webhook revoked.`
+
+The agent should err on the side of over-reporting manual steps. A flag the owner ignores
+is cheap; a missed step is expensive.
+
+---
+
+## 53. Appendix — Repo-Specific Reminders
+
+A condensed reference of the constants, paths, and patterns the rest of this library
+assumes. Verify against the live repo at session start; if any value drifted, use the
+current value and flag the change.
+
+### Identity
+
+- Brand: **Gold Ticker Live**.
+- Domain: **https://goldtickerlive.com/** (custom domain via `CNAME`).
+- GitHub repo: **`vctb12/Gold-Prices`** (until renamed; see [§52](#52-manual-follow-up-reporting-expectations)).
+- GitHub Pages historical URL: `https://vctb12.github.io/Gold-Prices/`.
+- X/Twitter handle: `@GoldTickerLive`.
+
+### Constants (`src/config/constants.js`)
+
+- `AED_PEG = 3.6725`.
+- `TROY_OZ_GRAMS = 31.1035`.
+- `GOLD_REFRESH_MS = 90 * 1000` (90 s).
+- `STALE_AFTER_MS = 12 * 60 * 1000` (12 min).
+- `FX_STALE_AFTER_MS = 26 * 60 * 60 * 1000` (26 h).
+- `BASE_PATH = '/'` (custom domain).
+- `CACHE_KEYS.alerts = 'gold_price_alerts'`.
+
+### Karat purities (`src/config/karats.js`)
+
+- 24K = 0.999
+- 22K = 0.916
+- 21K = 0.875
+- 18K = 0.750
+
+### Pricing formula
+
+```
+price_per_gram_AED = (XAU_USD ÷ 31.1035) × purity × 3.6725
+```
+
+### Manifest (`manifest.json`)
+
+- `name = "Gold Ticker Live — Live Gold Price Tracker"`.
+- `short_name = "Gold Ticker Live"`.
+- `start_url = "/"`.
+- `scope = "/"`.
+
+### Service worker (`sw.js`)
+
+- `CACHE_NAME = 'goldtickerlive-v16'` — bump version on cache logic changes; do not
+  rename the prefix.
+- `/admin/*` and `/api/*` excluded — gated by `tests/sw-exclusions.test.js`.
+
+### Module type split
+
+- Root `package.json`: `"type": "commonjs"`. `scripts/node/*.js` use CJS `require`.
+- `src/package.json`: `"type": "module"`. `src/**/*.js` use ESM `import`.
+
+### Tests
+
+- 39 test files (verify via `ls tests/*.test.js | wc -l`).
+- Runner: `node --test --test-concurrency=1 tests/*.test.js`.
+- Concurrency 1 to avoid `data/*.json` race.
+
+### Workflows (`.github/workflows/`)
+
+- 13 workflows; SHA-pinned actions; central reference table at `.github/workflows/README.md`.
+- Production: `post_gold.yml` (hourly X-post). Do not break import path
+  `scripts/python/utils/*`.
+- Sync: `sync-db-to-git.yml` (Supabase JSON snapshot).
+- Tests: `ci.yml`, `codeql.yml`, `semgrep.yml`, `lighthouse.yml`, `perf-check.yml`.
+- Alerts/uptime: `price-spike-alert*.yml`, `uptime-check*.yml`.
+
+### Generators (CJS in `scripts/node/`)
+
+- `inject-schema.js` (idempotent as of Round 16; mtime-driven dates).
+- `generate-sitemap.js`, `check-sitemap-coverage.js`.
+- `enrich-placeholder-pages.js`, `generate-placeholders.js`.
+- `normalize-shops.js` (atomic JSON gate).
+- `generate-rss.js`, `generate-newsletter.js`, `send-newsletter.js`.
+- `tweet-gold-price.js`, `notify-discord.js`, `notify-telegram.js`,
+  `price-spike-alert.js`, `uptime-check.js`.
+- `pre-deploy-check.js` (11 checks, exits 1 on failure).
+- `changelog.js`, `package-release.js`.
+- `check-unsafe-dom.js` (DOM-safety baseline).
+
+### Carve-out cross-references
+
+- Deployment paths: [§50](#50-safety-rules-and-carve-outs) → Deployment carve-outs.
+- SEO phrases & paths: [§50](#50-safety-rules-and-carve-outs) → SEO carve-outs.
+- Pricing math, peg, karats, troy-ounce: [§50](#50-safety-rules-and-carve-outs) → Data carve-outs.
+- `@GoldTickerLive` handle: [§50](#50-safety-rules-and-carve-outs) → Identity carve-outs.
+- 44 px tap target, RTL, reduced-motion, lightweight posture: [§50](#50-safety-rules-and-carve-outs) → Quality carve-outs.
+
+### Style tokens (`styles/global.css`)
+
+- Surfaces: `--surface-primary`, `--surface-secondary`, `--surface-tertiary`.
+- Text: `--text-primary`, `--text-secondary`, `--text-tertiary`.
+- Borders: `--border-subtle`.
+- Accents: `--color-accent`, `--color-accent-strong`, `--color-surface-raised`,
+  `--color-gold-alpha`, `--color-amber`, `--color-danger`.
+- Spacing: `--space-*`. Typography: `--text-*`. Radii: `--radius-*`. Shadows:
+  `--shadow-*`. Easing: `--ease-*`. Duration: `--duration-*`.
+
+### Documentation map
+
+- `AGENTS.md` — cross-agent charter.
+- `CLAUDE.md` — Claude-specific mechanics (points to AGENTS.md).
+- `.github/copilot-instructions.md` — Copilot-specific mechanics (points to AGENTS.md
+  and this file).
+- `docs/REVAMP_PLAN.md` — master revamp plan.
+- `docs/plans/` — proposal intake.
+- `docs/ARCHITECTURE.md`, `docs/DESIGN_TOKENS.md`, `docs/ACCESSIBILITY.md`,
+  `docs/PERFORMANCE.md`, `docs/SEO_STRATEGY.md`, `docs/SEO_CHECKLIST.md`,
+  `docs/EDIT_GUIDE.md`, `docs/AUTOMATIONS.md`, `docs/environment-variables.md`,
+  `docs/tracker-state.md`, `docs/methodology.md`, `docs/LIMITATIONS.md`,
+  `docs/DEPENDENCIES.md`, `docs/CONTRIBUTING.md`, `docs/ADMIN_SETUP.md`,
+  `docs/ADMIN_GUIDE.md`, `docs/SUPABASE_SETUP.md`, `docs/SUPABASE_SCHEMA.md`,
+  `docs/twitter_bot_architecture.md`, `docs/ANALYTICS_EVENTS.md` (verify each).
+- `docs/GOLD_TICKER_LIVE_REBRAND_NOTES.md`, `docs/GOLD_TICKER_LIVE_REBRAND_VERIFICATION.md`.
+
+---
+
+## 54. Changelog of this Prompt Library
+
+### v2.0.0 — 2026-04-30
+
+- Restructured the file into 54 sections with a strict 7-part schema for every prompt
+  (Purpose / When to use / Copy-paste prompt / Files-to-inspect / Required checks /
+  Expected final report / Safety notes / Failure modes / Cross-references).
+- Added meta-layer sections: Required Session Protocol (§2), Prompt Index / Quick
+  Picker (§3), Universal New Session Starter (§4), Repo Synergy & Consistency Audit
+  Prompts (§5 with three sub-prompts), After Pull / After Merge (§6), Before New PR
+  (§7), Docs and Governance (§16), Generated Files and Source Generator (§18), Final
+  Verification and Deploy Safety (§20), Validation Commands Reference (§49), Safety
+  Rules and Carve-Outs (§50), Expected Final-Report Format (§51), Manual Follow-Up
+  Reporting Expectations (§52), Appendix — Repo-Specific Reminders (§53), and this
+  changelog (§54).
+- Migrated all 40 v1 prompts (P1–P40) into the new schema with no substance dropped:
+  - v1 P1 → §8 Full UI/UX Revamp
+  - v1 P2 → §9 Live Tracker Upgrade
+  - v1 P3 → §10 SEO and Indexing
+  - v1 P4 → §13 Shops Directory
+  - v1 P5 → §14 Calculator and Tools
+  - v1 P6 → §15 Data Reliability and Methodology
+  - v1 P7 → §11 PWA / Service Worker / Performance (merged with v1 P21)
+  - v1 P8 → §12 Arabic / RTL Quality
+  - v1 P9 → §47 Repo Cleanup and Architecture
+  - v1 P10 → §48 Monetization and Growth
+  - v1 P11 → §19 Large PR Execution
+  - v1 P12 → §17 Rebrand Maintenance (with classification table)
+  - v1 P13 → §21 Homepage Hero & Above-the-Fold
+  - v1 P14 → §22 Country & City Pages Deep Dive
+  - v1 P15 → §23 Content Guide Library
+  - v1 P16 → §24 FAQ + Structured Data
+  - v1 P17 → §25 Site Search
+  - v1 P18 → §26 Admin Panel UX
+  - v1 P19 → §27 Newsletter & Alert System
+  - v1 P20 → §28 X/Twitter Automation Polish
+  - v1 P21 → §11 PWA (merged with v1 P7)
+  - v1 P22 → §29 Pricing & Invest Pages
+  - v1 P23 → §14 Calculator (merged into Calculator and Tools)
+  - v1 P24 → §30 Chart Component
+  - v1 P25 → §31 Footer, Internal Links & Breadcrumbs
+  - v1 P26 → §32 Compare Countries & Today's Best Rates
+  - v1 P27 → §33 Social Sharing & Embed Widget
+  - v1 P28 → §34 Submit Shop & Order Gold Flows
+  - v1 P29 → §35 Dark Mode & Theme System
+  - v1 P30 → §36 Analytics Events Standardization
+  - v1 P31 → §37 GitHub Actions Workflow Hardening
+  - v1 P32 → §38 Pre-deploy, Changelog & Release
+  - v1 P33 → §39 E2E & Coverage
+  - v1 P34 → §40 Dependency Audit & Advisory Check
+  - v1 P35 → §41 Placeholder & Stub Page Completion
+  - v1 P36 → §42 Mobile-First Layout Audit
+  - v1 P37 → §43 RSS Feed & News
+  - v1 P38 → §44 Supabase Data Sync
+  - v1 P39 → §45 404 / Error Pages & Redirect Hygiene
+  - v1 P40 → §46 Image Audit & Asset Optimization
+- Anchored every prompt against real repo facts (constants, manifest values, SW cache
+  name, generator paths, workflow names, test files).
+- Added Failure modes to watch for and Cross-references to every prompt.
+- Added explicit carve-out cross-references in every prompt.
+- Reorganized the Specialized Prompts (§§21–48) so meta-layer prompts (§§4–20) come first.
+
+### v1 — pre-2026-04-30
+
+- Original 40-prompt library with simpler INSPECT / WORK / CONSTRAINTS / VERIFY layout.
+- Preserved in git history on this branch's earlier commits and at base commit
+  `36138c9c` (`docs/GOLD_TICKER_LIVE_AGENT_PROMPTS.md`).
