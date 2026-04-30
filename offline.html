@@ -1,12 +1,15 @@
 <!doctype html>
 <html lang="en" dir="ltr">
   <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578581906562588"
-         crossorigin="anonymous"></script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8578581906562588"
+      crossorigin="anonymous"
+    ></script>
     <meta charset="UTF-8" />
     <script src="assets/analytics.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Offline Gold Prices — Gold Ticker Live</title>
+    <title>Offline — Gold Ticker Live</title>
     <meta name="robots" content="noindex" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="styles/global.css" />
@@ -17,40 +20,53 @@
         justify-content: center;
         min-height: 100vh;
         margin: 0;
-        background: #f8fafc;
+        background: var(--surface-secondary, #f8fafc);
       }
+
       .offline-card {
         text-align: center;
-        max-width: 480px;
-        margin: 2rem;
+        max-width: 500px;
+        width: calc(100% - 2rem);
+        margin: 2rem auto;
         padding: 2.5rem 2rem;
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        background: var(--surface-primary, #fff);
+        border-radius: var(--radius-xl, 16px);
+        box-shadow: var(--shadow-lg, 0 4px 24px rgba(0, 0, 0, 0.08));
       }
+
       .offline-icon {
-        font-size: 3.5rem;
+        font-size: 3rem;
         margin-bottom: 1rem;
+        line-height: 1;
       }
+
       h1 {
         font-size: 1.5rem;
         font-weight: 800;
-        color: #1e293b;
+        color: var(--text-primary, #1e293b);
         margin: 0 0 0.75rem;
       }
-      p {
-        color: #64748b;
+
+      .offline-body {
+        color: var(--text-secondary, #64748b);
         font-size: 0.95rem;
         line-height: 1.6;
         margin: 0 0 1.5rem;
       }
+
+      /* Cached price card */
       .cached-price-section {
         background: #fef3c7;
-        border-radius: 10px;
+        border-radius: var(--radius-md, 10px);
         padding: 1.25rem;
         margin: 1.25rem 0;
         text-align: left;
       }
+
+      [dir='rtl'] .cached-price-section {
+        text-align: right;
+      }
+
       .cached-label {
         font-size: 0.75rem;
         font-weight: 700;
@@ -59,112 +75,248 @@
         letter-spacing: 0.05em;
         margin-bottom: 0.5rem;
       }
+
       .cached-rows {
         display: flex;
         flex-direction: column;
         gap: 0.35rem;
       }
+
       .cached-row {
         display: flex;
         justify-content: space-between;
         font-size: 0.85rem;
-        color: #1e293b;
+        color: var(--text-primary, #1e293b);
       }
+
       .cached-row strong {
         font-weight: 700;
       }
-      .cached-timestamp {
+
+      .cached-disclaimer {
         font-size: 0.72rem;
         color: #78716c;
         margin-top: 0.5rem;
+        font-style: italic;
       }
+
+      .cached-timestamp {
+        font-size: 0.72rem;
+        color: #78716c;
+        margin-top: 0.25rem;
+      }
+
+      /* Retry button */
       .btn-retry {
-        display: inline-block;
-        padding: 0.65rem 1.5rem;
-        background: #d4a017;
-        color: white;
-        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.7rem 1.6rem;
+        background: var(--color-gold, #d4a017);
+        color: #fff;
+        border-radius: var(--radius-md, 8px);
         font-weight: 700;
         font-size: 0.9rem;
         text-decoration: none;
         cursor: pointer;
         border: none;
+        min-height: 44px;
         transition: opacity 0.15s;
       }
+
+      @media (prefers-reduced-motion: reduce) {
+        .btn-retry {
+          transition: none;
+        }
+      }
+
       .btn-retry:hover {
         opacity: 0.88;
       }
+
+      /* Quick links */
+      .offline-links {
+        margin-top: 1.5rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--border-subtle, #e2e8f0);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+      }
+
+      .offline-link {
+        font-size: 0.82rem;
+        color: var(--text-secondary, #64748b);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+
+      .offline-link:hover {
+        color: var(--text-primary, #1e293b);
+      }
+
       .no-cache-msg {
-        color: #94a3b8;
+        color: var(--text-secondary, #94a3b8);
         font-size: 0.82rem;
         margin-top: 1rem;
       }
     </style>
   </head>
   <body>
-    <div class="offline-card">
-      <div class="offline-icon">📡</div>
-      <h1 id="offline-title">You're offline — cached gold prices</h1>
-      <p id="offline-body">
-        No internet connection detected. If cached values are available, they are shown below as
-        last-known reference prices, not live retail quotes.
+    <div class="offline-card" id="offline-card">
+      <div class="offline-icon" aria-hidden="true">📡</div>
+      <h1 id="offline-title">You're offline</h1>
+      <p class="offline-body" id="offline-body">
+        No internet connection. If you've visited before, last-known reference prices are shown
+        below. These are cached estimates — not live retail quotes.
       </p>
 
       <div id="cached-section" class="cached-price-section" style="display: none">
         <div class="cached-label" id="cached-label">Last known reference prices (cached)</div>
         <div class="cached-rows" id="cached-rows"></div>
+        <div class="cached-disclaimer" id="cached-disclaimer">
+          Spot-linked estimates. Retail and jewelry prices may differ.
+        </div>
         <div class="cached-timestamp" id="cached-ts"></div>
       </div>
 
       <p class="no-cache-msg" id="no-cache-msg" style="display: none">
-        No cached prices are available yet. Visit Gold Ticker Live while online first.
+        No cached prices available yet. Visit Gold Ticker Live while online first.
       </p>
 
-      <button class="btn-retry" onclick="window.location.reload()">🔄 Try Again</button>
+      <button class="btn-retry" onclick="window.location.reload()" id="btn-retry">
+        🔄 <span id="retry-label">Try Again</span>
+      </button>
+
+      <nav class="offline-links" aria-label="Cached pages">
+        <a class="offline-link" href="/methodology.html" id="link-methodology">How prices work</a>
+        <a class="offline-link" href="/content/guides/buying-guide.html" id="link-guide"
+          >Gold buying guide</a
+        >
+        <a class="offline-link" href="/" id="link-home">Home</a>
+      </nav>
     </div>
 
     <script>
-      // Try to load last-known prices from localStorage
       (function () {
-        const TROY = 31.1035;
-        const AED_PEG = 3.6725;
-        const KARATS = [
-          { code: '24', purity: 1 },
-          { code: '22', purity: 22 / 24 },
-          { code: '21', purity: 21 / 24 },
-          { code: '18', purity: 18 / 24 },
+        // ── Language detection ──────────────────────────────────────────
+        // Mirror the main site's localStorage key: user_prefs.lang
+        var lang = 'en';
+        try {
+          var prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
+          if (prefs.lang === 'ar') lang = 'ar';
+        } catch (e) {}
+
+        // ── RTL switching ───────────────────────────────────────────────
+        if (lang === 'ar') {
+          document.documentElement.setAttribute('lang', 'ar');
+          document.documentElement.setAttribute('dir', 'rtl');
+        }
+
+        // ── Bilingual strings ───────────────────────────────────────────
+        var T = {
+          en: {
+            title: "You're offline",
+            body: 'No internet connection. If you've visited before, last-known reference prices are shown below. These are cached estimates — not live retail quotes.',
+            cachedLabel: 'Last known reference prices (cached)',
+            disclaimer: 'Spot-linked estimates. Retail and jewelry prices may differ.',
+            noCache: 'No cached prices available yet. Visit Gold Ticker Live while online first.',
+            retry: 'Try Again',
+            asOf: 'As of',
+            linkMethodology: 'How prices work',
+            linkGuide: 'Gold buying guide',
+            linkHome: 'Home',
+          },
+          ar: {
+            title: 'أنت غير متصل بالإنترنت',
+            body: 'لا يوجد اتصال بالإنترنت. إذا زرت الموقع من قبل، ستجد أدناه آخر أسعار مرجعية محفوظة. هذه تقديرات مخزنة مؤقتاً — وليست أسعار بيع فعلية.',
+            cachedLabel: 'آخر أسعار مرجعية محفوظة',
+            disclaimer: 'تقديرات مبنية على سعر الذهب العالمي. قد تختلف أسعار المحلات والمصاغ.',
+            noCache: 'لا توجد أسعار محفوظة بعد. تفضل بزيارة الموقع أثناء اتصالك بالإنترنت.',
+            retry: 'حاول مجدداً',
+            asOf: 'كما في',
+            linkMethodology: 'كيف تعمل الأسعار',
+            linkGuide: 'دليل شراء الذهب',
+            linkHome: 'الرئيسية',
+          },
+        };
+
+        var t = T[lang] || T.en;
+
+        document.getElementById('offline-title').textContent = t.title;
+        document.getElementById('offline-body').textContent = t.body;
+        document.getElementById('cached-label').textContent = t.cachedLabel;
+        document.getElementById('cached-disclaimer').textContent = t.disclaimer;
+        document.getElementById('no-cache-msg').textContent = t.noCache;
+        document.getElementById('retry-label').textContent = t.retry;
+        document.getElementById('link-methodology').textContent = t.linkMethodology;
+        document.getElementById('link-guide').textContent = t.linkGuide;
+        document.getElementById('link-home').textContent = t.linkHome;
+
+        // ── Last-known gold price from localStorage ─────────────────────
+        // Keys mirror src/config/constants.js CACHE_KEYS.goldPrice / goldFallback
+        var TROY = 31.1035;
+        var AED_PEG = 3.6725;
+        var KARATS = [
+          { code: '24', label: '24K', purity: 1 },
+          { code: '22', label: '22K', purity: 22 / 24 },
+          { code: '21', label: '21K', purity: 21 / 24 },
+          { code: '18', label: '18K', purity: 18 / 24 },
         ];
 
-        let spotPrice = null,
+        var spotPrice = null,
           updatedAt = null;
         try {
-          const raw = localStorage.getItem('gp_gold_price');
+          var raw =
+            localStorage.getItem('gold_price_cache') ||
+            localStorage.getItem('gold_price_fallback');
           if (raw) {
-            const d = JSON.parse(raw);
-            spotPrice = d.price || d.data?.price;
-            updatedAt = d.updatedAt || d.data?.updatedAt;
+            var d = JSON.parse(raw);
+            spotPrice = d.price;
+            updatedAt = d.updatedAt || d.fetchedAt;
           }
         } catch (e) {}
 
         if (spotPrice && spotPrice > 0) {
-          const rows = document.getElementById('cached-rows');
-          const ts = document.getElementById('cached-ts');
-          const sec = document.getElementById('cached-section');
+          var rowsEl = document.getElementById('cached-rows');
+          var tsEl = document.getElementById('cached-ts');
+          var secEl = document.getElementById('cached-section');
 
-          rows.innerHTML = KARATS.map((k) => {
-            const pricePerGram = (spotPrice / TROY) * k.purity * AED_PEG;
-            return `<div class="cached-row">
-            <span>${k.code}K Gold</span>
-            <strong>AED ${pricePerGram.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/g</strong>
-          </div>`;
-          }).join('');
+          // Build price rows safely (no innerHTML of user data)
+          KARATS.forEach(function (k) {
+            var pricePerGram = (spotPrice / TROY) * k.purity * AED_PEG;
+            var row = document.createElement('div');
+            row.className = 'cached-row';
+            var nameSpan = document.createElement('span');
+            nameSpan.textContent = k.label + ' Gold';
+            var valStrong = document.createElement('strong');
+            valStrong.textContent =
+              'AED ' +
+              pricePerGram.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }) +
+              '/g';
+            row.appendChild(nameSpan);
+            row.appendChild(valStrong);
+            rowsEl.appendChild(row);
+          });
 
           if (updatedAt) {
-            const d = new Date(updatedAt);
-            ts.textContent =
-              'As of ' + d.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
+            var d2 = new Date(updatedAt);
+            if (!isNaN(d2.getTime())) {
+              tsEl.textContent =
+                t.asOf +
+                ' ' +
+                d2.toLocaleString(lang === 'ar' ? 'ar-AE' : 'en-US', {
+                  dateStyle: 'medium',
+                  timeStyle: 'short',
+                });
+            }
           }
-          sec.style.display = '';
+
+          secEl.style.display = '';
         } else {
           document.getElementById('no-cache-msg').style.display = '';
         }

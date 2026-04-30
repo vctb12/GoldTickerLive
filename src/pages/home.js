@@ -17,6 +17,7 @@ import { renderAdSlot } from '../components/adSlot.js';
 import '../lib/reveal.js';
 import { countUp } from '../lib/count-up.js';
 import { clear, el, safeHref } from '../lib/safe-dom.js';
+import { initSwUpdateToast } from '../lib/sw-update-toast.js';
 
 // ── Constants ──────────────────────────────────────────────────────────────
 const LANG_KEY = 'user_prefs';
@@ -892,7 +893,10 @@ async function init() {
 
   // Register service worker for offline support
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register(BASE_PATH + 'sw.js').catch(() => {});
+    navigator.serviceWorker
+      .register(BASE_PATH + 'sw.js')
+      .then(() => initSwUpdateToast(getLang()))
+      .catch(() => {});
   }
 
   // PWA install prompt — capture the beforeinstallprompt event and show a
