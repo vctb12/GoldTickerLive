@@ -2309,8 +2309,8 @@ main {
     transform 0.15s ease;
   padding: 0.2rem;
   flex-shrink: 0;
-  min-width: 36px;
-  min-height: 36px;
+  min-width: 44px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -3147,7 +3147,7 @@ main {
 .btn-sm {
   padding: 0.4rem 1rem;
   font-size: 0.82rem;
-  min-height: 34px;
+  min-height: 44px;
 }
 
 .btn-lg {
@@ -4937,7 +4937,7 @@ body > * {
     color 0.2s ease,
     transform 0.2s ease,
     box-shadow 0.2s ease;
-  min-height: 40px;
+  min-height: 44px;
   white-space: nowrap;
 }
 
@@ -6552,7 +6552,7 @@ body[data-shell='market'] {
 
 .nav-dropdown-btn,
 .nav-link {
-  min-height: 42px;
+  min-height: 44px;
   border: 1px solid transparent;
 }
 

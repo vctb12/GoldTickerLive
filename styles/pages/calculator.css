@@ -687,7 +687,7 @@
     transform 0.1s;
   white-space: nowrap;
   font-family: inherit;
-  min-height: 32px;
+  min-height: 44px;
 }
 
 .calc-preset-chip:hover {
