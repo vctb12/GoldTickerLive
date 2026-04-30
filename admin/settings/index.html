@@ -808,7 +808,6 @@
       }
 
       function buildCacheable(s) {
-        const keyStatus = statusForApiKeys(s.apiKeys);
         return {
           marginPercent: s.marginPercent,
           vatRate: s.vatRate,
@@ -818,12 +817,7 @@
           socialLinks: s.socialLinks,
           features: s.features,
           adminNotes: s.adminNotes,
-          // ---- key material is NEVER written to localStorage ----
-          apiKeysStatus: {
-            goldApi: keyStatus.goldApiConfigured ? 'configured' : 'unset',
-            fxApi: keyStatus.fxApiConfigured ? 'configured' : 'unset',
-          },
-          adsensePublisherId: keyStatus.adsensePublisherId,
+          // ---- nothing derived from apiKeys is written to localStorage ----
         };
       }
 
@@ -844,16 +838,15 @@
           const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
           if (!raw) return null;
           const saved = JSON.parse(raw);
-          const status = saved.apiKeysStatus || {};
           return {
             ...DEFAULTS,
             ...saved,
             socialLinks: { ...DEFAULTS.socialLinks, ...(saved.socialLinks || {}) },
             features: { ...DEFAULTS.features, ...(saved.features || {}) },
             apiKeys: {
-              goldApi: status.goldApi === 'configured' ? SECRET_PLACEHOLDER : '',
-              fxApi: status.fxApi === 'configured' ? SECRET_PLACEHOLDER : '',
-              adsensePublisherId: saved.adsensePublisherId || '',
+              goldApi: '',
+              fxApi: '',
+              adsensePublisherId: '',
             },
           };
         } catch {
