@@ -814,7 +814,7 @@ export function renderAlerts() {
   clear(_el.alertList);
   if (!alerts.length) {
     _el.alertList.append(
-      el('p', { style: { color: 'var(--tp-text-muted)', fontSize: '0.85rem' } }, 'No alerts set.')
+      el('p', { style: { color: 'var(--tp-text-muted)', fontSize: '0.85rem' } }, tx('alerts.empty'))
     );
     return;
   }
@@ -858,7 +858,7 @@ export function renderAlerts() {
           {
             dataset: { idx: String(i) },
             class: 'tracker-remove-btn',
-            'aria-label': 'Delete alert',
+            'aria-label': tx('alerts.deleteAriaLabel'),
           },
           '×'
         ),
@@ -877,7 +877,7 @@ export function renderPresets() {
       el(
         'p',
         { style: { color: 'var(--tp-text-muted)', fontSize: '0.85rem' } },
-        'No presets saved. Save the current view via the form above.'
+        tx('presets.empty')
       )
     );
     return;
@@ -892,7 +892,7 @@ export function renderPresets() {
     const metaParts = [
       `${escape(p.karat)}K · ${escape(p.currency)}/${escape(p.unit)} · ${escape(p.range)} range`,
       ...(isCurrent
-        ? [' · ', el('span', { style: { color: 'var(--tp-accent)' } }, '● current')]
+        ? [' · ', el('span', { style: { color: 'var(--tp-accent)' } }, tx('presets.current'))]
         : []),
     ];
     fragment.append(
@@ -909,14 +909,14 @@ export function renderPresets() {
           el(
             'button',
             { dataset: { idx: String(i) }, class: 'tracker-load-btn tracker-pill' },
-            'Load'
+            tx('presets.load')
           ),
           el(
             'button',
             {
               dataset: { idx: String(i) },
               class: 'tracker-remove-btn',
-              'aria-label': 'Delete preset',
+              'aria-label': tx('presets.deleteAriaLabel'),
             },
             '×'
           ),
