@@ -10,6 +10,7 @@
 
 const express = require('express');
 const rateLimit = require('express-rate-limit');
+const crypto = require('crypto');
 const router = express.Router();
 const pendingShopsRepo = require('../repositories/pending-shops.repository');
 
@@ -103,7 +104,7 @@ router.post('/submit-shop', submitRateLimiter, (req, res) => {
   // ── Persist ──────────────────────────────────────────────────────────────
   const now = new Date().toISOString();
   const submission = {
-    id: `psub_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+    id: `psub_${crypto.randomBytes(12).toString('hex')}`,
     status: 'pending',
     shop_name: shopName,
     owner_name: ownerName,

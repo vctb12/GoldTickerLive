@@ -351,6 +351,7 @@
           ord_shops_none: 'No shops found for this city. Try a different city or browse the full directory.',
           ord_shops_contact: 'Contact',
           ord_shops_visit: 'Website',
+          ord_shops_no_contact: 'Contact details not yet available.',
           ord_shops_verified: 'Verified',
           ord_shops_featured: 'Featured',
           ord_shops_market: 'Market',
@@ -393,6 +394,7 @@
             'لم يُعثر على محلات في هذه المدينة. جرّب مدينة أخرى أو تصفح الدليل الكامل.',
           ord_shops_contact: 'اتصال',
           ord_shops_visit: 'الموقع',
+          ord_shops_no_contact: 'بيانات الاتصال غير متوفرة حالياً.',
           ord_shops_verified: 'موثق',
           ord_shops_featured: 'مميز',
           ord_shops_market: 'السوق',
@@ -681,7 +683,7 @@
         });
 
         // Clear existing results safely
-        while (resultsEl.firstChild) resultsEl.removeChild(resultsEl.firstChild);
+        resultsEl.replaceChildren();
 
         if (filtered.length === 0) {
           const msg = el('p', { class: 'order-shops-empty' }, [
@@ -754,7 +756,7 @@
           if (metaEl) children.push(metaEl);
           if (actionsEl) children.push(actionsEl);
           else {
-            children.push(el('p', { class: 'order-shop-no-contact' }, ['Contact details not yet available.']));
+            children.push(el('p', { class: 'order-shop-no-contact' }, [s.ord_shops_no_contact || 'Contact details not yet available.']));
           }
 
           list.appendChild(el('li', { class: 'order-shop-card' }, children));

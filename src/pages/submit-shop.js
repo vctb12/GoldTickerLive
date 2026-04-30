@@ -160,9 +160,6 @@ function validateStep(n) {
       setFieldError('contact_phone', null);
     }
     const website = getValue('website');
-    if (website && !/^https?:\/\//i.test(website) && !/^www\./i.test(website)) {
-      // Allow bare domain — we prepend https on submit
-    }
     if (website && /[<>"']/.test(website)) {
       setFieldError('website', 'errorUrl');
       valid = false;

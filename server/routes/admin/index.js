@@ -744,7 +744,7 @@ router.post(
       if (!createResult.success) {
         return res.status(500).json({
           success: false,
-          message: 'Failed to create shop: ' + createResult.message,
+          message: `Failed to create shop: ${createResult.message || 'unknown error'}`,
         });
       }
 
@@ -757,10 +757,14 @@ router.post(
         approved_shop_id: createResult.shop.id,
       });
 
-      auditLog.logAction(req.user.email, 'approve', 'pending_shop', sub.id, {
-        shop_name: sub.shop_name,
-        approved_shop_id: createResult.shop.id,
-      });
+      try {
+        auditLog.logAction(req.user.email, 'approve', 'pending_shop', sub.id, {
+          shop_name: sub.shop_name,
+          approved_shop_id: createResult.shop.id,
+        });
+      } catch (auditErr) {
+        console.error('[admin] Audit log failed after approve:', auditErr.message);
+      }
 
       res.json({ success: true, shop: createResult.shop, submission: sub });
     } catch (err) {
@@ -794,10 +798,14 @@ router.post('/pending-shops/:id/reject', adminRateLimiter, authMiddleware('edito
       rejection_reason: reason,
     });
 
-    auditLog.logAction(req.user.email, 'reject', 'pending_shop', sub.id, {
-      shop_name: sub.shop_name,
-      reason,
-    });
+    try {
+      auditLog.logAction(req.user.email, 'reject', 'pending_shop', sub.id, {
+        shop_name: sub.shop_name,
+        reason,
+      });
+    } catch (auditErr) {
+      console.error('[admin] Audit log failed after reject:', auditErr.message);
+    }
 
     res.json({ success: true, submission: updated });
   } catch (err) {
