@@ -46,7 +46,7 @@ jobs:
         run: python scripts/fetch_gold_price.py
 
       - name: Commit data/gold_price.json if changed
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: 'chore(data): update gold price [skip ci]'
           file_pattern: data/gold_price.json
