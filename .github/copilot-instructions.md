@@ -1,5 +1,7 @@
 # Gold Ticker Live / Gold-Prices — GPT-5.5 Copilot Agent Execution Prompt
 
+> **Operational reference:** see the [Agent Prompt Library v2](../docs/GOLD_TICKER_LIVE_AGENT_PROMPTS.md) for session protocol, per-task prompts, validation commands, and safety carve-outs.
+
 Repo: https://github.com/vctb12/Gold-Prices
 Live site: https://goldtickerlive.com/
 Main goal: Make the website feel more complete, trustworthy, polished, useful, SEO-ready, mobile-ready, and production-grade through MANY SMALL SAFE IMPROVEMENTS, not one risky massive rewrite.
