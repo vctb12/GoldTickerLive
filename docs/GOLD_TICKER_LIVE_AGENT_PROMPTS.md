@@ -2402,3 +2402,791 @@ DELIVERABLE
 - → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
 
 ---
+
+## 16. Docs and Governance Prompt
+
+**Purpose:**
+Keep docs (`docs/**`, `README.md`, `AGENTS.md`, `.github/copilot-instructions.md`, this prompt
+library) in sync with code reality. Govern the agent instruction surface so it stays
+practical — not so loose that agents make reckless changes, and not so restrictive that
+agents freeze and ship trivial PRs. Periodic reconciliation of the four canonical files is
+the goal.
+
+**When to use:**
+- Docs are stale relative to code (e.g. environment variables doc disagrees with
+  `server/lib/auth.js`).
+- Agent sessions consistently get stuck because docs over-restrict.
+- New features ship without doc updates.
+- Quarterly governance hygiene.
+- After a large refactor that moved major modules.
+
+**Copy-paste prompt:**
+
+```text
+You are running a docs and governance pass on Gold Ticker Live. Your job is to make the
+docs reflect code reality and to keep agent instructions actionable, not paralyzing.
+
+INSPECT FIRST
+1. Read the four canonical agent files:
+   - `AGENTS.md`
+   - `.github/copilot-instructions.md`
+   - `docs/GOLD_TICKER_LIVE_AGENT_PROMPTS.md` (this library)
+   - `docs/GOLD_TICKER_LIVE_REBRAND_NOTES.md`
+2. Read every doc under `docs/`. Note which docs are stale.
+3. Read `README.md`.
+4. Read `docs/REVAMP_PLAN.md` and every plan under `docs/plans/`.
+5. Spot-check code-vs-doc agreement on:
+   - `docs/environment-variables.md` vs the env vars actually read by `server/lib/
+     auth.js`, `src/config/supabase.js`, `scripts/python/post_gold_price.py`.
+   - `docs/SUPABASE_SCHEMA.md` vs the actual Supabase queries in `server/` and
+     `src/config/supabase.js`.
+   - `docs/methodology.md` vs `src/config/constants.js`.
+   - `docs/tracker-state.md` vs `src/lib/live-status.js`.
+   - `docs/AUTOMATIONS.md` vs `.github/workflows/*`.
+   - `docs/DEPENDENCIES.md` vs `package.json`.
+   - `docs/DESIGN_TOKENS.md` vs `styles/global.css`.
+
+WORK — RECONCILE
+- For each stale doc, update it to match code reality. If a doc and code conflict,
+  the code wins (unless the conflict is a known bug — in that case, log it).
+- For each plan in `docs/plans/` that is older than 90 days and not referenced by an
+  open PR or by `docs/REVAMP_PLAN.md`, archive it with a "DONE" or "ABANDONED" note;
+  do not silently delete.
+
+WORK — AGENT INSTRUCTIONS
+- This prompt library (`docs/GOLD_TICKER_LIVE_AGENT_PROMPTS.md`) is the canon for
+  agents. `AGENTS.md` and `.github/copilot-instructions.md` should point at it, not
+  duplicate it.
+- Avoid over-restrictive language that causes agents to freeze. Replace "do not
+  change anything without owner approval" with the specific carve-out list from §50.
+- Keep §50 (Safety Rules and Carve-Outs) as the single source of truth for what
+  agents may not change without instruction.
+- Keep the §51 final-report format as the single source of truth for end-of-session
+  reporting.
+
+WORK — PRACTICAL GOVERNANCE
+- Make sure every doc file has a "Last reviewed" date or a reasonable freshness
+  signal at the top.
+- Make sure cross-references between docs work (no broken anchors).
+- Make sure every public command (`npm run *`) referenced by docs exists in
+  `package.json`.
+
+CONSTRAINTS
+- Do not delete historical docs. `CHANGELOG.md`, `docs/GOLD_TICKER_LIVE_REBRAND_*.md`
+  are historical record; preserve them.
+- Do not relax §50 carve-outs without an owner instruction.
+- Do not change `AGENTS.md` to remove the protocol — it codifies the same
+  expectations as this library.
+
+VERIFY
+- `npm run check-links` (catches broken markdown anchors)
+- Manual: read each updated doc top to bottom.
+- Verify each `npm run *` reference in docs against `package.json`.
+
+DELIVERABLE
+- Themed commits: `docs(env): align with auth.js`, `docs(supabase-schema): refresh`,
+  `docs(automations): add new workflows`, `docs(plans): archive completed`.
+- §51 final report listing reconciled docs and archived plans.
+```
+
+**Files / surfaces Copilot should inspect:**
+- `AGENTS.md`, `.github/copilot-instructions.md`, this library,
+  `docs/GOLD_TICKER_LIVE_REBRAND_NOTES.md`
+- All `docs/**/*.md`, `docs/plans/**/*.md`
+- `README.md`
+- `package.json` `scripts.*`
+- Code surfaces being doc-cited (`server/lib/auth.js`, `src/config/supabase.js`,
+  `src/config/constants.js`, `src/lib/live-status.js`, `styles/global.css`,
+  `.github/workflows/*`)
+
+**Required checks:**
+- `npm run check-links`
+- Manual doc-to-code agreement spot checks.
+
+**Expected final report:**
+- Docs updated, grouped (env, supabase, methodology, tracker, automations, design
+  tokens).
+- Plans archived (with reasons).
+- Anchor / link check result.
+- §51 final report.
+
+**Safety notes:**
+- Do not soften §50 carve-outs.
+- Do not delete historical docs; archive instead.
+- Do not edit `CHANGELOG.md` retroactively.
+
+**Failure modes to watch for:**
+- Agent makes the prompt library shorter to "reduce friction", losing carve-outs.
+- Agent rewrites `docs/methodology.md` without verifying constants in `src/config/
+  constants.js`.
+- Agent deletes a plan from `docs/plans/` that is still referenced by an open PR.
+- Agent introduces a doc that recommends a script (`npm run typecheck`) that doesn't
+  exist.
+- Agent loosens carve-outs in this very file as part of a "doc cleanup".
+
+**Cross-references:**
+- → [§17 Rebrand Maintenance](#17-rebrand-maintenance-prompt)
+- → [§47 Repo Cleanup and Architecture](#47-repo-cleanup-and-architecture)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+- → [§54 Changelog of this Prompt Library](#54-changelog-of-this-prompt-library)
+
+---
+
+## 17. Rebrand Maintenance Prompt
+
+**Purpose:**
+Sweep every `Gold Prices` / `GoldPrices` / `Gold-Prices` / `gold_prices` / `goldprices` /
+`goldtickerlive` / `GoldTickerLive` reference in the repo and **classify** each match into
+one of three buckets: `Fix now`, `Intentional carve-out`, `Manual owner decision`. Repair
+the `Fix now` bucket via source generators where possible. Document the carve-outs.
+Surface owner decisions.
+
+**When to use:**
+- Quarterly rebrand hygiene.
+- After a content burst or generator change that may have re-introduced old strings.
+- When [§5a Cross-Surface Brand Consistency Audit](#5a-cross-surface-brand-consistency-audit)
+  flags a high count.
+- Before any marketing push.
+
+**Copy-paste prompt:**
+
+```text
+You are running a rebrand maintenance sweep on Gold Ticker Live. The canonical brand is
+"Gold Ticker Live" (compact: "GTL") and the canonical domain is
+https://goldtickerlive.com/. The GitHub repo is `vctb12/Gold-Prices` (NOT renamed).
+
+Some references to the old brand are intentional carve-outs. Your job is to FIND every
+match, CLASSIFY it, and only then act.
+
+INSPECT FIRST
+1. Read §50 Safety Rules and Carve-Outs of this prompt library. Memorize the
+   deployment, SEO, data, and identity carve-outs.
+2. Read `docs/GOLD_TICKER_LIVE_REBRAND_NOTES.md` and any rebrand verification report
+   under `docs/`.
+3. Open the repo's brand-bearing surfaces (see §5a INSPECT FIRST list).
+
+WORK — SWEEP
+Run all five rebrand/consistency ripgrep sweeps from §49.
+
+Variants to find:
+- `Gold Prices`, `Gold Price`, `Gold-Prices`, `GoldPrices`, `GoldTickerLive`
+- `gold-prices`, `gold_prices`, `goldprices`, `goldtickerlive`
+- `Gold Price Tracker`, `Gold Prices UAE`, `GoldPrices.app`
+
+WORK — CLASSIFY
+For each match, classify into ONE of three buckets:
+
+A) Fix now (canonical brand should now be "Gold Ticker Live"):
+   - User-visible strings in HTML/JS/CSS/translations that say "Gold Prices" as the
+     product name.
+   - `<title>`, `<meta>`, `og:*`, `twitter:*` brand tags pointing at the wrong name.
+   - JSON-LD `name` / `publisher` referring to the wrong brand.
+   - Footer copy, nav, README marketing copy referring to the wrong brand.
+
+B) Intentional carve-out (do NOT touch):
+   - `/Gold-Prices/` paths required for GitHub Pages project-path deployment
+     compatibility.
+   - `github.com/vctb12/Gold-Prices` URLs (repo not renamed).
+   - `vctb12.github.io/Gold-Prices/` historical/current Pages URL.
+   - `gold_prices` schema/table names in `data/gold_price.json`,
+     `data/pending_shops.json`, Supabase tables.
+   - `data/gold_price.json` filename.
+   - `countries/**/gold-prices/` URL paths (SEO carve-out).
+   - SEO topic phrases: "Gold Prices Today", "How Gold Prices Work",
+     "Why UAE Gold Prices Differ", "Gold Prices in Dubai", "Gold Prices in <City>".
+   - `@GoldTickerLive` X handle.
+   - Historical references in `CHANGELOG.md`,
+     `docs/GOLD_TICKER_LIVE_REBRAND_NOTES.md`,
+     `docs/REBRAND_VERIFICATION_REPORT.md` and similar.
+
+C) Manual owner decision (ambiguous):
+   - Marketing slogans that reference "gold prices" generically.
+   - Domain references in archived workflow files.
+   - Old logo paths.
+   - Any reference in an external integration where rename has side effects (Discord
+     webhook names, Telegram bot username).
+
+WORK — REPAIR
+- For bucket A, prefer fixing the GENERATOR over the generated output:
+  * `countries/**/*.html` matches → fix in `scripts/node/enrich-placeholder-pages.js`,
+    `scripts/node/generate-placeholders.js`, `scripts/node/inject-schema.js`.
+  * `content/**/*.html` matches → fix in their generator if they have one, else hand-
+    edit and document the source.
+  * `src/seo/seoHead.js` / `src/seo/metadataGenerator.js` matches → fix at source.
+  * `manifest.json`, `package.json`, `src/config/translations.js` matches → fix at
+    source.
+- After generator fixes, re-run the relevant generator and commit the regen as a
+  separate themed commit.
+- For bucket B, do not touch. Document.
+- For bucket C, surface a question for the owner; do not silently change.
+
+WORKED EXAMPLE — CLASSIFICATION TABLE
+
+| File:Line | Match | Bucket | Action |
+|---|---|---|---|
+| `manifest.json:2` | `"name": "Gold Prices Tracker"` | A | Edit `manifest.json` to "Gold Ticker Live — Live Gold Price Tracker"; bump SW `CACHE_NAME` |
+| `package.json:2` | `"name": "gold-prices"` | A | Edit to `"gold-ticker-live"` (only the npm package identity, NOT the GitHub repo) |
+| `vite.config.js:60` | `base: '/'` | B | Carve-out — `'/'` is correct for the custom domain; do not change to `'/Gold-Prices/'` |
+| `CHANGELOG.md:42` | `- Renamed from Gold Prices to Gold Ticker Live` | B | Historical record; do not touch |
+| `countries/uae/dubai/gold-prices/index.html:1` | path `/gold-prices/` | B | SEO carve-out; do not change route path |
+| `data/gold_price.json` (filename) | `gold_price.json` | B | Schema carve-out; do not rename |
+| `src/config/translations.js:120` | `home.heroTitle.en: "Gold Prices Today"` | B | SEO topic phrase carve-out; keep |
+| `README.md:3` | `# Gold Prices` | A | Edit to `# Gold Ticker Live` |
+| `src/social/postTemplates.js:14` | `Track #GoldPrices` | C | Hashtag — surface to owner; may be intentional for reach |
+
+CONSTRAINTS
+- Do not rename the GitHub repo.
+- Do not change `CNAME`.
+- Do not change `vite.config.js` `base` (currently `'/'`).
+- Do not change `gold_price.json` filename or `gold_prices` schema names.
+- Do not change `countries/**/gold-prices/` URL paths.
+- Do not change `@GoldTickerLive` X handle.
+- Do not edit historical docs / changelog entries retroactively.
+
+VERIFY
+- All five §49 rebrand sweeps with before/after counts.
+- `npm run validate`
+- `npm test`
+- `npm run lint`
+- `npm run build` (sanity)
+- Manual: spot-check 5 brand surfaces (manifest, footer, JSON-LD on home, OG tags on
+  tracker, README first paragraph).
+
+DELIVERABLE
+- Themed commits: `rebrand(generators): fix country/city pages at source`,
+  `rebrand(meta): manifest + JSON-LD + OG`, `rebrand(docs): README + nav copy`,
+  `chore(regen): regenerate after rebrand fixes`.
+- A classification table in the PR body listing every match.
+- A list of bucket-C items surfaced for owner decision.
+- §51 final report with carve-outs preserved.
+```
+
+**Files / surfaces Copilot should inspect:**
+- Same as [§5a Cross-Surface Brand Consistency Audit](#5a-cross-surface-brand-consistency-audit)
+- Plus historical docs that must NOT be edited:
+  `CHANGELOG.md`, `docs/GOLD_TICKER_LIVE_REBRAND_NOTES.md`,
+  `docs/REBRAND_VERIFICATION_REPORT.md`, archived plans.
+
+**Required checks:**
+- All five §49 rebrand sweeps with before/after counts.
+- `npm run validate`
+- `npm test`
+- `npm run lint`
+- `npm run build`
+
+**Expected final report:**
+- Classification table (file:line | match | bucket | action).
+- Counts: bucket A fixed, bucket B preserved, bucket C surfaced.
+- Generators edited and regen commits produced.
+- §51 final report with carve-outs preserved.
+
+**Safety notes:**
+- Bucket B is non-negotiable. Document every preserved carve-out.
+- Bucket C must NEVER be silently fixed; the agent surfaces these to the owner.
+- Generator-first repair: never hand-edit a generated file when the generator can
+  produce the correct string.
+
+**Failure modes to watch for:**
+- Agent silently rewrites `gold_prices` schema name, breaking Supabase joins.
+- Agent renames `data/gold_price.json` to `data/gold_ticker_live.json`, breaking
+  `API_GOLD_URL`.
+- Agent edits `countries/dubai/gold-prices/` to `countries/dubai/gold-ticker-live/`,
+  breaking SEO routes.
+- Agent edits `@GoldTickerLive` to `@gold_ticker_live` in social templates, breaking
+  the live X automation.
+- Agent edits historical changelog entries to "fix" old brand mentions.
+- Agent rewrites `vite.config.js` `base` to `'/Gold-Prices/'` in misguided
+  consistency.
+
+**Cross-references:**
+- → [§5a Cross-Surface Brand Consistency Audit](#5a-cross-surface-brand-consistency-audit)
+- → [§18 Generated Files and Source Generator Prompt](#18-generated-files-and-source-generator-prompt)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+
+---
+
+## 18. Generated Files and Source Generator Prompt
+
+**Purpose:**
+Make every change to a generated file go through its source generator. Per-generator,
+this prompt covers when to run, what is produced, whether the output is committed, and
+the cardinal rule "edit the generator before the generated file; never hand-edit a
+generated file unless you also update the generator in the same commit."
+
+**When to use:**
+- Any edit to `countries/**/*.html`, `content/**/*.html`, `data/shops*.json`,
+  `sitemap.xml`, JSON-LD blocks in HTML, `feed.xml`, or newsletter HTML.
+- Drift detected by [§5c Generated-vs-Source Drift Audit](#5c-generated-vs-source-drift-audit).
+- Any change to a `scripts/node/*` generator.
+- Before opening a PR that touches any generator's output.
+
+**Copy-paste prompt:**
+
+```text
+You are working with generated files on Gold Ticker Live. The repo's build pipeline runs:
+`extract-baseline → normalize-shops → inject-schema → generateSitemap → vite build`.
+Each step is a generator. Your job is to edit the generator, NOT the output.
+
+INSPECT FIRST
+1. Read `package.json` `scripts.build`. Memorize the canonical generator order.
+2. Read each generator end-to-end:
+   - `scripts/node/extract-baseline.js` — extracts a baseline of HTML files for diff
+     auditing.
+   - `scripts/node/normalize-shops.js` — gates the shape of `data/shops*.json`.
+   - `scripts/node/inject-schema.js` — injects JSON-LD into HTML files. NOT
+     idempotent (uses `fs.stat` mtime for Article dates). Re-runs may produce diffs
+     when source HTML mtimes shift.
+   - `scripts/node/generate-sitemap.js` — emits `sitemap.xml`.
+   - `scripts/node/check-sitemap-coverage.js` — gates sitemap-vs-pages parity.
+   - `scripts/node/enrich-placeholder-pages.js` — fills placeholder copy on stub
+     country/city pages.
+   - `scripts/node/generate-placeholders.js` — creates new placeholder pages from
+     country/city data.
+   - `scripts/node/generate-rss.js` — emits `feed.xml` (verify exists).
+   - `scripts/node/generate-newsletter.js` — emits newsletter HTML.
+   - `scripts/node/check-seo-meta.js`, `scripts/node/seo-audit.js`,
+     `scripts/node/inventory-seo.js` — checkers, not emitters.
+   - `scripts/node/check-unsafe-dom.js` — DOM-safety baseline gate.
+   - `scripts/node/check-sw-coverage.js` — SW precache coverage gate.
+3. Read `docs/AUTOMATIONS.md`.
+4. Read `tests/` for any test that asserts generator output stability.
+
+WORK — RULE
+The cardinal rule: **edit the generator BEFORE the generated file. Never hand-edit a
+generated file unless you also update its generator in the SAME commit.**
+
+WORK — PER GENERATOR
+
+`scripts/node/inject-schema.js` (CJS, NOT idempotent)
+- When to run: as part of `npm run build`, or manually after a content/SEO change that
+  affects schema.
+- Output: in-place rewrites of HTML files at the repo root, in `countries/**/*.html`,
+  `content/**/*.html`, etc. Article schema dates use `fs.stat` mtime → YYYY-MM-DD.
+- Committed: yes (the schema-injected HTML is committed to the repo).
+- Drift behavior: re-runs may produce diffs when source HTML mtimes shift, even with
+  no semantic change. Treat such diffs as expected; do not commit unless you intend to
+  refresh schema dates.
+- `--check` flag: yes; runs without writing, exits non-zero on drift.
+
+`scripts/node/generate-sitemap.js`
+- When to run: after adding/removing pages, or after country/city placeholder
+  regeneration.
+- Output: `sitemap.xml`.
+- Committed: yes.
+- Drift behavior: deterministic given the same set of pages.
+- Pair with: `scripts/node/check-sitemap-coverage.js` (gate; ensures every page has a
+  sitemap entry and no orphans).
+
+`scripts/node/enrich-placeholder-pages.js`
+- When to run: when placeholder country/city pages need richer copy.
+- Output: in-place rewrites of stub pages with enriched HTML.
+- Committed: yes.
+- Drift behavior: deterministic given input data; re-runs after data changes will
+  produce diffs.
+- `--check` flag: yes (verify in source); runs without writing.
+
+`scripts/node/generate-placeholders.js`
+- When to run: when adding a new country or city to coverage.
+- Output: new HTML files under `countries/**/`.
+- Committed: yes.
+- Drift behavior: idempotent for existing pages; emits new files for new entries.
+
+`scripts/node/normalize-shops.js`
+- When to run: after editing `data/shops.json` or `data/pending_shops.json`.
+- Output: in-place normalization of the JSON data files (canonical shape).
+- Committed: yes.
+- Drift behavior: deterministic; re-runs surface invalid entries via warnings.
+
+`scripts/node/generate-rss.js` (verify exists)
+- When to run: after content/news updates.
+- Output: `feed.xml` (verify path).
+- Committed: yes.
+
+`scripts/node/generate-newsletter.js`
+- When to run: scheduled via `.github/workflows/daily-newsletter.yml` and
+  `weekly-newsletter.yml`.
+- Output: newsletter HTML for the day/week.
+- Committed: typically not — output is sent via the send script.
+
+`scripts/node/extract-baseline.js`
+- When to run: as the first step of `npm run build`.
+- Output: a baseline file used by `check-unsafe-dom.js` and similar checkers.
+- Committed: typically yes for the unsafe-DOM baseline.
+
+WORK — DOM-SAFETY BASELINE
+- `scripts/node/check-unsafe-dom.js` keeps a per-file baseline of innerHTML / outerHTML
+  / insertAdjacentHTML / document.write sinks.
+- Adding a sink fails CI.
+- Removing a sink should tighten the baseline in the same PR.
+
+CONSTRAINTS
+- Do not commit `dist/`.
+- Do not reorder the canonical generator chain.
+- Do not bypass `normalize-shops.js` by hand-editing `data/shops*.json`.
+- Do not hand-edit JSON-LD in HTML; route additions through `inject-schema.js`.
+- Do not commit `inject-schema.js` mtime-only diffs unless intentional.
+
+VERIFY
+- `npm run validate` (runs `inject-schema.js --check`,
+  `enrich-placeholder-pages.js --check`, `inventory-seo.js --check`,
+  `externalize-analytics.js --check`)
+- `npm run build` on a clean tree, then `git diff --stat` to surface drift
+- `npm test`
+- `node scripts/node/check-sitemap-coverage.js`
+- `node scripts/node/check-seo-meta.js`
+- `node scripts/node/check-unsafe-dom.js`
+
+DELIVERABLE
+- A clear separation between generator-edit commits and regen commits in the PR.
+- Per-generator notes in the PR body when behavior changed.
+- §51 final report listing generators touched and outputs re-emitted.
+```
+
+**Files / surfaces Copilot should inspect:**
+- Every `scripts/node/*` generator listed in the prompt.
+- `package.json` `scripts.build`
+- `docs/AUTOMATIONS.md`
+- All generated outputs: `countries/**/*.html`, `content/**/*.html`,
+  `data/shops*.json`, `sitemap.xml`, `feed.xml`, JSON-LD blocks.
+- `tests/` files asserting generator output stability.
+
+**Required checks:**
+- `npm run validate`
+- `npm run build` then `git diff --stat`
+- `npm test`
+- Each generator's `--check` mode where supported.
+
+**Expected final report:**
+- Generators edited and the regen commits produced.
+- Confirmation that no generated file was edited in isolation.
+- Drift-vs-baseline summary.
+- §51 final report.
+
+**Safety notes:**
+- `inject-schema.js` mtime drift is a known repo trap; treat as expected unless
+  intentional.
+- The build pipeline order is canonical; do not reorder.
+- Generators that are also gates (`check-*`) should remain side-effect-free.
+
+**Failure modes to watch for:**
+- Agent commits noisy `inject-schema.js` mtime diffs alongside feature work.
+- Agent adds a new generator without wiring it into `package.json` `scripts.build`.
+- Agent edits `data/shops.json` directly, bypassing `normalize-shops.js`.
+- Agent introduces a new innerHTML sink in a generator's output, regressing the
+  baseline.
+- Agent orders `vite build` before `inject-schema.js`, losing schema injection.
+- Agent commits `dist/`.
+
+**Cross-references:**
+- → [§5c Generated-vs-Source Drift Audit](#5c-generated-vs-source-drift-audit)
+- → [§22 Country & City Pages Deep Dive](#22-country--city-pages-deep-dive)
+- → [§24 FAQ + Structured Data](#24-faq--structured-data)
+- → [§41 Placeholder & Stub Page Completion](#41-placeholder--stub-page-completion)
+- → [§43 RSS Feed & News](#43-rss-feed--news)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+
+---
+
+## 19. Large PR Execution Prompt
+
+**Purpose:**
+When the task naturally spans 5+ files of substantive change, force the agent to plan
+and execute as a sequence of themed commits — not one monolithic mega-diff. This is the
+prompt to paste when an agent is producing tiny shallow PRs for what should be broad
+work, or producing one giant unreviewable PR for what should be a sequence.
+
+**When to use:**
+- Owner says "revamp X", "polish the whole site", "improve SEO across the platform".
+- A multi-area sprint is in flight.
+- The agent has produced a 1500-line single-commit PR and the reviewer wants it
+  re-shaped.
+- After [§4 Universal Starter](#4-universal-new-session-starter-prompt), when the task
+  scope clearly exceeds one specialized prompt.
+
+**Copy-paste prompt:**
+
+```text
+You are executing a LARGE PR on Gold Ticker Live. "Large" means: 5+ files of
+substantive change, or work that spans 2+ specialized prompts in this library. Your job
+is to ship a sequence of themed, single-purpose commits — NOT one monolithic mega-diff,
+and NOT a series of tiny cosmetic edits.
+
+INSPECT FIRST
+1. Read §4 Universal Starter and complete the §2 Required Session Protocol.
+2. Identify which specialized prompts (§§8–48) this work touches. Enumerate them in
+   your plan.
+3. Read `docs/REVAMP_PLAN.md` to find the active track this PR contributes to.
+4. Read the most recent plan in `docs/plans/`. If your work is large and there is no
+   plan, write one before editing: `docs/plans/YYYY-MM-DD_<slug>.md`. Open a draft
+   PR with just the plan first.
+
+WORK — PLAN FIRST
+- Decompose the work into BUCKETS. Each bucket maps to a themed commit. Suggested
+  themes (Conventional Commits style):
+  * `docs`        — plan, README, doc updates
+  * `tokens`      — design token additions / consolidations
+  * `layout`      — global layout primitives, card hierarchy
+  * `nav`         — nav, drawer, footer
+  * `tracker`     — tracker UX (states, filters, hero)
+  * `calculator`  — calculator UX
+  * `shops`       — shops directory UX / data
+  * `seo`         — titles, descriptions, canonicals, schema
+  * `pwa`         — manifest, service worker, offline
+  * `generated`   — regenerated outputs (separate from generator edits)
+  * `a11y`        — accessibility fixes
+  * `perf`        — lazy-load, image dimensions, bundle size
+  * `i18n`        — translation parity, AR copy quality, RTL fixes
+  * `cleanup`     — dead code, dead docs
+  * `verification`— final checks, screenshots, deploy gate
+
+- Each bucket = one or two commits. Aim for ≤ 400 lines per commit unless the commit
+  is intentionally a generator regen.
+
+- Bucket order should be: docs → tokens → layout → nav → page-level (tracker,
+  calculator, shops) → seo → pwa → i18n → a11y → perf → generated → cleanup →
+  verification.
+
+WORK — EXECUTE BUCKETS
+- Implement bucket 1, run validation, commit, push.
+- Implement bucket 2, run validation, commit, push.
+- Repeat until all buckets are shipped.
+- After each commit, run AT MINIMUM `npm test` and `npm run validate`. Run the full
+  matrix from §49 before opening the PR for review.
+
+WORK — WORKED-EXAMPLE COMMIT SEQUENCE (UI/UX revamp)
+
+1. `docs(plan): add 2026-04-30 ux-revamp plan`
+   files: `docs/plans/2026-04-30_ux-revamp.md`
+2. `feat(tokens): consolidate surface + text aliases`
+   files: `styles/global.css`
+3. `feat(layout): tighten card primitives + spacing rhythm`
+   files: `styles/global.css`, `styles/pages/home.css`,
+   `styles/pages/shops.css`
+4. `feat(nav): mobile drawer hierarchy + active states`
+   files: `src/components/nav.js`, `src/components/nav-data.js`,
+   `styles/global.css`
+5. `feat(tracker-ui): freshness pill + state badges`
+   files: `src/tracker/render.js`, `src/tracker/dom-builders.js`,
+   `styles/pages/tracker-pro.css`, `src/config/translations.js`
+6. `feat(calculator-ui): result card + disclaimer hierarchy`
+   files: `src/pages/calculator.js`, `styles/pages/calculator.css`,
+   `src/config/translations.js`
+7. `seo(meta): tighten home + tracker titles/descriptions`
+   files: `src/seo/seoHead.js`, `index.html`, `tracker.html`
+8. `i18n(ar): rewrite hero + tracker freshness copy`
+   files: `src/config/translations.js`
+9. `style(rtl): mirror chevrons + breadcrumb order`
+   files: `styles/global.css`, `src/components/breadcrumbs.js`
+10. `chore(sw): bump CACHE_NAME to goldtickerlive-v17`
+    files: `sw.js`
+11. `chore(regen): regenerate sitemap + schema after meta changes`
+    files: `sitemap.xml`, generated HTML
+12. `docs: update REVAMP_PLAN with shipped items`
+    files: `docs/REVAMP_PLAN.md`
+
+CONSTRAINTS
+- No tiny shallow PRs. If the task is broad, ship broad work in themed commits.
+- No monolithic mega-commit. ≤ 400 lines per commit unless intentionally a regen.
+- No mixing of generator edits and regen output in the same commit.
+- No skipping of validation after each commit.
+- No force-push.
+- No commits to `main`.
+
+VERIFY
+- After each bucket: `npm test`, `npm run validate`.
+- Before opening PR: `npm run lint`, `npm run quality`, `npm run build`,
+  `node scripts/node/check-unsafe-dom.js`, `npm run seo-audit` (if SEO touched),
+  `npm run image-audit` (if images touched), `npm run pre-deploy` (if available).
+
+DELIVERABLE
+- 8–15 themed commits.
+- PR body with What / Why / How / Proof / Risks.
+- Bucket-by-bucket section in the PR body.
+- §51 Session Final Report inside the PR body.
+```
+
+**Files / surfaces Copilot should inspect:**
+- Varies by scope. Use [§3 Quick Picker](#3-prompt-index--quick-picker) to enumerate
+  files for each bucket.
+- Always: `docs/REVAMP_PLAN.md`, `docs/plans/`, the relevant specialized prompts'
+  `INSPECT FIRST` lists.
+
+**Required checks:**
+- After each bucket: `npm test`, `npm run validate`.
+- Before PR: full §49 matrix.
+- Per-bucket sanity (e.g. `node scripts/node/check-seo-meta.js` for seo bucket,
+  `npm run image-audit` for perf bucket).
+
+**Expected final report:**
+- 8–15 themed commits.
+- Bucket-by-bucket summary in the PR body.
+- §51 Session Final Report.
+- Carve-outs preserved enumerated.
+- Manual follow-up listed (cite [§52](#52-manual-follow-up-reporting-expectations)).
+
+**Safety notes:**
+- The bucket order matters — generator regens come AFTER the generator edits, in
+  separate commits.
+- SW `CACHE_NAME` bump goes in its own `chore(sw): ...` commit.
+- Generator regen commits should be diff-only (no logic), so reviewers can skim them
+  fast.
+
+**Failure modes to watch for:**
+- Agent ships one giant commit with 1500 lines across 30 files — un-reviewable.
+- Agent ships 30 trivial 3-line commits, none of which advance the work.
+- Agent mixes generator edits and regen output in the same commit, masking the
+  generator change.
+- Agent skips validation between buckets and ships a PR that fails CI on bucket 4.
+- Agent reorders the bucket sequence, regenerating before the generator edits, and
+  produces an empty regen.
+- Agent skips the `docs(plan)` bucket and starts editing without a plan.
+
+**Cross-references:**
+- → [§4 Universal New Session Starter Prompt](#4-universal-new-session-starter-prompt)
+- → [§7 Before New PR Prompt](#7-before-new-pr-prompt)
+- → [§20 Final Verification and Deploy Safety Prompt](#20-final-verification-and-deploy-safety-prompt)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+
+---
+
+## 20. Final Verification and Deploy Safety Prompt
+
+**Purpose:**
+The final gate before merge. Produce a deploy-readiness verdict. Run every relevant
+check from [§49](#49-validation-commands-reference). Confirm every carve-out from
+[§50](#50-safety-rules-and-carve-outs) is preserved. Surface every manual follow-up from
+[§52](#52-manual-follow-up-reporting-expectations). End with a clear `Safe to deploy:
+yes/no — <reasoning>` line.
+
+**When to use:**
+- Immediately before merging a PR.
+- Before any time-sensitive deploy (release, marketing push, demo).
+- After a hot-fix that touched deployment-sensitive paths.
+- As the final command of any session driven by [§19 Large PR
+  Execution](#19-large-pr-execution-prompt).
+
+**Copy-paste prompt:**
+
+```text
+You are running the final verification and deploy-safety pass on Gold Ticker Live.
+Your job is to produce a deploy-readiness verdict.
+
+INSPECT FIRST
+1. Read the PR body. Note the buckets shipped and the surfaces touched.
+2. Read §50 Safety Rules and Carve-Outs of this prompt library. Walk every carve-out
+   against the PR's diff.
+3. Read §52 Manual Follow-Up Reporting Expectations. Identify any work that must
+   happen outside this repo.
+
+WORK — RUN THE FULL CHECK MATRIX
+- `git status --short` (clean)
+- `git branch --show-current`
+- `git log --oneline origin/main..HEAD` (themed, single-purpose commits)
+- `git diff --stat origin/main..HEAD` (no surprise files)
+- `npm ci` (lockfile aligned)
+- `npm run lint`
+- `npm test`
+- `npm run validate`
+- `npm run quality`
+- `npm run build`
+- `npm run seo-audit` (if SEO touched)
+- `npm run check-links` (if links/internal nav touched)
+- `npm run image-audit` (if images touched)
+- `npm run perf:ci` (if perf-relevant; verify exists)
+- `npm run a11y` (if a11y-relevant; verify exists)
+- `npm run pre-deploy` (verify exists; runs the pre-deploy go/no-go check matrix)
+
+WORK — RUN THE RIPGREP AUDITS
+- All five rebrand/consistency sweeps from §49. Capture before/after counts.
+- innerHTML/outerHTML/insertAdjacentHTML sweep on `src/`. Confirm DOM-safety baseline
+  not regressed.
+- TODO/FIXME/HACK sweep. List anything new introduced by this PR.
+
+WORK — DEPLOYMENT-SENSITIVE SPOT CHECKS
+For each of these, confirm no unintended change:
+- `CNAME` (must read `goldtickerlive.com`)
+- `vite.config.js` `base` (must read `'/'`)
+- `manifest.json` `start_url`, `scope`, `name`, `short_name`
+- `sw.js` `CACHE_NAME` (bumped if user-visible assets changed)
+- `.github/workflows/post_gold.yml` (untouched unless intentional)
+- `.github/workflows/deploy.yml` (untouched unless intentional)
+- `_headers`, `_redirects`
+- `robots.txt` (`Disallow: /admin/`, `Disallow: /api/` intact)
+
+WORK — DATA-SAFETY SPOT CHECKS
+- `src/config/constants.js` (`AED_PEG = 3.6725`, `TROY_OZ_GRAMS = 31.1035`,
+  `STALE_AFTER_MS`, `FX_STALE_AFTER_MS`, `GOLD_REFRESH_MS = 90000`, `CACHE_KEYS`)
+  unchanged.
+- `src/config/karats.js` purity values unchanged.
+- `src/lib/price-calculator.js` formulas unchanged.
+
+WORK — PRODUCE THE VERDICT
+End your response with the §51 Session Final Report and the explicit final line:
+
+  Safe to deploy: <yes/no> — <one-paragraph reasoning>
+
+If `no`, list the blockers and the fix path.
+
+CONSTRAINTS
+- Do not merge. The verdict is advisory; merge is owner-driven.
+- Do not skip a check because "it didn't apply this time"; mark it `skipped (reason)`.
+- Do not silently fix issues you discover here; surface them and fix in a follow-up
+  commit if they block the verdict.
+
+DELIVERABLE
+- A complete §51 Session Final Report.
+- Explicit `Safe to deploy:` verdict.
+- List of remaining manual follow-up items (cite §52).
+```
+
+**Files / surfaces Copilot should inspect:**
+- The full PR diff.
+- All deployment-sensitive paths listed in the prompt.
+- All data-safety paths listed in the prompt.
+- The PR body and each commit message.
+
+**Required checks:**
+- The full §49 matrix where applicable.
+- All five rebrand/consistency ripgrep sweeps.
+- innerHTML/outerHTML/insertAdjacentHTML sweep.
+- Spot checks of deployment- and data-sensitive files.
+
+**Expected final report:**
+- §51 Session Final Report.
+- Explicit `Safe to deploy: yes/no — <reasoning>` line.
+- Carve-outs preserved.
+- Manual follow-up listed.
+
+**Safety notes:**
+- This is the gate. If anything fails, the verdict is `no`.
+- Skipped checks must be justified, not silently dropped.
+- The verdict is advisory. The owner merges.
+
+**Failure modes to watch for:**
+- Agent declares `Safe to deploy: yes` without running the matrix.
+- Agent silently fixes issues it found during the gate, blurring the audit trail.
+- Agent skips the rebrand sweep because "no brand changes were intended" — sweeps
+  catch unintended changes.
+- Agent says "tests pass" without actually running them.
+- Agent ignores a SW `CACHE_NAME` regression.
+- Agent ignores a `manifest.json` `start_url` change because it "looks harmless".
+
+**Cross-references:**
+- → [§7 Before New PR Prompt](#7-before-new-pr-prompt)
+- → [§19 Large PR Execution Prompt](#19-large-pr-execution-prompt)
+- → [§38 Pre-deploy, Changelog & Release](#38-pre-deploy-changelog--release)
+- → [§49 Validation Commands Reference](#49-validation-commands-reference)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+- → [§51 Expected Final-Report Format](#51-expected-final-report-format)
+- → [§52 Manual Follow-Up Reporting Expectations](#52-manual-follow-up-reporting-expectations)
+
+---
+
+# Specialized Prompts
+
+The remaining prompts (§§21–48) are specialized — narrow scope, high focus. Pair them
+with [§4 Universal Starter](#4-universal-new-session-starter-prompt) at the start of any
+session, with [§7 Before New PR Prompt](#7-before-new-pr-prompt) before opening the PR,
+and with [§20 Final Verification](#20-final-verification-and-deploy-safety-prompt)
+before merge.
+
