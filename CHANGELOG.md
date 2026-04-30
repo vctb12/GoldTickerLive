@@ -4,7 +4,52 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
-### Multi-track polish — 2026-04-27 session
+### Multi-area polish — 2026-04-30 session (Round 16)
+
+**Bug fixes:**
+
+- fix(index.html): correct broken X/Twitter social link (`https://x.com/Gold Ticker Live` had a
+  literal space in the URL making it invalid — fixed to `https://x.com/GoldTickerLive`).
+
+**Accessibility:**
+
+- a11y(tracker): add `aria-pressed` to all chart range pills (`24H`–`ALL`) and keep them in sync via
+  `events.js` click handler; also sync on init from persisted state via `populateSelects()` so
+  screen readers always know which range is active.
+- a11y(tracker): add `role="group"` to range-pills container and improve `aria-label` to "Chart time
+  range".
+- a11y(home): add `aria-live="polite"` to karat-strip freshness update span so screen readers
+  announce "Updated X min ago" changes.
+- a11y(home): add unique `id` attrs to region tab buttons (`gcc-tab-gcc` etc.) for correct ARIA
+  tab/tabpanel wiring; improve tablist `aria-label` to "Filter gold prices by region".
+- a11y(home): add `title` attributes to karat-strip unit toggle buttons with descriptive text.
+- a11y(home): improve unit toggle group `aria-label` to "Select price unit".
+- a11y(methodology): fix karat conversion table body rows — first column changed from `<td>` to
+  `<th scope="row">` matching the pattern already used in `learn.html`.
+
+**Calculator UX (mobile):**
+
+- feat(calculator): add `inputmode="decimal"` to all gold weight and budget amount inputs — triggers
+  the numeric/decimal keyboard on iOS and Android instead of the full text keyboard.
+- feat(calculator): add `autocomplete="off"` to all weight and price inputs to prevent browser
+  autofill on gold weight fields.
+- feat(calculator): add `aria-label` + `inputmode="numeric"` to scrap payout percentage input.
+
+**Shops:**
+
+- feat(shops): add `autocomplete="off"` and explicit `aria-label` to shops search input.
+
+**SEO / structured data:**
+
+- feat(seo): update `Organization` JSON-LD `sameAs` array in `index.html` to include
+  `https://x.com/GoldTickerLive` alongside the existing Twitter URL.
+- feat(seo): update `inject-schema.js` `getOrganizationSchema()` to emit the same dual sameAs array
+  so any future inject-schema run keeps both URLs.
+
+**Tests:**
+
+- test(seo-sitewide): add regression test for X social link — asserts no `x.com` URL in `index.html`
+  contains a space and that it starts with `https://x.com/`.
 
 **CSS / nav fixes (items from navbar-audit plan Phase 2):**
 

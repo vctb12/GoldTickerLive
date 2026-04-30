@@ -39,10 +39,7 @@ function getOrganizationSchema() {
     url: SITE_URL,
     logo: `${SITE_URL}/assets/logo.png`,
     description: SITE_DESCRIPTION,
-    sameAs: [
-      'https://twitter.com/goldtickerlive',
-      // Add more social profiles as they become available
-    ],
+    sameAs: ['https://twitter.com/goldtickerlive', 'https://x.com/GoldTickerLive'],
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Customer Service',
