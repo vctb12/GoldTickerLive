@@ -4,56 +4,58 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
-### Repo cleanup — 2026-04-30 session
+### Pre-deploy / changelog / release pipeline — 2026-04-30
 
-**CSS token centralization:**
+**`scripts/node/pre-deploy-check.js`**
 
-- refactor(css): define 8 previously-undefined CSS tokens in `styles/global.css` — `--color-accent`,
-  `--color-accent-strong`, `--color-amber`, `--color-danger`, `--color-surface-1`,
-  `--color-surface-raised`, `--color-text-secondary`, `--color-gold-alpha`. Each token now has a
-  correct value in light mode and a corresponding dark-mode override.
-- refactor(css): remove ~60 incorrect dark-theme fallback values from `var()` calls in
-  `styles/pages/shops.css` — replaced with canonical semantic aliases (`--text-primary`,
-  `--text-secondary`, `--text-tertiary`, `--border-default`, `--surface-canvas`,
-  `--surface-primary`). The fallback values were stale vestiges of the old dark-only design and
-  pointed to the wrong colors in light mode.
-- fix(css): `styles/pages/terms.css` — `var(--color-surface-raised, #201e19)` now resolves via the
-  newly-defined `--color-surface-raised` token instead of falling back to a dark `#201e19` value.
-  Similarly, `var(--color-text-secondary, #c8bfa8)` now resolves correctly in light mode via
-  `--text-secondary`.
-- refactor(css): remove ~15 incorrect fallback values from `var()` calls in `styles/pages/terms.css`
-  (same pattern as shops.css).
-- docs(css): add **Design Token System** section to `docs/ARCHITECTURE.md` documenting canonical
-  token categories, the semantic alias layer, and the agent rule for future changes.
+- fix: convert from broken ESM `import` syntax to CJS `require` — script was crashing with
+  `SyntaxError` at startup (`package.json` has `"type": "commonjs"`).
+- feat: add **check 9 — robots.txt** — fails if file is missing or lacks a `User-agent` directive.
+- feat: add **check 10 — unit tests** — runs `npm test`; pass `--skip-tests` for faster pre-flight.
+  Exits 1 on any test failure.
+- feat: add **check 11 — uncommitted changes** — fails if working tree is dirty (any staged or
+  unstaged files), preventing deploys from an unclean state.
+- fix: sitemap check now also verifies file age (warns if > 7 days old), not just URL count.
+- fix: build-output check now verifies `tracker.html`, `calculator.html`, and `shops.html` in
+  `dist/` in addition to `index.html`.
+- fix: CNAME check now fails (not warns) if the file is empty.
+- **breaking**: script now **always exits 1 on any failure**, not only in `--ci` mode. Use
+  `--skip-tests` for fast checks.
+- chore: `npm run pre-deploy:ci` alias removed; `npm run pre-deploy:fast` added (equivalent to
+  `--skip-tests`).
 
-**Constants cleanup:**
+**`scripts/node/changelog.js`**
 
-- refactor(js): `src/pages/calculator.js` — replace magic literal `31.1035` (troy oz) with
-  `CONSTANTS.TROY_OZ_GRAMS` (already imported); eliminates duplication with the authoritative
-  constant in `src/config/constants.js`.
-- refactor(js): `src/pages/calculator/utils.js` — add `import { CONSTANTS }` from config index;
-  replace magic literal `31.1035` with `CONSTANTS.TROY_OZ_GRAMS`.
+- fix: convert from broken ESM `import` syntax to CJS `require`.
+- fix: replace the fragile hand-rolled CC regex with a named-group regex that correctly handles
+  `feat(scope)!: desc`, `fix: desc`, and `chore(ci): desc`.
+- feat: auto-detect the most recent git tag as the `--since` lower bound; falls back to the last 200
+  commits when no tags exist.
+- feat: add **`--all`** flag to include all commits without a count limit.
+- feat: add `breaking` category at the top of the output for `feat!:` / `fix!:` commits.
+- feat: generate clickable GitHub commit links (`[sha](…/commit/sha)`) when the remote origin is a
+  GitHub URL.
+- feat: print a brief header on stdout showing the since-ref and commit count.
+- chore: `npm run changelog:since` script alias added for convenience.
 
-**Dead-file archive:**
+**`scripts/node/package-release.js`**
 
-- chore(archive): `scripts/node/cleanup-audit.js` → `scripts/archive/cleanup-audit.js`. This
-  one-shot audit script has no callers in any workflow or import graph; archived to reduce
-  maintenance surface.
-- chore(archive): `src/seo/seoHead.js` → `scripts/archive/seoHead.js`. The module has no imports or
-  dynamic requires anywhere in the codebase; archived rather than deleted to preserve the
-  implementation as reference.
+- feat: complete rewrite — was a 30-line stub that only wrote a manifest.
+- feat: writes `release/release.json` with `brand`, `version`, `buildSha`, `buildTimestamp`, and
+  `distFiles` list.
+- feat: copies `CHANGELOG.md` into `release/`.
+- feat: creates `release/gold-ticker-live-vX.Y.Z-SHA.tar.gz` containing the full `dist/` tree plus
+  `CHANGELOG.md` and `release.json`.
+- feat: `--dry-run` flag shows the plan without writing any files (works even without a `dist/`).
+- chore: tarball name includes version and short build SHA for unambiguous identification.
+- doc: script header explicitly states it does NOT tag git or publish anywhere.
 
-**Docs:**
+**`docs/CONTRIBUTING.md`**
 
-- docs(arch): `docs/ARCHITECTURE.md` — correct the "Data Flow" section which incorrectly referenced
-  `src/services/goldPriceService.js`, `src/services/fxService.js`, and
-  `src/services/pricingEngine.js` (those are under `server/services/`). The browser client uses
-  `src/lib/api.js` and `src/lib/price-calculator.js` directly.
-- docs(arch): fix formula comment in Data Flow from `31.1035` → `TROY_OZ_GRAMS` (uses the symbol now
-  that the constant is authoritative).
-- docs(arch): add `scripts/archive/` entry to the Folder Structure map.
-
-### Multi-track polish — 2026-04-27 session
+- docs: add **Testing** section with all relevant `npm run` commands.
+- docs: add **Pre-Deploy Checks** section documenting all 11 checks and severity.
+- docs: add **Generating a Changelog Entry** section with CC format examples.
+- docs: add **Packaging a Release Artifact** section with output file table.
 
 **CSS / nav fixes (items from navbar-audit plan Phase 2):**
 
