@@ -14,13 +14,13 @@ export function bindCoreEvents() {
   // Refresh button
   _el.refreshBtn?.addEventListener('click', async () => {
     _el.refreshBtn.disabled = true;
-    _el.refreshBtn.textContent = 'Refreshing…';
+    _el.refreshBtn.textContent = _cb.tx('actions.refreshing');
     try {
       await _cb.refreshData(true);
       _cb.renderAll();
     } finally {
       _el.refreshBtn.disabled = false;
-      _el.refreshBtn.textContent = '↻ Refresh';
+      _el.refreshBtn.textContent = `↻ ${_cb.tx('actions.refresh')}`;
     }
   });
 
@@ -38,16 +38,21 @@ export function bindCoreEvents() {
   // Share brief
   _el.shareBtn?.addEventListener('click', () => {
     const spot = _cb.currentSpot();
+    const uae24 = spot ? _cb.priceFor({ currency: 'AED', karat: '24', unit: 'gram', spot }) : null;
     const txt = spot
-      ? `Gold: $${spot.toFixed(2)}/oz · UAE 24K: AED ${_cb.priceFor({ currency: 'AED', karat: '24', unit: 'gram', spot })?.toFixed(2)}/g · ${new Date().toUTCString()}`
-      : 'Gold data unavailable';
+      ? _cb.tx('share.brief', {
+          spot: spot.toFixed(2),
+          uae24: uae24 ? uae24.toFixed(2) : '—',
+          time: new Date().toUTCString(),
+        })
+      : _cb.tx('share.unavailable');
     navigator.clipboard
       ?.writeText(txt)
       .then(() => {
-        _cb.showToast('Brief copied to clipboard');
+        _cb.showToast(_cb.tx('toast.briefCopied'));
       })
       .catch(() => {
-        _cb.showToast('Failed to copy to clipboard');
+        _cb.showToast(_cb.tx('toast.clipboardFailed'));
       });
   });
 
