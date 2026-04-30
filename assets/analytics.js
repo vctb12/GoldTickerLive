@@ -60,4 +60,30 @@
     if (y && y.parentNode) y.parentNode.insertBefore(t, y);
     else l.head.appendChild(t);
   })(window, document, 'clarity', 'script', 'w4e0nhdxt5');
+
+  // ── Event name catalog (for non-module / inline scripts) ─────────────────
+  // The canonical source of truth is src/lib/analytics.js (ES module).
+  // This mirror on window.GP_EVENTS lets any inline or non-bundled script
+  // reference event names without duplicating strings.
+  window.GP_EVENTS = Object.freeze({
+    PAGE_VIEW: 'page_view',
+    TRACKER_VIEW: 'tracker_view',
+    KARAT_CHANGE: 'karat_change',
+    COUNTRY_CHANGE: 'country_change',
+    UNIT_CHANGE: 'unit_change',
+    CURRENCY_CHANGE: 'currency_change',
+    CALCULATOR_USE: 'calculator_use',
+    TOOL_USE: 'tool_use',
+    SHARE_CLICK: 'share_click',
+    COPY_CLICK: 'copy_click',
+    ALERT_SET: 'alert_set',
+    ALERT_CLEAR: 'alert_clear',
+    NEWSLETTER_SUBSCRIBE: 'newsletter_subscribe',
+    SEARCH_QUERY: 'search_query',
+    SEARCH_OPEN: 'search_open',
+    THEME_CHANGE: 'theme_change',
+    LANG_CHANGE: 'lang_change',
+    OUTBOUND_CLICK: 'outbound_click',
+    ERROR: 'error',
+  });
 })();

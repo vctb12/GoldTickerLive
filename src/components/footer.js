@@ -1,6 +1,7 @@
 import { FORMSPREE_ENDPOINT } from '../config/index.js';
 import { NAV_DATA } from './nav-data.js';
 import { escapeHtml, resolveHref } from './nav/helpers.js';
+import { track, EVENTS } from '../lib/analytics.js';
 
 // Keep the shared footer useful without turning mobile layouts into a full mega-menu repeat.
 const MAX_FOOTER_LINKS_PER_SECTION = 3;
@@ -137,6 +138,14 @@ export function injectFooter(lang = 'en', depth = 0) {
       }
     }
   } catch (_) {}
+
+  // Newsletter form: fire newsletter_subscribe event on submit (before POST)
+  const newsletterForm = footerEl.querySelector('.footer-newsletter-form');
+  if (newsletterForm) {
+    newsletterForm.addEventListener('submit', () => {
+      track(EVENTS.NEWSLETTER_SUBSCRIBE, { source: 'footer', cadence: 'weekly' });
+    });
+  }
 
   // Populate "Data last updated" from goldUpdatedAt key
   try {
