@@ -1,6 +1,7 @@
 // tracker/events.js — all event bindings for tracker-pro
 import { persistState } from './state.js';
 import { el, escape } from '../lib/safe-dom.js';
+import { track, EVENTS } from '../lib/analytics.js';
 
 let _state, _el, _cb;
 
@@ -50,6 +51,7 @@ export function bindCoreEvents() {
       ?.writeText(txt)
       .then(() => {
         _cb.showToast(_cb.tx('toast.briefCopied'));
+        track(EVENTS.SHARE_CLICK, { surface: 'tracker', channel: 'clipboard' });
       })
       .catch(() => {
         _cb.showToast(_cb.tx('toast.clipboardFailed'));
@@ -58,18 +60,24 @@ export function bindCoreEvents() {
 
   // Toolbar selects
   _el.currency?.addEventListener('change', () => {
+    const from = _state.selectedCurrency;
     _state.selectedCurrency = _el.currency.value;
     persistState(_state);
+    track(EVENTS.CURRENCY_CHANGE, { from, to: _state.selectedCurrency });
     _cb.renderAll();
   });
   _el.karat?.addEventListener('change', () => {
+    const from = _state.selectedKarat;
     _state.selectedKarat = _el.karat.value;
     persistState(_state);
+    track(EVENTS.KARAT_CHANGE, { from, to: _state.selectedKarat });
     _cb.renderAll();
   });
   _el.unit?.addEventListener('change', () => {
+    const from = _state.selectedUnit;
     _state.selectedUnit = _el.unit.value;
     persistState(_state);
+    track(EVENTS.UNIT_CHANGE, { from, to: _state.selectedUnit });
     _cb.renderAll();
   });
   _el.language?.addEventListener('change', () => {
@@ -138,6 +146,12 @@ export function bindCoreEvents() {
     _cb.renderAlerts();
     _cb.showToast(`Alert ${direction} $${target} saved`);
     if (_el.alertTarget) _el.alertTarget.value = '';
+    track(EVENTS.ALERT_SET, {
+      karat: _state.selectedKarat,
+      threshold: target,
+      direction,
+      currency: _state.selectedCurrency,
+    });
   });
 
   // Notifications enable
@@ -179,6 +193,7 @@ export function bindCoreEvents() {
       ?.writeText(window.location.href)
       .then(() => {
         _cb.showToast('Preset URL copied to clipboard');
+        track(EVENTS.COPY_CLICK, { surface: 'tracker', value_type: 'preset_url' });
       })
       .catch(() => {
         _cb.showToast('Failed to copy to clipboard');
@@ -295,9 +310,11 @@ export function bindCoreEvents() {
     const btn = e.target.closest('.tracker-remove-btn[data-idx]');
     if (!btn) return;
     const idx = parseInt(btn.dataset.idx, 10);
+    const removed = (_state.alerts || [])[idx];
     _state.alerts = (_state.alerts || []).filter((_, i) => i !== idx);
     persistState(_state);
     _cb.renderAlerts();
+    if (removed) track(EVENTS.ALERT_CLEAR, { karat: _state.selectedKarat });
   });
 
   // Preset list: delete + load button delegation

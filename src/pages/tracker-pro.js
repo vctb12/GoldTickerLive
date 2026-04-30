@@ -5,6 +5,7 @@ import * as cache from '../lib/cache.js';
 import '../lib/reveal.js';
 import { createInitialState, persistState } from '../tracker/state.js';
 import { el as safeEl } from '../lib/safe-dom.js';
+import { track, EVENTS } from '../lib/analytics.js';
 // Lazy-load heavy UI modules (ui-shell, events, wire, adSlot) inside init()
 let mountShell;
 let fetchWire, renderWireModule;
@@ -613,6 +614,15 @@ async function init() {
   renderAll();
   if (state.autoRefresh) startAutoRefresh();
   startCountdown();
+
+  // Analytics: fire page_view + tracker_view after first data load
+  const locale = document.documentElement.lang || 'en';
+  track(EVENTS.PAGE_VIEW, { path: location.pathname, locale });
+  track(EVENTS.TRACKER_VIEW, {
+    karat: state.selectedKarat,
+    country: state.selectedCountry,
+    currency: state.selectedCurrency,
+  });
 
   // Render ads (ad slot renderer was lazy-loaded above)
   try {

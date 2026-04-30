@@ -14,6 +14,7 @@
 
 import { NAV_DATA, PAGE_SHELLS } from './nav-data.js';
 import { applyFeatureFlags } from '../lib/site-settings.js';
+import { track, EVENTS } from '../lib/analytics.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -579,6 +580,7 @@ export function injectNav(lang = 'en', depth = 0) {
       } catch (e) {
         console.warn('theme save', e);
       }
+      track(EVENTS.THEME_CHANGE, { to: next });
     }
 
     themeBtn.addEventListener('click', _cycleTheme);
@@ -987,7 +989,9 @@ function _buildReturnValue() {
  * @param {'en'|'ar'} lang
  */
 export function updateNavLang(lang) {
+  const prev = _currentLang;
   _currentLang = lang;
+  if (prev !== lang) track(EVENTS.LANG_CHANGE, { to: lang });
   const data = NAV_DATA[lang] || NAV_DATA.en;
   const isRtl = lang === 'ar';
 

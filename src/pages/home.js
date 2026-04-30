@@ -17,7 +17,7 @@ import { renderAdSlot } from '../components/adSlot.js';
 import '../lib/reveal.js';
 import { countUp } from '../lib/count-up.js';
 import { clear, el, safeHref } from '../lib/safe-dom.js';
-import { initSwUpdateToast } from '../lib/sw-update-toast.js';
+import { track, EVENTS } from '../lib/analytics.js';
 
 // ── Constants ──────────────────────────────────────────────────────────────
 const LANG_KEY = 'user_prefs';
@@ -667,11 +667,25 @@ function initCountrySearch() {
       if (!hide) visible++;
     });
     if (emptyState) emptyState.hidden = !query || visible > 0;
+    return { query, visible };
   }
 
-  input.addEventListener('input', (e) =>
-    filterTiles(/** @type {HTMLInputElement} */ (e.target).value)
-  );
+  let _searchTimer;
+  input.addEventListener('input', (e) => {
+    const q = /** @type {HTMLInputElement} */ (e.target).value;
+    const { query, visible } = filterTiles(q);
+    // Debounce search_query to avoid firing on every keystroke
+    clearTimeout(_searchTimer);
+    if (query) {
+      _searchTimer = setTimeout(() => {
+        track(EVENTS.SEARCH_QUERY, {
+          length: query.length,
+          result_count: visible,
+          locale: document.documentElement.lang || 'en',
+        });
+      }, 600);
+    }
+  });
 
   input.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowDown') {
@@ -766,6 +780,8 @@ async function init() {
       .then(() => {
         const orig = btn.textContent;
         btn.textContent = '✓';
+        const surface = btn.classList.contains('kstrip-copy-btn') ? 'karat_strip' : 'gcc_grid';
+        track(EVENTS.COPY_CLICK, { surface, value_type: 'price' });
         setTimeout(() => {
           btn.textContent = orig;
         }, 1500);
@@ -837,6 +853,9 @@ async function init() {
   }
 
   applyLangToPage();
+
+  // Analytics: fire page_view on home load
+  track(EVENTS.PAGE_VIEW, { path: location.pathname, locale: lang });
 
   // Render cached data immediately for instant content (non-blocking)
   if (goldPrice) {
