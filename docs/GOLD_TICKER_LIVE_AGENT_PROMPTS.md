@@ -3190,3 +3190,640 @@ session, with [§7 Before New PR Prompt](#7-before-new-pr-prompt) before opening
 and with [§20 Final Verification](#20-final-verification-and-deploy-safety-prompt)
 before merge.
 
+
+---
+
+## 21. Homepage Hero & Above-the-Fold
+
+**Purpose:**
+The homepage hero is the single biggest first-impression surface on `goldtickerlive.com`.
+Visitors decide in under five seconds whether the site is trustworthy. This prompt makes the
+above-the-fold answer three questions at a glance — *what is this, is it live, what should I
+do next* — without changing pricing math, freshness thresholds, or the karat purity table.
+
+**When to use:**
+- The homepage hero feels generic, hype-y, or unclear about live vs. cached state.
+- Mobile (360 px) above-the-fold is cramped, freshness pill is invisible, or CTAs are wrong.
+- Country search, karat strip unit toggle, or copy-row affordance is broken or unlabeled.
+- A new owner-approved hero variant needs to land cleanly without breaking translations.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the homepage hero and above-the-fold experience on Gold Ticker Live. The
+homepage is the highest-leverage surface — visitors decide in five seconds whether the site
+is trustworthy. The hero must answer: what is this, is it live, what should I do next.
+
+INSPECT FIRST
+1. Read `index.html` end-to-end. Note every section in DOM order: hero, freshness pill,
+   `#hlc-updated`, karat strip (`#karat-strip`, `#karat-strip-updated`), `#country-search`,
+   `.country-tiles`, hero CTAs.
+2. Read `src/pages/home.js` — focus on `renderHeroCard`, `renderKaratStrip`,
+   `startFreshnessTimer` (ticks every 1s, sets `data-freshness-key` and `data-freshness-age`
+   on `#hlc-updated` and `#karat-strip-updated`), `initCountrySearch` (`#country-search` input,
+   `.country-tile--filtered` class, ArrowDown/Up/Escape keyboard nav), `KARAT_STRIP_UNIT_MULT`,
+   `karatStripUnit` localStorage in `user_prefs`.
+3. Read `styles/pages/home.css` — hero card, freshness pill `::before` pseudo-elements
+   (⚠ / ✕ for stale / unavailable, color-blind accessible), `.country-search-input`,
+   `.country-search-empty`, `.kstrip-unit-toggle`.
+4. Read `src/lib/live-status.js` — `STALE_AFTER_MS = 12 * 60 * 1000`, freshness states
+   `live | cached | stale | unavailable`.
+5. Read translations `home.*`, `home.karatStripLabelGram/Tola/Oz`, `gold.freshness.label`,
+   `gold.badge`, `aed.badge` in `src/config/translations.js`.
+
+WORK — hero
+- Make the hero answer in one glance: "Live UAE & GCC gold prices, derived from XAU/USD spot."
+  No corporate fluff, no hype, no "best price guaranteed" wording.
+- The freshness pill (`#hlc-updated`) must be visible above the fold on 360 px width. Use the
+  existing `data-freshness-key` states (`live`, `cached`, `stale`, `unavailable`) and the
+  CSS `::before` icons. Do not move the threshold (12 min) without owner approval.
+- Primary CTA → tracker. Secondary CTA → calculator. Tertiary text link → methodology.
+  All three labels live in translations.
+- The hero AED + USD price card must surface its source line (e.g. "Spot · derived from
+  XAU/USD · AED at 3.6725 peg").
+
+WORK — karat strip
+- Verify the unit toggle (g / tola / oz) persists via `karatStripUnit` in `user_prefs`
+  localStorage. Default is grams. Active state is unambiguous.
+- Each karat row has a copy button that copies a deterministic share string (use the
+  existing handler; do not invent a new format).
+- Karat rows align cleanly at 360 px — no overflow, no truncated numerals.
+
+WORK — country search
+- `#country-search` filters `.country-tiles` via `.country-tile--filtered`. Verify
+  ArrowDown/Up/Escape keyboard navigation still works and `applyLangToPage()` covers AR.
+- Empty state (`.country-search-empty`) reads naturally in EN + AR with the typed query.
+- Tap-target on each country tile ≥ 44 × 44 px on mobile.
+
+WORK — freshness timer hygiene
+- Confirm the tick in `startFreshnessTimer` only writes when the rendered string changes
+  (avoid layout thrash and aria-live spam).
+- `aria-live="polite"` only on the freshness pill region — not on the price numerals.
+
+CONSTRAINTS
+- Do not change `STALE_AFTER_MS`, `AED_PEG`, or `GOLD_REFRESH_MS`.
+- Do not change the karat purity table, the troy-ounce constant, or `KARAT_STRIP_UNIT_MULT`.
+- Every user-visible string EN + AR via `src/config/translations.js`.
+- Do not introduce a new freshness state name without updating `src/lib/live-status.js`,
+  the CSS selectors keyed on `data-freshness-key`, and the freshness tests.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- Manual: throttle the network and confirm cached / stale / unavailable pills render.
+- Manual: tab through the hero — every interactive element is reachable and labeled.
+- Manual: 360 px and 1440 px in EN + AR; copy a karat row in each language.
+
+DELIVERABLE
+PR with focused commits (hero, freshness pill, karat strip, country search, RTL, tests).
+Update `docs/tracker-state.md` if you clarified any freshness copy.
+```
+
+**Files / surfaces to inspect:**
+- `index.html` (hero block, `#hlc-updated`, `#karat-strip`, `#country-search`).
+- `src/pages/home.js` (`renderHeroCard`, `renderKaratStrip`, `startFreshnessTimer`,
+  `initCountrySearch`).
+- `styles/pages/home.css` (`data-freshness-key` selectors, `.country-search-*`).
+- `src/lib/live-status.js` (`STALE_AFTER_MS`, freshness key derivation).
+- `src/config/translations.js` (`home.*`, `gold.freshness.*`, `gold.badge`, `aed.badge`).
+- `tests/home-translations.test.js` (translation key gates).
+
+**Required checks:**
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- `node scripts/node/check-unsafe-dom.js` — DOM-safety baseline must not regress.
+- Manual 360 px / 1440 px / EN / AR sweep; throttled network for cached/stale/unavailable.
+
+**Expected final report:**
+- Hero copy diff (EN + AR).
+- Freshness pill verified across all four states with screenshots.
+- Karat strip: unit toggle persistence verified; copy button works in EN + AR.
+- Country search keyboard nav verified.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Pricing math, AED peg, freshness thresholds are immutable here. See [§50](#50-safety-rules-and-carve-outs).
+- `aria-live` regions on price numerals announce too often — keep them on the pill only.
+
+**Failure modes to watch for:**
+- Agent moves `STALE_AFTER_MS` to "make the demo look fresh".
+- Agent introduces a fifth freshness state without updating CSS, tests, and translations.
+- Agent rewrites the karat-strip share string and breaks the analytics event payload.
+- Agent silently removes the source line from the hero card to clean up the design.
+- Agent drops EN/AR parity for the empty-search state.
+- Agent makes the freshness pill an icon-only element with no aria-label.
+
+**Cross-references:**
+- → [§9 Live Tracker Upgrade Prompt](#9-live-tracker-upgrade-prompt)
+- → [§12 Arabic / RTL Quality Prompt](#12-arabic--rtl-quality-prompt)
+- → [§42 Mobile-First Layout Audit](#42-mobile-first-layout-audit)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+
+---
+
+## 22. Country & City Pages Deep Dive
+
+**Purpose:**
+Country and city pages under `countries/**/gold-prices/` are the SEO long-tail and the
+second-largest source of organic traffic after the homepage. They must be substantive,
+locally-credible, and consistent with the tracker's freshness model — without becoming
+template-stamped boilerplate that Google demotes.
+
+**When to use:**
+- A new country or city page is being added.
+- An audit of existing pages reveals duplicated copy, weak intros, missing breadcrumbs,
+  or stale schema.
+- A generator change requires regenerating the country/city HTML output.
+- Internal linking between country pages, city pages, the tracker, and the calculator
+  is sparse or one-directional.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the country and city pages on Gold Ticker Live. These pages live under
+`countries/**/gold-prices/` and `countries/**/<city>/` and are the SEO backbone of the site.
+The URL path `countries/**/gold-prices/` is a SEO carve-out — never rename it.
+
+INSPECT FIRST
+1. List `countries/` top-level directories and a representative sample of city subpages
+   (e.g. `countries/uae/gold-prices/index.html`, `countries/uae/dubai/gold-prices/index.html`).
+2. Read `scripts/node/enrich-placeholder-pages.js` and `scripts/node/generate-placeholders.js` —
+   these are the generators that emit country/city HTML.
+3. Read `scripts/node/inject-schema.js` — it injects JSON-LD by rewriting source HTML; Article
+   schema dates come from `fs.stat` mtime truncated to YYYY-MM-DD. Idempotent as of Round 16.
+4. Read `scripts/node/generate-sitemap.js` and `scripts/node/check-sitemap-coverage.js`.
+5. Read `src/seo/seoHead.js` and `src/seo/metadataGenerator.js` — title / description /
+   canonical / hreflang / OG / Twitter card patterns.
+6. Read `src/components/breadcrumbs.js` and `src/components/internalLinks.js` — country/city
+   breadcrumbs and the related-pages linker.
+7. Read translations `country.*`, `city.*`, `seo.*` in `src/config/translations.js`.
+
+WORK — page substance
+- Each country page must have a unique, locally-credible intro paragraph (EN + AR).
+  No "lorem", no copy-pasted boilerplate across countries.
+- Each city page must reference at least one local landmark or market (e.g. Gold Souk,
+  Deira, Sharjah Central Market) and inherit the country freshness model.
+- Every page surfaces the live tracker (or its current cached/stale state) — never a
+  hardcoded price snapshot.
+
+WORK — SEO surfaces
+- Title pattern: "Gold Prices in <City> Today — Live <Karats> Rates · Gold Ticker Live".
+- Description: ~155 chars, mentions the city, the karats (24K/22K/21K/18K), AED + USD,
+  and "updated every 90 seconds". Do not stuff keywords.
+- Canonical: absolute, https, no trailing slash mismatch, matches the served URL.
+- `hreflang` pair: `en` ↔ `ar` for the same city.
+- JSON-LD: `WebPage` + `BreadcrumbList`. Keep `@id`s deterministic so re-running
+  `inject-schema.js` produces a stable diff.
+- OG and Twitter: branded image, locale-aware title, no truncation.
+
+WORK — internal linking
+- Country page → its cities (grid).
+- City page → its country, two sibling cities, the tracker, the calculator, methodology.
+- Tracker, calculator, methodology pages → at least one country and one city.
+- No orphaned pages — every country/city HTML is reachable in ≤ 2 clicks from the homepage.
+
+WORK — generators
+- If you change page substance, change the generator first, then regenerate.
+- If you regenerate, commit the generator change and the generated diff in the same commit
+  with a clear message ("regenerate countries/* after generator change").
+- Run `node scripts/node/inject-schema.js --check` before commit; it must report 0 changes.
+
+CONSTRAINTS
+- Never rename the `countries/**/gold-prices/` path segment.
+- Never blanket-rewrite SEO topic phrases ("Gold Prices in <City>", "Gold Prices Today").
+- Bilingual EN + AR for every visible string.
+- Do not edit a country/city HTML file by hand if a generator emits it.
+- Do not change `STALE_AFTER_MS` to make every page show "live".
+
+VERIFY
+- `npm run validate`, `npm run seo-audit`, `node scripts/node/check-sitemap-coverage.js`,
+  `npm test`, `npm run build`.
+- `node scripts/node/inject-schema.js --check` → 0 modifications expected.
+- Manual: pick 3 cities, verify EN + AR, breadcrumbs, internal links, freshness pill,
+  canonical, hreflang, JSON-LD.
+
+DELIVERABLE
+PR with focused commits: generator change, regenerated HTML, schema, sitemap, breadcrumbs,
+translations. Update `docs/SEO_STRATEGY.md` if you changed a pattern.
+```
+
+**Files / surfaces to inspect:**
+- `countries/**/gold-prices/index.html` (sample), city subpages.
+- `scripts/node/enrich-placeholder-pages.js`, `scripts/node/generate-placeholders.js`.
+- `scripts/node/inject-schema.js`, `scripts/node/generate-sitemap.js`,
+  `scripts/node/check-sitemap-coverage.js`, `scripts/node/check-seo-meta.js`.
+- `src/seo/seoHead.js`, `src/seo/metadataGenerator.js`.
+- `src/components/breadcrumbs.js`, `src/components/internalLinks.js`.
+- `sitemap.xml`, `robots.txt`.
+
+**Required checks:**
+- `npm run validate`, `npm run seo-audit`, `npm test`, `npm run build`.
+- `node scripts/node/inject-schema.js --check` (idempotency gate).
+- `node scripts/node/check-sitemap-coverage.js` (no orphans, no stale entries).
+- `npm run check-links` (verify no broken internal anchors).
+
+**Expected final report:**
+- Country/city pages touched (count + list).
+- Generator changes vs. regenerated output diff stats.
+- SEO surface deltas (titles, descriptions, canonicals, hreflang, JSON-LD counts).
+- Sitemap coverage delta.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- `countries/**/gold-prices/` is an SEO carve-out — see [§50](#50-safety-rules-and-carve-outs).
+- `inject-schema.js` is idempotent as of Round 16 but mtime-driven dates can drift; re-run
+  with `--check` and commit only deterministic diffs.
+
+**Failure modes to watch for:**
+- Agent edits a country/city HTML by hand without updating the generator.
+- Agent renames `gold-prices` to `prices` to "clean up the URL" — breaks SEO indexing.
+- Agent stuffs keywords into the description ("Gold Prices Gold Prices Today Gold").
+- Agent writes city intros that are obvious template variants of each other.
+- Agent forgets the AR translation; `hreflang` then points at a half-translated page.
+- Agent breaks JSON-LD `@id` determinism and `inject-schema.js` produces churn.
+
+**Cross-references:**
+- → [§10 SEO and Indexing Prompt](#10-seo-and-indexing-prompt)
+- → [§17 Rebrand Maintenance Prompt](#17-rebrand-maintenance-prompt)
+- → [§18 Generated Files and Source Generator Prompt](#18-generated-files-and-source-generator-prompt)
+- → [§31 Footer, Internal Links & Breadcrumbs](#31-footer-internal-links--breadcrumbs)
+
+---
+
+## 23. Content Guide Library
+
+**Purpose:**
+Long-form guides under `content/guides/` and `content/learn/` build topical authority and
+serve users who want to understand gold pricing rather than just look at a number. This
+prompt keeps the guide library coherent, well-linked, and bilingual without devolving into
+SEO spam.
+
+**When to use:**
+- Adding a new guide ("How Gold Prices Work", "Why UAE Gold Prices Differ", karat primers,
+  zakat / investment / Eid-buying guides).
+- Auditing existing guides for stale numbers, broken links, weak intros, or missing AR.
+- Internal-linking guides into country, city, calculator, and tracker pages.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the long-form guide library on Gold Ticker Live. Guides live under
+`content/guides/` and `content/learn/`. They build topical authority and answer real user
+questions — they are not SEO filler. Preserve the topic phrases "How Gold Prices Work",
+"Why UAE Gold Prices Differ" and similar (SEO carve-outs, see §50).
+
+INSPECT FIRST
+1. List `content/guides/` and `content/learn/` directories. Read 3–5 representative guides
+   end-to-end (the most-trafficked or most-recent first).
+2. Read `src/config/translations.js` `guide.*`, `learn.*`, `seo.*`.
+3. Read `src/seo/seoHead.js` to understand how guide metadata is computed.
+4. Read `src/components/internalLinks.js` and `src/components/breadcrumbs.js`.
+5. Read `scripts/node/inject-schema.js` (Article schema dates come from mtime; commit clean).
+
+WORK — guide quality
+- Every guide opens with a 2–3 sentence answer. Do not hide the answer below 800 words of
+  preamble. Google's "answer first" rule applies.
+- Every numeric example uses live or recent values (e.g. "at 3.6725 AED/USD") and includes
+  a "values shown for illustration only" disclaimer.
+- Every guide ends with two internal links: one to a country/city page, one to the tracker
+  or calculator.
+- Bilingual EN + AR. AR is idiomatic, not literal — see §12.
+
+WORK — schema + metadata
+- Article schema with author, datePublished, dateModified (mtime), mainEntityOfPage.
+- Title: descriptive, ~60 chars, contains the topic phrase exactly once.
+- Description: ~155 chars, summary of the answer, not a teaser.
+- Canonical absolute https.
+- Breadcrumbs: Home → Guides → <Guide title>.
+
+WORK — internal linking
+- Add the guide to the guides index.
+- Add a "Related guides" block at the end of each guide (3 siblings).
+- Link from country and city pages where relevant.
+
+CONSTRAINTS
+- No fake stats, no invented expert quotes, no "studies show" without a source.
+- Bilingual.
+- Do not change SEO topic phrases.
+- Do not edit a guide HTML by hand if a generator emits it (very few guides are generated;
+  most are authored).
+
+VERIFY
+- `npm run validate`, `npm run seo-audit`, `npm run check-links`, `npm test`, `npm run build`.
+- `node scripts/node/inject-schema.js --check` after edits.
+
+DELIVERABLE
+PR with focused commits: content, schema, internal links, translations. Update guides index.
+```
+
+**Files / surfaces to inspect:**
+- `content/guides/**/*.html`, `content/learn/**/*.html`, guide indexes.
+- `src/config/translations.js` (`guide.*`, `learn.*`).
+- `src/seo/seoHead.js`, `src/components/breadcrumbs.js`, `src/components/internalLinks.js`.
+
+**Required checks:**
+- `npm run validate`, `npm run seo-audit`, `npm run check-links`, `npm test`, `npm run build`.
+- `node scripts/node/inject-schema.js --check`.
+
+**Expected final report:**
+- Guides added / edited (with word-count deltas).
+- AR translation status per guide.
+- Internal links added (count + targets).
+- Schema and metadata deltas.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- SEO topic phrases are carve-outs. See [§50](#50-safety-rules-and-carve-outs).
+- "values shown for illustration only" disclaimer is mandatory in any guide that uses a
+  numeric example — preserves trust during stale-data periods.
+
+**Failure modes to watch for:**
+- Agent invents statistics or expert quotes ("according to Reuters…").
+- Agent buries the answer behind a 600-word intro ("Gold has been valuable since…").
+- Agent hardcodes a price in the body without the disclaimer.
+- Agent ships English-only and adds a half-translated AR file.
+- Agent forgets to update the guides index.
+
+**Cross-references:**
+- → [§10 SEO and Indexing Prompt](#10-seo-and-indexing-prompt)
+- → [§22 Country & City Pages Deep Dive](#22-country--city-pages-deep-dive)
+- → [§24 FAQ + Structured Data](#24-faq--structured-data)
+- → [§43 RSS Feed & News](#43-rss-feed--news)
+
+---
+
+## 24. FAQ + Structured Data
+
+**Purpose:**
+FAQ blocks and FAQPage JSON-LD give Google rich-result eligibility and answer common user
+questions inline. This prompt makes the FAQ honest, bilingual, schema-compliant, and free
+of marketing fluff.
+
+**When to use:**
+- Adding or auditing FAQ blocks on the homepage, methodology, calculator, country/city,
+  or guide pages.
+- A schema audit reveals invalid FAQPage JSON-LD or duplicate questions across pages.
+- A user-reported question deserves a permanent answer.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading FAQ content and FAQPage JSON-LD on Gold Ticker Live. Honest, useful
+answers — no marketing. Schema must validate. Bilingual EN + AR.
+
+INSPECT FIRST
+1. Find existing FAQ blocks: `rg -n 'class="faq"' index.html tracker.html calculator.html
+   methodology.html shops.html invest.html content/ countries/`.
+2. Read `scripts/node/inject-schema.js` for FAQPage emission patterns.
+3. Read translations `faq.*` in `src/config/translations.js`.
+4. Note which questions are duplicated across pages (Google penalizes duplicate FAQ schema).
+
+WORK — content
+- Answers are concrete, ≤ 80 words, and reference the actual product behavior (e.g.
+  "Prices update every 90 seconds; see methodology for the source.").
+- No "best price guaranteed" or "trusted by millions" claims.
+- Bilingual; AR is idiomatic.
+
+WORK — schema
+- Each page emits FAQPage only for the FAQ that is uniquely on that page.
+- No two pages emit the same Question text in FAQPage JSON-LD.
+- `acceptedAnswer.text` matches the rendered HTML answer (Google validates).
+
+WORK — accessibility
+- Use `<details>` / `<summary>` or an ARIA disclosure pattern. Tap target ≥ 44 px.
+- Each question is a heading-level element (`h3` typically) so screen readers can list them.
+
+CONSTRAINTS
+- Don't duplicate FAQs across pages.
+- Bilingual.
+- Don't invent answers — if the answer is unknown, omit the question.
+- Don't add a question that the methodology doc contradicts.
+
+VERIFY
+- `npm run validate`, `npm run seo-audit`, `node scripts/node/inject-schema.js --check`.
+- Validate JSON-LD with a schema validator (Rich Results test) — manual.
+- `npm test`, `npm run build`.
+
+DELIVERABLE
+PR with focused commits: content, schema, translations, accessibility.
+```
+
+**Files / surfaces to inspect:**
+- `index.html`, `tracker.html`, `calculator.html`, `methodology.html`, `shops.html`,
+  `invest.html`, `content/**/*.html`, `countries/**/*.html`.
+- `scripts/node/inject-schema.js` (FAQPage emission).
+- `src/config/translations.js` (`faq.*`).
+
+**Required checks:**
+- `npm run validate`, `npm run seo-audit`, `node scripts/node/inject-schema.js --check`,
+  `npm test`, `npm run build`.
+
+**Expected final report:**
+- FAQs added / edited per page.
+- Duplicate-question count before / after.
+- Schema validation status.
+- AR coverage.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- FAQPage JSON-LD that contradicts the methodology page is a trust violation and a Google
+  rich-results disqualifier.
+
+**Failure modes to watch for:**
+- Same question copy-pasted on 3 pages with 3 different answers.
+- Marketing-speak answers ("we offer the best…").
+- Schema `acceptedAnswer.text` and rendered HTML drift.
+- AR translations are literal English ("ما هو أفضل سعر؟" for "What is the best price?").
+- `<details>` without a tap-target-friendly summary.
+
+**Cross-references:**
+- → [§10 SEO and Indexing Prompt](#10-seo-and-indexing-prompt)
+- → [§15 Data Reliability and Methodology Prompt](#15-data-reliability-and-methodology-prompt)
+- → [§23 Content Guide Library](#23-content-guide-library)
+- → [§31 Footer, Internal Links & Breadcrumbs](#31-footer-internal-links--breadcrumbs)
+
+---
+
+## 25. Site Search
+
+**Purpose:**
+On-site search helps users navigate the country/city/guide/tracker matrix. Gold Ticker Live
+keeps it lightweight (no Algolia, no Elasticsearch) — a prebuilt index plus a small client.
+This prompt keeps the index fresh, the UI accessible, and the result ranking reasonable.
+
+**When to use:**
+- Adding new country/city/guide pages (the index needs to include them).
+- Search returns nothing for obvious queries ("dubai", "22k", "calculator").
+- Search UI has a11y issues (no aria-live, no keyboard nav, no escape-to-close).
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the on-site search on Gold Ticker Live. Lightweight, fast, bilingual,
+keyboard-friendly. No external search service.
+
+INSPECT FIRST
+1. Read `src/lib/search.js` and `src/search/**` — the index builder and the runtime client.
+2. Read translations `search.*`.
+3. Find the index artifact (a JSON file under `assets/` or `dist/` — verify path).
+4. Read the search UI: input, results dropdown, empty state, result-card pattern.
+
+WORK — index
+- Index titles, descriptions, and key headings from country/city/guide pages and the static
+  pages (tracker, calculator, methodology, shops, learn, insights).
+- AR titles indexed alongside EN titles. Search "دبي" returns Dubai pages.
+- Index regenerates as a build step (or via a script — verify exists).
+
+WORK — UI
+- Input has a clear label and `aria-controls` pointing at the results region.
+- Results region has `role="listbox"` and `aria-live="polite"`.
+- ArrowDown/Up navigates results, Enter activates, Escape closes.
+- Empty state uses the typed query: "No results for 'X' — try …".
+
+WORK — ranking
+- Title matches outrank description matches.
+- Country/city pages outrank generic guides for city queries.
+- Tracker / calculator outrank country pages for tool queries.
+
+CONSTRAINTS
+- No external search service.
+- Bilingual.
+- Index size stays reasonable (< ~500 KB gzipped). Trim if needed.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run build`.
+- Manual: search 5 queries (city, country, karat, tool, AR) and verify ranking.
+
+DELIVERABLE
+PR with focused commits: index builder, runtime client, UI, translations, tests.
+```
+
+**Files / surfaces to inspect:**
+- `src/lib/search.js`, `src/search/**`.
+- `src/config/translations.js` (`search.*`).
+- The committed index artifact (verify path).
+
+**Required checks:**
+- `npm run validate`, `npm test`, `npm run build`.
+- Manual queries: city, country, karat, tool, AR.
+
+**Expected final report:**
+- Index size delta.
+- Pages included / excluded.
+- a11y verification.
+- Ranking sanity check (5 queries).
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Don't add an external service — see lightweight-posture carve-out in [§50](#50-safety-rules-and-carve-outs).
+- Search index can leak draft pages — exclude `admin/`, `_drafts/`, anything under `private/`.
+
+**Failure modes to watch for:**
+- Index includes admin pages.
+- AR titles missing from the index.
+- Results dropdown traps focus on Escape.
+- Ranking puts methodology above the tracker for the query "tracker".
+- Index regen forgotten after adding new pages — search returns "no results".
+
+**Cross-references:**
+- → [§22 Country & City Pages Deep Dive](#22-country--city-pages-deep-dive)
+- → [§31 Footer, Internal Links & Breadcrumbs](#31-footer-internal-links--breadcrumbs)
+- → [§42 Mobile-First Layout Audit](#42-mobile-first-layout-audit)
+
+---
+
+## 26. Admin Panel UX
+
+**Purpose:**
+The `admin/` panel manages content (pending shops, settings, etc.) and is gated by Supabase
+GitHub OAuth. It's not user-facing but it is operator-facing — broken admin = broken ops.
+This prompt keeps the admin panel functional, secure-by-default, and excluded from public
+indexing.
+
+**When to use:**
+- Admin login flow, pending-shops review, or settings editor is broken or confusing.
+- A new admin tool needs to be added.
+- Security review (RLS, auth, exclusion from sitemap/SW) is due.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the admin panel on Gold Ticker Live. Operator-facing, Supabase-OAuth-gated,
+not in the public sitemap, not in the service-worker scope.
+
+INSPECT FIRST
+1. Read `admin/**/*.html` and any `admin/*.js` modules.
+2. Read `server/lib/auth.js`, `server/routes/admin/index.js`,
+   `server/repositories/pending-shops.repository.js`,
+   `server/routes/submissions.js`.
+3. Confirm `data/pending_shops.json` is the source of truth (atomicWriteJSON).
+4. Read `docs/ADMIN_SETUP.md` and `docs/SUPABASE_SETUP.md`.
+5. Read `tests/sw-exclusions.test.js` — `/admin/*` and `/api/*` must be SW-excluded.
+6. Confirm `robots.txt` has `Disallow: /admin/` and `Disallow: /api/`.
+
+WORK — UX
+- Login screen explains what the admin can do, who to contact for access.
+- Pending-shops list: each entry shows the submitter, timestamp, location, evidence;
+  approve/reject is one click with a confirmation.
+- Settings editor: every field has a label and a description; destructive actions confirm.
+- Admin nav is distinct from public nav (different bg, "ADMIN" label).
+
+WORK — security
+- All admin routes require auth; auth check is centralized.
+- JWT secret + admin password + access PIN env vars are validated at server boot
+  (see `server/lib/auth.js`).
+- RLS on Supabase tables enforces "admin can read all, public can read public".
+- Admin pages have `<meta name="robots" content="noindex,nofollow">`.
+
+CONSTRAINTS
+- `/admin/*` excluded from sitemap, SW, public search.
+- Don't expose secrets in client-side JS.
+- Don't widen RLS. Don't disable auth "for testing".
+
+VERIFY
+- `npm run validate`, `npm test` (sw-exclusions, repositories tests),
+  `npm run lint`, `npm run build`.
+- Manual: login as admin, approve a test submission, log out.
+
+DELIVERABLE
+PR with focused commits: UI, server routes, auth, RLS, docs.
+```
+
+**Files / surfaces to inspect:**
+- `admin/**`.
+- `server/lib/auth.js`, `server/routes/admin/index.js`,
+  `server/repositories/pending-shops.repository.js`, `server/routes/submissions.js`.
+- `docs/ADMIN_SETUP.md`, `docs/ADMIN_GUIDE.md`, `docs/SUPABASE_SETUP.md`,
+  `docs/SUPABASE_SCHEMA.md`.
+- `tests/sw-exclusions.test.js`, `tests/repositories.test.js`.
+- `robots.txt`.
+
+**Required checks:**
+- `npm run validate`, `npm test`, `npm run lint`, `npm run build`.
+- Manual auth flow, manual approve/reject flow.
+
+**Expected final report:**
+- Admin surfaces touched.
+- Auth path verified.
+- SW + sitemap + robots exclusion confirmed.
+- RLS state described.
+- Manual follow-up (Supabase RLS / OAuth) flagged per [§52](#52-manual-follow-up-reporting-expectations).
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Auth env vars (`JWT_SECRET`, `ADMIN_PASSWORD`, `ADMIN_ACCESS_PIN`) must be present at boot
+  — see `server/lib/auth.js`. Don't ship code that throws on missing vars without docs updates.
+- Supabase RLS changes are manual follow-up — see [§52](#52-manual-follow-up-reporting-expectations).
+
+**Failure modes to watch for:**
+- Admin page accidentally indexed (missing `noindex`, present in sitemap).
+- Admin route added without auth middleware.
+- Secret echoed in workflow logs or client JS.
+- SW caches `/admin/*` and serves stale auth pages.
+- `data/pending_shops.json` written non-atomically and corrupted on concurrent writes.
+
+**Cross-references:**
+- → [§37 GitHub Actions Workflow Hardening](#37-github-actions-workflow-hardening)
+- → [§44 Supabase Data Sync](#44-supabase-data-sync)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+- → [§52 Manual Follow-Up Reporting Expectations](#52-manual-follow-up-reporting-expectations)
+
+---
