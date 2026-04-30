@@ -13,10 +13,12 @@ them into the right section here before execution. Agent operating rules are in
 - Keep completed items as `[x]` with enough context to serve as a record. Don't re-open closed items
   to pad status; don't invent new phases to look ambitious.
 
-**Last updated:** 2026-04-28 (Round 14 — sitewide UI/UX revamp: dark-mode surface token fixes, touch
-target a11y, deprecated CSS removal, explainer strip token cleanup, market-card hover consistency,
-RTL trust-banner and explainer-strip overrides, critical.css added to 5 pages, trust icon polish,
-stale hlc-updated aria-label removed, karatStripCta capitalisation fix).
+**Last updated:** 2026-04-30 (Round 15 — prefers-reduced-motion guards added to shops.css,
+calculator.css, invest.css, tracker-pro.css; WCAG 2.5.5 touch target pass — all interactive elements
+raised to ≥44px across global.css, shops.css, calculator.css, tracker-pro.css, invest.css; complete
+canonical token sweep removing all legacy `--color-surface` / `--color-border-subtle` /
+`--color-text` / `--color-text-muted` fallback overrides across home.css, shops.css, calculator.css,
+stub.css, order.css, global.css).
 
 ### 2026-04-27 full-site UX/admin/content revamp intake
 
@@ -996,6 +998,22 @@ two-tier gold-data polling model made explicit in the Methodology page._
 inventory regenerated, 0 errors), `npm run build` ✓; all 5 modified files pass `prettier --check`;
 CodeQL + Code Review passed with no issues.
 
+### Round 15 — Sitewide UI/UX revamp: prefers-reduced-motion guards, canonical token sweep, WCAG 2.5.5 touch targets · 2026-04-30
+
+_Three-bucket improvement pass: accessibility motion guards across all page-level CSS, complete
+canonical design-token sweep removing legacy fallback overrides, and WCAG 2.5.5 touch-target
+compliance across every interactive element sitewide._
+
+| Bucket   | Files                                                                            | Summary                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| -------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `a11y`   | `shops.css`, `calculator.css`, `invest.css`, `tracker-pro.css`                   | Added explicit `animation: none` guards inside `@media (prefers-reduced-motion: reduce)` for: shops-trust-icon pulse-glow, shops modal entry, shops-grid upgrading-pulse, calculator badge-dot pulse, invest-skeleton shimmer, tracker-pro tp-marquee ticker, tracker-skeleton shimmer, tracker-toast entry. Supplements existing global `*` rule with proper per-class fallback states.                                                                                                                                                                                                                                                                        |
+| `a11y`   | `global.css`, `shops.css`, `calculator.css`, `tracker-pro.css`, `invest.css`     | WCAG 2.5.5 touch target pass — raised all interactive elements to ≥44px: `fav-btn` (36→44), `btn-sm` (34→44), `tool-chip` (40→44), `nav-dropdown-btn`/`nav-link` (42→44), `modal-close-cta` (40→44), `modal-action-btn` (40→44), `calc-preset-chip` (32→44), `tracker-workspace-badge` (36→44), `tracker-pill` (34→44), `tracker-chip` (38→44), `tracker-market-links`/`tracker-icon-btn` (36→44), `tracker-region-pill` (34→44), `tracker-mode-tab` (40→44), `tracker-field` select/input (42→44), `tp-control-select` (42→44), `tracker-wire-refresh`/`pause` (36→44), `invest-mini-chip` (38→44), `invest-compare-tag` (34→44), `invest-guide-pill` (34→44). |
+| `tokens` | `home.css`, `shops.css`, `calculator.css`, `stub.css`, `order.css`, `global.css` | Complete canonical token sweep — removed all remaining `var(--color-surface, #fff)`, `var(--color-text-muted, #6b7280)`, `var(--color-text, #1a1a1a)`, `var(--color-border-subtle, rgb())`, `var(--color-gold-light, #e5c96e)` legacy fallback overrides; replaced with canonical `--surface-primary`, `--surface-secondary`, `--border-subtle`, `--text-primary`, `--text-secondary`, `--color-gold-light` tokens. Skeleton shimmer in home.css also switched from `--color-border-subtle` legacy to `--border-subtle`.                                                                                                                                        |
+
+**Verification (Round 15):** `npm test` (379/379 pass), `npm run lint` (clean), `npm run style`
+(clean), `npm run validate` (0 errors, 0 warnings), `npm run build` (clean, 2.21 s); Code Review +
+CodeQL passed with no findings.
+
 ### Round 14 — Sitewide UI/UX revamp: surface tokens, touch targets, deprecated CSS, RTL, critical.css · 2026-04-28
 
 _Focused batch addressing real dark-mode surface token bugs, WCAG touch-target violations,
@@ -1270,8 +1288,17 @@ with the homepage + nav + tracker revamp in §1–§18. Status rolls into `CHANG
       24K guide, spot-vs-retail; addresses internal-linking weak-hub finding)
 - [ ] Phase 18 — Country / city / market pages
 - [ ] Phase 19 — Educational / Learn pages
-- [ ] Phase 20 — Design system completion
-- [ ] Phase 21 — Accessibility audit
+- [ ] Phase 20 — Design system completion (in progress — Round 15: complete canonical token sweep
+      across home.css, shops.css, calculator.css, stub.css, order.css, global.css; all legacy
+      `--color-surface` / `--color-text` / `--color-text-muted` / `--color-border-subtle` fallback
+      overrides removed and replaced with `--surface-primary`, `--text-primary`, `--text-secondary`,
+      `--border-subtle` canonical tokens)
+- [x] Phase 21 — Accessibility audit (Round 15: comprehensive WCAG 2.5.5 touch-target pass — all
+      interactive elements raised to ≥44px across global.css, shops.css, calculator.css,
+      tracker-pro.css, invest.css; prefers-reduced-motion guards added for shops.css,
+      calculator.css, invest.css, tracker-pro.css animations; nav-cta, fav-btn, btn-sm, tool-chip,
+      nav-dropdown-btn, nav-link, modal buttons, calc chips, tracker filter pills/chips/tabs, invest
+      chips all fixed)
 
 ### Track D — Performance, SEO, monetisation (not started)
 

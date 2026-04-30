@@ -72,6 +72,12 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .shops-trust-icon {
+    animation: none;
+  }
+}
+
 .shops-hero-inner::before {
   content: '';
   position: absolute;
@@ -1221,6 +1227,16 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .shops-modal:not([hidden]) {
+    animation: none;
+  }
+
+  .shops-modal:not([hidden]) .shops-modal-content {
+    animation: none;
+  }
+}
+
 .shops-modal-overlay {
   position: absolute;
   inset: 0;
@@ -1499,7 +1515,7 @@
   background: var(--color-bg, #131210);
   color: var(--color-text, #e8e0cc);
   border-radius: var(--radius-md);
-  min-height: 40px;
+  min-height: 44px;
   padding: 0.45rem 0.85rem;
   font-weight: var(--weight-semibold);
   cursor: pointer;
@@ -1570,13 +1586,13 @@
   gap: 0.5rem;
   padding: 0.85rem 1.1rem;
   border: 1px solid var(--color-border, #e8e2d0);
-  border-radius: var(--radius-md, 12px);
-  background: var(--color-surface, #fff);
+  border-radius: var(--radius-md);
+  background: var(--surface-primary);
   font: inherit;
   font-weight: var(--weight-bold);
   font-size: 0.95rem;
   cursor: pointer;
-  color: var(--color-text, #1a1612);
+  color: var(--text-primary);
   transition:
     border-color 0.18s ease,
     box-shadow 0.18s ease,
@@ -1870,7 +1886,7 @@
   cursor: pointer;
   text-decoration: none;
   transition: all 0.18s;
-  min-height: 40px;
+  min-height: 44px;
 }
 
 .modal-action-btn:hover {
@@ -1964,14 +1980,14 @@
   gap: 0.5rem;
   padding: 0.6rem 0;
   font-size: 0.82rem;
-  color: var(--color-text-muted, #6b5f4e);
+  color: var(--text-secondary);
   border-bottom: 1px solid var(--color-border-subtle, #ede8da);
   margin-bottom: 1rem;
 }
 
 .shops-results-count {
   font-weight: var(--weight-bold);
-  color: var(--color-text, #1a1612);
+  color: var(--text-primary);
 }
 
 /* ── Shops card — hover state glow improvement ── */
@@ -1998,12 +2014,12 @@
   font-size: var(--text-xl);
   font-weight: var(--weight-extrabold);
   margin: 0 0 0.5rem;
-  color: var(--color-text, #1a1612);
+  color: var(--text-primary);
 }
 
 .shops-nearme-lead {
   font-size: 0.9rem;
-  color: var(--color-text-muted, #6b5f4e);
+  color: var(--text-secondary);
   margin: 0 0 1.25rem;
 }
 
@@ -2043,7 +2059,7 @@
 
 .nearme-intro {
   font-size: 0.85rem;
-  color: var(--color-text-muted, #6b5f4e);
+  color: var(--text-secondary);
   margin: 0 0 0.5rem;
 }
 
@@ -2069,7 +2085,7 @@
   border: 1px solid var(--color-border, #e8e0d0);
   border-radius: var(--radius-sm);
   text-decoration: none;
-  color: var(--color-text, #1a1612);
+  color: var(--text-primary);
   font-size: var(--text-sm);
   transition:
     border-color 0.15s,
@@ -2108,7 +2124,7 @@
   border: 1px solid var(--color-border, #e8e0d0);
   border-radius: 6px;
   text-decoration: none;
-  color: var(--color-text, #1a1612);
+  color: var(--text-primary);
   font-size: 0.8rem;
   font-weight: var(--weight-semibold);
   transition: border-color 0.15s;
@@ -2120,7 +2136,7 @@
 
 .nearme-fallback p {
   font-size: 0.85rem;
-  color: var(--color-text-muted, #6b5f4e);
+  color: var(--text-secondary);
   margin: 0 0 0.75rem;
 }
 
@@ -2163,5 +2179,12 @@
 
   50% {
     opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shops-grid--upgrading::after {
+    animation: none;
+    opacity: 0.5;
   }
 }
