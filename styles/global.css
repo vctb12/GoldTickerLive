@@ -919,7 +919,7 @@ body.has-spot-bar .site-nav {
   font-size: 0.83rem;
   cursor: pointer;
   white-space: nowrap;
-  min-height: 36px;
+  min-height: 44px;
   text-decoration: none;
   transition:
     background 0.22s cubic-bezier(0.4, 0, 0.2, 1),

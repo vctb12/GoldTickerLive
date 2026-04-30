@@ -72,6 +72,12 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .shops-trust-icon {
+    animation: none;
+  }
+}
+
 .shops-hero-inner::before {
   content: '';
   position: absolute;
@@ -1221,6 +1227,16 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .shops-modal:not([hidden]) {
+    animation: none;
+  }
+
+  .shops-modal:not([hidden]) .shops-modal-content {
+    animation: none;
+  }
+}
+
 .shops-modal-overlay {
   position: absolute;
   inset: 0;
@@ -2163,5 +2179,12 @@
 
   50% {
     opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shops-grid--upgrading::after {
+    animation: none;
+    opacity: 0.5;
   }
 }

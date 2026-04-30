@@ -77,6 +77,12 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .badge-dot {
+    animation: none;
+  }
+}
+
 #calc-spot-price {
   font-weight: var(--weight-bold);
   font-variant-numeric: tabular-nums;
