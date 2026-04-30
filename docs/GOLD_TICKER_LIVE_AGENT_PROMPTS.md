@@ -4876,3 +4876,475 @@ PR with focused commits: checks, changelog, release packaging, docs.
 - → [§37 GitHub Actions Workflow Hardening](#37-github-actions-workflow-hardening)
 
 ---
+
+## 39. E2E & Coverage
+
+**Purpose:**
+Playwright E2E tests cover the user-facing flows the unit tests can't reach (theme cycle,
+country search, calculator round-trip, freshness pill on throttled networks). This prompt
+keeps the suite useful, fast, and CI-stable.
+
+**When to use:**
+- Adding a new user flow worth E2E coverage.
+- Existing E2E tests are flaky.
+- Coverage gaps surface in a regression.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the E2E suite on Gold Ticker Live. Playwright. Fast, deterministic,
+CI-stable. Coverage where it matters; not coverage theater.
+
+INSPECT FIRST
+1. Read `playwright.config.js`.
+2. Read existing E2E specs (verify location: `tests/e2e/` or `e2e/`).
+3. Read `package.json` `test:playwright` and `test:coverage`.
+4. Read the relevant CI workflow that runs Playwright.
+
+WORK — coverage
+- Cover: home → tracker, home → calculator → result, country → city, theme cycle,
+  AR toggle, freshness pill state.
+- Each test asserts visible behavior, not internal state.
+
+WORK — determinism
+- Network: stub gold price APIs to a fixture so tests don't depend on live data.
+- Time: freeze `Date.now` in the page where freshness state matters.
+- Retries: at most 1 retry; flaky tests get marked or fixed.
+
+WORK — speed
+- Parallel workers tuned to CI cores.
+- Reuse browser context where safe.
+
+CONSTRAINTS
+- Don't test against the live API.
+- Don't add Playwright-specific brittleness ("sleep 2000").
+
+VERIFY
+- `npm run test:playwright` (locally, then CI).
+- `npm run test:coverage` (verify thresholds defined).
+
+DELIVERABLE
+PR with focused commits: specs, fixtures, config, CI.
+```
+
+**Files / surfaces to inspect:**
+- `playwright.config.js`, `tests/e2e/` or `e2e/` (verify path).
+- `package.json` (`test:playwright`, `test:coverage`).
+- CI workflow (`.github/workflows/*.yml`).
+
+**Required checks:**
+- `npm run test:playwright`, `npm run test:coverage`.
+
+**Expected final report:**
+- Specs added / changed.
+- Coverage delta.
+- Flake rate over the last N runs.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Don't test against live APIs.
+- Don't bypass auth in admin E2E tests.
+
+**Failure modes to watch for:**
+- `await page.waitForTimeout(5000)` instead of an assertion.
+- Tests that hit the real gold API and break in CI.
+- Coverage threshold lowered to make CI pass.
+- Specs that share global state.
+
+**Cross-references:**
+- → [§7 Before New PR Prompt](#7-before-new-pr-prompt)
+- → [§37 GitHub Actions Workflow Hardening](#37-github-actions-workflow-hardening)
+- → [§42 Mobile-First Layout Audit](#42-mobile-first-layout-audit)
+
+---
+
+## 40. Dependency Audit & Advisory Check
+
+**Purpose:**
+The lightweight posture (no React, no Next, no charting libs) means few deps, but each
+one matters. This prompt keeps the dep list tight, vetted against the GitHub Advisory DB,
+and removed where unused.
+
+**When to use:**
+- Quarterly dep refresh.
+- Dependabot PR needs review.
+- A new dep is being considered.
+
+**Copy-paste prompt:**
+
+```text
+You are auditing dependencies on Gold Ticker Live. Lightweight posture: every dep earns
+its place. GitHub Advisory DB consulted before any add.
+
+INSPECT FIRST
+1. Read `package.json` and `package-lock.json`.
+2. Read `docs/DEPENDENCIES.md`.
+3. Run `npm outdated` and `npm audit` (capture).
+4. For each non-trivial dep, run a GH Advisory check.
+
+WORK — audit
+- Mark each dep as: kept (used + safe), upgrade (safe + tested), remove (unused),
+  replace (lighter alternative).
+- Run `npm audit fix` only on minor/patch within compat. Major bumps are owner-approved.
+
+WORK — adds
+- Before adding, justify in `docs/DEPENDENCIES.md`: why, what it replaces, bundle delta.
+- Run GH Advisory check.
+
+WORK — removes
+- `rg "from ['\"]<dep>['\"]|require\\(['\"]<dep>['\"]\\)" src/ scripts/` to confirm unused.
+
+CONSTRAINTS
+- No new framework (React, Next, Vue, Svelte).
+- No heavy charting lib (chart.js, d3 full bundle).
+- No CSS framework (Tailwind, Bootstrap).
+- jQuery banned.
+
+VERIFY
+- `npm install`, `npm test`, `npm run lint`, `npm run build`.
+- `npm audit` post-change.
+
+DELIVERABLE
+PR with focused commits: kept / upgraded / removed / replaced. Update `docs/DEPENDENCIES.md`.
+```
+
+**Files / surfaces to inspect:**
+- `package.json`, `package-lock.json`.
+- `docs/DEPENDENCIES.md`.
+
+**Required checks:**
+- `npm install`, `npm test`, `npm run lint`, `npm run build`, `npm audit`.
+
+**Expected final report:**
+- Deps audited (kept / upgraded / removed / replaced).
+- Advisory results.
+- Bundle size delta.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Lightweight-posture carve-out — see [§50](#50-safety-rules-and-carve-outs).
+- Major bumps need owner approval.
+
+**Failure modes to watch for:**
+- A "small" dep pulls 200 transitive deps.
+- Major bump silently included.
+- `npm audit fix --force` left in CI.
+- Advisory ignored ("low severity, fine").
+
+**Cross-references:**
+- → [§16 Docs and Governance Prompt](#16-docs-and-governance-prompt)
+- → [§37 GitHub Actions Workflow Hardening](#37-github-actions-workflow-hardening)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+
+---
+
+## 41. Placeholder & Stub Page Completion
+
+**Purpose:**
+Some country/city pages are placeholders awaiting enrichment. Stub pages exist for
+reserved URLs. This prompt completes them in a controlled way without breaking SEO
+or the generator pipeline.
+
+**When to use:**
+- A placeholder page is now ready for full content.
+- A stub URL needs to either complete or be removed.
+- The placeholder generator is producing weak output.
+
+**Copy-paste prompt:**
+
+```text
+You are completing placeholder/stub pages on Gold Ticker Live. Don't break URLs; don't
+ship thin content; don't leak "coming soon" past the launch date.
+
+INSPECT FIRST
+1. Read `scripts/node/enrich-placeholder-pages.js` and `scripts/node/generate-placeholders.js`.
+2. List placeholder pages: `rg -l "coming soon|placeholder|stub" countries/ content/`.
+3. Read `styles/pages/stub.css`.
+4. Read `src/seo/seoHead.js` placeholder branch.
+
+WORK — completion
+- Replace placeholder content with substantive content per [§22](#22-country--city-pages-deep-dive)
+  or [§23](#23-content-guide-library).
+- Re-run the generator if the page is generator-emitted.
+- Update sitemap, schema, internal links.
+
+WORK — removal
+- If a stub URL won't be completed, return 410 (preferred) or redirect via `_redirects`.
+- Drop from sitemap.
+
+CONSTRAINTS
+- Don't leave "coming soon" indexed.
+- SEO carve-outs preserved.
+- Bilingual.
+
+VERIFY
+- `npm run validate`, `npm run seo-audit`,
+  `node scripts/node/check-sitemap-coverage.js`, `npm test`, `npm run build`.
+
+DELIVERABLE
+PR with focused commits: content, generator, sitemap, redirects.
+```
+
+**Files / surfaces to inspect:**
+- `scripts/node/enrich-placeholder-pages.js`, `scripts/node/generate-placeholders.js`.
+- `styles/pages/stub.css`.
+- Placeholder pages identified by ripgrep.
+- `_redirects` (verify exists).
+
+**Required checks:**
+- `npm run validate`, `npm run seo-audit`,
+  `node scripts/node/check-sitemap-coverage.js`, `npm test`, `npm run build`.
+
+**Expected final report:**
+- Pages completed / removed.
+- Generator changes.
+- Sitemap delta.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- 410 vs 301 vs 404 — see [§45](#45-404--error-pages--redirect-hygiene).
+
+**Failure modes to watch for:**
+- Placeholder content shipped indexed for months.
+- Stub removed but sitemap still references it.
+- Generator regenerated and overwrote completed page.
+
+**Cross-references:**
+- → [§22 Country & City Pages Deep Dive](#22-country--city-pages-deep-dive)
+- → [§18 Generated Files and Source Generator Prompt](#18-generated-files-and-source-generator-prompt)
+- → [§45 404 / Error Pages & Redirect Hygiene](#45-404--error-pages--redirect-hygiene)
+
+---
+
+## 42. Mobile-First Layout Audit
+
+**Purpose:**
+60–80 % of traffic is mobile. Every surface must work cleanly at 320–414 px. This prompt
+audits layout hygiene at small widths, with RTL parity.
+
+**When to use:**
+- A layout regression on mobile is reported.
+- New page/component being shipped — verify mobile before merge.
+- Quarterly mobile audit.
+
+**Copy-paste prompt:**
+
+```text
+You are auditing mobile-first layout on Gold Ticker Live. Every surface clean at 320–414 px,
+EN + AR.
+
+INSPECT FIRST
+1. Sample pages: home, tracker, calculator, shops, methodology, country, city, guide,
+   FAQ, admin (operator-facing).
+2. Read `styles/global.css` breakpoints (verify there is no per-page breakpoint drift).
+3. Read `tests/sw-exclusions.test.js` and accessibility tests.
+
+WORK — layout
+- No horizontal scroll at 320 px.
+- Tap targets ≥ 44 × 44 px (WCAG 2.5.5) — verified per Round 15.
+- Forms: full-width inputs, labels above (not placeholder-as-label).
+
+WORK — RTL
+- Mirror chevrons / arrows / progress indicators.
+- Number formatting + AED/USD positioning.
+- Drawer slides in from the right in AR.
+
+WORK — performance on mobile
+- Hero LCP ≤ 2.5 s on a throttled 3G profile.
+- No CLS > 0.1.
+
+CONSTRAINTS
+- Don't add desktop-only fancy effects that break mobile.
+- All animations respect `prefers-reduced-motion: reduce` (Round 15 guards).
+
+VERIFY
+- `npm run validate`, `npm run a11y`, `npm run perf:ci`,
+  `npm test`, `npm run build`.
+- Manual: 320, 360, 414 px in EN + AR.
+
+DELIVERABLE
+PR with focused commits: layout, RTL, perf, a11y.
+```
+
+**Files / surfaces to inspect:**
+- `styles/global.css`, `styles/pages/*.css`.
+- Sample pages above.
+
+**Required checks:**
+- `npm run validate`, `npm run a11y`, `npm run perf:ci`, `npm test`, `npm run build`.
+
+**Expected final report:**
+- Pages tested at 320 / 360 / 414 px in EN + AR.
+- Issues found / fixed.
+- LCP / CLS deltas.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- 44 px tap target carve-out — see [§50](#50-safety-rules-and-carve-outs).
+
+**Failure modes to watch for:**
+- New CSS rule with a hardcoded width forcing horizontal scroll.
+- AR drawer slides in from the wrong side.
+- Reduced-motion users get an animation anyway.
+- A button shrinks to 32 px on mobile.
+
+**Cross-references:**
+- → [§8 Full UI/UX Revamp Prompt](#8-full-uiux-revamp-prompt)
+- → [§12 Arabic / RTL Quality Prompt](#12-arabic--rtl-quality-prompt)
+- → [§35 Dark Mode & Theme System](#35-dark-mode--theme-system)
+
+---
+
+## 43. RSS Feed & News
+
+**Purpose:**
+The RSS feed (`generate-rss.js`) gives aggregators and power users a low-cost way to follow
+guides + alerts. News-style updates need careful framing — Gold Ticker Live is not a news
+site; it summarizes its own content.
+
+**When to use:**
+- RSS feed is stale or invalid.
+- A new content type should be included in the feed.
+- News framing is too clickbait-y.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the RSS feed on Gold Ticker Live. Generated from guides + selected
+alerts. Standards-compliant. Honest framing.
+
+INSPECT FIRST
+1. Read `scripts/node/generate-rss.js`.
+2. Read `feed.xml` (or wherever the output lives — verify path).
+3. Read translations `news.*` if present.
+
+WORK — feed
+- Title, description, link, language (EN). Optional AR feed.
+- Items: title, link, pubDate (mtime), description (≤ 250 chars), guid (deterministic).
+- Self-link via `atom:link`.
+
+WORK — news framing
+- Items are summaries of OWN content + price-spike alerts.
+- No claims about external news outlets.
+
+CONSTRAINTS
+- Don't break the feed XML structure.
+- Don't include admin or stub pages.
+
+VERIFY
+- `npm run validate`, `npm test`, `npm run build`.
+- Validate the feed: `xmllint --noout feed.xml` (verify installed).
+- Submit to a feed validator — manual.
+
+DELIVERABLE
+PR with focused commits: generator, content, validation.
+```
+
+**Files / surfaces to inspect:**
+- `scripts/node/generate-rss.js`, `feed.xml` (verify path).
+- `src/config/translations.js` (`news.*` if present).
+
+**Required checks:**
+- `npm run validate`, `npm test`, `npm run build`.
+- `xmllint` if installed.
+
+**Expected final report:**
+- Feed item count.
+- Validation status.
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- Never include admin items.
+
+**Failure modes to watch for:**
+- Invalid RSS XML.
+- Items duplicated each run.
+- Admin pages leaked.
+- News framing reads as fake reporting.
+
+**Cross-references:**
+- → [§23 Content Guide Library](#23-content-guide-library)
+- → [§27 Newsletter & Alert System](#27-newsletter--alert-system)
+
+---
+
+## 44. Supabase Data Sync
+
+**Purpose:**
+Supabase backs admin auth (GitHub OAuth) and any Supabase-stored content (verify schema
+in `docs/SUPABASE_SCHEMA.md`). The `sync-db-to-git.yml` workflow keeps a JSON snapshot of
+key tables in the repo. This prompt keeps RLS, schema, and sync honest.
+
+**When to use:**
+- A schema change is needed (column add, table add).
+- RLS policies need review.
+- Sync workflow output drifts from the live DB.
+
+**Copy-paste prompt:**
+
+```text
+You are working on Supabase integration on Gold Ticker Live. Auth + selected content tables.
+RLS strict. Sync honest.
+
+INSPECT FIRST
+1. Read `docs/SUPABASE_SETUP.md` and `docs/SUPABASE_SCHEMA.md`.
+2. Read `.github/workflows/sync-db-to-git.yml`.
+3. Read `server/lib/auth.js` and any `server/lib/supabase*.js`.
+4. List Supabase-synced JSON files in `data/`.
+
+WORK — schema
+- Schema additions in a `migrations/` SQL file (verify exists; manual apply).
+- RLS: default deny; admin role for management; public for read-only safe tables.
+- gold_prices table name preserved (carve-out).
+
+WORK — sync
+- Workflow runs on a schedule and on manual dispatch.
+- JSON snapshots committed atomically.
+- No secrets echoed.
+
+CONSTRAINTS
+- `gold_prices` table name preserved.
+- RLS never widened without explicit approval.
+- Migrations applied manually — flag in the final report (manual follow-up).
+
+VERIFY
+- `npm test` (`tests/repositories.test.js`, `tests/server*`).
+- Manual: dispatch the sync workflow on a test branch.
+
+DELIVERABLE
+PR with focused commits: schema, RLS notes, sync, docs. Flag manual follow-up per [§52](#52-manual-follow-up-reporting-expectations).
+```
+
+**Files / surfaces to inspect:**
+- `docs/SUPABASE_SETUP.md`, `docs/SUPABASE_SCHEMA.md`.
+- `.github/workflows/sync-db-to-git.yml`.
+- `server/lib/auth.js`, `server/lib/supabase*.js` (verify exists).
+- `migrations/**` (verify exists).
+- `data/*.json` (synced files).
+
+**Required checks:**
+- `npm test`, `npm run lint`, `npm run build`.
+- Manual sync workflow dispatch.
+
+**Expected final report:**
+- Schema diff.
+- RLS audit.
+- Sync output diff.
+- Manual follow-up: SQL apply, RLS update, secrets — see [§52](#52-manual-follow-up-reporting-expectations).
+- 7-part report per [§51](#51-expected-final-report-format).
+
+**Safety notes:**
+- `gold_prices` carve-out — see [§50](#50-safety-rules-and-carve-outs).
+
+**Failure modes to watch for:**
+- RLS widened to "anon read all".
+- Migration committed but never applied.
+- Sync workflow leaks secrets in logs.
+- `gold_prices` renamed.
+
+**Cross-references:**
+- → [§26 Admin Panel UX](#26-admin-panel-ux)
+- → [§37 GitHub Actions Workflow Hardening](#37-github-actions-workflow-hardening)
+- → [§52 Manual Follow-Up Reporting Expectations](#52-manual-follow-up-reporting-expectations)
+
+---
