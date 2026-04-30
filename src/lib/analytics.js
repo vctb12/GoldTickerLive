@@ -63,7 +63,17 @@ function _getSessionId() {
   try {
     let id = sessionStorage.getItem('gp_session_id');
     if (!id) {
-      id = Math.random().toString(36).slice(2) + Date.now().toString(36);
+      // Prefer the Web Crypto API (available in all modern browsers) for
+      // generating the session token. Fall back to a timestamp-based
+      // string when the API is absent (very old browsers/jsdom).
+      if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+        id = crypto.randomUUID();
+      } else {
+        // Fallback: timestamp + random hex — analytics use only, not security.
+        id = Date.now().toString(36) + (crypto?.getRandomValues
+          ? Array.from(crypto.getRandomValues(new Uint8Array(8)), (b) => b.toString(16).padStart(2, '0')).join('')
+          : Math.floor(Math.random() * 0xffffffff).toString(16));
+      }
       sessionStorage.setItem('gp_session_id', id);
     }
     return id;
