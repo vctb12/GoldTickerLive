@@ -2,7 +2,7 @@
 
 ## Summary
 
-Gold Prices is a **zero-dependency, static multi-page front-end** gold pricing platform for GCC/Arab
+Gold Ticker Live is a **zero-dependency, static multi-page front-end** gold pricing platform for GCC/Arab
 markets, written in vanilla ES6 modules — no bundler framework, no package manager for browser code.
 
 It is served via **GitHub Pages** (primary) or an optional **Express server** (adds JWT-secured
