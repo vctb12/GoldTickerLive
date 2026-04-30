@@ -4,7 +4,58 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
-### Multi-track polish — 2026-04-27 session
+### Pre-deploy / changelog / release pipeline — 2026-04-30
+
+**`scripts/node/pre-deploy-check.js`**
+
+- fix: convert from broken ESM `import` syntax to CJS `require` — script was crashing with
+  `SyntaxError` at startup (`package.json` has `"type": "commonjs"`).
+- feat: add **check 9 — robots.txt** — fails if file is missing or lacks a `User-agent` directive.
+- feat: add **check 10 — unit tests** — runs `npm test`; pass `--skip-tests` for faster pre-flight.
+  Exits 1 on any test failure.
+- feat: add **check 11 — uncommitted changes** — fails if working tree is dirty (any staged or
+  unstaged files), preventing deploys from an unclean state.
+- fix: sitemap check now also verifies file age (warns if > 7 days old), not just URL count.
+- fix: build-output check now verifies `tracker.html`, `calculator.html`, and `shops.html` in
+  `dist/` in addition to `index.html`.
+- fix: CNAME check now fails (not warns) if the file is empty.
+- **breaking**: script now **always exits 1 on any failure**, not only in `--ci` mode. Use
+  `--skip-tests` for fast checks.
+- chore: `npm run pre-deploy:ci` alias removed; `npm run pre-deploy:fast` added (equivalent to
+  `--skip-tests`).
+
+**`scripts/node/changelog.js`**
+
+- fix: convert from broken ESM `import` syntax to CJS `require`.
+- fix: replace the fragile hand-rolled CC regex with a named-group regex that correctly handles
+  `feat(scope)!: desc`, `fix: desc`, and `chore(ci): desc`.
+- feat: auto-detect the most recent git tag as the `--since` lower bound; falls back to the last 200
+  commits when no tags exist.
+- feat: add **`--all`** flag to include all commits without a count limit.
+- feat: add `breaking` category at the top of the output for `feat!:` / `fix!:` commits.
+- feat: generate clickable GitHub commit links (`[sha](…/commit/sha)`) when the remote origin is a
+  GitHub URL.
+- feat: print a brief header on stdout showing the since-ref and commit count.
+- chore: `npm run changelog:since` script alias added for convenience.
+
+**`scripts/node/package-release.js`**
+
+- feat: complete rewrite — was a 30-line stub that only wrote a manifest.
+- feat: writes `release/release.json` with `brand`, `version`, `buildSha`, `buildTimestamp`, and
+  `distFiles` list.
+- feat: copies `CHANGELOG.md` into `release/`.
+- feat: creates `release/gold-ticker-live-vX.Y.Z-SHA.tar.gz` containing the full `dist/` tree plus
+  `CHANGELOG.md` and `release.json`.
+- feat: `--dry-run` flag shows the plan without writing any files (works even without a `dist/`).
+- chore: tarball name includes version and short build SHA for unambiguous identification.
+- doc: script header explicitly states it does NOT tag git or publish anywhere.
+
+**`docs/CONTRIBUTING.md`**
+
+- docs: add **Testing** section with all relevant `npm run` commands.
+- docs: add **Pre-Deploy Checks** section documenting all 11 checks and severity.
+- docs: add **Generating a Changelog Entry** section with CC format examples.
+- docs: add **Packaging a Release Artifact** section with output file table.
 
 **CSS / nav fixes (items from navbar-audit plan Phase 2):**
 
