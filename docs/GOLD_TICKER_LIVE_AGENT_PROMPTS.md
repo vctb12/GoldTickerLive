@@ -1130,3 +1130,1275 @@ DELIVERABLE
 - → [§51 Expected Final-Report Format](#51-expected-final-report-format)
 
 ---
+
+## 8. Full UI/UX Revamp Prompt
+
+**Purpose:**
+Drive a sitewide UI/UX revamp that makes Gold Ticker Live feel like a serious, premium,
+trustworthy live-gold-price platform — not a generic info site. Improve global polish,
+navigation, hero flow, card hierarchy, CTA clarity, mobile layout, RTL behavior, trust
+signals, and visual rhythm without breaking deployment, SEO, bilingual parity, or DOM safety.
+
+**When to use:**
+- The owner asks for a "revamp", "polish pass", "design refresh", or "make it look more
+  premium".
+- A round-N polish sprint is planned (see `docs/REVAMP_PLAN.md`).
+- A design-token rationalization is in flight.
+- After a brand consistency sweep ([§5a](#5a-cross-surface-brand-consistency-audit)) reveals
+  that the visual system has drifted.
+- Quarterly design-system hygiene.
+
+**Copy-paste prompt:**
+
+```text
+You are working on the Gold Ticker Live repo (custom domain: goldtickerlive.com). This is a
+bilingual EN/AR static multi-page site (no React, no Next, no SPA). All design tokens live
+in `styles/global.css` and `styles/pages/*.css`. All user-visible strings live in
+`src/config/translations.js`.
+
+GOAL
+Run a sitewide UI/UX revamp that makes the product feel like a serious, premium,
+trustworthy live-gold-price platform — not a generic info page. Improve global polish,
+navigation, hero flow, card hierarchy, CTA clarity, mobile layout, RTL behavior, trust
+signals, and visual rhythm.
+
+INSPECT FIRST
+1. Read every entry HTML page at the repo root: `index.html`, `tracker.html`,
+   `calculator.html`, `shops.html`, `learn.html`, `insights.html`, `methodology.html`,
+   `invest.html`, `pricing.html`, `offline.html`, `404.html`.
+2. Read `styles/global.css` (canonical design tokens + primitives). Memorize the token
+   namespaces: `--color-*`, `--surface-*`, `--space-*`, `--text-*`, `--radius-*`,
+   `--shadow-*`, `--ease-*`, `--duration-*`, `--text-secondary`, `--surface-primary`.
+3. Read every file under `styles/pages/` (e.g. `home.css`, `tracker-pro.css`,
+   `calculator.css`, `shops.css`, `invest.css`).
+4. Read `src/components/nav.js`, `src/components/nav-data.js`, `src/components/footer.js`,
+   `src/components/internalLinks.js`, `src/components/breadcrumbs.js`,
+   `src/components/ticker.js`, `src/components/spotBar.js`, `src/components/adSlot.js`.
+5. Read `src/pages/home.js`, `src/tracker/render.js`, `src/tracker/dom-builders.js`,
+   `src/tracker/ui-shell.js`.
+6. Read `src/config/translations.js` so every copy change you make ships in EN + AR.
+7. Read `docs/DESIGN_TOKENS.md`, `docs/ACCESSIBILITY.md`, `docs/REVAMP_PLAN.md`.
+8. Walk each surface mentally at desktop (1440px) and mobile (360px, 414px), in BOTH EN
+   and AR. List every surface that looks weak: cramped cards, weak hierarchy, unclear
+   CTAs, ambiguous freshness, mis-mirrored RTL chevrons, low-contrast trust signals.
+
+WORK — TOKENS
+- Use existing tokens. Never hand-pick raw hex or rems where a token exists.
+- If you need a new token, add it to `styles/global.css` once and reference it everywhere;
+  do not introduce one-off colors or spacing values.
+- Audit every `var(--color-*, #xxx)` fallback override; if the fallback hex disagrees with
+  the canonical token, remove the fallback.
+
+WORK — LAYOUT
+- Tighten heading scale and spacing rhythm across home, tracker, calculator, shops,
+  content guides.
+- Improve hero flow on `index.html`: clear value proposition, freshness pill near the
+  live price, obvious primary CTA to the tracker.
+- Strengthen card primitives: cards must look consistent across home, tracker, shops,
+  and country pages. Consolidate `.card` / `.panel` variants where they overlap.
+- Mobile pass at 360px and 414px: no horizontal scroll, no overlapping sticky elements,
+  tap targets ≥ 44px (per the existing accessibility convention).
+
+WORK — NAVIGATION
+- Improve nav active states, mobile drawer hierarchy, language/theme toggle clarity.
+  Keep the nav data-driven via `src/components/nav-data.js`.
+- The mobile drawer uses `.nav-drawer-bottom` containing both `#nav-theme-toggle-drawer`
+  and `#nav-lang-toggle-mobile`; `_cycleTheme()` is shared between desktop and drawer.
+  Do not fork them.
+- Footer hierarchy: group links by intent (Track, Calculate, Find a Shop, Learn,
+  Methodology, About). Avoid a flat 30-link footer.
+
+WORK — RTL
+- For every surface you touch, verify RTL: mirror chevrons/arrows, verify alignment,
+  confirm Arabic copy reads naturally (not literal English structure).
+- The tracker localizes welcome strip via `_localizeWelcomeStrip()` in `src/tracker/
+  render.js`; market badge has explicit aria-label via
+  `tracker.marketOpenAriaLabel`/`tracker.marketClosedAriaLabel`.
+
+WORK — TRUST SIGNALS
+- Add visible trust signals where they strengthen the page (source label, last-updated
+  pill, methodology link, "spot estimate vs retail" disclaimer near every price).
+- Freshness states are: 'live' (≤12 min, no failure), 'cached' (≤12 min, hasLiveFailure),
+  'stale' (>12 min), 'unavailable' (no updatedAt). Render every state visibly with
+  color-blind-accessible affordance (icon ::before, not color-only).
+
+WORK — MOTION
+- Respect `prefers-reduced-motion: reduce` for any new motion. Per-class guards are
+  preferred over global resets — see existing pattern in `styles/pages/shops.css`,
+  `styles/pages/calculator.css`, `styles/pages/invest.css`.
+- Do not introduce parallax, background video, or animated gold particles. Lightweight
+  posture is a carve-out.
+
+CONSTRAINTS
+- No new dependencies, no framework migration, no new build system, no CSS framework.
+- Don't change `CNAME`, `vite.config.js` `base` (currently `'/'`), service-worker scope,
+  canonical URLs, or the `countries/**/gold-prices/` URL paths.
+- Don't touch the AED peg constant (`3.6725`), the troy-ounce constant (`31.1035`),
+  karat purity values, freshness thresholds (`STALE_AFTER_MS = 12*60*1000`,
+  `FX_STALE_AFTER_MS = 26*60*60*1000`), or pricing math.
+- Every user-visible string change ships in EN + AR via `src/config/translations.js`.
+- Do not introduce new innerHTML/outerHTML/insertAdjacentHTML sinks — use `el()` /
+  `replaceChildren()` from `src/lib/safe-dom.js`.
+- Bump `sw.js` `CACHE_NAME` (currently `'goldtickerlive-v16'`) since visible asset/HTML
+  output is changing.
+
+VERIFY
+- `npm run validate` (build integrity + DOM-safety + SEO meta + sitemap + placeholder +
+  analytics gates)
+- `npm test`
+- `npm run quality` (lint + format:check + style)
+- `npm run build`
+- Manual: skim home / tracker / shops / a country page at 360px, 414px, and 1440px in
+  both EN and AR.
+
+DELIVERABLE
+- Multiple themed commits: `feat(tokens): ...`, `feat(layout): ...`, `feat(nav): ...`,
+  `feat(tracker-ui): ...`, `feat(rtl): ...`, `chore(sw): bump CACHE_NAME to ...`,
+  `docs: update REVAMP_PLAN`.
+- Before/after screenshots at 360px and 1440px, EN and AR, for every visibly changed
+  surface, in the PR body.
+- §51 final report with carve-outs preserved.
+```
+
+**Files / surfaces Copilot should inspect:**
+- HTML at root: `index.html`, `tracker.html`, `calculator.html`, `shops.html`, `learn.html`,
+  `insights.html`, `methodology.html`, `invest.html`, `pricing.html`, `offline.html`,
+  `404.html`
+- `styles/global.css`, every file under `styles/pages/`, `styles/order.css`
+- `src/components/{nav,nav-data,footer,internalLinks,breadcrumbs,ticker,spotBar,adSlot}.js`
+- `src/components/nav/{dropdown-builders,helpers}.js`
+- `src/pages/home.js`, `src/pages/tracker-pro.js`
+- `src/tracker/{render,dom-builders,ui-shell,events,formatting,modes,state,wire}.js`
+- `src/config/translations.js`, `src/config/constants.js`
+- `docs/DESIGN_TOKENS.md`, `docs/ACCESSIBILITY.md`, `docs/REVAMP_PLAN.md`
+
+**Required checks:**
+- `npm run validate`
+- `npm test`
+- `npm run quality`
+- `npm run build`
+- `node scripts/node/check-unsafe-dom.js`
+- Manual screenshots at 360 / 414 / 1440 in EN and AR
+
+**Expected final report:**
+- Files changed, grouped by area (tokens / layout / nav / tracker / rtl / sw).
+- SW `CACHE_NAME` bump value.
+- Carve-outs preserved (cite [§50](#50-safety-rules-and-carve-outs)).
+- Before/after screenshots attached.
+- Lighthouse delta if available (cite [§42](#42-mobile-first-layout-audit) /
+  [§11](#11-pwa--service-worker--performance-prompt) for perf coverage).
+- §51 final report.
+
+**Safety notes:**
+- No framework migration. No new charting library.
+- DOM-safety baseline must not regress.
+- The hourly `.github/workflows/post_gold.yml` is production. UI work must not touch
+  `scripts/python/utils/*` or `src/social/postTemplates.js` unless intentional.
+- Translation parity is enforced by `tests/home-translations.test.js` and
+  `tests/seo-metadata.test.js` — both must stay green.
+
+**Failure modes to watch for:**
+- Agent introduces a new color in raw hex instead of via a token.
+- Agent ships a copy change in EN only, breaking EN/AR parity.
+- Agent restructures the mobile drawer and breaks the shared `_cycleTheme()` /
+  `_applyTheme()` pattern.
+- Agent removes the freshness pill because "it looks busy", losing a trust signal.
+- Agent adds parallax / scroll-jacking, regressing performance.
+- Agent forgets to bump `sw.js` `CACHE_NAME`, shipping cached old CSS to returning users.
+- Agent fixes a generated country/city page directly without updating
+  `enrich-placeholder-pages.js`.
+
+**Cross-references:**
+- → [§9 Live Tracker Upgrade](#9-live-tracker-upgrade-prompt)
+- → [§11 PWA / Service Worker / Performance](#11-pwa--service-worker--performance-prompt)
+- → [§12 Arabic / RTL Quality](#12-arabic--rtl-quality-prompt)
+- → [§19 Large PR Execution](#19-large-pr-execution-prompt)
+- → [§35 Dark Mode & Theme System](#35-dark-mode--theme-system)
+- → [§42 Mobile-First Layout Audit](#42-mobile-first-layout-audit)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+
+---
+
+## 9. Live Tracker Upgrade Prompt
+
+**Purpose:**
+Make the live tracker (`tracker.html`) feel like the product's centerpiece — clear price
+hierarchy, unambiguous freshness, trustworthy data labels, scannable karats, fast first
+paint, easy filters, no broken empty/loading/error states. The tracker is what most users
+land on; if it feels uncertain, the whole product feels uncertain.
+
+**When to use:**
+- Tracker UX feedback ("it's confusing", "freshness is unclear", "mobile is cramped").
+- After a data-source change or freshness threshold change.
+- After a chart-component upgrade ([§30](#30-chart-component)).
+- Before a marketing push that drives traffic to the tracker.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the live tracker at `tracker.html` for Gold Ticker Live. The tracker is
+the centerpiece of the product. Your job is to improve clarity, trust, and mobile usability
+without changing pricing math, AED peg logic, karat logic, or FX logic.
+
+INSPECT FIRST
+1. Read `tracker.html`.
+2. Read every file in `src/tracker/`: `render.js`, `state.js`, `dom-builders.js`,
+   `events.js`, `formatting.js`, `modes.js`, `ui-shell.js`, `wire.js`.
+3. Read `src/lib/api.js`, `src/lib/cache.js`, `src/lib/live-status.js`,
+   `src/lib/price-calculator.js`, `src/lib/formatter.js`, `src/lib/freshness-pulse.js`,
+   `src/lib/historical-data.js`.
+4. Read `src/config/constants.js` (`AED_PEG = 3.6725`, `TROY_OZ_GRAMS = 31.1035`,
+   `GOLD_REFRESH_MS = 90000`, `CACHE_KEYS`, `STALE_AFTER_MS = 12*60*1000`,
+   `FX_STALE_AFTER_MS = 26*60*60*1000`).
+5. Read `src/config/karats.js` (purity values).
+6. Read `src/config/translations.js` (`tracker.*` keys, including `welcome.*`,
+   `pagination.*`, `marketOpenAriaLabel`, `marketClosedAriaLabel`).
+7. Read `styles/pages/tracker-pro.css`.
+8. Read `tests/live-status.test.js`, `tests/price-calculator.test.js`,
+   `tests/freshness-coverage.test.js`, `tests/historical.test.js`.
+9. Read `docs/tracker-state.md` and `docs/methodology.md`.
+
+WORK — FRESHNESS STATES
+- Render all four freshness states visibly: `live`, `cached`, `stale`, `unavailable`.
+  Use a color-blind-accessible affordance (icon ::before, not color-only).
+- The home/tracker freshness key is set on `data-freshness-key` and (where used)
+  `data-freshness-age`. The home freshness timer ticks every 1s
+  (`src/pages/home.js:161-190`). Match that cadence on the tracker hero only if the
+  tracker hero already implements it; do NOT introduce a per-second tick globally.
+- Always show a human-readable "Updated <relative>" label. Use `tx()` from
+  `src/lib/i18n.js` for all such strings.
+
+WORK — DATA SOURCE LABELS
+- Always show the source ("derived from XAU/USD spot via …") near the price card. Use
+  safe wording from §50: "spot-based estimate", "reference price", "before retail
+  premiums", "before making charges", "may differ from shop prices".
+- Never imply the price is the retail/shop price.
+
+WORK — KARATS, CURRENCIES, UNITS
+- Karat strip must be scannable at 360px: 24K / 22K / 21K / 18K (use existing values
+  from `src/config/karats.js`; do NOT change purity).
+- Currency switching: AED is pegged at `3.6725` to USD; FX comes from
+  `https://open.er-api.com/v6/latest/USD`. Show currency code clearly. Show "AED peg"
+  hint near AED.
+- Unit switching: per-gram / per-ounce / per-tola. Show the formula link
+  ("How is this calculated?" → methodology page).
+
+WORK — STATES
+- Loading: skeleton or spinner with calm wording, not "loading…" alone.
+- Empty: explain what happened ("Live data temporarily unavailable. Showing the most
+  recent cached price.") and offer a retry.
+- Error: human-readable, not a stack trace. Suggest the methodology page.
+- Cached/stale: visibly badged. Never silently serve stale data without a label.
+- Mobile filters: ≥44px tap targets, single-column, sticky header that does not overlap
+  content.
+
+WORK — PAGINATION
+- Pagination labels go through `tx()` (`tracker.pagination.prev`, `next`, `prevLabel`,
+  `nextLabel`, `page`). Enforced by `tests/home-translations.test.js`. Do NOT bypass.
+
+WORK — TITLE
+- `renderAll()` updates `document.title` with the live XAU/USD price. Preserve this; it
+  is a lightweight live-status signal in the browser tab.
+
+CONSTRAINTS — DO NOT TOUCH
+- Pricing formula: `price_per_gram = (XAU/USD ÷ 31.1035) × purity × FX`. Locked.
+- AED peg `3.6725`. Locked.
+- Troy ounce `31.1035`. Locked.
+- Karat purity table. Locked.
+- FX source `open.er-api.com/v6/latest/USD`. Locked.
+- `STALE_AFTER_MS = 12 minutes` and `FX_STALE_AFTER_MS = 26 hours`. Locked.
+- `GOLD_REFRESH_MS = 90000`. Locked unless you have an owner instruction.
+- `CACHE_KEYS` (e.g. `gold_price_cache`, `gold_price_history`). Locked.
+- DOM-safety baseline in `src/tracker/render.js` must remain at 0 sinks per
+  `scripts/node/check-unsafe-dom.js`.
+
+VERIFY
+- `npm test` (must include `tests/live-status.test.js`,
+  `tests/price-calculator.test.js`, `tests/freshness-coverage.test.js`,
+  `tests/home-translations.test.js`)
+- `npm run validate`
+- `npm run quality`
+- `npm run build`
+- Manual: cycle live → cached → stale states by mocking the API. Verify each renders
+  with the right badge.
+- Manual: 360px and 1440px in EN and AR.
+
+DELIVERABLE
+- Themed commits: `feat(tracker-states): ...`, `feat(tracker-i18n): ...`,
+  `feat(tracker-mobile): ...`, `chore(sw): bump CACHE_NAME`, `docs(tracker-state): ...`.
+- §51 final report citing the 4 freshness states verified.
+```
+
+**Files / surfaces Copilot should inspect:**
+- `tracker.html`
+- `src/tracker/{render,state,dom-builders,events,formatting,modes,ui-shell,wire}.js`
+- `src/lib/{api,cache,live-status,price-calculator,formatter,freshness-pulse,historical-data,export}.js`
+- `src/config/{constants,karats,translations}.js`
+- `src/components/chart.js`, `src/pages/tracker-chart-loader.js`
+- `styles/pages/tracker-pro.css`
+- `tests/live-status.test.js`, `tests/price-calculator.test.js`,
+  `tests/freshness-coverage.test.js`, `tests/historical.test.js`,
+  `tests/home-translations.test.js`
+- `docs/tracker-state.md`, `docs/methodology.md`
+
+**Required checks:**
+- `npm test`
+- `npm run validate`
+- `npm run quality`
+- `npm run build`
+- `node scripts/node/check-unsafe-dom.js`
+- Manual freshness-state walk (mock API to force live/cached/stale/unavailable).
+
+**Expected final report:**
+- 4 freshness states verified with screenshots.
+- Confirmation that pricing math, AED peg, troy ounce, karat values, FX source, and
+  freshness thresholds were not touched.
+- SW `CACHE_NAME` bump value.
+- §51 final report.
+
+**Safety notes:**
+- The tracker is the most-trafficked page. Regressions here are user-visible immediately.
+- Pricing math is sacrosanct. If you propose any change there, stop and ask the owner.
+- The home freshness timer is per-second; do not generalize that cadence to the tracker
+  unless the tracker already does it.
+- Tests `tests/home-translations.test.js` REQUIRED_KEYS list must stay green; pagination
+  labels must use `tx()`.
+
+**Failure modes to watch for:**
+- Agent silently changes `STALE_AFTER_MS` to "make stale states show less often".
+- Agent adds an `innerHTML` call in `src/tracker/render.js`, regressing the DOM-safety
+  baseline.
+- Agent hardcodes "Updated 5 minutes ago" instead of using a relative-time helper.
+- Agent shows the spot price as the "shop price", violating the trust language carve-out.
+- Agent introduces a chart library as a dependency. Charts use `src/components/chart.js`
+  which lazy-loads TradingView Lightweight Charts from jsDelivr CDN — keep that posture.
+- Agent breaks `tests/home-translations.test.js` by inlining English pagination strings.
+
+**Cross-references:**
+- → [§15 Data Reliability and Methodology](#15-data-reliability-and-methodology-prompt)
+- → [§30 Chart Component](#30-chart-component)
+- → [§42 Mobile-First Layout Audit](#42-mobile-first-layout-audit)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+- → [§12 Arabic / RTL Quality](#12-arabic--rtl-quality-prompt)
+
+---
+
+## 10. SEO and Indexing Prompt
+
+**Purpose:**
+Strengthen indexing, internal-link density, and discoverability across home, tracker,
+calculator, shops, methodology, learn/insights guides, country/city pages, and content
+clusters — without breaking the SEO carve-outs (`countries/**/gold-prices/` URL paths and
+the topic phrases listed in [§50](#50-safety-rules-and-carve-outs)).
+
+**When to use:**
+- The owner asks for "improve SEO", "more traffic", "fix indexing", "better titles".
+- After a content burst that adds many pages.
+- After [§5b SEO Surface Alignment Audit](#5b-seo-surface-alignment-audit) reveals drift.
+- Quarterly indexing hygiene.
+
+**Copy-paste prompt:**
+
+```text
+You are running an SEO and indexing upgrade on Gold Ticker Live. The site is bilingual
+(EN + AR), static, multi-page, and serves from the custom domain
+https://goldtickerlive.com/. The repo also retains compatibility with the historical
+GitHub Pages path `vctb12.github.io/Gold-Prices/`.
+
+INSPECT FIRST
+1. Read `docs/SEO_STRATEGY.md`, `docs/SEO_CHECKLIST.md`, `docs/SEO_SITEMAP_GUIDE.md`.
+2. Read `src/seo/seoHead.js`, `src/seo/metadataGenerator.js`.
+3. Read `scripts/node/inject-schema.js` end-to-end. NOTE: it is NOT idempotent — Article
+   schema dates use `fs.stat` mtime truncated to YYYY-MM-DD. Re-runs may produce diffs.
+4. Read `scripts/node/generate-sitemap.js`, `scripts/node/check-sitemap-coverage.js`,
+   `scripts/node/check-seo-meta.js`, `scripts/node/seo-audit.js`,
+   `scripts/node/inventory-seo.js`.
+5. Read `robots.txt` (must keep `Disallow: /admin/` and `Disallow: /api/`).
+6. Read `sitemap.xml` and `feed.xml` (if present).
+7. Read `src/components/internalLinks.js` and `src/components/breadcrumbs.js`.
+8. Read at least one full chain of pages:
+   - `index.html` → `tracker.html` → `countries/<country>/gold-prices/index.html` →
+     `countries/<country>/<city>/gold-prices/index.html`.
+9. Read `src/config/translations.js` for SEO-bearing strings (`tracker.title`,
+   `tracker.description`, `home.title`, etc.).
+
+WORK — TITLES & DESCRIPTIONS
+- Every page must have a unique, intent-aligned `<title>` and `<meta description>`.
+- Preserve the carve-out topic phrases ("Gold Prices Today", "How Gold Prices Work",
+  "Why UAE Gold Prices Differ", "Gold Prices in Dubai", "Gold Prices in <City>").
+- Use real numerics in titles where helpful ("Gold Price in Dubai — 24K AED 285/g").
+- No keyword stuffing. No clickbait.
+
+WORK — CANONICALS & HREFLANG
+- Every page has `<link rel="canonical">` pointing at its own
+  `https://goldtickerlive.com/...` URL. No canonical loops. No canonical pointing at
+  the dev domain.
+- Every bilingual page has `hreflang en` and `hreflang ar` pairs that resolve.
+- The /admin/ and /api/ paths stay disallowed in robots.
+
+WORK — JSON-LD
+- Use `scripts/node/inject-schema.js` as the single source for JSON-LD. Schema types in
+  the repo include `Organization`, `WebSite`, `WebPage`, `Article`, `FAQPage`,
+  `BreadcrumbList`, `Product` (gold), and `LocalBusiness` (shop pages).
+- Do not hand-write JSON-LD inside HTML files; route the addition through the generator.
+- Preserve the existing `Article` mtime-date logic.
+
+WORK — SITEMAP & ROBOTS
+- Re-run `npm run generate-sitemap`. Confirm `node scripts/node/check-sitemap-coverage.js`
+  passes (every published page has a sitemap entry; no orphans).
+- Confirm `robots.txt` references the canonical sitemap URL.
+
+WORK — INTERNAL LINKING
+- Every country page links to: tracker, calculator, methodology, the country's cities,
+  and a "compare countries" hub.
+- Every city page links to: parent country, neighboring cities (if defined), shops in
+  that city, the relevant content guide.
+- Every guide links to tracker / calculator / a relevant country page.
+- Avoid orphan pages.
+
+WORK — OG / TWITTER CARDS
+- Each page has `og:title`, `og:description`, `og:url`, `og:image`, `og:type`,
+  `twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`.
+- `og:image` paths must exist; `npm run image-audit` should not warn on them.
+- The `@GoldTickerLive` X handle is a carve-out — keep it.
+
+WORK — STRUCTURED DATA HYGIENE
+- Breadcrumb schema must match the visible breadcrumb component
+  (`src/components/breadcrumbs.js`).
+- FAQ schema must match the visible FAQ; do not inject FAQ schema for pages without
+  visible FAQs.
+
+CONSTRAINTS
+- Do not change `countries/**/gold-prices/` URL paths.
+- Do not change the SEO topic phrases listed in §50.
+- Do not change `robots.txt` `Disallow:` directives.
+- Do not change `CNAME`.
+- Do not change canonical URLs of indexed pages without a redirect plan.
+- Edit generators (`scripts/node/inject-schema.js`,
+  `scripts/node/generate-sitemap.js`, `scripts/node/enrich-placeholder-pages.js`,
+  `scripts/node/generate-placeholders.js`) BEFORE generated files.
+
+VERIFY
+- `npm run seo-audit`
+- `node scripts/node/check-seo-meta.js`
+- `node scripts/node/check-sitemap-coverage.js`
+- `node scripts/node/inject-schema.js --check`
+- `npm run validate`
+- `npm run check-links` (or `npm run linkcheck`)
+- Manual: open 6 representative pages, view source, confirm 12-surface alignment table
+  (see §5b).
+
+DELIVERABLE
+- Themed commits: `seo(meta): tighten titles/descriptions`,
+  `seo(canonical): repair drift`, `seo(schema): inject FAQ on …`,
+  `seo(internal-links): wire compare hub`, `seo(sitemap): regen after meta changes`.
+- §51 final report listing pages touched, schema types added/removed, and ripgrep audit
+  before/after counts.
+```
+
+**Files / surfaces Copilot should inspect:**
+- `src/seo/{seoHead,metadataGenerator}.js`
+- `scripts/node/{inject-schema,generate-sitemap,check-sitemap-coverage,check-seo-meta,seo-audit,inventory-seo,enrich-placeholder-pages,generate-placeholders}.js`
+- `robots.txt`, `sitemap.xml`, `feed.xml`, `CNAME`
+- `index.html`, `tracker.html`, `calculator.html`, `shops.html`, `learn.html`,
+  `insights.html`, `methodology.html`, `invest.html`, `pricing.html`, `404.html`
+- `countries/**/*.html`, `content/**/*.html`
+- `src/components/{internalLinks,breadcrumbs,footer}.js`
+- `src/config/translations.js`
+- `tests/seo-metadata.test.js`, `tests/seo-sitewide.test.js`,
+  `tests/sitemap-parity.test.js`, `tests/inventory-seo.test.js`
+
+**Required checks:**
+- `npm run seo-audit`
+- `node scripts/node/check-seo-meta.js`
+- `node scripts/node/check-sitemap-coverage.js`
+- `node scripts/node/inject-schema.js --check`
+- `npm run validate`
+- `npm run check-links`
+- `npm test` (must include `tests/seo-*.test.js`, `tests/sitemap-parity.test.js`,
+  `tests/inventory-seo.test.js`)
+
+**Expected final report:**
+- Pages touched, grouped (home, tracker, calculator, country/city, content guides).
+- Schema types added/removed/repaired.
+- Sitemap coverage delta.
+- Internal-link graph delta (count of new internal links added).
+- Carve-out preservation: confirm SEO topic phrases and `countries/**/gold-prices/` paths
+  intact.
+- §51 final report.
+
+**Safety notes:**
+- `scripts/node/inject-schema.js` is NOT idempotent. Treat its mtime drift as expected
+  noise unless you intend to refresh dates.
+- Canonical loops can be silently devastating; spot-check at least 6 pages.
+- Bilingual `hreflang` must remain bidirectional. If you remove the AR pair on a page,
+  verify the page no longer has Arabic content.
+- Do not introduce schema for content the page does not visibly contain.
+
+**Failure modes to watch for:**
+- Agent rewrites every title to a single keyword phrase, losing intent variation.
+- Agent adds canonical pointing at the dev/Replit domain.
+- Agent injects FAQ JSON-LD for pages without visible FAQs.
+- Agent edits a `countries/**/*.html` `<title>` directly without updating
+  `enrich-placeholder-pages.js`.
+- Agent regenerates sitemap without re-running `inject-schema.js`, leaving JSON-LD stale.
+- Agent removes `Disallow: /admin/` from `robots.txt`.
+
+**Cross-references:**
+- → [§5b SEO Surface Alignment Audit](#5b-seo-surface-alignment-audit)
+- → [§18 Generated Files and Source Generator Prompt](#18-generated-files-and-source-generator-prompt)
+- → [§22 Country & City Pages Deep Dive](#22-country--city-pages-deep-dive)
+- → [§24 FAQ + Structured Data](#24-faq--structured-data)
+- → [§31 Footer, Internal Links & Breadcrumbs](#31-footer-internal-links--breadcrumbs)
+
+---
+
+## 11. PWA / Service Worker / Performance Prompt
+
+**Purpose:**
+Treat the site as a PWA-grade product: correct manifest, safe and versioned service-worker
+caching, fast first paint, low CLS, lazy-loaded heavy assets, and a polished offline page.
+Performance and PWA discipline are inseparable here because the SW is the cache layer for
+both online and offline experiences.
+
+**When to use:**
+- After a layout/asset change that should ship a new SW cache version.
+- When Lighthouse PWA / Performance scores regress.
+- When the offline page UX is poor.
+- Before a marketing push (faster site = better conversion).
+- Quarterly perf hygiene.
+
+**Copy-paste prompt:**
+
+```text
+You are running a PWA + service-worker + performance pass on Gold Ticker Live. The site
+ships as a static multi-page PWA from `goldtickerlive.com`.
+
+INSPECT FIRST
+1. Read `manifest.json`. Current values:
+   - `name`: "Gold Ticker Live — Live Gold Price Tracker"
+   - `short_name`: "Gold Ticker Live"
+   - `start_url`: "/"
+   - `scope`: "/"
+   - `display`: "standalone"
+   - `theme_color`: "#d4a017"
+   - `background_color`: "#0f0e0a"
+   These are CARVE-OUTS — do not change `start_url`, `scope`, or any field that breaks
+   currently-installed PWAs without an owner instruction.
+2. Read `sw.js`. Current `CACHE_NAME`: `'goldtickerlive-v16'`. The SW excludes
+   `/admin/*` and `/api/*` (enforced by `tests/sw-exclusions.test.js`). The SW uses
+   `RUNTIME_CACHE` for runtime fetches and `CACHE_NAME` for the precached app shell.
+3. Read `offline.html`. Confirm it loads without network and has bilingual copy.
+4. Read `vite.config.js` (`base: '/'`, `outDir: 'dist'`). Excluded dirs:
+   `dist`, `node_modules`, `.git`, `countries`, `admin`, `embed`.
+5. Read `tests/sw-exclusions.test.js` and any other SW-related tests.
+6. Read `docs/PERFORMANCE.md`.
+7. Read `scripts/node/image-audit.js` and `scripts/node/check-sw-coverage.js`.
+8. Walk Lighthouse expectations: LCP < 2.5s, CLS < 0.1, TBT < 200ms on mid-tier mobile.
+
+WORK — MANIFEST
+- Confirm icons exist at every declared `src` (`favicon.svg`,
+  `assets/favicon-192x192.png`, etc.).
+- Confirm `theme_color` matches the brand palette.
+- Do NOT change `start_url` or `scope`.
+
+WORK — SERVICE WORKER
+- Bump `CACHE_NAME` (e.g. `'goldtickerlive-v17'`) when shipping any user-visible
+  asset/HTML change. Never rename the prefix.
+- Old caches are deleted on `activate` via the existing cleanup loop; verify any new
+  cache name you introduce is included in the `currentCaches` Set.
+- Keep `/admin/*` and `/api/*` excluded. `tests/sw-exclusions.test.js` must stay green.
+- Audit precache list: confirm every precached asset still exists; remove dead entries.
+- Confirm SW does not precache HTML for `/admin/*`.
+
+WORK — OFFLINE PAGE
+- `offline.html` must load with no network and show bilingual copy and a clear "Try
+  again" CTA. The page should not depend on JS that requires network.
+- Add a clear note: "Live prices require a network connection. The most recent cached
+  price will appear when you reconnect."
+
+WORK — PERFORMANCE
+- Lazy-load images below the fold (`loading="lazy"`).
+- Specify `width`/`height` on every `<img>` to avoid CLS.
+- Avoid `@import` in CSS; prefer `<link>` to load CSS in parallel.
+- Do not introduce blocking 3rd-party scripts. Analytics already externalized
+  (`scripts/node/externalize-analytics.js`); keep it that way.
+- Audit `src/components/chart.js`: charts must remain lazy-loaded via
+  `src/pages/tracker-chart-loader.js` (TradingView Lightweight Charts via jsDelivr CDN
+  +esm).
+- Run `npm run image-audit`. Address any unoptimized images.
+
+WORK — REDUCED MOTION
+- Every animation respects `prefers-reduced-motion: reduce`. Per-class guards exist in
+  `styles/pages/shops.css`, `styles/pages/calculator.css`, `styles/pages/invest.css`,
+  `styles/pages/tracker-pro.css`. Add new ones for any new animation.
+
+CONSTRAINTS
+- Do not change `localStorage` / `CACHE_KEYS` from `src/config/constants.js` without a
+  back-compat plan.
+- Do not change the SW cache prefix (`goldtickerlive-`).
+- Do not change `manifest.json` `start_url` or `scope`.
+- Do not change `vite.config.js` `base`.
+- Do not introduce a heavy charting library or framework.
+- Keep DOM safety baseline at 0 sinks in `src/tracker/render.js`.
+
+VERIFY
+- `npm test` (must include `tests/sw-exclusions.test.js`)
+- `npm run validate` (includes `node scripts/node/check-sw-coverage.js`)
+- `npm run image-audit`
+- `npm run perf:ci` (optional)
+- `npm run a11y` (optional, if `pa11y-ci` configured)
+- `npm run build` then manual offline check
+- Manual: Lighthouse on home / tracker / a country page; capture Performance, PWA,
+  Accessibility, SEO, Best Practices.
+
+DELIVERABLE
+- Themed commits: `chore(sw): bump CACHE_NAME to ...`,
+  `feat(offline): improve offline.html copy + CTA`,
+  `perf(images): lazy-load + dimensions`,
+  `perf(css): split critical / non-critical`.
+- Lighthouse before/after table in PR body.
+- §51 final report.
+```
+
+**Files / surfaces Copilot should inspect:**
+- `manifest.json`, `sw.js`, `offline.html`
+- `vite.config.js`
+- `tests/sw-exclusions.test.js`
+- `scripts/node/image-audit.js`, `scripts/node/check-sw-coverage.js`
+- `docs/PERFORMANCE.md`
+- `src/components/chart.js`, `src/pages/tracker-chart-loader.js`
+- All HTML at root (for `<img>` audit)
+
+**Required checks:**
+- `npm test`
+- `npm run validate`
+- `npm run image-audit`
+- `npm run perf:ci`
+- `npm run a11y` (if configured)
+- `npm run build`
+- Manual Lighthouse runs on home / tracker / country page.
+- Manual offline mode check.
+
+**Expected final report:**
+- New `CACHE_NAME` value.
+- Lighthouse before/after table (Perf / PWA / A11y / SEO / Best Practices).
+- Image audit before/after.
+- Confirmation that SW exclusions still cover `/admin/*` and `/api/*`.
+- Carve-outs preserved.
+- §51 final report.
+
+**Safety notes:**
+- Bumping `CACHE_NAME` without removing old caches will break offline experience.
+  Verify the activate cleanup loop covers every cache name you introduced.
+- Do not change `localStorage` keys; they are user state. Migration is a separate
+  decision.
+- Reduced-motion guards must be per-class, not only the global `*` rule, for
+  predictable fallback states.
+- `manifest.json` changes can break installed PWAs. The `start_url` and `scope`
+  carve-outs exist for that reason.
+
+**Failure modes to watch for:**
+- Agent bumps `CACHE_NAME` but forgets to add the new value to the `currentCaches` Set,
+  causing the new cache to be deleted on activate.
+- Agent precaches HTML for `/admin/*`.
+- Agent introduces a chart library, regressing bundle size.
+- Agent removes `loading="lazy"` because "modern browsers default to it" — they don't
+  for above-the-fold images.
+- Agent silently changes `start_url` from `/` to `/index.html`, breaking installed PWAs.
+- Agent ships a CSS animation without a `prefers-reduced-motion` guard.
+
+**Cross-references:**
+- → [§42 Mobile-First Layout Audit](#42-mobile-first-layout-audit)
+- → [§46 Image Audit & Asset Optimization](#46-image-audit--asset-optimization)
+- → [§37 GitHub Actions Workflow Hardening](#37-github-actions-workflow-hardening) (Lighthouse workflow)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+
+---
+
+## 12. Arabic / RTL Quality Prompt
+
+**Purpose:**
+Make the Arabic side of Gold Ticker Live feel like a first-class product, not a translated
+afterthought. Drive idiomatic UAE/GCC Arabic copy, true RTL layout (mirrored chevrons,
+correct alignment, correct currency/date formatting), and EN+AR parity for every visible
+string. Bilingual parity is enforced by tests (`tests/home-translations.test.js`,
+`tests/seo-metadata.test.js`); this prompt drives quality, not just compliance.
+
+**When to use:**
+- Arabic copy reads like a literal English translation.
+- RTL layout breaks on a specific surface (chevrons, badges, breadcrumbs).
+- A new feature shipped without AR strings.
+- After [§8 Full UI/UX Revamp](#8-full-uiux-revamp-prompt), as a parity pass.
+- Before a UAE/GCC marketing push.
+
+**Copy-paste prompt:**
+
+```text
+You are running an Arabic / RTL quality pass on Gold Ticker Live. The site is bilingual
+EN + AR, written for UAE/GCC users primarily, with broader Arab-world reach.
+
+INSPECT FIRST
+1. Read `src/config/translations.js` end-to-end. Note the structure: every visible
+   string has an `en` and `ar` value. Pagination labels live under `tracker.pagination.*`
+   and are enforced by `tests/home-translations.test.js` REQUIRED_KEYS list.
+2. Read `src/lib/i18n.js` (`tx()` helper). Confirm every visible string in JS goes
+   through it.
+3. Read `src/components/nav.js` (`_localizeWelcomeStrip()` pattern), `src/components/
+   footer.js`, `src/tracker/render.js` (`_localizeWelcomeStrip()`).
+4. Walk every page in AR: `index.html`, `tracker.html`, `calculator.html`, `shops.html`,
+   `learn.html`, `insights.html`, `methodology.html`, `invest.html`, `pricing.html`,
+   `404.html`, `offline.html`. List awkward translations.
+5. Walk one country page and one city page in AR.
+6. Read `tests/home-translations.test.js` and `tests/seo-metadata.test.js` to understand
+   parity expectations.
+7. Read `styles/global.css` for RTL CSS patterns (logical properties, dir-aware spacing).
+
+WORK — COPY QUALITY
+- Improve Arabic copy where it reads literally. Prefer modern, clear Arabic suitable for
+  UAE/GCC users. Examples of safe wording:
+  * "السعر تقديري مبني على سعر الذهب العالمي" (spot-based estimate)
+  * "قد يختلف سعر المحلات بسبب المصنعية والضريبة والهامش" (shop price differs)
+  * "آخر تحديث" (last updated)
+  * "مصدر السعر" (source)
+  * "سعر مرجعي" (reference price)
+  * "بيانات مخزنة مؤقتاً" (cached data)
+  * "السعر غير متاح حالياً" (price unavailable)
+- Avoid overly formal classical Arabic when a clearer modern phrase exists.
+- Avoid machine-style direct translations (e.g. don't translate "Track gold prices" as
+  "تتبع أسعار الذهب" if "تابع أسعار الذهب الآن" reads better).
+- Keep financial terms understandable.
+- Brand "Gold Ticker Live" is a Latin-script brand. In Arabic copy, it stays as
+  "Gold Ticker Live" (or appears with an Arabic gloss "(الذهب المباشر)" only where
+  context requires). Do not transliterate the brand inconsistently.
+
+WORK — RTL LAYOUT
+- Mirror chevrons (`›` becomes `‹`, `→` becomes `←`). Use logical CSS where possible
+  (`margin-inline-start`, `padding-inline-end`).
+- Verify the mobile drawer in AR: the `.nav-drawer-bottom` wrapper still groups
+  `#nav-theme-toggle-drawer` and `#nav-lang-toggle-mobile` correctly.
+- Verify breadcrumbs in AR: position-1 link is rightmost in RTL.
+- Verify cards/grids do not flip text inside (only the layout should mirror).
+- Numbers: keep western Arabic numerals (1234) by default; they are more legible for
+  prices. Do not auto-convert to ٠١٢٣٤٥٦٧٨٩ unless the design system explicitly says so.
+
+WORK — FORMATTING
+- Currency: AED, USD, EUR, GBP, SAR, etc. Always show ISO code; symbol-only is
+  ambiguous in Arabic context.
+- Dates: "آخر تحديث منذ 5 دقائق" pattern via `src/lib/formatter.js` relative-time helper.
+- Decimals: Arabic locale uses comma as decimal separator in some standards; keep dot
+  for consistency with the global product unless owner says otherwise.
+
+WORK — PARITY
+- Every new key in `src/config/translations.js` must have BOTH `en` and `ar` entries.
+- Every new visible string in HTML/JS must go through `tx()`.
+- `tests/home-translations.test.js` REQUIRED_KEYS list and `tests/seo-metadata.test.js`
+  must stay green.
+
+CONSTRAINTS
+- Do not transliterate the brand "Gold Ticker Live" inconsistently.
+- Do not change the bilingual contract (every page is EN + AR with `hreflang` pairs).
+- Do not change `dir="rtl"` toggling logic; it lives in shared infra.
+- Do not introduce a 3rd language without an owner instruction.
+
+VERIFY
+- `npm test` (must include `tests/home-translations.test.js`,
+  `tests/seo-metadata.test.js`)
+- `npm run validate`
+- Manual: walk each touched page in AR at 360px and 1440px. Confirm chevrons mirror,
+  breadcrumb order is correct, cards don't flip, numbers are legible.
+- Manual: cycle EN ↔ AR via the language toggle and confirm `_cycleTheme()` and
+  language state are independent.
+
+DELIVERABLE
+- Themed commits: `i18n(ar): rewrite home hero copy`,
+  `i18n(ar): tracker freshness states`, `style(rtl): mirror chevrons`,
+  `i18n(parity): add missing AR keys`.
+- AR before/after screenshot pairs in PR body.
+- §51 final report.
+```
+
+**Files / surfaces Copilot should inspect:**
+- `src/config/translations.js`
+- `src/lib/i18n.js`, `src/lib/formatter.js`
+- `src/components/{nav,footer}.js`, `src/tracker/render.js`
+- All HTML at root + sample country/city pages
+- `tests/home-translations.test.js`, `tests/seo-metadata.test.js`
+- `styles/global.css` (RTL patterns)
+
+**Required checks:**
+- `npm test`
+- `npm run validate`
+- Manual AR walkthrough at 360 / 414 / 1440.
+- Manual RTL chevron mirroring spot-check.
+
+**Expected final report:**
+- Pages where AR copy was improved.
+- New AR translation keys added.
+- RTL layout fixes shipped.
+- Parity tests confirmed green.
+- §51 final report.
+
+**Safety notes:**
+- Cite [§50](#50-safety-rules-and-carve-outs) for the bilingual contract.
+- Do not change tracker pagination string keys; they are referenced by tests.
+- Brand transliteration: "Gold Ticker Live" stays in Latin script in AR copy.
+
+**Failure modes to watch for:**
+- Agent translates English idioms literally ("Track" → "تَتبَّع" instead of "تابع").
+- Agent flips numbers to ٠١٢٣٤٥٦٧٨٩ without owner approval, hurting price legibility.
+- Agent uses `margin-left` / `padding-right` instead of logical
+  `margin-inline-start` / `padding-inline-end`, breaking RTL.
+- Agent adds an AR string in JS without going through `tx()`, breaking the parity test.
+- Agent transliterates the brand inconsistently across pages.
+- Agent removes a long-existing AR string because it "looks redundant" in EN.
+
+**Cross-references:**
+- → [§8 Full UI/UX Revamp](#8-full-uiux-revamp-prompt)
+- → [§10 SEO and Indexing](#10-seo-and-indexing-prompt) (`hreflang`)
+- → [§42 Mobile-First Layout Audit](#42-mobile-first-layout-audit)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+
+---
+
+## 13. Shops Directory Prompt
+
+**Purpose:**
+Improve the shops directory (`shops.html` and city/country shop pages) so it feels like a
+useful local UAE/GCC resource: clear filters, scannable shop cards, honest disclosure
+language ("informational, not endorsements"), trustworthy contact info, and a sane mobile
+layout. The data shape is gated by `scripts/node/normalize-shops.js`; never hand-edit
+`data/shops.json` without that gate.
+
+**When to use:**
+- Shop data is updated (new submissions approved, schema migration).
+- Filters / search are weak or missing.
+- Mobile cards are cramped or break at 360px.
+- The "submit shop" flow ([§34](#34-submit-shop--order-gold-flows)) has shipped a new
+  field that the directory needs to render.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the shops directory on Gold Ticker Live. The directory is a public,
+informational, non-endorsing list of gold/jewelry shops, primarily in UAE and GCC. The
+data is normalized by `scripts/node/normalize-shops.js` before any read.
+
+INSPECT FIRST
+1. Read `shops.html`.
+2. Read `src/pages/shops.js` and every file under `src/pages/shops/`:
+   `actions.js`, `filters.js`, `helpers.js`, `modal.js`, `rendering.js`.
+3. Read `data/shops*.json` (current shape, expected fields).
+4. Read `scripts/node/normalize-shops.js` (data shape gate; runs as part of
+   `npm run build`).
+5. Read `tests/shop-manager.test.js`, `tests/repositories.test.js`.
+6. Read `styles/pages/shops.css`.
+7. Read `src/config/translations.js` (`shops.*` keys).
+8. Read `server/repositories/pending-shops.repository.js` and
+   `server/routes/admin/index.js` for the admin-side approval flow context. Pending
+   submissions live at `data/pending_shops.json`.
+9. Read `docs/ADMIN_GUIDE.md` for the approval flow.
+
+WORK — DATA SHAPE
+- All shop reads go through `normalize-shops.js` first. If a new field is needed, add
+  it to the normalizer's expected schema and to the JSON files in the same commit.
+- Validate every shop entry has: `id`, `name`, `city`, `country`, `karatRange`,
+  `services`, `disclosureNotes` (or whatever the canonical fields are at the time of
+  the audit).
+- Never silently drop a malformed shop; surface it via a normalizer warning.
+
+WORK — UI
+- Shop card: name, city, country flag, karat range, key services, "view details" CTA,
+  and a clear "Listings are informational. We do not endorse, verify pricing, or take
+  bookings on behalf of these shops." disclosure (use `tx()` for this).
+- Filters: city, country, services, sort (alphabetical, by city). All ≥44px tap
+  targets, mobile-friendly.
+- Modal: opens on "view details", focus-trapped, keyboard-dismissable.
+- Empty state: "No shops match these filters. Try clearing filters or selecting a
+  different city."
+- Skeleton/loading state for the initial load.
+
+WORK — TRUST
+- Make the disclosure unmissable on every shop page.
+- If a shop entry has no verified phone/website, do not silently render a half-card —
+  show only the verified fields and a "Listing under review" badge.
+- Do not render fake "ratings" or "reviews".
+
+WORK — SEO
+- Shops directory page must have: unique title, meta description, JSON-LD
+  `LocalBusiness` schema for individual shop pages (via `inject-schema.js`), and
+  internal links to relevant city/country pages.
+- Cite [§5b SEO Surface Alignment Audit](#5b-seo-surface-alignment-audit) before
+  shipping.
+
+CONSTRAINTS
+- Do not hand-edit `data/shops.json` or `data/pending_shops.json` without running
+  `normalize-shops.js`.
+- Do not invent shop data. If sample data is needed for tests, it goes under
+  `tests/fixtures/`, not `data/`.
+- Do not introduce paid endorsement language. Keep the "informational" posture.
+- Do not bypass the admin approval flow for new shops; submissions go through
+  `POST /api/submit-shop` (server/routes/submissions.js).
+
+VERIFY
+- `npm run normalize-shops` (or it runs as part of `npm run build`)
+- `npm test` (must include `tests/shop-manager.test.js`, `tests/repositories.test.js`)
+- `npm run validate`
+- Manual: open shops.html at 360px and 1440px; cycle filters; open a modal; tab
+  through.
+- Manual: open a shop's detail card in AR.
+
+DELIVERABLE
+- Themed commits: `feat(shops-filters): ...`, `feat(shops-modal): ...`,
+  `data(shops): normalize after audit`, `seo(shops): inject LocalBusiness schema`.
+- §51 final report.
+```
+
+**Files / surfaces Copilot should inspect:**
+- `shops.html`
+- `src/pages/shops.js`, `src/pages/shops/{actions,filters,helpers,modal,rendering}.js`
+- `data/shops*.json`, `data/pending_shops.json`
+- `scripts/node/normalize-shops.js`
+- `server/repositories/pending-shops.repository.js`, `server/routes/admin/index.js`,
+  `server/routes/submissions.js`
+- `tests/shop-manager.test.js`, `tests/repositories.test.js`
+- `styles/pages/shops.css`
+- `src/config/translations.js`
+- `docs/ADMIN_GUIDE.md`
+
+**Required checks:**
+- `npm run normalize-shops`
+- `npm test`
+- `npm run validate`
+- Manual filter/modal walkthrough at 360 / 1440 in EN and AR.
+
+**Expected final report:**
+- New/changed shop fields and the normalizer commit.
+- Filter and modal UX changes.
+- Disclosure language updated where needed.
+- §51 final report.
+
+**Safety notes:**
+- The "informational, not endorsement" posture is non-negotiable.
+- Do not introduce paid placement without an owner instruction and a clear "sponsored"
+  label.
+- Never invent shops. Sample data for tests goes under `tests/fixtures/`.
+- Modal must be focus-trapped and keyboard-dismissable for accessibility.
+
+**Failure modes to watch for:**
+- Agent edits `data/shops.json` directly without re-running `normalize-shops.js`,
+  shipping invalid shape that the next build catches.
+- Agent removes the disclosure language because "it clutters the card".
+- Agent adds a "rating" field that is not backed by real data.
+- Agent renders a half-card when fields are missing instead of degrading gracefully.
+- Agent breaks modal focus-trap or keyboard dismissal.
+- Agent adds inline shop submission UI on the directory page, bypassing
+  `POST /api/submit-shop` and the admin approval flow.
+
+**Cross-references:**
+- → [§34 Submit Shop & Order Gold Flows](#34-submit-shop--order-gold-flows)
+- → [§26 Admin Panel UX](#26-admin-panel-ux)
+- → [§10 SEO and Indexing](#10-seo-and-indexing-prompt)
+- → [§42 Mobile-First Layout Audit](#42-mobile-first-layout-audit)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+
+---
+
+## 14. Calculator and Tools Prompt
+
+**Purpose:**
+Make the calculator at `calculator.html` and the broader tools suite (weight converter,
+zakat, investment-return) feel useful and trustworthy. Clear inputs, clear results,
+honest disclaimers (spot vs retail, making charges, VAT), and zero broken formulas.
+
+**When to use:**
+- Owner asks to improve calculator clarity or add a tool.
+- A formula bug is reported.
+- A tool needs better mobile usability.
+- After [§9 Live Tracker Upgrade](#9-live-tracker-upgrade-prompt) has refreshed price
+  presentation, to keep tools consistent.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the calculator and tool suite on Gold Ticker Live. The flagship tool
+is the gold calculator at `calculator.html`. Other tools may include weight converter,
+zakat calculator, and investment-return calculator. The calculator's pricing math comes
+from `src/lib/price-calculator.js`; you do NOT change formulas without an explicit owner
+instruction.
+
+INSPECT FIRST
+1. Read `calculator.html`.
+2. Read `src/pages/calculator.js` and every file under `src/pages/calculator/`:
+   `utils.js`, `value-calculator.js`.
+3. Read `src/lib/price-calculator.js` (formulas live here).
+4. Read `src/lib/formatter.js` (currency/unit formatting).
+5. Read `src/config/{constants,karats,translations}.js`.
+6. Read `tests/price-calculator.test.js`, `tests/pricing-engine.test.js`,
+   `tests/formatter.test.js`, `tests/input-validation.test.js`.
+7. Read `styles/pages/calculator.css`.
+8. If other tool pages exist (weight, zakat, return), read them under `content/tools/*`
+   or `src/pages/*` (verify which path the repo uses).
+9. Read `methodology.html` for the canonical disclosure language to mirror.
+
+WORK — INPUTS
+- Karat selector: 24K / 22K / 21K / 18K (use `src/config/karats.js`; do not change
+  purity values).
+- Unit selector: gram / ounce / tola.
+- Weight input: numeric, validated (≥ 0, ≤ a sane upper bound). Show units inline.
+- Currency selector: AED, USD, and any FX-supported currency. AED uses the fixed peg
+  `3.6725`.
+- Optional toggles: VAT, making charge, dealer premium. Each labeled clearly.
+
+WORK — RESULTS
+- Show: spot-based estimate at the chosen karat, total estimate, and a clear
+  "spot estimate vs retail" disclaimer.
+- Show: methodology link and a "How is this calculated?" expander that includes the
+  exact formula text from `methodology.html`.
+- Show: last-updated source label (mirror the tracker's freshness state).
+
+WORK — DISCLAIMER
+- Always render: "Spot-based estimate. Shop prices may differ due to making charges,
+  VAT, and dealer premium." Use `tx()`.
+
+WORK — MOBILE
+- Inputs at ≥44px tap targets.
+- Result card stays visible without scrolling on 360px when inputs are above the fold.
+- AR + RTL parity verified.
+
+WORK — OTHER TOOLS (if scope includes them)
+- Weight converter: g / oz / tola (use the same constants).
+- Zakat calculator: clearly state the assumption (current spot, weight in grams,
+  haul threshold). Do not make religious claims; cite the methodology page.
+- Investment-return calculator: show input weight, purchase price, current spot price,
+  and computed delta. Clearly disclaim that "past performance does not guarantee
+  future returns".
+
+CONSTRAINTS — DO NOT TOUCH
+- Pricing formula in `src/lib/price-calculator.js`.
+- AED peg `3.6725`.
+- Troy ounce `31.1035`.
+- Karat purity values.
+- FX source.
+- Currency code list (without owner approval).
+- VAT default rates (without owner approval).
+
+VERIFY
+- `npm test` (must include `tests/price-calculator.test.js`,
+  `tests/pricing-engine.test.js`, `tests/formatter.test.js`,
+  `tests/input-validation.test.js`)
+- `npm run validate`
+- `npm run quality`
+- Manual: enter edge values (0, very large, decimals), confirm validation messages and
+  result correctness.
+- Manual: cycle EN ↔ AR.
+
+DELIVERABLE
+- Themed commits: `feat(calculator-inputs): ...`, `feat(calculator-result): ...`,
+  `feat(tools-zakat): ...`, `feat(tools-return): ...`, `i18n(calculator): ...`.
+- §51 final report.
+```
+
+**Files / surfaces Copilot should inspect:**
+- `calculator.html`, `src/pages/calculator.js`, `src/pages/calculator/{utils,value-calculator}.js`
+- `src/lib/{price-calculator,formatter}.js`
+- `src/config/{constants,karats,translations}.js`
+- `tests/{price-calculator,pricing-engine,formatter,input-validation}.test.js`
+- `styles/pages/calculator.css`
+- `methodology.html`
+- Tool surfaces under `content/tools/*` or wherever the repo currently hosts them
+  *(verify exists)*
+
+**Required checks:**
+- `npm test` (focused: price-calculator, pricing-engine, formatter, input-validation)
+- `npm run validate`
+- `npm run quality`
+- Manual edge-value walkthrough.
+- Manual EN/AR + 360/1440.
+
+**Expected final report:**
+- Inputs / outputs / disclaimers improved.
+- Edge-value test cases added.
+- Confirmation that pricing math, peg, troy ounce, karat values were not changed.
+- §51 final report.
+
+**Safety notes:**
+- Pricing math is sacrosanct. The calculator is downstream of `price-calculator.js`.
+- The "spot estimate vs retail" disclaimer is the trust line of the tool. Do not hide
+  or shrink it.
+- VAT / making charge / dealer premium toggles default OFF unless the owner says
+  otherwise.
+
+**Failure modes to watch for:**
+- Agent adjusts a karat purity value to "round it nicer".
+- Agent removes the disclaimer because it's "redundant".
+- Agent silently adds a non-existent currency (e.g. INR without FX support).
+- Agent rounds prices in a way that contradicts `formatter.js` rules.
+- Agent introduces VAT default of 5% without owner approval.
+- Agent ships a tool page without AR translations.
+
+**Cross-references:**
+- → [§9 Live Tracker Upgrade](#9-live-tracker-upgrade-prompt)
+- → [§15 Data Reliability and Methodology](#15-data-reliability-and-methodology-prompt)
+- → [§29 Pricing & Invest Pages](#29-pricing--invest-pages)
+- → [§42 Mobile-First Layout Audit](#42-mobile-first-layout-audit)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+
+---
+
+## 15. Data Reliability and Methodology Prompt
+
+**Purpose:**
+Strengthen the layer between the upstream gold + FX sources and the rendered price card —
+clear source labeling, robust caching, sane fallbacks, visible freshness, honest stale
+states, and a methodology page that auditors and skeptics can read and respect. This is
+the trust spine of the product.
+
+**When to use:**
+- A data-source change is needed (new gold API, new FX source).
+- Stale/cached states are unclear or invisible.
+- Methodology page is out of sync with code.
+- Circuit breaker / failure copy is rough.
+- After incidents where users saw bad data without a label.
+
+**Copy-paste prompt:**
+
+```text
+You are upgrading the data reliability and methodology layer of Gold Ticker Live. This
+is the trust spine of the product. Your job is to make every piece of data the user sees
+honestly labeled with its source, freshness, and limitations.
+
+INSPECT FIRST
+1. Read `src/lib/api.js` (gold + FX fetchers, timeouts, fallbacks).
+2. Read `src/lib/cache.js` (`CACHE_KEYS` from `src/config/constants.js`).
+3. Read `src/lib/live-status.js` (`STALE_AFTER_MS = 12 minutes` for gold,
+   `FX_STALE_AFTER_MS = 26 hours` for FX).
+4. Read `src/lib/price-calculator.js` and `src/lib/formatter.js`.
+5. Read `src/config/constants.js` (`API_GOLD_URL = '/data/gold_price.json'`,
+   `API_FX_URL = 'https://open.er-api.com/v6/latest/USD'`, `AED_PEG = 3.6725`,
+   `TROY_OZ_GRAMS = 31.1035`, `GOLD_REFRESH_MS = 90000`,
+   `GOLD_FETCH_TIMEOUT = 8000`, `FX_FETCH_TIMEOUT = 8000`, `HISTORY_DAYS = 90`).
+6. Read `tests/live-status.test.js`, `tests/circuit-breaker.test.js`,
+   `tests/historical.test.js`, `tests/price-calculator.test.js`.
+7. Read `methodology.html`. Compare against the constants above. Identify drift.
+8. Read `docs/methodology.md`, `docs/tracker-state.md`, `docs/LIMITATIONS.md`.
+9. Read the data files: `data/gold_price.json` shape, history files, fallback files.
+10. Read `.github/workflows/gold-price-fetch.yml` (if it produces `data/gold_price.json`).
+
+WORK — SOURCE LABELS
+- Every price card shows the source ("XAU/USD spot via <source>") and the FX source
+  ("FX via open.er-api.com").
+- Every cached/stale render is visibly labeled. The four states are `live`, `cached`,
+  `stale`, `unavailable` (per `src/lib/live-status.js`).
+
+WORK — FRESHNESS
+- `STALE_AFTER_MS = 12 * 60 * 1000` for gold prices. Do not change.
+- `FX_STALE_AFTER_MS = 26 * 60 * 60 * 1000` for FX (one day + margin). Do not change.
+- `GOLD_REFRESH_MS = 90000` (90s polling). Do not change without owner approval.
+- Show a relative-time label ("Updated 3 min ago"). Use `src/lib/formatter.js`.
+
+WORK — FALLBACK & CACHE
+- On API failure, fall back to the most recent cached value AND label it visibly.
+- On both API failure AND no cache, render the `unavailable` state with helpful copy
+  ("Live prices temporarily unavailable. Check back shortly.") — never `NaN`,
+  `undefined`, `null`, or a stack trace.
+- The cache keys are: `gold_price_cache`, `gold_price_fallback`, `fx_rates_cache`,
+  `fx_rates_fallback`, `gold_day_open`, `gold_price_history`, `user_prefs`,
+  `gold_price_alerts`. Do not rename without a migration plan.
+
+WORK — CIRCUIT BREAKER
+- Read `src/lib/api.js` for the circuit-breaker pattern. After N consecutive failures,
+  the breaker opens and we serve cache. Confirm `tests/circuit-breaker.test.js`
+  reflects the current threshold and verify the user-visible copy when the breaker is
+  open.
+
+WORK — METHODOLOGY PAGE
+- `methodology.html` must clearly explain:
+  * Formula: `price_per_gram = (XAU/USD ÷ 31.1035) × purity × FX`.
+  * AED peg: `3.6725` (link to authoritative source if owner wants).
+  * Troy ounce: `31.1035` grams.
+  * Karat purities: 24K=99.9%, 22K=91.6%, 21K=87.5%, 18K=75% (verify against
+    `src/config/karats.js`).
+  * Sources for spot and FX, with cadence.
+  * Cache and freshness behavior.
+  * Limitations: prices are reference / spot-based; do not include making charges, VAT,
+    dealer premium, or shop-specific markups.
+- Bilingual EN + AR.
+
+WORK — DOCS
+- Update `docs/methodology.md`, `docs/tracker-state.md`, `docs/LIMITATIONS.md` to match
+  code reality. The docs are the audit trail.
+
+CONSTRAINTS — DO NOT TOUCH (without owner instruction)
+- Pricing formula.
+- `AED_PEG = 3.6725`.
+- `TROY_OZ_GRAMS = 31.1035`.
+- Karat purity values.
+- FX source.
+- `STALE_AFTER_MS`, `FX_STALE_AFTER_MS`, `GOLD_REFRESH_MS`.
+- `CACHE_KEYS` (would invalidate user state).
+
+VERIFY
+- `npm test` (must include `tests/live-status.test.js`,
+  `tests/circuit-breaker.test.js`, `tests/historical.test.js`,
+  `tests/price-calculator.test.js`)
+- `npm run validate`
+- `npm run quality`
+- Manual: simulate API failure, confirm fallback render and label.
+- Manual: simulate stale > 12 min, confirm `stale` badge.
+- Manual: methodology.html in EN + AR, confirm formulas match constants.
+
+DELIVERABLE
+- Themed commits: `feat(data-states): visible cached/stale labels`,
+  `feat(data-fallback): clearer unavailable copy`,
+  `docs(methodology): align with code`, `docs(limitations): audit & update`.
+- §51 final report including a "carve-outs preserved" line for each constant above.
+```
+
+**Files / surfaces Copilot should inspect:**
+- `src/lib/{api,cache,live-status,price-calculator,formatter,historical-data,site-settings}.js`
+- `src/config/{constants,karats}.js`
+- `methodology.html`
+- `docs/methodology.md`, `docs/tracker-state.md`, `docs/LIMITATIONS.md`
+- `data/gold_price.json` (shape)
+- `tests/{live-status,circuit-breaker,historical,price-calculator}.test.js`
+- `.github/workflows/gold-price-fetch.yml`
+
+**Required checks:**
+- `npm test`
+- `npm run validate`
+- `npm run quality`
+- Manual API-failure / stale-state simulation.
+- Manual methodology.html EN + AR walk.
+
+**Expected final report:**
+- States with visible labels confirmed (live / cached / stale / unavailable).
+- Methodology / tracker-state / limitations docs reconciled with code.
+- Constants explicitly listed as preserved.
+- §51 final report.
+
+**Safety notes:**
+- This prompt is the most carve-out-heavy in the file. Every constant listed is
+  load-bearing for trust.
+- Stale data without a visible label is the worst trust violation in the product.
+- The methodology page is what skeptical users read first; keep it factual.
+
+**Failure modes to watch for:**
+- Agent shortens `STALE_AFTER_MS` to "make stale states show less often".
+- Agent renames a `CACHE_KEYS` entry, invalidating user prefs and alerts on next
+  deploy.
+- Agent removes the `unavailable` state copy and lets the UI render `NaN`.
+- Agent rewrites `methodology.html` formulas in slightly different prose, drifting
+  from code.
+- Agent removes the circuit-breaker label even though `circuit-breaker.test.js`
+  expects it.
+- Agent changes the FX source without updating methodology or tests.
+
+**Cross-references:**
+- → [§9 Live Tracker Upgrade](#9-live-tracker-upgrade-prompt)
+- → [§14 Calculator and Tools](#14-calculator-and-tools-prompt)
+- → [§30 Chart Component](#30-chart-component) (historical data)
+- → [§44 Supabase Data Sync](#44-supabase-data-sync)
+- → [§50 Safety Rules and Carve-Outs](#50-safety-rules-and-carve-outs)
+
+---
