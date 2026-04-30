@@ -23,7 +23,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { spawnSync, execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const DIST = path.join(ROOT, 'dist');
@@ -34,12 +34,10 @@ const DRY_RUN = process.argv.includes('--dry-run');
 // Helpers
 // ---------------------------------------------------------------------------
 
-function run(cmd, opts = {}) {
-  try {
-    return execSync(cmd, { cwd: ROOT, encoding: 'utf8', ...opts }).trim();
-  } catch {
-    return '';
-  }
+/** Run a command safely using an argument array (no shell interpolation). */
+function runGit(...args) {
+  const result = spawnSync('git', args, { cwd: ROOT, encoding: 'utf8' });
+  return result.status === 0 ? result.stdout.trim() : '';
 }
 
 function log(msg) {
@@ -64,10 +62,15 @@ try {
 
 const brand = 'Gold Ticker Live';
 const version = `v${pkg.version || '0.0.0'}`;
-const buildSha = run('git rev-parse --short HEAD') || 'unknown';
+// Sanitise to safe characters only (hex + alphanum + dash) to prevent any
+// unexpected characters from leaking into filenames or command arguments.
+const rawSha = runGit('rev-parse', '--short', 'HEAD');
+const buildSha = /^[a-f0-9]{4,16}$/.test(rawSha) ? rawSha : 'unknown';
 const buildTimestamp = new Date().toISOString();
+// Sanitise version: keep only alphanumeric, dots, and hyphens
+const safeVersion = version.replace(/[^a-zA-Z0-9.\-]/g, '');
 
-const tarballName = `gold-ticker-live-${version}-${buildSha}.tar.gz`;
+const tarballName = `gold-ticker-live-${safeVersion}-${buildSha}.tar.gz`;
 const tarballPath = path.join(RELEASE_DIR, tarballName);
 
 console.log('\n  📦  Packaging release artifact\n');
@@ -98,14 +101,6 @@ if (!fs.existsSync(path.join(DIST, 'index.html'))) {
 // Build release.json
 // ---------------------------------------------------------------------------
 
-const releaseJson = {
-  brand,
-  version,
-  buildSha,
-  buildTimestamp,
-  distFiles: collectDistFiles(),
-};
-
 function collectDistFiles() {
   const files = [];
   function walk(dir) {
@@ -119,6 +114,14 @@ function collectDistFiles() {
   walk(DIST);
   return files;
 }
+
+const releaseJson = {
+  brand,
+  version,
+  buildSha,
+  buildTimestamp,
+  distFiles: collectDistFiles(),
+};
 
 // ---------------------------------------------------------------------------
 // Write artifacts
@@ -149,13 +152,13 @@ if (fs.existsSync(changelogSrc)) {
 //   CHANGELOG.md    (from release/CHANGELOG.md)
 //   release.json    (from release/release.json)
 try {
-  // We stage the extra files next to dist/ temporarily using a staging layout
+  // Stage the extra files alongside dist/ contents in a temporary directory
   const stagingDir = path.join(RELEASE_DIR, '.staging');
   if (fs.existsSync(stagingDir)) fs.rmSync(stagingDir, { recursive: true, force: true });
   fs.mkdirSync(stagingDir, { recursive: true });
 
-  // Copy dist/* into staging
-  run(`cp -r ${DIST}/. ${stagingDir}/`);
+  // Copy dist/* into staging using Node.js fs.cpSync (no shell)
+  fs.cpSync(DIST, stagingDir, { recursive: true });
 
   // Add CHANGELOG.md and release.json into staging root
   if (fs.existsSync(changelogDest)) {
@@ -163,8 +166,8 @@ try {
   }
   fs.copyFileSync(releaseJsonPath, path.join(stagingDir, 'release.json'));
 
-  // Create the tarball from staging
-  execSync(`tar -czf "${tarballPath}" -C "${stagingDir}" .`, { cwd: ROOT });
+  // Create the tarball using execFileSync with an argument array (no shell)
+  execFileSync('tar', ['-czf', tarballPath, '-C', stagingDir, '.'], { cwd: ROOT });
 
   // Clean up staging
   fs.rmSync(stagingDir, { recursive: true, force: true });
