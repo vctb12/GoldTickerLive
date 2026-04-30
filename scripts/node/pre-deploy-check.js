@@ -6,30 +6,34 @@
  * handful of additional heuristic checks and prints a structured summary.
  *
  * Usage:
- *   node scripts/node/pre-deploy-check.js           # full check
- *   node scripts/node/pre-deploy-check.js --ci      # exits 1 on any failure
+ *   node scripts/node/pre-deploy-check.js           # full check (exits 1 on any FAIL)
+ *   node scripts/node/pre-deploy-check.js --skip-tests  # skip slow npm test step
  *
  * Integrates with the `validate` npm script group. Does NOT rebuild the site —
  * run `npm run build` first if you need a fresh bundle.
  *
  * Checks performed:
- *   1. data/gold_price.json present and not zero-bytes (critical)
- *   2. Sitemap file present and >= 50 URLs (critical)
- *   3. dist/ directory present if built (warning)
- *   4. No .env or secrets files checked in (critical)
- *   5. Service-worker registered on index.html (warning)
- *   6. CNAME file present (warning — Pages deployment)
- *   7. data/shops-data.json parseable JSON (critical)
+ *   1.  data/gold_price.json present and not zero-bytes (critical)
+ *   2.  Sitemap file present, >= 50 URLs, and recent (critical)
+ *   3.  dist/ directory present and index.html exists (critical)
+ *   4.  No .env or secrets files checked in (critical)
+ *   5.  Service-worker registered on index.html (warning)
+ *   6.  CNAME file present (warning — Pages deployment)
+ *   7.  data/shops-data.json parseable JSON (critical)
+ *   8.  npm run validate passed — includes DOM-safety baseline (critical)
+ *   9.  robots.txt present and non-empty (critical)
+ *  10.  Unit test suite passes (critical)
+ *  11.  No uncommitted changes in working tree (critical)
  */
 
 'use strict';
 
-import { readFileSync, existsSync, statSync } from 'fs';
-import { resolve, join } from 'path';
-import { execSync } from 'child_process';
+const { readFileSync, existsSync, statSync } = require('fs');
+const { resolve, join } = require('path');
+const { execSync } = require('child_process');
 
-const ROOT = resolve(new URL('.', import.meta.url).pathname, '..', '..');
-const CI_MODE = process.argv.includes('--ci');
+const ROOT = resolve(__dirname, '..', '..');
+const SKIP_TESTS = process.argv.includes('--skip-tests');
 
 const GREEN = '\x1b[32m';
 const YELLOW = '\x1b[33m';
@@ -83,7 +87,7 @@ if (!existsSync(goldFile)) {
 }
 
 // ---------------------------------------------------------------------------
-// 2. Sitemap
+// 2. Sitemap — presence, URL count, and freshness
 // ---------------------------------------------------------------------------
 section('2. Sitemap');
 const sitemapFile = join(ROOT, 'sitemap.xml');
@@ -95,23 +99,38 @@ if (!existsSync(sitemapFile)) {
   if (count < 50) {
     fail(`sitemap.xml has only ${count} URLs (expected ≥ 50)`);
   } else {
-    ok(`sitemap.xml has ${count} URLs`);
+    const ageDays = (Date.now() - statSync(sitemapFile).mtimeMs) / 86_400_000;
+    if (ageDays > 7) {
+      warn(
+        `sitemap.xml has ${count} URLs but is ${ageDays.toFixed(1)} days old`,
+        'run npm run generate-sitemap or npm run build to refresh'
+      );
+    } else {
+      ok(`sitemap.xml has ${count} URLs (${ageDays.toFixed(1)} days old)`);
+    }
   }
 }
 
 // ---------------------------------------------------------------------------
-// 3. dist/ directory (optional — only when built)
+// 3. dist/ directory — build output check
 // ---------------------------------------------------------------------------
 section('3. Build output');
 const distDir = join(ROOT, 'dist');
 if (!existsSync(distDir)) {
-  warn('dist/ directory not found', 'run npm run build before deploying');
+  fail('dist/ directory not found', 'run npm run build before deploying');
 } else {
   const indexInDist = join(distDir, 'index.html');
   if (!existsSync(indexInDist)) {
     fail('dist/index.html is missing — build may be incomplete');
   } else {
-    ok('dist/index.html present');
+    const missing = ['tracker.html', 'calculator.html', 'shops.html'].filter(
+      (f) => !existsSync(join(distDir, f))
+    );
+    if (missing.length) {
+      warn(`dist/ is missing: ${missing.join(', ')}`, 'build may be partial');
+    } else {
+      ok('dist/ contains index.html, tracker.html, calculator.html, shops.html');
+    }
   }
 }
 
@@ -176,7 +195,11 @@ if (!existsSync(cnameFile)) {
   warn('CNAME file is missing', 'custom domain will not be set on GitHub Pages');
 } else {
   const cname = readFileSync(cnameFile, 'utf8').trim();
-  ok(`CNAME → ${cname}`);
+  if (!cname) {
+    fail('CNAME file is empty');
+  } else {
+    ok(`CNAME → ${cname}`);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -197,14 +220,66 @@ if (!existsSync(shopsFile)) {
 }
 
 // ---------------------------------------------------------------------------
-// 8. Run existing validate script (non-blocking in summary mode)
+// 8. npm run validate — includes DOM-safety baseline, SEO meta, SW coverage
 // ---------------------------------------------------------------------------
-section('8. npm run validate');
+section('8. npm run validate (DOM-safety, SEO meta, SW coverage, analytics)');
 try {
   execSync('npm run validate', { cwd: ROOT, stdio: 'ignore' });
   ok('npm run validate passed');
 } catch {
   fail('npm run validate failed', 'run npm run validate for details');
+}
+
+// ---------------------------------------------------------------------------
+// 9. robots.txt — must exist and be non-empty
+// ---------------------------------------------------------------------------
+section('9. robots.txt');
+const robotsFile = join(ROOT, 'robots.txt');
+if (!existsSync(robotsFile)) {
+  fail('robots.txt is missing', 'crawlers will index everything by default');
+} else {
+  const content = readFileSync(robotsFile, 'utf8').trim();
+  if (!content) {
+    fail('robots.txt is empty');
+  } else if (!content.includes('User-agent')) {
+    warn('robots.txt does not contain a User-agent directive');
+  } else {
+    ok(`robots.txt present (${content.split('\n').length} lines)`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 10. Unit tests pass
+// ---------------------------------------------------------------------------
+section('10. Unit tests' + (SKIP_TESTS ? ' [SKIPPED via --skip-tests]' : ''));
+if (SKIP_TESTS) {
+  warn('Unit tests skipped', 'pass --skip-tests only in fast pre-flight checks');
+} else {
+  try {
+    execSync('npm test', { cwd: ROOT, stdio: 'ignore', timeout: 120_000 });
+    ok('npm test passed');
+  } catch {
+    fail('npm test failed', 'run npm test for details');
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 11. No uncommitted changes in working tree
+// ---------------------------------------------------------------------------
+section('11. Git working tree');
+try {
+  const status = execSync('git status --porcelain', { cwd: ROOT, encoding: 'utf8' }).trim();
+  if (status.length > 0) {
+    const lineCount = status.split('\n').length;
+    fail(
+      `${lineCount} uncommitted change(s) detected`,
+      'commit or stash all changes before deploying'
+    );
+  } else {
+    ok('Working tree is clean — no uncommitted changes');
+  }
+} catch {
+  warn('Could not check git status', 'ensure git is available');
 }
 
 // ---------------------------------------------------------------------------
@@ -224,6 +299,6 @@ if (failures === 0 && warnings === 0) {
 }
 console.log('─'.repeat(60));
 
-if (CI_MODE && failures > 0) {
+if (failures > 0) {
   process.exit(1);
 }

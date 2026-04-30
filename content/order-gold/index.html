@@ -9,10 +9,10 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta http-equiv="X-Frame-Options" content="DENY" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <title>Order Gold Online — 1g to 100g, 24K to 18K | Gold Ticker Live UAE</title>
+    <title>Find Gold Shops — Check Reference Prices | Gold Ticker Live UAE</title>
     <meta
       name="description"
-      content="Order gold bullion online — 1g to 100g bars in 24K, 22K, 21K, and 18K. Live pricing with UAE VAT. Submit via WhatsApp for manual processing."
+      content="Use our gold price reference calculator, then find verified gold shops near you in UAE, GCC and Arab markets. Gold Ticker Live is an information service — we don't sell or broker gold."
     />
     <link rel="canonical" href="https://goldtickerlive.com/content/order-gold/" />
     <link
@@ -30,11 +30,11 @@
     <meta name="theme-color" content="#d4a017" />
     <meta
       property="og:title"
-      content="Order Gold Online — 1g to 100g, 24K to 18K | Gold Ticker Live UAE"
+      content="Find Gold Shops — Check Reference Prices | Gold Ticker Live UAE"
     />
     <meta
       property="og:description"
-      content="Order gold bullion with live pricing. 1g to 100g, multiple karats. UAE VAT included. Submit via WhatsApp."
+      content="Check spot-based gold price estimates for any weight and karat, then find verified gold shops in UAE, GCC and Arab markets."
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
@@ -82,9 +82,9 @@
     <main class="order-page">
       <!-- Hero -->
       <section class="order-hero">
-        <h1 class="order-hero-title" data-i18n="ord_title">Order Gold Online</h1>
+        <h1 class="order-hero-title" data-i18n="ord_title">Find Gold Shops &amp; Check Reference Prices</h1>
         <p class="order-hero-sub" data-i18n="ord_sub">
-          Live-priced gold bars — 1g to 100g — UAE VAT included
+          Spot-based price reference — then find verified shops in your city
         </p>
         <div class="order-hero-badges">
           <span class="order-price-badge">
@@ -97,17 +97,10 @@
 
       <div id="error-banner" class="order-error"></div>
 
-      <!-- Confirmation (hidden by default) -->
-      <div class="order-confirmation" id="order-confirmation">
-        <div class="order-confirmation-icon">✅</div>
-        <div class="order-confirmation-id" id="confirmation-id"></div>
-        <div class="order-confirmation-msg" data-i18n="ord_confirm_msg">
-          Your order has been saved. You will be contacted to confirm the final price and delivery
-          details.
-        </div>
-        <button class="order-new-btn" id="new-order-btn" data-i18n="ord_new_order">
-          Place New Order
-        </button>
+      <!-- Information notice -->
+      <div class="order-info-notice" role="note">
+        <strong data-i18n="ord_info_title">Price reference tool, not a marketplace</strong>
+        <span data-i18n="ord_info_body"> — Prices shown are spot-based estimates. Gold Ticker Live does not sell, broker, or process gold transactions. Always confirm final prices directly with the shop.</span>
       </div>
 
       <!-- Order form (hidden on confirmation) -->
@@ -182,110 +175,34 @@
           </div>
         </div>
 
-        <!-- Customer details -->
-        <div class="order-step order-form">
+        <!-- Shop finder -->
+        <div class="order-step">
           <div class="order-step-label" data-i18n="ord_step4_label">Step 4</div>
-          <div class="order-step-title" data-i18n="ord_step4_title">Your Details</div>
-
+          <div class="order-step-title" data-i18n="ord_step4_title">Find shops in your city</div>
+          <p class="order-finder-intro" data-i18n="ord_finder_intro">
+            Select a city to see gold shops and dealers in the directory. Contact them directly to confirm prices, availability, and any making charges.
+          </p>
           <div class="order-form-group">
-            <label class="order-form-label" for="input-name" data-i18n="ord_name_label"
-              >Full Name *</label
-            >
-            <input
-              class="order-form-input"
-              id="input-name"
-              type="text"
-              autocomplete="name"
-              placeholder="Ahmed Al Mansouri"
-              data-i18n-placeholder="ord_name_placeholder"
-            />
-            <div class="order-form-error" id="err-name" data-i18n="ord_name_err">
-              Please enter your full name (min 2 characters).
-            </div>
+            <label class="order-form-label" for="city-filter" data-i18n="ord_city_label">City</label>
+            <select class="order-form-input" id="city-filter" aria-label="Filter shops by city">
+              <option value="" data-i18n="ord_city_all">All cities</option>
+            </select>
           </div>
-
-          <div class="order-form-group">
-            <label class="order-form-label" for="input-phone" data-i18n="ord_phone_label"
-              >Phone (UAE) *</label
-            >
-            <input
-              class="order-form-input"
-              id="input-phone"
-              type="tel"
-              autocomplete="tel"
-              placeholder="+971 50 123 4567"
-              data-i18n-placeholder="ord_phone_placeholder"
-            />
-            <div class="order-form-error" id="err-phone" data-i18n="ord_phone_err">
-              Enter a valid UAE number (e.g. +971 50 123 4567 or 050 123 4567).
-            </div>
+          <div id="shop-results" class="order-shop-results" aria-live="polite" aria-label="Matching shops">
+            <!-- Rendered by JS -->
           </div>
-
-          <div class="order-form-group">
-            <label class="order-form-label" for="input-email" data-i18n="ord_email_label"
-              >Email (optional)</label
-            >
-            <input
-              class="order-form-input"
-              id="input-email"
-              type="email"
-              autocomplete="email"
-              placeholder="ahmed@example.com"
-              data-i18n-placeholder="ord_email_placeholder"
-            />
-            <div class="order-form-error" id="err-email" data-i18n="ord_email_err">
-              Please enter a valid email address.
-            </div>
-          </div>
-
-          <div class="order-form-group">
-            <label class="order-form-label" data-i18n="ord_delivery_label">Delivery Method</label>
-            <div class="order-radio-group" id="delivery-group">
-              <label class="order-radio-label">
-                <input type="radio" name="delivery" value="pickup" checked />
-                <span data-i18n="ord_pickup">Pickup</span>
-              </label>
-              <label class="order-radio-label">
-                <input type="radio" name="delivery" value="delivery" />
-                <span data-i18n="ord_delivery">Delivery</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="order-form-group">
-            <label class="order-form-label" for="input-notes" data-i18n="ord_notes_label"
-              >Notes (optional)</label
-            >
-            <textarea
-              class="order-form-textarea"
-              id="input-notes"
-              placeholder="Any special instructions…"
-              data-i18n-placeholder="ord_notes_placeholder"
-            ></textarea>
-          </div>
-        </div>
-
-        <!-- Action buttons -->
-        <div class="order-actions">
-          <button class="order-btn-whatsapp" id="btn-whatsapp" data-i18n="ord_btn_whatsapp">
-            💬 Complete via WhatsApp
-          </button>
-          <button class="order-btn-primary" id="btn-submit" data-i18n="ord_btn_submit">
-            ✓ Submit Order
-          </button>
         </div>
 
         <!-- Disclaimer -->
         <div class="order-disclaimer">
+          <p data-i18n="ord_disclaimer_info">
+            <strong>Gold Ticker Live is an information service. We don't sell or broker gold.</strong>
+          </p>
           <p data-i18n="ord_disclaimer_1">
-            Prices are indicative and based on live spot gold rates. The actual purchase price will
-            be confirmed at the time of transaction.
+            Prices shown are spot-based estimates before retail premiums, making charges, and VAT.
+            The actual purchase price is set by the shop at the time of transaction.
           </p>
           <p data-i18n="ord_disclaimer_2">VAT at 5% applies in the UAE.</p>
-          <p data-i18n="ord_disclaimer_3">
-            No payment is collected on this website. Orders are forwarded via WhatsApp for manual
-            processing.
-          </p>
         </div>
 
         <!-- Affiliate / Partner Dealers Section -->
@@ -360,12 +277,17 @@
       import { injectNav, updateNavLang } from '../../src/components/nav.js';
       import { injectFooter } from '../../src/components/footer.js';
       import { fetchGold } from '../../src/lib/api.js';
+      import { SHOPS } from '../../data/shops.js';
+      import { el, safeHref, safeTel } from '../../src/lib/safe-dom.js';
 
       // ── i18n ──────────────────────────────────────────────────────────────────
       const STRINGS = {
         en: {
-          ord_title: 'Order Gold Online',
-          ord_sub: 'Live-priced gold bars — 1g to 100g — UAE VAT included',
+          ord_title: 'Find Gold Shops & Check Reference Prices',
+          ord_sub: 'Spot-based price reference — then find verified shops in your city',
+          ord_info_title: 'Price reference tool, not a marketplace',
+          ord_info_body:
+            ' — Prices shown are spot-based estimates. Gold Ticker Live does not sell, broker, or process gold transactions. Always confirm final prices directly with the shop.',
           ord_step1_label: 'Step 1',
           ord_step1_title: 'Select Weight',
           ord_step2_label: 'Step 2',
@@ -373,47 +295,42 @@
           ord_step3_label: 'Step 3',
           ord_step3_title: 'Quantity',
           ord_step4_label: 'Step 4',
-          ord_step4_title: 'Your Details',
-          ord_breakdown_title: 'Price Breakdown',
-          ord_gold_price: 'Gold price',
-          ord_premium: 'Premium (3%)',
+          ord_step4_title: 'Find shops in your city',
+          ord_finder_intro:
+            'Select a city to see gold shops and dealers in the directory. Contact them directly to confirm prices, availability, and any making charges.',
+          ord_city_label: 'City',
+          ord_city_all: 'All cities',
+          ord_breakdown_title: 'Reference Price Estimate',
+          ord_gold_price: 'Spot gold price',
+          ord_premium: 'Indicative retail premium (3%)',
           ord_subtotal: 'Subtotal',
           ord_vat: 'VAT (5%)',
-          ord_total: 'TOTAL',
+          ord_total: 'ESTIMATE TOTAL',
           ord_stale_warning: '⚠ Price may be outdated. Refresh the page for latest rates.',
-          ord_name_label: 'Full Name *',
-          ord_name_placeholder: 'Ahmed Al Mansouri',
-          ord_name_err: 'Please enter your full name (min 2 characters).',
-          ord_phone_label: 'Phone (UAE) *',
-          ord_phone_placeholder: '+971 50 123 4567',
-          ord_phone_err: 'Enter a valid UAE number (e.g. +971 50 123 4567 or 050 123 4567).',
-          ord_email_label: 'Email (optional)',
-          ord_email_placeholder: 'ahmed@example.com',
-          ord_email_err: 'Please enter a valid email address.',
-          ord_delivery_label: 'Delivery Method',
-          ord_pickup: 'Pickup',
-          ord_delivery: 'Delivery',
-          ord_notes_label: 'Notes (optional)',
-          ord_notes_placeholder: 'Any special instructions…',
-          ord_btn_whatsapp: '💬 Complete via WhatsApp',
-          ord_btn_submit: '✓ Submit Order',
+          ord_disclaimer_info:
+            'Gold Ticker Live is an information service. We don\'t sell or broker gold.',
           ord_disclaimer_1:
-            'Prices are indicative and based on live spot gold rates. The actual purchase price will be confirmed at the time of transaction.',
+            'Prices shown are spot-based estimates before retail premiums, making charges, and VAT. The actual purchase price is set by the shop at the time of transaction.',
           ord_disclaimer_2: 'VAT at 5% applies in the UAE.',
-          ord_disclaimer_3:
-            'No payment is collected on this website. Orders are forwarded via WhatsApp for manual processing.',
-          ord_confirm_msg:
-            'Your order has been saved. You will be contacted to confirm the final price and delivery details.',
-          ord_new_order: 'Place New Order',
-          ord_countdown_prefix: 'Price valid for',
+          ord_countdown_prefix: 'Price estimate valid for',
           ord_countdown_suffix: 's — refreshing automatically',
           ord_price_refreshed: 'Price refreshed',
           ord_price_loading: 'Loading live price…',
-          ord_price_failed: 'Could not load live price. Showing estimated price.',
+          ord_price_failed: 'Could not load live price. Showing estimated reference price.',
+          ord_shops_none: 'No shops found for this city. Try a different city or browse the full directory.',
+          ord_shops_contact: 'Contact',
+          ord_shops_visit: 'Website',
+          ord_shops_no_contact: 'Contact details not yet available.',
+          ord_shops_verified: 'Verified',
+          ord_shops_featured: 'Featured',
+          ord_shops_market: 'Market',
         },
         ar: {
-          ord_title: 'اطلب الذهب أونلاين',
-          ord_sub: 'سبائك ذهب بأسعار فورية — من 1 غرام إلى 100 غرام — يشمل ضريبة القيمة المضافة',
+          ord_title: 'ابحث عن محلات الذهب وتحقق من أسعار السوق',
+          ord_sub: 'سعر مرجعي قائم على أسعار الفورية — ثم ابحث عن المحلات في مدينتك',
+          ord_info_title: 'أداة مرجعية للأسعار، وليست سوقاً تجارية',
+          ord_info_body:
+            ' — الأسعار المعروضة تقديرية مبنية على أسعار فورية. لا يبيع Gold Ticker Live الذهب ولا يتوسط في صفقاته. تأكد دائماً من الأسعار النهائية مباشرة مع المحل.',
           ord_step1_label: 'الخطوة 1',
           ord_step1_title: 'اختر الوزن',
           ord_step2_label: 'الخطوة 2',
@@ -421,42 +338,35 @@
           ord_step3_label: 'الخطوة 3',
           ord_step3_title: 'الكمية',
           ord_step4_label: 'الخطوة 4',
-          ord_step4_title: 'بياناتك',
-          ord_breakdown_title: 'تفاصيل السعر',
-          ord_gold_price: 'سعر الذهب',
-          ord_premium: 'هامش (3٪)',
+          ord_step4_title: 'ابحث عن محلات في مدينتك',
+          ord_finder_intro:
+            'اختر مدينة لعرض محلات الذهب والتجار في الدليل. تواصل معهم مباشرة لتأكيد الأسعار والتوفر وأي رسوم مصنعية.',
+          ord_city_label: 'المدينة',
+          ord_city_all: 'جميع المدن',
+          ord_breakdown_title: 'تقدير السعر المرجعي',
+          ord_gold_price: 'سعر الذهب الفوري',
+          ord_premium: 'هامش تجزئة استرشادي (3٪)',
           ord_subtotal: 'المجموع الفرعي',
           ord_vat: 'ضريبة القيمة المضافة (5٪)',
-          ord_total: 'الإجمالي',
+          ord_total: 'الإجمالي التقديري',
           ord_stale_warning: '⚠ قد يكون السعر قديمًا. أعد تحميل الصفحة للأسعار الأخيرة.',
-          ord_name_label: 'الاسم الكامل *',
-          ord_name_placeholder: 'أحمد المنصوري',
-          ord_name_err: 'يرجى إدخال الاسم الكامل (2 أحرف على الأقل).',
-          ord_phone_label: 'الهاتف (الإمارات) *',
-          ord_phone_placeholder: '‎+971 50 123 4567',
-          ord_phone_err: 'أدخل رقم هاتف إماراتي صحيح.',
-          ord_email_label: 'البريد الإلكتروني (اختياري)',
-          ord_email_placeholder: 'ahmed@example.com',
-          ord_email_err: 'يرجى إدخال عنوان بريد إلكتروني صحيح.',
-          ord_delivery_label: 'طريقة التسليم',
-          ord_pickup: 'استلام من المحل',
-          ord_delivery: 'توصيل',
-          ord_notes_label: 'ملاحظات (اختياري)',
-          ord_notes_placeholder: 'أي تعليمات خاصة…',
-          ord_btn_whatsapp: '💬 إتمام عبر واتساب',
-          ord_btn_submit: '✓ إرسال الطلب',
+          ord_disclaimer_info: 'Gold Ticker Live خدمة معلوماتية. لا نبيع الذهب ولا نتوسط فيه.',
           ord_disclaimer_1:
-            'الأسعار استرشادية وتستند إلى أسعار الذهب الفورية. يُؤكَّد السعر النهائي عند إتمام الصفقة.',
+            'الأسعار المعروضة تقديرية مبنية على الأسعار الفورية، دون احتساب هامش التجزئة والمصنعية والضريبة. السعر النهائي يحدده المحل عند إتمام الصفقة.',
           ord_disclaimer_2: 'تطبق ضريبة القيمة المضافة 5٪ في الإمارات.',
-          ord_disclaimer_3:
-            'لا يتم تحصيل أي مدفوعات على هذا الموقع. تُحوَّل الطلبات عبر واتساب للمعالجة اليدوية.',
-          ord_confirm_msg: 'تم حفظ طلبك. سيتم التواصل معك لتأكيد السعر النهائي وتفاصيل التسليم.',
-          ord_new_order: 'طلب جديد',
-          ord_countdown_prefix: 'السعر صالح لـ',
+          ord_countdown_prefix: 'تقدير السعر صالح لـ',
           ord_countdown_suffix: 'ث — يتجدد تلقائيًا',
           ord_price_refreshed: 'تم تحديث السعر',
           ord_price_loading: 'جارٍ تحميل السعر الفوري…',
-          ord_price_failed: 'تعذّر تحميل السعر الفوري. يُعرض سعر تقديري.',
+          ord_price_failed: 'تعذّر تحميل السعر الفوري. يُعرض سعر مرجعي تقديري.',
+          ord_shops_none:
+            'لم يُعثر على محلات في هذه المدينة. جرّب مدينة أخرى أو تصفح الدليل الكامل.',
+          ord_shops_contact: 'اتصال',
+          ord_shops_visit: 'الموقع',
+          ord_shops_no_contact: 'بيانات الاتصال غير متوفرة حالياً.',
+          ord_shops_verified: 'موثق',
+          ord_shops_featured: 'مميز',
+          ord_shops_market: 'السوق',
         },
       };
 
@@ -473,12 +383,9 @@
       };
 
       const KARAT_PURITIES = { 24: 1.0, 22: 22 / 24, 21: 21 / 24, 18: 18 / 24 };
-      const MARGIN_PCT_KEY = 'order_margin_pct';
-      const ORDERS_KEY = 'gold_orders';
       const AED_PER_USD = 3.6725;
       const TROY_OZ = 31.1035;
       const REFRESH_SECS = 90;
-      const UAE_PHONE_RE = /^(\+971|00971|05\d)\d{7,8}$/;
 
       // ── State ─────────────────────────────────────────────────────────────────
       let lang = new URLSearchParams(location.search).get('lang') || 'en';
@@ -497,8 +404,7 @@
       setupWeightPills();
       setupKaratPills();
       setupQty();
-      setupActions();
-      document.getElementById('new-order-btn').addEventListener('click', resetForm);
+      setupShopFinder();
 
       const langBtns = navCtrl.getLangToggleButtons ? navCtrl.getLangToggleButtons() : [];
       langBtns.forEach((btn) =>
@@ -509,6 +415,7 @@
           updateNavLang(lang);
           applyLang();
           recalculate();
+          renderShops();
         })
       );
 
@@ -570,7 +477,7 @@
       function recalculate() {
         if (!spotUsdPerOz) return;
         const purity = KARAT_PURITIES[selectedKarat];
-        const marginPct = parseFloat(localStorage.getItem(MARGIN_PCT_KEY) || '0.03');
+        const marginPct = 0.03; // indicative retail premium
         const usdPerGram = (spotUsdPerOz / TROY_OZ) * purity;
         const aedPerGram = usdPerGram * AED_PER_USD;
 
@@ -587,7 +494,7 @@
         const weightLabel = getWeightLabel();
         const s = STRINGS[lang];
         document.getElementById('gold-price-label').textContent =
-          `${s.ord_gold_price || 'Gold price'} (${weightLabel} × ${quantity} × ${selectedKarat}K)`;
+          `${s.ord_gold_price || 'Spot gold price'} (${weightLabel} × ${quantity} × ${selectedKarat}K)`;
         document.getElementById('bd-gold-price').textContent = formatAED(basePrice);
         document.getElementById('bd-premium').textContent = formatAED(margin);
         document.getElementById('bd-subtotal').textContent = formatAED(subtotal);
@@ -670,177 +577,174 @@
         });
       }
 
+      // ── Shop finder ───────────────────────────────────────────────────────────
+
+      // Derive list of unique cities from SHOPS, sorted alphabetically
+      const SHOP_CITIES = [...new Set(SHOPS.map((s) => s.city).filter(Boolean))].sort();
+
+      // Karat-to-specialty keyword mapping for rough matching
+      const KARAT_KEYWORDS = {
+        24: ['24k', '24 k', 'bullion', 'investment gold', 'gold bars', 'gold coins'],
+        22: ['22k', '22 k', 'jewellery', 'jewelry'],
+        21: ['21k', '21 k', 'jewellery', 'jewelry'],
+        18: ['18k', '18 k', 'jewellery', 'jewelry', 'wedding', 'bridal'],
+      };
+
+      function shopMatchesKarat(shop) {
+        const karatNum = parseInt(selectedKarat, 10);
+        const keywords = KARAT_KEYWORDS[karatNum] || [];
+        const haystack = [
+          shop.category || '',
+          shop.market || '',
+          ...(shop.specialties || []),
+          shop.notes || '',
+        ]
+          .join(' ')
+          .toLowerCase();
+        // A shop matches if any keyword is present, or if it has no specialties at all (general shop)
+        return (
+          keywords.some((kw) => haystack.includes(kw)) ||
+          !shop.specialties ||
+          shop.specialties.length === 0
+        );
+      }
+
+      let selectedCity = '';
+
+      function setupShopFinder() {
+        const cityFilter = document.getElementById('city-filter');
+        if (!cityFilter) return;
+
+        // Populate city options
+        SHOP_CITIES.forEach((city) => {
+          const opt = document.createElement('option');
+          opt.value = city;
+          opt.textContent = city;
+          cityFilter.appendChild(opt);
+        });
+
+        cityFilter.addEventListener('change', () => {
+          selectedCity = cityFilter.value;
+          renderShops();
+        });
+
+        // Initial render
+        renderShops();
+      }
+
+      function renderShops() {
+        const resultsEl = document.getElementById('shop-results');
+        if (!resultsEl) return;
+
+        const s = STRINGS[lang];
+
+        // Filter shops
+        let filtered = SHOPS.filter((shop) => {
+          if (selectedCity && shop.city !== selectedCity) return false;
+          return shopMatchesKarat(shop);
+        });
+
+        // Sort: featured first, then verified, then alphabetical
+        filtered.sort((a, b) => {
+          if (a.featured !== b.featured) return a.featured ? -1 : 1;
+          if (a.verified !== b.verified) return a.verified ? -1 : 1;
+          return (a.name || '').localeCompare(b.name || '');
+        });
+
+        // Clear existing results safely
+        resultsEl.replaceChildren();
+
+        if (filtered.length === 0) {
+          const msg = el('p', { class: 'order-shops-empty' }, [
+            s.ord_shops_none ||
+              'No shops found for this city. Try a different city or browse the full directory.',
+          ]);
+          resultsEl.appendChild(msg);
+
+          const link = el(
+            'a',
+            {
+              href: safeHref('/shops.html'),
+              class: 'order-shops-dir-link',
+            },
+            ['Browse full shop directory →']
+          );
+          resultsEl.appendChild(link);
+          return;
+        }
+
+        const list = el('ul', { class: 'order-shop-list' });
+
+        filtered.forEach((shop) => {
+          const badges = [];
+          if (shop.verified) {
+            badges.push(el('span', { class: 'shop-badge shop-badge--verified' }, [s.ord_shops_verified || 'Verified']));
+          }
+          if (shop.featured) {
+            badges.push(el('span', { class: 'shop-badge shop-badge--featured' }, [s.ord_shops_featured || 'Featured']));
+          }
+
+          const badgeRow = badges.length ? el('div', { class: 'shop-badges' }, badges) : null;
+
+          const nameEl = el('div', { class: 'order-shop-name' }, [shop.name || '']);
+
+          const metaParts = [];
+          if (shop.market) {
+            metaParts.push(el('span', { class: 'order-shop-market' }, [
+              `${s.ord_shops_market || 'Market'}: ${shop.market}`,
+            ]));
+          }
+          if (shop.city) {
+            metaParts.push(el('span', { class: 'order-shop-city' }, [shop.city]));
+          }
+          const metaEl = metaParts.length ? el('div', { class: 'order-shop-meta' }, metaParts) : null;
+
+          const actions = [];
+          const phone = safeTel(shop.phone);
+          if (phone) {
+            actions.push(
+              el('a', { href: `tel:${phone}`, class: 'order-shop-action order-shop-action--phone' }, [
+                `📞 ${s.ord_shops_contact || 'Contact'}`,
+              ])
+            );
+          }
+          const website = safeHref(shop.website);
+          if (website) {
+            actions.push(
+              el(
+                'a',
+                { href: website, target: '_blank', rel: 'noopener noreferrer', class: 'order-shop-action order-shop-action--web' },
+                [`🌐 ${s.ord_shops_visit || 'Website'}`]
+              )
+            );
+          }
+          const actionsEl = actions.length ? el('div', { class: 'order-shop-actions' }, actions) : null;
+
+          const children = [nameEl];
+          if (badgeRow) children.push(badgeRow);
+          if (metaEl) children.push(metaEl);
+          if (actionsEl) children.push(actionsEl);
+          else {
+            children.push(el('p', { class: 'order-shop-no-contact' }, [s.ord_shops_no_contact || 'Contact details not yet available.']));
+          }
+
+          list.appendChild(el('li', { class: 'order-shop-card' }, children));
+        });
+
+        resultsEl.appendChild(list);
+
+        // Link to full directory
+        const dirLink = el(
+          'a',
+          { href: safeHref('/shops.html'), class: 'order-shops-dir-link' },
+          ['Browse full shop directory →']
+        );
+        resultsEl.appendChild(dirLink);
+      }
+
       // ── Actions ───────────────────────────────────────────────────────────────
       function setupActions() {
-        document.getElementById('btn-whatsapp').addEventListener('click', () => {
-          if (!validateForm()) return;
-          const msg = buildWhatsAppMessage();
-          window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
-        });
-
-        document.getElementById('btn-submit').addEventListener('click', () => {
-          if (!validateForm()) return;
-          const order = buildOrder();
-          saveOrder(order);
-          showConfirmation(order.id);
-        });
-      }
-
-      // ── Validation ────────────────────────────────────────────────────────────
-      function validateForm() {
-        let valid = true;
-
-        const name = document.getElementById('input-name').value.trim();
-        const nameErr = document.getElementById('err-name');
-        if (name.length < 2) {
-          document.getElementById('input-name').classList.add('invalid');
-          nameErr.classList.add('visible');
-          valid = false;
-        } else {
-          document.getElementById('input-name').classList.remove('invalid');
-          nameErr.classList.remove('visible');
-        }
-
-        const phone = document.getElementById('input-phone').value.trim().replace(/\s+/g, '');
-        const phoneErr = document.getElementById('err-phone');
-        if (!UAE_PHONE_RE.test(phone)) {
-          document.getElementById('input-phone').classList.add('invalid');
-          phoneErr.classList.add('visible');
-          valid = false;
-        } else {
-          document.getElementById('input-phone').classList.remove('invalid');
-          phoneErr.classList.remove('visible');
-        }
-
-        const email = document.getElementById('input-email').value.trim();
-        const emailErr = document.getElementById('err-email');
-        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          document.getElementById('input-email').classList.add('invalid');
-          emailErr.classList.add('visible');
-          valid = false;
-        } else {
-          document.getElementById('input-email').classList.remove('invalid');
-          emailErr.classList.remove('visible');
-        }
-
-        return valid;
-      }
-
-      // ── Build order ───────────────────────────────────────────────────────────
-      function buildOrder() {
-        const purity = KARAT_PURITIES[selectedKarat];
-        const marginPct = parseFloat(localStorage.getItem(MARGIN_PCT_KEY) || '0.03');
-        const usdPerGram = (spotUsdPerOz / TROY_OZ) * purity;
-        const aedPerGram = usdPerGram * AED_PER_USD;
-        const basePrice = aedPerGram * selectedWeight * quantity;
-        const margin = basePrice * marginPct;
-        const subtotal = basePrice + margin;
-        const vat = subtotal * 0.05;
-        const total = subtotal + vat;
-
-        const delivery =
-          document.querySelector('input[name="delivery"]:checked')?.value || 'pickup';
-        const now = new Date();
-        const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-        const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
-        const seq = orders.length + 1;
-
-        return {
-          id: `ORD-${dateStr}-${String(seq).padStart(3, '0')}`,
-          items: [
-            {
-              weight: selectedWeight,
-              karat: selectedKarat,
-              quantity,
-              unitPrice: parseFloat(aedPerGram.toFixed(4)),
-              currency: 'AED',
-            },
-          ],
-          subtotal: parseFloat(subtotal.toFixed(2)),
-          vat: parseFloat(vat.toFixed(2)),
-          total: parseFloat(total.toFixed(2)),
-          goldPriceAtOrder: spotUsdPerOz,
-          currency: 'AED',
-          customer: {
-            name: document.getElementById('input-name').value.trim(),
-            phone: document.getElementById('input-phone').value.trim(),
-            email: document.getElementById('input-email').value.trim(),
-            delivery,
-            notes: document.getElementById('input-notes').value.trim(),
-          },
-          status: 'pending',
-          createdAt: now.toISOString(),
-        };
-      }
-
-      function saveOrder(order) {
-        const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
-        orders.push(order);
-        localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-      }
-
-      // ── WhatsApp message ──────────────────────────────────────────────────────
-      function buildWhatsAppMessage() {
-        const purity = KARAT_PURITIES[selectedKarat];
-        const marginPct = parseFloat(localStorage.getItem(MARGIN_PCT_KEY) || '0.03');
-        const usdPerGram = (spotUsdPerOz / TROY_OZ) * purity;
-        const aedPerGram = usdPerGram * AED_PER_USD;
-        const basePrice = aedPerGram * selectedWeight * quantity;
-        const margin = basePrice * marginPct;
-        const subtotal = basePrice + margin;
-        const vat = subtotal * 0.05;
-        const total = subtotal + vat;
-
-        const weightLabel = getWeightLabel();
-        const delivery =
-          document.querySelector('input[name="delivery"]:checked')?.value || 'pickup';
-        const deliveryLabel = delivery === 'pickup' ? 'Pickup' : 'Delivery';
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-        });
-        const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-        const name = document.getElementById('input-name').value.trim();
-        const phone = document.getElementById('input-phone').value.trim();
-
-        return `🥇 Gold Order — Gold Ticker Live.ae
-
-Weight: ${weightLabel} × ${selectedKarat}K
-Qty: ${quantity}
-Gold price: ${formatAED(aedPerGram)}/g
-Premium (${(marginPct * 100).toFixed(0)}%): ${formatAED(margin)}
-VAT (5%): ${formatAED(vat)}
-*TOTAL: ${formatAED(total)}*
-
-Name: ${name}
-Phone: ${phone}
-Delivery: ${deliveryLabel}
-
-Generated: ${dateStr} ${timeStr}
-goldtickerlive.com/content/order-gold/`;
-      }
-
-      // ── Confirmation ──────────────────────────────────────────────────────────
-      function showConfirmation(orderId) {
-        document.getElementById('order-form-wrap').style.display = 'none';
-        const conf = document.getElementById('order-confirmation');
-        conf.classList.add('visible');
-        document.getElementById('confirmation-id').textContent = `Order ${orderId}`;
-        if (countdownTimer) clearInterval(countdownTimer);
-      }
-
-      function resetForm() {
-        document.getElementById('order-form-wrap').style.display = '';
-        document.getElementById('order-confirmation').classList.remove('visible');
-        document.getElementById('input-name').value = '';
-        document.getElementById('input-phone').value = '';
-        document.getElementById('input-email').value = '';
-        document.getElementById('input-notes').value = '';
-        quantity = 1;
-        document.getElementById('qty-display').textContent = '1';
-        loadLivePrice();
+        // No order actions needed — page is informational only
       }
 
       // ── i18n ──────────────────────────────────────────────────────────────────

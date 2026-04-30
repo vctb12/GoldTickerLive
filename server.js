@@ -27,6 +27,7 @@ if (IS_PROD) app.set('trust proxy', 1);
 const adminRoutes = require('./server/routes/admin');
 const stripeRoutes = require('./server/routes/stripe');
 const newsletterRoutes = require('./server/routes/newsletter');
+const submissionsRoutes = require('./server/routes/submissions');
 
 // ---------------------------------------------------------------------------
 // Security headers (Helmet)
@@ -262,6 +263,7 @@ if (!IS_PROD) {
 app.use('/api/admin', adminRoutes);
 app.use('/api/stripe', stripeRoutes);
 app.use('/api/newsletter', newsletterRoutes);
+app.use('/api', submissionsRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -112,75 +112,135 @@
       </section>
 
       <section class="content-form-card" aria-labelledby="submit-shop-form-title">
-        <p class="content-eyebrow">Supabase review queue</p>
+        <p class="content-eyebrow">Submission queue</p>
         <h2 id="submit-shop-form-title">Shop submission form</h2>
         <p class="content-form-help">
-          Required fields are shop name, country, city, and contact email. Public publication is never automatic.
+          Required fields are marked *. We review every submission before publishing — nothing is
+          auto-published.
         </p>
+        <p class="content-form-help content-form-help--ar" lang="ar" dir="rtl">
+          الحقول المطلوبة مُشار إليها بـ *. كل طلب يمر بمراجعة تحريرية قبل النشر — لا يُنشر أي شيء
+          تلقائياً.
+        </p>
+
+        <!-- Step progress indicator -->
+        <div class="submit-steps" role="list" aria-label="Form steps">
+          <div class="submit-step active" data-step-indicator="1" role="listitem">
+            <span class="submit-step-num" aria-hidden="true">1</span>
+            <span class="submit-step-label">Location</span>
+          </div>
+          <div class="submit-step-divider" aria-hidden="true"></div>
+          <div class="submit-step" data-step-indicator="2" role="listitem">
+            <span class="submit-step-num" aria-hidden="true">2</span>
+            <span class="submit-step-label">Contact</span>
+          </div>
+          <div class="submit-step-divider" aria-hidden="true"></div>
+          <div class="submit-step" data-step-indicator="3" role="listitem">
+            <span class="submit-step-num" aria-hidden="true">3</span>
+            <span class="submit-step-label">Specialty</span>
+          </div>
+        </div>
+
         <form id="submit-shop-form" class="content-form-grid" novalidate>
+          <!-- Honeypot — hidden from real users, bots fill it in -->
           <div class="content-hidden-field" aria-hidden="true">
             <label for="company_website">Leave this field empty</label>
             <input id="company_website" name="company_website" type="text" tabindex="-1" autocomplete="off" />
           </div>
-          <div class="content-form-field">
-            <label for="shop_name">Shop name *</label>
-            <input id="shop_name" name="shop_name" type="text" required maxlength="120" autocomplete="organization" />
-          </div>
-          <div class="content-form-field">
-            <label for="owner_name">Owner or contact name</label>
-            <input id="owner_name" name="owner_name" type="text" maxlength="120" autocomplete="name" />
-          </div>
-          <div class="content-form-field">
-            <label for="contact_email">Contact email *</label>
-            <input id="contact_email" name="contact_email" type="email" required maxlength="160" autocomplete="email" />
-          </div>
-          <div class="content-form-field">
-            <label for="contact_phone">Contact phone</label>
-            <input id="contact_phone" name="contact_phone" type="tel" maxlength="60" autocomplete="tel" />
-          </div>
-          <div class="content-form-field">
-            <label for="country_code">Country *</label>
-            <select id="country_code" name="country_code" required>
-              <option value="">Select country</option>
-              <option value="AE">UAE</option>
-              <option value="SA">Saudi Arabia</option>
-              <option value="KW">Kuwait</option>
-              <option value="QA">Qatar</option>
-              <option value="BH">Bahrain</option>
-              <option value="OM">Oman</option>
-              <option value="EG">Egypt</option>
-              <option value="JO">Jordan</option>
-              <option value="MA">Morocco</option>
-              <option value="IN">India</option>
-              <option value="PK">Pakistan</option>
-              <option value="TR">Turkey</option>
-            </select>
-          </div>
-          <div class="content-form-field">
-            <label for="city">City *</label>
-            <input id="city" name="city" type="text" required maxlength="100" autocomplete="address-level2" />
-          </div>
-          <div class="content-form-field">
-            <label for="market">Market or area</label>
-            <input id="market" name="market" type="text" maxlength="140" placeholder="e.g. Dubai Gold Souk" />
-          </div>
-          <div class="content-form-field">
-            <label for="website">Website or social profile</label>
-            <input id="website" name="website" type="text" maxlength="200" placeholder="https://example.com" />
-          </div>
-          <div class="content-form-field content-form-field--full">
-            <label for="specialty">Specialty</label>
-            <input id="specialty" name="specialty" type="text" maxlength="180" placeholder="e.g. 22K jewellery, bullion bars, bridal sets, repairs" />
-          </div>
-          <div class="content-form-field content-form-field--full">
-            <label for="notes">Helpful notes</label>
-            <textarea id="notes" name="notes" maxlength="1200" placeholder="Add address hints, opening hours, why this listing is useful, or what details should be verified."></textarea>
-          </div>
-          <div class="content-form-field content-form-field--full">
-            <button class="btn btn-primary" type="submit">Submit shop for review</button>
-            <p class="content-form-help">By submitting, you confirm the information is provided for editorial review and may be edited for clarity before publication.</p>
+
+          <!-- Step 1: Location -->
+          <fieldset class="content-form-step content-form-step--active content-form-field--full" data-step="1">
+            <legend class="content-form-step-legend">Step 1 of 3 — Location</legend>
+            <div class="content-form-grid">
+              <div class="content-form-field">
+                <label for="country_code">Country *</label>
+                <select id="country_code" name="country_code" required aria-required="true">
+                  <option value="">Select country</option>
+                  <option value="AE">UAE</option>
+                  <option value="SA">Saudi Arabia</option>
+                  <option value="KW">Kuwait</option>
+                  <option value="QA">Qatar</option>
+                  <option value="BH">Bahrain</option>
+                  <option value="OM">Oman</option>
+                  <option value="EG">Egypt</option>
+                  <option value="JO">Jordan</option>
+                  <option value="MA">Morocco</option>
+                  <option value="IN">India</option>
+                  <option value="PK">Pakistan</option>
+                  <option value="TR">Turkey</option>
+                </select>
+                <span class="content-form-error" id="err-country_code" role="alert" hidden>Please select a country.</span>
+              </div>
+              <div class="content-form-field">
+                <label for="city">City *</label>
+                <input id="city" name="city" type="text" required aria-required="true" maxlength="100" autocomplete="address-level2" />
+                <span class="content-form-error" id="err-city" role="alert" hidden>Please enter the city.</span>
+              </div>
+              <div class="content-form-field content-form-field--full">
+                <label for="market">Market or area <span class="content-form-optional">(optional)</span></label>
+                <input id="market" name="market" type="text" maxlength="140" placeholder="e.g. Dubai Gold Souk" />
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Step 2: Contact -->
+          <fieldset class="content-form-step content-form-field--full" data-step="2" hidden>
+            <legend class="content-form-step-legend">Step 2 of 3 — Contact details</legend>
+            <div class="content-form-grid">
+              <div class="content-form-field content-form-field--full">
+                <label for="shop_name">Shop name *</label>
+                <input id="shop_name" name="shop_name" type="text" required aria-required="true" maxlength="120" autocomplete="organization" />
+                <span class="content-form-error" id="err-shop_name" role="alert" hidden>Shop name is required.</span>
+              </div>
+              <div class="content-form-field">
+                <label for="owner_name">Owner or contact name <span class="content-form-optional">(optional)</span></label>
+                <input id="owner_name" name="owner_name" type="text" maxlength="120" autocomplete="name" />
+              </div>
+              <div class="content-form-field">
+                <label for="contact_email">Contact email *</label>
+                <input id="contact_email" name="contact_email" type="email" required aria-required="true" maxlength="160" autocomplete="email" />
+                <span class="content-form-error" id="err-contact_email" role="alert" hidden>Please enter a valid email address.</span>
+              </div>
+              <div class="content-form-field">
+                <label for="contact_phone">Contact phone <span class="content-form-optional">(optional)</span></label>
+                <input id="contact_phone" name="contact_phone" type="tel" maxlength="60" autocomplete="tel" />
+                <span class="content-form-error" id="err-contact_phone" role="alert" hidden>Please enter a valid phone number.</span>
+              </div>
+              <div class="content-form-field">
+                <label for="website">Website or social profile <span class="content-form-optional">(optional)</span></label>
+                <input id="website" name="website" type="text" maxlength="200" placeholder="https://example.com" />
+                <span class="content-form-error" id="err-website" role="alert" hidden>Please enter a valid URL starting with https://</span>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Step 3: Specialty & notes -->
+          <fieldset class="content-form-step content-form-field--full" data-step="3" hidden>
+            <legend class="content-form-step-legend">Step 3 of 3 — Specialty &amp; notes</legend>
+            <div class="content-form-grid">
+              <div class="content-form-field content-form-field--full">
+                <label for="specialty">Specialty <span class="content-form-optional">(optional)</span></label>
+                <input id="specialty" name="specialty" type="text" maxlength="180" placeholder="e.g. 22K jewellery, bullion bars, bridal sets, repairs" />
+              </div>
+              <div class="content-form-field content-form-field--full">
+                <label for="notes">Helpful notes <span class="content-form-optional">(optional)</span></label>
+                <textarea id="notes" name="notes" maxlength="1200" placeholder="Address hints, opening hours, why this listing is useful, or details to verify."></textarea>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Navigation buttons -->
+          <div class="content-form-field content-form-field--full submit-form-nav">
+            <button class="btn btn-outline" type="button" id="btn-prev" hidden>← Back</button>
+            <button class="btn btn-primary" type="button" id="btn-next">Next →</button>
+            <button class="btn btn-primary" type="submit" id="btn-submit" hidden>Submit for review</button>
           </div>
         </form>
+
+        <p class="content-form-help" style="margin-top: var(--space-3)">
+          By submitting, you confirm the information is provided for editorial review and may be
+          edited for clarity before any public listing appears.
+        </p>
         <p id="submit-shop-status" class="content-form-status" role="status" aria-live="polite" hidden></p>
       </section>
 

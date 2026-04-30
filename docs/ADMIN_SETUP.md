@@ -24,7 +24,7 @@ configured admin email can access the panel.
 ### 3. Enable GitHub OAuth
 
 1. **In GitHub:** Settings → Developer settings → OAuth Apps → New OAuth App
-   - **Application name:** Gold Prices Admin (or any name)
+   - **Application name:** Gold Ticker Live Admin (or any name)
    - **Homepage URL:** `https://yourusername.github.io/Gold-Prices/`
    - **Authorization callback URL:** `https://<your-project-ref>.supabase.co/auth/v1/callback`
    - Click **Register application**
