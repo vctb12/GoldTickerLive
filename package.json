@@ -52,10 +52,10 @@
     "linkinator": "^7.6.1",
     "lint-staged": "^16.4.0",
     "prettier": "^3.8.3",
-    "stylelint": "^17.8.0",
+    "stylelint": "^17.9.1",
     "stylelint-config-standard": "^40.0.0",
-    "terser": "^5.46.1",
-    "vite": "^8.0.9"
+    "terser": "^5.46.2",
+    "vite": "^8.0.10"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
