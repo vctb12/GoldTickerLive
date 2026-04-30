@@ -259,6 +259,23 @@ test('every country+city declared in countries.js has a directory on disk', () =
   );
 });
 
+// --- X / Twitter social link — must have no spaces in the URL ---------
+test('index.html: X/Twitter social link URL has no spaces and uses https://x.com/', () => {
+  const html = fs.readFileSync(path.join(REPO_ROOT, 'index.html'), 'utf8');
+  // Find all href values that reference x.com
+  const xLinkRe = /href=["'](https?:\/\/x\.com\/[^"']*?)["']/gi;
+  const matches = [...html.matchAll(xLinkRe)];
+  assert.ok(matches.length > 0, 'index.html: expected at least one x.com link');
+  for (const m of matches) {
+    const url = m[1];
+    assert.ok(!url.includes(' '), `index.html: x.com URL contains a space (broken): "${url}"`);
+    assert.ok(
+      url.startsWith('https://x.com/'),
+      `index.html: x.com link should use https://x.com/ (got "${url}")`
+    );
+  }
+});
+
 // --- sitemap generator correctness (runs against current filesystem) --
 test('sitemap generator excludes every noindex / meta-refresh stub', () => {
   // Invoke the generator in-process by requiring it after writing to a

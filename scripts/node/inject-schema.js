@@ -39,10 +39,7 @@ function getOrganizationSchema() {
     url: SITE_URL,
     logo: `${SITE_URL}/assets/logo.png`,
     description: SITE_DESCRIPTION,
-    sameAs: [
-      'https://twitter.com/goldtickerlive',
-      // Add more social profiles as they become available
-    ],
+    sameAs: ['https://twitter.com/goldtickerlive', 'https://x.com/GoldTickerLive'],
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Customer Service',
@@ -315,10 +312,19 @@ function generateSchemasForPage(filePath, content) {
 function injectSchemas(content, schemas) {
   if (schemas.length === 0) return content;
 
-  // Check if schemas already exist
+  // Remove existing JSON-LD schema blocks (including any trailing blank line).
+  // We strip trailing whitespace from each removal but avoid consuming the
+  // newline that belongs to the NEXT element. Then we collapse multiple blank
+  // lines left behind so each run produces the same result (idempotency).
   if (content.includes('application/ld+json')) {
-    // Remove existing schemas first
-    content = content.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>\s*/gi, '');
+    // Remove each schema block without consuming unrelated trailing content.
+    content = content.replace(
+      /<script type="application\/ld\+json">[\s\S]*?<\/script>[ \t]*\r?\n?/gi,
+      ''
+    );
+    // Collapse 2+ consecutive blank lines (a blank line is an empty or
+    // whitespace-only line between two newlines) down to a single blank line.
+    content = content.replace(/(\n[ \t]*){2,}\n/g, '\n\n');
   }
 
   // Generate schema script tags
@@ -329,16 +335,19 @@ function injectSchemas(content, schemas) {
     })
     .join('\n');
 
-  // Inject before </head>
+  // Inject before </head>, ensuring exactly one blank line separates the last
+  // preceding element from the schema block so the result is consistent.
   const headEndIndex = content.indexOf('</head>');
   if (headEndIndex === -1) {
     console.warn('Warning: No </head> tag found');
     return content;
   }
 
-  return (
-    content.slice(0, headEndIndex) + '\n' + schemaScripts + '\n  ' + content.slice(headEndIndex)
-  );
+  // Trim any trailing whitespace/newlines from the content before </head>,
+  // then add one newline + schemas + newline before </head>.
+  const before = content.slice(0, headEndIndex).trimEnd();
+  const after = content.slice(headEndIndex);
+  return before + '\n' + schemaScripts + '\n  ' + after;
 }
 
 /**

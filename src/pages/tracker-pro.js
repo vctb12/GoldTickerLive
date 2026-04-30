@@ -409,6 +409,14 @@ function populateSelects() {
     el.unit.replaceChildren(frag);
   }
   if (el.language) el.language.value = state.lang;
+  // Sync range pills with persisted state (HTML default is 24H; state default is 30D).
+  if (el.rangePills?.length) {
+    el.rangePills.forEach((p) => {
+      const active = p.dataset.range === state.range;
+      p.classList.toggle('is-active', active);
+      p.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+  }
   if (el.jewelryKarat) {
     const frag = document.createDocumentFragment();
     KARATS.forEach((k) => {

@@ -181,7 +181,7 @@ function t(key) {
 // ── Weight unit conversions (to grams) ─────────────────────────────────────
 const UNIT_TO_GRAMS = {
   gram: 1,
-  oz: 31.1035,
+  oz: CONSTANTS.TROY_OZ_GRAMS,
   kg: 1000,
   tola: 11.6638,
   masha: 0.972,

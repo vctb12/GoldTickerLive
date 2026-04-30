@@ -89,8 +89,12 @@ export function bindCoreEvents() {
   // Range pills
   _el.rangePills?.forEach((pill) => {
     pill.addEventListener('click', () => {
-      _el.rangePills.forEach((p) => p.classList.remove('is-active'));
+      _el.rangePills.forEach((p) => {
+        p.classList.remove('is-active');
+        p.setAttribute('aria-pressed', 'false');
+      });
       pill.classList.add('is-active');
+      pill.setAttribute('aria-pressed', 'true');
       _state.range = pill.dataset.range;
       persistState(_state);
       _cb.renderAll();

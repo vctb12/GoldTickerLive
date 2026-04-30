@@ -590,6 +590,10 @@ function applyLangToPage() {
   }
   setTextById('country-search-empty', tx('countrySearchEmpty'));
 
+  // Karat strip unit toggle group — update aria-label bilingually
+  const unitGroupEl = document.getElementById('kstrip-unit-group');
+  if (unitGroupEl) unitGroupEl.setAttribute('aria-label', tx('unitToggleLabel'));
+
   renderHeroCard();
   renderGCCGrid();
 }
@@ -912,7 +916,10 @@ async function init() {
 
   // Register service worker for offline support
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register(BASE_PATH + 'sw.js').catch(() => {});
+    navigator.serviceWorker
+      .register(BASE_PATH + 'sw.js')
+      .then(() => initSwUpdateToast())
+      .catch(() => {});
   }
 
   // PWA install prompt — capture the beforeinstallprompt event and show a

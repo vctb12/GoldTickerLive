@@ -108,13 +108,94 @@ practical steps for working on Gold Ticker Live.
 ## Testing
 
 ```bash
-npm install           # Required for some test dependencies
-npm test              # Runs 205+ tests
-npm run preflight     # Runs audit-pages + check-links
-npm run seo-audit     # Validates SEO metadata
+npm install           # install dependencies
+npm test              # runs 350+ unit tests
+npm run preflight     # audit-pages + check-links
+npm run seo-audit     # validate SEO metadata
+npm run validate      # DOM-safety, SEO meta, SW coverage, analytics gate
 ```
 
 Tests run with `--test-concurrency=1` to prevent file races on shared JSON data.
+
+---
+
+## Pre-Deploy Checks
+
+Before merging or deploying, run the full gate:
+
+```bash
+npm run pre-deploy          # 11-check gate, exits 1 on any FAIL
+npm run pre-deploy:fast     # same but skips the slow npm test step
+```
+
+Checks performed (in order):
+
+| #   | What                                                          | Severity |
+| --- | ------------------------------------------------------------- | -------- |
+| 1   | `data/gold_price.json` present, valid, and fresh              | critical |
+| 2   | `sitemap.xml` present, ≥ 50 URLs, and ≤ 7 days old            | critical |
+| 3   | `dist/` and core HTML files exist                             | critical |
+| 4   | No `.env` / `secrets.json` checked in                         | critical |
+| 5   | Service-worker registered in `index.html`                     | warning  |
+| 6   | `CNAME` file present and non-empty                            | warning  |
+| 7   | `data/shops-data.json` parseable                              | critical |
+| 8   | `npm run validate` passes (DOM-safety, SEO meta, SW coverage) | critical |
+| 9   | `robots.txt` present and contains `User-agent`                | critical |
+| 10  | `npm test` passes                                             | critical |
+| 11  | Working tree has no uncommitted changes                       | critical |
+
+The script always exits non-zero when any **critical** check fails. Run `npm run build` first to
+populate `dist/`.
+
+---
+
+## Generating a Changelog Entry
+
+```bash
+npm run changelog              # print Conventional Commits grouped by type to stdout
+npm run changelog:write        # prepend to CHANGELOG.md
+npm run changelog -- --since v1.2.3   # since a specific git tag or SHA
+npm run changelog -- --version v1.3.0 # use an explicit version header
+```
+
+Commit messages should follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+feat(tracker): add karat-purity explanation card
+fix(css): dark-mode hover tint on nav icon buttons
+docs: update CONTRIBUTING with pre-deploy section
+chore(ci): pin Node to 20 in ci.yml
+```
+
+Breaking changes use `!` before the colon:
+
+```
+feat(api)!: drop support for legacy price endpoint
+```
+
+The script auto-detects the most recent git tag as the lower bound when no `--since` is supplied. If
+no tags exist it reads the last 200 commits.
+
+---
+
+## Packaging a Release Artifact
+
+```bash
+npm run build                 # build dist/ first
+npm run release:package       # package release → release/ directory
+npm run release:package -- --dry-run  # preview without writing files
+```
+
+Output written to `release/`:
+
+| File                                 | Contents                                                 |
+| ------------------------------------ | -------------------------------------------------------- |
+| `release.json`                       | brand, version, buildSha, buildTimestamp, distFiles list |
+| `CHANGELOG.md`                       | copy of root `CHANGELOG.md`                              |
+| `gold-ticker-live-vX.Y.Z-SHA.tar.gz` | tarball of `dist/` + both above files                    |
+
+**Important:** the script never tags git or publishes anywhere. Promotion (tagging, uploading
+assets) is a human or owner-approved CI step on `main`.
 
 ---
 
