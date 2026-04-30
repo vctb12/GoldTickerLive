@@ -10,6 +10,8 @@ A bilingual gold-price platform built for users who need more than a basic spot 
 live spot-linked pricing, market comparison, calculator tools, historical views, exports, alerts,
 country pages, and Arabic-first accessibility.
 
+> **For coding agents:** see [`AGENTS.md`](AGENTS.md) and the [Agent Prompt Library v2](docs/GOLD_TICKER_LIVE_AGENT_PROMPTS.md).
+
 <p>
   <a href="https://goldtickerlive.com/">
     <img src="https://img.shields.io/badge/Live%20Site-Open%20Now-C9A227?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Site" />
