@@ -358,6 +358,24 @@ export const TRANSLATIONS = {
     'home.nextSvrDesc':
       'Learn why live spot-linked estimates are not final jewelry or shop prices.',
     'home.nextSvrCta': 'Understand the difference →',
+
+    /* ── 404 / Not-found page (not-found.js) ── */
+    'notfound.heading': "We couldn't find that page",
+    'notfound.desc': "Here's what's nearby:",
+    'notfound.search.placeholder': 'Search gold prices, karats, countries…',
+    'notfound.search.btn': 'Search',
+    'notfound.nav.primary.label': 'Likely destinations',
+    'notfound.nav.secondary.label': 'More pages',
+    'notfound.link.tracker': 'Live Price Tracker',
+    'notfound.link.tracker.desc': 'Current prices for 24+ countries',
+    'notfound.link.calculator': 'Gold Calculator',
+    'notfound.link.calculator.desc': 'Estimate value, scrap payout & Zakat',
+    'notfound.link.countries': 'Browse Countries',
+    'notfound.link.countries.desc': 'All 24+ dedicated market pages',
+    'notfound.link.search': 'Search the site',
+    'notfound.link.search.desc': 'Find any page or country',
+    'notfound.freshness.label': 'Reference price',
+    'notfound.freshness.via': 'See live tracker →',
   },
   ar: {
     'header.title': 'أسعار الذهب المباشرة',
@@ -713,5 +731,23 @@ export const TRANSLATIONS = {
     'home.nextSvrDesc':
       'تعرف على سبب اختلاف التقديرات الفورية عن الأسعار النهائية في محلات المجوهرات.',
     'home.nextSvrCta': 'افهم الفرق ←',
+
+    /* ── 404 / Not-found page (not-found.js) ── */
+    'notfound.heading': 'لم نعثر على هذه الصفحة',
+    'notfound.desc': 'إليك ما هو قريب:',
+    'notfound.search.placeholder': 'ابحث عن أسعار الذهب والعيارات والدول…',
+    'notfound.search.btn': 'بحث',
+    'notfound.nav.primary.label': 'الوجهات الأكثر زيارة',
+    'notfound.nav.secondary.label': 'صفحات أخرى',
+    'notfound.link.tracker': 'تتبع الأسعار المباشر',
+    'notfound.link.tracker.desc': 'الأسعار الحالية لأكثر من 24 دولة',
+    'notfound.link.calculator': 'حاسبة الذهب',
+    'notfound.link.calculator.desc': 'احسب القيمة والعائد والزكاة',
+    'notfound.link.countries': 'تصفح الدول',
+    'notfound.link.countries.desc': 'جميع صفحات الأسواق — أكثر من 24 دولة',
+    'notfound.link.search': 'بحث في الموقع',
+    'notfound.link.search.desc': 'ابحث عن أي صفحة أو دولة',
+    'notfound.freshness.label': 'السعر المرجعي',
+    'notfound.freshness.via': 'انظر المتتبع المباشر ←',
   },
 };

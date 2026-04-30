@@ -13,12 +13,17 @@ them into the right section here before execution. Agent operating rules are in
 - Keep completed items as `[x]` with enough context to serve as a record. Don't re-open closed items
   to pad status; don't invent new phases to look ambitious.
 
-**Last updated:** 2026-04-30 (Round 15 — prefers-reduced-motion guards added to shops.css,
-calculator.css, invest.css, tracker-pro.css; WCAG 2.5.5 touch target pass — all interactive elements
-raised to ≥44px across global.css, shops.css, calculator.css, tracker-pro.css, invest.css; complete
-canonical token sweep removing all legacy `--color-surface` / `--color-border-subtle` /
-`--color-text` / `--color-text-muted` fallback overrides across home.css, shops.css, calculator.css,
-stub.css, order.css, global.css).
+**Last updated:** 2026-04-30 (Round 16 — 404 page redesigned with live freshness pill, bilingual
+EN/AR, search pre-fill, primary-intent card links, and analytics error logging; `_redirects`
+extended with clean-URL aliases, country shorthands, and legacy guide slug redirects; `not-found.js`
+fully rewritten; `translations.js` extended with `notfound.*` key family in both locales).
+
+Previous: Round 15 — prefers-reduced-motion guards added to shops.css, calculator.css, invest.css,
+tracker-pro.css; WCAG 2.5.5 touch target pass — all interactive elements raised to ≥44px across
+global.css, shops.css, calculator.css, tracker-pro.css, invest.css; complete canonical token sweep
+removing all legacy `--color-surface` / `--color-border-subtle` / `--color-text` /
+`--color-text-muted` fallback overrides across home.css, shops.css, calculator.css, stub.css,
+order.css, global.css).
 
 ### 2026-04-27 full-site UX/admin/content revamp intake
 
@@ -53,6 +58,24 @@ Live brand consistency.
       management improved.
 - [x] Sitemap/SEO inventory refresh and full validation (2026-04-27): `npm run validate` clean, 497
       URLs in sitemap, 0 errors.
+- [x] **404 page + redirects overhaul (2026-04-30, Round 16):**
+  - `404.html` redesigned: friendly heading ("We couldn't find that page"), primary 4-intent card
+    links (tracker / calculator / countries / search), secondary chip links, live reference-price
+    pill (reads local cache, shows XAU/USD with freshness age), search input pre-filled with failing
+    slug, bilingual EN/AR via `data-tx` attributes, `prefers-reduced-motion` guards, WCAG 2.5.5
+    touch targets (min-height 44px).
+  - `not-found.js` fully rewritten: language detection from `user_prefs` localStorage, DOM
+    translation apply, slug pre-fill, freshness pill render, analytics `error { type:'404', where }`
+    event, global `window.addEventListener('error')` for SPA render errors.
+  - `translations.js` extended: `notfound.*` key family (heading, desc, search, nav labels, 4
+    primary link title+desc, freshness label+via) in both EN and AR.
+  - `_redirects` extended with: clean URL aliases for all top-level `.html` pages (tracker,
+    calculator, shops, learn, methodology, insights, invest, pricing, privacy, terms, offline);
+    ISO-2 and common country-code shorthands (`/uae`, `/ksa`, `/kw`, `/qa`, `/bh`, `/om`, `/eg`,
+    `/jo`, `/lb`, `/tr`, `/pk`, `/in`) → canonical `/countries/<slug>/`; legacy guide slug aliases
+    (`/faq`, `/search`, `/compare`, `/guides`, `/gold-history`, `/making-charges`,
+    `/spot-vs-retail`, `/uae-guide`, `/dubai-guide`, `/22k`, `/24k`, `/best-rates`, `/news`,
+    `/submit-shop`). No indexed canonical URLs are self-redirected; no redirect loops introduced.
 
 | §      | Owns                                                       | Absorbed from                                                     |
 | ------ | ---------------------------------------------------------- | ----------------------------------------------------------------- |
