@@ -1,4 +1,4 @@
-# Supabase Mastery Guide — Gold-Prices Platform
+# Supabase Mastery Guide — Gold Ticker Live
 
 > **This is your single source of truth for everything Supabase in this project.** Read it top to
 > bottom the first time. After that, use the Table of Contents to jump to the section you need.
@@ -581,7 +581,7 @@ updated_at  timestamptz
 updated_by  text
 
 -- Example value:
--- { "darkMode": true, "orderGold": false, "priceAlerts": true, "siteName": "Gold Prices" }
+-- { "darkMode": true, "orderGold": false, "priceAlerts": true, "siteName": "Gold Ticker Live" }
 ```
 
 ### `pricing_overrides`

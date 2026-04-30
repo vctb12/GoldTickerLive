@@ -498,9 +498,29 @@
       function eventBadge(type) {
         const cls =
           {
+            // New standardized event catalog
+            page_view: 'badge-pageview',
+            tracker_view: 'badge-pageview',
+            karat_change: 'badge-click',
+            country_change: 'badge-click',
+            unit_change: 'badge-click',
+            currency_change: 'badge-click',
+            calculator_use: 'badge-click',
+            tool_use: 'badge-click',
+            share_click: 'badge-click',
+            copy_click: 'badge-click',
+            alert_set: 'badge-order',
+            alert_clear: 'badge-click',
+            newsletter_subscribe: 'badge-order',
+            search_query: 'badge-search',
+            search_open: 'badge-search',
+            theme_change: 'badge-click',
+            lang_change: 'badge-click',
+            outbound_click: 'badge-click',
+            error: 'badge-error',
+            // Legacy event names (backward compat)
             pageview: 'badge-pageview',
             click: 'badge-click',
-            error: 'badge-error',
             search: 'badge-search',
             order: 'badge-order',
           }[type] || 'badge-default';
@@ -521,7 +541,7 @@
           <div class="card-body empty-state-page">
             <div class="empty-icon">📊</div>
             <h2>No analytics data yet</h2>
-            <p>Visit your public Gold Prices pages to start collecting analytics data.
+            <p>Visit your public Gold Ticker Live pages to start collecting analytics data.
                Events like page views, searches, and clicks are automatically tracked when the analytics module is loaded.</p>
             <p style="margin-top:12px;">Data is stored in Supabase (with localStorage cache) and displayed here.</p>
             <div style="margin-top:20px;">
@@ -537,7 +557,8 @@
       /* ── Full dashboard ─────────────────────────────────────── */
       async function renderDashboard(events) {
         const content = document.getElementById('main-content');
-        const pageviews = events.filter((e) => e.event === 'pageview');
+        // Accept both legacy 'pageview' and new 'page_view' event names
+        const pageviews = events.filter((e) => e.event === 'page_view' || e.event === 'pageview');
         const totalViews = pageviews.length;
 
         // Unique sessions

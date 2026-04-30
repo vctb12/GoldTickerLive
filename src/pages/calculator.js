@@ -15,6 +15,7 @@ import { injectSpotBar, updateSpotBar, updateSpotBarLang } from '../components/s
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { renderAdSlot } from '../components/adSlot.js';
 import { el, clear } from '../lib/safe-dom.js';
+import { track, EVENTS } from '../lib/analytics.js';
 
 /**
  * Helper: render a list of {label, value} rows into a container using safe
@@ -180,7 +181,7 @@ function t(key) {
 // ── Weight unit conversions (to grams) ─────────────────────────────────────
 const UNIT_TO_GRAMS = {
   gram: 1,
-  oz: 31.1035,
+  oz: CONSTANTS.TROY_OZ_GRAMS,
   kg: 1000,
   tola: 11.6638,
   masha: 0.972,
@@ -215,6 +216,14 @@ function getPurityForKarat(code) {
   const n = parseInt(code, 10);
   if (n > 0 && n <= 24) return n / 24;
   return 1;
+}
+
+// ── Analytics debounce ───────────────────────────────────────────────────────
+// Debounce calculator_use events so rapid keystrokes produce only one event.
+const _calcUseTimers = {};
+function _trackCalcUse(tool, params) {
+  clearTimeout(_calcUseTimers[tool]);
+  _calcUseTimers[tool] = setTimeout(() => track(EVENTS.CALCULATOR_USE, params), 1000);
 }
 
 // ── Calculator 1: Value ─────────────────────────────────────────────────────
@@ -261,6 +270,12 @@ function calcValue() {
   ]);
 
   result.hidden = false;
+  _trackCalcUse('value', {
+    weight: weightGrams,
+    unit: 'gram',
+    karat,
+    currency,
+  });
 }
 
 // ── Calculator 2: Scrap ─────────────────────────────────────────────────────
@@ -557,6 +572,8 @@ function updateSpotBadge() {
 
 // ── Tab switching ────────────────────────────────────────────────────────────
 function setupTabs() {
+  // Map calc tab data-calc values to tool names
+  const TOOL_MAP = { value: 'weight', zakat: 'zakat', scrap: 'weight', buying: 'weight', convert: 'weight' };
   document.querySelectorAll('.calc-tab').forEach((btn) => {
     btn.addEventListener('click', () => {
       const target = btn.dataset.calc;
@@ -569,6 +586,7 @@ function setupTabs() {
         p.classList.toggle('active', isTarget);
         p.hidden = !isTarget;
       });
+      track(EVENTS.TOOL_USE, { tool: TOOL_MAP[target] || target });
     });
   });
 }
@@ -711,6 +729,7 @@ function initCopyBtn() {
       .then(() => {
         const orig = b.textContent;
         b.textContent = '✓ Copied';
+        track(EVENTS.COPY_CLICK, { surface: 'calculator', value_type: 'result' });
         setTimeout(() => {
           b.textContent = orig;
         }, 2000);
@@ -757,6 +776,8 @@ async function init() {
 
   await fetchLiveData();
   setInterval(fetchLiveData, CONSTANTS.GOLD_REFRESH_MS);
+
+  track(EVENTS.PAGE_VIEW, { path: location.pathname, locale: STATE.lang });
 }
 
 init();

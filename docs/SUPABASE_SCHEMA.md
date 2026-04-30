@@ -1,6 +1,6 @@
 # Supabase Database Schema
 
-This document contains all SQL migrations for the Gold Prices platform roadmap features.
+This document contains all SQL migrations for the Gold Ticker Live roadmap features.
 
 ## Public Shop Submissions
 

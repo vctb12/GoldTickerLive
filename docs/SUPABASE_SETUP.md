@@ -1,6 +1,6 @@
 # Supabase Setup Guide
 
-This document explains how to connect the Gold Prices platform to Supabase for persistent storage,
+This document explains how to connect Gold Ticker Live to Supabase for persistent storage,
 authentication, and future backend functionality.
 
 ---
