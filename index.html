@@ -302,25 +302,28 @@
               class="kstrip-unit-toggle"
               role="group"
               id="kstrip-unit-group"
-              aria-label="Price unit"
+              aria-label="Select price unit"
             >
               <button
                 class="kstrip-unit-btn"
                 data-unit="gram"
                 type="button"
                 aria-pressed="true"
+                title="Price per gram"
               >g</button>
               <button
                 class="kstrip-unit-btn"
                 data-unit="tola"
                 type="button"
                 aria-pressed="false"
+                title="Price per tola (11.66 g)"
               >tola</button>
               <button
                 class="kstrip-unit-btn"
                 data-unit="oz"
                 type="button"
                 aria-pressed="false"
+                title="Price per troy ounce (31.10 g)"
               >oz</button>
             </div>
           </div>
@@ -412,7 +415,7 @@
             </div>
           </div>
           <div class="karat-strip-actions">
-            <span class="karat-strip-updated" id="karat-strip-updated">Loading freshness…</span>
+            <span class="karat-strip-updated" id="karat-strip-updated" aria-live="polite">Loading freshness…</span>
             <a href="tracker.html" class="karat-strip-link" id="karat-strip-cta">Full tracker →</a>
           </div>
         </div>
@@ -508,13 +511,14 @@
             <a href="tracker.html" class="section-link" id="gcc-see-all"></a>
           </div>
           <!-- Region tabs for filtering prices -->
-          <div class="gcc-region-tabs" role="tablist" aria-label="Price region filter">
+          <div class="gcc-region-tabs" role="tablist" aria-label="Filter gold prices by region">
             <button
               class="gcc-region-tab is-active"
               data-region="gcc"
               role="tab"
               aria-selected="true"
               aria-controls="gcc-quick-grid"
+              id="gcc-tab-gcc"
             >
               GCC (6)
             </button>
@@ -524,6 +528,7 @@
               role="tab"
               aria-selected="false"
               aria-controls="gcc-quick-grid"
+              id="gcc-tab-mena"
             >
               MENA (8+)
             </button>
@@ -533,6 +538,7 @@
               role="tab"
               aria-selected="false"
               aria-controls="gcc-quick-grid"
+              id="gcc-tab-global"
             >
               Global (24+)
             </button>
@@ -879,7 +885,7 @@
             Daily gold price updates on X &mdash; GCC &amp; Arab world
           </p>
           <a
-            href="https://x.com/Gold Ticker Live"
+            href="https://x.com/GoldTickerLive"
             target="_blank"
             rel="noopener noreferrer"
             class="btn btn-primary home-social-btn"
