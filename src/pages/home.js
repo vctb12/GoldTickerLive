@@ -589,6 +589,10 @@ function applyLangToPage() {
   }
   setTextById('country-search-empty', tx('countrySearchEmpty'));
 
+  // Karat strip unit toggle group — update aria-label bilingually
+  const unitGroupEl = document.getElementById('kstrip-unit-group');
+  if (unitGroupEl) unitGroupEl.setAttribute('aria-label', tx('unitToggleLabel'));
+
   renderHeroCard();
   renderGCCGrid();
 }
