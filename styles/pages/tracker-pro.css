@@ -848,7 +848,7 @@ body.tracker-pro-page {
   font-weight: var(--weight-semibold);
   font-family: inherit;
   cursor: pointer;
-  min-height: 40px;
+  min-height: 44px;
   white-space: nowrap;
   text-align: center;
   transition:
@@ -919,7 +919,7 @@ body.tracker-pro-page {
   font-size: 0.75rem;
   font-weight: var(--weight-semibold);
   padding: 0.4rem 0.8rem;
-  min-height: 36px;
+  min-height: 44px;
   background: rgb(196 154 68 / 7%);
   border: 1px solid rgb(196 154 68 / 22%);
   border-radius: var(--radius-md);
@@ -1097,7 +1097,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
   color: var(--tp-text-muted);
   white-space: nowrap;
   cursor: pointer;
-  min-height: 34px;
+  min-height: 44px;
   transition: all 0.18s var(--ease-out);
 }
 
@@ -1139,7 +1139,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
 .tracker-chip {
   border: 1px solid var(--tp-border);
   background: var(--tp-panel);
-  min-height: 38px;
+  min-height: 44px;
   padding: 0.3rem 0.75rem;
   border-radius: var(--radius-pill);
   font-size: 0.76rem;
@@ -1188,7 +1188,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
 .tracker-field input,
 .tracker-search input {
   width: 100%;
-  min-height: 42px;
+  min-height: 44px;
   padding: 0 0.85rem;
   border-radius: var(--tp-radius-sm);
   border: 1px solid var(--tp-border);
@@ -1591,7 +1591,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
 .tracker-market-links a,
 .tracker-market-links button,
 .tracker-icon-btn {
-  min-height: 36px;
+  min-height: 44px;
   border-radius: var(--radius-pill);
   border: 1px solid var(--tp-border);
   background: var(--tp-panel);
@@ -1691,7 +1691,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
   font-weight: var(--weight-bold);
   color: var(--tp-text-muted);
   cursor: pointer;
-  min-height: 34px;
+  min-height: 44px;
   transition: all 0.16s var(--ease-out);
   font-family: inherit;
 }
@@ -1807,7 +1807,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
 .tracker-wire-pause {
   border: 1px solid var(--tp-border);
   background: var(--tp-panel);
-  min-height: 36px;
+  min-height: 44px;
   padding: 0.3rem 0.7rem;
   border-radius: var(--radius-pill);
   font-size: 0.76rem;
@@ -2662,7 +2662,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
 
 .tp-control-select {
   width: 100%;
-  min-height: 42px;
+  min-height: 44px;
   padding: 0 0.85rem;
   border-radius: var(--tp-radius-sm);
   border: 1px solid var(--tp-border);
@@ -3019,7 +3019,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
     flex-shrink: 0;
     padding: 0.5rem 0.65rem;
     font-size: 0.78rem;
-    min-height: 40px;
+    min-height: 44px;
   }
 
   .tp-tab-label {
@@ -3079,7 +3079,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
   }
 
   .tracker-badge {
-    min-height: 40px;
+    min-height: 44px;
     font-size: 0.72rem;
   }
 
