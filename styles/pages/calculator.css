@@ -636,13 +636,13 @@
 .calc-related-title {
   font-weight: 700;
   font-size: 0.95rem;
-  color: var(--color-text, #1a1612);
+  color: var(--text-primary);
   margin-bottom: 0.2rem;
 }
 
 .calc-related-desc {
   font-size: 0.84rem;
-  color: var(--color-text-muted, #6b5f4e);
+  color: var(--text-secondary);
   line-height: 1.45;
 }
 
@@ -664,7 +664,7 @@
 .calc-presets-label {
   font-size: 0.74rem;
   font-weight: 700;
-  color: var(--color-text-muted, #6b5f4e);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   flex-shrink: 0;
@@ -678,7 +678,7 @@
   padding: 0.28rem 0.75rem;
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--color-text-muted, #6b5f4e);
+  color: var(--text-secondary);
   cursor: pointer;
   transition:
     background 0.15s,
@@ -726,7 +726,7 @@
 .calc-result-label {
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--color-text-muted, #6b5f4e);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -750,7 +750,7 @@
   border-radius: var(--radius-pill, 999px);
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--color-text-muted, #6b5f4e);
+  color: var(--text-secondary);
   font-family: var(--font-main);
   cursor: pointer;
   transition:
@@ -834,7 +834,7 @@
   font-family: var(--font-main);
   font-size: 0.88rem;
   font-weight: 600;
-  color: var(--color-text-muted, #6b5f4e);
+  color: var(--text-secondary);
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;

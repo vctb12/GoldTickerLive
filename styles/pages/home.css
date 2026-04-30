@@ -89,7 +89,7 @@
   padding: 0.35rem 1rem;
   font-size: 0.76rem;
   font-weight: var(--weight-bold);
-  color: var(--color-gold-light, #e5c96e);
+  color: var(--color-gold-light);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   margin-bottom: 1.4rem;
@@ -200,15 +200,15 @@
 
 /* Hero primary: gold background with dark text (for dark hero bg) */
 .hero .btn-primary {
-  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-light, #e5c96e) 100%);
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-light) 100%);
   color: #1e0e03;
   border-color: var(--color-gold);
   text-shadow: 0 1px 0 rgb(255 255 255 / 15%);
 }
 
 .hero .btn-primary:hover {
-  background: linear-gradient(135deg, var(--color-gold-light, #e5c96e) 0%, #f0d070 100%);
-  border-color: var(--color-gold-light, #e5c96e);
+  background: linear-gradient(135deg, var(--color-gold-light) 0%, #f0d070 100%);
+  border-color: var(--color-gold-light);
   color: #1a0c02;
   text-decoration: none;
   transform: translateY(-2px);
@@ -297,7 +297,7 @@
 .hlc-title {
   font-size: 0.72rem;
   font-weight: var(--weight-bold);
-  color: var(--color-gold-light, #e5c96e);
+  color: var(--color-gold-light);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -306,7 +306,7 @@
   font-size: 0.68rem;
   font-weight: var(--weight-bold);
   background: rgb(196 153 62 / 18%);
-  color: var(--color-gold-light, #e5c96e);
+  color: var(--color-gold-light);
   border: 1px solid rgb(196 153 62 / 32%);
   border-radius: var(--radius-pill);
   padding: 0.15rem 0.6rem;
@@ -421,7 +421,7 @@
 .hlc-item-val {
   font-size: 0.95rem;
   font-weight: var(--weight-bold);
-  color: var(--color-gold-light, #e5c96e);
+  color: var(--color-gold-light);
   font-variant-numeric: tabular-nums;
 }
 
@@ -530,7 +530,7 @@
 }
 
 .hlc-tracker-link:hover {
-  color: var(--color-gold-light, #e5c96e);
+  color: var(--color-gold-light);
   text-decoration: none;
 }
 
@@ -644,7 +644,7 @@
 }
 
 .karat-strip-link:hover {
-  color: var(--color-gold-light, #e5c96e);
+  color: var(--color-gold-light);
 }
 
 @media (width <= 480px) {

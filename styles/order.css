@@ -481,7 +481,7 @@
 .order-partners-title {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--color-text, #1a1a1a);
+  color: var(--text-primary);
   margin: 0 0 0.35rem;
 }
 
@@ -530,7 +530,7 @@
 .order-partner-name {
   font-size: 0.875rem;
   font-weight: 700;
-  color: var(--color-text, #1a1a1a);
+  color: var(--text-primary);
 }
 
 .order-partner-desc {

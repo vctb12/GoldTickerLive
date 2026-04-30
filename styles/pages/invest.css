@@ -905,6 +905,13 @@ body.invest-page {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .invest-skeleton {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
 @media (width <= 1080px) {
   .invest-hero-grid,
   .invest-planner {

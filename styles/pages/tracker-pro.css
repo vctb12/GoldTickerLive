@@ -1790,6 +1790,12 @@ body.tracker-workspace-basic .tracker-advanced-only {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .tracker-wire-track {
+    animation: none;
+  }
+}
+
 .tracker-wire-actions {
   display: flex;
   gap: 0.4rem;
@@ -2143,6 +2149,12 @@ body.tracker-workspace-basic .tracker-advanced-only {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .tracker-skeleton {
+    animation: none;
+  }
+}
+
 /* ── Source badges ────────────────────────────────────────────────────────── */
 
 .tracker-source-badge {
@@ -2267,6 +2279,12 @@ body.tracker-workspace-basic .tracker-advanced-only {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tracker-toast {
+    animation: none;
   }
 }
 
