@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtDate": "2026-04-28",
+  "generatedAtDate": "2026-04-30",
   "summary": {
     "totalHtmlFiles": 653,
     "withCanonical": 651,
@@ -23244,7 +23244,7 @@
       "exempt": true,
       "lang": "en",
       "dir": "ltr",
-      "title": "Offline Gold Prices — Gold Ticker Live",
+      "title": "Offline — Gold Ticker Live",
       "metaDescription": null,
       "canonical": null,
       "robots": "noindex",

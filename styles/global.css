@@ -188,6 +188,18 @@
   --color-white: #fff;
   --color-black: #000;
 
+  /* Semantic aliases — consolidate page-level references to a single name.
+     These are the canonical tokens for features that were previously using
+     ad-hoc var() with incorrect / dark-theme fallback values. */
+  --color-accent: var(--color-gold-dark); /* primary accent text (light mode) */
+  --color-accent-strong: var(--color-gold-bright); /* bright accent (dark mode override) */
+  --color-surface-1: var(--color-surface); /* backward-compat alias for --surface-primary */
+  --color-surface-raised: var(--color-surface-2); /* slightly elevated surface */
+  --color-text-secondary: var(--color-text-muted); /* secondary body text alias */
+  --color-gold-alpha: rgb(196 153 62 / 12%); /* subtle gold tint for callout backgrounds */
+  --color-amber: #f59e0b; /* warm amber — freshness "cached / slightly stale" states */
+  --color-danger: #dc2626; /* danger red — freshness "very stale / unavailable" states */
+
   /* Transitions — luxury easing */
   --transition: 0.2s ease;
   --transition-md: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -245,6 +257,12 @@
   --border-subtle: #2e2518;
   --border-strong: #4a3a28;
   --gradient-surface: linear-gradient(180deg, #1a1510 0%, #181208 100%);
+
+  /* Semantic alias overrides for dark mode */
+  --color-accent: var(--color-gold-light);
+  --color-accent-strong: var(--color-gold-bright);
+  --color-surface-raised: var(--color-surface-2);
+  --color-text-secondary: var(--color-text-muted);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -274,6 +292,12 @@
     --border-subtle: #2e2518;
     --border-strong: #4a3a28;
     --gradient-surface: linear-gradient(180deg, #1a1510 0%, #181208 100%);
+
+    /* Semantic alias overrides for dark mode */
+    --color-accent: var(--color-gold-light);
+    --color-accent-strong: var(--color-gold-bright);
+    --color-surface-raised: var(--color-surface-2);
+    --color-text-secondary: var(--color-text-muted);
   }
 }
 

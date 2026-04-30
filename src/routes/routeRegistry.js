@@ -1,6 +1,6 @@
 /**
  * routes/routeRegistry.js
- * Defines all valid route patterns for the Gold-Prices platform.
+ * Defines all valid route patterns for the Gold Ticker Live platform.
  * Used by the page generator, breadcrumb, and internal links components.
  */
 import { COUNTRIES } from '../config/countries.js';
