@@ -17,8 +17,9 @@ on:
     - cron: '3 21 * * 5'       # Market CLOSE — after the 21:00 UTC fetch
   workflow_dispatch:
 
+# Least-privilege default; the posting job elevates to write for the state commit.
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   # Serialize tweet runs so two crons can't race on the state-file commit.
@@ -30,13 +31,15 @@ jobs:
     name: Post gold price to X / Twitter (Python)
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
         with:
           python-version: '3.11'
           cache: pip
@@ -52,12 +55,11 @@ jobs:
           TWITTER_ACCESS_TOKEN:        ${{ secrets.ACCESS_TOKEN }}
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
           GITHUB_EVENT_SCHEDULE:       ${{ github.event.schedule }}
-        run: |
-          python scripts/python/post_gold_price.py
-          echo "Exit code: $?"
+        run: python scripts/python/post_gold_price.py
 
       - name: Commit last price state
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [ -f data/last_gold_price.json ]; then
