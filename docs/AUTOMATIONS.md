@@ -127,6 +127,20 @@ price-change, and duplicate-content guards; they are not force posts.
 - Market open/close tweets use explicit cron entries so delayed GitHub scheduled starts do not
   repeat event tweets throughout the hour.
 
+### 8a. Gold provider bakeoff & migration (infrastructure only)
+
+The provider-adapter pipeline (`scripts/python/fetch_gold_price.py`,
+`scripts/python/provider_bakeoff.py`, `scripts/python/provider_scorecard.py`,
+`scripts/python/tweet_guard.py`) and its workflows
+(`gold-provider-bakeoff.yml`, `test-gold-providers.yml`) are landed but **not** wired into
+production. Legacy GoldPriceZ remains the active path until you flip it.
+
+Before activating, fill in the operator checklist:
+[`docs/operator-inputs-gold-provider-bakeoff.md`](./operator-inputs-gold-provider-bakeoff.md).
+See also [`gold-price-provider-bakeoff.md`](./gold-price-provider-bakeoff.md),
+[`gold-price-provider-migration.md`](./gold-price-provider-migration.md), and
+[`x-automation-duplicate-policy.md`](./x-automation-duplicate-policy.md).
+
 ### 9. Market events — `market_events.yml`
 
 Posts session open/close alerts (e.g. London open, New York close) to X/Twitter.
