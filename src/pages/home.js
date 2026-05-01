@@ -129,6 +129,12 @@ function setTextById(id, text) {
   if (target) target.textContent = text;
 }
 
+function formatCountrySearchEmpty(query = '') {
+  const trimmed = query.trim();
+  if (!trimmed) return tx('countrySearchEmpty');
+  return tx('countrySearchEmptyQuery').replace('{query}', trimmed);
+}
+
 function getFreshnessMeta() {
   const freshness = getLiveFreshness({
     updatedAt: goldUpdatedAt,
@@ -172,7 +178,7 @@ function startFreshnessTimer() {
     const { ageText, sourceText, key } = getFreshnessMeta();
     const ageClass = freshnessAgeClass(getLiveFreshness({ updatedAt: goldUpdatedAt, lang }).ageMs);
     const hlcText = `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`;
-    const kstripText = `${tx('updated')}: ${ageText} · ${sourceText}`;
+    const kstripText = `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`;
     const hlcEl = document.getElementById('hlc-updated');
     if (hlcEl && hlcText !== prevHlcText) {
       hlcEl.textContent = hlcText;
@@ -236,11 +242,14 @@ function renderHeroCard() {
   }
   const kstripUpdatedEl = document.getElementById('karat-strip-updated');
   if (kstripUpdatedEl) {
-    kstripUpdatedEl.textContent = `${tx('updated')}: ${ageText} · ${sourceText}`;
+    kstripUpdatedEl.textContent = `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`;
     kstripUpdatedEl.dataset.freshnessKey = key;
     kstripUpdatedEl.dataset.freshnessAge = ageClass;
   } else {
-    setTextById('karat-strip-updated', `${tx('updated')}: ${ageText} · ${sourceText}`);
+    setTextById(
+      'karat-strip-updated',
+      `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`
+    );
   }
 
   // Change vs day open
@@ -588,7 +597,7 @@ function applyLangToPage() {
     countrySearchInput.placeholder = tx('countrySearchPlaceholder');
     countrySearchInput.setAttribute('aria-label', tx('countrySearchPlaceholder'));
   }
-  setTextById('country-search-empty', tx('countrySearchEmpty'));
+  setTextById('country-search-empty', formatCountrySearchEmpty(countrySearchInput?.value || ''));
 
   // Karat strip unit toggle group — update aria-label bilingually
   const unitGroupEl = document.getElementById('kstrip-unit-group');
@@ -619,7 +628,17 @@ async function fetchLiveData() {
       priceEl.textContent = '—';
     }
     const updEl = document.getElementById('hlc-updated');
-    if (updEl) updEl.textContent = tx('priceUnavailableApi');
+    if (updEl) {
+      updEl.textContent = tx('priceUnavailableApi');
+      updEl.dataset.freshnessKey = 'unavailable';
+      updEl.dataset.freshnessAge = 'unavailable';
+    }
+    const karatUpdEl = document.getElementById('karat-strip-updated');
+    if (karatUpdEl) {
+      karatUpdEl.textContent = tx('priceUnavailableApi');
+      karatUpdEl.dataset.freshnessKey = 'unavailable';
+      karatUpdEl.dataset.freshnessAge = 'unavailable';
+    }
     document.getElementById('hero-live-card')?.removeAttribute('aria-busy');
   }
 
@@ -666,7 +685,10 @@ function initCountrySearch() {
       link.classList.toggle('country-tile--filtered', hide);
       if (!hide) visible++;
     });
-    if (emptyState) emptyState.hidden = !query || visible > 0;
+    if (emptyState) {
+      emptyState.hidden = !query || visible > 0;
+      if (query && visible === 0) emptyState.textContent = formatCountrySearchEmpty(q);
+    }
     return { query, visible };
   }
 
@@ -932,7 +954,17 @@ async function init() {
       priceEl.classList.remove('hlc-price--loading');
       priceEl.textContent = '—';
       const updEl = document.getElementById('hlc-updated');
-      if (updEl) updEl.textContent = tx('priceUnavailableConnection');
+      if (updEl) {
+        updEl.textContent = tx('priceUnavailableConnection');
+        updEl.dataset.freshnessKey = 'unavailable';
+        updEl.dataset.freshnessAge = 'unavailable';
+      }
+      const karatUpdEl = document.getElementById('karat-strip-updated');
+      if (karatUpdEl) {
+        karatUpdEl.textContent = tx('priceUnavailableConnection');
+        karatUpdEl.dataset.freshnessKey = 'unavailable';
+        karatUpdEl.dataset.freshnessAge = 'unavailable';
+      }
       document.getElementById('hero-live-card')?.removeAttribute('aria-busy');
     }
     // GCC grid skeleton timeout

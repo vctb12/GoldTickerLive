@@ -1775,6 +1775,21 @@ Only `ci.yml` blocks merges. See `.github/workflows/README.md`.
 _Absorbs `docs/execution-log.md`. Snapshot of completed phases of the earlier multi-phase audit. The
 active progress tracking continues in §17 (current revamp) and §22 (production tracks)._
 
+### 2026-05-01 — homepage + tracker trust / mobile polish ✅
+
+- Homepage hero copy now frames prices as spot-linked reference prices before retail premiums,
+  making charges, and tax. The live-card announcement surface moved to the freshness line instead of
+  the whole hero card, and country search now shows a query-aware empty state.
+- Tracker trust copy now distinguishes spot (GoldPriceZ snapshots) from FX (`open.er-api.com`) and
+  localizes static hero / toolbar / quick-tools / countdown / offline text in EN + AR. Unavailable
+  freshness states now fall back to human wording instead of `—`-style timestamps.
+- Shared breadcrumbs now localize labels from the active document language and replace prior mounts
+  instead of appending duplicates. Shared footer freshness wording is clearer (`Gold updated`,
+  `Data sync`) and the brand link aria-label is localized.
+- Verification in this pass: `npm test`, `npm run lint`, `npm run validate`, `npm run build`, and
+  `npm run check-links` passed. `npm run quality` still fails on unrelated repo-wide Prettier drift
+  in untouched files.
+
 ### Phase 0 — Repository audit + PR reconciliation ✅
 
 - **0A — Git history & PR audit.** 95 PRs analysed (1 open: PR #77 — revert, no longer needed). ≈ 95

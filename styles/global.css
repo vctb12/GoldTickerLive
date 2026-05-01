@@ -1221,6 +1221,7 @@ body.has-spot-bar .site-nav {
   list-style: none;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   gap: 0.4rem;
   font-size: var(--text-sm);
@@ -1257,6 +1258,10 @@ body.has-spot-bar .site-nav {
 [dir='rtl'] .breadcrumbs-item:not(:last-child)::after {
   content: '‹';
   margin-inline: 0 0.4rem;
+}
+
+[dir='rtl'] .breadcrumbs-list {
+  justify-content: flex-end;
 }
 
 @media (width <= 640px) {
@@ -1476,6 +1481,10 @@ body.has-spot-bar .site-nav {
   flex-wrap: wrap;
   font-size: 0.77rem;
   color: rgb(255 255 255 / 45%);
+}
+
+.footer-sources span {
+  overflow-wrap: anywhere;
 }
 
 .footer-sources a {

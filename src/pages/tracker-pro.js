@@ -1,5 +1,5 @@
 // tracker-pro.js — slim orchestrator
-import { CONSTANTS, KARATS, COUNTRIES } from '../config/index.js';
+import { CONSTANTS, KARATS, COUNTRIES, TRANSLATIONS } from '../config/index.js';
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import '../lib/reveal.js';
@@ -25,6 +25,134 @@ let initRender,
 
 const state = createInitialState();
 const el = {};
+
+function trackerTx(key, params = {}) {
+  const fullKey = `tracker.${key}`;
+  const template = TRANSLATIONS[state.lang]?.[fullKey] ?? TRANSLATIONS.en?.[fullKey] ?? fullKey;
+  return Object.entries(params).reduce(
+    (text, [token, value]) => text.replaceAll(`{${token}}`, String(value)),
+    template
+  );
+}
+
+function setInlineLinkText(node, beforeText, href, linkText) {
+  if (!node) return;
+  const link = document.createElement('a');
+  link.href = href;
+  link.className = 'tracker-inline-link';
+  link.textContent = linkText;
+  node.replaceChildren(beforeText, ' ', link);
+}
+
+function setButtonCopy(button, label, icon = null) {
+  if (!button) return;
+  const children = [];
+  if (icon) {
+    const iconSpan = document.createElement('span');
+    iconSpan.setAttribute('aria-hidden', 'true');
+    iconSpan.textContent = icon;
+    children.push(iconSpan, ' ');
+  }
+  children.push(label);
+  button.replaceChildren(...children);
+}
+
+function localizeStaticTrackerCopy() {
+  document.documentElement.lang = state.lang;
+  document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+
+  const trustContent = document.querySelector('.tracker-trust-content');
+  if (trustContent) {
+    const strong = document.createElement('strong');
+    strong.textContent = trackerTx('referenceBannerTitle');
+    const link = document.createElement('a');
+    link.href = 'methodology.html';
+    link.textContent = trackerTx('referenceBannerLink');
+    trustContent.replaceChildren(strong, ` — ${trackerTx('referenceBannerBody')} `, link);
+  }
+
+  const trustClose = document.querySelector('.tracker-trust-close');
+  if (trustClose) {
+    trustClose.setAttribute('aria-label', trackerTx('referenceBannerClose'));
+    trustClose.setAttribute('title', trackerTx('referenceBannerClose'));
+  }
+
+  const titleSub = document.querySelector('.tracker-hero-title-sub');
+  if (titleSub) titleSub.textContent = trackerTx('heroSub');
+  const heroTitle = document.getElementById('tp-hero-title');
+  if (heroTitle && titleSub) {
+    heroTitle.replaceChildren(`${trackerTx('heroTitle')} `, titleSub);
+  }
+
+  setInlineLinkText(
+    document.getElementById('tp-hero-copy'),
+    trackerTx('heroCopy'),
+    'methodology.html#spot-vs-retail',
+    trackerTx('heroCopyLink')
+  );
+
+  setButtonCopy(el.refreshBtn, trackerTx('actions.refresh'), '↻');
+  if (el.refreshBtn) el.refreshBtn.setAttribute('aria-label', trackerTx('actions.refreshLabel'));
+  setButtonCopy(el.shareBtn, trackerTx('actions.copyBrief'));
+  if (el.shareBtn) el.shareBtn.setAttribute('aria-label', trackerTx('actions.copyBriefLabel'));
+  setButtonCopy(el.resetBtn, trackerTx('actions.reset'));
+  if (el.resetBtn) el.resetBtn.setAttribute('aria-label', trackerTx('actions.resetLabel'));
+
+  const jumpChart = document.getElementById('tp-jump-chart');
+  if (jumpChart) {
+    const arrow = document.createElement('span');
+    arrow.setAttribute('aria-hidden', 'true');
+    arrow.textContent = state.lang === 'ar' ? '←' : '↓';
+    jumpChart.replaceChildren(trackerTx('actions.viewChart'), ' ', arrow);
+    jumpChart.setAttribute('aria-label', trackerTx('actions.jumpChartLabel'));
+  }
+
+  const fieldLabels = document.querySelectorAll('.tracker-hero-field .tracker-field-label');
+  const fieldKeys = [
+    trackerTx('controls.language'),
+    trackerTx('controls.currency'),
+    trackerTx('controls.karat'),
+    trackerTx('controls.unit'),
+  ];
+  fieldLabels.forEach((label, index) => {
+    if (fieldKeys[index]) label.textContent = fieldKeys[index];
+  });
+
+  const referenceHint = document.querySelector('.tracker-hero-footer .tracker-hint-text');
+  if (referenceHint) {
+    const icon = document.createElement('span');
+    icon.setAttribute('aria-hidden', 'true');
+    icon.textContent = '⚠';
+    const link = document.createElement('a');
+    link.href = 'methodology.html';
+    link.className = 'tracker-inline-link';
+    link.textContent = trackerTx('hints.referenceLink');
+    referenceHint.replaceChildren(icon, ` ${trackerTx('hints.reference')} · `, link);
+  }
+
+  const keyboardHint = document.getElementById('tp-hero-hints');
+  if (keyboardHint) keyboardHint.textContent = trackerTx('hints.shortcuts');
+
+  const quickToolsHeading = document.querySelector(
+    '.tracker-side-card--links .tracker-side-subheading'
+  );
+  if (quickToolsHeading) quickToolsHeading.textContent = trackerTx('quickToolsTitle');
+
+  const quickToolLinks = document.querySelectorAll('.tracker-side-card--links a');
+  const quickToolLabels = [
+    trackerTx('quickToolsCalculator'),
+    trackerTx('quickToolsCountries'),
+    trackerTx('quickToolsShops'),
+    trackerTx('quickToolsMethodology'),
+  ];
+  quickToolLinks.forEach((link, index) => {
+    if (quickToolLabels[index]) link.textContent = quickToolLabels[index];
+  });
+
+  const quickReference = document.querySelector('.tracker-hero-aside');
+  if (quickReference)
+    quickReference.setAttribute('aria-label', trackerTx('quickReferenceAriaLabel'));
+}
 
 function ui() {
   return {
@@ -338,7 +466,7 @@ function startCountdown() {
   const el_countdown = document.getElementById('tp-countdown');
 
   // Display the initial value immediately so the user sees the full countdown.
-  if (el_countdown) el_countdown.textContent = `Next update in ${_countdownValue}s`;
+  if (el_countdown) el_countdown.textContent = trackerTx('countdown', { seconds: _countdownValue });
 
   function tick() {
     _countdownValue--;
@@ -347,7 +475,8 @@ function startCountdown() {
       if (el_countdown) el_countdown.textContent = '';
       return;
     }
-    if (el_countdown) el_countdown.textContent = `Next update in ${_countdownValue}s`;
+    if (el_countdown)
+      el_countdown.textContent = trackerTx('countdown', { seconds: _countdownValue });
   }
   _countdownTimer = setInterval(tick, 1000);
 }
@@ -402,7 +531,9 @@ function populateSelects() {
   if (el.unit) {
     const frag = document.createDocumentFragment();
     ['gram', 'oz'].forEach((u) => {
-      const opt = safeEl('option', { value: u }, [u]);
+      const opt = safeEl('option', { value: u }, [
+        trackerTx(`controls.unit${u === 'gram' ? 'Gram' : 'Oz'}`),
+      ]);
       if (u === state.selectedUnit) opt.selected = true;
       frag.appendChild(opt);
     });
@@ -562,6 +693,7 @@ async function init() {
   initEvents({
     state,
     el,
+    tx: trackerTx,
     refreshData,
     renderAll,
     renderMarkets,
@@ -592,9 +724,14 @@ async function init() {
       populateSelects();
       renderAll();
     },
-    /* onLangChange */ () => renderAll()
+    /* onLangChange */ () => {
+      localizeStaticTrackerCopy();
+      populateSelects();
+      renderAll();
+    }
   );
 
+  localizeStaticTrackerCopy();
   populateSelects();
   bindCoreEvents();
 
@@ -700,9 +837,15 @@ function handleOnlineStatus() {
       offlineBanner.style.cssText =
         'position:fixed;top:0;left:0;right:0;z-index:9999;background:#dc2626;color:white;text-align:center;padding:0.5rem;font-size:0.875rem;font-weight:500;';
       const cached = state.live?.updatedAt
-        ? new Date(state.live.updatedAt).toLocaleTimeString()
-        : 'unknown';
-      offlineBanner.textContent = `⚠️ You're offline — showing cached prices from ${cached}`;
+        ? new Date(state.live.updatedAt).toLocaleTimeString(
+            state.lang === 'ar' ? 'ar-AE' : 'en-AE',
+            {
+              hour: '2-digit',
+              minute: '2-digit',
+            }
+          )
+        : trackerTx('offlineUnknown');
+      offlineBanner.textContent = trackerTx('offlineBanner', { time: cached });
       document.body.prepend(offlineBanner);
     }
   } else {

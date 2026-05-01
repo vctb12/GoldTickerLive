@@ -50,14 +50,14 @@ export function injectFooter(lang = 'en', depth = 0) {
 
       <!-- Brand column -->
       <div class="footer-col footer-col--brand">
-        <a href="${r('../index.html')}" class="footer-brand-link" aria-label="Gold Ticker Live Home">
+        <a href="${r('../index.html')}" class="footer-brand-link" aria-label="${isAr ? 'العودة إلى الصفحة الرئيسية في Gold Ticker Live' : 'Go to the Gold Ticker Live homepage'}">
           <span class="footer-brand-icon" aria-hidden="true">◈</span>
           <span class="footer-brand-name">${isAr ? 'Gold Ticker Live' : 'Gold Ticker Live'}</span>
         </a>
         <p class="footer-tagline">${
           isAr
-            ? 'أسعار ذهب مرجعية مباشرة للخليج والعالم العربي'
-            : 'Live spot-linked gold reference prices for the Gulf &amp; Arab world'
+            ? 'أسعار ذهب مرجعية مرتبطة بالسعر الفوري للإمارات والخليج والأسواق العربية'
+            : 'Spot-linked gold reference prices for the UAE, GCC, and Arab markets'
         }</p>
         <div class="footer-brand-badges">
           <span class="footer-badge">${isAr ? '24+ دولة' : '24+ Countries'}</span>
@@ -133,7 +133,7 @@ export function injectFooter(lang = 'en', depth = 0) {
         const isAr2 =
           document.documentElement.lang === 'ar' || document.documentElement.dir === 'rtl';
         freshnessEl.textContent =
-          (isAr2 ? 'آخر تحديث: ' : 'Gold: ') +
+          (isAr2 ? 'آخر تحديث الذهب: ' : 'Gold updated: ') +
           d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       }
     }
@@ -157,7 +157,7 @@ export function injectFooter(lang = 'en', depth = 0) {
         const isAr2 =
           document.documentElement.lang === 'ar' || document.documentElement.dir === 'rtl';
         dataUpdatedEl.textContent =
-          (isAr2 ? '· آخر تحديث البيانات: ' : '· Data last updated: ') +
+          (isAr2 ? '· آخر مزامنة للبيانات: ' : '· Data sync: ') +
           d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       }
     }

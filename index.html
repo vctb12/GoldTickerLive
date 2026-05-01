@@ -165,18 +165,18 @@
               <span class="hero-title-sub" id="hero-title-sub">UAE, GCC &amp; Arab World</span>
             </h1>
             <p class="hero-lead" id="hero-lead">
-              Live spot-linked gold estimates across 24+ countries in 7 karats — in local
-              currencies. Free, transparent, updated every 90 seconds.
+              Track spot-linked gold reference prices for the UAE, GCC, and Arab markets across
+              24+ countries, 7 karats, and local currencies.
             </p>
             <p class="hero-trust-line" id="hero-trust-line">
-              Spot-linked reference estimate — not a final retail jewelry quote.
+              Spot-linked reference prices before retail premiums, making charges, and tax.
             </p>
             <div class="hero-ctas">
               <a href="tracker.html" class="btn btn-primary" id="hero-cta-tracker"
-                >View Live Tracker</a
+                >Open Live Tracker</a
               >
               <a href="calculator.html" class="btn btn-outline-light" id="hero-cta-calculator"
-                >Open Calculator</a
+                >Use Gold Calculator</a
               >
             </div>
             <div class="hero-ctas-secondary">
@@ -206,8 +206,6 @@
           <div
             class="hero-live-card"
             id="hero-live-card"
-            aria-live="polite"
-            aria-atomic="false"
             aria-busy="true"
           >
             <div class="hlc-header">
@@ -224,7 +222,7 @@
               <span class="hlc-market" id="hlc-market-status"></span>
             </div>
             <p class="hlc-trust-line" id="hlc-trust-line">
-              Spot/reference estimate · final shop prices vary
+              Spot-linked reference · shop prices can add making charges, VAT, and margin
             </p>
             <div class="hlc-grid">
               <div class="hlc-item">
@@ -248,6 +246,9 @@
               <span
                 class="hlc-updated skeleton-text"
                 id="hlc-updated"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
                 >Loading...</span
               >
               <a href="tracker.html" class="hlc-tracker-link" id="hlc-tracker-link"
@@ -764,7 +765,7 @@
             >
           </div>
           <p class="country-search-empty" id="country-search-empty" aria-live="polite" hidden>
-            No countries match your search
+            No countries match your search. Try UAE, Saudi Arabia, or Kuwait.
           </p>
         </div>
       </section>
