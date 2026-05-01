@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "type": "commonjs",
   "scripts": {
+    "pretest": "npm run --silent pretest:assert-deps",
+    "pretest:assert-deps": "node scripts/node/assert-test-deps.js",
     "dev": "vite",
     "build": "node scripts/node/extract-baseline.js && node scripts/node/normalize-shops.js && node scripts/node/inject-schema.js && node build/generateSitemap.js && vite build",
     "extract-baseline": "node scripts/node/extract-baseline.js",
