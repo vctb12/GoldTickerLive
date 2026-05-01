@@ -99,7 +99,9 @@ controls).
 - Bakeoff end date/time:
 - Duration: ☐ 24h ☐ 48h ☐ other: ____ _(recommended default: at least 24h, 48h preferred)_
 - Interval seconds: 360 _(default = 6 min; change only with reason)_
-- Providers included: _____
+- Providers included: `goldapi_io,twelvedata_xauusd,fmp_gcusd` _(first 24h run; based on
+  PR Provider Smoke 2026-05-01 — `finnhub_oanda` excluded as plan-gated, `metal_sentinel`
+  excluded pending HTTP 400 fix, `goldpricez` excluded as legacy/`missing_price`)_
 - Workflow used: `.github/workflows/gold-provider-bakeoff.yml`
 - Results stored as: ☑ artifacts only ☐ committed files _(default: artifacts; commit only if explicitly needed)_
 - `commit_results` setting: ☑ false ☐ true _(default: false)_
@@ -140,9 +142,13 @@ timestamps/hour, longest frozen period, and stale/429 counts.
 
 Walk through these in order. Do not check the next box until the previous one is genuinely true.
 
-- [ ] API keys added as GitHub Secrets (Section 2)
+- [x] API keys added as GitHub Secrets (Section 2) — confirmed via PR Provider Smoke 2026-05-01
 - [ ] Provider enable flags set (Section 3)
-- [ ] Manual provider smoke test passed (`.github/workflows/test-gold-providers.yml` → Run workflow)
+- [x] Manual provider smoke test passed — `PR Provider Smoke` on PR #253 (2026-05-01) returned
+      real `ok` rows from `twelvedata_xauusd`, `goldapi_io`, and `fmp_gcusd`. `finnhub_oanda`
+      (plan_gated/403), `metal_sentinel` (http_error/400), and `goldpricez` (missing_price)
+      excluded from the first 24h bakeoff. See
+      [`OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md` → Smoke test results — 2026-05-01](./OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md#smoke-test-results--2026-05-01).
 - [ ] Bakeoff ran for at least 24h (Section 4)
 - [ ] `data/provider_scorecard.json` reviewed (Section 5)
 - [ ] Winning provider selected

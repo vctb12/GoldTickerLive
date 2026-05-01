@@ -19,6 +19,10 @@
   `scripts/python/fetch_gold_price.py` is not scheduled in any workflow yet.
 - ❌ **No real provider winner yet.** No real bakeoff samples exist, the scorecard contains only
   no-key skip data, and no winning/backup provider has been chosen.
+- ✅ **PR-visible smoke gate satisfied (2026-05-01).** `PR Provider Smoke` returned real `ok`
+  rows from `twelvedata_xauusd`, `goldapi_io`, and `fmp_gcusd`. Details in
+  [Smoke test results — 2026-05-01](#smoke-test-results--2026-05-01) below. Winner / backup
+  / 24h bakeoff / production cutover are still pending.
 
 ---
 
@@ -26,13 +30,17 @@
 
 Walk through these in order. Do not check the next box until the previous one is genuinely true.
 
-- [ ] Open the PR as **Draft**
-- [ ] Add at least **2 provider API keys** as GitHub Secrets (see "Recommended provider keys"
-      below)
-- [ ] Enable those providers in workflow/env (`*_ENABLED=true` flags)
-- [ ] Confirm **PR Provider Smoke** check is green on PR #253 with at least one real
-      `ok` row from a non-legacy provider (or run the local CLI smoke fallback)
+- [x] Open the PR as **Draft**
+- [x] Add at least **2 provider API keys** as GitHub Secrets (see "Recommended provider keys"
+      below) — `TWELVEDATA_API_KEY`, `GOLDAPI_IO_KEY`, `FMP_API_KEY`, `FINNHUB_API_KEY`,
+      `METAL_SENTINEL_API_KEY` confirmed exposed in the PR Provider Smoke run
+- [x] Enable those providers in workflow/env (`*_ENABLED=true` flags) — set inside the smoke
+      job env block only; production env is unchanged
+- [x] Confirm **PR Provider Smoke** check is green on PR #253 with at least one real
+      `ok` row from a non-legacy provider — **3 real `ok` rows** observed (see
+      "Smoke test results — 2026-05-01" below)
 - [ ] Run `gold-provider-bakeoff.yml` for **at least 24 hours**, preferably **48 hours**
+      — restrict the first run to `goldapi_io,twelvedata_xauusd,fmp_gcusd` (see notes below)
 - [ ] Download the bakeoff artifact and review `data/provider_scorecard.json`
 - [ ] Select a **winning provider** based on the scorecard (not on docs/marketing)
 - [ ] Select a **backup provider**
@@ -105,7 +113,50 @@ python scripts/python/gold_bakeoff_readiness.py --strict
 
 ---
 
-## Exact next action from GitHub UI
+## Smoke test results — 2026-05-01
+
+The `PR Provider Smoke` check ran successfully against PR #253. One-round smoke results:
+
+| Provider              | Status         | HTTP | Price (USD/oz) | Source timestamp        |
+| --------------------- | -------------- | ---- | -------------- | ----------------------- |
+| `twelvedata_xauusd`   | ✅ ok          | 200  | ~4639.14       | 2026-05-01T15:33:00Z    |
+| `goldapi_io`          | ✅ ok          | 200  | ~4637.47       | 2026-05-01T15:34:53Z    |
+| `fmp_gcusd`           | ✅ ok          | 200  | ~4647.50       | 2026-05-01T15:24:54Z    |
+| `finnhub_oanda`       | ❌ plan_gated  | 403  | —              | —                       |
+| `metal_sentinel`      | ❌ http_error  | 400  | —              | —                       |
+| `goldpricez`          | ❌ missing_price | 200 | —              | —                       |
+
+**The smoke gate is satisfied.** Three non-legacy providers returned real `ok` rows, which
+clears the "PR Provider Smoke ≥ 1 real `ok` row" merge-checklist item above. **Every other
+gate is still blocked** — winner selection, backup selection, 24h+ bakeoff, scorecard
+review, and production cutover all remain pending.
+
+### Notes on individual providers
+
+- **`finnhub_oanda`** — currently **plan-gated** on the configured key (HTTP 403). Exclude
+  from the first 24h bakeoff unless the operator intentionally retests it after upgrading
+  the Finnhub plan or re-verifying that XAU is on the free tier.
+- **`metal_sentinel`** — returned **HTTP 400**. Either fix separately (host/path/symbol
+  may need adjustment per the Metal Sentinel dashboard) or exclude from the first 24h
+  bakeoff. Do not promote to candidate without a clean smoke first.
+- **`goldpricez`** — returned HTTP 200 but the parser reported `missing_price`. Keep as
+  legacy / problematic; **do not use as a primary candidate** right now. Matches its known
+  history of 30–45 minute frozen periods.
+
+### Recommended first 24h bakeoff candidate set
+
+```text
+goldapi_io,twelvedata_xauusd,fmp_gcusd
+```
+
+Pass this to the bakeoff `providers` input (or set the matching `*_ENABLED=true` flags
+and leave the others false) for the first 24h+ run. **Do not pick a winner from this
+single round** — the bakeoff still needs at least 24 hours of samples, scorecard review,
+and an explicit owner decision on winner + backup.
+
+---
+
+
 
 > **GitHub limitation — `workflow_dispatch` visibility.** A `workflow_dispatch`-only
 > workflow file that exists **only on a feature branch** is not reliably exposed in the
@@ -278,10 +329,15 @@ spares with the names the script uses internally. Either:
 
 Only the following remain — every one needs your account, your decision, or your wait:
 
-1. **Real provider API keys** — already added; nothing more for me to do here.
+1. **Real provider API keys** — added; `TWELVEDATA_API_KEY`, `GOLDAPI_IO_KEY`, `FMP_API_KEY`,
+   `FINNHUB_API_KEY`, `METAL_SENTINEL_API_KEY` all confirmed reachable in the smoke run.
 2. **Per-provider `*_ENABLED=true` variables** — turn on whichever providers you want to test.
-3. **Run the smoke test** in Actions and confirm at least one provider returns real data.
-4. **Run / wait for the 24–48 h bakeoff** to accumulate samples.
+3. ~~**Run the smoke test** in Actions and confirm at least one provider returns real data.~~
+   ✅ Done 2026-05-01 — see [Smoke test results](#smoke-test-results--2026-05-01).
+4. **Run / wait for the 24–48 h bakeoff** to accumulate samples. Restrict the first run to
+   `goldapi_io,twelvedata_xauusd,fmp_gcusd`; exclude `finnhub_oanda` (plan-gated),
+   `metal_sentinel` (HTTP 400), and `goldpricez` (parser `missing_price`) until they are
+   investigated separately.
 5. **Review `data/provider_scorecard.json`** in the artifact — Copilot must not pick the winner.
 6. **Select winning + backup provider** based on the scorecard data.
 7. **Fill `docs/operator-inputs-gold-provider-bakeoff.md`** (sections 2, 3, 4, 5, 6, 8, 11).
@@ -304,8 +360,8 @@ Real provider testing and the 24h+ bakeoff are still pending. Merge is blocked u
 the owner-side checklist in docs/OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md is complete.
 
 Owner-side checklist:
-- [ ] Provider smoke test with real keys
-- [ ] 24h+ bakeoff
+- [x] Provider smoke test with real keys (2026-05-01: 3 ✅ — twelvedata_xauusd, goldapi_io, fmp_gcusd; 3 ❌ — finnhub_oanda plan_gated, metal_sentinel http_error, goldpricez missing_price)
+- [ ] 24h+ bakeoff (first run focuses on `goldapi_io,twelvedata_xauusd,fmp_gcusd`)
 - [ ] Scorecard reviewed
 - [ ] Winner selected
 - [ ] Backup selected
