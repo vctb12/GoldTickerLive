@@ -7,6 +7,11 @@ Manual prerequisites (API keys, enablement flags, scorecard review, polling
 cadence decisions) are tracked in
 [`operator-inputs-gold-provider-bakeoff.md`](./operator-inputs-gold-provider-bakeoff.md).
 
+Owner-only pre-merge checklist:
+[`OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md`](./OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md).
+Before opening for review or merging, run the readiness gate:
+`python scripts/python/gold_bakeoff_readiness.py --strict`.
+
 Until the bakeoff has produced samples we **do not pick a winner**.
 The infrastructure is intentionally drop-in so the migration is a
 config change, not a code change.

@@ -6,6 +6,11 @@ must skip unchanged content rather than try to force it through with
 random punctuation, invisible characters, or other cosmetic tricks.
 Doing so risks an automation-rule violation against the account.
 
+> Owner-only pre-merge checklist for the bakeoff + duplicate-guard PR:
+> [`OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md`](./OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md).
+> Before opening for review or merging, run the readiness gate:
+> `python scripts/python/gold_bakeoff_readiness.py --strict`.
+
 This doc describes how `scripts/python/post_gold_price.py` and
 `scripts/python/tweet_guard.py` cooperate to make the bot
 duplicate-safe and freshness-honest.

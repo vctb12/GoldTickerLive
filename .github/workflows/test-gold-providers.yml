@@ -12,11 +12,11 @@ on:
   workflow_dispatch:
     inputs:
       providers:
-        description: "Comma-separated provider names (blank = all known)"
+        description: "Comma-separated provider names (blank = all known/enabled). Example: twelvedata_xauusd,finnhub_oanda. Disabled providers skip cleanly."
         required: false
         default: ""
       log_raw:
-        description: "Log raw response bodies (BAKEOFF_LOG_RAW)"
+        description: "Log raw provider response bodies (BAKEOFF_LOG_RAW). Default false to keep artifacts free of upstream payloads. Set true only for debugging."
         required: false
         default: "false"
 

@@ -29,6 +29,10 @@ Related docs:
 - Legacy GoldPriceZ (`scripts/fetch_gold_price.py` + `.github/workflows/post_gold.yml`) remains
   the active production path until you explicitly flip it per
   [`gold-price-provider-migration.md`](./gold-price-provider-migration.md).
+- For the owner-only checklist, see
+  [`OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md`](./OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md).
+- Before opening for review or merging, run the readiness gate:
+  `python scripts/python/gold_bakeoff_readiness.py --strict`
 
 ---
 
@@ -85,12 +89,12 @@ controls).
 
 - Bakeoff start date/time:
 - Bakeoff end date/time:
-- Duration: ☐ 24h ☐ 48h ☐ other: ____
-- Interval seconds: _____ (recommend 360 = 6 min)
+- Duration: ☐ 24h ☐ 48h ☐ other: ____ _(recommended default: at least 24h, 48h preferred)_
+- Interval seconds: 360 _(default = 6 min; change only with reason)_
 - Providers included: _____
 - Workflow used: `.github/workflows/gold-provider-bakeoff.yml`
-- Results stored as: ☐ artifacts only ☐ committed files
-- `commit_results` setting: ☐ false ☐ true
+- Results stored as: ☑ artifacts only ☐ committed files _(default: artifacts; commit only if explicitly needed)_
+- `commit_results` setting: ☑ false ☐ true _(default: false)_
 - Notes:
 
 **Recommended defaults**
@@ -175,12 +179,13 @@ with the real adapter names from `scripts/python/gold_providers/registry.py` aft
 
 ## 8. Workflow decisions
 
-- Production polling cadence: ☐ 10 minutes ☐ 6 minutes
-- Production cron: _____
+- Production polling cadence: ☑ 10 minutes ☐ 6 minutes _(recommended default: 10 min first)_
+- Production cron: `3-53/10 * * * *` _(recommended default; replace with chosen cron)_
 - Bakeoff workflow enabled? ☐ yes ☐ no
 - Provider test workflow enabled? ☐ yes ☐ no
-- Commit bakeoff outputs? ☐ yes ☐ no
-- Keep artifacts only? ☐ yes ☐ no
+- Commit bakeoff outputs? ☑ no ☐ yes _(recommended default: no — use artifacts)_
+- Keep artifacts only? ☑ yes ☐ no _(recommended default: yes)_
+- Production cutover approved? ☑ no ☐ yes _(default: not approved)_
 - Notes:
 
 **Recommended**
@@ -231,15 +236,35 @@ If the new provider pipeline misbehaves in production:
 
 ## 11. Open questions for me
 
-Fill in answers; revisit before flipping production.
+Fill in answers; revisit before flipping production. Defaults reflect repo conventions; replace
+`_____` with your specific decision.
 
-- Which provider keys do I currently have? _____
-- Which provider accounts should I create? _____
-- Do I want a 24h or 48h bakeoff? _____
-- Should bakeoff results be committed or artifact-only? _____
-- Do I want to start production at 10 minutes? _____
-- Do I allow stale/cached tweets? _____
-- Which X/Twitter secrets are currently configured? _____ (default: `CONSUMER_KEY`,
-  `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET`)
-- Do I want GoldPriceZ kept as last fallback or removed entirely? _____
-- Do I want gold-api.com disabled completely because it previously hit limits? _____
+- Which provider keys do I currently have? _____ _(owner-only knowledge — never write secret values here)_
+- Which provider accounts should I create? _____ _(recommended first two: Twelve Data, Finnhub)_
+- Do I want a 24h or 48h bakeoff? **48h preferred**, 24h minimum.
+- Should bakeoff results be committed or artifact-only? **Artifact-only by default.**
+- Do I want to start production at 10 minutes? **Yes — `3-53/10 * * * *` first**, then move to 6 min only after stability.
+- Do I allow stale/cached tweets? **No — `ALLOW_STALE_TWEET=false`.**
+- Which X/Twitter secrets are currently configured? `CONSUMER_KEY`, `CONSUMER_SECRET`,
+  `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET` _(see `.github/workflows/post_gold.yml`)_
+- Do I want GoldPriceZ kept as last fallback or removed entirely? **Keep as legacy/fallback only;
+  not a winner candidate.**
+- Do I want gold-api.com disabled completely because it previously hit limits? **Yes — disabled
+  by default (`GOLD_API_COM_ENABLED=false`).**
+- Is `goldapi.io` in scope? **Candidate-only — `GOLDAPI_IO_ENABLED=false` until tested.**
+
+---
+
+## 12. Readiness gate
+
+Before opening this PR for review or merging, run:
+
+```bash
+python scripts/python/gold_bakeoff_readiness.py --strict
+```
+
+The gate checks infra files, gitignore, workflow safety, production safety, the operator
+checklist, and bakeoff samples. Exit code 0 = safe to merge; exit code 2 = Draft PR safe but
+merge blocked by owner actions; exit code 1 = something fundamentally wrong.
+
+You can also trigger this in GitHub Actions: **Actions → Gold Bakeoff Readiness → Run workflow**.

@@ -20,19 +20,19 @@ on:
   workflow_dispatch:
     inputs:
       providers:
-        description: "Comma-separated provider names (blank = all known)"
+        description: "Comma-separated provider names (blank = all known/enabled). Example for a real bakeoff: twelvedata_xauusd,finnhub_oanda,fmp_gcusd,goldapi_io"
         required: false
         default: ""
       duration_hours:
-        description: "Total runtime in hours (0 = single round)"
+        description: "Total runtime in hours (0 = single round). Recommended for a real bakeoff: 24 minimum, 48 preferred. Hosted runners cap below 6h per run."
         required: false
         default: "0"
       interval_seconds:
-        description: "Seconds between rounds when duration_hours > 0"
+        description: "Seconds between rounds when duration_hours > 0. Recommended default 360 (6 min) so each provider gets ~10 samples/hour without burning quotas."
         required: false
         default: "360"
       commit_results:
-        description: "Commit scorecard + JSONL back to the branch"
+        description: "Commit scorecard + JSONL back to the branch. Default false — use the workflow artifact instead. Only set true when you specifically want a tracked snapshot."
         required: false
         default: "false"
   schedule:

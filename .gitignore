@@ -96,3 +96,22 @@ feed.xml
 .DS_Store
 data/audit-logs.json
 data/404-logs.json
+
+# Gold provider bakeoff — generated artifacts.
+#
+# These files are produced by `scripts/python/provider_bakeoff.py` and
+# `scripts/python/provider_scorecard.py`. They are normally uploaded as
+# workflow artifacts, NOT committed. The bakeoff workflow only commits
+# them when the operator explicitly sets `commit_results=true`; in that
+# case use `git add -f data/provider_bakeoff_log.jsonl
+# data/provider_scorecard.json` to bypass this ignore.
+#
+# Important: do NOT add the curated state files
+# `data/gold_price.json`, `data/last_gold_price.json`,
+# `data/provider_state.json`, or `data/last_tweet_state.json` here —
+# those are tracked source-of-truth files.
+data/provider_bakeoff_log.jsonl
+data/provider_scorecard.json
+data/provider_test_results.json
+data/provider_bakeoff_*.jsonl
+data/provider_scorecard_*.json

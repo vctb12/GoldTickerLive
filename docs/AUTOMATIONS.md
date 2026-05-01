@@ -137,6 +137,11 @@ production. Legacy GoldPriceZ remains the active path until you flip it.
 
 Before activating, fill in the operator checklist:
 [`docs/operator-inputs-gold-provider-bakeoff.md`](./operator-inputs-gold-provider-bakeoff.md).
+For the owner-only pre-merge checklist see
+[`docs/OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md`](./OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md).
+Run the readiness gate before review/merge:
+`python scripts/python/gold_bakeoff_readiness.py --strict` (also available as
+**Actions → Gold Bakeoff Readiness**).
 See also [`gold-price-provider-bakeoff.md`](./gold-price-provider-bakeoff.md),
 [`gold-price-provider-migration.md`](./gold-price-provider-migration.md), and
 [`x-automation-duplicate-policy.md`](./x-automation-duplicate-policy.md).
