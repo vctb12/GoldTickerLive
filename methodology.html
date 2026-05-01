@@ -191,8 +191,9 @@
           <h3 id="gold-data-freshness-h3">Freshness Indicator</h3>
           <p id="gold-data-freshness-p">
             A live countdown timer and "last updated" timestamp are displayed throughout the site.
-            If the gold API fails or the data is more than 3 minutes old, a visual "stale" indicator
-            appears in amber/orange. This ensures you always know how fresh the data is.
+            If a live fetch fails, the UI labels the value as "Cached". If the gold timestamp is
+            older than <strong>12 minutes</strong>, the UI labels the value as "Stale" (so the site
+            never implies a value is live when it is multiple server refresh windows old).
           </p>
 
           <div class="method-warning" id="gold-data-warning">

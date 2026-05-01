@@ -169,7 +169,13 @@
 
             <!-- Status badges row -->
             <div class="tracker-badge-row">
-              <span class="tracker-badge tracker-badge-live" id="tp-live-badge">
+              <span
+                class="tracker-badge tracker-badge-live"
+                id="tp-live-badge"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+              >
                 <span class="tracker-badge-dot" aria-hidden="true"></span>
                 <span id="tp-live-badge-text">Preparing live feed</span>
                 <span class="tracker-badge-separator" aria-hidden="true">·</span>
