@@ -270,6 +270,20 @@ def check_winner_backup_in_doc(root: Path, report: Report) -> None:
     # Intentionally a no-op: the operator-doc check already reports these.
 
 
+def _yaml_default_for(body: str, input_name: str) -> Optional[str]:
+    """Best-effort grep for `input_name:` followed by `default: "..."`.
+
+    Avoids a YAML dependency; returns the default value as a stripped
+    string (lower-cased) or None if not found.
+    """
+    m = re.search(
+        rf"^\s*{re.escape(input_name)}:\s*\n(?:\s+[^\n]*\n)*?\s+default:\s*\"?([^\"\n]+)\"?",
+        body,
+        re.M,
+    )
+    return m.group(1).strip().lower() if m else None
+
+
 def check_workflow_safety(root: Path, report: Report) -> None:
     test_yml = _read(root / ".github" / "workflows" / "test-gold-providers.yml")
     bakeoff_yml = _read(root / ".github" / "workflows" / "gold-provider-bakeoff.yml")
@@ -284,6 +298,10 @@ def check_workflow_safety(root: Path, report: Report) -> None:
                 issues.append(f"{name} references X/Twitter secret `{tok}`")
         if "post_gold_price.py" in body:
             issues.append(f"{name} runs the X poster directly")
+        # Heavy auto-trigger: bakeoff/test workflows must NOT fire on every
+        # push, otherwise every commit hammers provider quotas.
+        if re.search(r"^on:\s*\n(?:[\s\S]*?\n)?\s*push:\s*\n", body, re.M):
+            issues.append(f"{name} runs on `push` (would hammer providers on every commit)")
 
     # Bakeoff commit must be gated behind explicit input.
     if bakeoff_yml:
@@ -292,6 +310,14 @@ def check_workflow_safety(root: Path, report: Report) -> None:
         elif "github.event.inputs.commit_results == 'true'" not in bakeoff_yml \
                 and "inputs.commit_results == 'true'" not in bakeoff_yml:
             issues.append("bakeoff workflow commits without gating on commit_results=='true'")
+        # Defaults must be safe.
+        commit_default = _yaml_default_for(bakeoff_yml, "commit_results")
+        if commit_default not in (None, "false"):
+            issues.append(f"bakeoff `commit_results` default is `{commit_default}` (must be `false`)")
+    if test_yml:
+        log_raw_default = _yaml_default_for(test_yml, "log_raw")
+        if log_raw_default not in (None, "false"):
+            issues.append(f"test-gold-providers `log_raw` default is `{log_raw_default}` (must be `false`)")
 
     if issues:
         report.add(Gate(
