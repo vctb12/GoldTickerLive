@@ -4,15 +4,27 @@
 # regenerates the scorecard.
 #
 # Strategy:
-#   * Manual: workflow_dispatch with duration_hours / interval_seconds
-#     inputs. Default = one round so a single click is safe.
-#   * Scheduled: every hour we grab one sample per provider. This
-#     gives ~24 datapoints/provider/day without leaning on a
-#     long-running 24h job (which is risky on hosted runners).
+#   * Manual: workflow_dispatch with providers / duration_hours /
+#     interval_seconds inputs. Default = one round so a single click
+#     is safe.
+#   * Scheduled (hourly chunked accumulation): each hourly run
+#     samples the smoke-passing candidate trio
+#     (goldapi_io, twelvedata_xauusd, fmp_gcusd) every 6 minutes for
+#     ~50 minutes (≈8 samples/provider/run). Each run restores the
+#     JSONL from the previous successful run's artifact via the
+#     GitHub API (``gh run download``) before sampling, so results
+#     accumulate across runs without writing anything to git.
 #
-# X is NOT posted to. By default the JSONL log + scorecard are
-# uploaded as artifacts only; commit the scorecard back to git only
-# when the user asks for it via the ``commit_results`` input.
+# X is NEVER posted from this workflow. Raw response bodies are
+# NEVER logged (BAKEOFF_LOG_RAW is hard-pinned to "false"). By
+# default the JSONL log + scorecard are uploaded as artifacts only;
+# commit the scorecard back to git only when explicitly requested
+# via the ``commit_results`` input.
+#
+# Production (``gold-price-fetch.yml`` → ``data/gold_price.json`` →
+# ``post_gold.yml``) is intentionally untouched: this workflow only
+# samples providers and stores artifacts. A separate cutover PR is
+# required to switch production off the legacy GoldPriceZ path.
 # ------------------------------------------------------------------
 name: Gold Provider Bakeoff
 
@@ -20,19 +32,19 @@ on:
   workflow_dispatch:
     inputs:
       providers:
-        description: "Comma-separated provider names (blank = all known/enabled). Example for a real bakeoff: twelvedata_xauusd,finnhub_oanda,fmp_gcusd,goldapi_io"
+        description: "Comma-separated provider names (blank = all known/enabled). Scheduled runs auto-pin the smoke-passing trio: goldapi_io,twelvedata_xauusd,fmp_gcusd"
         required: false
         default: ""
       duration_hours:
-        description: "Total runtime in hours (0 = single round). Recommended for a real bakeoff: 24 minimum, 48 preferred. Hosted runners cap below 6h per run."
+        description: "Total runtime in hours (0 = single round). Hosted runners cap at 6h per run; scheduled runs use 0.83h chunks (~50 min) and accumulate via artifact restore across hourly runs."
         required: false
         default: "0"
       interval_seconds:
-        description: "Seconds between rounds when duration_hours > 0. Recommended default 360 (6 min) so each provider gets ~10 samples/hour without burning quotas."
+        description: "Seconds between rounds when duration_hours > 0. Default 360 (6 min) so each provider gets ~10 samples/hour without burning quotas."
         required: false
         default: "360"
       commit_results:
-        description: "Commit scorecard + JSONL back to the branch. Default false — use the workflow artifact instead. Only set true when you specifically want a tracked snapshot."
+        description: "Commit scorecard + JSONL back to the branch. Default false — the rolling artifact is the canonical store. Only set true for a specific tracked snapshot."
         required: false
         default: "false"
   schedule:
@@ -55,6 +67,10 @@ jobs:
     # mistakenly-long manual run terminates safely.
     timeout-minutes: 350
     permissions:
+      # ``actions: read`` is required so the "Restore previous
+      # bakeoff log" step can call ``gh run download`` against the
+      # most recent successful run of this workflow.
+      actions: read
       contents: ${{ github.event.inputs.commit_results == 'true' && 'write' || 'read' }}
 
     steps:
@@ -71,28 +87,99 @@ jobs:
       - name: Install dependencies
         run: pip install -r scripts/python/requirements.txt
 
+      - name: Restore previous bakeoff log (scheduled runs)
+        # On scheduled runs we want each new hourly chunk to *append*
+        # to the JSONL produced by prior runs so samples accumulate.
+        # The previous artifact is the most recent successful run of
+        # this same workflow. Failures here are non-fatal — a missing
+        # prior artifact just means we start a fresh log.
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p data
+          PREV_RUN_ID="$(gh run list \
+            --workflow=gold-provider-bakeoff.yml \
+            --branch="${{ github.ref_name }}" \
+            --status=success \
+            --limit=1 \
+            --json databaseId \
+            --jq '.[0].databaseId // empty' || true)"
+          if [ -z "$PREV_RUN_ID" ]; then
+            echo "No previous successful run found — starting a fresh JSONL log."
+            exit 0
+          fi
+          echo "Restoring artifact from previous run: $PREV_RUN_ID"
+          rm -rf prev-bakeoff
+          mkdir -p prev-bakeoff
+          if gh run download "$PREV_RUN_ID" \
+              --name "gold-provider-bakeoff-$PREV_RUN_ID" \
+              --dir prev-bakeoff 2>/dev/null; then
+            if [ -f prev-bakeoff/data/provider_bakeoff_log.jsonl ]; then
+              cp prev-bakeoff/data/provider_bakeoff_log.jsonl data/provider_bakeoff_log.jsonl
+              LINES="$(wc -l < data/provider_bakeoff_log.jsonl || echo 0)"
+              echo "Restored prior JSONL ($LINES rows)."
+            fi
+            if [ -f prev-bakeoff/data/provider_scorecard.json ]; then
+              cp prev-bakeoff/data/provider_scorecard.json data/provider_scorecard.json
+            fi
+          else
+            echo "Could not download prior artifact (maybe expired) — starting a fresh JSONL log."
+          fi
+          rm -rf prev-bakeoff
+
       - name: Run bakeoff
         env:
-          METAL_SENTINEL_ENABLED: ${{ secrets.METAL_SENTINEL_ENABLED }}
+          # Provider API keys come from secrets. Anything not
+          # configured cleanly returns ``provider_disabled`` and is
+          # skipped — no fatal failure.
           METAL_SENTINEL_API_KEY: ${{ secrets.METAL_SENTINEL_API_KEY }}
           METAL_SENTINEL_API_HOST: ${{ secrets.METAL_SENTINEL_API_HOST }}
           METAL_SENTINEL_ENDPOINT: ${{ secrets.METAL_SENTINEL_ENDPOINT }}
-          FINNHUB_ENABLED: ${{ secrets.FINNHUB_ENABLED }}
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
           FINNHUB_SYMBOL: ${{ secrets.FINNHUB_SYMBOL }}
-          FMP_ENABLED: ${{ secrets.FMP_ENABLED }}
           FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
           FMP_SYMBOL: ${{ secrets.FMP_SYMBOL }}
-          GOLDAPI_IO_ENABLED: ${{ secrets.GOLDAPI_IO_ENABLED }}
           GOLDAPI_IO_KEY: ${{ secrets.GOLDAPI_IO_KEY }}
-          TWELVEDATA_ENABLED: ${{ secrets.TWELVEDATA_ENABLED }}
           TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
           TWELVEDATA_SYMBOL: ${{ secrets.TWELVEDATA_SYMBOL }}
           GOLDPRICEZ_API_KEY: ${{ secrets.GOLDPRICEZ_API_KEY }}
+          # Provider enable flags scoped to THIS bakeoff workflow
+          # only. These literals do NOT propagate to
+          # ``gold-price-fetch.yml`` / ``post_gold.yml`` or any other
+          # production workflow — production stays on the legacy
+          # GoldPriceZ path until a separate cutover PR is merged.
+          # The smoke-passing candidate trio is hard-enabled. The
+          # smoke-failing providers stay off so we don't burn quota
+          # on known-broken endpoints during scheduled accumulation.
+          GOLDAPI_IO_ENABLED: "true"
+          TWELVEDATA_ENABLED: "true"
+          FMP_ENABLED: "true"
+          FINNHUB_ENABLED: "false"
+          METAL_SENTINEL_ENABLED: "false"
+          GOLDPRICEZ_ENABLED: "false"
+          # Raw bodies are NEVER logged from this workflow. Hard-pinned
+          # to keep upstream payloads out of CI logs and artifacts.
+          BAKEOFF_LOG_RAW: "false"
         run: |
+          set -euo pipefail
+          EVENT="${{ github.event_name }}"
           DURATION="${{ github.event.inputs.duration_hours || '0' }}"
           INTERVAL="${{ github.event.inputs.interval_seconds || '360' }}"
           PROVIDERS="${{ github.event.inputs.providers || '' }}"
+
+          # Scheduled (cron) defaults: pin the candidate trio and
+          # run for ~50 minutes per hourly trigger so each run
+          # produces ~8 samples/provider, well under the runner cap.
+          if [ "$EVENT" = "schedule" ]; then
+            if [ -z "$PROVIDERS" ]; then
+              PROVIDERS="goldapi_io,twelvedata_xauusd,fmp_gcusd"
+            fi
+            DURATION="0.83"
+            INTERVAL="360"
+          fi
+
           ARGS=(--providers "$PROVIDERS" --interval-seconds "$INTERVAL" --write-scorecard)
           if [ "$DURATION" = "0" ] || [ -z "$DURATION" ]; then
             ARGS+=(--once)

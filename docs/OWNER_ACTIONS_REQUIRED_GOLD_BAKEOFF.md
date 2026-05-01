@@ -154,97 +154,94 @@ and leave the others false) for the first 24h+ run. **Do not pick a winner from 
 single round** — the bakeoff still needs at least 24 hours of samples, scorecard review,
 and an explicit owner decision on winner + backup.
 
-### 24h bakeoff plan — pre-merge
+### 24h bakeoff plan — GitHub-only hourly chunked accumulation
 
-**A single 24h GitHub Actions bakeoff is not feasible pre-merge.** Three platform
-constraints combine:
+**A single 24h GitHub Actions bakeoff is not feasible.** Two platform constraints
+combine:
 
 1. **Hosted-runner job cap = 6 hours.** `gold-provider-bakeoff.yml` already pins
-   `timeout-minutes: 350` (~5h50m) under that ceiling
-   (`.github/workflows/gold-provider-bakeoff.yml:56`). Raising the timeout cannot
-   bypass the 6h runner ceiling.
+   `timeout-minutes: 350` (~5h50m) under that ceiling. Raising the timeout cannot
+   bypass the runner ceiling.
 2. **`workflow_dispatch` and `schedule` only fire from the default branch.** The
-   bakeoff file is currently only on `copilot/replace-gold-api-key`, so its hourly
-   cron (`cron: "11 * * * *"`) does not run pre-merge and the dispatch button does
-   not appear in the Actions UI.
-3. **PR checks share the 6h cap** and would re-poll providers on every PR push;
-   they are not a safe place to host a 24h job.
+   bakeoff file is only on `copilot/replace-gold-api-key` until merge, so its
+   hourly cron (`cron: "11 * * * *"`) does not run pre-merge and the dispatch
+   button does not appear in the Actions UI.
 
-**Recommended pre-merge path: Option A — local 24h CLI bakeoff.** The existing
-`scripts/python/provider_bakeoff.py` already supports the required behaviour with
-no commit, no X posting, no raw-body logging by default, and no production
-coupling (production continues to consume the legacy `data/gold_price.json`).
+**Primary plan (GitHub-only, post-merge of this infra PR):** the bakeoff
+workflow has been updated so each scheduled run does an **hourly chunked
+accumulation**:
 
-```bash
-# Operator-local shell only — never commit secret values, never paste in PR comments.
-export GOLDAPI_IO_KEY="…"
-export GOLDAPI_IO_ENABLED=true
-export TWELVEDATA_API_KEY="…"
-export TWELVEDATA_ENABLED=true
-export FMP_API_KEY="…"
-export FMP_ENABLED=true
+- The hourly cron (`cron: "11 * * * *"`) auto-pins providers to
+  `goldapi_io,twelvedata_xauusd,fmp_gcusd` and runs for **0.83 hours (~50
+  minutes)** at `interval_seconds=360` — about **8 samples per provider per
+  hourly run**.
+- Each run **restores the JSONL log from the previous successful run's
+  artifact** (via `gh run download` against this workflow), appends new
+  samples, regenerates the scorecard, and uploads a fresh artifact named
+  `gold-provider-bakeoff-<run_id>`. Results accumulate across runs without
+  ever writing to git.
+- After ~24 hourly runs (≈24h wall clock) the latest artifact contains
+  **~600 samples** (3 providers × ~8/hour × 24h) — sufficient to compute
+  update frequency, unique prices/timestamps per hour, longest frozen
+  period, stale rate, failure rate, freshness, and response speed.
+- Provider enable flags are pinned **literally inside this workflow only**
+  (`GOLDAPI_IO_ENABLED: "true"`, `TWELVEDATA_ENABLED: "true"`,
+  `FMP_ENABLED: "true"`). The smoke-failing providers
+  (`finnhub_oanda` / `metal_sentinel` / `goldpricez`) are explicitly disabled
+  in the bakeoff workflow so quota isn't burned on known-broken endpoints.
+  Production (`gold-price-fetch.yml` → `data/gold_price.json` →
+  `post_gold.yml`) does not read these env vars and is unaffected.
+- `BAKEOFF_LOG_RAW` is hard-pinned to `"false"` — raw upstream payloads
+  never reach CI logs or artifacts; only sha256 hashes of parsed bodies are
+  recorded.
+- `commit_results` defaults to `false` — the rolling artifact is the
+  canonical store. Nothing is committed back to git from the cron path.
 
-# 24h continuous bakeoff, 6-min interval, artifacts only, no raw bodies, no commit.
-python scripts/python/provider_bakeoff.py \
-  --providers "goldapi_io,twelvedata_xauusd,fmp_gcusd" \
-  --duration-hours 24 \
-  --interval-seconds 360 \
-  --output data/provider_bakeoff_log.jsonl \
-  --scorecard-output data/provider_scorecard.json \
-  --write-scorecard
-```
+**How to review results from the GitHub UI (post-merge):**
 
-Properties of this run:
+1. Wait at least 24 hourly runs after this PR merges so accumulation reaches
+   24h coverage (the `Set-up Python` and provider-fetch steps each take
+   under a minute, the bakeoff loop runs ~50 min, then artifact upload).
+2. Open Actions → **Gold Provider Bakeoff** → most recent successful run.
+3. Download the `gold-provider-bakeoff-<run_id>` artifact. It contains:
+   - `data/provider_bakeoff_log.jsonl` — accumulated sanitized samples
+     across all hourly runs covered by the artifact retention window
+     (30 days).
+   - `data/provider_scorecard.json` — rolling scorecard regenerated on
+     each run, with per-provider unique-prices/hour, unique-timestamps/hour,
+     longest frozen period, stale-rate, failure-rate, p50/p95 response time,
+     and a derived ranking.
+4. Review the scorecard. **Do not** commit it or paste raw API responses
+   anywhere. The JSONL has zero raw bodies by construction.
+5. Choose winner + backup providers (owner-only), then open a separate
+   production-cutover PR. Production stays on the legacy GoldPriceZ path
+   until that cutover PR merges.
 
-- providers **exactly** `goldapi_io,twelvedata_xauusd,fmp_gcusd` (matches the
-  smoke-derived candidate set; `finnhub_oanda` / `metal_sentinel` / `goldpricez`
-  are intentionally excluded — see Smoke test results — 2026-05-01)
-- `interval_seconds=360`, `duration_hours=24` → ~240 rounds × 3 providers ≈ 720
-  samples (well under TwelveData free 800/day, comparable for goldapi.io / FMP)
-- **no X posting** — provider_bakeoff.py has no Twitter path
-- **no production cutover** — production still runs the legacy
-  `gold-price-fetch.yml` → `data/gold_price.json` → `post_gold.yml` chain
-- **no commit by default** — the operator must **not** `git add` / `git commit`
-  `data/provider_bakeoff_log.jsonl` or `data/provider_scorecard.json` while this
-  PR is Draft. Inspect locally; the artifacts are local-only by design
-- **no raw responses** — `--log-raw` not set, `BAKEOFF_LOG_RAW` not exported;
-  only sha256 hashes of parsed bodies are recorded
-- **artifacts only** — review `data/provider_scorecard.json` locally
+**On-demand burst (post-merge, optional).** If the operator wants denser
+sampling than the cron schedule provides, manually dispatch the workflow
+from the Actions UI with:
 
-Operational notes:
+- `providers`: `goldapi_io,twelvedata_xauusd,fmp_gcusd`
+- `duration_hours`: any value up to `5` (stays under the 350-minute cap)
+- `interval_seconds`: `360`
+- `commit_results`: `false`
 
-- Run under `nohup` / `tmux` / `screen` on a stable host. The JSONL log is
-  appended every round, so partial results survive process loss.
-- If continuous 24h uptime is impractical, run multiple shorter sessions
-  back-to-back (e.g. four `--duration-hours 5` runs); the JSONL accumulates and
-  the scorecard regenerates on each round.
-- To **regenerate the scorecard from an existing JSONL log** without re-running
-  the bakeoff (e.g. after merging multiple partial sessions, or to refresh the
-  scorecard mid-run from a separate shell), use the standalone scorecard CLI:
+Manual dispatches do **not** restore prior artifacts (only the scheduled
+path does), so a manual run produces its own standalone artifact rather
+than joining the rolling log. Use the cron path as the canonical
+accumulator; use dispatch only for ad-hoc bursts.
 
-  ```bash
-  python scripts/python/provider_scorecard.py \
-    --input data/provider_bakeoff_log.jsonl \
-    --output data/provider_scorecard.json
-  ```
+**Local CLI is explicitly NOT the recommended path.** A local
+`scripts/python/provider_bakeoff.py` invocation is technically possible
+but is not the primary path for this rollout — operator does not run
+local bakeoffs. The GitHub-only chunked accumulation above is the
+canonical method.
 
-  This reads the appended JSONL and rewrites `data/provider_scorecard.json` in
-  place. Same no-commit / artifacts-only rules apply — do **not** `git add` the
-  regenerated scorecard while the PR is Draft.
-
-**Fallback Option B (post-merge only).** Once the workflow file is on `main`,
-its hourly cron (`cron: "11 * * * *"`) accumulates ~24 datapoints/provider/day
-automatically, uploading artifacts each run with `commit_results=false`. This is
-the long-term plan but requires merging first.
-
-**Fallback Option C (post-merge only).** After merging, manually dispatch four
-sequential ≤5h runs (`duration_hours=5`, `interval_seconds=360`,
-`commit_results=false`, `providers=goldapi_io,twelvedata_xauusd,fmp_gcusd`) for
-faster sample density. Each terminates safely under the 350-minute cap.
-
-**Reaffirmed constraints (all options).** No merge. No Ready for Review. No
-production cutover. No X posting. No commit of bakeoff data. Winner / backup /
-production cutover all remain owner-only decisions made after scorecard review.
+**Reaffirmed constraints.** No merge of cutover PR. No Ready for Review on
+that cutover PR. No production cutover. No X posting. No commit of bakeoff
+data (cron path is artifacts-only by construction). Winner / backup /
+production cutover all remain owner-only decisions made after scorecard
+review.
 
 ---
 
