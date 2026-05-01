@@ -4,6 +4,14 @@
 > new provider-adapter + bakeoff system can be activated in production. Fill in this file as you
 > go and treat the checklists as the go/no-go gates.
 
+> ⚠️ **Workflow visibility note (read first).** A `workflow_dispatch`-only workflow file that
+> exists **only on a feature branch** is not reliably exposed in the Actions tab —
+> GitHub typically only shows the "Run workflow" button after the file lands on the default
+> branch. **Do not merge just to make it visible.** Use the PR-visible smoke check
+> (`.github/workflows/pr-provider-smoke.yml`, runs on `pull_request`) or the local CLI fallback
+> documented in [`OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md`](./OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md#exact-next-action-from-github-ui).
+> Never paste secret values into GitHub comments or docs.
+
 Related docs:
 
 - [`docs/gold-price-provider-bakeoff.md`](./gold-price-provider-bakeoff.md) — how the bakeoff works.

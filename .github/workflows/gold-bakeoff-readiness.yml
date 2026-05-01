@@ -16,6 +16,7 @@ on:
       - ".github/workflows/test-gold-providers.yml"
       - ".github/workflows/gold-provider-bakeoff.yml"
       - ".github/workflows/gold-bakeoff-readiness.yml"
+      - ".github/workflows/pr-provider-smoke.yml"
       - "docs/operator-inputs-gold-provider-bakeoff.md"
       - "docs/OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md"
       - "data/provider_state.json"

@@ -85,6 +85,7 @@ REQUIRED_FILES: List[str] = [
     "data/provider_state.json",
     ".github/workflows/test-gold-providers.yml",
     ".github/workflows/gold-provider-bakeoff.yml",
+    ".github/workflows/pr-provider-smoke.yml",
     "docs/operator-inputs-gold-provider-bakeoff.md",
     "docs/gold-price-provider-bakeoff.md",
     "docs/gold-price-provider-migration.md",
@@ -287,12 +288,21 @@ def _yaml_default_for(body: str, input_name: str) -> Optional[str]:
 def check_workflow_safety(root: Path, report: Report) -> None:
     test_yml = _read(root / ".github" / "workflows" / "test-gold-providers.yml")
     bakeoff_yml = _read(root / ".github" / "workflows" / "gold-provider-bakeoff.yml")
+    smoke_yml = _read(root / ".github" / "workflows" / "pr-provider-smoke.yml")
     issues: List[str] = []
 
     twitter_tokens = ("CONSUMER_KEY", "CONSUMER_SECRET", "ACCESS_TOKEN",
                       "ACCESS_TOKEN_SECRET", "TWITTER_API_KEY")
-    for name, body in (("test-gold-providers.yml", test_yml),
-                       ("gold-provider-bakeoff.yml", bakeoff_yml)):
+    # The PR smoke workflow is allowed to run on `pull_request` (that is its
+    # whole point — be visible as a PR check) but is NOT allowed to run on
+    # raw `push`. Bakeoff/test workflows must not run on either trigger.
+    for name, body, allow_push in (
+        ("test-gold-providers.yml", test_yml, False),
+        ("gold-provider-bakeoff.yml", bakeoff_yml, False),
+        ("pr-provider-smoke.yml", smoke_yml, False),
+    ):
+        if not body:
+            continue
         for tok in twitter_tokens:
             if tok in body:
                 issues.append(f"{name} references X/Twitter secret `{tok}`")
@@ -300,7 +310,7 @@ def check_workflow_safety(root: Path, report: Report) -> None:
             issues.append(f"{name} runs the X poster directly")
         # Heavy auto-trigger: bakeoff/test workflows must NOT fire on every
         # push, otherwise every commit hammers provider quotas.
-        if re.search(r"^on:\s*\n(?:[\s\S]*?\n)?\s*push:\s*\n", body, re.M):
+        if not allow_push and re.search(r"^on:\s*\n(?:[\s\S]*?\n)?\s*push:\s*\n", body, re.M):
             issues.append(f"{name} runs on `push` (would hammer providers on every commit)")
 
     # Bakeoff commit must be gated behind explicit input.
@@ -351,7 +361,7 @@ def check_production_unchanged(root: Path, report: Report) -> None:
     bad_callers: List[str] = []
     for wf in workflows_dir.glob("*.yml"):
         if wf.name in {"gold-provider-bakeoff.yml", "test-gold-providers.yml",
-                       "gold-bakeoff-readiness.yml"}:
+                       "gold-bakeoff-readiness.yml", "pr-provider-smoke.yml"}:
             continue
         text = _read(wf)
         # The new orchestrator is `scripts/python/fetch_gold_price.py`.

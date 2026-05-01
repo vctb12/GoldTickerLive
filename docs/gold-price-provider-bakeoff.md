@@ -13,6 +13,14 @@
 > Before opening for review or merging, run the readiness gate:
 > `python scripts/python/gold_bakeoff_readiness.py --strict` (also available
 > as **Actions → Gold Bakeoff Readiness**).
+>
+> ⚠️ **Pre-merge smoke testing path.** A brand-new `workflow_dispatch` workflow on a
+> feature branch is **not** reliably visible in the Actions UI — GitHub only lists
+> the "Run workflow" button after the file is on the default branch. To validate
+> providers before merge, use the `pull_request`-triggered
+> **PR Provider Smoke** check (`.github/workflows/pr-provider-smoke.yml`), which
+> appears under PR → Checks immediately. Local CLI fallback and full instructions:
+> see [`OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md`](./OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md#exact-next-action-from-github-ui).
 
 This doc covers:
 

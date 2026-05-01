@@ -30,8 +30,8 @@ Walk through these in order. Do not check the next box until the previous one is
 - [ ] Add at least **2 provider API keys** as GitHub Secrets (see "Recommended provider keys"
       below)
 - [ ] Enable those providers in workflow/env (`*_ENABLED=true` flags)
-- [ ] Run `test-gold-providers.yml` (Actions → Run workflow)
-- [ ] Confirm at least one provider returns real data (artifact shows non-error sample)
+- [ ] Confirm **PR Provider Smoke** check is green on PR #253 with at least one real
+      `ok` row from a non-legacy provider (or run the local CLI smoke fallback)
 - [ ] Run `gold-provider-bakeoff.yml` for **at least 24 hours**, preferably **48 hours**
 - [ ] Download the bakeoff artifact and review `data/provider_scorecard.json`
 - [ ] Select a **winning provider** based on the scorecard (not on docs/marketing)
@@ -107,49 +107,103 @@ python scripts/python/gold_bakeoff_readiness.py --strict
 
 ## Exact next action from GitHub UI
 
-### If `Test Gold Providers (manual)` shows up in the Actions tab
+> **GitHub limitation — `workflow_dispatch` visibility.** A `workflow_dispatch`-only
+> workflow file that exists **only on a feature branch** is not reliably exposed in the
+> Actions tab. The "Run workflow" button only appears after the workflow file is present
+> on the **default branch**. **Do not merge just to make the dispatch button appear.**
+> Use the `pull_request`-triggered smoke check below or the local CLI fallback first.
 
-1. Go to **Actions** → **Test Gold Providers (manual)** → **Run workflow** (branch:
-   `copilot/replace-gold-api-key`).
-2. `providers`: `twelvedata_xauusd,finnhub_oanda,fmp_gcusd,goldapi_io,metal_sentinel,goldpricez`
-   (or leave blank to test all).
-3. `log_raw`: `false`.
-4. Open the run, expand "Run one bakeoff round", and confirm at least one provider returns a
-   real `ok` row (not `provider_disabled` or `missing_api_key`).
-5. Download the `gold-provider-test-<run_id>` artifact and inspect
-   `out/provider_test_scorecard.json`.
+### Preferred path: PR Provider Smoke (visible in PR Checks)
 
-> 💡 If everything shows `provider_disabled`, you also need to set the matching `*_ENABLED=true`
-> repository variable (or secret) for each provider you want to test. The default for every
-> non-legacy adapter is **off** so a missing flag is a clean skip, not a credential leak.
+`.github/workflows/pr-provider-smoke.yml` runs on `pull_request` and therefore appears
+under **PR #253 → Checks** immediately, no merge required.
 
-### If the workflow does NOT show up in the Actions tab
+1. Open **PR #253 → Checks** tab.
+2. Find **PR Provider Smoke / One-round provider smoke (PR check)**.
+3. Click into the run, expand "Run one-round smoke (real providers)".
+4. Confirm at least one provider returns a real `ok` row (not `provider_disabled`,
+   `missing_api_key`, or `auth_error`).
+5. Download the **`pr-provider-smoke-<run_id>`** artifact and inspect
+   `out/provider_scorecard.json`.
 
-This is expected: GitHub only lists workflow files that exist on the **default branch**. The
-new `test-gold-providers.yml` and `gold-provider-bakeoff.yml` files live only on
-`copilot/replace-gold-api-key` until merge.
+If the check did not auto-trigger (e.g. you re-ran the PR but no listed paths changed),
+re-run it from **Checks → PR Provider Smoke → Re-run jobs**, or push an empty commit:
+`git commit --allow-empty -m "trigger smoke" && git push`.
 
-**Do not merge just to make them appear.** Use one of these instead:
+> 💡 The smoke job sets `<NAME>_ENABLED=true` **only inside its own env block**. Those
+> flags do not propagate to `post_gold.yml`, `gold-price-fetch.yml`, or any other
+> production workflow. You do **not** need to add `*_ENABLED=true` repository variables
+> to make the PR smoke run — only the `*_API_KEY` secrets.
 
-1. **Run from the branch UI** — open the workflow file on the PR branch
-   (`.github/workflows/test-gold-providers.yml` → "Run workflow" picker) — GitHub will offer the
-   PR branch as a target. This works for `workflow_dispatch` workflows defined on a non-default
-   branch as long as you select the correct branch in the dropdown.
-2. **Local CLI smoke test** — clone the branch locally, export the provider keys you want to
-   test as environment variables (one terminal session, never commit them), and run:
+### Fallback A: dispatch from the file URL (sometimes works for branch-only workflows)
+
+This works **only** when GitHub has already indexed the workflow against the default
+branch via a previous run on `main`. For brand-new files it usually 404s; treat it as
+a "try, and if it fails use the smoke check or local fallback."
+
+1. Open the workflow file on the PR branch:
+   `https://github.com/<org>/<repo>/blob/copilot/replace-gold-api-key/.github/workflows/test-gold-providers.yml`
+2. If a "Run workflow" picker is offered at the top of the file, select branch
+   `copilot/replace-gold-api-key` and dispatch.
+
+### Fallback B: local CLI smoke test
+
+Clone the branch locally, export the provider keys you want to test as environment
+variables (one terminal session, **never commit them, never paste them into GitHub
+comments or docs**), and run:
+
+```bash
+export TWELVEDATA_API_KEY=...     # paste; do NOT share or commit
+export TWELVEDATA_ENABLED=true
+export FINNHUB_API_KEY=...
+export FINNHUB_ENABLED=true
+export FMP_API_KEY=...
+export FMP_ENABLED=true
+export GOLDAPI_IO_KEY=...
+export GOLDAPI_IO_ENABLED=true
+export GOLDPRICEZ_API_KEY=...
+export GOLDPRICEZ_ENABLED=true
+export METAL_SENTINEL_API_KEY=...
+export METAL_SENTINEL_API_HOST=...
+export METAL_SENTINEL_ENABLED=true
+
+python scripts/python/provider_bakeoff.py --once \
+  --providers twelvedata_xauusd,finnhub_oanda,fmp_gcusd,goldapi_io,metal_sentinel,goldpricez
+python scripts/python/provider_scorecard.py
+```
+
+This calls the same code path as the workflow without any commit, artifact upload, or
+X post.
+
+### After the smoke check (PR or local) shows real `ok` rows
+
+Only after PR Provider Smoke succeeds with at least one real `ok` row from a
+non-legacy provider do you proceed to the 24h+ bakeoff. The bakeoff workflow
+(`gold-provider-bakeoff.yml`) becomes UI-visible only once it lands on the default
+branch via a separate cutover PR — until then, accumulate samples by waiting for the
+hourly cron once the file is on `main`, or extend the smoke loop locally.
+
+### Why the previous `gold-provider-bakeoff.yml #1..#6` runs appeared
+
+The earlier "failed runs" you saw labelled with `gold-provider-bakeoff.yml` are
+explained by one of:
+
+1. **Likely**: they were `gold-bakeoff-readiness.yml` runs triggered by `pull_request`
+   on this PR. The Actions tab labels each run by workflow name; older readiness runs
+   would show under "Gold Bakeoff Readiness", not under bakeoff itself. Cross-check
+   the run's "Triggered by" line.
+2. The file briefly had a different trigger in an earlier branch revision and those
+   runs persist in history. The current trigger set is `workflow_dispatch` + hourly
+   `cron` only — verify with:
    ```bash
-   export TWELVEDATA_API_KEY=...   # paste; do NOT share
-   export TWELVEDATA_ENABLED=true
-   export FINNHUB_API_KEY=...
-   export FINNHUB_ENABLED=true
-   python scripts/python/provider_bakeoff.py --once \
-     --providers twelvedata_xauusd,finnhub_oanda
+   sed -n '/^on:/,/^[a-z]/p' .github/workflows/gold-provider-bakeoff.yml
    ```
-   This calls the same code path as the workflow without any commit, artifact upload, or X post.
-3. **Wait for cutover PR** — only after the operator checklist is filled and Copilot has
-   prepared a separate cutover PR, the workflows can land on `main` along with the rest.
+3. The hourly cron only runs from the default branch in normal operation; if you saw
+   runs attributed to the PR head SHA, that is GitHub showing the schedule run that
+   happened to coincide with the PR being open.
 
-### After the smoke test succeeds
+In all three cases the current state is safe: no `push` trigger on any
+bakeoff/test/smoke workflow.
 
 Run the bakeoff with safe defaults:
 
