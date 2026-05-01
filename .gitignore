@@ -25,6 +25,7 @@ node_modules/
 .env
 .env.local
 *.env.*
+!.env.example
 
 # Python (if applicable)
 __pycache__/

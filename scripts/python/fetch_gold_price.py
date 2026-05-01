@@ -199,35 +199,31 @@ def main(argv: Optional[List[str]] = None) -> int:
     chosen_provider: Optional[str] = None
     notes: List[str] = []
     is_fallback = False
+    # Retain the first stale-but-valid quote we see in priority order so a
+    # second HTTP pass isn't necessary if no provider returns fresh.
+    first_stale: Optional[Dict[str, Any]] = None
+    first_stale_provider: Optional[str] = None
 
-    # First pass: any fresh provider wins.
+    # Single pass: any fresh provider wins. Stale quotes are remembered.
     for name in providers:
         normalized, note = _try_provider(name, state, now)
         notes.append(f"{name}={note}")
-        if normalized is not None and normalized.get("is_fresh"):
+        if normalized is None:
+            continue
+        if normalized.get("is_fresh"):
             chosen = normalized
             chosen_provider = name
             break
+        if first_stale is None:
+            first_stale = normalized
+            first_stale_provider = name
 
-    # Second pass: accept stale only if explicitly allowed AND the provider
-    # actually returned a quote in pass 1 (we already have those). Choose
-    # the first stale quote in declared priority order.
-    if chosen is None and env_bool("ALLOW_STALE_PRICE", default=False):
-        # Re-walk in order to find the first stale-but-valid quote — we must
-        # call again because the loop above did not retain rejected quotes.
-        # To avoid duplicate paid calls, only re-call providers that did NOT
-        # error (so circuit didn't open).
-        for name in providers:
-            entry = state.get(name, {})
-            if _circuit_open(entry, now) or entry.get("last_error_category"):
-                continue
-            normalized, note = _try_provider(name, state, now)
-            notes.append(f"{name}=retry:{note}")
-            if normalized is not None:
-                chosen = normalized
-                chosen_provider = name
-                is_fallback = True
-                break
+    # Accept stale only if explicitly allowed.
+    if chosen is None and first_stale is not None and env_bool("ALLOW_STALE_PRICE", default=False):
+        chosen = first_stale
+        chosen_provider = first_stale_provider
+        is_fallback = True
+        notes.append(f"accepted_stale_from={first_stale_provider}")
 
     if not args.dry_run:
         _save_state(state)

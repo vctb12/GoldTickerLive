@@ -185,10 +185,8 @@ def decide(
     if not is_fresh and not allow_stale:
         return Decision(False, "stale_quote", h, move_usd, move_pct, ts_changed)
 
-    # First-ever post: only block on the duplicate-text hash equality.
+    # First-ever post: nothing to compare against, just allow.
     if state.last_tweet_text_hash is None:
-        if state.last_tweet_text_hash == h:  # always False here; explicit
-            return Decision(False, "duplicate_text_hash", h, move_usd, move_pct, ts_changed)
         return Decision(True, None, h, move_usd, move_pct, ts_changed)
 
     # Rule 2: provider timestamp unchanged → skip unless forced summary due.
