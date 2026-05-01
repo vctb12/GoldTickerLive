@@ -305,8 +305,8 @@ body.tracker-pro-page {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  height: 36px;
-  padding: 0 0.9rem;
+  min-height: 44px;
+  padding: 0.55rem 0.9rem;
   border-radius: var(--radius-pill);
   border: 1px solid var(--tp-hero-border);
   background: var(--tp-hero-surface);
@@ -314,9 +314,14 @@ body.tracker-pro-page {
   font-weight: var(--weight-semibold);
   color: var(--tp-hero-muted);
   letter-spacing: 0.01em;
+  line-height: 1.4;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: background var(--duration-fast) var(--ease-out);
+}
+
+.tracker-badge-row > * {
+  min-width: 0;
 }
 
 .tracker-badge-separator {
@@ -671,8 +676,10 @@ body.tracker-pro-page {
 }
 
 .tracker-hint-countdown {
-  margin-left: auto;
+  margin-inline-start: auto;
   font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+  text-align: end;
 }
 
 /* ── Hero aside / summary panel ───────────────────────────────────────────── */
@@ -748,8 +755,10 @@ body.tracker-pro-page {
 }
 
 .tracker-side-ul a {
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 0.4rem 0.5rem;
+  min-height: 44px;
   border-radius: var(--radius-sm);
   font-size: 0.85rem;
   color: var(--tp-hero-muted);
@@ -2942,7 +2951,8 @@ body.tracker-workspace-basic .tracker-advanced-only {
   }
 
   .tracker-hint-countdown {
-    margin-left: 0;
+    margin-inline-start: 0;
+    text-align: start;
   }
 
   .tracker-badge-row {
@@ -2952,6 +2962,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
 
   .tracker-badge {
     justify-content: center;
+    white-space: normal;
   }
 
   /* Sticky controls strip on mobile */

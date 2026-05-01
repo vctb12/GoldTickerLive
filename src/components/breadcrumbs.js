@@ -9,6 +9,35 @@
  *   generateBreadcrumbSchema(items)     — generate a JSON-LD BreadcrumbList script tag
  */
 
+import { TRANSLATIONS } from '../config/index.js';
+
+function getLocale() {
+  if (typeof document === 'undefined') return 'en';
+  return document.documentElement?.lang === 'ar' ? 'ar' : 'en';
+}
+
+function tx(key, fallback) {
+  const locale = getLocale();
+  return TRANSLATIONS[locale]?.[key] ?? TRANSLATIONS.en?.[key] ?? fallback;
+}
+
+function getLabels(extra = {}) {
+  return {
+    home: tx('nav.home', 'Home'),
+    shops: tx('nav.shops', 'Shops & Markets'),
+    calculator: tx('nav.calculator', 'Calculator'),
+    learn: tx('nav.learn', 'Learn'),
+    insights: tx('nav.insights', 'Insights'),
+    methodology: tx('nav.methodology', 'Methodology'),
+    terms: tx('nav.terms', 'Terms of Service'),
+    privacy: tx('nav.privacy', 'Privacy Policy'),
+    invest: tx('nav.invest', 'Invest'),
+    tracker: tx('nav.tracker', 'Tracker'),
+    countries: tx('nav.countries', 'Countries'),
+    country: extra.countryName || tx('nav.country', 'Country'),
+  };
+}
+
 /**
  * Render breadcrumb navigation with schema.org `BreadcrumbList` microdata
  * into `container`. The last item is rendered as plain text (current page);
@@ -27,7 +56,8 @@ export function renderBreadcrumbs(container, items) {
   // Create breadcrumb nav
   const nav = document.createElement('nav');
   nav.className = 'breadcrumbs';
-  nav.setAttribute('aria-label', 'Breadcrumb navigation');
+  nav.setAttribute('aria-label', tx('breadcrumbs.ariaLabel', 'Breadcrumb'));
+  nav.setAttribute('dir', getLocale() === 'ar' ? 'rtl' : 'ltr');
 
   // Create ol with schema.org markup
   const ol = document.createElement('ol');
@@ -78,7 +108,7 @@ export function renderBreadcrumbs(container, items) {
   });
 
   nav.appendChild(ol);
-  container.appendChild(nav);
+  container.replaceChildren(nav);
 }
 
 /**
@@ -92,21 +122,22 @@ export function renderBreadcrumbs(container, items) {
  * @returns {Array<{label: string, url: string}>}
  */
 export function getBreadcrumbs(pageName, extra = {}) {
-  const breadcrumbs = [{ label: 'Home', url: '/' }];
+  const labels = getLabels(extra);
+  const breadcrumbs = [{ label: labels.home, url: '/' }];
 
   const pageMap = {
-    shops: [{ label: 'Shops & Markets', url: '/shops.html' }],
-    calculator: [{ label: 'Calculator', url: '/calculator.html' }],
-    learn: [{ label: 'Learn', url: '/learn.html' }],
-    insights: [{ label: 'Insights', url: '/insights.html' }],
-    methodology: [{ label: 'Methodology', url: '/methodology.html' }],
-    terms: [{ label: 'Terms of Service', url: '/terms.html' }],
-    privacy: [{ label: 'Privacy Policy', url: '/privacy.html' }],
-    invest: [{ label: 'Invest', url: '/invest.html' }],
-    tracker: [{ label: 'Tracker', url: '/tracker.html' }],
+    shops: [{ label: labels.shops, url: '/shops.html' }],
+    calculator: [{ label: labels.calculator, url: '/calculator.html' }],
+    learn: [{ label: labels.learn, url: '/learn.html' }],
+    insights: [{ label: labels.insights, url: '/insights.html' }],
+    methodology: [{ label: labels.methodology, url: '/methodology.html' }],
+    terms: [{ label: labels.terms, url: '/terms.html' }],
+    privacy: [{ label: labels.privacy, url: '/privacy.html' }],
+    invest: [{ label: labels.invest, url: '/invest.html' }],
+    tracker: [{ label: labels.tracker, url: '/tracker.html' }],
     country: [
-      { label: 'Countries', url: '/tracker.html' },
-      { label: extra.countryName || 'Country', url: extra.countryUrl || '#' },
+      { label: labels.countries, url: '/tracker.html' },
+      { label: labels.country, url: extra.countryUrl || '#' },
     ],
   };
 

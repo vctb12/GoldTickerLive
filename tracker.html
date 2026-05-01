@@ -111,8 +111,9 @@
         <div class="tracker-data-trust-banner">
           <div class="tracker-trust-icon" aria-hidden="true">ℹ</div>
           <div class="tracker-trust-content">
-            <strong>Reference prices only</strong> — Spot-linked estimates derived from XAU/USD (open.er-api.com or server snapshot).
-            AED uses UAE Central Bank fixed peg 3.6725. Freshness labels always visible: Live · Cached · Stale.
+            <strong>Reference prices only</strong> — Spot-linked estimates derived from GoldPriceZ spot
+            snapshots, with FX from open.er-api.com for non-AED currencies. AED uses the fixed 3.6725
+            peg. Freshness labels stay visible: Live · Cached · Stale · Unavailable.
             <a href="methodology.html">Methodology →</a>
           </div>
           <button
@@ -177,7 +178,7 @@
               <span class="tracker-badge tracker-badge-xauusd" id="tp-xauusd-badge" aria-label="XAU/USD spot price">
                 <span aria-hidden="true">🏅</span>
                 <span>XAU/USD</span>
-                <strong id="tp-xauusd-value" aria-live="polite">—</strong>
+                <strong id="tp-xauusd-value">—</strong>
               </span>
               <span class="tracker-badge tracker-badge-market" id="tp-market-badge">
                 <span aria-hidden="true">📊</span>
@@ -190,7 +191,8 @@
               <span class="tracker-hero-title-sub">Spot-linked reference workspace</span>
             </h1>
             <p id="tp-hero-copy" class="tracker-hero-description">
-              24+ markets · 7 karats · live freshness labels · bilingual EN/AR.
+              Track reference prices across 24+ markets, 7 karats, and live freshness states before
+              you compare shop quotes.
               <a href="methodology.html#spot-vs-retail" class="tracker-inline-link">How prices are calculated →</a>
             </p>
 
@@ -283,7 +285,7 @@
             <div class="tracker-hero-footer">
               <span class="tracker-hint-text">
                 <span aria-hidden="true">⚠</span>
-                Spot-linked reference prices · not retail quotes ·
+                Spot-linked reference prices before making charges and VAT ·
                 <a href="methodology.html" class="tracker-inline-link">Methodology</a>
               </span>
               <span class="tracker-hint-text tracker-hint-keyboard" id="tp-hero-hints" aria-hidden="true">

@@ -203,10 +203,14 @@ export function renderHero() {
   }
 
   if (_el.refreshBadge) {
+    const hasMeaningfulTime =
+      typeof freshness.timeText === 'string' &&
+      freshness.timeText.trim() &&
+      freshness.timeText !== '—';
     let refreshText;
     if (!spot) {
       if (_state.hasLiveFailure) {
-        refreshText = freshness.timeText
+        refreshText = hasMeaningfulTime
           ? tx('refreshBadgeUnavailable', { time: freshness.timeText })
           : tx('liveUnavailable');
       } else {
