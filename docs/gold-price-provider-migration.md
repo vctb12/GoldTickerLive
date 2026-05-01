@@ -3,6 +3,10 @@
 This is the runbook for flipping production from GoldPriceZ to whichever
 provider wins the bakeoff (see [`gold-price-provider-bakeoff.md`](./gold-price-provider-bakeoff.md)).
 
+Manual prerequisites (API keys, enablement flags, scorecard review, polling
+cadence decisions) are tracked in
+[`operator-inputs-gold-provider-bakeoff.md`](./operator-inputs-gold-provider-bakeoff.md).
+
 Until the bakeoff has produced samples we **do not pick a winner**.
 The infrastructure is intentionally drop-in so the migration is a
 config change, not a code change.

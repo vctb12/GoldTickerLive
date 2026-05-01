@@ -3,6 +3,10 @@
 > Status: infrastructure landed; **no provider has been crowned yet**.
 > The bakeoff is the source of truth — until it produces samples, every
 > provider in the registry is a *candidate*.
+>
+> Operator checklist for keys, enablement flags, and the go/no-go gates
+> for production cutover lives in
+> [`operator-inputs-gold-provider-bakeoff.md`](./operator-inputs-gold-provider-bakeoff.md).
 
 This doc covers:
 
