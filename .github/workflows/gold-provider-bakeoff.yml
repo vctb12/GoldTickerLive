@@ -71,7 +71,10 @@ jobs:
       # bakeoff log" step can call ``gh run download`` against the
       # most recent successful run of this workflow.
       actions: read
-      contents: ${{ github.event.inputs.commit_results == 'true' && 'write' || 'read' }}
+      # GitHub Actions does not allow runtime contexts inside
+      # ``permissions`` values, so keep this static; the guarded commit
+      # step below is still opt-in via ``commit_results``.
+      contents: write
 
     steps:
       - name: Checkout repository
