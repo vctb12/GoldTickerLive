@@ -1,0 +1,71 @@
+# ------------------------------------------------------------------
+# Gold Provider Bakeoff Readiness — runs the readiness gate that
+# checks whether the repo is in a state safe for opening a Draft PR
+# and whether merge is still blocked by owner-side actions.
+#
+# It NEVER posts to X, NEVER touches production workflows, and
+# NEVER reads or prints secret values. It only reports.
+# ------------------------------------------------------------------
+name: Gold Bakeoff Readiness
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    paths:
+      - "scripts/python/**"
+      - ".github/workflows/test-gold-providers.yml"
+      - ".github/workflows/gold-provider-bakeoff.yml"
+      - ".github/workflows/gold-bakeoff-readiness.yml"
+      - ".github/workflows/pr-provider-smoke.yml"
+      - "docs/operator-inputs-gold-provider-bakeoff.md"
+      - "docs/OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md"
+      - "data/provider_state.json"
+      - "data/last_tweet_state.json"
+      - ".env.example"
+      - ".gitignore"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gold-bakeoff-readiness-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  readiness:
+    name: Readiness gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
+        with:
+          python-version: "3.11"
+
+      - name: Run readiness gate
+        id: gate
+        # `--draft-ok-exit-zero` means: exit 0 even when merge is blocked
+        # purely by owner-side actions (real bakeoff samples, scorecard
+        # decisions). Draft PR safety is still required to pass.
+        # Hard FAILs (missing infra, unsafe workflow defaults) still exit 1.
+        run: |
+          python scripts/python/gold_bakeoff_readiness.py \
+            --strict \
+            --draft-ok-exit-zero \
+            | tee readiness.txt
+
+      - name: Append summary
+        if: always()
+        run: |
+          {
+            echo "## Gold provider bakeoff readiness"
+            echo
+            echo "\`\`\`"
+            cat readiness.txt || true
+            echo "\`\`\`"
+            echo
+            echo "See [\`docs/OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md\`](../blob/${{ github.sha }}/docs/OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md) for owner-side steps."
+          } >> "$GITHUB_STEP_SUMMARY"

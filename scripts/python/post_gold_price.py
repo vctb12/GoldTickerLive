@@ -40,6 +40,16 @@ MARKET_CLOSE_EVENT_CRON = '3 21 * * 5'
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 GOLD_PRICE_FILE = _REPO_ROOT / "data" / "gold_price.json"
 STATE_FILE = _REPO_ROOT / "data" / "last_gold_price.json"
+LAST_TWEET_STATE_FILE = _REPO_ROOT / "data" / "last_tweet_state.json"
+
+# Optional new tweet-guard module (additive to the existing price-change /
+# content-hash guards). Imported lazily so unit tests that don't need it
+# still work if the module is missing.
+try:
+    sys.path.insert(0, str(_REPO_ROOT / "scripts" / "python"))
+    import tweet_guard  # type: ignore  # noqa: E402
+except Exception:  # pragma: no cover — guard is optional
+    tweet_guard = None  # type: ignore
 
 TWITTER_API_KEY = os.environ.get('TWITTER_API_KEY', '')
 TWITTER_API_SECRET = os.environ.get('TWITTER_API_SECRET', '')
@@ -596,6 +606,35 @@ def main():
         )
         sys.exit(0)
 
+    # 10b. New X duplicate-prevention guard (additive). Skips on:
+    #      • provider timestamp unchanged (GoldPriceZ freezing case)
+    #      • exact tweet-text hash match
+    #      • sub-threshold price movement when no force-summary window is due
+    #      • fallback/cache source with same price+timestamp
+    # Controlled by SKIP_DUPLICATE_TWEETS (default true). Set false to bypass.
+    if tweet_guard is not None:
+        guard_quote = {
+            "xau_usd_per_oz": data['price'],
+            "timestamp_utc": raw_data.get("source_updated_at_gmt") if isinstance(raw_data, dict) else None,
+            "is_fresh": staleness_action == 'ok',
+            "is_fallback": False,
+            "provider": (raw_data.get("source") if isinstance(raw_data, dict) else None) or "goldpricez",
+            "source_type": "spot_reference",
+        }
+        guard_state = tweet_guard.load_state(LAST_TWEET_STATE_FILE)
+        decision = tweet_guard.decide(guard_state, quote=guard_quote, tweet_text=tweet)
+        if not decision.should_post:
+            print(
+                f"SKIP: tweet-guard — {decision.skip_reason}"
+                f" (hash={decision.tweet_hash[:12]}, move=${decision.price_move_usd or 0:.2f},"
+                f" ts_changed={decision.provider_timestamp_changed})"
+            )
+            sys.exit(0)
+        if str(os.environ.get('DRY_RUN_TWEET', '')).strip().lower() in ('1', 'true', 'yes'):
+            print("DRY_RUN_TWEET=true — would post; skipping actual X call")
+            print(f"   would-post hash: {decision.tweet_hash[:12]}")
+            sys.exit(0)
+
     # 11. Length guard (enforced inside format_hourly_tweet; no extra check needed here)
 
     # 12. Post tweet
@@ -603,6 +642,18 @@ def main():
 
     # 13. Save state (only reached on successful post)
     _save_last_price(data["price"], content_hash=tweet_hash)
+    if tweet_guard is not None:
+        try:
+            new_state = tweet_guard.update_state_after_post(
+                guard_state,  # noqa: F821 — defined when tweet_guard is loaded
+                quote=guard_quote,  # noqa: F821
+                tweet_text=tweet,
+                tweet_id=None,
+                reason="price_moved",
+            )
+            tweet_guard.save_state(LAST_TWEET_STATE_FILE, new_state)
+        except Exception as exc:  # pragma: no cover — best-effort
+            print(f"⚠️  Failed to update last_tweet_state.json: {exc}")
 
 
 if __name__ == '__main__':

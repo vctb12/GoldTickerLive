@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "last_tweet_id": null,
+  "last_tweet_time_utc": null,
+  "last_tweet_text_hash": null,
+  "last_price_usd_oz": null,
+  "last_provider": null,
+  "last_provider_timestamp_utc": null,
+  "last_source_type": null,
+  "last_post_reason": null
+}
