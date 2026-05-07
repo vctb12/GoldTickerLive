@@ -45,7 +45,7 @@ Related docs:
 | Provider                  | Why it isn't a free pick                                                                                                                                                                                    |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **GoldPriceZ** (current)  | Real-world freezes for **30–45 minutes**, which causes duplicate-post rejections from X (HTTP 403, error code 187).                                                                                         |
-| **gold-api.com** (legacy) | Hit limits / became unreliable in this project's previous production usage. Disabled by default; not primary.                                                                                               |
+| **gold-api.com**          | Previously hit limits / became unreliable in this project's production usage. It is now the first provider in the fetch order, so fallback monitoring still matters.                                        |
 | **Twelve Data**           | Indexed docs show `/time_series` is 1 credit per symbol and Basic = 8 credits/min, 800/day, but free-key access for `XAU/USD` and public/social-display terms must still be confirmed against real samples. |
 | **GoldAPI.io**            | Different vendor from gold-api.com. Free quota historically very low (~100/month). Candidate only.                                                                                                          |
 | **Finnhub OANDA XAU/USD** | Free key may be plan-gated for forex/metals. Adapter detects `s=no_data` and "don't have access" responses and tags them `plan_gated`.                                                                      |
@@ -71,7 +71,7 @@ scripts/python/gold_providers/
 ├── goldapi_io.py      ← XAU/USD via x-access-token
 ├── twelvedata.py      ← /time_series interval=1min
 ├── goldpricez.py      ← legacy production source
-└── gold_api_com.py    ← legacy reference, disabled by default
+└── gold_api_com.py    ← current first fetch provider, monitored with fallback
 ```
 
 Every adapter:

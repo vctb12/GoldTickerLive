@@ -169,3 +169,35 @@ def test_all_adapters_skip_cleanly_with_no_env(monkeypatch):
         # No API keys leaked into the error message.
         assert "key" not in (result.get("error_message") or "").lower() or \
             "not set" in (result.get("error_message") or "").lower()
+
+
+def test_gold_api_com_success_note_matches_current_wording(monkeypatch):
+    from gold_providers import gold_api_com
+
+    monkeypatch.setenv("GOLD_API_COM_ENABLED", "true")
+    monkeypatch.delenv("GOLD_API_COM_KEY", raising=False)
+
+    class _Response:
+        status_code = 200
+
+        @staticmethod
+        def json():
+            return {
+                "price": "4550.00",
+                "updatedAt": "2026-05-01T10:00:00Z",
+            }
+
+    class _Result:
+        exception = None
+        response = _Response()
+        elapsed_ms = 123
+        rate_limit_remaining = None
+        rate_limit_reset = None
+
+    monkeypatch.setattr(gold_api_com, "http_get", lambda *args, **kwargs: _Result())
+
+    result = gold_api_com.fetch()
+
+    assert result["success"] is True
+    assert result["provider"] == "gold_api_com"
+    assert result["notes"] == "gold-api.com spot/reference price. Monitored with provider fallback."
