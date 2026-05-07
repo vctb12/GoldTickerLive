@@ -1,29 +1,43 @@
 {
-  "source": "goldpricez.com",
-  "fetched_at_utc": "2026-05-07T15:51:46Z",
-  "source_updated_at_gmt": "07-05-2026 03:51:44 pm",
-  "currency_primary": "AED",
+  "schema_version": 1,
+  "provider": "gold_api_com",
+  "provider_url": "https://gold-api.com/",
+  "source_type": "spot_reference",
+  "raw_symbol": "XAU",
+  "quote_currency": "USD",
+  "xau_usd_per_oz": 4716.1001,
+  "usd_per_gram_24k": 151.626139,
+  "aed_per_gram_24k": 556.847,
+  "aed_peg": 3.6725,
+  "timestamp_utc": "2026-05-07T16:15:53Z",
+  "timestamp_source": "provider",
+  "fetched_at_utc": "2026-05-07T16:16:27Z",
+  "freshness_seconds": 34,
+  "max_freshness_seconds": 900,
+  "is_fresh": true,
+  "is_fallback": false,
+  "bid": null,
+  "ask": null,
+  "spread": null,
+  "provider_response_time_ms": 195,
+  "raw_provider_confidence": null,
+  "notes": "gold-api.com \u2014 historically rate-limited in this project; not for primary use",
+  "source": "gold_api_com",
+  "source_updated_at_gmt": "07-05-2026 04:15:53 pm",
   "gold": {
-    "ounce_usd": 4737.06,
-    "ounce_aed": 17401.57,
-    "gram_aed": 558.59,
-    "kg_aed": 559472.81,
-    "tola_india_aed": 6525.59,
-    "ask_usd": 4737.06,
-    "bid_usd": 4737.06,
-    "day_low_usd": 4684.99,
-    "day_high_usd": 4764.97
-  },
-  "silver": {
-    "ounce_usd": 0.0,
-    "gram_aed": 0.0
+    "ounce_usd": 4716.1,
+    "ounce_aed": 17319.88,
+    "gram_aed": 556.85,
+    "day_low_usd": null,
+    "day_high_usd": null,
+    "ask_usd": 4716.1,
+    "bid_usd": 4716.1
   },
   "karats_aed_per_gram": {
-    "24k": 558.59,
-    "22k": 512.06,
-    "21k": 488.77,
-    "18k": 418.94
+    "24k": 556.85,
+    "22k": 510.44,
+    "21k": 487.24,
+    "18k": 417.64
   },
-  "status": "ok",
-  "notes": "Spot/reference prices. Not UAE retail or jewelry shop prices."
+  "status": "ok"
 }
