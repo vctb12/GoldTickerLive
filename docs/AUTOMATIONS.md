@@ -114,37 +114,51 @@ Pings the site every **30 minutes**. Alerts via Telegram and/or Discord if site 
 
 ### 8. Python X/Twitter posts — `post_gold.yml`
 
-Runs every 6 minutes while the global gold market is open (Sunday 21:00 UTC through Friday 20:59
-UTC), offset a few minutes after the fetch workflow so it reads freshly committed data. It posts
-only when the committed spot price changes. Manual runs use the same staleness, market-hours,
-price-change, and duplicate-content guards; they are not force posts.
+Runs **hourly** while the global gold market is open (Sunday 21:00 UTC through Friday 20:59 UTC),
+offset a few minutes after the fetch workflow so it reads freshly committed data. It posts only when
+the cached result passes the stale, duplicate, cooldown, and 280-character guards.
+
+Manual `workflow_dispatch` is supported for GitHub UI and iPhone Shortcut triggers. Manual runs do
+not fetch gold prices themselves and do not bypass GitHub guardrails; they reuse the same cached
+`data/gold_price.json` source-of-truth and are protected by the same skip logic. `force_post=true`
+only overrides the cooldown guard.
 
 - Script: `scripts/python/post_gold_price.py`
-- Secrets needed: `CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET`,
-  `GOLDPRICEZ_API_KEY`
+- Secrets needed: `CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET`
 - State file: `data/last_gold_price.json` records the last successful post and is ignored by the
   deploy workflow to avoid redeploying the site for tweet-state-only commits.
-- Market open/close tweets use explicit cron entries so delayed GitHub scheduled starts do not
-  repeat event tweets throughout the hour.
+- `data/last_tweet_state.json` stores duplicate/cooldown state for safe scheduled + manual runs.
+- Recommended manual inputs: `dry_run`, `force_post`, and `source` (`manual`, `shortcut`,
+  `scheduled`).
 
 ### 8a. Gold provider bakeoff & migration (infrastructure only)
 
 The provider-adapter pipeline (`scripts/python/fetch_gold_price.py`,
 `scripts/python/provider_bakeoff.py`, `scripts/python/provider_scorecard.py`,
-`scripts/python/tweet_guard.py`) and its workflows
-(`gold-provider-bakeoff.yml`, `test-gold-providers.yml`) are landed but **not** wired into
-production. Legacy GoldPriceZ remains the active path until you flip it.
+`scripts/python/tweet_guard.py`) and its workflows (`gold-provider-bakeoff.yml`,
+`test-gold-providers.yml`) are landed but **not** wired into production. Legacy GoldPriceZ remains
+the active path until you flip it.
 
 Before activating, fill in the operator checklist:
-[`docs/operator-inputs-gold-provider-bakeoff.md`](./operator-inputs-gold-provider-bakeoff.md).
-For the owner-only pre-merge checklist see
-[`docs/OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md`](./OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md).
-Run the readiness gate before review/merge:
-`python scripts/python/gold_bakeoff_readiness.py --strict` (also available as
-**Actions → Gold Bakeoff Readiness**).
-See also [`gold-price-provider-bakeoff.md`](./gold-price-provider-bakeoff.md),
+[`docs/operator-inputs-gold-provider-bakeoff.md`](./operator-inputs-gold-provider-bakeoff.md). For
+the owner-only pre-merge checklist see
+[`docs/OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md`](./OWNER_ACTIONS_REQUIRED_GOLD_BAKEOFF.md). Run the
+readiness gate before review/merge: `python scripts/python/gold_bakeoff_readiness.py --strict` (also
+available as **Actions → Gold Bakeoff Readiness**). See also
+[`gold-price-provider-bakeoff.md`](./gold-price-provider-bakeoff.md),
 [`gold-price-provider-migration.md`](./gold-price-provider-migration.md), and
 [`x-automation-duplicate-policy.md`](./x-automation-duplicate-policy.md).
+
+Fast safe workflows:
+
+- **Immediate smoke:** **Actions → Test Gold Providers (manual)** → one round, artifact-only, no X
+  post, no commit.
+- **Micro-bakeoff:** **Actions → Gold Provider Bakeoff** with `mode=micro`,
+  `duration_minutes=50..90`, `interval_seconds=360`, `commit_results=false`.
+
+The 24h+ bakeoff is still the confidence gate for picking a winning provider and changing
+production, but it is **not** required to keep iterating on the automation or to gather quick
+same-day evidence.
 
 ### 9. Market events — `market_events.yml`
 

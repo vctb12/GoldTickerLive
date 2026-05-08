@@ -438,8 +438,6 @@ def format_hourly_tweet(data):
         f"\n"
         f"#GoldPrice #Gold #UAE #Dubai"
     )
-    if len(tweet) > 320:
-        raise ValueError(f"Hourly tweet exceeds 280 chars: {len(tweet)}")
     return tweet
 
 def format_market_open_tweet(data):
@@ -491,6 +489,16 @@ def format_tweet(data, post_type):
     if post_type == 'market_close':
         return format_market_close_tweet(data)
     return format_hourly_tweet(data)
+
+
+def check_tweet_length_guard(text, limit=280):
+    length = len(text or "")
+    if length <= limit:
+        return (False, None)
+    return (
+        True,
+        f"SKIP: tweet-length guard — {length} chars exceeds {limit}",
+    )
 
 # ── Step 3: Post to X / Twitter ──────────────────────────────────────────────
 def _log_tweet_error(exc, text, post_type):
@@ -586,6 +594,9 @@ def main():
     # GitHub scheduled workflows can start late, so using github.event.schedule
     # prevents repeated event tweets during the whole delayed start hour.
     schedule_cron = os.environ.get('GITHUB_EVENT_SCHEDULE', '').strip() or None
+    trigger_source = os.environ.get('POST_TRIGGER_SOURCE', '').strip() or (
+        'scheduled' if schedule_cron else 'manual'
+    )
     post_type = get_post_type(schedule_cron=schedule_cron)
 
     # 4. Print RUN CONTEXT block
@@ -595,6 +606,9 @@ def main():
     print(f"sha:          {sha[:7] if sha else 'local'}")
     print(f"actor:        {os.environ.get('GITHUB_ACTOR', 'local')}")
     print(f"schedule:     {schedule_cron or 'manual/local'}")
+    print(f"source:       {trigger_source}")
+    print(f"dry_run:      {os.environ.get('DRY_RUN_TWEET', 'false')}")
+    print(f"force_post:   {os.environ.get('FORCE_POST', 'false')}")
     print(f"post_type:    {post_type}")
     print("data_file:    data/gold_price.json")
     print(f"source_ts:    {source_ts}")
@@ -639,7 +653,13 @@ def main():
     print(tweet)
     print(f"   ({len(tweet)} characters)")
 
-    # 10. Content-hash guard
+    # 10. Length guard
+    skip, reason = check_tweet_length_guard(tweet)
+    if skip:
+        print(reason)
+        sys.exit(0)
+
+    # 11. Content-hash guard
     tweet_hash = compute_content_hash(tweet)
     prev_hash = data.get('prev_content_hash')
     if (
@@ -653,7 +673,7 @@ def main():
         )
         sys.exit(0)
 
-    # 10b. New X duplicate-prevention guard (additive). Skips on:
+    # 11b. New X duplicate-prevention guard (additive). Skips on:
     #      • provider timestamp unchanged (GoldPriceZ freezing case)
     #      • exact tweet-text hash match
     #      • sub-threshold price movement when no force-summary window is due
@@ -688,8 +708,6 @@ def main():
             print(f"   would-post hash: {decision.tweet_hash[:12]}")
             sys.exit(0)
 
-    # 11. Length guard (enforced inside format_hourly_tweet; no extra check needed here)
-
     # 12. Post tweet
     post_tweet(tweet, post_type=post_type)
 
@@ -702,7 +720,7 @@ def main():
                 quote=guard_quote,  # noqa: F821
                 tweet_text=tweet,
                 tweet_id=None,
-                reason="price_moved",
+                reason=f"{trigger_source}_price_moved",
             )
             tweet_guard.save_state(LAST_TWEET_STATE_FILE, new_state)
         except Exception as exc:  # pragma: no cover — best-effort

@@ -27,6 +27,11 @@ This doc covers:
 4. How to read the scorecard.
 5. What input is still needed from the user.
 
+Short version: you do **not** need a 24-hour bakeoff to keep developing the automation safely today.
+Use the manual smoke workflow for an immediate one-round check, or the micro-bakeoff mode for a
+50–90 minute artifact-only burst. The 24h+ bakeoff remains the confidence gate for provider
+selection and production cutover.
+
 Related docs:
 
 - [`docs/gold-price-provider-migration.md`](./gold-price-provider-migration.md) — how to flip the
@@ -115,16 +120,52 @@ Two workflows ship:
 
 - **Manual smoke test:**
   [`.github/workflows/test-gold-providers.yml`](../.github/workflows/test-gold-providers.yml) — runs
-  once, no commit, no X post, uploads a sanitized artifact. Use this when you wire up a new key.
-- **Hourly + on-demand bakeoff:**
+  once, no commit, no X post, uploads a sanitized artifact. Use this when you wire up a new key or
+  want an immediate provider sanity check.
+- **On-demand bakeoff:**
   [`.github/workflows/gold-provider-bakeoff.yml`](../.github/workflows/gold-provider-bakeoff.yml) —
-  runs one round per hour at minute 11 (offset away from the busy minute 0 where Actions sees the
-  most schedule starvation), and supports `workflow_dispatch` with `duration_hours`,
+  supports `workflow_dispatch` with `mode`, `duration_minutes`, `duration_hours`,
   `interval_seconds`, `providers`, and `commit_results`. Uploads JSONL + scorecard as artifacts.
   Commits to the branch only if `commit_results=true`.
 
-The hourly cadence intentionally avoids one long 24–48 h run because hosted runners can be
-evicted/timed out, especially during platform incidents.
+There is no automatic scheduled bakeoff in the conservative production setup. Any 6-minute polling
+is reserved for manual smoke or micro-bakeoff runs so provider testing stays separate from the
+hourly production automation budget.
+
+### Fast paths you can run today
+
+#### Immediate smoke test (one round)
+
+1. Open **Actions → Test Gold Providers (manual)**.
+2. Click **Run workflow**.
+3. Optional `providers` input: e.g. `goldapi_io,twelvedata_xauusd,fmp_gcusd`
+4. Keep `log_raw=false`.
+5. Download the artifact and inspect `out/provider_test_scorecard.json`.
+
+This path is safe by design:
+
+- no X/Twitter posting
+- no git commit
+- artifact-only output
+- secret names only: `TWELVEDATA_API_KEY`, `FINNHUB_API_KEY`, `FMP_API_KEY`, `GOLDAPI_IO_KEY`,
+  `METAL_SENTINEL_API_KEY`, `METAL_SENTINEL_API_HOST`, `GOLDPRICEZ_API_KEY`
+
+#### Micro-bakeoff (50–90 minutes)
+
+1. Open **Actions → Gold Provider Bakeoff**.
+2. Click **Run workflow**.
+3. Set `mode=micro`.
+4. Leave `duration_minutes=60` or choose any value from `50` to `90`.
+5. Keep `interval_seconds=360`.
+6. Keep `commit_results=false`.
+7. Optionally set `providers=goldapi_io,twelvedata_xauusd,fmp_gcusd`.
+
+Micro mode is for short-term evidence gathering, not winner selection. It is still:
+
+- artifact-only by default
+- no X/Twitter posting
+- no commit unless `commit_results=true`
+- safe to run before a longer 24h confidence bakeoff
 
 ## 4. Reading the scorecard
 
@@ -163,14 +204,16 @@ The infrastructure is now done. The remaining decisions need real keys / real si
 - **Add API keys** to GitHub Secrets for the providers you want to test (`TWELVEDATA_API_KEY`,
   `FINNHUB_API_KEY`, `GOLDAPI_IO_KEY`, `FMP_API_KEY`, `METAL_SENTINEL_API_KEY` + `*_ENABLED=true`).
   Missing keys produce a clean `missing_api_key` row and don't break anything.
-- **Let the hourly bakeoff run** for ≥ 24 hours so the scorecard has enough samples per provider.
+- **Use smoke or micro mode first** if you need quick evidence to keep development moving today.
+- **Run a longer manual bakeoff** for ≥ 24 hours only when you need final confidence for provider
+  ranking, winner selection, or production cutover.
 - **Decide whether to commit bakeoff results** to git or keep them as artifacts.
   (`commit_results=true` workflow input.)
 - **Pick the winner** based on the scorecard, then follow
   [`docs/gold-price-provider-migration.md`](./gold-price-provider-migration.md) to flip
   `GOLD_PROVIDER_ORDER` in production.
-- **Optional:** reduce polling from 6 minutes to 10 minutes (cron `3-53/10 * * * *`) if a winner has
-  tighter quota; see the migration doc.
+- **Keep production separate from bakeoff sampling.** Production should stay on the hourly cached
+  fetch → post flow unless a separate cutover decision changes it.
 
 No claim of "best provider" should be made until the scorecard has at least 24 hours of samples
 across providers in both market-open and market-closed windows.
