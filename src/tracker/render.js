@@ -1082,10 +1082,15 @@ export function renderDecisionCues() {
       el(
         'p',
         null,
-        tx(summary?.absoluteChange >= 0 ? 'decision.directionUp' : 'decision.directionDown', {
-          spot: spot.toFixed(2),
-          source: freshness.sourceLabel,
-        })
+        summary && summary.absoluteChange === 0
+          ? tx('decision.directionFlat', {
+              spot: spot.toFixed(2),
+              source: freshness.sourceLabel,
+            })
+          : tx(summary?.absoluteChange > 0 ? 'decision.directionUp' : 'decision.directionDown', {
+              spot: spot.toFixed(2),
+              source: freshness.sourceLabel,
+            })
       ),
     ]),
     el('article', { class: 'trust-note-card' }, [

@@ -1,5 +1,6 @@
 // tracker/state.js
 import { CONSTANTS } from '../config/index.js';
+import { COUNTRIES } from '../config/index.js';
 import * as cache from '../lib/cache.js';
 import { showStorageQuotaWarning } from '../lib/cache.js';
 
@@ -53,6 +54,7 @@ export const DEFAULT_STATE = {
 
 export function createInitialState() {
   const base = structuredClone(DEFAULT_STATE);
+  const validCountryCodes = new Set(COUNTRIES.map((country) => country.code));
 
   // Load shared cache into a stub first so we don't double-maintain logic.
   const stub = {
@@ -110,7 +112,7 @@ export function createInitialState() {
   base.compareCurrency = saved.compareCurrency || base.compareCurrency;
   base.compareCountries =
     Array.isArray(saved.compareCountries) && saved.compareCountries.length
-      ? saved.compareCountries.slice(0, 3)
+      ? saved.compareCountries.filter((code) => !code || validCountryCodes.has(code)).slice(0, 3)
       : base.compareCountries;
   base.compareKarats =
     Array.isArray(saved.compareKarats) && saved.compareKarats.length

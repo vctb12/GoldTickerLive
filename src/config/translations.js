@@ -287,6 +287,8 @@ export const TRANSLATIONS = {
       'Reference prices are currently above the recent starting point, with spot at ${spot} and labeled {source}.',
     'tracker.decision.directionDown':
       'Reference prices are currently below the recent starting point, with spot at ${spot} and labeled {source}.',
+    'tracker.decision.directionFlat':
+      'Reference prices are flat versus the selected start point, with spot at ${spot} and labeled {source}.',
     'tracker.decision.rangeMovementTitle': 'What changed since range start',
     'tracker.decision.rangeMovementCopy':
       '{range} moved {change} ({move}) in the selected reference window.',
@@ -845,6 +847,8 @@ export const TRANSLATIONS = {
       'الأسعار المرجعية حالياً أعلى من نقطة البداية الأخيرة، مع سعر فوري ${spot} وموسوم بأنه {source}.',
     'tracker.decision.directionDown':
       'الأسعار المرجعية حالياً أدنى من نقطة البداية الأخيرة، مع سعر فوري ${spot} وموسوم بأنه {source}.',
+    'tracker.decision.directionFlat':
+      'الأسعار المرجعية مستقرة مقارنة ببداية النطاق المحدد، مع سعر فوري ${spot} وموسوم بأنه {source}.',
     'tracker.decision.rangeMovementTitle': 'ما الذي تغيّر منذ بداية النطاق',
     'tracker.decision.rangeMovementCopy':
       'تحرك {range} بمقدار {change} ({move}) داخل نافذة المرجع المحددة.',
