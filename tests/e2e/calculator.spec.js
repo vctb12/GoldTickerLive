@@ -42,12 +42,12 @@ test.describe('Calculator page', () => {
 
   test('link back to tracker is present', async ({ page }) => {
     // The page should link to tracker.html for context-switching
-    const trackerLinks = page.locator('a[href*="tracker"]');
+    const trackerLinks = page.locator('main a[href*="tracker"]:visible');
     await expect(trackerLinks.first()).toBeVisible();
   });
 
   test('link to methodology is present', async ({ page }) => {
-    const methodLinks = page.locator('a[href*="methodology"]');
+    const methodLinks = page.locator('main a[href*="methodology"]:visible');
     await expect(methodLinks.first()).toBeVisible();
   });
 

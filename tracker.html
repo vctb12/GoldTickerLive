@@ -332,39 +332,42 @@
           <nav class="tracker-modes" role="tablist" aria-orientation="horizontal" aria-label="Tracker workspace modes">
             <!-- Primary modes -->
             <div class="tracker-modes-primary">
-              <button
+              <a
                 class="tracker-mode-tab is-active"
                 role="tab"
                 aria-selected="true"
                 aria-controls="mode-live"
                 id="tab-live"
                 data-mode="live"
+                href="#mode=live"
               >
                 <span class="tp-tab-icon" aria-hidden="true">📡</span>
                 <span class="tp-tab-label">Live</span>
-              </button>
-              <button
+              </a>
+              <a
                 class="tracker-mode-tab"
                 role="tab"
                 aria-selected="false"
                 aria-controls="mode-compare"
                 id="tab-compare"
                 data-mode="compare"
+                href="#mode=compare"
               >
                 <span class="tp-tab-icon" aria-hidden="true">🌍</span>
                 <span class="tp-tab-label">Compare</span>
-              </button>
-              <button
+              </a>
+              <a
                 class="tracker-mode-tab tracker-advanced-only"
                 role="tab"
                 aria-selected="false"
                 aria-controls="mode-archive"
                 id="tab-archive"
                 data-mode="archive"
+                href="#mode=archive"
               >
                 <span class="tp-tab-icon" aria-hidden="true">🗂</span>
                 <span class="tp-tab-label">Archive</span>
-              </button>
+              </a>
             </div>
 
             <!-- Divider -->
@@ -398,28 +401,30 @@
 
             <!-- Advanced modes (hidden in basic workspace) -->
             <div class="tracker-modes-advanced tracker-advanced-only">
-              <button
+              <a
                 class="tracker-mode-tab tracker-advanced-only"
                 role="tab"
                 aria-selected="false"
                 aria-controls="mode-exports"
                 id="tab-exports"
                 data-mode="exports"
+                href="#mode=exports"
               >
                 <span class="tp-tab-icon" aria-hidden="true">⬇</span>
                 <span class="tp-tab-label">Exports</span>
-              </button>
-              <button
+              </a>
+              <a
                 class="tracker-mode-tab tracker-advanced-only"
                 role="tab"
                 aria-selected="false"
                 aria-controls="mode-method"
                 id="tab-method"
                 data-mode="method"
+                href="#mode=method"
               >
                 <span class="tp-tab-icon" aria-hidden="true">📖</span>
                 <span class="tp-tab-label">Method</span>
-              </button>
+              </a>
             </div>
           </nav>
 
@@ -637,7 +642,7 @@
 
       <!-- ── MODE: COMPARE ──────────────────────────────────── -->
       <section
-        class="tracker-shell tracker-compare-shell tracker-mode-panel tracker-advanced-only"
+        class="tracker-shell tracker-compare-shell tracker-mode-panel"
         id="mode-compare"
         role="tabpanel"
         aria-labelledby="tab-compare"

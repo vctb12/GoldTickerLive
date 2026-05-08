@@ -15,6 +15,8 @@ import { TRACKER_PANELS, getShortcutMap } from './modes.js';
 let _openPanel = null;
 
 export function mountShell(state, els, onModeChange, onLangChange) {
+  const ADVANCED_MODES = new Set(['archive', 'exports', 'method']);
+
   // Mount shared shell
   injectSpotBar(state.lang, 0);
   const navCtrl = injectNav(state.lang, 0);
@@ -49,9 +51,6 @@ export function mountShell(state, els, onModeChange, onLangChange) {
       workspaceToggle.textContent = advanced ? 'Use basic workspace' : 'Open advanced workspace';
       workspaceToggle.setAttribute('aria-pressed', advanced ? 'true' : 'false');
     }
-    if (!advanced && state.mode !== 'live') {
-      setMode('live');
-    }
     if (!advanced && _openPanel) {
       closeOverlay(_openPanel);
     }
@@ -61,6 +60,9 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     state.workspaceLevel = level === 'advanced' ? 'advanced' : 'basic';
     persistState(state);
     applyWorkspaceLevel();
+    if (state.workspaceLevel !== 'advanced' && ADVANCED_MODES.has(state.mode)) {
+      setMode('live');
+    }
     if (typeof onModeChange === 'function') onModeChange(state.mode);
   }
 
@@ -71,7 +73,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   }
 
   function setMode(mode) {
-    if (mode !== 'live') ensureAdvancedWorkspace();
+    if (ADVANCED_MODES.has(mode)) ensureAdvancedWorkspace();
     state.mode = mode;
     tabs.forEach((tab) => {
       const active = tab.dataset.mode === mode;
@@ -87,8 +89,15 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     if (typeof onModeChange === 'function') onModeChange(mode);
   }
 
+  // Apply workspace classes immediately so advanced-only elements are hidden in
+  // basic workspace (and shown in advanced) before tests/users interact.
+  applyWorkspaceLevel();
+
   tabs.forEach((tab) => {
-    tab.addEventListener('click', () => setMode(tab.dataset.mode));
+    tab.addEventListener('click', (event) => {
+      if (tab.tagName === 'A') event.preventDefault();
+      setMode(tab.dataset.mode);
+    });
   });
 
   // Initial mode selection (never allow alerts/planner as mode)

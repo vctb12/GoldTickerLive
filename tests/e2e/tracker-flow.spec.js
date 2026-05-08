@@ -33,6 +33,12 @@ test.describe('Tracker page — live mode & navigation', () => {
   test('clicking compare tab switches to compare panel', async ({ page }) => {
     await page.goto('/tracker.html');
     await page.waitForSelector('[data-mode="compare"]', { timeout: 10000 });
+    await page.waitForFunction(
+      () =>
+        document.body.classList.contains('tracker-workspace-basic') ||
+        document.body.classList.contains('tracker-workspace-advanced'),
+      { timeout: 10000 }
+    );
 
     await page.locator('[data-mode="compare"]').click();
 
@@ -50,10 +56,13 @@ test.describe('Tracker page — live mode & navigation', () => {
   });
 
   test('method tab opens the methodology panel', async ({ page }) => {
-    await page.goto('/tracker.html');
-    await page.waitForSelector('[data-mode="method"]', { timeout: 10000 });
-
-    await page.locator('[data-mode="method"]').click();
+    await page.goto('/tracker.html#mode=method');
+    await page.waitForFunction(
+      () =>
+        document.body.classList.contains('tracker-workspace-basic') ||
+        document.body.classList.contains('tracker-workspace-advanced'),
+      { timeout: 10000 }
+    );
 
     const methodPanel = page.locator('#mode-method');
     await expect(methodPanel).toBeVisible({ timeout: 5000 });

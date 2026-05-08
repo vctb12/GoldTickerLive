@@ -83,8 +83,17 @@ test.describe('Shops directory page', () => {
   });
 
   test('search input filters shop listings', async ({ page }) => {
-    // Wait for shops to render
-    await page.waitForSelector('.shop-card, #shops-grid', { timeout: 5000 }).catch(() => null);
+    // Wait for the initial render (cards or empty state)
+    await page
+      .waitForFunction(
+        () => {
+          const cards = document.querySelectorAll('.shop-card').length;
+          const empty = document.getElementById('shops-empty');
+          return cards > 0 || (empty && !empty.hidden);
+        },
+        { timeout: 10000 }
+      )
+      .catch(() => null);
 
     const searchInput = page.locator(
       '#shops-search, input[type="search"], input[placeholder*="search" i], input[aria-label*="search" i]'
@@ -95,11 +104,23 @@ test.describe('Shops directory page', () => {
       return;
     }
 
+    const cardsBefore = await page.locator('.shop-card').count();
+
     // Type a search term and verify something happens (count changes or empty state)
     await searchInput.first().fill('Dubai');
-    await page.waitForTimeout(400); // debounce
+    await page
+      .waitForFunction(
+        (before) => {
+          const cards = document.querySelectorAll('.shop-card').length;
+          const empty = document.getElementById('shops-empty');
+          return cards !== before || (empty && !empty.hidden);
+        },
+        cardsBefore,
+        { timeout: 8000 }
+      )
+      .catch(() => null);
 
-    const listingsAfter = await page.locator('.shop-card, .shops-card, [data-shop-id]').count();
+    const listingsAfter = await page.locator('.shop-card').count();
     const emptyState = page.locator('#shops-empty, .shops-empty, [data-empty-state]');
     const hasEmptyState = (await emptyState.count()) > 0 && (await emptyState.first().isVisible());
 
