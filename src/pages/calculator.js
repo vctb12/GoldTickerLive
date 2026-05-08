@@ -111,8 +111,10 @@ const T = {
     conv_from: 'From',
     conv_results_title: 'Equivalent weights',
     freshness_waiting: 'Freshness: waiting for source timestamp…',
-    trust_note:
-      'Labels used across Gold Ticker Live: Live, Delayed, Cached/Fallback, Estimated, Historical baseline. Calculator outputs are spot-linked reference estimates, not final retail jewelry quotes.',
+    trust_note_prefix:
+      'Calculator outputs are spot-linked reference estimates — not final retail jewelry quotes. Actual shop prices add making charges, premiums, and taxes.',
+    trust_note_spot_link: 'Spot vs retail explained →',
+    trust_note_method_link: 'Full methodology →',
     copy_result: 'Copy result',
     copied_result: 'Copied!',
   },
@@ -167,8 +169,10 @@ const T = {
     conv_from: 'من',
     conv_results_title: 'الأوزان المكافئة',
     freshness_waiting: 'حداثة البيانات: بانتظار الطابع الزمني من المصدر…',
-    trust_note:
-      'التسميات الموحدة عبر Gold Ticker Live: مباشر، متأخر، مخزن/احتياطي، تقديري، وخط أساس تاريخي. نتائج الحاسبة تقديرات مرجعية مرتبطة بالسعر الفوري وليست سعر تجزئة نهائي للمجوهرات.',
+    trust_note_prefix:
+      'نواتج الحاسبة تقديرات مرجعية مرتبطة بالسعر الفوري — وليست أسعار تجزئة نهائية للمجوهرات. قد تضيف المحلات المصنعية والهامش والضريبة.',
+    trust_note_spot_link: 'الفرق بين الفوري والتجزئة →',
+    trust_note_method_link: 'المنهجية كاملة →',
     copy_result: 'نسخ النتيجة',
     copied_result: 'تم النسخ!',
   },
@@ -514,7 +518,16 @@ function applyLang() {
   set('conv-from-label', t('conv_from'));
   set('conv-results-title', t('conv_results_title'));
   set('calc-freshness-note', t('freshness_waiting'));
-  set('calc-trust-note', t('trust_note'));
+  const trustNote = document.getElementById('calc-trust-note');
+  if (trustNote) {
+    trustNote.replaceChildren(
+      t('trust_note_prefix'),
+      ' ',
+      el('a', { href: 'content/spot-vs-retail-gold-price/' }, [t('trust_note_spot_link')]),
+      ' · ',
+      el('a', { href: 'methodology.html' }, [t('trust_note_method_link')])
+    );
+  }
   document.querySelectorAll('.calc-copy-btn').forEach((btn) => {
     btn.textContent = t('copy_result');
     btn.setAttribute('aria-label', t('copy_result'));

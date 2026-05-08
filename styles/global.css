@@ -1052,6 +1052,7 @@ body.has-spot-bar .site-nav {
 
 /* --- Mobile drawer (off-canvas sheet from the right) --- */
 .nav-drawer {
+  display: none;
   position: fixed;
   top: 0;
   inset-inline-end: 0;
@@ -1074,6 +1075,7 @@ body.has-spot-bar .site-nav {
 }
 
 .nav-drawer.is-open {
+  display: block;
   transform: translateX(0);
   visibility: visible;
 }
@@ -1129,6 +1131,7 @@ body.has-spot-bar .site-nav {
 
 /* --- Backdrop / overlay --- */
 .nav-backdrop {
+  display: none;
   position: fixed;
   inset: 0;
   background: rgb(28 24 20 / 48%);
@@ -1142,6 +1145,7 @@ body.has-spot-bar .site-nav {
 }
 
 .nav-backdrop.is-visible {
+  display: block;
   opacity: 1;
   visibility: visible;
 }

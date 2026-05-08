@@ -49,10 +49,8 @@ test.describe('Tracker page — live mode & navigation', () => {
 
   test('tracker has a link to methodology', async ({ page }) => {
     await page.goto('/tracker.html');
-    await page.waitForSelector('a[href*="methodology"]', { timeout: 10000 });
-
-    const methodLink = page.locator('a[href*="methodology"]').first();
-    await expect(methodLink).toBeVisible();
+    const methodLink = page.locator('main a[href*="methodology"]:visible').first();
+    await expect(methodLink).toBeVisible({ timeout: 10000 });
   });
 
   test('method tab opens the methodology panel', async ({ page }) => {
@@ -68,7 +66,8 @@ test.describe('Tracker page — live mode & navigation', () => {
     await expect(methodPanel).toBeVisible({ timeout: 5000 });
 
     // Should contain methodology link
-    await expect(page.locator('#mode-method a[href*="methodology"]')).toBeVisible();
+    const methodCta = page.locator('#mode-method a[href*=\"methodology\"]:visible').first();
+    await expect(methodCta).toBeVisible({ timeout: 5000 });
   });
 
   test('tracker has XAU/USD price element', async ({ page }) => {

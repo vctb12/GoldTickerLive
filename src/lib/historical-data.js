@@ -30,7 +30,19 @@
 // Source: LBMA PM fix monthly averages (public domain)
 // ─────────────────────────────────────────────────────────────────────────────
 
-import MONTHLY_BASELINE from '../data/historical-baseline.json' assert { type: 'json' };
+async function loadMonthlyBaseline() {
+  try {
+    const url = new URL('../data/historical-baseline.json', import.meta.url);
+    const resp = await fetch(url, { cache: 'force-cache' });
+    if (!resp.ok) return [];
+    const data = await resp.json();
+    return Array.isArray(data) ? data : [];
+  } catch (_e) {
+    return [];
+  }
+}
+
+const MONTHLY_BASELINE = await loadMonthlyBaseline();
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SCHEMA HELPERS

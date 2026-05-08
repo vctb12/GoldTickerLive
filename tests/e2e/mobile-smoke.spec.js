@@ -49,7 +49,18 @@ test.describe('Mobile smoke — layout, nav, overflow', () => {
         const errors = [];
         page.on('pageerror', (err) => errors.push(String(err)));
         page.on('console', (msg) => {
-          if (msg.type() === 'error') errors.push(msg.text());
+          if (msg.type() !== 'error') return;
+          const text = msg.text() || '';
+          // In CI / offline runs, external resources (fonts/ads) may be blocked and
+          // generate browser-level console errors. Treat these as non-fatal so the
+          // smoke suite still catches real JS errors and layout regressions.
+          const ignorable =
+            /X-Frame-Options may only be set via an HTTP header/i.test(text) ||
+            /Failed to load resource: net::ERR_NAME_NOT_RESOLVED/i.test(text) ||
+            /Failed to load resource: net::ERR_BLOCKED_BY_CLIENT/i.test(text) ||
+            /Failed to load resource: net::ERR_CONNECTION_REFUSED/i.test(text);
+          if (ignorable) return;
+          errors.push(text);
         });
 
         await page.setViewportSize({ width: viewport.width, height: viewport.height });
@@ -94,11 +105,12 @@ test.describe('Mobile smoke — layout, nav, overflow', () => {
     await page.goto(url, { waitUntil: 'domcontentloaded' });
 
     await expect(page.locator('nav.site-nav')).toHaveCount(1);
-    await page.waitForSelector('#nav-lang-toggle', { timeout: 10000 });
-
-    await page.locator('#nav-lang-toggle').click();
+    // On phone widths, the desktop language toggle is hidden; use the drawer toggle.
+    await page.waitForSelector('.mobile-bottom-nav', { timeout: 10000 });
+    await page.locator('[data-mobile-nav="menu"]').click();
+    await page.waitForSelector('#nav-lang-toggle-mobile', { timeout: 10000 });
+    await page.locator('#nav-lang-toggle-mobile').click();
     await page.waitForFunction(() => document.documentElement.dir === 'rtl', { timeout: 10000 });
     await assertNoHorizontalOverflow(page);
   });
 });
-

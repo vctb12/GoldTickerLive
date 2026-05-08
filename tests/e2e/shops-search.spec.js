@@ -95,19 +95,14 @@ test.describe('Shops directory page', () => {
       )
       .catch(() => null);
 
-    const searchInput = page.locator(
-      '#shops-search, input[type="search"], input[placeholder*="search" i], input[aria-label*="search" i]'
-    );
-    const inputCount = await searchInput.count();
-    if (inputCount === 0) {
-      // Search input not present — skip gracefully (feature may not be on this build)
-      return;
-    }
+    const searchInput = page.locator('main #shops-search');
+    if ((await searchInput.count()) === 0) return; // graceful skip
 
     const cardsBefore = await page.locator('.shop-card').count();
 
     // Type a search term and verify something happens (count changes or empty state)
-    await searchInput.first().fill('Dubai');
+    await expect(searchInput).toBeVisible({ timeout: 5000 });
+    await searchInput.fill('Dubai');
     await page
       .waitForFunction(
         (before) => {
