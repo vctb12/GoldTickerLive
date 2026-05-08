@@ -364,7 +364,7 @@ Each adapter **also** checks a per-provider `*_ENABLED` flag (default `false` ex
 > ❗ Owner-side legacy / unused secrets — keep them, but they are **not** wired up:
 >
 > - `GOLD_API_KEY` — no adapter reads this; not the same as `GOLDAPI_IO_KEY`. Likely a relic from
->   the old `goldpricez.com`-only flow. Safe to leave; do not rename.
+>   the pre-provider-adapter fetch flow. Safe to leave; do not rename.
 > - `API_NINJAS_API_KEY`, `API_FX_URL`, `API_GOLD_URL` — no adapter reads these. There is no
 >   `api_ninjas` adapter, and per the brief, API Ninjas should stay out of the default provider
 >   order on the free tier. Leave the secrets but do not add an adapter.

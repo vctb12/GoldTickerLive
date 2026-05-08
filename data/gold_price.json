@@ -21,7 +21,7 @@
   "spread": null,
   "provider_response_time_ms": 521,
   "raw_provider_confidence": null,
-  "notes": "gold-api.com \u2014 historically rate-limited in this project; not for primary use",
+  "notes": "gold-api.com spot/reference price. Monitored with provider fallback.",
   "source": "gold_api_com",
   "source_updated_at_gmt": "08-05-2026 10:00:53 am",
   "gold": {

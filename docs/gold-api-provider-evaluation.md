@@ -1,8 +1,8 @@
 # Gold-price provider evaluation — gold-api.com and candidates
 
-> **Status:** Infrastructure in place, no winner crowned yet. This document records what is known,
-> what has been tested, and what still needs bakeoff evidence before any provider can be promoted to
-> primary.
+> **Status:** Gold Price Fetch now runs the provider-adapter path with
+> `gold_api_com,twelvedata_xauusd,fmp_gcusd`. This document keeps the historical evaluation context,
+> the bakeoff criteria, and the reasons fallback monitoring still matters.
 >
 > **Companion docs:**
 >
@@ -30,19 +30,17 @@ for a better primary provider led to the provider-adapter architecture and bakeo
 place.
 
 **gold-api.com** is the focus of this evaluation. Its marketing claims (free, no rate limiting,
-real-time) sound attractive, but this project has **a documented prior production failure with it**:
-it hit limits and became unreliable. It is therefore treated as a re-evaluation candidate, not a
-presumed replacement, and remains disabled by default.
+real-time) sound attractive, but this project also has **documented prior quota/reliability issues
+with it**. The fetch workflow now uses it first in the provider-adapter order, so the remaining job
+is continued monitoring and fallback validation rather than blind trust.
 
 Three providers passed the pre-merge smoke test on 2026-05-01: `goldapi_io`, `twelvedata_xauusd`,
 and `fmp_gcusd`. The 24h+ bakeoff is the next step to produce real update-frequency evidence before
 any winner is selected.
 
-**Recommendation (pre-bakeoff):** Do not switch production from GoldPriceZ until bakeoff data
-exists. Run the hourly bakeoff against `goldapi_io,twelvedata_xauusd,fmp_gcusd` for ≥ 24 hours. Only
-add `gold_api_com` to a bakeoff run manually (via `Test Gold Providers` or `Gold Provider Bakeoff`
-with the explicit `providers` input) to re-measure it. Choose a winner based on scorecard evidence,
-not documentation claims.
+**Recommendation (post-cutover):** Keep the current fetch order
+`gold_api_com,twelvedata_xauusd,fmp_gcusd`, keep GoldPriceZ as rollback-only, and continue to judge
+provider safety from bakeoff scorecards and production monitoring rather than documentation claims.
 
 ---
 
@@ -90,15 +88,15 @@ winner is chosen.
 
 ### 3.3 Provider adapter summary
 
-| Adapter name        | File                               | Default state | Smoke test (2026-05-01)     |
-| ------------------- | ---------------------------------- | ------------- | --------------------------- |
-| `goldpricez`        | `gold_providers/goldpricez.py`     | **enabled**   | ❌ missing_price (HTTP 200) |
-| `gold_api_com`      | `gold_providers/gold_api_com.py`   | **disabled**  | Not tested — see §5         |
-| `goldapi_io`        | `gold_providers/goldapi_io.py`     | disabled      | ✅ ok — $4,637 @ 15:34:53Z  |
-| `twelvedata_xauusd` | `gold_providers/twelvedata.py`     | disabled      | ✅ ok — $4,639 @ 15:33:00Z  |
-| `fmp_gcusd`         | `gold_providers/fmp.py`            | disabled      | ✅ ok — $4,647 @ 15:24:54Z  |
-| `finnhub_oanda`     | `gold_providers/finnhub.py`        | disabled      | ❌ plan_gated (HTTP 403)    |
-| `metal_sentinel`    | `gold_providers/metal_sentinel.py` | disabled      | ❌ http_error (HTTP 400)    |
+| Adapter name        | File                               | Default state                 | Smoke test (2026-05-01)                    |
+| ------------------- | ---------------------------------- | ----------------------------- | ------------------------------------------ |
+| `goldpricez`        | `gold_providers/goldpricez.py`     | **enabled**                   | ❌ missing_price (HTTP 200)                |
+| `gold_api_com`      | `gold_providers/gold_api_com.py`   | **enabled in fetch workflow** | Current fetch primary; monitor via bakeoff |
+| `goldapi_io`        | `gold_providers/goldapi_io.py`     | disabled                      | ✅ ok — $4,637 @ 15:34:53Z                 |
+| `twelvedata_xauusd` | `gold_providers/twelvedata.py`     | disabled                      | ✅ ok — $4,639 @ 15:33:00Z                 |
+| `fmp_gcusd`         | `gold_providers/fmp.py`            | disabled                      | ✅ ok — $4,647 @ 15:24:54Z                 |
+| `finnhub_oanda`     | `gold_providers/finnhub.py`        | disabled                      | ❌ plan_gated (HTTP 403)                   |
+| `metal_sentinel`    | `gold_providers/metal_sentinel.py` | disabled                      | ❌ http_error (HTTP 400)                   |
 
 ### 3.4 State files used for duplicate prevention
 
@@ -196,13 +194,14 @@ The following questions can only be answered by running the bakeoff:
 
 ### 5.4 Prior production failure
 
-> **Docstring in `gold_api_com.py`:** "The product team already had a bad experience with
-> gold-api.com in production — it became unreliable / hit limits quickly. This adapter exists only
-> so the bakeoff can re-measure it cleanly. Disabled by default."
+> **Current docstring in `gold_api_com.py`:** "gold-api.com adapter for the provider-adapter fetch
+> chain. gold-api.com previously showed quota/reliability risk in this project, so the current fetch
+> workflow keeps it paired with monitored fallback providers. It is labeled as a spot/reference
+> source."
 
-This is not a rumor — it is a documented production failure for this project. The bakeoff's job is
-to re-measure it under controlled conditions and with fresh evidence. Until that evidence exists,
-gold-api.com must be treated as a re-evaluation candidate, not a confirmed primary.
+This is not a rumor — it is a documented production risk from earlier production usage. The bakeoff
+and ongoing workflow monitoring are there to keep re-measuring it with fresh evidence even after the
+fetch cutover, so fallback coverage stays justified.
 
 ### 5.5 Enabling gold_api_com in the bakeoff
 

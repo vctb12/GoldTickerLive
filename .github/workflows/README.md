@@ -60,7 +60,7 @@ commit derived data; others only read and post to external APIs.
 | `uptime-monitor.yml` | every 30 min | pings live site, reports failures |
 | `spike_alert.yml` | every 15 min | detects price spikes, posts alerts |
 | `post_gold.yml` | every 6 min while markets are open (Sun 21:00–Fri 21:00 UTC) | posts changed gold prices to X (content bot) |
-| `gold-price-fetch.yml` | every 6 min while markets are open (Sun 21:00–Fri 20:59 UTC) | fetches live goldpricez.com price → `data/gold_price.json` |
+| `gold-price-fetch.yml` | every 6 min while markets are open (Sun 21:00–Fri 20:59 UTC) | fetches provider-adapter gold price → `data/gold_price.json` |
 | `daily-newsletter.yml` | daily at 03:00 UTC | generates + dispatches daily digest |
 | `weekly-newsletter.yml` | weekly Sun at 14:00 UTC | generates + dispatches weekly digest |
 | `sync-db-to-git.yml` | `repository_dispatch: sync-shops` | syncs admin DB to `data/shops.js` |

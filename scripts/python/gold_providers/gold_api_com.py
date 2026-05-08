@@ -1,8 +1,8 @@
-"""gold-api.com adapter (legacy reference).
+"""gold-api.com adapter for the provider-adapter fetch chain.
 
-The product team already had a bad experience with gold-api.com in
-production — it became unreliable / hit limits quickly. This adapter
-exists only so the bakeoff can re-measure it cleanly. Disabled by default.
+gold-api.com previously showed quota/reliability risk in this project,
+so the current fetch workflow keeps it paired with monitored fallback
+providers. It is labeled as a spot/reference source.
 """
 
 from __future__ import annotations
@@ -89,5 +89,5 @@ def fetch() -> Dict[str, Any]:
         source_type="spot_reference",
         rate_limit_remaining=result.rate_limit_remaining,
         rate_limit_reset=result.rate_limit_reset,
-        notes="gold-api.com — historically rate-limited in this project; not for primary use",
+        notes="gold-api.com spot/reference price. Monitored with provider fallback.",
     )
