@@ -500,7 +500,7 @@ def test_main_dry_run_does_not_post(tmp_path, monkeypatch, capsys):
     assert "DRY_RUN_TWEET=true — would post; skipping actual X call" in out
 
 
-def test_main_dry_run_long_post_does_not_call_x(tmp_path, monkeypatch, capsys):
+def test_main_dry_run_over_280_char_post_does_not_call_x(tmp_path, monkeypatch, capsys):
     fresh_now = datetime.now(timezone.utc)
     gold_file = tmp_path / "gold_price.json"
     state_file = tmp_path / "last_gold_price.json"
@@ -558,7 +558,7 @@ def test_main_dry_run_long_post_does_not_call_x(tmp_path, monkeypatch, capsys):
     assert "DRY_RUN_TWEET=true — would post; skipping actual X call" in out
 
 
-def test_main_long_post_attempts_x_call_when_other_guards_pass(tmp_path, monkeypatch, capsys):
+def test_main_over_280_char_post_attempts_x_call_when_other_guards_pass(tmp_path, monkeypatch, capsys):
     fresh_now = datetime.now(timezone.utc)
     gold_file = tmp_path / "gold_price.json"
     state_file = tmp_path / "last_gold_price.json"
