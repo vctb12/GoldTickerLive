@@ -491,15 +491,6 @@ def format_tweet(data, post_type):
     return format_hourly_tweet(data)
 
 
-def check_tweet_length_guard(text, limit=280):
-    length = len(text or "")
-    if length <= limit:
-        return (False, None)
-    return (
-        True,
-        f"SKIP: tweet-length guard — {length} chars exceeds {limit}",
-    )
-
 # ── Step 3: Post to X / Twitter ──────────────────────────────────────────────
 def _log_tweet_error(exc, text, post_type):
     """Log structured diagnostic info for a Tweepy exception. Never logs secrets."""
@@ -653,13 +644,7 @@ def main():
     print(tweet)
     print(f"   ({len(tweet)} characters)")
 
-    # 10. Length guard
-    skip, reason = check_tweet_length_guard(tweet)
-    if skip:
-        print(reason)
-        sys.exit(0)
-
-    # 11. Content-hash guard
+    # 10. Content-hash guard
     tweet_hash = compute_content_hash(tweet)
     prev_hash = data.get('prev_content_hash')
     if (
@@ -673,7 +658,7 @@ def main():
         )
         sys.exit(0)
 
-    # 11b. New X duplicate-prevention guard (additive). Skips on:
+    # 10b. New X duplicate-prevention guard (additive). Skips on:
     #      • provider timestamp unchanged (GoldPriceZ freezing case)
     #      • exact tweet-text hash match
     #      • sub-threshold price movement when no force-summary window is due
@@ -708,10 +693,10 @@ def main():
             print(f"   would-post hash: {decision.tweet_hash[:12]}")
             sys.exit(0)
 
-    # 12. Post tweet
+    # 11. Post tweet
     post_tweet(tweet, post_type=post_type)
 
-    # 13. Save state (only reached on successful post)
+    # 12. Save state (only reached on successful post)
     _save_last_price(data["price"], content_hash=tweet_hash)
     if tweet_guard is not None:
         try:
