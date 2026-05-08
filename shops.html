@@ -156,6 +156,25 @@
 
       <section class="shops-controls" aria-label="Shop filters">
         <div class="shops-controls-inner">
+          <label class="shops-control shops-control--search-priority" for="shops-search">
+            <span id="shops-search-label">Search by shop, city, country, market, or specialty</span>
+            <input
+              id="shops-search"
+              type="search"
+              placeholder="e.g. Dubai Gold Souk, Riyadh, bullion"
+              autocomplete="off"
+              aria-label="Search shops by name, city, country, market, or specialty"
+            />
+          </label>
+          <div class="shops-controls-summary" id="shops-controls-summary">
+            <p class="shops-controls-summary-count" id="shops-controls-count">0 listings</p>
+            <p class="shops-controls-summary-active" id="shops-controls-active">
+              Showing all listings
+            </p>
+            <button type="button" class="shops-controls-clear" id="shops-controls-clear">
+              Clear all
+            </button>
+          </div>
           <button
             class="shops-filter-toggle"
             id="shops-filter-toggle"
@@ -167,19 +186,6 @@
             <span class="shops-filter-toggle-icon" aria-hidden="true">▾</span>
           </button>
           <div class="shops-filter-panel" id="shops-filter-panel">
-            <label class="shops-control shops-control--wide" for="shops-search">
-              <span id="shops-search-label"
-                >Search by shop, city, country, market, or specialty</span
-              >
-              <input
-                id="shops-search"
-                type="search"
-                placeholder="e.g. Dubai Gold Souk, Riyadh, bullion"
-                autocomplete="off"
-                aria-label="Search shops by name, city, country, market, or specialty"
-              />
-            </label>
-
             <label class="shops-control" for="shops-region-filter">
               <span id="shops-region-label">Region</span>
               <select id="shops-region-filter"></select>

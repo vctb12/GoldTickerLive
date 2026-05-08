@@ -19,22 +19,25 @@ test.describe('Mobile smoke', () => {
   test('core pages load and show key controls at 390x844', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator('main')).toBeVisible();
+    await expect(page.locator('#home-command-card')).toBeVisible();
     await expectNoHorizontalOverflow(page, '/');
 
     await page.goto('/tracker.html');
     await page.waitForSelector('body[data-tracker-shell-ready="true"]', { timeout: 10000 });
     await expect(page.locator('.tracker-modes')).toBeVisible();
+    await expect(page.locator('.tracker-mobile-workspace')).toBeVisible();
     await expectNoHorizontalOverflow(page, '/tracker.html');
 
     await page.goto('/calculator.html');
     await expect(page.locator('.calc-nav-tabs')).toBeVisible();
+    await expect(page.locator('#calc-flow-title')).toBeVisible();
     await expect(page.locator('#val-weight')).toBeVisible();
     await expectNoHorizontalOverflow(page, '/calculator.html');
 
     await page.goto('/shops.html');
     await expect(page.locator('#shops-filter-toggle')).toBeVisible();
-    await page.locator('#shops-filter-toggle').click();
     await expect(page.locator('#shops-search')).toBeVisible();
+    await expect(page.locator('#shops-controls-summary')).toBeVisible();
     await expectNoHorizontalOverflow(page, '/shops.html');
 
     await page.goto('/methodology.html');
@@ -67,6 +70,7 @@ test.describe('Mobile smoke', () => {
       () => document.documentElement.dir === 'rtl' && document.documentElement.lang === 'ar'
     );
     await expect(page.locator('.calc-nav-tabs')).toBeVisible();
+    await expect(page.locator('#calc-flow-title')).toBeVisible();
     await expectNoHorizontalOverflow(page, '/calculator.html (forced rtl)');
   });
 });

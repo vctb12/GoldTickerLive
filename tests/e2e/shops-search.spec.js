@@ -40,6 +40,7 @@ test.describe('Shops directory page', () => {
     // are dynamic, the wrapper element should exist.
     const shopArea = page.locator('#shops-grid, .shops-grid, [data-shops], .shop-list, .shop-card');
     await expect(shopArea.first()).toBeAttached();
+    await expect(page.locator('#shops-controls-summary')).toBeVisible();
   });
 
   test('country / city filter controls have accessible labels', async ({ page }) => {

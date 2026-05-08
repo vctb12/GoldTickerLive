@@ -5,6 +5,13 @@ async function waitForTrackerReady(page) {
   await page.waitForSelector('body[data-tracker-shell-ready="true"]', { timeout: 10000 });
 }
 
+async function dismissOnboardingIfPresent(page) {
+  const dismiss = page.locator('#onb-dismiss');
+  if (await dismiss.count()) {
+    await dismiss.click().catch(() => null);
+  }
+}
+
 test.describe('Tracker page — live mode & navigation', () => {
   test('tracker page loads with expected landmarks', async ({ page }) => {
     await page.goto('/tracker.html');
@@ -13,6 +20,7 @@ test.describe('Tracker page — live mode & navigation', () => {
     await expect(page.locator('main')).toBeVisible();
     // tracker hero uses .tracker-hero-wrap in markup
     await expect(page.locator('.tracker-hero-wrap')).toBeVisible();
+    await expect(page.locator('.tracker-mobile-workspace')).toBeAttached();
   });
 
   test('mode tabs are visible and navigable', async ({ page }) => {
@@ -40,6 +48,7 @@ test.describe('Tracker page — live mode & navigation', () => {
   test('clicking compare tab switches to compare panel', async ({ page }) => {
     await page.goto('/tracker.html');
     await waitForTrackerReady(page);
+    await dismissOnboardingIfPresent(page);
     await page.waitForSelector('.tracker-mode-tab[data-mode="compare"]', { timeout: 10000 });
 
     await page.locator('.tracker-mode-tab[data-mode="compare"]').click();

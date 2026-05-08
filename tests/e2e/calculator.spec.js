@@ -51,6 +51,17 @@ test.describe('Calculator page', () => {
     await expect(methodLinks.first()).toBeVisible();
   });
 
+  test('mobile result dock appears after entering a value', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForFunction(() => {
+      const spot = document.getElementById('calc-spot-price');
+      return spot && spot.textContent && spot.textContent.trim() !== '—';
+    });
+    await page.locator('#val-weight').fill('10');
+    await expect(page.locator('#val-result')).toBeVisible();
+    await expect(page.locator('#calc-mobile-dock')).toBeVisible();
+  });
+
   test('JSON-LD structured data includes calculator breadcrumb schema', async ({ page }) => {
     const schemaTag = page.locator('script[type="application/ld+json"]');
     const count = await schemaTag.count();

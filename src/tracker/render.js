@@ -283,6 +283,65 @@ export function renderHero() {
 
     _el.summaryList.append(...summaryItems);
   }
+
+  const selectedCountry = COUNTRIES.find((country) => country.currency === _state.selectedCurrency);
+  const selectedLabel = selectedCountry
+    ? _state.lang === 'ar'
+      ? selectedCountry.nameAr || selectedCountry.nameEn
+      : selectedCountry.nameEn
+    : _state.selectedCurrency;
+  const selectedPrice = spot
+    ? _priceFor({
+        currency: _state.selectedCurrency,
+        karat: _state.selectedKarat,
+        unit: _state.selectedUnit,
+        spot,
+      })
+    : null;
+  const mobileStatus = document.getElementById('tp-mobile-summary-status');
+  if (mobileStatus) {
+    mobileStatus.textContent = spot
+      ? `${freshness.sourceLabel} · ${freshness.ageText}`
+      : _state.hasLiveFailure
+        ? tx('liveUnavailable')
+        : tx('connecting');
+    mobileStatus.dataset.tone =
+      freshness.key === 'live' ? 'live' : freshness.key === 'unavailable' ? 'neutral' : 'warning';
+  }
+  const mobileSource = document.getElementById('tp-mobile-summary-source');
+  if (mobileSource) {
+    mobileSource.textContent = `${selectedLabel} · ${_state.selectedCurrency}`;
+    mobileSource.dataset.tone = 'info';
+  }
+  setText(document.getElementById('tp-mobile-selected-value'), selectedLabel);
+  setText(
+    document.getElementById('tp-mobile-selected-note'),
+    `${_state.selectedCurrency} · ${_state.selectedKarat}K / ${formatUnitLabel(_state.selectedUnit)}`
+  );
+  setText(
+    document.getElementById('tp-mobile-price-value'),
+    selectedPrice
+      ? selectedPrice.toLocaleString('en', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      : '—'
+  );
+  setText(document.getElementById('tp-mobile-price-note'), tx('marketTrust'));
+  setText(document.getElementById('tp-mobile-spot-value'), spot ? formatUsd(spot) : '—');
+  setText(document.getElementById('tp-mobile-spot-note'), tx('mobileSpotNote'));
+  setText(
+    document.getElementById('tp-mobile-updated-value'),
+    spot
+      ? freshness.sourceLabel
+      : _state.hasLiveFailure
+        ? tx('source.unavailable')
+        : tx('connecting')
+  );
+  setText(
+    document.getElementById('tp-mobile-updated-note'),
+    spot ? freshness.timeText : tx('liveUnavailable')
+  );
 }
 
 export function renderMiniStrip() {

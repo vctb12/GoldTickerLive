@@ -62,6 +62,22 @@ const T = {
     pageTitle: 'Gold Calculator',
     pageSub: 'Spot-linked estimates · Multiple karats · AED & USD',
     spotLabel: 'Spot:',
+    flow_kicker: 'Mobile flow',
+    flow_title: 'Choose a tool, enter values, review the result',
+    flow_step1_kicker: 'Step 1',
+    flow_step1_label: 'Choose calculator type',
+    flow_step1_desc: 'Switch between value, scrap, Zakat, buying power, and units.',
+    flow_step2_kicker: 'Step 2',
+    flow_step2_label: 'Enter weight, karat, and currency',
+    flow_step2_desc: 'Use mobile-friendly numeric fields and quick presets where available.',
+    flow_step3_kicker: 'Step 3',
+    flow_step3_label: 'Review the reference result',
+    flow_step3_desc: 'Keep the result visible while checking trust notes and methodology.',
+    dock_title: 'Result summary',
+    dock_waiting: 'Enter values to see a mobile summary.',
+    dock_meta: 'Spot-linked reference before making charges and VAT.',
+    dock_action: 'View breakdown',
+    dock_method: 'Methodology →',
     tab_value: 'Gold Value',
     tab_scrap: 'Scrap Gold',
     tab_zakat: 'Zakat',
@@ -70,8 +86,10 @@ const T = {
     val_title: 'How much is my gold worth?',
     val_desc: 'Enter the weight and karat of your gold to get an instant value estimate.',
     val_weight: 'Weight',
+    val_weight_hint: 'Enter jewellery, coin, or bar weight.',
     val_karat: 'Karat',
     val_currency: 'Currency',
+    val_currency_hint: 'Results stay spot-linked reference estimates in the selected currency.',
     val_result_label: 'Estimated Value',
     val_disclaimer:
       'Spot-linked reference estimate only. Final retail prices can include making charges, dealer margins, and taxes.',
@@ -122,6 +140,22 @@ const T = {
     pageTitle: 'حاسبة الذهب',
     pageSub: 'تقديرات مرجعية فورية · عيارات متعددة · درهم ودولار',
     spotLabel: 'السعر الفوري:',
+    flow_kicker: 'مسار الموبايل',
+    flow_title: 'اختر الأداة، أدخل القيم، ثم راجع النتيجة',
+    flow_step1_kicker: 'الخطوة 1',
+    flow_step1_label: 'اختر نوع الحاسبة',
+    flow_step1_desc: 'بدّل بين القيمة والذهب المستعمل والزكاة والقوة الشرائية والوحدات.',
+    flow_step2_kicker: 'الخطوة 2',
+    flow_step2_label: 'أدخل الوزن والعيار والعملة',
+    flow_step2_desc: 'استخدم الحقول الرقمية المناسبة للموبايل مع الاختصارات السريعة عند توفرها.',
+    flow_step3_kicker: 'الخطوة 3',
+    flow_step3_label: 'راجع النتيجة المرجعية',
+    flow_step3_desc: 'أبقِ النتيجة ظاهرة أثناء مراجعة ملاحظات الثقة والمنهجية.',
+    dock_title: 'ملخص النتيجة',
+    dock_waiting: 'أدخل القيم لعرض ملخص مناسب للموبايل.',
+    dock_meta: 'مرجع مرتبط بالسعر الفوري قبل المصنعية وضريبة القيمة المضافة.',
+    dock_action: 'عرض التفاصيل',
+    dock_method: 'المنهجية ←',
     tab_value: 'قيمة الذهب',
     tab_scrap: 'ذهب مستعمل',
     tab_zakat: 'زكاة الذهب',
@@ -130,8 +164,10 @@ const T = {
     val_title: 'كم تساوي ذهبك؟',
     val_desc: 'أدخل وزن وعيار ذهبك للحصول على تقدير فوري للقيمة.',
     val_weight: 'الوزن',
+    val_weight_hint: 'أدخل وزن الحلي أو السبيكة أو القطعة النقدية.',
     val_karat: 'العيار',
     val_currency: 'العملة',
+    val_currency_hint: 'تبقى النتائج تقديرات مرجعية مرتبطة بالسعر الفوري بالعملة التي تختارها.',
     val_result_label: 'القيمة التقديرية',
     val_disclaimer:
       'تقدير مرجعي مرتبط بالسعر الفوري فقط. قد تشمل أسعار التجزئة النهائية المصنعية وهوامش التجار والضرائب.',
@@ -180,6 +216,25 @@ const T = {
 
 function t(key) {
   return T[STATE.lang]?.[key] ?? T.en[key] ?? key;
+}
+
+function hideMobileDock() {
+  const dock = document.getElementById('calc-mobile-dock');
+  if (dock) dock.hidden = true;
+}
+
+function updateMobileDock({ title, value, meta, targetId }) {
+  const dock = document.getElementById('calc-mobile-dock');
+  if (!dock) return;
+  const titleEl = document.getElementById('calc-mobile-dock-title');
+  const valueEl = document.getElementById('calc-mobile-dock-value');
+  const metaEl = document.getElementById('calc-mobile-dock-meta');
+  const actionBtn = document.getElementById('calc-mobile-dock-action');
+  if (titleEl) titleEl.textContent = title;
+  if (valueEl) valueEl.textContent = value;
+  if (metaEl) metaEl.textContent = meta;
+  if (actionBtn) actionBtn.dataset.target = targetId || '';
+  dock.hidden = false;
 }
 
 // ── Weight unit conversions (to grams) ─────────────────────────────────────
@@ -242,6 +297,7 @@ function calcValue() {
 
   if (isNaN(weightRaw) || weightRaw <= 0 || !STATE.spotUsdPerOz) {
     result.hidden = true;
+    hideMobileDock();
     return;
   }
 
@@ -250,6 +306,7 @@ function calcValue() {
   const rate = getRate(currency);
   if (!rate) {
     result.hidden = true;
+    hideMobileDock();
     return;
   }
 
@@ -274,6 +331,12 @@ function calcValue() {
   ]);
 
   result.hidden = false;
+  updateMobileDock({
+    title: t('val_result_label'),
+    value: document.getElementById('val-result-value').textContent,
+    meta: t('dock_meta'),
+    targetId: 'val-result',
+  });
   _trackCalcUse('value', {
     weight: weightGrams,
     unit: 'gram',
@@ -295,6 +358,7 @@ function calcScrap() {
 
   if (isNaN(weightRaw) || weightRaw <= 0 || !STATE.spotUsdPerOz || isNaN(payout)) {
     result.hidden = true;
+    hideMobileDock();
     return;
   }
 
@@ -303,6 +367,7 @@ function calcScrap() {
   const rate = getRate(currency);
   if (!rate) {
     result.hidden = true;
+    hideMobileDock();
     return;
   }
 
@@ -326,6 +391,12 @@ function calcScrap() {
   if (pctEl) pctEl.textContent = Math.round(payout * 100);
 
   result.hidden = false;
+  updateMobileDock({
+    title: t('scrap_label_spot'),
+    value: document.getElementById('scrap-result-dealer').textContent,
+    meta: t('dock_meta'),
+    targetId: 'scrap-result',
+  });
 }
 
 // ── Calculator 3: Zakat ─────────────────────────────────────────────────────
@@ -353,6 +424,7 @@ function calcZakat() {
 
   if (isNaN(weightRaw) || weightRaw <= 0 || !STATE.spotUsdPerOz || !rate) {
     result.hidden = true;
+    hideMobileDock();
     return;
   }
 
@@ -387,6 +459,12 @@ function calcZakat() {
   }
 
   result.hidden = false;
+  updateMobileDock({
+    title: t('zakat_label_due'),
+    value: document.getElementById('zakat-result-value').textContent,
+    meta: t('dock_meta'),
+    targetId: 'zakat-result',
+  });
 }
 
 // ── Calculator 4: Buying power ──────────────────────────────────────────────
@@ -400,12 +478,14 @@ function calcBuying() {
 
   if (isNaN(amount) || amount <= 0 || !STATE.spotUsdPerOz) {
     result.hidden = true;
+    hideMobileDock();
     return;
   }
 
   const rate = getRate(currency);
   if (!rate) {
     result.hidden = true;
+    hideMobileDock();
     return;
   }
 
@@ -433,6 +513,12 @@ function calcBuying() {
   ]);
 
   result.hidden = false;
+  updateMobileDock({
+    title: t('buy_result_label'),
+    value: document.getElementById('buy-result-grams').textContent,
+    meta: t('dock_meta'),
+    targetId: 'buy-result',
+  });
 }
 
 // ── Calculator 5: Unit converter ────────────────────────────────────────────
@@ -445,6 +531,7 @@ function calcConvert() {
 
   if (isNaN(amount) || amount <= 0) {
     convResults.hidden = true;
+    hideMobileDock();
     return;
   }
 
@@ -464,6 +551,62 @@ function calcConvert() {
   }
 
   convResults.hidden = false;
+  updateMobileDock({
+    title: t('conv_results_title'),
+    value: `${amount.toLocaleString('en-US', { maximumFractionDigits: 4 })} ${UNIT_LABELS[from] ?? from}`,
+    meta: t('dock_meta'),
+    targetId: 'conv-results',
+  });
+}
+
+function refreshMobileDockForActiveTab() {
+  const activeTab = document.querySelector('.calc-tab.active')?.dataset.calc ?? 'value';
+  if (activeTab === 'value' && !document.getElementById('val-result')?.hidden) {
+    updateMobileDock({
+      title: t('val_result_label'),
+      value: document.getElementById('val-result-value')?.textContent || '—',
+      meta: t('dock_meta'),
+      targetId: 'val-result',
+    });
+    return;
+  }
+  if (activeTab === 'scrap' && !document.getElementById('scrap-result')?.hidden) {
+    updateMobileDock({
+      title: t('scrap_label_spot'),
+      value: document.getElementById('scrap-result-dealer')?.textContent || '—',
+      meta: t('dock_meta'),
+      targetId: 'scrap-result',
+    });
+    return;
+  }
+  if (activeTab === 'zakat' && !document.getElementById('zakat-result')?.hidden) {
+    updateMobileDock({
+      title: t('zakat_label_due'),
+      value: document.getElementById('zakat-result-value')?.textContent || '—',
+      meta: t('dock_meta'),
+      targetId: 'zakat-result',
+    });
+    return;
+  }
+  if (activeTab === 'buying' && !document.getElementById('buy-result')?.hidden) {
+    updateMobileDock({
+      title: t('buy_result_label'),
+      value: document.getElementById('buy-result-grams')?.textContent || '—',
+      meta: t('dock_meta'),
+      targetId: 'buy-result',
+    });
+    return;
+  }
+  if (activeTab === 'convert' && !document.getElementById('conv-results')?.hidden) {
+    updateMobileDock({
+      title: t('conv_results_title'),
+      value: document.getElementById('conv-amount')?.value || '—',
+      meta: t('dock_meta'),
+      targetId: 'conv-results',
+    });
+    return;
+  }
+  hideMobileDock();
 }
 
 // ── Apply language ───────────────────────────────────────────────────────────
@@ -487,6 +630,21 @@ function applyLang() {
   set('calc-hero-h1', t('pageTitle'));
   set('calc-hero-sub', t('pageSub'));
   set('calc-spot-label', t('spotLabel'));
+  set('calc-flow-kicker', t('flow_kicker'));
+  set('calc-flow-title', t('flow_title'));
+  set('calc-flow-step1-kicker', t('flow_step1_kicker'));
+  set('calc-flow-step1-label', t('flow_step1_label'));
+  set('calc-flow-step1-desc', t('flow_step1_desc'));
+  set('calc-flow-step2-kicker', t('flow_step2_kicker'));
+  set('calc-flow-step2-label', t('flow_step2_label'));
+  set('calc-flow-step2-desc', t('flow_step2_desc'));
+  set('calc-flow-step3-kicker', t('flow_step3_kicker'));
+  set('calc-flow-step3-label', t('flow_step3_label'));
+  set('calc-flow-step3-desc', t('flow_step3_desc'));
+  set('calc-mobile-dock-title', t('dock_title'));
+  set('calc-mobile-dock-meta', t('dock_meta'));
+  set('calc-mobile-dock-action', t('dock_action'));
+  set('calc-mobile-dock-method', t('dock_method'));
   set('calc-value-title', t('tab_value'));
   set('calc-scrap-title', t('tab_scrap'));
   set('calc-zakat-title', t('tab_zakat'));
@@ -495,8 +653,10 @@ function applyLang() {
   set('calc-value-h2', t('val_title'));
   set('calc-value-desc', t('val_desc'));
   set('val-weight-label', t('val_weight'));
+  set('val-weight-hint', t('val_weight_hint'));
   set('val-karat-label', t('val_karat'));
   set('val-currency-label', t('val_currency'));
+  set('val-currency-hint', t('val_currency_hint'));
   set('val-result-label', t('val_result_label'));
   set('val-disclaimer', t('val_disclaimer'));
   set('calc-scrap-h2', t('scrap_title'));
@@ -537,6 +697,7 @@ function applyLang() {
 
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
+  refreshMobileDockForActiveTab();
 }
 
 // ── Spot badge ───────────────────────────────────────────────────────────────
@@ -607,6 +768,7 @@ function setupTabs() {
         p.classList.toggle('active', isTarget);
         p.hidden = !isTarget;
       });
+      refreshMobileDockForActiveTab();
       track(EVENTS.TOOL_USE, { tool: TOOL_MAP[target] || target });
     });
   });
@@ -792,6 +954,11 @@ async function init() {
   setupTabs();
   wireInputs();
   initCopyBtn();
+  document.getElementById('calc-mobile-dock-action')?.addEventListener('click', () => {
+    const targetId = document.getElementById('calc-mobile-dock-action')?.dataset.target;
+    if (!targetId) return;
+    document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
   updateSpotBadge();
   calcZakat(); // show nisab immediately from cache
 

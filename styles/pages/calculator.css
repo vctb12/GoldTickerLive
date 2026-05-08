@@ -162,6 +162,39 @@
   font-weight: var(--weight-bold);
 }
 
+.calc-flow {
+  padding: var(--space-5) var(--space-5) 0;
+}
+
+.calc-flow-inner {
+  max-width: 900px;
+  margin-inline: auto;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.calc-flow-title {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-extrabold);
+  color: var(--text-primary);
+}
+
+.calc-flow-steps .action-rail-link {
+  min-height: 96px;
+}
+
+.calc-mobile-dock[hidden] {
+  display: none;
+}
+
+.calc-mobile-dock-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
 /* ── Panel ─────────────────────────────────────────── */
 .calc-panel {
   max-width: 680px;
@@ -889,6 +922,14 @@
 
 /* Tighter panel horizontal padding on phones */
 @media (width <= 640px) {
+  .calc-flow {
+    padding: var(--space-4) var(--space-4) 0;
+  }
+
+  .calc-flow-steps {
+    grid-template-columns: 1fr;
+  }
+
   .calc-panel {
     padding-inline: var(--space-4);
     margin-block: var(--space-5);
@@ -901,6 +942,11 @@
 
 /* Comfortable touch targets for inputs and selects at ≤ 480 px */
 @media (width <= 480px) {
+  .calc-mobile-dock-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .calc-input,
   .calc-select {
     min-height: 48px;
@@ -914,5 +960,17 @@
   /* Slightly larger result value so it reads well at small widths */
   .calc-result-value {
     font-size: clamp(1.6rem, 7.5vw, 2.2rem);
+  }
+}
+
+@media (width <= 768px) {
+  .calc-mobile-dock:not([hidden]) {
+    display: grid;
+  }
+}
+
+@media (width >= 769px) {
+  .calc-mobile-dock {
+    display: none !important;
   }
 }

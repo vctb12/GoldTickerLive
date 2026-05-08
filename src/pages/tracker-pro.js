@@ -57,6 +57,11 @@ function setButtonCopy(button, label, icon = null) {
   button.replaceChildren(...children);
 }
 
+function setNodeText(id, text) {
+  const node = document.getElementById(id);
+  if (node) node.textContent = text;
+}
+
 function localizeStaticTrackerCopy() {
   document.documentElement.lang = state.lang;
   document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
@@ -152,6 +157,40 @@ function localizeStaticTrackerCopy() {
   const quickReference = document.querySelector('.tracker-hero-aside');
   if (quickReference)
     quickReference.setAttribute('aria-label', trackerTx('quickReferenceAriaLabel'));
+
+  setNodeText('tp-mobile-workspace-kicker', trackerTx('mobileWorkspaceKicker'));
+  setNodeText('tp-mobile-workspace-title', trackerTx('mobileWorkspaceTitle'));
+  setNodeText('tp-mobile-workspace-copy', trackerTx('mobileWorkspaceCopy'));
+  setNodeText('tp-mobile-selected-label', trackerTx('mobileStatusLabel'));
+  setNodeText('tp-mobile-selected-note', trackerTx('mobileStatusNote'));
+  setNodeText('tp-mobile-price-label', trackerTx('mobilePriceLabel'));
+  setNodeText('tp-mobile-price-note', trackerTx('mobilePriceNote'));
+  setNodeText('tp-mobile-spot-label', trackerTx('mobileSpotLabel'));
+  setNodeText('tp-mobile-spot-note', trackerTx('mobileSpotNote'));
+  setNodeText('tp-mobile-updated-label', trackerTx('mobileFreshnessLabel'));
+  setNodeText('tp-mobile-updated-note', trackerTx('mobileFreshnessNote'));
+  setNodeText('tp-mobile-summary-note', trackerTx('mobileSummaryNote'));
+  setNodeText('tp-mobile-action-compare-kicker', trackerTx('mobileActionCompareKicker'));
+  setNodeText('tp-mobile-action-compare-label', trackerTx('mobileActionCompareLabel'));
+  setNodeText('tp-mobile-action-compare-desc', trackerTx('mobileActionCompareDesc'));
+  setNodeText('tp-mobile-action-archive-kicker', trackerTx('mobileActionArchiveKicker'));
+  setNodeText('tp-mobile-action-archive-label', trackerTx('mobileActionArchiveLabel'));
+  setNodeText('tp-mobile-action-archive-desc', trackerTx('mobileActionArchiveDesc'));
+  setNodeText('tp-mobile-action-exports-kicker', trackerTx('mobileActionExportsKicker'));
+  setNodeText('tp-mobile-action-exports-label', trackerTx('mobileActionExportsLabel'));
+  setNodeText('tp-mobile-action-exports-desc', trackerTx('mobileActionExportsDesc'));
+  setNodeText('tp-mobile-action-alerts-kicker', trackerTx('mobileActionAlertsKicker'));
+  setNodeText('tp-mobile-action-alerts-label', trackerTx('mobileActionAlertsLabel'));
+  setNodeText('tp-mobile-action-alerts-desc', trackerTx('mobileActionAlertsDesc'));
+  setNodeText('tp-mobile-cue-chart-kicker', trackerTx('mobileCueChartKicker'));
+  setNodeText('tp-mobile-cue-chart-title', trackerTx('mobileCueChartTitle'));
+  setNodeText('tp-mobile-cue-chart-copy', trackerTx('mobileCueChartCopy'));
+  setNodeText('tp-mobile-cue-tools-kicker', trackerTx('mobileCueToolsKicker'));
+  setNodeText('tp-mobile-cue-tools-title', trackerTx('mobileCueToolsTitle'));
+  setNodeText('tp-mobile-cue-tools-copy', trackerTx('mobileCueToolsCopy'));
+  setNodeText('tp-chart-source-note', trackerTx('chartSourceNote'));
+  setNodeText('tp-market-scroll-hint', trackerTx('marketScrollHint'));
+  setNodeText('tp-archive-scroll-hint', trackerTx('archiveScrollHint'));
 }
 
 function ui() {
@@ -243,6 +282,29 @@ function ui() {
     briefCopy: document.getElementById('tp-brief-copy'),
     toastStack: document.getElementById('tp-toast-stack'),
   };
+}
+
+function initMobileWorkspaceActions() {
+  document.querySelectorAll('[data-mobile-action]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const action = button.getAttribute('data-mobile-action');
+      if (
+        ['compare', 'archive', 'exports'].includes(action) &&
+        !document.body.classList.contains('tracker-workspace-advanced')
+      ) {
+        el.workspaceToggle?.click();
+      }
+      const targetMap = {
+        compare: '#tab-compare',
+        archive: '#tab-archive',
+        exports: '#tab-exports',
+        alerts: '#tab-alerts',
+      };
+      const target = targetMap[action];
+      if (!target) return;
+      document.querySelector(target)?.click();
+    });
+  });
 }
 
 // ── Price helpers ─────────────────────────────────────────────────────────────
@@ -734,6 +796,7 @@ async function init() {
   localizeStaticTrackerCopy();
   populateSelects();
   bindCoreEvents();
+  initMobileWorkspaceActions();
 
   if (localStorage.getItem('tracker_trust_banner_dismissed')) {
     const trustSection = document.querySelector('.tracker-data-trust-section');

@@ -167,6 +167,52 @@
         </button>
       </div>
 
+      <section class="calc-flow" aria-labelledby="calc-flow-title">
+        <div class="calc-flow-inner">
+          <span class="section-kicker" id="calc-flow-kicker">Mobile flow</span>
+          <h2 class="calc-flow-title" id="calc-flow-title">Choose a tool, enter values, review the result</h2>
+          <div class="action-rail calc-flow-steps" aria-label="Calculator flow">
+            <div class="action-rail-link calc-flow-step">
+              <span class="action-rail-link__kicker" id="calc-flow-step1-kicker">Step 1</span>
+              <span class="action-rail-link__label" id="calc-flow-step1-label">Choose calculator type</span>
+              <span class="action-rail-link__desc" id="calc-flow-step1-desc"
+                >Switch between value, scrap, Zakat, buying power, and units.</span
+              >
+            </div>
+            <div class="action-rail-link calc-flow-step">
+              <span class="action-rail-link__kicker" id="calc-flow-step2-kicker">Step 2</span>
+              <span class="action-rail-link__label" id="calc-flow-step2-label">Enter weight, karat, and currency</span>
+              <span class="action-rail-link__desc" id="calc-flow-step2-desc"
+                >Use mobile-friendly numeric fields and quick presets where available.</span
+              >
+            </div>
+            <div class="action-rail-link calc-flow-step">
+              <span class="action-rail-link__kicker" id="calc-flow-step3-kicker">Step 3</span>
+              <span class="action-rail-link__label" id="calc-flow-step3-label">Review the reference result</span>
+              <span class="action-rail-link__desc" id="calc-flow-step3-desc"
+                >Keep the result visible while checking trust notes and methodology.</span
+              >
+            </div>
+          </div>
+
+          <div class="mobile-result-dock calc-mobile-dock" id="calc-mobile-dock" hidden>
+            <p class="mobile-result-dock__title" id="calc-mobile-dock-title">Result summary</p>
+            <p class="mobile-result-dock__value" id="calc-mobile-dock-value">—</p>
+            <p class="mobile-result-dock__meta" id="calc-mobile-dock-meta">
+              Spot-linked reference before making charges and VAT.
+            </p>
+            <div class="calc-mobile-dock-actions">
+              <button type="button" class="btn btn-outline btn-sm" id="calc-mobile-dock-action">
+                View breakdown
+              </button>
+              <a href="methodology.html" class="section-link" id="calc-mobile-dock-method"
+                >Methodology →</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- ── Calculator 1: Gold Value ── -->
       <section class="calc-panel active" id="panel-value" role="tabpanel" aria-labelledby="calc-value-title">
         <div class="calc-card">
@@ -215,6 +261,7 @@
                   <option value="masha">Masha (0.972g)</option>
                 </select>
               </div>
+              <p class="calc-field-hint" id="val-weight-hint">Enter jewellery, coin, or bar weight.</p>
             </div>
             <div class="calc-field">
               <label for="val-karat" id="val-karat-label">Karat</label>
@@ -242,6 +289,9 @@
                 <option value="MAD">MAD — Moroccan Dirham</option>
                 <option value="INR">INR — Indian Rupee</option>
               </select>
+              <p class="calc-field-hint" id="val-currency-hint">
+                Results stay spot-linked reference estimates in the selected currency.
+              </p>
             </div>
           </div>
           <div class="calc-result" id="val-result" hidden>

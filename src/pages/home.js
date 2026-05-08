@@ -135,6 +135,14 @@ function formatCountrySearchEmpty(query = '') {
   return tx('countrySearchEmptyQuery').replace('{query}', trimmed);
 }
 
+function setTrustChip(id, text, freshnessKey = 'neutral') {
+  const target = document.getElementById(id);
+  if (!target) return;
+  target.textContent = text;
+  target.dataset.tone =
+    freshnessKey === 'live' ? 'live' : freshnessKey === 'unavailable' ? 'neutral' : 'warning';
+}
+
 function getFreshnessMeta() {
   const freshness = getLiveFreshness({
     updatedAt: goldUpdatedAt,
@@ -173,12 +181,16 @@ function startFreshnessTimer() {
   if (_freshnessTimer) clearInterval(_freshnessTimer);
   let prevHlcText = '';
   let prevKstripText = '';
+  let prevCommandText = '';
+  let prevSnapshotText = '';
   _freshnessTimer = setInterval(() => {
     if (!goldPrice || !goldUpdatedAt) return;
     const { ageText, sourceText, key } = getFreshnessMeta();
     const ageClass = freshnessAgeClass(getLiveFreshness({ updatedAt: goldUpdatedAt, lang }).ageMs);
     const hlcText = `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`;
     const kstripText = `${tx('updated')}: ${ageText} · ${tx('source')}: ${sourceText}`;
+    const commandText = `${sourceText} · ${ageText}`;
+    const snapshotText = `${tx('updated')}: ${ageText}`;
     const hlcEl = document.getElementById('hlc-updated');
     if (hlcEl && hlcText !== prevHlcText) {
       hlcEl.textContent = hlcText;
@@ -192,6 +204,17 @@ function startFreshnessTimer() {
       kstripEl.dataset.freshnessKey = key;
       kstripEl.dataset.freshnessAge = ageClass;
       prevKstripText = kstripText;
+    }
+    if (commandText !== prevCommandText) {
+      setTrustChip('home-command-freshness', commandText, key);
+      prevCommandText = commandText;
+    }
+    const snapshotStatus = document.getElementById('home-snapshot-status-value');
+    const snapshotNote = document.getElementById('home-snapshot-status-note');
+    if (snapshotStatus) snapshotStatus.textContent = sourceText;
+    if (snapshotNote && snapshotText !== prevSnapshotText) {
+      snapshotNote.textContent = snapshotText;
+      prevSnapshotText = snapshotText;
     }
   }, 1_000);
 }
@@ -303,6 +326,15 @@ function renderHeroCard() {
   // Update karat strip
   renderKaratStrip(k18);
 
+  // Update mobile command center
+  renderCommandCenter({
+    aed24g,
+    aed22g,
+    aed21g,
+    aed18g,
+    usd24oz,
+  });
+
   // Update freshness banner
   const bar = document.getElementById('home-freshness-bar');
   const barText = document.getElementById('hfb-text');
@@ -315,6 +347,34 @@ function renderHeroCard() {
       : `${tx('sourceLive')} · ${tx('updated')}: ${timeStr}`;
     bar.removeAttribute('hidden');
   }
+}
+
+function renderCommandCenter(values = {}) {
+  const {
+    aed24g = null,
+    aed22g = null,
+    aed21g = null,
+    aed18g = null,
+    usd24oz = goldPrice,
+  } = values;
+  const { ageText, sourceText, key } = getFreshnessMeta();
+
+  setTrustChip('home-command-freshness', `${sourceText} · ${ageText}`, key);
+  setTrustChip(
+    'home-command-spot-chip',
+    usd24oz ? `XAU/USD ${fmt.formatPrice(usd24oz, 'USD', 2)}` : 'XAU/USD —',
+    key
+  );
+
+  setTextById('home-command-24-value', aed24g ? fmt.formatPrice(aed24g, 'AED', 2) : '—');
+  setTextById('home-command-22-value', aed22g ? fmt.formatPrice(aed22g, 'AED', 2) : '—');
+  setTextById('home-command-21-value', aed21g ? fmt.formatPrice(aed21g, 'AED', 2) : '—');
+  setTextById('home-command-18-value', aed18g ? fmt.formatPrice(aed18g, 'AED', 2) : '—');
+
+  setTextById('home-snapshot-uae-value', aed24g ? fmt.formatPrice(aed24g, 'AED', 2) : '—');
+  setTextById('home-snapshot-global-value', usd24oz ? fmt.formatPrice(usd24oz, 'USD', 2) : '—');
+  setTextById('home-snapshot-status-value', sourceText);
+  setTextById('home-snapshot-status-note', `${tx('updated')}: ${ageText}`);
 }
 
 // ── Render karat price strip ───────────────────────────────────────────────
@@ -460,6 +520,51 @@ function applyLangToPage() {
   setTextById('hero-cta-methodology', tx('heroCtaMethodology'));
   setTextById('hero-trust-line', tx('heroTrustLine'));
   setTextById('hlc-trust-line', tx('heroTrustShort'));
+  setTextById('home-command-kicker', tx('commandKicker'));
+  setTextById('home-command-center-title', tx('commandTitle'));
+  setTextById('home-command-copy', tx('commandCopy'));
+  setTextById('home-command-24-label', tx('lbl24aed'));
+  setTextById('home-command-22-label', tx('lbl22aed'));
+  setTextById('home-command-21-label', tx('lbl21aed'));
+  setTextById('home-command-18-label', tx('lbl18aed'));
+  setTextById('home-command-24-note', tx('command24Note'));
+  setTextById('home-command-22-note', tx('command22Note'));
+  setTextById('home-command-21-note', tx('command21Note'));
+  setTextById('home-command-18-note', tx('command18Note'));
+  setTextById('home-command-note', tx('commandNote'));
+  setTextById('home-command-cta-tracker', tx('commandCtaTracker'));
+  setTextById('home-command-cta-calculator', tx('commandCtaCalculator'));
+  setTextById('home-command-cta-uae', tx('commandCtaUae'));
+  setTextById('home-command-cta-method', tx('commandCtaMethod'));
+  setTextById('home-action-rail-kicker', tx('actionRailKicker'));
+  setTextById('home-action-rail-title', tx('actionRailTitle'));
+  setTextById('home-action-track-kicker', tx('actionTrackKicker'));
+  setTextById('home-action-track-label', tx('actionTrackLabel'));
+  setTextById('home-action-track-desc', tx('actionTrackDesc'));
+  setTextById('home-action-calc-kicker', tx('actionCalcKicker'));
+  setTextById('home-action-calc-label', tx('actionCalcLabel'));
+  setTextById('home-action-calc-desc', tx('actionCalcDesc'));
+  setTextById('home-action-compare-kicker', tx('actionCompareKicker'));
+  setTextById('home-action-compare-label', tx('actionCompareLabel'));
+  setTextById('home-action-compare-desc', tx('actionCompareDesc'));
+  setTextById('home-action-shops-kicker', tx('actionShopsKicker'));
+  setTextById('home-action-shops-label', tx('actionShopsLabel'));
+  setTextById('home-action-shops-desc', tx('actionShopsDesc'));
+  setTextById('home-action-learn-kicker', tx('actionLearnKicker'));
+  setTextById('home-action-learn-label', tx('actionLearnLabel'));
+  setTextById('home-action-learn-desc', tx('actionLearnDesc'));
+  setTextById('home-market-snapshot-kicker', tx('snapshotKicker'));
+  setTextById('home-market-snapshot-title', tx('snapshotTitle'));
+  setTextById('home-snapshot-uae-label', tx('snapshotUaeLabel'));
+  setTextById('home-snapshot-uae-note', tx('snapshotUaeNote'));
+  setTextById('home-snapshot-global-label', tx('snapshotGlobalLabel'));
+  setTextById('home-snapshot-global-note', tx('snapshotGlobalNote'));
+  setTextById('home-snapshot-peg-label', tx('snapshotPegLabel'));
+  setTextById('home-snapshot-peg-note', tx('snapshotPegNote'));
+  setTextById('home-snapshot-status-label', tx('snapshotStatusLabel'));
+  setTextById('home-snapshot-status-note', tx('snapshotStatusNote'));
+  setTextById('home-market-snapshot-copy', tx('snapshotCopy'));
+  setTextById('home-market-snapshot-link', tx('snapshotLink'));
   setTextById('hlc-tracker-link', tx('trackerLink'));
   setTextById('hlc-title', tx('spotTitle'));
   setTextById('hlc-sub', tx('perOz'));
@@ -644,6 +749,10 @@ async function fetchLiveData() {
       karatUpdEl.dataset.freshnessAge = 'unavailable';
     }
     document.getElementById('hero-live-card')?.removeAttribute('aria-busy');
+    setTrustChip('home-command-freshness', tx('sourceUnavailable'), 'unavailable');
+    setTrustChip('home-command-spot-chip', 'XAU/USD —', 'unavailable');
+    setTextById('home-snapshot-status-value', tx('sourceUnavailable'));
+    setTextById('home-snapshot-status-note', tx('priceUnavailableApi'));
   }
 
   if (fxRes.status === 'fulfilled') {
@@ -970,6 +1079,10 @@ async function init() {
         karatUpdEl.dataset.freshnessAge = 'unavailable';
       }
       document.getElementById('hero-live-card')?.removeAttribute('aria-busy');
+      setTrustChip('home-command-freshness', tx('sourceUnavailable'), 'unavailable');
+      setTrustChip('home-command-spot-chip', 'XAU/USD —', 'unavailable');
+      setTextById('home-snapshot-status-value', tx('sourceUnavailable'));
+      setTextById('home-snapshot-status-note', tx('priceUnavailableConnection'));
     }
     // GCC grid skeleton timeout
     document.querySelectorAll('.gcc-card.skeleton-card').forEach((card) => {
