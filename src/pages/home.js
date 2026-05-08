@@ -203,7 +203,10 @@ function renderHeroCard() {
   const k22 = KARATS.find((k) => k.code === '22');
   const k21 = KARATS.find((k) => k.code === '21');
   const k18 = KARATS.find((k) => k.code === '18');
-  if (!k24 || !k22 || !k21 || !k18) return;
+  if (!k24 || !k22 || !k21 || !k18) {
+    console.warn('[home] Missing required karat config (24/22/21/18); skipping hero card render');
+    return;
+  }
 
   const usd24oz = goldPrice;
   const aed24g = calc.usdPerGram(goldPrice, k24.purity) * CONSTANTS.AED_PEG;

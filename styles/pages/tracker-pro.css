@@ -3034,6 +3034,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
   }
 
   .tp-tab-label {
+    /* Keep text visible on compact screens to improve tab discoverability. */
     display: inline;
   }
 
