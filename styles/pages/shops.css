@@ -318,6 +318,54 @@
   box-shadow: var(--elev-2);
 }
 
+.shops-control--search-priority {
+  grid-column: span 3;
+}
+
+.shops-controls-summary {
+  grid-column: span 2;
+  display: grid;
+  gap: 0.35rem;
+  align-content: center;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgb(212 160 23 / 20%);
+  background: rgb(212 160 23 / 6%);
+}
+
+.shops-controls-summary-count {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+.shops-controls-summary-active {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.shops-controls-clear {
+  justify-self: start;
+  min-height: 40px;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-default);
+  background: var(--surface-primary);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+
+.shops-controls-clear:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold-dark);
+}
+
 .shops-control {
   display: flex;
   flex-direction: column;
@@ -683,6 +731,43 @@
   gap: 0.65rem;
 }
 
+.shop-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.shop-status-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-default);
+  background: var(--surface-secondary);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: var(--weight-semibold);
+}
+
+.shop-status-chip--verified {
+  color: var(--color-live);
+  background: var(--color-live-bg);
+  border-color: var(--color-live-border);
+}
+
+.shop-status-chip--listed {
+  color: var(--color-fixed);
+  background: var(--color-fixed-bg);
+  border-color: var(--color-fixed-border);
+}
+
+.shop-status-chip--market {
+  color: var(--color-warning-text);
+  background: var(--color-warning-bg);
+  border-color: var(--color-warning-border);
+}
+
 /* ── Card badges ─────────────────────────────────────────────────────────– */
 .shop-card-badges {
   display: flex;
@@ -892,6 +977,12 @@
   color: var(--text-secondary);
   line-height: 1.55;
   margin: 0;
+}
+
+.shop-action-btn--disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .shop-contact {
@@ -1648,6 +1739,11 @@
     display: block;
     grid-template-columns: none;
     gap: 0;
+  }
+
+  .shops-control--search-priority,
+  .shops-controls-summary {
+    margin-bottom: 0.75rem;
   }
 
   .shops-filter-toggle {

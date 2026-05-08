@@ -85,12 +85,18 @@ const TXT = {
     clearAllFiltersShort: 'Clear all',
     removeFilter: (value) => `Remove ${value} filter`,
     removeSearchFilter: (value) => `Remove "${value}" search filter`,
+    notAvailable: 'Not available',
     location: 'Location',
     market: 'Market',
     category: 'Category',
     specialties: 'Specialties',
+    status: 'Status',
     phone: 'Phone',
     website: 'Website',
+    verifiedStatus: 'Verified details',
+    listedStatus: 'Listed profile',
+    unverifiedStatus: 'Unverified listing',
+    marketAreaStatus: 'Market area',
     detailsSignal: 'Business details',
     detailsPartial: 'Partially available',
     detailsLimited: 'Limited',
@@ -191,12 +197,18 @@ const TXT = {
     clearAllFiltersShort: 'مسح الكل',
     removeFilter: (value) => `إزالة فلتر ${value}`,
     removeSearchFilter: (value) => `إزالة فلتر البحث "${value}"`,
+    notAvailable: 'غير متاح',
     location: 'الموقع',
     market: 'السوق',
     category: 'الفئة',
     specialties: 'التخصصات',
+    status: 'الحالة',
     phone: 'الهاتف',
     website: 'الموقع',
+    verifiedStatus: 'تفاصيل موثقة',
+    listedStatus: 'إدراج منشور',
+    unverifiedStatus: 'إدراج غير موثق',
+    marketAreaStatus: 'منطقة سوق',
     detailsSignal: 'تفاصيل النشاط',
     detailsPartial: 'متوفرة جزئياً',
     detailsLimited: 'محدودة',
@@ -324,6 +336,13 @@ function isMarketArea(shop) {
 function listingTypeLabel(shop) {
   if (isMarketArea(shop)) return t('marketAreaListing');
   return t('storeProfile');
+}
+
+function profileStatusLabel(shop) {
+  if (isMarketArea(shop)) return t('marketAreaStatus');
+  if (shop.verified) return t('verifiedStatus');
+  if (shop.phone || shop.website) return t('listedStatus');
+  return t('unverifiedStatus');
 }
 
 function listingSortScore(shop) {
@@ -572,6 +591,8 @@ function applyStaticText() {
     emptyTextEl.textContent = t('emptyText');
   }
   document.getElementById('shops-clear-filters').textContent = t('clearAllFilters');
+  document.getElementById('shops-controls-clear').textContent = t('clearAllFiltersShort');
+  document.getElementById('shops-controls-active').textContent = t('noFilters');
   document.getElementById('shops-stat-listings-label').textContent = t('statListings');
   document.getElementById('shops-stat-countries-label').textContent = t('statCountries');
   document.getElementById('shops-stat-regions-label').textContent = t('statRegions');
@@ -604,6 +625,7 @@ function applyStaticText() {
   document.querySelector('.shops-nearme-lead').textContent = t('nearmeLead');
   document.getElementById('shops-nearme-btn').lastChild.textContent = t('nearmeButton');
   document.getElementById('shops-guides-heading').textContent = t('resourcesTitle');
+  document.getElementById('shops-controls-count').textContent = t('count')(SHOPS.length);
 
   const modalCloseBtn = document.querySelector('.shops-modal-close');
   if (modalCloseBtn) {
@@ -786,6 +808,12 @@ function activeFilterSummary() {
   document.getElementById('shops-active-filters').textContent = labels.length
     ? t('activeFilters')(labels.join(' · '))
     : t('noFilters');
+  const controlsActive = document.getElementById('shops-controls-active');
+  if (controlsActive) {
+    controlsActive.textContent = labels.length
+      ? t('activeFilters')(labels.join(' · '))
+      : t('noFilters');
+  }
 
   // Update mobile filter badge count
   const badge = document.getElementById('shops-filter-badge');
@@ -821,13 +849,36 @@ function renderCards(shops) {
       const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${shop.name}, ${shop.market}, ${shop.city}`)}`;
       const nextActionLabel = isCluster ? t('nextActionsMarket') : t('nextActionsStore');
       const qualityLabel = contactQualityLabel(shop);
+      const statusLabel = profileStatusLabel(shop);
+      const phoneAction = shop.phone
+        ? `<a href="tel:${esc(safeTel(shop.phone))}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
+            <span class="shop-action-icon">📞</span>
+            <span class="shop-action-label">${t('callShop')}</span>
+          </a>`
+        : `<button class="shop-action-btn shop-action-btn--disabled" type="button" disabled aria-label="${t('phone')}: ${t('notAvailable')}">
+            <span class="shop-action-icon">📞</span>
+            <span class="shop-action-label">${t('notAvailable')}</span>
+          </button>`;
+      const websiteAction = safeUrl(shop.website)
+        ? `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--website" aria-label="${t('visitWebsite')}">
+            <span class="shop-action-icon">🌐</span>
+            <span class="shop-action-label">${t('visitWebsite')}</span>
+          </a>`
+        : `<button class="shop-action-btn shop-action-btn--disabled" type="button" disabled aria-label="${t('website')}: ${t('notAvailable')}">
+            <span class="shop-action-icon">🌐</span>
+            <span class="shop-action-label">${t('notAvailable')}</span>
+          </button>`;
 
       const contactParts = [];
-      if (shop.phone) contactParts.push(`${t('phone')}: ${esc(shop.phone)}`);
+      contactParts.push(
+        shop.phone ? `${t('phone')}: ${esc(shop.phone)}` : `${t('phone')}: ${t('notAvailable')}`
+      );
       if (safeUrl(shop.website)) {
         contactParts.push(
           `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="shop-site-link">${t('visitWebsite')}</a>`
         );
+      } else {
+        contactParts.push(`${t('website')}: ${t('notAvailable')}`);
       }
 
       return `
@@ -842,6 +893,12 @@ function renderCards(shops) {
             </div>
           </div>
         </header>
+
+        <div class="shop-status-row" aria-label="${t('status')}">
+          <span class="shop-status-chip shop-status-chip--type">${listingTypeLabel(shop)}</span>
+          <span class="shop-status-chip ${shop.verified ? 'shop-status-chip--verified' : isCluster ? 'shop-status-chip--market' : 'shop-status-chip--listed'}">${statusLabel}</span>
+          <span class="shop-status-chip shop-status-chip--details">${detailsAvailabilityLabel(shop.detailsAvailability)}</span>
+        </div>
 
         <section class="shop-confidence-block" aria-label="${t('listingConfidenceTitle')}">
           <p class="shop-confidence-title">${t('listingConfidenceTitle')}</p>
@@ -884,22 +941,8 @@ function renderCards(shops) {
           </a>`
               : ''
           }
-          ${
-            !isCluster && shop.phone
-              ? `<a href="tel:${esc(safeTel(shop.phone))}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
-            <span class="shop-action-icon">📞</span>
-            <span class="shop-action-label">${t('callShop')}</span>
-          </a>`
-              : ''
-          }
-          ${
-            !isCluster && safeUrl(shop.website)
-              ? `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--website" aria-label="${t('visitWebsite')}">
-            <span class="shop-action-icon">🌐</span>
-            <span class="shop-action-label">${t('visitWebsite')}</span>
-          </a>`
-              : ''
-          }
+          ${!isCluster ? phoneAction : ''}
+          ${!isCluster ? websiteAction : ''}
           ${
             !isCluster
               ? `<a href="${esc(directionsUrl)}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--directions" aria-label="${t('directions')}">
@@ -1161,6 +1204,8 @@ function render() {
   const empty = document.getElementById('shops-empty');
   const count = document.getElementById('shops-count');
   if (count) count.textContent = t('count')(shops.length);
+  const controlsCount = document.getElementById('shops-controls-count');
+  if (controlsCount) controlsCount.textContent = t('count')(shops.length);
   activeFilterSummary();
   renderFilterPills();
   renderFeaturedSection();
@@ -1231,6 +1276,7 @@ function bindEvents() {
   });
 
   document.getElementById('shops-clear-filters').addEventListener('click', resetFilters);
+  document.getElementById('shops-controls-clear').addEventListener('click', resetFilters);
 
   // Modal events
   const modal = document.getElementById('shops-modal');

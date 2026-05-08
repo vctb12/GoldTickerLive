@@ -483,6 +483,99 @@
           </div>
         </div>
 
+        <section class="tracker-mobile-workspace" aria-labelledby="tp-mobile-workspace-title">
+          <div class="mobile-command-card tracker-mobile-summary-card">
+            <div class="mobile-command-card__header">
+              <div>
+                <span class="section-kicker" id="tp-mobile-workspace-kicker">Mobile workspace</span>
+                <h2 class="mobile-command-card__title" id="tp-mobile-workspace-title">
+                  Selected market summary
+                </h2>
+                <p class="mobile-command-card__copy" id="tp-mobile-workspace-copy">
+                  Keep the selected market, current reference price, and trust context visible while
+                  you move between tracker tools.
+                </p>
+              </div>
+              <div class="tracker-mobile-summary-chips">
+                <span class="trust-chip" data-tone="live" id="tp-mobile-summary-status">Preparing…</span>
+                <span class="trust-chip" data-tone="info" id="tp-mobile-summary-source">Source note</span>
+              </div>
+            </div>
+
+            <div class="mobile-command-card__metrics">
+              <div class="mobile-command-card__metric">
+                <span class="mobile-command-card__metric-label" id="tp-mobile-selected-label">Selected view</span>
+                <strong class="mobile-command-card__metric-value" id="tp-mobile-selected-value">—</strong>
+                <span class="mobile-command-card__metric-note" id="tp-mobile-selected-note">Currency, karat, and unit</span>
+              </div>
+              <div class="mobile-command-card__metric">
+                <span class="mobile-command-card__metric-label" id="tp-mobile-price-label">Reference price</span>
+                <strong class="mobile-command-card__metric-value" id="tp-mobile-price-value">—</strong>
+                <span class="mobile-command-card__metric-note" id="tp-mobile-price-note">Spot-linked selected view</span>
+              </div>
+              <div class="mobile-command-card__metric">
+                <span class="mobile-command-card__metric-label" id="tp-mobile-spot-label">Global spot</span>
+                <strong class="mobile-command-card__metric-value" id="tp-mobile-spot-value">—</strong>
+                <span class="mobile-command-card__metric-note" id="tp-mobile-spot-note">XAU/USD per troy ounce</span>
+              </div>
+              <div class="mobile-command-card__metric">
+                <span class="mobile-command-card__metric-label" id="tp-mobile-updated-label">Freshness</span>
+                <strong class="mobile-command-card__metric-value" id="tp-mobile-updated-value">—</strong>
+                <span class="mobile-command-card__metric-note" id="tp-mobile-updated-note">Live, cached, or derived is always labeled</span>
+              </div>
+            </div>
+
+            <div class="mobile-command-card__footer">
+              <p class="source-note" id="tp-mobile-summary-note">
+                Data may be cached or derived from the historical baseline for longer ranges.
+              </p>
+            </div>
+          </div>
+
+          <div class="action-rail tracker-mobile-action-rail" aria-label="Tracker mobile actions">
+            <button type="button" class="action-rail-button" data-mobile-action="compare" id="tp-mobile-action-compare">
+              <span class="action-rail-link__kicker" id="tp-mobile-action-compare-kicker">Compare</span>
+              <span class="action-rail-link__label" id="tp-mobile-action-compare-label">Compare markets</span>
+              <span class="action-rail-link__desc" id="tp-mobile-action-compare-desc">Open the compare board with the same selected view.</span>
+            </button>
+            <button type="button" class="action-rail-button" data-mobile-action="archive" id="tp-mobile-action-archive">
+              <span class="action-rail-link__kicker" id="tp-mobile-action-archive-kicker">Archive</span>
+              <span class="action-rail-link__label" id="tp-mobile-action-archive-label">Browse archive</span>
+              <span class="action-rail-link__desc" id="tp-mobile-action-archive-desc">Jump to historical lookup and saved baseline ranges.</span>
+            </button>
+            <button type="button" class="action-rail-button" data-mobile-action="exports" id="tp-mobile-action-exports">
+              <span class="action-rail-link__kicker" id="tp-mobile-action-exports-kicker">Export</span>
+              <span class="action-rail-link__label" id="tp-mobile-action-exports-label">Export current view</span>
+              <span class="action-rail-link__desc" id="tp-mobile-action-exports-desc">Download chart, current view, or watchlist data.</span>
+            </button>
+            <button type="button" class="action-rail-button" data-mobile-action="alerts" id="tp-mobile-action-alerts">
+              <span class="action-rail-link__kicker" id="tp-mobile-action-alerts-kicker">Alerts</span>
+              <span class="action-rail-link__label" id="tp-mobile-action-alerts-label">Open alerts</span>
+              <span class="action-rail-link__desc" id="tp-mobile-action-alerts-desc">Create browser alerts or save a reusable preset.</span>
+            </button>
+          </div>
+
+          <div class="mobile-card-grid tracker-mobile-cues" aria-label="Tracker data notes">
+            <div class="mobile-command-card tracker-mobile-cue-card">
+              <span class="section-kicker" id="tp-mobile-cue-chart-kicker">Chart trust</span>
+              <h3 class="mobile-command-card__title" id="tp-mobile-cue-chart-title">Reference chart context</h3>
+              <p class="mobile-command-card__copy" id="tp-mobile-cue-chart-copy">
+                Short ranges blend live and cached snapshots. Longer ranges use the historical
+                baseline anchored to XAU/USD.
+              </p>
+            </div>
+            <div class="mobile-command-card tracker-mobile-cue-card">
+              <span class="section-kicker" id="tp-mobile-cue-tools-kicker">Mobile tools</span>
+              <h3 class="mobile-command-card__title" id="tp-mobile-cue-tools-title">
+                Switch tools without losing context
+              </h3>
+              <p class="mobile-command-card__copy" id="tp-mobile-cue-tools-copy">
+                Compare, archive, export, and alerts stay one tap away from the live workspace.
+              </p>
+            </div>
+          </div>
+        </section>
+
         <!-- Market wire (advanced) -->
         <section class="tracker-wire-shell tracker-advanced-only" aria-label="Market wire" data-reveal>
           <div class="tracker-wire-card">
@@ -562,6 +655,10 @@
                 <p>Waiting for live and history data…</p>
               </div>
             </div>
+            <p class="source-note tracker-chart-source-note" id="tp-chart-source-note">
+              Selected chart data may combine live, cached, and baseline points. Freshness remains
+              visible in the workspace.
+            </p>
 
             <div class="tracker-stat-grid" id="tp-chart-stats"></div>
 
@@ -697,6 +794,9 @@
               </select>
             </label>
           </div>
+          <p class="scroll-hint" id="tp-market-scroll-hint">
+            Use cards for quick scans, then open a country page for deeper market context.
+          </p>
 
           <div class="tracker-board-grid" id="tp-market-board"></div>
           <div class="tracker-empty" id="tp-market-empty" hidden>
@@ -1007,6 +1107,10 @@
                   </button>
                 </div>
               </div>
+              <p class="scroll-hint" id="tp-archive-scroll-hint">
+                Swipe the archive table sideways on mobile, or use the date lookup cards below for a
+                faster checkpoint.
+              </p>
               <div class="tracker-table-scroll">
                 <table class="tracker-table">
                   <thead>

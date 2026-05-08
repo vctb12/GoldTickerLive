@@ -13,6 +13,7 @@ test.describe('Tracker page — live mode & navigation', () => {
     await expect(page.locator('main')).toBeVisible();
     // tracker hero uses .tracker-hero-wrap in markup
     await expect(page.locator('.tracker-hero-wrap')).toBeVisible();
+    await expect(page.locator('.tracker-mobile-workspace')).toBeAttached();
   });
 
   test('mode tabs are visible and navigable', async ({ page }) => {
