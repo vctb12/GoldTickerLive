@@ -525,12 +525,12 @@ def test_main_dry_run_long_post_does_not_call_x(tmp_path, monkeypatch, capsys):
     state_file.write_text(json.dumps({"price": 4700.0, "posted_at_utc": "2026-05-07T09:00:00Z"}))
     tweet_state_file.write_text(json.dumps({"schema_version": 1}))
 
-    long_tweet = "x" * 304
+    over_length_post = "x" * 304
 
     monkeypatch.setattr(pg, "GOLD_PRICE_FILE", gold_file)
     monkeypatch.setattr(pg, "STATE_FILE", state_file)
     monkeypatch.setattr(pg, "LAST_TWEET_STATE_FILE", tweet_state_file)
-    monkeypatch.setattr(pg, "format_tweet", lambda *_args, **_kwargs: long_tweet)
+    monkeypatch.setattr(pg, "format_tweet", lambda *_args, **_kwargs: over_length_post)
     monkeypatch.setattr(pg, "post_tweet", MagicMock())
     monkeypatch.setenv("TWITTER_API_KEY", "key")
     monkeypatch.setenv("TWITTER_API_SECRET", "secret")
@@ -583,13 +583,13 @@ def test_main_long_post_attempts_x_call_when_other_guards_pass(tmp_path, monkeyp
     state_file.write_text(json.dumps({"price": 4700.0, "posted_at_utc": "2026-05-07T09:00:00Z"}))
     tweet_state_file.write_text(json.dumps({"schema_version": 1}))
 
-    long_tweet = "x" * 304
+    over_length_post = "x" * 304
     mock_post = MagicMock()
 
     monkeypatch.setattr(pg, "GOLD_PRICE_FILE", gold_file)
     monkeypatch.setattr(pg, "STATE_FILE", state_file)
     monkeypatch.setattr(pg, "LAST_TWEET_STATE_FILE", tweet_state_file)
-    monkeypatch.setattr(pg, "format_tweet", lambda *_args, **_kwargs: long_tweet)
+    monkeypatch.setattr(pg, "format_tweet", lambda *_args, **_kwargs: over_length_post)
     monkeypatch.setattr(pg, "post_tweet", mock_post)
     monkeypatch.setenv("TWITTER_API_KEY", "key")
     monkeypatch.setenv("TWITTER_API_SECRET", "secret")
@@ -603,7 +603,7 @@ def test_main_long_post_attempts_x_call_when_other_guards_pass(tmp_path, monkeyp
 
     pg.main()
 
-    mock_post.assert_called_once_with(long_tweet, post_type='hourly')
+    mock_post.assert_called_once_with(over_length_post, post_type='hourly')
     out = capsys.readouterr().out
     assert "📝 Generated tweet:" in out
     assert "304 characters" in out
