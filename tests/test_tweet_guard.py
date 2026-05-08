@@ -46,13 +46,14 @@ def test_allow_stale_when_env_true(monkeypatch):
 def test_skip_on_unchanged_provider_timestamp_within_summary_window(monkeypatch):
     monkeypatch.setenv("FORCE_SUMMARY_AFTER_MINUTES", "60")
     monkeypatch.delenv("ALLOW_STALE_TWEET", raising=False)
+    same_ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     state = tg.TweetState(
         last_tweet_text_hash=tg.hash_tweet("OLD"),
         last_tweet_time_utc=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        last_provider_timestamp_utc="2026-05-01T10:00:00Z",
+        last_provider_timestamp_utc=same_ts,
         last_price_usd_oz=4550.0,
     )
-    d = tg.decide(state, quote=_quote(price=4555.0, ts="2026-05-01T10:00:00Z"), tweet_text="NEW")
+    d = tg.decide(state, quote=_quote(price=4555.0, ts=same_ts), tweet_text="NEW")
     assert d.should_post is False
     assert d.skip_reason == "provider_timestamp_unchanged"
     assert d.provider_timestamp_changed is False
@@ -61,26 +62,28 @@ def test_skip_on_unchanged_provider_timestamp_within_summary_window(monkeypatch)
 def test_force_summary_due_overrides_unchanged_timestamp(monkeypatch):
     monkeypatch.setenv("FORCE_SUMMARY_AFTER_MINUTES", "60")
     long_ago = (datetime.now(timezone.utc) - timedelta(minutes=120)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    same_ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     state = tg.TweetState(
         last_tweet_text_hash=tg.hash_tweet("OLD"),
         last_tweet_time_utc=long_ago,
-        last_provider_timestamp_utc="2026-05-01T10:00:00Z",
+        last_provider_timestamp_utc=same_ts,
         last_price_usd_oz=4550.0,
     )
-    d = tg.decide(state, quote=_quote(price=4555.0, ts="2026-05-01T10:00:00Z"), tweet_text="NEW")
+    d = tg.decide(state, quote=_quote(price=4555.0, ts=same_ts), tweet_text="NEW")
     assert d.should_post is True
 
 
 def test_skip_on_unchanged_provider_sample_even_when_force_summary_due(monkeypatch):
     monkeypatch.setenv("FORCE_SUMMARY_AFTER_MINUTES", "60")
     long_ago = (datetime.now(timezone.utc) - timedelta(minutes=120)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    same_ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     state = tg.TweetState(
         last_tweet_text_hash=tg.hash_tweet("OLD"),
         last_tweet_time_utc=long_ago,
-        last_provider_timestamp_utc="2026-05-01T10:00:00Z",
+        last_provider_timestamp_utc=same_ts,
         last_price_usd_oz=4550.0,
     )
-    d = tg.decide(state, quote=_quote(price=4550.0, ts="2026-05-01T10:00:00Z"), tweet_text="NEW")
+    d = tg.decide(state, quote=_quote(price=4550.0, ts=same_ts), tweet_text="NEW")
     assert d.should_post is False
     assert d.skip_reason == "provider_sample_unchanged"
 
