@@ -237,13 +237,13 @@ export const TRANSLATIONS = {
     'tracker.noFavorites':
       'No favorites set. Add currencies via the Compare tab. Your watchlist will appear here for quick reference.',
     'tracker.waitingLive': 'Waiting for live data…',
-    'tracker.liveSpotNote': 'Live spot: ${spot} / troy oz',
+    'tracker.liveSpotNote': 'Live spot: {spot} / troy oz',
     'tracker.dataSourceNote': '{source} · updated {age}',
     'tracker.historyNote': 'History: LBMA baseline 2019–Aug 2025 + {count} session snapshots',
     'tracker.briefWaitingHeadline': 'Waiting for live data',
     'tracker.briefWaitingBody':
       'Gold price data is loading. If this persists, the API may be temporarily unavailable — last cached price will be shown when available.',
-    'tracker.briefHeadline': 'Gold at ${spot} / troy oz — {source}',
+    'tracker.briefHeadline': 'Gold at {spot} / troy oz — {source}',
     'tracker.briefBody':
       'UAE 24K: AED {aed24}/g. Selected view: {karat}K in {currency} per {unit}. FX source: open.er-api.com (AED uses fixed peg 3.6725). History: LBMA monthly baseline 2019–Aug 2025 + session snapshots.',
     'tracker.pagination.prev': '← Prev',
@@ -278,17 +278,17 @@ export const TRANSLATIONS = {
     'tracker.countdown': 'Next update in {seconds}s',
     'tracker.offlineBanner': "⚠️ You're offline — showing cached prices from {time}",
     'tracker.offlineUnknown': 'recent cache',
-    'tracker.share.brief': 'Gold: ${spot}/oz · UAE 24K: AED {uae24}/g · {time}',
+    'tracker.share.brief': 'Gold: {spot}/oz · UAE 24K: AED {uae24}/g · {time}',
     'tracker.share.unavailable': 'Gold data unavailable',
     'tracker.toast.briefCopied': 'Brief copied to clipboard',
     'tracker.toast.clipboardFailed': 'Failed to copy to clipboard',
     'tracker.decision.directionTitle': "Today's reference direction",
     'tracker.decision.directionUp':
-      'Reference prices are currently above the recent starting point, with spot at ${spot} and labeled {source}.',
+      'Reference prices are currently above the recent starting point, with spot at {spot} and labeled {source}.',
     'tracker.decision.directionDown':
-      'Reference prices are currently below the recent starting point, with spot at ${spot} and labeled {source}.',
+      'Reference prices are currently below the recent starting point, with spot at {spot} and labeled {source}.',
     'tracker.decision.directionFlat':
-      'Reference prices are flat versus the selected start point, with spot at ${spot} and labeled {source}.',
+      'Reference prices are flat versus the selected start point, with spot at {spot} and labeled {source}.',
     'tracker.decision.rangeMovementTitle': 'What changed since range start',
     'tracker.decision.rangeMovementCopy':
       '{range} moved {change} ({move}) in the selected reference window.',
@@ -797,13 +797,13 @@ export const TRANSLATIONS = {
     'tracker.noFavorites':
       'لا توجد مفضلات بعد. أضف العملات من تبويب المقارنة وسيظهر الملخص هنا للوصول السريع.',
     'tracker.waitingLive': 'بانتظار البيانات المباشرة…',
-    'tracker.liveSpotNote': 'السعر الفوري المباشر: ${spot} لكل أوقية تروي',
+    'tracker.liveSpotNote': 'السعر الفوري المباشر: {spot} لكل أوقية تروي',
     'tracker.dataSourceNote': '{source} · تم التحديث {age}',
     'tracker.historyNote': 'السجل: متوسطات LBMA من 2019 حتى أغسطس 2025 + {count} لقطات جلسة',
     'tracker.briefWaitingHeadline': 'بانتظار البيانات المباشرة',
     'tracker.briefWaitingBody':
       'يتم تحميل بيانات الذهب الآن. إذا استمر ذلك فقد تكون الواجهة غير متاحة مؤقتاً — سيتم عرض آخر قيمة مخزنة عند توفرها.',
-    'tracker.briefHeadline': 'الذهب عند ${spot} لكل أوقية تروي — {source}',
+    'tracker.briefHeadline': 'الذهب عند {spot} لكل أوقية تروي — {source}',
     'tracker.briefBody':
       'عيار 24 في الإمارات: {aed24} درهم/غ. العرض المحدد: {karat} قيراط بعملة {currency} لكل {unit}. مصدر الصرف: open.er-api.com (مع ربط الدرهم الثابت 3.6725). السجل: متوسطات LBMA الشهرية من 2019 حتى أغسطس 2025 مع لقطات الجلسة.',
     'tracker.pagination.prev': 'السابق ←',
@@ -838,17 +838,17 @@ export const TRANSLATIONS = {
     'tracker.countdown': 'التحديث التالي خلال {seconds}ث',
     'tracker.offlineBanner': '⚠️ أنت غير متصل — يتم عرض الأسعار المخزنة من {time}',
     'tracker.offlineUnknown': 'أحدث نسخة مخزنة',
-    'tracker.share.brief': 'الذهب: ${spot}/أوقية · الإمارات 24K: {uae24} AED/غ · {time}',
+    'tracker.share.brief': 'الذهب: {spot}/أوقية · الإمارات 24K: {uae24} AED/غ · {time}',
     'tracker.share.unavailable': 'بيانات الذهب غير متاحة',
     'tracker.toast.briefCopied': 'تم نسخ الملخص إلى الحافظة',
     'tracker.toast.clipboardFailed': 'تعذر النسخ إلى الحافظة',
     'tracker.decision.directionTitle': 'اتجاه المرجع اليوم',
     'tracker.decision.directionUp':
-      'الأسعار المرجعية حالياً أعلى من نقطة البداية الأخيرة، مع سعر فوري ${spot} وموسوم بأنه {source}.',
+      'الأسعار المرجعية حالياً أعلى من نقطة البداية الأخيرة، مع سعر فوري {spot} وموسوم بأنه {source}.',
     'tracker.decision.directionDown':
-      'الأسعار المرجعية حالياً أدنى من نقطة البداية الأخيرة، مع سعر فوري ${spot} وموسوم بأنه {source}.',
+      'الأسعار المرجعية حالياً أدنى من نقطة البداية الأخيرة، مع سعر فوري {spot} وموسوم بأنه {source}.',
     'tracker.decision.directionFlat':
-      'الأسعار المرجعية مستقرة مقارنة ببداية النطاق المحدد، مع سعر فوري ${spot} وموسوم بأنه {source}.',
+      'الأسعار المرجعية مستقرة مقارنة ببداية النطاق المحدد، مع سعر فوري {spot} وموسوم بأنه {source}.',
     'tracker.decision.rangeMovementTitle': 'ما الذي تغيّر منذ بداية النطاق',
     'tracker.decision.rangeMovementCopy':
       'تحرك {range} بمقدار {change} ({move}) داخل نافذة المرجع المحددة.',
