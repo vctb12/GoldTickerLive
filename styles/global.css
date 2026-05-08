@@ -178,6 +178,8 @@
   --content-max-width: 1280px;
   --page-gutter: 1.25rem;
   --nav-height: 64px;
+  --mobile-bottom-nav-height: 64px;
+  --mobile-bottom-nav-body-offset: 68px;
 
   /* Focus ring */
   --focus-ring-color: var(--color-gold);
@@ -5242,7 +5244,7 @@ body > * {
   justify-content: space-around;
   max-width: 500px;
   margin: 0 auto;
-  min-height: 64px;
+  min-height: var(--mobile-bottom-nav-height);
 }
 
 .mobile-bottom-nav-item {
@@ -5309,7 +5311,7 @@ body > * {
 
   /* Add bottom padding to body so content isn't hidden behind the nav */
   body {
-    padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(var(--mobile-bottom-nav-body-offset) + env(safe-area-inset-bottom, 0px));
   }
 }
 

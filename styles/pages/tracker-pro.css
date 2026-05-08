@@ -54,6 +54,7 @@
   --tp-hero-border: rgb(196 154 68 / 22%);
   --tp-hero-surface: rgb(255 255 255 / 6%);
   --tp-hero-surface-2: rgb(255 255 255 / 10%);
+  --tp-tab-label-max-width: 7ch;
 }
 
 /* ── Page base ────────────────────────────────────────────────────────────── */
@@ -3100,7 +3101,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
   }
 
   .tp-tab-label {
-    max-width: 7ch;
+    max-width: var(--tp-tab-label-max-width);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
