@@ -1033,7 +1033,7 @@ def main():
             closed_market_stale_allowed=closed_market_stale_allowed,
         )
         decision = tweet_guard.decide(guard_state, quote=guard_quote, tweet_text=tweet)
-        allow_same_price_threshold_override = (
+        should_bypass_threshold = (
             not decision.should_post
             and decision.skip_reason == "price_move_below_threshold"
             and post_type == "market_closed_reference"
@@ -1043,7 +1043,7 @@ def main():
             )
         )
         if not decision.should_post:
-            if allow_same_price_threshold_override:
+            if should_bypass_threshold:
                 print(
                     "allow_same_price_closed_market_repost=true — tweet-guard "
                     "price_move_below_threshold bypassed for this manual/operator "
