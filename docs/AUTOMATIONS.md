@@ -158,7 +158,8 @@ posting when the current price equals the previous successfully posted price. Fo
 message that includes the previous price, current price, previous post timestamp, minutes since last
 post, `selected_post_type`, `source`, `trigger_nonce`, and `refresh_price_first`. This is a clean
 successful skip — not a workflow failure. Operators who need to repost the same closing price (for
-example, to correct the posting time or use a different template nonce) can set
+example, to announce a market closure that was not posted earlier, or to post after a gap where the
+closing price has not moved) can set
 `allow_same_price_closed_market_repost=true` in the `workflow_dispatch` inputs — see below.
 
 **Workflow_dispatch inputs:**
@@ -168,7 +169,7 @@ example, to correct the posting time or use a different template nonce) can set
 | `dry_run`                               | `false`  | Evaluate all guards; skip the real X API call                                                                                                                                                         |
 | `force_post`                            | `false`  | Bypass cooldown only; duplicate and stale guards still apply                                                                                                                                          |
 | `source`                                | `manual` | Trigger source label for logs/state (`manual`, `shortcut`)                                                                                                                                            |
-| `refresh_price_first`                   | `false`  | Run one price refresh before posting (manual/operator only). Fetches `data/gold_price.json` from providers once; if the provider timestamp does not advance, continues with `market_closed_reference` |
+| `refresh_price_first`                   | `false`  | Run one price refresh before posting (manual/operator only). Fetches `data/gold_price.json` from providers once before the normal posting path runs. Post type is still determined by market hours and the operator trigger — not the provider timestamp. If the market is closed and the price is unchanged, `allow_same_price_closed_market_repost=true` is also required to bypass the price-change guard |
 | `trigger_nonce`                         | `""`     | Optional unique manual trigger label                                                                                                                                                                  |
 | `allow_same_price_closed_market_repost` | `false`  | Manual/operator only: allow `market_closed_reference` repost even if the closing price is unchanged, subject to duplicate/content-hash/cooldown protections. Scheduled runs ignore this               |
 

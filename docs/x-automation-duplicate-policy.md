@@ -167,7 +167,7 @@ SKIP: market_closed_reference — same closing/reference price already posted.
   previous_price:       $4,724.10
   current_price:        $4,724.10
   previous_post_at:     2026-05-09T06:04:47Z
-  minutes_since_post:   138
+  minutes_since_post:   138 min ago
   selected_post_type:   market_closed_reference
   source:               shortcut
   trigger_nonce:        (none)
@@ -187,8 +187,9 @@ figure repeatedly.
 
 ### Operator override: allow_same_price_closed_market_repost
 
-If an operator needs to re-post the same closing reference price (for example, to use a different
-`trigger_nonce` or correct a timing label), they can set
+If an operator needs to re-post the same closing reference price (for example, to announce a market
+closure that was not posted earlier, or to post after a gap where the closing price has not moved),
+they can set
 `allow_same_price_closed_market_repost=true` in the `workflow_dispatch` inputs. This bypasses
 **only** the price-change guard. All other protections remain active:
 
@@ -208,10 +209,22 @@ If an operator needs to re-post the same closing reference price (for example, t
 
 Scheduled runs **never** apply this override even if the env var is set.
 
-### Using refresh_price_first to advance the timestamp
+### Using refresh_price_first with allow_same_price_closed_market_repost
 
-If the provider timestamp advanced since the last post (for example, `gold-price-fetch.yml` ran
-again), the tweet text will differ (the "Last updated" line changes) and the `duplicate_text_hash`
-guard will not fire — meaning a plain repost without the override may work naturally. Use
-`refresh_price_first=true` to first run a fresh price fetch, then post with the newer provider
-timestamp. This is the preferred path when the operator knows the provider has updated.
+`refresh_price_first=true` runs a fresh provider fetch and updates `data/gold_price.json` before the
+posting path executes. However, if the market is still closed the provider will return the same
+last-known closing price — `xau_usd_per_oz` will not change, and the price-change guard will still
+fire and skip. In that case `allow_same_price_closed_market_repost=true` is also required to bypass
+the price-change guard.
+
+Use both inputs together when the operator wants to fetch the latest provider snapshot and then force
+a `market_closed_reference` post regardless of whether the price moved:
+
+```
+refresh_price_first: true
+allow_same_price_closed_market_repost: true
+```
+
+The `duplicate_text_hash` guard remains active; if the fetched price and all tweet fields are
+byte-for-byte identical to the last post, the post will still be skipped (and X would reject it
+anyway).
