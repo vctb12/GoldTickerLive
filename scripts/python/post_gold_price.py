@@ -312,7 +312,7 @@ def check_duplicate_guard(price, prev_price, prev_posted_at_utc, post_type, _now
     if post_type == 'market_closed_reference':
         # Emit a richer operator-friendly message for the closed-market case.
         trigger_source = os.environ.get('POST_TRIGGER_SOURCE', '').strip().lower() or 'unknown'
-        trigger_nonce = os.environ.get('POST_TRIGGER_NONCE', '').strip() or 'NONE'
+        trigger_nonce = os.environ.get('POST_TRIGGER_NONCE', '').strip() or '(none)'
         refresh_price_first = os.environ.get('REFRESH_PRICE_FIRST', 'false')
         minutes_age_str = str(int(minutes_ago)) if minutes_ago is not None else 'unknown'
         reason = (
@@ -790,13 +790,13 @@ def main():
 
     # 2. Load raw gold price data
     if not GOLD_PRICE_FILE.exists():
-        print(f"FATAL: data/gold_price.json not found."
+        print(f"FATAL: {GOLD_PRICE_FILE} not found."
               " The gold-price-fetch.yml workflow must run first to populate it.")
         sys.exit(1)
     try:
         raw_data = json.loads(GOLD_PRICE_FILE.read_text(encoding="utf-8"))
-    except Exception as _json_exc:
-        print(f"FATAL: data/gold_price.json unreadable — {_json_exc}")
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as _json_exc:
+        print(f"FATAL: {GOLD_PRICE_FILE} unreadable — {_json_exc}")
         sys.exit(1)
     source_ts = _provider_timestamp_iso(raw_data) or (
         raw_data.get("source_updated_at_gmt", "n/a") if isinstance(raw_data, dict) else "n/a"

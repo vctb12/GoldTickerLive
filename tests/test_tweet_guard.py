@@ -362,3 +362,19 @@ def test_force_post_bypasses_only_cooldown_not_stale(monkeypatch, capsys):
     d = tg.decide(state, quote=_quote(is_fresh=False), tweet_text="Gold: $4,555")
     assert d.should_post is False
     assert d.skip_reason == "stale_quote"
+
+
+def test_load_state_handles_non_integer_schema_version(tmp_path: Path, capsys):
+    """load_state must not crash when schema_version is a non-integer string."""
+    p = tmp_path / "last_tweet_state.json"
+    p.write_text(json.dumps({
+        "schema_version": "x",
+        "last_price_usd_oz": 4550.0,
+        "last_tweet_time_utc": "2026-05-01T10:00:00Z",
+        "last_tweet_text_hash": "abc123",
+    }))
+    state = tg.load_state(p)
+    # Must not crash; schema_version defaults to module SCHEMA_VERSION
+    assert state.schema_version == tg.SCHEMA_VERSION
+    out = capsys.readouterr().out
+    assert "non-integer schema_version" in out

@@ -1396,7 +1396,9 @@ def test_get_gold_price_fatal_on_missing_file(tmp_path, monkeypatch, capsys):
         raise AssertionError("Expected main() to exit(1) on missing gold_price.json")
 
     out = capsys.readouterr().out
-    assert "FATAL: data/gold_price.json not found" in out
+    assert "FATAL:" in out
+    assert "not found" in out
+    assert str(missing_file) in out
 
 
 def test_get_gold_price_fatal_on_malformed_json(tmp_path, monkeypatch, capsys):
@@ -1424,7 +1426,9 @@ def test_get_gold_price_fatal_on_malformed_json(tmp_path, monkeypatch, capsys):
         raise AssertionError("Expected main() to exit(1) on malformed gold_price.json")
 
     out = capsys.readouterr().out
-    assert "FATAL: data/gold_price.json unreadable" in out
+    assert "FATAL:" in out
+    assert "unreadable" in out
+    assert str(gold_file) in out
 
 
 def test_duplicate_guard_market_closed_reference_log_uses_tree_format(monkeypatch):

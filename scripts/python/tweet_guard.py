@@ -108,8 +108,13 @@ def load_state(path: Path) -> TweetState:
     missing = [k for k in required_keys if raw.get(k) is None]
     if missing:
         print(f"  [state] last_tweet_state.json missing/null keys: {missing} — first-run behaviour for those guards")
+    try:
+        schema_ver = int(raw.get("schema_version") or SCHEMA_VERSION)
+    except (TypeError, ValueError):
+        print(f"  [state] last_tweet_state.json has non-integer schema_version; defaulting to {SCHEMA_VERSION}")
+        schema_ver = SCHEMA_VERSION
     return TweetState(
-        schema_version=int(raw.get("schema_version") or SCHEMA_VERSION),
+        schema_version=schema_ver,
         last_tweet_id=raw.get("last_tweet_id"),
         last_tweet_time_utc=raw.get("last_tweet_time_utc"),
         last_tweet_text_hash=raw.get("last_tweet_text_hash"),
