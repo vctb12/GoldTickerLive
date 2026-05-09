@@ -378,6 +378,7 @@ def _env_float(name, default):
     try:
         return float(raw)
     except ValueError:
+        print(f"WARN: invalid {name}={raw!r}; falling back to {float(default):g}")
         return float(default)
 
 
@@ -477,6 +478,7 @@ def _uae_time_from_iso(ts):
             dt = dt.replace(tzinfo=timezone.utc)
         return dt.astimezone(UAE_TZ).strftime('%b %-d, %Y · %I:%M %p').lstrip('0')
     except Exception:
+        print(f"WARN: unable to format source timestamp {ts!r}; using raw value")
         return ts
 
 
