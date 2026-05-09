@@ -207,6 +207,70 @@ def test_duplicate_guard_market_close_same_price_skips():
     assert "market_close" in reason
 
 
+def test_duplicate_guard_market_closed_reference_same_price_skips_with_detailed_log(monkeypatch):
+    monkeypatch.setenv("POST_TRIGGER_SOURCE", "shortcut")
+    monkeypatch.setenv("POST_TRIGGER_NONCE", "test-nonce-001")
+    monkeypatch.setenv("REFRESH_PRICE_FIRST", "false")
+    skip, reason = pg.check_duplicate_guard(
+        price=4724.10,
+        prev_price=4724.10,
+        prev_posted_at_utc=_30_MIN_AGO,
+        post_type='market_closed_reference',
+        _now=_NOW,
+    )
+    assert skip is True
+    # Detailed log fields must be present
+    assert "market_closed_reference" in reason
+    assert "same closing/reference price already posted" in reason
+    assert "$4,724.10" in reason
+    assert "previous_price" in reason
+    assert "current_price" in reason
+    assert "minutes_since_post" in reason
+    assert "source" in reason
+    assert "shortcut" in reason
+    assert "trigger_nonce" in reason
+    assert "test-nonce-001" in reason
+    assert "refresh_price_first" in reason
+    assert "allow_same_price_closed_market_repost" in reason
+
+
+def test_is_allow_same_price_closed_market_repost_false_by_default(monkeypatch):
+    monkeypatch.delenv("ALLOW_SAME_PRICE_CLOSED_MARKET_REPOST", raising=False)
+    assert pg.is_allow_same_price_closed_market_repost(
+        event_name='workflow_dispatch', trigger_source='manual'
+    ) is False
+
+
+def test_is_allow_same_price_closed_market_repost_true_for_manual(monkeypatch):
+    monkeypatch.setenv("ALLOW_SAME_PRICE_CLOSED_MARKET_REPOST", "true")
+    assert pg.is_allow_same_price_closed_market_repost(
+        event_name='workflow_dispatch', trigger_source='manual'
+    ) is True
+
+
+def test_is_allow_same_price_closed_market_repost_true_for_shortcut(monkeypatch):
+    monkeypatch.setenv("ALLOW_SAME_PRICE_CLOSED_MARKET_REPOST", "true")
+    assert pg.is_allow_same_price_closed_market_repost(
+        event_name='workflow_dispatch', trigger_source='shortcut'
+    ) is True
+
+
+def test_is_allow_same_price_closed_market_repost_false_for_scheduled(monkeypatch):
+    monkeypatch.setenv("ALLOW_SAME_PRICE_CLOSED_MARKET_REPOST", "true")
+    # Scheduled runs have no workflow_dispatch event
+    assert pg.is_allow_same_price_closed_market_repost(
+        event_name='schedule', trigger_source='scheduled'
+    ) is False
+
+
+def test_is_allow_same_price_closed_market_repost_false_for_non_operator_dispatch(monkeypatch):
+    monkeypatch.setenv("ALLOW_SAME_PRICE_CLOSED_MARKET_REPOST", "true")
+    # workflow_dispatch but source is not manual/shortcut
+    assert pg.is_allow_same_price_closed_market_repost(
+        event_name='workflow_dispatch', trigger_source='scheduled'
+    ) is False
+
+
 def test_duplicate_guard_no_previous_state():
     skip, _ = pg.check_duplicate_guard(
         price=4701.73,
@@ -461,7 +525,7 @@ def test_staleness_supports_normalized_timestamp_utc():
     assert msg is None
 
 
-def test_market_closed_reference_template_labels_cached_reference():
+def test_market_closed_reference_template_uses_closing_wording():
     tweet = pg.format_market_closed_reference_tweet(
         {
             **_sample_data(prev_price=4669.34, prev_posted_at_utc="2026-04-24T10:00:00Z", chp=0.2677),
@@ -469,10 +533,19 @@ def test_market_closed_reference_template_labels_cached_reference():
             "stale_age_hours": 9.6,
         }
     )
-    assert "Gold Market Closed" in tweet
-    assert "Last spot/reference XAU/USD" in tweet
+    assert "🔴 Gold Market Is Now Closed" in tweet
+    assert "Closing Spot XAU/USD" in tweet
     assert "Last updated:" in tweet
-    assert "Not live retail price" in tweet
+    assert "Spot reference · Not retail price" in tweet
+    # Stale age must NOT appear in the public tweet body
+    assert "Cached reference" not in tweet
+    assert "9.6h old" not in tweet
+    # Must include AED karat prices
+    assert "AED/g" in tweet
+    # Must include reopens line
+    assert "Reopens Monday" in tweet
+    # Must include site URL
+    assert "🖥️ goldtickerlive.com" in tweet
 
 
 def test_build_guard_quote_marks_closed_market_reference_as_fresh():
@@ -744,8 +817,8 @@ def test_main_market_closed_shortcut_allows_cached_reference_within_limit(tmp_pa
     out = capsys.readouterr().out
     assert "selected_post_type:        market_closed_reference" in out
     assert "closed_market_stale_allowed: True" in out
-    assert "Gold Market Closed — Last Reference Price" in out
-    assert "Not live retail price" in out
+    assert "🔴 Gold Market Is Now Closed" in out
+    assert "Spot reference · Not retail price" in out
     assert "DRY_RUN_TWEET=true — would post; skipping actual X call" in out
 
 
@@ -1044,3 +1117,204 @@ def test_main_over_280_char_post_attempts_x_call_when_other_guards_pass(tmp_path
     assert "📝 Generated tweet:" in out
     assert "304 characters" in out
     assert "tweet-length guard" not in out
+
+
+# ── allow_same_price_closed_market_repost tests ─────────────────────────────
+
+def test_main_allow_same_price_closed_market_repost_bypasses_price_guard(
+    tmp_path, monkeypatch, capsys
+):
+    """When allow_same_price_closed_market_repost=true and it's a manual
+    workflow_dispatch, the price-change guard is bypassed for market_closed_reference.
+    The dry_run flag still prevents an actual X post."""
+    fresh_now = datetime.now(timezone.utc)
+    source_ts = (fresh_now - timedelta(hours=4)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    gold_file = tmp_path / "gold_price.json"
+    state_file = tmp_path / "last_gold_price.json"
+    tweet_state_file = tmp_path / "last_tweet_state.json"
+    gold_file.write_text(
+        json.dumps(
+            {
+                "provider": "gold_api_com",
+                "xau_usd_per_oz": 4724.10,
+                "timestamp_utc": source_ts,
+                "fetched_at_utc": fresh_now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "aed_per_gram_24k": 557.79,
+                "karats_aed_per_gram": {
+                    "24k": 557.79,
+                    "22k": 511.31,
+                    "21k": 488.07,
+                    "18k": 418.34,
+                },
+            }
+        )
+    )
+    # Previous state has the SAME price — would normally skip
+    state_file.write_text(
+        json.dumps({"price": 4724.10, "posted_at_utc": (fresh_now - timedelta(hours=3)).strftime("%Y-%m-%dT%H:%M:%SZ")})
+    )
+    tweet_state_file.write_text(json.dumps({"schema_version": 1}))
+
+    monkeypatch.setattr(pg, "GOLD_PRICE_FILE", gold_file)
+    monkeypatch.setattr(pg, "STATE_FILE", state_file)
+    monkeypatch.setattr(pg, "LAST_TWEET_STATE_FILE", tweet_state_file)
+    monkeypatch.setattr(pg, "post_tweet", MagicMock())
+    monkeypatch.setattr(pg, "is_market_open_time", lambda _now=None: False)
+    monkeypatch.setenv("TWITTER_API_KEY", "key")
+    monkeypatch.setenv("TWITTER_API_SECRET", "secret")
+    monkeypatch.setenv("TWITTER_ACCESS_TOKEN", "token")
+    monkeypatch.setenv("TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
+    monkeypatch.setenv("DRY_RUN_TWEET", "true")
+    monkeypatch.setenv("GITHUB_EVENT_NAME", "workflow_dispatch")
+    monkeypatch.setenv("POST_TRIGGER_SOURCE", "manual")
+    monkeypatch.setenv("ALLOW_SAME_PRICE_CLOSED_MARKET_REPOST", "true")
+    monkeypatch.delenv("GITHUB_EVENT_SCHEDULE", raising=False)
+    monkeypatch.setattr(pg, "TWITTER_API_KEY", "key")
+    monkeypatch.setattr(pg, "TWITTER_API_SECRET", "secret")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN", "token")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
+
+    try:
+        pg.main()
+    except SystemExit as exc:
+        assert exc.code == 0
+    else:
+        raise AssertionError("Expected main() to exit after dry run")
+
+    out = capsys.readouterr().out
+    assert "allow_same_price_closed_market_repost=true" in out
+    assert "price-change guard bypassed" in out
+    # DRY_RUN stops the actual post
+    assert "DRY_RUN_TWEET=true" in out
+    pg.post_tweet.assert_not_called()
+
+
+def test_main_allow_same_price_closed_market_repost_false_still_skips(
+    tmp_path, monkeypatch, capsys
+):
+    """When allow_same_price_closed_market_repost=false (default), same-price
+    market_closed_reference exits cleanly without posting."""
+    fresh_now = datetime.now(timezone.utc)
+    source_ts = (fresh_now - timedelta(hours=4)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    gold_file = tmp_path / "gold_price.json"
+    state_file = tmp_path / "last_gold_price.json"
+    tweet_state_file = tmp_path / "last_tweet_state.json"
+    gold_file.write_text(
+        json.dumps(
+            {
+                "provider": "gold_api_com",
+                "xau_usd_per_oz": 4724.10,
+                "timestamp_utc": source_ts,
+                "fetched_at_utc": fresh_now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "aed_per_gram_24k": 557.79,
+                "karats_aed_per_gram": {
+                    "24k": 557.79,
+                    "22k": 511.31,
+                    "21k": 488.07,
+                    "18k": 418.34,
+                },
+            }
+        )
+    )
+    state_file.write_text(
+        json.dumps({"price": 4724.10, "posted_at_utc": (fresh_now - timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%SZ")})
+    )
+    tweet_state_file.write_text(json.dumps({"schema_version": 1}))
+
+    monkeypatch.setattr(pg, "GOLD_PRICE_FILE", gold_file)
+    monkeypatch.setattr(pg, "STATE_FILE", state_file)
+    monkeypatch.setattr(pg, "LAST_TWEET_STATE_FILE", tweet_state_file)
+    monkeypatch.setattr(pg, "post_tweet", MagicMock())
+    monkeypatch.setattr(pg, "is_market_open_time", lambda _now=None: False)
+    monkeypatch.setenv("TWITTER_API_KEY", "key")
+    monkeypatch.setenv("TWITTER_API_SECRET", "secret")
+    monkeypatch.setenv("TWITTER_ACCESS_TOKEN", "token")
+    monkeypatch.setenv("TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
+    monkeypatch.setenv("GITHUB_EVENT_NAME", "workflow_dispatch")
+    monkeypatch.setenv("POST_TRIGGER_SOURCE", "manual")
+    monkeypatch.setenv("ALLOW_SAME_PRICE_CLOSED_MARKET_REPOST", "false")
+    monkeypatch.delenv("GITHUB_EVENT_SCHEDULE", raising=False)
+    monkeypatch.setattr(pg, "TWITTER_API_KEY", "key")
+    monkeypatch.setattr(pg, "TWITTER_API_SECRET", "secret")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN", "token")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
+
+    try:
+        pg.main()
+    except SystemExit as exc:
+        assert exc.code == 0
+    else:
+        raise AssertionError("Expected main() to exit with skip")
+
+    out = capsys.readouterr().out
+    # Should see the detailed skip log
+    assert "same closing/reference price already posted" in out
+    # Must NOT bypass the guard
+    assert "price-change guard bypassed" not in out
+    pg.post_tweet.assert_not_called()
+
+
+def test_main_scheduled_run_cannot_use_allow_same_price_repost(
+    tmp_path, monkeypatch, capsys
+):
+    """Scheduled runs must never bypass the price-change guard via
+    allow_same_price_closed_market_repost, even if env var is set to true."""
+    fresh_now = datetime.now(timezone.utc)
+    gold_file = tmp_path / "gold_price.json"
+    state_file = tmp_path / "last_gold_price.json"
+    tweet_state_file = tmp_path / "last_tweet_state.json"
+    gold_file.write_text(
+        json.dumps(
+            {
+                "provider": "gold_api_com",
+                "xau_usd_per_oz": 4724.10,
+                "timestamp_utc": fresh_now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "fetched_at_utc": fresh_now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "aed_per_gram_24k": 557.79,
+                "karats_aed_per_gram": {
+                    "24k": 557.79,
+                    "22k": 511.31,
+                    "21k": 488.07,
+                    "18k": 418.34,
+                },
+            }
+        )
+    )
+    state_file.write_text(
+        json.dumps({"price": 4724.10, "posted_at_utc": (fresh_now - timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%SZ")})
+    )
+    tweet_state_file.write_text(json.dumps({"schema_version": 1}))
+
+    monkeypatch.setattr(pg, "GOLD_PRICE_FILE", gold_file)
+    monkeypatch.setattr(pg, "STATE_FILE", state_file)
+    monkeypatch.setattr(pg, "LAST_TWEET_STATE_FILE", tweet_state_file)
+    monkeypatch.setattr(pg, "post_tweet", MagicMock())
+    monkeypatch.setattr(pg, "is_market_open_time", lambda _now=None: True)
+    monkeypatch.setenv("TWITTER_API_KEY", "key")
+    monkeypatch.setenv("TWITTER_API_SECRET", "secret")
+    monkeypatch.setenv("TWITTER_ACCESS_TOKEN", "token")
+    monkeypatch.setenv("TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
+    # Simulate scheduled run
+    monkeypatch.setenv("GITHUB_EVENT_NAME", "schedule")
+    monkeypatch.setenv("POST_TRIGGER_SOURCE", "scheduled")
+    monkeypatch.setenv("GITHUB_EVENT_SCHEDULE", "9 * * * 1-4")
+    # Even if this env var is set, scheduled run must not bypass
+    monkeypatch.setenv("ALLOW_SAME_PRICE_CLOSED_MARKET_REPOST", "true")
+    monkeypatch.setattr(pg, "TWITTER_API_KEY", "key")
+    monkeypatch.setattr(pg, "TWITTER_API_SECRET", "secret")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN", "token")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
+
+    try:
+        pg.main()
+    except SystemExit as exc:
+        assert exc.code == 0
+    else:
+        raise AssertionError("Expected main() to exit with skip")
+
+    out = capsys.readouterr().out
+    # Scheduled run: price-change guard fires (hourly post type, same price)
+    assert "SKIP: price-change guard" in out
+    # Must NOT bypass — is_allow_same_price... returns False for schedule event
+    assert "price-change guard bypassed" not in out
+    pg.post_tweet.assert_not_called()

@@ -153,3 +153,78 @@ hasn't changed. That's the entire point of `tweet_guard.decide()`.
 If you find yourself reaching for "let's just append a timestamp suffix to defeat the duplicate
 check," the correct action is to ask why the upstream provider is repeating itself — that's the
 bakeoff's job to surface, not the bot's job to paper over.
+
+## 7. market_closed_reference same-price skip — behavior and operator override
+
+### Default behavior
+
+`post_gold_price.py`'s `check_duplicate_guard` skips posting whenever the current price equals the
+previous successfully posted price. For `market_closed_reference` posts this produces a detailed
+diagnostic log (not a workflow failure):
+
+```
+SKIP: market_closed_reference — same closing/reference price already posted.
+  previous_price:       $4,724.10
+  current_price:        $4,724.10
+  previous_post_at:     2026-05-09T06:04:47Z
+  minutes_since_post:   138 min ago
+  selected_post_type:   market_closed_reference
+  source:               shortcut
+  trigger_nonce:        (none)
+  refresh_price_first:  false
+  hint: use allow_same_price_closed_market_repost=true (workflow_dispatch, manual/shortcut only) to override
+```
+
+This is expected and correct. The market is closed; the last reference price has not moved; there is
+nothing new to post. The workflow exits 0.
+
+### Why the same price recurs
+
+When the market is closed, `gold-price-fetch.yml` still runs hourly but the provider returns the
+same last-known closing price. `data/gold_price.json` is updated (provider timestamp may advance)
+but `xau_usd_per_oz` is unchanged. The price-change guard correctly prevents reposting the same
+figure repeatedly.
+
+### Operator override: allow_same_price_closed_market_repost
+
+If an operator needs to re-post the same closing reference price (for example, to announce a market
+closure that was not posted earlier, or to post after a gap where the closing price has not moved),
+they can set
+`allow_same_price_closed_market_repost=true` in the `workflow_dispatch` inputs. This bypasses
+**only** the price-change guard. All other protections remain active:
+
+- `duplicate_text_hash` — if the tweet text is byte-for-byte identical to the last post, it still
+  skips (and X would reject it anyway).
+- Cooldown — still active unless `force_post=true`.
+- X's own duplicate detection — still active server-side.
+- Stale data guard — still active.
+- Shortcut anti-spam guard — still active.
+
+**Conditions for the override to apply:**
+
+1. `ALLOW_SAME_PRICE_CLOSED_MARKET_REPOST=true` (set by the workflow from the dispatch input).
+2. `event == workflow_dispatch`.
+3. `source` is `manual` or `shortcut`.
+4. `selected_post_type == market_closed_reference`.
+
+Scheduled runs **never** apply this override even if the env var is set.
+
+### Using refresh_price_first with allow_same_price_closed_market_repost
+
+`refresh_price_first=true` runs a fresh provider fetch and updates `data/gold_price.json` before the
+posting path executes. However, if the market is still closed the provider will return the same
+last-known closing price — `xau_usd_per_oz` will not change, and the price-change guard will still
+fire and skip. In that case `allow_same_price_closed_market_repost=true` is also required to bypass
+the price-change guard.
+
+Use both inputs together when the operator wants to fetch the latest provider snapshot and then force
+a `market_closed_reference` post regardless of whether the price moved:
+
+```
+refresh_price_first: true
+allow_same_price_closed_market_repost: true
+```
+
+The `duplicate_text_hash` guard remains active; if the fetched price and all tweet fields are
+byte-for-byte identical to the last post, the post will still be skipped (and X would reject it
+anyway).

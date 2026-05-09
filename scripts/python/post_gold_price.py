@@ -291,6 +291,7 @@ def check_duplicate_guard(price, prev_price, prev_posted_at_utc, post_type, _now
         return (False, None)
 
     age_note = ""
+    minutes_ago = None
     try:
         if prev_posted_at_utc:
             ts = prev_posted_at_utc
@@ -308,11 +309,46 @@ def check_duplicate_guard(price, prev_price, prev_posted_at_utc, post_type, _now
     except Exception:
         age_note = ""
 
-    reason = (
-        f"SKIP: price-change guard — {post_type} price ${price:,.2f}"
-        f" unchanged{age_note}"
-    )
+    if post_type == 'market_closed_reference':
+        # Emit a richer operator-friendly message for the closed-market case.
+        trigger_source = os.environ.get('POST_TRIGGER_SOURCE', '').strip().lower() or 'unknown'
+        trigger_nonce = os.environ.get('POST_TRIGGER_NONCE', '').strip() or '(none)'
+        refresh_price_first = os.environ.get('REFRESH_PRICE_FIRST', 'false')
+        age_str = f"{int(minutes_ago)} min ago" if minutes_ago is not None else "unknown"
+        reason = (
+            f"SKIP: market_closed_reference — same closing/reference price already posted.\n"
+            f"  previous_price:       ${prev_price:,.2f}\n"
+            f"  current_price:        ${price:,.2f}\n"
+            f"  previous_post_at:     {prev_posted_at_utc or 'unknown'}\n"
+            f"  minutes_since_post:   {age_str}\n"
+            f"  selected_post_type:   {post_type}\n"
+            f"  source:               {trigger_source}\n"
+            f"  trigger_nonce:        {trigger_nonce}\n"
+            f"  refresh_price_first:  {refresh_price_first}\n"
+            f"  hint: use allow_same_price_closed_market_repost=true (workflow_dispatch, manual/shortcut only) to override"
+        )
+    else:
+        reason = (
+            f"SKIP: price-change guard — {post_type} price ${price:,.2f}"
+            f" unchanged{age_note}"
+        )
     return (True, reason)
+
+
+def is_allow_same_price_closed_market_repost(event_name=None, trigger_source=None):
+    """Return True when the operator has explicitly enabled same-price repost override.
+
+    This allows a manual/operator workflow_dispatch run for market_closed_reference
+    to bypass the price-change guard even when the closing price is unchanged.
+    It does NOT bypass duplicate_text_hash, cooldown (unless force_post), or X's own
+    duplicate detection. Only applies when all three conditions hold:
+      1. ALLOW_SAME_PRICE_CLOSED_MARKET_REPOST=true in the environment.
+      2. The run is a workflow_dispatch from a manual or shortcut operator.
+      3. Scheduled runs are always excluded.
+    """
+    if not _env_truthy('ALLOW_SAME_PRICE_CLOSED_MARKET_REPOST', default=False):
+        return False
+    return is_operator_market_hours_bypass(event_name=event_name, trigger_source=trigger_source)
 
 
 def is_market_open_time(now=None):
@@ -590,30 +626,37 @@ def format_market_close_tweet(data):
     )
 
 def format_market_closed_reference_tweet(data):
-    """Format a labeled market-closed reference post from cached spot data."""
-    price, g24, g22, g21, g18, _chp = _parse_fields(data)
+    """Format a clean market-closed reference post from cached spot data.
+
+    Public tweet uses closing/last-known wording.  Stale cache age is kept
+    in workflow logs only (via stale_age_hours in the data dict) and is NOT
+    included in the public post body.
+    """
+    price, g24, g22, g21, g18, chp = _parse_fields(data)
     source_updated_at = data.get('source_updated_at_utc') or 'timestamp unavailable'
     stale_age_hours = data.get('stale_age_hours')
-    stale_note = ''
     if isinstance(stale_age_hours, (int, float)):
-        stale_note = f"\nCached reference · {stale_age_hours:.1f}h old"
+        print(f"   [log] cache age: {stale_age_hours:.1f}h (not shown in public post)")
+    date_str, time_str = _uae_datetime()
     return (
-        f"🌙 Gold Market Closed — Last Reference Price\n"
+        f"🔴 Gold Market Is Now Closed\n"
+        f"🕐 {date_str} · {time_str} (UAE · GMT+4)\n"
         f"\n"
-        f"Last spot/reference XAU/USD\n"
-        f"24K · ${price:,.2f}/oz\n"
+        f"Closing Spot XAU/USD\n"
+        f"24K · ${price:,.2f}/oz{_change_str(chp)}\n"
         f"\n"
-        f"🇦🇪 Reference prices:\n"
+        f"🇦🇪 Prices:\n"
         f"24K  {_aed(g24)} AED/g\n"
         f"22K  {_aed(g22)} AED/g\n"
         f"21K  {_aed(g21)} AED/g\n"
         f"18K  {_aed(g18)} AED/g\n"
         f"\n"
-        f"Last updated: {_uae_time_from_iso(source_updated_at)} UAE{stale_note}\n"
-        f"Not live retail price\n"
-        f"goldtickerlive.com\n"
+        f"Reopens Monday 1:00 AM UAE (GMT+4) 🌙\n"
+        f"Last updated: {_uae_time_from_iso(source_updated_at)} UAE\n"
+        f"Spot reference · Not retail price\n"
+        f"🖥️ goldtickerlive.com\n"
         f"\n"
-        f"#GoldPrice #Gold #UAE #Dubai"
+        f"#GoldPrice #Gold #XAU #UAE #Dubai"
     )
 
 
@@ -887,7 +930,24 @@ def main():
     )
     if skip:
         print(reason)
-        sys.exit(0)
+        # For market_closed_reference, the operator may explicitly allow a
+        # same-price repost via allow_same_price_closed_market_repost=true.
+        # This only applies to manual/operator workflow_dispatch runs;
+        # it still respects duplicate_text_hash, cooldown, and X duplicate rules.
+        if (
+            post_type == 'market_closed_reference'
+            and is_allow_same_price_closed_market_repost(
+                event_name=os.environ.get('GITHUB_EVENT_NAME'),
+                trigger_source=trigger_source,
+            )
+        ):
+            print(
+                "allow_same_price_closed_market_repost=true — price-change guard bypassed "
+                "for this manual/operator market_closed_reference run. "
+                "duplicate_text_hash, cooldown, and X duplicate rules still apply."
+            )
+        else:
+            sys.exit(0)
 
     # 9. Format tweet
     tweet = format_tweet(data, post_type)

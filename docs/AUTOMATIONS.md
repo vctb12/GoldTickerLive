@@ -120,15 +120,23 @@ runs are market-aware: regular hourly posts use the live / market-open template 
 hours, scheduled runs still skip when the market is closed, and they post only when the cached
 result passes the stale, duplicate, and cooldown guards.
 
+**Architecture:** `post_gold.yml` posts from cached `data/gold_price.json` only. It never fetches
+prices itself on scheduled runs. The gold price is written by `gold-price-fetch.yml` (see §8b). This
+separation keeps the posting workflow free of provider API keys on scheduled runs and makes the two
+responsibilities independently testable.
+
+**Provider order** (production, set in `gold-price-fetch.yml`):
+`gold_api_com → twelvedata_xauusd → fmp_gcusd`
+
 Manual `workflow_dispatch` is supported for GitHub UI and iPhone Shortcut triggers.
 Operator-triggered manual / Shortcut runs may still attempt a post outside market hours, but they do
-not fetch gold prices themselves and they still reuse the same cached `data/gold_price.json`
-source-of-truth. Those operator-triggered runs still obey stale-data checks, duplicate/content-hash
-checks, cooldown rules, and normal X API behavior. `dry_run=true` never posts. `force_post=true`
-only overrides the cooldown guard; it does not bypass stale, duplicate, content-hash, or
-provider-based safety checks. The repo also logs the generated post and character count but does not
-block locally when the text is longer than 280 characters; X still enforces its own posting
-eligibility and length rules externally, including any Premium-only longer-post allowance.
+not fetch gold prices on the normal posting path and still reuse the same cached
+`data/gold_price.json` source-of-truth. Those operator-triggered runs still obey stale-data checks,
+duplicate/content-hash checks, cooldown rules, and normal X API behavior. `dry_run=true` never
+posts. `force_post=true` only overrides the cooldown guard; it does not bypass stale, duplicate,
+content-hash, or provider-based safety checks. The repo logs the generated post and character count
+but does not block locally when the text is longer than 280 characters; X still enforces its own
+posting eligibility and length rules, including any Premium-only longer-post allowance.
 
 Shortcut anti-spam protection is also enabled for `source=shortcut`: the workflow still keeps
 workflow-level concurrency (`group: post-gold`, `cancel-in-progress: true`), and the Python poster
@@ -138,12 +146,44 @@ Shortcut-triggered attempt arrives less than 2 minutes later, it exits early unl
 stale, duplicate, content-hash, and cooldown guards still run for any Shortcut run that is allowed
 past this early check.
 
-Outside market hours, a manual GitHub UI / Shortcut run now switches to a **market-closed
-reference** post type instead of reusing the normal hourly live-update template. That closed-market
-path uses the last cached spot/reference price, includes the provider timestamp / last-updated time
-in the post, labels the copy as market closed and not live retail pricing, and only allows stale
-cached data in this narrow case when the timestamp exists and the data age is within
+Outside market hours, a manual GitHub UI / Shortcut run switches to a **market-closed reference**
+post type instead of reusing the normal hourly live-update template. That closed-market path uses
+the last cached spot/reference price, labels the copy as market closed and not live retail pricing,
+and only allows stale cached data when the timestamp exists and the data age is within
 `CLOSED_MARKET_MAX_STALE_HOURS` (default `48`). Market-open hourly posts still block stale quotes.
+
+**Price-change guard and same-price market-closed skips:** The bot is price-change driven. It skips
+posting when the current price equals the previous successfully posted price. For
+`market_closed_reference` posts, when this guard fires, the workflow logs a detailed diagnostic
+message that includes the previous price, current price, previous post timestamp, minutes since last
+post, `selected_post_type`, `source`, `trigger_nonce`, and `refresh_price_first`. This is a clean
+successful skip — not a workflow failure. Operators who need to repost the same closing price (for
+example, to announce a market closure that was not posted earlier, or to post after a gap where the
+closing price has not moved) can set
+`allow_same_price_closed_market_repost=true` in the `workflow_dispatch` inputs — see below.
+
+**Workflow_dispatch inputs:**
+
+| Input                                   | Default  | Description                                                                                                                                                                                           |
+| --------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dry_run`                               | `false`  | Evaluate all guards; skip the real X API call                                                                                                                                                         |
+| `force_post`                            | `false`  | Bypass cooldown only; duplicate and stale guards still apply                                                                                                                                          |
+| `source`                                | `manual` | Trigger source label for logs/state (`manual`, `shortcut`)                                                                                                                                            |
+| `refresh_price_first`                   | `false`  | Run one price refresh before posting (manual/operator only). Fetches `data/gold_price.json` from providers once before the normal posting path runs. Post type is still determined by market hours and the operator trigger — not the provider timestamp. If the market is closed and the price is unchanged, `allow_same_price_closed_market_repost=true` is also required to bypass the price-change guard |
+| `trigger_nonce`                         | `""`     | Optional unique manual trigger label                                                                                                                                                                  |
+| `allow_same_price_closed_market_repost` | `false`  | Manual/operator only: allow `market_closed_reference` repost even if the closing price is unchanged, subject to duplicate/content-hash/cooldown protections. Scheduled runs ignore this               |
+
+`refresh_price_first=true` only runs for manual `workflow_dispatch`; scheduled runs always post from
+cached data and never trigger a provider fetch inside `post_gold.yml`.
+
+`allow_same_price_closed_market_repost=true` applies only when:
+
+- `event == workflow_dispatch`
+- `source` is `manual` or `shortcut`
+- `selected_post_type == market_closed_reference`
+
+It does NOT apply to scheduled runs and does NOT bypass `duplicate_text_hash`, cooldown (unless
+`force_post=true`), or X's own duplicate-detection.
 
 - Script: `scripts/python/post_gold_price.py`
 - Secrets needed: `CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET`
@@ -151,8 +191,6 @@ cached data in this narrow case when the timestamp exists and the data age is wi
   deploy workflow to avoid redeploying the site for tweet-state-only commits.
 - `data/last_tweet_state.json` stores duplicate/cooldown state plus the latest Shortcut-triggered
   attempt metadata used by the soft anti-spam guard.
-- Recommended manual inputs: `dry_run`, `force_post`, `source` (`manual`, `shortcut`, `scheduled`),
-  and optional `trigger_nonce` for a unique operator label.
 
 **Shortcut safety note**
 

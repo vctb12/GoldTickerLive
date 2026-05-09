@@ -28,13 +28,17 @@ on:
         required: false
         default: "manual"
       refresh_price_first:
-        description: "Optional operator note for run-context logs only; this workflow still posts from cached data/gold_price.json"
+        description: "Run one price refresh before posting (manual/operator only). Fetches data/gold_price.json from providers once, then continues with the regular post guards."
         required: false
         default: "false"
       trigger_nonce:
         description: "Optional unique manual trigger label"
         required: false
         default: ""
+      allow_same_price_closed_market_repost:
+        description: "Manual/operator only: allow market_closed_reference repost even if closing price is unchanged, subject to duplicate/content-hash/cooldown protections. Scheduled runs ignore this."
+        required: false
+        default: "false"
 
 # Least-privilege default; the posting job elevates to write for the state commit.
 permissions:
@@ -68,6 +72,36 @@ jobs:
       - name: Install dependencies
         run: pip install -r scripts/python/requirements.txt
 
+      - name: Refresh gold price (manual operator only)
+        # Only runs when an operator explicitly sets refresh_price_first=true via
+        # workflow_dispatch. Scheduled runs never fetch inside this workflow.
+        # Soft-fail: if the fetch fails (e.g., provider key unavailable), the
+        # workflow continues and posts from the existing cached data/gold_price.json.
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.refresh_price_first == 'true'
+        env:
+          GOLD_API_COM_ENABLED: 'true'
+          GOLD_PROVIDER_ORDER: gold_api_com,twelvedata_xauusd,fmp_gcusd
+          GOLD_API_COM_KEY: ${{ secrets.GOLD_API_COM_KEY }}
+          TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
+          TWELVEDATA_SYMBOL: ${{ secrets.TWELVEDATA_SYMBOL }}
+          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
+          FMP_SYMBOL: ${{ secrets.FMP_SYMBOL }}
+          GOLDPRICEZ_API_KEY: ${{ secrets.GOLDPRICEZ_API_KEY }}
+        continue-on-error: true
+        run: python scripts/python/fetch_gold_price.py
+
+      - name: Commit refreshed gold price (manual operator only)
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.refresh_price_first == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -f data/gold_price.json ]; then
+            git add data/gold_price.json || true
+            git diff --cached --quiet || git commit -m "chore(data): refresh gold price before post [skip ci]"
+            git push || true
+          fi
+
       - name: Run posting script
         env:
           TWITTER_API_KEY:             ${{ secrets.CONSUMER_KEY }}
@@ -80,6 +114,7 @@ jobs:
           POST_TRIGGER_SOURCE:         ${{ github.event.inputs.source || 'scheduled' }}
           REFRESH_PRICE_FIRST:         ${{ github.event.inputs.refresh_price_first || 'false' }}
           POST_TRIGGER_NONCE:          ${{ github.event.inputs.trigger_nonce || '' }}
+          ALLOW_SAME_PRICE_CLOSED_MARKET_REPOST: ${{ github.event.inputs.allow_same_price_closed_market_repost || 'false' }}
           MIN_TWEET_INTERVAL_MINUTES:  '55'
         run: python scripts/python/post_gold_price.py
 
