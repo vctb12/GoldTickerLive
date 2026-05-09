@@ -130,6 +130,14 @@ provider-based safety checks. The repo also logs the generated post and characte
 block locally when the text is longer than 280 characters; X still enforces its own posting
 eligibility and length rules externally, including any Premium-only longer-post allowance.
 
+Shortcut anti-spam protection is also enabled for `source=shortcut`: the workflow still keeps
+workflow-level concurrency (`group: post-gold`, `cancel-in-progress: true`), and the Python poster
+records the latest Shortcut-triggered attempt in `data/last_tweet_state.json`. If another
+Shortcut-triggered attempt arrives less than 2 minutes later, it exits early unless
+`force_post=true`. This is intentionally narrow: scheduled runs are unaffected, and the normal
+stale, duplicate, content-hash, and cooldown guards still run for any Shortcut run that is allowed
+past this early check.
+
 Outside market hours, a manual GitHub UI / Shortcut run now switches to a **market-closed
 reference** post type instead of reusing the normal hourly live-update template. That closed-market
 path uses the last cached spot/reference price, includes the provider timestamp / last-updated time
@@ -141,9 +149,19 @@ cached data in this narrow case when the timestamp exists and the data age is wi
 - Secrets needed: `CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET`
 - State file: `data/last_gold_price.json` records the last successful post and is ignored by the
   deploy workflow to avoid redeploying the site for tweet-state-only commits.
-- `data/last_tweet_state.json` stores duplicate/cooldown state for safe scheduled + manual runs.
-- Recommended manual inputs: `dry_run`, `force_post`, and `source` (`manual`, `shortcut`,
-  `scheduled`).
+- `data/last_tweet_state.json` stores duplicate/cooldown state plus the latest Shortcut-triggered
+  attempt metadata used by the soft anti-spam guard.
+- Recommended manual inputs: `dry_run`, `force_post`, `source` (`manual`, `shortcut`, `scheduled`),
+  and optional `trigger_nonce` for a unique operator label.
+
+**Shortcut safety note**
+
+- The iPhone Shortcut must contain **only one** **Get Contents of URL** action for this workflow
+  call.
+- Do **not** place the Shortcut inside Repeat / Wait loops.
+- Do **not** create an iOS Automation that triggers the Shortcut repeatedly.
+- If a flood happens, **disable the `post_gold.yml` workflow immediately**, then disable or revoke
+  the Shortcut token before re-enabling the workflow.
 
 ### 8a. Gold provider bakeoff & migration (infrastructure only)
 

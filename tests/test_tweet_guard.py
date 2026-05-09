@@ -189,9 +189,50 @@ def test_force_post_overrides_cooldown_only(monkeypatch):
     assert d.should_post is True
 
 
+def test_skip_recent_shortcut_attempt():
+    state = tg.TweetState(
+        last_trigger_source="shortcut",
+        last_trigger_attempt_time_utc=_minutes_ago_iso(1),
+        last_trigger_nonce="ios-shortcut-run-1",
+        last_trigger_run_id="12345",
+    )
+    should_skip, reason = tg.should_skip_recent_shortcut_attempt(
+        state,
+        trigger_source="shortcut",
+        window_minutes=2,
+        force_post=False,
+    )
+    assert should_skip is True
+    assert "shortcut anti-spam guard" in reason
+    assert "ios-shortcut-run-1" in reason
+
+
+def test_force_post_bypasses_recent_shortcut_attempt():
+    state = tg.TweetState(
+        last_trigger_source="shortcut",
+        last_trigger_attempt_time_utc=_minutes_ago_iso(1),
+    )
+    should_skip, reason = tg.should_skip_recent_shortcut_attempt(
+        state,
+        trigger_source="shortcut",
+        window_minutes=2,
+        force_post=True,
+    )
+    assert should_skip is False
+    assert reason is None
+
+
 def test_persistence_round_trip(tmp_path: Path):
     p = tmp_path / "last_tweet_state.json"
     state = tg.TweetState()
+    state = tg.record_trigger_attempt(
+        state,
+        trigger_source="shortcut",
+        trigger_nonce="ios-shortcut-run-1",
+        run_id="123",
+        run_attempt="2",
+        now=datetime(2026, 5, 1, 10, 1, 0, tzinfo=timezone.utc),
+    )
     state = tg.update_state_after_post(
         state,
         quote=_quote(),
@@ -204,5 +245,8 @@ def test_persistence_round_trip(tmp_path: Path):
     assert loaded.last_tweet_id == "123"
     assert loaded.last_provider == "twelvedata_xauusd"
     assert loaded.last_price_usd_oz == 4550.0
+    assert loaded.last_trigger_source == "shortcut"
+    assert loaded.last_trigger_nonce == "ios-shortcut-run-1"
+    assert loaded.last_trigger_run_attempt == "2"
     raw = json.loads(p.read_text())
     assert raw["schema_version"] == 1

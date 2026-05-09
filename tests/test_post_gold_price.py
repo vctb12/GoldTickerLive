@@ -656,7 +656,11 @@ def test_main_workflow_dispatch_shortcut_bypasses_market_hours(tmp_path, monkeyp
     monkeypatch.setenv("TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
     monkeypatch.setenv("DRY_RUN_TWEET", "true")
     monkeypatch.setenv("GITHUB_EVENT_NAME", "workflow_dispatch")
-    monkeypatch.setenv("POST_TRIGGER_SOURCE", "shortcut")
+    monkeypatch.setenv("POST_TRIGGER_SOURCE", "Shortcut")
+    monkeypatch.setenv("POST_TRIGGER_NONCE", "ios-shortcut-run-1")
+    monkeypatch.setenv("REFRESH_PRICE_FIRST", "false")
+    monkeypatch.setenv("GITHUB_RUN_ID", "123456789")
+    monkeypatch.setenv("GITHUB_RUN_ATTEMPT", "3")
     monkeypatch.delenv("GITHUB_EVENT_SCHEDULE", raising=False)
     monkeypatch.setattr(pg, "TWITTER_API_KEY", "key")
     monkeypatch.setattr(pg, "TWITTER_API_SECRET", "secret")
@@ -673,9 +677,16 @@ def test_main_workflow_dispatch_shortcut_bypasses_market_hours(tmp_path, monkeyp
     pg.post_tweet.assert_not_called()
     out = capsys.readouterr().out
     assert "Manual workflow_dispatch trigger; market-hours guard bypassed for operator-triggered run." in out
+    assert "source:       shortcut" in out
+    assert "refresh_price_first:      false" in out
+    assert "trigger_nonce:            ios-shortcut-run-1" in out
+    assert "github.run_id:            123456789" in out
+    assert "github.run_attempt:       3" in out
+    assert "shortcut_attempt_recorded: false (dry run)" in out
     assert "selected_post_type:        market_closed_reference" in out
     assert "template_used:             market_closed_reference" in out
     assert "DRY_RUN_TWEET=true — would post; skipping actual X call" in out
+    assert json.loads(tweet_state_file.read_text()) == {"schema_version": 1}
 
 
 def test_main_market_closed_shortcut_allows_cached_reference_within_limit(tmp_path, monkeypatch, capsys):
@@ -715,7 +726,7 @@ def test_main_market_closed_shortcut_allows_cached_reference_within_limit(tmp_pa
     monkeypatch.setenv("TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
     monkeypatch.setenv("DRY_RUN_TWEET", "true")
     monkeypatch.setenv("GITHUB_EVENT_NAME", "workflow_dispatch")
-    monkeypatch.setenv("POST_TRIGGER_SOURCE", "shortcut")
+    monkeypatch.setenv("POST_TRIGGER_SOURCE", "SHORTCUT")
     monkeypatch.setenv("CLOSED_MARKET_MAX_STALE_HOURS", "48")
     monkeypatch.delenv("GITHUB_EVENT_SCHEDULE", raising=False)
     monkeypatch.setattr(pg, "TWITTER_API_KEY", "key")
@@ -736,6 +747,75 @@ def test_main_market_closed_shortcut_allows_cached_reference_within_limit(tmp_pa
     assert "Gold Market Closed — Last Reference Price" in out
     assert "Not live retail price" in out
     assert "DRY_RUN_TWEET=true — would post; skipping actual X call" in out
+
+
+def test_main_shortcut_spam_guard_skips_recent_shortcut_attempt(tmp_path, monkeypatch, capsys):
+    fresh_now = datetime.now(timezone.utc)
+    gold_file = tmp_path / "gold_price.json"
+    state_file = tmp_path / "last_gold_price.json"
+    tweet_state_file = tmp_path / "last_tweet_state.json"
+    gold_file.write_text(
+        json.dumps(
+            {
+                "provider": "gold_api_com",
+                "xau_usd_per_oz": 4731.2,
+                "timestamp_utc": (fresh_now - timedelta(seconds=20)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "fetched_at_utc": fresh_now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "aed_per_gram_24k": 558.4,
+                "karats_aed_per_gram": {
+                    "24k": 558.4,
+                    "22k": 511.87,
+                    "21k": 488.6,
+                    "18k": 418.8,
+                },
+            }
+        )
+    )
+    state_file.write_text(json.dumps({"price": 4700.0, "posted_at_utc": "2026-05-07T09:00:00Z"}))
+    tweet_state_file.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "last_trigger_source": "shortcut",
+                "last_trigger_attempt_time_utc": (fresh_now - timedelta(seconds=45)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "last_trigger_nonce": "ios-shortcut-run-1",
+                "last_trigger_run_id": "123456789",
+            }
+        )
+    )
+
+    monkeypatch.setattr(pg, "GOLD_PRICE_FILE", gold_file)
+    monkeypatch.setattr(pg, "STATE_FILE", state_file)
+    monkeypatch.setattr(pg, "LAST_TWEET_STATE_FILE", tweet_state_file)
+    monkeypatch.setattr(pg, "format_tweet", MagicMock())
+    monkeypatch.setattr(pg, "post_tweet", MagicMock())
+    monkeypatch.setattr(pg, "is_market_open_time", lambda _now=None: False)
+    monkeypatch.setenv("TWITTER_API_KEY", "key")
+    monkeypatch.setenv("TWITTER_API_SECRET", "secret")
+    monkeypatch.setenv("TWITTER_ACCESS_TOKEN", "token")
+    monkeypatch.setenv("TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
+    monkeypatch.setenv("DRY_RUN_TWEET", "true")
+    monkeypatch.setenv("GITHUB_EVENT_NAME", "workflow_dispatch")
+    monkeypatch.setenv("POST_TRIGGER_SOURCE", "SHORTCUT")
+    monkeypatch.delenv("FORCE_POST", raising=False)
+    monkeypatch.delenv("GITHUB_EVENT_SCHEDULE", raising=False)
+    monkeypatch.setattr(pg, "TWITTER_API_KEY", "key")
+    monkeypatch.setattr(pg, "TWITTER_API_SECRET", "secret")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN", "token")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
+
+    try:
+        pg.main()
+    except SystemExit as exc:
+        assert exc.code == 0
+    else:
+        raise AssertionError("Expected main() to exit for recent shortcut spam")
+
+    pg.format_tweet.assert_not_called()
+    pg.post_tweet.assert_not_called()
+    out = capsys.readouterr().out
+    assert "SKIP: shortcut anti-spam guard" in out
+    assert "ios-shortcut-run-1" in out
 
 
 def test_main_market_open_stale_data_still_blocks(tmp_path, monkeypatch, capsys):

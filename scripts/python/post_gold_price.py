@@ -36,6 +36,7 @@ TROY_OZ_GRAMS = 31.1034768
 MARKET_OPEN_EVENT_CRON = '3 21 * * 0'
 MARKET_CLOSE_EVENT_CRON = '3 21 * * 5'
 DEFAULT_CLOSED_MARKET_MAX_STALE_HOURS = 48
+SHORTCUT_TRIGGER_SPAM_WINDOW_MINUTES = 2
 
 # Canonical data file written by scripts/fetch_gold_price.py
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -380,6 +381,13 @@ def _env_float(name, default):
     except ValueError:
         print(f"WARN: invalid {name}={raw!r}; falling back to {float(default):g}")
         return float(default)
+
+
+def _env_truthy(name, default=False):
+    raw = os.environ.get(name, '')
+    if raw == '':
+        return bool(default)
+    return str(raw).strip().lower() in ('1', 'true', 'yes', 'on')
 
 
 def should_allow_closed_market_stale_reference(
@@ -742,13 +750,20 @@ def main():
     source_ts = _provider_timestamp_iso(raw_data) or (
         raw_data.get("source_updated_at_gmt", "n/a") if isinstance(raw_data, dict) else "n/a"
     )
+    refresh_price_first = os.environ.get('REFRESH_PRICE_FIRST', 'false')
+    trigger_nonce = os.environ.get('POST_TRIGGER_NONCE', '').strip()
+    run_id = os.environ.get('GITHUB_RUN_ID', '').strip()
+    run_attempt = os.environ.get('GITHUB_RUN_ATTEMPT', '').strip()
+    force_post_enabled = _env_truthy('FORCE_POST', default=False)
+    guard_state = tweet_guard.load_state(LAST_TWEET_STATE_FILE) if tweet_guard is not None else None
 
     # 3. Compute post type from the intended cron schedule when available.
     # GitHub scheduled workflows can start late, so using github.event.schedule
     # prevents repeated event tweets during the whole delayed start hour.
     schedule_cron = os.environ.get('GITHUB_EVENT_SCHEDULE', '').strip() or None
-    trigger_source = os.environ.get('POST_TRIGGER_SOURCE', '').strip() or (
-        'scheduled' if schedule_cron else 'manual'
+    trigger_source = (
+        os.environ.get('POST_TRIGGER_SOURCE', '').strip().lower()
+        or ('scheduled' if schedule_cron else 'manual')
     )
     base_post_type = get_post_type(schedule_cron=schedule_cron)
     market_open = is_market_open_time()
@@ -767,8 +782,12 @@ def main():
     print(f"actor:        {os.environ.get('GITHUB_ACTOR', 'local')}")
     print(f"schedule:     {schedule_cron or 'manual/local'}")
     print(f"source:       {trigger_source}")
+    print(f"refresh_price_first:      {refresh_price_first}")
+    print(f"trigger_nonce:            {trigger_nonce or '(none)'}")
     print(f"dry_run:      {os.environ.get('DRY_RUN_TWEET', 'false')}")
     print(f"force_post:   {os.environ.get('FORCE_POST', 'false')}")
+    print(f"github.run_id:            {run_id or 'local'}")
+    print(f"github.run_attempt:       {run_attempt or 'local'}")
     print(f"market_open:               {market_open}")
     print(f"operator_trigger:          {operator_trigger}")
     print(f"post_type:                 {base_post_type}")
@@ -777,6 +796,37 @@ def main():
     print(f"source_ts:    {source_ts}")
     print(f"template_used:             {template_used}")
     print("===================")
+
+    # 4a. Shortcut-triggered workflow_dispatch anti-spam guard. Record the
+    # latest Shortcut attempt before the normal stale/duplicate/cooldown guards
+    # so accidental iPhone Shortcut floods self-throttle on the next run.
+    if tweet_guard is not None and guard_state is not None and trigger_source == 'shortcut':
+        skip, reason = tweet_guard.should_skip_recent_shortcut_attempt(
+            guard_state,
+            trigger_source=trigger_source,
+            window_minutes=SHORTCUT_TRIGGER_SPAM_WINDOW_MINUTES,
+            force_post=force_post_enabled,
+        )
+        if reason:
+            print(reason)
+        if skip:
+            sys.exit(0)
+        is_dry_run_tweet = os.getenv("DRY_RUN_TWEET", "").strip().lower() == "true"
+        if is_dry_run_tweet:
+            print("shortcut_attempt_recorded: false (dry run)")
+        else:
+            try:
+                guard_state = tweet_guard.record_trigger_attempt(
+                    guard_state,
+                    trigger_source=trigger_source,
+                    trigger_nonce=trigger_nonce,
+                    run_id=run_id,
+                    run_attempt=run_attempt,
+                )
+                tweet_guard.save_state(LAST_TWEET_STATE_FILE, guard_state)
+                print("shortcut_attempt_recorded: true")
+            except Exception as exc:  # pragma: no cover — best-effort
+                print(f"⚠️  Failed to record shortcut trigger attempt: {exc}")
 
     # 5. Load gold price (includes previous-state fields)
     print("📡 Reading gold price from data/gold_price.json (canonical price payload)…")
@@ -873,7 +923,6 @@ def main():
             post_type=post_type,
             closed_market_stale_allowed=closed_market_stale_allowed,
         )
-        guard_state = tweet_guard.load_state(LAST_TWEET_STATE_FILE)
         decision = tweet_guard.decide(guard_state, quote=guard_quote, tweet_text=tweet)
         if not decision.should_post:
             print(

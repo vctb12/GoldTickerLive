@@ -23,6 +23,8 @@ Production posture:
   type instead of the live hourly template
 - that closed-market reference path may use cached last-known spot/reference data only when the
   source timestamp exists and the age is within `CLOSED_MARKET_MAX_STALE_HOURS` (default 48h)
+- `source=shortcut` records the latest Shortcut-triggered attempt and soft-skips another Shortcut
+  attempt inside a 2-minute window unless `force_post=true`
 - `force_post=true` only overrides the cooldown guard; stale and duplicate checks still apply
 - long posts are logged and attempted locally; if X rejects them, the API error is surfaced in the
   workflow logs
@@ -59,7 +61,11 @@ means the bot exits 0 with a `skip_reason`.
 | 6   | `fallback_no_change`           | `is_fallback=true` (or `source_type` is `cache_last_known` / `spot_delayed`) AND price equals last price.                                                                                                                 |
 | 7   | `price_move_below_threshold`   | `                                                                                                                                                                                                                         | move_usd | < MIN_TWEET_MOVE_USD`AND` | move_pct | < MIN_TWEET_MOVE_PCT`, and `FORCE_SUMMARY_AFTER_MINUTES` hasn't elapsed. |
 
-When all seven rules pass, the bot posts and updates `data/last_tweet_state.json`.
+Before those seven rules, `post_gold_price.py` also applies a narrow Shortcut anti-spam pre-check:
+when `source=shortcut`, it records the latest Shortcut-triggered attempt and exits early if the
+prior Shortcut-triggered attempt in `data/last_tweet_state.json` happened less than 2 minutes
+earlier, unless `FORCE_POST=true`. Scheduled runs are not affected. When the pre-check passes and
+all seven rules pass, the bot posts and updates `data/last_tweet_state.json`.
 
 `post_gold_price.py` prints the generated post text and character count before calling the X API.
 The repo no longer skips locally just because the text is longer than 280 characters. X still owns
@@ -99,7 +105,12 @@ All env vars; sensible defaults baked into the code so a missing variable behave
   "last_provider": "twelvedata_xauusd",
   "last_provider_timestamp_utc": "2026-05-01T09:59:30Z",
   "last_source_type": "spot_reference",
-  "last_post_reason": "price_moved"
+  "last_post_reason": "price_moved",
+  "last_trigger_source": "shortcut",
+  "last_trigger_attempt_time_utc": "2026-05-01T10:01:10Z",
+  "last_trigger_nonce": "ios-shortcut-run-1",
+  "last_trigger_run_id": "12345678901",
+  "last_trigger_run_attempt": "1"
 }
 ```
 
