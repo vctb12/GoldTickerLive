@@ -3,12 +3,12 @@
 scripts/post_gold_price.py
 
 Reads the canonical gold-price data file written by
-`scripts/fetch_gold_price.py` (from goldpricez.com) and posts a
+`scripts/fetch_gold_price.py` and posts a
 formatted update to X / Twitter using tweepy.
 
 This script does NOT call any gold-price API directly. It reads
 `data/gold_price.json`, which is committed by the
-`.github/workflows/gold-price-fetch.yml` workflow every 6 minutes.
+`.github/workflows/gold-price-fetch.yml` workflow on its normal schedule.
 
 Required environment variables (set as GitHub Secrets):
   TWITTER_API_KEY           – X Developer Portal: API Key (Consumer Key)
@@ -17,7 +17,7 @@ Required environment variables (set as GitHub Secrets):
   TWITTER_ACCESS_TOKEN_SECRET – X Developer Portal: Access Token Secret
 
 Workflow cron schedule (.github/workflows/post_gold.yml):
-  - every 6 minutes while the global gold market is open
+  - hourly while the global gold market is open
   - posts only when the committed spot price changes
   - keeps explicit market open/close schedule entries for event tweets"""
 
@@ -305,15 +305,26 @@ def is_market_open_time(now=None):
     return False
 
 
-def should_skip_market_closed(post_type, now=None):
-    """Skip regular price posts outside 24/5 market hours."""
+def is_operator_market_hours_bypass(event_name=None, trigger_source=None):
+    event = (event_name or os.environ.get('GITHUB_EVENT_NAME', '')).strip().lower()
+    source = (trigger_source or os.environ.get('POST_TRIGGER_SOURCE', '')).strip().lower()
+    return event == 'workflow_dispatch' and source in ('manual', 'shortcut')
+
+
+def should_skip_market_closed(post_type, now=None, event_name=None, trigger_source=None):
+    """Skip scheduled hourly price posts outside 24/5 market hours."""
     if post_type in ('market_open', 'market_close'):
         return (False, None)
     if is_market_open_time(now):
         return (False, None)
+    if is_operator_market_hours_bypass(event_name=event_name, trigger_source=trigger_source):
+        return (
+            False,
+            "Manual workflow_dispatch trigger; market-hours guard bypassed for operator-triggered run.",
+        )
     return (
         True,
-        "SKIP: market closed — regular 6-minute price posts run only "
+        "SKIP: market closed — regular hourly price posts run only "
         "from Sunday 21:00 UTC through Friday 20:59 UTC",
     )
 
@@ -622,9 +633,14 @@ def main():
         print("   Previous post: none")
 
     # 7. 24/5 market-hours guard for regular price posts
-    skip, reason = should_skip_market_closed(post_type)
-    if skip:
+    skip, reason = should_skip_market_closed(
+        post_type,
+        event_name=os.environ.get('GITHUB_EVENT_NAME'),
+        trigger_source=trigger_source,
+    )
+    if reason:
         print(reason)
+    if skip:
         sys.exit(0)
 
     # 8. Price-change guard
