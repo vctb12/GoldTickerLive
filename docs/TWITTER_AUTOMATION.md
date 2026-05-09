@@ -145,8 +145,11 @@ Make sure all 5 secrets are added in GitHub Settings → Secrets → Actions.
 
 ### Tweet > 280 characters
 
-The script warns but still attempts to post. Shorten the template in `buildTweetText()` inside
-`scripts/tweet-gold-price.js`.
+The repo no longer blocks long posts locally in the cached-data posting flow. It logs the generated
+text and character count, then lets X decide whether the account can publish it. If X rejects the
+post because of platform-level character rules or account eligibility, the API error should appear
+in the workflow logs. X Premium / verified longer-post eligibility is handled by X, not by this
+repo.
 
 ---
 

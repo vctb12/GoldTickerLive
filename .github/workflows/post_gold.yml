@@ -20,7 +20,7 @@ on:
         required: false
         default: "false"
       force_post:
-        description: "true = bypass cooldown only; duplicate, stale, and length guards still apply"
+        description: "true = bypass cooldown only; duplicate and stale guards still apply; long posts are still attempted"
         required: false
         default: "false"
       source:

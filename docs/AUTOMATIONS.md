@@ -116,12 +116,14 @@ Pings the site every **30 minutes**. Alerts via Telegram and/or Discord if site 
 
 Runs **hourly** while the global gold market is open (Sunday 21:00 UTC through Friday 20:59 UTC),
 offset a few minutes after the fetch workflow so it reads freshly committed data. It posts only when
-the cached result passes the stale, duplicate, cooldown, and 280-character guards.
+the cached result passes the stale, duplicate, and cooldown guards.
 
 Manual `workflow_dispatch` is supported for GitHub UI and iPhone Shortcut triggers. Manual runs do
 not fetch gold prices themselves and do not bypass GitHub guardrails; they reuse the same cached
 `data/gold_price.json` source-of-truth and are protected by the same skip logic. `force_post=true`
-only overrides the cooldown guard.
+only overrides the cooldown guard. The repo now logs the generated post and character count but does
+not block locally when the text is longer than 280 characters; X still enforces its own posting
+eligibility and length rules externally, including any Premium-only longer-post allowance.
 
 - Script: `scripts/python/post_gold_price.py`
 - Secrets needed: `CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET`

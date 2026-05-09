@@ -59,7 +59,7 @@ commit derived data; others only read and post to external APIs.
 | `health_check.yml` | daily at 04:00 UTC | smoke-tests public URLs + upstream APIs |
 | `uptime-monitor.yml` | every 30 min | pings live site, reports failures |
 | `spike_alert.yml` | every 15 min | detects price spikes, posts alerts |
-| `post_gold.yml` | hourly while markets are open (Sun 21:00–Fri 20:59 UTC) + manual dispatch | posts from cached `data/gold_price.json` to X after duplicate/stale/cooldown/length guards |
+| `post_gold.yml` | hourly while markets are open (Sun 21:00–Fri 20:59 UTC) + manual dispatch | posts from cached `data/gold_price.json` to X after duplicate/stale/cooldown guards; long posts are attempted and any rejection comes from X |
 | `gold-price-fetch.yml` | hourly while markets are open (Sun 21:00–Fri 20:59 UTC) + manual dispatch | single production provider-call path; updates `data/gold_price.json` for `post_gold.yml` |
 | `daily-newsletter.yml` | daily at 03:00 UTC | generates + dispatches daily digest |
 | `weekly-newsletter.yml` | weekly Sun at 14:00 UTC | generates + dispatches weekly digest |
