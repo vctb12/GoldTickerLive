@@ -477,8 +477,11 @@ def _uae_time_from_iso(ts):
         if dt.tzinfo is None:
             dt = dt.replace(tzinfo=timezone.utc)
         return dt.astimezone(UAE_TZ).strftime('%b %-d, %Y · %I:%M %p').lstrip('0')
-    except Exception:
-        print(f"WARN: unable to format source timestamp {ts!r}; using raw value")
+    except Exception as exc:
+        print(
+            f"WARN: unable to format source timestamp {ts!r}"
+            f" ({type(exc).__name__}: {exc}); using raw value"
+        )
         return ts
 
 
@@ -804,7 +807,10 @@ def main():
     if staleness_action == 'skip' and not closed_market_stale_allowed:
         sys.exit(0)
     if staleness_action == 'parse_error' and post_type == 'market_closed_reference':
-        print("SKIP: market-closed reference post requires a valid source timestamp.")
+        print(
+            "SKIP: market-closed reference post requires a valid source timestamp"
+            f" ({staleness_msg or 'provider timestamp missing or invalid'})."
+        )
         sys.exit(0)
 
     # 7. 24/5 market-hours guard for regular price posts
