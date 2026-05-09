@@ -465,7 +465,7 @@ def test_tweet_429_logs_retry_after(capsys, monkeypatch):
     assert "=== TWEET ERROR ===" in out
 
 
-def test_main_dry_run_does_not_post(tmp_path, monkeypatch, capsys):
+def test_main_dry_run_does_not_post_when_other_guards_pass(tmp_path, monkeypatch, capsys):
     fresh_now = datetime.now(timezone.utc)
     gold_file = tmp_path / "gold_price.json"
     state_file = tmp_path / "last_gold_price.json"
@@ -519,9 +519,7 @@ def test_main_dry_run_does_not_post(tmp_path, monkeypatch, capsys):
     assert "DRY_RUN_TWEET=true — would post; skipping actual X call" in out
 
 
-def test_main_shortcut_workflow_dispatch_bypasses_market_hours_guard_then_dry_runs(
-    tmp_path, monkeypatch, capsys
-):
+def test_main_workflow_dispatch_shortcut_bypasses_market_hours(tmp_path, monkeypatch, capsys):
     fresh_now = datetime.now(timezone.utc)
     gold_file = tmp_path / "gold_price.json"
     state_file = tmp_path / "last_gold_price.json"

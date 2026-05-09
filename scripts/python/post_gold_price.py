@@ -638,7 +638,9 @@ def main():
         event_name=os.environ.get('GITHUB_EVENT_NAME'),
         trigger_source=trigger_source,
     )
-    if reason:
+    if skip and reason:
+        print(reason)
+    elif reason:
         print(reason)
     if skip:
         sys.exit(0)
