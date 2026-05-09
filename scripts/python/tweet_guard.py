@@ -46,6 +46,11 @@ class TweetState:
     last_provider_timestamp_utc: Optional[str] = None
     last_source_type: Optional[str] = None
     last_post_reason: Optional[str] = None
+    last_trigger_source: Optional[str] = None
+    last_trigger_attempt_time_utc: Optional[str] = None
+    last_trigger_nonce: Optional[str] = None
+    last_trigger_run_id: Optional[str] = None
+    last_trigger_run_attempt: Optional[str] = None
 
 
 def _truthy(name: str, default: bool = False) -> bool:
@@ -108,6 +113,11 @@ def load_state(path: Path) -> TweetState:
         last_provider_timestamp_utc=raw.get("last_provider_timestamp_utc"),
         last_source_type=raw.get("last_source_type"),
         last_post_reason=raw.get("last_post_reason"),
+        last_trigger_source=raw.get("last_trigger_source"),
+        last_trigger_attempt_time_utc=raw.get("last_trigger_attempt_time_utc"),
+        last_trigger_nonce=raw.get("last_trigger_nonce"),
+        last_trigger_run_id=raw.get("last_trigger_run_id"),
+        last_trigger_run_attempt=raw.get("last_trigger_run_attempt"),
     )
 
 
@@ -254,4 +264,57 @@ def update_state_after_post(
     state.last_provider_timestamp_utc = quote.get("timestamp_utc")
     state.last_source_type = quote.get("source_type")
     state.last_post_reason = reason
+    return state
+
+
+def should_skip_recent_shortcut_attempt(
+    state: TweetState,
+    *,
+    trigger_source: Optional[str],
+    now: Optional[datetime] = None,
+    window_minutes: int = 2,
+    force_post: Optional[bool] = None,
+) -> tuple[bool, Optional[str]]:
+    source = str(trigger_source or "").strip().lower()
+    if source != "shortcut":
+        return (False, None)
+    if force_post is None:
+        force_post = _truthy("FORCE_POST", default=False)
+    if force_post:
+        return (False, None)
+    if str(state.last_trigger_source or "").strip().lower() != "shortcut":
+        return (False, None)
+    minutes_since = _minutes_since(state.last_trigger_attempt_time_utc, now)
+    if minutes_since is None or minutes_since >= float(window_minutes):
+        return (False, None)
+    reason = (
+        "SKIP: shortcut anti-spam guard — "
+        f"last shortcut attempt was {minutes_since:.1f} min ago"
+    )
+    if state.last_trigger_nonce:
+        reason += f" (nonce={state.last_trigger_nonce})"
+    if state.last_trigger_run_id:
+        reason += f" (run_id={state.last_trigger_run_id})"
+    return (True, reason)
+
+
+def record_trigger_attempt(
+    state: TweetState,
+    *,
+    trigger_source: Optional[str],
+    trigger_nonce: Optional[str] = None,
+    run_id: Optional[str] = None,
+    run_attempt: Optional[str] = None,
+    now: Optional[datetime] = None,
+) -> TweetState:
+    now_dt = now or datetime.now(timezone.utc)
+    cleaned_source = str(trigger_source or "").strip() or None
+    cleaned_nonce = str(trigger_nonce or "").strip() or None
+    cleaned_run_id = str(run_id or "").strip() or None
+    cleaned_run_attempt = str(run_attempt or "").strip() or None
+    state.last_trigger_source = cleaned_source
+    state.last_trigger_attempt_time_utc = now_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+    state.last_trigger_nonce = cleaned_nonce
+    state.last_trigger_run_id = cleaned_run_id
+    state.last_trigger_run_attempt = cleaned_run_attempt
     return state
