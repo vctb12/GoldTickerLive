@@ -1,9 +1,9 @@
 # ------------------------------------------------------------------
 # Post Gold Price to X — informational social-posting bot. Runs hourly
 # while global gold markets are open and posts only when the committed
-# cached spot price passes the posting guards. Supports manual
-# workflow_dispatch for GitHub UI / iPhone Shortcut triggers without
-# bypassing guardrails.
+# cached spot price passes the posting guards. Manual workflow_dispatch
+# runs from GitHub UI / iPhone Shortcut may be allowed outside market
+# hours, but stale / duplicate / cooldown / dry-run guardrails still apply.
 # NOT a required merge gate.
 # ------------------------------------------------------------------
 name: Post Gold Price to X (Python)

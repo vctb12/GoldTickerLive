@@ -115,14 +115,18 @@ Pings the site every **30 minutes**. Alerts via Telegram and/or Discord if site 
 ### 8. Python X/Twitter posts — `post_gold.yml`
 
 Runs **hourly** while the global gold market is open (Sunday 21:00 UTC through Friday 20:59 UTC),
-offset a few minutes after the fetch workflow so it reads freshly committed data. It posts only when
-the cached result passes the stale, duplicate, and cooldown guards.
+offset a few minutes after the fetch workflow so it reads freshly committed data. Scheduled hourly
+runs still skip when the market is closed, and they post only when the cached result passes the
+stale, duplicate, and cooldown guards.
 
-Manual `workflow_dispatch` is supported for GitHub UI and iPhone Shortcut triggers. Manual runs do
-not fetch gold prices themselves and do not bypass GitHub guardrails; they reuse the same cached
-`data/gold_price.json` source-of-truth and are protected by the same skip logic. `force_post=true`
-only overrides the cooldown guard. The repo now logs the generated post and character count but does
-not block locally when the text is longer than 280 characters; X still enforces its own posting
+Manual `workflow_dispatch` is supported for GitHub UI and iPhone Shortcut triggers.
+Operator-triggered manual / Shortcut runs may still attempt a post outside market hours, but they do
+not fetch gold prices themselves and they still reuse the same cached `data/gold_price.json`
+source-of-truth. Those operator-triggered runs still obey stale-data checks, duplicate/content-hash
+checks, cooldown rules, and normal X API behavior. `dry_run=true` never posts. `force_post=true`
+only overrides the cooldown guard; it does not bypass stale, duplicate, content-hash, or
+provider-based safety checks. The repo also logs the generated post and character count but does not
+block locally when the text is longer than 280 characters; X still enforces its own posting
 eligibility and length rules externally, including any Premium-only longer-post allowance.
 
 - Script: `scripts/python/post_gold_price.py`

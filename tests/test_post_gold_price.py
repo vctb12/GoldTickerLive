@@ -248,12 +248,30 @@ def test_market_open_time_covers_24_5_window():
     assert pg.is_market_open_time(datetime(2026, 5, 2, 12, 0, 0, tzinfo=timezone.utc)) is False
 
 
-def test_market_closed_guard_skips_regular_hourly_posts_only():
+def test_market_closed_guard_skips_scheduled_runs():
     saturday = datetime(2026, 5, 2, 12, 0, 0, tzinfo=timezone.utc)
-    skip, reason = pg.should_skip_market_closed('hourly', now=saturday)
+    skip, reason = pg.should_skip_market_closed(
+        'hourly',
+        now=saturday,
+        event_name='schedule',
+        trigger_source='scheduled',
+    )
     assert skip is True
     assert "market closed" in reason
+    assert "regular hourly price posts" in reason
     assert pg.should_skip_market_closed('market_close', now=saturday) == (False, None)
+
+
+def test_market_closed_guard_bypasses_workflow_dispatch_shortcut_runs():
+    saturday = datetime(2026, 5, 2, 12, 0, 0, tzinfo=timezone.utc)
+    skip, reason = pg.should_skip_market_closed(
+        'hourly',
+        now=saturday,
+        event_name='workflow_dispatch',
+        trigger_source='shortcut',
+    )
+    assert skip is False
+    assert reason == "Manual workflow_dispatch trigger; market-hours guard bypassed for operator-triggered run."
 
 
 # ── Content-hash tests ────────────────────────────────────────────────────────
@@ -477,6 +495,7 @@ def test_main_dry_run_does_not_post(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(pg, "LAST_TWEET_STATE_FILE", tweet_state_file)
     monkeypatch.setattr(pg, "format_tweet", lambda *_args, **_kwargs: "short dry-run tweet")
     monkeypatch.setattr(pg, "post_tweet", MagicMock())
+    monkeypatch.setattr(pg, "is_market_open_time", lambda _now=None: True)
     monkeypatch.setenv("TWITTER_API_KEY", "key")
     monkeypatch.setenv("TWITTER_API_SECRET", "secret")
     monkeypatch.setenv("TWITTER_ACCESS_TOKEN", "token")
@@ -497,6 +516,63 @@ def test_main_dry_run_does_not_post(tmp_path, monkeypatch, capsys):
     pg.post_tweet.assert_not_called()
     assert json.loads(tweet_state_file.read_text()) == {"schema_version": 1}
     out = capsys.readouterr().out
+    assert "DRY_RUN_TWEET=true — would post; skipping actual X call" in out
+
+
+def test_main_workflow_dispatch_shortcut_bypasses_market_hours(tmp_path, monkeypatch, capsys):
+    fresh_now = datetime.now(timezone.utc)
+    gold_file = tmp_path / "gold_price.json"
+    state_file = tmp_path / "last_gold_price.json"
+    tweet_state_file = tmp_path / "last_tweet_state.json"
+    gold_file.write_text(
+        json.dumps(
+            {
+                "provider": "gold_api_com",
+                "xau_usd_per_oz": 4731.2,
+                "timestamp_utc": (fresh_now - timedelta(seconds=20)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "fetched_at_utc": fresh_now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "aed_per_gram_24k": 558.4,
+                "karats_aed_per_gram": {
+                    "24k": 558.4,
+                    "22k": 511.87,
+                    "21k": 488.6,
+                    "18k": 418.8,
+                },
+            }
+        )
+    )
+    state_file.write_text(json.dumps({"price": 4700.0, "posted_at_utc": "2026-05-07T09:00:00Z"}))
+    tweet_state_file.write_text(json.dumps({"schema_version": 1}))
+
+    monkeypatch.setattr(pg, "GOLD_PRICE_FILE", gold_file)
+    monkeypatch.setattr(pg, "STATE_FILE", state_file)
+    monkeypatch.setattr(pg, "LAST_TWEET_STATE_FILE", tweet_state_file)
+    monkeypatch.setattr(pg, "format_tweet", lambda *_args, **_kwargs: "shortcut dry-run tweet")
+    monkeypatch.setattr(pg, "post_tweet", MagicMock())
+    monkeypatch.setattr(pg, "is_market_open_time", lambda _now=None: False)
+    monkeypatch.setenv("TWITTER_API_KEY", "key")
+    monkeypatch.setenv("TWITTER_API_SECRET", "secret")
+    monkeypatch.setenv("TWITTER_ACCESS_TOKEN", "token")
+    monkeypatch.setenv("TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
+    monkeypatch.setenv("DRY_RUN_TWEET", "true")
+    monkeypatch.setenv("GITHUB_EVENT_NAME", "workflow_dispatch")
+    monkeypatch.setenv("POST_TRIGGER_SOURCE", "shortcut")
+    monkeypatch.delenv("GITHUB_EVENT_SCHEDULE", raising=False)
+    monkeypatch.setattr(pg, "TWITTER_API_KEY", "key")
+    monkeypatch.setattr(pg, "TWITTER_API_SECRET", "secret")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN", "token")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
+
+    try:
+        pg.main()
+    except SystemExit as exc:
+        assert exc.code == 0
+    else:
+        raise AssertionError("Expected main() to exit after dry run")
+
+    pg.post_tweet.assert_not_called()
+    out = capsys.readouterr().out
+    assert "Manual workflow_dispatch trigger; market-hours guard bypassed for operator-triggered run." in out
     assert "DRY_RUN_TWEET=true — would post; skipping actual X call" in out
 
 
@@ -532,6 +608,7 @@ def test_main_dry_run_over_280_char_post_does_not_call_x(tmp_path, monkeypatch, 
     monkeypatch.setattr(pg, "LAST_TWEET_STATE_FILE", tweet_state_file)
     monkeypatch.setattr(pg, "format_tweet", lambda *_args, **_kwargs: over_length_post)
     monkeypatch.setattr(pg, "post_tweet", MagicMock())
+    monkeypatch.setattr(pg, "is_market_open_time", lambda _now=None: True)
     monkeypatch.setenv("TWITTER_API_KEY", "key")
     monkeypatch.setenv("TWITTER_API_SECRET", "secret")
     monkeypatch.setenv("TWITTER_ACCESS_TOKEN", "token")
@@ -591,6 +668,7 @@ def test_main_over_280_char_post_attempts_x_call_when_other_guards_pass(tmp_path
     monkeypatch.setattr(pg, "LAST_TWEET_STATE_FILE", tweet_state_file)
     monkeypatch.setattr(pg, "format_tweet", lambda *_args, **_kwargs: over_length_post)
     monkeypatch.setattr(pg, "post_tweet", mock_post)
+    monkeypatch.setattr(pg, "is_market_open_time", lambda _now=None: True)
     monkeypatch.setenv("TWITTER_API_KEY", "key")
     monkeypatch.setenv("TWITTER_API_SECRET", "secret")
     monkeypatch.setenv("TWITTER_ACCESS_TOKEN", "token")
