@@ -545,7 +545,7 @@ def test_market_closed_reference_template_uses_closing_wording():
     # Must include reopens line
     assert "Reopens Monday" in tweet
     # Must include site URL
-    assert "goldtickerlive.com" in tweet
+    assert "🖥️ goldtickerlive.com" in tweet
 
 
 def test_build_guard_quote_marks_closed_market_reference_as_fresh():
