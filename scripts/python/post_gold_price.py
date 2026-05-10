@@ -510,9 +510,25 @@ def _trend_emoji(chp):
 
 def _uae_datetime():
     now = datetime.now(UAE_TZ)
-    date_str = now.strftime('%b %-d, %Y')
-    time_str = now.strftime('%I:%M %p').lstrip('0')
+    return _format_uae_date_time_parts(now)
+
+
+def _format_uae_date_time_parts(dt):
+    local_dt = dt.astimezone(UAE_TZ)
+    date_str = f"{local_dt.strftime('%b')} {local_dt.day}, {local_dt.year}"
+    time_str = local_dt.strftime('%I:%M %p').lstrip('0')
     return date_str, time_str
+
+
+def _format_uae_full_stamp(dt):
+    date_str, time_str = _format_uae_date_time_parts(dt)
+    return f"{date_str} · {time_str}"
+
+
+def _format_uae_compact_stamp(dt):
+    local_dt = dt.astimezone(UAE_TZ)
+    time_str = local_dt.strftime('%I:%M %p').lstrip('0')
+    return f"{local_dt.strftime('%b')} {local_dt.day} · {time_str}"
 
 
 def _uae_time_from_iso(ts):
@@ -521,7 +537,7 @@ def _uae_time_from_iso(ts):
         dt = datetime.fromisoformat(raw)
         if dt.tzinfo is None:
             dt = dt.replace(tzinfo=timezone.utc)
-        return dt.astimezone(UAE_TZ).strftime('%b %-d, %Y · %I:%M %p').lstrip('0')
+        return _format_uae_full_stamp(dt)
     except Exception as exc:
         print(
             f"WARN: unable to format source timestamp {ts!r}"
@@ -536,7 +552,7 @@ def _uae_compact_time_from_iso(ts):
         dt = datetime.fromisoformat(raw)
         if dt.tzinfo is None:
             dt = dt.replace(tzinfo=timezone.utc)
-        return dt.astimezone(UAE_TZ).strftime('%b %-d · %I:%M %p').lstrip('0')
+        return _format_uae_compact_stamp(dt)
     except Exception as exc:
         print(
             f"WARN: unable to format compact source timestamp {ts!r}"
@@ -785,7 +801,7 @@ def post_tweet(text, post_type='hourly'):
     try:
         client.create_tweet(text=text)
         print("✅ Tweet posted successfully")
-        return True
+        return {"posted": True}
     except tweepy.errors.Forbidden as exc:
         _log_tweet_error(exc, text, post_type)
         problem = _parse_x_api_problem(exc)
@@ -1166,7 +1182,7 @@ def main():
 
     # 11. Post tweet
     post_result = post_tweet(tweet, post_type=post_type)
-    if isinstance(post_result, dict) and not post_result.get("posted", True):
+    if isinstance(post_result, dict) and not post_result.get("posted", False):
         print("=== RUN RESULT ===")
         print("outcome:      SKIPPED_SPEND_CAP")
         print(f"post_type:    {post_type}")
