@@ -545,6 +545,7 @@ def test_market_closed_reference_template_uses_closing_wording():
     # Must include reopens line
     assert "Reopens Mon" in tweet
     # Must include site URL
+    # The URL is the penultimate visible line; the last visible line is the hashtag block.
     visible_lines = [line for line in tweet.splitlines() if line]
     assert visible_lines[-2] == "goldtickerlive.com"
 
@@ -1942,6 +1943,7 @@ def test_market_closed_reference_template_content(tmp_path, monkeypatch, capsys)
     assert "Reopens Mon 1:00 AM UAE" in tweet
     assert "Updated " in tweet
     assert "Spot ref · Not retail" in tweet
+    # The URL is the penultimate visible line; the last visible line is the hashtag block.
     visible_lines = [line for line in tweet.splitlines() if line]
     assert visible_lines[-2] == "goldtickerlive.com"
     assert "#GoldPrice #XAU #UAE" in tweet

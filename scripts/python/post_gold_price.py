@@ -25,7 +25,7 @@ import hashlib
 import os
 import sys
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass, asdict
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
 from typing import Optional
@@ -39,6 +39,7 @@ MARKET_OPEN_EVENT_CRON = '3 21 * * 0'
 MARKET_CLOSE_EVENT_CRON = '3 21 * * 5'
 DEFAULT_CLOSED_MARKET_MAX_STALE_HOURS = 48
 SHORTCUT_TRIGGER_SPAM_WINDOW_MINUTES = 2
+MARKET_REOPENS_UAE_LABEL = "Mon 1:00 AM UAE"
 
 # Canonical data file written by scripts/fetch_gold_price.py
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -92,7 +93,7 @@ def _persist_run_result(result):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(asdict(result), indent=2) + "\n", encoding="utf-8")
     except Exception as exc:  # pragma: no cover — best-effort
-        print(f"⚠️  Failed to persist run result to {path}: {exc}")
+        print(f"⚠️  Failed to persist run result to {path} ({type(exc).__name__}): {exc}")
 
 
 def emit_run_result(result):
@@ -761,7 +762,7 @@ def format_market_closed_reference_tweet(data):
         f"24K {_aed(g24)} · 22K {_aed(g22)}\n"
         f"21K {_aed(g21)} · 18K {_aed(g18)}\n"
         f"\n"
-        f"Reopens Mon 1:00 AM UAE 🌙\n"
+        f"Reopens {MARKET_REOPENS_UAE_LABEL} 🌙\n"
         f"Updated {_uae_compact_time_from_iso(source_updated_at)} UAE\n"
         f"Spot ref · Not retail\n"
         f"goldtickerlive.com\n"
@@ -810,7 +811,7 @@ def format_market_open_tweet_compact(data):
     price, g24, g22, g21, g18, chp = _parse_fields(data)
     return (
         f"🟢 Gold Market Open\n"
-        f"Mon 1:00 AM UAE\n"
+        f"{MARKET_REOPENS_UAE_LABEL}\n"
         f"\n"
         f"Opening Spot XAU/USD\n"
         f"24K ${price:,.2f}/oz{_change_str(chp)}\n"
@@ -838,7 +839,7 @@ def format_market_close_tweet_compact(data):
         f"24K {_aed(g24)} · 22K {_aed(g22)}\n"
         f"21K {_aed(g21)} · 18K {_aed(g18)}\n"
         f"\n"
-        f"Reopens Mon 1:00 AM UAE\n"
+        f"Reopens {MARKET_REOPENS_UAE_LABEL}\n"
         f"goldtickerlive.com\n"
         f"#GoldPrice #XAU #UAE"
     )
@@ -864,8 +865,8 @@ def _render_tweet(data, post_type):
             ('hourly_compact', format_hourly_tweet_compact),
         ]
 
-    last_variant_name = variants[0][0]
-    last_tweet = ""
+    current_variant_name = variants[0][0]
+    current_tweet = ""
     for variant_name, formatter in variants:
         candidate = formatter(data)
         if len(candidate) <= 280:
@@ -877,14 +878,14 @@ def _render_tweet(data, post_type):
                 "tweet_length": len(candidate),
                 "fits_limit": True,
             }
-        last_variant_name = variant_name
-        last_tweet = candidate
+        current_variant_name = variant_name
+        current_tweet = candidate
 
-    print(f"⚠️  tweet_length={len(last_tweet)} > 280 — X API may reject; local posting NOT blocked")
+    print(f"⚠️  tweet_length={len(current_tweet)} > 280 — X API may reject; local posting NOT blocked")
     return {
-        "text": last_tweet,
-        "template_used": last_variant_name,
-        "tweet_length": len(last_tweet),
+        "text": current_tweet,
+        "template_used": current_variant_name,
+        "tweet_length": len(current_tweet),
         "fits_limit": False,
     }
 
@@ -1380,17 +1381,17 @@ def main():
             )
 
     # 9. Format tweet
-    tweet_render = format_tweet(data, post_type, return_meta=True)
-    if isinstance(tweet_render, str):
-        tweet_render = {
-            "text": tweet_render,
+    tweet_metadata = format_tweet(data, post_type, return_meta=True)
+    if isinstance(tweet_metadata, str):
+        tweet_metadata = {
+            "text": tweet_metadata,
             "template_used": template_used,
-            "tweet_length": len(tweet_render),
-            "fits_limit": len(tweet_render) <= 280,
+            "tweet_length": len(tweet_metadata),
+            "fits_limit": len(tweet_metadata) <= 280,
         }
-    tweet = tweet_render["text"]
-    template_used = tweet_render["template_used"]
-    tweet_length = tweet_render["tweet_length"]
+    tweet = tweet_metadata["text"]
+    template_used = tweet_metadata["template_used"]
+    tweet_length = tweet_metadata["tweet_length"]
     print("📝 Generated tweet:")
     print(tweet)
     print(f"   ({tweet_length} characters)")
