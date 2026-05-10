@@ -769,12 +769,11 @@ def _parse_x_api_problem(exc):
         payload = {}
     if not isinstance(payload, dict):
         payload = {}
-    return {
-        "title": str(payload.get("title") or "").strip(),
-        "detail": str(payload.get("detail") or "").strip(),
-        "type": str(payload.get("type") or "").strip(),
-        "reset_date": str(payload.get("reset_date") or "").strip(),
-    }
+    problem = {}
+    for key in ("title", "detail", "type", "reset_date"):
+        value = payload.get(key)
+        problem[key] = str(value).strip() if value is not None else ""
+    return problem
 
 
 def _is_spend_cap_problem(problem):
