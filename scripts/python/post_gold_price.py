@@ -91,12 +91,13 @@ def _atomic_write_text(path, text):
     try:
         tmp.write_text(text, encoding="utf-8")
         tmp.replace(path)
-    except Exception:
+    except Exception as exc:
         try:
             if tmp.exists():
                 tmp.unlink()
         except OSError:
             pass
+        print(f"⚠️  Failed to atomically write {path} ({type(exc).__name__}): {exc}")
         raise
 
 
