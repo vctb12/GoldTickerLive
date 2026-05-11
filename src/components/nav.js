@@ -607,7 +607,10 @@ export function injectNav(lang = 'en', depth = 0) {
   const drawer = document.getElementById('nav-drawer');
   const backdrop = document.getElementById('nav-backdrop');
   const drawerCloseBtn = document.getElementById('nav-drawer-close');
-  let overflowResetTimer = null;
+  const drawerFocusableSelector =
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  const mobileDrawerMedia =
+    typeof window.matchMedia === 'function' ? window.matchMedia('(max-width: 640px)') : null;
 
   // ── Drawer search — forward typed text to the main nav search overlay ───────
   const drawerSearchInput = document.getElementById('nav-drawer-search-input');
@@ -638,10 +641,6 @@ export function injectNav(lang = 'en', depth = 0) {
   // ── Drawer helpers ──────────────────────────────────────────────────────────
   function setDrawerState(isOpen) {
     const d = NAV_DATA[_currentLang] || NAV_DATA.en;
-    if (overflowResetTimer) {
-      window.clearTimeout(overflowResetTimer);
-      overflowResetTimer = null;
-    }
     navEl.classList.toggle('nav--open', isOpen);
     drawer.classList.toggle('is-open', isOpen);
     drawer.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
@@ -658,19 +657,12 @@ export function injectNav(lang = 'en', depth = 0) {
 
   function openDrawer() {
     setDrawerState(true);
-    const firstFocusable = drawer.querySelector(
-      'a, button, input, [tabindex]:not([tabindex="-1"])'
-    );
+    const firstFocusable = drawer.querySelector(drawerFocusableSelector);
     if (firstFocusable) firstFocusable.focus();
   }
 
   function closeDrawer() {
     setDrawerState(false);
-    // Keep this in sync if CSS timing changes.
-    overflowResetTimer = window.setTimeout(() => {
-      if (!navEl.classList.contains('nav--open')) document.body.style.overflow = '';
-      overflowResetTimer = null;
-    }, 260);
   }
 
   // ── Dropdown helpers ────────────────────────────────────────────────────────
@@ -836,9 +828,7 @@ export function injectNav(lang = 'en', depth = 0) {
   // ── Focus trap inside the open drawer ──────────────────────────────────────
   drawer.addEventListener('keydown', (e) => {
     if (e.key !== 'Tab' || !navEl.classList.contains('nav--open')) return;
-    const focusables = drawer.querySelectorAll(
-      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    );
+    const focusables = drawer.querySelectorAll(drawerFocusableSelector);
     if (!focusables.length) return;
     const first = focusables[0];
     const last = focusables[focusables.length - 1];
@@ -853,7 +843,10 @@ export function injectNav(lang = 'en', depth = 0) {
 
   // ── Prevent stuck mobile drawer state when resizing to desktop ─────────────
   window.addEventListener('resize', () => {
-    if (window.innerWidth > 760 && navEl.classList.contains('nav--open')) {
+    const isMobileDrawerVisible = mobileDrawerMedia
+      ? mobileDrawerMedia.matches
+      : window.innerWidth <= 640;
+    if (!isMobileDrawerVisible && navEl.classList.contains('nav--open')) {
       closeDrawer();
     }
   });

@@ -87,7 +87,9 @@ test.describe('Mobile smoke', () => {
     await expect.poll(async () => page.evaluate(() => document.body.style.overflow)).toBe('');
   });
 
-  test('mobile drawer closes with close button and on desktop resize', async ({ page }) => {
+  test('mobile drawer closes with close button and when resizing past the mobile drawer breakpoint', async ({
+    page,
+  }) => {
     await page.goto('/');
     const burger = page.locator('#nav-hamburger');
     const drawer = page.locator('#nav-drawer');
@@ -102,7 +104,7 @@ test.describe('Mobile smoke', () => {
 
     await burger.click();
     await expect(drawer).toHaveAttribute('aria-hidden', 'false');
-    await page.setViewportSize({ width: 1100, height: 844 });
+    await page.setViewportSize({ width: 700, height: 844 });
     await expect(drawer).toHaveAttribute('aria-hidden', 'true');
     await expect(burger).toHaveAttribute('aria-expanded', 'false');
     await expect.poll(async () => page.evaluate(() => document.body.style.overflow)).toBe('');
