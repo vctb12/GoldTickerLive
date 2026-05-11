@@ -1,9 +1,14 @@
 # ------------------------------------------------------------------
 # Post Gold Price to X — informational social-posting bot. Runs hourly
-# while global gold markets are open and posts only when the committed
-# cached spot price passes the posting guards. Manual workflow_dispatch
-# runs from GitHub UI / iPhone Shortcut may be allowed outside market
-# hours, but stale / duplicate / cooldown / dry-run guardrails still apply.
+# while global gold markets are open and publishes a gold price update.
+#
+# POST_INTENT=must_post (default for all runs): every triggered run
+# publishes a valid non-duplicate post unless a hard external blocker
+# prevents it (invalid X credentials, X API outage, no usable price).
+# Soft guard conditions (small price move, provider timestamp unchanged,
+# cooldown, fallback data) are bypassed — the tweet text is always unique
+# thanks to the current UAE run-window timestamp.
+#
 # NOT a required merge gate.
 # ------------------------------------------------------------------
 name: Post Gold Price to X (Python)
@@ -15,12 +20,16 @@ on:
     - cron: '9 0-20 * * 5'   # Hourly Friday until close hour
   workflow_dispatch:
     inputs:
+      post_intent:
+        description: "must_post = publish a valid non-duplicate update unless X/API/auth hard-fails. guard_normal = legacy guard behaviour (small moves may skip)."
+        required: false
+        default: "must_post"
       dry_run:
         description: "true = evaluate all guards and skip the real X API call"
         required: false
         default: "false"
       force_post:
-        description: "true = bypass cooldown only; duplicate and stale guards still apply; long posts are still attempted"
+        description: "true = bypass cooldown only; duplicate and stale guards still apply (use post_intent=must_post to bypass all soft guards)"
         required: false
         default: "false"
       source:
@@ -30,7 +39,7 @@ on:
       refresh_price_first:
         description: "Run one price refresh before posting (manual/operator only). Fetches data/gold_price.json from providers once, then continues with the regular post guards."
         required: false
-        default: "false"
+        default: "true"
       trigger_nonce:
         description: "Optional unique manual trigger label"
         required: false
@@ -109,6 +118,7 @@ jobs:
           TWITTER_ACCESS_TOKEN:        ${{ secrets.ACCESS_TOKEN }}
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
           GITHUB_EVENT_SCHEDULE:       ${{ github.event.schedule }}
+          POST_INTENT:                 ${{ github.event.inputs.post_intent || 'must_post' }}
           DRY_RUN_TWEET:               ${{ github.event.inputs.dry_run || 'false' }}
           FORCE_POST:                  ${{ github.event.inputs.force_post || 'false' }}
           POST_TRIGGER_SOURCE:         ${{ github.event.inputs.source || 'scheduled' }}
@@ -162,6 +172,7 @@ jobs:
         env:
           GITHUB_EVENT_NAME_VAR:  ${{ github.event_name }}
           GITHUB_ACTOR_VAR:       ${{ github.actor }}
+          POST_INTENT_INPUT:      ${{ github.event.inputs.post_intent || 'must_post' }}
           DRY_RUN_INPUT:          ${{ github.event.inputs.dry_run || 'false' }}
           FORCE_POST_INPUT:       ${{ github.event.inputs.force_post || 'false' }}
           SOURCE_INPUT:           ${{ github.event.inputs.source || 'scheduled' }}
@@ -176,6 +187,7 @@ jobs:
             echo "| --- | --- |"
             echo "| event | \`$GITHUB_EVENT_NAME_VAR\` |"
             echo "| actor | \`$GITHUB_ACTOR_VAR\` |"
+            echo "| post_intent | \`$POST_INTENT_INPUT\` |"
             echo "| dry_run | \`$DRY_RUN_INPUT\` |"
             echo "| force_post | \`$FORCE_POST_INPUT\` |"
             echo "| source | \`$SOURCE_INPUT\` |"

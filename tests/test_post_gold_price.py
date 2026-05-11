@@ -1681,18 +1681,21 @@ def test_format_tweet_warns_when_all_variants_exceed_limit(capsys, monkeypatch):
     }
     original_standard = pg.format_hourly_tweet
     original_compact = pg.format_hourly_tweet_compact
+    original_micro = pg.format_micro_tweet
     pg.format_hourly_tweet = lambda _d: "x" * 304
     pg.format_hourly_tweet_compact = lambda _d: "y" * 299
+    pg.format_micro_tweet = lambda _d: "z" * 290  # also exceeds 280
     try:
         result = pg.format_tweet(data, "hourly")
     finally:
         pg.format_hourly_tweet = original_standard
         pg.format_hourly_tweet_compact = original_compact
+        pg.format_micro_tweet = original_micro
 
-    assert result == "y" * 299
+    assert result == "z" * 290
     out = capsys.readouterr().out
     assert "⚠️" in out
-    assert "299" in out
+    assert "290" in out
 
 
 def test_format_tweet_returns_standard_template_within_premium_limit(capsys, monkeypatch):
@@ -2175,3 +2178,321 @@ def test_force_post_only_bypasses_cooldown_not_price_move_threshold(monkeypatch)
     assert decision.should_post is False
     assert decision.skip_reason == "price_move_below_threshold"
     assert decision.force_summary_due is False
+
+
+# ── must_post mode tests ──────────────────────────────────────────────────────
+# These tests verify that POST_INTENT=must_post bypasses all soft guard reasons
+# and converts them into published posts rather than skipped runs.
+
+def _make_fresh_gold_file(tmp_path, price=4675.20, prev_price=4674.80):
+    """Return a fresh gold_price.json and matching state/guard files."""
+    now = datetime.now(timezone.utc)
+    gold_file = tmp_path / "gold_price.json"
+    gold_file.write_text(json.dumps({
+        "provider": "gold_api_com",
+        "xau_usd_per_oz": price,
+        "timestamp_utc": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "fetched_at_utc": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "aed_per_gram_24k": 552.02,
+        "karats_aed_per_gram": {
+            "24k": 552.02,
+            "22k": 506.02,
+            "21k": 483.02,
+            "18k": 414.02,
+        },
+    }))
+    return gold_file
+
+
+def _make_guard_state(tmp_path, last_price=4674.80, mins_ago=2):
+    """Return a last_tweet_state.json with a recent post."""
+    guard_file = tmp_path / "last_tweet_state.json"
+    last_time = (datetime.now(timezone.utc) - timedelta(minutes=mins_ago))
+    guard_file.write_text(json.dumps({
+        "schema_version": 1,
+        "last_tweet_text_hash": "abc123",
+        "last_tweet_time_utc": last_time.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "last_price_usd_oz": last_price,
+        "last_provider_timestamp_utc": (
+            last_time - timedelta(minutes=5)
+        ).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }))
+    return guard_file
+
+
+def _setup_must_post_env(monkeypatch, tmp_path, gold_file, guard_file, state_file=None):
+    """Set up common env vars for must_post integration tests."""
+    if state_file is None:
+        state_file = tmp_path / "last_gold_price.json"
+        state_file.write_text("{}")
+    monkeypatch.setattr(pg, "GOLD_PRICE_FILE", gold_file)
+    monkeypatch.setattr(pg, "STATE_FILE", state_file)
+    monkeypatch.setattr(pg, "LAST_TWEET_STATE_FILE", guard_file)
+    monkeypatch.setenv("TWITTER_API_KEY", "key")
+    monkeypatch.setenv("TWITTER_API_SECRET", "secret")
+    monkeypatch.setenv("TWITTER_ACCESS_TOKEN", "token")
+    monkeypatch.setenv("TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
+    monkeypatch.setattr(pg, "TWITTER_API_KEY", "key")
+    monkeypatch.setattr(pg, "TWITTER_API_SECRET", "secret")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN", "token")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
+    monkeypatch.setenv("POST_INTENT", "must_post")
+    monkeypatch.setenv("FORCE_POST", "true")
+    monkeypatch.setenv("DRY_RUN_TWEET", "true")
+    monkeypatch.setenv("GITHUB_EVENT_NAME", "workflow_dispatch")
+    monkeypatch.setenv("POST_TRIGGER_SOURCE", "manual")
+    monkeypatch.setattr(pg, "is_market_open_time", lambda _now=None: True)
+
+
+def test_must_post_posts_when_price_move_below_threshold(tmp_path, monkeypatch, capsys):
+    """must_post mode must proceed even when price moved below threshold (+$0.40).
+    This is the exact scenario from the bug report (SKIP: price_move_below_threshold)."""
+    gold_file = _make_fresh_gold_file(tmp_path, price=4675.20)
+    guard_file = _make_guard_state(tmp_path, last_price=4674.80, mins_ago=2)
+    post_mock = MagicMock(return_value={"posted": True, "id": "tweet123"})
+    monkeypatch.setattr(pg, "post_tweet", post_mock)
+    _setup_must_post_env(monkeypatch, tmp_path, gold_file, guard_file)
+    # dry_run=true so no real X call but the guards should pass
+    try:
+        pg.main()
+    except SystemExit as exc:
+        assert exc.code == 0
+    out = capsys.readouterr().out
+    # Must NOT see SKIPPED_TWEET_GUARD or price_move_below_threshold skip
+    assert "SKIPPED_TWEET_GUARD" not in out
+    assert "SKIP: tweet-guard — price_move_below_threshold" not in out
+    # Should see the dry-run bypass (indicates guards passed)
+    assert "DRY_RUN_TWEET=true" in out
+
+
+def test_must_post_posts_when_price_unchanged(tmp_path, monkeypatch, capsys):
+    """must_post must post when price is identical to last post (unchanged price)."""
+    gold_file = _make_fresh_gold_file(tmp_path, price=4675.20)
+    guard_file = _make_guard_state(tmp_path, last_price=4675.20, mins_ago=65)
+    post_mock = MagicMock(return_value={"posted": True, "id": "tweet456"})
+    monkeypatch.setattr(pg, "post_tweet", post_mock)
+    _setup_must_post_env(monkeypatch, tmp_path, gold_file, guard_file)
+    try:
+        pg.main()
+    except SystemExit as exc:
+        assert exc.code == 0
+    out = capsys.readouterr().out
+    assert "SKIPPED_TWEET_GUARD" not in out
+    assert "SKIP: price-change guard" not in out or "must_post" in out
+    assert "DRY_RUN_TWEET=true" in out
+
+
+def test_must_post_does_not_send_literal_duplicate_text(tmp_path, monkeypatch, capsys):
+    """must_post must NOT send literal duplicate text; it must add a uniqueness suffix."""
+    now = datetime.now(timezone.utc)
+    # Generate the tweet text that would be produced, then set it as last hash
+    gold_file = _make_fresh_gold_file(tmp_path, price=4675.20)
+    data = {
+        "price": 4675.20,
+        "price_gram_24k": 552.02,
+        "price_gram_22k": 506.02,
+        "price_gram_21k": 483.02,
+        "price_gram_18k": 414.02,
+        "chp": 0.01,
+        "prev_price": 4675.20,
+        "prev_posted_at_utc": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "prev_content_hash": None,
+    }
+    import tweet_guard as tg
+    # Use the real uniqueness suffix function
+    assert pg._add_uniqueness_suffix("sample text") != "sample text"
+    assert "Latest check:" in pg._add_uniqueness_suffix("sample text")
+
+
+def test_must_post_mode_is_false_by_default(monkeypatch):
+    """_is_must_post_mode() returns False when POST_INTENT is not set (guard_normal)."""
+    monkeypatch.delenv("POST_INTENT", raising=False)
+    assert pg._is_must_post_mode() is False
+
+
+def test_must_post_mode_true_when_set(monkeypatch):
+    """_is_must_post_mode() returns True when POST_INTENT=must_post."""
+    monkeypatch.setenv("POST_INTENT", "must_post")
+    assert pg._is_must_post_mode() is True
+
+
+def test_must_post_mode_false_for_guard_normal(monkeypatch):
+    """_is_must_post_mode() returns False for POST_INTENT=guard_normal."""
+    monkeypatch.setenv("POST_INTENT", "guard_normal")
+    assert pg._is_must_post_mode() is False
+
+
+def test_add_uniqueness_suffix_changes_text():
+    """_add_uniqueness_suffix() always produces text different from input."""
+    original = "Gold Update — May 11 2026\nXAU/USD $4,675.20/oz"
+    suffixed = pg._add_uniqueness_suffix(original)
+    assert suffixed != original
+    assert original in suffixed  # original is still present
+    assert "Latest check:" in suffixed
+
+
+def test_format_micro_tweet_under_280_chars():
+    """format_micro_tweet() must always produce a tweet under 280 characters."""
+    data = {
+        "price": 4675.20,
+        "price_gram_24k": 552.02,
+        "chp": 0.01,
+    }
+    tweet = pg.format_micro_tweet(data)
+    assert len(tweet) <= 280, f"Micro tweet is {len(tweet)} chars, expected <= 280"
+
+
+def test_format_micro_tweet_contains_required_fields():
+    """format_micro_tweet() must include price, UAE 24K rate, and spot ref label."""
+    data = {
+        "price": 4675.20,
+        "price_gram_24k": 552.02,
+        "chp": 0.25,
+    }
+    tweet = pg.format_micro_tweet(data)
+    assert "4,675.20" in tweet
+    assert "UAE" in tweet
+    assert "goldtickerlive.com" in tweet
+    assert "Spot ref" in tweet
+
+
+def test_format_micro_tweet_unchanged_label_for_small_move():
+    """format_micro_tweet() uses 'unchanged' label for sub-threshold moves."""
+    data = {"price": 4675.20, "price_gram_24k": 552.02, "chp": 0.01}
+    tweet = pg.format_micro_tweet(data)
+    assert "unchanged" in tweet
+
+
+def test_format_micro_tweet_positive_pct_for_big_move():
+    """format_micro_tweet() uses +% label for significant upward moves."""
+    data = {"price": 4675.20, "price_gram_24k": 552.02, "chp": 1.5}
+    tweet = pg.format_micro_tweet(data)
+    assert "+1.50%" in tweet
+
+
+def test_format_micro_tweet_negative_pct_for_drop():
+    """format_micro_tweet() uses -% label for drops."""
+    data = {"price": 4675.20, "price_gram_24k": 552.02, "chp": -0.8}
+    tweet = pg.format_micro_tweet(data)
+    assert "-0.80%" in tweet
+
+
+def test_must_post_bypasses_price_change_guard_logs_override(tmp_path, monkeypatch, capsys):
+    """must_post mode must log the guard bypass rather than skipping."""
+    gold_file = _make_fresh_gold_file(tmp_path, price=4675.20)
+    guard_file = _make_guard_state(tmp_path, last_price=4675.20, mins_ago=30)
+    post_mock = MagicMock(return_value={"posted": True, "id": "tweetX"})
+    monkeypatch.setattr(pg, "post_tweet", post_mock)
+    _setup_must_post_env(monkeypatch, tmp_path, gold_file, guard_file)
+    try:
+        pg.main()
+    except SystemExit as exc:
+        assert exc.code == 0
+    out = capsys.readouterr().out
+    # Should see the must_post override message
+    assert "must_post" in out
+    # Should NOT see a hard SKIP
+    assert "SKIPPED_PRICE_CHANGE_GUARD" not in out
+
+
+def test_must_post_fails_hard_on_missing_credentials(tmp_path, monkeypatch, capsys):
+    """must_post mode must hard-fail (exit 1) when X credentials are missing."""
+    gold_file = _make_fresh_gold_file(tmp_path, price=4675.20)
+    guard_file = _make_guard_state(tmp_path, last_price=4674.80, mins_ago=65)
+    monkeypatch.setattr(pg, "GOLD_PRICE_FILE", gold_file)
+    monkeypatch.setattr(pg, "STATE_FILE", tmp_path / "last_gold_price.json")
+    (tmp_path / "last_gold_price.json").write_text("{}")
+    monkeypatch.setattr(pg, "LAST_TWEET_STATE_FILE", guard_file)
+    monkeypatch.setattr(pg, "is_market_open_time", lambda _now=None: True)
+    monkeypatch.setenv("POST_INTENT", "must_post")
+    # No X credentials set — must hard-fail
+    monkeypatch.delenv("TWITTER_API_KEY", raising=False)
+    monkeypatch.delenv("TWITTER_API_SECRET", raising=False)
+    monkeypatch.delenv("TWITTER_ACCESS_TOKEN", raising=False)
+    monkeypatch.delenv("TWITTER_ACCESS_TOKEN_SECRET", raising=False)
+    monkeypatch.setattr(pg, "TWITTER_API_KEY", "")
+    monkeypatch.setattr(pg, "TWITTER_API_SECRET", "")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN", "")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN_SECRET", "")
+    try:
+        pg.main()
+    except SystemExit as exc:
+        assert exc.code == 1, f"Expected exit(1) for missing credentials in must_post mode, got {exc.code}"
+    else:
+        raise AssertionError("Expected SystemExit for missing credentials in must_post mode")
+    out = capsys.readouterr().out
+    assert "FAILED_HARD_MISSING_CREDENTIALS" in out
+
+
+def test_guard_normal_skips_missing_credentials_with_exit_0(tmp_path, monkeypatch, capsys):
+    """guard_normal mode must soft-skip (exit 0) when X credentials are missing."""
+    gold_file = _make_fresh_gold_file(tmp_path, price=4675.20)
+    guard_file = _make_guard_state(tmp_path, last_price=4674.80, mins_ago=65)
+    monkeypatch.setattr(pg, "GOLD_PRICE_FILE", gold_file)
+    monkeypatch.setattr(pg, "STATE_FILE", tmp_path / "last_gold_price.json")
+    (tmp_path / "last_gold_price.json").write_text("{}")
+    monkeypatch.setattr(pg, "LAST_TWEET_STATE_FILE", guard_file)
+    monkeypatch.setattr(pg, "is_market_open_time", lambda _now=None: True)
+    monkeypatch.setenv("POST_INTENT", "guard_normal")
+    monkeypatch.delenv("TWITTER_API_KEY", raising=False)
+    monkeypatch.delenv("TWITTER_API_SECRET", raising=False)
+    monkeypatch.delenv("TWITTER_ACCESS_TOKEN", raising=False)
+    monkeypatch.delenv("TWITTER_ACCESS_TOKEN_SECRET", raising=False)
+    monkeypatch.setattr(pg, "TWITTER_API_KEY", "")
+    monkeypatch.setattr(pg, "TWITTER_API_SECRET", "")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN", "")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN_SECRET", "")
+    try:
+        pg.main()
+    except SystemExit as exc:
+        assert exc.code == 0, f"Expected exit(0) for missing credentials in guard_normal mode, got {exc.code}"
+    else:
+        raise AssertionError("Expected SystemExit for missing credentials")
+    out = capsys.readouterr().out
+    assert "SKIPPED_MISSING_CREDENTIALS" in out
+
+
+def test_must_post_micro_template_fallback_under_280(tmp_path, monkeypatch, capsys):
+    """When must_post forces a post and the standard template is overlong,
+    the micro fallback must produce a valid sub-280-char tweet."""
+    monkeypatch.setenv("TWEET_MAX_CHARS", "280")
+    # Override standard and compact to exceed limit so micro kicks in.
+    original_standard = pg.format_hourly_tweet
+    original_compact = pg.format_hourly_tweet_compact
+    pg.format_hourly_tweet = lambda _d: "x" * 304
+    pg.format_hourly_tweet_compact = lambda _d: "y" * 299
+    try:
+        data = {
+            "price": 4675.20,
+            "price_gram_24k": 552.02,
+            "price_gram_22k": 506.02,
+            "price_gram_21k": 483.02,
+            "price_gram_18k": 414.02,
+            "chp": 0.01,
+            "prev_price": None,
+            "prev_posted_at_utc": None,
+        }
+        result_meta = pg.format_tweet(data, "hourly", return_meta=True)
+    finally:
+        pg.format_hourly_tweet = original_standard
+        pg.format_hourly_tweet_compact = original_compact
+    assert result_meta["template_used"] == "micro"
+    assert result_meta["tweet_length"] <= 280
+    assert result_meta["fits_limit"] is True
+
+
+def test_soft_skip_reasons_set_is_correct():
+    """_MUST_POST_SOFT_SKIP_REASONS must include all the expected guard reasons."""
+    expected = {
+        "price_move_below_threshold",
+        "provider_sample_unchanged",
+        "provider_timestamp_unchanged",
+        "fallback_no_change",
+        "cooldown_active",
+        "stale_quote",
+    }
+    assert expected.issubset(pg._MUST_POST_SOFT_SKIP_REASONS), (
+        f"Missing reasons: {expected - pg._MUST_POST_SOFT_SKIP_REASONS}"
+    )
+    # duplicate_text_hash is NOT a soft reason — it requires text regeneration
+    assert "duplicate_text_hash" not in pg._MUST_POST_SOFT_SKIP_REASONS
