@@ -72,6 +72,7 @@ class RunResult:
     price_usd_oz: Optional[float] = None
     tweet_length: Optional[int] = None
     content_hash: Optional[str] = None
+    tweet_id: Optional[str] = None
     skip_reason: Optional[str] = None
     operator_action: Optional[str] = None
     reset_date: Optional[str] = None
@@ -123,6 +124,7 @@ def emit_run_result(result):
         ("price", f"${result.price_usd_oz:,.2f}/oz" if isinstance(result.price_usd_oz, (int, float)) else None),
         ("tweet_length", result.tweet_length),
         ("content_hash", result.content_hash),
+        ("tweet_id", result.tweet_id),
         ("skip_reason", result.skip_reason),
         ("operator_action", result.operator_action),
         ("reset_date", result.reset_date),
@@ -556,6 +558,63 @@ def _env_truthy(name, default=False):
     return str(raw).strip().lower() in ('1', 'true', 'yes', 'on')
 
 
+# ── must_post mode ─────────────────────────────────────────────────────────────
+# When POST_INTENT=must_post the workflow guarantees that every triggered run
+# produces a published post unless a hard external blocker prevents it (invalid
+# X credentials, X API outage/hard-rate-block, or genuinely no usable price).
+#
+# Soft guard reasons below are bypassed in must_post mode:
+#   • price_move_below_threshold  – wording stays ("little changed"), post anyway
+#   • provider_sample_unchanged   – current-time suffix ensures unique text
+#   • provider_timestamp_unchanged – same; unique due to run-window timestamp
+#   • fallback_no_change          – label as reference, post anyway
+#   • cooldown_active             – operator/scheduler explicitly triggered a run
+#   • stale_quote                 – allowed up to MAX_PRICE_AGE_HOURS_MUST_POST
+#
+# Hard guard reasons that always block posting:
+#   • duplicate_text_hash         – regenerate unique text; hard-fail only if
+#                                   regeneration also collides (extremely unlikely)
+#   • missing/invalid X credentials
+#   • X API auth/outage error
+#   • no usable price after all fallback layers
+
+_MUST_POST_SOFT_SKIP_REASONS = frozenset({
+    "price_move_below_threshold",
+    "provider_sample_unchanged",
+    "provider_timestamp_unchanged",
+    "fallback_no_change",
+    "cooldown_active",
+    "stale_quote",
+})
+
+
+def _is_must_post_mode():
+    """Return True when POST_INTENT=must_post is set in the environment.
+
+    Defaults to False (guard_normal) so existing tests continue to work without
+    changes.  The workflow sets POST_INTENT=must_post by default so production
+    runs always use must_post mode.
+    """
+    return os.environ.get('POST_INTENT', '').strip().lower() == 'must_post'
+
+
+def _safe_hash12(h):
+    """Return the first 12 characters of a hash string, or 'none' if absent."""
+    return h[:12] if h else "none"
+
+
+def _add_uniqueness_suffix(tweet_text, now=None):
+    """Append a factual current-check timestamp to prevent duplicate text hash.
+
+    Uses the current UAE time so each run produces a distinct string while
+    remaining accurate and policy-safe.  Only appended when the tweet would
+    otherwise be a literal duplicate of the previous post.
+    """
+    local_now = (now or datetime.now(timezone.utc)).astimezone(UAE_TZ)
+    time_str = local_now.strftime('%I:%M:%S %p').lstrip('0')
+    return tweet_text + f"\nLatest check: {time_str} UAE"
+
+
 def should_allow_closed_market_stale_reference(
     *,
     post_type,
@@ -939,6 +998,33 @@ def format_market_close_tweet_compact(data):
     )
 
 
+def format_micro_tweet(data):
+    """Ultra-compact template guaranteed to fit under 280 characters.
+
+    Used as the final fallback in the template chain when all other variants
+    exceed the active TWEET_MAX_CHARS limit.  Always produces a valid post
+    that is honest about source (spot reference, not retail) and includes the
+    current UAE run-window time for uniqueness.
+    """
+    price = data.get('price') or 0
+    g24   = data.get('price_gram_24k') or (price / TROY_OZ_GRAMS)
+    chp   = data.get('chp')
+    date_str, time_str = _uae_datetime()
+    if chp is None or abs(chp) < 0.03:
+        move_label = "unchanged"
+    elif chp > 0:
+        move_label = f"+{chp:.2f}%"
+    else:
+        move_label = f"{chp:.2f}%"
+    return (
+        f"Gold {date_str} · {time_str} UAE\n"
+        f"XAU/USD ${price:,.2f}/oz · {move_label}\n"
+        f"UAE 24K: AED {_aed(g24)}/g\n"
+        f"Spot ref · Not retail\n"
+        f"goldtickerlive.com"
+    )
+
+
 def _tweet_max_chars():
     """Return the active character limit.
 
@@ -970,15 +1056,19 @@ def _render_tweet(data, post_type):
 
     if post_type == 'market_open':
         variants = [('market_open', format_market_open_tweet),
-                    ('market_open_compact', format_market_open_tweet_compact)]
+                    ('market_open_compact', format_market_open_tweet_compact),
+                    ('micro', format_micro_tweet)]
     elif post_type == 'market_close':
         variants = [('market_close', format_market_close_tweet),
-                    ('market_close_compact', format_market_close_tweet_compact)]
+                    ('market_close_compact', format_market_close_tweet_compact),
+                    ('micro', format_micro_tweet)]
     elif post_type == 'market_closed_reference':
-        variants = [('market_closed_reference', format_market_closed_reference_tweet)]
+        variants = [('market_closed_reference', format_market_closed_reference_tweet),
+                    ('micro', format_micro_tweet)]
     else:
         variants = [('hourly', format_hourly_tweet),
-                    ('hourly_compact', format_hourly_tweet_compact)]
+                    ('hourly_compact', format_hourly_tweet_compact),
+                    ('micro', format_micro_tweet)]
 
     last_variant_name = variants[0][0]
     last_tweet = ""
@@ -1147,9 +1237,15 @@ def post_tweet(text, post_type='hourly'):
         access_token_secret=TWITTER_ACCESS_TOKEN_SECRET,
     )
     try:
-        client.create_tweet(text=text)
-        print("✅ Tweet posted successfully")
-        return {"posted": True}
+        response = client.create_tweet(text=text)
+        tweet_id = None
+        if hasattr(response, "data") and response.data and hasattr(response.data, "id"):
+            tweet_id = str(response.data.id)
+        if tweet_id:
+            print(f"✅ Tweet posted successfully — X post ID: {tweet_id}")
+        else:
+            print("✅ Tweet posted successfully")
+        return {"posted": True, "id": tweet_id}
     except tweepy.errors.Forbidden as exc:
         _log_tweet_error(exc, text, post_type)
         problem = _parse_x_api_problem(exc)
@@ -1203,16 +1299,29 @@ def main():
         count = len(missing)
         print(f"⚠️  {count} required environment variable(s) not set.")
         print("   Set these as GitHub Secrets in Settings → Secrets → Actions.")
-        print("   Skipping tweet.")
-        finish_run(
-            RunResult(
-                outcome="SKIPPED_MISSING_CREDENTIALS",
-                status="skip",
-                operator_action="set_missing_x_secrets",
-                detail=", ".join(missing),
-            ),
-            exit_code=0,
-        )
+        must_post = _is_must_post_mode()
+        if must_post:
+            print("   FAILED_HARD: must_post mode — missing credentials are a hard failure.")
+            finish_run(
+                RunResult(
+                    outcome="FAILED_HARD_MISSING_CREDENTIALS",
+                    status="fatal",
+                    operator_action="set_missing_x_secrets",
+                    detail=", ".join(missing),
+                ),
+                exit_code=1,
+            )
+        else:
+            print("   Skipping tweet.")
+            finish_run(
+                RunResult(
+                    outcome="SKIPPED_MISSING_CREDENTIALS",
+                    status="skip",
+                    operator_action="set_missing_x_secrets",
+                    detail=", ".join(missing),
+                ),
+                exit_code=0,
+            )
 
     # 2. Load raw gold price data
     if not GOLD_PRICE_FILE.exists():
@@ -1293,6 +1402,7 @@ def main():
     print(f"actor:        {os.environ.get('GITHUB_ACTOR', 'local')}")
     print(f"schedule:     {schedule_cron or 'manual/local'}")
     print(f"source:       {trigger_source}")
+    print(f"post_intent:  {os.environ.get('POST_INTENT', 'guard_normal')} (must_post={_is_must_post_mode()})")
     print(f"refresh_price_first:                    {refresh_price_first}")
     print(f"trigger_nonce:                          {trigger_nonce or '(none)'}")
     print(f"dry_run:      {os.environ.get('DRY_RUN_TWEET', 'false')}")
@@ -1404,19 +1514,45 @@ def main():
     print(f"stale_age_hours:          {stale_age_label}")
     print(f"closed_market_stale_allowed: {closed_market_stale_allowed}")
     if staleness_action == 'skip' and not closed_market_stale_allowed:
-        finish_run(
-            RunResult(
-                outcome="SKIPPED_STALE_QUOTE",
-                status="skip",
-                skip_reason="stale_quote",
-                post_type=post_type,
-                template_used=template_used,
-                price_usd_oz=data['price'],
-                trigger_source=trigger_source,
-                trigger_nonce=trigger_nonce or "(none)",
-            ),
-            exit_code=0,
-        )
+        must_post = _is_must_post_mode()
+        max_stale_hours_must_post = _env_float("MAX_PRICE_AGE_HOURS_MUST_POST", 48.0)
+        if must_post and isinstance(stale_age_hours, (int, float)) and stale_age_hours <= max_stale_hours_must_post:
+            print(
+                f"  [must_post] stale_quote: age={stale_age_hours:.1f}h <= {max_stale_hours_must_post:.0f}h "
+                f"(MAX_PRICE_AGE_HOURS_MUST_POST) — proceeding with cached/reference data"
+            )
+        elif must_post:
+            print(
+                f"  [must_post] FAILED_HARD_STALE_QUOTE: age={stale_age_label}h > {max_stale_hours_must_post:.0f}h "
+                f"— no usable price within hard staleness limit."
+            )
+            finish_run(
+                RunResult(
+                    outcome="FAILED_HARD_STALE_QUOTE",
+                    status="fatal",
+                    skip_reason="stale_quote",
+                    post_type=post_type,
+                    template_used=template_used,
+                    price_usd_oz=data['price'],
+                    trigger_source=trigger_source,
+                    trigger_nonce=trigger_nonce or "(none)",
+                ),
+                exit_code=1,
+            )
+        else:
+            finish_run(
+                RunResult(
+                    outcome="SKIPPED_STALE_QUOTE",
+                    status="skip",
+                    skip_reason="stale_quote",
+                    post_type=post_type,
+                    template_used=template_used,
+                    price_usd_oz=data['price'],
+                    trigger_source=trigger_source,
+                    trigger_nonce=trigger_nonce or "(none)",
+                ),
+                exit_code=0,
+            )
     if staleness_action == 'parse_error' and post_type == 'market_closed_reference':
         print(
             "SKIP: market-closed reference post requires a valid source timestamp"
@@ -1488,6 +1624,13 @@ def main():
                 "for this manual/operator market_closed_reference run. "
                 "duplicate_text_hash, cooldown, and X duplicate rules still apply."
             )
+        elif _is_must_post_mode():
+            # must_post: price-change guard is a soft skip.  Tweet text is already
+            # unique due to the current-run timestamp in the header, so we proceed.
+            print(
+                "  [must_post] price_change_guard: same price — "
+                "bypassed in must_post mode. Tweet text is unique via run-window timestamp."
+            )
         else:
             finish_run(
                 RunResult(
@@ -1527,25 +1670,35 @@ def main():
         and tweet_hash == prev_hash
         and data['prev_posted_at_utc'] is not None
     ):
-        print(
-            f"SKIP: content-hash guard — tweet content identical to last post"
-            f" (hash {tweet_hash})"
-        )
-        finish_run(
-            RunResult(
-                outcome="SKIPPED_DUPLICATE_CONTENT_HASH",
-                status="skip",
-                skip_reason="content_hash_duplicate",
-                post_type=post_type,
-                template_used=template_used,
-                price_usd_oz=data['price'],
-                tweet_length=tweet_length,
-                content_hash=tweet_hash,
-                trigger_source=trigger_source,
-                trigger_nonce=trigger_nonce or "(none)",
-            ),
-            exit_code=0,
-        )
+        if _is_must_post_mode():
+            # must_post: add a uniqueness suffix instead of skipping.
+            print(
+                f"  [must_post] content-hash guard: tweet would be a literal duplicate "
+                f"(hash {tweet_hash}) — adding uniqueness suffix."
+            )
+            tweet = _add_uniqueness_suffix(tweet)
+            tweet_hash = compute_content_hash(tweet)
+            tweet_length = len(tweet)
+        else:
+            print(
+                f"SKIP: content-hash guard — tweet content identical to last post"
+                f" (hash {tweet_hash})"
+            )
+            finish_run(
+                RunResult(
+                    outcome="SKIPPED_DUPLICATE_CONTENT_HASH",
+                    status="skip",
+                    skip_reason="content_hash_duplicate",
+                    post_type=post_type,
+                    template_used=template_used,
+                    price_usd_oz=data['price'],
+                    tweet_length=tweet_length,
+                    content_hash=tweet_hash,
+                    trigger_source=trigger_source,
+                    trigger_nonce=trigger_nonce or "(none)",
+                ),
+                exit_code=0,
+            )
 
     # 10b. New X duplicate-prevention guard (additive). Skips on:
     #      • provider timestamp unchanged (GoldPriceZ freezing case)
@@ -1553,6 +1706,10 @@ def main():
     #      • sub-threshold price movement when no force-summary window is due
     #      • fallback/cache source with same price+timestamp
     # Controlled by SKIP_DUPLICATE_TWEETS (default true). Set false to bypass.
+    # In must_post mode, SOFT skip reasons are converted to posts.
+    # Only duplicate_text_hash causes text regeneration; all other soft reasons
+    # are simply logged and bypassed (the tweet text is already unique due to the
+    # current UAE time in the header).
     if tweet_guard is not None:
         guard_quote = build_guard_quote(
             raw_data,
@@ -1572,6 +1729,7 @@ def main():
             )
         )
         if not decision.should_post:
+            must_post = _is_must_post_mode()
             if should_bypass_threshold:
                 print(
                     "allow_same_price_closed_market_repost=true — tweet-guard "
@@ -1579,10 +1737,53 @@ def main():
                     "market_closed_reference run. duplicate_text_hash, cooldown, "
                     "and X duplicate rules still apply."
                 )
+            elif must_post and decision.skip_reason == "duplicate_text_hash":
+                # Literal duplicate text: add uniqueness suffix and re-run guard.
+                print(
+                    f"  [must_post] duplicate_text_hash: tweet text is literally the "
+                    f"same as last post (hash {_safe_hash12(decision.tweet_hash)}) — "
+                    f"adding uniqueness suffix."
+                )
+                tweet = _add_uniqueness_suffix(tweet)
+                tweet_hash = compute_content_hash(tweet)
+                tweet_length = len(tweet)
+                # Re-run guard with the updated tweet so state records the new hash.
+                decision = tweet_guard.decide(guard_state, quote=guard_quote, tweet_text=tweet)
+                if not decision.should_post and decision.skip_reason not in _MUST_POST_SOFT_SKIP_REASONS:
+                    print(
+                        f"  [must_post] FAILED_HARD: tweet guard rejected regenerated tweet "
+                        f"({decision.skip_reason}) — cannot produce valid non-duplicate post."
+                    )
+                    finish_run(
+                        RunResult(
+                            outcome="FAILED_HARD_DUPLICATE_TWEET",
+                            status="fatal",
+                            skip_reason=decision.skip_reason,
+                            post_type=post_type,
+                            template_used=template_used,
+                            price_usd_oz=data['price'],
+                            tweet_length=tweet_length,
+                            content_hash=_safe_hash12(decision.tweet_hash),
+                            trigger_source=trigger_source,
+                            trigger_nonce=trigger_nonce or "(none)",
+                        ),
+                        exit_code=1,
+                    )
+                print(f"  [must_post] uniqueness suffix applied — proceeding to post.")
+            elif must_post and decision.skip_reason in _MUST_POST_SOFT_SKIP_REASONS:
+                # Soft guard reason: log context and proceed.
+                mins_str = f"{decision.minutes_since_last:.1f}" if decision.minutes_since_last is not None else "unknown"
+                print(
+                    f"  [must_post] soft guard bypassed: {decision.skip_reason}"
+                    f" (hash={_safe_hash12(decision.tweet_hash)}, move=${decision.price_move_usd or 0:.2f},"
+                    f" ts_changed={decision.provider_timestamp_changed},"
+                    f" minutes_since_last={mins_str})"
+                    f" — posting with current run-window timestamp ensuring unique text."
+                )
             else:
                 skip_msg = (
                     f"SKIP: tweet-guard — {decision.skip_reason}"
-                    f" (hash={decision.tweet_hash[:12]}, move=${decision.price_move_usd or 0:.2f},"
+                    f" (hash={_safe_hash12(decision.tweet_hash)}, move=${decision.price_move_usd or 0:.2f},"
                     f" ts_changed={decision.provider_timestamp_changed})"
                 )
                 if decision.skip_reason == "price_move_below_threshold":
@@ -1596,6 +1797,7 @@ def main():
                         f"\n   force_summary_after:    {_force_summary_min} min"
                         f"\n   force_post:             {force_post_enabled}"
                         f"\n   Note: force_post=True bypasses cooldown only, NOT price_move_below_threshold."
+                        f"\n   Tip: set POST_INTENT=must_post to bypass all soft guards."
                     )
                     if post_type == "market_closed_reference":
                         skip_msg += (
@@ -1643,8 +1845,9 @@ def main():
                     " allow_same_price_closed_market_repost=True and duplicate/cooldown guards passed."
                 )
         if str(os.environ.get('DRY_RUN_TWEET', '')).strip().lower() in ('1', 'true', 'yes'):
+            _dhash = _safe_hash12(decision.tweet_hash) if decision.tweet_hash else tweet_hash
             print("DRY_RUN_TWEET=true — would post; skipping actual X call")
-            print(f"   would-post hash: {decision.tweet_hash[:12]}")
+            print(f"   would-post hash: {_dhash}")
             finish_run(
                 RunResult(
                     outcome="DRY_RUN_READY",
@@ -1654,7 +1857,7 @@ def main():
                     template_used=template_used,
                     price_usd_oz=data['price'],
                     tweet_length=tweet_length,
-                    content_hash=decision.tweet_hash[:12],
+                    content_hash=_dhash,
                     trigger_source=trigger_source,
                     trigger_nonce=trigger_nonce or "(none)",
                 ),
@@ -1719,6 +1922,7 @@ def main():
         )
 
     # 12. Save state (only reached on successful post)
+    posted_tweet_id = post_result.get("id") if isinstance(post_result, dict) else None
     _save_last_price(data["price"], content_hash=tweet_hash)
     if tweet_guard is not None:
         try:
@@ -1726,7 +1930,7 @@ def main():
                 guard_state,  # noqa: F821 — defined when tweet_guard is loaded
                 quote=guard_quote,  # noqa: F821
                 tweet_text=tweet,
-                tweet_id=None,
+                tweet_id=posted_tweet_id,
                 reason=f"{trigger_source}_price_moved",
             )
             tweet_guard.save_state(LAST_TWEET_STATE_FILE, new_state)
@@ -1742,6 +1946,7 @@ def main():
             price_usd_oz=data['price'],
             tweet_length=tweet_length,
             content_hash=tweet_hash,
+            tweet_id=posted_tweet_id,
             trigger_source=trigger_source,
             trigger_nonce=trigger_nonce or "(none)",
         )
