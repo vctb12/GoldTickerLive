@@ -42,6 +42,14 @@ export function installChartLoader({ state, el } = {}) {
       } catch (e) {
         console.warn('[chart-loader] setDailyHistory failed', e);
       }
+      // sync initial range from persisted state
+      try {
+        if (state?.range && typeof chart.setRange === 'function') {
+          chart.setRange(state.range);
+        }
+      } catch (_e) {
+        // non-fatal
+      }
 
       // Sync language and visibility
       const obs = new MutationObserver(() => {

@@ -12,6 +12,7 @@ import { clear, el, setText, escape } from '../lib/safe-dom.js';
 import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
 import { pulseFreshness } from '../lib/freshness-pulse.js';
 import { countUp } from '../lib/count-up.js';
+import { getDayOpenPrice } from '../lib/cache.js';
 
 let _state, _el, _priceFor, _currentSpot, _showToast;
 let _chartListenersAttached = false;
@@ -480,16 +481,11 @@ export function renderChart() {
     const min = Math.min(...prices) * 0.998;
     const max = Math.max(...prices) * 1.002;
     const W = _el.chartWrap?.clientWidth || 1200;
-    const H = _el.chartWrap?.clientHeight || 430;
+    const PAD_TOP = 28;
+    const PAD_BOTTOM = 30;
+    const H = Math.max(200, (_el.chartWrap?.clientHeight || 430) - PAD_BOTTOM);
+    const chartH = H - PAD_TOP;
     _el.chart.setAttribute('viewBox', `0 0 ${W} ${H}`);
-    const pts = rows
-      .map((r, i) => {
-        const x = (i / (rows.length - 1)) * W;
-        const y = H - ((r.spot - min) / (max - min)) * (H - 40) - 20;
-        return `${x.toFixed(1)},${y.toFixed(1)}`;
-      })
-      .join(' ');
-    const sourceLabel = resolution.label;
     const svgNs = 'http://www.w3.org/2000/svg';
     function svgEl(tag, attrs, textContent) {
       const node = document.createElementNS(svgNs, tag);
@@ -497,7 +493,101 @@ export function renderChart() {
       if (textContent !== undefined) node.textContent = textContent;
       return node;
     }
+
+    // Build polyline points
+    const pts = rows
+      .map((r, i) => {
+        const x = (i / (rows.length - 1)) * W;
+        const y = PAD_TOP + chartH - ((r.spot - min) / (max - min)) * chartH;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      })
+      .join(' ');
+
+    // Closed path for gradient fill (polyline + bottom border)
+    const firstX = 0;
+    const lastX = W;
+    const bottomY = PAD_TOP + chartH;
+    const fillPts = pts + ` ${lastX},${bottomY} ${firstX},${bottomY}`;
+
+    const gradientId = 'tp-chart-gradient';
+    const sourceLabel = resolution.label;
+
     const frag = document.createDocumentFragment();
+
+    // defs: gradient
+    const defs = svgEl('defs', {});
+    const grad = svgEl('linearGradient', { id: gradientId, x1: '0', y1: '0', x2: '0', y2: '1' });
+    const stop1 = svgEl('stop', { offset: '0%', 'stop-color': '#c49a44', 'stop-opacity': '0.18' });
+    const stop2 = svgEl('stop', {
+      offset: '100%',
+      'stop-color': '#c49a44',
+      'stop-opacity': '0.01',
+    });
+    grad.append(stop1, stop2);
+    defs.append(grad);
+    frag.append(defs);
+
+    // Horizontal grid lines (4 levels)
+    for (let i = 0; i <= 3; i++) {
+      const yVal = min + ((max - min) * (3 - i)) / 3;
+      const yPos = PAD_TOP + (chartH * i) / 3;
+      frag.append(
+        svgEl('line', {
+          x1: '0',
+          y1: yPos.toFixed(1),
+          x2: String(W),
+          y2: yPos.toFixed(1),
+          stroke: 'rgba(196,154,68,0.12)',
+          'stroke-width': '1',
+          'stroke-dasharray': '4 6',
+        }),
+        svgEl(
+          'text',
+          {
+            x: '6',
+            y: (yPos - 4).toFixed(1),
+            fill: '#9d8c72',
+            'font-size': '10',
+            'font-family': 'system-ui, sans-serif',
+          },
+          `$${yVal.toFixed(0)}`
+        )
+      );
+    }
+
+    // Date labels (3 evenly-spaced)
+    const dateLabelCount = Math.min(3, rows.length);
+    for (let i = 0; i < dateLabelCount; i++) {
+      const rowIdx =
+        dateLabelCount === 1 ? 0 : Math.round((i / (dateLabelCount - 1)) * (rows.length - 1));
+      const row = rows[rowIdx];
+      const x = rows.length > 1 ? (rowIdx / (rows.length - 1)) * W : W / 2;
+      const dateStr = row.date instanceof Date ? row.date.toLocaleDateString() : String(row.date);
+      frag.append(
+        svgEl(
+          'text',
+          {
+            x: x.toFixed(1),
+            y: String(H - 4),
+            'text-anchor': i === 0 ? 'start' : i === dateLabelCount - 1 ? 'end' : 'middle',
+            fill: '#9d8c72',
+            'font-size': '10',
+            'font-family': 'system-ui, sans-serif',
+          },
+          dateStr
+        )
+      );
+    }
+
+    // Fill polygon
+    frag.append(
+      svgEl('polygon', {
+        points: fillPts,
+        fill: `url(#${gradientId})`,
+      })
+    );
+
+    // Price line
     frag.append(
       svgEl('polyline', {
         points: pts,
@@ -506,29 +596,26 @@ export function renderChart() {
         'stroke-width': '2.5',
         'stroke-linejoin': 'round',
         'stroke-linecap': 'round',
-      }),
-      svgEl(
-        'text',
-        { x: '8', y: '18', fill: '#9d8c72', 'font-size': '11' },
-        `High: ${max.toFixed(0)}`
-      ),
-      svgEl(
-        'text',
-        { x: '8', y: String(H - 6), fill: '#9d8c72', 'font-size': '11' },
-        `Low: ${min.toFixed(0)}`
-      ),
+      })
+    );
+
+    // Source label bottom-right
+    frag.append(
       svgEl(
         'text',
         {
-          x: String(W - 8),
-          y: String(H - 6),
+          x: String(W - 6),
+          y: String(H - 4),
           'text-anchor': 'end',
           fill: '#9d8c72',
-          'font-size': '11',
+          'font-size': '10',
+          'font-family': 'system-ui, sans-serif',
+          opacity: '0.7',
         },
-        `${sourceLabel} · ${rows.length} points`
+        `${sourceLabel} · ${rows.length} pts`
       )
     );
+
     _el.chart.replaceChildren(frag);
   }
 
@@ -662,10 +749,52 @@ export function renderKaratTable() {
     unit: _state.selectedUnit,
     spot,
   });
+  const dayOpenSpot = getDayOpenPrice();
+
+  // Helper: build a change indicator element from spot vs day-open
+  function buildChangeIndicator(k) {
+    if (!dayOpenSpot) return el('td', { 'data-karat-chg': k.code }, '—');
+    const now = _priceFor({
+      currency: _state.selectedCurrency,
+      karat: k.code,
+      unit: _state.selectedUnit,
+      spot,
+    });
+    const open = _priceFor({
+      currency: _state.selectedCurrency,
+      karat: k.code,
+      unit: _state.selectedUnit,
+      spot: dayOpenSpot,
+    });
+    if (!now || !open) return el('td', { 'data-karat-chg': k.code }, '—');
+    const pct = ((now - open) / open) * 100;
+    const isUp = pct >= 0;
+    const text = `${isUp ? '▲' : '▼'} ${Math.abs(pct).toFixed(2)}%`;
+    return el(
+      'td',
+      {
+        'data-karat-chg': k.code,
+        class: isUp ? 'tracker-chg-up' : 'tracker-chg-down',
+        'aria-label': `Day change: ${text}`,
+      },
+      text
+    );
+  }
 
   // Build rows on first render; update price cells in-place on subsequent renders
   // so countUp can animate from the previous value.
   const isFirstRender = !_el.karatTable.querySelector('[data-karat-price]');
+
+  // Sync thead columns when day-open becomes available
+  const thead = _el.karatTable.closest('table')?.querySelector('thead tr');
+  if (thead) {
+    const hasChgTh = thead.querySelector('[data-col="chg"]');
+    if (dayOpenSpot && !hasChgTh) {
+      thead.append(el('th', { 'data-col': 'chg' }, 'Day change'));
+    } else if (!dayOpenSpot && hasChgTh) {
+      hasChgTh.remove();
+    }
+  }
 
   if (isFirstRender) {
     const fragment = document.createDocumentFragment();
@@ -679,14 +808,14 @@ export function renderKaratTable() {
       const vs = price24 && p ? `${((p / price24) * 100).toFixed(1)}%` : '—';
       const priceCell = el('td', { 'data-karat-price': k.code }, p ? p.toFixed(2) : '—');
       const vsCell = el('td', { 'data-karat-vs': k.code }, vs);
-      fragment.append(
-        el('tr', null, [
-          el('td', null, `${k.code}K`),
-          el('td', null, `${(k.purity * 100).toFixed(1)}%`),
-          priceCell,
-          vsCell,
-        ])
-      );
+      const cells = [
+        el('td', null, `${k.code}K`),
+        el('td', null, `${(k.purity * 100).toFixed(1)}%`),
+        priceCell,
+        vsCell,
+      ];
+      if (dayOpenSpot) cells.push(buildChangeIndicator(k));
+      fragment.append(el('tr', null, cells));
     }
     clear(_el.karatTable);
     _el.karatTable.append(fragment);
@@ -709,6 +838,22 @@ export function renderKaratTable() {
         setText(priceCell, '—');
       }
       if (vsCell) setText(vsCell, vs);
+      // Update day-change cell if present
+      const chgCell = _el.karatTable.querySelector(`[data-karat-chg="${k.code}"]`);
+      if (chgCell && dayOpenSpot) {
+        const open = _priceFor({
+          currency: _state.selectedCurrency,
+          karat: k.code,
+          unit: _state.selectedUnit,
+          spot: dayOpenSpot,
+        });
+        if (p && open) {
+          const pct = ((p - open) / open) * 100;
+          const isUp = pct >= 0;
+          chgCell.textContent = `${isUp ? '▲' : '▼'} ${Math.abs(pct).toFixed(2)}%`;
+          chgCell.className = isUp ? 'tracker-chg-up' : 'tracker-chg-down';
+        }
+      }
     }
   }
 }

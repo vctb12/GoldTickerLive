@@ -1484,6 +1484,24 @@ body.tracker-workspace-basic .tracker-advanced-only {
   height: 100%;
 }
 
+/* Advanced chart container (Lightweight Charts) */
+#tp-chart-container {
+  width: 100%;
+  height: 240px;
+}
+
+/* Fallback message shown when chart library fails or no data */
+.chart-no-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  padding: 1.5rem;
+  color: var(--tp-text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
 .tracker-tooltip {
   position: absolute;
   top: 0;
@@ -1608,6 +1626,22 @@ body.tracker-workspace-basic .tracker-advanced-only {
 .tracker-table td.tracker-cell-strong {
   font-weight: var(--weight-extrabold);
   color: var(--tp-text);
+}
+
+/* Daily change indicator in karat table */
+td.tracker-chg-up,
+td.tracker-chg-down {
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+td.tracker-chg-up {
+  color: var(--color-live, #1b8a4c);
+}
+
+td.tracker-chg-down {
+  color: var(--color-error, #c94040);
 }
 
 .tracker-table-footer {
@@ -1990,6 +2024,35 @@ body.tracker-workspace-basic .tracker-advanced-only {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.85rem;
+}
+
+/* Planner result rows (used by renderPlanners) */
+.tracker-result-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--tp-border);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.tracker-result-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.tracker-result-item span {
+  color: var(--tp-text-muted);
+  min-width: 0;
+}
+
+.tracker-result-item strong {
+  color: var(--tp-text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  font-weight: var(--weight-semibold);
 }
 
 .tracker-result-card {
