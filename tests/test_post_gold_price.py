@@ -1612,8 +1612,9 @@ def test_main_scheduled_run_cannot_use_allow_same_price_repost(
 
 # ── New hardening tests ───────────────────────────────────────────────────────
 
-def test_format_tweet_always_uses_standard_variant_regardless_of_length(capsys):
-    """With X Premium, format_tweet always uses the standard template — no compact fallback."""
+def test_format_tweet_always_uses_standard_variant_when_premium(capsys, monkeypatch):
+    """With X Premium (default TWEET_MAX_CHARS=25000), the standard template is always used."""
+    monkeypatch.delenv("TWEET_MAX_CHARS", raising=False)
     data = {
         "price": 4681.84,
         "price_gram_24k": 150.38,
@@ -1637,8 +1638,66 @@ def test_format_tweet_always_uses_standard_variant_regardless_of_length(capsys):
     assert "template_variant: hourly_compact" not in out
 
 
-def test_format_tweet_returns_standard_template_within_premium_limit(capsys):
+def test_format_tweet_falls_back_to_compact_when_limit_is_280(capsys, monkeypatch):
+    """With TWEET_MAX_CHARS=280, a 304-char standard template falls back to compact."""
+    monkeypatch.setenv("TWEET_MAX_CHARS", "280")
+    data = {
+        "price": 4681.84,
+        "price_gram_24k": 150.38,
+        "price_gram_22k": 137.85,
+        "price_gram_21k": 131.58,
+        "price_gram_18k": 112.78,
+        "chp": 0.25,
+        "prev_price": None,
+        "prev_posted_at_utc": None,
+    }
+    original_standard = pg.format_hourly_tweet
+    original_compact = pg.format_hourly_tweet_compact
+    pg.format_hourly_tweet = lambda _d: "x" * 304         # exceeds 280
+    pg.format_hourly_tweet_compact = lambda _d: "y" * 260  # fits within 280
+    try:
+        result = pg.format_tweet(data, "hourly")
+    finally:
+        pg.format_hourly_tweet = original_standard
+        pg.format_hourly_tweet_compact = original_compact
+
+    assert result == "y" * 260
+    out = capsys.readouterr().out
+    assert "template_variant: hourly_compact" in out
+
+
+def test_format_tweet_warns_when_all_variants_exceed_limit(capsys, monkeypatch):
+    """When all variants exceed TWEET_MAX_CHARS, the last variant is returned with a warning."""
+    monkeypatch.setenv("TWEET_MAX_CHARS", "280")
+    data = {
+        "price": 4681.84,
+        "price_gram_24k": 150.38,
+        "price_gram_22k": 137.85,
+        "price_gram_21k": 131.58,
+        "price_gram_18k": 112.78,
+        "chp": 0.25,
+        "prev_price": None,
+        "prev_posted_at_utc": None,
+    }
+    original_standard = pg.format_hourly_tweet
+    original_compact = pg.format_hourly_tweet_compact
+    pg.format_hourly_tweet = lambda _d: "x" * 304
+    pg.format_hourly_tweet_compact = lambda _d: "y" * 299
+    try:
+        result = pg.format_tweet(data, "hourly")
+    finally:
+        pg.format_hourly_tweet = original_standard
+        pg.format_hourly_tweet_compact = original_compact
+
+    assert result == "y" * 299
+    out = capsys.readouterr().out
+    assert "⚠️" in out
+    assert "299" in out
+
+
+def test_format_tweet_returns_standard_template_within_premium_limit(capsys, monkeypatch):
     """With X Premium, even a tweet that exceeds the legacy 280-char limit is returned as-is."""
+    monkeypatch.delenv("TWEET_MAX_CHARS", raising=False)
     data = {
         "price": 4681.84,
         "price_gram_24k": 150.38,
@@ -1662,8 +1721,9 @@ def test_format_tweet_returns_standard_template_within_premium_limit(capsys):
     assert "⚠️" not in out
 
 
-def test_format_tweet_no_warning_for_normal_length_tweets(capsys):
+def test_format_tweet_no_warning_for_normal_length_tweets(capsys, monkeypatch):
     """format_tweet must NOT emit a length warning for normal-sized tweets."""
+    monkeypatch.delenv("TWEET_MAX_CHARS", raising=False)
     data = {
         "price": 4681.84,
         "price_gram_24k": 150.38,

@@ -642,7 +642,7 @@ def _trend_emoji(chp):
     return '➡️'
 
 def _spike_headline(chp, date_str):
-    """Return a catching alert headline when |chp| >= SPIKE_THRESHOLD_PCT, else None."""
+    """Return a catchy alert headline when |chp| >= SPIKE_THRESHOLD_PCT, else None."""
     if chp is None or abs(chp) < SPIKE_THRESHOLD_PCT:
         return None
     if chp >= 3.0:
@@ -939,31 +939,74 @@ def format_market_close_tweet_compact(data):
     )
 
 
-def _render_tweet(data, post_type):
-    print(f"   Post type: {post_type}")
-    if post_type == 'market_open':
-        formatter = format_market_open_tweet
-        variant_name = 'market_open'
-    elif post_type == 'market_close':
-        formatter = format_market_close_tweet
-        variant_name = 'market_close'
-    elif post_type == 'market_closed_reference':
-        formatter = format_market_closed_reference_tweet
-        variant_name = 'market_closed_reference'
-    else:
-        formatter = format_hourly_tweet
-        variant_name = 'hourly'
+def _tweet_max_chars():
+    """Return the active character limit.
 
-    tweet = formatter(data)
-    tweet_len = len(tweet)
-    # X Premium supports up to 25,000 characters; no compact fallback needed.
-    if tweet_len > 10000:
-        print(f"⚠️  tweet_length={tweet_len} > 10000 — unusually long; verify X Premium account is active")
+    Reads TWEET_MAX_CHARS from the environment (default: 25000 for X Premium).
+    Set to 280 for a standard non-Premium account to restore compact-fallback
+    behaviour.  The value is clamped to [280, 25000].
+    """
+    raw = os.environ.get('TWEET_MAX_CHARS', '25000').strip()
+    try:
+        return max(280, min(25000, int(raw)))
+    except (ValueError, TypeError):
+        return 25000
+
+
+def _render_tweet(data, post_type):
+    """Format a tweet and enforce the active character limit.
+
+    When TWEET_MAX_CHARS is 280 (non-Premium account) the function tries the
+    standard template first and falls back to the compact variant if the
+    standard template exceeds the limit.  For X Premium accounts (default
+    25,000-char limit) the standard template is always used.
+
+    If all available variants still exceed the active limit the longest
+    variant is returned with a warning — the X API will reject it if the
+    account is not Premium, which is the correct fail-fast behaviour.
+    """
+    max_chars = _tweet_max_chars()
+    print(f"   Post type: {post_type}  |  tweet_max_chars: {max_chars}")
+
+    if post_type == 'market_open':
+        variants = [('market_open', format_market_open_tweet),
+                    ('market_open_compact', format_market_open_tweet_compact)]
+    elif post_type == 'market_close':
+        variants = [('market_close', format_market_close_tweet),
+                    ('market_close_compact', format_market_close_tweet_compact)]
+    elif post_type == 'market_closed_reference':
+        variants = [('market_closed_reference', format_market_closed_reference_tweet)]
+    else:
+        variants = [('hourly', format_hourly_tweet),
+                    ('hourly_compact', format_hourly_tweet_compact)]
+
+    last_variant_name = variants[0][0]
+    last_tweet = ""
+    for variant_name, formatter in variants:
+        candidate = formatter(data)
+        last_variant_name = variant_name
+        last_tweet = candidate
+        if len(candidate) <= max_chars:
+            if variant_name != variants[0][0]:
+                print(f"   template_variant: {variant_name} (compact fallback; standard exceeded {max_chars}-char limit)")
+            return {
+                "text": candidate,
+                "template_used": variant_name,
+                "tweet_length": len(candidate),
+                "fits_limit": True,
+            }
+
+    # All variants exceed the limit — return the last (most compact) one with a warning.
+    tweet_len = len(last_tweet)
+    print(
+        f"⚠️  tweet_length={tweet_len} > {max_chars} — all variants exceed the active limit;"
+        f" posting anyway (X API will reject if account is not Premium)."
+    )
     return {
-        "text": tweet,
-        "template_used": variant_name,
+        "text": last_tweet,
+        "template_used": last_variant_name,
         "tweet_length": tweet_len,
-        "fits_limit": tweet_len <= 25000,
+        "fits_limit": False,
     }
 
 
