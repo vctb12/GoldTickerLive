@@ -116,11 +116,37 @@ jobs:
           POST_TRIGGER_NONCE:          ${{ github.event.inputs.trigger_nonce || '' }}
           ALLOW_SAME_PRICE_CLOSED_MARKET_REPOST: ${{ github.event.inputs.allow_same_price_closed_market_repost || 'false' }}
           MIN_TWEET_INTERVAL_MINUTES:  '55'
+          POST_GOLD_RESULT_PATH:       ${{ runner.temp }}/post-gold-result.json
         run: python scripts/python/post_gold_price.py
 
       - name: Commit last price state
+        env:
+          POST_GOLD_RESULT_PATH: ${{ runner.temp }}/post-gold-result.json
         run: |
           set -euo pipefail
+          RESULT_STATUS="$(python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["POST_GOLD_RESULT_PATH"])
+          if not path.exists():
+              print("unknown")
+          else:
+              try:
+                  payload = json.loads(path.read_text(encoding="utf-8"))
+                  if not isinstance(payload, dict):
+                      print("unknown")
+                  else:
+                      print(payload.get("status") or "unknown")
+              except (OSError, json.JSONDecodeError):
+                  print("unknown")
+          PY
+          )"
+          if [ "$RESULT_STATUS" = "operator_action_needed" ]; then
+            echo "runtime result status=operator_action_needed; skipping state commit."
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [ -f data/last_gold_price.json ] || [ -f data/last_tweet_state.json ]; then
@@ -142,6 +168,7 @@ jobs:
           REFRESH_PRICE_FIRST_INPUT: ${{ github.event.inputs.refresh_price_first || 'false' }}
           ALLOW_SAME_PRICE_INPUT: ${{ github.event.inputs.allow_same_price_closed_market_repost || 'false' }}
           TRIGGER_NONCE_INPUT:    ${{ github.event.inputs.trigger_nonce || '' }}
+          POST_GOLD_RESULT_PATH:  ${{ runner.temp }}/post-gold-result.json
         run: |
           {
             echo "### 🏅 Post Gold — Run Summary"
@@ -156,3 +183,47 @@ jobs:
             echo "| allow_same_price_closed_market_repost | \`$ALLOW_SAME_PRICE_INPUT\` |"
             echo "| trigger_nonce | \`${TRIGGER_NONCE_INPUT:-none}\` |"
           } >> "$GITHUB_STEP_SUMMARY"
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["POST_GOLD_RESULT_PATH"])
+          if not path.exists():
+              print("\n### Runtime outcome\nNo structured runtime outcome file was written.")
+          else:
+              try:
+                  payload = json.loads(path.read_text(encoding="utf-8"))
+              except (OSError, json.JSONDecodeError) as exc:
+                  print("\n### Runtime outcome")
+                  print(f"Best-effort summary unavailable: `{type(exc).__name__}: {exc}`")
+              else:
+                  if not isinstance(payload, dict):
+                      print("\n### Runtime outcome")
+                      print("Best-effort summary unavailable: runtime outcome payload was not a JSON object.")
+                  else:
+                      print("\n### Runtime outcome")
+                      print("| Field | Value |")
+                      print("| --- | --- |")
+                      ordered_fields = [
+                          "outcome",
+                          "status",
+                          "post_type",
+                          "template_used",
+                          "price_usd_oz",
+                          "tweet_length",
+                          "content_hash",
+                          "skip_reason",
+                          "operator_action",
+                          "reset_date",
+                          "retry_after_seconds",
+                          "trigger_source",
+                          "trigger_nonce",
+                          "detail",
+                      ]
+                      for key in ordered_fields:
+                          value = payload.get(key)
+                          if value in (None, ""):
+                              continue
+                          print(f"| {key} | `{value}` |")
+          PY

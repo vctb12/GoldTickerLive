@@ -125,9 +125,9 @@ not fetch gold prices on the normal posting path and still reuse the same cached
 `data/gold_price.json` source-of-truth. Those operator-triggered runs still obey stale-data checks,
 duplicate/content-hash checks, cooldown rules, and normal X API behavior. `dry_run=true` never
 posts. `force_post=true` only overrides the cooldown guard; it does not bypass stale, duplicate,
-content-hash, or provider-based safety checks. The repo logs the generated post and character count
-but does not block locally when the text is longer than 280 characters; X still enforces its own
-posting eligibility and length rules, including any Premium-only longer-post allowance.
+content-hash, or provider-based safety checks. The poster now uses a small template matrix with
+compact fallbacks: `market_closed_reference` is always compact, and hourly/open/close posts can fall
+back to compact variants before the workflow ever relies on X's own length enforcement.
 
 Shortcut anti-spam protection is also enabled for `source=shortcut`: the workflow still keeps
 workflow-level concurrency (`group: post-gold`, `cancel-in-progress: true`), and the Python poster
@@ -163,13 +163,11 @@ the visible inputs appear identical. This is correct behavior. See
 [`docs/x-automation-duplicate-policy.md § 8`](./x-automation-duplicate-policy.md) for the full
 analysis including the 18:29/18:46 example and the dual-state explanation.
 
-**State file dual-write issue:** `data/last_gold_price.json` is written by both
-`fetch_gold_price.py` (full normalized payload) and `post_gold_price.py` (legacy
-`{"price": ..., "posted_at_utc": ...}` schema). When `refresh_price_first=true` runs a fetch before
-posting, the fetcher overwrites `last_gold_price.json` with the normalized schema, causing the
-poster's legacy `_load_last_price()` to return `None` and print `"Previous post (legacy): none"`.
-This does not affect guard correctness — all cooldown/duplicate/price-move decisions read from
-`data/last_tweet_state.json`. The RUN CONTEXT block in the log now cross-references both files.
+**State-file authority:** `data/last_tweet_state.json` is now the authoritative previous-post source
+for cooldown, duplicate, and operator metadata. `data/last_gold_price.json` is still written for
+legacy compatibility, but the poster no longer trusts it when `last_tweet_state.json` already has a
+valid last-post record. The RUN CONTEXT block still lists both files so operators can spot schema
+drift quickly.
 
 **Workflow_dispatch inputs:**
 
@@ -200,6 +198,11 @@ It does NOT apply to scheduled runs and does NOT bypass `duplicate_text_hash`, c
   deploy workflow to avoid redeploying the site for tweet-state-only commits.
 - `data/last_tweet_state.json` stores duplicate/cooldown state plus the latest Shortcut-triggered
   attempt metadata used by the soft anti-spam guard.
+- X billing-cap failures (`SpendCapReached`) are treated as a clean skip: the workflow logs the
+  reset date, exits `0`, and does not update tweet-state files because no post was sent.
+- `post_gold.yml` also passes a temporary `POST_GOLD_RESULT_PATH` into the poster so the Python step
+  can write a structured runtime outcome file. The always-on summary step reads that file and adds a
+  machine-readable outcome table to `$GITHUB_STEP_SUMMARY`.
 
 **Shortcut safety note**
 
