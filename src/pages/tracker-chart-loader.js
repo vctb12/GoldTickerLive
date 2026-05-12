@@ -18,7 +18,7 @@ export function installChartLoader({ state, el } = {}) {
       c = document.createElement('div');
       c.id = 'tp-chart-container';
       c.style.width = '100%';
-      c.style.height = '240px';
+      // height is controlled by CSS (#tp-chart-container { height: 100%; min-height: 240px })
       // insert before the existing svg to preserve fallback
       const svg = document.getElementById('tp-chart');
       if (svg && svg.parentNode) svg.parentNode.insertBefore(c, svg);
@@ -41,6 +41,14 @@ export function installChartLoader({ state, el } = {}) {
         if (state && Array.isArray(state.history)) chart.setDailyHistory(state.history);
       } catch (e) {
         console.warn('[chart-loader] setDailyHistory failed', e);
+      }
+      // sync initial range from persisted state
+      try {
+        if (state?.range && typeof chart.setRange === 'function') {
+          chart.setRange(state.range);
+        }
+      } catch (_e) {
+        // non-fatal
       }
 
       // Sync language and visibility

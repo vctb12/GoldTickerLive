@@ -107,6 +107,14 @@ export function bindCoreEvents() {
       if (_el.historyMonth) _el.historyMonth.value = '';
       persistState(_state);
       _cb.renderAll();
+      // Sync the advanced chart if it's loaded
+      try {
+        if (window.__GOLD_CHART && typeof window.__GOLD_CHART.setRange === 'function') {
+          window.__GOLD_CHART.setRange(_state.range);
+        }
+      } catch (_e) {
+        // non-fatal
+      }
     });
   });
 

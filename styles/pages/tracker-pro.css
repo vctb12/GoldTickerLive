@@ -1146,6 +1146,31 @@ body.tracker-workspace-basic .tracker-advanced-only {
   margin-top: var(--space-4);
 }
 
+/* Base card styles for each country card in comparison workspace */
+.comparison-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--tp-border);
+  background: var(--tp-panel);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition:
+    border-color 0.2s var(--ease-out),
+    box-shadow 0.2s var(--ease-out);
+}
+
+.comparison-card:hover {
+  border-color: var(--border-accent);
+  box-shadow: var(--elev-accent);
+}
+
+.comparison-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
 .comparison-card__header {
   display: flex;
   justify-content: space-between;
@@ -1484,6 +1509,25 @@ body.tracker-workspace-basic .tracker-advanced-only {
   height: 100%;
 }
 
+/* Advanced chart container (Lightweight Charts) — fills the chart-wrap */
+#tp-chart-container {
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+}
+
+/* Fallback message shown when chart library fails or no data */
+.chart-no-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  padding: 1.5rem;
+  color: var(--tp-text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
 .tracker-tooltip {
   position: absolute;
   top: 0;
@@ -1608,6 +1652,22 @@ body.tracker-workspace-basic .tracker-advanced-only {
 .tracker-table td.tracker-cell-strong {
   font-weight: var(--weight-extrabold);
   color: var(--tp-text);
+}
+
+/* Daily change indicator in karat table */
+td.tracker-chg-up,
+td.tracker-chg-down {
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+td.tracker-chg-up {
+  color: var(--color-live, #1b8a4c);
+}
+
+td.tracker-chg-down {
+  color: var(--color-error, #c94040);
 }
 
 .tracker-table-footer {
@@ -1990,6 +2050,50 @@ body.tracker-workspace-basic .tracker-advanced-only {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.85rem;
+}
+
+/* Planner result container — stacked label/value rows */
+.tracker-result-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--tp-border);
+  background: var(--surface-secondary);
+  padding: 0.5rem 0.9rem;
+}
+
+.tracker-result-list:empty {
+  display: none;
+}
+
+/* Planner result rows (used by renderPlanners) */
+.tracker-result-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--tp-border);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.tracker-result-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.tracker-result-item span {
+  color: var(--tp-text-muted);
+  min-width: 0;
+}
+
+.tracker-result-item strong {
+  color: var(--tp-text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  font-weight: var(--weight-semibold);
 }
 
 .tracker-result-card {
@@ -3343,6 +3447,24 @@ body.tracker-workspace-basic .tracker-advanced-only {
 
 [dir='rtl'] .tracker-hero-title-sub {
   letter-spacing: 0;
+}
+
+[dir='rtl'] .comparison-card__header {
+  flex-direction: row-reverse;
+}
+
+[dir='rtl'] .comparison-card__row {
+  flex-direction: row-reverse;
+}
+
+[dir='rtl'] .tracker-result-item {
+  flex-direction: row-reverse;
+}
+
+[dir='rtl'] td.tracker-chg-up,
+[dir='rtl'] td.tracker-chg-down {
+  direction: ltr; /* keep ▲/▼ symbol left of number */
+  unicode-bidi: isolate;
 }
 
 /* ══════════════════════════════════════════════════════════════

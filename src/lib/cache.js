@@ -184,6 +184,24 @@ export function getFallbackGoldPrice() {
 }
 
 /**
+ * Return today's day-open gold price (XAU/USD) if recorded for the current
+ * Dubai calendar date, otherwise null.
+ *
+ * @returns {number|null}
+ */
+export function getDayOpenPrice() {
+  try {
+    const stored = safeGet(CACHE_KEYS.dayOpen);
+    if (!stored) return null;
+    const today = getDubaiDateString();
+    if (stored.dubaiDate !== today) return null;
+    return typeof stored.price === 'number' && stored.price > 0 ? stored.price : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Return the most-recently persisted FX rates payload, preferring the fallback
  * slot over the primary slot. Returns `null` when no cached data exists.
  *
