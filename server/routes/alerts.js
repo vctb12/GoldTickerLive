@@ -741,6 +741,15 @@ async function findSubscriptionForRule(rule) {
   );
 }
 
+/**
+ * Update notification subscription rows scoped by destination + channel.
+ * Channel scoping avoids cross-channel writes for the same destination string
+ * (for example, future email + push destinations sharing similar identifiers).
+ * @param {string} destination
+ * @param {string} channel
+ * @param {Record<string, unknown>} patch
+ * @returns {Promise<unknown>}
+ */
 function updateSubscriptionByDestination(destination, channel, patch) {
   const sb = getSupabase();
   if (sb) {
@@ -936,7 +945,7 @@ router.post('/alerts/unsubscribe', async (req, res) => {
 
 function shouldAllowJobRequest(req, dryRunRequested) {
   const configuredToken = safeTrimmed(process.env.ALERT_JOB_TOKEN, 256);
-  if (!configuredToken) return dryRunRequested === true;
+  if (!configuredToken) return Boolean(dryRunRequested);
   const inboundToken = safeTrimmed(req.get('x-alert-job-token') || req.body?.jobToken, 256);
   if (!inboundToken) return false;
   if (inboundToken.length !== configuredToken.length) return false;
@@ -1054,11 +1063,15 @@ router.post('/jobs/check-alerts', async (req, res) => {
       if (!tokenForEmail) {
         tokenForEmail = generateToken();
       }
-      if (!subscription || subscription.unsubscribe_token_hash !== hashToken(tokenForEmail)) {
+      const tokenHash = hashToken(tokenForEmail);
+      const shouldPersistToken = !subscription || subscription.unsubscribe_token_hash !== tokenHash;
+      if (shouldPersistToken) {
         await updateSubscriptionByDestination(rule.email, rule.channel, {
-          unsubscribe_token_hash: hashToken(tokenForEmail),
+          unsubscribe_token_hash: tokenHash,
           metadata: {
-            ...(subscription?.metadata && typeof subscription.metadata === 'object'
+            ...(subscription?.metadata &&
+            typeof subscription.metadata === 'object' &&
+            !Array.isArray(subscription.metadata)
               ? subscription.metadata
               : {}),
             unsubscribe_token: tokenForEmail,

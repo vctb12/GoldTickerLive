@@ -380,6 +380,8 @@ alter table public.alert_rules enable row level security;
 
 create index if not exists idx_alert_rules_active_lookup
     on public.alert_rules(is_active, symbol, currency, condition);
+create index if not exists idx_alert_rules_user_id
+    on public.alert_rules(user_id);
 create index if not exists idx_alert_rules_threshold_lookup
     on public.alert_rules(symbol, currency, threshold_value);
 create index if not exists idx_alert_rules_last_triggered
