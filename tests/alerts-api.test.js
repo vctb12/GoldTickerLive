@@ -2,8 +2,9 @@
 
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret-for-tests-only';
 process.env.ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'test-password-1234';
-process.env.NODE_ENV = process.env.NODE_ENV || 'production';
+process.env.NODE_ENV = process.env.NODE_ENV || 'test';
 process.env.ALERT_EMAIL_DRY_RUN = 'true';
+process.env.ALERTS_EXPOSE_DEV_TOKENS = 'true';
 
 const { test, after, beforeEach } = require('node:test');
 const assert = require('node:assert/strict');
@@ -202,4 +203,15 @@ test('alerts unsubscribe deactivates subscriptions via token', async () => {
   assert.equal(unsubscribe.status, 200);
   assert.equal(unsubscribe.body?.ok, true);
   assert.equal(unsubscribe.body?.data?.unsubscribed, true);
+});
+
+test('alerts job requires dry-run when ALERT_JOB_TOKEN is unset', async () => {
+  delete process.env.ALERT_JOB_TOKEN;
+  const unauthorized = await request('POST', '/api/v1/jobs/check-alerts');
+  assert.equal(unauthorized.status, 401);
+  assert.equal(unauthorized.body?.ok, false);
+
+  const allowedDryRun = await request('POST', '/api/v1/jobs/check-alerts?dryRun=true');
+  assert.equal(allowedDryRun.status, 200);
+  assert.equal(allowedDryRun.body?.ok, true);
 });

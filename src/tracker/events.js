@@ -228,7 +228,7 @@ export function bindCoreEvents() {
 
     if (delivery === 'server') {
       try {
-        const result = await _cb.createServerAlert({ scope, condition, target });
+        const result = await _cb.createServerAlert({ condition, target });
         const sentMode = result?.verifyDelivery === 'dry_run' ? 'dry-run' : 'email';
         const manageNote = result?.managementUrl
           ? ` ${_cb.tx('alerts.serverManage')}: ${result.managementUrl}`

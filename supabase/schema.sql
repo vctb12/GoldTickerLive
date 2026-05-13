@@ -391,25 +391,49 @@ drop policy if exists "Admin read alert rules" on public.alert_rules;
 create policy "Admin read alert rules"
     on public.alert_rules for select
     to authenticated
-    using (true);
+    using (
+        (user_id is not null and user_id = auth.uid())
+        or exists (
+            select 1 from public.user_profiles p
+            where p.id = auth.uid() and p.role = 'admin'
+        )
+    );
 
 drop policy if exists "Admin insert alert rules" on public.alert_rules;
 create policy "Admin insert alert rules"
     on public.alert_rules for insert
     to authenticated
-    with check (true);
+    with check (
+        (user_id is not null and user_id = auth.uid())
+        or exists (
+            select 1 from public.user_profiles p
+            where p.id = auth.uid() and p.role = 'admin'
+        )
+    );
 
 drop policy if exists "Admin update alert rules" on public.alert_rules;
 create policy "Admin update alert rules"
     on public.alert_rules for update
     to authenticated
-    using (true);
+    using (
+        (user_id is not null and user_id = auth.uid())
+        or exists (
+            select 1 from public.user_profiles p
+            where p.id = auth.uid() and p.role = 'admin'
+        )
+    );
 
 drop policy if exists "Admin delete alert rules" on public.alert_rules;
 create policy "Admin delete alert rules"
     on public.alert_rules for delete
     to authenticated
-    using (true);
+    using (
+        (user_id is not null and user_id = auth.uid())
+        or exists (
+            select 1 from public.user_profiles p
+            where p.id = auth.uid() and p.role = 'admin'
+        )
+    );
 
 create trigger alert_rules_set_updated_at
     before update on public.alert_rules
@@ -438,25 +462,52 @@ drop policy if exists "Admin read alert events" on public.alert_events;
 create policy "Admin read alert events"
     on public.alert_events for select
     to authenticated
-    using (true);
+    using (
+        exists (
+            select 1
+            from public.alert_rules r
+            where r.id = alert_events.alert_rule_id
+              and r.user_id is not null
+              and r.user_id = auth.uid()
+        )
+        or exists (
+            select 1 from public.user_profiles p
+            where p.id = auth.uid() and p.role = 'admin'
+        )
+    );
 
 drop policy if exists "Admin insert alert events" on public.alert_events;
 create policy "Admin insert alert events"
     on public.alert_events for insert
     to authenticated
-    with check (true);
+    with check (
+        exists (
+            select 1 from public.user_profiles p
+            where p.id = auth.uid() and p.role = 'admin'
+        )
+    );
 
 drop policy if exists "Admin update alert events" on public.alert_events;
 create policy "Admin update alert events"
     on public.alert_events for update
     to authenticated
-    using (true);
+    using (
+        exists (
+            select 1 from public.user_profiles p
+            where p.id = auth.uid() and p.role = 'admin'
+        )
+    );
 
 drop policy if exists "Admin delete alert events" on public.alert_events;
 create policy "Admin delete alert events"
     on public.alert_events for delete
     to authenticated
-    using (true);
+    using (
+        exists (
+            select 1 from public.user_profiles p
+            where p.id = auth.uid() and p.role = 'admin'
+        )
+    );
 
 create table if not exists public.notification_subscriptions (
     id                      uuid primary key default uuid_generate_v4(),
@@ -485,25 +536,49 @@ drop policy if exists "Admin read notification subscriptions" on public.notifica
 create policy "Admin read notification subscriptions"
     on public.notification_subscriptions for select
     to authenticated
-    using (true);
+    using (
+        (user_id is not null and user_id = auth.uid())
+        or exists (
+            select 1 from public.user_profiles p
+            where p.id = auth.uid() and p.role = 'admin'
+        )
+    );
 
 drop policy if exists "Admin insert notification subscriptions" on public.notification_subscriptions;
 create policy "Admin insert notification subscriptions"
     on public.notification_subscriptions for insert
     to authenticated
-    with check (true);
+    with check (
+        (user_id is not null and user_id = auth.uid())
+        or exists (
+            select 1 from public.user_profiles p
+            where p.id = auth.uid() and p.role = 'admin'
+        )
+    );
 
 drop policy if exists "Admin update notification subscriptions" on public.notification_subscriptions;
 create policy "Admin update notification subscriptions"
     on public.notification_subscriptions for update
     to authenticated
-    using (true);
+    using (
+        (user_id is not null and user_id = auth.uid())
+        or exists (
+            select 1 from public.user_profiles p
+            where p.id = auth.uid() and p.role = 'admin'
+        )
+    );
 
 drop policy if exists "Admin delete notification subscriptions" on public.notification_subscriptions;
 create policy "Admin delete notification subscriptions"
     on public.notification_subscriptions for delete
     to authenticated
-    using (true);
+    using (
+        (user_id is not null and user_id = auth.uid())
+        or exists (
+            select 1 from public.user_profiles p
+            where p.id = auth.uid() and p.role = 'admin'
+        )
+    );
 
 create trigger notification_subscriptions_set_updated_at
     before update on public.notification_subscriptions

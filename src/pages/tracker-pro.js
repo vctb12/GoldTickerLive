@@ -296,6 +296,7 @@ function ui() {
     watchlistGrid: document.getElementById('tp-watchlist-grid'),
     decisionCues: document.getElementById('tp-decision-cues'),
     alertScope: document.getElementById('tp-alert-scope'),
+    alertScopeWrap: document.getElementById('tp-alert-scope-wrap'),
     alertDelivery: document.getElementById('tp-alert-delivery'),
     alertDirection: document.getElementById('tp-alert-direction'),
     alertTarget: document.getElementById('tp-alert-target'),
@@ -358,6 +359,9 @@ function updateServerAlertUiState() {
 
   if (el.alertEmailWrap) {
     el.alertEmailWrap.hidden = !(wantsServer && canUseServer);
+  }
+  if (el.alertScopeWrap) {
+    el.alertScopeWrap.hidden = wantsServer && canUseServer;
   }
 
   if (wantsServer && !canUseServer) {

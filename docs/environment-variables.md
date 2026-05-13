@@ -24,6 +24,7 @@
 | `NODE_ENV`                  | No          | Environment mode                                   | `production`                  |
 | `PORT`                      | No          | Server port (default: 3000)                        | `3000`                        |
 | `ALERT_EMAIL_DRY_RUN`       | No          | Force alert emails into log-only dry-run mode      | `true`                        |
+| `ALERTS_EXPOSE_DEV_TOKENS`  | No          | Expose dev verification token in non-prod only     | `true`                        |
 | `ALERT_JOB_TOKEN`           | No          | Shared secret for `POST /api/v1/jobs/check-alerts` | `[random long token]`         |
 | `ALERTS_DATA_FILE`          | No          | Override alert file-storage path (dev/test)        | `/tmp/alerts-v1.json`         |
 | `ALERTS_PRICE_FILE`         | No          | Override snapshot JSON used by alert checks        | `/tmp/gold_price.json`        |

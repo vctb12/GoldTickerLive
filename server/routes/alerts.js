@@ -57,8 +57,13 @@ function hashToken(token) {
     .digest('hex');
 }
 
-function randomId(prefix) {
-  return `${prefix}_${crypto.randomBytes(12).toString('hex')}`;
+function generateUuid() {
+  if (typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+  const bytes = crypto.randomBytes(16);
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = bytes.toString('hex');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 }
 
 function safeTrimmed(value, maxLength = 240) {
@@ -198,7 +203,7 @@ async function createAlertRule(record) {
 
   const row = {
     ...record,
-    id: randomId('arule'),
+    id: generateUuid(),
     management_token_hash: hashToken(managementToken),
     verification_token_hash: hashToken(verificationToken),
     verified_at: null,
@@ -208,7 +213,7 @@ async function createAlertRule(record) {
   };
 
   const subscription = {
-    id: randomId('nsub'),
+    id: generateUuid(),
     user_id: row.user_id,
     channel: row.channel,
     destination: row.email,
@@ -221,6 +226,7 @@ async function createAlertRule(record) {
       symbol: row.symbol,
       currency: row.currency,
       createdAt,
+      unsubscribe_token: unsubscribeToken,
     },
     created_at: createdAt,
     updated_at: createdAt,
@@ -438,7 +444,7 @@ async function unsubscribeByToken(token) {
 
 async function writeAlertEvent(event) {
   const row = {
-    id: randomId('aevt'),
+    id: generateUuid(),
     created_at: nowIso(),
     ...event,
   };
@@ -488,6 +494,12 @@ function sanitizeRuleForResponse(rule) {
 function shouldUseDryRunEmail() {
   if (String(process.env.ALERT_EMAIL_DRY_RUN || '').toLowerCase() === 'true') return true;
   return !(hasValue(process.env.RESEND_API_KEY) && hasValue(process.env.RESEND_FROM_EMAIL));
+}
+
+function shouldExposeDevVerificationToken() {
+  if (String(process.env.NODE_ENV || '').toLowerCase() === 'production') return false;
+  const expose = String(process.env.ALERTS_EXPOSE_DEV_TOKENS || 'true').toLowerCase();
+  return expose !== 'false';
 }
 
 async function sendEmail({ to, subject, html, text, tags = [] }) {
@@ -698,17 +710,51 @@ async function loadActiveRules() {
   );
 }
 
-function updateSubscriptionByDestination(destination, patch) {
+async function findSubscriptionForRule(rule) {
+  const sb = getSupabase();
+  if (sb) {
+    try {
+      const { data, error } = await sb
+        .from('notification_subscriptions')
+        .select('*')
+        .eq('destination', rule.email)
+        .eq('channel', rule.channel)
+        .is('unsubscribed_at', null)
+        .order('created_at', { ascending: false })
+        .limit(1);
+      if (!error && Array.isArray(data) && data[0]) return data[0];
+    } catch (error) {
+      console.warn(
+        `[alerts] Supabase subscription lookup failed, using file fallback: ${error.message}`
+      );
+    }
+  }
+
+  const store = readStore();
+  return (
+    store.notification_subscriptions
+      .filter(
+        (sub) =>
+          sub.destination === rule.email && sub.channel === rule.channel && !sub.unsubscribed_at
+      )
+      .sort((a, b) => Date.parse(b.created_at || 0) - Date.parse(a.created_at || 0))[0] || null
+  );
+}
+
+function updateSubscriptionByDestination(destination, channel, patch) {
   const sb = getSupabase();
   if (sb) {
     return sb
       .from('notification_subscriptions')
       .update({ ...patch, updated_at: nowIso() })
-      .eq('destination', destination);
+      .eq('destination', destination)
+      .eq('channel', channel);
   }
   const store = readStore();
   store.notification_subscriptions = store.notification_subscriptions.map((row) =>
-    row.destination === destination ? { ...row, ...patch, updated_at: nowIso() } : row
+    row.destination === destination && row.channel === channel
+      ? { ...row, ...patch, updated_at: nowIso() }
+      : row
   );
   writeStore(store);
   return Promise.resolve();
@@ -742,6 +788,7 @@ router.post('/alerts', async (req, res) => {
   });
 
   const isDryMode = shouldUseDryRunEmail();
+  const shouldExposeDevToken = shouldExposeDevVerificationToken();
   return res.status(201).json(
     successResponse(
       {
@@ -753,7 +800,9 @@ router.post('/alerts', async (req, res) => {
         unsubscribeHint: buildUrl(
           `/api/v1/alerts/unsubscribe?token=${encodeURIComponent(created.unsubscribeToken)}`
         ),
-        ...(isDryMode ? { devVerificationToken: created.verificationToken } : {}),
+        ...(isDryMode && shouldExposeDevToken
+          ? { devVerificationToken: created.verificationToken }
+          : {}),
       },
       {
         source: 'alerts-api',
@@ -821,7 +870,9 @@ router.delete('/alerts/:managementToken', async (req, res) => {
     is_active: false,
     unsubscribed_at: nowIso(),
   });
-  await updateSubscriptionByDestination(existing.email, { unsubscribed_at: nowIso() });
+  await updateSubscriptionByDestination(existing.email, existing.channel, {
+    unsubscribed_at: nowIso(),
+  });
   return res.json(
     successResponse(
       {
@@ -883,9 +934,9 @@ router.post('/alerts/unsubscribe', async (req, res) => {
   );
 });
 
-function shouldAllowJobRequest(req) {
+function shouldAllowJobRequest(req, dryRunRequested) {
   const configuredToken = safeTrimmed(process.env.ALERT_JOB_TOKEN, 256);
-  if (!configuredToken) return true;
+  if (!configuredToken) return dryRunRequested === true;
   const inboundToken = safeTrimmed(req.get('x-alert-job-token') || req.body?.jobToken, 256);
   if (!inboundToken) return false;
   if (inboundToken.length !== configuredToken.length) return false;
@@ -900,13 +951,17 @@ function isDryRunRequest(req) {
 }
 
 router.post('/jobs/check-alerts', async (req, res) => {
-  if (!shouldAllowJobRequest(req)) {
+  const dryRun = isDryRunRequest(req);
+  if (!shouldAllowJobRequest(req, dryRun)) {
     return res
       .status(401)
-      .json(errorResponse('UNAUTHORIZED', 'Invalid or missing alert job token.'));
+      .json(
+        errorResponse(
+          'UNAUTHORIZED',
+          'Invalid or missing alert job token. When ALERT_JOB_TOKEN is unset, only dry-run requests are allowed.'
+        )
+      );
   }
-
-  const dryRun = isDryRunRequest(req);
   const snapshot = await readLatestPriceSnapshot();
   if (!snapshot || !Number.isFinite(snapshot.xauUsdPerOz) || snapshot.xauUsdPerOz <= 0) {
     return res
@@ -971,6 +1026,7 @@ router.post('/jobs/check-alerts', async (req, res) => {
     }
 
     triggered += 1;
+    const subscription = await findSubscriptionForRule(rule);
     if (dryRun) {
       await writeAlertEvent({
         alert_rule_id: rule.id,
@@ -993,10 +1049,22 @@ router.post('/jobs/check-alerts', async (req, res) => {
     }
 
     try {
-      const tokenForEmail = generateToken();
-      await updateSubscriptionByDestination(rule.email, {
-        unsubscribe_token_hash: hashToken(tokenForEmail),
-      });
+      const storedToken = subscription?.metadata?.unsubscribe_token;
+      let tokenForEmail = safeTrimmed(storedToken, 256);
+      if (!tokenForEmail) {
+        tokenForEmail = generateToken();
+      }
+      if (!subscription || subscription.unsubscribe_token_hash !== hashToken(tokenForEmail)) {
+        await updateSubscriptionByDestination(rule.email, rule.channel, {
+          unsubscribe_token_hash: hashToken(tokenForEmail),
+          metadata: {
+            ...(subscription?.metadata && typeof subscription.metadata === 'object'
+              ? subscription.metadata
+              : {}),
+            unsubscribe_token: tokenForEmail,
+          },
+        });
+      }
       const delivery = await sendTriggeredAlertEmail({
         rule,
         currentPrice: currentValue,
@@ -1064,6 +1132,7 @@ router.post('/jobs/check-alerts', async (req, res) => {
 router.__private = {
   computeRulePrice,
   shouldTrigger,
+  shouldExposeDevVerificationToken,
 };
 
 module.exports = router;
