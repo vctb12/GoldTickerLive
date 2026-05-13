@@ -30,11 +30,11 @@ const MAX_LEAD_MESSAGE_LENGTH = 1200;
 const MAX_LEAD_SOURCE_LENGTH = 120;
 const MAX_STORED_EVENTS = 5000;
 const MAX_STORED_LEADS = 5000;
-const YYYY_MM_FORMAT_LENGTH = 7;
+const ISO_YEAR_MONTH_STRING_LENGTH = 7;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const EVENTS_RATE_LIMIT_WINDOW_MINUTES = 15;
 const LEADS_RATE_LIMIT_WINDOW_MINUTES = 15;
-const DEFAULT_PROVIDER_RUNS_LIMIT = 100;
+const DEFAULT_LIMIT_PROVIDER_RUNS = 100;
 
 const PACKAGE_VERSION = (() => {
   try {
@@ -329,7 +329,7 @@ router.get('/prices/history', async (req, res) => {
         returned: points.length,
         points: points.map((point) => ({
           timestampUtc:
-            typeof point.date === 'string' && point.date.length === YYYY_MM_FORMAT_LENGTH
+            typeof point.date === 'string' && point.date.length === ISO_YEAR_MONTH_STRING_LENGTH
               ? `${point.date}-01T00:00:00.000Z`
               : point.date,
           xauUsdPerOz: point.price,
@@ -469,7 +469,7 @@ router.get('/providers/status', async (_req, res) => {
 });
 
 router.get('/providers/runs', async (req, res) => {
-  const limit = parseLimit(req.query.limit, DEFAULT_PROVIDER_RUNS_LIMIT, 1000);
+  const limit = parseLimit(req.query.limit, DEFAULT_LIMIT_PROVIDER_RUNS, 1000);
   const provider = sanitizeString(req.query.provider, 120, null);
 
   const providerRuns = await querySupabase('provider_runs', (table) => {

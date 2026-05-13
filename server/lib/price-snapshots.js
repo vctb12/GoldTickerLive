@@ -39,9 +39,15 @@ function sortObjectDeep(value) {
     }, {});
 }
 
+/**
+ * Return a deterministic JSON representation by recursively sorting object keys
+ * before serialization. This ensures semantically identical payloads hash to
+ * the same value even when key insertion order differs.
+ *
+ * @param {unknown} value
+ * @returns {string}
+ */
 function stableJsonStringify(value) {
-  // Duplicate prevention depends on this hash being deterministic even when
-  // object key insertion order differs across producers/runtimes.
   return JSON.stringify(sortObjectDeep(value));
 }
 

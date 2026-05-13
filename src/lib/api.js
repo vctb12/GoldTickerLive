@@ -159,7 +159,7 @@ export async function fetchGold() {
   // GitHub Pages mode stays fully functional.
   try {
     const backendRes = await fetchWithTimeout(
-      `${GOLD_BACKEND_URL}?t=${Date.now()}`,
+      GOLD_BACKEND_URL,
       Math.min(CONSTANTS.GOLD_FETCH_TIMEOUT, 4000)
     );
     const backendData = await backendRes.json();
