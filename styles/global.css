@@ -3580,6 +3580,128 @@ main {
 }
 
 /* ═══════════════════════════════════════════════
+   Global loading/error/empty state utilities
+   ═══════════════════════════════════════════════ */
+
+/* Price unavailable inline */
+.price-unavailable {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+/* Freshness inline chip — used near any live price surface */
+.freshness-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  border-radius: var(--radius-badge);
+  padding: 0.15rem 0.55rem;
+}
+
+.freshness-chip--live {
+  background: var(--color-live-bg);
+  color: var(--color-live);
+  border: 1px solid var(--color-live-border);
+}
+
+.freshness-chip--cached {
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+  border: 1px solid var(--color-warning-border);
+}
+
+.freshness-chip--stale {
+  background: var(--color-stale-bg);
+  color: var(--color-stale);
+  border: 1px solid rgb(168 64 0 / 25%);
+}
+
+/* Section anchor links — used for internal "→ See methodology" type links */
+.section-anchor-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--color-gold-dark);
+  text-decoration: none;
+  font-weight: var(--weight-semibold);
+  border-bottom: 1px solid var(--color-gold);
+  padding-bottom: 1px;
+  transition:
+    color var(--transition),
+    border-color var(--transition);
+}
+
+.section-anchor-link:hover {
+  color: var(--color-gold-deep);
+  border-color: var(--color-gold-deep);
+  text-decoration: none;
+}
+
+/* Inline trust note — sentence-level disclaimer near price surfaces */
+.trust-note-inline {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+  font-style: italic;
+}
+
+/* Alert/info box — reusable across pages (similar to method-warning) */
+.info-box {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: var(--surface-secondary);
+}
+
+.info-box--gold {
+  background: var(--color-gold-bg);
+  border-color: var(--color-gold);
+}
+
+.info-box--warning {
+  background: var(--color-warning-bg);
+  border-color: var(--color-warning-border);
+  color: var(--color-warning-text);
+}
+
+.info-box--tip {
+  background: var(--color-live-bg);
+  border-color: var(--color-live-border);
+}
+
+.info-box__icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 0.1rem;
+}
+
+.info-box__body {
+  flex: 1;
+}
+
+.info-box__title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  margin: 0 0 var(--space-1);
+}
+
+.info-box__text {
+  font-size: var(--text-sm);
+  margin: 0;
+  line-height: var(--leading-relaxed);
+}
+
+/* ═══════════════════════════════════════════════
    FAQ (global — used on home, learn, country pages)
    ═══════════════════════════════════════════════ */
 .faq-item,

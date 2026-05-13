@@ -25,6 +25,20 @@ removing all legacy `--color-surface` / `--color-border-subtle` / `--color-text`
 `--color-text-muted` fallback overrides across home.css, shops.css, calculator.css, stub.css,
 order.css, global.css).
 
+### 2026-05-13 flagship UI/CX rewrite — Phase 1
+
+- [x] Country gold-price pages: FAQPage + Dataset JSON-LD generated for all 18 country pages via
+      inject-schema.js; Saudi Arabia Product schema priceCurrency corrected (AED→SAR); SEO inventory
+      refreshed; all 410+ tests passing.
+- [x] Global CSS: Added freshness-chip, price-unavailable, section-anchor-link, trust-note-inline,
+      and info-box utility component classes.
+- [x] Methodology page: Added "Before you visit a shop" info-box callout linking to spot-vs-retail
+      guide and calculator.
+- [x] Calculator: Added hero breakdown chips (what's included / excluded) for clearer upfront trust.
+- [x] Tracker: Added spot-vs-retail secondary link in hero and tools sidebar.
+- [x] Country FAQ headings improved: "Country page FAQ" → "Gold price questions & answers".
+- [x] Homepage how-it-works section: Added spot-vs-retail link for better internal discovery.
+
 ### 2026-05-12 scoped execution slice (core public pages)
 
 Scope for this cycle is intentionally constrained to top-level public website surfaces first (home,

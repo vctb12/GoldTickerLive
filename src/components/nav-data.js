@@ -75,7 +75,8 @@ const RAW_NAV_DATA = {
         cta: {
           href: '/methodology.html',
           label: 'How prices are calculated',
-          description: 'Spot, karat purity, FX, AED peg, cache, and limits.',
+          description:
+            'Transparent formula: XAU/USD spot, troy oz conversion, karat purity, AED fixed peg 3.6725',
         },
         sections: [
           {

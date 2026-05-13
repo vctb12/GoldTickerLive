@@ -119,6 +119,16 @@
   border-bottom: none;
 }
 
+.method-section--callout {
+  border: none;
+  margin-bottom: 0;
+  padding-bottom: var(--space-6);
+}
+
+.info-box__text + .info-box__text {
+  margin-top: var(--space-2);
+}
+
 .method-section h2 {
   font-size: 1.4rem;
   font-weight: var(--weight-bold);
