@@ -100,6 +100,46 @@ async function retryWithBackoff(fn, maxRetries = 2) {
 }
 
 const GOLD_DATA_URL = '/data/gold_price.json';
+const GOLD_BACKEND_URL = '/api/v1/prices/latest';
+
+function normalizeGoldResponse(data) {
+  if (!data || typeof data !== 'object') return null;
+
+  const apiEnvelopeData =
+    data?.ok === true && data?.data && typeof data.data === 'object' ? data.data : null;
+  const payload = apiEnvelopeData || data;
+  const normalizedPrice = payload?.xauUsdPerOz ?? payload?.xau_usd_per_oz;
+  const legacyPrice = payload?.gold?.ounce_usd;
+  const price =
+    typeof normalizedPrice === 'number' && normalizedPrice > 0
+      ? normalizedPrice
+      : typeof legacyPrice === 'number' && legacyPrice > 0
+        ? legacyPrice
+        : null;
+
+  if (typeof price !== 'number' || price <= 0) return null;
+
+  const updatedAt =
+    payload?.timestampUtc ||
+    payload?.timestamp_utc ||
+    payload?.fetchedAtUtc ||
+    payload?.fetched_at_utc ||
+    new Date().toISOString();
+
+  const source =
+    payload?.provider ||
+    payload?.source_provider ||
+    payload?.source ||
+    data?.meta?.source ||
+    'goldpricez';
+
+  return {
+    price,
+    updatedAt,
+    source,
+    raw: data,
+  };
+}
 
 /**
  * Fetch the current gold spot price (XAU/USD) from the committed static data
@@ -113,10 +153,20 @@ const GOLD_DATA_URL = '/data/gold_price.json';
 export async function fetchGold() {
   if (_simulateGoldFail) throw new NetworkError('Simulated gold API failure');
 
-  // Data comes from a single, committed file written every 6 min by
-  // .github/workflows/gold-price-fetch.yml.
-  // We fetch same-origin with cache-busting so the freshness timestamp
-  // in the payload is the truth.
+  // Prefer backend API when available, then fall back to static JSON so
+  // GitHub Pages mode stays fully functional.
+  try {
+    const backendRes = await fetchWithTimeout(
+      `${GOLD_BACKEND_URL}?t=${Date.now()}`,
+      Math.min(CONSTANTS.GOLD_FETCH_TIMEOUT, 4000)
+    );
+    const backendData = await backendRes.json();
+    const normalized = normalizeGoldResponse(backendData);
+    if (normalized) return normalized;
+  } catch {
+    // Backend unavailable or invalid; continue to static fallback.
+  }
+
   try {
     return await retryWithBackoff(async () => {
       const res = await fetchWithTimeout(
@@ -124,19 +174,9 @@ export async function fetchGold() {
         CONSTANTS.GOLD_FETCH_TIMEOUT
       );
       const data = await res.json();
-      const normalizedPrice = data?.xau_usd_per_oz;
-      const legacyPrice = data?.gold?.ounce_usd;
-      const price =
-        typeof normalizedPrice === 'number' && normalizedPrice > 0 ? normalizedPrice : legacyPrice;
-      if (typeof price !== 'number' || price <= 0) {
-        throw new DataError('Invalid gold price data file');
-      }
-      return {
-        price,
-        updatedAt: data.timestamp_utc || data.fetched_at_utc || new Date().toISOString(),
-        source: data.provider || data.source || 'goldpricez',
-        raw: data,
-      };
+      const normalized = normalizeGoldResponse(data);
+      if (!normalized) throw new DataError('Invalid gold price data file');
+      return normalized;
     });
   } catch {
     // Fetching the static data file failed — fall through to cached fallback.

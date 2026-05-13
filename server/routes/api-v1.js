@@ -8,6 +8,12 @@ const rateLimit = require('express-rate-limit');
 const { atomicWriteJSON } = require('../lib/fs-atomic');
 const { getRuntimeEnvSnapshot, validateServerEnv } = require('../lib/env-validation');
 const { successResponse, errorResponse } = require('../lib/api-response');
+const { getSupabaseClient } = require('../lib/supabase-client');
+const {
+  normalizeHistoryRange,
+  getHistoryWindowStart,
+  validatePricePayload,
+} = require('../lib/price-snapshots');
 
 const router = express.Router();
 const ROOT = path.resolve(__dirname, '../..');
@@ -27,6 +33,7 @@ const MAX_STORED_LEADS = 5000;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const EVENTS_RATE_LIMIT_WINDOW_MINUTES = 15;
 const LEADS_RATE_LIMIT_WINDOW_MINUTES = 15;
+const DEFAULT_PROVIDER_RUNS_LIMIT = 100;
 
 const PACKAGE_VERSION = (() => {
   try {
@@ -111,6 +118,57 @@ function sanitizeString(value, maxLength, fallback = null) {
   return cleaned || fallback;
 }
 
+async function querySupabase(table, queryBuilder) {
+  const sb = getSupabaseClient(false);
+  if (!sb) return null;
+  try {
+    const query = sb.from(table);
+    const { data, error } = await queryBuilder(query);
+    if (error) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+function mapPricePayloadToApiData(pricePayload) {
+  return {
+    xauUsdPerOz: pricePayload?.xau_usd_per_oz ?? pricePayload?.gold?.ounce_usd ?? null,
+    usdPerGram24k: pricePayload?.usd_per_gram_24k ?? null,
+    aedPerGram24k: pricePayload?.aed_per_gram_24k ?? pricePayload?.gold?.gram_aed ?? null,
+    karatsAedPerGram: pricePayload?.karats_aed_per_gram || null,
+    timestampUtc: pricePayload?.timestamp_utc || null,
+    fetchedAtUtc: pricePayload?.fetched_at_utc || null,
+    provider: pricePayload?.provider || pricePayload?.source || null,
+    providerChain: pricePayload?.provider_chain || null,
+    freshnessSeconds:
+      typeof pricePayload?.freshness_seconds === 'number' ? pricePayload.freshness_seconds : null,
+    isFresh: typeof pricePayload?.is_fresh === 'boolean' ? pricePayload?.is_fresh : null,
+    isFallback: typeof pricePayload?.is_fallback === 'boolean' ? pricePayload?.is_fallback : null,
+    isMarketOpen:
+      typeof pricePayload?.is_market_open === 'boolean' ? pricePayload?.is_market_open : null,
+    sourceMode: 'file',
+  };
+}
+
+function mapSnapshotRowToLatestApiData(row) {
+  return {
+    xauUsdPerOz: row?.xau_usd_per_oz ?? null,
+    usdPerGram24k: null,
+    aedPerGram24k: row?.xau_aed_per_gram ?? null,
+    karatsAedPerGram: null,
+    timestampUtc: row?.timestamp_utc || null,
+    fetchedAtUtc: row?.fetched_at_utc || null,
+    provider: row?.source_provider || null,
+    providerChain: row?.provider_chain || null,
+    freshnessSeconds: typeof row?.freshness_seconds === 'number' ? row.freshness_seconds : null,
+    isFresh: typeof row?.is_fresh === 'boolean' ? row.is_fresh : null,
+    isFallback: typeof row?.is_fallback === 'boolean' ? row.is_fallback : null,
+    isMarketOpen: typeof row?.is_market_open === 'boolean' ? row.is_market_open : null,
+    sourceMode: 'supabase',
+  };
+}
+
 const eventsRateLimiter = rateLimit({
   windowMs: EVENTS_RATE_LIMIT_WINDOW_MINUTES * 60 * 1000,
   max: 60,
@@ -170,7 +228,25 @@ router.get('/config/public', (_req, res) => {
   res.json(successResponse(data, { source: 'backend-config', freshness: 'current' }));
 });
 
-router.get('/prices/latest', (_req, res) => {
+router.get('/prices/latest', async (_req, res) => {
+  const latestSnapshotRows = await querySupabase('price_snapshots', (table) =>
+    table.select('*').order('timestamp_utc', { ascending: false }).limit(1)
+  );
+
+  if (Array.isArray(latestSnapshotRows) && latestSnapshotRows.length > 0) {
+    const latest = mapSnapshotRowToLatestApiData(latestSnapshotRows[0]);
+    return res.json(
+      successResponse(latest, {
+        source: latest.provider || 'price_snapshots',
+        freshness:
+          latest.isFresh === true ? 'fresh' : latest.isFresh === false ? 'stale' : 'unknown',
+        extra: {
+          mode: 'supabase',
+        },
+      })
+    );
+  }
+
   const pricePayload = readJsonFile(GOLD_PRICE_FILE);
   if (!pricePayload) {
     return res
@@ -178,51 +254,194 @@ router.get('/prices/latest', (_req, res) => {
       .json(errorResponse('PRICE_DATA_UNAVAILABLE', 'Price data file is unavailable or invalid.'));
   }
 
-  const data = {
-    xauUsdPerOz: pricePayload.xau_usd_per_oz ?? pricePayload?.gold?.ounce_usd ?? null,
-    usdPerGram24k: pricePayload?.usd_per_gram_24k ?? null,
-    aedPerGram24k: pricePayload?.aed_per_gram_24k ?? pricePayload?.gold?.gram_aed ?? null,
-    karatsAedPerGram: pricePayload?.karats_aed_per_gram || null,
-    timestampUtc: pricePayload?.timestamp_utc || null,
-    fetchedAtUtc: pricePayload?.fetched_at_utc || null,
-    provider: pricePayload?.provider || pricePayload?.source || null,
-    isFresh: typeof pricePayload?.is_fresh === 'boolean' ? pricePayload?.is_fresh : null,
-    isFallback: typeof pricePayload?.is_fallback === 'boolean' ? pricePayload?.is_fallback : null,
-  };
+  const data = mapPricePayloadToApiData(pricePayload);
 
   return res.json(
     successResponse(data, {
       source: data.provider || 'gold_price_file',
       freshness: computeFreshnessLabel(pricePayload),
+      extra: {
+        mode: 'file',
+      },
     })
   );
 });
 
-router.get('/prices/history', (req, res) => {
+router.get('/prices/history', async (req, res) => {
+  const range = normalizeHistoryRange(req.query.range);
+  const supabaseStart = getHistoryWindowStart(range);
+  const supabaseRows = await querySupabase('price_snapshots', (table) =>
+    table
+      .select(
+        'timestamp_utc,fetched_at_utc,xau_usd_per_oz,xau_aed_per_gram,source_provider,freshness_seconds,is_fresh,is_fallback'
+      )
+      .gte('timestamp_utc', supabaseStart)
+      .order('timestamp_utc', { ascending: true })
+      .limit(5000)
+  );
+
+  if (Array.isArray(supabaseRows) && supabaseRows.length > 0) {
+    return res.json(
+      successResponse(
+        {
+          range,
+          total: supabaseRows.length,
+          returned: supabaseRows.length,
+          points: supabaseRows.map((row) => ({
+            timestampUtc: row.timestamp_utc,
+            fetchedAtUtc: row.fetched_at_utc,
+            xauUsdPerOz: row.xau_usd_per_oz,
+            xauAedPerGram: row.xau_aed_per_gram,
+            provider: row.source_provider,
+            freshnessSeconds: row.freshness_seconds,
+            isFresh: row.is_fresh,
+            isFallback: row.is_fallback,
+          })),
+          sourceMode: 'supabase',
+        },
+        {
+          source: 'price_snapshots',
+          freshness: 'historical',
+          extra: { mode: 'supabase' },
+        }
+      )
+    );
+  }
+
   const history = readJsonFile(PRICE_HISTORY_FILE);
   if (!Array.isArray(history)) {
     return res
       .status(503)
       .json(errorResponse('PRICE_HISTORY_UNAVAILABLE', 'Historical price dataset is unavailable.'));
   }
-  const limit = parseLimit(req.query.limit, 120, 1000);
+  const limit = parseLimit(req.query.limit, 120, 5000);
   const points = history.slice(-limit);
   return res.json(
     successResponse(
       {
+        range,
         total: history.length,
         returned: points.length,
-        points,
+        points: points.map((point) => ({
+          timestampUtc:
+            typeof point.date === 'string' && point.date.length === 7
+              ? `${point.date}-01T00:00:00.000Z`
+              : point.date,
+          xauUsdPerOz: point.price,
+          provider: point.source || 'historical-baseline',
+          granularity: point.granularity || (String(point.date).length === 7 ? 'monthly' : 'daily'),
+        })),
+        sourceMode: 'file',
       },
       {
         source: 'historical-baseline',
         freshness: 'reference',
+        extra: { mode: 'file' },
       }
     )
   );
 });
 
-router.get('/providers/status', (_req, res) => {
+router.get('/prices/snapshots', async (req, res) => {
+  const limit = parseLimit(req.query.limit, 120, 1000);
+  const provider = sanitizeString(req.query.provider, 120, null);
+
+  const supabaseRows = await querySupabase('price_snapshots', (table) => {
+    let query = table
+      .select(
+        'id,timestamp_utc,fetched_at_utc,xau_usd_per_oz,xau_aed_per_gram,source_provider,provider_chain,freshness_seconds,is_fresh,is_fallback,raw_payload_hash,created_at'
+      )
+      .order('timestamp_utc', { ascending: false })
+      .limit(limit);
+    if (provider) query = query.eq('source_provider', provider);
+    return query;
+  });
+
+  if (Array.isArray(supabaseRows) && supabaseRows.length > 0) {
+    return res.json(
+      successResponse(
+        {
+          total: supabaseRows.length,
+          returned: supabaseRows.length,
+          snapshots: supabaseRows,
+          sourceMode: 'supabase',
+        },
+        {
+          source: 'price_snapshots',
+          freshness: 'historical',
+          extra: { mode: 'supabase' },
+        }
+      )
+    );
+  }
+
+  const payload = readJsonFile(GOLD_PRICE_FILE);
+  const validated = validatePricePayload(payload);
+  const snapshots = validated.ok
+    ? [
+        {
+          id: null,
+          timestamp_utc: validated.normalized.timestampUtc,
+          fetched_at_utc: validated.normalized.fetchedAtUtc,
+          xau_usd_per_oz: validated.normalized.xauUsdPerOz,
+          xau_aed_per_gram: validated.normalized.xauAedPerGram,
+          source_provider: validated.normalized.sourceProvider,
+          provider_chain: null,
+          freshness_seconds: validated.normalized.freshnessSeconds,
+          is_fresh: validated.normalized.isFresh,
+          is_fallback: validated.normalized.isFallback,
+          raw_payload_hash: null,
+          created_at: null,
+        },
+      ]
+    : [];
+
+  return res.json(
+    successResponse(
+      {
+        total: snapshots.length,
+        returned: snapshots.length,
+        snapshots,
+        sourceMode: 'file',
+      },
+      {
+        source: 'gold_price_file',
+        freshness: snapshots.length ? computeFreshnessLabel(payload) : 'unknown',
+        extra: { mode: 'file' },
+      }
+    )
+  );
+});
+
+router.get('/providers/status', async (_req, res) => {
+  const providerHealthRows = await querySupabase('provider_health', (table) =>
+    table.select('*').order('provider_name', { ascending: true }).limit(200)
+  );
+
+  if (Array.isArray(providerHealthRows) && providerHealthRows.length > 0) {
+    const latestSnapshotRows = await querySupabase('price_snapshots', (table) =>
+      table
+        .select('source_provider,timestamp_utc')
+        .order('timestamp_utc', { ascending: false })
+        .limit(1)
+    );
+    return res.json(
+      successResponse(
+        {
+          providers: providerHealthRows,
+          latestProvider: latestSnapshotRows?.[0]?.source_provider || null,
+          latestTimestampUtc: latestSnapshotRows?.[0]?.timestamp_utc || null,
+          sourceMode: 'supabase',
+        },
+        {
+          source: 'provider_health',
+          freshness: 'current',
+          extra: { mode: 'supabase' },
+        }
+      )
+    );
+  }
+
   const state = readJsonFile(PROVIDER_STATE_FILE);
   const latest = readJsonFile(GOLD_PRICE_FILE);
   return res.json(
@@ -232,10 +451,58 @@ router.get('/providers/status', (_req, res) => {
         providerState: state || {},
         latestProvider: latest?.provider || latest?.source || null,
         latestTimestampUtc: latest?.timestamp_utc || latest?.fetched_at_utc || null,
+        providers: [],
+        sourceMode: 'file',
       },
       {
         source: 'provider-state',
         freshness: state ? 'current' : 'unknown',
+        extra: { mode: 'file' },
+      }
+    )
+  );
+});
+
+router.get('/providers/runs', async (req, res) => {
+  const limit = parseLimit(req.query.limit, DEFAULT_PROVIDER_RUNS_LIMIT, 1000);
+  const provider = sanitizeString(req.query.provider, 120, null);
+
+  const providerRuns = await querySupabase('provider_runs', (table) => {
+    let query = table.select('*').order('created_at', { ascending: false }).limit(limit);
+    if (provider) query = query.eq('provider_name', provider);
+    return query;
+  });
+
+  if (Array.isArray(providerRuns) && providerRuns.length > 0) {
+    return res.json(
+      successResponse(
+        {
+          total: providerRuns.length,
+          returned: providerRuns.length,
+          runs: providerRuns,
+          sourceMode: 'supabase',
+        },
+        {
+          source: 'provider_runs',
+          freshness: 'current',
+          extra: { mode: 'supabase' },
+        }
+      )
+    );
+  }
+
+  return res.json(
+    successResponse(
+      {
+        total: 0,
+        returned: 0,
+        runs: [],
+        sourceMode: 'file',
+      },
+      {
+        source: 'provider-state',
+        freshness: 'unknown',
+        extra: { mode: 'file' },
       }
     )
   );
