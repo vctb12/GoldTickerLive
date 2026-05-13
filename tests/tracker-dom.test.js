@@ -135,6 +135,14 @@ test('tracker-dom: alerts overlay has role=dialog and aria-modal', () => {
   );
 });
 
+test('tracker-dom: alerts delivery selector exists', () => {
+  assert.ok(/id="tp-alert-delivery"/.test(HTML), '#tp-alert-delivery must exist');
+});
+
+test('tracker-dom: server alert email field exists', () => {
+  assert.ok(/id="tp-alert-email"/.test(HTML), '#tp-alert-email must exist');
+});
+
 test('tracker-dom: planner overlay has role=dialog and aria-modal', () => {
   assert.ok(
     /id="tp-overlay-planner"[\s\S]*?role="dialog"/.test(HTML) ||

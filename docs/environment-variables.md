@@ -11,18 +11,23 @@
 
 ## Optional Variables (Express Server / Self-Hosted)
 
-| Variable                    | Required    | Description                                     | Example                       |
-| --------------------------- | ----------- | ----------------------------------------------- | ----------------------------- |
-| `JWT_SECRET`                | Server/test | Secret for signing JWT admin tokens (32+ chars) | `[random 64-char hex string]` |
-| `ADMIN_PASSWORD`            | Server/test | Admin panel password (bcrypt-hashed at startup) | `[strong password]`           |
-| `ADMIN_ACCESS_PIN`          | Server/test | 6+ digit numeric PIN gating the admin login     | `123456`                      |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server/CI   | Supabase service-role key (bypasses RLS)        | `eyJhbGciOi...`               |
-| `STORAGE_BACKEND`           | No          | `file` (default) or `supabase`                  | `supabase`                    |
-| `GA4_MEASUREMENT_ID`        | No          | Google Analytics 4 measurement ID               | `G-XXXXXXXXXX`                |
-| `ADSENSE_CLIENT_ID`         | No          | Google AdSense publisher ID                     | `ca-pub-1234567890`           |
-| `CORS_ORIGINS`              | No          | Allowed CORS origins (comma-separated)          | `https://example.com`         |
-| `NODE_ENV`                  | No          | Environment mode                                | `production`                  |
-| `PORT`                      | No          | Server port (default: 3000)                     | `3000`                        |
+| Variable                    | Required    | Description                                        | Example                       |
+| --------------------------- | ----------- | -------------------------------------------------- | ----------------------------- |
+| `JWT_SECRET`                | Server/test | Secret for signing JWT admin tokens (32+ chars)    | `[random 64-char hex string]` |
+| `ADMIN_PASSWORD`            | Server/test | Admin panel password (bcrypt-hashed at startup)    | `[strong password]`           |
+| `ADMIN_ACCESS_PIN`          | Server/test | 6+ digit numeric PIN gating the admin login        | `123456`                      |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server/CI   | Supabase service-role key (bypasses RLS)           | `eyJhbGciOi...`               |
+| `STORAGE_BACKEND`           | No          | `file` (default) or `supabase`                     | `supabase`                    |
+| `GA4_MEASUREMENT_ID`        | No          | Google Analytics 4 measurement ID                  | `G-XXXXXXXXXX`                |
+| `ADSENSE_CLIENT_ID`         | No          | Google AdSense publisher ID                        | `ca-pub-1234567890`           |
+| `CORS_ORIGINS`              | No          | Allowed CORS origins (comma-separated)             | `https://example.com`         |
+| `NODE_ENV`                  | No          | Environment mode                                   | `production`                  |
+| `PORT`                      | No          | Server port (default: 3000)                        | `3000`                        |
+| `ALERT_EMAIL_DRY_RUN`       | No          | Force alert emails into log-only dry-run mode      | `true`                        |
+| `ALERTS_EXPOSE_DEV_TOKENS`  | No          | Expose dev verification token in non-prod only     | `true`                        |
+| `ALERT_JOB_TOKEN`           | No          | Shared secret for `POST /api/v1/jobs/check-alerts` | `[random long token]`         |
+| `ALERTS_DATA_FILE`          | No          | Override alert file-storage path (dev/test)        | `/tmp/alerts-v1.json`         |
+| `ALERTS_PRICE_FILE`         | No          | Override snapshot JSON used by alert checks        | `/tmp/gold_price.json`        |
 
 > **Note.** `JWT_SECRET`, `ADMIN_PASSWORD`, and `ADMIN_ACCESS_PIN` are **required at module load**
 > by `server/lib/auth.js` — without them the server throws at startup and `npm test` fails
@@ -78,3 +83,5 @@ See [`.env.example`](../.env.example) in the repo root for a complete template.
   Secrets only
 - `STORAGE_BACKEND=supabase` switches the Express server's repository layer from file-based to
   Supabase
+- Alerts v1 uses Resend when `RESEND_API_KEY` + `RESEND_FROM_EMAIL` are both configured; otherwise
+  it runs safely in dry-run/log-only mode.

@@ -939,6 +939,13 @@
               <div class="tracker-subpanel-head"><h3>Create alert</h3></div>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
+                  <span id="tp-alert-delivery-label">Delivery</span>
+                  <select id="tp-alert-delivery" aria-labelledby="tp-alert-delivery-label">
+                    <option value="local">Browser notification (local)</option>
+                    <option value="server">Email alert (server)</option>
+                  </select>
+                </label>
+                <label class="tracker-field" id="tp-alert-scope-wrap">
                   <span id="tp-alert-scope-label">Watch price</span>
                   <select id="tp-alert-scope" aria-labelledby="tp-alert-scope-label">
                     <option value="selected">Selected view (current karat + currency)</option>
@@ -968,6 +975,19 @@
                     Use spot-linked reference prices as a guide. Retail prices may differ.
                   </span>
                 </label>
+                <label class="tracker-field" id="tp-alert-email-wrap" hidden>
+                  <span id="tp-alert-email-label">Email for server alerts</span>
+                  <input
+                    type="email"
+                    id="tp-alert-email"
+                    aria-labelledby="tp-alert-email-label"
+                    placeholder="name@example.com"
+                    autocomplete="email"
+                  />
+                  <span class="tracker-help-text" id="tp-alert-email-hint">
+                    Server alerts require email verification and include unsubscribe links.
+                  </span>
+                </label>
               </div>
               <div class="tracker-inline-actions">
                 <button class="btn btn-primary" type="button" id="tp-save-alert">
@@ -978,13 +998,15 @@
                 </button>
               </div>
               <p class="tracker-help-text" id="tp-alert-permission"></p>
+              <p class="tracker-help-text" id="tp-alert-server-status" aria-live="polite"></p>
             </article>
 
             <article class="tracker-subpanel">
               <div class="tracker-subpanel-head"><h3>Saved alerts</h3></div>
               <p class="tracker-help-text tracker-browser-only-note" id="tp-alert-browser-note">
-                <strong>Browser-only:</strong> Alerts fire only while this tab is open.
-                Closing or refreshing the tab stops all alerts. No server-side delivery.
+                <strong>Local alerts:</strong> Browser alerts fire only while this tab is open.
+                Server email alerts (if available) require verification and run from backend checks.
+                They may be unavailable when backend services are unreachable.
               </p>
               <div class="tracker-stack-list" id="tp-alert-list" aria-live="polite"></div>
             </article>
