@@ -18,7 +18,9 @@ node_modules/
 *.swp
 
 # Editors
-.vscode/
+.vscode/*
+!.vscode/mcp.example.json
+.vscode/mcp.json
 .idea/
 
 # Environment
