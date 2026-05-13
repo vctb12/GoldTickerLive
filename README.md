@@ -241,6 +241,13 @@ The Express admin backend (`server.js`) refuses to start without `JWT_SECRET`, `
 keys — lives in [`docs/environment-variables.md`](./docs/environment-variables.md). A `.env.example`
 template ships in repo root.
 
+### Local MCP setup (safe pattern)
+
+- Keep `.vscode/mcp.json` local-only (ignored by git).
+- Start from [`.vscode/mcp.example.json`](./.vscode/mcp.example.json).
+- Never hardcode Supabase PATs or other secrets in MCP config.
+- For CLI/non-login auth, set `SUPABASE_ACCESS_TOKEN` in your shell or CI environment.
+
 ---
 
 ## All Pages & Tools

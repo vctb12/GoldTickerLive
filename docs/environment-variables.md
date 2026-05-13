@@ -73,6 +73,19 @@ These are configured as repository secrets in GitHub (Settings → Secrets → A
 
 See [`.env.example`](../.env.example) in the repo root for a complete template.
 
+## Local MCP config (`.vscode/mcp.json`)
+
+- `.vscode/mcp.json` is **local-only** and must never be committed.
+- Copy from [`../.vscode/mcp.example.json`](../.vscode/mcp.example.json) and keep local values out
+  of git.
+- Prefer OAuth/http MCP setup where possible, or use environment variables for stdio/CLI mode.
+- For non-login CLI usage, use `SUPABASE_ACCESS_TOKEN` from your shell/CI environment (do not
+  hardcode PAT values in config files).
+- Manage Supabase personal access tokens in **Supabase Dashboard → Account → Access Tokens**.
+- If Supabase currently shows **“No access tokens found”**, a previously leaked token is likely
+  already unavailable/revoked, but the repository must still be cleaned and protected against
+  recommits.
+
 ## Notes
 
 - Never commit `.env` files to the repository
@@ -85,3 +98,6 @@ See [`.env.example`](../.env.example) in the repo root for a complete template.
   Supabase
 - Alerts v1 uses Resend when `RESEND_API_KEY` + `RESEND_FROM_EMAIL` are both configured; otherwise
   it runs safely in dry-run/log-only mode.
+- Never commit personal access tokens or credentials, including Supabase PATs, Supabase service-role
+  keys, database URLs with embedded passwords, X/Twitter tokens, Telegram bot tokens, Discord
+  webhooks, or GitHub tokens.
