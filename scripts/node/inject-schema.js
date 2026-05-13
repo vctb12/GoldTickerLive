@@ -154,6 +154,49 @@ function getArticleSchema(options) {
   };
 }
 
+/**
+ * FAQPage schema for pages with FAQ content.
+ * @param {Array<{q: string, a: string}>} questions
+ */
+function getFAQPageSchema(questions) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: questions.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.a,
+      },
+    })),
+  };
+}
+
+/**
+ * Dataset schema for price data pages.
+ * @param {Object} options
+ */
+function getDatasetSchema(options) {
+  const { name, description, url, variableMeasured = 'Gold price per gram' } = options;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name,
+    description,
+    url,
+    creator: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+    license: `${SITE_URL}/terms.html`,
+    variableMeasured,
+    isAccessibleForFree: true,
+    inLanguage: ['en', 'ar'],
+  };
+}
+
 // ── URL to Breadcrumb Parser ────────────────────────────────────────────────
 
 /**
@@ -267,11 +310,15 @@ function generateSchemasForPage(filePath, content) {
     }
   }
 
-  // Price pages get Product schema
+  // Price pages get Product + FAQPage + Dataset schemas
   if (pageType === 'price') {
     // Extract country/karat from path
     const countryMatch = relativePath.match(/countries\/([^\/]+)/);
     const karatMatch = relativePath.match(/(\d+k)/i);
+
+    // Extract currency code from page title (e.g. "— SAR reference rates")
+    const currencyMatch = pageTitle.match(/—\s*([A-Z]{3})\s+reference rates/);
+    const currency = currencyMatch ? currencyMatch[1] : 'AED';
 
     schemas.push(
       getProductSchema({
@@ -279,6 +326,34 @@ function generateSchemasForPage(filePath, content) {
         description: pageDescription,
         country: countryMatch ? countryMatch[1].toUpperCase() : 'UAE',
         karat: karatMatch ? karatMatch[1].toUpperCase() : '24K',
+        currency,
+      })
+    );
+
+    // Extract FAQ data from embedded country-page-data JSON (body script tag)
+    const pageDataMatch = content.match(
+      /<script[^>]+id=["']country-page-data["'][^>]*>([\s\S]*?)<\/script>/i
+    );
+    if (pageDataMatch) {
+      try {
+        const pageData = JSON.parse(pageDataMatch[1]);
+        const faqItems = pageData.faqEn || [];
+        if (faqItems.length > 0) {
+          schemas.push(getFAQPageSchema(faqItems));
+        }
+      } catch {
+        // Malformed JSON — skip FAQ schema
+      }
+    }
+
+    // Dataset schema for the price data
+    const pageUrl = canonicalUrl || `${SITE_URL}${urlPath}`;
+    schemas.push(
+      getDatasetSchema({
+        name: pageTitle,
+        description: pageDescription,
+        url: pageUrl,
+        variableMeasured: 'Gold price per gram',
       })
     );
   }
