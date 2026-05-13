@@ -104,7 +104,7 @@ function updateLead(id, updates) {
 
 /**
  * Count leads grouped by status.
- * @returns {{ new: number, contacted: number, converted: number, closed: number, total: number }}
+ * @returns {{ new: number, contacted: number, converted: number, closed: number, spam: number, total: number }}
  */
 function getLeadCounts() {
   const leads = _readStore().leads;
@@ -113,8 +113,21 @@ function getLeadCounts() {
     contacted: leads.filter((l) => l.status === 'contacted').length,
     converted: leads.filter((l) => l.status === 'converted').length,
     closed: leads.filter((l) => l.status === 'closed').length,
+    spam: leads.filter((l) => l.status === 'spam').length,
     total: leads.length,
   };
+}
+
+/**
+ * Count leads matching a filter (without pagination) — used for accurate page totals.
+ * @param {{ status?: string, type?: string }} [filter]
+ * @returns {number}
+ */
+function getLeadsTotal(filter = {}) {
+  let leads = _readStore().leads;
+  if (filter.status) leads = leads.filter((l) => l.status === filter.status);
+  if (filter.type) leads = leads.filter((l) => l.type === filter.type);
+  return leads.length;
 }
 
 // ---------------------------------------------------------------------------
@@ -148,6 +161,7 @@ module.exports = {
   getLeads,
   updateLead,
   getLeadCounts,
+  getLeadsTotal,
   insertEvent,
   getEventsByLeadId,
 };

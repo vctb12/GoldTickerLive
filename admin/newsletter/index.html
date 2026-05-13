@@ -233,28 +233,44 @@
 
       // ── Export CSV ───────────────────────────────────────────────────────
       document.getElementById('btn-export-csv').addEventListener('click', async () => {
+        const btn = document.getElementById('btn-export-csv');
+        btn.disabled = true;
+        btn.textContent = 'Exporting…';
         try {
-          const data = await apiGet('/api/v1/newsletter/subscribers?per_page=100&page=1');
           const rows = [['Email', 'Status', 'Locale', 'Source', 'Frequency', 'Confirmed', 'Joined']];
-          (data.data || []).forEach((s) => {
-            rows.push([
-              s.email,
-              s.status,
-              s.locale || 'en',
-              s.source || '',
-              s.preferences?.frequency || 'weekly',
-              s.confirmed_at || '',
-              s.created_at || '',
-            ]);
-          });
+          let page = 1;
+          let totalPages = 1;
+          do {
+            const data = await apiGet(`/api/v1/newsletter/subscribers?per_page=100&page=${page}`);
+            (data.data || []).forEach((s) => {
+              rows.push([
+                s.email,
+                s.status,
+                s.locale || 'en',
+                s.source || '',
+                s.preferences?.frequency || 'weekly',
+                s.confirmed_at || '',
+                s.created_at || '',
+              ]);
+            });
+            totalPages = data.pagination?.pages ?? 1;
+            page++;
+          } while (page <= totalPages);
+
           const csv = rows.map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
           const blob = new Blob([csv], { type: 'text/csv' });
           const url = URL.createObjectURL(blob);
-          const a = Object.assign(document.createElement('a'), { href: url, download: `newsletter-subscribers-${new Date().toISOString().slice(0,10)}.csv` });
+          const a = Object.assign(document.createElement('a'), {
+            href: url,
+            download: `newsletter-subscribers-${new Date().toISOString().slice(0, 10)}.csv`,
+          });
           a.click();
           URL.revokeObjectURL(url);
         } catch (e) {
           alert('Export failed: ' + e.message);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Export CSV';
         }
       });
 

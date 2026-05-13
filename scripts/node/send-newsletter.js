@@ -116,12 +116,17 @@ async function sendNewsletter(type = 'daily') {
 
       const emails = batch.map((s) => {
         const unsubUrl = `${siteUrl}/content/unsubscribe/?email=${encodeURIComponent(s.email)}`;
-        const html = content.html.replace(/\{\{email\}\}/g, s.email).replace(
-          '</body>',
-          `<div style="text-align:center;padding:16px;font-size:0.75rem;color:#64748b">
+        const unsubFooter = `<div style="text-align:center;padding:16px;font-size:0.75rem;color:#64748b">
             <a href="${unsubUrl}" style="color:#64748b">Unsubscribe</a>
-          </div></body>`
-        );
+          </div>`;
+        // Append unsubscribe block before </body> when the marker exists, or unconditionally
+        // at the end so it is never silently dropped (CAN-SPAM / GDPR requirement).
+        let html = content.html.replace(/\{\{email\}\}/g, s.email);
+        if (html.includes('</body>')) {
+          html = html.replace('</body>', `${unsubFooter}</body>`);
+        } else {
+          html = `${html}${unsubFooter}`;
+        }
         return { to: s.email, subject: content.subject, html, text: content.text || '' };
       });
 

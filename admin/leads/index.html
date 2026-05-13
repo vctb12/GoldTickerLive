@@ -247,12 +247,15 @@
             </tr>
           `).join('');
 
-          // Pagination (basic — the getLeads call doesn't track total pages with offsets)
-          paginationBar.hidden = allLeads.length < 50;
+          // Pagination — use server-provided totals
+          const pg = data.pagination || {};
+          const totalPages = pg.pages || 1;
+          paginationBar.hidden = totalPages <= 1;
           if (!paginationBar.hidden) {
             document.getElementById('btn-prev').disabled = page <= 1;
-            document.getElementById('btn-next').disabled = allLeads.length < 50;
-            document.getElementById('pagination-info').textContent = `Page ${page}`;
+            document.getElementById('btn-next').disabled = page >= totalPages;
+            document.getElementById('pagination-info').textContent =
+              `Page ${page} of ${totalPages} (${pg.total ?? allLeads.length} leads)`;
           }
 
           // View buttons

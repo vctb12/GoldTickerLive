@@ -164,13 +164,17 @@ router.get('/admin/leads', authMiddleware('admin'), (req, res) => {
     const page = Math.max(1, parseInt(req.query.page) || 1);
     const perPage = Math.min(100, Math.max(1, parseInt(req.query.per_page) || 50));
 
+    const statusArg = ALLOWED_LEAD_STATUSES.has(status) ? status : null;
+    const typeArg = ALLOWED_LEAD_TYPES.has(type) ? type : null;
+
     const leads = repo.getLeads({
-      status: ALLOWED_LEAD_STATUSES.has(status) ? status : null,
-      type: ALLOWED_LEAD_TYPES.has(type) ? type : null,
+      status: statusArg,
+      type: typeArg,
       limit: perPage,
       offset: (page - 1) * perPage,
     });
 
+    const total = repo.getLeadsTotal({ status: statusArg, type: typeArg });
     const counts = repo.getLeadCounts();
 
     return res.json({
@@ -180,6 +184,8 @@ router.get('/admin/leads', authMiddleware('admin'), (req, res) => {
       pagination: {
         page,
         per_page: perPage,
+        total,
+        pages: Math.ceil(total / perPage) || 1,
       },
     });
   } catch (err) {

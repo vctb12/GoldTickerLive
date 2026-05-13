@@ -190,8 +190,8 @@ router.post('/subscribe', subscribeLimiter, async (req, res) => {
     const existing = repo.findByEmail(email);
     if (existing) {
       if (existing.status === 'active') {
-        // Already active — respond as if success to avoid enumeration
-        return res.status(200).json({ success: true, message: 'Already subscribed.' });
+        // Already active — return the same message as a new subscriber to avoid enumeration
+        return res.status(200).json({ success: true, message: 'Check your inbox to confirm.' });
       }
       if (existing.status === 'pending') {
         // Re-send verification
