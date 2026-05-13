@@ -40,6 +40,8 @@ function sortObjectDeep(value) {
 }
 
 function stableJsonStringify(value) {
+  // Duplicate prevention depends on this hash being deterministic even when
+  // object key insertion order differs across producers/runtimes.
   return JSON.stringify(sortObjectDeep(value));
 }
 
@@ -133,7 +135,9 @@ async function insertSnapshotIfNew(supabase, row) {
 }
 
 async function insertProviderRun(supabase, normalized, { circuitState = null } = {}) {
-  const status = normalized.isFresh ? 'success' : normalized.isFallback ? 'fallback' : 'stale';
+  let status = 'stale';
+  if (normalized.isFresh) status = 'success';
+  else if (normalized.isFallback) status = 'fallback';
   const row = {
     provider_name: normalized.sourceProvider,
     status,

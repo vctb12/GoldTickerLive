@@ -30,6 +30,7 @@ const MAX_LEAD_MESSAGE_LENGTH = 1200;
 const MAX_LEAD_SOURCE_LENGTH = 120;
 const MAX_STORED_EVENTS = 5000;
 const MAX_STORED_LEADS = 5000;
+const YYYY_MM_FORMAT_LENGTH = 7;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const EVENTS_RATE_LIMIT_WINDOW_MINUTES = 15;
 const LEADS_RATE_LIMIT_WINDOW_MINUTES = 15;
@@ -124,9 +125,13 @@ async function querySupabase(table, queryBuilder) {
   try {
     const query = sb.from(table);
     const { data, error } = await queryBuilder(query);
-    if (error) return null;
+    if (error) {
+      console.warn(`[api-v1] Supabase query failed for table "${table}": ${error.message}`);
+      return null;
+    }
     return data;
-  } catch {
+  } catch (error) {
+    console.warn(`[api-v1] Supabase query exception for table "${table}": ${error.message}`);
     return null;
   }
 }
@@ -324,7 +329,7 @@ router.get('/prices/history', async (req, res) => {
         returned: points.length,
         points: points.map((point) => ({
           timestampUtc:
-            typeof point.date === 'string' && point.date.length === 7
+            typeof point.date === 'string' && point.date.length === YYYY_MM_FORMAT_LENGTH
               ? `${point.date}-01T00:00:00.000Z`
               : point.date,
           xauUsdPerOz: point.price,

@@ -102,12 +102,14 @@ async function retryWithBackoff(fn, maxRetries = 2) {
 const GOLD_DATA_URL = '/data/gold_price.json';
 const GOLD_BACKEND_URL = '/api/v1/prices/latest';
 
+function unwrapApiEnvelope(data) {
+  return data?.ok === true && data?.data && typeof data.data === 'object' ? data.data : data;
+}
+
 function normalizeGoldResponse(data) {
   if (!data || typeof data !== 'object') return null;
 
-  const apiEnvelopeData =
-    data?.ok === true && data?.data && typeof data.data === 'object' ? data.data : null;
-  const payload = apiEnvelopeData || data;
+  const payload = unwrapApiEnvelope(data);
   const normalizedPrice = payload?.xauUsdPerOz ?? payload?.xau_usd_per_oz;
   const legacyPrice = payload?.gold?.ounce_usd;
   const price =

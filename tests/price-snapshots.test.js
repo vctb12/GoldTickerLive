@@ -25,7 +25,7 @@ function samplePayload() {
 }
 
 function createSupabaseMock({ duplicate = false } = {}) {
-  const state = { inserts: [] };
+  const state = { inserts: [], eqCalls: [], limitCalls: [] };
   return {
     state,
     from(table) {
@@ -33,10 +33,12 @@ function createSupabaseMock({ duplicate = false } = {}) {
       return {
         select() {
           const chain = {
-            eq() {
+            eq(field, value) {
+              state.eqCalls.push([field, value]);
               return chain;
             },
-            limit() {
+            limit(value) {
+              state.limitCalls.push(value);
               return Promise.resolve({
                 data: duplicate ? [{ id: 'existing-id' }] : [],
                 error: null,
@@ -90,6 +92,12 @@ test('insertSnapshotIfNew prevents duplicate inserts for same key', async () => 
   assert.equal(result.inserted, false);
   assert.equal(result.duplicate, true);
   assert.equal(mock.state.inserts.length, 0);
+  assert.deepEqual(mock.state.eqCalls, [
+    ['timestamp_utc', row.timestamp_utc],
+    ['source_provider', row.source_provider],
+    ['raw_payload_hash', row.raw_payload_hash],
+  ]);
+  assert.deepEqual(mock.state.limitCalls, [1]);
 });
 
 test('insertSnapshotIfNew inserts when duplicate does not exist', async () => {
