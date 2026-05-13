@@ -16,6 +16,11 @@ import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { renderAdSlot } from '../components/adSlot.js';
 import { el, clear } from '../lib/safe-dom.js';
 import { track, EVENTS } from '../lib/analytics.js';
+import {
+  createSavedCalculation,
+  isAuthenticated as isAccountAuthenticated,
+  redirectToAccount,
+} from '../lib/public-account-client.js';
 
 /**
  * Helper: render a list of {label, value} rows into a container using safe
@@ -149,6 +154,9 @@ const T = {
     trust_method_link: 'Full methodology',
     copy_result: 'Copy result',
     copied_result: 'Copied!',
+    save_result: 'Save to account',
+    saved_result: 'Saved',
+    save_requires_auth: 'Sign in to sync this result across devices?',
   },
   ar: {
     pageTitle: 'حاسبة الذهب',
@@ -238,6 +246,9 @@ const T = {
     trust_method_link: 'المنهجية الكاملة',
     copy_result: 'نسخ النتيجة',
     copied_result: 'تم النسخ!',
+    save_result: 'حفظ في الحساب',
+    saved_result: 'تم الحفظ',
+    save_requires_auth: 'هل تريد تسجيل الدخول لمزامنة هذه النتيجة عبر الأجهزة؟',
   },
 };
 
@@ -823,8 +834,10 @@ function applyLang() {
   setTrustNote();
   set('calc-country-link', t('country_link'));
   document.querySelectorAll('.calc-copy-btn').forEach((btn) => {
-    btn.textContent = t('copy_result');
-    btn.setAttribute('aria-label', t('copy_result'));
+    const isSave = btn.classList.contains('calc-save-btn');
+    const label = isSave ? t('save_result') : t('copy_result');
+    btn.textContent = label;
+    btn.setAttribute('aria-label', label);
   });
 
   document.documentElement.lang = STATE.lang;
@@ -1041,6 +1054,7 @@ function initCopyBtn() {
   document.addEventListener('click', (e) => {
     const b = e.target.closest('.calc-copy-btn[data-target]');
     if (!b) return;
+    if (b.classList.contains('calc-save-btn')) return;
     const targetEl = document.getElementById(b.dataset.target);
     const text = targetEl?.textContent?.trim();
     if (!text || text === '—') return;
@@ -1061,6 +1075,85 @@ function initCopyBtn() {
       navigator.clipboard.writeText(text).then(done).catch(tryFallbackCopy);
     } else {
       tryFallbackCopy();
+    }
+  });
+
+  document.addEventListener('click', async (e) => {
+    const button = e.target.closest('.calc-save-btn[data-save-calculation]');
+    if (!button) return;
+    const targetEl = document.getElementById(button.dataset.target || '');
+    const valueText = targetEl?.textContent?.trim();
+    if (!valueText || valueText === '—') return;
+
+    const tool = button.dataset.saveCalculation || 'value';
+    const payloadByTool = {
+      value: {
+        weight: document.getElementById('val-weight')?.value || null,
+        unit: document.getElementById('val-unit')?.value || null,
+        karat: document.getElementById('val-karat')?.value || null,
+        currency: document.getElementById('val-currency')?.value || null,
+      },
+      scrap: {
+        weight: document.getElementById('scrap-weight')?.value || null,
+        unit: document.getElementById('scrap-unit')?.value || null,
+        karat: document.getElementById('scrap-karat')?.value || null,
+        payout: document.getElementById('scrap-payout')?.value || null,
+        currency: document.getElementById('scrap-currency')?.value || null,
+      },
+      zakat: {
+        weight: document.getElementById('zakat-weight')?.value || null,
+        unit: document.getElementById('zakat-unit')?.value || null,
+        karat: document.getElementById('zakat-karat')?.value || null,
+        currency: document.getElementById('zakat-currency')?.value || null,
+      },
+      buying: {
+        amount: document.getElementById('buy-amount')?.value || null,
+        currency: document.getElementById('buy-currency')?.value || null,
+        karat: document.getElementById('buy-karat')?.value || null,
+      },
+      convert: {
+        amount: document.getElementById('conv-amount')?.value || null,
+        from: document.getElementById('conv-from')?.value || null,
+      },
+    };
+
+    const payload = {
+      tool,
+      label: `${tool} calculation`,
+      input_data: payloadByTool[tool] || {},
+      output_data: { value: valueText },
+    };
+
+    const fallback = () => {
+      try {
+        const items = JSON.parse(localStorage.getItem('gold_saved_calculations_local_v1') || '[]');
+        items.unshift({ ...payload, created_at: new Date().toISOString() });
+        localStorage.setItem(
+          'gold_saved_calculations_local_v1',
+          JSON.stringify(items.slice(0, 200))
+        );
+      } catch {
+        // ignore quota/storage issues
+      }
+    };
+
+    if (!isAccountAuthenticated()) {
+      fallback();
+      if (window.confirm(t('save_requires_auth'))) redirectToAccount();
+      return;
+    }
+
+    try {
+      await createSavedCalculation(payload);
+      const original = button.textContent;
+      button.textContent = `✓ ${t('saved_result')}`;
+      button.setAttribute('aria-label', t('saved_result'));
+      setTimeout(() => {
+        button.textContent = original || t('save_result');
+        button.setAttribute('aria-label', t('save_result'));
+      }, 1600);
+    } catch {
+      fallback();
     }
   });
 }

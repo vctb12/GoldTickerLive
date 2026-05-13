@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Sign In — Gold Ticker Live</title>
+    <meta
+      name="description"
+      content="Sign in to save watchlists, calculator outputs, and favorite shops across devices."
+    />
+    <link rel="canonical" href="https://goldtickerlive.com/account.html" />
+    <link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/account.html" />
+    <link rel="alternate" hreflang="en" href="https://goldtickerlive.com/account.html" />
+    <link rel="alternate" hreflang="ar" href="https://goldtickerlive.com/account.html?lang=ar" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="./styles/critical.css" />
+    <link rel="stylesheet" href="./styles/global.css" />
+    <link rel="stylesheet" href="./styles/pages/account.css" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <main id="main-content" class="account-page">
+      <section class="account-shell" aria-labelledby="account-title">
+        <p class="account-kicker" id="account-kicker">Public account</p>
+        <h1 id="account-title">Sign in to save your tools</h1>
+        <p class="account-lead" id="account-lead">
+          Keep saved calculations, watchlists, and favorite shops synced across devices.
+        </p>
+        <p class="account-note" id="account-note">
+          Public account access is separate from the admin panel and does not grant admin privileges.
+        </p>
+
+        <div class="account-card">
+          <div class="account-tabs" role="tablist" aria-label="Authentication actions">
+            <button id="account-tab-signin" class="account-tab is-active" type="button">Sign in</button>
+            <button id="account-tab-signup" class="account-tab" type="button">Create account</button>
+          </div>
+
+          <form id="account-form-signin" class="account-form">
+            <label for="account-signin-email">Email</label>
+            <input id="account-signin-email" type="email" autocomplete="email" required />
+            <label for="account-signin-password">Password</label>
+            <input
+              id="account-signin-password"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+            <button class="btn btn-primary" type="submit" id="account-signin-submit">Sign in</button>
+          </form>
+
+          <form id="account-form-signup" class="account-form" hidden>
+            <label for="account-signup-email">Email</label>
+            <input id="account-signup-email" type="email" autocomplete="email" required />
+            <label for="account-signup-password">Password (min 8 chars)</label>
+            <input
+              id="account-signup-password"
+              type="password"
+              autocomplete="new-password"
+              minlength="8"
+              required
+            />
+            <button class="btn btn-primary" type="submit" id="account-signup-submit">
+              Create account
+            </button>
+          </form>
+
+          <button class="btn btn-outline account-oauth" type="button" id="account-google-btn">
+            Continue with Google
+          </button>
+
+          <p class="account-status" id="account-status" role="status" aria-live="polite"></p>
+          <p class="account-links">
+            <a href="dashboard.html" id="account-dashboard-link">Go to dashboard →</a>
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="./src/pages/account.js"></script>
+  </body>
+</html>
+

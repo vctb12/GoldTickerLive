@@ -336,6 +336,14 @@
               <div class="calc-result-label" id="val-result-label">Estimated Value</div>
               <div class="calc-result-value" id="val-result-value">—</div>
               <button class="calc-copy-btn" id="calc-copy-btn" type="button">Copy Result</button>
+              <button
+                class="calc-copy-btn calc-save-btn"
+                data-save-calculation="value"
+                data-target="val-result-value"
+                type="button"
+              >
+                Save to account
+              </button>
             </div>
             <div class="calc-result-breakdown" id="val-result-breakdown"></div>
           </div>
@@ -425,6 +433,14 @@
               <button class="calc-copy-btn" data-target="scrap-result-spot" type="button">
                 Copy Result
               </button>
+              <button
+                class="calc-copy-btn calc-save-btn"
+                data-save-calculation="scrap"
+                data-target="scrap-result-dealer"
+                type="button"
+              >
+                Save to account
+              </button>
             </div>
             <div class="calc-result-secondary">
               <div class="calc-result-row">
@@ -502,6 +518,14 @@
               <button class="calc-copy-btn" data-target="zakat-result-value" type="button">
                 Copy Result
               </button>
+              <button
+                class="calc-copy-btn calc-save-btn"
+                data-save-calculation="zakat"
+                data-target="zakat-result-value"
+                type="button"
+              >
+                Save to account
+              </button>
             </div>
             <div class="calc-result-breakdown" id="zakat-result-breakdown"></div>
             <div class="calc-result-note" id="zakat-below-nisab" hidden>
@@ -563,6 +587,14 @@
             <div class="calc-result-main">
               <div class="calc-result-label" id="buy-result-label">You can buy approximately</div>
               <div class="calc-result-value" id="buy-result-grams">—</div>
+              <button
+                class="calc-copy-btn calc-save-btn"
+                data-save-calculation="buying"
+                data-target="buy-result-grams"
+                type="button"
+              >
+                Save to account
+              </button>
             </div>
             <div class="calc-result-breakdown" id="buy-result-breakdown"></div>
           </div>
@@ -609,6 +641,14 @@
           <div class="calc-convert-results" id="conv-results" hidden>
             <h3 id="conv-results-title">Equivalent weights</h3>
             <div class="conv-grid" id="conv-grid"></div>
+            <button
+              class="calc-copy-btn calc-save-btn"
+              data-save-calculation="convert"
+              data-target="conv-results"
+              type="button"
+            >
+              Save to account
+            </button>
           </div>
         </div>
       </section>

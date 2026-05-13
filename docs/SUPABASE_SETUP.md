@@ -33,14 +33,20 @@ Open the Supabase SQL Editor (_Database → SQL Editor → New query_), paste th
 
 This creates:
 
-| Table                  | Purpose                                                            |
-| ---------------------- | ------------------------------------------------------------------ |
-| `public.shops`         | Gold shop directory with confidence scores and verification status |
-| `public.audit_logs`    | Immutable record of all admin actions                              |
-| `public.user_profiles` | Admin role/name data linked to `auth.users`                        |
-| `public.site_settings` | Key-value store for admin-configurable site settings               |
-| `public.gold_prices`   | Cached gold price snapshots (per-country, per-karat)               |
-| `public.fetch_logs`    | Log of every gold-price fetch attempt (status, source, errors)     |
+| Table                       | Purpose                                                            |
+| --------------------------- | ------------------------------------------------------------------ |
+| `public.shops`              | Gold shop directory with confidence scores and verification status |
+| `public.audit_logs`         | Immutable record of all admin actions                              |
+| `public.user_profiles`      | Admin role/name data linked to `auth.users`                        |
+| `public.profiles`           | Public account profile data for end users                          |
+| `public.user_preferences`   | Per-user saved defaults (language, currency, tool preferences)     |
+| `public.saved_calculations` | Saved calculator runs for signed-in users                          |
+| `public.watchlists`         | Saved watchlist items (karats, currencies, alert markers)          |
+| `public.saved_shops`        | Saved directory shops for signed-in users                          |
+| `public.user_sessions`      | Lightweight public account session audit trail                     |
+| `public.site_settings`      | Key-value store for admin-configurable site settings               |
+| `public.gold_prices`        | Cached gold price snapshots (per-country, per-karat)               |
+| `public.fetch_logs`         | Log of every gold-price fetch attempt (status, source, errors)     |
 
 ---
 
@@ -48,14 +54,20 @@ This creates:
 
 All tables have RLS **enabled**. The policies enforce:
 
-| Table           | Unauthenticated    | Authenticated user | Admin             |
-| --------------- | ------------------ | ------------------ | ----------------- |
-| `shops`         | Read verified only | Read all           | Full CRUD         |
-| `audit_logs`    | No access          | Read own           | Read all          |
-| `user_profiles` | No access          | Read own profile   | Read/update all   |
-| `site_settings` | Public read        | Public read        | Admin write       |
-| `gold_prices`   | No access          | No access          | Service-role only |
-| `fetch_logs`    | No access          | No access          | Service-role only |
+| Table                | Unauthenticated    | Authenticated user | Admin              |
+| -------------------- | ------------------ | ------------------ | ------------------ |
+| `shops`              | Read verified only | Read all           | Full CRUD          |
+| `audit_logs`         | No access          | Read own           | Read all           |
+| `user_profiles`      | No access          | Read own profile   | Read/update all    |
+| `profiles`           | No access          | Own profile only   | Service-role/admin |
+| `user_preferences`   | No access          | Own preferences    | Service-role/admin |
+| `saved_calculations` | No access          | Own rows only      | Service-role/admin |
+| `watchlists`         | No access          | Own rows only      | Service-role/admin |
+| `saved_shops`        | No access          | Own rows only      | Service-role/admin |
+| `user_sessions`      | No access          | Own rows only      | Service-role/admin |
+| `site_settings`      | Public read        | Public read        | Admin write        |
+| `gold_prices`        | No access          | No access          | Service-role only  |
+| `fetch_logs`         | No access          | No access          | Service-role only  |
 
 Writes to `audit_logs` are performed server-side using the **service-role key**, which bypasses RLS.
 Never expose the service-role key to the browser.

@@ -32,6 +32,7 @@ const newsletterRoutes = require('./server/routes/newsletter');
 const submissionsRoutes = require('./server/routes/submissions');
 const apiV1Routes = require('./server/routes/api-v1');
 const alertsRoutes = require('./server/routes/alerts');
+const { publicAccountsRouter } = require('./server/routes/public-accounts');
 
 // Validate environment feature wiring at startup without crashing optional integrations.
 validateServerEnv(process.env, console);
@@ -281,6 +282,7 @@ app.use('/api/v1/newsletter', newsletterRoutes);
 app.use('/api/v1', submissionsRoutes);
 app.use('/api/v1', apiV1Routes);
 app.use('/api/v1', alertsRoutes);
+app.use('/api/v1', publicAccountsRouter);
 
 // Health check endpoint
 app.get('/api/health', (_req, res) => {

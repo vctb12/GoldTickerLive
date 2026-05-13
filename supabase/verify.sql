@@ -4,7 +4,7 @@
 -- configured correctly. Paste into Supabase SQL Editor → Run.
 -- ============================================================
 
--- ── 1. Confirm all 11 tables exist ──────────────────────────
+-- ── 1. Confirm core tables exist ──────────────────────────
 
 SELECT
   table_name,
@@ -12,7 +12,9 @@ SELECT
     WHEN table_name IN (
       'analytics_events', 'api_call_logs', 'audit_logs', 'content_posts',
       'fetch_logs', 'gold_prices', 'orders', 'pricing_overrides',
-      'shops', 'site_settings', 'social_posts', 'user_profiles'
+      'shops', 'site_settings', 'social_posts', 'user_profiles',
+      'profiles', 'user_preferences', 'saved_calculations',
+      'watchlists', 'saved_shops', 'user_sessions'
     ) THEN '✅ expected'
     ELSE '⚠️  unexpected'
   END AS status
@@ -20,7 +22,7 @@ FROM information_schema.tables
 WHERE table_schema = 'public'
 ORDER BY table_name;
 
--- Expected output: 12 rows, all marked ✅ expected.
+-- Expected output: all listed core tables marked ✅ expected.
 -- If any expected table is missing, re-run schema.sql.
 
 
@@ -33,7 +35,9 @@ FROM pg_class
 WHERE relname IN (
   'analytics_events', 'api_call_logs', 'audit_logs', 'content_posts',
   'fetch_logs', 'gold_prices', 'orders', 'pricing_overrides',
-  'shops', 'site_settings', 'social_posts', 'user_profiles'
+  'shops', 'site_settings', 'social_posts', 'user_profiles',
+  'profiles', 'user_preferences', 'saved_calculations',
+  'watchlists', 'saved_shops', 'user_sessions'
 )
 AND relkind = 'r'
 ORDER BY relname;

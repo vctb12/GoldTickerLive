@@ -11,6 +11,11 @@ import { renderAdSlot } from '../components/adSlot.js';
 import { CONSTANTS } from '../config/index.js';
 import { KARATS } from '../config/index.js';
 import { escape as esc, safeHref as safeUrl, safeTel } from '../lib/safe-dom.js';
+import {
+  createSavedShop,
+  isAuthenticated as isAccountAuthenticated,
+  redirectToAccount,
+} from '../lib/public-account-client.js';
 
 /**
  * Mutable shops array — starts with hardcoded fallback data,
@@ -119,6 +124,9 @@ const TXT = {
     storeProfile: 'Store profile',
     saveToShortlist: 'Save to shortlist',
     removeFromShortlist: 'Remove from shortlist',
+    saveToAccount: 'Save to account',
+    savedToAccount: 'Saved to account',
+    saveToAccountAuthPrompt: 'Sign in to save this shop to your account?',
     saved: 'Saved',
     shortlistCount: (n) => `${n} saved`,
     shortlistLabel: 'Quick comparison list',
@@ -233,6 +241,9 @@ const TXT = {
     storeProfile: 'ملف متجر',
     saveToShortlist: 'حفظ في القائمة',
     removeFromShortlist: 'إزالة من القائمة',
+    saveToAccount: 'حفظ في الحساب',
+    savedToAccount: 'تم الحفظ في الحساب',
+    saveToAccountAuthPrompt: 'هل تريد تسجيل الدخول لحفظ هذا المحل في حسابك؟',
     saved: 'محفوظ',
     shortlistCount: (n) => `${n} محفوظة`,
     shortlistLabel: 'قائمة مقارنة سريعة',
@@ -408,6 +419,25 @@ function shareShop(shop) {
   }
 }
 
+async function saveShopToAccount(shop) {
+  if (!shop?.id) return;
+  if (!isAccountAuthenticated()) {
+    if (window.confirm(t('saveToAccountAuthPrompt'))) {
+      redirectToAccount();
+    }
+    return;
+  }
+  await createSavedShop({
+    shop_id: shop.id,
+    shop_name: shop.name,
+    city: shop.city,
+    country_code: shop.countryCode,
+    source_url: `${location.origin}${location.pathname}?shop=${shop.id}`,
+    notes: shop.notes || null,
+  });
+  alert(t('savedToAccount'));
+}
+
 function openModal(shop) {
   const modal = document.getElementById('shops-modal');
   const country = countryByCode(shop.countryCode);
@@ -427,6 +457,10 @@ function openModal(shop) {
       <button class="modal-action-btn modal-action-btn--share" type="button" data-shop-id="${esc(shop.id)}" aria-label="${t('shareShop')}">
         <span class="modal-action-icon">↗</span>
         <span class="modal-action-label">${t('shareShop')}</span>
+      </button>
+      <button class="modal-action-btn modal-action-btn--account" type="button" data-shop-id="${esc(shop.id)}" aria-label="${t('saveToAccount')}">
+        <span class="modal-action-icon">☁</span>
+        <span class="modal-action-label">${t('saveToAccount')}</span>
       </button>
       ${
         shop.phone
@@ -527,6 +561,12 @@ function openModal(shop) {
   const shareBtn = modal.querySelector('.modal-action-btn--share');
   if (shareBtn) {
     shareBtn.addEventListener('click', () => shareShop(shop));
+  }
+  const saveAccountBtn = modal.querySelector('.modal-action-btn--account');
+  if (saveAccountBtn) {
+    saveAccountBtn.addEventListener('click', () => {
+      saveShopToAccount(shop).catch(() => {});
+    });
   }
 
   modal.hidden = false;
@@ -983,6 +1023,10 @@ function renderCards(shops) {
             <span class="shop-action-icon">↗</span>
             <span class="shop-action-label">${t('shareShop')}</span>
           </button>
+          <button class="shop-action-btn shop-action-btn--account" type="button" data-shop-id="${esc(shop.id)}" aria-label="${t('saveToAccount')}">
+            <span class="shop-action-icon">☁</span>
+            <span class="shop-action-label">${t('saveToAccount')}</span>
+          </button>
         </div>
         
         <p class="shop-contact">${contactParts.join(' · ') || t('noContact')}</p>
@@ -1030,6 +1074,17 @@ function bindShopCardHandlers() {
       const shopId = btn.dataset.shopId;
       const shop = SHOPS.find((s) => s.id === shopId);
       if (shop) shareShop(shop);
+    });
+  });
+
+  grid.querySelectorAll('.shop-action-btn--account').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const shopId = btn.dataset.shopId;
+      const shop = SHOPS.find((s) => s.id === shopId);
+      if (shop) {
+        saveShopToAccount(shop).catch(() => {});
+      }
     });
   });
 }
