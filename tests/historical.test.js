@@ -87,6 +87,11 @@ describe('historical-data (inline helpers)', () => {
 });
 
 describe('historical-data: baseline range and record metadata', () => {
+  // NOTE: src/lib/historical-data.js uses ES module `import` syntax and cannot be directly
+  // require()'d by this CJS test suite. The functions below are inline reimplementations that
+  // mirror the production code exactly. Any change to the production implementations must be
+  // reflected here. This is consistent with the existing pattern in this file (see toChartData,
+  // filterByRange, computeYoYChange, getHistoryStats above).
   test('baseline is sorted chronologically', () => {
     for (let i = 1; i < baseline.length; i++) {
       assert.ok(

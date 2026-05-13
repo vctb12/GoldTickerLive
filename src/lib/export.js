@@ -13,6 +13,20 @@ import { KARATS } from '../config/index.js';
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
+/**
+ * Derive a consistent per-row freshness state string for CSV/JSON exports.
+ * Uses both `source` and `granularity` to cover all record shapes.
+ *
+ * @param {{ source?: string, granularity?: string, freshnessState?: string }} record
+ * @returns {'live'|'historical'|'cached'}
+ */
+function rowFreshnessState(record) {
+  if (record.freshnessState) return record.freshnessState;
+  if (record.source === 'live' || record.granularity === 'live') return 'live';
+  if (record.granularity === 'monthly') return 'historical';
+  return 'cached';
+}
+
 function downloadFile(content, filename, mimeType) {
   const blob = new Blob([content], { type: mimeType });
   const url = URL.createObjectURL(blob);
@@ -275,7 +289,7 @@ export function exportHistoricalCSV(records, karatCode = '24') {
         usdGram.toFixed(3),
         aedGram.toFixed(3),
         r.source,
-        r.freshnessState || (r.granularity === 'monthly' ? 'historical' : 'cached'),
+        rowFreshnessState(r),
       ])
     );
   }
@@ -339,12 +353,7 @@ export function exportChartCSV(rows, range, karatCode = '24') {
     const dateStr = r.date instanceof Date ? r.date.toISOString().slice(0, 10) : String(r.date);
     const usdGram = (spot * purity) / TROY;
     const aedGram = usdGram * AED;
-    const rowFreshnessState =
-      r.source === 'live' || r.granularity === 'live'
-        ? 'live'
-        : r.granularity === 'monthly'
-          ? 'historical'
-          : 'cached';
+    const rowState = rowFreshnessState(r);
     lines.push(
       csvRow([
         dateStr,
@@ -352,7 +361,7 @@ export function exportChartCSV(rows, range, karatCode = '24') {
         usdGram.toFixed(3),
         aedGram.toFixed(3),
         r.source || 'baseline',
-        rowFreshnessState,
+        rowState,
       ])
     );
   }

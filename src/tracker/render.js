@@ -56,6 +56,19 @@ function tx(key, params = {}) {
   );
 }
 
+/**
+ * Format a concise source/resolution context string for a history record.
+ * Used by the chart tooltip and can be reused in archive rows or export previews.
+ *
+ * @param {{ source?: string, granularity?: string }} row
+ * @returns {string}
+ */
+function formatHistoricalContext(row) {
+  const sourceLabel = row.source || '';
+  const granLabel = row.granularity === 'monthly' ? 'monthly avg' : row.granularity || '';
+  return [sourceLabel, granLabel].filter(Boolean).join(' · ');
+}
+
 function formatUsd(value, decimals = 2) {
   if (!Number.isFinite(value)) return '—';
   return `$${value.toLocaleString('en', {
@@ -645,10 +658,7 @@ export function renderChart() {
       strong.textContent = `$${row.spot.toFixed(2)}`;
       const div = document.createElement('div');
       // Show date, source, and granularity so users can tell live/cached/historical apart
-      const granLabel = row.granularity === 'monthly' ? 'monthly avg' : row.granularity || '';
-      const sourceLabel = row.source || '';
-      const contextParts = [sourceLabel, granLabel].filter(Boolean).join(' · ');
-      div.textContent = `${row.date.toLocaleDateString()} · ${contextParts}`;
+      div.textContent = `${row.date.toLocaleDateString()} · ${formatHistoricalContext(row)}`;
       tooltip.replaceChildren(strong, div);
       tooltip.style.left = x + 'px';
       tooltip.style.top = '0px';
