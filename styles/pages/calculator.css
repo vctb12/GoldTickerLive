@@ -1019,3 +1019,32 @@
     display: none !important;
   }
 }
+
+/* ── Hero breakdown chips ── */
+.calc-hero-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: var(--space-3);
+  font-size: var(--text-xs);
+}
+
+.calc-hero-breakdown-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--color-text-muted);
+}
+
+.calc-hero-breakdown-sep {
+  color: var(--color-text-muted);
+  opacity: 0.4;
+}
+
+@media (max-width: 480px) {
+  .calc-hero-breakdown {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
