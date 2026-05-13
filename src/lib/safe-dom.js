@@ -30,8 +30,8 @@ export function escape(value) {
 }
 
 /** Return the URL only if it is safe to use as an `<a href>` value in a
- *  browser context. Allows http(s), root-relative, relative (`./` / `../`),
- *  and fragment-only URLs. Explicitly rejects `javascript:`, `data:`,
+ *  browser context. Allows http(s), `mailto:`, `tel:`, root-relative,
+ *  relative (`./` / `../`), and fragment-only URLs. Explicitly rejects `javascript:`, `data:`,
  *  `vbscript:`, `file:`, and any other non-allowlisted scheme.
  *
  *  ⚠️ This is for *navigation URLs in the browser only*. It is NOT a
@@ -42,6 +42,11 @@ export function safeHref(url) {
   const trimmed = url.trim();
   // Explicitly reject javascript:, data:, vbscript:, file:, etc. — allowlist only.
   if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  if (/^mailto:/i.test(trimmed)) return trimmed;
+  if (/^tel:/i.test(trimmed)) {
+    const sanitizedPhone = safeTel(trimmed.slice(4));
+    return sanitizedPhone ? `tel:${sanitizedPhone}` : '';
+  }
   // Also allow protocol-relative and root-relative internal links.
   if (trimmed.startsWith('/') || trimmed.startsWith('./') || trimmed.startsWith('../'))
     return trimmed;
@@ -67,6 +72,63 @@ export function clear(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
 }
 
+const SAFE_DOM_NODE_BRAND = Symbol('safeDomTrustedNode');
+const ALLOWED_NODE_TYPES = new Set([1, 3, 11]); // Element, Text, DocumentFragment
+const BLOCKED_ATTR_NAMES = new Set(['srcdoc']);
+const URL_ATTR_NAMES = new Set(['href', 'src', 'action', 'formaction', 'poster', 'xlink:href']);
+
+function markTrustedNode(node) {
+  if (!node || typeof node !== 'object') return node;
+  try {
+    Object.defineProperty(node, SAFE_DOM_NODE_BRAND, {
+      value: true,
+      enumerable: false,
+      configurable: true,
+    });
+  } catch {
+    // Non-extensible DOM node; safe to continue without branding.
+  }
+  return node;
+}
+
+function isNodeLike(value) {
+  return Boolean(value && typeof value === 'object' && typeof value.nodeType === 'number');
+}
+
+function isTrustedNode(node, ownerDocument) {
+  if (!isNodeLike(node)) return false;
+  if (!ALLOWED_NODE_TYPES.has(node.nodeType)) return false;
+  if (ownerDocument && node.ownerDocument && node.ownerDocument !== ownerDocument) return false;
+  if (node.nodeType === 3) return true; // Text nodes are safe by construction.
+  return node[SAFE_DOM_NODE_BRAND] === true;
+}
+
+function appendText(parent, value) {
+  const doc = parent?.ownerDocument || document;
+  parent.appendChild(doc.createTextNode(String(value ?? '')));
+}
+
+function appendTrustedNode(parent, node) {
+  if (isTrustedNode(node, parent?.ownerDocument)) {
+    parent.appendChild(node);
+    return;
+  }
+  appendText(parent, node?.textContent ?? '');
+}
+
+function appendSafeChildren(parent, children) {
+  if (children === null || children === undefined || children === false) return;
+  if (Array.isArray(children)) {
+    for (const child of children) appendSafeChildren(parent, child);
+    return;
+  }
+  if (isNodeLike(children)) {
+    appendTrustedNode(parent, children);
+    return;
+  }
+  appendText(parent, children);
+}
+
 /**
  * Create an element with attributes and children.
  *
@@ -77,10 +139,12 @@ export function clear(node) {
  * become text nodes (never parsed as HTML).
  */
 export function el(tag, attrs, children) {
-  const node = document.createElement(tag);
+  const node = markTrustedNode(document.createElement(tag));
   if (attrs) {
     for (const [key, value] of Object.entries(attrs)) {
       if (value === null || value === undefined || value === false) continue;
+      const keyLower = key.toLowerCase();
+      if (BLOCKED_ATTR_NAMES.has(keyLower)) continue;
       if (key === 'class') node.className = String(value);
       else if (key === 'dataset' && typeof value === 'object') {
         for (const [dk, dv] of Object.entries(value)) node.dataset[dk] = String(dv);
@@ -90,8 +154,13 @@ export function el(tag, attrs, children) {
           if (sk.startsWith('--')) node.style.setProperty(sk, String(sv));
           else node.style[sk] = String(sv);
         }
-      } else if (key.startsWith('on') && typeof value === 'function') {
-        node.addEventListener(key.slice(2).toLowerCase(), value);
+      } else if (keyLower.startsWith('on')) {
+        if (typeof value === 'function') {
+          node.addEventListener(keyLower.slice(2), value);
+        }
+      } else if (URL_ATTR_NAMES.has(keyLower)) {
+        const safeValue = safeHref(String(value));
+        if (safeValue) node.setAttribute(key, safeValue);
       } else if (value === true) {
         node.setAttribute(key, '');
       } else {
@@ -99,19 +168,7 @@ export function el(tag, attrs, children) {
       }
     }
   }
-  if (children) {
-    const arr = Array.isArray(children) ? children : [children];
-    for (const child of arr) {
-      if (child === null || child === undefined || child === false) continue;
-      // `appendChild(Node)` is a structural DOM operation, not an HTML sink.
-      // Strings fall through to `createTextNode`, which treats the content
-      // as literal text. Neither branch reinterprets the argument as HTML,
-      // so any `js/xss-through-dom` alert on this line is a false positive.
-      // lgtm[js/xss-through-dom]
-      if (child instanceof Node) node.appendChild(child);
-      else node.appendChild(document.createTextNode(String(child)));
-    }
-  }
+  appendSafeChildren(node, children);
   return node;
 }
 

@@ -52,6 +52,8 @@ test('safeHref() allows http/https/relative/fragment', async () => {
   const { safeHref } = await load();
   assert.equal(safeHref('https://example.com/x'), 'https://example.com/x');
   assert.equal(safeHref('http://example.com'), 'http://example.com');
+  assert.equal(safeHref('mailto:hello@example.com'), 'mailto:hello@example.com');
+  assert.equal(safeHref('tel:+971 50 123 4567'), 'tel:+971501234567');
   assert.equal(safeHref('/internal/path'), '/internal/path');
   assert.equal(safeHref('./rel'), './rel');
   assert.equal(safeHref('#section'), '#section');
@@ -112,5 +114,134 @@ test('el() applies normal styles and CSS custom properties', async () => {
   } finally {
     global.document = originalDocument;
     global.Node = originalNode;
+  }
+});
+
+function installMockDocument() {
+  const originalDocument = global.document;
+  const originalNode = global.Node;
+  const listeners = [];
+  const doc = {
+    createElement(tag) {
+      return {
+        tagName: String(tag).toUpperCase(),
+        nodeType: 1,
+        ownerDocument: doc,
+        attrs: {},
+        dataset: {},
+        style: {
+          setProperty(name, value) {
+            this[name] = value;
+          },
+        },
+        children: [],
+        appendChild(child) {
+          this.children.push(child);
+          return child;
+        },
+        setAttribute(name, value) {
+          this.attrs[name] = String(value);
+        },
+        addEventListener(type, fn) {
+          listeners.push([type, fn]);
+        },
+      };
+    },
+    createTextNode(value) {
+      return {
+        nodeType: 3,
+        ownerDocument: doc,
+        textContent: String(value),
+      };
+    },
+  };
+  global.Node = class Node {};
+  global.document = doc;
+  return {
+    doc,
+    listeners,
+    restore() {
+      global.document = originalDocument;
+      global.Node = originalNode;
+    },
+  };
+}
+
+test('el() renders string payloads as literal text (no HTML reinterpretation)', async () => {
+  const mock = installMockDocument();
+  try {
+    const { el } = await load();
+    const payload = '<img src=x onerror=alert(1)>';
+    const node = el('div', null, [payload]);
+    assert.equal(node.children.length, 1);
+    assert.equal(node.children[0].nodeType, 3);
+    assert.equal(node.children[0].textContent, payload);
+  } finally {
+    mock.restore();
+  }
+});
+
+test('el() skips nullish/false children and supports nested arrays', async () => {
+  const mock = installMockDocument();
+  try {
+    const { el } = await load();
+    const node = el('div', null, [null, undefined, false, ['a', ['b']], 1, true]);
+    assert.deepEqual(
+      node.children.map((child) => child.textContent),
+      ['a', 'b', '1', 'true']
+    );
+  } finally {
+    mock.restore();
+  }
+});
+
+test('el() allows trusted element children created by safe-dom', async () => {
+  const mock = installMockDocument();
+  try {
+    const { el } = await load();
+    const child = el('span', null, 'ok');
+    const parent = el('div', null, [child]);
+    assert.equal(parent.children[0], child);
+  } finally {
+    mock.restore();
+  }
+});
+
+test('el() converts untrusted node children to text content', async () => {
+  const mock = installMockDocument();
+  try {
+    const { el } = await load();
+    const externalNode = mock.doc.createElement('strong');
+    externalNode.textContent = '<b>unsafe html-ish text</b>';
+    const parent = el('div', null, [externalNode]);
+    assert.equal(parent.children.length, 1);
+    assert.equal(parent.children[0].nodeType, 3);
+    assert.equal(parent.children[0].textContent, '<b>unsafe html-ish text</b>');
+  } finally {
+    mock.restore();
+  }
+});
+
+test('el() blocks dangerous attributes but allows event listeners', async () => {
+  const mock = installMockDocument();
+  try {
+    const { el } = await load();
+    const onClick = () => {};
+    const node = el('iframe', {
+      onclick: onClick,
+      onerror: 'alert(1)',
+      srcdoc: '<script>alert(1)</script>',
+      href: 'javascript:alert(1)',
+      class: 'x',
+    });
+    assert.equal(node.attrs.href, undefined);
+    assert.equal(node.attrs.srcdoc, undefined);
+    assert.equal(node.attrs.onerror, undefined);
+    assert.equal(node.attrs.onclick, undefined);
+    assert.equal(node.className, 'x');
+    assert.equal(mock.listeners.length, 1);
+    assert.equal(mock.listeners[0][0], 'click');
+  } finally {
+    mock.restore();
   }
 });
