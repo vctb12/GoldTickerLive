@@ -1047,4 +1047,8 @@
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .calc-hero-breakdown-sep {
+    display: none;
+  }
 }
