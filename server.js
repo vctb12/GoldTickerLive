@@ -31,6 +31,7 @@ const stripeRoutes = require('./server/routes/stripe');
 const newsletterRoutes = require('./server/routes/newsletter');
 const submissionsRoutes = require('./server/routes/submissions');
 const apiV1Routes = require('./server/routes/api-v1');
+const alertsRoutes = require('./server/routes/alerts');
 
 // Validate environment feature wiring at startup without crashing optional integrations.
 validateServerEnv(process.env, console);
@@ -279,6 +280,7 @@ app.use('/api/v1/stripe', stripeRoutes);
 app.use('/api/v1/newsletter', newsletterRoutes);
 app.use('/api/v1', submissionsRoutes);
 app.use('/api/v1', apiV1Routes);
+app.use('/api/v1', alertsRoutes);
 
 // Health check endpoint
 app.get('/api/health', (_req, res) => {

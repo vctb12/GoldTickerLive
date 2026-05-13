@@ -352,6 +352,164 @@ create policy "Admin delete price snapshots"
     using (true);
 
 -- ============================================================
+-- ALERTS + NOTIFICATIONS (phase 3 server-backed retention)
+-- ============================================================
+create table if not exists public.alert_rules (
+    id                      uuid primary key default uuid_generate_v4(),
+    user_id                 uuid,
+    email                   text not null,
+    channel                 text not null default 'email',
+    symbol                  text not null default 'XAUUSD',
+    currency                text not null default 'USD',
+    condition               text not null check (condition in ('above', 'below')),
+    threshold_value         numeric not null check (threshold_value > 0),
+    karat                   text,
+    country_code            text,
+    is_active               boolean not null default false,
+    cooldown_minutes        int not null default 60 check (cooldown_minutes > 0 and cooldown_minutes <= 10080),
+    last_triggered_at       timestamptz,
+    management_token_hash   text not null unique,
+    verification_token_hash text,
+    verified_at             timestamptz,
+    unsubscribed_at         timestamptz,
+    created_at              timestamptz not null default now(),
+    updated_at              timestamptz not null default now()
+);
+
+alter table public.alert_rules enable row level security;
+
+create index if not exists idx_alert_rules_active_lookup
+    on public.alert_rules(is_active, symbol, currency, condition);
+create index if not exists idx_alert_rules_threshold_lookup
+    on public.alert_rules(symbol, currency, threshold_value);
+create index if not exists idx_alert_rules_last_triggered
+    on public.alert_rules(last_triggered_at);
+create index if not exists idx_alert_rules_email_channel
+    on public.alert_rules(email, channel);
+
+drop policy if exists "Admin read alert rules" on public.alert_rules;
+create policy "Admin read alert rules"
+    on public.alert_rules for select
+    to authenticated
+    using (true);
+
+drop policy if exists "Admin insert alert rules" on public.alert_rules;
+create policy "Admin insert alert rules"
+    on public.alert_rules for insert
+    to authenticated
+    with check (true);
+
+drop policy if exists "Admin update alert rules" on public.alert_rules;
+create policy "Admin update alert rules"
+    on public.alert_rules for update
+    to authenticated
+    using (true);
+
+drop policy if exists "Admin delete alert rules" on public.alert_rules;
+create policy "Admin delete alert rules"
+    on public.alert_rules for delete
+    to authenticated
+    using (true);
+
+create trigger alert_rules_set_updated_at
+    before update on public.alert_rules
+    for each row execute procedure public.set_updated_at();
+
+create table if not exists public.alert_events (
+    id                  uuid primary key default uuid_generate_v4(),
+    alert_rule_id       uuid not null references public.alert_rules(id) on delete cascade,
+    price_snapshot_id   uuid references public.price_snapshots(id) on delete set null,
+    channel             text not null,
+    status              text not null,
+    payload             jsonb,
+    error_message       text,
+    sent_at             timestamptz,
+    created_at          timestamptz not null default now()
+);
+
+alter table public.alert_events enable row level security;
+
+create index if not exists idx_alert_events_rule_created
+    on public.alert_events(alert_rule_id, created_at desc);
+create index if not exists idx_alert_events_status_created
+    on public.alert_events(status, created_at desc);
+
+drop policy if exists "Admin read alert events" on public.alert_events;
+create policy "Admin read alert events"
+    on public.alert_events for select
+    to authenticated
+    using (true);
+
+drop policy if exists "Admin insert alert events" on public.alert_events;
+create policy "Admin insert alert events"
+    on public.alert_events for insert
+    to authenticated
+    with check (true);
+
+drop policy if exists "Admin update alert events" on public.alert_events;
+create policy "Admin update alert events"
+    on public.alert_events for update
+    to authenticated
+    using (true);
+
+drop policy if exists "Admin delete alert events" on public.alert_events;
+create policy "Admin delete alert events"
+    on public.alert_events for delete
+    to authenticated
+    using (true);
+
+create table if not exists public.notification_subscriptions (
+    id                      uuid primary key default uuid_generate_v4(),
+    user_id                 uuid,
+    channel                 text not null,
+    destination             text not null,
+    destination_hash        text not null,
+    unsubscribe_token_hash  text not null,
+    verified_at             timestamptz,
+    unsubscribed_at         timestamptz,
+    metadata                jsonb default '{}'::jsonb,
+    created_at              timestamptz not null default now(),
+    updated_at              timestamptz not null default now()
+);
+
+alter table public.notification_subscriptions enable row level security;
+
+create unique index if not exists idx_notification_subscriptions_channel_destination
+    on public.notification_subscriptions(channel, destination);
+create unique index if not exists idx_notification_subscriptions_unsubscribe_hash
+    on public.notification_subscriptions(unsubscribe_token_hash);
+create index if not exists idx_notification_subscriptions_active
+    on public.notification_subscriptions(channel, verified_at, unsubscribed_at);
+
+drop policy if exists "Admin read notification subscriptions" on public.notification_subscriptions;
+create policy "Admin read notification subscriptions"
+    on public.notification_subscriptions for select
+    to authenticated
+    using (true);
+
+drop policy if exists "Admin insert notification subscriptions" on public.notification_subscriptions;
+create policy "Admin insert notification subscriptions"
+    on public.notification_subscriptions for insert
+    to authenticated
+    with check (true);
+
+drop policy if exists "Admin update notification subscriptions" on public.notification_subscriptions;
+create policy "Admin update notification subscriptions"
+    on public.notification_subscriptions for update
+    to authenticated
+    using (true);
+
+drop policy if exists "Admin delete notification subscriptions" on public.notification_subscriptions;
+create policy "Admin delete notification subscriptions"
+    on public.notification_subscriptions for delete
+    to authenticated
+    using (true);
+
+create trigger notification_subscriptions_set_updated_at
+    before update on public.notification_subscriptions
+    for each row execute procedure public.set_updated_at();
+
+-- ============================================================
 -- PROVIDER RUNS (phase 2 provider telemetry)
 -- ============================================================
 create table if not exists public.provider_runs (

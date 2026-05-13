@@ -27,6 +27,7 @@ let initRender,
 
 const state = createInitialState();
 const el = {};
+let serverAlertsAvailable = false;
 
 function trackerTx(key, params = {}) {
   const fullKey = `tracker.${key}`;
@@ -202,6 +203,15 @@ function localizeStaticTrackerCopy() {
   setNodeText('tp-mobile-action-alerts-kicker', trackerTx('mobileActionAlertsKicker'));
   setNodeText('tp-mobile-action-alerts-label', trackerTx('mobileActionAlertsLabel'));
   setNodeText('tp-mobile-action-alerts-desc', trackerTx('mobileActionAlertsDesc'));
+  setNodeText('tp-alert-delivery-label', trackerTx('alerts.deliveryLabel'));
+  setNodeText('tp-alert-email-label', trackerTx('alerts.serverEmailLabel'));
+  setNodeText('tp-alert-email-hint', trackerTx('alerts.serverEmailHint'));
+  if (el.alertDelivery?.options?.[0]) {
+    el.alertDelivery.options[0].textContent = trackerTx('alerts.deliveryLocal');
+  }
+  if (el.alertDelivery?.options?.[1]) {
+    el.alertDelivery.options[1].textContent = trackerTx('alerts.deliveryServer');
+  }
   setNodeText('tp-mobile-cue-chart-kicker', trackerTx('mobileCueChartKicker'));
   setNodeText('tp-mobile-cue-chart-title', trackerTx('mobileCueChartTitle'));
   setNodeText('tp-mobile-cue-chart-copy', trackerTx('mobileCueChartCopy'));
@@ -286,10 +296,14 @@ function ui() {
     watchlistGrid: document.getElementById('tp-watchlist-grid'),
     decisionCues: document.getElementById('tp-decision-cues'),
     alertScope: document.getElementById('tp-alert-scope'),
+    alertDelivery: document.getElementById('tp-alert-delivery'),
     alertDirection: document.getElementById('tp-alert-direction'),
     alertTarget: document.getElementById('tp-alert-target'),
+    alertEmail: document.getElementById('tp-alert-email'),
+    alertEmailWrap: document.getElementById('tp-alert-email-wrap'),
     alertList: document.getElementById('tp-alert-list'),
     alertPermission: document.getElementById('tp-alert-permission'),
+    alertServerStatus: document.getElementById('tp-alert-server-status'),
     saveAlert: document.getElementById('tp-save-alert'),
     enableNotifications: document.getElementById('tp-enable-notifications'),
     presetName: document.getElementById('tp-preset-name'),
@@ -335,6 +349,73 @@ function ui() {
     briefCopy: document.getElementById('tp-brief-copy'),
     toastStack: document.getElementById('tp-toast-stack'),
   };
+}
+
+function updateServerAlertUiState() {
+  if (!el.alertDelivery) return;
+  const wantsServer = el.alertDelivery.value === 'server';
+  const canUseServer = serverAlertsAvailable;
+
+  if (el.alertEmailWrap) {
+    el.alertEmailWrap.hidden = !(wantsServer && canUseServer);
+  }
+
+  if (wantsServer && !canUseServer) {
+    el.alertDelivery.value = 'local';
+    if (el.alertServerStatus) {
+      el.alertServerStatus.textContent = trackerTx('alerts.serverUnavailable');
+    }
+    return;
+  }
+
+  if (el.alertServerStatus) {
+    el.alertServerStatus.textContent = canUseServer
+      ? trackerTx('alerts.serverAvailable')
+      : trackerTx('alerts.serverUnavailable');
+  }
+}
+
+async function probeServerAlertsAvailability() {
+  try {
+    const res = await fetch('/api/v1/config/public', {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+    });
+    if (!res.ok) return false;
+    const payload = await res.json();
+    return payload?.ok === true && payload?.data?.features?.alerts === true;
+  } catch {
+    return false;
+  }
+}
+
+async function createServerAlert({ direction, target }) {
+  const email = el.alertEmail?.value?.trim()?.toLowerCase();
+  if (!email) {
+    throw new Error(trackerTx('alerts.serverEmailRequired'));
+  }
+
+  const response = await fetch('/api/v1/alerts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email,
+      channel: 'email',
+      symbol: 'XAUUSD',
+      currency: state.selectedCurrency === 'AED' ? 'AED' : 'USD',
+      condition: direction,
+      threshold_value: target,
+      karat: state.selectedCurrency === 'AED' ? state.selectedKarat : null,
+      country_code: state.selectedCurrency === 'AED' ? 'AE' : null,
+      cooldown_minutes: 60,
+    }),
+  });
+
+  const payload = await response.json().catch(() => null);
+  if (!response.ok) {
+    throw new Error(payload?.error?.message || trackerTx('alerts.serverCreateFailed'));
+  }
+  return payload?.data || null;
 }
 
 function initMobileWorkspaceActions() {
@@ -905,6 +986,8 @@ async function init() {
     exportWatchlistData,
     exportComparisonData,
     exportBriefData,
+    updateServerAlertUiState,
+    createServerAlert,
   });
 
   mountShell(
@@ -917,12 +1000,15 @@ async function init() {
     /* onLangChange */ () => {
       localizeStaticTrackerCopy();
       populateSelects();
+      updateServerAlertUiState();
       renderAll();
     }
   );
 
   localizeStaticTrackerCopy();
   populateSelects();
+  serverAlertsAvailable = await probeServerAlertsAvailability();
+  updateServerAlertUiState();
   bindCoreEvents();
   el.currency?.addEventListener('change', () => syncCurrentCountryPageLink());
   initMobileWorkspaceActions();

@@ -214,12 +214,38 @@ export function bindCoreEvents() {
     });
   });
 
+  _el.alertDelivery?.addEventListener('change', () => {
+    _cb.updateServerAlertUiState?.();
+  });
+
   // Alert save
-  _el.saveAlert?.addEventListener('click', () => {
+  _el.saveAlert?.addEventListener('click', async () => {
+    const delivery = _el.alertDelivery?.value || 'local';
     const scope = _el.alertScope?.value || 'selected';
     const direction = _el.alertDirection?.value || 'above';
     const target = parseFloat(_el.alertTarget?.value);
     if (!Number.isFinite(target)) return;
+
+    if (delivery === 'server') {
+      try {
+        const result = await _cb.createServerAlert({ scope, direction, target });
+        const sentMode = result?.verifyDelivery === 'dry_run' ? 'dry-run' : 'email';
+        const manageNote = result?.managementUrl
+          ? ` ${_cb.tx('alerts.serverManage')}: ${result.managementUrl}`
+          : '';
+        _cb.showToast(_cb.tx('alerts.serverCreated', { mode: sentMode }));
+        if (_el.alertServerStatus) {
+          _el.alertServerStatus.textContent = `${_cb.tx('alerts.serverCreated', { mode: sentMode })}${manageNote}`;
+        }
+      } catch (error) {
+        if (_el.alertServerStatus) {
+          _el.alertServerStatus.textContent = error.message || _cb.tx('alerts.serverCreateFailed');
+        }
+        _cb.showToast(error.message || _cb.tx('alerts.serverCreateFailed'));
+      }
+      return;
+    }
+
     _state.alerts = [...(_state.alerts || []), { scope, direction, target }];
     persistState(_state);
     _cb.renderAlerts();

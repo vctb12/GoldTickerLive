@@ -33,6 +33,7 @@ Stable knowledge base. These are referenced from the master plan but have their 
 | [`ADMIN_SETUP.md`](./ADMIN_SETUP.md)                           | Admin Supabase setup.                                    |
 | [`SUPABASE_SETUP.md`](./SUPABASE_SETUP.md)                     | Supabase project setup.                                  |
 | [`SUPABASE_SCHEMA.md`](./SUPABASE_SCHEMA.md)                   | Database schema reference.                               |
+| [`ALERTS_AND_NOTIFICATIONS.md`](./ALERTS_AND_NOTIFICATIONS.md) | Alerts lifecycle, channels, and operations guide.        |
 | [`AUTOMATIONS.md`](./AUTOMATIONS.md)                           | GitHub Actions & scheduled bots.                         |
 | [`TWITTER_AUTOMATION.md`](./TWITTER_AUTOMATION.md)             | Social-posting architecture.                             |
 | [`twitter_bot_architecture.md`](./twitter_bot_architecture.md) | Twitter bot runtime architecture.                        |

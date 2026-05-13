@@ -258,6 +258,7 @@ router.get('/config/public', (_req, res) => {
     features: {
       supabase: envSnapshot.supabaseConfigured,
       newsletter: envSnapshot.newsletterConfigured,
+      alerts: true,
       stripe: envSnapshot.stripeConfigured,
       adminPin: envSnapshot.adminPinConfigured,
     },
