@@ -1525,4 +1525,275 @@ router.post('/pending-shops/:id/reject', adminRateLimiter, authMiddleware('edito
   }
 });
 
+// ---------------------------------------------------------------------------
+// AI Content Drafts — Phase 11
+//
+// All endpoints require admin auth. Drafts are NEVER auto-published.
+// Every draft starts in "draft" status and must be explicitly approved and
+// published by a human operator.
+// ---------------------------------------------------------------------------
+
+const aiDraftsRepo = require('../../repositories/ai-drafts.repository');
+const aiDraftsService = require('../../services/ai-drafts');
+
+// POST /api/admin/ai-drafts/generate
+// Generate one or more content drafts from current price data.
+// Body: { types: string[] }  (optional; defaults to all types)
+router.post('/ai-drafts/generate', adminRateLimiter, authMiddleware('admin'), async (req, res) => {
+  try {
+    const { types } = req.body || {};
+    const requestedTypes = Array.isArray(types) ? types : aiDraftsRepo.DRAFT_TYPES;
+
+    // Reject an empty types array so callers get clear feedback rather than a
+    // successful no-op response.
+    if (requestedTypes.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'types array must not be empty. Valid: ' + aiDraftsRepo.DRAFT_TYPES.join(', '),
+      });
+    }
+
+    // Validate each requested type
+    const invalid = requestedTypes.filter((t) => !aiDraftsRepo.DRAFT_TYPES.includes(t));
+    if (invalid.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid draft type(s): ${invalid.join(', ')}. Valid: ${aiDraftsRepo.DRAFT_TYPES.join(', ')}`,
+      });
+    }
+
+    const drafts = await aiDraftsService.generateDrafts(requestedTypes);
+
+    auditLog.logAction(req.user.email, 'ai_draft_generate', 'ai_draft', 'batch', {
+      types: requestedTypes,
+      count: drafts.length,
+    });
+
+    return res.status(201).json({
+      success: true,
+      generated: drafts.length,
+      drafts,
+    });
+  } catch (err) {
+    console.error('[admin] Error generating AI drafts:', err);
+    return res.status(500).json({ success: false, message: 'Failed to generate drafts' });
+  }
+});
+
+// GET /api/admin/ai-drafts
+// List drafts with optional filters: status, type, limit, offset
+router.get('/ai-drafts', adminRateLimiter, authMiddleware('admin'), (req, res) => {
+  try {
+    const filter = {
+      status: req.query.status || undefined,
+      type: req.query.type || undefined,
+      limit: req.query.limit ? Number(req.query.limit) : 50,
+      offset: req.query.offset ? Number(req.query.offset) : 0,
+    };
+    const drafts = aiDraftsRepo.getDrafts(filter);
+    const total = aiDraftsRepo.getDraftsTotal(filter);
+    const counts = aiDraftsRepo.getDraftCounts();
+    return res.json({ success: true, drafts, total, counts });
+  } catch (err) {
+    console.error('[admin] Error listing AI drafts:', err);
+    return res.status(500).json({ success: false, message: 'Failed to list drafts' });
+  }
+});
+
+// GET /api/admin/ai-drafts/:id
+// Get a single draft by ID.
+router.get('/ai-drafts/:id', adminRateLimiter, authMiddleware('admin'), (req, res) => {
+  try {
+    const draft = aiDraftsRepo.getDraftById(req.params.id);
+    if (!draft) {
+      return res.status(404).json({ success: false, message: 'Draft not found' });
+    }
+    return res.json({ success: true, draft });
+  } catch (err) {
+    console.error('[admin] Error fetching AI draft:', err);
+    return res.status(500).json({ success: false, message: 'Failed to fetch draft' });
+  }
+});
+
+// PATCH /api/admin/ai-drafts/:id
+// Edit a draft's editable fields (title, body, review_note, export_channel).
+// Edits are recorded in the per-draft audit_trail.
+// Only drafts in "draft" or "approved" status can be edited.
+router.patch('/ai-drafts/:id', adminRateLimiter, authMiddleware('admin'), async (req, res) => {
+  try {
+    const existing = aiDraftsRepo.getDraftById(req.params.id);
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Draft not found' });
+    }
+    if (existing.status === 'published' || existing.status === 'rejected') {
+      return res.status(409).json({
+        success: false,
+        message: `Cannot edit a draft with status "${existing.status}"`,
+      });
+    }
+
+    const updates = {};
+    const allowedFields = [
+      'title_en',
+      'title_ar',
+      'body_en',
+      'body_ar',
+      'review_note',
+      'export_channel',
+    ];
+    for (const field of allowedFields) {
+      if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+        updates[field] = req.body[field];
+      }
+    }
+
+    const updated = await aiDraftsRepo.updateDraft(req.params.id, updates, req.user.email);
+    auditLog.logAction(req.user.email, 'ai_draft_edit', 'ai_draft', req.params.id, updates);
+    return res.json({ success: true, draft: updated });
+  } catch (err) {
+    console.error('[admin] Error editing AI draft:', err);
+    return res.status(500).json({ success: false, message: 'Failed to edit draft' });
+  }
+});
+
+// POST /api/admin/ai-drafts/:id/approve
+// Mark a draft as approved. Required before publish.
+router.post(
+  '/ai-drafts/:id/approve',
+  adminRateLimiter,
+  authMiddleware('admin'),
+  async (req, res) => {
+    try {
+      const existing = aiDraftsRepo.getDraftById(req.params.id);
+      if (!existing) {
+        return res.status(404).json({ success: false, message: 'Draft not found' });
+      }
+      if (existing.status !== 'draft') {
+        return res.status(409).json({
+          success: false,
+          message: `Draft status is "${existing.status}"; only "draft" can be approved`,
+        });
+      }
+
+      const updated = await aiDraftsRepo.transitionDraft(req.params.id, 'approved', {
+        actor: req.user.email,
+        note: req.body?.note || null,
+      });
+      auditLog.logAction(req.user.email, 'ai_draft_approve', 'ai_draft', req.params.id, {
+        note: req.body?.note,
+      });
+      return res.json({ success: true, draft: updated });
+    } catch (err) {
+      console.error('[admin] Error approving AI draft:', err);
+      return res.status(500).json({ success: false, message: 'Failed to approve draft' });
+    }
+  }
+);
+
+// POST /api/admin/ai-drafts/:id/reject
+// Reject a draft. Adds reason to audit trail.
+router.post(
+  '/ai-drafts/:id/reject',
+  adminRateLimiter,
+  authMiddleware('admin'),
+  async (req, res) => {
+    try {
+      const existing = aiDraftsRepo.getDraftById(req.params.id);
+      if (!existing) {
+        return res.status(404).json({ success: false, message: 'Draft not found' });
+      }
+      if (existing.status === 'published') {
+        return res.status(409).json({
+          success: false,
+          message: 'Cannot reject an already-published draft',
+        });
+      }
+      // Block no-op re-rejection so the audit trail stays meaningful
+      if (existing.status === 'rejected') {
+        return res.status(409).json({
+          success: false,
+          message: 'Draft is already rejected',
+        });
+      }
+
+      const updated = await aiDraftsRepo.transitionDraft(req.params.id, 'rejected', {
+        actor: req.user.email,
+        note: req.body?.reason || req.body?.note || null,
+      });
+      auditLog.logAction(req.user.email, 'ai_draft_reject', 'ai_draft', req.params.id, {
+        reason: req.body?.reason,
+      });
+      return res.json({ success: true, draft: updated });
+    } catch (err) {
+      console.error('[admin] Error rejecting AI draft:', err);
+      return res.status(500).json({ success: false, message: 'Failed to reject draft' });
+    }
+  }
+);
+
+// POST /api/admin/ai-drafts/:id/publish
+// Mark an approved draft as published/exported. Does NOT auto-post anywhere.
+// The operator must copy/export the content themselves.
+// Body: { export_channel?: string, acknowledge_anomaly?: boolean, note?: string }
+// When anomaly_flag is true, acknowledge_anomaly: true is required in the request body.
+router.post(
+  '/ai-drafts/:id/publish',
+  adminRateLimiter,
+  authMiddleware('admin'),
+  async (req, res) => {
+    try {
+      const existing = aiDraftsRepo.getDraftById(req.params.id);
+      if (!existing) {
+        return res.status(404).json({ success: false, message: 'Draft not found' });
+      }
+      if (existing.status !== 'approved') {
+        return res.status(409).json({
+          success: false,
+          message: `Draft must be in "approved" status to publish; current: "${existing.status}"`,
+        });
+      }
+      // Require explicit operator acknowledgement for anomaly-flagged drafts so the
+      // safety rule is enforced in code, not just documented.
+      if (existing.anomaly_flag && req.body?.acknowledge_anomaly !== true) {
+        return res.status(422).json({
+          success: false,
+          message:
+            'This draft has an anomaly flag. Set acknowledge_anomaly: true in the request body to confirm you have reviewed the anomaly before publishing.',
+          anomaly_detail: existing.anomaly_detail,
+        });
+      }
+
+      const updated = await aiDraftsRepo.transitionDraft(req.params.id, 'published', {
+        actor: req.user.email,
+        note: req.body?.note || null,
+        export_channel: req.body?.export_channel || null,
+      });
+      auditLog.logAction(req.user.email, 'ai_draft_publish', 'ai_draft', req.params.id, {
+        export_channel: req.body?.export_channel,
+        anomaly_flag: existing.anomaly_flag,
+        acknowledge_anomaly: req.body?.acknowledge_anomaly || false,
+      });
+      return res.json({ success: true, draft: updated });
+    } catch (err) {
+      console.error('[admin] Error publishing AI draft:', err);
+      return res.status(500).json({ success: false, message: 'Failed to publish draft' });
+    }
+  }
+);
+
+// GET /api/admin/ai-drafts/:id/audit-log
+// Return the per-draft audit trail.
+router.get('/ai-drafts/:id/audit-log', adminRateLimiter, authMiddleware('admin'), (req, res) => {
+  try {
+    const draft = aiDraftsRepo.getDraftById(req.params.id);
+    if (!draft) {
+      return res.status(404).json({ success: false, message: 'Draft not found' });
+    }
+    return res.json({ success: true, audit_trail: draft.audit_trail || [] });
+  } catch (err) {
+    console.error('[admin] Error fetching draft audit log:', err);
+    return res.status(500).json({ success: false, message: 'Failed to fetch audit log' });
+  }
+});
+
 module.exports = router;
