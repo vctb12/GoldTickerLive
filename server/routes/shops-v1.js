@@ -52,6 +52,13 @@ const WRITE_RATE_LIMITER = rateLimit({
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const UUID_RX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+let mirrorSupabaseClient = null;
+
+function getMirrorSupabaseClient() {
+  if (mirrorSupabaseClient) return mirrorSupabaseClient;
+  mirrorSupabaseClient = getSupabaseClient(false);
+  return mirrorSupabaseClient;
+}
 
 function ensureArrayFile(filePath) {
   const dir = path.dirname(filePath);
@@ -168,7 +175,7 @@ async function loadNormalizedListings() {
 }
 
 async function resolveSupabaseListingId(listingIdentifier) {
-  const sb = getSupabaseClient(false);
+  const sb = getMirrorSupabaseClient();
   if (!sb || !listingIdentifier) return null;
   try {
     if (UUID_RX.test(listingIdentifier)) {
@@ -192,17 +199,24 @@ async function resolveSupabaseListingId(listingIdentifier) {
 }
 
 async function tryMirrorSupabase(table, payload) {
-  const sb = getSupabaseClient(false);
+  const sb = getMirrorSupabaseClient();
   if (!sb || !payload) return false;
   try {
     const { error } = await sb.from(table).insert(payload);
     if (error) {
-      console.warn(`[shops-v1] Supabase mirror failed for ${table}:`, error.message);
+      console.warn(`[shops-v1] Supabase mirror failed for ${table}:`, {
+        message: error.message,
+        code: error.code || null,
+        payload_keys: Object.keys(payload),
+      });
       return false;
     }
     return true;
   } catch (error) {
-    console.warn(`[shops-v1] Supabase mirror exception for ${table}:`, error.message);
+    console.warn(`[shops-v1] Supabase mirror exception for ${table}:`, {
+      message: error.message,
+      payload_keys: Object.keys(payload),
+    });
     return false;
   }
 }
