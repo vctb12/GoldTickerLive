@@ -48,10 +48,11 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '',
   if (governance.requiredSlotId !== false && !resolvedSlotId) return;
 
   const mobile = isMobile();
-  if (mobile && adFormat === 'leaderboard' && governance.allowLeaderboardOnMobile === false) {
-    adFormat = 'banner';
-  }
-  const dims = AD_DIMENSIONS[adFormat];
+  const effectiveFormat =
+    mobile && adFormat === 'leaderboard' && governance.allowLeaderboardOnMobile === false
+      ? 'banner'
+      : adFormat;
+  const dims = AD_DIMENSIONS[effectiveFormat];
   if (!dims) return;
   const w = mobile && dims.mobileWidth ? dims.mobileWidth : dims.width;
   const h = mobile && dims.mobileHeight ? dims.mobileHeight : dims.height;
@@ -71,7 +72,7 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '',
   container.style.borderRadius = 'var(--radius-xs, 4px)';
   container.style.overflow = 'hidden';
   container.setAttribute('aria-label', 'Advertisement');
-  container.dataset.adFormat = adFormat;
+  container.dataset.adFormat = effectiveFormat;
 
   let loaded = false;
 
@@ -81,7 +82,7 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '',
         loaded = true;
         observer.disconnect();
         renderedAdContainers.add(containerId);
-        _loadAd(container, resolvedSlotId, adFormat);
+        _loadAd(container, resolvedSlotId, effectiveFormat);
       }
     },
     { rootMargin: '200px' }

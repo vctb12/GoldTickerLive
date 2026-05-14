@@ -278,12 +278,6 @@ export function bindCoreEvents() {
       // non-blocking optional integration
     }
     if (_el.alertTarget) _el.alertTarget.value = '';
-    track(EVENTS.ALERT_SET, {
-      karat: _state.selectedKarat,
-      threshold: target,
-      direction: condition,
-      currency: _state.selectedCurrency,
-    });
     track(EVENTS.ALERT_CREATE_SUCCESS, {
       surface: 'tracker',
       delivery,

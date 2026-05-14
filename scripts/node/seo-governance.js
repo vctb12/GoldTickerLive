@@ -64,8 +64,8 @@ function classifyGroup(relPath) {
 
 function stripTags(html = '') {
   return html
-    .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<script\b[\s\S]*?<\/script\s*>/gi, ' ')
+    .replace(/<style\b[\s\S]*?<\/style\s*>/gi, ' ')
     .replace(/<[^>]+>/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
@@ -134,10 +134,7 @@ function extractRecord(relPath) {
     thinRisk: !noindex && wordCount > 0 && wordCount < 140,
     missingCanonical: !noindex && !canonical,
     missingHreflang:
-      !noindex &&
-      !['x-default', 'en', 'ar'].every((lang) => {
-        return hreflangs.includes(lang);
-      }),
+      !noindex && !['x-default', 'en', 'ar'].every((lang) => hreflangs.includes(lang)),
     missingSchema: !noindex && !hasSchema,
   };
 }

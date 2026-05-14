@@ -189,7 +189,7 @@ function _isDebugMode() {
     // ignore
   }
   const host = location?.hostname || '';
-  return host === 'localhost' || host === '127.0.0.1' || host.endsWith('.local');
+  return host === 'localhost' || host === '127.0.0.1' || host === '::1' || host.endsWith('.local');
 }
 
 // ── PII sanitizer ─────────────────────────────────────────────────────────────
@@ -217,17 +217,17 @@ export function sanitize(params) {
  * Validate required payload keys for an event.
  * @param {string} name
  * @param {Record<string, unknown>} params
- * @returns {{ valid: boolean, missing: string[], normalizedName: string }}
+ * @returns {{ valid: boolean, missing: string[], normalizedName: string, schemaExists: boolean }}
  */
 export function validateEvent(name, params = {}) {
   const normalizedName = EVENT_ALIASES[name] || name;
   const schema = EVENT_SCHEMA[normalizedName] || EVENT_SCHEMA[name];
-  if (!schema) return { valid: false, missing: ['__unknown_event__'], normalizedName };
+  if (!schema) return { valid: false, missing: [], normalizedName, schemaExists: false };
   const missing = (schema.required || []).filter((key) => {
     const value = params[key];
-    return value === undefined || value === null || value === '';
+    return value === undefined || value === null;
   });
-  return { valid: missing.length === 0, missing, normalizedName };
+  return { valid: missing.length === 0, missing, normalizedName, schemaExists: true };
 }
 
 export function getEventInventory() {
@@ -293,6 +293,7 @@ export function track(name, params = {}) {
       console.warn('[analytics] skipped invalid event', {
         name,
         normalizedName: validation.normalizedName,
+        schemaExists: validation.schemaExists,
         missing: validation.missing,
       });
     }

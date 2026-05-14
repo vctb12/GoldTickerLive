@@ -39,6 +39,7 @@ const STATE = {
 
 const SHOPS_LAST_REVIEWED_ISO = '2026-04-05';
 const MOBILE_FILTER_BREAKPOINT = 640;
+const SEARCH_TRACK_DEBOUNCE_MS = 450;
 let _searchTrackTimer = null;
 
 function sanitizeSearchQueryForMessage(value = '') {
@@ -1685,7 +1686,7 @@ function bindEvents() {
   document.getElementById('shops-search').addEventListener('input', (event) => {
     STATE.search = event.target.value;
     clearTimeout(_searchTrackTimer);
-    _searchTrackTimer = setTimeout(() => trackShopFilterApply('search'), 450);
+    _searchTrackTimer = setTimeout(() => trackShopFilterApply('search'), SEARCH_TRACK_DEBOUNCE_MS);
     render();
   });
 
