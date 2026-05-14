@@ -72,7 +72,9 @@ function _extractPriceUsdOz(record) {
  * @returns {number|null}
  */
 function _pctChange(from, to) {
-  if (!Number.isFinite(from) || from === 0 || !Number.isFinite(to)) return null;
+  if (!Number.isFinite(from) || !Number.isFinite(to)) return null;
+  if (from === 0 && to === 0) return 0;
+  if (from === 0) return null;
   return ((to - from) / from) * 100;
 }
 

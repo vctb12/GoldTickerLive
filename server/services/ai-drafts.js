@@ -136,7 +136,7 @@ function _buildDailySummary(price, anomalyResult) {
     '---',
     '*[DRAFT — Requires editorial review before publication. Do not publish without approval.]*',
   ]
-    .filter((l) => l !== undefined)
+    .filter((l) => l !== undefined && l !== '')
     .join('\n');
 
   const bodyAr = [
@@ -163,7 +163,7 @@ function _buildDailySummary(price, anomalyResult) {
     '---',
     '*[مسودة — تتطلب مراجعة تحريرية قبل النشر. لا تنشر دون موافقة.]*',
   ]
-    .filter((l) => l !== undefined)
+    .filter((l) => l !== undefined && l !== '')
     .join('\n');
 
   return { titleEn, titleAr, bodyEn, bodyAr };
@@ -204,7 +204,7 @@ function _buildWeeklySummary(price, anomalyResult) {
     '---',
     '*[DRAFT — Requires editorial review before publication.]*',
   ]
-    .filter((l) => l !== undefined)
+    .filter((l) => l !== undefined && l !== '')
     .join('\n');
 
   const bodyAr = [
@@ -229,7 +229,7 @@ function _buildWeeklySummary(price, anomalyResult) {
     '---',
     '*[مسودة — تتطلب مراجعة تحريرية قبل النشر.]*',
   ]
-    .filter((l) => l !== undefined)
+    .filter((l) => l !== undefined && l !== '')
     .join('\n');
 
   return { titleEn, titleAr, bodyEn, bodyAr };
@@ -278,7 +278,7 @@ function _buildUaeGccSummary(price, anomalyResult) {
     '---',
     '*[DRAFT — Requires editorial review before publication.]*',
   ]
-    .filter((l) => l !== undefined)
+    .filter((l) => l !== undefined && l !== '')
     .join('\n');
 
   const bodyAr = [
@@ -309,7 +309,7 @@ function _buildUaeGccSummary(price, anomalyResult) {
     '---',
     '*[مسودة — تتطلب مراجعة تحريرية قبل النشر.]*',
   ]
-    .filter((l) => l !== undefined)
+    .filter((l) => l !== undefined && l !== '')
     .join('\n');
 
   return { titleEn, titleAr, bodyEn, bodyAr };
@@ -436,7 +436,7 @@ function _buildSeoBrief(price, anomalyResult) {
     '---',
     '*[DRAFT BRIEF — Editor fills in full article content. No auto-generation of article body.]*',
   ]
-    .filter((l) => l !== undefined)
+    .filter((l) => l !== undefined && l !== '')
     .join('\n');
 
   const bodyAr = [
@@ -466,7 +466,7 @@ function _buildSeoBrief(price, anomalyResult) {
     '---',
     '*[مسودة موجز — يكتب المحرر محتوى المقالة الكاملة.]*',
   ]
-    .filter((l) => l !== undefined)
+    .filter((l) => l !== undefined && l !== '')
     .join('\n');
 
   return { titleEn, titleAr, bodyEn, bodyAr };
@@ -588,7 +588,7 @@ function _buildNewsletterBlock(price, anomalyResult) {
     '---',
     '*[DRAFT — Requires editorial review and approval before sending.]*',
   ]
-    .filter((l) => l !== undefined)
+    .filter((l) => l !== undefined && l !== '')
     .join('\n');
 
   const bodyAr = [
@@ -619,7 +619,7 @@ function _buildNewsletterBlock(price, anomalyResult) {
     '---',
     '*[مسودة — تتطلب مراجعة وموافقة تحريرية قبل الإرسال.]*',
   ]
-    .filter((l) => l !== undefined)
+    .filter((l) => l !== undefined && l !== '')
     .join('\n');
 
   return { titleEn, titleAr, bodyEn, bodyAr };
@@ -656,10 +656,13 @@ const BUILDERS = {
  * @returns {object} saved draft record
  */
 function generateDraft(type, options = {}) {
-  const builder = BUILDERS[type];
-  if (!builder) {
-    throw new Error(`Unknown draft type: ${type}. Valid: ${Object.keys(BUILDERS).join(', ')}`);
+  // Validate type against a fixed whitelist before any dynamic lookup.
+  // This prevents CodeQL js/unvalidated-dynamic-method-call.
+  const VALID_TYPES = Object.keys(BUILDERS);
+  if (!VALID_TYPES.includes(type)) {
+    throw new Error(`Unknown draft type: ${type}. Valid: ${VALID_TYPES.join(', ')}`);
   }
+  const builder = BUILDERS[type];
 
   const price = options.currentPrice || _readJson(GOLD_PRICE_FILE) || {};
   const prevPrice = options.prevPrice || _readJson(LAST_GOLD_PRICE_FILE);
