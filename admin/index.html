@@ -774,10 +774,15 @@
             key: 'xAutomation',
             title: 'X Automation',
             href: './social/',
-            value: modules.xAutomation?.lastPost?.postReason || 'No recent post',
-            meta: modules.xAutomation?.lastPost?.timeUtc
-              ? `Last run ${relativeTime(modules.xAutomation.lastPost.timeUtc)}`
-              : 'No recent run timestamp',
+            value:
+              modules.xAutomation?.observability?.latestRun?.status ||
+              modules.xAutomation?.lastPost?.postReason ||
+              'No recent run',
+            meta: modules.xAutomation?.observability?.lastSkippedReason
+              ? `Last skip: ${modules.xAutomation.observability.lastSkippedReason}`
+              : modules.xAutomation?.observability?.latestRun?.created_at
+                ? `Last run ${relativeTime(modules.xAutomation.observability.latestRun.created_at)}`
+                : 'No recent run timestamp',
           },
           {
             key: 'audit',

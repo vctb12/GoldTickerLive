@@ -27,6 +27,9 @@ const REPORTS_DIR = path.join(ROOT, 'reports');
 const GOLD_PRICE_FILE = path.join(DATA_DIR, 'gold_price.json');
 const PROVIDER_STATE_FILE = path.join(DATA_DIR, 'provider_state.json');
 const LAST_TWEET_STATE_FILE = path.join(DATA_DIR, 'last_tweet_state.json');
+const AUTOMATION_RUNS_FILE = path.join(DATA_DIR, 'automation_runs.json');
+const TWEET_POSTS_FILE = path.join(DATA_DIR, 'tweet_posts.json');
+const TWEET_FAILURES_FILE = path.join(DATA_DIR, 'tweet_failures.json');
 const ALERTS_DATA_FILE = process.env.ALERTS_DATA_FILE || path.join(DATA_DIR, 'alerts-v1.json');
 const BILLING_DATA_FILE = path.join(DATA_DIR, 'billing.json');
 const SEO_INVENTORY_FILE = path.join(REPORTS_DIR, 'seo', 'inventory.json');
@@ -242,6 +245,59 @@ function parseIsoDate(value) {
   if (!value) return null;
   const parsed = new Date(value);
   return Number.isFinite(parsed.getTime()) ? parsed.toISOString() : null;
+}
+
+function readJsonArraySafe(filePath) {
+  const payload = readJsonSafe(filePath, []);
+  return Array.isArray(payload) ? payload : [];
+}
+
+function normalizeRunTimestamp(row) {
+  if (!row || typeof row !== 'object') return null;
+  return parseIsoDate(row.created_at || row.last_tweet_time_utc || row.last_tweet_time || null);
+}
+
+function sortRunsDescending(rows) {
+  return [...rows].sort((a, b) => {
+    const aTs = Date.parse(normalizeRunTimestamp(a) || 0);
+    const bTs = Date.parse(normalizeRunTimestamp(b) || 0);
+    return bTs - aTs;
+  });
+}
+
+function summarizeXAutomationRuns(runs) {
+  const sortedRuns = sortRunsDescending(runs);
+  const isFailed = (row) => {
+    const statusBucket = String(row?.status_bucket || '').toLowerCase();
+    const status = String(row?.status || '').toLowerCase();
+    return (
+      statusBucket === 'failed' || ['failed', 'fatal', 'operator_action_needed'].includes(status)
+    );
+  };
+  const isSkipped = (row) => {
+    const statusBucket = String(row?.status_bucket || '').toLowerCase();
+    const status = String(row?.status || '').toLowerCase();
+    return statusBucket === 'skipped' || ['skip', 'skipped'].includes(status);
+  };
+  const lastSuccessful =
+    sortedRuns.find((row) => String(row?.status || '').toLowerCase() === 'posted') || null;
+  const lastFailed = sortedRuns.find((row) => isFailed(row)) || null;
+  const lastSkipped = sortedRuns.find((row) => isSkipped(row)) || null;
+  const recentDryRuns = sortedRuns.filter((row) => row?.dry_run === true).slice(0, 5);
+  const latestRun = sortedRuns[0] || null;
+  const latestClosedMarketRun =
+    sortedRuns.find(
+      (row) => row?.market_open === false || row?.post_type === 'market_closed_reference'
+    ) || null;
+  return {
+    totalRuns: sortedRuns.length,
+    latestRun,
+    lastSuccessful,
+    lastFailed,
+    lastSkipped,
+    recentDryRuns,
+    latestClosedMarketRun,
+  };
 }
 
 /**
@@ -561,10 +617,49 @@ function getSeoSummary() {
   };
 }
 
-function getXAutomationSummary() {
+async function getXAutomationSummary() {
   const state = readJsonSafe(LAST_TWEET_STATE_FILE, {});
   const providerState = readJsonSafe(PROVIDER_STATE_FILE, {});
+  const fallbackRuns = readJsonArraySafe(AUTOMATION_RUNS_FILE);
+  const fallbackPosts = readJsonArraySafe(TWEET_POSTS_FILE);
+  const fallbackFailures = readJsonArraySafe(TWEET_FAILURES_FILE);
+  let sourceMode = 'file';
+  let runs = fallbackRuns;
+  let posts = fallbackPosts;
+  let failures = fallbackFailures;
+
+  const sb = getSupabaseClient(false);
+  if (sb) {
+    try {
+      const [runsRes, postsRes, failuresRes] = await Promise.all([
+        sb.from('automation_runs').select('*').order('created_at', { ascending: false }).limit(100),
+        sb.from('tweet_posts').select('*').order('created_at', { ascending: false }).limit(50),
+        sb.from('tweet_failures').select('*').order('created_at', { ascending: false }).limit(50),
+      ]);
+      assertSupabaseResponseOk(runsRes, 'automation_runs query failed');
+      assertSupabaseResponseOk(postsRes, 'tweet_posts query failed');
+      assertSupabaseResponseOk(failuresRes, 'tweet_failures query failed');
+      runs = Array.isArray(runsRes?.data) ? runsRes.data : [];
+      posts = Array.isArray(postsRes?.data) ? postsRes.data : [];
+      failures = Array.isArray(failuresRes?.data) ? failuresRes.data : [];
+      sourceMode = 'supabase';
+    } catch (err) {
+      console.warn('[admin] x-automation supabase fallback:', err.message);
+    }
+  }
+
+  const summary = summarizeXAutomationRuns(runs);
+  const currentStateHash = state.last_tweet_text_hash
+    ? String(state.last_tweet_text_hash).slice(0, 12)
+    : null;
+  const providerFreshnessAtPostTime =
+    summary.latestRun?.price_freshness ||
+    summary.latestRun?.freshness ||
+    summary.latestRun?.staleness_action ||
+    null;
+
   return {
+    sourceMode,
     workflowConfigured: hasFile(POST_GOLD_WORKFLOW_FILE),
     stateFileAvailable: hasFile(LAST_TWEET_STATE_FILE),
     lastPost: {
@@ -577,6 +672,28 @@ function getXAutomationSummary() {
       triggerSource: state.last_trigger_source || null,
       runId: state.last_trigger_run_id || null,
       runAttempt: state.last_trigger_run_attempt || null,
+    },
+    observability: {
+      totalRuns: summary.totalRuns,
+      lastSuccessfulPost: summary.lastSuccessful,
+      lastFailedPost: summary.lastFailed,
+      lastSkippedReason: summary.lastSkipped?.skip_reason || null,
+      currentStateHash,
+      recentDryRuns: summary.recentDryRuns,
+      closedMarketStatus: summary.latestClosedMarketRun
+        ? {
+            marketOpen: summary.latestClosedMarketRun.market_open ?? null,
+            postType: summary.latestClosedMarketRun.post_type || null,
+            createdAt: normalizeRunTimestamp(summary.latestClosedMarketRun),
+          }
+        : null,
+      providerFreshnessAtPostTime,
+      latestRun: summary.latestRun,
+      records: {
+        runs: runs.length,
+        posts: posts.length,
+        failures: failures.length,
+      },
     },
     providerCircuit: providerState || {},
   };
@@ -617,7 +734,7 @@ async function getControlCenterSummary() {
       newsletter: getNewsletterSummary(),
       billing,
       seo: getSeoSummary(),
-      xAutomation: getXAutomationSummary(),
+      xAutomation: await getXAutomationSummary(),
       audit,
     },
   };
@@ -867,9 +984,10 @@ router.get('/ops/seo-summary', adminRateLimiter, authMiddleware('admin'), (_req,
   }
 });
 
-router.get('/ops/x-automation', adminRateLimiter, authMiddleware('admin'), (_req, res) => {
+router.get('/ops/x-automation', adminRateLimiter, authMiddleware('admin'), async (_req, res) => {
   try {
-    res.json({ success: true, data: getXAutomationSummary() });
+    const data = await getXAutomationSummary();
+    res.json({ success: true, data });
   } catch (err) {
     console.error('[admin] x-automation error:', err);
     res.status(500).json({ success: false, message: 'Failed to load X automation summary.' });

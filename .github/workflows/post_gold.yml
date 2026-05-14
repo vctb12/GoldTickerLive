@@ -127,6 +127,13 @@ jobs:
           ALLOW_SAME_PRICE_CLOSED_MARKET_REPOST: ${{ github.event.inputs.allow_same_price_closed_market_repost || 'false' }}
           MIN_TWEET_INTERVAL_MINUTES:  '55'
           POST_GOLD_RESULT_PATH:       ${{ runner.temp }}/post-gold-result.json
+          POST_GOLD_REPORT_PATH:       ${{ runner.temp }}/post-gold-report.md
+          X_AUTOMATION_OBSERVABILITY_SYNC: 'true'
+          X_AUTOMATION_RUNS_FILE:      ${{ github.workspace }}/data/automation_runs.json
+          X_AUTOMATION_POSTS_FILE:     ${{ github.workspace }}/data/tweet_posts.json
+          X_AUTOMATION_FAILURES_FILE:  ${{ github.workspace }}/data/tweet_failures.json
+          SUPABASE_URL:                ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY:   ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: python scripts/python/post_gold_price.py
 
       - name: Commit last price state
@@ -180,6 +187,44 @@ jobs:
             echo "tweet state files not found, skipping commit."
           fi
 
+      - name: Commit observability fallback files
+        if: always()
+        env:
+          X_AUTOMATION_RUNS_FILE:      ${{ github.workspace }}/data/automation_runs.json
+          X_AUTOMATION_POSTS_FILE:     ${{ github.workspace }}/data/tweet_posts.json
+          X_AUTOMATION_FAILURES_FILE:  ${{ github.workspace }}/data/tweet_failures.json
+        run: |
+          set -euo pipefail
+          OBS_FILES=("$X_AUTOMATION_RUNS_FILE" "$X_AUTOMATION_POSTS_FILE" "$X_AUTOMATION_FAILURES_FILE")
+          EXISTING_FILES=()
+          for f in "${OBS_FILES[@]}"; do
+            if [ -f "$f" ]; then
+              EXISTING_FILES+=("$f")
+            else
+              echo "observability fallback file not found (skipping): $f"
+            fi
+          done
+          if [ "${#EXISTING_FILES[@]}" -eq 0 ]; then
+            echo "no observability fallback files found; skipping commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "${EXISTING_FILES[@]}"
+          if git diff --cached --quiet; then
+            echo "no observability fallback file changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(data): update x automation observability logs [skip ci]"
+          git push || {
+            echo "ERROR: git push failed after observability file update."
+            echo "  Run ID:  ${GITHUB_RUN_ID:-unknown}"
+            echo "  Run URL: https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo "  Common causes: concurrent workflow push, temporary remote failure, or branch protection mismatch."
+            echo "  Recovery: rerun this workflow after checking branch protections and recent commits on the branch."
+            exit 1
+          }
+
       - name: Operator run summary
         if: always()
         env:
@@ -193,6 +238,7 @@ jobs:
           ALLOW_SAME_PRICE_INPUT: ${{ github.event.inputs.allow_same_price_closed_market_repost || 'false' }}
           TRIGGER_NONCE_INPUT:    ${{ github.event.inputs.trigger_nonce || '' }}
           POST_GOLD_RESULT_PATH:  ${{ runner.temp }}/post-gold-result.json
+          POST_GOLD_REPORT_PATH:  ${{ runner.temp }}/post-gold-report.md
         run: |
           {
             echo "### 🏅 Post Gold — Run Summary"
@@ -231,15 +277,27 @@ jobs:
                       print("| Field | Value |")
                       print("| --- | --- |")
                       ordered_fields = [
+                          "created_at",
                           "outcome",
                           "status",
+                          "status_bucket",
                           "post_type",
                           "template_used",
+                          "run_id",
+                          "dry_run",
+                          "force_post",
+                          "post_intent",
+                          "market_open",
+                          "price_source",
+                          "price_freshness",
+                          "duplicate_guard_result",
                           "price_usd_oz",
                           "tweet_length",
                           "content_hash",
+                          "state_hash",
                           "tweet_id",
                           "skip_reason",
+                          "error_summary",
                           "operator_action",
                           "reset_date",
                           "retry_after_seconds",
@@ -253,3 +311,22 @@ jobs:
                               continue
                           print(f"| {key} | `{value}` |")
           PY
+          if [ -f "$POST_GOLD_REPORT_PATH" ]; then
+            {
+              echo ""
+              cat "$POST_GOLD_REPORT_PATH"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload post-gold observability artifact
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: post-gold-observability-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/post-gold-result.json
+            ${{ runner.temp }}/post-gold-report.md
+            ${{ github.workspace }}/data/automation_runs.json
+            ${{ github.workspace }}/data/tweet_posts.json
+            ${{ github.workspace }}/data/tweet_failures.json

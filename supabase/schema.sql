@@ -1922,3 +1922,158 @@ create policy "Admin insert billing audit logs"
     on public.billing_audit_logs for insert
     to service_role
     with check (true);
+
+-- ============================================================
+-- X AUTOMATION OBSERVABILITY
+-- ============================================================
+-- Intentional separation:
+--   automation_runs  = canonical stream of all outcomes
+--   tweet_posts      = fast path for posted-only analytics
+--   tweet_failures   = fast path for failure triage dashboards/alerts
+-- This mirrors the runtime sync contract used by this repository's
+-- scripts/python/post_gold_price.py emitter.
+-- and keeps common operator queries simple without heavy status filtering.
+create table if not exists public.automation_runs (
+    id                      uuid primary key default uuid_generate_v4(),
+    created_at              timestamptz not null default now(),
+    outcome                 text not null,
+    status                  text not null,
+    status_bucket           text,
+    post_type               text,
+    template_used           text,
+    run_id                  text,
+    dry_run                 boolean,
+    force_post              boolean,
+    post_intent             text,
+    market_open             boolean,
+    price_source            text,
+    price_freshness         text,
+    duplicate_guard_result  text,
+    price_usd_oz            double precision,
+    tweet_length            int,
+    content_hash            text,
+    state_hash              text,
+    tweet_id                text,
+    skip_reason             text,
+    error_summary           text,
+    operator_action         text,
+    reset_date              text,
+    retry_after_seconds     text,
+    trigger_source          text,
+    trigger_nonce           text,
+    db_sync_mode            text,
+    detail                  text
+);
+
+create table if not exists public.tweet_posts (
+    id                      uuid primary key default uuid_generate_v4(),
+    created_at              timestamptz not null default now(),
+    outcome                 text not null,
+    status                  text not null,
+    status_bucket           text,
+    post_type               text,
+    template_used           text,
+    run_id                  text,
+    dry_run                 boolean,
+    force_post              boolean,
+    post_intent             text,
+    market_open             boolean,
+    price_source            text,
+    price_freshness         text,
+    duplicate_guard_result  text,
+    price_usd_oz            double precision,
+    tweet_length            int,
+    content_hash            text,
+    state_hash              text,
+    tweet_id                text,
+    skip_reason             text,
+    error_summary           text,
+    operator_action         text,
+    reset_date              text,
+    retry_after_seconds     text,
+    trigger_source          text,
+    trigger_nonce           text,
+    db_sync_mode            text,
+    detail                  text
+);
+
+create table if not exists public.tweet_failures (
+    id                      uuid primary key default uuid_generate_v4(),
+    created_at              timestamptz not null default now(),
+    outcome                 text not null,
+    status                  text not null,
+    status_bucket           text,
+    post_type               text,
+    template_used           text,
+    run_id                  text,
+    dry_run                 boolean,
+    force_post              boolean,
+    post_intent             text,
+    market_open             boolean,
+    price_source            text,
+    price_freshness         text,
+    duplicate_guard_result  text,
+    price_usd_oz            double precision,
+    tweet_length            int,
+    content_hash            text,
+    state_hash              text,
+    tweet_id                text,
+    skip_reason             text,
+    error_summary           text,
+    operator_action         text,
+    reset_date              text,
+    retry_after_seconds     text,
+    trigger_source          text,
+    trigger_nonce           text,
+    db_sync_mode            text,
+    detail                  text
+);
+
+create index if not exists idx_automation_runs_created_at
+    on public.automation_runs(created_at desc);
+create index if not exists idx_automation_runs_status_bucket
+    on public.automation_runs(status_bucket, created_at desc);
+create index if not exists idx_tweet_posts_created_at
+    on public.tweet_posts(created_at desc);
+create index if not exists idx_tweet_failures_created_at
+    on public.tweet_failures(created_at desc);
+
+alter table public.automation_runs enable row level security;
+alter table public.tweet_posts enable row level security;
+alter table public.tweet_failures enable row level security;
+
+drop policy if exists "Admin read automation runs" on public.automation_runs;
+create policy "Admin read automation runs"
+    on public.automation_runs for select
+    to service_role
+    using (true);
+
+drop policy if exists "Admin insert automation runs" on public.automation_runs;
+create policy "Admin insert automation runs"
+    on public.automation_runs for insert
+    to service_role
+    with check (true);
+
+drop policy if exists "Admin read tweet posts" on public.tweet_posts;
+create policy "Admin read tweet posts"
+    on public.tweet_posts for select
+    to service_role
+    using (true);
+
+drop policy if exists "Admin insert tweet posts" on public.tweet_posts;
+create policy "Admin insert tweet posts"
+    on public.tweet_posts for insert
+    to service_role
+    with check (true);
+
+drop policy if exists "Admin read tweet failures" on public.tweet_failures;
+create policy "Admin read tweet failures"
+    on public.tweet_failures for select
+    to service_role
+    using (true);
+
+drop policy if exists "Admin insert tweet failures" on public.tweet_failures;
+create policy "Admin insert tweet failures"
+    on public.tweet_failures for insert
+    to service_role
+    with check (true);
