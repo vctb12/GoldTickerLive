@@ -244,6 +244,11 @@ function parseIsoDate(value) {
   return Number.isFinite(parsed.getTime()) ? parsed.toISOString() : null;
 }
 
+/**
+ * Validate a Supabase query response and throw when it contains an error.
+ * @param {{ error?: { message?: string } } | null | undefined} response
+ * @param {string} context
+ */
 function assertSupabaseResponseOk(response, context) {
   if (response?.error) {
     const message = response.error.message || 'Unknown Supabase query error';
