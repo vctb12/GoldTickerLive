@@ -261,6 +261,219 @@ create trigger user_profiles_set_updated_at
     for each row execute procedure public.set_updated_at();
 
 -- ============================================================
+-- PUBLIC ACCOUNTS + SAVED TOOLS (phase 5)
+-- ============================================================
+create table if not exists public.profiles (
+    id              uuid primary key references auth.users(id) on delete cascade,
+    email           text,
+    display_name    text,
+    avatar_url      text,
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now(),
+    last_seen_at    timestamptz
+);
+
+alter table public.profiles enable row level security;
+
+drop policy if exists "Users read own public profile" on public.profiles;
+create policy "Users read own public profile"
+    on public.profiles for select
+    to authenticated
+    using (id = auth.uid());
+
+drop policy if exists "Users upsert own public profile" on public.profiles;
+create policy "Users upsert own public profile"
+    on public.profiles for insert
+    to authenticated
+    with check (id = auth.uid());
+
+drop policy if exists "Users update own public profile" on public.profiles;
+create policy "Users update own public profile"
+    on public.profiles for update
+    to authenticated
+    using (id = auth.uid());
+
+create trigger profiles_set_updated_at
+    before update on public.profiles
+    for each row execute procedure public.set_updated_at();
+
+create table if not exists public.user_preferences (
+    user_id          uuid primary key references public.profiles(id) on delete cascade,
+    lang             text,
+    currency         text,
+    karat            text,
+    unit             text,
+    theme            text,
+    alert_delivery   text,
+    created_at       timestamptz not null default now(),
+    updated_at       timestamptz not null default now()
+);
+
+alter table public.user_preferences enable row level security;
+
+drop policy if exists "Users read own preferences" on public.user_preferences;
+create policy "Users read own preferences"
+    on public.user_preferences for select
+    to authenticated
+    using (user_id = auth.uid());
+
+drop policy if exists "Users upsert own preferences" on public.user_preferences;
+create policy "Users upsert own preferences"
+    on public.user_preferences for insert
+    to authenticated
+    with check (user_id = auth.uid());
+
+drop policy if exists "Users update own preferences" on public.user_preferences;
+create policy "Users update own preferences"
+    on public.user_preferences for update
+    to authenticated
+    using (user_id = auth.uid());
+
+create trigger user_preferences_set_updated_at
+    before update on public.user_preferences
+    for each row execute procedure public.set_updated_at();
+
+create table if not exists public.saved_calculations (
+    id              uuid primary key default uuid_generate_v4(),
+    user_id         uuid not null references public.profiles(id) on delete cascade,
+    tool            text not null,
+    label           text not null,
+    input_data      jsonb not null default '{}'::jsonb,
+    output_data     jsonb not null default '{}'::jsonb,
+    created_at      timestamptz not null default now()
+);
+
+create index if not exists idx_saved_calculations_user_created
+    on public.saved_calculations(user_id, created_at desc);
+
+alter table public.saved_calculations enable row level security;
+
+drop policy if exists "Users read own saved calculations" on public.saved_calculations;
+create policy "Users read own saved calculations"
+    on public.saved_calculations for select
+    to authenticated
+    using (user_id = auth.uid());
+
+drop policy if exists "Users insert own saved calculations" on public.saved_calculations;
+create policy "Users insert own saved calculations"
+    on public.saved_calculations for insert
+    to authenticated
+    with check (user_id = auth.uid());
+
+drop policy if exists "Users delete own saved calculations" on public.saved_calculations;
+create policy "Users delete own saved calculations"
+    on public.saved_calculations for delete
+    to authenticated
+    using (user_id = auth.uid());
+
+create table if not exists public.watchlists (
+    id              uuid primary key default uuid_generate_v4(),
+    user_id         uuid not null references public.profiles(id) on delete cascade,
+    item_type       text not null,
+    item_key        text not null,
+    item_label      text,
+    metadata        jsonb not null default '{}'::jsonb,
+    created_at      timestamptz not null default now(),
+    unique (user_id, item_type, item_key)
+);
+
+create index if not exists idx_watchlists_user_created
+    on public.watchlists(user_id, created_at desc);
+
+alter table public.watchlists enable row level security;
+
+drop policy if exists "Users read own watchlist" on public.watchlists;
+create policy "Users read own watchlist"
+    on public.watchlists for select
+    to authenticated
+    using (user_id = auth.uid());
+
+drop policy if exists "Users insert own watchlist" on public.watchlists;
+create policy "Users insert own watchlist"
+    on public.watchlists for insert
+    to authenticated
+    with check (user_id = auth.uid());
+
+drop policy if exists "Users update own watchlist" on public.watchlists;
+create policy "Users update own watchlist"
+    on public.watchlists for update
+    to authenticated
+    using (user_id = auth.uid());
+
+drop policy if exists "Users delete own watchlist" on public.watchlists;
+create policy "Users delete own watchlist"
+    on public.watchlists for delete
+    to authenticated
+    using (user_id = auth.uid());
+
+create table if not exists public.saved_shops (
+    id              uuid primary key default uuid_generate_v4(),
+    user_id         uuid not null references public.profiles(id) on delete cascade,
+    shop_id         text not null,
+    shop_name       text,
+    city            text,
+    country_code    text,
+    source_url      text,
+    notes           text,
+    created_at      timestamptz not null default now(),
+    unique (user_id, shop_id)
+);
+
+create index if not exists idx_saved_shops_user_created
+    on public.saved_shops(user_id, created_at desc);
+
+alter table public.saved_shops enable row level security;
+
+drop policy if exists "Users read own saved shops" on public.saved_shops;
+create policy "Users read own saved shops"
+    on public.saved_shops for select
+    to authenticated
+    using (user_id = auth.uid());
+
+drop policy if exists "Users insert own saved shops" on public.saved_shops;
+create policy "Users insert own saved shops"
+    on public.saved_shops for insert
+    to authenticated
+    with check (user_id = auth.uid());
+
+drop policy if exists "Users update own saved shops" on public.saved_shops;
+create policy "Users update own saved shops"
+    on public.saved_shops for update
+    to authenticated
+    using (user_id = auth.uid());
+
+drop policy if exists "Users delete own saved shops" on public.saved_shops;
+create policy "Users delete own saved shops"
+    on public.saved_shops for delete
+    to authenticated
+    using (user_id = auth.uid());
+
+create table if not exists public.user_sessions (
+    id              uuid primary key default uuid_generate_v4(),
+    user_id         uuid not null references public.profiles(id) on delete cascade,
+    ip_hash         text,
+    user_agent      text,
+    created_at      timestamptz not null default now()
+);
+
+create index if not exists idx_user_sessions_user_created
+    on public.user_sessions(user_id, created_at desc);
+
+alter table public.user_sessions enable row level security;
+
+drop policy if exists "Users read own sessions" on public.user_sessions;
+create policy "Users read own sessions"
+    on public.user_sessions for select
+    to authenticated
+    using (user_id = auth.uid());
+
+drop policy if exists "Users insert own sessions" on public.user_sessions;
+create policy "Users insert own sessions"
+    on public.user_sessions for insert
+    to authenticated
+    with check (user_id = auth.uid());
+
+-- ============================================================
 -- GOLD PRICES (used by @GoldTickerLive posting system)
 -- ============================================================
 -- Stores every gold price fetched by the automated posting workflows.

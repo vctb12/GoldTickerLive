@@ -7,6 +7,11 @@ import { createInitialState, persistState } from '../tracker/state.js';
 import { el as safeEl } from '../lib/safe-dom.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { getBaselineRange } from '../lib/historical-data.js';
+import {
+  createWatchlistItem,
+  isAuthenticated as isAccountAuthenticated,
+  redirectToAccount,
+} from '../lib/public-account-client.js';
 // Lazy-load heavy UI modules (ui-shell, events, wire, adSlot) inside init()
 let mountShell;
 let fetchWire, renderWireModule;
@@ -206,6 +211,10 @@ function localizeStaticTrackerCopy() {
   setNodeText('tp-alert-delivery-label', trackerTx('alerts.deliveryLabel'));
   setNodeText('tp-alert-email-label', trackerTx('alerts.serverEmailLabel'));
   setNodeText('tp-alert-email-hint', trackerTx('alerts.serverEmailHint'));
+  if (el.saveWatchlistAccount) {
+    el.saveWatchlistAccount.textContent =
+      state.lang === 'ar' ? 'حفظ قائمة المراقبة في الحساب' : 'Save watchlist to account';
+  }
   if (el.alertDelivery?.options?.[0]) {
     el.alertDelivery.options[0].textContent = trackerTx('alerts.deliveryLocal');
   }
@@ -343,6 +352,7 @@ function ui() {
     exportCompare: document.getElementById('tp-export-compare'),
     exportCompare2: document.getElementById('tp-export-compare-2'),
     exportWatchlist: document.getElementById('tp-export-watchlist'),
+    saveWatchlistAccount: document.getElementById('tp-save-watchlist-account'),
     downloadJson: document.getElementById('tp-download-json'),
     downloadJson2: document.getElementById('tp-download-json-2'),
     downloadBrief: document.getElementById('tp-download-brief'),
@@ -420,6 +430,59 @@ async function createServerAlert({ condition, target }) {
     throw new Error(payload?.error?.message || trackerTx('alerts.serverCreateFailed'));
   }
   return payload?.data || null;
+}
+
+async function syncAlertToAccount({ condition, target }) {
+  if (!isAccountAuthenticated()) return;
+  const currency = state.selectedCurrency || 'USD';
+  const karat = state.selectedKarat || '24';
+  const itemKey = `${condition}:${target}:${currency}:${karat}`;
+  await createWatchlistItem({
+    item_type: 'alert',
+    item_key: itemKey.slice(0, 120),
+    item_label:
+      state.lang === 'ar'
+        ? `تنبيه ${condition === 'above' ? 'أعلى من' : 'أقل من'} ${target}`
+        : `Alert ${condition} ${target}`,
+    metadata: {
+      source: 'tracker',
+      condition,
+      target,
+      currency,
+      karat,
+    },
+  });
+}
+
+async function saveWatchlistToAccount() {
+  if (!isAccountAuthenticated()) {
+    if (
+      window.confirm(
+        state.lang === 'ar'
+          ? 'سجّل الدخول لمزامنة قائمة المراقبة عبر الأجهزة.'
+          : 'Sign in to sync watchlist across devices.'
+      )
+    ) {
+      redirectToAccount();
+    }
+    return;
+  }
+
+  const favorites = Array.isArray(state.favorites) ? state.favorites : [];
+  for (const currency of favorites) {
+    if (!currency) continue;
+    await createWatchlistItem({
+      item_type: 'currency',
+      item_key: String(currency).toUpperCase(),
+      item_label: String(currency).toUpperCase(),
+      metadata: { source: 'tracker-watchlist' },
+    });
+  }
+  showToast(
+    state.lang === 'ar'
+      ? `تم حفظ ${favorites.length} عناصر في حسابك.`
+      : `Saved ${favorites.length} watchlist items to your account.`
+  );
 }
 
 function initMobileWorkspaceActions() {
@@ -992,6 +1055,7 @@ async function init() {
     exportBriefData,
     updateServerAlertUiState,
     createServerAlert,
+    syncAlertToAccount,
   });
 
   mountShell(
@@ -1014,6 +1078,15 @@ async function init() {
   serverAlertsAvailable = await probeServerAlertsAvailability();
   updateServerAlertUiState();
   bindCoreEvents();
+  el.saveWatchlistAccount?.addEventListener('click', () => {
+    saveWatchlistToAccount().catch(() => {
+      showToast(
+        state.lang === 'ar'
+          ? 'تعذر حفظ قائمة المراقبة حالياً.'
+          : 'Could not save watchlist right now.'
+      );
+    });
+  });
   el.currency?.addEventListener('change', () => syncCurrentCountryPageLink());
   initMobileWorkspaceActions();
 
