@@ -77,9 +77,7 @@ jobs:
 
           if [ "${DRY_RUN}" = "true" ] && [ "${HTTP_CODE}" = "405" ]; then
             echo "::warning::Dry-run request was rejected with HTTP 405; treating this as a non-fatal skipped run."
-            cat > /tmp/alerts-check-response.json <<'JSON'
-{"status":"skipped","reason":"dry_run_http_405","message":"POST is blocked in dry-run mode on the public endpoint."}
-JSON
+            printf '%s\n' '{"status":"skipped","reason":"dry_run_http_405","message":"POST is blocked in dry-run mode on the public endpoint."}' > /tmp/alerts-check-response.json
             exit 0
           fi
 

@@ -64,7 +64,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           SNAPSHOT_SYNC_STRICT: ${{ vars.SNAPSHOT_SYNC_STRICT || 'false' }}
           PRICE_PROVIDER_CHAIN: ${{ steps.fetch_gold.outputs.reason }}
-          PRICE_CIRCUIT_STATE: ${{ steps.fetch_gold.outputs.fresh == 'true' ? 'closed' : 'fallback' }}
+          PRICE_CIRCUIT_STATE: ${{ steps.fetch_gold.outputs.fresh == 'true' && 'closed' || 'fallback' }}
         run: node scripts/node/sync-price-snapshot.js
 
       - name: Workflow summary
