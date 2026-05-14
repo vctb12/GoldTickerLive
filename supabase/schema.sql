@@ -1930,7 +1930,8 @@ create policy "Admin insert billing audit logs"
 --   automation_runs  = canonical stream of all outcomes
 --   tweet_posts      = fast path for posted-only analytics
 --   tweet_failures   = fast path for failure triage dashboards/alerts
--- This mirrors the runtime sync contract used by scripts/python/post_gold_price.py
+-- This mirrors the runtime sync contract used by this repository's
+-- scripts/python/post_gold_price.py emitter.
 -- and keeps common operator queries simple without heavy status filtering.
 create table if not exists public.automation_runs (
     id                      uuid primary key default uuid_generate_v4(),

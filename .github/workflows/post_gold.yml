@@ -220,6 +220,8 @@ jobs:
             echo "ERROR: git push failed after observability file update."
             echo "  Run ID:  ${GITHUB_RUN_ID:-unknown}"
             echo "  Run URL: https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo "  Common causes: concurrent workflow push, temporary remote failure, or branch protection mismatch."
+            echo "  Recovery: rerun this workflow after checking branch protections and recent commits on the branch."
             exit 1
           }
 
