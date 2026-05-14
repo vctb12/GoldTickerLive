@@ -21,6 +21,28 @@ const isMobile = () => window.innerWidth < 768;
 const isAdminPage = () => window.location.pathname.includes('/admin');
 const renderedAdContainers = new Set();
 
+function resolveSlotFromConfig(adFormat, slotKey = '') {
+  if (slotKey && AD_CONFIG.AD_SLOTS?.[slotKey]) return AD_CONFIG.AD_SLOTS[slotKey];
+  const byFormat = {
+    leaderboard: ['homeLeaderboard', 'countryBanner', 'toolBanner'],
+    rectangle: [
+      'trackerSidebar',
+      'calculatorResult',
+      'homeRectangle',
+      'learnRectangle',
+      'guideMidContent',
+    ],
+    banner: ['toolBanner', 'countryBanner', 'homeLeaderboard'],
+    skyscraper: [],
+  };
+  const candidates = byFormat[adFormat] || [];
+  for (const key of candidates) {
+    const value = AD_CONFIG.AD_SLOTS?.[key];
+    if (value) return value;
+  }
+  return '';
+}
+
 /**
  * Render an AdSense slot in the given container.
  * @param {string} containerId  ID of the container element
@@ -43,20 +65,19 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '',
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  // Resolve slot ID from config if not passed directly
-  const resolvedSlotId = adSlotId || (slotKey && AD_CONFIG.AD_SLOTS[slotKey]) || '';
   const governance = AD_CONFIG.SLOT_GOVERNANCE || {};
-  const maxSlotsPerPage = Number.isFinite(governance.maxSlotsPerPage)
-    ? governance.maxSlotsPerPage
-    : 3;
-  if (renderedAdContainers.size >= maxSlotsPerPage) return;
-  if (governance.requiredSlotId !== false && !resolvedSlotId) return;
-
   const mobile = isMobile();
   const effectiveFormat =
     mobile && adFormat === 'leaderboard' && governance.allowLeaderboardOnMobile === false
       ? 'banner'
       : adFormat;
+  // Resolve slot ID from config if not passed directly
+  const resolvedSlotId = adSlotId || resolveSlotFromConfig(effectiveFormat, slotKey);
+  const maxSlotsPerPage = Number.isFinite(governance.maxSlotsPerPage)
+    ? governance.maxSlotsPerPage
+    : 3;
+  if (renderedAdContainers.size >= maxSlotsPerPage) return;
+  if (governance.requiredSlotId !== false && !resolvedSlotId) return;
   const dims = AD_DIMENSIONS[effectiveFormat];
   if (!dims) return;
   const w = mobile && dims.mobileWidth ? dims.mobileWidth : dims.width;

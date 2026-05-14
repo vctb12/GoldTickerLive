@@ -1057,7 +1057,12 @@ function initCopyBtn() {
       }, 1500);
     };
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(text).then(done).catch(done);
+      navigator.clipboard
+        .writeText(text)
+        .then(done)
+        .catch(() => {
+          if (copyTextFallback(text)) done();
+        });
     } else {
       if (copyTextFallback(text)) done();
     }

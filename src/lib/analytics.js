@@ -106,7 +106,6 @@ export const EVENT_SCHEMA = Object.freeze({
   [EVENTS.SEARCH_QUERY]: { required: ['length'] },
   [EVENTS.SEARCH_OPEN]: { required: [] },
   [EVENTS.THEME_CHANGE]: { required: ['to'] },
-  [EVENTS.LANG_CHANGE]: { required: ['to'] },
   [EVENTS.OUTBOUND_CLICK]: { required: ['url_host'] },
   [EVENTS.ERROR]: { required: ['type', 'where'] },
 });
