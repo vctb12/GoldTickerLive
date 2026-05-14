@@ -87,8 +87,12 @@ export function bindCoreEvents() {
     _cb.renderAll();
   });
   _el.language?.addEventListener('change', () => {
+    const from = _state.lang;
     _state.lang = _el.language.value;
     persistState(_state);
+    if (from !== _state.lang) {
+      track(EVENTS.LANGUAGE_SWITCH, { from, to: _state.lang, surface: 'tracker' });
+    }
     _cb.populateSelects();
     _cb.renderAll();
   });
@@ -226,6 +230,14 @@ export function bindCoreEvents() {
     const target = parseFloat(_el.alertTarget?.value);
     if (!Number.isFinite(target)) return;
 
+    track(EVENTS.ALERT_CREATE_START, {
+      surface: 'tracker',
+      delivery,
+      scope,
+      direction: condition,
+      currency: _state.selectedCurrency,
+    });
+
     if (delivery === 'server') {
       try {
         const result = await _cb.createServerAlert({ condition, target });
@@ -237,6 +249,13 @@ export function bindCoreEvents() {
         if (_el.alertServerStatus) {
           _el.alertServerStatus.textContent = `${_cb.tx('alerts.serverCreated', { mode: sentMode })}${manageNote}`;
         }
+        track(EVENTS.ALERT_CREATE_SUCCESS, {
+          surface: 'tracker',
+          delivery,
+          direction: condition,
+          currency: _state.selectedCurrency,
+          mode: sentMode,
+        });
       } catch (error) {
         if (_el.alertServerStatus) {
           _el.alertServerStatus.textContent = error.message || _cb.tx('alerts.serverCreateFailed');
@@ -262,6 +281,12 @@ export function bindCoreEvents() {
     track(EVENTS.ALERT_SET, {
       karat: _state.selectedKarat,
       threshold: target,
+      direction: condition,
+      currency: _state.selectedCurrency,
+    });
+    track(EVENTS.ALERT_CREATE_SUCCESS, {
+      surface: 'tracker',
+      delivery,
       direction: condition,
       currency: _state.selectedCurrency,
     });

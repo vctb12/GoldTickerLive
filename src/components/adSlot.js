@@ -19,6 +19,7 @@ const AD_DIMENSIONS = {
 
 const isMobile = () => window.innerWidth < 768;
 const isAdminPage = () => window.location.pathname.includes('/admin');
+const renderedAdContainers = new Set();
 
 /**
  * Render an AdSense slot in the given container.
@@ -32,17 +33,26 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '',
   if (!AD_CONFIG.ADSENSE_PUBLISHER_ID) return;
   if (isAdminPage()) return;
   if (typeof IntersectionObserver === 'undefined') return;
+  if (renderedAdContainers.has(containerId)) return;
 
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const dims = AD_DIMENSIONS[adFormat];
-  if (!dims) return;
-
   // Resolve slot ID from config if not passed directly
   const resolvedSlotId = adSlotId || (slotKey && AD_CONFIG.AD_SLOTS[slotKey]) || '';
+  const governance = AD_CONFIG.SLOT_GOVERNANCE || {};
+  const maxSlotsPerPage = Number.isFinite(governance.maxSlotsPerPage)
+    ? governance.maxSlotsPerPage
+    : 3;
+  if (renderedAdContainers.size >= maxSlotsPerPage) return;
+  if (governance.requiredSlotId !== false && !resolvedSlotId) return;
 
   const mobile = isMobile();
+  if (mobile && adFormat === 'leaderboard' && governance.allowLeaderboardOnMobile === false) {
+    adFormat = 'banner';
+  }
+  const dims = AD_DIMENSIONS[adFormat];
+  if (!dims) return;
   const w = mobile && dims.mobileWidth ? dims.mobileWidth : dims.width;
   const h = mobile && dims.mobileHeight ? dims.mobileHeight : dims.height;
 
@@ -70,6 +80,7 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '',
       if (entries[0].isIntersecting && !loaded) {
         loaded = true;
         observer.disconnect();
+        renderedAdContainers.add(containerId);
         _loadAd(container, resolvedSlotId, adFormat);
       }
     },
