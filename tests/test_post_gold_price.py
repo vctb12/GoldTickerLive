@@ -836,6 +836,14 @@ def test_main_writes_structured_result_file_for_dry_run(tmp_path, monkeypatch, c
     assert payload["status"] == "skip"
     assert payload["skip_reason"] == "dry_run"
     assert payload["tweet_length"] == len("short dry-run tweet")
+    assert payload["dry_run"] is True
+    assert payload["force_post"] is False
+    assert payload["post_intent"] == "guard_normal"
+    assert payload["run_id"]
+    assert payload["created_at"]
+    assert payload["price_source"] == "gold_api_com"
+    assert payload["price_freshness"] == "ok"
+    assert payload["duplicate_guard_result"]
 
 
 def test_main_workflow_dispatch_shortcut_bypasses_market_hours(tmp_path, monkeypatch, capsys):
@@ -2553,3 +2561,125 @@ def test_post_tweet_returns_tweet_id(monkeypatch):
 
     assert result.get("posted") is True
     assert result.get("id") == "1921000000000000001"
+
+
+def test_duplicate_skipped_report_shape(tmp_path, monkeypatch):
+    result_file = tmp_path / "post-gold-result.json"
+    report_file = tmp_path / "post-gold-report.md"
+    monkeypatch.setenv("POST_GOLD_RESULT_PATH", str(result_file))
+    monkeypatch.setenv("POST_GOLD_REPORT_PATH", str(report_file))
+    monkeypatch.setenv("GITHUB_RUN_ID", "run-dup-1")
+    monkeypatch.setenv("POST_GOLD_DUPLICATE_GUARD_RESULT", "skipped:duplicate_text_hash")
+    monkeypatch.setenv("POST_GOLD_PRICE_SOURCE", "gold_api_com")
+    monkeypatch.setenv("POST_GOLD_PRICE_FRESHNESS", "ok")
+    monkeypatch.setenv("POST_GOLD_MARKET_OPEN", "true")
+    monkeypatch.delenv("X_AUTOMATION_OBSERVABILITY_SYNC", raising=False)
+
+    pg.emit_run_result(
+        pg.RunResult(
+            outcome="SKIPPED_TWEET_GUARD",
+            status="skip",
+            skip_reason="duplicate_text_hash",
+            template_used="hourly",
+            tweet_length=220,
+            trigger_source="scheduled",
+        )
+    )
+
+    payload = json.loads(result_file.read_text(encoding="utf-8"))
+    assert payload["status"] == "skip"
+    assert payload["skip_reason"] == "duplicate_text_hash"
+    assert payload["duplicate_guard_result"] == "skipped:duplicate_text_hash"
+    assert payload["price_source"] == "gold_api_com"
+    assert payload["price_freshness"] == "ok"
+    assert payload["run_id"] == "run-dup-1"
+    md = report_file.read_text(encoding="utf-8")
+    assert "duplicate_guard_result" in md
+    assert "SKIPPED_TWEET_GUARD" in md
+
+
+def test_force_post_report_shape(tmp_path, monkeypatch):
+    result_file = tmp_path / "post-gold-result.json"
+    monkeypatch.setenv("POST_GOLD_RESULT_PATH", str(result_file))
+    monkeypatch.setenv("FORCE_POST", "true")
+    monkeypatch.setenv("POST_INTENT", "must_post")
+    monkeypatch.setenv("POST_GOLD_DUPLICATE_GUARD_RESULT", "bypassed:must_post")
+    monkeypatch.setenv("POST_GOLD_MARKET_OPEN", "true")
+    monkeypatch.delenv("X_AUTOMATION_OBSERVABILITY_SYNC", raising=False)
+
+    pg.emit_run_result(
+        pg.RunResult(
+            outcome="POSTED",
+            status="posted",
+            template_used="hourly",
+            tweet_length=245,
+            trigger_source="manual",
+        )
+    )
+
+    payload = json.loads(result_file.read_text(encoding="utf-8"))
+    assert payload["status"] == "posted"
+    assert payload["force_post"] is True
+    assert payload["post_intent"] == "must_post"
+    assert payload["duplicate_guard_result"] == "bypassed:must_post"
+
+
+def test_closed_market_report_shape(tmp_path, monkeypatch):
+    result_file = tmp_path / "post-gold-result.json"
+    monkeypatch.setenv("POST_GOLD_RESULT_PATH", str(result_file))
+    monkeypatch.setenv("POST_GOLD_MARKET_OPEN", "false")
+    monkeypatch.setenv("POST_GOLD_PRICE_FRESHNESS", "warn")
+    monkeypatch.setenv("POST_GOLD_DUPLICATE_GUARD_RESULT", "pass:tweet_guard")
+    monkeypatch.delenv("X_AUTOMATION_OBSERVABILITY_SYNC", raising=False)
+
+    pg.emit_run_result(
+        pg.RunResult(
+            outcome="DRY_RUN_READY",
+            status="skip",
+            post_type="market_closed_reference",
+            template_used="market_closed_reference",
+            tweet_length=230,
+            trigger_source="shortcut",
+            skip_reason="dry_run",
+        )
+    )
+
+    payload = json.loads(result_file.read_text(encoding="utf-8"))
+    assert payload["post_type"] == "market_closed_reference"
+    assert payload["market_open"] is False
+    assert payload["price_freshness"] == "warn"
+    assert payload["duplicate_guard_result"] == "pass:tweet_guard"
+
+
+def test_db_sync_dry_mode_file_fallback(tmp_path, monkeypatch):
+    result_file = tmp_path / "post-gold-result.json"
+    runs_file = tmp_path / "automation-runs.json"
+    posts_file = tmp_path / "tweet-posts.json"
+    failures_file = tmp_path / "tweet-failures.json"
+    monkeypatch.setenv("POST_GOLD_RESULT_PATH", str(result_file))
+    monkeypatch.setenv("X_AUTOMATION_OBSERVABILITY_SYNC", "true")
+    monkeypatch.setenv("X_AUTOMATION_RUNS_FILE", str(runs_file))
+    monkeypatch.setenv("X_AUTOMATION_POSTS_FILE", str(posts_file))
+    monkeypatch.setenv("X_AUTOMATION_FAILURES_FILE", str(failures_file))
+    monkeypatch.delenv("SUPABASE_URL", raising=False)
+    monkeypatch.delenv("SUPABASE_SERVICE_ROLE_KEY", raising=False)
+
+    pg.emit_run_result(
+        pg.RunResult(
+            outcome="DRY_RUN_READY",
+            status="skip",
+            skip_reason="dry_run",
+            template_used="hourly",
+            tweet_length=210,
+            trigger_source="manual",
+        )
+    )
+
+    payload = json.loads(result_file.read_text(encoding="utf-8"))
+    assert payload["db_sync_mode"] == "file"
+    assert runs_file.exists()
+    rows = json.loads(runs_file.read_text(encoding="utf-8"))
+    assert isinstance(rows, list) and rows
+    assert rows[-1]["status"] == "skip"
+    assert not posts_file.exists()
+    assert not failures_file.exists()

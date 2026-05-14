@@ -200,9 +200,10 @@ It does NOT apply to scheduled runs and does NOT bypass `duplicate_text_hash`, c
   attempt metadata used by the soft anti-spam guard.
 - X billing-cap failures (`SpendCapReached`) are treated as a clean skip: the workflow logs the
   reset date, exits `0`, and does not update tweet-state files because no post was sent.
-- `post_gold.yml` also passes a temporary `POST_GOLD_RESULT_PATH` into the poster so the Python step
-  can write a structured runtime outcome file. The always-on summary step reads that file and adds a
-  machine-readable outcome table to `$GITHUB_STEP_SUMMARY`.
+- `post_gold.yml` passes temporary `POST_GOLD_RESULT_PATH` and `POST_GOLD_REPORT_PATH` paths into
+  the poster so the Python step can write a structured JSON outcome plus markdown run report. The
+  always-on summary step reads these files, appends the machine-readable table to
+  `$GITHUB_STEP_SUMMARY`, and uploads a post-gold observability artifact.
 
 **Shortcut safety note**
 

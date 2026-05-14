@@ -47,6 +47,9 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 GOLD_PRICE_FILE = _REPO_ROOT / "data" / "gold_price.json"
 STATE_FILE = _REPO_ROOT / "data" / "last_gold_price.json"
 LAST_TWEET_STATE_FILE = _REPO_ROOT / "data" / "last_tweet_state.json"
+AUTOMATION_RUNS_FILE = _REPO_ROOT / "data" / "automation_runs.json"
+TWEET_POSTS_FILE = _REPO_ROOT / "data" / "tweet_posts.json"
+TWEET_FAILURES_FILE = _REPO_ROOT / "data" / "tweet_failures.json"
 
 # Optional new tweet-guard module (additive to the existing price-change /
 # content-hash guards). Imported lazily so unit tests that don't need it
@@ -79,12 +82,204 @@ class RunResult:
     retry_after_seconds: Optional[str] = None
     trigger_source: Optional[str] = None
     trigger_nonce: Optional[str] = None
+    run_id: Optional[str] = None
+    dry_run: Optional[bool] = None
+    force_post: Optional[bool] = None
+    post_intent: Optional[str] = None
+    market_open: Optional[bool] = None
+    price_source: Optional[str] = None
+    price_freshness: Optional[str] = None
+    duplicate_guard_result: Optional[str] = None
+    error_summary: Optional[str] = None
+    created_at: Optional[str] = None
+    state_hash: Optional[str] = None
+    db_sync_mode: Optional[str] = None
     detail: Optional[str] = None
 
 
 def _run_result_path():
     raw = os.environ.get("POST_GOLD_RESULT_PATH", "").strip()
     return Path(raw) if raw else None
+
+
+def _run_report_path():
+    raw = os.environ.get("POST_GOLD_REPORT_PATH", "").strip()
+    return Path(raw) if raw else None
+
+
+def _json_output_path(env_name, default_path):
+    raw = os.environ.get(env_name, "").strip()
+    return Path(raw) if raw else default_path
+
+
+def _env_bool(name, default=False):
+    raw = os.environ.get(name, "").strip().lower()
+    if not raw:
+        return bool(default)
+    return raw in ("1", "true", "yes", "on")
+
+
+def _now_iso_utc():
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _status_bucket(status):
+    normalized = str(status or "").strip().lower()
+    if normalized == "posted":
+        return "posted"
+    if normalized in ("skip", "skipped"):
+        return "skipped"
+    return "failed"
+
+
+def _short_hash(value):
+    if not isinstance(value, str) or not value:
+        return None
+    return value[:12]
+
+
+def _append_json_array(path, row, max_rows=250):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    existing = []
+    if path.exists():
+        try:
+            loaded = json.loads(path.read_text(encoding="utf-8"))
+            if isinstance(loaded, list):
+                existing = loaded
+        except Exception:
+            existing = []
+    existing.append(row)
+    if len(existing) > max_rows:
+        existing = existing[-max_rows:]
+    _atomic_write_text(path, json.dumps(existing, indent=2) + "\n")
+
+
+def _build_observability_record(result):
+    record = asdict(result)
+    record["status_bucket"] = _status_bucket(result.status)
+    record["tweet_length"] = result.tweet_length
+    return record
+
+
+def _sync_observability(result):
+    if not _env_bool("X_AUTOMATION_OBSERVABILITY_SYNC", default=False):
+        return "disabled"
+
+    record = _build_observability_record(result)
+    status_bucket = record["status_bucket"]
+    synced_supabase = False
+    fallback_synced = False
+
+    supabase_url = os.environ.get("SUPABASE_URL", "").strip()
+    supabase_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()
+    if supabase_url and supabase_key:
+        try:
+            from supabase import create_client
+
+            client = create_client(supabase_url, supabase_key)
+            client.table("automation_runs").insert(record).execute()
+            if status_bucket == "posted":
+                client.table("tweet_posts").insert(record).execute()
+            elif status_bucket == "failed":
+                client.table("tweet_failures").insert(record).execute()
+            synced_supabase = True
+        except Exception as exc:
+            print(f"⚠️  Supabase observability sync failed ({type(exc).__name__}): {exc}")
+
+    if not synced_supabase:
+        try:
+            runs_file = _json_output_path("X_AUTOMATION_RUNS_FILE", AUTOMATION_RUNS_FILE)
+            posts_file = _json_output_path("X_AUTOMATION_POSTS_FILE", TWEET_POSTS_FILE)
+            failures_file = _json_output_path("X_AUTOMATION_FAILURES_FILE", TWEET_FAILURES_FILE)
+            _append_json_array(runs_file, record)
+            if status_bucket == "posted":
+                _append_json_array(posts_file, record)
+            elif status_bucket == "failed":
+                _append_json_array(failures_file, record)
+            fallback_synced = True
+        except Exception as exc:
+            print(f"⚠️  File observability sync failed ({type(exc).__name__}): {exc}")
+
+    if synced_supabase and fallback_synced:
+        return "supabase+file"
+    if synced_supabase:
+        return "supabase"
+    if fallback_synced:
+        return "file"
+    return "unavailable"
+
+
+def _render_run_report_markdown(result):
+    rows = [
+        ("created_at", result.created_at),
+        ("status", result.status),
+        ("outcome", result.outcome),
+        ("status_bucket", _status_bucket(result.status)),
+        ("run_id", result.run_id),
+        ("trigger_source", result.trigger_source),
+        ("dry_run", result.dry_run),
+        ("force_post", result.force_post),
+        ("post_intent", result.post_intent),
+        ("market_open", result.market_open),
+        ("post_type", result.post_type),
+        ("template_used", result.template_used),
+        ("price_source", result.price_source),
+        ("price_freshness", result.price_freshness),
+        ("duplicate_guard_result", result.duplicate_guard_result),
+        ("tweet_length", result.tweet_length),
+        ("tweet_id", result.tweet_id),
+        ("state_hash", result.state_hash),
+        ("skip_reason", result.skip_reason),
+        ("error_summary", result.error_summary),
+        ("operator_action", result.operator_action),
+        ("db_sync_mode", result.db_sync_mode),
+    ]
+    lines = ["## Post Gold — Observability Run Report", "", "| Field | Value |", "| --- | --- |"]
+    for key, value in rows:
+        if value is None or value == "":
+            continue
+        lines.append(f"| {key} | `{value}` |")
+    return "\n".join(lines) + "\n"
+
+
+def _persist_run_report(result):
+    path = _run_report_path()
+    if path is None:
+        return
+    try:
+        _atomic_write_text(path, _render_run_report_markdown(result))
+    except Exception as exc:  # pragma: no cover — best-effort
+        print(f"⚠️  Failed to persist markdown run report to {path} ({type(exc).__name__}): {exc}")
+
+
+def _enrich_run_result(result):
+    if result.created_at is None:
+        result.created_at = _now_iso_utc()
+    if result.run_id is None:
+        result.run_id = os.environ.get("GITHUB_RUN_ID", "").strip() or "local"
+    if result.dry_run is None:
+        result.dry_run = _env_bool("DRY_RUN_TWEET", default=False)
+    if result.force_post is None:
+        result.force_post = _env_bool("FORCE_POST", default=False)
+    if result.post_intent is None:
+        result.post_intent = os.environ.get("POST_INTENT", "guard_normal").strip() or "guard_normal"
+    if result.market_open is None:
+        raw_market_open = os.environ.get("POST_GOLD_MARKET_OPEN", "").strip().lower()
+        if raw_market_open in ("true", "false"):
+            result.market_open = raw_market_open == "true"
+    if result.price_source is None:
+        result.price_source = os.environ.get("POST_GOLD_PRICE_SOURCE", "").strip() or None
+    if result.price_freshness is None:
+        result.price_freshness = os.environ.get("POST_GOLD_PRICE_FRESHNESS", "").strip() or None
+    if result.duplicate_guard_result is None:
+        result.duplicate_guard_result = os.environ.get("POST_GOLD_DUPLICATE_GUARD_RESULT", "").strip() or None
+    if result.state_hash is None:
+        result.state_hash = _short_hash(os.environ.get("POST_GOLD_STATE_HASH", "").strip()) or None
+    if result.error_summary is None:
+        result.error_summary = result.detail or result.skip_reason
+    if result.db_sync_mode is None:
+        result.db_sync_mode = _sync_observability(result)
+    return result
 
 
 def _atomic_write_text(path, text):
@@ -114,23 +309,38 @@ def _persist_run_result(result):
 
 
 def emit_run_result(result):
+    result = _enrich_run_result(result)
     _persist_run_result(result)
+    _persist_run_report(result)
     print("=== RUN RESULT ===")
     ordered_fields = [
+        ("created_at", result.created_at),
         ("outcome", result.outcome),
         ("status", result.status),
+        ("status_bucket", _status_bucket(result.status)),
         ("post_type", result.post_type),
         ("template_used", result.template_used),
+        ("run_id", result.run_id),
+        ("dry_run", result.dry_run),
+        ("force_post", result.force_post),
+        ("post_intent", result.post_intent),
+        ("market_open", result.market_open),
+        ("price_source", result.price_source),
+        ("price_freshness", result.price_freshness),
+        ("duplicate_guard_result", result.duplicate_guard_result),
         ("price", f"${result.price_usd_oz:,.2f}/oz" if isinstance(result.price_usd_oz, (int, float)) else None),
         ("tweet_length", result.tweet_length),
         ("content_hash", result.content_hash),
+        ("state_hash", result.state_hash),
         ("tweet_id", result.tweet_id),
         ("skip_reason", result.skip_reason),
+        ("error_summary", result.error_summary),
         ("operator_action", result.operator_action),
         ("reset_date", result.reset_date),
         ("retry_after_seconds", result.retry_after_seconds),
         ("trigger_source", result.trigger_source),
         ("trigger_nonce", result.trigger_nonce),
+        ("db_sync_mode", result.db_sync_mode),
         ("detail", result.detail),
     ]
     for label, value in ordered_fields:
@@ -1352,6 +1562,11 @@ def main():
     source_ts = _provider_timestamp_iso(raw_data) or (
         raw_data.get("source_updated_at_gmt", "n/a") if isinstance(raw_data, dict) else "n/a"
     )
+    source_provider = (
+        (raw_data.get("provider") if isinstance(raw_data, dict) else None)
+        or (raw_data.get("source") if isinstance(raw_data, dict) else None)
+        or "unknown"
+    )
     refresh_price_first = os.environ.get('REFRESH_PRICE_FIRST', 'false')
     trigger_nonce = os.environ.get('POST_TRIGGER_NONCE', '').strip()
     run_id = os.environ.get('GITHUB_RUN_ID', '').strip()
@@ -1394,8 +1609,12 @@ def main():
     _gs_price = f"${guard_state.last_price_usd_oz:,.4f}/oz" if (guard_state and guard_state.last_price_usd_oz is not None) else "none"
     _gs_time = guard_state.last_tweet_time_utc if (guard_state and guard_state.last_tweet_time_utc) else "none"
     _gs_hash = guard_state.last_tweet_text_hash[:12] if (guard_state and guard_state.last_tweet_text_hash) else "none"
+    os.environ["POST_GOLD_STATE_HASH"] = _gs_hash if _gs_hash != "none" else ""
     _mins_str = f"{_minutes_since_last:.2f}" if _minutes_since_last is not None else "none"
     _ltp_utc = guard_state.last_provider_timestamp_utc if (guard_state and guard_state.last_provider_timestamp_utc) else "none"
+    os.environ["POST_GOLD_PRICE_SOURCE"] = str(source_provider)
+    os.environ["POST_GOLD_MARKET_OPEN"] = "true" if market_open else "false"
+    os.environ["POST_GOLD_DUPLICATE_GUARD_RESULT"] = "not_evaluated"
     print("=== RUN CONTEXT ===")
     print(f"event:        {os.environ.get('GITHUB_EVENT_NAME', 'local')}")
     print(f"sha:          {sha[:7] if sha else 'local'}")
@@ -1499,6 +1718,7 @@ def main():
     # 6. Staleness check
     staleness_details = get_staleness_details(raw_data)
     staleness_action = staleness_details["action"]
+    os.environ["POST_GOLD_PRICE_FRESHNESS"] = str(staleness_action)
     staleness_msg = staleness_details["message"]
     if staleness_msg:
         print(staleness_msg)
@@ -1607,6 +1827,7 @@ def main():
         post_type,
     )
     if skip:
+        os.environ["POST_GOLD_DUPLICATE_GUARD_RESULT"] = "skipped:price_change_guard"
         print(reason)
         # For market_closed_reference, the operator may explicitly allow a
         # same-price repost via allow_same_price_closed_market_repost=true.
@@ -1619,12 +1840,14 @@ def main():
                 trigger_source=trigger_source,
             )
         ):
+            os.environ["POST_GOLD_DUPLICATE_GUARD_RESULT"] = "bypassed:allow_same_price_closed_market_repost"
             print(
                 "allow_same_price_closed_market_repost=true — price-change guard bypassed "
                 "for this manual/operator market_closed_reference run. "
                 "duplicate_text_hash, cooldown, and X duplicate rules still apply."
             )
         elif _is_must_post_mode():
+            os.environ["POST_GOLD_DUPLICATE_GUARD_RESULT"] = "bypassed:must_post"
             # must_post: price-change guard is a soft skip.  Tweet text is already
             # unique due to the current-run timestamp in the header, so we proceed.
             print(
@@ -1730,7 +1953,9 @@ def main():
         )
         if not decision.should_post:
             must_post = _is_must_post_mode()
+            os.environ["POST_GOLD_DUPLICATE_GUARD_RESULT"] = f"skipped:{decision.skip_reason}"
             if should_bypass_threshold:
+                os.environ["POST_GOLD_DUPLICATE_GUARD_RESULT"] = "bypassed:allow_same_price_closed_market_repost"
                 print(
                     "allow_same_price_closed_market_repost=true — tweet-guard "
                     "price_move_below_threshold bypassed for this manual/operator "
@@ -1738,6 +1963,7 @@ def main():
                     "and X duplicate rules still apply."
                 )
             elif must_post and decision.skip_reason == "duplicate_text_hash":
+                os.environ["POST_GOLD_DUPLICATE_GUARD_RESULT"] = "bypassed:must_post_duplicate_hash"
                 # Literal duplicate text: add uniqueness suffix and re-run guard.
                 print(
                     f"  [must_post] duplicate_text_hash: tweet text is literally the "
@@ -1771,6 +1997,7 @@ def main():
                     )
                 print(f"  [must_post] uniqueness suffix applied — proceeding to post.")
             elif must_post and decision.skip_reason in _MUST_POST_SOFT_SKIP_REASONS:
+                os.environ["POST_GOLD_DUPLICATE_GUARD_RESULT"] = f"bypassed:must_post_soft:{decision.skip_reason}"
                 # Soft guard reason: log context and proceed.
                 mins_str = f"{decision.minutes_since_last:.1f}" if decision.minutes_since_last is not None else "unknown"
                 print(
@@ -1831,6 +2058,8 @@ def main():
                     ),
                     exit_code=0,
                 )
+        else:
+            os.environ["POST_GOLD_DUPLICATE_GUARD_RESULT"] = "pass:tweet_guard"
         # Log why a same-price market_closed_reference was allowed through.
         if post_type == "market_closed_reference" and decision.price_move_usd is not None and abs(decision.price_move_usd) < 0.01:
             if decision.force_summary_due:
@@ -1867,6 +2096,8 @@ def main():
     # 10c. Dry-run guard (applied unconditionally; also catches the case where
     #      tweet_guard is unavailable and was not imported above).
     if str(os.environ.get('DRY_RUN_TWEET', '')).strip().lower() in ('1', 'true', 'yes'):
+        if os.environ.get("POST_GOLD_DUPLICATE_GUARD_RESULT", "").strip() == "not_evaluated":
+            os.environ["POST_GOLD_DUPLICATE_GUARD_RESULT"] = "pass:dry_run"
         print("DRY_RUN_TWEET=true — would post; skipping actual X call")
         print(f"   would-post hash: {tweet_hash}")
         finish_run(
@@ -1886,6 +2117,8 @@ def main():
         )
 
     # 11. Post tweet
+    if os.environ.get("POST_GOLD_DUPLICATE_GUARD_RESULT", "").strip() == "not_evaluated":
+        os.environ["POST_GOLD_DUPLICATE_GUARD_RESULT"] = "pass"
     try:
         post_result = post_tweet(tweet, post_type=post_type)
     except Exception as exc:

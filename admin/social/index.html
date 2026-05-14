@@ -741,6 +741,53 @@
             </div>
           </div>
 
+          <div class="card" style="margin-bottom: 20px">
+            <div class="card-header">
+              <h2 class="card-title">🔎 X Automation Observability</h2>
+            </div>
+            <div class="card-body">
+              <p style="margin: 0 0 12px; color: var(--text-dim); font-size: 0.875rem" id="x-obs-status">
+                Loading latest automation diagnostics…
+              </p>
+              <div class="stats-bar" style="margin-bottom: 12px">
+                <div class="stat-mini">
+                  <div class="stat-num" id="x-obs-last-success">—</div>
+                  <div class="stat-label">Last Successful Post</div>
+                </div>
+                <div class="stat-mini">
+                  <div class="stat-num" id="x-obs-last-failure">—</div>
+                  <div class="stat-label">Last Failed Post</div>
+                </div>
+                <div class="stat-mini">
+                  <div class="stat-num" id="x-obs-last-skip">—</div>
+                  <div class="stat-label">Last Skipped Reason</div>
+                </div>
+                <div class="stat-mini">
+                  <div class="stat-num" id="x-obs-state-hash">—</div>
+                  <div class="stat-label">Current State Hash</div>
+                </div>
+              </div>
+              <div class="stats-bar">
+                <div class="stat-mini">
+                  <div class="stat-num" id="x-obs-dry-runs">—</div>
+                  <div class="stat-label">Recent Dry Runs</div>
+                </div>
+                <div class="stat-mini">
+                  <div class="stat-num" id="x-obs-closed-market">—</div>
+                  <div class="stat-label">Closed-Market Status</div>
+                </div>
+                <div class="stat-mini">
+                  <div class="stat-num" id="x-obs-freshness">—</div>
+                  <div class="stat-label">Provider Freshness</div>
+                </div>
+                <div class="stat-mini">
+                  <div class="stat-num" id="x-obs-source-mode">—</div>
+                  <div class="stat-label">Data Source</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Page tabs -->
           <div class="page-tabs" role="tablist">
             <button class="page-tab active" data-tab="schedule" role="tab" type="button">
@@ -810,25 +857,24 @@
               >
                 <p>
                   Posts are <strong>automatically generated and posted every hour</strong> by the
-                  GitHub Actions workflow <code>gold-price-tweet.yml</code>. The template rotates
-                  based on Dubai time (UTC+4):
+                  GitHub Actions workflow <code>post_gold.yml</code>. Posting logic runs from
+                  <code>scripts/python/post_gold_price.py</code> and uses duplicate/cooldown/staleness
+                  guards with dry-run and force controls:
                 </p>
                 <ul style="margin: 12px 0; padding-left: 20px">
                   <li>
-                    <strong>Special templates</strong> fire at fixed hours: 00:00 (Daily), 06:00
-                    (Morning), 08:00 (Arabic), 10:00 (Country), 14:00 (Comparison), 16:00
-                    (Educational), 20:00 (Evening)
+                    <strong>Scheduled runs</strong> post hourly while markets are open (Sun 21:00
+                    UTC to Fri 20:59 UTC)
                   </li>
                   <li>
-                    <strong>Weekend edition</strong> replaces the noon post on Fridays &amp;
-                    Saturdays
+                    <strong>Manual runs</strong> support <code>dry_run</code>,
+                    <code>force_post</code>, and <code>post_intent</code> for safe operator control
                   </li>
-                  <li><strong>All other hours</strong> use the Hourly Snapshot template</li>
+                  <li><strong>Closed-market references</strong> are clearly labeled and guarded</li>
                 </ul>
                 <p>
-                  Templates are <strong>read-only</strong> — they are defined in
-                  <code>scripts/tweet-gold-price.js</code>. To modify a template, edit that file and
-                  push to <code>main</code>.
+                  Use the observability panel above to track last success/failure/skip state and
+                  freshness context from recent runs.
                 </p>
                 <p style="margin-top: 8px">
                   Use the <strong>Post Generator</strong> tab to manually create and post custom
@@ -1169,6 +1215,7 @@
       import { initAdminShell, renderBreadcrumb } from '../shared/admin-shell.js';
       import { showToast, confirmDialog, initCommandPalette } from '../shared/admin-utils.js';
       import { ICONS } from '../shared/icons.js';
+      import { fetchJsonWithTimeout, getAuthToken } from '../shared/admin-data.js';
 
       // ── Auth guard ──────────────────────────────────────────
       if (!(await requireAuth())) throw new Error('redirect');
@@ -1202,7 +1249,7 @@
       const TROY_OZ = 31.1035;
       const SITE_URL = 'https://goldtickerlive.com/';
 
-      /* Template metadata matching scripts/tweet-gold-price.js pickTemplate() */
+      /* Template metadata for the Social generator preview schedule. */
       const TEMPLATE_SCHEDULE = [
         {
           id: 'daily',
@@ -1396,7 +1443,7 @@
         return new Date(utcMs + 4 * 3600000);
       }
 
-      /** Pick template for a given UTC Date (mirrors scripts/tweet-gold-price.js) */
+      /** Pick template for a given UTC Date (generator-only schedule preview). */
       function pickTemplate(utcDate) {
         const dubaiHour = (utcDate.getUTCHours() + 4) % 24;
         const dubaiDate = new Date(utcDate.getTime() + 4 * 3600 * 1000);
@@ -1732,6 +1779,74 @@
           minimumFractionDigits: decimals,
           maximumFractionDigits: decimals,
         });
+      }
+
+      function setText(id, value) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = value == null || value === '' ? '—' : String(value);
+      }
+
+      function relativeTimeFromIso(iso) {
+        if (!iso) return '—';
+        const date = new Date(iso);
+        const ms = date.getTime();
+        if (!Number.isFinite(ms)) return String(iso);
+        const diffMs = Date.now() - ms;
+        const absSec = Math.round(Math.abs(diffMs) / 1000);
+        if (absSec < 60) return `${absSec}s ago`;
+        const absMin = Math.round(absSec / 60);
+        if (absMin < 60) return `${absMin}m ago`;
+        const absHours = Math.round(absMin / 60);
+        if (absHours < 48) return `${absHours}h ago`;
+        const absDays = Math.round(absHours / 24);
+        return `${absDays}d ago`;
+      }
+
+      function compactReason(value) {
+        if (!value) return '—';
+        const raw = String(value);
+        return raw.length > 32 ? `${raw.slice(0, 32)}…` : raw;
+      }
+
+      async function loadAutomationObservability() {
+        const statusEl = document.getElementById('x-obs-status');
+        const token = getAuthToken();
+        if (!token) {
+          if (statusEl) statusEl.textContent = 'Admin API token unavailable. Sign in again to load run diagnostics.';
+          return;
+        }
+
+        const result = await fetchJsonWithTimeout('/api/v1/admin/ops/x-automation', {
+          cache: 'no-store',
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!result.ok || !result.data?.success || !result.data?.data) {
+          if (statusEl) statusEl.textContent = 'Could not load observability snapshot from admin API.';
+          return;
+        }
+
+        const data = result.data.data;
+        const obs = data.observability || {};
+        setText('x-obs-last-success', relativeTimeFromIso(obs.lastSuccessfulPost?.created_at));
+        setText('x-obs-last-failure', relativeTimeFromIso(obs.lastFailedPost?.created_at));
+        setText('x-obs-last-skip', compactReason(obs.lastSkippedReason));
+        setText('x-obs-state-hash', obs.currentStateHash || '—');
+        setText('x-obs-dry-runs', obs.recentDryRuns?.length ?? 0);
+        if (obs.closedMarketStatus) {
+          const marketOpen = obs.closedMarketStatus.marketOpen;
+          const mode = marketOpen === false ? 'Closed' : marketOpen === true ? 'Open' : 'Unknown';
+          setText('x-obs-closed-market', mode);
+        } else {
+          setText('x-obs-closed-market', '—');
+        }
+        setText('x-obs-freshness', obs.providerFreshnessAtPostTime || 'unknown');
+        setText('x-obs-source-mode', data.sourceMode || 'file');
+        if (statusEl) {
+          statusEl.textContent = obs.latestRun?.created_at
+            ? `Latest run ${relativeTimeFromIso(obs.latestRun.created_at)} (${obs.latestRun.status || 'unknown'})`
+            : 'No recent automation run record found yet.';
+        }
       }
 
       function toArabicNumerals(str) {
@@ -2309,10 +2424,12 @@
         renderSchedule();
         renderTemplates();
         await renderHistory();
+        await loadAutomationObservability();
         updateNextPost();
 
         // Update countdown every second
         setInterval(updateNextPost, 1000);
+        setInterval(loadAutomationObservability, 60 * 1000);
       }
 
       init();

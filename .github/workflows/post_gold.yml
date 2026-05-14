@@ -127,6 +127,13 @@ jobs:
           ALLOW_SAME_PRICE_CLOSED_MARKET_REPOST: ${{ github.event.inputs.allow_same_price_closed_market_repost || 'false' }}
           MIN_TWEET_INTERVAL_MINUTES:  '55'
           POST_GOLD_RESULT_PATH:       ${{ runner.temp }}/post-gold-result.json
+          POST_GOLD_REPORT_PATH:       ${{ runner.temp }}/post-gold-report.md
+          X_AUTOMATION_OBSERVABILITY_SYNC: 'true'
+          X_AUTOMATION_RUNS_FILE:      ${{ runner.temp }}/automation-runs.json
+          X_AUTOMATION_POSTS_FILE:     ${{ runner.temp }}/tweet-posts.json
+          X_AUTOMATION_FAILURES_FILE:  ${{ runner.temp }}/tweet-failures.json
+          SUPABASE_URL:                ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY:   ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: python scripts/python/post_gold_price.py
 
       - name: Commit last price state
@@ -193,6 +200,7 @@ jobs:
           ALLOW_SAME_PRICE_INPUT: ${{ github.event.inputs.allow_same_price_closed_market_repost || 'false' }}
           TRIGGER_NONCE_INPUT:    ${{ github.event.inputs.trigger_nonce || '' }}
           POST_GOLD_RESULT_PATH:  ${{ runner.temp }}/post-gold-result.json
+          POST_GOLD_REPORT_PATH:  ${{ runner.temp }}/post-gold-report.md
         run: |
           {
             echo "### 🏅 Post Gold — Run Summary"
@@ -231,15 +239,27 @@ jobs:
                       print("| Field | Value |")
                       print("| --- | --- |")
                       ordered_fields = [
+                          "created_at",
                           "outcome",
                           "status",
+                          "status_bucket",
                           "post_type",
                           "template_used",
+                          "run_id",
+                          "dry_run",
+                          "force_post",
+                          "post_intent",
+                          "market_open",
+                          "price_source",
+                          "price_freshness",
+                          "duplicate_guard_result",
                           "price_usd_oz",
                           "tweet_length",
                           "content_hash",
+                          "state_hash",
                           "tweet_id",
                           "skip_reason",
+                          "error_summary",
                           "operator_action",
                           "reset_date",
                           "retry_after_seconds",
@@ -253,3 +273,22 @@ jobs:
                               continue
                           print(f"| {key} | `{value}` |")
           PY
+          if [ -f "$POST_GOLD_REPORT_PATH" ]; then
+            {
+              echo ""
+              cat "$POST_GOLD_REPORT_PATH"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload post-gold observability artifact
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: post-gold-observability-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/post-gold-result.json
+            ${{ runner.temp }}/post-gold-report.md
+            ${{ runner.temp }}/automation-runs.json
+            ${{ runner.temp }}/tweet-posts.json
+            ${{ runner.temp }}/tweet-failures.json
