@@ -35,6 +35,30 @@ export function readLegacyAdminToken() {
   }
 }
 
+export function getAuthToken() {
+  try {
+    const legacy = localStorage.getItem('gp_admin_token');
+    if (legacy) return legacy;
+    const sbKey = Object.keys(localStorage).find(
+      (key) => key.startsWith('sb-') && key.endsWith('-auth-token')
+    );
+    if (!sbKey) return null;
+    const raw = localStorage.getItem(sbKey);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    // Supabase can store either { access_token } or an array [{ access_token }]
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+      return parsed.access_token || null;
+    }
+    if (Array.isArray(parsed) && parsed[0] && typeof parsed[0] === 'object') {
+      return parsed[0].access_token || null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchJsonWithTimeout(
   url,
   options = {},
@@ -54,7 +78,7 @@ export async function fetchJsonWithTimeout(
 }
 
 export async function fetchServerAdminStats() {
-  const token = readLegacyAdminToken();
+  const token = getAuthToken();
   if (!token) {
     return { ok: false, skipped: true, reason: 'No legacy API token available' };
   }
