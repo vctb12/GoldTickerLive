@@ -79,7 +79,16 @@ function extractBearerToken(req) {
   return token || null;
 }
 
+function resolveClientIp(req) {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (typeof forwarded === 'string' && forwarded.trim()) {
+    return forwarded.split(',')[0].trim();
+  }
+  return req.ip || req.socket?.remoteAddress || 'unknown';
+}
+
 function parseDevUser(req) {
+  if (process.env.NODE_ENV === 'production') return null;
   if (process.env.PUBLIC_AUTH_TEST_MODE !== '1') return null;
   const id = toSafeString(req.headers['x-test-user-id'], 128);
   if (!id) return null;
@@ -191,24 +200,45 @@ function createDataLayer(storePath) {
     },
 
     async touchSession(user, req) {
+      const ipHash = crypto
+        .createHash('sha256')
+        .update(String(resolveClientIp(req)))
+        .digest('hex');
       const row = {
         id: generateId(),
         user_id: user.id,
-        ip_hash: crypto
-          .createHash('sha256')
-          .update(String(req.ip || req.socket?.remoteAddress || 'unknown'))
-          .digest('hex'),
+        ip_hash: ipHash,
         user_agent: toSafeString(req.get('user-agent') || '', 500),
         created_at: nowIso(),
       };
       return runWithFallback(
         async (sb) => {
+          const cutoffIso = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+          const { data: existing, error: existingError } = await sb
+            .from('user_sessions')
+            .select('id')
+            .eq('user_id', user.id)
+            .eq('ip_hash', ipHash)
+            .gte('created_at', cutoffIso)
+            .order('created_at', { ascending: false })
+            .limit(1);
+          if (existingError) throw existingError;
+          if (Array.isArray(existing) && existing.length > 0) return false;
           const { error } = await sb.from('user_sessions').insert(row);
           if (error) throw error;
           return true;
         },
         () => {
           const store = readStore(storePath);
+          const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+          const hasRecent = store.user_sessions.some(
+            (entry) =>
+              entry.user_id === user.id &&
+              entry.ip_hash === ipHash &&
+              Number.isFinite(new Date(entry.created_at).getTime()) &&
+              new Date(entry.created_at).getTime() >= cutoff
+          );
+          if (hasRecent) return false;
           store.user_sessions.push(row);
           store.user_sessions = store.user_sessions.slice(-1000);
           writeStore(storePath, store);
@@ -595,7 +625,7 @@ function createPublicAccountsRouter(options = {}) {
   const dataLayer = createDataLayer(storePath);
   const resolveUser = options.resolveUser || resolveSupabaseUser;
 
-  router.use(async (req, res, next) => {
+  router.use('/me', async (req, res, next) => {
     const devUser = parseDevUser(req);
     if (devUser) {
       req.publicUser = devUser;

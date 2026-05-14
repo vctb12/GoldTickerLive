@@ -250,7 +250,14 @@ export function bindCoreEvents() {
     persistState(_state);
     _cb.renderAlerts();
     _cb.showToast(`Alert ${condition} $${target} saved`);
-    _cb.syncAlertToAccount?.({ condition, target }).catch(() => {});
+    try {
+      const maybePromise = _cb.syncAlertToAccount?.({ condition, target });
+      if (maybePromise && typeof maybePromise.then === 'function') {
+        maybePromise.catch(() => {});
+      }
+    } catch {
+      // non-blocking optional integration
+    }
     if (_el.alertTarget) _el.alertTarget.value = '';
     track(EVENTS.ALERT_SET, {
       karat: _state.selectedKarat,

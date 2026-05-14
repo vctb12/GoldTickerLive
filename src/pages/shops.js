@@ -437,7 +437,9 @@ function announceShopStatus(message) {
 async function saveShopToAccount(shop) {
   if (!shop?.id) return;
   if (!isAccountAuthenticated()) {
-    redirectToAccount();
+    if (window.confirm(t('saveToAccountAuthPrompt'))) {
+      redirectToAccount();
+    }
     return;
   }
   await createSavedShop({

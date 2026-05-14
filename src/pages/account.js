@@ -62,6 +62,10 @@ function switchTab(mode) {
   const isSignIn = mode === 'signin';
   signInTab?.classList.toggle('is-active', isSignIn);
   signUpTab?.classList.toggle('is-active', !isSignIn);
+  if (signInTab) signInTab.setAttribute('aria-selected', String(isSignIn));
+  if (signUpTab) signUpTab.setAttribute('aria-selected', String(!isSignIn));
+  if (signInTab) signInTab.tabIndex = isSignIn ? 0 : -1;
+  if (signUpTab) signUpTab.tabIndex = isSignIn ? -1 : 0;
   if (signInForm) signInForm.hidden = !isSignIn;
   if (signUpForm) signUpForm.hidden = isSignIn;
 }
@@ -115,6 +119,7 @@ async function init() {
   document
     .getElementById('account-tab-signup')
     ?.addEventListener('click', () => switchTab('signup'));
+  switchTab('signin');
 
   document.getElementById('account-form-signin')?.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -138,9 +143,10 @@ async function init() {
   });
 
   document.getElementById('account-google-btn')?.addEventListener('click', async () => {
+    const redirectTarget = new URL(getNextUrl(), window.location.origin).toString();
     const { error } = await sb.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/dashboard.html` },
+      options: { redirectTo: redirectTarget },
     });
     if (error) setStatus(tx('oauthFailed'));
   });

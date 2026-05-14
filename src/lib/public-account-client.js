@@ -186,28 +186,51 @@ export async function importLocalStorageData() {
     savedShops: 0,
     savedCalculations: 0,
     alerts: 0,
+    failed: 0,
   };
 
-  if (preview.preferences) {
-    await updatePreferences(preview.preferences);
-    result.preferences = true;
+  async function runConcurrent(items, worker, concurrency = 4) {
+    const queue = [...items];
+    const runners = Array.from({ length: Math.min(concurrency, queue.length || 1) }, async () => {
+      while (queue.length) {
+        const next = queue.shift();
+        try {
+          await worker(next);
+        } catch {
+          result.failed += 1;
+        }
+      }
+    });
+    await Promise.all(runners);
   }
 
-  for (const currency of preview.watchlistCurrencies) {
-    if (typeof currency !== 'string' || !currency.trim()) continue;
+  if (preview.preferences) {
+    try {
+      await updatePreferences(preview.preferences);
+      result.preferences = true;
+    } catch {
+      result.failed += 1;
+    }
+  }
+
+  const watchlistItems = preview.watchlistCurrencies.filter(
+    (currency) => typeof currency === 'string' && currency.trim()
+  );
+  await runConcurrent(watchlistItems, async (currency) => {
+    const normalized = currency.trim().toUpperCase();
     await createWatchlistItem({
       item_type: 'currency',
-      item_key: currency.trim().toUpperCase(),
-      item_label: `${currency.trim().toUpperCase()} watch`,
+      item_key: normalized,
+      item_label: `${normalized} watch`,
       metadata: { source: 'localStorage-import' },
     });
     result.watchlist += 1;
-  }
+  });
 
-  for (const alert of preview.alerts) {
-    if (!alert || typeof alert !== 'object') continue;
+  const alertItems = preview.alerts.filter((alert) => alert && typeof alert === 'object');
+  await runConcurrent(alertItems, async (alert) => {
     const key = [alert.direction, alert.target, alert.scope].filter(Boolean).join(':');
-    if (!key) continue;
+    if (!key) return;
     await createWatchlistItem({
       item_type: 'alert',
       item_key: key.slice(0, 120),
@@ -215,22 +238,26 @@ export async function importLocalStorageData() {
       metadata: { ...alert, source: 'localStorage-import' },
     });
     result.alerts += 1;
-  }
+  });
 
-  for (const shopId of preview.shortlistShopIds) {
-    if (typeof shopId !== 'string' || !shopId.trim()) continue;
+  const shortlistIds = preview.shortlistShopIds.filter(
+    (shopId) => typeof shopId === 'string' && shopId.trim()
+  );
+  await runConcurrent(shortlistIds, async (shopId) => {
+    const normalized = shopId.trim();
     await createSavedShop({
-      shop_id: shopId.trim(),
-      shop_name: shopId.trim(),
+      shop_id: normalized,
+      shop_name: normalized,
       notes: 'Imported from local shortlist',
       source_url: '/shops.html',
     });
     result.savedShops += 1;
-  }
+  });
 
-  for (const calc of preview.localCalculations) {
-    if (!calc || typeof calc !== 'object') continue;
-    if (!calc.tool) continue;
+  const calculations = preview.localCalculations.filter(
+    (calc) => calc && typeof calc === 'object' && calc.tool
+  );
+  await runConcurrent(calculations, async (calc) => {
     await createSavedCalculation({
       tool: String(calc.tool).slice(0, 40),
       label: String(calc.label || calc.tool).slice(0, 200),
@@ -238,7 +265,7 @@ export async function importLocalStorageData() {
       output_data: calc.output_data && typeof calc.output_data === 'object' ? calc.output_data : {},
     });
     result.savedCalculations += 1;
-  }
+  });
 
   return result;
 }

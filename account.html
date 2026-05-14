@@ -71,11 +71,29 @@
 
         <div class="account-card">
           <div class="account-tabs" role="tablist" aria-label="Authentication actions">
-            <button id="account-tab-signin" class="account-tab is-active" type="button">Sign in</button>
-            <button id="account-tab-signup" class="account-tab" type="button">Create account</button>
+            <button
+              id="account-tab-signin"
+              class="account-tab is-active"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              aria-controls="account-form-signin"
+            >
+              Sign in
+            </button>
+            <button
+              id="account-tab-signup"
+              class="account-tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="account-form-signup"
+            >
+              Create account
+            </button>
           </div>
 
-          <form id="account-form-signin" class="account-form">
+          <form id="account-form-signin" class="account-form" role="tabpanel" aria-labelledby="account-tab-signin">
             <label for="account-signin-email">Email</label>
             <input id="account-signin-email" type="email" autocomplete="email" required />
             <label for="account-signin-password">Password</label>
@@ -88,7 +106,13 @@
             <button class="btn btn-primary" type="submit" id="account-signin-submit">Sign in</button>
           </form>
 
-          <form id="account-form-signup" class="account-form" hidden>
+          <form
+            id="account-form-signup"
+            class="account-form"
+            role="tabpanel"
+            aria-labelledby="account-tab-signup"
+            hidden
+          >
             <label for="account-signup-email">Email</label>
             <input id="account-signup-email" type="email" autocomplete="email" required />
             <label for="account-signup-password">Password (min 8 chars)</label>

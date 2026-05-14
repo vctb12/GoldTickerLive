@@ -23,15 +23,27 @@ const T = {
     authRequired: 'Please sign in first.',
     loaded: 'Dashboard refreshed.',
     importing: 'Importing local browser data…',
+    delete: 'Delete',
+    empty: 'No saved items yet.',
+    refreshFailed: 'Could not refresh dashboard right now.',
+    importFailed: 'Import failed. Please try again.',
+    signOutFailed: 'Could not sign out right now.',
+    loadFailed: 'Could not load dashboard right now.',
     importDone: (r) =>
-      `Import complete. Preferences: ${r.preferences ? 'yes' : 'no'}, watchlist: ${r.watchlist}, alerts: ${r.alerts}, shops: ${r.savedShops}, calculations: ${r.savedCalculations}.`,
+      `Import complete. Preferences: ${r.preferences ? 'yes' : 'no'}, watchlist: ${r.watchlist}, alerts: ${r.alerts}, shops: ${r.savedShops}, calculations: ${r.savedCalculations}, failed: ${r.failed || 0}.`,
   },
   ar: {
     authRequired: 'يرجى تسجيل الدخول أولاً.',
     loaded: 'تم تحديث لوحة التحكم.',
     importing: 'جارٍ استيراد بيانات المتصفح المحلية…',
+    delete: 'حذف',
+    empty: 'لا توجد عناصر محفوظة بعد.',
+    refreshFailed: 'تعذر تحديث لوحة التحكم حالياً.',
+    importFailed: 'فشل الاستيراد. يرجى المحاولة مرة أخرى.',
+    signOutFailed: 'تعذر تسجيل الخروج حالياً.',
+    loadFailed: 'تعذر تحميل لوحة التحكم حالياً.',
     importDone: (r) =>
-      `اكتمل الاستيراد. التفضيلات: ${r.preferences ? 'نعم' : 'لا'}، المراقبة: ${r.watchlist}، التنبيهات: ${r.alerts}، المحلات: ${r.savedShops}، الحاسبات: ${r.savedCalculations}.`,
+      `اكتمل الاستيراد. التفضيلات: ${r.preferences ? 'نعم' : 'لا'}، المراقبة: ${r.watchlist}، التنبيهات: ${r.alerts}، المحلات: ${r.savedShops}، الحاسبات: ${r.savedCalculations}، الفاشلة: ${r.failed || 0}.`,
   },
 };
 
@@ -64,7 +76,7 @@ function renderList(containerId, items, onDelete) {
   list.replaceChildren();
   if (!items.length) {
     const li = document.createElement('li');
-    li.textContent = '—';
+    li.textContent = tx('empty');
     list.append(li);
     return;
   }
@@ -76,8 +88,12 @@ function renderList(containerId, items, onDelete) {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'btn btn-ghost btn-sm';
-    btn.textContent = 'Delete';
-    btn.addEventListener('click', () => onDelete(item.id));
+    btn.textContent = tx('delete');
+    btn.addEventListener('click', () => {
+      Promise.resolve(onDelete(item.id)).catch(() => {
+        setStatus(tx('refreshFailed'));
+      });
+    });
     li.append(copy, btn);
     list.append(li);
   });
@@ -140,19 +156,37 @@ async function init() {
     return;
   }
 
-  document.getElementById('dashboard-refresh-btn')?.addEventListener('click', refreshDashboard);
+  document.getElementById('dashboard-refresh-btn')?.addEventListener('click', async () => {
+    try {
+      await refreshDashboard();
+    } catch {
+      setStatus(tx('refreshFailed'));
+    }
+  });
   document.getElementById('dashboard-signout-btn')?.addEventListener('click', async () => {
-    await sb.auth.signOut();
-    window.location.href = '/account.html';
+    try {
+      await sb.auth.signOut();
+      window.location.href = '/account.html';
+    } catch {
+      setStatus(tx('signOutFailed'));
+    }
   });
   document.getElementById('dashboard-import-btn')?.addEventListener('click', async () => {
-    setStatus(tx('importing'));
-    const result = await importLocalStorageData();
-    setStatus(tx('importDone', result));
-    await refreshDashboard();
+    try {
+      setStatus(tx('importing'));
+      const result = await importLocalStorageData();
+      setStatus(tx('importDone', result));
+      await refreshDashboard();
+    } catch {
+      setStatus(tx('importFailed'));
+    }
   });
 
-  await refreshDashboard();
+  try {
+    await refreshDashboard();
+  } catch {
+    setStatus(tx('loadFailed'));
+  }
 }
 
 init();
