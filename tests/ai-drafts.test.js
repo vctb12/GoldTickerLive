@@ -114,8 +114,8 @@ function authHeader(token) {
 describe('ai-drafts repository', () => {
   const repo = require('../server/repositories/ai-drafts.repository');
 
-  test('insertDraft always sets status=draft', () => {
-    const draft = repo.insertDraft({
+  test('insertDraft always sets status=draft', async () => {
+    const draft = await repo.insertDraft({
       type: 'daily_summary',
       title_en: 'Test EN',
       title_ar: 'اختبار',
@@ -127,8 +127,8 @@ describe('ai-drafts repository', () => {
     assert.equal(draft.is_spot_estimate, true, 'is_spot_estimate must be true');
   });
 
-  test('insertDraft generates a unique id', () => {
-    const d1 = repo.insertDraft({
+  test('insertDraft generates a unique id', async () => {
+    const d1 = await repo.insertDraft({
       type: 'x_post',
       title_en: 'A',
       title_ar: 'أ',
@@ -136,7 +136,7 @@ describe('ai-drafts repository', () => {
       body_ar: 'ب',
       data_timestamp_utc: new Date().toISOString(),
     });
-    const d2 = repo.insertDraft({
+    const d2 = await repo.insertDraft({
       type: 'x_post',
       title_en: 'A',
       title_ar: 'أ',
@@ -151,8 +151,8 @@ describe('ai-drafts repository', () => {
     assert.equal(repo.getDraftById('nonexistent'), null);
   });
 
-  test('transitionDraft: draft → approved', () => {
-    const draft = repo.insertDraft({
+  test('transitionDraft: draft → approved', async () => {
+    const draft = await repo.insertDraft({
       type: 'seo_brief',
       title_en: 'T',
       title_ar: 'ت',
@@ -160,7 +160,7 @@ describe('ai-drafts repository', () => {
       body_ar: 'ب',
       data_timestamp_utc: new Date().toISOString(),
     });
-    const approved = repo.transitionDraft(draft.id, 'approved', {
+    const approved = await repo.transitionDraft(draft.id, 'approved', {
       actor: 'editor@test.com',
       note: 'looks good',
     });
@@ -170,8 +170,8 @@ describe('ai-drafts repository', () => {
     assert.ok(approved.audit_trail.length >= 1);
   });
 
-  test('transitionDraft: approved → published sets published_at_utc', () => {
-    const draft = repo.insertDraft({
+  test('transitionDraft: approved → published sets published_at_utc', async () => {
+    const draft = await repo.insertDraft({
       type: 'newsletter_block',
       title_en: 'T',
       title_ar: 'ت',
@@ -179,8 +179,8 @@ describe('ai-drafts repository', () => {
       body_ar: 'ب',
       data_timestamp_utc: new Date().toISOString(),
     });
-    repo.transitionDraft(draft.id, 'approved', { actor: 'a@b.com' });
-    const published = repo.transitionDraft(draft.id, 'published', {
+    await repo.transitionDraft(draft.id, 'approved', { actor: 'a@b.com' });
+    const published = await repo.transitionDraft(draft.id, 'published', {
       actor: 'a@b.com',
       export_channel: 'newsletter',
     });
@@ -189,8 +189,33 @@ describe('ai-drafts repository', () => {
     assert.equal(published.export_channel, 'newsletter');
   });
 
-  test('updateDraft only modifies allowed fields', () => {
-    const draft = repo.insertDraft({
+  test('transitionDraft: approval note preserved through publish with no note', async () => {
+    const draft = await repo.insertDraft({
+      type: 'seo_brief',
+      title_en: 'T',
+      title_ar: 'ت',
+      body_en: 'B',
+      body_ar: 'ب',
+      data_timestamp_utc: new Date().toISOString(),
+    });
+    await repo.transitionDraft(draft.id, 'approved', {
+      actor: 'a@b.com',
+      note: 'Approved by editor',
+    });
+    // Publish without supplying a note — approval note must be preserved
+    const published = await repo.transitionDraft(draft.id, 'published', {
+      actor: 'a@b.com',
+      export_channel: 'newsletter',
+    });
+    assert.equal(
+      published.review_note,
+      'Approved by editor',
+      'Approval note must not be erased by publish'
+    );
+  });
+
+  test('updateDraft only modifies allowed fields and appends audit trail entry', async () => {
+    const draft = await repo.insertDraft({
       type: 'daily_summary',
       title_en: 'Original',
       title_ar: 'أصلي',
@@ -198,14 +223,22 @@ describe('ai-drafts repository', () => {
       body_ar: 'قديم',
       data_timestamp_utc: new Date().toISOString(),
     });
-    repo.updateDraft(draft.id, { title_en: 'Updated', status: 'published' }); // status is not allowed
+    await repo.updateDraft(
+      draft.id,
+      { title_en: 'Updated', status: 'published' },
+      'editor@test.com'
+    ); // status is not allowed
     const updated = repo.getDraftById(draft.id);
     assert.equal(updated.title_en, 'Updated');
     assert.equal(updated.status, 'draft', 'status must not be changed via updateDraft');
+    // Audit trail must have an 'edited' entry
+    const editEntry = updated.audit_trail.find((e) => e.action === 'edited');
+    assert.ok(editEntry, 'audit_trail must contain an edited entry');
+    assert.deepEqual(editEntry.fields, ['title_en']);
   });
 
-  test('getDraftCounts returns accurate totals', () => {
-    repo.insertDraft({
+  test('getDraftCounts returns accurate totals', async () => {
+    await repo.insertDraft({
       type: 'x_post',
       title_en: 'A',
       title_ar: 'أ',
@@ -311,24 +344,32 @@ describe('ai-drafts service — generateDraft', () => {
     karats_aed_per_gram: { '24k': 380.1, '22k': 348.4, '21k': 332.6, '18k': 285.1 },
   };
 
-  test('generateDraft returns a draft with status=draft (never auto-publishes)', () => {
-    const draft = svc.generateDraft('daily_summary', { currentPrice: MOCK_PRICE });
+  test('generateDraft returns a draft with status=draft (never auto-publishes)', async () => {
+    const draft = await svc.generateDraft('daily_summary', { currentPrice: MOCK_PRICE });
     assert.equal(draft.status, 'draft', 'Generated draft must start as "draft"');
   });
 
-  test('generateDraft includes data_timestamp_utc', () => {
-    const draft = svc.generateDraft('daily_summary', { currentPrice: MOCK_PRICE });
+  test('generateDraft includes data_timestamp_utc', async () => {
+    const draft = await svc.generateDraft('daily_summary', { currentPrice: MOCK_PRICE });
     assert.ok(draft.data_timestamp_utc, 'data_timestamp_utc must be set');
   });
 
-  test('generateDraft includes both EN and AR body', () => {
-    const draft = svc.generateDraft('daily_summary', { currentPrice: MOCK_PRICE });
+  test('generateDraft throws when price has no timestamp', async () => {
+    const noTs = { ...MOCK_PRICE, timestamp_utc: undefined, fetched_at_utc: undefined };
+    await assert.rejects(
+      () => svc.generateDraft('daily_summary', { currentPrice: noTs }),
+      /data_timestamp_utc/
+    );
+  });
+
+  test('generateDraft includes both EN and AR body', async () => {
+    const draft = await svc.generateDraft('daily_summary', { currentPrice: MOCK_PRICE });
     assert.ok(draft.body_en && draft.body_en.length > 20, 'body_en must be non-trivial');
     assert.ok(draft.body_ar && draft.body_ar.length > 20, 'body_ar must be non-trivial');
   });
 
-  test('generateDraft body_en contains spot/reference disclaimer', () => {
-    const draft = svc.generateDraft('daily_summary', { currentPrice: MOCK_PRICE });
+  test('generateDraft body_en contains spot/reference disclaimer', async () => {
+    const draft = await svc.generateDraft('daily_summary', { currentPrice: MOCK_PRICE });
     const hasDisclaimer =
       draft.body_en.includes('spot') ||
       draft.body_en.includes('estimate') ||
@@ -336,8 +377,8 @@ describe('ai-drafts service — generateDraft', () => {
     assert.ok(hasDisclaimer, 'body_en must contain trust language (spot/estimate/reference)');
   });
 
-  test('generateDraft body_ar contains Arabic trust language', () => {
-    const draft = svc.generateDraft('daily_summary', { currentPrice: MOCK_PRICE });
+  test('generateDraft body_ar contains Arabic trust language', async () => {
+    const draft = await svc.generateDraft('daily_summary', { currentPrice: MOCK_PRICE });
     const hasArabicTrust =
       draft.body_ar.includes('تقديري') ||
       draft.body_ar.includes('مرجعي') ||
@@ -345,30 +386,30 @@ describe('ai-drafts service — generateDraft', () => {
     assert.ok(hasArabicTrust, 'body_ar must contain Arabic trust language');
   });
 
-  test('generateDraft sets is_spot_estimate=true', () => {
-    const draft = svc.generateDraft('x_post', { currentPrice: MOCK_PRICE });
+  test('generateDraft sets is_spot_estimate=true', async () => {
+    const draft = await svc.generateDraft('x_post', { currentPrice: MOCK_PRICE });
     assert.equal(draft.is_spot_estimate, true);
   });
 
-  test('generateDraft sets anomaly_flag when price is stale', () => {
+  test('generateDraft sets anomaly_flag when price is stale', async () => {
     const stalePrice = { ...MOCK_PRICE, is_fresh: false };
-    const draft = svc.generateDraft('daily_summary', { currentPrice: stalePrice });
+    const draft = await svc.generateDraft('daily_summary', { currentPrice: stalePrice });
     assert.equal(draft.anomaly_flag, true, 'Stale price must set anomaly_flag');
     assert.ok(draft.anomaly_detail, 'anomaly_detail must be set when flagged');
   });
 
-  test('generateDraft does not set anomaly_flag for clean fresh data', () => {
-    const draft = svc.generateDraft('daily_summary', {
+  test('generateDraft does not set anomaly_flag for clean fresh data', async () => {
+    const draft = await svc.generateDraft('daily_summary', {
       currentPrice: MOCK_PRICE,
       prevPrice: { ...MOCK_PRICE, xau_usd_per_oz: 3200.5 },
     });
     assert.equal(draft.anomaly_flag, false);
   });
 
-  test('generateDraft: all seven types produce a draft', () => {
+  test('generateDraft: all seven types produce a draft', async () => {
     const types = repo.DRAFT_TYPES;
     for (const type of types) {
-      const draft = svc.generateDraft(type, { currentPrice: MOCK_PRICE });
+      const draft = await svc.generateDraft(type, { currentPrice: MOCK_PRICE });
       assert.equal(draft.type, type, `Draft type mismatch for ${type}`);
       assert.equal(draft.status, 'draft');
       assert.ok(draft.body_en, `body_en missing for type ${type}`);
@@ -376,15 +417,17 @@ describe('ai-drafts service — generateDraft', () => {
     }
   });
 
-  test('generateDrafts returns one draft per type', () => {
-    const drafts = svc.generateDrafts(['daily_summary', 'x_post'], { currentPrice: MOCK_PRICE });
+  test('generateDrafts returns one draft per type', async () => {
+    const drafts = await svc.generateDrafts(['daily_summary', 'x_post'], {
+      currentPrice: MOCK_PRICE,
+    });
     assert.equal(drafts.length, 2);
     assert.equal(drafts[0].type, 'daily_summary');
     assert.equal(drafts[1].type, 'x_post');
   });
 
-  test('generateDraft: x_post body_en contains DRAFT notice', () => {
-    const draft = svc.generateDraft('x_post', { currentPrice: MOCK_PRICE });
+  test('generateDraft: x_post body_en contains DRAFT notice', async () => {
+    const draft = await svc.generateDraft('x_post', { currentPrice: MOCK_PRICE });
     assert.ok(
       draft.body_en.toUpperCase().includes('DRAFT') ||
         draft.body_en.includes('review required') ||
@@ -393,8 +436,8 @@ describe('ai-drafts service — generateDraft', () => {
     );
   });
 
-  test('generateDraft throws on unknown type', () => {
-    assert.throws(
+  test('generateDraft throws on unknown type', async () => {
+    await assert.rejects(
       () => svc.generateDraft('invalid_type', { currentPrice: MOCK_PRICE }),
       /Unknown draft type/
     );
@@ -706,5 +749,82 @@ describe('AI drafts admin API — generate + lifecycle', () => {
     );
     const res = await request('GET', `/api/admin/ai-drafts/${draftId}`, null, authHeader(token));
     assert.equal(res.body.draft.status, 'draft', 'PATCH must not allow status change');
+  });
+
+  test('POST /api/admin/ai-drafts/generate rejects empty types array', async () => {
+    const token = await getAdminToken();
+    const res = await request(
+      'POST',
+      '/api/admin/ai-drafts/generate',
+      { types: [] },
+      authHeader(token)
+    );
+    assert.equal(res.status, 400, 'Empty types array must return 400');
+  });
+
+  test('POST /api/admin/ai-drafts/:id/reject blocks rejected → rejected no-op', async () => {
+    const token = await getAdminToken();
+    const genRes = await request(
+      'POST',
+      '/api/admin/ai-drafts/generate',
+      { types: ['seo_brief'] },
+      authHeader(token)
+    );
+    const draftId = genRes.body.drafts[0].id;
+
+    // First reject — should succeed
+    const first = await request(
+      'POST',
+      `/api/admin/ai-drafts/${draftId}/reject`,
+      { reason: 'Needs work' },
+      authHeader(token)
+    );
+    assert.equal(first.status, 200);
+    assert.equal(first.body.draft.status, 'rejected');
+
+    // Second reject on already-rejected draft — must 409
+    const second = await request(
+      'POST',
+      `/api/admin/ai-drafts/${draftId}/reject`,
+      { reason: 'Again' },
+      authHeader(token)
+    );
+    assert.equal(second.status, 409, 'Rejecting an already-rejected draft must return 409');
+  });
+
+  test('PATCH audit trail has edited entry after approve', async () => {
+    const token = await getAdminToken();
+    const genRes = await request(
+      'POST',
+      '/api/admin/ai-drafts/generate',
+      { types: ['newsletter_block'] },
+      authHeader(token)
+    );
+    const draftId = genRes.body.drafts[0].id;
+
+    // Approve, then edit while approved
+    await request(
+      'POST',
+      `/api/admin/ai-drafts/${draftId}/approve`,
+      { note: 'ok' },
+      authHeader(token)
+    );
+    await request(
+      'PATCH',
+      `/api/admin/ai-drafts/${draftId}`,
+      { title_en: 'Post-approval edit' },
+      authHeader(token)
+    );
+
+    const auditRes = await request(
+      'GET',
+      `/api/admin/ai-drafts/${draftId}/audit-log`,
+      null,
+      authHeader(token)
+    );
+    assert.equal(auditRes.status, 200);
+    const editedEntry = auditRes.body.audit_trail.find((e) => e.action === 'edited');
+    assert.ok(editedEntry, 'audit_trail must have an edited entry after PATCH');
+    assert.ok(editedEntry.fields.includes('title_en'));
   });
 });

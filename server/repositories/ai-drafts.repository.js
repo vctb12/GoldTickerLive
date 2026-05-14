@@ -15,6 +15,25 @@ const path = require('path');
 const crypto = require('crypto');
 const { atomicWriteJSON } = require('../lib/fs-atomic.js');
 
+// ---------------------------------------------------------------------------
+// In-process mutex
+// Prevents concurrent read-modify-write races on the JSON file store.
+// All mutating operations (insert, update, transition) must acquire the lock
+// before reading, and release it only after atomicWriteJSON completes.
+// ---------------------------------------------------------------------------
+let _lockPromise = Promise.resolve();
+
+function _withLock(fn) {
+  const next = _lockPromise.then(() => fn());
+  // Swallow rejections on the shared chain so a failed mutation does not
+  // poison every subsequent write.
+  _lockPromise = next.then(
+    () => {},
+    () => {}
+  );
+  return next;
+}
+
 function getDataFile() {
   return process.env.AI_DRAFTS_DATA_FILE || path.join(__dirname, '../../data/ai-drafts.json');
 }
@@ -77,36 +96,38 @@ function _newId() {
 /**
  * Insert a new draft.
  * @param {object} draft – must include type, title_en, title_ar, body_en, body_ar, data_timestamp_utc
- * @returns {object} saved draft with id, status=draft, generated_at_utc
+ * @returns {Promise<object>} saved draft with id, status=draft, generated_at_utc
  */
 function insertDraft(draft) {
-  const store = _readStore();
-  const record = {
-    id: _newId(),
-    type: draft.type,
-    status: 'draft', // always starts as draft — never auto-publish
-    language_pair: 'en+ar',
-    title_en: draft.title_en || '',
-    title_ar: draft.title_ar || '',
-    body_en: draft.body_en || '',
-    body_ar: draft.body_ar || '',
-    data_snapshot: draft.data_snapshot || null,
-    data_timestamp_utc: draft.data_timestamp_utc || null,
-    is_spot_estimate: true, // always true — trust rule
-    anomaly_flag: draft.anomaly_flag || false,
-    anomaly_detail: draft.anomaly_detail || null,
-    generated_at_utc: new Date().toISOString(),
-    reviewed_by: null,
-    reviewed_at_utc: null,
-    review_action: null,
-    review_note: null,
-    published_at_utc: null,
-    export_channel: null,
-    audit_trail: [],
-  };
-  store.drafts.push(record);
-  _writeStore(store);
-  return record;
+  return _withLock(() => {
+    const store = _readStore();
+    const record = {
+      id: _newId(),
+      type: draft.type,
+      status: 'draft', // always starts as draft — never auto-publish
+      language_pair: 'en+ar',
+      title_en: draft.title_en || '',
+      title_ar: draft.title_ar || '',
+      body_en: draft.body_en || '',
+      body_ar: draft.body_ar || '',
+      data_snapshot: draft.data_snapshot || null,
+      data_timestamp_utc: draft.data_timestamp_utc || null,
+      is_spot_estimate: true, // always true — trust rule
+      anomaly_flag: draft.anomaly_flag || false,
+      anomaly_detail: draft.anomaly_detail || null,
+      generated_at_utc: new Date().toISOString(),
+      reviewed_by: null,
+      reviewed_at_utc: null,
+      review_action: null,
+      review_note: null,
+      published_at_utc: null,
+      export_channel: null,
+      audit_trail: [],
+    };
+    store.drafts.push(record);
+    _writeStore(store);
+    return record;
+  });
 }
 
 /**
@@ -148,26 +169,44 @@ function getDraftsTotal(filter = {}) {
 
 /**
  * Update a draft by ID.
+ * Edits are recorded in the per-draft audit_trail.
  * @param {string} id
  * @param {object} updates – only safe fields are applied
- * @returns {object|null}
+ * @param {string} [actor] – email of the operator making the edit
+ * @returns {Promise<object|null>}
  */
-function updateDraft(id, updates) {
-  const store = _readStore();
-  const idx = store.drafts.findIndex((d) => d.id === id);
-  if (idx === -1) return null;
+function updateDraft(id, updates, actor) {
+  return _withLock(() => {
+    const store = _readStore();
+    const idx = store.drafts.findIndex((d) => d.id === id);
+    if (idx === -1) return null;
 
-  // Merge only allowed edit fields — status transitions use dedicated helpers
-  const allowed = ['title_en', 'title_ar', 'body_en', 'body_ar', 'review_note', 'export_channel'];
-  const filtered = {};
-  for (const key of allowed) {
-    if (Object.prototype.hasOwnProperty.call(updates, key)) {
-      filtered[key] = updates[key];
+    // Merge only allowed edit fields — status transitions use dedicated helpers
+    const allowed = ['title_en', 'title_ar', 'body_en', 'body_ar', 'review_note', 'export_channel'];
+    const filtered = {};
+    for (const key of allowed) {
+      if (Object.prototype.hasOwnProperty.call(updates, key)) {
+        filtered[key] = updates[key];
+      }
     }
-  }
-  store.drafts[idx] = { ...store.drafts[idx], ...filtered };
-  _writeStore(store);
-  return store.drafts[idx];
+
+    const now = new Date().toISOString();
+    const draft = { ...store.drafts[idx], ...filtered };
+
+    // Record every edit in the audit trail so reviewers can see what changed
+    // between approval and publish, even when PATCH is called after approve.
+    if (!Array.isArray(draft.audit_trail)) draft.audit_trail = [];
+    draft.audit_trail.push({
+      action: 'edited',
+      actor: actor || null,
+      at_utc: now,
+      fields: Object.keys(filtered),
+    });
+
+    store.drafts[idx] = draft;
+    _writeStore(store);
+    return store.drafts[idx];
+  });
 }
 
 /**
@@ -177,38 +216,43 @@ function updateDraft(id, updates) {
  * @param {string} id
  * @param {'approved'|'rejected'|'published'} newStatus
  * @param {{ actor: string, note?: string, export_channel?: string }} meta
- * @returns {object|null}
+ * @returns {Promise<object|null>}
  */
 function transitionDraft(id, newStatus, meta = {}) {
-  const store = _readStore();
-  const idx = store.drafts.findIndex((d) => d.id === id);
-  if (idx === -1) return null;
+  return _withLock(() => {
+    const store = _readStore();
+    const idx = store.drafts.findIndex((d) => d.id === id);
+    if (idx === -1) return null;
 
-  const now = new Date().toISOString();
-  const draft = { ...store.drafts[idx] };
+    const now = new Date().toISOString();
+    const draft = { ...store.drafts[idx] };
 
-  draft.status = newStatus;
-  draft.reviewed_by = meta.actor || null;
-  draft.reviewed_at_utc = now;
-  draft.review_action = newStatus;
-  if (meta.note !== undefined) draft.review_note = meta.note;
-  if (newStatus === 'published') {
-    draft.published_at_utc = now;
-    if (meta.export_channel) draft.export_channel = meta.export_channel;
-  }
+    draft.status = newStatus;
+    draft.reviewed_by = meta.actor || null;
+    draft.reviewed_at_utc = now;
+    draft.review_action = newStatus;
+    // Only overwrite review_note when a non-null, non-empty note is provided,
+    // so the human-readable approval note is preserved through subsequent
+    // publish/reject transitions that supply no note.
+    if (meta.note != null && meta.note !== '') draft.review_note = meta.note;
+    if (newStatus === 'published') {
+      draft.published_at_utc = now;
+      if (meta.export_channel) draft.export_channel = meta.export_channel;
+    }
 
-  // Append to per-draft audit trail
-  if (!Array.isArray(draft.audit_trail)) draft.audit_trail = [];
-  draft.audit_trail.push({
-    action: newStatus,
-    actor: meta.actor || null,
-    at_utc: now,
-    note: meta.note || null,
+    // Append to per-draft audit trail
+    if (!Array.isArray(draft.audit_trail)) draft.audit_trail = [];
+    draft.audit_trail.push({
+      action: newStatus,
+      actor: meta.actor || null,
+      at_utc: now,
+      note: meta.note || null,
+    });
+
+    store.drafts[idx] = draft;
+    _writeStore(store);
+    return store.drafts[idx];
   });
-
-  store.drafts[idx] = draft;
-  _writeStore(store);
-  return store.drafts[idx];
 }
 
 /**

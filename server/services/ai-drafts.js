@@ -484,7 +484,9 @@ function _buildXPost(price, anomalyResult) {
   const titleEn = `X Post Draft — Gold Price — ${new Date(ts || Date.now()).toDateString()}`;
   const titleAr = `مسودة تغريدة — سعر الذهب — ${new Date(ts || Date.now()).toLocaleDateString('ar-AE')}`;
 
-  // Keep under 280 chars for each option. Editor picks or edits.
+  // Option A is designed to fit within X/Twitter's 280-character limit.
+  // Option B is a multi-line long-form draft that exceeds 280 chars and must
+  // be shortened by the editor before posting.
   const ozStr = Number.isFinite(Number(ozUsd)) ? `$${Number(ozUsd).toFixed(0)}/oz` : 'N/A';
   const gAedStr = Number.isFinite(Number(gAed)) ? `AED ${Number(gAed).toFixed(2)}/g` : 'N/A';
   const k22Str = Number.isFinite(Number(k22)) ? `AED ${Number(k22).toFixed(2)}/g` : 'N/A';
@@ -510,6 +512,8 @@ function _buildXPost(price, anomalyResult) {
     `goldtickerlive.com${anomalyNote}`,
     '',
     '### Notes for Editor',
+    '- Option A is intended to fit within 280 characters — verify after editing.',
+    '- Option B exceeds 280 characters and must be shortened before posting.',
     '- Pick one option and edit as needed.',
     '- Confirm prices are still fresh before posting.',
     '- Add relevant hashtags (#gold #goldprice #UAE #Dubai) only if appropriate.',
@@ -655,7 +659,7 @@ const BUILDERS = {
  * @param {object} [options.providerState]   - override provider_state.json
  * @returns {object} saved draft record
  */
-function generateDraft(type, options = {}) {
+async function generateDraft(type, options = {}) {
   // Validate type against a fixed whitelist before any dynamic lookup.
   // This prevents CodeQL js/unvalidated-dynamic-method-call.
   const VALID_TYPES = Object.keys(BUILDERS);
@@ -672,7 +676,17 @@ function generateDraft(type, options = {}) {
 
   const { titleEn, titleAr, bodyEn, bodyAr } = builder(price, providerState, anomalyResult);
 
-  const draft = insertDraft({
+  // Enforce the "Timestamp required" safety rule — never persist a draft that
+  // cannot be traced back to a specific point-in-time price record.
+  const dataTimestampUtc = price.timestamp_utc || price.fetched_at_utc || null;
+  if (!dataTimestampUtc) {
+    throw new Error(
+      'generateDraft: data_timestamp_utc could not be derived from the price record. ' +
+        'Ensure gold_price.json contains a valid timestamp_utc or fetched_at_utc field.'
+    );
+  }
+
+  return insertDraft({
     type,
     title_en: titleEn,
     title_ar: titleAr,
@@ -685,28 +699,32 @@ function generateDraft(type, options = {}) {
       is_fresh: price.is_fresh ?? null,
       is_fallback: price.is_fallback ?? null,
     },
-    data_timestamp_utc: price.timestamp_utc || price.fetched_at_utc || null,
+    data_timestamp_utc: dataTimestampUtc,
     anomaly_flag: anomalyResult.anomaly_flag,
     anomaly_detail: anomalyResult.anomaly_detail,
   });
-
-  return draft;
 }
 
 /**
  * Generate multiple draft types in one call.
  * @param {string[]} types
  * @param {object} [options]
- * @returns {object[]} saved draft records
+ * @returns {Promise<object[]>} saved draft records
  */
-function generateDrafts(types, options = {}) {
+async function generateDrafts(types, options = {}) {
   // Load shared price data once
   const price = options.currentPrice || _readJson(GOLD_PRICE_FILE) || {};
   const prevPrice = options.prevPrice || _readJson(LAST_GOLD_PRICE_FILE);
   const providerState = options.providerState || _readJson(PROVIDER_STATE_FILE);
   const sharedOptions = { ...options, currentPrice: price, prevPrice, providerState };
 
-  return types.map((type) => generateDraft(type, sharedOptions));
+  // Run sequentially so the in-process mutex in the repository is not flooded
+  // with concurrent requests that would block on the same lock.
+  const results = [];
+  for (const type of types) {
+    results.push(await generateDraft(type, sharedOptions));
+  }
+  return results;
 }
 
 module.exports = {
