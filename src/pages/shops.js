@@ -596,21 +596,28 @@ function isInShortlist(shopId) {
   return STATE.shortlist.includes(shopId);
 }
 
-function shareShop(shop) {
-  postShopEvent(shop.id, 'share');
+async function shareShop(shop) {
   const url = `${location.origin}${location.pathname}?shop=${shop.id}`;
   const text = `${shop.name} — ${shop.market}, ${shop.city}`;
 
   if (navigator.share) {
-    navigator.share({ title: shop.name, text, url }).catch(() => {});
+    try {
+      await navigator.share({ title: shop.name, text, url });
+      postShopEvent(shop.id, 'share');
+    } catch {
+      // User canceled or native share failed; do not track conversion.
+    }
   } else {
     // Fallback: copy to clipboard
-    navigator.clipboard
-      ?.writeText(url)
-      .then(() => {
-        announceShopStatus(t('linkCopied'));
-      })
-      .catch(() => {});
+    try {
+      const writeText = navigator.clipboard?.writeText?.bind(navigator.clipboard);
+      if (!writeText) return;
+      await writeText(url);
+      announceShopStatus(t('linkCopied'));
+      postShopEvent(shop.id, 'share');
+    } catch {
+      // Clipboard unavailable/blocked; do not track conversion.
+    }
   }
 }
 
