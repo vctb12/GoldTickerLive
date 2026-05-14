@@ -33,8 +33,10 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '',
   if (!AD_CONFIG.ADSENSE_PUBLISHER_ID) return;
   if (isAdminPage()) return;
   if (typeof IntersectionObserver === 'undefined') return;
-  if (renderedAdContainers.has(containerId) && document.getElementById(containerId)) return;
-  if (renderedAdContainers.has(containerId) && !document.getElementById(containerId)) {
+  const hasRenderedContainer = renderedAdContainers.has(containerId);
+  const existingContainer = document.getElementById(containerId);
+  if (hasRenderedContainer && existingContainer) return;
+  if (hasRenderedContainer && !existingContainer) {
     renderedAdContainers.delete(containerId);
   }
 

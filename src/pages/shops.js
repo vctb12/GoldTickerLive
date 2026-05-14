@@ -1679,6 +1679,10 @@ function resetFilters() {
 }
 
 function bindEvents() {
+  window.addEventListener('beforeunload', () => {
+    clearTimeout(_filterTrackTimer);
+  });
+
   document.querySelectorAll('[data-listing-tab]').forEach((button) => {
     button.addEventListener('click', () => {
       STATE.listingTab = button.dataset.listingTab || DEFAULT_LISTING_TAB;
