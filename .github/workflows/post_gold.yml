@@ -195,14 +195,27 @@ jobs:
           X_AUTOMATION_FAILURES_FILE:  ${{ github.workspace }}/data/tweet_failures.json
         run: |
           set -euo pipefail
+          OBS_FILES=("$X_AUTOMATION_RUNS_FILE" "$X_AUTOMATION_POSTS_FILE" "$X_AUTOMATION_FAILURES_FILE")
+          EXISTING_FILES=()
+          for f in "${OBS_FILES[@]}"; do
+            if [ -f "$f" ]; then
+              EXISTING_FILES+=("$f")
+            else
+              echo "observability fallback file not found (skipping): $f"
+            fi
+          done
+          if [ "${#EXISTING_FILES[@]}" -eq 0 ]; then
+            echo "no observability fallback files found; skipping commit."
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$X_AUTOMATION_RUNS_FILE" "$X_AUTOMATION_POSTS_FILE" "$X_AUTOMATION_FAILURES_FILE" 2>/dev/null || true
+          git add "${EXISTING_FILES[@]}"
           if git diff --cached --quiet; then
             echo "no observability fallback file changes to commit."
             exit 0
           fi
-          git commit -m "chore(data): update x automation observability logs [skip ci]" || true
+          git commit -m "chore(data): update x automation observability logs [skip ci]"
           git push || {
             echo "ERROR: git push failed after observability file update."
             echo "  Run ID:  ${GITHUB_RUN_ID:-unknown}"
