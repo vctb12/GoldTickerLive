@@ -13,6 +13,7 @@ const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 const router = express.Router();
 const pendingShopsRepo = require('../repositories/pending-shops.repository');
+const { getSupabaseClient } = require('../lib/supabase-client');
 
 // ---------------------------------------------------------------------------
 // Rate limiter — tighter than the global limit because these are public writes
@@ -59,7 +60,7 @@ function sanitize(val, maxLen = 200) {
 // ---------------------------------------------------------------------------
 // POST /api/submit-shop
 // ---------------------------------------------------------------------------
-router.post('/submit-shop', submitRateLimiter, (req, res) => {
+router.post('/submit-shop', submitRateLimiter, async (req, res) => {
   // Honeypot — bots fill in the hidden company_website field; humans leave it blank.
   const honeypot = req.body.company_website;
   if (honeypot && typeof honeypot === 'string' && honeypot.trim()) {
@@ -125,6 +126,27 @@ router.post('/submit-shop', submitRateLimiter, (req, res) => {
   };
 
   try {
+    const supabase = getSupabaseClient(false);
+    if (supabase) {
+      const { error } = await supabase.from('shop_submissions').insert({
+        shop_name: submission.shop_name,
+        owner_name: submission.owner_name,
+        contact_email: submission.contact_email,
+        contact_phone: submission.contact_phone,
+        country_code: submission.country_code,
+        city: submission.city,
+        market: submission.market,
+        website: submission.website,
+        specialty: submission.specialty,
+        notes: submission.notes,
+        status: 'pending',
+        source: submission.source,
+        page_path: '/content/submit-shop/',
+      });
+      if (error) {
+        console.warn('[submissions] Supabase insert failed, keeping file fallback:', error.message);
+      }
+    }
     pendingShopsRepo.insert(submission);
     return res.status(201).json({ success: true, id: submission.id });
   } catch (err) {

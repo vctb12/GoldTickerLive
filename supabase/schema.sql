@@ -152,6 +152,254 @@ create trigger shop_submissions_set_updated_at
     for each row execute procedure public.set_updated_at();
 
 -- ============================================================
+-- PHASE 7: SHOPS DIRECTORY BUSINESS TABLES
+-- ============================================================
+create table if not exists public.market_clusters (
+    id                          uuid primary key default uuid_generate_v4(),
+    slug                        text unique not null,
+    name                        text not null,
+    country_code                text not null,
+    city                        text,
+    area                        text,
+    notes                       text,
+    source                      text not null default 'editorial',
+    confidence                  int not null default 50,
+    contact_completeness_score  int not null default 0,
+    verified_at                 timestamptz,
+    verification_method         text,
+    created_at                  timestamptz not null default now(),
+    updated_at                  timestamptz not null default now()
+);
+
+create table if not exists public.shop_listings (
+    id                          uuid primary key default uuid_generate_v4(),
+    slug                        text unique not null,
+    market_cluster_id           uuid references public.market_clusters(id) on delete set null,
+    name                        text not null,
+    name_ar                     text,
+    country_code                text not null,
+    city                        text,
+    category                    text,
+    listing_type                text not null default 'pending_unverified'
+                                check (listing_type in ('verified_shop', 'market_cluster', 'sponsor', 'pending_unverified')),
+    status                      text not null default 'active'
+                                check (status in ('active', 'paused', 'archived', 'pending')),
+    phone                       text,
+    whatsapp                    text,
+    email                       text,
+    website                     text,
+    address                     text,
+    specialties                 text[],
+    source                      text not null default 'editorial',
+    confidence                  int not null default 50,
+    contact_completeness_score  int not null default 0,
+    verified_at                 timestamptz,
+    verification_method         text,
+    sponsored                   boolean not null default false,
+    sponsored_rank              int,
+    notes                       text,
+    created_at                  timestamptz not null default now(),
+    updated_at                  timestamptz not null default now()
+);
+
+create table if not exists public.shop_claims (
+    id                  uuid primary key default uuid_generate_v4(),
+    shop_listing_id     uuid not null references public.shop_listings(id) on delete cascade,
+    claimant_name       text not null,
+    claimant_email      text not null,
+    claimant_phone      text,
+    claim_note          text,
+    status              text not null default 'pending'
+                        check (status in ('pending', 'approved', 'rejected', 'needs_info')),
+    reviewed_by         text,
+    reviewed_at         timestamptz,
+    created_at          timestamptz not null default now(),
+    updated_at          timestamptz not null default now()
+);
+
+create table if not exists public.shop_leads (
+    id                  uuid primary key default uuid_generate_v4(),
+    shop_listing_id     uuid not null references public.shop_listings(id) on delete cascade,
+    lead_type           text not null default 'inquiry'
+                        check (lead_type in ('call', 'whatsapp', 'website', 'inquiry', 'visit')),
+    name                text,
+    email               text,
+    phone               text,
+    message             text,
+    source_path         text,
+    status              text not null default 'new'
+                        check (status in ('new', 'contacted', 'qualified', 'won', 'lost', 'ignored')),
+    created_at          timestamptz not null default now(),
+    updated_at          timestamptz not null default now()
+);
+
+create table if not exists public.sponsored_placements (
+    id                  uuid primary key default uuid_generate_v4(),
+    slot                text not null default 'shops_directory',
+    shop_listing_id     uuid not null references public.shop_listings(id) on delete cascade,
+    country_code        text,
+    city                text,
+    rank                int not null default 100,
+    starts_at           timestamptz not null default now(),
+    ends_at             timestamptz,
+    disclosure_label    text not null default 'Sponsored',
+    active              boolean not null default true,
+    notes               text,
+    created_at          timestamptz not null default now(),
+    updated_at          timestamptz not null default now()
+);
+
+create table if not exists public.shop_verification_logs (
+    id                  uuid primary key default uuid_generate_v4(),
+    shop_listing_id     uuid not null references public.shop_listings(id) on delete cascade,
+    action              text not null
+                        check (action in ('submitted', 'verified', 'unverified', 'updated', 'rejected')),
+    verification_method text,
+    source              text,
+    confidence          int,
+    actor               text,
+    notes               text,
+    created_at          timestamptz not null default now()
+);
+
+create table if not exists public.shop_click_events (
+    id                  uuid primary key default uuid_generate_v4(),
+    shop_listing_id     uuid not null references public.shop_listings(id) on delete cascade,
+    event_type          text not null
+                        check (event_type in ('call', 'whatsapp', 'website', 'directions', 'share', 'save')),
+    source_path         text,
+    user_agent          text,
+    ip_hash             text,
+    created_at          timestamptz not null default now()
+);
+
+create index if not exists idx_market_clusters_country_city
+    on public.market_clusters(country_code, city);
+create index if not exists idx_shop_listings_country_city
+    on public.shop_listings(country_code, city);
+create index if not exists idx_shop_listings_listing_type
+    on public.shop_listings(listing_type, status);
+create index if not exists idx_shop_claims_status
+    on public.shop_claims(status, created_at desc);
+create index if not exists idx_shop_leads_status
+    on public.shop_leads(status, created_at desc);
+create index if not exists idx_sponsored_placements_slot
+    on public.sponsored_placements(slot, active, rank);
+create index if not exists idx_shop_click_events_shop_created
+    on public.shop_click_events(shop_listing_id, created_at desc);
+
+alter table public.market_clusters enable row level security;
+alter table public.shop_listings enable row level security;
+alter table public.shop_claims enable row level security;
+alter table public.shop_leads enable row level security;
+alter table public.sponsored_placements enable row level security;
+alter table public.shop_verification_logs enable row level security;
+alter table public.shop_click_events enable row level security;
+
+drop policy if exists "Public read active market clusters" on public.market_clusters;
+create policy "Public read active market clusters"
+    on public.market_clusters for select
+    using (true);
+
+drop policy if exists "Public read active shop listings" on public.shop_listings;
+create policy "Public read active shop listings"
+    on public.shop_listings for select
+    using (status = 'active');
+
+drop policy if exists "Public read active sponsored placements" on public.sponsored_placements;
+create policy "Public read active sponsored placements"
+    on public.sponsored_placements for select
+    using (active = true and (ends_at is null or ends_at >= now()));
+
+drop policy if exists "Public insert shop claims" on public.shop_claims;
+create policy "Public insert shop claims"
+    on public.shop_claims for insert
+    with check (status = 'pending');
+
+drop policy if exists "Public insert shop leads" on public.shop_leads;
+create policy "Public insert shop leads"
+    on public.shop_leads for insert
+    with check (status = 'new');
+
+drop policy if exists "Public insert shop click events" on public.shop_click_events;
+create policy "Public insert shop click events"
+    on public.shop_click_events for insert
+    with check (true);
+
+drop policy if exists "Admin full market clusters" on public.market_clusters;
+create policy "Admin full market clusters"
+    on public.market_clusters for all
+    to authenticated
+    using (true)
+    with check (true);
+
+drop policy if exists "Admin full shop listings" on public.shop_listings;
+create policy "Admin full shop listings"
+    on public.shop_listings for all
+    to authenticated
+    using (true)
+    with check (true);
+
+drop policy if exists "Admin full shop claims" on public.shop_claims;
+create policy "Admin full shop claims"
+    on public.shop_claims for all
+    to authenticated
+    using (true)
+    with check (true);
+
+drop policy if exists "Admin full shop leads" on public.shop_leads;
+create policy "Admin full shop leads"
+    on public.shop_leads for all
+    to authenticated
+    using (true)
+    with check (true);
+
+drop policy if exists "Admin full sponsored placements" on public.sponsored_placements;
+create policy "Admin full sponsored placements"
+    on public.sponsored_placements for all
+    to authenticated
+    using (true)
+    with check (true);
+
+drop policy if exists "Admin full verification logs" on public.shop_verification_logs;
+create policy "Admin full verification logs"
+    on public.shop_verification_logs for all
+    to authenticated
+    using (true)
+    with check (true);
+
+drop policy if exists "Admin read click events" on public.shop_click_events;
+create policy "Admin read click events"
+    on public.shop_click_events for select
+    to authenticated
+    using (true);
+
+drop trigger if exists market_clusters_set_updated_at on public.market_clusters;
+create trigger market_clusters_set_updated_at
+    before update on public.market_clusters
+    for each row execute procedure public.set_updated_at();
+
+drop trigger if exists shop_listings_set_updated_at on public.shop_listings;
+create trigger shop_listings_set_updated_at
+    before update on public.shop_listings
+    for each row execute procedure public.set_updated_at();
+
+drop trigger if exists shop_claims_set_updated_at on public.shop_claims;
+create trigger shop_claims_set_updated_at
+    before update on public.shop_claims
+    for each row execute procedure public.set_updated_at();
+
+drop trigger if exists shop_leads_set_updated_at on public.shop_leads;
+create trigger shop_leads_set_updated_at
+    before update on public.shop_leads
+    for each row execute procedure public.set_updated_at();
+
+drop trigger if exists sponsored_placements_set_updated_at on public.sponsored_placements;
+create trigger sponsored_placements_set_updated_at
+    before update on public.sponsored_placements
+    for each row execute procedure public.set_updated_at();
+
+-- ============================================================
 -- SITE SETTINGS (single-row config, JSON value)
 -- ============================================================
 create table if not exists public.site_settings (

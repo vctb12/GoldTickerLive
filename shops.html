@@ -156,6 +156,42 @@
 
       <section class="shops-controls" aria-label="Shop filters">
         <div class="shops-controls-inner">
+          <div class="shops-listing-tabs" role="tablist" aria-label="Directory tabs">
+            <button
+              type="button"
+              class="shops-tab is-active"
+              id="shops-tab-verified"
+              data-listing-tab="verified_shop"
+              role="tab"
+              aria-selected="true"
+            >
+              Verified Shops
+            </button>
+            <button
+              type="button"
+              class="shops-tab"
+              id="shops-tab-markets"
+              data-listing-tab="market_cluster"
+              role="tab"
+              aria-selected="false"
+            >
+              Gold Markets
+            </button>
+            <button
+              type="button"
+              class="shops-tab"
+              id="shops-tab-sponsored"
+              data-listing-tab="sponsor"
+              role="tab"
+              aria-selected="false"
+            >
+              Sponsored
+            </button>
+          </div>
+          <p class="shops-results-disclaimer" id="shops-sponsored-disclosure" hidden>
+            Sponsored placements are clearly labeled and do not change reference-price methodology.
+            Listings may appear because of paid placement.
+          </p>
           <label class="shops-control shops-control--search-priority" for="shops-search">
             <span id="shops-search-label">Search by shop, city, country, market, or specialty</span>
             <input
@@ -282,6 +318,16 @@
           </div>
 
           <div id="shops-grid" class="shops-grid"></div>
+          <div id="shops-loading" class="shops-empty" hidden aria-live="polite">
+            <span class="ses-icon" aria-hidden="true">⏳</span>
+            <h3>Loading listings…</h3>
+            <p>Fetching verified shops, markets, and sponsored placements.</p>
+          </div>
+          <div id="shops-error" class="shops-empty" hidden aria-live="polite">
+            <span class="ses-icon" aria-hidden="true">⚠️</span>
+            <h3>Could not refresh live listings</h3>
+            <p>Showing local fallback data for now. Please try again shortly.</p>
+          </div>
 
           <div id="shops-empty" class="shops-empty" hidden>
             <span class="ses-icon" aria-hidden="true">🔍</span>

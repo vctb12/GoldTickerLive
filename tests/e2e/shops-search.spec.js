@@ -139,4 +139,20 @@ test.describe('Shops directory page', () => {
     const spotVsRetailLink = page.locator('a[href*="spot-vs-retail"]');
     await expect(spotVsRetailLink.first()).toBeAttached();
   });
+
+  test('listing tabs render and sponsored disclosure is visible on sponsored tab', async ({
+    page,
+  }) => {
+    const verifiedTab = page.locator('[data-listing-tab="verified_shop"]');
+    const marketsTab = page.locator('[data-listing-tab="market_cluster"]');
+    const sponsoredTab = page.locator('[data-listing-tab="sponsor"]');
+    await expect(verifiedTab).toBeVisible();
+    await expect(marketsTab).toBeVisible();
+    await expect(sponsoredTab).toBeVisible();
+
+    await sponsoredTab.click();
+    const disclosure = page.locator('#shops-sponsored-disclosure');
+    await expect(disclosure).toBeVisible();
+    await expect(disclosure).toContainText(/sponsored|placement|ممول/i);
+  });
 });

@@ -28,7 +28,7 @@ const T = {
     errorCity: 'Please enter the city.',
     errorShopName: 'Shop name is required.',
     success:
-      'Your shop has been submitted. The Gold Ticker Live team will review it before any public listing appears.',
+      'Your shop has been submitted and is pending moderation. The Gold Ticker Live team will review it before any public listing appears.',
     successAr: null,
     error:
       'Could not submit right now. Please try again — no listing is published until it is reviewed.',
@@ -45,7 +45,8 @@ const T = {
     errorCountry: 'يرجى اختيار الدولة.',
     errorCity: 'يرجى إدخال المدينة.',
     errorShopName: 'اسم المحل مطلوب.',
-    success: 'تم إرسال طلبك. سيراجع فريق Gold Ticker Live التفاصيل قبل أي نشر في الدليل العام.',
+    success:
+      'تم إرسال الطلب وهو الآن قيد المراجعة. سيراجع فريق Gold Ticker Live التفاصيل قبل أي نشر في الدليل العام.',
     error: 'تعذّر الإرسال الآن. يرجى المحاولة مرة أخرى — لا يُنشر أي شيء إلا بعد المراجعة.',
   },
 };
@@ -58,6 +59,7 @@ const statusEl = document.getElementById('submit-shop-status');
 const btnNext = document.getElementById('btn-next');
 const btnPrev = document.getElementById('btn-prev');
 const btnSubmit = document.getElementById('btn-submit');
+const successPanel = document.getElementById('submit-shop-success');
 const steps = /** @type {HTMLFieldSetElement[]} */ (
   Array.from(form?.querySelectorAll('[data-step]') ?? [])
 );
@@ -260,6 +262,7 @@ form?.addEventListener('submit', async (event) => {
     website: normalizeUrl(getValue('website')),
     specialty: getValue('specialty') || null,
     notes: getValue('notes') || null,
+    status: 'pending',
     company_website: '', // explicit empty honeypot
   };
 
@@ -277,6 +280,8 @@ form?.addEventListener('submit', async (event) => {
 
     form.reset();
     showStep(1);
+    form.hidden = true;
+    if (successPanel) successPanel.hidden = false;
     setStatus(t('success'), 'success');
   } catch (err) {
     console.warn('[submit-shop] Submission failed:', err.message);

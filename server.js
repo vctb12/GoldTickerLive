@@ -34,6 +34,7 @@ const newsletterRoutes = require('./server/routes/newsletter');
 const submissionsRoutes = require('./server/routes/submissions');
 const leadsRoutes = require('./server/routes/leads');
 const apiV1Routes = require('./server/routes/api-v1');
+const shopsV1Routes = require('./server/routes/shops-v1');
 const alertsRoutes = require('./server/routes/alerts');
 const { publicAccountsRouter } = require('./server/routes/public-accounts');
 
@@ -288,6 +289,7 @@ app.use('/api/v1/billing', billingRoutes);
 app.use('/api/v1/me', billingMeRouter);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api', submissionsRoutes);
+app.use('/api/v1', shopsV1Routes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/stripe', stripeRoutes);
 app.use('/api/v1/newsletter', newsletterRoutes);
