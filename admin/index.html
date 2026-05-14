@@ -798,7 +798,10 @@
           const card = document.createElement(href ? 'a' : 'div');
           card.className = `ops-control-card${className ? ` ${className}` : ''}`;
           card.setAttribute('role', 'listitem');
-          if (href) card.href = safeHref(href);
+          if (href) {
+            card.href = safeHref(href);
+            card.setAttribute('aria-label', title);
+          }
 
           const titleEl = document.createElement('div');
           titleEl.className = 'ops-control-title';

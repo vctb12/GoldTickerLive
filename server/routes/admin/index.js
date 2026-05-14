@@ -234,7 +234,8 @@ function maskEmail(email) {
   if (typeof email !== 'string') return null;
   const [name, domain] = email.split('@');
   if (!name || !domain) return null;
-  const prefixLength = name.length >= 3 ? 2 : 1;
+  const prefixLength = Math.min(2, Math.max(0, name.length - 1));
+  if (prefixLength === 0) return `***@${domain}`;
   return `${name.slice(0, prefixLength)}***@${domain}`;
 }
 
