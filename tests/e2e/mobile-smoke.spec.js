@@ -48,6 +48,9 @@ test.describe('Mobile smoke', () => {
     await expect(page.locator('#shops-filter-toggle')).toBeVisible();
     await expect(page.locator('#shops-search')).toBeVisible();
     await expect(page.locator('#shops-controls-summary')).toBeVisible();
+    await expect(page.locator('[data-listing-tab="verified_shop"]')).toBeVisible();
+    await page.locator('#shops-filter-toggle').click();
+    await expect(page.locator('#shops-filter-panel')).toHaveClass(/is-open/);
     await expectNoHorizontalOverflow(page, '/shops.html');
 
     await page.goto('/methodology.html');

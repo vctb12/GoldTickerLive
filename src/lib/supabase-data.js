@@ -19,8 +19,11 @@ import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../config/supabase.js';
  * expected by the shops page renderer.
  */
 function mapRow(row) {
+  const listingType =
+    row.listing_type || (row.sponsored ? 'sponsor' : row.verified ? 'verified_shop' : null);
   return {
     id: row.id,
+    slug: row.slug || row.id,
     name: row.name,
     countryCode: row.country_code || '',
     city: row.city || '',
@@ -28,10 +31,21 @@ function mapRow(row) {
     category: row.category || '',
     specialties: Array.isArray(row.specialties) ? row.specialties : [],
     phone: row.phone || '',
+    email: row.email || '',
     website: row.website || '',
     detailsAvailability: row.details_availability || 'limited',
     featured: Boolean(row.featured),
     verified: Boolean(row.verified),
+    sponsored: Boolean(row.sponsored),
+    listingType,
+    listing_type: listingType,
+    confidence: Number.isFinite(Number(row.confidence)) ? Number(row.confidence) : undefined,
+    verified_at: row.verified_at || null,
+    verification_method: row.verification_method || null,
+    source: row.source || 'supabase',
+    contact_completeness_score: Number.isFinite(Number(row.contact_completeness_score))
+      ? Number(row.contact_completeness_score)
+      : undefined,
     notes: row.notes || '',
   };
 }
@@ -43,18 +57,27 @@ function mapRow(row) {
  */
 export async function fetchShops() {
   try {
-    const url = `${SUPABASE_URL}/rest/v1/shops?verified=eq.true&select=*&order=featured.desc,name.asc`;
+    const candidates = [
+      `${SUPABASE_URL}/rest/v1/shop_listings?status=eq.active&select=*&order=sponsored.desc,featured.desc,name.asc`,
+      `${SUPABASE_URL}/rest/v1/shops?verified=eq.true&select=*&order=featured.desc,name.asc`,
+    ];
+    const baseHeaders = {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      Accept: 'application/json',
+    };
 
-    const res = await fetch(url, {
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        Accept: 'application/json',
-      },
-    });
+    let res = null;
+    for (const url of candidates) {
+      const probe = await fetch(url, { headers: baseHeaders });
+      if (probe.ok) {
+        res = probe;
+        break;
+      }
+    }
 
-    if (!res.ok) {
-      console.warn('[supabase-data] Fetch failed:', res.status, res.statusText);
+    if (!res?.ok) {
+      console.warn('[supabase-data] Fetch failed on all Supabase shop endpoints');
       return null;
     }
 

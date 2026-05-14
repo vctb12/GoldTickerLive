@@ -22,9 +22,11 @@ import {
  * replaced by Supabase data once it loads.
  */
 let SHOPS = [...FALLBACK_SHOPS];
+const DEFAULT_LISTING_TAB = 'verified_shop';
 
 const STATE = {
   lang: 'en',
+  listingTab: DEFAULT_LISTING_TAB,
   search: '',
   region: 'all',
   country: 'all',
@@ -35,6 +37,7 @@ const STATE = {
 };
 
 const SHOPS_LAST_REVIEWED_ISO = '2026-04-05';
+const MOBILE_FILTER_BREAKPOINT = 640;
 
 function sanitizeSearchQueryForMessage(value = '') {
   return String(value)
@@ -42,6 +45,12 @@ function sanitizeSearchQueryForMessage(value = '') {
     .replace(/\s+/g, ' ')
     .trim()
     .slice(0, 120);
+}
+
+function formatPhoneForWhatsApp(phone) {
+  const digits = String(phone || '').replace(/[^\d]/g, '');
+  if (!digits) return '';
+  return encodeURIComponent(digits);
 }
 
 // Load shortlist from localStorage on module init
@@ -107,6 +116,7 @@ const TXT = {
     specialties: 'Specialties',
     status: 'Status',
     phone: 'Phone',
+    contactName: 'Name',
     website: 'Website',
     verifiedStatus: 'Verified details',
     listedStatus: 'Listed profile',
@@ -177,6 +187,27 @@ const TXT = {
       'Listings are for discovery only and have not been independently verified — details may be outdated. Reference prices shown are spot-based estimates, not actual shop prices; retail quotes include making charges, dealer margins, and taxes. Always confirm prices, hours, and availability directly with the shop before visiting or purchasing.',
     spotVsRetailLinkText: 'Why shop prices differ from spot →',
     methodologyLinkText: 'How we calculate prices →',
+    tabVerified: 'Verified Shops',
+    tabMarkets: 'Gold Markets',
+    tabSponsored: 'Sponsored',
+    sponsoredDisclosure:
+      'Sponsored placements are clearly labeled and do not change reference-price methodology. Listings may appear because of paid placement.',
+    badgeVerified: 'Verified',
+    badgeMarketArea: 'Market Area',
+    badgeContactLimited: 'Contact Limited',
+    badgeSponsored: 'Sponsored',
+    claimListing: 'Claim listing',
+    claimListingPrompt:
+      'Submit your name and email to claim this listing. Our moderation team reviews all claims before any update is published.',
+    claimEmailPrompt: 'Email',
+    claimListingThanks:
+      'Claim submitted. We will review and contact you if verification is needed.',
+    whatsApp: 'WhatsApp',
+    loadingListings: 'Loading listings…',
+    loadingListingsBody: 'Fetching verified shops, markets, and sponsored placements.',
+    loadErrorTitle: 'Could not refresh live listings',
+    loadErrorBody: 'Showing local fallback data for now. Please try again shortly.',
+    genericError: 'Something went wrong. Please try again.',
   },
   ar: {
     kicker: 'محلات حسب المنطقة',
@@ -225,6 +256,7 @@ const TXT = {
     specialties: 'التخصصات',
     status: 'الحالة',
     phone: 'الهاتف',
+    contactName: 'الاسم',
     website: 'الموقع',
     verifiedStatus: 'تفاصيل موثقة',
     listedStatus: 'إدراج منشور',
@@ -292,6 +324,26 @@ const TXT = {
       'هذه الإدراجات للاكتشاف فقط ولم يتم التحقق منها بشكل مستقل — قد تكون التفاصيل قديمة. الأسعار المعروضة تقديرية مبنية على السعر الفوري وليست أسعار محلات فعلية؛ تشمل أسعار التجزئة المصنعية وهامش التاجر والضرائب. احرص دائماً على تأكيد الأسعار والأوقات والتوفر مباشرة مع المحل قبل الزيارة أو الشراء.',
     spotVsRetailLinkText: 'لماذا تختلف أسعار المحلات عن السعر الفوري ←',
     methodologyLinkText: 'كيف نحسب الأسعار →',
+    tabVerified: 'محلات موثقة',
+    tabMarkets: 'أسواق الذهب',
+    tabSponsored: 'نتائج ممولة',
+    sponsoredDisclosure:
+      'النتائج الممولة موضحة بوضوح ولا تغيّر منهجية الأسعار المرجعية. قد يظهر بعض الإدراج بسبب ترتيب إعلاني مدفوع.',
+    badgeVerified: 'موثق',
+    badgeMarketArea: 'منطقة سوق',
+    badgeContactLimited: 'تواصل محدود',
+    badgeSponsored: 'ممول',
+    claimListing: 'طلب ملكية الإدراج',
+    claimListingPrompt:
+      'أرسل اسمك وبريدك الإلكتروني لطلب ملكية هذا الإدراج. تتم مراجعة كل الطلبات قبل أي تحديث.',
+    claimEmailPrompt: 'البريد الإلكتروني',
+    claimListingThanks: 'تم إرسال طلب الملكية وسنتواصل معك عند الحاجة للتحقق.',
+    whatsApp: 'واتساب',
+    loadingListings: 'جارٍ تحميل الإدراجات…',
+    loadingListingsBody: 'يتم جلب المحلات الموثقة والأسواق والنتائج الممولة.',
+    loadErrorTitle: 'تعذّر تحديث الإدراجات المباشرة',
+    loadErrorBody: 'يتم عرض بيانات احتياطية حالياً. يرجى المحاولة لاحقاً.',
+    genericError: 'حدث خطأ ما. يرجى المحاولة مرة أخرى.',
   },
 };
 
@@ -347,6 +399,9 @@ function calculateConfidenceBadge(shop) {
 }
 
 function isMarketArea(shop) {
+  const listingType = String(shop.listingType || shop.listing_type || '').toLowerCase();
+  if (listingType === 'market_cluster') return true;
+  if (listingType === 'verified_shop' || listingType === 'sponsor') return false;
   if (shop.type === 'market') return true;
   if (shop.type === 'direct') return false;
   return (
@@ -358,12 +413,145 @@ function isMarketArea(shop) {
   );
 }
 
+function listingType(shop) {
+  const explicit = String(shop.listingType || shop.listing_type || '').toLowerCase();
+  if (
+    explicit === 'verified_shop' ||
+    explicit === 'market_cluster' ||
+    explicit === 'sponsor' ||
+    explicit === 'pending_unverified'
+  ) {
+    return explicit;
+  }
+  if (shop.sponsored) return 'sponsor';
+  if (shop.verified) return 'verified_shop';
+  if (isMarketArea(shop)) return 'market_cluster';
+  return 'pending_unverified';
+}
+
+const LISTING_TAB_LABELS = {
+  verified_shop: 'tabVerified',
+  market_cluster: 'tabMarkets',
+  sponsor: 'tabSponsored',
+};
+
+function activeListingTabLabel() {
+  const key = LISTING_TAB_LABELS[STATE.listingTab];
+  return key ? t(key) : null;
+}
+
+async function openClaimDialog() {
+  const dialog = document.createElement('dialog');
+  dialog.className = 'shops-claim-dialog';
+
+  const form = document.createElement('form');
+  form.method = 'dialog';
+  form.className = 'shops-claim-dialog-form';
+
+  const title = document.createElement('h3');
+  title.textContent = t('claimListing');
+  form.appendChild(title);
+
+  const lead = document.createElement('p');
+  lead.textContent = t('claimListingPrompt');
+  form.appendChild(lead);
+
+  const nameLabel = document.createElement('label');
+  nameLabel.textContent = t('contactName');
+  const nameInput = document.createElement('input');
+  nameInput.name = 'name';
+  nameInput.required = true;
+  nameInput.maxLength = 120;
+  nameLabel.appendChild(nameInput);
+  form.appendChild(nameLabel);
+
+  const emailLabel = document.createElement('label');
+  emailLabel.textContent = t('claimEmailPrompt');
+  const emailInput = document.createElement('input');
+  emailInput.name = 'email';
+  emailInput.type = 'email';
+  emailInput.required = true;
+  emailInput.maxLength = 200;
+  emailLabel.appendChild(emailInput);
+  form.appendChild(emailLabel);
+
+  const menu = document.createElement('menu');
+  const cancel = document.createElement('button');
+  cancel.value = 'cancel';
+  cancel.type = 'button';
+  cancel.textContent = t('closeDetails');
+  const submit = document.createElement('button');
+  submit.value = 'submit';
+  submit.type = 'submit';
+  submit.textContent = t('claimListing');
+  menu.append(cancel, submit);
+  form.appendChild(menu);
+
+  dialog.appendChild(form);
+  document.body.appendChild(dialog);
+
+  return new Promise((resolve) => {
+    cancel.addEventListener('click', () => {
+      dialog.close('cancel');
+    });
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const fd = new FormData(form);
+      const name = String(fd.get('name') || '').trim();
+      const email = String(fd.get('email') || '').trim();
+      if (!name || !email) return;
+      dialog.close('submit');
+      resolve({ name, email });
+    });
+    dialog.addEventListener('close', () => {
+      if (dialog.returnValue !== 'submit') resolve(null);
+      dialog.remove();
+    });
+    dialog.showModal();
+  });
+}
+
+async function postShopEvent(shopId, action, extra = {}) {
+  if (!shopId || !action) return;
+  try {
+    await fetch(`/api/v1/shops/${encodeURIComponent(shopId)}/click`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action,
+        source_path: `${location.pathname}${location.search}`,
+        ...extra,
+      }),
+    });
+  } catch {
+    // non-blocking telemetry
+  }
+}
+
+async function submitShopClaim(shopId) {
+  const claimData = await openClaimDialog();
+  if (!claimData) return;
+  try {
+    const res = await fetch(`/api/v1/shops/${encodeURIComponent(shopId)}/claim`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ claimant_name: claimData.name, claimant_email: claimData.email }),
+    });
+    if (!res.ok) throw new Error('claim failed');
+    announceShopStatus(t('claimListingThanks'));
+  } catch {
+    announceShopStatus(t('genericError'));
+  }
+}
+
 function listingTypeLabel(shop) {
+  if (listingType(shop) === 'sponsor') return t('badgeSponsored');
   if (isMarketArea(shop)) return t('marketAreaListing');
   return t('storeProfile');
 }
 
 function profileStatusLabel(shop) {
+  if (listingType(shop) === 'sponsor') return t('badgeSponsored');
   if (isMarketArea(shop)) return t('marketAreaStatus');
   if (shop.verified) return t('verifiedStatus');
   if (shop.phone || shop.website) return t('listedStatus');
@@ -389,6 +577,7 @@ function sortedShops(shops) {
 
 function toggleShortlist(shopId) {
   const idx = STATE.shortlist.indexOf(shopId);
+  const addingToShortlist = idx === -1;
   if (idx === -1) {
     STATE.shortlist.push(shopId);
   } else {
@@ -397,6 +586,9 @@ function toggleShortlist(shopId) {
   try {
     localStorage.setItem('shops_shortlist', JSON.stringify(STATE.shortlist));
   } catch {}
+  if (addingToShortlist) {
+    postShopEvent(shopId, 'save');
+  }
   render(); // Re-render to update button states
 }
 
@@ -404,20 +596,28 @@ function isInShortlist(shopId) {
   return STATE.shortlist.includes(shopId);
 }
 
-function shareShop(shop) {
+async function shareShop(shop) {
   const url = `${location.origin}${location.pathname}?shop=${shop.id}`;
   const text = `${shop.name} — ${shop.market}, ${shop.city}`;
 
   if (navigator.share) {
-    navigator.share({ title: shop.name, text, url }).catch(() => {});
+    try {
+      await navigator.share({ title: shop.name, text, url });
+      postShopEvent(shop.id, 'share');
+    } catch {
+      // User canceled or native share failed; do not track conversion.
+    }
   } else {
     // Fallback: copy to clipboard
-    navigator.clipboard
-      ?.writeText(url)
-      .then(() => {
-        announceShopStatus(t('linkCopied'));
-      })
-      .catch(() => {});
+    try {
+      const writeText = navigator.clipboard?.writeText?.bind(navigator.clipboard);
+      if (!writeText) return;
+      await writeText(url);
+      announceShopStatus(t('linkCopied'));
+      postShopEvent(shop.id, 'share');
+    } catch {
+      // Clipboard unavailable/blocked; do not track conversion.
+    }
   }
 }
 
@@ -450,12 +650,14 @@ async function saveShopToAccount(shop) {
     source_url: `${location.origin}${location.pathname}?shop=${encodeURIComponent(shop.id)}`,
     notes: shop.notes || null,
   });
+  postShopEvent(shop.id, 'save');
   announceShopStatus(t('savedToAccount'));
 }
 
 function openModal(shop) {
   const modal = document.getElementById('shops-modal');
   const country = countryByCode(shop.countryCode);
+  const whatsappNumber = formatPhoneForWhatsApp(shop.phone);
   const specialties = (shop.specialties || [])
     .map((item) => `<span class="shop-tag">${esc(item)}</span>`)
     .join('');
@@ -486,6 +688,14 @@ function openModal(shop) {
           : ''
       }
       ${
+        whatsappNumber
+          ? `<a href="https://wa.me/${esc(whatsappNumber)}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--whatsapp" aria-label="${t('whatsApp')}">
+        <span class="modal-action-icon">💬</span>
+        <span class="modal-action-label">${t('whatsApp')}</span>
+      </a>`
+          : ''
+      }
+      ${
         safeUrl(shop.website)
           ? `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--website" aria-label="${t('visitWebsite')}">
         <span class="modal-action-icon">🌐</span>
@@ -493,6 +703,10 @@ function openModal(shop) {
       </a>`
           : ''
       }
+      <button class="modal-action-btn modal-action-btn--share" type="button" data-claim-shop-id="${esc(shop.id)}" aria-label="${t('claimListing')}">
+        <span class="modal-action-icon">🛡️</span>
+        <span class="modal-action-label">${t('claimListing')}</span>
+      </button>
     </div>
   `;
 
@@ -583,6 +797,20 @@ function openModal(shop) {
       saveShopToAccount(shop).catch(() => {});
     });
   }
+  modal.querySelectorAll('[data-claim-shop-id]').forEach((button) => {
+    button.addEventListener('click', () => {
+      submitShopClaim(shop.id).catch(() => {});
+    });
+  });
+  modal.querySelectorAll('.modal-action-btn--call').forEach((button) => {
+    button.addEventListener('click', () => postShopEvent(shop.id, 'call'));
+  });
+  modal.querySelectorAll('.modal-action-btn--website').forEach((button) => {
+    button.addEventListener('click', () => postShopEvent(shop.id, 'website'));
+  });
+  modal.querySelectorAll('.modal-action-btn--whatsapp').forEach((button) => {
+    button.addEventListener('click', () => postShopEvent(shop.id, 'whatsapp'));
+  });
 
   modal.hidden = false;
   document.body.style.overflow = 'hidden';
@@ -693,6 +921,28 @@ function applyStaticText() {
   document.getElementById('shops-nearme-btn').lastChild.textContent = t('nearmeButton');
   document.getElementById('shops-guides-heading').textContent = t('resourcesTitle');
   document.getElementById('shops-controls-count').textContent = t('count')(SHOPS.length);
+  const tabVerified = document.getElementById('shops-tab-verified');
+  const tabMarkets = document.getElementById('shops-tab-markets');
+  const tabSponsored = document.getElementById('shops-tab-sponsored');
+  if (tabVerified) tabVerified.textContent = t('tabVerified');
+  if (tabMarkets) tabMarkets.textContent = t('tabMarkets');
+  if (tabSponsored) tabSponsored.textContent = t('tabSponsored');
+  const sponsoredDisclosure = document.getElementById('shops-sponsored-disclosure');
+  if (sponsoredDisclosure) sponsoredDisclosure.textContent = t('sponsoredDisclosure');
+  const loading = document.getElementById('shops-loading');
+  if (loading) {
+    const title = loading.querySelector('h3');
+    const body = loading.querySelector('p');
+    if (title) title.textContent = t('loadingListings');
+    if (body) body.textContent = t('loadingListingsBody');
+  }
+  const error = document.getElementById('shops-error');
+  if (error) {
+    const title = error.querySelector('h3');
+    const body = error.querySelector('p');
+    if (title) title.textContent = t('loadErrorTitle');
+    if (body) body.textContent = t('loadErrorBody');
+  }
 
   const modalCloseBtn = document.querySelector('.shops-modal-close');
   if (modalCloseBtn) {
@@ -825,6 +1075,7 @@ function filterShops() {
     if (STATE.specialty !== 'all' && !(shop.specialties || []).includes(STATE.specialty))
       return false;
     if (STATE.verifiedOnly && !(shop.phone || shop.website)) return false;
+    if (STATE.listingTab && listingType(shop) !== STATE.listingTab) return false;
 
     if (!q) return true;
 
@@ -862,6 +1113,8 @@ function updateHeaderStats() {
 function activeFilterSummary() {
   const labels = [];
 
+  const listingTabLabel = activeListingTabLabel();
+  if (listingTabLabel) labels.push(listingTabLabel);
   if (STATE.region !== 'all') labels.push(regionName(STATE.region));
   if (STATE.country !== 'all') {
     const country = countryByCode(STATE.country);
@@ -917,6 +1170,8 @@ function renderCards(shops) {
       const nextActionLabel = isCluster ? t('nextActionsMarket') : t('nextActionsStore');
       const qualityLabel = contactQualityLabel(shop);
       const statusLabel = profileStatusLabel(shop);
+      const shopListingType = listingType(shop);
+      const whatsappNumber = formatPhoneForWhatsApp(shop.phone);
       const phoneAction = shop.phone
         ? `<a href="tel:${esc(safeTel(shop.phone))}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
             <span class="shop-action-icon">📞</span>
@@ -935,6 +1190,12 @@ function renderCards(shops) {
             <span class="shop-action-icon">🌐</span>
             <span class="shop-action-label">${t('notAvailable')}</span>
           </button>`;
+      const whatsappAction = whatsappNumber
+        ? `<a href="https://wa.me/${whatsappNumber}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--whatsapp" aria-label="${t('whatsApp')}">
+            <span class="shop-action-icon">💬</span>
+            <span class="shop-action-label">${t('whatsApp')}</span>
+          </a>`
+        : '';
 
       const contactParts = [];
       contactParts.push(
@@ -965,6 +1226,10 @@ function renderCards(shops) {
           <span class="shop-status-chip shop-status-chip--type">${listingTypeLabel(shop)}</span>
           <span class="shop-status-chip ${shop.verified ? 'shop-status-chip--verified' : isCluster ? 'shop-status-chip--market' : 'shop-status-chip--listed'}">${statusLabel}</span>
           <span class="shop-status-chip shop-status-chip--details">${detailsAvailabilityLabel(shop.detailsAvailability)}</span>
+          ${shopListingType === 'sponsor' ? `<span class="shop-status-chip shop-status-chip--listed">${t('badgeSponsored')}</span>` : ''}
+          ${shopListingType === 'market_cluster' ? `<span class="shop-status-chip shop-status-chip--market">${t('badgeMarketArea')}</span>` : ''}
+          ${shopListingType === 'verified_shop' ? `<span class="shop-status-chip shop-status-chip--verified">${t('badgeVerified')}</span>` : ''}
+          ${shop.detailsAvailability === 'limited' ? `<span class="shop-status-chip shop-status-chip--listed">${t('badgeContactLimited')}</span>` : ''}
         </div>
 
         <section class="shop-confidence-block" aria-label="${t('listingConfidenceTitle')}">
@@ -1009,6 +1274,7 @@ function renderCards(shops) {
               : ''
           }
           ${!isCluster ? phoneAction : ''}
+          ${!isCluster ? whatsappAction : ''}
           ${!isCluster ? websiteAction : ''}
           ${
             !isCluster
@@ -1041,6 +1307,10 @@ function renderCards(shops) {
           <button class="shop-action-btn shop-action-btn--account" type="button" data-shop-id="${esc(shop.id)}" aria-label="${t('saveToAccount')}">
             <span class="shop-action-icon">☁</span>
             <span class="shop-action-label">${t('saveToAccount')}</span>
+          </button>
+          <button class="shop-action-btn shop-action-btn--share shop-action-btn--claim" type="button" data-claim-shop-id="${esc(shop.id)}" aria-label="${t('claimListing')}">
+            <span class="shop-action-icon">🛡️</span>
+            <span class="shop-action-label">${t('claimListing')}</span>
           </button>
         </div>
         
@@ -1100,6 +1370,39 @@ function bindShopCardHandlers() {
       if (shop) {
         saveShopToAccount(shop).catch(() => {});
       }
+    });
+  });
+
+  grid.querySelectorAll('[data-claim-shop-id]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const shopId = btn.dataset.claimShopId;
+      submitShopClaim(shopId).catch(() => {});
+    });
+  });
+
+  grid.querySelectorAll('.shop-action-btn--call').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const shopId = btn.closest('.shop-card')?.dataset.shopId;
+      postShopEvent(shopId, 'call');
+    });
+  });
+  grid.querySelectorAll('.shop-action-btn--website').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const shopId = btn.closest('.shop-card')?.dataset.shopId;
+      postShopEvent(shopId, 'website');
+    });
+  });
+  grid.querySelectorAll('.shop-action-btn--whatsapp').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const shopId = btn.closest('.shop-card')?.dataset.shopId;
+      postShopEvent(shopId, 'whatsapp');
+    });
+  });
+  grid.querySelectorAll('.shop-action-btn--directions').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const shopId = btn.closest('.shop-card')?.dataset.shopId;
+      postShopEvent(shopId, 'directions');
     });
   });
 }
@@ -1249,6 +1552,8 @@ function syncUrlToState() {
   else p.delete('specialty');
   if (STATE.verifiedOnly) p.set('verified', '1');
   else p.delete('verified');
+  if (STATE.listingTab !== DEFAULT_LISTING_TAB) p.set('listing', STATE.listingTab);
+  else p.delete('listing');
   if (STATE.lang === 'ar') p.set('lang', 'ar');
   else p.delete('lang');
 
@@ -1263,6 +1568,15 @@ function syncUrlToState() {
 
   const qs = p.toString();
   history.replaceState(null, '', qs ? `${location.pathname}?${qs}` : location.pathname);
+}
+
+function collapseMobileFilters() {
+  if (window.innerWidth > MOBILE_FILTER_BREAKPOINT) return;
+  const filterToggle = document.getElementById('shops-filter-toggle');
+  const filterPanel = document.getElementById('shops-filter-panel');
+  if (!filterToggle || !filterPanel) return;
+  filterPanel.classList.remove('is-open');
+  filterToggle.setAttribute('aria-expanded', 'false');
 }
 
 function renderShortlistBar() {
@@ -1292,6 +1606,13 @@ function render() {
   renderFilterPills();
   renderFeaturedSection();
   renderShortlistBar();
+  document.querySelectorAll('[data-listing-tab]').forEach((button) => {
+    const isActive = button.dataset.listingTab === STATE.listingTab;
+    button.classList.toggle('is-active', isActive);
+    button.setAttribute('aria-selected', String(isActive));
+  });
+  const sponsoredDisclosure = document.getElementById('shops-sponsored-disclosure');
+  if (sponsoredDisclosure) sponsoredDisclosure.hidden = STATE.listingTab !== 'sponsor';
 
   if (!shops.length) {
     document.getElementById('shops-grid').replaceChildren();
@@ -1310,6 +1631,7 @@ function render() {
 
 function resetFilters() {
   STATE.search = '';
+  STATE.listingTab = DEFAULT_LISTING_TAB;
   STATE.region = 'all';
   STATE.country = 'all';
   STATE.city = 'all';
@@ -1323,6 +1645,13 @@ function resetFilters() {
 }
 
 function bindEvents() {
+  document.querySelectorAll('[data-listing-tab]').forEach((button) => {
+    button.addEventListener('click', () => {
+      STATE.listingTab = button.dataset.listingTab || DEFAULT_LISTING_TAB;
+      render();
+    });
+  });
+
   document.getElementById('shops-search').addEventListener('input', (event) => {
     STATE.search = event.target.value;
     render();
@@ -1335,6 +1664,7 @@ function bindEvents() {
     STATE.specialty = 'all';
     buildFilters();
     render();
+    collapseMobileFilters();
   });
 
   document.getElementById('shops-country-filter').addEventListener('change', (event) => {
@@ -1343,6 +1673,7 @@ function bindEvents() {
     STATE.specialty = 'all';
     buildFilters();
     render();
+    collapseMobileFilters();
   });
 
   document.getElementById('shops-city-filter').addEventListener('change', (event) => {
@@ -1350,16 +1681,19 @@ function bindEvents() {
     STATE.specialty = 'all';
     buildFilters();
     render();
+    collapseMobileFilters();
   });
 
   document.getElementById('shops-specialty-filter').addEventListener('change', (event) => {
     STATE.specialty = event.target.value;
     render();
+    collapseMobileFilters();
   });
 
   document.getElementById('shops-verified-only').addEventListener('change', (event) => {
     STATE.verifiedOnly = event.target.checked;
     render();
+    collapseMobileFilters();
   });
 
   document.getElementById('shops-clear-filters').addEventListener('click', resetFilters);
@@ -1457,6 +1791,7 @@ function init() {
   const _pSpec = _p.get('specialty') || '';
   const _pSearch = _p.get('search') || _p.get('q') || '';
   const _pVerified = (_p.get('verified') || '') === '1';
+  const _pListing = (_p.get('listing') || '').toLowerCase();
   const _pLang = (_p.get('lang') || '').toLowerCase();
 
   if (_pRegion && Object.prototype.hasOwnProperty.call(REGIONS, _pRegion)) STATE.region = _pRegion;
@@ -1465,6 +1800,9 @@ function init() {
   if (_pSpec) STATE.specialty = _pSpec;
   if (_pSearch) STATE.search = _pSearch;
   if (_pVerified) STATE.verifiedOnly = true;
+  if (['verified_shop', 'market_cluster', 'sponsor'].includes(_pListing)) {
+    STATE.listingTab = _pListing;
+  }
   if (_pLang === 'ar' || _pLang === 'en') STATE.lang = _pLang;
 
   injectSpotBar(STATE.lang, 0);
@@ -1566,6 +1904,10 @@ init();
 // most up-to-date directory without any visible delay.
 (async function upgradeToLiveData() {
   const grid = document.getElementById('shops-grid');
+  const loading = document.getElementById('shops-loading');
+  const error = document.getElementById('shops-error');
+  if (loading) loading.hidden = false;
+  if (error) error.hidden = true;
   if (grid) grid.classList.add('shops-grid--upgrading');
   try {
     const remote = await fetchSupabaseShops();
@@ -1578,7 +1920,9 @@ init();
     }
   } catch (err) {
     console.warn('[shops] Could not fetch Supabase data; using fallback:', err.message);
+    if (error) error.hidden = false;
   } finally {
+    if (loading) loading.hidden = true;
     if (grid) grid.classList.remove('shops-grid--upgrading');
   }
 })();

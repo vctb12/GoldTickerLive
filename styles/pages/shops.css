@@ -318,6 +318,41 @@
   box-shadow: var(--elev-2);
 }
 
+.shops-listing-tabs {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.shops-tab {
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  background: var(--surface-primary);
+  color: var(--text-secondary);
+  padding: 0.45rem 0.9rem;
+  min-height: 40px;
+  font: inherit;
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+
+.shops-tab.is-active,
+.shops-tab[aria-selected='true'] {
+  border-color: rgb(196 153 62 / 70%);
+  background: rgb(196 153 62 / 12%);
+  color: var(--color-gold-dark);
+}
+
+#shops-sponsored-disclosure {
+  grid-column: 1 / -1;
+  margin: -0.25rem 0 0;
+  border: 1px solid rgb(196 153 62 / 28%);
+  border-radius: var(--radius-md);
+  background: rgb(196 153 62 / 8%);
+  padding: 0.55rem 0.75rem;
+}
+
 .shops-control--search-priority {
   grid-column: span 3;
 }
@@ -1755,6 +1790,10 @@
   .shops-control--search-priority,
   .shops-controls-summary {
     margin-bottom: 0.75rem;
+  }
+
+  .shops-listing-tabs {
+    margin-bottom: 0.5rem;
   }
 
   .shops-filter-toggle {
