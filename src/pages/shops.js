@@ -48,7 +48,9 @@ function sanitizeSearchQueryForMessage(value = '') {
 }
 
 function formatPhoneForWhatsApp(phone) {
-  return encodeURIComponent(String(phone || '').replace(/[^\d]/g, ''));
+  const digits = String(phone || '').replace(/[^\d]/g, '');
+  if (!digits) return '';
+  return encodeURIComponent(digits);
 }
 
 // Load shortlist from localStorage on module init
@@ -441,27 +443,58 @@ function activeListingTabLabel() {
 async function openClaimDialog() {
   const dialog = document.createElement('dialog');
   dialog.className = 'shops-claim-dialog';
-  dialog.innerHTML = `
-    <form method="dialog" class="shops-claim-dialog-form">
-      <h3>${esc(t('claimListing'))}</h3>
-      <p>${esc(t('claimListingPrompt'))}</p>
-      <label>${esc(t('contactName'))}<input name="name" required maxlength="120" /></label>
-      <label>${esc(t('claimEmailPrompt'))}<input name="email" type="email" required maxlength="200" /></label>
-      <menu>
-        <button value="cancel" type="button">${esc(t('closeDetails'))}</button>
-        <button value="submit" type="submit">${esc(t('claimListing'))}</button>
-      </menu>
-    </form>
-  `;
+
+  const form = document.createElement('form');
+  form.method = 'dialog';
+  form.className = 'shops-claim-dialog-form';
+
+  const title = document.createElement('h3');
+  title.textContent = t('claimListing');
+  form.appendChild(title);
+
+  const lead = document.createElement('p');
+  lead.textContent = t('claimListingPrompt');
+  form.appendChild(lead);
+
+  const nameLabel = document.createElement('label');
+  nameLabel.textContent = t('contactName');
+  const nameInput = document.createElement('input');
+  nameInput.name = 'name';
+  nameInput.required = true;
+  nameInput.maxLength = 120;
+  nameLabel.appendChild(nameInput);
+  form.appendChild(nameLabel);
+
+  const emailLabel = document.createElement('label');
+  emailLabel.textContent = t('claimEmailPrompt');
+  const emailInput = document.createElement('input');
+  emailInput.name = 'email';
+  emailInput.type = 'email';
+  emailInput.required = true;
+  emailInput.maxLength = 200;
+  emailLabel.appendChild(emailInput);
+  form.appendChild(emailLabel);
+
+  const menu = document.createElement('menu');
+  const cancel = document.createElement('button');
+  cancel.value = 'cancel';
+  cancel.type = 'button';
+  cancel.textContent = t('closeDetails');
+  const submit = document.createElement('button');
+  submit.value = 'submit';
+  submit.type = 'submit';
+  submit.textContent = t('claimListing');
+  menu.append(cancel, submit);
+  form.appendChild(menu);
+
+  dialog.appendChild(form);
   document.body.appendChild(dialog);
 
   return new Promise((resolve) => {
-    const form = dialog.querySelector('form');
-    const cancel = dialog.querySelector('button[value="cancel"]');
-    cancel?.addEventListener('click', () => {
+    cancel.addEventListener('click', () => {
       dialog.close('cancel');
     });
-    form?.addEventListener('submit', (event) => {
+    form.addEventListener('submit', (event) => {
       event.preventDefault();
       const fd = new FormData(form);
       const name = String(fd.get('name') || '').trim();
@@ -544,6 +577,7 @@ function sortedShops(shops) {
 
 function toggleShortlist(shopId) {
   const idx = STATE.shortlist.indexOf(shopId);
+  const addingToShortlist = idx === -1;
   if (idx === -1) {
     STATE.shortlist.push(shopId);
   } else {
@@ -552,7 +586,9 @@ function toggleShortlist(shopId) {
   try {
     localStorage.setItem('shops_shortlist', JSON.stringify(STATE.shortlist));
   } catch {}
-  postShopEvent(shopId, 'save');
+  if (addingToShortlist) {
+    postShopEvent(shopId, 'save');
+  }
   render(); // Re-render to update button states
 }
 
@@ -644,7 +680,7 @@ function openModal(shop) {
           : ''
       }
       ${
-        shop.phone
+        formatPhoneForWhatsApp(shop.phone)
           ? `<a href="https://wa.me/${esc(formatPhoneForWhatsApp(shop.phone))}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--whatsapp" aria-label="${t('whatsApp')}">
         <span class="modal-action-icon">💬</span>
         <span class="modal-action-label">${t('whatsApp')}</span>
@@ -1145,7 +1181,7 @@ function renderCards(shops) {
             <span class="shop-action-icon">🌐</span>
             <span class="shop-action-label">${t('notAvailable')}</span>
           </button>`;
-      const whatsappAction = shop.phone
+      const whatsappAction = formatPhoneForWhatsApp(shop.phone)
         ? `<a href="https://wa.me/${formatPhoneForWhatsApp(shop.phone)}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--whatsapp" aria-label="${t('whatsApp')}">
             <span class="shop-action-icon">💬</span>
             <span class="shop-action-label">${t('whatsApp')}</span>

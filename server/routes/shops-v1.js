@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const rateLimit = require('express-rate-limit');
 const { authMiddleware } = require('../lib/auth');
+const { getSupabaseClient } = require('../lib/supabase-client');
 const shopsRepo = require('../repositories/shops.repository');
 const pendingShopsRepo = require('../repositories/pending-shops.repository');
 
@@ -13,10 +14,14 @@ const router = express.Router();
 
 const ROOT = path.resolve(__dirname, '../..');
 const SHOPS_FILE = path.join(ROOT, 'data', 'shops-data.json');
-const SHOP_LEADS_FILE = path.join(ROOT, 'data', 'shop_leads.json');
-const SHOP_CLAIMS_FILE = path.join(ROOT, 'data', 'shop_claims.json');
-const SHOP_CLICKS_FILE = path.join(ROOT, 'data', 'shop_click_events.json');
-const SPONSORED_FILE = path.join(ROOT, 'data', 'sponsored_placements.json');
+const SHOP_LEADS_FILE =
+  process.env.SHOP_LEADS_DATA_FILE || path.join(ROOT, 'data', 'shop_leads.json');
+const SHOP_CLAIMS_FILE =
+  process.env.SHOP_CLAIMS_DATA_FILE || path.join(ROOT, 'data', 'shop_claims.json');
+const SHOP_CLICKS_FILE =
+  process.env.SHOP_CLICKS_DATA_FILE || path.join(ROOT, 'data', 'shop_click_events.json');
+const SPONSORED_FILE =
+  process.env.SHOP_SPONSORED_DATA_FILE || path.join(ROOT, 'data', 'sponsored_placements.json');
 const MARKET_CLUSTER_HINT_RX = /cluster|market|souk|area|district/;
 const LISTING_TYPES = {
   VERIFIED_SHOP: 'verified_shop',
@@ -46,6 +51,7 @@ const WRITE_RATE_LIMITER = rateLimit({
 });
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const UUID_RX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function ensureArrayFile(filePath) {
   const dir = path.dirname(filePath);
@@ -161,6 +167,46 @@ async function loadNormalizedListings() {
   return sourceRows.map(normalizeShop);
 }
 
+async function resolveSupabaseListingId(listingIdentifier) {
+  const sb = getSupabaseClient(false);
+  if (!sb || !listingIdentifier) return null;
+  try {
+    if (UUID_RX.test(listingIdentifier)) {
+      const byId = await sb
+        .from('shop_listings')
+        .select('id')
+        .eq('id', listingIdentifier)
+        .maybeSingle();
+      if (!byId.error && byId.data?.id) return byId.data.id;
+    }
+    const bySlug = await sb
+      .from('shop_listings')
+      .select('id')
+      .eq('slug', listingIdentifier)
+      .maybeSingle();
+    if (!bySlug.error && bySlug.data?.id) return bySlug.data.id;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+async function tryMirrorSupabase(table, payload) {
+  const sb = getSupabaseClient(false);
+  if (!sb || !payload) return false;
+  try {
+    const { error } = await sb.from(table).insert(payload);
+    if (error) {
+      console.warn(`[shops-v1] Supabase mirror failed for ${table}:`, error.message);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.warn(`[shops-v1] Supabase mirror exception for ${table}:`, error.message);
+    return false;
+  }
+}
+
 function loadSponsoredPlacements() {
   return readArrayFile(SPONSORED_FILE);
 }
@@ -271,7 +317,7 @@ router.get('/shops/:slug', async (req, res) => {
   return res.json({ success: true, data: listing });
 });
 
-router.post('/shops/:id/lead', WRITE_RATE_LIMITER, (req, res) => {
+router.post('/shops/:id/lead', WRITE_RATE_LIMITER, async (req, res) => {
   const shopId = sanitizeString(req.params.id, 120);
   const leadType = sanitizeString(req.body?.lead_type, 40).toLowerCase() || 'inquiry';
   const name = sanitizeString(req.body?.name, 120) || null;
@@ -295,15 +341,29 @@ router.post('/shops/:id/lead', WRITE_RATE_LIMITER, (req, res) => {
     created_at: new Date().toISOString(),
     status: 'new',
   };
+  const shopListingId = await resolveSupabaseListingId(shopId);
+  lead.shop_listing_id = shopListingId;
 
   const leads = readArrayFile(SHOP_LEADS_FILE);
   leads.push(lead);
   writeArrayFile(SHOP_LEADS_FILE, leads.slice(-MAX_SHOP_LEADS_RETENTION));
+  if (shopListingId) {
+    await tryMirrorSupabase('shop_leads', {
+      shop_listing_id: shopListingId,
+      lead_type: leadType,
+      name,
+      email,
+      phone,
+      message,
+      source_path: lead.source_path,
+      status: 'new',
+    });
+  }
 
   return res.status(201).json({ success: true, id: lead.id });
 });
 
-router.post('/shops/:id/claim', WRITE_RATE_LIMITER, (req, res) => {
+router.post('/shops/:id/claim', WRITE_RATE_LIMITER, async (req, res) => {
   const shopId = sanitizeString(req.params.id, 120);
   const claimantName = sanitizeString(req.body?.claimant_name || req.body?.name, 120);
   const claimantEmail = sanitizeString(
@@ -331,15 +391,27 @@ router.post('/shops/:id/claim', WRITE_RATE_LIMITER, (req, res) => {
     reviewed_at: null,
     reviewed_by: null,
   };
+  const shopListingId = await resolveSupabaseListingId(shopId);
+  claim.shop_listing_id = shopListingId;
 
   const claims = readArrayFile(SHOP_CLAIMS_FILE);
   claims.push(claim);
   writeArrayFile(SHOP_CLAIMS_FILE, claims.slice(-MAX_SHOP_CLAIMS_RETENTION));
+  if (shopListingId) {
+    await tryMirrorSupabase('shop_claims', {
+      shop_listing_id: shopListingId,
+      claimant_name: claimantName,
+      claimant_email: claimantEmail,
+      claimant_phone: claimantPhone,
+      claim_note: note,
+      status: 'pending',
+    });
+  }
 
   return res.status(201).json({ success: true, id: claim.id, status: claim.status });
 });
 
-router.post('/shops/:id/click', WRITE_RATE_LIMITER, (req, res) => {
+router.post('/shops/:id/click', WRITE_RATE_LIMITER, async (req, res) => {
   const shopId = sanitizeString(req.params.id, 120);
   const action = sanitizeString(req.body?.action || req.body?.event_type, 40).toLowerCase();
   if (!ALLOWED_CLICK_ACTIONS.has(action)) {
@@ -353,10 +425,19 @@ router.post('/shops/:id/click', WRITE_RATE_LIMITER, (req, res) => {
     source_path: sanitizeString(req.body?.source_path || req.body?.page_path, 200) || '/shops.html',
     created_at: new Date().toISOString(),
   };
+  const shopListingId = await resolveSupabaseListingId(shopId);
+  click.shop_listing_id = shopListingId;
 
   const clicks = readArrayFile(SHOP_CLICKS_FILE);
   clicks.push(click);
   writeArrayFile(SHOP_CLICKS_FILE, clicks.slice(-MAX_SHOP_CLICKS_RETENTION));
+  if (shopListingId) {
+    await tryMirrorSupabase('shop_click_events', {
+      shop_listing_id: shopListingId,
+      event_type: action,
+      source_path: click.source_path,
+    });
+  }
 
   return res.status(201).json({ success: true, id: click.id });
 });
@@ -385,7 +466,6 @@ router.post('/admin/shops/:id/verify', authMiddleware('editor'), async (req, res
 
   const updated = await shopsRepo.update(id, {
     verified: true,
-    listing_type: LISTING_TYPES.VERIFIED_SHOP,
     verified_at: new Date().toISOString(),
     verification_method: verificationMethod,
     source,
@@ -402,7 +482,6 @@ router.post('/admin/shops/:id/reject', authMiddleware('editor'), async (req, res
   const id = sanitizeString(req.params.id, 120);
   const updated = await shopsRepo.update(id, {
     verified: false,
-    listing_type: LISTING_TYPES.PENDING_UNVERIFIED,
     verification_method: sanitizeString(req.body?.verification_method, 80) || 'manual_review',
   });
 

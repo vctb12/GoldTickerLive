@@ -10,17 +10,19 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const http = require('node:http');
+const os = require('node:os');
 
 const ROOT = path.resolve(__dirname, '..');
-const LEADS_FILE = path.join(ROOT, 'data', 'shop_leads.json');
-const CLAIMS_FILE = path.join(ROOT, 'data', 'shop_claims.json');
-const CLICKS_FILE = path.join(ROOT, 'data', 'shop_click_events.json');
-const SPONSORED_FILE = path.join(ROOT, 'data', 'sponsored_placements.json');
+const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gtl-shops-business-test-'));
+const LEADS_FILE = path.join(tmpDir, 'shop_leads.json');
+const CLAIMS_FILE = path.join(tmpDir, 'shop_claims.json');
+const CLICKS_FILE = path.join(tmpDir, 'shop_click_events.json');
+const SPONSORED_FILE = path.join(tmpDir, 'sponsored_placements.json');
 
-const backups = new Map();
-for (const filePath of [LEADS_FILE, CLAIMS_FILE, CLICKS_FILE, SPONSORED_FILE]) {
-  backups.set(filePath, fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf8') : null);
-}
+process.env.SHOP_LEADS_DATA_FILE = LEADS_FILE;
+process.env.SHOP_CLAIMS_DATA_FILE = CLAIMS_FILE;
+process.env.SHOP_CLICKS_DATA_FILE = CLICKS_FILE;
+process.env.SHOP_SPONSORED_DATA_FILE = SPONSORED_FILE;
 
 const app = require(path.join(ROOT, 'server.js'));
 const server = app.listen(0);
@@ -47,13 +49,7 @@ beforeEach(() => {
 
 after(() => {
   server.close();
-  for (const [filePath, original] of backups.entries()) {
-    if (original === null) {
-      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-    } else {
-      fs.writeFileSync(filePath, original);
-    }
-  }
+  fs.rmSync(tmpDir, { recursive: true, force: true });
 });
 
 function request(method, routePath, body = null, headers = {}) {
