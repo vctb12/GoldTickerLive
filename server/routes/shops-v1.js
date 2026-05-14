@@ -17,6 +17,18 @@ const SHOP_LEADS_FILE = path.join(ROOT, 'data', 'shop_leads.json');
 const SHOP_CLAIMS_FILE = path.join(ROOT, 'data', 'shop_claims.json');
 const SHOP_CLICKS_FILE = path.join(ROOT, 'data', 'shop_click_events.json');
 const SPONSORED_FILE = path.join(ROOT, 'data', 'sponsored_placements.json');
+const MARKET_CLUSTER_HINT_RX = /cluster|market|souk|area|district/;
+const ALLOWED_CLICK_ACTIONS = new Set([
+  'call',
+  'whatsapp',
+  'website',
+  'directions',
+  'share',
+  'save',
+]);
+const MAX_SHOP_LEADS_RETENTION = 5000;
+const MAX_SHOP_CLAIMS_RETENTION = 5000;
+const MAX_SHOP_CLICKS_RETENTION = 10000;
 
 const WRITE_RATE_LIMITER = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -86,10 +98,7 @@ function inferListingType(shop) {
   const notes = sanitizeString(shop?.notes, 500).toLowerCase();
   const noDirectContact = !sanitizeString(shop?.phone) && !sanitizeString(shop?.website);
 
-  if (
-    typeValue === 'market_cluster' ||
-    (noDirectContact && /cluster|market|souk|area|district/.test(notes))
-  ) {
+  if (typeValue === 'market_cluster' || (noDirectContact && MARKET_CLUSTER_HINT_RX.test(notes))) {
     return 'market_cluster';
   }
 
@@ -282,7 +291,7 @@ router.post('/shops/:id/lead', WRITE_RATE_LIMITER, (req, res) => {
 
   const leads = readArrayFile(SHOP_LEADS_FILE);
   leads.push(lead);
-  writeArrayFile(SHOP_LEADS_FILE, leads.slice(-5000));
+  writeArrayFile(SHOP_LEADS_FILE, leads.slice(-MAX_SHOP_LEADS_RETENTION));
 
   return res.status(201).json({ success: true, id: lead.id });
 });
@@ -318,7 +327,7 @@ router.post('/shops/:id/claim', WRITE_RATE_LIMITER, (req, res) => {
 
   const claims = readArrayFile(SHOP_CLAIMS_FILE);
   claims.push(claim);
-  writeArrayFile(SHOP_CLAIMS_FILE, claims.slice(-5000));
+  writeArrayFile(SHOP_CLAIMS_FILE, claims.slice(-MAX_SHOP_CLAIMS_RETENTION));
 
   return res.status(201).json({ success: true, id: claim.id, status: claim.status });
 });
@@ -326,9 +335,7 @@ router.post('/shops/:id/claim', WRITE_RATE_LIMITER, (req, res) => {
 router.post('/shops/:id/click', WRITE_RATE_LIMITER, (req, res) => {
   const shopId = sanitizeString(req.params.id, 120);
   const action = sanitizeString(req.body?.action || req.body?.event_type, 40).toLowerCase();
-  const allowed = new Set(['call', 'whatsapp', 'website', 'directions', 'share', 'save']);
-
-  if (!allowed.has(action)) {
+  if (!ALLOWED_CLICK_ACTIONS.has(action)) {
     return res.status(400).json({ success: false, message: 'Invalid click action.' });
   }
 
@@ -342,7 +349,7 @@ router.post('/shops/:id/click', WRITE_RATE_LIMITER, (req, res) => {
 
   const clicks = readArrayFile(SHOP_CLICKS_FILE);
   clicks.push(click);
-  writeArrayFile(SHOP_CLICKS_FILE, clicks.slice(-10000));
+  writeArrayFile(SHOP_CLICKS_FILE, clicks.slice(-MAX_SHOP_CLICKS_RETENTION));
 
   return res.status(201).json({ success: true, id: click.id });
 });

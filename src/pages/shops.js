@@ -36,6 +36,7 @@ const STATE = {
 };
 
 const SHOPS_LAST_REVIEWED_ISO = '2026-04-05';
+const MOBILE_FILTER_BREAKPOINT = 640;
 
 function sanitizeSearchQueryForMessage(value = '') {
   return String(value)
@@ -43,6 +44,10 @@ function sanitizeSearchQueryForMessage(value = '') {
     .replace(/\s+/g, ' ')
     .trim()
     .slice(0, 120);
+}
+
+function normalizePhoneForWhatsApp(phone) {
+  return encodeURIComponent(String(phone || '').replace(/[^\d]/g, ''));
 }
 
 // Load shortlist from localStorage on module init
@@ -190,6 +195,7 @@ const TXT = {
     claimListing: 'Claim listing',
     claimListingPrompt:
       'Submit your name and email to claim this listing. Our moderation team reviews all claims before any update is published.',
+    claimEmailPrompt: 'Email',
     claimListingThanks:
       'Claim submitted. We will review and contact you if verification is needed.',
     whatsApp: 'WhatsApp',
@@ -325,6 +331,7 @@ const TXT = {
     claimListing: 'طلب ملكية الإدراج',
     claimListingPrompt:
       'أرسل اسمك وبريدك الإلكتروني لطلب ملكية هذا الإدراج. تتم مراجعة كل الطلبات قبل أي تحديث.',
+    claimEmailPrompt: 'البريد الإلكتروني',
     claimListingThanks: 'تم إرسال طلب الملكية وسنتواصل معك عند الحاجة للتحقق.',
     whatsApp: 'واتساب',
     loadingListings: 'جارٍ تحميل الإدراجات…',
@@ -437,7 +444,7 @@ async function postShopEvent(shopId, action, extra = {}) {
 async function submitShopClaim(shopId) {
   const name = window.prompt(t('claimListingPrompt'));
   if (!name) return;
-  const email = window.prompt('Email');
+  const email = window.prompt(t('claimEmailPrompt'));
   if (!email) return;
   try {
     const res = await fetch(`/api/v1/shops/${encodeURIComponent(shopId)}/claim`, {
@@ -586,7 +593,7 @@ function openModal(shop) {
       }
       ${
         shop.phone
-          ? `<a href="https://wa.me/${esc(encodeURIComponent(String(shop.phone).replace(/[^\\d]/g, '')))}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--whatsapp" aria-label="${t('whatsApp')}">
+          ? `<a href="https://wa.me/${esc(normalizePhoneForWhatsApp(shop.phone))}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--whatsapp" aria-label="${t('whatsApp')}">
         <span class="modal-action-icon">💬</span>
         <span class="modal-action-label">${t('whatsApp')}</span>
       </a>`
@@ -1088,7 +1095,7 @@ function renderCards(shops) {
             <span class="shop-action-label">${t('notAvailable')}</span>
           </button>`;
       const whatsappAction = shop.phone
-        ? `<a href="https://wa.me/${encodeURIComponent(String(shop.phone).replace(/[^\\d]/g, ''))}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--whatsapp" aria-label="${t('whatsApp')}">
+        ? `<a href="https://wa.me/${normalizePhoneForWhatsApp(shop.phone)}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--whatsapp" aria-label="${t('whatsApp')}">
             <span class="shop-action-icon">💬</span>
             <span class="shop-action-label">${t('whatsApp')}</span>
           </a>`
@@ -1468,7 +1475,7 @@ function syncUrlToState() {
 }
 
 function collapseMobileFilters() {
-  if (window.innerWidth > 640) return;
+  if (window.innerWidth > MOBILE_FILTER_BREAKPOINT) return;
   const filterToggle = document.getElementById('shops-filter-toggle');
   const filterPanel = document.getElementById('shops-filter-panel');
   if (!filterToggle || !filterPanel) return;

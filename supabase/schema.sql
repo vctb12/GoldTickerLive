@@ -181,6 +181,10 @@ create table if not exists public.shop_listings (
     city                        text,
     category                    text,
     listing_type                text not null default 'pending_unverified'
+                                -- verified_shop: manually verified shop profile
+                                -- market_cluster: area-level souk/market reference
+                                -- sponsor: paid placement slot
+                                -- pending_unverified: submitted/listed but not verified yet
                                 check (listing_type in ('verified_shop', 'market_cluster', 'sponsor', 'pending_unverified')),
     status                      text not null default 'active'
                                 check (status in ('active', 'paused', 'archived', 'pending')),
