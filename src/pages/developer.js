@@ -46,22 +46,22 @@ async function apiFetch(path, options = {}) {
   return { status: res.status, ...json };
 }
 
-function el(id) {
+function getEl(id) {
   return document.getElementById(id);
 }
 
 function show(id) {
-  const elem = el(id);
+  const elem = getEl(id);
   if (elem) elem.hidden = false;
 }
 
 function hide(id) {
-  const elem = el(id);
+  const elem = getEl(id);
   if (elem) elem.hidden = true;
 }
 
 function setText(id, text) {
-  const elem = el(id);
+  const elem = getEl(id);
   if (elem) elem.textContent = text;
 }
 
@@ -102,9 +102,9 @@ function renderAuthState() {
 // ---------------------------------------------------------------------------
 
 async function loadKeys() {
-  const list = el('dev-keys-list');
-  const empty = el('dev-keys-empty');
-  const loading = el('dev-keys-loading');
+  const list = getEl('dev-keys-list');
+  const empty = getEl('dev-keys-empty');
+  const loading = getEl('dev-keys-loading');
   if (!list) return;
 
   if (loading) loading.hidden = false;
@@ -189,9 +189,9 @@ async function loadKeys() {
 
 async function handleCreateKey(evt) {
   evt.preventDefault();
-  const btn = el('dev-create-key-btn');
-  const status = el('dev-create-key-status');
-  const labelInput = el('dev-key-label');
+  const btn = getEl('dev-create-key-btn');
+  const status = getEl('dev-create-key-status');
+  const labelInput = getEl('dev-key-label');
 
   if (btn) btn.disabled = true;
   if (status) {
@@ -219,8 +219,8 @@ async function handleCreateKey(evt) {
   if (labelInput) labelInput.value = '';
 
   // Show raw key reveal
-  const reveal = el('dev-new-key-reveal');
-  const keyValue = el('dev-new-key-value');
+  const reveal = getEl('dev-new-key-reveal');
+  const keyValue = getEl('dev-new-key-value');
   if (reveal && keyValue) {
     keyValue.textContent = result.data.key;
     reveal.hidden = false;
@@ -272,8 +272,8 @@ async function handleRegenerate(keyId) {
   }
 
   // Show new key
-  const reveal = el('dev-new-key-reveal');
-  const keyValue = el('dev-new-key-value');
+  const reveal = getEl('dev-new-key-reveal');
+  const keyValue = getEl('dev-new-key-value');
   if (reveal && keyValue) {
     keyValue.textContent = result.data.key;
     reveal.hidden = false;
@@ -288,8 +288,8 @@ async function handleRegenerate(keyId) {
 // ---------------------------------------------------------------------------
 
 async function loadUsage() {
-  const loading = el('dev-usage-loading');
-  const summary = el('dev-usage-summary');
+  const loading = getEl('dev-usage-loading');
+  const summary = getEl('dev-usage-summary');
 
   if (loading) loading.hidden = false;
   if (summary) summary.hidden = true;
@@ -306,8 +306,8 @@ async function loadUsage() {
   setText('dev-usage-tier', d.quota?.tier || 'free');
 
   // Quota bar
-  const bar = el('dev-usage-bar');
-  const note = el('dev-usage-note');
+  const bar = getEl('dev-usage-bar');
+  const note = getEl('dev-usage-note');
   if (bar && d.quota?.daily > 0) {
     const pct = Math.min(100, Math.round(((d.todayCalls || 0) / d.quota.daily) * 100));
     bar.style.width = `${pct}%`;
@@ -340,20 +340,20 @@ async function copyToClipboard(text) {
 // ---------------------------------------------------------------------------
 
 function attachListeners() {
-  const form = el('dev-create-key-form');
+  const form = getEl('dev-create-key-form');
   if (form) form.addEventListener('submit', handleCreateKey);
 
-  const refreshBtn = el('dev-refresh-keys-btn');
+  const refreshBtn = getEl('dev-refresh-keys-btn');
   if (refreshBtn)
     refreshBtn.addEventListener('click', () => {
       loadKeys();
       loadUsage();
     });
 
-  const copyBtn = el('dev-copy-key-btn');
+  const copyBtn = getEl('dev-copy-key-btn');
   if (copyBtn) {
     copyBtn.addEventListener('click', async () => {
-      const keyEl = el('dev-new-key-value');
+      const keyEl = getEl('dev-new-key-value');
       const text = keyEl?.textContent || '';
       const ok = await copyToClipboard(text);
       copyBtn.textContent = ok ? 'Copied!' : 'Copy failed';
@@ -363,18 +363,18 @@ function attachListeners() {
     });
   }
 
-  const dismissBtn = el('dev-dismiss-key-btn');
+  const dismissBtn = getEl('dev-dismiss-key-btn');
   if (dismissBtn) {
     dismissBtn.addEventListener('click', () => {
-      const reveal = el('dev-new-key-reveal');
+      const reveal = getEl('dev-new-key-reveal');
       if (reveal) reveal.hidden = true;
-      const keyEl = el('dev-new-key-value');
+      const keyEl = getEl('dev-new-key-value');
       if (keyEl) keyEl.textContent = '';
     });
   }
 
   // Delegate revoke / regenerate button clicks inside key list
-  const keysList = el('dev-keys-list');
+  const keysList = getEl('dev-keys-list');
   if (keysList) {
     keysList.addEventListener('click', (e) => {
       const revokeBtn = e.target.closest('.dev-revoke-btn');

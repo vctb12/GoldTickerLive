@@ -36,13 +36,15 @@ premiums, making charges, or VAT.
 
 API keys are issued per user account. They are prefixed with `gtl_`.
 
-Pass the key in **one** of three ways (header preferred):
+Pass the key in **one** of two ways (header preferred):
 
 ```
 X-API-Key: gtl_<your-key>
 Authorization: Bearer gtl_<your-key>
-?api_key=gtl_<your-key>          # query parameter — least preferred
 ```
+
+> **Security note:** Query parameter (`?api_key=…`) is not supported. Query parameters appear in
+> server access logs and browser history — headers are always safer for API keys.
 
 `/public/karats` and `/public/countries` are always open (no key needed).
 

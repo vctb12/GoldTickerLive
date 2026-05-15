@@ -242,6 +242,9 @@ async function querySupabase(table, buildQuery) {
     return data;
   } catch (err) {
     console.error(`[developer-api] Supabase query error on ${table}:`, err.message);
+    // Return null so callers fall back to the local file store.
+    // Both "no data" and "error" return null; callers only need to know
+    // whether Supabase data is available — they always fall back to file.
     return null;
   }
 }
@@ -422,8 +425,8 @@ router.get('/public/history', requireApiKey, async (req, res) => {
 // GET /api/v1/public/karats
 // ---------------------------------------------------------------------------
 
-router.get('/public/karats', optionalApiKey, (req, res) => {
-  const ctx = req.apiKeyContext;
+// GET /api/v1/public/karats — no per-key quota header needed for static reference data
+router.get('/public/karats', optionalApiKey, (_req, res) => {
   res.json(
     successResponse(
       {
@@ -439,14 +442,13 @@ router.get('/public/karats', optionalApiKey, (req, res) => {
       { source: 'reference', freshness: 'static' }
     )
   );
-  void ctx; // acknowledged — no extra header needed for static data
 });
 
 // ---------------------------------------------------------------------------
 // GET /api/v1/public/countries
 // ---------------------------------------------------------------------------
 
-router.get('/public/countries', optionalApiKey, (req, res) => {
+router.get('/public/countries', optionalApiKey, (_req, res) => {
   res.json(
     successResponse(
       {

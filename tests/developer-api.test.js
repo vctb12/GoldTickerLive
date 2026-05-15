@@ -37,6 +37,9 @@ const fs = require('node:fs');
 // so we don't pull in the entire server.js stack.
 // ---------------------------------------------------------------------------
 
+// NOTE: makeTestApp() is intentionally called only once per test file in the
+// before() hook below. The tmpDir cleanup in after() is safe under this
+// single-invocation assumption.
 function makeTestApp() {
   const express = require('express');
   const app = express();

@@ -437,6 +437,9 @@ async function recordEvent({ stripeEventId, type, livemode, handledAt }) {
  */
 async function createApiKey({ userId, label }) {
   const rawKey = 'gtl_' + crypto.randomBytes(24).toString('hex');
+  // SHA-256 used as lookup index for a high-entropy (192-bit) random API key.
+  // This is intentional — SHA-256 is appropriate here; bcrypt is only required
+  // for low-entropy, user-chosen secrets such as passwords.
   const keyHash = crypto.createHash('sha256').update(rawKey).digest('hex');
   const keyPrefix = rawKey.slice(0, 12);
 
@@ -484,6 +487,10 @@ async function createApiKey({ userId, label }) {
 
 /**
  * Look up a user by raw API key (hash check).
+ * SHA-256 is used here as a non-secret lookup index, NOT as a password hash.
+ * API keys are 24 random bytes (192 bits of entropy) — they are not user-chosen
+ * passwords, so SHA-256 is appropriate; bcrypt-style adaptive hashing is only
+ * required for low-entropy, user-supplied secrets.
  */
 async function resolveApiKey(rawKey) {
   if (!rawKey) return null;

@@ -29,6 +29,7 @@ const billingRepo = require('./billing-repository');
 const { resolveUserEntitlements } = require('./entitlements');
 
 // How many free (unauthenticated) calls we allow per IP per day.
+// This applies to anonymous API requests only (no key provided).
 const ANON_FREE_DAILY_LIMIT = 10;
 
 // In-memory anon counter: Map<ip:date, count>.  Resets naturally on server restart.
@@ -62,7 +63,10 @@ function resolveIp(req) {
 }
 
 function extractRawKey(req) {
-  // Accept: Authorization: Bearer <key>  OR  ?api_key=<key>  OR  X-API-Key: <key>
+  // Accept: Authorization: Bearer <key>  OR  X-API-Key: <key>
+  // Note: query-parameter API keys are intentionally NOT supported because they
+  // appear in server access logs and browser history, which is a security risk
+  // for long-lived credentials.
   const authHeader = req.headers['authorization'] || '';
   if (authHeader.startsWith('Bearer ')) {
     const token = authHeader.slice('Bearer '.length).trim();
@@ -70,8 +74,6 @@ function extractRawKey(req) {
   }
   const xApiKey = req.headers['x-api-key'];
   if (typeof xApiKey === 'string' && xApiKey.startsWith('gtl_')) return xApiKey.trim();
-  const qKey = req.query && req.query.api_key;
-  if (typeof qKey === 'string' && qKey.startsWith('gtl_')) return qKey.trim();
   return null;
 }
 
