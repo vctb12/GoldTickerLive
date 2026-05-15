@@ -482,7 +482,7 @@ describe('X-RateLimit-* headers', () => {
   test('anonymous /public/latest returns 429 after exceeding IP limit', async () => {
     // The anon middleware is only on /public/latest; exhaust the in-process counter
     // by sending more than ANON_FREE_DAILY_LIMIT (10) requests from a unique "IP"
-    const fakeIp = `192.0.2.${Math.floor(Math.random() * 250) + 1}`;
+    const fakeIp = `192.0.2.${Math.floor(Math.random() * 253) + 1}`;
     let lastStatus = 200;
     for (let i = 0; i < 12; i++) {
       const { status } = await request(server, 'GET', '/api/v1/public/latest', {
@@ -502,7 +502,7 @@ describe('X-RateLimit-* headers', () => {
 
   test('/public/karats and /public/countries are open — no anon quota enforced', async () => {
     // These endpoints have no optionalApiKey middleware and should always return 200
-    const fakeIp = `198.51.100.${Math.floor(Math.random() * 250) + 1}`;
+    const fakeIp = `198.51.100.${Math.floor(Math.random() * 253) + 1}`;
     // Exhaust anon IP counter on /public/latest first
     for (let i = 0; i < 15; i++) {
       await request(server, 'GET', '/api/v1/public/latest', {

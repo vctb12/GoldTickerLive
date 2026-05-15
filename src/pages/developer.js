@@ -394,9 +394,10 @@ function attachListeners() {
 
 function getLang() {
   try {
-    const p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
     const urlLang = new URLSearchParams(window.location.search).get('lang');
-    return urlLang === 'ar' || p.lang === 'ar' ? 'ar' : 'en';
+    if (urlLang === 'ar') return 'ar';
+    const p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
+    return p.lang === 'ar' ? 'ar' : 'en';
   } catch {
     return 'en';
   }

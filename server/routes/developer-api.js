@@ -407,7 +407,7 @@ router.get('/public/history', requireApiKey, async (req, res) => {
         points: filtered.map((p) => {
           const xauUsd = coercePositive(p.price);
           const xauAed =
-            xauUsd != null ? parseFloat(((xauUsd / TROY_OZ_GRAMS) * AED_PEG).toFixed(6)) : null;
+            xauUsd != null ? Math.round((xauUsd / TROY_OZ_GRAMS) * AED_PEG * 1e6) / 1e6 : null;
           return {
             timestampUtc:
               String(p.date).length === 7 ? `${p.date}-01T00:00:00Z` : `${p.date}T00:00:00Z`,
