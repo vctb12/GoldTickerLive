@@ -2142,3 +2142,82 @@ create policy "Admin update ai drafts"
     to service_role
     using (true)
     with check (true);
+
+-- ============================================================
+-- PHASE 12 — API PRODUCT FOUNDATION
+-- ============================================================
+
+-- ── api_rate_limits ────────────────────────────────────────────────────────
+-- Per-user, per-tier override table.  When a row exists for a user it takes
+-- precedence over the default tier quotas defined in entitlements.js.
+-- Use case: custom enterprise limits or temporary quota grants.
+create table if not exists public.api_rate_limits (
+    id              uuid primary key default uuid_generate_v4(),
+    user_id         text not null unique,
+    daily_limit     int not null default 0,          -- 0 = use tier default
+    monthly_limit   int not null default 0,          -- 0 = unlimited
+    note            text,
+    granted_by      text,
+    valid_until     date,
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now()
+);
+
+alter table public.api_rate_limits enable row level security;
+
+create index if not exists idx_api_rate_limits_user_id
+    on public.api_rate_limits(user_id);
+
+create policy "Admin manage api rate limits"
+    on public.api_rate_limits for all
+    to service_role
+    using (true)
+    with check (true);
+
+create trigger api_rate_limits_set_updated_at
+    before update on public.api_rate_limits
+    for each row execute procedure public.set_updated_at();
+
+-- ── developer_apps ─────────────────────────────────────────────────────────
+-- Optional: named applications registered by a developer.
+-- Allows grouping multiple API keys under one named integration.
+create table if not exists public.developer_apps (
+    id              uuid primary key default uuid_generate_v4(),
+    user_id         text not null,
+    name            text not null,
+    description     text,
+    website_url     text,
+    created_at      timestamptz not null default now(),
+    updated_at      timestamptz not null default now()
+);
+
+alter table public.developer_apps enable row level security;
+
+create index if not exists idx_developer_apps_user_id
+    on public.developer_apps(user_id, created_at desc);
+
+create policy "User read own developer apps"
+    on public.developer_apps for select
+    to authenticated
+    using (user_id = auth.uid()::text);
+
+create policy "User insert own developer apps"
+    on public.developer_apps for insert
+    to authenticated
+    with check (user_id = auth.uid()::text);
+
+create policy "User update own developer apps"
+    on public.developer_apps for update
+    to authenticated
+    using (user_id = auth.uid()::text)
+    with check (user_id = auth.uid()::text);
+
+create policy "Admin manage developer apps"
+    on public.developer_apps for all
+    to service_role
+    using (true)
+    with check (true);
+
+create trigger developer_apps_set_updated_at
+    before update on public.developer_apps
+    for each row execute procedure public.set_updated_at();

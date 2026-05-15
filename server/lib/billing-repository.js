@@ -23,7 +23,8 @@ const crypto = require('crypto');
 const { atomicWriteJSON } = require('./fs-atomic');
 const { getSupabaseClient } = require('./supabase-client');
 
-const BILLING_FILE = path.join(__dirname, '../../data/billing.json');
+const BILLING_FILE =
+  process.env.BILLING_DATA_FILE || path.join(__dirname, '../../data/billing.json');
 const MAX_AUDIT_ROWS = 5000;
 const MAX_EVENTS_ROWS = 10000;
 
@@ -634,6 +635,53 @@ async function getApiUsageToday(keyId) {
   return row?.count ?? 0;
 }
 
+/**
+ * List API usage rows for a user's keys over a date range.
+ * Returns one row per (keyId, date) with call counts.
+ * @param {string} userId
+ * @param {{ days?: number }} [opts]
+ * @returns {Promise<Array<{ keyId, date, count }>>}
+ */
+async function listApiUsageForUser(userId, opts = {}) {
+  const days = typeof opts.days === 'number' && opts.days > 0 ? Math.min(opts.days, 90) : 30;
+  const cutoff = new Date(Date.now() - days * 24 * 3600 * 1000).toISOString().slice(0, 10);
+
+  const sb = getSupabaseClient();
+  if (sb) {
+    try {
+      // First get key IDs belonging to this user
+      const { data: keyRows, error: keyErr } = await sb
+        .from('api_keys')
+        .select('id')
+        .eq('user_id', userId);
+      if (keyErr) throw keyErr;
+      if (!keyRows || keyRows.length === 0) return [];
+      const keyIds = keyRows.map((r) => r.id);
+      const { data, error } = await sb
+        .from('api_usage')
+        .select('api_key_id, date, call_count')
+        .in('api_key_id', keyIds)
+        .gte('date', cutoff)
+        .order('date', { ascending: false });
+      if (error) throw error;
+      return (data || []).map((r) => ({
+        keyId: r.api_key_id,
+        date: r.date,
+        count: r.call_count,
+      }));
+    } catch (err) {
+      console.error('[billing-repo] listApiUsageForUser Supabase error:', err.message);
+    }
+  }
+
+  const store = readStore();
+  const userKeyIds = new Set(store.api_keys.filter((k) => k.userId === userId).map((k) => k.id));
+  return store.api_usage
+    .filter((r) => userKeyIds.has(r.keyId) && r.date >= cutoff)
+    .map(({ keyId, date, count }) => ({ keyId, date, count }))
+    .sort((a, b) => (b.date > a.date ? 1 : -1));
+}
+
 // ---------------------------------------------------------------------------
 // billing_audit_logs
 // ---------------------------------------------------------------------------
@@ -689,5 +737,6 @@ module.exports = {
   revokeApiKey,
   incrementApiUsage,
   getApiUsageToday,
+  listApiUsageForUser,
   appendAuditLog,
 };

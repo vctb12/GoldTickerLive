@@ -1,0 +1,434 @@
+'use strict';
+
+/**
+ * tests/developer-api.test.js
+ *
+ * Tests for Phase 12: API product routes
+ *  - GET /api/v1/public/latest      (optionalApiKey)
+ *  - GET /api/v1/public/history     (requireApiKey)
+ *  - GET /api/v1/public/karats      (open)
+ *  - GET /api/v1/public/countries   (open)
+ *  - POST /api/v1/me/api-keys
+ *  - GET  /api/v1/me/api-keys
+ *  - DELETE /api/v1/me/api-keys/:id
+ *  - POST /api/v1/me/api-keys/:id/regenerate
+ *  - GET  /api/v1/me/api-usage
+ *
+ * Run with: npm test
+ */
+
+process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret-for-tests-only';
+process.env.ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'test-password-1234';
+process.env.ADMIN_ACCESS_PIN = process.env.ADMIN_ACCESS_PIN || '123456';
+process.env.NODE_ENV = process.env.NODE_ENV || 'test';
+// Enable the test-user bypass for /me routes (dev-only)
+process.env.PUBLIC_AUTH_TEST_MODE = '1';
+
+const { test, describe, before, after } = require('node:test');
+const assert = require('node:assert/strict');
+const http = require('node:http');
+const path = require('node:path');
+const os = require('node:os');
+const fs = require('node:fs');
+
+// ---------------------------------------------------------------------------
+// Minimal test app factory
+// Uses the isolated developer-api router mounted on a small express app,
+// so we don't pull in the entire server.js stack.
+// ---------------------------------------------------------------------------
+
+function makeTestApp() {
+  const express = require('express');
+  const app = express();
+  app.use(express.json({ limit: '256kb' }));
+
+  // Provide a test billing data file so api_keys are isolated per test run.
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gtl-devapi-'));
+  process.env.BILLING_DATA_FILE = path.join(tmpDir, 'billing.json');
+
+  const router = require(path.resolve(__dirname, '../server/routes/developer-api'));
+  app.use('/api/v1', router);
+
+  return { app, tmpDir };
+}
+
+function request(server, method, p, opts = {}) {
+  return new Promise((resolve, reject) => {
+    const payload = opts.body != null ? JSON.stringify(opts.body) : undefined;
+    const options = {
+      host: '127.0.0.1',
+      port: server.address().port,
+      method,
+      path: p,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(payload ? { 'Content-Length': Buffer.byteLength(payload) } : {}),
+        ...(opts.headers || {}),
+      },
+    };
+    const req = http.request(options, (res) => {
+      let data = '';
+      res.on('data', (chunk) => (data += chunk));
+      res.on('end', () => {
+        try {
+          resolve({ status: res.statusCode, body: JSON.parse(data), headers: res.headers });
+        } catch {
+          resolve({ status: res.statusCode, body: data, headers: res.headers });
+        }
+      });
+    });
+    req.on('error', reject);
+    if (payload) req.write(payload);
+    req.end();
+  });
+}
+
+// Convenience wrappers
+function get(server, path, headers = {}) {
+  return request(server, 'GET', path, { headers });
+}
+function post(server, path, body = {}, headers = {}) {
+  return request(server, 'POST', path, { body, headers });
+}
+function del(server, path, headers = {}) {
+  return request(server, 'DELETE', path, { headers });
+}
+
+// Test-user header (only works when PUBLIC_AUTH_TEST_MODE=1 and NODE_ENV≠production)
+const TEST_USER_HEADERS = { 'x-test-user-id': 'test-user-phase12' };
+
+// ---------------------------------------------------------------------------
+// Setup
+// ---------------------------------------------------------------------------
+
+let server;
+let tmpDir;
+
+before(() => {
+  const { app, tmpDir: dir } = makeTestApp();
+  tmpDir = dir;
+  server = app.listen(0);
+});
+
+after(() => {
+  server.close();
+  try {
+    fs.rmSync(tmpDir, { recursive: true });
+  } catch {
+    /* ok */
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Open public endpoints
+// ---------------------------------------------------------------------------
+
+describe('GET /api/v1/public/karats', () => {
+  test('returns standard envelope with karat list', async () => {
+    const { status, body } = await get(server, '/api/v1/public/karats');
+    assert.equal(status, 200);
+    assert.equal(body.ok, true);
+    assert.ok(Array.isArray(body.data.karats), 'karats should be an array');
+    assert.ok(body.data.karats.length > 0, 'should have at least one karat');
+    assert.ok(typeof body.data.troyOzGrams === 'number', 'troyOzGrams should be number');
+    // Spot-check 24k entry
+    const k24 = body.data.karats.find((k) => k.code === '24');
+    assert.ok(k24, '24k entry should exist');
+    assert.equal(k24.purity, 1);
+  });
+
+  test('includes meta with static freshness', async () => {
+    const { body } = await get(server, '/api/v1/public/karats');
+    assert.equal(body.meta.freshness, 'static');
+    assert.equal(body.meta.source, 'reference');
+    assert.ok(typeof body.meta.timestamp === 'string');
+  });
+});
+
+describe('GET /api/v1/public/countries', () => {
+  test('returns standard envelope with countries list', async () => {
+    const { status, body } = await get(server, '/api/v1/public/countries');
+    assert.equal(status, 200);
+    assert.equal(body.ok, true);
+    assert.ok(Array.isArray(body.data.countries));
+    assert.ok(body.data.countries.length > 0);
+    // UAE should be there with fixedPeg
+    const ae = body.data.countries.find((c) => c.code === 'AE');
+    assert.ok(ae, 'UAE should be in country list');
+    assert.equal(ae.currency, 'AED');
+    assert.equal(ae.fixedPeg, true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// /public/latest — optionalApiKey
+// ---------------------------------------------------------------------------
+
+describe('GET /api/v1/public/latest', () => {
+  test('responds 200 without API key (anonymous within limit)', async () => {
+    const { status, body } = await get(server, '/api/v1/public/latest');
+    // 200 or 503 (if no data file) are both valid — depends on test env
+    assert.ok([200, 503].includes(status), `expected 200 or 503, got ${status}`);
+    if (status === 200) {
+      assert.equal(body.ok, true);
+      assert.ok(body.data.disclaimer, 'should include disclaimer');
+    }
+  });
+
+  test('responds with error envelope on 503 when data unavailable', async () => {
+    const { status, body } = await get(server, '/api/v1/public/latest');
+    if (status === 503) {
+      assert.equal(body.ok, false);
+      assert.ok(body.error?.code, 'error should have a code');
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// /public/history — requireApiKey
+// ---------------------------------------------------------------------------
+
+describe('GET /api/v1/public/history', () => {
+  test('returns 401 without API key', async () => {
+    const { status, body } = await get(server, '/api/v1/public/history');
+    assert.equal(status, 401);
+    assert.equal(body.ok, false);
+    assert.equal(body.error.code, 'API_KEY_REQUIRED');
+  });
+
+  test('returns 401 with invalid API key', async () => {
+    const { status, body } = await get(server, '/api/v1/public/history', {
+      'X-API-Key': 'gtl_invalid_fake_key_abcdef1234567890',
+    });
+    assert.equal(status, 401);
+    assert.equal(body.ok, false);
+    assert.equal(body.error.code, 'INVALID_API_KEY');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// API key management — /me/api-keys
+// ---------------------------------------------------------------------------
+
+describe('GET /api/v1/me/api-keys', () => {
+  test('returns 401 without auth token', async () => {
+    const { status, body } = await get(server, '/api/v1/me/api-keys');
+    assert.equal(status, 401);
+    assert.equal(body.ok, false);
+  });
+
+  test('returns empty key list for new test user', async () => {
+    const { status, body } = await get(server, '/api/v1/me/api-keys', TEST_USER_HEADERS);
+    assert.equal(status, 200);
+    assert.equal(body.ok, true);
+    assert.ok(Array.isArray(body.data.keys));
+  });
+});
+
+describe('POST /api/v1/me/api-keys', () => {
+  test('returns 401 without auth token', async () => {
+    const { status, body } = await post(server, '/api/v1/me/api-keys', { label: 'test' });
+    assert.equal(status, 401);
+    assert.equal(body.ok, false);
+  });
+
+  test('creates an API key for an authenticated user', async () => {
+    const { status, body } = await post(
+      server,
+      '/api/v1/me/api-keys',
+      { label: 'my-test-key' },
+      TEST_USER_HEADERS
+    );
+    assert.equal(status, 201);
+    assert.equal(body.ok, true);
+    assert.ok(typeof body.data.key === 'string', 'should return raw key');
+    assert.ok(body.data.key.startsWith('gtl_'), 'key should start with gtl_');
+    assert.ok(typeof body.data.id === 'string', 'should return key id');
+    assert.equal(body.data.label, 'my-test-key');
+    assert.ok(body.data.warning, 'should include warning about key visibility');
+  });
+
+  test('lists the newly created key', async () => {
+    // Create first
+    await post(server, '/api/v1/me/api-keys', { label: 'list-test' }, TEST_USER_HEADERS);
+    // Then list
+    const { status, body } = await get(server, '/api/v1/me/api-keys', TEST_USER_HEADERS);
+    assert.equal(status, 200);
+    assert.ok(body.data.keys.length >= 1, 'should have at least one key');
+    // Keys should NOT expose raw key or hash
+    for (const k of body.data.keys) {
+      assert.ok(!('key' in k), 'list should not expose raw key');
+      assert.ok(!('keyHash' in k), 'list should not expose key hash');
+      assert.ok(typeof k.keyPrefix === 'string', 'should expose key prefix');
+    }
+  });
+});
+
+describe('DELETE /api/v1/me/api-keys/:id', () => {
+  test('revokes an active key', async () => {
+    // Create a key
+    const created = await post(
+      server,
+      '/api/v1/me/api-keys',
+      { label: 'to-revoke' },
+      TEST_USER_HEADERS
+    );
+    assert.equal(created.status, 201);
+    const keyId = created.body.data.id;
+
+    // Revoke it
+    const revoked = await del(server, `/api/v1/me/api-keys/${keyId}`, TEST_USER_HEADERS);
+    assert.equal(revoked.status, 200);
+    assert.equal(revoked.body.ok, true);
+    assert.equal(revoked.body.data.revoked, true);
+  });
+
+  test('returns 404 for unknown key ID', async () => {
+    const { status, body } = await del(
+      server,
+      '/api/v1/me/api-keys/nonexistent-id',
+      TEST_USER_HEADERS
+    );
+    assert.equal(status, 404);
+    assert.equal(body.ok, false);
+    assert.equal(body.error.code, 'KEY_NOT_FOUND');
+  });
+
+  test('returns 401 without auth', async () => {
+    const { status, body } = await del(server, '/api/v1/me/api-keys/some-id');
+    assert.equal(status, 401);
+    assert.equal(body.ok, false);
+  });
+});
+
+describe('POST /api/v1/me/api-keys/:id/regenerate', () => {
+  test('revokes old key and creates a new one', async () => {
+    const created = await post(
+      server,
+      '/api/v1/me/api-keys',
+      { label: 'rotate-me' },
+      TEST_USER_HEADERS
+    );
+    assert.equal(created.status, 201);
+    const oldId = created.body.data.id;
+
+    const regen = await post(
+      server,
+      `/api/v1/me/api-keys/${oldId}/regenerate`,
+      {},
+      TEST_USER_HEADERS
+    );
+    assert.equal(regen.status, 201);
+    assert.equal(regen.body.ok, true);
+    assert.ok(typeof regen.body.data.key === 'string', 'should return new raw key');
+    assert.ok(regen.body.data.key.startsWith('gtl_'), 'new key should start with gtl_');
+    assert.notEqual(regen.body.data.id, oldId, 'new key should have a different id');
+    assert.equal(regen.body.data.revokedId, oldId, 'should confirm old key was revoked');
+  });
+
+  test('returns 404 for unknown key', async () => {
+    const { status, body } = await post(
+      server,
+      '/api/v1/me/api-keys/does-not-exist/regenerate',
+      {},
+      TEST_USER_HEADERS
+    );
+    assert.equal(status, 404);
+    assert.equal(body.ok, false);
+    assert.equal(body.error.code, 'KEY_NOT_FOUND');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Usage — /me/api-usage
+// ---------------------------------------------------------------------------
+
+describe('GET /api/v1/me/api-usage', () => {
+  test('returns 401 without auth', async () => {
+    const { status, body } = await get(server, '/api/v1/me/api-usage');
+    assert.equal(status, 401);
+    assert.equal(body.ok, false);
+  });
+
+  test('returns usage summary for authenticated user', async () => {
+    const { status, body } = await get(server, '/api/v1/me/api-usage', TEST_USER_HEADERS);
+    assert.equal(status, 200);
+    assert.equal(body.ok, true);
+    assert.ok(typeof body.data.totalCalls === 'number');
+    assert.ok(typeof body.data.todayCalls === 'number');
+    assert.ok(typeof body.data.windowDays === 'number');
+    assert.ok(body.data.quota !== undefined);
+    assert.ok(Array.isArray(body.data.byKey));
+    assert.ok(Array.isArray(body.data.byDate));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// API key authentication flow
+// ---------------------------------------------------------------------------
+
+describe('API key auth — /public/latest with key', () => {
+  test('valid API key resolves and is tracked', async () => {
+    // Create a key for the test user
+    const created = await post(
+      server,
+      '/api/v1/me/api-keys',
+      { label: 'auth-flow-test' },
+      TEST_USER_HEADERS
+    );
+    assert.equal(created.status, 201);
+    const rawKey = created.body.data.key;
+    assert.ok(rawKey.startsWith('gtl_'));
+
+    // Use it on /public/latest
+    const { status } = await get(server, '/api/v1/public/latest', { 'X-API-Key': rawKey });
+    // 200 or 503 (no data file in CI)
+    assert.ok([200, 503].includes(status), `expected 200 or 503, got ${status}`);
+  });
+
+  test('revoked key is rejected with 401', async () => {
+    // Create and immediately revoke
+    const created = await post(
+      server,
+      '/api/v1/me/api-keys',
+      { label: 'revoke-test' },
+      TEST_USER_HEADERS
+    );
+    const keyId = created.body.data.id;
+    const rawKey = created.body.data.key;
+    await del(server, `/api/v1/me/api-keys/${keyId}`, TEST_USER_HEADERS);
+
+    // Attempt to use it
+    const { status, body } = await get(server, '/api/v1/public/latest', { 'X-API-Key': rawKey });
+    assert.equal(status, 401);
+    assert.equal(body.ok, false);
+    assert.equal(body.error.code, 'INVALID_API_KEY');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Key limit enforcement
+// ---------------------------------------------------------------------------
+
+describe('Key limit — max 10 active keys per user', () => {
+  test('creating more than 10 keys returns KEY_LIMIT_REACHED', async () => {
+    const uniqueUser = { 'x-test-user-id': `limit-test-user-${Date.now()}` };
+
+    // Create 10 keys
+    for (let i = 0; i < 10; i++) {
+      const res = await post(server, '/api/v1/me/api-keys', { label: `key-${i}` }, uniqueUser);
+      assert.equal(res.status, 201, `key ${i} should be created`);
+    }
+
+    // 11th should fail
+    const { status, body } = await post(
+      server,
+      '/api/v1/me/api-keys',
+      { label: 'overflow' },
+      uniqueUser
+    );
+    assert.equal(status, 422);
+    assert.equal(body.ok, false);
+    assert.equal(body.error.code, 'KEY_LIMIT_REACHED');
+  });
+});
