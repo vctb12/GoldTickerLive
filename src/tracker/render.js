@@ -17,6 +17,7 @@ import { getDayOpenPrice } from '../lib/cache.js';
 
 let _state, _el, _priceFor, _currentSpot, _showToast;
 let _chartListenersAttached = false;
+const MIN_QUICK_CALC_WEIGHT_GRAMS = 0.01;
 // Holds the latest chart rows so the chart mousemove handler (attached once)
 // can always read the most-current data without re-registering on every render.
 let _latestChartRows = [];
@@ -88,6 +89,26 @@ function formatUnitLabel(unit) {
 function formatPercent(value) {
   if (!Number.isFinite(value)) return '—';
   return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
+}
+
+function getHistorySourceLabel(rows = []) {
+  if (!rows.length) return tx('historySource.unavailable');
+  const sources = new Set(rows.map((row) => String(row.source || '').toLowerCase()));
+  let hasSupabase = false;
+  let hasBaseline = false;
+  let hasLocal = false;
+  for (const source of sources) {
+    if (source.includes('supabase')) hasSupabase = true;
+    if (source.includes('baseline') || source.includes('estimated')) hasBaseline = true;
+    if (source.includes('local') || source.includes('cache')) hasLocal = true;
+  }
+
+  if (hasSupabase && !hasBaseline && !hasLocal) return tx('historySource.supabase');
+  if (hasSupabase && (hasBaseline || hasLocal)) return tx('historySource.mixedSupabase');
+  if (hasBaseline && hasLocal) return tx('historySource.mixedBaseline');
+  if (hasBaseline) return tx('historySource.baseline');
+  if (hasLocal) return tx('historySource.local');
+  return tx('historySource.unavailable');
 }
 
 function getVisibleHistoryRows() {
@@ -457,6 +478,12 @@ export function renderChart() {
     range: rangeLabel,
     liveRecord: livePoint,
   });
+  if (_el.chartHistorySource) {
+    setText(
+      _el.chartHistorySource,
+      tx('historySource.label', { source: getHistorySourceLabel(historyOnly) })
+    );
+  }
 
   if (!rows.length) {
     if (_el.chartEmpty) _el.chartEmpty.hidden = false;
@@ -754,6 +781,68 @@ export function renderChart() {
       el('div', { class: 'tracker-note-item' }, tx('historical.note.methodology'))
     );
   }
+}
+
+function renderAlertsSummary() {
+  if (!_el.alertSummary) return;
+  const alertsCount = Array.isArray(_state.alerts) ? _state.alerts.length : 0;
+  const freshness = getFreshnessModel();
+  setText(
+    _el.alertSummary,
+    tx('alerts.summary', {
+      count: alertsCount,
+      source: freshness.sourceLabel,
+      age: freshness.ageText,
+    })
+  );
+}
+
+export function renderQuickCalculator() {
+  if (!_el.quickCalcResult || !_el.quickCalcMeta) return;
+  const spot = _currentSpot();
+  const weight = Number.parseFloat(_el.quickCalcWeight?.value || '');
+  const karat = _el.quickCalcKarat?.value || _state.selectedKarat;
+  const currency = _el.quickCalcCurrency?.value || _state.selectedCurrency;
+  const perGram = spot
+    ? _priceFor({
+        currency,
+        karat,
+        unit: 'gram',
+        spot,
+      })
+    : null;
+
+  if (
+    !spot ||
+    !Number.isFinite(weight) ||
+    weight < MIN_QUICK_CALC_WEIGHT_GRAMS ||
+    !Number.isFinite(perGram)
+  ) {
+    setText(_el.quickCalcResult, '—');
+    setText(_el.quickCalcMeta, tx('quickCalc.waiting'));
+    return;
+  }
+
+  const total = perGram * weight;
+  const numberLocale = _state.lang === 'ar' ? 'ar-AE' : 'en-US';
+  setText(
+    _el.quickCalcResult,
+    `${currency} ${total.toLocaleString(numberLocale, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`
+  );
+  setText(
+    _el.quickCalcMeta,
+    tx('quickCalc.summary', {
+      weight: weight.toLocaleString(numberLocale, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+      karat,
+      source: getFreshnessModel().sourceLabel,
+    })
+  );
 }
 
 export function renderKaratTable() {
@@ -1869,6 +1958,8 @@ export function renderAll() {
     renderComparisonWorkspace();
     renderWatchlist();
     renderDecisionCues();
+    renderAlertsSummary();
+    renderQuickCalculator();
   } else if (_state.mode === 'compare') {
     renderComparisonWorkspace();
     renderMarkets();

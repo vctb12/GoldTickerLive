@@ -1418,7 +1418,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
 
 .tracker-main-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.8fr);
+  grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.45fr);
   gap: 1.2rem;
 }
 
@@ -1509,6 +1509,12 @@ body.tracker-workspace-basic .tracker-advanced-only {
   overflow: hidden;
   box-shadow: var(--elev-2);
   transition: all 0.28s var(--ease-out);
+}
+
+.tracker-chart-source-label {
+  margin-top: -0.2rem;
+  font-size: 0.76rem;
+  color: var(--tp-text-faint);
 }
 
 #tp-chart {
@@ -1702,6 +1708,23 @@ td.tracker-chg-down {
 /* Watchlist */
 .tracker-watchlist-block {
   margin-top: 1rem;
+}
+
+.tracker-command-panel {
+  margin-top: 1rem;
+}
+
+.tracker-command-note {
+  font-size: var(--text-sm);
+  color: var(--tp-text-muted);
+}
+
+.tracker-quick-calc-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tracker-quick-calc-result {
+  margin-top: 0.9rem;
 }
 
 .tracker-watchlist-grid {

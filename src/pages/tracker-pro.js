@@ -26,6 +26,7 @@ let initRender,
   renderMarkets,
   renderComparisonWorkspace,
   renderAlerts,
+  renderQuickCalculator,
   renderPresets,
   renderPlanners,
   renderArchive;
@@ -237,6 +238,38 @@ function localizeStaticTrackerCopy() {
   setNodeText('tp-mobile-cue-tools-title', trackerTx('mobileCueToolsTitle'));
   setNodeText('tp-mobile-cue-tools-copy', trackerTx('mobileCueToolsCopy'));
   setNodeText('tp-chart-source-note', trackerTx('chartSourceNote'));
+  setNodeText('tp-chart-history-source', trackerTx('historySource.preparing'));
+  setNodeText('tp-karat-heading', trackerTx('karatSectionTitle'));
+  setNodeText('tp-karat-source-note', trackerTx('karatSectionNote'));
+  setNodeText('tp-alerts-watchlist-title', trackerTx('alertsWatchlistTitle'));
+  setNodeText('tp-watchlist-title', trackerTx('watchlistTitle'));
+  setNodeText('tp-decision-cues-title', trackerTx('decisionCuesTitle'));
+  setButtonCopy(
+    document.getElementById('tp-open-alerts-inline'),
+    trackerTx('actions.openAlertsPanel')
+  );
+  setNodeText('tp-quick-calc-title', trackerTx('quickCalc.title'));
+  setNodeText('tp-quick-calc-copy', trackerTx('quickCalc.copy'));
+  setNodeText('tp-quick-calc-weight-label', trackerTx('quickCalc.weightLabel'));
+  setNodeText('tp-quick-calc-karat-label', trackerTx('quickCalc.karatLabel'));
+  setNodeText('tp-quick-calc-currency-label', trackerTx('quickCalc.currencyLabel'));
+  setNodeText('tp-quick-calc-result-label', trackerTx('quickCalc.resultLabel'));
+  setNodeText('tp-quick-calc-meta', trackerTx('quickCalc.meta'));
+  setNodeText('tp-quick-calc-open-full', trackerTx('quickCalc.openFull'));
+  setNodeText('tp-quick-calc-method-link', trackerTx('quickCalc.methodLink'));
+  setNodeText('tp-export-command-title', trackerTx('exportCommand.title'));
+  setNodeText('tp-export-command-copy', trackerTx('exportCommand.copy'));
+  setButtonCopy(document.getElementById('tp-share-inline'), trackerTx('actions.copyBrief'));
+  setButtonCopy(
+    document.getElementById('tp-open-exports-inline'),
+    trackerTx('actions.openExportsPanel')
+  );
+  setInlineLinkText(
+    document.getElementById('tp-export-source-note'),
+    trackerTx('exportCommand.note'),
+    'methodology.html',
+    trackerTx('referenceBannerLink')
+  );
   setNodeText('tp-history-caption', trackerTx('historyCaptionLoading'));
   setNodeText('tp-market-scroll-hint', trackerTx('marketScrollHint'));
   setNodeText('tp-archive-scroll-hint', trackerTx('archiveScrollHint'));
@@ -292,6 +325,7 @@ function ui() {
     legendCompare: document.getElementById('tp-legend-compare'),
     miniStrip: document.getElementById('tp-mini-strip'),
     chartStats: document.getElementById('tp-chart-stats'),
+    chartHistorySource: document.getElementById('tp-chart-history-source'),
     historyCaption: document.getElementById('tp-history-caption'),
     rangeNotes: document.getElementById('tp-range-notes'),
     playbackStrip: document.getElementById('tp-playback-strip'),
@@ -313,6 +347,8 @@ function ui() {
     comparisonEmpty: document.getElementById('tp-comparison-empty'),
     watchlistGrid: document.getElementById('tp-watchlist-grid'),
     decisionCues: document.getElementById('tp-decision-cues'),
+    alertSummary: document.getElementById('tp-alert-summary'),
+    openAlertsInline: document.getElementById('tp-open-alerts-inline'),
     alertScope: document.getElementById('tp-alert-scope'),
     alertScopeWrap: document.getElementById('tp-alert-scope-wrap'),
     alertDelivery: document.getElementById('tp-alert-delivery'),
@@ -363,6 +399,13 @@ function ui() {
     exportCompare2: document.getElementById('tp-export-compare-2'),
     exportWatchlist: document.getElementById('tp-export-watchlist'),
     saveWatchlistAccount: document.getElementById('tp-save-watchlist-account'),
+    quickCalcWeight: document.getElementById('tp-quick-calc-weight'),
+    quickCalcKarat: document.getElementById('tp-quick-calc-karat'),
+    quickCalcCurrency: document.getElementById('tp-quick-calc-currency'),
+    quickCalcResult: document.getElementById('tp-quick-calc-result'),
+    quickCalcMeta: document.getElementById('tp-quick-calc-meta'),
+    openExportsInline: document.getElementById('tp-open-exports-inline'),
+    shareInline: document.getElementById('tp-share-inline'),
     downloadJson: document.getElementById('tp-download-json'),
     downloadJson2: document.getElementById('tp-download-json-2'),
     downloadBrief: document.getElementById('tp-download-brief'),
@@ -876,6 +919,25 @@ function populateSelects() {
     el.unit.replaceChildren(frag);
   }
   if (el.language) el.language.value = state.lang;
+  if (el.quickCalcKarat) {
+    const frag = document.createDocumentFragment();
+    KARATS.forEach((k) => {
+      const opt = safeEl('option', { value: k.code }, [`${k.code}K`]);
+      if (k.code === state.selectedKarat) opt.selected = true;
+      frag.appendChild(opt);
+    });
+    el.quickCalcKarat.replaceChildren(frag);
+  }
+  if (el.quickCalcCurrency) {
+    const currencies = [...new Set(COUNTRIES.map((c) => c.currency))].sort();
+    const frag = document.createDocumentFragment();
+    currencies.forEach((c) => {
+      const opt = safeEl('option', { value: c }, [c]);
+      if (c === state.selectedCurrency) opt.selected = true;
+      frag.appendChild(opt);
+    });
+    el.quickCalcCurrency.replaceChildren(frag);
+  }
   if (el.historyMonth) el.historyMonth.value = state.historyMonth || '';
   // Sync range pills with persisted state (HTML default is 24H; state default is 30D).
   if (el.rangePills?.length) {
@@ -1049,6 +1111,7 @@ async function init() {
     renderMarkets,
     renderComparisonWorkspace,
     renderAlerts,
+    renderQuickCalculator,
     renderPresets,
     renderPlanners,
     renderArchive,
@@ -1121,6 +1184,30 @@ async function init() {
       updateServerAlertUiState();
     }
     setTimeout(() => el.alertEmail?.focus(), ALERT_EMAIL_FOCUS_DELAY_MS);
+  });
+  el.openAlertsInline?.addEventListener('click', (event) => {
+    event.preventDefault();
+    const alertsTab = document.getElementById('tab-alerts');
+    alertsTab?.click();
+    if (serverAlertsAvailable && el.alertDelivery) {
+      el.alertDelivery.value = 'server';
+      updateServerAlertUiState();
+    }
+    setTimeout(() => el.alertEmail?.focus(), ALERT_EMAIL_FOCUS_DELAY_MS);
+  });
+  el.openExportsInline?.addEventListener('click', (event) => {
+    event.preventDefault();
+    if (!document.body.classList.contains('tracker-workspace-advanced')) {
+      el.workspaceToggle?.click();
+    }
+    document.getElementById('tab-exports')?.click();
+  });
+  el.shareInline?.addEventListener('click', (event) => {
+    event.preventDefault();
+    el.shareBtn?.click();
+  });
+  [el.quickCalcWeight, el.quickCalcKarat, el.quickCalcCurrency].forEach((field) => {
+    field?.addEventListener('input', () => renderQuickCalculator());
   });
   el.saveWatchlistAccount?.addEventListener('click', () => {
     saveWatchlistToAccount().catch(() => {

@@ -621,12 +621,42 @@
           </div>
         </section>
 
-        <!-- Live chart + karat ladder + watchlist -->
+        <!-- Command center flow: karats → chart → alerts/watchlist → calculator → exports -->
         <section class="tracker-main-grid" id="section-chart">
+          <aside class="tracker-panel tracker-panel-side">
+            <div class="tracker-panel-head">
+              <div>
+                <h2 id="tp-karat-heading">Karat reference table</h2>
+                <p>
+                  Scan 24K/22K/21K/18K reference levels first, then compare with your selected
+                  market context and freshness labels.
+                </p>
+              </div>
+            </div>
+            <p class="source-note tracker-command-note" id="tp-karat-source-note">
+              Reference values are derived from spot and purity. Final shop pricing may include
+              making charges, dealer margin, and VAT.
+            </p>
+            <div class="tracker-ladder-table-wrap" aria-label="Karat ladder">
+              <table class="tracker-table">
+                <caption class="sr-only">Karat ladder — spot-linked reference price per selected unit for the selected market</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Karat</th>
+                    <th scope="col">Purity</th>
+                    <th scope="col">Selected price</th>
+                    <th scope="col">vs 24K</th>
+                  </tr>
+                </thead>
+                <tbody id="tp-karat-table" aria-live="polite" aria-atomic="false"></tbody>
+              </table>
+            </div>
+          </aside>
+
           <section class="tracker-panel">
             <div class="tracker-panel-head">
               <div>
-                <h2 tabindex="-1" id="tp-chart-heading">Live chart workspace</h2>
+                <h2 tabindex="-1" id="tp-chart-heading">Chart and trend context</h2>
                 <p>
                   Blended spot-linked history: recent ranges use live and cached snapshots; longer
                   ranges use monthly baseline anchored to XAU/USD.
@@ -680,6 +710,9 @@
               Selected chart data may combine live, cached, and baseline points. Freshness remains
               visible in the workspace.
             </p>
+            <p class="source-note tracker-chart-source-label" id="tp-chart-history-source" aria-live="polite">
+              —
+            </p>
 
             <div class="tracker-stat-grid" id="tp-chart-stats">
               <div class="tracker-stat-card">
@@ -725,56 +758,138 @@
               </article>
             </div>
           </section>
+        </section>
 
-          <aside class="tracker-panel tracker-panel-side">
-            <div class="tracker-panel-head compact">
-              <div>
-                <h2>Karat ladder &amp; watchlist</h2>
-                <p>
-                  Fast context for your selected view across major karats and favorite markets.
-                </p>
-              </div>
+        <section class="tracker-panel tracker-command-panel" id="tp-alerts-watchlist-panel">
+          <div class="tracker-panel-head compact">
+            <div>
+              <h2 id="tp-alerts-watchlist-title">Alerts and watchlist desk</h2>
+              <p>
+                Keep thresholds, favorites, and decision cues in one place. Logged-in users can
+                jump to server email alerts directly.
+              </p>
             </div>
+            <div class="tracker-head-actions">
+              <button
+                type="button"
+                class="btn btn-sm btn-primary"
+                id="tp-open-alerts-inline"
+              >
+                Open alerts panel
+              </button>
+            </div>
+          </div>
+          <p class="source-note tracker-command-note" id="tp-alert-summary" aria-live="polite">
+            Alerts summary will appear here.
+          </p>
 
-            <div class="tracker-ladder-table-wrap" aria-label="Karat ladder">
-              <table class="tracker-table">
-                <caption class="sr-only">Karat ladder — spot-linked reference price per selected unit for the selected market</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">Karat</th>
-                    <th scope="col">Purity</th>
-                    <th scope="col">Selected price</th>
-                    <th scope="col">vs 24K</th>
-                  </tr>
-                </thead>
-                <tbody id="tp-karat-table" aria-live="polite" aria-atomic="false"></tbody>
-              </table>
+          <div class="tracker-watchlist-block" aria-label="Market watchlist">
+            <div class="tracker-subpanel-head">
+              <h3 id="tp-watchlist-title">Market watchlist</h3>
+              <button
+                type="button"
+                class="btn btn-sm btn-outline tracker-advanced-only"
+                id="tp-export-watchlist"
+              >
+                Export watchlist CSV
+              </button>
+              <button type="button" class="btn btn-sm btn-outline" id="tp-save-watchlist-account">
+                Save watchlist to account
+              </button>
             </div>
+            <div class="tracker-watchlist-grid" id="tp-watchlist-grid"></div>
+          </div>
 
-            <div class="tracker-watchlist-block" aria-label="Market watchlist">
-              <div class="tracker-subpanel-head">
-                <h3>Market watchlist</h3>
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline tracker-advanced-only"
-                  id="tp-export-watchlist"
-                >
-                  Export watchlist CSV
-                </button>
-                <button type="button" class="btn btn-sm btn-outline" id="tp-save-watchlist-account">
-                  Save watchlist to account
-                </button>
-              </div>
-              <div class="tracker-watchlist-grid" id="tp-watchlist-grid"></div>
+          <div class="tracker-watchlist-block">
+            <div class="tracker-subpanel-head">
+              <h3 id="tp-decision-cues-title">Decision cues</h3>
             </div>
+            <div class="tracker-note-list" id="tp-decision-cues"></div>
+          </div>
+        </section>
 
-            <div class="tracker-watchlist-block">
-              <div class="tracker-subpanel-head">
-                <h3>Decision cues</h3>
-              </div>
-              <div class="tracker-note-list" id="tp-decision-cues"></div>
+        <section class="tracker-panel tracker-command-panel" id="tp-quick-calc-panel">
+          <div class="tracker-panel-head">
+            <div>
+              <h2 id="tp-quick-calc-title">Quick calculator</h2>
+              <p id="tp-quick-calc-copy">
+                Estimate reference value instantly (weight × karat × currency) using the same
+                spot-linked engine as the tracker.
+              </p>
             </div>
-          </aside>
+          </div>
+          <div class="tracker-form-grid tracker-quick-calc-grid">
+            <label class="tracker-field">
+              <span id="tp-quick-calc-weight-label">Weight (grams)</span>
+              <input
+                type="number"
+                id="tp-quick-calc-weight"
+                min="0"
+                step="0.01"
+                value="10"
+                aria-labelledby="tp-quick-calc-weight-label"
+              />
+            </label>
+            <label class="tracker-field">
+              <span id="tp-quick-calc-karat-label">Karat</span>
+              <select id="tp-quick-calc-karat" aria-labelledby="tp-quick-calc-karat-label"></select>
+            </label>
+            <label class="tracker-field">
+              <span id="tp-quick-calc-currency-label">Currency</span>
+              <select
+                id="tp-quick-calc-currency"
+                aria-labelledby="tp-quick-calc-currency-label"
+              ></select>
+            </label>
+          </div>
+          <div class="tracker-result-list tracker-quick-calc-result">
+            <div class="tracker-result-item">
+              <span id="tp-quick-calc-result-label">Estimated reference value</span>
+              <strong id="tp-quick-calc-result">—</strong>
+            </div>
+            <p class="source-note tracker-command-note" id="tp-quick-calc-meta">
+              Reference estimate only — retail prices may differ.
+            </p>
+          </div>
+          <div class="tracker-inline-actions">
+            <a href="calculator.html" class="btn btn-sm btn-outline" id="tp-quick-calc-open-full">Open full calculator</a>
+            <a href="methodology.html#spot-vs-retail" class="tracker-inline-link" id="tp-quick-calc-method-link"
+              >Spot vs retail →</a
+            >
+          </div>
+        </section>
+
+        <section class="tracker-panel tracker-command-panel" id="tp-export-command-panel">
+          <div class="tracker-panel-head">
+            <div>
+              <h2 id="tp-export-command-title">Export and share</h2>
+              <p id="tp-export-command-copy">
+                Share a short brief now, or open the exports workspace for CSV/JSON files with source
+                labels.
+              </p>
+            </div>
+            <div class="tracker-head-actions">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline"
+                id="tp-share-inline"
+              >
+                Copy brief
+              </button>
+              <button
+                type="button"
+                class="btn btn-sm btn-outline"
+                id="tp-open-exports-inline"
+              >
+                Open exports panel
+              </button>
+            </div>
+          </div>
+          <p class="source-note tracker-command-note" id="tp-export-source-note">
+            Exports always include source/freshness context. When historical baseline points are
+            used, files remain labeled as baseline-derived reference data.
+            <a href="methodology.html" class="tracker-inline-link">Methodology →</a>
+          </p>
         </section>
       </section>
 

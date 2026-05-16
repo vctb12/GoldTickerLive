@@ -100,6 +100,20 @@ test.describe('Tracker page — live mode & navigation', () => {
     await expect(page.locator('#tp-history-month')).toBeVisible();
     await expect(page.locator('#tp-chart-stats .tracker-stat-card').first()).toBeVisible();
     await expect(page.locator('#tp-chart-source-note')).toBeVisible();
+    await expect(page.locator('#tp-chart-history-source')).toBeVisible();
+  });
+
+  test('command-center panels (karat table, alerts, calculator, exports) are visible in live mode', async ({
+    page,
+  }) => {
+    await page.goto('/tracker.html#mode=live&cur=AED&k=24&u=gram&r=30D');
+    await waitForTrackerReady(page);
+    await expect(page.locator('#tp-live-badge-text')).toBeVisible();
+    await expect(page.locator('#tp-karat-table')).toBeVisible();
+    await expect(page.locator('#tp-alerts-watchlist-panel')).toBeVisible();
+    await expect(page.locator('#tp-quick-calc-panel')).toBeVisible();
+    await expect(page.locator('#tp-open-alerts-inline')).toBeVisible();
+    await expect(page.locator('#tp-export-command-panel')).toBeVisible();
   });
 
   test('comparison builder supports presets and export', async ({ page }) => {
@@ -171,5 +185,9 @@ test.describe('Tracker page — live mode & navigation', () => {
       metrics.scrollWidth <= metrics.viewportWidth + 1,
       `tracker at 360px overflows: ${metrics.scrollWidth}px > ${metrics.viewportWidth}px`
     ).toBeTruthy();
+
+    await expect(page.locator('#tp-quick-calc-panel')).toBeVisible();
+    await expect(page.locator('#tp-alerts-watchlist-panel')).toBeVisible();
+    await expect(page.locator('#tp-chart-history-source')).toBeVisible();
   });
 });
