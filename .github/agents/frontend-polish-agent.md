@@ -8,6 +8,7 @@ use_with_prompts:
 loads_skills:
   - mobile-ux-review
   - frontend-design-system
+description: Frontend and mobile UI specialist for responsive polish, navigation, layout consistency, RTL support, design tokens, and premium user experience.
 ---
 
 # Agent: Frontend Polish
