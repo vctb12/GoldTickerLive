@@ -90,6 +90,25 @@ function formatPercent(value) {
   return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
 }
 
+function getHistorySourceLabel(rows = []) {
+  if (!rows.length) return tx('historySource.unavailable');
+  const sources = new Set(rows.map((row) => String(row.source || '').toLowerCase()));
+  const hasSupabase = [...sources].some((source) => source.includes('supabase'));
+  const hasBaseline = [...sources].some(
+    (source) => source.includes('baseline') || source.includes('estimated')
+  );
+  const hasLocal = [...sources].some(
+    (source) => source.includes('local') || source.includes('cache')
+  );
+
+  if (hasSupabase && !hasBaseline && !hasLocal) return tx('historySource.supabase');
+  if (hasSupabase && (hasBaseline || hasLocal)) return tx('historySource.mixedSupabase');
+  if (hasBaseline && hasLocal) return tx('historySource.mixedBaseline');
+  if (hasBaseline) return tx('historySource.baseline');
+  if (hasLocal) return tx('historySource.local');
+  return tx('historySource.unavailable');
+}
+
 function getVisibleHistoryRows() {
   const flatHistory = (_state.history || []).map((r) => ({
     date: r.date instanceof Date ? r.date.toISOString().slice(0, 10) : String(r.date),
@@ -457,6 +476,12 @@ export function renderChart() {
     range: rangeLabel,
     liveRecord: livePoint,
   });
+  if (_el.chartHistorySource) {
+    setText(
+      _el.chartHistorySource,
+      tx('historySource.label', { source: getHistorySourceLabel(historyOnly) })
+    );
+  }
 
   if (!rows.length) {
     if (_el.chartEmpty) _el.chartEmpty.hidden = false;
@@ -754,6 +779,62 @@ export function renderChart() {
       el('div', { class: 'tracker-note-item' }, tx('historical.note.methodology'))
     );
   }
+}
+
+function renderAlertsSummary() {
+  if (!_el.alertSummary) return;
+  const alertsCount = Array.isArray(_state.alerts) ? _state.alerts.length : 0;
+  const freshness = getFreshnessModel();
+  setText(
+    _el.alertSummary,
+    tx('alerts.summary', {
+      count: alertsCount,
+      source: freshness.sourceLabel,
+      age: freshness.ageText,
+    })
+  );
+}
+
+export function renderQuickCalculator() {
+  if (!_el.quickCalcResult || !_el.quickCalcMeta) return;
+  const spot = _currentSpot();
+  const weight = Number.parseFloat(_el.quickCalcWeight?.value || '');
+  const karat = _el.quickCalcKarat?.value || _state.selectedKarat;
+  const currency = _el.quickCalcCurrency?.value || _state.selectedCurrency;
+  const perGram = spot
+    ? _priceFor({
+        currency,
+        karat,
+        unit: 'gram',
+        spot,
+      })
+    : null;
+
+  if (!spot || !Number.isFinite(weight) || weight <= 0 || !Number.isFinite(perGram)) {
+    setText(_el.quickCalcResult, '—');
+    setText(_el.quickCalcMeta, tx('quickCalc.waiting'));
+    return;
+  }
+
+  const total = perGram * weight;
+  setText(
+    _el.quickCalcResult,
+    `${currency} ${total.toLocaleString('en', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`
+  );
+  setText(
+    _el.quickCalcMeta,
+    tx('quickCalc.summary', {
+      weight: weight.toLocaleString('en', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+      karat,
+      source: getFreshnessModel().sourceLabel,
+    })
+  );
 }
 
 export function renderKaratTable() {
@@ -1869,6 +1950,8 @@ export function renderAll() {
     renderComparisonWorkspace();
     renderWatchlist();
     renderDecisionCues();
+    renderAlertsSummary();
+    renderQuickCalculator();
   } else if (_state.mode === 'compare') {
     renderComparisonWorkspace();
     renderMarkets();
