@@ -22,7 +22,7 @@ const PACKAGE_JSON_PATH = path.join(ROOT, 'package.json');
 const GOLD_PRICE_FILE = path.join(ROOT, 'data', 'gold_price.json');
 const PROVIDER_STATE_FILE = path.join(ROOT, 'data', 'provider_state.json');
 const PRICE_HISTORY_FILE = path.join(ROOT, 'src', 'data', 'historical-baseline.json');
-const PRICE_SNAPSHOT_SYNC_SCRIPT_PATH = path.join(
+const PRICE_SNAPSHOT_SYNC_SCRIPT_FILE = path.join(
   ROOT,
   'scripts',
   'node',
@@ -86,7 +86,7 @@ function buildSystemStatus() {
   const providerState = readJsonFile(PROVIDER_STATE_FILE);
   const supabaseWriteAvailable = Boolean(getSupabaseClient(false));
   const providerStateAvailable = fileExists(PROVIDER_STATE_FILE);
-  const priceSnapshotSyncScriptAvailable = fileExists(PRICE_SNAPSHOT_SYNC_SCRIPT_PATH);
+  const priceSnapshotSyncScriptAvailable = fileExists(PRICE_SNAPSHOT_SYNC_SCRIPT_FILE);
   const readiness = {
     supabaseConfigured: envSnapshot.supabaseConfigured,
     supabaseWriteAvailable,
@@ -170,6 +170,10 @@ function toHistoryTimestampUtc(dateValue) {
         : dateValue;
   const date = new Date(isoCandidate);
   return Number.isFinite(date.getTime()) ? date.toISOString() : null;
+}
+
+function inferHistoryGranularity(dateValue) {
+  return String(dateValue).length === ISO_YEAR_MONTH_STRING_LENGTH ? 'monthly' : 'daily';
 }
 
 async function querySupabase(table, queryBuilder) {
@@ -337,9 +341,7 @@ function buildHistoryResponse({ range, limit, supabaseRows, baselineHistory, lat
         timestampUtc: toHistoryTimestampUtc(point.date),
         xauUsdPerOz: coerceToNumber(point.price, { positive: true }),
         provider: point.source || 'historical-baseline',
-        granularity:
-          point.granularity ||
-          (String(point.date).length === ISO_YEAR_MONTH_STRING_LENGTH ? 'monthly' : 'daily'),
+        granularity: point.granularity || inferHistoryGranularity(point.date),
       }));
     return {
       status: 200,
