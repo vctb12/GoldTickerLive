@@ -136,3 +136,159 @@ test('watchlist CRUD works and unauthorized tokens are rejected', async () => {
   });
   assert.equal(del.status, 200);
 });
+
+test('GET /api/v1/me/export rejects unauthorized requests', async () => {
+  const response = await request({ method: 'GET', path: '/api/v1/me/export' });
+  assert.equal(response.status, 401);
+  assert.equal(response.json?.ok, false);
+});
+
+test('DELETE /api/v1/me rejects unauthorized requests', async () => {
+  const response = await request({ method: 'DELETE', path: '/api/v1/me' });
+  assert.equal(response.status, 401);
+  assert.equal(response.json?.ok, false);
+});
+
+test('GET /api/v1/me/export returns account data and excludes sensitive fields', async () => {
+  await request({
+    method: 'POST',
+    path: '/api/v1/me/saved-calculations',
+    userId: 'export-user',
+    userEmail: 'export-user@example.com',
+    body: {
+      tool: 'value',
+      label: 'Export sample',
+      input_data: { weight: 10, karat: '24' },
+      output_data: { value: 'AED 3000' },
+    },
+  });
+  await request({
+    method: 'POST',
+    path: '/api/v1/me/watchlist',
+    userId: 'export-user',
+    userEmail: 'export-user@example.com',
+    body: {
+      item_type: 'currency',
+      item_key: 'AED',
+      item_label: 'AED',
+    },
+  });
+  await request({
+    method: 'POST',
+    path: '/api/v1/me/saved-shops',
+    userId: 'export-user',
+    userEmail: 'export-user@example.com',
+    body: {
+      shop_id: 'shop-1',
+      shop_name: 'Demo Shop',
+    },
+  });
+  await request({
+    method: 'POST',
+    path: '/api/v1/alerts',
+    body: {
+      user_id: 'export-user',
+      email: 'export-user@example.com',
+      channel: 'email',
+      symbol: 'XAUUSD',
+      currency: 'USD',
+      condition: 'above',
+      threshold_value: 2600,
+    },
+  });
+
+  const exportRes = await request({
+    method: 'GET',
+    path: '/api/v1/me/export',
+    userId: 'export-user',
+    userEmail: 'export-user@example.com',
+  });
+
+  assert.equal(exportRes.status, 200);
+  assert.equal(exportRes.json?.ok, true);
+  const data = exportRes.json?.data || {};
+  assert.equal(typeof data.exportedAt, 'string');
+  assert.equal(data.user?.id, 'export-user');
+  assert.equal(Array.isArray(data.savedCalculations), true);
+  assert.equal(Array.isArray(data.watchlist), true);
+  assert.equal(Array.isArray(data.savedShops), true);
+  assert.equal(Array.isArray(data.alertRules), true);
+  assert.equal(Array.isArray(data.notificationSubscriptions), true);
+  assert.equal(Array.isArray(data.apiKeys), true);
+  assert.equal(typeof data.subscriptions, 'object');
+  assert.equal(typeof data.entitlements, 'object');
+
+  const serialized = JSON.stringify(data);
+  assert.equal(serialized.includes('key_hash'), false);
+  assert.equal(serialized.includes('management_token_hash'), false);
+  assert.equal(serialized.includes('verification_token_hash'), false);
+  assert.equal(serialized.includes('unsubscribe_token_hash'), false);
+  assert.equal(serialized.includes('SUPABASE_SERVICE_ROLE_KEY'), false);
+});
+
+test('DELETE /api/v1/me removes account data, safe-modes auth deletion, and is idempotent', async () => {
+  await request({
+    method: 'POST',
+    path: '/api/v1/me/saved-calculations',
+    userId: 'delete-user',
+    userEmail: 'delete-user@example.com',
+    body: {
+      tool: 'value',
+      label: 'Delete sample',
+      input_data: { weight: 1, karat: '24' },
+      output_data: { value: 'AED 300' },
+    },
+  });
+  await request({
+    method: 'POST',
+    path: '/api/v1/me/watchlist',
+    userId: 'delete-user',
+    userEmail: 'delete-user@example.com',
+    body: {
+      item_type: 'currency',
+      item_key: 'USD',
+      item_label: 'USD',
+    },
+  });
+  await request({
+    method: 'POST',
+    path: '/api/v1/me/saved-shops',
+    userId: 'delete-user',
+    userEmail: 'delete-user@example.com',
+    body: {
+      shop_id: 'shop-delete',
+      shop_name: 'Delete Shop',
+    },
+  });
+
+  const deleteRes = await request({
+    method: 'DELETE',
+    path: '/api/v1/me',
+    userId: 'delete-user',
+    userEmail: 'delete-user@example.com',
+  });
+  assert.equal(deleteRes.status, 200);
+  assert.equal(deleteRes.json?.ok, true);
+  assert.equal(deleteRes.json?.data?.auth?.mode, 'safe_mode');
+  assert.equal(deleteRes.json?.data?.auth?.userDeleted, false);
+
+  const meAfterDelete = await request({
+    method: 'GET',
+    path: '/api/v1/me',
+    userId: 'delete-user',
+    userEmail: 'delete-user@example.com',
+  });
+  assert.equal(meAfterDelete.status, 200);
+  assert.equal(meAfterDelete.json?.data?.counts?.savedCalculations, 0);
+  assert.equal(meAfterDelete.json?.data?.counts?.watchlist, 0);
+  assert.equal(meAfterDelete.json?.data?.counts?.savedShops, 0);
+
+  const secondDelete = await request({
+    method: 'DELETE',
+    path: '/api/v1/me',
+    userId: 'delete-user',
+    userEmail: 'delete-user@example.com',
+  });
+  assert.equal(secondDelete.status, 200);
+  assert.equal(secondDelete.json?.ok, true);
+});

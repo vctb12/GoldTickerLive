@@ -74,6 +74,14 @@ export function getMe() {
   return authedFetch('/me');
 }
 
+export function exportMyData() {
+  return authedFetch('/me/export');
+}
+
+export function deleteMyAccount() {
+  return authedFetch('/me', { method: 'DELETE' });
+}
+
 export function getPreferences() {
   return authedFetch('/me/preferences');
 }

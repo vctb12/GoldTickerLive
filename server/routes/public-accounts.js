@@ -7,6 +7,8 @@ const path = require('path');
 const { atomicWriteJSON } = require('../lib/fs-atomic');
 const { getSupabaseClient } = require('../lib/supabase-client');
 const { successResponse, errorResponse } = require('../lib/api-response');
+const billingRepo = require('../lib/billing-repository');
+const { resolveUserEntitlements } = require('../lib/entitlements');
 
 const ROOT = path.resolve(__dirname, '../..');
 const DEFAULT_STORE_PATH = path.join(ROOT, 'data', 'public-accounts.json');
@@ -45,6 +47,11 @@ function createEmptyStore() {
     watchlists: [],
     saved_shops: [],
     user_sessions: [],
+    alert_rules: [],
+    notification_subscriptions: [],
+    api_keys: [],
+    subscriptions: [],
+    entitlements: [],
   };
 }
 
@@ -60,6 +67,13 @@ function readStore(storePath) {
       watchlists: Array.isArray(parsed.watchlists) ? parsed.watchlists : [],
       saved_shops: Array.isArray(parsed.saved_shops) ? parsed.saved_shops : [],
       user_sessions: Array.isArray(parsed.user_sessions) ? parsed.user_sessions : [],
+      alert_rules: Array.isArray(parsed.alert_rules) ? parsed.alert_rules : [],
+      notification_subscriptions: Array.isArray(parsed.notification_subscriptions)
+        ? parsed.notification_subscriptions
+        : [],
+      api_keys: Array.isArray(parsed.api_keys) ? parsed.api_keys : [],
+      subscriptions: Array.isArray(parsed.subscriptions) ? parsed.subscriptions : [],
+      entitlements: Array.isArray(parsed.entitlements) ? parsed.entitlements : [],
     };
   } catch {
     return createEmptyStore();
@@ -548,6 +562,303 @@ function createDataLayer(storePath) {
         }
       );
     },
+
+    async listUserSessions(userId) {
+      return runWithFallback(
+        async (sb) => {
+          const { data, error } = await sb
+            .from('user_sessions')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+          if (error) throw error;
+          return Array.isArray(data) ? data : [];
+        },
+        () => {
+          const store = readStore(storePath);
+          return store.user_sessions
+            .filter((row) => row.user_id === userId)
+            .sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
+        }
+      );
+    },
+
+    async getAdminRoleForUser(userId) {
+      return runWithFallback(
+        async (sb) => {
+          const { data, error } = await sb
+            .from('user_profiles')
+            .select('role')
+            .eq('id', userId)
+            .maybeSingle();
+          if (error) throw error;
+          return toSafeString(data?.role, 32);
+        },
+        () => null
+      );
+    },
+
+    async listAlertRulesForUser(userId, email) {
+      const normalizedEmail = toSafeString(String(email || '').toLowerCase(), 320);
+      return runWithFallback(
+        async (sb) => {
+          const byUser = await sb
+            .from('alert_rules')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+          if (byUser.error) throw byUser.error;
+
+          let byEmail = { data: [] };
+          if (normalizedEmail) {
+            byEmail = await sb
+              .from('alert_rules')
+              .select('*')
+              .is('user_id', null)
+              .eq('email', normalizedEmail)
+              .order('created_at', { ascending: false });
+            if (byEmail.error) throw byEmail.error;
+          }
+
+          const dedup = new Map();
+          [...(byUser.data || []), ...(byEmail.data || [])].forEach((row) => {
+            if (!row?.id) return;
+            dedup.set(row.id, sanitizeAlertRuleForExport(row));
+          });
+          return Array.from(dedup.values());
+        },
+        () => {
+          const store = readStore(storePath);
+          const dedup = new Map();
+          store.alert_rules
+            .filter((row) => {
+              const rowEmail = toSafeString(String(row.email || '').toLowerCase(), 320);
+              return row.user_id === userId || (normalizedEmail && rowEmail === normalizedEmail);
+            })
+            .forEach((row) => {
+              if (!row?.id) return;
+              dedup.set(row.id, sanitizeAlertRuleForExport(row));
+            });
+          return Array.from(dedup.values());
+        }
+      );
+    },
+
+    async listNotificationSubscriptionsForUser(userId, email) {
+      const normalizedEmail = toSafeString(String(email || '').toLowerCase(), 320);
+      return runWithFallback(
+        async (sb) => {
+          const byUser = await sb
+            .from('notification_subscriptions')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+          if (byUser.error) throw byUser.error;
+
+          let byEmail = { data: [] };
+          if (normalizedEmail) {
+            byEmail = await sb
+              .from('notification_subscriptions')
+              .select('*')
+              .is('user_id', null)
+              .eq('destination', normalizedEmail)
+              .order('created_at', { ascending: false });
+            if (byEmail.error) throw byEmail.error;
+          }
+
+          const dedup = new Map();
+          [...(byUser.data || []), ...(byEmail.data || [])].forEach((row) => {
+            if (!row?.id) return;
+            dedup.set(row.id, sanitizeNotificationSubscriptionForExport(row));
+          });
+          return Array.from(dedup.values());
+        },
+        () => {
+          const store = readStore(storePath);
+          const dedup = new Map();
+          store.notification_subscriptions
+            .filter((row) => {
+              const destination = toSafeString(String(row.destination || '').toLowerCase(), 320);
+              return row.user_id === userId || (normalizedEmail && destination === normalizedEmail);
+            })
+            .forEach((row) => {
+              if (!row?.id) return;
+              dedup.set(row.id, sanitizeNotificationSubscriptionForExport(row));
+            });
+          return Array.from(dedup.values());
+        }
+      );
+    },
+
+    async listSubscriptionRows(userId) {
+      return runWithFallback(
+        async (sb) => {
+          const { data, error } = await sb
+            .from('subscriptions')
+            .select(
+              'id,user_id,tier,status,current_period_end,cancel_at_period_end,canceled_at,interval,created_at,updated_at'
+            )
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+          if (error) throw error;
+          return Array.isArray(data) ? data : [];
+        },
+        () => {
+          const store = readStore(storePath);
+          return store.subscriptions
+            .filter((row) => row.userId === userId || row.user_id === userId)
+            .map((row) => ({
+              id: row.id || null,
+              user_id: row.user_id || row.userId || null,
+              tier: row.tier || null,
+              status: row.status || null,
+              current_period_end: row.current_period_end || row.currentPeriodEnd || null,
+              cancel_at_period_end: Boolean(row.cancel_at_period_end || row.cancelAtPeriodEnd),
+              canceled_at: row.canceled_at || row.canceledAt || null,
+              interval: row.interval || null,
+              created_at: row.created_at || row.createdAt || null,
+              updated_at: row.updated_at || row.updatedAt || null,
+            }))
+            .sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
+        }
+      );
+    },
+
+    async listEntitlementRows(userId) {
+      return runWithFallback(
+        async (sb) => {
+          const { data, error } = await sb
+            .from('entitlements')
+            .select('id,user_id,feature,value,expires_at,created_at,updated_at')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+          if (error) throw error;
+          return Array.isArray(data) ? data : [];
+        },
+        () => {
+          const store = readStore(storePath);
+          return store.entitlements
+            .filter((row) => row.userId === userId || row.user_id === userId)
+            .map((row) => ({
+              id: row.id || null,
+              user_id: row.user_id || row.userId || null,
+              feature: row.feature || null,
+              value: row.value ?? null,
+              expires_at: row.expires_at || row.expiresAt || null,
+              created_at: row.created_at || row.createdAt || null,
+              updated_at: row.updated_at || row.updatedAt || null,
+            }))
+            .sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
+        }
+      );
+    },
+
+    async deleteAccountData(user) {
+      const userId = user.id;
+      const normalizedEmail = toSafeString(String(user.email || '').toLowerCase(), 320);
+      const counts = {
+        profiles: 0,
+        user_preferences: 0,
+        saved_calculations: 0,
+        watchlists: 0,
+        saved_shops: 0,
+        user_sessions: 0,
+        api_keys: 0,
+        subscriptions: 0,
+        entitlements: 0,
+        alert_rules: 0,
+        notification_subscriptions: 0,
+      };
+
+      await runWithFallback(
+        async (sb) => {
+          const deleteAndCount = async (table, matcher) => {
+            const { data, error } = await matcher(sb.from(table).delete()).select('id');
+            if (error) throw error;
+            return Array.isArray(data) ? data.length : 0;
+          };
+
+          counts.saved_calculations = await deleteAndCount('saved_calculations', (q) =>
+            q.eq('user_id', userId)
+          );
+          counts.watchlists = await deleteAndCount('watchlists', (q) => q.eq('user_id', userId));
+          counts.saved_shops = await deleteAndCount('saved_shops', (q) => q.eq('user_id', userId));
+          counts.user_sessions = await deleteAndCount('user_sessions', (q) =>
+            q.eq('user_id', userId)
+          );
+          counts.user_preferences = await deleteAndCount('user_preferences', (q) =>
+            q.eq('user_id', userId)
+          );
+          counts.api_keys = await deleteAndCount('api_keys', (q) => q.eq('user_id', userId));
+          counts.subscriptions = await deleteAndCount('subscriptions', (q) =>
+            q.eq('user_id', userId)
+          );
+          counts.entitlements = await deleteAndCount('entitlements', (q) =>
+            q.eq('user_id', userId)
+          );
+          counts.alert_rules = await deleteAndCount('alert_rules', (q) => q.eq('user_id', userId));
+          counts.notification_subscriptions = await deleteAndCount(
+            'notification_subscriptions',
+            (q) => q.eq('user_id', userId)
+          );
+
+          if (normalizedEmail) {
+            counts.alert_rules += await deleteAndCount('alert_rules', (q) =>
+              q.is('user_id', null).eq('email', normalizedEmail)
+            );
+            counts.notification_subscriptions += await deleteAndCount(
+              'notification_subscriptions',
+              (q) => q.is('user_id', null).eq('destination', normalizedEmail)
+            );
+          }
+
+          counts.profiles = await deleteAndCount('profiles', (q) => q.eq('id', userId));
+        },
+        () => {
+          const store = readStore(storePath);
+          const removeOwned = (key, predicate) => {
+            const before = store[key].length;
+            store[key] = store[key].filter((row) => !predicate(row));
+            return before - store[key].length;
+          };
+          counts.saved_calculations = removeOwned(
+            'saved_calculations',
+            (row) => row.user_id === userId
+          );
+          counts.watchlists = removeOwned('watchlists', (row) => row.user_id === userId);
+          counts.saved_shops = removeOwned('saved_shops', (row) => row.user_id === userId);
+          counts.user_sessions = removeOwned('user_sessions', (row) => row.user_id === userId);
+          counts.user_preferences = removeOwned(
+            'user_preferences',
+            (row) => row.user_id === userId
+          );
+          counts.profiles = removeOwned('profiles', (row) => row.id === userId);
+          counts.api_keys = removeOwned(
+            'api_keys',
+            (row) => row.user_id === userId || row.userId === userId
+          );
+          counts.subscriptions = removeOwned(
+            'subscriptions',
+            (row) => row.user_id === userId || row.userId === userId
+          );
+          counts.entitlements = removeOwned(
+            'entitlements',
+            (row) => row.user_id === userId || row.userId === userId
+          );
+          counts.alert_rules = removeOwned('alert_rules', (row) => {
+            const rowEmail = toSafeString(String(row.email || '').toLowerCase(), 320);
+            return row.user_id === userId || (normalizedEmail && rowEmail === normalizedEmail);
+          });
+          counts.notification_subscriptions = removeOwned('notification_subscriptions', (row) => {
+            const destination = toSafeString(String(row.destination || '').toLowerCase(), 320);
+            return row.user_id === userId || (normalizedEmail && destination === normalizedEmail);
+          });
+          writeStore(storePath, store);
+        }
+      );
+
+      return counts;
+    },
   };
 }
 
@@ -618,6 +929,42 @@ function sanitizeSavedShop(payload) {
   };
 }
 
+function sanitizeAlertRuleForExport(row) {
+  return {
+    id: row.id || null,
+    user_id: row.user_id || null,
+    email: row.email || null,
+    channel: row.channel || null,
+    symbol: row.symbol || null,
+    currency: row.currency || null,
+    condition: row.condition || null,
+    threshold_value: row.threshold_value ?? null,
+    karat: row.karat || null,
+    country_code: row.country_code || null,
+    is_active: Boolean(row.is_active),
+    cooldown_minutes: row.cooldown_minutes ?? null,
+    last_triggered_at: row.last_triggered_at || null,
+    verified_at: row.verified_at || null,
+    unsubscribed_at: row.unsubscribed_at || null,
+    created_at: row.created_at || null,
+    updated_at: row.updated_at || null,
+  };
+}
+
+function sanitizeNotificationSubscriptionForExport(row) {
+  return {
+    id: row.id || null,
+    user_id: row.user_id || null,
+    channel: row.channel || null,
+    destination: row.destination || null,
+    verified_at: row.verified_at || null,
+    unsubscribed_at: row.unsubscribed_at || null,
+    metadata: row.metadata && typeof row.metadata === 'object' ? row.metadata : {},
+    created_at: row.created_at || null,
+    updated_at: row.updated_at || null,
+  };
+}
+
 function createPublicAccountsRouter(options = {}) {
   const router = express.Router();
   const storePath =
@@ -669,6 +1016,126 @@ function createPublicAccountsRouter(options = {}) {
             savedCalculations: savedCalculations.length,
             watchlist: watchlist.length,
             savedShops: savedShops.length,
+          },
+        },
+        { source: 'public-accounts', freshness: 'live' }
+      )
+    );
+  });
+
+  router.get('/me/export', async (req, res) => {
+    const profile = await dataLayer.getOrCreateProfile(req.publicUser);
+    const [preferences, savedCalculations, watchlist, savedShops, userSessions] = await Promise.all(
+      [
+        dataLayer.getPreferences(req.publicUser.id),
+        dataLayer.listSavedCalculations(req.publicUser.id),
+        dataLayer.listWatchlist(req.publicUser.id),
+        dataLayer.listSavedShops(req.publicUser.id),
+        dataLayer.listUserSessions(req.publicUser.id),
+      ]
+    );
+    const [alertRules, notificationSubscriptions, apiKeys, resolvedEntitlements, subscriptionRows] =
+      await Promise.all([
+        dataLayer.listAlertRulesForUser(req.publicUser.id, req.publicUser.email),
+        dataLayer.listNotificationSubscriptionsForUser(req.publicUser.id, req.publicUser.email),
+        billingRepo.listApiKeys(req.publicUser.id),
+        resolveUserEntitlements(req.publicUser.id),
+        dataLayer.listSubscriptionRows(req.publicUser.id),
+      ]);
+    const entitlementRows = await dataLayer.listEntitlementRows(req.publicUser.id);
+
+    res.json(
+      successResponse(
+        {
+          exportedAt: nowIso(),
+          user: {
+            id: req.publicUser.id,
+            email: req.publicUser.email || null,
+          },
+          profile: profile || null,
+          preferences: preferences || {},
+          savedCalculations,
+          watchlist,
+          savedShops,
+          userSessions,
+          alertRules,
+          notificationSubscriptions,
+          apiKeys: (apiKeys || []).map((key) => ({
+            id: key.id,
+            keyPrefix: key.keyPrefix,
+            label: key.label,
+            revoked: Boolean(key.revoked),
+            createdAt: key.createdAt || null,
+          })),
+          subscriptions: {
+            active:
+              resolvedEntitlements?.subscription &&
+              typeof resolvedEntitlements.subscription === 'object'
+                ? {
+                    tier: resolvedEntitlements.subscription.tier || null,
+                    status: resolvedEntitlements.subscription.status || null,
+                    currentPeriodEnd: resolvedEntitlements.subscription.currentPeriodEnd || null,
+                    cancelAtPeriodEnd: Boolean(resolvedEntitlements.subscription.cancelAtPeriodEnd),
+                    canceledAt: resolvedEntitlements.subscription.canceledAt || null,
+                    interval: resolvedEntitlements.subscription.interval || null,
+                  }
+                : null,
+            rows: subscriptionRows,
+          },
+          entitlements: {
+            tier: resolvedEntitlements?.tier || 'free',
+            resolved: resolvedEntitlements?.entitlements || {},
+            overrides: entitlementRows,
+          },
+        },
+        { source: 'public-accounts', freshness: 'live' }
+      )
+    );
+  });
+
+  router.delete('/me', async (req, res) => {
+    const role = await dataLayer.getAdminRoleForUser(req.publicUser.id);
+    if (role === 'admin' || role === 'editor') {
+      return res
+        .status(403)
+        .json(
+          errorResponse('FORBIDDEN', 'Admin/editor accounts cannot be deleted from this route.')
+        );
+    }
+
+    const deleted = await dataLayer.deleteAccountData(req.publicUser);
+
+    let authUserDeleted = false;
+    let authDeletionMode = 'safe_mode';
+    let authDeletionMessage =
+      'Local app data was removed. Supabase auth-user deletion requires service-role configuration.';
+
+    const sb = getSupabaseClient(false);
+    if (sb?.auth?.admin?.deleteUser) {
+      try {
+        const { error } = await sb.auth.admin.deleteUser(req.publicUser.id);
+        if (!error) {
+          authUserDeleted = true;
+          authDeletionMode = 'full';
+          authDeletionMessage = 'Account data and Supabase auth user were deleted.';
+        } else {
+          authDeletionMessage =
+            'Local app data was removed. Supabase auth-user deletion failed and requires owner review.';
+        }
+      } catch {
+        authDeletionMessage =
+          'Local app data was removed. Supabase auth-user deletion failed and requires owner review.';
+      }
+    }
+
+    res.json(
+      successResponse(
+        {
+          deleted,
+          auth: {
+            userDeleted: authUserDeleted,
+            mode: authDeletionMode,
+            message: authDeletionMessage,
           },
         },
         { source: 'public-accounts', freshness: 'live' }

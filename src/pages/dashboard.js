@@ -4,9 +4,11 @@ import { injectTicker, updateTickerLang } from '../components/ticker.js';
 import { injectSpotBar, updateSpotBarLang } from '../components/spotBar.js';
 import {
   buildSupabaseBrowserClient,
+  deleteMyAccount,
   deleteSavedCalculation,
   deleteSavedShop,
   deleteWatchlistItem,
+  exportMyData,
   getMe,
   importLocalStorageData,
   listSavedCalculations,
@@ -31,6 +33,24 @@ const T = {
     loadFailed: 'Could not load dashboard right now.',
     importDone: (r) =>
       `Import complete. Preferences: ${r.preferences ? 'yes' : 'no'}, watchlist: ${r.watchlist}, alerts: ${r.alerts}, shops: ${r.savedShops}, calculations: ${r.savedCalculations}, failed: ${r.failed || 0}.`,
+    privacyTitle: 'Account & Privacy',
+    privacyCopy:
+      'Export your account data as JSON or permanently delete your account data from the app.',
+    exportBtn: 'Export my data',
+    dangerTitle: 'Danger zone',
+    deleteHelp: 'Type DELETE to confirm permanent deletion.',
+    deleteLabel: 'Confirmation text',
+    deletePlaceholder: 'Type DELETE',
+    deleteBtn: 'Delete my account',
+    exportPreparing: 'Preparing your export…',
+    exportDone: 'Data export downloaded.',
+    exportFailed: 'Could not export your data right now.',
+    deleteConfirmRequired: 'Type DELETE exactly to continue.',
+    deleting: 'Deleting account data…',
+    deleteDone: 'Account deletion completed. You will be signed out.',
+    deleteFailed: 'Could not delete your account right now.',
+    signOutAfterDeleteFailed:
+      'Deletion finished but sign-out failed. Please close this tab and sign in again to confirm.',
   },
   ar: {
     authRequired: 'يرجى تسجيل الدخول أولاً.',
@@ -44,6 +64,23 @@ const T = {
     loadFailed: 'تعذر تحميل لوحة التحكم حالياً.',
     importDone: (r) =>
       `اكتمل الاستيراد. التفضيلات: ${r.preferences ? 'نعم' : 'لا'}، المراقبة: ${r.watchlist}، التنبيهات: ${r.alerts}، المحلات: ${r.savedShops}، الحاسبات: ${r.savedCalculations}، الفاشلة: ${r.failed || 0}.`,
+    privacyTitle: 'الحساب والخصوصية',
+    privacyCopy: 'يمكنك تنزيل بيانات حسابك بصيغة JSON أو حذف بيانات الحساب نهائياً من التطبيق.',
+    exportBtn: 'تنزيل بياناتي',
+    dangerTitle: 'منطقة حساسة',
+    deleteHelp: 'اكتب DELETE لتأكيد الحذف النهائي.',
+    deleteLabel: 'نص التأكيد',
+    deletePlaceholder: 'اكتب DELETE',
+    deleteBtn: 'حذف حسابي',
+    exportPreparing: 'جارٍ تجهيز ملف البيانات…',
+    exportDone: 'تم تنزيل ملف البيانات.',
+    exportFailed: 'تعذر تنزيل بياناتك حالياً.',
+    deleteConfirmRequired: 'اكتب DELETE كما هي للمتابعة.',
+    deleting: 'جارٍ حذف بيانات الحساب…',
+    deleteDone: 'اكتمل حذف الحساب. سيتم تسجيل خروجك.',
+    deleteFailed: 'تعذر حذف حسابك حالياً.',
+    signOutAfterDeleteFailed:
+      'اكتمل الحذف لكن تسجيل الخروج فشل. أغلق الصفحة وسجّل الدخول مرة أخرى للتأكد.',
   },
 };
 
@@ -54,6 +91,11 @@ function tx(key, arg) {
 
 function setStatus(message) {
   const node = document.getElementById('dashboard-status');
+  if (node) node.textContent = message;
+}
+
+function setPrivacyStatus(message) {
+  const node = document.getElementById('dashboard-privacy-status');
   if (node) node.textContent = message;
 }
 
@@ -68,6 +110,37 @@ function setLang(nextLang) {
   } catch {
     // no-op
   }
+  applyStaticCopy();
+}
+
+function applyStaticCopy() {
+  const mapping = [
+    ['dashboard-privacy-title', 'privacyTitle'],
+    ['dashboard-privacy-copy', 'privacyCopy'],
+    ['dashboard-export-btn', 'exportBtn'],
+    ['dashboard-danger-title', 'dangerTitle'],
+    ['dashboard-delete-help', 'deleteHelp'],
+    ['dashboard-delete-label', 'deleteLabel'],
+    ['dashboard-delete-btn', 'deleteBtn'],
+  ];
+  mapping.forEach(([id, key]) => {
+    const node = document.getElementById(id);
+    if (node) node.textContent = tx(key);
+  });
+  const confirmInput = document.getElementById('dashboard-delete-confirm');
+  if (confirmInput) confirmInput.placeholder = tx('deletePlaceholder');
+}
+
+function downloadJsonFile(fileName, value) {
+  const blob = new Blob([JSON.stringify(value, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
 
 function renderList(containerId, items, onDelete) {
@@ -179,6 +252,39 @@ async function init() {
       await refreshDashboard();
     } catch {
       setStatus(tx('importFailed'));
+    }
+  });
+  document.getElementById('dashboard-export-btn')?.addEventListener('click', async () => {
+    try {
+      setPrivacyStatus(tx('exportPreparing'));
+      const payload = await exportMyData();
+      const dateStamp = new Date().toISOString().replaceAll(':', '-');
+      downloadJsonFile(`gold-ticker-live-export-${dateStamp}.json`, payload);
+      setPrivacyStatus(tx('exportDone'));
+    } catch {
+      setPrivacyStatus(tx('exportFailed'));
+    }
+  });
+  document.getElementById('dashboard-delete-btn')?.addEventListener('click', async () => {
+    const confirmInput = document.getElementById('dashboard-delete-confirm');
+    const typed = confirmInput?.value?.trim();
+    if (typed !== 'DELETE') {
+      setPrivacyStatus(tx('deleteConfirmRequired'));
+      return;
+    }
+    try {
+      setPrivacyStatus(tx('deleting'));
+      const result = await deleteMyAccount();
+      setPrivacyStatus(result?.auth?.message || tx('deleteDone'));
+      if (confirmInput) confirmInput.value = '';
+      try {
+        await sb.auth.signOut();
+        window.location.href = '/account.html';
+      } catch {
+        setPrivacyStatus(tx('signOutAfterDeleteFailed'));
+      }
+    } catch {
+      setPrivacyStatus(tx('deleteFailed'));
     }
   });
 
