@@ -27,7 +27,7 @@ const CANONICAL_ROUTE_MAP = Object.freeze({
 function applyDeprecationHeaders(req, res, canonicalPath) {
   if (!canonicalPath) return;
   res.setHeader('Deprecation', 'true');
-  res.setHeader('Sunset', 'Wed, 31 Dec 2026 23:59:59 GMT');
+  res.setHeader('Sunset', 'Thu, 31 Dec 2026 23:59:59 GMT');
   res.setHeader('Link', `<${canonicalPath}>; rel="successor-version"`);
   res.setHeader('X-Canonical-Route', canonicalPath);
 }

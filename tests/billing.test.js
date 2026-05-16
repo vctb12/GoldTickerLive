@@ -237,6 +237,7 @@ describe('billing routes — Stripe not configured', () => {
     assert.equal(status, 200);
     assert.equal(body.configured, false);
     assert.equal(headers.deprecation, 'true');
+    assert.equal(headers.sunset, 'Thu, 31 Dec 2026 23:59:59 GMT');
     assert.equal(headers['x-canonical-route'], '/api/v1/billing/config');
   });
 

@@ -67,7 +67,7 @@ Legacy compatibility routes remain available at `/api/stripe/*` and `/api/v1/str
 clients, but they now delegate to the canonical billing handlers and return deprecation metadata:
 
 - `Deprecation: true`
-- `Sunset: Wed, 31 Dec 2026 23:59:59 GMT`
+- `Sunset: Thu, 31 Dec 2026 23:59:59 GMT`
 - `Link: <.../api/v1/billing/...>; rel="successor-version"`
 - `X-Canonical-Route: /api/v1/billing/...`
 
