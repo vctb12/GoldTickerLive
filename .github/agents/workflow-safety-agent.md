@@ -8,6 +8,7 @@ use_with_prompts:
 loads_skills:
   - github-actions-debug
   - security-review
+description: GitHub Actions specialist for CI stability, scheduled automation, workflow permissions, posting safety, logs, and rollback-aware release checks.
 ---
 
 # Agent: Workflow Safety
