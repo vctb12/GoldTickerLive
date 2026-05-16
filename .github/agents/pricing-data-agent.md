@@ -6,6 +6,7 @@ use_with_prompts:
   - .github/prompts/provider-bakeoff.prompt.md
 loads_skills:
   - pricing-data-integrity
+description: Pricing data specialist for gold formulas, provider integrations, AED peg safety, freshness labels, historical data, exports, and source-of-truth checks.
 ---
 
 # Agent: Pricing Data
