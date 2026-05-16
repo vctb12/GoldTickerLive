@@ -20,6 +20,7 @@ function getRuntimeEnvSnapshot(env = process.env) {
     storageBackend: env.STORAGE_BACKEND || 'file',
     corsOriginsConfigured: hasValue(env.CORS_ORIGINS),
     supabaseConfigured,
+    // Backward-compatible alias kept for existing status consumers/docs.
     newsletterConfigured: resendConfigured,
     resendConfigured,
     stripeConfigured,

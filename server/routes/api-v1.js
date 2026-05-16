@@ -22,7 +22,12 @@ const PACKAGE_JSON_PATH = path.join(ROOT, 'package.json');
 const GOLD_PRICE_FILE = path.join(ROOT, 'data', 'gold_price.json');
 const PROVIDER_STATE_FILE = path.join(ROOT, 'data', 'provider_state.json');
 const PRICE_HISTORY_FILE = path.join(ROOT, 'src', 'data', 'historical-baseline.json');
-const PRICE_SNAPSHOT_SYNC_SCRIPT = path.join(ROOT, 'scripts', 'node', 'sync-price-snapshot.js');
+const PRICE_SNAPSHOT_SYNC_SCRIPT_PATH = path.join(
+  ROOT,
+  'scripts',
+  'node',
+  'sync-price-snapshot.js'
+);
 const EVENTS_FILE = path.join(ROOT, 'data', 'analytics-events.json');
 const LEADS_FILE = path.join(ROOT, 'data', 'leads.json');
 const MAX_EVENT_NAME_LENGTH = 80;
@@ -81,7 +86,7 @@ function buildSystemStatus() {
   const providerState = readJsonFile(PROVIDER_STATE_FILE);
   const supabaseWriteAvailable = Boolean(getSupabaseClient(false));
   const providerStateAvailable = fileExists(PROVIDER_STATE_FILE);
-  const priceSnapshotSyncScriptAvailable = fileExists(PRICE_SNAPSHOT_SYNC_SCRIPT);
+  const priceSnapshotSyncScriptAvailable = fileExists(PRICE_SNAPSHOT_SYNC_SCRIPT_PATH);
   const readiness = {
     supabaseConfigured: envSnapshot.supabaseConfigured,
     supabaseWriteAvailable,
@@ -237,7 +242,7 @@ function buildHistoryCoverage(points, extra = {}) {
   }
   const timestamps = points
     .map((point) => point?.timestampUtc || null)
-    .filter((value) => typeof value === 'string' && value);
+    .filter((value) => typeof value === 'string' && value.length > 0);
   return {
     startTimestampUtc: timestamps[0] || null,
     endTimestampUtc: timestamps[timestamps.length - 1] || null,

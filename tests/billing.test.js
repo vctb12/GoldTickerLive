@@ -18,13 +18,13 @@ const path = require('path');
 // Minimal server factory — avoids pulling in the real server.js which
 // requires JWT_SECRET etc. at module load time.
 // ---------------------------------------------------------------------------
-function makeTestApp(billingRoutesPath, stripeRoutesPath = null) {
+function makeTestApp(billingRoutesPath, legacyRoutesPath = null) {
   const express = require('express');
   const app = express();
 
   // Raw-body middleware for the webhook path (mirrors server.js)
   app.use('/api/v1/billing/webhook', express.raw({ type: 'application/json' }));
-  if (stripeRoutesPath) {
+  if (legacyRoutesPath) {
     app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
     app.use('/api/v1/stripe/webhook', express.raw({ type: 'application/json' }));
   }
@@ -36,10 +36,10 @@ function makeTestApp(billingRoutesPath, stripeRoutesPath = null) {
 
   app.use('/api/v1/billing', billingRouter);
   if (meRouter) app.use('/api/v1/me', meRouter);
-  if (stripeRoutesPath) {
-    const stripeRouter = require(stripeRoutesPath);
-    app.use('/api/stripe', stripeRouter);
-    app.use('/api/v1/stripe', stripeRouter);
+  if (legacyRoutesPath) {
+    const legacyRouter = require(legacyRoutesPath);
+    app.use('/api/stripe', legacyRouter);
+    app.use('/api/v1/stripe', legacyRouter);
   }
 
   return app;
