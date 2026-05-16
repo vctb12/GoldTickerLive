@@ -1208,7 +1208,6 @@ async function init() {
   });
   [el.quickCalcWeight, el.quickCalcKarat, el.quickCalcCurrency].forEach((field) => {
     field?.addEventListener('input', () => renderQuickCalculator?.());
-    field?.addEventListener('change', () => renderQuickCalculator?.());
   });
   el.saveWatchlistAccount?.addEventListener('click', () => {
     saveWatchlistToAccount().catch(() => {
