@@ -1,5 +1,6 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
+const NONEXISTENT_COUNTRY_QUERY = 'zzzzzz';
 
 test.describe('Homepage smoke tests', () => {
   test('has a title containing Gold', async ({ page }) => {
@@ -71,8 +72,8 @@ test.describe('Homepage — structure and key landmarks', () => {
     expect(initialCount).toBeGreaterThan(1);
 
     // Type into the search and assert it accepts and retains the value.
-    await searchInput.fill('zzzzzz');
-    await expect(searchInput).toHaveValue('zzzzzz');
+    await searchInput.fill(NONEXISTENT_COUNTRY_QUERY);
+    await expect(searchInput).toHaveValue(NONEXISTENT_COUNTRY_QUERY);
 
     // Clear the search and assert reset.
     await searchInput.fill('');

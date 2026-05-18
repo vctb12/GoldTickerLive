@@ -1,6 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
 const MOBILE_VIEWPORT = { width: 390, height: 844 };
+// Desktop width that is always outside the mobile-drawer media-query range.
 const DRAWER_DESKTOP_BREAKPOINT = 1024;
 
 async function expectNoHorizontalOverflow(page, route) {

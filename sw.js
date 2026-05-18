@@ -103,7 +103,8 @@ self.addEventListener('fetch', (event) => {
 
   // Legacy GitHub Pages base-path redirect support.
   // Keep this pattern in sync with `_redirects` and `.htaccess`.
-  // Ensures /Gold-Prices/* normalizes to /* for old links and bookmarks.
+  // Ensures /Gold-Prices/* normalizes to /* for old links/bookmarks on both
+  // goldtickerlive.com and the legacy vctb12.github.io/Gold-Prices path.
   if (url.origin === self.location.origin && /^\/Gold-Prices(?:\/|$)/.test(url.pathname)) {
     const normalizedPath = url.pathname.replace(/^\/Gold-Prices/, '') || '/';
     event.respondWith(Response.redirect(`${url.origin}${normalizedPath}${url.search}`, 301));
