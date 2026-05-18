@@ -100,6 +100,15 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
   // Bypass non-http(s) schemes (chrome-extension, blob, data, …).
   if (!url.protocol.startsWith('http')) return;
+
+  // Legacy GitHub Pages base-path redirect support.
+  // Ensures /Gold-Prices/* normalizes to /* for old links and bookmarks.
+  if (url.origin === self.location.origin && /^\/Gold-Prices(?:\/|$)/.test(url.pathname)) {
+    const normalizedPath = url.pathname.replace(/^\/Gold-Prices/, '') || '/';
+    event.respondWith(Response.redirect(`${url.origin}${normalizedPath}${url.search}`, 301));
+    return;
+  }
+
   // Bypass external FX/price API origins.
   if (BYPASS_ORIGINS.some((o) => url.hostname.includes(o))) return;
   // Bypass explicit ?nocache requests — let the browser go straight to network.

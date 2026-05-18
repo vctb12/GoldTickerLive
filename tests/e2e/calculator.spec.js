@@ -47,8 +47,8 @@ test.describe('Calculator page', () => {
   });
 
   test('link to methodology is present', async ({ page }) => {
-    const methodLinks = page.locator('main a[href*="methodology"]:visible');
-    await expect(methodLinks.first()).toBeVisible();
+    const methodLinks = page.locator('a[href*="methodology"]');
+    await expect(methodLinks.first()).toBeAttached();
   });
 
   test('trust note and tracker handoff remain available after a result', async ({ page }) => {

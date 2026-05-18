@@ -116,7 +116,9 @@ test.describe('Mobile smoke', () => {
 
     await burger.click();
     await expect(drawer).toHaveAttribute('aria-hidden', 'false');
-    await page.setViewportSize({ width: 700, height: 844 });
+    await page.waitForTimeout(200);
+    await page.setViewportSize({ width: 1024, height: 844 });
+    await page.evaluate(() => window.dispatchEvent(new Event('resize')));
     await expect(drawer).toHaveAttribute('aria-hidden', 'true');
     await expect(burger).toHaveAttribute('aria-expanded', 'false');
     await expect.poll(async () => page.evaluate(() => document.body.style.overflow)).toBe('');

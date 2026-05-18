@@ -11,6 +11,7 @@
 # --- Legacy shop/tracker paths ---------------------------------------------
 /old-shops    /shops.html      301
 /old-tracker  /tracker.html    301
+/Gold-Prices/*  /:splat        301
 
 # --- Clean URL → .html (trailing-slash-free navigation) --------------------
 # Users and external links often omit the .html extension or use bare slugs.

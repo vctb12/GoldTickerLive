@@ -25,7 +25,7 @@ test.describe('Country gold price pages', () => {
     await expect(page.locator('#country-trust-note a[href*="methodology"]')).toBeVisible();
     await expect(page.locator('#country-actions a[href*="tracker.html"]').first()).toBeVisible();
     await expect(page.locator('#country-actions a[href*="calculator.html"]').first()).toBeVisible();
-    await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(3);
+    await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(4);
     await expectNoHorizontalOverflow(page, '/countries/uae/gold-price/');
   });
 
