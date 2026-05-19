@@ -79,10 +79,16 @@
 
 # --- Consolidated landing pages (architecture simplification) ----------------
 /content/index.html                  /learn.html                  301
+/content                             /learn.html                  301
+/content/                            /learn.html                  301
 /content/guides/                     /learn.html                  301
+/content/guides/index.html           /learn.html                  301
 /content/tools/                      /calculator.html             301
+/content/tools/index.html            /calculator.html             301
 /content/embed/                      /tracker.html                301
+/content/embed/index.html            /tracker.html                301
 /content/social/                     /insights.html               301
+/content/social/index.html           /insights.html               301
 /content/todays-best-rates/          /tracker.html#mode=compare   301
 /content/compare-countries/          /tracker.html#mode=compare   301
 /content/premium-watch/              /insights.html               301
