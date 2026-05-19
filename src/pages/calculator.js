@@ -3,7 +3,7 @@
  * Handles 5 calculators: Value, Scrap, Zakat, Buying Power, Unit Converter.
  */
 
-import { CONSTANTS, KARATS, COUNTRIES } from '../config/index.js';
+import { CONSTANTS, KARATS, COUNTRIES, TRANSLATIONS } from '../config/index.js';
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import { usdPerGram } from '../lib/price-calculator.js';
@@ -14,8 +14,11 @@ import { injectTicker, updateTicker, updateTickerLang } from '../components/tick
 import { injectSpotBar, updateSpotBar, updateSpotBarLang } from '../components/spotBar.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { renderAdSlot } from '../components/adSlot.js';
+import { renderFreshnessBadge } from '../components/FreshnessBadge.js';
+import { renderMarketStatusPanel } from '../components/MarketStatusPanel.js';
 import { el, clear } from '../lib/safe-dom.js';
 import { track, EVENTS } from '../lib/analytics.js';
+import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
 import {
   createSavedCalculation,
   isAuthenticated as isAccountAuthenticated,
@@ -258,6 +261,10 @@ function t(key, params = {}) {
     (text, [token, value]) => text.replaceAll(`{${token}}`, String(value)),
     template
   );
+}
+
+function tGlobal(key) {
+  return TRANSLATIONS[STATE.lang]?.[key] ?? TRANSLATIONS.en?.[key] ?? key;
 }
 
 function hideMobileDock() {
@@ -835,6 +842,7 @@ function applyLang() {
   set('conv-results-title', t('conv_results_title'));
   set('calc-freshness-note', t('freshness_waiting'));
   setTrustNote();
+  renderCalculatorTrustAddons();
   set('calc-country-link', t('country_link'));
   document.querySelectorAll('.calc-copy-btn').forEach((btn) => {
     const isSave = btn.classList.contains('calc-save-btn');
@@ -892,7 +900,41 @@ function updateSpotBadge() {
           : `Freshness: ${sourceLabel} · ${stamp} · Source: goldpricez.com`;
     }
   }
+  renderCalculatorTrustAddons();
   refreshMobileDockForActiveTab();
+}
+
+function renderCalculatorTrustAddons() {
+  const freshnessSlot = document.getElementById('calc-freshness-badge-slot');
+  if (freshnessSlot) {
+    const freshness = getLiveFreshness({
+      updatedAt: STATE.freshness.goldUpdatedAt,
+      lang: STATE.lang,
+      hasLiveFailure: STATE.spotSource !== 'live',
+    });
+    freshnessSlot.replaceChildren(
+      renderFreshnessBadge({
+        lang: STATE.lang,
+        state: freshness.key,
+        source: 'goldpricez.com',
+        updatedAt: STATE.freshness.goldUpdatedAt,
+        marketOpen: getMarketStatus().isOpen,
+        className: 'calc-freshness-badge',
+        t: tGlobal,
+      })
+    );
+  }
+
+  const marketSlot = document.getElementById('calc-market-status-slot');
+  if (marketSlot) {
+    marketSlot.replaceChildren(
+      renderMarketStatusPanel({
+        lang: STATE.lang,
+        className: 'calc-market-status',
+        t: tGlobal,
+      })
+    );
+  }
 }
 
 // ── Tab switching ────────────────────────────────────────────────────────────

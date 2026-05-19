@@ -57,6 +57,16 @@
   color: var(--color-gold-light);
 }
 
+.calc-addon-slot {
+  width: min(100%, 760px);
+  margin-top: var(--space-2);
+}
+
+.calc-freshness-badge,
+.calc-market-status {
+  justify-content: center;
+}
+
 .badge-dot {
   width: 6px;
   height: 6px;

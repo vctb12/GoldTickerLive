@@ -1,0 +1,59 @@
+[
+  {
+    "slug": "uae-dubai",
+    "countryCode": "AE",
+    "city": "Dubai",
+    "cityAr": "دبي",
+    "commonKarats": ["24K", "22K", "21K", "18K"],
+    "buyingHabitsEn": "Tourists compare multiple souq quotes and often negotiate making charges.",
+    "buyingHabitsAr": "يقارن المشترون عدة عروض في السوق وغالباً ما يفاوضون على المصنعية.",
+    "checklistEn": [
+      "Confirm the exact karat and gram weight on the invoice.",
+      "Ask for making charge and VAT as separate line items.",
+      "Compare the quote with the current tracker reference before paying."
+    ],
+    "checklistAr": [
+      "تأكد من العيار والوزن بالجرام بشكل واضح في الفاتورة.",
+      "اطلب عرض المصنعية والضريبة كبنود منفصلة.",
+      "قارن السعر المعروض مع مرجع المتتبع قبل الدفع."
+    ]
+  },
+  {
+    "slug": "saudi-riyadh",
+    "countryCode": "SA",
+    "city": "Riyadh",
+    "cityAr": "الرياض",
+    "commonKarats": ["24K", "22K", "21K", "18K"],
+    "buyingHabitsEn": "Family purchases focus on 21K and 22K jewellery, especially in wedding seasons.",
+    "buyingHabitsAr": "تتركز المشتريات العائلية على 21 و22 قيراط خصوصاً في مواسم الزواج.",
+    "checklistEn": [
+      "Ask whether labour cost is fixed or percentage-based.",
+      "Verify buy-back terms before confirming the purchase.",
+      "Keep a screenshot of reference price timestamp for comparison."
+    ],
+    "checklistAr": [
+      "اسأل هل المصنعية مبلغ ثابت أم نسبة مئوية.",
+      "تحقق من شروط إعادة الشراء قبل إتمام العملية.",
+      "احتفظ بلقطة للشاشة مع طابع الوقت المرجعي للمقارنة."
+    ]
+  },
+  {
+    "slug": "kuwait-city",
+    "countryCode": "KW",
+    "city": "Kuwait City",
+    "cityAr": "مدينة الكويت",
+    "commonKarats": ["24K", "22K", "21K", "18K"],
+    "buyingHabitsEn": "Shoppers compare classic souq offers with mall retailers for premium designs.",
+    "buyingHabitsAr": "يقارن المتسوقون بين عروض السوق التقليدي ومحلات المراكز التجارية للتصاميم المميزة.",
+    "checklistEn": [
+      "Request total price split into gold value and workmanship.",
+      "Confirm if stone weight is excluded from gold weight.",
+      "Check quote against tracker and calculator for same unit."
+    ],
+    "checklistAr": [
+      "اطلب تفصيل السعر إلى قيمة الذهب والمصنعية.",
+      "تأكد مما إذا كان وزن الأحجار مستبعداً من وزن الذهب.",
+      "قارن العرض مع المتتبع والحاسبة بنفس الوحدة."
+    ]
+  }
+]

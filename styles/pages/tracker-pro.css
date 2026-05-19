@@ -74,6 +74,10 @@ body.tracker-pro-page {
   margin: 0 auto var(--space-5);
 }
 
+.tracker-addon-slot {
+  margin-top: var(--space-3);
+}
+
 /* Mode panels — shown/hidden by JS via [hidden] attribute */
 .tracker-mode-panel[hidden] {
   display: none;
