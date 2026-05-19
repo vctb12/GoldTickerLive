@@ -445,15 +445,7 @@ export function renderHero() {
         ? tx('liveUnavailable')
         : tx('connecting');
     mobileStatus.dataset.tone =
-      freshness.key === 'live'
-        ? 'live'
-        : freshness.key === 'delayed'
-          ? 'delayed'
-          : freshness.key === 'fallback'
-            ? 'fallback'
-            : freshness.key === 'unavailable'
-              ? 'neutral'
-              : 'warning';
+      freshness.key === 'live' ? 'live' : freshness.key === 'unavailable' ? 'neutral' : 'warning';
   }
   const mobileSource = document.getElementById('tp-mobile-summary-source');
   if (mobileSource) {

@@ -133,7 +133,11 @@ const SCENARIOS = [
   { key: 'delayed', data: { updatedAt: isoMinAgo(45), hasLiveFailure: false } },
 ];
 
-const LIVE_TEXT_RE = /\b(Live|مباشر)\b/u;
+const LIVE_EN_RE = /\bLive\b/;
+const LIVE_AR_RE = /مباشر/u;
+function containsLiveLabel(text) {
+  return LIVE_EN_RE.test(text) || LIVE_AR_RE.test(text);
+}
 
 test('guard: spotBar freshness badge never reads "Live" for non-live keys (EN+AR)', async () => {
   const { injectSpotBar, updateSpotBar } = await importModule('src/components/spotBar.js');
@@ -155,7 +159,7 @@ test('guard: spotBar freshness badge never reads "Live" for non-live keys (EN+AR
       assert.ok(tsEl, `[${lang}/${key}] timestamp slot must exist`);
       const badgeText = `${tsEl.textContent || ''} | ${tsEl.getAttribute('title') || ''}`;
       assert.equal(
-        LIVE_TEXT_RE.test(badgeText),
+        containsLiveLabel(badgeText),
         false,
         `[${lang}/${key}] spotBar badge must not contain "Live"/"مباشر". Got: ${badgeText}`
       );
@@ -189,7 +193,7 @@ test('guard: ticker freshness pill never reads "Live" for non-live keys (EN+AR)'
       assert.ok(statusEl && labelEl, `[${lang}/${key}] ticker status nodes must exist`);
       const badgeText = `${labelEl.textContent || ''} | ${statusEl.getAttribute('title') || ''} | ${statusEl.getAttribute('aria-label') || ''}`;
       assert.equal(
-        LIVE_TEXT_RE.test(badgeText),
+        containsLiveLabel(badgeText),
         false,
         `[${lang}/${key}] ticker pill must not contain "Live"/"مباشر". Got: ${badgeText}`
       );

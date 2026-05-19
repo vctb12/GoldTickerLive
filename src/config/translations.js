@@ -1474,7 +1474,7 @@ export const TRANSLATIONS = {
     'country.freshness.live': 'مباشر',
     'country.freshness.delayed': 'متأخر قليلاً',
     'country.freshness.cached': 'مخزن مؤقتاً',
-    'country.freshness.stale': 'متأخر',
+    'country.freshness.stale': 'قديم',
     'country.freshness.fallback': 'بديل احتياطي',
     'country.freshness.unavailable': 'غير متاح',
     'country.freshness.fixed': 'ربط الدرهم الثابت',

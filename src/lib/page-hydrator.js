@@ -172,10 +172,10 @@ async function fetchPrices() {
 
 function freshnessTone(key) {
   if (key === 'live') return 'live';
-  if (key === 'delayed') return 'delayed';
+  if (key === 'delayed') return 'cached';
   if (key === 'cached') return 'cached';
   if (key === 'stale') return 'stale';
-  if (key === 'fallback') return 'fallback';
+  if (key === 'fallback') return 'stale';
   return 'unavailable';
 }
 
