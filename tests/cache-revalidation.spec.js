@@ -36,8 +36,8 @@ test('cache boot starts as cached and only becomes live after revalidation', asy
 
   engine.seedFromCache({
     price: 3199,
-    updatedAt: '2026-05-19T16:00:00Z',
-    fetchedAt: '2026-05-19T16:00:00Z',
+    updatedAt: new Date().toISOString(),
+    fetchedAt: new Date().toISOString(),
     providerId: 'cache',
     source: 'cache',
   });

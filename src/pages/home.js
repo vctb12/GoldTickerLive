@@ -10,6 +10,7 @@ import * as calc from '../lib/price-calculator.js';
 import * as fmt from '../lib/formatter.js';
 import { getMarketStatus, getLiveFreshness } from '../lib/live-status.js';
 import { createRealtimePricingEngine } from '../lib/realtime-pricing-engine.js';
+import { REALTIME_POLLING_DEFAULTS } from '../lib/realtime-config.js';
 import { PrimaryQuoteProvider } from '../lib/quote-providers/primary-provider.js';
 import { SecondaryQuoteProvider } from '../lib/quote-providers/secondary-provider.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
@@ -890,17 +891,16 @@ function applyLangToPage() {
 // ── Fetch live data in parallel ────────────────────────────────────────────
 async function fetchLiveData() {
   if (!navigator.onLine) return;
-
-  const fxRes = await Promise.allSettled([api.fetchFX()]);
-  const fxResult = fxRes[0];
-
-  if (fxResult.status === 'fulfilled') {
-    rates = fxResult.value.rates ?? {};
+  try {
+    const fxData = await api.fetchFX();
+    rates = fxData.rates ?? {};
     cache.saveFXRates(rates, {
-      lastUpdateUtc: fxResult.value.time_last_update_utc,
-      nextUpdateUtc: fxResult.value.time_next_update_utc,
+      lastUpdateUtc: fxData.time_last_update_utc,
+      nextUpdateUtc: fxData.time_next_update_utc,
     });
     renderGCCGrid();
+  } catch {
+    // keep previous FX data
   }
 }
 
@@ -938,13 +938,7 @@ function initRealtimeEngine() {
   _realtimeEngine = createRealtimePricingEngine({
     primaryProvider,
     secondaryProvider,
-    config: {
-      activePollMs: 5000,
-      hiddenPollMs: 20000,
-      fetchTimeoutMs: 5000,
-      jitterMs: 250,
-      backoffMs: [5000, 10000, 20000, 40000, 60000],
-    },
+    config: REALTIME_POLLING_DEFAULTS,
     debug: new URLSearchParams(location.search).get('debugFreshness') === '1',
   });
 

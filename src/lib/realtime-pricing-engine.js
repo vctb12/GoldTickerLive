@@ -4,7 +4,10 @@ import { ProviderHealthMonitor } from './provider-health.js';
 
 const DEFAULT_BACKOFF_MS = [5000, 10000, 20000, 40000, 60000];
 const WARNING_WINDOW_MS = 15 * 60 * 1000;
+// 30-minute rolling window required by the incident SLO/error-budget model.
 const ROLLING_WINDOW_MS = 30 * 60 * 1000;
+const LIVE_STALE_GUARD_MS = 10 * 1000;
+const NO_SUCCESS_CRITICAL_MS = 120 * 1000;
 
 function percentile(values, percentileValue) {
   if (!values.length) return null;
@@ -174,7 +177,11 @@ export function createRealtimePricingEngine({
     if (staleIncidents > 0) {
       criticalFlags.push('stale_live_contradiction_detected');
     }
-    if (state.lastAppliedAt && nowFn() - state.lastAppliedAt > 120000 && getMarketStatus().isOpen) {
+    if (
+      state.lastAppliedAt &&
+      nowFn() - state.lastAppliedAt > NO_SUCCESS_CRITICAL_MS &&
+      getMarketStatus().isOpen
+    ) {
       criticalFlags.push('no_successful_quote_over_120s_market_open');
     }
     if ((state.metrics.p95ApplyLatencyMs ?? 0) > 4000) {
@@ -212,7 +219,10 @@ export function createRealtimePricingEngine({
         })
       : { state: 'unavailable', ageMs: Number.POSITIVE_INFINITY, reason: 'no-quote' };
 
-    if (fresh.state === 'live' && ageMs > 10000) {
+    // Defensive trust guard: this should be unreachable when the policy is
+    // correct, but we keep it as a last-mile invariant so UI never emits a
+    // stale value with live semantics.
+    if (fresh.state === 'live' && ageMs > LIVE_STALE_GUARD_MS) {
       state.metrics.staleLivePrevented += 1;
       emit('STALE_LIVE_PREVENTED', { ageMs, providerId: state.activeProviderId }, 'warning');
       state.rolling.staleContradictions.push({ at: now, ageMs, prevented: true });
@@ -558,7 +568,7 @@ export function createRealtimePricingEngine({
       providerPathSuccessful: false,
       forcedState: 'cached',
       status: 'cached',
-      isFallback: true,
+      isFallback: false,
       isFresh: false,
     };
     state.freshness = {

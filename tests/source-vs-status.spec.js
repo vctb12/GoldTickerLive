@@ -9,6 +9,8 @@ function installDom() {
     createElement(tag) {
       return {
         tagName: String(tag).toUpperCase(),
+        nodeType: 1,
+        ownerDocument: null,
         children: [],
         textContent: '',
         attributes: new Map(),
@@ -28,6 +30,14 @@ function installDom() {
   };
 }
 
+function collectText(node) {
+  if (typeof node === 'string') return node;
+  if (!node || typeof node !== 'object') return '';
+  const own = typeof node.textContent === 'string' ? node.textContent : '';
+  const children = Array.isArray(node.children) ? node.children.map(collectText).join(' ') : '';
+  return `${own} ${children}`.trim();
+}
+
 async function loadComponent() {
   const url = new URL(
     'file://' + path.resolve(__dirname, '..', 'src', 'components', 'QuoteMetaPanel.js')
@@ -44,8 +54,9 @@ test('quote meta panel keeps status and source as separate fields', async () => 
     providerId: 'PrimaryProvider',
   });
 
-  const text = JSON.stringify(panel);
+  const text = collectText(panel);
   assert.equal(text.includes('Source: Live'), false);
+  assert.equal(text.includes('Live'), true);
   assert.equal(text.includes('PrimaryProvider'), true);
   delete global.document;
 });

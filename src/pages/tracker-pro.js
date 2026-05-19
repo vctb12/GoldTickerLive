@@ -4,6 +4,7 @@ import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import '../lib/reveal.js';
 import { createRealtimePricingEngine } from '../lib/realtime-pricing-engine.js';
+import { REALTIME_POLLING_DEFAULTS } from '../lib/realtime-config.js';
 import { PrimaryQuoteProvider } from '../lib/quote-providers/primary-provider.js';
 import { SecondaryQuoteProvider } from '../lib/quote-providers/secondary-provider.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
@@ -1150,13 +1151,7 @@ function initRealtimeEngine() {
   realtimeEngine = createRealtimePricingEngine({
     primaryProvider: new PrimaryQuoteProvider({ timeoutMs: 5000 }),
     secondaryProvider: new SecondaryQuoteProvider({ timeoutMs: 5000 }),
-    config: {
-      activePollMs: 5000,
-      hiddenPollMs: 20000,
-      fetchTimeoutMs: 5000,
-      jitterMs: 250,
-      backoffMs: [5000, 10000, 20000, 40000, 60000],
-    },
+    config: REALTIME_POLLING_DEFAULTS,
     debug: new URLSearchParams(location.search).get('debugFreshness') === '1',
   });
 
@@ -1205,17 +1200,13 @@ async function fetchLive() {
   }
 
   try {
-    const fxRes = await Promise.allSettled([api.fetchFX()]);
-    const fxResult = fxRes[0];
-    if (fxResult.status === 'fulfilled') {
-      const data = fxResult.value;
-      state.rates = data.rates;
-      state.fxMeta = {
-        lastUpdateUtc: data.time_last_update_utc,
-        nextUpdateUtc: new Date(data.time_next_update_utc).getTime(),
-      };
-      cache.saveFXRates(state.rates, state.fxMeta);
-    }
+    const data = await api.fetchFX();
+    state.rates = data.rates;
+    state.fxMeta = {
+      lastUpdateUtc: data.time_last_update_utc,
+      nextUpdateUtc: new Date(data.time_next_update_utc).getTime(),
+    };
+    cache.saveFXRates(state.rates, state.fxMeta);
   } catch (_e) {
     console.warn('[tracker] refreshData failed', _e);
     state.hasLiveFailure = true;

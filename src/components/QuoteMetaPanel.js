@@ -35,8 +35,8 @@ export function renderQuoteMetaPanel({
     'section',
     {
       class: `tracker-addon-card quote-meta-panel${className ? ` ${className}` : ''}`,
-      role: 'status',
-      'aria-live': 'polite',
+      role: 'region',
+      'aria-live': 'off',
     },
     [
       el('h3', { class: 'tracker-addon-title' }, t('freshness.meta.title')),

@@ -28,8 +28,11 @@ export function evaluateFreshnessState({
     return { state: 'closed', ageMs: normalizedAgeMs, reason: 'market-closed' };
   }
 
-  if (forcedState === 'fallback') {
-    return { state: 'fallback', ageMs: normalizedAgeMs, reason: 'provider-fallback' };
+  if (
+    forcedState &&
+    ['cached', 'delayed', 'estimated', 'fallback', 'closed'].includes(forcedState)
+  ) {
+    return { state: forcedState, ageMs: normalizedAgeMs, reason: `forced-${forcedState}` };
   }
 
   if (!providerPathSuccessful || !providerHealthy) {
