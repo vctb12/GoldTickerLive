@@ -137,19 +137,19 @@
 
           <div class="method-source-card-row">
             <div class="method-source-card">
-              <div class="method-source-card-name">goldpricez.com</div>
+              <div class="method-source-card-name">gold-api.com</div>
               <div class="method-source-card-role" id="source-gold-role">
                 Gold spot price (XAU/USD)
               </div>
               <div class="method-source-card-freq" id="source-gold-freq">
-                Server-side refresh: every 6 minutes · Client re-poll: every 90 s
+                Server-side refresh: hourly during market hours · Client re-poll: ~90 s while open
               </div>
               <a
-                href="https://goldpricez.com"
+                href="https://gold-api.com"
                 target="_blank"
                 rel="nofollow noopener"
                 class="method-source-card-link"
-                >↗ goldpricez.com</a
+                >↗ gold-api.com</a
               >
             </div>
             <div class="method-source-card">
@@ -176,23 +176,25 @@
           <h3 id="gold-data-source-h3">Source</h3>
           <p id="gold-data-source-p">
             We fetch the XAU/USD spot price from
-            <a href="https://goldpricez.com" target="_blank" rel="nofollow noopener">goldpricez.com</a>
-            (<a href="https://goldpricez.com/about/api" target="_blank" rel="nofollow noopener">API documentation</a>),
-            a dedicated precious metals data API. The price represents the current market spot rate
+            <a href="https://gold-api.com" target="_blank" rel="nofollow noopener">gold-api.com</a>,
+            a precious metals data API. The price represents the current market spot rate
             for one troy ounce of pure gold (99.9% fineness / 24K), denominated in US Dollars. The
-            response is fetched server-side every 6 minutes by a GitHub Actions workflow and
-            committed to this repository as <code>data/gold_price.json</code>; the website reads
-            that single file so the API key never reaches the browser.
+            response is fetched server-side hourly during market hours by a GitHub Actions workflow
+            (<code>.github/workflows/gold-price-fetch.yml</code>) and committed to this repository as
+            <code>data/gold_price.json</code>; the website reads that single file so no API key ever
+            reaches the browser.
           </p>
 
           <h3 id="gold-data-update-h3">Update Frequency</h3>
           <p id="gold-data-update-p">
             There are two refresh cycles. <strong>Server-side:</strong> a GitHub Actions workflow
-            fetches the latest XAU/USD spot price from goldpricez.com every 6 minutes and commits it
-            to <code>data/gold_price.json</code>. <strong>Client-side:</strong> the browser
-            re-downloads that file every <strong>90 seconds</strong> while a page is open and the
-            device is online. Combined, this means prices shown are at most ~90 seconds old relative
-            to the last server poll, and at most ~6–7 minutes old relative to the live market.
+            fetches the latest XAU/USD spot price hourly during market hours and commits it to
+            <code>data/gold_price.json</code>. <strong>Client-side:</strong> the browser re-downloads
+            that file roughly every 90 seconds while a page is open and the device is online — but
+            because the server-side data only changes hourly, most client polls observe no change.
+            A visible freshness label on every surface (<em>live · delayed · cached · stale ·
+            fallback · unavailable</em>) tells you the exact age of the value you're looking at, so
+            there is no fixed-frequency promise to break.
           </p>
 
           <h3 id="gold-data-cache-h3">Caching</h3>

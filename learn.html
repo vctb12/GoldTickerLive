@@ -253,8 +253,8 @@
             <strong id="callout-spot-title">Our Price Data</strong>
             <p id="callout-spot-body">
               We fetch the XAU/USD spot rate from
-              <a href="https://goldpricez.com" target="_blank" rel="nofollow noopener">goldpricez.com</a>
-              every 6 minutes (committed to this repository as <code>data/gold_price.json</code>).
+              <a href="https://gold-api.com" target="_blank" rel="nofollow noopener">gold-api.com</a>
+              hourly during market hours (committed to this repository as <code>data/gold_price.json</code>).
               Exchange rates come from
               <a href="https://open.er-api.com" target="_blank" rel="noopener">open.er-api.com</a>.
               All prices shown are estimates — retail prices include additional charges.
@@ -523,12 +523,11 @@
                 itemtype="https://schema.org/Answer"
               >
                 <p itemprop="text" id="faq-a5">
-                  We fetch gold prices every 6 minutes from goldpricez.com (via a scheduled GitHub
-                  Actions workflow, committed as <code>data/gold_price.json</code>) and exchange
-                  rates from open.er-api.com. This provides near-real-time data, but there may be a
-                  slight lag versus institutional trading platforms. The prices shown are estimates
-                  based on this data and are suitable for reference purposes, not for executing
-                  trades.
+                  We fetch gold prices hourly during market hours from gold-api.com (via a scheduled
+                  GitHub Actions workflow, committed as <code>data/gold_price.json</code>) and exchange
+                  rates from open.er-api.com. The freshness label on every surface tells you whether
+                  you're seeing live, delayed, cached, or fallback data, so there's no ambiguity.
+                  Prices shown are estimates suitable for reference purposes, not for executing trades.
                 </p>
               </div>
             </details>

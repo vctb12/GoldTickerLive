@@ -33,14 +33,14 @@ export function generateMetadata(routeType, params = {}) {
     case 'home':
       title = `Live Gold Prices Today — UAE, GCC & Arab World | ${SITE_NAME}`;
       description =
-        'Track live gold spot prices in 24 countries across GCC, Levant and Africa. 24K, 22K, 21K, 18K per gram. Updated every 90 seconds. Free.';
+        'Track live gold spot prices in 24 countries across GCC, Levant and Africa. 24K, 22K, 21K, 18K per gram. Auto-refresh with a visible freshness label. Free.';
       canonical = `${SITE_URL}/`;
       breadcrumbs = [{ name: 'Home', url: canonical }];
       break;
 
     case 'country':
       title = `Gold Price in ${countryObj?.nameEn || country} Today — 24K, 22K, 21K, 18K | ${SITE_NAME}`;
-      description = `Live ${countryObj?.nameEn || country} gold prices in ${countryObj?.currency || 'local currency'}. 24K, 22K, 21K and 18K per gram and ounce. Updated every 90 seconds.`;
+      description = `Live ${countryObj?.nameEn || country} gold prices in ${countryObj?.currency || 'local currency'}. 24K, 22K, 21K and 18K per gram and ounce. Auto-refresh with a visible freshness label.`;
       canonical = `${SITE_URL}/${country}/gold-price/`;
       breadcrumbs = [
         { name: 'Home', url: `${SITE_URL}/` },
@@ -50,7 +50,7 @@ export function generateMetadata(routeType, params = {}) {
 
     case 'city-prices':
       title = `Gold Price in ${cityObj?.nameEn || city}, ${countryObj?.nameEn || ''} Today | ${countryObj?.currency} per Gram | ${SITE_NAME}`;
-      description = `Live 24K, 22K, 21K and 18K gold prices in ${cityObj?.nameEn || city}, ${countryObj?.nameEn || ''}. Compare ${countryObj?.currency} rates per gram. Updated every 90 seconds.`;
+      description = `Live 24K, 22K, 21K and 18K gold prices in ${cityObj?.nameEn || city}, ${countryObj?.nameEn || ''}. Compare ${countryObj?.currency} rates per gram. Auto-refresh with a visible freshness label.`;
       canonical = `${SITE_URL}/${country}/${city}/gold-prices/`;
       breadcrumbs = [
         { name: 'Home', url: `${SITE_URL}/` },
@@ -72,7 +72,7 @@ export function generateMetadata(routeType, params = {}) {
 
     case 'city-karat':
       title = `${karatObj?.code || karat}K Gold Price in ${cityObj?.nameEn || city} Today — ${countryObj?.currency} per Gram | ${SITE_NAME}`;
-      description = `Live ${karatObj?.code || karat} karat gold price in ${cityObj?.nameEn || city}, ${countryObj?.nameEn || ''}. ${countryObj?.currency} per gram, per ounce, per tola. Updated every 90 seconds.`;
+      description = `Live ${karatObj?.code || karat} karat gold price in ${cityObj?.nameEn || city}, ${countryObj?.nameEn || ''}. ${countryObj?.currency} per gram, per ounce, per tola. Auto-refresh with a visible freshness label.`;
       canonical = `${SITE_URL}/${country}/${city}/gold-rate/${karat}/`;
       breadcrumbs = [
         { name: 'Home', url: `${SITE_URL}/` },
@@ -107,7 +107,7 @@ export function generateMetadata(routeType, params = {}) {
     case 'order':
       title = `Order Gold Online — 1g to 100g Bars & Coins | ${SITE_NAME}`;
       description =
-        'Buy gold bars and coins online. 1g to 100g, 24K to 18K. Live prices updated every 90 seconds. Order via WhatsApp. UAE 5% VAT included.';
+        'Buy gold bars and coins online. 1g to 100g, 24K to 18K. Live prices with a visible freshness label. Order via WhatsApp. UAE 5% VAT included.';
       canonical = `${SITE_URL}/order-gold/`;
       breadcrumbs = [
         { name: 'Home', url: `${SITE_URL}/` },
@@ -118,7 +118,7 @@ export function generateMetadata(routeType, params = {}) {
     case 'tracker':
       title = `Gold Tracker Pro — Live Price Workspace | UAE, GCC | ${SITE_NAME}`;
       description =
-        'Live gold price tracker: 24 countries, 7 karats, historical chart, alerts, planners and CSV exports. Updated every 90 seconds.';
+        'Live gold price tracker: 24 countries, 7 karats, historical chart, alerts, planners and CSV exports. Auto-refresh with a visible freshness label.';
       canonical = `${SITE_URL}/tracker.html`;
       breadcrumbs = [
         { name: 'Home', url: `${SITE_URL}/` },

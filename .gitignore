@@ -98,6 +98,8 @@ feed.xml
 .DS_Store
 data/audit-logs.json
 data/404-logs.json
+data/alerts-v1.json
+data/billing.json
 
 # Gold provider bakeoff — generated artifacts.
 #

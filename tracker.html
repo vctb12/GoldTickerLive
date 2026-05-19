@@ -11,7 +11,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta
       name="description"
-      content="Live gold prices for UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual EN/AR, refreshed every 90s."
+      content="Live gold prices for UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual EN/AR, auto-refresh with a visible freshness label."
     />
     <meta
       name="keywords"
@@ -20,7 +20,7 @@
     <meta property="og:title" content="Gold Command Center — Live Tracker for UAE, GCC &amp; Arab World | Gold Ticker Live" />
     <meta
       property="og:description"
-      content="Live gold prices for UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual EN/AR, refreshed every 90s."
+      content="Live gold prices for UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual EN/AR, auto-refresh with a visible freshness label."
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
@@ -31,7 +31,7 @@
     <meta name="twitter:title" content="Gold Command Center — Live Tracker for UAE, GCC &amp; Arab World | Gold Ticker Live" />
     <meta
       name="twitter:description"
-      content="Live gold prices for UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual EN/AR, refreshed every 90s."
+      content="Live gold prices for UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual EN/AR, auto-refresh with a visible freshness label."
     />
     <meta name="twitter:image" content="https://goldtickerlive.com/assets/og-image.png" />
     <meta property="og:image:alt" content="Gold Ticker Live — live gold price tracker for GCC and Arab world" />
@@ -1534,13 +1534,11 @@
             <article class="tracker-method-card">
               <h3>Live spot layer</h3>
               <p>
-                Live spot is pulled from GoldPriceZ in XAU/USD every 6 minutes and committed
+                Live spot is pulled in XAU/USD hourly during market hours by
+                <code>.github/workflows/gold-price-fetch.yml</code> and committed
                 to the repository as <code>data/gold_price.json</code>, with retries and
                 fallbacks from cache when networks fail.
               </p>
-              <a href="https://goldpricez.com/about/api" target="_blank" rel="nofollow noopener noreferrer"
-                >GoldPriceZ API docs</a
-              > ·
               <a href="methodology.html#gold-data" class="tracker-inline-link">Site methodology →</a>
             </article>
 
