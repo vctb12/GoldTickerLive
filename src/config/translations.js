@@ -420,7 +420,7 @@ export const TRANSLATIONS = {
     'alerts.browserOnly': "Alerts are browser-only. Close this tab and you won't receive them.",
 
     /* ── Homepage (home.js) ── */
-    'home.heroLive': 'Live · auto-refresh',
+    'home.heroLive': 'Auto-refresh · freshness labeled',
     'home.heroTitle': 'Gold Prices Today',
     'home.heroSub': 'UAE, GCC & Arab World',
     'home.heroLead':
@@ -1160,7 +1160,7 @@ export const TRANSLATIONS = {
       'التنبيهات تعمل في المتصفح فقط. إذا أغلقت هذا التبويب، لن تصلك الإشعارات.',
 
     /* ── Homepage (home.js) ── */
-    'home.heroLive': 'مباشر · تحديث تلقائي',
+    'home.heroLive': 'تحديث تلقائي · مع عرض حالة التحديث',
     'home.heroTitle': 'أسعار الذهب اليوم',
     'home.heroSub': 'الإمارات والخليج والعالم العربي',
     'home.heroLead':
