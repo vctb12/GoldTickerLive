@@ -7,6 +7,13 @@ import { createInitialState, persistState } from '../tracker/state.js';
 import { el as safeEl } from '../lib/safe-dom.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { getBaselineRange } from '../lib/historical-data.js';
+import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
+import { renderFreshnessBadge } from '../components/FreshnessBadge.js';
+import { renderMarketStatusPanel } from '../components/MarketStatusPanel.js';
+import { renderTrackerQuickPresets } from '../components/TrackerQuickPresets.js';
+import { renderTrackerCompareHints } from '../components/TrackerCompareHints.js';
+import { renderExportHelpTips } from '../components/ExportHelpTips.js';
+import { renderAlertsEducationTips } from '../components/AlertsEducationTips.js';
 import {
   createWatchlistItem,
   getMe,
@@ -46,6 +53,10 @@ function trackerTx(key, params = {}) {
     (text, [token, value]) => text.replaceAll(`{${token}}`, String(value)),
     template
   );
+}
+
+function txGlobal(key) {
+  return TRANSLATIONS[state.lang]?.[key] ?? TRANSLATIONS.en?.[key] ?? key;
 }
 
 function setInlineLinkText(node, beforeText, href, linkText) {
@@ -298,6 +309,52 @@ function localizeStaticTrackerCopy() {
   el.comparePresetButtons?.forEach((button, index) => {
     if (presetLabels[index]) button.textContent = presetLabels[index];
   });
+}
+
+function renderTrackerAddonPanels() {
+  const freshnessSlot = document.getElementById('tp-freshness-badge-slot');
+  if (freshnessSlot) {
+    const freshness = getLiveFreshness({
+      updatedAt: state.live?.updatedAt,
+      lang: state.lang,
+      hasLiveFailure: state.hasLiveFailure,
+      isFallback: state.live?.isFallback ?? null,
+      isFresh: state.live?.isFresh ?? null,
+    });
+    freshnessSlot.replaceChildren(
+      renderFreshnessBadge({
+        lang: state.lang,
+        state: freshness.key,
+        source: 'GoldPriceZ',
+        updatedAt: state.live?.updatedAt,
+        marketOpen: getMarketStatus().isOpen,
+        t: txGlobal,
+      })
+    );
+  }
+
+  const marketSlot = document.getElementById('tp-market-status-slot');
+  if (marketSlot) {
+    marketSlot.replaceChildren(
+      renderMarketStatusPanel({
+        lang: state.lang,
+        t: txGlobal,
+      })
+    );
+  }
+
+  document
+    .getElementById('tp-quick-presets-slot')
+    ?.replaceChildren(renderTrackerQuickPresets({ t: txGlobal }));
+  document
+    .getElementById('tp-compare-hints-slot')
+    ?.replaceChildren(renderTrackerCompareHints({ t: txGlobal }));
+  document
+    .getElementById('tp-export-help-slot')
+    ?.replaceChildren(renderExportHelpTips({ t: txGlobal }));
+  document
+    .getElementById('tp-alerts-help-slot')
+    ?.replaceChildren(renderAlertsEducationTips({ t: txGlobal }));
 }
 
 function ui() {
@@ -1174,17 +1231,20 @@ async function init() {
     /* onModeChange */ () => {
       populateSelects();
       renderAll();
+      renderTrackerAddonPanels();
     },
     /* onLangChange */ () => {
       localizeStaticTrackerCopy();
       populateSelects();
       updateServerAlertUiState();
       renderAll();
+      renderTrackerAddonPanels();
     }
   );
 
   localizeStaticTrackerCopy();
   populateSelects();
+  renderTrackerAddonPanels();
   serverAlertsAvailable = await probeServerAlertsAvailability();
   updateServerAlertUiState();
   bindCoreEvents();
@@ -1249,6 +1309,7 @@ async function init() {
   // Skip fetching the market wire during initial load to reduce critical path
   await refreshData(false, false);
   renderAll();
+  renderTrackerAddonPanels();
   syncCurrentCountryPageLink();
   if (state.autoRefresh) startAutoRefresh();
   startCountdown();

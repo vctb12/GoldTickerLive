@@ -14,10 +14,17 @@ import { injectFooter } from '../components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
 import { injectSpotBar, updateSpotBar, updateSpotBarLang } from '../components/spotBar.js';
 import { renderAdSlot } from '../components/adSlot.js';
+import { renderFreshnessBadge } from '../components/FreshnessBadge.js';
+import { renderMarketStatusPanel } from '../components/MarketStatusPanel.js';
+import { renderMethodologySection } from '../components/MethodologySection.js';
+import { renderLocationGuideSection } from '../components/LocationGuideSection.js';
 import '../lib/reveal.js';
 import { countUp } from '../lib/count-up.js';
 import { clear, el, safeHref } from '../lib/safe-dom.js';
 import { track, EVENTS } from '../lib/analytics.js';
+import { enforceCanonicalOnDocument } from '../seo/canonical.js';
+import { enforceHreflangAlternates } from '../seo/hreflang.js';
+import { buildMethodologyFaqSchema, injectFaqSchema } from '../seo/faq-schema.js';
 
 // ── Constants ──────────────────────────────────────────────────────────────
 const LANG_KEY = 'user_prefs';
@@ -88,6 +95,10 @@ function saveLang(l) {
 function tx(key) {
   const fullKey = 'home.' + key;
   return TRANSLATIONS[lang]?.[fullKey] ?? TRANSLATIONS.en?.[fullKey] ?? key;
+}
+
+function txGlobal(key) {
+  return TRANSLATIONS[lang]?.[key] ?? TRANSLATIONS.en?.[key] ?? key;
 }
 
 // ── Regional groupings for homepage display ────────────────────────────────
@@ -376,6 +387,65 @@ function renderHeroCard() {
       ? `${tx('sourceCached')} · ${tx('updated')}: ${timeStr}`
       : `${tx('sourceLive')} · ${tx('updated')}: ${timeStr}`;
     bar.removeAttribute('hidden');
+  }
+  renderHomeTrustAddons();
+}
+
+function renderHomeTrustAddons() {
+  const freshnessSlot = document.getElementById('home-freshness-badge-slot');
+  if (freshnessSlot) {
+    const freshness = getLiveFreshness({
+      updatedAt: goldUpdatedAt,
+      lang,
+      hasLiveFailure: priceSourceLabel !== 'live',
+      isFallback: goldIsFallback,
+      isFresh: goldIsFresh,
+    });
+    freshnessSlot.replaceChildren(
+      renderFreshnessBadge({
+        lang,
+        state: freshness.key,
+        source: 'GoldPriceZ',
+        updatedAt: goldUpdatedAt,
+        marketOpen: getMarketStatus().isOpen,
+        className: 'home-freshness-badge',
+        t: txGlobal,
+      })
+    );
+  }
+
+  const marketSlot = document.getElementById('home-market-status-panel');
+  if (marketSlot) {
+    marketSlot.replaceChildren(
+      renderMarketStatusPanel({
+        lang,
+        className: 'home-market-status',
+        t: txGlobal,
+      })
+    );
+  }
+}
+
+function renderHomeAdditiveSections() {
+  const methodologyMount = document.getElementById('home-methodology-mount');
+  if (methodologyMount) {
+    methodologyMount.replaceChildren(
+      renderMethodologySection({
+        t: txGlobal,
+        className: 'home-methodology-section',
+      })
+    );
+  }
+
+  const locationMount = document.getElementById('home-location-guides-mount');
+  if (locationMount) {
+    locationMount.replaceChildren(
+      renderLocationGuideSection({
+        lang,
+        t: txGlobal,
+        className: 'home-location-guides-section',
+      })
+    );
   }
 }
 
@@ -674,6 +744,12 @@ function applyLangToPage() {
   setTextById('explainer-local-desc', tx('explainerLocalDesc'));
   setTextById('faq-title', tx('faqTitle'));
   setTextById('faq-more-link', tx('faqMore'));
+  setTextById('home-methodology-title', txGlobal('methodology.sectionTitle'));
+  setTextById('home-methodology-sub', txGlobal('methodology.sectionSub'));
+  setTextById('home-methodology-page-link', txGlobal('methodology.fullPageLink'));
+  setTextById('home-location-guides-title', txGlobal('locationGuides.sectionTitle'));
+  setTextById('home-location-guides-sub', txGlobal('locationGuides.sectionSub'));
+  setTextById('home-location-guides-link', txGlobal('locationGuides.sectionLink'));
 
   // Next-step guides section
   setTextById('next-step-title', tx('nextStepTitle'));
@@ -746,6 +822,8 @@ function applyLangToPage() {
   const unitGroupEl = document.getElementById('kstrip-unit-group');
   if (unitGroupEl) unitGroupEl.setAttribute('aria-label', tx('unitToggleLabel'));
   applyRegionTabA11yLabels();
+  renderHomeAdditiveSections();
+  renderHomeTrustAddons();
 
   renderHeroCard();
   renderGCCGrid();
@@ -937,6 +1015,9 @@ async function init() {
   // Apply language direction immediately
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  enforceCanonicalOnDocument(document, window.location.pathname);
+  enforceHreflangAlternates(document, window.location.pathname);
+  injectFaqSchema(document, buildMethodologyFaqSchema(lang));
 
   // Nav + footer + spot bar
   injectSpotBar(lang, 0);
@@ -949,6 +1030,7 @@ async function init() {
       updateTickerLang(lang);
       updateSpotBarLang(lang);
       applyLangToPage();
+      injectFaqSchema(document, buildMethodologyFaqSchema(lang));
     });
   });
   injectFooter(lang, 0);

@@ -7804,3 +7804,93 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 .ph-disclaimer-share:hover {
   background: #1fba58;
 }
+[data-freshness-state] {
+  font-variant-numeric: tabular-nums;
+}
+
+.freshness-badge {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-secondary);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.freshness-badge__state {
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+.freshness-badge--live .freshness-badge__state {
+  color: var(--color-live-ink);
+}
+
+.freshness-badge--cached .freshness-badge__state,
+.freshness-badge--delayed .freshness-badge__state,
+.freshness-badge--estimated .freshness-badge__state,
+.freshness-badge--fallback .freshness-badge__state,
+.freshness-badge--closed .freshness-badge__state {
+  color: var(--color-warning-ink);
+}
+
+.market-status-panel {
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-card);
+  background: var(--surface-secondary);
+  padding: var(--space-3);
+}
+
+.market-status-panel__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-base);
+}
+
+.market-status-panel__body,
+.market-status-panel__note {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.market-status-panel__note {
+  margin-top: var(--space-2);
+}
+
+.tracker-addon-card {
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-card);
+  background: var(--surface-secondary);
+  padding: var(--space-3);
+}
+
+.tracker-addon-card > h3 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-base);
+}
+
+.tracker-addon-card__copy {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.tracker-addon-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.tracker-addon-list {
+  margin: 0;
+  padding-inline-start: 1.2rem;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  display: grid;
+  gap: var(--space-2);
+}
