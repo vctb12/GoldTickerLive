@@ -5,6 +5,9 @@
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
+# Redirect legacy GitHub Pages base-path URLs to root equivalents
+RewriteRule ^Gold-Prices/?(.*)$ /$1 [R=301,L]
+
 # Redirect old city paths to new structure
 RewriteRule ^cities/dubai\.html$ countries/uae/cities/dubai.html [R=301,L]
 RewriteRule ^cities/abu-dhabi\.html$ countries/uae/cities/abu-dhabi.html [R=301,L]

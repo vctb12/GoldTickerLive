@@ -2,7 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## [Unreleased]
+
+### Phase 0 stabilization hotfixes — 2026-05-18
+
+- chore(scripts): add script aliases required by the Phase 0 baseline sweep (`lint:css`,
+  `check:unsafe-dom`, `test:e2e`).
+- chore(e2e): make `test:e2e` install Playwright browsers/deps before execution to avoid missing
+  executable failures after `npm ci`.
+- test(e2e): align brittle assertions with current site behavior on calculator methodology link,
+  country JSON-LD count, homepage country search empty-state, and mobile drawer resize breakpoint.
 
 ### Multi-area polish — 2026-04-30 session (Round 16)
 

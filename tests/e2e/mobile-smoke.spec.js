@@ -1,6 +1,8 @@
 const { test, expect } = require('@playwright/test');
 
 const MOBILE_VIEWPORT = { width: 390, height: 844 };
+// Desktop width that is always outside the mobile-drawer media-query range.
+const DRAWER_DESKTOP_BREAKPOINT = 1024;
 
 async function expectNoHorizontalOverflow(page, route) {
   const metrics = await page.evaluate(() => ({
@@ -116,7 +118,8 @@ test.describe('Mobile smoke', () => {
 
     await burger.click();
     await expect(drawer).toHaveAttribute('aria-hidden', 'false');
-    await page.setViewportSize({ width: 700, height: 844 });
+    await page.setViewportSize({ width: DRAWER_DESKTOP_BREAKPOINT, height: 844 });
+    await page.evaluate(() => window.dispatchEvent(new Event('resize')));
     await expect(drawer).toHaveAttribute('aria-hidden', 'true');
     await expect(burger).toHaveAttribute('aria-expanded', 'false');
     await expect.poll(async () => page.evaluate(() => document.body.style.overflow)).toBe('');
