@@ -144,7 +144,7 @@ const RAW_NAV_DATA = {
             description: 'Understand differences between references.',
             items: [
               {
-                href: '/tracker.html#mode=compare',
+                href: '/tracker.html#mode=compare&r=30D',
                 label: 'Tracker compare mode',
                 description: 'Side-by-side market comparison',
                 icon: 'CMP',
@@ -352,9 +352,9 @@ const RAW_NAV_DATA = {
             description: 'Separate spot references from retail quotes.',
             items: [
               {
-                href: '/insights.html',
-                label: 'Retail premium insights',
-                description: 'Context for spot-vs-retail gaps',
+                href: '/content/guides/gold-karat-comparison.html',
+                label: 'Karat premium context',
+                description: 'Purity context behind retail gaps',
                 icon: 'PRM',
               },
               {
@@ -625,7 +625,7 @@ const RAW_NAV_DATA = {
             description: 'افهم الفروق بين المراجع.',
             items: [
               {
-                href: '/tracker.html#mode=compare',
+                href: '/tracker.html#mode=compare&r=30D',
                 label: 'وضع المقارنة في المتتبع',
                 description: 'مقارنة الأسواق جنباً إلى جنب',
                 icon: 'CMP',
@@ -833,9 +833,9 @@ const RAW_NAV_DATA = {
             description: 'افصل السعر المرجعي عن عرض المحل.',
             items: [
               {
-                href: '/insights.html',
-                label: 'رؤى علاوة التجزئة',
-                description: 'سياق فرق الفوري مقابل التجزئة',
+                href: '/content/guides/gold-karat-comparison.html',
+                label: 'سياق علاوة العيارات',
+                description: 'سياق النقاء وراء فروق التجزئة',
                 icon: 'PRM',
               },
               {
