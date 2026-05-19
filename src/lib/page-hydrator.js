@@ -658,10 +658,10 @@ function renderFreshnessBadgeLegacy(updatedAt) {
   const freshness = getLiveFreshness({ updatedAt, hasLiveFailure: false, lang: 'en' });
   const colorMap = {
     live: 'var(--color-live, #10b981)',
-    delayed: 'var(--color-warning, #f59e0b)',
+    delayed: 'var(--color-warning)',
     cached: 'var(--color-warning, #f59e0b)',
     stale: 'var(--color-stale, #f97316)',
-    fallback: 'var(--color-stale, #f97316)',
+    fallback: 'var(--color-stale)',
     unavailable: 'var(--text-tertiary, #6b7280)',
   };
   const color = colorMap[freshness.key] || 'var(--text-tertiary, #6b7280)';

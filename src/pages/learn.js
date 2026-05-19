@@ -64,7 +64,7 @@ const CONTENT = {
     'pricing-markets-h3': 'Where is the price set?',
     'callout-spot-title': 'Our Price Data',
     'callout-spot-body':
-      'We fetch XAU/USD from goldpricez.com every 6 minutes (committed to the repo as data/gold_price.json). Exchange rates from open.er-api.com. All prices are estimates for reference — not for trade execution.',
+      'We fetch XAU/USD from gold-api.com hourly during market hours (committed to the repo as data/gold_price.json). Exchange rates from open.er-api.com. All prices are estimates for reference — not for trade execution.',
     'aed-h2': 'The AED–USD Fixed Peg',
     'aed-intro':
       'The UAE Dirham (AED) has been fixed at exactly 3.6725 AED per US Dollar since November 1997.',

@@ -306,8 +306,8 @@
       }
 
       async function fetchSpot() {
-        // Canonical gold-price file — written every 6 min by
-        // .github/workflows/gold-price-fetch.yml from goldpricez.com.
+        // Canonical gold-price file — written hourly by
+        // .github/workflows/gold-price-fetch.yml from gold-api.com.
         // Using the absolute URL so this embed works as an iframe AND as
         // a drop-in script on external sites.
         const r = await fetch('https://goldtickerlive.com/data/gold_price.json', {

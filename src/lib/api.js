@@ -173,9 +173,9 @@ function normalizeGoldResponse(data) {
 
 /**
  * Fetch the current gold spot price (XAU/USD) from the committed static data
- * file `/data/gold_price.json`, which is refreshed every 6 minutes by a
- * GitHub Actions workflow. Falls back to the most-recent `localStorage` cache
- * entry if the network request fails.
+ * file `/data/gold_price.json`, which is refreshed hourly during market hours
+ * by the `gold-price-fetch.yml` GitHub Actions workflow. Falls back to the
+ * most-recent `localStorage` cache entry if the network request fails.
  *
  * @returns {Promise<{ price: number, updatedAt: string, source: string, raw?: object }>}
  * @throws {NetworkError} When both the data file fetch and the local cache fail.

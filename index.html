@@ -15,7 +15,7 @@
     <meta name="msvalidate.01" content="E88623E4C36CDC8E8D44913FA9192725" />
     <meta
       name="description"
-      content="Current gold price per gram in UAE AED — live 24K, 22K, 21K, 18K rates for GCC and 20+ Arab countries. Updated every 90 seconds."
+      content="Current gold price per gram in UAE AED — live 24K, 22K, 21K, 18K rates for GCC and 20+ Arab countries. Auto-refresh with a visible freshness label."
     />
     <meta
       name="keywords"
@@ -27,7 +27,7 @@
     />
     <meta
       property="og:description"
-      content="Track live gold spot prices in 24 countries across GCC, Levant, Africa and globally. 7 karats. Bilingual EN/AR. Free, updated every 90 seconds."
+      content="Track live gold spot prices in 24 countries across GCC, Levant, Africa and globally. 7 karats. Bilingual EN/AR. Free, with a visible freshness label."
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
@@ -159,7 +159,7 @@
           <div class="hero-text">
             <div class="hero-badge" id="hero-live-badge" role="status" aria-live="polite" aria-atomic="true">
               <span class="hero-badge-dot" aria-hidden="true"></span>
-              <span id="hero-live-label">Live · Updated every 90s</span>
+              <span id="hero-live-label">Live · auto-refresh</span>
             </div>
             <h1 id="hero-headline">
               <span class="hero-title-main" id="hero-title-main">Gold Prices Today</span>
@@ -602,7 +602,7 @@
             <span class="trust-icon" aria-hidden="true">⚡</span>
             <div class="trust-content">
               <span class="trust-label" id="trust-live">Live spot data</span>
-              <span class="trust-sub" id="trust-live-sub">Updated every 90s</span>
+              <span class="trust-sub" id="trust-live-sub">Auto-refresh while open</span>
             </div>
           </div>
           <div class="trust-item">
@@ -676,7 +676,7 @@
             <div>
               <h2 id="gcc-section-title" class="home-section-title">Live Gold Prices</h2>
               <p class="home-section-sub" id="gcc-section-sub">
-                22K per gram in local currency · updated every 90 seconds
+                22K per gram in local currency · freshness shown live
               </p>
             </div>
             <a href="tracker.html" class="section-link" id="gcc-see-all"></a>
@@ -769,8 +769,8 @@
               <div class="tool-card-icon" aria-hidden="true">📈</div>
               <h3 class="tool-card-title" id="tool-tracker-title">Live Tracker</h3>
               <p class="tool-card-desc" id="tool-tracker-desc">
-                Full price matrix — 24 countries, 7 karats, per gram &amp; per ounce. Refreshed
-                every 90 seconds.
+                Full price matrix — 24 countries, 7 karats, per gram &amp; per ounce. Auto-refresh
+                with a visible freshness label.
               </p>
               <span class="tool-card-cta" id="tool-tracker-cta">Open Tracker →</span>
             </a>
@@ -1130,8 +1130,8 @@
                 <div itemprop="text">
                   The live gold price per gram in UAE (AED) is shown on the
                   <a href="tracker.html">Live Tracker</a> and the
-                  <a href="countries/uae/gold-price/">UAE page</a>. Prices are updated every 90 seconds
-                  from the XAU/USD spot rate, converted using the official AED peg of 3.6725.
+                  <a href="countries/uae/gold-price/">UAE page</a>. Spot prices auto-refresh while open
+                  (source data updates hourly during market hours) and are converted using the official AED peg of 3.6725.
                 </div>
               </div>
             </details>
@@ -1218,10 +1218,11 @@
                 itemprop="acceptedAnswer"
               >
                 <div itemprop="text">
-                  Gold spot price refreshes every 90 seconds while you have the page open. FX rates
-                  update once per day (via open.er-api.com). A countdown timer on the tracker shows
-                  you exactly when the next refresh is due. Data is cached locally so the last known
-                  price shows even when you're offline.
+                  The gold spot price auto-refreshes while you have the page open; the underlying source data
+                  updates hourly during market hours. FX rates update once per day (via open.er-api.com).
+                  A countdown timer on the tracker shows you exactly when the next refresh is due. Data is
+                  cached locally so the last known price shows even when you're offline, with a visible
+                  cached / fallback label so you can tell the difference.
                 </div>
               </div>
             </details>
