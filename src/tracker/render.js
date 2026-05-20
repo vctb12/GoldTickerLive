@@ -135,27 +135,48 @@ function getExportReadinessState() {
     freshness.effectiveKey === 'fallback' ||
     freshness.effectiveKey === 'unavailable' ||
     _state.live?.isFallback === true;
+  const hasLiveSpot = Number.isFinite(_currentSpot?.());
+  const hasSourceMix = hasSupabase && (hasBaseline || hasLocal);
+  const hasStaleLikeFreshness =
+    freshness.effectiveKey === 'cached' ||
+    freshness.effectiveKey === 'delayed' ||
+    freshness.effectiveKey === 'stale';
 
-  if (!rows.length || fallbackLike || (!hasSupabase && (hasBaseline || hasLocal))) {
+  if (!rows.length && !fallbackLike) {
+    return {
+      state: 'checking',
+      disableHistoryExports: false,
+      disableLiveExports: !hasLiveSpot,
+      label: tx('exportReadiness.checking'),
+      reason: tx('exportCommand.note'),
+    };
+  }
+
+  if (fallbackLike) {
     return {
       state: 'blocked',
-      disableExports: true,
+      disableHistoryExports: true,
+      disableLiveExports: true,
       label: tx('exportReadiness.blocked'),
       reason: tx('exportReadiness.blockedReason'),
     };
   }
 
-  if (
-    hasSupabase &&
-    (hasBaseline ||
-      hasLocal ||
-      freshness.effectiveKey === 'cached' ||
-      freshness.effectiveKey === 'delayed' ||
-      freshness.effectiveKey === 'stale')
-  ) {
+  if (!hasSupabase && (hasBaseline || hasLocal)) {
     return {
       state: 'limited',
-      disableExports: false,
+      disableHistoryExports: true,
+      disableLiveExports: !hasLiveSpot,
+      label: tx('exportReadiness.limited'),
+      reason: tx('exportCommand.note'),
+    };
+  }
+
+  if (hasSourceMix || hasStaleLikeFreshness) {
+    return {
+      state: 'limited',
+      disableHistoryExports: false,
+      disableLiveExports: !hasLiveSpot,
       label: tx('exportReadiness.limited'),
       reason: tx('exportCommand.note'),
     };
@@ -163,7 +184,8 @@ function getExportReadinessState() {
 
   return {
     state: 'ready',
-    disableExports: false,
+    disableHistoryExports: false,
+    disableLiveExports: !hasLiveSpot,
     label: tx('exportReadiness.ready'),
     reason: tx('exportCommand.note'),
   };
@@ -179,23 +201,31 @@ function applyExportReadiness() {
     pill.setAttribute('aria-label', `${readiness.label} · ${readiness.reason}`);
   }
 
-  const exportButtons = [
+  const historyExportButtons = [
     _el.exportArchive,
     _el.exportArchive2,
     _el.exportHistory,
     _el.exportHistory2,
-    _el.downloadJson,
-    _el.downloadJson2,
     _el.exportChart,
     _el.exportChart2,
+  ].filter(Boolean);
+  const liveExportButtons = [
     _el.exportCompare,
     _el.exportCompare2,
     _el.exportWatchlist,
+    _el.downloadJson,
+    _el.downloadJson2,
   ].filter(Boolean);
 
-  exportButtons.forEach((button) => {
-    button.disabled = readiness.disableExports;
-    button.setAttribute('aria-disabled', readiness.disableExports ? 'true' : 'false');
+  historyExportButtons.forEach((button) => {
+    button.disabled = readiness.disableHistoryExports;
+    button.setAttribute('aria-disabled', readiness.disableHistoryExports ? 'true' : 'false');
+    button.setAttribute('title', readiness.reason);
+  });
+
+  liveExportButtons.forEach((button) => {
+    button.disabled = readiness.disableLiveExports;
+    button.setAttribute('aria-disabled', readiness.disableLiveExports ? 'true' : 'false');
     button.setAttribute('title', readiness.reason);
   });
 }

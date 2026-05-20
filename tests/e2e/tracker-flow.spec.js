@@ -117,8 +117,19 @@ test.describe('Tracker page — live mode & navigation', () => {
     await expect(page.locator('#tp-export-readiness-pill')).toBeVisible();
     await expect(page.locator('#tp-export-readiness-pill')).toHaveAttribute(
       'data-state',
-      /(ready|limited|blocked)/
+      /(checking|ready|limited|blocked)/
     );
+    const readinessState = await page
+      .locator('#tp-export-readiness-pill')
+      .getAttribute('data-state');
+    const historyExport = page.locator('#tp-export-history');
+    const compareExport = page.locator('#tp-export-compare');
+    if (readinessState === 'blocked') {
+      await expect(historyExport).toBeDisabled();
+      await expect(compareExport).toBeDisabled();
+    } else {
+      await expect(compareExport).toBeEnabled();
+    }
   });
 
   test('comparison builder supports presets and export', async ({ page }) => {
@@ -134,7 +145,7 @@ test.describe('Tracker page — live mode & navigation', () => {
     await expect(page.locator('#tp-comparison-cards .comparison-card').first()).toBeVisible();
     await expect(page.locator('#tp-export-readiness-pill')).toHaveAttribute(
       'data-state',
-      /(ready|limited|blocked)/
+      /(checking|ready|limited|blocked)/
     );
   });
 
