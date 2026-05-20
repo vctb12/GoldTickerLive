@@ -114,6 +114,11 @@ test.describe('Tracker page — live mode & navigation', () => {
     await expect(page.locator('#tp-quick-calc-panel')).toBeVisible();
     await expect(page.locator('#tp-open-alerts-inline')).toBeVisible();
     await expect(page.locator('#tp-export-command-panel')).toBeVisible();
+    await expect(page.locator('#tp-export-readiness-pill')).toBeVisible();
+    await expect(page.locator('#tp-export-readiness-pill')).toHaveAttribute(
+      'data-state',
+      /(ready|limited|blocked)/
+    );
   });
 
   test('comparison builder supports presets and export', async ({ page }) => {
@@ -127,7 +132,10 @@ test.describe('Tracker page — live mode & navigation', () => {
     await expect(page.locator('#tp-export-compare')).toBeVisible();
     await page.locator('[data-compare-preset="uae-karats"]').click();
     await expect(page.locator('#tp-comparison-cards .comparison-card').first()).toBeVisible();
-    await expect(page.locator('#tp-export-compare')).toBeEnabled({ timeout: 10000 });
+    await expect(page.locator('#tp-export-readiness-pill')).toHaveAttribute(
+      'data-state',
+      /(ready|limited|blocked)/
+    );
   });
 
   test('compare tab is visible and clickable without needing advanced workspace', async ({
@@ -188,6 +196,18 @@ test.describe('Tracker page — live mode & navigation', () => {
 
     await expect(page.locator('#tp-quick-calc-panel')).toBeVisible();
     await expect(page.locator('#tp-alerts-watchlist-panel')).toBeVisible();
+    await expect(page.locator('#tp-chart-history-source')).toBeVisible();
+  });
+
+  test('tracker at 414px keeps command-center panels usable', async ({ page }) => {
+    await page.setViewportSize({ width: 414, height: 896 });
+    await page.goto('/tracker.html#mode=live&cur=AED&k=24&u=gram&r=30D');
+    await waitForTrackerReady(page);
+
+    await expect(page.locator('#tp-karat-table')).toBeVisible();
+    await expect(page.locator('#tp-alerts-watchlist-panel')).toBeVisible();
+    await expect(page.locator('#tp-quick-calc-panel')).toBeVisible();
+    await expect(page.locator('#tp-export-readiness-pill')).toBeVisible();
     await expect(page.locator('#tp-chart-history-source')).toBeVisible();
   });
 });

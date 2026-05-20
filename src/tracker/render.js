@@ -119,6 +119,87 @@ function getHistorySourceLabel(rows = []) {
   return tx('historySource.unavailable');
 }
 
+function getExportReadinessState() {
+  const rows = Array.isArray(_state.history) ? _state.history : [];
+  const sources = new Set(rows.map((row) => String(row?.source || '').toLowerCase()));
+  let hasSupabase = false;
+  let hasBaseline = false;
+  let hasLocal = false;
+  for (const source of sources) {
+    if (source.includes('supabase')) hasSupabase = true;
+    if (source.includes('baseline') || source.includes('estimated')) hasBaseline = true;
+    if (source.includes('local') || source.includes('cache')) hasLocal = true;
+  }
+  const freshness = getFreshnessModel();
+  const fallbackLike =
+    freshness.effectiveKey === 'fallback' ||
+    freshness.effectiveKey === 'unavailable' ||
+    _state.live?.isFallback === true;
+
+  if (!rows.length || fallbackLike || (!hasSupabase && (hasBaseline || hasLocal))) {
+    return {
+      state: 'blocked',
+      disableExports: true,
+      label: tx('exportReadiness.blocked'),
+      reason: tx('exportReadiness.blockedReason'),
+    };
+  }
+
+  if (
+    hasSupabase &&
+    (hasBaseline ||
+      hasLocal ||
+      freshness.effectiveKey === 'cached' ||
+      freshness.effectiveKey === 'delayed' ||
+      freshness.effectiveKey === 'stale')
+  ) {
+    return {
+      state: 'limited',
+      disableExports: false,
+      label: tx('exportReadiness.limited'),
+      reason: tx('exportCommand.note'),
+    };
+  }
+
+  return {
+    state: 'ready',
+    disableExports: false,
+    label: tx('exportReadiness.ready'),
+    reason: tx('exportCommand.note'),
+  };
+}
+
+function applyExportReadiness() {
+  const readiness = getExportReadinessState();
+  const pill = document.getElementById('tp-export-readiness-pill');
+  if (pill) {
+    setText(pill, readiness.label);
+    pill.dataset.state = readiness.state;
+    pill.setAttribute('title', readiness.reason);
+    pill.setAttribute('aria-label', `${readiness.label} · ${readiness.reason}`);
+  }
+
+  const exportButtons = [
+    _el.exportArchive,
+    _el.exportArchive2,
+    _el.exportHistory,
+    _el.exportHistory2,
+    _el.downloadJson,
+    _el.downloadJson2,
+    _el.exportChart,
+    _el.exportChart2,
+    _el.exportCompare,
+    _el.exportCompare2,
+    _el.exportWatchlist,
+  ].filter(Boolean);
+
+  exportButtons.forEach((button) => {
+    button.disabled = readiness.disableExports;
+    button.setAttribute('aria-disabled', readiness.disableExports ? 'true' : 'false');
+    button.setAttribute('title', readiness.reason);
+  });
+}
+
 function getVisibleHistoryRows() {
   const flatHistory = (_state.history || []).map((r) => ({
     date: r.date instanceof Date ? r.date.toISOString().slice(0, 10) : String(r.date),
@@ -2012,6 +2093,7 @@ export function renderAll() {
   renderPlanners();
 
   renderBrief();
+  applyExportReadiness();
 
   // Localize welcome strip chips (bilingual parity — §6 rule 6).
   _localizeWelcomeStrip();
