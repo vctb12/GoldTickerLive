@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------
 # Phase 0 — Lighthouse Baseline Capture
-# Runs Lighthouse (mobile + desktop, EN + AR) against the live
-# goldtickerlive.com site for the 7 canonical surfaces, then commits
+# Runs Lighthouse (mobile + desktop, EN + AR) against a local preview
+# server built from this branch for the 7 canonical surfaces, then commits
 # the results back to reports/baseline-2026-05/lighthouse/.
 #
 # Trigger: workflow_dispatch (manual) or first push to any
@@ -52,6 +52,18 @@ jobs:
           ADMIN_ACCESS_PIN: '000000'
         run: npm run build
 
+      - name: Copy static content not bundled by Vite
+        run: |
+          cp -r assets dist/
+          cp -r styles dist/
+          cp -r countries dist/
+          [ -d content ] && cp -r content dist/ || true
+          cp sw.js dist/
+          cp robots.txt dist/
+          cp sitemap.xml dist/ || true
+          cp manifest.json dist/
+          cp favicon.svg dist/
+
       - name: Start preview server
         run: |
           nohup npx serve dist -p 4173 --no-clipboard > /tmp/serve.log 2>&1 &
@@ -62,10 +74,10 @@ jobs:
         run: npm install -g lighthouse@13
 
       - name: Run Lighthouse baselines (EN)
-        run: node scripts/node/run-lighthouse-baseline.js --base-url http://localhost:4173 --locale en
+        run: node scripts/node/run-lighthouse-baseline.js --base-url http://localhost:4173 --locale en --force
 
       - name: Run Lighthouse baselines (AR)
-        run: node scripts/node/run-lighthouse-baseline.js --base-url http://localhost:4173 --locale ar
+        run: node scripts/node/run-lighthouse-baseline.js --base-url http://localhost:4173 --locale ar --force
 
       - name: Generate summaries
         run: node scripts/node/generate-lighthouse-summary.js

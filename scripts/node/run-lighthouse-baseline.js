@@ -3,12 +3,14 @@
  * scripts/node/run-lighthouse-baseline.js
  *
  * Phase 0 — capture Lighthouse metrics for the 7 target pages
- * (mobile + desktop) against the live site.
+ * (mobile + desktop). By default it targets the live site, but
+ * CI passes --base-url to run against a local preview server.
  *
  * Outputs JSON to reports/baseline-2026-05/lighthouse/
  *
- * Usage: node scripts/node/run-lighthouse-baseline.js [--locale ar]
- *        (default locale: en)
+ * Usage:
+ *   node scripts/node/run-lighthouse-baseline.js [--locale ar] [--base-url http://localhost:4173] [--force]
+ *   node scripts/node/run-lighthouse-baseline.js --locale en --base-url https://goldtickerlive.com
  *
  * Requires: lighthouse (npm install -g lighthouse) and chromium.
  */
@@ -29,6 +31,7 @@ const LOCALE = process.argv.includes('--locale')
 const BASE_URL = process.argv.includes('--base-url')
   ? process.argv[process.argv.indexOf('--base-url') + 1]
   : 'https://goldtickerlive.com';
+const OVERWRITE = process.argv.includes('--force') || process.argv.includes('--overwrite');
 
 const PAGES = [
   { slug: 'home', path: '/' },
@@ -47,21 +50,23 @@ const CHROME_FLAGS = [
   '--no-sandbox',
   '--disable-gpu',
   '--disable-dev-shm-usage',
-].join(',');
+].join(' ');
 
 function lighthouseBin() {
-  // Try global, then local npx
+  // Try global lighthouse, then npx lighthouse
   try {
     execSync('lighthouse --version', { stdio: 'pipe' });
-    return 'lighthouse';
+    return { command: 'lighthouse', prefixArgs: [] };
   } catch {
-    return 'npx lighthouse';
+    return { command: 'npx', prefixArgs: ['lighthouse'] };
   }
 }
 
 const lhBin = lighthouseBin();
-console.log(`Using Lighthouse: ${lhBin}`);
+console.log(`Using Lighthouse: ${[lhBin.command, ...lhBin.prefixArgs].join(' ')}`);
 console.log(`Locale: ${LOCALE}`);
+console.log(`Base URL: ${BASE_URL}`);
+console.log(`Overwrite: ${OVERWRITE ? 'enabled' : 'disabled'}`);
 console.log(`Output: ${OUT_DIR}\n`);
 
 const summary = {
@@ -80,18 +85,22 @@ for (const page of PAGES) {
 
     console.log(`\n▶ ${page.slug} [${formFactor}/${LOCALE}] → ${url}`);
 
-    if (fs.existsSync(outFile)) {
+    if (!OVERWRITE && fs.existsSync(outFile)) {
       console.log('  ↩ Already exists, skipping.');
       continue;
     }
+    if (OVERWRITE && fs.existsSync(outFile)) {
+      console.log('  ↻ Already exists, overwriting.');
+    }
 
     const args = [
+      ...lhBin.prefixArgs,
       url,
       '--output=json',
       `--output-path=${outFile}`,
       `--form-factor=${formFactor}`,
       `--locale=${LOCALE}`,
-      `--chrome-flags="${CHROME_FLAGS}"`,
+      `--chrome-flags=${CHROME_FLAGS}`,
       '--only-categories=performance,accessibility,best-practices,seo',
       '--quiet',
     ];
@@ -105,8 +114,7 @@ for (const page of PAGES) {
       args.push('--screenEmulation.deviceScaleFactor=1');
     }
 
-    const cmd = `${lhBin} ${args.join(' ')}`;
-    const result = spawnSync(cmd, { shell: true, encoding: 'utf8', timeout: 120000 });
+    const result = spawnSync(lhBin.command, args, { encoding: 'utf8', timeout: 120000 });
 
     if (result.status !== 0) {
       console.error(`  ✗ Lighthouse failed for ${page.slug} [${formFactor}/${LOCALE}]`);

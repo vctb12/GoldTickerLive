@@ -8,10 +8,11 @@
  *   reports/baseline-2026-05/page-inventory.json
  *   reports/baseline-2026-05/click-inventory.json
  *
- * page-inventory.json  — every .html file: path, bytes, lastCommitSha,
- *                        inboundLinkCount, inSitemap
+ * page-inventory.json  — public HTML surfaces in this repo (excludes
+ *                        server/admin/docs/tests/build artifacts): path,
+ *                        bytes, lastCommitSha, inboundLinkCount, inSitemap
  * click-inventory.json — every <a>, <button>, <form>, [role="button"],
- *                        [data-action] across all public pages:
+ *                        [data-action] across all scanned public pages:
  *                        page, selector, textEN, textAR, hrefOrAction,
  *                        firesAnalyticsEvent
  *

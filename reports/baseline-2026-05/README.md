@@ -5,13 +5,13 @@ starting state for all subsequent phases.
 
 ## Contents
 
-| File                    | Description                                                                                       |
-| ----------------------- | ------------------------------------------------------------------------------------------------- |
-| `page-inventory.json`   | Every `.html` file in the repo: path, bytes, last commit SHA, inbound link count, in-sitemap flag |
-| `click-inventory.json`  | Every `<a>`, `<button>`, `<form>`, `[role="button"]`, `[data-action]` across all public pages     |
-| `sitemap.xml`           | Snapshot of the sitemap at baseline (generated from `build/generateSitemap.js`)                   |
-| `lighthouse/`           | Lighthouse JSON reports for 7 canonical surfaces × 2 form factors × 2 locales (EN/AR)             |
-| `lighthouse-summary.md` | Human-readable Lighthouse score table with budget thresholds                                      |
+| File                    | Description                                                                                                               |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `page-inventory.json`   | Public `.html` surfaces scanned by the baseline script: path, bytes, last commit SHA, inbound link count, in-sitemap flag |
+| `click-inventory.json`  | Every `<a>`, `<button>`, `<form>`, `[role="button"]`, `[data-action]` across all public pages                             |
+| `sitemap.xml`           | Current repo-root sitemap (`/sitemap.xml`) generated from `build/generateSitemap.js`                                      |
+| `lighthouse/`           | Lighthouse JSON reports for 7 canonical surfaces × 2 form factors × 2 locales (EN/AR)                                     |
+| `lighthouse-summary.md` | Human-readable Lighthouse score table with budget thresholds                                                              |
 
 ## Lighthouse Status
 
@@ -19,7 +19,7 @@ starting state for all subsequent phases.
 > make network connections in the agent sandbox environment.
 >
 > **To populate real scores:** run the
-> [`Phase 0 — Lighthouse Baseline Capture`](./.github/workflows/phase0-lighthouse-baseline.yml)
+> [`Phase 0 — Lighthouse Baseline Capture`](../../.github/workflows/phase0-lighthouse-baseline.yml)
 > workflow manually from GitHub Actions, targeting this branch.
 
 The Lighthouse CI workflow will:
@@ -55,13 +55,8 @@ Performance regressions against these thresholds block merge in Phase 8.
 
 ## Key Numbers (at baseline)
 
-| Metric                             | Value                                                   |
-| ---------------------------------- | ------------------------------------------------------- |
-| Total HTML files                   | 659                                                     |
-| Files in sitemap                   | 40                                                      |
-| Total interactive elements         | 3,122                                                   |
-| Elements with analytics attributes | 0 (analytics fired via JS modules, not HTML attributes) |
-| Sitemap URLs                       | 214                                                     |
+Use `page-inventory.json` and `click-inventory.json` as the source of truth for counts. These
+metrics are generated outputs and can change as the inventory is regenerated.
 
 ## Notes
 
@@ -71,7 +66,6 @@ Performance regressions against these thresholds block merge in Phase 8.
   surface; subsequent phases will add `data-testid` and `data-analytics` attributes to interactive
   elements as part of the Click Contract requirement.
 
-- The 619 HTML files NOT in the sitemap are primarily:
+- HTML files not in the sitemap are primarily:
   - Country/city/karat sub-pages with `noindex` (expected — SEO governance policy)
-  - Admin pages
   - Offline/404 utility pages
