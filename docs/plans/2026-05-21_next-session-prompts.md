@@ -5,7 +5,7 @@ status: in-progress
 priority: P1
 owner: @vctb12
 last_run_at: "2026-05-22T13:11:17Z"
-last_run_pr: ""
+last_run_pr: "pending (this PR)"
 last_run_agent: copilot
 next_action: "Complete the Phase 1 parity sweep by auditing remaining shell-style extraction gaps and capturing full lint/test/validate/build evidence."
 blocked_on: ""
