@@ -282,24 +282,43 @@ test('calculator.html: numeric inputs keep mobile inputmode hints', () => {
   const numberInputTags = [...html.matchAll(/<input\b[^>]*type=["']number["'][^>]*>/gi)].map(
     (m) => m[0]
   );
-  assert.ok(
-    numberInputTags.length >= 6,
-    `calculator.html: expected at least 6 numeric inputs, found ${numberInputTags.length}`
-  );
+  const expectedModesById = new Map([
+    ['val-weight', 'decimal'],
+    ['scrap-weight', 'decimal'],
+    ['scrap-payout', 'numeric'],
+    ['zakat-weight', 'decimal'],
+    ['buy-amount', 'decimal'],
+    ['conv-amount', 'decimal'],
+  ]);
+  const seenIds = new Set();
+  const unexpectedIds = [];
   for (const tag of numberInputTags) {
-    const id = (tag.match(/\bid=["']([^"']+)["']/i) || [])[1] || '(missing id)';
+    const id = (tag.match(/\bid=["']([^"']+)["']/i) || [])[1];
+    assert.ok(id, `calculator.html: numeric input missing id attribute in tag: ${tag}`);
     const inputmode = (tag.match(/\binputmode=["']([^"']+)["']/i) || [])[1];
-    assert.ok(inputmode, `calculator.html: #${id} missing inputmode attribute`);
-    if (id === 'scrap-payout') {
-      assert.equal(
-        inputmode,
-        'numeric',
-        'calculator.html: #scrap-payout should keep inputmode="numeric"'
-      );
-    } else {
-      assert.equal(inputmode, 'decimal', `calculator.html: #${id} should keep inputmode="decimal"`);
+    if (!expectedModesById.has(id)) {
+      unexpectedIds.push(id);
+      continue;
     }
+    seenIds.add(id);
+    assert.ok(inputmode, `calculator.html: #${id} missing inputmode attribute`);
+    assert.equal(
+      inputmode,
+      expectedModesById.get(id),
+      `calculator.html: #${id} should keep inputmode="${expectedModesById.get(id)}"`
+    );
   }
+  assert.deepEqual(
+    unexpectedIds,
+    [],
+    `calculator.html: unexpected numeric input ids: ${unexpectedIds.join(', ')}`
+  );
+  const missingIds = [...expectedModesById.keys()].filter((id) => !seenIds.has(id));
+  assert.deepEqual(
+    missingIds,
+    [],
+    `calculator.html: missing expected numeric inputs: ${missingIds.join(', ')}`
+  );
 });
 
 // --- sitemap generator correctness (runs against current filesystem) --
