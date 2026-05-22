@@ -8,7 +8,7 @@ owner: @vctb12
 last_run_at: "2026-05-22T15:48:00Z"
 last_run_pr: "TBD"
 last_run_agent: copilot
-slices_remaining_estimate: 2
+slices_remaining_estimate: 1
 next_action: "Implement Batch 4B homepage below-the-fold polish (`index.html`, `src/pages/home.js`, `styles/pages/home.css`)."
 blocked_on: ""
 guardrails_reviewed: true
@@ -98,9 +98,10 @@ brand shift toward **Gold Ticker Live**.
       loading states and localized ARIA hooks.
 - [ ] **Batch 4B — homepage below-the-fold polish** (`/index.html`, `/src/pages/home.js`,
       `/styles/pages/home.css`) — continue deeper UX pass for command/snapshot/tools/country blocks.
-- [ ] **Batch 4C — tracker deeper UX pass** (`/tracker.html`, `/src/tracker/*`,
-      `/styles/pages/tracker-pro.css`) _(2026-05-12 partial: planner/karat-table loading + empty
-      strings localized through `translations.js`.)_
+- [x] **Batch 4C — tracker deeper UX pass** (`/tracker.html`, `/src/tracker/*`,
+      `/styles/pages/tracker-pro.css`) — trust banner wired to EN/AR translations; archive meta and
+      mini-strip format strings localized via new translation keys; `_localizeTrustBanner()` added
+      to `render.js` and called on every render.
 - [x] `/shops.html`, `/src/pages/shops/*`, `/styles/pages/shops.css` — deeper UI pass _(2026-05-12
       partial: query-aware no-result copy in EN/AR.)_
 
@@ -144,6 +145,25 @@ brand shift toward **Gold Ticker Live**.
 4. Revert admin workflow polish independently.
 
 ## Session log
+
+### 2026-05-22T15:15Z — copilot (PR #334)
+
+- Slice class: CODE
+- Phase/Feature closed: Batch 4 — tracker deeper UX pass
+- Skills activated: gold-ticker-live-audit, frontend-polish-agent
+- Files touched: 4 (render.js, translations.js, translations-new-keys.spec.test.js, plan file)
+- Completed:
+  - Added `_localizeTrustBanner()` to wire trust banner strong/body/link/close to EN/AR
+    translations.
+  - Added `tracker.archiveMeta`, `tracker.archiveSourceMixed`, `tracker.archiveSourceBaseline`,
+    `tracker.present` keys; wired archive pagination meta to translations.
+  - Added `tracker.miniStripSummary` key; wired mini strip summary to translations.
+  - Added 5 new keys to `tests/translations-new-keys.spec.test.js` REQUIRED_KEYS.
+- Added/Split: none
+- Skipped (owner-only / blocked): none
+- Validation: lint=PASS, validate=PASS, build=PASS, test=pre-existing failure in analytics.test.js
+  only
+- Next action: Batch 5 and Batch 6 already complete. Consider Batch 4 homepage deeper UX pass.
 
 ### 2026-05-22T14:31Z — copilot (PR #332)
 
