@@ -47,7 +47,12 @@ if (!fs.existsSync(shellCssPath)) {
   fail('styles/partials/shell.css is missing.');
 } else {
   const css = fs.readFileSync(shellCssPath, 'utf8');
-  const colorLiteral = /(#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\()/;
+  // Flags raw color literals in shell.css.
+  // - #[0-9a-fA-F]{3,8}\b  — hex literals (#fff, #ff0000, #rrggbbaa)
+  // - rgba?\((?![^)]*var\(--) — rgb()/rgba() NOT followed by var(-- inside the parens
+  // - hsla?\((?![^)]*var\(--) — hsl()/hsla() NOT followed by var(-- inside the parens
+  // Token-driven calls like rgba(var(--color-primary), 0.5) are intentionally allowed.
+  const colorLiteral = /(#[0-9a-fA-F]{3,8}\b|rgba?\((?![^)]*var\(--)|hsla?\((?![^)]*var\(--))/;
   if (colorLiteral.test(css)) {
     fail('styles/partials/shell.css must use design tokens only (no raw color literals).');
   } else {
@@ -65,10 +70,11 @@ async function checkCanonicalSurfaces() {
       continue;
     }
     const configured = Array.isArray(locale.canonicalSurfaces) ? locale.canonicalSurfaces : [];
-    for (const href of EXPECTED_SURFACES) {
-      if (!configured.includes(href)) {
-        fail(`NAV_DATA.${lang}.canonicalSurfaces missing href: ${href}`);
-      }
+    if (JSON.stringify(configured) !== JSON.stringify(EXPECTED_SURFACES)) {
+      fail(
+        `NAV_DATA.${lang}.canonicalSurfaces does not exactly match EXPECTED_SURFACES ` +
+          `(got [${configured.join(', ')}], expected [${EXPECTED_SURFACES.join(', ')}]).`
+      );
     }
   }
   if (errors === 0) pass('Canonical 7-surface nav coverage check passed.');

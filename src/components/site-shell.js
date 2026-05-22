@@ -20,9 +20,10 @@ export function mountSharedShell(options = {}) {
   return {
     navCtrl,
     updateLang(nextLang) {
-      updateNavLang(nextLang);
-      updateTickerLang(nextLang);
-      if (withSpotBar) updateSpotBarLang(nextLang);
+      const lang = nextLang === 'ar' ? 'ar' : 'en';
+      updateNavLang(lang);
+      updateTickerLang(lang);
+      if (withSpotBar) updateSpotBarLang(lang);
     },
   };
 }
