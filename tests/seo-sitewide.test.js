@@ -276,6 +276,32 @@ test('index.html: X/Twitter social link URL has no spaces and uses https://x.com
   }
 });
 
+// --- calculator inputmode guard ----------------------------------------
+test('calculator.html: numeric inputs keep mobile inputmode hints', () => {
+  const html = fs.readFileSync(path.join(REPO_ROOT, 'calculator.html'), 'utf8');
+  const numberInputTags = [...html.matchAll(/<input\b[^>]*type=["']number["'][^>]*>/gi)].map(
+    (m) => m[0]
+  );
+  assert.ok(
+    numberInputTags.length >= 6,
+    `calculator.html: expected at least 6 numeric inputs, found ${numberInputTags.length}`
+  );
+  for (const tag of numberInputTags) {
+    const id = (tag.match(/\bid=["']([^"']+)["']/i) || [])[1] || '(missing id)';
+    const inputmode = (tag.match(/\binputmode=["']([^"']+)["']/i) || [])[1];
+    assert.ok(inputmode, `calculator.html: #${id} missing inputmode attribute`);
+    if (id === 'scrap-payout') {
+      assert.equal(
+        inputmode,
+        'numeric',
+        'calculator.html: #scrap-payout should keep inputmode="numeric"'
+      );
+    } else {
+      assert.equal(inputmode, 'decimal', `calculator.html: #${id} should keep inputmode="decimal"`);
+    }
+  }
+});
+
 // --- sitemap generator correctness (runs against current filesystem) --
 test('sitemap generator excludes every noindex / meta-refresh stub', () => {
   // Invoke the generator in-process by requiring it after writing to a
