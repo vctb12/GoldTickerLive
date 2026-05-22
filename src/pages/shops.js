@@ -1464,7 +1464,7 @@ function renderFeaturedSection() {
         .map((item) => `<span class="featured-tag">${esc(item)}</span>`)
         .join('');
       return `
-      <article class="featured-card" data-shop-id="${esc(shop.id)}" style="cursor: pointer;">
+      <article class="featured-card" data-shop-id="${esc(shop.id)}">
         <div class="featured-header">
           <h3>${esc(shop.name)}</h3>
           <span class="featured-location">${esc(shop.city)} · ${countryName(country)}</span>
@@ -1493,6 +1493,80 @@ function bindFeaturedCardHandlers() {
       const shopId = newCard.dataset.shopId;
       const shop = SHOPS.find((s) => s.id === shopId);
       if (shop) openModal(shop);
+    });
+  });
+}
+
+function renderMobileQuickFilters() {
+  const container = document.getElementById('shops-mobile-quick-filters');
+  if (!container) return;
+
+  const quickFilters = [
+    {
+      key: 'reset',
+      label: t('clearAllFiltersShort'),
+      active:
+        STATE.listingTab === DEFAULT_LISTING_TAB &&
+        STATE.region === 'all' &&
+        STATE.country === 'all' &&
+        STATE.city === 'all' &&
+        STATE.specialty === 'all' &&
+        !STATE.verifiedOnly &&
+        !STATE.search.trim(),
+    },
+    {
+      key: 'listing:verified_shop',
+      label: t('tabVerified'),
+      active: STATE.listingTab === 'verified_shop',
+    },
+    {
+      key: 'listing:market_cluster',
+      label: t('tabMarkets'),
+      active: STATE.listingTab === 'market_cluster',
+    },
+    {
+      key: 'verified-only',
+      label: t('verifiedOnly'),
+      active: STATE.verifiedOnly,
+    },
+  ];
+
+  const buttons = quickFilters.map((item) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `shops-quick-filter-chip${item.active ? ' is-active' : ''}`;
+    button.setAttribute('data-quick-filter', item.key);
+    button.setAttribute('aria-pressed', item.active ? 'true' : 'false');
+    button.textContent = item.label;
+    return button;
+  });
+  container.replaceChildren(...buttons);
+
+  container.querySelectorAll('[data-quick-filter]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const key = button.getAttribute('data-quick-filter');
+      if (key === 'reset') {
+        trackShopFilterApply('mobile_quick_reset');
+        resetFilters();
+        collapseMobileFilters();
+        return;
+      }
+      if (key === 'verified-only') {
+        STATE.verifiedOnly = !STATE.verifiedOnly;
+        const verifiedBox = document.getElementById('shops-verified-only');
+        if (verifiedBox) verifiedBox.checked = STATE.verifiedOnly;
+        trackShopFilterApply('mobile_quick_verified');
+        render();
+        collapseMobileFilters();
+        return;
+      }
+      if (key?.startsWith('listing:')) {
+        const listing = key.split(':')[1] || DEFAULT_LISTING_TAB;
+        STATE.listingTab = listing;
+        trackShopFilterApply('mobile_quick_listing_tab');
+        render();
+        collapseMobileFilters();
+      }
     });
   });
 }
@@ -1635,6 +1709,7 @@ function render() {
   const controlsCount = document.getElementById('shops-controls-count');
   if (controlsCount) controlsCount.textContent = t('count')(shops.length);
   activeFilterSummary();
+  renderMobileQuickFilters();
   renderFilterPills();
   renderFeaturedSection();
   renderShortlistBar();
@@ -1923,7 +1998,7 @@ function init() {
   const filterPanel = document.getElementById('shops-filter-panel');
   if (filterToggle && filterPanel) {
     // On desktop (>640px) start expanded; on mobile keep collapsed
-    if (window.innerWidth > 640) {
+    if (window.innerWidth > MOBILE_FILTER_BREAKPOINT) {
       filterPanel.classList.add('is-open');
       filterToggle.setAttribute('aria-expanded', 'true');
     }
