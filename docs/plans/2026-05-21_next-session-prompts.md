@@ -424,8 +424,10 @@ Acceptance:
   - None.
 - Skipped (owner-only / blocked):
   - None.
-- Validation: lint=PASS, quality=PASS, test=FAIL (741 run, 1 unrelated pre-existing failure),
-  check-unsafe-dom=PASS, build=PASS, check-links=PASS, validate=PASS, playwright=PASS (5)
+- Validation: lint=PASS, quality=FAIL (pre-existing prettier drift in untouched files), test=FAIL
+  (741 run, 1 pre-existing failure in `tests/analytics.test.js`), check-unsafe-dom=PASS, build=PASS,
+  check-links=PASS, validate=PASS, playwright=FAIL (138 passed, 96 failed; missing host libs for
+  WebKit and pre-existing nav/lang smoke failures)
 - Screenshots:
   - `/tmp/playwright-logs/phase1-inline-cleanup-360-ltr.png`
   - `/tmp/playwright-logs/phase1-inline-cleanup-360-rtl.png`
