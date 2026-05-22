@@ -232,3 +232,18 @@ test('NAV_DATA labels are present (langToggle, openMenu, closeMenu, mainNav)', a
     assert.ok(NAV_DATA[lang].themeLabels?.dark, `${lang}.themeLabels.dark missing`);
   }
 });
+
+test('NAV_DATA canonical 7 surfaces are present and locale-parity aligned', async () => {
+  const { NAV_DATA } = await loadNav();
+  const expected = [
+    '/index.html',
+    '/tracker.html',
+    '/calculator.html',
+    '/countries/index.html',
+    '/shops.html',
+    '/learn.html',
+    '/insights.html',
+  ];
+  assert.deepEqual(NAV_DATA.en.canonicalSurfaces, expected);
+  assert.deepEqual(NAV_DATA.ar.canonicalSurfaces, expected);
+});

@@ -4,9 +4,7 @@
  */
 
 import * as cache from '../lib/cache.js';
-import { injectNav, updateNavLang } from '../components/nav.js';
-import { injectFooter } from '../components/footer.js';
-import { injectTicker, updateTickerLang } from '../components/ticker.js';
+import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 
 const STATE = {
@@ -183,17 +181,15 @@ async function init() {
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
 
-  const navResult = injectNav(STATE.lang, 0);
+  const shell = mountSharedShell({ lang: STATE.lang, depth: 0 });
+  const navResult = shell.navCtrl;
   injectBreadcrumbs('learn');
-  injectFooter(STATE.lang, 0);
-  injectTicker(STATE.lang, 0);
 
   navResult.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       cache.savePreference('lang', STATE.lang);
-      updateNavLang(STATE.lang);
-      updateTickerLang(STATE.lang);
+      shell.updateLang(STATE.lang);
       applyLang(STATE.lang);
     });
   });

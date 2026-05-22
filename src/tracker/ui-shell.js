@@ -1,8 +1,7 @@
 // tracker/ui-shell.js
-import { injectNav, updateNavLang } from '../components/nav.js';
-import { injectFooter } from '../components/footer.js';
-import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
-import { injectSpotBar, updateSpotBar, updateSpotBarLang } from '../components/spotBar.js';
+import { updateTicker } from '../components/ticker.js';
+import { updateSpotBar } from '../components/spotBar.js';
+import { mountSharedShell } from '../components/site-shell.js';
 import {
   syncUrlFromState,
   persistState,
@@ -28,8 +27,8 @@ function getFocusableElements(container) {
 
 export function mountShell(state, els, onModeChange, onLangChange) {
   // Mount shared shell
-  injectSpotBar(state.lang, 0);
-  const navCtrl = injectNav(state.lang, 0);
+  const shell = mountSharedShell({ lang: state.lang, depth: 0, withSpotBar: true });
+  const navCtrl = shell.navCtrl;
   navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       const from = state.lang;
@@ -40,16 +39,11 @@ export function mountShell(state, els, onModeChange, onLangChange) {
       if (from !== state.lang) {
         track(EVENTS.LANGUAGE_SWITCH, { from, to: state.lang, surface: 'tracker_shell' });
       }
-      updateNavLang(state.lang);
-      updateTickerLang(state.lang);
-      updateSpotBarLang(state.lang);
+      shell.updateLang(state.lang);
       if (els.language) els.language.value = state.lang;
       onLangChange();
     });
   });
-
-  injectFooter(state.lang, 0);
-  injectTicker(state.lang, 0);
 
   // Wire main mode tabs (Live / Compare / Archive / Exports / Method only)
   const tabs = Array.from(document.querySelectorAll('.tracker-mode-tab[data-mode]'));

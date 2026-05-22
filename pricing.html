@@ -120,10 +120,10 @@
               <h2>Pro</h2>
               <div class="pricing-price">
                 <span class="price-amount monthly-price">$4.99</span>
-                <span class="price-amount annual-price" style="display: none;">$4.17</span>
+                <span class="price-amount annual-price pricing-annual-price">$4.17</span>
                 <span class="price-period">/month</span>
               </div>
-              <div class="pricing-annual-note annual-price" style="display: none;">
+              <div class="pricing-annual-note annual-price pricing-annual-price">
                 Billed annually at $49.99
               </div>
             </div>
@@ -151,10 +151,10 @@
               <h2>API</h2>
               <div class="pricing-price">
                 <span class="price-amount monthly-price">$19.99</span>
-                <span class="price-amount annual-price" style="display: none;">$16.66</span>
+                <span class="price-amount annual-price pricing-annual-price">$16.66</span>
                 <span class="price-period">/month</span>
               </div>
-              <div class="pricing-annual-note annual-price" style="display: none;">
+              <div class="pricing-annual-note annual-price pricing-annual-price">
                 Billed annually at $199.99
               </div>
             </div>
@@ -292,13 +292,11 @@
     <div id="footer-container"></div>
 
     <script type="module">
-      import { injectNav } from './src/components/nav.js';
-      import { injectFooter } from './src/components/footer.js';
+      import { mountSharedShell } from './src/components/site-shell.js';
       import { track, EVENTS } from './src/lib/analytics.js';
 
       // Render navigation and footer
-      injectNav('en');
-      injectFooter('en');
+      mountSharedShell({ lang: 'en', depth: 0 });
 
       // -----------------------------------------------------------------------
       // Billing configuration check

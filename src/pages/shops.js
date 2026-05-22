@@ -1,10 +1,8 @@
 import { COUNTRIES } from '../config/countries.js';
 import { SHOPS as FALLBACK_SHOPS } from '../../data/shops.js';
 import { fetchShops as fetchSupabaseShops } from '../lib/supabase-data.js';
-import { injectNav, updateNavLang } from '../components/nav.js';
-import { injectFooter } from '../components/footer.js';
-import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
-import { injectSpotBar, updateSpotBarLang } from '../components/spotBar.js';
+import { updateTicker } from '../components/ticker.js';
+import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import * as cache from '../lib/cache.js';
 import { renderAdSlot } from '../components/adSlot.js';
@@ -1856,11 +1854,9 @@ function init() {
   }
   if (_pLang === 'ar' || _pLang === 'en') STATE.lang = _pLang;
 
-  injectSpotBar(STATE.lang, 0);
-  const navResult = injectNav(STATE.lang, 0);
+  const shell = mountSharedShell({ lang: STATE.lang, depth: 0, withSpotBar: true });
+  const navResult = shell.navCtrl;
   injectBreadcrumbs('shops');
-  injectFooter(STATE.lang, 0);
-  injectTicker(STATE.lang, 0);
   renderAdSlot('ad-top', 'leaderboard');
 
   // Populate ticker from cache so it never shows all-dashes
@@ -1887,9 +1883,7 @@ function init() {
     button.addEventListener('click', () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       cache.savePreference('lang', STATE.lang);
-      updateNavLang(STATE.lang);
-      updateTickerLang(STATE.lang);
-      updateSpotBarLang(STATE.lang);
+      shell.updateLang(STATE.lang);
       updateLanguage();
     });
   });

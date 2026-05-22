@@ -3,9 +3,7 @@
  * Injects shared nav/footer and wires language toggle.
  */
 
-import { injectNav, updateNavLang } from '../components/nav.js';
-import { injectFooter } from '../components/footer.js';
-import { injectTicker, updateTickerLang } from '../components/ticker.js';
+import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 
 const STATE = { lang: 'en' };
@@ -66,19 +64,17 @@ function init() {
   const saved = localStorage.getItem('gp_pref_lang');
   if (saved === 'ar' || saved === 'en') STATE.lang = saved;
 
-  const navCtrl = injectNav(STATE.lang, 0);
+  const shell = mountSharedShell({ lang: STATE.lang, depth: 0 });
+  const navCtrl = shell.navCtrl;
   injectBreadcrumbs('terms');
   navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       localStorage.setItem('gp_pref_lang', STATE.lang);
-      updateNavLang(STATE.lang);
-      updateTickerLang(STATE.lang);
+      shell.updateLang(STATE.lang);
       applyLanguage();
     });
   });
-  injectFooter(STATE.lang, 0);
-  injectTicker(STATE.lang, 0);
 
   applyLanguage();
 }
