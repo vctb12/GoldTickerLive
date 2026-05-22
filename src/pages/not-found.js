@@ -9,8 +9,7 @@
  * - Registers a global error handler to log SPA render errors.
  */
 
-import { injectNav, updateNavLang } from '../components/nav.js';
-import { injectFooter } from '../components/footer.js';
+import { mountSharedShell } from '../components/site-shell.js';
 import { TRANSLATIONS } from '../config/translations.js';
 import { getLiveFreshness } from '../lib/live-status.js';
 
@@ -178,9 +177,7 @@ window.addEventListener('error', (event) => {
 // ── Init ───────────────────────────────────────────────────────────────────
 
 const lang = getLang();
-
-injectNav(lang, 0);
-injectFooter(lang, 0);
+const shell = mountSharedShell({ lang, depth: 0 });
 applyLang(lang);
 prefillSearch();
 renderFreshnessPill(lang);
@@ -191,5 +188,5 @@ document.addEventListener('langchange', (e) => {
   const newLang = e.detail?.lang === 'ar' ? 'ar' : 'en';
   applyLang(newLang);
   renderFreshnessPill(newLang);
-  updateNavLang(newLang);
+  shell.updateLang(newLang);
 });

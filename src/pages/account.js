@@ -1,7 +1,4 @@
-import { injectNav, updateNavLang } from '../components/nav.js';
-import { injectFooter } from '../components/footer.js';
-import { injectTicker, updateTickerLang } from '../components/ticker.js';
-import { injectSpotBar, updateSpotBarLang } from '../components/spotBar.js';
+import { mountSharedShell } from '../components/site-shell.js';
 import { buildSupabaseBrowserClient } from '../lib/public-account-client.js';
 import { cacheKeyUserPrefs } from './dashboard.shared.js';
 
@@ -84,17 +81,13 @@ function getNextUrl() {
 
 async function init() {
   setLang(initialLang);
-  injectSpotBar(lang, 0);
-  const nav = injectNav(lang, 0);
-  injectFooter(lang, 0);
-  injectTicker(lang, 0);
+  const shell = mountSharedShell({ lang, depth: 0, withSpotBar: true });
+  const nav = shell.navCtrl;
 
   nav.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       setLang(lang === 'en' ? 'ar' : 'en');
-      updateNavLang(lang);
-      updateTickerLang(lang);
-      updateSpotBarLang(lang);
+      shell.updateLang(lang);
     });
   });
 

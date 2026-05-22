@@ -8,10 +8,9 @@ import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import { usdPerGram } from '../lib/price-calculator.js';
 import { formatPrice } from '../lib/formatter.js';
-import { injectNav, updateNavLang } from '../components/nav.js';
-import { injectFooter } from '../components/footer.js';
-import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
-import { injectSpotBar, updateSpotBar, updateSpotBarLang } from '../components/spotBar.js';
+import { updateTicker } from '../components/ticker.js';
+import { updateSpotBar } from '../components/spotBar.js';
+import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { renderAdSlot } from '../components/adSlot.js';
 import { renderFreshnessBadge } from '../components/FreshnessBadge.js';
@@ -1269,20 +1268,16 @@ async function init() {
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
 
-  injectSpotBar(STATE.lang, 0);
-  const navResult = injectNav(STATE.lang, 0);
+  const shell = mountSharedShell({ lang: STATE.lang, depth: 0, withSpotBar: true });
+  const navResult = shell.navCtrl;
   injectBreadcrumbs('calculator');
-  injectFooter(STATE.lang, 0);
-  injectTicker(STATE.lang, 0);
   renderAdSlot('ad-bottom', 'rectangle');
 
   navResult.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       cache.savePreference('lang', STATE.lang);
-      updateNavLang(STATE.lang);
-      updateTickerLang(STATE.lang);
-      updateSpotBarLang(STATE.lang);
+      shell.updateLang(STATE.lang);
       applyLang();
       updateSpotBadge();
     });

@@ -1,5 +1,4 @@
-import { injectNav } from '../components/nav.js';
-import { injectFooter } from '../components/footer.js';
+import { mountSharedShell } from '../components/site-shell.js';
 
 const depth = 2;
 const urlLang = new URLSearchParams(location.search).get('lang');
@@ -8,8 +7,7 @@ if (lang === 'ar') {
   document.documentElement.lang = 'ar';
   document.documentElement.dir = 'rtl';
 }
-injectNav(lang, depth);
-injectFooter(lang, depth);
+mountSharedShell({ lang, depth });
 
 // ---------------------------------------------------------------------------
 // i18n

@@ -1,0 +1,51 @@
+.shell-skeleton-price-lg {
+  inline-size: 10rem;
+  block-size: 2.2rem;
+}
+
+.shell-skeleton-karat {
+  inline-size: 3.5rem;
+  block-size: 1.1em;
+}
+
+.pricing-annual-price {
+  display: none;
+}
+
+.invest-skeleton-market {
+  min-inline-size: 8ch;
+}
+
+.invest-section-header--compact {
+  margin-block-end: 0;
+}
+
+.invest-section-title--compact {
+  font-size: var(--text-2xl);
+}
+
+.invest-section-sub--compact {
+  margin-block-start: var(--space-2);
+}
+
+.invest-guide-link-card {
+  display: block;
+  text-decoration: none;
+}
+
+.invest-guide-copy {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.invest-disclosure {
+  max-inline-size: 50rem;
+  margin: var(--space-8) auto;
+  padding: var(--space-4) var(--space-6);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-control);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}

@@ -59,6 +59,15 @@ const RAW_NAV_DATA = {
         description: 'Browse shops and gold markets',
       },
     ],
+    canonicalSurfaces: [
+      '/index.html',
+      '/tracker.html',
+      '/calculator.html',
+      '/countries/index.html',
+      '/shops.html',
+      '/learn.html',
+      '/insights.html',
+    ],
     groups: [
       {
         key: 'prices',
@@ -540,6 +549,15 @@ const RAW_NAV_DATA = {
         label: 'المحلات',
         description: 'تصفح المحلات وأسواق الذهب',
       },
+    ],
+    canonicalSurfaces: [
+      '/index.html',
+      '/tracker.html',
+      '/calculator.html',
+      '/countries/index.html',
+      '/shops.html',
+      '/learn.html',
+      '/insights.html',
     ],
     groups: [
       {

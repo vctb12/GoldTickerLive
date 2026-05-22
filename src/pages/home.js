@@ -14,10 +14,9 @@ import { REALTIME_POLLING_DEFAULTS } from '../lib/realtime-config.js';
 import { PrimaryQuoteProvider } from '../lib/quote-providers/primary-provider.js';
 import { SecondaryQuoteProvider } from '../lib/quote-providers/secondary-provider.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
-import { injectNav, updateNavLang } from '../components/nav.js';
-import { injectFooter } from '../components/footer.js';
-import { injectTicker, updateTicker, updateTickerLang } from '../components/ticker.js';
-import { injectSpotBar, updateSpotBar, updateSpotBarLang } from '../components/spotBar.js';
+import { updateTicker } from '../components/ticker.js';
+import { updateSpotBar } from '../components/spotBar.js';
+import { mountSharedShell } from '../components/site-shell.js';
 import { renderAdSlot } from '../components/adSlot.js';
 import { renderFreshnessBadge } from '../components/FreshnessBadge.js';
 import { renderMarketStatusPanel } from '../components/MarketStatusPanel.js';
@@ -1104,21 +1103,17 @@ async function init() {
   injectFaqSchema(document, buildMethodologyFaqSchema(lang));
 
   // Nav + footer + spot bar
-  injectSpotBar(lang, 0);
-  const navCtrl = injectNav(lang, 0);
+  const shell = mountSharedShell({ lang, depth: 0, withSpotBar: true });
+  const navCtrl = shell.navCtrl;
   navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       lang = lang === 'en' ? 'ar' : 'en';
       saveLang(lang);
-      updateNavLang(lang);
-      updateTickerLang(lang);
-      updateSpotBarLang(lang);
+      shell.updateLang(lang);
       applyLangToPage();
       injectFaqSchema(document, buildMethodologyFaqSchema(lang));
     });
   });
-  injectFooter(lang, 0);
-  injectTicker(lang, 0);
 
   // Render ad slots
   renderAdSlot('ad-top', 'leaderboard');

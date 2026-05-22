@@ -124,7 +124,7 @@
                 <h2 class="invest-panel-title" data-i18n="liveTitle"></h2>
               </div>
               <span class="invest-market-chip" id="invest-market-status">
-                <span class="invest-skeleton" style="min-width: 8ch"></span>
+                <span class="invest-skeleton invest-skeleton-market"></span>
               </span>
             </div>
 
@@ -252,13 +252,12 @@
             </div>
 
             <div class="invest-planner-results">
-              <div class="invest-section-header" style="margin-bottom: 0">
+              <div class="invest-section-header invest-section-header--compact">
                 <h3
-                  class="invest-section-title"
-                  style="font-size: 1.4rem"
+                  class="invest-section-title invest-section-title--compact"
                   data-i18n="planSnapshot"
                 ></h3>
-                <p class="invest-section-sub" style="margin-top: 0.45rem" data-i18n="planSub"></p>
+                <p class="invest-section-sub invest-section-sub--compact" data-i18n="planSub"></p>
               </div>
 
               <div class="invest-results-grid">
@@ -353,37 +352,34 @@
           <div class="invest-card-grid three">
             <a
               href="tracker.html"
-              class="invest-guide-card"
-              style="text-decoration: none; display: block"
+              class="invest-guide-card invest-guide-link-card"
             >
               <div class="invest-guide-head">
                 <h3 class="invest-guide-title">📈 Live Tracker</h3>
               </div>
-              <p style="color: var(--invest-muted); line-height: 1.65; margin: 0">
+              <p class="invest-guide-copy">
                 24+ countries, 7 karats, with a visible freshness label. Set price alerts and export data.
               </p>
             </a>
             <a
               href="calculator.html"
-              class="invest-guide-card"
-              style="text-decoration: none; display: block"
+              class="invest-guide-card invest-guide-link-card"
             >
               <div class="invest-guide-head">
                 <h3 class="invest-guide-title">🧮 Gold Calculator</h3>
               </div>
-              <p style="color: var(--invest-muted); line-height: 1.65; margin: 0">
+              <p class="invest-guide-copy">
                 Calculate gold value, scrap price, Zakat, and buying power — all in one tool.
               </p>
             </a>
             <a
               href="shops.html"
-              class="invest-guide-card"
-              style="text-decoration: none; display: block"
+              class="invest-guide-card invest-guide-link-card"
             >
               <div class="invest-guide-head">
                 <h3 class="invest-guide-title">🏪 Find a Shop</h3>
               </div>
-              <p style="color: var(--invest-muted); line-height: 1.65; margin: 0">
+              <p class="invest-guide-copy">
                 Browse listed gold shops by region, country, city, and specialty across GCC and
                 beyond.
               </p>
@@ -403,20 +399,7 @@
       </section>
 
       <!-- ═══════ AFFILIATE DISCLOSURE ═══════ -->
-      <section
-        class="invest-disclosure"
-        aria-label="Affiliate disclosure"
-        style="
-          max-width: 800px;
-          margin: 2rem auto;
-          padding: 1rem 1.5rem;
-          background: var(--color-surface-2);
-          border-radius: var(--radius-sm);
-          border: 1px solid var(--color-border-subtle);
-          font-size: 0.8rem;
-          color: var(--color-text-muted);
-        "
-      >
+      <section class="invest-disclosure" aria-label="Affiliate disclosure">
         <strong>Disclosure:</strong> Some links on this page may be affiliate links. If you purchase
         through these links, Gold Ticker Live may earn a small commission at no extra cost to you. This
         helps support the free tools and data we provide.
@@ -430,12 +413,12 @@
       import * as cache from './src/lib/cache.js';
       import * as calc from './src/lib/price-calculator.js';
       import * as fmt from './src/lib/formatter.js';
-      import { injectNav, updateNavLang } from './src/components/nav.js';
-      import { injectFooter } from './src/components/footer.js';
-      import { injectTicker, updateTicker, updateTickerLang } from './src/components/ticker.js';
+      import { updateTicker } from './src/components/ticker.js';
+      import { mountSharedShell } from './src/components/site-shell.js';
       import { injectBreadcrumbs } from './src/components/breadcrumbs.js';
 
       const LANG_KEY = 'user_prefs';
+      let shellCtrl = null;
 
       const MARKET_META = {
         AE: { currency: 'AED', name: { en: 'UAE', ar: 'الإمارات' }, decimals: 2 },
@@ -1488,8 +1471,7 @@
         renderFaq();
         renderPlanner();
         renderLiveCard();
-        updateNavLang(state.lang);
-        updateTickerLang(state.lang);
+        shellCtrl?.updateLang(state.lang);
       }
 
       async function fetchLiveData() {
@@ -1533,7 +1515,8 @@
       async function init() {
         state.lang = getLang();
 
-        const navCtrl = injectNav(state.lang, 0);
+        shellCtrl = mountSharedShell({ lang: state.lang, depth: 0 });
+        const navCtrl = shellCtrl.navCtrl;
         injectBreadcrumbs('invest');
         navCtrl.getLangToggleButtons().forEach((btn) => {
           btn.addEventListener('click', () => {
@@ -1542,9 +1525,6 @@
             applyLang();
           });
         });
-
-        injectFooter(state.lang, 0);
-        injectTicker(state.lang, 0);
 
         const stub = {
           lang: state.lang,
