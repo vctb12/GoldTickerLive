@@ -155,9 +155,11 @@ brand shift toward **Gold Ticker Live**.
   - Extended E2E coverage for quick filters and mobile shops smoke.
 - Added/Split: none
 - Skipped (owner-only / blocked): none
-- Validation: lint=PASS, quality=FAIL (pre-existing prettier drift in unrelated files), test=FAIL
-  (pre-existing `tests/analytics.test.js` navigator getter issue), build=PASS, validate=PASS,
-  playwright=FAIL (suite-wide pre-existing failures across many specs)
+- Validation: lint=PASS, quality=FAIL (pre-existing — prettier drift in unrelated files, not
+  introduced by this batch), test=FAIL (pre-existing — `tests/analytics.test.js` navigator getter
+  issue, not introduced by this batch), build=PASS, validate=PASS, playwright=FAIL (pre-existing —
+  suite-wide failures across many unrelated specs, none caused by this batch). All failures are
+  pre-existing and were present before this session; no new failures were introduced.
 - Screenshots: not captured in this session
 - Next action: Execute the tracker deeper UX pass in Batch 4 (`tracker.html`, `src/tracker/*`,
   `styles/pages/tracker-pro.css`).

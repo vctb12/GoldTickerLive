@@ -163,7 +163,7 @@ test.describe('Shops directory page', () => {
     const quickFilters = page.locator('#shops-mobile-quick-filters .shops-quick-filter-chip');
     await expect(quickFilters.first()).toBeVisible();
 
-    const verifiedChip = quickFilters.filter({ hasText: /verified|موثقة/i }).first();
+    const verifiedChip = page.locator('[data-quick-filter="verified-only"]');
     await expect(verifiedChip).toHaveAttribute('aria-pressed', 'false');
     await verifiedChip.click();
     await expect(verifiedChip).toHaveAttribute('aria-pressed', 'true');

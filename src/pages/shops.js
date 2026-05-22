@@ -1501,32 +1501,38 @@ function renderMobileQuickFilters() {
   const container = document.getElementById('shops-mobile-quick-filters');
   if (!container) return;
 
+  const isAtDefaults =
+    STATE.listingTab === DEFAULT_LISTING_TAB &&
+    STATE.region === 'all' &&
+    STATE.country === 'all' &&
+    STATE.city === 'all' &&
+    STATE.specialty === 'all' &&
+    !STATE.verifiedOnly &&
+    !STATE.search.trim();
+
   const quickFilters = [
     {
       key: 'reset',
       label: t('clearAllFiltersShort'),
-      active:
-        STATE.listingTab === DEFAULT_LISTING_TAB &&
-        STATE.region === 'all' &&
-        STATE.country === 'all' &&
-        STATE.city === 'all' &&
-        STATE.specialty === 'all' &&
-        !STATE.verifiedOnly &&
-        !STATE.search.trim(),
+      type: 'command',
+      disabled: isAtDefaults,
     },
     {
       key: 'listing:verified_shop',
       label: t('tabVerified'),
+      type: 'tab',
       active: STATE.listingTab === 'verified_shop',
     },
     {
       key: 'listing:market_cluster',
       label: t('tabMarkets'),
+      type: 'tab',
       active: STATE.listingTab === 'market_cluster',
     },
     {
       key: 'verified-only',
       label: t('verifiedOnly'),
+      type: 'toggle',
       active: STATE.verifiedOnly,
     },
   ];
@@ -1536,7 +1542,14 @@ function renderMobileQuickFilters() {
     button.type = 'button';
     button.className = `shops-quick-filter-chip${item.active ? ' is-active' : ''}`;
     button.setAttribute('data-quick-filter', item.key);
-    button.setAttribute('aria-pressed', item.active ? 'true' : 'false');
+    if (item.type === 'toggle') {
+      button.setAttribute('aria-pressed', item.active ? 'true' : 'false');
+    } else if (item.type === 'tab') {
+      button.setAttribute('aria-selected', item.active ? 'true' : 'false');
+    } else if (item.type === 'command') {
+      button.disabled = Boolean(item.disabled);
+      button.setAttribute('aria-disabled', item.disabled ? 'true' : 'false');
+    }
     button.textContent = item.label;
     return button;
   });
