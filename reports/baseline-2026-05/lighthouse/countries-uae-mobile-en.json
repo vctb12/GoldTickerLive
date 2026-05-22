@@ -1,0 +1,52 @@
+{
+  "lighthouseVersion": "13.x",
+  "requestedUrl": "https://goldtickerlive.com/countries/uae/",
+  "_phase0": {
+    "status": "pending",
+    "note": "Chrome cannot make network connections in the agent sandbox. Run .github/workflows/phase0-lighthouse-baseline.yml on GitHub Actions to populate real scores.",
+    "generatedAt": "2026-05-21T20:22:40.423Z",
+    "slug": "countries-uae",
+    "formFactor": "mobile",
+    "locale": "en"
+  },
+  "categories": {
+    "performance": {
+      "score": null,
+      "title": "Performance"
+    },
+    "accessibility": {
+      "score": null,
+      "title": "Accessibility"
+    },
+    "best-practices": {
+      "score": null,
+      "title": "Best Practices"
+    },
+    "seo": {
+      "score": null,
+      "title": "SEO"
+    }
+  },
+  "audits": {
+    "largest-contentful-paint": {
+      "id": "largest-contentful-paint",
+      "displayValue": "pending",
+      "numericValue": null
+    },
+    "cumulative-layout-shift": {
+      "id": "cumulative-layout-shift",
+      "displayValue": "pending",
+      "numericValue": null
+    },
+    "total-blocking-time": {
+      "id": "total-blocking-time",
+      "displayValue": "pending",
+      "numericValue": null
+    },
+    "first-contentful-paint": {
+      "id": "first-contentful-paint",
+      "displayValue": "pending",
+      "numericValue": null
+    }
+  }
+}

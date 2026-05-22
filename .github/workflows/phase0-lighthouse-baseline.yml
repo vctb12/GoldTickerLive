@@ -1,0 +1,103 @@
+# ------------------------------------------------------------------
+# Phase 0 — Lighthouse Baseline Capture
+# Runs Lighthouse (mobile + desktop, EN + AR) against a local preview
+# server built from this branch for the 7 canonical surfaces, then commits
+# the results back to reports/baseline-2026-05/lighthouse/.
+#
+# Trigger: workflow_dispatch (manual) or first push to any
+#          copilot/revamp-* branch that adds page-inventory.json.
+#
+# Permissions: write (to push the reports back to the branch).
+# ------------------------------------------------------------------
+name: Phase 0 — Lighthouse Baseline Capture
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Branch to commit baseline results to'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: phase0-lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse-baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          ref: ${{ github.event.inputs.target_branch || github.ref }}
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        env:
+          JWT_SECRET: ci-placeholder-not-real
+          ADMIN_PASSWORD: ci-placeholder
+          ADMIN_ACCESS_PIN: '000000'
+        run: npm run build
+
+      - name: Copy static content not bundled by Vite
+        run: |
+          cp -r assets dist/
+          cp -r styles dist/
+          cp -r countries dist/
+          [ -d content ] && cp -r content dist/ || true
+          cp sw.js dist/
+          cp robots.txt dist/
+          cp sitemap.xml dist/ || true
+          cp manifest.json dist/
+          cp favicon.svg dist/
+
+      - name: Start preview server
+        run: |
+          nohup npx serve dist -p 4173 --no-clipboard > /tmp/serve.log 2>&1 &
+          sleep 5
+          curl -s -o /dev/null -w "Server status: %{http_code}\n" http://localhost:4173/
+
+      - name: Install Lighthouse
+        run: npm install -g lighthouse@13
+
+      - name: Run Lighthouse baselines (EN)
+        run: node scripts/node/run-lighthouse-baseline.js --base-url http://localhost:4173 --locale en --force
+
+      - name: Run Lighthouse baselines (AR)
+        run: node scripts/node/run-lighthouse-baseline.js --base-url http://localhost:4173 --locale ar --force
+
+      - name: Generate summaries
+        run: node scripts/node/generate-lighthouse-summary.js
+
+      - name: Commit baselines
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/baseline-2026-05/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore(phase0): add Lighthouse baselines [skip ci]"
+            git push
+          fi
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: phase0-lighthouse-baselines
+          path: reports/baseline-2026-05/lighthouse/
+          retention-days: 90
