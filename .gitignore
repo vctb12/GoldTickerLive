@@ -21,6 +21,8 @@ node_modules/
 .vscode/*
 !.vscode/mcp.example.json
 .vscode/mcp.json
+.cursor/*
+!.cursor/mcp.json
 .idea/
 
 # Environment
