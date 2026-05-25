@@ -48,19 +48,19 @@ GitHub Actions → Python scripts → X/Twitter posts (hourly)
 
 ### 2A. GitHub Actions Secrets (Repository Settings → Secrets → Actions)
 
-| Secret Name                 | Purpose                                  | Where to Get                                       | Status                                   |
-| --------------------------- | ---------------------------------------- | -------------------------------------------------- | ---------------------------------------- |
-| `GOLDPRICEZ_API_KEY`        | Gold price API key (api.goldpricez.com)  | https://goldpricez.com — sign up, dashboard        | **Active** — used by all price workflows |
-| `CONSUMER_KEY`              | X/Twitter OAuth 1.0a API Key             | X Developer Portal → App → Keys and Tokens         | **Active** — hourly posting              |
-| `CONSUMER_SECRET`           | X/Twitter OAuth 1.0a API Secret          | X Developer Portal → App → Keys and Tokens         | **Active** — hourly posting              |
-| `ACCESS_TOKEN`              | X/Twitter Access Token (Read+Write)      | X Developer Portal → Generate                      | **Active** — hourly posting              |
-| `ACCESS_TOKEN_SECRET`       | X/Twitter Access Token Secret            | X Developer Portal → Generate                      | **Active** — hourly posting              |
-| `SUPABASE_URL`              | Supabase project URL                     | Supabase Dashboard → Settings → API → URL          | **Active** — DB sync, Python workflows   |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service-role key (bypasses RLS) | Supabase Dashboard → Settings → API → service_role | **Active** — server-side only            |
-| `TELEGRAM_BOT_TOKEN`        | Telegram Bot API token                   | @BotFather on Telegram                             | **Active** — alerts                      |
-| `TELEGRAM_CHANNEL_ID`       | Telegram channel/group ID                | Channel username or numeric ID                     | **Active** — alerts                      |
-| `DISCORD_WEBHOOK_URL`       | Discord webhook URL                      | Discord channel → Integrations → Webhooks          | **Active** — alerts                      |
-| `SUPABASE_MCP_TOKEN`        | Supabase MCP bearer token (optional)     | Supabase Dashboard → Account → Access Tokens       | Optional                                 |
+| Secret Name                 | Purpose                                  | Where to Get                                       | Status                                                                     |
+| --------------------------- | ---------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------- |
+| `GOLDPRICEZ_API_KEY`        | Gold price API key (api.goldpricez.com)  | https://goldpricez.com — sign up, dashboard        | **Active** — used by all price workflows                                   |
+| `CONSUMER_KEY`              | X/Twitter OAuth 1.0a API Key             | X Developer Portal → App → Keys and Tokens         | **Active** — hourly posting                                                |
+| `CONSUMER_SECRET`           | X/Twitter OAuth 1.0a API Secret          | X Developer Portal → App → Keys and Tokens         | **Active** — hourly posting                                                |
+| `ACCESS_TOKEN`              | X/Twitter Access Token (Read+Write)      | X Developer Portal → Generate                      | **Active** — hourly posting                                                |
+| `ACCESS_TOKEN_SECRET`       | X/Twitter Access Token Secret            | X Developer Portal → Generate                      | **Active** — hourly posting                                                |
+| `SUPABASE_URL`              | Supabase project URL                     | Supabase Dashboard → Settings → API → URL          | **Active** — DB sync, Python workflows                                     |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service-role key (bypasses RLS) | Supabase Dashboard → Settings → API → service_role | **Active** — server-side only                                              |
+| `TELEGRAM_BOT_TOKEN`        | Telegram Bot API token                   | @BotFather on Telegram                             | **Active** — alerts                                                        |
+| `TELEGRAM_CHANNEL_ID`       | Telegram channel/group ID                | Channel username or numeric ID                     | **Active** — alerts                                                        |
+| `DISCORD_WEBHOOK_URL`       | Discord webhook URL                      | Discord channel → Integrations → Webhooks          | **Active** — alerts                                                        |
+| `SUPABASE_MCP_TOKEN`        | Supabase MCP bearer token (legacy docs)  | Supabase Dashboard → Account → Access Tokens       | Deprecated/unused in workflows — use local `SUPABASE_ACCESS_TOKEN` instead |
 
 > **Important:** Twitter workflow YAML maps these secrets to env vars named `TWITTER_API_KEY`,
 > `TWITTER_API_SECRET`, `TWITTER_ACCESS_TOKEN`, `TWITTER_ACCESS_TOKEN_SECRET` internally. The GitHub
@@ -70,11 +70,16 @@ GitHub Actions → Python scripts → X/Twitter posts (hourly)
 
 #### Required for server startup / `npm test`
 
-| Variable           | Purpose                            | Default      |
-| ------------------ | ---------------------------------- | ------------ |
-| `JWT_SECRET`       | Signs JWT admin tokens (32+ chars) | — (required) |
-| `ADMIN_PASSWORD`   | Admin panel password               | — (required) |
-| `ADMIN_ACCESS_PIN` | 6+ digit PIN gating admin login    | — (required) |
+| Variable         | Purpose                            | Default      |
+| ---------------- | ---------------------------------- | ------------ |
+| `JWT_SECRET`     | Signs JWT admin tokens (32+ chars) | — (required) |
+| `ADMIN_PASSWORD` | Admin panel password               | — (required) |
+
+#### Optional for admin PIN gating
+
+| Variable           | Purpose                         | Default                      |
+| ------------------ | ------------------------------- | ---------------------------- |
+| `ADMIN_ACCESS_PIN` | 6+ digit PIN gating admin login | PIN gate disabled when unset |
 
 #### Gold Price Providers
 
@@ -185,9 +190,10 @@ nvm use   # or ensure Node 24+
 # 3. Install dependencies
 npm install
 
-# 4. Set required env vars (minimum for npm test to pass)
+# 4. Set required env vars
 export JWT_SECRET="any-random-string-32-chars-or-more"
 export ADMIN_PASSWORD="any-password"
+# Optional: enables admin PIN gate
 export ADMIN_ACCESS_PIN="123456"
 
 # 5. Copy env template for full development
@@ -289,7 +295,7 @@ npm start
 | -------------------- | ------------ | -------------------------------- |
 | `health_check.yml`   | Periodic     | Site + API health check          |
 | `uptime-monitor.yml` | Every 30 min | Ping site, alert if down         |
-| `spike_alert.yml`    | Hourly (:30) | Alert on >2% price spike         |
+| `spike_alert.yml`    | Every 15 min | Alert on >2% price spike         |
 | `check-alerts.yml`   | Periodic     | Process user alert subscriptions |
 
 ### Data & Sync
@@ -458,8 +464,10 @@ Paste-ready task starters:
 
 ### Active Gold Price Provider
 
-- **Production:** GoldPriceZ (via `gold-price-fetch.yml`)
-- **Bakeoff candidates:** Metal Sentinel, Finnhub, FMP, GoldAPI.io, Twelve Data
+- **Production fetch chain:** `gold-price-fetch.yml` runs the provider-adapter chain from
+  `GOLD_PROVIDER_ORDER` (currently `gold_api_com,twelvedata_xauusd,fmp_gcusd`)
+- **GoldPriceZ:** available via key/legacy paths, but not the first provider in the production fetch
+  chain
 - **Provider order configured in:** `gold-price-fetch.yml` and `.env.example`
 
 ### Client Polling

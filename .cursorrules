@@ -28,6 +28,7 @@
 # Required env vars — server/lib/auth.js throws at startup without these
 export JWT_SECRET=<random 32+ char string>
 export ADMIN_PASSWORD=<any string>
+# Optional (enables PIN gate on admin login)
 export ADMIN_ACCESS_PIN=<6+ digit PIN>
 
 npm install                  # install dependencies
