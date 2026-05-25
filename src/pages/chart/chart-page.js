@@ -1,4 +1,4 @@
-import { CONSTANTS, KARATS } from '../../config/index.js';
+import { BASE_PATH, CONSTANTS, KARATS } from '../../config/index.js';
 import { formatPrice, formatTimestampShort } from '../../lib/formatter.js';
 import { mountSharedShell } from '../../components/site-shell.js';
 import { injectBreadcrumbs } from '../../components/breadcrumbs.js';
@@ -19,6 +19,16 @@ const PERIOD_TO_RANGE = {
   '1Y': '1Y',
   ALL: 'ALL',
 };
+
+function getShellDepth() {
+  const basePath = String(BASE_PATH || '/').replace(/\/+$/, '');
+  let pathname = window.location.pathname || '/';
+  if (basePath && pathname.startsWith(`${basePath}/`)) {
+    pathname = pathname.slice(basePath.length);
+  }
+  const normalized = pathname.replace(/\/index\.html$/, '/').replace(/\/$/, '');
+  return normalized.split('/').filter(Boolean).length;
+}
 
 const T = {
   en: {
@@ -155,7 +165,7 @@ function setupPage() {
   const tx = T[lang];
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
 
-  mountSharedShell({ lang, depth: 0, withSpotBar: true });
+  mountSharedShell({ lang, depth: getShellDepth(), withSpotBar: true });
   injectBreadcrumbs('tracker');
 
   const queryState = parseChartQuery(window.location.search);
@@ -259,11 +269,12 @@ function setupPage() {
       const period = button.getAttribute('data-chart-period');
       button.classList.toggle('is-active', period === state.period);
       button.addEventListener('click', () => {
+        if (period === state.period) return;
         state.period = period;
         document
           .querySelectorAll('[data-chart-period]')
           .forEach((item) => item.classList.toggle('is-active', item === button));
-        render();
+        loadHistory();
       });
     });
 
@@ -330,17 +341,22 @@ function setupPage() {
 
   async function loadHistory() {
     const range = PERIOD_TO_RANGE[state.period] || '30D';
-    const response = await fetch(
-      `/api/v1/prices/history?range=${encodeURIComponent(range)}&limit=5000`
-    );
-    if (!response.ok) {
+    try {
+      const response = await fetch(
+        `/api/v1/prices/history?range=${encodeURIComponent(range)}&limit=5000`
+      );
+      if (!response.ok) {
+        state.rawPoints = [];
+        render();
+        return;
+      }
+      const payload = await response.json();
+      state.rawPoints = payload?.data?.points || [];
+      render();
+    } catch {
       state.rawPoints = [];
       render();
-      return;
     }
-    const payload = await response.json();
-    state.rawPoints = payload?.data?.points || [];
-    render();
   }
 
   setupControls();

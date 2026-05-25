@@ -1,4 +1,4 @@
-import { CONSTANTS, KARATS } from '../config/index.js';
+import { BASE_PATH, CONSTANTS, KARATS } from '../config/index.js';
 import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { GoldChart } from '../components/chart.js';
@@ -25,6 +25,16 @@ export const KARAT_INFO = {
     ar: 'نقاء 75%. شائع في المجوهرات الأوروبية ومجوهرات الألماس. أكثر مقاومة للخدش.',
   },
 };
+
+function getShellDepth() {
+  const basePath = String(BASE_PATH || '/').replace(/\/+$/, '');
+  let pathname = window.location.pathname || '/';
+  if (basePath && pathname.startsWith(`${basePath}/`)) {
+    pathname = pathname.slice(basePath.length);
+  }
+  const normalized = pathname.replace(/\/index\.html$/, '/').replace(/\/$/, '');
+  return normalized.split('/').filter(Boolean).length;
+}
 
 export function calculateKaratPricePerGram(xauUsdPerOz, karatCode, currency = 'AED') {
   const purity = KARATS.find((item) => item.code === String(karatCode))?.purity ?? 1;
@@ -141,7 +151,7 @@ function wireCalculator(karat, lang) {
 
 async function init() {
   const { karat, lang } = getPageState();
-  mountSharedShell({ lang, depth: 0, withSpotBar: true });
+  mountSharedShell({ lang, depth: getShellDepth(), withSpotBar: true });
   injectBreadcrumbs('country');
 
   const title = document.getElementById('karat-page-title');

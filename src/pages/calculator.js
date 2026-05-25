@@ -388,15 +388,13 @@ function getPurityForKarat(code) {
 }
 
 function updateValueUrlState() {
-  const weightValue =
-    STATE.valueMode === 'weight'
-      ? document.getElementById('val-weight')?.value || ''
-      : document.getElementById('val-aed-amount')?.value || '';
   const query = serializeCalculatorUrlState({
-    weight: weightValue,
+    weight: document.getElementById('val-weight')?.value || '',
+    amount: document.getElementById('val-aed-amount')?.value || '',
     karat: document.getElementById('val-karat')?.value || '22',
     currency: document.getElementById('val-currency')?.value || 'AED',
     mode: document.querySelector('.calc-tab.active')?.dataset.calc || 'value',
+    valueMode: STATE.valueMode,
   });
   history.replaceState({}, '', `${location.pathname}${query}${location.hash}`);
 }
@@ -1121,22 +1119,8 @@ function wireInputs() {
 
   const modeWeightBtn = document.getElementById('val-mode-weight');
   const modeAedBtn = document.getElementById('val-mode-aed');
-  const weightField = document.getElementById('val-weight')?.closest('.calc-field');
-  const aedField = document.getElementById('val-aed-field');
-  const scrapToggleRow = document.getElementById('val-scrap-toggle')?.closest('.calc-field');
   const applyModeUi = () => {
-    const isWeight = STATE.valueMode === 'weight';
-    if (modeWeightBtn) modeWeightBtn.classList.toggle('is-active', isWeight);
-    if (modeAedBtn) modeAedBtn.classList.toggle('is-active', !isWeight);
-    if (weightField) weightField.hidden = !isWeight;
-    if (scrapToggleRow) scrapToggleRow.hidden = !isWeight;
-    if (aedField) aedField.hidden = isWeight;
-    if (!isWeight) {
-      const currencySelect = document.getElementById('val-currency');
-      if (currencySelect?.querySelector('option[value=\"AED\"]')) {
-        currencySelect.value = 'AED';
-      }
-    }
+    applyValueModeUi();
     calcValue();
   };
   if (modeWeightBtn) {
@@ -1152,6 +1136,26 @@ function wireInputs() {
     });
   }
   applyModeUi();
+}
+
+function applyValueModeUi() {
+  const modeWeightBtn = document.getElementById('val-mode-weight');
+  const modeAedBtn = document.getElementById('val-mode-aed');
+  const weightField = document.getElementById('val-weight')?.closest('.calc-field');
+  const aedField = document.getElementById('val-aed-field');
+  const scrapToggleRow = document.getElementById('val-scrap-toggle')?.closest('.calc-field');
+  const isWeight = STATE.valueMode === 'weight';
+  if (modeWeightBtn) modeWeightBtn.classList.toggle('is-active', isWeight);
+  if (modeAedBtn) modeAedBtn.classList.toggle('is-active', !isWeight);
+  if (weightField) weightField.hidden = !isWeight;
+  if (scrapToggleRow) scrapToggleRow.hidden = !isWeight;
+  if (aedField) aedField.hidden = isWeight;
+  if (!isWeight) {
+    const currencySelect = document.getElementById('val-currency');
+    if (currencySelect?.querySelector('option[value=\"AED\"]')) {
+      currencySelect.value = 'AED';
+    }
+  }
 }
 
 // ── Fetch live data ──────────────────────────────────────────────────────────
@@ -1451,10 +1455,15 @@ function applyUrlPreset() {
     });
   }
 
-  if (parsedCalc.weight) {
+  STATE.valueMode = parsedCalc.valueMode;
+  if (parsedCalc.valueMode === 'aed' && parsedCalc.amount) {
+    const amountInput = document.getElementById('val-aed-amount');
+    if (amountInput) amountInput.value = parsedCalc.amount;
+  } else if (parsedCalc.weight) {
     const valWeight = document.getElementById('val-weight');
     if (valWeight) valWeight.value = parsedCalc.weight;
   }
+  applyValueModeUi();
 
   const tabButton = document.querySelector(`.calc-tab[data-calc=\"${parsedCalc.mode}\"]`);
   if (tabButton instanceof HTMLElement) {
