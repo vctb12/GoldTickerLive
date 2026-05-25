@@ -882,6 +882,37 @@ export const TRANSLATIONS = {
     'country.freshness.fallback': 'Fallback',
     'country.freshness.unavailable': 'Unavailable',
     'country.freshness.fixed': 'AED fixed peg',
+
+    // Markets hub
+    'markets.heroTag': 'Global Gold Markets',
+    'markets.title': 'Gold Prices Across 24+ Countries',
+    'markets.sub':
+      'Live spot-linked reference prices across GCC, Levant, Africa, and global markets — by karat, by currency, always labeled.',
+    'markets.searchPlaceholder': 'Search countries…',
+    'markets.searchEmpty': 'No countries match your search.',
+    'markets.tabAll': 'All',
+    'markets.tabGcc': 'GCC',
+    'markets.tabLevant': 'Levant',
+    'markets.tabAfrica': 'Africa',
+    'markets.tabGlobal': 'Global',
+    'markets.cardViewPrices': 'View prices →',
+    'markets.explainerTitle': 'What We Show',
+    'markets.explainerBody':
+      'Each country page shows spot-linked gold reference prices converted to local currency using live exchange rates. These are bullion-equivalent estimates — not retail shop prices. Retail jewelry includes making charges, design premiums, and local taxes on top.',
+    'markets.disclaimer':
+      'All prices are reference estimates for informational purposes. Always confirm with your local retailer before making a purchase.',
+    'markets.methodLink': 'Read our methodology →',
+    'markets.faqTitle': 'Frequently Asked Questions',
+    'markets.faq1Q': 'Why do gold prices differ between countries?',
+    'markets.faq1A':
+      'Gold prices differ primarily because of local currency exchange rates, import duties, local taxes (like VAT or GST), and market-specific premiums. The underlying spot price in USD is globally consistent.',
+    'markets.faq2Q': 'Are these retail prices or reference prices?',
+    'markets.faq2A':
+      'These are spot-linked reference prices (bullion-equivalent estimates). Actual retail prices at shops include making charges, design premiums, brand margins, and taxes.',
+    'markets.faq3Q': 'How often are prices updated?',
+    'markets.faq3A':
+      'Gold spot is fetched hourly during market hours. Exchange rates update daily. All prices carry a visible freshness label showing their exact update time.',
+    'markets.breadcrumb': 'Markets',
   },
   ar: {
     'header.title': 'أسعار الذهب المباشرة',
@@ -1753,5 +1784,36 @@ export const TRANSLATIONS = {
     'country.freshness.fallback': 'بديل احتياطي',
     'country.freshness.unavailable': 'غير متاح',
     'country.freshness.fixed': 'ربط الدرهم الثابت',
+
+    // Markets hub
+    'markets.heroTag': 'أسواق الذهب العالمية',
+    'markets.title': 'أسعار الذهب في أكثر من ٢٤ دولة',
+    'markets.sub':
+      'أسعار مرجعية مباشرة مرتبطة بالسعر الفوري عبر دول الخليج والشام وأفريقيا والأسواق العالمية — حسب العيار والعملة، مع وسم دائم.',
+    'markets.searchPlaceholder': 'ابحث عن دولة…',
+    'markets.searchEmpty': 'لا توجد دول مطابقة لبحثك.',
+    'markets.tabAll': 'الكل',
+    'markets.tabGcc': 'الخليج',
+    'markets.tabLevant': 'الشام',
+    'markets.tabAfrica': 'أفريقيا',
+    'markets.tabGlobal': 'عالمي',
+    'markets.cardViewPrices': 'عرض الأسعار ←',
+    'markets.explainerTitle': 'ما نعرضه',
+    'markets.explainerBody':
+      'تعرض كل صفحة دولة أسعار الذهب المرجعية المرتبطة بالسعر الفوري ومحوّلة إلى العملة المحلية باستخدام أسعار صرف مباشرة. هذه تقديرات مكافئة للسبائك — وليست أسعار تجزئة. تتضمن أسعار المجوهرات مصنعية وعلاوات تصميم وضرائب محلية إضافية.',
+    'markets.disclaimer':
+      'جميع الأسعار تقديرات مرجعية لأغراض المعلومات فقط. تأكد دائماً مع البائع المحلي قبل الشراء.',
+    'markets.methodLink': 'اقرأ منهجيتنا ←',
+    'markets.faqTitle': 'الأسئلة الشائعة',
+    'markets.faq1Q': 'لماذا تختلف أسعار الذهب بين الدول؟',
+    'markets.faq1A':
+      'تختلف أسعار الذهب أساساً بسبب أسعار صرف العملات المحلية والرسوم الجمركية والضرائب المحلية (مثل ضريبة القيمة المضافة) والعلاوات الخاصة بالسوق. السعر الفوري الأساسي بالدولار متسق عالمياً.',
+    'markets.faq2Q': 'هل هذه أسعار تجزئة أم أسعار مرجعية؟',
+    'markets.faq2A':
+      'هذه أسعار مرجعية مرتبطة بالسعر الفوري (تقديرات مكافئة للسبائك). تشمل أسعار التجزئة الفعلية في المحلات مصنعية وعلاوات تصميم وهوامش العلامة التجارية والضرائب.',
+    'markets.faq3Q': 'كم مرة يتم تحديث الأسعار؟',
+    'markets.faq3A':
+      'يتم جلب السعر الفوري للذهب كل ساعة خلال ساعات السوق. تتحدث أسعار الصرف يومياً. تحمل جميع الأسعار وسم حداثة مرئي يوضح وقت التحديث الدقيق.',
+    'markets.breadcrumb': 'الأسواق',
   },
 };
