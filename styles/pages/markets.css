@@ -36,7 +36,7 @@
   border-bottom: 1px solid var(--border-default);
   padding: var(--space-4) var(--space-5);
   position: sticky;
-  top: 0;
+  top: calc(var(--nav-height, 64px) + var(--spot-bar-height, 0px));
   z-index: 10;
 }
 
@@ -68,7 +68,7 @@
 .markets-search-input:focus {
   outline: none;
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 2px rgb(212 160 23 / 20%);
+  box-shadow: 0 0 0 2px var(--color-gold-glow);
 }
 
 .markets-region-tabs {

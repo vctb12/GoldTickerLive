@@ -13,49 +13,9 @@ let lang = 'en';
 let activeRegion = 'all';
 let searchQuery = '';
 
-// ── Country slug map (countries with dedicated pages) ──
-const COUNTRY_SLUGS = {
-  AE: 'uae',
-  SA: 'saudi-arabia',
-  KW: 'kuwait',
-  QA: 'qatar',
-  BH: 'bahrain',
-  OM: 'oman',
-  JO: 'jordan',
-  LB: 'lebanon',
-  IQ: 'iraq',
-  SY: 'syria',
-  PS: 'palestine',
-  YE: 'yemen',
-  EG: 'egypt',
-  LY: 'libya',
-  TN: 'tunisia',
-  DZ: 'algeria',
-  MA: 'morocco',
-  SD: 'sudan',
-  TR: 'turkey',
-  PK: 'pakistan',
-  IN: 'india',
-};
-
-// Region classification mapping
-const REGION_MAP = {
-  gcc: ['AE', 'SA', 'KW', 'QA', 'BH', 'OM'],
-  levant: ['JO', 'LB', 'IQ', 'SY', 'PS', 'YE'],
-  africa: ['EG', 'LY', 'TN', 'DZ', 'MA', 'SD'],
-  global: ['TR', 'PK', 'IN'],
-};
-
 function tx(key) {
   const fullKey = 'markets.' + key;
   return TRANSLATIONS[lang]?.[fullKey] ?? TRANSLATIONS.en?.[fullKey] ?? key;
-}
-
-function getCountryRegion(code) {
-  for (const [region, codes] of Object.entries(REGION_MAP)) {
-    if (codes.includes(code)) return region;
-  }
-  return 'global';
 }
 
 function getFilteredCountries() {
@@ -63,8 +23,7 @@ function getFilteredCountries() {
 
   // Region filter
   if (activeRegion !== 'all') {
-    const regionCodes = REGION_MAP[activeRegion] || [];
-    countries = countries.filter((c) => regionCodes.includes(c.code));
+    countries = countries.filter((c) => c.group === activeRegion);
   }
 
   // Search filter
@@ -101,8 +60,7 @@ function renderGrid() {
   if (empty) empty.hidden = true;
 
   for (const country of countries) {
-    const slug = COUNTRY_SLUGS[country.code];
-    const href = slug ? `../../countries/${slug}/gold-price/` : null;
+    const href = country.slug ? `../../countries/${country.slug}/gold-price/` : null;
     const name = lang === 'ar' ? country.nameAr : country.nameEn;
 
     const card = el(href ? 'a' : 'div', {

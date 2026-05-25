@@ -107,7 +107,7 @@ const LEGACY_LEARN_COPY = Object.freeze({
     'pricing-markets-h3': 'أين يُحدَّد السعر؟',
     'callout-spot-title': 'بيانات أسعارنا',
     'callout-spot-body':
-      'نجلب سعر XAU/USD من goldpricez.com كل 6 دقائق (يُحفظ في المستودع كـ data/gold_price.json). أسعار الصرف من open.er-api.com. جميع الأسعار تقديرية للمرجعية — وليست للتنفيذ التجاري.',
+      'نجلب سعر XAU/USD من gold-api.com كل ساعة خلال ساعات التداول (يُحفظ في المستودع كـ data/gold_price.json). أسعار الصرف من open.er-api.com. جميع الأسعار تقديرية للمرجعية — وليست للتنفيذ التجاري.',
     'aed-h2': 'الربط الثابت للدرهم الإماراتي بالدولار',
     'aed-intro':
       'يرتبط الدرهم الإماراتي (AED) بسعر ثابت قدره 3.6725 درهم لكل دولار أمريكي منذ نوفمبر 1997.',

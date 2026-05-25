@@ -1,16 +1,9 @@
-import { CONSTANTS } from '../config/index.js';
+import { CONSTANTS, KARATS } from '../config/index.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { formatPrice } from '../lib/formatter.js';
 import { el, setText } from '../lib/safe-dom.js';
 
-const INLINE_CALC_KARATS = Object.freeze([
-  { code: '24', label: '24K' },
-  { code: '22', label: '22K' },
-  { code: '21', label: '21K' },
-  { code: '18', label: '18K' },
-  { code: '14', label: '14K' },
-  { code: '9', label: '9K' },
-]);
+const INLINE_CALC_KARATS = KARATS.map(({ code, labelEn }) => ({ code, label: labelEn }));
 
 const MIN_WEIGHT_GRAMS = 0.01;
 
@@ -49,20 +42,21 @@ function syncSelectOptions(select, options, selectedValue) {
 export function calculateInlineCalcReference({ goldPriceUsd, weight, karat, currency, rates }) {
   const parsedSpot = Number(goldPriceUsd);
   const parsedWeight = Number(weight);
-  const parsedKarat = Number(karat);
   const fxRate = getFxRate(currency, rates);
+  const karatEntry = KARATS.find((k) => k.code === String(karat));
+  const purity = karatEntry ? karatEntry.purity : null;
 
   if (
     !Number.isFinite(parsedSpot) ||
     !Number.isFinite(parsedWeight) ||
     parsedWeight < MIN_WEIGHT_GRAMS ||
-    !Number.isFinite(parsedKarat) ||
+    purity === null ||
     !Number.isFinite(fxRate)
   ) {
     return null;
   }
 
-  return (parsedSpot / CONSTANTS.TROY_OZ_GRAMS) * (parsedKarat / 24) * parsedWeight * fxRate;
+  return (parsedSpot / CONSTANTS.TROY_OZ_GRAMS) * purity * parsedWeight * fxRate;
 }
 
 export function initInlineCalc(opts = {}) {
