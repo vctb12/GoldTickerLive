@@ -46,6 +46,15 @@ const SHORT_RANGE_MS = {
   '7D': 604800000,
 };
 
+const CUSTOM_RANGE_MS = {
+  '1D': 86400000,
+  '1W': 604800000,
+  '1M': 30 * 86400000,
+  '3M': 90 * 86400000,
+  '6M': 180 * 86400000,
+  '1Y': 365 * 86400000,
+};
+
 const LIGHTWEIGHT_CDN = 'https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.3/+esm';
 
 export class GoldChart {
@@ -55,6 +64,7 @@ export class GoldChart {
     this.range = '1Y'; // default to show meaningful historical data
     this.snapshots = loadSnapshots();
     this._cachedDaily = []; // injected from STATE.history
+    this._customData = null;
     this._chart = null;
     this._series = null;
     this._ready = false;
@@ -65,6 +75,20 @@ export class GoldChart {
   /** Inject the daily history from STATE (called after cache load) */
   setDailyHistory(dailyHistory) {
     this._cachedDaily = Array.isArray(dailyHistory) ? dailyHistory : [];
+    if (this._ready) this._render();
+  }
+
+  /**
+   * Inject custom chart data in Lightweight Charts format:
+   * [{ time: 'YYYY-MM-DD' | unixSeconds, value: number }]
+   */
+  setCustomData(points) {
+    this._customData = Array.isArray(points) ? points : null;
+    if (this._ready) this._render();
+  }
+
+  clearCustomData() {
+    this._customData = null;
     if (this._ready) this._render();
   }
 
@@ -168,6 +192,50 @@ export class GoldChart {
 
   _getChartData() {
     const range = (this.range || '1Y').toUpperCase();
+
+    if (Array.isArray(this._customData) && this._customData.length) {
+      const normalized = this._customData
+        .map((point) => {
+          if (!point || typeof point !== 'object') return null;
+          const value = Number(point.value);
+          if (!Number.isFinite(value) || value <= 0) return null;
+          const asDate =
+            typeof point.time === 'string'
+              ? new Date(`${point.time}T00:00:00Z`)
+              : new Date(point.time * 1000);
+          if (!Number.isFinite(asDate.getTime())) return null;
+          return {
+            time: typeof point.time === 'string' ? point.time : Math.floor(asDate.getTime() / 1000),
+            value,
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => {
+          const aTime =
+            typeof a.time === 'string' ? new Date(`${a.time}T00:00:00Z`).getTime() : a.time * 1000;
+          const bTime =
+            typeof b.time === 'string' ? new Date(`${b.time}T00:00:00Z`).getTime() : b.time * 1000;
+          return aTime - bTime;
+        });
+      if (!normalized.length) return null;
+      if (range === 'ALL') return normalized;
+      const rangeMs = CUSTOM_RANGE_MS[range];
+      if (!rangeMs) return normalized;
+      const latest = normalized[normalized.length - 1];
+      const latestTime =
+        typeof latest.time === 'string'
+          ? new Date(`${latest.time}T00:00:00Z`).getTime()
+          : latest.time * 1000;
+      const cutoff = latestTime - rangeMs;
+      const filtered = normalized.filter((point) => {
+        const pointTime =
+          typeof point.time === 'string'
+            ? new Date(`${point.time}T00:00:00Z`).getTime()
+            : point.time * 1000;
+        return pointTime >= cutoff;
+      });
+      return filtered.length ? filtered : normalized;
+    }
 
     // Short ranges: use live snapshots for high resolution
     if (range === '24H' || range === '7D') {
