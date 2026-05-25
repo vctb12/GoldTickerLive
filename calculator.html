@@ -9,10 +9,10 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta http-equiv="X-Frame-Options" content="DENY" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <title>Gold Calculator — Value, Scrap, Zakat | Gold Ticker Live</title>
+    <title>Gold Price Calculator UAE — Grams to AED | Gold Ticker Live</title>
     <meta
       name="description"
-      content="Free gold calculator tools: calculate gold value by weight and karat, scrap gold price, Zakat on gold, and buying power. Live XAU/USD rates."
+      content="Free gold price calculator for UAE. Convert any weight and karat to AED or USD instantly. Includes 24K, 22K, 21K, 18K, 14K, 10K."
     />
     <link rel="canonical" href="https://goldtickerlive.com/calculator.html" />
     <link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/calculator.html" />
@@ -281,6 +281,10 @@
               1 oz
             </button>
           </div>
+          <div class="calc-mode-toggle" role="group" aria-label="Value mode">
+            <button type="button" class="calc-preset-chip is-active" id="val-mode-weight">Weight → AED</button>
+            <button type="button" class="calc-preset-chip" id="val-mode-aed">AED → Weight</button>
+          </div>
           <div class="calc-form">
             <div class="calc-field">
               <label for="val-weight" id="val-weight-label">Weight</label>
@@ -305,8 +309,21 @@
               </div>
               <p class="calc-field-hint" id="val-weight-hint">Enter jewellery, coin, or bar weight.</p>
             </div>
+            <div class="calc-field" id="val-aed-field" hidden>
+                <label for="val-aed-amount" id="val-aed-label">Amount (AED)</label>
+                <input
+                  type="number"
+                  id="val-aed-amount"
+                  class="calc-input calc-input-full"
+                  min="0"
+                  step="0.01"
+                  placeholder="e.g. 5000"
+                  inputmode="decimal"
+                  autocomplete="off"
+                />
+            </div>
             <div class="calc-field">
-              <label for="val-karat" id="val-karat-label">Karat</label>
+                <label for="val-karat" id="val-karat-label">Karat</label>
               <select id="val-karat" class="calc-select calc-select-full">
                 <option value="24">24K — Pure Gold (99.9%)</option>
                 <option value="22" selected>22K (91.7%)</option>
@@ -335,6 +352,15 @@
                 Results stay spot-linked reference estimates in the selected currency.
               </p>
             </div>
+            <div class="calc-field">
+              <label class="calc-checkbox-row" for="val-scrap-toggle">
+                <input type="checkbox" id="val-scrap-toggle" />
+                <span id="val-scrap-toggle-label">Scrap / melt value (deduct 5% refinery fee)</span>
+              </label>
+              <p class="calc-field-hint" id="val-scrap-note" hidden>
+                Scrap value is approximate. Actual refinery rates vary (2–8%).
+              </p>
+            </div>
           </div>
           <div class="calc-result" id="val-result" hidden>
             <div class="calc-result-main">
@@ -351,6 +377,18 @@
               </button>
             </div>
             <div class="calc-result-breakdown" id="val-result-breakdown"></div>
+            <div class="calc-result-note" id="val-nisab-indicator" role="status" aria-live="polite"></div>
+            <div class="calc-result-actions">
+              <button class="calc-copy-btn" id="calc-copy-link-btn" type="button">Copy Link</button>
+              <button class="calc-copy-btn" id="calc-copy-image-btn" type="button">📸 Copy as image</button>
+            </div>
+            <div class="calc-share-card" id="calc-share-card" aria-label="Shareable result card">
+              <p class="calc-share-card__title">Gold Ticker Live</p>
+              <p class="calc-share-card__line" id="calc-share-card-main">—</p>
+              <p class="calc-share-card__line" id="calc-share-card-meta">—</p>
+              <p class="calc-share-card__line" id="calc-share-card-date">—</p>
+              <p class="calc-share-card__line">https://goldtickerlive.com/calculator.html</p>
+            </div>
           </div>
           <p class="calc-disclaimer" id="val-disclaimer">
             Indicative estimate only. Does not include making charges, dealer markup or taxes.

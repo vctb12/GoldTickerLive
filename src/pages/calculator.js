@@ -23,6 +23,7 @@ import {
   isAuthenticated as isAccountAuthenticated,
   redirectToAccount,
 } from '../lib/public-account-client.js';
+import { parseCalculatorUrlState, serializeCalculatorUrlState } from './calculator/url-state.js';
 
 /**
  * Helper: render a list of {label, value} rows into a container using safe
@@ -62,6 +63,7 @@ const STATE = {
   selectedKaratSpotlight: '22',
   selectedKaratCountries: '22',
   selectedUnitTable: 'gram',
+  valueMode: 'weight',
 };
 
 // ── Translations ────────────────────────────────────────────────────────────
@@ -385,6 +387,54 @@ function getPurityForKarat(code) {
   return 1;
 }
 
+function updateValueUrlState() {
+  const weightValue =
+    STATE.valueMode === 'weight'
+      ? document.getElementById('val-weight')?.value || ''
+      : document.getElementById('val-aed-amount')?.value || '';
+  const query = serializeCalculatorUrlState({
+    weight: weightValue,
+    karat: document.getElementById('val-karat')?.value || '22',
+    currency: document.getElementById('val-currency')?.value || 'AED',
+    mode: document.querySelector('.calc-tab.active')?.dataset.calc || 'value',
+  });
+  history.replaceState({}, '', `${location.pathname}${query}${location.hash}`);
+}
+
+function updateShareCard({
+  displayValue = '—',
+  weightGrams = null,
+  karat = '22',
+  currency = 'AED',
+  mode = 'weight',
+} = {}) {
+  const main = document.getElementById('calc-share-card-main');
+  const meta = document.getElementById('calc-share-card-meta');
+  const date = document.getElementById('calc-share-card-date');
+  if (main) {
+    main.textContent =
+      mode === 'weight'
+        ? `${weightGrams?.toFixed?.(3) ?? '—'} g · ${karat}K · ${currency}`
+        : `Budget mode · ${karat}K · ${currency}`;
+  }
+  if (meta) meta.textContent = `Estimated value: ${displayValue}`;
+  if (date) date.textContent = new Date().toISOString().slice(0, 10);
+}
+
+function updateNisabIndicator(weightGrams, purity) {
+  const indicator = document.getElementById('val-nisab-indicator');
+  if (!indicator) return;
+  const grams24k = Number(weightGrams || 0) * Number(purity || 0);
+  if (grams24k >= 85) {
+    indicator.textContent =
+      STATE.lang === 'ar'
+        ? '✓ هذا يتجاوز حد نصاب الزكاة (85غ عيار 24)'
+        : '✓ This exceeds the Zakat nisab threshold (85g 24K)';
+  } else {
+    indicator.textContent = STATE.lang === 'ar' ? '✗ أقل من حد النصاب' : '✗ Below nisab threshold';
+  }
+}
+
 // ── Analytics debounce ───────────────────────────────────────────────────────
 // Debounce calculator_use events so rapid keystrokes produce only one event.
 const _calcUseTimers = {};
@@ -399,20 +449,21 @@ function _trackCalcUse(tool, params) {
 // ── Calculator 1: Value ─────────────────────────────────────────────────────
 function calcValue() {
   const weightRaw = parseFloat(document.getElementById('val-weight')?.value);
+  const amountRaw = parseFloat(document.getElementById('val-aed-amount')?.value);
   const unit = document.getElementById('val-unit')?.value ?? 'gram';
   const karat = document.getElementById('val-karat')?.value ?? '22';
   const currency = document.getElementById('val-currency')?.value ?? 'AED';
+  const scrapChecked = Boolean(document.getElementById('val-scrap-toggle')?.checked);
 
   const result = document.getElementById('val-result');
   if (!result) return;
 
-  if (isNaN(weightRaw) || weightRaw <= 0 || !STATE.spotUsdPerOz) {
+  if (!STATE.spotUsdPerOz) {
     result.hidden = true;
     hideMobileDock();
     return;
   }
 
-  const weightGrams = toGrams(weightRaw, unit);
   const purity = getPurityForKarat(karat);
   const rate = getRate(currency);
   if (!rate) {
@@ -422,24 +473,63 @@ function calcValue() {
   }
 
   const gramPriceUsd = usdPerGram(STATE.spotUsdPerOz, purity);
-  const totalUsd = gramPriceUsd * weightGrams;
-  const totalLocal = totalUsd * rate;
+  const gramPriceLocal = gramPriceUsd * rate;
+  let weightGrams = toGrams(weightRaw, unit);
+  let totalLocal = gramPriceLocal * weightGrams;
+
+  if (STATE.valueMode === 'aed') {
+    if (isNaN(amountRaw) || amountRaw <= 0) {
+      result.hidden = true;
+      hideMobileDock();
+      return;
+    }
+    totalLocal = amountRaw;
+    weightGrams = totalLocal / gramPriceLocal;
+    const modeLabel = document.getElementById('val-result-label');
+    if (modeLabel)
+      modeLabel.textContent = STATE.lang === 'ar' ? 'الوزن التقديري' : 'Estimated Weight';
+    document.getElementById('val-result-value').textContent = `${weightGrams.toFixed(3)} g`;
+  } else if (isNaN(weightRaw) || weightRaw <= 0) {
+    result.hidden = true;
+    hideMobileDock();
+    return;
+  } else {
+    const modeLabel = document.getElementById('val-result-label');
+    if (modeLabel) modeLabel.textContent = t('val_result_label');
+    if (scrapChecked) totalLocal *= 0.95;
+    document.getElementById('val-result-value').textContent = formatPrice(
+      totalLocal,
+      currency,
+      ['KWD', 'BHD', 'OMR', 'JOD'].includes(currency) ? 3 : 2
+    );
+  }
+
+  const totalUsd = totalLocal / rate;
 
   const decimals = ['KWD', 'BHD', 'OMR', 'JOD'].includes(currency) ? 3 : 2;
 
-  document.getElementById('val-result-value').textContent = formatPrice(
-    totalLocal,
-    currency,
-    decimals
-  );
-
   const breakdown = document.getElementById('val-result-breakdown');
-  renderBreakdownRows(breakdown, [
+  const rows = [
     ['Weight', `${weightGrams.toFixed(3)} g`],
     [`Purity (${karat}K)`, `${(purity * 100).toFixed(1)}%`],
     [`Spot price per gram (${currency})`, formatPrice(gramPriceUsd * rate, currency, decimals)],
     ['USD equivalent', formatPrice(totalUsd, 'USD', 2)],
-  ]);
+  ];
+  if (scrapChecked && STATE.valueMode === 'weight') {
+    rows.push(['Refinery deduction', '5%']);
+  }
+  renderBreakdownRows(breakdown, rows);
+  const scrapNote = document.getElementById('val-scrap-note');
+  if (scrapNote) scrapNote.hidden = !scrapChecked;
+  updateNisabIndicator(weightGrams, purity);
+  updateShareCard({
+    displayValue: document.getElementById('val-result-value').textContent,
+    weightGrams,
+    karat,
+    currency,
+    mode: STATE.valueMode,
+  });
+  updateValueUrlState();
 
   result.hidden = false;
   updateTrackerHandoff({ karat, currency });
@@ -803,8 +893,23 @@ function applyLang() {
   set('calc-convert-title', t('tab_convert'));
   set('calc-value-h2', t('val_title'));
   set('calc-value-desc', t('val_desc'));
+  set('val-mode-weight', STATE.lang === 'ar' ? 'الوزن ← درهم' : 'Weight → AED');
+  set('val-mode-aed', STATE.lang === 'ar' ? 'درهم ← الوزن' : 'AED → Weight');
   set('val-weight-label', t('val_weight'));
   set('val-weight-hint', t('val_weight_hint'));
+  set('val-aed-label', STATE.lang === 'ar' ? 'المبلغ (درهم)' : 'Amount (AED)');
+  set(
+    'val-scrap-toggle-label',
+    STATE.lang === 'ar'
+      ? 'قيمة خردة / صهر (خصم 5% رسوم تكرير)'
+      : 'Scrap / melt value (deduct 5% refinery fee)'
+  );
+  set(
+    'val-scrap-note',
+    STATE.lang === 'ar'
+      ? 'قيمة الخردة تقديرية. تختلف معدلات التكرير الفعلية (2–8%).'
+      : 'Scrap value is approximate. Actual refinery rates vary (2–8%).'
+  );
   set('val-karat-label', t('val_karat'));
   set('val-currency-label', t('val_currency'));
   set('val-currency-hint', t('val_currency_hint'));
@@ -844,11 +949,16 @@ function applyLang() {
   renderCalculatorTrustAddons();
   set('calc-country-link', t('country_link'));
   document.querySelectorAll('.calc-copy-btn').forEach((btn) => {
+    if (btn.id === 'calc-copy-link-btn' || btn.id === 'calc-copy-image-btn') {
+      return;
+    }
     const isSave = btn.classList.contains('calc-save-btn');
     const label = isSave ? t('save_result') : t('copy_result');
     btn.textContent = label;
     btn.setAttribute('aria-label', label);
   });
+  set('calc-copy-link-btn', STATE.lang === 'ar' ? 'نسخ الرابط' : 'Copy Link');
+  set('calc-copy-image-btn', STATE.lang === 'ar' ? '📸 نسخ كصورة' : '📸 Copy as image');
 
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
@@ -958,6 +1068,7 @@ function setupTabs() {
         p.classList.toggle('active', isTarget);
         p.hidden = !isTarget;
       });
+      updateValueUrlState();
       refreshMobileDockForActiveTab();
       track(EVENTS.TOOL_USE, { tool: TOOL_MAP[target] || target });
     });
@@ -969,6 +1080,7 @@ function wireInputs() {
   const on = (id, fn) => document.getElementById(id)?.addEventListener('input', fn);
 
   ['val-weight', 'val-unit', 'val-karat', 'val-currency'].forEach((id) => on(id, calcValue));
+  ['val-aed-amount', 'val-scrap-toggle'].forEach((id) => on(id, calcValue));
   ['scrap-weight', 'scrap-unit', 'scrap-karat', 'scrap-payout', 'scrap-currency'].forEach((id) =>
     on(id, calcScrap)
   );
@@ -1006,6 +1118,40 @@ function wireInputs() {
         .forEach((c) => c.classList.remove('is-active'));
     });
   }
+
+  const modeWeightBtn = document.getElementById('val-mode-weight');
+  const modeAedBtn = document.getElementById('val-mode-aed');
+  const weightField = document.getElementById('val-weight')?.closest('.calc-field');
+  const aedField = document.getElementById('val-aed-field');
+  const scrapToggleRow = document.getElementById('val-scrap-toggle')?.closest('.calc-field');
+  const applyModeUi = () => {
+    const isWeight = STATE.valueMode === 'weight';
+    if (modeWeightBtn) modeWeightBtn.classList.toggle('is-active', isWeight);
+    if (modeAedBtn) modeAedBtn.classList.toggle('is-active', !isWeight);
+    if (weightField) weightField.hidden = !isWeight;
+    if (scrapToggleRow) scrapToggleRow.hidden = !isWeight;
+    if (aedField) aedField.hidden = isWeight;
+    if (!isWeight) {
+      const currencySelect = document.getElementById('val-currency');
+      if (currencySelect?.querySelector('option[value=\"AED\"]')) {
+        currencySelect.value = 'AED';
+      }
+    }
+    calcValue();
+  };
+  if (modeWeightBtn) {
+    modeWeightBtn.addEventListener('click', () => {
+      STATE.valueMode = 'weight';
+      applyModeUi();
+    });
+  }
+  if (modeAedBtn) {
+    modeAedBtn.addEventListener('click', () => {
+      STATE.valueMode = 'aed';
+      applyModeUi();
+    });
+  }
+  applyModeUi();
 }
 
 // ── Fetch live data ──────────────────────────────────────────────────────────
@@ -1222,9 +1368,61 @@ function initCopyBtn() {
       fallback();
     }
   });
+
+  const copyLinkBtn = document.getElementById('calc-copy-link-btn');
+  if (copyLinkBtn) {
+    copyLinkBtn.addEventListener('click', async () => {
+      const link = `${location.origin}${location.pathname}${location.search}`;
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(link);
+        const original = copyLinkBtn.textContent;
+        copyLinkBtn.textContent = t('copied_result');
+        setTimeout(() => {
+          copyLinkBtn.textContent = original || 'Copy Link';
+        }, 1400);
+      }
+    });
+  }
+
+  const copyImageBtn = document.getElementById('calc-copy-image-btn');
+  if (copyImageBtn) {
+    copyImageBtn.addEventListener('click', async () => {
+      const card = document.getElementById('calc-share-card');
+      if (!card) return;
+      if (!window.html2canvas) {
+        await new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+          script.onload = () => resolve();
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+      }
+      if (!window.html2canvas) return;
+      const canvas = await window.html2canvas(card, { backgroundColor: '#ffffff', scale: 2 });
+      if (navigator.clipboard?.write) {
+        canvas.toBlob(async (blob) => {
+          if (!blob) return;
+          try {
+            if (window.ClipboardItem) {
+              await navigator.clipboard.write([new window.ClipboardItem({ [blob.type]: blob })]);
+              return;
+            }
+            throw new Error('Clipboard image API unavailable');
+          } catch {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = 'gold-calculator-result.png';
+            link.click();
+          }
+        });
+      }
+    });
+  }
 }
 
 function applyUrlPreset() {
+  const parsedCalc = parseCalculatorUrlState(location.search);
   const params = new URLSearchParams(location.search);
   const requestedCountry = params.get('country');
   const requestedCurrency = (params.get('currency') || '').toUpperCase();
@@ -1233,7 +1431,7 @@ function applyUrlPreset() {
 
   if (selectedCountry?.slug) STATE.countrySlug = selectedCountry.slug;
 
-  const nextCurrency = selectedCountry?.currency || requestedCurrency;
+  const nextCurrency = selectedCountry?.currency || requestedCurrency || parsedCalc.currency;
   if (nextCurrency) {
     ['val-currency', 'scrap-currency', 'zakat-currency', 'buy-currency'].forEach((id) => {
       const control = document.getElementById(id);
@@ -1243,18 +1441,29 @@ function applyUrlPreset() {
     });
   }
 
-  if (requestedKarat && KARATS.some((karat) => karat.code === requestedKarat)) {
+  const finalKarat = requestedKarat || parsedCalc.karat;
+  if (finalKarat && KARATS.some((karat) => karat.code === finalKarat)) {
     ['val-karat', 'scrap-karat', 'zakat-karat', 'buy-karat'].forEach((id) => {
       const control = document.getElementById(id);
-      if (control?.querySelector(`option[value=\"${requestedKarat}\"]`)) {
-        control.value = requestedKarat;
+      if (control?.querySelector(`option[value=\"${finalKarat}\"]`)) {
+        control.value = finalKarat;
       }
     });
   }
 
+  if (parsedCalc.weight) {
+    const valWeight = document.getElementById('val-weight');
+    if (valWeight) valWeight.value = parsedCalc.weight;
+  }
+
+  const tabButton = document.querySelector(`.calc-tab[data-calc=\"${parsedCalc.mode}\"]`);
+  if (tabButton instanceof HTMLElement) {
+    tabButton.click();
+  }
+
   updateTrackerHandoff({
     currency: nextCurrency || 'AED',
-    karat: requestedKarat || '22',
+    karat: finalKarat || '22',
   });
 }
 
