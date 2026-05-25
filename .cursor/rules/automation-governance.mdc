@@ -1,0 +1,33 @@
+---
+alwaysApply: true
+---
+
+# Automation Governance
+
+> Applies to all Cursor agents and background automations on vctb12/GoldTickerLive.
+
+## Before creating any PR
+- Check open PRs first. Do not create a PR if one already exists for the same fix or the same files.
+- Reference @PLAN.md before starting any task to check for context or blockers.
+
+## Scope discipline
+- Only edit files directly required by the task.
+- Do not refactor, rename, or restructure files that aren't part of the task scope.
+- Do not add dependencies without explicit instruction.
+
+## Production-critical files — extra caution required
+These files affect live production. Do not modify without a dry-run or explicit owner approval:
+- `post_gold.yml` — hourly X posting
+- `gold-price-fetch.yml` — live price data
+- `data/gold_price.json` — committed price state
+- `sw.js` — service worker (affects PWA cache)
+- `src/config/constants.js` — AED peg, troy ounce constant
+
+## Merge behavior (fully autonomous mode)
+- Agents may merge PRs **only after** all required CI checks pass (green).
+- Never merge if CodeQL, Gold Bakeoff Readiness, or Perf & QA Checks are failing.
+- Never merge to main if `post_gold.yml` or `gold-price-fetch.yml` are the only changed files — those need human review.
+
+## Secrets
+- Public repo. Never write secret values to any file, PR body, log, or comment.
+- `.env.example` contains variable names only — never real values.
