@@ -320,8 +320,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -432,8 +431,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -470,8 +468,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -508,8 +505,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -546,8 +542,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -584,8 +579,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -622,8 +616,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -660,8 +653,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -698,8 +690,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -736,8 +727,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -773,8 +763,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList",
-        "ItemList"
+        "Article",
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -811,8 +801,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -849,8 +838,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -887,8 +875,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -999,8 +986,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -1037,8 +1023,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -1075,8 +1060,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -1113,8 +1097,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -1188,8 +1171,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -1226,8 +1208,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -1263,8 +1244,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList",
-        "ItemList"
+        "Article",
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -1338,8 +1319,7 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -1649,9 +1629,7 @@
         }
       ],
       "jsonLdTypes": [
-        "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -1687,9 +1665,7 @@
         }
       ],
       "jsonLdTypes": [
-        "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -1725,9 +1701,7 @@
         }
       ],
       "jsonLdTypes": [
-        "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -1799,9 +1773,7 @@
         }
       ],
       "jsonLdTypes": [
-        "Article",
-        "BreadcrumbList",
-        "FAQPage"
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
