@@ -62,14 +62,36 @@ a prior refactor. `dom-builders.js` / `dropdown-builders.js` are dead **duplicat
 
 ### Bucket B — report hygiene
 
-- [x] Regenerate `reports/seo/governance.json` (stale per validate).
-- [x] Regenerate `reports/analytics/event-inventory.json` (stale per validate).
-- [x] Refresh `reports/cleanup-audit/` so the audit reflects current HEAD.
+- [x] Regenerate `reports/seo/governance.json` (stale per validate) — now 706 pages, validate green.
+- [x] Regenerate `reports/analytics/event-inventory.json` (stale per validate) — 37 events.
 
-### Bucket C — dead exports inside live files
+### Bucket C — fully-dead module removal
 
-- [x] Run knip-style unused-export sweep on `src/`; remove safe dead exports flagged with zero
-      consumers (excluding defensive `safe-dom.js` / `cache.js` fallbacks).
+- [x] `src/utils/slugify.js` (60 lines) — not imported anywhere; all 5 exports (`karatToSlug`,
+      `slugToKarat`, `countryCodeToSlug`, `cityToSlug`, `toKebabCase`) have zero references
+      repo-wide. Removed the file and its stale annotation in
+      `scripts/node/audit-freshness-coverage.js`.
+
+## Documented follow-ups (deliberately NOT touched this PR)
+
+Per the conservative cleanup guardrails ("if in doubt, leave it alone"), these are real slimming
+opportunities that need owner judgement because they are **unshipped/authored** rather than dead:
+
+- **`src/learn-hub/` (1265 lines, incl. 41KB authored article content).** A complete article-hub
+  system (`article-renderer`, `content-model`, `content-registry`, `toc-renderer`, barrel
+  `index.js`) that is **not imported by any page** — `learn.html` ships the simpler
+  `src/pages/learn.js` instead. Either wire it into a content hub or remove it; both are owner calls
+  on product roadmap.
+- **Scattered unused named exports** (verified zero consumers across src/tests/scripts/server/html):
+  `learn-hub/*` exports, `lib/export.js::exportCurrentViewCSV`,
+  `lib/freshness-pulse.js::FRESHNESS_PULSE_MIN_INTERVAL_MS`, `lib/freshness.js::deriveMarketState`,
+  `lib/search.js::matchesQuery`, `pages/shops/filters.js::buildFilterDropdowns`,
+  `pages/shops/helpers.js::{detailsConfidenceTier,isDirectShop,loadShortlistFromStorage}`,
+  `routes/routeRegistry.js::{ROUTE_PATTERNS,getCountrySlugs,getCitySlugs,getKaratSlugs,resolveRoute}`,
+  `seo/metadataGenerator.js::generateMetadata`, `social/postTemplates.js::getTemplate`,
+  `utils/routeBuilder.js::generateAllRoutes`. These live in cohesive utility/registry modules whose
+  other exports are still consumed; trimming them is safe but should be reviewed module-by-module so
+  the intended public API surface isn't accidentally gutted.
 
 ## Carve-outs preserved
 
