@@ -66,7 +66,7 @@ const ALLOW_LIST = {
 
 // Modules that, when loaded as a `<script src=…>`, register the SW.
 // Anchored to the path string so a link re-arrangement still matches.
-const SW_LOADER_SIGNATURES = ['src/pages/home.js'];
+const SW_LOADER_SIGNATURES = ['src/pages/home.js', 'src/pages/invest.js'];
 
 function readPage(file) {
   return fs.readFileSync(path.join(ROOT, file), 'utf8');
