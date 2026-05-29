@@ -98,16 +98,6 @@
   color: var(--color-live);
 }
 
-.endpoint-badge--post {
-  background: var(--color-fixed-bg);
-  color: var(--color-fixed);
-}
-
-.endpoint-badge--delete {
-  background: var(--color-error-bg);
-  color: var(--color-error);
-}
-
 .endpoint-path {
   font-size: 0.875rem;
   font-weight: 600;

@@ -250,26 +250,6 @@
 }
 
 /* ── Breadcrumbs for market pages ───────────────────── */
-.mkt-breadcrumbs {
-  padding: 0.65rem var(--space-5);
-  background: var(--color-surface-2);
-  border-bottom: 1px solid var(--color-border-subtle);
-  font-size: 0.78rem;
-}
-
-.mkt-breadcrumbs a {
-  color: var(--color-gold-dark);
-  text-decoration: none;
-}
-
-.mkt-breadcrumbs a:hover {
-  text-decoration: underline;
-}
-
-.mkt-breadcrumbs span {
-  color: var(--color-text-faint);
-  margin: 0 0.4rem;
-}
 
 /* ── Responsive ─────────────────────────────────────── */
 @media (width <= 640px) {

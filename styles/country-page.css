@@ -348,108 +348,10 @@
 }
 
 /* Better hero price display */
-.cp-hero-prices {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--space-5);
-}
-
-.cp-price-chip {
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-3) 1.1rem;
-  background: rgb(255 255 255 / 7%);
-  border: 1px solid rgb(255 255 255 / 12%);
-  border-radius: var(--radius-md);
-  backdrop-filter: blur(6px);
-  min-width: 110px;
-}
-
-.cp-price-chip-label {
-  font-size: 0.72rem;
-  color: rgb(255 255 255 / 50%);
-  font-weight: var(--weight-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: var(--space-1);
-}
-
-.cp-price-chip-value {
-  font-size: 1.15rem;
-  font-weight: var(--weight-extrabold);
-  color: var(--text-on-dark);
-  font-variant-numeric: tabular-nums;
-}
 
 /* Better related countries */
-.cp-related-link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 0.55rem 1.1rem;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-pill);
-  font-size: 0.84rem;
-  font-weight: var(--weight-semibold);
-  color: var(--color-text-muted);
-  text-decoration: none;
-  transition: all 0.18s ease;
-}
-
-.cp-related-link:hover {
-  border-color: var(--color-gold);
-  color: var(--color-gold-dark);
-  background: var(--color-gold-bg);
-  transform: translateY(-1px);
-  text-decoration: none;
-}
 
 /* FAQ improvements */
-.cp-faq-item {
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  margin-bottom: 0.6rem;
-  background: var(--color-surface);
-}
-
-.cp-faq-item > summary {
-  padding: var(--space-4) 1.25rem;
-  font-weight: var(--weight-bold);
-  cursor: pointer;
-  list-style: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  font-size: 0.95rem;
-}
-
-.cp-faq-item > summary::after {
-  content: '+';
-  font-size: 1.2rem;
-  font-weight: var(--weight-normal);
-  color: var(--color-gold);
-  flex-shrink: 0;
-  transition: transform 0.2s ease;
-}
-
-.cp-faq-item[open] > summary::after {
-  transform: rotate(45deg);
-}
-
-.cp-faq-item > summary::-webkit-details-marker {
-  display: none;
-}
-
-.cp-faq-item .cp-faq-answer {
-  padding: 0 1.25rem var(--space-4);
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  line-height: var(--leading-relaxed);
-}
 
 /* Inner tools row */
 .cp-tools-row {
@@ -470,21 +372,6 @@
   margin-top: var(--space-3);
 }
 
-@media (width <= 640px) {
-  .cp-hero-prices {
-    gap: var(--space-2);
-  }
-
-  .cp-price-chip {
-    min-width: 90px;
-    padding: 0.6rem 0.8rem;
-  }
-
-  .cp-price-chip-value {
-    font-size: var(--text-base);
-  }
-}
-
 /* ── Comprehensive Mobile Fixes ── */
 @media (width <= 768px) {
   .cp-hero {
@@ -494,48 +381,11 @@
   .cp-section {
     padding: var(--space-5) var(--space-4) !important;
   }
-
-  .cp-price-chips-grid {
-    gap: 0.6rem;
-  }
 }
 
 @media (width <= 480px) {
   .cp-hero {
     padding: var(--space-6) var(--space-4) var(--space-5) !important;
-  }
-
-  .cp-hero-prices {
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  .cp-price-chip {
-    min-width: min(90px, 42vw);
-    padding: 0.6rem 0.7rem;
-  }
-
-  .cp-price-chip-label {
-    font-size: 0.68rem;
-  }
-
-  .cp-price-chip-value {
-    font-size: 0.95rem;
-  }
-
-  .cp-related-links {
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-
-  .cp-related-link {
-    font-size: 0.78rem;
-    padding: 0.3rem 0.65rem;
-  }
-
-  .cp-faq-item summary {
-    font-size: 0.88rem;
-    padding: 0.85rem var(--space-4);
   }
 
   .cp-tools-row {
@@ -544,10 +394,6 @@
 }
 
 @media (width <= 380px) {
-  .cp-price-chip {
-    min-width: calc(50% - var(--space-1));
-  }
-
   .cp-hero {
     padding: 1.5rem 0.85rem 1.25rem !important;
   }

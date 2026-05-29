@@ -95,13 +95,6 @@
 .content-panel,
 .content-next,
 .content-form-card,
-.content-faq-card {
-  background: var(--gradient-surface);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-card);
-  box-shadow: var(--elev-2);
-}
-
 .content-panel {
   display: grid;
   gap: var(--space-3);
@@ -121,29 +114,8 @@
 }
 
 .content-panel h2,
-.content-faq-card h2 {
-  font-size: var(--text-xl);
-  letter-spacing: var(--tracking-tight);
-  line-height: var(--leading-tight);
-  margin: 0 0 var(--space-2);
-}
-
 .content-panel p,
 .content-next p,
-.content-faq-card p {
-  color: var(--text-secondary);
-  line-height: var(--leading-relaxed);
-  margin: 0;
-}
-
-.content-check-list {
-  color: var(--text-secondary);
-  display: grid;
-  gap: var(--space-2);
-  margin: var(--space-3) 0 0;
-  padding-inline-start: 1.2rem;
-}
-
 .content-next {
   align-items: center;
   display: grid;
