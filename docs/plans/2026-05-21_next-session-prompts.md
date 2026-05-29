@@ -5,11 +5,11 @@ status: in-progress
 priority: P1
 class: B
 owner: @vctb12
-last_run_at: "2026-05-28T09:30:00Z"
+last_run_at: "2026-05-29T13:25:00Z"
 last_run_pr: "https://github.com/vctb12/GoldTickerLive/pull/362"
 last_run_agent: copilot
-slices_remaining_estimate: 6
-next_action: "Phase 3b: finish render.js teardown (move remaining orchestration helpers into hero/chart/compare modules so render.js becomes a pure re-export barrel), then begin Phase 2 leaf #1 (migrate methodology.html to learn-hub content model)."
+slices_remaining_estimate: 5
+next_action: "Phase 2 leaf #1: migrate methodology.html to learn-hub content model and wire redirects/link updates once content parity is complete."
 blocked_on: ""
 guardrails_reviewed: true
 skills_used: [gold-ticker-live-audit, frontend-design-system]
