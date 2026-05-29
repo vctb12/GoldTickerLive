@@ -32623,6 +32623,7 @@
         }
       ],
       "jsonLdTypes": [
+        "Article",
         "BreadcrumbList"
       ],
       "hasStructuredData": true,
