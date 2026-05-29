@@ -284,6 +284,7 @@ test('calculator.html: numeric inputs keep mobile inputmode hints', () => {
   );
   const expectedModesById = new Map([
     ['val-weight', 'decimal'],
+    ['val-aed-amount', 'decimal'],
     ['scrap-weight', 'decimal'],
     ['scrap-payout', 'numeric'],
     ['zakat-weight', 'decimal'],

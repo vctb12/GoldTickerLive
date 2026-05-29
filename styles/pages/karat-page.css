@@ -1,0 +1,81 @@
+.karat-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-5);
+  display: grid;
+  gap: var(--space-4);
+}
+
+.karat-hero,
+.karat-card {
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-card);
+  background: var(--surface-primary);
+  padding: var(--space-4);
+}
+
+.karat-prices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.karat-price-item strong {
+  display: block;
+  font-size: var(--text-xl);
+  font-variant-numeric: tabular-nums;
+}
+
+#karat-mini-chart {
+  height: 40vh;
+  min-height: 240px;
+}
+
+.karat-calc-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.karat-calc-row input {
+  min-height: 44px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  padding: 0.4rem 0.7rem;
+}
+
+.karat-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.karat-table th,
+.karat-table td {
+  border-bottom: 1px solid var(--border-default);
+  padding: 0.55rem;
+  text-align: start;
+}
+
+.karat-sibling-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.karat-faq details {
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem;
+  background: var(--surface-secondary);
+}
+
+@media (width <= 640px) {
+  .karat-page {
+    padding: var(--space-4);
+  }
+
+  #karat-mini-chart {
+    height: 32vh;
+  }
+}

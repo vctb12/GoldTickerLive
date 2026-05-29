@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
-  "generatedAtDate": "2026-05-28",
+  "generatedAtDate": "2026-05-29",
   "summary": {
-    "totalHtmlFiles": 673,
-    "withCanonical": 671,
+    "totalHtmlFiles": 685,
+    "withCanonical": 683,
     "withoutCanonical": 2,
     "withOgImage": 520,
-    "withoutOgImage": 153,
-    "withJsonLd": 664,
+    "withoutOgImage": 165,
+    "withJsonLd": 676,
     "withoutJsonLd": 9,
-    "hreflangEnArPairs": 664,
+    "hreflangEnArPairs": 676,
     "noindexCount": 432
   },
   "records": [
@@ -71,12 +71,240 @@
       "jsonLdParseFailures": null
     },
     {
+      "path": "ar/chart/index.html",
+      "exempt": null,
+      "lang": "ar",
+      "dir": "rtl",
+      "title": "مخطط سعر الذهب الإمارات — الأسعار التاريخية | Gold Ticker Live",
+      "metaDescription": "مخطط تفاعلي لسعر الذهب في الإمارات. تتبع أسعار 24 و22 و21 و18 قيراط بالدرهم والدولار من يوم واحد حتى كامل التاريخ.",
+      "canonical": "https://goldtickerlive.com/ar/chart/",
+      "robots": null,
+      "ogTitle": "مخطط سعر الذهب الإمارات — الأسعار التاريخية | Gold Ticker Live",
+      "ogDescription": "مخطط تفاعلي لسعر الذهب في الإمارات. تتبع أسعار 24 و22 و21 و18 قيراط بالدرهم والدولار.",
+      "ogImage": null,
+      "ogUrl": "https://goldtickerlive.com/ar/chart/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": null,
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/ar/chart/"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/chart/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/chart/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "ar/gold-price/18k/index.html",
+      "exempt": null,
+      "lang": "ar",
+      "dir": "rtl",
+      "title": "سعر ذهب 18 قيراط في الإمارات اليوم | Gold Ticker Live",
+      "metaDescription": "سعر 18 قيراط المرجعي في الإمارات مع مخطط 7 أيام وجدول 30 يوماً وحاسبة وزن.",
+      "canonical": "https://goldtickerlive.com/ar/gold-price/18k/",
+      "robots": null,
+      "ogTitle": "سعر ذهب 18 قيراط في الإمارات اليوم | Gold Ticker Live",
+      "ogDescription": null,
+      "ogImage": null,
+      "ogUrl": "https://goldtickerlive.com/ar/gold-price/18k/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": null,
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/ar/gold-price/18k/"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/gold-price/18k/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/gold-price/18k/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "Dataset",
+        "Offer",
+        "Product"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "ar/gold-price/21k/index.html",
+      "exempt": null,
+      "lang": "ar",
+      "dir": "rtl",
+      "title": "سعر ذهب 21 قيراط في الإمارات اليوم | Gold Ticker Live",
+      "metaDescription": "سعر 21 قيراط المرجعي في الإمارات مع مخطط 7 أيام وجدول 30 يوماً وحاسبة وزن.",
+      "canonical": "https://goldtickerlive.com/ar/gold-price/21k/",
+      "robots": null,
+      "ogTitle": "سعر ذهب 21 قيراط في الإمارات اليوم | Gold Ticker Live",
+      "ogDescription": null,
+      "ogImage": null,
+      "ogUrl": "https://goldtickerlive.com/ar/gold-price/21k/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": null,
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/ar/gold-price/21k/"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/gold-price/21k/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/gold-price/21k/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "Dataset",
+        "Offer",
+        "Product"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "ar/gold-price/22k/index.html",
+      "exempt": null,
+      "lang": "ar",
+      "dir": "rtl",
+      "title": "سعر ذهب 22 قيراط في الإمارات اليوم | Gold Ticker Live",
+      "metaDescription": "سعر 22 قيراط المرجعي في الإمارات مع مخطط 7 أيام وجدول 30 يوماً وحاسبة وزن.",
+      "canonical": "https://goldtickerlive.com/ar/gold-price/22k/",
+      "robots": null,
+      "ogTitle": "سعر ذهب 22 قيراط في الإمارات اليوم | Gold Ticker Live",
+      "ogDescription": null,
+      "ogImage": null,
+      "ogUrl": "https://goldtickerlive.com/ar/gold-price/22k/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": null,
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/ar/gold-price/22k/"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/gold-price/22k/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/gold-price/22k/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "Dataset",
+        "Offer",
+        "Product"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "ar/gold-price/24k/index.html",
+      "exempt": null,
+      "lang": "ar",
+      "dir": "rtl",
+      "title": "سعر ذهب 24 قيراط في الإمارات اليوم | Gold Ticker Live",
+      "metaDescription": "سعر 24 قيراط المرجعي في الإمارات مع مخطط 7 أيام وجدول 30 يوماً وحاسبة وزن.",
+      "canonical": "https://goldtickerlive.com/ar/gold-price/24k/",
+      "robots": null,
+      "ogTitle": "سعر ذهب 24 قيراط في الإمارات اليوم | Gold Ticker Live",
+      "ogDescription": null,
+      "ogImage": null,
+      "ogUrl": "https://goldtickerlive.com/ar/gold-price/24k/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": null,
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/ar/gold-price/24k/"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/gold-price/24k/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/gold-price/24k/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "Dataset",
+        "Offer",
+        "Product"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "ar/methodology/index.html",
+      "exempt": null,
+      "lang": "ar",
+      "dir": "rtl",
+      "title": "كيف يتم حساب أسعار الذهب في الإمارات | Gold Ticker Live",
+      "metaDescription": "منهجية شفافة: كيف نجلب أسعار الذهب ونحوّلها إلى الدرهم ونوضح الفرق بين السعر الفوري وسعر التجزئة.",
+      "canonical": "https://goldtickerlive.com/ar/methodology/",
+      "robots": null,
+      "ogTitle": null,
+      "ogDescription": null,
+      "ogImage": null,
+      "ogUrl": "https://goldtickerlive.com/ar/methodology/",
+      "ogType": "article",
+      "twitterCard": null,
+      "twitterImage": null,
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/ar/methodology/"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/methodology/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/methodology/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
       "path": "calculator.html",
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Calculator — Value, Scrap, Zakat | Gold Ticker Live",
-      "metaDescription": "Free gold calculator tools: calculate gold value by weight and karat, scrap gold price, Zakat on gold, and buying power. Live XAU/USD rates.",
+      "title": "Gold Price Calculator UAE — Grams to AED | Gold Ticker Live",
+      "metaDescription": "Free gold price calculator for UAE. Convert any weight and karat to AED or USD instantly. Includes 24K, 22K, 21K, 18K, 14K, 10K.",
       "canonical": "https://goldtickerlive.com/calculator.html",
       "robots": null,
       "ogTitle": "Gold Calculator — Value, Scrap, Zakat | Gold Ticker Live",
@@ -98,6 +326,42 @@
         {
           "lang": "x-default",
           "href": "https://goldtickerlive.com/calculator.html"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "chart/index.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "Gold Price Chart UAE — Historical Prices (AED) | Gold Ticker Live",
+      "metaDescription": "Interactive gold price chart for UAE. Track 24K, 22K, 21K, 18K gold prices in AED and USD. 1 day to all-time history.",
+      "canonical": "https://goldtickerlive.com/chart/",
+      "robots": null,
+      "ogTitle": "Gold Price Chart UAE — Historical Prices (AED) | Gold Ticker Live",
+      "ogDescription": "Interactive gold price chart for UAE. Track 24K, 22K, 21K, 18K gold prices in AED and USD.",
+      "ogImage": null,
+      "ogUrl": "https://goldtickerlive.com/chart/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": null,
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/ar/chart/"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/chart/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/chart/"
         }
       ],
       "jsonLdTypes": [
@@ -24510,6 +24774,154 @@
       "jsonLdParseFailures": null
     },
     {
+      "path": "gold-price/18k/index.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "18K Gold Price UAE Today | Gold Ticker Live",
+      "metaDescription": "Live 18K gold reference price in UAE today with 7-day chart, 30-day table, calculator, and methodology context.",
+      "canonical": "https://goldtickerlive.com/gold-price/18k/",
+      "robots": null,
+      "ogTitle": "18K Gold Price UAE Today | Gold Ticker Live",
+      "ogDescription": null,
+      "ogImage": null,
+      "ogUrl": "https://goldtickerlive.com/gold-price/18k/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": null,
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/ar/gold-price/18k/"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/gold-price/18k/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/gold-price/18k/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "Offer"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "gold-price/21k/index.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "21K Gold Price in UAE Today (AED per gram) | Gold Ticker Live",
+      "metaDescription": "Live 21K gold reference price in UAE today with 7-day chart, 30-day table, calculator, and methodology context.",
+      "canonical": "https://goldtickerlive.com/gold-price/21k/",
+      "robots": null,
+      "ogTitle": "21K Gold Price in UAE Today (AED per gram) | Gold Ticker Live",
+      "ogDescription": null,
+      "ogImage": null,
+      "ogUrl": "https://goldtickerlive.com/gold-price/21k/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": null,
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/ar/gold-price/21k/"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/gold-price/21k/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/gold-price/21k/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "Offer"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "gold-price/22k/index.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "22K Gold Price UAE Today — Jewelry & Investment | Gold Ticker Live",
+      "metaDescription": "Live 22K gold reference price in UAE today with 7-day chart, 30-day table, calculator, and methodology context.",
+      "canonical": "https://goldtickerlive.com/gold-price/22k/",
+      "robots": null,
+      "ogTitle": "22K Gold Price UAE Today — Jewelry & Investment | Gold Ticker Live",
+      "ogDescription": null,
+      "ogImage": null,
+      "ogUrl": "https://goldtickerlive.com/gold-price/22k/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": null,
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/ar/gold-price/22k/"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/gold-price/22k/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/gold-price/22k/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "Offer"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "gold-price/24k/index.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "24K Gold Price in UAE Today (Live AED) | Gold Ticker Live",
+      "metaDescription": "Live 24K gold reference price in UAE today with 7-day chart, 30-day table, calculator, and methodology context.",
+      "canonical": "https://goldtickerlive.com/gold-price/24k/",
+      "robots": null,
+      "ogTitle": "24K Gold Price in UAE Today (Live AED) | Gold Ticker Live",
+      "ogDescription": null,
+      "ogImage": null,
+      "ogUrl": "https://goldtickerlive.com/gold-price/24k/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": null,
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/ar/gold-price/24k/"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/gold-price/24k/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/gold-price/24k/"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "Offer"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
       "path": "index.html",
       "exempt": null,
       "lang": "en",
@@ -24682,6 +25094,42 @@
         {
           "lang": "x-default",
           "href": "https://goldtickerlive.com/methodology.html"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "methodology/index.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "How Gold Prices Are Calculated in UAE | Gold Ticker Live",
+      "metaDescription": "Transparent methodology: how we source, convert, and display gold prices for UAE. Spot vs retail, AED conversion formula, karat purity explained.",
+      "canonical": "https://goldtickerlive.com/methodology/",
+      "robots": null,
+      "ogTitle": null,
+      "ogDescription": null,
+      "ogImage": null,
+      "ogUrl": "https://goldtickerlive.com/methodology/",
+      "ogType": "article",
+      "twitterCard": null,
+      "twitterImage": null,
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/ar/methodology/"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/methodology/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/methodology/"
         }
       ],
       "jsonLdTypes": [

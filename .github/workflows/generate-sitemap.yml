@@ -1,0 +1,39 @@
+name: Generate sitemap
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Generate sitemap without committing changes'
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+  push:
+    branches: [main]
+  schedule:
+    # Daily at 00:00 UTC to refresh sitemap lastmod dates.
+    - cron: '0 0 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  sitemap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/generate-sitemap.js
+      - if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'true' }}
+        run: git status --short public/sitemap.xml && git diff -- public/sitemap.xml
+      - if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true' }}
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Actions"
+          git add public/sitemap.xml
+          git diff --staged --quiet || git commit -m "chore: regenerate sitemap"
+          git push
