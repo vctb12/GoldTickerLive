@@ -11,8 +11,19 @@ async function loadEngine() {
   return import(url.href + `?v=${Date.now()}`);
 }
 
+/**
+ * Return a nowFn pinned to a Wednesday 12:00 UTC so market is always open.
+ * Advances 1ms per call to avoid zero-age edge cases.
+ */
+function marketOpenNowFn() {
+  // Wednesday 2026-01-07 12:00:00 UTC (mid-week, mid-session)
+  let ts = new Date('2026-01-07T12:00:00Z').getTime();
+  return () => ts++;
+}
+
 test('provider failover switches to secondary when primary keeps failing', async () => {
   const { createRealtimePricingEngine } = await loadEngine();
+  const nowFn = marketOpenNowFn();
   const primaryProvider = {
     providerId: 'primary-provider',
     async fetchQuote() {
@@ -24,8 +35,8 @@ test('provider failover switches to secondary when primary keeps failing', async
     async fetchQuote() {
       return {
         price: 3001,
-        providerTimestamp: new Date().toISOString(),
-        fetchedAt: new Date().toISOString(),
+        providerTimestamp: new Date(nowFn()).toISOString(),
+        fetchedAt: new Date(nowFn()).toISOString(),
         providerId: 'secondary-provider-cache',
         source: 'secondary-provider-cache',
         providerPathSuccessful: false,
@@ -37,6 +48,7 @@ test('provider failover switches to secondary when primary keeps failing', async
   const engine = createRealtimePricingEngine({
     primaryProvider,
     secondaryProvider,
+    nowFn,
     config: { activePollMs: 999999, hiddenPollMs: 999999, jitterMs: 0 },
   });
 

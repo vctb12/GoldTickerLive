@@ -104,23 +104,15 @@ const AUDIT_EXEMPTIONS = {
     'Pure formatter (locale/currency/time); callers own freshness. The three freshness keys appear in source.* translation keys, not as renderer branches.',
   'src/lib/price-calculator.js':
     'Pure math library (purity × grams × spot); no DOM, no time dimension.',
-  'src/routes/routeRegistry.js':
-    'Static route metadata (paths, titles, descriptions); no runtime prices.',
   'src/search/searchIndex.js':
     'Search index generator; "live" is an entity-type label, not a freshness key.',
-  'src/seo/metadataGenerator.js':
-    'Server-side SEO meta builder (titles, descriptions); static per-page.',
   'src/seo/seoHead.js': 'SEO head snippet emitter; static metadata.',
-  'src/social/postTemplates.js':
-    'Social post copy templates; rendered by scripts/python at post time, not in the browser.',
   'src/tracker/events.js':
     "'live' is the tracker mode-name (VALID_MODES), not a freshness key. Tracker freshness is owned by src/tracker/render.js.",
   'src/tracker/state.js':
     "'live' is the default tracker mode-name; tracker freshness lives on _state.live.updatedAt and is consumed by render.js.",
   'src/tracker/ui-shell.js':
     "'live' references are mode-name checks; now forwards hasLiveFailure into updateSpotBar, which owns the freshness label.",
-  'src/utils/inputValidation.js':
-    'Input validators (regex); tokens like "karat" appear in validator names/messages, not prices.',
   'src/pages/learn.js': 'Static educational content page; no live prices.',
   'src/pages/methodology.js': 'Static methodology page; no live prices.',
   'src/pages/shops.js':
