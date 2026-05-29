@@ -121,25 +121,8 @@
 }
 
 /* ── Body Layout ──────────────────────────────────── */
-.insights-body {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2.5rem 1.5rem 4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-}
 
 /* ── Section Headings ─────────────────────────────── */
-.insights-section-heading {
-  font-size: 1.35rem;
-  font-weight: var(--weight-extrabold);
-  color: var(--color-text);
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--color-gold);
-  display: inline-block;
-}
 
 /* ── Featured Article ─────────────────────────────── */
 .insights-featured {
@@ -149,40 +132,6 @@
   border-radius: var(--radius-lg);
   padding: 2rem 2.25rem;
   box-shadow: var(--shadow-md);
-}
-
-.insights-featured-tag {
-  font-size: 0.72rem;
-  font-weight: var(--weight-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: var(--color-gold);
-  margin-bottom: 0.75rem;
-}
-
-.insights-featured-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-  margin-bottom: 1.5rem;
-}
-
-.insights-meta-sep {
-  opacity: 0.4;
-}
-
-.insights-tag-chip {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: var(--weight-bold);
-  padding: 0.2rem 0.65rem;
-  border-radius: var(--radius-pill);
-  background: var(--color-gold-tint);
-  color: var(--color-gold-dark);
-  border: 1px solid rgb(201 168 76 / 30%);
 }
 
 .insights-featured-body h3 {
@@ -211,123 +160,6 @@
   gap: 1.25rem;
 }
 
-.insight-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 1.25rem 1.35rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-  box-shadow: var(--shadow-xs);
-  transition:
-    box-shadow var(--transition),
-    transform var(--transition);
-}
-
-.insight-card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-.insight-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
-.insight-tag-chip {
-  display: inline-block;
-  font-size: 0.68rem;
-  font-weight: var(--weight-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-pill);
-  white-space: nowrap;
-}
-
-.insight-tag--analysis {
-  background: rgb(59 130 246 / 8%);
-  color: #1d4ed8;
-  border: 1px solid rgb(59 130 246 / 25%);
-}
-
-.insight-tag--guide {
-  background: var(--color-gold-tint);
-  color: var(--color-gold-dark);
-  border: 1px solid rgb(201 168 76 / 30%);
-}
-
-.insight-tag--islamic {
-  background: rgb(16 140 96 / 8%);
-  color: #065f46;
-  border: 1px solid rgb(16 140 96 / 25%);
-}
-
-.insight-tag--regional {
-  background: rgb(139 92 246 / 8%);
-  color: #5b21b6;
-  border: 1px solid rgb(139 92 246 / 25%);
-}
-
-.insight-tag--education {
-  background: rgb(245 158 11 / 8%);
-  color: #92400e;
-  border: 1px solid rgb(245 158 11 / 25%);
-}
-
-.insight-read-time {
-  font-size: 0.7rem;
-  color: var(--color-text-muted);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.insight-card-title {
-  font-size: 0.97rem;
-  font-weight: var(--weight-bold);
-  color: var(--color-text);
-  line-height: 1.4;
-}
-
-.insight-card-excerpt {
-  font-size: 0.86rem;
-  line-height: 1.65;
-  color: var(--color-text-muted);
-  flex: 1;
-}
-
-.insight-card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-top: 0.25rem;
-  padding-top: 0.65rem;
-  border-top: 1px solid var(--color-border);
-}
-
-.insight-card-date {
-  font-size: 0.72rem;
-  color: var(--color-text-muted);
-}
-
-.insight-read-more {
-  font-size: 0.78rem;
-  font-weight: var(--weight-bold);
-  color: var(--color-gold-dark);
-  text-decoration: none;
-  transition: color var(--transition);
-  white-space: nowrap;
-}
-
-.insight-read-more:hover {
-  color: var(--color-gold);
-  text-decoration: underline;
-}
-
 /* ── Weekly Brief ─────────────────────────────────── */
 .weekly-brief {
   background: var(--color-surface);
@@ -336,48 +168,6 @@
   border-radius: var(--radius-md);
   padding: 1.5rem 1.75rem;
   box-shadow: var(--shadow-xs);
-}
-
-.weekly-brief-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
-}
-
-.weekly-brief-label {
-  font-size: 0.8rem;
-  font-weight: var(--weight-extrabold);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-gold);
-}
-
-.weekly-brief-date {
-  font-size: 0.76rem;
-  color: var(--color-text-muted);
-}
-
-.weekly-brief-list {
-  padding-left: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  margin-bottom: 1rem;
-}
-
-.weekly-brief-list li {
-  font-size: 0.9rem;
-  line-height: 1.7;
-  color: var(--color-text);
-}
-
-.weekly-brief-disclaimer {
-  font-size: 0.73rem;
-  color: var(--color-text-muted);
-  font-style: italic;
 }
 
 /* ── Evergreen Guides ─────────────────────────────── */
@@ -412,44 +202,6 @@
   color: var(--color-text);
 }
 
-.guide-card-icon {
-  font-size: 1.4rem;
-  color: var(--color-gold);
-  flex-shrink: 0;
-  line-height: 1;
-  margin-top: 0.1rem;
-}
-
-.guide-card-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.guide-card-title {
-  font-size: 0.88rem;
-  font-weight: var(--weight-bold);
-  color: var(--color-text);
-  line-height: 1.35;
-  margin-bottom: 0.35rem;
-}
-
-.guide-card-desc {
-  font-size: 0.77rem;
-  line-height: 1.55;
-  color: var(--color-text-muted);
-}
-
-.guide-card-arrow {
-  font-size: var(--text-base);
-  color: var(--color-gold-dark);
-  flex-shrink: 0;
-  align-self: center;
-  opacity: 0.6;
-  transition:
-    opacity var(--transition),
-    transform var(--transition);
-}
-
 .guide-card:hover .guide-card-arrow {
   opacity: 1;
   transform: translateX(3px);
@@ -472,23 +224,6 @@
 [dir='rtl'] .weekly-brief {
   border-left: 1px solid var(--color-border);
   border-right: 4px solid var(--color-gold);
-}
-
-[dir='rtl'] .weekly-brief-header {
-  flex-direction: row-reverse;
-}
-
-[dir='rtl'] .weekly-brief-list {
-  padding-left: 0;
-  padding-right: 1.25rem;
-}
-
-[dir='rtl'] .insight-card-header {
-  flex-direction: row-reverse;
-}
-
-[dir='rtl'] .insight-card-footer {
-  flex-direction: row-reverse;
 }
 
 [dir='rtl'] .guide-card {

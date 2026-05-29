@@ -578,26 +578,8 @@
 }
 
 /* ── Improved input groups ─────────────────────── */
-.calc-input-group {
-  background: var(--color-surface);
-  border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 0.9rem 1rem;
-  transition: border-color 0.15s ease;
-}
-
-.calc-input-group:focus-within {
-  border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px var(--color-gold-glow);
-}
 
 /* Help text under inputs */
-.calc-help-text {
-  font-size: 0.78rem;
-  color: var(--color-text-faint);
-  margin-top: 0.35rem;
-  line-height: 1.4;
-}
 
 /* Copy result button */
 .calc-copy-btn {
@@ -630,21 +612,12 @@
     padding: 0.55rem 0.85rem;
   }
 
-  .calc-section {
-    padding: 1.25rem;
-  }
-
   .calc-result-value {
     font-size: 1.6rem;
   }
 }
 
 @media (width <= 640px) {
-  .calc-tab-bar {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-  }
-
   .calc-nav-tabs {
     position: sticky;
     top: calc(var(--nav-height, 64px) + var(--spot-bar-height, 0px));
@@ -672,10 +645,6 @@
   .calc-tab {
     font-size: 0.75rem;
     padding: 0.45rem 0.6rem;
-  }
-
-  .calc-section {
-    padding: 1rem;
   }
 }
 

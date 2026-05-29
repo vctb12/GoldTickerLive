@@ -749,16 +749,6 @@ tbody td {
   color: var(--warning);
 }
 
-.badge-danger {
-  background: rgb(239 68 68 / 15%);
-  color: var(--danger);
-}
-
-.badge-info {
-  background: rgb(59 130 246 / 15%);
-  color: var(--info);
-}
-
 .badge-neutral {
   background: var(--surface-2);
   color: var(--text-muted);
@@ -954,17 +944,6 @@ tbody td {
   width: 20px;
 }
 
-.spinner--sm {
-  height: 14px;
-  width: 14px;
-}
-
-.spinner--lg {
-  border-width: 3px;
-  height: 36px;
-  width: 36px;
-}
-
 .btn-spinner {
   animation: spin 0.75s linear infinite;
   border: 2px solid rgb(255, 255, 255, 0.3);
@@ -1009,22 +988,6 @@ tbody td {
   flex-shrink: 0;
   height: 8px;
   width: 8px;
-}
-
-.status-dot--green {
-  background: var(--success);
-}
-
-.status-dot--yellow {
-  background: var(--warning);
-}
-
-.status-dot--red {
-  background: var(--danger);
-}
-
-.status-dot--gray {
-  background: var(--text-dim);
 }
 
 /* --------------------------------------------------------------------------
@@ -1105,36 +1068,8 @@ tbody td {
   display: flex;
 }
 
-.flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .gap-2 {
   gap: 8px;
-}
-
-.gap-4 {
-  gap: 16px;
-}
-
-.mt-2 {
-  margin-top: 8px;
-}
-
-.mt-4 {
-  margin-top: 16px;
-}
-
-.mb-4 {
-  margin-bottom: 16px;
 }
 
 .text-muted {
@@ -1157,14 +1092,6 @@ tbody td {
   color: var(--warning);
 }
 
-.text-info {
-  color: var(--info);
-}
-
-.text-gold {
-  color: var(--gold);
-}
-
 .text-sm {
   font-size: 0.8125rem;
 }
@@ -1173,23 +1100,11 @@ tbody td {
   font-size: 0.75rem;
 }
 
-.font-600 {
-  font-weight: 600;
-}
-
-.font-700 {
-  font-weight: 700;
-}
-
 .truncate {
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.w-full {
-  width: 100%;
 }
 
 .sr-only {
@@ -1238,16 +1153,6 @@ tbody td {
 .role-badge--admin {
   background: rgb(245 158 11 / 15%);
   color: var(--gold);
-}
-
-.role-badge--editor {
-  background: rgb(59 130 246 / 15%);
-  color: var(--blue-400);
-}
-
-.role-badge--viewer {
-  background: rgb(100 116 139 / 15%);
-  color: var(--text-dim);
 }
 
 /* --------------------------------------------------------------------------
@@ -1410,28 +1315,13 @@ tbody td {
   width: 7px;
 }
 
-.freshness-badge--live {
-  background: rgb(16 185 129 / 12%);
-  color: var(--success);
-}
-
 .freshness-badge--live .freshness-dot {
   animation: pulse-dot 2s ease-in-out infinite;
   background: var(--success);
 }
 
-.freshness-badge--stale {
-  background: rgb(245 158 11 / 12%);
-  color: var(--warning);
-}
-
 .freshness-badge--stale .freshness-dot {
   background: var(--warning);
-}
-
-.freshness-badge--error {
-  background: rgb(239 68 68 / 12%);
-  color: var(--danger);
 }
 
 .freshness-badge--error .freshness-dot {
@@ -1938,32 +1828,9 @@ textarea:focus-visible {
   box-shadow: 0 -4px 20px rgb(0, 0, 0, 0.4);
 }
 
-.admin-bottom-nav-item {
-  align-items: center;
-  background: none;
-  border: none;
-  color: var(--text-dim);
-  cursor: pointer;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  font-size: 0.65rem;
-  font-weight: 500;
-  gap: 2px;
-  justify-content: center;
-  padding: 4px 0;
-  text-decoration: none;
-  transition: color 0.15s;
-}
-
 .admin-bottom-nav-item:hover,
 .admin-bottom-nav-item.active {
   color: var(--gold);
-}
-
-.admin-bottom-nav-item svg {
-  height: 20px;
-  width: 20px;
 }
 
 @media (max-width: 640px) {
@@ -2086,15 +1953,6 @@ textarea:focus-visible {
   padding: 20px;
 }
 
-.drawer-footer {
-  border-top: 1px solid var(--border);
-  display: flex;
-  flex-shrink: 0;
-  gap: 8px;
-  justify-content: flex-end;
-  padding: 14px 20px;
-}
-
 @media (max-width: 640px) {
   .drawer {
     width: 100%;
@@ -2104,25 +1962,9 @@ textarea:focus-visible {
 /* --------------------------------------------------------------------------
    30. Sparkline & Badges / Misc
    -------------------------------------------------------------------------- */
-.sparkline-wrap {
-  align-items: center;
-  display: flex;
-  gap: 8px;
-  margin-top: 4px;
-}
 
 .sparkline-canvas {
   opacity: 0.8;
-}
-
-.trend-up {
-  color: var(--success);
-  font-weight: 600;
-}
-
-.trend-down {
-  color: var(--danger);
-  font-weight: 600;
 }
 
 .user-avatar {
@@ -2149,37 +1991,6 @@ textarea:focus-visible {
   min-width: 16px;
   padding: 1px 4px;
   text-align: center;
-}
-
-.autosave-indicator {
-  color: var(--success);
-  font-size: 0.8rem;
-}
-
-.pill-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-
-.pill-filter {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  color: var(--text-muted);
-  cursor: pointer;
-  font-size: 0.8125rem;
-  padding: 4px 12px;
-  transition:
-    background 0.15s,
-    color 0.15s,
-    border-color 0.15s;
-}
-
-.pill-filter:hover {
-  border-color: var(--primary);
-  color: var(--text);
 }
 
 .pill-filter.active {
@@ -2293,10 +2104,6 @@ tbody tr:hover td {
 }
 
 /* Pill filter active state */
-.pill-filter:hover {
-  border-color: var(--primary);
-  color: var(--text);
-}
 
 .pill-filter.active {
   background: rgb(99, 102, 241, 0.12);
@@ -2426,22 +2233,6 @@ thead th {
 }
 
 /* Konami / Easter-egg admin access button (injected into main site footer) */
-.admin-secret-access {
-  display: none;
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  z-index: 9999;
-  background: linear-gradient(135deg, #080f1a, #0d1526);
-  border: 1px solid var(--gold);
-  border-radius: var(--radius-lg);
-  box-shadow:
-    0 8px 32px rgb(0, 0, 0, 0.6),
-    0 0 20px var(--gold-glow);
-  padding: 16px 20px;
-  max-width: 280px;
-  animation: access-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
 
 @keyframes access-pop {
   from {
@@ -2822,10 +2613,6 @@ thead th {
   flex-shrink: 0;
   height: 7px;
   width: 7px;
-}
-
-.ticker-dot--green {
-  background: var(--success);
 }
 
 .ticker-dot--yellow {

@@ -890,24 +890,6 @@
   text-transform: capitalize;
 }
 
-.shop-signal--full {
-  color: rgb(76 175 80 / 80%);
-  background: rgb(76 175 80 / 8%);
-  border-color: rgb(76 175 80 / 20%);
-}
-
-.shop-signal--partial {
-  color: rgb(255 193 7 / 80%);
-  background: rgb(255 193 7 / 8%);
-  border-color: rgb(255 193 7 / 20%);
-}
-
-.shop-signal--limited {
-  color: rgb(244 67 54 / 70%);
-  background: rgb(244 67 54 / 8%);
-  border-color: rgb(244 67 54 / 20%);
-}
-
 .shop-card--cluster {
   border-color: rgb(180 100 0 / 22%);
 }
@@ -1474,24 +1456,6 @@
   padding: 0.25rem 0.65rem;
   letter-spacing: 0.03em;
   text-transform: capitalize;
-}
-
-.modal-details-full {
-  color: rgb(76 175 80 / 85%);
-  background: rgb(76 175 80 / 10%);
-  border: 1px solid rgb(76 175 80 / 25%);
-}
-
-.modal-details-partial {
-  color: rgb(255 193 7 / 85%);
-  background: rgb(255 193 7 / 10%);
-  border: 1px solid rgb(255 193 7 / 25%);
-}
-
-.modal-details-limited {
-  color: rgb(244 67 54 / 75%);
-  background: rgb(244 67 54 / 10%);
-  border: 1px solid rgb(244 67 54 / 25%);
 }
 
 .modal-featured-badge {
@@ -2185,11 +2149,6 @@
   margin-bottom: 1rem;
 }
 
-.shops-results-count {
-  font-weight: var(--weight-bold);
-  color: var(--text-primary);
-}
-
 /* ── Shops card — hover state glow improvement ── */
 .shops-card:hover {
   box-shadow:
@@ -2240,16 +2199,6 @@
   padding: 0.5rem 1rem;
   border-radius: 6px;
   text-align: left;
-}
-
-.shops-nearme-status--info {
-  background: var(--color-fixed-bg);
-  color: var(--color-fixed);
-}
-
-.shops-nearme-status--error {
-  background: var(--color-error-bg);
-  color: var(--color-error);
 }
 
 .shops-nearme-results {
@@ -2346,11 +2295,6 @@
   font-size: 2.5rem;
   display: block;
   margin-bottom: 0.75rem;
-}
-
-.ses-link {
-  color: var(--color-gold-dark);
-  text-decoration: underline;
 }
 
 /* ── Grid upgrade loading state ──────────────────────────────────────────── */
