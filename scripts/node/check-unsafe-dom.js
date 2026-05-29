@@ -70,8 +70,9 @@ const BASELINE = {
   'src/lib/cache.js': 0, // showStorageQuotaWarning migrated to DOM construction on 2026-04-28 (was 1 sink, all hardcoded strings).
   'src/lib/page-hydrator.js': 0, // W-1: migrated renderKaratCards/renderFreshnessBadge/renderDisclaimer to safe-dom el() + replaceChildren().
   'src/pages/home.js': 0, // Homepage revamp migrated GCC grid + PWA banner rendering to el()/DocumentFragment on 2026-04-25.
+  'src/pages/invest.js': 11, // Extracted from invest.html inline module (2026-05-29); static I18N templates only, no user input.
   'src/pages/shops.js': 13,
-  'src/pages/shops/filters.js': 4, // Extracted from shops.js: safe <option> building with esc()
+  'src/pages/shops/filters.js': 0, // buildFilterDropdowns removed 2026-05-29; filter logic uses no sinks.
   'src/pages/shops/modal.js': 1, // Extracted from shops.js: modal HTML with esc() wrappers
   'src/pages/shops/rendering.js': 0, // Migrated to el()/DocumentFragment on 2026-04-24 (PR A-2). Kept in baseline as 0-ceiling regression guard.
   'src/pages/tracker-pro.js': 0, // Phase 4: populateSelects migrated to safeEl()/DocumentFragment (was 4).
