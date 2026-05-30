@@ -24,6 +24,13 @@ import { renderAlertsEducationTips } from '../components/AlertsEducationTips.js'
 import { initInlineCalc } from '../tracker/inline-calc.js';
 import { bindControlShortcuts } from '../tracker/control-shortcuts.js';
 import { initPageEnter } from '../lib/page-enter.js';
+import { createAlertEngine } from '../lib/alert-engine.js';
+import {
+  renderAlertManager,
+  openAlertManager,
+  showTriggerDialog,
+  refreshAlertManager,
+} from '../components/alert-manager.js';
 import {
   createWatchlistItem,
   getMe,
@@ -58,6 +65,7 @@ let didPrefillAccountAlertEmail = false;
 let realtimeEngine = null;
 let realtimeSnapshot = null;
 let inlineCalc = null;
+let alertEngine = null;
 
 function trackerTx(key, params = {}) {
   const fullKey = `tracker.${key}`;
@@ -1069,8 +1077,7 @@ function populateSelects() {
   if (el.unit) {
     const frag = document.createDocumentFragment();
     ['gram', 'oz', 'tola', 'kg'].forEach((u) => {
-      const unitKey =
-        u === 'gram' ? 'Gram' : u === 'oz' ? 'Oz' : u === 'tola' ? 'Tola' : 'Kg';
+      const unitKey = u === 'gram' ? 'Gram' : u === 'oz' ? 'Oz' : u === 'tola' ? 'Tola' : 'Kg';
       const opt = safeEl('option', { value: u }, [trackerTx(`controls.unit${unitKey}`)]);
       if (u === state.selectedUnit) opt.selected = true;
       frag.appendChild(opt);
@@ -1184,6 +1191,12 @@ function applyRealtimeSnapshot(snapshot) {
   startCountdown();
   renderAll?.();
   renderTrackerAddonPanels();
+
+  // Run alert engine check after every price update
+  if (alertEngine && state.live?.price) {
+    const aed24k = priceFor({ currency: 'AED', karat: '24', unit: 'gram' });
+    alertEngine.check(state.live.price, aed24k);
+  }
 }
 
 function initRealtimeEngine() {
@@ -1280,6 +1293,62 @@ async function refreshWire() {
   const { items } = await fetchWire(state.wireItems || []);
   state.wireItems = items;
   renderWireModule(el, state);
+}
+
+// ── Alert Engine ──────────────────────────────────────────────────────────────
+
+function initAlertEngine() {
+  alertEngine = createAlertEngine({
+    onTrigger: (alert, currentPrice) => {
+      showTriggerDialog(alert, currentPrice);
+      refreshAlertManager();
+      updateAlertCountBadge();
+    },
+    onCountChange: (count) => {
+      updateAlertCountBadge(count);
+    },
+    onLimitWarning: (count, max) => {
+      showToast(
+        state.lang === 'ar'
+          ? `لديك ${count}/${max} تنبيهات. الحد الأقصى ${max}.`
+          : `You have ${count}/${max} alerts. Maximum is ${max}.`
+      );
+    },
+  });
+
+  // Render alert manager (mounts the drawer to body)
+  renderAlertManager(document.body, alertEngine, state.lang);
+
+  // Wire the "Open alerts panel" button to open the new manager
+  const openBtn = document.getElementById('tp-open-alerts-inline');
+  if (openBtn) {
+    openBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openAlertManager();
+    });
+  }
+
+  updateAlertCountBadge();
+}
+
+function updateAlertCountBadge(count) {
+  const c = count ?? alertEngine?.getActiveCount() ?? 0;
+  // Update any existing badge, or create one on the alerts tab/button
+  let badge = document.querySelector('.alert-count-badge');
+  if (!badge) {
+    const alertTab = document.getElementById('tab-alerts');
+    if (alertTab) {
+      badge = document.createElement('span');
+      badge.className = 'alert-count-badge';
+      badge.setAttribute('aria-label', `${c} active alerts`);
+      alertTab.appendChild(badge);
+    }
+  }
+  if (badge) {
+    badge.textContent = c > 0 ? String(c) : '';
+    badge.setAttribute('data-count', String(c));
+    badge.setAttribute('aria-label', `${c} active alert${c !== 1 ? 's' : ''}`);
+  }
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
@@ -1379,6 +1448,7 @@ async function init() {
   });
   renderTrackerAddonPanels();
   initRealtimeEngine();
+  initAlertEngine();
   serverAlertsAvailable = await probeServerAlertsAvailability();
   updateServerAlertUiState();
   bindCoreEvents();
@@ -1537,6 +1607,8 @@ async function init() {
     () => {
       realtimeEngine?.stop();
       realtimeEngine = null;
+      alertEngine?.destroy();
+      alertEngine = null;
     },
     { once: true }
   );
