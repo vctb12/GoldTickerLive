@@ -9,7 +9,6 @@
 ## 🔴 In Progress
 
 <!-- Active tasks go here -->
-<!-- Format: - [ ] Task description — assigned to: [agent/human] — started: YYYY-MM-DD -->
 
 ---
 
@@ -21,6 +20,9 @@
 ---
 
 ## ✅ Recently Completed
+
+- [x] Visual excellence session 7 (global interactions + homepage polish) — completed: 2026-05-30 — PR: (draft open)
+- [x] Launch push session 6 (content standardization, learn/insights) — completed: 2026-05-30 — PR: #375
 
 - [x] Deep clean session 3: broken links, invest safe-dom, learn/insights split, cache.getPreference — completed: 2026-05-29 — PR: (pending)
 - [x] Autonomous cleanup: gold-prices ref sweep, city stub rebuild, invest.js extraction, dead-code trim — completed: 2026-05-29 — PR: #371
