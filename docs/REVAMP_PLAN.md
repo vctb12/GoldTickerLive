@@ -49,6 +49,15 @@ removing all legacy `--color-surface` / `--color-border-subtle` / `--color-text`
 `--color-text-muted` fallback overrides across home.css, shops.css, calculator.css, stub.css,
 order.css, global.css).
 
+### 2026-05-30 session 5 — terminal & directory polish
+
+- [x] Tracker: `K`/`U` cycle karat & unit; `Shift+C` copy spot + selection via `copy-toast`
+- [x] Tracker: GCC currency flags; units gram/oz/tola/kg; in-place hero `countUp`; day-change strip
+- [x] Tracker: chart pills labeled 1D/1W/1M/3M/1Y; tabular nums + market pulse CSS
+- [x] Shops: copy details, group-by-city, sort modes, filter counts, city `gold-rate/` links
+- [x] Design: `.badge` family, `page-enter` fade, `RelatedGuides` on guides hub
+- [x] Verified: `npm run validate`, `npm run build`; tracker tests green; 2 pre-existing cache/provider failures in full `npm test`
+
 ### 2026-05-30 premium UI/UX revamp (build phase)
 
 - [x] Shared `copy-toast.js` + global toast / compare / purity / quick-convert CSS primitives
