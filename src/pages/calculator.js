@@ -24,6 +24,13 @@ import {
   redirectToAccount,
 } from '../lib/public-account-client.js';
 import { parseCalculatorUrlState, serializeCalculatorUrlState } from './calculator/url-state.js';
+import { countUp } from '../lib/count-up.js';
+import { copyWithToast } from '../lib/copy-toast.js';
+import {
+  renderKaratPurityIndicator,
+  updateKaratPurityIndicator,
+} from '../components/KaratPurityIndicator.js';
+import { updateShopVsReferenceMount } from '../components/ShopVsReferencePanel.js';
 
 /**
  * Helper: render a list of {label, value} rows into a container using safe
@@ -65,6 +72,12 @@ const STATE = {
   selectedUnitTable: 'gram',
   valueMode: 'weight',
 };
+
+let _karatPurityRoot = null;
+
+function shopVsRefT(key) {
+  return t(`shop_vs_ref_${key}`);
+}
 
 // ── Translations ────────────────────────────────────────────────────────────
 const T = {
@@ -116,6 +129,17 @@ const T = {
     val_result_label: 'Estimated Value',
     val_disclaimer:
       'Spot-linked reference estimate only. Final retail prices can include making charges, dealer margins, and taxes.',
+    shop_vs_ref_title: 'Reference vs typical shop range',
+    shop_vs_ref_intro:
+      'Jewellery shops often quote above the raw gold reference. The range below is illustrative (8–22% making charges) — not a live shop price.',
+    shop_vs_ref_reference: 'Raw gold reference',
+    shop_vs_ref_low: 'Typical shop (low making)',
+    shop_vs_ref_high: 'Typical shop (higher making)',
+    shop_vs_ref_disclaimer:
+      'Actual quotes vary by design, brand, VAT, and negotiation. Always compare multiple shops.',
+    shop_vs_ref_link: 'Why shop prices differ →',
+    copy_success: 'Copied to clipboard',
+    copy_failed: 'Could not copy',
     scrap_title: 'Scrap Gold Calculator',
     scrap_desc:
       'Estimate the refinery value of your scrap gold. Dealers typically pay 80–95% of spot value.',
@@ -210,6 +234,17 @@ const T = {
     val_result_label: 'القيمة التقديرية',
     val_disclaimer:
       'تقدير مرجعي مرتبط بالسعر الفوري فقط. قد تشمل أسعار التجزئة النهائية المصنعية وهوامش التجار والضرائب.',
+    shop_vs_ref_title: 'المرجع مقابل نطاق المحلات التقريبي',
+    shop_vs_ref_intro:
+      'غالباً ما تقتبس محلات المجوهرات فوق قيمة الذهب الخام. النطاق أدناه توضيحي (مصنعية 8–22٪) — وليس سعر محل مباشر.',
+    shop_vs_ref_reference: 'المرجع (ذهب خام)',
+    shop_vs_ref_low: 'محل نموذجي (مصنعية منخفضة)',
+    shop_vs_ref_high: 'محل نموذجي (مصنعية أعلى)',
+    shop_vs_ref_disclaimer:
+      'تختلف العروض حسب التصميم والعلامة وضريبة القيمة المضافة والتفاوض. قارن عدة محلات.',
+    shop_vs_ref_link: 'لماذا تختلف أسعار المحلات ←',
+    copy_success: 'تم النسخ',
+    copy_failed: 'تعذر النسخ',
     scrap_title: 'حاسبة الذهب المستعمل',
     scrap_desc: 'احسب القيمة المعدنية لذهبك المستعمل. يدفع التجار عادةً 80–95% من قيمة السوق.',
     scrap_weight: 'الوزن',
@@ -495,11 +530,14 @@ function calcValue() {
     const modeLabel = document.getElementById('val-result-label');
     if (modeLabel) modeLabel.textContent = t('val_result_label');
     if (scrapChecked) totalLocal *= 0.95;
-    document.getElementById('val-result-value').textContent = formatPrice(
-      totalLocal,
-      currency,
-      ['KWD', 'BHD', 'OMR', 'JOD'].includes(currency) ? 3 : 2
-    );
+    const resultEl = document.getElementById('val-result-value');
+    const decimalsResult = ['KWD', 'BHD', 'OMR', 'JOD'].includes(currency) ? 3 : 2;
+    if (resultEl) {
+      countUp(resultEl, totalLocal, {
+        decimals: decimalsResult,
+        format: (n) => formatPrice(n, currency, decimalsResult),
+      });
+    }
   }
 
   const totalUsd = totalLocal / rate;
@@ -517,6 +555,18 @@ function calcValue() {
     rows.push(['Refinery deduction', '5%']);
   }
   renderBreakdownRows(breakdown, rows);
+  const shopMount = document.getElementById('val-shop-vs-ref-mount');
+  if (shopMount && STATE.valueMode === 'weight' && !scrapChecked) {
+    shopMount.hidden = false;
+    updateShopVsReferenceMount(shopMount, {
+      referenceLocal: totalLocal,
+      currency,
+      decimals,
+      t: shopVsRefT,
+    });
+  } else if (shopMount) {
+    shopMount.hidden = true;
+  }
   const scrapNote = document.getElementById('val-scrap-note');
   if (scrapNote) scrapNote.hidden = !scrapChecked;
   updateNisabIndicator(weightGrams, purity);
@@ -1073,10 +1123,23 @@ function setupTabs() {
   });
 }
 
+function syncKaratPurity() {
+  const mount = document.getElementById('val-karat-purity-mount');
+  const karat = document.getElementById('val-karat')?.value ?? '22';
+  if (!mount) return;
+  if (!_karatPurityRoot) {
+    mount.replaceChildren(renderKaratPurityIndicator({ karat }));
+    _karatPurityRoot = mount.firstElementChild;
+    return;
+  }
+  updateKaratPurityIndicator(_karatPurityRoot, karat);
+}
+
 // ── Wire inputs ──────────────────────────────────────────────────────────────
 function wireInputs() {
   const on = (id, fn) => document.getElementById(id)?.addEventListener('input', fn);
 
+  document.getElementById('val-karat')?.addEventListener('change', syncKaratPurity);
   ['val-weight', 'val-unit', 'val-karat', 'val-currency'].forEach((id) => on(id, calcValue));
   ['val-aed-amount', 'val-scrap-toggle'].forEach((id) => on(id, calcValue));
   ['scrap-weight', 'scrap-unit', 'scrap-karat', 'scrap-payout', 'scrap-currency'].forEach((id) =>
@@ -1504,6 +1567,7 @@ async function init() {
   applyLang();
   setupTabs();
   wireInputs();
+  syncKaratPurity();
   applyUrlPreset();
   initCopyBtn();
   document.getElementById('calc-mobile-dock-action')?.addEventListener('click', () => {

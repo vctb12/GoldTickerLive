@@ -13,7 +13,12 @@ them into the right section here before execution. Agent operating rules are in
 - Keep completed items as `[x]` with enough context to serve as a record. Don't re-open closed items
   to pad status; don't invent new phases to look ambitious.
 
-**Last updated:** 2026-05-29 (Deep clean session 3 — 22 broken content links fixed; `invest.js`
+**Last updated:** 2026-05-30 (Premium UI/UX revamp — homepage quick-convert widget, shared copy toast,
+smooth count-up on hero/command metrics, calculator shop-vs-reference panel + karat purity ring,
+country hero card hover polish. See
+[`docs/plans/2026-05-30_premium-ui-ux-revamp.md`](./plans/2026-05-30_premium-ui-ux-revamp.md).)
+
+Previous: 2026-05-29 (Deep clean session 3 — 22 broken content links fixed; `invest.js`
 migrated off `innerHTML` (11→0 DOM baseline); learn vs insights differentiated (no merge);
 `cache.getPreference()` added for learn page lang restore; SEO reports regenerated. See
 [`docs/plans/2026-05-29_deep-clean-session3.md`](./plans/2026-05-29_deep-clean-session3.md).)
@@ -38,6 +43,14 @@ global.css, shops.css, calculator.css, tracker-pro.css, invest.css; complete can
 removing all legacy `--color-surface` / `--color-border-subtle` / `--color-text` /
 `--color-text-muted` fallback overrides across home.css, shops.css, calculator.css, stub.css,
 order.css, global.css).
+
+### 2026-05-30 premium UI/UX revamp (build phase)
+
+- [x] Shared `copy-toast.js` + global toast / compare / purity / quick-convert CSS primitives
+- [x] Homepage: quick-convert widget in command center, count-up on command metrics + hero karat cells
+- [x] Calculator: shop vs reference comparison panel, karat purity ring, animated result value
+- [x] Country pages: hero price-card hover + karat % pill styling
+- [x] EN/AR translation keys for quick convert + copy feedback
 
 ### 2026-05-13 flagship UI/CX rewrite — Phase 1
 

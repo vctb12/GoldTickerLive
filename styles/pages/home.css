@@ -1,3 +1,14 @@
+/* Quick-convert widget slot (command center sidebar) */
+.home-quick-convert-mount {
+  margin-block-end: var(--space-5);
+}
+
+@media (width <= 900px) {
+  .home-quick-convert-mount {
+    margin-block: var(--space-4) 0;
+  }
+}
+
 /* ══════════════════════════════════════════════════════════════
    Landing Page Styles (home.css) — Premium Redesign
    Imports shared design tokens from style.css via the cascade.

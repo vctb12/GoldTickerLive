@@ -98,6 +98,28 @@
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+  transition:
+    transform var(--duration-normal, 0.25s) var(--ease-out, ease-out),
+    box-shadow var(--duration-normal, 0.25s) var(--ease-out, ease-out),
+    border-color var(--duration-normal, 0.25s) var(--ease-out, ease-out);
+}
+
+.cp-price-card:hover {
+  transform: translateY(-2px);
+  border-color: rgb(196 153 62 / 40%);
+  box-shadow: var(--shadow-gold);
+}
+
+.cp-karat-pct {
+  display: inline-flex;
+  align-items: center;
+  margin-inline-start: var(--space-2);
+  padding: 0.1rem var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  background: var(--color-gold-glow);
+  color: var(--color-gold-light);
 }
 
 .cp-price-label {
@@ -150,6 +172,16 @@
 
   .cp-prices-row .cp-price-card:last-child {
     grid-column: span 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cp-price-card {
+    transition: none;
+  }
+
+  .cp-price-card:hover {
+    transform: none;
   }
 }
 

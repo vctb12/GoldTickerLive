@@ -26,6 +26,8 @@ import { renderMethodologySection } from '../components/MethodologySection.js';
 import { renderLocationGuideSection } from '../components/LocationGuideSection.js';
 import '../lib/reveal.js';
 import { countUp } from '../lib/count-up.js';
+import { copyWithToast } from '../lib/copy-toast.js';
+import { mountQuickConvertWidget } from '../components/QuickConvertWidget.js';
 import { initSwUpdateToast } from '../lib/sw-update-toast.js';
 import { clear, el, safeHref } from '../lib/safe-dom.js';
 import { track, EVENTS } from '../lib/analytics.js';
@@ -68,6 +70,7 @@ let _realtimeSnapshot = null;
 let _realtimeEngine = null;
 let _refreshTimer = null;
 let _freshnessTimer = null;
+let _quickConvert = null;
 
 // Karat strip unit preference — persisted in user_prefs localStorage
 let karatStripUnit = (() => {
@@ -189,10 +192,17 @@ function setTrustChip(id, text, freshnessKey = 'neutral') {
     freshnessKey === 'live' ? 'live' : freshnessKey === 'unavailable' ? 'neutral' : 'warning';
 }
 
-function setCommandMetricValue(id, valueText = '—') {
+function setCommandMetricValue(id, valueText = '—', numericTarget = null) {
   const target = document.getElementById(id);
   if (!target) return;
-  target.textContent = valueText;
+  if (Number.isFinite(numericTarget)) {
+    countUp(target, numericTarget, {
+      decimals: 2,
+      format: () => valueText,
+    });
+  } else {
+    target.textContent = valueText;
+  }
   target.classList.remove('skeleton-inline', 'shell-skeleton-karat', 'home-command-metric-loading');
   target.removeAttribute('aria-busy');
 }
@@ -318,10 +328,19 @@ function renderHeroCard() {
     priceEl.classList.remove('hlc-price--loading');
   }
   document.getElementById('hero-live-card')?.removeAttribute('aria-busy');
-  setTextById('hlc-aed24', fmt.formatPrice(aed24g, 'AED', 2));
-  setTextById('hlc-aed22', fmt.formatPrice(aed22g, 'AED', 2));
-  setTextById('hlc-aed21', fmt.formatPrice(aed21g, 'AED', 2));
-  setTextById('hlc-aed18', fmt.formatPrice(aed18g, 'AED', 2));
+  for (const [id, val] of [
+    ['hlc-aed24', aed24g],
+    ['hlc-aed22', aed22g],
+    ['hlc-aed21', aed21g],
+    ['hlc-aed18', aed18g],
+  ]) {
+    const cell = document.getElementById(id);
+    if (cell && val) {
+      countUp(cell, val, { decimals: 2, format: (n) => fmt.formatPrice(n, 'AED', 2) });
+    } else if (cell) {
+      cell.textContent = '—';
+    }
+  }
   const { ageText, isLive, statusText, sourceText, key } = getFreshnessMeta();
   const ageClass = freshnessAgeClass(getLiveFreshness({ updatedAt: goldUpdatedAt, lang }).ageMs);
   const hlcUpdatedEl = document.getElementById('hlc-updated');
@@ -403,6 +422,7 @@ function renderHeroCard() {
     aed18g,
     usd24oz,
   });
+  _quickConvert?.recalc?.();
 
   // Update freshness banner
   const bar = document.getElementById('home-freshness-bar');
@@ -494,6 +514,17 @@ function renderHomeRealtimePanels() {
   }
 }
 
+function mountHomeQuickConvert() {
+  const mount = document.getElementById('home-quick-convert-mount');
+  if (!mount) return;
+  _quickConvert = mountQuickConvertWidget({
+    lang,
+    spotUsdPerOz: goldPrice,
+    t: (key) => tx(key),
+    mount,
+  });
+}
+
 function renderHomeAdditiveSections() {
   const methodologyMount = document.getElementById('home-methodology-mount');
   if (methodologyMount) {
@@ -538,10 +569,26 @@ function renderCommandCenter(values = {}) {
     key
   );
 
-  setCommandMetricValue('home-command-24-value', aed24g ? fmt.formatPrice(aed24g, 'AED', 2) : '—');
-  setCommandMetricValue('home-command-22-value', aed22g ? fmt.formatPrice(aed22g, 'AED', 2) : '—');
-  setCommandMetricValue('home-command-21-value', aed21g ? fmt.formatPrice(aed21g, 'AED', 2) : '—');
-  setCommandMetricValue('home-command-18-value', aed18g ? fmt.formatPrice(aed18g, 'AED', 2) : '—');
+  setCommandMetricValue(
+    'home-command-24-value',
+    aed24g ? fmt.formatPrice(aed24g, 'AED', 2) : '—',
+    aed24g
+  );
+  setCommandMetricValue(
+    'home-command-22-value',
+    aed22g ? fmt.formatPrice(aed22g, 'AED', 2) : '—',
+    aed22g
+  );
+  setCommandMetricValue(
+    'home-command-21-value',
+    aed21g ? fmt.formatPrice(aed21g, 'AED', 2) : '—',
+    aed21g
+  );
+  setCommandMetricValue(
+    'home-command-18-value',
+    aed18g ? fmt.formatPrice(aed18g, 'AED', 2) : '—',
+    aed18g
+  );
 
   setTextById('home-snapshot-uae-value', aed24g ? fmt.formatPrice(aed24g, 'AED', 2) : '—');
   setTextById('home-snapshot-global-value', usd24oz ? fmt.formatPrice(usd24oz, 'USD', 2) : '—');
@@ -1137,6 +1184,7 @@ async function init() {
       saveLang(lang);
       shell.updateLang(lang);
       applyLangToPage();
+      mountHomeQuickConvert();
       injectFaqSchema(document, buildMethodologyFaqSchema(lang));
     });
   });
@@ -1174,23 +1222,24 @@ async function init() {
   });
 
   // Copy price button (event delegation — covers both GCC grid and karat strip)
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', async (e) => {
     const btn = e.target.closest('.gcc-copy-btn, .kstrip-copy-btn');
     if (!btn) return;
     const text = btn.dataset.copy;
     if (!text || text === '—') return;
-    navigator.clipboard
-      ?.writeText(text)
-      .then(() => {
-        const orig = btn.textContent;
-        btn.textContent = '✓';
-        const surface = btn.classList.contains('kstrip-copy-btn') ? 'karat_strip' : 'gcc_grid';
-        track(EVENTS.COPY_CLICK, { surface, value_type: 'price' });
-        setTimeout(() => {
-          btn.textContent = orig;
-        }, 1500);
-      })
-      .catch(() => {});
+    const surface = btn.classList.contains('kstrip-copy-btn') ? 'karat_strip' : 'gcc_grid';
+    const ok = await copyWithToast(text, {
+      successMessage: tx('copyPriceSuccess'),
+      errorMessage: tx('copyPriceFailed'),
+    });
+    if (ok) {
+      const orig = btn.textContent;
+      btn.textContent = '✓';
+      track(EVENTS.COPY_CLICK, { surface, value_type: 'price' });
+      setTimeout(() => {
+        btn.textContent = orig;
+      }, 1500);
+    }
   });
 
   // Karat strip unit toggle
@@ -1253,6 +1302,7 @@ async function init() {
   }
 
   applyLangToPage();
+  mountHomeQuickConvert();
 
   // Analytics: fire page_view on home load
   track(EVENTS.PAGE_VIEW, { path: location.pathname, locale: lang });
