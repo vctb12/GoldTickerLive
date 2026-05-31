@@ -4,88 +4,25 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### BUILD 8 — Insights Feed: Market Analysis Hub — 2026-05-31
+### BUILD 8 — Insights: Market Analysis Feed (filterable, searchable) — 2026-05-31
 
 **New feature:**
 
-- feat(insights): replace static 3-card grid with a dynamic, JS-rendered masonry layout powered by
-  `src/config/insights-articles.js` — 15 bilingual articles across 6 categories (Price Analysis,
-  Market News, Buying Guides, Zakat & Islamic Finance, Investment, Education).
-- feat(insights): add horizontally scrollable category filter chip strip with article counts per
-  category. Active category highlighted with gold accent. Clicking filters the grid instantly.
-- feat(insights): add client-side search with 200ms debounce, filtering by title + excerpt text.
-  No-results state with helpful suggestions. Escape key clears search. Result count shown when
-  filter is active.
-- feat(insights): add dynamic "Related to current gold price" contextual callout card inserted at
-  position 3 in the grid. Compares current spot price to 7-day baseline average. Updates every 90
-  seconds with the price refresh cycle.
-- feat(insights): add estimated read time on every card calculated from article word count (200
-  wpm).
-- feat(insights): add scroll-triggered entrance animations (`data-reveal`) to all cards and the
-  featured article card, with `prefers-reduced-motion` fallback.
-- feat(insights): full bilingual EN/AR support for search, categories, result count, no-results
-  message, read time labels, and contextual callout text.
-
-**Quality:**
-
-- test: 9 new tests in `tests/insights-feed.test.js` — config completeness, category coverage,
-  unique IDs, bilingual labels, read-time calculation.
-- a11y: search input has associated label, category chips use `role="tablist"` with `aria-selected`,
-  results meta uses `aria-live="polite"`, search input has `aria-describedby` hint.
-- RTL: search icon position, category strip, card header/footer all mirror correctly.
-- mobile: masonry grid collapses 3→2→1 columns; category strip scrolls horizontally with snap.
-- CSS: uses design tokens for all colors, spacing, radii, shadows; no hardcoded values.
-### BUILD 7 — Gold Shop Directory: Map View & Compare Feature — 2026-05-31
-
-**New features:**
-
-- feat(shops/map): add interactive Leaflet.js map view to shops directory with Map/List toggle.
-  Shops with lat/lng coordinates appear as clickable pins; popup shows name, market, city, and a
-  "View details →" button that opens the shop modal. Map fits bounds to show all visible pins.
-  Graceful fallback to list-only view if Leaflet CDN fails to load.
-- feat(shops/compare): add shop comparison feature — select up to 3 shops via a "Compare" toggle
-  button on each card. A sticky bottom bar shows selected shops as removable chips with a "Compare
-  selected" button that opens a full-screen comparison modal with a side-by-side table (location,
-  market, category, specialties, details, phone, website).
-- feat(shops/data): add lat/lng coordinates to all 27 shop entries in `data/shops.js` for map pin
-  placement.
-
-**Architecture:**
-
-- `src/components/shops-map.js` — Leaflet map component (CDN loader, marker layer, popup bindings,
-  fit-bounds, invalidateSize for container visibility)
-- `src/components/shops-compare.js` — compare module (initCompare, toggleCompare, clearCompare,
-  renderCompareBar, openCompareModal, max-3 limit)
-- `styles/components/shops-map.css` — map container, view toggle, compare bar, compare modal,
-  compare table (design tokens, RTL, dark mode, responsive, reduced-motion)
-- `tests/shops-compare.test.js` — 9 unit tests covering add/remove/max/clear/callback
-
-**Quality:**
-
-- i18n: bilingual EN/AR strings for map, list, compare features
-- 0 new lint errors; all existing tests pass (3 pre-existing failures unchanged)
-- Build passes; map view loads Leaflet lazily on first click (no impact on initial load)
-### BUILD 8 — Insights: market-analysis feed (filter · search · masonry · live context) — 2026-05-31
-
-**New feature:**
-
-- feat(insights): rebuild the Insights cards section into an interactive market-analysis feed — a
-  horizontally scrollable category filter strip with live counts, a debounced (200 ms) client-side
-  search, a masonry-style CSS-columns grid (3 → 2 → 1), per-card read-time estimates and publish
-  dates, and a branded no-results state.
-- feat(insights): add a live "Related to current gold price" context card pinned to grid position 3
-  — it compares the current spot price with a ~7-day-ago cached daily snapshot and only renders when
-  honest week-over-week data exists. It updates on the existing 90-second refresh cycle and makes no
-  extra fetches.
-- feat(insights): add `src/config/insights-data.js` — a bilingual (EN/AR) content model of 12
-  insights, each linking to an existing `content/guides/` page (no dead links), plus the category
-  taxonomy.
-- feat(insights): add `src/lib/insights-feed-core.js` — a pure, DOM-free logic module
-  (`filterInsights`, `categoryCounts`, `estimateReadMinutes`, `sortByDateDesc`, `getFeatured`,
-  `buildPriceContext`, `aed22kPerGram`) with 18 unit tests in `tests/insights-feed-core.test.js`.
-- feat(insights): render via `src/components/insights-feed.js` (`mountInsightsFeed`) using the
-  safe-DOM `el()` helper (no innerHTML); full RTL support via CSS logical properties, dark mode
-  through design tokens, and a `prefers-reduced-motion` fallback for the entrance animation.
+- feat(insights): rebuild the insights guide grid into a rich, filterable market-analysis feed — a
+  category filter strip with live counts, a debounced (200 ms) client-side search, a CSS-column
+  masonry grid (3/2/1 columns) of bilingual insight cards (icon, category badge, excerpt, publish
+  date, estimated read time, "Read →" link), and a no-results / empty state.
+- feat(insights): add a dynamic "Today's gold price context" card injected at position 3 of the
+  feed, driven by the page's existing live price + 7-day price history (up / down / flat / unknown
+  states, EN/AR). Reuses the same cached price state — no extra fetches.
+- feat(insights): new pure, DOM-free data module `src/pages/insights/insights-data.js` (`INSIGHTS`,
+  `CATEGORIES`, `estimateReadTime`/`readTimeLabel` at 200 wpm, `categoryCounts`, `filterInsights`,
+  `categoryLabel`, `buildPriceContextCard`) with 10 unit tests in `tests/insights-data.test.js`.
+  Every feed entry links to an existing content page (link-checked by a test).
+- feat(insights): new renderer `src/pages/insights/insights-feed.js` builds all feed DOM via the
+  shared safe-DOM `el()` helper (no innerHTML), with category state encoded in the URL hash
+  (`#cat=…`), full RTL support, reveal-on-scroll, and a `prefers-reduced-motion` fallback. Styles
+  added in `styles/pages/insights.css`.
 
 ### BUILD 6 — Compare Countries: interactive cross-country tool — 2026-05-31
 

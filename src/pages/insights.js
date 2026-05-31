@@ -9,10 +9,13 @@ import * as api from '../lib/api.js';
 import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { CONSTANTS } from '../config/index.js';
-import { getBaselineHistory, getHistoryStats } from '../lib/historical-data.js';
+import { getBaselineHistory, getHistoryStats, getUnifiedHistory } from '../lib/historical-data.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import { countUp } from '../lib/count-up.js';
 import { mountRelatedGuides } from '../components/RelatedGuides.js';
+import { initInsightsFeed } from './insights/insights-feed.js';
+
+let feedCtrl = null;
 import { escape, safeHref } from '../lib/safe-dom.js';
 import {
   INSIGHTS_ARTICLES,
@@ -251,6 +254,31 @@ function setPulseValue(id, pct) {
   });
 }
 
+function deriveWeekAgoPrice() {
+  const target = new Date();
+  target.setUTCDate(target.getUTCDate() - 7);
+  const targetKey = target.toISOString().slice(0, 10); // YYYY-MM-DD
+  const records = getUnifiedHistory(STATE.history || []);
+  let best = 0;
+  for (const r of records) {
+    // Records may be 'YYYY-MM' (monthly) or 'YYYY-MM-DD' (daily). Normalise
+    // monthly keys to the 1st so the lexical comparison stays correct across
+    // both granularities. Records are sorted ascending, so the last match is
+    // the most recent price at-or-before the 7-day mark.
+    const rk = typeof r.date === 'string' && r.date.length === 7 ? `${r.date}-01` : r.date;
+    if (rk <= targetKey && Number.isFinite(r.price)) best = r.price;
+  }
+  return best;
+}
+
+function pushFeedPrices() {
+  if (!feedCtrl) return;
+  feedCtrl.setPrices({
+    current: STATE.goldPriceUsdPerOz,
+    weekAgo: deriveWeekAgoPrice(),
+  });
+}
+
 function updateMarketPulse(spotUsd) {
   const records = getBaselineHistory();
   const stats = getHistoryStats(records);
@@ -267,6 +295,8 @@ function updateMarketPulse(spotUsd) {
   if (open > 0 && spotUsd > 0) {
     setPulseValue('pulse-day-value', ((spotUsd - open) / open) * 100);
   }
+
+  pushFeedPrices();
 
   const updated = document.getElementById('insights-page-updated');
   if (updated) {
@@ -642,6 +672,7 @@ async function init() {
       cache.savePreference('lang', STATE.lang);
       shell.updateLang(STATE.lang);
       applyLang(STATE.lang);
+      if (feedCtrl) feedCtrl.setLang(STATE.lang);
       renderCategoryChips();
       renderFeed();
       // Update search placeholder
@@ -663,6 +694,9 @@ async function init() {
 
   applyLang(STATE.lang);
 
+  // Mount the filterable / searchable insights feed.
+  feedCtrl = initInsightsFeed(STATE.lang);
+  pushFeedPrices();
   // Initialize the insights feed (category filter, search, cards)
   initFeed();
   // Mount the interactive insights feed (filter · search · masonry · context)
@@ -694,6 +728,7 @@ async function init() {
     () => {
       clearInterval(_refreshTimer);
       _refreshTimer = null;
+      if (feedCtrl) feedCtrl.destroy();
     },
     { once: true }
   );

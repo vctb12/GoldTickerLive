@@ -24,17 +24,11 @@
 
 ## ✅ Recently Completed
 
-- [x] BUILD 8: Insights Feed — Market Analysis Feed with category filter, client-side search,
-      masonry card grid (15 articles), contextual price callout, animated entrance, bilingual
-      (`src/config/insights-articles.js`, `src/pages/insights.js`, `styles/pages/insights.css`,
-      `tests/insights-feed.test.js`) — completed: 2026-05-31 — PR: (draft)
-- [x] BUILD 7: Shops Directory — Map view (Leaflet.js) + compare shops (up to 3, side-by-side
-      modal) + lat/lng data for 27 shops + 9 new tests — completed: 2026-05-31 — PR: (draft)
-- [x] BUILD 8: Insights Feed — interactive market-analysis feed on `insights.html` (category filter
-      strip with live counts, debounced client-side search, masonry CSS-columns grid, per-card
-      read-time + date, "Related to current gold price" live context card at position 3, bilingual
-      EN/AR + RTL, no-results state) backed by pure `src/lib/insights-feed-core.js` +
-      `src/config/insights-data.js` and 18 tests — completed: 2026-05-31 — PR: (draft)
+- [x] BUILD 8: Insights Market Analysis Feed — rebuilt the insights guide grid into a filterable,
+      searchable CSS-masonry feed (category strip with counts, debounced search, read-time,
+      bilingual cards, dynamic live "price context" card at position 3) backed by pure
+      `src/pages/insights/insights-data.js` + renderer `src/pages/insights/insights-feed.js` and 10
+      tests (`tests/insights-data.test.js`) — completed: 2026-05-31 — PR: (draft)
 - [x] BUILD 6: Compare Countries — standalone interactive `compare.html` (sortable table, karat
       tabs, country chips, side-by-side detail with per-karat bar chart, cheapest-to-buy callout,
       hash deep links) backed by pure `src/pages/compare/compare-core.js` + 13 tests — completed:
@@ -121,14 +115,8 @@
 - [x] BUILD 5: PWA — done (sw.js, manifest.json, offline.html, install prompt)
 - [x] BUILD 6: Compare Tool — **done** (standalone `compare.html` + `compare-core.js`)
 - [ ] BUILD 7: Shops Directory — partial (list + filter, needs map, card redesign)
-- [x] BUILD 8: Insights Feed — **done this session** (category filter, masonry grid, search,
-      contextual callout)
-- [x] BUILD 6: Compare Tool — **done this session** (standalone `compare.html` + `compare-core.js`)
-- [x] BUILD 7: Shops Directory — **done this session** (map view + compare feature)
-- [ ] BUILD 8: Insights Feed — partial (exists, needs category filter, masonry, search)
-- [ ] BUILD 7: Shops Directory — partial (list + filter, needs map, card redesign)
-- [x] BUILD 8: Insights Feed — **done this session** (category filter + search + masonry +
-      read-time + live price context card)
+- [x] BUILD 8: Insights Feed — **done this session** (category filter + masonry + search + live
+      context card)
 - [ ] BUILD 9: Homepage Overhaul — partial (recent polish sessions improved it significantly)
 - [x] BUILD 10: Alert System — **done** (engine + drawer + dialog + sound + tests)
 

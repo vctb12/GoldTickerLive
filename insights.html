@@ -206,6 +206,8 @@
         </div>
       </section>
 
+      <!-- Section 3: Insight Feed (filterable, searchable masonry) -->
+      <section id="weekly-brief" class="insights-section insights-section--alt">
       <!-- Section 3: Search + Category Filter + Insight Cards Grid -->
       <section id="insights-feed" class="insights-section insights-section--alt">
       <!-- Section 3: Insight Feed (filter · search · masonry grid · live context) -->
@@ -224,6 +226,27 @@
             </p>
           </div>
 
+          <!-- Feed toolbar: search + category filter strip (populated by insights.js) -->
+          <div class="insights-feed-toolbar">
+            <div class="insights-search">
+              <label class="sr-only" for="insights-search-input" id="insights-search-label">
+                Search insights
+              </label>
+              <span class="insights-search-icon" aria-hidden="true">🔎</span>
+              <input
+                type="search"
+                id="insights-search-input"
+                class="insights-search-input"
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </div>
+            <div
+              class="insights-filter-strip"
+              id="insights-filter-strip"
+              role="tablist"
+              aria-label="Filter insights by category"
+            ></div>
           <!-- Search input -->
           <div class="insights-search-wrap" role="search" aria-label="Search insights">
             <label for="insights-search" class="sr-only" id="insights-search-label" data-i18n="insights.searchLabel">Search articles</label>
@@ -333,6 +356,12 @@
               </article>
             </div>
           </div>
+
+          <!-- JS-rendered masonry feed -->
+          <div class="insights-feed" id="insights-feed" aria-live="polite"></div>
+
+          <!-- Empty / no-results state -->
+          <p class="insights-feed-empty" id="insights-feed-empty" role="status" hidden></p>
         </div>
       </section>
 
