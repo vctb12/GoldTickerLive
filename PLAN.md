@@ -24,6 +24,8 @@
 
 ## ✅ Recently Completed
 
+- [x] BUILD 7: Shops Directory — Map view (Leaflet.js) + compare shops (up to 3, side-by-side
+      modal) + lat/lng data for 27 shops + 9 new tests — completed: 2026-05-31 — PR: (draft)
 - [x] BUILD 8: Insights Feed — interactive market-analysis feed on `insights.html` (category filter
       strip with live counts, debounced client-side search, masonry CSS-columns grid, per-card
       read-time + date, "Related to current gold price" live context card at position 3, bilingual
@@ -114,6 +116,8 @@
 - [x] BUILD 4: Calculator Tabs — done (5 tabs: value, scrap, zakat, buying power, converter)
 - [x] BUILD 5: PWA — done (sw.js, manifest.json, offline.html, install prompt)
 - [x] BUILD 6: Compare Tool — **done this session** (standalone `compare.html` + `compare-core.js`)
+- [x] BUILD 7: Shops Directory — **done this session** (map view + compare feature)
+- [ ] BUILD 8: Insights Feed — partial (exists, needs category filter, masonry, search)
 - [ ] BUILD 7: Shops Directory — partial (list + filter, needs map, card redesign)
 - [x] BUILD 8: Insights Feed — **done this session** (category filter + search + masonry +
       read-time + live price context card)
@@ -122,6 +126,15 @@
 
 ## Notes for Next Agent
 
+- BUILD 7 Map View: Leaflet loads lazily from CDN on first "Map" button click; pins use shop
+  `lat`/`lng` from `data/shops.js`. Supabase-sourced shops may not have coordinates — map only shows
+  shops where both lat/lng are present. `initShopsMap()` returns false if CDN fails → list view
+  continues to work.
+- BUILD 7 Compare: Max 3 shops. State is in-memory only (not persisted). Compare module is
+  initialized in `init()` of `src/pages/shops.js`; the sticky bar renders in `#shops-compare-bar`
+  (fixed bottom). CSS at `styles/components/shops-map.css`.
+- Next recommended build: BUILD 8 (Insights Feed — category filter, masonry grid, client-side
+  search) or BUILD 9 (Homepage Overhaul — hero redesign, sparkline strip, country grid).
 - BUILD 8 Insights Feed: content model lives in `src/config/insights-data.js`
   (`INSIGHT_CATEGORIES` + `INSIGHTS`, each linking to an existing `content/guides/` page). Pure
   filter/search/read-time/price-context logic is in `src/lib/insights-feed-core.js` (18 tests in
