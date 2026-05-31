@@ -318,6 +318,8 @@ export function buildPriceContextCard(weekAgoPrice, currentPrice, lang = 'en') {
 
   const pct = ((b - a) / a) * 100;
   const abs = Math.abs(pct).toFixed(2);
+  // `pct` is already a percentage; a ±0.05 percentage-point dead zone keeps tiny
+  // intraday wobble from being labelled a directional "up"/"down" move.
   let direction = 'flat';
   if (pct >= 0.05) direction = 'up';
   else if (pct <= -0.05) direction = 'down';

@@ -199,8 +199,12 @@ function deriveWeekAgoPrice() {
   const records = getUnifiedHistory(STATE.history || []);
   let best = 0;
   for (const r of records) {
-    // Records may be 'YYYY-MM' (monthly) or 'YYYY-MM-DD' (daily); compare lexically.
-    if (r.date <= targetKey && Number.isFinite(r.price)) best = r.price;
+    // Records may be 'YYYY-MM' (monthly) or 'YYYY-MM-DD' (daily). Normalise
+    // monthly keys to the 1st so the lexical comparison stays correct across
+    // both granularities. Records are sorted ascending, so the last match is
+    // the most recent price at-or-before the 7-day mark.
+    const rk = typeof r.date === 'string' && r.date.length === 7 ? `${r.date}-01` : r.date;
+    if (rk <= targetKey && Number.isFinite(r.price)) best = r.price;
   }
   return best;
 }

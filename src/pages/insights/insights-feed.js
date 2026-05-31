@@ -49,7 +49,7 @@ const SEARCH_DEBOUNCE_MS = 200;
 
 function formatDate(yyyymm, lang) {
   const [y, m] = String(yyyymm).split('-').map(Number);
-  if (!y || !m) return '';
+  if (!y || !m || m < 1 || m > 12) return '';
   const d = new Date(Date.UTC(y, m - 1, 1));
   return d.toLocaleDateString(lang === 'ar' ? 'ar' : 'en-GB', {
     month: 'short',
@@ -228,7 +228,8 @@ export function initInsightsFeed(initialLang = 'en') {
 
   function applyLangStrings() {
     if (searchEl) searchEl.placeholder = t().searchPlaceholder;
-    if (searchEl) searchEl.setAttribute('aria-label', t().searchLabel);
+    // The visible (sr-only) <label> is the accessible name; don't also set
+    // aria-label on the input or it would override the associated label.
     if (searchLabelEl) setText(searchLabelEl, t().searchLabel);
   }
 
@@ -265,6 +266,7 @@ export function initInsightsFeed(initialLang = 'en') {
     },
     destroy() {
       clearTimeout(searchTimer);
+      searchTimer = null;
     },
   };
 }
