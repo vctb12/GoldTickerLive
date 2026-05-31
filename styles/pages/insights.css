@@ -1161,6 +1161,103 @@
 .insights-feed-grid.is-revealed .insights-feed-card {
   animation: insights-card-in 300ms ease-out both;
   animation-delay: calc(var(--i, 0) * 45ms);
+.insights-feed-chip.is-active .insights-feed-chip-count {
+  background: rgb(255 255 255 / 22%);
+  color: #fff;
+}
+
+/* ── Search ──────────────────────────────────────── */
+.insights-feed-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 0 1 240px;
+  min-width: 180px;
+  padding-inline: 0.75rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.insights-feed-search:focus-within {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+
+.insights-feed-search-label {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-text-muted);
+}
+
+.insights-feed-search-icon {
+  font-size: var(--text-sm);
+}
+
+.insights-feed-search-input {
+  flex: 1;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.insights-feed-search-input:focus {
+  outline: none;
+}
+
+.insights-feed-search-input::placeholder {
+  color: var(--color-text-faint);
+}
+
+/* ── Masonry grid (CSS columns) ──────────────────── */
+.insights-feed-grid {
+  column-count: 3;
+  column-gap: 1.25rem;
+  transition: opacity var(--transition-md);
+}
+
+.insights-feed-grid.is-swapping {
+  opacity: 0;
+}
+
+.insights-feed-grid.is-empty {
+  column-count: 1;
+}
+
+.insights-feed-card {
+  display: inline-block;
+  width: 100%;
+  margin-block-end: 1.25rem;
+  break-inside: avoid;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+  opacity: 0;
+  transform: translateY(12px);
+  animation: insights-feed-enter 300ms ease-out forwards;
+  transition:
+    box-shadow var(--transition-md),
+    transform var(--transition-md);
+}
+
+@keyframes insights-feed-enter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.insights-feed-card-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
 }
 
 .insights-feed-card:hover {
@@ -1202,6 +1299,8 @@
   font-weight: var(--weight-bold);
   line-height: 1.35;
   color: var(--color-text);
+  color: var(--color-text);
+  line-height: 1.35;
 }
 
 .insights-feed-card-excerpt {
@@ -1214,6 +1313,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  gap: 0.4rem;
   font-size: var(--text-xs);
   color: var(--color-text-faint);
 }
@@ -1362,5 +1462,25 @@
   .insights-feed-card-link,
   .insights-search-input {
     transition: none;
+  .insights-feed-grid,
+  .insights-feed-loading {
+    column-count: 1;
+  }
+
+  .insights-feed-search {
+    flex-basis: 100%;
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .insights-feed-card,
+  .insights-feed-cover-icon,
+  .insights-feed-grid,
+  .insights-feed-skeleton {
+    animation: none;
+    transition: none;
+    opacity: 1;
+    transform: none;
   }
 }
