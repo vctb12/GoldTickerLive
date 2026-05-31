@@ -4,6 +4,37 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### BUILD 7 — Gold Shop Directory: Map View & Compare Feature — 2026-05-31
+
+**New features:**
+
+- feat(shops/map): add interactive Leaflet.js map view to shops directory with Map/List toggle.
+  Shops with lat/lng coordinates appear as clickable pins; popup shows name, market, city, and a
+  "View details →" button that opens the shop modal. Map fits bounds to show all visible pins.
+  Graceful fallback to list-only view if Leaflet CDN fails to load.
+- feat(shops/compare): add shop comparison feature — select up to 3 shops via a "Compare" toggle
+  button on each card. A sticky bottom bar shows selected shops as removable chips with a "Compare
+  selected" button that opens a full-screen comparison modal with a side-by-side table (location,
+  market, category, specialties, details, phone, website).
+- feat(shops/data): add lat/lng coordinates to all 27 shop entries in `data/shops.js` for map pin
+  placement.
+
+**Architecture:**
+
+- `src/components/shops-map.js` — Leaflet map component (CDN loader, marker layer, popup bindings,
+  fit-bounds, invalidateSize for container visibility)
+- `src/components/shops-compare.js` — compare module (initCompare, toggleCompare, clearCompare,
+  renderCompareBar, openCompareModal, max-3 limit)
+- `styles/components/shops-map.css` — map container, view toggle, compare bar, compare modal,
+  compare table (design tokens, RTL, dark mode, responsive, reduced-motion)
+- `tests/shops-compare.test.js` — 9 unit tests covering add/remove/max/clear/callback
+
+**Quality:**
+
+- i18n: bilingual EN/AR strings for map, list, compare features
+- 0 new lint errors; all existing tests pass (3 pre-existing failures unchanged)
+- Build passes; map view loads Leaflet lazily on first click (no impact on initial load)
+
 ### BUILD 6 — Compare Countries: interactive cross-country tool — 2026-05-31
 
 **New feature:**

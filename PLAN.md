@@ -24,6 +24,8 @@
 
 ## ✅ Recently Completed
 
+- [x] BUILD 7: Shops Directory — Map view (Leaflet.js) + compare shops (up to 3, side-by-side
+      modal) + lat/lng data for 27 shops + 9 new tests — completed: 2026-05-31 — PR: (draft)
 - [x] BUILD 6: Compare Countries — standalone interactive `compare.html` (sortable table, karat
       tabs, country chips, side-by-side detail with per-karat bar chart, cheapest-to-buy callout,
       hash deep links) backed by pure `src/pages/compare/compare-core.js` + 13 tests — completed:
@@ -109,28 +111,19 @@
 - [x] BUILD 4: Calculator Tabs — done (5 tabs: value, scrap, zakat, buying power, converter)
 - [x] BUILD 5: PWA — done (sw.js, manifest.json, offline.html, install prompt)
 - [x] BUILD 6: Compare Tool — **done this session** (standalone `compare.html` + `compare-core.js`)
-- [ ] BUILD 7: Shops Directory — partial (list + filter, needs map, card redesign)
+- [x] BUILD 7: Shops Directory — **done this session** (map view + compare feature)
 - [ ] BUILD 8: Insights Feed — partial (exists, needs category filter, masonry, search)
 - [ ] BUILD 9: Homepage Overhaul — partial (recent polish sessions improved it significantly)
 - [x] BUILD 10: Alert System — **done this session** (engine + drawer + dialog + sound + tests)
 
 ## Notes for Next Agent
 
-- BUILD 2 Market Intelligence Panel is injected by `countries/country-page.js` via
-  `ensureMarketIntelMount()` (no per-page HTML edits) and styled in `styles/country-page.css`.
-  Reference data lives in `src/config/market-intel.js` keyed by ISO code with a generic fallback.
-- The "Should I Buy Today?" indicator reads the shared `gtl_history` daily snapshots; country pages
-  now call `cache.saveHistorySnapshot(STATE)` so the 7-day average builds over repeat visits.
-- Alert engine is wired into tracker-pro.js `applyRealtimeSnapshot` — fires on every 90s price tick
-- Alert manager drawer CSS is at `styles/components/alert-manager.css` — imported only in
-  tracker.html
-- New localStorage key `gtl_alerts_v2` — migrates from legacy `gold_price_alerts` automatically
-- 18 new tests in `tests/alert-engine.test.js` — all pass
-- BUILD 6 Compare tool: standalone page `compare.html` + orchestrator `src/pages/compare.js` + pure
-  logic `src/pages/compare/compare-core.js` (DOM-free, unit-tested). Cross-country comparison keys
-  off an all-in **retail estimate** = gold value × (1 + median making charge) × (1 + VAT), because
-  the spot-linked gold value per gram is globally identical in USD. `fxRateFor` returns the
-  hardcoded AED peg for AED and never the live rates object. Hash deep-link format:
-  `#compare=ae,sa,kw,qa&k=22` (codes + active karat). Footer/breadcrumb/sitemap/translations wired.
-- Next recommended build: BUILD 7 (Shops Directory — add map view, card redesign, advanced filters,
-  detail modal) or BUILD 8 (Insights Feed — category filter, masonry grid, client-side search).
+- BUILD 7 Map View: Leaflet loads lazily from CDN on first "Map" button click; pins use shop
+  `lat`/`lng` from `data/shops.js`. Supabase-sourced shops may not have coordinates — map only shows
+  shops where both lat/lng are present. `initShopsMap()` returns false if CDN fails → list view
+  continues to work.
+- BUILD 7 Compare: Max 3 shops. State is in-memory only (not persisted). Compare module is
+  initialized in `init()` of `src/pages/shops.js`; the sticky bar renders in `#shops-compare-bar`
+  (fixed bottom). CSS at `styles/components/shops-map.css`.
+- Next recommended build: BUILD 8 (Insights Feed — category filter, masonry grid, client-side
+  search) or BUILD 9 (Homepage Overhaul — hero redesign, sparkline strip, country grid).
