@@ -1320,6 +1320,7 @@ function buildShopCardMarkup(shop) {
     : '';
   const listingTypeBadge = `<span class="shop-listing-type ${isCluster ? 'shop-listing-type--market' : 'shop-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
   const inShortlist = isInShortlist(shop.id);
+  const inCompare = isInCompareList(shop.id);
   const countryUrl = country?.slug ? `countries/${country.slug}/gold-price/` : '';
   const goldRateUrl = cityGoldRateUrl(shop);
   const areaGuideUrl = `${location.pathname}?country=${encodeURIComponent(shop.countryCode)}&search=${encodeURIComponent(shop.market)}`;
@@ -1465,10 +1466,10 @@ function buildShopCardMarkup(shop) {
             <span class="shop-action-icon">${inShortlist ? '✓' : '+'}</span>
             <span class="shop-action-label">${inShortlist ? t('saved') : t('saveToShortlist')}</span>
           </button>
-          <button class="shop-compare-toggle ${isInCompareList(shop.id) ? 'is-compared' : ''}" 
-                  type="button" data-compare-shop-id="${esc(shop.id)}" aria-label="${isInCompareList(shop.id) ? t('compareRemove') : t('compareAdd')}: ${esc(shop.name)}" aria-pressed="${isInCompareList(shop.id) ? 'true' : 'false'}">
-            <span class="shop-action-icon">${isInCompareList(shop.id) ? '✓' : '⇌'}</span>
-            <span class="shop-action-label">${isInCompareList(shop.id) ? t('compareRemove') : t('compareAdd')}</span>
+          <button class="shop-compare-toggle ${inCompare ? 'is-compared' : ''}" 
+                  type="button" data-compare-shop-id="${esc(shop.id)}" aria-label="${inCompare ? t('compareRemove') : t('compareAdd')}: ${esc(shop.name)}" aria-pressed="${inCompare ? 'true' : 'false'}">
+            <span class="shop-action-icon">${inCompare ? '✓' : '⇌'}</span>
+            <span class="shop-action-label">${inCompare ? t('compareRemove') : t('compareAdd')}</span>
           </button>
           <button class="shop-action-btn shop-action-btn--copy" type="button" data-copy-shop-id="${esc(shop.id)}" aria-label="${t('copyDetails')}">
             <span class="shop-action-icon">⎘</span>

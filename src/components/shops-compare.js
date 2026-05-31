@@ -6,7 +6,7 @@
  * @module src/components/shops-compare
  */
 
-import { escape as esc } from '../lib/safe-dom.js';
+import { escape as esc, safeHref as safeUrl } from '../lib/safe-dom.js';
 
 const MAX_COMPARE = 3;
 
@@ -233,16 +233,20 @@ export function openCompareModal() {
     },
     {
       key: 'detailsAvailability',
-      fn: (s) =>
-        `<span class="shops-compare-detail-badge shops-compare-detail-${esc(s.detailsAvailability || 'limited')}">${esc(s.detailsAvailability || 'limited')}</span>`,
+      fn: (s) => {
+        const avail = s.detailsAvailability || 'limited';
+        return `<span class="shops-compare-detail-badge shops-compare-detail-${esc(avail)}">${esc(avail)}</span>`;
+      },
     },
     { key: 'phone', fn: (s) => (s.phone ? esc(s.phone) : `<em>${t('notAvailable')}</em>`) },
     {
       key: 'website',
-      fn: (s) =>
-        s.website
-          ? `<a href="${esc(s.website)}" target="_blank" rel="noopener">${t('website')}</a>`
-          : `<em>${t('notAvailable')}</em>`,
+      fn: (s) => {
+        const url = safeUrl(s.website);
+        return url
+          ? `<a href="${esc(url)}" target="_blank" rel="noopener">${t('website')}</a>`
+          : `<em>${t('notAvailable')}</em>`;
+      },
     },
   ];
 

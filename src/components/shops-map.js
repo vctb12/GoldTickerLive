@@ -5,6 +5,8 @@
  * @module src/components/shops-map
  */
 
+import { escape as escapeHtml } from '../lib/safe-dom.js';
+
 const LEAFLET_CSS = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
 const LEAFLET_JS = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
 
@@ -124,7 +126,7 @@ export function updateMapMarkers(shops) {
         <strong>${escapeHtml(shop.name)}</strong>
         <p>${escapeHtml(shop.market)}, ${escapeHtml(shop.city)}</p>
         <p class="shops-map-popup-category">${escapeHtml(shop.category)}</p>
-        <button class="shops-map-popup-btn" data-shop-id="${escapeHtml(shop.id)}">View details →</button>
+        <button class="shops-map-popup-btn" data-shop-id="${escapeHtml(shop.id)}">View details &rarr;</button>
       </div>
     `;
 
@@ -167,12 +169,4 @@ export function invalidateMapSize() {
   if (_map) {
     _map.invalidateSize();
   }
-}
-
-function escapeHtml(str) {
-  return String(str || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
 }
