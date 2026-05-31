@@ -4,6 +4,37 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### BUILD 8 — Insights Feed: Market Analysis Hub — 2026-05-31
+
+**New feature:**
+
+- feat(insights): replace static 3-card grid with a dynamic, JS-rendered masonry layout powered by
+  `src/config/insights-articles.js` — 15 bilingual articles across 6 categories (Price Analysis,
+  Market News, Buying Guides, Zakat & Islamic Finance, Investment, Education).
+- feat(insights): add horizontally scrollable category filter chip strip with article counts per
+  category. Active category highlighted with gold accent. Clicking filters the grid instantly.
+- feat(insights): add client-side search with 200ms debounce, filtering by title + excerpt text.
+  No-results state with helpful suggestions. Escape key clears search. Result count shown when
+  filter is active.
+- feat(insights): add dynamic "Related to current gold price" contextual callout card inserted at
+  position 3 in the grid. Compares current spot price to 7-day baseline average. Updates every 90
+  seconds with the price refresh cycle.
+- feat(insights): add estimated read time on every card calculated from article word count (200
+  wpm).
+- feat(insights): add scroll-triggered entrance animations (`data-reveal`) to all cards and the
+  featured article card, with `prefers-reduced-motion` fallback.
+- feat(insights): full bilingual EN/AR support for search, categories, result count, no-results
+  message, read time labels, and contextual callout text.
+
+**Quality:**
+
+- test: 9 new tests in `tests/insights-feed.test.js` — config completeness, category coverage,
+  unique IDs, bilingual labels, read-time calculation.
+- a11y: search input has associated label, category chips use `role="tablist"` with `aria-selected`,
+  results meta uses `aria-live="polite"`, search input has `aria-describedby` hint.
+- RTL: search icon position, category strip, card header/footer all mirror correctly.
+- mobile: masonry grid collapses 3→2→1 columns; category strip scrolls horizontally with snap.
+- CSS: uses design tokens for all colors, spacing, radii, shadows; no hardcoded values.
 ### BUILD 7 — Gold Shop Directory: Map View & Compare Feature — 2026-05-31
 
 **New features:**
