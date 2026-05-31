@@ -10,6 +10,10 @@
 
 const WORDS_PER_MINUTE = 200;
 
+// Minimum absolute week-over-week move (in %) before the price context card
+// labels the market as up or down rather than flat.
+const DIRECTION_THRESHOLD_PCT = 0.05;
+
 /**
  * Count words in a plain-text string. Collapses any whitespace run.
  * @param {string} text
@@ -158,8 +162,8 @@ export function buildPriceContext(input = {}) {
   const abs = Math.abs(rounded).toFixed(2);
 
   let direction = 'flat';
-  if (rounded >= 0.05) direction = 'up';
-  else if (rounded <= -0.05) direction = 'down';
+  if (rounded >= DIRECTION_THRESHOLD_PCT) direction = 'up';
+  else if (rounded <= -DIRECTION_THRESHOLD_PCT) direction = 'down';
 
   const en = {
     up: {

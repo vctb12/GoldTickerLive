@@ -253,16 +253,20 @@ function getWeekAgoUsd() {
   const history = Array.isArray(STATE.history) ? STATE.history : [];
   if (history.length === 0) return 0;
   const now = Date.now();
-  const DAY = 24 * 60 * 60 * 1000;
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  // Accept any cached snapshot 4–14 days old, preferring the one closest to 7.
+  const MIN_WEEK_AGO_DAYS = 4;
+  const MAX_WEEK_AGO_DAYS = 14;
+  const TARGET_DAYS = 7;
   let best = null;
   let bestDist = Infinity;
   for (const entry of history) {
     if (!entry || !entry.price || !entry.date) continue;
     const ts = entry.timestamp || Date.parse(`${entry.date}T00:00:00Z`);
     if (!ts) continue;
-    const ageDays = (now - ts) / DAY;
-    if (ageDays < 4 || ageDays > 14) continue;
-    const dist = Math.abs(ageDays - 7);
+    const ageDays = (now - ts) / DAY_MS;
+    if (ageDays < MIN_WEEK_AGO_DAYS || ageDays > MAX_WEEK_AGO_DAYS) continue;
+    const dist = Math.abs(ageDays - TARGET_DAYS);
     if (dist < bestDist) {
       bestDist = dist;
       best = entry.price;

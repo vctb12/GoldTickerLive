@@ -261,7 +261,8 @@ export class InsightsFeed {
 
     let placed = 0;
     results.forEach((insight, index) => {
-      // Insert the live context card at the configured slot (1-based).
+      // Insert the live context card at the configured slot. CONTEXT_POSITION
+      // is 1-based, so the 0-based `placed` index reaches it at POSITION - 1.
       if (contextNode && placed === CONTEXT_POSITION - 1) {
         grid.append(contextNode);
         placed += 1;
