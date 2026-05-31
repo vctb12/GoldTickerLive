@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### BUILD 8 — Insights: market-analysis feed (filter · search · masonry · live context) — 2026-05-31
+
+**New feature:**
+
+- feat(insights): rebuild the Insights cards section into an interactive market-analysis feed — a
+  horizontally scrollable category filter strip with live counts, a debounced (200 ms) client-side
+  search, a masonry-style CSS-columns grid (3 → 2 → 1), per-card read-time estimates and publish
+  dates, and a branded no-results state.
+- feat(insights): add a live "Related to current gold price" context card pinned to grid position 3
+  — it compares the current spot price with a ~7-day-ago cached daily snapshot and only renders when
+  honest week-over-week data exists. It updates on the existing 90-second refresh cycle and makes no
+  extra fetches.
+- feat(insights): add `src/config/insights-data.js` — a bilingual (EN/AR) content model of 12
+  insights, each linking to an existing `content/guides/` page (no dead links), plus the category
+  taxonomy.
+- feat(insights): add `src/lib/insights-feed-core.js` — a pure, DOM-free logic module
+  (`filterInsights`, `categoryCounts`, `estimateReadMinutes`, `sortByDateDesc`, `getFeatured`,
+  `buildPriceContext`, `aed22kPerGram`) with 18 unit tests in `tests/insights-feed-core.test.js`.
+- feat(insights): render via `src/components/insights-feed.js` (`mountInsightsFeed`) using the
+  safe-DOM `el()` helper (no innerHTML); full RTL support via CSS logical properties, dark mode
+  through design tokens, and a `prefers-reduced-motion` fallback for the entrance animation.
+
 ### BUILD 6 — Compare Countries: interactive cross-country tool — 2026-05-31
 
 **New feature:**

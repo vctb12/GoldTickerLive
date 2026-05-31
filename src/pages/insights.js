@@ -12,6 +12,8 @@ import { getBaselineHistory, getHistoryStats } from '../lib/historical-data.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import { countUp } from '../lib/count-up.js';
 import { mountRelatedGuides } from '../components/RelatedGuides.js';
+import { mountInsightsFeed } from '../components/insights-feed.js';
+import { INSIGHTS, INSIGHT_CATEGORIES } from '../config/insights-data.js';
 
 const AED_PEG = CONSTANTS.AED_PEG; // 3.6725
 const TROY_GRAMS = CONSTANTS.TROY_OZ_GRAMS; // 31.1035
@@ -26,6 +28,7 @@ const STATE = {
   freshness: { goldUpdatedAt: null },
   favorites: [],
   history: [],
+  feed: null,
   activeTab: 'gcc',
   sortOrder: 'default',
   searchQuery: '',
@@ -212,6 +215,8 @@ function updateMarketPulse(spotUsd) {
     const label = STATE.lang === 'ar' ? 'تحديث بيانات الصفحة' : 'Page data updated';
     updated.textContent = `${label}: ${hhmm}`;
   }
+
+  refreshFeedContext();
 }
 
 async function fetchAndUpdatePriceBar() {
@@ -231,6 +236,60 @@ async function fetchAndUpdatePriceBar() {
       if (freshEl) freshEl.textContent = STATE.lang === 'ar' ? 'غير متاح' : 'Unavailable';
     }
   }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// INSIGHTS FEED (BUILD 8)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Find a XAU/USD reference price from roughly one week ago using the cached
+ * daily snapshots. Returns 0 when no snapshot in the 4–14 day window exists, so
+ * the contextual callout stays hidden until honest week-over-week data is
+ * available. No extra network requests are made.
+ * @returns {number}
+ */
+function getWeekAgoUsd() {
+  const history = Array.isArray(STATE.history) ? STATE.history : [];
+  if (history.length === 0) return 0;
+  const now = Date.now();
+  const DAY = 24 * 60 * 60 * 1000;
+  let best = null;
+  let bestDist = Infinity;
+  for (const entry of history) {
+    if (!entry || !entry.price || !entry.date) continue;
+    const ts = entry.timestamp || Date.parse(`${entry.date}T00:00:00Z`);
+    if (!ts) continue;
+    const ageDays = (now - ts) / DAY;
+    if (ageDays < 4 || ageDays > 14) continue;
+    const dist = Math.abs(ageDays - 7);
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = entry.price;
+    }
+  }
+  return best || 0;
+}
+
+/** Refresh the live "Related to current gold price" context card in the feed. */
+function refreshFeedContext() {
+  if (!STATE.feed || STATE.goldPriceUsdPerOz <= 0) return;
+  STATE.feed.setPriceContext({
+    currentUsd: STATE.goldPriceUsdPerOz,
+    weekAgoUsd: getWeekAgoUsd(),
+  });
+}
+
+function mountFeed() {
+  const mount = document.getElementById('insights-feed-mount');
+  if (!mount) return;
+  STATE.feed = mountInsightsFeed({
+    mount,
+    insights: INSIGHTS,
+    categories: INSIGHT_CATEGORIES,
+    lang: STATE.lang,
+  });
+  refreshFeedContext();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -258,6 +317,7 @@ async function init() {
       cache.savePreference('lang', STATE.lang);
       shell.updateLang(STATE.lang);
       applyLang(STATE.lang);
+      if (STATE.feed) STATE.feed.setLang(STATE.lang);
       // Refresh freshness label in new language
       if (STATE.goldPriceUsdPerOz > 0) {
         updatePriceBar(STATE.goldPriceUsdPerOz, STATE.status.goldStale);
@@ -266,6 +326,9 @@ async function init() {
   });
 
   applyLang(STATE.lang);
+
+  // Mount the interactive insights feed (filter · search · masonry · context)
+  mountFeed();
 
   // Show cached price immediately, then fetch fresh
   if (STATE.goldPriceUsdPerOz > 0) {

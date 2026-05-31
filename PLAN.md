@@ -24,6 +24,11 @@
 
 ## ✅ Recently Completed
 
+- [x] BUILD 8: Insights Feed — interactive market-analysis feed on `insights.html` (category filter
+      strip with live counts, debounced client-side search, masonry CSS-columns grid, per-card
+      read-time + date, "Related to current gold price" live context card at position 3, bilingual
+      EN/AR + RTL, no-results state) backed by pure `src/lib/insights-feed-core.js` +
+      `src/config/insights-data.js` and 18 tests — completed: 2026-05-31 — PR: (draft)
 - [x] BUILD 6: Compare Countries — standalone interactive `compare.html` (sortable table, karat
       tabs, country chips, side-by-side detail with per-karat bar chart, cheapest-to-buy callout,
       hash deep links) backed by pure `src/pages/compare/compare-core.js` + 13 tests — completed:
@@ -110,12 +115,21 @@
 - [x] BUILD 5: PWA — done (sw.js, manifest.json, offline.html, install prompt)
 - [x] BUILD 6: Compare Tool — **done this session** (standalone `compare.html` + `compare-core.js`)
 - [ ] BUILD 7: Shops Directory — partial (list + filter, needs map, card redesign)
-- [ ] BUILD 8: Insights Feed — partial (exists, needs category filter, masonry, search)
+- [x] BUILD 8: Insights Feed — **done this session** (category filter + search + masonry +
+      read-time + live price context card)
 - [ ] BUILD 9: Homepage Overhaul — partial (recent polish sessions improved it significantly)
 - [x] BUILD 10: Alert System — **done this session** (engine + drawer + dialog + sound + tests)
 
 ## Notes for Next Agent
 
+- BUILD 8 Insights Feed: content model lives in `src/config/insights-data.js`
+  (`INSIGHT_CATEGORIES` + `INSIGHTS`, each linking to an existing `content/guides/` page). Pure
+  filter/search/read-time/price-context logic is in `src/lib/insights-feed-core.js` (18 tests in
+  `tests/insights-feed-core.test.js`). Rendering is `src/components/insights-feed.js`
+  (`mountInsightsFeed`), mounted from `src/pages/insights.js` into `#insights-feed-mount`. The live
+  "Related to current gold price" card only renders when a ~7-day-ago daily snapshot exists in
+  localStorage (honest week-over-week); it is fed via `feed.setPriceContext()` on each refresh. CSS
+  additions are at the bottom of `styles/pages/insights.css`.
 - BUILD 2 Market Intelligence Panel is injected by `countries/country-page.js` via
   `ensureMarketIntelMount()` (no per-page HTML edits) and styled in `styles/country-page.css`.
   Reference data lives in `src/config/market-intel.js` keyed by ISO code with a generic fallback.
