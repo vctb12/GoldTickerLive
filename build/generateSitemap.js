@@ -70,6 +70,7 @@ const staticPages = [
   { loc: `${SITE_URL}/tracker.html`,      changefreq: 'always',  priority: '0.95' },
   { loc: `${SITE_URL}/shops.html`,        changefreq: 'weekly',  priority: '0.85' },
   { loc: `${SITE_URL}/calculator.html`,   changefreq: 'monthly', priority: '0.75' },
+  { loc: `${SITE_URL}/compare.html`,       changefreq: 'always',  priority: '0.80' },
   { loc: `${SITE_URL}/learn.html`,        changefreq: 'monthly', priority: '0.65' },
   { loc: `${SITE_URL}/insights.html`,     changefreq: 'daily',   priority: '0.75' },
   { loc: `${SITE_URL}/methodology.html`,  changefreq: 'monthly', priority: '0.55' },
