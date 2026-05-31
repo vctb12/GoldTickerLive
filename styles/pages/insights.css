@@ -508,6 +508,27 @@
   box-shadow: var(--shadow-md);
 }
 
+.insights-featured-card[data-reveal] {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.4s ease-out,
+    transform 0.4s ease-out;
+}
+
+.insights-featured-card[data-reveal].is-in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .insights-featured-card[data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 .insights-featured-label {
   font-size: 0.72rem;
   font-weight: var(--weight-bold);

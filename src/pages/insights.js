@@ -272,6 +272,7 @@ async function fetchAndUpdatePriceBar() {
     cache.saveGoldPrice(data.price, data.updatedAt);
     updatePriceBar(data.price, false);
     updateMarketPulse(data.price);
+    refreshContextCallout();
   } catch {
     STATE.status.goldStale = true;
     if (STATE.goldPriceUsdPerOz > 0) {
@@ -280,6 +281,20 @@ async function fetchAndUpdatePriceBar() {
       const freshEl = document.getElementById('price-bar-freshness');
       if (freshEl) freshEl.textContent = STATE.lang === 'ar' ? 'غير متاح' : 'Unavailable';
     }
+  }
+}
+
+/** Update the contextual callout in the grid (if visible and category is 'all') */
+function refreshContextCallout() {
+  const grid = document.getElementById('insights-masonry-grid');
+  if (!grid) return;
+  const existing = grid.querySelector('.insights-context-callout');
+  if (!existing) return; // Not shown (category filtered or search active)
+  const newCallout = buildContextCallout();
+  if (newCallout) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = newCallout;
+    existing.replaceWith(tmp.firstElementChild);
   }
 }
 
