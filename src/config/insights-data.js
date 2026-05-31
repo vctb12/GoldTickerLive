@@ -1,277 +1,236 @@
 /**
- * Insights feed data model.
+ * Insights feed content model.
+ * ═══════════════════════════════════════════════════════════════════════════
  *
- * A bilingual (EN/AR) catalogue of market-analysis and buyer-guide articles that
- * already exist in the repository. Each entry maps to a real, published page — no
- * placeholders. Word counts are taken from the article bodies so the read-time
- * estimate shown in the feed is genuine.
+ * Pure data — no DOM, no imports. Consumed by:
+ *   - src/lib/insights-feed-core.js  (filter / search / read-time logic)
+ *   - src/components/insights-feed.js (rendering)
  *
- * Consumed by:
- *   - src/pages/insights/feed-core.js  (pure logic: filtering, search, counts)
- *   - src/pages/insights/feed.js       (DOM rendering)
+ * Each insight links to an existing evergreen guide already shipped under
+ * `content/guides/` so there are no dead links or placeholder content.
+ *
+ * Schema (per insight):
+ *   id        unique slug-style id (also used as the DOM key)
+ *   category  one of INSIGHT_CATEGORIES[].id (never 'all')
+ *   href      relative URL to the full guide
+ *   dateIso   publish date 'YYYY-MM-DD' (used for sort + display)
+ *   words     approximate word count of the linked article (drives read time)
+ *   icon      short emoji used as the card's inline illustration
+ *   featured  optional boolean — the single hero card at the top of the feed
+ *   title     { en, ar }
+ *   excerpt   { en, ar }  — two-line summary, plain text
  */
 
 /**
- * Category registry. `key` is used in the URL hash + filtering; labels are bilingual.
- * `accent` drives the cover gradient + chip tint via a data attribute.
+ * Category taxonomy. `all` is a synthetic bucket handled by the filter UI and
+ * must stay first. Every other id must be referenced by at least one insight.
+ * @type {{ id: string, en: string, ar: string }[]}
  */
 export const INSIGHT_CATEGORIES = [
-  { key: 'price-analysis', en: 'Price Analysis', ar: 'تحليل الأسعار', icon: '📈' },
-  { key: 'market-news', en: 'Market News', ar: 'أخبار السوق', icon: '📰' },
-  { key: 'buying-guides', en: 'Buying Guides', ar: 'أدلة الشراء', icon: '🛍️' },
-  {
-    key: 'zakat-islamic',
-    en: 'Zakat & Islamic Finance',
-    ar: 'الزكاة والتمويل الإسلامي',
-    icon: '🕌',
-  },
-  { key: 'investment', en: 'Investment', ar: 'الاستثمار', icon: '💰' },
+  { id: 'all', en: 'All', ar: 'الكل' },
+  { id: 'price-analysis', en: 'Price Analysis', ar: 'تحليل الأسعار' },
+  { id: 'market-news', en: 'Market News', ar: 'أخبار السوق' },
+  { id: 'buying-guides', en: 'Buying Guides', ar: 'أدلة الشراء' },
+  { id: 'zakat', en: 'Zakat & Islamic Finance', ar: 'الزكاة والتمويل الإسلامي' },
+  { id: 'investment', en: 'Investment', ar: 'الاستثمار' },
 ];
 
 /**
- * Insight entries. `words` is the approximate article body word count (chrome
- * excluded) used to derive read time at 200 wpm. `featured: true` marks the hero.
+ * The insight library. Newest first is not required — the feed sorts by date.
+ * @type {Array<object>}
  */
 export const INSIGHTS = [
   {
-    id: 'aed-peg-explained',
+    id: 'spot-vs-retail',
     category: 'price-analysis',
-    url: 'content/guides/aed-peg-explained.html',
-    date: '2026-05-12',
-    words: 1665,
-    icon: '🔗',
+    href: 'content/spot-vs-retail-gold-price/',
+    dateIso: '2026-04-18',
+    words: 760,
+    icon: '⚖️',
     featured: true,
+    title: {
+      en: 'Why UAE Gold Prices Differ from Global Spot',
+      ar: 'لماذا تختلف أسعار الذهب في الإمارات عن السعر العالمي الفوري',
+    },
+    excerpt: {
+      en: 'The spot price is the global benchmark for pure gold. Retail rates add making charges, store margin and logistics — here is how to read the gap.',
+      ar: 'السعر الفوري هو المرجع العالمي للذهب الخالص، بينما تضيف أسعار التجزئة رسوم الصنعة وهامش المتجر والشحن — إليك كيفية قراءة الفارق.',
+    },
+  },
+  {
+    id: 'aed-peg',
+    category: 'price-analysis',
+    href: 'content/guides/aed-peg-explained.html',
+    dateIso: '2026-04-12',
+    words: 540,
+    icon: '🇦🇪',
     title: {
       en: 'Understanding the AED Gold Peg',
       ar: 'فهم ربط الدرهم بالذهب',
     },
     excerpt: {
-      en: 'Since 1997 the UAE has pegged 1 USD = 3.6725 AED, so local gold prices track the dollar with zero FX noise. Here is why that makes the Emirates one of the most price-stable gold markets on earth.',
-      ar: 'منذ عام 1997 يثبّت الدرهم عند 3.6725 لكل دولار، فتتبع أسعار الذهب المحلية الدولار دون تذبذب صرف. إليك لماذا يجعل ذلك الإمارات من أكثر أسواق الذهب استقراراً في العالم.',
+      en: 'The UAE has pegged 1 USD = 3.6725 AED since 1997, so dirham gold prices track the dollar with zero FX noise — one of the most stable gold markets globally.',
+      ar: 'ثبّتت الإمارات سعر الصرف عند 1 دولار = 3.6725 درهم منذ عام 1997، لذا تتبع أسعار الذهب بالدرهم الدولار دون تقلبات صرف — أحد أكثر أسواق الذهب استقراراً عالمياً.',
     },
   },
   {
-    id: 'uae-vs-saudi-vs-kuwait',
+    id: 'gcc-price-compare',
     category: 'price-analysis',
-    url: 'content/guides/uae-vs-saudi-vs-kuwait-gold-prices/',
-    date: '2026-05-08',
-    words: 1616,
+    href: 'content/guides/uae-vs-saudi-vs-kuwait-gold-prices/',
+    dateIso: '2026-03-29',
+    words: 690,
     icon: '🌍',
     title: {
-      en: 'UAE vs Saudi vs Kuwait Gold Prices',
-      ar: 'أسعار الذهب: الإمارات والسعودية والكويت',
+      en: 'UAE vs Saudi vs Kuwait: Where Is Gold Cheapest?',
+      ar: 'الإمارات مقابل السعودية مقابل الكويت: أين الذهب الأرخص؟',
     },
     excerpt: {
-      en: 'Spot gold is identical across the GCC, yet final prices differ. We break down VAT, making charges and currency pegs to show where the same 22K gram really costs less.',
-      ar: 'سعر الذهب الفوري واحد في الخليج، لكن الأسعار النهائية تختلف. نحلّل الضريبة وأجور الصياغة وربط العملة لنبيّن أين يكلّف غرام عيار 22 أقل فعلاً.',
+      en: 'Spot gold is identical across the GCC in USD. The real difference comes from VAT and making charges — we break down the all-in cost country by country.',
+      ar: 'السعر الفوري للذهب متطابق في دول الخليج بالدولار، والفارق الحقيقي يأتي من ضريبة القيمة المضافة ورسوم الصنعة — نوضح التكلفة الإجمالية لكل دولة.',
     },
   },
   {
-    id: 'gcc-market-hours',
+    id: 'market-hours',
     category: 'market-news',
-    url: 'content/guides/gcc-market-hours.html',
-    date: '2026-05-05',
-    words: 1440,
-    icon: '🕐',
+    href: 'content/guides/gcc-market-hours.html',
+    dateIso: '2026-03-22',
+    words: 480,
+    icon: '🕑',
     title: {
       en: 'When Do Gold Markets Open? A GCC Guide',
-      ar: 'متى تفتح أسواق الذهب؟ دليل خليجي',
+      ar: 'متى تفتح أسواق الذهب؟ دليل الخليج',
     },
     excerpt: {
-      en: 'Gold trades almost 24 hours a day from Sunday night to Friday evening UTC. Learn the London and New York sessions that drive the most movement — and when GCC buyers see it land.',
-      ar: 'يُتداول الذهب نحو 24 ساعة من مساء الأحد إلى مساء الجمعة بتوقيت غرينتش. تعرّف على جلستي لندن ونيويورك الأكثر تأثيراً ومتى يصل ذلك لمشتري الخليج.',
+      en: 'Gold trades almost 24 hours a day, Sunday 22:00 to Friday 21:00 UTC. Liquidity peaks at the London open and during the London–New York overlap.',
+      ar: 'يُتداول الذهب نحو 24 ساعة يومياً من الأحد 22:00 حتى الجمعة 21:00 بالتوقيت العالمي، وتبلغ السيولة ذروتها عند افتتاح لندن وتداخل لندن ونيويورك.',
+    },
+  },
+  {
+    id: 'best-time-to-buy',
+    category: 'buying-guides',
+    href: 'content/guides/best-time-to-buy-gold/',
+    dateIso: '2026-03-15',
+    words: 720,
+    icon: '📅',
+    title: {
+      en: 'Is There a Best Time to Buy Gold?',
+      ar: 'هل هناك أفضل وقت لشراء الذهب؟',
+    },
+    excerpt: {
+      en: 'Seasonality, wedding demand and the USD cycle all nudge prices. Use the tracker’s 7-day average to judge whether today sits above or below the recent range.',
+      ar: 'تؤثر المواسم وطلب الأعراس ودورة الدولار على الأسعار. استخدم متوسط 7 أيام في المتتبع لمعرفة ما إذا كان سعر اليوم أعلى أم أقل من النطاق الأخير.',
     },
   },
   {
     id: '24k-vs-22k',
     category: 'buying-guides',
-    url: 'content/guides/24k-vs-22k.html',
-    date: '2026-05-10',
-    words: 1628,
-    icon: '⚖️',
+    href: 'content/guides/24k-vs-22k-vs-18k-gold/',
+    dateIso: '2026-03-08',
+    words: 650,
+    icon: '🔶',
     title: {
-      en: '24K vs 22K: Which Is the Better Buy?',
-      ar: 'عيار 24 مقابل 22: أيهما أفضل للشراء؟',
+      en: '24K vs 22K vs 18K: Which Karat to Buy?',
+      ar: '24 مقابل 22 مقابل 18 قيراطاً: أي عيار تشتري؟',
     },
     excerpt: {
-      en: '24K is 99.9% pure and ideal for bars and coins; 22K (91.7%) is the Gulf jewelry standard. Price scales with purity but retail premiums do not — here is how to choose.',
-      ar: 'عيار 24 نقي بنسبة 99.9% ومثالي للسبائك والعملات، بينما عيار 22 (91.7%) هو معيار المجوهرات الخليجية. السعر يتبع النقاء لكن هوامش التجزئة لا — إليك كيف تختار.',
+      en: '24K is 99.9% pure and best for bars and coins; 22K (91.7%) is the Gulf jewellery standard; 18K is more durable for everyday wear. Price scales with purity.',
+      ar: 'عيار 24 نقي بنسبة 99.9% وهو الأفضل للسبائك والعملات، وعيار 22 (91.7%) هو معيار مجوهرات الخليج، وعيار 18 أكثر متانة للاستخدام اليومي. يتناسب السعر مع النقاء.',
     },
   },
   {
-    id: 'best-time-to-buy-gold',
+    id: 'spot-fake-gold',
     category: 'buying-guides',
-    url: 'content/guides/best-time-to-buy-gold/',
-    date: '2026-04-28',
-    words: 919,
-    icon: '🗓️',
-    title: {
-      en: 'Best Time to Buy Gold: Seasonal Patterns',
-      ar: 'أفضل وقت لشراء الذهب: الأنماط الموسمية',
-    },
-    excerpt: {
-      en: 'Wedding season, festival demand and summer lulls all leave fingerprints on the gold price. We look at the recurring patterns and what they mean for timing a GCC purchase.',
-      ar: 'موسم الأعراس والطلب في الأعياد وركود الصيف كلها تترك بصمات على سعر الذهب. نستعرض الأنماط المتكررة وما تعنيه لتوقيت الشراء في الخليج.',
-    },
-  },
-  {
-    id: 'how-to-spot-fake-gold',
-    category: 'buying-guides',
-    url: 'content/guides/how-to-spot-fake-gold/',
-    date: '2026-04-30',
-    words: 1475,
+    href: 'content/guides/how-to-spot-fake-gold/',
+    dateIso: '2026-02-26',
+    words: 610,
     icon: '🔍',
     title: {
-      en: 'How to Spot Fake Gold: 8 Home Tests',
-      ar: 'كيف تكتشف الذهب المزيّف: 8 اختبارات منزلية',
+      en: 'How to Spot Fake Gold Before You Buy',
+      ar: 'كيف تكتشف الذهب المزيّف قبل الشراء',
     },
     excerpt: {
-      en: 'From the magnet test to hallmark checks and density math, here are eight practical ways to verify gold before you buy — and the red flags that should make you walk away.',
-      ar: 'من اختبار المغناطيس إلى فحص الدمغات وحساب الكثافة، إليك ثماني طرق عملية للتحقق من الذهب قبل الشراء — والإشارات التي يجب أن تدفعك للانصراف.',
+      en: 'Hallmarks, the magnet test, density checks and trusted retailers. Simple ways to verify purity and avoid overpaying for plated or under-karat pieces.',
+      ar: 'الدمغات واختبار المغناطيس وفحص الكثافة والمتاجر الموثوقة — طرق بسيطة للتحقق من النقاء وتجنب دفع أكثر من اللازم للقطع المطلية أو منخفضة العيار.',
     },
   },
   {
-    id: 'gold-hallmarks-explained',
+    id: 'hallmarks',
     category: 'buying-guides',
-    url: 'content/guides/gold-hallmarks-explained/',
-    date: '2026-04-22',
-    words: 939,
+    href: 'content/guides/gold-hallmarks-explained/',
+    dateIso: '2026-02-19',
+    words: 520,
     icon: '🏷️',
     title: {
       en: 'Gold Hallmarks Explained',
       ar: 'شرح دمغات الذهب',
     },
     excerpt: {
-      en: 'The tiny stamps on your gold tell you its purity, origin and assay office. Learn to read 916, 750 and 999 marks so you always know exactly what you are holding.',
-      ar: 'الدمغات الصغيرة على ذهبك تخبرك بنقائه ومصدره ومكتب الفحص. تعلّم قراءة علامات 916 و750 و999 لتعرف دائماً ما تمسكه بالضبط.',
+      en: 'What 916, 750 and 999 stamps really mean, how Dubai’s assaying works, and why a clear hallmark protects your resale value.',
+      ar: 'ماذا تعني دمغات 916 و750 و999 حقاً، وكيف يعمل دمغ دبي، ولماذا تحمي الدمغة الواضحة قيمة إعادة البيع.',
     },
   },
   {
-    id: '24k-22k-18k',
-    category: 'buying-guides',
-    url: 'content/guides/24k-vs-22k-vs-18k-gold/',
-    date: '2026-04-20',
-    words: 1062,
-    icon: '🧩',
+    id: 'zakat-gold',
+    category: 'zakat',
+    href: 'content/guides/zakat-gold-guide.html',
+    dateIso: '2026-02-10',
+    words: 700,
+    icon: '🌙',
     title: {
-      en: '24K vs 22K vs 18K: Which Karat to Buy',
-      ar: 'عيار 24 و22 و18: أي عيار تشتري',
+      en: 'Zakat on Gold: A Practical Guide',
+      ar: 'زكاة الذهب: دليل عملي',
     },
     excerpt: {
-      en: 'A side-by-side of the three karats that dominate GCC counters — purity, durability, resale value and the buyer each one suits best.',
-      ar: 'مقارنة مباشرة بين العيارات الثلاثة الأكثر شيوعاً في الخليج — النقاء والمتانة وقيمة إعادة البيع والمشتري الأنسب لكل منها.',
+      en: 'Once your gold passes the nisab threshold (about 85g) and a lunar year passes, 2.5% is due. Use live prices to value holdings accurately at the moment of calculation.',
+      ar: 'عندما يبلغ ذهبك النصاب (نحو 85 جراماً) ويمر عليه عام هجري، تجب فيه الزكاة بنسبة 2.5%. استخدم الأسعار المباشرة لتقييم ممتلكاتك بدقة عند الحساب.',
     },
   },
   {
-    id: 'buying-online-vs-in-store',
-    category: 'buying-guides',
-    url: 'content/guides/buying-gold-online-vs-in-store/',
-    date: '2026-04-18',
-    words: 717,
-    icon: '🛒',
-    title: {
-      en: 'Buying Gold Online vs In-Store',
-      ar: 'شراء الذهب عبر الإنترنت أم من المتجر',
-    },
-    excerpt: {
-      en: 'Online dealers often beat souk premiums, but in-store buying lets you inspect and haggle. We weigh the pros, cons and safety checks for each route.',
-      ar: 'غالباً ما تتفوق المتاجر الإلكترونية على هوامش السوق، لكن الشراء من المتجر يتيح المعاينة والمساومة. نوازن المزايا والعيوب وفحوصات الأمان لكل طريق.',
-    },
-  },
-  {
-    id: 'zakat-gold-guide',
-    category: 'zakat-islamic',
-    url: 'content/guides/zakat-gold-guide.html',
-    date: '2026-05-02',
-    words: 1880,
-    icon: '🕌',
-    title: {
-      en: 'Zakat on Gold: A Complete Guide',
-      ar: 'زكاة الذهب: دليل شامل',
-    },
-    excerpt: {
-      en: 'When does gold reach nisab, how is the 2.5% calculated, and does jewelry you wear count? A clear, practical walk-through for GCC households.',
-      ar: 'متى يبلغ الذهب النصاب، وكيف تُحسب نسبة 2.5%، وهل تُحتسب المجوهرات التي تُلبس؟ شرح عملي واضح للأسر في الخليج.',
-    },
-  },
-  {
-    id: 'invest-in-gold-gcc',
+    id: 'bars-vs-coins',
     category: 'investment',
-    url: 'content/guides/invest-in-gold-gcc.html',
-    date: '2026-05-14',
-    words: 2179,
-    icon: '🏦',
-    title: {
-      en: 'How to Invest in Gold in the GCC',
-      ar: 'كيف تستثمر في الذهب في الخليج',
-    },
-    excerpt: {
-      en: 'Bars, coins, savings plans or ETFs? A structured framework for building a gold position in the Gulf — including costs, storage and exit liquidity.',
-      ar: 'سبائك أم عملات أم خطط ادخار أم صناديق متداولة؟ إطار منظّم لبناء مركز ذهبي في الخليج — يشمل التكاليف والتخزين وسيولة الخروج.',
-    },
-  },
-  {
-    id: 'gold-as-inflation-hedge',
-    category: 'investment',
-    url: 'content/guides/gold-as-inflation-hedge/',
-    date: '2026-05-06',
-    words: 860,
-    icon: '🛡️',
-    title: {
-      en: 'Gold as an Inflation Hedge: Does It Work?',
-      ar: 'الذهب كتحوّط من التضخم: هل ينجح؟',
-    },
-    excerpt: {
-      en: 'Gold is famous as an inflation shield, but the historical record is more nuanced. We look at when it has protected wealth — and when it has lagged.',
-      ar: 'يشتهر الذهب كدرع ضد التضخم، لكن السجل التاريخي أكثر تعقيداً. نستعرض متى حمى الثروة — ومتى تخلّف عن الركب.',
-    },
-  },
-  {
-    id: 'gold-bars-vs-coins',
-    category: 'investment',
-    url: 'content/guides/gold-bars-vs-coins/',
-    date: '2026-04-26',
-    words: 732,
+    href: 'content/guides/gold-bars-vs-coins/',
+    dateIso: '2026-02-02',
+    words: 640,
     icon: '🪙',
     title: {
-      en: 'Gold Bars vs Coins for Investment',
-      ar: 'سبائك الذهب مقابل العملات للاستثمار',
+      en: 'Gold Bars vs Coins for Investors',
+      ar: 'سبائك الذهب مقابل العملات للمستثمرين',
     },
     excerpt: {
-      en: 'Bars carry the lowest premium per gram; coins offer liquidity and collectability. Which one fits your budget and exit plan?',
-      ar: 'تحمل السبائك أدنى هامش لكل غرام، بينما توفّر العملات سيولة وقابلية للجمع. أيهما يناسب ميزانيتك وخطة خروجك؟',
+      en: 'Bars carry lower premiums per gram and suit larger sums; coins are more liquid and divisible. Both beat jewellery for pure investment exposure.',
+      ar: 'تحمل السبائك علاوة أقل لكل جرام وتناسب المبالغ الكبيرة، بينما العملات أكثر سيولة وقابلية للتجزئة. كلاهما أفضل من المجوهرات للاستثمار الخالص.',
     },
   },
   {
-    id: 'gold-investment-for-beginners',
+    id: 'inflation-hedge',
     category: 'investment',
-    url: 'content/guides/gold-investment-for-beginners/',
-    date: '2026-04-24',
-    words: 719,
-    icon: '🌱',
+    href: 'content/guides/gold-as-inflation-hedge/',
+    dateIso: '2026-01-24',
+    words: 680,
+    icon: '📈',
     title: {
-      en: 'Gold Investment for Beginners',
-      ar: 'الاستثمار في الذهب للمبتدئين',
+      en: 'Is Gold Really an Inflation Hedge?',
+      ar: 'هل الذهب حقاً وقاية من التضخم؟',
     },
     excerpt: {
-      en: 'New to gold? Start here. We cover the simplest first steps, how much to allocate and the common mistakes first-time GCC buyers make.',
-      ar: 'جديد على الذهب؟ ابدأ من هنا. نغطّي أبسط الخطوات الأولى وكم تخصّص والأخطاء الشائعة لدى مشتري الخليج لأول مرة.',
+      en: 'Over long horizons gold has preserved purchasing power, but it is volatile year to year. We look at the evidence and how to size an allocation.',
+      ar: 'على المدى الطويل حافظ الذهب على القوة الشرائية، لكنه متقلب من عام لآخر. نستعرض الأدلة وكيفية تحديد حجم التخصيص.',
     },
   },
   {
-    id: 'gold-savings-plans-gcc',
+    id: 'savings-plans',
     category: 'investment',
-    url: 'content/guides/gold-savings-plans-gcc/',
-    date: '2026-05-01',
-    words: 1612,
-    icon: '📊',
+    href: 'content/guides/gold-savings-plans-gcc/',
+    dateIso: '2026-01-15',
+    words: 560,
+    icon: '💳',
     title: {
       en: 'Gold Savings Plans in the GCC',
-      ar: 'خطط ادخار الذهب في الخليج',
+      ar: 'خطط ادخار الذهب في دول الخليج',
     },
     excerpt: {
-      en: 'Banks and apps now let you buy gold monthly in small amounts. We compare the leading GCC savings schemes on fees, redemption and flexibility.',
-      ar: 'تتيح البنوك والتطبيقات الآن شراء الذهب شهرياً بمبالغ صغيرة. نقارن أبرز خطط الادخار الخليجية من حيث الرسوم والاسترداد والمرونة.',
+      en: 'Jewellers across the Gulf offer instalment schemes to accumulate gold over time. We weigh the convenience against making charges and lock-in terms.',
+      ar: 'يقدم تجار المجوهرات في الخليج خطط أقساط لتجميع الذهب بمرور الوقت. نوازن بين الراحة ورسوم الصنعة وشروط الالتزام.',
     },
   },
 ];
