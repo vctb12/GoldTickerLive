@@ -225,14 +225,14 @@ function getFeaturedKarats(countryData) {
     .filter(Boolean);
 }
 
-function animatePriceEl(elNode, numericValue, formatted, options = {}) {
+function animatePriceEl(elNode, numericValue, formatFn, options = {}) {
   if (!elNode || !Number.isFinite(numericValue)) {
-    if (elNode) setText(elNode, formatted || '—');
+    if (elNode) setText(elNode, '—');
     return;
   }
   countUp(elNode, numericValue, {
     decimals: 2,
-    format: () => formatted,
+    format: formatFn,
     pulse: options.pulse !== false,
     pulseTarget: elNode.closest('.country-price-card, .country-karat-card'),
     minDurationMs: options.minDurationMs,
@@ -245,9 +245,8 @@ function wireKaratCardCopy(button, text, lang) {
     const icon = button.querySelector('.country-karat-card__copy-icon');
     const original = icon?.textContent || '⎘';
     const ok = await copyWithToast(text, {
-      successMessage:
-        lang === 'ar' ? 'تم نسخ السعر' : 'Price copied',
-      errorMessage: lang === 'ar' ? 'تعذّر النسخ' : 'Could not copy',
+      successMessage: tx(lang, 'copySuccess'),
+      errorMessage: tx(lang, 'copyFailed'),
     });
     if (ok && icon) {
       icon.textContent = '✓';
@@ -388,11 +387,15 @@ function renderCountryHero({ country, pageData, lang, gold, goldFreshness, fxFre
         setText(valueEl, '—');
         return;
       }
-      const formatted = formatPrice(localPerGram, country.currency, country.decimals);
-      animatePriceEl(valueEl, localPerGram, formatted, {
-        minDurationMs: karat.code === '24' ? 800 : 180,
-        maxDurationMs: karat.code === '24' ? 800 : 800,
-      });
+      animatePriceEl(
+        valueEl,
+        localPerGram,
+        (n) => formatPrice(n, country.currency, country.decimals),
+        {
+          minDurationMs: karat.code === '24' ? 800 : 180,
+          maxDurationMs: karat.code === '24' ? 800 : 800,
+        }
+      );
     });
   }
 
@@ -505,9 +508,7 @@ function renderCountryKaratCards({ country, pageData, lang, gold, rate, goldFres
                 type: 'button',
                 class: 'country-karat-card__copy btn btn-sm btn-outline',
                 'aria-label':
-                  lang === 'ar'
-                    ? `نسخ سعر ${karat.code}K`
-                    : `Copy ${karat.code}K price`,
+                  lang === 'ar' ? `نسخ سعر ${karat.code}K` : `Copy ${karat.code}K price`,
               },
               [
                 el('span', { class: 'country-karat-card__copy-icon', 'aria-hidden': 'true' }, '⎘'),
@@ -531,10 +532,8 @@ function renderCountryKaratCards({ country, pageData, lang, gold, rate, goldFres
       }
       const valueEl = card?.querySelector(`[data-karat-value="${karat.code}"]`);
       if (valueEl && localPerGram) {
-        animatePriceEl(
-          valueEl,
-          localPerGram,
-          formatPrice(localPerGram, country.currency, country.decimals)
+        animatePriceEl(valueEl, localPerGram, (n) =>
+          formatPrice(n, country.currency, country.decimals)
         );
       } else if (valueEl) {
         setText(valueEl, '—');

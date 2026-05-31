@@ -256,10 +256,6 @@
   margin: var(--space-6) auto;
 }
 
-.calc-tab-panels > .calc-panel[hidden] {
-  display: block;
-}
-
 .calc-panel.active,
 .calc-panel.is-active {
   display: block;

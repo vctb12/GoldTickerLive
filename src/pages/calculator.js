@@ -1123,7 +1123,6 @@ function setupTabs() {
         const isTarget = p.id === `panel-${target}`;
         p.classList.toggle('is-active', isTarget);
         p.classList.toggle('active', isTarget);
-        p.hidden = false;
       });
       updateValueUrlState();
       refreshMobileDockForActiveTab();

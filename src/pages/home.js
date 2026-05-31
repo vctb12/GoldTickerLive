@@ -196,8 +196,7 @@ function setTrustChip(id, text, freshnessKey = 'neutral') {
 
 /** Deep-link to tracker with current karat strip unit preference. */
 function buildTrackerHref(overrides = {}) {
-  const unit =
-    karatStripUnit === 'tola' ? 'tola' : karatStripUnit === 'oz' ? 'oz' : 'gram';
+  const unit = karatStripUnit === 'tola' ? 'tola' : karatStripUnit === 'oz' ? 'oz' : 'gram';
   const params = new URLSearchParams({
     mode: 'live',
     cur: 'AED',
@@ -1478,10 +1477,7 @@ async function init() {
       showDataStatusBanner({
         variant: 'error',
         lang,
-        message:
-          lang === 'ar'
-            ? 'تعذّر تحميل سعر الذهب المباشر. يُعرض آخر سعر معروف إن وُجد.'
-            : 'Live gold price unavailable. Showing last known value if available.',
+        message: tx('liveUnavailableBanner'),
         onRetry: () => {
           hideDataStatusBanner();
           if (_realtimeEngine) {
