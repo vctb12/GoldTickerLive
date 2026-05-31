@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### BUILD 6 — Compare Countries: interactive cross-country tool — 2026-05-31
+
+**New feature:**
+
+- feat(compare): add a standalone `compare.html` page — an interactive, sortable, filterable tool
+  for comparing live gold reference prices across the GCC and Arab world. Sticky karat tabs
+  (24K/22K/21K/18K), removable country chips (max 6), an "Add country" selector, a sortable table
+  (local/g, USD/g, VAT, making charges, all-in retail estimate, % vs UAE), a dynamic "currently most
+  affordable" callout, and a side-by-side detail view (with a per-karat difference bar chart) when
+  exactly two countries are selected.
+- feat(compare): add `src/pages/compare/compare-core.js` — a pure, DOM-free logic module
+  (`buildComparisonRows`, `annotatePctVsUae`, `sortRows`, `computeCheapest`, `fxRateFor`, hash
+  parse/serialize). `fxRateFor` returns the hardcoded AED peg (3.6725) for AED and never the live
+  rates object. The cross-country comparison keys off an all-in retail estimate (gold value × (1 +
+  median making charge) × (1 + VAT)) since the spot-linked gold value per gram is globally identical
+  in USD — surfaced explicitly in the UI as reference only, not financial advice.
+- feat(compare): URL-hash deep links (`#compare=ae,sa,kw,qa&k=22`) for shareable, back-button-safe
+  selections, wired to the shared shell, spot bar, and the existing 90-second refresh cycle.
+- feat(nav): add "Compare countries" links to the comparison footer mega-menu (EN + AR), a `compare`
+  breadcrumb label/route, `nav.compare` translations, and `compare.html` to the generated sitemap.
+
+**Quality:**
+
+- i18n: all new strings provided in EN and AR; the page is fully RTL-mirrored via CSS logical
+  properties and adapts to dark mode through design tokens (`styles/pages/compare.css`).
+- test(compare): add `tests/compare-core.test.js` (13 tests) covering karat purity, the AED-peg FX
+  path, row building, % vs UAE annotation, sorting, cheapest computation, and hash parse/serialize.
+
 ### BUILD 2 — Country Pages: Market Intelligence Panel — 2026-05-31
 
 **New feature:**

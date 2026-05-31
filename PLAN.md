@@ -1,7 +1,7 @@
 # Gold Ticker Live — Active Task Plan
 
 > This file is the persistent task tracker for AI agents and human contributors. Agents: read this
-> before starting any task. Update it after completing work. Last updated: 2026-05-30
+> before starting any task. Update it after completing work. Last updated: 2026-05-31
 
 ---
 
@@ -13,8 +13,6 @@
 
 ## 🟡 Up Next
 
-- [ ] BUILD 6: Compare Tool — standalone interactive country comparison page (sortable table,
-      country chips, side-by-side detail, cheapest-to-buy callout) — priority: high
 - [ ] Replace hardcoded hex colors in CSS with design tokens (565 instances across styles/) —
       priority: medium — context: improves maintainability and dark mode consistency
 - [ ] Add visibilitychange cleanup to insights.js sparkline/charts if added — priority: low —
@@ -26,6 +24,10 @@
 
 ## ✅ Recently Completed
 
+- [x] BUILD 6: Compare Countries — standalone interactive `compare.html` (sortable table, karat
+      tabs, country chips, side-by-side detail with per-karat bar chart, cheapest-to-buy callout,
+      hash deep links) backed by pure `src/pages/compare/compare-core.js` + 13 tests — completed:
+      2026-05-31 — PR: (draft)
 - [x] BUILD 2: Country Pages Market Intelligence Panel — per-country
       VAT/making-charge/retail-estimate panel + "Should I Buy Today?" indicator on every country
       page (`src/config/market-intel.js`, `countries/country-page.js`, `styles/country-page.css`,
@@ -106,7 +108,7 @@
 - [x] BUILD 3: Price Chart — done (existing `src/components/chart.js` with 24H–ALL ranges)
 - [x] BUILD 4: Calculator Tabs — done (5 tabs: value, scrap, zakat, buying power, converter)
 - [x] BUILD 5: PWA — done (sw.js, manifest.json, offline.html, install prompt)
-- [ ] BUILD 6: Compare Tool — partial (tracker compare mode exists, no standalone page)
+- [x] BUILD 6: Compare Tool — **done this session** (standalone `compare.html` + `compare-core.js`)
 - [ ] BUILD 7: Shops Directory — partial (list + filter, needs map, card redesign)
 - [ ] BUILD 8: Insights Feed — partial (exists, needs category filter, masonry, search)
 - [ ] BUILD 9: Homepage Overhaul — partial (recent polish sessions improved it significantly)
@@ -124,4 +126,11 @@
   tracker.html
 - New localStorage key `gtl_alerts_v2` — migrates from legacy `gold_price_alerts` automatically
 - 18 new tests in `tests/alert-engine.test.js` — all pass
-- Next recommended build: BUILD 2 (Country Pages) or BUILD 6 (Compare Tool)
+- BUILD 6 Compare tool: standalone page `compare.html` + orchestrator `src/pages/compare.js` + pure
+  logic `src/pages/compare/compare-core.js` (DOM-free, unit-tested). Cross-country comparison keys
+  off an all-in **retail estimate** = gold value × (1 + median making charge) × (1 + VAT), because
+  the spot-linked gold value per gram is globally identical in USD. `fxRateFor` returns the
+  hardcoded AED peg for AED and never the live rates object. Hash deep-link format:
+  `#compare=ae,sa,kw,qa&k=22` (codes + active karat). Footer/breadcrumb/sitemap/translations wired.
+- Next recommended build: BUILD 7 (Shops Directory — add map view, card redesign, advanced filters,
+  detail modal) or BUILD 8 (Insights Feed — category filter, masonry grid, client-side search).

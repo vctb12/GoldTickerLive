@@ -153,6 +153,12 @@ const RAW_NAV_DATA = {
             description: 'Understand differences between references.',
             items: [
               {
+                href: '/compare.html',
+                label: 'Compare countries',
+                description: 'Sortable cross-country price tool',
+                icon: 'CMP',
+              },
+              {
                 href: '/tracker.html#mode=compare&r=30D',
                 label: 'Tracker compare mode',
                 description: 'Side-by-side market comparison',
@@ -654,6 +660,12 @@ const RAW_NAV_DATA = {
             label: 'مقارنة الأسواق',
             description: 'افهم الفروق بين المراجع.',
             items: [
+              {
+                href: '/compare.html',
+                label: 'قارن الدول',
+                description: 'أداة مقارنة الأسعار بين الدول',
+                icon: 'CMP',
+              },
               {
                 href: '/tracker.html#mode=compare&r=30D',
                 label: 'وضع المقارنة في المتتبع',

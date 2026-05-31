@@ -34,6 +34,7 @@ function getLabels(extra = {}) {
     invest: tx('nav.invest', 'Invest'),
     tracker: tx('nav.tracker', 'Tracker'),
     countries: tx('nav.countries', 'Countries'),
+    compare: tx('nav.compare', 'Compare Countries'),
     country: extra.countryName || tx('nav.country', 'Country'),
   };
 }
@@ -135,6 +136,7 @@ export function getBreadcrumbs(pageName, extra = {}) {
     privacy: [{ label: labels.privacy, url: '/privacy.html' }],
     invest: [{ label: labels.invest, url: '/invest.html' }],
     tracker: [{ label: labels.tracker, url: '/tracker.html' }],
+    compare: [{ label: labels.compare, url: '/compare.html' }],
     country: [
       { label: labels.countries, url: '/countries/index.html' },
       { label: labels.country, url: extra.countryUrl || '#' },
