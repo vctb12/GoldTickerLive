@@ -11,6 +11,36 @@
 
 import { AD_CONFIG } from '../config/index.js';
 
+/** @returns {boolean} True when publisher ID and at least one slot ID are configured. */
+export function isAdMonetizationActive() {
+  const publisherId =
+    AD_CONFIG.ADSENSE_PUBLISHER_ID ||
+    (typeof window !== 'undefined' ? window.__GTL_ADSENSE__ : '') ||
+    '';
+  if (!publisherId.trim()) return false;
+  const slots = AD_CONFIG.AD_SLOTS || {};
+  return Object.values(slots).some((id) => Boolean(String(id).trim()));
+}
+
+function collapseAdContainer(container) {
+  if (!container) return;
+  container.classList.add('ad-container--collapsed');
+  container.hidden = true;
+  container.setAttribute('aria-hidden', 'true');
+  container.replaceChildren();
+  container.style.minHeight = '0';
+  container.style.margin = '0';
+  container.style.display = 'none';
+  container.dataset.adCollapsed = 'true';
+}
+
+/** Hide empty ad placeholders and remove eager AdSense tags when ads are not configured. */
+export function collapseInactiveAdSlots() {
+  if (isAdMonetizationActive()) return;
+  document.querySelectorAll('.ad-container').forEach(collapseAdContainer);
+  document.querySelectorAll('script[src*="adsbygoogle"]').forEach((node) => node.remove());
+}
+
 const AD_DIMENSIONS = {
   leaderboard: { width: 728, height: 90, mobileWidth: 320, mobileHeight: 50 },
   rectangle: { width: 300, height: 250, mobileWidth: 300, mobileHeight: 250 },
@@ -52,21 +82,20 @@ function resolveSlotFromConfig(adFormat, slotKey = '') {
  * @param {string} [slotKey]    Key in AD_CONFIG.AD_SLOTS to look up the slot ID
  */
 export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '', slotKey = '') {
+  const container = document.getElementById(containerId);
   const publisherId = AD_CONFIG.ADSENSE_PUBLISHER_ID || window.__GTL_ADSENSE__ || '';
   if (!publisherId) {
-    const container = document.getElementById(containerId);
-    if (container && !container.dataset.adPlaceholder) {
-      const placeholder = document.createElement('div');
-      placeholder.className = 'ad-slot ad-slot--unconfigured';
-      placeholder.hidden = true;
-      placeholder.setAttribute('aria-hidden', 'true');
-      container.replaceChildren(placeholder);
-      container.dataset.adPlaceholder = 'true';
-    }
+    collapseAdContainer(container);
     return;
   }
-  if (isAdminPage()) return;
-  if (typeof IntersectionObserver === 'undefined') return;
+  if (isAdminPage()) {
+    collapseAdContainer(container);
+    return;
+  }
+  if (typeof IntersectionObserver === 'undefined') {
+    collapseAdContainer(container);
+    return;
+  }
   const hasRenderedContainer = renderedAdContainers.has(containerId);
   const existingContainer = document.getElementById(containerId);
   if (hasRenderedContainer && existingContainer) return;
@@ -74,7 +103,6 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '',
     renderedAdContainers.delete(containerId);
   }
 
-  const container = document.getElementById(containerId);
   if (!container) return;
 
   const governance = AD_CONFIG.SLOT_GOVERNANCE || {};
@@ -88,14 +116,31 @@ export function renderAdSlot(containerId, adFormat = 'rectangle', adSlotId = '',
   const maxSlotsPerPage = Number.isFinite(governance.maxSlotsPerPage)
     ? governance.maxSlotsPerPage
     : 3;
-  if (renderedAdContainers.size >= maxSlotsPerPage) return;
-  if (governance.requiredSlotId !== false && !resolvedSlotId) return;
+  if (renderedAdContainers.size >= maxSlotsPerPage) {
+    collapseAdContainer(container);
+    return;
+  }
+  if (governance.requiredSlotId !== false && !resolvedSlotId) {
+    collapseAdContainer(container);
+    return;
+  }
   const dims = AD_DIMENSIONS[effectiveFormat];
-  if (!dims) return;
+  if (!dims) {
+    collapseAdContainer(container);
+    return;
+  }
   const w = mobile && dims.mobileWidth ? dims.mobileWidth : dims.width;
   const h = mobile && dims.mobileHeight ? dims.mobileHeight : dims.height;
 
-  if (w === 0) return; // skyscraper hidden on mobile
+  if (w === 0) {
+    collapseAdContainer(container);
+    return; // skyscraper hidden on mobile
+  }
+
+  container.hidden = false;
+  container.removeAttribute('aria-hidden');
+  container.classList.remove('ad-container--collapsed');
+  delete container.dataset.adCollapsed;
 
   // Reserve space before ad loads to prevent CLS
   container.style.minHeight = h + 'px';

@@ -15,6 +15,8 @@
 import { NAV_DATA, PAGE_SHELLS } from './nav-data.js';
 import { applyFeatureFlags } from '../lib/site-settings.js';
 import { track, EVENTS } from '../lib/analytics.js';
+import { collapseInactiveAdSlots } from './adSlot.js';
+import { ensureLazyMedia } from '../lib/media-governance.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -859,6 +861,9 @@ export function injectNav(lang = 'en', depth = 0) {
   applyFeatureFlags().catch((err) => {
     console.warn('[nav] Failed to apply feature flags:', err);
   });
+
+  collapseInactiveAdSlots();
+  ensureLazyMedia();
 
   return _buildReturnValue();
 }

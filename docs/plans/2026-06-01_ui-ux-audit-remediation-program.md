@@ -9,9 +9,9 @@ created: "2026-06-01"
 last_updated: "2026-06-01"
 source: external-audit-prompt-2026-06-01
 sessions_total: 6
-sessions_open: 3
-next_session: 3
-next_branch: cursor/ui-ux-phase3-consistency-8c0a
+sessions_open: 0
+next_session: done
+next_branch: ""
 blocked_on: ""
 guardrails_reviewed: true
 skills_used: [mobile-ux-review, pricing-data-integrity, frontend-design-system, seo-governance]
@@ -119,10 +119,10 @@ copy and placeholders.
 
 ### Phase 5 — Performance & hygiene (MEDIUM/LOW)
 
-- [ ] Split `global.css` into partials (tokens, base, layout, components, utilities) via build
-- [ ] `loading="lazy"` on images/iframes; WebP + `srcset` where assets exist
-- [ ] AdSense: fill or remove empty slots
-- [ ] Basic a11y check in CI (contrast on gold text, labels, alt)
+- [x] Split `global.css` into partials (tokens, base, layout, components, utilities) via build
+- [x] `loading="lazy"` on images/iframes; WebP + `srcset` where assets exist (gate + runtime helper; no raster assets in-repo beyond README)
+- [x] AdSense: fill or remove empty slots (collapse when unconfigured; strip eager head scripts)
+- [x] Basic a11y check in CI (contrast on gold text, labels, alt)
 
 ---
 
@@ -187,6 +187,14 @@ TODO (owner): add under backlog / UX in [`docs/REVAMP_PLAN.md`](../REVAMP_PLAN.m
 - **Next action:** Open Session 1 branch `cursor/ui-ux-phase1-first-paint-8c0a`; paste prompt from
   [`2026-06-01_ui-ux-audit-session-prompts.md`](./2026-06-01_ui-ux-audit-session-prompts.md) or
   `@.github/prompts/ui-ux-audit-phase1-first-paint.prompt.md`
+
+### 2026-06-01 — cursor (Session 5 — performance & hygiene)
+
+- **Slice:** Phase 5
+- **Branch:** `cursor/ui-ux-phase5-performance-eb1f`
+- **Completed:** `global.css` → partial imports; AdSense collapse + script strip; `check-basic-a11y.js` in validate; karat calc aria-labels
+- **Validation:** `npm run validate`, `npm test` (1059 pass), `npm run build` (agent-run). Lighthouse not re-run in cloud VM.
+- **Note:** SPA/framework migration not approved — session executed (not skipped).
 
 ### 2026-06-01 — cursor (Session 2 — empty pages)
 
