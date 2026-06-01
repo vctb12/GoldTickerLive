@@ -36,8 +36,8 @@ skills_used: [mobile-ux-review, pricing-data-integrity, frontend-design-system, 
 Gold Ticker Live is feature-rich but reads as an unfinished dev project on first paint. Root causes
 are **systemic**, not cosmetic:
 
-1. **Client-side price waterfall** — sequential gold → FX → calc → render exposes `Loading…`, `—`,
-   and empty tables before JS resolves; crawlers and slow networks see skeleton shells.
+1. **Client-side price pipeline** — gold/FX fetch + calc/render happen after JS boot, exposing `Loading…`, `—`,
+   and empty tables before the UI hydrates; crawlers and slow networks can see skeleton shells.
 2. **JS-only content pages** — Learn, Invest, Shops, and many country/city shells ship almost no
    static body; a JS hiccup = blank page.
 3. **Drift** — three product names, conflicting data-source attribution (gold-api.com vs
