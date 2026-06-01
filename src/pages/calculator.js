@@ -340,7 +340,21 @@ function buildCountryPageHref(country) {
   return country?.slug ? `countries/${country.slug}/` : 'countries/index.html';
 }
 
+let _shopsHandoffListenersBound = false;
+
 function updateShopsHandoff({ currency = 'AED' } = {}) {
+  if (!_shopsHandoffListenersBound) {
+    _shopsHandoffListenersBound = true;
+    const bindCurrencySelect = (id) => {
+      const select = document.getElementById(id);
+      if (!select) return;
+      const handler = () => updateShopsHandoff({ currency: select.value || 'AED' });
+      select.addEventListener('change', handler);
+      select.addEventListener('input', handler);
+    };
+    ['val-currency', 'scrap-currency', 'zakat-currency', 'buy-currency'].forEach(bindCurrencySelect);
+  }
+
   const selectedCountry = getSelectedCountryContext(currency);
   const href = buildShopsHandoffHref({
     countryCode: selectedCountry?.code || '',
