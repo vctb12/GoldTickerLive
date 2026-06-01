@@ -34,7 +34,7 @@ Tasks:
 2. Replace literal "Loading…", "Loading freshness…", "Preparing…", "Connecting…", and bare "—" placeholders on index.html, tracker.html, shops.html, invest.html, and shared country/city price mounts with skeletons
 3. On load, render last-known cached prices from existing localStorage/cache immediately, then refresh from network
 4. Add error empty state (icon + message + retry) when gold/FX fail and no cache — wire to api.js failure path
-5. Parallelize gold + FX fetches (currently sequential waterfall)
+5. Where gold + FX are still fetched sequentially, parallelize them (avoid waterfalls)
 
 Out of scope this session: learn static content, 404, nav IA, homepage section removal, global.css split
 
