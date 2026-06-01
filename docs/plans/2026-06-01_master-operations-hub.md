@@ -10,11 +10,12 @@ last_updated: "2026-06-01"
 next_action: "Run Track C Session C1a (docs archive) or NEXT_PR_SEQUENCE PR 1"
 ```
 
-> **Superseded for depth by the Master Workbook** —
+> **Superseded for depth by the Master Workbook v2** —
 > [`docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md`](../GOLD_TICKER_LIVE_MASTER_WORKBOOK.md)
+> + appendices [`docs/workbook/`](../workbook/)
 > (`@.github/prompts/master-workbook-session.prompt.md`).  
-> This hub remains a **one-screen routing summary**; all session detail, gaps, scanners, and WB IDs
-> live in the workbook.
+> This hub remains a **one-screen routing summary**; playbooks, API map, CI catalog, and step-by-step
+> guides live in the workbook appendices.
 
 ---
 

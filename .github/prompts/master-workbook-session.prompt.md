@@ -25,8 +25,10 @@ reference terminal** (truth, freshness, speed, EN/AR, depth).
 ## Required inspection (read in order)
 
 1. [`AGENTS.md`](../../AGENTS.md)
-2. [`docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md`](../../docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md) —
-   Part 0, Part 5 (gaps), Part 6 (session catalog), Part 9 (verify), Part 10 (forbidden)
+2. [`docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md`](../../docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md) **v2** —
+   Part 0, Part 5 (gaps), Part 6 (pick WB-ID), Part 9 (verify), Part 10 (forbidden), Part 19 (appendices)
+3. [`docs/workbook/APPENDIX_D_SESSION_EXECUTION_GUIDES.md`](../../docs/workbook/APPENDIX_D_SESSION_EXECUTION_GUIDES.md) —
+   step-by-step for your WB session (when numbered)
 3. [`PLAN.md`](../../PLAN.md)
 4. [`docs/workbook/WORKBOOK_SESSION_REGISTRY.md`](../../docs/workbook/WORKBOOK_SESSION_REGISTRY.md)
 5. `gh pr list --state open` — do not duplicate an open scope

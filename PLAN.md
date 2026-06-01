@@ -3,8 +3,9 @@
 > This file is the persistent task tracker for AI agents and human contributors. Agents: read this
 > before starting any task. Update it after completing work. Last updated: 2026-06-01 (ops hub)
 
-**Master workbook (read first):**
+**Master workbook v2 (read first):**
 [`docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md`](docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md)
+· appendices [`docs/workbook/`](docs/workbook/)
 · `@.github/prompts/master-workbook-session.prompt.md`  
 **Short hub:**
 [`docs/plans/2026-06-01_master-operations-hub.md`](docs/plans/2026-06-01_master-operations-hub.md)

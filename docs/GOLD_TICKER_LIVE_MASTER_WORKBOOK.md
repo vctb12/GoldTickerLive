@@ -1,19 +1,25 @@
 # Gold Ticker Live — Master Workbook
 
 ```yaml
-workbook-version: "1.0.0"
+workbook-version: "2.0.0"
 status: canonical
 owner: "@vctb12"
 created: "2026-06-01"
 last_verified_against_main: "2026-06-01"
 production: "https://goldtickerlive.com/"
 repo: "vctb12/GoldTickerLive"
-tests_on_main: "1059 pass / 0 fail (npm test)"
+tests_on_main: "1059 pass / 0 fail · 115 test files (npm test)"
+html_surfaces: "~702 HTML (17 root · ~256 countries · ~33 content)"
+workflows: "21 under .github/workflows/"
 ```
 
 > **This is the one document.** Everything else is reference, history, or a thin index pointing here.
-> Agents: read **Part 0** (60 seconds), then **Part 6** (pick a session), then execute **Part 9**
-> (verify). Humans: read **Part 1** (vision) and **Part 5** (gaps).
+> **v2 adds deep appendices** — per-surface playbooks, API map, CI catalog, step-by-step session
+> guides, test map, owner secrets, country/SEO strategy.
+>
+> **Agent path:** Part 0 (2 min) → Part 5 (gaps) → Part 6 (pick WB-ID) →
+> [Appendix D](./workbook/APPENDIX_D_SESSION_EXECUTION_GUIDES.md) (steps) → Part 9 (verify).  
+> **Human path:** Part 1 (vision) + Part 14 (competitive bar) + Part 16 (monetization ladder).
 >
 > **Composer one-liner:** `@.github/prompts/master-workbook-session.prompt.md`
 >
@@ -39,7 +45,16 @@ tests_on_main: "1059 pass / 0 fail (npm test)"
 | 11 | [Consolidated backlog](#part-11--consolidated-backlog) |
 | 12 | [Prompt & skill arsenal](#part-12--prompt--skill-arsenal) |
 | 13 | [Mega session starter](#part-13--mega-session-starter-copy-paste) |
-| A | [Appendix — doc authority map](#appendix-a--documentation-authority-map) |
+| 14 | [Competitive & feature matrix](#part-14--competitive--feature-matrix) |
+| 15 | [12-phase platform digest](#part-15--12-phase-platform-digest) |
+| 16 | [Monetization ladder](#part-16--monetization-ladder) |
+| 17 | [EN/AR & RTL matrix](#part-17--enar--rtl-matrix) |
+| 18 | [Integration reality (expanded)](#part-18--integration-reality-expanded) |
+| 19 | [Deep appendices index](#part-19--deep-appendices-index) |
+| 20 | [Extended discovery scanners](#part-20--extended-discovery-scanners) |
+| 21 | [Workbook maintenance](#part-21--workbook-maintenance-protocol) |
+| 22 | [90-day outcome map](#part-22--90-day-outcome-map) |
+| A | [Doc authority map](#appendix-a--documentation-authority-map) |
 
 **Thin indexes (do not duplicate this workbook):**
 
@@ -239,7 +254,7 @@ Priority: **P0** ship blocker · **P1** major · **P2** cleanup · **P3** polish
 
 | ID | Gap | P | Evidence | Session |
 | -- | --- | - | -------- | ------- |
-| G-01 | No GDPR export/delete UI + routes | P1 | `STAKEHOLDER_READINESS` §2; `NEXT_PR_SEQUENCE` PR1 | WB-101 |
+| G-01 | GDPR export/delete UX incomplete vs API | P1 | Routes exist `public-accounts.js:1067,1141`; verify `dashboard.js` wires UI + tests | WB-101 |
 | G-02 | No vendor portal (DB exists) | P1 | `INTEGRATION_REALITY_CHECK`; 0 vendor HTML | WB-701+ |
 | G-03 | ~608 country HTML — thin per-karat farm | P2 | `PAGE_CLEANUP` | WB-201 |
 | G-04 | Stripe checkout inert (no live keys) | P1 | `pricing.html`, owner secrets | Owner |
@@ -254,6 +269,18 @@ Priority: **P0** ship blocker · **P1** major · **P2** cleanup · **P3** polish
 | G-13 | Cross-page deep links weak | P2 | Track D1 program | WB-102 |
 | G-14 | Doc/plan sprawl confuses agents | P2 | 227+ `.md` files | WB-501 |
 | G-15 | Vendor claim UI missing on shop pages | P2 | `shops-v1.js` claim route | WB-702 |
+| G-16 | Dual billing routers `/api/stripe` vs `/api/v1/billing` | P2 | `NEXT_PR_SEQUENCE` PR4 | WB-105 |
+| G-17 | Vendor role not in auth | P1 | No `vendor` in profiles | WB-106 → WB-701 |
+| G-18 | AI drafts admin UI not exercised | P3 | Phase 11 scorecard | WB-702 |
+| G-19 | Admin mobile not verified | P3 | `STAKEHOLDER_READINESS` §4 | WB-806 |
+| G-20 | 44 content pages schema failures | P2 | `audit-content-pages` | WB-203 |
+| G-21 | SW registration home-centric | P2 | `home.js` registers SW | WB-807 |
+| G-22 | Analytics event catalog drift | P2 | `export-analytics-inventory --check` | WB-602 |
+| G-23 | Hex colors vs tokens (565) | P2 | `PLAN.md` | WB-901 (∞) |
+| G-24 | Newsletter/alert cron secrets | P1 | Appendix F | Owner |
+| G-25 | Knowledge hub triple surface | P2 | learn + insights + guides | WB-205 |
+
+**Execution detail for starred sessions:** [Appendix D](./workbook/APPENDIX_D_SESSION_EXECUTION_GUIDES.md)
 
 ---
 
@@ -276,6 +303,8 @@ conflicting files.
 | WB-102 | Cross-page deep links | `wb-102-cross-page-deeplinks` | `endless-integration-wiring` + program D1 | Home→tracker hash; calc→shops; tracker→calc; all nav 200 |
 | WB-103 | Tracker alerts surfacing | `wb-103-tracker-alerts-ux` | `tracker-flagship-revamp` (scoped) | Clear CTA from price card to alert create |
 | WB-104 | Account data migration UX | `wb-104-dashboard-import-polish` | `backend-admin-supabase` | Import/export flows documented + tested |
+| WB-105 | Billing router consolidation | `wb-105-billing-canonical` | `NEXT_PR_SEQUENCE` PR4 | One billing surface; tests green |
+| WB-106 | Vendor role schema foundation | `wb-106-vendor-role` | PR5 | `profiles.role`; RLS; no vendor UI yet |
 
 ### Track S — SEO & product focus
 
@@ -312,6 +341,9 @@ conflicting files.
 | WB-502 | CSS co-location pilot C1c | `wb-502-css-colocate` | owner approval |
 | WB-503 | HTML pilot 404/offline C1e | `wb-503-html-pilot` | redirects checklist |
 | WB-504 | CI: SW precache + content audit | `wb-504-ci-gates` | program C3a |
+| WB-805 | Vendor portal MVP | `wb-805-vendor-portal` | PR7 | `vendor.html` + `/api/v1/me/shops` — **after WB-106** |
+| WB-806 | Admin mobile pass | `wb-806-admin-mobile` | PR8 | 414px usable |
+| WB-807 | SW register on all flagships | `wb-807-sw-bootstrap` | — | Or document intentional home-only |
 
 ### Track M — Monetization
 
@@ -449,6 +481,65 @@ rg -n 'next_session: done|IN PROGRESS|Start Session 1' docs/plans PLAN.md
 rg -n 'schedule:|cron:' .github/workflows/post_gold.yml .github/workflows/gold-price-fetch.yml
 ```
 
+### S9 — Hardcoded hex in CSS
+
+```bash
+rg -n '#[0-9a-fA-F]{3,8}' styles --glob '*.css' | rg -v 'var\(--' | head -30
+```
+
+### S10 — Analytics events without doc
+
+```bash
+npm run analytics:inventory:check
+```
+
+### S11 — Placeholder pages
+
+```bash
+npm run validate 2>&1 | rg -i placeholder
+```
+
+### S12 — Unused exports (dead code candidate)
+
+```bash
+# Pick one export from src/lib; rg import across repo
+rg -n 'export function' src/lib --glob '*.js' | head -20
+```
+
+### S13 — aria-live on price regions
+
+```bash
+rg -l 'aria-live' tracker.html index.html calculator.html shops.html
+rg -L 'aria-live' countries/country-page.js 2>/dev/null | head -5
+```
+
+### S14 — Translations key parity EN/AR
+
+```bash
+node -e "
+const t=require('./src/config/translations.js');
+const en=Object.keys(t.TRANSLATIONS?.en||t.en||{});
+const ar=Object.keys(t.TRANSLATIONS?.ar||t.ar||{});
+const miss=en.filter(k=>!(t.TRANSLATIONS?.ar||t.ar)[k]);
+console.log('missing AR', miss.length, miss.slice(0,15));
+" 2>/dev/null || echo 'Run via project test: translations-*'
+```
+
+### S15 — Stripe placeholder UX
+
+```bash
+rg -n 'alert\(|TODO|placeholder' pricing.html src/pages/pricing* 2>/dev/null
+```
+
+### S16 — Country generator drift
+
+```bash
+npm run build 2>&1 | tail -20
+npm test -- tests/country-canonical.test.js tests/sitemap-parity.test.js
+```
+
+**Full scanner playbook:** Part 20 below.
+
 ---
 
 ## Part 9 — Verification bible
@@ -553,7 +644,179 @@ DELIVERABLES:
 - Update WORKBOOK_SESSION_REGISTRY.md row
 - Update PLAN.md
 - PR: What / Why / How / Proof / Risks
+
+Also read the matching guide in docs/workbook/APPENDIX_D_SESSION_EXECUTION_GUIDES.md when executing a numbered WB session.
 ```
+
+---
+
+## Part 14 — Competitive & feature matrix
+
+What “world-class gold reference” sites do vs what GTL must excel at:
+
+| Capability | Commodity sites | GTL target | Status |
+| ---------- | --------------- | ---------- | ------ |
+| Spot price above fold | ✅ | ✅ post UI/UX 1–5 | 🟢 |
+| Per-gram AED + karats | ✅ | ✅ | 🟢 |
+| Freshness label | Rare | **Mandatory** | 🟢 differentiator |
+| EN + full RTL AR | Rare | **Mandatory** | 🟢 differentiator |
+| Live workspace / tracker | Some | Terminal-grade | 🟡 WB-403 |
+| Cross-country compare | Some | Retail estimate + disclosure | 🟢 BUILD 6 |
+| Zakat / GCC tools | Niche | Calculator tab | 🟢 |
+| Shop directory | N/A | Honest directory | 🟡 WB-301 |
+| Hourly social proof | Some | @GoldTickerLive | 🟢 |
+| Developer API | Rare | `/developer` + keys | 🟢 Phase 12 |
+| Mobile app feel | Apps | PWA + polish | 🟡 |
+| Vendor self-serve | N/A | Missing | 🔴 WB-805 |
+
+**Strategy:** Win on **trust + locale + tools**, not on page count.
+
+---
+
+## Part 15 — 12-phase platform digest
+
+Condensed from [`docs/audits/12_PHASE_IMPLEMENTATION_SCORECARD.md`](./audits/12_PHASE_IMPLEMENTATION_SCORECARD.md):
+
+| Phase | Theme | Verdict | Workbook follow-up |
+| ----- | ----- | ------- | ------------------ |
+| 1 | Express foundation | ✅ | — |
+| 2 | Price API + history | 🟡 mixed history | WB-802 |
+| 3 | Server alerts | 🟡 needs secrets | WB-303, Owner |
+| 4 | Newsletter/leads | ✅ | — |
+| 5 | Public accounts | ✅ | WB-101, WB-104 |
+| 6 | Stripe billing | 🟡 keys | Owner, WB-105 |
+| 7 | Shops v1 | 🟡 no vendor UI | WB-301, WB-805 |
+| 8 | Analytics SEO | ✅ | WB-602 |
+| 9 | Admin ops | ✅ | WB-806 |
+| 10 | X observability | ✅ | workflow-debug only |
+| 11 | AI drafts | 🟡 no LLM UI | WB-702 |
+| 12 | API product | ✅ | developer surface |
+
+**NEXT_PR_SEQUENCE** maps PR1–9 to remaining glue: see [`docs/audits/NEXT_PR_SEQUENCE.md`](./audits/NEXT_PR_SEQUENCE.md).
+
+---
+
+## Part 16 — Monetization ladder
+
+Ethical revenue — never blur reference vs retail pricing.
+
+| Rung | Surface | Implementation | Blocker |
+| ---- | ------- | -------------- | ------- |
+| L0 | Reference traffic | SEO + X + embed | — |
+| L1 | Ads | `adSlot.js`, collapse if unconfigured | WB-601 |
+| L2 | Analytics | GA4 + `/api/v1/events` | WB-602 |
+| L3 | Shop leads | `submit-shop`, `shop_leads` | — |
+| L4 | Sponsored listings | admin CRUD | Vendor + Stripe |
+| L5 | Pro subscription | `pricing.html` + Stripe | G-04 Owner |
+| L6 | API keys paid tier | `developer.html` + quotas | Stripe |
+| L7 | Affiliate (optional) | shops only with disclosure | policy |
+
+Each rung requires **visible** honesty copy in EN/AR.
+
+---
+
+## Part 17 — EN/AR & RTL matrix
+
+| Surface | `translations.js` prefix | RTL test |
+| ------- | ------------------------ | -------- |
+| Home | `home.*`, `hero.*` | 360 + toggle |
+| Tracker | `tracker.*` | keyboard order |
+| Calculator | `calc.*` | tab panels |
+| Shops | `shops.*` | filter bar |
+| Country | `country.*` + generated | city names |
+| Nav | `nav.*` via `nav-data` | drawer + mega menu |
+| Dashboard | `dashboard.*` | WB-101 strings |
+| Errors | `notfound.*`, `offline.*` | — |
+
+**Rule:** Never ship English-only `textContent =` for user-visible strings.
+
+**Prompt:** `@.github/prompts/mobile-ux-audit.prompt.md` + `tests/rtl-new-components.spec.test.js`
+
+---
+
+## Part 18 — Integration reality (expanded)
+
+Full matrix: [`docs/audits/INTEGRATION_REALITY_CHECK.md`](./audits/INTEGRATION_REALITY_CHECK.md).
+
+| Stakeholder | Ready? | Next WB |
+| ----------- | ------ | ------- |
+| Anonymous visitor | ✅ | WB-102, WB-302 |
+| Logged-in customer | 🟡 | WB-101, WB-104 |
+| Vendor | 🔴 | WB-106 → WB-805 |
+| Admin | ✅ | WB-806 |
+| Developer | 🟡 | Owner Stripe for paid tier |
+
+**API map:** [Appendix C](./workbook/APPENDIX_C_MODULE_AND_API_MAP.md)
+
+---
+
+## Part 19 — Deep appendices index
+
+| Appendix | Contents | When to open |
+| -------- | -------- | ------------ |
+| [**A — Surface playbooks**](./workbook/APPENDIX_A_SURFACE_PLAYBOOKS.md) | Home, tracker, calc, shops, compare, country, auth — file maps + checklists | Any UI session |
+| [**B — Workflows & CI**](./workbook/APPENDIX_B_WORKFLOWS_AND_CI.md) | 21 workflows, validate decomposition | CI fail, workflow-debug |
+| [**C — Module & API map**](./workbook/APPENDIX_C_MODULE_AND_API_MAP.md) | api.js pipeline, `/api/v1` routes, build order | Backend, data bugs |
+| [**D — Session execution guides**](./workbook/APPENDIX_D_SESSION_EXECUTION_GUIDES.md) | Step-by-step WB-102, 101, 201, 301, 302, 501, ∞ | **Before coding** |
+| [**E — Test & validate map**](./workbook/APPENDIX_E_TEST_AND_VALIDATE_MAP.md) | 115 files → domains | After edits |
+| [**F — Owner & secrets**](./workbook/APPENDIX_F_OWNER_AND_SECRETS.md) | Blockers matrix | Blocked sessions |
+| [**G — Country & SEO**](./workbook/APPENDIX_G_COUNTRY_AND_SEO_STRATEGY.md) | 600-page strategy | WB-201–205 |
+
+---
+
+## Part 20 — Extended discovery scanners
+
+Parts 8 + S9–S16 = **16 scanners**. Run **one per endless session**; log `WB-∞-YYYYMMDD-N`.
+
+| # | Scanner | Part |
+| - | ------- | ---- |
+| 1–8 | Core | Part 8 |
+| 9–16 | Extended | S9–S16 above |
+| 17 | Shell guard violations | `npm run check-shell-guard` |
+| 18 | SEO governance | `npm run seo:governance:check` |
+| 19 | Image weight | `npm run image-audit` |
+| 20 | Pre-deploy | `npm run pre-deploy:fast` before large release |
+
+---
+
+## Part 21 — Workbook maintenance protocol
+
+When to update this workbook (same PR or follow-up):
+
+| Trigger | Update |
+| ------- | ------ |
+| New flagship page | Appendix A + Part 4 |
+| New API route | Appendix C + Part 18 |
+| New CI gate | Appendix B + Part 9 |
+| Session merged | Registry + Part 11 row |
+| Audit superseded | Part 5 gap row + Appendix G |
+| Test count change | YAML frontmatter `tests_on_main` |
+
+**Version bump:** patch for typos; minor for new WB IDs; major for structure change.
+
+---
+
+## Part 22 — 90-day outcome map
+
+Outcome-focused (not calendar estimates) — sequence of **capabilities**:
+
+```mermaid
+flowchart LR
+  A[Integration glue WB-102] --> B[Trust UX WB-101]
+  B --> C[SEO focus WB-201]
+  C --> D[Flagship terminal WB-302-404]
+  D --> E[Vendor foundation WB-106-805]
+  E --> F[Monetization live Owner keys]
+```
+
+| Outcome | Sessions | Measurable signal |
+| ------- | -------- | ----------------- |
+| Site feels “alive” on first paint | Done + WB-302 | No raw Loading on home/tracker |
+| User trusts labels | WB-801, methodology | freshness tests 100% flagship |
+| Crawl budget focused | WB-201–202 | Sitemap URL count drop |
+| Customer data rights | WB-101 | export/delete E2E |
+| Vendor can claim shop | WB-106, WB-805 | vendor E2E test exists |
+| Revenue path honest | WB-601–603, Owner | Stripe or removed CTAs |
 
 ---
 
@@ -576,4 +839,5 @@ Full index: [`docs/plans/ARCHIVE_AND_SUPERSESSION_INDEX.md`](./plans/ARCHIVE_AND
 
 | Version | Date | Change |
 | ------- | ---- | ------ |
+| 2.0.0 | 2026-06-01 | Deep appendices A–G; Parts 14–22; 25 gaps; 16 scanners; execution guides; competitive/monetization/90-day maps |
 | 1.0.0 | 2026-06-01 | Initial canonical workbook: gaps, 40+ WB sessions, scanners, verification, mega prompt |
