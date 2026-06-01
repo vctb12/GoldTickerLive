@@ -5,7 +5,7 @@
 
 | Session | Phase | Branch | PR | Status | Merged | Notes |
 | :-----: | ----- | ------ | -- | ------ | ------ | ----- |
-| 0 | Planning | `cursor/ui-ux-audit-session-program-8c0a` | _(fill on open)_ | 🟡 open | — | Docs + prompts only |
+| 0 | Planning | `cursor/ui-ux-audit-session-program-8c0a` | [#387](https://github.com/vctb12/GoldTickerLive/pull/387) | 🟡 open | — | Docs + prompts only |
 | 1 | First paint | `cursor/ui-ux-phase1-first-paint-8c0a` | — | ⬜ queued | — | **Start here** after Session 0 merges |
 | 2 | Empty pages | `cursor/ui-ux-phase2-empty-pages-8c0a` | — | ⬜ queued | — | Learn static body; invest decision; shops; 404 |
 | 3 | Consistency | `cursor/ui-ux-phase3-consistency-8c0a` | — | ⬜ queued | — | May split 3a/3b |
