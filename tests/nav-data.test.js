@@ -43,7 +43,7 @@ test('NAV_DATA group keys match between locales', async () => {
   const { NAV_DATA } = await loadNav();
   const enKeys = NAV_DATA.en.groups.map((g) => g.key);
   const arKeys = NAV_DATA.ar.groups.map((g) => g.key);
-  // Top-level order is intentional IA: primary price checking, tools, buying, markets.
+  // Top-level order is intentional IA: primary price checking, tools, and discovery.
   const expectedKeys = ['prices', 'tools', 'discover'];
   assert.deepEqual(enKeys, expectedKeys);
   assert.deepEqual(arKeys, expectedKeys);
