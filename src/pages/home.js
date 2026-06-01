@@ -713,6 +713,36 @@ function syncCrossPageLinks() {
     const node = document.getElementById(id);
     if (node) node.setAttribute('href', calcHref);
   }
+function syncTrackerLinks(overrides = {}) {
+  applyTrackerHandoffToIds(buildTrackerHref(overrides));
+}
+
+function initKaratStripTrackerHandoff() {
+  document.querySelectorAll('.karat-strip-item').forEach((item) => {
+  document.querySelectorAll('.karat-strip-item').forEach((item) => {
+    item.setAttribute('role', 'link');
+    item.setAttribute('tabindex', '0');
+    const karat = karatFromKstripItem(item);
+    const go = () => {
+      if (!karat) return;
+      const href = buildTrackerHref({ k: karat });
+      track(EVENTS.TRACKER_VIEW, { surface: 'home_karat_strip', karat, currency: 'AED' });
+      window.location.assign(href);
+    };
+    item.addEventListener('click', (e) => {
+      if (e.target.closest('.kstrip-copy-btn')) return;
+      go();
+    });
+    item.addEventListener('keydown', (e) => {
+      if (e.target.closest('.kstrip-copy-btn')) return;
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        go();
+      }
+    });
+  });
+    });
+  });
 }
 
 // ── Apply full page language ───────────────────────────────────────────────
@@ -1216,6 +1246,8 @@ async function init() {
       }, 1500);
     }
   });
+
+  initKaratStripTrackerHandoff();
 
   // Karat strip unit toggle
   document.querySelectorAll('.kstrip-unit-btn').forEach((btn) => {

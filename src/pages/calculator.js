@@ -357,6 +357,8 @@ function updateShopsLink({ currency = 'AED' } = {}) {
 }
 
 function updateTrackerHandoff({ karat = '22', currency = 'AED' } = {}) {
+  updateShopsHandoff({ currency });
+
   const handoff = document.getElementById('calc-tracker-handoff');
   const trackerLink = document.getElementById('calc-tracker-link');
   const countryLink = document.getElementById('calc-country-link');
