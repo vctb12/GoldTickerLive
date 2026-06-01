@@ -42,7 +42,7 @@ function patchGoldPricePage(filePath, countrySlug) {
   );
 
   const goldPricePath = `/countries/${countrySlug}/gold-price/`;
-  const re = new RegExp(goldPricePath.replace(/\//g, '\\/'), 'g');
+  const re = new RegExp(goldPricePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
   const replaced = (html.match(re) || []).length;
   html = html.replace(re, `/countries/${countrySlug}/`);
   linksFixed += replaced;
