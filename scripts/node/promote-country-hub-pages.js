@@ -31,7 +31,6 @@ function promote(slug) {
   html = html.replace(/\.\.\/\.\.\/\.\.\//g, '../../');
   html = html.replace(/\.\.\/\.\.\/\.\.\/src\//g, '../../src/');
   html = html.replace(/\.\.\/\.\.\/styles\//g, '../../styles/');
-  html = html.replace(/\.\.\/\.\.\/assets\//g, '../../assets/');
 
   html = html.replace(/<meta\s+name=["']robots["'][^>]*>\s*/i, '');
   html = html.replace(
