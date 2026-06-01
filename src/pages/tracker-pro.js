@@ -1270,18 +1270,32 @@ async function refreshData(forceLive = true, includeWire = true) {
 }
 
 async function fetchLive() {
+  const tasks = [];
   if (realtimeEngine) {
-    await realtimeEngine.refreshNow('manual-refresh');
+    tasks.push(realtimeEngine.refreshNow('manual-refresh'));
   }
-
+  tasks.push(
+    api.fetchGoldAndFX().then(({ gold, fx, errors }) => {
+      if (fx?.rates) {
+        state.rates = fx.rates;
+        state.fxMeta = {
+          lastUpdateUtc: fx.time_last_update_utc,
+          nextUpdateUtc: new Date(fx.time_next_update_utc).getTime(),
+        };
+        cache.saveFXRates(state.rates, state.fxMeta);
+      }
+      if (!state.live?.price && gold?.price) {
+        state.live = {
+          price: gold.price,
+          updatedAt: gold.updatedAt || new Date().toISOString(),
+          raw: gold.raw || {},
+        };
+      }
+      if (errors.gold || errors.fx) state.hasLiveFailure = true;
+    })
+  );
   try {
-    const data = await api.fetchFX();
-    state.rates = data.rates;
-    state.fxMeta = {
-      lastUpdateUtc: data.time_last_update_utc,
-      nextUpdateUtc: new Date(data.time_next_update_utc).getTime(),
-    };
-    cache.saveFXRates(state.rates, state.fxMeta);
+    await Promise.all(tasks);
   } catch (_e) {
     console.warn('[tracker] refreshData failed', _e);
     state.hasLiveFailure = true;

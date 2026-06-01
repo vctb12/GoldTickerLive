@@ -278,3 +278,30 @@ export async function fetchFX() {
   }
   throw new NetworkError('FX rates unavailable — live fetch and cache both failed');
 }
+
+/**
+ * Fetch gold spot and FX rates in parallel (no waterfall).
+ * Individual fetchers still apply cache fallbacks; this helper surfaces partial success.
+ *
+ * @param {{ signal?: AbortSignal, timeoutMs?: number }} [options]
+ * @returns {Promise<{
+ *   gold: Awaited<ReturnType<typeof fetchGold>>|null,
+ *   fx: Awaited<ReturnType<typeof fetchFX>>|null,
+ *   errors: { gold: Error|null, fx: Error|null }
+ * }>}
+ */
+export async function fetchGoldAndFX(options = {}) {
+  const [goldRes, fxRes] = await Promise.allSettled([
+    fetchGold(options),
+    fetchFX(options),
+  ]);
+
+  return {
+    gold: goldRes.status === 'fulfilled' ? goldRes.value : null,
+    fx: fxRes.status === 'fulfilled' ? fxRes.value : null,
+    errors: {
+      gold: goldRes.status === 'rejected' ? goldRes.reason : null,
+      fx: fxRes.status === 'rejected' ? fxRes.reason : null,
+    },
+  };
+}
