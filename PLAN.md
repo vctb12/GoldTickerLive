@@ -1,7 +1,7 @@
 # Gold Ticker Live — Active Task Plan
 
 > This file is the persistent task tracker for AI agents and human contributors. Agents: read this
-> before starting any task. Update it after completing work. Last updated: 2026-06-01 (ops hub)
+> before starting any task. Update it after completing work. Last updated: 2026-06-01 (D1 calculator→shops)
 
 **Master workbook v2 (read first):**
 [`docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md`](docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md)
@@ -24,7 +24,8 @@
 > [`docs/plans/2026-06-01_ui-ux-audit-remediation-program.md`](docs/plans/2026-06-01_ui-ux-audit-remediation-program.md)
 
 - [ ] **Track D1** — cross-page integration wiring (endless:
-      `@.github/prompts/endless-integration-wiring.prompt.md`)
+      `@.github/prompts/endless-integration-wiring.prompt.md`) — calculator→shops country filter ✅
+      2026-06-01; remaining flows in program checklist
 - [ ] **NEXT_PR_SEQUENCE PR 1** — GDPR export/delete + dashboard + alerts docs (see
       [`docs/audits/NEXT_PR_SEQUENCE.md`](docs/audits/NEXT_PR_SEQUENCE.md))
 - [ ] **Repo C1a** — docs archive + supersession index only (no URL moves) —
@@ -47,6 +48,10 @@
 
 ## ✅ Recently Completed
 
+- [x] **D1 Calculator → Shops handoff** — `calc-find-shops-link` and related card now pass
+      `?country=<code>` (+ `lang=ar`) from calculator country/currency context;
+      `src/pages/calculator/shops-handoff.js` + `tests/calculator-shops-handoff.test.js` — completed:
+      2026-06-01 — PR: (pending)
 - [x] **UI/UX audit Sessions 0–5** — first paint through CSS partials + a11y CI — completed:
       2026-06-01 — PRs: [#387](https://github.com/vctb12/GoldTickerLive/pull/387)–[#393](https://github.com/vctb12/GoldTickerLive/pull/393)
 - [x] BUILD 8: Insights Market Analysis Feed — rebuilt the insights guide grid into a filterable,
