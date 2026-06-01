@@ -16,7 +16,7 @@
 > · Registry:
 > [`docs/audits/UI_UX_AUDIT_SESSION_REGISTRY.md`](docs/audits/UI_UX_AUDIT_SESSION_REGISTRY.md)
 
-- [ ] **Session 0** — planning docs + phase prompts (branch `cursor/ui-ux-audit-session-program-8c0a`)
+- [x] **Session 0** — planning docs + phase prompts (branch `cursor/ui-ux-audit-session-program-8c0a`)
 - [ ] **Session 1** — first paint: skeletons, cache-first prices, parallel fetch, error states
       (`cursor/ui-ux-phase1-first-paint-8c0a`) — **ship first**
 - [ ] **Session 2** — learn / invest / shops / 404 (`cursor/ui-ux-phase2-empty-pages-8c0a`)
