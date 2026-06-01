@@ -29,7 +29,7 @@ function promote(slug) {
 
   // One fewer directory level for assets and modules.
   html = html.replace(/\.\.\/\.\.\/\.\.\//g, '../../');
-  html = html.replace(/\.\.\/\.\.\/src\//g, '../../src/');
+  html = html.replace(/\.\.\/\.\.\/\.\.\/src\//g, '../../src/');
   html = html.replace(/\.\.\/\.\.\/styles\//g, '../../styles/');
   html = html.replace(/\.\.\/\.\.\/assets\//g, '../../assets/');
 
