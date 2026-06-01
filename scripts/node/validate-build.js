@@ -271,9 +271,8 @@ const DUPLICATE_LINE_MIN = 24;
 let duplicateLineIssues = 0;
 const pagesDir = path.join(ROOT, 'src/pages');
 if (fs.existsSync(pagesDir)) {
-  for (const entry of fs.readdirSync(pagesDir)) {
-    if (!entry.endsWith('.js')) continue;
-    const filePath = path.join(pagesDir, entry);
+  for (const filePath of walkJs(pagesDir)) {
+    if (!filePath.endsWith('.js')) continue;
     const lines = fs.readFileSync(filePath, 'utf8').split('\n');
     for (let i = 1; i < lines.length; i++) {
       const prev = lines[i - 1].trim();
