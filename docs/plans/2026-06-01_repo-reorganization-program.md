@@ -19,7 +19,7 @@ guardrails_reviewed: true
 
 ## Rules (all sessions)
 
-- No direct commits to `main`. Branch: `cursor/repo-<slug>-cb21`.
+- No direct commits to `main`. Branch: `cursor/wb-<WB-ID>-<slug>-cb21` for workbook sessions; otherwise `cursor/repo-<slug>-cb21`.
 - Every URL change needs `_redirects` + sitemap regen + `npm run validate`.
 - Do not move `post_gold.yml`, `gold-price-fetch.yml`, `data/gold_price.json`, `sw.js`,
   `src/config/constants.js` paths without owner approval.
