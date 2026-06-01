@@ -24,6 +24,7 @@ import {
   redirectToAccount,
 } from '../lib/public-account-client.js';
 import { parseCalculatorUrlState, serializeCalculatorUrlState } from './calculator/url-state.js';
+import { buildShopsHandoffHref } from './calculator/shops-handoff.js';
 import '../lib/reveal.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import { countUp } from '../lib/count-up.js';
@@ -339,7 +340,35 @@ function buildCountryPageHref(country) {
   return country?.slug ? `countries/${country.slug}/` : 'countries/index.html';
 }
 
+let _shopsHandoffListenersBound = false;
+
+function updateShopsHandoff({ currency = 'AED' } = {}) {
+  if (!_shopsHandoffListenersBound) {
+    _shopsHandoffListenersBound = true;
+    const bindCurrencySelect = (id) => {
+      const select = document.getElementById(id);
+      if (!select) return;
+      const handler = () => updateShopsHandoff({ currency: select.value || 'AED' });
+      select.addEventListener('change', handler);
+      select.addEventListener('input', handler);
+    };
+    ['val-currency', 'scrap-currency', 'zakat-currency', 'buy-currency'].forEach(bindCurrencySelect);
+  }
+
+  const selectedCountry = getSelectedCountryContext(currency);
+  const href = buildShopsHandoffHref({
+    countryCode: selectedCountry?.code || '',
+    lang: STATE.lang,
+  });
+  for (const id of ['calc-find-shops-link', 'calc-related-shops-link']) {
+    const link = document.getElementById(id);
+    if (link) link.href = href;
+  }
+}
+
 function updateTrackerHandoff({ karat = '22', currency = 'AED' } = {}) {
+  updateShopsHandoff({ currency });
+
   const handoff = document.getElementById('calc-tracker-handoff');
   const trackerLink = document.getElementById('calc-tracker-link');
   const countryLink = document.getElementById('calc-country-link');
@@ -347,7 +376,7 @@ function updateTrackerHandoff({ karat = '22', currency = 'AED' } = {}) {
   const note = document.getElementById('calc-live-tracker-note');
   if (!handoff || !trackerLink || !mobileTrackerLink || !note) return;
 
-  const params = new URLSearchParams({
+  const href = buildTrackerHandoffUrl({
     mode: 'live',
     cur: currency,
     k: String(karat),
@@ -355,7 +384,6 @@ function updateTrackerHandoff({ karat = '22', currency = 'AED' } = {}) {
     r: '30D',
     lang: STATE.lang,
   });
-  const href = `tracker.html#${params.toString()}`;
   trackerLink.href = href;
   mobileTrackerLink.href = href;
   handoff.hidden = false;

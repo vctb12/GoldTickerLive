@@ -24,7 +24,10 @@
 > [`docs/plans/2026-06-01_ui-ux-audit-remediation-program.md`](docs/plans/2026-06-01_ui-ux-audit-remediation-program.md)
 
 - [ ] **Track D1** — cross-page integration wiring (endless:
-      `@.github/prompts/endless-integration-wiring.prompt.md`)
+      `@.github/prompts/endless-integration-wiring.prompt.md`) — calculator→shops country filter ✅
+      2026-06-01; remaining flows in program checklist
+      `@.github/prompts/endless-integration-wiring.prompt.md`) — in progress: shared
+      `page-handoff.js`, homepage tracker CTAs, karat-strip handoff, calc→shops country filter
 - [ ] **NEXT_PR_SEQUENCE PR 1** — GDPR export/delete + dashboard + alerts docs (see
       [`docs/audits/NEXT_PR_SEQUENCE.md`](docs/audits/NEXT_PR_SEQUENCE.md))
 
@@ -48,6 +51,13 @@
 - [x] **Repo C1a** — docs archive (`docs/archive/2026-06/`) + supersession index + plan stubs (no URL
       moves) — completed: 2026-06-01 —
       [`docs/plans/2026-06-01_repo-reorganization-program.md`](docs/plans/2026-06-01_repo-reorganization-program.md)
+- [x] **D1 Calculator → Shops handoff** — `calc-find-shops-link` and related card now pass
+      `?country=<code>` (+ `lang=ar`) from calculator country/currency context;
+      `src/pages/calculator/shops-handoff.js` + `tests/calculator-shops-handoff.test.js` — completed:
+      2026-06-01 — PR: (pending)
+- [x] **Repo C1a** — docs archive scaffold + supersession index refresh (no plan file moves) —
+      completed: 2026-06-01 — see
+      [`docs/plans/ARCHIVE_AND_SUPERSESSION_INDEX.md`](docs/plans/ARCHIVE_AND_SUPERSESSION_INDEX.md)
 - [x] **UI/UX audit Sessions 0–5** — first paint through CSS partials + a11y CI — completed:
       2026-06-01 — PRs: [#387](https://github.com/vctb12/GoldTickerLive/pull/387)–[#393](https://github.com/vctb12/GoldTickerLive/pull/393)
 - [x] BUILD 8: Insights Market Analysis Feed — rebuilt the insights guide grid into a filterable,

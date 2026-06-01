@@ -3,6 +3,8 @@
 > **Purpose:** One place to know which `.md` file is authoritative. Agents: read this before creating
 > a new plan doc. Humans: archive to `docs/archive/YYYY-MM/` only in session **C1a/C3b** (see
 > [`2026-06-01_repo-reorganization-program.md`](./2026-06-01_repo-reorganization-program.md)).
+>
+> **Last updated:** 2026-06-01 (session **C1a** — index + README statuses; no plan file moves).
 
 **Last updated:** 2026-06-01 (C1a — nine landed May 2026 session plans → [`docs/archive/2026-06/`](../archive/2026-06/); stubs in `docs/plans/`)
 
@@ -29,6 +31,7 @@
 | [`2026-06-01_endless-session-prompts.md`](./2026-06-01_endless-session-prompts.md) | **Active** endless runs | Inline endless blocks in program doc |
 | [`2026-06-01_repo-reorganization-program.md`](./2026-06-01_repo-reorganization-program.md) | **Active** — C1a **done**; C1b+ not started | Wave 3 #18 wholesale move without phases |
 | [`docs/audits/NEXT_PR_SEQUENCE.md`](../audits/NEXT_PR_SEQUENCE.md) | **Active** post-12-phase | — |
+| [`docs/audits/UI_UX_AUDIT_SESSION_REGISTRY.md`](../audits/UI_UX_AUDIT_SESSION_REGISTRY.md) | **Historical** Sessions 0–5 merged | Per-session branches only |
 
 ---
 
@@ -43,6 +46,8 @@
 | [`2026-05-21_next-session-prompts.md`](./2026-05-21_next-session-prompts.md) | 🟡 shell work | Defer if conflicts with open UX |
 | [`REPO_CLEANUP_PROPOSAL.md`](./REPO_CLEANUP_PROPOSAL.md) | Phase 1 audit | Deletions gated on `CANDIDATES.md` |
 | [`PLATFORM_UPGRADE_PROPOSAL.md`](./PLATFORM_UPGRADE_PROPOSAL.md) | 📥 pending | Reconcile to REVAMP_PLAN only |
+| [`PRODUCT_SIMPLIFICATION_AND_SEO_CLEANUP_PLAN.md`](./PRODUCT_SIMPLIFICATION_AND_SEO_CLEANUP_PLAN.md) | 📥 locked / NEXT_PR PR2 | No deletions until owner sign-off |
+| [`TRACKER_COMMAND_CENTER_RESTRUCTURE.md`](./TRACKER_COMMAND_CENTER_RESTRUCTURE.md) | 📥 pending | Tracker revamp in REVAMP_PLAN |
 
 ---
 
@@ -103,6 +108,17 @@ Regenerate rather than edit stale numbers in place.
 | [`docs/AI_PROMPT_LIBRARY.md`](../AI_PROMPT_LIBRARY.md) | Index of `.github/prompts` |
 | [`docs/GOLD_TICKER_LIVE_AGENT_PROMPTS.md`](../GOLD_TICKER_LIVE_AGENT_PROMPTS.md) | Deep 50+ prompt catalog |
 | [`2026-06-01_endless-session-prompts.md`](./2026-06-01_endless-session-prompts.md) | Repeatable discovery prompts |
+
+---
+
+## Archive layout (`docs/archive/`)
+
+| Path | Role |
+| ---- | ---- |
+| [`docs/archive/README.md`](../archive/README.md) | Archive policy + month folders |
+| `docs/archive/YYYY-MM/<original-name>.md` | Frozen copy after C3b move |
+
+Physical moves are **C3b only**. C1a updates indices and README statuses without breaking inbound links.
 
 ---
 
