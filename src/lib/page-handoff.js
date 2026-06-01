@@ -3,9 +3,9 @@
  * Keeps hash/query shapes consistent across surfaces.
  */
 
-const ALLOWED_TRACKER_MODE = new Set(['live', 'compare', 'exports']);
-const ALLOWED_K = new Set(['24', '22', '21', '18', '14', '10', '9']);
-const ALLOWED_U = new Set(['gram', 'tola', 'oz']);
+const ALLOWED_TRACKER_MODE = new Set(['live', 'compare', 'archive', 'exports', 'method']);
+const ALLOWED_K = new Set(['24', '22', '21', '20', '18', '16', '14']);
+const ALLOWED_U = new Set(['gram', 'tola', 'oz', 'kg']);
 const ALLOWED_LANG = new Set(['en', 'ar']);
 
 /**
