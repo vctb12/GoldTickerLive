@@ -9,9 +9,9 @@ created: "2026-06-01"
 last_updated: "2026-06-01"
 source: external-audit-prompt-2026-06-01
 sessions_total: 6
-sessions_open: 5
-next_session: 1
-next_branch: cursor/ui-ux-phase1-first-paint-8c0a
+sessions_open: 4
+next_session: 2
+next_branch: cursor/ui-ux-phase2-empty-pages-8c0a
 blocked_on: ""
 guardrails_reviewed: true
 skills_used: [mobile-ux-review, pricing-data-integrity, frontend-design-system, seo-governance]
@@ -79,12 +79,12 @@ copy and placeholders.
 
 ### Phase 1 — Kill Loading…/— first paint (CRITICAL)
 
-- [ ] Reusable skeleton component + CSS utilities (price cards, tables, freshness strip)
-- [ ] Replace literal `Loading…`, `Preparing…`, `Connecting…`, bare `—` on index, tracker, shops,
+- [x] Reusable skeleton component + CSS utilities (price cards, tables, freshness strip)
+- [x] Replace literal `Loading…`, `Preparing…`, `Connecting…`, bare `—` on index, tracker, shops,
       country/city, invest
-- [ ] Hydrate from `localStorage` / existing cache layer before network
-- [ ] Error empty state (icon, message, retry) on `api.js` failure path when no cache
-- [ ] Parallelize gold + FX fetches (today: sequential)
+- [x] Hydrate from `localStorage` / existing cache layer before network
+- [x] Error empty state (icon, message, retry) on `api.js` failure path when no cache
+- [x] Parallelize gold + FX fetches (today: sequential)
 
 **Verify:** `npm test`, `npm run validate`, `npm run build`; manual 360px LTR + RTL first paint &
       hard-offline.
@@ -187,3 +187,12 @@ TODO (owner): add under backlog / UX in [`docs/REVAMP_PLAN.md`](../REVAMP_PLAN.m
 - **Next action:** Open Session 1 branch `cursor/ui-ux-phase1-first-paint-8c0a`; paste prompt from
   [`2026-06-01_ui-ux-audit-session-prompts.md`](./2026-06-01_ui-ux-audit-session-prompts.md) or
   `@.github/prompts/ui-ux-audit-phase1-first-paint.prompt.md`
+
+### 2026-06-01 — cursor (Session 1 — first paint)
+
+- **Slice:** Phase 1
+- **Branch:** `cursor/ui-ux-phase1-first-paint-f3bc`
+- **Completed:** `skeleton.js`, `price-fetch-error.js`, `fetchGoldAndFX`, cache-first hydrators,
+  skeleton HTML on index/tracker/shops/invest/country shells
+- **Validation:** `npm test`, `npm run lint`, `npm run validate`, `npm run build` (agent-run)
+- **Next action:** Session 2 empty pages (`cursor/ui-ux-phase2-empty-pages-8c0a`)

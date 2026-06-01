@@ -212,6 +212,17 @@ export function getFallbackFXRates() {
 }
 
 /**
+ * Snapshot of last-known gold + FX from localStorage for cache-first paint.
+ * @returns {{ gold: ReturnType<typeof getFallbackGoldPrice>, fx: ReturnType<typeof getFallbackFXRates> }}
+ */
+export function getCachedPriceSnapshot() {
+  return {
+    gold: getFallbackGoldPrice(),
+    fx: getFallbackFXRates(),
+  };
+}
+
+/**
  * Persist a single user-preference key/value pair. The full preferences object
  * is read-modify-written atomically.
  *

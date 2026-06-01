@@ -95,7 +95,7 @@
             <span class="shops-trust-icon" aria-hidden="true">◈</span>
             <span class="shops-trust-text"
               ><span id="shops-trust-label">Reference listings</span> ·
-              <span id="shops-last-updated">Loading...</span></span
+              <span id="shops-last-updated" class="skeleton-inline shell-skeleton-freshness-strip" aria-busy="true"></span></span
             >
           </div>
           <p class="shops-results-disclaimer" id="shops-freshness-semantics">
@@ -367,10 +367,12 @@
           </div>
 
           <div id="shops-grid" class="shops-grid"></div>
-          <div id="shops-loading" class="shops-empty" hidden aria-live="polite">
-            <span class="ses-icon" aria-hidden="true">⏳</span>
-            <h3>Loading listings…</h3>
-            <p>Fetching verified shops, markets, and sponsored placements.</p>
+          <div id="shops-loading" class="shops-empty shops-loading-skeleton" hidden aria-live="polite">
+            <div class="shops-skeleton-grid" aria-hidden="true">
+              <div class="shops-skeleton-card"><span class="skeleton-inline shell-skeleton-block"></span></div>
+              <div class="shops-skeleton-card"><span class="skeleton-inline shell-skeleton-block"></span></div>
+              <div class="shops-skeleton-card"><span class="skeleton-inline shell-skeleton-block"></span></div>
+            </div>
           </div>
           <div id="shops-error" class="shops-empty" hidden aria-live="polite">
             <span class="ses-icon" aria-hidden="true">⚠️</span>

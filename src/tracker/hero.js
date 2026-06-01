@@ -2,6 +2,7 @@
 import { CONSTANTS, KARATS, COUNTRIES } from '../config/index.js';
 import { _state, _el, _priceFor, _currentSpot, tx, formatUsd, formatUnitLabel } from './_ctx.js';
 import { clear, el, setText } from '../lib/safe-dom.js';
+import { mountSkeleton, skeletonNode } from '../components/skeleton.js';
 import { getMarketStatus } from '../lib/live-status.js';
 import { pulseFreshness } from '../lib/freshness-pulse.js';
 import { countUp } from '../lib/count-up.js';
@@ -116,8 +117,10 @@ export function renderHero() {
         pulseTarget: _el.xauUsdValue?.closest('.tracker-hero-price, .tracker-metric'),
       });
       pulseFreshness(_el.xauUsdValue);
-    } else {
+    } else if (_state.hasLiveFailure) {
       setText(_el.xauUsdValue, '—');
+    } else {
+      mountSkeleton(_el.xauUsdValue, 'priceLg');
     }
   }
   const xauBadge = document.getElementById('tp-xauusd-badge');
@@ -255,6 +258,16 @@ export function renderHero() {
   } else if (_el.heroStats && !spot) {
     clear(_el.heroStats);
     _el.heroStats.setAttribute('aria-busy', 'true');
+    const labels = ['XAU/USD', 'UAE 24K', 'UAE 22K', 'USD/g 24K'];
+    labels.forEach((label) => {
+      _el.heroStats.append(
+        el('div', { class: 'tracker-hero-stat tracker-hero-stat--skeleton', 'aria-hidden': 'true' }, [
+          el('div', { class: 'tracker-hero-k' }, label),
+          el('div', { class: 'tracker-hero-v' }, [skeletonNode('priceMd', { block: true })]),
+          el('div', { class: 'tracker-hero-s' }, [skeletonNode('freshnessStrip')]),
+        ])
+      );
+    });
   }
 
   if (_el.summaryList) {

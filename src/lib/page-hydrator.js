@@ -15,6 +15,8 @@ import { injectFooter } from '../components/footer.js';
 import { injectSpotBar, updateSpotBar, updateSpotBarLang } from '../components/spotBar.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { el, safeHref, clear, setText } from './safe-dom.js';
+import { skeletonNode } from '../components/skeleton.js';
+import { renderPriceFetchError } from '../components/price-fetch-error.js';
 import { track, EVENTS } from './analytics.js';
 import '../lib/reveal.js';
 import { initPageEnter } from './page-enter.js';
@@ -142,36 +144,55 @@ function calcLocalPrice(spotUsdPerOz, purity, fxRate, unit = 'gram') {
   return localPerGram;
 }
 
+function goldFromCache() {
+  const fallback = cache.getFallbackGoldPrice();
+  return fallback
+    ? { price: fallback.price, updatedAt: fallback.updatedAt, source: 'cache-fallback' }
+    : null;
+}
+
+function fxFromCache() {
+  const cached = cache.getFallbackFXRates();
+  return cached
+    ? {
+        rates: cached.rates || {},
+        time_last_update_utc: cached.time_last_update_utc,
+        source: 'cache-fallback',
+      }
+    : { rates: {}, source: 'unavailable' };
+}
+
 async function fetchPrices() {
-  try {
-    const [goldRes, fxRes] = await Promise.allSettled([api.fetchGold(), api.fetchFX()]);
-    const gold =
-      goldRes.status === 'fulfilled'
-        ? goldRes.value
-        : (() => {
-            const fallback = cache.getFallbackGoldPrice();
-            return fallback
-              ? { price: fallback.price, updatedAt: fallback.updatedAt, source: 'cache-fallback' }
-              : null;
-          })();
+  const { gold: liveGold, fx: liveFx } = await api.fetchGoldAndFX();
+  const gold = liveGold || goldFromCache();
+  const fx = liveFx || fxFromCache();
+  return { gold, fx };
+}
 
-    const fx =
-      fxRes.status === 'fulfilled'
-        ? fxRes.value
-        : cache.getFXRates?.()
-          ? { ...cache.getFXRates(), source: 'cache-fallback' }
-          : { rates: {}, source: 'unavailable' };
-
-    return { gold, fx };
-  } catch {
-    const fallback = cache.getFallbackGoldPrice();
-    return {
-      gold: fallback
-        ? { price: fallback.price, updatedAt: fallback.updatedAt, source: 'cache-fallback' }
-        : null,
-      fx: { rates: {}, source: 'unavailable' },
-    };
-  }
+function renderLegacyLoadingSkeleton(loadingEl) {
+  if (!loadingEl) return;
+  clear(loadingEl);
+  loadingEl.className = 'ph-loading-skeleton';
+  loadingEl.append(
+    el('div', { class: 'ph-karat-skeleton-grid', 'aria-hidden': 'true' }, [
+      el('div', { class: 'ph-karat-card ph-karat-card--skeleton' }, [
+        skeletonNode('tableCell', { block: true }),
+        skeletonNode('priceMd', { block: true }),
+      ]),
+      el('div', { class: 'ph-karat-card ph-karat-card--skeleton' }, [
+        skeletonNode('tableCell', { block: true }),
+        skeletonNode('priceMd', { block: true }),
+      ]),
+      el('div', { class: 'ph-karat-card ph-karat-card--skeleton' }, [
+        skeletonNode('tableCell', { block: true }),
+        skeletonNode('priceMd', { block: true }),
+      ]),
+      el('div', { class: 'ph-karat-card ph-karat-card--skeleton' }, [
+        skeletonNode('tableCell', { block: true }),
+        skeletonNode('priceMd', { block: true }),
+      ]),
+    ])
+  );
 }
 
 function freshnessTone(key) {
@@ -839,26 +860,36 @@ function renderDisclaimerLegacy(country, pageUrl) {
   ]);
 }
 
-async function hydrateLegacyPage({ country, karatSlug }) {
+function renderLegacyFromCache(country, karatSlug) {
+  const cachedGold = cache.getFallbackGoldPrice();
+  const cachedFx = cache.getFallbackFXRates();
+  if (!cachedGold?.price) return false;
+
+  const gold = {
+    price: cachedGold.price,
+    updatedAt: cachedGold.updatedAt,
+    source: 'cache-fallback',
+  };
+  const fx = cachedFx
+    ? {
+        rates: cachedFx.rates || {},
+        time_last_update_utc: cachedFx.time_last_update_utc,
+        source: 'cache-fallback',
+      }
+    : { rates: {}, source: 'unavailable' };
+
+  return applyLegacyPriceRender({ country, karatSlug, gold, fx });
+}
+
+function applyLegacyPriceRender({ country, karatSlug, gold, fx }) {
   const loadingEl = document.getElementById('price-loading');
   const displayEl = document.getElementById('price-display');
   const karatsEl = document.getElementById('karat-cards');
   const freshEl = document.getElementById('freshness-badge');
   const disclaimerEl = document.getElementById('price-disclaimer');
 
-  const { gold, fx } = await fetchPrices();
-  if (!gold) {
-    if (loadingEl) loadingEl.textContent = 'Unable to fetch prices. Please try again.';
-    updateSpotBar({ updatedAt: null });
-    return;
-  }
-
   const rate = getCountryFxRate(country, fx);
-  if (!rate) {
-    if (loadingEl) loadingEl.textContent = `FX rate for ${country.currency} unavailable.`;
-    updateSpotBar({ updatedAt: gold.updatedAt, hasLiveFailure: true });
-    return;
-  }
+  if (!rate) return false;
 
   if (karatsEl)
     karatsEl.replaceChildren(
@@ -867,7 +898,7 @@ async function hydrateLegacyPage({ country, karatSlug }) {
   if (freshEl) freshEl.replaceChildren(renderFreshnessBadgeLegacy(gold.updatedAt));
   if (disclaimerEl) disclaimerEl.replaceChildren(renderDisclaimerLegacy(country, location.href));
 
-  const aed24g = (gold.price / CONSTANTS.TROY_OZ_GRAMS) * AED_PEG;
+  const aed24g = (gold.price / TROY_OZ_GRAMS) * AED_PEG;
   updateSpotBar({
     xauUsd: gold.price,
     aed24kGram: aed24g,
@@ -876,7 +907,54 @@ async function hydrateLegacyPage({ country, karatSlug }) {
   });
 
   if (displayEl) displayEl.style.display = '';
-  if (loadingEl) loadingEl.style.display = 'none';
+  if (loadingEl) {
+    loadingEl.style.display = 'none';
+    loadingEl.hidden = true;
+  }
+  return true;
+}
+
+async function hydrateLegacyPage({ country, karatSlug, lang = 'en' }) {
+  const loadingEl = document.getElementById('price-loading');
+  const displayEl = document.getElementById('price-display');
+
+  renderLegacyLoadingSkeleton(loadingEl);
+  renderLegacyFromCache(country, karatSlug);
+
+  const refresh = async () => {
+    const { gold, fx } = await fetchPrices();
+    if (!gold) {
+      if (!cache.getFallbackGoldPrice()?.price && loadingEl) {
+        renderPriceFetchError(loadingEl, {
+          lang,
+          onRetry: () => {
+            renderLegacyLoadingSkeleton(loadingEl);
+            refresh();
+          },
+        });
+        loadingEl.style.display = '';
+        loadingEl.hidden = false;
+        if (displayEl) displayEl.style.display = 'none';
+      }
+      updateSpotBar({ updatedAt: null });
+      return;
+    }
+
+    if (!applyLegacyPriceRender({ country, karatSlug, gold, fx })) {
+      if (loadingEl) {
+        setText(
+          loadingEl,
+          lang === 'ar'
+            ? `سعر صرف ${country.currency} غير متوفر.`
+            : `FX rate for ${country.currency} unavailable.`
+        );
+      }
+      updateSpotBar({ updatedAt: gold.updatedAt, hasLiveFailure: true });
+      return;
+    }
+  };
+
+  await refresh();
 }
 
 async function hydrate() {
@@ -904,6 +982,27 @@ async function hydrate() {
       countryUrl: withBase(`countries/${country.slug}/gold-price/`),
     });
     const pageData = getCountryPageData();
+    const cachedGold = cache.getFallbackGoldPrice();
+    const cachedFx = cache.getFallbackFXRates();
+    if (cachedGold?.price) {
+      renderCountryPage({
+        country,
+        pageData,
+        lang,
+        gold: {
+          price: cachedGold.price,
+          updatedAt: cachedGold.updatedAt,
+          source: 'cache-fallback',
+        },
+        fx: cachedFx
+          ? {
+              rates: cachedFx.rates || {},
+              time_last_update_utc: cachedFx.time_last_update_utc,
+              source: 'cache-fallback',
+            }
+          : { rates: {}, source: 'unavailable' },
+      });
+    }
     const { gold, fx } = await fetchPrices();
     renderCountryPage({ country, pageData, lang, gold, fx });
     track(EVENTS.COUNTRY_PAGE_VIEW, {
@@ -915,7 +1014,7 @@ async function hydrate() {
     return;
   }
 
-  await hydrateLegacyPage({ country, karatSlug: route.karatSlug });
+  await hydrateLegacyPage({ country, karatSlug: route.karatSlug, lang });
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -18,14 +18,15 @@ test('home hero command chips expose localized status landmark hook', () => {
 test('home command chips render with loading skeleton classes', () => {
   assert.match(
     HTML,
-    /class="trust-chip skeleton-inline home-command-chip--loading"[\s\S]*id="home-command-freshness"/,
+    /class="trust-chip skeleton-inline home-command-chip--loading"[\s\S]*id="home-command-freshness"[\s\S]*aria-busy="true"/,
     'freshness chip should ship with loading skeleton class'
   );
   assert.match(
     HTML,
-    /class="trust-chip skeleton-inline home-command-chip--loading"[\s\S]*id="home-command-spot-chip"/,
+    /class="trust-chip skeleton-inline home-command-chip--loading"[\s\S]*id="home-command-spot-chip"[\s\S]*aria-busy="true"/,
     'spot chip should ship with loading skeleton class'
   );
+  assert.doesNotMatch(HTML, /id="home-command-freshness"[^>]*>Loading freshness/);
 });
 
 test('home command metric values ship with skeleton placeholders', () => {

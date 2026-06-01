@@ -182,7 +182,7 @@
                 aria-atomic="true"
               >
                 <span class="tracker-badge-dot" aria-hidden="true"></span>
-                <span id="tp-live-badge-text">Preparing live feed</span>
+                <span id="tp-live-badge-text" class="skeleton-inline shell-skeleton-freshness-chip" aria-busy="true"></span>
                 <span class="tracker-badge-separator" aria-hidden="true">·</span>
                 <span id="tp-refresh-badge" role="status" aria-live="polite">Waiting for first sync</span>
               </span>
@@ -190,7 +190,7 @@
               <span class="tracker-badge tracker-badge-xauusd tracker-hero-price" id="tp-xauusd-badge" aria-label="XAU/USD spot price">
                 <span aria-hidden="true">🏅</span>
                 <span>XAU/USD</span>
-                <strong id="tp-xauusd-value">—</strong>
+                <strong id="tp-xauusd-value" class="skeleton-inline shell-skeleton-price-lg" aria-busy="true"></strong>
               </span>
               <span class="tracker-badge tracker-badge-market" id="tp-market-badge">
                 <span aria-hidden="true">📊</span>
@@ -225,23 +225,23 @@
             <div class="tracker-hero-stats" id="tp-hero-stats" aria-label="Key live metrics" aria-busy="true">
               <div class="tracker-hero-stat tracker-hero-stat--skeleton" aria-hidden="true">
                 <div class="tracker-hero-k">XAU/USD</div>
-                <div class="tracker-hero-v tracker-skeleton-pulse">—</div>
-                <div class="tracker-hero-s">Connecting…</div>
+                <div class="tracker-hero-v"><span class="skeleton-inline shell-skeleton-price-md" role="presentation" aria-hidden="true"></span></div>
+                <div class="tracker-hero-s"><span class="skeleton-inline shell-skeleton-freshness-strip" role="presentation" aria-hidden="true"></span></div>
               </div>
               <div class="tracker-hero-stat tracker-hero-stat--skeleton" aria-hidden="true">
                 <div class="tracker-hero-k">UAE 24K</div>
-                <div class="tracker-hero-v tracker-skeleton-pulse">—</div>
-                <div class="tracker-hero-s">per gram</div>
+                <div class="tracker-hero-v"><span class="skeleton-inline shell-skeleton-price-md" role="presentation" aria-hidden="true"></span></div>
+                <div class="tracker-hero-s"><span class="skeleton-inline shell-skeleton-freshness-strip" role="presentation" aria-hidden="true"></span></div>
               </div>
               <div class="tracker-hero-stat tracker-hero-stat--skeleton" aria-hidden="true">
                 <div class="tracker-hero-k">UAE 22K</div>
-                <div class="tracker-hero-v tracker-skeleton-pulse">—</div>
-                <div class="tracker-hero-s">per gram</div>
+                <div class="tracker-hero-v"><span class="skeleton-inline shell-skeleton-price-md" role="presentation" aria-hidden="true"></span></div>
+                <div class="tracker-hero-s"><span class="skeleton-inline shell-skeleton-freshness-strip" role="presentation" aria-hidden="true"></span></div>
               </div>
               <div class="tracker-hero-stat tracker-hero-stat--skeleton" aria-hidden="true">
                 <div class="tracker-hero-k">USD/g 24K</div>
-                <div class="tracker-hero-v tracker-skeleton-pulse">—</div>
-                <div class="tracker-hero-s">per gram</div>
+                <div class="tracker-hero-v"><span class="skeleton-inline shell-skeleton-price-md" role="presentation" aria-hidden="true"></span></div>
+                <div class="tracker-hero-s"><span class="skeleton-inline shell-skeleton-freshness-strip" role="presentation" aria-hidden="true"></span></div>
               </div>
             </div>
 
@@ -533,7 +533,7 @@
                 </p>
               </div>
               <div class="tracker-mobile-summary-chips">
-                <span class="trust-chip" data-tone="live" id="tp-mobile-summary-status">Preparing…</span>
+                <span class="trust-chip skeleton-inline shell-skeleton-freshness-chip" data-tone="live" id="tp-mobile-summary-status" aria-busy="true"></span>
                 <span class="trust-chip" data-tone="info" id="tp-mobile-summary-source">Source note</span>
               </div>
             </div>
@@ -541,22 +541,22 @@
             <div class="mobile-command-card__metrics">
               <div class="mobile-command-card__metric">
                 <span class="mobile-command-card__metric-label" id="tp-mobile-selected-label">Selected view</span>
-                <strong class="mobile-command-card__metric-value" id="tp-mobile-selected-value">—</strong>
+                <strong class="mobile-command-card__metric-value skeleton-inline shell-skeleton-karat" id="tp-mobile-selected-value" aria-busy="true"></strong>
                 <span class="mobile-command-card__metric-note" id="tp-mobile-selected-note">Currency, karat, and unit</span>
               </div>
               <div class="mobile-command-card__metric">
                 <span class="mobile-command-card__metric-label" id="tp-mobile-price-label">Reference price</span>
-                <strong class="mobile-command-card__metric-value" id="tp-mobile-price-value">—</strong>
+                <strong class="mobile-command-card__metric-value skeleton-inline shell-skeleton-karat" id="tp-mobile-price-value" aria-busy="true"></strong>
                 <span class="mobile-command-card__metric-note" id="tp-mobile-price-note">Spot-linked selected view</span>
               </div>
               <div class="mobile-command-card__metric">
                 <span class="mobile-command-card__metric-label" id="tp-mobile-spot-label">Global spot</span>
-                <strong class="mobile-command-card__metric-value" id="tp-mobile-spot-value">—</strong>
+                <strong class="mobile-command-card__metric-value skeleton-inline shell-skeleton-karat" id="tp-mobile-spot-value" aria-busy="true"></strong>
                 <span class="mobile-command-card__metric-note" id="tp-mobile-spot-note">XAU/USD per troy ounce</span>
               </div>
               <div class="mobile-command-card__metric">
                 <span class="mobile-command-card__metric-label" id="tp-mobile-updated-label">Freshness</span>
-                <strong class="mobile-command-card__metric-value" id="tp-mobile-updated-value">—</strong>
+                <strong class="mobile-command-card__metric-value skeleton-inline shell-skeleton-karat" id="tp-mobile-updated-value" aria-busy="true"></strong>
                 <span class="mobile-command-card__metric-note" id="tp-mobile-updated-note">Live, cached, or derived is always labeled</span>
               </div>
             </div>
@@ -723,7 +723,7 @@
               </div>
             </div>
             <p class="tracker-chart-caption" id="tp-history-caption" role="status" aria-live="polite">
-              Preparing historical explorer…
+              <span class="skeleton-inline shell-skeleton-freshness-strip" role="presentation" aria-hidden="true"></span>
             </p>
             <p class="source-note tracker-chart-source-note" id="tp-chart-source-note">
               Selected chart data may combine live, cached, and baseline points. Freshness remains

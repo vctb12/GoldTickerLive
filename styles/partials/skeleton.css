@@ -1,0 +1,100 @@
+/* Skeleton size utilities — paired with .skeleton-inline in global.css */
+
+.shell-skeleton-price-md {
+  inline-size: 5.5rem;
+  block-size: 1.35em;
+}
+
+.shell-skeleton-freshness-chip {
+  inline-size: 9rem;
+  block-size: 1.25rem;
+}
+
+.shell-skeleton-freshness-strip {
+  inline-size: 12rem;
+  block-size: 0.9em;
+}
+
+.shell-skeleton-table-cell {
+  display: block;
+  inline-size: 4.5rem;
+  block-size: 1em;
+}
+
+.shell-skeleton-block {
+  display: block;
+  inline-size: 100%;
+  block-size: 4rem;
+  border-radius: var(--radius-control);
+}
+
+.skeleton-table-row td {
+  padding-block: var(--space-3);
+}
+
+/* Price fetch failure — compact empty state for hero / country mounts */
+.price-fetch-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.price-fetch-error__icon {
+  font-size: var(--text-2xl);
+  line-height: 1;
+  color: var(--color-warning, #d97706);
+}
+
+.price-fetch-error__message {
+  margin: 0;
+  max-inline-size: 22rem;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.price-fetch-error__retry {
+  margin-block-start: var(--space-1);
+}
+
+.ph-loading-skeleton {
+  padding: var(--space-6) var(--space-4);
+}
+
+.ph-karat-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--space-4);
+}
+
+.shops-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.shops-skeleton-card {
+  min-block-size: 7rem;
+}
+
+.ph-karat-card--skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-control);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-inline {
+    animation: none;
+    background: var(--color-surface-2);
+  }
+}

@@ -1,6 +1,8 @@
-import { CONSTANTS, KARATS } from '../config/index.js';
+import { CONSTANTS, KARATS, TRANSLATIONS } from '../config/index.js';
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
+import { mountSkeleton } from '../components/skeleton.js';
+import { showDataStatusBanner, hideDataStatusBanner } from '../lib/data-status-banner.js';
 import * as calc from '../lib/price-calculator.js';
 import * as fmt from '../lib/formatter.js';
 import { updateTicker } from '../components/ticker.js';
@@ -877,12 +879,26 @@ function renderPlanner() {
   );
   document.getElementById('result-budget-note').textContent = tx('planBudgetNote');
 
-  document.getElementById('result-grams').textContent = formatWeightGrams(grams);
+  const gramsEl = document.getElementById('result-grams');
+  const ouncesEl = document.getElementById('result-ounces');
+  if (grams != null) {
+    gramsEl.textContent = formatWeightGrams(grams);
+  } else if (!state.goldPriceUsdPerOz) {
+    mountSkeleton(gramsEl, 'karat');
+  } else {
+    gramsEl.textContent = formatWeightGrams(grams);
+  }
   document.getElementById('result-grams-note').textContent = pricePerGram
     ? `${formatCurrency(pricePerGram, currency, decimals)} / g`
-    : tx('fetching');
+    : '';
 
-  document.getElementById('result-ounces').textContent = formatWeightOz(ounces);
+  if (ounces != null) {
+    ouncesEl.textContent = formatWeightOz(ounces);
+  } else if (!state.goldPriceUsdPerOz) {
+    mountSkeleton(ouncesEl, 'karat');
+  } else {
+    ouncesEl.textContent = formatWeightOz(ounces);
+  }
   document.getElementById('result-ounces-note').textContent = tx('planOuncesNote');
 
   const fourthLabel = document.getElementById('result-fourth-label');
@@ -1024,24 +1040,42 @@ function renderLiveCard() {
   const panel = document.getElementById('invest-live-panel');
   const status = getMarketStatus();
   const spot = state.goldPriceUsdPerOz;
-  const p24 = getLocalPricePerGram('24', 'AE');
-  const p22 = getLocalPricePerGram('22', 'AE');
-  const p21 = getLocalPricePerGram('21', 'AE');
+  const p24 = spot ? getLocalPricePerGram('24', 'AE') : null;
+  const p22 = spot ? getLocalPricePerGram('22', 'AE') : null;
+  const p21 = spot ? getLocalPricePerGram('21', 'AE') : null;
 
   const statusEl = document.getElementById('invest-market-status');
-  statusEl.textContent = status === 'open' ? tx('marketOpen') : tx('marketClosed');
-  statusEl.className = `invest-market-chip ${status === 'open' ? 'is-open' : 'is-closed'}`;
+  if (spot) {
+    statusEl.textContent = status === 'open' ? tx('marketOpen') : tx('marketClosed');
+    statusEl.className = `invest-market-chip ${status === 'open' ? 'is-open' : 'is-closed'}`;
+  } else {
+    mountSkeleton(statusEl, 'freshnessChip');
+  }
 
-  document.getElementById('stat-spot').textContent = formatCurrency(spot, 'USD', 2);
-  document.getElementById('stat-24').textContent = formatCurrency(p24, 'AED', 2);
-  document.getElementById('stat-22').textContent = formatCurrency(p22, 'AED', 2);
-  document.getElementById('stat-21').textContent = formatCurrency(p21, 'AED', 2);
+  const setStat = (id, value, currency, decimals) => {
+    const elNode = document.getElementById(id);
+    if (!elNode) return;
+    if (spot && value != null) {
+      elNode.textContent = formatCurrency(value, currency, decimals);
+    } else {
+      mountSkeleton(elNode, 'priceMd');
+    }
+  };
+  setStat('stat-spot', spot, 'USD', 2);
+  setStat('stat-24', p24, 'AED', 2);
+  setStat('stat-22', p22, 'AED', 2);
+  setStat('stat-21', p21, 'AED', 2);
 
-  document.getElementById('invest-updated').textContent = state.goldPriceUsdPerOz
-    ? `${tx('updated')}: ${fmt.formatTimestampShort(new Date().toISOString(), state.lang)}`
-    : tx('fetching');
+  const updatedEl = document.getElementById('invest-updated');
+  if (updatedEl) {
+    if (state.goldPriceUsdPerOz) {
+      updatedEl.textContent = `${tx('updated')}: ${fmt.formatTimestampShort(new Date().toISOString(), state.lang)}`;
+    } else {
+      mountSkeleton(updatedEl, 'freshnessStrip');
+    }
+  }
 
-  panel.removeAttribute('aria-busy');
+  if (spot) panel.removeAttribute('aria-busy');
 
   if (spot) {
     const p18 = getLocalPricePerGram('18', 'AE');
@@ -1074,18 +1108,30 @@ function applyLang() {
 async function fetchLiveData() {
   if (!navigator.onLine) return;
 
-  const [goldRes, fxRes] = await Promise.allSettled([api.fetchGold(), api.fetchFX()]);
+  const { gold, fx, errors } = await api.fetchGoldAndFX();
 
-  if (goldRes.status === 'fulfilled') {
-    state.goldPriceUsdPerOz = goldRes.value.price;
-    cache.saveGoldPrice(goldRes.value.price, goldRes.value.updatedAt);
+  if (gold?.price) {
+    state.goldPriceUsdPerOz = gold.price;
+    cache.saveGoldPrice(gold.price, gold.updatedAt);
+    hideDataStatusBanner();
   }
 
-  if (fxRes.status === 'fulfilled') {
-    state.rates = fxRes.value.rates ?? {};
+  if (fx?.rates) {
+    state.rates = fx.rates ?? {};
     cache.saveFXRates(state.rates, {
-      lastUpdateUtc: fxRes.value.time_last_update_utc,
-      nextUpdateUtc: fxRes.value.time_next_update_utc,
+      lastUpdateUtc: fx.time_last_update_utc,
+      nextUpdateUtc: fx.time_next_update_utc,
+    });
+  }
+
+  if (!state.goldPriceUsdPerOz && (errors.gold || errors.fx)) {
+    showDataStatusBanner({
+      lang: state.lang,
+      variant: 'error',
+      message:
+        TRANSLATIONS[state.lang]?.['status.noData'] ??
+        TRANSLATIONS.en['status.noData'],
+      onRetry: fetchLiveData,
     });
   }
 
@@ -1154,6 +1200,8 @@ async function init() {
 
   bindBudgetInputs();
   applyLang();
+  renderLiveCard();
+  renderPlanner();
   await fetchLiveData();
 
   if (state.timer) clearInterval(state.timer);

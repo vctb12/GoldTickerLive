@@ -32,6 +32,7 @@ import { injectNav, updateNavLang } from '../src/components/nav.js';
 import { injectFooter } from '../src/components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../src/components/ticker.js';
 import { renderBreadcrumbs } from '../src/components/breadcrumbs.js';
+import { renderPriceFetchError } from '../src/components/price-fetch-error.js';
 
 // Minimal shared STATE for country pages
 const STATE = {
@@ -157,6 +158,16 @@ function calcChange(price) {
   return ((price - STATE.dayOpenGoldPriceUsdPerOz) / STATE.dayOpenGoldPriceUsdPerOz) * 100;
 }
 
+function priceValueMarkup(value, currency, decimals) {
+  if (value != null && Number.isFinite(value)) {
+    return formatPrice(value, currency, decimals);
+  }
+  if (!STATE.goldPriceUsdPerOz) {
+    return '<span class="skeleton-inline shell-skeleton-price-md" role="presentation" aria-hidden="true"></span>';
+  }
+  return '—';
+}
+
 // ── Render hero price block ──────────────────────────────────────────────────
 function renderHero(cfg) {
   const rate = getRate(cfg);
@@ -193,15 +204,15 @@ function renderHero(cfg) {
       <div class="cp-prices-row">
         <div class="cp-price-card">
           <div class="cp-price-label">${t('karat22')} · ${t('perGram')}</div>
-          <div class="cp-price-value">${gram22 ? formatPrice(gram22, cfg.currency, cfg.decimals) : '—'}</div>
+          <div class="cp-price-value">${priceValueMarkup(gram22, cfg.currency, cfg.decimals)}</div>
         </div>
         <div class="cp-price-card">
           <div class="cp-price-label">${t('karat24')} · ${t('perGram')}</div>
-          <div class="cp-price-value">${gram24 ? formatPrice(gram24, cfg.currency, cfg.decimals) : '—'}</div>
+          <div class="cp-price-value">${priceValueMarkup(gram24, cfg.currency, cfg.decimals)}</div>
         </div>
         <div class="cp-price-card">
           <div class="cp-price-label">${t('karat24')} · ${t('perOz')}</div>
-          <div class="cp-price-value">${oz24usd ? formatPrice(oz24usd, 'USD', 2) : '—'}</div>
+          <div class="cp-price-value">${priceValueMarkup(oz24usd, 'USD', 2)}</div>
         </div>
       </div>
       ${
@@ -573,22 +584,33 @@ function renderAll(cfg) {
 // ── Live data fetch ──────────────────────────────────────────────────────────
 async function fetchLiveData(cfg) {
   try {
-    const [goldData, fxData] = await Promise.allSettled([api.fetchGold(), api.fetchFX()]);
+    const { gold, fx } = await api.fetchGoldAndFX();
 
-    if (goldData.status === 'fulfilled') {
-      STATE.goldPriceUsdPerOz = goldData.value.price;
-      STATE.freshness.goldUpdatedAt = goldData.value.updatedAt;
-      cache.saveGoldPrice(goldData.value.price, goldData.value.updatedAt);
+    if (gold?.price) {
+      STATE.goldPriceUsdPerOz = gold.price;
+      STATE.freshness.goldUpdatedAt = gold.updatedAt;
+      cache.saveGoldPrice(gold.price, gold.updatedAt);
     }
 
-    if (fxData.status === 'fulfilled') {
-      const rates = fxData.value.rates;
-      rates.AED = undefined;
+    if (fx?.rates) {
+      const rates = { ...fx.rates };
+      delete rates.AED;
       STATE.rates = rates;
       cache.saveFXRates(rates, {
-        lastUpdateUtc: fxData.value.time_last_update_utc,
-        nextUpdateUtc: fxData.value.time_next_update_utc,
+        lastUpdateUtc: fx.time_last_update_utc,
+        nextUpdateUtc: fx.time_next_update_utc,
       });
+    }
+
+    if (!STATE.goldPriceUsdPerOz) {
+      const heroEl = document.getElementById('cp-hero-price');
+      if (heroEl) {
+        renderPriceFetchError(heroEl, {
+          lang: STATE.lang,
+          onRetry: () => fetchLiveData(cfg),
+        });
+      }
+      return;
     }
 
     // Append today's snapshot so the "Should I Buy Today?" indicator can build a

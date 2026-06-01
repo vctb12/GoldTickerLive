@@ -235,19 +235,19 @@
             <div class="hlc-grid">
               <div class="hlc-item">
                 <span class="hlc-item-label" id="hlc-label-aed24">24K / gram (AED)</span>
-                <span class="hlc-item-val" id="hlc-aed24">—</span>
+                <span class="hlc-item-val skeleton-inline shell-skeleton-karat" id="hlc-aed24" aria-busy="true"></span>
               </div>
               <div class="hlc-item">
                 <span class="hlc-item-label" id="hlc-label-aed22">22K / gram (AED)</span>
-                <span class="hlc-item-val" id="hlc-aed22">—</span>
+                <span class="hlc-item-val skeleton-inline shell-skeleton-karat" id="hlc-aed22" aria-busy="true"></span>
               </div>
               <div class="hlc-item">
                 <span class="hlc-item-label" id="hlc-label-aed21">21K / gram (AED)</span>
-                <span class="hlc-item-val" id="hlc-aed21">—</span>
+                <span class="hlc-item-val skeleton-inline shell-skeleton-karat" id="hlc-aed21" aria-busy="true"></span>
               </div>
               <div class="hlc-item">
                 <span class="hlc-item-label" id="hlc-label-aed18">18K / gram (AED)</span>
-                <span class="hlc-item-val" id="hlc-aed18">—</span>
+                <span class="hlc-item-val skeleton-inline shell-skeleton-karat" id="hlc-aed18" aria-busy="true"></span>
               </div>
             </div>
             <div class="hlc-footer">
@@ -257,7 +257,7 @@
                 role="status"
                 aria-live="polite"
                 aria-atomic="true"
-                >Loading…</span
+                ><span class="skeleton-inline shell-skeleton-freshness-strip" role="presentation" aria-hidden="true"></span></span
               >
               <a href="tracker.html" class="hlc-tracker-link" id="hlc-tracker-link"
                 >Full Tracker →</a
@@ -293,15 +293,13 @@
                   data-tone="live"
                   id="home-command-freshness"
                   aria-busy="true"
-                  >Loading freshness…</span
-                >
+                ></span>
                 <span
                   class="trust-chip skeleton-inline home-command-chip--loading"
                   data-tone="info"
                   id="home-command-spot-chip"
                   aria-busy="true"
-                  >XAU/USD —</span
-                >
+                ></span>
               </div>
             </div>
 
@@ -455,7 +453,11 @@
                     <span class="mobile-command-card__metric-label" id="home-snapshot-uae-label"
                       >UAE reference</span
                     >
-                    <strong class="mobile-command-card__metric-value" id="home-snapshot-uae-value">—</strong>
+                    <strong
+                      class="mobile-command-card__metric-value skeleton-inline shell-skeleton-karat"
+                      id="home-snapshot-uae-value"
+                      aria-busy="true"
+                    ></strong>
                     <span class="mobile-command-card__metric-note" id="home-snapshot-uae-note"
                       >24K per gram in AED</span
                     >
@@ -464,7 +466,11 @@
                     <span class="mobile-command-card__metric-label" id="home-snapshot-global-label"
                       >Global spot</span
                     >
-                    <strong class="mobile-command-card__metric-value" id="home-snapshot-global-value">—</strong>
+                    <strong
+                      class="mobile-command-card__metric-value skeleton-inline shell-skeleton-karat"
+                      id="home-snapshot-global-value"
+                      aria-busy="true"
+                    ></strong>
                     <span class="mobile-command-card__metric-note" id="home-snapshot-global-note"
                       >XAU/USD per troy ounce</span
                     >
@@ -484,7 +490,11 @@
                     <span class="mobile-command-card__metric-label" id="home-snapshot-status-label"
                       >Status</span
                     >
-                    <strong class="mobile-command-card__metric-value" id="home-snapshot-status-value">—</strong>
+                    <strong
+                      class="mobile-command-card__metric-value skeleton-inline shell-skeleton-karat"
+                      id="home-snapshot-status-value"
+                      aria-busy="true"
+                    ></strong>
                     <span class="mobile-command-card__metric-note" id="home-snapshot-status-note"
                       >Live, cached, or stale is always labeled.</span
                     >
@@ -555,8 +565,8 @@
               <span
                 class="karat-strip-v skeleton-inline shell-skeleton-karat"
                 id="kstrip-24-val"
-                >—</span
-              >
+                aria-busy="true"
+              ></span>
               <button
                 class="kstrip-copy-btn"
                 id="kstrip-24-copy"
@@ -570,8 +580,8 @@
               <span
                 class="karat-strip-v skeleton-inline shell-skeleton-karat"
                 id="kstrip-22-val"
-                >—</span
-              >
+                aria-busy="true"
+              ></span>
               <button
                 class="kstrip-copy-btn"
                 id="kstrip-22-copy"
@@ -585,8 +595,8 @@
               <span
                 class="karat-strip-v skeleton-inline shell-skeleton-karat"
                 id="kstrip-21-val"
-                >—</span
-              >
+                aria-busy="true"
+              ></span>
               <button
                 class="kstrip-copy-btn"
                 id="kstrip-21-copy"
@@ -600,8 +610,8 @@
               <span
                 class="karat-strip-v skeleton-inline shell-skeleton-karat"
                 id="kstrip-18-val"
-                >—</span
-              >
+                aria-busy="true"
+              ></span>
               <button
                 class="kstrip-copy-btn"
                 id="kstrip-18-copy"
@@ -615,8 +625,8 @@
               <span
                 class="karat-strip-v skeleton-inline shell-skeleton-karat"
                 id="kstrip-14-val"
-                >—</span
-              >
+                aria-busy="true"
+              ></span>
               <button
                 class="kstrip-copy-btn"
                 id="kstrip-14-copy"
@@ -627,7 +637,9 @@
             </div>
           </div>
           <div class="karat-strip-actions">
-            <span class="karat-strip-updated" id="karat-strip-updated" aria-live="polite">Loading freshness…</span>
+            <span class="karat-strip-updated" id="karat-strip-updated" aria-live="polite"
+              ><span class="skeleton-inline shell-skeleton-freshness-strip" role="presentation" aria-hidden="true"></span
+            ></span>
             <a href="tracker.html" class="karat-strip-link" id="karat-strip-cta">Full tracker →</a>
           </div>
         </div>
