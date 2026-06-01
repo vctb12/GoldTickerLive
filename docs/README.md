@@ -7,8 +7,10 @@ holds the master plan plus human-facing reference docs.
 
 | File                                               | Role                                                                              |
 | -------------------------------------------------- | --------------------------------------------------------------------------------- |
+| [`plans/2026-06-01_master-operations-hub.md`](./plans/2026-06-01_master-operations-hub.md) | **Start here** — priority queue, last-3-days summary, endless prompt index. |
 | [`REVAMP_PLAN.md`](./REVAMP_PLAN.md)               | Master plan — tracks in progress, decisions, production tracks, issues, backlog.  |
 | [`plans/README.md`](./plans/README.md)             | Proposal intake + priority matrix. New plans follow `plans/YYYY-MM-DD_<slug>.md`. |
+| [`plans/ARCHIVE_AND_SUPERSESSION_INDEX.md`](./plans/ARCHIVE_AND_SUPERSESSION_INDEX.md) | Which docs are authoritative vs archive candidates. |
 | [`plans/`](./plans/)                               | Raw proposal captures.                                                            |
 | [`AGENT_REFRESH_PLAN.md`](./AGENT_REFRESH_PLAN.md) | Historical record of the 2026-04 agent-instruction refresh.                       |
 
