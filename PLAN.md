@@ -26,6 +26,8 @@
 - [ ] **Track D1** — cross-page integration wiring (endless:
       `@.github/prompts/endless-integration-wiring.prompt.md`) — calculator→shops country filter ✅
       2026-06-01; remaining flows in program checklist
+      `@.github/prompts/endless-integration-wiring.prompt.md`) — in progress: shared
+      `page-handoff.js`, homepage tracker CTAs, karat-strip handoff, calc→shops country filter
 - [ ] **NEXT_PR_SEQUENCE PR 1** — GDPR export/delete + dashboard + alerts docs (see
       [`docs/audits/NEXT_PR_SEQUENCE.md`](docs/audits/NEXT_PR_SEQUENCE.md))
 

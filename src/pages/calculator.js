@@ -376,7 +376,7 @@ function updateTrackerHandoff({ karat = '22', currency = 'AED' } = {}) {
   const note = document.getElementById('calc-live-tracker-note');
   if (!handoff || !trackerLink || !mobileTrackerLink || !note) return;
 
-  const params = new URLSearchParams({
+  const href = buildTrackerHandoffUrl({
     mode: 'live',
     cur: currency,
     k: String(karat),
@@ -384,7 +384,6 @@ function updateTrackerHandoff({ karat = '22', currency = 'AED' } = {}) {
     r: '30D',
     lang: STATE.lang,
   });
-  const href = `tracker.html#${params.toString()}`;
   trackerLink.href = href;
   mobileTrackerLink.href = href;
   handoff.hidden = false;
