@@ -1,0 +1,275 @@
+/* ═══════════════════════════════════════════════
+   CSS Custom Properties — Theme Tokens
+   ═══════════════════════════════════════════════ */
+:root {
+  /* Background layers */
+  --color-bg: #f5f2eb;
+  --color-surface: #fff;
+  --color-surface-2: #f9f6f0;
+  --color-surface-3: #f2ede0;
+  --color-border: #e8e2d0;
+  --color-border-subtle: #ede8da;
+
+  /* Text */
+  --color-text: #1a1612;
+  --color-text-muted: #6b5f4e;
+  --color-text-faint: #78685a;
+
+  /* Gold palette — richer, more premium */
+  --color-gold: #c4993e;
+  --color-gold-light: #e0b84a;
+  --color-gold-bright: #f0c84a;
+  --color-gold-dark: #8a6420;
+  --color-gold-deep: #5e4210;
+  --color-gold-bg: #fdf8ee;
+  --color-gold-tint: #faf4e2;
+  --color-gold-glow: rgb(196 153 62 / 15%);
+
+  /* Status colours */
+  --color-live: #1a7a32;
+  --color-live-bg: rgb(26 122 50 / 9%);
+  --color-live-border: rgb(26 122 50 / 25%);
+  --color-daily: #a85800;
+  --color-daily-bg: rgb(168 88 0 / 9%);
+  --color-daily-border: rgb(168 88 0 / 25%);
+  --color-fixed: #1050a0;
+  --color-fixed-bg: rgb(16 80 160 / 7%);
+  --color-fixed-border: rgb(16 80 160 / 22%);
+  --color-stale: #a84000;
+  --color-stale-bg: rgb(168 64 0 / 9%);
+  --color-up: #176832;
+  --color-up-bg: rgb(23 104 50 / 8%);
+  --color-down: #b81428;
+  --color-down-bg: rgb(184 20 40 / 8%);
+  --color-error: #b81428;
+  --color-error-bg: rgb(184 20 40 / 8%);
+
+  /* Warning / stale-data palette — used by freshness badges, "cached (API
+     unavailable)" banners, and delayed-quote labels. Amber, not red, so the
+     user isn't misled into thinking the page is broken. */
+  --color-warning: #a0671c;
+  --color-warning-bg: rgb(212 160 23 / 10%);
+  --color-warning-border: rgb(212 160 23 / 35%);
+  --color-warning-text: #7a4f15;
+
+  /* Semantic surfaces (canonical) */
+  --surface-canvas: var(--color-bg);
+  --surface-primary: var(--color-surface);
+  --surface-secondary: var(--color-surface-2);
+  --surface-tertiary: var(--color-surface-3);
+  --surface-accent: var(--color-gold-bg);
+  --surface-glass: rgb(255 255 255 / 78%);
+  --surface-glass-border: rgb(255 255 255 / 55%);
+
+  /* Semantic text tiers (canonical) */
+  --text-primary: var(--color-text);
+  --text-secondary: var(--color-text-muted);
+  --text-tertiary: var(--color-text-faint);
+  --text-accent: var(--color-gold-dark);
+  --text-on-dark: #fff;
+
+  /* Semantic borders (canonical) */
+  --border-default: var(--color-border);
+  --border-subtle: var(--color-border-subtle);
+  --border-strong: #d9cfb7;
+  --border-accent: var(--color-gold);
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* Radius semantic aliases (canonical) */
+  --radius-control: var(--radius-sm);
+  --radius-card: var(--radius-lg);
+  --radius-panel: var(--radius-xl);
+  --radius-badge: var(--radius-pill);
+
+  /* Shadows — luxury layered depth */
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 4%), 0 1px 1px rgb(0 0 0 / 2%);
+  --shadow-sm: 0 1px 3px rgb(0 0 0 / 6%), 0 2px 8px rgb(0 0 0 / 3%);
+  --shadow-md: 0 4px 14px rgb(0 0 0 / 8%), 0 2px 4px rgb(0 0 0 / 4%);
+  --shadow-lg: 0 10px 30px rgb(0 0 0 / 10%), 0 4px 10px rgb(0 0 0 / 5%);
+  --shadow-xl: 0 20px 50px rgb(0 0 0 / 12%), 0 8px 20px rgb(0 0 0 / 6%);
+  --shadow-gold: 0 4px 18px rgb(196 153 62 / 22%), 0 1px 4px rgb(196 153 62 / 10%);
+  --shadow-gold-lg: 0 8px 32px rgb(196 153 62 / 28%), 0 2px 8px rgb(196 153 62 / 12%);
+  --shadow-card-hover: 0 8px 28px rgb(0 0 0 / 10%), 0 2px 6px rgb(196 153 62 / 8%);
+
+  /* Elevation semantic aliases (canonical) */
+  --elev-1: var(--shadow-xs);
+  --elev-2: var(--shadow-sm);
+  --elev-3: var(--shadow-md);
+  --elev-4: var(--shadow-lg);
+  --elev-5: var(--shadow-xl);
+  --elev-accent: var(--shadow-gold);
+  --elev-accent-strong: var(--shadow-gold-lg);
+
+  /* Premium gradients */
+  --gradient-gold: linear-gradient(135deg, #c4993e 0%, #e0b84a 50%, #c4993e 100%);
+  --gradient-gold-subtle: linear-gradient(
+    135deg,
+    rgb(196 153 62 / 8%) 0%,
+    rgb(224 184 74 / 4%) 100%
+  );
+  --gradient-dark: linear-gradient(155deg, #3d2005 0%, #1e0e03 45%, #0c0802 100%);
+  --gradient-surface: linear-gradient(180deg, #fff 0%, #fdfbf7 100%);
+
+  /* Spacing scale (canonical) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  /* Rhythm — section / block / inline cadence shared by all pages */
+  --rhythm-inline: var(--space-3);
+  --rhythm-block: var(--space-5);
+  --rhythm-section: var(--space-7);
+  --rhythm-section-lg: var(--space-8);
+
+  /* Typography — font stacks */
+  --font-main: 'Cairo', -apple-system, blinkmacsystemfont, 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+
+  /* Typography — size scale */
+  --text-2xs: 0.625rem; /* 10px */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-md: 1.0625rem; /* 17px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem; /* 36px — display tier, hero headings */
+  --text-5xl: 3rem; /* 48px — display tier, hero headings */
+
+  /* Typography — font weights */
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-normal: 400; /* alias */
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-extrabold: 800;
+
+  /* Typography — line heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  /* Typography — letter spacing */
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-caps: 0.1em;
+
+  /* Layout */
+  --content-max-width: 1280px;
+  --page-gutter: 1.25rem;
+  --nav-height: 64px;
+  --mobile-bottom-nav-height: 68px;
+  --mobile-bottom-nav-body-offset: 84px;
+  --mobile-bottom-nav-max-width: 640px;
+
+  /* Focus ring */
+  --focus-ring-color: var(--color-gold);
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 2px;
+
+  /* Common color aliases */
+  --color-white: #fff;
+  --color-black: #000;
+
+  /* Semantic aliases — consolidate page-level references to a single name.
+     These are the canonical tokens for features that were previously using
+     ad-hoc var() with incorrect / dark-theme fallback values. */
+  --color-accent: var(--color-gold-dark); /* primary accent text (light mode) */
+  --color-accent-strong: var(--color-gold-bright); /* bright accent (dark mode override) */
+  --color-surface-1: var(--color-surface); /* backward-compat alias for --surface-primary */
+  --color-surface-raised: var(--color-surface-2); /* slightly elevated surface */
+  --color-text-secondary: var(--color-text-muted); /* secondary body text alias */
+  --color-gold-alpha: rgb(196 153 62 / 12%); /* subtle gold tint for callout backgrounds */
+  --color-amber: #f59e0b; /* warm amber — freshness "cached / slightly stale" states */
+  --color-danger: #dc2626; /* danger red — freshness "very stale / unavailable" states */
+
+  /* Transitions — luxury easing */
+  --transition: 0.2s ease;
+  --transition-md: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-slow: 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Easing curves */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Duration scale */
+  --duration-fast: 100ms;
+  --duration-normal: 200ms;
+  --duration-md: 0.3s;
+  --duration-slow: 350ms;
+  --duration-xslow: 500ms;
+
+  /* Interaction aliases (session 7 visual system) */
+  --transition-fast: 150ms var(--ease-out);
+  --transition-normal: 250ms var(--ease-out);
+  --transition-slow: 400ms var(--ease-out);
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Breakpoint tokens (for reference — use in @media queries) */
+  --bp-xs: 380px;
+  --bp-sm: 480px;
+  --bp-md: 640px;
+  --bp-lg: 768px;
+  --bp-xl: 1024px;
+  --bp-2xl: 1280px;
+}
+
+/* ═══════════════════════════════════════════════
+   Dark Mode Tokens
+   ═══════════════════════════════════════════════ */
+[data-theme='dark'] {
+  --color-bg: #0f0c08;
+  --color-surface: #1a1510;
+  --color-surface-2: #211a12;
+  --color-surface-3: #2a2018;
+  --color-border: #3a3020;
+  --color-border-subtle: #2e2518;
+  --color-text: #f0ebe0;
+  --color-text-muted: #c8b99a;
+  --color-text-faint: #8a7a62;
+  --color-gold-bg: #1e1808;
+  --color-gold-tint: #1a1508;
+  --surface-canvas: #0f0c08;
+  --surface-primary: #1a1510;
+  --surface-secondary: #211a12;
+  --surface-tertiary: #2a2018;
+  --surface-accent: #1e1808;
+  --text-primary: #f0ebe0;
+  --text-secondary: #c8b99a;
+  --text-tertiary: #8a7a62;
+  --border-default: #3a3020;
+  --border-subtle: #2e2518;
+  --border-strong: #4a3a28;
+  --gradient-surface: linear-gradient(180deg, #1a1510 0%, #181208 100%);
+
+  /* Semantic alias overrides for dark mode */
+  --color-accent: var(--color-gold-light);
+  --color-accent-strong: var(--color-gold-bright);
+  --color-surface-raised: var(--color-surface-2);
+  --color-text-secondary: var(--color-text-muted);
+}
