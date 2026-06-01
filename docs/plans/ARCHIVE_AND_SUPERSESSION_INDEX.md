@@ -11,9 +11,11 @@
 | File | Role |
 | ---- | ---- |
 | [`AGENTS.md`](../../AGENTS.md) | Cross-agent charter |
-| [`PLAN.md`](../../PLAN.md) | Active task tracker |
-| [`docs/plans/2026-06-01_master-operations-hub.md`](./2026-06-01_master-operations-hub.md) | Routing + priority |
-| [`docs/REVAMP_PLAN.md`](../REVAMP_PLAN.md) | Master backlog |
+| [`docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md`](../GOLD_TICKER_LIVE_MASTER_WORKBOOK.md) | **Canonical workbook** — vision, gaps, WB sessions, scanners |
+| [`docs/workbook/WORKBOOK_SESSION_REGISTRY.md`](../workbook/WORKBOOK_SESSION_REGISTRY.md) | Workbook PR tracker |
+| [`PLAN.md`](../../PLAN.md) | Active task checklist |
+| [`docs/plans/2026-06-01_master-operations-hub.md`](./2026-06-01_master-operations-hub.md) | One-screen routing summary |
+| [`docs/REVAMP_PLAN.md`](../REVAMP_PLAN.md) | Master backlog narrative |
 
 ---
 

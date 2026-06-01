@@ -21,6 +21,7 @@ If you author a new prompt, follow this standard.
 
 |   # | Prompt                                                                                    | When to use                                 | Output                                            | Related agent                                  |
 | --: | ----------------------------------------------------------------------------------------- | ------------------------------------------- | ------------------------------------------------- | ---------------------------------------------- |
+|   0 | [`master-workbook-session`](../.github/prompts/master-workbook-session.prompt.md)         | **Default for any work block** — read workbook, run one WB session | One scoped PR + registry update | any                                            |
 |   1 | [`pr-review`](../.github/prompts/pr-review.prompt.md)                                     | Reviewing any PR                            | Verdict + findings + verification + follow-ups    | `gold-ticker-live-reviewer`                    |
 |   2 | [`mobile-ux-audit`](../.github/prompts/mobile-ux-audit.prompt.md)                         | Mobile / RTL polish across primary surfaces | Per-page report + screenshots                     | `frontend-polish-agent`                        |
 |   3 | [`workflow-debug`](../.github/prompts/workflow-debug.prompt.md)                           | Any failing GitHub Actions workflow         | Root cause + fix + verification                   | `workflow-safety-agent`                        |
@@ -46,6 +47,7 @@ If you author a new prompt, follow this standard.
 |  23 | [`endless-gold-product-trust`](../.github/prompts/endless-gold-product-trust.prompt.md) | Pricing/freshness truth                     | One trust fix                                     | `pricing-data-agent`                           |
 |  — | [`ui-ux-audit-phase1`…`phase5`](../.github/prompts/) | One-shot UI/UX audit sessions (merged 2026-06-01) | Bounded phase PR                                  | `frontend-polish-agent`                        |
 
+> **Master workbook:** [`docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md`](./GOLD_TICKER_LIVE_MASTER_WORKBOOK.md)  
 > **Endless catalog (copy-paste):** [`docs/plans/2026-06-01_endless-session-prompts.md`](./plans/2026-06-01_endless-session-prompts.md)  
 > **Routing hub:** [`docs/plans/2026-06-01_master-operations-hub.md`](./plans/2026-06-01_master-operations-hub.md)
 

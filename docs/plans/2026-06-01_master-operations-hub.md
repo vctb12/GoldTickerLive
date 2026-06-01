@@ -10,9 +10,11 @@ last_updated: "2026-06-01"
 next_action: "Run Track C Session C1a (docs archive) or NEXT_PR_SEQUENCE PR 1"
 ```
 
-> **Start here** when you do not know what to work on. This file replaces scattered “what’s next?”
-> notes across `PLAN.md`, `REVAMP_PLAN.md`, and ad-hoc prompts. It is the single routing table for
-> humans and agents.
+> **Superseded for depth by the Master Workbook** —
+> [`docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md`](../GOLD_TICKER_LIVE_MASTER_WORKBOOK.md)
+> (`@.github/prompts/master-workbook-session.prompt.md`).  
+> This hub remains a **one-screen routing summary**; all session detail, gaps, scanners, and WB IDs
+> live in the workbook.
 
 ---
 
@@ -57,6 +59,8 @@ switch in same PR as UX, edits to `post_gold.yml` / `gold-price-fetch.yml` / `da
 
 | Artifact | Purpose |
 | -------- | ------- |
+| [`docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md`](../GOLD_TICKER_LIVE_MASTER_WORKBOOK.md) | **Canonical one-time workbook** — vision, gaps, WB sessions, scanners |
+| [`docs/workbook/WORKBOOK_SESSION_REGISTRY.md`](../workbook/WORKBOOK_SESSION_REGISTRY.md) | WB branch ↔ PR tracker |
 | [`PLAN.md`](../../PLAN.md) | Active task checklist (update every session) |
 | [`docs/REVAMP_PLAN.md`](../REVAMP_PLAN.md) | Master backlog + production tracks |
 | [`docs/plans/README.md`](./README.md) | Proposal intake + impact/effort matrix |

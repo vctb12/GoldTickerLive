@@ -7,7 +7,9 @@ holds the master plan plus human-facing reference docs.
 
 | File                                               | Role                                                                              |
 | -------------------------------------------------- | --------------------------------------------------------------------------------- |
-| [`plans/2026-06-01_master-operations-hub.md`](./plans/2026-06-01_master-operations-hub.md) | **Start here** — priority queue, last-3-days summary, endless prompt index. |
+| [`GOLD_TICKER_LIVE_MASTER_WORKBOOK.md`](./GOLD_TICKER_LIVE_MASTER_WORKBOOK.md) | **Start here** — canonical workbook: vision, gaps, 40+ sessions, scanners, verify. |
+| [`workbook/WORKBOOK_SESSION_REGISTRY.md`](./workbook/WORKBOOK_SESSION_REGISTRY.md) | Workbook session branch ↔ PR tracker. |
+| [`plans/2026-06-01_master-operations-hub.md`](./plans/2026-06-01_master-operations-hub.md) | One-screen routing summary (details in workbook). |
 | [`REVAMP_PLAN.md`](./REVAMP_PLAN.md)               | Master plan — tracks in progress, decisions, production tracks, issues, backlog.  |
 | [`plans/README.md`](./plans/README.md)             | Proposal intake + priority matrix. New plans follow `plans/YYYY-MM-DD_<slug>.md`. |
 | [`plans/ARCHIVE_AND_SUPERSESSION_INDEX.md`](./plans/ARCHIVE_AND_SUPERSESSION_INDEX.md) | Which docs are authoritative vs archive candidates. |
