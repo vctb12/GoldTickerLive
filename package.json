@@ -81,7 +81,7 @@
     "express-rate-limit": "^8.5.2",
     "helmet": "^8.2.0",
     "jsonwebtoken": "^9.0.3",
-    "morgan": "^1.10.1",
+    "morgan": "^1.11.0",
     "stripe": "^22.1.1"
   },
   "lint-staged": {
