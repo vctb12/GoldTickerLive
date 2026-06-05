@@ -42,8 +42,13 @@ export class GoldApiComQuoteProvider extends BaseQuoteProvider {
       });
     }
 
-    const providerTimestamp = body?.updatedAt || new Date().toISOString();
-
+    const providerTimestamp = body?.updatedAt;
+    const providerTsMs = new Date(providerTimestamp || 0).getTime();
+    if (!Number.isFinite(providerTsMs) || providerTsMs <= 0) {
+      throw new ProviderFetchError('gold-api.com missing or invalid updatedAt', {
+        code: 'missing_timestamp',
+      });
+    }
     return this.normalizeQuote({
       price,
       providerTimestamp,
