@@ -49,6 +49,23 @@ test('SecondaryQuoteProvider rejects multi-day-old localStorage cache', async ()
   await assert.rejects(() => provider.fetchQuote());
 });
 
+test('SecondaryQuoteProvider aborts slow last snapshot fetch within timeoutMs', async () => {
+  global.fetch = (_url, options) =>
+    new Promise((resolve, reject) => {
+      const onAbort = () => reject(Object.assign(new Error('aborted'), { name: 'AbortError' }));
+      if (options?.signal?.aborted) onAbort();
+      else options?.signal?.addEventListener('abort', onAbort, { once: true });
+    });
+
+  const { SecondaryQuoteProvider } = await loadSecondary();
+  const provider = new SecondaryQuoteProvider();
+
+  const started = Date.now();
+  await assert.rejects(() => provider.fetchQuote({ timeoutMs: 50 }));
+  const elapsed = Date.now() - started;
+  assert.ok(elapsed < 500, `expected abort near timeout, took ${elapsed}ms`);
+});
+
 test('SecondaryQuoteProvider accepts recent localStorage cache as fallback', async () => {
   installLocalStorage({
     price: 4448,

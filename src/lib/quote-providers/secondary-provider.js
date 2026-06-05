@@ -1,6 +1,7 @@
 import { BaseQuoteProvider } from './base-provider.js';
 import * as cache from '../cache.js';
 import { GOLD_MARKET } from '../live-status.js';
+import { fetchWithProviderTimeout } from './fetch-utils.js';
 
 const LAST_PRICE_PATH = '/data/last_gold_price.json';
 
@@ -14,11 +15,11 @@ function isRecentEnough(timestamp, maxAgeMs = GOLD_MARKET.STALE_AFTER_MS) {
   return quoteAgeMs(timestamp) <= maxAgeMs;
 }
 
-async function tryFetchLastSnapshot(signal) {
+async function tryFetchLastSnapshot({ signal, timeoutMs } = {}) {
   try {
-    const response = await fetch(`${LAST_PRICE_PATH}?t=${Date.now()}`, {
-      cache: 'no-store',
+    const response = await fetchWithProviderTimeout(`${LAST_PRICE_PATH}?t=${Date.now()}`, {
       signal,
+      timeoutMs,
     });
     if (!response.ok) return null;
     const payload = await response.json();
@@ -39,9 +40,14 @@ export class SecondaryQuoteProvider extends BaseQuoteProvider {
     super({ providerId, timeoutMs });
   }
 
-  async fetchQuote({ signal } = {}) {
+  async fetchQuote({ signal, timeoutMs } = {}) {
     const startedAt = Date.now();
-    const fallbackFile = await tryFetchLastSnapshot(signal);
+    const effectiveTimeout =
+      Number.isFinite(timeoutMs) && timeoutMs > 0 ? timeoutMs : this.timeoutMs;
+    const fallbackFile = await tryFetchLastSnapshot({
+      signal,
+      timeoutMs: effectiveTimeout,
+    });
 
     if (fallbackFile && isRecentEnough(fallbackFile.providerTimestamp)) {
       return this.normalizeQuote({
