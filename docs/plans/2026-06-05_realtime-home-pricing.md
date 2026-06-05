@@ -1,6 +1,6 @@
-# Plan: Realtime Homepage Gold Pricing (1-second live updates)
+# Plan: Realtime Homepage Gold Pricing (5-second live updates)
 
-~~~yaml plan-status
+```yaml plan-status
 status: in-progress
 priority: P1
 class: B
@@ -13,7 +13,7 @@ next_action: ""
 blocked_on: ""
 guardrails_reviewed: true
 skills_used: []
-~~~
+```
 
 ---
 
@@ -41,7 +41,8 @@ This violates AGENTS.md §6.2 (cached/stale values must be labelled — they are
 
 ### What users expect
 
-- Hero XAU/USD price refreshes **every second** while the tab is visible.
+- Hero XAU/USD price refreshes **every 5 seconds** while the tab is visible (quota-safe cadence;
+  freshness label still ticks every 1 s).
 - Freshness label reads **Live** when the provider timestamp is < 10 s old.
 - If live APIs fail, degrade honestly: cached → delayed → stale — never silently show week-old data
   as the active quote.
@@ -52,12 +53,12 @@ This violates AGENTS.md §6.2 (cached/stale values must be labelled — they are
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
-│ Browser — homepage realtime pricing engine (1 s poll)       │
+│ Browser — homepage realtime pricing engine (5 s poll)       │
 └───────────────────────────┬─────────────────────────────────┘
                             │
          ┌──────────────────▼──────────────────┐
          │ ChainedQuoteProvider (primary)      │
-         │  1. GoldApiComQuoteProvider         │  ← live, CORS, ~1 s cadence
+         │  1. GoldApiComQuoteProvider         │  ← live, CORS, ~5 s cadence
          │  2. PrimaryQuoteProvider (static)   │  ← /data/gold_price.json hourly
          └──────────────────┬──────────────────┘
                             │ all fail
@@ -103,11 +104,11 @@ This violates AGENTS.md §6.2 (cached/stale values must be labelled — they are
 
 **Rollback:** point factory back to `PrimaryQuoteProvider` only.
 
-### Phase C — 1-second polling ✅
+### Phase C — 5-second polling ✅
 
-1. `REALTIME_POLLING_DEFAULTS.activePollMs = 1000`
-2. `hiddenPollMs = 5000` (battery-friendly background tab)
-3. Tighter backoff floor: `[1000, 2000, 5000, …]`
+1. `REALTIME_POLLING_DEFAULTS.activePollMs = 5000` (quota-safe vs gold-api.com free tier)
+2. `hiddenPollMs = 20000` (battery-friendly background tab)
+3. Backoff floor: `[5000, 10000, 20000, …]`
 
 **Rollback:** restore `realtime-config.js` defaults.
 
@@ -149,7 +150,7 @@ npm run validate
 ## 5. Done checklist
 
 - [x] Homepage hero shows **Live** with `gold_api_com` source when market open and API healthy
-- [x] Poll interval = 1 s visible tab (verify in `?debugFreshness=1` SLA panel)
+- [x] Poll interval = 5 s visible tab (verify in `?debugFreshness=1` SLA panel)
 - [x] 6-day-old localStorage no longer boots as active quote
 - [x] `getFallbackGoldPrice()` returns newest entry
 - [x] Secondary provider rejects stale snapshots
@@ -166,7 +167,7 @@ npm run validate
 | -------------------------------- | ----------------------------------------------------------------------------------- |
 | gold-api.com rate limits / quota | Static file + cache fallbacks; exponential backoff                                  |
 | CORS policy change upstream      | Chained provider falls through to static JSON                                       |
-| 1 s polling battery impact       | `hiddenPollMs: 5000`; jitter; existing visibility handler                           |
+| 5 s polling + gold-api.com quota | `hiddenPollMs: 20000`; jitter; chained static JSON fallback; backoff on 429         |
 | Mislabeling stale as live        | `getLiveFreshness()` guards unchanged; `providerPathSuccessful: false` on secondary |
 
 ---

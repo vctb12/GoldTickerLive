@@ -965,7 +965,8 @@ function applyRealtimeSnapshot(snapshot) {
     goldUpdatedAt = quote.providerTimestamp || quote.fetchedAt || new Date().toISOString();
     goldProviderId = quote.providerId || goldProviderId;
     goldIsFallback = quote.isFallback ?? quote.forcedState === 'fallback';
-    goldIsFresh = quote.isFresh ?? snapshot?.freshness?.state === 'live';
+    goldIsFresh =
+      snapshot?.freshness?.state === 'live' && quote.isFallback !== true && quote.isFresh !== false;
     cache.saveGoldPrice(quote.price, goldUpdatedAt);
     hideDataStatusBanner();
     renderHeroCard();

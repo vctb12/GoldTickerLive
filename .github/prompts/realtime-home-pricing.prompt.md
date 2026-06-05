@@ -9,7 +9,7 @@
 
 ## Mission
 
-Restore homepage pricing trust by delivering **1-second live XAU/USD reference quotes** in the browser, with honest freshness labels and a multi-tier provider failover chain. The user must never see a week-old price occupying the hero card without an explicit stale/fallback label — and the system must **recover to Live** automatically when APIs return.
+Restore homepage pricing trust by delivering **5-second live XAU/USD reference quotes** in the browser (quota-safe gold-api.com cadence), with honest freshness labels and a multi-tier provider failover chain. Freshness age labels still tick every 1 s in the UI. The user must never see a week-old price occupying the hero card without an explicit stale/fallback label — and the system must **recover to Live** automatically when APIs return.
 
 ---
 
@@ -105,8 +105,8 @@ Response: { price: number, updatedAt: ISO string, symbol: "XAU" }
 **File:** `src/lib/realtime-config.js`
 
 ```javascript
-activePollMs: 1000,
-hiddenPollMs: 5000,
+activePollMs: 5000,
+hiddenPollMs: 20000,
 fetchTimeoutMs: 4000,
 jitterMs: 100,
 backoffMs: [1000, 2000, 5000, 10000, 30000],
@@ -159,7 +159,7 @@ npm run dev
 
 Checklist:
 
-- [ ] Hero price updates ~every 1 s (watch last digit of XAU/USD)
+- [ ] Hero price updates ~every 5 s (watch last digit of XAU/USD)
 - [ ] Freshness strip: `Live` + `Gold-API.com` + relative age < 10 s
 - [ ] SLA debug panel: `p50RefreshIntervalMs` ≈ 1000 ms
 - [ ] DevTools → Application → Local Storage: clear `gold_price_*` keys, hard refresh — should recover to Live within 2 s
