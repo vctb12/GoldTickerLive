@@ -2,6 +2,8 @@ const PROVIDER_NAME_MAP = {
   'primary-provider': 'PrimaryProvider',
   'live-primary': 'Live',
   gold_api_com: 'Gold-API.com',
+  minted_metal: 'Minted Metal',
+  'last-gold-price': 'Last Snapshot',
   'secondary-provider-cache': 'SecondaryProvider',
   goldpricez: 'GoldPriceZ',
   gold_api_com_file: 'Gold-API.com',

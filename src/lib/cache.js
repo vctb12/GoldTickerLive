@@ -86,8 +86,8 @@ function safeSet(key, value) {
  * @param {object} STATE  The shared page-level state object (mutated in place).
  */
 export function loadState(STATE) {
-  // Gold price
-  const gold = safeGet(CACHE_KEYS.goldPrice) || safeGet(CACHE_KEYS.goldFallback);
+  // Gold price — newest of primary/fallback slots (see getFallbackGoldPrice)
+  const gold = getFallbackGoldPrice();
   if (gold) {
     STATE.goldPriceUsdPerOz = gold.price;
     STATE.freshness.goldUpdatedAt = gold.updatedAt;

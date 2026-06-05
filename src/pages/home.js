@@ -25,6 +25,7 @@ import {
   createPrimaryQuoteProvider,
   createSecondaryQuoteProvider,
 } from '../lib/quote-providers/create-providers.js';
+import { resolveGoldIsFresh } from '../lib/quote-freshness-bridge.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 import { updateTicker } from '../components/ticker.js';
 import { updateSpotBar } from '../components/spotBar.js';
@@ -965,8 +966,7 @@ function applyRealtimeSnapshot(snapshot) {
     goldUpdatedAt = quote.providerTimestamp || quote.fetchedAt || new Date().toISOString();
     goldProviderId = quote.providerId || goldProviderId;
     goldIsFallback = quote.isFallback ?? quote.forcedState === 'fallback';
-    goldIsFresh =
-      snapshot?.freshness?.state === 'live' && quote.isFallback !== true && quote.isFresh !== false;
+    goldIsFresh = resolveGoldIsFresh(quote);
     cache.saveGoldPrice(quote.price, goldUpdatedAt);
     hideDataStatusBanner();
     renderHeroCard();
@@ -1275,11 +1275,15 @@ async function init() {
   cache.loadState(cacheState);
   ensureHeroLoadingSkeletons();
 
-  if (cacheState.goldPriceUsdPerOz) {
-    goldPrice = cacheState.goldPriceUsdPerOz;
-    dayOpenPrice = cacheState.dayOpenGoldPriceUsdPerOz;
-    rates = cacheState.rates;
-    goldUpdatedAt = cacheState.freshness?.goldUpdatedAt || null;
+  dayOpenPrice = cacheState.dayOpenGoldPriceUsdPerOz;
+  rates = cacheState.rates;
+
+  const bootGold = cache.getFreshBootGoldPrice();
+  if (bootGold?.price) {
+    goldPrice = bootGold.price;
+    goldUpdatedAt = bootGold.updatedAt || null;
+    goldIsFallback = true;
+    goldIsFresh = false;
   }
 
   applyLangToPage();

@@ -9,6 +9,7 @@ import {
   createPrimaryQuoteProvider,
   createSecondaryQuoteProvider,
 } from '../lib/quote-providers/create-providers.js';
+import { resolveGoldIsFresh } from '../lib/quote-freshness-bridge.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 import { createInitialState, persistState } from '../tracker/state.js';
 import { el as safeEl } from '../lib/safe-dom.js';
@@ -1189,10 +1190,7 @@ function applyRealtimeSnapshot(snapshot) {
       providerId: quote.providerId,
       source: quote.source || quote.providerId,
       status: snapshot?.freshness?.state || quote.status || 'cached',
-      isFresh:
-        snapshot?.freshness?.state === 'live' &&
-        quote.isFallback !== true &&
-        quote.isFresh !== false,
+      isFresh: resolveGoldIsFresh(quote),
       isFallback: quote.isFallback ?? null,
       freshnessSeconds: quote.freshnessSeconds ?? null,
       sourceTimestamp: quote.providerTimestamp ?? null,
