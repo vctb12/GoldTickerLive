@@ -1,9 +1,19 @@
 # Plan: Realtime Homepage Gold Pricing (1-second live updates)
 
-> **Status:** In progress  
-> **Opened:** 2026-06-05  
-> **Trigger:** Homepage showing `Stale · Source: SecondaryProvider · Updated: 6 days ago`  
-> **Owner surface:** `index.html` / `src/pages/home.js` hero live card
+~~~yaml plan-status
+status: in-progress
+priority: P1
+class: B
+owner: @vctb12
+last_run_at: ""
+last_run_pr: ""
+last_run_agent: copilot
+slices_remaining_estimate: 0
+next_action: ""
+blocked_on: ""
+guardrails_reviewed: true
+skills_used: []
+~~~
 
 ---
 
