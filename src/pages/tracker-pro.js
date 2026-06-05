@@ -1191,7 +1191,7 @@ function applyRealtimeSnapshot(snapshot) {
       source: quote.source || quote.providerId,
       status: snapshot?.freshness?.state || quote.status || 'cached',
       isFresh: resolveGoldIsFresh(quote),
-      isFallback: quote.isFallback ?? null,
+      isFallback: quote.isFallback ?? quote.forcedState === 'fallback',
       freshnessSeconds: quote.freshnessSeconds ?? null,
       sourceTimestamp: quote.providerTimestamp ?? null,
       raw: quote.providerRaw || quote,
