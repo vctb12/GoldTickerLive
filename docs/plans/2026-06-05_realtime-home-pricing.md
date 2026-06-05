@@ -138,15 +138,15 @@ npm run validate
 
 ## 5. Done checklist
 
-- [ ] Homepage hero shows **Live** with `gold_api_com` source when market open and API healthy
-- [ ] Poll interval = 1 s visible tab (verify in `?debugFreshness=1` SLA panel)
-- [ ] 6-day-old localStorage no longer boots as active quote
-- [ ] `getFallbackGoldPrice()` returns newest entry
-- [ ] Secondary provider rejects stale snapshots
-- [ ] EN/AR freshness labels unchanged (no new user-visible strings)
-- [ ] `npm test` green on touched suites
-- [ ] `npm run validate` green
-- [ ] Tracker (`tracker-pro.js`) uses same provider factory
+- [x] Homepage hero shows **Live** with `gold_api_com` source when market open and API healthy
+- [x] Poll interval = 1 s visible tab (verify in `?debugFreshness=1` SLA panel)
+- [x] 6-day-old localStorage no longer boots as active quote
+- [x] `getFallbackGoldPrice()` returns newest entry
+- [x] Secondary provider rejects stale snapshots
+- [x] EN/AR freshness labels unchanged (no new user-visible strings)
+- [x] `npm test` green on touched suites (10 focused tests)
+- [x] `npm run validate` green
+- [x] Tracker (`tracker-pro.js`) uses same provider factory
 
 ---
 
