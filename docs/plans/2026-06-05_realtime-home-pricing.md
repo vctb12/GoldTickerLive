@@ -172,8 +172,10 @@ npm run validate
 
 ---
 
-## 7. Internal agent prompt
+## 7. Internal agent prompts
 
-See
-[`.github/prompts/realtime-home-pricing.prompt.md`](../.github/prompts/realtime-home-pricing.prompt.md)
-for the full handoff prompt used by Cursor / Copilot agents continuing this work.
+- [`.github/prompts/realtime-home-pricing.prompt.md`](../.github/prompts/realtime-home-pricing.prompt.md)
+- [`2026-06-05_realtime-multi-provider-execution-prompt.md`](2026-06-05_realtime-multi-provider-execution-prompt.md)
+
+**UI freshness rule:** labels follow `getLiveFreshness()` only. Use `resolveGoldIsFresh()` — never
+map engine `cached` → `isFresh: false`.
