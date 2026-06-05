@@ -21,8 +21,10 @@ import * as fmt from '../lib/formatter.js';
 import { getMarketStatus, getLiveFreshness } from '../lib/live-status.js';
 import { createRealtimePricingEngine } from '../lib/realtime-pricing-engine.js';
 import { REALTIME_POLLING_DEFAULTS } from '../lib/realtime-config.js';
-import { PrimaryQuoteProvider } from '../lib/quote-providers/primary-provider.js';
-import { SecondaryQuoteProvider } from '../lib/quote-providers/secondary-provider.js';
+import {
+  createPrimaryQuoteProvider,
+  createSecondaryQuoteProvider,
+} from '../lib/quote-providers/create-providers.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 import { updateTicker } from '../components/ticker.js';
 import { updateSpotBar } from '../components/spotBar.js';
@@ -981,17 +983,14 @@ function applyRealtimeSnapshot(snapshot) {
 function initRealtimeEngine() {
   if (_realtimeEngine) return;
 
-  const primaryProvider = new PrimaryQuoteProvider({ timeoutMs: 5000 });
-  const secondaryProvider = new SecondaryQuoteProvider({ timeoutMs: 5000 });
-
   _realtimeEngine = createRealtimePricingEngine({
-    primaryProvider,
-    secondaryProvider,
+    primaryProvider: createPrimaryQuoteProvider(),
+    secondaryProvider: createSecondaryQuoteProvider(),
     config: REALTIME_POLLING_DEFAULTS,
     debug: new URLSearchParams(location.search).get('debugFreshness') === '1',
   });
 
-  const cacheBoot = cache.getFallbackGoldPrice();
+  const cacheBoot = cache.getFreshBootGoldPrice();
   if (cacheBoot) {
     _realtimeEngine.seedFromCache({
       price: cacheBoot.price,

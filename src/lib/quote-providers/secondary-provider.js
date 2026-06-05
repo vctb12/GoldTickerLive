@@ -1,7 +1,18 @@
 import { BaseQuoteProvider } from './base-provider.js';
 import * as cache from '../cache.js';
+import { GOLD_MARKET } from '../live-status.js';
 
 const LAST_PRICE_PATH = '/data/last_gold_price.json';
+
+function quoteAgeMs(timestamp) {
+  const parsed = new Date(timestamp || 0).getTime();
+  if (!Number.isFinite(parsed) || parsed <= 0) return Number.POSITIVE_INFINITY;
+  return Math.max(0, Date.now() - parsed);
+}
+
+function isRecentEnough(timestamp, maxAgeMs = GOLD_MARKET.STALE_AFTER_MS) {
+  return quoteAgeMs(timestamp) <= maxAgeMs;
+}
 
 async function tryFetchLastSnapshot(signal) {
   try {
@@ -32,7 +43,7 @@ export class SecondaryQuoteProvider extends BaseQuoteProvider {
     const startedAt = Date.now();
     const fallbackFile = await tryFetchLastSnapshot(signal);
 
-    if (fallbackFile) {
+    if (fallbackFile && isRecentEnough(fallbackFile.providerTimestamp)) {
       return this.normalizeQuote({
         ...fallbackFile,
         fetchedAt: new Date().toISOString(),
@@ -47,7 +58,7 @@ export class SecondaryQuoteProvider extends BaseQuoteProvider {
     }
 
     const cached = cache.getFallbackGoldPrice();
-    if (cached?.price) {
+    if (cached?.price && isRecentEnough(cached.updatedAt || cached.fetchedAt)) {
       return this.normalizeQuote({
         price: cached.price,
         providerTimestamp: cached.updatedAt || cached.fetchedAt || new Date().toISOString(),

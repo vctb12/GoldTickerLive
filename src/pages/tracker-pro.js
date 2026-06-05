@@ -5,8 +5,10 @@ import * as cache from '../lib/cache.js';
 import '../lib/reveal.js';
 import { createRealtimePricingEngine } from '../lib/realtime-pricing-engine.js';
 import { REALTIME_POLLING_DEFAULTS } from '../lib/realtime-config.js';
-import { PrimaryQuoteProvider } from '../lib/quote-providers/primary-provider.js';
-import { SecondaryQuoteProvider } from '../lib/quote-providers/secondary-provider.js';
+import {
+  createPrimaryQuoteProvider,
+  createSecondaryQuoteProvider,
+} from '../lib/quote-providers/create-providers.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 import { createInitialState, persistState } from '../tracker/state.js';
 import { el as safeEl } from '../lib/safe-dom.js';
@@ -1224,13 +1226,13 @@ function initRealtimeEngine() {
   if (realtimeEngine) return;
 
   realtimeEngine = createRealtimePricingEngine({
-    primaryProvider: new PrimaryQuoteProvider({ timeoutMs: 5000 }),
-    secondaryProvider: new SecondaryQuoteProvider({ timeoutMs: 5000 }),
+    primaryProvider: createPrimaryQuoteProvider(),
+    secondaryProvider: createSecondaryQuoteProvider(),
     config: REALTIME_POLLING_DEFAULTS,
     debug: new URLSearchParams(location.search).get('debugFreshness') === '1',
   });
 
-  const cacheBoot = cache.getFallbackGoldPrice();
+  const cacheBoot = cache.getFreshBootGoldPrice();
   if (cacheBoot) {
     realtimeEngine.seedFromCache({
       price: cacheBoot.price,
@@ -1481,12 +1483,14 @@ async function init() {
     rates: state.rates,
     lang: state.lang,
   });
-  ['tracker-inline-calc-weight', 'tracker-inline-calc-karat', 'tracker-inline-calc-currency'].forEach(
-    (id) => {
-      document.getElementById(id)?.addEventListener('input', syncInlineCalcCalculatorLink);
-      document.getElementById(id)?.addEventListener('change', syncInlineCalcCalculatorLink);
-    }
-  );
+  [
+    'tracker-inline-calc-weight',
+    'tracker-inline-calc-karat',
+    'tracker-inline-calc-currency',
+  ].forEach((id) => {
+    document.getElementById(id)?.addEventListener('input', syncInlineCalcCalculatorLink);
+    document.getElementById(id)?.addEventListener('change', syncInlineCalcCalculatorLink);
+  });
   syncInlineCalcCalculatorLink();
   renderTrackerAddonPanels();
   initRealtimeEngine();
