@@ -1,6 +1,12 @@
 import { CONSTANTS } from '../config/index.js';
+import { GOLD_MARKET } from './live-status.js';
 
 const { CACHE_KEYS } = CONSTANTS;
+
+function cacheEntryTimestampMs(entry) {
+  const parsed = new Date(entry?.updatedAt || entry?.fetchedAt || 0).getTime();
+  return Number.isFinite(parsed) ? parsed : 0;
+}
 
 function getDubaiDateString() {
   return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Dubai' }); // YYYY-MM-DD
@@ -80,8 +86,8 @@ function safeSet(key, value) {
  * @param {object} STATE  The shared page-level state object (mutated in place).
  */
 export function loadState(STATE) {
-  // Gold price
-  const gold = safeGet(CACHE_KEYS.goldPrice) || safeGet(CACHE_KEYS.goldFallback);
+  // Gold price — newest of primary/fallback slots (see getFallbackGoldPrice)
+  const gold = getFallbackGoldPrice();
   if (gold) {
     STATE.goldPriceUsdPerOz = gold.price;
     STATE.freshness.goldUpdatedAt = gold.updatedAt;
@@ -173,14 +179,33 @@ export function saveFXRates(rates, fxMeta) {
 }
 
 /**
- * Return the most-recently persisted gold price payload, preferring the
- * fallback slot (which holds the previous-good value) over the primary slot.
+ * Return the best available persisted gold price payload — the entry with the
+ * newest `updatedAt` / `fetchedAt` between primary and fallback slots.
  * Returns `null` when no cached data exists.
  *
  * @returns {{ price: number, updatedAt: string, fetchedAt: number } | null}
  */
 export function getFallbackGoldPrice() {
-  return safeGet(CACHE_KEYS.goldFallback) || safeGet(CACHE_KEYS.goldPrice);
+  const primary = safeGet(CACHE_KEYS.goldPrice);
+  const fallback = safeGet(CACHE_KEYS.goldFallback);
+  if (!primary) return fallback;
+  if (!fallback) return primary;
+  return cacheEntryTimestampMs(primary) >= cacheEntryTimestampMs(fallback) ? primary : fallback;
+}
+
+/**
+ * Return a cached gold quote only when it is fresh enough for boot paint.
+ * Prevents multi-day-old localStorage from occupying the hero before live APIs run.
+ *
+ * @param {number} [maxAgeMs=GOLD_MARKET.STALE_AFTER_MS]
+ * @returns {{ price: number, updatedAt: string, fetchedAt: number } | null}
+ */
+export function getFreshBootGoldPrice(maxAgeMs = GOLD_MARKET.STALE_AFTER_MS) {
+  const cached = getFallbackGoldPrice();
+  if (!cached?.price) return null;
+  const ageMs = Date.now() - cacheEntryTimestampMs(cached);
+  if (!Number.isFinite(ageMs) || ageMs > maxAgeMs) return null;
+  return cached;
 }
 
 /**

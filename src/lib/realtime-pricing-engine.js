@@ -1,6 +1,7 @@
 import { getMarketStatus } from './live-status.js';
 import { evaluateFreshnessState, isLiveEligible } from './freshness-policy.js';
 import { ProviderHealthMonitor } from './provider-health.js';
+import { resolveProviderPollMs } from './realtime-poll-interval.js';
 
 const DEFAULT_BACKOFF_MS = [5000, 10000, 20000, 40000, 60000];
 const WARNING_WINDOW_MS = 15 * 60 * 1000;
@@ -47,8 +48,11 @@ export function createRealtimePricingEngine({
   if (!primaryProvider) throw new Error('primaryProvider is required');
 
   const cfg = {
-    activePollMs: sanitizeMs(config.activePollMs, 5000),
-    hiddenPollMs: sanitizeMs(config.hiddenPollMs, 20000),
+    activePollMs: sanitizeMs(config.activePollMs, 1000),
+    livePollMs: sanitizeMs(config.livePollMs, config.activePollMs ?? 1000),
+    staticPollMs: sanitizeMs(config.staticPollMs, 30_000),
+    fallbackPollMs: sanitizeMs(config.fallbackPollMs, 60_000),
+    hiddenPollMs: sanitizeMs(config.hiddenPollMs, 20_000),
     fetchTimeoutMs: sanitizeMs(config.fetchTimeoutMs, 5000),
     jitterMs: sanitizeMs(config.jitterMs, 250),
     backoffMs:
@@ -290,7 +294,15 @@ export function createRealtimePricingEngine({
     if (!state.running) return;
     if (state.timerId) clearTimeoutFn(state.timerId);
 
-    const basePoll = state.visible ? cfg.activePollMs : cfg.hiddenPollMs;
+    const providerId = state.quote?.providerId || state.activeProviderId;
+    const basePoll = resolveProviderPollMs(providerId, {
+      livePollMs: cfg.livePollMs,
+      staticPollMs: cfg.staticPollMs,
+      fallbackPollMs: cfg.fallbackPollMs,
+      activePollMs: cfg.activePollMs,
+      hiddenPollMs: cfg.hiddenPollMs,
+      visible: state.visible,
+    });
     const backoffIndex = Math.min(state.failureCount, cfg.backoffMs.length - 1);
     const failureBackoff = state.failureCount ? cfg.backoffMs[backoffIndex] : basePoll;
     const pollMs = withJitter(immediate ? 0 : failureBackoff, cfg.jitterMs);
@@ -607,7 +619,7 @@ export function createRealtimePricingEngine({
       providerPathSuccessful: false,
       forcedState: 'cached',
       status: 'cached',
-      isFallback: false,
+      isFallback: true,
       isFresh: false,
     };
     state.freshness = {

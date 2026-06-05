@@ -21,8 +21,11 @@ import * as fmt from '../lib/formatter.js';
 import { getMarketStatus, getLiveFreshness } from '../lib/live-status.js';
 import { createRealtimePricingEngine } from '../lib/realtime-pricing-engine.js';
 import { REALTIME_POLLING_DEFAULTS } from '../lib/realtime-config.js';
-import { PrimaryQuoteProvider } from '../lib/quote-providers/primary-provider.js';
-import { SecondaryQuoteProvider } from '../lib/quote-providers/secondary-provider.js';
+import {
+  createPrimaryQuoteProvider,
+  createSecondaryQuoteProvider,
+} from '../lib/quote-providers/create-providers.js';
+import { resolveGoldIsFresh } from '../lib/quote-freshness-bridge.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 import { updateTicker } from '../components/ticker.js';
 import { updateSpotBar } from '../components/spotBar.js';
@@ -963,7 +966,7 @@ function applyRealtimeSnapshot(snapshot) {
     goldUpdatedAt = quote.providerTimestamp || quote.fetchedAt || new Date().toISOString();
     goldProviderId = quote.providerId || goldProviderId;
     goldIsFallback = quote.isFallback ?? quote.forcedState === 'fallback';
-    goldIsFresh = quote.isFresh ?? snapshot?.freshness?.state === 'live';
+    goldIsFresh = resolveGoldIsFresh(quote);
     cache.saveGoldPrice(quote.price, goldUpdatedAt);
     hideDataStatusBanner();
     renderHeroCard();
@@ -981,17 +984,14 @@ function applyRealtimeSnapshot(snapshot) {
 function initRealtimeEngine() {
   if (_realtimeEngine) return;
 
-  const primaryProvider = new PrimaryQuoteProvider({ timeoutMs: 5000 });
-  const secondaryProvider = new SecondaryQuoteProvider({ timeoutMs: 5000 });
-
   _realtimeEngine = createRealtimePricingEngine({
-    primaryProvider,
-    secondaryProvider,
+    primaryProvider: createPrimaryQuoteProvider(),
+    secondaryProvider: createSecondaryQuoteProvider(),
     config: REALTIME_POLLING_DEFAULTS,
     debug: new URLSearchParams(location.search).get('debugFreshness') === '1',
   });
 
-  const cacheBoot = cache.getFallbackGoldPrice();
+  const cacheBoot = cache.getFreshBootGoldPrice();
   if (cacheBoot) {
     _realtimeEngine.seedFromCache({
       price: cacheBoot.price,
@@ -1275,11 +1275,15 @@ async function init() {
   cache.loadState(cacheState);
   ensureHeroLoadingSkeletons();
 
-  if (cacheState.goldPriceUsdPerOz) {
-    goldPrice = cacheState.goldPriceUsdPerOz;
-    dayOpenPrice = cacheState.dayOpenGoldPriceUsdPerOz;
-    rates = cacheState.rates;
-    goldUpdatedAt = cacheState.freshness?.goldUpdatedAt || null;
+  dayOpenPrice = cacheState.dayOpenGoldPriceUsdPerOz;
+  rates = cacheState.rates;
+
+  const bootGold = cache.getFreshBootGoldPrice();
+  if (bootGold?.price) {
+    goldPrice = bootGold.price;
+    goldUpdatedAt = bootGold.updatedAt || null;
+    goldIsFallback = true;
+    goldIsFresh = false;
   }
 
   applyLangToPage();
