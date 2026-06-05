@@ -46,6 +46,7 @@ import { enforceCanonicalOnDocument } from '../seo/canonical.js';
 import { enforceHreflangAlternates } from '../seo/hreflang.js';
 import { buildMethodologyFaqSchema, injectFaqSchema } from '../seo/faq-schema.js';
 import { buildHomeTrackerHref } from '../lib/cross-page-links.js';
+import { applyTrackerHandoffToIds, HOME_DEFAULT_TRACKER_LINK_IDS } from '../lib/page-handoff.js';
 import { serializeCalculatorUrlState } from './calculator/url-state.js';
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -390,7 +391,11 @@ function renderHeroCard() {
   const ageClass = freshnessAgeClass(getLiveFreshness({ updatedAt: goldUpdatedAt, lang }).ageMs);
   const hlcUpdatedEl = document.getElementById('hlc-updated');
   if (hlcUpdatedEl) {
-    hlcUpdatedEl.classList.remove('skeleton-text', 'skeleton-inline', 'shell-skeleton-freshness-strip');
+    hlcUpdatedEl.classList.remove(
+      'skeleton-text',
+      'skeleton-inline',
+      'shell-skeleton-freshness-strip'
+    );
     hlcUpdatedEl.removeAttribute('aria-busy');
     hlcUpdatedEl.textContent = `${txGlobal('freshness.statusLabel')}: ${statusText} · ${tx('source')}: ${sourceText} · ${tx('updated')}: ${ageText}`;
     hlcUpdatedEl.dataset.freshnessKey = key;
@@ -704,42 +709,12 @@ function renderGCCGrid() {
 function syncCrossPageLinks() {
   const unit = karatStripUnit === 'tola' ? 'tola' : karatStripUnit === 'oz' ? 'oz' : 'gram';
   const trackerHref = buildHomeTrackerHref(homeTrackerKarat, unit, lang);
-  for (const id of ['hero-cta-tracker', 'hlc-tracker-link', 'karat-strip-cta']) {
-    const node = document.getElementById(id);
-    if (node) node.setAttribute('href', trackerHref);
-  }
+  applyTrackerHandoffToIds(trackerHref, HOME_DEFAULT_TRACKER_LINK_IDS);
   const calcHref = buildCalculatorHref();
   for (const id of ['hero-cta-calculator', 'home-action-calc']) {
     const node = document.getElementById(id);
     if (node) node.setAttribute('href', calcHref);
   }
-function syncTrackerLinks(overrides = {}) {
-  applyTrackerHandoffToIds(buildTrackerHref(overrides));
-}
-
-function initKaratStripTrackerHandoff() {
-  document.querySelectorAll('.karat-strip-item').forEach((item) => {
-    item.setAttribute('role', 'link');
-    item.setAttribute('tabindex', '0');
-    const karat = karatFromKstripItem(item);
-    const go = () => {
-      if (!karat) return;
-      const href = buildTrackerHref({ k: karat });
-      track(EVENTS.TRACKER_VIEW, { surface: 'home_karat_strip', karat, currency: 'AED' });
-      window.location.assign(href);
-    };
-    item.addEventListener('click', (e) => {
-      if (e.target.closest('.kstrip-copy-btn')) return;
-      go();
-    });
-    item.addEventListener('keydown', (e) => {
-      if (e.target.closest('.kstrip-copy-btn')) return;
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        go();
-      }
-    });
-  });
 }
 
 // ── Apply full page language ───────────────────────────────────────────────
@@ -1243,8 +1218,6 @@ async function init() {
       }, 1500);
     }
   });
-
-  initKaratStripTrackerHandoff();
 
   // Karat strip unit toggle
   document.querySelectorAll('.kstrip-unit-btn').forEach((btn) => {
