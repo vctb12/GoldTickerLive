@@ -1,0 +1,39 @@
+---
+alwaysApply: true
+---
+
+# Non-negotiable rules
+
+> Canonical charter: [`AGENTS.md`](../../AGENTS.md) §6. Pricing detail: [`gold-pricing-integrity.mdc`](./gold-pricing-integrity.mdc).
+
+## 1. Reference prices are not retail shop quotes
+
+- Never present a spot-linked reference price as a guaranteed in-store purchase price.
+- If content compares market/reference pricing and shop pricing, the distinction must remain explicit.
+
+## 2. Freshness labels must be exact
+
+- The terms `live`, `updated`, `cached`, and `delayed` must not be used loosely.
+- If data is not truly live, do not call it live.
+- If a page uses cached or delayed values, the wording must reflect that clearly.
+
+## 3. English and Arabic must match in meaning
+
+- Semantic parity is required between EN and AR.
+- One language must not make stronger promises or claims than the other.
+- Natural phrasing is preferred over literal translation.
+
+## 4. Country and city pages must strengthen internal linking
+
+- Local pages should connect users to related country pages, calculators, methodology pages, and related market content.
+- Avoid creating orphaned or weakly connected local pages.
+
+## 5. Metadata and technical SEO are product quality
+
+- Schema, canonicals, metadata, hreflang, and internal linking are part of core product integrity.
+- Agents must flag missing, conflicting, or misleading implementations.
+
+## 6. Trust-first language is mandatory
+
+- Avoid hype, fake precision, clickbait, or exaggerated certainty.
+- Do not imply financial advice unless a page is explicitly designed for that purpose.

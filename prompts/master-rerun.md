@@ -12,14 +12,27 @@ static gold-price reference platform. Production: https://goldtickerlive.com/
 
 ## Non-negotiables (read before coding)
 
-1. **Reference price ≠ retail price** — never blur spot-linked estimates with shop prices.
-2. **Freshness labels** on every visible price (source, timestamp, state).
-3. **EN + AR parity** — user-visible strings in `src/config/translations.js`.
-4. **RTL** — layouts must work at 360px with `dir="rtl"`.
-5. **DOM safety** — use `src/lib/safe-dom.js`; no new `innerHTML` sinks.
-6. **PR-only** — no direct commits to `main`.
-7. **Production-critical** — do not change `post_gold.yml`, `gold-price-fetch.yml`,
-   `data/gold_price.json`, `sw.js`, `src/config/constants.js` without owner approval.
+Product-trust (see `.cursor/rules/non-negotiable-rules.mdc`):
+
+1. **Reference price ≠ retail price** — never present spot-linked reference as a guaranteed shop
+   price; keep the distinction explicit when comparing.
+2. **Freshness labels must be exact** — do not call cached or delayed data `live`; label source,
+   timestamp, and state on every visible price.
+3. **EN + AR semantic parity** — matching meaning, not literal translation; no stronger claims in
+   one language; strings in `src/config/translations.js`.
+4. **Country/city internal linking** — connect local pages to calculators, methodology, and related
+   market content; avoid orphaned local pages.
+5. **Metadata & SEO are product quality** — schema, canonicals, hreflang, internal links; flag
+   missing or conflicting implementations.
+6. **Trust-first language** — no hype, fake precision, or implied financial advice.
+
+Operational:
+
+7. **RTL** — layouts must work at 360px with `dir="rtl"`.
+8. **DOM safety** — use `src/lib/safe-dom.js`; no new `innerHTML` sinks.
+9. **PR-only** — no direct commits to `main`.
+10. **Production-critical** — do not change `post_gold.yml`, `gold-price-fetch.yml`,
+    `data/gold_price.json`, `sw.js`, `src/config/constants.js` without owner approval.
 
 Full charter: [`AGENTS.md`](../AGENTS.md)
 

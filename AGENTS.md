@@ -6,12 +6,15 @@ should read this file first. Agent-specific files (`CLAUDE.md`, `.github/copilot
 are thin pointers back here plus tool-specific mechanics.
 
 ## Project overview
+
 GoldTickerLive is a bilingual gold price and gold education platform for GCC and Arab-world users.
-It provides spot-linked reference prices, local currency conversion, karat pricing, calculators, country/city market pages, and trust-oriented educational content.
+It provides spot-linked reference prices, local currency conversion, karat pricing, calculators,
+country/city market pages, and trust-oriented educational content.
 
 ## Core objective
-Protect user trust.
-Accuracy, clarity, and semantic consistency matter more than speed or content volume.
+
+Protect user trust. Accuracy, clarity, and semantic consistency matter more than speed or content
+volume.
 
 ## 1. What this repo is
 
@@ -115,35 +118,53 @@ For a one-line bug fix, collapse steps 2–3 into a sentence in the PR body.
 
 ## 6. Product-trust guardrails
 
-Non-negotiables. Each has a one-line _Why:_ so you can make good edge-case decisions.
+Non-negotiables. Each has a one-line _Why:_ so you can make good edge-case decisions. Cursor agents
+also load `.cursor/rules/non-negotiable-rules.mdc` (always applied).
 
-1. **Spot / reference prices must never be blurred with retail or jewelry prices.** _Why:_ the
-   site's entire credibility rests on this distinction; retail quotes include making charges,
-   premiums, and tax.
-2. **Cached, fallback, estimated, delayed, or derived values must be visibly labelled with source
-   and timestamp.** _Why:_ labelled stale data is honest; unlabelled stale data is a trust
-   violation.
-3. **Freshness labels, disclaimers, methodology notes are product elements, not decoration.** _Why:_
-   removing them re-introduces the exact ambiguity guardrails 1–2 are guarding against.
-4. **SEO integrity.** Don't silently change canonical URLs, `robots.txt`, sitemap structure, `og:*`
-   / `twitter:*` tags, or `CNAME`. Schema changes need a migration note. _Why:_ measurable ranking
-   regression risk.
-5. **Static multi-page architecture stays static.** Don't migrate to an SPA / framework without an
+### Product-trust non-negotiables
+
+1. **Reference prices are not retail shop quotes.** Never present a spot-linked reference price as a
+   guaranteed in-store purchase price. If content compares market/reference pricing and shop
+   pricing, the distinction must remain explicit. _Why:_ the site's entire credibility rests on this
+   distinction; retail quotes include making charges, premiums, and tax.
+2. **Freshness labels must be exact.** The terms `live`, `updated`, `cached`, and `delayed` must not
+   be used loosely. If data is not truly live, do not call it live. Cached, fallback, estimated,
+   delayed, or derived values must be visibly labelled with source and timestamp. _Why:_ labelled
+   stale data is honest; unlabelled stale data is a trust violation.
+3. **Freshness labels, disclaimers, and methodology notes are product elements, not decoration.**
+   _Why:_ removing them re-introduces the exact ambiguity guardrails 1–2 are guarding against.
+4. **English and Arabic must match in meaning.** Semantic parity is required between EN and AR. One
+   language must not make stronger promises or claims than the other. Natural phrasing is preferred
+   over literal translation. User-visible strings live in `src/config/translations.js`. _Why:_ tests
+   enforce it and half-landed copy is a visible bug.
+5. **Country and city pages must strengthen internal linking.** Local pages should connect users to
+   related country pages, calculators, methodology pages, and related market content. Avoid creating
+   orphaned or weakly connected local pages. _Why:_ weak local pages hurt discovery and trust.
+6. **Metadata and technical SEO are product quality.** Schema, canonicals, metadata, hreflang, and
+   internal linking are part of core product integrity. Don't silently change canonical URLs,
+   `robots.txt`, sitemap structure, `og:*` / `twitter:*` tags, or `CNAME`. Schema changes need a
+   migration note. Agents must flag missing, conflicting, or misleading implementations. _Why:_
+   measurable ranking regression risk and misleading metadata erode trust.
+7. **Trust-first language is mandatory.** Avoid hype, fake precision, clickbait, or exaggerated
+   certainty. Do not imply financial advice unless a page is explicitly designed for that purpose.
+   _Why:_ overstated claims undermine the reference-pricing mission.
+
+### Operational guardrails
+
+8. **Static multi-page architecture stays static.** Don't migrate to an SPA / framework without an
    explicit request. _Why:_ SPA migration is a separate, owner-approved program.
-6. **Bilingual EN / AR parity.** User-visible copy changes ship in both languages; strings live in
-   `src/config/translations.js`. _Why:_ tests enforce it and half-landed copy is a visible bug.
-7. **DOM-safety baseline doesn't regress.** Use helpers from `src/lib/safe-dom.js` (`escape`,
+9. **DOM-safety baseline doesn't regress.** Use helpers from `src/lib/safe-dom.js` (`escape`,
    `safeHref`, `safeTel`, `el`, `clear`); prefer `node.replaceChildren()` over
    `node.innerHTML = ''`. _Why:_ the baseline is the repo's only XSS regression guard, and CI blocks
    sink growth.
-8. **No secrets in git.** Use GitHub Secrets only; never echo them into logs or workflow outputs.
-   _Why:_ this is a public repo.
-9. **PR-only workflow.** No direct commits to `main`, no force-push. _Why:_ `main` is protected and
-   the live site deploys from it.
-10. **The hourly `post_gold.yml` Actions workflow is production.** Any change to it needs a plan
+10. **No secrets in git.** Use GitHub Secrets only; never echo them into logs or workflow outputs.
+    _Why:_ this is a public repo.
+11. **PR-only workflow.** No direct commits to `main`, no force-push. _Why:_ `main` is protected and
+    the live site deploys from it.
+12. **The hourly `post_gold.yml` Actions workflow is production.** Any change to it needs a plan
     entry and must not break the `scripts/python/utils/*` import layout. _Why:_ it auto-posts to a
     public channel every hour — breakage is public within the hour.
-11. **Honesty about verification.** Separate what you ran from what you assumed. Don't claim tests
+13. **Honesty about verification.** Separate what you ran from what you assumed. Don't claim tests
     pass that you didn't run. _Why:_ the one rule that makes every other claim in a PR body legible.
 
 ## 7. Style & conventions

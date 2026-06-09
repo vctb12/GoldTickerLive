@@ -67,5 +67,5 @@ Canonical vocabulary also includes `stale` / `unavailable` on some surfaces — 
 ## Golden rules (pricing)
 
 1. Reference price is not retail price.
-2. Freshness must be visible.
+2. Freshness must be visible and exact — see `.cursor/rules/non-negotiable-rules.mdc` §2.
 3. AED peg is **3.6725** (fixed).
