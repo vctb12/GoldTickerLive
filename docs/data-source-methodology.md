@@ -180,7 +180,7 @@ Understanding their resolution and limitations is important for honest display.
 
 ### Layer 3 — Live session ticks
 
-- **Source:** Real-time GoldPriceZ / gold-api.com spot snapshot (refreshed every 90 s)
+- **Source:** Real-time gold-api.com spot snapshot (server hourly + client ~90 s re-poll)
 - **Resolution:** ~90-second ticks
 - **Coverage:** Current session duration only
 - **Freshness state:** `live` or `cached` depending on whether the fetch succeeded

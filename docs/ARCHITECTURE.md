@@ -21,7 +21,7 @@ admin API and server-side data persistence).
 | CSS lines     | ~17,000 across 16 files                                                                                                      |
 | JS modules    | 75+                                                                                                                          |
 | Test suites   | 10 files, 205 tests                                                                                                          |
-| External APIs | goldpricez.com (gold spot), exchangerate-api.com (FX), DataHub (historical)                                                  |
+| External APIs | gold-api.com (gold spot), open.er-api.com (FX), DataHub (historical)                                                       |
 
 ---
 
@@ -64,9 +64,9 @@ admin API and server-side data persistence).
 │                                                             │
 │  ┌──────────────────────────────────────┐                   │
 │  │ External APIs (fetched from browser) │                   │
-│  │  • api.goldpricez.com (XAU/USD spot)   │                   │
+│  │  • gold-api.com (XAU/USD spot)       │                   │
 │  │  • open.er-api.com (FX rates)        │                   │
-│  │  • goldprice.org (fallback)          │                   │
+│  │  • mintedmetal.com + committed JSON  │                   │
 │  └──────────────────────────────────────┘                   │
 │                                                             │
 │  ┌──────────────────────────────────────┐                   │
@@ -254,9 +254,9 @@ HTML loads page-specific JS (e.g. src/pages/home.js)
   │    └── If fresh → use cached data → render immediately
   │
   ├──► Fetch gold spot price (`src/lib/api.js` → provider chain)
-  │    ├── Provider 1: api.goldpricez.com (primary)
-  │    ├── Provider 2: goldpricez.com (fallback)
-  │    └── On failure: use stale cache → show "stale data" badge
+  │    ├── Live race: gold-api.com + mintedmetal.com (client)
+  │    ├── Committed: data/gold_price.json (hourly server fetch)
+  │    └── On failure: use stale cache → show freshness badge
   │
   ├──► Fetch FX rates (`src/lib/api.js`)
   │    ├── Source: open.er-api.com
@@ -369,7 +369,7 @@ Page Scripts ──► Core Library (api, cache, calculator, formatter)
 ## Resilience & Offline Strategy
 
 - **Dual cache layers**: Primary + fallback localStorage prevents data loss on storage errors
-- **Multi-provider fallback**: Gold price tries goldpricez.com → goldprice.org → cache
+- **Multi-provider fallback**: Gold price tries gold-api.com → mintedmetal.com → committed JSON → cache
 - **Stale data badges**: When cached data is used, freshness indicators are shown
 - **Service worker** (`sw.js`): Cache-first for static assets, network-first for API calls
 - **AED fixed peg**: Always 3.6725 regardless of FX API (removes dependency for UAE prices)

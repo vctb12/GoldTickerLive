@@ -3,7 +3,7 @@
  * Handles 5 calculators: Value, Scrap, Zakat, Buying Power, Unit Converter.
  */
 
-import { CONSTANTS, KARATS, COUNTRIES, TRANSLATIONS } from '../config/index.js';
+import { CONSTANTS, KARATS, COUNTRIES, TRANSLATIONS, DATA_ATTRIBUTION } from '../config/index.js';
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import { usdPerGram } from '../lib/price-calculator.js';
@@ -1102,8 +1102,8 @@ function updateSpotBadge() {
             : 'Cached/Fallback';
       freshnessEl.textContent =
         STATE.lang === 'ar'
-          ? `حداثة البيانات: ${sourceLabel} · ${stamp} · المصدر: goldpricez.com`
-          : `Freshness: ${sourceLabel} · ${stamp} · Source: goldpricez.com`;
+          ? `حداثة البيانات: ${sourceLabel} · ${stamp} · المصدر: ${DATA_ATTRIBUTION.gold.domain}`
+          : `Freshness: ${sourceLabel} · ${stamp} · Source: ${DATA_ATTRIBUTION.gold.domain}`;
     }
   }
   renderCalculatorTrustAddons();
@@ -1122,7 +1122,7 @@ function renderCalculatorTrustAddons() {
       renderFreshnessBadge({
         lang: STATE.lang,
         state: freshness.key,
-        source: 'goldpricez.com',
+        source: DATA_ATTRIBUTION.gold.domain,
         updatedAt: STATE.freshness.goldUpdatedAt,
         marketOpen: getMarketStatus().isOpen,
         className: 'calc-freshness-badge',

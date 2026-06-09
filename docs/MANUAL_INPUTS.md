@@ -5,14 +5,20 @@ where to get it, which file to edit, and what breaks without it.
 
 ---
 
-## 1. GOLDPRICEZ_API_KEY — REQUIRED (~5 min)
+## 1. GOLD_API_COM_KEY — REQUIRED for live price fetch (~5 min)
 
-- **What:** API key for fetching live gold spot prices in server-side scripts (tweet bots, alerts).
-- **Where to get it:** Sign up at https://goldpricez.com — the free tier gives 500 requests/month.
-- **Where to set it:** Add as a GitHub repository secret: Settings → Secrets → Actions →
-  `GOLDPRICEZ_API_KEY`.
-- **What breaks without it:** The automated Twitter/Telegram/Discord posting scripts will fail to
-  fetch prices. The client-side homepage uses the public endpoint and does not need this key.
+- **What:** API key for the primary gold spot provider (`gold_api_com`) in
+  `gold-price-fetch.yml`.
+- **Where to get it:** Sign up at https://gold-api.com and copy your API key from the dashboard.
+- **Where to set it:** GitHub repository secret: Settings → Secrets → Actions → `GOLD_API_COM_KEY`.
+- **What breaks without it:** The hourly price-fetch workflow cannot refresh `data/gold_price.json`;
+  bots and the static site fall back to stale committed data or cache.
+
+### GOLDPRICEZ_API_KEY — optional legacy adapter
+
+- **What:** Legacy fallback provider key only (not in production `GOLD_PROVIDER_ORDER`).
+- **Where to get it:** https://goldpricez.com if you keep the adapter enabled.
+- **What breaks without it:** Nothing in the current production chain — primary is gold-api.com.
 
 ## 2. ADSENSE_PUBLISHER_ID and AD_SLOTS — OPTIONAL (~30 min after approval)
 
