@@ -53,9 +53,8 @@ If you author a new prompt, follow this standard.
 > [`docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md`](./GOLD_TICKER_LIVE_MASTER_WORKBOOK.md)  
 > **Endless catalog (copy-paste):**
 > [`docs/plans/2026-06-01_endless-session-prompts.md`](./plans/2026-06-01_endless-session-prompts.md)  
-> **Routing
-> hub:**
-> [`docs/plans/2026-06-01_master-operations-hub.md`](./plans/2026-06-01_master-operations-hub.md)  
+|> **Routing hub:**
+|> [`docs/plans/2026-06-01_master-operations-hub.md`](./plans/2026-06-01_master-operations-hub.md)  
 > **GitHub control center:**
 > [`docs/plans/2026-06-09_github-control-center-setup.md`](./plans/2026-06-09_github-control-center-setup.md)
 
