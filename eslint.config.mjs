@@ -67,6 +67,7 @@ export default [
         crypto: 'readonly',
         requestIdleCallback: 'readonly',
         structuredClone: 'readonly',
+        CSS: 'readonly',
       },
     },
     rules: {
