@@ -57,12 +57,14 @@ test('realtime engine enforces monotonic quote guard', async () => {
 test('realtime engine snapshot never labels stale quotes as live', async () => {
   const { createRealtimePricingEngine } = await loadEngine();
 
-  const staleTs = new Date(Date.now() - 15_000).toISOString();
+  const fixedNow = Date.parse('2026-06-09T12:00:00Z');
+  const staleTs = new Date(fixedNow - 15_000).toISOString();
   const primary = providerFrom([{ price: 3300, providerTimestamp: staleTs }]);
 
   const engine = createRealtimePricingEngine({
     primaryProvider: primary,
     config: { activePollMs: 999999, hiddenPollMs: 999999, jitterMs: 0 },
+    nowFn: () => fixedNow,
   });
 
   engine.start();
