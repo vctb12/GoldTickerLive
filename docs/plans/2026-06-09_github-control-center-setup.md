@@ -32,7 +32,7 @@ canonical mapping so agents do not rebuild what exists.
 | `.github/ISSUE_TEMPLATE/`             | bug, feature, polish, performance                                                                      | ✅ Extended                      |
 | `REPOS_TO_STEAL_FROM.md`              | [`docs/REPOS_TO_STEAL_FROM.md`](../REPOS_TO_STEAL_FROM.md)                                             | ✅ Added                         |
 
-**Beyond the starter trio:** 19 additional workflows (deploy, CodeQL, gold fetch/post, newsletters,
+**Beyond the starter trio:** additional workflows (deploy, CodeQL, gold fetch/post, newsletters,
 uptime, bakeoff, etc.). Registry:
 [`.github/workflows/README.md`](../../.github/workflows/README.md).
 
