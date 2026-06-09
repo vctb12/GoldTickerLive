@@ -386,7 +386,7 @@ in git, not chat memory.
 | [`PLAN.md`](PLAN.md)                                                                                           | Active task queue — update after each PR                     |
 | [`docs/REPOS_TO_STEAL_FROM.md`](docs/REPOS_TO_STEAL_FROM.md)                                                   | External repos to use / fork / study (one feature at a time) |
 | [`docs/plans/2026-06-09_github-control-center-setup.md`](docs/plans/2026-06-09_github-control-center-setup.md) | CI map, issue templates, folder structure                    |
-| [`.github/workflows/README.md`](.github/workflows/README.md)                                                   | Full workflow tier registry (22 workflows)                   |
+| [`.github/workflows/README.md`](.github/workflows/README.md)                                                   | Full workflow tier registry                           |
 
 **Quality gates (starter trio):**
 
