@@ -7,19 +7,12 @@ const TRACKER_KARATS = new Set(['24', '22', '21', '20', '18', '16', '14']);
 const TRACKER_UNITS = new Set(['gram', 'tola', 'oz']);
 const TRACKER_MODES = new Set(['live', 'compare', 'archive', 'method', 'exports']);
 const ALLOWED_LANG = new Set(['en', 'ar']);
-const ALLOWED_CURRENCIES = new Set([
-  'USD',
-  'AED',
-  'SAR',
-  'KWD',
-  'QAR',
-  'BHD',
-  'OMR',
-  'EGP',
-  'JOD',
-  'MAD',
-  'INR',
-]);
+const ISO_CURRENCY_CODE = /^[A-Za-z]{3}$/;
+const ALLOWED_CURRENCIES = {
+  has(value) {
+    return ISO_CURRENCY_CODE.test(String(value));
+  },
+};
 const ALLOWED_RANGES = new Set(['24H', '7D', '30D', '90D', '1Y', '3Y', '5Y', 'ALL']);
 const ISO_COUNTRY_CODE = /^[A-Za-z]{2}$/;
 
