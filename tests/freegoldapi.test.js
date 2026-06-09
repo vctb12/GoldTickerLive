@@ -3,7 +3,8 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 
 async function loadModule() {
-  return import('file://' + path.join(process.cwd(), 'src/lib/freegoldapi.js'));
+  const url = new URL('file://' + path.resolve(__dirname, '..', 'src', 'lib', 'freegoldapi.js'));
+  return import(url);
 }
 
 describe('freegoldapi', () => {
