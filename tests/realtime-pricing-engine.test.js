@@ -54,6 +54,26 @@ test('realtime engine enforces monotonic quote guard', async () => {
   assert.equal(snapshot.metrics.monotonicGuardBlocks, 1);
 });
 
+test('realtime engine snapshot never labels stale quotes as live', async () => {
+  const { createRealtimePricingEngine } = await loadEngine();
+
+  const staleTs = new Date(Date.now() - 15_000).toISOString();
+  const primary = providerFrom([{ price: 3300, providerTimestamp: staleTs }]);
+
+  const engine = createRealtimePricingEngine({
+    primaryProvider: primary,
+    config: { activePollMs: 999999, hiddenPollMs: 999999, jitterMs: 0 },
+  });
+
+  engine.start();
+  await engine.refreshNow('stale-live-guard');
+  const snapshot = engine.getSnapshot();
+  engine.stop();
+
+  assert.notEqual(snapshot.freshness.state, 'live');
+  assert.ok(['cached', 'delayed', 'estimated', 'fallback'].includes(snapshot.freshness.state));
+});
+
 test('realtime engine triggers immediate visibility recovery refresh path', async () => {
   const { createRealtimePricingEngine } = await loadEngine();
   const primary = providerFrom([{ price: 3300, providerTimestamp: '2026-05-19T16:00:00Z' }]);

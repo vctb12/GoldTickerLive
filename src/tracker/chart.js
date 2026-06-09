@@ -1,6 +1,6 @@
 // tracker/chart.js — historical chart rendering
 import { _state, _el, _currentSpot, tx, formatUsd, formatPercent } from './_ctx.js';
-import { clear, el } from '../lib/safe-dom.js';
+import { clear, el, setText } from '../lib/safe-dom.js';
 import {
   buildHistorySummary,
   describeHistoryResolution,
