@@ -83,10 +83,11 @@ const API_KEY_HASH_ITERATIONS =
     : 210000;
 const API_KEY_HASH_BYTES = 32;
 const API_KEY_HASH_DIGEST = 'sha512';
-const API_KEY_HASH_FALLBACK_SALT = 'goldtickerlive-api-key-hash-v2';
 
 function getApiKeyHashSalt() {
-  return process.env.API_KEY_HASH_SALT || API_KEY_HASH_FALLBACK_SALT;
+  const salt = process.env.API_KEY_HASH_SALT || process.env.JWT_SECRET;
+  if (!salt) throw new Error('API_KEY_HASH_SALT or JWT_SECRET must be configured');
+  return salt;
 }
 
 function hashApiKey(rawKey) {
