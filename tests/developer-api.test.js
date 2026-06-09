@@ -20,6 +20,7 @@
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret-for-tests-only';
 process.env.ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'test-password-1234';
 process.env.ADMIN_ACCESS_PIN = process.env.ADMIN_ACCESS_PIN || '123456';
+process.env.API_KEY_HASH_SALT = process.env.API_KEY_HASH_SALT || 'test-api-key-hash-salt';
 process.env.NODE_ENV = process.env.NODE_ENV || 'test';
 // Enable the test-user bypass for /me routes (dev-only)
 process.env.PUBLIC_AUTH_TEST_MODE = '1';
