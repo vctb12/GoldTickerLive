@@ -142,7 +142,7 @@ export class GoldChart {
       handleScale: true,
     });
 
-    this._series = this._chart.addAreaSeries({
+    this._series = this._chart.addSeries(this._LW.AreaSeries, {
       lineColor: '#c9a84c',
       topColor: 'rgba(201,168,76,0.22)',
       bottomColor: 'rgba(201,168,76,0.02)',
