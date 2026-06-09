@@ -20,6 +20,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { promisify } = require('util');
 const { atomicWriteJSON } = require('./fs-atomic');
 const { getSupabaseClient } = require('./supabase-client');
 
@@ -83,6 +84,7 @@ const API_KEY_HASH_ITERATIONS =
     : 210000;
 const API_KEY_HASH_BYTES = 32;
 const API_KEY_HASH_DIGEST = 'sha512';
+const pbkdf2Async = promisify(crypto.pbkdf2);
 
 function getApiKeyHashSalt() {
   const salt = process.env.API_KEY_HASH_SALT;
@@ -95,19 +97,13 @@ function hashApiKeyLegacy(rawKey) {
 }
 
 function hashApiKey(rawKey) {
-  return new Promise((resolve, reject) => {
-    crypto.pbkdf2(
-      rawKey,
-      getApiKeyHashSalt(),
-      API_KEY_HASH_ITERATIONS,
-      API_KEY_HASH_BYTES,
-      API_KEY_HASH_DIGEST,
-      (err, derivedKey) => {
-        if (err) return reject(err);
-        return resolve(derivedKey.toString('hex'));
-      }
-    );
-  });
+  return pbkdf2Async(
+    rawKey,
+    getApiKeyHashSalt(),
+    API_KEY_HASH_ITERATIONS,
+    API_KEY_HASH_BYTES,
+    API_KEY_HASH_DIGEST
+  ).then((derivedKey) => derivedKey.toString('hex'));
 }
 
 // ---------------------------------------------------------------------------
@@ -540,11 +536,18 @@ async function resolveApiKey(rawKey) {
       if (!rows.length) return null;
       const row = rows.find((item) => item.key_hash === keyHash) || rows[0];
       if (row.key_hash === legacyKeyHash) {
-        await sb
+        const { error: migrateError } = await sb
           .from('api_keys')
           .update({ key_hash: keyHash, updated_at: nowIso() })
           .eq('id', row.id)
+          .eq('key_hash', legacyKeyHash)
           .eq('revoked', false);
+        if (migrateError) {
+          console.error(
+            '[billing-repo] resolveApiKey legacy hash migration error:',
+            migrateError.message
+          );
+        }
       }
       return { id: row.id, userId: row.user_id, label: row.label, createdAt: row.created_at };
     } catch (err) {
@@ -552,13 +555,17 @@ async function resolveApiKey(rawKey) {
     }
   }
   const store = readStore();
-  const row =
-    store.api_keys.find((r) => r.keyHash === keyHash && !r.revoked) ||
-    store.api_keys.find((r) => r.keyHash === legacyKeyHash && !r.revoked);
+  const row = store.api_keys.find(
+    (r) => !r.revoked && (r.keyHash === keyHash || r.keyHash === legacyKeyHash)
+  );
   if (!row) return null;
   if (row.keyHash === legacyKeyHash) {
     row.keyHash = keyHash;
-    writeStore(store);
+    try {
+      writeStore(store);
+    } catch (err) {
+      console.error('[billing-repo] resolveApiKey file migration error:', err.message);
+    }
   }
   return { id: row.id, userId: row.userId, label: row.label, createdAt: row.createdAt };
 }
