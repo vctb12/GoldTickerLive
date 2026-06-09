@@ -8,8 +8,7 @@
  *   exportHistoricalCSV(records, karatCode)          — monthly baseline + cached
  */
 
-import { CONSTANTS } from '../config/index.js';
-import { KARATS } from '../config/index.js';
+import { CONSTANTS, DATA_ATTRIBUTION, KARATS } from '../config/index.js';
 import { showCopyToast } from './copy-toast.js';
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
@@ -78,7 +77,7 @@ export function exportCSV(countries, karatCode, prices, lang = 'en') {
   const header = [
     `# Gold Ticker Live — ${karatLabel} Snapshot`,
     `# Exported: ${ts}`,
-    '# Source: goldpricez.com / open.er-api.com',
+    `# Source: ${DATA_ATTRIBUTION.gold.domain} / ${DATA_ATTRIBUTION.fx.label}`,
     `# AED peg: ${CONSTANTS.AED_PEG} fixed (UAE Central Bank)`,
     '# Note: Estimated bullion-equivalent values. Not financial advice.',
     '',
@@ -133,7 +132,7 @@ export function exportJSON(STATE, prices) {
     goldUpdatedAt: STATE.freshness?.goldUpdatedAt,
     fxUpdatedAt: STATE.freshness?.fxUpdatedAt,
     freshnessState,
-    dataSource: 'goldpricez.com / open.er-api.com',
+    dataSource: `${DATA_ATTRIBUTION.gold.domain} / ${DATA_ATTRIBUTION.fx.label}`,
     dataResolution: 'live snapshot — spot-linked reference estimate',
     selectedRange: STATE.range || null,
     selectedCurrency: STATE.selectedCurrency || null,
@@ -501,7 +500,7 @@ export function exportBriefText(headline, body) {
     '',
     body || '',
     '',
-    'Source: goldpricez.com / open.er-api.com · Reference prices only · Not financial advice.',
+    `Source: ${DATA_ATTRIBUTION.gold.domain} / ${DATA_ATTRIBUTION.fx.label} · Reference prices only · Not financial advice.`,
   ].join('\n');
   downloadFile(content, `goldtickerlive-brief-${dateStamp()}.txt`, 'text/plain;charset=utf-8;');
 }

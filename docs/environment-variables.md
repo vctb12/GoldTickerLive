@@ -7,7 +7,8 @@
 | `SUPABASE_URL`       | Yes      | Supabase project URL                                | `https://xxxxx.supabase.co` |
 | `SUPABASE_ANON_KEY`  | Yes      | Supabase anonymous/public API key                   | `eyJhbGciOi...`             |
 | `ALLOWED_EMAIL`      | Yes      | Admin email whitelist for GitHub OAuth              | `admin@example.com`         |
-| `GOLDPRICEZ_API_KEY` | Yes      | goldpricez.com API key for live XAU/USD spot prices | `goldapi-abc123xyz`         |
+| `GOLD_API_COM_KEY`   | Yes (CI) | gold-api.com API key for live XAU/USD spot prices   | `[from gold-api.com dashboard]` |
+| `GOLDPRICEZ_API_KEY` | No       | Legacy goldpricez.com adapter key (optional)        | `[legacy fallback only]`    |
 
 ## Optional Variables (Express Server / Self-Hosted)
 
@@ -54,7 +55,8 @@ These are configured as repository secrets in GitHub (Settings → Secrets → A
 
 | Secret Name                 | Used By                   | Purpose                                  |
 | --------------------------- | ------------------------- | ---------------------------------------- |
-| `GOLDPRICEZ_API_KEY`        | Multiple workflows        | Gold price API key (api.goldpricez.com)  |
+| `GOLD_API_COM_KEY`          | `gold-price-fetch.yml`    | Primary gold spot API key (gold-api.com) |
+| `GOLDPRICEZ_API_KEY`        | Provider adapter (legacy) | Optional legacy fallback key           |
 | `CONSUMER_KEY`              | Tweet workflows           | Twitter/X OAuth 1.0a API Key             |
 | `CONSUMER_SECRET`           | Tweet workflows           | Twitter/X OAuth 1.0a API Secret          |
 | `ACCESS_TOKEN`              | Tweet workflows           | Twitter/X Access Token (read-write)      |

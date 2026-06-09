@@ -59,7 +59,7 @@ export const TRANSLATIONS = {
     'status.noData': 'Prices aren’t available right now. Check your connection and tap Retry.',
     'status.retry': 'Retry',
     'status.cacheHealth': 'Data freshness:',
-    'footer.goldSource': 'Gold data: GoldPriceZ (goldpricez.com)',
+    'footer.goldSource': 'Gold data: Gold-API.com (gold-api.com)',
     'footer.fxSource': 'FX data: ExchangeRate-API (open.er-api.com)',
     'footer.disclaimer':
       'Estimated bullion-equivalent values only. Retail and jewelry prices may differ significantly. Not financial advice.',
@@ -162,7 +162,7 @@ export const TRANSLATIONS = {
     'tracker.summary.aedPegCopy': 'AED conversions use the UAE Central Bank fixed peg 3.6725.',
     'tracker.summary.sourceTitle': 'Data source',
     'tracker.summary.sourceCopy':
-      'XAU/USD spot comes from GoldPriceZ server snapshots, with local cache fallback when live fetch fails. Non-AED FX comes from open.er-api.com. AED uses the fixed 3.6725 peg.',
+      'XAU/USD spot comes from gold-api.com server snapshots (hourly during market hours), with local cache fallback when live fetch fails. Non-AED FX comes from open.er-api.com. AED uses the fixed 3.6725 peg.',
     'tracker.summary.historyTitle': 'History coverage',
     'tracker.summary.historyCopy': 'LBMA baseline 2019–Aug 2025 + session snapshots.',
     'tracker.mobileWorkspaceKicker': 'Mobile workspace',
@@ -249,7 +249,7 @@ export const TRANSLATIONS = {
       'Freshness: {freshness}. FX source: {fxSource}. Shop prices may still add making charges, VAT, and dealer premiums.',
     'tracker.referenceBannerTitle': 'Reference prices only',
     'tracker.referenceBannerBody':
-      'Spot-linked estimates derived from GoldPriceZ spot snapshots, with FX from open.er-api.com for non-AED currencies. AED uses the fixed 3.6725 peg. Freshness labels stay visible: Live, Cached, Delayed, Fallback.',
+      'Spot-linked estimates derived from gold-api.com spot snapshots, with FX from open.er-api.com for non-AED currencies. AED uses the fixed 3.6725 peg. Freshness labels stay visible: Live, Cached, Delayed, Fallback.',
     'tracker.referenceBannerLink': 'Methodology →',
     'tracker.referenceBannerClose': 'Close trust banner',
     'tracker.marketMeta': '{karat}K / {unit}',
@@ -617,7 +617,7 @@ export const TRANSLATIONS = {
       'Bars vs jewellery, ETFs, Zakat on investments, storage costs — everything for GCC investors.',
     'home.toolInvestCta': 'Read Guide →',
     // Trust banner copy is split around fixed safe links in index.html:
-    // copy → goldpricez.com link → source tail → methodology link.
+    // copy → gold-api.com link → source tail → methodology link.
     'home.trustBannerTitle': 'About Our Prices',
     'home.trustBannerCopy':
       'These are spot-linked reference estimates, not final retail or jewelry prices. Retail quotes usually include making charges, dealer margins, and local taxes. Freshness labels follow one vocabulary sitewide: Live, Delayed, Cached/Fallback, Estimated, and Historical baseline. Price source:',
@@ -647,6 +647,7 @@ export const TRANSLATIONS = {
     'home.karatStripSub':
       'Spot-linked AED gram estimates. Retail jewelry can include making charges and tax.',
     'home.karatStripCta': 'Full Tracker →',
+    'home.karatStripScrollHint': 'Swipe for more karats →',
     'home.pwaInstallLabel': 'Install app',
     'home.pwaTitle': 'Add Gold Ticker Live to your home screen',
     'home.pwaSubtitle': 'Live gold prices — works offline too',
@@ -1044,7 +1045,7 @@ export const TRANSLATIONS = {
     'status.noData': 'الأسعار غير متاحة الآن. تحقق من اتصالك ثم اضغط إعادة المحاولة.',
     'status.retry': 'إعادة المحاولة',
     'status.cacheHealth': 'حداثة البيانات:',
-    'footer.goldSource': 'بيانات الذهب: GoldPriceZ (goldpricez.com)',
+    'footer.goldSource': 'بيانات الذهب: Gold-API.com (gold-api.com)',
     'footer.fxSource': 'بيانات أسعار الصرف: ExchangeRate-API (open.er-api.com)',
     'footer.disclaimer':
       'قيم تقديرية مكافئة للسبيكة فقط. قد تختلف أسعار التجزئة والمجوهرات. ليست نصيحة مالية.',
@@ -1148,7 +1149,7 @@ export const TRANSLATIONS = {
       'تحويلات الدرهم تعتمد الربط الثابت لمصرف الإمارات المركزي 3.6725.',
     'tracker.summary.sourceTitle': 'مصدر البيانات',
     'tracker.summary.sourceCopy':
-      'سعر XAU/USD الفوري يأتي من لقطات GoldPriceZ مع احتياطي من الذاكرة المحلية عند تعذر التحديث. أسعار الصرف لغير الدرهم تأتي من open.er-api.com. أما الدرهم فيستخدم الربط الثابت 3.6725.',
+      'سعر XAU/USD الفوري يأتي من لقطات gold-api.com (كل ساعة خلال ساعات السوق) مع احتياطي من الذاكرة المحلية عند تعذر التحديث. أسعار الصرف لغير الدرهم تأتي من open.er-api.com. أما الدرهم فيستخدم الربط الثابت 3.6725.',
     'tracker.summary.historyTitle': 'نطاق السجل',
     'tracker.summary.historyCopy': 'متوسطات LBMA من 2019 حتى أغسطس 2025 مع لقطات الجلسة.',
     'tracker.mobileWorkspaceKicker': 'مساحة الموبايل',
@@ -1234,7 +1235,7 @@ export const TRANSLATIONS = {
       'الحداثة: {freshness}. مصدر الصرف: {fxSource}. قد تضيف أسعار المحلات المصنعية والضريبة وهوامش التاجر.',
     'tracker.referenceBannerTitle': 'أسعار مرجعية فقط',
     'tracker.referenceBannerBody':
-      'تقديرات مرتبطة بالسعر الفوري مبنية على لقطات GoldPriceZ، مع أسعار صرف من open.er-api.com للعملات غير المرتبطة بالدرهم. الدرهم يستخدم الربط الثابت 3.6725. وتبقى حالات الحداثة ظاهرة دائمًا: مباشر، مخزن، متأخر، نسخة احتياطية.',
+      'تقديرات مرتبطة بالسعر الفوري مبنية على لقطات gold-api.com، مع أسعار صرف من open.er-api.com للعملات غير المرتبطة بالدرهم. الدرهم يستخدم الربط الثابت 3.6725. وتبقى حالات الحداثة ظاهرة دائمًا: مباشر، مخزن، متأخر، نسخة احتياطية.',
     'tracker.referenceBannerLink': 'المنهجية ←',
     'tracker.referenceBannerClose': 'إغلاق شريط الثقة',
     'tracker.marketMeta': '{karat} قيراط / {unit}',
@@ -1595,7 +1596,7 @@ export const TRANSLATIONS = {
       'السبائك مقابل المجوهرات، الصناديق، زكاة الاستثمار، وتكاليف التخزين لمستثمري الخليج.',
     'home.toolInvestCta': 'اقرأ الدليل ←',
     // Trust banner copy is split around fixed safe links in index.html:
-    // copy → goldpricez.com link → source tail → methodology link.
+    // copy → gold-api.com link → source tail → methodology link.
     'home.trustBannerTitle': 'حول أسعارنا',
     'home.trustBannerCopy':
       'هذه تقديرات مرجعية مرتبطة بالسعر الفوري، وليست أسعار تجزئة نهائية للمجوهرات. عادةً تشمل أسعار التجزئة المصنعية وهوامش التاجر والضرائب المحلية. تتبع تسميات الحداثة مفردات موحدة: مباشر، متأخر، مخزن/احتياطي، تقديري، وخط أساس تاريخي. مصدر السعر:',
@@ -1625,6 +1626,7 @@ export const TRANSLATIONS = {
     'home.karatStripSub':
       'تقديرات غرام بالدرهم مرتبطة بالسعر الفوري. قد تشمل المجوهرات المصنعية والضريبة.',
     'home.karatStripCta': 'المتتبع الكامل ←',
+    'home.karatStripScrollHint': 'اسحب لعرض المزيد من العيارات ←',
     'home.pwaInstallLabel': 'تثبيت التطبيق',
     'home.pwaTitle': 'أضف Gold Ticker Live إلى الشاشة الرئيسية',
     'home.pwaSubtitle': 'أسعار ذهب مباشرة — يعمل دون إنترنت أيضًا',

@@ -5,6 +5,7 @@ alwaysApply: true
 # Automation Governance
 
 > Applies to all Cursor agents and background automations on vctb12/GoldTickerLive.
+> Cursor Cloud Automations setup: `docs/CURSOR_AUTOMATIONS_PLAYBOOK.md` + `.cursor/automation-policy.md`.
 
 ## Before creating any PR
 - Read `AGENTS.md` and `.cursor/rules/non-negotiable-rules.mdc`, `pricing-trust.mdc`, `bilingual-content.mdc`, `seo-structure.mdc` before reviewing or editing.

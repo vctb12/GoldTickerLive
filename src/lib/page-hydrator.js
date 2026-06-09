@@ -3,7 +3,7 @@
  * - Country gold-price pages get the Phase 6 production-grade country experience.
  * - Other legacy generated pages keep the lightweight existing hydration flow.
  */
-import { BASE_PATH, CONSTANTS, TRANSLATIONS } from '../config/index.js';
+import { BASE_PATH, CONSTANTS, DATA_ATTRIBUTION, TRANSLATIONS } from '../config/index.js';
 import { COUNTRIES } from '../config/countries.js';
 import { KARATS } from '../config/karats.js';
 import * as api from './api.js';
@@ -344,11 +344,11 @@ function renderCountryHero({ country, pageData, lang, gold, goldFreshness, fxFre
       },
       {
         label: tx(lang, 'statusSource'),
-        value: gold ? 'goldpricez.com' : tx(lang, 'statusUnavailable'),
+        value: gold ? DATA_ATTRIBUTION.gold.domain : tx(lang, 'statusUnavailable'),
         meta:
           country.currency === 'AED'
-            ? 'goldpricez.com · UAE peg'
-            : 'goldpricez.com · open.er-api.com',
+            ? `${DATA_ATTRIBUTION.gold.domain} · UAE peg`
+            : `${DATA_ATTRIBUTION.gold.domain} · ${DATA_ATTRIBUTION.fx.label}`,
         tone: gold ? 'info' : 'unavailable',
       },
     ];
@@ -808,7 +808,7 @@ function renderFreshnessBadgeLegacy(updatedAt) {
       'span',
       {
         class: 'ph-freshness-badge',
-        title: 'Source: goldpricez.com / open.er-api.com',
+        title: `Source: ${DATA_ATTRIBUTION.gold.domain} / ${DATA_ATTRIBUTION.fx.label}`,
         style: { color },
       },
       [

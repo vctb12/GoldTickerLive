@@ -30,6 +30,18 @@ operating system in `.github/`. Be substantive, not ceremonial.
 Produce a review that protects pricing truth, EN/AR parity, SEO integrity, security, automation
 safety, and mobile UX — while being honest about what was verified vs. assumed.
 
+## Cursor Automations (already on PRs)
+
+If these Cloud Automations are enabled on the repo, **do not duplicate** their standing checks:
+
+- **Gold Integrity Agent** — pricing math, freshness wording, reference vs retail
+- **Bilingual Consistency Agent** — EN/AR semantic parity
+- **SERP Structure Agent** — titles, canonicals, hreflang, schema
+
+Focus this interactive review on: **security**, **accessibility**, **mobile/RTL layout**,
+**verification honesty** (what CI ran vs assumed), **workflow safety**, and **integration risks**
+not covered by automations. Registry: `docs/CURSOR_AUTOMATIONS_REGISTRY.md`.
+
 ## Inputs
 
 - The PR diff

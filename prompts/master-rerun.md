@@ -57,12 +57,18 @@ Full charter: [`AGENTS.md`](../AGENTS.md)
 ## Session startup (required)
 
 1. Read [`PLAN.md`](../PLAN.md) — active queue and blockers.
-2. Read
+2. Read [`docs/MASTER_IMPROVEMENT_PROGRAM.md`](../docs/MASTER_IMPROVEMENT_PROGRAM.md) — phased
+   improvements + session prompts.
+3. Read
    [`docs/plans/2026-06-01_master-operations-hub.md`](../docs/plans/2026-06-01_master-operations-hub.md)
    — priority routing.
-3. Check open PRs — do not duplicate scope (`gh pr list --state open`).
-4. If touching pricing: read `.github/instructions/gold-pricing.instructions.md`.
-5. If touching workflows: read `.github/instructions/github-actions.instructions.md`.
+4. Check open PRs — do not duplicate scope (`gh pr list --state open`).
+5. If touching pricing: read `.github/instructions/gold-pricing.instructions.md`.
+6. If touching workflows: read `.github/instructions/github-actions.instructions.md`.
+7. If setting up or tuning Cursor Automations: read
+   [`docs/CURSOR_AUTOMATIONS_PLAYBOOK.md`](../docs/CURSOR_AUTOMATIONS_PLAYBOOK.md),
+   [`docs/CURSOR_AUTOMATIONS_REGISTRY.md`](../docs/CURSOR_AUTOMATIONS_REGISTRY.md), and
+   [`.cursor/automation-policy.md`](../.cursor/automation-policy.md).
 
 ---
 
@@ -77,6 +83,7 @@ Ship **one PR-sized improvement** — not a survey, not a mega-refactor.
 | Frontend pages          | `@.github/prompts/endless-frontend-polish.prompt.md`       |
 | Cross-page links        | `@.github/prompts/endless-integration-wiring.prompt.md`    |
 | Pricing / trust         | `@.github/prompts/endless-gold-product-trust.prompt.md`    |
+| Platform upgrade backlog | [`prompts/platform-upgrade.md`](platform-upgrade.md) or `@.github/prompts/platform-upgrade-bootstrap.prompt.md` |
 | Repo hygiene            | `@.github/prompts/endless-repo-discovery.prompt.md`        |
 | Workbook-sized program  | `@.github/prompts/master-workbook-session.prompt.md`       |
 

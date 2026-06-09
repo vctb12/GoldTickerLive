@@ -45,6 +45,12 @@ Stable knowledge base. These are referenced from the master plan but have their 
 | [`SUPABASE_SCHEMA.md`](./SUPABASE_SCHEMA.md)                   | Database schema reference.                               |
 | [`ALERTS_AND_NOTIFICATIONS.md`](./ALERTS_AND_NOTIFICATIONS.md) | Alerts lifecycle, channels, and operations guide.        |
 | [`AUTOMATIONS.md`](./AUTOMATIONS.md)                           | GitHub Actions & scheduled bots.                         |
+| [`MASTER_IMPROVEMENT_PROGRAM.md`](./MASTER_IMPROVEMENT_PROGRAM.md) | **Phased improvements** — UI/UX, automations, SEO, prompts. |
+| [`CURSOR_AUTOMATIONS_PLAYBOOK.md`](./CURSOR_AUTOMATIONS_PLAYBOOK.md) | Cursor Cloud Automations — setup guide.                  |
+| [`CURSOR_AUTOMATIONS_REGISTRY.md`](./CURSOR_AUTOMATIONS_REGISTRY.md) | Live automation config + tuning log (owner-maintained).  |
+| [`AI_CONTENT_AUTOMATION.md`](./AI_CONTENT_AUTOMATION.md)       | Admin AI draft pipeline (human review required).         |
+| [`AI_AGENT_OPERATING_SYSTEM.md`](./AI_AGENT_OPERATING_SYSTEM.md) | AI-agent index (skills, prompts, agents).              |
+| [`CURSOR_HANDOVER.md`](./CURSOR_HANDOVER.md)                   | Cursor onboarding reference.                             |
 | [`TWITTER_AUTOMATION.md`](./TWITTER_AUTOMATION.md)             | Social-posting architecture.                             |
 | [`twitter_bot_architecture.md`](./twitter_bot_architecture.md) | Twitter bot runtime architecture.                        |
 | [`twitter_bot_schema.md`](./twitter_bot_schema.md)             | Twitter bot DB schema.                                   |

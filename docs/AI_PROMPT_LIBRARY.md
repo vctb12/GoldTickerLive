@@ -1,7 +1,11 @@
 # AI Prompt Library
 
-Reference for the 13 paste-ready prompts under `.github/prompts/`. For the system overview, see
+Reference for paste-ready prompts under `.github/prompts/`. For the system overview, see
 [`AI_AGENT_OPERATING_SYSTEM.md`](./AI_AGENT_OPERATING_SYSTEM.md).
+
+**Cursor Cloud Automations** (configure at cursor.com/automations): see
+[`.github/prompts/cursor-automations/`](../.github/prompts/cursor-automations/) and
+[`docs/CURSOR_AUTOMATIONS_PLAYBOOK.md`](./CURSOR_AUTOMATIONS_PLAYBOOK.md).
 
 ## Prompt format
 
@@ -53,6 +57,26 @@ If you author a new prompt, follow this standard. Canonical preamble snippet:
 |  23 | [`endless-gold-product-trust`](../.github/prompts/endless-gold-product-trust.prompt.md)   | Pricing/freshness truth                                            | One trust fix                                     | `pricing-data-agent`                           |
 |   — | [`ui-ux-audit-phase1`…`phase5`](../.github/prompts/)                                      | One-shot UI/UX audit sessions (merged 2026-06-01)                  | Bounded phase PR                                  | `frontend-polish-agent`                        |
 
+### Cursor Cloud Automations (always-on)
+
+Configure at [cursor.com/automations](https://cursor.com/automations). Full setup:
+[`docs/CURSOR_AUTOMATIONS_PLAYBOOK.md`](./CURSOR_AUTOMATIONS_PLAYBOOK.md).
+
+| Order | Prompt | Trigger | Output |
+| ----- | ------ | ------- | ------ |
+| 1 | [`gold-integrity-agent`](../.github/prompts/cursor-automations/gold-integrity-agent.prompt.md) | PR opened/updated | APPROVE \| COMMENT \| BLOCK |
+| 2 | [`bilingual-consistency-agent`](../.github/prompts/cursor-automations/bilingual-consistency-agent.prompt.md) | PR opened/updated | PASS \| NEEDS REVISION \| HIGH-RISK MISMATCH |
+| 3 | [`serp-structure-agent`](../.github/prompts/cursor-automations/serp-structure-agent.prompt.md) | PR opened/updated | HEALTHY \| WATCH \| BROKEN |
+| 4 | [`seo-expansion-agent`](../.github/prompts/cursor-automations/seo-expansion-agent.prompt.md) | Weekly schedule | PROPOSE \| NO WORTHWHILE IDEAS |
+| 5 | [`gold-market-insight-writer`](../.github/prompts/cursor-automations/gold-market-insight-writer.prompt.md) | Daily schedule | PUBLISH \| DO NOT PUBLISH |
+
+**Phase 2+ / sessions:** [`serp-structure-weekly-audit`](../.github/prompts/cursor-automations/serp-structure-weekly-audit.prompt.md),
+[`seo-expansion-draft-mode`](../.github/prompts/cursor-automations/seo-expansion-draft-mode.prompt.md),
+[`automation-tuning-session`](../.github/prompts/cursor-automations/automation-tuning-session.prompt.md),
+[`ui-ux-ease-of-use-session`](../.github/prompts/cursor-automations/ui-ux-ease-of-use-session.prompt.md)
+
+**Master program (all tracks):** [`docs/MASTER_IMPROVEMENT_PROGRAM.md`](./MASTER_IMPROVEMENT_PROGRAM.md)
+
 > **Session bootstrap:** [`prompts/master-rerun.md`](../prompts/master-rerun.md)  
 > **Master workbook:**
 > [`docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md`](./GOLD_TICKER_LIVE_MASTER_WORKBOOK.md)  
@@ -62,7 +86,9 @@ If you author a new prompt, follow this standard. Canonical preamble snippet:
 > **Routing hub:** |>
 > [`docs/plans/2026-06-01_master-operations-hub.md`](./plans/2026-06-01_master-operations-hub.md)  
 > **GitHub control center:**
-> [`docs/plans/2026-06-09_github-control-center-setup.md`](./plans/2026-06-09_github-control-center-setup.md)
+> [`docs/plans/2026-06-09_github-control-center-setup.md`](./plans/2026-06-09_github-control-center-setup.md)  
+> **Cursor Automations:**
+> [`docs/CURSOR_AUTOMATIONS_PLAYBOOK.md`](./CURSOR_AUTOMATIONS_PLAYBOOK.md)
 
 ## Agent routing matrix
 

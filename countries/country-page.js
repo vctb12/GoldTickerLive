@@ -22,7 +22,7 @@
  * }
  */
 
-import { CONSTANTS, KARATS } from '../src/config/index.js';
+import { CONSTANTS, DATA_ATTRIBUTION, KARATS } from '../src/config/index.js';
 import { getMarketIntel } from '../src/config/market-intel.js';
 import * as api from '../src/lib/api.js';
 import * as cache from '../src/lib/cache.js';
@@ -224,7 +224,7 @@ function renderHero(cfg) {
       </div>`
           : ''
       }
-      <div class="cp-update-time">${t('lastUpdate')}: ${STATE.status.goldStale ? 'Cached/Fallback' : 'Live'} · ${STATE.freshness.goldUpdatedAt ? new Date(STATE.freshness.goldUpdatedAt).toLocaleString(STATE.lang === 'ar' ? 'ar-AE' : 'en-AE', { timeZone: cfg.timezone, hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'} · Gold: GoldPriceZ · FX: open.er-api.com</div>
+      <div class="cp-update-time">${t('lastUpdate')}: ${STATE.status.goldStale ? 'Cached/Fallback' : 'Live'} · ${STATE.freshness.goldUpdatedAt ? new Date(STATE.freshness.goldUpdatedAt).toLocaleString(STATE.lang === 'ar' ? 'ar-AE' : 'en-AE', { timeZone: cfg.timezone, hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'} · Gold: ${DATA_ATTRIBUTION.gold.label} · FX: ${DATA_ATTRIBUTION.fx.label}</div>
     </div>`;
 }
 

@@ -29,7 +29,9 @@ Run a structured Gold Ticker Live session from checked-in instructions — not f
 1. [`AGENTS.md`](../../AGENTS.md)
 2. [`PLAN.md`](../../PLAN.md)
 3. [`docs/plans/2026-06-01_master-operations-hub.md`](../../docs/plans/2026-06-01_master-operations-hub.md)
-4. Open PRs: `gh pr list --state open`
+4. Platform upgrade backlog (if applicable):
+   [`docs/plans/2026-06-09_platform-upgrade-program.md`](../../docs/plans/2026-06-09_platform-upgrade-program.md)
+5. Open PRs: `gh pr list --state open`
 
 ## Pick one slice
 

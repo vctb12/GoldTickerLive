@@ -51,6 +51,10 @@
   color: '0366d6'
   description: Pull requests that update a dependency file
 
+- name: automated
+  color: bfdadc
+  description: Pull requests opened by Dependabot or other automation
+
 - name: github_actions
   color: '000000'
   description: Pull requests that update GitHub Actions code
