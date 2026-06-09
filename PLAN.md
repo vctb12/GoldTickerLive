@@ -61,6 +61,9 @@ Canonical plan:
 
 ## ✅ Recently Completed
 
+- [x] **Cursor Automations playbook** — five Cloud Automation prompts, policy, implementation guide
+      (`docs/CURSOR_AUTOMATIONS_PLAYBOOK.md`) — completed: 2026-06-09 — PR:
+      [#420](https://github.com/vctb12/GoldTickerLive/pull/420)
 - [x] **GitHub control center** — setup plan, `master-rerun`, `REPOS_TO_STEAL_FROM`, issue
       templates, `link-check.yml`, `lighthouserc.json`, `labels.yml` + `sync-labels.yml`,
       README/AGENTS wiring — completed: 2026-06-09 — PR:

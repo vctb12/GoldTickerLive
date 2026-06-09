@@ -6,7 +6,7 @@
 
 **Policy (read first):** [`.cursor/automation-policy.md`](../.cursor/automation-policy.md)  
 **Charter:** [`AGENTS.md`](../AGENTS.md)  
-**Prompt files (copy-paste):** [`.github/prompts/cursor-automations/`](../.github/prompts/cursor-automations/)
+**Prompt files (copy-paste):** [`.github/prompts/cursor-automations/README.md`](../.github/prompts/cursor-automations/README.md)
 
 ---
 

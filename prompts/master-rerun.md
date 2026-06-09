@@ -34,6 +34,9 @@ Full charter: [`AGENTS.md`](../AGENTS.md)
 3. Check open PRs — do not duplicate scope (`gh pr list --state open`).
 4. If touching pricing: read `.github/instructions/gold-pricing.instructions.md`.
 5. If touching workflows: read `.github/instructions/github-actions.instructions.md`.
+6. If setting up Cursor Automations: read
+   [`docs/CURSOR_AUTOMATIONS_PLAYBOOK.md`](../docs/CURSOR_AUTOMATIONS_PLAYBOOK.md) +
+   [`.cursor/automation-policy.md`](../.cursor/automation-policy.md).
 
 ---
 

@@ -30,6 +30,7 @@
 | Pricing rules | `.github/instructions/gold-pricing.instructions.md` |
 | SEO rules | `.github/instructions/seo.instructions.md` |
 | Automation governance | `.cursor/rules/automation-governance.mdc` |
+| Cursor Automations setup | `docs/CURSOR_AUTOMATIONS_PLAYBOOK.md` |
 | GitHub Actions (not Cursor) | `docs/AUTOMATIONS.md` |
 
 ---

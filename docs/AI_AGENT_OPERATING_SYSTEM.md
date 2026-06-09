@@ -151,6 +151,7 @@ For a release gate, see [`AI_RELEASE_READINESS_PLAYBOOK.md`](./AI_RELEASE_READIN
 | New repo-wide rule                    | `AGENTS.md` + sync to `.github/copilot-instructions.md`                  |
 | Rule for a specific path              | the matching `.github/instructions/*.instructions.md`                    |
 | New task workflow                     | add `.github/prompts/<task>.prompt.md` + entry in `AI_PROMPT_LIBRARY.md` |
+| New Cursor Cloud Automation           | add `.github/prompts/cursor-automations/<name>.prompt.md` + playbook section in `docs/CURSOR_AUTOMATIONS_PLAYBOOK.md` |
 | New reusable workflow with checklists | add `.github/skills/<name>/` + entry in `AGENT_SKILL_LIBRARY.md`         |
 | Skill checklist updated               | edit the `.md` directly                                                  |
 | New specialist agent                  | add `.github/agents/<name>.md` + entry in this doc                       |
