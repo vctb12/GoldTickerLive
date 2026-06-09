@@ -360,10 +360,21 @@ Multi-step task workflows with checklists:
 - `security-review` — Security audit
 - `seo-governance` — SEO/sitemap/canonical checks
 
+### Cursor Cloud Automations
+
+Always-on background agents (configured at https://cursor.com/automations):
+
+- **Playbook:** `docs/CURSOR_AUTOMATIONS_PLAYBOOK.md` — setup order, field values, test checklists
+- **Policy:** `.cursor/automation-policy.md` — non-negotiables for all automations
+- **Prompts:** `.github/prompts/cursor-automations/` — copy-paste Agent Instructions (×5)
+
+Build order: Gold Integrity → Bilingual Consistency → SERP Structure → SEO Expansion → Market Insight Writer.
+
 ### Prompts (`.github/prompts/`)
 
 Paste-ready task starters:
 
+- `cursor-automations/` — five Cloud Automation prompts (see playbook above)
 - `accessibility-audit.prompt.md`
 - `backend-admin-supabase.prompt.md`
 - `country-pages-expansion.prompt.md`
@@ -380,6 +391,7 @@ Paste-ready task starters:
 
 ### Key Docs for AI Agents
 
+- `docs/CURSOR_AUTOMATIONS_PLAYBOOK.md` — Cursor Cloud Automations (five agents)
 - `docs/AI_AGENT_OPERATING_SYSTEM.md` — Master map
 - `docs/AI_PROMPT_LIBRARY.md` — Pick a prompt
 - `docs/AGENT_SKILL_LIBRARY.md` — Pick a skill

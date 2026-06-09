@@ -647,6 +647,7 @@ export const TRANSLATIONS = {
     'home.karatStripSub':
       'Spot-linked AED gram estimates. Retail jewelry can include making charges and tax.',
     'home.karatStripCta': 'Full Tracker →',
+    'home.karatStripScrollHint': 'Swipe for more karats →',
     'home.pwaInstallLabel': 'Install app',
     'home.pwaTitle': 'Add Gold Ticker Live to your home screen',
     'home.pwaSubtitle': 'Live gold prices — works offline too',
@@ -1625,6 +1626,7 @@ export const TRANSLATIONS = {
     'home.karatStripSub':
       'تقديرات غرام بالدرهم مرتبطة بالسعر الفوري. قد تشمل المجوهرات المصنعية والضريبة.',
     'home.karatStripCta': 'المتتبع الكامل ←',
+    'home.karatStripScrollHint': 'اسحب لعرض المزيد من العيارات ←',
     'home.pwaInstallLabel': 'تثبيت التطبيق',
     'home.pwaTitle': 'أضف Gold Ticker Live إلى الشاشة الرئيسية',
     'home.pwaSubtitle': 'أسعار ذهب مباشرة — يعمل دون إنترنت أيضًا',

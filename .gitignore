@@ -29,6 +29,7 @@ node_modules/
 !.cursor/skills/**/SKILL.md
 !.cursor/agents/
 !.cursor/agents/*.md
+!.cursor/automation-policy.md
 .idea/
 
 # Environment

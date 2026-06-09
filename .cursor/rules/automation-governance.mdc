@@ -5,6 +5,7 @@ alwaysApply: true
 # Automation Governance
 
 > Applies to all Cursor agents and background automations on vctb12/GoldTickerLive.
+> Cursor Cloud Automations setup: `docs/CURSOR_AUTOMATIONS_PLAYBOOK.md` + `.cursor/automation-policy.md`.
 
 ## Before creating any PR
 - Check open PRs first. Do not create a PR if one already exists for the same fix or the same files.
