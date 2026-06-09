@@ -14,7 +14,8 @@ async function load() {
 test('freshness-policy: classifies live/cached/delayed/estimated windows', async () => {
   const { evaluateFreshnessState } = await load();
 
-  assert.equal(evaluateFreshnessState({ ageMs: 9000 }).state, 'live');
+  assert.equal(evaluateFreshnessState({ ageMs: 4000 }).state, 'live');
+  assert.equal(evaluateFreshnessState({ ageMs: 9000 }).state, 'cached');
   assert.equal(evaluateFreshnessState({ ageMs: 30000 }).state, 'cached');
   assert.equal(evaluateFreshnessState({ ageMs: 120000 }).state, 'delayed');
   assert.equal(evaluateFreshnessState({ ageMs: 400000 }).state, 'estimated');

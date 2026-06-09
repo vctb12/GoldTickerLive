@@ -1,7 +1,7 @@
 const SECOND_MS = 1000;
 
 export const FRESHNESS_POLICY = {
-  liveMaxAgeMs: 10 * SECOND_MS,
+  liveMaxAgeMs: 5 * SECOND_MS,
   cachedMaxAgeMs: 60 * SECOND_MS,
   delayedMaxAgeMs: 300 * SECOND_MS,
 };

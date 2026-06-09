@@ -3,11 +3,12 @@ import { evaluateFreshnessState, isLiveEligible } from './freshness-policy.js';
 import { ProviderHealthMonitor } from './provider-health.js';
 import { resolveProviderPollMs } from './realtime-poll-interval.js';
 
-const DEFAULT_BACKOFF_MS = [5000, 10000, 20000, 40000, 60000];
+const DEFAULT_BACKOFF_MS = [1000, 2000, 3000, 5000];
 const WARNING_WINDOW_MS = 15 * 60 * 1000;
 // 30-minute rolling window required by the incident SLO/error-budget model.
 const ROLLING_WINDOW_MS = 30 * 60 * 1000;
-const LIVE_STALE_GUARD_MS = 10 * 1000;
+const LIVE_STALE_GUARD_MS = 5 * 1000;
+const P95_REFRESH_SLO_MS = 5 * 1000;
 const NO_SUCCESS_CRITICAL_MS = 120 * 1000;
 
 function percentile(values, percentileValue) {
@@ -52,7 +53,7 @@ export function createRealtimePricingEngine({
     livePollMs: sanitizeMs(config.livePollMs, config.activePollMs ?? 1000),
     staticPollMs: sanitizeMs(config.staticPollMs, 30_000),
     fallbackPollMs: sanitizeMs(config.fallbackPollMs, 60_000),
-    hiddenPollMs: sanitizeMs(config.hiddenPollMs, 20_000),
+    hiddenPollMs: sanitizeMs(config.hiddenPollMs, 5000),
     fetchTimeoutMs: sanitizeMs(config.fetchTimeoutMs, 5000),
     jitterMs: sanitizeMs(config.jitterMs, 250),
     backoffMs:
@@ -176,6 +177,9 @@ export function createRealtimePricingEngine({
     const warningFlags = [];
     const criticalFlags = [];
 
+    if ((state.metrics.p95RefreshIntervalMs ?? 0) > P95_REFRESH_SLO_MS) {
+      warningFlags.push('refresh_interval_p95_over_5s');
+    }
     if ((state.metrics.p95RefreshIntervalMs ?? 0) > 12000) {
       warningFlags.push('refresh_interval_p95_over_12s');
     }

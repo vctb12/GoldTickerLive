@@ -21,6 +21,8 @@ import * as fmt from '../lib/formatter.js';
 import { getMarketStatus, getLiveFreshness } from '../lib/live-status.js';
 import { createRealtimePricingEngine } from '../lib/realtime-pricing-engine.js';
 import { REALTIME_POLLING_DEFAULTS } from '../lib/realtime-config.js';
+import { isRealtimeDebugEnabled } from '../lib/realtime-debug.js';
+import { maybeTrackRealtimeSlo } from '../lib/realtime-slo-analytics.js';
 import {
   createPrimaryQuoteProvider,
   createSecondaryQuoteProvider,
@@ -529,8 +531,7 @@ function renderHomeTrustAddons() {
 function renderHomeRealtimePanels() {
   const slaMount = document.getElementById('home-realtime-sla-slot');
   if (slaMount) {
-    const debugFreshness = new URLSearchParams(location.search).get('debugFreshness') === '1';
-    if (!debugFreshness) {
+    if (!isRealtimeDebugEnabled()) {
       slaMount.replaceChildren();
       return;
     }
@@ -993,6 +994,7 @@ function applyRealtimeSnapshot(snapshot) {
     }
   }
 
+  maybeTrackRealtimeSlo(snapshot, 'home');
   renderHomeRealtimePanels();
 }
 
@@ -1003,7 +1005,7 @@ function initRealtimeEngine() {
     primaryProvider: createPrimaryQuoteProvider(),
     secondaryProvider: createSecondaryQuoteProvider(),
     config: REALTIME_POLLING_DEFAULTS,
-    debug: new URLSearchParams(location.search).get('debugFreshness') === '1',
+    debug: isRealtimeDebugEnabled(),
   });
 
   const cacheBoot = cache.getFreshBootGoldPrice();

@@ -24,7 +24,7 @@ Canonical plan:
 · reconciled in `REVAMP_PLAN.md` §22b Track 6.
 
 - [x] **Phase 0** — Motion foundation (`price-motion.js`, `motion-boot.js`, `motion-advanced.css`)
-- [ ] **Phases 1–4** — SLO + parallel provider + 5 s freshness + backoff (PR-B)
+- [x] **Phases 1–4** — SLO + parallel race provider + 5 s freshness + backoff cap (PR-B)
 - [ ] **Phases 5–20** — Tracker shell, Spot Terminal, quote bus, sitewide adoption (PR-C–F)
 
 ### Master workbook — WB-102 cross-page deep links (2026-06-01)

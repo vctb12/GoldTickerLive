@@ -189,7 +189,7 @@ Each phase = 1–3 focused PRs, reversible commits, checklist synced to `REVAMP_
 
 ---
 
-### Phase 0 — Motion foundation (PR-A — **in progress**)
+### Phase 0 — Motion foundation (PR-A — **done**)
 
 **Goal:** Shared motion layer every later phase imports.
 
@@ -200,7 +200,7 @@ Each phase = 1–3 focused PRs, reversible commits, checklist synced to `REVAMP_
 - [x] `styles/partials/motion-advanced.css` — spot ring, sonar, view-transition, scroll-driven
 - [x] Motion tokens in `tokens.css` (`--motion-*`, `--duration-price-tick`)
 - [x] Wire `initMotionBoot()` from `injectNav()` (once per page)
-- [ ] Tests: `tests/price-motion.test.js`, `tests/motion-boot.test.js`
+- [x] Tests: `tests/price-motion.test.js`, `tests/motion-boot.test.js`
 
 **Done when:** Tracker hero uses `animatePrice`; nav same-origin clicks crossfade; reduced-motion path verified.
 
@@ -212,8 +212,8 @@ Each phase = 1–3 focused PRs, reversible commits, checklist synced to `REVAMP_
 
 **Work:**
 
-- [ ] `?debugSlo=1` panel: provider, `p95RefreshIntervalMs`, `p95ApplyLatencyMs`, `nextPollInMs`
-- [ ] Analytics `REALTIME_SLO` events (no PII)
+- [x] `?debugSlo=1` panel (alias `debugFreshness`): provider, p95 refresh, next poll, failures
+- [x] Analytics `REALTIME_SLO` events (throttled, no PII)
 - [ ] Baseline capture: `reports/baseline-2026-06/realtime-slo.json`
 - [ ] Document p50/p95 in Evidence section below
 
@@ -227,10 +227,10 @@ Each phase = 1–3 focused PRs, reversible commits, checklist synced to `REVAMP_
 
 **Work:**
 
-- [ ] `ParallelQuoteRaceProvider` — race gold-api + mintedmetal, 2 s timeout each
-- [ ] Replace serial chain in `createPrimaryQuoteProvider()`
-- [ ] Master 5 s `Promise.race` budget
-- [ ] Tests: slow A + fast B → B wins; both fail → fallback ≤ 5 s
+- [x] `ParallelQuoteRaceProvider` — race gold-api + mintedmetal, 2 s timeout each
+- [x] Replace serial chain in `createPrimaryQuoteProvider()`
+- [x] Master 5 s budget via `Promise.any` + master abort
+- [x] Tests: `quote-providers-race.test.js`, updated `live-provider-chain.test.js`
 
 ---
 
@@ -240,10 +240,11 @@ Each phase = 1–3 focused PRs, reversible commits, checklist synced to `REVAMP_
 
 **Work:**
 
-- [ ] `FRESHNESS_POLICY.liveMaxAgeMs` → `5_000`
-- [ ] `LIVE_STALE_GUARD_MS` → `5_000`
-- [ ] Bilingual `tracker.freshness.*` keys for transitions
-- [ ] Tests updated
+- [x] `FRESHNESS_POLICY.liveMaxAgeMs` → `5_000`
+- [x] `LIVE_STALE_GUARD_MS` → `5_000`
+- [x] `getLiveFreshness()` live-API path aligned to 5 s / 60 s budgets
+- [ ] Bilingual `tracker.freshness.*` keys for transitions (optional polish)
+- [x] Tests updated
 
 ---
 
@@ -253,10 +254,10 @@ Each phase = 1–3 focused PRs, reversible commits, checklist synced to `REVAMP_
 
 **Work:**
 
-- [ ] `backoffMs: [1000, 2000, 3000, 5000]`
-- [ ] `hiddenPollMs: 5000`
-- [ ] Decouple wire/history 60 s loop from spot poll
-- [ ] `referenceMode` flag when live lane exhausted
+- [x] `backoffMs: [1000, 2000, 3000, 5000]`
+- [x] `hiddenPollMs: 5000`
+- [x] Decouple wire/history 60 s loop from spot poll (`WIRE_HISTORY_REFRESH_MS`)
+- [ ] `referenceMode` flag when live lane exhausted (Phase 12+)
 
 ---
 

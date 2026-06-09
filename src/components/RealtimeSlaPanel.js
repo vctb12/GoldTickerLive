@@ -32,7 +32,17 @@ export function renderRealtimeSlaPanel({ snapshot, t = (key) => key, className =
     metricRow(
       'p95 refresh',
       metrics.p95RefreshIntervalMs ? `${Math.round(metrics.p95RefreshIntervalMs)}ms` : '—',
-      (metrics.p95RefreshIntervalMs ?? 0) <= 12000
+      (metrics.p95RefreshIntervalMs ?? 0) <= 5000
+    ),
+    metricRow(
+      'next poll',
+      Number.isFinite(metrics.nextPollInMs) ? `${Math.round(metrics.nextPollInMs)}ms` : '—',
+      (metrics.nextPollInMs ?? 0) <= 5000
+    ),
+    metricRow(
+      'active provider',
+      snapshot.activeProviderId || '—',
+      true
     ),
     metricRow(
       'p99 refresh',

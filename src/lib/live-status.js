@@ -1,4 +1,5 @@
 import { formatTimestampShort } from './formatter.js';
+import { FRESHNESS_POLICY } from './freshness-policy.js';
 
 /**
  * Gold-market timing constants.
@@ -193,7 +194,21 @@ export function getLiveFreshness({
     return { key: 'stale', ageMs, ageText, timeText, updatedAt, reason: 'upstream-stale' };
   }
 
-  // Age-based classification.
+  // Live API path — align UI labels with engine freshness-policy (5 s live budget).
+  if (isFresh === true) {
+    if (ageMs > FRESHNESS_POLICY.delayedMaxAgeMs) {
+      return { key: 'delayed', ageMs, ageText, timeText, updatedAt, reason: 'live-api-delayed' };
+    }
+    if (ageMs > FRESHNESS_POLICY.cachedMaxAgeMs) {
+      return { key: 'delayed', ageMs, ageText, timeText, updatedAt, reason: 'live-api-cached-window' };
+    }
+    if (ageMs > FRESHNESS_POLICY.liveMaxAgeMs) {
+      return { key: 'cached', ageMs, ageText, timeText, updatedAt, reason: 'live-budget-exceeded' };
+    }
+    return { key: 'live', ageMs, ageText, timeText, updatedAt, reason: 'fresh' };
+  }
+
+  // Age-based classification (hourly cron / static JSON path).
   if (ageMs > staleAfterMs) {
     return { key: 'stale', ageMs, ageText, timeText, updatedAt, reason: 'age-exceeds-stale' };
   }

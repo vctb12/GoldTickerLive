@@ -1678,7 +1678,8 @@ Canonical plan:
 
 - [x] **Phase 0** — Motion foundation: `price-motion.js`, `motion-boot.js`, `motion-advanced.css`,
       tokens, tracker + home Spot Terminal classes, nav view-transition boot.
-- [ ] **Phases 1–4** — SLO instrumentation, parallel race provider, 5 s freshness policy, backoff cap.
+- [x] **Phases 1–4** — SLO panel (`?debugSlo=1`), `REALTIME_SLO` analytics, parallel race provider,
+      5 s freshness policy + UI bridge, backoff cap 5 s, wire/history decoupled from spot poll.
 - [ ] **Phases 5–8** — Tracker shell split, Spot Terminal hero, sitewide price motion, fast render path.
 - [ ] **Phases 9–14** — Command deck, chart sync, karat binding, quote bus, surface hooks.
 - [ ] **Phases 15–20** — Lazy modes, CSS split, PWA hardening, optional relay, CI SLO gates.

@@ -66,6 +66,7 @@ export const EVENTS = Object.freeze({
   LANG_CHANGE: 'lang_change',
   OUTBOUND_CLICK: 'outbound_click',
   ERROR: 'error',
+  REALTIME_SLO: 'realtime_slo',
 });
 
 /**
@@ -112,6 +113,9 @@ export const EVENT_SCHEMA = Object.freeze({
   [EVENTS.THEME_CHANGE]: { required: ['to'] },
   [EVENTS.OUTBOUND_CLICK]: { required: ['url_host'] },
   [EVENTS.ERROR]: { required: ['type', 'where'] },
+  [EVENTS.REALTIME_SLO]: {
+    required: ['surface', 'provider_id', 'freshness_state', 'p95_refresh_ms', 'next_poll_ms'],
+  },
 });
 
 /**

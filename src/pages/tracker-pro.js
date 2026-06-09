@@ -4,7 +4,9 @@ import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import '../lib/reveal.js';
 import { createRealtimePricingEngine } from '../lib/realtime-pricing-engine.js';
-import { REALTIME_POLLING_DEFAULTS } from '../lib/realtime-config.js';
+import { REALTIME_POLLING_DEFAULTS, WIRE_HISTORY_REFRESH_MS } from '../lib/realtime-config.js';
+import { isRealtimeDebugEnabled } from '../lib/realtime-debug.js';
+import { maybeTrackRealtimeSlo } from '../lib/realtime-slo-analytics.js';
 import {
   createPrimaryQuoteProvider,
   createSecondaryQuoteProvider,
@@ -441,8 +443,7 @@ function renderTrackerAddonPanels() {
 
   const slaSlot = document.getElementById('tp-realtime-sla-slot');
   if (slaSlot) {
-    const debugFreshness = new URLSearchParams(location.search).get('debugFreshness') === '1';
-    if (!debugFreshness) {
+    if (!isRealtimeDebugEnabled()) {
       slaSlot.replaceChildren();
     } else {
       slaSlot.replaceChildren(
@@ -1058,13 +1059,12 @@ function startAutoRefresh() {
         await ensureUnifiedHistory();
         await refreshWire();
         checkAlerts();
-        renderAll();
         renderTrackerAddonPanels();
       } finally {
         _fetchInFlight = false;
       }
     },
-    Math.max(CONSTANTS.GOLD_REFRESH_MS, 20000)
+    WIRE_HISTORY_REFRESH_MS
   );
 }
 
@@ -1212,6 +1212,7 @@ function applyRealtimeSnapshot(snapshot) {
     state.hasLiveFailure = true;
   }
 
+  maybeTrackRealtimeSlo(snapshot, 'tracker');
   startCountdown();
   renderAll?.();
   renderTrackerAddonPanels();
@@ -1230,7 +1231,7 @@ function initRealtimeEngine() {
     primaryProvider: createPrimaryQuoteProvider(),
     secondaryProvider: createSecondaryQuoteProvider(),
     config: REALTIME_POLLING_DEFAULTS,
-    debug: new URLSearchParams(location.search).get('debugFreshness') === '1',
+    debug: isRealtimeDebugEnabled(),
   });
 
   const cacheBoot = cache.getFreshBootGoldPrice();

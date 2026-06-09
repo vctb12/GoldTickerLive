@@ -2,24 +2,35 @@ import { ChainedQuoteProvider } from './chained-provider.js';
 import { GoldApiComQuoteProvider } from './gold-api-com-provider.js';
 import { MintedMetalQuoteProvider } from './minted-metal-provider.js';
 import { LastGoldPriceQuoteProvider } from './last-gold-price-provider.js';
+import { ParallelQuoteRaceProvider } from './parallel-race-provider.js';
 import { PrimaryQuoteProvider } from './primary-provider.js';
 import { SecondaryQuoteProvider } from './secondary-provider.js';
 
+const LIVE_RACE_TIMEOUT_MS = 2000;
+const LIVE_RACE_MASTER_MS = 5000;
+const FALLBACK_JSON_TIMEOUT_MS = 1500;
+
 /**
- * Primary chain — five browser-safe sources before localStorage fallback:
- *  1. gold-api.com (seconds-level CORS spot)
- *  2. mintedmetal.com (LBMA twice-daily CORS reference)
- *  3. backend API / committed gold_price.json (hourly cron)
- *  4. last_gold_price.json (recent committed snapshot)
- *  5. (secondary) recent localStorage only
+ * Primary chain — live lane first, then fast file fallbacks:
+ *  1. Parallel race: gold-api.com + mintedmetal.com (2 s each, 5 s master budget)
+ *  2. backend API / committed gold_price.json (1.5 s cap)
+ *  3. last_gold_price.json
+ * Secondary provider (localStorage) is wired separately on the engine.
  */
 export function createPrimaryQuoteProvider() {
   return new ChainedQuoteProvider({
     providerId: 'live-primary',
     providers: [
-      new GoldApiComQuoteProvider(),
-      new MintedMetalQuoteProvider(),
-      new PrimaryQuoteProvider(),
+      new ParallelQuoteRaceProvider({
+        providerId: 'live-race',
+        providers: [
+          new GoldApiComQuoteProvider({ timeoutMs: LIVE_RACE_TIMEOUT_MS }),
+          new MintedMetalQuoteProvider({ timeoutMs: LIVE_RACE_TIMEOUT_MS }),
+        ],
+        raceTimeoutMs: LIVE_RACE_TIMEOUT_MS,
+        masterTimeoutMs: LIVE_RACE_MASTER_MS,
+      }),
+      new PrimaryQuoteProvider({ timeoutMs: FALLBACK_JSON_TIMEOUT_MS }),
       new LastGoldPriceQuoteProvider(),
     ],
   });
