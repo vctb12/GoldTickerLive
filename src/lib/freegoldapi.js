@@ -3,6 +3,8 @@
  * Community-maintained, no API key, CORS-enabled. Used as a supplement — not live spot authority.
  */
 
+import { isSaneGoldSpotUsd } from './quote-providers/fetch-utils.js';
+
 const API_URL = 'https://freegoldapi.com/data/latest.json';
 const CACHE_KEY = 'gtl_freegoldapi_reference_v1';
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // source refreshes daily ~06:00 UTC
@@ -46,7 +48,7 @@ function writeCache(records) {
 export function freegoldRowToRecord(row) {
   if (!row || typeof row !== 'object') return null;
   const price = Number(row.price);
-  if (!row.date || !Number.isFinite(price) || price <= 0) return null;
+  if (!row.date || !isSaneGoldSpotUsd(price)) return null;
   return {
     date: row.date.slice(0, 10),
     price,
