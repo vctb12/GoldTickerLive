@@ -1,6 +1,6 @@
 /**
  * Single source of truth for brand data attribution and refresh cadence copy.
- * Aligns with PLAN.md / README: GoldPriceZ (XAU/USD) + open.er-api.com (FX).
+ * Aligns with PLAN.md / README: gold-api.com (XAU/USD) + open.er-api.com (FX).
  */
 
 import { CONSTANTS } from './constants.js';
@@ -8,9 +8,9 @@ import { KARATS } from './karats.js';
 
 export const DATA_ATTRIBUTION = {
   gold: {
-    label: 'GoldPriceZ',
-    domain: 'goldpricez.com',
-    url: 'https://goldpricez.com',
+    label: 'Gold-API.com',
+    domain: 'gold-api.com',
+    url: 'https://gold-api.com',
     roleEn: 'Gold spot price (XAU/USD)',
     roleAr: 'سعر الذهب الفوري (XAU/USD)',
   },

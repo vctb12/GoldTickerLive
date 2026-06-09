@@ -55,7 +55,7 @@ this site from static prototype to production._
 **Gold Ticker Live** is a bilingual (English/Arabic) gold pricing platform serving 15 countries
 across the GCC, Levant, North Africa, and India. It provides:
 
-- **Live spot-linked pricing** (refreshed every 90 seconds via goldpricez.com)
+- **Live spot-linked pricing** (gold-api.com; server hourly + client ~90s re-poll)
 - **24+ currency conversions** (via exchangerate-api.com)
 - **7 karat grades** (24K, 22K, 21K, 18K, 14K, 12K, 10K)
 - **380+ SEO-optimized pages** (country → city → karat → shops)

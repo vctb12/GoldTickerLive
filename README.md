@@ -55,7 +55,7 @@ country pages, and Arabic-first accessibility.
     <img src="https://img.shields.io/badge/PWA-Ready-0EA5E9?style=flat-square" alt="PWA" />
   </a>
   <a href="#license">
-    <img src="https://img.shields.io/badge/License-MIT-2563EB?style=flat-square" alt="License" />
+    <img src="https://img.shields.io/badge/License-Apache--2.0-2563EB?style=flat-square" alt="License" />
   </a>
 </p>
 
@@ -174,7 +174,7 @@ practice**, combining:
 │  constants.js · countries.js · karats.js · translations.js  │
 ├─────────────────────────────────────────────────────────────┤
 │                External APIs                                │
-│  goldpricez.com (XAU/USD) · open.er-api.com (FX rates)        │
+│  gold-api.com (XAU/USD) · open.er-api.com (FX rates)          │
 │  datahub.io (historical) · GDELT (news headlines)           │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -353,7 +353,8 @@ template ships in repo root.
 
 | Source                                                                       | Used for                | Notes                       |
 | ---------------------------------------------------------------------------- | ----------------------- | --------------------------- |
-| [GoldPriceZ](https://goldpricez.com/docs)                                    | Live XAU/USD spot price | Primary live market layer   |
+| [Gold-API.com](https://gold-api.com)                                         | Live XAU/USD spot price | Primary live market layer   |
+| [GoldPriceZ](https://goldpricez.com/docs)                                    | Legacy adapter          | Optional fallback in adapter chain |
 | [ExchangeRate-API](https://www.exchangerate-api.com/docs/free)               | Currency conversion     | FX layer                    |
 | Hardcoded `3.6725`                                                           | UAE pricing             | Official AED/USD peg        |
 | [DataHub Gold Prices](https://datahub.io/core/gold-prices)                   | Historical baseline     | Long-range historical layer |
@@ -524,14 +525,20 @@ npm start  # Starts Express server on port 3000
 
 ## API Setup
 
-### GoldPriceZ (required for live prices)
+### Gold-API.com (primary live prices)
 
-1. Sign up at [goldpricez.com](https://goldpricez.com)
+1. Sign up at [gold-api.com](https://gold-api.com)
 2. Get your API key
-3. Add as GitHub Secret: `GOLDPRICEZ_API_KEY`
-4. The `gold-price-fetch` workflow (`.github/workflows/gold-price-fetch.yml`) calls goldpricez.com
-   every 6 minutes and commits the response to `data/gold_price.json`. The frontend and all bots
-   read from that committed file — the key never ships to the browser.
+3. Add as GitHub Secret: `GOLD_API_COM_KEY`
+4. The `gold-price-fetch` workflow (`.github/workflows/gold-price-fetch.yml`) runs the provider
+   adapter chain (`gold_api_com` → `twelvedata_xauusd` → `fmp_gcusd`) hourly during market hours
+   and commits the result to `data/gold_price.json`. The frontend and all bots read from that
+   committed file — API keys never ship to the browser.
+
+### GoldPriceZ (legacy adapter — optional)
+
+1. Legacy fallback only; not in the production `GOLD_PROVIDER_ORDER` chain.
+2. If retained, add `GOLDPRICEZ_API_KEY` as a GitHub Secret.
 
 ### ExchangeRate API (required for FX conversion)
 
@@ -738,7 +745,8 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for:
 ### Pages show "No data available"
 
 - Check browser console for API errors
-- Verify GoldPriceZ key is valid at [goldpricez.com](https://goldpricez.com)
+- Verify `data/gold_price.json` is fresh and the `gold-price-fetch` workflow succeeded
+- If using Gold-API.com directly, verify `GOLD_API_COM_KEY` is valid at [gold-api.com](https://gold-api.com)
 - Try `?debug=true` to use the debug panel
 - Clear localStorage: `localStorage.clear()` then refresh
 
@@ -806,4 +814,4 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for:
 
 ## License
 
-MIT
+Apache License 2.0 — see [LICENSE](LICENSE).

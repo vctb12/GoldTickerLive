@@ -20,8 +20,8 @@
 
 ### 1. Client-Side Price Fetching
 
-- **Issue**: Gold prices and FX rates are fetched directly from the browser. Each visitor makes
-  their own API calls to goldpricez.com and exchangerate-api.com.
+- **Issue**: Gold prices and FX rates are fetched from the browser on live lanes. Each visitor may
+  call gold-api.com (live race) and open.er-api.com (FX), or read committed `data/gold_price.json`.
 - **Impact**: API rate limits may be hit with high traffic. Each visitor experiences their own
   latency for price loading.
 - **Mitigation**: Dual-layer localStorage cache reduces redundant API calls. Service worker caches
