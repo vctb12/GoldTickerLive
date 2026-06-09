@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Tests for the spotBar component's freshness-state wiring (§6.2).
+ * Tests for the spotBar component's freshness-state wiring (AGENTS.md rule 2).
  *
  * spotBar is an ES module that imports from `src/lib/live-status.js` and
  * mutates the DOM. We drive it with a minimal DOM stub and assert that

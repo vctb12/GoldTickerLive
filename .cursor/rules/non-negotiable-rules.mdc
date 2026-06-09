@@ -1,0 +1,89 @@
+---
+alwaysApply: true
+---
+
+# Non-negotiable rules
+
+> Canonical charter: [`AGENTS.md`](../../AGENTS.md). Extended reference: `docs/AGENTS_REFERENCE.md`.
+> Topic rules: [`pricing-trust.mdc`](./pricing-trust.mdc), [`bilingual-content.mdc`](./bilingual-content.mdc), [`seo-structure.mdc`](./seo-structure.mdc).
+
+## 1. Reference prices are not retail shop quotes
+
+- Never present a spot-linked reference price as a guaranteed in-store purchase price.
+- If content compares market/reference pricing and shop pricing, the distinction must remain explicit.
+
+## 2. Freshness labels must be exact and must remain visible
+
+- The terms `live`, `updated`, `cached`, and `delayed` must not be used loosely.
+- If data is not truly live, do not call it live.
+- If a page uses cached or delayed values, the wording must reflect that clearly.
+- Must not remove methodology links, freshness pills, or reference-vs-retail disclaimers to “look cleaner.”
+
+## 3. English and Arabic must match in meaning
+
+- Semantic parity is required between EN and AR.
+- One language must not make stronger promises or claims than the other.
+- Natural phrasing is preferred over literal translation.
+
+## 4. Country and city pages must strengthen internal linking
+
+- Local pages should connect users to related country pages, calculators, methodology pages, and related market content.
+- Avoid creating orphaned or weakly connected local pages.
+
+## 5. Metadata and technical SEO are product quality
+
+- Schema, canonicals, metadata, hreflang, and internal linking are part of core product integrity.
+- Agents must flag missing, conflicting, or misleading implementations.
+
+## 6. Trust-first language is mandatory
+
+- Avoid hype, fake precision, clickbait, or exaggerated certainty.
+- Do not imply financial advice unless a page is explicitly designed for that purpose.
+
+## Terminology policy
+
+Use these definitions consistently in code, copy, automations, and reviews. Terminology drift breaks trust even when math is correct.
+
+### Reference price
+
+A market-linked or spot-linked estimate used for informational purposes.
+It is not the same as a final retail jewelry quote.
+
+### Retail quote
+
+A final or near-final price offered by a store or seller, which may include making charges, premiums, taxes, spreads, and local adjustments.
+
+### Live
+
+Use only when the displayed value is updated in real time or near-real time from the active source.
+
+### Updated
+
+Use when data is refreshed periodically but not continuously.
+
+### Cached
+
+Use when stored data is being shown from a prior fetch or processing cycle.
+
+### Delayed
+
+Use when the data intentionally lags the underlying source by a known or expected interval.
+
+## Review priorities
+
+Agents should prioritize issues in this order:
+
+1. Price accuracy and karat math
+2. Misleading trust/freshness language
+3. EN/AR semantic mismatch
+4. Broken canonicals, hreflang, schema, or metadata
+5. Internal linking regressions
+6. Lower-risk style or copy issues
+
+## Action rules
+
+- Block or strongly flag any change that can mislead users about price accuracy, freshness, or retail-vs-reference interpretation.
+- Comment on SEO, schema, metadata, and internal linking issues with exact fixes.
+- Suggest exact rewrite pairs for EN/AR mismatches.
+- Prefer minimal diffs and implementation-ready fixes.
+- Save repeated issue patterns into memory when the tooling supports it.

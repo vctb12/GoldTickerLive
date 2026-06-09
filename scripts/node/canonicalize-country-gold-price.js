@@ -29,7 +29,10 @@ function patchGoldPricePage(filePath, countrySlug) {
     '<meta name="robots" content="noindex,follow" />'
   );
   if (!/name=["']robots["']/i.test(html)) {
-    html = html.replace(/<meta charset="UTF-8"\s*\/?>/i, (m) => `${m}\n    <meta name="robots" content="noindex,follow" />`);
+    html = html.replace(
+      /<meta charset="UTF-8"\s*\/?>/i,
+      (m) => `${m}\n    <meta name="robots" content="noindex,follow" />`
+    );
   }
 
   html = html.replace(

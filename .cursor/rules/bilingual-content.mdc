@@ -1,0 +1,15 @@
+---
+alwaysApply: true
+---
+
+# Bilingual content rules
+
+> Terminology policy: [`non-negotiable-rules.mdc`](./non-negotiable-rules.mdc) § Terminology policy.
+> All user-visible strings: `src/config/translations.js`.
+
+- English and Arabic must match in meaning.
+- One language must not make stronger claims.
+- Preserve natural GCC/Arab commercial wording — not English-shaped Arabic.
+- Use approved terminology for **reference price**, **retail quote**, **making charge**, and freshness labels (`live`, `updated`, `cached`, `delayed`).
+- When fixing a mismatch, suggest exact EN/AR rewrite pairs — not vague “improve translation” notes.
+- RTL layouts must work at 360px minimum.

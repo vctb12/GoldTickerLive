@@ -368,9 +368,6 @@ function renderCountryHero({ country, pageData, lang, gold, goldFreshness, fxFre
     clear(heroMetrics);
     const featured = getFeaturedKarats(pageData).slice(0, 3);
     featured.forEach((karat) => {
-      const localPerGram = rate
-        ? calcLocalPrice(gold?.price || 0, karat.purity, rate, 'gram')
-        : null;
       heroMetrics.append(
         el(
           'article',

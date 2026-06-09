@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "generatedAtDate": "2026-04-23",
-  "scopeNote": "Static analysis only. Does not audit §6.1 spot-vs-retail mixing. Advisory, not a gate.",
+  "scopeNote": "Static analysis only. Does not audit non-negotiable rule 1 (reference vs retail) spot-vs-retail mixing. Advisory, not a gate.",
   "summary": {
     "totalSurfaces": 29,
     "consumersWithAllThreeBranches": 3,
@@ -333,11 +333,11 @@
       "hasSourceLabel": true,
       "hasTimestampLabel": true,
       "exempt": true,
-      "exemptReason": "Shops directory is a discovery page; shop cards do not render live prices (the `%` trust-score strings + `shop-tag` labels trip the price-token heuristic). The page-level ticker/spotBar calls now forward updatedAt + hasLiveFailure, so §6.2 is satisfied via those shared components.",
+      "exemptReason": "Shops directory is a discovery page; shop cards do not render live prices (the `%` trust-score strings + `shop-tag` labels trip the price-token heuristic). The page-level ticker/spotBar calls now forward updatedAt + hasLiveFailure, so non-negotiable rule 2 (freshness) is satisfied via those shared components.",
       "knownGap": false,
       "knownGapReason": null,
       "notes": [
-        "EXEMPT: Shops directory is a discovery page; shop cards do not render live prices (the `%` trust-score strings + `shop-tag` labels trip the price-token heuristic). The page-level ticker/spotBar calls now forward updatedAt + hasLiveFailure, so §6.2 is satisfied via those shared components."
+        "EXEMPT: Shops directory is a discovery page; shop cards do not render live prices (the `%` trust-score strings + `shop-tag` labels trip the price-token heuristic). The page-level ticker/spotBar calls now forward updatedAt + hasLiveFailure, so non-negotiable rule 2 (freshness) is satisfied via those shared components."
       ]
     },
     {

@@ -149,13 +149,14 @@ E2E test files live in `tests/e2e/` and follow the `*.spec.js` naming convention
    [GitHub Advisory Database](https://github.com/advisories) for known vulnerabilities first,
    justify the addition in the PR body (alternatives considered, bundle-size impact, license), and
    pin the major version. The repo prefers vanilla ES modules over new frameworks; framework
-   migrations require explicit owner approval per
-   [`AGENTS.md`](./AGENTS.md#6-product-trust-guardrails) §6.5.
+   migrations require explicit owner approval per [`AGENTS.md`](./AGENTS.md#operational-guardrails)
+   operational guardrails.
 
 8. **Don't change product-trust surfaces silently** — spot-vs-retail labelling, freshness pills,
    methodology copy, canonical URLs, `robots.txt`, `og:*` / `twitter:*` tags, sitemap structure, and
-   `CNAME` are tracked under [`AGENTS.md`](./AGENTS.md#6-product-trust-guardrails) §6.1–§6.4. Any
-   change to these surfaces must be flagged in the PR body and ship with the rationale.
+   `CNAME` are tracked under [`AGENTS.md`](./AGENTS.md#non-negotiable-rules) and
+   [`technical SEO policy`](./AGENTS.md#technical-seo-policy). Any change to these surfaces must be
+   flagged in the PR body and ship with the rationale.
 
 ## Project Structure
 

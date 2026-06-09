@@ -12,6 +12,15 @@ related_instructions:
 
 # Prompt: PR Review
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
+
 You are reviewing a PR on `vctb12/GoldTickerLive` (production site
 <https://goldtickerlive.com/>). Apply the Gold Ticker Live charter (`AGENTS.md`) and the
 operating system in `.github/`. Be substantive, not ceremonial.
@@ -73,27 +82,35 @@ or as a recommended follow-up PR. Don't be timid — if a redesign is the right 
 
 ## Return format
 
+Follow `AGENTS.md` output expectations and review priorities. Canonical template:
+[`_output-format.md`](./_output-format.md).
+
 ```md
 ## Verdict
-<one of: approve / approve with comments / request changes / block>
+<approve | approve with comments | request changes | block>
 
 ## Blocking issues
-- **[file:line]** <issue> — <why> — <suggested fix>
+### block — <title>
+- **File/page:** `path:line`
+- **Issue:** …
+- **Impact:** trust / pricing / SEO / bilingual / UX
+- **Exact fix:** …
+- **Repeat pattern:** yes/no — …
 
 ## Important non-blocking
-- **[file:line]** <issue> — <why> — <suggested fix>
+(same fields; severity high or medium)
 
 ## Nice-to-have
-- ...
+(low severity, same fields)
 
 ## Files requiring manual review
 - <file> — <reason>
 
 ## Verification recommended before merge
-- `npm run lint` / `npm test` / `npm run validate` / Lighthouse / RTL spot-check / etc.
+- commands actually needed for this diff
 
 ## Merge recommendation
-<merge now / merge after fixes / hold for owner review>
+<merge now | merge after fixes | hold for owner review>
 
 ## Follow-up PRs to consider
 - <title> — <scope>

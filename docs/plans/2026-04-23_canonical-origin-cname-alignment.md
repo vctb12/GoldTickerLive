@@ -17,14 +17,14 @@ skills_used: []
 
 **Date:** 2026-04-23 **Status:** 📥 Proposal (plan-only, awaiting owner approval) **Audit ref:**
 [`docs/REPO_AUDIT.md` §D, §J-P0-1](../REPO_AUDIT.md) **Campaign ref:** PR #2 of the
-charter-respecting multi-PR campaign (plan-first per [`AGENTS.md` §4.3](../../AGENTS.md))
-**Requires:** owner decision between Option A and Option B below before any implementation PR is
-opened.
+charter-respecting multi-PR campaign (plan-first per
+[`AGENTS.md` workflow](../../AGENTS.md#workflow)) **Requires:** owner decision between Option A and
+Option B below before any implementation PR is opened.
 
 > This is a **plan file**. It proposes no code, SEO, or `CNAME` edits. Per
-> [`AGENTS.md` §6.4](../../AGENTS.md#6-product-trust-guardrails), canonicals / `robots.txt` /
-> sitemap / `og:*` / `CNAME` changes must ride on a reviewed plan, never a silent diff. Approval of
-> this plan unblocks a separate focused implementation PR.
+> [`AGENTS.md` technical SEO policy](../../AGENTS.md#non-negotiable-rules), canonicals /
+> `robots.txt` / sitemap / `og:*` / `CNAME` changes must ride on a reviewed plan, never a silent
+> diff. Approval of this plan unblocks a separate focused implementation PR.
 
 ---
 
@@ -46,10 +46,10 @@ which forces apex requests through a 301 redirect to `www.` before they resolve.
 inconsistent with every canonical URL the site publishes and costs a small but real amount of Core
 Web Vitals + crawl budget on every apex visit.
 
-**This is the kind of decision §6.4 exists to protect.** A silent edit to `CNAME` would change the
-host every indexed URL redirects through and could invalidate external inbound links. A silent edit
-to every canonical and the sitemap would flip hundreds of indexed URLs at once. Either direction is
-reviewable work; neither is a drive-by fix.
+**This is the kind of decision technical SEO policy exists to protect.** A silent edit to `CNAME`
+would change the host every indexed URL redirects through and could invalidate external inbound
+links. A silent edit to every canonical and the sitemap would flip hundreds of indexed URLs at once.
+Either direction is reviewable work; neither is a drive-by fix.
 
 ---
 
@@ -137,9 +137,10 @@ reversed — the test contract inverts — so this has to be a single atomic PR.
 
 ## 5. Rollback
 
-Single-commit revert. Because §6.9 forbids force-push, rollback is `git revert <sha>` and redeploy.
-DNS does not need to be rolled back — both hostnames remain valid; only which one is primary
-changes. GitHub Pages accepts `CNAME` swaps without caching issues beyond normal DNS TTL.
+Single-commit revert. Because operational guardrails (PR-only) forbids force-push, rollback is
+`git revert <sha>` and redeploy. DNS does not need to be rolled back — both hostnames remain valid;
+only which one is primary changes. GitHub Pages accepts `CNAME` swaps without caching issues beyond
+normal DNS TTL.
 
 For Option B, rollback is larger but still a single revert because the implementation PR is required
 to be a single atomic commit (no intermediate half-state where some canonicals point apex and others
@@ -149,17 +150,17 @@ point www).
 
 ## 6. Charter-compliance checklist
 
-| Clause                                | How honored                                                                                                                                                    |
-| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| §6.1 – §6.3 price-data invariants     | No price / freshness / retail-vs-reference surface is touched. N/A.                                                                                            |
-| §6.4 SEO surface integrity            | This is the plan PR §6.4 requires. Implementation only proceeds after owner approval on this file.                                                             |
-| §6.5 static architecture stays static | No SPA / framework migration. Static multi-page architecture unchanged.                                                                                        |
-| §6.6 EN/AR parity                     | Origin change applies identically to EN and AR pages; no user-visible copy changes. `tests/nav-data.test.js` and sitewide parity checks remain green.          |
-| §6.7 DOM-safety baseline              | No `innerHTML` / `safe-dom` surface touched. Baseline unchanged.                                                                                               |
-| §6.8 no secrets in git                | N/A — no secrets.                                                                                                                                              |
-| §6.9 PR-only, no force-push           | Both the plan PR and the implementation PR will be opened against `main`, reviewed, and merged normally.                                                       |
-| §6.10 `post_gold.yml` untouched       | This workflow is not referenced or modified.                                                                                                                   |
-| §6.11 honest verification             | Post-deploy `curl -sI` output + test run outputs attached to the implementation PR. No fabricated Lighthouse numbers; those belong to a separate perf plan PR. |
+| Clause                                                                                                           | How honored                                                                                                                                                    |
+| ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| non-negotiable rule 1 (reference vs retail) – non-negotiable rule 2 (freshness visibility) price-data invariants | No price / freshness / retail-vs-reference surface is touched. N/A.                                                                                            |
+| technical SEO policy SEO surface integrity                                                                       | This is the plan PR technical SEO policy requires. Implementation only proceeds after owner approval on this file.                                             |
+| operational guardrails (static MPA) static architecture stays static                                             | No SPA / framework migration. Static multi-page architecture unchanged.                                                                                        |
+| non-negotiable rule 3 (EN/AR) EN/AR parity                                                                       | Origin change applies identically to EN and AR pages; no user-visible copy changes. `tests/nav-data.test.js` and sitewide parity checks remain green.          |
+| operational guardrails (DOM safety) DOM-safety baseline                                                          | No `innerHTML` / `safe-dom` surface touched. Baseline unchanged.                                                                                               |
+| operational guardrails (secrets) no secrets in git                                                               | N/A — no secrets.                                                                                                                                              |
+| operational guardrails (PR-only) PR-only, no force-push                                                          | Both the plan PR and the implementation PR will be opened against `main`, reviewed, and merged normally.                                                       |
+| operational guardrails (`post_gold.yml`) `post_gold.yml` untouched                                               | This workflow is not referenced or modified.                                                                                                                   |
+| output expectations honest verification                                                                          | Post-deploy `curl -sI` output + test run outputs attached to the implementation PR. No fabricated Lighthouse numbers; those belong to a separate perf plan PR. |
 
 ---
 
@@ -191,8 +192,8 @@ point www).
 ### No live-site Lighthouse claim
 
 Post-deploy Lighthouse deltas belong to a separate performance plan PR (audit §J-P1-6). Claiming LCP
-/ INP / CLS improvements from origin alignment alone without measured evidence would violate §6.11.
-The implementation PR body will note only the redirect-hop saving qualitatively.
+/ INP / CLS improvements from origin alignment alone without measured evidence would violate output
+expectations. The implementation PR body will note only the redirect-hop saving qualitatively.
 
 ---
 

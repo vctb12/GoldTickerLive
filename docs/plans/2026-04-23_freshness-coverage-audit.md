@@ -17,8 +17,8 @@ skills_used: []
 
 **Date:** 2026-04-23 **Status:** 📥 Proposal (plan-only, awaiting owner approval) **Audit ref:**
 [`docs/REPO_AUDIT.md` §J-P0-3](../REPO_AUDIT.md) **Campaign ref:** PR #4 of the charter-respecting
-multi-PR campaign (plan-first per [`AGENTS.md` §4.3](../../AGENTS.md)) **Depends on:** nothing.
-Independent of P0 #1 and P0 #2.
+multi-PR campaign (plan-first per [`AGENTS.md` workflow](../../AGENTS.md#workflow)) **Depends on:**
+nothing. Independent of P0 #1 and P0 #2.
 
 > This is a **plan file**. It proposes no code changes. Approval unblocks a separate implementation
 > PR that adds **one read-only analysis script** and commits **one report-only artefact**. No page
@@ -28,12 +28,14 @@ Independent of P0 #1 and P0 #2.
 
 ## 1. Problem statement
 
-Charter §6.1–§6.3 is the trust perimeter of the site:
+Charter non-negotiable rules 1–2 is the trust perimeter of the site:
 
-- §6.1 — spot/reference prices must never be blurred with retail or jewelry prices.
-- §6.2 — cached / fallback / estimated / delayed / derived values must be **visibly labelled** with
-  source and timestamp.
-- §6.3 — freshness labels, disclaimers, methodology notes are product elements, not decoration.
+- non-negotiable rule 1 (reference vs retail) — spot/reference prices must never be blurred with
+  retail or jewelry prices.
+- non-negotiable rule 2 (freshness) — cached / fallback / estimated / delayed / derived values must
+  be **visibly labelled** with source and timestamp.
+- non-negotiable rule 2 (freshness visibility) — freshness labels, disclaimers, methodology notes
+  are product elements, not decoration.
 
 The repo already ships the machinery for this:
 
@@ -46,8 +48,8 @@ The repo already ships the machinery for this:
 
 What is **not** verified anywhere is **coverage**: which price-rendering pages actually consume
 `getLiveFreshness()` and render all three states correctly. The `stale` branch in particular is the
-one that matters most for §6.2 trust, and it is the one most likely to be accidentally dropped in a
-refactor because it rarely fires in development.
+one that matters most for non-negotiable rule 2 (freshness) trust, and it is the one most likely to
+be accidentally dropped in a refactor because it rarely fires in development.
 
 Today there is no test, no validate hook, and no committed artefact that answers the question:
 "Which pages render prices, and for each page, does it emit the stale state?"
@@ -112,7 +114,8 @@ implementation PR's unit tests lock down the detection rules on a fixture set.
 - total surfaces detected
 - count with full freshness coverage (all three keys present)
 - count with missing `stale` branch only
-- count with no live-status usage at all (these are §6.2 suspects if they actually render prices)
+- count with no live-status usage at all (these are non-negotiable rule 2 (freshness) suspects if
+  they actually render prices)
 - count flagged as false-positive-likely (present in a doc or test fixture)
 
 ---
@@ -121,8 +124,9 @@ implementation PR's unit tests lock down the detection rules on a fixture set.
 
 - No modifications to any price-rendering page.
 - No runtime / DOM / Playwright crawling. Static analysis only.
-- No attempt to detect §6.1 violations (spot-vs-retail mixing) — that is a meaningfully harder
-  problem and belongs to its own audit plan if the owner wants one.
+- No attempt to detect non-negotiable rule 1 (reference vs retail) violations (spot-vs-retail
+  mixing) — that is a meaningfully harder problem and belongs to its own audit plan if the owner
+  wants one.
 - No lint rule. This script emits a report; it does not fail `npm run lint` or `npm run validate`.
 - No change to `src/lib/live-status.js` or `src/lib/api.js`.
 
@@ -156,31 +160,31 @@ implementation PR's unit tests lock down the detection rules on a fixture set.
 
 ## 7. Risks and mitigations
 
-| Risk                                           | Mitigation                                                                                                                 |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| False positives overwhelm the signal           | Explicit "false-positive-likely" bucket in the summary. Fixture tests keep the heuristics honest.                          |
-| Script becomes a de-facto gate that blocks PRs | Explicit README in `reports/` stating: this file is descriptive, not prescriptive. No `validate` wire-up in v1.            |
-| Gaps found turn into a huge follow-up          | That's the point of surfacing them. Each gap becomes an individual plan PR, not a drive-by fix. §6.4-analogous discipline. |
-| Timestamp in output churns every run           | Same mitigation as P0 #2: either floor to `YYYY-MM-DD` or accept single-line churn.                                        |
-| Static analysis misses runtime-composed DOM    | Acknowledge explicitly in the report header. Playwright-level coverage is a separate, larger plan (deferred).              |
+| Risk                                           | Mitigation                                                                                                                          |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| False positives overwhelm the signal           | Explicit "false-positive-likely" bucket in the summary. Fixture tests keep the heuristics honest.                                   |
+| Script becomes a de-facto gate that blocks PRs | Explicit README in `reports/` stating: this file is descriptive, not prescriptive. No `validate` wire-up in v1.                     |
+| Gaps found turn into a huge follow-up          | That's the point of surfacing them. Each gap becomes an individual plan PR, not a drive-by fix. technical-SEO-analogous discipline. |
+| Timestamp in output churns every run           | Same mitigation as P0 #2: either floor to `YYYY-MM-DD` or accept single-line churn.                                                 |
+| Static analysis misses runtime-composed DOM    | Acknowledge explicitly in the report header. Playwright-level coverage is a separate, larger plan (deferred).                       |
 
 ---
 
 ## 8. Charter-compliance checklist
 
-| Clause                                    | How honored                                                                                                                             |
-| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| §6.1 spot/retail blur                     | Not directly addressed (see §5 non-scope). Explicitly called out as a separate future plan.                                             |
-| §6.2 labelled stale / cached / derived    | The whole point. Coverage gaps surface silently-unlabelled branches.                                                                    |
-| §6.3 freshness labels as product elements | Report's `hasSourceLabel` / `hasTimestampLabel` fields flag surfaces where the labels might be missing.                                 |
-| §6.4 SEO surface integrity                | No SEO surface touched.                                                                                                                 |
-| §6.5 static architecture stays static     | Node-only script, no framework.                                                                                                         |
-| §6.6 EN/AR parity                         | Script runs on EN and AR surfaces alike; report rows are language-agnostic.                                                             |
-| §6.7 DOM-safety baseline                  | No browser code; baseline unaffected.                                                                                                   |
-| §6.8 no secrets in git                    | JSON/markdown output is paths + booleans. No secrets.                                                                                   |
-| §6.9 PR-only, no force-push               | Single focused implementation PR after approval.                                                                                        |
-| §6.10 `post_gold.yml` untouched           | N/A.                                                                                                                                    |
-| §6.11 honest verification                 | Report explicitly states it is static-analysis-only; no claim of runtime / DOM coverage. Each row is auditable from the committed JSON. |
+| Clause                                                                            | How honored                                                                                                                             |
+| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| non-negotiable rule 1 (reference vs retail) spot/retail blur                      | Not directly addressed (see §5 non-scope). Explicitly called out as a separate future plan.                                             |
+| non-negotiable rule 2 (freshness) labelled stale / cached / derived               | The whole point. Coverage gaps surface silently-unlabelled branches.                                                                    |
+| non-negotiable rule 2 (freshness visibility) freshness labels as product elements | Report's `hasSourceLabel` / `hasTimestampLabel` fields flag surfaces where the labels might be missing.                                 |
+| technical SEO policy SEO surface integrity                                        | No SEO surface touched.                                                                                                                 |
+| operational guardrails (static MPA) static architecture stays static              | Node-only script, no framework.                                                                                                         |
+| non-negotiable rule 3 (EN/AR) EN/AR parity                                        | Script runs on EN and AR surfaces alike; report rows are language-agnostic.                                                             |
+| operational guardrails (DOM safety) DOM-safety baseline                           | No browser code; baseline unaffected.                                                                                                   |
+| operational guardrails (secrets) no secrets in git                                | JSON/markdown output is paths + booleans. No secrets.                                                                                   |
+| operational guardrails (PR-only) PR-only, no force-push                           | Single focused implementation PR after approval.                                                                                        |
+| operational guardrails (`post_gold.yml`) `post_gold.yml` untouched                | N/A.                                                                                                                                    |
+| output expectations honest verification                                           | Report explicitly states it is static-analysis-only; no claim of runtime / DOM coverage. Each row is auditable from the committed JSON. |
 
 ---
 
@@ -190,7 +194,8 @@ implementation PR's unit tests lock down the detection rules on a fixture set.
 - `reports/freshness-coverage.md` and `reports/freshness-coverage.json` are committed and enumerate
   every detected surface with the fields in §4.
 - The report header explicitly states: (a) static analysis only, (b) heuristic detection, (c)
-  advisory not prescriptive, (d) §6.1 (spot/retail mixing) is **not** audited here.
+  advisory not prescriptive, (d) non-negotiable rule 1 (reference vs retail) (spot/retail mixing) is
+  **not** audited here.
 - Unit tests cover detection of: import patterns, three freshness keys, false-positive filtering,
   EN/AR parity.
 - `node scripts/node/audit-freshness-coverage.js --check` succeeds after regeneration.
@@ -210,9 +215,10 @@ Single-commit revert. The report and script are additive; no production code dep
 1. **Wire `--check` into `npm run validate` in v1**, or defer until the artefact has stabilized over
    at least one release? Default recommendation: defer.
 2. **Report format**: markdown + JSON (recommended), JSON-only, or markdown-only?
-3. **Should the same plan also cover §6.1 (spot-vs-retail)?** Default recommendation: **no**, keep
-   this one tight; handle §6.1 in a separate proposal because detecting retail-markup blur requires
-   semantic analysis of currency + context, not static grep.
+3. **Should the same plan also cover non-negotiable rule 1 (reference vs retail) (spot-vs-retail)?**
+   Default recommendation: **no**, keep this one tight; handle non-negotiable rule 1 (reference vs
+   retail) in a separate proposal because detecting retail-markup blur requires semantic analysis of
+   currency + context, not static grep.
 4. **Acceptance threshold**: do gaps found here auto-qualify for a P0 follow-up plan, or does the
    owner review and prioritize case-by-case? Default recommendation: case-by-case, because §5
    non-scope means some "gaps" may be intentional (e.g. marketing pages that show a headline price

@@ -200,7 +200,14 @@ export function getLiveFreshness({
       return { key: 'delayed', ageMs, ageText, timeText, updatedAt, reason: 'live-api-delayed' };
     }
     if (ageMs > FRESHNESS_POLICY.cachedMaxAgeMs) {
-      return { key: 'delayed', ageMs, ageText, timeText, updatedAt, reason: 'live-api-cached-window' };
+      return {
+        key: 'delayed',
+        ageMs,
+        ageText,
+        timeText,
+        updatedAt,
+        reason: 'live-api-cached-window',
+      };
     }
     if (ageMs > FRESHNESS_POLICY.liveMaxAgeMs) {
       return { key: 'cached', ageMs, ageText, timeText, updatedAt, reason: 'live-budget-exceeded' };
@@ -230,7 +237,7 @@ export function getLiveFreshness({
  * `open.er-api.com` free-tier rates update approximately once per 24 hours.
  * When rates come from a local cache and are older than `FX_STALE_AFTER_MS`
  * (26 hours), the returned key is `'stale'` so callers can show a visible
- * label (AGENTS.md §6.2 — cached values must be labelled).
+ * label (AGENTS.md non-negotiable rule 2 — cached values must be labelled).
  *
  * @param {{ fxUpdatedAt?: string|Date|number|null, hasCacheFailure?: boolean, lang?: 'en'|'ar', staleAfterMs?: number }} [options]
  * @returns {{ key: 'live'|'cached'|'stale'|'unavailable', ageMs: number, ageText: string, timeText: string }}

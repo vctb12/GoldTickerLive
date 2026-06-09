@@ -2,7 +2,7 @@
  * components/ticker.js — Premium bottom gold price ticker.
  * Slim fixed bar with smooth scrolling gold prices.
  *
- * Honors AGENTS.md §6.2: the ticker's `data-freshness` attribute reflects
+ * Honors AGENTS.md non-negotiable rule 2 (freshness): the ticker's `data-freshness` attribute reflects
  * `getLiveFreshness()` ('live' | 'cached' | 'stale' | 'unavailable'), a
  * status pill surfaces the label + relative age next to the close button,
  * and the pill's tooltip discloses the source timestamp. Pass `updatedAt`
@@ -233,7 +233,7 @@ export function updateTicker(data = {}) {
       });
   });
 
-  // Freshness pill (§6.2). Three-way contract on `data-updatedAt`:
+  // Freshness pill (AGENTS.md rule 2). Three-way contract on `data-updatedAt`:
   //   - truthy ISO string  → recompute freshness from it
   //   - explicit `null`    → reset the pill to "unavailable"
   //   - omitted / undefined → preserve last-rendered state (never silently

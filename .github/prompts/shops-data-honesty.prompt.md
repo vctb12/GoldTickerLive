@@ -10,6 +10,15 @@ related_instructions:
 
 # Prompt: Shops Data Honesty
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
+
 Audit and improve `shops.html` and the underlying shops data pipeline. Honesty over polish.
 
 ## Goal
@@ -62,6 +71,8 @@ node --test tests/shops*.test.js
 ```
 
 ## Return format
+
+Use [`_output-format.md`](./_output-format.md) per finding when reporting issues.
 
 ```md
 # Shops Audit — <date>

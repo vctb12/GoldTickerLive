@@ -5,7 +5,7 @@
  * Validates alert creation, triggering, persistence, import/export, and limits.
  */
 
-const { test, beforeEach, mock } = require('node:test');
+const { test } = require('node:test');
 const assert = require('node:assert/strict');
 
 // Mock localStorage for Node.js environment

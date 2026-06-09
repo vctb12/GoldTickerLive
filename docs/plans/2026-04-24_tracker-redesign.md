@@ -269,8 +269,7 @@ From `reports/tracker-ux-audit.md` §4:
 - `npm test`, `npm run lint`, `npm run validate`, `npm run build` all green.
 - Before/after screenshots at 360 px + 1440 px for every phase that touches visible surfaces.
 - RTL spot-check (Arabic + `dir=rtl`) for Phases 5, 6, 9, 10, 11.
-- All §6 product-trust guardrails intact (freshness labels, spot-vs-retail framing, disclaimer
-  copy).
+- All non-negotiable rules intact (freshness labels, spot-vs-retail framing, disclaimer copy).
 
 ---
 

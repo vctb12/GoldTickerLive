@@ -15,9 +15,9 @@ It informs three Wave B fix PRs (2.1 metadata, 2.2 structured data, 2.4 social p
 helper). Internal-linking (§2.3) is a separate audit deliverable (`reports/internal-linking.md`)
 that needs a built `dist/` link graph; **deferred** from this PR.
 
-Per `AGENTS.md` §6.4 and §6.11: this audit records what is on the site today; it does not move
-canonicals, sitemap, `og:*`, or `CNAME`. It separates measured findings from items that require a
-separate live run.
+Per `AGENTS.md` technical SEO policy and output expectations: this audit records what is on the site
+today; it does not move canonicals, sitemap, `og:*`, or `CNAME`. It separates measured findings from
+items that require a separate live run.
 
 ---
 
@@ -112,7 +112,8 @@ required if the page has an Arabic counterpart (see translations file). No DOM c
 - 0 `http:` canonicals.
 - All canonicals start with `https://goldtickerlive.com/` (matches `CNAME`).
 
-No findings. Track 2.4 canonical pillar is healthy and must stay healthy (§6.4 trust guardrail).
+No findings. Track 2.4 canonical pillar is healthy and must stay healthy (technical SEO policy trust
+guardrail).
 
 ---
 
@@ -136,9 +137,9 @@ No findings. Track 2.4 canonical pillar is healthy and must stay healthy (§6.4 
 
 ### 3.2 Visible-content gaps to fix in the JSON-LD pass
 
-The plan's §6.1 / §6.7 / §6.8 guardrail rule applies: **never add a JSON-LD field whose data isn't
-visible on the page.** All recommendations below are gated on DOM presence; the validator script
-proposed in §2.2 of the plan must enforce that.
+The plan's non-negotiable rule 1 and operational guardrails guardrail rule applies: **never add a
+JSON-LD field whose data isn't visible on the page.** All recommendations below are gated on DOM
+presence; the validator script proposed in §2.2 of the plan must enforce that.
 
 | Gap                                                                                                                                                                                                              | Page(s)                                            | Recommendation                                                                                                                                                                         |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -153,11 +154,12 @@ proposed in §2.2 of the plan must enforce that.
 ### 3.3 Schema-vs-content trust-guardrail risks (don't slip up here)
 
 - `Product` / `Offer` is currently used on 91 country/city `gold-prices/` pages. Inventory data
-  shows these pages render reference prices, not retail offers. **Per `AGENTS.md` §6.1, `Product`
-  schema must label these as reference prices** — verify each `offers.priceCurrency` and
-  `description` says "reference / spot-derived" not "retail." Action item for the Wave B 2.2 PR:
-  read the rendered DOM, ensure schema mirrors the visible `freshness` pill state, and **drop the
-  `Product` schema on any page whose visible content has switched to "no live data."**
+  shows these pages render reference prices, not retail offers. **Per `AGENTS.md` non-negotiable
+  rule 1 (reference vs retail), `Product` schema must label these as reference prices** — verify
+  each `offers.priceCurrency` and `description` says "reference / spot-derived" not "retail." Action
+  item for the Wave B 2.2 PR: read the rendered DOM, ensure schema mirrors the visible `freshness`
+  pill state, and **drop the `Product` schema on any page whose visible content has switched to "no
+  live data."**
 - `BreadcrumbList` `itemListElement[*].item` URLs must be absolute apex URLs
   (`https://goldtickerlive.com/...`) and match the page's canonical chain. Spot-check 3 country/city
   pages in the fix PR.
@@ -262,9 +264,9 @@ Findings **not** addressed in this PR (deferred to a separate Wave B-1.5 PR beca
   of them touches ≈ 396 HTML files and is meaningfully larger than the rest of the Wave B-1 slice.
   Owner can redirect the sequencing if priorities shift.
 - Wave B-2 (structured-data alignment, `check-jsonld-dom.js`, FAQPage / WebApplication / Product
-  trust-label cross-check) — separate PR per §6.
+  trust-label cross-check) — separate PR per `AGENTS.md` guardrails §
 - Wave B-3 (`og:image` dimension validator, `og:locale[:alternate]` capture, `setHead()`
-  consolidation) — separate PR per §6.
+  consolidation) — separate PR per `AGENTS.md` guardrails §
 
 The audit numbers in §1–§4 reflect **pre-fix** state; §1 row "duplicate title groups: 1" and §2.1.B
 "13 long descriptions" are now **0** post-fix. Re-running the inventory confirms it.

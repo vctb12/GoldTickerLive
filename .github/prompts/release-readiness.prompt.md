@@ -9,6 +9,15 @@ related_instructions:
 
 # Prompt: Release Readiness
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
+
 You are gating a merge or a production deploy. Run every relevant check. Produce a clear
 deploy / no-deploy decision with evidence.
 
@@ -71,6 +80,8 @@ npm run test:playwright # if Playwright suite exists for the change
 - `post_gold.yml` last 24h healthy (`data/automation-*.json`)
 
 ## Return format
+
+Use [`_output-format.md`](./_output-format.md) per finding when reporting issues.
 
 ```md
 # Release Readiness — PR <#> / Branch <name>

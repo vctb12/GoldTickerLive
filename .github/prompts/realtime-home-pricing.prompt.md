@@ -1,5 +1,14 @@
 # Internal prompt: Realtime Homepage Gold Pricing
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
+
 > **Use when:** Homepage or tracker shows `Stale · SecondaryProvider · Updated: X days ago`, or when asked to make gold prices update every second with live APIs and backup failover.  
 > **Plan:** [`docs/plans/2026-06-05_realtime-home-pricing.md`](../../docs/plans/2026-06-05_realtime-home-pricing.md)  
 > **Pricing integrity:** [`.github/instructions/gold-pricing.instructions.md`](../instructions/gold-pricing.instructions.md)  
@@ -44,7 +53,7 @@ Price animates every ~1 s when market is open. If gold-api.com fails, static JSO
 
 ---
 
-## Non-negotiable guardrails (AGENTS.md §6)
+## Non-negotiable guardrails (`AGENTS.md` + `.cursor/rules/pricing-trust.mdc`)
 
 1. **Reference ≠ retail** — hero is spot-linked reference only.
 2. **Freshness labels stay visible** — do not hide stale/delayed/fallback pills to look cleaner.

@@ -6,7 +6,7 @@ Generated from `scripts/node/audit-freshness-coverage.js` on 2026-04-23.
 
 ## Scope note
 
-Static analysis only. Does not audit §6.1 spot-vs-retail mixing. Advisory, not a gate.
+Static analysis only. Does not audit non-negotiable rule 1 (reference vs retail) spot-vs-retail mixing. Advisory, not a gate.
 
 Plan: [`docs/plans/2026-04-23_freshness-coverage-audit.md`](../docs/plans/2026-04-23_freshness-coverage-audit.md).
 
@@ -41,7 +41,7 @@ Plan: [`docs/plans/2026-04-23_freshness-coverage-audit.md`](../docs/plans/2026-0
 | `src/pages/home.js` | page-module | ✓ | getMarketStatus | live, unavailable | ✓ / ✓ | missing 'cached' branch literal; missing 'stale' branch literal; KNOWN GAP: Hero card, spotBar, and ticker all carry freshness; surrounding GCC grid and country carousel do not carry per-card freshness branches. |
 | `src/pages/learn.js` | page-module | · | — | — | · / · | EXEMPT: Static educational content page; no live prices. |
 | `src/pages/methodology.js` | page-module | · | — | — | · / · | EXEMPT: Static methodology page; no live prices. |
-| `src/pages/shops.js` | page-module | · | — | — | ✓ / ✓ | EXEMPT: Shops directory is a discovery page; shop cards do not render live prices (the `%` trust-score strings + `shop-tag` labels trip the price-token heuristic). The page-level ticker/spotBar calls now forward updatedAt + hasLiveFailure, so §6.2 is satisfied via those shared components. |
+| `src/pages/shops.js` | page-module | · | — | — | ✓ / ✓ | EXEMPT: Shops directory is a discovery page; shop cards do not render live prices (the `%` trust-score strings + `shop-tag` labels trip the price-token heuristic). The page-level ticker/spotBar calls now forward updatedAt + hasLiveFailure, so non-negotiable rule 2 (freshness) is satisfied via those shared components. |
 | `src/pages/tracker-pro.js` | page-module | · | — | live | ✓ / ✓ | renders price-like content but no live-status import; KNOWN GAP: Tracker-pro workspace; per-panel freshness coverage tracked by follow-up plan. |
 | `src/routes/routeRegistry.js` | other | · | — | — | · / · | EXEMPT: Static route metadata (paths, titles, descriptions); no runtime prices. |
 | `src/search/searchIndex.js` | search | · | — | live | · / · | EXEMPT: Search index generator; "live" is an entity-type label, not a freshness key. |

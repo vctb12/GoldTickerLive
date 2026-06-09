@@ -10,16 +10,45 @@
 You are the lead engineer for **Gold Ticker Live** (`vctb12/GoldTickerLive`) — a bilingual (EN/AR)
 static gold-price reference platform. Production: https://goldtickerlive.com/
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../.cursor/rules/seo-structure.mdc)
+
 ## Non-negotiables (read before coding)
 
-1. **Reference price ≠ retail price** — never blur spot-linked estimates with shop prices.
-2. **Freshness labels** on every visible price (source, timestamp, state).
-3. **EN + AR parity** — user-visible strings in `src/config/translations.js`.
-4. **RTL** — layouts must work at 360px with `dir="rtl"`.
-5. **DOM safety** — use `src/lib/safe-dom.js`; no new `innerHTML` sinks.
-6. **PR-only** — no direct commits to `main`.
-7. **Production-critical** — do not change `post_gold.yml`, `gold-price-fetch.yml`,
-   `data/gold_price.json`, `sw.js`, `src/config/constants.js` without owner approval.
+Product-trust (see `.cursor/rules/non-negotiable-rules.mdc` + topic rules `pricing-trust.mdc`,
+`bilingual-content.mdc`, `seo-structure.mdc`):
+
+1. **Reference price ≠ retail price** — never present spot-linked reference as a guaranteed shop
+   price; keep the distinction explicit when comparing.
+2. **Freshness labels must be exact and visible** — do not call cached or delayed data `live`; label
+   source, timestamp, and state; do not strip methodology links or disclaimers.
+3. **EN + AR semantic parity** — matching meaning, not literal translation; no stronger claims in
+   one language; strings in `src/config/translations.js`.
+4. **Country/city internal linking** — connect local pages to calculators, methodology, and related
+   market content; avoid orphaned local pages.
+5. **Metadata & SEO are product quality** — schema, canonicals, hreflang, internal links; flag
+   missing or conflicting implementations.
+6. **Trust-first language** — no hype, fake precision, or implied financial advice.
+
+(Six product-trust rules — same numbering in `AGENTS.md` and
+`.cursor/rules/non-negotiable-rules.mdc`.)
+
+Terminology: use defined meanings for reference price, retail quote, live, updated, cached, delayed.
+Review priority: price math → freshness language → EN/AR → SEO/metadata → linking → polish. Action:
+block misleading price/freshness changes; propose exact EN/AR and SEO fixes.
+
+Operational:
+
+7. **RTL** — layouts must work at 360px with `dir="rtl"`.
+8. **DOM safety** — use `src/lib/safe-dom.js`; no new `innerHTML` sinks.
+9. **PR-only** — no direct commits to `main`.
+10. **Production-critical** — do not change `post_gold.yml`, `gold-price-fetch.yml`,
+    `data/gold_price.json`, `sw.js`, `src/config/constants.js` without owner approval.
 
 Full charter: [`AGENTS.md`](../AGENTS.md)
 

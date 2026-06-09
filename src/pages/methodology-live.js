@@ -3,12 +3,7 @@
  */
 
 import * as api from '../lib/api.js';
-import {
-  CONSTANTS,
-  KARATS,
-  formatPurityPercent,
-  getMillesimalFineness,
-} from '../config/index.js';
+import { CONSTANTS, KARATS, formatPurityPercent, getMillesimalFineness } from '../config/index.js';
 import { getBaselineHistory, getHistoryStats } from '../lib/historical-data.js';
 import { el } from '../lib/safe-dom.js';
 
@@ -27,7 +22,13 @@ function formatAed(n) {
 
 function freshnessBadge(state, lang) {
   const labels = {
-    en: { live: 'Live', cached: 'Cached', delayed: 'Delayed', stale: 'Stale', fallback: 'Fallback' },
+    en: {
+      live: 'Live',
+      cached: 'Cached',
+      delayed: 'Delayed',
+      stale: 'Stale',
+      fallback: 'Fallback',
+    },
     ar: { live: 'مباشر', cached: 'مخزّن', delayed: 'متأخر', stale: 'قديم', fallback: 'احتياطي' },
   };
   const t = labels[lang] || labels.en;
@@ -100,16 +101,24 @@ function renderFormulaPipeline(spotUsd, lang) {
     'ol',
     { class: 'method-formula-pipeline' },
     steps.map((step, i) =>
-      el('li', { class: 'method-formula-step', 'data-reveal': '', 'data-reveal-delay': String(i + 1) }, [
-        el('span', { class: 'method-formula-step-num' }, String(i + 1)),
-        el('span', { class: 'method-formula-step-label' }, step.label),
-        el('strong', { class: 'method-formula-step-value' }, step.value),
-      ])
+      el(
+        'li',
+        { class: 'method-formula-step', 'data-reveal': '', 'data-reveal-delay': String(i + 1) },
+        [
+          el('span', { class: 'method-formula-step-num' }, String(i + 1)),
+          el('span', { class: 'method-formula-step-label' }, step.label),
+          el('strong', { class: 'method-formula-step-value' }, step.value),
+        ]
+      )
     )
   );
 
   const units = el('div', { class: 'method-unit-snapshot' }, [
-    el('p', { class: 'method-unit-snapshot-title' }, lang === 'ar' ? 'وحدات شائعة (22K AED)' : 'Common units (22K AED)'),
+    el(
+      'p',
+      { class: 'method-unit-snapshot-title' },
+      lang === 'ar' ? 'وحدات شائعة (22K AED)' : 'Common units (22K AED)'
+    ),
     el('ul', { class: 'method-unit-snapshot-list' }, [
       el('li', null, `1 tola ≈ ${formatAed(tolaAed)} AED`),
       el('li', null, `1 kg ≈ ${formatAed(kgAed)} AED`),
@@ -119,7 +128,7 @@ function renderFormulaPipeline(spotUsd, lang) {
   root.replaceChildren(list, units);
 }
 
-function renderKaratTable(lang = 'en') {
+function renderKaratTable(_lang = 'en') {
   const tbody = document.getElementById('method-karat-tbody');
   if (!tbody) return;
 
@@ -127,10 +136,7 @@ function renderKaratTable(lang = 'en') {
     ...KARATS.map((k) => {
       const num = Number(k.code);
       const denom = 24;
-      const fraction =
-        lang === 'ar'
-          ? `${num}/24 = ${k.purity.toFixed(4)}`
-          : `${num}/24 = ${k.purity.toFixed(4)}`;
+      const fraction = `${num}/${denom} = ${k.purity.toFixed(4)}`;
       return el('tr', null, [
         el('th', { scope: 'row' }, el('strong', null, `${k.code}K`)),
         el('td', null, formatPurityPercent(k.purity)),
@@ -146,9 +152,10 @@ function renderUnitTable(spotUsd, lang = 'en') {
   if (!tbody || !(spotUsd > 0)) return;
 
   const g24 = spotUsd / TROY;
-  const unitLabels = lang === 'ar'
-    ? ['1 أونصة تروي', '1 جرام', '1 جرام', '1 تولة (11.664 جم)', '1 كجم']
-    : ['1 troy oz', '1 gram', '1 gram', '1 tola (11.664 g)', '1 kg'];
+  const unitLabels =
+    lang === 'ar'
+      ? ['1 أونصة تروي', '1 جرام', '1 جرام', '1 تولة (11.664 جم)', '1 كجم']
+      : ['1 troy oz', '1 gram', '1 gram', '1 tola (11.664 g)', '1 kg'];
 
   const rows = [
     [unitLabels[0], '24K', spotUsd, 'USD', spotUsd],
@@ -220,8 +227,7 @@ function renderHistoricalContext(lang) {
     return;
   }
   const last12 = records.slice(-12);
-  const avg =
-    last12.reduce((s, r) => s + r.price, 0) / (last12.length || 1);
+  const avg = last12.reduce((s, r) => s + r.price, 0) / (last12.length || 1);
   const pct = ((stats.latest - avg) / avg) * 100;
   const dir = pct >= 0 ? 'above' : 'below';
   el52.textContent =

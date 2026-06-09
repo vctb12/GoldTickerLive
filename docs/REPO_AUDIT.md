@@ -11,7 +11,7 @@ P0 items graduate into plan PRs under [`docs/plans/`](./plans/), per
 - Live-site numbers (Lighthouse, Core Web Vitals, axe scans, responsive screenshots) are
   **explicitly flagged as follow-ups**. This sandbox cannot drive a browser against
   `https://goldtickerlive.com/` and the charter forbids fabricating verification claims
-  ([`AGENTS.md` §6.11](../AGENTS.md#6-product-trust-guardrails)). The existing
+  ([`AGENTS.md` output expectations](../AGENTS.md#non-negotiable-rules)). The existing
   [`lighthouse.yml`](../.github/workflows/lighthouse.yml) and [`.pa11yci.js`](../.pa11yci.js) are
   the right tools for that work in a follow-up PR.
 - Findings are neutral. They identify where the repo is strong, where it's reasonable, and where
@@ -84,21 +84,21 @@ not a defect.
 
 Workflows live in `.github/workflows/`. Each has a tier header; only `ci.yml` gates merges.
 
-| Workflow                | Tier               | Trigger                                 | Notes                                                                 |
-| ----------------------- | ------------------ | --------------------------------------- | --------------------------------------------------------------------- |
-| `ci.yml`                | **Merge gate**     | push/PR to `main`, manual, nightly cron | validate → quality → test → build → link-check; `e2e` job is blocking |
-| `deploy.yml`            | Production deploy  | push to `main`                          | Publishes to GitHub Pages                                             |
-| `codeql.yml`            | Informational scan | schedule / PR                           | Security scan                                                         |
-| `semgrep.yml`           | Informational scan | schedule / PR                           | Pattern-based SAST                                                    |
-| `lighthouse.yml`        | Informational scan | `workflow_dispatch`                     | Manual LHCI autorun against `npm run preview`                         |
-| `perf-check.yml`        | Informational scan | —                                       | Performance sanity                                                    |
-| `post_gold.yml`         | **Production bot** | hourly schedule                         | **§6.10 — do not touch without explicit approval and a plan entry.**  |
-| `daily-newsletter.yml`  | Content bot        | schedule                                | Daily digest                                                          |
-| `weekly-newsletter.yml` | Content bot        | schedule                                | Weekly digest                                                         |
-| `uptime-monitor.yml`    | Content/ops bot    | schedule                                | Pings health endpoints                                                |
-| `health_check.yml`      | Content/ops bot    | schedule                                | Health probes                                                         |
-| `spike_alert.yml`       | Content/ops bot    | schedule                                | Price spike detection                                                 |
-| `sync-db-to-git.yml`    | Content/ops bot    | schedule / dispatch                     | Persists DB state back to git                                         |
+| Workflow                | Tier               | Trigger                                 | Notes                                                                                                   |
+| ----------------------- | ------------------ | --------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `ci.yml`                | **Merge gate**     | push/PR to `main`, manual, nightly cron | validate → quality → test → build → link-check; `e2e` job is blocking                                   |
+| `deploy.yml`            | Production deploy  | push to `main`                          | Publishes to GitHub Pages                                                                               |
+| `codeql.yml`            | Informational scan | schedule / PR                           | Security scan                                                                                           |
+| `semgrep.yml`           | Informational scan | schedule / PR                           | Pattern-based SAST                                                                                      |
+| `lighthouse.yml`        | Informational scan | `workflow_dispatch`                     | Manual LHCI autorun against `npm run preview`                                                           |
+| `perf-check.yml`        | Informational scan | —                                       | Performance sanity                                                                                      |
+| `post_gold.yml`         | **Production bot** | hourly schedule                         | **operational guardrails (`post_gold.yml`) — do not touch without explicit approval and a plan entry.** |
+| `daily-newsletter.yml`  | Content bot        | schedule                                | Daily digest                                                                                            |
+| `weekly-newsletter.yml` | Content bot        | schedule                                | Weekly digest                                                                                           |
+| `uptime-monitor.yml`    | Content/ops bot    | schedule                                | Pings health endpoints                                                                                  |
+| `health_check.yml`      | Content/ops bot    | schedule                                | Health probes                                                                                           |
+| `spike_alert.yml`       | Content/ops bot    | schedule                                | Price spike detection                                                                                   |
+| `sync-db-to-git.yml`    | Content/ops bot    | schedule / dispatch                     | Persists DB state back to git                                                                           |
 
 ### Validation surface (what `ci.yml` actually runs)
 
@@ -145,11 +145,11 @@ Notable invariant-enforcing suites:
 
 ---
 
-## D. SEO surface (read-only — §6.4)
+## D. SEO surface (read-only — technical SEO policy)
 
-Per [`AGENTS.md` §6.4](../AGENTS.md#6-product-trust-guardrails) I am **documenting only**, not
-changing anything on the SEO surface. Every finding below is a question for the owner, not an action
-item I will silently execute.
+Per [`AGENTS.md` technical SEO policy](../AGENTS.md#non-negotiable-rules) I am **documenting only**,
+not changing anything on the SEO surface. Every finding below is a question for the owner, not an
+action item I will silently execute.
 
 ### `robots.txt`
 
@@ -180,8 +180,8 @@ Contains `www.goldtickerlive.com` (single line). **This is worth the owner's att
   site publishes (apex) redirects once before resolving. That's not broken, but it's inconsistent
   with the apex-first story enforced elsewhere, and redirect hops are a small but real Core Web
   Vitals / crawl-efficiency tax.
-- **I am not changing this.** Changing `CNAME` is exactly the kind of SEO surface edit §6.4 says
-  must ride on a plan PR, not a silent fix. See P1 below.
+- **I am not changing this.** Changing `CNAME` is exactly the kind of SEO surface edit technical SEO
+  policy says must ride on a plan PR, not a silent fix. See P1 below.
 
 ### `sitemap.xml` (root)
 
@@ -199,8 +199,8 @@ P1 below) so the owner can review a structured inventory rather than a docs-only
 
 ## E. Data source & freshness UX (partial verification)
 
-Charter clauses §6.1–§6.3 (spot vs retail separation, labelled freshness) are the highest-stakes
-product invariants. Quick grounded observations from the code:
+Charter clauses non-negotiable rules 1–2 (spot vs retail separation, labelled freshness) are the
+highest-stakes product invariants. Quick grounded observations from the code:
 
 - [`src/lib/api.js`](../src/lib/api.js) already implements a **primary → secondary → cached
   fallback** chain with a `source` field on the returned object (`cache-fallback` etc.) and an
@@ -222,8 +222,8 @@ product invariants. Quick grounded observations from the code:
    beyond the tracker. Surface-by-surface "what do we show when we served from fallback?" is worth a
    read-only inventory before any change.
 3. **Currency / unit coverage matrix.** The README lists 24+ currencies and 7 karats; a generated
-   matrix of which pages actually expose which currency × unit × karat would make §6.1–§6.3 easier
-   to reason about across all country pages.
+   matrix of which pages actually expose which currency × unit × karat would make non-negotiable
+   rules 1–2 easier to reason about across all country pages.
 
 None of these requires immediate code change. They're candidates for plan PRs.
 
@@ -268,9 +268,10 @@ None of these are defects. They're candidates.
 **What I deliberately did not do:**
 
 - I did not run Lighthouse against `https://goldtickerlive.com/`. The sandbox cannot drive a browser
-  against a production URL, and inventing numbers would violate §6.11. The correct next step is a
-  follow-up PR that either (a) dispatches `lighthouse.yml` and attaches the report URL, or (b) runs
-  LHCI locally against the current `main` build and records the numbers in a plan PR.
+  against a production URL, and inventing numbers would violate output expectations. The correct
+  next step is a follow-up PR that either (a) dispatches `lighthouse.yml` and attaches the report
+  URL, or (b) runs LHCI locally against the current `main` build and records the numbers in a plan
+  PR.
 
 ---
 
@@ -316,23 +317,24 @@ same rules the implementation would be bound by. None of these is implemented in
    `www.goldtickerlive.com` while every canonical/og:url/sitemap URL in the repo uses the apex
    `https://goldtickerlive.com`. Either (a) confirm the redirect is intentional and note it in
    `docs/SEO_STRATEGY.md`, or (b) plan a `CNAME`/redirect change as a dedicated plan PR.
-   **Charter:** §6.4 (no silent SEO surface changes).
+   **Charter:** technical SEO policy (no silent SEO surface changes).
 
 2. **Generate a read-only SEO-surface inventory.** One JSON artifact listing, per entry HTML file,
    the canonical, og:url, og:image, twitter:card, JSON-LD @type values, hreflang, and robots-meta.
    Committed under `reports/seo/` (or similar), produced by a new script added in a plan PR. Makes
-   every future SEO change reviewable as a diff of generated output. **Charter:** §6.4, §6.11.
+   every future SEO change reviewable as a diff of generated output. **Charter:** technical SEO
+   policy, output expectations.
 
 3. **Site-wide stale/freshness coverage audit.** A static-analysis pass (grep + AST) that lists
    every page with a gold-price rendering, and for each whether it consumes `getLiveFreshness()` and
    whether it renders the `stale` state. Report-only; no code change. Findings seed a future plan PR
-   if gaps exist. **Charter:** §6.1–§6.3.
+   if gaps exist. **Charter:** non-negotiable rules 1–2.
 
 ### P1 — this month
 
 4. **Extend pa11y coverage beyond 3 URLs** (sampled country, content, calculator, invest, a selected
-   shop page). Keep `npm run a11y` manual; expand the URL list. **Charter:** §6.11 keeps the honesty
-   expectation; no guardrail loosens.
+   shop page). Keep `npm run a11y` manual; expand the URL list. **Charter:** output expectations
+   keeps the honesty expectation; no guardrail loosens.
 
 5. **Add axe-core assertions inside the existing Playwright `e2e` job** against the same URLs pa11y
    covers, gated as informational-first, blocking later if stable. **Charter:** respects §4 Autonomy
@@ -340,7 +342,7 @@ same rules the implementation would be bound by. None of these is implemented in
 
 6. **Record a Lighthouse baseline for the current `main` build.** Dispatch `lighthouse.yml` or run
    LHCI locally, attach the report URLs, update `docs/performance-baseline.json` if applicable.
-   **Charter:** §6.11.
+   **Charter:** output expectations.
 
 7. **`npm audit` snapshot in the audit doc.** Refresh this file with a dated advisory table so the
    health statement is time-stamped rather than "current majors."

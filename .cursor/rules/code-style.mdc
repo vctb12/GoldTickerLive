@@ -9,12 +9,12 @@ alwaysApply: true
 ## Change scope
 
 - **Smallest correct change only** — no unsolicited refactors or drive-by edits.
-- **Static multi-page architecture stays static** — no SPA / framework migration unless explicitly requested (`AGENTS.md` §6).
+- **Static multi-page architecture stays static** — no SPA / framework migration unless explicitly requested (`AGENTS.md` operational guardrails).
 - **PR-only workflow** — no direct commits to `main`, no force-push.
 
 ## Dependencies & verification
 
-- **Do not add new dependencies without asking** — check GitHub Advisory DB before adding anything new (`AGENTS.md` §7).
+- **Do not add new dependencies without asking** — check GitHub Advisory DB before adding anything new (`AGENTS.md` operational guardrails).
 - **Preserve all existing tests** in `tests/` (`docs/ARCHITECTURE.md` lists 205 tests in the architecture doc; run `npm test` before marking done).
 - Before `npm test` / `npm run validate`, delete `playwright-report/` and `test-results/` if present — they can cause false positives.
 - **Honest verification** — state what you ran vs. what you assumed; do not claim tests you did not run.

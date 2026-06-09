@@ -13,8 +13,8 @@ see
 §1.1. It informs Wave B fix PRs sliced by category cluster (alt + semantic, contrast + tokens,
 keyboard + focus, ARIA + labels).
 
-Per `AGENTS.md` §6.7: this audit does not move the DOM-safety baseline. It records what is on the
-site today.
+Per `AGENTS.md` operational guardrails (DOM safety): this audit does not move the DOM-safety
+baseline. It records what is on the site today.
 
 ---
 
@@ -205,7 +205,7 @@ B a11y fix PRs**.
 
 ---
 
-## 4. Bilingual (EN + AR) parity — `AGENTS.md` §6.6 — 🟢 mostly OK, one risk
+## 4. Bilingual (EN + AR) parity — `AGENTS.md` non-negotiable rule 3 (EN/AR) — 🟢 mostly OK, one risk
 
 The site is single-source-EN HTML with runtime translation (`src/config/translations.js`). The fix
 PRs must:

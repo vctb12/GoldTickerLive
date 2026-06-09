@@ -10,6 +10,15 @@ related_instructions:
 
 # Prompt: Workflow Debug
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
+
 A workflow is failing. Triage, fix the root cause, and verify.
 
 ## Required inputs (gather these first)
@@ -53,6 +62,8 @@ Do NOT claim you can't read logs. The tools exist.
   `docs/AUTOMATIONS.md`.
 
 ## Return format
+
+Use [`_output-format.md`](./_output-format.md) per finding when reporting issues.
 
 ```md
 # Workflow Debug — <workflow file>

@@ -46,7 +46,10 @@ function buildCrumbs(rel) {
   if (rel.startsWith('content/guides/ar/')) {
     crumbs[0] = { label: 'الرئيسية', url: up || './' };
     crumbs.push({ label: 'الأدلة', url: `${up}content/guides/ar/` });
-    const slug = rel.replace(/^content\/guides\/ar\//, '').replace(/(^|\/)index\.html$/, '').replace(/\.html$/, '');
+    const slug = rel
+      .replace(/^content\/guides\/ar\//, '')
+      .replace(/(^|\/)index\.html$/, '')
+      .replace(/\.html$/, '');
     if (slug) {
       const title = slug
         .split('/')[0]
@@ -59,10 +62,14 @@ function buildCrumbs(rel) {
 
   if (rel.startsWith('content/guides/')) {
     crumbs.push({ label: 'Guides', url: `${up}content/guides/` });
-    const slug = rel.replace(/^content\/guides\//, '').replace(/\.html$/, '').replace(/\/index$/, '');
+    const slug = rel
+      .replace(/^content\/guides\//, '')
+      .replace(/\.html$/, '')
+      .replace(/\/index$/, '');
     if (slug && slug !== 'index') {
       const title = slug
-        .split('/').pop()
+        .split('/')
+        .pop()
         .replace(/-/g, ' ')
         .replace(/\b\w/g, (c) => c.toUpperCase());
       crumbs.push({ label: title, url: '#' });
@@ -144,7 +151,7 @@ function patchHtml(rel, html) {
   }
 
   if (!/related-guides-slot/.test(out)) {
-    out = out.replace(/<\/main>/i, (m) => {
+    out = out.replace(/<\/main>/i, () => {
       changed = true;
       return '      <div id="related-guides-slot"></div>\n    </main>';
     });
@@ -178,9 +185,7 @@ function patchHtml(rel, html) {
 
   if (/bootContentPage/.test(out)) {
     // already patched
-  } else if (
-    /fetchGold|runSearch|history-chart|searchEngine|Chart\.register/i.test(out)
-  ) {
+  } else if (/fetchGold|runSearch|history-chart|searchEngine|Chart\.register/i.test(out)) {
     // Pages with heavy inline app logic — shell-only patch below
     if (!/"@type":\s*"WebPage"/.test(out)) {
       /* WebPage already added above */

@@ -9,6 +9,15 @@ related_instructions:
 
 # Prompt: Endless Gold Product Trust
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
+
 ## Goal
 
 Protect pricing truth — **one** trust defect per run.
@@ -33,4 +42,5 @@ Protect pricing truth — **one** trust defect per run.
 
 ## Return format
 
-Defect → fix → test → risks.
+Follow `AGENTS.md` review priorities (price math → freshness → EN/AR → SEO → linking).
+Use [`_output-format.md`](./_output-format.md) for each finding. End with: defect → exact fix → test → risks.

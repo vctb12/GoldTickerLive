@@ -103,7 +103,7 @@ of which apply here.
 
 ## 4. Why this is **not** in the same PR as the freshness engine
 
-Three reasons aligned with `AGENTS.md` §6 (product-trust guardrails):
+Three reasons aligned with `AGENTS.md` non-negotiable rules:
 
 1. **Production safety.** `server.js` ships with bcrypt + Helmet + rate limiting. Adding a
    long-lived SSE endpoint requires reviewing helmet's `crossOriginEmbedderPolicy`, rate-limiter
@@ -162,8 +162,8 @@ reset the client's liveness watchdog.
 | Phase 3               | Adaptive polling, circuit breaker, time-drift guard                        | future PR  |
 | Phase 6               | Metrics endpoint, structured logs, alerts (see ops runbook)                | future PR  |
 
-Each future PR follows `AGENTS.md` §6 product-trust guardrails: freshness labels stay truthful, AED
-peg stays at 3.6725, EN/AR parity is preserved, no "Live" without all preconditions met.
+Each future PR follows `AGENTS.md` non-negotiable rules: freshness labels stay truthful, AED peg
+stays at 3.6725, EN/AR parity is preserved, no "Live" without all preconditions met.
 
 ## 8. Hard non-goals
 

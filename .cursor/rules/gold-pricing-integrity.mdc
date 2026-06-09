@@ -4,7 +4,9 @@ alwaysApply: true
 
 # Gold Pricing Integrity
 
-Pricing truth is the single biggest reputational risk for Gold Ticker Live. See also `.github/instructions/gold-pricing.instructions.md` when editing pricing surfaces.
+Pricing truth is the single biggest reputational risk for Gold Ticker Live. See also
+`.cursor/rules/pricing-trust.mdc`, `.cursor/rules/non-negotiable-rules.mdc` (terminology policy),
+and `.github/instructions/gold-pricing.instructions.md` when editing pricing surfaces.
 
 ## Canonical formula
 
@@ -62,10 +64,10 @@ Canonical vocabulary also includes `stale` / `unavailable` on some surfaces — 
 
 - Methodology link must remain on pages showing estimated/reference prices.
 - Never present cached, fallback, estimated, or delayed values as live without the correct state label.
-- Product-trust guardrails in `AGENTS.md` §6 items 1–3 apply to every pricing change.
+- Product-trust guardrails in `AGENTS.md` (non-negotiable rules 1–2) apply to every pricing change.
 
 ## Golden rules (pricing)
 
 1. Reference price is not retail price.
-2. Freshness must be visible.
+2. Freshness must be visible and exact — see `.cursor/rules/non-negotiable-rules.mdc` §2.
 3. AED peg is **3.6725** (fixed).

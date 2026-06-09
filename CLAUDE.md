@@ -6,8 +6,8 @@ don't belong in the shared charter.
 
 ## Start here
 
-1. [`AGENTS.md`](./AGENTS.md) — what this repo is, core commands, repository map, the Autonomy
-   Contract, product-trust guardrails, style, done criteria.
+1. [`AGENTS.md`](./AGENTS.md) — product promise, non-negotiable rules, terminology, review
+   priorities, core commands, operational guardrails. Deep reference: `docs/AGENTS_REFERENCE.md`.
 2. [`docs/AI_AGENT_OPERATING_SYSTEM.md`](./docs/AI_AGENT_OPERATING_SYSTEM.md) — index for the skills
    / prompts / agents / checklists system layered on top of `AGENTS.md`.
 3. [`docs/REVAMP_PLAN.md`](./docs/REVAMP_PLAN.md) — only if your task maps to an active section.
@@ -59,8 +59,8 @@ Full reference: [`docs/AI_PROMPT_LIBRARY.md`](./docs/AI_PROMPT_LIBRARY.md) and
 
 ## Verification defaults for Claude sessions
 
-When you finish work, run the commands in [`AGENTS.md` §2](./AGENTS.md#2-core-commands) that match
-the surface you touched (typically `npm test` + `npm run lint` + `npm run validate`, plus
+When you finish work, run the commands in [`AGENTS.md` core commands](./AGENTS.md#core-commands)
+that match the surface you touched (typically `npm test` + `npm run lint` + `npm run validate`, plus
 `npm run build` for any change that touches HTML / CSS / JS). State in the PR body exactly what you
 ran vs. what you inferred.
 

@@ -448,8 +448,8 @@ in `tests/live-status.test.js`.
 **Files:** `src/lib/api.js`, `src/lib/cache.js`, `src/lib/live-status.js`  
 **Risk:** `getLiveFreshness()` only assesses gold price age via `updatedAt`. FX rates are fetched
 live on each page load and cached in `localStorage`, but there is no visible UI indicator when FX
-rates are served from a stale cache (e.g., `open.er-api.com` is unreachable). Charter §6.2 requires
-labelling cached/estimated values.  
+rates are served from a stale cache (e.g., `open.er-api.com` is unreachable). Charter non-negotiable
+rule 2 (freshness) requires labelling cached/estimated values.  
 **Action:** Track `fxUpdatedAt` (from `time_last_update_utc`) and show a stale FX label when rates
 are from cache and older than a threshold.
 

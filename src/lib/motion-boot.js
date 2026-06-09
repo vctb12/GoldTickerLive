@@ -2,6 +2,7 @@
  * Sitewide motion bootstrap — view transitions, scroll-driven reveals, stagger.
  * Call once per page (wired from injectNav).
  */
+/* global CSS */
 
 let booted = false;
 

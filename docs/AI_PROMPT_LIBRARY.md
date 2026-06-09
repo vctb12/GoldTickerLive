@@ -12,14 +12,19 @@ Reference for paste-ready prompts under `.github/prompts/`. For the system overv
 Every prompt in this repo follows the same structure:
 
 - **YAML frontmatter** — `mode`, `description`, related skills, related instructions
+- **Rules preamble** (required, immediately after the `# Prompt:` title) — copy from
+  `_rules-preamble.md`; enforced by `check-agent-governance.js` in `npm run validate`
 - **Goal** — one paragraph
+- **Return format** — audit/review prompts use `_output-format.md` (severity, file, impact, exact
+  fix)
 - **Required inspection** — files / docs to load first
 - **Permission** — what the prompt explicitly allows (counters timid agents)
 - **Implementation expectations** — concrete rules
 - **Verification** — exact commands to run
 - **Return format** — markdown template
 
-If you author a new prompt, follow this standard.
+If you author a new prompt, follow this standard. Canonical preamble snippet:
+[`.github/prompts/_rules-preamble.md`](../.github/prompts/_rules-preamble.md).
 
 ## Index
 
@@ -77,7 +82,8 @@ Configure at [cursor.com/automations](https://cursor.com/automations). Full setu
 > [`docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md`](./GOLD_TICKER_LIVE_MASTER_WORKBOOK.md)  
 > **Endless catalog (copy-paste):**
 > [`docs/plans/2026-06-01_endless-session-prompts.md`](./plans/2026-06-01_endless-session-prompts.md)  
-> **Routing hub:**
+> |>
+> **Routing hub:** |>
 > [`docs/plans/2026-06-01_master-operations-hub.md`](./plans/2026-06-01_master-operations-hub.md)  
 > **GitHub control center:**
 > [`docs/plans/2026-06-09_github-control-center-setup.md`](./plans/2026-06-09_github-control-center-setup.md)  

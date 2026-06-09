@@ -25,8 +25,9 @@ Users on the homepage see a trust-breaking freshness strip:
 Status: Stale · Source: SecondaryProvider · Updated: 6 days ago
 ```
 
-This violates AGENTS.md §6.2 (cached/stale values must be labelled — they are — but **serving
-6-day-old data as the hero price is a product failure**, not an honest label).
+This violates AGENTS.md non-negotiable rule 2 (freshness) (cached/stale values must be labelled —
+they are — but **serving 6-day-old data as the hero price is a product failure**, not an honest
+label).
 
 ### Root causes (confirmed in code review)
 

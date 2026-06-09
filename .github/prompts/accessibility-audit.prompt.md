@@ -11,6 +11,15 @@ related_instructions:
 
 # Prompt: Accessibility Audit
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
+
 Audit Gold Ticker Live's accessibility surface. Treat findings as product quality, not box-ticks.
 
 ## Scope
@@ -58,6 +67,8 @@ npm run validate
 ```
 
 ## Return format
+
+Use [`_output-format.md`](./_output-format.md) per finding when reporting issues.
 
 ```md
 # Accessibility Audit — <date>

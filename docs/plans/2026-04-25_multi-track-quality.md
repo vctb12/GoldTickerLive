@@ -29,17 +29,17 @@ refresh, Track 4.3 CONTRIBUTING ↔ AGENTS.md alignment, Track 4.4 narrow `src/l
 3.2 E2E flows: `lang-toggle.spec.js` + `tracker-flow.spec.js` for flows 1 + 2 from the
 critical-flows list; Track 1.3 freshness coverage: `tests/freshness-coverage.test.js`) ✅ landed. PR
 7+ pending. **Reconcile into:** [`docs/REVAMP_PLAN.md`](../REVAMP_PLAN.md) — each track folds into
-its matching section as PRs land (§22 production tracks owns most of it; §6.x guardrails apply to
-all). Track 2 SEO results feed §11 (Track H — SEO & metadata).
+its matching section as PRs land (§22 production tracks owns most of it; non-negotiable and
+operational guardrails apply to all). Track 2 SEO results feed §11 (Track H — SEO & metadata).
 
 This proposal captures a 20-task program that spans frontend/UX, SEO, testing, documentation, CI/CD,
 and release shipping. Trying to do all 20 in one PR would itself violate the autonomy contract —
 huge churn, uninspectable diff. The plan below sequences them into reviewable slices, each shippable
 independently, with audits landing first so the owner can redirect cheaply.
 
-Nothing here weakens the §6 product-trust guardrails in [`AGENTS.md`](../../AGENTS.md): no
-spot-vs-retail blurring, freshness labels stay, EN/AR parity, DOM-safety baseline doesn't regress,
-no SPA migration, canonical apex (`goldtickerlive.com`) untouched.
+Nothing here weakens the non-negotiable rules in [`AGENTS.md`](../../AGENTS.md): no spot-vs-retail
+blurring, freshness labels stay, EN/AR parity, DOM-safety baseline doesn't regress, no SPA
+migration, canonical apex (`goldtickerlive.com`) untouched.
 
 ---
 
@@ -152,9 +152,9 @@ Each PR follows the Autonomy Contract in [`AGENTS.md`](../../AGENTS.md) §4: exp
 ### 2.2 Structured data pass (Wave B)
 
 - **Plan:** add or improve JSON-LD per page type — `Article` (guides/news), `Product` / `Offer` only
-  where retail prices are actually shown (and labelled — guardrail §6.1), `FAQPage` (only on pages
-  with visible FAQ), `BreadcrumbList` (country/city/shop), `Organization` (homepage),
-  `LocalBusiness` (shop detail), `WebSite` + `SearchAction` (homepage).
+  where retail prices are actually shown (and labelled — guardrail non-negotiable rule 1 (reference
+  vs retail)), `FAQPage` (only on pages with visible FAQ), `BreadcrumbList` (country/city/shop),
+  `Organization` (homepage), `LocalBusiness` (shop detail), `WebSite` + `SearchAction` (homepage).
 - **Validation:** schema.org validator + Google Rich Results Test in CI (additive script).
 - **Constraint:** never schema for content not actually on the page — fail the validator script if a
   JSON-LD field has no DOM equivalent.
@@ -266,7 +266,7 @@ Each PR follows the Autonomy Contract in [`AGENTS.md`](../../AGENTS.md) §4: exp
 
 - **Audit:** `reports/ci-audit.md`. Per workflow in `.github/workflows/`: average runtime, p95,
   failure rate, cache hit rate, redundant steps. Special attention to `post_gold.yml` (production
-  hourly — guardrail §6.10, do not break).
+  hourly — guardrail operational guardrails (`post_gold.yml`), do not break).
 - **Fixes:** add `actions/setup-node` cache + `actions/cache` for `node_modules` / Vite cache /
   Playwright browsers; collapse duplicated install steps; parallelize independent test/lint jobs;
   pin action SHAs; add concurrency groups to cancel superseded runs; ensure `pytest` is wired
@@ -300,8 +300,8 @@ Each PR follows the Autonomy Contract in [`AGENTS.md`](../../AGENTS.md) §4: exp
   `docs/environment-variables.md`.
 - Confirm none are committed (check `git log` for known patterns; secret-scanning is on for the
   org).
-- Verify dev/staging/prod separation (the auth boot-time check is documented per `AGENTS.md` §2 —
-  keep it).
+- Verify dev/staging/prod separation (the auth boot-time check is documented per `AGENTS.md` core
+  commands — keep it).
 - Document each variable: name, purpose, where consumed, required/optional, default, example.
 - **Constraint:** no runtime behavior change.
 
@@ -335,16 +335,18 @@ Each PR follows the Autonomy Contract in [`AGENTS.md`](../../AGENTS.md) §4: exp
 
 ## Cross-cutting guardrails (every PR in this program)
 
-- PR-only, no direct push, no force-push (`AGENTS.md` §6.9).
-- Bilingual EN+AR parity for any user-visible string (§6.6).
-- DOM-safety baseline (`scripts/node/check-unsafe-dom.js`) does not regress (§6.7).
-- Spot/reference vs. retail distinction preserved; freshness labels preserved (§6.1–§6.3).
-- SEO integrity: don't silently move canonicals, sitemap, `robots.txt`, `og:*`, `CNAME` (§6.4) —
-  anything intentional is called out explicitly.
-- Static MPA architecture stays static (§6.5).
+- PR-only, no direct push, no force-push (`AGENTS.md` operational guardrails (PR-only)).
+- Bilingual EN+AR parity for any user-visible string (non-negotiable rule 3 (EN/AR)).
+- DOM-safety baseline (`scripts/node/check-unsafe-dom.js`) does not regress (operational guardrails
+  (DOM safety)).
+- Spot/reference vs. retail distinction preserved; freshness labels preserved (non-negotiable rules
+  1–2).
+- SEO integrity: don't silently move canonicals, sitemap, `robots.txt`, `og:*`, `CNAME` (technical
+  SEO policy) — anything intentional is called out explicitly.
+- Static MPA architecture stays static (operational guardrails (static MPA)).
 - `post_gold.yml` and `scripts/python/utils/*` import layout untouched unless the PR is explicitly
-  about it (§6.10).
-- Honest verification: PR body separates what was run from what was assumed (§6.11).
+  about it (operational guardrails (`post_gold.yml`)).
+- Honest verification: PR body separates what was run from what was assumed (output expectations).
 
 ---
 
@@ -366,7 +368,7 @@ Then Track 3 (testing), Track 4 (docs), Track 5 (CI/deps/lint/env) in parallel b
 
 ## What this plan will NOT do
 
-- No SPA migration, no framework introduction (`AGENTS.md` §6.5).
+- No SPA migration, no framework introduction (`AGENTS.md` operational guardrails (static MPA)).
 - No `www.` reintroduction in canonicals (CNAME apex stays).
 - No major-version dep bumps without owner approval.
 - No `.skip` on flaky tests as a "fix".
