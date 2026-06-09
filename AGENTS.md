@@ -185,3 +185,4 @@ Automation prompts under `.github/prompts/` include a rules preamble — copy fr
 | SEO governance     | `scripts/node/seo-governance.js`, `.github/instructions/seo.instructions.md`       |
 | Active queue       | `PLAN.md`                                                                          |
 | Deep reference     | `docs/AGENTS_REFERENCE.md`, `docs/ARCHITECTURE.md`, `docs/REVAMP_PLAN.md`          |
+| Cursor Cloud env   | `docs/AGENTS_REFERENCE.md` (Node 24, env vars, ports)                              |

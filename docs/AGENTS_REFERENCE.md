@@ -85,3 +85,23 @@ export ADMIN_ACCESS_PIN="123456"
 
 - `npm test` — ~745 tests; 1 pre-existing failure in `tests/analytics.test.js` (Node 24).
 - Admin login: `POST /api/admin/auth/login` with `admin@goldprices.com` + `ADMIN_PASSWORD`.
+
+## Legacy `AGENTS.md` anchor map
+
+Older docs and comments may cite pre-2026-06 section numbers. Map to the compact charter:
+
+| Legacy reference            | Current location                                     |
+| --------------------------- | ---------------------------------------------------- |
+| §6.1 spot vs retail         | `AGENTS.md` non-negotiable rule 1                    |
+| §6.2 freshness labels       | `AGENTS.md` non-negotiable rule 2                    |
+| §6.3 disclaimers as product | `AGENTS.md` non-negotiable rule 2 (merged)           |
+| §6.4 SEO integrity          | `AGENTS.md` rules 5–6 + technical SEO policy         |
+| §6.5 static MPA             | `AGENTS.md` operational guardrails                   |
+| §6.6 EN/AR parity           | `AGENTS.md` non-negotiable rule 3 + bilingual policy |
+| §6.7 DOM safety             | `AGENTS.md` operational guardrails                   |
+| §6.8 secrets                | `AGENTS.md` operational guardrails                   |
+| §6.9 PR-only                | `AGENTS.md` operational guardrails                   |
+| §6.10 `post_gold.yml`       | `AGENTS.md` operational guardrails                   |
+| §6.11 honest verification   | `AGENTS.md` output expectations                      |
+| §2 core commands            | `AGENTS.md` core commands                            |
+| §4 Autonomy Contract        | This file, Autonomy Contract section                 |

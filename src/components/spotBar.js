@@ -2,7 +2,7 @@
  * components/spotBar.js — Sticky top bar showing XAU/USD and 24K AED/gram.
  * Present on every page. Updates on each successful price fetch.
  *
- * Honors AGENTS.md §6.2: cached / stale / unavailable values are visibly
+ * Honors AGENTS.md non-negotiable rule 2 (freshness): cached / stale / unavailable values are visibly
  * labelled. The bar's `data-freshness` attribute reflects
  * `getLiveFreshness()` ('live' | 'cached' | 'stale' | 'unavailable') and
  * the timestamp slot renders both the clock time and a relative age
