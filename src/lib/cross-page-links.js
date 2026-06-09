@@ -27,7 +27,7 @@ export function countryForCurrency(currency, countries = []) {
 }
 
 /**
- * @param {{ countryCode?: string }} [options]
+ * @param {{ countryCode?: string, lang?: 'en'|'ar', base?: string }} [options]
  * @returns {string}
  */
 export function buildShopsHref({ countryCode } = {}) {

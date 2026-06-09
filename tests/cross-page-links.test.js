@@ -41,6 +41,14 @@ test('buildShopsHref adds country query when code present', async () => {
   const mod = await loadModule();
   assert.equal(mod.buildShopsHref(), 'shops.html');
   assert.equal(mod.buildShopsHref({ countryCode: 'AE' }), 'shops.html?country=AE');
+  assert.equal(
+    mod.buildShopsHref({ countryCode: 'ae', lang: 'ar' }),
+    'shops.html?country=AE&lang=ar'
+  );
+  assert.equal(
+    mod.buildShopsHref({ countryCode: 'AE', lang: 'en' }),
+    'shops.html?country=AE&lang=en'
+  );
 });
 
 test('countryForCurrency returns first matching country', async () => {

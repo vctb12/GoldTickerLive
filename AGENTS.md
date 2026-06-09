@@ -168,8 +168,9 @@ Non-negotiables. Each has a one-line _Why:_ so you can make good edge-case decis
 ## 9. Where the plan lives
 
 - **Master workbook (canonical for agents):** `docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md` — product
-  vision, evidence-backed gaps, numbered WB sessions, discovery scanners, verification. Session
-  log: `docs/workbook/WORKBOOK_SESSION_REGISTRY.md`. Composer: `@.github/prompts/master-workbook-session.prompt.md`.
+  vision, evidence-backed gaps, numbered WB sessions, discovery scanners, verification. Session log:
+  `docs/workbook/WORKBOOK_SESSION_REGISTRY.md`. Composer:
+  `@.github/prompts/master-workbook-session.prompt.md`.
 - **Master plan:** `docs/REVAMP_PLAN.md` — tracks in progress, decisions, production tracks, issues,
   backlog. Update the specific section you touched in the same PR.
 - **Proposal intake:** `docs/plans/` — raw captures from prompts, plus `docs/plans/README.md`
@@ -178,6 +179,10 @@ Non-negotiables. Each has a one-line _Why:_ so you can make good edge-case decis
   `docs/PERFORMANCE.md`, `docs/SEO_STRATEGY.md`, `docs/SEO_CHECKLIST.md`, `docs/EDIT_GUIDE.md`,
   `docs/AUTOMATIONS.md`, `docs/environment-variables.md`, `docs/tracker-state.md`. Agent rules don't
   live in `docs/`; this file owns them.
+- **GitHub control center:** `PLAN.md` (active queue), `prompts/master-rerun.md` (session
+  bootstrap), `docs/REPOS_TO_STEAL_FROM.md` (external repo catalog),
+  `docs/plans/2026-06-09_github-control-center-setup.md` (CI + issue template map). Quality gates:
+  `.github/workflows/ci.yml`, `lighthouse.yml`, `link-check.yml`.
 
 ## 10. Agent-specific notes
 
@@ -186,9 +191,10 @@ Non-negotiables. Each has a one-line _Why:_ so you can make good edge-case decis
   never use `git push` directly.
 - **Claude Code** — prefers `CLAUDE.md`, which points here and adds Claude-only mechanics
   (subagents, skills).
-- **Cursor** — modular rules in `.cursor/rules/*.mdc` (migrated from legacy `.cursorrules`). MCP config
-  lives in `.cursor/mcp.json`. Full handover reference: `docs/CURSOR_HANDOVER.md`. For domain-specific
-  tasks,
+- **Cursor** — modular rules in `.cursor/rules/*.mdc` (migrated from legacy `.cursorrules`). MCP
+  config lives in `.cursor/mcp.json`. Full handover reference: `docs/CURSOR_HANDOVER.md`. **Start
+  every session** with `prompts/master-rerun.md` or `@.github/prompts/master-rerun.prompt.md` (rules
+  can be inconsistent in background agents — checked-in docs win). For domain-specific tasks,
   @-mention the relevant `.github/instructions/*.instructions.md` file. Use Composer for multi-file
   changes following the Autonomy Contract (§4 above).
 - **Codex / Windsurf / Aider / Gemini CLI** — read this file directly per the

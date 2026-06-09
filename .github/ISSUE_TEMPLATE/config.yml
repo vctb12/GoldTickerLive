@@ -1,5 +1,11 @@
 blank_issues_enabled: false
 contact_links:
   - name: Documentation
-    url: https://github.com/vctb12/Gold-Prices/blob/main/README.md
+    url: https://github.com/vctb12/GoldTickerLive/blob/main/README.md
     about: Read the full README before opening an issue.
+  - name: Agent charter (AGENTS.md)
+    url: https://github.com/vctb12/GoldTickerLive/blob/main/AGENTS.md
+    about: Product guardrails and verification expectations for contributors and AI agents.
+  - name: Active task plan (PLAN.md)
+    url: https://github.com/vctb12/GoldTickerLive/blob/main/PLAN.md
+    about: Current priorities and recently completed work.

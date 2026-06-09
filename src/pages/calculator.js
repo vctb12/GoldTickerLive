@@ -341,24 +341,42 @@ function buildCountryPageHref(country) {
   return country?.slug ? `countries/${country.slug}/` : 'countries/index.html';
 }
 
-function updateShopsLink({ currency = 'AED' } = {}) {
-  const link = document.getElementById('calc-find-shops-link');
-  if (!link) return;
+let _shopsHandoffListenersBound = false;
+
+function updateShopsHandoff({ currency = 'AED' } = {}) {
+  if (!_shopsHandoffListenersBound) {
+    _shopsHandoffListenersBound = true;
+    const bindCurrencySelect = (id) => {
+      const select = document.getElementById(id);
+      if (!select) return;
+      const handler = () => updateShopsHandoff({ currency: select.value || 'AED' });
+      select.addEventListener('change', handler);
+      select.addEventListener('input', handler);
+    };
+    ['val-currency', 'scrap-currency', 'zakat-currency', 'buy-currency'].forEach(
+      bindCurrencySelect
+    );
+  }
+
   const country = getSelectedCountryContext(currency);
-  link.href = buildShopsHref({ countryCode: country?.code });
-  const countryName = country
-    ? STATE.lang === 'ar'
-      ? country.nameAr
-      : country.nameEn
-    : '';
-  link.textContent = countryName
-    ? tGlobal('calc.findShopsLinkCountry').replace('{country}', countryName)
-    : tGlobal('calc.findShopsLink');
+  const href = buildShopsHref({
+    countryCode: country?.code || '',
+    lang: STATE.lang,
+  });
+  for (const id of ['calc-find-shops-link', 'calc-related-shops-link']) {
+    const link = document.getElementById(id);
+    if (link) link.href = href;
+  }
+  const findLink = document.getElementById('calc-find-shops-link');
+  if (findLink) {
+    const countryName = country ? (STATE.lang === 'ar' ? country.nameAr : country.nameEn) : '';
+    findLink.textContent = countryName
+      ? tGlobal('calc.findShopsLinkCountry').replace('{country}', countryName)
+      : tGlobal('calc.findShopsLink');
+  }
 }
 
 function updateTrackerHandoff({ karat = '22', currency = 'AED' } = {}) {
-  updateShopsHandoff({ currency });
-
   const handoff = document.getElementById('calc-tracker-handoff');
   const trackerLink = document.getElementById('calc-tracker-link');
   const countryLink = document.getElementById('calc-country-link');
@@ -378,7 +396,7 @@ function updateTrackerHandoff({ karat = '22', currency = 'AED' } = {}) {
   mobileTrackerLink.href = href;
   handoff.hidden = false;
 
-  updateShopsLink({ currency });
+  updateShopsHandoff({ currency });
 
   const selectedCountry = getSelectedCountryContext(currency);
   if (countryLink) {
@@ -990,7 +1008,7 @@ function applyLang() {
   set('val-currency-hint', t('val_currency_hint'));
   set('val-result-label', t('val_result_label'));
   set('val-disclaimer', t('val_disclaimer'));
-  updateShopsLink({
+  updateShopsHandoff({
     currency: document.getElementById('val-currency')?.value || 'AED',
   });
   set('calc-scrap-h2', t('scrap_title'));
@@ -1585,10 +1603,7 @@ function populateKaratSelects() {
     select.replaceChildren(
       ...KARATS.map((k) => {
         const pct = (k.purity * 100).toFixed(1);
-        const label =
-          STATE.lang === 'ar'
-            ? `عيار ${k.code} (${pct}%)`
-            : `${k.code}K (${pct}%)`;
+        const label = STATE.lang === 'ar' ? `عيار ${k.code} (${pct}%)` : `${k.code}K (${pct}%)`;
         const opt = document.createElement('option');
         opt.value = k.code;
         opt.textContent = label;

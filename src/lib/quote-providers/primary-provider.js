@@ -15,7 +15,7 @@ export class PrimaryQuoteProvider extends BaseQuoteProvider {
       price: data.price,
       providerTimestamp: data.sourceTimestamp || data.updatedAt,
       fetchedAt: data.updatedAt || new Date().toISOString(),
-      providerId: data.source || this.providerId,
+      providerId: this.providerId,
       source: data.source || this.providerId,
       providerRaw: data.raw || null,
       providerPathSuccessful: data.source !== 'cache-fallback',
