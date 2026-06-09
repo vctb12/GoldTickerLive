@@ -39,6 +39,7 @@ its step into `ci.yml` after it has been stable for a while.
 | `codeql.yml` | CodeQL static analysis (JS/TS), findings in Security tab |
 | `perf-check.yml` | Playwright + image-audit, visibility only (uses `\|\| true`) |
 | `lighthouse.yml` | Manual-only Lighthouse CI run (`workflow_dispatch`); uploads `.lighthouseci/` artifact |
+| `link-check.yml` | Focused dist link audit on content-heavy PRs + nightly 04:00 UTC; PR runs are informational |
 
 ## Tier 3 — Production deploy
 
