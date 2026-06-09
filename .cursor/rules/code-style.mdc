@@ -9,7 +9,7 @@ alwaysApply: true
 ## Change scope
 
 - **Smallest correct change only** — no unsolicited refactors or drive-by edits.
-- **Static multi-page architecture stays static** — no SPA / framework migration unless explicitly requested (`AGENTS.md` §6).
+- **Static multi-page architecture stays static** — no SPA / framework migration unless explicitly requested (`AGENTS.md` operational guardrails).
 - **PR-only workflow** — no direct commits to `main`, no force-push.
 
 ## Dependencies & verification

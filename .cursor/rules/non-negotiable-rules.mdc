@@ -4,7 +4,7 @@ alwaysApply: true
 
 # Non-negotiable rules
 
-> Canonical charter: [`AGENTS.md`](../../AGENTS.md) §6.
+> Canonical charter: [`AGENTS.md`](../../AGENTS.md). Extended reference: `docs/AGENTS_REFERENCE.md`.
 > Topic rules: [`pricing-trust.mdc`](./pricing-trust.mdc), [`bilingual-content.mdc`](./bilingual-content.mdc), [`seo-structure.mdc`](./seo-structure.mdc).
 
 ## 1. Reference prices are not retail shop quotes

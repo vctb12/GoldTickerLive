@@ -53,7 +53,7 @@ Price animates every ~1 s when market is open. If gold-api.com fails, static JSO
 
 ---
 
-## Non-negotiable guardrails (AGENTS.md §6)
+## Non-negotiable guardrails (`AGENTS.md` + `.cursor/rules/pricing-trust.mdc`)
 
 1. **Reference ≠ retail** — hero is spot-linked reference only.
 2. **Freshness labels stay visible** — do not hide stale/delayed/fallback pills to look cleaner.

@@ -6,8 +6,8 @@ don't belong in the shared charter.
 
 ## Start here
 
-1. [`AGENTS.md`](./AGENTS.md) — what this repo is, core commands, repository map, the Autonomy
-   Contract, product-trust guardrails, style, done criteria.
+1. [`AGENTS.md`](./AGENTS.md) — product promise, non-negotiable rules, terminology, review
+   priorities, core commands, operational guardrails. Deep reference: `docs/AGENTS_REFERENCE.md`.
 2. [`docs/AI_AGENT_OPERATING_SYSTEM.md`](./docs/AI_AGENT_OPERATING_SYSTEM.md) — index for the skills
    / prompts / agents / checklists system layered on top of `AGENTS.md`.
 3. [`docs/REVAMP_PLAN.md`](./docs/REVAMP_PLAN.md) — only if your task maps to an active section.

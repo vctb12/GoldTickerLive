@@ -35,7 +35,7 @@ static site. It serves UAE, GCC, the Arab world, and global reference pricing. S
 7. **Shops data must be honest.** No fabricated verification. Use `verified` / `listed` /
    `market cluster` carefully.
 
-Full guardrails: see [`AGENTS.md` §6](../AGENTS.md#6-product-trust-guardrails).
+Full guardrails: see [`AGENTS.md`](../AGENTS.md) (non-negotiable rules, terminology, review priorities).
 
 ## 3. Pricing Truth (one-screen summary)
 
