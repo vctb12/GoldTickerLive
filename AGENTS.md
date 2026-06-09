@@ -26,18 +26,17 @@ be labelled honestly. EN and AR must not diverge in meaning.
 1. **Reference prices are not retail shop quotes.** Must not present a spot-linked reference price
    as a guaranteed in-store purchase price. When comparing reference and shop pricing, the
    distinction must remain explicit.
-2. **Freshness labels must be exact.** Must not use `live`, `updated`, `cached`, or `delayed`
-   loosely. If data is not truly live, must not call it live. Cached, fallback, estimated, or
-   delayed values must show source, timestamp, and state.
-3. **Freshness labels and disclaimers are product elements.** Must not remove methodology links,
-   freshness pills, or reference-vs-retail disclaimers to “look cleaner.”
-4. **EN/AR semantic parity.** Must not ship stronger promises or claims in one language.
+2. **Freshness labels must be exact and must remain visible.** Must not use `live`, `updated`,
+   `cached`, or `delayed` loosely. If data is not truly live, must not call it live. Cached,
+   fallback, estimated, or delayed values must show source, timestamp, and state. Must not remove
+   methodology links, freshness pills, or reference-vs-retail disclaimers to “look cleaner.”
+3. **EN/AR semantic parity.** Must not ship stronger promises or claims in one language.
    User-visible strings live in `src/config/translations.js`.
-5. **Local pages must strengthen linking.** Country and city pages must connect to calculators,
+4. **Local pages must strengthen linking.** Country and city pages must connect to calculators,
    methodology, related country/market content — not fragment into orphans.
-6. **Metadata and SEO are product quality.** Schema, canonicals, metadata, hreflang, and internal
+5. **Metadata and SEO are product quality.** Schema, canonicals, metadata, hreflang, and internal
    links are core integrity. Must flag missing, conflicting, or misleading implementations.
-7. **Trust-first language.** Must not use hype, fake precision, clickbait, or exaggerated certainty.
+6. **Trust-first language.** Must not use hype, fake precision, clickbait, or exaggerated certainty.
    Must not imply financial advice unless the page is explicitly designed for that purpose.
 
 ## Terminology policy

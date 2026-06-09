@@ -25,8 +25,8 @@ Product-trust (see `.cursor/rules/non-negotiable-rules.mdc` + topic rules `prici
 
 1. **Reference price ≠ retail price** — never present spot-linked reference as a guaranteed shop
    price; keep the distinction explicit when comparing.
-2. **Freshness labels must be exact** — do not call cached or delayed data `live`; label source,
-   timestamp, and state on every visible price.
+2. **Freshness labels must be exact and visible** — do not call cached or delayed data `live`; label
+   source, timestamp, and state; do not strip methodology links or disclaimers.
 3. **EN + AR semantic parity** — matching meaning, not literal translation; no stronger claims in
    one language; strings in `src/config/translations.js`.
 4. **Country/city internal linking** — connect local pages to calculators, methodology, and related
@@ -34,6 +34,9 @@ Product-trust (see `.cursor/rules/non-negotiable-rules.mdc` + topic rules `prici
 5. **Metadata & SEO are product quality** — schema, canonicals, hreflang, internal links; flag
    missing or conflicting implementations.
 6. **Trust-first language** — no hype, fake precision, or implied financial advice.
+
+(Six product-trust rules — same numbering in `AGENTS.md` and
+`.cursor/rules/non-negotiable-rules.mdc`.)
 
 Terminology: use defined meanings for reference price, retail quote, live, updated, cached, delayed.
 Review priority: price math → freshness language → EN/AR → SEO/metadata → linking → polish. Action:

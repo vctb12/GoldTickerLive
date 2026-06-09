@@ -36,6 +36,8 @@ const REQUIRED_AGENTS_SECTIONS = [
   '## Operational guardrails',
 ];
 
+const EXPECTED_NON_NEGOTIABLE_COUNT = 6;
+
 const PREAMBLE_MARKERS = [
   'Before reviewing or editing anything, read and follow:',
   'AGENTS.md',
@@ -46,6 +48,23 @@ const PREAMBLE_MARKERS = [
 ];
 
 let errors = 0;
+
+function sliceBetween(text, startHeading, endHeading) {
+  const start = text.indexOf(startHeading);
+  const end = text.indexOf(endHeading, start + 1);
+  if (start === -1 || end === -1) return '';
+  return text.slice(start, end);
+}
+
+function countBoldListRules(text, startHeading, endHeading) {
+  const slice = sliceBetween(text, startHeading, endHeading);
+  return (slice.match(/^\d+\. \*\*/gm) || []).length;
+}
+
+function countMdcSectionRules(text, startHeading, endHeading) {
+  const slice = sliceBetween(text, startHeading, endHeading);
+  return (slice.match(/^## \d+\./gm) || []).length;
+}
 
 function fail(msg) {
   errors += 1;
@@ -100,10 +119,60 @@ if (!exists(agentsPath)) {
   if (!exists('docs/AGENTS_REFERENCE.md')) {
     fail('docs/AGENTS_REFERENCE.md missing — extended reference for AGENTS.md');
   }
+  const agentsRules = countBoldListRules(
+    agents,
+    '## Non-negotiable rules',
+    '## Terminology policy'
+  );
+  if (agentsRules !== EXPECTED_NON_NEGOTIABLE_COUNT) {
+    fail(
+      `AGENTS.md has ${agentsRules} non-negotiable rules; expected ${EXPECTED_NON_NEGOTIABLE_COUNT}`
+    );
+  }
   if (errors === 0 || lineCount <= 280) {
     pass(
-      `AGENTS.md structure check passed (${lineCount} lines, ${REQUIRED_AGENTS_SECTIONS.length} sections).`
+      `AGENTS.md structure check passed (${lineCount} lines, ${agentsRules} non-negotiable rules).`
     );
+  }
+}
+
+// --- Rule count parity (AGENTS.md ↔ non-negotiable-rules.mdc ↔ master-rerun) ---
+const mdcRules = countMdcSectionRules(
+  read('.cursor/rules/non-negotiable-rules.mdc'),
+  '# Non-negotiable rules',
+  '## Terminology policy'
+);
+if (mdcRules !== EXPECTED_NON_NEGOTIABLE_COUNT) {
+  fail(`non-negotiable-rules.mdc has ${mdcRules} rules; expected ${EXPECTED_NON_NEGOTIABLE_COUNT}`);
+} else {
+  pass(`non-negotiable-rules.mdc has ${EXPECTED_NON_NEGOTIABLE_COUNT} rules.`);
+}
+
+const masterRerunText = read('prompts/master-rerun.md');
+const productTrustBlock = masterRerunText.match(
+  /## Non-negotiables \(read before coding\)[\s\S]*?Operational:/
+);
+if (!productTrustBlock) {
+  fail('prompts/master-rerun.md missing product-trust non-negotiables block.');
+} else {
+  const masterRules = (productTrustBlock[0].match(/^\d+\. \*\*/gm) || []).length;
+  if (masterRules !== EXPECTED_NON_NEGOTIABLE_COUNT) {
+    fail(
+      `prompts/master-rerun.md lists ${masterRules} product-trust rules; expected ${EXPECTED_NON_NEGOTIABLE_COUNT}`
+    );
+  } else {
+    pass(`prompts/master-rerun.md lists ${EXPECTED_NON_NEGOTIABLE_COUNT} product-trust rules.`);
+  }
+}
+
+if (exists(agentsPath) && mdcRules === EXPECTED_NON_NEGOTIABLE_COUNT) {
+  const agentsRules = countBoldListRules(
+    read(agentsPath),
+    '## Non-negotiable rules',
+    '## Terminology policy'
+  );
+  if (agentsRules === mdcRules) {
+    pass('AGENTS.md and non-negotiable-rules.mdc rule counts match.');
   }
 }
 

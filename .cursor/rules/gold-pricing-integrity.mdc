@@ -64,7 +64,7 @@ Canonical vocabulary also includes `stale` / `unavailable` on some surfaces — 
 
 - Methodology link must remain on pages showing estimated/reference prices.
 - Never present cached, fallback, estimated, or delayed values as live without the correct state label.
-- Product-trust guardrails in `AGENTS.md` (non-negotiable rules 1–3) apply to every pricing change.
+- Product-trust guardrails in `AGENTS.md` (non-negotiable rules 1–2) apply to every pricing change.
 
 ## Golden rules (pricing)
 

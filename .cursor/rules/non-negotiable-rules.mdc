@@ -12,11 +12,12 @@ alwaysApply: true
 - Never present a spot-linked reference price as a guaranteed in-store purchase price.
 - If content compares market/reference pricing and shop pricing, the distinction must remain explicit.
 
-## 2. Freshness labels must be exact
+## 2. Freshness labels must be exact and must remain visible
 
 - The terms `live`, `updated`, `cached`, and `delayed` must not be used loosely.
 - If data is not truly live, do not call it live.
 - If a page uses cached or delayed values, the wording must reflect that clearly.
+- Must not remove methodology links, freshness pills, or reference-vs-retail disclaimers to “look cleaner.”
 
 ## 3. English and Arabic must match in meaning
 
