@@ -10,8 +10,9 @@ A bilingual gold-price platform built for users who need more than a basic spot 
 live spot-linked pricing, market comparison, calculator tools, historical views, exports, alerts,
 country pages, and Arabic-first accessibility.
 
-> **For coding agents:** see [`AGENTS.md`](AGENTS.md) and the
-> [Agent Prompt Library v2](docs/GOLD_TICKER_LIVE_AGENT_PROMPTS.md).
+> **For coding agents:** start every session with
+> [`prompts/master-rerun.md`](prompts/master-rerun.md), then [`PLAN.md`](PLAN.md) and
+> [`AGENTS.md`](AGENTS.md). Prompt index: [`docs/AI_PROMPT_LIBRARY.md`](docs/AI_PROMPT_LIBRARY.md).
 
 <p>
   <a href="https://goldtickerlive.com/">
@@ -73,6 +74,7 @@ country pages, and Arabic-first accessibility.
 - [Core Workspaces](#core-workspaces)
 - [Supported Markets](#supported-markets)
 - [Data Sources & Price Logic](#data-sources--price-logic)
+- [GitHub Control Center](#github-control-center)
 - [Automation & Social Posting](#automation--social-posting)
 - [Admin Panel](#admin-panel)
 - [System Resilience](#system-resilience-and-offline-behavior)
@@ -373,6 +375,31 @@ AED price         = usdPrice × 3.6725 (fixed peg)
 
 ---
 
+## GitHub Control Center
+
+This repo is the **control center** for AI-driven work (Claude Pro + Cursor Pro) — instructions live
+in git, not chat memory.
+
+| Artifact                                                                                                       | Purpose                                                      |
+| -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| [`prompts/master-rerun.md`](prompts/master-rerun.md)                                                           | Paste at the start of every agent session                    |
+| [`PLAN.md`](PLAN.md)                                                                                           | Active task queue — update after each PR                     |
+| [`docs/REPOS_TO_STEAL_FROM.md`](docs/REPOS_TO_STEAL_FROM.md)                                                   | External repos to use / fork / study (one feature at a time) |
+| [`docs/plans/2026-06-09_github-control-center-setup.md`](docs/plans/2026-06-09_github-control-center-setup.md) | CI map, issue templates, folder structure                    |
+| [`.github/workflows/README.md`](.github/workflows/README.md)                                                   | Full workflow tier registry (22 workflows)                   |
+
+**Quality gates (starter trio):**
+
+| Workflow                                             | Trigger                   | Role                                          |
+| ---------------------------------------------------- | ------------------------- | --------------------------------------------- |
+| [`ci.yml`](.github/workflows/ci.yml)                 | Every PR + push to `main` | Lint, test, validate, build, Playwright smoke |
+| [`lighthouse.yml`](.github/workflows/lighthouse.yml) | UI PRs + manual           | Performance, a11y, SEO (`lighthouserc.json`)  |
+| [`link-check.yml`](.github/workflows/link-check.yml) | Content PRs + nightly     | Broken internal links on built `dist/`        |
+
+Open issues via **Issues → New issue** — templates: bug, feature, polish, performance.
+
+---
+
 ## Automation & Social Posting
 
 Gold Ticker Live runs **GitHub Actions workflows** for automated operations:
@@ -635,7 +662,8 @@ GoldTickerLive/
 │   └── python/
 │       └── gold_poster.py         # Python gold price poster
 │
-├── .github/workflows/         # GitHub Actions (8 workflows)
+├── .github/workflows/         # GitHub Actions (22 workflows — see .github/workflows/README.md)
+├── prompts/master-rerun.md    # Agent session bootstrap
 ├── data/                      # Static data files (shops, audit logs)
 ├── assets/                    # Images, screenshots, icons
 ├── server/                    # Server-side admin routes, middleware, and lib

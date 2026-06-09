@@ -1,13 +1,21 @@
 # ------------------------------------------------------------------
 # Lighthouse CI — informational performance scan.
-# Manual-only (`workflow_dispatch`); reports Core Web Vitals to the
-# LHCI temporary public storage. NOT a required merge gate.
+# Manual (`workflow_dispatch`) or UI-heavy PRs; reads `lighthouserc.json`.
+# Reports Core Web Vitals to LHCI temporary public storage. NOT a merge gate.
 # Tier: informational scan
 # ------------------------------------------------------------------
 name: Lighthouse CI
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - '**.html'
+      - 'styles/**'
+      - 'src/**'
+      - 'lighthouserc.json'
+      - '.github/workflows/lighthouse.yml'
 
 # Manual best-effort performance reporting — no write scope required.
 permissions:
@@ -49,8 +57,7 @@ jobs:
       - name: Run LHCI autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npx @lhci/cli autorun --collect.url=http://localhost:4173 --upload.target=temporary-public-storage
+        run: npx @lhci/cli autorun
 
       - name: Upload Lighthouse report
         if: always()

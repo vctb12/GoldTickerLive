@@ -51,9 +51,10 @@ Endless prompts:
 
 ## ✅ Recently Completed
 
-- [x] **GitHub control center** — `docs/plans/2026-06-09_github-control-center-setup.md`,
-      `prompts/master-rerun.md`, `docs/REPOS_TO_STEAL_FROM.md`, polish/performance issue templates,
-      standalone `link-check.yml` — completed: 2026-06-09 — PR: (pending)
+- [x] **GitHub control center** — setup plan, `master-rerun`, `REPOS_TO_STEAL_FROM`, issue
+      templates, `link-check.yml`, `lighthouserc.json`, `labels.yml` + `sync-labels.yml`,
+      README/AGENTS wiring — completed: 2026-06-09 — PR:
+      [#411](https://github.com/vctb12/GoldTickerLive/pull/411)
 - [x] **WB-102** (partial — PR open) — home karat selection → tracker `#mode=live&cur=AED&k=&u=`;
       calculator shops CTA with `?country=`; `src/lib/cross-page-links.js` — 2026-06-01
 - [x] **Repo C1a** — docs archive (`docs/archive/2026-06/`) + supersession index + plan stubs (no

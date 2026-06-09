@@ -7,7 +7,7 @@ class: meta
 owner: @vctb12
 created: "2026-06-09"
 last_updated: "2026-06-09"
-next_action: "Use prompts/master-rerun.md for every Claude/Cursor session; extend REPOS_TO_STEAL_FROM.md as you evaluate repos"
+next_action: "Extend REPOS_TO_STEAL_FROM.md as you evaluate repos; run Lighthouse after major UI PRs"
 ```
 
 > **Goal:** Make `vctb12/GoldTickerLive` the control center for AI-driven, repeatable work — not a
@@ -87,9 +87,11 @@ in Tier 2.
 
 ### 2. `lighthouse.yml` — performance / a11y / SEO snapshot
 
-**Trigger:** `workflow_dispatch` only (manual).
+**Trigger:** `workflow_dispatch`; PRs touching `**.html`, `styles/**`, `src/**`, or
+`lighthouserc.json`.
 
-**Use when:** major UI changes (homepage, tracker, nav). Uploads `.lighthouseci/` artifact.
+**Use when:** major UI changes (homepage, tracker, nav). Config: root `lighthouserc.json` (4
+canonical URLs). Uploads `.lighthouseci/` artifact.
 
 **Related:** `perf-check.yml` (Playwright + image audit, non-blocking on every PR).
 
@@ -154,6 +156,9 @@ treat `AGENTS.md`, `PLAN.md`, and the prompt body as the source of truth.
 - [x] Issue templates: polish + performance
 - [x] Standalone `link-check.yml` workflow
 - [x] Update `.github/workflows/README.md` tier table
+- [x] `.github/labels.yml` + `sync-labels.yml` (`polish`, `performance` labels)
+- [x] `lighthouserc.json` + PR path triggers on `lighthouse.yml`
+- [x] README + `AGENTS.md` + `AI_PROMPT_LIBRARY.md` wired to control center
 - [ ] Owner: review REPOS catalog quarterly; add rows only for one clear GTL problem each
 
 ---

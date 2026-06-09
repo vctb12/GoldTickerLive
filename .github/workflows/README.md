@@ -19,6 +19,8 @@ merge gate or informational. Four tiers are in use:
 | Spike Alert | [![Spike Alert](https://github.com/vctb12/GoldTickerLive/actions/workflows/spike_alert.yml/badge.svg)](https://github.com/vctb12/GoldTickerLive/actions/workflows/spike_alert.yml) |
 | Daily Newsletter | [![Daily Newsletter](https://github.com/vctb12/GoldTickerLive/actions/workflows/daily-newsletter.yml/badge.svg)](https://github.com/vctb12/GoldTickerLive/actions/workflows/daily-newsletter.yml) |
 | Weekly Newsletter | [![Weekly Newsletter](https://github.com/vctb12/GoldTickerLive/actions/workflows/weekly-newsletter.yml/badge.svg)](https://github.com/vctb12/GoldTickerLive/actions/workflows/weekly-newsletter.yml) |
+| Lighthouse CI | [![Lighthouse CI](https://github.com/vctb12/GoldTickerLive/actions/workflows/lighthouse.yml/badge.svg)](https://github.com/vctb12/GoldTickerLive/actions/workflows/lighthouse.yml) |
+| Link Check | [![Link Check](https://github.com/vctb12/GoldTickerLive/actions/workflows/link-check.yml/badge.svg)](https://github.com/vctb12/GoldTickerLive/actions/workflows/link-check.yml) |
 
 ## Tier 1 — Required merge gates
 
@@ -38,7 +40,7 @@ its step into `ci.yml` after it has been stable for a while.
 | ---- | ---- |
 | `codeql.yml` | CodeQL static analysis (JS/TS), findings in Security tab |
 | `perf-check.yml` | Playwright + image-audit, visibility only (uses `\|\| true`) |
-| `lighthouse.yml` | Manual-only Lighthouse CI run (`workflow_dispatch`); uploads `.lighthouseci/` artifact |
+| `lighthouse.yml` | UI PRs + manual LHCI (`lighthouserc.json`); uploads `.lighthouseci/` artifact |
 | `link-check.yml` | Focused dist link audit on content-heavy PRs + nightly 04:00 UTC; PR runs are informational |
 
 ## Tier 3 — Production deploy
@@ -66,6 +68,7 @@ commit derived data; others only read and post to external APIs.
 | `daily-newsletter.yml` | daily at 03:00 UTC | generates + dispatches daily digest |
 | `weekly-newsletter.yml` | weekly Sun at 14:00 UTC | generates + dispatches weekly digest |
 | `sync-db-to-git.yml` | `repository_dispatch: sync-shops` | syncs admin DB to `data/shops.js` |
+| `sync-labels.yml` | push to `main` (labels file) + manual | syncs `.github/labels.yml` to repo labels |
 
 ## Conventions
 
@@ -117,3 +120,8 @@ update this table and every workflow that references it.
 | `actions/deploy-pages` | v5 | `cd2ce8fcbc39b97be8ca5fce6e763baed58fa128` |
 | `github/codeql-action` | v4 | `95e58e9a2cdfd71adc6e0353d5c52f41a045d225` |
 | `stefanzweifel/git-auto-commit-action` | v7 | `04702edda442b2e678b25b537cec683a1493fcb9` |
+
+## Label sync
+
+Issue templates reference labels defined in [`.github/labels.yml`](../labels.yml). After editing that
+file, merge to `main` (triggers `sync-labels.yml`) or run **Sync GitHub Labels** manually from Actions.
