@@ -57,7 +57,7 @@ jobs:
       - name: Run LHCI autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx @lhci/cli autorun
+        run: lhci autorun
 
       - name: Upload Lighthouse report
         if: always()
