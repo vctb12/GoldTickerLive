@@ -73,20 +73,20 @@ function nowIso() {
   return new Date().toISOString();
 }
 
-const API_KEY_HASH_ITERATIONS = Number.parseInt(
+const parsedApiKeyHashIterations = Number.parseInt(
   process.env.API_KEY_HASH_ITERATIONS || '210000',
   10
 );
+const API_KEY_HASH_ITERATIONS =
+  Number.isFinite(parsedApiKeyHashIterations) && parsedApiKeyHashIterations > 0
+    ? parsedApiKeyHashIterations
+    : 210000;
 const API_KEY_HASH_BYTES = 32;
 const API_KEY_HASH_DIGEST = 'sha512';
+const API_KEY_HASH_FALLBACK_SALT = 'goldtickerlive-api-key-hash-v2';
 
 function getApiKeyHashSalt() {
-  return (
-    process.env.API_KEY_HASH_SALT ||
-    process.env.JWT_SECRET ||
-    process.env.ADMIN_PASSWORD ||
-    'goldtickerlive-api-key-hash-v2'
-  );
+  return process.env.API_KEY_HASH_SALT || API_KEY_HASH_FALLBACK_SALT;
 }
 
 function hashApiKey(rawKey) {
@@ -94,17 +94,11 @@ function hashApiKey(rawKey) {
     .pbkdf2Sync(
       rawKey,
       getApiKeyHashSalt(),
-      Number.isFinite(API_KEY_HASH_ITERATIONS) && API_KEY_HASH_ITERATIONS > 0
-        ? API_KEY_HASH_ITERATIONS
-        : 210000,
+      API_KEY_HASH_ITERATIONS,
       API_KEY_HASH_BYTES,
       API_KEY_HASH_DIGEST
     )
     .toString('hex');
-}
-
-function hashApiKeyLegacy(rawKey) {
-  return crypto.createHash('sha256').update(rawKey).digest('hex');
 }
 
 // ---------------------------------------------------------------------------
@@ -517,41 +511,30 @@ async function createApiKey({ userId, label }) {
 }
 
 /**
- * Look up a user by raw API key (hash check), with backward compatibility for
- * legacy SHA-256 records.
+ * Look up a user by raw API key (hash check).
  */
 async function resolveApiKey(rawKey) {
   if (!rawKey) return null;
   const keyHash = hashApiKey(rawKey);
-  const legacyKeyHash = hashApiKeyLegacy(rawKey);
   const sb = getSupabaseClient();
   if (sb) {
     try {
       const { data, error } = await sb
         .from('api_keys')
-        .select('id, user_id, revoked, label, created_at, key_hash')
-        .in('key_hash', [keyHash, legacyKeyHash])
+        .select('id, user_id, revoked, label, created_at')
+        .eq('key_hash', keyHash)
         .eq('revoked', false)
         .maybeSingle();
       if (error) throw error;
       if (!data) return null;
-      if (data.key_hash === legacyKeyHash) {
-        await sb.from('api_keys').update({ key_hash: keyHash }).eq('id', data.id);
-      }
       return { id: data.id, userId: data.user_id, label: data.label, createdAt: data.created_at };
     } catch (err) {
       console.error('[billing-repo] resolveApiKey Supabase error:', err.message);
     }
   }
   const store = readStore();
-  const row = store.api_keys.find(
-    (r) => (r.keyHash === keyHash || r.keyHash === legacyKeyHash) && !r.revoked
-  );
+  const row = store.api_keys.find((r) => r.keyHash === keyHash && !r.revoked);
   if (!row) return null;
-  if (row.keyHash === legacyKeyHash) {
-    row.keyHash = keyHash;
-    writeStore(store);
-  }
   return { id: row.id, userId: row.userId, label: row.label, createdAt: row.createdAt };
 }
 
