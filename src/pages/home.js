@@ -801,6 +801,7 @@ function applyLangToPage() {
   setTextById('karat-strip-title', tx('karatStripTitle'));
   setTextById('karat-strip-sub', tx('karatStripSub'));
   setTextById('karat-strip-cta', tx('karatStripCta'));
+  setTextById('karat-strip-scroll-hint', tx('karatStripScrollHint'));
   updateKaratStripSelection();
   syncCrossPageLinks();
   setTextById('tools-title', tx('toolsTitle'));

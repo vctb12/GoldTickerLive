@@ -27,6 +27,13 @@ Protect and improve how important pages are structured for search engines and us
 Read: `.github/instructions/seo.instructions.md`, `scripts/node/seo-governance.js` (policy),
 `robots.txt`, sitemap generation in `scripts/generate-sitemap.js`.
 
+## Scope boundaries
+
+- **Gold Integrity Agent** owns pricing/freshness on price surfaces — you may flag SEO on country
+  price pages but not re-audit karat math.
+- **Bilingual Consistency Agent** owns EN/AR copy parity — skip body copy unless in meta/schema text.
+- For scheduled weekly scans, use `serp-structure-weekly-audit.prompt.md`.
+
 ## When triggered
 
 1. Inspect changed pages and nearby related pages in the same cluster.

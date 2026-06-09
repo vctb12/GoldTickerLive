@@ -75,7 +75,7 @@ walkCountries(path.join(ROOT, 'countries'));
 
 // Fix internal links in stub pages and other HTML under countries/
 function fixHtmlLinks(filePath) {
-  let html = fs.readFileSync(filePath, 'utf8');
+  const html = fs.readFileSync(filePath, 'utf8');
   const next = html.replace(/\/countries\/([a-z0-9-]+)\/gold-price\//g, '/countries/$1/');
   if (next !== html) {
     if (!dryRun) fs.writeFileSync(filePath, next, 'utf8');

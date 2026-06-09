@@ -2,8 +2,12 @@
 
 Copy-paste **Agent Instructions** for [Cursor Automations](https://cursor.com/automations).
 
-**Setup guide:** [`docs/CURSOR_AUTOMATIONS_PLAYBOOK.md`](../../../docs/CURSOR_AUTOMATIONS_PLAYBOOK.md)  
-**Policy:** [`.cursor/automation-policy.md`](../../../.cursor/automation-policy.md)
+**Setup:** [`docs/CURSOR_AUTOMATIONS_PLAYBOOK.md`](../../../docs/CURSOR_AUTOMATIONS_PLAYBOOK.md)  
+**Live config:** [`docs/CURSOR_AUTOMATIONS_REGISTRY.md`](../../../docs/CURSOR_AUTOMATIONS_REGISTRY.md)  
+**Policy:** [`.cursor/automation-policy.md`](../../../.cursor/automation-policy.md)  
+**Master program:** [`docs/MASTER_IMPROVEMENT_PROGRAM.md`](../../../docs/MASTER_IMPROVEMENT_PROGRAM.md)
+
+## Core automations (build order)
 
 | Order | File | Trigger | Launch mode |
 | ----- | ---- | ------- | ----------- |
@@ -13,4 +17,13 @@ Copy-paste **Agent Instructions** for [Cursor Automations](https://cursor.com/au
 | 4 | [`seo-expansion-agent.prompt.md`](./seo-expansion-agent.prompt.md) | Weekly schedule | Proposal-only |
 | 5 | [`gold-market-insight-writer.prompt.md`](./gold-market-insight-writer.prompt.md) | Daily schedule | Draft-only |
 
-Paste the full file body (below the YAML frontmatter) into the automation **Agent Instructions** field.
+## Phase 2+ prompts
+
+| File | When |
+| ---- | ---- |
+| [`serp-structure-weekly-audit.prompt.md`](./serp-structure-weekly-audit.prompt.md) | SERP PR mode stable → weekly schedule |
+| [`seo-expansion-draft-mode.prompt.md`](./seo-expansion-draft-mode.prompt.md) | Registry mode `draft-scaffold` |
+| [`automation-tuning-session.prompt.md`](./automation-tuning-session.prompt.md) | After 5–10 automation runs (interactive session) |
+| [`ui-ux-ease-of-use-session.prompt.md`](./ui-ux-ease-of-use-session.prompt.md) | One PR of homepage/nav/calculator ease-of-use |
+
+Paste the full file body (below YAML frontmatter) into the automation **Agent Instructions** field.

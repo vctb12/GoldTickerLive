@@ -32,6 +32,13 @@ reviewing.
 - Freshness labels (live/cached/fallback/etc.)
 - Local market terminology (karat names, currency labels, city/country names)
 
+## Scope boundaries
+
+- **Gold Integrity Agent** owns pricing math and freshness state labels — you flag copy only when
+  meaning diverges, not formula issues.
+- **SERP Structure Agent** owns titles/meta/hreflang — skip metadata unless wording affects trust.
+- Skip with `PASS` when PR has no user-visible copy changes.
+
 ## When triggered
 
 1. Identify changed bilingual pairs or equivalent EN/AR sections in the diff.

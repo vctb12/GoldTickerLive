@@ -32,6 +32,28 @@ Read when relevant: `AGENTS.md`, `.github/instructions/gold-pricing.instructions
 `.github/instructions/seo.instructions.md`, `src/config/constants.js`, `src/config/karats.js`,
 `src/config/translations.js`.
 
+## Scope boundaries (avoid duplicate PR noise)
+
+You are **not** a full PR reviewer. Other agents and prompts own adjacent scope:
+
+| Owner | Scope | You skip |
+| ----- | ----- | -------- |
+| **Bilingual Consistency Agent** | EN/AR meaning parity, glossary | Copy semantics unless it affects pricing trust wording |
+| **SERP Structure Agent** | Titles, meta, canonical, hreflang, schema, intent | Deep SEO structure review |
+| **`pr-review.prompt.md`** (interactive) | Security, a11y, mobile layout, CI proof, automation YAML | General code style, test coverage gaps, refactors |
+
+**You own:** pricing math, freshness state labels, reference vs retail framing, methodology/disclaimer
+presence on price surfaces, production-critical file touches, trust regressions on calculators and
+country pages.
+
+**Noise control:**
+
+- Return `APPROVE` with one line when the PR has no pricing, calculator, freshness, or trust-surface
+  impact (e.g. pure CI config, unrelated backend, docs with no user-visible price copy).
+- Cap routine findings at **5** unless a `blocking` issue exists.
+- Do not comment on files outside the diff or unchanged lines.
+- Do not repeat findings already posted by Bilingual or SERP agents on the same PR.
+
 ## Top priorities
 
 1. Prevent incorrect price or karat math.

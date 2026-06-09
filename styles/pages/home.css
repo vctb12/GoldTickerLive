@@ -716,12 +716,24 @@
   overflow-wrap: anywhere;
 }
 
+.karat-strip-scroll-hint {
+  display: none;
+  margin: 0;
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
 .karat-strip-prices {
   display: flex;
   gap: var(--space-2);
   overflow-x: auto;
   scrollbar-width: none;
   padding: var(--space-1);
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-inline: var(--space-2);
 }
 
 .karat-strip-prices::-webkit-scrollbar {
@@ -734,6 +746,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-1);
+  scroll-snap-align: start;
   min-width: 104px;
   min-height: 72px;
   background: var(--surface-secondary);
@@ -828,6 +841,42 @@
 
 .karat-strip-link:hover {
   color: var(--color-gold-light);
+}
+
+.karat-strip-link:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-xs);
+}
+
+/* Edge fade hints horizontal scroll on narrow viewports */
+@media (width <= 768px) {
+  .karat-strip-scroll-hint {
+    display: block;
+    grid-column: 1 / -1;
+    text-align: center;
+    padding-block-end: var(--space-1);
+  }
+
+  .karat-strip-prices {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 10%,
+      #000 90%,
+      transparent
+    );
+  }
+
+  [dir='rtl'] .karat-strip-prices {
+    mask-image: linear-gradient(
+      to left,
+      transparent,
+      #000 10%,
+      #000 90%,
+      transparent
+    );
+  }
 }
 
 @media (width <= 480px) {

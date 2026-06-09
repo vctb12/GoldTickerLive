@@ -65,6 +65,13 @@ Configure at [cursor.com/automations](https://cursor.com/automations). Full setu
 | 4 | [`seo-expansion-agent`](../.github/prompts/cursor-automations/seo-expansion-agent.prompt.md) | Weekly schedule | PROPOSE \| NO WORTHWHILE IDEAS |
 | 5 | [`gold-market-insight-writer`](../.github/prompts/cursor-automations/gold-market-insight-writer.prompt.md) | Daily schedule | PUBLISH \| DO NOT PUBLISH |
 
+**Phase 2+ / sessions:** [`serp-structure-weekly-audit`](../.github/prompts/cursor-automations/serp-structure-weekly-audit.prompt.md),
+[`seo-expansion-draft-mode`](../.github/prompts/cursor-automations/seo-expansion-draft-mode.prompt.md),
+[`automation-tuning-session`](../.github/prompts/cursor-automations/automation-tuning-session.prompt.md),
+[`ui-ux-ease-of-use-session`](../.github/prompts/cursor-automations/ui-ux-ease-of-use-session.prompt.md)
+
+**Master program (all tracks):** [`docs/MASTER_IMPROVEMENT_PROGRAM.md`](./MASTER_IMPROVEMENT_PROGRAM.md)
+
 > **Session bootstrap:** [`prompts/master-rerun.md`](../prompts/master-rerun.md)  
 > **Master workbook:**
 > [`docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md`](./GOLD_TICKER_LIVE_MASTER_WORKBOOK.md)  

@@ -5,6 +5,8 @@
 > this document is **Cursor Cloud Automations** only.
 
 **Policy (read first):** [`.cursor/automation-policy.md`](../.cursor/automation-policy.md)  
+**Your live config:** [`CURSOR_AUTOMATIONS_REGISTRY.md`](./CURSOR_AUTOMATIONS_REGISTRY.md) — update after creating automations in Cursor  
+**Master program:** [`MASTER_IMPROVEMENT_PROGRAM.md`](./MASTER_IMPROVEMENT_PROGRAM.md) — all phases + future prompts  
 **Charter:** [`AGENTS.md`](../AGENTS.md)  
 **Prompt files (copy-paste):** [`.github/prompts/cursor-automations/README.md`](../.github/prompts/cursor-automations/README.md)
 
