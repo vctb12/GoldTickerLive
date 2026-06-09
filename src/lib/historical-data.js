@@ -60,9 +60,9 @@ function baselineToRecord(entry) {
 
 /**
  * Normalise a daily cached entry (from localStorage/STATE.history).
- * @param {{ date: string, price: number, timestamp: number }} entry
+ * Normalise a daily cached entry (from localStorage/STATE.history).
+ * @param {{ date: string|Date, price?: number, spot?: number, timestamp?: number }} entry
  * @returns {HistoryRecord}
- */
 function normalizeCachedDate(entry) {
   if (entry.date instanceof Date) return entry.date.toISOString().slice(0, 10);
   return String(entry.date || '').slice(0, 10);
