@@ -6,9 +6,11 @@
  *   Layer 1 — BASELINE  : Monthly averages 2019–present (embedded in code)
  *                          Source: LBMA monthly average data / public domain records
  *                          Granularity: monthly  |  Unit: USD/troy oz
- *   Layer 2 — CACHED    : Daily snapshots from localStorage (user's session history)
+ *   Layer 2 — REFERENCE : Daily USD rows from freegoldapi.com (optional, cached 24h)
+ *                          Granularity: daily  |  Label: freegoldapi-reference (derived)
+ *   Layer 3 — CACHED    : Daily snapshots from localStorage (user's session history)
  *                          Granularity: daily  |  Coverage: up to 90 days back
- *   Layer 3 — LIVE      : Current session chart ticks (90s resolution)
+ *   Layer 4 — LIVE      : Current session chart ticks (90s resolution)
  *                          Granularity: ~90s  |  Coverage: last ~5 days
  *
  * All layers use the same normalised record schema:
@@ -31,6 +33,9 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import MONTHLY_BASELINE from '../data/historical-baseline.json' with { type: 'json' };
+import { ensureFreeGoldReference, getCachedFreeGoldReference } from './freegoldapi.js';
+
+export { ensureFreeGoldReference as ensureRemoteHistory };
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SCHEMA HELPERS
@@ -55,13 +60,19 @@ function baselineToRecord(entry) {
 
 /**
  * Normalise a daily cached entry (from localStorage/STATE.history).
- * @param {{ date: string, price: number, timestamp: number }} entry
+ * Normalise a daily cached entry (from localStorage/STATE.history).
+ * @param {{ date: string|Date, price?: number, spot?: number, timestamp?: number }} entry
  * @returns {HistoryRecord}
- */
+function normalizeCachedDate(entry) {
+  if (entry.date instanceof Date) return entry.date.toISOString().slice(0, 10);
+  return String(entry.date || '').slice(0, 10);
+}
+
 function cachedToRecord(entry) {
+  const price = Number(entry.price ?? entry.spot);
   return {
-    date: entry.date, // 'YYYY-MM-DD'
-    price: entry.price, // USD/troy oz
+    date: normalizeCachedDate(entry), // 'YYYY-MM-DD'
+    price, // USD/troy oz
     granularity: 'daily',
     source: 'local-snapshot',
     freshnessState: 'cached',
@@ -100,7 +111,8 @@ export function getBaselineRange() {
  */
 export function getUnifiedHistory(cachedDaily = []) {
   const baselineRecords = MONTHLY_BASELINE.map(baselineToRecord);
-  const cachedRecords = cachedDaily.map(cachedToRecord);
+  const referenceRecords = getCachedFreeGoldReference();
+  const cachedRecords = cachedDaily.map(cachedToRecord).filter((r) => r.price > 0);
 
   // Build a month-map so recent daily data supersedes old monthly entries
   const monthMap = {};
@@ -108,16 +120,22 @@ export function getUnifiedHistory(cachedDaily = []) {
     monthMap[r.date] = r; // monthly key e.g. '2025-03'
   }
 
-  // Inject daily records — don't overwrite baseline months with future projections
-  for (const r of cachedRecords) {
-    const monthKey = r.date.slice(0, 7); // 'YYYY-MM' from 'YYYY-MM-DD'
-    // Always add daily as its own entry (don't collapse to monthly)
+  const injectDaily = (r) => {
+    const monthKey = r.date.slice(0, 7);
     monthMap[r.date] = r;
-    // If we now have real daily data for this month, mark the monthly aggregate
-    // as superseded so chart prefers the daily granularity
-    if (monthMap[monthKey] && monthMap[monthKey].granularity === 'monthly') {
+    if (monthMap[monthKey]?.granularity === 'monthly') {
       monthMap[monthKey].superseded = true;
     }
+  };
+
+  // Reference daily rows (community dataset) — superseded by local snapshots
+  for (const r of referenceRecords) {
+    injectDaily(r);
+  }
+
+  // Local browser snapshots win over reference + monthly baseline
+  for (const r of cachedRecords) {
+    injectDaily(r);
   }
 
   const allRecords = Object.values(monthMap)

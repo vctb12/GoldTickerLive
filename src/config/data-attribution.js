@@ -20,6 +20,12 @@ export const DATA_ATTRIBUTION = {
     roleEn: 'Foreign exchange rates (USD base)',
     roleAr: 'أسعار صرف العملات (أساس USD)',
   },
+  historicalReference: {
+    label: 'freegoldapi.com',
+    url: 'https://freegoldapi.com',
+    roleEn: 'Optional daily reference history (derived, not live spot)',
+    roleAr: 'سجل تاريخي يومي مرجعي اختياري (مشتق — ليس سعراً لحظياً)',
+  },
   clientPollSeconds: Math.round(CONSTANTS.GOLD_REFRESH_MS / 1000),
 };
 

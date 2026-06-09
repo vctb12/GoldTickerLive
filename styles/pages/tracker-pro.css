@@ -1623,6 +1623,27 @@ body.tracker-workspace-basic .tracker-advanced-only {
   width: 100%;
   height: 100%;
   min-height: 240px;
+  position: relative;
+}
+
+.chart-tv-attribution {
+  position: absolute;
+  bottom: var(--space-1, 0.25rem);
+  left: var(--space-2, 0.5rem);
+  z-index: 2;
+  font-size: var(--text-xs, 0.75rem);
+  color: var(--tp-text-muted, var(--color-text-muted));
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.chart-tv-attribution:hover {
+  text-decoration: underline;
+}
+
+[dir='rtl'] .chart-tv-attribution {
+  left: auto;
+  right: var(--space-2, 0.5rem);
 }
 
 /* Fallback message shown when chart library fails or no data */
