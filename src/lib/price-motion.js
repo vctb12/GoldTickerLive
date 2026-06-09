@@ -36,7 +36,7 @@ export function animatePrice(el, target, options = {}) {
   });
 
   if (options.terminalRoot) {
-    pulseSpotTerminal(options.terminalRoot, { direction: options.direction });
+    pulseSpotTerminal(options.terminalRoot, { direction: options.direction, isLive: options.isLive });
   }
 }
 
