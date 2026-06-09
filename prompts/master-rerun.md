@@ -54,6 +54,7 @@ Ship **one PR-sized improvement** — not a survey, not a mega-refactor.
 | Frontend pages          | `@.github/prompts/endless-frontend-polish.prompt.md`       |
 | Cross-page links        | `@.github/prompts/endless-integration-wiring.prompt.md`    |
 | Pricing / trust         | `@.github/prompts/endless-gold-product-trust.prompt.md`    |
+| Platform upgrade backlog | [`prompts/platform-upgrade.md`](platform-upgrade.md) or `@.github/prompts/platform-upgrade-bootstrap.prompt.md` |
 | Repo hygiene            | `@.github/prompts/endless-repo-discovery.prompt.md`        |
 | Workbook-sized program  | `@.github/prompts/master-workbook-session.prompt.md`       |
 

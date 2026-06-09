@@ -46,7 +46,7 @@ function initViewTransitions() {
 function initScrollDrivenClass() {
   if (prefersReducedMotion()) return;
   const cssApi = globalThis.CSS;
-  if (!cssApi || typeof cssApi.supports !== 'function') return;
+  if (typeof cssApi === 'undefined' || typeof cssApi.supports !== 'function') return;
   if (!cssApi.supports('animation-timeline: view()')) return;
   document.documentElement.classList.add('motion-scroll-driven');
 }

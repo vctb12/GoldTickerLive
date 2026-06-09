@@ -1,7 +1,7 @@
 /**
  * services/goldPriceService.js
  * Reads the canonical gold-price payload written by
- * `scripts/fetch_gold_price.py` (source: goldpricez.com) from the
+ * `scripts/python/fetch_gold_price.py` (provider-adapter chain; primary: gold-api.com) from the
  * committed file `data/gold_price.json`.
  *
  * This module is Node-side; it reads the file from disk and returns the

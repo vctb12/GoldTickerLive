@@ -23,8 +23,22 @@ updates:
     open-pull-requests-limit: 5
     labels:
       - dependencies
-      - github-actions
+      - github_actions
     groups:
       github-actions:
+        patterns:
+          - '*'
+
+  - package-ecosystem: pip
+    directory: /scripts/python
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - python
+    groups:
+      python-dependencies:
         patterns:
           - '*'

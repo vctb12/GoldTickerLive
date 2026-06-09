@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtDate": "2026-06-01",
+  "generatedAtDate": "2026-06-09",
   "summary": {
     "totalHtmlFiles": 341,
     "withCanonical": 339,
@@ -12104,7 +12104,7 @@
       "canonical": "https://goldtickerlive.com/",
       "robots": null,
       "ogTitle": "Gold Ticker Live — Live Gold Prices for GCC & the Arab World | أسعار الذهب المباشرة",
-      "ogDescription": "Track live gold spot prices in 24+ countries. Seven karat grades (14K–24K) from GoldPriceZ spot + open.er-api.com FX. Source updates hourly; pages re-poll ~90s. Bilingual EN/AR.",
+      "ogDescription": "Track live gold spot prices in 24+ countries. Seven karat grades (14K–24K) from gold-api.com spot + open.er-api.com FX. Source updates hourly; pages re-poll ~90s. Bilingual EN/AR.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/",
       "ogType": "website",

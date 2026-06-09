@@ -10,7 +10,8 @@ Go to **Settings → Secrets and variables → Actions → New repository secret
 
 | Secret                      | Used by                 | How to get it                                        |
 | --------------------------- | ----------------------- | ---------------------------------------------------- |
-| `GOLDPRICEZ_API_KEY`        | All price scripts       | Sign up at https://goldpricez.com                    |
+| `GOLD_API_COM_KEY`          | `gold-price-fetch.yml`  | Sign up at https://gold-api.com (primary provider)   |
+| `GOLDPRICEZ_API_KEY`        | Provider adapter (legacy) | Optional — https://goldpricez.com                |
 | `CONSUMER_KEY`              | X/Twitter posts         | X Developer Portal: API Key (Consumer Key)           |
 | `CONSUMER_SECRET`           | X/Twitter posts         | X Developer Portal: API Key Secret                   |
 | `ACCESS_TOKEN`              | X/Twitter posts         | X Developer Portal: Access Token (read-write)        |

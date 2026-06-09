@@ -3,7 +3,7 @@
  * scripts/tweet-gold-price.js
  *
  * Reads the live XAU/USD spot price from data/gold_price.json (written every 6 min
- * by the gold-price-fetch workflow, source: goldpricez.com) and posts a
+ * by the gold-price-fetch workflow, primary: gold-api.com) and posts a
  * formatted tweet via the X / Twitter API v2.
  *
  * Runs from .github/workflows/gold-price-tweet.yml on a hourly schedule.
@@ -45,7 +45,7 @@ const TWITTER_ACCESS_TOKEN = process.env.TWITTER_ACCESS_TOKEN || '';
 const TWITTER_ACCESS_TOKEN_SECRET = process.env.TWITTER_ACCESS_TOKEN_SECRET || '';
 
 // Read the canonical gold-price payload (written every 6 min by
-// .github/workflows/gold-price-fetch.yml from goldpricez.com).
+// .github/workflows/gold-price-fetch.yml via provider-adapter chain).
 function readGoldPrice() {
   const fs = require('fs');
   const raw = fs.readFileSync(GOLD_PRICE_FILE, 'utf8');
@@ -517,7 +517,7 @@ async function main() {
   }
 
   // 1. Load gold price from the canonical data file
-  console.log('📡 Reading gold price from data/gold_price.json (goldpricez.com)…');
+  console.log('📡 Reading gold price from data/gold_price.json (gold-api.com chain)…');
   let goldData;
   try {
     goldData = readGoldPrice();

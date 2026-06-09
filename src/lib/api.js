@@ -142,7 +142,7 @@ function normalizeGoldResponse(data) {
     payload?.source_provider ||
     payload?.source ||
     data?.meta?.source ||
-    'goldpricez';
+    'gold_api_com';
 
   // Pipe upstream truth metadata through so the client freshness engine can
   // honor anti-mislabel guards (isFallback, isFresh) instead of relying on

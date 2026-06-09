@@ -196,7 +196,8 @@ unauthenticated public endpoint; gold price is fetched server-side via GitHub Ac
 
 | API                             | Used for                                 | Auth                        | Consumer     | Free-tier limit |
 | ------------------------------- | ---------------------------------------- | --------------------------- | ------------ | --------------- |
-| `goldpricez.com`                | Gold spot price (XAU/USD) data refresh   | `GOLDPRICEZ_API_KEY` secret | GHA workflow | Unknown         |
+| `gold-api.com`                  | Primary gold spot price (XAU/USD)        | `GOLD_API_COM_KEY` secret   | GHA workflow | Provider chain  |
+| `goldpricez.com`                | Legacy adapter (optional fallback)       | `GOLDPRICEZ_API_KEY` secret | GHA adapter  | Legacy only     |
 | `open.er-api.com/v6/latest/USD` | Live FX exchange rates                   | None                        | Browser      | 1 500 req/month |
 | `X / Twitter API v2`            | Hourly automated gold-price posts        | OAuth 1.0a (4 secrets)      | GHA workflow | Rate limited    |
 | `Supabase REST + Auth`          | Admin GitHub OAuth, newsletter, settings | `SUPABASE_URL` + keys       | Both         | Free tier       |

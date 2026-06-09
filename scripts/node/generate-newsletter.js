@@ -3,7 +3,7 @@
  *
  * Generate HTML email content for daily/weekly newsletters.
  * Reads the canonical gold price from data/gold_price.json (committed
- * every 6 min by gold-price-fetch.yml, source: goldpricez.com) and
+ * hourly by gold-price-fetch.yml, primary: gold-api.com) and
  * fetches live FX rates from open.er-api.com.
  */
 

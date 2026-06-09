@@ -26,7 +26,7 @@ test('refresh statement documents hourly source and ~90s client poll', async () 
   assert.match(en, /90/);
 });
 
-test('gold attribution points at GoldPriceZ per owner truth', async () => {
+test('gold attribution points at gold-api.com per production provider chain', async () => {
   const { attr } = await loadModules();
-  assert.equal(attr.DATA_ATTRIBUTION.gold.domain, 'goldpricez.com');
+  assert.equal(attr.DATA_ATTRIBUTION.gold.domain, 'gold-api.com');
 });
