@@ -28,6 +28,7 @@ describe('freegoldapi', () => {
     const { freegoldRowToRecord } = await loadModule();
     assert.equal(freegoldRowToRecord(null), null);
     assert.equal(freegoldRowToRecord({ date: '2020-01-01', price: 0 }), null);
+    assert.equal(freegoldRowToRecord({ date: '2020-01-01', price: 50_000 }), null);
     const ok = freegoldRowToRecord({ date: '2020-06-15', price: 1734.2, source: 'worldbank' });
     assert.equal(ok.granularity, 'daily');
     assert.equal(ok.upstreamSource, 'worldbank');

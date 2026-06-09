@@ -237,7 +237,7 @@ export function createRealtimePricingEngine({
       ? Math.max(0, now - providerTimestampMs(state.quote))
       : Number.POSITIVE_INFINITY;
 
-    const fresh = state.quote
+    let fresh = state.quote
       ? evaluateFreshnessState({
           ageMs,
           providerHealthy: health.getSnapshot(state.activeProviderId).healthy,
