@@ -93,7 +93,7 @@ function getApiKeyHashSalt() {
 }
 
 function hashApiKeyLegacy(rawKey) {
-  return crypto.createHash('sha256').update(rawKey).digest('hex');
+  return hashApiKey(rawKey);
 }
 
 function hashApiKey(rawKey) {
@@ -521,52 +521,27 @@ async function createApiKey({ userId, label }) {
 async function resolveApiKey(rawKey) {
   if (!rawKey) return null;
   const keyHash = await hashApiKey(rawKey);
-  const legacyKeyHash = hashApiKeyLegacy(rawKey);
   const sb = getSupabaseClient();
   if (sb) {
     try {
       const { data, error } = await sb
         .from('api_keys')
         .select('id, user_id, revoked, label, created_at, key_hash')
-        .in('key_hash', [keyHash, legacyKeyHash])
+        .eq('key_hash', keyHash)
         .eq('revoked', false)
-        .limit(2);
+        .limit(1);
       if (error) throw error;
       const rows = Array.isArray(data) ? data : [];
       if (!rows.length) return null;
-      const row = rows.find((item) => item.key_hash === keyHash) || rows[0];
-      if (row.key_hash === legacyKeyHash) {
-        const { error: migrateError } = await sb
-          .from('api_keys')
-          .update({ key_hash: keyHash, updated_at: nowIso() })
-          .eq('id', row.id)
-          .eq('key_hash', legacyKeyHash)
-          .eq('revoked', false);
-        if (migrateError) {
-          console.error(
-            '[billing-repo] resolveApiKey legacy hash migration error:',
-            migrateError.message
-          );
-        }
-      }
+      const row = rows[0];
       return { id: row.id, userId: row.user_id, label: row.label, createdAt: row.created_at };
     } catch (err) {
       console.error('[billing-repo] resolveApiKey Supabase error:', err.message);
     }
   }
   const store = readStore();
-  const row = store.api_keys.find(
-    (r) => !r.revoked && (r.keyHash === keyHash || r.keyHash === legacyKeyHash)
-  );
+  const row = store.api_keys.find((r) => !r.revoked && r.keyHash === keyHash);
   if (!row) return null;
-  if (row.keyHash === legacyKeyHash) {
-    row.keyHash = keyHash;
-    try {
-      writeStore(store);
-    } catch (err) {
-      console.error('[billing-repo] resolveApiKey file migration error:', err.message);
-    }
-  }
   return { id: row.id, userId: row.userId, label: row.label, createdAt: row.createdAt };
 }
 
