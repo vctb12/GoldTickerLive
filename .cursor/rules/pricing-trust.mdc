@@ -1,0 +1,16 @@
+---
+alwaysApply: true
+---
+
+# Pricing trust rules
+
+> Terminology definitions: [`non-negotiable-rules.mdc`](./non-negotiable-rules.mdc) § Terminology policy.
+> Formula and karat constants: [`gold-pricing-integrity.mdc`](./gold-pricing-integrity.mdc).
+
+- Reference prices are not retail quotes.
+- Karat calculations must remain internally consistent (`src/config/karats.js`, `src/config/constants.js`).
+- `Live` must only be used for truly live data — see terminology policy.
+- `Cached`, `delayed`, and `updated` labels must be truthful.
+- Any wording that increases certainty must be reviewed carefully.
+- Never strip freshness labels, disclaimers, or methodology links to “look cleaner.”
+- Calculator output is always a reference estimate; disclose making charges, VAT, and that shops may charge differently.

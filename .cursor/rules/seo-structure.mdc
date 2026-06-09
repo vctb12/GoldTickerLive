@@ -1,0 +1,14 @@
+---
+alwaysApply: true
+---
+
+# SEO structure rules
+
+> Review priority: [`non-negotiable-rules.mdc`](./non-negotiable-rules.mdc) § Review priorities.
+
+- Important pages need unique intent — no duplicate or cannibalizing metadata.
+- Canonicals and hreflang must be correct and consistent.
+- Metadata should reflect actual page purpose, not aspirational or misleading claims.
+- Country and city pages must be strongly internally linked to calculators, methodology, related country/market content, and parent hubs.
+- Schema must match visible content — do not mark up prices or offers the page does not actually show.
+- Flag missing, conflicting, or misleading canonicals, `og:*`, `twitter:*`, hreflang, or schema — with exact fixes.

@@ -12,7 +12,8 @@ static gold-price reference platform. Production: https://goldtickerlive.com/
 
 ## Non-negotiables (read before coding)
 
-Product-trust (see `.cursor/rules/non-negotiable-rules.mdc`):
+Product-trust (see `.cursor/rules/non-negotiable-rules.mdc` + topic rules `pricing-trust.mdc`,
+`bilingual-content.mdc`, `seo-structure.mdc`):
 
 1. **Reference price ≠ retail price** — never present spot-linked reference as a guaranteed shop
    price; keep the distinction explicit when comparing.
@@ -25,6 +26,10 @@ Product-trust (see `.cursor/rules/non-negotiable-rules.mdc`):
 5. **Metadata & SEO are product quality** — schema, canonicals, hreflang, internal links; flag
    missing or conflicting implementations.
 6. **Trust-first language** — no hype, fake precision, or implied financial advice.
+
+Terminology: use defined meanings for reference price, retail quote, live, updated, cached, delayed.
+Review priority: price math → freshness language → EN/AR → SEO/metadata → linking → polish. Action:
+block misleading price/freshness changes; propose exact EN/AR and SEO fixes.
 
 Operational:
 

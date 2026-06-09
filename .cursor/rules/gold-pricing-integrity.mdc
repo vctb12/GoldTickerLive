@@ -4,7 +4,9 @@ alwaysApply: true
 
 # Gold Pricing Integrity
 
-Pricing truth is the single biggest reputational risk for Gold Ticker Live. See also `.github/instructions/gold-pricing.instructions.md` when editing pricing surfaces.
+Pricing truth is the single biggest reputational risk for Gold Ticker Live. See also
+`.cursor/rules/pricing-trust.mdc`, `.cursor/rules/non-negotiable-rules.mdc` (terminology policy),
+and `.github/instructions/gold-pricing.instructions.md` when editing pricing surfaces.
 
 ## Canonical formula
 

@@ -119,7 +119,8 @@ For a one-line bug fix, collapse steps 2–3 into a sentence in the PR body.
 ## 6. Product-trust guardrails
 
 Non-negotiables. Each has a one-line _Why:_ so you can make good edge-case decisions. Cursor agents
-also load `.cursor/rules/non-negotiable-rules.mdc` (always applied).
+load `.cursor/rules/non-negotiable-rules.mdc` (always applied) plus topic rules:
+`pricing-trust.mdc`, `bilingual-content.mdc`, `seo-structure.mdc`.
 
 ### Product-trust non-negotiables
 
@@ -166,6 +167,34 @@ also load `.cursor/rules/non-negotiable-rules.mdc` (always applied).
     public channel every hour — breakage is public within the hour.
 13. **Honesty about verification.** Separate what you ran from what you assumed. Don't claim tests
     pass that you didn't run. _Why:_ the one rule that makes every other claim in a PR body legible.
+
+### Terminology policy
+
+Use consistently in code, copy, automations, and reviews — see
+`.cursor/rules/non-negotiable-rules.mdc` for full definitions.
+
+| Term                | Use when                                                                                    |
+| ------------------- | ------------------------------------------------------------------------------------------- |
+| **Reference price** | Market-linked or spot-linked informational estimate — not a final retail jewelry quote      |
+| **Retail quote**    | Final or near-final store/seller price (may include making charges, premiums, tax, spreads) |
+| **Live**            | Value updated in real time or near-real time from the active source                         |
+| **Updated**         | Data refreshed periodically but not continuously                                            |
+| **Cached**          | Stored data from a prior fetch or processing cycle                                          |
+| **Delayed**         | Data intentionally lags the source by a known or expected interval                          |
+
+### Review priorities
+
+When multiple issues exist, address in this order: (1) price accuracy and karat math, (2) misleading
+trust/freshness language, (3) EN/AR semantic mismatch, (4) broken
+canonicals/hreflang/schema/metadata, (5) internal linking regressions, (6) lower-risk style or copy.
+
+### Action rules
+
+- Block or strongly flag changes that mislead on price accuracy, freshness, or retail-vs-reference
+  interpretation.
+- Comment on SEO, schema, metadata, and internal linking with exact fixes.
+- Suggest exact EN/AR rewrite pairs for mismatches.
+- Prefer minimal diffs and implementation-ready fixes.
 
 ## 7. Style & conventions
 
