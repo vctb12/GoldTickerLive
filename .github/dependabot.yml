@@ -4,13 +4,27 @@ updates:
     directory: /
     schedule:
       interval: weekly
+      day: monday
     open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - automated
     groups:
       dev-dependencies:
         dependency-type: development
+      production-dependencies:
+        dependency-type: production
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+      day: monday
     open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - github-actions
+    groups:
+      github-actions:
+        patterns:
+          - '*'

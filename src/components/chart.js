@@ -55,8 +55,6 @@ const CUSTOM_RANGE_MS = {
   '1Y': 365 * 86400000,
 };
 
-const LIGHTWEIGHT_CDN = 'https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.3/+esm';
-
 export class GoldChart {
   constructor(containerId, lang = 'en') {
     this.containerId = containerId;
@@ -94,7 +92,10 @@ export class GoldChart {
 
   async _loadLibrary() {
     try {
-      const mod = await import(LIGHTWEIGHT_CDN);
+      const [mod] = await Promise.all([
+        import('lightweight-charts'),
+        import('../lib/historical-data.js').then((m) => m.ensureRemoteHistory?.()),
+      ]);
       this._LW = mod;
       this._init();
     } catch (e) {
@@ -158,8 +159,22 @@ export class GoldChart {
     });
     ro.observe(container);
 
+    this._injectTradingViewAttribution(container);
+
     this._ready = true;
     this._render();
+  }
+
+  _injectTradingViewAttribution(container) {
+    if (container.querySelector('.chart-tv-attribution')) return;
+    const isAr = this.lang === 'ar';
+    const link = document.createElement('a');
+    link.className = 'chart-tv-attribution';
+    link.href = 'https://www.tradingview.com/';
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = isAr ? 'مخططات من TradingView' : 'Charts by TradingView';
+    container.appendChild(link);
   }
 
   _showFallback(reason) {

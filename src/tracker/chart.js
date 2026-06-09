@@ -25,14 +25,20 @@ function getHistorySourceLabel(rows = []) {
   let hasSupabase = false;
   let hasBaseline = false;
   let hasLocal = false;
+  let hasReference = false;
   for (const source of sources) {
     if (source.includes('supabase')) hasSupabase = true;
     if (source.includes('baseline') || source.includes('estimated')) hasBaseline = true;
     if (source.includes('local') || source.includes('cache')) hasLocal = true;
+    if (source.includes('freegoldapi')) hasReference = true;
   }
 
-  if (hasSupabase && !hasBaseline && !hasLocal) return tx('historySource.supabase');
-  if (hasSupabase && (hasBaseline || hasLocal)) return tx('historySource.mixedSupabase');
+  if (hasSupabase && !hasBaseline && !hasLocal && !hasReference) return tx('historySource.supabase');
+  if (hasSupabase && (hasBaseline || hasLocal || hasReference))
+    return tx('historySource.mixedSupabase');
+  if (hasReference && hasLocal) return tx('historySource.mixedReference');
+  if (hasReference && hasBaseline) return tx('historySource.mixedReferenceBaseline');
+  if (hasReference) return tx('historySource.reference');
   if (hasBaseline && hasLocal) return tx('historySource.mixedBaseline');
   if (hasBaseline) return tx('historySource.baseline');
   if (hasLocal) return tx('historySource.local');

@@ -1315,8 +1315,9 @@ async function fetchLive() {
 
 async function ensureUnifiedHistory() {
   const cachedDaily = Array.isArray(state.snapshots) ? state.snapshots : [];
-  const { getUnifiedHistory } = await import('../lib/historical-data.js');
-  const unified = await getUnifiedHistory(cachedDaily);
+  const { ensureRemoteHistory, getUnifiedHistory } = await import('../lib/historical-data.js');
+  await ensureRemoteHistory();
+  const unified = getUnifiedHistory(cachedDaily);
   state.history = unified
     .map((row) => ({
       date: new Date(row.date.length === 7 ? `${row.date}-01` : row.date),

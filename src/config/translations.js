@@ -367,6 +367,9 @@ export const TRANSLATIONS = {
     'tracker.historySource.supabase': 'Supabase history',
     'tracker.historySource.mixedSupabase': 'Supabase + fallback history',
     'tracker.historySource.mixedBaseline': 'Monthly baseline + local snapshots',
+    'tracker.historySource.mixedReference': 'Reference history + local snapshots',
+    'tracker.historySource.mixedReferenceBaseline': 'Baseline + reference history',
+    'tracker.historySource.reference': 'Reference history (freegoldapi.com)',
     'tracker.historySource.baseline': 'Monthly baseline',
     'tracker.historySource.local': 'Local cached snapshots',
     'tracker.alerts.summary':
@@ -1347,6 +1350,9 @@ export const TRANSLATIONS = {
     'tracker.historySource.supabase': 'سجل Supabase',
     'tracker.historySource.mixedSupabase': 'سجل Supabase مع بدائل احتياطية',
     'tracker.historySource.mixedBaseline': 'خط أساسي شهري + لقطات محلية',
+    'tracker.historySource.mixedReference': 'سجل مرجعي + لقطات محلية',
+    'tracker.historySource.mixedReferenceBaseline': 'خط أساسي + سجل مرجعي',
+    'tracker.historySource.reference': 'سجل مرجعي (freegoldapi.com)',
     'tracker.historySource.baseline': 'خط أساسي شهري',
     'tracker.historySource.local': 'لقطات محلية مخزنة',
     'tracker.alerts.summary':
