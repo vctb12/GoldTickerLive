@@ -50,8 +50,7 @@ export function buildTrackerHashHref({
   const safeMode = TRACKER_MODES.has(String(mode)) ? String(mode) : 'live';
   const safeK = TRACKER_KARATS.has(String(k)) ? String(k) : '24';
   const safeU = TRACKER_UNITS.has(String(u)) ? String(u) : 'gram';
-  const safeCur = ALLOWED_CURRENCIES.has(String(cur)) ? String(cur) : 'AED';
-  const safeLang = ALLOWED_LANG.has(String(lang)) ? String(lang) : 'en';
+  const safeCur = ALLOWED_CURRENCIES.has(String(cur)) ? String(cur).toUpperCase() : 'AED';
   const params = new URLSearchParams({
     mode: safeMode,
     cur: safeCur,
