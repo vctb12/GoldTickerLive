@@ -68,9 +68,10 @@ borrow one feature**, never full-site template swap.
 ## Verification (state what you ran)
 
 ```bash
-export JWT_SECRET="dev-secret-key-for-local-development-32chars"
-export ADMIN_PASSWORD="admin-dev-password"
-export ADMIN_ACCESS_PIN="123456"
+# Set these locally (do not commit real secrets)
+export JWT_SECRET="<your-local-jwt-secret>"
+export ADMIN_PASSWORD="<your-local-admin-password>"
+export ADMIN_ACCESS_PIN="<your-local-admin-pin>"
 
 # Before npm test — remove stale artifacts if present
 rm -rf playwright-report test-results
