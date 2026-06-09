@@ -662,7 +662,7 @@ GoldTickerLive/
 │   └── python/
 │       └── gold_poster.py         # Python gold price poster
 │
-├── .github/workflows/         # GitHub Actions (22 workflows — see .github/workflows/README.md)
+├── .github/workflows/         # GitHub Actions workflows (see .github/workflows/README.md)
 ├── prompts/master-rerun.md    # Agent session bootstrap
 ├── data/                      # Static data files (shops, audit logs)
 ├── assets/                    # Images, screenshots, icons
