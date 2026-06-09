@@ -30,3 +30,15 @@ test('parseLastGoldPriceSnapshot reads legacy nested schema', async () => {
   });
   assert.equal(parsed.price, 2300);
 });
+
+test('parseLastGoldPriceSnapshot rejects out-of-band spot prices', async () => {
+  const { parseLastGoldPriceSnapshot } = await loadParse();
+  assert.equal(
+    parseLastGoldPriceSnapshot({ price: 42, posted_at_utc: '2026-06-05T12:00:00Z' }),
+    null
+  );
+  assert.equal(
+    parseLastGoldPriceSnapshot({ price: 50000, posted_at_utc: '2026-06-05T12:00:00Z' }),
+    null
+  );
+});
