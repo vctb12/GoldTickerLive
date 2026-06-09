@@ -1,0 +1,73 @@
+# ------------------------------------------------------------------
+# Sync GitHub Labels — apply .github/labels.yml to the repository.
+# Runs on push to main when labels change, or manual dispatch.
+# Tier: content / sync bot
+# ------------------------------------------------------------------
+name: Sync GitHub Labels
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/labels.yml
+      - .github/workflows/sync-labels.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    name: Apply label definitions
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Sync labels from .github/labels.yml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const { execSync } = require('child_process');
+
+          const lines = fs.readFileSync('.github/labels.yml', 'utf8').split('\n');
+          const labels = [];
+          let current = null;
+
+          for (const raw of lines) {
+            const line = raw.trim();
+            if (!line || line.startsWith('#')) continue;
+            if (line.startsWith('- name:')) {
+              if (current) labels.push(current);
+              current = { name: line.slice('- name:'.length).trim() };
+              continue;
+            }
+            if (!current) continue;
+            if (line.startsWith('color:')) {
+              current.color = line.slice('color:'.length).trim().replace(/'/g, '');
+            }
+            if (line.startsWith('description:')) {
+              current.description = line.slice('description:'.length).trim();
+            }
+          }
+          if (current) labels.push(current);
+
+          for (const label of labels) {
+            const args = [
+              'label', 'create', label.name,
+              '--color', label.color,
+              '--description', label.description || '',
+              '--force',
+            ];
+            execSync(`gh ${args.map((a) => JSON.stringify(a)).join(' ')}`, { stdio: 'inherit' });
+          }
+
+          console.log(`Synced ${labels.length} labels.`);
+          NODE
