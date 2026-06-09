@@ -38,6 +38,20 @@ const REQUIRED_AGENTS_SECTIONS = [
 
 const EXPECTED_NON_NEGOTIABLE_COUNT = 6;
 
+/** Keyword checks per rule index for AGENTS.md vs non-negotiable-rules.mdc headings */
+const RULE_TITLE_PAIRS = [
+  { agents: ['reference', 'retail'], mdc: ['reference', 'retail'] },
+  { agents: ['freshness'], mdc: ['freshness'] },
+  { agents: ['semantic'], mdc: ['arabic'] },
+  { agents: ['linking'], mdc: ['linking'] },
+  { agents: ['metadata', 'seo'], mdc: ['metadata', 'seo'] },
+  { agents: ['trust-first'], mdc: ['trust-first'] },
+];
+
+const LEGACY_CHARTER_PATTERN = /§6\.|#6-product-trust-guardrails/;
+const LEGACY_SCAN_FILES = ['docs/REPO_AUDIT.md', 'docs/realtime-architecture.md'];
+const LEGACY_ALLOWLIST = new Set(['docs/AGENTS_REFERENCE.md']);
+
 const PREAMBLE_MARKERS = [
   'Before reviewing or editing anything, read and follow:',
   'AGENTS.md',
@@ -64,6 +78,39 @@ function countBoldListRules(text, startHeading, endHeading) {
 function countMdcSectionRules(text, startHeading, endHeading) {
   const slice = sliceBetween(text, startHeading, endHeading);
   return (slice.match(/^## \d+\./gm) || []).length;
+}
+
+function extractAgentsRuleTitles(text) {
+  const slice = sliceBetween(text, '## Non-negotiable rules', '## Terminology policy');
+  const titles = [];
+  const re = /^\d+\. \*\*([^*]+)\*\*/gm;
+  let m;
+  while ((m = re.exec(slice)) !== null) titles.push(m[1].trim().toLowerCase());
+  return titles;
+}
+
+function extractMdcRuleTitles(text) {
+  const slice = sliceBetween(text, '# Non-negotiable rules', '## Terminology policy');
+  const titles = [];
+  const re = /^## \d+\. (.+)$/gm;
+  let m;
+  while ((m = re.exec(slice)) !== null) titles.push(m[1].trim().toLowerCase());
+  return titles;
+}
+
+function titleMatchesKeywords(title, keywords) {
+  return keywords.every((kw) => title.includes(kw));
+}
+
+function walkFiles(dir, ext, files = []) {
+  const abs = path.join(ROOT, dir);
+  if (!fs.existsSync(abs)) return files;
+  for (const ent of fs.readdirSync(abs, { withFileTypes: true })) {
+    const full = path.join(abs, ent.name);
+    if (ent.isDirectory()) walkFiles(path.join(dir, ent.name), ext, files);
+    else if (full.endsWith(ext)) files.push(path.relative(ROOT, full));
+  }
+  return files;
 }
 
 function fail(msg) {
@@ -174,6 +221,52 @@ if (exists(agentsPath) && mdcRules === EXPECTED_NON_NEGOTIABLE_COUNT) {
   if (agentsRules === mdcRules) {
     pass('AGENTS.md and non-negotiable-rules.mdc rule counts match.');
   }
+
+  const agentsTitles = extractAgentsRuleTitles(read(agentsPath));
+  const mdcTitles = extractMdcRuleTitles(read('.cursor/rules/non-negotiable-rules.mdc'));
+  if (agentsTitles.length !== RULE_TITLE_PAIRS.length) {
+    fail(
+      `AGENTS.md rule title extract count ${agentsTitles.length} !== ${RULE_TITLE_PAIRS.length}`
+    );
+  } else if (mdcTitles.length !== RULE_TITLE_PAIRS.length) {
+    fail(
+      `non-negotiable-rules.mdc title extract count ${mdcTitles.length} !== ${RULE_TITLE_PAIRS.length}`
+    );
+  } else {
+    let titlesOk = true;
+    for (let i = 0; i < RULE_TITLE_PAIRS.length; i += 1) {
+      const pair = RULE_TITLE_PAIRS[i];
+      if (
+        !titleMatchesKeywords(agentsTitles[i], pair.agents) ||
+        !titleMatchesKeywords(mdcTitles[i], pair.mdc)
+      ) {
+        fail(
+          `Rule ${i + 1} title mismatch — AGENTS: "${agentsTitles[i]}" | mdc: "${mdcTitles[i]}"`
+        );
+        titlesOk = false;
+      }
+    }
+    if (titlesOk) pass('AGENTS.md and non-negotiable-rules.mdc rule titles align.');
+  }
+}
+
+// --- Legacy §6 references in active docs ---
+for (const rel of [
+  ...LEGACY_SCAN_FILES,
+  ...walkFiles('docs/plans', '.md'),
+  ...walkFiles('reports', '.md'),
+  ...walkFiles('reports', '.json'),
+]) {
+  if (LEGACY_ALLOWLIST.has(rel)) continue;
+  const content = read(rel);
+  if (LEGACY_CHARTER_PATTERN.test(content)) {
+    fail(
+      `Legacy AGENTS.md §6 reference in ${rel} — run node scripts/node/migrate-agents-charter-refs.js`
+    );
+  }
+}
+if (errors === 0) {
+  pass('No legacy §6 / #6-product-trust-guardrails refs in plans/reports/active docs.');
 }
 
 // --- Prompt preambles ---

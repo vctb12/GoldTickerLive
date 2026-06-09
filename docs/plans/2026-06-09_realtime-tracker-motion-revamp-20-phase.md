@@ -25,7 +25,7 @@ Robinhood-grade price motion, and **animation everywhere it earns trust** (not d
 `tracker.html` architecture, wire a sitewide quote bus, and ship a cohesive **Motion Universe** that
 works in EN + AR with `prefers-reduced-motion` fallbacks.
 
-**Non-negotiables (AGENTS.md §6):** Reference ≠ retail; freshness labels never hidden; AED peg
+**Non-negotiables (`AGENTS.md`):** Reference ≠ retail; freshness labels never hidden; AED peg
 `3.6725` fixed; static multi-page (no SPA); EN/AR via `translations.js`; DOM-safety baseline; no
 secrets; `post_gold.yml` / `gold-price-fetch.yml` need owner review.
 
@@ -35,46 +35,46 @@ secrets; `post_gold.yml` / `gold-price-fetch.yml` need owner review.
 
 ### What competitors teach us
 
-| Product | Motion / live pattern | What we adopt | What we reject |
-| ------- | ---------------------- | ------------- | -------------- |
-| **GoldTrack** | 60s WebSocket refresh; chart normalize + % change toggle; market-closed honest state | Live dot + chart edge dot; multi-range crossfade; honest closed banner | Paywall on prices |
-| **Gold Bullion Stacker** | 2s streaming; lock-screen live activities; 3D stack visualization | Ambient pulse ring; tick tape strip; “always updating” affordance | 3D WebGL stack (perf cost on static GH Pages) |
-| **Robinhood** | Rolling probability counters; 200–300ms eased number transitions | `countUp` + odometer columns; directional flash (muted green/red) | Aggressive red flashing on every tick |
-| **2026 fintech UX** | Event-driven confirmations; progress indicators; personalization | Per-poll freshness micro-pulse; export/share receipt animation | Motion-only feedback (always pair with text) |
+| Product                  | Motion / live pattern                                                                | What we adopt                                                          | What we reject                                |
+| ------------------------ | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- | --------------------------------------------- |
+| **GoldTrack**            | 60s WebSocket refresh; chart normalize + % change toggle; market-closed honest state | Live dot + chart edge dot; multi-range crossfade; honest closed banner | Paywall on prices                             |
+| **Gold Bullion Stacker** | 2s streaming; lock-screen live activities; 3D stack visualization                    | Ambient pulse ring; tick tape strip; “always updating” affordance      | 3D WebGL stack (perf cost on static GH Pages) |
+| **Robinhood**            | Rolling probability counters; 200–300ms eased number transitions                     | `countUp` + odometer columns; directional flash (muted green/red)      | Aggressive red flashing on every tick         |
+| **2026 fintech UX**      | Event-driven confirmations; progress indicators; personalization                     | Per-poll freshness micro-pulse; export/share receipt animation         | Motion-only feedback (always pair with text)  |
 
 ### Why the site still feels 5–40 s stale
 
 The June 2025 plan diagnosis still holds — see
 [`2026-06-05_realtime-tracker-site-revamp-20-phase.md`](./2026-06-05_realtime-tracker-site-revamp-20-phase.md)
 for the bottleneck table. **Animation cannot fix wrong latency**; Phases 1–4 fix truth, Phases 5–20
-make truth *visible* and *delightful*.
+make truth _visible_ and _delightful_.
 
 ### Motion budget (2026 fast-site standard)
 
 Every animation must have one of four jobs: **state**, **attention**, **feedback**, **spatial**.
 
-| Rule | Value |
-| ---- | ----- |
-| Micro-interaction duration | 120–200 ms |
-| Panel / page enter | 240–320 ms |
-| Hero orchestration (first paint) | ≤ 800 ms total |
-| Single animation max | 500 ms |
-| Properties | `transform`, `opacity`, `filter` only on hot paths |
-| Reduced motion | Opacity swap or instant state; never remove freshness text |
-| INP target | < 200 ms on tracker controls |
+| Rule                             | Value                                                      |
+| -------------------------------- | ---------------------------------------------------------- |
+| Micro-interaction duration       | 120–200 ms                                                 |
+| Panel / page enter               | 240–320 ms                                                 |
+| Hero orchestration (first paint) | ≤ 800 ms total                                             |
+| Single animation max             | 500 ms                                                     |
+| Properties                       | `transform`, `opacity`, `filter` only on hot paths         |
+| Reduced motion                   | Opacity swap or instant state; never remove freshness text |
+| INP target                       | < 200 ms on tracker controls                               |
 
 ---
 
 ## Target SLO (product contract)
 
-| Metric | Target | On breach |
-| ------ | ------ | --------- |
-| Time to first live quote (warm tab) | ≤ 2 s p95 | Skeleton + “Connecting…” |
-| Refresh interval (market open, visible tab) | 1 s poll, ≤ 2 s p95 apply | — |
-| Max age labelled **Live** | **5 s** | Auto-downgrade to Cached/Delayed |
-| Max wall-clock before degraded state | **5 s** | Last price + explicit badge |
-| Hidden tab recovery | ≤ 2 s after `visibilitychange` | `refreshNow` |
-| Hero tick JS budget | ≤ 8 ms per poll | Partial DOM only (`renderLiveTick`) |
+| Metric                                      | Target                         | On breach                           |
+| ------------------------------------------- | ------------------------------ | ----------------------------------- |
+| Time to first live quote (warm tab)         | ≤ 2 s p95                      | Skeleton + “Connecting…”            |
+| Refresh interval (market open, visible tab) | 1 s poll, ≤ 2 s p95 apply      | —                                   |
+| Max age labelled **Live**                   | **5 s**                        | Auto-downgrade to Cached/Delayed    |
+| Max wall-clock before degraded state        | **5 s**                        | Last price + explicit badge         |
+| Hidden tab recovery                         | ≤ 2 s after `visibilitychange` | `refreshNow`                        |
+| Hero tick JS budget                         | ≤ 8 ms per poll                | Partial DOM only (`renderLiveTick`) |
 
 ---
 
@@ -109,12 +109,12 @@ flowchart TB
 
 ### `tracker.html` end state
 
-| Layer | Responsibility |
-| ----- | -------------- |
-| `tracker.html` | Shell ~120 lines: meta, critical CSS, `#tracker-app`, `<template>` fragments |
-| `src/tracker/shell/mount.js` | Hydrate regions; frozen hash contract |
-| `src/tracker/shell/regions/` | `hero.js`, `live-desk.js`, `chart.js`, `modes/*.js` |
-| `styles/pages/tracker/` | Split CSS: `_shell`, `_hero-terminal`, `_live`, `_compare`, … |
+| Layer                        | Responsibility                                                               |
+| ---------------------------- | ---------------------------------------------------------------------------- |
+| `tracker.html`               | Shell ~120 lines: meta, critical CSS, `#tracker-app`, `<template>` fragments |
+| `src/tracker/shell/mount.js` | Hydrate regions; frozen hash contract                                        |
+| `src/tracker/shell/regions/` | `hero.js`, `live-desk.js`, `chart.js`, `modes/*.js`                          |
+| `styles/pages/tracker/`      | Split CSS: `_shell`, `_hero-terminal`, `_live`, `_compare`, …                |
 
 **Frozen:** `docs/tracker-state.md`, `src/tracker/modes.js`, `tests/tracker-hash.test.js`,
 `tests/tracker-dom.test.js` element IDs.
@@ -127,16 +127,16 @@ Primitives ship in layers. **Phase 0** (this PR) lands foundation; later phases 
 
 ### Layer 0 — Foundation (Phase 0, shipped in PR-A)
 
-| Primitive | Module / CSS | Surfaces |
-| --------- | ------------ | -------- |
-| `animatePrice()` | `src/lib/price-motion.js` | All price cells |
-| `initMotionBoot()` | `src/lib/motion-boot.js` | Every page with nav |
-| View Transitions | `motion-advanced.css` + boot | Same-origin nav clicks |
-| Scroll-driven reveal | `@supports (animation-timeline: view())` | `[data-reveal-scroll]` |
-| Spot ring breathe | `.spot-terminal--live` | Tracker + home hero |
-| Live sonar dot | `.live-sonar` | Freshness pills when Live |
-| Stagger children | `[data-stagger]` | Section grids |
-| Motion tokens | `styles/partials/tokens.css` | Global |
+| Primitive            | Module / CSS                             | Surfaces                  |
+| -------------------- | ---------------------------------------- | ------------------------- |
+| `animatePrice()`     | `src/lib/price-motion.js`                | All price cells           |
+| `initMotionBoot()`   | `src/lib/motion-boot.js`                 | Every page with nav       |
+| View Transitions     | `motion-advanced.css` + boot             | Same-origin nav clicks    |
+| Scroll-driven reveal | `@supports (animation-timeline: view())` | `[data-reveal-scroll]`    |
+| Spot ring breathe    | `.spot-terminal--live`                   | Tracker + home hero       |
+| Live sonar dot       | `.live-sonar`                            | Freshness pills when Live |
+| Stagger children     | `[data-stagger]`                         | Section grids             |
+| Motion tokens        | `styles/partials/tokens.css`             | Global                    |
 
 ### Layer 1 — Price terminal (Phases 6–8)
 
@@ -168,18 +168,18 @@ Primitives ship in layers. **Phase 0** (this PR) lands foundation; later phases 
 
 ### Surfaces × motion intensity
 
-| Surface | Real-time | Motion intensity | Key effects |
-| ------- | --------- | ---------------- | ----------- |
-| `tracker.html` | ●●● | ●●●●● | Spot terminal, tick tape, chart dot, karat row flash |
-| `index.html` | ●●● | ●●●● | Compact terminal, GCC strip countUp, hero ring |
-| `calculator.html` | ●● | ●●● | Purity ring, result countUp, tab crossfade |
-| `shops.html` | ● | ●●● | Card hover-lift, grid `--updating` fade, copy ✓ |
-| `countries/*` | ●● | ●●● | Hero countUp, karat copy micro-bounce |
-| `compare.html` | ●● | ●●● | Bar chart grow, cheapest callout pulse |
-| `insights.html` | ● | ●●● | Masonry reveal, pulse card countUp |
-| `learn/methodology` | — | ●● | Guide card hover, formula stagger |
-| Nav / ticker | ●●● | ●●●● | Marquee pause-flash on tick, view transitions |
-| `404.html` | ● | ●● | Freshness pill, search focus ring expand |
+| Surface             | Real-time | Motion intensity | Key effects                                          |
+| ------------------- | --------- | ---------------- | ---------------------------------------------------- |
+| `tracker.html`      | ●●●       | ●●●●●            | Spot terminal, tick tape, chart dot, karat row flash |
+| `index.html`        | ●●●       | ●●●●             | Compact terminal, GCC strip countUp, hero ring       |
+| `calculator.html`   | ●●        | ●●●              | Purity ring, result countUp, tab crossfade           |
+| `shops.html`        | ●         | ●●●              | Card hover-lift, grid `--updating` fade, copy ✓      |
+| `countries/*`       | ●●        | ●●●              | Hero countUp, karat copy micro-bounce                |
+| `compare.html`      | ●●        | ●●●              | Bar chart grow, cheapest callout pulse               |
+| `insights.html`     | ●         | ●●●              | Masonry reveal, pulse card countUp                   |
+| `learn/methodology` | —         | ●●               | Guide card hover, formula stagger                    |
+| Nav / ticker        | ●●●       | ●●●●             | Marquee pause-flash on tick, view transitions        |
+| `404.html`          | ●         | ●●               | Freshness pill, search focus ring expand             |
 
 ---
 
@@ -202,7 +202,8 @@ Each phase = 1–3 focused PRs, reversible commits, checklist synced to `REVAMP_
 - [x] Wire `initMotionBoot()` from `injectNav()` (once per page)
 - [x] Tests: `tests/price-motion.test.js`, `tests/motion-boot.test.js`
 
-**Done when:** Tracker hero uses `animatePrice`; nav same-origin clicks crossfade; reduced-motion path verified.
+**Done when:** Tracker hero uses `animatePrice`; nav same-origin clicks crossfade; reduced-motion
+path verified.
 
 ---
 
@@ -292,7 +293,7 @@ Each phase = 1–3 focused PRs, reversible commits, checklist synced to `REVAMP_
 
 ### Phase 7 — Price motion adoption (sitewide)
 
-**Goal:** Every price update *looks* like an update.
+**Goal:** Every price update _looks_ like an update.
 
 **Work:**
 
@@ -487,14 +488,14 @@ Each phase = 1–3 focused PRs, reversible commits, checklist synced to `REVAMP_
 
 ## Suggested PR sequence
 
-| PR | Phases | Theme |
-| -- | ------ | ----- |
-| **PR-A** | 0 | Motion foundation — **this branch** |
-| **PR-B** | 1–4 | SLO + parallel race + freshness + backoff |
-| **PR-C** | 5–8 | Tracker shell + Spot Terminal + fast render |
-| **PR-D** | 9–11 | Command deck + chart + karat binding |
-| **PR-E** | 12–14 | Sitewide quote bus + surface hooks |
-| **PR-F** | 15–20 | Lazy modes + CSS split + CI gates |
+| PR       | Phases | Theme                                       |
+| -------- | ------ | ------------------------------------------- |
+| **PR-A** | 0      | Motion foundation — **this branch**         |
+| **PR-B** | 1–4    | SLO + parallel race + freshness + backoff   |
+| **PR-C** | 5–8    | Tracker shell + Spot Terminal + fast render |
+| **PR-D** | 9–11   | Command deck + chart + karat binding        |
+| **PR-E** | 12–14  | Sitewide quote bus + surface hooks          |
+| **PR-F** | 15–20  | Lazy modes + CSS split + CI gates           |
 
 ---
 
@@ -524,14 +525,14 @@ npm run build
 
 ## Risks & mitigations
 
-| Risk | Mitigation |
-| ---- | ---------- |
-| Animation anxiety on volatile markets | Muted flash colors; max 1 s flash; no full-screen red |
-| INP regression from view transitions | Only same-origin; skip if reduced-motion |
-| gold-api rate limits | Phase 2 parallel race; optional Phase 19 relay |
-| False Live label | Phase 3 policy |
-| LCP from hero SVG | Critical CSS inline ring only; lazy tick tape |
-| Motion overload | Motion budget table; max 3 concurrent loops per viewport |
+| Risk                                  | Mitigation                                               |
+| ------------------------------------- | -------------------------------------------------------- |
+| Animation anxiety on volatile markets | Muted flash colors; max 1 s flash; no full-screen red    |
+| INP regression from view transitions  | Only same-origin; skip if reduced-motion                 |
+| gold-api rate limits                  | Phase 2 parallel race; optional Phase 19 relay           |
+| False Live label                      | Phase 3 policy                                           |
+| LCP from hero SVG                     | Critical CSS inline ring only; lazy tick tape            |
+| Motion overload                       | Motion budget table; max 3 concurrent loops per viewport |
 
 ---
 
@@ -542,7 +543,7 @@ npm run build
 - [ ] Spot Terminal + Motion Universe Layer 0–1 shipped
 - [ ] `tracker.html` < 400 lines shell
 - [ ] Homepage uses quote bus
-- [ ] All §6 trust guardrails intact
+- [ ] All `AGENTS.md` non-negotiable rules trust guardrails intact
 - [ ] `npm test` + `validate` + `build` green
 - [ ] Before/after screenshots (360 / 1440, EN + AR)
 
@@ -550,9 +551,9 @@ npm run build
 
 ## Evidence (fill after Phase 1 baseline)
 
-| Metric | Baseline (TBD) | Target |
-| ------ | -------------- | ------ |
-| p50 refresh interval | — | ≤ 2000 ms |
-| p95 refresh interval | — | ≤ 5000 ms |
-| p95 apply latency | — | ≤ 500 ms |
-| Lighthouse mobile LCP | — | ≤ 2800 ms |
+| Metric                | Baseline (TBD) | Target    |
+| --------------------- | -------------- | --------- |
+| p50 refresh interval  | —              | ≤ 2000 ms |
+| p95 refresh interval  | —              | ≤ 5000 ms |
+| p95 apply latency     | —              | ≤ 500 ms  |
+| Lighthouse mobile LCP | —              | ≤ 2800 ms |

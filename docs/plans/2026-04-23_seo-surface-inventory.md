@@ -17,8 +17,8 @@ skills_used: []
 
 **Date:** 2026-04-23 **Status:** 📥 Proposal (plan-only, awaiting owner approval) **Audit ref:**
 [`docs/REPO_AUDIT.md` §J-P0-2](../REPO_AUDIT.md) **Campaign ref:** PR #3 of the charter-respecting
-multi-PR campaign (plan-first per [`AGENTS.md` §4.3](../../AGENTS.md)) **Depends on:** nothing.
-Independent of the P0 #1 `CNAME` / canonical-origin decision — this inventory script is
+multi-PR campaign (plan-first per [`AGENTS.md` workflow](../../AGENTS.md#workflow)) **Depends on:**
+nothing. Independent of the P0 #1 `CNAME` / canonical-origin decision — this inventory script is
 origin-agnostic and will simply record whichever origin is canonical at the moment it runs.
 
 > This is a **plan file**. It proposes no code changes. Approval unblocks a separate implementation
@@ -28,10 +28,10 @@ origin-agnostic and will simply record whichever origin is canonical at the mome
 
 ## 1. Problem statement
 
-SEO-surface edits are charter-sensitive (§6.4 — "Don't silently change canonical URLs, `robots.txt`,
-sitemap structure, `og:*` / `twitter:*` tags, or `CNAME`. Schema changes need a migration note.").
-Today there is no single artefact that captures the current state of those surfaces across ~689 HTML
-files, which means:
+SEO-surface edits are charter-sensitive (technical SEO policy — "Don't silently change canonical
+URLs, `robots.txt`, sitemap structure, `og:*` / `twitter:*` tags, or `CNAME`. Schema changes need a
+migration note."). Today there is no single artefact that captures the current state of those
+surfaces across ~689 HTML files, which means:
 
 - Any drift is only detectable by running ad-hoc greps against the tree.
 - Future SEO change PRs have no easy before/after diff to review.
@@ -147,17 +147,17 @@ interpretation of it. Missing values are `null` (never `""`), so diffs of missin
 
 ## 7. Charter-compliance checklist
 
-| Clause                                | How honored                                                                                                                                            |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| §6.1–§6.3 price-data invariants       | N/A. Script does not touch price rendering.                                                                                                            |
-| §6.4 SEO surface integrity            | The whole point: inventory makes SEO surfaces reviewable. No values are rewritten; nothing is silently changed.                                        |
-| §6.5 static architecture stays static | New file added under `scripts/node/` and `reports/seo/`. No framework, no runtime dependency injection, no SPA shift.                                  |
-| §6.6 EN/AR parity                     | Inventory records both languages' files side-by-side; makes parity regressions visible in the hreflang pair count. Neutral on any specific EN/AR edit. |
-| §6.7 DOM-safety baseline              | No browser code touched; Node-only. `check-unsafe-dom.js` baseline unaffected.                                                                         |
-| §6.8 no secrets in git                | JSON output contains canonicals / titles / meta — all public. No secrets.                                                                              |
-| §6.9 PR-only, no force-push           | Single focused implementation PR after approval.                                                                                                       |
-| §6.10 `post_gold.yml` untouched       | N/A.                                                                                                                                                   |
-| §6.11 honest verification             | Script output is the verification. `--check` mode keeps the committed artefact honest.                                                                 |
+| Clause                                                               | How honored                                                                                                                                            |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| non-negotiable rules 1–2 price-data invariants                       | N/A. Script does not touch price rendering.                                                                                                            |
+| technical SEO policy SEO surface integrity                           | The whole point: inventory makes SEO surfaces reviewable. No values are rewritten; nothing is silently changed.                                        |
+| operational guardrails (static MPA) static architecture stays static | New file added under `scripts/node/` and `reports/seo/`. No framework, no runtime dependency injection, no SPA shift.                                  |
+| non-negotiable rule 3 (EN/AR) EN/AR parity                           | Inventory records both languages' files side-by-side; makes parity regressions visible in the hreflang pair count. Neutral on any specific EN/AR edit. |
+| operational guardrails (DOM safety) DOM-safety baseline              | No browser code touched; Node-only. `check-unsafe-dom.js` baseline unaffected.                                                                         |
+| operational guardrails (secrets) no secrets in git                   | JSON output contains canonicals / titles / meta — all public. No secrets.                                                                              |
+| operational guardrails (PR-only) PR-only, no force-push              | Single focused implementation PR after approval.                                                                                                       |
+| operational guardrails (`post_gold.yml`) `post_gold.yml` untouched   | N/A.                                                                                                                                                   |
+| output expectations honest verification                              | Script output is the verification. `--check` mode keeps the committed artefact honest.                                                                 |
 
 ---
 

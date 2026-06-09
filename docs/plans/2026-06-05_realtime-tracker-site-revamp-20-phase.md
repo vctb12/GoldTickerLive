@@ -19,7 +19,7 @@ ceiling** before the UI honestly degrades (cached/delayed/fallback). Better **an
 graphics** for how spot is shown and updated. **Revamp `tracker.html` architecture** and align the
 **whole site** to the same live data + motion layer.
 
-**Non-negotiables (AGENTS.md §6):**
+**Non-negotiables (`AGENTS.md`):**
 
 - Reference ≠ retail; freshness labels stay visible; AED peg `3.6725` fixed.
 - Static multi-page architecture stays static (no SPA migration).
@@ -543,6 +543,6 @@ npm run build
 - [ ] Spot Terminal shipped with motion + RTL
 - [ ] `tracker.html` < 400 lines shell + templates
 - [ ] Homepage hero uses same quote bus
-- [ ] All §6 trust guardrails intact
+- [ ] All `AGENTS.md` non-negotiable rules trust guardrails intact
 - [ ] `npm test` + `validate` + `build` green
 - [ ] Before/after evidence attached to final PR

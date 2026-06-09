@@ -21,7 +21,7 @@ stat), PR B-2 partial (admin no-store cache-control), PR C-1 (lowdb removal), an
 scan, static-tier header parity, and perf baseline shipped — see §7.
 
 **Owner:** audit agent · **Scope:** Express admin backend, static site, CI, deps. **Guardrails:**
-[`AGENTS.md §6`](../../AGENTS.md#6-product-trust-guardrails). No SPA migration, no silent
+[`AGENTS.md §6`](../../AGENTS.md#non-negotiable-rules). No SPA migration, no silent
 SEO/canonical/`robots.txt`/sitemap/CSP changes, no DOM-safety-baseline regressions, bilingual parity
 on user-visible copy, PR-only.
 

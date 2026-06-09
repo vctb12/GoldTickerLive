@@ -12,7 +12,6 @@ import {
   getKaratCount,
   getKaratCountLabel,
   getKaratRangeLabel,
-  getRefreshStatement,
 } from '../config/index.js';
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
@@ -40,12 +39,12 @@ import { renderLocationGuideSection } from '../components/LocationGuideSection.j
 import '../lib/reveal.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import { countUp } from '../lib/count-up.js';
-import { animatePrice, pulseSpotTerminal } from '../lib/price-motion.js';
+import { animatePrice } from '../lib/price-motion.js';
 import { copyWithToast } from '../lib/copy-toast.js';
 import { mountQuickConvertWidget } from '../components/QuickConvertWidget.js';
 import { initSwUpdateToast } from '../lib/sw-update-toast.js';
 import { showDataStatusBanner, hideDataStatusBanner } from '../lib/data-status-banner.js';
-import { mountSkeleton, skeletonNode } from '../components/skeleton.js';
+import { mountSkeleton } from '../components/skeleton.js';
 import { clear, el, safeHref } from '../lib/safe-dom.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { enforceCanonicalOnDocument } from '../seo/canonical.js';

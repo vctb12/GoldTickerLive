@@ -14,9 +14,9 @@ program — see
 §1.2. It informs Wave B fix PRs sliced by template family (home/tracker, shops, country/city,
 calculator, content).
 
-Per `AGENTS.md` §6.4 / §6.5: this audit does not move canonicals, sitemap, `og:*`, `CNAME`, and does
-not propose any SPA migration. It only catalogues responsive risks present in the current static
-MPA.
+Per `AGENTS.md` technical SEO policy / operational guardrails (static MPA): this audit does not move
+canonicals, sitemap, `og:*`, `CNAME`, and does not propose any SPA migration. It only catalogues
+responsive risks present in the current static MPA.
 
 ---
 
@@ -134,11 +134,12 @@ lives in the few `font-size: <Npx>` declarations and in any layout that hardcode
 Static scan found **0** sub-13 px declarations, which is the hard floor; hand-verify the dense
 surfaces (tracker chrome, freshness pill, breadcrumbs) at 200% zoom in the fix PR.
 
-### 2.G RTL parity at narrow widths — `AGENTS.md` §6.6 — 🟡
+### 2.G RTL parity at narrow widths — `AGENTS.md` non-negotiable rule 3 (EN/AR) — 🟡
 
 Every screenshot in the §2.E matrix should also be captured with `dir="rtl"` toggled (set
 `localStorage.lang = 'ar'` or use the lang switch). RTL spot-check is a checkbox item per
-`AGENTS.md` §6.6 — the fix PR must include before/after at least at 320 and 768 in RTL.
+`AGENTS.md` non-negotiable rule 3 (EN/AR) — the fix PR must include before/after at least at 320 and
+768 in RTL.
 
 ---
 

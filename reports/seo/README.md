@@ -22,8 +22,8 @@ gate — only value drift does.
 ## Why it's committed
 
 Every future SEO-affecting PR carries a visible diff of what changed across the entire site. This
-closes the "silent canonical change" risk called out in [`AGENTS.md` §6.4](../../AGENTS.md) by
-making the state machine-readable.
+closes the "silent canonical change" risk called out in
+[`AGENTS.md` technical SEO policy](../../AGENTS.md) by making the state machine-readable.
 
 ## What this file is **not**
 
