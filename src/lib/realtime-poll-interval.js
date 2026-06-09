@@ -1,5 +1,5 @@
 /** Provider IDs that return seconds-level spot from a live HTTP API. */
-const LIVE_PROVIDER_IDS = new Set(['gold_api_com']);
+const LIVE_PROVIDER_IDS = new Set(['gold_api_com', 'live-race']);
 
 /** Provider IDs backed by hourly cron / twice-daily LBMA / committed JSON. */
 const STATIC_PROVIDER_IDS = new Set(['minted_metal', 'primary-provider', 'last-gold-price']);
@@ -29,7 +29,7 @@ export function resolveProviderPollMs(
     staticPollMs = 30_000,
     fallbackPollMs = 60_000,
     activePollMs = 1000,
-    hiddenPollMs = 20_000,
+    hiddenPollMs = 5000,
     visible = true,
   } = {}
 ) {

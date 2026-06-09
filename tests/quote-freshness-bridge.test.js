@@ -24,7 +24,25 @@ test('resolveGoldIsFresh returns null for normal live API quote (age classificat
   assert.equal(resolveGoldIsFresh({ isFresh: false }), false);
 });
 
-test('15s old quote with isFresh null shows Live via getLiveFreshness (not Stale)', async () => {
+test('3s live API quote shows Live via getLiveFreshness', async () => {
+  const { resolveGoldIsFresh } = await loadBridge();
+  const { getLiveFreshness } = await loadLiveStatus();
+
+  const updatedAt = new Date(Date.now() - 3000).toISOString();
+  const quote = { isFallback: false, isFresh: true };
+  const isFresh = resolveGoldIsFresh(quote);
+  const freshness = getLiveFreshness({
+    updatedAt,
+    isFresh,
+    isFallback: quote.isFallback,
+    hasLiveFailure: false,
+  });
+
+  assert.equal(isFresh, true);
+  assert.equal(freshness.key, 'live');
+});
+
+test('15s live API quote downgrades to cached (5s live budget)', async () => {
   const { resolveGoldIsFresh } = await loadBridge();
   const { getLiveFreshness } = await loadLiveStatus();
 
@@ -39,11 +57,11 @@ test('15s old quote with isFresh null shows Live via getLiveFreshness (not Stale
   });
 
   assert.equal(isFresh, true);
-  assert.equal(freshness.key, 'live');
-  assert.notEqual(freshness.reason, 'upstream-stale');
+  assert.equal(freshness.key, 'cached');
+  assert.equal(freshness.reason, 'live-budget-exceeded');
 });
 
-test('engine cached state must not force isFresh false', async () => {
+test('hourly cron path still shows Live at 15s when isFresh is null', async () => {
   const { resolveGoldIsFresh } = await loadBridge();
   const { getLiveFreshness } = await loadLiveStatus();
 

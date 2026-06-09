@@ -41,11 +41,16 @@ test('resolveProviderPollMs uses hiddenPollMs when tab is hidden', async () => {
   assert.equal(
     resolveProviderPollMs('gold_api_com', {
       livePollMs: 1000,
-      hiddenPollMs: 20_000,
+      hiddenPollMs: 5000,
       visible: false,
     }),
-    20_000
+    5000
   );
+});
+
+test('resolveProviderPollMs uses 1s for live-race wrapper', async () => {
+  const { resolveProviderPollMs } = await loadModule();
+  assert.equal(resolveProviderPollMs('live-race', { livePollMs: 1000, visible: true }), 1000);
 });
 
 test('resolveProviderPollMs defaults to activePollMs before first quote', async () => {

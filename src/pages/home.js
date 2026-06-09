@@ -21,6 +21,8 @@ import * as fmt from '../lib/formatter.js';
 import { getMarketStatus, getLiveFreshness } from '../lib/live-status.js';
 import { createRealtimePricingEngine } from '../lib/realtime-pricing-engine.js';
 import { REALTIME_POLLING_DEFAULTS } from '../lib/realtime-config.js';
+import { isRealtimeDebugEnabled } from '../lib/realtime-debug.js';
+import { maybeTrackRealtimeSlo } from '../lib/realtime-slo-analytics.js';
 import {
   createPrimaryQuoteProvider,
   createSecondaryQuoteProvider,
@@ -38,6 +40,7 @@ import { renderLocationGuideSection } from '../components/LocationGuideSection.j
 import '../lib/reveal.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import { countUp } from '../lib/count-up.js';
+import { animatePrice, pulseSpotTerminal } from '../lib/price-motion.js';
 import { copyWithToast } from '../lib/copy-toast.js';
 import { mountQuickConvertWidget } from '../components/QuickConvertWidget.js';
 import { initSwUpdateToast } from '../lib/sw-update-toast.js';
@@ -369,13 +372,27 @@ function renderHeroCard() {
   });
 
   const priceEl = document.getElementById('hlc-price');
+  const heroCard = document.getElementById('hero-live-card');
   if (priceEl) {
-    countUp(priceEl, usd24oz, {
+    const prev = parseFloat(String(priceEl.textContent || '').replace(/[^0-9.-]/g, ''));
+    const direction =
+      Number.isFinite(prev) && prev !== usd24oz ? (usd24oz > prev ? 'up' : 'down') : null;
+
+    const { key } = getFreshnessMeta();
+    const isLive = key === 'live';
+
+    animatePrice(priceEl, usd24oz, {
       decimals: 2,
       format: (n) => fmt.formatPrice(n, 'USD', 2),
       pulse: true,
       pulseTarget: priceEl,
+      terminalRoot: heroCard,
+      direction,
+      isLive,
     });
+
+    priceEl.classList.remove('hlc-price--loading');
+
     priceEl.classList.remove('hlc-price--loading');
   }
 
@@ -514,8 +531,7 @@ function renderHomeTrustAddons() {
 function renderHomeRealtimePanels() {
   const slaMount = document.getElementById('home-realtime-sla-slot');
   if (slaMount) {
-    const debugFreshness = new URLSearchParams(location.search).get('debugFreshness') === '1';
-    if (!debugFreshness) {
+    if (!isRealtimeDebugEnabled()) {
       slaMount.replaceChildren();
       return;
     }
@@ -991,6 +1007,7 @@ function applyRealtimeSnapshot(snapshot) {
     }
   }
 
+  maybeTrackRealtimeSlo(snapshot, 'home');
   renderHomeRealtimePanels();
 }
 
@@ -1001,7 +1018,7 @@ function initRealtimeEngine() {
     primaryProvider: createPrimaryQuoteProvider(),
     secondaryProvider: createSecondaryQuoteProvider(),
     config: REALTIME_POLLING_DEFAULTS,
-    debug: new URLSearchParams(location.search).get('debugFreshness') === '1',
+    debug: isRealtimeDebugEnabled(),
   });
 
   const cacheBoot = cache.getFreshBootGoldPrice();

@@ -12,15 +12,17 @@ async function loadFactory() {
   return import(url.href + `?v=${Date.now()}`);
 }
 
-test('createPrimaryQuoteProvider chains four live/file sources', async () => {
+test('createPrimaryQuoteProvider chains live race + file fallbacks', async () => {
   const { createPrimaryQuoteProvider } = await loadFactory();
   const chain = createPrimaryQuoteProvider();
   assert.equal(chain.providerId, 'live-primary');
-  assert.equal(chain.providers.length, 4);
-  assert.equal(chain.providers[0].providerId, 'gold_api_com');
-  assert.equal(chain.providers[1].providerId, 'minted_metal');
-  assert.equal(chain.providers[2].providerId, 'primary-provider');
-  assert.equal(chain.providers[3].providerId, 'last-gold-price');
+  assert.equal(chain.providers.length, 3);
+  assert.equal(chain.providers[0].providerId, 'live-race');
+  assert.equal(chain.providers[0].providers.length, 2);
+  assert.equal(chain.providers[0].providers[0].providerId, 'gold_api_com');
+  assert.equal(chain.providers[0].providers[1].providerId, 'minted_metal');
+  assert.equal(chain.providers[1].providerId, 'primary-provider');
+  assert.equal(chain.providers[2].providerId, 'last-gold-price');
 });
 
 test('createPrimaryQuoteProvider fails over through the chain', async () => {
@@ -28,14 +30,14 @@ test('createPrimaryQuoteProvider fails over through the chain', async () => {
   const chain = createPrimaryQuoteProvider();
 
   chain.providers[0].fetchQuote = async () => {
-    throw new Error('gold-api down');
+    throw new Error('live race down');
   };
   chain.providers[1].fetchQuote = async () => ({
     price: 4496.95,
     providerTimestamp: new Date().toISOString(),
     fetchedAt: new Date().toISOString(),
-    providerId: 'minted_metal',
-    source: 'minted_metal',
+    providerId: 'primary-provider',
+    source: 'primary-provider',
     providerPathSuccessful: true,
     isFresh: null,
     isFallback: false,
@@ -43,5 +45,5 @@ test('createPrimaryQuoteProvider fails over through the chain', async () => {
 
   const quote = await chain.fetchQuote();
   assert.equal(quote.price, 4496.95);
-  assert.equal(quote.providerId, 'minted_metal');
+  assert.equal(quote.providerId, 'primary-provider');
 });

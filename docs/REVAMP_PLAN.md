@@ -1669,6 +1669,21 @@ surfaces (`tracker.html`, `index.html`, `admin/`). Phases ship as single-concern
 - [ ] **Phase 30** — Docs, changelog, rollout. Update `CHANGELOG.md`, this section, and
       `docs/ADMIN_GUIDE.md`; bump "Last updated"; tag release per §21 Rollout Governance.
 
+### Track 6 — Real-time SLO + Motion Universe (20-phase program)
+
+Canonical plan:
+[`docs/plans/2026-06-09_realtime-tracker-motion-revamp-20-phase.md`](./plans/2026-06-09_realtime-tracker-motion-revamp-20-phase.md)
+(supersedes latency appendix in
+[`2026-06-05_realtime-tracker-site-revamp-20-phase.md`](./plans/2026-06-05_realtime-tracker-site-revamp-20-phase.md)).
+
+- [x] **Phase 0** — Motion foundation: `price-motion.js`, `motion-boot.js`, `motion-advanced.css`,
+      tokens, tracker + home Spot Terminal classes, nav view-transition boot.
+- [x] **Phases 1–4** — SLO panel (`?debugSlo=1`), `REALTIME_SLO` analytics, parallel race provider,
+      5 s freshness policy + UI bridge, backoff cap 5 s, wire/history decoupled from spot poll.
+- [ ] **Phases 5–8** — Tracker shell split, Spot Terminal hero, sitewide price motion, fast render path.
+- [ ] **Phases 9–14** — Command deck, chart sync, karat binding, quote bus, surface hooks.
+- [ ] **Phases 15–20** — Lazy modes, CSS split, PWA hardening, optional relay, CI SLO gates.
+
 ### §22b-specific risks (mirror in §25)
 
 - **Phase 14** — Tracker CSS split is the highest regression risk; visual-diff screenshots required
