@@ -20,6 +20,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { promisify } = require('util');
 const { atomicWriteJSON } = require('./fs-atomic');
 const { getSupabaseClient } = require('./supabase-client');
 
@@ -71,6 +72,38 @@ function generateId() {
 
 function nowIso() {
   return new Date().toISOString();
+}
+
+const parsedApiKeyHashIterations = Number.parseInt(
+  process.env.API_KEY_HASH_ITERATIONS || '210000',
+  10
+);
+const API_KEY_HASH_ITERATIONS =
+  Number.isFinite(parsedApiKeyHashIterations) && parsedApiKeyHashIterations > 0
+    ? parsedApiKeyHashIterations
+    : 210000;
+const API_KEY_HASH_BYTES = 32;
+const API_KEY_HASH_DIGEST = 'sha512';
+const pbkdf2Async = promisify(crypto.pbkdf2);
+
+function getApiKeyHashSalt() {
+  const salt = process.env.API_KEY_HASH_SALT;
+  if (!salt) throw new Error('API_KEY_HASH_SALT must be configured');
+  return salt;
+}
+
+function hashApiKeyLegacy(rawKey) {
+  return hashApiKey(rawKey);
+}
+
+function hashApiKey(rawKey) {
+  return pbkdf2Async(
+    rawKey,
+    getApiKeyHashSalt(),
+    API_KEY_HASH_ITERATIONS,
+    API_KEY_HASH_BYTES,
+    API_KEY_HASH_DIGEST
+  ).then((derivedKey) => derivedKey.toString('hex'));
 }
 
 // ---------------------------------------------------------------------------
@@ -437,10 +470,7 @@ async function recordEvent({ stripeEventId, type, livemode, handledAt }) {
  */
 async function createApiKey({ userId, label }) {
   const rawKey = 'gtl_' + crypto.randomBytes(24).toString('hex');
-  // SHA-256 used as lookup index for a high-entropy (192-bit) random API key.
-  // This is intentional — SHA-256 is appropriate here; bcrypt is only required
-  // for low-entropy, user-chosen secrets such as passwords.
-  const keyHash = crypto.createHash('sha256').update(rawKey).digest('hex'); // lgtm[js/insufficient-password-hash] codeql[js/insufficient-password-hash]
+  const keyHash = await hashApiKey(rawKey);
   const keyPrefix = rawKey.slice(0, 12);
 
   const sb = getSupabaseClient();
@@ -487,32 +517,30 @@ async function createApiKey({ userId, label }) {
 
 /**
  * Look up a user by raw API key (hash check).
- * SHA-256 is used here as a non-secret lookup index, NOT as a password hash.
- * API keys are 24 random bytes (192 bits of entropy) — they are not user-chosen
- * passwords, so SHA-256 is appropriate; bcrypt-style adaptive hashing is only
- * required for low-entropy, user-supplied secrets.
  */
 async function resolveApiKey(rawKey) {
   if (!rawKey) return null;
-  const keyHash = crypto.createHash('sha256').update(rawKey).digest('hex'); // lgtm[js/insufficient-password-hash] codeql[js/insufficient-password-hash]
+  const keyHash = await hashApiKey(rawKey);
   const sb = getSupabaseClient();
   if (sb) {
     try {
       const { data, error } = await sb
         .from('api_keys')
-        .select('id, user_id, revoked, label, created_at')
+        .select('id, user_id, revoked, label, created_at, key_hash')
         .eq('key_hash', keyHash)
         .eq('revoked', false)
-        .maybeSingle();
+        .limit(1);
       if (error) throw error;
-      if (!data) return null;
-      return { id: data.id, userId: data.user_id, label: data.label, createdAt: data.created_at };
+      const rows = Array.isArray(data) ? data : [];
+      if (!rows.length) return null;
+      const row = rows[0];
+      return { id: row.id, userId: row.user_id, label: row.label, createdAt: row.created_at };
     } catch (err) {
       console.error('[billing-repo] resolveApiKey Supabase error:', err.message);
     }
   }
   const store = readStore();
-  const row = store.api_keys.find((r) => r.keyHash === keyHash && !r.revoked);
+  const row = store.api_keys.find((r) => !r.revoked && r.keyHash === keyHash);
   if (!row) return null;
   return { id: row.id, userId: row.userId, label: row.label, createdAt: row.createdAt };
 }

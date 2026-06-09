@@ -2,13 +2,13 @@
 
 ## Required Variables
 
-| Variable             | Required | Description                                         | Example                     |
-| -------------------- | -------- | --------------------------------------------------- | --------------------------- |
-| `SUPABASE_URL`       | Yes      | Supabase project URL                                | `https://xxxxx.supabase.co` |
-| `SUPABASE_ANON_KEY`  | Yes      | Supabase anonymous/public API key                   | `eyJhbGciOi...`             |
-| `ALLOWED_EMAIL`      | Yes      | Admin email whitelist for GitHub OAuth              | `admin@example.com`         |
-| `GOLD_API_COM_KEY`   | Yes (CI) | gold-api.com API key for live XAU/USD spot prices   | `[from gold-api.com dashboard]` |
-| `GOLDPRICEZ_API_KEY` | No       | Legacy goldpricez.com adapter key (optional)        | `[legacy fallback only]`    |
+| Variable             | Required | Description                                       | Example                         |
+| -------------------- | -------- | ------------------------------------------------- | ------------------------------- |
+| `SUPABASE_URL`       | Yes      | Supabase project URL                              | `https://xxxxx.supabase.co`     |
+| `SUPABASE_ANON_KEY`  | Yes      | Supabase anonymous/public API key                 | `eyJhbGciOi...`                 |
+| `ALLOWED_EMAIL`      | Yes      | Admin email whitelist for GitHub OAuth            | `admin@example.com`             |
+| `GOLD_API_COM_KEY`   | Yes (CI) | gold-api.com API key for live XAU/USD spot prices | `[from gold-api.com dashboard]` |
+| `GOLDPRICEZ_API_KEY` | No       | Legacy goldpricez.com adapter key (optional)      | `[legacy fallback only]`        |
 
 ## Optional Variables (Express Server / Self-Hosted)
 
@@ -17,6 +17,8 @@
 | `JWT_SECRET`                | Server/test | Secret for signing JWT admin tokens (32+ chars)    | `[random 64-char hex string]` |
 | `ADMIN_PASSWORD`            | Server/test | Admin panel password (bcrypt-hashed at startup)    | `[strong password]`           |
 | `ADMIN_ACCESS_PIN`          | Server/test | 6+ digit numeric PIN gating the admin login        | `123456`                      |
+| `API_KEY_HASH_SALT`         | API/server  | Dedicated salt for PBKDF2 API key hashing          | `[random long string]`        |
+| `API_KEY_HASH_ITERATIONS`   | API/server  | PBKDF2 iteration count for API key hashing         | `210000`                      |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server/CI   | Supabase service-role key (bypasses RLS)           | `eyJhbGciOi...`               |
 | `STORAGE_BACKEND`           | No          | `file` (default) or `supabase`                     | `supabase`                    |
 | `GA4_MEASUREMENT_ID`        | No          | Google Analytics 4 measurement ID                  | `G-XXXXXXXXXX`                |
@@ -34,6 +36,9 @@
 > by `server/lib/auth.js` — without them the server throws at startup and `npm test` fails
 > immediately. CI sets test-only values for these via job-level `env:`. Locally, export them before
 > running `npm start` or `npm test`.
+>
+> `API_KEY_HASH_SALT` is a separate required secret for API key create/resolve flows and should not
+> reuse `JWT_SECRET`.
 
 ### Reverse-proxy / `trust proxy`
 
@@ -56,7 +61,7 @@ These are configured as repository secrets in GitHub (Settings → Secrets → A
 | Secret Name                 | Used By                   | Purpose                                  |
 | --------------------------- | ------------------------- | ---------------------------------------- |
 | `GOLD_API_COM_KEY`          | `gold-price-fetch.yml`    | Primary gold spot API key (gold-api.com) |
-| `GOLDPRICEZ_API_KEY`        | Provider adapter (legacy) | Optional legacy fallback key           |
+| `GOLDPRICEZ_API_KEY`        | Provider adapter (legacy) | Optional legacy fallback key             |
 | `CONSUMER_KEY`              | Tweet workflows           | Twitter/X OAuth 1.0a API Key             |
 | `CONSUMER_SECRET`           | Tweet workflows           | Twitter/X OAuth 1.0a API Secret          |
 | `ACCESS_TOKEN`              | Tweet workflows           | Twitter/X Access Token (read-write)      |
