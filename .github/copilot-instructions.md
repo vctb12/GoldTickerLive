@@ -39,7 +39,7 @@ Full guardrails: see [`AGENTS.md`](../AGENTS.md) (non-negotiable rules, terminol
 
 ## 3. Pricing Truth (one-screen summary)
 
-- Formula: `price_per_gram_AED = (XAU/USD ÷ 31.1035) × 3.6725 × karat_purity_factor`
+- Formula: `price_per_gram_AED = (XAU/USD ÷ 31.1034768) × 3.6725 × karat_purity_factor`
 - Karat factors: 24K=1.000, 22K=0.9167, 21K=0.875, 18K=0.750, 14K=0.5833, 9K=0.375
 - Local-currency pages multiply USD/g by current FX, **not** by the AED peg
 - Always label: `as of <UTC timestamp>`, source, and state (`live` / `cached` / `delayed` /
