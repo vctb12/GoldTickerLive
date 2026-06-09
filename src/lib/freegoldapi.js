@@ -75,10 +75,16 @@ export function normalizeFreeGoldRows(rows) {
  * @returns {Promise<Array>} normalised history records (may be empty on failure)
  */
 export async function fetchFreeGoldReference() {
-  const response = await fetch(API_URL, { credentials: 'omit' });
-  if (!response.ok) throw new Error(`freegoldapi HTTP ${response.status}`);
-  const payload = await response.json();
-  return normalizeFreeGoldRows(payload);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const response = await fetch(API_URL, { credentials: 'omit', signal: controller.signal });
+    if (!response.ok) throw new Error(`freegoldapi HTTP ${response.status}`);
+    const payload = await response.json();
+    return normalizeFreeGoldRows(payload);
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 /**
