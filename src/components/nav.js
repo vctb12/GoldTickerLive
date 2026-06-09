@@ -17,6 +17,7 @@ import { applyFeatureFlags } from '../lib/site-settings.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { collapseInactiveAdSlots } from './adSlot.js';
 import { ensureLazyMedia } from '../lib/media-governance.js';
+import { initMotionBoot } from '../lib/motion-boot.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -507,6 +508,9 @@ export function injectNav(lang = 'en', depth = 0) {
 
   // ── Scroll state: is-scrolled + hide/reveal on scroll (Track B §5.B.7) ───
   _initNavScrollBehavior(navEl);
+
+  // ── Sitewide motion (view transitions, scroll-driven, stagger) ─────────────
+  initMotionBoot();
 
   // ── Theme (auto/light/dark) tri-state toggle ─────────────────────────────
   const themeBtn = document.getElementById('nav-theme-toggle');

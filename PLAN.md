@@ -17,6 +17,16 @@
 
 ## 🔴 In Progress
 
+### Real-time tracker + Motion Universe — 20-phase program (2026-06-09)
+
+Canonical plan:
+[`docs/plans/2026-06-09_realtime-tracker-motion-revamp-20-phase.md`](docs/plans/2026-06-09_realtime-tracker-motion-revamp-20-phase.md)
+· reconciled in `REVAMP_PLAN.md` §22b Track 6.
+
+- [x] **Phase 0** — Motion foundation (`price-motion.js`, `motion-boot.js`, `motion-advanced.css`)
+- [ ] **Phases 1–4** — SLO + parallel provider + 5 s freshness + backoff (PR-B)
+- [ ] **Phases 5–20** — Tracker shell, Spot Terminal, quote bus, sitewide adoption (PR-C–F)
+
 ### Master workbook — WB-102 cross-page deep links (2026-06-01)
 
 - [ ] **WB-102** — home karat → tracker/calculator hash; calculator → shops by country; shared

@@ -230,6 +230,15 @@
   --transition-slow: 400ms var(--ease-out);
   --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
 
+  /* Motion Universe tokens — Phase 0 foundation */
+  --motion-spot-ring: 2.4s;
+  --motion-sonar: 1.8s;
+  --motion-stagger: 280ms;
+  --motion-stagger-step: 50ms;
+  --motion-page-transition: 280ms;
+  --duration-price-tick: 220ms;
+  --ease-price-tick: cubic-bezier(0.16, 1, 0.3, 1);
+
   /* Breakpoint tokens (for reference — use in @media queries) */
   --bp-xs: 380px;
   --bp-sm: 480px;

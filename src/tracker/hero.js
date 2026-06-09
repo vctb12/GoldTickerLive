@@ -4,8 +4,9 @@ import { _state, _el, _priceFor, _currentSpot, tx, formatUsd, formatUnitLabel } 
 import { clear, el, setText } from '../lib/safe-dom.js';
 import { mountSkeleton, skeletonNode, skeletonTableRow } from '../components/skeleton.js';
 import { getMarketStatus } from '../lib/live-status.js';
-import { pulseFreshness } from '../lib/freshness-pulse.js';
 import { countUp } from '../lib/count-up.js';
+import { pulseFreshness } from '../lib/freshness-pulse.js';
+import { animatePrice, pulseSpotTerminal, tickFreshnessPill } from '../lib/price-motion.js';
 import { getDayOpenPrice } from '../lib/cache.js';
 import {
   TRACKER_BADGE_CLASSES,
@@ -108,15 +109,38 @@ export function renderHero() {
     sourceStateBadge.setAttribute('aria-label', tooltip);
   }
 
+  const heroWrap = document.querySelector('.tracker-hero-wrap.spot-terminal');
+
   if (_el.xauUsdValue) {
     if (spot) {
-      countUp(_el.xauUsdValue, spot, {
+      const prevSpot = parseFloat(String(_el.xauUsdValue.textContent || '').replace(/[^0-9.-]/g, ''));
+      const direction =
+        Number.isFinite(prevSpot) && prevSpot !== spot
+          ? spot > prevSpot
+            ? 'up'
+            : 'down'
+          : null;
+
+      animatePrice(_el.xauUsdValue, spot, {
         decimals: 2,
         format: (n) => formatUsd(n),
         pulse: true,
         pulseTarget: _el.xauUsdValue?.closest('.tracker-hero-price, .tracker-metric'),
+        terminalRoot: heroWrap,
+        direction,
       });
-      pulseFreshness(_el.xauUsdValue);
+
+      if (heroWrap) {
+        pulseSpotTerminal(heroWrap, {
+          direction,
+          isLive: freshness.effectiveKey === 'live',
+        });
+      }
+
+      if (liveBadge) {
+        liveBadge.classList.toggle('live-sonar', freshness.effectiveKey === 'live');
+        tickFreshnessPill(liveBadge);
+      }
     } else if (_state.hasLiveFailure) {
       setText(_el.xauUsdValue, '—');
     } else {

@@ -1,0 +1,165 @@
+/* ═══════════════════════════════════════════════
+   Motion Advanced — Spot Terminal, view transitions,
+   scroll-driven reveals. All loops respect
+   prefers-reduced-motion in utilities.css.
+   ═══════════════════════════════════════════════ */
+
+/* ── Spot Terminal ambient ring ───────────────── */
+.spot-terminal--live {
+  position: relative;
+}
+
+.spot-terminal--live::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.35;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgb(201 168 76 / 22%) 0%,
+    transparent 70%
+  );
+  animation: spot-ring-breathe var(--motion-spot-ring, 2.4s) var(--ease-in-out) infinite;
+  z-index: 0;
+}
+
+@keyframes spot-ring-breathe {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.45;
+    transform: scale(1.02);
+  }
+}
+
+.spot-terminal--live[data-price-flash='up']::before {
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgb(34 197 94 / 18%) 0%,
+    transparent 70%
+  );
+}
+
+.spot-terminal--live[data-price-flash='down']::before {
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgb(239 68 68 / 14%) 0%,
+    transparent 70%
+  );
+}
+
+/* ── Live sonar dot (freshness pills) ─────────── */
+.live-sonar {
+  position: relative;
+}
+
+.live-sonar::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid var(--color-gold, #c4993e);
+  opacity: 0;
+  animation: live-sonar-ripple var(--motion-sonar, 1.8s) var(--ease-out) infinite;
+  pointer-events: none;
+}
+
+@keyframes live-sonar-ripple {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.85);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+/* ── Stagger children ─────────────────────────── */
+[data-stagger] > * {
+  opacity: 0;
+  transform: translateY(6px);
+  animation: stagger-child-in var(--motion-stagger, 280ms) var(--ease-premium, var(--ease-out)) both;
+  animation-delay: calc(var(--stagger-index, 0) * var(--motion-stagger-step, 50ms));
+}
+
+@keyframes stagger-child-in {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Scroll-driven reveal (progressive enhancement) */
+@supports (animation-timeline: view()) {
+  .motion-scroll-driven [data-reveal-scroll] {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: reveal-scroll-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+
+  @keyframes reveal-scroll-in {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* ── View Transitions (same-origin nav) ───────── */
+@supports (view-transition-name: none) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: var(--motion-page-transition, 280ms);
+    animation-timing-function: var(--ease-premium, var(--ease-out));
+  }
+
+  ::view-transition-old(root) {
+    animation-name: vt-fade-out;
+  }
+
+  ::view-transition-new(root) {
+    animation-name: vt-fade-in;
+  }
+
+  @keyframes vt-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes vt-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spot-terminal--live::before,
+  .live-sonar::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  [data-stagger] > * {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .motion-scroll-driven [data-reveal-scroll] {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}

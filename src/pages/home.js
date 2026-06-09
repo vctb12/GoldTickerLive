@@ -38,6 +38,7 @@ import { renderLocationGuideSection } from '../components/LocationGuideSection.j
 import '../lib/reveal.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import { countUp } from '../lib/count-up.js';
+import { animatePrice, pulseSpotTerminal } from '../lib/price-motion.js';
 import { copyWithToast } from '../lib/copy-toast.js';
 import { mountQuickConvertWidget } from '../components/QuickConvertWidget.js';
 import { initSwUpdateToast } from '../lib/sw-update-toast.js';
@@ -369,13 +370,26 @@ function renderHeroCard() {
   });
 
   const priceEl = document.getElementById('hlc-price');
+  const heroCard = document.getElementById('hero-live-card');
   if (priceEl) {
-    countUp(priceEl, usd24oz, {
+    const prev = parseFloat(String(priceEl.textContent || '').replace(/[^0-9.-]/g, ''));
+    const direction =
+      Number.isFinite(prev) && prev !== usd24oz ? (usd24oz > prev ? 'up' : 'down') : null;
+
+    animatePrice(priceEl, usd24oz, {
       decimals: 2,
       format: (n) => fmt.formatPrice(n, 'USD', 2),
       pulse: true,
       pulseTarget: priceEl,
+      terminalRoot: heroCard,
+      direction,
     });
+
+    if (heroCard) {
+      const { key } = getFreshnessMeta();
+      pulseSpotTerminal(heroCard, { direction, isLive: key === 'live' });
+    }
+
     priceEl.classList.remove('hlc-price--loading');
   }
 
