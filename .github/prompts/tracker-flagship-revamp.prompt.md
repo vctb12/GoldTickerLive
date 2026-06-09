@@ -13,6 +13,15 @@ related_instructions:
 
 # Prompt: Tracker Flagship Revamp
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
+
 The Tracker is the flagship of Gold Ticker Live. Treat it as a workspace, not a landing page.
 
 ## Goal

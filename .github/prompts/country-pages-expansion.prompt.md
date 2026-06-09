@@ -10,6 +10,15 @@ related_instructions:
 
 # Prompt: Country Pages Expansion
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
+
 Add or improve country / city pages with **real local context**. Thin templated duplicates are
 not acceptable.
 

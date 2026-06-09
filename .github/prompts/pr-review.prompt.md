@@ -12,6 +12,15 @@ related_instructions:
 
 # Prompt: PR Review
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
+
 You are reviewing a PR on `vctb12/GoldTickerLive` (production site
 <https://goldtickerlive.com/>). Apply the Gold Ticker Live charter (`AGENTS.md`) and the
 operating system in `.github/`. Be substantive, not ceremonial.

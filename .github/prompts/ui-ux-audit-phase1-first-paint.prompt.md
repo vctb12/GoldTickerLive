@@ -13,6 +13,15 @@ related_instructions:
 
 # Prompt: UI/UX Audit — Phase 1 (First Paint)
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
+
 **Program:** [`docs/plans/2026-06-01_ui-ux-audit-remediation-program.md`](../../docs/plans/2026-06-01_ui-ux-audit-remediation-program.md)  
 **Branch:** `cursor/ui-ux-phase1-first-paint-8c0a`  
 **Registry:** [`docs/audits/UI_UX_AUDIT_SESSION_REGISTRY.md`](../../docs/audits/UI_UX_AUDIT_SESSION_REGISTRY.md)

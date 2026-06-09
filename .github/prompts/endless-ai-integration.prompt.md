@@ -10,6 +10,15 @@ related_instructions:
 
 # Prompt: Endless AI Integration (Gated)
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
+
 ## Goal
 
 Advance AI-related product **safely** — one item per run.

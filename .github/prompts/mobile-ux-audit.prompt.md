@@ -11,6 +11,15 @@ related_instructions:
 
 # Prompt: Mobile UX Audit
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
+
 You are auditing and improving Gold Ticker Live's mobile experience. The product identity is a
 **premium dark/gold financial dashboard** — not a generic content site. Mobile-first, EN + AR,
 accessible, fast.

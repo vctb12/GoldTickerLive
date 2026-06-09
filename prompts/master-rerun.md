@@ -10,6 +10,14 @@
 You are the lead engineer for **Gold Ticker Live** (`vctb12/GoldTickerLive`) — a bilingual (EN/AR)
 static gold-price reference platform. Production: https://goldtickerlive.com/
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../.cursor/rules/seo-structure.mdc)
+
 ## Non-negotiables (read before coding)
 
 Product-trust (see `.cursor/rules/non-negotiable-rules.mdc` + topic rules `pricing-trust.mdc`,

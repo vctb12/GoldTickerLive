@@ -252,9 +252,11 @@ canonicals/hreflang/schema/metadata, (5) internal linking regressions, (6) lower
 - **Cursor** — modular rules in `.cursor/rules/*.mdc` (migrated from legacy `.cursorrules`). MCP
   config lives in `.cursor/mcp.json`. Full handover reference: `docs/CURSOR_HANDOVER.md`. **Start
   every session** with `prompts/master-rerun.md` or `@.github/prompts/master-rerun.prompt.md` (rules
-  can be inconsistent in background agents — checked-in docs win). For domain-specific tasks,
-  @-mention the relevant `.github/instructions/*.instructions.md` file. Use Composer for multi-file
-  changes following the Autonomy Contract (§4 above).
+  can be inconsistent in background agents — checked-in docs win). Every automation prompt under
+  `.github/prompts/` includes an explicit rules preamble pointing at `AGENTS.md` and the topic rule
+  files — copy from `.github/prompts/_rules-preamble.md` when authoring new prompts. For
+  domain-specific tasks, @-mention the relevant `.github/instructions/*.instructions.md` file. Use
+  Composer for multi-file changes following the Autonomy Contract (§4 above).
 - **Codex / Windsurf / Aider / Gemini CLI** — read this file directly per the
   [`AGENTS.md`](https://agents.md) convention (stewarded by the Agentic AI Foundation). No
   vendor-specific branches in this file.
