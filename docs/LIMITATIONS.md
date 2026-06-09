@@ -213,7 +213,7 @@
 
 ### 2. Client-Side API Rate Limits
 
-- **Issue**: Free-tier APIs (goldpricez.com, exchangerate-api.com) have rate limits.
+- **Issue**: Free-tier APIs (gold-api.com live lane, open.er-api.com FX) have rate limits.
 - **Impact**: High traffic could exhaust API quotas, causing price display failures.
 - **Ideal fix**: Server-side caching proxy with a shared cache for all visitors.
 

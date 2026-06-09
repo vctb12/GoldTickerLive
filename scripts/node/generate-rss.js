@@ -5,7 +5,7 @@
  * Generates feed.xml — an RSS 2.0 feed for gold price updates.
  *
  * The feed contains one item per day. When data/gold_price.json is present
- * (written every 6 min by gold-price-fetch.yml from goldpricez.com), we
+ * (written hourly by gold-price-fetch.yml from gold-api.com chain), we
  * include a live-price item for today. Otherwise the feed falls back to
  * the static "about" item only.
  *
@@ -70,7 +70,7 @@ async function buildItems() {
   const now = new Date();
 
   // Try to read today's live price from the canonical data file
-  // (written every 6 min by gold-price-fetch.yml from goldpricez.com).
+  // (written hourly by gold-price-fetch.yml from gold-api.com provider chain).
   const liveSpot = readLocalGoldPrice();
 
   if (liveSpot) {

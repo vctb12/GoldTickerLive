@@ -63,7 +63,7 @@ Gold-Prices platform.
 ```html
 <!-- DNS Prefetch -->
 <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-<link rel="dns-prefetch" href="//api.goldpricez.com" />
+<link rel="dns-prefetch" href="//api.gold-api.com" />
 
 <!-- Preconnect -->
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -276,7 +276,7 @@ async function batchFetch(endpoints) {
 }
 
 const [goldData, fxData] = await batchFetch([
-  'https://api.goldpricez.com/price',
+  'https://api.gold-api.com/price/XAU',
   'https://open.er-api.com/v6/latest/USD',
 ]);
 ```

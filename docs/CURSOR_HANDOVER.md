@@ -31,7 +31,7 @@ Arab world, and global reference pricing.
 ```
 Browser → Static HTML pages (GitHub Pages)
          ├── ES modules (src/pages/, src/components/, src/lib/)
-         ├── Fetches from api.goldpricez.com (XAU/USD spot)
+         ├── Reads data/gold_price.json (gold-api.com via hourly provider chain)
          ├── Fetches from open.er-api.com (FX rates)
          ├── localStorage cache + Service Worker
          └── Optional: /api/v1/* → Express backend → Supabase
@@ -50,7 +50,8 @@ GitHub Actions → Python scripts → X/Twitter posts (hourly)
 
 | Secret Name                 | Purpose                                  | Where to Get                                       | Status                                                                     |
 | --------------------------- | ---------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------- |
-| `GOLDPRICEZ_API_KEY`        | Gold price API key (api.goldpricez.com)  | https://goldpricez.com — sign up, dashboard        | **Active** — used by all price workflows                                   |
+| `GOLD_API_COM_KEY`          | Primary gold spot API key (gold-api.com) | https://gold-api.com — sign up, dashboard          | **Active** — production `GOLD_PROVIDER_ORDER` primary                      |
+| `GOLDPRICEZ_API_KEY`        | Legacy gold price API key (optional)     | https://goldpricez.com — sign up, dashboard        | **Optional** — legacy adapter fallback only                                |
 | `CONSUMER_KEY`              | X/Twitter OAuth 1.0a API Key             | X Developer Portal → App → Keys and Tokens         | **Active** — hourly posting                                                |
 | `CONSUMER_SECRET`           | X/Twitter OAuth 1.0a API Secret          | X Developer Portal → App → Keys and Tokens         | **Active** — hourly posting                                                |
 | `ACCESS_TOKEN`              | X/Twitter Access Token (Read+Write)      | X Developer Portal → Generate                      | **Active** — hourly posting                                                |
@@ -437,7 +438,8 @@ Paste-ready task starters:
 | **GitHub Actions**     | CI/CD + automation    | Repo → Actions                 |
 | **Supabase**           | Database + Auth + RLS | https://supabase.com/dashboard |
 | **X Developer Portal** | Twitter/X API access  | https://developer.twitter.com  |
-| **GoldPriceZ**         | Gold spot price API   | https://goldpricez.com         |
+| **Gold-API.com**       | Primary gold spot API | https://gold-api.com           |
+| **GoldPriceZ**         | Legacy adapter (opt.) | https://goldpricez.com         |
 | **Telegram**           | Bot alerts            | @BotFather                     |
 | **Discord**            | Webhook alerts        | Server Settings → Integrations |
 | **Resend**             | Transactional email   | https://resend.com             |

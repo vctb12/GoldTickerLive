@@ -100,7 +100,7 @@ async function main() {
     process.exit(0);
   }
 
-  console.log('📡 Reading gold price from data/gold_price.json (goldpricez.com)…');
+  console.log('📡 Reading gold price from data/gold_price.json (gold-api.com chain)…');
   let goldData;
   try {
     goldData = readGoldPrice();
