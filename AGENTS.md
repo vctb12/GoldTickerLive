@@ -5,6 +5,14 @@ Copilot (cloud agent, CLI, chat), OpenAI Codex, Claude Code, Cursor, Gemini CLI,
 should read this file first. Agent-specific files (`CLAUDE.md`, `.github/copilot-instructions.md`)
 are thin pointers back here plus tool-specific mechanics.
 
+## Project overview
+GoldTickerLive is a bilingual gold price and gold education platform for GCC and Arab-world users.
+It provides spot-linked reference prices, local currency conversion, karat pricing, calculators, country/city market pages, and trust-oriented educational content.
+
+## Core objective
+Protect user trust.
+Accuracy, clarity, and semantic consistency matter more than speed or content volume.
+
 ## 1. What this repo is
 
 Gold Ticker Live — a bilingual (EN / AR) static multi-page website publishing gold-price reference
