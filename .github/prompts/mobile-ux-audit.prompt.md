@@ -82,6 +82,8 @@ npm run build
 
 ## Return format
 
+Use [`_output-format.md`](./_output-format.md) per finding when reporting issues.
+
 See [`.github/skills/mobile-ux-review/SKILL.md`](../skills/mobile-ux-review/SKILL.md#final-report-template).
 
 Don't stop at cosmetic changes if a deeper issue is the real problem. Flag and (where in scope)

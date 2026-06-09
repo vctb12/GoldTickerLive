@@ -33,7 +33,7 @@ a PR. It produces a coherent picture across all the surfaces that matter at Gold
 
 | What                              | Where                                                  |
 | --------------------------------- | ------------------------------------------------------ |
-| Product identity                  | `AGENTS.md` §1, `.github/copilot-instructions.md` §1   |
+| Product identity                  | `AGENTS.md` project overview, `.cursor/rules/*.mdc`      |
 | Pricing rules                     | `.github/instructions/gold-pricing.instructions.md`    |
 | Visual identity / tokens          | `styles/global.css`, `docs/DESIGN_TOKENS.md`           |
 | Tracker state                     | `docs/tracker-state.md`                                |
@@ -58,8 +58,8 @@ a PR. It produces a coherent picture across all the surfaces that matter at Gold
 4. **If the task is >2h of work**, write a plan file under `docs/plans/YYYY-MM-DD_<slug>.md` and
    open a draft PR with just the plan.
 5. **Implement in coherent commits**, one surface at a time.
-6. **Verify** with the commands from `AGENTS.md` §2 + `testing-qa.instructions.md`.
-7. **Report** using the format in §13 of `.github/copilot-instructions.md`.
+6. **Verify** with `AGENTS.md` core commands + `testing-qa.instructions.md`.
+7. **Report** using `.github/prompts/_output-format.md` (severity, file, impact, exact fix).
 
 ## Checklists in this skill
 

@@ -63,6 +63,8 @@ Do NOT claim you can't read logs. The tools exist.
 
 ## Return format
 
+Use [`_output-format.md`](./_output-format.md) per finding when reporting issues.
+
 ```md
 # Workflow Debug — <workflow file>
 

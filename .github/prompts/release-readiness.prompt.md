@@ -81,6 +81,8 @@ npm run test:playwright # if Playwright suite exists for the change
 
 ## Return format
 
+Use [`_output-format.md`](./_output-format.md) per finding when reporting issues.
+
 ```md
 # Release Readiness — PR <#> / Branch <name>
 

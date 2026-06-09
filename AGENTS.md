@@ -181,6 +181,8 @@ Automation prompts under `.github/prompts/` include a rules preamble — copy fr
 | Karats / constants | `src/config/karats.js`, `src/config/constants.js`                                  |
 | Pricing logic      | `src/lib/price-calculator.js`, `.github/instructions/gold-pricing.instructions.md` |
 | Freshness contract | `docs/freshness-contract.md`, `src/lib/live-status.js`                             |
+| Terminology        | `docs/TERMINOLOGY_GLOSSARY.md`, `.cursor/rules/non-negotiable-rules.mdc`           |
+| Agent governance   | `scripts/node/check-agent-governance.js` (runs in `npm run validate`)              |
 | SEO governance     | `scripts/node/seo-governance.js`, `.github/instructions/seo.instructions.md`       |
 | Active queue       | `PLAN.md`                                                                          |
 | Deep reference     | `docs/AGENTS_REFERENCE.md`, `docs/ARCHITECTURE.md`, `docs/REVAMP_PLAN.md`          |

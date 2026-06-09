@@ -72,6 +72,8 @@ node --test tests/shops*.test.js
 
 ## Return format
 
+Use [`_output-format.md`](./_output-format.md) per finding when reporting issues.
+
 ```md
 # Shops Audit — <date>
 

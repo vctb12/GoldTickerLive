@@ -8,10 +8,11 @@ Reference for the 13 paste-ready prompts under `.github/prompts/`. For the syste
 Every prompt in this repo follows the same structure:
 
 - **YAML frontmatter** — `mode`, `description`, related skills, related instructions
-- **Rules preamble** (required, immediately after the `# Prompt:` title) — agents must read
-  `AGENTS.md` and `.cursor/rules/non-negotiable-rules.mdc`, `pricing-trust.mdc`,
-  `bilingual-content.mdc`, `seo-structure.mdc` before reviewing or editing
+- **Rules preamble** (required, immediately after the `# Prompt:` title) — copy from
+  `_rules-preamble.md`; enforced by `check-agent-governance.js` in `npm run validate`
 - **Goal** — one paragraph
+- **Return format** — audit/review prompts use `_output-format.md` (severity, file, impact, exact
+  fix)
 - **Required inspection** — files / docs to load first
 - **Permission** — what the prompt explicitly allows (counters timid agents)
 - **Implementation expectations** — concrete rules

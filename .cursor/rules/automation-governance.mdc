@@ -7,9 +7,11 @@ alwaysApply: true
 > Applies to all Cursor agents and background automations on vctb12/GoldTickerLive.
 
 ## Before creating any PR
+- Read `AGENTS.md` and `.cursor/rules/non-negotiable-rules.mdc`, `pricing-trust.mdc`, `bilingual-content.mdc`, `seo-structure.mdc` before reviewing or editing.
 - Check open PRs first. Do not create a PR if one already exists for the same fix or the same files.
 - Reference @PLAN.md before starting any task to check for context or blockers.
 - Start sessions from `prompts/master-rerun.md` (or `@.github/prompts/master-rerun.prompt.md`) — do not rely on chat memory alone.
+- New automation prompts must include the preamble from `.github/prompts/_rules-preamble.md` (enforced by `check-agent-governance.js`).
 
 ## Scope discipline
 - Only edit files directly required by the task.

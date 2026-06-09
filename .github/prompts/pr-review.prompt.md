@@ -70,27 +70,35 @@ or as a recommended follow-up PR. Don't be timid — if a redesign is the right 
 
 ## Return format
 
+Follow `AGENTS.md` output expectations and review priorities. Canonical template:
+[`_output-format.md`](./_output-format.md).
+
 ```md
 ## Verdict
-<one of: approve / approve with comments / request changes / block>
+<approve | approve with comments | request changes | block>
 
 ## Blocking issues
-- **[file:line]** <issue> — <why> — <suggested fix>
+### block — <title>
+- **File/page:** `path:line`
+- **Issue:** …
+- **Impact:** trust / pricing / SEO / bilingual / UX
+- **Exact fix:** …
+- **Repeat pattern:** yes/no — …
 
 ## Important non-blocking
-- **[file:line]** <issue> — <why> — <suggested fix>
+(same fields; severity high or medium)
 
 ## Nice-to-have
-- ...
+(low severity, same fields)
 
 ## Files requiring manual review
 - <file> — <reason>
 
 ## Verification recommended before merge
-- `npm run lint` / `npm test` / `npm run validate` / Lighthouse / RTL spot-check / etc.
+- commands actually needed for this diff
 
 ## Merge recommendation
-<merge now / merge after fixes / hold for owner review>
+<merge now | merge after fixes | hold for owner review>
 
 ## Follow-up PRs to consider
 - <title> — <scope>

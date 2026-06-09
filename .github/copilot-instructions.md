@@ -125,7 +125,7 @@ Deep dive: [`.github/instructions/security.instructions.md`](./instructions/secu
 
 ## 10. Testing and Verification
 
-Run what matches your change (from `AGENTS.md` §2):
+Run what matches your change (from `AGENTS.md` core commands):
 
 ```bash
 npm test                  # node:test under tests/*.test.js

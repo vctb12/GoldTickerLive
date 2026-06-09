@@ -69,6 +69,9 @@ npm run build
 
 ## Return format
 
+Use [`_output-format.md`](./_output-format.md) per finding. Prioritize by `AGENTS.md` review priorities.
+
+
 ```md
 # Pricing Data Audit — <date>
 

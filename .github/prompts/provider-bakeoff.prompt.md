@@ -71,6 +71,8 @@ cat docs/gold-price-provider-bakeoff.md
 
 ## Return format
 
+Use [`_output-format.md`](./_output-format.md) per finding when reporting issues.
+
 ```md
 # Provider Bakeoff — <date>
 

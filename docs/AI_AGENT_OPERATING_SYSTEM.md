@@ -105,7 +105,7 @@ everything else on a non-negotiable, `AGENTS.md` wins. File an edit to reconcile
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
-│ 1. Read AGENTS.md                                                    │
+│ 1. Read AGENTS.md + .cursor/rules/*.mdc (prompt preamble repeats this)│
 │ 2. Read .github/copilot-instructions.md  (or CLAUDE.md / etc.)       │
 │ 3. Classify the task → pick a prompt from .github/prompts/           │
 │ 4. Prompt's frontmatter tells you which skills + instructions apply  │
@@ -113,8 +113,8 @@ everything else on a non-negotiable, `AGENTS.md` wins. File an edit to reconcile
 │ 6. Run the preflight checklist (skills/gold-ticker-live-audit/...)   │
 │ 7. If task > 2h → write docs/plans/YYYY-MM-DD_<slug>.md (draft PR)   │
 │ 8. Implement                                                          │
-│ 9. Verify (AGENTS.md §2 + the task's verification block)             │
-│ 10. Report (use the prompt's return format)                          │
+│ 9. Verify (AGENTS.md core commands + the task's verification block)  │
+│ 10. Report (_output-format.md: severity, file, impact, exact fix)    │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -140,20 +140,21 @@ Read AGENTS.md. Then read docs/AI_AGENT_OPERATING_SYSTEM.md and use
 
 ## How to run verification
 
-See [`AGENTS.md` §2](../AGENTS.md#2-core-commands) and the task's prompt for verification specifics.
-For a release gate, see [`AI_RELEASE_READINESS_PLAYBOOK.md`](./AI_RELEASE_READINESS_PLAYBOOK.md).
+See [`AGENTS.md` core commands](../AGENTS.md#core-commands) and the task's prompt for verification
+specifics. For a release gate, see
+[`AI_RELEASE_READINESS_PLAYBOOK.md`](./AI_RELEASE_READINESS_PLAYBOOK.md).
 
 ## How to update the system
 
-| Change type                           | Who edits what                                                           |
-| ------------------------------------- | ------------------------------------------------------------------------ |
-| New repo-wide rule                    | `AGENTS.md` + sync to `.github/copilot-instructions.md`                  |
-| Rule for a specific path              | the matching `.github/instructions/*.instructions.md`                    |
-| New task workflow                     | add `.github/prompts/<task>.prompt.md` + entry in `AI_PROMPT_LIBRARY.md` |
-| New reusable workflow with checklists | add `.github/skills/<name>/` + entry in `AGENT_SKILL_LIBRARY.md`         |
-| Skill checklist updated               | edit the `.md` directly                                                  |
-| New specialist agent                  | add `.github/agents/<name>.md` + entry in this doc                       |
-| Risk identified                       | add to `AI_AGENT_REVIEW_CHECKLISTS.md` Risk Register                     |
+| Change type                           | Who edits what                                                         |
+| ------------------------------------- | ---------------------------------------------------------------------- |
+| New repo-wide rule                    | `AGENTS.md` + `.cursor/rules/*.mdc` + sync copilot-instructions        |
+| Rule for a specific path              | the matching `.github/instructions/*.instructions.md`                  |
+| New task workflow                     | add prompt with `_rules-preamble.md` + entry in `AI_PROMPT_LIBRARY.md` |
+| New reusable workflow with checklists | add `.github/skills/<name>/` + entry in `AGENT_SKILL_LIBRARY.md`       |
+| Skill checklist updated               | edit the `.md` directly                                                |
+| New specialist agent                  | add `.github/agents/<name>.md` + entry in this doc                     |
+| Risk identified                       | add to `AI_AGENT_REVIEW_CHECKLISTS.md` Risk Register                   |
 
 Keep updates small and atomic. Don't rewrite the system every quarter.
 
@@ -167,20 +168,21 @@ Keep updates small and atomic. Don't rewrite the system every quarter.
 
 ## Common mistakes this system prevents
 
-| Mistake                                                 | Defended by                                    |
-| ------------------------------------------------------- | ---------------------------------------------- |
-| Treating Gold Ticker Live as a generic static site      | `AGENTS.md` §1 + copilot-instructions §1       |
-| Mixing reference and retail prices                      | `gold-pricing.instructions.md`, pricing skill  |
-| Hand-editing `sitemap.xml`                              | `seo.instructions.md`, sitemap checklist       |
-| Pushing a tracker tweak that strips the freshness pill  | `frontend-polish-agent`, pricing skill         |
-| `set -x` on a step that touches `${{ secrets.* }}`      | `security.instructions.md`, workflow checklist |
-| Service-role Supabase key in browser bundle             | `security-review` skill                        |
-| Per-karat city page indexed                             | `seo-governance.js` + governance skill         |
-| Posting stale data as live on X                         | `x-twitter-automation-review` prompt           |
-| Migrating to React because "it would be easier"         | `AGENTS.md` §6 #5                              |
-| Tweet > 280 chars because URL counted as 0              | X-posting checklist                            |
-| Adding a 7th `.card` variant                            | `frontend-design-system` skill                 |
-| Sub-agent (`explore`) launched for a single-file lookup | `AGENTS.md` tools section                      |
+| Mistake                                                 | Defended by                                            |
+| ------------------------------------------------------- | ------------------------------------------------------ |
+| Treating Gold Ticker Live as a generic static site      | `AGENTS.md` project overview + copilot-instructions §1 |
+| Mixing reference and retail prices                      | `gold-pricing.instructions.md`, pricing skill          |
+| Hand-editing `sitemap.xml`                              | `seo.instructions.md`, sitemap checklist               |
+| Pushing a tracker tweak that strips the freshness pill  | `frontend-polish-agent`, pricing skill                 |
+| `set -x` on a step that touches `${{ secrets.* }}`      | `security.instructions.md`, workflow checklist         |
+| Service-role Supabase key in browser bundle             | `security-review` skill                                |
+| Per-karat city page indexed                             | `seo-governance.js` + governance skill                 |
+| Posting stale data as live on X                         | `x-twitter-automation-review` prompt                   |
+| Migrating to React because "it would be easier"         | `AGENTS.md` operational guardrails                     |
+| Using `live` for cached or delayed data                 | `AGENTS.md` terminology policy + pricing-trust         |
+| Tweet > 280 chars because URL counted as 0              | X-posting checklist                                    |
+| Adding a 7th `.card` variant                            | `frontend-design-system` skill                         |
+| Sub-agent (`explore`) launched for a single-file lookup | `AGENTS.md` tools section                              |
 
 ## How this protects pricing truth, SEO, automation, EN/AR
 

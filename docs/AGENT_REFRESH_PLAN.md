@@ -156,7 +156,8 @@ Every rule below is being removed or sharply softened. One line per reason.
 
 ## Preserved guardrails — what stays, as product truth
 
-Kept in `AGENTS.md` under **Product-trust guardrails**, each with a one-line _Why:_.
+Kept in `AGENTS.md` under **Non-negotiable rules**, **Terminology policy**, and topic rules in
+`.cursor/rules/*.mdc`. CI gate: `npm run check-agent-governance`.
 
 1. Spot/reference prices must never be blurred with retail or jewelry prices. _Why:_ the entire
    site's credibility rests on this distinction.

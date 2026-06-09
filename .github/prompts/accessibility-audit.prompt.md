@@ -68,6 +68,8 @@ npm run validate
 
 ## Return format
 
+Use [`_output-format.md`](./_output-format.md) per finding when reporting issues.
+
 ```md
 # Accessibility Audit — <date>
 

@@ -42,4 +42,5 @@ Protect pricing truth — **one** trust defect per run.
 
 ## Return format
 
-Defect → fix → test → risks.
+Follow `AGENTS.md` review priorities (price math → freshness → EN/AR → SEO → linking).
+Use [`_output-format.md`](./_output-format.md) for each finding. End with: defect → exact fix → test → risks.

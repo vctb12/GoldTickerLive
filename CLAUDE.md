@@ -59,8 +59,8 @@ Full reference: [`docs/AI_PROMPT_LIBRARY.md`](./docs/AI_PROMPT_LIBRARY.md) and
 
 ## Verification defaults for Claude sessions
 
-When you finish work, run the commands in [`AGENTS.md` §2](./AGENTS.md#2-core-commands) that match
-the surface you touched (typically `npm test` + `npm run lint` + `npm run validate`, plus
+When you finish work, run the commands in [`AGENTS.md` core commands](./AGENTS.md#core-commands)
+that match the surface you touched (typically `npm test` + `npm run lint` + `npm run validate`, plus
 `npm run build` for any change that touches HTML / CSS / JS). State in the PR body exactly what you
 ran vs. what you inferred.
 

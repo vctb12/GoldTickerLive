@@ -66,6 +66,8 @@ npm run build                # regenerates sitemap
 
 ## Return format
 
+Use [`_output-format.md`](./_output-format.md) per finding when reporting issues.
+
 ```md
 # Country Pages Expansion — <countries>
 
