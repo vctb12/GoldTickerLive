@@ -30,7 +30,6 @@ function promote(slug) {
   // One fewer directory level for assets and modules.
   html = html.replace(/\.\.\/\.\.\/\.\.\//g, '../../');
   html = html.replace(/\.\.\/\.\.\/\.\.\/src\//g, '../../src/');
-  html = html.replace(/\.\.\/\.\.\/styles\//g, '../../styles/');
 
   html = html.replace(/<meta\s+name=["']robots["'][^>]*>\s*/i, '');
   html = html.replace(
