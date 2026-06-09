@@ -266,7 +266,7 @@ Higher-level abstraction over `src/lib/api.js`. Used by newer code paths.
 
 | File                               | What It Does                                                                                                                     |
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `src/services/goldPriceService.js` | Server-side gold price reader. Uses committed `data/gold_price.json` from the provider-adapter chain. Returns `{ price, updatedAt }`. |
+| `server/services/goldPriceService.js` | Server-side gold price reader. Uses committed `data/gold_price.json` from the provider-adapter chain. Returns `{ price, updatedAt }`. |
 | `src/services/fxService.js`        | Multi-provider FX rate fetcher. Primary: exchangerate-api.com, fallback: openexchangerates.org. Returns currency rate map.       |
 | `src/services/apiAdapter.js`       | Shared HTTP client with retry logic, timeout handling, and typed errors (`DataError`, `NetworkError`).                           |
 | `src/services/pricingEngine.js`    | Single-source-of-truth price calculator. Takes spot USD/oz + FX rates → outputs keyed prices for all country×karat combinations. |
