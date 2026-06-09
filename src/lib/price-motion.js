@@ -45,11 +45,10 @@ export function animatePrice(el, target, options = {}) {
  * @param {HTMLElement} root — e.g. `.tracker-hero-wrap` or `#hero-live-card`
  * @param {{ direction?: 'up'|'down'|null, isLive?: boolean }} [options]
  */
-export function pulseSpotTerminal(root, { direction = null, isLive = true } = {}) {
+export function pulseSpotTerminal(root, { direction = null, isLive = false } = {}) {
   if (!root || prefersReducedMotion()) return;
 
   root.classList.toggle('spot-terminal--live', Boolean(isLive));
-
   if (direction === 'up' || direction === 'down') {
     root.setAttribute('data-price-flash', direction);
     const timer =
