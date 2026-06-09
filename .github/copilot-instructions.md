@@ -7,7 +7,7 @@ The homepage shows a live spot-linked XAU/USD card plus UAE/GCC/Arab-market kara
 - Stack: static-first multi-page site on **Vite + vanilla JS**, optional **Node/Express admin** with **Supabase-backed** data/services, deployed to **GitHub Pages** on `goldtickerlive.com`.
 - Build: `npm run build` · Dev: `npm run dev` · Preview: `npm run preview` · Tests: `npm test`.
 - Quality/validation: `npm run lint`, `npm run validate`.
-- Detect real commands from `package.json`; never guess. Run build + tests (and matching quality checks) before claiming changes work.
+- Detect real commands from `package.json`; never guess. Before `npm test` or `npm run validate`, delete `playwright-report/` and `test-results/` to avoid false positives from scanned HTML reports.
 
 ## How to work here (always)
 - **Read before editing.** Inspect files first. Make the smallest correct change.
@@ -19,9 +19,11 @@ The homepage shows a live spot-linked XAU/USD card plus UAE/GCC/Arab-market kara
 ## Trust rules (load-bearing)
 - Keep **spot/reference** and **retail/jewelry-shop** prices visually + semantically distinct.
 - **Freshness is first-class:** every price surface must show visible timestamp + state (live/stale/delayed/etc.).
-- **Label non-live values:** estimated, derived, delayed, fallback, cached. Never present cached as live.
+- **Required freshness labels:** `live` (fresh source), `cached` (stored value), `delayed` (provider lag), `estimated` (derived), `fallback` (last known), `closed` (market closed). Never present non-live values as live.
 - Keep methodology + disclaimers reachable from every price surface.
-- **Immutable constants:** AED/USD peg = `3.6725`; 1 troy ounce = `31.1035 g`.
+- **Canonical formula:** `price_per_gram_AED = (XAU/USD ÷ 31.1034768) × 3.6725 × karat_purity_factor`.
+- **Karat factors:** 24K=1.000, 22K=0.9167, 21K=0.875, 18K=0.750, 14K=0.5833, 9K=0.375.
+- **Immutable constants:** AED/USD peg = `3.6725`; 1 troy ounce = `31.1034768 g`.
 
 ## SEO rules
 - Never change a URL/slug without 301 redirect + canonical update + internal link update.
