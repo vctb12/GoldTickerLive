@@ -376,6 +376,9 @@ function renderHeroCard() {
     const direction =
       Number.isFinite(prev) && prev !== usd24oz ? (usd24oz > prev ? 'up' : 'down') : null;
 
+    const { key } = getFreshnessMeta();
+    const isLive = key === 'live';
+
     animatePrice(priceEl, usd24oz, {
       decimals: 2,
       format: (n) => fmt.formatPrice(n, 'USD', 2),
@@ -383,12 +386,10 @@ function renderHeroCard() {
       pulseTarget: priceEl,
       terminalRoot: heroCard,
       direction,
+      isLive,
     });
 
-    if (heroCard) {
-      const { key } = getFreshnessMeta();
-      pulseSpotTerminal(heroCard, { direction, isLive: key === 'live' });
-    }
+    priceEl.classList.remove('hlc-price--loading');
 
     priceEl.classList.remove('hlc-price--loading');
   }
