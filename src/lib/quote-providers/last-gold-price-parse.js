@@ -1,3 +1,5 @@
+import { isSaneGoldSpotUsd } from './fetch-utils.js';
+
 /**
  * Parse `/data/last_gold_price.json` — tweet-guard schema and legacy nested shape.
  * @param {unknown} payload
@@ -11,7 +13,7 @@ export function parseLastGoldPriceSnapshot(payload) {
   const rawPrice = Number.isFinite(Number(nested)) && Number(nested) > 0 ? nested : flat;
   const price = Number(rawPrice);
 
-  if (!Number.isFinite(price) || price <= 0) return null;
+  if (!isSaneGoldSpotUsd(price)) return null;
 
   const providerTimestamp =
     payload?.posted_at_utc ||

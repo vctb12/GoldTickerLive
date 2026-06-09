@@ -1,5 +1,6 @@
 import { CONSTANTS } from '../config/index.js';
 import { getFallbackGoldPrice, getFallbackFXRates } from './cache.js';
+import { isSaneGoldSpotUsd } from './quote-providers/fetch-utils.js';
 
 class NetworkError extends Error {
   constructor(msg) {
@@ -127,7 +128,7 @@ function normalizeGoldResponse(data) {
         ? legacyPrice
         : null;
 
-  if (typeof price !== 'number' || price <= 0) return null;
+  if (!isSaneGoldSpotUsd(price)) return null;
 
   const updatedAt =
     payload?.timestampUtc ||
@@ -291,10 +292,7 @@ export async function fetchFX() {
  * }>}
  */
 export async function fetchGoldAndFX(options = {}) {
-  const [goldRes, fxRes] = await Promise.allSettled([
-    fetchGold(options),
-    fetchFX(options),
-  ]);
+  const [goldRes, fxRes] = await Promise.allSettled([fetchGold(options), fetchFX(options)]);
 
   return {
     gold: goldRes.status === 'fulfilled' ? goldRes.value : null,
