@@ -52,6 +52,7 @@ CLAUDE.md                                    ← Claude-specific mechanics (suba
   security-review/             (secrets / server / Supabase)
   backend-admin-supabase/      (schema / routes / admin)
 .github/prompts/                             ← paste-ready prompts (one per task type)
+  cursor-automations/          (five Cursor Cloud Automation prompts)
   pr-review.prompt.md
   mobile-ux-audit.prompt.md
   workflow-debug.prompt.md
@@ -195,6 +196,7 @@ Keep updates small and atomic. Don't rewrite the system every quarter.
 
 ## Quick links
 
+- [Cursor Automations playbook](./CURSOR_AUTOMATIONS_PLAYBOOK.md) — five always-on Cloud Automations
 - [Agent skill library](./AGENT_SKILL_LIBRARY.md)
 - [AI prompt library](./AI_PROMPT_LIBRARY.md)
 - [Review checklists + risk register](./AI_AGENT_REVIEW_CHECKLISTS.md)
