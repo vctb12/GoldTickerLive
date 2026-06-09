@@ -936,6 +936,19 @@ function applyLangToPage() {
 async function fetchLiveData() {
   if (!navigator.onLine) return;
   try {
+    if (_realtimeEngine) {
+      const fx = await api.fetchFX();
+      if (fx?.rates) {
+        rates = fx.rates ?? {};
+        cache.saveFXRates(rates, {
+          lastUpdateUtc: fx.time_last_update_utc,
+          nextUpdateUtc: fx.time_next_update_utc,
+        });
+        renderGCCGrid();
+      }
+      return;
+    }
+
     const { gold, fx } = await api.fetchGoldAndFX();
     if (fx?.rates) {
       rates = fx.rates ?? {};

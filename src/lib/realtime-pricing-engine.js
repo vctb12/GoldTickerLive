@@ -250,6 +250,14 @@ export function createRealtimePricingEngine({
       state.metrics.staleLivePrevented += 1;
       emit('STALE_LIVE_PREVENTED', { ageMs, providerId: state.activeProviderId }, 'warning');
       state.rolling.staleContradictions.push({ at: now, ageMs, prevented: true });
+      const providerStatus = health.getSnapshot(state.activeProviderId);
+      fresh = evaluateFreshnessState({
+        ageMs,
+        providerHealthy: providerStatus.healthy,
+        providerPathSuccessful: state.quote?.providerPathSuccessful !== false,
+        forcedState: state.quote?.forcedState || (state.quote?.isFallback ? 'fallback' : null),
+        marketOpen: isMarketOpen(),
+      });
     }
 
     state.freshness = fresh;

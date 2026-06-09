@@ -17,12 +17,17 @@ export function countryForCurrency(currency, countries = []) {
 }
 
 /**
- * @param {{ countryCode?: string }} [options]
+ * @param {{ countryCode?: string, lang?: 'en'|'ar', base?: string }} [options]
  * @returns {string}
  */
-export function buildShopsHref({ countryCode } = {}) {
-  if (!countryCode) return 'shops.html';
-  return `shops.html?country=${encodeURIComponent(countryCode)}`;
+export function buildShopsHref({ countryCode, lang, base = 'shops.html' } = {}) {
+  const params = new URLSearchParams();
+  const code = String(countryCode || '').trim();
+  if (code) params.set('country', code.toUpperCase());
+  if (lang === 'ar') params.set('lang', 'ar');
+  else if (lang === 'en' && code) params.set('lang', 'en');
+  const qs = params.toString();
+  return qs ? `${base}?${qs}` : base;
 }
 
 /**
