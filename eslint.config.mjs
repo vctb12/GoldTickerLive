@@ -57,6 +57,16 @@ export default [
         exports: 'writable',
         global: 'readonly',
         Buffer: 'readonly',
+        AbortController: 'readonly',
+        AbortSignal: 'readonly',
+        Blob: 'readonly',
+        FileReader: 'readonly',
+        FormData: 'readonly',
+        Node: 'readonly',
+        Notification: 'readonly',
+        crypto: 'readonly',
+        requestIdleCallback: 'readonly',
+        structuredClone: 'readonly',
       },
     },
     rules: {
@@ -84,6 +94,7 @@ export default [
     // Track A #6.
     files: ['src/**/*.js', 'src/**/*.mjs'],
     rules: {
+      'no-undef': 'error',
       'no-restricted-imports': [
         'error',
         {

@@ -41,6 +41,14 @@ test('buildShopsHref adds country query when code present', async () => {
   const mod = await loadModule();
   assert.equal(mod.buildShopsHref(), 'shops.html');
   assert.equal(mod.buildShopsHref({ countryCode: 'AE' }), 'shops.html?country=AE');
+  assert.equal(
+    mod.buildShopsHref({ countryCode: 'ae', lang: 'ar' }),
+    'shops.html?country=AE&lang=ar'
+  );
+  assert.equal(
+    mod.buildShopsHref({ countryCode: 'AE', lang: 'en' }),
+    'shops.html?country=AE&lang=en'
+  );
 });
 
 test('countryForCurrency returns first matching country', async () => {
@@ -51,4 +59,22 @@ test('countryForCurrency returns first matching country', async () => {
   ];
   assert.equal(mod.countryForCurrency('SAR', countries)?.code, 'SA');
   assert.equal(mod.countryForCurrency('USD', countries), null);
+});
+
+test('buildTrackerHashHref allowlists currency and language', async () => {
+  const mod = await loadModule();
+  const href = mod.buildTrackerHashHref({
+    cur: 'javascript:alert(1)',
+    lang: 'fr',
+    range: 'bogus',
+  });
+  assert.match(href, /cur=AED/);
+  assert.match(href, /lang=en/);
+  assert.doesNotMatch(href, /[&?#]r=/);
+});
+
+test('buildShopsHref rejects invalid country codes', async () => {
+  const mod = await loadModule();
+  assert.equal(mod.buildShopsHref({ countryCode: 'javascript:' }), 'shops.html');
+  assert.equal(mod.buildShopsHref({ countryCode: 'AE' }), 'shops.html?country=AE');
 });

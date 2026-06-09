@@ -123,6 +123,43 @@ test('fetchGold falls back to static JSON when backend endpoint fails', async ()
   }
 });
 
+test('fetchGold rejects out-of-band spot prices', async () => {
+  const originalFetch = global.fetch;
+  let call = 0;
+  global.fetch = async () => {
+    call += 1;
+    if (call === 1) {
+      return {
+        ok: false,
+        status: 404,
+        async json() {
+          return {};
+        },
+      };
+    }
+    return {
+      ok: true,
+      async json() {
+        return {
+          provider: 'gold_api_com',
+          xau_usd_per_oz: 99,
+          timestamp_utc: '2026-05-07T10:34:52Z',
+        };
+      },
+    };
+  };
+
+  try {
+    const api = await loadApiModule();
+    await assert.rejects(
+      () => api.fetchGold(),
+      (err) => err.name === 'NetworkError'
+    );
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
 test('fetchGold accepts numeric strings from backend payload', async () => {
   const originalFetch = global.fetch;
   global.fetch = async () => ({

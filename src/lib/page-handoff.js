@@ -3,6 +3,8 @@
  * Keeps hash/query shapes consistent across surfaces.
  */
 
+import { buildShopsHref } from './cross-page-links.js';
+
 const ALLOWED_TRACKER_MODE = new Set(['live', 'compare', 'archive', 'exports', 'method']);
 const ALLOWED_K = new Set(['24', '22', '21', '20', '18', '16', '14']);
 const ALLOWED_U = new Set(['gram', 'tola', 'oz', 'kg']);
@@ -47,11 +49,7 @@ export function buildTrackerHandoffUrl({
  * @param {string} [options.base]
  */
 export function buildShopsHandoffUrl({ countryCode, lang, base = 'shops.html' } = {}) {
-  const params = new URLSearchParams();
-  if (countryCode) params.set('country', String(countryCode).toUpperCase());
-  if (lang === 'ar' || lang === 'en') params.set('lang', lang);
-  const qs = params.toString();
-  return qs ? `${base}?${qs}` : base;
+  return buildShopsHref({ countryCode, lang, base });
 }
 
 /** Homepage anchors that should inherit the default live-tracker handoff (unit + lang). */

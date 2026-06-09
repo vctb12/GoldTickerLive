@@ -212,11 +212,22 @@
                   >gold-api.com</a
                 ></strong
               >
-              — XAU/USD spot price. The API is called server-side by a GitHub Actions workflow
-              hourly during market hours and the response is committed to this repository; your
-              browser never talks to gold-api.com directly.
+              — XAU/USD spot price. When you open the homepage or tracker, your browser may call
+              this API directly (about once per second while the tab is active and that source is
+              healthy) to refresh live reference prices. A server-side GitHub Actions workflow also
+              fetches the same provider hourly and commits
+              <code>data/gold_price.json</code> — no API key is shipped to the browser.
             </li>
             <li id="third-li2">
+              <strong
+                ><a href="https://mintedmetal.com" target="_blank" rel="nofollow noopener"
+                  >mintedmetal.com</a
+                ></strong
+              >
+              — LBMA-linked reference JSON used as a CORS fallback when gold-api.com is unavailable.
+              Your browser may contact this host directly during failover.
+            </li>
+            <li id="third-li3">
               <strong
                 ><a href="https://open.er-api.com" target="_blank" rel="noopener"
                   >open.er-api.com</a

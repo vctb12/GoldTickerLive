@@ -36,6 +36,7 @@
     <meta name="twitter:image" content="https://goldtickerlive.com/assets/og-image.png" />
     <meta property="og:image:alt" content="Gold Ticker Live — live gold price tracker for GCC and Arab world" />
     <link rel="preconnect" href="https://www.gold-api.com" crossorigin />
+    <link rel="preconnect" href="https://mintedmetal.com" crossorigin />
     <link rel="preconnect" href="https://open.er-api.com" crossorigin />
     <link rel="preload" as="style" href="./styles/critical.css" />
     <link rel="stylesheet" href="./styles/critical.css" />
@@ -204,26 +205,29 @@
 
           <h3 id="gold-data-source-h3">Source</h3>
           <p id="gold-data-source-p">
-            We fetch the XAU/USD spot price from
-            <a href="https://gold-api.com" target="_blank" rel="nofollow noopener">gold-api.com</a>,
-            a precious metals data API. The price represents the current market spot rate
-            for one troy ounce of pure gold (99.9% fineness / 24K), denominated in US Dollars. The
-            response is fetched server-side hourly during market hours by a GitHub Actions workflow
-            (<code>.github/workflows/gold-price-fetch.yml</code>) and committed to this repository as
-            <code>data/gold_price.json</code>; the website reads that single file so no API key ever
-            reaches the browser.
+            Live reference prices use a browser-side provider waterfall (no API keys in the client
+            bundle). When healthy, the homepage and tracker poll
+            <a href="https://gold-api.com" target="_blank" rel="nofollow noopener">gold-api.com</a>
+            for XAU/USD spot; failover sources include
+            <a href="https://mintedmetal.com" target="_blank" rel="nofollow noopener"
+              >mintedmetal.com</a
+            >
+            (LBMA-linked JSON), committed <code>data/gold_price.json</code> and
+            <code>data/last_gold_price.json</code>, then recent browser cache. Hourly server-side
+            fetches via <code>.github/workflows/gold-price-fetch.yml</code> keep the committed JSON
+            files current during market hours.
           </p>
 
           <h3 id="gold-data-update-h3">Update Frequency</h3>
           <p id="gold-data-update-p">
-            There are two refresh cycles. <strong>Server-side:</strong> a GitHub Actions workflow
-            fetches the latest XAU/USD spot price hourly during market hours and commits it to
-            <code>data/gold_price.json</code>. <strong>Client-side:</strong> the browser re-downloads
-            that file roughly every 90 seconds while a page is open and the device is online — but
-            because the server-side data only changes hourly, most client polls observe no change.
-            A visible freshness label on every surface (<em>live · delayed · cached · stale ·
-            fallback · unavailable</em>) tells you the exact age of the value you're looking at, so
-            there is no fixed-frequency promise to break.
+            <strong>Client-side (live lane):</strong> when gold-api.com is the active source, the
+            homepage and tracker poll about once per second while the tab is visible; hidden tabs
+            slow down. Static fallbacks (mintedmetal, committed JSON, recent cache) use slower
+            cadences. <strong>Server-side:</strong> GitHub Actions still commits hourly updates to
+            <code>data/gold_price.json</code> during market hours. Every visible price carries a
+            freshness label (<em>live · delayed · cached · stale · fallback · unavailable</em>) with
+            source and timestamp — we never present stale or cached values as live without that
+            label.
           </p>
 
           <h3 id="gold-data-cache-h3">Caching</h3>
@@ -484,37 +488,38 @@
           <div class="method-fallback-tiers">
             <div class="method-fallback-tier method-fallback-tier--1">
               <div class="method-tier-badge">Tier 1</div>
-              <div class="method-tier-label" id="tier-1-label">Live API</div>
+              <div class="method-tier-label" id="tier-1-label">gold-api.com (live)</div>
               <div class="method-tier-desc" id="tier-1-desc">
-                data/gold_price.json is present and fresh — price sourced from goldpricez.com
+                Browser CORS spot feed — ~1 s polling when healthy; labelled with source + age
               </div>
             </div>
             <div class="method-fallback-tier method-fallback-tier--2">
               <div class="method-tier-badge">Tier 2</div>
-              <div class="method-tier-label" id="tier-2-label">localStorage Primary Cache</div>
+              <div class="method-tier-label" id="tier-2-label">mintedmetal.com (LBMA JSON)</div>
               <div class="method-tier-desc" id="tier-2-desc">
-                Last known price from this browser session — shown immediately on load
+                Twice-daily LBMA-linked reference when the live API is unavailable
               </div>
             </div>
             <div class="method-fallback-tier method-fallback-tier--3">
               <div class="method-tier-badge">Tier 3</div>
-              <div class="method-tier-label" id="tier-3-label">localStorage Fallback Slot</div>
+              <div class="method-tier-label" id="tier-3-label">Committed JSON files</div>
               <div class="method-tier-desc" id="tier-3-desc">
-                Previous known price — preserved when cache is overwritten
+                <code>data/gold_price.json</code> (hourly cron) then
+                <code>data/last_gold_price.json</code> when recent
               </div>
             </div>
             <div class="method-fallback-tier method-fallback-tier--4">
               <div class="method-tier-badge">Tier 4</div>
-              <div class="method-tier-label" id="tier-4-label">Hardcoded Last-Resort Value</div>
+              <div class="method-tier-label" id="tier-4-label">localStorage cache</div>
               <div class="method-tier-desc" id="tier-4-desc">
-                Static compile-time price used only if all other sources fail
+                Recent browser snapshot only (≤ 75 min) — always labelled fallback
               </div>
             </div>
             <div class="method-fallback-tier method-fallback-tier--5">
               <div class="method-tier-badge">Tier 5</div>
-              <div class="method-tier-label" id="tier-5-label">Error State</div>
+              <div class="method-tier-label" id="tier-5-label">Error state</div>
               <div class="method-tier-desc" id="tier-5-desc">
-                Clear error banner shown if all data is unavailable — no silent failures
+                Clear error banner if every provider fails — no silent blank prices
               </div>
             </div>
           </div>

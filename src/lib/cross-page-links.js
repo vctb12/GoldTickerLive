@@ -6,6 +6,16 @@
 const TRACKER_KARATS = new Set(['24', '22', '21', '20', '18', '16', '14']);
 const TRACKER_UNITS = new Set(['gram', 'tola', 'oz']);
 const TRACKER_MODES = new Set(['live', 'compare', 'archive', 'method', 'exports']);
+const ALLOWED_LANG = new Set(['en', 'ar']);
+const ISO_CURRENCY_CODE = /^[A-Za-z]{3}$/;
+const ALLOWED_CURRENCIES = {
+  has(value) {
+    return ISO_CURRENCY_CODE.test(String(value));
+  },
+};
+const ALLOWED_RANGES = new Set(['24H', '7D', '30D', '90D', '1Y', '3Y', '5Y', 'ALL']);
+const ISO_COUNTRY_CODE = /^[A-Za-z]{2}$/;
+
 /**
  * @param {string} currency
  * @param {Array<{ currency: string, code?: string }>} countries
@@ -17,12 +27,12 @@ export function countryForCurrency(currency, countries = []) {
 }
 
 /**
- * @param {{ countryCode?: string }} [options]
+ * @param {{ countryCode?: string, lang?: 'en'|'ar', base?: string }} [options]
  * @returns {string}
  */
 export function buildShopsHref({ countryCode } = {}) {
-  if (!countryCode) return 'shops.html';
-  return `shops.html?country=${encodeURIComponent(countryCode)}`;
+  if (!countryCode || !ISO_COUNTRY_CODE.test(String(countryCode))) return 'shops.html';
+  return `shops.html?country=${encodeURIComponent(String(countryCode).toUpperCase())}`;
 }
 
 /**
@@ -40,14 +50,17 @@ export function buildTrackerHashHref({
   const safeMode = TRACKER_MODES.has(String(mode)) ? String(mode) : 'live';
   const safeK = TRACKER_KARATS.has(String(k)) ? String(k) : '24';
   const safeU = TRACKER_UNITS.has(String(u)) ? String(u) : 'gram';
+  const safeCur = ALLOWED_CURRENCIES.has(String(cur)) ? String(cur).toUpperCase() : 'AED';
   const params = new URLSearchParams({
     mode: safeMode,
-    cur: String(cur || 'AED'),
+    cur: safeCur,
     k: safeK,
     u: safeU,
-    lang: String(lang || 'en'),
+    lang: safeLang,
   });
-  if (range) params.set('r', String(range));
+  if (range && ALLOWED_RANGES.has(String(range).toUpperCase())) {
+    params.set('r', String(range).toUpperCase());
+  }
   return `tracker.html#${params.toString()}`;
 }
 
@@ -59,5 +72,6 @@ export function buildTrackerHashHref({
 export function buildHomeTrackerHref(homeTrackerKarat = '24', unit = 'gram', lang = 'en') {
   const safeUnit = TRACKER_UNITS.has(unit) ? unit : 'gram';
   const safeK = TRACKER_KARATS.has(String(homeTrackerKarat)) ? String(homeTrackerKarat) : '24';
-  return buildTrackerHashHref({ mode: 'live', cur: 'AED', k: safeK, u: safeUnit, lang });
+  const safeLang = ALLOWED_LANG.has(String(lang)) ? String(lang) : 'en';
+  return buildTrackerHashHref({ mode: 'live', cur: 'AED', k: safeK, u: safeUnit, lang: safeLang });
 }
