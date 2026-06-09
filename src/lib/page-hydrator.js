@@ -22,6 +22,7 @@ import '../lib/reveal.js';
 import { initPageEnter } from './page-enter.js';
 import { countUp } from './count-up.js';
 import { copyWithToast } from './copy-toast.js';
+import { buildShopsHref as buildShopsHandoffHref } from './cross-page-links.js';
 
 const _modUrl = new URL(import.meta.url);
 const _pageUrl = new URL(location.href);
@@ -235,8 +236,12 @@ function buildCalculatorHref({ country, currency, karat = '24', lang = 'en' }) {
   return withBase(`calculator.html?${params.toString()}`);
 }
 
-function buildShopsHref(country) {
-  return withBase(`shops.html?country=${encodeURIComponent(country.code)}`);
+function buildShopsHref(country, lang = 'en') {
+  return buildShopsHandoffHref({
+    countryCode: country.code,
+    lang,
+    base: withBase('shops.html'),
+  });
 }
 
 function getFeaturedKarats(countryData) {
@@ -680,7 +685,7 @@ function renderCountryContext({ country, lang }) {
         'a',
         {
           class: 'country-inline-link country-inline-link--cta',
-          href: safeHref(buildShopsHref(country)),
+          href: safeHref(buildShopsHref(country, lang)),
         },
         `${getCountryName(country, lang)} ${tx(lang, 'contextShops')} →`
       ),
