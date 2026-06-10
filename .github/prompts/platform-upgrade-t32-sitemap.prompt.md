@@ -10,6 +10,14 @@ related_skills:
 
 # T3.2 — Sitemap coverage cleanup
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
 ## Evidence
 
 Run `npm run seo-audit` — reports ~28 pages not in sitemap (dashboard, legacy gold-price paths, some country/market pages, etc.).

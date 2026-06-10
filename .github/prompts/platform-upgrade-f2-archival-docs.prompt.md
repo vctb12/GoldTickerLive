@@ -8,6 +8,14 @@ related_instructions:
 
 # F2b — Archival doc clarity (optional)
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
 ## Goal
 
 Bakeoff/migration docs still center **GoldPriceZ** as the old production path. Add a short banner so agents treat them as **historical context**, not current truth. Current primary: **gold-api.com** via `GOLD_PROVIDER_ORDER=gold_api_com,twelvedata_xauusd,fmp_gcusd`.

@@ -154,7 +154,7 @@ npm start                       # Express admin :3000
 - **No secrets in git** — GitHub Secrets only; never echo into logs.
 - **PR-only** — must not commit directly to `main` or force-push.
 - **Production-critical** — `post_gold.yml`, `gold-price-fetch.yml`, `data/gold_price.json`,
-  `sw.js`, `src/config/constants.js` (AED peg `3.6725`, troy oz `31.1034768`) need owner approval
+  `sw.js`, `src/config/constants.js` (AED peg `3.6725`, troy oz `31.1035`) need owner approval
   before change.
 - **Pricing constants** — karat factors from `src/config/karats.js` only; must not inline elsewhere.
 - **Dependencies** — must not add without explicit ask + advisory check.
@@ -168,6 +168,23 @@ npm start                       # Express admin :3000
 3. Smallest correct change; match surrounding conventions.
 4. Verify applicable commands; state what you skipped.
 5. Ship one PR with honest Proof section.
+
+## Agent run-book (quick mechanics)
+
+- Install: `npm install`
+- Dev server: `npm run dev` (Vite on `:5000`)
+- Full verification gate: `npm run lint && npm test && npm run validate && npm run build`
+- Single test file: `node --test --test-concurrency=1 tests/<file>.test.js`
+- Server env var names required for auth-bound tests/startup: `JWT_SECRET`, `ADMIN_PASSWORD`,
+  `ADMIN_ACCESS_PIN` (names only; never commit values).
+- Supabase wiring:
+  - Browser/public data uses `src/config/supabase.js` (anon key + RLS-protected reads).
+  - Server/admin uses `server/lib/supabase-client.js` (`SUPABASE_URL` +
+    `SUPABASE_SERVICE_ROLE_KEY`).
+- GitHub Actions wiring:
+  - `gold-price-fetch.yml` refreshes `data/gold_price.json`.
+  - `post_gold.yml` posts to X with duplicate/staleness guards and commits state files.
+  - `ci.yml` is the merge gate for validate/lint/test/build.
 
 Automation prompts under `.github/prompts/` include a rules preamble — copy from
 `.github/prompts/_rules-preamble.md` when authoring new prompts.

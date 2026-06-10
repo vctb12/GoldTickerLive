@@ -11,6 +11,14 @@ related_skills:
 
 # T2.2 — axe-core in Playwright
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
 ## Goal
 
 Add `@axe-core/playwright` to scan: home, tracker, calculator, one country page. Tags: `wcag2a`, `wcag2aa`, `wcag21aa`.

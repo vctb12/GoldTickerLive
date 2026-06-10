@@ -11,6 +11,14 @@ related_skills:
 
 # T1.1 — Secondary gold + cross-validation
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
 ## Goal
 
 Reduce single-source fragility on the **client live lane** by adding a lazy secondary spot check. If primary vs secondary diverge beyond a configurable threshold, show the correct freshness label (delayed/estimated — never unlabeled live).
