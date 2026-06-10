@@ -56,12 +56,15 @@ Canonical plan:
 
 - [x] **F1** License Apache-2.0 — [#421](https://github.com/vctb12/GoldTickerLive/pull/421)
 - [x] **F2** Source truth gold-api.com — [#421](https://github.com/vctb12/GoldTickerLive/pull/421)
-- [x] **T0.1** Dependabot (npm, actions, pip) — [#421](https://github.com/vctb12/GoldTickerLive/pull/421)
+- [x] **T0.1** Dependabot (npm, actions, pip) —
+      [#421](https://github.com/vctb12/GoldTickerLive/pull/421)
 - [x] **T0.2** CodeQL — already in `.github/workflows/codeql.yml`
 - [ ] **T0.3** Secret scanning docs — `@.github/prompts/platform-upgrade-t03-secrets.prompt.md`
-- [ ] **T1.1** Secondary gold cross-validation — `@.github/prompts/platform-upgrade-t11-secondary-gold.prompt.md`
+- [ ] **T1.1** Secondary gold cross-validation —
+      `@.github/prompts/platform-upgrade-t11-secondary-gold.prompt.md`
 - [ ] **T2.1** Lighthouse budget gate — `@.github/prompts/platform-upgrade-t21-lighthouse.prompt.md`
-- [ ] **T2.2** axe-core Playwright — `@.github/prompts/platform-upgrade-t22-a11y-playwright.prompt.md`
+- [ ] **T2.2** axe-core Playwright —
+      `@.github/prompts/platform-upgrade-t22-a11y-playwright.prompt.md`
 - [ ] **T3.1** JSON-LD validation — `@.github/prompts/platform-upgrade-t31-jsonld.prompt.md`
 - [ ] **T3.2** Sitemap gaps (28) — `@.github/prompts/platform-upgrade-t32-sitemap.prompt.md`
 
@@ -78,6 +81,13 @@ Canonical plan:
 
 ## ✅ Recently Completed
 
+- [x] **Premium redesign baseline** — tokens.css re-valued to neutral-base + restrained gold system
+      (light + dark), legacy palette swept sitewide (hex + rgb + theme-color + manifest),
+      nav/drawer/spot-bar ink-first restyle with condense-on-scroll, warm hero gradients → shared
+      `--gradient-dark`, `?lang=ar` honored on home/invest/404, AA contrast fix for faint text, hero
+      price CLS guard — completed: 2026-06-10 — branch `claude/funny-brown-98dp0p`. NOTE for Motion
+      Universe phases 5–20: the visual baseline changed (palette only — DOM contracts, motion
+      tokens, and freshness semantics untouched).
 - [x] **Cursor Automations playbook** — five Cloud Automation prompts, policy, registry, master
       improvement program, ESLint clean, homepage karat-strip UX — completed: 2026-06-09 — PR:
       [#420](https://github.com/vctb12/GoldTickerLive/pull/420)

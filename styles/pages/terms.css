@@ -2,7 +2,7 @@
 
 /* Hero */
 .legal-hero {
-  background: linear-gradient(135deg, var(--color-gold-dark) 0%, var(--color-gold) 100%);
+  background: var(--gradient-dark);
   color: var(--color-white);
   padding: var(--space-7) var(--space-5) 2.5rem;
 }

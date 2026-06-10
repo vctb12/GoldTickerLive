@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Premium redesign — design-token re-theme, nav shell, page rollout — 2026-06-10
+
+**Visual system (no URL, data, or markup-contract changes):**
+
+- feat(design-system): re-value `styles/partials/tokens.css` to a premium neutral system — refined
+  near-white canvas with hairline borders (light), true near-black neutral ramp (dark, replacing the
+  brown ramp), and a single restrained metallic gold accent. All custom-property names unchanged;
+  `critical.css` first-paint palette updated in lockstep. Adds z-index scale tokens
+  (`--z-nav/--z-drawer/--z-toast/--z-modal`), `--shadow-hairline`, and reveal/exit motion tokens.
+- refactor(styles): sweep all legacy palette values (hex + `rgb()` triplets + warm-brown/cream
+  tints) across `styles/` and `src/tracker/chart.js` to the new palette so no page renders
+  half-themed; `theme-color` metas and `manifest.json` updated to match.
+- feat(nav): premium ink-first nav restyle — hairline border, condense-on-scroll height, gold
+  reduced to the active-link underline and solid CTA; accessible drawer polish (reduced-motion
+  guards, RTL-mirrored active edge); spot bar re-grounded on neutral near-black with gold values.
+- fix(i18n): `home.js`, `invest.js`, `not-found.js` `getLang()` now honor the `?lang=ar` query
+  parameter (matches the site's hreflang convention; other pages already did).
+- feat(pages): calculator, insights, methodology, learn, terms, country/city/market, and guide hero
+  gradients moved from warm gold-brown washes to the shared neutral `--gradient-dark`.
+- fix(a11y): `--color-text-faint` raised to WCAG AA contrast in both themes; invalid
+  `transform-origin: inline-start` replaced with dir-aware origins (stylelint now fully green).
+- fix(home): hero price skeleton reserves the full final price height (CLS guard).
+
 ### BUILD 8 — Insights: Market Analysis Feed (filterable, searchable) — 2026-05-31
 
 **New feature:**

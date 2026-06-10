@@ -408,7 +408,7 @@ body.tracker-pro-page {
 .tracker-badge-xauusd {
   border-color: rgb(196 154 68 / 35%);
   background: rgb(196 154 68 / 12%);
-  color: #e8c464;
+  color: #c9a14d;
   font-weight: var(--weight-extrabold);
 }
 
@@ -468,7 +468,7 @@ body.tracker-pro-page {
 }
 
 .tracker-hero-description .tracker-inline-link {
-  color: #e8c464;
+  color: #c9a14d;
 }
 
 /* ── Hero stats grid ──────────────────────────────────────────────────────── */
@@ -648,7 +648,7 @@ body.tracker-pro-page {
 
 .tracker-hero-wrap .btn.btn-outline:hover {
   border-color: rgb(196 154 68 / 60%);
-  color: #e8c464;
+  color: #c9a14d;
 }
 
 .tracker-hero-wrap .btn.btn-ghost {
@@ -689,7 +689,7 @@ body.tracker-pro-page {
 }
 
 .tracker-hint-text .tracker-inline-link:hover {
-  color: #e8c464;
+  color: #c9a14d;
 }
 
 .tracker-hint-keyboard {
@@ -1603,7 +1603,9 @@ body.tracker-workspace-basic .tracker-advanced-only {
 }
 
 .tracker-hero-price.price-pulse {
-  box-shadow: 0 0 0 2px var(--color-gold-glow), var(--shadow-gold);
+  box-shadow:
+    0 0 0 2px var(--color-gold-glow),
+    var(--shadow-gold);
 }
 
 .tracker-chart-source-label {
@@ -1667,7 +1669,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
   transform: translate(-50%, calc(-100% - 16px));
   padding: 0.7rem 0.85rem;
   border-radius: var(--tp-radius-md);
-  background: rgb(20 14 8 / 97%);
+  background: rgb(16 17 20 / 97%);
   color: var(--color-white);
   box-shadow: 0 16px 40px rgb(0 0 0 / 22%);
   pointer-events: none;
@@ -2646,7 +2648,7 @@ td.tracker-chg-down {
 }
 
 .tracker-toast {
-  background: rgb(20 14 8 / 97%);
+  background: rgb(16 17 20 / 97%);
   color: var(--color-white);
   padding: 0.8rem 1rem;
   border-radius: var(--tp-radius-md);
@@ -3039,8 +3041,8 @@ td.tracker-chg-down {
   display: inline-flex;
   align-items: center;
   padding: 0.3rem 0.75rem;
-  background: rgb(196 153 62 / 8%);
-  border: 1px solid rgb(196 153 62 / 22%);
+  background: rgb(176 138 62 / 8%);
+  border: 1px solid rgb(176 138 62 / 22%);
   border-radius: var(--radius-pill);
   font-size: 0.76rem;
   font-weight: var(--weight-semibold);

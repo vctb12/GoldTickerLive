@@ -1,6 +1,6 @@
 .content-landing-page {
   background:
-    radial-gradient(circle at top left, rgb(196 153 62 / 16%), transparent 34rem),
+    radial-gradient(circle at top left, rgb(176 138 62 / 16%), transparent 34rem),
     linear-gradient(180deg, var(--surface-canvas), var(--color-gold-bg));
   color: var(--text-primary);
 }
@@ -22,7 +22,7 @@
 }
 
 .content-hero::after {
-  background: radial-gradient(circle, rgb(240 200 74 / 28%), transparent 60%);
+  background: radial-gradient(circle, rgb(217 178 94 / 28%), transparent 60%);
   content: '';
   height: 22rem;
   inset-inline-end: -8rem;

@@ -30,8 +30,7 @@ const I18N = {
     ctaPlanner: 'Build My Plan',
     ctaCompare: 'Compare Options',
     point1Title: 'Use gold for a job',
-    point1Copy:
-      'Protection, liquidity, gifting, or tactical exposure — decide the job first.',
+    point1Copy: 'Protection, liquidity, gifting, or tactical exposure — decide the job first.',
     point2Title: 'Buy with live numbers',
     point2Copy: 'Use spot-linked pricing before walking into a store or placing an order.',
     point3Title: 'Respect premiums',
@@ -89,8 +88,7 @@ const I18N = {
       'Use the right channel, ask the right questions, and avoid the obvious mistakes before paying.',
     mistakesKicker: 'Discipline first',
     mistakesTitle: 'Common mistakes that damage returns',
-    mistakesSub:
-      'The biggest problems usually come from premium, storage, and emotional timing.',
+    mistakesSub: 'The biggest problems usually come from premium, storage, and emotional timing.',
     faqKicker: 'Before you buy',
     faqTitle: 'Questions worth asking first',
     faqSub:
@@ -166,12 +164,10 @@ const I18N = {
     resultPremium: 'العلاوة المعتادة',
     compareKicker: 'اختيار المنتج',
     compareTitle: 'ما الذي يبدو منطقياً فعلاً؟',
-    compareSub:
-      'لا تشترِ بالطريقة نفسها لكل هدف. السبائك والمجوهرات والصناديق تحل مشكلات مختلفة.',
+    compareSub: 'لا تشترِ بالطريقة نفسها لكل هدف. السبائك والمجوهرات والصناديق تحل مشكلات مختلفة.',
     marketsKicker: 'أين تشتري',
     marketsTitle: 'كيف تشتري في سوقك',
-    marketsSub:
-      'اختر القناة الصحيحة، واسأل الأسئلة الصحيحة، وتجنب الأخطاء الواضحة قبل الدفع.',
+    marketsSub: 'اختر القناة الصحيحة، واسأل الأسئلة الصحيحة، وتجنب الأخطاء الواضحة قبل الدفع.',
     mistakesKicker: 'الانضباط أولاً',
     mistakesTitle: 'أخطاء شائعة تضر بالعائد',
     mistakesSub: 'أكبر المشكلات غالباً تأتي من العلاوة والتخزين والتوقيت العاطفي.',
@@ -613,6 +609,8 @@ const state = {
 
 function getLang() {
   try {
+    const urlLang = new URLSearchParams(window.location.search).get('lang');
+    if (urlLang === 'ar' || urlLang === 'en') return urlLang;
     const p = JSON.parse(localStorage.getItem(LANG_KEY) || '{}');
     return p.lang || 'en';
   } catch {
@@ -661,8 +659,7 @@ function getLocalPricePerGram(type, marketCode) {
   if (!state.goldPriceUsdPerOz) return null;
   const rate = getLocalRate(marketCode);
   if (!rate) return null;
-  if (type === 'ETF')
-    return calc.usdPerGram(state.goldPriceUsdPerOz, karat('24').purity) * rate;
+  if (type === 'ETF') return calc.usdPerGram(state.goldPriceUsdPerOz, karat('24').purity) * rate;
 
   const purity = karat(type).purity;
   return calc.usdPerGram(state.goldPriceUsdPerOz, purity) * rate;
@@ -1012,7 +1009,11 @@ function renderMarketGuide() {
         el('div', { class: 'invest-guide-block' }, [
           el('h4', null, [block.title]),
           block.list
-            ? el('ul', null, block.list.map((item) => el('li', null, [item])))
+            ? el(
+                'ul',
+                null,
+                block.list.map((item) => el('li', null, [item]))
+              )
             : el('p', null, [block.body]),
         ])
       )
@@ -1139,9 +1140,7 @@ async function fetchLiveData() {
     showDataStatusBanner({
       lang: state.lang,
       variant: 'error',
-      message:
-        TRANSLATIONS[state.lang]?.['status.noData'] ??
-        TRANSLATIONS.en['status.noData'],
+      message: TRANSLATIONS[state.lang]?.['status.noData'] ?? TRANSLATIONS.en['status.noData'],
       onRetry: fetchLiveData,
     });
   }

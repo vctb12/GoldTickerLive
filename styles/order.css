@@ -25,7 +25,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 80% 40%, rgb(196 153 62 / 22%) 0%, transparent 60%);
+  background: radial-gradient(ellipse at 80% 40%, rgb(176 138 62 / 22%) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -518,8 +518,8 @@
 }
 
 .order-partner-card:hover {
-  border-color: var(--color-gold, #d4a017);
-  box-shadow: 0 2px 8px rgb(212 160 23 / 12%);
+  border-color: var(--color-gold, #b08a3e);
+  box-shadow: 0 2px 8px rgb(176 138 62 / 12%);
 }
 
 .order-partner-logo {
@@ -543,7 +543,7 @@
 .order-partner-cta {
   font-size: 0.78rem;
   font-weight: 600;
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold, #b08a3e);
   margin-top: auto;
 }
 
@@ -630,8 +630,8 @@
 }
 
 .shop-badge--featured {
-  background: rgb(196 153 62 / 12%);
-  border: 1px solid rgb(196 153 62 / 30%);
+  background: rgb(176 138 62 / 12%);
+  border: 1px solid rgb(176 138 62 / 30%);
   color: #7a5c00;
 }
 
@@ -660,8 +660,8 @@
 }
 
 .order-shop-action--web {
-  color: var(--color-gold, #d4a017);
-  border-color: rgb(196 153 62 / 30%);
+  color: var(--color-gold, #b08a3e);
+  border-color: rgb(176 138 62 / 30%);
 }
 
 .order-shop-no-contact {
@@ -680,7 +680,7 @@
   display: inline-block;
   font-size: var(--text-sm, 0.875rem);
   font-weight: var(--weight-semibold, 600);
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold, #b08a3e);
   margin-top: var(--space-3, 0.75rem);
 }
 

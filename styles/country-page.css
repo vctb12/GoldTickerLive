@@ -4,7 +4,7 @@
 
 /* ── Hero ──────────────────────────────────────────── */
 .cp-hero {
-  background: linear-gradient(155deg, var(--color-gold-deep) 0%, #2a1a04 50%, #100c04 100%);
+  background: var(--gradient-dark);
   padding: var(--space-7) var(--space-5) var(--space-6);
   position: relative;
   overflow: hidden;
@@ -14,7 +14,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 60% 70% at 80% 30%, rgb(196 153 62 / 8%) 0%, transparent 60%);
+  background: radial-gradient(ellipse 60% 70% at 80% 30%, rgb(176 138 62 / 8%) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -92,7 +92,7 @@
 
 .cp-price-card {
   background: rgb(255 255 255 / 6%);
-  border: 1px solid rgb(201 168 76 / 25%);
+  border: 1px solid rgb(176 138 62 / 25%);
   border-radius: var(--radius-control);
   padding: var(--space-4) var(--space-5);
   display: flex;
@@ -106,7 +106,7 @@
 
 .cp-price-card:hover {
   transform: translateY(-2px);
-  border-color: rgb(196 153 62 / 40%);
+  border-color: rgb(176 138 62 / 40%);
   box-shadow: var(--shadow-gold);
 }
 
@@ -370,7 +370,7 @@
 
 /* Richer hero gradient */
 .cp-hero {
-  background: linear-gradient(155deg, #3d2005 0%, #1e0e03 55%, #0a0602 100%);
+  background: linear-gradient(155deg, #1c1e24 0%, #14161b 55%, #0a0b0d 100%);
   position: relative;
   overflow: hidden;
 }
@@ -379,7 +379,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 50% 60% at 80% 50%, rgb(196 153 62 / 8%) 0%, transparent 70%);
+  background: radial-gradient(ellipse 50% 60% at 80% 50%, rgb(176 138 62 / 8%) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -455,7 +455,7 @@
 }
 
 .cp-faq-item:hover {
-  border-color: rgb(196 153 62 / 35%);
+  border-color: rgb(176 138 62 / 35%);
 }
 
 .cp-faq-item[open] {
@@ -629,7 +629,7 @@
   color: var(--color-gold-dark);
   text-decoration: none;
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgb(196 153 62 / 12%);
+  box-shadow: 0 2px 8px rgb(176 138 62 / 12%);
 }
 
 @media (width <= 560px) {

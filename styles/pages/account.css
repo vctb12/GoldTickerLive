@@ -10,7 +10,7 @@
 }
 
 .account-kicker {
-  color: var(--color-gold-500, #d4a017);
+  color: var(--color-gold, #b08a3e);
   font-weight: 700;
   margin: 0;
 }
@@ -42,7 +42,7 @@
 }
 
 .account-tab.is-active {
-  border-color: var(--color-gold-500, #d4a017);
+  border-color: var(--color-gold, #b08a3e);
 }
 
 .account-form {
