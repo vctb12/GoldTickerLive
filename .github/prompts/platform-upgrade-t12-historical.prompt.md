@@ -8,6 +8,14 @@ related_instructions:
 
 # T1.2 — Historical archive gap-fill
 
+Before reviewing or editing anything, read and follow:
+
+- [`AGENTS.md`](../../AGENTS.md)
+- [`.cursor/rules/non-negotiable-rules.mdc`](../../.cursor/rules/non-negotiable-rules.mdc)
+- [`.cursor/rules/pricing-trust.mdc`](../../.cursor/rules/pricing-trust.mdc)
+- [`.cursor/rules/bilingual-content.mdc`](../../.cursor/rules/bilingual-content.mdc)
+- [`.cursor/rules/seo-structure.mdc`](../../.cursor/rules/seo-structure.mdc)
+
 ## Context
 
 Layer 2 already exists: `src/lib/freegoldapi.js` + merge in `src/lib/historical-data.js`. Label: `freegoldapi-reference` (derived).

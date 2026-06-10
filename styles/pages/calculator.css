@@ -17,7 +17,7 @@
   inset: 0;
   background: radial-gradient(
     ellipse 50% 80% at 50% 100%,
-    rgb(196 153 62 / 8%) 0%,
+    rgb(176 138 62 / 8%) 0%,
     transparent 60%
   );
   pointer-events: none;
@@ -50,7 +50,7 @@
   align-items: center;
   gap: 0.5rem;
   background: rgb(255 255 255 / 6%);
-  border: 1px solid rgb(201 168 76 / 30%);
+  border: 1px solid rgb(176 138 62 / 30%);
   border-radius: var(--radius-pill);
   padding: 0.35rem 0.9rem;
   font-size: 0.82rem;
@@ -156,13 +156,13 @@
 
 .calc-tab:hover {
   color: var(--color-gold-dark);
-  background: rgb(196 153 62 / 5%);
+  background: rgb(176 138 62 / 5%);
 }
 
 .calc-tab:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: -2px;
-  background: rgb(196 153 62 / 9%);
+  background: rgb(176 138 62 / 9%);
   color: var(--color-gold-dark);
 }
 
@@ -263,13 +263,13 @@
 
 /* ── Card ──────────────────────────────────────────── */
 .calc-card {
-  background: linear-gradient(180deg, var(--surface-primary) 0%, #fdfbf7 100%);
+  background: linear-gradient(180deg, var(--surface-primary) 0%, #fafaf8 100%);
   border: 1.25px solid var(--border-default);
   border-radius: var(--radius-card);
   padding: var(--space-6);
   box-shadow:
     var(--elev-2),
-    0 1px 3px rgb(196 153 62 / 5%);
+    0 1px 3px rgb(176 138 62 / 5%);
   transition:
     box-shadow 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     border-color 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -332,7 +332,7 @@
 .calc-input:focus {
   outline: none;
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgb(196 153 62 / 10%);
+  box-shadow: 0 0 0 3px rgb(176 138 62 / 10%);
 }
 
 .calc-input-full {
@@ -356,7 +356,7 @@
 .calc-select:focus {
   outline: none;
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgb(196 153 62 / 10%);
+  box-shadow: 0 0 0 3px rgb(176 138 62 / 10%);
 }
 
 .calc-select-full {
@@ -383,13 +383,13 @@
 
 /* ── Result ────────────────────────────────────────── */
 .calc-result {
-  background: linear-gradient(135deg, var(--color-gold-bg) 0%, #fffbf0 100%);
+  background: linear-gradient(135deg, var(--color-gold-bg) 0%, #faf7f0 100%);
   border: 1px solid var(--color-gold);
   border-radius: var(--radius-md);
   padding: 1.25rem;
   margin-top: 0.5rem;
   animation: fadeIn 0.25s ease;
-  box-shadow: 0 2px 8px rgb(196 153 62 / 10%);
+  box-shadow: 0 2px 8px rgb(176 138 62 / 10%);
 }
 
 @keyframes fadeIn {
@@ -496,8 +496,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgb(201 168 76 / 8%);
-  border: 1px solid rgb(201 168 76 / 25%);
+  background: rgb(176 138 62 / 8%);
+  border: 1px solid rgb(176 138 62 / 25%);
   border-radius: var(--radius-sm);
   padding: 0.6rem 0.9rem;
   font-size: 0.85rem;
@@ -725,8 +725,8 @@
 }
 
 .calc-live-badge--aed {
-  background: rgb(196 153 62 / 14%);
-  border-color: rgb(196 153 62 / 32%);
+  background: rgb(176 138 62 / 14%);
+  border-color: rgb(176 138 62 / 32%);
   color: var(--color-gold-dark);
   font-weight: 700;
 }
@@ -763,7 +763,7 @@
 
 .calc-related-card:hover {
   border-color: var(--color-gold);
-  box-shadow: 0 4px 16px rgb(196 153 62 / 12%);
+  box-shadow: 0 4px 16px rgb(176 138 62 / 12%);
   transform: translateY(-2px);
 }
 

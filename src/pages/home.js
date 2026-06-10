@@ -112,6 +112,8 @@ let karatStripUnit = (() => {
 
 function getLang() {
   try {
+    const urlLang = new URLSearchParams(window.location.search).get('lang');
+    if (urlLang === 'ar' || urlLang === 'en') return urlLang;
     const p = JSON.parse(localStorage.getItem(LANG_KEY) || '{}');
     return p.lang || 'en';
   } catch {

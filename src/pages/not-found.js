@@ -17,6 +17,8 @@ import { getLiveFreshness } from '../lib/live-status.js';
 
 function getLang() {
   try {
+    const urlLang = new URLSearchParams(window.location.search).get('lang');
+    if (urlLang === 'ar' || urlLang === 'en') return urlLang;
     const p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
     return p.lang === 'ar' ? 'ar' : 'en';
   } catch {

@@ -9,7 +9,7 @@
   --invest-dark: #101010;
   --invest-gold: #c9a84c;
   --invest-gold-2: #f0c040;
-  --invest-border: rgb(201 168 76 / 18%);
+  --invest-border: rgb(176 138 62 / 18%);
   --invest-shadow: 0 18px 45px rgb(0 0 0 / 28%);
   --invest-shadow-soft: 0 10px 24px rgb(0 0 0 / 16%);
   --invest-radius-xl: 28px;
@@ -27,7 +27,7 @@ html {
 
 body.invest-page {
   background:
-    radial-gradient(circle at top left, rgb(201 168 76 / 18%), transparent 28%),
+    radial-gradient(circle at top left, rgb(176 138 62 / 18%), transparent 28%),
     radial-gradient(circle at top right, rgb(240 192 64 / 10%), transparent 32%), var(--invest-bg);
   color: var(--invest-text);
 }
@@ -76,7 +76,7 @@ body.invest-page {
   inset: 0;
   background:
     radial-gradient(circle at 10% 15%, rgb(240 192 64 / 22%), transparent 24%),
-    radial-gradient(circle at 80% 20%, rgb(201 168 76 / 12%), transparent 25%);
+    radial-gradient(circle at 80% 20%, rgb(176 138 62 / 12%), transparent 25%);
   pointer-events: none;
 }
 
@@ -105,7 +105,7 @@ body.invest-page {
   height: 0.55rem;
   border-radius: 50%;
   background: linear-gradient(180deg, var(--invest-gold-2), var(--invest-gold));
-  box-shadow: 0 0 0 6px rgb(201 168 76 / 12%);
+  box-shadow: 0 0 0 6px rgb(176 138 62 / 12%);
 }
 
 .invest-hero-title {
@@ -210,9 +210,9 @@ body.invest-page {
 }
 
 .invest-market-chip.is-closed {
-  background: rgb(201 168 76 / 14%);
+  background: rgb(176 138 62 / 14%);
   color: #f5ddb0;
-  border-color: rgb(201 168 76 / 25%);
+  border-color: rgb(176 138 62 / 25%);
 }
 
 .invest-panel-grid {
@@ -242,7 +242,7 @@ body.invest-page {
   font-size: 1.55rem;
   line-height: 1.1;
   font-weight: var(--weight-extrabold);
-  color: #fff4d2;
+  color: #f7f3e9;
   margin: 0.4rem 0 0.25rem;
   word-break: break-all;
   overflow-wrap: anywhere;
@@ -313,8 +313,8 @@ body.invest-page {
 
 .invest-jumpbar a:hover {
   transform: translateY(-1px);
-  border-color: rgb(201 168 76 / 32%);
-  background: rgb(201 168 76 / 10%);
+  border-color: rgb(176 138 62 / 32%);
+  background: rgb(176 138 62 / 10%);
 }
 
 .invest-section {
@@ -347,7 +347,7 @@ body.invest-page {
   margin: 0;
   font-size: clamp(1.45rem, 3vw, 2.2rem);
   line-height: 1.15;
-  color: #fff4d2;
+  color: #f7f3e9;
 }
 
 .invest-section-sub {
@@ -396,16 +396,16 @@ body.invest-page {
 
 .invest-goal-card:hover {
   transform: translateY(-2px);
-  border-color: rgb(201 168 76 / 28%);
-  background: rgb(201 168 76 / 10%);
+  border-color: rgb(176 138 62 / 28%);
+  background: rgb(176 138 62 / 10%);
 }
 
 .invest-goal-card.is-active {
-  border-color: rgb(201 168 76 / 55%);
-  background: linear-gradient(180deg, rgb(201 168 76 / 18%), rgb(201 168 76 / 8%));
+  border-color: rgb(176 138 62 / 55%);
+  background: linear-gradient(180deg, rgb(176 138 62 / 18%), rgb(176 138 62 / 8%));
   box-shadow:
     0 14px 34px rgb(0 0 0 / 24%),
-    0 0 0 1px rgb(201 168 76 / 15%) inset;
+    0 0 0 1px rgb(176 138 62 / 15%) inset;
 }
 
 .invest-goal-icon {
@@ -417,7 +417,7 @@ body.invest-page {
 .invest-goal-title {
   font-size: 1.12rem;
   font-weight: var(--weight-extrabold);
-  color: #fff4d2;
+  color: #f7f3e9;
   margin-bottom: 0.35rem;
 }
 
@@ -439,7 +439,7 @@ body.invest-page {
 .invest-advice-title {
   font-size: 1.18rem;
   font-weight: var(--weight-extrabold);
-  color: #fff4d2;
+  color: #f7f3e9;
   margin: 0 0 0.55rem;
 }
 
@@ -475,7 +475,7 @@ body.invest-page {
 .invest-planner-panel {
   background: var(--invest-card);
   color: var(--invest-dark);
-  border: 1px solid rgb(201 168 76 / 16%);
+  border: 1px solid rgb(176 138 62 / 16%);
   padding: 1.3rem;
 }
 
@@ -519,8 +519,8 @@ body.invest-page {
 }
 
 .invest-number:focus {
-  border-color: rgb(201 168 76 / 55%);
-  box-shadow: 0 0 0 4px rgb(201 168 76 / 16%);
+  border-color: rgb(176 138 62 / 55%);
+  box-shadow: 0 0 0 4px rgb(176 138 62 / 16%);
 }
 
 .invest-range {
@@ -552,14 +552,14 @@ body.invest-page {
 
 .invest-chip:hover {
   transform: translateY(-1px);
-  border-color: rgb(201 168 76 / 42%);
+  border-color: rgb(176 138 62 / 42%);
 }
 
 .invest-chip.is-active {
   background: linear-gradient(180deg, #f8e5a3, #f0c040);
-  border-color: rgb(201 168 76 / 65%);
+  border-color: rgb(176 138 62 / 65%);
   color: #2b1c00;
-  box-shadow: 0 8px 18px rgb(201 168 76 / 18%);
+  box-shadow: 0 8px 18px rgb(176 138 62 / 18%);
 }
 
 .invest-results-grid {
@@ -585,7 +585,7 @@ body.invest-page {
   font-size: clamp(1.25rem, 2vw, 1.7rem);
   line-height: 1.15;
   font-weight: var(--weight-extrabold);
-  color: #fff4d2;
+  color: #f7f3e9;
 }
 
 .invest-result-note {
@@ -599,8 +599,8 @@ body.invest-page {
   margin-top: 1rem;
   padding: 1rem;
   border-radius: var(--invest-radius-lg);
-  background: rgb(201 168 76 / 12%);
-  border: 1px solid rgb(201 168 76 / 18%);
+  background: rgb(176 138 62 / 12%);
+  border: 1px solid rgb(176 138 62 / 18%);
   color: #fff0cf;
   line-height: 1.7;
 }
@@ -652,11 +652,11 @@ body.invest-page {
   min-height: 44px;
   padding: 0.35rem 0.75rem;
   border-radius: var(--invest-radius-pill);
-  background: #fff4d2;
+  background: #f7f3e9;
   color: #7b5904;
   font-size: 0.8rem;
   font-weight: var(--weight-extrabold);
-  border: 1px solid rgb(201 168 76 / 28%);
+  border: 1px solid rgb(176 138 62 / 28%);
 }
 
 .invest-compare-copy {
@@ -699,12 +699,12 @@ body.invest-page {
 
 .invest-tab:hover {
   transform: translateY(-1px);
-  border-color: rgb(201 168 76 / 24%);
+  border-color: rgb(176 138 62 / 24%);
 }
 
 .invest-tab.is-active {
-  background: linear-gradient(180deg, rgb(201 168 76 / 28%), rgb(201 168 76 / 15%));
-  border-color: rgb(201 168 76 / 50%);
+  background: linear-gradient(180deg, rgb(176 138 62 / 28%), rgb(176 138 62 / 15%));
+  border-color: rgb(176 138 62 / 50%);
   color: #fff3cc;
 }
 
@@ -727,7 +727,7 @@ body.invest-page {
 .invest-guide-title {
   margin: 0;
   font-size: 1.22rem;
-  color: #fff4d2;
+  color: #f7f3e9;
 }
 
 .invest-guide-pill {
@@ -736,8 +736,8 @@ body.invest-page {
   min-height: 44px;
   padding: 0.35rem 0.75rem;
   border-radius: var(--invest-radius-pill);
-  background: rgb(201 168 76 / 13%);
-  border: 1px solid rgb(201 168 76 / 22%);
+  background: rgb(176 138 62 / 13%);
+  border: 1px solid rgb(176 138 62 / 22%);
   color: #f0d491;
   font-size: 0.82rem;
   font-weight: var(--weight-bold);
@@ -790,16 +790,16 @@ body.invest-page {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgb(201 168 76 / 16%);
+  background: rgb(176 138 62 / 16%);
   color: #fff0c3;
   font-weight: var(--weight-extrabold);
   margin-bottom: 0.75rem;
-  border: 1px solid rgb(201 168 76 / 24%);
+  border: 1px solid rgb(176 138 62 / 24%);
 }
 
 .invest-mistake-title {
   margin: 0 0 0.35rem;
-  color: #fff4d2;
+  color: #f7f3e9;
   font-size: 1.04rem;
   font-weight: var(--weight-extrabold);
 }
@@ -832,7 +832,7 @@ body.invest-page {
   gap: 1rem;
   padding: 1rem 1.15rem;
   font-weight: var(--weight-extrabold);
-  color: #fff4d2;
+  color: #f7f3e9;
 }
 
 .invest-faq-item summary::-webkit-details-marker {
@@ -861,14 +861,14 @@ body.invest-page {
   padding: 1.5rem;
   text-align: center;
   background:
-    radial-gradient(circle at top center, rgb(201 168 76 / 22%), transparent 35%),
+    radial-gradient(circle at top center, rgb(176 138 62 / 22%), transparent 35%),
     linear-gradient(180deg, rgb(255 255 255 / 4%), rgb(255 255 255 / 1.5%)), #111;
   color: var(--invest-text);
 }
 
 .invest-cta-card h2 {
   margin: 0 0 0.65rem;
-  color: #fff4d2;
+  color: #f7f3e9;
   font-size: clamp(1.55rem, 3vw, 2.2rem);
 }
 

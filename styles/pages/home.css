@@ -75,8 +75,8 @@
   left: 0;
   right: 0;
   background:
-    radial-gradient(ellipse 80% 60% at 20% 80%, rgb(196 153 62 / 6%) 0%, transparent 50%),
-    radial-gradient(ellipse 40% 40% at 85% 20%, rgb(196 153 62 / 4%) 0%, transparent 50%);
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgb(176 138 62 / 6%) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 40% at 85% 20%, rgb(176 138 62 / 4%) 0%, transparent 50%);
   pointer-events: none;
   will-change: transform;
 
@@ -97,7 +97,7 @@
   inset: 0;
   background: radial-gradient(
     ellipse 60% 55% at 75% 50%,
-    rgb(196 153 62 / 14%) 0%,
+    rgb(176 138 62 / 14%) 0%,
     transparent 65%
   );
   pointer-events: none;
@@ -126,8 +126,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgb(196 153 62 / 12%);
-  border: 1px solid rgb(196 153 62 / 30%);
+  background: rgb(176 138 62 / 12%);
+  border: 1px solid rgb(176 138 62 / 30%);
   border-radius: var(--radius-pill);
   padding: 0.35rem 1rem;
   font-size: 0.76rem;
@@ -244,20 +244,18 @@
 /* Hero primary: gold background with dark text (for dark hero bg) */
 .hero .btn-primary {
   background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-light) 100%);
-  color: #1e0e03;
+  color: #14161b;
   border-color: var(--color-gold);
   text-shadow: 0 1px 0 rgb(255 255 255 / 15%);
 }
 
 .hero .btn-primary:hover {
-  background: linear-gradient(135deg, var(--color-gold-light) 0%, #f0d070 100%);
+  background: linear-gradient(135deg, var(--color-gold-light) 0%, var(--color-gold-bright) 100%);
   border-color: var(--color-gold-light);
-  color: #1a0c02;
+  color: #16181d;
   text-decoration: none;
   transform: translateY(-2px);
-  box-shadow:
-    0 6px 24px rgb(196 153 62 / 50%),
-    0 0 0 1px rgb(224 184 74 / 20%);
+  box-shadow: 0 6px 20px rgb(176 138 62 / 28%);
 }
 
 /* Outline light — white-bordered on dark bg (hero only) */
@@ -307,15 +305,15 @@
    ══════════════════════════════════════════════════════════════ */
 .hero-live-card {
   background: rgb(255 255 255 / 6%);
-  border: 1px solid rgb(196 153 62 / 28%);
+  border: 1px solid rgb(176 138 62 / 28%);
   border-radius: var(--radius-card);
   padding: var(--space-6) var(--space-5);
   backdrop-filter: blur(24px) saturate(1.4);
   box-shadow:
     0 1px 0 rgb(255 255 255 / 6%) inset,
     var(--elev-5),
-    0 0 0 1px rgb(196 153 62 / 8%),
-    0 8px 32px rgb(196 153 62 / 18%);
+    0 0 0 1px rgb(176 138 62 / 8%),
+    0 8px 32px rgb(176 138 62 / 18%);
   position: relative;
   overflow: hidden;
 }
@@ -328,7 +326,7 @@
   left: 10%;
   right: 10%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgb(196 153 62 / 50%), transparent);
+  background: linear-gradient(90deg, transparent, rgb(176 138 62 / 50%), transparent);
 }
 
 .hlc-header {
@@ -349,9 +347,9 @@
 .hlc-badge {
   font-size: 0.68rem;
   font-weight: var(--weight-bold);
-  background: rgb(196 153 62 / 18%);
+  background: rgb(176 138 62 / 18%);
   color: var(--color-gold-light);
-  border: 1px solid rgb(196 153 62 / 32%);
+  border: 1px solid rgb(176 138 62 / 32%);
   border-radius: var(--radius-pill);
   padding: 0.15rem 0.6rem;
   letter-spacing: 0.04em;
@@ -394,6 +392,13 @@
   font-variant-numeric: tabular-nums;
   line-height: 1;
   letter-spacing: -0.03em;
+  min-block-size: 1em;
+}
+
+/* Reserve the full final price height while the skeleton is showing so the
+   card doesn't shift when the live value lands (CLS guard). */
+.hlc-price .shell-skeleton-price-lg {
+  block-size: 1em;
 }
 
 .hlc-price.price-pulse {
@@ -420,8 +425,8 @@
   margin: 0 0 var(--space-4);
   padding: var(--space-3);
   color: rgb(255 255 255 / 72%);
-  background: rgb(196 153 62 / 10%);
-  border: 1px solid rgb(196 153 62 / 20%);
+  background: rgb(176 138 62 / 10%);
+  border: 1px solid rgb(176 138 62 / 20%);
   border-radius: var(--radius-md);
   font-size: var(--text-xs);
   line-height: var(--leading-normal);
@@ -950,7 +955,7 @@
   flex-shrink: 0;
   border-radius: var(--radius-sm);
   background: var(--color-gold-tint);
-  border: 1px solid rgb(196 153 62 / 22%);
+  border: 1px solid rgb(176 138 62 / 22%);
 }
 
 .trust-content {
@@ -983,7 +988,7 @@
 
 .trust-banner-box {
   background: var(--surface-accent);
-  border: 1px solid rgb(196 153 62 / 24%);
+  border: 1px solid rgb(176 138 62 / 24%);
   border-inline-start: 3px solid var(--color-gold);
   border-radius: var(--radius-md);
   padding: 1.2rem 1.4rem;
@@ -1042,8 +1047,8 @@
 
 .home-section--alt {
   background: var(--surface-secondary);
-  border-top: 1px solid rgb(196 153 62 / 8%);
-  border-bottom: 1px solid rgb(196 153 62 / 8%);
+  border-top: 1px solid rgb(176 138 62 / 8%);
+  border-bottom: 1px solid rgb(176 138 62 / 8%);
 }
 
 .home-section-inner {
@@ -1177,7 +1182,7 @@
 .gcc-card:hover,
 .tool-card:hover {
   box-shadow:
-    0 10px 32px rgb(196 153 62 / 22%),
+    0 10px 32px rgb(176 138 62 / 22%),
     0 2px 8px rgb(0 0 0 / 6%);
   border-color: var(--color-gold);
   transform: translateY(-4px);
@@ -1339,7 +1344,7 @@
 
 .tool-card:hover {
   box-shadow:
-    0 10px 32px rgb(196 153 62 / 20%),
+    0 10px 32px rgb(176 138 62 / 20%),
     0 2px 8px rgb(0 0 0 / 5%);
 }
 
@@ -1381,7 +1386,7 @@
 /* ── Primary tool card variant (Tracker, Calculator) ── */
 .tool-card--primary {
   background: var(--color-gold-bg);
-  border-color: rgb(196 153 62 / 45%);
+  border-color: rgb(176 138 62 / 45%);
 }
 
 .tool-card--primary::after {
@@ -1404,7 +1409,7 @@
 
 .tool-card--primary:hover {
   border-color: var(--color-gold);
-  background: rgb(196 153 62 / 12%);
+  background: rgb(176 138 62 / 12%);
 }
 
 [dir='rtl'] .tool-card--primary::after {
@@ -1422,7 +1427,7 @@
   margin-top: 2rem;
   padding: 1rem 1.4rem;
   background: var(--color-gold-bg);
-  border: 1px solid rgb(196 153 62 / 28%);
+  border: 1px solid rgb(176 138 62 / 28%);
   border-radius: var(--radius-md);
   font-size: 0.86rem;
   color: var(--text-secondary);
@@ -1459,7 +1464,7 @@
 
 .country-search-input:focus-visible {
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 var(--focus-ring-width, 2px) var(--color-gold-tint, rgb(196 153 62 / 20%));
+  box-shadow: 0 0 0 var(--focus-ring-width, 2px) var(--color-gold-tint, rgb(176 138 62 / 20%));
 }
 
 /* Hide tiles that don't match the current filter query */
@@ -1504,17 +1509,17 @@
 
 .country-tile:hover {
   border-color: var(--color-gold);
-  background: var(--color-gold-tint, rgb(196 153 62 / 7%));
+  background: var(--color-gold-tint, rgb(176 138 62 / 7%));
   color: var(--color-gold-dark);
   text-decoration: none;
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgb(196 153 62 / 14%);
+  box-shadow: 0 2px 8px rgb(176 138 62 / 14%);
 }
 
 .country-tile--more {
   background: var(--color-gold-bg);
   color: var(--color-gold-dark);
-  border-color: rgb(196 153 62 / 35%);
+  border-color: rgb(176 138 62 / 35%);
   font-weight: var(--weight-bold);
 }
 
@@ -2085,7 +2090,7 @@
   font-weight: var(--weight-bold);
   color: var(--color-gold-dark);
   text-align: center;
-  background: linear-gradient(180deg, transparent, rgb(253 248 238 / 96%));
+  background: linear-gradient(180deg, transparent, rgb(250 247 240 / 96%));
   opacity: 0;
   transform: translateY(6px);
   transition:
@@ -2257,7 +2262,7 @@
 .kstrip-unit-btn:hover {
   background: var(--color-gold-bg);
   color: var(--color-gold-dark);
-  border-color: rgb(196 153 62 / 50%);
+  border-color: rgb(176 138 62 / 50%);
 }
 
 .kstrip-unit-btn:focus-visible {
@@ -2301,7 +2306,7 @@
 
 .kstrip-copy-btn:hover {
   color: var(--color-gold);
-  border-color: rgb(196 153 62 / 40%);
+  border-color: rgb(176 138 62 / 40%);
 }
 
 .kstrip-copy-btn:focus-visible {
@@ -2464,7 +2469,7 @@
   border-color: var(--color-gold);
   transform: translateY(-4px);
   box-shadow:
-    0 10px 32px rgb(196 153 62 / 22%),
+    0 10px 32px rgb(176 138 62 / 22%),
     0 2px 8px rgb(0 0 0 / 6%);
 }
 

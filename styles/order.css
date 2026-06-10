@@ -25,7 +25,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 80% 40%, rgb(196 153 62 / 22%) 0%, transparent 60%);
+  background: radial-gradient(ellipse at 80% 40%, rgb(176 138 62 / 22%) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -519,7 +519,7 @@
 
 .order-partner-card:hover {
   border-color: var(--color-gold);
-  box-shadow: 0 2px 8px rgb(212 160 23 / 12%);
+  box-shadow: 0 2px 8px rgb(176 138 62 / 12%);
 }
 
 .order-partner-logo {
@@ -630,8 +630,8 @@
 }
 
 .shop-badge--featured {
-  background: rgb(196 153 62 / 12%);
-  border: 1px solid rgb(196 153 62 / 30%);
+  background: rgb(176 138 62 / 12%);
+  border: 1px solid rgb(176 138 62 / 30%);
   color: #7a5c00;
 }
 
@@ -661,7 +661,7 @@
 
 .order-shop-action--web {
   color: var(--color-gold);
-  border-color: rgb(196 153 62 / 30%);
+  border-color: rgb(176 138 62 / 30%);
 }
 
 .order-shop-no-contact {

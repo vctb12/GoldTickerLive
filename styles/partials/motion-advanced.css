@@ -16,7 +16,7 @@
   border-radius: inherit;
   pointer-events: none;
   opacity: 0.35;
-  background: radial-gradient(ellipse at 50% 50%, rgb(201 168 76 / 22%) 0%, transparent 70%);
+  background: radial-gradient(ellipse at 50% 50%, rgb(176 138 62 / 22%) 0%, transparent 70%);
   animation: spot-ring-breathe var(--motion-spot-ring, 2.4s) var(--ease-in-out) infinite;
   z-index: 0;
 }

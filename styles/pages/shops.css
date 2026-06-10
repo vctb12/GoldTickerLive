@@ -24,7 +24,7 @@
 /* ── Hero ────────────────────────────────────────────────────────────────── */
 .shops-hero-inner {
   background:
-    radial-gradient(circle at 85% 15%, rgb(240 200 74 / 18%), transparent 42%),
+    radial-gradient(circle at 85% 15%, rgb(217 178 94 / 18%), transparent 42%),
     radial-gradient(circle at 10% 80%, rgb(180 100 0 / 12%), transparent 50%),
     linear-gradient(145deg, #19140e 0%, #2a1f10 55%, #5b4117 100%);
   border-radius: var(--radius-panel);
@@ -32,9 +32,9 @@
   padding: clamp(1.6rem, 4vw, 2.8rem);
   box-shadow:
     var(--elev-5),
-    0 4px 10px rgb(196 153 62 / 18%),
+    0 4px 10px rgb(176 138 62 / 18%),
     inset 0 1px 0 rgb(255 220 120 / 15%);
-  border: 1px solid rgb(240 200 74 / 28%);
+  border: 1px solid rgb(217 178 94 / 28%);
   position: relative;
   overflow: hidden;
 }
@@ -208,14 +208,14 @@
 
 .shops-chip:hover,
 .shops-chip:focus-visible {
-  background: rgb(212 160 23 / 20%);
-  border-color: rgb(212 160 23 / 50%);
+  background: rgb(176 138 62 / 20%);
+  border-color: rgb(176 138 62 / 50%);
   color: #ffd98c;
   outline: none;
 }
 
 .shops-chip:active {
-  background: rgb(212 160 23 / 30%);
+  background: rgb(176 138 62 / 30%);
 }
 
 /* ── Quick actions row ──────────────────────────────────────────────────── */
@@ -244,8 +244,8 @@
 }
 
 .shops-quick-action-btn:hover {
-  background: rgb(212 160 23 / 15%);
-  border-color: rgb(212 160 23 / 50%);
+  background: rgb(176 138 62 / 15%);
+  border-color: rgb(176 138 62 / 50%);
   color: #ffd98c;
   transform: translateY(-1px);
 }
@@ -340,17 +340,17 @@
 
 .shops-tab.is-active,
 .shops-tab[aria-selected='true'] {
-  border-color: rgb(196 153 62 / 70%);
-  background: rgb(196 153 62 / 12%);
+  border-color: rgb(176 138 62 / 70%);
+  background: rgb(176 138 62 / 12%);
   color: var(--color-gold-dark);
 }
 
 #shops-sponsored-disclosure {
   grid-column: 1 / -1;
   margin: -0.25rem 0 0;
-  border: 1px solid rgb(196 153 62 / 28%);
+  border: 1px solid rgb(176 138 62 / 28%);
   border-radius: var(--radius-md);
-  background: rgb(196 153 62 / 8%);
+  background: rgb(176 138 62 / 8%);
   padding: 0.55rem 0.75rem;
 }
 
@@ -365,8 +365,8 @@
   align-content: center;
   padding: 0.85rem 1rem;
   border-radius: var(--radius-lg);
-  border: 1px solid rgb(212 160 23 / 20%);
-  background: rgb(212 160 23 / 6%);
+  border: 1px solid rgb(176 138 62 / 20%);
+  background: rgb(176 138 62 / 6%);
 }
 
 .shops-controls-summary-count {
@@ -478,7 +478,7 @@
 .shops-control select:focus {
   outline: none;
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgb(212 160 23 / 14%);
+  box-shadow: 0 0 0 3px rgb(176 138 62 / 14%);
 }
 
 .shops-control input:not([type='checkbox'])::placeholder {
@@ -524,7 +524,7 @@
 
 .featured-card {
   background: var(--surface-primary);
-  border: 1px solid rgb(212 160 23 / 28%);
+  border: 1px solid rgb(176 138 62 / 28%);
   border-radius: var(--radius-lg);
   padding: 1rem;
   display: grid;
@@ -539,9 +539,9 @@
 .featured-card:hover {
   transform: translateY(-2px);
   box-shadow:
-    0 6px 20px rgb(212 160 23 / 15%),
+    0 6px 20px rgb(176 138 62 / 15%),
     0 2px 6px rgb(0 0 0 / 20%);
-  border-color: rgb(212 160 23 / 45%);
+  border-color: rgb(176 138 62 / 45%);
 }
 
 .featured-header {
@@ -579,8 +579,8 @@
 .featured-tag {
   font-size: 0.68rem;
   padding: 0.15rem 0.5rem;
-  background: rgb(212 160 23 / 8%);
-  border: 1px solid rgb(212 160 23 / 20%);
+  background: rgb(176 138 62 / 8%);
+  border: 1px solid rgb(176 138 62 / 20%);
   border-radius: var(--radius-pill);
   color: var(--text-secondary);
   font-weight: var(--weight-semibold);
@@ -600,8 +600,8 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.35rem 0.7rem;
-  background: rgb(212 160 23 / 12%);
-  border: 1px solid rgb(212 160 23 / 28%);
+  background: rgb(176 138 62 / 12%);
+  border: 1px solid rgb(176 138 62 / 28%);
   border-radius: var(--radius-pill);
   color: var(--color-gold);
   font-size: 0.78rem;
@@ -615,8 +615,8 @@
 }
 
 .shops-filter-pill:hover {
-  background: rgb(212 160 23 / 20%);
-  border-color: rgb(212 160 23 / 40%);
+  background: rgb(176 138 62 / 20%);
+  border-color: rgb(176 138 62 / 40%);
 }
 
 .shops-filter-pill-remove {
@@ -684,7 +684,7 @@
 
 .shops-results-legend {
   margin: 0.15rem 0 0;
-  color: rgb(212 160 23 / 92%);
+  color: rgb(176 138 62 / 92%);
   font-size: 0.79rem;
   line-height: 1.45;
   font-weight: var(--weight-semibold);
@@ -694,8 +694,8 @@
 #shops-count {
   color: var(--color-gold-dark);
   font-weight: var(--weight-bold);
-  background: rgb(212 160 23 / 8%);
-  border: 1px solid rgb(212 160 23 / 22%);
+  background: rgb(176 138 62 / 8%);
+  border: 1px solid rgb(176 138 62 / 22%);
   border-radius: var(--radius-pill);
   padding: 0.35rem 0.85rem;
   white-space: nowrap;
@@ -731,24 +731,24 @@
   transform: translateY(-3px);
   box-shadow:
     var(--elev-4),
-    0 2px 8px rgb(196 153 62 / 10%);
-  border-color: rgb(212 160 23 / 30%);
+    0 2px 8px rgb(176 138 62 / 10%);
+  border-color: rgb(176 138 62 / 30%);
 }
 
 .shop-card--featured {
-  border-color: rgb(196 153 62 / 38%);
+  border-color: rgb(176 138 62 / 38%);
   border-left-width: 3px;
   border-left-color: var(--color-gold);
   padding-left: calc(1.15rem - 2px);
 }
 
 .shop-card--featured:hover {
-  border-color: rgb(212 160 23 / 55%);
+  border-color: rgb(176 138 62 / 55%);
   border-left-color: var(--color-gold);
   box-shadow:
     0 8px 24px rgb(0 0 0 / 25%),
-    0 0 0 1px rgb(212 160 23 / 18%),
-    0 4px 12px rgb(196 153 62 / 12%);
+    0 0 0 1px rgb(176 138 62 / 18%),
+    0 4px 12px rgb(176 138 62 / 12%);
 }
 
 [dir='rtl'] .shop-card--featured {
@@ -864,8 +864,8 @@
   font-size: 0.68rem;
   font-weight: var(--weight-bold);
   color: var(--color-gold-dark);
-  background: rgb(212 160 23 / 10%);
-  border: 1px solid rgb(212 160 23 / 28%);
+  background: rgb(176 138 62 / 10%);
+  border: 1px solid rgb(176 138 62 / 28%);
   border-radius: var(--radius-pill);
   padding: 0.18rem 0.55rem;
   letter-spacing: 0.03em;
@@ -913,9 +913,9 @@
 }
 
 .shop-confidence-block {
-  border: 1px solid rgb(212 160 23 / 28%);
+  border: 1px solid rgb(176 138 62 / 28%);
   border-radius: var(--radius-md);
-  background: linear-gradient(180deg, rgb(212 160 23 / 9%), rgb(212 160 23 / 3%));
+  background: linear-gradient(180deg, rgb(176 138 62 / 9%), rgb(176 138 62 / 3%));
   padding: 0.62rem 0.72rem;
   display: grid;
   gap: 0.45rem;
@@ -927,7 +927,7 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: var(--weight-extrabold);
-  color: rgb(212 160 23 / 95%);
+  color: rgb(176 138 62 / 95%);
 }
 
 .shop-confidence-grid {
@@ -1004,8 +1004,8 @@
 
 .shop-tag--muted {
   color: var(--color-gold-dark);
-  background: rgb(212 160 23 / 7%);
-  border-color: rgb(212 160 23 / 20%);
+  background: rgb(176 138 62 / 7%);
+  border-color: rgb(176 138 62 / 20%);
 }
 
 /* ── Notes & contact ─────────────────────────────────────────────────────── */
@@ -1045,7 +1045,7 @@
   margin-top: 0.5rem;
   padding: 2.5rem 1.5rem;
   border-radius: var(--radius-lg);
-  border: 1px dashed rgb(212 160 23 / 20%);
+  border: 1px dashed rgb(176 138 62 / 20%);
   background: var(--surface-primary);
   display: grid;
   gap: 0.5rem;
@@ -1069,7 +1069,7 @@
 
 .shops-clear-btn {
   margin-top: 0.5rem;
-  border: 1px solid rgb(212 160 23 / 40%);
+  border: 1px solid rgb(176 138 62 / 40%);
   border-radius: var(--radius-pill);
   padding: 0.5rem 1.1rem;
   font-weight: var(--weight-bold);
@@ -1086,7 +1086,7 @@
 
 .shops-clear-btn:hover,
 .shops-clear-btn:focus-visible {
-  background: rgb(212 160 23 / 10%);
+  background: rgb(176 138 62 / 10%);
   border-color: var(--color-gold);
   outline: none;
 }
@@ -1108,7 +1108,7 @@
 }
 
 .shops-resource-chip--submit {
-  border-color: rgb(212 160 23 / 40%);
+  border-color: rgb(176 138 62 / 40%);
   color: var(--color-gold);
 }
 
@@ -1150,8 +1150,8 @@
 }
 
 .shops-info-card:hover {
-  border-color: rgb(212 160 23 / 20%);
-  background: rgb(212 160 23 / 3%);
+  border-color: rgb(176 138 62 / 20%);
+  background: rgb(176 138 62 / 3%);
 }
 
 .shops-info-card h3 {
@@ -1501,8 +1501,8 @@
   font-size: 0.7rem;
   font-weight: var(--weight-bold);
   color: var(--color-gold-dark);
-  background: rgb(212 160 23 / 12%);
-  border: 1px solid rgb(212 160 23 / 28%);
+  background: rgb(176 138 62 / 12%);
+  border: 1px solid rgb(176 138 62 / 28%);
   border-radius: var(--radius-pill);
   padding: 0.25rem 0.65rem;
   letter-spacing: 0.03em;
@@ -1576,8 +1576,8 @@
   margin: 0 0 1.25rem;
   padding: 0.85rem 0.95rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgb(212 160 23 / 28%);
-  background: rgb(212 160 23 / 8%);
+  border: 1px solid rgb(176 138 62 / 28%);
+  background: rgb(176 138 62 / 8%);
 }
 
 .modal-next-step strong {
@@ -1652,7 +1652,7 @@
 .modal-close-cta:hover,
 .modal-close-cta:focus-visible {
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgb(212 160 23 / 14%);
+  box-shadow: 0 0 0 3px rgb(176 138 62 / 14%);
   outline: none;
 }
 
@@ -1691,7 +1691,7 @@
   border-radius: var(--radius-pill);
   border: 1px solid var(--color-gold);
   color: var(--color-gold-dark);
-  background: rgb(196 153 62 / 7%);
+  background: rgb(176 138 62 / 7%);
   font-weight: var(--weight-bold);
   font-size: 0.88rem;
   text-decoration: none;
@@ -1701,7 +1701,7 @@
 }
 
 .shops-guide-chip:hover {
-  background: rgb(196 153 62 / 15%);
+  background: rgb(176 138 62 / 15%);
   transform: translateY(-1px);
 }
 
@@ -1755,13 +1755,13 @@
 .shops-filter-toggle:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
-  border-color: rgb(196 153 62 / 70%);
-  box-shadow: 0 0 0 3px rgb(196 153 62 / 20%);
+  border-color: rgb(176 138 62 / 70%);
+  box-shadow: 0 0 0 3px rgb(176 138 62 / 20%);
 }
 
 .shops-filter-toggle[aria-expanded='true'] {
-  border-color: rgb(196 153 62 / 60%);
-  background: rgb(196 153 62 / 8%);
+  border-color: rgb(176 138 62 / 60%);
+  background: rgb(176 138 62 / 8%);
 }
 
 .shops-mobile-quick-filters {
@@ -1864,9 +1864,9 @@
 /* ── Shortlist bar ───────────────────────────────────────────────────────── */
 .shops-shortlist-bar {
   padding: 0.75rem 1.25rem;
-  background: linear-gradient(135deg, rgb(212 160 23 / 8%), rgb(196 153 62 / 4%));
-  border-top: 1px solid rgb(212 160 23 / 20%);
-  border-bottom: 1px solid rgb(212 160 23 / 20%);
+  background: linear-gradient(135deg, rgb(176 138 62 / 8%), rgb(176 138 62 / 4%));
+  border-top: 1px solid rgb(176 138 62 / 20%);
+  border-bottom: 1px solid rgb(176 138 62 / 20%);
 }
 
 .shops-shortlist-bar-inner {
@@ -1926,7 +1926,7 @@
   padding: 0.4rem 0.9rem;
   border: 1px solid var(--color-gold);
   border-radius: var(--radius-pill);
-  background: rgb(212 160 23 / 10%);
+  background: rgb(176 138 62 / 10%);
   color: var(--color-gold-dark);
   font-weight: var(--weight-bold);
   font-size: 0.8rem;
@@ -1938,7 +1938,7 @@
 }
 
 .shops-shortlist-compare-btn:hover {
-  background: rgb(212 160 23 / 20%);
+  background: rgb(176 138 62 / 20%);
 }
 
 /* ── Shop card action row ────────────────────────────────────────────────── */
@@ -1986,7 +1986,7 @@
 .shop-action-btn:hover {
   border-color: var(--color-gold);
   color: var(--color-gold-dark);
-  background: rgb(212 160 23 / 6%);
+  background: rgb(176 138 62 / 6%);
 }
 
 .shop-action-btn.is-saved {
@@ -2085,7 +2085,7 @@
 .modal-action-btn:hover {
   border-color: var(--color-gold);
   color: var(--color-gold-dark);
-  background: rgb(212 160 23 / 8%);
+  background: rgb(176 138 62 / 8%);
 }
 
 .modal-action-btn.is-saved {
@@ -2193,7 +2193,7 @@
 /* ── Shops card — hover state glow improvement ── */
 .shops-card:hover {
   box-shadow:
-    0 8px 28px rgb(196 153 62 / 16%),
+    0 8px 28px rgb(176 138 62 / 16%),
     0 2px 6px rgb(0 0 0 / 5%);
 }
 
@@ -2294,7 +2294,7 @@
 
 .nearme-link:hover {
   border-color: var(--color-gold);
-  box-shadow: 0 2px 8px rgb(196 153 62 / 12%);
+  box-shadow: 0 2px 8px rgb(176 138 62 / 12%);
 }
 
 .nearme-name {

@@ -32,7 +32,7 @@
     <meta name="twitter:image" content="https://goldtickerlive.com/assets/og-image.png" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="theme-color" content="#d4a017" />
+    <meta name="theme-color" content="#b08a3e" />
     <link rel="stylesheet" href="../../styles/global.css" />
     <link rel="stylesheet" href="../../styles/pages/content-landing.css" />
     <style>
@@ -75,8 +75,8 @@
           box-shadow 0.2s;
       }
       .search-input:focus {
-        border-color: #d4a017;
-        box-shadow: 0 0 0 4px rgba(212, 160, 23, 0.12);
+        border-color: #b08a3e;
+        box-shadow: 0 0 0 4px rgba(176, 138, 62, 0.12);
       }
       .search-icon {
         position: absolute;
@@ -122,12 +122,12 @@
         color: #475569;
       }
       .filter-chip:hover {
-        border-color: #d4a017;
+        border-color: #b08a3e;
         color: #92400e;
       }
       .filter-chip.active {
-        background: #d4a017;
-        border-color: #d4a017;
+        background: #b08a3e;
+        border-color: #b08a3e;
         color: white;
       }
 
@@ -158,8 +158,8 @@
           transform 0.1s;
       }
       .result-card:hover {
-        border-color: #d4a017;
-        box-shadow: 0 4px 12px rgba(212, 160, 23, 0.12);
+        border-color: #b08a3e;
+        box-shadow: 0 4px 12px rgba(176, 138, 62, 0.12);
         transform: translateY(-1px);
       }
       .result-icon {
@@ -253,7 +253,7 @@
       }
       .suggestion-pill:hover {
         background: #fef3c7;
-        border-color: #d4a017;
+        border-color: #b08a3e;
         color: #92400e;
       }
 
@@ -267,6 +267,34 @@
       }
       [dir='rtl'] .search-input {
         padding: 0.85rem 1.1rem 0.85rem 3rem;
+      }
+      .search-guide {
+        margin-top: 2rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid #e2e8f0;
+      }
+      .search-guide h2 {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+        color: #1e293b;
+      }
+      .search-guide p,
+      .search-guide li {
+        color: #475569;
+        line-height: 1.7;
+      }
+      .search-guide-list {
+        margin: 0.75rem 0 0;
+        padding-inline-start: 1.2rem;
+      }
+      .search-copy-ar {
+        display: none;
+      }
+      html[lang='ar'] .search-copy-en {
+        display: none;
+      }
+      html[lang='ar'] .search-copy-ar {
+        display: block;
       }
     </style>
   <script type="application/ld+json">
@@ -371,17 +399,51 @@
         <div class="suggestions-title" id="suggestions-title">Popular searches</div>
         <div class="suggestion-pills" id="suggestion-pills"></div>
       </div>
-      <section class="content-section" aria-label="Search tips">
-        <p>
-          Use this search to jump to country and city gold-rate pages, karat explainers, calculators,
-          and shops. Results are curated site links — not a live metals feed. For current XAU/USD
-          spot-linked reference prices with freshness labels, open the
-          <a href="/tracker.html">live tracker</a> or
-          <a href="/calculator.html">gold calculator</a>. Popular GCC destinations include
-          <a href="/countries/uae/gold-price/">UAE</a>,
-          <a href="/countries/saudi-arabia/gold-price/">Saudi Arabia</a>, and
-          <a href="/countries/kuwait/gold-price/">Kuwait</a>.
-        </p>
+      <section class="content-section search-guide" aria-labelledby="search-guide-title">
+        <div class="search-copy-en">
+          <h2 id="search-guide-title">What this search covers</h2>
+          <p>
+            Use this search to jump to country and city gold-rate pages, karat explainers,
+            calculators, and shop directory entries. Results are curated site links — not a live
+            metals feed or a retail quote engine.
+          </p>
+          <p>
+            For current XAU/USD spot-linked reference prices with freshness labels, open the
+            <a href="/tracker.html">live tracker</a> or
+            <a href="/calculator.html">gold calculator</a>. If you want market overviews before
+            searching deeper, start with the <a href="/content/markets/">markets hub</a> or jump
+            straight to <a href="/countries/uae/gold-price/">UAE</a>,
+            <a href="/countries/saudi-arabia/gold-price/">Saudi Arabia</a>, and
+            <a href="/countries/kuwait/gold-price/">Kuwait</a>.
+          </p>
+          <ul class="search-guide-list">
+            <li>Country and city pages for reference rates by currency and karat</li>
+            <li>Calculators for scrap, investment, zakat, and unit conversion</li>
+            <li>Gold shops and educational guides that explain methodology and pricing limits</li>
+          </ul>
+        </div>
+        <div class="search-copy-ar" lang="ar" dir="rtl">
+          <h2>ما الذي يغطيه هذا البحث؟</h2>
+          <p>
+            استخدم هذا البحث للوصول سريعاً إلى صفحات أسعار الذهب حسب الدولة أو المدينة، وشروحات
+            العيارات، والحاسبات، وصفحات دليل المحلات. النتائج روابط منسقة داخل الموقع وليست بثاً
+            فورياً للمعادن أو محركاً لأسعار التجزئة.
+          </p>
+          <p>
+            إذا كنت تريد السعر المرجعي المرتبط بالسعر الفوري مع وسم الحداثة، فافتح
+            <a href="/tracker.html">متتبع الأسعار</a> أو
+            <a href="/calculator.html">حاسبة الذهب</a>. وللاطلاع على نظرة سوقية قبل البحث
+            التفصيلي، ابدأ من <a href="/content/markets/">صفحة الأسواق</a> أو انتقل مباشرة إلى
+            <a href="/countries/uae/gold-price/">الإمارات</a> و
+            <a href="/countries/saudi-arabia/gold-price/">السعودية</a> و
+            <a href="/countries/kuwait/gold-price/">الكويت</a>.
+          </p>
+          <ul class="search-guide-list">
+            <li>صفحات الدول والمدن لأسعار الذهب المرجعية حسب العملة والعيار</li>
+            <li>حواسب للذهب الكسر والاستثمار والزكاة وتحويل الأوزان</li>
+            <li>صفحات المحلات والأدلة التعليمية التي تشرح المنهجية وحدود التسعير</li>
+          </ul>
+        </div>
       </section>
       <div id="related-guides-slot"></div>
     </main>

@@ -1,8 +1,7 @@
 :root {
-  /* Pre-paint tokens aligned with styles/partials/tokens.css brand values */
-  --tp-bg: #f5f2eb;
-  --tp-text: #1a1612;
-  --tp-accent: #c4993e;
+  --tp-bg: #fafaf8;
+  --tp-text: #16181d;
+  --tp-accent: #b08a3e;
   --tp-font-sans: 'Cairo', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
 }
 
@@ -36,7 +35,7 @@ a {
 .calc-hero,
 .method-hero,
 .insights-hero {
-  background: #1e0e03;
+  background: #14161b;
   color: #fff;
   min-height: 200px;
 }
