@@ -430,12 +430,13 @@ body.tracker-pro-page {
 
 /* Hero title */
 .tracker-hero-title {
+  font-family: var(--font-display);
   font-size: clamp(2.25rem, 5vw, 3.5rem);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+  line-height: 1.04;
+  letter-spacing: var(--tracking-tight);
   color: var(--tp-hero-text);
   margin-bottom: var(--space-3);
-  font-weight: var(--weight-extrabold);
+  font-weight: var(--weight-bold);
 }
 
 .tracker-hero-kicker {
@@ -519,7 +520,8 @@ body.tracker-pro-page {
 
 .tracker-hero-v {
   font-size: clamp(1.15rem, 2.2vw, 1.7rem);
-  font-weight: var(--weight-extrabold);
+  font-weight: var(--weight-bold);
+  font-family: var(--font-numeric);
   color: var(--tp-hero-text);
   line-height: 1.1;
   font-variant-numeric: tabular-nums;
@@ -3889,6 +3891,7 @@ td.tracker-chg-down {
 .tracker-karat-table td[data-karat-price],
 #tp-mobile-price-value,
 #tp-xauusd-value {
+  font-family: var(--font-numeric);
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
 }
