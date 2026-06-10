@@ -339,7 +339,7 @@
 .submit-step.done .submit-step-num {
   background: var(--color-gold);
   border-color: var(--color-gold);
-  color: #000;
+  color: var(--color-black);
 }
 
 .submit-step.active .submit-step-label,

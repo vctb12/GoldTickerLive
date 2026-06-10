@@ -532,7 +532,7 @@
 
 .hlc-updated[data-freshness-key='cached'],
 .hlc-updated[data-freshness-key='stale'] {
-  color: var(--color-amber, #f59e0b);
+  color: var(--color-amber);
 }
 
 /* Add a non-color visual cue for cached/stale so color-blind users can distinguish */
@@ -545,7 +545,7 @@
 }
 
 .hlc-updated[data-freshness-key='unavailable'] {
-  color: var(--color-stale, #a84000);
+  color: var(--color-stale);
 }
 
 .hlc-updated[data-freshness-key='unavailable']::before {
@@ -556,7 +556,7 @@
 
 /* amber: 5–30 min — warmer than the default muted color */
 .hlc-updated[data-freshness-age='amber'] {
-  color: var(--color-amber, #f59e0b);
+  color: var(--color-amber);
 }
 
 .hlc-updated[data-freshness-age='amber']::before {
@@ -565,7 +565,7 @@
 
 /* stale: >30 min — escalate to danger red */
 .hlc-updated[data-freshness-age='stale'] {
-  color: var(--color-danger, #dc2626);
+  color: var(--color-danger);
 }
 
 .hlc-updated[data-freshness-age='stale']::before {
@@ -574,7 +574,7 @@
 
 .karat-strip-updated[data-freshness-key='cached'],
 .karat-strip-updated[data-freshness-key='stale'] {
-  color: var(--color-amber, #f59e0b);
+  color: var(--color-amber);
 }
 
 .karat-strip-updated[data-freshness-key='cached']::before {
@@ -586,7 +586,7 @@
 }
 
 .karat-strip-updated[data-freshness-key='unavailable'] {
-  color: var(--color-stale, #a84000);
+  color: var(--color-stale);
 }
 
 .karat-strip-updated[data-freshness-key='unavailable']::before {
@@ -595,7 +595,7 @@
 
 /* Granular age-based color shifts for karat strip */
 .karat-strip-updated[data-freshness-age='amber'] {
-  color: var(--color-amber, #f59e0b);
+  color: var(--color-amber);
 }
 
 .karat-strip-updated[data-freshness-age='amber']::before {
@@ -603,7 +603,7 @@
 }
 
 .karat-strip-updated[data-freshness-age='stale'] {
-  color: var(--color-danger, #dc2626);
+  color: var(--color-danger);
 }
 
 .karat-strip-updated[data-freshness-age='stale']::before {
@@ -789,7 +789,7 @@
   padding: 0.35rem 0.55rem;
   border-radius: var(--radius-sm);
   background: var(--color-gray-900, #1a1a1a);
-  color: #fff;
+  color: var(--color-white);
   font-size: var(--text-2xs);
   font-weight: var(--weight-semibold);
   opacity: 0;
@@ -862,8 +862,8 @@
     mask-image: linear-gradient(
       to right,
       transparent,
-      #000 10%,
-      #000 90%,
+      var(--color-black) 10%,
+      var(--color-black) 90%,
       transparent
     );
   }
@@ -872,8 +872,8 @@
     mask-image: linear-gradient(
       to left,
       transparent,
-      #000 10%,
-      #000 90%,
+      var(--color-black) 10%,
+      var(--color-black) 90%,
       transparent
     );
   }

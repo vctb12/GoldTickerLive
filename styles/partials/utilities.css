@@ -1330,7 +1330,7 @@ body > * {
 }
 
 .spot-change-down {
-  color: var(--danger, #dc2626);
+  color: var(--danger, var(--color-danger));
 }
 
 .spot-change-neutral {
@@ -1565,8 +1565,12 @@ a.link-accent {
   height: 1px;
   background: currentcolor;
   transform: scaleX(0);
-  transform-origin: inline-start;
+  transform-origin: 0 50%;
   transition: transform var(--transition-fast);
+}
+
+[dir='rtl'] .link-accent::after {
+  transform-origin: 100% 50%;
 }
 
 .link-accent:hover::after,
@@ -1578,7 +1582,7 @@ a.link-accent {
   color: var(--color-gold-deep);
 }
 
-input:not([type='checkbox']):not([type='radio']):not([type='range']),
+input:not([type='checkbox'], [type='radio'], [type='range']),
 select,
 textarea,
 .input-control {
@@ -1587,14 +1591,14 @@ textarea,
     box-shadow var(--transition-fast);
 }
 
-input:not([type='checkbox']):not([type='radio']):not([type='range']):hover:not(:focus):not(:disabled),
-select:hover:not(:focus):not(:disabled),
-textarea:hover:not(:focus):not(:disabled),
-.input-control:hover:not(:focus):not(:disabled) {
+input:not([type='checkbox'], [type='radio'], [type='range']):hover:not(:focus, :disabled),
+select:hover:not(:focus, :disabled),
+textarea:hover:not(:focus, :disabled),
+.input-control:hover:not(:focus, :disabled) {
   border-color: var(--border-strong);
 }
 
-input:not([type='checkbox']):not([type='radio']):not([type='range']):focus,
+input:not([type='checkbox'], [type='radio'], [type='range']):focus,
 select:focus,
 textarea:focus,
 .input-control:focus {
@@ -2318,7 +2322,7 @@ body.has-spot-bar .site-nav[data-nav-hidden='true'] {
   width: 100%;
   padding: var(--space-3) var(--space-4);
   background: var(--color-gold);
-  color: var(--color-white, #fff);
+  color: var(--color-white);
   font-family: var(--font-main);
   font-weight: var(--weight-bold);
   font-size: 0.95rem;
@@ -2337,7 +2341,7 @@ body.has-spot-bar .site-nav[data-nav-hidden='true'] {
   transform: translateY(-1px);
   box-shadow: 0 4px 16px rgb(196 153 62 / 35%);
   text-decoration: none;
-  color: var(--color-white, #fff);
+  color: var(--color-white);
 }
 
 /* Drawer search input — top of the drawer panel */
@@ -2452,7 +2456,7 @@ body[data-shell='editorial'] {
 }
 
 body[data-shell='market'] {
-  --shell-accent: #1050a0;
+  --shell-accent: var(--color-fixed);
   --shell-accent-soft: var(--color-fixed-bg);
 }
 
@@ -3138,7 +3142,7 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 }
 
 .ph-disclaimer-link {
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold);
   font-weight: 600;
 }
 
@@ -3148,7 +3152,7 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
   gap: 0.35rem;
   padding: var(--space-1) var(--space-2-5, 0.65rem);
   background: #25d366;
-  color: #fff;
+  color: var(--color-white);
   border-radius: var(--radius-sm);
   font-weight: 600;
   text-decoration: none;
@@ -3517,7 +3521,7 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
     var(--color-gold) 0% var(--purity-fill, 75%),
     var(--border-subtle) var(--purity-fill, 75%) 100%
   );
-  mask: radial-gradient(farthest-side, transparent 58%, #000 60%);
+  mask: radial-gradient(farthest-side, transparent 58%, var(--color-black) 60%);
   transition: --purity-fill 300ms var(--ease-out);
 }
 

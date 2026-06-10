@@ -2,11 +2,7 @@
 
 /* Hero */
 .method-hero {
-  background: linear-gradient(
-    135deg,
-    var(--color-gold-dark, #b8860b) 0%,
-    var(--color-gold, #d4a017) 100%
-  );
+  background: linear-gradient(135deg, var(--color-gold-dark, #b8860b) 0%, var(--color-gold) 100%);
   color: var(--color-white);
   padding: var(--space-7) var(--space-5) 2.5rem;
 }
@@ -98,7 +94,7 @@
 
 .method-toc-list li a:hover {
   background: var(--color-border, #2e2b24);
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold);
 }
 
 /* Body */
@@ -132,7 +128,7 @@
 .method-section h2 {
   font-size: 1.4rem;
   font-weight: var(--weight-bold);
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold);
   margin: 0 0 var(--space-4);
 }
 
@@ -150,7 +146,7 @@
 }
 
 .method-section a {
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -188,7 +184,7 @@
 .method-source-card-name {
   font-size: 0.95rem;
   font-weight: var(--weight-bold);
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold);
   margin-bottom: 0.4rem;
 }
 
@@ -206,7 +202,7 @@
 
 .method-source-card-link {
   font-size: 0.8rem;
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold);
   text-decoration: none;
   font-weight: var(--weight-semibold);
 }
@@ -219,7 +215,7 @@
 .method-formula-block {
   background: var(--color-surface, #1a1814);
   border: 1px solid var(--color-gold-dim, #4a3c10);
-  border-inline-start: 3px solid var(--color-gold, #d4a017);
+  border-inline-start: 3px solid var(--color-gold);
   border-radius: var(--radius-md, 8px);
   padding: 1rem 1.25rem;
   margin: 1.25rem 0;
@@ -473,7 +469,7 @@ code.method-formula {
 }
 
 [dir='rtl'] .method-formula-block {
-  border-inline-start: 3px solid var(--color-gold, #d4a017);
+  border-inline-start: 3px solid var(--color-gold);
 }
 
 [dir='rtl'] .method-warning {

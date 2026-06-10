@@ -2,7 +2,7 @@
   --invest-bg: #0d0d0d;
   --invest-surface: #141414;
   --invest-surface-2: #1b1b1b;
-  --invest-card: #fff;
+  --invest-card: var(--color-white);
   --invest-card-soft: #fff8eb;
   --invest-text: #f2ead7;
   --invest-muted: rgb(242 234 215 / 72%);
@@ -513,7 +513,7 @@ body.invest-page {
   font: inherit;
   font-size: 1.15rem;
   font-weight: var(--weight-extrabold);
-  background: #fff;
+  background: var(--color-white);
   color: #1a1a1a;
   outline: none;
 }
@@ -539,7 +539,7 @@ body.invest-page {
   padding: 0.72rem 0.95rem;
   border-radius: var(--invest-radius-pill);
   border: 1px solid rgb(0 0 0 / 12%);
-  background: #fff;
+  background: var(--color-white);
   color: #1b1b1b;
   font: inherit;
   font-weight: var(--weight-bold);

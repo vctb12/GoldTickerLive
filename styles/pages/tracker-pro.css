@@ -1603,7 +1603,9 @@ body.tracker-workspace-basic .tracker-advanced-only {
 }
 
 .tracker-hero-price.price-pulse {
-  box-shadow: 0 0 0 2px var(--color-gold-glow), var(--shadow-gold);
+  box-shadow:
+    0 0 0 2px var(--color-gold-glow),
+    var(--shadow-gold);
 }
 
 .tracker-chart-source-label {
@@ -3098,7 +3100,7 @@ td.tracker-chg-down {
 
   body,
   .tracker-pro-page {
-    background: #fff;
+    background: var(--color-white);
   }
 
   .tracker-hero-wrap {

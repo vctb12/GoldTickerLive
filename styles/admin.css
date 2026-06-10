@@ -19,13 +19,13 @@
   --primary: #6366f1;
   --primary-hover: #4f46e5;
   --primary-glow: rgb(99, 102, 241, 0.25);
-  --gold: #f59e0b;
+  --gold: var(--color-amber);
   --gold-hover: #d97706;
   --gold-glow: rgb(245, 158, 11, 0.2);
   --gold-soft: rgb(245, 158, 11, 0.1);
   --success: #10b981;
   --success-glow: rgb(16, 185, 129, 0.2);
-  --warning: #f59e0b;
+  --warning: var(--color-amber);
   --danger: #ef4444;
   --danger-glow: rgb(239, 68, 68, 0.2);
   --info: #6366f1;
@@ -169,7 +169,7 @@ ol {
 }
 
 .sidebar-header .logo-text {
-  background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
+  background: linear-gradient(135deg, var(--color-white) 0%, var(--gold) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -552,7 +552,7 @@ ol {
 
 .btn-primary {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
-  color: #fff;
+  color: var(--color-white);
   box-shadow: 0 2px 12px var(--primary-glow);
 }
 
@@ -562,19 +562,19 @@ ol {
 }
 
 .btn-gold {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(135deg, var(--color-amber) 0%, #d97706 100%);
   color: var(--dark-navy);
   box-shadow: 0 2px 12px var(--gold-glow);
 }
 
 .btn-gold:hover:not(:disabled) {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  background: linear-gradient(135deg, #fbbf24 0%, var(--color-amber) 100%);
   box-shadow: 0 4px 20px var(--gold-glow);
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
-  color: #fff;
+  background: linear-gradient(135deg, var(--danger) 0%, var(--color-danger) 100%);
+  color: var(--color-white);
   box-shadow: 0 2px 10px var(--danger-glow);
 }
 
@@ -2142,7 +2142,7 @@ textarea:focus-visible {
 .notification-badge {
   background: var(--danger);
   border-radius: 999px;
-  color: #fff;
+  color: var(--color-white);
   font-size: 0.65rem;
   font-weight: 700;
   line-height: 1;
@@ -2239,7 +2239,7 @@ textarea:focus-visible {
 .pagination-btn.active {
   background: var(--primary);
   border-color: var(--primary);
-  color: #fff;
+  color: var(--color-white);
 }
 
 .pagination-info {
@@ -2353,7 +2353,7 @@ thead th {
 
 /* Improved notification badge */
 .notification-badge {
-  background: linear-gradient(135deg, var(--danger), #dc2626);
+  background: linear-gradient(135deg, var(--danger), var(--color-danger));
   box-shadow: 0 0 8px var(--danger-glow);
 }
 
