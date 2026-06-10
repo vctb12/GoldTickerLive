@@ -159,7 +159,7 @@
 /* ── Dark mode (already dark, just ensure contrast) ── */
 
 [data-theme='dark'] .market-summary-ticker {
-  --mst-bg: linear-gradient(155deg, #1a1208 0%, #0f0a05 100%);
+  --mst-bg: var(--gradient-dark);
 
   border-bottom-color: rgb(176 138 62 / 15%);
 }

@@ -1448,7 +1448,7 @@ body > * {
    the tri-state theme toggle controls it. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --color-warning: var(--color-amber);
+    --color-warning: var(--color-amber, #f59e0b);
     --color-warning-bg: rgb(245 158 11 / 15%);
     --color-warning-border: rgb(245 158 11 / 45%);
     --color-warning-text: #e8c76a;
@@ -1456,7 +1456,7 @@ body > * {
 }
 
 :root[data-theme='dark'] {
-  --color-warning: var(--color-amber);
+  --color-warning: var(--color-amber, #f59e0b);
   --color-warning-bg: rgb(245 158 11 / 15%);
   --color-warning-border: rgb(245 158 11 / 45%);
   --color-warning-text: #e8c76a;

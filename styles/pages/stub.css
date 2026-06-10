@@ -102,7 +102,7 @@
 .stub-related-link:focus-visible {
   border-color: #b08a3e;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgb(212, 160, 23, 0.1);
+  box-shadow: 0 4px 12px rgb(176 138 62 / 10%);
 }
 
 .stub-related-icon {
