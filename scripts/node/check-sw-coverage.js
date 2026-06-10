@@ -48,6 +48,7 @@ const ALLOW_LIST = {
   'privacy.html': 'Static legal page, low value to cache. Tracked in §22b for follow-up.',
   'terms.html': 'Static legal page, low value to cache. Tracked in §22b for follow-up.',
   'pricing.html': 'Subscription page; SW caching could mask price changes. Intentionally skipped.',
+  'design-lab.html': 'Internal noindex design-system proof page; not a public PWA surface.',
 
   // ────────────────────────────────────────────────────────────────────
   // Pre-existing baseline (before W-14 audit). These entry pages should

@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-09T09:24:12.174Z",
+  "generatedAt": "2026-06-10T14:58:24.705Z",
   "summary": {
     "groups": {
-      "core": 61,
+      "core": 62,
       "countries": 190,
       "cities": 69,
       "markets": 4,
       "content": 50
     },
     "totals": {
-      "htmlPages": 374,
+      "htmlPages": 375,
       "indexablePages": 239,
-      "thinRiskPages": 153,
+      "thinRiskPages": 152,
       "duplicateRiskClusters": 0,
       "missingCanonical": 0,
       "missingHreflang": 0,
@@ -56,10 +56,6 @@
         {
           "path": "compare.html",
           "words": 108
-        },
-        {
-          "path": "content/search/index.html",
-          "words": 94
         },
         {
           "path": "countries/algeria/algiers/gold-rate/index.html",
@@ -1606,8 +1602,8 @@
       "path": "content/markets/index.html",
       "group": "content",
       "noindex": false,
-      "title": "Gold Markets — Live Prices Across 24+ Countries | Gold Ticker Live",
-      "description": "Explore live gold reference prices across GCC, Levant, Africa, and 24+ global markets. Compare karats and currencies with visible freshness labels.",
+      "title": "Gold Markets — Reference Prices Across 24+ Countries | Gold Ticker Live",
+      "description": "Explore spot-linked gold reference prices across GCC, Levant, Africa, and 24+ global markets with visible freshness labels.",
       "canonical": "https://goldtickerlive.com/content/markets/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
@@ -1641,8 +1637,8 @@
       "canonical": "https://goldtickerlive.com/content/search/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 94,
-      "thinRisk": true,
+      "wordCount": 249,
+      "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
       "missingSchema": false
@@ -5803,6 +5799,21 @@
       "missingSchema": false
     },
     {
+      "path": "design-lab.html",
+      "group": "core",
+      "noindex": true,
+      "title": "Bullion Desk — Design Lab · Gold Ticker Live",
+      "description": "Internal design-system proof page for the Bullion Desk redesign. Not a public page.",
+      "canonical": "https://goldtickerlive.com/design-lab.html",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 214,
+      "thinRisk": false,
+      "missingCanonical": false,
+      "missingHreflang": false,
+      "missingSchema": false
+    },
+    {
       "path": "developer.html",
       "group": "core",
       "noindex": false,
@@ -5886,7 +5897,7 @@
       "canonical": "https://goldtickerlive.com/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 1501,
+      "wordCount": 1506,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6246,7 +6257,7 @@
       "canonical": "https://goldtickerlive.com/tracker.html",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 1950,
+      "wordCount": 1956,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,

@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "generatedAtDate": "2026-06-10",
   "summary": {
-    "totalHtmlFiles": 341,
-    "withCanonical": 339,
+    "totalHtmlFiles": 342,
+    "withCanonical": 340,
     "withoutCanonical": 2,
     "withOgImage": 251,
-    "withoutOgImage": 90,
+    "withoutOgImage": 91,
     "withJsonLd": 338,
-    "withoutJsonLd": 3,
+    "withoutJsonLd": 4,
     "hreflangEnArPairs": 338,
-    "noindexCount": 102
+    "noindexCount": 103
   },
   "records": [
     {
@@ -11909,6 +11909,27 @@
         "BreadcrumbList"
       ],
       "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "design-lab.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "Bullion Desk — Design Lab · Gold Ticker Live",
+      "metaDescription": "Internal design-system proof page for the Bullion Desk redesign. Not a public page.",
+      "canonical": "https://goldtickerlive.com/design-lab.html",
+      "robots": "noindex,nofollow",
+      "ogTitle": null,
+      "ogDescription": null,
+      "ogImage": null,
+      "ogUrl": null,
+      "ogType": null,
+      "twitterCard": null,
+      "twitterImage": null,
+      "hreflang": [],
+      "jsonLdTypes": [],
+      "hasStructuredData": false,
       "jsonLdParseFailures": null
     },
     {
