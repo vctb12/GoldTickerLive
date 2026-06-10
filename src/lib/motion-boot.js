@@ -2,6 +2,8 @@
  * Sitewide motion bootstrap — view transitions, scroll-driven reveals, stagger.
  * Call once per page (wired from injectNav).
  */
+import { observeReveal } from './reveal.js';
+
 let booted = false;
 
 const prefersReducedMotion = () =>
@@ -70,4 +72,13 @@ export function initMotionBoot() {
   initScrollDrivenClass();
   initStaggerScan();
   initViewTransitions();
+
+  // Sitewide reveal-on-scroll: animate any [data-reveal] element on every page
+  // (idempotent — already-observed nodes are skipped). Reduced-motion is a no-op
+  // via the reveal CSS, so this is safe to run unconditionally.
+  try {
+    observeReveal();
+  } catch {
+    /* reveal is a progressive enhancement; never block boot */
+  }
 }

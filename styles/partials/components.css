@@ -2464,6 +2464,45 @@ main {
 }
 
 /* ═══════════════════════════════════════════════
+   Content link — animated gold foil underline.
+   Editorial micro-interaction for prose links across guides, legal,
+   methodology, country, and callout bodies. Hover-only (no load cost).
+   ═══════════════════════════════════════════════ */
+.guide-section a:not(.btn, [class*='card']),
+.legal-body a:not(.btn),
+.method-body a:not(.btn),
+.cp-section a:not(.btn, [class*='card'], [class*='link-card']),
+.learn-hub-callout-body a:not(.btn) {
+  color: var(--text-accent);
+  text-decoration: none;
+  background-image: var(--foil-underline);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 2px;
+  padding-bottom: 1px;
+  transition: background-size var(--transition-normal);
+}
+
+.guide-section a:not(.btn, [class*='card']):hover,
+.legal-body a:not(.btn):hover,
+.method-body a:not(.btn):hover,
+.cp-section a:not(.btn, [class*='card'], [class*='link-card']):hover,
+.learn-hub-callout-body a:not(.btn):hover {
+  background-size: 100% 2px;
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-section a:not(.btn, [class*='card']),
+  .legal-body a:not(.btn),
+  .method-body a:not(.btn),
+  .cp-section a:not(.btn, [class*='card'], [class*='link-card']),
+  .learn-hub-callout-body a:not(.btn) {
+    transition: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════
    Badge / pill system
    ═══════════════════════════════════════════════ */
 .badge {
