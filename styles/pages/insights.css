@@ -450,8 +450,8 @@
 }
 
 .insights-hero-sub {
-  font-size: 0.97rem;
-  color: rgb(255 255 255 / 60%);
+  font-size: var(--text-md);
+  color: var(--text-secondary);
   max-width: 520px;
   margin: 0 auto 1.25rem;
   line-height: 1.6;
@@ -469,9 +469,9 @@
 .insights-freshness-chip {
   font-size: var(--text-xs);
   font-weight: var(--weight-semibold);
-  background: rgb(255 255 255 / 7%);
-  border: 1px solid rgb(255 255 255 / 15%);
-  color: rgb(255 255 255 / 70%);
+  background: var(--surface-secondary);
+  border: var(--rule-hairline);
+  color: var(--text-secondary);
   border-radius: var(--radius-pill);
   padding: 0.25rem 0.75rem;
 }
