@@ -4,7 +4,7 @@
 
 /* ── Hero ─────────────────────────────────────────── */
 .calc-hero {
-  background: linear-gradient(155deg, #1a1206 0%, var(--color-gold-deep) 40%, #1a1206 100%);
+  background: var(--gradient-dark);
   padding: var(--space-6) var(--space-5) var(--space-6);
   text-align: center;
   position: relative;
@@ -1149,4 +1149,10 @@
   .calc-hero-breakdown-sep {
     display: none;
   }
+}
+
+/* Hover affordance for inputs/selects (Phase 4 polish) */
+.calc-input:hover:not(:focus, :disabled),
+.calc-select:hover:not(:focus, :disabled) {
+  border-color: var(--border-strong);
 }

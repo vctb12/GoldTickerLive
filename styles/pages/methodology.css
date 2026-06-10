@@ -1,21 +1,33 @@
 /* ─── Methodology Page ─────────────────────────────────────────────────────── */
 
-/* Hero */
+/* Hero — brand dark/gold identity shared with the homepage hero */
 .method-hero {
-  background: linear-gradient(135deg, var(--color-gold-dark, #b8860b) 0%, var(--color-gold) 100%);
+  background: var(--gradient-dark);
   color: var(--color-white);
   padding: var(--space-7) var(--space-5) 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.method-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 25% 85%, rgb(196 153 62 / 9%) 0%, transparent 55%);
+  pointer-events: none;
 }
 
 .method-hero-inner {
   max-width: 760px;
   margin-inline: auto;
+  position: relative;
 }
 
 .method-hero-tag {
   display: inline-block;
-  background: rgb(255 255 255 / 18%);
-  border: 1px solid rgb(255 255 255 / 30%);
+  background: rgb(196 153 62 / 18%);
+  border: 1px solid rgb(196 153 62 / 36%);
+  color: var(--color-gold-light);
   border-radius: var(--radius-pill);
   font-size: var(--text-xs);
   font-weight: var(--weight-semibold);
@@ -235,7 +247,7 @@ code.method-formula {
   background: none;
   padding: 0;
   font-size: 0.92rem;
-  color: var(--color-gold-light, #e8c040);
+  color: var(--color-accent);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
