@@ -13,7 +13,7 @@
   /* Text — near-black ink, neutral grays */
   --color-text: #16181d;
   --color-text-muted: #5c5f66;
-  --color-text-faint: #80838a;
+  --color-text-faint: #6b6e75;
 
   /* Gold palette — single restrained metallic accent */
   --color-gold: #b08a3e;
@@ -270,7 +270,7 @@
   --color-border-subtle: #22242a;
   --color-text: #edeef0;
   --color-text-muted: #a6a8ae;
-  --color-text-faint: #74767d;
+  --color-text-faint: #82858c;
   --color-gold-bg: #181610;
   --color-gold-tint: #15130d;
   --surface-canvas: #0d0e10;
@@ -280,7 +280,7 @@
   --surface-accent: #181610;
   --text-primary: #edeef0;
   --text-secondary: #a6a8ae;
-  --text-tertiary: #74767d;
+  --text-tertiary: #82858c;
   --border-default: #2a2d33;
   --border-subtle: #22242a;
   --border-strong: #383b42;
