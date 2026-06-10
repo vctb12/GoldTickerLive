@@ -61,4 +61,20 @@ are preserved.
 
 ## Status log
 
-- 2026-06-10 — Plan created; P0 design lab + P1 tokens in progress.
+- 2026-06-10 — Plan created.
+- 2026-06-10 — **P0 shipped**: `design-lab.html` proof page; **P1 shipped**: editorial display +
+  numeric type tokens, foil/hairline accents (additive, non-breaking, RTL-safe).
+- 2026-06-10 — **P3 (homepage) shipped**: hero converted from dark-glow banner to light editorial
+  canvas + precision Spot Terminal (tabular-mono price, foil rules, theme-adaptive ink CTA); every
+  white-on-dark rule recolored to ink-on-light; section headings adopt the display face for
+  page-wide coherence. All DOM ids, ARIA, freshness/trust hooks, and i18n bindings preserved.
+- Verified: `npm run lint` (clean), `npm test` (1113 pass / 0 fail), `npm run validate` (green),
+  `npm run build` (green). Screenshots captured at 1440 light/dark + 390 mobile.
+
+## Remaining (next sessions)
+
+- **P2 — Shell** (nav/footer/mobile dock) to the new language — sitewide inheritance.
+- **P4 — Tracker** Spot Terminal + price-motion + mobile command deck (program Phases 6–11).
+- **P5 — Rollout** calculator/compare/shops/countries/learn/insights + state polish + RTL
+  deep-check.
+- Optional: self-hosted brand display face (currently a system-serif stack — zero-cost interim).
