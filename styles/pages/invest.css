@@ -242,7 +242,7 @@ body.invest-page {
   font-size: 1.55rem;
   line-height: 1.1;
   font-weight: var(--weight-extrabold);
-  color: #fff4d2;
+  color: #f7f3e9;
   margin: 0.4rem 0 0.25rem;
   word-break: break-all;
   overflow-wrap: anywhere;
@@ -347,7 +347,7 @@ body.invest-page {
   margin: 0;
   font-size: clamp(1.45rem, 3vw, 2.2rem);
   line-height: 1.15;
-  color: #fff4d2;
+  color: #f7f3e9;
 }
 
 .invest-section-sub {
@@ -417,7 +417,7 @@ body.invest-page {
 .invest-goal-title {
   font-size: 1.12rem;
   font-weight: var(--weight-extrabold);
-  color: #fff4d2;
+  color: #f7f3e9;
   margin-bottom: 0.35rem;
 }
 
@@ -439,7 +439,7 @@ body.invest-page {
 .invest-advice-title {
   font-size: 1.18rem;
   font-weight: var(--weight-extrabold);
-  color: #fff4d2;
+  color: #f7f3e9;
   margin: 0 0 0.55rem;
 }
 
@@ -585,7 +585,7 @@ body.invest-page {
   font-size: clamp(1.25rem, 2vw, 1.7rem);
   line-height: 1.15;
   font-weight: var(--weight-extrabold);
-  color: #fff4d2;
+  color: #f7f3e9;
 }
 
 .invest-result-note {
@@ -652,7 +652,7 @@ body.invest-page {
   min-height: 44px;
   padding: 0.35rem 0.75rem;
   border-radius: var(--invest-radius-pill);
-  background: #fff4d2;
+  background: #f7f3e9;
   color: #7b5904;
   font-size: 0.8rem;
   font-weight: var(--weight-extrabold);
@@ -727,7 +727,7 @@ body.invest-page {
 .invest-guide-title {
   margin: 0;
   font-size: 1.22rem;
-  color: #fff4d2;
+  color: #f7f3e9;
 }
 
 .invest-guide-pill {
@@ -799,7 +799,7 @@ body.invest-page {
 
 .invest-mistake-title {
   margin: 0 0 0.35rem;
-  color: #fff4d2;
+  color: #f7f3e9;
   font-size: 1.04rem;
   font-weight: var(--weight-extrabold);
 }
@@ -832,7 +832,7 @@ body.invest-page {
   gap: 1rem;
   padding: 1rem 1.15rem;
   font-weight: var(--weight-extrabold);
-  color: #fff4d2;
+  color: #f7f3e9;
 }
 
 .invest-faq-item summary::-webkit-details-marker {
@@ -868,7 +868,7 @@ body.invest-page {
 
 .invest-cta-card h2 {
   margin: 0 0 0.65rem;
-  color: #fff4d2;
+  color: #f7f3e9;
   font-size: clamp(1.55rem, 3vw, 2.2rem);
 }
 

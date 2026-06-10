@@ -785,7 +785,7 @@
 }
 
 .footer-copy a:hover {
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold, #b08a3e);
 }
 
 @media (width <= 960px) {
@@ -3610,7 +3610,7 @@ body.has-ticker {
   bottom: 60px;
   left: 50%;
   transform: translateX(-50%);
-  background: #1a1612;
+  background: #16181d;
   color: var(--text-on-dark);
   border: 1px solid rgb(176 138 62 / 40%);
   border-radius: var(--radius-md);

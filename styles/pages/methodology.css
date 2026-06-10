@@ -2,11 +2,7 @@
 
 /* Hero */
 .method-hero {
-  background: linear-gradient(
-    135deg,
-    var(--color-gold-dark, #b8860b) 0%,
-    var(--color-gold, #d4a017) 100%
-  );
+  background: var(--gradient-dark);
   color: var(--color-white);
   padding: var(--space-7) var(--space-5) 2.5rem;
 }
@@ -46,8 +42,8 @@
 
 /* Table of Contents */
 .method-toc {
-  background: var(--color-surface, #1a1814);
-  border-bottom: 1px solid var(--color-border, #2e2b24);
+  background: var(--color-surface, #141518);
+  border-bottom: 1px solid var(--color-border, #22242a);
   position: sticky;
   top: calc(var(--nav-height, 56px) + var(--spot-bar-height, 0px));
   z-index: 100;
@@ -97,8 +93,8 @@
 }
 
 .method-toc-list li a:hover {
-  background: var(--color-border, #2e2b24);
-  color: var(--color-gold, #d4a017);
+  background: var(--color-border, #22242a);
+  color: var(--color-gold, #b08a3e);
 }
 
 /* Body */
@@ -112,7 +108,7 @@
 .method-section {
   margin-bottom: var(--space-7);
   padding-bottom: 2rem;
-  border-bottom: 1px solid var(--color-border, #2e2b24);
+  border-bottom: 1px solid var(--color-border, #22242a);
 }
 
 .method-section:last-child {
@@ -132,14 +128,14 @@
 .method-section h2 {
   font-size: 1.4rem;
   font-weight: var(--weight-bold);
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold, #b08a3e);
   margin: 0 0 var(--space-4);
 }
 
 .method-section h3 {
   font-size: var(--text-base);
   font-weight: var(--weight-semibold);
-  color: var(--color-text, #e8e0cc);
+  color: var(--color-text, #e7e5e0);
   margin: var(--space-5) 0 var(--space-2);
 }
 
@@ -150,13 +146,13 @@
 }
 
 .method-section a {
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold, #b08a3e);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 .method-section code {
-  background: var(--color-border, #2e2b24);
+  background: var(--color-border, #22242a);
   border-radius: var(--radius-xs);
   padding: 0.1em 0.4em;
   font-size: 0.88em;
@@ -179,8 +175,8 @@
 }
 
 .method-source-card {
-  background: var(--color-surface, #1a1814);
-  border: 1px solid var(--color-border, #2e2b24);
+  background: var(--color-surface, #141518);
+  border: 1px solid var(--color-border, #22242a);
   border-radius: var(--radius-lg, 10px);
   padding: 1.1rem;
 }
@@ -188,13 +184,13 @@
 .method-source-card-name {
   font-size: 0.95rem;
   font-weight: var(--weight-bold);
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold, #b08a3e);
   margin-bottom: 0.4rem;
 }
 
 .method-source-card-role {
   font-size: 0.82rem;
-  color: var(--color-text, #e8e0cc);
+  color: var(--color-text, #e7e5e0);
   margin-bottom: 0.3rem;
 }
 
@@ -206,7 +202,7 @@
 
 .method-source-card-link {
   font-size: 0.8rem;
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold, #b08a3e);
   text-decoration: none;
   font-weight: var(--weight-semibold);
 }
@@ -217,9 +213,9 @@
 
 /* Formula block */
 .method-formula-block {
-  background: var(--color-surface, #1a1814);
+  background: var(--color-surface, #141518);
   border: 1px solid var(--color-gold-dim, #4a3c10);
-  border-inline-start: 3px solid var(--color-gold, #d4a017);
+  border-inline-start: 3px solid var(--color-gold, #b08a3e);
   border-radius: var(--radius-md, 8px);
   padding: 1rem 1.25rem;
   margin: 1.25rem 0;
@@ -253,7 +249,7 @@ code.method-formula {
 
 .method-formula-breakdown li {
   padding: 0.45rem 0;
-  border-bottom: 1px solid var(--color-border, #2e2b24);
+  border-bottom: 1px solid var(--color-border, #22242a);
   font-size: 0.88rem;
   color: var(--color-text-muted, #aaa);
   line-height: 1.5;
@@ -268,7 +264,7 @@ code.method-formula {
   overflow-x: auto;
   margin: 1rem 0;
   border-radius: var(--radius-md, 8px);
-  border: 1px solid var(--color-border, #2e2b24);
+  border: 1px solid var(--color-border, #22242a);
 }
 
 .method-karat-table {
@@ -278,7 +274,7 @@ code.method-formula {
 }
 
 .method-karat-table th {
-  background: var(--color-surface, #1a1814);
+  background: var(--color-surface, #141518);
   color: var(--color-text-muted, #888);
   font-size: var(--text-xs);
   font-weight: var(--weight-semibold);
@@ -291,12 +287,12 @@ code.method-formula {
 
 .method-karat-table td {
   padding: 0.6rem 1rem;
-  color: var(--color-text, #e8e0cc);
-  border-top: 1px solid var(--color-border, #2e2b24);
+  color: var(--color-text, #e7e5e0);
+  border-top: 1px solid var(--color-border, #22242a);
 }
 
 .method-karat-table tr:hover td {
-  background: var(--color-surface, #1a1814);
+  background: var(--color-surface, #141518);
 }
 
 /* Warning / callout blocks */
@@ -327,7 +323,7 @@ code.method-formula {
   font-weight: var(--weight-bold);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wider);
-  color: var(--color-text, #e8e0cc);
+  color: var(--color-text, #e7e5e0);
   margin-bottom: var(--space-2);
 }
 
@@ -375,7 +371,7 @@ code.method-formula {
   display: block;
   font-size: 0.92rem;
   font-weight: var(--weight-semibold);
-  color: var(--color-text, #e8e0cc);
+  color: var(--color-text, #e7e5e0);
   margin-bottom: 0.35rem;
 }
 
@@ -390,7 +386,7 @@ code.method-formula {
   flex-direction: column;
   gap: 0;
   margin: 1.25rem 0;
-  border: 1px solid var(--color-border, #2e2b24);
+  border: 1px solid var(--color-border, #22242a);
   border-radius: var(--radius-lg, 10px);
   overflow: hidden;
 }
@@ -400,7 +396,7 @@ code.method-formula {
   align-items: center;
   gap: var(--space-4);
   padding: 0.85rem 1.1rem;
-  border-bottom: 1px solid var(--color-border, #2e2b24);
+  border-bottom: 1px solid var(--color-border, #22242a);
 }
 
 .method-fallback-tier:last-child {
@@ -434,7 +430,7 @@ code.method-formula {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--color-text-muted, #888);
-  background: var(--color-border, #2e2b24);
+  background: var(--color-border, #22242a);
   border-radius: var(--radius-sm, 6px);
   padding: 0.2rem 0.5rem;
   min-width: 3.2rem;
@@ -445,7 +441,7 @@ code.method-formula {
   flex: 1;
   font-size: 0.9rem;
   font-weight: var(--weight-semibold);
-  color: var(--color-text, #e8e0cc);
+  color: var(--color-text, #e7e5e0);
 }
 
 .method-tier-desc {
@@ -473,7 +469,7 @@ code.method-formula {
 }
 
 [dir='rtl'] .method-formula-block {
-  border-inline-start: 3px solid var(--color-gold, #d4a017);
+  border-inline-start: 3px solid var(--color-gold, #b08a3e);
 }
 
 [dir='rtl'] .method-warning {
@@ -494,7 +490,7 @@ code.method-formula {
 
 /* Related tools footer */
 .method-section--tools {
-  border-top: 1px solid var(--color-border, #2e2b24);
+  border-top: 1px solid var(--color-border, #22242a);
   padding-top: 2rem;
   margin-top: var(--space-4);
 }

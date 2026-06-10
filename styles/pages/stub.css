@@ -100,7 +100,7 @@
 
 .stub-related-link:hover,
 .stub-related-link:focus-visible {
-  border-color: #d4a017;
+  border-color: #b08a3e;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgb(212, 160, 23, 0.1);
 }
@@ -114,7 +114,7 @@
   display: inline-block;
   margin-top: 0.5rem;
   padding: 0.7rem 1.4rem;
-  background: #d4a017;
+  background: #b08a3e;
   color: #fff;
   font-weight: 600;
   font-size: 0.95rem;

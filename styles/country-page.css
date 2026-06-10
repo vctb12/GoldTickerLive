@@ -4,7 +4,7 @@
 
 /* ── Hero ──────────────────────────────────────────── */
 .cp-hero {
-  background: linear-gradient(155deg, var(--color-gold-deep) 0%, #2a1a04 50%, #100c04 100%);
+  background: var(--gradient-dark);
   padding: var(--space-7) var(--space-5) var(--space-6);
   position: relative;
   overflow: hidden;

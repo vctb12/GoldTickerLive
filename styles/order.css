@@ -518,7 +518,7 @@
 }
 
 .order-partner-card:hover {
-  border-color: var(--color-gold, #d4a017);
+  border-color: var(--color-gold, #b08a3e);
   box-shadow: 0 2px 8px rgb(176 138 62 / 12%);
 }
 
@@ -543,7 +543,7 @@
 .order-partner-cta {
   font-size: 0.78rem;
   font-weight: 600;
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold, #b08a3e);
   margin-top: auto;
 }
 
@@ -660,7 +660,7 @@
 }
 
 .order-shop-action--web {
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold, #b08a3e);
   border-color: rgb(176 138 62 / 30%);
 }
 
@@ -680,7 +680,7 @@
   display: inline-block;
   font-size: var(--text-sm, 0.875rem);
   font-weight: var(--weight-semibold, 600);
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold, #b08a3e);
   margin-top: var(--space-3, 0.75rem);
 }
 

@@ -4,7 +4,7 @@
 
 /* ── Market Hero ───────────────────────────────────── */
 .mkt-hero {
-  background: linear-gradient(135deg, var(--color-gold-deep) 0%, #2a1a04 60%, #100c04 100%);
+  background: var(--gradient-dark);
   padding: var(--space-7) var(--space-5) 2.5rem;
 }
 

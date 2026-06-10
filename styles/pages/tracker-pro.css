@@ -408,7 +408,7 @@ body.tracker-pro-page {
 .tracker-badge-xauusd {
   border-color: rgb(196 154 68 / 35%);
   background: rgb(196 154 68 / 12%);
-  color: #e8c464;
+  color: #c9a14d;
   font-weight: var(--weight-extrabold);
 }
 
@@ -468,7 +468,7 @@ body.tracker-pro-page {
 }
 
 .tracker-hero-description .tracker-inline-link {
-  color: #e8c464;
+  color: #c9a14d;
 }
 
 /* ── Hero stats grid ──────────────────────────────────────────────────────── */
@@ -648,7 +648,7 @@ body.tracker-pro-page {
 
 .tracker-hero-wrap .btn.btn-outline:hover {
   border-color: rgb(196 154 68 / 60%);
-  color: #e8c464;
+  color: #c9a14d;
 }
 
 .tracker-hero-wrap .btn.btn-ghost {
@@ -689,7 +689,7 @@ body.tracker-pro-page {
 }
 
 .tracker-hint-text .tracker-inline-link:hover {
-  color: #e8c464;
+  color: #c9a14d;
 }
 
 .tracker-hint-keyboard {

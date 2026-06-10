@@ -102,7 +102,7 @@
 }
 
 .learn-hub-article-header {
-  background: linear-gradient(135deg, #0f0d07 0%, var(--color-gold-deep) 50%, #0f0d07 100%);
+  background: var(--gradient-dark);
   border: 1px solid rgb(255 255 255 / 8%);
   border-radius: var(--radius-lg);
   padding: clamp(1.2rem, 2.5vw, 1.8rem);

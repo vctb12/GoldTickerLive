@@ -1448,7 +1448,7 @@ body > * {
    the tri-state theme toggle controls it. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --color-warning: #d4a017;
+    --color-warning: #b08a3e;
     --color-warning-bg: rgb(176 138 62 / 15%);
     --color-warning-border: rgb(176 138 62 / 45%);
     --color-warning-text: #e8c76a;
@@ -1456,7 +1456,7 @@ body > * {
 }
 
 :root[data-theme='dark'] {
-  --color-warning: #d4a017;
+  --color-warning: #b08a3e;
   --color-warning-bg: rgb(176 138 62 / 15%);
   --color-warning-border: rgb(176 138 62 / 45%);
   --color-warning-text: #e8c76a;
@@ -3138,7 +3138,7 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 }
 
 .ph-disclaimer-link {
-  color: var(--color-gold, #d4a017);
+  color: var(--color-gold, #b08a3e);
   font-weight: 600;
 }
 
