@@ -1056,9 +1056,10 @@
 }
 
 .home-section-title {
+  font-family: var(--font-display);
   font-size: var(--text-3xl, 1.875rem);
-  font-weight: var(--weight-extrabold);
-  color: var(--color-gold-deep);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
   letter-spacing: var(--tracking-tight, -0.025em);
   line-height: var(--leading-tight, 1.2);
 }
