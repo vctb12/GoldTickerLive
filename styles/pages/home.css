@@ -307,14 +307,15 @@
    ══════════════════════════════════════════════════════════════ */
 .hero-live-card {
   background: rgb(255 255 255 / 6%);
-  border: 1px solid rgb(255 255 255 / 10%);
+  border: 1px solid rgb(196 153 62 / 28%);
   border-radius: var(--radius-card);
   padding: var(--space-6) var(--space-5);
   backdrop-filter: blur(24px) saturate(1.4);
   box-shadow:
     0 1px 0 rgb(255 255 255 / 6%) inset,
     var(--elev-5),
-    0 6px 20px rgb(196 153 62 / 12%);
+    0 0 0 1px rgb(196 153 62 / 8%),
+    0 8px 32px rgb(196 153 62 / 18%);
   position: relative;
   overflow: hidden;
 }
@@ -364,21 +365,26 @@
 }
 
 .hlc-direction {
-  font-size: 1.35rem;
+  font-size: 1.5rem;
   line-height: 1;
-  margin-top: 0.45rem;
+  margin-top: 0.4rem;
   flex-shrink: 0;
+  padding: 0.1rem 0.35rem;
+  border-radius: var(--radius-sm);
   transition:
     color var(--transition-slow),
+    background var(--transition-slow),
     transform var(--transition-normal);
 }
 
 .hlc-direction--up {
   color: #5dd887;
+  background: rgb(93 216 135 / 12%);
 }
 
 .hlc-direction--down {
   color: #f87171;
+  background: rgb(248 113 113 / 12%);
 }
 
 .hlc-price {
@@ -935,9 +941,16 @@
 }
 
 .trust-icon {
-  font-size: var(--text-base);
+  display: inline-grid;
+  place-items: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  font-size: 0.85rem;
   line-height: 1;
   flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  background: var(--color-gold-tint);
+  border: 1px solid rgb(196 153 62 / 22%);
 }
 
 .trust-content {
@@ -969,8 +982,9 @@
 }
 
 .trust-banner-box {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: var(--surface-accent);
+  border: 1px solid rgb(196 153 62 / 24%);
+  border-inline-start: 3px solid var(--color-gold);
   border-radius: var(--radius-md);
   padding: 1.2rem 1.4rem;
   display: flex;
@@ -978,6 +992,7 @@
   gap: 1rem;
   max-width: 760px;
   margin: 0 auto;
+  box-shadow: var(--elev-1);
 }
 
 .trust-banner-icon {
@@ -1234,7 +1249,7 @@
 }
 
 .gcc-price {
-  font-size: var(--text-2xl);
+  font-size: clamp(var(--text-2xl), 2.4vw, var(--text-3xl));
   font-weight: var(--weight-extrabold);
   color: var(--color-gold-deep);
   font-variant-numeric: tabular-nums;
@@ -2275,6 +2290,13 @@
 .karat-strip-item:hover .kstrip-copy-btn,
 .karat-strip-item:focus-within .kstrip-copy-btn {
   opacity: 1;
+}
+
+/* Touch devices have no hover — keep the copy affordance discoverable */
+@media (pointer: coarse) {
+  .kstrip-copy-btn {
+    opacity: 0.55;
+  }
 }
 
 .kstrip-copy-btn:hover {
