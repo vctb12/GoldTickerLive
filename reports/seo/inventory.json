@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtDate": "2026-06-09",
+  "generatedAtDate": "2026-06-10",
   "summary": {
     "totalHtmlFiles": 341,
     "withCanonical": 339,
@@ -475,7 +475,8 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "FAQPage"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -1671,12 +1672,12 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Markets — Live Prices Across 24+ Countries | Gold Ticker Live",
-      "metaDescription": "Explore live gold reference prices across GCC, Levant, Africa, and 24+ global markets. Compare karats and currencies with visible freshness labels.",
+      "title": "Gold Markets — Reference Prices Across 24+ Countries | Gold Ticker Live",
+      "metaDescription": "Explore spot-linked gold reference prices across GCC, Levant, Africa, and 24+ global markets with visible freshness labels.",
       "canonical": "https://goldtickerlive.com/content/markets/",
       "robots": null,
-      "ogTitle": "Gold Markets — Live Prices Across 24+ Countries | Gold Ticker Live",
-      "ogDescription": "Explore live gold reference prices across GCC, Levant, Africa, and 24+ global markets.",
+      "ogTitle": "Gold Markets — Reference Prices Across 24+ Countries | Gold Ticker Live",
+      "ogDescription": "Explore spot-linked gold reference prices across GCC, Levant, Africa, and 24+ global markets.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/markets/",
       "ogType": "website",

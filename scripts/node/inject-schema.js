@@ -128,7 +128,7 @@ function getProductSchema(options) {
  * @param {Object} options
  */
 function getArticleSchema(options) {
-  const { headline, description, datePublished, dateModified, url } = options;
+  const { headline, description, datePublished, dateModified, url, inLanguage = 'en' } = options;
 
   return {
     '@context': 'https://schema.org',
@@ -150,7 +150,7 @@ function getArticleSchema(options) {
         url: `${SITE_URL}/assets/logo.png`,
       },
     },
-    inLanguage: 'en',
+    inLanguage,
   };
 }
 
@@ -171,6 +171,29 @@ function getFAQPageSchema(questions) {
       },
     })),
   };
+}
+
+function extractContentPanelFaq(content) {
+  const panelRegex =
+    /<section class="content-panel"[\s\S]*?<h2>([\s\S]*?)<\/h2>[\s\S]*?<p>([\s\S]*?)<\/p>[\s\S]*?<\/section>/gi;
+  const faqItems = [];
+  let match = panelRegex.exec(content);
+
+  while (match) {
+    faqItems.push({
+      q: match[1]
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim(),
+      a: match[2]
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim(),
+    });
+    match = panelRegex.exec(content);
+  }
+
+  return faqItems;
 }
 
 /**
@@ -314,6 +337,8 @@ function generateSchemasForPage(filePath, content) {
   // BreadcrumbList item URLs with the page's own canonical declaration.
   const canonicalMatch = content.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i);
   const canonicalUrl = canonicalMatch ? canonicalMatch[1] : null;
+  const langMatch = content.match(/<html[^>]*lang=["']([^"']+)["']/i);
+  const pageLanguage = langMatch ? langMatch[1].split('-')[0] : 'en';
 
   // Homepage gets Organization + WebSite schemas
   if (pageType === 'homepage') {
@@ -395,11 +420,19 @@ function generateSchemasForPage(filePath, content) {
       getArticleSchema({
         headline: pageTitle,
         description: pageDescription,
-        url: `${SITE_URL}${urlPath}`,
+        url: canonicalUrl || `${SITE_URL}${urlPath}`,
         datePublished: dateModified,
         dateModified,
+        inLanguage: pageLanguage,
       })
     );
+
+    if (relativePath === 'content/faq/index.html') {
+      const faqItems = extractContentPanelFaq(content);
+      if (faqItems.length > 0) {
+        schemas.push(getFAQPageSchema(faqItems));
+      }
+    }
   }
 
   return schemas;
