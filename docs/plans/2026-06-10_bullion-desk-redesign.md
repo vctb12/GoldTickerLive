@@ -71,10 +71,25 @@ are preserved.
 - Verified: `npm run lint` (clean), `npm test` (1113 pass / 0 fail), `npm run validate` (green),
   `npm run build` (green). Screenshots captured at 1440 light/dark + 390 mobile.
 
-## Remaining (next sessions)
+## Sitewide propagation (2026-06-10 ambition pass) — shipped
 
-- **P2 — Shell** (nav/footer/mobile dock) to the new language — sitewide inheritance.
-- **P4 — Tracker** Spot Terminal + price-motion + mobile command deck (program Phases 6–11).
-- **P5 — Rollout** calculator/compare/shops/countries/learn/insights + state polish + RTL
-  deep-check.
-- Optional: self-hosted brand display face (currently a system-serif stack — zero-cost interim).
+- **Shell**: base h1/h2/.display serif sitewide (RTL→Cairo); nav wordmark serif + ink CTA; footer
+  foil-rule token + serif brand (kept dark as intentional "ground" anchor).
+- **Heroes → light editorial**: calculator, methodology, markets, insights, legal, order, guide-page
+  (all guides), market-page (all markets), country-page (24+ pages), compare, learn per-article
+  header.
+- **Tracker**: elevated the dark terminal (serif title, mono prices) — kept dark as flagship desk.
+- **Intentional dark surfaces** (terminal frame): spot-bar, bottom marquee, footer, shops gold-vault
+  hero, content-landing feature card.
+- Audit catch + fix: insights hero feature chips rendered faint white-on-light → light pills.
+- Verified per batch: stylelint, vite build, validate, `npm test` (1113 pass/0 fail), screenshots.
+
+## Rolling audit — still weak / next
+
+- **Motion adoption** beyond homepage (reveal choreography, price-tick flash, hover/press on shared
+  cards/buttons) — system exists (`reveal.js`, `motion-advanced.css`) but under-adopted inner pages.
+- **Shops/compare** card + table interaction polish; **empty/loading/error/skeleton** state review.
+- **Mobile drawer + bottom-dock** visual refinement to match the new nav.
+- **Global button system**: two-tier (ink flagship vs gold in-page) — decide whether to unify.
+- Optional: self-hosted brand display face (zero-cost system-serif interim today).
+- Deferred (complex/owner-gated): full tracker Spot-Terminal rebuild (sanctioned Phases 6–11).
