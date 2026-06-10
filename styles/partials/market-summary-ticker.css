@@ -13,7 +13,7 @@
   height: var(--mst-height);
   overflow: hidden;
   background: var(--mst-bg);
-  border-bottom: 1px solid rgb(196 153 62 / 20%);
+  border-bottom: 1px solid rgb(176 138 62 / 20%);
   user-select: none;
 }
 
@@ -161,5 +161,5 @@
 [data-theme='dark'] .market-summary-ticker {
   --mst-bg: linear-gradient(155deg, #1a1208 0%, #0f0a05 100%);
 
-  border-bottom-color: rgb(196 153 62 / 15%);
+  border-bottom-color: rgb(176 138 62 / 15%);
 }

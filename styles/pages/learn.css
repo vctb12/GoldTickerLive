@@ -300,8 +300,8 @@
 
 /* ── Callout box ────────────────────────────────────── */
 .learn-callout {
-  background: rgb(201 168 76 / 8%);
-  border: 1px solid rgb(201 168 76 / 30%);
+  background: rgb(176 138 62 / 8%);
+  border: 1px solid rgb(176 138 62 / 30%);
   border-inline-start: 3px solid var(--color-gold);
   border-radius: var(--radius-sm);
   padding: 1rem 1.2rem;

@@ -16,7 +16,7 @@
 .guide-hero-eyebrow {
   display: inline-block;
   background: var(--color-gold-glow);
-  border: 1px solid rgb(196 153 62 / 40%);
+  border: 1px solid rgb(176 138 62 / 40%);
   color: var(--color-gold-light);
   font-size: 0.7rem;
   font-weight: var(--weight-bold);
@@ -38,7 +38,7 @@
 
 .guide-hero-subtitle {
   font-size: var(--text-base);
-  color: rgb(224 184 74 / 70%);
+  color: rgb(201 161 77 / 70%);
   line-height: 1.65;
   max-width: 620px;
 }

@@ -17,7 +17,7 @@
 
 .country-hero__panel {
   background: linear-gradient(155deg, #0f0903 0%, #221508 48%, #160d05 100%);
-  border: 1px solid rgb(196 153 62 / 18%);
+  border: 1px solid rgb(176 138 62 / 18%);
   border-radius: var(--radius-panel);
   box-shadow: var(--elev-4);
   overflow: hidden;
@@ -30,7 +30,7 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 14% 18%, rgb(224 184 74 / 18%) 0%, transparent 34%),
+    radial-gradient(circle at 14% 18%, rgb(201 161 77 / 18%) 0%, transparent 34%),
     radial-gradient(circle at 88% 24%, rgb(59 130 246 / 12%) 0%, transparent 34%);
   pointer-events: none;
 }
@@ -54,7 +54,7 @@
   font-weight: var(--weight-bold);
   letter-spacing: var(--tracking-caps);
   text-transform: uppercase;
-  color: rgb(240 200 74 / 88%);
+  color: rgb(217 178 94 / 88%);
 }
 
 .country-hero__eyebrow {
@@ -82,7 +82,7 @@
 .country-hero__trust {
   margin: 0;
   padding-inline-start: var(--space-3);
-  border-inline-start: 3px solid rgb(240 200 74 / 72%);
+  border-inline-start: 3px solid rgb(217 178 94 / 72%);
   font-size: var(--text-sm);
   line-height: var(--leading-normal);
   color: rgb(255 255 255 / 88%);
@@ -187,7 +187,7 @@
 
 .country-price-card[data-tone='cached'],
 .country-price-card[data-tone='stale'] {
-  border-color: rgb(212 160 23 / 36%);
+  border-color: rgb(176 138 62 / 36%);
 }
 
 .country-price-card__label {
@@ -237,7 +237,7 @@
 .country-action-card:hover,
 .country-action-card:focus-visible {
   transform: translateY(-2px);
-  border-color: rgb(240 200 74 / 45%);
+  border-color: rgb(217 178 94 / 45%);
   background: rgb(255 255 255 / 10%);
   text-decoration: none;
 }
@@ -538,7 +538,9 @@
   color: var(--text-secondary);
   font-size: var(--text-sm);
   line-height: var(--leading-relaxed);
-  transition: grid-template-rows var(--transition-normal), padding var(--transition-normal);
+  transition:
+    grid-template-rows var(--transition-normal),
+    padding var(--transition-normal);
 }
 
 .country-faq-item[open] .country-faq-item__answer {
@@ -649,7 +651,7 @@
 
 [dir='rtl'] .country-hero__trust {
   border-inline-start: 0;
-  border-inline-end: 3px solid rgb(240 200 74 / 72%);
+  border-inline-end: 3px solid rgb(217 178 94 / 72%);
   padding-inline-start: 0;
   padding-inline-end: var(--space-3);
 }

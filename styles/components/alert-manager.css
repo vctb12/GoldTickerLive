@@ -263,7 +263,7 @@
 
 .alert-mgr-input:focus {
   border-color: var(--color-gold, #b08a3e);
-  outline: 2px solid var(--color-gold-glow, rgb(196 153 62 / 15%));
+  outline: 2px solid var(--color-gold-glow, rgb(176 138 62 / 15%));
   outline-offset: 0;
 }
 

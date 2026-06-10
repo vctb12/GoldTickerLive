@@ -48,8 +48,8 @@
      unavailable)" banners, and delayed-quote labels. Amber, not red, so the
      user isn't misled into thinking the page is broken. */
   --color-warning: #a0671c;
-  --color-warning-bg: rgb(212 160 23 / 10%);
-  --color-warning-border: rgb(212 160 23 / 35%);
+  --color-warning-bg: rgb(176 138 62 / 10%);
+  --color-warning-border: rgb(176 138 62 / 35%);
   --color-warning-text: #7a4f15;
 
   /* Semantic surfaces (canonical) */
