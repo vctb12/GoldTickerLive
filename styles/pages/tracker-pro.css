@@ -3100,7 +3100,7 @@ td.tracker-chg-down {
 
   body,
   .tracker-pro-page {
-    background: #fff;
+    background: var(--color-white);
   }
 
   .tracker-hero-wrap {

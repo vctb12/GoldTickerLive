@@ -383,7 +383,7 @@
 
 /* ── Result ────────────────────────────────────────── */
 .calc-result {
-  background: linear-gradient(135deg, var(--color-gold-bg, #faf7f0) 0%, #faf7f0 100%);
+  background: linear-gradient(135deg, var(--color-gold-bg) 0%, #faf7f0 100%);
   border: 1px solid var(--color-gold);
   border-radius: var(--radius-md);
   padding: 1.25rem;
@@ -727,13 +727,13 @@
 .calc-live-badge--aed {
   background: rgb(176 138 62 / 14%);
   border-color: rgb(176 138 62 / 32%);
-  color: var(--color-gold-dark, #7d6022);
+  color: var(--color-gold-dark);
   font-weight: 700;
 }
 
 /* ── Related tools strip ─────────────────────────────── */
 .calc-related {
-  border-top: 1px solid var(--color-border, #e7e5e0);
+  border-top: 1px solid var(--color-border);
   padding: 2rem 1.5rem;
 }
 
@@ -751,7 +751,7 @@
   gap: 0.85rem;
   padding: 1rem 1.1rem;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border, #e7e5e0);
+  border: 1px solid var(--color-border);
   background: var(--surface-primary);
   text-decoration: none;
   color: inherit;
@@ -762,7 +762,7 @@
 }
 
 .calc-related-card:hover {
-  border-color: var(--color-gold, #b08a3e);
+  border-color: var(--color-gold);
   box-shadow: 0 4px 16px rgb(176 138 62 / 12%);
   transform: translateY(-2px);
 }
@@ -814,7 +814,7 @@
 
 .calc-preset-chip {
   background: var(--surface-secondary);
-  border: 1.25px solid var(--color-border, #e7e5e0);
+  border: 1.25px solid var(--color-border);
   border-radius: var(--radius-pill, 999px);
   padding: 0.28rem 0.75rem;
   font-size: 0.8rem;
@@ -832,9 +832,9 @@
 }
 
 .calc-preset-chip:hover {
-  background: var(--color-gold-tint, #f7f3e9);
-  border-color: var(--color-gold, #b08a3e);
-  color: var(--color-gold-dark, #7d6022);
+  background: var(--color-gold-tint);
+  border-color: var(--color-gold);
+  color: var(--color-gold-dark);
 }
 
 .calc-preset-chip:active {
@@ -842,9 +842,9 @@
 }
 
 .calc-preset-chip.is-active {
-  background: var(--color-gold-bg, #faf7f0);
-  border-color: var(--color-gold, #b08a3e);
-  color: var(--color-gold-deep, #59431a);
+  background: var(--color-gold-bg);
+  border-color: var(--color-gold);
+  color: var(--color-gold-deep);
   font-weight: 700;
 }
 
@@ -896,7 +896,7 @@
 /* ── Enhanced calc result cards ── */
 .calc-result {
   margin-top: 1.25rem;
-  border-top: 1.5px solid var(--color-border, #e7e5e0);
+  border-top: 1.5px solid var(--color-border);
   padding-top: 1.25rem;
 }
 
@@ -920,7 +920,7 @@
 .calc-result-value {
   font-size: clamp(1.6rem, 4vw, 2.2rem);
   font-weight: 800;
-  color: var(--color-gold-deep, #59431a);
+  color: var(--color-gold-deep);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -932,7 +932,7 @@
   gap: 0.3rem;
   padding: 0.45rem 1rem;
   background: transparent;
-  border: 1.5px solid var(--color-border, #e7e5e0);
+  border: 1.5px solid var(--color-border);
   border-radius: var(--radius-pill, 999px);
   font-size: 0.78rem;
   font-weight: 700;
@@ -947,14 +947,14 @@
 }
 
 .calc-copy-btn:hover {
-  border-color: var(--color-gold, #b08a3e);
-  color: var(--color-gold-dark, #7d6022);
-  background: var(--color-gold-tint, #f7f3e9);
+  border-color: var(--color-gold);
+  color: var(--color-gold-dark);
+  background: var(--color-gold-tint);
 }
 
 .calc-copy-btn.copied {
-  border-color: var(--color-live, #1a7a32);
-  color: var(--color-live, #1a7a32);
+  border-color: var(--color-live);
+  color: var(--color-live);
   background: var(--color-live-bg, rgb(26 122 50 / 9%));
 }
 
@@ -965,7 +965,7 @@
   padding: 0.75rem 0.9rem;
   background: var(--surface-secondary);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border-subtle, #efedea);
+  border: 1px solid var(--color-border-subtle);
   font-size: 0.85rem;
 }
 
@@ -973,7 +973,7 @@
   padding: 0.75rem 0.9rem;
   background: var(--surface-secondary);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border-subtle, #efedea);
+  border: 1px solid var(--color-border-subtle);
   font-size: 0.85rem;
 }
 
@@ -994,7 +994,7 @@
   border: 1px solid rgb(26 122 50 / 20%);
   border-radius: var(--radius-sm);
   font-size: 0.82rem;
-  color: var(--color-live, #1a7a32);
+  color: var(--color-live);
   margin-top: 0.5rem;
 }
 
@@ -1004,7 +1004,7 @@
   gap: 0;
   overflow-x: auto;
   scrollbar-width: none;
-  border-bottom: 2px solid var(--color-border, #e7e5e0);
+  border-bottom: 2px solid var(--color-border);
   margin-bottom: 0;
 }
 
@@ -1033,13 +1033,13 @@
 }
 
 .calc-tab:hover {
-  color: var(--color-gold-dark, #7d6022);
-  background: var(--color-gold-tint, #f7f3e9);
+  color: var(--color-gold-dark);
+  background: var(--color-gold-tint);
 }
 
 .calc-tab.active {
-  color: var(--color-gold-deep, #59431a);
-  border-bottom-color: var(--color-gold, #b08a3e);
+  color: var(--color-gold-deep);
+  border-bottom-color: var(--color-gold);
   font-weight: 700;
 }
 
@@ -1149,4 +1149,10 @@
   .calc-hero-breakdown-sep {
     display: none;
   }
+}
+
+/* Hover affordance for inputs/selects (Phase 4 polish) */
+.calc-input:hover:not(:focus, :disabled),
+.calc-select:hover:not(:focus, :disabled) {
+  border-color: var(--border-strong);
 }

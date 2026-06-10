@@ -822,7 +822,7 @@
 
 .insights-article-cta:hover {
   background: var(--color-gold);
-  color: #fff;
+  color: var(--color-white);
 }
 
 /* ── Bottom banner ──────────────────────────────────── */
