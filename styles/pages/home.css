@@ -250,14 +250,12 @@
 }
 
 .hero .btn-primary:hover {
-  background: linear-gradient(135deg, var(--color-gold-light) 0%, #f0d070 100%);
+  background: linear-gradient(135deg, var(--color-gold-light) 0%, var(--color-gold-bright) 100%);
   border-color: var(--color-gold-light);
-  color: #1a0c02;
+  color: #16181d;
   text-decoration: none;
   transform: translateY(-2px);
-  box-shadow:
-    0 6px 24px rgb(176 138 62 / 50%),
-    0 0 0 1px rgb(201 161 77 / 20%);
+  box-shadow: 0 6px 20px rgb(176 138 62 / 28%);
 }
 
 /* Outline light — white-bordered on dark bg (hero only) */
@@ -306,15 +304,14 @@
    HERO LIVE CARD — Glassmorphism
    ══════════════════════════════════════════════════════════════ */
 .hero-live-card {
-  background: rgb(255 255 255 / 6%);
+  background: rgb(255 255 255 / 5%);
   border: 1px solid rgb(255 255 255 / 10%);
   border-radius: var(--radius-card);
   padding: var(--space-6) var(--space-5);
   backdrop-filter: blur(24px) saturate(1.4);
   box-shadow:
     0 1px 0 rgb(255 255 255 / 6%) inset,
-    var(--elev-5),
-    0 6px 20px rgb(176 138 62 / 12%);
+    var(--elev-5);
   position: relative;
   overflow: hidden;
 }
@@ -388,6 +385,13 @@
   font-variant-numeric: tabular-nums;
   line-height: 1;
   letter-spacing: -0.03em;
+  min-block-size: 1em;
+}
+
+/* Reserve the full final price height while the skeleton is showing so the
+   card doesn't shift when the live value lands (CLS guard). */
+.hlc-price .shell-skeleton-price-lg {
+  block-size: 1em;
 }
 
 .hlc-price.price-pulse {
