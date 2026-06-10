@@ -1,7 +1,8 @@
 :root {
-  --tp-bg: #fff;
-  --tp-text: #1f2937;
-  --tp-accent: #c49a44;
+  /* Pre-paint tokens aligned with styles/partials/tokens.css brand values */
+  --tp-bg: #f5f2eb;
+  --tp-text: #1a1612;
+  --tp-accent: #c4993e;
   --tp-font-sans: 'Cairo', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
 }
 
@@ -27,6 +28,22 @@ a {
   display: inline-block;
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
+}
+
+/* Above-fold scaffolding: dark hero paints before global.css to avoid a light
+   flash on pages with a dark hero band (home, calculator, methodology). */
+.hero,
+.calc-hero,
+.method-hero,
+.insights-hero {
+  background: #1e0e03;
+  color: #fff;
+  min-height: 200px;
+}
+
+/* Nav placeholder height so JS-injected nav doesn't shift content */
+.site-nav {
+  min-height: 64px;
 }
 
 .skip-link {
