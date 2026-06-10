@@ -4,7 +4,8 @@
 
 /* ── Hero ─────────────────────────────────────────── */
 .calc-hero {
-  background: var(--gradient-dark);
+  background: var(--gradient-paper);
+  border-block-end: var(--rule-hairline);
   padding: var(--space-6) var(--space-5) var(--space-6);
   text-align: center;
   position: relative;
@@ -14,12 +15,11 @@
 .calc-hero::after {
   content: '';
   position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 50% 80% at 50% 100%,
-    rgb(176 138 62 / 8%) 0%,
-    transparent 60%
-  );
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 2px;
+  background: var(--rule-foil);
+  opacity: 0.6;
   pointer-events: none;
 }
 
@@ -30,18 +30,21 @@
   flex-direction: column;
   align-items: center;
   gap: 0.6rem;
+  position: relative;
 }
 
 .calc-hero-title {
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: var(--weight-extrabold);
-  color: var(--color-gold-light);
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
   margin: 0;
 }
 
 .calc-hero-sub {
-  font-size: 0.95rem;
-  color: rgb(255 255 255 / 55%);
+  font-size: var(--text-md);
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -49,12 +52,12 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgb(255 255 255 / 6%);
-  border: 1px solid rgb(176 138 62 / 30%);
+  background: var(--color-gold-tint);
+  border: 1px solid var(--color-gold-glow);
   border-radius: var(--radius-pill);
   padding: 0.35rem 0.9rem;
   font-size: 0.82rem;
-  color: var(--color-gold-light);
+  color: var(--text-accent);
 }
 
 .calc-addon-slot {

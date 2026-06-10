@@ -12,33 +12,39 @@
 
 /* ── Hero ── */
 .order-hero {
-  background: var(--gradient-dark);
-  color: var(--text-on-dark);
+  background: var(--surface-primary);
+  border: var(--rule-hairline);
+  color: var(--text-primary);
   padding: var(--space-6) var(--space-6);
   border-radius: var(--radius-xl);
   margin-bottom: var(--space-5);
   position: relative;
   overflow: hidden;
+  box-shadow: var(--elev-2);
 }
 
 .order-hero::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 80% 40%, rgb(176 138 62 / 22%) 0%, transparent 60%);
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 2px;
+  background: var(--rule-foil);
   pointer-events: none;
 }
 
 .order-hero-title {
-  font-size: clamp(1.4rem, 3vw, 2rem);
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
   margin: 0 0 var(--space-2);
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .order-hero-sub {
-  color: rgb(255 255 255 / 70%);
-  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-size: var(--text-md);
   margin: 0 0 var(--space-4);
 }
 

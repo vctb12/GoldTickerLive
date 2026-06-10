@@ -4,20 +4,33 @@
 
 /* ── Market Hero ───────────────────────────────────── */
 .mkt-hero {
-  background: var(--gradient-dark);
+  background: var(--gradient-paper);
+  border-block-end: var(--rule-hairline);
   padding: var(--space-7) var(--space-5) 2.5rem;
+  position: relative;
+}
+
+.mkt-hero::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 2px;
+  background: var(--rule-foil);
+  opacity: 0.6;
 }
 
 .mkt-hero-inner {
   max-width: 860px;
   margin-inline: auto;
+  position: relative;
 }
 
 .mkt-hero-badge {
   display: inline-block;
-  background: var(--color-gold-glow);
-  border: 1px solid rgb(176 138 62 / 40%);
-  color: var(--color-gold-light);
+  background: var(--color-gold-tint);
+  border: 1px solid var(--color-gold-glow);
+  color: var(--text-accent);
   font-size: 0.7rem;
   font-weight: var(--weight-bold);
   padding: 0.2rem 0.65rem;
@@ -28,17 +41,18 @@
 }
 
 .mkt-hero-title {
-  font-size: 1.7rem;
+  font-family: var(--font-display);
+  font-size: 1.95rem;
   font-weight: var(--weight-bold);
-  color: var(--color-gold-light);
-  text-shadow: 0 1px 4px rgb(0 0 0 / 50%);
-  line-height: 1.25;
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.2;
   margin-bottom: 0.6rem;
 }
 
 .mkt-hero-subtitle {
-  font-size: 0.95rem;
-  color: rgb(201 161 77 / 70%);
+  font-size: var(--text-md);
+  color: var(--text-secondary);
   line-height: 1.6;
   max-width: 640px;
   margin-bottom: 1.2rem;
@@ -59,7 +73,7 @@
 .mkt-hero-meta-label {
   font-size: 0.68rem;
   font-weight: var(--weight-bold);
-  color: rgb(201 161 77 / 50%);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -67,7 +81,8 @@
 .mkt-hero-meta-value {
   font-size: 0.88rem;
   font-weight: var(--weight-semibold);
-  color: var(--color-gold-light);
+  font-family: var(--font-numeric);
+  color: var(--text-primary);
 }
 
 /* ── Sections ──────────────────────────────────────── */

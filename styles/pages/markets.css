@@ -4,27 +4,43 @@
 
 /* ── Hero ── */
 .markets-hero {
-  background: var(--gradient-dark);
-  color: var(--text-on-dark);
+  background: var(--gradient-paper);
+  border-block-end: var(--rule-hairline);
+  color: var(--text-primary);
   padding: var(--space-8) var(--space-5) var(--space-7);
   text-align: center;
+  position: relative;
+}
+
+.markets-hero::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 2px;
+  background: var(--rule-foil);
+  opacity: 0.6;
 }
 
 .markets-hero-inner {
   max-width: 800px;
   margin: 0 auto;
+  position: relative;
 }
 
 .markets-hero-title {
-  font-size: var(--text-3xl);
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
   margin: var(--space-3) 0 var(--space-2);
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .markets-hero-sub {
-  font-size: var(--text-base);
-  opacity: 0.85;
+  font-size: var(--text-md);
+  color: var(--text-secondary);
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.6;
