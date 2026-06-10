@@ -148,7 +148,7 @@
   position: sticky;
   top: 0;
   z-index: calc(var(--z-nav, 300) + 10);
-  background: #101114;
+  background: var(--gradient-dark);
   color: var(--text-on-dark);
   font-size: var(--text-xs);
   letter-spacing: var(--tracking-wide);
