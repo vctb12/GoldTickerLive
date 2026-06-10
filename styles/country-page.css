@@ -370,7 +370,7 @@
 
 /* Richer hero gradient */
 .cp-hero {
-  background: linear-gradient(155deg, #3d2005 0%, #1e0e03 55%, #0a0602 100%);
+  background: linear-gradient(155deg, #1c1e24 0%, #14161b 55%, #0a0b0d 100%);
   position: relative;
   overflow: hidden;
 }

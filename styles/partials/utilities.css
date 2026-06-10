@@ -1565,8 +1565,12 @@ a.link-accent {
   height: 1px;
   background: currentcolor;
   transform: scaleX(0);
-  transform-origin: inline-start;
+  transform-origin: 0 50%;
   transition: transform var(--transition-fast);
+}
+
+[dir='rtl'] .link-accent::after {
+  transform-origin: 100% 50%;
 }
 
 .link-accent:hover::after,
@@ -1578,7 +1582,7 @@ a.link-accent {
   color: var(--color-gold-deep);
 }
 
-input:not([type='checkbox']):not([type='radio']):not([type='range']),
+input:not([type='checkbox'], [type='radio'], [type='range']),
 select,
 textarea,
 .input-control {
@@ -1587,14 +1591,14 @@ textarea,
     box-shadow var(--transition-fast);
 }
 
-input:not([type='checkbox']):not([type='radio']):not([type='range']):hover:not(:focus):not(:disabled),
-select:hover:not(:focus):not(:disabled),
-textarea:hover:not(:focus):not(:disabled),
-.input-control:hover:not(:focus):not(:disabled) {
+input:not([type='checkbox'], [type='radio'], [type='range']):hover:not(:focus, :disabled),
+select:hover:not(:focus, :disabled),
+textarea:hover:not(:focus, :disabled),
+.input-control:hover:not(:focus, :disabled) {
   border-color: var(--border-strong);
 }
 
-input:not([type='checkbox']):not([type='radio']):not([type='range']):focus,
+input:not([type='checkbox'], [type='radio'], [type='range']):focus,
 select:focus,
 textarea:focus,
 .input-control:focus {

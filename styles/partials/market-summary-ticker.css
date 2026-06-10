@@ -5,7 +5,7 @@
 .market-summary-ticker {
   --mst-height: 40px;
   --mst-bg: var(--gradient-dark);
-  --mst-text: #f0ebe0;
+  --mst-text: #edeef0;
   --mst-speed: 30s;
 
   position: relative;

@@ -383,7 +383,7 @@
 
 /* ── Result ────────────────────────────────────────── */
 .calc-result {
-  background: linear-gradient(135deg, var(--color-gold-bg, #fdf8ee) 0%, #fffbf0 100%);
+  background: linear-gradient(135deg, var(--color-gold-bg, #faf7f0) 0%, #fffbf0 100%);
   border: 1px solid var(--color-gold);
   border-radius: var(--radius-md);
   padding: 1.25rem;
@@ -727,13 +727,13 @@
 .calc-live-badge--aed {
   background: rgb(196 153 62 / 14%);
   border-color: rgb(196 153 62 / 32%);
-  color: var(--color-gold-dark, #8a6420);
+  color: var(--color-gold-dark, #7d6022);
   font-weight: 700;
 }
 
 /* ── Related tools strip ─────────────────────────────── */
 .calc-related {
-  border-top: 1px solid var(--color-border, #e8e2d0);
+  border-top: 1px solid var(--color-border, #e7e5e0);
   padding: 2rem 1.5rem;
 }
 
@@ -751,7 +751,7 @@
   gap: 0.85rem;
   padding: 1rem 1.1rem;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border, #e8e2d0);
+  border: 1px solid var(--color-border, #e7e5e0);
   background: var(--surface-primary);
   text-decoration: none;
   color: inherit;
@@ -762,7 +762,7 @@
 }
 
 .calc-related-card:hover {
-  border-color: var(--color-gold, #c4993e);
+  border-color: var(--color-gold, #b08a3e);
   box-shadow: 0 4px 16px rgb(196 153 62 / 12%);
   transform: translateY(-2px);
 }
@@ -814,7 +814,7 @@
 
 .calc-preset-chip {
   background: var(--surface-secondary);
-  border: 1.25px solid var(--color-border, #e8e2d0);
+  border: 1.25px solid var(--color-border, #e7e5e0);
   border-radius: var(--radius-pill, 999px);
   padding: 0.28rem 0.75rem;
   font-size: 0.8rem;
@@ -832,9 +832,9 @@
 }
 
 .calc-preset-chip:hover {
-  background: var(--color-gold-tint, #faf4e2);
-  border-color: var(--color-gold, #c4993e);
-  color: var(--color-gold-dark, #8a6420);
+  background: var(--color-gold-tint, #f7f3e9);
+  border-color: var(--color-gold, #b08a3e);
+  color: var(--color-gold-dark, #7d6022);
 }
 
 .calc-preset-chip:active {
@@ -842,9 +842,9 @@
 }
 
 .calc-preset-chip.is-active {
-  background: var(--color-gold-bg, #fdf8ee);
-  border-color: var(--color-gold, #c4993e);
-  color: var(--color-gold-deep, #5e4210);
+  background: var(--color-gold-bg, #faf7f0);
+  border-color: var(--color-gold, #b08a3e);
+  color: var(--color-gold-deep, #59431a);
   font-weight: 700;
 }
 
@@ -896,7 +896,7 @@
 /* ── Enhanced calc result cards ── */
 .calc-result {
   margin-top: 1.25rem;
-  border-top: 1.5px solid var(--color-border, #e8e2d0);
+  border-top: 1.5px solid var(--color-border, #e7e5e0);
   padding-top: 1.25rem;
 }
 
@@ -920,7 +920,7 @@
 .calc-result-value {
   font-size: clamp(1.6rem, 4vw, 2.2rem);
   font-weight: 800;
-  color: var(--color-gold-deep, #5e4210);
+  color: var(--color-gold-deep, #59431a);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -932,7 +932,7 @@
   gap: 0.3rem;
   padding: 0.45rem 1rem;
   background: transparent;
-  border: 1.5px solid var(--color-border, #e8e2d0);
+  border: 1.5px solid var(--color-border, #e7e5e0);
   border-radius: var(--radius-pill, 999px);
   font-size: 0.78rem;
   font-weight: 700;
@@ -947,9 +947,9 @@
 }
 
 .calc-copy-btn:hover {
-  border-color: var(--color-gold, #c4993e);
-  color: var(--color-gold-dark, #8a6420);
-  background: var(--color-gold-tint, #faf4e2);
+  border-color: var(--color-gold, #b08a3e);
+  color: var(--color-gold-dark, #7d6022);
+  background: var(--color-gold-tint, #f7f3e9);
 }
 
 .calc-copy-btn.copied {
@@ -965,7 +965,7 @@
   padding: 0.75rem 0.9rem;
   background: var(--surface-secondary);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border-subtle, #ede8da);
+  border: 1px solid var(--color-border-subtle, #efedea);
   font-size: 0.85rem;
 }
 
@@ -973,7 +973,7 @@
   padding: 0.75rem 0.9rem;
   background: var(--surface-secondary);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border-subtle, #ede8da);
+  border: 1px solid var(--color-border-subtle, #efedea);
   font-size: 0.85rem;
 }
 
@@ -1004,7 +1004,7 @@
   gap: 0;
   overflow-x: auto;
   scrollbar-width: none;
-  border-bottom: 2px solid var(--color-border, #e8e2d0);
+  border-bottom: 2px solid var(--color-border, #e7e5e0);
   margin-bottom: 0;
 }
 
@@ -1033,13 +1033,13 @@
 }
 
 .calc-tab:hover {
-  color: var(--color-gold-dark, #8a6420);
-  background: var(--color-gold-tint, #faf4e2);
+  color: var(--color-gold-dark, #7d6022);
+  background: var(--color-gold-tint, #f7f3e9);
 }
 
 .calc-tab.active {
-  color: var(--color-gold-deep, #5e4210);
-  border-bottom-color: var(--color-gold, #c4993e);
+  color: var(--color-gold-deep, #59431a);
+  border-bottom-color: var(--color-gold, #b08a3e);
   font-weight: 700;
 }
 

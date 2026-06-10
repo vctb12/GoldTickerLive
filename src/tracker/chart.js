@@ -33,7 +33,8 @@ function getHistorySourceLabel(rows = []) {
     if (source.includes('freegoldapi')) hasReference = true;
   }
 
-  if (hasSupabase && !hasBaseline && !hasLocal && !hasReference) return tx('historySource.supabase');
+  if (hasSupabase && !hasBaseline && !hasLocal && !hasReference)
+    return tx('historySource.supabase');
   if (hasSupabase && (hasBaseline || hasLocal || hasReference))
     return tx('historySource.mixedSupabase');
   if (hasReference && hasLocal) return tx('historySource.mixedReference');
@@ -207,10 +208,10 @@ export function renderChart() {
     // defs: gradient
     const defs = svgEl('defs', {});
     const grad = svgEl('linearGradient', { id: gradientId, x1: '0', y1: '0', x2: '0', y2: '1' });
-    const stop1 = svgEl('stop', { offset: '0%', 'stop-color': '#c49a44', 'stop-opacity': '0.18' });
+    const stop1 = svgEl('stop', { offset: '0%', 'stop-color': '#b08a3e', 'stop-opacity': '0.18' });
     const stop2 = svgEl('stop', {
       offset: '100%',
-      'stop-color': '#c49a44',
+      'stop-color': '#b08a3e',
       'stop-opacity': '0.01',
     });
     grad.append(stop1, stop2);
@@ -282,7 +283,7 @@ export function renderChart() {
       svgEl('polyline', {
         points: pts,
         fill: 'none',
-        stroke: '#c49a44',
+        stroke: '#b08a3e',
         'stroke-width': '2.5',
         'stroke-linejoin': 'round',
         'stroke-linecap': 'round',

@@ -527,7 +527,7 @@
    Global Footer — 5-column dark premium
    ═══════════════════════════════════════════════ */
 .site-footer-global {
-  background: linear-gradient(180deg, #141008 0%, #0f0c08 40%, #0a0806 100%);
+  background: linear-gradient(180deg, #16171b 0%, #0d0e10 40%, #0a0b0d 100%);
   color: rgb(255 255 255 / 72%);
   margin-top: auto;
   position: relative;
@@ -679,7 +679,7 @@
 }
 
 .footer-newsletter-form input[type='email']:focus {
-  border-color: var(--color-gold, #c4993e);
+  border-color: var(--color-gold, #b08a3e);
   box-shadow: 0 0 0 2px rgb(196 153 62 / 25%);
 }
 
@@ -3263,7 +3263,7 @@ details[open] > .faq-q::after {
 }
 
 .ticker-item:hover {
-  color: var(--color-gold-light, #e0b84a);
+  color: var(--color-gold-light, #c9a14d);
   text-decoration: none;
 }
 
@@ -3352,7 +3352,7 @@ details[open] > .faq-q::after {
 }
 
 .gold-ticker[data-freshness='cached'] .ticker-status-dot {
-  background: #e0b84a;
+  background: #c9a14d;
 }
 
 .gold-ticker[data-freshness='stale'] .ticker-status {

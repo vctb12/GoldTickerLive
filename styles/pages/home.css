@@ -244,7 +244,7 @@
 /* Hero primary: gold background with dark text (for dark hero bg) */
 .hero .btn-primary {
   background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-light) 100%);
-  color: #1e0e03;
+  color: #14161b;
   border-color: var(--color-gold);
   text-shadow: 0 1px 0 rgb(255 255 255 / 15%);
 }
@@ -859,23 +859,11 @@
   }
 
   .karat-strip-prices {
-    mask-image: linear-gradient(
-      to right,
-      transparent,
-      #000 10%,
-      #000 90%,
-      transparent
-    );
+    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
   }
 
   [dir='rtl'] .karat-strip-prices {
-    mask-image: linear-gradient(
-      to left,
-      transparent,
-      #000 10%,
-      #000 90%,
-      transparent
-    );
+    mask-image: linear-gradient(to left, transparent, #000 10%, #000 90%, transparent);
   }
 }
 

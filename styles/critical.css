@@ -1,7 +1,7 @@
 :root {
-  --tp-bg: #fff;
-  --tp-text: #1f2937;
-  --tp-accent: #c49a44;
+  --tp-bg: #fafaf8;
+  --tp-text: #16181d;
+  --tp-accent: #b08a3e;
   --tp-font-sans: 'Cairo', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
 }
 

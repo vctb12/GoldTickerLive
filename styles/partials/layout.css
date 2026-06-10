@@ -148,11 +148,11 @@
   position: sticky;
   top: 0;
   z-index: 310;
-  background: var(--color-gold-deep, #5e4210);
+  background: var(--color-gold-deep, #59431a);
   color: var(--text-on-dark);
   font-size: var(--text-xs);
   letter-spacing: var(--tracking-wide);
-  border-bottom: 1px solid var(--color-gold-dark, #8a6420);
+  border-bottom: 1px solid var(--color-gold-dark, #7d6022);
 }
 
 .spot-bar-inner {
