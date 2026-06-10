@@ -326,6 +326,45 @@
   background: var(--rule-foil);
 }
 
+/* Ambient "alive" ring while the quote is Live. Uses box-shadow (not ::before,
+   which carries the foil rule, and which overflow:hidden would clip) so the
+   breathing aura is actually visible on the light terminal. The directional
+   tick flash from price-motion sets [data-price-flash] for ~320ms. */
+.hero-live-card.spot-terminal--live {
+  animation: hlc-live-breathe var(--motion-spot-ring, 2.4s) var(--ease-in-out) infinite;
+}
+
+@keyframes hlc-live-breathe {
+  0%,
+  100% {
+    box-shadow: var(--elev-4);
+  }
+
+  50% {
+    box-shadow:
+      var(--elev-4),
+      0 0 0 4px var(--color-gold-glow);
+  }
+}
+
+.hero-live-card[data-price-flash='up'] {
+  box-shadow:
+    var(--elev-4),
+    0 0 0 4px var(--color-up-bg);
+}
+
+.hero-live-card[data-price-flash='down'] {
+  box-shadow:
+    var(--elev-4),
+    0 0 0 4px var(--color-down-bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-live-card.spot-terminal--live {
+    animation: none;
+  }
+}
+
 .hlc-header {
   display: flex;
   align-items: center;
