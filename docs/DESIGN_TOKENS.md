@@ -320,6 +320,24 @@ active.
 }
 ```
 
+## Button system (Bullion Desk — intentional two-tier)
+
+The redesign uses a deliberate two-tier primary-action system. Keep it consistent:
+
+| Tier               | Treatment                                                   | Use for                                                                              |
+| ------------------ | ----------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| **Flagship / ink** | `--color-text` bg, `--surface-canvas` text (theme-adaptive) | The single "enter the live product" command — nav "Live Tracker", homepage hero CTA. |
+| **Primary / gold** | `.btn-primary` — solid `--color-gold-dark`                  | The standard in-app / in-page action (tools, forms, alerts). The brand action color. |
+| **Outline**        | `.btn-outline` — gold border, transparent                   | Secondary actions.                                                                   |
+| **Ghost**          | `.btn-ghost` — text only                                    | Tertiary / low-emphasis.                                                             |
+| **Gold foil**      | `--rule-foil`, `--foil-underline`, active underlines        | Accents, rules, active states — never a fill wash.                                   |
+
+Rationale: gold reads as a **foil accent** and ink carries the one flagship command, so the product
+avoids the "gold-everywhere template" look while staying on-brand. Do **not** flip the global
+`.btn-primary` to ink — it appears on dark tracker panels / the shops gold-vault hero where ink
+would fail contrast; those dark surfaces use scoped overrides (`.hero .btn-primary`,
+`.tracker-hero-wrap .btn.btn-primary`).
+
 ## Benefits
 
 1. **Consistency**: All components use the same values
