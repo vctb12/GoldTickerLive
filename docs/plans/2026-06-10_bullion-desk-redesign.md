@@ -84,12 +84,30 @@ are preserved.
 - Audit catch + fix: insights hero feature chips rendered faint white-on-light → light pills.
 - Verified per batch: stylelint, vite build, validate, `npm test` (1113 pass/0 fail), screenshots.
 
-## Rolling audit — still weak / next
+## Motion + decisions pass (2026-06-10/11) — shipped
 
-- **Motion adoption** beyond homepage (reveal choreography, price-tick flash, hover/press on shared
-  cards/buttons) — system exists (`reveal.js`, `motion-advanced.css`) but under-adopted inner pages.
-- **Shops/compare** card + table interaction polish; **empty/loading/error/skeleton** state review.
-- **Mobile drawer + bottom-dock** visual refinement to match the new nav.
-- **Global button system**: two-tier (ink flagship vs gold in-page) — decide whether to unify.
+- **Sitewide reveal**: `observeReveal()` wired into `initMotionBoot` (every page).
+- **Foil underline**: animated gold underline on prose links
+  (guides/legal/methodology/country/callouts).
+- **Live ring (systemic fix)**: replaced the clipped `::before` ring with a clip-safe `outline`
+  breathing ring on `.spot-terminal--live` → now visible on BOTH flagship terminals (home + tracker)
+  - muted directional tint on `[data-price-flash]`. Reduced-motion safe.
+- **Button system DECISION** (documented in `DESIGN_TOKENS.md`): intentional two-tier — ink =
+  flagship "enter the product" command (nav + hero); gold `.btn-primary` = standard in-app action
+  (flattened gradient → solid `--color-gold-dark`); foil = accents. Not flipped to ink (dark tracker
+  panels / shops gold-vault hero need the override-safe gold default).
+- **Shops**: audited (cards already on-system) → bumped card-title hierarchy + tokenized featured
+  hover shadow.
+- Verified: eslint + stylelint clean, vite build, validate, `npm test` (1113 pass/0 fail);
+  light/dark + ring screenshots.
+
+## Rolling audit — still open / next
+
+- **Mobile drawer + bottom-dock**: audited — already strong (gold icon-badges, active border); no
+  rework needed.
+- **Interactive cards**: hover coverage already broad (tool/guide/insights/market/related cards).
+- **Empty/loading/error/skeleton** state review in the new language (not yet swept).
+- **Country live cards**: count-up/price-motion adoption (currently innerHTML re-render; full-bleed
+  band, so no terminal ring — would need a render refactor).
 - Optional: self-hosted brand display face (zero-cost system-serif interim today).
 - Deferred (complex/owner-gated): full tracker Spot-Terminal rebuild (sanctioned Phases 6–11).
