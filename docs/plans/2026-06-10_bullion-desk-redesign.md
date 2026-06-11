@@ -101,6 +101,23 @@ are preserved.
 - Verified: eslint + stylelint clean, vite build, validate, `npm test` (1113 pass/0 fail);
   light/dark + ring screenshots.
 
+## Full page sweep + live count-up (2026-06-11) — shipped
+
+- **Country live count-up**: hero price cards + karat-table per-gram column count up from the
+  previous poll value with a directional flash + pulse (shared `animatePriceCells`, tested
+  `countUp`). No new innerHTML sink; first-render / no-price / reduced-motion no-op. 24+ pages now
+  feel alive.
+- **Pricing rewrite**: the off-brand blue/purple/slate SaaS template → full Bullion Desk re-skin
+  (light editorial hero, gold-bordered Pro tier + foil rule + gold "MOST POPULAR", ink-mono prices,
+  gold/ink CTAs, tokened FAQ + comparison table). Conversion-critical page now on-brand
+  (light+dark).
+- **Token cleanups**: learn info-callout `#3b82f6` → `--color-fixed`; dashboard undefined
+  `--muted-text` slate leak → `--color-text-muted`.
+- **Verified on-brand (no change needed)**: 404, offline, dashboard, account (serif headings + gold
+  buttons already); developer (conventional API method-badge colors — kept); city (token-based).
+- **Intentional dark surfaces** (confirmed deliberate, kept): invest (dark editorial feature), shops
+  gold-vault hero, content-landing card, tracker terminal, spot-bar, bottom marquee.
+
 ## Rolling audit — still open / next
 
 - **Mobile drawer + bottom-dock**: audited — already strong (gold icon-badges, active border); no
