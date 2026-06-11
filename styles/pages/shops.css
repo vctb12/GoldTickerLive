@@ -745,10 +745,7 @@
 .shop-card--featured:hover {
   border-color: rgb(176 138 62 / 55%);
   border-left-color: var(--color-gold);
-  box-shadow:
-    0 8px 24px rgb(0 0 0 / 25%),
-    0 0 0 1px rgb(176 138 62 / 18%),
-    0 4px 12px rgb(176 138 62 / 12%);
+  box-shadow: var(--shadow-card-hover), var(--shadow-gold);
 }
 
 [dir='rtl'] .shop-card--featured {
@@ -814,10 +811,11 @@
 }
 
 .shop-card h3 {
-  font-size: 0.98rem;
+  font-size: var(--text-lg);
   font-weight: var(--weight-bold);
   color: var(--text-primary);
-  line-height: 1.3;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.25;
   margin: 0;
 }
 
