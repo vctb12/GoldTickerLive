@@ -1275,9 +1275,9 @@
   border-radius: var(--radius-xs);
   background: linear-gradient(
     90deg,
-    var(--border-subtle) 25%,
-    rgb(255 255 255 / 60%) 50%,
-    var(--border-subtle) 75%
+    var(--color-surface-2) 25%,
+    var(--color-surface-3) 50%,
+    var(--color-surface-2) 75%
   );
   background-size: 400px 100%;
   animation: skeleton-shimmer 1.4s ease-in-out infinite;
