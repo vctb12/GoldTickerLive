@@ -324,9 +324,9 @@
 }
 
 .learn-callout--info {
-  background: rgb(59 130 246 / 6%);
-  border-color: rgb(59 130 246 / 30%);
-  border-left-color: #3b82f6;
+  background: var(--color-fixed-bg);
+  border-color: var(--color-fixed-border);
+  border-left-color: var(--color-fixed);
 }
 
 .learn-callout strong {
@@ -367,7 +367,7 @@
 }
 
 .learn-callout--info strong {
-  color: #93c5fd;
+  color: var(--color-fixed);
 }
 
 /* ── Karat table ────────────────────────────────────── */
@@ -468,7 +468,7 @@
 }
 
 [dir='rtl'] .learn-callout--info {
-  border-right-color: #3b82f6;
+  border-right-color: var(--color-fixed);
 }
 
 [dir='rtl'] .learn-section ul {
