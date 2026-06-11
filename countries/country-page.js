@@ -28,6 +28,7 @@ import * as api from '../src/lib/api.js';
 import * as cache from '../src/lib/cache.js';
 import { usdPerGram, usdPerOz } from '../src/lib/price-calculator.js';
 import { formatPrice } from '../src/lib/formatter.js';
+import { countUp } from '../src/lib/count-up.js';
 import { injectNav, updateNavLang } from '../src/components/nav.js';
 import { injectFooter } from '../src/components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../src/components/ticker.js';
@@ -204,15 +205,15 @@ function renderHero(cfg) {
       <div class="cp-prices-row">
         <div class="cp-price-card">
           <div class="cp-price-label">${t('karat22')} · ${t('perGram')}</div>
-          <div class="cp-price-value">${priceValueMarkup(gram22, cfg.currency, cfg.decimals)}</div>
+          <div class="cp-price-value" data-cp-key="g22" data-cp-target="${Number.isFinite(gram22) ? gram22 : ''}" data-cp-cur="${cfg.currency}" data-cp-dec="${cfg.decimals}">${priceValueMarkup(gram22, cfg.currency, cfg.decimals)}</div>
         </div>
         <div class="cp-price-card">
           <div class="cp-price-label">${t('karat24')} · ${t('perGram')}</div>
-          <div class="cp-price-value">${priceValueMarkup(gram24, cfg.currency, cfg.decimals)}</div>
+          <div class="cp-price-value" data-cp-key="g24" data-cp-target="${Number.isFinite(gram24) ? gram24 : ''}" data-cp-cur="${cfg.currency}" data-cp-dec="${cfg.decimals}">${priceValueMarkup(gram24, cfg.currency, cfg.decimals)}</div>
         </div>
         <div class="cp-price-card">
           <div class="cp-price-label">${t('karat24')} · ${t('perOz')}</div>
-          <div class="cp-price-value">${priceValueMarkup(oz24usd, 'USD', 2)}</div>
+          <div class="cp-price-value" data-cp-key="oz24" data-cp-target="${Number.isFinite(oz24usd) ? oz24usd : ''}" data-cp-cur="USD" data-cp-dec="2">${priceValueMarkup(oz24usd, 'USD', 2)}</div>
         </div>
       </div>
       ${
@@ -226,6 +227,42 @@ function renderHero(cfg) {
       }
       <div class="cp-update-time">${t('lastUpdate')}: ${STATE.status.goldStale ? 'Cached/Fallback' : 'Live'} · ${STATE.freshness.goldUpdatedAt ? new Date(STATE.freshness.goldUpdatedAt).toLocaleString(STATE.lang === 'ar' ? 'ar-AE' : 'en-AE', { timeZone: cfg.timezone, hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'} · Gold: ${DATA_ATTRIBUTION.gold.label} · FX: ${DATA_ATTRIBUTION.fx.label}</div>
     </div>`;
+
+  animateHeroPrices(heroEl);
+}
+
+// Previous poll's hero price values, keyed by cell. Lets the hero cards count
+// up from the last value to the new one on each refresh (the "alive" cue),
+// instead of snapping after the innerHTML re-render.
+const prevHeroPrices = Object.create(null);
+
+/**
+ * After the hero re-renders, animate each price cell from its previous poll
+ * value to the freshly rendered target with a directional flash. First render
+ * (no previous value) and reduced-motion both no-op gracefully — countUp writes
+ * the final value immediately.
+ */
+function animateHeroPrices(heroEl) {
+  heroEl.querySelectorAll('.cp-price-value[data-cp-target]').forEach((el) => {
+    const key = el.dataset.cpKey;
+    const target = parseFloat(el.dataset.cpTarget);
+    if (!key || !Number.isFinite(target)) return; // skeleton / no price — leave as-is
+    const decimals = parseInt(el.dataset.cpDec, 10) || 2;
+    const currency = el.dataset.cpCur || 'USD';
+    const format = (n) => formatPrice(n, currency, decimals);
+    const from = prevHeroPrices[key];
+    if (Number.isFinite(from) && from !== target) {
+      el.textContent = format(from); // start from the previous value so countUp animates the delta
+      countUp(el, target, {
+        decimals,
+        format,
+        flash: 'auto',
+        pulse: true,
+        pulseTarget: el.closest('.cp-price-card'),
+      });
+    }
+    prevHeroPrices[key] = target;
+  });
 }
 
 // ── Render karat table ───────────────────────────────────────────────────────
