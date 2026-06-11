@@ -228,29 +228,32 @@ function renderHero(cfg) {
       <div class="cp-update-time">${t('lastUpdate')}: ${STATE.status.goldStale ? 'Cached/Fallback' : 'Live'} · ${STATE.freshness.goldUpdatedAt ? new Date(STATE.freshness.goldUpdatedAt).toLocaleString(STATE.lang === 'ar' ? 'ar-AE' : 'en-AE', { timeZone: cfg.timezone, hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'} · Gold: ${DATA_ATTRIBUTION.gold.label} · FX: ${DATA_ATTRIBUTION.fx.label}</div>
     </div>`;
 
-  animateHeroPrices(heroEl);
+  animatePriceCells(heroEl);
 }
 
-// Previous poll's hero price values, keyed by cell. Lets the hero cards count
-// up from the last value to the new one on each refresh (the "alive" cue),
-// instead of snapping after the innerHTML re-render.
-const prevHeroPrices = Object.create(null);
+// Previous poll's price values, keyed by cell (hero cards + karat-table per-gram
+// column). Lets each cell count up from the last value to the new one on every
+// refresh (the "alive" cue) instead of snapping after the innerHTML re-render.
+const prevPriceCells = Object.create(null);
 
 /**
- * After the hero re-renders, animate each price cell from its previous poll
- * value to the freshly rendered target with a directional flash. First render
- * (no previous value) and reduced-motion both no-op gracefully — countUp writes
- * the final value immediately.
+ * After a price region re-renders (hero cards or karat table), animate each
+ * `[data-cp-target]` cell from its previous poll value to the freshly rendered
+ * target with a directional flash + container pulse — the same proven primitive
+ * the home/tracker terminals use. First render (no previous value), no-price
+ * ('—'), and reduced-motion all no-op gracefully (countUp writes the final value
+ * immediately). Keys are globally unique so one prev-value map serves all cells.
  */
-function animateHeroPrices(heroEl) {
-  heroEl.querySelectorAll('.cp-price-value[data-cp-target]').forEach((el) => {
+function animatePriceCells(rootEl) {
+  if (!rootEl) return;
+  rootEl.querySelectorAll('[data-cp-target]').forEach((el) => {
     const key = el.dataset.cpKey;
     const target = parseFloat(el.dataset.cpTarget);
     if (!key || !Number.isFinite(target)) return; // skeleton / no price — leave as-is
     const decimals = parseInt(el.dataset.cpDec, 10) || 2;
     const currency = el.dataset.cpCur || 'USD';
     const format = (n) => formatPrice(n, currency, decimals);
-    const from = prevHeroPrices[key];
+    const from = prevPriceCells[key];
     if (Number.isFinite(from) && from !== target) {
       el.textContent = format(from); // start from the previous value so countUp animates the delta
       countUp(el, target, {
@@ -258,10 +261,10 @@ function animateHeroPrices(heroEl) {
         format,
         flash: 'auto',
         pulse: true,
-        pulseTarget: el.closest('.cp-price-card'),
+        pulseTarget: el.closest('.cp-price-card') || el,
       });
     }
-    prevHeroPrices[key] = target;
+    prevPriceCells[key] = target;
   });
 }
 
@@ -290,7 +293,7 @@ function renderKaratTable(cfg) {
       return `
       <tr>
         <td class="cp-karat-name"><strong>${label}</strong><span class="cp-karat-pct">${pct}%</span></td>
-        <td class="cp-price-cell">${gramLocal ? formatPrice(gramLocal, cfg.currency, cfg.decimals) : '—'}</td>
+        <td class="cp-price-cell" data-cp-key="kg${code}" data-cp-target="${Number.isFinite(gramLocal) ? gramLocal : ''}" data-cp-cur="${cfg.currency}" data-cp-dec="${cfg.decimals}">${gramLocal ? formatPrice(gramLocal, cfg.currency, cfg.decimals) : '—'}</td>
         <td class="cp-price-cell">${ozLocal ? formatPrice(ozLocal, cfg.currency, cfg.decimals) : '—'}</td>
         <td class="cp-price-cell cp-usd-col">${gramUsd ? formatPrice(gramUsd, 'USD', 2) : '—'}</td>
       </tr>`;
@@ -326,6 +329,8 @@ function renderKaratTable(cfg) {
       </table>
     </div>
     <p class="cp-disclaimer">${t('disclaimer')}</p>`;
+
+  animatePriceCells(el);
 }
 
 // ── Market Intelligence Panel + "Should I Buy Today?" indicator ──────────────
