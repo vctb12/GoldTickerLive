@@ -76,6 +76,8 @@ const T = {
     disclaimer:
       'Spot-linked reference estimates only — not final retail jewelry quotes. Retail prices may include making charges, dealer margins, and local taxes.',
     lastUpdate: 'Freshness',
+    freshnessLive: 'Live',
+    freshnessCachedFallback: 'Cached/Fallback',
     gram: 'gram',
     oz: 'troy oz',
     switchLang: 'العربية',
@@ -120,6 +122,8 @@ const T = {
     disclaimer:
       'هذه الأسعار تقديرات مرجعية مرتبطة بالسعر الفوري وليست أسعار تجزئة نهائية للمجوهرات. قد تتضمن أسعار التجزئة رسوم مصنعية وهوامش وضرائب محلية.',
     lastUpdate: 'حداثة البيانات',
+    freshnessLive: 'مباشر',
+    freshnessCachedFallback: 'مخزّن مؤقتًا/احتياطي',
     gram: 'غرام',
     oz: 'أوقية',
     switchLang: 'English',
@@ -225,7 +229,7 @@ function renderHero(cfg) {
       </div>`
           : ''
       }
-      <div class="cp-update-time">${t('lastUpdate')}: ${STATE.status.goldStale ? 'Cached/Fallback' : 'Live'} · ${STATE.freshness.goldUpdatedAt ? new Date(STATE.freshness.goldUpdatedAt).toLocaleString(STATE.lang === 'ar' ? 'ar-AE' : 'en-AE', { timeZone: cfg.timezone, hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'} · Gold: ${DATA_ATTRIBUTION.gold.label} · FX: ${DATA_ATTRIBUTION.fx.label}</div>
+      <div class="cp-update-time">${t('lastUpdate')}: ${STATE.status.goldStale ? t('freshnessCachedFallback') : t('freshnessLive')} · ${STATE.freshness.goldUpdatedAt ? new Date(STATE.freshness.goldUpdatedAt).toLocaleString(STATE.lang === 'ar' ? 'ar-AE' : 'en-AE', { timeZone: cfg.timezone, hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'} · Gold: ${DATA_ATTRIBUTION.gold.label} · FX: ${DATA_ATTRIBUTION.fx.label}</div>
     </div>`;
 
   animatePriceCells(heroEl);
@@ -256,11 +260,14 @@ function animatePriceCells(rootEl) {
     const from = prevPriceCells[key];
     if (Number.isFinite(from) && from !== target) {
       el.textContent = format(from); // start from the previous value so countUp animates the delta
+      // Freshness honesty: suppress the live-style flash/pulse when data is
+      // cached/stale so polled reference prices never read as a live feed.
+      const isStale = Boolean(STATE.status && STATE.status.goldStale);
       countUp(el, target, {
         decimals,
         format,
-        flash: 'auto',
-        pulse: true,
+        flash: isStale ? null : 'auto',
+        pulse: !isStale,
         pulseTarget: el.closest('.cp-price-card') || el,
       });
     }
