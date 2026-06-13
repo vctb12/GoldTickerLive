@@ -29,6 +29,22 @@ a {
   border-radius: 6px;
 }
 
+/* Above-fold scaffolding: dark hero paints before global.css to avoid a light
+   flash on pages with a dark hero band (home, calculator, methodology). */
+.hero,
+.calc-hero,
+.method-hero,
+.insights-hero {
+  background: #14161b;
+  color: #fff;
+  min-height: 200px;
+}
+
+/* Nav placeholder height so JS-injected nav doesn't shift content */
+.site-nav {
+  min-height: 64px;
+}
+
 .skip-link {
   position: absolute;
   left: -10000px;

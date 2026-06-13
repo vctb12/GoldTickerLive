@@ -1,6 +1,6 @@
 /* ─── Methodology Page ─────────────────────────────────────────────────────── */
 
-/* Hero */
+/* Hero — brand dark/gold identity shared with the homepage hero */
 .method-hero {
   background: var(--gradient-paper);
   border-block-end: var(--rule-hairline);
@@ -108,7 +108,7 @@
 
 .method-toc-list li a:hover {
   background: var(--color-border, #22242a);
-  color: var(--color-gold, #b08a3e);
+  color: var(--color-gold);
 }
 
 /* Body */
@@ -142,7 +142,7 @@
 .method-section h2 {
   font-size: 1.4rem;
   font-weight: var(--weight-bold);
-  color: var(--color-gold, #b08a3e);
+  color: var(--color-gold);
   margin: 0 0 var(--space-4);
 }
 
@@ -160,7 +160,7 @@
 }
 
 .method-section a {
-  color: var(--color-gold, #b08a3e);
+  color: var(--color-gold);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -198,7 +198,7 @@
 .method-source-card-name {
   font-size: 0.95rem;
   font-weight: var(--weight-bold);
-  color: var(--color-gold, #b08a3e);
+  color: var(--color-gold);
   margin-bottom: 0.4rem;
 }
 
@@ -216,7 +216,7 @@
 
 .method-source-card-link {
   font-size: 0.8rem;
-  color: var(--color-gold, #b08a3e);
+  color: var(--color-gold);
   text-decoration: none;
   font-weight: var(--weight-semibold);
 }
@@ -229,7 +229,7 @@
 .method-formula-block {
   background: var(--color-surface, #141518);
   border: 1px solid var(--color-gold-dim, #4a3c10);
-  border-inline-start: 3px solid var(--color-gold, #b08a3e);
+  border-inline-start: 3px solid var(--color-gold);
   border-radius: var(--radius-md, 8px);
   padding: 1rem 1.25rem;
   margin: 1.25rem 0;
@@ -249,7 +249,7 @@ code.method-formula {
   background: none;
   padding: 0;
   font-size: 0.92rem;
-  color: var(--color-gold-light, #e8c040);
+  color: var(--color-accent);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -483,7 +483,7 @@ code.method-formula {
 }
 
 [dir='rtl'] .method-formula-block {
-  border-inline-start: 3px solid var(--color-gold, #b08a3e);
+  border-inline-start: 3px solid var(--color-gold);
 }
 
 [dir='rtl'] .method-warning {

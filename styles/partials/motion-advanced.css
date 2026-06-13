@@ -46,7 +46,7 @@
   position: absolute;
   inset: -3px;
   border-radius: 50%;
-  border: 1px solid var(--color-gold, #b08a3e);
+  border: 1px solid var(--color-gold);
   opacity: 0;
   animation: live-sonar-ripple var(--motion-sonar, 1.8s) var(--ease-out) infinite;
   pointer-events: none;

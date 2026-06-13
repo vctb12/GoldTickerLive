@@ -123,8 +123,8 @@
   }
 
   body {
-    background: #fff;
-    color: #000;
+    background: var(--color-white);
+    color: var(--color-black);
     font-size: 12pt;
   }
 
@@ -221,7 +221,7 @@
 }
 .spot-bar[data-freshness='stale'] .spot-bar-ts::before,
 .spot-bar[data-freshness='unavailable'] .spot-bar-ts::before {
-  background: var(--color-danger, #dc2626);
+  background: var(--color-danger);
 }
 .spot-bar[data-freshness='cached'] .spot-bar-ts,
 .spot-bar[data-freshness='stale'] .spot-bar-ts,

@@ -2507,3 +2507,11 @@
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
 }
+
+/* Touch devices: give filter pills a full 44px target (Phase 4 polish) */
+@media (pointer: coarse) {
+  .shops-filter-pill {
+    min-height: 44px;
+    padding-block: 0.55rem;
+  }
+}

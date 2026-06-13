@@ -57,7 +57,7 @@
 
 .order-price-badge {
   background: var(--color-gold);
-  color: #fff;
+  color: var(--color-white);
   font-size: 1.1rem;
   font-weight: 700;
   padding: var(--space-2) var(--space-4);
@@ -133,7 +133,7 @@
 .order-pill.active {
   background: var(--color-gold);
   border-color: var(--color-gold);
-  color: #fff;
+  color: var(--color-white);
   box-shadow: var(--shadow-gold);
 }
 
@@ -348,7 +348,7 @@
 
 .order-btn-primary {
   background: var(--gradient-gold);
-  color: #fff;
+  color: var(--color-white);
   box-shadow: var(--shadow-gold);
 }
 
@@ -359,7 +359,7 @@
 
 .order-btn-whatsapp {
   background: #25d366;
-  color: #fff;
+  color: var(--color-white);
   box-shadow: 0 4px 14px rgb(37 211 102 / 30%);
 }
 
@@ -513,7 +513,7 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 1rem;
-  background: #fff;
+  background: var(--color-white);
   border: 1px solid var(--color-border, #e8e0d0);
   border-radius: var(--radius-md, 8px);
   text-decoration: none;
@@ -524,7 +524,7 @@
 }
 
 .order-partner-card:hover {
-  border-color: var(--color-gold, #b08a3e);
+  border-color: var(--color-gold);
   box-shadow: 0 2px 8px rgb(176 138 62 / 12%);
 }
 
@@ -549,7 +549,7 @@
 .order-partner-cta {
   font-size: 0.78rem;
   font-weight: 600;
-  color: var(--color-gold, #b08a3e);
+  color: var(--color-gold);
   margin-top: auto;
 }
 
@@ -666,7 +666,7 @@
 }
 
 .order-shop-action--web {
-  color: var(--color-gold, #b08a3e);
+  color: var(--color-gold);
   border-color: rgb(176 138 62 / 30%);
 }
 
@@ -686,7 +686,7 @@
   display: inline-block;
   font-size: var(--text-sm, 0.875rem);
   font-weight: var(--weight-semibold, 600);
-  color: var(--color-gold, #b08a3e);
+  color: var(--color-gold);
   margin-top: var(--space-3, 0.75rem);
 }
 

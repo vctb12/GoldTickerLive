@@ -251,7 +251,7 @@
 }
 
 .dev-form-status--error {
-  color: var(--color-error, #dc2626);
+  color: var(--color-error, var(--color-danger));
 }
 
 /* ── Key reveal ──────────────────────────────────────────────────────────── */

@@ -365,12 +365,15 @@
 }
 
 .hlc-direction {
-  font-size: 1.35rem;
+  font-size: 1.5rem;
   line-height: 1;
-  margin-top: 0.45rem;
+  margin-top: 0.4rem;
   flex-shrink: 0;
+  padding: 0.1rem 0.35rem;
+  border-radius: var(--radius-sm);
   transition:
     color var(--transition-slow),
+    background var(--transition-slow),
     transform var(--transition-normal);
 }
 
@@ -544,7 +547,7 @@
 
 .hlc-updated[data-freshness-key='cached'],
 .hlc-updated[data-freshness-key='stale'] {
-  color: var(--color-amber, #f59e0b);
+  color: var(--color-amber);
 }
 
 /* Add a non-color visual cue for cached/stale so color-blind users can distinguish */
@@ -557,7 +560,7 @@
 }
 
 .hlc-updated[data-freshness-key='unavailable'] {
-  color: var(--color-stale, #a84000);
+  color: var(--color-stale);
 }
 
 .hlc-updated[data-freshness-key='unavailable']::before {
@@ -568,7 +571,7 @@
 
 /* amber: 5–30 min — warmer than the default muted color */
 .hlc-updated[data-freshness-age='amber'] {
-  color: var(--color-amber, #f59e0b);
+  color: var(--color-amber);
 }
 
 .hlc-updated[data-freshness-age='amber']::before {
@@ -577,7 +580,7 @@
 
 /* stale: >30 min — escalate to danger red */
 .hlc-updated[data-freshness-age='stale'] {
-  color: var(--color-danger, #dc2626);
+  color: var(--color-danger);
 }
 
 .hlc-updated[data-freshness-age='stale']::before {
@@ -586,7 +589,7 @@
 
 .karat-strip-updated[data-freshness-key='cached'],
 .karat-strip-updated[data-freshness-key='stale'] {
-  color: var(--color-amber, #f59e0b);
+  color: var(--color-amber);
 }
 
 .karat-strip-updated[data-freshness-key='cached']::before {
@@ -598,7 +601,7 @@
 }
 
 .karat-strip-updated[data-freshness-key='unavailable'] {
-  color: var(--color-stale, #a84000);
+  color: var(--color-stale);
 }
 
 .karat-strip-updated[data-freshness-key='unavailable']::before {
@@ -607,7 +610,7 @@
 
 /* Granular age-based color shifts for karat strip */
 .karat-strip-updated[data-freshness-age='amber'] {
-  color: var(--color-amber, #f59e0b);
+  color: var(--color-amber);
 }
 
 .karat-strip-updated[data-freshness-age='amber']::before {
@@ -615,7 +618,7 @@
 }
 
 .karat-strip-updated[data-freshness-age='stale'] {
-  color: var(--color-danger, #dc2626);
+  color: var(--color-danger);
 }
 
 .karat-strip-updated[data-freshness-age='stale']::before {
@@ -801,7 +804,7 @@
   padding: 0.35rem 0.55rem;
   border-radius: var(--radius-sm);
   background: var(--color-gray-900, #1a1a1a);
-  color: #fff;
+  color: var(--color-white);
   font-size: var(--text-2xs);
   font-weight: var(--weight-semibold);
   opacity: 0;
@@ -871,11 +874,23 @@
   }
 
   .karat-strip-prices {
-    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      var(--color-black) 10%,
+      var(--color-black) 90%,
+      transparent
+    );
   }
 
   [dir='rtl'] .karat-strip-prices {
-    mask-image: linear-gradient(to left, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(
+      to left,
+      transparent,
+      var(--color-black) 10%,
+      var(--color-black) 90%,
+      transparent
+    );
   }
 }
 
@@ -935,9 +950,16 @@
 }
 
 .trust-icon {
-  font-size: var(--text-base);
+  display: inline-grid;
+  place-items: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  font-size: 0.85rem;
   line-height: 1;
   flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  background: var(--color-gold-tint);
+  border: 1px solid rgb(176 138 62 / 22%);
 }
 
 .trust-content {
@@ -969,8 +991,9 @@
 }
 
 .trust-banner-box {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: var(--surface-accent);
+  border: 1px solid rgb(176 138 62 / 24%);
+  border-inline-start: 3px solid var(--color-gold);
   border-radius: var(--radius-md);
   padding: 1.2rem 1.4rem;
   display: flex;
@@ -978,6 +1001,7 @@
   gap: 1rem;
   max-width: 760px;
   margin: 0 auto;
+  box-shadow: var(--elev-1);
 }
 
 .trust-banner-icon {
@@ -1235,7 +1259,7 @@
 }
 
 .gcc-price {
-  font-size: var(--text-2xl);
+  font-size: clamp(var(--text-2xl), 2.4vw, var(--text-3xl));
   font-weight: var(--weight-extrabold);
   color: var(--color-gold-deep);
   font-variant-numeric: tabular-nums;
@@ -2276,6 +2300,13 @@
 .karat-strip-item:hover .kstrip-copy-btn,
 .karat-strip-item:focus-within .kstrip-copy-btn {
   opacity: 1;
+}
+
+/* Touch devices have no hover — keep the copy affordance discoverable */
+@media (pointer: coarse) {
+  .kstrip-copy-btn {
+    opacity: 0.55;
+  }
 }
 
 .kstrip-copy-btn:hover {
