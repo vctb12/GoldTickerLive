@@ -11,7 +11,10 @@ async function loadEngine() {
   return import(url.href + `?v=${Date.now()}`);
 }
 
-test('cache boot starts as cached and only becomes live after revalidation', async () => {
+test('cache boot starts as cached and only becomes live after revalidation', async (t) => {
+  // Pin the clock to a weekday during market hours so freshness reflects the
+  // cache/live transition under test rather than a weekend "closed" downgrade.
+  t.mock.timers.enable({ apis: ['Date'], now: new Date('2026-06-10T14:00:00Z').getTime() });
   const { createRealtimePricingEngine } = await loadEngine();
   let revalidated = false;
   const primaryProvider = {

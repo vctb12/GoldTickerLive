@@ -11,7 +11,10 @@ async function loadEngine() {
   return import(url.href + `?v=${Date.now()}`);
 }
 
-test('provider failover switches to secondary when primary keeps failing', async () => {
+test('provider failover switches to secondary when primary keeps failing', async (t) => {
+  // Pin the clock to a weekday during market hours so freshness reflects the
+  // fallback state under test rather than a weekend "closed" downgrade.
+  t.mock.timers.enable({ apis: ['Date'], now: new Date('2026-06-10T14:00:00Z').getTime() });
   const { createRealtimePricingEngine } = await loadEngine();
   const primaryProvider = {
     providerId: 'primary-provider',
