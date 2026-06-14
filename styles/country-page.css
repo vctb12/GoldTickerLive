@@ -4,7 +4,8 @@
 
 /* ── Hero ──────────────────────────────────────────── */
 .cp-hero {
-  background: var(--gradient-dark);
+  background: var(--gradient-paper);
+  border-block-end: var(--rule-hairline);
   padding: var(--space-7) var(--space-5) var(--space-6);
   position: relative;
   overflow: hidden;
@@ -13,8 +14,11 @@
 .cp-hero::after {
   content: '';
   position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 60% 70% at 80% 30%, rgb(176 138 62 / 8%) 0%, transparent 60%);
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 2px;
+  background: var(--rule-foil);
+  opacity: 0.6;
   pointer-events: none;
 }
 
@@ -49,8 +53,7 @@
 .cp-hero-title {
   font-size: 1.15rem;
   font-weight: var(--weight-bold);
-  color: var(--color-gold-light);
-  text-shadow: 0 1px 4px rgb(0 0 0 / 50%);
+  color: var(--text-primary);
 }
 
 .cp-hero-badges {
@@ -60,9 +63,9 @@
 }
 
 .cp-stale-badge {
-  background: rgb(245 158 11 / 20%);
-  border: 1px solid var(--color-gold);
-  color: var(--color-gold-light);
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  color: var(--color-warning-text);
   font-size: 0.7rem;
   font-weight: var(--weight-bold);
   padding: 0.15rem var(--space-2);
@@ -72,9 +75,9 @@
 }
 
 .cp-peg-badge {
-  background: rgb(59 130 246 / 20%);
-  border: 1px solid #3b82f6;
-  color: #93c5fd;
+  background: var(--color-fixed-bg);
+  border: 1px solid var(--color-fixed-border);
+  color: var(--color-fixed);
   font-size: 0.7rem;
   font-weight: var(--weight-bold);
   padding: 0.15rem var(--space-2);
@@ -91,9 +94,9 @@
 }
 
 .cp-price-card {
-  background: rgb(255 255 255 / 6%);
-  border: 1px solid rgb(176 138 62 / 25%);
-  border-radius: var(--radius-control);
+  background: var(--surface-secondary);
+  border: var(--rule-hairline);
+  border-radius: var(--radius-card);
   padding: var(--space-4) var(--space-5);
   display: flex;
   flex-direction: column;
@@ -106,7 +109,7 @@
 
 .cp-price-card:hover {
   transform: translateY(-2px);
-  border-color: rgb(176 138 62 / 40%);
+  border-color: var(--color-gold);
   box-shadow: var(--shadow-gold);
 }
 
@@ -118,14 +121,14 @@
   border-radius: var(--radius-pill);
   font-size: var(--text-2xs);
   font-weight: var(--weight-semibold);
-  background: var(--color-gold-glow);
-  color: var(--color-gold-light);
+  background: var(--color-gold-tint);
+  color: var(--text-accent);
 }
 
 .cp-price-label {
   font-size: 0.72rem;
   font-weight: var(--weight-bold);
-  color: var(--color-gold-muted);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wider);
 }
@@ -133,7 +136,8 @@
 .cp-price-value {
   font-size: clamp(1.25rem, 3vw, 1.75rem);
   font-weight: var(--weight-bold);
-  color: var(--color-gold-light);
+  font-family: var(--font-numeric);
+  color: var(--text-primary);
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
 }
@@ -147,12 +151,12 @@
 
 .cp-change-label {
   font-size: 0.78rem;
-  color: rgb(255 255 255 / 50%);
+  color: var(--text-secondary);
 }
 
 .cp-update-time {
   font-size: 0.72rem;
-  color: rgb(255 255 255 / 35%);
+  color: var(--text-tertiary);
 }
 
 @media (width <= 640px) {
@@ -368,9 +372,10 @@
    Country Page Premium Upgrades
    ═══════════════════════════════════════════════ */
 
-/* Richer hero gradient */
+/* Light editorial hero (overrides the legacy dark gradient above) */
 .cp-hero {
-  background: linear-gradient(155deg, #1c1e24 0%, #14161b 55%, #0a0b0d 100%);
+  background: var(--gradient-paper);
+  border-block-end: var(--rule-hairline);
   position: relative;
   overflow: hidden;
 }
@@ -378,8 +383,11 @@
 .cp-hero::after {
   content: '';
   position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 50% 60% at 80% 50%, rgb(176 138 62 / 8%) 0%, transparent 70%);
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 2px;
+  background: var(--rule-foil);
+  opacity: 0.6;
   pointer-events: none;
 }
 
@@ -395,16 +403,25 @@
   display: flex;
   flex-direction: column;
   padding: var(--space-3) 1.1rem;
-  background: rgb(255 255 255 / 7%);
-  border: 1px solid rgb(255 255 255 / 12%);
+  background: var(--surface-secondary);
+  border: var(--rule-hairline);
   border-radius: var(--radius-md);
-  backdrop-filter: blur(6px);
   min-width: 110px;
+  transition:
+    transform var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.cp-price-chip:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold);
 }
 
 .cp-price-chip-label {
   font-size: 0.72rem;
-  color: rgb(255 255 255 / 50%);
+  color: var(--text-secondary);
   font-weight: var(--weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -412,9 +429,10 @@
 }
 
 .cp-price-chip-value {
-  font-size: 1.15rem;
-  font-weight: var(--weight-extrabold);
-  color: var(--text-on-dark);
+  font-size: 1.2rem;
+  font-weight: var(--weight-bold);
+  font-family: var(--font-numeric);
+  color: var(--text-primary);
   font-variant-numeric: tabular-nums;
 }
 

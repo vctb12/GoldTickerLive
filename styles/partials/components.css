@@ -64,9 +64,10 @@
   gap: var(--space-2);
   text-decoration: none;
   color: var(--text-primary);
-  font-weight: var(--weight-extrabold);
-  font-size: 1.1rem;
-  letter-spacing: -0.01em;
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: 1.2rem;
+  letter-spacing: var(--tracking-tight);
   flex-shrink: 0;
   transition: opacity 0.18s ease;
 }
@@ -135,11 +136,12 @@
 .nav-cta {
   display: inline-flex;
   align-items: center;
+  gap: 0.4rem;
   padding: 0.38rem var(--space-4);
-  border: 1px solid var(--color-gold-dark);
+  border: 1px solid var(--color-text);
   border-radius: var(--radius-pill);
-  background: var(--color-gold-dark);
-  color: #fff;
+  background: var(--color-text);
+  color: var(--surface-canvas);
   font-family: var(--font-main);
   font-weight: var(--weight-bold);
   font-size: 0.83rem;
@@ -148,17 +150,18 @@
   min-height: 44px;
   text-decoration: none;
   transition:
-    background 0.22s var(--ease-standard),
-    box-shadow 0.22s var(--ease-standard),
-    transform 0.22s var(--ease-standard);
+    border-color 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    filter 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-cta:hover {
-  background: var(--color-gold-deep);
-  border-color: var(--color-gold-deep);
-  color: var(--color-white);
-  box-shadow: var(--shadow-sm);
+  border-color: var(--color-gold);
+  color: var(--surface-canvas);
+  box-shadow: var(--elev-accent);
   transform: translateY(-1px);
+  filter: brightness(1.08);
   text-decoration: none;
 }
 
@@ -434,15 +437,14 @@
 }
 
 [data-theme='dark'] .nav-cta {
-  background: var(--color-gold);
-  border-color: var(--color-gold);
-  color: #16181d;
+  background: var(--color-text);
+  border-color: var(--color-text);
+  color: var(--surface-canvas);
 }
 
 [data-theme='dark'] .nav-cta:hover {
-  background: var(--color-gold-light);
-  border-color: var(--color-gold-light);
-  color: #16181d;
+  border-color: var(--color-gold);
+  color: var(--surface-canvas);
 }
 
 /* ═══════════════════════════════════════════════
@@ -533,15 +535,9 @@
   position: absolute;
   top: 0;
   inset-inline: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgb(176 138 62 / 30%) 30%,
-    rgb(201 161 77 / 40%) 50%,
-    rgb(176 138 62 / 30%) 70%,
-    transparent 100%
-  );
+  height: 2px;
+  background: var(--rule-foil);
+  opacity: 0.85;
   pointer-events: none;
 }
 
@@ -571,8 +567,10 @@
 }
 
 .footer-brand-name {
-  font-size: 1.1rem;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
   font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
   color: var(--text-on-dark);
 }
 
@@ -2407,15 +2405,19 @@ main {
   outline-offset: var(--focus-ring-offset);
 }
 
+/* Standard in-app/in-page primary action — the brand gold. (The flagship
+   "enter the live product" CTA in nav + homepage hero uses ink; gold foil is
+   for accents/rules/active states. Two-tier system, see DESIGN_TOKENS.md.)
+   Solid refined gold — no gradient wash, tokenized. */
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-gold-dark) 0%, #9e7428 100%);
+  background: var(--color-gold-dark);
   border-color: var(--color-gold-dark);
   color: var(--text-on-dark);
   box-shadow: var(--shadow-gold);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, var(--color-gold-deep) 0%, var(--color-gold-dark) 100%);
+  background: var(--color-gold-deep);
   border-color: var(--color-gold-deep);
   transform: translateY(-2px);
   box-shadow: var(--shadow-gold-lg);
@@ -2469,6 +2471,45 @@ main {
   opacity: 0.45;
   cursor: not-allowed;
   pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════
+   Content link — animated gold foil underline.
+   Editorial micro-interaction for prose links across guides, legal,
+   methodology, country, and callout bodies. Hover-only (no load cost).
+   ═══════════════════════════════════════════════ */
+.guide-section a:not(.btn, [class*='card']),
+.legal-body a:not(.btn),
+.method-body a:not(.btn),
+.cp-section a:not(.btn, [class*='card'], [class*='link-card']),
+.learn-hub-callout-body a:not(.btn) {
+  color: var(--text-accent);
+  text-decoration: none;
+  background-image: var(--foil-underline);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 2px;
+  padding-bottom: 1px;
+  transition: background-size var(--transition-normal);
+}
+
+.guide-section a:not(.btn, [class*='card']):hover,
+.legal-body a:not(.btn):hover,
+.method-body a:not(.btn):hover,
+.cp-section a:not(.btn, [class*='card'], [class*='link-card']):hover,
+.learn-hub-callout-body a:not(.btn):hover {
+  background-size: 100% 2px;
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-section a:not(.btn, [class*='card']),
+  .legal-body a:not(.btn),
+  .method-body a:not(.btn),
+  .cp-section a:not(.btn, [class*='card'], [class*='link-card']),
+  .learn-hub-callout-body a:not(.btn) {
+    transition: none;
+  }
 }
 
 /* ═══════════════════════════════════════════════

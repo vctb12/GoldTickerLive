@@ -128,3 +128,7 @@ data/provider_scorecard.json
 data/provider_test_results.json
 data/provider_bakeoff_*.jsonl
 data/provider_scorecard_*.json
+
+# Auto-generated empty lockfile for src/package.json (no deps; type:module shim).
+# npm regenerates it on install; nothing to track.
+src/package-lock.json

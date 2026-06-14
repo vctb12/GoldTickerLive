@@ -64,7 +64,7 @@
 
 .dashboard-help {
   margin: 0;
-  color: var(--muted-text, #475569);
+  color: var(--color-text-muted);
   font-size: 0.9rem;
 }
 

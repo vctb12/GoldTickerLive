@@ -556,11 +556,13 @@ h6 {
 }
 
 h1 {
+  font-family: var(--font-display);
   font-size: var(--text-4xl);
   letter-spacing: var(--tracking-tight);
 }
 
 h2 {
+  font-family: var(--font-display);
   font-size: var(--text-3xl);
   letter-spacing: var(--tracking-tight);
 }
@@ -602,6 +604,7 @@ h6 {
 }
 
 .h1 {
+  font-family: var(--font-display);
   font-size: var(--text-4xl);
   font-weight: var(--weight-bold);
   line-height: var(--leading-tight);
@@ -609,6 +612,7 @@ h6 {
 }
 
 .h2 {
+  font-family: var(--font-display);
   font-size: var(--text-3xl);
   font-weight: var(--weight-bold);
   line-height: var(--leading-tight);
@@ -643,6 +647,7 @@ h6 {
 
 /* Display tier — opt-in for hero surfaces that need larger than .h1. */
 .display-1 {
+  font-family: var(--font-display);
   font-size: var(--text-5xl);
   font-weight: var(--weight-bold);
   line-height: var(--leading-tight);

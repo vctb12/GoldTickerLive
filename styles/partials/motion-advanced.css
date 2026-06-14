@@ -4,42 +4,36 @@
    prefers-reduced-motion in utilities.css.
    ═══════════════════════════════════════════════ */
 
-/* ── Spot Terminal ambient ring ───────────────── */
+/* ── Spot Terminal ambient ring ─────────────────
+   Clip-safe breathing ring via `outline` (renders OUTSIDE the box, so it is
+   never clipped by a terminal card's `overflow: hidden`, and never collides
+   with a decorative `::before`/`::after`). Works on light + dark surfaces. */
 .spot-terminal--live {
-  position: relative;
-}
-
-.spot-terminal--live::before {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0.35;
-  background: radial-gradient(ellipse at 50% 50%, rgb(176 138 62 / 22%) 0%, transparent 70%);
+  outline: 2.5px solid transparent;
+  outline-offset: 3px;
   animation: spot-ring-breathe var(--motion-spot-ring, 2.4s) var(--ease-in-out) infinite;
-  z-index: 0;
 }
 
 @keyframes spot-ring-breathe {
   0%,
   100% {
-    opacity: 0.25;
-    transform: scale(1);
+    outline-color: rgb(176 138 62 / 0%);
   }
 
   50% {
-    opacity: 0.45;
-    transform: scale(1.02);
+    outline-color: rgb(176 138 62 / 38%);
   }
 }
 
-.spot-terminal--live[data-price-flash='up']::before {
-  background: radial-gradient(ellipse at 50% 50%, rgb(34 197 94 / 18%) 0%, transparent 70%);
+/* Directional tick flash (set ~320ms by price-motion) — muted, never alarming. */
+.spot-terminal--live[data-price-flash='up'] {
+  outline-color: var(--color-live-border);
+  animation: none;
 }
 
-.spot-terminal--live[data-price-flash='down']::before {
-  background: radial-gradient(ellipse at 50% 50%, rgb(239 68 68 / 14%) 0%, transparent 70%);
+.spot-terminal--live[data-price-flash='down'] {
+  outline-color: rgb(184 20 40 / 30%);
+  animation: none;
 }
 
 /* ── Live sonar dot (freshness pills) ─────────── */
@@ -133,7 +127,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .spot-terminal--live::before,
+  .spot-terminal--live {
+    animation: none;
+    outline-color: transparent;
+  }
+
   .live-sonar::after {
     animation: none;
     opacity: 0;

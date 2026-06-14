@@ -118,6 +118,20 @@
   --gradient-dark: linear-gradient(155deg, #1c1e24 0%, #14161b 45%, #0d0e10 100%);
   --gradient-surface: linear-gradient(180deg, #fff 0%, #fafaf8 100%);
 
+  /* Bullion Desk — editorial hairlines + foil accent.
+     Gold reads as a thin foil line / underline, never a background wash. */
+  --rule-hairline: 1px solid var(--color-border);
+  --rule-foil: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-gold) 18%,
+    var(--color-gold-bright) 50%,
+    var(--color-gold) 82%,
+    transparent
+  );
+  --foil-underline: linear-gradient(90deg, var(--color-gold-dark), var(--color-gold-bright));
+  --gradient-paper: linear-gradient(180deg, #fdfdfb 0%, #f6f5f1 100%);
+
   /* Spacing scale (canonical) */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -137,6 +151,14 @@
   /* Typography — font stacks */
   --font-main: 'Cairo', -apple-system, blinkmacsystemfont, 'Segoe UI', sans-serif;
   --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+
+  /* Bullion Desk — editorial display + instrument numerics.
+     Latin headlines use a refined system serif for editorial authority (zero
+     network cost, no added dependency). Arabic/RTL falls back to Cairo via the
+     [dir='rtl'] override below so EN/AR parity and shaping are preserved.
+     Numerics use a tabular mono so prices read like a precision instrument. */
+  --font-display: ui-serif, georgia, 'Iowan Old Style', 'Times New Roman', 'Cairo', serif;
+  --font-numeric: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', menlo, monospace;
 
   /* Typography — size scale */
   --text-2xs: 0.625rem; /* 10px */
@@ -285,10 +307,19 @@
   --border-subtle: #22242a;
   --border-strong: #383b42;
   --gradient-surface: linear-gradient(180deg, #141518 0%, #101114 100%);
+  --gradient-paper: linear-gradient(180deg, #141518 0%, #0f1013 100%);
 
   /* Semantic alias overrides for dark mode */
   --color-accent: var(--color-gold-light);
   --color-accent-strong: var(--color-gold-bright);
   --color-surface-raised: var(--color-surface-2);
   --color-text-secondary: var(--color-text-muted);
+}
+
+/* ═══════════════════════════════════════════════
+   RTL — Arabic headlines keep Cairo (system serif
+   stacks lack Arabic shaping); numerics stay mono.
+   ═══════════════════════════════════════════════ */
+[dir='rtl'] {
+  --font-display: 'Cairo', var(--font-main);
 }

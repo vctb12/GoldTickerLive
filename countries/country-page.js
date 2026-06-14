@@ -28,6 +28,7 @@ import * as api from '../src/lib/api.js';
 import * as cache from '../src/lib/cache.js';
 import { usdPerGram, usdPerOz } from '../src/lib/price-calculator.js';
 import { formatPrice } from '../src/lib/formatter.js';
+import { countUp } from '../src/lib/count-up.js';
 import { injectNav, updateNavLang } from '../src/components/nav.js';
 import { injectFooter } from '../src/components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../src/components/ticker.js';
@@ -75,6 +76,8 @@ const T = {
     disclaimer:
       'Spot-linked reference estimates only — not final retail jewelry quotes. Retail prices may include making charges, dealer margins, and local taxes.',
     lastUpdate: 'Freshness',
+    freshnessLive: 'Live',
+    freshnessCachedFallback: 'Cached/Fallback',
     gram: 'gram',
     oz: 'troy oz',
     switchLang: 'العربية',
@@ -119,6 +122,8 @@ const T = {
     disclaimer:
       'هذه الأسعار تقديرات مرجعية مرتبطة بالسعر الفوري وليست أسعار تجزئة نهائية للمجوهرات. قد تتضمن أسعار التجزئة رسوم مصنعية وهوامش وضرائب محلية.',
     lastUpdate: 'حداثة البيانات',
+    freshnessLive: 'مباشر',
+    freshnessCachedFallback: 'مخزّن مؤقتًا/احتياطي',
     gram: 'غرام',
     oz: 'أوقية',
     switchLang: 'English',
@@ -204,15 +209,15 @@ function renderHero(cfg) {
       <div class="cp-prices-row">
         <div class="cp-price-card">
           <div class="cp-price-label">${t('karat22')} · ${t('perGram')}</div>
-          <div class="cp-price-value">${priceValueMarkup(gram22, cfg.currency, cfg.decimals)}</div>
+          <div class="cp-price-value" data-cp-key="g22" data-cp-target="${Number.isFinite(gram22) ? gram22 : ''}" data-cp-cur="${cfg.currency}" data-cp-dec="${cfg.decimals}">${priceValueMarkup(gram22, cfg.currency, cfg.decimals)}</div>
         </div>
         <div class="cp-price-card">
           <div class="cp-price-label">${t('karat24')} · ${t('perGram')}</div>
-          <div class="cp-price-value">${priceValueMarkup(gram24, cfg.currency, cfg.decimals)}</div>
+          <div class="cp-price-value" data-cp-key="g24" data-cp-target="${Number.isFinite(gram24) ? gram24 : ''}" data-cp-cur="${cfg.currency}" data-cp-dec="${cfg.decimals}">${priceValueMarkup(gram24, cfg.currency, cfg.decimals)}</div>
         </div>
         <div class="cp-price-card">
           <div class="cp-price-label">${t('karat24')} · ${t('perOz')}</div>
-          <div class="cp-price-value">${priceValueMarkup(oz24usd, 'USD', 2)}</div>
+          <div class="cp-price-value" data-cp-key="oz24" data-cp-target="${Number.isFinite(oz24usd) ? oz24usd : ''}" data-cp-cur="USD" data-cp-dec="2">${priceValueMarkup(oz24usd, 'USD', 2)}</div>
         </div>
       </div>
       ${
@@ -224,8 +229,50 @@ function renderHero(cfg) {
       </div>`
           : ''
       }
-      <div class="cp-update-time">${t('lastUpdate')}: ${STATE.status.goldStale ? 'Cached/Fallback' : 'Live'} · ${STATE.freshness.goldUpdatedAt ? new Date(STATE.freshness.goldUpdatedAt).toLocaleString(STATE.lang === 'ar' ? 'ar-AE' : 'en-AE', { timeZone: cfg.timezone, hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'} · Gold: ${DATA_ATTRIBUTION.gold.label} · FX: ${DATA_ATTRIBUTION.fx.label}</div>
+      <div class="cp-update-time">${t('lastUpdate')}: ${STATE.status.goldStale ? t('freshnessCachedFallback') : t('freshnessLive')} · ${STATE.freshness.goldUpdatedAt ? new Date(STATE.freshness.goldUpdatedAt).toLocaleString(STATE.lang === 'ar' ? 'ar-AE' : 'en-AE', { timeZone: cfg.timezone, hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'} · Gold: ${DATA_ATTRIBUTION.gold.label} · FX: ${DATA_ATTRIBUTION.fx.label}</div>
     </div>`;
+
+  animatePriceCells(heroEl);
+}
+
+// Previous poll's price values, keyed by cell (hero cards + karat-table per-gram
+// column). Lets each cell count up from the last value to the new one on every
+// refresh (the "alive" cue) instead of snapping after the innerHTML re-render.
+const prevPriceCells = Object.create(null);
+
+/**
+ * After a price region re-renders (hero cards or karat table), animate each
+ * `[data-cp-target]` cell from its previous poll value to the freshly rendered
+ * target with a directional flash + container pulse — the same proven primitive
+ * the home/tracker terminals use. First render (no previous value), no-price
+ * ('—'), and reduced-motion all no-op gracefully (countUp writes the final value
+ * immediately). Keys are globally unique so one prev-value map serves all cells.
+ */
+function animatePriceCells(rootEl) {
+  if (!rootEl) return;
+  rootEl.querySelectorAll('[data-cp-target]').forEach((el) => {
+    const key = el.dataset.cpKey;
+    const target = parseFloat(el.dataset.cpTarget);
+    if (!key || !Number.isFinite(target)) return; // skeleton / no price — leave as-is
+    const decimals = parseInt(el.dataset.cpDec, 10) || 2;
+    const currency = el.dataset.cpCur || 'USD';
+    const format = (n) => formatPrice(n, currency, decimals);
+    const from = prevPriceCells[key];
+    if (Number.isFinite(from) && from !== target) {
+      el.textContent = format(from); // start from the previous value so countUp animates the delta
+      // Freshness honesty: suppress the live-style flash/pulse when data is
+      // cached/stale so polled reference prices never read as a live feed.
+      const isStale = Boolean(STATE.status && STATE.status.goldStale);
+      countUp(el, target, {
+        decimals,
+        format,
+        flash: isStale ? null : 'auto',
+        pulse: !isStale,
+        pulseTarget: el.closest('.cp-price-card') || el,
+      });
+    }
+    prevPriceCells[key] = target;
+  });
 }
 
 // ── Render karat table ───────────────────────────────────────────────────────
@@ -253,7 +300,7 @@ function renderKaratTable(cfg) {
       return `
       <tr>
         <td class="cp-karat-name"><strong>${label}</strong><span class="cp-karat-pct">${pct}%</span></td>
-        <td class="cp-price-cell">${gramLocal ? formatPrice(gramLocal, cfg.currency, cfg.decimals) : '—'}</td>
+        <td class="cp-price-cell" data-cp-key="kg${code}" data-cp-target="${Number.isFinite(gramLocal) ? gramLocal : ''}" data-cp-cur="${cfg.currency}" data-cp-dec="${cfg.decimals}">${gramLocal ? formatPrice(gramLocal, cfg.currency, cfg.decimals) : '—'}</td>
         <td class="cp-price-cell">${ozLocal ? formatPrice(ozLocal, cfg.currency, cfg.decimals) : '—'}</td>
         <td class="cp-price-cell cp-usd-col">${gramUsd ? formatPrice(gramUsd, 'USD', 2) : '—'}</td>
       </tr>`;
@@ -289,6 +336,8 @@ function renderKaratTable(cfg) {
       </table>
     </div>
     <p class="cp-disclaimer">${t('disclaimer')}</p>`;
+
+  animatePriceCells(el);
 }
 
 // ── Market Intelligence Panel + "Should I Buy Today?" indicator ──────────────

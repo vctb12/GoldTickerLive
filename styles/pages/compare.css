@@ -16,11 +16,13 @@
 }
 
 .compare-hero-title {
-  font-size: var(--text-3xl);
-  font-weight: var(--weight-extrabold);
-  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
   margin: 0 0 var(--space-2);
-  line-height: 1.15;
+  line-height: 1.12;
 }
 
 .compare-hero-sub {
