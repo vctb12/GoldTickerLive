@@ -16,13 +16,29 @@
 }
 
 .country-hero__panel {
-  background: linear-gradient(155deg, #0f0903 0%, #221508 48%, #160d05 100%);
-  border: 1px solid rgb(176 138 62 / 18%);
+  background: linear-gradient(148deg, #05060b 0%, #0e1228 40%, #121c36 65%, #08090e 100%);
+  border: 1px solid rgb(212 168 64 / 20%);
   border-radius: var(--radius-panel);
-  box-shadow: var(--elev-4);
+  box-shadow:
+    var(--elev-4),
+    0 0 0 1px rgb(212 168 64 / 5%),
+    var(--shadow-gold);
   overflow: hidden;
   position: relative;
-  padding: clamp(1.25rem, 3vw, 2rem);
+  padding: clamp(1.4rem, 3vw, 2.25rem);
+}
+
+/* Gold foil top accent + gold radial orb */
+.country-hero__panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 2px;
+  background: var(--rule-foil);
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .country-hero__panel::after {
@@ -30,9 +46,10 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 14% 18%, rgb(201 161 77 / 18%) 0%, transparent 34%),
-    radial-gradient(circle at 88% 24%, rgb(59 130 246 / 12%) 0%, transparent 34%);
+    radial-gradient(ellipse 60% 55% at 12% 16%, rgb(212 168 64 / 20%) 0%, transparent 50%),
+    radial-gradient(ellipse 45% 40% at 90% 25%, rgb(30 60 160 / 14%) 0%, transparent 45%);
   pointer-events: none;
+  z-index: 0;
 }
 
 .country-hero__content,
