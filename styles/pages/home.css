@@ -59,18 +59,17 @@
    HERO
    ══════════════════════════════════════════════════════════════ */
 
-/* Bullion Desk hero — light editorial canvas. Gold appears only as a hairline
-   foil rule along the bottom edge; no gradient wash, no glow drift. */
+/* Premium hero — warm ivory with gold radial orb glow. */
 .hero {
-  background: var(--gradient-paper);
+  background: var(--gradient-hero-light);
   color: var(--text-primary);
-  padding: var(--space-8) var(--space-5) var(--space-7);
+  padding: calc(var(--space-8) + 0.5rem) var(--space-5) var(--space-7);
   position: relative;
   overflow: hidden;
   border-block-end: var(--rule-hairline);
 }
 
-/* Parallax backdrop layer — faint neutral depth only (no gold wash). */
+/* Gold orb radial glow — appears upper-right behind the price card */
 .hero::before {
   content: '';
   position: absolute;
@@ -79,32 +78,42 @@
   left: 0;
   right: 0;
   background:
-    radial-gradient(ellipse 70% 55% at 18% 12%, rgb(22 24 29 / 3%) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 45% at 88% 92%, rgb(176 138 62 / 4%) 0%, transparent 55%);
+    radial-gradient(ellipse 70% 60% at 78% 38%, rgb(212 168 64 / 10%) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 20% 70%, rgb(24 20 10 / 3%) 0%, transparent 55%),
+    radial-gradient(ellipse 30% 25% at 85% 85%, rgb(184 137 44 / 6%) 0%, transparent 50%);
   pointer-events: none;
   will-change: transform;
-
-  /* Parallax: move the layer at 40 % of scroll speed (counter to scroll direction). */
   transform: translateY(calc(var(--hero-parallax-y, 0px) * -0.4));
 }
 
-/* Reduced-motion: suppress parallax transform completely. */
 @media (prefers-reduced-motion: reduce) {
   .hero::before {
     transform: none !important;
   }
 }
 
-/* Gold foil hairline pinned to the hero's bottom edge. */
+/* Gold foil hairline bottom */
 .hero::after {
   content: '';
   position: absolute;
   inset-inline: 0;
   inset-block-end: 0;
-  block-size: 2px;
+  block-size: 3px;
   background: var(--rule-foil);
-  opacity: 0.7;
+  opacity: 0.8;
   pointer-events: none;
+}
+
+/* Dark mode hero — deep midnight with stronger gold orb */
+[data-theme='dark'] .hero {
+  background: var(--gradient-hero-dark);
+}
+
+[data-theme='dark'] .hero::before {
+  background:
+    radial-gradient(ellipse 70% 60% at 78% 38%, rgb(212 168 64 / 18%) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 20% 70%, rgb(8 9 14 / 60%) 0%, transparent 55%),
+    radial-gradient(ellipse 30% 25% at 85% 85%, rgb(184 137 44 / 10%) 0%, transparent 50%);
 }
 
 .hero-inner {
@@ -149,20 +158,26 @@
 .hero-title-main {
   display: block;
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5.8vw, 3.6rem);
+  font-size: clamp(2.6rem, 5.8vw, 3.85rem);
   font-weight: var(--weight-bold);
   line-height: 1.05;
   color: var(--text-primary);
-  letter-spacing: var(--tracking-tight);
+  letter-spacing: var(--tracking-tighter);
+}
+
+/* Gold accent on the price number / key word */
+.hero-title-main mark {
+  background: none;
+  color: var(--color-gold);
 }
 
 .hero-title-sub {
   display: block;
   font-family: var(--font-display);
-  font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+  font-size: clamp(1.05rem, 2.4vw, 1.4rem);
   font-weight: var(--weight-regular);
   color: var(--text-accent);
-  margin-top: 0.4rem;
+  margin-top: 0.45rem;
   letter-spacing: 0.01em;
   font-style: italic;
 }
@@ -307,27 +322,54 @@
    ══════════════════════════════════════════════════════════════ */
 .hero-live-card {
   background: var(--surface-primary);
-  border: var(--rule-hairline);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-panel);
   padding: var(--space-6) var(--space-5);
-  box-shadow: var(--elev-4);
+  box-shadow: var(--elev-4), var(--shadow-gold);
   position: relative;
   overflow: hidden;
+  transition: box-shadow 0.3s var(--ease-out);
 }
 
-/* Gold foil rule across the top of the instrument panel.
-   The "alive" breathing ring + directional tick flash come from the shared
-   `.spot-terminal--live` primitive (motion-advanced.css) which uses `outline`
-   so it is not clipped by this card's overflow:hidden nor in conflict with the
-   foil ::before below. price-motion adds `--live` + `[data-price-flash]`. */
+.hero-live-card:hover {
+  box-shadow: var(--elev-5), var(--shadow-gold-lg);
+}
+
+/* Gold foil top rule */
 .hero-live-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 3px;
   background: var(--rule-foil);
+  opacity: 0.9;
+}
+
+/* Subtle radial glow in top-right corner of card */
+.hero-live-card::after {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgb(212 168 64 / 8%) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+[data-theme='dark'] .hero-live-card {
+  background: var(--color-surface);
+  border-color: var(--color-gold-glow);
+  box-shadow:
+    var(--elev-4),
+    var(--shadow-gold),
+    inset 0 0 0 1px rgb(212 168 64 / 8%);
+}
+
+[data-theme='dark'] .hero-live-card::after {
+  background: radial-gradient(circle, rgb(212 168 64 / 14%) 0%, transparent 70%);
 }
 
 .hlc-header {
@@ -693,9 +735,22 @@
    LIVE KARAT PRICE STRIP
    ══════════════════════════════════════════════════════════════ */
 .karat-strip {
-  background: var(--surface-primary);
+  background: linear-gradient(180deg, var(--surface-primary) 0%, var(--surface-canvas) 100%);
   border-bottom: 1px solid var(--border-subtle);
   padding: var(--space-5);
+  position: relative;
+}
+
+/* Gold accent top hairline on karat strip */
+.karat-strip::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 1px;
+  background: var(--rule-foil);
+  opacity: 0.35;
+  pointer-events: none;
 }
 
 .karat-strip-inner {
@@ -762,8 +817,8 @@
   justify-content: center;
   gap: var(--space-1);
   scroll-snap-align: start;
-  min-width: 104px;
-  min-height: 72px;
+  min-width: 110px;
+  min-height: 76px;
   background: var(--surface-secondary);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
@@ -771,8 +826,10 @@
   white-space: nowrap;
   flex-shrink: 0;
   transition:
-    background 0.2s,
-    border-color 0.2s;
+    background 0.22s var(--ease-out),
+    border-color 0.22s var(--ease-out),
+    box-shadow 0.22s var(--ease-out),
+    transform 0.22s var(--ease-out);
 }
 
 .karat-strip-item {
@@ -782,8 +839,14 @@
 
 .karat-strip-item.is-selected {
   border-color: var(--color-gold);
-  box-shadow: var(--shadow-sm);
-  background: color-mix(in srgb, var(--color-gold) 12%, var(--surface-raised));
+  box-shadow: var(--shadow-gold), var(--shadow-sm);
+  background: var(--color-gold-tint);
+}
+
+[data-theme='dark'] .karat-strip-item.is-selected {
+  background: var(--color-gold-bg);
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold-lg);
 }
 
 .karat-strip-item:hover {
