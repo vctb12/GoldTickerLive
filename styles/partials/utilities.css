@@ -869,11 +869,13 @@ body > * {
   left: 0;
   right: 0;
   z-index: 250;
-  background: var(--color-surface);
+  background: rgb(253 251 245 / 92%);
   border-top: 1px solid var(--color-border);
-  box-shadow: 0 -4px 20px rgb(0 0 0 / 10%);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 -1px 0 rgb(184 137 44 / 12%),
+    0 -8px 32px rgb(0 0 0 / 8%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   padding: 0;
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
@@ -896,16 +898,18 @@ body > * {
   align-items: center;
   justify-content: center;
   flex: 1;
-  gap: 3px;
+  gap: 4px;
   padding: 8px 5px 6px;
   text-decoration: none;
   color: var(--color-text-faint);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: var(--weight-semibold);
   letter-spacing: var(--tracking-wide);
-  transition: color 0.15s ease;
+  transition:
+    color 0.18s ease,
+    transform 0.15s var(--ease-out);
   -webkit-tap-highlight-color: transparent;
-  min-height: 44px;
+  min-height: 48px;
   border: none;
   background: none;
   cursor: pointer;
@@ -913,8 +917,13 @@ body > * {
   position: relative;
 }
 
-.mobile-bottom-nav-item:hover,
 .mobile-bottom-nav-item:active {
+  transform: scale(0.92);
+  text-decoration: none;
+}
+
+.mobile-bottom-nav-item:hover {
+  color: var(--color-text-muted);
   text-decoration: none;
 }
 
@@ -927,10 +936,11 @@ body > * {
   content: '';
   position: absolute;
   top: 0;
-  inset-inline: 22%;
-  height: 3px;
+  inset-inline: 28%;
+  height: 2.5px;
   border-radius: 0 0 3px 3px;
   background: var(--gradient-gold);
+  box-shadow: 0 0 8px var(--color-gold-glow);
 }
 
 .mobile-bottom-nav-item.is-active .mobile-bottom-nav-label {
@@ -938,17 +948,19 @@ body > * {
 }
 
 .mobile-bottom-nav-icon {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   line-height: var(--leading-none);
+  transition: transform 0.18s var(--ease-out);
 }
 
 .mobile-bottom-nav-item.is-active .mobile-bottom-nav-icon {
-  filter: drop-shadow(0 1px 3px rgb(176 138 62 / 30%));
+  filter: drop-shadow(0 1px 4px rgb(176 138 62 / 40%));
+  transform: translateY(-1px);
 }
 
 .mobile-bottom-nav-label {
@@ -956,6 +968,9 @@ body > * {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 76px;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  font-size: 0.6rem;
 }
 
 /* Show bottom nav only on mobile */
@@ -974,16 +989,44 @@ body > * {
 
 /* Dark mode bottom nav */
 [data-theme='dark'] .mobile-bottom-nav {
-  background: var(--color-surface);
-  border-top-color: var(--color-border);
-  box-shadow: 0 -2px 16px rgb(0 0 0 / 25%);
+  background: rgb(8 9 14 / 94%);
+  border-top-color: rgb(212 168 64 / 15%);
+  box-shadow:
+    0 -1px 0 rgb(212 168 64 / 10%),
+    0 -12px 40px rgb(0 0 0 / 50%);
+}
+
+[data-theme='dark'] .mobile-bottom-nav-item {
+  color: rgb(240 237 216 / 38%);
+}
+
+[data-theme='dark'] .mobile-bottom-nav-item:hover {
+  color: rgb(240 237 216 / 60%);
+}
+
+[data-theme='dark'] .mobile-bottom-nav-item.is-active {
+  color: var(--color-gold-light);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) .mobile-bottom-nav {
-    background: var(--color-surface);
-    border-top-color: var(--color-border);
-    box-shadow: 0 -2px 16px rgb(0 0 0 / 25%);
+    background: rgb(8 9 14 / 94%);
+    border-top-color: rgb(212 168 64 / 15%);
+    box-shadow:
+      0 -1px 0 rgb(212 168 64 / 10%),
+      0 -12px 40px rgb(0 0 0 / 50%);
+  }
+
+  :root:not([data-theme='light']) .mobile-bottom-nav-item {
+    color: rgb(240 237 216 / 38%);
+  }
+
+  :root:not([data-theme='light']) .mobile-bottom-nav-item:hover {
+    color: rgb(240 237 216 / 60%);
+  }
+
+  :root:not([data-theme='light']) .mobile-bottom-nav-item.is-active {
+    color: var(--color-gold-light);
   }
 }
 
@@ -3759,5 +3802,111 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 @media (prefers-reduced-motion: reduce) {
   .shop-vs-reference__fill {
     transition: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   Phase 16 — Mobile Optimization
+   Touch targets, viewport, layout tweaks
+   ═══════════════════════════════════════════════ */
+
+/* Ensure every interactive element meets 44px minimum */
+button,
+[role='button'],
+[type='button'],
+[type='submit'],
+a,
+select,
+label[for],
+.tab-btn,
+.pill,
+.range-btn,
+.filter-chip,
+.chart-range-btn {
+  min-height: 44px;
+}
+
+/* Inline-only anchors (nav links etc.) can be shorter */
+nav a,
+.breadcrumb a,
+.footer-link,
+.prose a {
+  min-height: unset;
+}
+
+/* ── Mobile card improvements ── */
+@media (width <= 640px) {
+  /* Cards: full-width, slightly more padding  */
+  .gcc-card,
+  .tool-card {
+    padding: var(--space-4);
+  }
+
+  /* Tool card primary: ensure full bleed bg on mobile */
+  .tool-card--primary {
+    border-radius: var(--radius-lg);
+  }
+
+  /* Karat pills: horizontal scroll without scrollbar */
+  .karat-pills {
+    padding-block-end: 2px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Stat strip: 2 cols on small screens */
+  .history-stats-strip {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+    padding: 0.75rem;
+  }
+
+  /* Better spacing for bottom-anchored sticky elements */
+  .mobile-result-dock {
+    margin-inline: 0;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+}
+
+/* ── Extra compact (< 380px) fine-tuning ── */
+@media (width <= 380px) {
+  .mobile-bottom-nav-inner {
+    min-height: 54px;
+  }
+
+  .mobile-bottom-nav-icon {
+    font-size: var(--text-base);
+    width: 22px;
+    height: 22px;
+  }
+
+  .mobile-bottom-nav-label {
+    font-size: 0.55rem;
+  }
+}
+
+/* ── Prevent text scaling in landscape on iOS ── */
+@media (orientation: landscape) and (width <= 900px) {
+  html {
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+  }
+}
+
+/* ── Reduced motion: disable bottom nav tap scale ── */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-bottom-nav-item {
+    transition: color 0.15s ease;
+  }
+
+  .mobile-bottom-nav-item:active {
+    transform: none;
+  }
+
+  .mobile-bottom-nav-icon {
+    transition: none;
+  }
+
+  .mobile-bottom-nav-item.is-active .mobile-bottom-nav-icon {
+    transform: none;
   }
 }
