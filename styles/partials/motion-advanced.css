@@ -149,3 +149,62 @@
     animation: none;
   }
 }
+
+/* ═══════════════════════════════════════════════
+   Phase 24 — Performance Optimization
+   CSS containment hints for key render subtrees.
+   ═══════════════════════════════════════════════ */
+
+/* Cards: style containment prevents outside styles from flowing in */
+.gcc-card,
+.tool-card,
+.learn-guide-card,
+.guide-card,
+.karat-card {
+  contain: style;
+}
+
+/* Table rows: paint containment for long tables */
+.karat-table-row,
+.tracker-row,
+.country-row,
+.shop-row {
+  contain: style;
+}
+
+/* Animated elements: promote to compositor layer only during hover/active */
+.gcc-card:hover,
+.tool-card:hover,
+.learn-guide-card:hover {
+  will-change: transform;
+}
+
+/* Release will-change when not hovering (resting state) */
+.gcc-card,
+.tool-card,
+.learn-guide-card {
+  will-change: auto;
+}
+
+/* Sticky elements: contain layout to avoid full-page reflows */
+.site-nav,
+.learn-toc,
+.method-toc,
+.mobile-bottom-nav {
+  contain: layout style;
+}
+
+/* Skeleton blocks: paint isolation to avoid shimmer repaints propagating */
+.skeleton-inline,
+.skeleton-block {
+  contain: strict;
+}
+
+/* Off-screen / below-fold sections: use content-visibility for defer */
+@supports (content-visibility: auto) {
+  .home-section:not(:first-of-type),
+  .learn-section:not(:first-of-type) {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 300px;
+  }
+}
