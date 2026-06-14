@@ -498,6 +498,48 @@
   box-shadow: 6px 0 32px rgb(0 0 0 / 14%);
 }
 
+/* RTL nav brand: logo leads on start side */
+[dir='rtl'] .nav-brand {
+  flex-direction: row-reverse;
+}
+
+/* RTL brand sub-label: stays left-aligned (LTR) for Arabic readability */
+[dir='rtl'] .nav-brand-text {
+  text-align: end;
+}
+
+/* RTL nav CTA: ensure icon/dot stays on correct side */
+[dir='rtl'] .nav-cta {
+  flex-direction: row-reverse;
+}
+
+/* RTL dropdown: open from right side */
+[dir='rtl'] .nav-dropdown-panel {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+
+/* RTL breadcrumbs are already handled above */
+
+/* RTL footer columns: reverse column order */
+[dir='rtl'] .footer-main {
+  direction: rtl;
+}
+
+[dir='rtl'] .footer-links-group {
+  text-align: end;
+}
+
+/* RTL mobile bottom nav: labels stay LTR for numerics */
+[dir='rtl'] .mobile-bottom-nav-item {
+  direction: rtl;
+}
+
+/* RTL search input: icon on right side */
+[dir='rtl'] .nav-search-overlay {
+  direction: rtl;
+}
+
 /* Dark mode nav */
 [data-theme='dark'] .site-nav {
   background: rgb(8 9 14 / 90%);
