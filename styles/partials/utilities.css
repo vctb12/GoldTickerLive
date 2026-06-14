@@ -2064,47 +2064,67 @@ details.nav-drawer-group[open] .nav-drawer-group-caret {
   font-weight: 600;
 }
 
-/* --- Search overlay (migrated from inline styles) -------------------------- */
+/* --- Search overlay — premium redesign ------------------------------------ */
 .nav-search-overlay {
   position: absolute;
   top: 100%;
   inset-inline: 0;
-  background: var(--surface, #fff);
-  border-bottom: 1px solid var(--border-default, #e2e8f0);
-  padding: 0.75rem 1rem;
+  background: var(--surface-glass, rgb(253 251 245 / 96%));
+  backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid var(--border-subtle);
+  border-top: 2px solid var(--color-gold);
+  padding: 0.85rem 1.25rem;
   z-index: 1000;
-  box-shadow: 0 4px 12px rgb(0, 0, 0, 0.05);
+  box-shadow:
+    0 8px 28px rgb(24 20 10 / 10%),
+    0 2px 8px rgb(24 20 10 / 5%);
 }
+
+[data-theme='dark'] .nav-search-overlay {
+  background: rgb(12 14 22 / 96%);
+  border-bottom-color: var(--border-subtle);
+  box-shadow:
+    0 12px 40px rgb(0 0 0 / 50%),
+    0 3px 10px rgb(0 0 0 / 30%);
+}
+
 .nav-search-overlay[hidden] {
   display: none;
 }
+
 .nav-search-input {
   width: 100%;
-  max-width: 480px;
-  padding: 0.55rem 0.8rem;
-  border: 1px solid var(--border-default, #e2e8f0);
-  border-radius: var(--radius-sm, 6px);
-  font-size: 0.9rem;
+  max-width: 520px;
+  padding: 0.65rem 1rem;
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
   outline: none;
   display: block;
   margin: 0 auto;
-  background: var(--surface, #fff);
-  color: var(--color-text, #1e293b);
+  background: var(--surface-primary);
+  color: var(--text-primary);
+  transition:
+    border-color 0.18s var(--ease-out),
+    box-shadow 0.18s var(--ease-out);
 }
+
 .nav-search-input:focus-visible {
-  border-color: var(--focus-ring-color, #2563eb);
-  box-shadow: 0 0 0 2px var(--focus-ring-color, #2563eb);
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
 }
+
 .nav-search-dropdown {
-  max-width: 480px;
-  margin: 0.35rem auto 0;
-  background: var(--surface, #fff);
-  border: 1px solid var(--border-default, #e2e8f0);
-  border-radius: var(--radius-sm, 6px);
+  max-width: 520px;
+  margin: 0.45rem auto 0;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
   overflow-y: auto;
-  max-height: 320px;
-  box-shadow: 0 4px 12px rgb(0, 0, 0, 0.08);
+  max-height: 340px;
+  box-shadow: var(--shadow-md);
 }
+
 .nav-search-dropdown:empty {
   display: none;
 }
