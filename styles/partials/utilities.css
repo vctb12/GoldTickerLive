@@ -3187,6 +3187,11 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
   display: inline-block;
   flex-shrink: 0;
   background: var(--color-live);
+  animation: none;
+}
+
+/* Only pulse when data is confirmed live — gate via data-state attribute */
+.ph-freshness-dot[data-state='live'] {
   animation: freshness-dot-pulse 2.4s ease-in-out infinite;
 }
 
@@ -3204,7 +3209,7 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ph-freshness-dot {
+  .ph-freshness-dot[data-state='live'] {
     animation: none;
   }
 }

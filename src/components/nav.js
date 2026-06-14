@@ -371,7 +371,7 @@ export function injectNav(lang = 'en', depth = 0) {
       </svg>
       <span class="nav-brand-text">
         <span class="nav-brand-name">Gold Ticker Live</span>
-        <span class="nav-brand-sub">${lang === 'ar' ? 'أسعار مباشرة · الخليج' : 'Live Prices · GCC'}</span>
+        <span class="nav-brand-sub">${escapeHtml(data.brandSub || 'Reference Prices · GCC')}</span>
       </span>
     </a>
 
@@ -409,7 +409,7 @@ export function injectNav(lang = 'en', depth = 0) {
          href="${resolveHref('/tracker.html', depth)}"
          class="nav-cta"
          aria-label="${escapeHtml(data.ctaLabel || 'Live Tracker')}"
-      ><span class="nav-cta-dot" aria-hidden="true"></span>${escapeHtml(data.ctaLabel || 'Live Tracker')}</a>
+      >${escapeHtml(data.ctaLabel || 'Live Tracker')}</a>
 
       <button id="nav-hamburger"
               class="nav-hamburger"
@@ -1214,6 +1214,10 @@ export function updateNavLang(lang) {
     const drawerCloseText = drawerCloseBtn.querySelector('span:not([aria-hidden="true"])');
     if (drawerCloseText) drawerCloseText.textContent = data.closeMenu;
   }
+
+  // Brand subtitle (language-specific reference tagline)
+  const brandSubEl = document.querySelector('.nav-brand-sub');
+  if (brandSubEl && data.brandSub) brandSubEl.textContent = data.brandSub;
 
   // Desktop CTA label
   const ctaEl = document.getElementById('nav-cta-tracker');
