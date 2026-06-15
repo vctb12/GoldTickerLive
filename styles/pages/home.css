@@ -14,8 +14,8 @@
    Imports shared design tokens from style.css via the cascade.
    ══════════════════════════════════════════════════════════════ */
 
-/* ── Keyframes (pulse-live is hero-specific; skeleton-shimmer is in style.css) ── */
-@keyframes pulse-live {
+/* ── Keyframes (pulse-live-hero is hero-specific; skeleton-shimmer is in style.css) ── */
+@keyframes pulse-live-hero {
   0%,
   100% {
     opacity: 1;
@@ -27,19 +27,6 @@
     opacity: 0.85;
     transform: scale(1.15);
     box-shadow: 0 0 0 5px rgb(74 222 128 / 0%);
-  }
-}
-
-@keyframes hero-gold-drift {
-  0%,
-  100% {
-    opacity: 0.75;
-    transform: translate(0, 0) scale(1);
-  }
-
-  50% {
-    opacity: 1;
-    transform: translate(1.5%, -1.5%) scale(1.03);
   }
 }
 
@@ -151,7 +138,7 @@
   border-radius: 50%;
   background: var(--color-live);
   flex-shrink: 0;
-  animation: pulse-live 2s ease-in-out infinite;
+  animation: pulse-live-hero 2s ease-in-out infinite;
 }
 
 /* ── Hero headings ── */
@@ -524,7 +511,7 @@
   background: var(--color-live);
   margin-inline-end: 0.35rem;
   vertical-align: middle;
-  animation: pulse-live 2s ease-in-out infinite;
+  animation: pulse-live-hero 2s ease-in-out infinite;
 }
 
 .hlc-market--closed {

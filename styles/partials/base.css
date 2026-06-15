@@ -35,10 +35,10 @@
 }
 
 .freshness-dot--pulse {
-  animation: freshness-pulse 2s ease-in-out infinite;
+  animation: freshness-dot-fade 2s ease-in-out infinite;
 }
 
-@keyframes freshness-pulse {
+@keyframes freshness-dot-fade {
   0%,
   100% {
     opacity: 1;

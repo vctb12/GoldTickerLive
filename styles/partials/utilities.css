@@ -1837,41 +1837,6 @@ textarea:focus,
   animation: pulse-dot 2.4s var(--ease-in-out) infinite;
 }
 
-/* Underline slide — nav hover affordance. */
-@keyframes underline-slide {
-  from {
-    transform: scaleX(0);
-  }
-
-  to {
-    transform: scaleX(1);
-  }
-}
-
-/* Drawer slide — mobile nav open. */
-@keyframes drawer-slide-in {
-  from {
-    transform: translateX(100%);
-  }
-
-  to {
-    transform: none;
-  }
-}
-
-/* Reveal-up: explicit reveal keyframe for opt-in reveals. */
-@keyframes reveal-up {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 /* Card hover lift: opt-in `.hover-lift` utility for card-like surfaces.
    Raises the card by 2 px and deepens the shadow in 200 ms `--ease-out`.
    Caller must set a base `box-shadow` (or accept the fallback) and a
