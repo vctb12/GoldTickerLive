@@ -56,7 +56,10 @@ export function renderWatchlist() {
     const card = el('div', { class: `tracker-watch-card${isCurrent ? ' is-highlight' : ''}` }, [
       el('div', { class: 'tracker-watch-top' }, [
         el('div', { class: 'tracker-watch-title' }, [
-          el('strong', null, `${country?.flag ?? ''} ${name ?? cur}`.trim()),
+          el('strong', null, [
+            country?.flag ? el('span', { 'aria-hidden': 'true' }, `${country.flag} `) : null,
+            name ?? cur,
+          ]),
           el('span', null, `${cur}${isCurrent ? ` · ${tx('selected')}` : ''}`),
         ]),
         el('div', { class: 'tracker-watch-value' }, [

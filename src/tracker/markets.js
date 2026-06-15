@@ -122,7 +122,10 @@ export function renderMarkets() {
     const card = el('div', { class: `tracker-market-card${isFav ? ' is-highlight' : ''}` }, [
       el('div', { class: 'tracker-market-top' }, [
         el('div', { class: 'tracker-market-title' }, [
-          el('strong', null, `${country.flag ?? ''} ${name}`.trim()),
+          el('strong', null, [
+            country.flag ? el('span', { 'aria-hidden': 'true' }, `${country.flag} `) : null,
+            name,
+          ]),
           el('span', null, cur),
         ]),
         el('div', { class: 'tracker-market-value' }, [

@@ -2150,14 +2150,26 @@ function init() {
       '[shops] CRITICAL: SHOPS data is empty, not an array, or not loaded. Check data/shops.js module export.';
     console.error(errorMsg);
     console.error('[shops] SHOPS value:', SHOPS);
-    document.body.innerHTML = `
-      <div style="padding:2rem;background:#fee;color:#900;font-family:system-ui;">
-        <h1 style="color:#c00;">Shops Page Data Error</h1>
-        <p><strong>Error:</strong> Shop data failed to load.</p>
-        <p><code>SHOPS = ${JSON.stringify(SHOPS)?.slice(0, 200)}${JSON.stringify(SHOPS)?.length > 200 ? '...' : ''}</code></p>
-        <p>Check browser console for details. Verify data/shops.js exports SHOPS array correctly.</p>
-      </div>
-    `;
+    const errDiv = document.createElement('div');
+    errDiv.setAttribute('style', 'padding:2rem;background:#fee;color:#900;font-family:system-ui;');
+    const h1 = document.createElement('h1');
+    h1.setAttribute('style', 'color:#c00;');
+    h1.textContent = 'Shops Page Data Error';
+    const p1 = document.createElement('p');
+    p1.textContent = 'Error: Shop data failed to load.';
+    const p2 = document.createElement('p');
+    const code = document.createElement('code');
+    const shopsStr = JSON.stringify(SHOPS) ?? '';
+    code.textContent = `SHOPS = ${shopsStr.slice(0, 200)}${shopsStr.length > 200 ? '...' : ''}`;
+    p2.appendChild(code);
+    const p3 = document.createElement('p');
+    p3.textContent =
+      'Check browser console for details. Verify data/shops.js exports SHOPS array correctly.';
+    errDiv.appendChild(h1);
+    errDiv.appendChild(p1);
+    errDiv.appendChild(p2);
+    errDiv.appendChild(p3);
+    document.body.replaceChildren(errDiv);
     throw new Error(errorMsg);
   }
 
@@ -2185,14 +2197,28 @@ function init() {
   if (missingElements.length > 0) {
     const errorMsg = `[shops] CRITICAL: Missing required DOM elements: ${missingElements.join(', ')}. Check shops.html structure.`;
     console.error(errorMsg);
-    document.body.innerHTML = `
-      <div style="padding:2rem;background:#fee;color:#900;font-family:system-ui;">
-        <h1 style="color:#c00;">Shops Page DOM Error</h1>
-        <p><strong>Error:</strong> Required HTML elements are missing.</p>
-        <p><strong>Missing IDs:</strong> ${missingElements.join(', ')}</p>
-        <p>Check shops.html for correct element IDs.</p>
-      </div>
-    `;
+    const domErrDiv = document.createElement('div');
+    domErrDiv.setAttribute(
+      'style',
+      'padding:2rem;background:#fee;color:#900;font-family:system-ui;'
+    );
+    const domH1 = document.createElement('h1');
+    domH1.setAttribute('style', 'color:#c00;');
+    domH1.textContent = 'Shops Page DOM Error';
+    const domP1 = document.createElement('p');
+    domP1.textContent = 'Error: Required HTML elements are missing.';
+    const domP2 = document.createElement('p');
+    const missingLabel = document.createElement('strong');
+    missingLabel.textContent = 'Missing IDs: ';
+    domP2.appendChild(missingLabel);
+    domP2.appendChild(document.createTextNode(missingElements.join(', ')));
+    const domP3 = document.createElement('p');
+    domP3.textContent = 'Check shops.html for correct element IDs.';
+    domErrDiv.appendChild(domH1);
+    domErrDiv.appendChild(domP1);
+    domErrDiv.appendChild(domP2);
+    domErrDiv.appendChild(domP3);
+    document.body.replaceChildren(domErrDiv);
     throw new Error(errorMsg);
   }
 

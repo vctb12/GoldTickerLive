@@ -90,6 +90,7 @@ export function injectFooter(lang = 'en', depth = 0) {
           <span>${isAr ? 'احصل على تحديثات أسعار الذهب الأسبوعية في صندوق بريدك' : 'Get weekly gold price updates delivered to your inbox'}</span>
         </div>
         <form class="footer-newsletter-form" id="footer-newsletter-form" novalidate aria-label="${isAr ? 'اشتراك النشرة الإخبارية' : 'Newsletter signup'}" data-endpoint="${NEWSLETTER_API_ENDPOINT}" data-formspree="${FORMSPREE_ENDPOINT}">
+          <label for="footer-newsletter-email" class="sr-only">${isAr ? 'البريد الإلكتروني' : 'Email address'}</label>
           <input type="email" name="email" id="footer-newsletter-email"
             placeholder="${isAr ? 'بريدك الإلكتروني' : 'Your email address'}"
             required

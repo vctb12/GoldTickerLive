@@ -64,7 +64,10 @@ export function renderComparisonWorkspace() {
       el('article', { class: 'comparison-card' }, [
         el('div', { class: 'comparison-card__header' }, [
           el('div', null, [
-            el('h3', { class: 'comparison-card__title' }, `${country.flag ?? ''} ${name}`.trim()),
+            el('h3', { class: 'comparison-card__title' }, [
+              country.flag ? el('span', { 'aria-hidden': 'true' }, `${country.flag} `) : null,
+              name,
+            ]),
             el(
               'p',
               { class: 'comparison-card__meta' },
