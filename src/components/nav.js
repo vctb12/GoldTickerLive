@@ -357,8 +357,22 @@ export function injectNav(lang = 'en', depth = 0) {
 
     <!-- Brand -->
     <a href="${homeHref}" class="nav-brand" aria-label="${escapeHtml(data.brandLabel || 'Gold Ticker Live Home')}">
-      <span class="nav-brand-icon" aria-hidden="true">◈</span>
-      <span class="nav-brand-text">Gold Ticker Live</span>
+      <svg class="nav-brand-logo" viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="nb-g" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#e8bf5a"/>
+            <stop offset="50%" stop-color="#d4a840"/>
+            <stop offset="100%" stop-color="#b8892c"/>
+          </linearGradient>
+        </defs>
+        <circle cx="16" cy="16" r="11" fill="none" stroke="url(#nb-g)" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="8.5" fill="url(#nb-g)" opacity="0.15"/>
+        <text x="16" y="20.5" font-size="11" text-anchor="middle" fill="url(#nb-g)" font-family="Georgia,serif" font-weight="700" letter-spacing="-0.5">G</text>
+      </svg>
+      <span class="nav-brand-text">
+        <span class="nav-brand-name">Gold Ticker Live</span>
+        <span class="nav-brand-sub">${escapeHtml(data.brandSub || 'Reference Prices · GCC')}</span>
+      </span>
     </a>
 
     <!-- Desktop links -->
@@ -1200,6 +1214,10 @@ export function updateNavLang(lang) {
     const drawerCloseText = drawerCloseBtn.querySelector('span:not([aria-hidden="true"])');
     if (drawerCloseText) drawerCloseText.textContent = data.closeMenu;
   }
+
+  // Brand subtitle (language-specific reference tagline)
+  const brandSubEl = document.querySelector('.nav-brand-sub');
+  if (brandSubEl && data.brandSub) brandSubEl.textContent = data.brandSub;
 
   // Desktop CTA label
   const ctaEl = document.getElementById('nav-cta-tracker');

@@ -151,18 +151,6 @@ export function updateMapMarkers(shops) {
 }
 
 /**
- * Destroy the map instance and clean up.
- */
-export function destroyShopsMap() {
-  if (_map) {
-    _map.remove();
-    _map = null;
-  }
-  _markers = [];
-  _markerLayer = null;
-}
-
-/**
  * Invalidate map size (call after container becomes visible).
  */
 export function invalidateMapSize() {

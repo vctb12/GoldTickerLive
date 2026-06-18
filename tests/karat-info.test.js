@@ -31,7 +31,8 @@ test('karat purity values match expected fractions', async () => {
   assert.equal(map['21'], 21 / 24);
   assert.equal(map['18'], 18 / 24);
   assert.equal(map['14'], 14 / 24);
-  assert.equal(10 / 24, 10 / 24);
+  assert.equal(map['20'], 20 / 24);
+  assert.equal(map['16'], 16 / 24);
 });
 
 test('calculateKaratPricePerGram matches canonical formula', async () => {

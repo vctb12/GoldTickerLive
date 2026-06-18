@@ -92,10 +92,6 @@ function getApiKeyHashSalt() {
   return salt;
 }
 
-function hashApiKeyLegacy(rawKey) {
-  return hashApiKey(rawKey);
-}
-
 function hashApiKey(rawKey) {
   return pbkdf2Async(
     rawKey,

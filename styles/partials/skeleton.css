@@ -1,4 +1,4 @@
-/* Skeleton size utilities — paired with .skeleton-inline in global.css */
+/* Skeleton size utilities — paired with .skeleton-inline in components.css */
 
 .shell-skeleton-price-md {
   inline-size: 5.5rem;
@@ -30,6 +30,74 @@
 
 .skeleton-table-row td {
   padding-block: var(--space-3);
+}
+
+/* ── Skeleton block primitives ── */
+.skeleton-block {
+  display: block;
+  inline-size: 100%;
+  block-size: 1em;
+  border-radius: var(--radius-xs);
+}
+
+.skeleton-block--sm {
+  block-size: 0.75em;
+}
+
+.skeleton-block--lg {
+  block-size: 2rem;
+}
+
+.skeleton-block--xl {
+  block-size: 3.5rem;
+}
+
+.skeleton-block--w-1\/4 {
+  inline-size: 25%;
+}
+
+.skeleton-block--w-1\/3 {
+  inline-size: 33%;
+}
+
+.skeleton-block--w-1\/2 {
+  inline-size: 50%;
+}
+
+.skeleton-block--w-2\/3 {
+  inline-size: 66%;
+}
+
+.skeleton-block--w-3\/4 {
+  inline-size: 75%;
+}
+
+.skeleton-block--pill {
+  border-radius: var(--radius-pill);
+  block-size: 1.75rem;
+  inline-size: 6rem;
+}
+
+.skeleton-block--circle {
+  border-radius: 50%;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+}
+
+/* Staggered animation delays for groups */
+.skeleton-group > .skeleton-inline:nth-child(2),
+.skeleton-group > .skeleton-block:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.skeleton-group > .skeleton-inline:nth-child(3),
+.skeleton-group > .skeleton-block:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.skeleton-group > .skeleton-inline:nth-child(4),
+.skeleton-group > .skeleton-block:nth-child(4) {
+  animation-delay: 0.3s;
 }
 
 /* Price fetch failure — compact empty state for hero / country mounts */
@@ -92,9 +160,26 @@
   border: 1px solid var(--border-subtle);
 }
 
+/* ── Loading fade-in once content hydrates ── */
+.content-loading {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.content-loading.is-loaded {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .skeleton-inline {
+  .skeleton-inline,
+  .skeleton-block {
     animation: none;
-    background: var(--color-surface-2);
+    background: var(--color-surface-3);
+  }
+
+  .content-loading,
+  .content-loading.is-loaded {
+    opacity: 1;
+    transition: none;
   }
 }

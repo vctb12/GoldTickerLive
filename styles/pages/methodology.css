@@ -1,12 +1,23 @@
 /* ─── Methodology Page ─────────────────────────────────────────────────────── */
 
-/* Hero — brand dark/gold identity shared with the homepage hero */
+/* Hero — brand dark/gold identity */
 .method-hero {
-  background: var(--gradient-paper);
-  border-block-end: var(--rule-hairline);
-  color: var(--text-primary);
-  padding: var(--space-7) var(--space-5) 2.5rem;
+  background:
+    radial-gradient(ellipse 60% 55% at 80% 20%, rgb(184 137 44 / 18%) 0%, transparent 55%),
+    linear-gradient(148deg, #05060b 0%, #0e1220 40%, #0c1428 70%, #05060b 100%);
+  border-block-end: 1px solid rgb(212 168 64 / 14%);
+  color: #f0edd8;
+  padding: var(--space-8) var(--space-5) 3rem;
   position: relative;
+}
+
+.method-hero::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 3px;
+  background: var(--gradient-gold);
 }
 
 .method-hero::after {
@@ -14,54 +25,75 @@
   position: absolute;
   inset-inline: 0;
   inset-block-end: 0;
-  block-size: 2px;
-  background: var(--rule-foil);
-  opacity: 0.6;
+  block-size: 1px;
+  background: var(--gradient-gold);
+  opacity: 0.2;
 }
 
 .method-hero-inner {
   max-width: 760px;
   margin-inline: auto;
   position: relative;
+  z-index: 1;
 }
 
 .method-hero-tag {
-  display: inline-block;
-  background: var(--color-gold-tint);
-  border: 1px solid var(--color-gold-glow);
-  color: var(--text-accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  background: rgb(212 168 64 / 14%);
+  border: 1px solid rgb(212 168 64 / 30%);
+  color: var(--color-gold-bright);
   border-radius: var(--radius-pill);
   font-size: var(--text-xs);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0.06em;
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-caps);
   text-transform: uppercase;
-  padding: 0.25rem 0.85rem;
-  margin-bottom: 1rem;
+  padding: 0.3rem 0.9rem;
+  margin-bottom: 1.1rem;
 }
 
 .method-hero h1 {
-  font-size: clamp(1.7rem, 4vw, 2.6rem);
-  font-weight: var(--weight-bold);
-  margin: 0 0 0.75rem;
+  font-size: clamp(1.8rem, 4.5vw, 2.9rem);
+  font-weight: var(--weight-extrabold);
+  margin: 0 0 0.8rem;
   line-height: var(--leading-tight);
-  color: var(--text-primary);
+  color: #f0edd8;
+  font-family: var(--font-display);
+  letter-spacing: var(--tracking-tight);
 }
 
 .method-hero p {
   font-size: var(--text-md);
-  color: var(--text-secondary);
+  color: rgb(240 237 216 / 70%);
   margin: 0;
   max-width: 600px;
+  line-height: var(--leading-relaxed);
 }
 
 /* Table of Contents */
 .method-toc {
-  background: var(--color-surface, #141518);
-  border-bottom: 1px solid var(--color-border, #22242a);
+  background: rgb(253 251 245 / 96%);
+  border-bottom: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-gold-glow);
   position: sticky;
   top: calc(var(--nav-height, 56px) + var(--spot-bar-height, 0px));
   z-index: 100;
   overflow-x: auto;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+[data-theme='dark'] .method-toc {
+  background: rgb(8 9 14 / 94%);
+  border-bottom-color: var(--color-border);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .method-toc {
+    background: rgb(8 9 14 / 94%);
+    border-bottom-color: var(--color-border);
+  }
 }
 
 .method-toc-inner {

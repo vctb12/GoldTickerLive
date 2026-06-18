@@ -654,8 +654,14 @@ function renderDetailChart(a, b) {
   });
 
   const legend = el('div', { class: 'compare-chart-legend' }, [
-    el('span', { class: 'compare-chart-key compare-chart-key--a' }, `${a.flag} ${countryName(a)}`),
-    el('span', { class: 'compare-chart-key compare-chart-key--b' }, `${b.flag} ${countryName(b)}`),
+    el('span', { class: 'compare-chart-key compare-chart-key--a' }, [
+      el('span', { 'aria-hidden': 'true' }, `${a.flag} `),
+      countryName(a),
+    ]),
+    el('span', { class: 'compare-chart-key compare-chart-key--b' }, [
+      el('span', { 'aria-hidden': 'true' }, `${b.flag} `),
+      countryName(b),
+    ]),
   ]);
 
   return el('figure', { class: 'compare-chart' }, [

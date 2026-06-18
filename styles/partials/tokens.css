@@ -1,31 +1,32 @@
 /* ═══════════════════════════════════════════════
    CSS Custom Properties — Theme Tokens
+   Gold Ticker Live — Premium Redesign v2
    ═══════════════════════════════════════════════ */
 :root {
-  /* Background layers — refined near-white neutral ramp, hairline borders */
-  --color-bg: #fafaf8;
+  /* ── Background layers — warm ivory / gold-kissed paper ── */
+  --color-bg: #fdfbf5;
   --color-surface: #fff;
-  --color-surface-2: #f6f5f2;
-  --color-surface-3: #f0efeb;
-  --color-border: #e7e5e0;
-  --color-border-subtle: #efedea;
+  --color-surface-2: #faf7ee;
+  --color-surface-3: #f4f0e3;
+  --color-border: #e6dcc8;
+  --color-border-subtle: #ede7d7;
 
-  /* Text — near-black ink, neutral grays */
-  --color-text: #16181d;
-  --color-text-muted: #5c5f66;
-  --color-text-faint: #6b6e75;
+  /* ── Text — deep warm ink ── */
+  --color-text: #18140a;
+  --color-text-muted: #6b5f4e;
+  --color-text-faint: #8a7c68;
 
-  /* Gold palette — single restrained metallic accent */
-  --color-gold: #b08a3e;
-  --color-gold-light: #c9a14d;
-  --color-gold-bright: #d9b25e;
-  --color-gold-dark: #7d6022;
-  --color-gold-deep: #59431a;
-  --color-gold-bg: #faf7f0;
-  --color-gold-tint: #f7f3e9;
-  --color-gold-glow: rgb(176 138 62 / 12%);
+  /* ── Gold palette — rich, saturated metallic ── */
+  --color-gold: #b8892c;
+  --color-gold-light: #d4a840;
+  --color-gold-bright: #e8bf5a;
+  --color-gold-dark: #8a6520;
+  --color-gold-deep: #5c430e;
+  --color-gold-bg: #faf6e8;
+  --color-gold-tint: #f5f0d8;
+  --color-gold-glow: rgb(184 137 44 / 14%);
 
-  /* Status colours */
+  /* ── Status / semantic colours ── */
   --color-live: #1a7a32;
   --color-live-bg: rgb(26 122 50 / 9%);
   --color-live-border: rgb(26 122 50 / 25%);
@@ -43,63 +44,56 @@
   --color-down-bg: rgb(184 20 40 / 8%);
   --color-error: #b81428;
   --color-error-bg: rgb(184 20 40 / 8%);
-
-  /* Warning / stale-data palette — used by freshness badges, "cached (API
-     unavailable)" banners, and delayed-quote labels. Amber, not red, so the
-     user isn't misled into thinking the page is broken. */
   --color-warning: #a0671c;
   --color-warning-bg: rgb(245 158 11 / 10%);
   --color-warning-border: rgb(245 158 11 / 35%);
   --color-warning-text: #7a4f15;
 
-  /* Semantic surfaces (canonical) */
+  /* ── Semantic surfaces ── */
   --surface-canvas: var(--color-bg);
   --surface-primary: var(--color-surface);
   --surface-secondary: var(--color-surface-2);
   --surface-tertiary: var(--color-surface-3);
   --surface-accent: var(--color-gold-bg);
-  --surface-glass: rgb(255 255 255 / 78%);
-  --surface-glass-border: rgb(255 255 255 / 55%);
+  --surface-glass: rgb(255 255 255 / 80%);
 
-  /* Semantic text tiers (canonical) */
+  /* ── Semantic text ── */
   --text-primary: var(--color-text);
   --text-secondary: var(--color-text-muted);
   --text-tertiary: var(--color-text-faint);
   --text-accent: var(--color-gold-dark);
   --text-on-dark: #fff;
 
-  /* Semantic borders (canonical) */
+  /* ── Semantic borders ── */
   --border-default: var(--color-border);
   --border-subtle: var(--color-border-subtle);
-  --border-strong: #d6d3cc;
+  --border-strong: #d6ccb4;
   --border-accent: var(--color-gold);
 
-  /* Radii */
+  /* ── Radii ── */
   --radius-xs: 4px;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 18px;
   --radius-xl: 24px;
   --radius-pill: 999px;
-
-  /* Radius semantic aliases (canonical) */
   --radius-control: var(--radius-sm);
   --radius-card: var(--radius-lg);
   --radius-panel: var(--radius-xl);
   --radius-badge: var(--radius-pill);
 
-  /* Shadows — luxury layered depth */
-  --shadow-xs: 0 1px 2px rgb(0 0 0 / 4%), 0 1px 1px rgb(0 0 0 / 2%);
-  --shadow-sm: 0 1px 3px rgb(0 0 0 / 6%), 0 2px 8px rgb(0 0 0 / 3%);
-  --shadow-md: 0 4px 14px rgb(0 0 0 / 8%), 0 2px 4px rgb(0 0 0 / 4%);
-  --shadow-lg: 0 10px 30px rgb(0 0 0 / 10%), 0 4px 10px rgb(0 0 0 / 5%);
-  --shadow-xl: 0 20px 50px rgb(0 0 0 / 12%), 0 8px 20px rgb(0 0 0 / 6%);
-  --shadow-gold: 0 2px 10px rgb(176 138 62 / 14%), 0 1px 3px rgb(176 138 62 / 8%);
-  --shadow-gold-lg: 0 6px 22px rgb(176 138 62 / 18%), 0 2px 6px rgb(176 138 62 / 10%);
-  --shadow-card-hover: 0 8px 28px rgb(0 0 0 / 9%), 0 2px 6px rgb(0 0 0 / 4%);
+  /* ── Shadows — layered depth with warm undertones ── */
+  --shadow-xs: 0 1px 2px rgb(24 20 10 / 4%), 0 1px 1px rgb(24 20 10 / 2%);
+  --shadow-sm: 0 1px 3px rgb(24 20 10 / 6%), 0 2px 8px rgb(24 20 10 / 3%);
+  --shadow-md: 0 4px 14px rgb(24 20 10 / 8%), 0 2px 4px rgb(24 20 10 / 4%);
+  --shadow-lg: 0 10px 32px rgb(24 20 10 / 10%), 0 4px 10px rgb(24 20 10 / 5%);
+  --shadow-xl: 0 20px 52px rgb(24 20 10 / 13%), 0 8px 20px rgb(24 20 10 / 6%);
+  --shadow-gold: 0 2px 12px rgb(184 137 44 / 18%), 0 1px 3px rgb(184 137 44 / 10%);
+  --shadow-gold-lg: 0 6px 28px rgb(184 137 44 / 22%), 0 2px 8px rgb(184 137 44 / 12%);
+  --shadow-card-hover: 0 10px 32px rgb(24 20 10 / 10%), 0 3px 8px rgb(24 20 10 / 5%);
   --shadow-hairline: inset 0 0 0 1px var(--color-border);
 
-  /* Elevation semantic aliases (canonical) */
+  /* ── Elevation aliases ── */
   --elev-1: var(--shadow-xs);
   --elev-2: var(--shadow-sm);
   --elev-3: var(--shadow-md);
@@ -108,18 +102,20 @@
   --elev-accent: var(--shadow-gold);
   --elev-accent-strong: var(--shadow-gold-lg);
 
-  /* Premium gradients — restrained; gold reads as a hairline accent, not a wash */
-  --gradient-gold: linear-gradient(135deg, #b08a3e 0%, #c9a14d 50%, #b08a3e 100%);
+  /* ── Premium gradients ── */
+  --gradient-gold: linear-gradient(135deg, #b8892c 0%, #d4a840 40%, #e8bf5a 70%, #b8892c 100%);
   --gradient-gold-subtle: linear-gradient(
     135deg,
-    rgb(176 138 62 / 6%) 0%,
-    rgb(201 161 77 / 3%) 100%
+    rgb(184 137 44 / 7%) 0%,
+    rgb(212 168 64 / 3%) 100%
   );
-  --gradient-dark: linear-gradient(155deg, #1c1e24 0%, #14161b 45%, #0d0e10 100%);
-  --gradient-surface: linear-gradient(180deg, #fff 0%, #fafaf8 100%);
+  --gradient-dark: linear-gradient(155deg, #08090e 0%, #101320 50%, #08090e 100%);
+  --gradient-hero-dark: linear-gradient(145deg, #08090e 0%, #10152a 35%, #141a2c 65%, #08090e 100%);
+  --gradient-surface: linear-gradient(180deg, #fff 0%, #fdfbf5 100%);
+  --gradient-paper: linear-gradient(180deg, #fefcf8 0%, #f8f4eb 100%);
+  --gradient-hero-light: linear-gradient(160deg, #fefcf8 0%, #faf6ea 50%, #f5f0e0 100%);
 
-  /* Bullion Desk — editorial hairlines + foil accent.
-     Gold reads as a thin foil line / underline, never a background wash. */
+  /* ── Gold foil ── */
   --rule-hairline: 1px solid var(--color-border);
   --rule-foil: linear-gradient(
     90deg,
@@ -130,9 +126,8 @@
     transparent
   );
   --foil-underline: linear-gradient(90deg, var(--color-gold-dark), var(--color-gold-bright));
-  --gradient-paper: linear-gradient(180deg, #fdfdfb 0%, #f6f5f1 100%);
 
-  /* Spacing scale (canonical) */
+  /* ── Spacing scale ── */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -142,62 +137,58 @@
   --space-7: 3rem;
   --space-8: 4rem;
 
-  /* Rhythm — section / block / inline cadence shared by all pages */
+  /* ── Rhythm ── */
   --rhythm-inline: var(--space-3);
   --rhythm-block: var(--space-5);
   --rhythm-section: var(--space-7);
   --rhythm-section-lg: var(--space-8);
 
-  /* Typography — font stacks */
+  /* ── Typography ── */
   --font-main: 'Cairo', -apple-system, blinkmacsystemfont, 'Segoe UI', sans-serif;
   --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
-
-  /* Bullion Desk — editorial display + instrument numerics.
-     Latin headlines use a refined system serif for editorial authority (zero
-     network cost, no added dependency). Arabic/RTL falls back to Cairo via the
-     [dir='rtl'] override below so EN/AR parity and shaping are preserved.
-     Numerics use a tabular mono so prices read like a precision instrument. */
   --font-display: ui-serif, georgia, 'Iowan Old Style', 'Times New Roman', 'Cairo', serif;
   --font-numeric: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', menlo, monospace;
+  --font-sans:
+    -apple-system, blinkmacsystemfont, 'Segoe UI Variable', 'Segoe UI', 'Cairo', sans-serif;
 
-  /* Typography — size scale */
-  --text-2xs: 0.625rem; /* 10px */
-  --text-xs: 0.75rem; /* 12px */
-  --text-sm: 0.875rem; /* 14px */
-  --text-base: 1rem; /* 16px */
-  --text-md: 1.0625rem; /* 17px */
-  --text-lg: 1.125rem; /* 18px */
-  --text-xl: 1.25rem; /* 20px */
-  --text-2xl: 1.5rem; /* 24px */
-  --text-3xl: 1.875rem; /* 30px */
-  --text-4xl: 2.25rem; /* 36px — display tier, hero headings */
-  --text-5xl: 3rem; /* 48px — display tier, hero headings */
+  /* ── Type scale ── */
+  --text-2xs: 0.625rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.0625rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
 
-  /* Typography — font weights */
+  /* ── Font weights ── */
   --weight-light: 300;
   --weight-regular: 400;
-  --weight-normal: 400; /* alias */
+  --weight-normal: 400;
   --weight-medium: 500;
   --weight-semibold: 600;
   --weight-bold: 700;
   --weight-extrabold: 800;
 
-  /* Typography — line heights */
+  /* ── Line heights ── */
   --leading-none: 1;
-  --leading-tight: 1.25;
-  --leading-snug: 1.375;
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
   --leading-normal: 1.5;
-  --leading-relaxed: 1.625;
-  --leading-loose: 2;
+  --leading-relaxed: 1.65;
 
-  /* Typography — letter spacing */
+  /* ── Letter spacing ── */
+  --tracking-tighter: -0.04em;
   --tracking-tight: -0.025em;
-  --tracking-normal: 0;
   --tracking-wide: 0.025em;
   --tracking-wider: 0.05em;
   --tracking-caps: 0.1em;
 
-  /* Layout */
+  /* ── Layout ── */
   --content-max-width: 1280px;
   --page-gutter: 1.25rem;
   --nav-height: 64px;
@@ -205,120 +196,129 @@
   --mobile-bottom-nav-body-offset: 84px;
   --mobile-bottom-nav-max-width: 640px;
 
-  /* Focus ring */
+  /* ── Focus ring ── */
   --focus-ring-color: var(--color-gold);
   --focus-ring-width: 3px;
   --focus-ring-offset: 2px;
 
-  /* Common color aliases */
+  /* ── Common aliases ── */
   --color-white: #fff;
   --color-black: #000;
+  --color-accent: var(--color-gold-dark);
+  --color-accent-strong: var(--color-gold-bright);
+  --color-surface-1: var(--color-surface);
+  --color-surface-raised: var(--color-surface-2);
+  --color-text-secondary: var(--color-text-muted);
+  --color-gold-alpha: rgb(184 137 44 / 10%);
+  --color-amber: #f59e0b;
+  --color-danger: #dc2626;
 
-  /* Semantic aliases — consolidate page-level references to a single name.
-     These are the canonical tokens for features that were previously using
-     ad-hoc var() with incorrect / dark-theme fallback values. */
-  --color-accent: var(--color-gold-dark); /* primary accent text (light mode) */
-  --color-accent-strong: var(--color-gold-bright); /* bright accent (dark mode override) */
-  --color-surface-1: var(--color-surface); /* backward-compat alias for --surface-primary */
-  --color-surface-raised: var(--color-surface-2); /* slightly elevated surface */
-  --color-text-secondary: var(--color-text-muted); /* secondary body text alias */
-  --color-gold-alpha: rgb(176 138 62 / 10%); /* subtle gold tint for callout backgrounds */
-  --color-amber: #f59e0b; /* warm amber — freshness "cached / slightly stale" states */
-  --color-danger: #dc2626; /* danger red — freshness "very stale / unavailable" states */
-
-  /* Transitions — luxury easing */
+  /* ── Transitions ── */
   --transition: 0.2s ease;
   --transition-md: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* Easing curves */
+  /* ── Easing curves ── */
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Duration scale */
+  /* ── Duration scale ── */
   --duration-fast: 100ms;
   --duration-normal: 200ms;
   --duration-md: 0.3s;
-  --duration-slow: 350ms;
   --duration-xslow: 500ms;
-
-  /* Interaction aliases (session 7 visual system) */
   --transition-fast: 150ms var(--ease-out);
   --transition-normal: 250ms var(--ease-out);
   --transition-slow: 400ms var(--ease-out);
-  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Motion Universe tokens — Phase 0 foundation */
+  /* ── Motion tokens ── */
   --motion-spot-ring: 2.4s;
   --motion-sonar: 1.8s;
   --motion-stagger: 280ms;
   --motion-stagger-step: 50ms;
   --motion-page-transition: 280ms;
-  --duration-price-tick: 220ms;
-  --ease-price-tick: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Z-index scale — layered surfaces share one ladder */
+  /* ── Z-index ladder ── */
   --z-nav: 100;
   --z-drawer: 200;
-  --z-toast: 300;
   --z-modal: 400;
 
-  /* Reveal / exit motion tokens */
-  --duration-reveal: 480ms;
-  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
-
-  /* Breakpoint tokens (for reference — use in @media queries) */
-  --bp-xs: 380px;
-  --bp-sm: 480px;
-  --bp-md: 640px;
-  --bp-lg: 768px;
-  --bp-xl: 1024px;
-  --bp-2xl: 1280px;
+  /* ── Nav accent bar ── */
+  --nav-accent-height: 3px;
+  --nav-accent-gradient: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-gold) 20%,
+    var(--color-gold-bright) 50%,
+    var(--color-gold) 80%,
+    transparent
+  );
 }
 
 /* ═══════════════════════════════════════════════
-   Dark Mode Tokens
+   Dark Mode — Deep Midnight Gold
    ═══════════════════════════════════════════════ */
 [data-theme='dark'] {
-  --color-bg: #0d0e10;
-  --color-surface: #141518;
-  --color-surface-2: #1a1c20;
-  --color-surface-3: #212328;
-  --color-border: #2a2d33;
-  --color-border-subtle: #22242a;
-  --color-text: #edeef0;
-  --color-text-muted: #a6a8ae;
-  --color-text-faint: #82858c;
-  --color-gold-bg: #181610;
-  --color-gold-tint: #15130d;
-  --surface-canvas: #0d0e10;
-  --surface-primary: #141518;
-  --surface-secondary: #1a1c20;
-  --surface-tertiary: #212328;
-  --surface-accent: #181610;
-  --text-primary: #edeef0;
-  --text-secondary: #a6a8ae;
-  --text-tertiary: #82858c;
-  --border-default: #2a2d33;
-  --border-subtle: #22242a;
-  --border-strong: #383b42;
-  --gradient-surface: linear-gradient(180deg, #141518 0%, #101114 100%);
-  --gradient-paper: linear-gradient(180deg, #141518 0%, #0f1013 100%);
-
-  /* Semantic alias overrides for dark mode */
+  --color-bg: #08090e;
+  --color-surface: #0f1118;
+  --color-surface-2: #171a26;
+  --color-surface-3: #1e2232;
+  --color-border: #262b3e;
+  --color-border-subtle: #1c2030;
+  --color-text: #f0edd8;
+  --color-text-muted: #9b96a0;
+  --color-text-faint: #6e6878;
+  --color-gold: #d4a840;
+  --color-gold-light: #e8bf5a;
+  --color-gold-bright: #f5d070;
+  --color-gold-dark: #b8892c;
+  --color-gold-deep: #8a6520;
+  --color-gold-bg: #12100a;
+  --color-gold-tint: #0e0c08;
+  --color-gold-glow: rgb(212 168 64 / 16%);
+  --surface-canvas: #08090e;
+  --surface-primary: #0f1118;
+  --surface-secondary: #171a26;
+  --surface-tertiary: #1e2232;
+  --surface-accent: #12100a;
+  --surface-glass: rgb(15 17 24 / 88%);
+  --text-primary: #f0edd8;
+  --text-secondary: #9b96a0;
+  --text-tertiary: #6e6878;
+  --text-accent: var(--color-gold-light);
+  --border-default: #262b3e;
+  --border-subtle: #1c2030;
+  --border-strong: #333a52;
+  --border-accent: var(--color-gold);
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 20%);
+  --shadow-sm: 0 1px 4px rgb(0 0 0 / 30%), 0 2px 8px rgb(0 0 0 / 15%);
+  --shadow-md: 0 4px 16px rgb(0 0 0 / 40%), 0 2px 6px rgb(0 0 0 / 20%);
+  --shadow-lg: 0 12px 36px rgb(0 0 0 / 50%), 0 4px 12px rgb(0 0 0 / 25%);
+  --shadow-xl: 0 24px 56px rgb(0 0 0 / 60%), 0 8px 22px rgb(0 0 0 / 30%);
+  --shadow-gold: 0 2px 14px rgb(212 168 64 / 22%), 0 1px 4px rgb(212 168 64 / 14%);
+  --shadow-gold-lg: 0 8px 32px rgb(212 168 64 / 28%), 0 3px 10px rgb(212 168 64 / 16%);
+  --shadow-card-hover: 0 12px 36px rgb(0 0 0 / 45%), 0 4px 10px rgb(0 0 0 / 22%);
+  --gradient-surface: linear-gradient(180deg, #0f1118 0%, #0b0d14 100%);
+  --gradient-paper: linear-gradient(180deg, #0f1118 0%, #0a0c12 100%);
+  --gradient-hero-light: linear-gradient(160deg, #0a0c14 0%, #10152a 40%, #141a2e 100%);
   --color-accent: var(--color-gold-light);
   --color-accent-strong: var(--color-gold-bright);
   --color-surface-raised: var(--color-surface-2);
   --color-text-secondary: var(--color-text-muted);
+  --nav-accent-gradient: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-gold) 20%,
+    var(--color-gold-bright) 50%,
+    var(--color-gold) 80%,
+    transparent
+  );
 }
 
 /* ═══════════════════════════════════════════════
-   RTL — Arabic headlines keep Cairo (system serif
-   stacks lack Arabic shaping); numerics stay mono.
+   RTL — Arabic keeps Cairo; numerics stay mono
    ═══════════════════════════════════════════════ */
 [dir='rtl'] {
   --font-display: 'Cairo', var(--font-main);

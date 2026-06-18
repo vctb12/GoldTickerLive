@@ -24,19 +24,31 @@
 /* ── Hero ────────────────────────────────────────────────────────────────── */
 .shops-hero-inner {
   background:
-    radial-gradient(circle at 85% 15%, rgb(217 178 94 / 18%), transparent 42%),
-    radial-gradient(circle at 10% 80%, rgb(180 100 0 / 12%), transparent 50%),
-    linear-gradient(145deg, #19140e 0%, #2a1f10 55%, #5b4117 100%);
+    radial-gradient(ellipse 65% 55% at 88% 15%, rgb(212 168 64 / 22%), transparent 60%),
+    radial-gradient(ellipse 45% 40% at 8% 80%, rgb(140 80 0 / 14%), transparent 55%),
+    linear-gradient(148deg, #06070e 0%, #0e1228 40%, #151e38 70%, #0c1020 100%);
   border-radius: var(--radius-panel);
-  color: #fff8ea;
-  padding: clamp(1.6rem, 4vw, 2.8rem);
+  color: #f0edd8;
+  padding: clamp(1.8rem, 4vw, 3rem);
   box-shadow:
     var(--elev-5),
-    0 4px 10px rgb(176 138 62 / 18%),
-    inset 0 1px 0 rgb(255 220 120 / 15%);
-  border: 1px solid rgb(217 178 94 / 28%);
+    0 6px 24px rgb(212 168 64 / 16%),
+    inset 0 1px 0 rgb(212 168 64 / 18%);
+  border: 1px solid rgb(212 168 64 / 22%);
   position: relative;
   overflow: hidden;
+}
+
+/* Gold foil accent line at top */
+.shops-hero-inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 2px;
+  background: var(--rule-foil);
+  opacity: 0.85;
+  pointer-events: none;
 }
 
 /* Trust banner */

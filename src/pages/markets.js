@@ -68,7 +68,7 @@ function renderGrid() {
       ...(href ? { href } : {}),
     });
 
-    const flag = el('span', { class: 'markets-card__flag' });
+    const flag = el('span', { class: 'markets-card__flag', 'aria-hidden': 'true' });
     flag.textContent = country.flag || '🏳️';
 
     const info = el('div', { class: 'markets-card__info' });
@@ -79,7 +79,7 @@ function renderGrid() {
     info.appendChild(nameEl);
     info.appendChild(currEl);
 
-    const arrow = el('span', { class: 'markets-card__arrow' });
+    const arrow = el('span', { class: 'markets-card__arrow', 'aria-hidden': 'true' });
     arrow.textContent = href ? '→' : '';
 
     card.appendChild(flag);

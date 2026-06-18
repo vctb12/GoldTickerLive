@@ -4,12 +4,24 @@
 
 /* ── Hero ─────────────────────────────────────────── */
 .calc-hero {
-  background: var(--gradient-paper);
+  background: var(--gradient-hero-light);
   border-block-end: var(--rule-hairline);
-  padding: var(--space-6) var(--space-5) var(--space-6);
+  padding: var(--space-7) var(--space-5) var(--space-6);
   text-align: center;
   position: relative;
   overflow: hidden;
+}
+
+.calc-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 55% 60% at 50% -10%,
+    rgb(184 137 44 / 10%) 0%,
+    transparent 65%
+  );
+  pointer-events: none;
 }
 
 .calc-hero::after {
@@ -17,10 +29,14 @@
   position: absolute;
   inset-inline: 0;
   inset-block-end: 0;
-  block-size: 2px;
+  block-size: 3px;
   background: var(--rule-foil);
-  opacity: 0.6;
+  opacity: 0.75;
   pointer-events: none;
+}
+
+[data-theme='dark'] .calc-hero {
+  background: var(--gradient-hero-dark);
 }
 
 .calc-hero-inner {
