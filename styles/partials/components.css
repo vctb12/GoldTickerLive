@@ -24,20 +24,20 @@
   outline-offset: 2px;
 }
 
-/* --- Base nav bar --- */
+/* ── Phase 40: Navigation — crisper glass with stronger gold accent ── */
 .site-nav {
   position: sticky;
   top: 0;
   z-index: var(--z-nav, 300);
-  background: rgb(253 251 245 / 88%);
-  backdrop-filter: blur(20px) saturate(1.6);
-  border-bottom: 1px solid var(--border-subtle);
+  background: rgb(254 252 247 / 90%);
+  backdrop-filter: blur(24px) saturate(1.8);
+  border-bottom: 1px solid var(--color-border-subtle);
   box-shadow:
-    0 1px 0 0 var(--border-subtle),
-    0 4px 20px rgb(24 20 10 / 5%);
+    0 1px 0 0 var(--color-border-subtle),
+    0 4px 24px rgb(21 17 10 / 6%);
 }
 
-/* Gold accent bar at top of nav */
+/* Gold accent bar at top of nav — richer */
 .site-nav::before {
   content: '';
   position: absolute;
@@ -46,6 +46,7 @@
   height: var(--nav-accent-height, 3px);
   background: var(--nav-accent-gradient);
   pointer-events: none;
+  opacity: 0.95;
 }
 
 /* --- Inner layout (condenses when scrolled) --- */
@@ -540,13 +541,13 @@
   direction: rtl;
 }
 
-/* Dark mode nav */
+/* Phase 44 dark mode nav — deeper, richer */
 [data-theme='dark'] .site-nav {
-  background: rgb(8 9 14 / 90%);
+  background: rgb(6 7 8 / 92%);
   border-bottom-color: var(--border-subtle);
   box-shadow:
     0 1px 0 0 var(--border-subtle),
-    0 4px 24px rgb(0 0 0 / 40%);
+    0 6px 28px rgb(0 0 0 / 50%);
 }
 
 [data-theme='dark'] .nav-drawer {
@@ -2538,25 +2539,31 @@ main {
 }
 
 /* ═══════════════════════════════════════════════
-   Premium Button System
+   Phase 41: Premium Button System — Refined
    ═══════════════════════════════════════════════ */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  padding: 0.6rem 1.4rem;
-  border-radius: var(--radius-sm);
+  gap: 0.45rem;
+  padding: 0.65rem 1.5rem;
+  border-radius: var(--radius-md);
   font-family: var(--font-main);
   font-size: 0.9rem;
   font-weight: var(--weight-bold);
   text-decoration: none;
-  transition: var(--transition-md);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
   cursor: pointer;
   border: 1.5px solid transparent;
   white-space: nowrap;
   min-height: 44px;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.015em;
+  line-height: 1.4;
 }
 
 .btn:hover {
@@ -2566,24 +2573,22 @@ main {
 .btn:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-md);
 }
 
-/* Standard in-app/in-page primary action — the brand gold. (The flagship
-   "enter the live product" CTA in nav + homepage hero uses ink; gold foil is
-   for accents/rules/active states. Two-tier system, see DESIGN_TOKENS.md.)
-   Solid refined gold — no gradient wash, tokenized. */
+/* Primary: rich gold with glow — reserved for main CTAs */
 .btn-primary {
   background: var(--color-gold-dark);
   border-color: var(--color-gold-dark);
-  color: var(--text-on-dark);
-  box-shadow: var(--shadow-gold);
+  color: #fff8e8;
+  box-shadow: var(--shadow-gold), var(--shadow-sm);
 }
 
 .btn-primary:hover {
-  background: var(--color-gold-deep);
-  border-color: var(--color-gold-deep);
+  background: var(--color-gold);
+  border-color: var(--color-gold);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-gold-lg);
+  box-shadow: var(--shadow-gold-lg), var(--shadow-md);
 }
 
 .btn:active:not(:disabled) {
@@ -2601,10 +2606,11 @@ main {
 }
 
 .btn-outline:hover {
-  background: var(--color-gold-bg);
+  background: var(--color-gold-tint);
   border-color: var(--color-gold-dark);
   transform: translateY(-2px);
   box-shadow: var(--shadow-gold);
+  color: var(--color-gold-deep);
 }
 
 .btn-ghost {
@@ -2614,20 +2620,22 @@ main {
 }
 
 .btn-ghost:hover {
-  background: var(--color-surface-2);
+  background: var(--surface-secondary);
   color: var(--color-text);
 }
 
 .btn-sm {
-  padding: 0.4rem 1rem;
-  font-size: 0.82rem;
+  padding: 0.45rem 1.05rem;
+  font-size: 0.83rem;
   min-height: 44px;
+  border-radius: var(--radius-sm);
 }
 
 .btn-lg {
-  padding: 0.75rem 1.9rem;
-  font-size: 0.98rem;
-  min-height: 50px;
+  padding: 0.85rem 2.1rem;
+  font-size: 1rem;
+  min-height: 52px;
+  border-radius: var(--radius-lg);
 }
 
 .btn:disabled {
@@ -4189,4 +4197,202 @@ body.has-ticker {
 /* Search-no-results variant */
 .empty-state--search::before {
   content: '🔎';
+}
+
+/* ═══════════════════════════════════════════════
+   Phase 46: RTL Polish — Refined bidirectional support
+   ═══════════════════════════════════════════════ */
+
+/* Number-only nodes must stay LTR regardless of document direction */
+[dir='rtl'] .hlc-price,
+[dir='rtl'] .gcc-price,
+[dir='rtl'] .home-stat-value,
+[dir='rtl'] .karat-strip-v,
+[dir='rtl'] .cc-price-main,
+[dir='rtl'] .market-card-loc {
+  direction: ltr;
+  text-align: right;
+}
+
+/* Tool cards: RTL text alignment + icon positioning */
+[dir='rtl'] .tool-card-icon {
+  align-self: flex-end;
+}
+
+/* Freshness bar RTL */
+[dir='rtl'] .home-freshness-bar {
+  flex-direction: row-reverse;
+}
+
+[dir='rtl'] .hfb-dismiss {
+  margin-inline-start: 0;
+  margin-inline-end: auto;
+}
+
+/* FAQ accordion RTL — native <details> marker on start side */
+[dir='rtl'] .faq-item[open] .faq-q {
+  background: linear-gradient(270deg, rgb(196 144 46 / 5%), transparent 70%);
+}
+
+/* GCC tabs container RTL */
+[dir='rtl'] .gcc-region-tabs {
+  flex-direction: row-reverse;
+}
+
+/* Hero trust line RTL — border on end side */
+[dir='rtl'] .hero-trust-line {
+  border-inline-start: none;
+  border-inline-end: 3px solid var(--color-gold);
+  padding-inline-start: 0;
+  padding-inline-end: var(--space-3);
+  background: linear-gradient(270deg, rgb(196 144 46 / 5%), transparent 60%);
+}
+
+/* Karat strip label column RTL */
+[dir='rtl'] .karat-strip-label,
+[dir='rtl'] .karat-strip-title,
+[dir='rtl'] .karat-strip-sub {
+  text-align: right;
+}
+
+/* Stats section RTL */
+[dir='rtl'] .home-stats-grid {
+  direction: rtl;
+}
+
+[dir='rtl'] .home-stat-card::after {
+  background: var(--rule-foil);
+}
+
+/* Section title underline RTL — anchor to inline-end */
+[dir='rtl'] .home-section-title::after {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+
+[dir='rtl'] .section-intro.centered .home-section-title::after {
+  inset-inline-end: 50%;
+  transform: translateX(50%);
+}
+
+/* ═══════════════════════════════════════════════
+   Phase 47: Accessibility — Enhanced focus + WCAG compliance
+   ═══════════════════════════════════════════════ */
+
+/* Global focus ring baseline — gold on all interactive elements */
+:focus-visible {
+  outline: 2px solid var(--focus-ring-color, var(--color-gold));
+  outline-offset: var(--focus-ring-offset, 2px);
+  border-radius: var(--radius-xs);
+}
+
+/* Remove outline on mouse click (only show for keyboard) — already handled by :focus-visible */
+
+/* Interactive card links — stronger focus ring */
+a.gcc-card:focus-visible,
+a.tool-card:focus-visible,
+a.market-card:focus-visible,
+a.country-tile:focus-visible,
+a.city-market-card:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius: var(--radius-lg);
+}
+
+/* Nav links */
+.nav-link:focus-visible,
+.nav-drawer-link:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: var(--radius-pill);
+}
+
+.nav-cta:focus-visible {
+  outline: 2px solid var(--color-gold-dark);
+  outline-offset: 3px;
+}
+
+/* Nav hamburger */
+.nav-hamburger:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* Buttons — thicker ring for primary actions */
+.btn-primary:focus-visible {
+  outline: 3px solid var(--color-gold-dark);
+  outline-offset: 3px;
+}
+
+/* Skip link — always visible on focus */
+.nav-skip-link:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 0;
+  box-shadow: 0 0 0 4px var(--color-gold-glow);
+}
+
+/* Form inputs */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 0;
+  border-color: var(--color-gold);
+}
+
+/* Ensure minimum contrast on muted text used in financial contexts */
+.hlc-high-low,
+.hlc-sub,
+.karat-strip-k,
+.gcc-source,
+.market-card-desc {
+  color: var(--color-text-muted);
+}
+
+/* Touch target enforcer — all buttons must have 44×44 tap area */
+button,
+[role='button'],
+[type='button'],
+[type='submit'],
+[type='reset'] {
+  min-height: 44px;
+}
+
+/* Ensure freshness labels are always visually distinct (beyond color) */
+.hlc-updated[data-freshness-key]::before,
+.karat-strip-updated[data-freshness-key]::before {
+  font-family: var(--font-sans);
+}
+
+/* Color-blind-safe: ensure up/down badges have shape + text cue, not just color */
+.badge-up::before {
+  content: '↑ ';
+  font-size: 0.8em;
+}
+
+.badge-down::before {
+  content: '↓ ';
+  font-size: 0.8em;
+}
+
+/* Suppress arrow prefix on empty badges (skeleton state) */
+.badge-up:empty::before,
+.badge-down:empty::before {
+  content: none;
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --color-border: #9a8c72;
+    --color-text-muted: #5a4d38;
+    --shadow-gold: 0 2px 8px rgb(196 144 46 / 40%);
+  }
+
+  .gcc-card,
+  .tool-card,
+  .market-card,
+  .country-tile,
+  .faq-item {
+    border-width: 2px;
+  }
 }

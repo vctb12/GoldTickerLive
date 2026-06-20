@@ -1,30 +1,34 @@
 /* ═══════════════════════════════════════════════
    CSS Custom Properties — Theme Tokens
-   Gold Ticker Live — Premium Redesign v2
+   Gold Ticker Live — Premium Redesign v3
+   50-Phase Visual Overhaul
    ═══════════════════════════════════════════════ */
 :root {
-  /* ── Background layers — warm ivory / gold-kissed paper ── */
-  --color-bg: #fdfbf5;
-  --color-surface: #fff;
+  /* ── Phase 1: Richer background layers — warm parchment ── */
+  --color-bg: #fefcf7;
+  --color-surface: #ffffff;
   --color-surface-2: #faf7ee;
-  --color-surface-3: #f4f0e3;
-  --color-border: #e6dcc8;
-  --color-border-subtle: #ede7d7;
+  --color-surface-3: #f3eedd;
+  --color-border: #e4d9c0;
+  --color-border-subtle: #ece5d2;
 
-  /* ── Text — deep warm ink ── */
-  --color-text: #18140a;
-  --color-text-muted: #6b5f4e;
-  --color-text-faint: #8a7c68;
+  /* ── Phase 2: Deeper warm ink text ── */
+  --color-text: #15110a;
+  --color-text-muted: #6a5c48;
+  --color-text-faint: #8a7a64;
 
-  /* ── Gold palette — rich, saturated metallic ── */
-  --color-gold: #b8892c;
-  --color-gold-light: #d4a840;
-  --color-gold-bright: #e8bf5a;
-  --color-gold-dark: #8a6520;
-  --color-gold-deep: #5c430e;
-  --color-gold-bg: #faf6e8;
-  --color-gold-tint: #f5f0d8;
-  --color-gold-glow: rgb(184 137 44 / 14%);
+  /* ── Phase 3: Richer metallic gold palette ── */
+  --color-gold: #c4902e;
+  --color-gold-light: #ddb040;
+  --color-gold-bright: #f0ca5c;
+  --color-gold-dark: #966a1a;
+  --color-gold-deep: #6b4a0e;
+  --color-gold-pale: #e8c87a;
+  --color-gold-rose: #d4964a;
+  --color-gold-warm: #c8982c;
+  --color-gold-bg: #fdf8e8;
+  --color-gold-tint: #f8f2dc;
+  --color-gold-glow: rgb(196 144 46 / 16%);
 
   /* ── Status / semantic colours ── */
   --color-live: #1a7a32;
@@ -70,27 +74,32 @@
   --border-strong: #d6ccb4;
   --border-accent: var(--color-gold);
 
-  /* ── Radii ── */
+  /* ── Phase 7: Refined border radius system ── */
   --radius-xs: 4px;
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-2xl: 28px;
   --radius-pill: 999px;
   --radius-control: var(--radius-sm);
   --radius-card: var(--radius-lg);
   --radius-panel: var(--radius-xl);
+  --radius-modal: var(--radius-2xl);
   --radius-badge: var(--radius-pill);
 
-  /* ── Shadows — layered depth with warm undertones ── */
-  --shadow-xs: 0 1px 2px rgb(24 20 10 / 4%), 0 1px 1px rgb(24 20 10 / 2%);
-  --shadow-sm: 0 1px 3px rgb(24 20 10 / 6%), 0 2px 8px rgb(24 20 10 / 3%);
-  --shadow-md: 0 4px 14px rgb(24 20 10 / 8%), 0 2px 4px rgb(24 20 10 / 4%);
-  --shadow-lg: 0 10px 32px rgb(24 20 10 / 10%), 0 4px 10px rgb(24 20 10 / 5%);
-  --shadow-xl: 0 20px 52px rgb(24 20 10 / 13%), 0 8px 20px rgb(24 20 10 / 6%);
-  --shadow-gold: 0 2px 12px rgb(184 137 44 / 18%), 0 1px 3px rgb(184 137 44 / 10%);
-  --shadow-gold-lg: 0 6px 28px rgb(184 137 44 / 22%), 0 2px 8px rgb(184 137 44 / 12%);
-  --shadow-card-hover: 0 10px 32px rgb(24 20 10 / 10%), 0 3px 8px rgb(24 20 10 / 5%);
+  /* ── Phase 6: Deeper layered shadow system ── */
+  --shadow-xs: 0 1px 2px rgb(21 17 10 / 5%), 0 1px 1px rgb(21 17 10 / 3%);
+  --shadow-sm: 0 1px 4px rgb(21 17 10 / 7%), 0 2px 10px rgb(21 17 10 / 4%);
+  --shadow-md: 0 4px 16px rgb(21 17 10 / 10%), 0 2px 6px rgb(21 17 10 / 5%);
+  --shadow-lg: 0 10px 36px rgb(21 17 10 / 12%), 0 4px 12px rgb(21 17 10 / 6%);
+  --shadow-xl: 0 20px 60px rgb(21 17 10 / 15%), 0 8px 24px rgb(21 17 10 / 8%);
+  --shadow-2xl: 0 32px 80px rgb(21 17 10 / 18%), 0 12px 32px rgb(21 17 10 / 10%);
+  --shadow-gold: 0 2px 14px rgb(196 144 46 / 20%), 0 1px 4px rgb(196 144 46 / 12%);
+  --shadow-gold-lg: 0 6px 32px rgb(196 144 46 / 26%), 0 2px 10px rgb(196 144 46 / 14%);
+  --shadow-gold-xl: 0 12px 48px rgb(196 144 46 / 30%), 0 4px 16px rgb(196 144 46 / 18%);
+  --shadow-card-hover: 0 12px 40px rgb(21 17 10 / 12%), 0 4px 10px rgb(21 17 10 / 6%);
+  --shadow-inset: inset 0 1px 3px rgb(21 17 10 / 8%);
   --shadow-hairline: inset 0 0 0 1px var(--color-border);
 
   /* ── Elevation aliases ── */
@@ -102,30 +111,49 @@
   --elev-accent: var(--shadow-gold);
   --elev-accent-strong: var(--shadow-gold-lg);
 
-  /* ── Premium gradients ── */
-  --gradient-gold: linear-gradient(135deg, #b8892c 0%, #d4a840 40%, #e8bf5a 70%, #b8892c 100%);
+  /* ── Phase 4: Richer premium gradients ── */
+  --gradient-gold: linear-gradient(135deg, #966a1a 0%, #c4902e 30%, #ddb040 55%, #f0ca5c 75%, #c4902e 100%);
   --gradient-gold-subtle: linear-gradient(
     135deg,
-    rgb(184 137 44 / 7%) 0%,
-    rgb(212 168 64 / 3%) 100%
+    rgb(196 144 46 / 9%) 0%,
+    rgb(221 176 64 / 5%) 50%,
+    rgb(196 144 46 / 3%) 100%
   );
-  --gradient-dark: linear-gradient(155deg, #08090e 0%, #101320 50%, #08090e 100%);
-  --gradient-hero-dark: linear-gradient(145deg, #08090e 0%, #10152a 35%, #141a2c 65%, #08090e 100%);
-  --gradient-surface: linear-gradient(180deg, #fff 0%, #fdfbf5 100%);
-  --gradient-paper: linear-gradient(180deg, #fefcf8 0%, #f8f4eb 100%);
-  --gradient-hero-light: linear-gradient(160deg, #fefcf8 0%, #faf6ea 50%, #f5f0e0 100%);
+  --gradient-gold-shine: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgb(240 202 92 / 28%) 50%,
+    transparent 70%
+  );
+  --gradient-dark: linear-gradient(155deg, #07080c 0%, #0e1220 50%, #07080c 100%);
+  --gradient-hero-dark: linear-gradient(145deg, #07080c 0%, #0e1428 35%, #121830 65%, #07080c 100%);
+  --gradient-surface: linear-gradient(180deg, #ffffff 0%, #fefcf7 100%);
+  --gradient-paper: linear-gradient(180deg, #fefdf9 0%, #f9f4e8 100%);
+  --gradient-hero-light: linear-gradient(160deg, #fefdf9 0%, #fbf7ed 40%, #f7f1e2 100%);
+  --gradient-card: linear-gradient(160deg, #ffffff 0%, #fdfaf3 100%);
+  --gradient-section-alt: linear-gradient(180deg, #faf7ee 0%, #fefcf7 100%);
 
-  /* ── Gold foil ── */
+  /* ── Phase 5: Enhanced gold foil rules ── */
   --rule-hairline: 1px solid var(--color-border);
   --rule-foil: linear-gradient(
     90deg,
     transparent,
-    var(--color-gold) 18%,
+    var(--color-gold-dark) 12%,
+    var(--color-gold) 35%,
     var(--color-gold-bright) 50%,
-    var(--color-gold) 82%,
+    var(--color-gold) 65%,
+    var(--color-gold-dark) 88%,
     transparent
   );
-  --foil-underline: linear-gradient(90deg, var(--color-gold-dark), var(--color-gold-bright));
+  --rule-foil-subtle: linear-gradient(
+    90deg,
+    transparent,
+    rgb(196 144 46 / 40%) 20%,
+    rgb(221 176 64 / 60%) 50%,
+    rgb(196 144 46 / 40%) 80%,
+    transparent
+  );
+  --foil-underline: linear-gradient(90deg, var(--color-gold-dark), var(--color-gold-bright), var(--color-gold-dark));
 
   /* ── Spacing scale ── */
   --space-1: 0.25rem;
@@ -213,31 +241,37 @@
   --color-amber: #f59e0b;
   --color-danger: #dc2626;
 
-  /* ── Transitions ── */
-  --transition: 0.2s ease;
-  --transition-md: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* ── Phase 8: Refined transitions ── */
+  --transition: 0.18s ease;
+  --transition-md: 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-  /* ── Easing curves ── */
+  /* ── Phase 9: Enhanced easing library ── */
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
 
-  /* ── Duration scale ── */
-  --duration-fast: 100ms;
+  /* ── Phase 10: Comprehensive duration scale ── */
+  --duration-instant: 80ms;
+  --duration-fast: 120ms;
   --duration-normal: 200ms;
-  --duration-md: 0.3s;
-  --duration-xslow: 500ms;
+  --duration-md: 300ms;
+  --duration-slow: 400ms;
+  --duration-xslow: 550ms;
+  --transition-instant: 80ms var(--ease-out);
   --transition-fast: 150ms var(--ease-out);
-  --transition-normal: 250ms var(--ease-out);
-  --transition-slow: 400ms var(--ease-out);
+  --transition-normal: 240ms var(--ease-out);
+  --transition-slow: 380ms var(--ease-out);
+  --transition-premium: 320ms var(--ease-premium);
 
   /* ── Motion tokens ── */
   --motion-spot-ring: 2.4s;
   --motion-sonar: 1.8s;
-  --motion-stagger: 280ms;
-  --motion-stagger-step: 50ms;
+  --motion-stagger: 260ms;
+  --motion-stagger-step: 45ms;
   --motion-page-transition: 280ms;
 
   /* ── Z-index ladder ── */
@@ -258,51 +292,57 @@
 }
 
 /* ═══════════════════════════════════════════════
-   Dark Mode — Deep Midnight Gold
+   Phase 44: Dark Mode — Refined Deep Midnight Gold
+   Deeper blacks, richer gold highlights, better contrast
    ═══════════════════════════════════════════════ */
 [data-theme='dark'] {
-  --color-bg: #08090e;
-  --color-surface: #0f1118;
-  --color-surface-2: #171a26;
-  --color-surface-3: #1e2232;
-  --color-border: #262b3e;
-  --color-border-subtle: #1c2030;
-  --color-text: #f0edd8;
-  --color-text-muted: #9b96a0;
-  --color-text-faint: #6e6878;
-  --color-gold: #d4a840;
-  --color-gold-light: #e8bf5a;
-  --color-gold-bright: #f5d070;
-  --color-gold-dark: #b8892c;
-  --color-gold-deep: #8a6520;
-  --color-gold-bg: #12100a;
-  --color-gold-tint: #0e0c08;
-  --color-gold-glow: rgb(212 168 64 / 16%);
-  --surface-canvas: #08090e;
-  --surface-primary: #0f1118;
-  --surface-secondary: #171a26;
-  --surface-tertiary: #1e2232;
-  --surface-accent: #12100a;
-  --surface-glass: rgb(15 17 24 / 88%);
-  --text-primary: #f0edd8;
-  --text-secondary: #9b96a0;
-  --text-tertiary: #6e6878;
+  --color-bg: #060708;
+  --color-surface: #0c0e14;
+  --color-surface-2: #141720;
+  --color-surface-3: #1b1e2c;
+  --color-border: #242840;
+  --color-border-subtle: #1a1e30;
+  --color-text: #f2eedd;
+  --color-text-muted: #a09890;
+  --color-text-faint: #706860;
+  --color-gold: #ddb040;
+  --color-gold-light: #f0ca5c;
+  --color-gold-bright: #fad97a;
+  --color-gold-dark: #c4902e;
+  --color-gold-deep: #966a1a;
+  --color-gold-pale: #f5e090;
+  --color-gold-bg: #100e08;
+  --color-gold-tint: #0c0a06;
+  --color-gold-glow: rgb(221 176 64 / 18%);
+  --surface-canvas: #060708;
+  --surface-primary: #0c0e14;
+  --surface-secondary: #141720;
+  --surface-tertiary: #1b1e2c;
+  --surface-accent: #100e08;
+  --surface-glass: rgb(12 14 20 / 90%);
+  --text-primary: #f2eedd;
+  --text-secondary: #a09890;
+  --text-tertiary: #706860;
   --text-accent: var(--color-gold-light);
-  --border-default: #262b3e;
-  --border-subtle: #1c2030;
-  --border-strong: #333a52;
+  --border-default: #242840;
+  --border-subtle: #1a1e30;
+  --border-strong: #303550;
   --border-accent: var(--color-gold);
-  --shadow-xs: 0 1px 2px rgb(0 0 0 / 20%);
-  --shadow-sm: 0 1px 4px rgb(0 0 0 / 30%), 0 2px 8px rgb(0 0 0 / 15%);
-  --shadow-md: 0 4px 16px rgb(0 0 0 / 40%), 0 2px 6px rgb(0 0 0 / 20%);
-  --shadow-lg: 0 12px 36px rgb(0 0 0 / 50%), 0 4px 12px rgb(0 0 0 / 25%);
-  --shadow-xl: 0 24px 56px rgb(0 0 0 / 60%), 0 8px 22px rgb(0 0 0 / 30%);
-  --shadow-gold: 0 2px 14px rgb(212 168 64 / 22%), 0 1px 4px rgb(212 168 64 / 14%);
-  --shadow-gold-lg: 0 8px 32px rgb(212 168 64 / 28%), 0 3px 10px rgb(212 168 64 / 16%);
-  --shadow-card-hover: 0 12px 36px rgb(0 0 0 / 45%), 0 4px 10px rgb(0 0 0 / 22%);
-  --gradient-surface: linear-gradient(180deg, #0f1118 0%, #0b0d14 100%);
-  --gradient-paper: linear-gradient(180deg, #0f1118 0%, #0a0c12 100%);
-  --gradient-hero-light: linear-gradient(160deg, #0a0c14 0%, #10152a 40%, #141a2e 100%);
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 25%);
+  --shadow-sm: 0 1px 4px rgb(0 0 0 / 35%), 0 2px 10px rgb(0 0 0 / 18%);
+  --shadow-md: 0 4px 18px rgb(0 0 0 / 48%), 0 2px 8px rgb(0 0 0 / 24%);
+  --shadow-lg: 0 12px 40px rgb(0 0 0 / 58%), 0 4px 14px rgb(0 0 0 / 28%);
+  --shadow-xl: 0 24px 60px rgb(0 0 0 / 68%), 0 8px 24px rgb(0 0 0 / 34%);
+  --shadow-2xl: 0 40px 80px rgb(0 0 0 / 76%), 0 14px 36px rgb(0 0 0 / 40%);
+  --shadow-gold: 0 2px 16px rgb(221 176 64 / 26%), 0 1px 5px rgb(221 176 64 / 16%);
+  --shadow-gold-lg: 0 8px 36px rgb(221 176 64 / 32%), 0 3px 12px rgb(221 176 64 / 18%);
+  --shadow-gold-xl: 0 16px 56px rgb(221 176 64 / 38%), 0 6px 20px rgb(221 176 64 / 22%);
+  --shadow-card-hover: 0 14px 44px rgb(0 0 0 / 55%), 0 4px 12px rgb(0 0 0 / 28%);
+  --gradient-surface: linear-gradient(180deg, #0c0e14 0%, #090b10 100%);
+  --gradient-paper: linear-gradient(180deg, #0c0e14 0%, #08090e 100%);
+  --gradient-hero-light: linear-gradient(160deg, #08090e 0%, #0e1326 40%, #121830 100%);
+  --gradient-card: linear-gradient(160deg, #0e1018 0%, #0a0c12 100%);
+  --gradient-section-alt: linear-gradient(180deg, #141720 0%, #0c0e14 100%);
   --color-accent: var(--color-gold-light);
   --color-accent-strong: var(--color-gold-bright);
   --color-surface-raised: var(--color-surface-2);
@@ -310,9 +350,11 @@
   --nav-accent-gradient: linear-gradient(
     90deg,
     transparent,
-    var(--color-gold) 20%,
+    var(--color-gold-dark) 15%,
+    var(--color-gold) 35%,
     var(--color-gold-bright) 50%,
-    var(--color-gold) 80%,
+    var(--color-gold) 65%,
+    var(--color-gold-dark) 85%,
     transparent
   );
 }

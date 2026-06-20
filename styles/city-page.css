@@ -283,3 +283,123 @@
 [dir='rtl'] .city-cta-banner {
   flex-direction: row-reverse;
 }
+
+/* ═══════════════════════════════════════════════
+   Phase 50: City Page — Premium Visual Polish
+   ═══════════════════════════════════════════════ */
+
+/* Upgrade city market cards to gradient-card treatment */
+.city-market-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem 1.5rem;
+  box-shadow: var(--shadow-xs);
+  position: relative;
+  overflow: hidden;
+  transition:
+    box-shadow var(--transition-normal),
+    border-color var(--transition-normal),
+    transform var(--transition-normal);
+}
+
+.city-market-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 3px;
+  background: var(--rule-foil);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.city-market-card:hover {
+  box-shadow: var(--shadow-gold-lg), var(--shadow-md);
+  border-color: var(--color-gold);
+  transform: translateY(-3px);
+}
+
+.city-market-card:hover::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .city-market-card {
+    transition: border-color 0.2s;
+  }
+
+  .city-market-card:hover {
+    transform: none;
+  }
+}
+
+.city-market-card:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* City market card tag — more premium */
+.city-market-card-tag {
+  background: var(--color-gold-tint);
+  border-color: rgb(196 144 46 / 28%);
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.06em;
+}
+
+/* Area cards — subtle gradient */
+.city-area-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1rem var(--space-4);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.city-area-card:hover {
+  border-color: rgb(196 144 46 / 35%);
+  box-shadow: var(--shadow-gold);
+}
+
+/* Tips list — stronger visual cues */
+.city-tips-list li {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.city-tips-list li:hover {
+  border-color: rgb(196 144 46 / 25%);
+  box-shadow: var(--shadow-xs);
+}
+
+/* CTA banner — richer gold gradient */
+.city-cta-banner {
+  background: linear-gradient(135deg, var(--color-gold-tint) 0%, var(--color-gold-bg) 60%, rgb(253 250 240 / 80%) 100%);
+  border: 1.5px solid rgb(196 144 46 / 40%);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-gold), var(--shadow-sm);
+}
+
+/* Related city links — pill refinement */
+.city-related-link:hover {
+  border-color: var(--color-gold);
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-gold);
+}
+
+/* Section h2 titles — align with home-section-title style */
+.city-section-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.8vw, 1.5rem);
+  font-weight: var(--weight-extrabold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+}
