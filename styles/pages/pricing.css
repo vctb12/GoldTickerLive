@@ -511,3 +511,59 @@
     border: none;
   }
 }
+
+/* ── Phase 61 — Premium Polish ─────────────────────────────────────────────── */
+
+.pricing-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle, var(--border-default));
+}
+
+.pricing-card:hover {
+  border-color: var(--color-gold-glow);
+  box-shadow: var(--shadow-gold), var(--shadow-card-hover);
+}
+
+.pricing-card-featured {
+  background: var(--gradient-card);
+}
+
+.faq-item {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle, var(--border-default));
+}
+
+.faq-item:hover {
+  border-color: var(--color-gold-glow);
+  box-shadow: var(--shadow-gold), var(--elev-2);
+}
+
+.faq-item[open] {
+  border-color: var(--color-gold-glow);
+  box-shadow: var(--shadow-gold);
+}
+
+.pricing-hero-content h1 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+}
+
+.pricing-faq h2,
+.pricing-comparison h2 {
+  font-weight: var(--weight-extrabold);
+}
+
+.comparison-table-wrapper {
+  border: 1.5px solid var(--border-subtle, var(--border-default));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.comparison-table th {
+  background: linear-gradient(180deg, var(--color-gold-tint), var(--surface-secondary));
+  color: var(--color-gold-dark);
+}
+
+.comparison-table tbody tr:hover {
+  background: var(--color-gold-tint);
+}

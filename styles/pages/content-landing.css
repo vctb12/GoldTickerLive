@@ -397,3 +397,64 @@
     transition: none;
   }
 }
+
+/* ── Phase 64 — Premium Polish ─────────────────────────────────────────────── */
+
+.content-panel,
+.content-next,
+.content-form-card,
+.content-faq-card {
+  border: 1.5px solid var(--border-subtle, var(--border-default));
+  box-shadow: var(--shadow-xs);
+  background: var(--gradient-card);
+}
+
+.content-cta-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle, var(--border-default));
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out);
+}
+
+.content-cta-card::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 3px;
+  background: var(--rule-foil);
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-out);
+}
+
+.content-cta-card:is(:hover, :focus-visible) {
+  border-color: var(--color-gold-glow);
+  box-shadow: var(--shadow-gold-lg), var(--shadow-xs);
+  transform: translateY(-3px);
+}
+
+.content-cta-card:is(:hover, :focus-visible)::before {
+  opacity: 1;
+}
+
+.content-panel-icon {
+  background: var(--color-gold-tint);
+  border: 1.5px solid var(--color-gold-glow);
+}
+
+.submit-step-num {
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-cta-card,
+  .content-cta-card::before {
+    transition: none;
+  }
+}

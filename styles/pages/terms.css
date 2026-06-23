@@ -257,3 +257,49 @@
 [dir='rtl'] .legal-callout {
   border-inline-start: 4px solid var(--color-gold);
 }
+
+/* ── Phase 59 — Premium Polish ─────────────────────────────────────────────── */
+
+.legal-callout {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle, var(--border-default));
+  border-inline-start: 3px solid var(--color-gold);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.legal-meta {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle, var(--border-default));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.legal-related-link {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle, var(--border-default));
+  border-radius: var(--radius-lg);
+  transition:
+    border-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out),
+    color var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-out);
+}
+
+.legal-related-link:hover,
+.legal-related-link:focus {
+  border-color: var(--color-gold);
+  color: var(--color-gold-dark);
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-2px);
+}
+
+.legal-hero::after {
+  block-size: 3px;
+  opacity: 0.7;
+}
+
+.legal-hero-tag {
+  border-radius: var(--radius-pill);
+  font-weight: var(--weight-bold);
+}

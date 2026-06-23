@@ -3992,3 +3992,179 @@ td.tracker-chg-down {
 [dir='rtl'] .tracker-karat-table tbody tr.is-selected {
   box-shadow: inset -3px 0 0 var(--color-gold);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Phase 56: Tracker Pro — Premium Visual Polish
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Panels — subtle gradient border upgrade */
+.tracker-panel,
+.tracker-hero-card,
+.tracker-toolbar-card,
+.tracker-wire-card,
+.tracker-subpanel,
+.tracker-method-card {
+  border: 1.5px solid var(--border-subtle);
+}
+
+.tracker-panel:hover,
+.tracker-subpanel:hover {
+  border-color: rgb(196 144 46 / 25%);
+  box-shadow: var(--shadow-xs), 0 0 0 0 transparent;
+}
+
+/* Toolbar card — gradient surface */
+.tracker-toolbar-card {
+  background: linear-gradient(180deg, var(--surface-secondary) 0%, var(--surface-primary) 100%);
+  border: 1.5px solid var(--border-subtle);
+}
+
+/* Result cards — gradient-card */
+.tracker-result-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.tracker-result-card:hover {
+  border-color: rgb(196 144 46 / 30%);
+  box-shadow: var(--shadow-gold), var(--shadow-xs);
+}
+
+/* Stat cards below chart — gradient-card */
+.tracker-stat-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.tracker-stat-card:hover {
+  border-color: rgb(196 144 46 / 30%);
+  box-shadow: var(--shadow-gold);
+}
+
+/* Market cards — gold shadow on hover */
+.tracker-market-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+}
+
+.tracker-market-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold-lg), var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tracker-market-card:hover {
+    transform: none;
+  }
+}
+
+/* Watch cards */
+.tracker-watch-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+}
+
+/* Chart wrap — enhanced premium border */
+.tracker-chart-wrap {
+  border: 1.5px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+}
+
+.tracker-chart-wrap:hover {
+  border-color: rgb(196 144 46 / 25%);
+}
+
+/* Mode tab bar — thicker gold active underline */
+.tracker-mode-tab::after {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--color-gold);
+}
+
+.tracker-mode-tab.is-active,
+.tracker-mode-tab[aria-selected='true'] {
+  font-weight: var(--weight-extrabold);
+}
+
+/* Mini stat items */
+.tracker-mini-item {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.tracker-mini-item:hover {
+  border-color: rgb(196 144 46 / 30%);
+  box-shadow: var(--shadow-gold);
+}
+
+/* Comparison cards */
+.comparison-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+}
+
+.comparison-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold), var(--shadow-xs);
+}
+
+/* Welcome chips — pill upgrade */
+.tracker-welcome-chip {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  font-weight: var(--weight-semibold);
+}
+
+/* Method cards — gold heading */
+.tracker-method-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+}
+
+/* Panel section head titles */
+.tracker-panel-head h2,
+.tracker-panel-head .h2 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+}
+
+/* Trust banner — gold-accent bar */
+.tracker-data-trust-banner {
+  background: linear-gradient(90deg, rgb(196 144 46 / 5%) 0%, transparent 60%);
+  border-bottom: 1.5px solid rgb(196 144 46 / 20%);
+}
+
+/* Table hover — gold tint */
+.tracker-table tbody tr:hover {
+  background: rgb(196 144 46 / 4%);
+}
+
+/* Calc result box — richer accent */
+.tracker-calc-result {
+  background: linear-gradient(135deg, var(--color-gold-tint) 0%, var(--surface-accent) 100%);
+  border: 1.5px solid rgb(196 144 46 / 35%);
+  box-shadow: var(--shadow-gold), var(--shadow-xs);
+}
+
+.tracker-calc-result__value {
+  font-family: var(--font-numeric);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-extrabold);
+}

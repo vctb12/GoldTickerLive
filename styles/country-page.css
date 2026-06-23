@@ -878,3 +878,235 @@
     transform: none;
   }
 }
+
+/* ═══════════════════════════════════════════════
+   Phase 51: Country Page — Premium Visual Polish
+   ═══════════════════════════════════════════════ */
+
+/* Hero — warm ivory with radial glow accent */
+.cp-hero {
+  background: var(--gradient-hero-light);
+  padding: var(--space-8) var(--space-5) var(--space-6);
+}
+
+.cp-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 60% 50% at 85% -5%,
+    rgb(196 144 46 / 10%) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+/* Hero title sizing */
+.cp-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.8vw, 1.55rem);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Price cards — gradient card with lift + gold shadow */
+.cp-price-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-xs);
+  position: relative;
+  overflow: hidden;
+}
+
+.cp-price-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 3px;
+  background: var(--rule-foil);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.cp-price-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold-lg), var(--shadow-md);
+}
+
+.cp-price-card:hover::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cp-price-card {
+    transition: border-color 0.2s;
+  }
+
+  .cp-price-card:hover {
+    transform: none;
+  }
+}
+
+/* Price chip — enhanced */
+.cp-price-chip {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+}
+
+.cp-price-chip:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold);
+}
+
+/* Price label + value */
+.cp-price-label {
+  color: var(--text-tertiary);
+  letter-spacing: 0.06em;
+}
+
+.cp-price-value {
+  font-family: var(--font-numeric);
+  font-weight: var(--weight-extrabold);
+  color: var(--text-primary);
+}
+
+.cp-price-chip-value {
+  font-family: var(--font-numeric);
+  font-weight: var(--weight-extrabold);
+}
+
+/* Table — gold-tinted header, row hover */
+.cp-table-scroll {
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.cp-table th {
+  background: linear-gradient(
+    180deg,
+    rgb(196 144 46 / 6%) 0%,
+    rgb(196 144 46 / 3%) 100%
+  );
+  color: var(--text-tertiary);
+  font-size: 0.68rem;
+  letter-spacing: 0.07em;
+}
+
+.cp-table tbody tr:hover {
+  background: rgb(196 144 46 / 4%);
+}
+
+.cp-table td {
+  border-bottom-color: var(--border-subtle);
+}
+
+/* Table header + section title upgrade */
+.cp-table-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+  font-weight: var(--weight-extrabold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+}
+
+#cp-related h2,
+#cp-faq h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+  font-weight: var(--weight-extrabold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Related country cards — lift + shadow */
+.cp-related-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+}
+
+.cp-related-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold-lg), var(--shadow-sm);
+}
+
+/* FAQ — gradient-card, gold shadow when open */
+.cp-faq-item {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.cp-faq-item:hover {
+  border-color: rgb(196 144 46 / 30%);
+}
+
+.cp-faq-item[open] {
+  border-color: rgb(196 144 46 / 40%);
+  box-shadow: var(--shadow-gold), var(--shadow-xs);
+}
+
+/* MI Card — gradient with gold foil treatment */
+.cp-mi-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.cp-mi-stat {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.cp-mi-stat:hover {
+  border-color: rgb(196 144 46 / 30%);
+  box-shadow: var(--shadow-gold);
+}
+
+.cp-mi-stat--retail {
+  border-color: rgb(196 144 46 / 35%);
+  background: linear-gradient(135deg, var(--color-gold-tint) 0%, var(--gradient-card) 100%);
+}
+
+.cp-mi-buy {
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--gradient-card);
+}
+
+.cp-mi-cta {
+  background: var(--color-gold-dark);
+  color: #fff8e8;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-gold);
+  min-height: 44px;
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.cp-mi-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold-lg);
+}
+
+/* Trust note — left 3px gold accent */
+.cp-trust-note {
+  border-inline-start: 3px solid var(--color-gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: linear-gradient(90deg, rgb(196 144 46 / 5%), transparent 70%);
+}

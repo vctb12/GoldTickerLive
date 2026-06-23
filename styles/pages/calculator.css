@@ -1175,3 +1175,115 @@
 .calc-select:hover:not(:focus, :disabled) {
   border-color: var(--border-strong);
 }
+
+/* ═══════════════════════════════════════════════
+   Phase 54: Calculator Page — Premium Visual Polish
+   ═══════════════════════════════════════════════ */
+
+/* Hero eyebrow badge */
+.calc-live-badge {
+  box-shadow: var(--shadow-gold);
+}
+
+/* Hero title — extrabold */
+.calc-hero-title {
+  font-weight: var(--weight-extrabold);
+  line-height: 1.1;
+}
+
+/* Tab bar — frosted surface */
+.calc-nav-tabs {
+  background: var(--surface-primary);
+  border-bottom: 1.5px solid var(--border-subtle);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 4%);
+}
+
+/* Active tab — stronger gold indicator */
+.calc-tab.active {
+  color: var(--color-gold-deep);
+  border-bottom-color: var(--color-gold);
+  font-weight: var(--weight-extrabold);
+  background: linear-gradient(180deg, transparent 80%, rgb(196 144 46 / 5%) 100%);
+}
+
+/* Calculator card — enhanced gradient */
+.calc-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Input focus ring */
+.calc-input:focus,
+.calc-select:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgb(196 144 46 / 12%);
+}
+
+/* Result box — stronger gold treatment */
+.calc-result {
+  background: linear-gradient(135deg, var(--color-gold-tint) 0%, rgb(253 250 240 / 80%) 60%, transparent 100%);
+  border: 1.5px solid rgb(196 144 46 / 40%);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-gold), var(--shadow-xs);
+}
+
+.calc-result-value {
+  font-family: var(--font-numeric);
+  font-weight: var(--weight-extrabold);
+  color: var(--color-gold-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+.calc-result-breakdown {
+  border-top-color: rgb(196 144 46 / 20%);
+}
+
+/* Tracker handoff banner — gradient card */
+.calc-tracker-handoff {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Zakat nisab banner */
+.calc-zakat-nisab {
+  background: rgb(196 144 46 / 7%);
+  border: 1.5px solid rgb(196 144 46 / 25%);
+  border-radius: var(--radius-md);
+}
+
+.calc-zakat-nisab strong {
+  font-family: var(--font-numeric);
+  font-weight: var(--weight-extrabold);
+}
+
+/* Conversion results grid — card cells */
+.conv-grid-item {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.conv-grid-item:hover {
+  border-color: rgb(196 144 46 / 30%);
+  box-shadow: var(--shadow-gold);
+}
+
+/* Result note — left gold bar */
+.calc-result-note {
+  border-inline-start: 3px solid var(--color-gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: linear-gradient(90deg, rgb(196 144 46 / 7%), transparent 70%);
+}
+
+/* Focus ring */
+.calc-tab:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: -2px;
+}

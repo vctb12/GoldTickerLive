@@ -2527,3 +2527,157 @@
     padding-block: 0.55rem;
   }
 }
+
+/* ═══════════════════════════════════════════════
+   Phase 55: Shops Page — Premium Visual Polish
+   ═══════════════════════════════════════════════ */
+
+/* Shop cards — gradient-card with foil hover */
+.shop-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  position: relative;
+  overflow: hidden;
+}
+
+.shop-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 3px;
+  background: var(--rule-foil);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.shop-card:hover {
+  transform: translateY(-3px);
+  border-color: rgb(196 144 46 / 45%);
+  box-shadow: var(--shadow-gold-lg), var(--shadow-md);
+}
+
+.shop-card:hover::before {
+  opacity: 0.8;
+}
+
+.shop-card:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.shop-card--featured {
+  border-inline-start-width: 3px;
+  border-inline-start-color: var(--color-gold);
+}
+
+.shop-card--featured:hover {
+  box-shadow: var(--shadow-gold-lg), var(--shadow-md);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-card {
+    transition: border-color 0.2s;
+  }
+
+  .shop-card:hover {
+    transform: none;
+  }
+}
+
+/* Featured directory cards — richer treatment */
+.featured-card {
+  background: var(--gradient-card);
+  border: 1.5px solid rgb(196 144 46 / 28%);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  position: relative;
+  overflow: hidden;
+}
+
+.featured-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 3px;
+  background: var(--rule-foil);
+  opacity: 0.6;
+}
+
+.featured-card:hover {
+  transform: translateY(-3px);
+  border-color: rgb(196 144 46 / 55%);
+  box-shadow: var(--shadow-gold-lg), var(--shadow-md);
+}
+
+.featured-card:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featured-card:hover {
+    transform: none;
+  }
+}
+
+/* Section title */
+.shops-featured-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+}
+
+#shops-results-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Controls bar — subtle gradient card */
+.shops-controls-inner {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Tab active state — stronger */
+.shops-tab.is-active,
+.shops-tab[aria-selected='true'] {
+  border-color: rgb(196 144 46 / 60%);
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+  font-weight: var(--weight-bold);
+  box-shadow: var(--shadow-gold);
+}
+
+/* Filter inputs — gold focus ring */
+.shops-control input:not([type='checkbox']):focus,
+.shops-control select:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgb(196 144 46 / 12%);
+}
+
+/* Controls summary card */
+.shops-controls-summary {
+  border: 1.5px solid rgb(196 144 46 / 22%);
+  background: linear-gradient(135deg, rgb(196 144 46 / 6%) 0%, transparent 70%);
+  border-radius: var(--radius-md);
+}
+
+/* Shops count badge */
+#shops-count {
+  background: var(--color-gold-tint);
+  border-color: rgb(196 144 46 / 35%);
+  box-shadow: var(--shadow-gold);
+}
+
+/* Results legend */
+.shops-results-legend {
+  color: var(--color-gold-dark);
+}

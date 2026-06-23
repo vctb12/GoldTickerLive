@@ -489,3 +489,79 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* ── Phase 58 — Premium Polish ─────────────────────────────────────────────── */
+
+.developer-hero-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+}
+
+.developer-section-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+  padding-bottom: 0.5rem;
+  border-bottom: 1.5px solid var(--border-subtle, var(--border-default));
+}
+
+.developer-endpoint-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle, var(--border-default));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  transition:
+    transform var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+.developer-endpoint-card::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 3px;
+  background: var(--rule-foil);
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-out);
+}
+
+.developer-endpoint-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-gold-lg), var(--shadow-xs);
+  border-color: var(--color-gold-glow);
+}
+
+.developer-endpoint-card:hover::before {
+  opacity: 1;
+}
+
+.developer-table-wrapper {
+  border: 1.5px solid var(--border-subtle, var(--border-default));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.developer-table th {
+  background: linear-gradient(180deg, var(--color-gold-tint), var(--surface-secondary));
+  color: var(--color-gold-dark);
+  font-weight: var(--weight-semibold);
+}
+
+.developer-table tbody tr:hover td {
+  background: var(--color-gold-tint);
+}
+
+.dev-auth-banner {
+  border-radius: var(--radius-lg);
+  border-width: 1.5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .developer-endpoint-card,
+  .developer-endpoint-card::before {
+    transition: none;
+  }
+}

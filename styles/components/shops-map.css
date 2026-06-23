@@ -484,3 +484,46 @@
     transition: none;
   }
 }
+
+/* ═══════════════════════════════════════════════
+   Phase 57: Shops Map — Premium Visual Polish
+   ═══════════════════════════════════════════════ */
+
+/* View toggle — gradient-card pill container */
+.shops-view-toggle {
+  gap: var(--space-2);
+}
+
+.shops-view-toggle-btn {
+  border: 1.5px solid var(--border-subtle);
+  background: var(--gradient-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+  font-weight: var(--weight-semibold);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.shops-view-toggle-btn:hover {
+  border-color: var(--color-gold);
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+}
+
+.shops-view-toggle-btn.is-active {
+  border-color: var(--color-gold);
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+  font-weight: var(--weight-bold);
+  box-shadow: var(--shadow-gold);
+}
+
+/* Map container — premium border */
+.shops-map-container {
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}

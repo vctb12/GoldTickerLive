@@ -1222,3 +1222,33 @@
     transform: none;
   }
 }
+
+/* ═══════════════════════════════════════════════
+   Phase 57: Insights Page — Premium Visual Polish
+   ═══════════════════════════════════════════════ */
+
+/* Featured article — richer gradient-card */
+.insights-featured {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-top: 3px solid var(--color-gold);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-gold), var(--shadow-sm);
+}
+
+/* Section heading — gold underline */
+.insights-section-heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: var(--tracking-tight);
+  border-bottom-color: var(--color-gold);
+  border-bottom-width: 3px;
+}
+
+/* Price bar — gold glow border */
+.insights-price-bar {
+  border-top-color: rgb(196 144 46 / 25%);
+  border-bottom-color: rgb(196 144 46 / 25%);
+  background: linear-gradient(180deg, var(--surface-primary) 0%, rgb(196 144 46 / 3%) 100%);
+}

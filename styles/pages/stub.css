@@ -149,3 +149,51 @@
   background: var(--color-surface-alt, #0f172a);
   border-color: var(--color-border, #334155);
 }
+
+/* ── Phase 60 — Premium Polish ─────────────────────────────────────────────── */
+
+.stub-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle, var(--color-border, #e2e8f0));
+  border-radius: var(--radius-xl, 20px);
+  box-shadow: var(--shadow-gold), var(--shadow-xs);
+  position: relative;
+  overflow: hidden;
+}
+
+.stub-card::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 3px;
+  background: var(--rule-foil);
+  pointer-events: none;
+}
+
+.stub-related-link {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle, var(--color-border, #e2e8f0));
+  border-radius: var(--radius-md, 10px);
+  transition:
+    border-color 0.15s,
+    transform 0.12s,
+    box-shadow 0.15s;
+}
+
+.stub-related-link:hover,
+.stub-related-link:focus-visible {
+  border-color: var(--color-gold);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+}
+
+.stub-title {
+  font-family: var(--font-display);
+}
+
+.stub-eyebrow {
+  background: var(--color-gold-tint, #fef3c7);
+  color: var(--color-gold-dark, #92400e);
+  border: 1px solid var(--color-gold-glow, rgb(212 168 64 / 30%));
+}
