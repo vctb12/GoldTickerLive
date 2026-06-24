@@ -3,6 +3,10 @@ import { fetchWithProviderTimeout, isSaneGoldSpotUsd, ProviderFetchError } from 
 
 const ENDPOINT = 'https://mintedmetal.com/api/prices.json';
 
+// Reject MM quotes older than 4 hours so the chain falls through to the
+// committed gold_price.json (updated hourly) rather than showing stale data.
+const MAX_AGE_MS = 4 * 60 * 60 * 1000;
+
 export class MintedMetalQuoteProvider extends BaseQuoteProvider {
   constructor({ providerId = 'minted_metal', timeoutMs = 4000 } = {}) {
     super({ providerId, timeoutMs });
@@ -48,6 +52,14 @@ export class MintedMetalQuoteProvider extends BaseQuoteProvider {
     if (!Number.isFinite(providerTsMs) || providerTsMs <= 0) {
       throw new ProviderFetchError('mintedmetal missing timestamp', {
         code: 'missing_timestamp',
+      });
+    }
+
+    const ageMs = Date.now() - providerTsMs;
+    if (ageMs > MAX_AGE_MS) {
+      throw new ProviderFetchError(`mintedmetal data too old: ${Math.round(ageMs / 60000)} min`, {
+        code: 'stale_data',
+        ageMs,
       });
     }
 

@@ -67,7 +67,12 @@ function makeHistoryRows(points, karat) {
 }
 
 async function fetchHistory(days = '30D') {
-  const response = await fetch(`/api/v1/prices/history?range=${days}&limit=120`);
+  let response;
+  try {
+    response = await fetch(`/api/v1/prices/history?range=${days}&limit=120`);
+  } catch {
+    return [];
+  }
   if (!response.ok) return [];
   const payload = await response.json();
   const points = payload?.data?.points || [];

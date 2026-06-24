@@ -641,6 +641,10 @@
   color: #7a5c00;
 }
 
+[data-theme='dark'] .shop-badge--featured {
+  color: var(--color-gold);
+}
+
 .order-shop-actions {
   display: flex;
   flex-wrap: wrap;
@@ -710,4 +714,72 @@
   .order-shop-action {
     transition: none;
   }
+}
+
+/* ── Phase 67 — Premium Polish ─────────────────────────────────────────────── */
+
+.order-hero {
+  background: var(--gradient-hero-light, var(--surface-primary));
+  border: 1.5px solid var(--border-subtle, var(--rule-hairline));
+  box-shadow: var(--shadow-gold), var(--elev-2);
+}
+
+.order-step {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle, var(--color-border));
+  box-shadow: var(--shadow-xs);
+  transition:
+    box-shadow var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out);
+}
+
+.order-step:hover {
+  border-color: var(--color-gold-glow);
+  box-shadow: var(--shadow-gold), var(--shadow-xs);
+}
+
+.order-step-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+}
+
+.order-partners {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle, var(--color-border, #e8e0d0));
+  box-shadow: var(--shadow-xs);
+}
+
+.order-partner-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle, var(--color-border, #e8e0d0));
+  border-radius: var(--radius-lg, 12px);
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    transform 0.12s;
+}
+
+.order-partner-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-2px);
+}
+
+.order-shop-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle, var(--border-default));
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.order-shop-card:hover {
+  border-color: var(--color-gold-glow);
+  box-shadow: var(--shadow-gold), var(--shadow-xs);
+}
+
+.order-hero-title {
+  font-weight: var(--weight-extrabold);
 }

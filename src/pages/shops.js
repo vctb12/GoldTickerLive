@@ -11,6 +11,7 @@ import { KARATS } from '../config/index.js';
 import { escape as esc, safeHref as safeUrl, safeTel } from '../lib/safe-dom.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { copyWithToast } from '../lib/copy-toast.js';
+import { createFocusTrap } from '../lib/focus-trap.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import { observeReveal } from '../lib/reveal.js';
 import {
@@ -55,7 +56,11 @@ const SHOPS_LAST_REVIEWED_ISO = '2026-04-05';
 const MOBILE_FILTER_BREAKPOINT = 640;
 const FILTER_TRACK_DEBOUNCE_MS = 180;
 const SEARCH_TRACK_DEBOUNCE_MS = 450;
+const SEARCH_RENDER_DEBOUNCE_MS = 150;
 let _filterTrackTimer = null;
+let _searchRenderTimer = null;
+/** Focus trap for the shop detail dialog; lazily created on first open. */
+let MODAL_FOCUS_TRAP = null;
 
 function sanitizeSearchQueryForMessage(value = '') {
   return String(value)
@@ -513,7 +518,9 @@ async function openClaimDialog() {
   form.className = 'shops-claim-dialog-form';
 
   const title = document.createElement('h3');
+  title.id = 'shops-claim-dialog-title';
   title.textContent = t('claimListing');
+  dialog.setAttribute('aria-labelledby', 'shops-claim-dialog-title');
   form.appendChild(title);
 
   const lead = document.createElement('p');
@@ -942,6 +949,16 @@ function openModal(shop) {
 
   modal.hidden = false;
   document.body.style.overflow = 'hidden';
+
+  // Trap keyboard focus inside the dialog and remember the trigger so it
+  // can be restored on close (WCAG 2.4.3). Idempotent: re-opening to
+  // refresh the body keeps the original trigger and re-asserts focus.
+  if (!MODAL_FOCUS_TRAP) {
+    MODAL_FOCUS_TRAP = createFocusTrap(modal, {
+      initialFocus: () => modal.querySelector('.shops-modal-close'),
+    });
+  }
+  MODAL_FOCUS_TRAP.activate();
 }
 
 function closeModal({ clearShopParam = true } = {}) {
@@ -949,6 +966,7 @@ function closeModal({ clearShopParam = true } = {}) {
   if (!modal) return;
   modal.hidden = true;
   document.body.style.overflow = '';
+  if (MODAL_FOCUS_TRAP) MODAL_FOCUS_TRAP.deactivate();
 
   if (!clearShopParam) return;
   const params = new URLSearchParams(location.search);
@@ -2043,7 +2061,8 @@ function bindEvents() {
   document.getElementById('shops-search').addEventListener('input', (event) => {
     STATE.search = event.target.value;
     trackShopFilterApply('search', SEARCH_TRACK_DEBOUNCE_MS);
-    render();
+    clearTimeout(_searchRenderTimer);
+    _searchRenderTimer = setTimeout(render, SEARCH_RENDER_DEBOUNCE_MS);
   });
 
   document.getElementById('shops-region-filter').addEventListener('change', (event) => {

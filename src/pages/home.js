@@ -51,6 +51,7 @@ import { enforceCanonicalOnDocument } from '../seo/canonical.js';
 import { enforceHreflangAlternates } from '../seo/hreflang.js';
 import { buildMethodologyFaqSchema, injectFaqSchema } from '../seo/faq-schema.js';
 import { buildHomeTrackerHref } from '../lib/cross-page-links.js';
+import { getBaselineHistory } from '../lib/historical-data.js';
 import { applyTrackerHandoffToIds, HOME_DEFAULT_TRACKER_LINK_IDS } from '../lib/page-handoff.js';
 import { serializeCalculatorUrlState } from './calculator/url-state.js';
 
@@ -90,6 +91,8 @@ let _realtimeEngine = null;
 let _refreshTimer = null;
 let _freshnessTimer = null;
 let _quickConvert = null;
+const _sessionPriceHistory = []; // [{price, ts}] — rolling 120-point window for sparkline
+let _homeChart = null; // GoldChart instance for the home-chart section
 
 // Karat selected for tracker/calculator deep links — persisted in user_prefs
 let homeTrackerKarat = (() => {
@@ -325,7 +328,7 @@ function startFreshnessTimer() {
     if (!goldPrice || !goldUpdatedAt) return;
     const { ageText, statusText, sourceText, key } = getFreshnessMeta();
     const ageClass = freshnessAgeClass(getLiveFreshness({ updatedAt: goldUpdatedAt, lang }).ageMs);
-    const hlcText = `${txGlobal('freshness.statusLabel')}: ${statusText} · ${tx('source')}: ${sourceText} · ${tx('updated')}: ${ageText}`;
+    const hlcText = `${sourceText} · ${ageText}`;
     const kstripText = `${txGlobal('freshness.statusLabel')}: ${statusText} · ${tx('source')}: ${sourceText} · ${tx('updated')}: ${ageText}`;
     const hlcEl = document.getElementById('hlc-updated');
     if (hlcEl && hlcText !== prevHlcText) {
@@ -361,6 +364,14 @@ function renderHeroCard() {
   const aed22g = calc.usdPerGram(goldPrice, k22.purity) * CONSTANTS.AED_PEG;
   const aed21g = calc.usdPerGram(goldPrice, k21.purity) * CONSTANTS.AED_PEG;
   const aed18g = calc.usdPerGram(goldPrice, k18.purity) * CONSTANTS.AED_PEG;
+
+  // Accumulate session price history for sparkline (rolling 120-point window)
+  _sessionPriceHistory.push({ price: usd24oz, ts: Date.now() });
+  if (_sessionPriceHistory.length > 120) _sessionPriceHistory.shift();
+  drawHeroSparkline();
+
+  // Feed live tick into the home chart if it's loaded
+  _homeChart?.addPoint(usd24oz, Date.now());
 
   // Update sticky spot bar
   updateSpotBar({
@@ -418,14 +429,11 @@ function renderHeroCard() {
       'shell-skeleton-freshness-strip'
     );
     hlcUpdatedEl.removeAttribute('aria-busy');
-    hlcUpdatedEl.textContent = `${txGlobal('freshness.statusLabel')}: ${statusText} · ${tx('source')}: ${sourceText} · ${tx('updated')}: ${ageText}`;
+    hlcUpdatedEl.textContent = `${sourceText} · ${ageText}`;
     hlcUpdatedEl.dataset.freshnessKey = key;
     hlcUpdatedEl.dataset.freshnessAge = ageClass;
   } else {
-    setTextById(
-      'hlc-updated',
-      `${txGlobal('freshness.statusLabel')}: ${statusText} · ${tx('source')}: ${sourceText} · ${tx('updated')}: ${ageText}`
-    );
+    setTextById('hlc-updated', `${sourceText} · ${ageText}`);
   }
   const kstripUpdatedEl = document.getElementById('karat-strip-updated');
   if (kstripUpdatedEl) {
@@ -439,28 +447,40 @@ function renderHeroCard() {
     );
   }
 
-  // Change vs day open
+  // Change vs day open — show absolute + percentage
   const changeEl = document.getElementById('hlc-change');
   if (changeEl && dayOpenPrice && goldPrice) {
-    const chg = ((goldPrice - dayOpenPrice) / dayOpenPrice) * 100;
-    const sign = chg >= 0 ? '+' : '';
-    changeEl.textContent = `${tx('changeLabel')}: ${sign}${chg.toFixed(2)}%`;
-    changeEl.className = 'hlc-change ' + (chg >= 0 ? 'badge-up' : 'badge-down');
+    const absChg = goldPrice - dayOpenPrice;
+    const pctChg = (absChg / dayOpenPrice) * 100;
+    const signStr = absChg >= 0 ? '+' : '−';
+    const absFmt = fmt.formatPrice(Math.abs(absChg), 'USD', 2);
+    const pctFmt = Math.abs(pctChg).toFixed(2);
+    changeEl.textContent = `${signStr}${absFmt}  ${signStr}${pctFmt}%`;
+    changeEl.className = 'hlc-change ' + (absChg >= 0 ? 'badge-up' : 'badge-down');
     changeEl.hidden = false;
   }
 
-  // Day high/low estimate: derived from current price vs day open price.
-  // These two data points give a rough intraday range; true OHLC highs/lows
-  // are not available from the current data source. This is labelled
-  // "H/L" (not "High/Low") to signal it is an approximation.
+  // Stats row: Day Open / High / Low
+  const statsRowEl = document.getElementById('hlc-stats-row');
+  if (statsRowEl && dayOpenPrice && goldPrice) {
+    const high = Math.max(goldPrice, dayOpenPrice);
+    const low = Math.min(goldPrice, dayOpenPrice);
+    const openEl = document.getElementById('hlc-stat-open');
+    const highEl = document.getElementById('hlc-stat-high');
+    const lowEl = document.getElementById('hlc-stat-low');
+    if (openEl) openEl.textContent = fmt.formatPrice(dayOpenPrice, 'USD', 2);
+    if (highEl) highEl.textContent = fmt.formatPrice(high, 'USD', 2);
+    if (lowEl) lowEl.textContent = fmt.formatPrice(low, 'USD', 2);
+    statsRowEl.hidden = false;
+  }
+
+  // Day high/low (legacy element — keep updated for backward compat)
   const hlHlEl = document.getElementById('hlc-high-low');
   if (hlHlEl && dayOpenPrice && goldPrice) {
     const high = Math.max(goldPrice, dayOpenPrice);
     const low = Math.min(goldPrice, dayOpenPrice);
-    const highFmt = fmt.formatPrice(high, 'USD', 2);
-    const lowFmt = fmt.formatPrice(low, 'USD', 2);
-    hlHlEl.textContent = `H: ${highFmt} · L: ${lowFmt}`;
-    hlHlEl.hidden = false;
+    hlHlEl.textContent = `H: ${fmt.formatPrice(high, 'USD', 2)} · L: ${fmt.formatPrice(low, 'USD', 2)}`;
+    hlHlEl.hidden = true; // hidden — superseded by hlc-stats-row
   }
 
   // Market status
@@ -501,6 +521,206 @@ function renderHeroCard() {
     bar.removeAttribute('hidden');
   }
   renderHomeTrustAddons();
+  initExportButton();
+}
+
+// ── Hero sparkline ─────────────────────────────────────────────────────────
+function drawHeroSparkline() {
+  const container = document.getElementById('hlc-sparkline');
+  if (!container) return;
+  const prices = _sessionPriceHistory.map((p) => p.price);
+  if (prices.length < 3) return;
+
+  const W = 280;
+  const H = 56;
+  const PAD = 3;
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const range = max - min || prices[0] * 0.0005;
+
+  const toX = (i) => PAD + (i / (prices.length - 1)) * (W - PAD * 2);
+  const toY = (p) => H - PAD - ((p - min) / range) * (H - PAD * 2);
+
+  const pts = prices.map((p, i) => `${toX(i).toFixed(1)},${toY(p).toFixed(1)}`);
+  const isUp = prices[prices.length - 1] >= prices[0];
+  const stroke = isUp ? 'var(--color-up)' : 'var(--color-down)';
+  const fill = isUp ? 'rgb(74 222 128 / 12%)' : 'rgb(239 68 68 / 12%)';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('preserveAspectRatio', 'none');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('class', 'hlc-spark-svg');
+
+  const lastX = toX(prices.length - 1).toFixed(1);
+  const firstX = toX(0).toFixed(1);
+  const area = document.createElementNS(NS, 'path');
+  area.setAttribute('d', `M ${pts.join(' L ')} L ${lastX},${H} L ${firstX},${H} Z`);
+  area.setAttribute('fill', fill);
+  svg.append(area);
+
+  const line = document.createElementNS(NS, 'polyline');
+  line.setAttribute('points', pts.join(' '));
+  line.setAttribute('fill', 'none');
+  line.setAttribute('stroke', stroke);
+  line.setAttribute('stroke-width', '1.5');
+  line.setAttribute('stroke-linecap', 'round');
+  line.setAttribute('stroke-linejoin', 'round');
+  svg.append(line);
+
+  const [lx, ly] = pts[pts.length - 1].split(',').map(Number);
+  const dot = document.createElementNS(NS, 'circle');
+  dot.setAttribute('cx', lx.toFixed(1));
+  dot.setAttribute('cy', ly.toFixed(1));
+  dot.setAttribute('r', '3');
+  dot.setAttribute('fill', stroke);
+  dot.setAttribute('class', 'hlc-spark-dot');
+  svg.append(dot);
+
+  container.replaceChildren(svg);
+}
+
+// ── CSV export from session history ────────────────────────────────────────
+function initExportButton() {
+  const btn = document.getElementById('hlc-export-btn');
+  if (!btn || _sessionPriceHistory.length < 2) return;
+  btn.hidden = false;
+  btn.onclick = () => {
+    const k24 = KARATS.find((k) => k.code === '24');
+    const purity = k24?.purity ?? 1;
+    const rows = [['Timestamp', 'XAU/USD', 'AED/24K gram']];
+    for (const { price, ts } of _sessionPriceHistory) {
+      const aed = calc.usdPerGram(price, purity) * CONSTANTS.AED_PEG;
+      rows.push([new Date(ts).toISOString(), price.toFixed(2), aed.toFixed(4)]);
+    }
+    const csv = rows.map((r) => r.map((c) => `"${c}"`).join(',')).join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `gold-price-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    track(EVENTS.EXPORT_CLICK, { surface: 'home-hero', export_type: 'csv' });
+  };
+}
+
+// ── Historical price trend section ─────────────────────────────────────────
+function renderPriceTrend() {
+  const grid = document.getElementById('home-trend-grid');
+  if (!grid) return;
+
+  const k24 = KARATS.find((k) => k.code === '24');
+  const purity = k24?.purity ?? 1;
+
+  // Last 13 baseline entries → 12 month-over-month changes
+  const baseline = getBaselineHistory();
+  const slice = baseline.slice(-13);
+
+  const cards = [];
+  for (let i = 1; i < slice.length; i++) {
+    const prev = slice[i - 1];
+    const curr = slice[i];
+    const pctChange = ((curr.price - prev.price) / prev.price) * 100;
+    const aedPerGram = calc.usdPerGram(curr.price, purity) * CONSTANTS.AED_PEG;
+
+    // Parse 'YYYY-MM' → short month label
+    const [year, month] = curr.date.split('-');
+    const monthLabel = new Date(Number(year), Number(month) - 1, 1).toLocaleString('en', {
+      month: 'short',
+      year: '2-digit',
+    });
+
+    const isUp = pctChange >= 0;
+    const sign = isUp ? '+' : '';
+    const pctStr = `${sign}${pctChange.toFixed(1)}%`;
+    const priceStr = `$${curr.price.toLocaleString('en', { maximumFractionDigits: 0 })}`;
+    const aedStr = `AED ${aedPerGram.toFixed(2)}`;
+
+    const card = el('div', {
+      class: `price-trend-card ${isUp ? 'price-trend-card--up' : 'price-trend-card--down'}`,
+    });
+    const monthEl = el('span', { class: 'price-trend-month' });
+    monthEl.textContent = monthLabel;
+    const priceEl = el('span', { class: 'price-trend-price' });
+    priceEl.textContent = priceStr;
+    const aedEl = el('span', { class: 'price-trend-aed' });
+    aedEl.textContent = aedStr;
+    const changeEl = el('span', {
+      class: `price-trend-change price-trend-change--${isUp ? 'up' : 'down'}`,
+    });
+    changeEl.textContent = pctStr;
+    card.replaceChildren(monthEl, priceEl, aedEl, changeEl);
+    cards.push(card);
+  }
+
+  grid.replaceChildren(...cards);
+  grid.removeAttribute('aria-busy');
+
+  // Apply i18n to section header
+  const kicker = document.getElementById('home-trend-kicker');
+  const title = document.getElementById('home-trend-title');
+  const sub = document.getElementById('home-trend-sub');
+  if (kicker) kicker.textContent = tx('priceTrendKicker');
+  if (title) title.textContent = tx('priceTrendTitle');
+  if (sub) sub.textContent = tx('priceTrendSub');
+}
+
+// ── Home interactive chart ──────────────────────────────────────────────────
+function initHomeChart() {
+  const wrap = document.getElementById('home-chart-wrap');
+  if (!wrap) return;
+
+  // Apply i18n to section header and buttons
+  const kicker = document.getElementById('home-chart-kicker');
+  const title = document.getElementById('home-chart-title');
+  const sub = document.getElementById('home-chart-sub');
+  const btn1y = document.getElementById('home-chart-btn-1y');
+  const btn3y = document.getElementById('home-chart-btn-3y');
+  const btnAll = document.getElementById('home-chart-btn-all');
+  if (kicker) kicker.textContent = tx('chartKicker');
+  if (title) title.textContent = tx('chartTitle');
+  if (sub) sub.textContent = tx('chartSub');
+  if (btn1y) btn1y.textContent = tx('chartRange1Y');
+  if (btn3y) btn3y.textContent = tx('chartRange3Y');
+  if (btnAll) btnAll.textContent = tx('chartRangeAll');
+
+  // Lazy-load chart when section scrolls into view
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (!entries[0].isIntersecting) return;
+      observer.disconnect();
+
+      import('../components/chart.js')
+        .then(({ GoldChart }) => {
+          const container = document.getElementById('home-chart-container');
+          if (!container) return;
+          container.removeAttribute('aria-busy');
+          _homeChart = new GoldChart('home-chart-container', lang);
+          _homeChart.setRange('ALL');
+
+          // Wire range button clicks
+          const rangeGroup = document.getElementById('home-chart-ranges');
+          if (rangeGroup) {
+            rangeGroup.addEventListener('click', (e) => {
+              const btn = e.target.closest('.home-chart-range-btn');
+              if (!btn || !_homeChart) return;
+              const range = btn.dataset.range;
+              rangeGroup.querySelectorAll('.home-chart-range-btn').forEach((b) => {
+                b.classList.toggle('is-active', b === btn);
+              });
+              _homeChart.setRange(range);
+            });
+          }
+        })
+        .catch(() => {});
+    },
+    { threshold: 0.1 }
+  );
+  observer.observe(wrap);
 }
 
 function renderHomeTrustAddons() {
@@ -1319,6 +1539,8 @@ async function init() {
   }
 
   applyLangToPage();
+  renderPriceTrend();
+  initHomeChart();
   mountHomeQuickConvert();
 
   // Analytics: fire page_view on home load

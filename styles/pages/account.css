@@ -64,3 +64,33 @@
 .account-links {
   margin: 0;
 }
+
+/* ── Phase 62 — Premium Polish ─────────────────────────────────────────────── */
+
+.account-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle, var(--border-muted, #e5e7eb));
+  box-shadow: var(--shadow-xs);
+}
+
+.account-tab {
+  border: 1.5px solid var(--border-muted, #e5e7eb);
+  border-radius: var(--radius-pill, 999px);
+  transition:
+    border-color var(--duration-normal) var(--ease-out),
+    background var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.account-tab.is-active {
+  border-color: var(--color-gold);
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+  box-shadow: var(--shadow-gold);
+}
+
+.account-form input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-alpha, rgb(212 168 64 / 14%));
+}

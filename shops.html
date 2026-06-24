@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" dir="ltr">
   <head>
-<meta charset="UTF-8" />
+    <meta charset="UTF-8" />
     <script src="assets/analytics.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
@@ -16,6 +16,17 @@
     <link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/shops.html" />
     <link rel="alternate" hreflang="en" href="https://goldtickerlive.com/shops.html" />
     <link rel="alternate" hreflang="ar" href="https://goldtickerlive.com/shops.html?lang=ar" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <link rel="manifest" href="manifest.json" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
@@ -39,6 +50,9 @@
     <meta property="og:image:alt" content="Gold Ticker Live — live gold price tracker for GCC and Arab world" />
     <meta name="theme-color" content="#b08a3e" />
     <link rel="preload" as="style" href="styles/critical.css" />
+    <link rel="preload" as="style" href="./styles/global.css" />
+    <link rel="preload" as="style" href="./styles/pages/shops.css" />
+    <link rel="preload" as="style" href="./styles/components/shops-map.css" />
     <link rel="modulepreload" href="./src/pages/shops.js" />
     <link rel="modulepreload" href="./src/lib/api.js" />
     <link rel="modulepreload" href="./src/components/site-shell.js" />
@@ -50,6 +64,7 @@
 
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+    <meta name="msvalidate.01" content="E88623E4C36CDC8E8D44913FA9192725" />
     <!-- Structured data for directory -->
   <script type="application/ld+json">
 {
@@ -529,6 +544,11 @@
       </div>
     </div>
 
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
     <script type="module" src="./src/pages/shops.js"></script>
   </body>
 </html>

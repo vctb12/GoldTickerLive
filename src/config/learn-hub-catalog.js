@@ -154,7 +154,11 @@ export function markGuideRead(href) {
   const list = getLearnProgress();
   if (!list.includes(href)) {
     list.push(href);
-    localStorage.setItem(LEARN_PROGRESS_KEY, JSON.stringify(list.slice(-50)));
+    try {
+      localStorage.setItem(LEARN_PROGRESS_KEY, JSON.stringify(list.slice(-50)));
+    } catch {
+      // ignore quota/access errors — progress tracking is best-effort
+    }
   }
 }
 

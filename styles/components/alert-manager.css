@@ -517,3 +517,61 @@
     transition: none;
   }
 }
+
+/* ═══════════════════════════════════════════════
+   Phase 57: Alert Manager — Premium Visual Polish
+   ═══════════════════════════════════════════════ */
+
+/* Panel — gradient-card bg */
+.alert-mgr-panel {
+  background: var(--gradient-card);
+  border-inline-start: 1.5px solid var(--border-subtle);
+  box-shadow: -4px 0 24px rgb(0 0 0 / 10%);
+}
+
+/* Header — gold bottom border */
+.alert-mgr-header {
+  border-block-end: 1.5px solid var(--border-subtle);
+  background: linear-gradient(180deg, var(--surface-secondary) 0%, transparent 100%);
+}
+
+.alert-mgr-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Form — gradient-card */
+.alert-mgr-form {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Input focus ring */
+.alert-mgr-input:focus {
+  border-color: var(--color-gold);
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(196 144 46 / 12%);
+}
+
+/* Tool buttons — pill style */
+.alert-mgr-tool-btn {
+  border: 1.5px solid var(--border-subtle);
+  background: var(--gradient-card);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.alert-mgr-tool-btn:hover {
+  border-color: var(--color-gold);
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+  box-shadow: var(--shadow-gold);
+}

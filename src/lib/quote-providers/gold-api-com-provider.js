@@ -2,6 +2,9 @@ import { BaseQuoteProvider } from './base-provider.js';
 import { fetchWithProviderTimeout, isSaneGoldSpotUsd, ProviderFetchError } from './fetch-utils.js';
 
 const ENDPOINT = 'https://api.gold-api.com/price/XAU';
+// Reject quotes whose provider timestamp is older than 15 minutes.
+// gold-api.com is the live lane — if it returns stale data, something is wrong.
+const MAX_AGE_MS = 15 * 60 * 1000;
 
 export class GoldApiComQuoteProvider extends BaseQuoteProvider {
   constructor({ providerId = 'gold_api_com', timeoutMs = 4000 } = {}) {
@@ -49,6 +52,15 @@ export class GoldApiComQuoteProvider extends BaseQuoteProvider {
         code: 'missing_timestamp',
       });
     }
+
+    const ageMs = Date.now() - providerTsMs;
+    if (ageMs > MAX_AGE_MS) {
+      throw new ProviderFetchError(`gold-api.com data too old: ${Math.round(ageMs / 60000)} min`, {
+        code: 'stale_data',
+        ageMs,
+      });
+    }
+
     return this.normalizeQuote({
       price,
       providerTimestamp,

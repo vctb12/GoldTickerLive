@@ -305,3 +305,192 @@
 [dir='rtl'] .markets-card__arrow {
   transform: scaleX(-1);
 }
+
+/* ═══════════════════════════════════════════════
+   Phase 52: Markets Hub — Premium Visual Polish
+   ═══════════════════════════════════════════════ */
+
+/* Hero — warm ivory with radial gold glow */
+.markets-hero {
+  background: var(--gradient-hero-light);
+  padding: var(--space-8) var(--space-5) var(--space-7);
+}
+
+.markets-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 55% 55% at 50% -5%, rgb(196 144 46 / 9%) 0%, transparent 62%);
+  pointer-events: none;
+}
+
+.markets-hero-inner {
+  position: relative;
+}
+
+/* Hero title — extrabold clamp */
+.markets-hero-title {
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.1;
+}
+
+/* Market cards — gradient-card with foil hover */
+.markets-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  position: relative;
+  overflow: hidden;
+}
+
+.markets-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 3px;
+  background: var(--rule-foil);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.markets-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold-lg), var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.markets-card:hover::before {
+  opacity: 1;
+}
+
+.markets-card:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .markets-card {
+    transition: border-color 0.2s;
+  }
+
+  .markets-card:hover {
+    transform: none;
+  }
+}
+
+/* Region tab active state — richer pill */
+.markets-region-tab.is-active {
+  background: var(--color-gold-dark);
+  border-color: var(--color-gold-dark);
+  color: #fff8e8;
+  box-shadow: var(--shadow-gold);
+  font-weight: var(--weight-bold);
+}
+
+[data-theme='dark'] .markets-region-tab.is-active {
+  color: var(--color-on-gold);
+}
+
+.markets-region-tab:hover:not(.is-active) {
+  background: var(--color-gold-tint);
+  border-color: var(--color-gold);
+  color: var(--color-gold-dark);
+}
+
+/* Search input — enhanced focus ring */
+.markets-search-input {
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  min-height: 44px;
+  background: var(--surface-primary);
+}
+
+.markets-search-input:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgb(196 144 46 / 12%);
+}
+
+/* Explainer section — better typography */
+.markets-explainer {
+  background: linear-gradient(180deg, var(--surface-secondary) 0%, var(--surface-primary) 100%);
+  border-top: 1.5px solid var(--border-subtle);
+}
+
+.markets-explainer-inner h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.8vw, 1.5rem);
+  font-weight: var(--weight-extrabold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* FAQ items — gradient-card, gold shadow when open */
+.markets-faq-item {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition:
+    border-color var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+.markets-faq-item:hover {
+  border-color: rgb(196 144 46 / 30%);
+}
+
+.markets-faq-item[open] {
+  border-color: rgb(196 144 46 / 40%);
+  box-shadow: var(--shadow-gold), var(--shadow-xs);
+}
+
+.markets-faq-item summary {
+  padding: var(--space-4) var(--space-5);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.markets-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.markets-faq-item summary::after {
+  content: '+';
+  font-size: 1.2rem;
+  font-weight: var(--weight-normal);
+  color: var(--color-gold);
+  flex-shrink: 0;
+  transition: transform var(--transition-normal);
+}
+
+.markets-faq-item[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.markets-faq-item summary:hover {
+  background: rgb(196 144 46 / 3%);
+}
+
+.markets-faq-inner h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.8vw, 1.5rem);
+  font-weight: var(--weight-extrabold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Filter section — sticky bar refinement */
+.markets-filter-section {
+  background: var(--surface-primary);
+  border-bottom: 1.5px solid var(--border-subtle);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 4%);
+}

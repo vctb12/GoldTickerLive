@@ -311,3 +311,152 @@
 [dir='rtl'] .mkt-tips-list li {
   flex-direction: row-reverse;
 }
+
+/* ═══════════════════════════════════════════════
+   Phase 50: Market Page — Premium Visual Polish
+   ═══════════════════════════════════════════════ */
+
+/* Hero — richer paper gradient with gold foil */
+.mkt-hero {
+  background: var(--gradient-hero-light);
+  padding: var(--space-8) var(--space-5) var(--space-6);
+}
+
+.mkt-hero-title {
+  font-size: clamp(1.5rem, 4vw, 2.4rem);
+  font-weight: var(--weight-extrabold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+.mkt-hero-badge {
+  border-radius: var(--radius-pill);
+  padding: 0.25rem 0.85rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  box-shadow: var(--shadow-gold);
+}
+
+/* Info cards — gradient card treatment */
+.mkt-info-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) 1.2rem;
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.mkt-info-card:hover {
+  border-color: rgb(196 144 46 / 30%);
+  box-shadow: var(--shadow-gold);
+}
+
+.mkt-info-card-label {
+  color: var(--text-tertiary);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+}
+
+.mkt-info-card-value {
+  font-size: 0.95rem;
+  font-family: var(--font-numeric);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+/* Tips list — richer card treatment */
+.mkt-tips-list li {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.mkt-tips-list li:hover {
+  border-color: rgb(196 144 46 / 25%);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Link buttons — pill style with gold hover */
+.mkt-link-btn {
+  border-radius: var(--radius-pill);
+  min-height: 44px;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.mkt-link-btn:hover {
+  border-color: var(--color-gold);
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-1px);
+}
+
+.mkt-link-btn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* Related market cards — premium lift */
+.mkt-related-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.2rem 1.3rem;
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition-normal),
+    box-shadow var(--transition-normal),
+    transform var(--transition-normal);
+}
+
+.mkt-related-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold-lg), var(--shadow-md);
+  transform: translateY(-4px);
+  text-decoration: none;
+}
+
+.mkt-related-card:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mkt-related-card {
+    transition: border-color 0.2s;
+  }
+
+  .mkt-related-card:hover {
+    transform: none;
+  }
+}
+
+/* Trust note — left gold accent */
+.mkt-trust-note {
+  border-inline-start: 3px solid var(--color-gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: linear-gradient(90deg, rgb(196 144 46 / 6%), transparent 70%);
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.8rem;
+}
+
+/* Section titles — consistent with home-section-title */
+.mkt-section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  font-weight: var(--weight-extrabold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+  margin-bottom: 1rem;
+}

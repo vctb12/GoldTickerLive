@@ -44,6 +44,8 @@ const EXEMPT_FILES = new Set(['404.html', 'offline.html']);
 const CONTRAST_PAIRS = [
   ['--color-text', '--color-bg'],
   ['--color-text-muted', '--color-bg'],
+  ['--color-text-faint', '--color-bg'],
+  ['--color-text-faint', '--color-surface-3'],
   ['--text-accent', '--color-bg'],
   ['--color-gold-dark', '--color-bg'],
   ['--color-gold-dark', '--color-surface'],
@@ -51,6 +53,23 @@ const CONTRAST_PAIRS = [
 ];
 
 const MIN_NORMAL_CONTRAST = 4.5;
+
+/* Dark-theme status/signal colours rendered as foreground on the dark
+   card and page surfaces. These are the financial signal colours
+   (live / fixed / daily / error / movement) and must stay legible after
+   the [data-theme='dark'] overrides. Guards against regressing the dark
+   status palette back to the saturated light-mode mid-tones. */
+const DARK_CONTRAST_PAIRS = [
+  ['--color-live', '--surface-primary'],
+  ['--color-fixed', '--surface-primary'],
+  ['--color-daily', '--surface-primary'],
+  ['--color-error', '--surface-primary'],
+  ['--color-up', '--surface-primary'],
+  ['--color-down', '--surface-primary'],
+  ['--color-stale', '--surface-secondary'],
+  ['--color-warning-text', '--surface-secondary'],
+  ['--color-text-faint', '--surface-tertiary'],
+];
 
 let errors = 0;
 
@@ -143,6 +162,24 @@ function loadTokenMap() {
   return map;
 }
 
+/** Build the effective token map for dark mode: :root overlaid with the
+ *  [data-theme='dark'] overrides. */
+function loadDarkTokenMap() {
+  const css = fs.readFileSync(TOKENS_PATH, 'utf8');
+  const map = loadTokenMap();
+  const darkBlock = css.match(/\[data-theme='dark'\]\s*\{([\s\S]*?)\n\}/);
+  if (!darkBlock) {
+    fail("Could not parse [data-theme='dark'] block in tokens.css");
+    return map;
+  }
+  const declRe = /(--[a-z0-9-]+)\s*:\s*([^;]+);/gi;
+  let m;
+  while ((m = declRe.exec(darkBlock[1])) !== null) {
+    map.set(m[1].trim(), m[2].trim());
+  }
+  return map;
+}
+
 function resolveColor(tokenName, map, stack = new Set()) {
   const raw = map.get(tokenName);
   if (!raw) return null;
@@ -177,6 +214,29 @@ function checkContrastPairs() {
   if (errors === 0) ok('Gold/body token contrast pairs meet WCAG AA (4.5:1)');
 }
 
+function checkDarkContrastPairs() {
+  const map = loadDarkTokenMap();
+  if (!map.size) return;
+  let darkErrors = 0;
+  for (const [fgName, bgName] of DARK_CONTRAST_PAIRS) {
+    const fg = resolveColor(fgName, map);
+    const bg = resolveColor(bgName, map);
+    if (!fg || !bg) {
+      fail(`Could not resolve dark contrast pair ${fgName} on ${bgName}`);
+      darkErrors += 1;
+      continue;
+    }
+    const ratio = contrastRatio(fg, bg);
+    if (ratio < MIN_NORMAL_CONTRAST) {
+      fail(
+        `Dark-mode contrast ${ratio.toFixed(2)}:1 for ${fgName} on ${bgName} is below WCAG AA ${MIN_NORMAL_CONTRAST}:1`
+      );
+      darkErrors += 1;
+    }
+  }
+  if (darkErrors === 0) ok('Dark-mode status/signal colours meet WCAG AA (4.5:1)');
+}
+
 function isMonetizationConfigured() {
   const src = fs.readFileSync(CONSTANTS_PATH, 'utf8');
   const pubMatch = src.match(/ADSENSE_PUBLISHER_ID:\s*'([^']*)'/);
@@ -205,7 +265,8 @@ function checkHtmlSurfaces(files) {
         fail(`${rel}: <img> missing alt attribute`);
       }
       const isPriority =
-        /\bfetchpriority\s*=\s*["']high["']/i.test(tag) || /\bloading\s*=\s*["']eager["']/i.test(tag);
+        /\bfetchpriority\s*=\s*["']high["']/i.test(tag) ||
+        /\bloading\s*=\s*["']eager["']/i.test(tag);
       if (!isPriority && !/\bloading\s*=\s*["']lazy["']/i.test(tag)) {
         fail(`${rel}: <img> must use loading="lazy" (or fetchpriority="high" for LCP)`);
       }
@@ -273,13 +334,7 @@ function checkHtmlSurfaces(files) {
 function checkGlobalCssImports() {
   const globalPath = path.join(ROOT, 'styles/global.css');
   const css = fs.readFileSync(globalPath, 'utf8');
-  const required = [
-    'tokens.css',
-    'base.css',
-    'layout.css',
-    'components.css',
-    'utilities.css',
-  ];
+  const required = ['tokens.css', 'base.css', 'layout.css', 'components.css', 'utilities.css'];
   for (const partial of required) {
     if (!css.includes(partial)) {
       fail(`styles/global.css must import partials/${partial}`);
@@ -298,6 +353,7 @@ function main() {
   console.log('\n♿ Basic accessibility gate\n');
   checkGlobalCssImports();
   checkContrastPairs();
+  checkDarkContrastPairs();
 
   const allHtml = walkHtml(ROOT, []);
   const publicHtml = allHtml.filter(isPublicHtml);

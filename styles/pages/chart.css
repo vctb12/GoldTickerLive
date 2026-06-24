@@ -146,3 +146,58 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ═══════════════════════════════════════════════
+   Phase 57: Chart Page — Premium Visual Polish
+   ═══════════════════════════════════════════════ */
+
+/* Chart panel — gradient-card */
+.chart-panel {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.chart-panel:hover {
+  border-color: rgb(196 144 46 / 25%);
+}
+
+/* Chart chips — pill style */
+.chart-chip {
+  border: 1.5px solid var(--border-subtle);
+  background: var(--gradient-card);
+  box-shadow: var(--shadow-xs);
+  min-height: 44px;
+  padding: 0.4rem 1rem;
+  font-weight: var(--weight-semibold);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.chart-chip:hover {
+  border-color: var(--color-gold);
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+}
+
+.chart-chip.is-active {
+  background: var(--color-gold-tint);
+  border-color: var(--color-gold);
+  color: var(--color-gold-dark);
+  font-weight: var(--weight-bold);
+  box-shadow: var(--shadow-gold);
+}
+
+/* Page heading */
+.chart-page h1 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: var(--tracking-tight);
+}

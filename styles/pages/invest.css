@@ -21,10 +21,6 @@
   --invest-transition: 220ms ease;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body.invest-page {
   background:
     radial-gradient(circle at top left, rgb(176 138 62 / 18%), transparent 28%),

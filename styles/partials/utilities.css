@@ -22,335 +22,6 @@ body > * {
   padding-inline-end: max(var(--space-4), env(safe-area-inset-right));
 }
 
-/* ── Scroll affordance for horizontal scrollers ── */
-.scrollable-x {
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border) transparent;
-}
-
-.scrollable-x::-webkit-scrollbar {
-  height: 3px;
-}
-
-.scrollable-x::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 2px;
-}
-
-/* Apply to common horizontal scroll areas */
-.karat-pills,
-.chart-range-pills,
-.workspace-tabs,
-.tab-bar,
-.controls-row,
-.freshness-chips {
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.karat-pills::-webkit-scrollbar,
-.chart-range-pills::-webkit-scrollbar,
-.workspace-tabs::-webkit-scrollbar,
-.tab-bar::-webkit-scrollbar,
-.freshness-chips::-webkit-scrollbar {
-  display: none;
-}
-
-/* ── Chart controls bar ── */
-.chart-controls-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
-}
-
-.chart-range-pills {
-  display: flex;
-  gap: var(--space-1);
-  flex-wrap: nowrap;
-  padding-bottom: 2px;
-}
-
-.chart-range-btn {
-  font-size: var(--text-xs);
-  font-weight: var(--weight-bold);
-  padding: 0.3rem 0.65rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-pill);
-  background: var(--color-surface-2);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-  flex-shrink: 0;
-  min-height: 44px;
-}
-
-.chart-range-btn:hover {
-  border-color: var(--color-gold);
-  color: var(--color-gold-dark);
-}
-
-.chart-range-btn.active {
-  background: var(--color-gold-dark);
-  border-color: var(--color-gold-dark);
-  color: var(--text-on-dark);
-}
-
-/* ── History stats strip ── */
-.history-stats-strip {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-3);
-  margin-bottom: var(--space-4);
-  padding: 0.85rem 1rem;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-xs);
-}
-
-.hs-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  text-align: center;
-}
-
-.hs-label {
-  font-size: 0.68rem;
-  font-weight: var(--weight-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-text-muted);
-}
-
-.hs-value {
-  font-size: 0.95rem;
-  font-weight: var(--weight-extrabold);
-  color: var(--color-text);
-  font-variant-numeric: tabular-nums;
-}
-
-.hs-value--up {
-  color: var(--color-up);
-}
-
-.hs-value--down {
-  color: var(--color-down);
-}
-
-@media (width <= 640px) {
-  .history-stats-strip {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (width <= 380px) {
-  .history-stats-strip {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ── Archive panel improvements ── */
-.archive-panel-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-  margin-bottom: var(--space-4);
-}
-
-.archive-panel-title h3 {
-  font-size: var(--text-base);
-  font-weight: var(--weight-bold);
-  margin-bottom: 0.2rem;
-}
-
-.archive-controls {
-  display: flex;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-  align-items: flex-end;
-}
-
-.archive-control-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.archive-control-label {
-  font-size: 0.7rem;
-  font-weight: var(--weight-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-text-muted);
-}
-
-.archive-count-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--color-border-subtle);
-}
-
-.archive-count-label {
-  font-size: 0.78rem;
-  font-weight: var(--weight-bold);
-  color: var(--color-text-muted);
-}
-
-.archive-source-legend {
-  display: flex;
-  gap: var(--space-3);
-  align-items: center;
-}
-
-.archive-legend-item {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.72rem;
-  color: var(--color-text-muted);
-}
-
-.archive-legend-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.archive-legend-dot--baseline {
-  background: var(--color-gold-dark);
-}
-
-.archive-legend-dot--local {
-  background: var(--color-live);
-}
-
-/* Archive list rows */
-.archive-history-row {
-  display: grid;
-  grid-template-columns: 110px 1fr auto auto;
-  align-items: center;
-  gap: var(--space-3);
-  padding: 0.6rem 0.5rem;
-  border-bottom: 1px solid var(--color-border-subtle);
-  font-size: 0.85rem;
-}
-
-.archive-history-row:last-child {
-  border-bottom: none;
-}
-
-.archive-history-row:hover {
-  background: var(--color-surface-2);
-  border-radius: var(--radius-xs);
-}
-
-.archive-row-date {
-  font-weight: var(--weight-bold);
-  font-variant-numeric: tabular-nums;
-  color: var(--color-text);
-  font-size: 0.82rem;
-}
-
-.archive-row-prices {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-}
-
-.archive-row-price {
-  font-weight: var(--weight-bold);
-  color: var(--color-text);
-  font-variant-numeric: tabular-nums;
-  font-size: 0.88rem;
-}
-
-.archive-row-aed {
-  font-size: 0.76rem;
-  color: var(--color-text-muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.archive-row-unit {
-  font-size: 0.72rem;
-  color: var(--color-text-faint);
-  white-space: nowrap;
-}
-
-.archive-row-source {
-  font-size: 0.65rem;
-  font-weight: var(--weight-bold);
-  padding: 0.15rem 0.45rem;
-  border-radius: var(--radius-pill);
-  white-space: nowrap;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wider);
-}
-
-.archive-row-source--baseline {
-  background: var(--color-gold-tint);
-  color: var(--color-gold-dark);
-  border: 1px solid rgb(176 138 62 / 30%);
-}
-
-.archive-row-source--local {
-  background: var(--color-live-bg);
-  color: var(--color-live);
-  border: 1px solid var(--color-live-border);
-}
-
-@media (width <= 640px) {
-  .archive-history-row {
-    grid-template-columns: 90px 1fr auto;
-    gap: var(--space-2);
-  }
-
-  .archive-row-source {
-    display: none;
-  }
-
-  .archive-controls {
-    gap: 0.4rem;
-  }
-}
-
-@media (width <= 480px) {
-  .archive-panel-header {
-    flex-direction: column;
-  }
-
-  .archive-controls {
-    flex-flow: row wrap;
-  }
-
-  .archive-history-row {
-    grid-template-columns: 85px 1fr auto;
-  }
-}
-
-/* ── Download card improvements ── */
-.download-card--featured {
-  border-color: var(--color-gold);
-  background: var(--color-gold-tint);
-}
-
-.download-card--featured .download-card-title {
-  color: var(--color-gold-dark);
-}
-
 /* ── Country card mobile fixes ── */
 .country-card {
   /* Ensure readable minimum width */
@@ -2196,7 +1867,7 @@ details.nav-drawer-group[open] .nav-drawer-group-caret {
 [data-theme='dark'] .nav-search-overlay,
 [data-theme='dark'] .nav-search-dropdown,
 [data-theme='dark'] .nav-search-input {
-  background: var(--surface, #0f172a);
+  background: var(--color-surface, #0f172a);
   color: var(--color-text, #e2e8f0);
   border-color: var(--border-default, #334155);
 }
@@ -3155,30 +2826,6 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
   animation: none;
 }
 
-/* Only pulse when data is confirmed live — gate via data-state attribute */
-.ph-freshness-dot[data-state='live'] {
-  animation: freshness-dot-pulse 2.4s ease-in-out infinite;
-}
-
-@keyframes freshness-dot-pulse {
-  0%,
-  100% {
-    opacity: 1;
-    box-shadow: 0 0 0 0 rgb(26 122 50 / 40%);
-  }
-
-  50% {
-    opacity: 0.7;
-    box-shadow: 0 0 0 5px rgb(26 122 50 / 0%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ph-freshness-dot[data-state='live'] {
-    animation: none;
-  }
-}
-
 .ph-freshness-suffix {
   color: var(--text-tertiary);
   font-size: var(--text-2xs, 0.7rem);
@@ -3432,7 +3079,6 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 
 .freshness-strip[data-freshness-state='live'] .freshness-strip__dot {
   background: var(--color-live);
-  animation: freshness-strip-pulse var(--duration-xslow) var(--ease-standard) infinite;
 }
 
 .freshness-strip[data-freshness-state='delayed'] .freshness-strip__dot {
@@ -3453,19 +3099,6 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
   background: var(--text-tertiary);
 }
 
-@keyframes freshness-strip-pulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 0.55;
-    transform: scale(0.88);
-  }
-}
-
 @media (width <= 640px) {
   .freshness-strip {
     align-items: flex-start;
@@ -3481,6 +3114,172 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
   .freshness-strip__dot {
     animation: none;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Freshness Strip — Enhanced State Styles
+   Live = electric green heartbeat glow; stale = amber warning bar
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Shared strip upgrades */
+.freshness-strip {
+  transition:
+    background var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+/* LIVE — bright green tint, pulsing dot with ring glow */
+.freshness-strip[data-freshness-state='live'] {
+  background: linear-gradient(135deg, rgb(26 163 78 / 10%), rgb(26 163 78 / 5%));
+  border-color: rgb(26 163 78 / 35%);
+}
+
+.freshness-strip[data-freshness-state='live'] .freshness-strip__dot {
+  inline-size: 10px;
+  block-size: 10px;
+  flex: 0 0 10px;
+  background: #22c55e;
+  box-shadow:
+    0 0 0 3px rgb(34 197 94 / 20%),
+    0 0 10px rgb(34 197 94 / 45%);
+  animation: freshness-strip-live 2s ease-in-out infinite;
+}
+
+.freshness-strip[data-freshness-state='live'] .freshness-strip__label {
+  color: #16a34a;
+}
+
+[data-theme='dark'] .freshness-strip[data-freshness-state='live'] .freshness-strip__label {
+  color: #4ade80;
+}
+
+@keyframes freshness-strip-live {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgb(34 197 94 / 55%),
+      0 0 8px rgb(34 197 94 / 40%);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow:
+      0 0 0 5px rgb(34 197 94 / 0%),
+      0 0 14px rgb(34 197 94 / 20%);
+    transform: scale(1.15);
+  }
+}
+
+/* DELAYED — amber tint, visible warning */
+.freshness-strip[data-freshness-state='delayed'] {
+  background: rgb(234 179 8 / 7%);
+  border-color: rgb(234 179 8 / 35%);
+}
+
+.freshness-strip[data-freshness-state='delayed'] .freshness-strip__dot {
+  inline-size: 9px;
+  block-size: 9px;
+  flex: 0 0 9px;
+  background: #eab308;
+}
+
+.freshness-strip[data-freshness-state='delayed'] .freshness-strip__label {
+  color: #a16207;
+}
+
+[data-theme='dark'] .freshness-strip[data-freshness-state='delayed'] .freshness-strip__label {
+  color: #facc15;
+}
+
+/* STALE / CACHED — orange warning band */
+.freshness-strip[data-freshness-state='stale'],
+.freshness-strip[data-freshness-state='cached'] {
+  background: linear-gradient(135deg, rgb(234 88 12 / 9%), rgb(234 88 12 / 5%));
+  border-color: rgb(234 88 12 / 35%);
+}
+
+.freshness-strip[data-freshness-state='stale'] .freshness-strip__dot,
+.freshness-strip[data-freshness-state='cached'] .freshness-strip__dot {
+  inline-size: 9px;
+  block-size: 9px;
+  flex: 0 0 9px;
+  background: #f97316;
+}
+
+.freshness-strip[data-freshness-state='stale'] .freshness-strip__label,
+.freshness-strip[data-freshness-state='cached'] .freshness-strip__label {
+  color: #c2410c;
+}
+
+[data-theme='dark'] .freshness-strip[data-freshness-state='stale'] .freshness-strip__label,
+[data-theme='dark'] .freshness-strip[data-freshness-state='cached'] .freshness-strip__label {
+  color: #fb923c;
+}
+
+/* FALLBACK / UNAVAILABLE — red error state */
+.freshness-strip[data-freshness-state='fallback'],
+.freshness-strip[data-freshness-state='unavailable'] {
+  background: rgb(220 38 38 / 6%);
+  border-color: rgb(220 38 38 / 30%);
+}
+
+.freshness-strip[data-freshness-state='fallback'] .freshness-strip__label,
+.freshness-strip[data-freshness-state='unavailable'] .freshness-strip__label {
+  color: #b91c1c;
+}
+
+[data-theme='dark'] .freshness-strip[data-freshness-state='fallback'] .freshness-strip__label,
+[data-theme='dark'] .freshness-strip[data-freshness-state='unavailable'] .freshness-strip__label {
+  color: #f87171;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .freshness-strip[data-freshness-state='live'] .freshness-strip__dot {
+    animation: none;
+    box-shadow: 0 0 0 3px rgb(34 197 94 / 25%);
+  }
+}
+
+/* ph-freshness-dot live — enhanced glow heartbeat */
+@keyframes freshness-dot-live-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(34 197 94 / 55%);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgb(34 197 94 / 0%);
+    transform: scale(1.2);
+  }
+}
+
+.ph-freshness-dot[data-state='live'] {
+  animation: freshness-dot-live-glow 2s ease-in-out infinite;
+  background: #22c55e;
+  box-shadow: 0 0 6px rgb(34 197 94 / 45%);
+  width: 9px;
+  height: 9px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ph-freshness-dot[data-state='live'] {
+    animation: none;
+    box-shadow: 0 0 6px rgb(34 197 94 / 45%);
+  }
+}
+
+/* freshness-badge live — green ring glow */
+.freshness-badge--live {
+  background: linear-gradient(135deg, rgb(34 197 94 / 10%), rgb(34 197 94 / 5%));
+  border-color: rgb(34 197 94 / 35%);
+  color: #16a34a;
+}
+
+[data-theme='dark'] .freshness-badge--live {
+  color: #4ade80;
+}
+
+.freshness-badge--live .freshness-badge__state {
+  color: inherit;
 }
 
 /* ═══════════════════════════════════════════════
@@ -3907,5 +3706,116 @@ nav a,
 
   .mobile-bottom-nav-item.is-active .mobile-bottom-nav-icon {
     transform: none;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Touch hover-lift safety net
+   ------------------------------------------------------------------------
+   On coarse / no-hover pointers (phones, most tablets) the `:hover` state
+   is synthesised on tap and *persists* until the user taps elsewhere. Any
+   `:hover` rule that raises a card with `transform: translateY(...)` (or
+   `scale()`) therefore leaves the element stuck in its lifted position
+   after a tap — a visible, well-known mobile glitch.
+
+   This block neutralises those lifts wherever a real hover is unavailable.
+   It is the device-capability counterpart of the `prefers-reduced-motion`
+   global net in `base.css`, and uses the same `!important` strategy so it
+   reliably wins over page-level stylesheets that load after `global.css`.
+
+   `@media (hover: none)` is mutually exclusive with the `@media (hover:
+   hover)` guards used elsewhere, so this never double-applies or conflicts.
+   Keyboard affordances are untouched: those use `:focus-visible`, not
+   `:hover`, so focus lifts still work on hybrid (touch + keyboard) devices.
+
+   New card-lift styles should either wrap their hover transform in
+   `@media (hover: hover)` (preferred, see `.hover-lift`) or add their
+   selector here. ═══════════════════════════════════════════════════════ */
+@media (hover: none) {
+  /* Buttons & CTAs */
+  .btn-primary:hover,
+  .hero .btn-primary:hover,
+  .btn-outline:hover,
+  .btn-outline-light:hover,
+  .btn-ghost-light:hover,
+  .retry-btn:hover,
+  .nav-cta:hover,
+  .nav-drawer-cta:hover,
+  .nav-drawer-link:hover,
+  .nav-dropdown-btn:hover,
+  #back-to-top:hover,
+  .action-rail-button:hover,
+  .order-btn-primary:hover,
+  .order-btn-whatsapp:hover,
+  .pricing-cta-pro:hover,
+  .pricing-cta-api:hover,
+  .cp-mi-cta:hover,
+  .mkt-link-btn:hover,
+  .onb-dismiss-btn:hover,
+  .home-social-btn:hover,
+  /* Home cards & strips */
+  .gcc-card:hover,
+  .tool-card:hover,
+  .hero-live-card:hover,
+  .home-stat-card:hover,
+  .karat-strip-item:hover,
+  .trust-item:hover,
+  .market-card:hover,
+  .country-tile:hover,
+  .explainer-strip-item:hover,
+  .spotlight-card:hover,
+  .insight-card:hover,
+  .featured-card:hover,
+  /* Country / city / market pages */
+  .country-card:hover,
+  .country-context-card:hover,
+  .country-karat-card:hover,
+  .country-action-card:hover,
+  .cp-price-card:hover,
+  .cp-related-card:hover,
+  .cp-price-chip:hover,
+  .cp-related-link:hover,
+  .city-market-card:hover,
+  .city-related-link:hover,
+  .mkt-related-card:hover,
+  /* Tool / tracker / invest / shops */
+  .tool-chip:hover,
+  .tracker-chip:hover,
+  .tracker-hero-stat:hover,
+  .tracker-market-card:hover,
+  .invest-chip:hover,
+  .invest-goal-card:hover,
+  .invest-jumpbar a:hover,
+  .invest-tab:hover,
+  .shop-card:hover,
+  .shops-guide-chip:hover,
+  .shops-quick-action-btn:hover,
+  .calc-related-card:hover,
+  .compare-card:hover,
+  .developer-endpoint-card:hover,
+  .pricing-card:hover,
+  .pricing-card-featured:hover,
+  .order-partner-card:hover,
+  .content-cta-card:hover,
+  .karat-sibling-links button:hover,
+  /* Guides / learn / insights / related links */
+  .guide-card:hover,
+  .guide-journey-step:hover,
+  .learn-guide-card:hover,
+  .insights-card:hover,
+  .insights-feed-card:hover,
+  .markets-card:hover,
+  .related-tool-link:hover,
+  .related-guides-link:hover,
+  .legal-related-link:hover,
+  .stub-related-link:hover,
+  .fav-btn:hover {
+    transform: none !important;
+  }
+
+  /* Descendant affordance shifts that also stick after tap */
+  .guide-card:hover .guide-card-arrow,
+  .action-rail-link:hover .action-rail-link__kicker {
+    transform: none !important;
   }
 }

@@ -138,7 +138,7 @@
 
 .compare-karat-btn.is-active {
   background: var(--color-gold);
-  color: var(--color-black, #1a1a1a);
+  color: var(--color-on-gold);
 }
 
 .compare-select-block {
@@ -681,4 +681,94 @@
   .compare-chip-remove {
     transition: none;
   }
+}
+
+/* ═══════════════════════════════════════════════
+   Phase 57: Compare Page — Premium Visual Polish
+   ═══════════════════════════════════════════════ */
+
+/* Hero — warm ivory gradient */
+.compare-hero {
+  background: var(--gradient-hero-light);
+  border-bottom: 1.5px solid var(--border-subtle);
+  position: relative;
+  overflow: hidden;
+}
+
+.compare-hero::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 2px;
+  background: var(--rule-foil);
+  opacity: 0.6;
+}
+
+/* Hero title */
+.compare-hero-title {
+  font-weight: var(--weight-extrabold);
+  line-height: 1.1;
+}
+
+/* Spot badge — gradient-card */
+.compare-spot-badge {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-gold);
+}
+
+/* Karat selector — pill segmented control */
+.compare-karat {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+}
+
+.compare-karat-btn.is-active {
+  background: var(--color-gold-dark);
+  color: #fff8e8;
+  box-shadow: var(--shadow-gold);
+}
+
+[data-theme='dark'] .compare-karat-btn.is-active {
+  color: var(--color-on-gold);
+}
+
+/* Select block — gradient-card */
+.compare-select-block {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Comparison cards (result grid) */
+.compare-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition-normal),
+    box-shadow var(--transition-normal),
+    transform var(--transition-normal);
+}
+
+.compare-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold-lg), var(--shadow-sm);
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .compare-card:hover {
+    transform: none;
+  }
+}
+
+.compare-card:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
 }

@@ -91,13 +91,6 @@ body.tracker-pro-page {
   flex-wrap: wrap;
 }
 
-.tracker-anchor {
-  position: relative;
-  top: -110px;
-  visibility: hidden;
-  height: 0;
-}
-
 /* ── Trust banner ─────────────────────────────────────────────────────────── */
 
 .tracker-data-trust-section {
@@ -345,24 +338,26 @@ body.tracker-pro-page {
   margin: 0 0.1rem;
 }
 
-/* Live badge — green */
+/* Live badge — electric green with glow */
 .tracker-badge-live {
-  border-color: rgb(27 163 78 / 35%);
-  background: rgb(27 163 78 / 12%);
-  color: #5dd98b;
+  border-color: rgb(34 197 94 / 45%);
+  background: linear-gradient(135deg, rgb(34 197 94 / 14%), rgb(34 197 94 / 6%));
+  color: #4ade80;
+  box-shadow: 0 0 0 1px rgb(34 197 94 / 15%) inset;
 }
 
 /* Cached / stale / unavailable — remain visible on dark */
 .tracker-badge--cached {
-  border-color: rgb(200 160 0 / 30%);
-  background: rgb(200 160 0 / 10%);
-  color: #e8c84a;
+  border-color: rgb(234 179 8 / 40%);
+  background: rgb(234 179 8 / 10%);
+  color: #facc15;
 }
 
 .tracker-badge--stale {
-  border-color: rgb(214 119 32 / 30%);
-  background: rgb(214 119 32 / 10%);
-  color: #f0a350;
+  border-color: rgb(234 88 12 / 45%);
+  background: linear-gradient(135deg, rgb(234 88 12 / 12%), rgb(234 88 12 / 6%));
+  color: #fb923c;
+  box-shadow: 0 0 0 1px rgb(234 88 12 / 12%) inset;
 }
 
 .tracker-badge--closed {
@@ -372,30 +367,32 @@ body.tracker-pro-page {
 }
 
 .tracker-badge--unavailable {
-  border-color: rgb(200 60 60 / 30%);
-  background: rgb(200 60 60 / 10%);
-  color: #f07070;
+  border-color: rgb(220 38 38 / 40%);
+  background: rgb(220 38 38 / 10%);
+  color: #f87171;
 }
 
-/* Live pulse dot */
+/* Live pulse dot — heartbeat glow */
 .tracker-badge-dot {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: currentcolor;
-  animation: tp-pulse 2s ease-in-out infinite;
+  animation: tp-heartbeat 2s ease-in-out infinite;
   flex-shrink: 0;
 }
 
-@keyframes tp-pulse {
+@keyframes tp-heartbeat {
   0%,
   100% {
     transform: scale(1);
     opacity: 1;
+    box-shadow: 0 0 0 0 rgb(74 222 128 / 50%);
   }
   50% {
-    transform: scale(0.75);
-    opacity: 0.45;
+    transform: scale(1.2);
+    opacity: 0.85;
+    box-shadow: 0 0 0 5px rgb(74 222 128 / 0%);
   }
 }
 
@@ -414,9 +411,11 @@ body.tracker-pro-page {
 }
 
 .tracker-badge-xauusd strong {
-  font-size: 0.82rem;
+  font-size: 1rem;
+  font-weight: var(--weight-extrabold);
   font-variant-numeric: tabular-nums;
   color: #f0d070;
+  letter-spacing: -0.01em;
 }
 
 /* Market status badge */
@@ -520,12 +519,13 @@ body.tracker-pro-page {
 }
 
 .tracker-hero-v {
-  font-size: clamp(1.15rem, 2.2vw, 1.7rem);
-  font-weight: var(--weight-bold);
+  font-size: clamp(1.35rem, 2.8vw, 2rem);
+  font-weight: var(--weight-extrabold);
   font-family: var(--font-numeric);
   color: var(--tp-hero-text);
-  line-height: 1.1;
+  line-height: 1.05;
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
 .tracker-hero-s {
@@ -533,28 +533,6 @@ body.tracker-pro-page {
   color: var(--tp-hero-faint);
   line-height: 1.4;
   margin-top: 0.3rem;
-}
-
-/* Skeleton shimmer */
-.tracker-skeleton-pulse {
-  color: var(--tp-hero-faint);
-  animation: tp-skeleton-flash 1.5s ease-in-out infinite;
-}
-
-@keyframes tp-skeleton-flash {
-  0%,
-  100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tracker-skeleton-pulse {
-    animation: none;
-  }
 }
 
 /* ── Hero controls ────────────────────────────────────────────────────────── */
@@ -634,7 +612,7 @@ body.tracker-pro-page {
 /* Override .btn styles for dark hero context */
 .tracker-hero-wrap .btn.btn-primary {
   background: var(--tp-gold);
-  color: #0d0a07;
+  color: var(--color-on-gold);
   border-color: var(--tp-gold);
 }
 
@@ -1558,30 +1536,6 @@ body.tracker-workspace-basic .tracker-advanced-only {
   justify-content: flex-end;
 }
 
-.tracker-mini-item {
-  min-width: 130px;
-  padding: 0.7rem 0.85rem;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--tp-border);
-  background: var(--tp-panel);
-}
-
-.tracker-mini-k {
-  font-size: 0.66rem;
-  font-weight: var(--weight-extrabold);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--tp-text-faint);
-  margin-bottom: 0.25rem;
-}
-
-.tracker-mini-v {
-  font-size: var(--text-base);
-  font-weight: var(--weight-extrabold);
-  color: var(--tp-text);
-  font-variant-numeric: tabular-nums;
-}
-
 .tracker-mini-s {
   margin-top: 0.2rem;
   font-size: 0.7rem;
@@ -2490,68 +2444,6 @@ td.tracker-chg-down {
   text-decoration: underline;
 }
 
-/* ── Live line ────────────────────────────────────────────────────────────── */
-
-.tracker-live-line {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.76rem;
-  color: var(--tp-text-muted);
-}
-
-.tracker-live-line::before {
-  content: '';
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--tp-live);
-  box-shadow: 0 0 0 4px rgb(27 123 58 / 10%);
-}
-
-/* ── Colour helpers ───────────────────────────────────────────────────────── */
-
-.tracker-pos {
-  color: var(--tp-live) !important;
-}
-.tracker-neg {
-  color: var(--tp-danger) !important;
-}
-.tracker-neutral {
-  color: var(--tp-text-muted) !important;
-}
-
-/* ── Skeleton ─────────────────────────────────────────────────────────────── */
-
-.tracker-skeleton {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(
-    90deg,
-    var(--surface-tertiary) 25%,
-    var(--tp-panel) 50%,
-    var(--surface-tertiary) 75%
-  );
-  background-size: 400px 100%;
-  animation: tp-skeleton 1.5s linear infinite;
-  border-radius: var(--tp-radius-sm);
-}
-
-@keyframes tp-skeleton {
-  0% {
-    background-position: -400px 0;
-  }
-  100% {
-    background-position: 400px 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tracker-skeleton {
-    animation: none;
-  }
-}
-
 /* ── Source badges ────────────────────────────────────────────────────────── */
 
 .tracker-source-badge {
@@ -2598,6 +2490,12 @@ td.tracker-chg-down {
   background: rgb(16 111 120 / 8%);
   border-color: rgb(16 111 120 / 22%);
   color: #0d7680;
+}
+
+[data-theme='dark'] .tracker-source-badge--local-snapshot {
+  background: rgb(62 188 200 / 10%);
+  border-color: rgb(62 188 200 / 25%);
+  color: #40bfc8;
 }
 .tracker-source-badge--LBMA-baseline {
   background: var(--tp-blue-soft);
@@ -3974,7 +3872,7 @@ td.tracker-chg-down {
 .tracker-range-pills .tracker-pill[aria-pressed='true'] {
   background: var(--color-gold);
   border-color: var(--color-gold-light);
-  color: #1a0c02;
+  color: var(--color-on-gold);
 }
 
 .tracker-karat-table tbody tr {
@@ -3991,4 +3889,167 @@ td.tracker-chg-down {
 
 [dir='rtl'] .tracker-karat-table tbody tr.is-selected {
   box-shadow: inset -3px 0 0 var(--color-gold);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Phase 56: Tracker Pro — Premium Visual Polish
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Panels — subtle gradient border upgrade */
+.tracker-panel,
+.tracker-hero-card,
+.tracker-toolbar-card,
+.tracker-wire-card,
+.tracker-subpanel,
+.tracker-method-card {
+  border: 1.5px solid var(--border-subtle);
+}
+
+.tracker-panel:hover,
+.tracker-subpanel:hover {
+  border-color: rgb(196 144 46 / 25%);
+  box-shadow:
+    var(--shadow-xs),
+    0 0 0 0 transparent;
+}
+
+/* Toolbar card — gradient surface */
+.tracker-toolbar-card {
+  background: linear-gradient(180deg, var(--surface-secondary) 0%, var(--surface-primary) 100%);
+  border: 1.5px solid var(--border-subtle);
+}
+
+/* Result cards — gradient-card */
+.tracker-result-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.tracker-result-card:hover {
+  border-color: rgb(196 144 46 / 30%);
+  box-shadow: var(--shadow-gold), var(--shadow-xs);
+}
+
+/* Stat cards below chart — gradient-card */
+.tracker-stat-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.tracker-stat-card:hover {
+  border-color: rgb(196 144 46 / 30%);
+  box-shadow: var(--shadow-gold);
+}
+
+/* Market cards — gold shadow on hover */
+.tracker-market-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+}
+
+.tracker-market-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold-lg), var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tracker-market-card:hover {
+    transform: none;
+  }
+}
+
+/* Watch cards */
+.tracker-watch-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+}
+
+/* Chart wrap — enhanced premium border */
+.tracker-chart-wrap {
+  border: 1.5px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+}
+
+.tracker-chart-wrap:hover {
+  border-color: rgb(196 144 46 / 25%);
+}
+
+/* Mode tab bar — thicker gold active underline */
+.tracker-mode-tab::after {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--color-gold);
+}
+
+.tracker-mode-tab.is-active,
+.tracker-mode-tab[aria-selected='true'] {
+  font-weight: var(--weight-extrabold);
+}
+
+/* Comparison cards */
+.comparison-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+}
+
+.comparison-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold), var(--shadow-xs);
+}
+
+/* Welcome chips — pill upgrade */
+.tracker-welcome-chip {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  font-weight: var(--weight-semibold);
+}
+
+/* Method cards — gold heading */
+.tracker-method-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+}
+
+/* Panel section head titles */
+.tracker-panel-head h2,
+.tracker-panel-head .h2 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+}
+
+/* Trust banner — gold-accent bar */
+.tracker-data-trust-banner {
+  background: linear-gradient(90deg, rgb(196 144 46 / 5%) 0%, transparent 60%);
+  border-bottom: 1.5px solid rgb(196 144 46 / 20%);
+}
+
+/* Table hover — gold tint */
+.tracker-table tbody tr:hover {
+  background: rgb(196 144 46 / 4%);
+}
+
+/* Calc result box — richer accent */
+.tracker-calc-result {
+  background: linear-gradient(135deg, var(--color-gold-tint) 0%, var(--surface-accent) 100%);
+  border: 1.5px solid rgb(196 144 46 / 35%);
+  box-shadow: var(--shadow-gold), var(--shadow-xs);
+}
+
+.tracker-calc-result__value {
+  font-family: var(--font-numeric);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-extrabold);
 }

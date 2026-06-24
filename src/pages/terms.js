@@ -70,7 +70,11 @@ function init() {
   navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
-      localStorage.setItem('gp_pref_lang', STATE.lang);
+      try {
+        localStorage.setItem('gp_pref_lang', STATE.lang);
+      } catch {
+        // ignore quota/access errors
+      }
       shell.updateLang(STATE.lang);
       applyLanguage();
     });

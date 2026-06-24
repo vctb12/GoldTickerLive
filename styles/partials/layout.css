@@ -108,36 +108,167 @@
 }
 
 /* ═══════════════════════════════════════════════
-   Print Styles
+   Phase 48: Print Styles — Premium print layout
+   Optimized for printing gold price data and guides.
    ═══════════════════════════════════════════════ */
 @media print {
+  /* ── Hide all UI chrome ── */
   .site-nav,
   .spot-bar,
   .site-footer,
+  .site-footer-global,
   .skip-link,
   .nav-drawer-overlay,
   .nav-drawer,
   .mobile-bottom-bar,
-  [aria-hidden='true'] {
+  .gold-ticker,
+  .home-freshness-bar,
+  .trust-strip,
+  .home-explainer-strip,
+  .hero-ctas,
+  .hero-ctas-secondary,
+  .tools-alert-row,
+  .gcc-copy-btn,
+  .kstrip-copy-btn,
+  .kstrip-unit-toggle,
+  .faq-more-row,
+  .section-link,
+  [aria-hidden='true'],
+  [data-noprint] {
     display: none !important;
   }
 
+  /* ── Base typography for print ── */
   body {
-    background: var(--color-white);
-    color: var(--color-black);
-    font-size: 12pt;
+    background: #fff;
+    color: #111;
+    font-size: 11pt;
+    line-height: 1.5;
+    font-family: 'Georgia', 'Times New Roman', serif;
   }
 
-  a[href]::after {
-    content: ' (' attr(href) ')';
-    font-size: 0.8em;
-    color: #666;
+  h1,
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+    color: #111;
   }
 
+  /* ── Page layout ── */
+  .hero,
+  .home-section,
+  .home-section--alt {
+    padding: 1rem 0;
+    background: none;
+    border: none;
+  }
+
+  .hero-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-live-card {
+    max-width: 100%;
+    box-shadow: none;
+    border: 1.5px solid #c4902e;
+    border-radius: 4px;
+    padding: 0.75rem;
+  }
+
+  /* ── Cards — print-safe ── */
+  .gcc-card,
+  .tool-card,
+  .market-card,
+  .home-stat-card,
+  .karat-strip-item,
+  .faq-item,
   .card {
     break-inside: avoid;
-    border: 1px solid #ccc;
+    box-shadow: none !important;
+    border: 1px solid #d6ccb4 !important;
+    border-radius: 4px;
+    background: #fff !important;
+  }
+
+  /* ── Grids collapse to 2-col for print ── */
+  .gcc-grid,
+  .tools-grid,
+  .home-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem;
+  }
+
+  .markets-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* ── Gold price value — keep prominent ── */
+  .hlc-price,
+  .gcc-price,
+  .home-stat-value {
+    color: #7a4c10 !important;
+    -webkit-text-fill-color: #7a4c10 !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+  }
+
+  /* ── Freshness labels — print as text ── */
+  .hlc-updated,
+  .karat-strip-updated {
+    font-style: italic;
+    color: #555 !important;
+  }
+
+  /* ── Trust banner — include on print ── */
+  .trust-banner-box {
+    border: 1px solid #c4902e;
     box-shadow: none;
+    background: #fdf8e8;
+  }
+
+  /* ── Karat strip ── */
+  .karat-strip {
+    background: #fdf8e8;
+    border: 1px solid #c4902e;
+    padding: 0.5rem;
+  }
+
+  .karat-strip-prices {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+
+  /* ── Print URL expansion for important links ── */
+  a.gcc-card::after,
+  a.tool-card::after {
+    display: none; /* Don't expand card link URLs */
+  }
+
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.75em;
+    color: #666;
+    word-break: break-all;
+  }
+
+  /* ── Page breaks ── */
+  .home-section + .home-section {
+    break-before: auto;
+  }
+
+  .karat-strip,
+  .trust-banner-box {
+    break-inside: avoid;
+  }
+
+  /* ── Remove animations for print ── */
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }
 

@@ -61,10 +61,7 @@ function migrateGoldPricesToGoldRate(goldPricesFile, goldRateFile) {
 
   html = html.replace(/gold-prices\/?/g, 'gold-rate/');
   html = html.replace(/\bGold Prices\b/g, 'Gold Rate');
-  html = html.replace(
-    /<meta\s+name="robots"\s+content="noindex,follow"\s*\/?>\s*/i,
-    ''
-  );
+  html = html.replace(/<meta\s+name="robots"\s+content="noindex,follow"\s*\/?>\s*/i, '');
 
   writeFile(goldRateFile, html);
 }
@@ -142,7 +139,7 @@ function buildCityGoldRatePage({ country, city, depth }) {
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://open.er-api.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="${rel}styles/global.css" />
   <link rel="icon" href="${rel}favicon.svg" type="image/svg+xml" />
   <script type="application/ld+json">
@@ -151,7 +148,7 @@ ${JSON.stringify(jsonLd, null, 2)}
 </head>
 <body>
   <div id="nav-root"></div>
-  <main class="country-page-main" style="max-width:900px;margin:0 auto;padding:1.5rem 1rem;">
+  <main id="main-content" class="country-page-main" style="max-width:900px;margin:0 auto;padding:1.5rem 1rem;">
     <nav class="breadcrumb" aria-label="Breadcrumb" id="breadcrumb-root"></nav>
     <h1 style="font-size:1.75rem;font-weight:700;margin:1rem 0 0.5rem;">${h1}</h1>
     <p style="color:#64748b;margin-bottom:1.5rem;">${intro}</p>
@@ -194,13 +191,10 @@ function patchGoldRateStub(goldRateFile, country, city) {
     }
   }
 
-  html = html.replace(
-    /<meta\s+name="robots"\s+content="noindex,follow"\s*\/?>\s*/i,
-    () => {
-      changed = true;
-      return '';
-    }
-  );
+  html = html.replace(/<meta\s+name="robots"\s+content="noindex,follow"\s*\/?>\s*/i, () => {
+    changed = true;
+    return '';
+  });
 
   if (changed) writeFile(goldRateFile, html);
 }

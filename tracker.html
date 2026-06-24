@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" dir="ltr">
   <head>
-<meta charset="UTF-8" />
+    <meta charset="UTF-8" />
     <script src="assets/analytics.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
@@ -50,10 +50,11 @@
     <link
       rel="preload"
       as="style"
-      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
     />
     <link rel="preload" as="style" href="styles/global.css" />
     <link rel="preload" as="style" href="styles/pages/tracker-pro.css" />
+    <link rel="preload" as="style" href="styles/components/alert-manager.css" />
     <link rel="modulepreload" href="src/pages/tracker-pro.js" />
     <link rel="modulepreload" href="src/lib/api.js" />
     <link rel="modulepreload" href="src/tracker/inline-calc.js" />
@@ -66,7 +67,7 @@
 
     <!-- Fonts with font-display: swap -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
 
@@ -1686,8 +1687,8 @@
           <table class="tp-keyboard-table">
             <thead>
               <tr>
-                <th>Key</th>
-                <th>Action</th>
+                <th scope="col">Key</th>
+                <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -1785,6 +1786,11 @@
       </div>
     </div>
 
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
     <script type="module" src="src/pages/tracker-pro.js"></script>
   </body>
 </html>

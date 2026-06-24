@@ -1,7 +1,8 @@
+/* Phase 49: Critical CSS — optimized above-fold rendering tokens */
 :root {
-  --tp-bg: #fafaf8;
-  --tp-text: #16181d;
-  --tp-accent: #b08a3e;
+  --tp-bg: #fefcf7;
+  --tp-text: #15110a;
+  --tp-accent: #c4902e;
   --tp-font-sans: 'Cairo', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
 }
 
@@ -17,27 +18,36 @@ body {
   color: var(--tp-text);
   font-family: var(--tp-font-sans);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
   color: var(--tp-accent);
+  text-decoration: none;
 }
 
 .btn {
-  display: inline-block;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  font-family: inherit;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-/* Above-fold scaffolding: dark hero paints before global.css to avoid a light
-   flash on pages with a dark hero band (home, calculator, methodology). */
+/* Above-fold scaffolding: light hero for redesign v3 (warm ivory) */
 .hero,
 .calc-hero,
 .method-hero,
 .insights-hero {
-  background: #14161b;
-  color: #fff;
-  min-height: 200px;
+  background: #fefdf9;
+  color: #15110a;
+  min-height: 220px;
 }
 
 /* Nav placeholder height so JS-injected nav doesn't shift content */

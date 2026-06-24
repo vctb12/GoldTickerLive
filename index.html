@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" dir="ltr">
   <head>
-<meta charset="UTF-8" />
+    <meta charset="UTF-8" />
     <script src="assets/analytics.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
@@ -58,7 +58,7 @@
     <link
       rel="preload"
       as="style"
-      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
     />
     <link rel="preload" as="style" href="styles/global.css" />
     <link rel="preload" as="style" href="styles/pages/home.css" />
@@ -72,7 +72,7 @@
 
     <!-- Fonts with font-display: swap for faster FCP -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
 
@@ -207,19 +207,36 @@
           >
             <div class="hlc-header">
               <span class="hlc-title" id="hlc-title">Gold Spot Price</span>
-              <span class="hlc-badge" id="hlc-badge">XAU/USD</span>
+              <span class="hlc-market" id="hlc-market-status"></span>
             </div>
             <div class="hlc-price-wrap">
-              <span class="hlc-direction" id="hlc-direction" hidden aria-hidden="true"></span>
               <div class="hlc-price hlc-price--loading" id="hlc-price" data-testid="gold-price">
                 <span class="skeleton-inline shell-skeleton-price-lg"></span>
               </div>
             </div>
-            <div class="hlc-sub" id="hlc-sub">per troy ounce</div>
-            <div class="hlc-indicators">
+            <div class="hlc-change-row">
+              <span class="hlc-direction" id="hlc-direction" hidden aria-hidden="true"></span>
               <span class="hlc-change" id="hlc-change" hidden>—</span>
+              <span class="hlc-sub" id="hlc-sub">per troy ounce</span>
+            </div>
+            <div class="hlc-sparkline" id="hlc-sparkline" aria-hidden="true"></div>
+            <div class="hlc-stats-row" id="hlc-stats-row" hidden>
+              <div class="hlc-stat">
+                <span class="hlc-stat-label">Open</span>
+                <span class="hlc-stat-value" id="hlc-stat-open">—</span>
+              </div>
+              <div class="hlc-stat">
+                <span class="hlc-stat-label">High</span>
+                <span class="hlc-stat-value hlc-stat-value--up" id="hlc-stat-high">—</span>
+              </div>
+              <div class="hlc-stat">
+                <span class="hlc-stat-label">Low</span>
+                <span class="hlc-stat-value hlc-stat-value--down" id="hlc-stat-low">—</span>
+              </div>
+            </div>
+            <div class="hlc-indicators">
+              <span class="hlc-badge" id="hlc-badge">XAU/USD</span>
               <span class="hlc-high-low" id="hlc-high-low" hidden></span>
-              <span class="hlc-market" id="hlc-market-status"></span>
             </div>
             <p class="hlc-trust-line" id="hlc-trust-line">
               Spot-linked reference · shops may add making charges, VAT, and margin
@@ -238,13 +255,53 @@
                 aria-atomic="true"
                 ><span class="skeleton-inline shell-skeleton-freshness-strip" role="presentation" aria-hidden="true"></span></span
               >
-              <a href="tracker.html" class="hlc-tracker-link" id="hlc-tracker-link"
-                >Full Tracker →</a
-              >
+              <div class="hlc-footer-actions">
+                <button
+                  type="button"
+                  class="hlc-export-btn"
+                  id="hlc-export-btn"
+                  aria-label="Export session price history as CSV"
+                  hidden
+                >⬇ CSV</button>
+                <a href="tracker.html" class="hlc-tracker-link" id="hlc-tracker-link"
+                  >Full Tracker →</a
+                >
+              </div>
             </div>
             <div id="home-freshness-badge-slot" class="home-addon-slot"></div>
             <div id="home-realtime-sla-slot" class="home-addon-slot" hidden></div>
           </div>
+        </div>
+      </section>
+
+      <section class="home-chart-section" aria-labelledby="home-chart-title" data-reveal>
+        <div class="home-chart-inner">
+          <div class="home-chart-header">
+            <div class="section-intro section-intro--compact">
+              <span class="section-kicker" id="home-chart-kicker">Interactive</span>
+              <h2 class="home-section-title" id="home-chart-title">Gold Price Chart</h2>
+              <p class="home-section-sub" id="home-chart-sub">XAU/USD spot price — LBMA baseline combined with live session data</p>
+            </div>
+            <div class="home-chart-ranges" role="group" aria-label="Chart time range" id="home-chart-ranges">
+              <button type="button" class="home-chart-range-btn" data-range="1Y" id="home-chart-btn-1y">1Y</button>
+              <button type="button" class="home-chart-range-btn" data-range="3Y" id="home-chart-btn-3y">3Y</button>
+              <button type="button" class="home-chart-range-btn is-active" data-range="ALL" id="home-chart-btn-all">ALL</button>
+            </div>
+          </div>
+          <div class="home-chart-wrap" id="home-chart-wrap">
+            <div id="home-chart-container" class="home-chart-container" aria-busy="true"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="home-price-trend" aria-labelledby="home-trend-title" data-reveal>
+        <div class="home-price-trend-inner">
+          <div class="section-intro section-intro--compact">
+            <span class="section-kicker" id="home-trend-kicker">Historical</span>
+            <h2 class="home-section-title" id="home-trend-title">Price History</h2>
+            <p class="home-section-sub" id="home-trend-sub">Monthly XAU/USD averages · LBMA baseline reference</p>
+          </div>
+          <div class="price-trend-grid" id="home-trend-grid" aria-busy="true"></div>
         </div>
       </section>
 

@@ -1,9 +1,12 @@
 <!doctype html>
 <html lang="en" dir="ltr">
   <head>
-<meta charset="UTF-8" />
+    <meta charset="UTF-8" />
     <script src="assets/analytics.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>Data Sources &amp; Methodology | Gold Ticker Live</title>
     <meta
       name="description"
@@ -37,6 +40,17 @@
     />
     <meta name="twitter:image" content="https://goldtickerlive.com/assets/og-image.png" />
     <meta property="og:image:alt" content="Gold Ticker Live — live gold price tracker for GCC and Arab world" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <link rel="preconnect" href="https://www.gold-api.com" crossorigin />
     <link rel="preconnect" href="https://mintedmetal.com" crossorigin />
     <link rel="preconnect" href="https://open.er-api.com" crossorigin />
@@ -349,10 +363,10 @@
             <table class="method-karat-table">
               <thead>
                 <tr>
-                  <th id="karat-th-grade">Karat Grade</th>
-                  <th id="karat-th-purity">Purity</th>
-                  <th id="karat-th-fraction">Fraction</th>
-                  <th id="karat-th-fineness">Millesimal Fineness</th>
+                  <th id="karat-th-grade" scope="col">Karat Grade</th>
+                  <th id="karat-th-purity" scope="col">Purity</th>
+                  <th id="karat-th-fraction" scope="col">Fraction</th>
+                  <th id="karat-th-fineness" scope="col">Millesimal Fineness</th>
                 </tr>
               </thead>
               <tbody id="method-karat-tbody">
@@ -626,6 +640,11 @@
       </section>
     </main>
 
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
     <script type="module" src="./src/pages/methodology.js"></script>
   </body>
 </html>

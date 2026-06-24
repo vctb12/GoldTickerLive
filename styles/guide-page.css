@@ -436,3 +436,219 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ═══════════════════════════════════════════════
+   Phase 50: Guide Page — Premium Visual Polish
+   ═══════════════════════════════════════════════ */
+
+/* Hero — richer heading scale + better visual weight */
+.guide-hero {
+  background: var(--gradient-hero-light);
+  padding: calc(var(--space-8) + 0.5rem) var(--space-5) var(--space-7);
+}
+
+.guide-hero-title {
+  font-size: clamp(1.6rem, 4.5vw, 2.6rem);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.1;
+  margin-bottom: 0.8rem;
+}
+
+.guide-hero-subtitle {
+  font-size: var(--text-lg);
+  line-height: 1.7;
+  max-width: 640px;
+}
+
+/* Eyebrow badge — pill style */
+.guide-hero-eyebrow {
+  border-radius: var(--radius-pill);
+  padding: 0.25rem 0.85rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+  box-shadow: var(--shadow-gold);
+}
+
+/* TOC — richer treatment */
+.guide-toc {
+  background: linear-gradient(135deg, var(--color-gold-tint) 0%, var(--color-gold-bg) 100%);
+  border: 1.5px solid rgb(196 144 46 / 35%);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-gold), var(--shadow-xs);
+  padding: 1.4rem var(--space-5);
+}
+
+.guide-toc-title {
+  font-size: 0.72rem;
+  color: var(--color-gold-dark);
+  letter-spacing: 0.07em;
+}
+
+.guide-toc-list a {
+  font-size: var(--text-sm);
+  color: var(--color-gold-dark);
+  font-weight: var(--weight-semibold);
+  transition:
+    color var(--transition-fast),
+    padding-inline-start var(--transition-fast);
+  display: inline-block;
+  padding: 0.1rem 0;
+}
+
+.guide-toc-list a:hover {
+  color: var(--color-gold-deep);
+  padding-inline-start: 0.35rem;
+  text-decoration: none;
+}
+
+/* Section titles — more weight */
+.guide-section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+  font-weight: var(--weight-extrabold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+  border-inline-start: 3px solid var(--color-gold);
+  padding-inline-start: var(--space-3);
+  padding-block: 0.1rem;
+  background: linear-gradient(90deg, rgb(196 144 46 / 4%), transparent 60%);
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+}
+
+/* Compare cards — gradient treatment */
+.guide-compare-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem;
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.guide-compare-card:hover {
+  border-color: rgb(196 144 46 / 30%);
+  box-shadow: var(--shadow-gold), var(--shadow-sm);
+}
+
+/* Checklist items — richer surface */
+.guide-checklist li {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.guide-checklist li:hover {
+  border-color: rgb(196 144 46 / 25%);
+  box-shadow: var(--shadow-xs);
+}
+
+/* CTA banner — stronger presence */
+.guide-cta {
+  background: linear-gradient(
+    135deg,
+    var(--color-gold-tint) 0%,
+    var(--color-gold-bg) 60%,
+    rgb(253 250 240 / 80%) 100%
+  );
+  border: 1.5px solid rgb(196 144 46 / 40%);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-gold), var(--shadow-sm);
+}
+
+.guide-cta h3 {
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  font-weight: var(--weight-extrabold);
+}
+
+/* Journey steps — gradient card with lift */
+.guide-journey-step {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  position: relative;
+  overflow: hidden;
+  transition:
+    border-color var(--transition-normal),
+    box-shadow var(--transition-normal),
+    transform var(--transition-normal);
+}
+
+.guide-journey-step:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold-lg), var(--shadow-sm);
+  transform: translateY(-3px);
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-journey-step {
+    transition: border-color 0.2s;
+  }
+
+  .guide-journey-step:hover {
+    transform: none;
+  }
+}
+
+.guide-journey-step:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: var(--radius-lg);
+}
+
+/* FAQ items — premium accordion */
+.guide-faq-item {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  margin-bottom: 0.6rem;
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+.guide-faq-item[open] {
+  border-color: rgb(196 144 46 / 40%);
+  box-shadow: var(--shadow-gold), var(--shadow-xs);
+}
+
+.guide-faq-item summary {
+  padding: 1.1rem 1.4rem;
+  font-size: 0.93rem;
+  background: transparent;
+  transition:
+    color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.guide-faq-item[open] summary {
+  color: var(--color-gold-deep);
+  background: linear-gradient(90deg, rgb(196 144 46 / 5%), transparent 70%);
+}
+
+.guide-faq-item summary::after {
+  font-size: 1.3rem;
+  color: var(--color-gold-dark);
+}
+
+.guide-faq-item summary:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.guide-faq-answer {
+  padding: 0.3rem 1.4rem 1.1rem;
+  background: transparent;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.88rem;
+  line-height: 1.8;
+}

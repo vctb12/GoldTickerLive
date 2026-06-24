@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" dir="ltr">
   <head>
-<meta charset="UTF-8" />
+    <meta charset="UTF-8" />
     <script src="assets/analytics.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
@@ -20,6 +20,15 @@
     <link rel="preconnect" href="https://open.er-api.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#b08a3e" />
     <meta property="og:title" content="Gold Calculator — Value, Scrap, Zakat | Gold Ticker Live" />
@@ -43,16 +52,18 @@
     <meta name="twitter:image" content="https://goldtickerlive.com/assets/og-image.png" />
     <meta property="og:image:alt" content="Gold Ticker Live — live gold price tracker for GCC and Arab world" />
     <link rel="preload" as="style" href="./styles/critical.css" />
+    <link rel="preload" as="style" href="./styles/global.css" />
+    <link rel="preload" as="style" href="./styles/pages/calculator.css" />
     <link rel="modulepreload" href="./src/pages/calculator.js" />
     <link rel="modulepreload" href="./src/lib/api.js" />
     <link rel="modulepreload" href="./src/components/site-shell.js" />
     <link rel="stylesheet" href="./styles/critical.css" />
     <link rel="stylesheet" href="./styles/global.css" />
+    <link rel="stylesheet" href="./styles/pages/calculator.css" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
-    <link rel="stylesheet" href="./styles/pages/calculator.css" />
     <meta name="msvalidate.01" content="E88623E4C36CDC8E8D44913FA9192725" />
   <script type="application/ld+json">
 {
@@ -769,6 +780,11 @@
     <!-- ═══════ AD: Rectangle (below calculator) ═══════ -->
     <div id="ad-bottom" class="ad-container" aria-label="Advertisement"></div>
 
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
     <script type="module" src="./src/pages/calculator.js"></script>
   </body>
 </html>

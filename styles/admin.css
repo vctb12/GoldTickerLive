@@ -2936,3 +2936,77 @@ thead th {
   padding: 0.5rem 0.75rem;
   margin-top: 0.5rem;
 }
+
+/* ── Phase 69 — Premium Polish ─────────────────────────────────────────────── */
+
+/* Gold stat-card — richer foil top (gold → primary → gold) on hover */
+.stat-card::before {
+  background: linear-gradient(90deg, var(--gold), var(--primary), var(--gold));
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 1;
+}
+
+.stat-card:hover::before {
+  opacity: 1;
+}
+
+/* Quick action card — gold on hover */
+.quick-action-card:hover {
+  border-color: var(--gold-glow, rgb(245 158 11 / 30%));
+  box-shadow:
+    var(--shadow-md),
+    0 0 0 1px var(--gold-soft, rgb(245 158 11 / 10%)) inset;
+}
+
+/* Quick action icon — gold tint */
+.quick-action-icon {
+  background: rgb(245 158 11 / 10%);
+  transition: background 0.2s;
+}
+
+.quick-action-card:hover .quick-action-icon {
+  background: rgb(245 158 11 / 18%);
+}
+
+/* Welcome banner — stronger gold glow */
+.welcome-banner {
+  border-color: rgb(201 162 39 / 28%);
+  box-shadow:
+    0 0 0 1px rgb(201 162 39 / 8%) inset,
+    var(--shadow-sm);
+}
+
+/* Ops control cards — subtle gold active state */
+.ops-control-card:hover {
+  border-color: var(--border-light);
+  box-shadow: var(--shadow-md);
+}
+
+/* Page tab active gold variant */
+.page-tab.active {
+  border-bottom-color: var(--gold);
+  color: var(--gold);
+}
+
+/* Data pills — subtle gold for ok state */
+.data-pill--ok {
+  background: rgb(245 158 11 / 8%);
+  border: 1px solid rgb(245 158 11 / 18%);
+  color: var(--success);
+}
+
+/* Card hover — gold border flash */
+.card:hover {
+  border-color: rgb(245 158 11 / 22%);
+}
+
+/* Touch hover-lift safety net (mirrors styles/partials/utilities.css).
+   Admin runs on tablets too; neutralise sticky lifts on no-hover pointers. */
+@media (hover: none) {
+  .stat-card:hover,
+  .quick-action-card:hover,
+  .ops-control-card:hover {
+    transform: none !important;
+  }
+}
