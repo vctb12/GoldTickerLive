@@ -167,7 +167,7 @@ function buildCityHub(country, city, relFile) {
   ];
 
   const body = `
-    <main>
+    <main id="main-content">
       <nav aria-label="Breadcrumb" class="stub-breadcrumbs">
         <a href="/">Home</a> ›
         <a href="/countries/${country.slug}/">${escapeHtml(countryEn)}</a> ›
@@ -253,7 +253,7 @@ function buildCityKaratHub(country, city, relFile) {
   ];
 
   const body = `
-    <main>
+    <main id="main-content">
       <nav aria-label="Breadcrumb" class="stub-breadcrumbs">
         <a href="/">Home</a> ›
         <a href="/countries/${country.slug}/">${escapeHtml(countryEn)}</a> ›
@@ -322,7 +322,7 @@ function buildCountryCitiesIndex(country, relFile, which) {
     )
     .join('\n');
   const body = `
-    <main>
+    <main id="main-content">
       <nav aria-label="Breadcrumb" class="stub-breadcrumbs">
         <a href="/">Home</a> ›
         <a href="/countries/${country.slug}/">${escapeHtml(countryEn)}</a> ›
@@ -350,7 +350,7 @@ function buildInternalStub(relFile) {
   const title = 'Not a public page — Gold Ticker Live';
   const desc = 'This path is an internal directory index and is not intended for end users.';
   const body = `
-    <main>
+    <main id="main-content">
       <h1>Not a public page</h1>
       <p>This URL is an internal directory listing and has no public content.
         Continue to the <a href="/">Gold Ticker Live home page</a> instead.</p>

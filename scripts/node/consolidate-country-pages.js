@@ -148,7 +148,7 @@ ${JSON.stringify(jsonLd, null, 2)}
 </head>
 <body>
   <div id="nav-root"></div>
-  <main class="country-page-main" style="max-width:900px;margin:0 auto;padding:1.5rem 1rem;">
+  <main id="main-content" class="country-page-main" style="max-width:900px;margin:0 auto;padding:1.5rem 1rem;">
     <nav class="breadcrumb" aria-label="Breadcrumb" id="breadcrumb-root"></nav>
     <h1 style="font-size:1.75rem;font-weight:700;margin:1rem 0 0.5rem;">${h1}</h1>
     <p style="color:#64748b;margin-bottom:1.5rem;">${intro}</p>

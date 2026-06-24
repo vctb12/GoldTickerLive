@@ -1241,6 +1241,10 @@ main {
   border-color: var(--color-fixed);
 }
 
+[data-theme='dark'] .spotlight-card.aed-card {
+  background: linear-gradient(135deg, rgb(107 163 240 / 8%) 0%, rgb(107 163 240 / 4%) 100%);
+}
+
 /* sc-* classes match what app.js generates inside spotlight cards */
 .sc-label {
   font-size: 0.72rem;
@@ -3056,7 +3060,7 @@ details[open] > .faq-q::after {
 
 .insight-tag--analysis {
   background: rgb(20 85 164 / 6%);
-  color: #1455a4;
+  color: var(--color-fixed);
   border-color: rgb(20 85 164 / 20%);
 }
 
@@ -4103,7 +4107,7 @@ body.has-ticker {
 .retry-btn {
   padding: 0.65rem 1.75rem;
   background: var(--color-gold);
-  color: #1a0c02;
+  color: var(--color-on-gold);
   border: none;
   border-radius: var(--radius-sm);
   font-size: 0.9rem;

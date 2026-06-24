@@ -549,7 +549,11 @@ export function bindCoreEvents() {
   if (trustCloseBtn && trustSection) {
     trustCloseBtn.addEventListener('click', () => {
       trustSection.style.display = 'none';
-      localStorage.setItem('tracker_trust_banner_dismissed', 'true');
+      try {
+        localStorage.setItem('tracker_trust_banner_dismissed', 'true');
+      } catch {
+        // ignore quota/access errors
+      }
     });
   }
 
@@ -562,7 +566,11 @@ export function bindCoreEvents() {
     }
     welcomeClose.addEventListener('click', () => {
       welcomeStrip.hidden = true;
-      localStorage.setItem('tracker_first_visit', 'seen');
+      try {
+        localStorage.setItem('tracker_first_visit', 'seen');
+      } catch {
+        // ignore quota/access errors
+      }
     });
   }
 
