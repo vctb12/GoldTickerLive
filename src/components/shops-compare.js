@@ -7,6 +7,7 @@
  */
 
 import { escape as esc, safeHref as safeUrl } from '../lib/safe-dom.js';
+import { createFocusTrap } from '../lib/focus-trap.js';
 
 const MAX_COMPARE = 3;
 
@@ -288,10 +289,16 @@ export function openCompareModal() {
   // Bind close
   const closeBtn = modal.querySelector('.shops-compare-modal-close');
   const overlay = modal.querySelector('.shops-compare-modal-overlay');
+
+  // Trap focus inside the comparison dialog and restore it on close.
+  const focusTrap = createFocusTrap(modal, { initialFocus: () => closeBtn });
   const closeModal = () => {
     modal.hidden = true;
     document.body.style.overflow = '';
+    focusTrap.deactivate();
   };
+  focusTrap.activate();
+
   closeBtn?.addEventListener('click', closeModal);
   overlay?.addEventListener('click', closeModal);
   document.addEventListener('keydown', function _esc(e) {

@@ -15,6 +15,7 @@ import { resolveGoldIsFresh } from '../lib/quote-freshness-bridge.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 import { createInitialState, persistState } from '../tracker/state.js';
 import { el as safeEl } from '../lib/safe-dom.js';
+import { createFocusTrap } from '../lib/focus-trap.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { getBaselineRange } from '../lib/historical-data.js';
 import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
@@ -1050,22 +1051,19 @@ function startCountdown() {
 function startAutoRefresh() {
   if (realtimeEngine) realtimeEngine.start();
   if (_autoRefreshTimer) return;
-  _autoRefreshTimer = setInterval(
-    async () => {
-      if (!state.autoRefresh) return;
-      if (_fetchInFlight) return;
-      _fetchInFlight = true;
-      try {
-        await ensureUnifiedHistory();
-        await refreshWire();
-        checkAlerts();
-        renderTrackerAddonPanels();
-      } finally {
-        _fetchInFlight = false;
-      }
-    },
-    WIRE_HISTORY_REFRESH_MS
-  );
+  _autoRefreshTimer = setInterval(async () => {
+    if (!state.autoRefresh) return;
+    if (_fetchInFlight) return;
+    _fetchInFlight = true;
+    try {
+      await ensureUnifiedHistory();
+      await refreshWire();
+      checkAlerts();
+      renderTrackerAddonPanels();
+    } finally {
+      _fetchInFlight = false;
+    }
+  }, WIRE_HISTORY_REFRESH_MS);
 }
 
 function stopAutoRefresh() {
@@ -1727,12 +1725,18 @@ function initOnboarding() {
     return;
   }
 
+  const focusTrap = createFocusTrap(overlay, {
+    initialFocus: () => document.getElementById('onb-close'),
+  });
+
   setTimeout(() => {
     overlay.removeAttribute('hidden');
+    focusTrap.activate();
   }, 1800);
 
   function dismiss() {
     overlay.setAttribute('hidden', '');
+    focusTrap.deactivate();
     try {
       localStorage.setItem(SEEN_KEY, '1');
     } catch {}
