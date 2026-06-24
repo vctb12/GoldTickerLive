@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "generatedAtDate": "2026-06-24",
   "summary": {
-    "totalHtmlFiles": 342,
-    "withCanonical": 340,
+    "totalHtmlFiles": 343,
+    "withCanonical": 341,
     "withoutCanonical": 2,
     "withOgImage": 263,
-    "withoutOgImage": 79,
+    "withoutOgImage": 80,
     "withJsonLd": 338,
-    "withoutJsonLd": 4,
-    "hreflangEnArPairs": 338,
-    "noindexCount": 103
+    "withoutJsonLd": 5,
+    "hreflangEnArPairs": 339,
+    "noindexCount": 104
   },
   "records": [
     {
@@ -260,6 +260,40 @@
         "Product"
       ],
       "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "ar/index.html",
+      "exempt": null,
+      "lang": "ar",
+      "dir": "rtl",
+      "title": "Gold Ticker Live — العربية",
+      "metaDescription": null,
+      "canonical": "https://goldtickerlive.com/",
+      "robots": "noindex,follow",
+      "ogTitle": null,
+      "ogDescription": null,
+      "ogImage": null,
+      "ogUrl": null,
+      "ogType": null,
+      "twitterCard": null,
+      "twitterImage": null,
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/?lang=ar"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/"
+        }
+      ],
+      "jsonLdTypes": [],
+      "hasStructuredData": false,
       "jsonLdParseFailures": null
     },
     {

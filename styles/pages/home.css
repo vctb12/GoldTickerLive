@@ -603,38 +603,6 @@
   border: 1px solid var(--border-default);
 }
 
-/* ── HLC grid ── */
-.hlc-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.8rem;
-  margin-bottom: 1rem;
-  border-top: var(--rule-hairline);
-  padding-top: 1rem;
-}
-
-.hlc-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.22rem;
-}
-
-.hlc-item-label {
-  font-size: 0.67rem;
-  color: var(--text-secondary);
-  font-weight: var(--weight-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.hlc-item-val {
-  font-size: 0.95rem;
-  font-weight: var(--weight-bold);
-  font-family: var(--font-numeric);
-  color: var(--text-primary);
-  font-variant-numeric: tabular-nums;
-}
-
 /* ── HLC footer ── */
 .hlc-footer {
   display: flex;
@@ -2086,11 +2054,6 @@
     grid-template-columns: 1fr;
   }
 
-  /* Hero live card spacing */
-  .hlc-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
   .hero-live-card {
     padding: 1.1rem;
   }
@@ -2104,10 +2067,6 @@
    RESPONSIVE — 380px
    ══════════════════════════════════════════════════════════════ */
 @media (width <= 380px) {
-  .hlc-grid {
-    grid-template-columns: 1fr;
-  }
-
   .gcc-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -2117,8 +2076,6 @@
     width: 100%;
   }
 
-  .hero-cta-primary,
-  .hero-cta-secondary,
   .hero-secondary-link {
     min-height: 44px;
   }
@@ -2202,10 +2159,6 @@
 
 [dir='rtl'] .hlc-footer {
   flex-direction: row-reverse;
-}
-
-[dir='rtl'] .hlc-grid {
-  direction: rtl;
 }
 
 [dir='rtl'] .faq-q {
@@ -2885,15 +2838,6 @@
   .hero-trust-line {
     margin-top: var(--space-3);
     font-size: 0.78rem;
-  }
-
-  /* Larger AED karat values so they read like price data, not captions */
-  .hlc-item-val {
-    font-size: var(--text-base);
-  }
-
-  .hlc-item-label {
-    font-size: 0.62rem;
   }
 
   .hlc-footer {
