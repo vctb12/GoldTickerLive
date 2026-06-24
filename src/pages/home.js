@@ -90,6 +90,7 @@ let _realtimeEngine = null;
 let _refreshTimer = null;
 let _freshnessTimer = null;
 let _quickConvert = null;
+const _sessionPriceHistory = []; // [{price, ts}] — rolling 120-point window for sparkline
 
 // Karat selected for tracker/calculator deep links — persisted in user_prefs
 let homeTrackerKarat = (() => {
@@ -325,7 +326,7 @@ function startFreshnessTimer() {
     if (!goldPrice || !goldUpdatedAt) return;
     const { ageText, statusText, sourceText, key } = getFreshnessMeta();
     const ageClass = freshnessAgeClass(getLiveFreshness({ updatedAt: goldUpdatedAt, lang }).ageMs);
-    const hlcText = `${txGlobal('freshness.statusLabel')}: ${statusText} · ${tx('source')}: ${sourceText} · ${tx('updated')}: ${ageText}`;
+    const hlcText = `${sourceText} · ${ageText}`;
     const kstripText = `${txGlobal('freshness.statusLabel')}: ${statusText} · ${tx('source')}: ${sourceText} · ${tx('updated')}: ${ageText}`;
     const hlcEl = document.getElementById('hlc-updated');
     if (hlcEl && hlcText !== prevHlcText) {
@@ -361,6 +362,11 @@ function renderHeroCard() {
   const aed22g = calc.usdPerGram(goldPrice, k22.purity) * CONSTANTS.AED_PEG;
   const aed21g = calc.usdPerGram(goldPrice, k21.purity) * CONSTANTS.AED_PEG;
   const aed18g = calc.usdPerGram(goldPrice, k18.purity) * CONSTANTS.AED_PEG;
+
+  // Accumulate session price history for sparkline (rolling 120-point window)
+  _sessionPriceHistory.push({ price: usd24oz, ts: Date.now() });
+  if (_sessionPriceHistory.length > 120) _sessionPriceHistory.shift();
+  drawHeroSparkline();
 
   // Update sticky spot bar
   updateSpotBar({
@@ -418,14 +424,11 @@ function renderHeroCard() {
       'shell-skeleton-freshness-strip'
     );
     hlcUpdatedEl.removeAttribute('aria-busy');
-    hlcUpdatedEl.textContent = `${txGlobal('freshness.statusLabel')}: ${statusText} · ${tx('source')}: ${sourceText} · ${tx('updated')}: ${ageText}`;
+    hlcUpdatedEl.textContent = `${sourceText} · ${ageText}`;
     hlcUpdatedEl.dataset.freshnessKey = key;
     hlcUpdatedEl.dataset.freshnessAge = ageClass;
   } else {
-    setTextById(
-      'hlc-updated',
-      `${txGlobal('freshness.statusLabel')}: ${statusText} · ${tx('source')}: ${sourceText} · ${tx('updated')}: ${ageText}`
-    );
+    setTextById('hlc-updated', `${sourceText} · ${ageText}`);
   }
   const kstripUpdatedEl = document.getElementById('karat-strip-updated');
   if (kstripUpdatedEl) {
@@ -439,28 +442,40 @@ function renderHeroCard() {
     );
   }
 
-  // Change vs day open
+  // Change vs day open — show absolute + percentage
   const changeEl = document.getElementById('hlc-change');
   if (changeEl && dayOpenPrice && goldPrice) {
-    const chg = ((goldPrice - dayOpenPrice) / dayOpenPrice) * 100;
-    const sign = chg >= 0 ? '+' : '';
-    changeEl.textContent = `${tx('changeLabel')}: ${sign}${chg.toFixed(2)}%`;
-    changeEl.className = 'hlc-change ' + (chg >= 0 ? 'badge-up' : 'badge-down');
+    const absChg = goldPrice - dayOpenPrice;
+    const pctChg = (absChg / dayOpenPrice) * 100;
+    const signStr = absChg >= 0 ? '+' : '−';
+    const absFmt = fmt.formatPrice(Math.abs(absChg), 'USD', 2);
+    const pctFmt = Math.abs(pctChg).toFixed(2);
+    changeEl.textContent = `${signStr}${absFmt}  ${signStr}${pctFmt}%`;
+    changeEl.className = 'hlc-change ' + (absChg >= 0 ? 'badge-up' : 'badge-down');
     changeEl.hidden = false;
   }
 
-  // Day high/low estimate: derived from current price vs day open price.
-  // These two data points give a rough intraday range; true OHLC highs/lows
-  // are not available from the current data source. This is labelled
-  // "H/L" (not "High/Low") to signal it is an approximation.
+  // Stats row: Day Open / High / Low
+  const statsRowEl = document.getElementById('hlc-stats-row');
+  if (statsRowEl && dayOpenPrice && goldPrice) {
+    const high = Math.max(goldPrice, dayOpenPrice);
+    const low = Math.min(goldPrice, dayOpenPrice);
+    const openEl = document.getElementById('hlc-stat-open');
+    const highEl = document.getElementById('hlc-stat-high');
+    const lowEl = document.getElementById('hlc-stat-low');
+    if (openEl) openEl.textContent = fmt.formatPrice(dayOpenPrice, 'USD', 2);
+    if (highEl) highEl.textContent = fmt.formatPrice(high, 'USD', 2);
+    if (lowEl) lowEl.textContent = fmt.formatPrice(low, 'USD', 2);
+    statsRowEl.hidden = false;
+  }
+
+  // Day high/low (legacy element — keep updated for backward compat)
   const hlHlEl = document.getElementById('hlc-high-low');
   if (hlHlEl && dayOpenPrice && goldPrice) {
     const high = Math.max(goldPrice, dayOpenPrice);
     const low = Math.min(goldPrice, dayOpenPrice);
-    const highFmt = fmt.formatPrice(high, 'USD', 2);
-    const lowFmt = fmt.formatPrice(low, 'USD', 2);
-    hlHlEl.textContent = `H: ${highFmt} · L: ${lowFmt}`;
-    hlHlEl.hidden = false;
+    hlHlEl.textContent = `H: ${fmt.formatPrice(high, 'USD', 2)} · L: ${fmt.formatPrice(low, 'USD', 2)}`;
+    hlHlEl.hidden = true; // hidden — superseded by hlc-stats-row
   }
 
   // Market status
@@ -501,6 +516,91 @@ function renderHeroCard() {
     bar.removeAttribute('hidden');
   }
   renderHomeTrustAddons();
+  initExportButton();
+}
+
+// ── Hero sparkline ─────────────────────────────────────────────────────────
+function drawHeroSparkline() {
+  const container = document.getElementById('hlc-sparkline');
+  if (!container) return;
+  const prices = _sessionPriceHistory.map((p) => p.price);
+  if (prices.length < 3) return;
+
+  const W = 280;
+  const H = 56;
+  const PAD = 3;
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const range = max - min || prices[0] * 0.0005;
+
+  const toX = (i) => PAD + (i / (prices.length - 1)) * (W - PAD * 2);
+  const toY = (p) => H - PAD - ((p - min) / range) * (H - PAD * 2);
+
+  const pts = prices.map((p, i) => `${toX(i).toFixed(1)},${toY(p).toFixed(1)}`);
+  const isUp = prices[prices.length - 1] >= prices[0];
+  const stroke = isUp ? 'var(--color-up)' : 'var(--color-down)';
+  const fill = isUp ? 'rgb(74 222 128 / 12%)' : 'rgb(239 68 68 / 12%)';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('preserveAspectRatio', 'none');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('class', 'hlc-spark-svg');
+
+  const lastX = toX(prices.length - 1).toFixed(1);
+  const firstX = toX(0).toFixed(1);
+  const area = document.createElementNS(NS, 'path');
+  area.setAttribute('d', `M ${pts.join(' L ')} L ${lastX},${H} L ${firstX},${H} Z`);
+  area.setAttribute('fill', fill);
+  svg.append(area);
+
+  const line = document.createElementNS(NS, 'polyline');
+  line.setAttribute('points', pts.join(' '));
+  line.setAttribute('fill', 'none');
+  line.setAttribute('stroke', stroke);
+  line.setAttribute('stroke-width', '1.5');
+  line.setAttribute('stroke-linecap', 'round');
+  line.setAttribute('stroke-linejoin', 'round');
+  svg.append(line);
+
+  const [lx, ly] = pts[pts.length - 1].split(',').map(Number);
+  const dot = document.createElementNS(NS, 'circle');
+  dot.setAttribute('cx', lx.toFixed(1));
+  dot.setAttribute('cy', ly.toFixed(1));
+  dot.setAttribute('r', '3');
+  dot.setAttribute('fill', stroke);
+  dot.setAttribute('class', 'hlc-spark-dot');
+  svg.append(dot);
+
+  container.replaceChildren(svg);
+}
+
+// ── CSV export from session history ────────────────────────────────────────
+function initExportButton() {
+  const btn = document.getElementById('hlc-export-btn');
+  if (!btn || _sessionPriceHistory.length < 2) return;
+  btn.hidden = false;
+  btn.onclick = () => {
+    const k24 = KARATS.find((k) => k.code === '24');
+    const purity = k24?.purity ?? 1;
+    const rows = [['Timestamp', 'XAU/USD', 'AED/24K gram']];
+    for (const { price, ts } of _sessionPriceHistory) {
+      const aed = calc.usdPerGram(price, purity) * CONSTANTS.AED_PEG;
+      rows.push([new Date(ts).toISOString(), price.toFixed(2), aed.toFixed(4)]);
+    }
+    const csv = rows.map((r) => r.map((c) => `"${c}"`).join(',')).join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `gold-price-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    track(EVENTS.EXPORT_CLICK, { surface: 'home-hero', export_type: 'csv' });
+  };
 }
 
 function renderHomeTrustAddons() {
