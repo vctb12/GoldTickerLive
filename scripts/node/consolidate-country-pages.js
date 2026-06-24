@@ -61,10 +61,7 @@ function migrateGoldPricesToGoldRate(goldPricesFile, goldRateFile) {
 
   html = html.replace(/gold-prices\/?/g, 'gold-rate/');
   html = html.replace(/\bGold Prices\b/g, 'Gold Rate');
-  html = html.replace(
-    /<meta\s+name="robots"\s+content="noindex,follow"\s*\/?>\s*/i,
-    ''
-  );
+  html = html.replace(/<meta\s+name="robots"\s+content="noindex,follow"\s*\/?>\s*/i, '');
 
   writeFile(goldRateFile, html);
 }
@@ -142,7 +139,7 @@ function buildCityGoldRatePage({ country, city, depth }) {
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://open.er-api.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="${rel}styles/global.css" />
   <link rel="icon" href="${rel}favicon.svg" type="image/svg+xml" />
   <script type="application/ld+json">
@@ -194,13 +191,10 @@ function patchGoldRateStub(goldRateFile, country, city) {
     }
   }
 
-  html = html.replace(
-    /<meta\s+name="robots"\s+content="noindex,follow"\s*\/?>\s*/i,
-    () => {
-      changed = true;
-      return '';
-    }
-  );
+  html = html.replace(/<meta\s+name="robots"\s+content="noindex,follow"\s*\/?>\s*/i, () => {
+    changed = true;
+    return '';
+  });
 
   if (changed) writeFile(goldRateFile, html);
 }
