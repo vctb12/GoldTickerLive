@@ -11,6 +11,7 @@
   --color-surface-3: #f3eedd;
   --color-border: #e4d9c0;
   --color-border-subtle: #ece5d2;
+  --color-surface-alt: #f8fafc; /* neutral-cool alt surface for non-warm UI */
 
   /* ── Phase 2: Deeper warm ink text ── */
   --color-text: #15110a;
@@ -29,6 +30,7 @@
   --color-gold-bg: #fdf8e8;
   --color-gold-tint: #f8f2dc;
   --color-gold-glow: rgb(196 144 46 / 16%);
+  --color-gold-dim: #4a3c10; /* muted gold for borders on dark-surface elements */
 
   /* ── Status / semantic colours ── */
   --color-live: #1a7a32;
@@ -48,10 +50,15 @@
   --color-down-bg: rgb(184 20 40 / 8%);
   --color-error: #b81428;
   --color-error-bg: rgb(184 20 40 / 8%);
+  --color-error-border: #f87171; /* error card / danger-zone border */
   --color-warning: #a0671c;
   --color-warning-bg: rgb(245 158 11 / 10%);
   --color-warning-border: rgb(245 158 11 / 35%);
   --color-warning-text: #7a4f15;
+  --color-warning-subtle: #fef9c3; /* very light warning wash */
+  --color-success: #16a34a;
+  --color-success-bg: #dcfce7;
+  --color-on-gold: #1a1305; /* text placed directly on gold backgrounds */
 
   /* ── Semantic surfaces ── */
   --surface-canvas: var(--color-bg);
@@ -73,6 +80,7 @@
   --border-subtle: var(--color-border-subtle);
   --border-strong: #d6ccb4;
   --border-accent: var(--color-gold);
+  --border-muted: #e2e8f0; /* neutral muted border for portal / utility UI */
 
   /* ── Phase 7: Refined border radius system ── */
   --radius-xs: 4px;
@@ -252,8 +260,6 @@
   --color-gold-alpha: rgb(184 137 44 / 10%);
   --color-amber: #f59e0b;
   --color-danger: #dc2626;
-  --color-success: #16a34a;
-  --color-success-bg: #dcfce7;
 
   /* ── Phase 8: Refined transitions ── */
   --transition: 0.18s ease;
@@ -316,6 +322,7 @@
   --color-surface-3: #1b1e2c;
   --color-border: #242840;
   --color-border-subtle: #1a1e30;
+  --color-surface-alt: #0f172a;
   --color-text: #f2eedd;
   --color-text-muted: #a09890;
   --color-text-faint: #8f857a; /* WCAG AA ≥4.5:1 on all dark surfaces incl. surface-3 */
@@ -328,6 +335,7 @@
   --color-gold-bg: #100e08;
   --color-gold-tint: #0c0a06;
   --color-gold-glow: rgb(221 176 64 / 18%);
+  --color-gold-dim: #7a5814; /* brighter on dark backgrounds */
 
   /* Status colours — lightened for dark surfaces. The :root values are
      saturated mid-tones tuned for light backgrounds; on dark cards they
@@ -345,8 +353,12 @@
   --color-error: #f87171;
   --color-warning: #e0b060;
   --color-warning-text: #e0b060;
+  --color-error-border: #ef4444;
+  --color-warning-subtle: rgb(250 240 60 / 8%);
   --color-success: #4ade80;
   --color-success-bg: rgb(74 222 128 / 12%);
+  --color-on-gold: #1a1305;
+  --border-muted: #1e2336;
   --surface-canvas: #060708;
   --surface-primary: #0c0e14;
   --surface-secondary: #141720;
