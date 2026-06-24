@@ -2598,6 +2598,10 @@ main {
   box-shadow: var(--shadow-gold), var(--shadow-sm);
 }
 
+[data-theme='dark'] .btn-primary {
+  color: var(--color-on-gold);
+}
+
 .btn-primary:hover {
   background: var(--color-gold);
   border-color: var(--color-gold);

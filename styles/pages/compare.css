@@ -728,8 +728,12 @@
 
 .compare-karat-btn.is-active {
   background: var(--color-gold-dark);
-  color: var(--color-on-gold);
+  color: #fff8e8;
   box-shadow: var(--shadow-gold);
+}
+
+[data-theme='dark'] .compare-karat-btn.is-active {
+  color: var(--color-on-gold);
 }
 
 /* Select block — gradient-card */
