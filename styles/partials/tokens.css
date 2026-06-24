@@ -15,7 +15,7 @@
   /* ── Phase 2: Deeper warm ink text ── */
   --color-text: #15110a;
   --color-text-muted: #6a5c48;
-  --color-text-faint: #8a7a64;
+  --color-text-faint: #776a56; /* WCAG AA ≥4.5:1 on all light surfaces incl. surface-3 */
 
   /* ── Phase 3: Richer metallic gold palette ── */
   --color-gold: #c4902e;
@@ -316,7 +316,7 @@
   --color-border-subtle: #1a1e30;
   --color-text: #f2eedd;
   --color-text-muted: #a09890;
-  --color-text-faint: #706860;
+  --color-text-faint: #8f857a; /* WCAG AA ≥4.5:1 on all dark surfaces incl. surface-3 */
   --color-gold: #ddb040;
   --color-gold-light: #f0ca5c;
   --color-gold-bright: #fad97a;

@@ -44,6 +44,8 @@ const EXEMPT_FILES = new Set(['404.html', 'offline.html']);
 const CONTRAST_PAIRS = [
   ['--color-text', '--color-bg'],
   ['--color-text-muted', '--color-bg'],
+  ['--color-text-faint', '--color-bg'],
+  ['--color-text-faint', '--color-surface-3'],
   ['--text-accent', '--color-bg'],
   ['--color-gold-dark', '--color-bg'],
   ['--color-gold-dark', '--color-surface'],
@@ -66,6 +68,7 @@ const DARK_CONTRAST_PAIRS = [
   ['--color-down', '--surface-primary'],
   ['--color-stale', '--surface-secondary'],
   ['--color-warning-text', '--surface-secondary'],
+  ['--color-text-faint', '--surface-tertiary'],
 ];
 
 let errors = 0;
