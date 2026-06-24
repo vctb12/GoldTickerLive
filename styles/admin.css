@@ -2939,10 +2939,9 @@ thead th {
 
 /* ── Phase 69 — Premium Polish ─────────────────────────────────────────────── */
 
-/* Gold stat-card — 3px foil top on hover */
+/* Gold stat-card — richer foil top (gold → primary → gold) on hover */
 .stat-card::before {
   background: linear-gradient(90deg, var(--gold), var(--primary), var(--gold));
-  background-size: 200% 100%;
   opacity: 0;
   transition: opacity 0.25s ease;
   z-index: 1;
@@ -2973,7 +2972,9 @@ thead th {
 /* Welcome banner — stronger gold glow */
 .welcome-banner {
   border-color: rgb(201 162 39 / 28%);
-  box-shadow: 0 0 0 1px rgb(201 162 39 / 8%) inset, var(--shadow-sm);
+  box-shadow:
+    0 0 0 1px rgb(201 162 39 / 8%) inset,
+    var(--shadow-sm);
 }
 
 /* Ops control cards — subtle gold active state */
