@@ -169,7 +169,7 @@
   left: 50%;
   transform: translateX(-50%);
   background: var(--foil-underline);
-  color: #1a1408;
+  color: var(--color-on-gold);
   padding: 0.4rem 1.25rem;
   border-radius: var(--radius-pill);
   font-size: var(--text-xs);

@@ -383,6 +383,16 @@
   color: #991b1b;
 }
 
+[data-theme='dark'] .dev-key-badge--active {
+  background: rgb(6 95 70 / 20%);
+  color: #34d399;
+}
+
+[data-theme='dark'] .dev-key-badge--revoked {
+  background: rgb(153 27 27 / 20%);
+  color: #f87171;
+}
+
 .dev-key-actions {
   display: flex;
   gap: 0.4rem;

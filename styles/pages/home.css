@@ -1747,7 +1747,7 @@
 
 .country-tile--more:hover {
   background: var(--color-gold);
-  color: #0a0700;
+  color: var(--color-on-gold);
   border-color: var(--color-gold);
   box-shadow: var(--shadow-gold-lg);
 }

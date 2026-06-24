@@ -408,7 +408,7 @@ code.method-formula {
   align-items: center;
   justify-content: center;
   font-size: 0.8rem;
-  color: #c44;
+  color: var(--color-down, #b81428);
   font-weight: var(--weight-bold);
   margin-top: 0.15rem;
 }

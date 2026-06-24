@@ -186,7 +186,7 @@
   height: 3.2rem;
   border-radius: var(--radius-md);
   background: var(--gradient-gold);
-  color: #0a0800;
+  color: var(--color-on-gold);
   display: grid;
   place-items: center;
   font-size: 1.4rem;
@@ -700,11 +700,7 @@
 
 /* Article header — richer gradient */
 .learn-hub-article-header {
-  background: linear-gradient(
-    160deg,
-    var(--gradient-hero-light) 0%,
-    var(--surface-secondary) 100%
-  );
+  background: linear-gradient(160deg, var(--gradient-hero-light) 0%, var(--surface-secondary) 100%);
   border: 1.5px solid var(--border-subtle);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-xs);
