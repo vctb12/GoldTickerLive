@@ -3295,3 +3295,141 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   Home Interactive Chart Section
+   ══════════════════════════════════════════════════════════════ */
+
+.home-chart-section {
+  padding-block: var(--space-10) var(--space-12);
+  background: var(--surface-secondary, #f8f9fb);
+  border-block: 1px solid var(--border-subtle, rgb(0 0 0 / 5%));
+}
+
+.home-chart-inner {
+  max-width: var(--content-max-width, 1200px);
+  margin-inline: auto;
+  padding-inline: var(--space-5);
+}
+
+.home-chart-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-block-end: var(--space-5);
+}
+
+.home-chart-ranges {
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.home-chart-range-btn {
+  padding: var(--space-1) var(--space-3);
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle, rgb(0 0 0 / 12%));
+  background: var(--surface-primary);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: var(--weight-semibold, 600);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.home-chart-range-btn:hover {
+  background: var(--color-gold-light, #fef9ec);
+  color: var(--color-gold, #c9a84c);
+  border-color: var(--color-gold, #c9a84c);
+}
+
+.home-chart-range-btn.is-active {
+  background: var(--color-gold, #c9a84c);
+  color: #fff;
+  border-color: var(--color-gold, #c9a84c);
+}
+
+.home-chart-wrap {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-xl, 16px);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle, rgb(0 0 0 / 6%));
+  background: var(--surface-primary);
+  box-shadow: 0 2px 16px rgb(0 0 0 / 4%);
+}
+
+.home-chart-container {
+  width: 100%;
+  height: 380px;
+  min-height: 240px;
+}
+
+/* TradingView attribution injected by GoldChart */
+.home-chart-container .chart-tv-attribution {
+  position: absolute;
+  bottom: var(--space-2);
+  inset-inline-end: var(--space-3);
+  font-size: 0.65rem;
+  color: var(--text-tertiary, var(--text-secondary));
+  opacity: 0.6;
+  text-decoration: none;
+}
+
+/* no-data / loading placeholder */
+.home-chart-container .chart-no-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 240px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .home-chart-section {
+    background: var(--surface-secondary, rgb(255 255 255 / 3%));
+    border-color: rgb(255 255 255 / 6%);
+  }
+
+  .home-chart-wrap {
+    border-color: rgb(255 255 255 / 8%);
+    box-shadow: 0 2px 20px rgb(0 0 0 / 20%);
+  }
+
+  .home-chart-range-btn {
+    border-color: rgb(255 255 255 / 12%);
+    background: rgb(255 255 255 / 4%);
+    color: var(--text-secondary);
+  }
+
+  .home-chart-range-btn:hover {
+    background: rgb(201 168 76 / 15%);
+    color: #e8c96a;
+    border-color: #c9a84c;
+  }
+
+  .home-chart-range-btn.is-active {
+    background: #c9a84c;
+    color: #1a1500;
+    border-color: #c9a84c;
+  }
+}
+
+@media (width <= 640px) {
+  .home-chart-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .home-chart-container {
+    height: 280px;
+  }
+}

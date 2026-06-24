@@ -274,6 +274,26 @@
         </div>
       </section>
 
+      <section class="home-chart-section" aria-labelledby="home-chart-title" data-reveal>
+        <div class="home-chart-inner">
+          <div class="home-chart-header">
+            <div class="section-intro section-intro--compact">
+              <span class="section-kicker" id="home-chart-kicker">Interactive</span>
+              <h2 class="home-section-title" id="home-chart-title">Gold Price Chart</h2>
+              <p class="home-section-sub" id="home-chart-sub">XAU/USD spot price — LBMA baseline combined with live session data</p>
+            </div>
+            <div class="home-chart-ranges" role="group" aria-label="Chart time range" id="home-chart-ranges">
+              <button type="button" class="home-chart-range-btn" data-range="1Y" id="home-chart-btn-1y">1Y</button>
+              <button type="button" class="home-chart-range-btn" data-range="3Y" id="home-chart-btn-3y">3Y</button>
+              <button type="button" class="home-chart-range-btn is-active" data-range="ALL" id="home-chart-btn-all">ALL</button>
+            </div>
+          </div>
+          <div class="home-chart-wrap" id="home-chart-wrap">
+            <div id="home-chart-container" class="home-chart-container" aria-busy="true"></div>
+          </div>
+        </div>
+      </section>
+
       <section class="home-price-trend" aria-labelledby="home-trend-title" data-reveal>
         <div class="home-price-trend-inner">
           <div class="section-intro section-intro--compact">

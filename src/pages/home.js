@@ -92,6 +92,7 @@ let _refreshTimer = null;
 let _freshnessTimer = null;
 let _quickConvert = null;
 const _sessionPriceHistory = []; // [{price, ts}] — rolling 120-point window for sparkline
+let _homeChart = null; // GoldChart instance for the home-chart section
 
 // Karat selected for tracker/calculator deep links — persisted in user_prefs
 let homeTrackerKarat = (() => {
@@ -368,6 +369,9 @@ function renderHeroCard() {
   _sessionPriceHistory.push({ price: usd24oz, ts: Date.now() });
   if (_sessionPriceHistory.length > 120) _sessionPriceHistory.shift();
   drawHeroSparkline();
+
+  // Feed live tick into the home chart if it's loaded
+  _homeChart?.addPoint(usd24oz, Date.now());
 
   // Update sticky spot bar
   updateSpotBar({
@@ -663,6 +667,60 @@ function renderPriceTrend() {
   if (kicker) kicker.textContent = tx('priceTrendKicker');
   if (title) title.textContent = tx('priceTrendTitle');
   if (sub) sub.textContent = tx('priceTrendSub');
+}
+
+// ── Home interactive chart ──────────────────────────────────────────────────
+function initHomeChart() {
+  const wrap = document.getElementById('home-chart-wrap');
+  if (!wrap) return;
+
+  // Apply i18n to section header and buttons
+  const kicker = document.getElementById('home-chart-kicker');
+  const title = document.getElementById('home-chart-title');
+  const sub = document.getElementById('home-chart-sub');
+  const btn1y = document.getElementById('home-chart-btn-1y');
+  const btn3y = document.getElementById('home-chart-btn-3y');
+  const btnAll = document.getElementById('home-chart-btn-all');
+  if (kicker) kicker.textContent = tx('chartKicker');
+  if (title) title.textContent = tx('chartTitle');
+  if (sub) sub.textContent = tx('chartSub');
+  if (btn1y) btn1y.textContent = tx('chartRange1Y');
+  if (btn3y) btn3y.textContent = tx('chartRange3Y');
+  if (btnAll) btnAll.textContent = tx('chartRangeAll');
+
+  // Lazy-load chart when section scrolls into view
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (!entries[0].isIntersecting) return;
+      observer.disconnect();
+
+      import('../components/chart.js')
+        .then(({ GoldChart }) => {
+          const container = document.getElementById('home-chart-container');
+          if (!container) return;
+          container.removeAttribute('aria-busy');
+          _homeChart = new GoldChart('home-chart-container', lang);
+          _homeChart.setRange('ALL');
+
+          // Wire range button clicks
+          const rangeGroup = document.getElementById('home-chart-ranges');
+          if (rangeGroup) {
+            rangeGroup.addEventListener('click', (e) => {
+              const btn = e.target.closest('.home-chart-range-btn');
+              if (!btn || !_homeChart) return;
+              const range = btn.dataset.range;
+              rangeGroup.querySelectorAll('.home-chart-range-btn').forEach((b) => {
+                b.classList.toggle('is-active', b === btn);
+              });
+              _homeChart.setRange(range);
+            });
+          }
+        })
+        .catch(() => {});
+    },
+    { threshold: 0.1 }
+  );
+  observer.observe(wrap);
 }
 
 function renderHomeTrustAddons() {
@@ -1482,6 +1540,7 @@ async function init() {
 
   applyLangToPage();
   renderPriceTrend();
+  initHomeChart();
   mountHomeQuickConvert();
 
   // Analytics: fire page_view on home load
