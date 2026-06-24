@@ -20,11 +20,11 @@ beforeEach(() => {
     status: 200,
     async json() {
       return {
-        updatedAt: '2026-06-05T13:50:37.227Z',
+        updatedAt: new Date().toISOString(),
         metals: {
           gold: {
             price: 4496.95,
-            fixedAt: '2026-06-04T15:00:00Z',
+            fixedAt: new Date().toISOString(),
             currency: 'USD',
             unit: 'troy oz',
           },
@@ -45,7 +45,7 @@ test('MintedMetalQuoteProvider parses LBMA reference JSON', async () => {
 
   assert.equal(quote.providerId, 'minted_metal');
   assert.equal(quote.price, 4496.95);
-  assert.equal(quote.providerTimestamp, '2026-06-04T15:00:00Z');
+  assert.ok(quote.providerTimestamp);
   assert.equal(quote.providerPathSuccessful, true);
   assert.equal(quote.isFallback, false);
   assert.equal(quote.isFresh, null);

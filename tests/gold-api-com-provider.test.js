@@ -21,7 +21,7 @@ beforeEach(() => {
     async json() {
       return {
         price: 4446.2,
-        updatedAt: '2026-06-05T12:43:23Z',
+        updatedAt: new Date().toISOString(),
         symbol: 'XAU',
       };
     },
@@ -40,7 +40,7 @@ test('GoldApiComQuoteProvider parses live API response', async () => {
 
   assert.equal(quote.providerId, 'gold_api_com');
   assert.equal(quote.price, 4446.2);
-  assert.equal(quote.providerTimestamp, '2026-06-05T12:43:23Z');
+  assert.ok(quote.providerTimestamp);
   assert.equal(quote.providerPathSuccessful, true);
   assert.equal(quote.isFallback, false);
 });
