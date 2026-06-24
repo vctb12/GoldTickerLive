@@ -323,10 +323,15 @@ export function bindCoreEvents() {
         _el.alertPermission.textContent = 'Browser notifications not supported.';
       return;
     }
-    const perm = await Notification.requestPermission();
-    if (_el.alertPermission)
-      _el.alertPermission.textContent =
-        perm === 'granted' ? 'Notifications enabled.' : 'Notifications blocked.';
+    try {
+      const perm = await Notification.requestPermission();
+      if (_el.alertPermission)
+        _el.alertPermission.textContent =
+          perm === 'granted' ? 'Notifications enabled.' : 'Notifications blocked.';
+    } catch {
+      if (_el.alertPermission)
+        _el.alertPermission.textContent = 'Could not request notification permission.';
+    }
   });
 
   // Preset save
