@@ -3432,7 +3432,6 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 
 .freshness-strip[data-freshness-state='live'] .freshness-strip__dot {
   background: var(--color-live);
-  animation: freshness-strip-pulse var(--duration-xslow) var(--ease-standard) infinite;
 }
 
 .freshness-strip[data-freshness-state='delayed'] .freshness-strip__dot {
@@ -3451,19 +3450,6 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 
 .freshness-strip[data-freshness-state='closed'] .freshness-strip__dot {
   background: var(--text-tertiary);
-}
-
-@keyframes freshness-strip-pulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 0.55;
-    transform: scale(0.88);
-  }
 }
 
 @media (width <= 640px) {
