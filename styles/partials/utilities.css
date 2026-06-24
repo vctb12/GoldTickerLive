@@ -3909,3 +3909,114 @@ nav a,
     transform: none;
   }
 }
+
+/* ════════════════════════════════════════════════════════════════════════
+   Touch hover-lift safety net
+   ------------------------------------------------------------------------
+   On coarse / no-hover pointers (phones, most tablets) the `:hover` state
+   is synthesised on tap and *persists* until the user taps elsewhere. Any
+   `:hover` rule that raises a card with `transform: translateY(...)` (or
+   `scale()`) therefore leaves the element stuck in its lifted position
+   after a tap — a visible, well-known mobile glitch.
+
+   This block neutralises those lifts wherever a real hover is unavailable.
+   It is the device-capability counterpart of the `prefers-reduced-motion`
+   global net in `base.css`, and uses the same `!important` strategy so it
+   reliably wins over page-level stylesheets that load after `global.css`.
+
+   `@media (hover: none)` is mutually exclusive with the `@media (hover:
+   hover)` guards used elsewhere, so this never double-applies or conflicts.
+   Keyboard affordances are untouched: those use `:focus-visible`, not
+   `:hover`, so focus lifts still work on hybrid (touch + keyboard) devices.
+
+   New card-lift styles should either wrap their hover transform in
+   `@media (hover: hover)` (preferred, see `.hover-lift`) or add their
+   selector here. ═══════════════════════════════════════════════════════ */
+@media (hover: none) {
+  /* Buttons & CTAs */
+  .btn-primary:hover,
+  .hero .btn-primary:hover,
+  .btn-outline:hover,
+  .btn-outline-light:hover,
+  .btn-ghost-light:hover,
+  .retry-btn:hover,
+  .nav-cta:hover,
+  .nav-drawer-cta:hover,
+  .nav-drawer-link:hover,
+  .nav-dropdown-btn:hover,
+  #back-to-top:hover,
+  .action-rail-button:hover,
+  .order-btn-primary:hover,
+  .order-btn-whatsapp:hover,
+  .pricing-cta-pro:hover,
+  .pricing-cta-api:hover,
+  .cp-mi-cta:hover,
+  .mkt-link-btn:hover,
+  .onb-dismiss-btn:hover,
+  .home-social-btn:hover,
+  /* Home cards & strips */
+  .gcc-card:hover,
+  .tool-card:hover,
+  .hero-live-card:hover,
+  .home-stat-card:hover,
+  .karat-strip-item:hover,
+  .trust-item:hover,
+  .market-card:hover,
+  .country-tile:hover,
+  .explainer-strip-item:hover,
+  .spotlight-card:hover,
+  .insight-card:hover,
+  .featured-card:hover,
+  /* Country / city / market pages */
+  .country-card:hover,
+  .country-context-card:hover,
+  .country-karat-card:hover,
+  .country-action-card:hover,
+  .cp-price-card:hover,
+  .cp-related-card:hover,
+  .cp-price-chip:hover,
+  .cp-related-link:hover,
+  .city-market-card:hover,
+  .city-related-link:hover,
+  .mkt-related-card:hover,
+  /* Tool / tracker / invest / shops */
+  .tool-chip:hover,
+  .tracker-chip:hover,
+  .tracker-hero-stat:hover,
+  .tracker-market-card:hover,
+  .invest-chip:hover,
+  .invest-goal-card:hover,
+  .invest-jumpbar a:hover,
+  .invest-tab:hover,
+  .shop-card:hover,
+  .shops-guide-chip:hover,
+  .shops-quick-action-btn:hover,
+  .calc-related-card:hover,
+  .compare-card:hover,
+  .developer-endpoint-card:hover,
+  .pricing-card:hover,
+  .pricing-card-featured:hover,
+  .order-partner-card:hover,
+  .content-cta-card:hover,
+  .karat-sibling-links button:hover,
+  /* Guides / learn / insights / related links */
+  .guide-card:hover,
+  .guide-journey-step:hover,
+  .learn-guide-card:hover,
+  .insights-card:hover,
+  .insights-feed-card:hover,
+  .markets-card:hover,
+  .related-tool-link:hover,
+  .related-guides-link:hover,
+  .legal-related-link:hover,
+  .stub-related-link:hover,
+  .fav-btn:hover {
+    transform: none !important;
+  }
+
+  /* Descendant affordance shifts that also stick after tap */
+  .guide-card:hover .guide-card-arrow,
+  .action-rail-link:hover .action-rail-link__kicker {
+    transform: none !important;
+  }
+}

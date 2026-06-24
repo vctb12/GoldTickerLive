@@ -3000,3 +3000,13 @@ thead th {
 .card:hover {
   border-color: rgb(245 158 11 / 22%);
 }
+
+/* Touch hover-lift safety net (mirrors styles/partials/utilities.css).
+   Admin runs on tablets too; neutralise sticky lifts on no-hover pointers. */
+@media (hover: none) {
+  .stat-card:hover,
+  .quick-action-card:hover,
+  .ops-control-card:hover {
+    transform: none !important;
+  }
+}
