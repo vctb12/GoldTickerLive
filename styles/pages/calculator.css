@@ -89,7 +89,7 @@
 .badge-dot {
   width: 6px;
   height: 6px;
-  background: #22c55e;
+  background: var(--color-success, #22c55e);
   border-radius: 50%;
   animation: pulse 2s infinite;
   flex-shrink: 0;

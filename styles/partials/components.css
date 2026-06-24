@@ -182,7 +182,7 @@
   border: 1.5px solid var(--color-gold);
   border-radius: var(--radius-pill);
   background: var(--color-gold);
-  color: #0a0800;
+  color: var(--color-on-gold);
   font-family: var(--font-main);
   font-weight: var(--weight-bold);
   font-size: 0.82rem;
@@ -201,7 +201,7 @@
 .nav-cta:hover {
   background: var(--color-gold-light);
   border-color: var(--color-gold-light);
-  color: #0a0800;
+  color: var(--color-on-gold);
   box-shadow: var(--shadow-gold-lg);
   transform: translateY(-1px);
   text-decoration: none;
@@ -212,7 +212,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #0a0800;
+  background: var(--color-on-gold);
   opacity: 0.7;
   flex-shrink: 0;
   animation: nav-cta-pulse 2.2s ease-in-out infinite;
@@ -559,7 +559,7 @@
 [data-theme='dark'] .nav-cta {
   background: var(--color-gold);
   border-color: var(--color-gold);
-  color: #0a0800;
+  color: var(--color-on-gold);
 }
 
 [data-theme='dark'] .nav-cta:hover {
@@ -1408,7 +1408,7 @@ main {
 
 #karat-table tbody tr.row-22k,
 #karat-table tbody tr.row-21k {
-  background: #fdfbf5;
+  background: var(--color-surface-2, #fdfbf5);
 }
 
 /* Numeric columns always right-aligned regardless of dir */

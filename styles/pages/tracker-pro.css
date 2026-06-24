@@ -634,7 +634,7 @@ body.tracker-pro-page {
 /* Override .btn styles for dark hero context */
 .tracker-hero-wrap .btn.btn-primary {
   background: var(--tp-gold);
-  color: #0d0a07;
+  color: var(--color-on-gold);
   border-color: var(--tp-gold);
 }
 
@@ -2598,6 +2598,12 @@ td.tracker-chg-down {
   background: rgb(16 111 120 / 8%);
   border-color: rgb(16 111 120 / 22%);
   color: #0d7680;
+}
+
+[data-theme='dark'] .tracker-source-badge--local-snapshot {
+  background: rgb(62 188 200 / 10%);
+  border-color: rgb(62 188 200 / 25%);
+  color: #40bfc8;
 }
 .tracker-source-badge--LBMA-baseline {
   background: var(--tp-blue-soft);
