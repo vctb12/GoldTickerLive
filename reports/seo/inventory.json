@@ -644,7 +644,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/guides/24k-vs-22k.html",
       "ogType": "article",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -681,7 +681,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/guides/aed-peg-explained.html",
       "ogType": "article",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -1199,7 +1199,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/guides/buying-guide.html",
       "ogType": "article",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -1236,7 +1236,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/guides/gcc-market-hours.html",
       "ogType": "article",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -1421,7 +1421,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/guides/gold-karat-comparison.html",
       "ogType": "article",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -1569,7 +1569,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/guides/invest-in-gold-gcc.html",
       "ogType": "article",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -1644,7 +1644,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/guides/zakat-gold-guide.html",
       "ogType": "article",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -1755,7 +1755,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/search/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -1792,7 +1792,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/content/social/x-post-generator.html",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -2294,7 +2294,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/algeria/algiers/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -2404,7 +2404,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/algeria/constantine/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -2479,7 +2479,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/algeria/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -2589,7 +2589,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/algeria/oran/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -2664,7 +2664,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/bahrain/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -2774,7 +2774,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/bahrain/manama/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -2884,7 +2884,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/bahrain/muharraq/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -2994,7 +2994,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/bahrain/rifaa/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -3104,7 +3104,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/egypt/alexandria/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -3214,7 +3214,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/egypt/cairo/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -3250,7 +3250,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/egypt/cities/cairo.html",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -3286,7 +3286,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/egypt/cities/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -3396,7 +3396,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/egypt/giza/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -3471,7 +3471,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/egypt/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -3507,7 +3507,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/egypt/markets/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -3543,7 +3543,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/egypt/markets/khan-el-khalili-cairo.html",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -3579,7 +3579,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -3689,7 +3689,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/india/chennai/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -3799,7 +3799,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/india/delhi/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -3874,7 +3874,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/india/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -3984,7 +3984,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/india/mumbai/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -4094,7 +4094,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/iraq/baghdad/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -4204,7 +4204,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/iraq/basra/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -4314,7 +4314,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/iraq/erbil/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -4499,7 +4499,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/jordan/amman/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -4574,7 +4574,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/jordan/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -4684,7 +4684,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/jordan/irbid/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -4794,7 +4794,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/jordan/zarqa/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -4943,7 +4943,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/kuwait/hawalli/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -4979,7 +4979,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/kuwait/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -5089,7 +5089,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/kuwait/kuwait-city/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -5199,7 +5199,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/kuwait/salmiya/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -5309,7 +5309,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/lebanon/beirut/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -5384,7 +5384,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/lebanon/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -5494,7 +5494,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/lebanon/sidon/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -5604,7 +5604,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/lebanon/tripoli/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -5714,7 +5714,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/libya/benghazi/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -5789,7 +5789,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/libya/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -5899,7 +5899,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/libya/misrata/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -6009,7 +6009,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/libya/tripoli/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -6119,7 +6119,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/morocco/casablanca/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -6194,7 +6194,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/morocco/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -6304,7 +6304,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/morocco/marrakech/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -6414,7 +6414,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/morocco/rabat/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -6489,7 +6489,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/oman/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -6599,7 +6599,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/oman/muscat/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -6709,7 +6709,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/oman/salalah/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -6819,7 +6819,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/oman/sohar/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -7004,7 +7004,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/pakistan/islamabad/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -7114,7 +7114,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/pakistan/karachi/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -7224,7 +7224,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/pakistan/lahore/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -7334,7 +7334,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/palestine/gaza/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -7519,7 +7519,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/palestine/nablus/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -7629,7 +7629,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/palestine/ramallah/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -7739,7 +7739,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/qatar/al-rayyan/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -7849,7 +7849,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/qatar/al-wakrah/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -7885,7 +7885,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/qatar/cities/doha.html",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -7921,7 +7921,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/qatar/cities/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -8031,7 +8031,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/qatar/doha/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -8106,7 +8106,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/qatar/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -8142,7 +8142,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/saudi-arabia/cities/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -8178,7 +8178,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/saudi-arabia/cities/riyadh.html",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -8288,7 +8288,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/saudi-arabia/dammam/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -8363,7 +8363,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/saudi-arabia/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -8473,7 +8473,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/saudi-arabia/jeddah/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -8583,7 +8583,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/saudi-arabia/mecca/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -8693,7 +8693,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/saudi-arabia/medina/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -8803,7 +8803,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/saudi-arabia/riyadh/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -8878,7 +8878,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/sudan/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -8988,7 +8988,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/sudan/khartoum/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -9098,7 +9098,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/sudan/omdurman/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -9208,7 +9208,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/sudan/port-sudan/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -9318,7 +9318,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/syria/aleppo/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -9428,7 +9428,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/syria/damascus/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -9577,7 +9577,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/syria/homs/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -9688,7 +9688,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/tunisia/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -9798,7 +9798,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/tunisia/sfax/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -9908,7 +9908,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/tunisia/sousse/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -10018,7 +10018,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/tunisia/tunis/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -10128,7 +10128,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/turkey/ankara/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -10313,7 +10313,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/turkey/istanbul/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -10423,7 +10423,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/turkey/izmir/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -10533,7 +10533,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/uae/abu-dhabi/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -10643,7 +10643,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/uae/ajman/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -10679,7 +10679,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/uae/cities/abu-dhabi.html",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -10715,7 +10715,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/uae/cities/dubai.html",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -10751,7 +10751,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/uae/cities/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -10861,7 +10861,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/uae/dubai/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -10971,7 +10971,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/uae/fujairah/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -11046,7 +11046,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/uae/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -11082,7 +11082,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/uae/markets/dubai-gold-souk.html",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -11118,7 +11118,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/uae/markets/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -11228,7 +11228,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/uae/ras-al-khaimah/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -11338,7 +11338,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/uae/sharjah/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -11448,7 +11448,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/uae/umm-al-quwain/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -11558,7 +11558,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/yemen/aden/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -11743,7 +11743,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/yemen/sanaa/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -11853,7 +11853,7 @@
       "ogImage": null,
       "ogUrl": "https://goldtickerlive.com/countries/yemen/taiz/",
       "ogType": "website",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": null,
       "hreflang": [
         {
@@ -12404,7 +12404,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/privacy.html",
       "ogType": "article",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
@@ -12476,7 +12476,7 @@
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/terms.html",
       "ogType": "article",
-      "twitterCard": "summary",
+      "twitterCard": "summary_large_image",
       "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
