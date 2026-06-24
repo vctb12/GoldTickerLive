@@ -389,7 +389,6 @@
 .content-form-field input[aria-invalid='true'],
 .content-form-field select[aria-invalid='true'] {
   border-color: var(--color-error);
-  outline: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -106,10 +106,9 @@
 }
 
 .legal-toc-list li a:hover,
-.legal-toc-list li a:focus {
+.legal-toc-list li a:focus-visible {
   background: var(--color-gold-alpha);
   color: var(--color-gold);
-  outline: none;
 }
 
 /* Body */
@@ -238,10 +237,9 @@
 }
 
 .legal-related-link:hover,
-.legal-related-link:focus {
+.legal-related-link:focus-visible {
   border-color: var(--color-gold);
   color: var(--color-gold);
-  outline: none;
 }
 
 /* RTL adjustments */

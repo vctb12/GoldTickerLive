@@ -354,13 +354,13 @@ code.method-formula {
 .method-warning--info {
   background: rgb(30 90 180 / 8%);
   border-color: rgb(30 90 180 / 30%);
-  border-left-color: #25b;
+  border-inline-start-color: #25b;
 }
 
 .method-warning--strong {
   background: rgb(140 0 0 / 10%);
   border-color: rgb(200 0 0 / 30%);
-  border-left-color: #c00;
+  border-inline-start-color: #c00;
 }
 
 .method-warning strong {
@@ -662,7 +662,9 @@ code.method-formula {
 
 .method-source-card:hover {
   border-color: var(--color-gold-dim, #4a3c10);
-  box-shadow: 0 0 0 1px var(--color-gold-dim, #4a3c10), 0 4px 16px rgb(217 178 94 / 8%);
+  box-shadow:
+    0 0 0 1px var(--color-gold-dim, #4a3c10),
+    0 4px 16px rgb(217 178 94 / 8%);
 }
 
 /* Formula block: tighter gold accent */
