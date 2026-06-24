@@ -326,6 +326,23 @@
   --color-gold-bg: #100e08;
   --color-gold-tint: #0c0a06;
   --color-gold-glow: rgb(221 176 64 / 18%);
+
+  /* Status colours — lightened for dark surfaces. The :root values are
+     saturated mid-tones tuned for light backgrounds; on dark cards they
+     fail WCAG AA (e.g. --color-fixed #1050a0 = 2.46:1, --color-error
+     #b81428 = 2.91:1). These overrides restore ≥4.5:1 and match the
+     dark-mode signal palette the tracker already uses. The faint
+     translucent -bg / -border tints stay as-is (they read as subtle
+     wash over the dark surface). */
+  --color-live: #5dd98b;
+  --color-daily: #f0a350;
+  --color-fixed: #6ba3f0;
+  --color-stale: #f0a350;
+  --color-up: #5dd98b;
+  --color-down: #f87171;
+  --color-error: #f87171;
+  --color-warning: #e0b060;
+  --color-warning-text: #e0b060;
   --surface-canvas: #060708;
   --surface-primary: #0c0e14;
   --surface-secondary: #141720;
