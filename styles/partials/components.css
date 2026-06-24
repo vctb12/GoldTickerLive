@@ -3570,36 +3570,63 @@ details[open] > .faq-q::after {
 }
 
 .gold-ticker[data-freshness='live'] .ticker-status {
-  color: rgb(141 217 159 / 90%);
+  color: rgb(74 222 128 / 95%);
 }
 
 .gold-ticker[data-freshness='live'] .ticker-status-dot {
-  background: #4ade80;
-  box-shadow: 0 0 6px rgb(74 222 128 / 55%);
+  background: #22c55e;
+  box-shadow:
+    0 0 0 0 rgb(34 197 94 / 55%),
+    0 0 8px rgb(34 197 94 / 50%);
+  animation: ticker-dot-live 2s ease-in-out infinite;
+}
+
+@keyframes ticker-dot-live {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgb(34 197 94 / 60%),
+      0 0 8px rgb(34 197 94 / 45%);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow:
+      0 0 0 4px rgb(34 197 94 / 0%),
+      0 0 12px rgb(34 197 94 / 25%);
+    transform: scale(1.15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gold-ticker[data-freshness='live'] .ticker-status-dot {
+    animation: none;
+    box-shadow: 0 0 8px rgb(34 197 94 / 50%);
+  }
 }
 
 .gold-ticker[data-freshness='cached'] .ticker-status {
-  color: rgb(201 161 77 / 95%);
+  color: rgb(250 204 21 / 90%);
 }
 
 .gold-ticker[data-freshness='cached'] .ticker-status-dot {
-  background: var(--color-gold-light);
+  background: #facc15;
 }
 
 .gold-ticker[data-freshness='stale'] .ticker-status {
-  color: rgb(242 172 89 / 95%);
+  color: rgb(251 146 60 / 95%);
 }
 
 .gold-ticker[data-freshness='stale'] .ticker-status-dot {
-  background: #f2ac59;
+  background: #f97316;
+  box-shadow: 0 0 6px rgb(249 115 22 / 40%);
 }
 
 .gold-ticker[data-freshness='unavailable'] .ticker-status {
-  color: rgb(220 120 120 / 85%);
+  color: rgb(248 113 113 / 90%);
 }
 
 .gold-ticker[data-freshness='unavailable'] .ticker-status-dot {
-  background: #dc7878;
+  background: #f87171;
 }
 
 /* Body padding when ticker is present */

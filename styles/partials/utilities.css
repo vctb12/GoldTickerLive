@@ -3483,6 +3483,172 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   Freshness Strip — Enhanced State Styles
+   Live = electric green heartbeat glow; stale = amber warning bar
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Shared strip upgrades */
+.freshness-strip {
+  transition:
+    background var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+/* LIVE — bright green tint, pulsing dot with ring glow */
+.freshness-strip[data-freshness-state='live'] {
+  background: linear-gradient(135deg, rgb(26 163 78 / 10%), rgb(26 163 78 / 5%));
+  border-color: rgb(26 163 78 / 35%);
+}
+
+.freshness-strip[data-freshness-state='live'] .freshness-strip__dot {
+  inline-size: 10px;
+  block-size: 10px;
+  flex: 0 0 10px;
+  background: #22c55e;
+  box-shadow:
+    0 0 0 3px rgb(34 197 94 / 20%),
+    0 0 10px rgb(34 197 94 / 45%);
+  animation: freshness-strip-live 2s ease-in-out infinite;
+}
+
+.freshness-strip[data-freshness-state='live'] .freshness-strip__label {
+  color: #16a34a;
+}
+
+[data-theme='dark'] .freshness-strip[data-freshness-state='live'] .freshness-strip__label {
+  color: #4ade80;
+}
+
+@keyframes freshness-strip-live {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgb(34 197 94 / 55%),
+      0 0 8px rgb(34 197 94 / 40%);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow:
+      0 0 0 5px rgb(34 197 94 / 0%),
+      0 0 14px rgb(34 197 94 / 20%);
+    transform: scale(1.15);
+  }
+}
+
+/* DELAYED — amber tint, visible warning */
+.freshness-strip[data-freshness-state='delayed'] {
+  background: rgb(234 179 8 / 7%);
+  border-color: rgb(234 179 8 / 35%);
+}
+
+.freshness-strip[data-freshness-state='delayed'] .freshness-strip__dot {
+  inline-size: 9px;
+  block-size: 9px;
+  flex: 0 0 9px;
+  background: #eab308;
+}
+
+.freshness-strip[data-freshness-state='delayed'] .freshness-strip__label {
+  color: #a16207;
+}
+
+[data-theme='dark'] .freshness-strip[data-freshness-state='delayed'] .freshness-strip__label {
+  color: #facc15;
+}
+
+/* STALE / CACHED — orange warning band */
+.freshness-strip[data-freshness-state='stale'],
+.freshness-strip[data-freshness-state='cached'] {
+  background: linear-gradient(135deg, rgb(234 88 12 / 9%), rgb(234 88 12 / 5%));
+  border-color: rgb(234 88 12 / 35%);
+}
+
+.freshness-strip[data-freshness-state='stale'] .freshness-strip__dot,
+.freshness-strip[data-freshness-state='cached'] .freshness-strip__dot {
+  inline-size: 9px;
+  block-size: 9px;
+  flex: 0 0 9px;
+  background: #f97316;
+}
+
+.freshness-strip[data-freshness-state='stale'] .freshness-strip__label,
+.freshness-strip[data-freshness-state='cached'] .freshness-strip__label {
+  color: #c2410c;
+}
+
+[data-theme='dark'] .freshness-strip[data-freshness-state='stale'] .freshness-strip__label,
+[data-theme='dark'] .freshness-strip[data-freshness-state='cached'] .freshness-strip__label {
+  color: #fb923c;
+}
+
+/* FALLBACK / UNAVAILABLE — red error state */
+.freshness-strip[data-freshness-state='fallback'],
+.freshness-strip[data-freshness-state='unavailable'] {
+  background: rgb(220 38 38 / 6%);
+  border-color: rgb(220 38 38 / 30%);
+}
+
+.freshness-strip[data-freshness-state='fallback'] .freshness-strip__label,
+.freshness-strip[data-freshness-state='unavailable'] .freshness-strip__label {
+  color: #b91c1c;
+}
+
+[data-theme='dark'] .freshness-strip[data-freshness-state='fallback'] .freshness-strip__label,
+[data-theme='dark'] .freshness-strip[data-freshness-state='unavailable'] .freshness-strip__label {
+  color: #f87171;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .freshness-strip[data-freshness-state='live'] .freshness-strip__dot {
+    animation: none;
+    box-shadow: 0 0 0 3px rgb(34 197 94 / 25%);
+  }
+}
+
+/* ph-freshness-dot live — enhanced glow heartbeat */
+@keyframes freshness-dot-live-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(34 197 94 / 55%);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgb(34 197 94 / 0%);
+    transform: scale(1.2);
+  }
+}
+
+.ph-freshness-dot[data-state='live'] {
+  animation: freshness-dot-live-glow 2s ease-in-out infinite;
+  background: #22c55e;
+  box-shadow: 0 0 6px rgb(34 197 94 / 45%);
+  width: 9px;
+  height: 9px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ph-freshness-dot[data-state='live'] {
+    animation: none;
+    box-shadow: 0 0 6px rgb(34 197 94 / 45%);
+  }
+}
+
+/* freshness-badge live — green ring glow */
+.freshness-badge--live {
+  background: linear-gradient(135deg, rgb(34 197 94 / 10%), rgb(34 197 94 / 5%));
+  border-color: rgb(34 197 94 / 35%);
+  color: #16a34a;
+}
+
+[data-theme='dark'] .freshness-badge--live {
+  color: #4ade80;
+}
+
+.freshness-badge--live .freshness-badge__state {
+  color: inherit;
+}
+
 /* ═══════════════════════════════════════════════
    Premium UI primitives — toast, purity ring, compare
    ═══════════════════════════════════════════════ */
