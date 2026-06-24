@@ -411,9 +411,11 @@ body.tracker-pro-page {
 }
 
 .tracker-badge-xauusd strong {
-  font-size: 0.82rem;
+  font-size: 1rem;
+  font-weight: var(--weight-extrabold);
   font-variant-numeric: tabular-nums;
   color: #f0d070;
+  letter-spacing: -0.01em;
 }
 
 /* Market status badge */
@@ -517,12 +519,13 @@ body.tracker-pro-page {
 }
 
 .tracker-hero-v {
-  font-size: clamp(1.15rem, 2.2vw, 1.7rem);
-  font-weight: var(--weight-bold);
+  font-size: clamp(1.35rem, 2.8vw, 2rem);
+  font-weight: var(--weight-extrabold);
   font-family: var(--font-numeric);
   color: var(--tp-hero-text);
-  line-height: 1.1;
+  line-height: 1.05;
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
 .tracker-hero-s {

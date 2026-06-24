@@ -3163,3 +3163,135 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   Historical Price Trend Section
+   ══════════════════════════════════════════════════════════════ */
+
+.home-price-trend {
+  padding-block: var(--space-10) var(--space-12);
+  background: var(--surface-primary);
+}
+
+.home-price-trend-inner {
+  max-width: var(--content-max-width, 1200px);
+  margin-inline: auto;
+  padding-inline: var(--space-5);
+}
+
+.price-trend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 130px), 1fr));
+  gap: var(--space-3);
+  margin-block-start: var(--space-6);
+}
+
+.price-trend-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-3);
+  border-radius: var(--radius-lg, 12px);
+  background: var(--surface-secondary, #f8f9fa);
+  border: 1px solid var(--border-subtle, rgb(0 0 0 / 6%));
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  cursor: default;
+}
+
+.price-trend-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 8%);
+}
+
+.price-trend-card--up {
+  border-block-start: 3px solid var(--color-up, #22c55e);
+}
+
+.price-trend-card--down {
+  border-block-start: 3px solid var(--color-down, #ef4444);
+}
+
+.price-trend-month {
+  font-size: 0.72rem;
+  font-weight: var(--weight-semibold, 600);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.price-trend-price {
+  font-size: 1rem;
+  font-weight: var(--weight-bold, 700);
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.price-trend-aed {
+  font-size: 0.72rem;
+  color: var(--text-tertiary, var(--text-secondary));
+  letter-spacing: 0.01em;
+}
+
+.price-trend-change {
+  margin-block-start: var(--space-1);
+  font-size: 0.78rem;
+  font-weight: var(--weight-semibold, 600);
+  border-radius: 4px;
+  align-self: flex-start;
+  padding: 1px 5px;
+}
+
+.price-trend-change--up {
+  background: rgb(34 197 94 / 12%);
+  color: var(--color-up, #16a34a);
+}
+
+.price-trend-change--down {
+  background: rgb(239 68 68 / 10%);
+  color: var(--color-down, #dc2626);
+}
+
+@media (prefers-color-scheme: dark) {
+  .price-trend-card {
+    background: var(--surface-secondary, rgb(255 255 255 / 4%));
+    border-color: var(--border-subtle, rgb(255 255 255 / 8%));
+  }
+
+  .price-trend-card:hover {
+    box-shadow: 0 4px 20px rgb(0 0 0 / 30%);
+  }
+
+  .price-trend-change--up {
+    background: rgb(34 197 94 / 18%);
+    color: #4ade80;
+  }
+
+  .price-trend-change--down {
+    background: rgb(239 68 68 / 16%);
+    color: #f87171;
+  }
+}
+
+@media (width <= 640px) {
+  .price-trend-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-2);
+  }
+
+  .price-trend-card {
+    padding: var(--space-2);
+  }
+
+  .price-trend-price {
+    font-size: 0.85rem;
+  }
+}
+
+@media (width <= 380px) {
+  .price-trend-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

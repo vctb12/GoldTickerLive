@@ -51,6 +51,7 @@ import { enforceCanonicalOnDocument } from '../seo/canonical.js';
 import { enforceHreflangAlternates } from '../seo/hreflang.js';
 import { buildMethodologyFaqSchema, injectFaqSchema } from '../seo/faq-schema.js';
 import { buildHomeTrackerHref } from '../lib/cross-page-links.js';
+import { getBaselineHistory } from '../lib/historical-data.js';
 import { applyTrackerHandoffToIds, HOME_DEFAULT_TRACKER_LINK_IDS } from '../lib/page-handoff.js';
 import { serializeCalculatorUrlState } from './calculator/url-state.js';
 
@@ -601,6 +602,67 @@ function initExportButton() {
     URL.revokeObjectURL(url);
     track(EVENTS.EXPORT_CLICK, { surface: 'home-hero', export_type: 'csv' });
   };
+}
+
+// ── Historical price trend section ─────────────────────────────────────────
+function renderPriceTrend() {
+  const grid = document.getElementById('home-trend-grid');
+  if (!grid) return;
+
+  const k24 = KARATS.find((k) => k.code === '24');
+  const purity = k24?.purity ?? 1;
+
+  // Last 13 baseline entries → 12 month-over-month changes
+  const baseline = getBaselineHistory();
+  const slice = baseline.slice(-13);
+
+  const cards = [];
+  for (let i = 1; i < slice.length; i++) {
+    const prev = slice[i - 1];
+    const curr = slice[i];
+    const pctChange = ((curr.price - prev.price) / prev.price) * 100;
+    const aedPerGram = calc.usdPerGram(curr.price, purity) * CONSTANTS.AED_PEG;
+
+    // Parse 'YYYY-MM' → short month label
+    const [year, month] = curr.date.split('-');
+    const monthLabel = new Date(Number(year), Number(month) - 1, 1).toLocaleString('en', {
+      month: 'short',
+      year: '2-digit',
+    });
+
+    const isUp = pctChange >= 0;
+    const sign = isUp ? '+' : '';
+    const pctStr = `${sign}${pctChange.toFixed(1)}%`;
+    const priceStr = `$${curr.price.toLocaleString('en', { maximumFractionDigits: 0 })}`;
+    const aedStr = `AED ${aedPerGram.toFixed(2)}`;
+
+    const card = el('div', {
+      class: `price-trend-card ${isUp ? 'price-trend-card--up' : 'price-trend-card--down'}`,
+    });
+    const monthEl = el('span', { class: 'price-trend-month' });
+    monthEl.textContent = monthLabel;
+    const priceEl = el('span', { class: 'price-trend-price' });
+    priceEl.textContent = priceStr;
+    const aedEl = el('span', { class: 'price-trend-aed' });
+    aedEl.textContent = aedStr;
+    const changeEl = el('span', {
+      class: `price-trend-change price-trend-change--${isUp ? 'up' : 'down'}`,
+    });
+    changeEl.textContent = pctStr;
+    card.replaceChildren(monthEl, priceEl, aedEl, changeEl);
+    cards.push(card);
+  }
+
+  grid.replaceChildren(...cards);
+  grid.removeAttribute('aria-busy');
+
+  // Apply i18n to section header
+  const kicker = document.getElementById('home-trend-kicker');
+  const title = document.getElementById('home-trend-title');
+  const sub = document.getElementById('home-trend-sub');
+  if (kicker) kicker.textContent = tx('priceTrendKicker');
+  if (title) title.textContent = tx('priceTrendTitle');
+  if (sub) sub.textContent = tx('priceTrendSub');
 }
 
 function renderHomeTrustAddons() {
@@ -1419,6 +1481,7 @@ async function init() {
   }
 
   applyLangToPage();
+  renderPriceTrend();
   mountHomeQuickConvert();
 
   // Analytics: fire page_view on home load
