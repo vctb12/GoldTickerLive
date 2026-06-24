@@ -67,6 +67,9 @@
   --surface-tertiary: var(--color-surface-3);
   --surface-accent: var(--color-gold-bg);
   --surface-glass: rgb(255 255 255 / 80%);
+  --surface-elevated: var(--color-surface-2);
+  --surface-muted: var(--color-surface-2);
+  --surface-code: #1e2937;
 
   /* ── Semantic text ── */
   --text-primary: var(--color-text);
@@ -90,6 +93,7 @@
   --radius-xl: 22px;
   --radius-2xl: 28px;
   --radius-pill: 999px;
+  --radius-full: 9999px;
   --radius-control: var(--radius-sm);
   --radius-card: var(--radius-lg);
   --radius-panel: var(--radius-xl);
@@ -184,6 +188,8 @@
   --space-6: 2rem;
   --space-7: 3rem;
   --space-8: 4rem;
+  --space-9: 5rem;
+  --space-10: 6rem;
 
   /* ── Rhythm ── */
   --rhythm-inline: var(--space-3);
@@ -255,6 +261,7 @@
   --color-accent: var(--color-gold-dark);
   --color-accent-strong: var(--color-gold-bright);
   --color-surface-1: var(--color-surface);
+  --surface-1: var(--color-surface);
   --color-surface-raised: var(--color-surface-2);
   --color-text-secondary: var(--color-text-muted);
   --color-gold-alpha: rgb(184 137 44 / 10%);
@@ -365,6 +372,9 @@
   --surface-tertiary: #1b1e2c;
   --surface-accent: #100e08;
   --surface-glass: rgb(12 14 20 / 90%);
+  --surface-elevated: #141720;
+  --surface-muted: #141720;
+  --surface-code: #0d1117;
   --text-primary: #f2eedd;
   --text-secondary: #a09890;
   --text-tertiary: var(--color-text-faint);

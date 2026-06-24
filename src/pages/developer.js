@@ -31,16 +31,21 @@ async function apiFetch(path, options = {}) {
     redirectToAccount();
     return null;
   }
-  const res = await fetch(`${API_BASE}${path}`, {
-    method: options.method || 'GET',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(options.headers || {}),
-    },
-    body: options.body != null ? JSON.stringify(options.body) : undefined,
-  });
+  let res;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      method: options.method || 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(options.headers || {}),
+      },
+      body: options.body != null ? JSON.stringify(options.body) : undefined,
+    });
+  } catch {
+    return { ok: false, error: { message: 'Network error. Please check your connection.' } };
+  }
   const json = await res
     .json()
     .catch(() => ({ ok: false, error: { message: 'Invalid response' } }));

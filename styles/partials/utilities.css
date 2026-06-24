@@ -2196,7 +2196,7 @@ details.nav-drawer-group[open] .nav-drawer-group-caret {
 [data-theme='dark'] .nav-search-overlay,
 [data-theme='dark'] .nav-search-dropdown,
 [data-theme='dark'] .nav-search-input {
-  background: var(--surface, #0f172a);
+  background: var(--color-surface, #0f172a);
   color: var(--color-text, #e2e8f0);
   border-color: var(--border-default, #334155);
 }

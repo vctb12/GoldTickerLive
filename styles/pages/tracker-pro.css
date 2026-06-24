@@ -3974,7 +3974,7 @@ td.tracker-chg-down {
 .tracker-range-pills .tracker-pill[aria-pressed='true'] {
   background: var(--color-gold);
   border-color: var(--color-gold-light);
-  color: #1a0c02;
+  color: var(--color-on-gold);
 }
 
 .tracker-karat-table tbody tr {
@@ -4010,7 +4010,9 @@ td.tracker-chg-down {
 .tracker-panel:hover,
 .tracker-subpanel:hover {
   border-color: rgb(196 144 46 / 25%);
-  box-shadow: var(--shadow-xs), 0 0 0 0 transparent;
+  box-shadow:
+    var(--shadow-xs),
+    0 0 0 0 transparent;
 }
 
 /* Toolbar card — gradient surface */
