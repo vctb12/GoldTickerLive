@@ -2681,3 +2681,134 @@
 .shops-results-legend {
   color: var(--color-gold-dark);
 }
+
+/* ── Claim listing dialog ───────────────────────────────────────────────── */
+.shops-claim-dialog {
+  border: none;
+  border-radius: var(--radius-xl);
+  padding: 0;
+  max-width: min(420px, 92vw);
+  width: 100%;
+  box-shadow: var(--shadow-xl);
+  background: var(--color-surface);
+  font-family: var(--font-main);
+  color: var(--color-text);
+}
+
+.shops-claim-dialog::backdrop {
+  background: rgb(0 0 0 / 50%);
+}
+
+.shops-claim-dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+}
+
+.shops-claim-dialog-form h3 {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
+}
+
+.shops-claim-dialog-form p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+.shops-claim-dialog-form label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+}
+
+.shops-claim-dialog-form input {
+  padding: var(--space-3) var(--space-4);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  font-size: var(--text-base);
+  font-family: var(--font-main);
+  color: var(--color-text);
+  min-height: 44px;
+  transition: border-color 0.15s ease;
+}
+
+.shops-claim-dialog-form input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+
+.shops-claim-dialog-form menu {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex-wrap: wrap;
+}
+
+.shops-claim-dialog-form menu button[type='button'] {
+  padding: var(--space-3) var(--space-5);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: transparent;
+  font-size: var(--text-sm);
+  font-family: var(--font-main);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  min-height: 44px;
+  transition: background-color 0.15s ease;
+}
+
+.shops-claim-dialog-form menu button[type='button']:hover {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+.shops-claim-dialog-form menu button[type='submit'] {
+  padding: var(--space-3) var(--space-5);
+  border: none;
+  border-radius: var(--radius-control);
+  background: var(--color-gold);
+  font-size: var(--text-sm);
+  font-family: var(--font-main);
+  font-weight: var(--weight-semibold);
+  color: var(--color-surface);
+  cursor: pointer;
+  min-height: 44px;
+  transition: background-color 0.15s ease;
+}
+
+.shops-claim-dialog-form menu button[type='submit']:hover {
+  background: var(--color-gold-dark);
+}
+
+.shops-claim-dialog-form button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+[data-theme='dark'] .shops-claim-dialog {
+  background: var(--color-surface);
+}
+
+[data-theme='dark'] .shops-claim-dialog-form input {
+  background: var(--color-surface-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shops-claim-dialog-form input,
+  .shops-claim-dialog-form button {
+    transition: none;
+  }
+}

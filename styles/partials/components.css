@@ -2388,6 +2388,16 @@ main {
   height: 0.85rem;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-line,
+  .skeleton-value,
+  .skeleton-flag,
+  .skeleton-row td div {
+    animation: none;
+    background: var(--color-surface-3);
+  }
+}
+
 /* ═══════════════════════════════════════════════
    Price Alerts Panel
    ═══════════════════════════════════════════════ */

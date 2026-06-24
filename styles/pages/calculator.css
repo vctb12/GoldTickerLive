@@ -423,6 +423,12 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .calc-result {
+    animation: none;
+  }
+}
+
 .calc-result[hidden] {
   display: none;
 }
@@ -1223,7 +1229,12 @@
 
 /* Result box — stronger gold treatment */
 .calc-result {
-  background: linear-gradient(135deg, var(--color-gold-tint) 0%, rgb(253 250 240 / 80%) 60%, transparent 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-gold-tint) 0%,
+    rgb(253 250 240 / 80%) 60%,
+    transparent 100%
+  );
   border: 1.5px solid rgb(196 144 46 / 40%);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-gold), var(--shadow-xs);

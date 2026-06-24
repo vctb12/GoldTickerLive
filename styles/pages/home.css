@@ -198,6 +198,17 @@
   animation: pulse-live-hero 2s ease-in-out infinite;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .hero-badge {
+    animation: none;
+  }
+
+  .hero-badge-dot,
+  .hlc-market--open::before {
+    animation: none;
+  }
+}
+
 /* ── Phase 15: Hero headings — larger, more dramatic ── */
 .hero-title-main {
   display: block;
@@ -1501,6 +1512,15 @@
 .skeleton-value {
   width: 80%;
   height: 22px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-flag,
+  .skeleton-line,
+  .skeleton-value {
+    animation: none;
+    background: var(--color-surface-3);
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════

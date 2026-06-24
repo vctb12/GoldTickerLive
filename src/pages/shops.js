@@ -56,7 +56,9 @@ const SHOPS_LAST_REVIEWED_ISO = '2026-04-05';
 const MOBILE_FILTER_BREAKPOINT = 640;
 const FILTER_TRACK_DEBOUNCE_MS = 180;
 const SEARCH_TRACK_DEBOUNCE_MS = 450;
+const SEARCH_RENDER_DEBOUNCE_MS = 150;
 let _filterTrackTimer = null;
+let _searchRenderTimer = null;
 /** Focus trap for the shop detail dialog; lazily created on first open. */
 let MODAL_FOCUS_TRAP = null;
 
@@ -516,7 +518,9 @@ async function openClaimDialog() {
   form.className = 'shops-claim-dialog-form';
 
   const title = document.createElement('h3');
+  title.id = 'shops-claim-dialog-title';
   title.textContent = t('claimListing');
+  dialog.setAttribute('aria-labelledby', 'shops-claim-dialog-title');
   form.appendChild(title);
 
   const lead = document.createElement('p');
@@ -2057,7 +2061,8 @@ function bindEvents() {
   document.getElementById('shops-search').addEventListener('input', (event) => {
     STATE.search = event.target.value;
     trackShopFilterApply('search', SEARCH_TRACK_DEBOUNCE_MS);
-    render();
+    clearTimeout(_searchRenderTimer);
+    _searchRenderTimer = setTimeout(render, SEARCH_RENDER_DEBOUNCE_MS);
   });
 
   document.getElementById('shops-region-filter').addEventListener('change', (event) => {

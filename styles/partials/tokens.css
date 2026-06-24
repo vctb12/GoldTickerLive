@@ -252,6 +252,8 @@
   --color-gold-alpha: rgb(184 137 44 / 10%);
   --color-amber: #f59e0b;
   --color-danger: #dc2626;
+  --color-success: #16a34a;
+  --color-success-bg: #dcfce7;
 
   /* ── Phase 8: Refined transitions ── */
   --transition: 0.18s ease;
@@ -343,6 +345,8 @@
   --color-error: #f87171;
   --color-warning: #e0b060;
   --color-warning-text: #e0b060;
+  --color-success: #4ade80;
+  --color-success-bg: rgb(74 222 128 / 12%);
   --surface-canvas: #060708;
   --surface-primary: #0c0e14;
   --surface-secondary: #141720;
@@ -351,7 +355,7 @@
   --surface-glass: rgb(12 14 20 / 90%);
   --text-primary: #f2eedd;
   --text-secondary: #a09890;
-  --text-tertiary: #706860;
+  --text-tertiary: var(--color-text-faint);
   --text-accent: var(--color-gold-light);
   --border-default: #242840;
   --border-subtle: #1a1e30;
