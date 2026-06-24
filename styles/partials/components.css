@@ -4395,4 +4395,23 @@ button,
   .faq-item {
     border-width: 2px;
   }
+
+  /* Gradient text → solid gold so text stays readable at high contrast */
+  .home-stat-value {
+    background: none;
+    -webkit-text-fill-color: var(--color-gold-dark);
+    color: var(--color-gold-dark);
+  }
+}
+
+/* Windows High Contrast / forced-colors mode:
+   gradient text via -webkit-text-fill-color:transparent becomes invisible
+   because the system ignores background images. Reset to system text color. */
+@media (forced-colors: active) {
+  .home-stat-value {
+    background: none;
+    -webkit-text-fill-color: CanvasText;
+    color: CanvasText;
+    forced-color-adjust: auto;
+  }
 }
