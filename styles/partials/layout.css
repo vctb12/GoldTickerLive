@@ -144,10 +144,13 @@
     color: #111;
     font-size: 11pt;
     line-height: 1.5;
-    font-family: Georgia, 'Times New Roman', serif;
+    font-family: 'Georgia', 'Times New Roman', serif;
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     break-after: avoid;
     color: #111;
   }

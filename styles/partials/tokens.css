@@ -6,7 +6,7 @@
 :root {
   /* ── Phase 1: Richer background layers — warm parchment ── */
   --color-bg: #fefcf7;
-  --color-surface: #ffffff;
+  --color-surface: #fff;
   --color-surface-2: #faf7ee;
   --color-surface-3: #f3eedd;
   --color-border: #e4d9c0;
@@ -112,7 +112,14 @@
   --elev-accent-strong: var(--shadow-gold-lg);
 
   /* ── Phase 4: Richer premium gradients ── */
-  --gradient-gold: linear-gradient(135deg, #966a1a 0%, #c4902e 30%, #ddb040 55%, #f0ca5c 75%, #c4902e 100%);
+  --gradient-gold: linear-gradient(
+    135deg,
+    #966a1a 0%,
+    #c4902e 30%,
+    #ddb040 55%,
+    #f0ca5c 75%,
+    #c4902e 100%
+  );
   --gradient-gold-subtle: linear-gradient(
     135deg,
     rgb(196 144 46 / 9%) 0%,
@@ -127,10 +134,10 @@
   );
   --gradient-dark: linear-gradient(155deg, #07080c 0%, #0e1220 50%, #07080c 100%);
   --gradient-hero-dark: linear-gradient(145deg, #07080c 0%, #0e1428 35%, #121830 65%, #07080c 100%);
-  --gradient-surface: linear-gradient(180deg, #ffffff 0%, #fefcf7 100%);
+  --gradient-surface: linear-gradient(180deg, #fff 0%, #fefcf7 100%);
   --gradient-paper: linear-gradient(180deg, #fefdf9 0%, #f9f4e8 100%);
   --gradient-hero-light: linear-gradient(160deg, #fefdf9 0%, #fbf7ed 40%, #f7f1e2 100%);
-  --gradient-card: linear-gradient(160deg, #ffffff 0%, #fdfaf3 100%);
+  --gradient-card: linear-gradient(160deg, #fff 0%, #fdfaf3 100%);
   --gradient-section-alt: linear-gradient(180deg, #faf7ee 0%, #fefcf7 100%);
 
   /* ── Phase 5: Enhanced gold foil rules ── */
@@ -153,7 +160,12 @@
     rgb(196 144 46 / 40%) 80%,
     transparent
   );
-  --foil-underline: linear-gradient(90deg, var(--color-gold-dark), var(--color-gold-bright), var(--color-gold-dark));
+  --foil-underline: linear-gradient(
+    90deg,
+    var(--color-gold-dark),
+    var(--color-gold-bright),
+    var(--color-gold-dark)
+  );
 
   /* ── Spacing scale ── */
   --space-1: 0.25rem;
