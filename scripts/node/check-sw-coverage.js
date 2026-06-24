@@ -45,24 +45,7 @@ const ENTRY_GLOB = (dir) =>
 const ALLOW_LIST = {
   '404.html': 'Error page; SW would self-cache before render. No need.',
   'offline.html': 'Served *by* the SW when network is down — must not register itself.',
-  'privacy.html': 'Static legal page, low value to cache. Tracked in §22b for follow-up.',
-  'terms.html': 'Static legal page, low value to cache. Tracked in §22b for follow-up.',
-  'pricing.html': 'Subscription page; SW caching could mask price changes. Intentionally skipped.',
   'design-lab.html': 'Internal noindex design-system proof page; not a public PWA surface.',
-
-  // ────────────────────────────────────────────────────────────────────
-  // Pre-existing baseline (before W-14 audit). These entry pages should
-  // ideally register the SW for offline support but currently do not.
-  // Tracked as follow-up in `reports/sw-coverage.md`. Removing an entry
-  // here without registering the SW will fail this check — the right
-  // fix is to add the registration snippet.
-  // ────────────────────────────────────────────────────────────────────
-  'calculator.html': 'TODO §22b — registration not yet wired; safe to add.',
-  'insights.html': 'TODO §22b — registration not yet wired; safe to add.',
-  'learn.html': 'TODO §22b — registration not yet wired; safe to add.',
-  'methodology.html': 'TODO §22b — registration not yet wired; safe to add.',
-  'shops.html': 'TODO §22b — registration not yet wired; safe to add.',
-  'tracker.html': 'TODO §22b — registration not yet wired; safe to add.',
 };
 
 // Modules that, when loaded as a `<script src=…>`, register the SW.

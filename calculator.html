@@ -771,6 +771,11 @@
     <!-- ═══════ AD: Rectangle (below calculator) ═══════ -->
     <div id="ad-bottom" class="ad-container" aria-label="Advertisement"></div>
 
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
     <script type="module" src="./src/pages/calculator.js"></script>
   </body>
 </html>

@@ -282,7 +282,7 @@
 
 /* ── Card ──────────────────────────────────────────── */
 .calc-card {
-  background: linear-gradient(180deg, var(--surface-primary) 0%, #fafaf8 100%);
+  background: linear-gradient(180deg, var(--surface-primary) 0%, var(--surface-secondary) 100%);
   border: 1.25px solid var(--border-default);
   border-radius: var(--radius-card);
   padding: var(--space-6);
@@ -402,7 +402,7 @@
 
 /* ── Result ────────────────────────────────────────── */
 .calc-result {
-  background: linear-gradient(135deg, var(--color-gold-bg) 0%, #faf7f0 100%);
+  background: linear-gradient(135deg, var(--color-gold-bg) 0%, var(--color-gold-tint) 100%);
   border: 1px solid var(--color-gold);
   border-radius: var(--radius-md);
   padding: 1.25rem;

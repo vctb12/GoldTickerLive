@@ -138,7 +138,7 @@
 
 .compare-karat-btn.is-active {
   background: var(--color-gold);
-  color: var(--color-black, #1a1a1a);
+  color: var(--color-on-gold);
 }
 
 .compare-select-block {
@@ -728,7 +728,7 @@
 
 .compare-karat-btn.is-active {
   background: var(--color-gold-dark);
-  color: #fff8e8;
+  color: var(--color-on-gold);
   box-shadow: var(--shadow-gold);
 }
 

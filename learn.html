@@ -349,6 +349,11 @@
       </section>
     </main>
 
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
     <script type="module" src="./src/pages/learn.js"></script>
   </body>
 </html>

@@ -312,6 +312,11 @@
       <div id="related-guides-slot"></div>
     </main>
 
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
     <script type="module" src="./src/pages/insights.js"></script>
   </body>
 </html>
