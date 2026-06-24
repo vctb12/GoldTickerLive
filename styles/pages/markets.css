@@ -320,11 +320,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse 55% 55% at 50% -5%,
-    rgb(196 144 46 / 9%) 0%,
-    transparent 62%
-  );
+  background: radial-gradient(ellipse 55% 55% at 50% -5%, rgb(196 144 46 / 9%) 0%, transparent 62%);
   pointer-events: none;
 }
 
@@ -393,6 +389,10 @@
   color: #fff8e8;
   box-shadow: var(--shadow-gold);
   font-weight: var(--weight-bold);
+}
+
+[data-theme='dark'] .markets-region-tab.is-active {
+  color: var(--color-on-gold);
 }
 
 .markets-region-tab:hover:not(.is-active) {

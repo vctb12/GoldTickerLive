@@ -989,11 +989,7 @@
 }
 
 .cp-table th {
-  background: linear-gradient(
-    180deg,
-    rgb(196 144 46 / 6%) 0%,
-    rgb(196 144 46 / 3%) 100%
-  );
+  background: linear-gradient(180deg, rgb(196 144 46 / 6%) 0%, rgb(196 144 46 / 3%) 100%);
   color: var(--text-tertiary);
   font-size: 0.68rem;
   letter-spacing: 0.07em;
@@ -1097,6 +1093,10 @@
   transition:
     transform var(--transition-fast),
     box-shadow var(--transition-fast);
+}
+
+[data-theme='dark'] .cp-mi-cta {
+  color: var(--color-on-gold);
 }
 
 .cp-mi-cta:hover {
