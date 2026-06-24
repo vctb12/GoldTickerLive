@@ -3155,30 +3155,6 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
   animation: none;
 }
 
-/* Only pulse when data is confirmed live — gate via data-state attribute */
-.ph-freshness-dot[data-state='live'] {
-  animation: freshness-dot-pulse 2.4s ease-in-out infinite;
-}
-
-@keyframes freshness-dot-pulse {
-  0%,
-  100% {
-    opacity: 1;
-    box-shadow: 0 0 0 0 rgb(26 122 50 / 40%);
-  }
-
-  50% {
-    opacity: 0.7;
-    box-shadow: 0 0 0 5px rgb(26 122 50 / 0%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ph-freshness-dot[data-state='live'] {
-    animation: none;
-  }
-}
-
 .ph-freshness-suffix {
   color: var(--text-tertiary);
   font-size: var(--text-2xs, 0.7rem);

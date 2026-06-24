@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-24T14:56:27.792Z",
+  "generatedAt": "2026-06-24T15:01:56.163Z",
   "summary": {
     "groups": {
       "core": 63,
@@ -59,123 +59,123 @@
         },
         {
           "path": "countries/algeria/algiers/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/algeria/algiers/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/algeria/constantine/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/algeria/constantine/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/algeria/index.html",
-          "words": 31
+          "words": 35
         },
         {
           "path": "countries/algeria/oran/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/algeria/oran/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/bahrain/index.html",
-          "words": 31
+          "words": 35
         },
         {
           "path": "countries/bahrain/manama/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/bahrain/manama/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/bahrain/muharraq/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/bahrain/muharraq/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/bahrain/rifaa/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/bahrain/rifaa/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/egypt/alexandria/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/egypt/alexandria/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/egypt/cairo/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/egypt/giza/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/egypt/giza/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/egypt/index.html",
-          "words": 33
+          "words": 37
         },
         {
           "path": "countries/india/chennai/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/india/chennai/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/india/delhi/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/india/delhi/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/india/index.html",
-          "words": 33
+          "words": 37
         },
         {
           "path": "countries/india/mumbai/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/india/mumbai/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/iraq/baghdad/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/iraq/basra/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/iraq/erbil/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/iraq/index.html",
@@ -183,171 +183,171 @@
         },
         {
           "path": "countries/jordan/amman/gold-rate/index.html",
-          "words": 48
-        },
-        {
-          "path": "countries/jordan/amman/gold-shops/index.html",
-          "words": 34
-        },
-        {
-          "path": "countries/jordan/index.html",
-          "words": 31
-        },
-        {
-          "path": "countries/jordan/irbid/gold-rate/index.html",
-          "words": 48
-        },
-        {
-          "path": "countries/jordan/irbid/gold-shops/index.html",
-          "words": 34
-        },
-        {
-          "path": "countries/jordan/zarqa/gold-rate/index.html",
-          "words": 48
-        },
-        {
-          "path": "countries/jordan/zarqa/gold-shops/index.html",
-          "words": 34
-        },
-        {
-          "path": "countries/kuwait/hawalli/gold-rate/index.html",
-          "words": 49
-        },
-        {
-          "path": "countries/kuwait/hawalli/gold-shops/index.html",
-          "words": 34
-        },
-        {
-          "path": "countries/kuwait/index.html",
-          "words": 34
-        },
-        {
-          "path": "countries/kuwait/kuwait-city/gold-rate/index.html",
           "words": 52
         },
         {
-          "path": "countries/kuwait/kuwait-city/gold-shops/index.html",
+          "path": "countries/jordan/amman/gold-shops/index.html",
           "words": 38
         },
         {
+          "path": "countries/jordan/index.html",
+          "words": 35
+        },
+        {
+          "path": "countries/jordan/irbid/gold-rate/index.html",
+          "words": 52
+        },
+        {
+          "path": "countries/jordan/irbid/gold-shops/index.html",
+          "words": 38
+        },
+        {
+          "path": "countries/jordan/zarqa/gold-rate/index.html",
+          "words": 52
+        },
+        {
+          "path": "countries/jordan/zarqa/gold-shops/index.html",
+          "words": 38
+        },
+        {
+          "path": "countries/kuwait/hawalli/gold-rate/index.html",
+          "words": 53
+        },
+        {
+          "path": "countries/kuwait/hawalli/gold-shops/index.html",
+          "words": 38
+        },
+        {
+          "path": "countries/kuwait/index.html",
+          "words": 38
+        },
+        {
+          "path": "countries/kuwait/kuwait-city/gold-rate/index.html",
+          "words": 56
+        },
+        {
+          "path": "countries/kuwait/kuwait-city/gold-shops/index.html",
+          "words": 42
+        },
+        {
           "path": "countries/kuwait/salmiya/gold-rate/index.html",
-          "words": 49
+          "words": 53
         },
         {
           "path": "countries/kuwait/salmiya/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/lebanon/beirut/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/lebanon/beirut/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/lebanon/index.html",
-          "words": 31
+          "words": 35
         },
         {
           "path": "countries/lebanon/sidon/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/lebanon/sidon/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/lebanon/tripoli/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/lebanon/tripoli/gold-shops/index.html",
-          "words": 35
+          "words": 39
         },
         {
           "path": "countries/libya/benghazi/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/libya/benghazi/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/libya/index.html",
-          "words": 31
-        },
-        {
-          "path": "countries/libya/misrata/gold-rate/index.html",
-          "words": 48
-        },
-        {
-          "path": "countries/libya/misrata/gold-shops/index.html",
-          "words": 34
-        },
-        {
-          "path": "countries/libya/tripoli/gold-rate/index.html",
-          "words": 48
-        },
-        {
-          "path": "countries/libya/tripoli/gold-shops/index.html",
           "words": 35
         },
         {
+          "path": "countries/libya/misrata/gold-rate/index.html",
+          "words": 52
+        },
+        {
+          "path": "countries/libya/misrata/gold-shops/index.html",
+          "words": 38
+        },
+        {
+          "path": "countries/libya/tripoli/gold-rate/index.html",
+          "words": 52
+        },
+        {
+          "path": "countries/libya/tripoli/gold-shops/index.html",
+          "words": 39
+        },
+        {
           "path": "countries/morocco/casablanca/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/morocco/casablanca/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/morocco/index.html",
-          "words": 31
+          "words": 35
         },
         {
           "path": "countries/morocco/marrakech/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/morocco/marrakech/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/morocco/rabat/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/morocco/rabat/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/oman/index.html",
-          "words": 31
+          "words": 35
         },
         {
           "path": "countries/oman/muscat/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/oman/muscat/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/oman/salalah/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/oman/salalah/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/oman/sohar/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/oman/sohar/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/pakistan/index.html",
@@ -355,19 +355,19 @@
         },
         {
           "path": "countries/pakistan/islamabad/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/pakistan/karachi/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/pakistan/lahore/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/palestine/gaza/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/palestine/index.html",
@@ -375,115 +375,115 @@
         },
         {
           "path": "countries/palestine/nablus/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/palestine/ramallah/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/qatar/al-rayyan/gold-rate/index.html",
-          "words": 53
+          "words": 57
         },
         {
           "path": "countries/qatar/al-rayyan/gold-shops/index.html",
-          "words": 38
+          "words": 42
         },
         {
           "path": "countries/qatar/al-wakrah/gold-rate/index.html",
-          "words": 53
+          "words": 57
         },
         {
           "path": "countries/qatar/al-wakrah/gold-shops/index.html",
-          "words": 38
+          "words": 42
         },
         {
           "path": "countries/qatar/doha/gold-shops/index.html",
-          "words": 34
-        },
-        {
-          "path": "countries/qatar/index.html",
-          "words": 34
-        },
-        {
-          "path": "countries/saudi-arabia/dammam/gold-rate/index.html",
-          "words": 52
-        },
-        {
-          "path": "countries/saudi-arabia/dammam/gold-shops/index.html",
-          "words": 35
-        },
-        {
-          "path": "countries/saudi-arabia/index.html",
-          "words": 36
-        },
-        {
-          "path": "countries/saudi-arabia/jeddah/gold-rate/index.html",
-          "words": 52
-        },
-        {
-          "path": "countries/saudi-arabia/jeddah/gold-shops/index.html",
-          "words": 35
-        },
-        {
-          "path": "countries/saudi-arabia/mecca/gold-rate/index.html",
-          "words": 52
-        },
-        {
-          "path": "countries/saudi-arabia/mecca/gold-shops/index.html",
-          "words": 35
-        },
-        {
-          "path": "countries/saudi-arabia/medina/gold-rate/index.html",
-          "words": 52
-        },
-        {
-          "path": "countries/saudi-arabia/medina/gold-shops/index.html",
-          "words": 35
-        },
-        {
-          "path": "countries/saudi-arabia/riyadh/gold-shops/index.html",
-          "words": 35
-        },
-        {
-          "path": "countries/sudan/index.html",
-          "words": 31
-        },
-        {
-          "path": "countries/sudan/khartoum/gold-rate/index.html",
-          "words": 49
-        },
-        {
-          "path": "countries/sudan/khartoum/gold-shops/index.html",
-          "words": 34
-        },
-        {
-          "path": "countries/sudan/omdurman/gold-rate/index.html",
-          "words": 49
-        },
-        {
-          "path": "countries/sudan/omdurman/gold-shops/index.html",
-          "words": 34
-        },
-        {
-          "path": "countries/sudan/port-sudan/gold-rate/index.html",
-          "words": 52
-        },
-        {
-          "path": "countries/sudan/port-sudan/gold-shops/index.html",
           "words": 38
         },
         {
+          "path": "countries/qatar/index.html",
+          "words": 38
+        },
+        {
+          "path": "countries/saudi-arabia/dammam/gold-rate/index.html",
+          "words": 56
+        },
+        {
+          "path": "countries/saudi-arabia/dammam/gold-shops/index.html",
+          "words": 39
+        },
+        {
+          "path": "countries/saudi-arabia/index.html",
+          "words": 40
+        },
+        {
+          "path": "countries/saudi-arabia/jeddah/gold-rate/index.html",
+          "words": 56
+        },
+        {
+          "path": "countries/saudi-arabia/jeddah/gold-shops/index.html",
+          "words": 39
+        },
+        {
+          "path": "countries/saudi-arabia/mecca/gold-rate/index.html",
+          "words": 56
+        },
+        {
+          "path": "countries/saudi-arabia/mecca/gold-shops/index.html",
+          "words": 39
+        },
+        {
+          "path": "countries/saudi-arabia/medina/gold-rate/index.html",
+          "words": 56
+        },
+        {
+          "path": "countries/saudi-arabia/medina/gold-shops/index.html",
+          "words": 39
+        },
+        {
+          "path": "countries/saudi-arabia/riyadh/gold-shops/index.html",
+          "words": 39
+        },
+        {
+          "path": "countries/sudan/index.html",
+          "words": 35
+        },
+        {
+          "path": "countries/sudan/khartoum/gold-rate/index.html",
+          "words": 53
+        },
+        {
+          "path": "countries/sudan/khartoum/gold-shops/index.html",
+          "words": 38
+        },
+        {
+          "path": "countries/sudan/omdurman/gold-rate/index.html",
+          "words": 53
+        },
+        {
+          "path": "countries/sudan/omdurman/gold-shops/index.html",
+          "words": 38
+        },
+        {
+          "path": "countries/sudan/port-sudan/gold-rate/index.html",
+          "words": 56
+        },
+        {
+          "path": "countries/sudan/port-sudan/gold-shops/index.html",
+          "words": 42
+        },
+        {
           "path": "countries/syria/aleppo/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/syria/damascus/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/syria/homs/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/syria/index.html",
@@ -491,35 +491,35 @@
         },
         {
           "path": "countries/tunisia/index.html",
-          "words": 31
+          "words": 35
         },
         {
           "path": "countries/tunisia/sfax/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/tunisia/sfax/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/tunisia/sousse/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/tunisia/sousse/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/tunisia/tunis/gold-rate/index.html",
-          "words": 48
+          "words": 52
         },
         {
           "path": "countries/tunisia/tunis/gold-shops/index.html",
-          "words": 34
+          "words": 38
         },
         {
           "path": "countries/turkey/ankara/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/turkey/index.html",
@@ -527,71 +527,71 @@
         },
         {
           "path": "countries/turkey/istanbul/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/turkey/izmir/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/uae/abu-dhabi/gold-rate/index.html",
-          "words": 60
+          "words": 64
         },
         {
           "path": "countries/uae/abu-dhabi/gold-shops/index.html",
-          "words": 40
+          "words": 44
         },
         {
           "path": "countries/uae/ajman/gold-rate/index.html",
-          "words": 57
+          "words": 61
         },
         {
           "path": "countries/uae/ajman/gold-shops/index.html",
-          "words": 36
+          "words": 40
         },
         {
           "path": "countries/uae/dubai/gold-shops/index.html",
-          "words": 36
+          "words": 40
         },
         {
           "path": "countries/uae/fujairah/gold-rate/index.html",
-          "words": 55
+          "words": 59
         },
         {
           "path": "countries/uae/fujairah/gold-shops/index.html",
-          "words": 36
+          "words": 40
         },
         {
           "path": "countries/uae/index.html",
-          "words": 56
+          "words": 60
         },
         {
           "path": "countries/uae/ras-al-khaimah/gold-rate/index.html",
-          "words": 63
+          "words": 67
         },
         {
           "path": "countries/uae/ras-al-khaimah/gold-shops/index.html",
-          "words": 44
+          "words": 48
         },
         {
           "path": "countries/uae/sharjah/gold-rate/index.html",
-          "words": 57
+          "words": 61
         },
         {
           "path": "countries/uae/sharjah/gold-shops/index.html",
-          "words": 36
+          "words": 40
         },
         {
           "path": "countries/uae/umm-al-quwain/gold-rate/index.html",
-          "words": 63
+          "words": 67
         },
         {
           "path": "countries/uae/umm-al-quwain/gold-shops/index.html",
-          "words": 44
+          "words": 48
         },
         {
           "path": "countries/yemen/aden/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/yemen/index.html",
@@ -599,11 +599,11 @@
         },
         {
           "path": "countries/yemen/sanaa/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "countries/yemen/taiz/gold-shops/index.html",
-          "words": 59
+          "words": 63
         },
         {
           "path": "dashboard.html",
@@ -1847,7 +1847,7 @@
       "canonical": "https://goldtickerlive.com/countries/algeria/algiers/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1862,7 +1862,7 @@
       "canonical": "https://goldtickerlive.com/countries/algeria/algiers/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1892,7 +1892,7 @@
       "canonical": "https://goldtickerlive.com/countries/algeria/constantine/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1907,7 +1907,7 @@
       "canonical": "https://goldtickerlive.com/countries/algeria/constantine/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1952,7 +1952,7 @@
       "canonical": "https://goldtickerlive.com/countries/algeria/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 31,
+      "wordCount": 35,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1967,7 +1967,7 @@
       "canonical": "https://goldtickerlive.com/countries/algeria/oran/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1982,7 +1982,7 @@
       "canonical": "https://goldtickerlive.com/countries/algeria/oran/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2027,7 +2027,7 @@
       "canonical": "https://goldtickerlive.com/countries/bahrain/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 31,
+      "wordCount": 35,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2042,7 +2042,7 @@
       "canonical": "https://goldtickerlive.com/countries/bahrain/manama/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2057,7 +2057,7 @@
       "canonical": "https://goldtickerlive.com/countries/bahrain/manama/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2087,7 +2087,7 @@
       "canonical": "https://goldtickerlive.com/countries/bahrain/muharraq/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2102,7 +2102,7 @@
       "canonical": "https://goldtickerlive.com/countries/bahrain/muharraq/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2132,7 +2132,7 @@
       "canonical": "https://goldtickerlive.com/countries/bahrain/rifaa/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2147,7 +2147,7 @@
       "canonical": "https://goldtickerlive.com/countries/bahrain/rifaa/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2177,7 +2177,7 @@
       "canonical": "https://goldtickerlive.com/countries/egypt/alexandria/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2192,7 +2192,7 @@
       "canonical": "https://goldtickerlive.com/countries/egypt/alexandria/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2222,7 +2222,7 @@
       "canonical": "https://goldtickerlive.com/countries/egypt/cairo/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 323,
+      "wordCount": 327,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2237,7 +2237,7 @@
       "canonical": "https://goldtickerlive.com/countries/egypt/cairo/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2267,7 +2267,7 @@
       "canonical": "https://goldtickerlive.com/countries/egypt/cities/cairo.html",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 707,
+      "wordCount": 711,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2282,7 +2282,7 @@
       "canonical": "https://goldtickerlive.com/countries/egypt/cities/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 58,
+      "wordCount": 62,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2297,7 +2297,7 @@
       "canonical": "https://goldtickerlive.com/countries/egypt/giza/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2312,7 +2312,7 @@
       "canonical": "https://goldtickerlive.com/countries/egypt/giza/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2357,7 +2357,7 @@
       "canonical": "https://goldtickerlive.com/countries/egypt/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 33,
+      "wordCount": 37,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2372,7 +2372,7 @@
       "canonical": "https://goldtickerlive.com/countries/egypt/markets/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 54,
+      "wordCount": 58,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2387,7 +2387,7 @@
       "canonical": "https://goldtickerlive.com/countries/egypt/markets/khan-el-khalili-cairo.html",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 941,
+      "wordCount": 945,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2417,7 +2417,7 @@
       "canonical": "https://goldtickerlive.com/countries/india/chennai/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2432,7 +2432,7 @@
       "canonical": "https://goldtickerlive.com/countries/india/chennai/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2462,7 +2462,7 @@
       "canonical": "https://goldtickerlive.com/countries/india/delhi/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2477,7 +2477,7 @@
       "canonical": "https://goldtickerlive.com/countries/india/delhi/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2522,7 +2522,7 @@
       "canonical": "https://goldtickerlive.com/countries/india/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 33,
+      "wordCount": 37,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2537,7 +2537,7 @@
       "canonical": "https://goldtickerlive.com/countries/india/mumbai/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2552,7 +2552,7 @@
       "canonical": "https://goldtickerlive.com/countries/india/mumbai/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2582,7 +2582,7 @@
       "canonical": "https://goldtickerlive.com/countries/iraq/baghdad/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 279,
+      "wordCount": 283,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2597,7 +2597,7 @@
       "canonical": "https://goldtickerlive.com/countries/iraq/baghdad/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2627,7 +2627,7 @@
       "canonical": "https://goldtickerlive.com/countries/iraq/basra/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 253,
+      "wordCount": 257,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2642,7 +2642,7 @@
       "canonical": "https://goldtickerlive.com/countries/iraq/basra/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2672,7 +2672,7 @@
       "canonical": "https://goldtickerlive.com/countries/iraq/erbil/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 262,
+      "wordCount": 266,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2687,7 +2687,7 @@
       "canonical": "https://goldtickerlive.com/countries/iraq/erbil/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2747,7 +2747,7 @@
       "canonical": "https://goldtickerlive.com/countries/jordan/amman/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2762,7 +2762,7 @@
       "canonical": "https://goldtickerlive.com/countries/jordan/amman/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2807,7 +2807,7 @@
       "canonical": "https://goldtickerlive.com/countries/jordan/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 31,
+      "wordCount": 35,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2822,7 +2822,7 @@
       "canonical": "https://goldtickerlive.com/countries/jordan/irbid/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2837,7 +2837,7 @@
       "canonical": "https://goldtickerlive.com/countries/jordan/irbid/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2867,7 +2867,7 @@
       "canonical": "https://goldtickerlive.com/countries/jordan/zarqa/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2882,7 +2882,7 @@
       "canonical": "https://goldtickerlive.com/countries/jordan/zarqa/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2927,7 +2927,7 @@
       "canonical": "https://goldtickerlive.com/countries/kuwait/hawalli/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 49,
+      "wordCount": 53,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2942,7 +2942,7 @@
       "canonical": "https://goldtickerlive.com/countries/kuwait/hawalli/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2972,7 +2972,7 @@
       "canonical": "https://goldtickerlive.com/countries/kuwait/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2987,7 +2987,7 @@
       "canonical": "https://goldtickerlive.com/countries/kuwait/kuwait-city/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 56,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3002,7 +3002,7 @@
       "canonical": "https://goldtickerlive.com/countries/kuwait/kuwait-city/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 38,
+      "wordCount": 42,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3032,7 +3032,7 @@
       "canonical": "https://goldtickerlive.com/countries/kuwait/salmiya/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 49,
+      "wordCount": 53,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3047,7 +3047,7 @@
       "canonical": "https://goldtickerlive.com/countries/kuwait/salmiya/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3077,7 +3077,7 @@
       "canonical": "https://goldtickerlive.com/countries/lebanon/beirut/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3092,7 +3092,7 @@
       "canonical": "https://goldtickerlive.com/countries/lebanon/beirut/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3137,7 +3137,7 @@
       "canonical": "https://goldtickerlive.com/countries/lebanon/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 31,
+      "wordCount": 35,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3152,7 +3152,7 @@
       "canonical": "https://goldtickerlive.com/countries/lebanon/sidon/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3167,7 +3167,7 @@
       "canonical": "https://goldtickerlive.com/countries/lebanon/sidon/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3197,7 +3197,7 @@
       "canonical": "https://goldtickerlive.com/countries/lebanon/tripoli/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3212,7 +3212,7 @@
       "canonical": "https://goldtickerlive.com/countries/lebanon/tripoli/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 35,
+      "wordCount": 39,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3242,7 +3242,7 @@
       "canonical": "https://goldtickerlive.com/countries/libya/benghazi/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3257,7 +3257,7 @@
       "canonical": "https://goldtickerlive.com/countries/libya/benghazi/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3302,7 +3302,7 @@
       "canonical": "https://goldtickerlive.com/countries/libya/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 31,
+      "wordCount": 35,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3317,7 +3317,7 @@
       "canonical": "https://goldtickerlive.com/countries/libya/misrata/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3332,7 +3332,7 @@
       "canonical": "https://goldtickerlive.com/countries/libya/misrata/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3362,7 +3362,7 @@
       "canonical": "https://goldtickerlive.com/countries/libya/tripoli/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3377,7 +3377,7 @@
       "canonical": "https://goldtickerlive.com/countries/libya/tripoli/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 35,
+      "wordCount": 39,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3407,7 +3407,7 @@
       "canonical": "https://goldtickerlive.com/countries/morocco/casablanca/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3422,7 +3422,7 @@
       "canonical": "https://goldtickerlive.com/countries/morocco/casablanca/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3467,7 +3467,7 @@
       "canonical": "https://goldtickerlive.com/countries/morocco/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 31,
+      "wordCount": 35,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3482,7 +3482,7 @@
       "canonical": "https://goldtickerlive.com/countries/morocco/marrakech/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3497,7 +3497,7 @@
       "canonical": "https://goldtickerlive.com/countries/morocco/marrakech/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3527,7 +3527,7 @@
       "canonical": "https://goldtickerlive.com/countries/morocco/rabat/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3542,7 +3542,7 @@
       "canonical": "https://goldtickerlive.com/countries/morocco/rabat/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3587,7 +3587,7 @@
       "canonical": "https://goldtickerlive.com/countries/oman/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 31,
+      "wordCount": 35,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3602,7 +3602,7 @@
       "canonical": "https://goldtickerlive.com/countries/oman/muscat/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3617,7 +3617,7 @@
       "canonical": "https://goldtickerlive.com/countries/oman/muscat/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3647,7 +3647,7 @@
       "canonical": "https://goldtickerlive.com/countries/oman/salalah/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3662,7 +3662,7 @@
       "canonical": "https://goldtickerlive.com/countries/oman/salalah/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3692,7 +3692,7 @@
       "canonical": "https://goldtickerlive.com/countries/oman/sohar/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3707,7 +3707,7 @@
       "canonical": "https://goldtickerlive.com/countries/oman/sohar/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3767,7 +3767,7 @@
       "canonical": "https://goldtickerlive.com/countries/pakistan/islamabad/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 223,
+      "wordCount": 227,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3782,7 +3782,7 @@
       "canonical": "https://goldtickerlive.com/countries/pakistan/islamabad/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3812,7 +3812,7 @@
       "canonical": "https://goldtickerlive.com/countries/pakistan/karachi/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 265,
+      "wordCount": 269,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3827,7 +3827,7 @@
       "canonical": "https://goldtickerlive.com/countries/pakistan/karachi/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3857,7 +3857,7 @@
       "canonical": "https://goldtickerlive.com/countries/pakistan/lahore/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 225,
+      "wordCount": 229,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3872,7 +3872,7 @@
       "canonical": "https://goldtickerlive.com/countries/pakistan/lahore/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3902,7 +3902,7 @@
       "canonical": "https://goldtickerlive.com/countries/palestine/gaza/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 223,
+      "wordCount": 227,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3917,7 +3917,7 @@
       "canonical": "https://goldtickerlive.com/countries/palestine/gaza/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3977,7 +3977,7 @@
       "canonical": "https://goldtickerlive.com/countries/palestine/nablus/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 223,
+      "wordCount": 227,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3992,7 +3992,7 @@
       "canonical": "https://goldtickerlive.com/countries/palestine/nablus/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4022,7 +4022,7 @@
       "canonical": "https://goldtickerlive.com/countries/palestine/ramallah/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 229,
+      "wordCount": 233,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4037,7 +4037,7 @@
       "canonical": "https://goldtickerlive.com/countries/palestine/ramallah/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4067,7 +4067,7 @@
       "canonical": "https://goldtickerlive.com/countries/qatar/al-rayyan/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 53,
+      "wordCount": 57,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4082,7 +4082,7 @@
       "canonical": "https://goldtickerlive.com/countries/qatar/al-rayyan/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 38,
+      "wordCount": 42,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4112,7 +4112,7 @@
       "canonical": "https://goldtickerlive.com/countries/qatar/al-wakrah/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 53,
+      "wordCount": 57,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4127,7 +4127,7 @@
       "canonical": "https://goldtickerlive.com/countries/qatar/al-wakrah/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 38,
+      "wordCount": 42,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4157,7 +4157,7 @@
       "canonical": "https://goldtickerlive.com/countries/qatar/cities/doha.html",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 651,
+      "wordCount": 655,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4172,7 +4172,7 @@
       "canonical": "https://goldtickerlive.com/countries/qatar/cities/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 62,
+      "wordCount": 66,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4187,7 +4187,7 @@
       "canonical": "https://goldtickerlive.com/countries/qatar/doha/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 332,
+      "wordCount": 336,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4202,7 +4202,7 @@
       "canonical": "https://goldtickerlive.com/countries/qatar/doha/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4247,7 +4247,7 @@
       "canonical": "https://goldtickerlive.com/countries/qatar/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4262,7 +4262,7 @@
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/cities/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 80,
+      "wordCount": 84,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4277,7 +4277,7 @@
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/cities/riyadh.html",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 685,
+      "wordCount": 689,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4292,7 +4292,7 @@
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/dammam/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 56,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4307,7 +4307,7 @@
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/dammam/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 35,
+      "wordCount": 39,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4352,7 +4352,7 @@
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 36,
+      "wordCount": 40,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4367,7 +4367,7 @@
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/jeddah/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 56,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4382,7 +4382,7 @@
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/jeddah/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 35,
+      "wordCount": 39,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4412,7 +4412,7 @@
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/mecca/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 56,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4427,7 +4427,7 @@
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/mecca/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 35,
+      "wordCount": 39,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4457,7 +4457,7 @@
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/medina/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 56,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4472,7 +4472,7 @@
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/medina/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 35,
+      "wordCount": 39,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4502,7 +4502,7 @@
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/riyadh/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 326,
+      "wordCount": 330,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4517,7 +4517,7 @@
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/riyadh/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 35,
+      "wordCount": 39,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4562,7 +4562,7 @@
       "canonical": "https://goldtickerlive.com/countries/sudan/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 31,
+      "wordCount": 35,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4577,7 +4577,7 @@
       "canonical": "https://goldtickerlive.com/countries/sudan/khartoum/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 49,
+      "wordCount": 53,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4592,7 +4592,7 @@
       "canonical": "https://goldtickerlive.com/countries/sudan/khartoum/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4622,7 +4622,7 @@
       "canonical": "https://goldtickerlive.com/countries/sudan/omdurman/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 49,
+      "wordCount": 53,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4637,7 +4637,7 @@
       "canonical": "https://goldtickerlive.com/countries/sudan/omdurman/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4667,7 +4667,7 @@
       "canonical": "https://goldtickerlive.com/countries/sudan/port-sudan/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 56,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4682,7 +4682,7 @@
       "canonical": "https://goldtickerlive.com/countries/sudan/port-sudan/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 38,
+      "wordCount": 42,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4712,7 +4712,7 @@
       "canonical": "https://goldtickerlive.com/countries/syria/aleppo/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 228,
+      "wordCount": 232,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4727,7 +4727,7 @@
       "canonical": "https://goldtickerlive.com/countries/syria/aleppo/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4757,7 +4757,7 @@
       "canonical": "https://goldtickerlive.com/countries/syria/damascus/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 246,
+      "wordCount": 250,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4772,7 +4772,7 @@
       "canonical": "https://goldtickerlive.com/countries/syria/damascus/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4817,7 +4817,7 @@
       "canonical": "https://goldtickerlive.com/countries/syria/homs/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 223,
+      "wordCount": 227,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4832,7 +4832,7 @@
       "canonical": "https://goldtickerlive.com/countries/syria/homs/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4892,7 +4892,7 @@
       "canonical": "https://goldtickerlive.com/countries/tunisia/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 31,
+      "wordCount": 35,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4907,7 +4907,7 @@
       "canonical": "https://goldtickerlive.com/countries/tunisia/sfax/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4922,7 +4922,7 @@
       "canonical": "https://goldtickerlive.com/countries/tunisia/sfax/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4952,7 +4952,7 @@
       "canonical": "https://goldtickerlive.com/countries/tunisia/sousse/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4967,7 +4967,7 @@
       "canonical": "https://goldtickerlive.com/countries/tunisia/sousse/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4997,7 +4997,7 @@
       "canonical": "https://goldtickerlive.com/countries/tunisia/tunis/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5012,7 +5012,7 @@
       "canonical": "https://goldtickerlive.com/countries/tunisia/tunis/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 34,
+      "wordCount": 38,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5042,7 +5042,7 @@
       "canonical": "https://goldtickerlive.com/countries/turkey/ankara/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 217,
+      "wordCount": 221,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5057,7 +5057,7 @@
       "canonical": "https://goldtickerlive.com/countries/turkey/ankara/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5117,7 +5117,7 @@
       "canonical": "https://goldtickerlive.com/countries/turkey/istanbul/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 263,
+      "wordCount": 267,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5132,7 +5132,7 @@
       "canonical": "https://goldtickerlive.com/countries/turkey/istanbul/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5162,7 +5162,7 @@
       "canonical": "https://goldtickerlive.com/countries/turkey/izmir/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 217,
+      "wordCount": 221,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5177,7 +5177,7 @@
       "canonical": "https://goldtickerlive.com/countries/turkey/izmir/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5207,7 +5207,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/abu-dhabi/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 60,
+      "wordCount": 64,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5222,7 +5222,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/abu-dhabi/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 40,
+      "wordCount": 44,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5252,7 +5252,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/ajman/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 57,
+      "wordCount": 61,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5267,7 +5267,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/ajman/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 36,
+      "wordCount": 40,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5297,7 +5297,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/cities/abu-dhabi.html",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 580,
+      "wordCount": 584,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5312,7 +5312,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/cities/dubai.html",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 730,
+      "wordCount": 734,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5327,7 +5327,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/cities/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 112,
+      "wordCount": 116,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5342,7 +5342,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/dubai/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 333,
+      "wordCount": 337,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5357,7 +5357,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/dubai/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 36,
+      "wordCount": 40,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5387,7 +5387,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/fujairah/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 55,
+      "wordCount": 59,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5402,7 +5402,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/fujairah/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 36,
+      "wordCount": 40,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5447,7 +5447,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 56,
+      "wordCount": 60,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5462,7 +5462,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/markets/dubai-gold-souk.html",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 973,
+      "wordCount": 977,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5477,7 +5477,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/markets/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 108,
+      "wordCount": 112,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5492,7 +5492,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/ras-al-khaimah/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 67,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5507,7 +5507,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/ras-al-khaimah/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 44,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5537,7 +5537,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/sharjah/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 57,
+      "wordCount": 61,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5552,7 +5552,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/sharjah/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 36,
+      "wordCount": 40,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5582,7 +5582,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/umm-al-quwain/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 67,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5597,7 +5597,7 @@
       "canonical": "https://goldtickerlive.com/countries/uae/umm-al-quwain/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 44,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5627,7 +5627,7 @@
       "canonical": "https://goldtickerlive.com/countries/yemen/aden/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 230,
+      "wordCount": 234,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5642,7 +5642,7 @@
       "canonical": "https://goldtickerlive.com/countries/yemen/aden/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5702,7 +5702,7 @@
       "canonical": "https://goldtickerlive.com/countries/yemen/sanaa/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 259,
+      "wordCount": 263,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5717,7 +5717,7 @@
       "canonical": "https://goldtickerlive.com/countries/yemen/sanaa/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5747,7 +5747,7 @@
       "canonical": "https://goldtickerlive.com/countries/yemen/taiz/gold-rate/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 212,
+      "wordCount": 216,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5762,7 +5762,7 @@
       "canonical": "https://goldtickerlive.com/countries/yemen/taiz/gold-shops/",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 63,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
