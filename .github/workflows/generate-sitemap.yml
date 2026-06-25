@@ -35,5 +35,10 @@ jobs:
           git config user.email "action@github.com"
           git config user.name "GitHub Actions"
           git add -f public/sitemap.xml
-          git diff --staged --quiet || git commit -m "chore: regenerate sitemap"
+          if git diff --staged --quiet; then
+            echo "Sitemap unchanged; nothing to push."
+            exit 0
+          fi
+          git commit -m "chore: regenerate sitemap"
+          git pull --rebase origin "${GITHUB_REF_NAME:-main}"
           git push
