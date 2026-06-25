@@ -25,3 +25,29 @@
 | 16 — Tracker onboarding EN/AR parity                             | GREEN | ✅                         | 1081 ✓ (eslint, no dangling refs)  | `tracker.html`, `src/pages/tracker-pro.js`                    |
 | 18 — Reduced-motion completeness                                 | GREEN | ✅                         | 1081 ✓ (stylelint)                 | `styles/pages/home.css`                                       |
 | 23 — 360px GCC grid (verified false-positive; dead code removed) | GREEN | ✅                         | 1081 ✓ (stylelint)                 | `styles/pages/home.css`                                       |
+
+### Queued GREEN phases (not yet executed this run)
+
+Tracked for continuation — all are independent, test-gated, and revertible. Pick up in numeric
+order:
+
+- **17** — i18n the tracker's residual hardcoded strings (workspace toggle + ~17 `showToast`
+  literals + 2 badge placeholders) via `translations.js` + `trackerTx`.
+- **19–21** — RTL logical-property sweeps (home / tracker / shops page CSS).
+- **22** — touch-target 44px floor (`.gcc-region-tab` 38px→44px, tracker chips/tabs).
+- **24** — tracker mobile label floor (≥13px on sub-0.8rem labels).
+- **25** — fix `DESIGN_TOKENS.md` drift + auto-generate from `tokens.css`.
+- **26** — stylelint guard: ban raw hex/rgb + off-scale spacing outside tokens.
+- **27–28** — bring `invest.css` / `methodology.css` into the token system.
+- **29** — consolidate duplicate `prefers-color-scheme` blocks (8 files).
+- **30–31** — spacing half-steps + rhythm; breakpoint tokens.
+- **32** — homepage hierarchy / section consolidation.
+- **33–34** — component-token layer; country/city premium pass.
+- **35** — shop card/directory redesign (finish BUILD 7).
+- **36–38** — split mega CSS files; semantic section headers; `!important` audit.
+- **39–42, 44, 45** — SEO depth: gold-shops stubs noindex/redirect; enrich thin gold-rate pages;
+  acronym breadcrumb humanizer (`Uae`→`UAE`); leaf internal links + visible breadcrumbs; expand thin
+  content hubs; freshness-language precision.
+- **47** — observability: notify-on-failure across workflows. | 43,46,48 — AR path / GDPR /
+  automation durability | RED | 🟥 staged | n/a (proposals) | `OWNER_REVIEW.md` | | 49,50 —
+  multi-metal / API+portfolio+push | SKIP | ⏭️ spec | n/a | `OWNER_REVIEW.md` |

@@ -219,3 +219,62 @@ to capture a **real** measured baseline, then flip perf/a11y assertions from `wa
 thresholds the live site actually meets. **Why staged.** Flipping to `error` against estimated
 numbers would fail CI on inaccurate thresholds. **Apply.** Run `lhci autorun` on a deploy preview;
 set thresholds from real medians; change `warn`→`error`. **Rollback.** Revert to `warn`.
+
+---
+
+## Phase 43 — Unify AR on /ar/ path + reciprocal hreflang 🟥 STAGED (SEO-critical, large)
+
+**What & why.** Split-brain bilingual setup: ~127 pages point their AR hreflang at `?lang=ar` (a
+client-side JS toggle over identical EN HTML), while a real `/ar/` path scheme exists for only ~6
+pages. Google sees duplicates and ignores hreflang; AR has no indexable surface for most pages.
+**Proposed.** Standardize on the `/ar/` path scheme; generate real AR documents for the top
+country/karat pages; emit reciprocal `hreflang` only where a distinct `/ar/` URL exists. **Why
+staged.** Large; touches canonicals/hreflang (SEO-critical — needs owner sign-off per the
+technical-SEO policy). **Apply.** Generator + `countries/country-page.js` changes + AR content
+generation; verify hreflang reciprocity and canonical correctness. **Rollback.** Revert generator
+changes.
+
+---
+
+## Phase 46 — GDPR export/delete for stored PII 🟥 STAGED (touches PII)
+
+**What & why.** No user-facing export/delete path for stored PII (`orders.customer`,
+`lead_submissions`, `newsletter_subscribers`). **Proposed.** Server endpoints (service-role gated)
+to export and delete a user's data, plus an admin action; or a documented manual runbook until the
+Express tier is deployed. **Why staged.** Touches PII + server + RLS. **Apply.** Implement endpoints
+with owner/service-role auth and RLS-safe queries; document retention. **Rollback.** Revert
+endpoints.
+
+---
+
+## Phase 48 — Automation durability 🟥 STAGED (production-critical: post_gold)
+
+**What & why.** `scripts/python/tweet_guard.py` silently resets to empty state on a corrupt state
+file (duplicate-post risk); in `post_gold.yml`, if the post succeeds but the state-commit push
+fails, the guard state lags (possible double-post). **Proposed.** On corrupt state, back up to
+`.bak` + emit a loud step-summary warning before recovering; reconcile the last tweet from X (or
+commit state atomically with posting). **Why staged.** Production-critical X automation — owner
+sign-off + dry-run required. **Apply.** Edit `tweet_guard.py` + `post_gold.yml`; dry-run before
+merge. **Rollback.** Revert the commits.
+
+---
+
+## Phase 49 — Multi-metal (silver / platinum / palladium) ⏭️ SPEC ONLY
+
+**Spec.** Add silver/platinum/palladium as parallel **reference** metals (never blended with
+retail). Reuse `src/lib/price-calculator.js` with per-metal purity factors; extend the data pipeline
+(`fetch_gold_price.py` → multi-metal source fields, new JSON shape) with the same freshness/failover
+contract; add a metal switch in the tracker/home UI; per-metal purity tables; EN/AR strings via
+`translations.js`; per-metal SEO pages. **Scope:** large (data + pricing + UI + SEO + automation).
+Keep AED peg 3.6725 / troy oz 31.1035 frozen. **No code this run.**
+
+---
+
+## Phase 50 — Public API + portfolio/watchlist + web-push ⏭️ SPEC ONLY
+
+**Spec.** (a) Public read-only developer API `/api/v1/*` (price + history) using the existing
+`api_keys` / `api_usage` tables, server-issued keys, and per-key rate limits; (b)
+portfolio/watchlist backed by the existing Supabase `watchlists` / `saved_calculations` tables under
+user auth (RLS already uid-scoped); (c) web-push notifications beyond browser alerts via
+`notification_subscriptions`. **Scope:** large (backend + auth + infra; depends on the Express tier
+being deployed and on RLS lockdown from Phase 1). **No code this run.**
