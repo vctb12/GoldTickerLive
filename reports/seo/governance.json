@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-25T16:08:41.035Z",
+  "generatedAt": "2026-06-25T16:24:35.045Z",
   "summary": {
     "groups": {
       "core": 63,
@@ -1022,7 +1022,7 @@
       "canonical": "https://goldtickerlive.com/calculator.html",
       "hreflangs": ["x-default", "en", "ar"],
       "hasSchema": true,
-      "wordCount": 720,
+      "wordCount": 721,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
