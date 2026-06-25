@@ -195,7 +195,9 @@
   }
 
   .hero-badge-dot,
-  .hlc-market--open::before {
+  .hlc-market--open::before,
+  .hlc-spark-dot,
+  .hlc-updated[data-freshness-key='live']::before {
     animation: none;
   }
 }
