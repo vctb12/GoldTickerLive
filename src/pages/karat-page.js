@@ -90,19 +90,6 @@ async function fetchHistory(days = '30D') {
     .sort((a, b) => new Date(a.timestampUtc) - new Date(b.timestampUtc));
 }
 
-function updateOfferSchema(currentPriceAed) {
-  const script = document.getElementById('karat-offer-schema');
-  if (!script) return;
-  try {
-    const json = JSON.parse(script.textContent || '{}');
-    json.price = Number(currentPriceAed || 0).toFixed(2);
-    json.priceValidUntil = new Date().toISOString().slice(0, 10);
-    script.textContent = JSON.stringify(json, null, 2);
-  } catch {
-    // ignore malformed schema payload
-  }
-}
-
 function renderTable(rows, lang) {
   const body = document.getElementById('karat-history-table-body');
   const fallback = document.getElementById('karat-history-fallback');
@@ -175,7 +162,6 @@ async function init() {
   if (latest && aedEl && usdEl) {
     aedEl.textContent = formatPrice(latest.aed, 'AED', 2);
     usdEl.textContent = formatPrice(latest.usd, 'USD', 2);
-    updateOfferSchema(latest.aed);
     const calcOut = document.getElementById('karat-calc-output');
     if (calcOut) calcOut.dataset.latestAed = String(latest.aed);
     if (freshnessSlot) {
