@@ -106,3 +106,25 @@ function requireAllowlistedAdmin(req, res, next) {
 **Apply.** Dashboard toggle + Phase 1 apply; middleware ships via normal deploy. **Rollback.**
 Re-enable the signup toggle; revert the middleware commit. **Open question.** Depends on (A) and
 (B).
+
+---
+
+## Phase 7 — Harden public (anon) insert paths 🟥 STAGED
+
+**File:** `supabase/migrations/003_public_insert_hardening.sql`
+
+**What & why.** Public-insert RLS lets the browser write directly with the anon key, bypassing the
+Express rate limiters. `shop_click_events` used `with check (true)` (unconstrained). The migration
+adds additive column-length CHECK constraints to `shop_claims`, `shop_leads`, `shop_click_events`,
+and tightens the `shop_click_events` insert policy to validate shape. `lead_submissions` /
+`newsletter_subscribers` are left as a TODO (their columns were not read this run — extend the same
+pattern before applying).
+
+**Apply.** `psql "$SUPABASE_DB_URL" -f supabase/migrations/003_public_insert_hardening.sql`
+(applying validates existing rows; limits are generous, these tables are low-volume).
+
+**Rollback.** Drop the added constraints; restore the original "Public insert shop click events"
+policy from `supabase/schema.sql`.
+
+**Open question.** Consider routing all public writes through a rate-limited server/Edge Function
+(larger change, not staged here).
