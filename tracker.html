@@ -201,17 +201,44 @@
                 <span>Gold market</span>
               </span>
             </div>
-            <div id="tp-freshness-badge-slot" class="tracker-addon-slot"></div>
-            <p
-              id="tp-price-change-strip"
-              class="tracker-price-change-strip"
-              hidden
-              role="status"
-              aria-live="polite"
-            ></p>
-            <div id="tp-market-status-slot" class="tracker-addon-slot"></div>
-            <div id="tp-quote-meta-slot" class="tracker-addon-slot"></div>
-            <div id="tp-realtime-sla-slot" class="tracker-addon-slot"></div>
+
+            <!-- Primary live readout — spot + selected karat -->
+            <div class="tracker-hero-readout" id="tp-hero-readout" aria-live="polite">
+              <div class="tracker-hero-readout__spot">
+                <span class="tracker-hero-readout__k" id="tp-readout-spot-label">XAU/USD spot</span>
+                <strong class="tracker-hero-readout__v" id="tp-readout-spot-value">
+                  <span class="skeleton-inline shell-skeleton-price-lg" aria-busy="true"></span>
+                </strong>
+              </div>
+              <div class="tracker-hero-readout__divider" aria-hidden="true"></div>
+              <div class="tracker-hero-readout__selected">
+                <span class="tracker-hero-readout__k" id="tp-readout-selected-label">Selected reference</span>
+                <strong class="tracker-hero-readout__v" id="tp-readout-selected-value">
+                  <span class="skeleton-inline shell-skeleton-price-lg" aria-busy="true"></span>
+                </strong>
+                <span class="tracker-hero-readout__unit" id="tp-readout-unit-note"></span>
+              </div>
+              <p class="tracker-hero-readout__disclaimer" id="tp-readout-disclaimer">
+                Spot-linked reference prices before making charges and VAT ·
+                <a href="methodology.html#spot-vs-retail" class="tracker-inline-link">Spot vs retail</a>
+              </p>
+            </div>
+
+            <!-- Trust + metadata command band -->
+            <div class="tracker-command-meta-card" id="tp-command-meta" aria-label="Data trust and coverage">
+              <h2 class="tracker-command-meta-card__heading" id="tp-command-meta-heading">Quote context</h2>
+              <div id="tp-freshness-badge-slot" class="tracker-addon-slot"></div>
+              <p
+                id="tp-price-change-strip"
+                class="tracker-price-change-strip"
+                hidden
+                role="status"
+                aria-live="polite"
+              ></p>
+              <div id="tp-market-status-slot" class="tracker-addon-slot"></div>
+              <div id="tp-quote-meta-slot" class="tracker-addon-slot"></div>
+              <div id="tp-realtime-sla-slot" class="tracker-addon-slot"></div>
+            </div>
 
             <h1 id="tp-hero-title" class="tracker-hero-title">
               <span class="tracker-hero-kicker" id="tp-hero-kicker"></span>
@@ -267,9 +294,20 @@
                   <span class="tracker-field-label">Karat</span>
                   <select id="tp-karat" aria-label="Karat"></select>
                 </label>
-                <label class="tracker-hero-field">
+                <label class="tracker-hero-field tracker-hero-field--unit">
                   <span class="tracker-field-label">Unit</span>
-                  <select id="tp-unit" aria-label="Unit"></select>
+                  <div
+                    class="ds-segmented tracker-unit-segmented"
+                    id="tp-unit-segmented"
+                    role="group"
+                    aria-label="Unit"
+                  >
+                    <button type="button" class="ds-segmented__btn is-active" data-unit="gram" aria-pressed="true" title="Gram">g</button>
+                    <button type="button" class="ds-segmented__btn" data-unit="tola" aria-pressed="false" title="Tola">tola</button>
+                    <button type="button" class="ds-segmented__btn" data-unit="oz" aria-pressed="false" title="Troy ounce">oz</button>
+                    <button type="button" class="ds-segmented__btn" data-unit="kg" aria-pressed="false" title="Kilogram">kg</button>
+                  </div>
+                  <select id="tp-unit" class="sr-only-focusable" aria-label="Unit"></select>
                 </label>
               </div>
 
@@ -661,7 +699,7 @@
               making charges, dealer margin, and VAT.
             </p>
             <div class="tracker-ladder-table-wrap" aria-label="Karat ladder">
-              <table class="tracker-table tracker-karat-table table-interactive">
+              <table class="tracker-table tracker-karat-table table-interactive ds-table">
                 <caption class="sr-only">Karat ladder — spot-linked reference price per selected unit for the selected market</caption>
                 <thead>
                   <tr>
@@ -714,6 +752,13 @@
             </div>
 
             <div class="tracker-chart-wrap" aria-label="Gold price chart" role="group" aria-describedby="tp-chart-source-note">
+              <div class="tracker-chart-skeleton" id="tp-chart-skeleton" aria-hidden="true">
+                <div class="tracker-chart-skeleton__line"></div>
+                <div class="tracker-chart-skeleton__line"></div>
+                <div class="tracker-chart-skeleton__line"></div>
+                <div class="tracker-chart-skeleton__line"></div>
+                <div class="tracker-chart-skeleton__line"></div>
+              </div>
               <svg id="tp-chart" viewBox="0 0 1200 430" aria-hidden="true"></svg>
               <div
                 class="tracker-tooltip"

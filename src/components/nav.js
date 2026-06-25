@@ -352,7 +352,7 @@ export function injectNav(lang = 'en', depth = 0) {
 
   const html = `
 <a class="nav-skip-link" href="#main-content">${lang === 'ar' ? 'تخطي إلى المحتوى' : 'Skip to main content'}</a>
-<nav class="site-nav" role="navigation" aria-label="${data.mainNav}" dir="${isRtl ? 'rtl' : 'ltr'}">
+<nav class="site-nav site-nav--premium" role="navigation" aria-label="${data.mainNav}" dir="${isRtl ? 'rtl' : 'ltr'}">
   <div class="nav-inner">
 
     <!-- Brand -->

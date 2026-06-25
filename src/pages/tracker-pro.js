@@ -796,6 +796,108 @@ function flagForCurrency(code) {
   return country?.flag ? `${country.flag} ` : '';
 }
 
+function formatReadoutPrice(value, currency) {
+  if (value == null || !Number.isFinite(value)) return '—';
+  const formatted = value.toLocaleString(state.lang === 'ar' ? 'ar-AE' : 'en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  return currency ? `${formatted} ${currency}` : `$${formatted}`;
+}
+
+function syncHeroReadout() {
+  const spotEl = document.getElementById('tp-readout-spot-value');
+  const selectedEl = document.getElementById('tp-readout-selected-value');
+  const unitNoteEl = document.getElementById('tp-readout-unit-note');
+  const spotLabelEl = document.getElementById('tp-readout-spot-label');
+  const selectedLabelEl = document.getElementById('tp-readout-selected-label');
+  const metaHeading = document.getElementById('tp-command-meta-heading');
+
+  const spot = currentSpot();
+  const selectedPrice = priceFor({
+    currency: state.selectedCurrency,
+    karat: state.selectedKarat,
+    unit: state.selectedUnit,
+    spot,
+  });
+
+  if (spotLabelEl) spotLabelEl.textContent = trackerTx('readout.spotLabel') || 'XAU/USD spot';
+  if (selectedLabelEl) {
+    selectedLabelEl.textContent =
+      trackerTx('readout.selectedLabel', {
+        karat: state.selectedKarat,
+        currency: state.selectedCurrency,
+      }) || `${state.selectedKarat}K · ${state.selectedCurrency}`;
+  }
+  if (spotEl) {
+    spotEl.textContent = spot
+      ? `$${spot.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+      : '—';
+    spotEl.removeAttribute('aria-busy');
+  }
+  if (selectedEl) {
+    selectedEl.textContent = formatReadoutPrice(selectedPrice, state.selectedCurrency);
+    selectedEl.removeAttribute('aria-busy');
+  }
+  if (unitNoteEl) {
+    const unitKey =
+      state.selectedUnit === 'gram'
+        ? 'Gram'
+        : state.selectedUnit === 'oz'
+          ? 'Oz'
+          : state.selectedUnit === 'tola'
+            ? 'Tola'
+            : 'Kg';
+    unitNoteEl.textContent = trackerTx(`controls.unit${unitKey}`) || state.selectedUnit;
+  }
+  if (metaHeading) {
+    metaHeading.textContent = trackerTx('commandMeta.heading') || 'Quote context';
+  }
+}
+
+function syncUnitSegmented() {
+  const segmented = document.getElementById('tp-unit-segmented');
+  if (!segmented) return;
+  segmented.querySelectorAll('[data-unit]').forEach((btn) => {
+    const active = btn.dataset.unit === state.selectedUnit;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+}
+
+function wireUnitSegmentedControl() {
+  const segmented = document.getElementById('tp-unit-segmented');
+  if (!segmented || segmented.dataset.wired === 'true') return;
+  segmented.dataset.wired = 'true';
+  segmented.querySelectorAll('[data-unit]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const unit = btn.dataset.unit;
+      if (!unit || unit === state.selectedUnit) return;
+      state.selectedUnit = unit;
+      if (el.unit) {
+        el.unit.value = unit;
+        el.unit.dispatchEvent(new Event('change', { bubbles: true }));
+      } else {
+        persistState(state);
+        renderAll?.();
+        renderTrackerAddonPanels();
+      }
+      syncUnitSegmented();
+      syncHeroReadout();
+      track(EVENTS.UNIT_CHANGE, { surface: 'tracker', unit });
+    });
+  });
+  syncUnitSegmented();
+}
+
+function setChartLoading(isLoading) {
+  const wrap = el.chartWrap || document.querySelector('.tracker-chart-wrap');
+  if (!wrap) return;
+  wrap.classList.toggle('is-loading', Boolean(isLoading));
+  const skeleton = document.getElementById('tp-chart-skeleton');
+  if (skeleton) skeleton.setAttribute('aria-hidden', isLoading ? 'false' : 'true');
+}
+
 function getSelectedComparisonCountries() {
   return (state.compareCountries || [])
     .map((code) => COUNTRIES.find((country) => country.code === code))
@@ -1175,6 +1277,7 @@ function populateSelects() {
       button.classList.toggle('is-active', button.dataset.comparePreset === state.comparePreset);
     });
   }
+  syncUnitSegmented();
 }
 
 // ── Data fetch ────────────────────────────────────────────────────────────────
@@ -1213,6 +1316,7 @@ function applyRealtimeSnapshot(snapshot) {
 
   maybeTrackRealtimeSlo(snapshot, 'tracker');
   startCountdown();
+  syncHeroReadout();
   renderAll?.();
   renderTrackerAddonPanels();
 
@@ -1470,6 +1574,7 @@ async function init() {
       populateSelects();
       updateServerAlertUiState();
       renderAll();
+      syncHeroReadout();
       renderTrackerAddonPanels();
     }
   );
@@ -1496,6 +1601,7 @@ async function init() {
   serverAlertsAvailable = await probeServerAlertsAvailability();
   updateServerAlertUiState();
   bindCoreEvents();
+  wireUnitSegmentedControl();
   bindControlShortcuts({
     state,
     el,
@@ -1562,8 +1668,11 @@ async function init() {
 
   // Skip fetching the market wire during initial load to reduce critical path
   await refreshData(false, false);
+  setChartLoading(true);
   renderAll();
+  syncHeroReadout();
   renderTrackerAddonPanels();
+  setChartLoading(false);
   syncCurrentCountryPageLink();
   if (state.autoRefresh) startAutoRefresh();
   startCountdown();
