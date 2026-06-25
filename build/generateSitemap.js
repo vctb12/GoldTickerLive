@@ -136,22 +136,18 @@ for (const p of staticPages) {
   urls.push(url(p.loc, p.changefreq, p.priority));
 }
 
-// Old country pages (kept for backlinks)
+// Country landing hubs.
+// Canonical for each country is the hub at /countries/{slug}/ — NOT the
+// /{slug}/gold-price/ form, which is a non-existent path (the physical page
+// lives at /countries/{slug}/gold-price/ and is noindex, self-canonicalising
+// to the hub; see _redirects "Country gold-price duplicate → canonical country
+// hub"). Emit the canonical hub URL so the sitemap never advertises a
+// redirected / non-canonical / 404-ing URL.
 for (const country of COUNTRIES) {
   if (!country.slug) continue;
   const htmlPath = path.join(ROOT, 'countries', country.slug, 'index.html');
   if (fs.existsSync(htmlPath) && !isNoindexFile(htmlPath)) {
-    const oldUrl = `${SITE_URL}/countries/${country.slug}/`;
-    urls.push(url(oldUrl, 'monthly', '0.40'));
-  }
-}
-
-// Generated: country landing
-for (const country of COUNTRIES) {
-  if (!country.slug) continue;
-  const countryGoldPriceFile = path.join(ROOT, 'countries', country.slug, 'gold-price', 'index.html');
-  if (!(fs.existsSync(countryGoldPriceFile) && isNoindexFile(countryGoldPriceFile))) {
-    urls.push(url(`${SITE_URL}/${country.slug}/gold-price/`, 'hourly', '0.90'));
+    urls.push(url(`${SITE_URL}/countries/${country.slug}/`, 'hourly', '0.90'));
   }
 
   for (const city of (country.cities || [])) {
