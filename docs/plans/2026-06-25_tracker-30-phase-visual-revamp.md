@@ -1,17 +1,19 @@
 # Tracker HTML 30-Phase Visual Revamp — Gold Command Center
 
 ```yaml
-plan-status: active
+plan-status: complete
 priority: P0
 class: A
 owner: cursor-agent
 created: 2026-06-25
+completed: 2026-06-25
 extends:
   - docs/plans/2026-06-09_realtime-tracker-motion-revamp-20-phase.md
   - docs/tracker-rebrand-spec.md
   - reports/tracker-ux-audit.md
 guardrails_reviewed: true
 branch: cursor/tracker-30-phase-revamp-3c60
+pr: "#440"
 ```
 
 **Goal:** Full visual, color, typography, and layout revamp of `tracker.html` — from trust banner through hero terminal, workspace modes, and mobile command center — while preserving DOM contracts, freshness labels, EN/AR parity, and pricing integrity.
@@ -42,21 +44,19 @@ branch: cursor/tracker-30-phase-revamp-3c60
 | **15** | Toolbar card + range pills — segmented control look | `tracker-pro.css` | ✅ |
 | **16** | Chip row — toggle chips with gold active state | `tracker-pro.css` | ✅ |
 | **17** | Chart container — dark inset terminal frame | `tracker-pro.css` | ✅ |
-| **18** | Karat table + watchlist desk styling | `tracker-pro.css` | 🔄 |
-| **19** | Mobile command center cards + action rail | `tracker-pro.css` | 🔄 |
-| **20** | Compare mode — card grid premium borders | `tracker-pro.css` | 🔄 |
-| **21** | Archive mode — row cards, pagination chrome | `tracker-pro.css` | ⏳ |
-| **22** | Alerts overlay — drawer surface + live region | `tracker-pro.css` | ⏳ |
-| **23** | Planner overlay — calculator panel trust cues | `tracker-pro.css` | ⏳ |
-| **24** | Exports mode — readiness pill + download cards | `tracker-pro.css` | ⏳ |
-| **25** | Method mode — methodology link cards | `tracker-pro.css` | ⏳ |
-| **26** | RTL — badge row, tabs, chart meta mirroring | `tracker-pro.css` | 🔄 |
-| **27** | Dark mode — hero + panel parity via `[data-theme=dark]` | `tracker-pro.css` | 🔄 |
-| **28** | Motion — hero reveal, tab transitions, reduced-motion | `tracker-pro.css` | 🔄 |
-| **29** | A11y — focus rings, contrast, touch targets ≥44px | `tracker-pro.css` | 🔄 |
-| **30** | Verification — lint, test, validate, build, PR | CI | ⏳ |
-
-Legend: ✅ this session · 🔄 partial · ⏳ follow-up PR
+| **18** | Karat table + watchlist desk styling | `tracker-pro.css`, `tracker.html` | ✅ |
+| **19** | Mobile command center cards + action rail | `tracker-pro.css` | ✅ |
+| **20** | Compare mode — card grid premium borders | `tracker-pro.css` | ✅ |
+| **21** | Archive mode — row cards, pagination chrome | `tracker-pro.css` | ✅ |
+| **22** | Alerts overlay — drawer surface + live region | `tracker-pro.css` | ✅ |
+| **23** | Planner overlay — calculator panel trust cues | `tracker-pro.css` | ✅ |
+| **24** | Exports mode — readiness pill + download cards | `tracker-pro.css`, `tracker.html` | ✅ |
+| **25** | Method mode — methodology link cards | `tracker-pro.css` | ✅ |
+| **26** | RTL — badge row, tabs, chart meta mirroring | `tracker-pro.css` | ✅ |
+| **27** | Dark mode — hero + panel parity via `[data-theme=dark]` | `tracker-pro.css` | ✅ |
+| **28** | Motion — hero reveal, tab transitions, reduced-motion | `tracker-pro.css` | ✅ |
+| **29** | A11y — focus rings, contrast, touch targets ≥44px | `tracker-pro.css` | ✅ |
+| **30** | Verification — lint, test, validate, build, PR | CI | ✅ |
 
 ---
 
@@ -89,6 +89,7 @@ Legend: ✅ this session · 🔄 partial · ⏳ follow-up PR
 | Tab underline | 200ms | `transform` |
 | Card hover | 280ms | `box-shadow`, `border-color` |
 | Welcome chips | 350ms stagger | `opacity`, `translateY` |
+| Mode panel enter | 320ms | `opacity`, `translateY` |
 | Reduced motion | instant | opacity only |
 
 ---
@@ -115,8 +116,8 @@ Spot-check: 360px EN, 360px AR (`?lang=ar`), 430px EN — hero, tabs, live chart
 
 ---
 
-## Follow-up PRs
+## Follow-up (out of scope)
 
-- Phases 21–25: per-mode deep polish after shell stabilizes
 - Wire `tracker.html` hardcoded EN strings → `translations.js` (separate i18n pass)
 - Split `tracker-pro.css` into `styles/pages/tracker/` partials (maintenance)
+- Lighthouse before/after capture for PR proof gallery
