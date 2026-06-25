@@ -18,6 +18,7 @@ on:
       - 'styles/**'
       - 'scripts/node/check-links.js'
       - 'scripts/node/enforce-linkcheck.js'
+      - 'scripts/node/stage-dist-statics.js'
       - 'package.json'
       - 'package-lock.json'
   workflow_dispatch:
