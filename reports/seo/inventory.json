@@ -329,8 +329,8 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price Calculator UAE — Grams to AED | Gold Ticker Live",
-      "metaDescription": "Free gold price calculator for UAE. Convert any weight and karat to AED or USD instantly. Includes 24K, 22K, 21K, 18K, 14K, 10K.",
+      "title": "Gold Calculator — Value, Scrap, Zakat | Gold Ticker Live",
+      "metaDescription": "Free gold calculator: value any weight and karat in AED or USD, plus scrap, Zakat (2.5%), buying power and unit conversion using live reference rates.",
       "canonical": "https://goldtickerlive.com/calculator.html",
       "robots": null,
       "ogTitle": "Gold Calculator — Value, Scrap, Zakat | Gold Ticker Live",
@@ -355,7 +355,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "WebApplication"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -2492,7 +2493,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price in Algeria Today — DZD per Gram | Gold Ticker Live",
+      "title": "Gold Price in Algeria Today — DZD | Gold Ticker Live",
       "metaDescription": "Live gold price in Algeria in DZD per gram. Updated every 90 seconds. 24K, 22K, 21K, 18K gold rates in Algerian Dinar.",
       "canonical": "https://goldtickerlive.com/countries/algeria/",
       "robots": null,
@@ -2518,7 +2519,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -2675,7 +2677,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price in Bahrain Today — BHD per Gram | Gold Ticker Live",
+      "title": "Gold Price in Bahrain Today — BHD | Gold Ticker Live",
       "metaDescription": "Live gold price in Bahrain in BHD per gram. Updated every 90 seconds. 24K, 22K, 21K, 18K gold rates in Bahraini Dinar.",
       "canonical": "https://goldtickerlive.com/countries/bahrain/",
       "robots": null,
@@ -2701,7 +2703,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -3475,7 +3478,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price in Egypt Today — EGP per Gram (عيار 21) | Gold Ticker Live",
+      "title": "Gold Price in Egypt Today — EGP | Gold Ticker Live",
       "metaDescription": "Live gold price in Egypt today in EGP per gram. Updated every 90 seconds. 24K (عيار 24), 21K, 18K gold rates in Egyptian Pound.",
       "canonical": "https://goldtickerlive.com/countries/egypt/",
       "robots": null,
@@ -3501,7 +3504,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -3875,7 +3879,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price in India Today — INR per Gram (24K, 22K) | Gold Ticker Live",
+      "title": "Gold Price in India Today — INR | Gold Ticker Live",
       "metaDescription": "Live gold price in India today in INR per gram. Updated every 90 seconds. 24K, 22K, 21K, 18K gold rates in Indian Rupee.",
       "canonical": "https://goldtickerlive.com/countries/india/",
       "robots": null,
@@ -3901,7 +3905,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -4385,12 +4390,12 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold price today in Iraq — IQD reference rates | Gold Ticker Live",
-      "metaDescription": "Today spot-linked reference gold price in Iraq, with 24K, 22K, 21K, 18K, and 14K rates in IQD per gram, freshness labels, and direct links to the tracker, calculator, methodology, and country market context.",
+      "title": "Gold Price in Iraq Today — IQD | Gold Ticker Live",
+      "metaDescription": "Spot-linked reference gold price in Iraq today — 24K, 22K, 21K, 18K and 14K rates in IQD per gram, with freshness labels and methodology.",
       "canonical": "https://goldtickerlive.com/countries/iraq/",
       "robots": null,
-      "ogTitle": "Gold price today in Iraq — IQD reference rates | Gold Ticker Live",
-      "ogDescription": "Today spot-linked reference gold price in Iraq, with 24K, 22K, 21K, 18K, and 14K rates in IQD per gram, freshness labels, and direct links to the tracker, calculator, methodology, and country market context.",
+      "ogTitle": "Gold Price in Iraq Today — IQD per Gram",
+      "ogDescription": "Spot-linked reference gold price in Iraq today — 24K, 22K, 21K, 18K and 14K rates in IQD per gram, with freshness labels and methodology.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/iraq/",
       "ogType": "website",
@@ -4411,7 +4416,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -4568,7 +4574,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price in Jordan Today — JOD per Gram | Gold Ticker Live",
+      "title": "Gold Price in Jordan Today — JOD | Gold Ticker Live",
       "metaDescription": "Live gold price in Jordan in JOD per gram. Updated every 90 seconds. 24K, 22K, 21K, 18K gold rates in Jordanian Dinar.",
       "canonical": "https://goldtickerlive.com/countries/jordan/",
       "robots": null,
@@ -4594,7 +4600,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -4969,7 +4976,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price in Kuwait Today — KWD per Gram (24K, 22K, 21K) | Gold Ticker Live",
+      "title": "Gold Price in Kuwait Today — KWD | Gold Ticker Live",
       "metaDescription": "Live gold price in Kuwait today in KWD per gram and troy oz. Updated every 90 seconds. 24K, 22K, 21K and 18K gold rates in Kuwaiti Dinar.",
       "canonical": "https://goldtickerlive.com/countries/kuwait/",
       "robots": null,
@@ -4995,7 +5002,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -5370,7 +5378,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price in Lebanon Today — LBP per Gram | Gold Ticker Live",
+      "title": "Gold Price in Lebanon Today — LBP | Gold Ticker Live",
       "metaDescription": "Live gold price in Lebanon in LBP per gram. Updated every 90 seconds. 24K, 22K, 21K, 18K gold rates in Lebanese Pound.",
       "canonical": "https://goldtickerlive.com/countries/lebanon/",
       "robots": null,
@@ -5396,7 +5404,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -5771,7 +5780,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price in Libya Today — LYD per Gram | Gold Ticker Live",
+      "title": "Gold Price in Libya Today — LYD | Gold Ticker Live",
       "metaDescription": "Live gold price in Libya in LYD per gram. Updated every 90 seconds. 24K, 22K, 21K, 18K gold rates in Libyan Dinar.",
       "canonical": "https://goldtickerlive.com/countries/libya/",
       "robots": null,
@@ -5797,7 +5806,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -6172,7 +6182,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price in Morocco Today — MAD per Gram | Gold Ticker Live",
+      "title": "Gold Price in Morocco Today — MAD | Gold Ticker Live",
       "metaDescription": "Live gold price in Morocco in MAD per gram. Updated every 90 seconds. 24K, 22K, 18K gold rates in Moroccan Dirham.",
       "canonical": "https://goldtickerlive.com/countries/morocco/",
       "robots": null,
@@ -6198,7 +6208,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -6464,7 +6475,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price in Oman Today — OMR per Gram | Gold Ticker Live",
+      "title": "Gold Price in Oman Today — OMR | Gold Ticker Live",
       "metaDescription": "Live gold price in Oman in OMR per gram. Updated every 90 seconds. 24K, 22K, 21K, 18K gold rates in Omani Rial.",
       "canonical": "https://goldtickerlive.com/countries/oman/",
       "robots": null,
@@ -6490,7 +6501,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -6865,12 +6877,12 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold price today in Pakistan — PKR reference rates | Gold Ticker Live",
-      "metaDescription": "Today spot-linked reference gold price in Pakistan, with 24K, 22K, 21K, 18K, and 14K rates in PKR per gram, freshness labels, and direct links to the tracker, calculator, methodology, and country market context.",
+      "title": "Gold Price in Pakistan Today — PKR | Gold Ticker Live",
+      "metaDescription": "Spot-linked reference gold price in Pakistan today — 24K, 22K, 21K, 18K and 14K rates in PKR per gram, with freshness labels and methodology.",
       "canonical": "https://goldtickerlive.com/countries/pakistan/",
       "robots": null,
-      "ogTitle": "Gold price today in Pakistan — PKR reference rates | Gold Ticker Live",
-      "ogDescription": "Today spot-linked reference gold price in Pakistan, with 24K, 22K, 21K, 18K, and 14K rates in PKR per gram, freshness labels, and direct links to the tracker, calculator, methodology, and country market context.",
+      "ogTitle": "Gold Price in Pakistan Today — PKR per Gram",
+      "ogDescription": "Spot-linked reference gold price in Pakistan today — 24K, 22K, 21K, 18K and 14K rates in PKR per gram, with freshness labels and methodology.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/pakistan/",
       "ogType": "website",
@@ -6891,7 +6903,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -7375,12 +7388,12 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold price today in Palestine — ILS reference rates | Gold Ticker Live",
-      "metaDescription": "Today spot-linked reference gold price in Palestine, with 24K, 22K, 21K, 18K, and 14K rates in ILS per gram, freshness labels, and direct links to the tracker, calculator, methodology, and country market context.",
+      "title": "Gold Price in Palestine Today — ILS | Gold Ticker Live",
+      "metaDescription": "Spot-linked reference gold price in Palestine today — 24K, 22K, 21K, 18K and 14K rates in ILS per gram, with freshness labels and methodology.",
       "canonical": "https://goldtickerlive.com/countries/palestine/",
       "robots": null,
-      "ogTitle": "Gold price today in Palestine — ILS reference rates | Gold Ticker Live",
-      "ogDescription": "Today spot-linked reference gold price in Palestine, with 24K, 22K, 21K, 18K, and 14K rates in ILS per gram, freshness labels, and direct links to the tracker, calculator, methodology, and country market context.",
+      "ogTitle": "Gold Price in Palestine Today — ILS per Gram",
+      "ogDescription": "Spot-linked reference gold price in Palestine today — 24K, 22K, 21K, 18K and 14K rates in ILS per gram, with freshness labels and methodology.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/palestine/",
       "ogType": "website",
@@ -7401,7 +7414,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -8066,7 +8080,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price in Qatar Today — QAR per Gram (24K, 22K, 21K) | Gold Ticker Live",
+      "title": "Gold Price in Qatar Today — QAR | Gold Ticker Live",
       "metaDescription": "Live gold price in Qatar today in QAR per gram. Updated every 90 seconds. 24K, 22K, 21K, 18K gold rates in Qatari Riyal.",
       "canonical": "https://goldtickerlive.com/countries/qatar/",
       "robots": null,
@@ -8092,7 +8106,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -8321,7 +8336,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price in Saudi Arabia Today — SAR per Gram (24K, 22K, 21K) | Gold Ticker Live",
+      "title": "Gold Price in Saudi Arabia Today — SAR | Gold Ticker Live",
       "metaDescription": "Live gold price in Saudi Arabia today in SAR per gram and troy oz. Updated every 90 seconds. View 24K, 22K, 21K and 18K gold rates in Saudi Riyal.",
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/",
       "robots": null,
@@ -8347,7 +8362,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -8831,7 +8847,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price in Sudan Today — SDG per Gram | Gold Ticker Live",
+      "title": "Gold Price in Sudan Today — SDG | Gold Ticker Live",
       "metaDescription": "Live gold price in Sudan in SDG per gram. Updated every 90 seconds. 24K, 22K, 21K, 18K gold rates in Sudanese Pound.",
       "canonical": "https://goldtickerlive.com/countries/sudan/",
       "robots": null,
@@ -8857,7 +8873,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -9559,12 +9576,12 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold price today in Syria — SYP reference rates | Gold Ticker Live",
-      "metaDescription": "Today spot-linked reference gold price in Syria, with 24K, 22K, 21K, 18K, and 14K rates in SYP per gram, freshness labels, and direct links to the tracker, calculator, methodology, and country market context.",
+      "title": "Gold Price in Syria Today — SYP | Gold Ticker Live",
+      "metaDescription": "Spot-linked reference gold price in Syria today — 24K, 22K, 21K, 18K and 14K rates in SYP per gram, with freshness labels and methodology.",
       "canonical": "https://goldtickerlive.com/countries/syria/",
       "robots": null,
-      "ogTitle": "Gold price today in Syria — SYP reference rates | Gold Ticker Live",
-      "ogDescription": "Today spot-linked reference gold price in Syria, with 24K, 22K, 21K, 18K, and 14K rates in SYP per gram, freshness labels, and direct links to the tracker, calculator, methodology, and country market context.",
+      "ogTitle": "Gold Price in Syria Today — SYP per Gram",
+      "ogDescription": "Spot-linked reference gold price in Syria today — 24K, 22K, 21K, 18K and 14K rates in SYP per gram, with freshness labels and methodology.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/syria/",
       "ogType": "website",
@@ -9585,7 +9602,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -9633,7 +9651,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price in Tunisia Today — TND per Gram | Gold Ticker Live",
+      "title": "Gold Price in Tunisia Today — TND | Gold Ticker Live",
       "metaDescription": "Live gold price in Tunisia in TND per gram. Updated every 90 seconds. 24K, 22K, 21K, 18K gold rates in Tunisian Dinar.",
       "canonical": "https://goldtickerlive.com/countries/tunisia/",
       "robots": null,
@@ -9659,7 +9677,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -10143,12 +10162,12 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold price today in Turkey — TRY reference rates | Gold Ticker Live",
-      "metaDescription": "Today spot-linked reference gold price in Turkey, with 24K, 22K, 21K, 18K, and 14K rates in TRY per gram, freshness labels, and direct links to the tracker, calculator, methodology, and country market context.",
+      "title": "Gold Price in Turkey Today — TRY | Gold Ticker Live",
+      "metaDescription": "Spot-linked reference gold price in Turkey today — 24K, 22K, 21K, 18K and 14K rates in TRY per gram, with freshness labels and methodology.",
       "canonical": "https://goldtickerlive.com/countries/turkey/",
       "robots": null,
-      "ogTitle": "Gold price today in Turkey — TRY reference rates | Gold Ticker Live",
-      "ogDescription": "Today spot-linked reference gold price in Turkey, with 24K, 22K, 21K, 18K, and 14K rates in TRY per gram, freshness labels, and direct links to the tracker, calculator, methodology, and country market context.",
+      "ogTitle": "Gold Price in Turkey Today — TRY per Gram",
+      "ogDescription": "Spot-linked reference gold price in Turkey today — 24K, 22K, 21K, 18K and 14K rates in TRY per gram, with freshness labels and methodology.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/turkey/",
       "ogType": "website",
@@ -10169,7 +10188,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -10979,7 +10999,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price in UAE Today — AED per Gram (24K, 22K, 21K, 18K) | Gold Ticker Live",
+      "title": "Gold Price in UAE Today — AED | Gold Ticker Live",
       "metaDescription": "Live gold price in UAE today in AED per gram and troy oz. Updated every 90 seconds. See 24K, 22K, 21K and 18K gold rates in UAE Dirham.",
       "canonical": "https://goldtickerlive.com/countries/uae/",
       "robots": null,
@@ -11005,7 +11025,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -11561,12 +11582,12 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold price today in Yemen — YER reference rates | Gold Ticker Live",
-      "metaDescription": "Today spot-linked reference gold price in Yemen, with 24K, 22K, 21K, 18K, and 14K rates in YER per gram, freshness labels, and direct links to the tracker, calculator, methodology, and country market context.",
+      "title": "Gold Price in Yemen Today — YER | Gold Ticker Live",
+      "metaDescription": "Spot-linked reference gold price in Yemen today — 24K, 22K, 21K, 18K and 14K rates in YER per gram, with freshness labels and methodology.",
       "canonical": "https://goldtickerlive.com/countries/yemen/",
       "robots": null,
-      "ogTitle": "Gold price today in Yemen — YER reference rates | Gold Ticker Live",
-      "ogDescription": "Today spot-linked reference gold price in Yemen, with 24K, 22K, 21K, 18K, and 14K rates in YER per gram, freshness labels, and direct links to the tracker, calculator, methodology, and country market context.",
+      "ogTitle": "Gold Price in Yemen Today — YER per Gram",
+      "ogDescription": "Spot-linked reference gold price in Yemen today — 24K, 22K, 21K, 18K and 14K rates in YER per gram, with freshness labels and methodology.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/countries/yemen/",
       "ogType": "website",
@@ -11587,7 +11608,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "Dataset"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -12388,7 +12410,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "ItemList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null

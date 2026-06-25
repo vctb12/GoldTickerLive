@@ -26,6 +26,34 @@ const SITE_URL = 'https://goldtickerlive.com';
 const SITE_NAME = 'Gold Ticker Live';
 const SITE_DESCRIPTION = 'Live gold prices for GCC, Arab world and global markets';
 
+// ── Trusted local config loaders ────────────────────────────────────────────
+// data/shops.js and src/config/countries.js are ES modules that can't be
+// require()'d from this CommonJS script, so we extract the exported array
+// literal and evaluate it in an isolated VM context (same pattern as
+// build/generateSitemap.js). These feed the shops ItemList and country-hub
+// Dataset schemas below. Failures degrade gracefully to an empty list — the
+// injector must never crash a build because a data file moved.
+const vm = require('vm');
+
+function evalArrayLiteral(src) {
+  return vm.runInNewContext(`(${src})`, Object.create(null), { timeout: 2000 });
+}
+
+function loadExportedArray(relPath, exportName) {
+  try {
+    const raw = fs.readFileSync(path.join(ROOT, relPath), 'utf8');
+    const match = raw.match(new RegExp(`export const ${exportName}\\s*=\\s*(\\[[\\s\\S]*?\\]);`));
+    if (!match) return [];
+    return evalArrayLiteral(match[1]);
+  } catch {
+    return [];
+  }
+}
+
+const SHOPS = loadExportedArray('data/shops.js', 'SHOPS');
+const COUNTRIES = loadExportedArray('src/config/countries.js', 'COUNTRIES');
+const COUNTRY_BY_SLUG = new Map(COUNTRIES.filter((c) => c && c.slug).map((c) => [c.slug, c]));
+
 // ── Schema Templates ────────────────────────────────────────────────────────
 
 /**
@@ -181,6 +209,96 @@ function getDatasetSchema(options) {
     variableMeasured,
     isAccessibleForFree: true,
     inLanguage: ['en', 'ar'],
+  };
+}
+
+/**
+ * ItemList of gold-shop / gold-market directory listings for shops.html.
+ *
+ * Honesty contract (AGENTS.md "schema must match visible content"): the
+ * directory page explicitly frames most listings as "market areas or dealer
+ * clusters, not a single shop", and `data/shops.js` carries NO verified phone,
+ * website, opening hours, rating, or review data. We therefore emit ONLY the
+ * fields that are real and visible on each card — name, locality (city),
+ * country, and the served area — and deliberately omit telephone, geo,
+ * openingHours, aggregateRating, review, and any Offer/priceRange. This keeps
+ * the markup truthful and avoids a Google structured-data policy violation.
+ *
+ * @param {Array<Object>} shops - SHOPS from data/shops.js
+ */
+function getShopsDirectorySchema(shops) {
+  if (!Array.isArray(shops) || shops.length === 0) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Gold Shops & Markets Directory',
+    description:
+      'Editorially listed gold shops and known gold markets across the GCC, Levant, North Africa, and India.',
+    url: `${SITE_URL}/shops.html`,
+    numberOfItems: shops.length,
+    itemListOrder: 'https://schema.org/ItemListUnordered',
+    itemListElement: shops.map((shop, index) => {
+      const area = [shop.market, shop.city].filter(Boolean).join(', ');
+      const descParts = [shop.category, shop.market].filter(Boolean);
+      const store = {
+        '@type': 'JewelryStore',
+        name: shop.name,
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: shop.city,
+          addressCountry: shop.countryCode,
+        },
+      };
+      if (area) store.areaServed = area;
+      if (descParts.length) store.description = descParts.join(' · ');
+      return {
+        '@type': 'ListItem',
+        position: index + 1,
+        item: store,
+      };
+    }),
+  };
+}
+
+/**
+ * WebApplication schema for the calculator tool page.
+ *
+ * featureList mirrors the five tabs that are actually rendered on the page
+ * (value, scrap, Zakat, buying power, unit converter), so the markup matches
+ * visible content. The tool is free and runs in the browser — represented with
+ * a zero-price Offer and isAccessibleForFree, no fabricated review/rating.
+ *
+ * @param {Object} options
+ */
+function getCalculatorAppSchema({ url, description }) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Gold Calculator',
+    url,
+    description,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Any (web browser)',
+    browserRequirements: 'Requires JavaScript',
+    isAccessibleForFree: true,
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    featureList: [
+      'Gold value calculator (any weight and karat)',
+      'Scrap / melt gold value calculator',
+      'Zakat on gold calculator (2.5%)',
+      'Buying power calculator',
+      'Gold weight unit converter',
+    ],
+    inLanguage: ['en', 'ar'],
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
   };
 }
 
@@ -399,6 +517,40 @@ function generateSchemasForPage(filePath, content) {
         schemas.push(getFAQPageSchema(faqItems));
       }
     }
+  }
+
+  // Shops directory — ItemList of JewelryStore listings (from data/shops.js).
+  if (relativePath === 'shops.html') {
+    const itemList = getShopsDirectorySchema(SHOPS);
+    if (itemList) schemas.push(itemList);
+  }
+
+  // Calculator tool — WebApplication describing the five calculator tools.
+  if (relativePath === 'calculator.html') {
+    schemas.push(
+      getCalculatorAppSchema({
+        url: canonicalUrl || `${SITE_URL}${urlPath}`,
+        description: pageDescription || SITE_DESCRIPTION,
+      })
+    );
+  }
+
+  // Country hub (countries/{slug}/index.html, indexable) — add a Dataset for
+  // the reference price data the page displays. FAQPage is injected at runtime
+  // by country-page.js alongside the visible FAQ (parity-correct), so it is not
+  // duplicated here; BreadcrumbList is already added above. The deeper
+  // /{slug}/gold-price/ variant is noindex and skipped by the injector.
+  const hubMatch = relativePath.match(/^countries\/([^/]+)\/index\.html$/);
+  if (hubMatch && COUNTRY_BY_SLUG.has(hubMatch[1])) {
+    const country = COUNTRY_BY_SLUG.get(hubMatch[1]);
+    schemas.push(
+      getDatasetSchema({
+        name: pageTitle,
+        description: pageDescription,
+        url: canonicalUrl || `${SITE_URL}${urlPath}`,
+        variableMeasured: `Gold price per gram in ${country.currency}`,
+      })
+    );
   }
 
   return schemas;
