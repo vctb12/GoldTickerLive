@@ -17,6 +17,16 @@ Endless prompts:
 
 ## 🔴 In Progress
 
+### Tracker HTML 30-Phase Visual Revamp (2026-06-25)
+
+Canonical plan:
+[`docs/plans/2026-06-25_tracker-30-phase-visual-revamp.md`](docs/plans/2026-06-25_tracker-30-phase-visual-revamp.md)
+· branch `cursor/tracker-30-phase-revamp-3c60`
+
+- [x] **Phases 0–17** — tokens, hero terminal, badges, stats, mode shell, panels, chart inset
+- [x] **Phases 27–28** — dark mode parity, hero entrance motion
+- [ ] **Phases 18–26, 29–30** — per-mode polish, mobile rail, RTL, a11y audit, screenshots
+
 ### Real-time tracker + Motion Universe — 20-phase program (2026-06-09)
 
 Canonical plan:
