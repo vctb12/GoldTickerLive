@@ -54,4 +54,5 @@ order:
   toasts/workspace EN/AR i18n | GREEN | ✅ | 1081 ✓ (eslint) | `src/config/translations.js`,
   `src/pages/tracker-pro.js`, `src/tracker/{events,ui-shell}.js`, `tracker.html` | | PR-fix —
   preserve Article datePublished (review item) | GREEN | ✅ | 1081 ✓ (validate) |
-  `scripts/node/inject-schema.js` + ~44 content HTML + reports |
+  `scripts/node/inject-schema.js` + ~44 content HTML + reports | | 22 — Touch target 44px
+  (.gcc-region-tab) | GREEN | ✅ | 1081 ✓ (stylelint) | `styles/pages/home.css` |

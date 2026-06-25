@@ -1460,7 +1460,7 @@
     color var(--transition-fast),
     box-shadow var(--transition-fast);
   white-space: nowrap;
-  min-height: 38px;
+  min-height: 44px;
 }
 
 .gcc-region-tab:hover {
