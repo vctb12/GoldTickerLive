@@ -2248,10 +2248,10 @@
    RESPONSIVE — 380px
    ══════════════════════════════════════════════════════════════ */
 @media (width <= 380px) {
-  .gcc-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
+  /* .gcc-grid stays single-column below 480px via `1fr !important` above. The
+     prior `repeat(2, minmax(0, 1fr))` here was dead code (overridden by that
+     !important regardless of source order), so the grid was never actually 2-up
+     at 360px — removed in phase 23 to keep the small-screen intent unambiguous. */
   .home-quick-convert-mount .calc-input,
   .home-quick-convert-mount .calc-select {
     width: 100%;
