@@ -7,7 +7,7 @@
  * - Organization (homepage)
  * - BreadcrumbList (all pages)
  * - WebSite with SearchAction (homepage)
- * - Product/Offer for price pages
+ * - Dataset (+ FAQPage) for reference/price pages (non-commercial — no Offer)
  * - Article for content pages
  *
  * Usage:
@@ -85,42 +85,6 @@ function getBreadcrumbSchema(items) {
       item: item.url,
     })),
   };
-}
-
-/**
- * Product/Offer schema for price pages
- * @param {Object} options
- */
-function getProductSchema(options) {
-  const {
-    name = '24K Gold Price',
-    description = 'Current spot gold price',
-    price = null,
-    currency = 'AED',
-    _country = 'UAE',
-    _karat = '24K',
-  } = options;
-
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name,
-    description,
-    category: 'Precious Metals',
-    offers: {
-      '@type': 'AggregateOffer',
-      priceCurrency: currency,
-      availability: 'https://schema.org/InStock',
-      itemCondition: 'https://schema.org/NewCondition',
-    },
-  };
-
-  if (price) {
-    schema.offers.lowPrice = price;
-    schema.offers.highPrice = price;
-  }
-
-  return schema;
 }
 
 /**
@@ -354,10 +318,15 @@ function generateSchemasForPage(filePath, content) {
     }
   }
 
-  // Price pages get Product + FAQPage + Dataset schemas
+  // Reference/price pages get FAQPage + Dataset schemas only.
+  //
+  // These pages publish non-commercial reference/spot prices and sell nothing,
+  // so they must NOT emit Product/Offer/AggregateOffer markup (doing so would
+  // mark up retail offers the page doesn't show — a schema-honesty violation
+  // that risks a Google manual action). The non-commercial Dataset schema below
+  // is the correct representation of the price data these pages display.
   if (pageType === 'price') {
-    // Extract country/karat from path
-    const countryMatch = relativePath.match(/countries\/([^\/]+)/);
+    // Extract karat from path (used by the Dataset variableMeasured label).
     const karatMatch = relativePath.match(/(\d+k)/i);
 
     // Extract currency code from page title.
@@ -370,16 +339,6 @@ function generateSchemasForPage(filePath, content) {
       pageTitle.match(/—\s*([A-Z]{3})\s+per Gram/i) ||
       pageTitle.match(/\bin\s+([A-Z]{3})\s*[|,]/);
     const currency = currencyMatch ? currencyMatch[1] : 'AED';
-
-    schemas.push(
-      getProductSchema({
-        name: pageTitle,
-        description: pageDescription,
-        country: countryMatch ? countryMatch[1].toUpperCase() : 'UAE',
-        karat: karatMatch ? karatMatch[1].toUpperCase() : '24K',
-        currency,
-      })
-    );
 
     // Extract FAQ data from embedded country-page-data JSON (body script tag)
     const pageDataMatch = content.match(
