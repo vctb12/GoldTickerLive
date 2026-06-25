@@ -109,7 +109,10 @@ const { createClient } = (() => {
 async function resolveUserFromToken(token) {
   if (!token) return null;
   const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+  // Fail closed: server-side token verification requires the service-role key.
+  // The anon key cannot reliably resolve another user's identity server-side, so
+  // do NOT fall back to it — return null (→ 401) when the service-role is absent.
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key || !createClient) return null;
   try {
     const client = createClient(url, key, { auth: { persistSession: false } });

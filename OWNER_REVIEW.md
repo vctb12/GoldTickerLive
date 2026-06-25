@@ -128,3 +128,19 @@ policy from `supabase/schema.sql`.
 
 **Open question.** Consider routing all public writes through a rate-limited server/Edge Function
 (larger change, not staged here).
+
+---
+
+## Phase 6 — Billing token verification fail-closed 🟥 STAGED (Stripe-critical)
+
+**File:** `server/routes/billing.js` (`resolveUserFromToken`)
+
+**What & why.** Server-side token verification fell back to `SUPABASE_ANON_KEY` when the
+service-role key was absent; the anon key cannot reliably resolve another user's identity
+server-side. Now requires `SUPABASE_SERVICE_ROLE_KEY` and returns null (→ 401) when absent (fail
+closed). Committed on the branch only; the Express tier is not deployed in static prod, so this does
+not affect live Stripe until/if the server is deployed.
+
+**Owner sign-off before merge/deploy.** Ensure `SUPABASE_SERVICE_ROLE_KEY` is set in the server
+environment, else billing endpoints 401 by design. **Rollback.** Revert the one-line change.
+**Verified:** 1081/1081 tests, eslint clean.
