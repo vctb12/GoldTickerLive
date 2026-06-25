@@ -2,6 +2,7 @@
    Depends on styles/global.css design tokens only. Hero dark palette uses
    global gradient tokens; local hex only where compositor effects require it.
 */
+@import url('./tracker-pro-v4.css');
 
 /* ── Phase 1: Tracker token harmonization ─────────────────────────────────── */
 
@@ -78,9 +79,7 @@
 /* ── Page base ────────────────────────────────────────────────────────────── */
 
 body.tracker-pro-page {
-  background:
-    var(--gradient-section-alt),
-    var(--tp-bg);
+  background: var(--gradient-section-alt), var(--tp-bg);
   background-attachment: fixed;
 }
 
@@ -463,7 +462,11 @@ body.tracker-pro-page {
 /* Live badge — semantic green with soft glow */
 .tracker-badge-live {
   border-color: var(--tp-live-border);
-  background: linear-gradient(135deg, color-mix(in srgb, var(--tp-live) 16%, transparent), color-mix(in srgb, var(--tp-live) 6%, transparent));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--tp-live) 16%, transparent),
+    color-mix(in srgb, var(--tp-live) 6%, transparent)
+  );
   color: var(--color-up);
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--tp-live) 12%, transparent) inset,
@@ -479,7 +482,11 @@ body.tracker-pro-page {
 
 .tracker-badge--stale {
   border-color: color-mix(in srgb, var(--tp-stale) 40%, transparent);
-  background: linear-gradient(135deg, color-mix(in srgb, var(--tp-stale) 14%, transparent), color-mix(in srgb, var(--tp-stale) 6%, transparent));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--tp-stale) 14%, transparent),
+    color-mix(in srgb, var(--tp-stale) 6%, transparent)
+  );
   color: var(--tp-stale);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--tp-stale) 10%, transparent) inset;
 }
@@ -523,12 +530,12 @@ body.tracker-pro-page {
   100% {
     transform: scale(1);
     opacity: 1;
-    box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 50%, transparent);
+    box-shadow: 0 0 0 0 color-mix(in srgb, currentcolor 50%, transparent);
   }
   50% {
     transform: scale(1.2);
     opacity: 0.85;
-    box-shadow: 0 0 0 5px color-mix(in srgb, currentColor 0%, transparent);
+    box-shadow: 0 0 0 5px color-mix(in srgb, currentcolor 0%, transparent);
   }
 }
 
@@ -615,7 +622,9 @@ body.tracker-pro-page {
   color: var(--tp-gold-light);
   text-decoration: none;
   border-bottom: 1px solid color-mix(in srgb, var(--tp-gold) 35%, transparent);
-  transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
 }
 
 .tracker-hero-description .tracker-inline-link:hover {
@@ -1114,7 +1123,11 @@ body.tracker-pro-page {
 
 .tracker-mode-tab.is-active,
 .tracker-mode-tab[aria-selected='true'] {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--tp-gold) 18%, transparent), color-mix(in srgb, var(--tp-gold) 8%, transparent));
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tp-gold) 18%, transparent),
+    color-mix(in srgb, var(--tp-gold) 8%, transparent)
+  );
   border-color: color-mix(in srgb, var(--tp-gold) 38%, transparent);
   color: var(--tp-accent);
   font-weight: var(--weight-bold);
@@ -1171,7 +1184,11 @@ body.tracker-pro-page {
   font-weight: var(--weight-semibold);
   padding: 0.45rem 0.9rem;
   min-height: 44px;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--tp-gold) 10%, var(--surface-primary)), var(--surface-secondary));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--tp-gold) 10%, var(--surface-primary)),
+    var(--surface-secondary)
+  );
   border: 1.5px solid color-mix(in srgb, var(--tp-gold) 28%, var(--tp-border));
   border-radius: var(--radius-lg);
   color: var(--tp-gold-strong);
@@ -1195,7 +1212,11 @@ body.tracker-pro-page {
 }
 
 .tracker-workspace-badge[aria-pressed='true'] {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--tp-gold) 18%, transparent), color-mix(in srgb, var(--tp-gold) 8%, transparent));
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tp-gold) 18%, transparent),
+    color-mix(in srgb, var(--tp-gold) 8%, transparent)
+  );
   border-color: color-mix(in srgb, var(--tp-gold) 48%, transparent);
   color: var(--tp-accent);
   font-weight: var(--weight-bold);
@@ -1620,7 +1641,11 @@ body.tracker-workspace-basic .tracker-advanced-only {
 
 .tracker-chip.is-active,
 .tracker-chip[aria-pressed='true'] {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--tp-gold) 16%, transparent), color-mix(in srgb, var(--tp-gold) 8%, transparent));
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tp-gold) 16%, transparent),
+    color-mix(in srgb, var(--tp-gold) 8%, transparent)
+  );
   border-color: color-mix(in srgb, var(--tp-gold) 42%, transparent);
   color: var(--tp-accent);
   font-weight: var(--weight-extrabold);
@@ -1770,7 +1795,11 @@ body.tracker-workspace-basic .tracker-advanced-only {
   border-radius: var(--radius-xl);
   border: 1.5px solid var(--tp-chart-border);
   background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--tp-gold) 6%, transparent), transparent 70%),
+    radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      color-mix(in srgb, var(--tp-gold) 6%, transparent),
+      transparent 70%
+    ),
     var(--tp-chart-bg);
   overflow: hidden;
   box-shadow:
@@ -4281,9 +4310,7 @@ td.tracker-chg-down {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 [data-theme='dark'] body.tracker-pro-page {
-  background:
-    var(--gradient-section-alt),
-    var(--surface-canvas);
+  background: var(--gradient-section-alt), var(--surface-canvas);
 }
 
 [data-theme='dark'] .tracker-mode-shell {
@@ -4335,14 +4362,30 @@ td.tracker-chg-down {
   animation: none;
 }
 
-.tracker-hero-main > *:nth-child(1) { animation-delay: 0ms; }
-.tracker-hero-main > *:nth-child(2) { animation-delay: 40ms; }
-.tracker-hero-main > *:nth-child(3) { animation-delay: 80ms; }
-.tracker-hero-main > *:nth-child(4) { animation-delay: 120ms; }
-.tracker-hero-main > *:nth-child(5) { animation-delay: 160ms; }
-.tracker-hero-main > *:nth-child(6) { animation-delay: 200ms; }
-.tracker-hero-main > *:nth-child(7) { animation-delay: 240ms; }
-.tracker-hero-main > *:nth-child(8) { animation-delay: 280ms; }
+.tracker-hero-main > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.tracker-hero-main > *:nth-child(2) {
+  animation-delay: 40ms;
+}
+.tracker-hero-main > *:nth-child(3) {
+  animation-delay: 80ms;
+}
+.tracker-hero-main > *:nth-child(4) {
+  animation-delay: 120ms;
+}
+.tracker-hero-main > *:nth-child(5) {
+  animation-delay: 160ms;
+}
+.tracker-hero-main > *:nth-child(6) {
+  animation-delay: 200ms;
+}
+.tracker-hero-main > *:nth-child(7) {
+  animation-delay: 240ms;
+}
+.tracker-hero-main > *:nth-child(8) {
+  animation-delay: 280ms;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .tracker-hero-main > * {
@@ -4768,7 +4811,11 @@ td.tracker-chg-down {
 
 [data-theme='dark'] .tracker-chart-wrap {
   background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--color-gold) 8%, transparent), transparent 70%),
+    radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      color-mix(in srgb, var(--color-gold) 8%, transparent),
+      transparent 70%
+    ),
     var(--tp-chart-bg);
 }
 
