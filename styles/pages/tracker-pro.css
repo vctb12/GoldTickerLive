@@ -496,14 +496,26 @@ body.tracker-pro-page {
   color: var(--tp-danger);
 }
 
-/* Live pulse dot — heartbeat glow */
+/* Live pulse dot — heartbeat glow (live state only) */
 .tracker-badge-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: currentcolor;
-  animation: tp-heartbeat 2s ease-in-out infinite;
   flex-shrink: 0;
+}
+
+.tracker-badge-live .tracker-badge-dot,
+.tracker-badge-live.live-sonar .tracker-badge-dot {
+  animation: tp-heartbeat 2s ease-in-out infinite;
+}
+
+.tracker-badge--cached .tracker-badge-dot,
+.tracker-badge--stale .tracker-badge-dot,
+.tracker-badge--unavailable .tracker-badge-dot,
+.tracker-badge--closed .tracker-badge-dot {
+  animation: none;
+  box-shadow: none;
 }
 
 @keyframes tp-heartbeat {
@@ -511,17 +523,18 @@ body.tracker-pro-page {
   100% {
     transform: scale(1);
     opacity: 1;
-    box-shadow: 0 0 0 0 rgb(74 222 128 / 50%);
+    box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 50%, transparent);
   }
   50% {
     transform: scale(1.2);
     opacity: 0.85;
-    box-shadow: 0 0 0 5px rgb(74 222 128 / 0%);
+    box-shadow: 0 0 0 5px color-mix(in srgb, currentColor 0%, transparent);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tracker-badge-dot {
+  .tracker-badge-live .tracker-badge-dot,
+  .tracker-badge-live.live-sonar .tracker-badge-dot {
     animation: none;
   }
 }
@@ -4311,6 +4324,15 @@ td.tracker-chg-down {
 
 .tracker-hero-main > * {
   animation: tp-hero-fade-up 0.42s var(--ease-premium) both;
+}
+
+/* Trust/freshness nodes must be visible on first paint — no entrance fade */
+.tracker-hero-main > .tracker-badge-row,
+.tracker-hero-main > #tp-freshness-badge-slot,
+.tracker-hero-main > #tp-quote-meta-slot,
+.tracker-hero-main > #tp-realtime-sla-slot,
+.tracker-hero-main > #tp-market-status-slot {
+  animation: none;
 }
 
 .tracker-hero-main > *:nth-child(1) { animation-delay: 0ms; }
