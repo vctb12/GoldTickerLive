@@ -66,12 +66,14 @@ describe('billing-repository API key hashing', () => {
     const expectedPbkdf2 = crypto
       .pbkdf2Sync(created.key, process.env.API_KEY_HASH_SALT, 2, 32, 'sha512')
       .toString('hex');
-    const legacySha256 = crypto.createHash('sha256').update(created.key).digest('hex');
+    const legacyPbkdf2 = crypto
+      .pbkdf2Sync(created.key, process.env.API_KEY_HASH_SALT, 2, 32, 'sha256')
+      .toString('hex');
 
     assert.equal(stored.keyHash, expectedPbkdf2);
     assert.equal(stored.keyHash.length, 64);
     assert.notEqual(stored.keyHash, created.key, 'raw key must never be stored as the hash');
-    assert.notEqual(stored.keyHash, legacySha256, 'legacy SHA-256 hashes must not be written');
+    assert.notEqual(stored.keyHash, legacyPbkdf2, 'legacy non-sha512 PBKDF2 hashes must not be written');
 
     const resolved = await repo.resolveApiKey(created.key);
     assert.deepEqual(resolved, {
