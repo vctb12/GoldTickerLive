@@ -168,3 +168,45 @@ for (const file of countryHubFiles()) {
     assert.ok(dataset.variableMeasured, `${file}: Dataset missing variableMeasured`);
   });
 }
+
+// Trust-framing guard (PR #448 review): reference pricing must be explicit on
+// the country hubs (meta description + Dataset) — these are trust surfaces, so
+// a bare "live gold price" without the reference qualifier is a regression.
+for (const file of countryHubFiles()) {
+  test(`${file}: meta description + Dataset state reference pricing`, () => {
+    const html = read(file);
+    const desc = getMeta(head(html), 'name', 'description') || '';
+    assert.match(desc, /reference/i, `${file}: meta description must state reference pricing`);
+    const dataset = jsonLdObjects(html).find((o) => o['@type'] === 'Dataset');
+    assert.ok(dataset, `${file}: missing Dataset`);
+    assert.match(
+      dataset.description,
+      /reference/i,
+      `${file}: Dataset.description must state reference pricing`
+    );
+  });
+}
+
+test('calculator.html: reference framing across description, WebApplication, and social tags', () => {
+  const html = read('calculator.html');
+  const h = head(html);
+  const surfaces = [
+    ['meta description', getMeta(h, 'name', 'description') || ''],
+    ['og:description', getMeta(h, 'property', 'og:description') || ''],
+    ['twitter:description', getMeta(h, 'name', 'twitter:description') || ''],
+  ];
+  for (const [label, value] of surfaces) {
+    assert.match(value, /reference/i, `calculator ${label} must state reference rates`);
+    assert.doesNotMatch(
+      value,
+      /live gold rates/i,
+      `calculator ${label} must not claim "live gold rates"`
+    );
+  }
+  const app = jsonLdObjects(html).find((o) => o['@type'] === 'WebApplication');
+  assert.match(
+    app.description,
+    /reference/i,
+    'WebApplication.description must state reference rates'
+  );
+});
