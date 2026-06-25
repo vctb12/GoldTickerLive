@@ -116,8 +116,9 @@ Spot-check: 360px EN, 360px AR (`?lang=ar`), 430px EN — hero, tabs, live chart
 
 ---
 
-## Follow-up (out of scope)
+## Follow-up (post-program)
 
-- Wire `tracker.html` hardcoded EN strings → `translations.js` (separate i18n pass)
 - Split `tracker-pro.css` into `styles/pages/tracker/` partials (maintenance)
 - Lighthouse before/after capture for PR proof gallery
+
+**Closure polish (2026-06-25):** Phase 7 sticky hero controls ≤960px, glass select tokens, welcome-strip anti-FOUC. See [`reports/tracker-30-phase-completion.md`](../reports/tracker-30-phase-completion.md).
