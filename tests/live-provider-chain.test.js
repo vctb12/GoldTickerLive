@@ -75,3 +75,25 @@ test('createPrimaryQuoteProvider uses mintedmetal as a sequential failover', asy
   assert.equal(quote.price, 4501.25);
   assert.equal(quote.providerId, 'minted_metal');
 });
+
+test('withTimeoutCap clamps the engine budget to a provider cap', async () => {
+  const { withTimeoutCap } = await loadFactory();
+  const seen = [];
+  const fake = {
+    providerId: 'gold_api_com',
+    fetchQuote: async (ctx) => {
+      seen.push(ctx?.timeoutMs);
+      return { price: 2500, providerId: 'gold_api_com' };
+    },
+  };
+  const capped = withTimeoutCap(fake, 2000);
+
+  assert.equal(capped.providerId, 'gold_api_com');
+  // Engine's larger budget (5s) is clamped down to the 2s cap.
+  await capped.fetchQuote({ timeoutMs: 5000 });
+  // A tighter inbound budget is still honoured.
+  await capped.fetchQuote({ timeoutMs: 1200 });
+  // No inbound budget → the cap is used.
+  await capped.fetchQuote({});
+  assert.deepEqual(seen, [2000, 1200, 2000]);
+});
