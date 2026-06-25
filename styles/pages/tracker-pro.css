@@ -1713,7 +1713,7 @@ body.tracker-workspace-basic .tracker-advanced-only {
 .tracker-table td {
   padding: 0.72rem 0.9rem;
   border-bottom: 1px solid var(--border-subtle);
-  text-align: left;
+  text-align: start;
   font-size: 0.86rem;
   vertical-align: middle;
 }
@@ -2734,7 +2734,7 @@ td.tracker-chg-down {
 .tp-keyboard-help-close {
   position: absolute;
   top: 1rem;
-  right: 1rem;
+  inset-inline-end: 1rem;
   background: none;
   border: 1px solid var(--tp-border);
   border-radius: var(--tp-radius-sm);
