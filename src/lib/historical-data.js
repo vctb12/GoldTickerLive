@@ -59,13 +59,43 @@ function baselineToRecord(entry) {
 }
 
 /**
+ * Coerce a history record date to a sortable ISO key (YYYY-MM or YYYY-MM-DD).
+ * Accepts strings, Date objects, and numeric epoch ms/s values.
+ * @param {string|number|Date|null|undefined} value
+ * @returns {string}
+ */
+function toDateKey(value) {
+  if (value == null || value === '') return '';
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (/^\d{4}-\d{2}$/.test(trimmed)) return trimmed;
+    if (/^\d{4}-\d{2}-\d{2}/.test(trimmed)) return trimmed.slice(0, 10);
+  }
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const ms = value >= 1e12 ? value : value >= 1e9 ? value * 1000 : value;
+    const date = new Date(ms);
+    return Number.isFinite(date.getTime()) ? date.toISOString().slice(0, 10) : '';
+  }
+  if (value instanceof Date) {
+    return Number.isFinite(value.getTime()) ? value.toISOString().slice(0, 10) : '';
+  }
+  const parsed = new Date(value);
+  if (Number.isFinite(parsed.getTime())) return parsed.toISOString().slice(0, 10);
+  return String(value).slice(0, 10);
+}
+
+function toMonthKey(value) {
+  const key = toDateKey(value);
+  return key.length >= 7 ? key.slice(0, 7) : key;
+}
+
+/**
  * Normalise a daily cached entry (from localStorage/STATE.history).
  * @param {{ date: string|Date, price?: number, spot?: number, timestamp?: number }} entry
  * @returns {HistoryRecord}
  */
 function normalizeCachedDate(entry) {
-  if (entry.date instanceof Date) return entry.date.toISOString().slice(0, 10);
-  return String(entry.date || '').slice(0, 10);
+  return toDateKey(entry.date);
 }
 
 function cachedToRecord(entry) {
@@ -121,8 +151,11 @@ export function getUnifiedHistory(cachedDaily = []) {
   }
 
   const injectDaily = (r) => {
-    const monthKey = r.date.slice(0, 7);
-    monthMap[r.date] = r;
+    const dateKey = toDateKey(r.date);
+    if (!dateKey) return;
+    const monthKey = toMonthKey(dateKey);
+    const normalized = { ...r, date: dateKey };
+    monthMap[dateKey] = normalized;
     if (monthMap[monthKey]?.granularity === 'monthly') {
       monthMap[monthKey].superseded = true;
     }
@@ -332,7 +365,7 @@ export function computeYoYChange(records) {
   const oneYearAgo = new Date();
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
   const yearAgoStr = oneYearAgo.toISOString().slice(0, 7);
-  const yearAgoEntry = [...records].reverse().find((r) => r.date.slice(0, 7) <= yearAgoStr);
+  const yearAgoEntry = [...records].reverse().find((r) => toMonthKey(r.date) <= yearAgoStr);
   if (!yearAgoEntry) return null;
   return ((latest - yearAgoEntry.price) / yearAgoEntry.price) * 100;
 }
@@ -353,7 +386,9 @@ export function getHistoryStats(records) {
 
   // YTD: compare to start of this year
   const yearStart = `${new Date().getFullYear()}-01`;
-  const ytdEntry = records.find((r) => r.date.slice(0, 7) === yearStart || r.date >= yearStart);
+  const ytdEntry = records.find(
+    (r) => toMonthKey(r.date) === yearStart || toDateKey(r.date) >= yearStart
+  );
   const ytdChange = ytdEntry ? ((latest - ytdEntry.price) / ytdEntry.price) * 100 : null;
 
   const yoyChange = computeYoYChange(records);
