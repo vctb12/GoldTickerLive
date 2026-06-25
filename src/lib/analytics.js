@@ -12,12 +12,15 @@
  *     replaced by its character length only.
  *   - Event payloads are validated against EVENT_SCHEMA (non-throwing).
  *   - price_view is sampled at PRICE_VIEW_SAMPLE_RATE to avoid volume noise.
- *   - Supabase write is best-effort / non-blocking (never throws).
+ *   - Supabase write is best-effort / non-blocking (never throws), and is gated
+ *     by CONSTANTS.ANALYTICS_SUPABASE_ENABLED (off until an anon-insert RLS
+ *     policy exists, so it never 401s on the client).
  *   - Local/dev debug mode can log event validation + dispatch details.
  *   - No new runtime dependency; uses the existing Supabase anon key.
  */
 
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../config/supabase.js';
+import { CONSTANTS } from '../config/index.js';
 
 // ── Event name catalog ────────────────────────────────────────────────────────
 
@@ -255,6 +258,13 @@ export function getEventInventory() {
  * @param {Record<string, unknown>} safeParams  Already-sanitized parameters.
  */
 function _persistToSupabase(name, safeParams) {
+  // The Supabase mirror needs an RLS policy that allows the `anon` role to
+  // INSERT into analytics_events; until that policy is live the POST returns 401
+  // and surfaces in the browser console/network log. Skip the request entirely
+  // while disabled — GA4 still receives every event via the gtag path in
+  // track(). Flip CONSTANTS.ANALYTICS_SUPABASE_ENABLED once the RLS policy
+  // exists (see docs/ANALYTICS_EVENTS.md and the PR notes).
+  if (!CONSTANTS.ANALYTICS_SUPABASE_ENABLED) return;
   const url = `${SUPABASE_URL}/rest/v1/analytics_events`;
   const body = JSON.stringify({
     event: name,

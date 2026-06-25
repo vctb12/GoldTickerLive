@@ -194,19 +194,24 @@ export async function fetchGold({ signal, timeoutMs } = {}) {
   const effectiveTimeoutMs =
     Number.isFinite(timeoutMs) && timeoutMs > 0 ? timeoutMs : CONSTANTS.GOLD_FETCH_TIMEOUT;
 
-  // Prefer backend API when available, then fall back to static JSON so
-  // GitHub Pages mode stays fully functional.
-  try {
-    const backendRes = await fetchWithTimeout(
-      GOLD_BACKEND_URL,
-      Math.min(effectiveTimeoutMs, 4000),
-      { signal }
-    );
-    const backendData = await backendRes.json();
-    const normalized = normalizeGoldResponse(backendData);
-    if (normalized) return normalized;
-  } catch {
-    // Backend unavailable or invalid; continue to static fallback.
+  // Prefer the versioned backend API when it is actually deployed (same-origin
+  // `/api/v1/*`), then fall back to static JSON. On static GitHub Pages there is
+  // no backend, so this probe is gated behind CONSTANTS.API_BACKEND_ENABLED to
+  // avoid a guaranteed 404 on every load; the committed JSON below is the source
+  // of truth there.
+  if (CONSTANTS.API_BACKEND_ENABLED) {
+    try {
+      const backendRes = await fetchWithTimeout(
+        GOLD_BACKEND_URL,
+        Math.min(effectiveTimeoutMs, 4000),
+        { signal }
+      );
+      const backendData = await backendRes.json();
+      const normalized = normalizeGoldResponse(backendData);
+      if (normalized) return normalized;
+    } catch {
+      // Backend unavailable or invalid; continue to static fallback.
+    }
   }
 
   try {

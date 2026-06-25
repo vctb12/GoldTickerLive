@@ -623,6 +623,12 @@ function updateServerAlertUiState() {
 }
 
 async function probeServerAlertsAvailability() {
+  // Static GitHub Pages has no `/api/v1/*` backend, so this capability probe
+  // would 404 on every tracker load. Skip it unless a backend is actually
+  // deployed (CONSTANTS.API_BACKEND_ENABLED). All server-alert UI and POSTs are
+  // gated on the returned value, so returning false here cleanly keeps the
+  // tracker on the local-alert path with no failed request.
+  if (!CONSTANTS.API_BACKEND_ENABLED) return false;
   try {
     const res = await fetch('/api/v1/config/public', {
       method: 'GET',
