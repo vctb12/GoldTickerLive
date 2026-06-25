@@ -144,3 +144,16 @@ not affect live Stripe until/if the server is deployed.
 **Owner sign-off before merge/deploy.** Ensure `SUPABASE_SERVICE_ROLE_KEY` is set in the server
 environment, else billing endpoints 401 by design. **Rollback.** Revert the one-line change.
 **Verified:** 1081/1081 tests, eslint clean.
+
+---
+
+## Phase 8 — RLS regression assertions 🟥 STAGED
+
+**File:** `supabase/verify.sql` (section 11)
+
+**What & why.** Adds manual SQL assertions that an authenticated NON-admin and an anon session both
+read 0 rows from `orders` / `pricing_overrides` after Phase 1, while an admin can. Wiring into CI
+needs a live Supabase test project (no DB in CI today) — left as an owner action.
+
+**Apply.** Paste section 11 into the Supabase SQL editor after Phase 1, substituting real
+`auth.users` UUIDs. **Rollback.** N/A (verification only).

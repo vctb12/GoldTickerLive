@@ -14,3 +14,4 @@
 | 04 — Schema integrity (no retail Offer) | GREEN | ✅        | 1081 ✓ (+schema/content checks)    | `scripts/node/inject-schema.js` + ~120 reference HTML    |
 | 05 — Sitemap canonical alignment        | GREEN | ✅        | 1081 ✓ (sitemap regenerated)       | `build/generateSitemap.js`                               |
 | 06 — Billing fail-closed                | RED   | 🟥 staged | 1081 ✓                             | `server/routes/billing.js`                               |
+| 08 — RLS regression assertions          | RED   | 🟥 staged | n/a (SQL)                          | `supabase/verify.sql`                                    |
