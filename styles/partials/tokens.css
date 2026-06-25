@@ -40,10 +40,16 @@
   --color-fixed-border: rgb(16 80 160 / 22%);
   --color-stale: #a84000;
   --color-stale-bg: rgb(168 64 0 / 9%);
-  --color-up: #176832;
-  --color-up-bg: rgb(23 104 50 / 8%);
-  --color-down: #b81428;
-  --color-down-bg: rgb(184 20 40 / 8%);
+  --color-move-up: #176832;
+  --color-move-down: #b81428;
+  --color-move-up-bg: rgb(23 104 50 / 8%);
+  --color-move-down-bg: rgb(184 20 40 / 8%);
+  --color-move-up-border: rgb(23 104 50 / 22%);
+  --color-move-down-border: rgb(184 20 40 / 22%);
+  --color-up: var(--color-move-up);
+  --color-down: var(--color-move-down);
+  --color-up-bg: var(--color-move-up-bg);
+  --color-down-bg: var(--color-move-down-bg);
   --color-error: #b81428;
   --color-error-bg: rgb(184 20 40 / 8%);
   --color-error-border: #f87171; /* error card / danger-zone border */
@@ -292,6 +298,35 @@
     var(--color-gold) 80%,
     transparent
   );
+
+  /* ── Design System v4 — unified movement + readable data scale ── */
+  --color-champagne: #d4b86a;
+  --color-champagne-soft: #f5ecd4;
+
+  /* Readable UI / data type scale — fixes tiny-text walls */
+  --text-ui-xs: 0.8125rem;
+  --text-ui-sm: 0.875rem;
+  --text-ui-base: 0.9375rem;
+  --text-ui-md: 1.0625rem;
+  --text-data-sm: 1rem;
+  --text-data-md: 1.25rem;
+  --text-data-lg: clamp(1.65rem, 3.6vw, 2.35rem);
+  --text-data-xl: clamp(2.1rem, 4.8vw, 3.15rem);
+
+  /* Component primitive tokens */
+  --control-height: 44px;
+  --control-height-sm: 36px;
+  --segmented-bg: var(--surface-secondary);
+  --segmented-border: var(--border-subtle);
+  --segmented-active-bg: var(--gradient-gold-subtle);
+  --segmented-active-border: color-mix(in srgb, var(--color-gold) 42%, transparent);
+  --card-padding: var(--space-4);
+  --table-cell-padding: 0.85rem 1rem;
+  --table-header-size: var(--text-ui-xs);
+  --table-body-size: var(--text-ui-sm);
+  --badge-height: 28px;
+  --section-fade-height: 48px;
+  --section-gap: var(--space-6);
 }
 
 /* ═══════════════════════════════════════════════
@@ -329,8 +364,16 @@
   --color-daily: #f0a350;
   --color-fixed: #6ba3f0;
   --color-stale: #f0a350;
-  --color-up: #5dd98b;
-  --color-down: #f87171;
+  --color-move-up: #5dd98b;
+  --color-move-down: #f87171;
+  --color-move-up-bg: rgb(93 217 139 / 12%);
+  --color-move-down-bg: rgb(248 113 113 / 12%);
+  --color-move-up-border: rgb(93 217 139 / 28%);
+  --color-move-down-border: rgb(248 113 113 / 28%);
+  --color-up: var(--color-move-up);
+  --color-down: var(--color-move-down);
+  --color-up-bg: var(--color-move-up-bg);
+  --color-down-bg: var(--color-move-down-bg);
   --color-error: #f87171;
   --color-warning: #e0b060;
   --color-warning-text: #e0b060;

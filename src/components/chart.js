@@ -55,6 +55,47 @@ const CUSTOM_RANGE_MS = {
   '1Y': 365 * 86400000,
 };
 
+function readChartTheme() {
+  const root = document.documentElement;
+  const styles = window.getComputedStyle(root);
+  const pick = (token, fallback) => styles.getPropertyValue(token).trim() || fallback;
+  return {
+    text: pick('--text-secondary', '#6a6050'),
+    grid: pick('--border-subtle', 'rgba(230,224,208,0.5)'),
+    border: pick('--border-default', 'rgba(230,224,208,0.8)'),
+    line: pick('--color-gold', '#c4902e'),
+    areaTop: pick('--color-gold-glow', 'rgba(196,144,46,0.22)'),
+    areaBottom: 'rgba(196,144,46,0.02)',
+  };
+}
+
+function applyChartTheme(chart, series) {
+  if (!chart || !series) return;
+  const theme = readChartTheme();
+  chart.applyOptions({
+    layout: {
+      background: { color: 'transparent' },
+      textColor: theme.text,
+    },
+    grid: {
+      vertLines: { color: theme.grid },
+      horzLines: { color: theme.grid },
+    },
+    rightPriceScale: {
+      borderColor: theme.border,
+      textColor: theme.text,
+    },
+    timeScale: {
+      borderColor: theme.border,
+    },
+  });
+  series.applyOptions({
+    lineColor: theme.line,
+    topColor: theme.areaTop,
+    bottomColor: theme.areaBottom,
+  });
+}
+
 export class GoldChart {
   constructor(containerId, lang = 'en') {
     this.containerId = containerId;
@@ -119,21 +160,21 @@ export class GoldChart {
       height: chartHeight,
       layout: {
         background: { color: 'transparent' },
-        textColor: '#6a6050',
+        textColor: readChartTheme().text,
         fontFamily: "'Cairo', system-ui, sans-serif",
       },
       grid: {
-        vertLines: { color: 'rgba(230,224,208,0.5)' },
-        horzLines: { color: 'rgba(230,224,208,0.5)' },
+        vertLines: { color: readChartTheme().grid },
+        horzLines: { color: readChartTheme().grid },
       },
       crosshair: { mode: 1 },
       rightPriceScale: {
-        borderColor: 'rgba(230,224,208,0.8)',
-        textColor: '#6a6050',
+        borderColor: readChartTheme().border,
+        textColor: readChartTheme().text,
         minimumWidth: 65,
       },
       timeScale: {
-        borderColor: 'rgba(230,224,208,0.8)',
+        borderColor: readChartTheme().border,
         timeVisible: true,
         secondsVisible: false,
         rightOffset: 5,
@@ -142,12 +183,21 @@ export class GoldChart {
       handleScale: true,
     });
 
+    const theme = readChartTheme();
     this._series = this._chart.addSeries(this._LW.AreaSeries, {
-      lineColor: '#c9a84c',
-      topColor: 'rgba(201,168,76,0.22)',
-      bottomColor: 'rgba(201,168,76,0.02)',
+      lineColor: theme.line,
+      topColor: theme.areaTop,
+      bottomColor: theme.areaBottom,
       lineWidth: 2,
       priceFormat: { type: 'price', precision: 2, minMove: 0.01 },
+    });
+
+    this._themeObserver = new MutationObserver(() => {
+      applyChartTheme(this._chart, this._series);
+    });
+    this._themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
     });
 
     const ro = new ResizeObserver(() => {
@@ -175,6 +225,7 @@ export class GoldChart {
     link.rel = 'noopener noreferrer';
     link.textContent = isAr ? 'مخططات من TradingView' : 'Charts by TradingView';
     container.appendChild(link);
+    applyChartTheme(this._chart, this._series);
   }
 
   _showFallback(reason) {

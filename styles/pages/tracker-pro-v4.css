@@ -1,0 +1,491 @@
+/* tracker-pro-v4.css — Design System v4 elevation layer
+   Loaded via tracker-pro.css @import for maintainability. */
+
+/* ── Hero → workspace smooth transition ─────────────────────────────────── */
+
+.tracker-hero-wrap::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: var(--section-fade-height);
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--surface-canvas) 35%, transparent) 55%,
+    var(--surface-canvas) 100%
+  );
+}
+
+.tracker-mode-shell {
+  position: sticky;
+  top: calc(var(--nav-height) + 2px);
+  z-index: calc(var(--z-nav) - 1);
+  padding-block: var(--space-3);
+  margin-block-end: var(--space-4);
+  background: color-mix(in srgb, var(--surface-primary) 88%, transparent);
+  backdrop-filter: blur(18px) saturate(1.4);
+  border-block-end: 1px solid var(--border-subtle);
+  box-shadow: 0 8px 24px rgb(21 17 10 / 5%);
+}
+
+.tracker-modes-wrap {
+  width: var(--tp-shell);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+/* ── Live price hero readout ─────────────────────────────────────────────── */
+
+.tracker-hero-readout {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--space-4);
+  align-items: center;
+  margin-block: var(--space-5) var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--tp-hero-border);
+  background: var(--tp-hero-glass);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 7%),
+    var(--shadow-md);
+}
+
+.tracker-hero-readout__k {
+  display: block;
+  font-size: var(--text-ui-xs);
+  font-weight: var(--weight-extrabold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  color: var(--tp-hero-faint);
+  margin-block-end: 0.35rem;
+}
+
+.tracker-hero-readout__v {
+  display: block;
+  font-family: var(--font-numeric);
+  font-size: var(--text-data-xl);
+  font-weight: var(--weight-extrabold);
+  font-variant-numeric: tabular-nums;
+  color: var(--tp-hero-text);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+}
+
+.tracker-hero-readout__unit {
+  display: block;
+  margin-block-start: 0.25rem;
+  font-size: var(--text-ui-sm);
+  color: var(--tp-hero-muted);
+}
+
+.tracker-hero-readout__divider {
+  width: 1px;
+  align-self: stretch;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in srgb, var(--color-gold) 35%, transparent) 50%,
+    transparent
+  );
+}
+
+.tracker-hero-readout__disclaimer {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding-block-start: var(--space-2);
+  border-block-start: 1px solid color-mix(in srgb, var(--color-gold) 18%, transparent);
+  font-size: var(--text-ui-sm);
+  color: var(--tp-hero-muted);
+  line-height: var(--leading-relaxed);
+}
+
+.tracker-hero-readout__disclaimer a {
+  color: var(--tp-gold-light);
+}
+
+/* ── Command center metadata card ──────────────────────────────────────── */
+
+.tracker-command-meta-card {
+  display: grid;
+  gap: var(--space-3);
+  margin-block: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 16%, var(--tp-hero-border));
+  background: color-mix(in srgb, var(--tp-hero-glass) 90%, rgb(255 255 255 / 3%));
+  backdrop-filter: blur(10px);
+}
+
+.tracker-command-meta-card__heading {
+  margin: 0;
+  font-size: var(--text-ui-xs);
+  font-weight: var(--weight-extrabold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  color: var(--tp-hero-faint);
+}
+
+.tracker-command-meta-card .tracker-addon-slot {
+  margin: 0;
+}
+
+.tracker-command-meta-card .quote-meta-panel {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.tracker-command-meta-card .quote-meta-panel__list {
+  grid-template-columns: minmax(120px, max-content) 1fr;
+  gap: var(--space-2) var(--space-4);
+}
+
+.tracker-command-meta-card .quote-meta-panel__label {
+  font-size: var(--text-ui-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tracker-command-meta-card .quote-meta-panel__value {
+  font-size: var(--text-ui-sm);
+}
+
+/* ── Hero controls toolbar ───────────────────────────────────────────────── */
+
+.tracker-hero-controls {
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 14%, var(--tp-hero-border));
+  background: color-mix(in srgb, var(--tp-hero-glass) 85%, transparent);
+}
+
+.tracker-hero-field--unit .ds-segmented {
+  width: 100%;
+  justify-content: stretch;
+}
+
+.tracker-hero-field--unit .ds-segmented__btn {
+  flex: 1;
+}
+
+.tracker-hero-field--unit select.sr-only-focusable {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Toolbar card — breathable control band ─────────────────────────────── */
+
+.tracker-toolbar-card {
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-xl);
+  background: var(--gradient-card);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+  margin-block-end: var(--section-gap);
+}
+
+.tracker-control-grid {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-3);
+}
+
+.tracker-field span {
+  font-size: var(--text-ui-xs);
+}
+
+.tracker-field select,
+.tracker-field input,
+.tracker-search input {
+  font-size: var(--text-ui-sm);
+  min-height: var(--control-height);
+}
+
+/* ── Price matrix tables ─────────────────────────────────────────────────── */
+
+.tracker-ladder-table-wrap,
+.tracker-table-scroll {
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+}
+
+.tracker-table th,
+.tracker-table td {
+  padding: var(--table-cell-padding);
+  font-size: var(--table-body-size);
+}
+
+.tracker-table th {
+  font-size: var(--table-header-size);
+  background: linear-gradient(180deg, var(--surface-secondary), var(--surface-tertiary));
+  border-block-end: 1.5px solid color-mix(in srgb, var(--color-gold) 16%, var(--border-default));
+}
+
+.tracker-table td:nth-child(n + 3),
+.tracker-table th:nth-child(n + 3) {
+  text-align: end;
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+}
+
+.tracker-karat-table tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--color-gold) 3%, var(--surface-primary));
+}
+
+.tracker-karat-table td[data-karat-price] {
+  font-size: var(--text-data-sm);
+  font-weight: var(--weight-bold);
+}
+
+td.tracker-chg-up {
+  color: var(--color-move-up);
+}
+
+td.tracker-chg-down {
+  color: var(--color-move-down);
+}
+
+.tracker-price-change-strip--up {
+  background: var(--color-move-up-bg);
+  color: var(--color-move-up);
+  border: 1px solid var(--color-move-up-border);
+}
+
+.tracker-price-change-strip--down {
+  background: var(--color-move-down-bg);
+  color: var(--color-move-down);
+  border: 1px solid var(--color-move-down-border);
+}
+
+.tracker-tag.up {
+  color: var(--color-move-up);
+  background: var(--color-move-up-bg);
+  border-color: var(--color-move-up-border);
+}
+
+.tracker-tag.down {
+  color: var(--color-move-down);
+  background: var(--color-move-down-bg);
+  border-color: var(--color-move-down-border);
+}
+
+/* ── Chart terminal + skeleton states ────────────────────────────────────── */
+
+.tracker-chart-wrap {
+  min-height: 420px;
+}
+
+.tracker-chart-skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  padding: var(--space-5);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tp-chart-bg) 70%, transparent),
+    var(--tp-chart-bg)
+  );
+  pointer-events: none;
+  transition: opacity var(--duration-normal) var(--ease-out);
+}
+
+.tracker-chart-wrap:not(.is-loading) .tracker-chart-skeleton {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.tracker-chart-skeleton__line {
+  block-size: 8px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-gold) 8%, var(--surface-tertiary)) 0%,
+    color-mix(in srgb, var(--color-gold) 18%, var(--surface-secondary)) 50%,
+    color-mix(in srgb, var(--color-gold) 8%, var(--surface-tertiary)) 100%
+  );
+  background-size: 200% 100%;
+  animation: tp-chart-shimmer 1.4s ease-in-out infinite;
+}
+
+.tracker-chart-skeleton__line:nth-child(1) {
+  inline-size: 92%;
+}
+.tracker-chart-skeleton__line:nth-child(2) {
+  inline-size: 78%;
+}
+.tracker-chart-skeleton__line:nth-child(3) {
+  inline-size: 85%;
+}
+.tracker-chart-skeleton__line:nth-child(4) {
+  inline-size: 64%;
+}
+.tracker-chart-skeleton__line:nth-child(5) {
+  inline-size: 70%;
+}
+
+@keyframes tp-chart-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.tracker-chart-empty {
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  text-align: center;
+  font-size: var(--text-ui-sm);
+  background: color-mix(in srgb, var(--surface-secondary) 60%, transparent);
+}
+
+.tracker-stat-k {
+  font-size: var(--text-ui-xs);
+}
+
+.tracker-stat-v {
+  font-size: var(--text-data-md);
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Panel rhythm — reduce dead gaps ─────────────────────────────────────── */
+
+.tracker-main-shell {
+  padding-block-start: var(--space-2);
+}
+
+.tracker-panel {
+  margin-block-end: var(--section-gap);
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-subtle);
+  background: var(--gradient-card);
+  box-shadow: var(--shadow-sm);
+}
+
+.tracker-panel-head h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  letter-spacing: var(--tracking-tight);
+}
+
+.tracker-panel-head p {
+  font-size: var(--text-ui-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+  max-width: 68ch;
+}
+
+.tracker-command-note,
+.source-note {
+  font-size: var(--text-ui-sm);
+  line-height: var(--leading-relaxed);
+}
+
+/* ── RTL ─────────────────────────────────────────────────────────────────── */
+
+[dir='rtl'] .tracker-hero-readout__divider {
+  transform: scaleX(-1);
+}
+
+[dir='rtl'] .tracker-karat-table tbody tr.is-selected {
+  box-shadow: inset -3px 0 0 var(--tp-gold);
+}
+
+[dir='rtl'] .tracker-table td:nth-child(n + 3),
+[dir='rtl'] .tracker-table th:nth-child(n + 3) {
+  text-align: start;
+}
+
+[dir='rtl'] .chart-tv-attribution {
+  inset-inline-start: auto;
+  inset-inline-end: var(--space-2);
+}
+
+/* ── Dark theme parity ───────────────────────────────────────────────────── */
+
+[data-theme='dark'] .tracker-mode-shell {
+  background: color-mix(in srgb, var(--surface-primary) 90%, transparent);
+  box-shadow: 0 8px 28px rgb(0 0 0 / 28%);
+}
+
+[data-theme='dark'] .tracker-toolbar-card,
+[data-theme='dark'] .tracker-panel {
+  background: var(--gradient-card);
+  border-color: var(--border-default);
+}
+
+[data-theme='dark'] .tracker-ladder-table-wrap {
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 4%);
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+
+@media (width <= 1024px) {
+  .tracker-hero-readout {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .tracker-hero-readout__divider {
+    width: 100%;
+    height: 1px;
+  }
+
+  .tracker-hero-selectors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (width <= 640px) {
+  .tracker-hero-readout__v {
+    font-size: var(--text-data-lg);
+  }
+
+  .tracker-toolbar-card {
+    padding: var(--space-3);
+  }
+
+  .tracker-range-pills {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+
+  .tracker-range-pills::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tracker-chart-skeleton__line {
+    animation: none;
+  }
+
+  .tracker-hero-readout,
+  .tracker-mode-shell {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}

@@ -3435,3 +3435,118 @@
     height: 280px;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   Home — Design System v4 elevation
+   ══════════════════════════════════════════════════════════════ */
+
+.home-page main > section {
+  padding-block: var(--section-gap);
+}
+
+.home-page main > section + section {
+  border-block-start: 1px solid color-mix(in srgb, var(--color-gold) 8%, var(--border-subtle));
+}
+
+.hero-live-card.ds-card {
+  border: 1.5px solid color-mix(in srgb, var(--color-gold) 22%, var(--border-subtle));
+  box-shadow: var(--shadow-lg), var(--shadow-gold);
+  padding: var(--space-5);
+}
+
+.hlc-price {
+  font-family: var(--font-numeric);
+  font-size: var(--text-data-xl);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.hlc-stat-value,
+.hlc-change,
+.kstrip-price {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+}
+
+.hlc-stat-value--up,
+.hlc-direction--up,
+.hlc-change.badge-up {
+  color: var(--color-move-up);
+}
+
+.hlc-stat-value--down,
+.hlc-direction--down,
+.hlc-change.badge-down {
+  color: var(--color-move-down);
+}
+
+.home-chart-section,
+.home-price-trend,
+.home-tools,
+.karat-strip {
+  background: var(--gradient-section-alt);
+}
+
+.home-chart-wrap {
+  border-radius: var(--radius-xl);
+  border: 1.5px solid var(--border-subtle);
+  background: var(--surface-primary);
+  box-shadow: var(--shadow-sm);
+  min-height: 320px;
+}
+
+.home-chart-ranges.ds-segmented {
+  flex-shrink: 0;
+}
+
+.home-chart-range-btn.is-active {
+  background: var(--segmented-active-bg);
+  border-color: var(--segmented-active-border);
+  color: var(--text-accent);
+}
+
+.kstrip-unit-toggle {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--segmented-bg);
+  border: 1px solid var(--segmented-border);
+  gap: 0;
+}
+
+.kstrip-unit-btn {
+  min-height: var(--control-height-sm);
+  min-width: var(--control-height-sm);
+  padding: 0 0.85rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--text-ui-sm);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.kstrip-unit-btn.is-active,
+.kstrip-unit-btn[aria-pressed='true'] {
+  background: var(--segmented-active-bg);
+  border-color: var(--segmented-active-border);
+  color: var(--text-accent);
+  font-weight: var(--weight-extrabold);
+}
+
+.karat-card__price {
+  font-size: var(--text-data-md);
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (width <= 360px) {
+  .hlc-price {
+    font-size: var(--text-data-lg);
+  }
+}
