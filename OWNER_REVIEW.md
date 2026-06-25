@@ -184,3 +184,38 @@ weight. **Why staged.** Requires a ~390-page head change / build transform — h
 minimal diff; reclassified to staged per the minimal-diff guardrail (escape-hatch: "a GREEN phase
 can't be completed without [an invasive change]"). **Apply.** Add a dist head-transform step
 (sibling to `flatten-css.js`) or self-host fonts + preload. **Rollback.** Revert the transform.
+
+---
+
+## Phase 13 — Image pipeline (webp/avif + responsive) 🟥 STAGED (reclassified — invasive)
+
+**What & why.** `assets/` ships raw PNGs (og-image, favicons) with no webp/avif or responsive
+`<picture>` strategy. **Proposed.** A build step to emit webp/avif variants + `<picture>`/`srcset`
+on key images. **Why staged.** Needs a build script + per-page markup changes (not minimal).
+**Apply.** Add `scripts/node/build-images.js` (sharp) + update image markup; wire into build.
+**Rollback.** Revert the step. (Low urgency — few raster images.)
+
+---
+
+## Phase 14 — Pin Leaflet with SRI 🟥 STAGED (verify hashes before applying)
+
+**What & why.** `src/components/shops-map.js` loads Leaflet 1.9.4 from `unpkg.com` with no
+`integrity`/`crossorigin` (supply-chain risk; lazy-loaded, so scoped). **Proposed.** Add SRI to the
+injected `<script>`/`<link>`, OR self-host/pin Leaflet. Published Leaflet 1.9.4 hashes (⚠️ **verify
+against unpkg before shipping** — a wrong hash blocks the map):
+
+- `leaflet.js` → `integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="`
+- `leaflet.css` → `integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="` Add
+  `crossorigin="anonymous"`. **Why staged.** A mismatched hash silently breaks the (lazy) shops map
+  — verify first. **Rollback.** Remove the attributes.
+
+---
+
+## Phase 15 — Lighthouse budget gate (warn → error) 🟥 STAGED (needs real baseline)
+
+**What & why.** `lighthouserc.json` assertions are `warn`-only and `docs/performance-baseline.json`
+is self-declared **estimated**, so CI never blocks regressions. **Proposed.** Run Lighthouse CI once
+to capture a **real** measured baseline, then flip perf/a11y assertions from `warn` to `error` at
+thresholds the live site actually meets. **Why staged.** Flipping to `error` against estimated
+numbers would fail CI on inaccurate thresholds. **Apply.** Run `lhci autorun` on a deploy preview;
+set thresholds from real medians; change `warn`→`error`. **Rollback.** Revert to `warn`.
