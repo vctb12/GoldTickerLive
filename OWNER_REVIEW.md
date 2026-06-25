@@ -68,3 +68,41 @@ at the bottom of the migration file.
 read path was not traced (no public-read policy exists on that table, so browser tampering of
 _displayed_ prices is unconfirmed; write-access by any authenticated user is confirmed from the
 schema).
+
+---
+
+## Phase 2 — Allowlist hardening + signup lockdown 🟥 STAGED
+
+**What & why.** Admin authorization is currently enforced only client-side
+(`admin/supabase-config.js` `ALLOWED_EMAIL`), and the anon key is committed. Real enforcement must
+be DB-side (RLS, Phase 1) and, where a server exists, server-side.
+
+**Owner actions (in order):**
+
+1. Dashboard → Authentication → Providers → Email → **disable** "Allow new users to sign up"
+   (load-bearing — see Question A).
+2. Apply the Phase 1 migration, then bootstrap the owner admin role (migration step 4).
+3. _Only if/when the Express tier is deployed:_ enforce the allowlist in the admin auth middleware
+   (defense-in-depth). On static GitHub Pages prod the Express server is **not** deployed, so the DB
+   (`is_admin()` + RLS) is the real gate.
+
+**Proposed Express middleware** (verify against `server/lib/auth.js` + `server/routes/admin/` before
+wiring; do not commit secrets):
+
+```js
+const ADMIN_ALLOWLIST = (process.env.ADMIN_ALLOWLIST || '')
+  .split(',')
+  .map((s) => s.trim().toLowerCase())
+  .filter(Boolean);
+function requireAllowlistedAdmin(req, res, next) {
+  const email = req.user?.email?.toLowerCase();
+  if (!email || !ADMIN_ALLOWLIST.includes(email)) {
+    return res.status(403).json({ error: 'forbidden' });
+  }
+  next();
+}
+```
+
+**Apply.** Dashboard toggle + Phase 1 apply; middleware ships via normal deploy. **Rollback.**
+Re-enable the signup toggle; revert the middleware commit. **Open question.** Depends on (A) and
+(B).
