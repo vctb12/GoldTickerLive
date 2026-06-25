@@ -12,6 +12,26 @@ export const CONSTANTS = {
   GOLD_FETCH_TIMEOUT: 8000,
   FX_FETCH_TIMEOUT: 8000,
   HISTORY_DAYS: 90,
+
+  // ── Integration flags ───────────────────────────────────────────────────────
+  // Production is static GitHub Pages with no Express backend, so the versioned
+  // same-origin `/api/v1/*` endpoints always 404. Leave this false for static
+  // hosting; set true only where the Node server in `server/` actually serves
+  // `/api/v1/*` (self-hosted / Replit). Gates the backend price probe
+  // (`src/lib/api.js`) and the server-alerts capability probe
+  // (`src/pages/tracker-pro.js`) so neither fires a guaranteed-404 request on
+  // every page load. Does not affect pricing — static JSON remains the source
+  // of truth when this is off.
+  API_BACKEND_ENABLED: false,
+
+  // Client analytics are mirrored to the Supabase `analytics_events` table with
+  // the public anon key. That write returns 401 until an RLS policy grants the
+  // `anon` role INSERT (see PR notes and `docs/ANALYTICS_EVENTS.md`). Leave
+  // false so no request is sent at all — GA4 still receives every event via the
+  // gtag path. Flip to true only after the anon-insert RLS policy is live in
+  // the Supabase dashboard.
+  ANALYTICS_SUPABASE_ENABLED: false,
+
   CACHE_KEYS: {
     goldPrice: 'gold_price_cache',
     goldFallback: 'gold_price_fallback',
