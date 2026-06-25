@@ -52,4 +52,6 @@ order:
   automation durability | RED | 🟥 staged | n/a (proposals) | `OWNER_REVIEW.md` | | 49,50 —
   multi-metal / API+portfolio+push | SKIP | ⏭️ spec | n/a | `OWNER_REVIEW.md` | | 17 — Tracker
   toasts/workspace EN/AR i18n | GREEN | ✅ | 1081 ✓ (eslint) | `src/config/translations.js`,
-  `src/pages/tracker-pro.js`, `src/tracker/{events,ui-shell}.js`, `tracker.html` |
+  `src/pages/tracker-pro.js`, `src/tracker/{events,ui-shell}.js`, `tracker.html` | | PR-fix —
+  preserve Article datePublished (review item) | GREEN | ✅ | 1081 ✓ (validate) |
+  `scripts/node/inject-schema.js` + ~44 content HTML + reports |

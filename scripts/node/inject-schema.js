@@ -371,16 +371,23 @@ function generateSchemasForPage(filePath, content) {
 
   // Article pages get Article schema
   if (pageType === 'article') {
-    // Try to get file modification date
-    const stats = fs.statSync(filePath);
-    const dateModified = stats.mtime.toISOString().split('T')[0];
+    // Preserve existing publication dates across rebuilds. Re-running the
+    // injector must NOT bump datePublished/dateModified — doing so would falsely
+    // signal republication across the content hub on every schema regeneration.
+    // Reuse the dates already present in the page's Article JSON-LD; only fall
+    // back to the file mtime for brand-new pages that have no Article date yet.
+    const existingPublished = content.match(/"datePublished"\s*:\s*"(\d{4}-\d{2}-\d{2})"/);
+    const existingModified = content.match(/"dateModified"\s*:\s*"(\d{4}-\d{2}-\d{2})"/);
+    const mtimeDate = fs.statSync(filePath).mtime.toISOString().split('T')[0];
+    const datePublished = existingPublished ? existingPublished[1] : mtimeDate;
+    const dateModified = existingModified ? existingModified[1] : datePublished;
 
     schemas.push(
       getArticleSchema({
         headline: pageTitle,
         description: pageDescription,
         url: canonicalUrl || `${SITE_URL}${urlPath}`,
-        datePublished: dateModified,
+        datePublished,
         dateModified,
         inLanguage: pageLanguage,
       })
