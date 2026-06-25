@@ -16,3 +16,4 @@
 | 06 — Billing fail-closed                  | RED   | 🟥 staged | 1081 ✓                             | `server/routes/billing.js`                                    |
 | 08 — RLS regression assertions            | RED   | 🟥 staged | n/a (SQL)                          | `supabase/verify.sql`                                         |
 | 09 — CSS @import waterfall (dist flatten) | GREEN | ✅        | 1081 ✓                             | `scripts/node/flatten-css.js`, `.github/workflows/deploy.yml` |
+| 10 — Inline critical CSS                  | RED   | 🟥 staged | n/a (proposal)                     | `OWNER_REVIEW.md`                                             |

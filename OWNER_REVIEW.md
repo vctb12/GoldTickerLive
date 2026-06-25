@@ -157,3 +157,30 @@ needs a live Supabase test project (no DB in CI today) — left as an owner acti
 
 **Apply.** Paste section 11 into the Supabase SQL editor after Phase 1, substituting real
 `auth.users` UUIDs. **Rollback.** N/A (verification only).
+
+---
+
+## Phase 10 — Inline critical CSS 🟥 STAGED (touches sw.js — production-critical)
+
+**What & why.** Pages link `styles/critical.css` as a blocking `<link rel="stylesheet">` (plus a
+preload) rather than inlining it — defeating the documented critical-CSS strategy (extra round-trip
+before paint). **Proposed.** A build step that inlines `critical.css` into each page's `<head>`
+`<style>` and drops the blocking `<link>`; then update `sw.js` precache (critical.css no longer
+separately fetched) and re-run `check-sw-precache`. **Why staged.** Touches all ~390 page heads
+**and** `sw.js` (production-critical precache). Needs a verified build transform (sibling to
+`flatten-css.js` / `inject-schema.js`) + an `sw.js` review. **Apply.** Implement
+`scripts/node/inline-critical-css.js`, wire into build/deploy, re-run `npm run validate`
+(sw-precache gate). **Rollback.** Revert the build step.
+
+---
+
+## Phase 11 — Async / self-hosted fonts 🟥 STAGED (reclassified from GREEN — invasive)
+
+**What & why.** Google Fonts (Cairo) load as a render-blocking `<link rel="stylesheet">` in every
+page head (~390 files), blocking first paint on the critical path. **Proposed (minimal).** Rewrite
+to the async-swap pattern (`media="print" onload="this.media='all'"`) via a dist head-transform on
+leaf pages (root pages are handled by Vite), **or** self-host a subset Cairo woff2 and preload one
+weight. **Why staged.** Requires a ~390-page head change / build transform — higher value but not a
+minimal diff; reclassified to staged per the minimal-diff guardrail (escape-hatch: "a GREEN phase
+can't be completed without [an invasive change]"). **Apply.** Add a dist head-transform step
+(sibling to `flatten-css.js`) or self-host fonts + preload. **Rollback.** Revert the transform.
