@@ -50,4 +50,6 @@ order:
   content hubs; freshness-language precision.
 - **47** — observability: notify-on-failure across workflows. | 43,46,48 — AR path / GDPR /
   automation durability | RED | 🟥 staged | n/a (proposals) | `OWNER_REVIEW.md` | | 49,50 —
-  multi-metal / API+portfolio+push | SKIP | ⏭️ spec | n/a | `OWNER_REVIEW.md` |
+  multi-metal / API+portfolio+push | SKIP | ⏭️ spec | n/a | `OWNER_REVIEW.md` | | 17 — Tracker
+  toasts/workspace EN/AR i18n | GREEN | ✅ | 1081 ✓ (eslint) | `src/config/translations.js`,
+  `src/pages/tracker-pro.js`, `src/tracker/{events,ui-shell}.js`, `tracker.html` |
