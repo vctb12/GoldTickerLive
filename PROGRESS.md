@@ -22,3 +22,4 @@
 | 13 — Image pipeline                       | RED\* | 🟥 staged (reclassified)   | n/a (proposal)                     | `OWNER_REVIEW.md`                                             |
 | 14 — Leaflet SRI                          | RED\* | 🟥 staged (verify hashes)  | n/a (proposal)                     | `OWNER_REVIEW.md`                                             |
 | 15 — Lighthouse gate                      | RED\* | 🟥 staged (needs baseline) | n/a (proposal)                     | `OWNER_REVIEW.md`                                             |
+| 16 — Tracker onboarding EN/AR parity      | GREEN | ✅                         | 1081 ✓ (eslint, no dangling refs)  | `tracker.html`, `src/pages/tracker-pro.js`                    |

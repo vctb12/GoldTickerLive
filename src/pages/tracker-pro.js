@@ -15,7 +15,6 @@ import { resolveGoldIsFresh } from '../lib/quote-freshness-bridge.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 import { createInitialState, persistState } from '../tracker/state.js';
 import { el as safeEl } from '../lib/safe-dom.js';
-import { createFocusTrap } from '../lib/focus-trap.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { getBaselineRange } from '../lib/historical-data.js';
 import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
@@ -1714,41 +1713,10 @@ function initShareButtons() {
     ?.addEventListener('click', (e) => copyUrlToClipboard(e.currentTarget));
 }
 
-// ── First-time onboarding overlay ────────────────────────────────────────
-function initOnboarding() {
-  const SEEN_KEY = 'tracker_onb_seen';
-  const overlay = document.getElementById('tracker-onboarding');
-  if (!overlay) return;
-  try {
-    if (localStorage.getItem(SEEN_KEY) === '1') return;
-  } catch {
-    return;
-  }
-
-  const focusTrap = createFocusTrap(overlay, {
-    initialFocus: () => document.getElementById('onb-close'),
-  });
-
-  setTimeout(() => {
-    overlay.removeAttribute('hidden');
-    focusTrap.activate();
-  }, 1800);
-
-  function dismiss() {
-    overlay.setAttribute('hidden', '');
-    focusTrap.deactivate();
-    try {
-      localStorage.setItem(SEEN_KEY, '1');
-    } catch {}
-  }
-  document.getElementById('onb-dismiss')?.addEventListener('click', dismiss);
-  document.getElementById('onb-close')?.addEventListener('click', dismiss);
-  overlay.querySelector('.onb-backdrop')?.addEventListener('click', dismiss);
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !overlay.hasAttribute('hidden')) dismiss();
-  });
-}
+// First-time onboarding is handled by the bilingual welcome chip strip
+// (src/tracker/onboarding.js → localizeWelcomeStrip). The previous hardcoded-
+// English modal overlay was removed in phase 16 (EN/AR parity — it had no
+// translation keys and showed an all-English dialog to Arabic users).
 
 init();
 initShareButtons();
-initOnboarding();
