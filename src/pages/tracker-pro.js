@@ -15,7 +15,6 @@ import { resolveGoldIsFresh } from '../lib/quote-freshness-bridge.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 import { createInitialState, persistState } from '../tracker/state.js';
 import { el as safeEl } from '../lib/safe-dom.js';
-import { createFocusTrap } from '../lib/focus-trap.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { getBaselineRange } from '../lib/historical-data.js';
 import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
@@ -731,11 +730,7 @@ async function saveWatchlistToAccount() {
       metadata: { source: 'tracker-watchlist' },
     });
   }
-  showToast(
-    state.lang === 'ar'
-      ? `تم حفظ ${favorites.length} عناصر في حسابك.`
-      : `Saved ${favorites.length} watchlist items to your account.`
-  );
+  showToast(trackerTx('toast.watchlistSavedAccount', { count: favorites.length }));
 }
 
 function initMobileWorkspaceActions() {
@@ -843,7 +838,7 @@ function checkAlerts() {
 
 async function exportArchiveData() {
   if (!state.history.length) {
-    showToast('No archive data available.');
+    showToast(trackerTx('toast.noArchiveData'));
     return;
   }
   const records = state.history.map((r) => ({
@@ -856,7 +851,7 @@ async function exportArchiveData() {
     const expMod = await import('../lib/export.js');
     expMod.exportHistoricalCSV(records, state.selectedKarat);
   } catch (_e) {
-    showToast('Export failed');
+    showToast(trackerTx('toast.exportFailed'));
   }
 }
 
@@ -867,7 +862,7 @@ function exportHistoryData() {
 
 async function exportChartData() {
   if (!state.history.length) {
-    showToast('No chart data available yet.');
+    showToast(trackerTx('toast.noChartData'));
     return;
   }
   const flat = state.history.map((r) => ({
@@ -886,20 +881,20 @@ async function exportChartData() {
   try {
     const expMod = await import('../lib/export.js');
     expMod.exportChartCSV(rows, state.range, state.selectedKarat);
-    showToast('Chart CSV downloaded');
+    showToast(trackerTx('toast.chartCsvDownloaded'));
   } catch (_e) {
-    showToast('Export failed');
+    showToast(trackerTx('toast.exportFailed'));
   }
 }
 
 async function exportWatchlistData() {
   const spot = currentSpot();
   if (!spot) {
-    showToast('Waiting for live price data.');
+    showToast(trackerTx('toast.waitingLivePrice'));
     return;
   }
   if (!state.favorites?.length) {
-    showToast('No favorites in watchlist. Add currencies via Compare tab.');
+    showToast(trackerTx('toast.noFavorites'));
     return;
   }
   try {
@@ -914,22 +909,22 @@ async function exportWatchlistData() {
       selectedCurrency: state.selectedCurrency,
       lang: state.lang,
     });
-    showToast('Watchlist CSV downloaded');
+    showToast(trackerTx('toast.watchlistCsvDownloaded'));
   } catch (_e) {
-    showToast('Export failed');
+    showToast(trackerTx('toast.exportFailed'));
   }
 }
 
 async function exportComparisonData() {
   const spot = currentSpot();
   if (!spot) {
-    showToast('Waiting for live price data.');
+    showToast(trackerTx('toast.waitingLivePrice'));
     return;
   }
   const countries = getSelectedComparisonCountries();
   const karats = getSelectedComparisonKarats();
   if (!countries.length || !karats.length) {
-    showToast('Select at least one country and one karat.');
+    showToast(trackerTx('toast.selectCountryKarat'));
     return;
   }
   try {
@@ -946,9 +941,9 @@ async function exportComparisonData() {
       },
       lang: state.lang,
     });
-    showToast('Comparison CSV downloaded');
+    showToast(trackerTx('toast.comparisonCsvDownloaded'));
   } catch (_e) {
-    showToast('Export failed');
+    showToast(trackerTx('toast.exportFailed'));
   }
 }
 
@@ -956,15 +951,15 @@ async function exportBriefData() {
   const headline = el.briefHeadline?.textContent;
   const body = el.briefCopy?.textContent;
   if (!headline || headline.startsWith('Waiting')) {
-    showToast('Waiting for live data.');
+    showToast(trackerTx('toast.waitingLiveData'));
     return;
   }
   try {
     const expMod = await import('../lib/export.js');
     expMod.exportBriefText(headline, body);
-    showToast('Brief downloaded');
+    showToast(trackerTx('toast.briefDownloaded'));
   } catch (_e) {
-    showToast('Export failed');
+    showToast(trackerTx('toast.exportFailed'));
   }
 }
 
@@ -1013,7 +1008,7 @@ async function exportJsonData() {
     const expMod = await import('../lib/export.js');
     expMod.exportJSON(exportState, prices);
   } catch (_e) {
-    showToast('Export failed');
+    showToast(trackerTx('toast.exportFailed'));
   }
 }
 
@@ -1346,11 +1341,7 @@ function initAlertEngine() {
       updateAlertCountBadge(count);
     },
     onLimitWarning: (count, max) => {
-      showToast(
-        state.lang === 'ar'
-          ? `لديك ${count}/${max} تنبيهات. الحد الأقصى ${max}.`
-          : `You have ${count}/${max} alerts. Maximum is ${max}.`
-      );
+      showToast(trackerTx('toast.alertLimitWarning', { count, max }));
     },
   });
 
@@ -1546,11 +1537,7 @@ async function init() {
   });
   el.saveWatchlistAccount?.addEventListener('click', () => {
     saveWatchlistToAccount().catch(() => {
-      showToast(
-        state.lang === 'ar'
-          ? 'تعذر حفظ قائمة المراقبة حالياً.'
-          : 'Could not save watchlist right now.'
-      );
+      showToast(trackerTx('toast.watchlistSaveFailed'));
     });
   });
   el.currency?.addEventListener('change', () => syncCurrentCountryPageLink());
@@ -1714,41 +1701,10 @@ function initShareButtons() {
     ?.addEventListener('click', (e) => copyUrlToClipboard(e.currentTarget));
 }
 
-// ── First-time onboarding overlay ────────────────────────────────────────
-function initOnboarding() {
-  const SEEN_KEY = 'tracker_onb_seen';
-  const overlay = document.getElementById('tracker-onboarding');
-  if (!overlay) return;
-  try {
-    if (localStorage.getItem(SEEN_KEY) === '1') return;
-  } catch {
-    return;
-  }
-
-  const focusTrap = createFocusTrap(overlay, {
-    initialFocus: () => document.getElementById('onb-close'),
-  });
-
-  setTimeout(() => {
-    overlay.removeAttribute('hidden');
-    focusTrap.activate();
-  }, 1800);
-
-  function dismiss() {
-    overlay.setAttribute('hidden', '');
-    focusTrap.deactivate();
-    try {
-      localStorage.setItem(SEEN_KEY, '1');
-    } catch {}
-  }
-  document.getElementById('onb-dismiss')?.addEventListener('click', dismiss);
-  document.getElementById('onb-close')?.addEventListener('click', dismiss);
-  overlay.querySelector('.onb-backdrop')?.addEventListener('click', dismiss);
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !overlay.hasAttribute('hidden')) dismiss();
-  });
-}
+// First-time onboarding is handled by the bilingual welcome chip strip
+// (src/tracker/onboarding.js → localizeWelcomeStrip). The previous hardcoded-
+// English modal overlay was removed in phase 16 (EN/AR parity — it had no
+// translation keys and showed an all-English dialog to Arabic users).
 
 init();
 initShareButtons();
-initOnboarding();

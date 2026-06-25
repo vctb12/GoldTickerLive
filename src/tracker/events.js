@@ -196,7 +196,7 @@ export function bindCoreEvents() {
         ? next.findIndex((code, idx) => idx !== index && code === select.value)
         : -1;
       if (duplicateIndex !== -1) {
-        _cb.showToast('Pick different countries for each comparison slot.');
+        _cb.showToast(_cb.tx('toast.compareDuplicateCountry'));
         _cb.populateSelects();
         return;
       }
@@ -218,7 +218,7 @@ export function bindCoreEvents() {
       if (current.has(code)) current.delete(code);
       else if (current.size < 4) current.add(code);
       else {
-        _cb.showToast('Comparison supports up to 4 karats at once.');
+        _cb.showToast(_cb.tx('toast.compareKaratLimit'));
         return;
       }
       _state.compareKarats = [...current];
@@ -297,7 +297,7 @@ export function bindCoreEvents() {
     _state.alerts = [...(_state.alerts || []), { scope, direction: condition, target }];
     persistState(_state);
     _cb.renderAlerts();
-    _cb.showToast(`Alert ${condition} $${target} saved`);
+    _cb.showToast(_cb.tx('toast.alertSaved', { condition, target }));
     try {
       const maybePromise = _cb.syncAlertToAccount?.({ condition, target });
       if (maybePromise && typeof maybePromise.then === 'function') {
@@ -350,7 +350,7 @@ export function bindCoreEvents() {
     ];
     persistState(_state);
     _cb.renderPresets();
-    _cb.showToast(`Preset "${name}" saved`);
+    _cb.showToast(_cb.tx('toast.presetSaved', { name }));
     if (_el.presetName) _el.presetName.value = '';
   });
 
@@ -359,11 +359,11 @@ export function bindCoreEvents() {
     navigator.clipboard
       ?.writeText(window.location.href)
       .then(() => {
-        _cb.showToast('Preset URL copied to clipboard');
+        _cb.showToast(_cb.tx('toast.presetUrlCopied'));
         track(EVENTS.COPY_CLICK, { surface: 'tracker', value_type: 'preset_url' });
       })
       .catch(() => {
-        _cb.showToast('Failed to copy to clipboard');
+        _cb.showToast(_cb.tx('toast.clipboardFailed'));
       });
   });
 

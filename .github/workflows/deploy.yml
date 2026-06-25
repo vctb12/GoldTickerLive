@@ -102,6 +102,13 @@ jobs:
           # ── Content pages (guides, tools, etc.) ──
           [ -d content ] && cp -r content dist/ || true
 
+      - name: Flatten leaf-page CSS (collapse the @import waterfall in the dist copy)
+        # Leaf pages (countries/, content/) load styles/global.css as-is, where 9
+        # nested @imports load serially. Inline them into the dist copy only — the
+        # source keeps its @import structure for development. Safe: unresolved
+        # imports are left untouched. See scripts/node/flatten-css.js.
+        run: node scripts/node/flatten-css.js dist/styles/global.css
+
       - name: Verify dist directory
         run: |
           echo "── dist/ contents ──"

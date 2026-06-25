@@ -388,6 +388,48 @@
   );
 }
 
+/* OS-preference dark fallback for FIRST PAINT only. The :not([data-theme]) guard
+   means this applies before nav.js sets [data-theme] (pre-JS / no-JS) and then
+   stops matching once a theme is chosen, so it never competes with the
+   [data-theme='dark'] block above. Values mirror the Phase 44 dark core to avoid
+   a light flash for OS-dark users; phase 29 can DRY this duplication. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-bg: #060708;
+    --color-surface: #0c0e14;
+    --color-surface-2: #141720;
+    --color-surface-3: #1b1e2c;
+    --color-border: #242840;
+    --color-border-subtle: #1a1e30;
+    --color-text: #f2eedd;
+    --color-text-muted: #a09890;
+    --color-text-faint: #8f857a;
+    --color-gold: #ddb040;
+    --color-gold-light: #f0ca5c;
+    --color-gold-bright: #fad97a;
+    --color-gold-bg: #100e08;
+    --color-gold-tint: #0c0a06;
+    --surface-canvas: #060708;
+    --surface-primary: #0c0e14;
+    --surface-secondary: #141720;
+    --surface-tertiary: #1b1e2c;
+    --surface-accent: #100e08;
+    --surface-glass: rgb(12 14 20 / 90%);
+    --text-primary: #f2eedd;
+    --text-secondary: #a09890;
+    --text-tertiary: #8f857a;
+    --border-default: #242840;
+    --border-subtle: #1a1e30;
+    --border-strong: #303550;
+    --color-accent: var(--color-gold-light);
+    --color-accent-strong: var(--color-gold-bright);
+    --color-surface-raised: #141720;
+    --color-text-secondary: #a09890;
+
+    color-scheme: dark;
+  }
+}
+
 /* ═══════════════════════════════════════════════
    RTL — Arabic keeps Cairo; numerics stay mono
    ═══════════════════════════════════════════════ */

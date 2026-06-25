@@ -4,16 +4,20 @@
 
 ## Overview
 
-This document describes the comprehensive design token system implemented across the Gold-Prices
-platform. All tokens are defined in `styles/global.css` and should be used consistently throughout
-the codebase.
+This document describes the design token system implemented across the Gold Ticker Live platform.
+Tokens are defined in `styles/partials/tokens.css` (imported via `styles/global.css`).
+
+> ⚠️ **Source of truth: `styles/partials/tokens.css`.** This reference is hand-maintained and some
+> values below have drifted from the implementation — always verify against `tokens.css`. Phase 25
+> corrected the headline surface/gold values; an auto-generation step (so this file can never drift
+> again) is staged in `PROGRESS.md`.
 
 ## Color Tokens
 
 ### Surface Colors
 
 ```css
---color-bg: #f5f2eb; /* Canvas background */
+--color-bg: #fefcf7; /* Canvas background (warm parchment) */
 --color-surface: #fff; /* Primary surface */
 --color-surface-2: #f9f6f0; /* Secondary surface */
 --color-surface-3: #f2ede0; /* Tertiary surface */
@@ -32,7 +36,7 @@ the codebase.
 ### Gold Palette
 
 ```css
---color-gold: #c4993e; /* Primary gold */
+--color-gold: #c4902e; /* Primary gold */
 --color-gold-light: #e0b84a; /* Light gold */
 --color-gold-bright: #f0c84a; /* Bright gold */
 --color-gold-dark: #8a6420; /* Dark gold */

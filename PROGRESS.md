@@ -1,0 +1,101 @@
+# Gold Ticker Live — Revamp Progress (PR #443)
+
+- **Branch:** `claude/elegant-cori-lyo379` · **PR:** vctb12/GoldTickerLive#443
+- **Baseline:** 1081 tests passing, 0 failing — held green on every committed phase.
+- **Legend:** ✅ committed (GREEN) · 🟥 staged only (RED → `OWNER_REVIEW.md`) · 🟦 GREEN staged as a
+  proposal (judgment-heavy/large — plan + risk below) · ⏭️ spec only · ⤴️ out of scope for #443
+
+## ✅ Completed GREEN phases (live on the branch)
+
+| Phase  | Scope                                                                                     | Verified                                              |
+| ------ | ----------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| 03     | Dark-mode fork removed; `tokens.css` single source + OS-dark first-paint fallback         | a11y/contrast (dark AA), stylelint, 1081/0            |
+| 04     | Strip retail `Product`/`Offer`/`AggregateOffer` schema from ~150 reference pages          | schema `--check`, audit-content-pages, grep=0, 1081/0 |
+| 05     | Sitemap emits canonical `/countries/{slug}/` (no redirected/dup URLs)                     | sitemap-coverage gate, 1081/0                         |
+| 09     | Collapse leaf-page CSS `@import` waterfall (dist-only flatten)                            | flattener 9/9 inlined, source intact, 1081/0          |
+| 12     | Defer GA4 + Clarity to first interaction / idle                                           | externalize-analytics `--check`, eslint, 1081/0       |
+| 16     | Remove hardcoded-English tracker onboarding modal (EN/AR parity)                          | eslint, no dangling refs, 1081/0                      |
+| 17     | i18n tracker toasts + workspace toggle + badge placeholders (EN+AR)                       | eslint, no raw literals, 1081/0                       |
+| 18     | Reduced-motion: disable 2 uncovered infinite hero animations                              | stylelint, 1081/0                                     |
+| 20     | Tracker RTL: logical props for keyboard-help close + table cells                          | stylelint, 1081/0                                     |
+| 22     | Touch target: `.gcc-region-tab` 38px→44px                                                 | stylelint, 1081/0                                     |
+| 23     | 360px GCC grid — verified audit false-positive; removed dead code                         | first-hand cascade analysis, stylelint, 1081/0        |
+| 25     | Correct `DESIGN_TOKENS.md` drift + source-of-truth warning                                | doc-only, 1081/0                                      |
+| PR-fix | Preserve Article `datePublished` across rebuilds; restore true dates on ~44 content pages | validate, no 2026-06-25 left, 1081/0                  |
+
+## 🟥 RED — staged only (see `OWNER_REVIEW.md`; not applied to live infra)
+
+01 RLS lockdown (`002`), 02 allowlist/signup hardening, 06 billing fail-closed, 07 public-insert
+hardening (`003`), 08 RLS regression assertions, 10 inline critical CSS, 11 async/self-host fonts,
+13 image pipeline, 14 Leaflet SRI, 15 Lighthouse gate, 43 AR `/ar/` path + hreflang, 46 GDPR
+export/delete, 48 automation durability. **Blocking owner questions A (signups on/off) & B (orders
+write path) are at the top of `OWNER_REVIEW.md`.**
+
+## 🟦 GREEN — staged as proposals (judgment-heavy / large; plan + risk)
+
+Each is independent and revertible; left staged rather than guessed into a degraded state on a live
+site, per the run directive.
+
+- **19 / 21 — Home & shops RTL sweeps.** _Plan:_ convert physical `left/right`, `padding-*`,
+  `text-align:left/right` to logical props (`inset-inline-*`, `padding-inline-*`, `start/end`) in
+  `styles/pages/home.css` + `shops.css`. _Risk:_ both files contain manual `[dir='rtl']` override
+  blocks — a blind sweep would invert those (e.g. an override's `text-align:right`→`end` flips it).
+  Needs per-rule classification (default vs `[dir=rtl]` block) + a 360px RTL visual check. (Phase 20
+  was safe only because it was 2 confirmed-directional controls, not a sweep.)
+- **24 — Tracker mobile label floor.** _Plan:_ raise sub-0.8rem label/badge/tab text to a ~13px
+  floor at `tracker-pro.css:513,561,1674,2454,3430,3435`. _Risk:_ several of those selectors are
+  dense numeric/stat displays where 0.8rem would bloat/break the layout — needs per-selector intent
+  judgment, not a blanket bump.
+- **26 — Stylelint guard (ban raw hex/rgb + off-scale spacing).** _Plan:_ add `color-no-hex` /
+  allowed-list rules scoped to exclude `tokens.css`. _Risk:_ the repo ships ~52 intentional
+  `var(--token, #hexfallback)` patterns and ~549 hex literals — a strict rule fails
+  `npm run lint:css` repo-wide on existing code; must be scoped + the backlog migrated first.
+- **27 / 28 — Bring `invest.css` / `methodology.css` into the token system.** _Plan:_ re-base their
+  parallel palettes (`--invest-bg`, hardcoded `#05060b` hero) onto global tokens; scope any dark
+  hero to a class. _Risk:_ visual change to two live pages (invest is always-dark today) — needs
+  before/after EN+AR review.
+- **29 — Consolidate duplicate `prefers-color-scheme` blocks (8 files).** _Plan:_ drop the
+  media-query dark twins now that `[data-theme]` is canonical (phase 3). _Risk:_ behavior change for
+  no-JS/first-paint dark; needs per-file verification.
+- **30 / 31 — Spacing half-steps + breakpoint tokens.** _Plan:_ add `--space-4-5/6-5`, `--bp-*`.
+  _Risk:_ low to add, but valueless without adoption across files (the real work); adding unused
+  tokens alone is scope-creep.
+- **32 — Homepage hierarchy / section consolidation.** Large restructure of `index.html` +
+  `home.css` (merge overlapping tool/country grids). Needs design direction + EN/AR/360 review.
+- **33 — Component-token layer** (`--card-*`, `--chip-*` between primitives and `components.css`).
+  Large; touches the 4.2k-line components.css.
+- **34 — Country/city premium pass.** Large visual; `country-page.css` / `city-page.css`.
+- **35 — Shop card/directory redesign** (finish BUILD 7). Large; `shops.html/.css/.js`.
+- **36 / 37 / 38 — Split mega CSS files / semantic section headers / `!important` audit.** 36 is
+  large+risky (reorganising 4k-line files); 37 is safe but pure comment churn; 38 is judgment-heavy
+  and best done after 29.
+- **39 — `gold-shops` stub resolution** (noindex or redirect-merge 69 empty pages). Generator +
+  `_redirects` + 69 pages; needs the noindex-vs-redirect decision.
+- **40 / 44 — Enrich thin gold-rate pages / expand thin content hubs.** Content generation at scale.
+- **41 — Acronym breadcrumb humanizer (`Uae`→`UAE`).** _Plan:_ add an acronym map in
+  `inject-schema.js`, re-run the injector. _Risk:_ injector-rerunning pass (rewrites all breadcrumb
+  JSON-LD + regenerates reports) — explicitly flagged to stage. Now safe re: dates (the preserve-fix
+  is in), so this is ready to run as a focused follow-up.
+- **42 — Leaf internal links + visible breadcrumbs.** `page-hydrator.js` + templates; large.
+- **25b — Auto-generate `DESIGN_TOKENS.md` from `tokens.css`** (build step) so the doc can't drift.
+
+## ⤴️ Out of scope for PR #443 (tracked for a separate follow-up PR, per directive)
+
+- **45** — "Live / Updated every 90 seconds" meta + `Dataset.description` wording on country/city
+  pages → reference/state-labelled framing per `docs/freshness-contract.md` (pre-existing; flagged
+  by the SERP/Gold-Integrity bots).
+- `detectPageType()` build-time FAQ/Dataset gap on country hubs (JS-only injection today).
+- Identical `<title>` on indexed hub vs `noindex` `gold-price/` stub.
+- Country/city/tracker intent-cannibalization metas.
+
+## ⏭️ SKIP — spec only (see `OWNER_REVIEW.md`)
+
+- **49** — Multi-metal (silver/platinum/palladium) reference expansion.
+- **50** — Public dev API + portfolio/watchlist + web-push.
+
+## 47 — Observability (notify-on-failure across workflows)
+
+🟦 staged. _Plan:_ add a notify-on-failure step (open a GitHub issue via `GITHUB_TOKEN`) to
+`health_check.yml` / `spike_alert.yml` / newsletter workflows. _Risk:_ touches CI/automation and
+can't be verified without an actual failing run in this environment; needs the notify-channel
+decision (issue vs Slack). Left staged.

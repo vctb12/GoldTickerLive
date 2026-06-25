@@ -191,3 +191,29 @@ ORDER BY t.table_name;
 -- A healthy setup shows ✅ for every table and at least 1 policy per table.
 -- Tables like gold_prices and fetch_logs (written by service role) may have 0 policies —
 -- this is correct: the service role bypasses RLS and does not need policies.
+
+
+-- ── 11. (Phase 8) Authenticated NON-ADMIN must NOT read admin / PII tables ──
+-- Regression guard for 002_admin_rls_lockdown.sql. After applying that migration,
+-- a logged-in user who is NOT an admin (no user_profiles.role = 'admin') must get
+-- 0 rows from orders / pricing_overrides; an admin must still see them. Simulate a
+-- specific user by setting the JWT claims. Replace the UUID placeholders with real
+-- auth.users ids before running in the Supabase SQL editor.
+
+-- Non-admin (expect 0 / 0):
+-- SET LOCAL ROLE authenticated;
+-- SET LOCAL request.jwt.claims = '{"sub":"<NON_ADMIN_UUID>","role":"authenticated"}';
+-- SELECT count(*) AS orders_visible_to_nonadmin    FROM public.orders;            -- expect 0
+-- SELECT count(*) AS overrides_visible_to_nonadmin FROM public.pricing_overrides; -- expect 0
+-- RESET ROLE;
+
+-- Admin (expect to read without error; rows visible):
+-- SET LOCAL ROLE authenticated;
+-- SET LOCAL request.jwt.claims = '{"sub":"<ADMIN_UUID>","role":"authenticated"}';
+-- SELECT count(*) AS orders_visible_to_admin FROM public.orders;  -- no RLS error; rows visible
+-- RESET ROLE;
+
+-- Anonymous (expect 0):
+-- SET LOCAL ROLE anon;
+-- SELECT count(*) AS orders_visible_to_anon FROM public.orders;   -- expect 0
+-- RESET ROLE;

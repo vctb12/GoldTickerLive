@@ -11,6 +11,12 @@ import {
 } from './state.js';
 import { TRACKER_PANELS, getShortcutMap, getTrackerTab } from './modes.js';
 import { track, EVENTS } from '../lib/analytics.js';
+import { TRANSLATIONS } from '../config/index.js';
+
+function shellTx(lang, key) {
+  const fullKey = `tracker.${key}`;
+  return TRANSLATIONS[lang]?.[fullKey] ?? TRANSLATIONS.en?.[fullKey] ?? fullKey;
+}
 
 let _openPanel = null;
 const _overlayReturnFocus = new Map();
@@ -42,6 +48,8 @@ export function mountShell(state, els, onModeChange, onLangChange) {
       shell.updateLang(state.lang);
       if (els.language) els.language.value = state.lang;
       onLangChange();
+      // Refresh language-dependent shell controls (e.g. workspace toggle copy)
+      applyWorkspaceLevel();
     });
   });
 
@@ -57,7 +65,9 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     document.body.classList.toggle('tracker-workspace-basic', !advanced);
     document.body.classList.toggle('tracker-workspace-advanced', advanced);
     if (workspaceToggle) {
-      workspaceToggle.textContent = advanced ? 'Use basic workspace' : 'Open advanced workspace';
+      workspaceToggle.textContent = advanced
+        ? shellTx(state.lang, 'workspace.toggleBasic')
+        : shellTx(state.lang, 'workspace.toggleAdvanced');
       workspaceToggle.setAttribute('aria-pressed', advanced ? 'true' : 'false');
     }
     if (!advanced && getTrackerTab(state.mode)?.workspace === 'advanced') {

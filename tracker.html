@@ -185,9 +185,9 @@
                 <span class="tracker-badge-dot" aria-hidden="true"></span>
                 <span id="tp-live-badge-text" class="skeleton-inline shell-skeleton-freshness-chip" aria-busy="true"></span>
                 <span class="tracker-badge-separator" aria-hidden="true">·</span>
-                <span id="tp-refresh-badge" role="status" aria-live="polite">Waiting for first sync</span>
+                <span id="tp-refresh-badge" class="skeleton-inline shell-skeleton-freshness-chip" role="status" aria-live="polite" aria-busy="true"></span>
               </span>
-              <span class="tracker-badge tracker-badge-source" id="tp-source-state-badge">Reference status</span>
+              <span class="tracker-badge tracker-badge-source" id="tp-source-state-badge" aria-busy="true"></span>
               <span class="tracker-badge tracker-badge-xauusd tracker-hero-price" id="tp-xauusd-badge" aria-label="XAU/USD spot price">
                 <span aria-hidden="true">🏅</span>
                 <span>XAU/USD</span>
@@ -1720,71 +1720,9 @@
       aria-atomic="false"
     ></div>
 
-    <!-- First-time onboarding overlay -->
-    <div
-      id="tracker-onboarding"
-      class="tracker-onboarding"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="onb-title"
-      hidden
-    >
-      <div class="onb-backdrop"></div>
-      <div class="onb-panel">
-        <div class="onb-header">
-          <span class="onb-icon" aria-hidden="true">📈</span>
-          <h2 id="onb-title" class="onb-title">Welcome to Gold Ticker Live</h2>
-          <button
-            id="onb-close"
-            class="onb-close"
-            type="button"
-            aria-label="Close introduction"
-          >
-            ×
-          </button>
-        </div>
-        <div class="onb-steps">
-          <div class="onb-step">
-            <span class="onb-step-icon" aria-hidden="true">⚖️</span>
-            <div>
-              <strong>Karat &amp; Unit</strong>
-              <p>Select any supported karat (14K–24K) and switch between grams, tolas, and ounces.</p>
-            </div>
-          </div>
-          <div class="onb-step">
-            <span class="onb-step-icon" aria-hidden="true">🌍</span>
-            <div>
-              <strong>Compare Countries</strong>
-              <p>
-                Switch to Compare mode to see gold prices across 24 countries side by side.
-              </p>
-            </div>
-          </div>
-          <div class="onb-step">
-            <span class="onb-step-icon" aria-hidden="true">🔔</span>
-            <div>
-              <strong>Price Alerts</strong>
-              <p>
-                Set a target price — we'll notify you in the browser when gold hits your
-                threshold.
-              </p>
-            </div>
-          </div>
-          <div class="onb-step">
-            <span class="onb-step-icon" aria-hidden="true">📊</span>
-            <div>
-              <strong>Historical Chart</strong>
-              <p>View price history with 1D, 7D, 1M, 3M, 1Y and All-time ranges.</p>
-            </div>
-          </div>
-        </div>
-        <div class="onb-footer">
-          <button id="onb-dismiss" class="onb-dismiss-btn" type="button">
-            Got it, start tracking
-          </button>
-        </div>
-      </div>
-    </div>
+    <!-- First-time onboarding uses the bilingual welcome chip strip
+         (src/tracker/onboarding.js -> localizeWelcomeStrip). The hardcoded-English
+         modal overlay was removed in phase 16 for EN/AR parity. -->
 
     <script>
       if ('serviceWorker' in navigator) {

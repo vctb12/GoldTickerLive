@@ -7,7 +7,7 @@
  * - Organization (homepage)
  * - BreadcrumbList (all pages)
  * - WebSite with SearchAction (homepage)
- * - Product/Offer for price pages
+ * - Dataset (+ FAQPage) for reference/price pages (non-commercial — no Offer)
  * - Article for content pages
  *
  * Usage:
@@ -85,42 +85,6 @@ function getBreadcrumbSchema(items) {
       item: item.url,
     })),
   };
-}
-
-/**
- * Product/Offer schema for price pages
- * @param {Object} options
- */
-function getProductSchema(options) {
-  const {
-    name = '24K Gold Price',
-    description = 'Current spot gold price',
-    price = null,
-    currency = 'AED',
-    _country = 'UAE',
-    _karat = '24K',
-  } = options;
-
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name,
-    description,
-    category: 'Precious Metals',
-    offers: {
-      '@type': 'AggregateOffer',
-      priceCurrency: currency,
-      availability: 'https://schema.org/InStock',
-      itemCondition: 'https://schema.org/NewCondition',
-    },
-  };
-
-  if (price) {
-    schema.offers.lowPrice = price;
-    schema.offers.highPrice = price;
-  }
-
-  return schema;
 }
 
 /**
@@ -354,10 +318,15 @@ function generateSchemasForPage(filePath, content) {
     }
   }
 
-  // Price pages get Product + FAQPage + Dataset schemas
+  // Reference/price pages get FAQPage + Dataset schemas only.
+  //
+  // These pages publish non-commercial reference/spot prices and sell nothing,
+  // so they must NOT emit Product/Offer/AggregateOffer markup (doing so would
+  // mark up retail offers the page doesn't show — a schema-honesty violation
+  // that risks a Google manual action). The non-commercial Dataset schema below
+  // is the correct representation of the price data these pages display.
   if (pageType === 'price') {
-    // Extract country/karat from path
-    const countryMatch = relativePath.match(/countries\/([^\/]+)/);
+    // Extract karat from path (used by the Dataset variableMeasured label).
     const karatMatch = relativePath.match(/(\d+k)/i);
 
     // Extract currency code from page title.
@@ -370,16 +339,6 @@ function generateSchemasForPage(filePath, content) {
       pageTitle.match(/—\s*([A-Z]{3})\s+per Gram/i) ||
       pageTitle.match(/\bin\s+([A-Z]{3})\s*[|,]/);
     const currency = currencyMatch ? currencyMatch[1] : 'AED';
-
-    schemas.push(
-      getProductSchema({
-        name: pageTitle,
-        description: pageDescription,
-        country: countryMatch ? countryMatch[1].toUpperCase() : 'UAE',
-        karat: karatMatch ? karatMatch[1].toUpperCase() : '24K',
-        currency,
-      })
-    );
 
     // Extract FAQ data from embedded country-page-data JSON (body script tag)
     const pageDataMatch = content.match(
@@ -412,16 +371,23 @@ function generateSchemasForPage(filePath, content) {
 
   // Article pages get Article schema
   if (pageType === 'article') {
-    // Try to get file modification date
-    const stats = fs.statSync(filePath);
-    const dateModified = stats.mtime.toISOString().split('T')[0];
+    // Preserve existing publication dates across rebuilds. Re-running the
+    // injector must NOT bump datePublished/dateModified — doing so would falsely
+    // signal republication across the content hub on every schema regeneration.
+    // Reuse the dates already present in the page's Article JSON-LD; only fall
+    // back to the file mtime for brand-new pages that have no Article date yet.
+    const existingPublished = content.match(/"datePublished"\s*:\s*"(\d{4}-\d{2}-\d{2})"/);
+    const existingModified = content.match(/"dateModified"\s*:\s*"(\d{4}-\d{2}-\d{2})"/);
+    const mtimeDate = fs.statSync(filePath).mtime.toISOString().split('T')[0];
+    const datePublished = existingPublished ? existingPublished[1] : mtimeDate;
+    const dateModified = existingModified ? existingModified[1] : datePublished;
 
     schemas.push(
       getArticleSchema({
         headline: pageTitle,
         description: pageDescription,
         url: canonicalUrl || `${SITE_URL}${urlPath}`,
-        datePublished: dateModified,
+        datePublished,
         dateModified,
         inLanguage: pageLanguage,
       })

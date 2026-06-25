@@ -30,36 +30,68 @@
   gtag('js', new Date());
   gtag('config', GA_ID, { anonymize_ip: true });
 
-  // Inject the gtag loader if it isn't already present.
-  try {
-    const gaSrc = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
-    const exists = Array.prototype.some.call(document.getElementsByTagName('script'), function (s) {
-      return s.src && s.src.indexOf('googletagmanager.com/gtag/js') !== -1;
-    });
-    if (!exists) {
-      const s = document.createElement('script');
-      s.async = true;
-      s.src = gaSrc;
-      document.head.appendChild(s);
+  // ── Deferred vendor loading ──────────────────────────────────────────────
+  // Defer the actual network loads (gtag loader + Clarity tag) until the first
+  // user interaction, with an idle/timeout fallback. gtag()/dataLayer and
+  // GP_EVENTS stay available synchronously, so any early gtag() calls queue into
+  // dataLayer and flush once the loader arrives — no events are lost, but the
+  // third-party requests no longer compete with the critical path on every load.
+  function loadAnalyticsVendors() {
+    // Inject the gtag loader if it isn't already present.
+    try {
+      const gaSrc = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+      const exists = Array.prototype.some.call(
+        document.getElementsByTagName('script'),
+        function (s) {
+          return s.src && s.src.indexOf('googletagmanager.com/gtag/js') !== -1;
+        }
+      );
+      if (!exists) {
+        const s = document.createElement('script');
+        s.async = true;
+        s.src = gaSrc;
+        document.head.appendChild(s);
+      }
+    } catch (_e) {
+      // non-fatal
     }
-  } catch (_e) {
-    // non-fatal
+
+    // ── Microsoft Clarity ──────────────────────────────────────────────────
+    (function (c, l, a, r, i) {
+      c[a] =
+        c[a] ||
+        function () {
+          (c[a].q = c[a].q || []).push(arguments);
+        };
+      const t = l.createElement(r);
+      t.async = 1;
+      t.src = 'https://www.clarity.ms/tag/' + i;
+      const y = l.getElementsByTagName(r)[0];
+      if (y && y.parentNode) y.parentNode.insertBefore(t, y);
+      else l.head.appendChild(t);
+    })(window, document, 'clarity', 'script', 'w4e0nhdxt5');
   }
 
-  // ── Microsoft Clarity ────────────────────────────────────────────────────
-  (function (c, l, a, r, i) {
-    c[a] =
-      c[a] ||
-      function () {
-        (c[a].q = c[a].q || []).push(arguments);
-      };
-    const t = l.createElement(r);
-    t.async = 1;
-    t.src = 'https://www.clarity.ms/tag/' + i;
-    const y = l.getElementsByTagName(r)[0];
-    if (y && y.parentNode) y.parentNode.insertBefore(t, y);
-    else l.head.appendChild(t);
-  })(window, document, 'clarity', 'script', 'w4e0nhdxt5');
+  const INTERACTION_EVENTS = ['pointerdown', 'keydown', 'touchstart', 'scroll'];
+  let vendorsLoaded = false;
+  function loadOnce() {
+    if (vendorsLoaded) return;
+    vendorsLoaded = true;
+    INTERACTION_EVENTS.forEach(function (ev) {
+      window.removeEventListener(ev, loadOnce);
+    });
+    loadAnalyticsVendors();
+  }
+  INTERACTION_EVENTS.forEach(function (ev) {
+    window.addEventListener(ev, loadOnce, { passive: true });
+  });
+  // Fallback: load during idle / after a short delay so no-interaction sessions
+  // (bounces) still register a pageview.
+  if (typeof window.requestIdleCallback === 'function') {
+    window.requestIdleCallback(loadOnce, { timeout: 5000 });
+  } else {
+    window.setTimeout(loadOnce, 4000);
+  }
 
   // ── Event name catalog (for non-module / inline scripts) ─────────────────
   // The canonical source of truth is src/lib/analytics.js (ES module).
