@@ -18,3 +18,4 @@
 | 09 — CSS @import waterfall (dist flatten) | GREEN | ✅                       | 1081 ✓                             | `scripts/node/flatten-css.js`, `.github/workflows/deploy.yml` |
 | 10 — Inline critical CSS                  | RED   | 🟥 staged                | n/a (proposal)                     | `OWNER_REVIEW.md`                                             |
 | 11 — Async/self-hosted fonts              | RED\* | 🟥 staged (reclassified) | n/a (proposal)                     | `OWNER_REVIEW.md`                                             |
+| 12 — Defer analytics to interaction       | GREEN | ✅                       | 1081 ✓                             | `assets/analytics.js`                                         |
