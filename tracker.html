@@ -165,9 +165,12 @@
 
       <!-- ── Hero — dark premium ──────────────────────────── -->
       <section class="tracker-hero-wrap spot-terminal" aria-labelledby="tp-hero-title">
-        <!-- Decorative background glow elements -->
+        <!-- Decorative background — mesh + ambient glow -->
+        <div class="tp-hero-mesh" aria-hidden="true"></div>
         <div class="tp-hero-glow tp-hero-glow--gold" aria-hidden="true"></div>
         <div class="tp-hero-glow tp-hero-glow--blue" aria-hidden="true"></div>
+        <div class="tp-hero-glow tp-hero-glow--violet" aria-hidden="true"></div>
+        <div class="tp-hero-foil-rule" aria-hidden="true"></div>
 
         <div class="tracker-hero-inner">
           <!-- Main hero content -->
@@ -643,7 +646,7 @@
 
         <!-- Command center flow: karats → chart → alerts/watchlist → calculator → exports -->
         <section class="tracker-main-grid" id="section-chart">
-          <aside class="tracker-panel tracker-panel-side">
+          <aside class="tracker-panel tracker-panel-side tracker-command-desk">
             <div class="tracker-panel-head">
               <div>
                 <h2 id="tp-karat-heading">Karat reference table</h2>
@@ -1473,7 +1476,7 @@
           </div>
 
           <div class="tracker-export-grid">
-            <article class="tracker-subpanel">
+            <article class="tracker-subpanel tracker-export-card">
               <div class="tracker-subpanel-head"><h3>Visible chart CSV</h3></div>
               <p>
                 Exports the visible historical range with start/end dates, source labels, and
@@ -1485,7 +1488,7 @@
               </button>
             </article>
 
-            <article class="tracker-subpanel">
+            <article class="tracker-subpanel tracker-export-card">
               <div class="tracker-subpanel-head"><h3>Comparison CSV</h3></div>
               <p>
                 Downloads the current country + karat comparison cards in the same order shown in
@@ -1497,7 +1500,7 @@
               </button>
             </article>
 
-            <article class="tracker-subpanel">
+            <article class="tracker-subpanel tracker-export-card">
               <div class="tracker-subpanel-head"><h3>Archive CSVs</h3></div>
               <p>
                 Download the cached daily archive (visible range) or the full baseline + cache
@@ -1514,7 +1517,7 @@
               </div>
             </article>
 
-            <article class="tracker-subpanel">
+            <article class="tracker-subpanel tracker-export-card">
               <div class="tracker-subpanel-head"><h3>Snapshot JSON</h3></div>
               <p>
                 Structured JSON with the live snapshot, freshness label, FX rate, selected karat,
@@ -1526,7 +1529,7 @@
               </button>
             </article>
 
-            <article class="tracker-subpanel">
+            <article class="tracker-subpanel tracker-export-card">
               <div class="tracker-subpanel-head"><h3>Market brief text</h3></div>
               <p>
                 Plain-text summary of current gold conditions for the selected view — suitable for

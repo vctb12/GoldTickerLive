@@ -1,9 +1,9 @@
-/* tracker-pro.css — Gold Tracker Pro — full visual revamp
-   Depends on styles/global.css design tokens only. No hard-coded hex values
-   except where a visual effect truly requires them (dark hero gradients).
+/* tracker-pro.css — Gold Command Center — 30-phase visual revamp (2026-06-25)
+   Depends on styles/global.css design tokens only. Hero dark palette uses
+   global gradient tokens; local hex only where compositor effects require it.
 */
 
-/* ── Design tokens / local aliases ───────────────────────────────────────── */
+/* ── Phase 1: Tracker token harmonization ─────────────────────────────────── */
 
 :root {
   /* Surface aliases */
@@ -22,6 +22,8 @@
 
   /* Gold / accent palette */
   --tp-gold: var(--color-gold);
+  --tp-gold-light: var(--color-gold-light);
+  --tp-gold-bright: var(--color-gold-bright);
   --tp-gold-strong: var(--color-gold-dark);
   --tp-gold-soft: var(--color-gold-glow);
   --tp-accent: var(--color-gold-dark);
@@ -29,37 +31,57 @@
   /* Status colours */
   --tp-live: var(--color-live);
   --tp-live-soft: var(--color-live-bg);
+  --tp-live-border: var(--color-live-border);
   --tp-danger: var(--color-error);
   --tp-danger-soft: var(--color-error-bg);
   --tp-blue: var(--color-fixed);
   --tp-blue-soft: var(--color-fixed-bg);
+  --tp-stale: var(--color-stale);
+  --tp-stale-soft: var(--color-stale-bg);
+  --tp-warning: var(--color-warning);
+  --tp-warning-soft: var(--color-warning-bg);
 
   /* Elevation */
   --tp-shadow-1: var(--shadow-sm);
   --tp-shadow-2: var(--shadow-md);
+  --tp-shadow-gold: var(--shadow-gold);
 
   /* Radii */
   --tp-radius-md: var(--radius-md);
   --tp-radius-sm: var(--radius-sm);
+  --tp-radius-panel: var(--radius-panel);
 
   /* Max-width shell */
   --tp-shell: min(var(--content-max-width), calc(100% - 2 * var(--page-gutter)));
 
-  /* Hero dark palette — deep midnight gold premium look */
+  /* Phase 2–3: Hero terminal — midnight gold (aligned to --gradient-hero-dark) */
   --tp-hero-bg-deep: #05060b;
   --tp-hero-bg-mid: #0e1220;
-  --tp-hero-text: rgb(240 237 216 / 96%);
-  --tp-hero-muted: rgb(240 237 216 / 65%);
-  --tp-hero-faint: rgb(240 237 216 / 40%);
-  --tp-hero-border: rgb(212 168 64 / 24%);
-  --tp-hero-surface: rgb(212 168 64 / 6%);
-  --tp-hero-surface-2: rgb(212 168 64 / 11%);
+  --tp-hero-bg-accent: #121830;
+  --tp-hero-text: rgb(242 238 221 / 97%);
+  --tp-hero-muted: rgb(242 238 221 / 68%);
+  --tp-hero-faint: rgb(242 238 221 / 42%);
+  --tp-hero-border: color-mix(in srgb, var(--color-gold) 28%, transparent);
+  --tp-hero-surface: color-mix(in srgb, var(--color-gold) 7%, rgb(255 255 255 / 4%));
+  --tp-hero-surface-2: color-mix(in srgb, var(--color-gold) 12%, rgb(255 255 255 / 6%));
+  --tp-hero-glass: rgb(12 14 22 / 72%);
+  --tp-hero-glow-gold: color-mix(in srgb, var(--color-gold-bright) 24%, transparent);
+  --tp-hero-glow-blue: rgb(30 60 160 / 14%);
+  --tp-hero-glow-violet: rgb(88 48 160 / 10%);
+
+  /* Chart terminal inset */
+  --tp-chart-bg: #080a10;
+  --tp-chart-border: color-mix(in srgb, var(--color-gold) 18%, var(--border-subtle));
+  --tp-chart-grid: rgb(255 255 255 / 4%);
 }
 
 /* ── Page base ────────────────────────────────────────────────────────────── */
 
 body.tracker-pro-page {
-  background: var(--tp-bg);
+  background:
+    var(--gradient-section-alt),
+    var(--tp-bg);
+  background-attachment: fixed;
 }
 
 .tracker-page main#tracker-app {
@@ -99,15 +121,32 @@ body.tracker-pro-page {
 }
 
 .tracker-data-trust-banner {
-  background: var(--surface-accent);
-  border-bottom: 1px solid var(--border-default);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-gold) 12%, var(--surface-accent)) 0%,
+    var(--surface-accent) 45%,
+    transparent 100%
+  );
+  border-bottom: 1.5px solid color-mix(in srgb, var(--color-gold) 22%, var(--border-default));
   padding: var(--space-3) var(--space-4);
   display: flex;
   align-items: center;
   gap: var(--space-3);
   font-size: var(--text-sm);
   color: var(--tp-text);
-  line-height: 1.5;
+  line-height: 1.55;
+  position: relative;
+}
+
+.tracker-data-trust-banner::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--gradient-gold);
+  border-radius: 0 2px 2px 0;
 }
 
 .tracker-trust-icon {
@@ -159,8 +198,13 @@ body.tracker-pro-page {
 /* ── Welcome strip ────────────────────────────────────────────────────────── */
 
 .tracker-welcome-strip {
-  background: color-mix(in srgb, var(--color-gold) 10%, var(--color-surface));
-  border-bottom: 1px solid color-mix(in srgb, var(--color-gold) 28%, var(--color-border));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-gold) 14%, var(--color-surface)) 0%,
+    color-mix(in srgb, var(--color-gold) 6%, var(--color-surface-2)) 100%
+  );
+  border-bottom: 1px solid color-mix(in srgb, var(--color-gold) 24%, var(--color-border));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 50%);
 }
 
 .tracker-welcome-inner {
@@ -183,11 +227,13 @@ body.tracker-pro-page {
 .tracker-welcome-chip {
   font-size: 0.82rem;
   color: var(--tp-text);
-  background: var(--tp-panel);
-  border: 1px solid var(--tp-border);
-  border-radius: var(--radius-sm);
-  padding: 0.3rem 0.7rem;
-  animation: tp-welcome-chip-in 0.35s var(--ease-out) both;
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  padding: 0.4rem 0.85rem;
+  font-weight: var(--weight-semibold);
+  box-shadow: var(--shadow-xs);
+  animation: tp-welcome-chip-in 0.38s var(--ease-premium) both;
 }
 
 .tracker-welcome-chip--0 {
@@ -234,27 +280,66 @@ body.tracker-pro-page {
     border-color 0.15s;
 }
 
-.tracker-welcome-close:hover {
-  color: var(--tp-text);
-  border-color: var(--tp-text);
+.tracker-welcome-strip[hidden] {
+  display: none !important;
+}
+
+.tracker-welcome-strip:not([hidden]) {
+  animation: tp-welcome-strip-in 0.28s var(--ease-out) both;
+}
+
+@keyframes tp-welcome-strip-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tracker-welcome-strip:not([hidden]) {
+    animation: none;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   HERO SECTION — dark premium
+   HERO SECTION — Phase 2–8: midnight gold command terminal
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .tracker-hero-wrap {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(
-    148deg,
-    var(--tp-hero-bg-deep) 0%,
-    var(--tp-hero-bg-mid) 45%,
-    #0c1428 75%,
-    var(--tp-hero-bg-deep) 100%
-  );
+  background: var(--gradient-hero-dark);
   padding: var(--space-8) 0 var(--space-7);
   isolation: isolate;
+}
+
+/* Subtle mesh texture overlay */
+.tp-hero-mesh {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  background-image:
+    radial-gradient(circle at 20% 30%, var(--tp-hero-glow-gold) 0%, transparent 42%),
+    radial-gradient(circle at 78% 68%, var(--tp-hero-glow-blue) 0%, transparent 38%),
+    radial-gradient(circle at 50% 100%, var(--tp-hero-glow-violet) 0%, transparent 45%),
+    linear-gradient(180deg, transparent 0%, rgb(0 0 0 / 18%) 100%);
+}
+
+/* Gold foil rule along top edge */
+.tp-hero-foil-rule {
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 2px;
+  z-index: 2;
+  background: var(--rule-foil);
+  opacity: 0.85;
 }
 
 /* Decorative glow blobs */
@@ -264,22 +349,48 @@ body.tracker-pro-page {
   z-index: 0;
   border-radius: 50%;
   filter: blur(90px);
+  animation: tp-hero-glow-drift 18s ease-in-out infinite alternate;
 }
 
 .tp-hero-glow--gold {
-  width: 600px;
-  height: 600px;
-  top: -180px;
-  right: -100px;
-  background: radial-gradient(circle, rgb(212 168 64 / 22%), transparent 65%);
+  width: 620px;
+  height: 620px;
+  top: -200px;
+  inset-inline-end: -120px;
+  background: radial-gradient(circle, var(--tp-hero-glow-gold), transparent 68%);
 }
 
 .tp-hero-glow--blue {
-  width: 450px;
-  height: 450px;
-  bottom: -130px;
-  left: -80px;
-  background: radial-gradient(circle, rgb(30 60 160 / 16%), transparent 70%);
+  width: 480px;
+  height: 480px;
+  bottom: -140px;
+  inset-inline-start: -90px;
+  background: radial-gradient(circle, var(--tp-hero-glow-blue), transparent 72%);
+  animation-delay: -6s;
+}
+
+.tp-hero-glow--violet {
+  width: 360px;
+  height: 360px;
+  top: 40%;
+  inset-inline-start: 42%;
+  background: radial-gradient(circle, var(--tp-hero-glow-violet), transparent 70%);
+  animation-delay: -12s;
+}
+
+@keyframes tp-hero-glow-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(12px, -8px) scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tp-hero-glow {
+    animation: none;
+  }
 }
 
 /* Hero 2-column grid */
@@ -300,33 +411,44 @@ body.tracker-pro-page {
   min-width: 0;
 }
 
-/* Badge row */
+/* Badge row — Phase 4: scroll-safe, semantic status */
 .tracker-badge-row {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.55rem;
   flex-wrap: wrap;
   margin-bottom: var(--space-5);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
 }
 
-/* All badges on dark background */
+.tracker-badge-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* All badges on dark background — glass pill */
 .tracker-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   min-height: 44px;
-  padding: 0.55rem 0.9rem;
+  padding: 0.55rem 0.95rem;
   border-radius: var(--radius-pill);
   border: 1px solid var(--tp-hero-border);
-  background: var(--tp-hero-surface);
+  background: var(--tp-hero-glass);
   font-size: 0.78rem;
   font-weight: var(--weight-semibold);
   color: var(--tp-hero-muted);
   letter-spacing: 0.01em;
   line-height: 1.4;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: background var(--duration-fast) var(--ease-out);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 6%);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
 }
 
 .tracker-badge-row > * {
@@ -338,26 +460,28 @@ body.tracker-pro-page {
   margin: 0 0.1rem;
 }
 
-/* Live badge — electric green with glow */
+/* Live badge — semantic green with soft glow */
 .tracker-badge-live {
-  border-color: rgb(34 197 94 / 45%);
-  background: linear-gradient(135deg, rgb(34 197 94 / 14%), rgb(34 197 94 / 6%));
-  color: #4ade80;
-  box-shadow: 0 0 0 1px rgb(34 197 94 / 15%) inset;
+  border-color: var(--tp-live-border);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--tp-live) 16%, transparent), color-mix(in srgb, var(--tp-live) 6%, transparent));
+  color: var(--color-up);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--tp-live) 12%, transparent) inset,
+    0 0 20px color-mix(in srgb, var(--tp-live) 8%, transparent);
 }
 
-/* Cached / stale / unavailable — remain visible on dark */
+/* Cached / stale / unavailable — semantic tokens on dark */
 .tracker-badge--cached {
-  border-color: rgb(234 179 8 / 40%);
-  background: rgb(234 179 8 / 10%);
-  color: #facc15;
+  border-color: var(--color-daily-border);
+  background: var(--color-daily-bg);
+  color: var(--color-daily);
 }
 
 .tracker-badge--stale {
-  border-color: rgb(234 88 12 / 45%);
-  background: linear-gradient(135deg, rgb(234 88 12 / 12%), rgb(234 88 12 / 6%));
-  color: #fb923c;
-  box-shadow: 0 0 0 1px rgb(234 88 12 / 12%) inset;
+  border-color: color-mix(in srgb, var(--tp-stale) 40%, transparent);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--tp-stale) 14%, transparent), color-mix(in srgb, var(--tp-stale) 6%, transparent));
+  color: var(--tp-stale);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tp-stale) 10%, transparent) inset;
 }
 
 .tracker-badge--closed {
@@ -367,19 +491,31 @@ body.tracker-pro-page {
 }
 
 .tracker-badge--unavailable {
-  border-color: rgb(220 38 38 / 40%);
-  background: rgb(220 38 38 / 10%);
-  color: #f87171;
+  border-color: color-mix(in srgb, var(--tp-danger) 38%, transparent);
+  background: var(--tp-danger-soft);
+  color: var(--tp-danger);
 }
 
-/* Live pulse dot — heartbeat glow */
+/* Live pulse dot — heartbeat glow (live state only) */
 .tracker-badge-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: currentcolor;
-  animation: tp-heartbeat 2s ease-in-out infinite;
   flex-shrink: 0;
+}
+
+.tracker-badge-live .tracker-badge-dot,
+.tracker-badge-live.live-sonar .tracker-badge-dot {
+  animation: tp-heartbeat 2s ease-in-out infinite;
+}
+
+.tracker-badge--cached .tracker-badge-dot,
+.tracker-badge--stale .tracker-badge-dot,
+.tracker-badge--unavailable .tracker-badge-dot,
+.tracker-badge--closed .tracker-badge-dot {
+  animation: none;
+  box-shadow: none;
 }
 
 @keyframes tp-heartbeat {
@@ -387,34 +523,36 @@ body.tracker-pro-page {
   100% {
     transform: scale(1);
     opacity: 1;
-    box-shadow: 0 0 0 0 rgb(74 222 128 / 50%);
+    box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 50%, transparent);
   }
   50% {
     transform: scale(1.2);
     opacity: 0.85;
-    box-shadow: 0 0 0 5px rgb(74 222 128 / 0%);
+    box-shadow: 0 0 0 5px color-mix(in srgb, currentColor 0%, transparent);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tracker-badge-dot {
+  .tracker-badge-live .tracker-badge-dot,
+  .tracker-badge-live.live-sonar .tracker-badge-dot {
     animation: none;
   }
 }
 
-/* XAU/USD badge */
+/* XAU/USD badge — gold accent */
 .tracker-badge-xauusd {
-  border-color: rgb(196 154 68 / 35%);
-  background: rgb(196 154 68 / 12%);
-  color: #c9a14d;
+  border-color: color-mix(in srgb, var(--tp-gold-bright) 38%, transparent);
+  background: color-mix(in srgb, var(--tp-gold) 14%, transparent);
+  color: var(--tp-gold-light);
   font-weight: var(--weight-extrabold);
 }
 
 .tracker-badge-xauusd strong {
   font-size: 1rem;
   font-weight: var(--weight-extrabold);
+  font-family: var(--font-numeric);
   font-variant-numeric: tabular-nums;
-  color: #f0d070;
+  color: var(--tp-gold-bright);
   letter-spacing: -0.01em;
 }
 
@@ -428,35 +566,40 @@ body.tracker-pro-page {
   font-weight: var(--weight-bold);
 }
 
-/* Hero title */
+/* Hero title — Phase 5: display scale + foil kicker */
 .tracker-hero-title {
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 5.2vw, 3.8rem);
-  line-height: 1.03;
-  letter-spacing: var(--tracking-tighter, -0.04em);
+  font-size: clamp(2.35rem, 5.4vw, 3.85rem);
+  line-height: 1.04;
+  letter-spacing: var(--tracking-tighter);
   color: var(--tp-hero-text);
   margin-bottom: var(--space-3);
-  font-weight: var(--weight-bold);
+  font-weight: var(--weight-extrabold);
+  text-wrap: balance;
 }
 
 .tracker-hero-kicker {
   display: block;
-  margin-bottom: var(--space-2);
+  font-family: var(--font-main);
   font-size: var(--text-xs);
-  font-weight: var(--weight-bold);
-  letter-spacing: 0.1em;
+  font-weight: var(--weight-extrabold);
   text-transform: uppercase;
-  color: var(--color-gold-light);
+  letter-spacing: var(--tracking-caps);
+  color: var(--tp-gold-bright);
+  margin-bottom: var(--space-2);
+  padding-bottom: var(--space-2);
+  background: var(--foil-underline) left bottom / 100% 2px no-repeat;
+  opacity: 0.92;
 }
 
 .tracker-hero-title-sub {
   display: block;
-  font-size: clamp(0.78rem, 1.1vw, 0.88rem);
-  font-weight: var(--weight-semibold);
-  color: var(--tp-hero-faint);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   margin-top: var(--space-2);
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  font-weight: var(--weight-medium);
+  color: var(--tp-hero-faint);
+  letter-spacing: 0.01em;
+  line-height: 1.45;
 }
 
 /* Hero description */
@@ -469,10 +612,18 @@ body.tracker-pro-page {
 }
 
 .tracker-hero-description .tracker-inline-link {
-  color: #c9a14d;
+  color: var(--tp-gold-light);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--tp-gold) 35%, transparent);
+  transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
 }
 
-/* ── Hero stats grid ──────────────────────────────────────────────────────── */
+.tracker-hero-description .tracker-inline-link:hover {
+  color: var(--tp-gold-bright);
+  border-bottom-color: var(--tp-gold-bright);
+}
+
+/* ── Phase 6: Hero stats grid — glass metric cards ────────────────────────── */
 
 .tracker-hero-stats {
   display: grid;
@@ -482,26 +633,39 @@ body.tracker-pro-page {
 }
 
 .tracker-hero-stat {
-  background: var(--tp-hero-surface);
+  background: var(--tp-hero-glass);
   border: 1px solid var(--tp-hero-border);
   border-radius: var(--radius-lg);
-  padding: 1rem;
-  min-height: 110px;
+  padding: 1rem 1.05rem;
+  min-height: 112px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 5%),
+    var(--shadow-xs);
   transition:
-    background var(--duration-fast) var(--ease-out),
-    border-color var(--duration-fast) var(--ease-out),
-    transform 0.2s var(--ease-out);
+    background var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
 }
 
 .tracker-hero-stat:hover {
   background: var(--tp-hero-surface-2);
-  border-color: rgb(196 154 68 / 42%);
+  border-color: color-mix(in srgb, var(--tp-gold-bright) 45%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 8%),
+    var(--tp-shadow-gold);
   transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tracker-hero-stat:hover {
+    transform: none;
+  }
 }
 
 .tracker-hero-stat--skeleton {
@@ -513,8 +677,8 @@ body.tracker-pro-page {
   font-size: 0.68rem;
   font-weight: var(--weight-extrabold);
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: rgb(196 154 68 / 80%);
+  letter-spacing: var(--tracking-caps);
+  color: color-mix(in srgb, var(--tp-gold-bright) 82%, var(--tp-hero-faint));
   margin-bottom: 0.3rem;
 }
 
@@ -570,35 +734,39 @@ body.tracker-pro-page {
   min-height: 44px;
   padding: 0 var(--space-3);
   border-radius: var(--radius-md);
-  border: 1px solid rgb(255 255 255 / 18%);
-  background: rgb(255 255 255 / 8%);
+  border: 1px solid color-mix(in srgb, var(--tp-gold-bright) 22%, rgb(255 255 255 / 18%));
+  background: color-mix(in srgb, var(--tp-hero-glass) 88%, rgb(255 255 255 / 6%));
   color: var(--tp-hero-text);
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   cursor: pointer;
   appearance: auto;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%);
   transition:
     border-color var(--duration-fast) var(--ease-out),
-    background var(--duration-fast) var(--ease-out);
+    background var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
 }
 
 .tracker-hero-field select option {
-  background: #1a1208;
+  background: var(--tp-hero-bg-mid);
   color: var(--tp-hero-text);
 }
 
 .tracker-hero-field select:hover {
-  border-color: rgb(196 154 68 / 50%);
-  background: rgb(255 255 255 / 12%);
+  border-color: color-mix(in srgb, var(--tp-gold-bright) 48%, transparent);
+  background: color-mix(in srgb, var(--tp-hero-glass) 92%, rgb(255 255 255 / 10%));
 }
 
 .tracker-hero-field select:focus {
   outline: none;
-  border-color: var(--tp-gold);
-  box-shadow: 0 0 0 3px rgb(196 154 68 / 20%);
-  background: rgb(255 255 255 / 12%);
+  border-color: var(--tp-gold-bright);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--tp-gold) 22%, transparent),
+    inset 0 1px 0 rgb(255 255 255 / 10%);
+  background: color-mix(in srgb, var(--tp-hero-glass) 95%, rgb(255 255 255 / 10%));
 }
 
 /* Action buttons row */
@@ -611,9 +779,10 @@ body.tracker-pro-page {
 
 /* Override .btn styles for dark hero context */
 .tracker-hero-wrap .btn.btn-primary {
-  background: var(--tp-gold);
+  background: var(--gradient-gold);
   color: var(--color-on-gold);
-  border-color: var(--tp-gold);
+  border-color: var(--tp-gold-strong);
+  box-shadow: var(--shadow-gold);
 }
 
 .tracker-hero-wrap .btn.btn-primary:hover {
@@ -709,12 +878,25 @@ body.tracker-pro-page {
 }
 
 .tracker-side-card {
-  background: var(--tp-hero-surface);
+  background: var(--tp-hero-glass);
   border: 1px solid var(--tp-hero-border);
-  border-radius: var(--radius-panel);
+  border-radius: var(--tp-radius-panel);
   padding: var(--space-4);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 6%),
+    var(--shadow-md);
+  transition:
+    border-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.tracker-side-card:hover {
+  border-color: color-mix(in srgb, var(--tp-gold-bright) 40%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 8%),
+    var(--tp-shadow-gold);
 }
 
 .tracker-side-card--links {
@@ -724,9 +906,9 @@ body.tracker-pro-page {
 .tracker-side-heading {
   font-size: var(--text-base);
   font-weight: var(--weight-bold);
-  color: rgb(196 154 68 / 90%);
+  color: var(--tp-gold-bright);
   margin-bottom: var(--space-3);
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
 }
 
 .tracker-side-subheading {
@@ -824,9 +1006,24 @@ body.tracker-pro-page {
   position: sticky;
   top: calc(var(--nav-height, 64px) + var(--spot-bar-height, 0px));
   z-index: 120;
-  background: var(--tp-panel);
+  background: color-mix(in srgb, var(--tp-panel) 88%, transparent);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
   border-bottom: 1.5px solid var(--tp-border);
-  box-shadow: 0 2px 12px rgb(0 0 0 / 6%);
+  box-shadow:
+    0 4px 20px rgb(21 17 10 / 6%),
+    inset 0 1px 0 rgb(255 255 255 / 60%);
+}
+
+.tracker-mode-shell::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 2px;
+  background: var(--rule-foil);
+  opacity: 0.65;
+  pointer-events: none;
 }
 
 .tracker-modes-wrap {
@@ -859,9 +1056,10 @@ body.tracker-pro-page {
   align-items: center;
   gap: var(--space-1);
   padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-md);
-  background: var(--surface-secondary);
+  border-radius: var(--radius-lg);
+  background: var(--gradient-card);
   border: 1px solid var(--tp-border);
+  box-shadow: var(--shadow-xs);
   flex-shrink: 0;
 }
 
@@ -916,10 +1114,11 @@ body.tracker-pro-page {
 
 .tracker-mode-tab.is-active,
 .tracker-mode-tab[aria-selected='true'] {
-  background: var(--tp-gold-soft);
-  border-color: rgb(196 154 68 / 35%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tp-gold) 18%, transparent), color-mix(in srgb, var(--tp-gold) 8%, transparent));
+  border-color: color-mix(in srgb, var(--tp-gold) 38%, transparent);
   color: var(--tp-accent);
   font-weight: var(--weight-bold);
+  box-shadow: var(--shadow-xs);
 }
 
 .tracker-mode-tab[aria-expanded='true'] {
@@ -962,38 +1161,45 @@ body.tracker-pro-page {
   /* visible on desktop, hidden on very small screens via media query */
 }
 
-/* Workspace Advanced toggle button */
+/* Workspace Advanced toggle — Phase 13 */
 .tracker-workspace-badge {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.4rem;
   font-size: 0.75rem;
   font-weight: var(--weight-semibold);
-  padding: 0.4rem 0.8rem;
+  padding: 0.45rem 0.9rem;
   min-height: 44px;
-  background: rgb(196 154 68 / 7%);
-  border: 1px solid rgb(196 154 68 / 22%);
-  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--tp-gold) 10%, var(--surface-primary)), var(--surface-secondary));
+  border: 1.5px solid color-mix(in srgb, var(--tp-gold) 28%, var(--tp-border));
+  border-radius: var(--radius-lg);
   color: var(--tp-gold-strong);
   cursor: pointer;
   font-family: inherit;
   white-space: nowrap;
+  box-shadow: var(--shadow-xs);
   transition:
-    background 0.15s,
-    color 0.15s,
-    border-color 0.15s;
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
 }
 
 .tracker-workspace-badge:hover {
   background: var(--tp-gold-soft);
-  border-color: rgb(196 154 68 / 40%);
+  border-color: color-mix(in srgb, var(--tp-gold) 45%, transparent);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .tracker-workspace-badge[aria-pressed='true'] {
-  background: var(--tp-gold-soft);
-  border-color: rgb(196 154 68 / 45%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tp-gold) 18%, transparent), color-mix(in srgb, var(--tp-gold) 8%, transparent));
+  border-color: color-mix(in srgb, var(--tp-gold) 48%, transparent);
   color: var(--tp-accent);
+  font-weight: var(--weight-bold);
+  box-shadow: var(--tp-shadow-gold);
 }
 
 .tp-workspace-icon {
@@ -1138,7 +1344,9 @@ body.tracker-workspace-basic .tracker-advanced-only {
 .tracker-toolbar-card {
   padding: var(--space-4) var(--space-5);
   border-width: 1.5px;
-  background: var(--surface-secondary);
+  background: var(--gradient-card);
+  border-color: var(--border-subtle);
+  box-shadow: var(--elev-2);
 }
 
 .tracker-mobile-workspace {
@@ -1316,12 +1524,17 @@ body.tracker-workspace-basic .tracker-advanced-only {
   flex-wrap: wrap;
 }
 
-/* Range pills */
+/* Phase 15–16: Range pills — segmented control */
 .tracker-range-pills {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0;
   flex-wrap: wrap;
+  padding: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  box-shadow: inset 0 1px 2px rgb(21 17 10 / 4%);
 }
 
 .tracker-pill,
@@ -1329,30 +1542,30 @@ body.tracker-workspace-basic .tracker-advanced-only {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.3rem 0.75rem;
+  padding: 0.35rem 0.8rem;
   border-radius: var(--radius-pill);
-  border: 1.25px solid var(--tp-border);
-  background: var(--tp-panel);
+  border: 1px solid transparent;
+  background: transparent;
   font-size: var(--text-xs);
   font-weight: var(--weight-bold);
   color: var(--tp-text-muted);
   white-space: nowrap;
   cursor: pointer;
-  min-height: 44px;
-  transition: all 0.18s var(--ease-out);
+  min-height: 40px;
+  transition: all var(--duration-fast) var(--ease-out);
 }
 
 .tracker-pill:hover {
-  border-color: var(--tp-gold);
   color: var(--tp-text);
-  background: var(--tp-gold-soft);
+  background: color-mix(in srgb, var(--tp-gold) 8%, transparent);
 }
 
 .tracker-pill.is-active {
-  background: var(--tp-gold-soft);
-  border-color: rgb(196 154 68 / 40%);
+  background: var(--gradient-gold-subtle);
+  border-color: color-mix(in srgb, var(--tp-gold) 42%, transparent);
   color: var(--tp-accent);
   font-weight: var(--weight-extrabold);
+  box-shadow: var(--shadow-xs);
 }
 
 .tracker-tag.up {
@@ -1376,33 +1589,42 @@ body.tracker-workspace-basic .tracker-advanced-only {
   border-color: rgb(196 154 68 / 25%);
 }
 
-/* Toggle chips */
+/* Toggle chips — Phase 16: gold active state */
 .tracker-chip {
-  border: 1px solid var(--tp-border);
-  background: var(--tp-panel);
+  border: 1.5px solid var(--tp-border);
+  background: var(--gradient-card);
   min-height: 44px;
-  padding: 0.3rem 0.75rem;
+  padding: 0.35rem 0.85rem;
   border-radius: var(--radius-pill);
   font-size: 0.76rem;
   font-weight: var(--weight-bold);
   color: var(--tp-text-muted);
   cursor: pointer;
-  transition: all 0.16s var(--ease-out);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
   font-family: inherit;
   white-space: nowrap;
+  box-shadow: var(--shadow-xs);
 }
 
 .tracker-chip:hover {
-  border-color: var(--tp-gold);
+  border-color: color-mix(in srgb, var(--tp-gold) 45%, var(--tp-border));
   color: var(--tp-gold-strong);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .tracker-chip.is-active,
 .tracker-chip[aria-pressed='true'] {
-  background: var(--tp-gold-soft);
-  border-color: rgb(196 154 68 / 35%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tp-gold) 16%, transparent), color-mix(in srgb, var(--tp-gold) 8%, transparent));
+  border-color: color-mix(in srgb, var(--tp-gold) 42%, transparent);
   color: var(--tp-accent);
+  font-weight: var(--weight-extrabold);
+  box-shadow: var(--tp-shadow-gold);
 }
 
 /* ── Form fields ──────────────────────────────────────────────────────────── */
@@ -1546,11 +1768,25 @@ body.tracker-workspace-basic .tracker-advanced-only {
   position: relative;
   min-height: 480px;
   border-radius: var(--radius-xl);
-  border: 1.5px solid var(--tp-border);
-  background: var(--tp-panel);
+  border: 1.5px solid var(--tp-chart-border);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--tp-gold) 6%, transparent), transparent 70%),
+    var(--tp-chart-bg);
   overflow: hidden;
-  box-shadow: var(--elev-2);
-  transition: all 0.28s var(--ease-out);
+  box-shadow:
+    var(--elev-3),
+    inset 0 1px 0 rgb(255 255 255 / 4%);
+  transition:
+    border-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.tracker-chart-wrap:hover {
+  border-color: color-mix(in srgb, var(--tp-gold) 32%, var(--tp-chart-border));
+  box-shadow:
+    var(--tp-shadow-gold),
+    var(--elev-3),
+    inset 0 1px 0 rgb(255 255 255 / 5%);
 }
 
 .tracker-chart-wrap.is-loading #tp-chart,
@@ -3848,31 +4084,22 @@ td.tracker-chg-down {
   }
 }
 
-.tracker-range-pills {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  padding: 0.25rem;
-  border-radius: var(--radius-pill);
+/* Phase 15b: Hero-context range pills (dark toolbar inside hero if used) */
+.tracker-hero-wrap .tracker-range-pills {
   background: rgb(0 0 0 / 22%);
   border: 1px solid rgb(255 255 255 / 8%);
+}
+
+.tracker-hero-wrap .tracker-range-pills .tracker-pill.is-active,
+.tracker-hero-wrap .tracker-range-pills .tracker-pill[aria-pressed='true'] {
+  background: var(--color-gold);
+  border-color: var(--color-gold-light);
+  color: var(--color-on-gold);
 }
 
 .tracker-range-pills .tracker-pill {
   min-height: 44px;
   font-variant-numeric: tabular-nums;
-  transition:
-    background-color var(--transition-normal),
-    border-color var(--transition-normal),
-    color var(--transition-normal),
-    transform var(--transition-fast);
-}
-
-.tracker-range-pills .tracker-pill.is-active,
-.tracker-range-pills .tracker-pill[aria-pressed='true'] {
-  background: var(--color-gold);
-  border-color: var(--color-gold-light);
-  color: var(--color-on-gold);
 }
 
 .tracker-karat-table tbody tr {
@@ -3913,13 +4140,7 @@ td.tracker-chg-down {
     0 0 0 0 transparent;
 }
 
-/* Toolbar card — gradient surface */
-.tracker-toolbar-card {
-  background: linear-gradient(180deg, var(--surface-secondary) 0%, var(--surface-primary) 100%);
-  border: 1.5px solid var(--border-subtle);
-}
-
-/* Result cards — gradient-card */
+/* Phase 56 polish — panels, cards, chart (aligned to 30-phase revamp) */
 .tracker-result-card {
   background: var(--gradient-card);
   border: 1.5px solid var(--border-subtle);
@@ -3974,14 +4195,16 @@ td.tracker-chg-down {
   border: 1.5px solid var(--border-subtle);
 }
 
-/* Chart wrap — enhanced premium border */
-.tracker-chart-wrap {
-  border: 1.5px solid var(--border-subtle);
-  box-shadow: var(--shadow-sm);
-}
-
-.tracker-chart-wrap:hover {
-  border-color: rgb(196 144 46 / 25%);
+/* Chart wrap — keep dark terminal from Phase 17; underline accent only */
+.tracker-chart-wrap::after {
+  content: '';
+  position: absolute;
+  inset-inline: var(--space-4);
+  bottom: 0;
+  height: 2px;
+  background: var(--rule-foil);
+  opacity: 0.35;
+  pointer-events: none;
 }
 
 /* Mode tab bar — thicker gold active underline */
@@ -4030,10 +4253,9 @@ td.tracker-chg-down {
   color: var(--text-primary);
 }
 
-/* Trust banner — gold-accent bar */
+/* Trust banner — gold-accent bar (Phase 9) */
 .tracker-data-trust-banner {
-  background: linear-gradient(90deg, rgb(196 144 46 / 5%) 0%, transparent 60%);
-  border-bottom: 1.5px solid rgb(196 144 46 / 20%);
+  padding-inline-start: calc(var(--space-4) + 6px);
 }
 
 /* Table hover — gold tint */
@@ -4052,4 +4274,607 @@ td.tracker-chg-down {
   font-family: var(--font-numeric);
   font-size: var(--text-3xl);
   font-weight: var(--weight-extrabold);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Phase 27: Dark mode — tracker shell parity
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme='dark'] body.tracker-pro-page {
+  background:
+    var(--gradient-section-alt),
+    var(--surface-canvas);
+}
+
+[data-theme='dark'] .tracker-mode-shell {
+  background: color-mix(in srgb, var(--surface-primary) 90%, transparent);
+  box-shadow:
+    0 4px 24px rgb(0 0 0 / 35%),
+    inset 0 1px 0 rgb(255 255 255 / 4%);
+}
+
+[data-theme='dark'] .tracker-toolbar-card,
+[data-theme='dark'] .tracker-panel,
+[data-theme='dark'] .tracker-subpanel {
+  background: var(--gradient-card);
+  border-color: var(--border-default);
+}
+
+[data-theme='dark'] .tracker-chart-wrap {
+  --tp-chart-bg: #040508;
+  --tp-chart-border: color-mix(in srgb, var(--color-gold) 22%, var(--border-default));
+}
+
+[data-theme='dark'] .tracker-range-pills {
+  background: var(--surface-tertiary);
+  border-color: var(--border-default);
+}
+
+/* Phase 28: Hero entrance — respects reduced motion */
+@keyframes tp-hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tracker-hero-main > * {
+  animation: tp-hero-fade-up 0.42s var(--ease-premium) both;
+}
+
+/* Trust/freshness nodes must be visible on first paint — no entrance fade */
+.tracker-hero-main > .tracker-badge-row,
+.tracker-hero-main > #tp-freshness-badge-slot,
+.tracker-hero-main > #tp-quote-meta-slot,
+.tracker-hero-main > #tp-realtime-sla-slot,
+.tracker-hero-main > #tp-market-status-slot {
+  animation: none;
+}
+
+.tracker-hero-main > *:nth-child(1) { animation-delay: 0ms; }
+.tracker-hero-main > *:nth-child(2) { animation-delay: 40ms; }
+.tracker-hero-main > *:nth-child(3) { animation-delay: 80ms; }
+.tracker-hero-main > *:nth-child(4) { animation-delay: 120ms; }
+.tracker-hero-main > *:nth-child(5) { animation-delay: 160ms; }
+.tracker-hero-main > *:nth-child(6) { animation-delay: 200ms; }
+.tracker-hero-main > *:nth-child(7) { animation-delay: 240ms; }
+.tracker-hero-main > *:nth-child(8) { animation-delay: 280ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tracker-hero-main > * {
+    animation: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Phases 18–30 completion — per-mode polish, RTL, motion, a11y
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Phase 18: Karat command desk + watchlist */
+.tracker-command-desk {
+  background: var(--gradient-card);
+  border-color: var(--border-subtle);
+}
+
+.tracker-ladder-table-wrap {
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--border-subtle);
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 50%);
+}
+
+.tracker-karat-table {
+  margin: 0;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.tracker-karat-table thead th {
+  background: linear-gradient(180deg, var(--surface-secondary) 0%, var(--surface-tertiary) 100%);
+  border-bottom: 1.5px solid color-mix(in srgb, var(--tp-gold) 18%, var(--border-default));
+  padding: 0.65rem 0.85rem;
+}
+
+.tracker-karat-table tbody tr {
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.tracker-karat-table tbody tr:hover {
+  background: color-mix(in srgb, var(--tp-gold) 6%, var(--surface-primary));
+}
+
+.tracker-karat-table tbody tr.is-selected {
+  background: color-mix(in srgb, var(--tp-gold) 10%, var(--surface-accent));
+  box-shadow: inset 3px 0 0 var(--tp-gold);
+}
+
+.tracker-karat-table td[data-karat-price] {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+.tracker-watchlist-block .tracker-subpanel-head h3 {
+  color: var(--text-accent);
+}
+
+.tracker-watch-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+}
+
+.tracker-watch-card.is-highlight {
+  border-color: color-mix(in srgb, var(--tp-gold) 45%, transparent);
+  box-shadow: var(--tp-shadow-gold);
+}
+
+/* Phase 19: Mobile command center */
+@media (width <= 768px) {
+  .tracker-mobile-workspace {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+
+  .tracker-mobile-summary-card {
+    background: var(--gradient-card);
+    border: 1.5px solid color-mix(in srgb, var(--tp-gold) 22%, var(--border-default));
+    border-radius: var(--radius-panel);
+    box-shadow: var(--elev-3);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .tracker-mobile-summary-card::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 3px;
+    background: var(--rule-foil);
+    opacity: 0.8;
+  }
+
+  .tracker-mobile-cue-card {
+    background: var(--gradient-card);
+    border: 1.5px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .tracker-mobile-action-rail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+
+  .tracker-mobile-action-rail .action-rail-button {
+    min-height: 104px;
+    background: var(--gradient-card);
+    border: 1.5px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xs);
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
+  }
+
+  .tracker-mobile-action-rail .action-rail-button:hover,
+  .tracker-mobile-action-rail .action-rail-button:focus-visible {
+    border-color: color-mix(in srgb, var(--tp-gold) 40%, transparent);
+    box-shadow: var(--tp-shadow-gold);
+    transform: translateY(-2px);
+  }
+
+  .tracker-mobile-summary-card .mobile-command-card__metric {
+    background: var(--surface-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+  }
+
+  .tracker-mobile-summary-card .mobile-command-card__metric-value {
+    font-family: var(--font-numeric);
+    color: var(--text-accent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tracker-mobile-action-rail .action-rail-button:hover {
+    transform: none;
+  }
+}
+
+/* Phase 20: Compare workspace */
+.comparison-workspace.trust-note-card {
+  background: var(--gradient-card);
+  border: 1.5px solid color-mix(in srgb, var(--tp-gold) 16%, var(--border-default));
+  border-radius: var(--radius-panel);
+  padding: var(--space-4);
+  box-shadow: var(--elev-2);
+}
+
+.comparison-workspace__note {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--surface-accent);
+  border: 1px solid color-mix(in srgb, var(--tp-gold) 14%, var(--border-default));
+}
+
+.comparison-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+}
+
+.comparison-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold), var(--shadow-xs);
+  transform: translateY(-2px);
+}
+
+.comparison-card__price {
+  font-family: var(--font-numeric);
+  font-weight: var(--weight-extrabold);
+  color: var(--text-accent);
+}
+
+.tracker-compare-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: flex-end;
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+  background: var(--surface-secondary);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+/* Phase 21: Archive mode */
+.tracker-archive-shell .tracker-panel {
+  background: var(--gradient-card);
+}
+
+.tracker-archive-shell .tracker-result-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.tracker-archive-shell .tracker-result-card:hover {
+  border-color: color-mix(in srgb, var(--tp-gold) 35%, transparent);
+  box-shadow: var(--shadow-gold);
+}
+
+.tracker-pagination {
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-secondary);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-xs);
+}
+
+.tracker-pagination .btn {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.tracker-table-scroll {
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--border-subtle);
+  overflow: auto;
+  max-height: min(60vh, 520px);
+}
+
+.tracker-archive-shell .tracker-table tbody tr {
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.tracker-archive-shell .tracker-table tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--surface-secondary) 60%, transparent);
+}
+
+/* Phase 22: Alerts overlay drawer */
+.tp-overlay-panel {
+  background: var(--gradient-card);
+  border-inline-start: 1.5px solid color-mix(in srgb, var(--tp-gold) 22%, var(--border-default));
+  box-shadow: -12px 0 48px rgb(21 17 10 / 14%);
+}
+
+.tp-overlay-header {
+  background: linear-gradient(180deg, var(--surface-primary) 0%, var(--surface-secondary) 100%);
+  border-bottom: 1.5px solid color-mix(in srgb, var(--tp-gold) 16%, var(--border-default));
+}
+
+.tp-overlay-header h2,
+.tp-overlay-header .h2 {
+  font-family: var(--font-display);
+  color: var(--text-accent);
+}
+
+.tp-overlay-intro {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--surface-accent);
+  border: 1px solid color-mix(in srgb, var(--tp-gold) 18%, var(--border-default));
+  border-inline-start: 3px solid var(--tp-gold);
+}
+
+#tp-alert-live-region:not(.sr-only) {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-live-bg);
+  border: 1px solid var(--color-live-border);
+  color: var(--color-live);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+/* Phase 23: Planner overlay trust cues */
+#tp-overlay-planner .tracker-subpanel {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+}
+
+#tp-overlay-planner .tracker-result-list {
+  background: var(--surface-accent);
+  border-color: color-mix(in srgb, var(--tp-gold) 20%, var(--border-default));
+}
+
+#tp-overlay-planner .tracker-result-item strong {
+  font-family: var(--font-numeric);
+  color: var(--text-accent);
+}
+
+.tracker-planner-grid .tracker-subpanel {
+  min-height: 100%;
+}
+
+/* Phase 24: Exports mode */
+.tracker-export-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 200px;
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  transition:
+    border-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.tracker-export-card:hover {
+  border-color: color-mix(in srgb, var(--tp-gold) 38%, transparent);
+  box-shadow: var(--shadow-gold), var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+.tracker-export-card .btn {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+.tracker-export-disclaimer {
+  background: linear-gradient(135deg, var(--surface-accent) 0%, var(--surface-secondary) 100%);
+  border: 1.5px solid color-mix(in srgb, var(--tp-gold) 22%, var(--border-default));
+  border-inline-start: 3px solid var(--tp-gold);
+}
+
+/* Phase 25: Method mode */
+.tracker-method-shell .tracker-method-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+  transition:
+    border-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.tracker-method-shell .tracker-method-card::before {
+  content: '';
+  position: absolute;
+  inset-inline: var(--space-4);
+  top: 0;
+  height: 2px;
+  background: var(--rule-foil);
+  opacity: 0.55;
+}
+
+.tracker-method-shell .tracker-method-card:hover {
+  border-color: color-mix(in srgb, var(--tp-gold) 40%, transparent);
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-2px);
+}
+
+.tracker-method-shell .tracker-method-card h3,
+.tracker-method-shell .tracker-method-card .h3 {
+  font-family: var(--font-display);
+  color: var(--text-accent);
+}
+
+.tracker-method-footer {
+  background: var(--surface-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Phase 26: RTL refinements */
+[dir='rtl'] .tracker-badge-row {
+  flex-direction: row;
+}
+
+[dir='rtl'] .tracker-karat-table tbody tr.is-selected {
+  box-shadow: inset -3px 0 0 var(--tp-gold);
+}
+
+[dir='rtl'] .tracker-data-trust-banner::before {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  border-radius: 2px 0 0 2px;
+}
+
+[dir='rtl'] .tracker-export-disclaimer,
+[dir='rtl'] .tp-overlay-intro {
+  border-inline-start: none;
+  border-inline-end: 3px solid var(--tp-gold);
+}
+
+[dir='rtl'] .tp-overlay-panel {
+  box-shadow: 12px 0 48px rgb(21 17 10 / 14%);
+}
+
+[dir='rtl'] .tracker-range-pills {
+  direction: ltr; /* keep chronological L→R pill order */
+}
+
+[dir='rtl'] .tracker-modes {
+  direction: rtl;
+}
+
+/* Phase 27b: Dark mode per-mode */
+[data-theme='dark'] .tracker-command-desk,
+[data-theme='dark'] .comparison-workspace.trust-note-card,
+[data-theme='dark'] .tracker-export-card,
+[data-theme='dark'] .tracker-method-shell .tracker-method-card {
+  background: var(--gradient-card);
+  border-color: var(--border-default);
+}
+
+[data-theme='dark'] .tp-overlay-panel {
+  background: var(--gradient-card);
+  box-shadow: -12px 0 48px rgb(0 0 0 / 45%);
+}
+
+[data-theme='dark'] .tracker-mobile-summary-card {
+  border-color: color-mix(in srgb, var(--color-gold) 28%, var(--border-default));
+}
+
+[data-theme='dark'] .tracker-chart-wrap {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--color-gold) 8%, transparent), transparent 70%),
+    var(--tp-chart-bg);
+}
+
+/* Phase 28b: Mode panel + tab motion */
+.tracker-mode-panel:not([hidden]) {
+  animation: tp-mode-enter 0.32s var(--ease-premium) both;
+}
+
+@keyframes tp-mode-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tracker-mode-tab {
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.tracker-mode-tab:active {
+  transform: scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tracker-mode-panel:not([hidden]),
+  .comparison-card:hover,
+  .tracker-export-card:hover,
+  .tracker-method-shell .tracker-method-card:hover {
+    animation: none;
+    transform: none;
+  }
+
+  .tracker-mode-tab:active {
+    transform: none;
+  }
+}
+
+/* Phase 29: A11y — focus rings + touch targets */
+.tracker-chip:focus-visible,
+.tracker-workspace-badge:focus-visible,
+.tracker-wire-refresh:focus-visible,
+.tracker-wire-pause:focus-visible,
+.tracker-export-card:focus-within,
+.comparison-card:focus-within,
+.tracker-method-card:focus-within {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.tracker-empty.empty-state-card {
+  padding: var(--space-6);
+  text-align: center;
+  background: var(--surface-secondary);
+  border: 1.5px dashed var(--border-default);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+}
+
+.tracker-trust-close,
+.tp-overlay-close {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Phase 30: Print + high-contrast safety */
+@media (prefers-contrast: more) {
+  .tracker-badge,
+  .tracker-chip,
+  .tracker-pill,
+  .tracker-mode-tab {
+    border-width: 2px;
+  }
+}
+
+/* Phase 7 completion: sticky hero controls on tablet/mobile scroll */
+@media (width <= 960px) {
+  .tracker-hero-controls {
+    position: sticky;
+    top: calc(var(--nav-height, 64px) + var(--spot-bar-height, 0px));
+    z-index: 119;
+    padding-block: var(--space-3);
+    margin-inline: calc(-1 * var(--page-gutter));
+    padding-inline: var(--page-gutter);
+    background: color-mix(in srgb, var(--tp-hero-bg-deep) 94%, transparent);
+    backdrop-filter: blur(16px) saturate(1.15);
+    -webkit-backdrop-filter: blur(16px) saturate(1.15);
+    border-block: 1px solid var(--tp-hero-border);
+    box-shadow: 0 10px 28px rgb(0 0 0 / 22%);
+  }
+
+  .tracker-hero-actions .btn {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tracker-hero-controls {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }
