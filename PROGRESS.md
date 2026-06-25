@@ -5,7 +5,8 @@
 - **Legend:** ✅ committed (GREEN) · 🟥 staged only (RED, see `OWNER_REVIEW.md`) · ⏭️ spec only · ↩️
   reverted+logged
 
-| Phase                    | Zone | Status    | Tests      | Files                                            |
-| ------------------------ | ---- | --------- | ---------- | ------------------------------------------------ |
-| 01 — Admin RLS lockdown  | RED  | 🟥 staged | n/a (SQL)  | `supabase/migrations/002_admin_rls_lockdown.sql` |
-| 02 — Allowlist hardening | RED  | 🟥 staged | n/a (docs) | `OWNER_REVIEW.md`                                |
+| Phase                       | Zone  | Status    | Tests                              | Files                                                    |
+| --------------------------- | ----- | --------- | ---------------------------------- | -------------------------------------------------------- |
+| 01 — Admin RLS lockdown     | RED   | 🟥 staged | n/a (SQL)                          | `supabase/migrations/002_admin_rls_lockdown.sql`         |
+| 02 — Allowlist hardening    | RED   | 🟥 staged | n/a (docs)                         | `OWNER_REVIEW.md`                                        |
+| 03 — Dark-mode fork removed | GREEN | ✅        | 1081 ✓ (+a11y/contrast, stylelint) | `styles/partials/base.css`, `styles/partials/tokens.css` |

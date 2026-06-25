@@ -437,41 +437,13 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --color-bg: #0d0e10;
-    --color-surface: #141518;
-    --color-surface-2: #1a1c20;
-    --color-surface-3: #212328;
-    --color-border: #2a2d33;
-    --color-border-subtle: #22242a;
-    --color-text: #edeef0;
-    --color-text-muted: #a6a8ae;
-    --color-text-faint: #82858c;
-    --color-gold-bg: #181610;
-    --color-gold-tint: #15130d;
-    --surface-canvas: #0d0e10;
-    --surface-primary: #141518;
-    --surface-secondary: #1a1c20;
-    --surface-tertiary: #212328;
-    --surface-accent: #181610;
-    --surface-glass: rgb(16 17 20 / 72%);
-    --surface-glass-border: rgb(56 59 66 / 60%);
-    --text-primary: #edeef0;
-    --text-secondary: #a6a8ae;
-    --text-tertiary: #82858c;
-    --border-default: #2a2d33;
-    --border-subtle: #22242a;
-    --border-strong: #383b42;
-    --gradient-surface: linear-gradient(180deg, #141518 0%, #101114 100%);
-
-    /* Semantic alias overrides for dark mode */
-    --color-accent: var(--color-gold-light);
-    --color-accent-strong: var(--color-gold-bright);
-    --color-surface-raised: var(--color-surface-2);
-    --color-text-secondary: var(--color-text-muted);
-  }
-}
+/* Dark mode is defined once in tokens.css ([data-theme='dark']) and applied by
+   nav.js (auto mode resolves OS preference and sets [data-theme]). A previous
+   prefers-color-scheme fork lived here with a stale palette and overrode
+   tokens.css by specificity (:root:not([data-theme='light']) beat
+   [data-theme='dark']) — removed in phase 3 so the canonical dark palette wins.
+   The OS-dark first-paint fallback now lives in tokens.css under
+   @media (prefers-color-scheme: dark) :root:not([data-theme]). */
 
 /* Font loading optimization to reduce layout shift */
 @font-face {
