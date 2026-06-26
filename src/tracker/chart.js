@@ -9,6 +9,22 @@ import {
   getHistoryStats,
 } from '../lib/historical-data.js';
 import { pulseFreshness } from '../lib/freshness-pulse.js';
+import { getFreshnessModel } from './freshness.js';
+
+/**
+ * Derive the provenance + freshness label for the synthetic "current price" row
+ * that gets appended to the chart/export series. The row must NEVER be labelled
+ * `live` unless the freshness engine actually classifies the current price as
+ * live — otherwise delayed / cached / stale / fallback / closed data would be
+ * exported and charted as "live", violating the freshness-honesty contract.
+ *
+ * @param {string} freshnessKey  effectiveKey from getFreshnessModel()
+ * @returns {{ source: 'live'|'cached', freshnessState: string }}
+ */
+export function deriveLiveRowFreshness(freshnessKey) {
+  const isLive = freshnessKey === 'live';
+  return { source: isLive ? 'live' : 'cached', freshnessState: freshnessKey };
+}
 
 let _chartListenersAttached = false;
 let _latestChartRows = [];
@@ -68,7 +84,7 @@ export function getVisibleHistoryRows() {
           date: new Date(),
           price: liveSpot,
           spot: liveSpot,
-          source: _state.hasLiveFailure ? 'cached' : 'live',
+          ...deriveLiveRowFreshness(getFreshnessModel().effectiveKey),
           granularity: 'live',
         }
       : null;

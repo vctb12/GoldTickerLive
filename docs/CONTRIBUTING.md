@@ -54,8 +54,8 @@ practical steps for working on Gold Ticker Live.
    { code: 'XX', name: 'Country Name', nameAr: 'الاسم', currency: 'XXX', flag: '🇽🇽', group: 'region', decimals: 2 }
    ```
 
-2. **Create country page:** Copy an existing file in `countries/` (e.g., `countries/oman.html`) and
-   update the country-specific content.
+2. **Create country page:** Copy an existing country directory in `countries/` (e.g.,
+   `countries/oman/index.html`) and update the country-specific content.
 
 3. **Create city pages:** Under `<country-slug>/` create the city structure:
 

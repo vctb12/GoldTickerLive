@@ -223,7 +223,7 @@ Append `?debug=true` to any page URL to expose a debug panel for:
 
 ```bash
 npm install
-npm test             # ~350 unit tests across the suite
+npm test             # 1,200+ tests across the suite (node:test)
 npm run lint         # ESLint (flat config in eslint.config.mjs)
 npm run validate     # build integrity + DOM safety + SEO + sitemap + sw-coverage gates
 npm run quality      # lint + prettier --check + stylelint
@@ -294,23 +294,23 @@ template ships in repo root.
 
 ### Country Pages (15 countries, 45+ cities)
 
-| Country         | URL                                                                                      | Cities                                               |
-| --------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| 🇦🇪 UAE          | [`/countries/uae.html`](https://goldtickerlive.com/countries/uae.html)                   | Dubai, Abu Dhabi, Sharjah, Ajman, Fujairah, RAK, UAQ |
-| 🇸🇦 Saudi Arabia | [`/countries/saudi-arabia.html`](https://goldtickerlive.com/countries/saudi-arabia.html) | Riyadh, Jeddah, Mecca, Medina, Dammam                |
-| 🇰🇼 Kuwait       | [`/countries/kuwait.html`](https://goldtickerlive.com/countries/kuwait.html)             | Kuwait City, Hawalli, Salmiya                        |
-| 🇶🇦 Qatar        | [`/countries/qatar.html`](https://goldtickerlive.com/countries/qatar.html)               | Doha, Al Rayyan, Al Wakrah                           |
-| 🇧🇭 Bahrain      | [`/countries/bahrain.html`](https://goldtickerlive.com/countries/bahrain.html)           | Manama, Muharraq, Rifaa                              |
-| 🇴🇲 Oman         | [`/countries/oman.html`](https://goldtickerlive.com/countries/oman.html)                 | Muscat, Salalah, Sohar                               |
-| 🇪🇬 Egypt        | [`/countries/egypt.html`](https://goldtickerlive.com/countries/egypt.html)               | Cairo, Alexandria, Giza                              |
-| 🇯🇴 Jordan       | [`/countries/jordan.html`](https://goldtickerlive.com/countries/jordan.html)             | Amman, Irbid, Zarqa                                  |
-| 🇱🇧 Lebanon      | [`/countries/lebanon.html`](https://goldtickerlive.com/countries/lebanon.html)           | Beirut, Tripoli, Sidon                               |
-| 🇲🇦 Morocco      | [`/countries/morocco.html`](https://goldtickerlive.com/countries/morocco.html)           | Casablanca, Rabat, Marrakech                         |
-| 🇹🇳 Tunisia      | [`/countries/tunisia.html`](https://goldtickerlive.com/countries/tunisia.html)           | Tunis, Sfax, Sousse                                  |
-| 🇩🇿 Algeria      | [`/countries/algeria.html`](https://goldtickerlive.com/countries/algeria.html)           | Algiers, Oran, Constantine                           |
-| 🇱🇾 Libya        | [`/countries/libya.html`](https://goldtickerlive.com/countries/libya.html)               | Tripoli, Benghazi, Misrata                           |
-| 🇸🇩 Sudan        | [`/countries/sudan.html`](https://goldtickerlive.com/countries/sudan.html)               | Khartoum, Omdurman, Port Sudan                       |
-| 🇮🇳 India        | [`/countries/india.html`](https://goldtickerlive.com/countries/india.html)               | Mumbai, Delhi, Chennai                               |
+| Country         | URL                                                                              | Cities                                               |
+| --------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| 🇦🇪 UAE          | [`/countries/uae/`](https://goldtickerlive.com/countries/uae/)                   | Dubai, Abu Dhabi, Sharjah, Ajman, Fujairah, RAK, UAQ |
+| 🇸🇦 Saudi Arabia | [`/countries/saudi-arabia/`](https://goldtickerlive.com/countries/saudi-arabia/) | Riyadh, Jeddah, Mecca, Medina, Dammam                |
+| 🇰🇼 Kuwait       | [`/countries/kuwait/`](https://goldtickerlive.com/countries/kuwait/)             | Kuwait City, Hawalli, Salmiya                        |
+| 🇶🇦 Qatar        | [`/countries/qatar/`](https://goldtickerlive.com/countries/qatar/)               | Doha, Al Rayyan, Al Wakrah                           |
+| 🇧🇭 Bahrain      | [`/countries/bahrain/`](https://goldtickerlive.com/countries/bahrain/)           | Manama, Muharraq, Rifaa                              |
+| 🇴🇲 Oman         | [`/countries/oman/`](https://goldtickerlive.com/countries/oman/)                 | Muscat, Salalah, Sohar                               |
+| 🇪🇬 Egypt        | [`/countries/egypt/`](https://goldtickerlive.com/countries/egypt/)               | Cairo, Alexandria, Giza                              |
+| 🇯🇴 Jordan       | [`/countries/jordan/`](https://goldtickerlive.com/countries/jordan/)             | Amman, Irbid, Zarqa                                  |
+| 🇱🇧 Lebanon      | [`/countries/lebanon/`](https://goldtickerlive.com/countries/lebanon/)           | Beirut, Tripoli, Sidon                               |
+| 🇲🇦 Morocco      | [`/countries/morocco/`](https://goldtickerlive.com/countries/morocco/)           | Casablanca, Rabat, Marrakech                         |
+| 🇹🇳 Tunisia      | [`/countries/tunisia.html`](https://goldtickerlive.com/countries/tunisia.html)   | Tunis, Sfax, Sousse                                  |
+| 🇩🇿 Algeria      | [`/countries/algeria.html`](https://goldtickerlive.com/countries/algeria.html)   | Algiers, Oran, Constantine                           |
+| 🇱🇾 Libya        | [`/countries/libya.html`](https://goldtickerlive.com/countries/libya.html)       | Tripoli, Benghazi, Misrata                           |
+| 🇸🇩 Sudan        | [`/countries/sudan.html`](https://goldtickerlive.com/countries/sudan.html)       | Khartoum, Omdurman, Port Sudan                       |
+| 🇮🇳 India        | [`/countries/india/`](https://goldtickerlive.com/countries/india/)               | Mumbai, Delhi, Chennai                               |
 
 ---
 
@@ -351,14 +351,14 @@ template ships in repo root.
 
 ## Data Sources & Price Logic
 
-| Source                                                                       | Used for                | Notes                       |
-| ---------------------------------------------------------------------------- | ----------------------- | --------------------------- |
-| [Gold-API.com](https://gold-api.com)                                         | Live XAU/USD spot price | Primary live market layer   |
+| Source                                                                       | Used for                | Notes                              |
+| ---------------------------------------------------------------------------- | ----------------------- | ---------------------------------- |
+| [Gold-API.com](https://gold-api.com)                                         | Live XAU/USD spot price | Primary live market layer          |
 | [GoldPriceZ](https://goldpricez.com/docs)                                    | Legacy adapter          | Optional fallback in adapter chain |
-| [ExchangeRate-API](https://www.exchangerate-api.com/docs/free)               | Currency conversion     | FX layer                    |
-| Hardcoded `3.6725`                                                           | UAE pricing             | Official AED/USD peg        |
-| [DataHub Gold Prices](https://datahub.io/core/gold-prices)                   | Historical baseline     | Long-range historical layer |
-| [GDELT DOC API](https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/amp/) | Market wire / headlines | News strip layer            |
+| [ExchangeRate-API](https://www.exchangerate-api.com/docs/free)               | Currency conversion     | FX layer                           |
+| Hardcoded `3.6725`                                                           | UAE pricing             | Official AED/USD peg               |
+| [DataHub Gold Prices](https://datahub.io/core/gold-prices)                   | Historical baseline     | Long-range historical layer        |
+| [GDELT DOC API](https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/amp/) | Market wire / headlines | News strip layer                   |
 
 ### Price formulas
 
@@ -387,7 +387,7 @@ in git, not chat memory.
 | [`PLAN.md`](PLAN.md)                                                                                           | Active task queue — update after each PR                     |
 | [`docs/REPOS_TO_STEAL_FROM.md`](docs/REPOS_TO_STEAL_FROM.md)                                                   | External repos to use / fork / study (one feature at a time) |
 | [`docs/plans/2026-06-09_github-control-center-setup.md`](docs/plans/2026-06-09_github-control-center-setup.md) | CI map, issue templates, folder structure                    |
-| [`.github/workflows/README.md`](.github/workflows/README.md)                                                   | Full workflow tier registry                           |
+| [`.github/workflows/README.md`](.github/workflows/README.md)                                                   | Full workflow tier registry                                  |
 
 **Quality gates (starter trio):**
 
@@ -531,9 +531,9 @@ npm start  # Starts Express server on port 3000
 2. Get your API key
 3. Add as GitHub Secret: `GOLD_API_COM_KEY`
 4. The `gold-price-fetch` workflow (`.github/workflows/gold-price-fetch.yml`) runs the provider
-   adapter chain (`gold_api_com` → `twelvedata_xauusd` → `fmp_gcusd`) hourly during market hours
-   and commits the result to `data/gold_price.json`. The frontend and all bots read from that
-   committed file — API keys never ship to the browser.
+   adapter chain (`gold_api_com` → `twelvedata_xauusd` → `fmp_gcusd`) hourly during market hours and
+   commits the result to `data/gold_price.json`. The frontend and all bots read from that committed
+   file — API keys never ship to the browser.
 
 ### GoldPriceZ (legacy adapter — optional)
 
@@ -691,7 +691,7 @@ GoldTickerLive/
 │   ├── CHANGELOG.md           # Version history
 │   └── …                      # SEO, Supabase, automation, risk docs
 ├── .env.example               # Environment variable template
-└── tests/                     # Test suite (205 tests across 10 files)
+└── tests/                     # Test suite (1,200+ tests across 137 files)
 ```
 
 ---
@@ -746,7 +746,8 @@ See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for:
 
 - Check browser console for API errors
 - Verify `data/gold_price.json` is fresh and the `gold-price-fetch` workflow succeeded
-- If using Gold-API.com directly, verify `GOLD_API_COM_KEY` is valid at [gold-api.com](https://gold-api.com)
+- If using Gold-API.com directly, verify `GOLD_API_COM_KEY` is valid at
+  [gold-api.com](https://gold-api.com)
 - Try `?debug=true` to use the debug panel
 - Clear localStorage: `localStorage.clear()` then refresh
 

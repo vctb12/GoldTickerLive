@@ -2937,6 +2937,41 @@ td.tracker-chg-down {
   border-color: rgb(196 154 68 / 35%);
 }
 
+/* Alert/preset delete control (rendered by alerts.js / planner.js). Previously
+   unstyled — it shipped as a default-sized button around a single "×" glyph,
+   well under the 44px touch-target floor. */
+.tracker-remove-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius-sm);
+  color: var(--tp-text-muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background 0.14s,
+    color 0.14s,
+    border-color 0.14s;
+}
+
+.tracker-remove-btn:hover {
+  background: var(--tp-danger-soft);
+  color: var(--tp-danger);
+  border-color: var(--tp-danger);
+}
+
+.tracker-remove-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
 .tp-overlay-body {
   flex: 1;
   overflow-y: auto;

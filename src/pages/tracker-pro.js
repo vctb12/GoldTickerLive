@@ -14,6 +14,8 @@ import {
 import { resolveGoldIsFresh } from '../lib/quote-freshness-bridge.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 import { createInitialState, persistState } from '../tracker/state.js';
+import { getFreshnessModel } from '../tracker/freshness.js';
+import { deriveLiveRowFreshness } from '../tracker/chart.js';
 import { el as safeEl } from '../lib/safe-dom.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { getBaselineRange } from '../lib/historical-data.js';
@@ -129,9 +131,32 @@ function syncCurrentCountryPageLink() {
       : `📄 ${selectedCountry.nameEn}`;
 }
 
+// Generic declarative hydrator for static tracker copy. Any element tagged
+// data-i18n="<key>" gets its textContent set from trackerTx('<key>'); the
+// -placeholder / -aria-label / -title variants set those attributes instead.
+// This replaces dozens of per-element setNodeText calls for the static modes
+// (exports / method / archive / planner / alerts chrome) — one attribute per
+// string, re-applied on every language change. Keys are guarded by
+// tests/tracker-i18n-key-coverage.test.js (which scans data-i18n attributes).
+function hydrateStaticI18n() {
+  for (const el of document.querySelectorAll('[data-i18n]')) {
+    el.textContent = trackerTx(el.dataset.i18n);
+  }
+  for (const el of document.querySelectorAll('[data-i18n-placeholder]')) {
+    el.setAttribute('placeholder', trackerTx(el.dataset.i18nPlaceholder));
+  }
+  for (const el of document.querySelectorAll('[data-i18n-aria-label]')) {
+    el.setAttribute('aria-label', trackerTx(el.dataset.i18nAriaLabel));
+  }
+  for (const el of document.querySelectorAll('[data-i18n-title]')) {
+    el.setAttribute('title', trackerTx(el.dataset.i18nTitle));
+  }
+}
+
 function localizeStaticTrackerCopy() {
   document.documentElement.lang = state.lang;
   document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+  hydrateStaticI18n();
 
   const trustContent = document.querySelector('.tracker-trust-content');
   if (trustContent) {
@@ -149,18 +174,76 @@ function localizeStaticTrackerCopy() {
     trustClose.setAttribute('title', trackerTx('referenceBannerClose'));
   }
 
+  // Hero heading parts are independent siblings (not nested in the <h1>) so the
+  // <h1> accessible name is a single clean title — not a run-on of the kicker
+  // eyebrow + title + tagline (D6). The kicker is decorative branding that
+  // duplicates the title, so it is aria-hidden in the markup.
   const titleSub = document.querySelector('.tracker-hero-title-sub');
   if (titleSub) titleSub.textContent = trackerTx('heroSub');
   const heroKicker = document.getElementById('tp-hero-kicker');
   if (heroKicker) heroKicker.textContent = trackerTx('heroKicker');
   const heroTitle = document.getElementById('tp-hero-title');
-  if (heroTitle && titleSub) {
-    if (heroKicker) {
-      heroTitle.replaceChildren(heroKicker, ` ${trackerTx('heroTitle')} `, titleSub);
-    } else {
-      heroTitle.replaceChildren(`${trackerTx('heroTitle')} `, titleSub);
-    }
+  if (heroTitle) heroTitle.textContent = trackerTx('heroTitle');
+
+  // Workspace tab labels — text only (the emoji lives in a separate aria-hidden
+  // .tp-tab-icon). Previously static English, so AR users saw English tabs.
+  for (const id of ['live', 'compare', 'archive', 'alerts', 'planner', 'exports', 'method']) {
+    const label = document.querySelector(`#tab-${id} .tp-tab-label`);
+    if (label) label.textContent = trackerTx(`tabs.${id}`);
   }
+
+  // Live-mode toolbar — static control labels (active state is class-driven).
+  const compareMarketLabel = document.getElementById('tp-compare-market-label');
+  if (compareMarketLabel)
+    compareMarketLabel.textContent = trackerTx('liveToolbar.compareMarketLabel');
+  for (const [range, key] of Object.entries({
+    '3Y': 'liveToolbar.range3y',
+    '5Y': 'liveToolbar.range5y',
+    ALL: 'liveToolbar.rangeAll',
+  })) {
+    const pill = document.querySelector(`.tracker-pill[data-range="${range}"]`);
+    if (pill) pill.textContent = trackerTx(key);
+  }
+  for (const [sel, key] of Object.entries({
+    '[data-metric="selected"]': 'liveToolbar.chipSelected',
+    '[data-metric="spot"]': 'liveToolbar.chipSpotOnly',
+    '[data-metric="compare"]': 'liveToolbar.chipCompare',
+    '[data-toggle="wire"]': 'liveToolbar.chipWire',
+    '[data-toggle="favorites"]': 'liveToolbar.chipFavorites',
+  })) {
+    const chip = document.querySelector(`.tracker-chip${sel}`);
+    if (chip) chip.textContent = trackerTx(key);
+  }
+  const autoRefreshChip = document.getElementById('tp-auto-refresh');
+  if (autoRefreshChip) {
+    autoRefreshChip.textContent = trackerTx(
+      state.autoRefresh === false ? 'liveToolbar.autoRefreshOff' : 'liveToolbar.autoRefreshOn'
+    );
+  }
+
+  // Exports mode — link-bearing disclaimer (the static card copy is data-i18n).
+  setInlineLinkText(
+    document.getElementById('tp-export-disclaimer'),
+    trackerTx('exports.disclaimer'),
+    'methodology.html',
+    trackerTx('exports.disclaimerLink')
+  );
+
+  // Planner overlay — link-bearing fees note (the rest of the chrome is data-i18n).
+  setInlineLinkText(
+    document.getElementById('tp-planner-fees-note'),
+    trackerTx('planner.feesNote'),
+    'methodology.html',
+    trackerTx('planner.feesNoteLink')
+  );
+
+  // Hero readout reference-vs-retail disclaimer (link-bearing; under the live price).
+  setInlineLinkText(
+    document.getElementById('tp-readout-disclaimer'),
+    trackerTx('readout.disclaimer'),
+    'methodology.html#spot-vs-retail',
+    trackerTx('readout.disclaimerLink')
+  );
 
   setInlineLinkText(
     document.getElementById('tp-hero-copy'),
@@ -985,7 +1068,13 @@ async function exportChartData() {
   const rangeFiltered = state.range ? filterByRange(flat, state.range) : flat;
   const rows = rangeFiltered.filter(Boolean);
   if (spot)
-    rows.push({ date: new Date().toISOString().slice(0, 10), spot, price: spot, source: 'live' });
+    rows.push({
+      date: new Date().toISOString().slice(0, 10),
+      spot,
+      price: spot,
+      granularity: 'live',
+      ...deriveLiveRowFreshness(getFreshnessModel().effectiveKey),
+    });
   try {
     const expMod = await import('../lib/export.js');
     expMod.exportChartCSV(rows, state.range, state.selectedKarat);
@@ -1821,5 +1910,9 @@ function initShareButtons() {
 // English modal overlay was removed in phase 16 (EN/AR parity — it had no
 // translation keys and showed an all-English dialog to Arabic users).
 
-init();
+init().catch((err) => {
+  // Surface a boot failure instead of a silent unhandled rejection. The static
+  // HTML still renders the last cached/skeleton state; this just logs the cause.
+  console.error('[tracker] initialisation failed', err);
+});
 initShareButtons();

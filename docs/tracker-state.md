@@ -128,19 +128,37 @@ the HTML order in `tracker.html`, and be covered by
 ## Freshness state machine
 
 The tracker live badge, refresh badge, and the hero summary panel all reflect a **freshness state**
-derived by `getLiveFreshness()` in [`src/lib/live-status.js`](../src/lib/live-status.js). The four
-states and their copy keys are:
+derived by `getLiveFreshness()` in [`src/lib/live-status.js`](../src/lib/live-status.js), which is
+the **canonical source** for both the state vocabulary and the age thresholds. It emits six base
+keys (build against `getFreshnessModel().effectiveKey`; do not hard-code the list or thresholds from
+this prose):
 
-| State         | `freshness.key` | Badge CSS class              | Meaning                                                     |
-| ------------- | --------------- | ---------------------------- | ----------------------------------------------------------- |
-| `live`        | `live`          | `tracker-badge-live`         | Data ≤ 12 min old; no live-fetch failure. Green pill.       |
-| `cached`      | `cached`        | `tracker-badge--cached`      | Data ≤ 12 min old; live-fetch failure occurred. Amber pill. |
-| `stale`       | `stale`         | `tracker-badge--stale`       | Data > 12 min old. Shown with "Stale · as of HH:MM".        |
-| `unavailable` | `unavailable`   | `tracker-badge--unavailable` | `updatedAt` absent — no price available.                    |
+| State         | `freshness.key` | Badge CSS class              | Meaning                                                          |
+| ------------- | --------------- | ---------------------------- | ---------------------------------------------------------------- |
+| `live`        | `live`          | `tracker-badge-live`         | Age ≤ `DELAYED_AFTER_MS` (30 min), upstream fresh, no failure.   |
+| `delayed`     | `delayed`       | `tracker-badge--cached`      | Age between 30 and 75 min, or upstream marked delayed.           |
+| `cached`      | `cached`        | `tracker-badge--cached`      | Within the age window but the local live fetch failed.           |
+| `stale`       | `stale`         | `tracker-badge--stale`       | Age > `STALE_AFTER_MS` (75 min). Shown as "Stale · as of HH:MM". |
+| `fallback`    | `fallback`      | `tracker-badge--stale`       | Upstream served a documented fallback value.                     |
+| `unavailable` | `unavailable`   | `tracker-badge--unavailable` | `updatedAt` absent — no price available.                         |
 
-The 12-minute boundary (`STALE_AFTER_MS`) in `src/lib/live-status.js` tolerates one missed cron tick
-while markets are open (workflow runs every 6 minutes). `live` and `cached` share the same age
-window — they differ only by whether a live-fetch failure (`hasLiveFailure`) has occurred.
+Canonical thresholds in `src/lib/live-status.js`: `DELAYED_AFTER_MS = 30 min`,
+`STALE_AFTER_MS = 75 min` — sized to tolerate a missed cron tick while markets are open. `live` and
+`cached` share an age window and differ only by whether a live-fetch failure (`hasLiveFailure`)
+occurred.
+
+Two further keys come from the **tracker layer**, not `getLiveFreshness()`:
+
+- `closed` — `getFreshnessModel()` ([`src/tracker/freshness.js`](../src/tracker/freshness.js))
+  overrides the key to `closed` when `getMarketStatus().isOpen` is false.
+- `estimated` — the realtime freshness policy
+  ([`src/lib/freshness-policy.js`](../src/lib/freshness-policy.js)) can report `state: 'estimated'`
+  (provider-unavailable / beyond the delayed budget), surfaced via
+  `realtimeSnapshot.freshness.state`.
+
+Every one of these eight effective keys has a `tracker.source.<key>` label in
+`src/config/translations.js` (EN + AR), guarded by `tests/tracker-i18n-key-coverage.test.js` so none
+can leak as a raw key.
 
 ### Copy keys per state
 

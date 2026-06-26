@@ -299,6 +299,15 @@ function wireLangToggles(navCtrl, lang) {
 }
 
 function renderCountryHero({ country, pageData, lang, gold, goldFreshness, fxFreshness, rate }) {
+  // Two strings the per-section hydration never touched (stayed English in AR):
+  const skip = document.querySelector('a.skip-link');
+  if (skip) setText(skip, tx(lang, 'skipLink'));
+  const methodLink = document.querySelector(
+    '.country-inline-link[href$="methodology.html#country-reference-pages"]'
+  );
+  if (methodLink) {
+    setText(methodLink, `${tx(lang, 'inlineMethodology')} ${lang === 'ar' ? '←' : '→'}`);
+  }
   setText(document.getElementById('country-page-kicker'), tx(lang, 'referenceKicker'));
   setText(
     document.getElementById('country-page-eyebrow'),

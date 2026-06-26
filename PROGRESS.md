@@ -5,6 +5,31 @@
 - **Legend:** ✅ committed (GREEN) · 🟥 staged only (RED → `OWNER_REVIEW.md`) · 🟦 GREEN staged as a
   proposal (judgment-heavy/large — plan + risk below) · ⏭️ spec only · ⤴️ out of scope for #443
 
+## 🟢 2026-06-26 Overhaul session (branch `claude/tracker-html-revamp-bpk97i`)
+
+Separate from PR #443. Full record:
+[`docs/plans/2026-06-26_overhaul-session-report.md`](docs/plans/2026-06-26_overhaul-session-report.md).
+28 gated commits, baseline 1205 → **1218 tests / 0 fail**; lint + style + validate + build green on
+every commit; LOCKED pricing intact (24K AED/g = 478.03); **0 runtime leaked i18n keys** across 6
+pages × EN/AR.
+
+- **Defects:** D1 (country `.html` 404s), D2 (404/offline relative analytics), D5 (dead
+  `X-Frame-Options` meta in 383 files), D6 (tracker `<h1>` run-on), D8 (missing i18n keys + leaked
+  `source.estimated`) — all ✅ fixed + guarded. D3 verified-OK (anon-key fallback). D4 home RTL / D7
+  imagery / D9 fonts / D6-homepage headings+landmark — ⬜ outstanding.
+- **Reliability:** freshness-honesty export fix (no non-live data labelled "live"); dead-code
+  removal.
+- **a11y:** single price live region, ESC-in-modal, 44px targets.
+- **i18n parity (Ultracode-driven):** ✅ tracker fully localized; ✅ home chrome; ✅ calculator
+  (local-dict + breakdown labels); ✅ methodology (18 headings); ✅ country (skip link + method
+  link). ⬜ shops (105 KB local `TXT` dict + `initNearMe`), home FAQ, tracker wire/keyboard +
+  method-mode rich bodies.
+- **Guards (CI):** `tests/i18n-sitewide-guard.test.js` (EN/AR parity + global-helper keys +
+  data-i18n) + `tests/tracker-i18n-key-coverage.test.js` + runtime `npm run i18n:leaked-scan`.
+- **⬜ Not started:** tracker design-token redesign (Tracks B–G), full
+  functional/offline/debug-panel QA, README prose reconciliation, Phase B page regeneration.
+  Datasets staged under `docs/plans/_artifacts/`.
+
 ## ✅ Completed GREEN phases (live on the branch)
 
 | Phase  | Scope                                                                                     | Verified                                              |

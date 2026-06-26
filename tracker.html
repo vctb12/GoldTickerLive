@@ -5,20 +5,19 @@
     <script src="assets/analytics.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="DENY" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta
       name="description"
-      content="Live gold prices for UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual EN/AR, auto-refresh with a visible freshness label."
+      content="Spot-linked reference gold prices for UAE, Saudi, Kuwait, Qatar and 20+ markets — 24K–18K per gram and ounce, with visible freshness labels. EN/AR."
     />
     <meta
       name="keywords"
       content="gold price today UAE, gold price Dubai, سعر الذهب اليوم, gold rate per gram AED, 24K gold price, 22K gold UAE, GCC gold prices, live gold tracker"
     />
-    <meta property="og:title" content="Gold Command Center — Live Tracker for UAE, GCC &amp; Arab World | Gold Ticker Live" />
+    <meta property="og:title" content="Gold Command Center — Gold Tracker for UAE, GCC &amp; Arab World | Gold Ticker Live" />
     <meta
       property="og:description"
-      content="Live gold prices for UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual EN/AR, auto-refresh with a visible freshness label."
+      content="Spot-linked reference gold prices for UAE, Saudi, Kuwait, Qatar and 20+ markets — 24K–18K per gram and ounce, with visible freshness labels. EN/AR."
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
@@ -28,10 +27,10 @@
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Gold Command Center — Live Tracker for UAE, GCC &amp; Arab World | Gold Ticker Live" />
+    <meta name="twitter:title" content="Gold Command Center — Gold Tracker for UAE, GCC &amp; Arab World | Gold Ticker Live" />
     <meta
       name="twitter:description"
-      content="Live gold prices for UAE, Saudi Arabia, Kuwait, Qatar and 20+ countries. 24K, 22K, 21K, 18K per gram and per ounce. Bilingual EN/AR, auto-refresh with a visible freshness label."
+      content="Spot-linked reference gold prices for UAE, Saudi, Kuwait, Qatar and 20+ markets — 24K–18K per gram and ounce, with visible freshness labels. EN/AR."
     />
     <meta name="twitter:image" content="https://goldtickerlive.com/assets/og-image.png" />
     <meta property="og:image:alt" content="Gold Ticker Live — live gold price tracker for GCC and Arab world" />
@@ -39,7 +38,7 @@
     <link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/tracker.html" />
     <link rel="alternate" hreflang="en" href="https://goldtickerlive.com/tracker.html" />
     <link rel="alternate" hreflang="ar" href="https://goldtickerlive.com/tracker.html?lang=ar" />
-    <title>Gold Command Center — Live Tracker UAE &amp; GCC | Gold Ticker Live</title>
+    <title>Gold Command Center — Gold Tracker | Gold Ticker Live</title>
 
     <!-- Critical Preloads for faster FCP -->
     <link rel="dns-prefetch" href="https://open.er-api.com" />
@@ -108,7 +107,7 @@
   </head>
 
   <body class="tracker-page tracker-pro-page">
-    <a class="skip-link" href="#tracker-app">Skip to main content</a>
+    <a class="skip-link" href="#tracker-app" data-i18n="skipLink.label">Skip to main content</a>
     <!-- Shared nav/footer/ticker are injected by tracker-pro.js using components/nav.js, components/footer.js, components/ticker.js -->
 
     <main id="tracker-app" class="tracker-app">
@@ -178,13 +177,7 @@
 
             <!-- Status badges row -->
             <div class="tracker-badge-row">
-              <span
-                class="tracker-badge tracker-badge-live"
-                id="tp-live-badge"
-                role="status"
-                aria-live="polite"
-                aria-atomic="true"
-              >
+              <span class="tracker-badge tracker-badge-live" id="tp-live-badge">
                 <span class="tracker-badge-dot" aria-hidden="true"></span>
                 <span id="tp-live-badge-text" class="skeleton-inline shell-skeleton-freshness-chip" aria-busy="true"></span>
                 <span class="tracker-badge-separator" aria-hidden="true">·</span>
@@ -226,7 +219,7 @@
 
             <!-- Trust + metadata command band -->
             <div class="tracker-command-meta-card" id="tp-command-meta" aria-label="Data trust and coverage">
-              <h2 class="tracker-command-meta-card__heading" id="tp-command-meta-heading">Quote context</h2>
+              <p class="tracker-command-meta-card__heading" id="tp-command-meta-heading">Quote context</p>
               <div id="tp-freshness-badge-slot" class="tracker-addon-slot"></div>
               <p
                 id="tp-price-change-strip"
@@ -240,11 +233,9 @@
               <div id="tp-realtime-sla-slot" class="tracker-addon-slot"></div>
             </div>
 
-            <h1 id="tp-hero-title" class="tracker-hero-title">
-              <span class="tracker-hero-kicker" id="tp-hero-kicker"></span>
-              Live Gold Price Tracker
-              <span class="tracker-hero-title-sub">Spot-linked reference workspace</span>
-            </h1>
+            <span class="tracker-hero-kicker" id="tp-hero-kicker" aria-hidden="true"></span>
+            <h1 id="tp-hero-title" class="tracker-hero-title">Gold Command Center</h1>
+            <p class="tracker-hero-title-sub">Spot-linked reference workspace</p>
             <p id="tp-hero-copy" class="tracker-hero-description">
               Track reference prices across 24+ markets, all configured karats, and live freshness states before
               you compare shop quotes.
@@ -513,7 +504,7 @@
         <div class="tracker-toolbar-card">
           <div class="tracker-control-grid">
             <label class="tracker-field tracker-advanced-only">
-              <span>Compare market</span>
+              <span id="tp-compare-market-label">Compare market</span>
               <select id="tp-compare-country"></select>
             </label>
             <label class="tracker-field tracker-field-inline tracker-history-month-field">
@@ -655,19 +646,19 @@
         </section>
 
         <!-- Market wire (advanced) -->
-        <section class="tracker-wire-shell tracker-advanced-only" aria-label="Market wire" data-reveal>
+        <section class="tracker-wire-shell tracker-advanced-only" aria-label="Market wire" data-i18n-aria-label="wire.ariaLabel" data-reveal>
           <div class="tracker-wire-card">
-            <div class="tracker-wire-label">Market wire</div>
+            <div class="tracker-wire-label" data-i18n="wire.label">Market wire</div>
             <div class="tracker-wire-meta" id="tp-wire-meta">
-              Live headlines · <span id="tp-wire-updated">waiting…</span>
+              Live headlines · <span id="tp-wire-updated" data-i18n="wire.metaWaiting">waiting…</span>
             </div>
             <div class="tracker-wire-marquee">
               <div class="tracker-wire-track" id="tp-wire-track">
-                <span class="tracker-wire-item">Loading live market headlines…</span>
+                <span class="tracker-wire-item" data-i18n="wire.loadingItem">Loading live market headlines…</span>
               </div>
             </div>
             <div class="tracker-wire-actions">
-              <button type="button" class="tracker-wire-refresh" id="tp-wire-refresh">
+              <button type="button" class="tracker-wire-refresh" id="tp-wire-refresh" data-i18n="wire.refresh">
                 Refresh wire
               </button>
               <button
@@ -688,7 +679,7 @@
             <div class="tracker-panel-head">
               <div>
                 <h2 id="tp-karat-heading">Karat reference table</h2>
-                <p>
+                <p data-i18n="karat.introCopy">
                   Scan 24K/22K/21K/18K reference levels first, then compare with your selected
                   market context and freshness labels.
                 </p>
@@ -698,15 +689,15 @@
               Reference values are derived from spot and purity. Final shop pricing may include
               making charges, dealer margin, and VAT.
             </p>
-            <div class="tracker-ladder-table-wrap" aria-label="Karat ladder">
+            <div class="tracker-ladder-table-wrap" aria-label="Karat ladder" data-i18n-aria-label="karat.ladderAriaLabel">
               <table class="tracker-table tracker-karat-table table-interactive ds-table">
-                <caption class="sr-only">Karat ladder — spot-linked reference price per selected unit for the selected market</caption>
+                <caption class="sr-only" data-i18n="karat.tableCaption">Karat ladder — spot-linked reference price per selected unit for the selected market</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Karat</th>
-                    <th scope="col">Purity</th>
-                    <th scope="col">Selected price</th>
-                    <th scope="col">vs 24K</th>
+                    <th scope="col" data-i18n="karat.colKarat">Karat</th>
+                    <th scope="col" data-i18n="karat.colPurity">Purity</th>
+                    <th scope="col" data-i18n="karat.colSelectedPrice">Selected price</th>
+                    <th scope="col" data-i18n="karat.colVs24k">vs 24K</th>
                   </tr>
                 </thead>
                 <tbody id="tp-karat-table" aria-live="polite" aria-atomic="false"></tbody>
@@ -717,8 +708,8 @@
           <section class="tracker-panel">
             <div class="tracker-panel-head">
               <div>
-                <h2 tabindex="-1" id="tp-chart-heading">Chart and trend context</h2>
-                <p>
+                <h2 tabindex="-1" id="tp-chart-heading" data-i18n="chart.heading">Chart and trend context</h2>
+                <p data-i18n="chart.headingCopy">
                   Blended spot-linked history: recent ranges use live and cached snapshots; longer
                   ranges use monthly baseline anchored to XAU/USD.
                 </p>
@@ -728,6 +719,7 @@
                   type="button"
                   class="btn btn-sm btn-outline tracker-advanced-only"
                   id="tp-export-chart"
+                  data-i18n="chart.exportCsv"
                 >
                   Export visible chart CSV
                 </button>
@@ -735,6 +727,7 @@
                   type="button"
                   class="btn btn-sm btn-ghost tracker-advanced-only"
                   id="tp-download-json"
+                  data-i18n="chart.downloadJson"
                 >
                   Download snapshot JSON
                 </button>
@@ -745,13 +738,13 @@
               <div class="tracker-legend">
                 <span class="tracker-legend-item">
                   <span class="tracker-legend-dot"></span>
-                  <span id="tp-legend-main">Selected series</span>
+                  <span id="tp-legend-main" data-i18n="chart.legendMain">Selected series</span>
                 </span>
               </div>
               <div class="tracker-mini-strip" id="tp-mini-strip"></div>
             </div>
 
-            <div class="tracker-chart-wrap" aria-label="Gold price chart" role="group" aria-describedby="tp-chart-source-note">
+            <div class="tracker-chart-wrap" aria-label="Gold price chart" data-i18n-aria-label="chart.chartAriaLabel" role="group" aria-describedby="tp-chart-source-note">
               <div class="tracker-chart-skeleton" id="tp-chart-skeleton" aria-hidden="true">
                 <div class="tracker-chart-skeleton__line"></div>
                 <div class="tracker-chart-skeleton__line"></div>
@@ -767,8 +760,8 @@
                 aria-live="polite"
               ></div>
               <div class="tracker-chart-empty" id="tp-chart-empty" hidden>
-                <p>Waiting for price data — select a time range above or refresh to load history.</p>
-                <p class="source-note">Short ranges use live and cached snapshots. Longer ranges use the monthly baseline anchored to XAU/USD.</p>
+                <p data-i18n="chart.emptyTitle">Waiting for price data — select a time range above or refresh to load history.</p>
+                <p class="source-note" data-i18n="chart.emptyNote">Short ranges use live and cached snapshots. Longer ranges use the monthly baseline anchored to XAU/USD.</p>
               </div>
             </div>
             <p class="tracker-chart-caption" id="tp-history-caption" role="status" aria-live="polite">
@@ -808,9 +801,9 @@
             <div class="tracker-two-up">
               <article class="tracker-subpanel">
                 <div class="tracker-subpanel-head">
-                  <h3>Range playback</h3>
+                  <h3 data-i18n="chart.rangePlaybackTitle">Range playback</h3>
                   <div class="tracker-subpanel-actions">
-                    <button type="button" class="btn btn-sm btn-ghost" id="tp-playback-btn">
+                    <button type="button" class="btn btn-sm btn-ghost" id="tp-playback-btn" data-i18n="chart.playHistory">
                       Play history
                     </button>
                   </div>
@@ -820,7 +813,7 @@
 
               <article class="tracker-subpanel">
                 <div class="tracker-subpanel-head">
-                  <h3>Visible range notes</h3>
+                  <h3 data-i18n="chart.visibleRangeNotesTitle">Visible range notes</h3>
                 </div>
                 <div class="tracker-note-list" id="tp-range-notes"></div>
               </article>
@@ -1118,19 +1111,20 @@
       >
         <div class="tp-overlay-panel">
           <div class="tp-overlay-header">
-            <h2 id="tp-overlay-alerts-title">Alerts + presets</h2>
+            <h2 id="tp-overlay-alerts-title" data-i18n="alerts.overlayTitle">Alerts + presets</h2>
             <button
               class="tp-overlay-close"
               type="button"
               data-close-overlay="alerts"
               aria-label="Close alerts panel"
+              data-i18n-aria-label="alerts.closeLabel"
             >
               ✕
             </button>
           </div>
           <div class="tp-overlay-body">
             <div class="tp-drawer-inner">
-            <p class="tp-overlay-intro">
+            <p class="tp-overlay-intro" data-i18n="alerts.overlayIntro">
               Browser-based price alerts — stored locally in your browser only. Alerts fire only
               while this tab is open. No SMS, email, or server-side notifications.
             </p>
@@ -1144,7 +1138,7 @@
             ></div>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Create alert</h3></div>
+              <div class="tracker-subpanel-head"><h3 data-i18n="alerts.createTitle">Create alert</h3></div>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
                   <span id="tp-alert-delivery-label">Delivery</span>
@@ -1154,22 +1148,22 @@
                   </select>
                 </label>
                 <label class="tracker-field" id="tp-alert-scope-wrap">
-                  <span id="tp-alert-scope-label">Watch price</span>
+                  <span id="tp-alert-scope-label" data-i18n="alerts.scopeLabel">Watch price</span>
                   <select id="tp-alert-scope" aria-labelledby="tp-alert-scope-label">
-                    <option value="selected">Selected view (current karat + currency)</option>
-                    <option value="spot">Spot XAU/USD per ounce</option>
-                    <option value="uae24">UAE 24K per gram (AED)</option>
+                    <option value="selected" data-i18n="alerts.scopeSelected">Selected view (current karat + currency)</option>
+                    <option value="spot" data-i18n="alerts.scopeSpot">Spot XAU/USD per ounce</option>
+                    <option value="uae24" data-i18n="alerts.scopeUae24">UAE 24K per gram (AED)</option>
                   </select>
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-alert-direction-label">Trigger when price is</span>
+                  <span id="tp-alert-direction-label" data-i18n="alerts.directionLabel">Trigger when price is</span>
                   <select id="tp-alert-direction" aria-labelledby="tp-alert-direction-label">
-                    <option value="above">Above target</option>
-                    <option value="below">Below target</option>
+                    <option value="above" data-i18n="alerts.directionAbove">Above target</option>
+                    <option value="below" data-i18n="alerts.directionBelow">Below target</option>
                   </select>
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-alert-target-label">Target price</span>
+                  <span id="tp-alert-target-label" data-i18n="alerts.targetLabel">Target price</span>
                   <input
                     type="number"
                     id="tp-alert-target"
@@ -1177,9 +1171,9 @@
                     aria-describedby="tp-alert-target-hint"
                     min="0"
                     step="0.01"
-                    placeholder="Enter target price"
+                    placeholder="Enter target price" data-i18n-placeholder="alerts.targetPlaceholder"
                   />
-                  <span class="tracker-help-text" id="tp-alert-target-hint">
+                  <span class="tracker-help-text" id="tp-alert-target-hint" data-i18n="alerts.targetHint">
                     Use spot-linked reference prices as a guide. Retail prices may differ.
                   </span>
                 </label>
@@ -1201,10 +1195,10 @@
                 </p>
               </div>
               <div class="tracker-inline-actions">
-                <button class="btn btn-primary" type="button" id="tp-save-alert">
+                <button class="btn btn-primary" type="button" id="tp-save-alert" data-i18n="alerts.saveAlert">
                   Save alert
                 </button>
-                <button class="btn btn-outline" type="button" id="tp-enable-notifications">
+                <button class="btn btn-outline" type="button" id="tp-enable-notifications" data-i18n="alerts.enableNotifications">
                   Enable notifications
                 </button>
               </div>
@@ -1213,8 +1207,8 @@
             </article>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Saved alerts</h3></div>
-              <p class="tracker-help-text tracker-browser-only-note" id="tp-alert-browser-note">
+              <div class="tracker-subpanel-head"><h3 data-i18n="alerts.savedTitle">Saved alerts</h3></div>
+              <p class="tracker-help-text tracker-browser-only-note" id="tp-alert-browser-note" data-i18n="alerts.browserOnlyNote">
                 <strong>Local alerts:</strong> Browser alerts fire only while this tab is open.
                 Server email alerts (if available) require verification and run from backend checks.
                 They may be unavailable when backend services are unreachable.
@@ -1223,29 +1217,29 @@
             </article>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Save preset</h3></div>
+              <div class="tracker-subpanel-head"><h3 data-i18n="alerts.savePresetTitle">Save preset</h3></div>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
-                  <span>Preset name</span>
+                  <span data-i18n="alerts.presetNameLabel">Preset name</span>
                   <input
                     type="text"
                     id="tp-preset-name"
-                    placeholder="Example: UAE 24K per gram"
+                    placeholder="Example: UAE 24K per gram" data-i18n-placeholder="alerts.presetNamePlaceholder"
                   />
                 </label>
               </div>
               <div class="tracker-inline-actions">
-                <button class="btn btn-primary" type="button" id="tp-save-preset">
+                <button class="btn btn-primary" type="button" id="tp-save-preset" data-i18n="alerts.saveCurrentSetup">
                   Save current setup
                 </button>
-                <button class="btn btn-ghost" type="button" id="tp-copy-url">
+                <button class="btn btn-ghost" type="button" id="tp-copy-url" data-i18n="alerts.copyShareableUrl">
                   Copy shareable URL
                 </button>
               </div>
             </article>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Saved presets</h3></div>
+              <div class="tracker-subpanel-head"><h3 data-i18n="alerts.savedPresetsTitle">Saved presets</h3></div>
               <div class="tracker-stack-list" id="tp-preset-list"></div>
             </article>
             </div><!-- /.tp-drawer-inner -->
@@ -1266,38 +1260,39 @@
       >
         <div class="tp-overlay-panel">
           <div class="tp-overlay-header">
-            <h2 id="tp-overlay-planner-title">Planners + estimators</h2>
+            <h2 id="tp-overlay-planner-title" data-i18n="planner.overlayTitle">Planners + estimators</h2>
             <button
               class="tp-overlay-close"
               type="button"
               data-close-overlay="planner"
               aria-label="Close planner panel"
+              data-i18n-aria-label="planner.closeLabel"
             >
               ✕
             </button>
           </div>
           <div class="tp-overlay-body">
             <div class="tp-drawer-inner">
-            <p class="tp-overlay-intro">
+            <p class="tp-overlay-intro" data-i18n="planner.intro">
               Turn reference prices into decisions. All calculations use spot-linked estimates —
               not retail or jewelry quotes.
             </p>
-            <p class="tracker-help-text">
+            <p class="tracker-help-text" id="tp-planner-fees-note">
               ⚠ Actual purchase prices include making charges, dealer premiums, and applicable taxes.
               Add these in the fields below or use the full calculator for a more detailed estimate.
               <a href="methodology.html" class="tracker-inline-link">Methodology →</a>
             </p>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Budget planner</h3></div>
-              <p class="tracker-subpanel-intro">How many grams can I buy with my budget?</p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="planner.budgetTitle">Budget planner</h3></div>
+              <p class="tracker-subpanel-intro" data-i18n="planner.budgetIntro">How many grams can I buy with my budget?</p>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
-                  <span id="tp-budget-amount-label">Budget amount (in selected currency)</span>
+                  <span id="tp-budget-amount-label" data-i18n="planner.budgetAmountLabel">Budget amount (in selected currency)</span>
                   <input type="number" id="tp-budget-amount" aria-labelledby="tp-budget-amount-label" min="0" step="0.01" value="10000" />
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-budget-fee-label">Extra fee / premium %</span>
+                  <span id="tp-budget-fee-label" data-i18n="planner.budgetFeeLabel">Extra fee / premium %</span>
                   <input type="number" id="tp-budget-fee" aria-labelledby="tp-budget-fee-label" min="0" step="0.01" value="0" />
                 </label>
               </div>
@@ -1305,15 +1300,15 @@
             </article>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Position tracker</h3></div>
-              <p class="tracker-subpanel-intro">What is my unrealised gain or loss at the current reference price?</p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="planner.positionTitle">Position tracker</h3></div>
+              <p class="tracker-subpanel-intro" data-i18n="planner.positionIntro">What is my unrealised gain or loss at the current reference price?</p>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
-                  <span id="tp-position-entry-label">Entry price (per gram, selected currency)</span>
+                  <span id="tp-position-entry-label" data-i18n="planner.positionEntryLabel">Entry price (per gram, selected currency)</span>
                   <input type="number" id="tp-position-entry" aria-labelledby="tp-position-entry-label" min="0" step="0.01" value="0" />
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-position-qty-label">Quantity (grams)</span>
+                  <span id="tp-position-qty-label" data-i18n="planner.positionQtyLabel">Quantity (grams)</span>
                   <input type="number" id="tp-position-qty" aria-labelledby="tp-position-qty-label" min="0" step="0.0001" value="0" />
                 </label>
               </div>
@@ -1321,41 +1316,41 @@
             </article>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Jewelry ticket estimate</h3></div>
-              <p class="tracker-subpanel-intro">Estimate the reference value of a jewelry piece — add making charges, premiums, and VAT to get closer to a retail estimate.</p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="planner.jewelryTitle">Jewelry ticket estimate</h3></div>
+              <p class="tracker-subpanel-intro" data-i18n="planner.jewelryIntro">Estimate the reference value of a jewelry piece — add making charges, premiums, and VAT to get closer to a retail estimate.</p>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
-                  <span id="tp-jewelry-weight-label">Weight (grams)</span>
+                  <span id="tp-jewelry-weight-label" data-i18n="planner.jewelryWeightLabel">Weight (grams)</span>
                   <input type="number" id="tp-jewelry-weight" aria-labelledby="tp-jewelry-weight-label" min="0" step="0.01" value="20" />
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-jewelry-karat-label">Karat</span>
+                  <span id="tp-jewelry-karat-label" data-i18n="planner.jewelryKaratLabel">Karat</span>
                   <select id="tp-jewelry-karat" aria-labelledby="tp-jewelry-karat-label"></select>
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-jewelry-making-label">Making charge per gram</span>
+                  <span id="tp-jewelry-making-label" data-i18n="planner.jewelryMakingLabel">Making charge per gram</span>
                   <input type="number" id="tp-jewelry-making" aria-labelledby="tp-jewelry-making-label" min="0" step="0.01" value="0" />
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-jewelry-premium-label">Dealer premium %</span>
+                  <span id="tp-jewelry-premium-label" data-i18n="planner.jewelryPremiumLabel">Dealer premium %</span>
                   <input type="number" id="tp-jewelry-premium" aria-labelledby="tp-jewelry-premium-label" min="0" step="0.01" value="0" />
                 </label>
               </div>
               <div class="tracker-inline-actions">
                 <label class="tracker-checkbox">
                   <input type="checkbox" id="tp-jewelry-vat" checked />
-                  <span>Include 5% UAE VAT</span>
+                  <span data-i18n="planner.jewelryVatLabel">Include 5% UAE VAT</span>
                 </label>
               </div>
               <div class="tracker-result-list" id="tp-jewelry-results"></div>
             </article>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Accumulation planner</h3></div>
-              <p class="tracker-subpanel-intro">How long will it take to reach my target weight at the current reference price?</p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="planner.accumTitle">Accumulation planner</h3></div>
+              <p class="tracker-subpanel-intro" data-i18n="planner.accumIntro">How long will it take to reach my target weight at the current reference price?</p>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
-                  <span id="tp-accum-monthly-label">Monthly contribution (selected currency)</span>
+                  <span id="tp-accum-monthly-label" data-i18n="planner.accumMonthlyLabel">Monthly contribution (selected currency)</span>
                   <input
                     type="number"
                     id="tp-accum-monthly"
@@ -1366,7 +1361,7 @@
                   />
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-accum-target-label">Target quantity (grams)</span>
+                  <span id="tp-accum-target-label" data-i18n="planner.accumTargetLabel">Target quantity (grams)</span>
                   <input
                     type="number"
                     id="tp-accum-target"
@@ -1381,7 +1376,7 @@
             </article>
 
             <div class="tracker-panel-footer-link">
-              <a href="calculator.html" class="tracker-link">Open full calculator for more options →</a>
+              <a href="calculator.html" class="tracker-link" data-i18n="planner.openFullCalculator">Open full calculator for more options →</a>
             </div>
             </div><!-- /.tp-drawer-inner -->
           </div>
@@ -1401,17 +1396,17 @@
         <div class="tracker-panel">
           <div class="tracker-panel-head">
             <div>
-              <h2>Archive + lookup</h2>
-              <p>
+              <h2 data-i18n="archive.title">Archive + lookup</h2>
+              <p data-i18n="archive.intro">
                 Browse unified history (baseline + cache), export slices, and jump to the nearest
                 archived point for any date.
               </p>
             </div>
             <div class="tracker-head-actions">
               <label class="tracker-field tracker-field-inline">
-                <span>Archive range</span>
+                <span data-i18n="archive.rangeLabel">Archive range</span>
                 <select id="tp-archive-range">
-                  <option value="ALL">All</option>
+                  <option value="ALL" data-i18n="archive.rangeAll">All</option>
                   <option value="5Y">5Y</option>
                   <option value="3Y">3Y</option>
                   <option value="1Y">1Y</option>
@@ -1420,11 +1415,11 @@
                 </select>
               </label>
               <label class="tracker-search">
-                <span class="sr-only">Search archive</span>
+                <span class="sr-only" data-i18n="archive.searchLabel">Search archive</span>
                 <input
                   type="text"
                   id="tp-archive-search"
-                  placeholder="Search month, year, source"
+                  placeholder="Search month, year, source" data-i18n-placeholder="archive.searchPlaceholder"
                 />
               </label>
             </div>
@@ -1433,12 +1428,12 @@
           <div class="tracker-two-up">
             <article class="tracker-subpanel">
               <div class="tracker-subpanel-head">
-                <h3>Archive browser</h3>
+                <h3 data-i18n="archive.browserHeading">Archive browser</h3>
                 <div class="tracker-inline-actions">
-                  <button class="btn btn-sm btn-outline" type="button" id="tp-export-archive">
+                  <button class="btn btn-sm btn-outline" type="button" id="tp-export-archive" data-i18n="archive.exportVisible">
                     Download visible archive CSV
                   </button>
-                  <button class="btn btn-sm btn-ghost" type="button" id="tp-export-history">
+                  <button class="btn btn-sm btn-ghost" type="button" id="tp-export-history" data-i18n="archive.exportHistory">
                     Download full history CSV
                   </button>
                 </div>
@@ -1454,14 +1449,14 @@
               </p>
               <div class="tracker-table-scroll">
                 <table class="tracker-table">
-                  <caption class="sr-only">Gold price archive — historical XAU/USD spot and selected market reference prices with data source labels</caption>
+                  <caption class="sr-only" data-i18n="archive.tableCaption">Gold price archive — historical XAU/USD spot and selected market reference prices with data source labels</caption>
                   <thead>
                     <tr>
-                      <th scope="col">Date</th>
-                      <th scope="col">Spot USD/oz</th>
-                      <th scope="col">Selected view</th>
-                      <th scope="col">UAE 24K/g</th>
-                      <th scope="col">Source</th>
+                      <th scope="col" data-i18n="archive.thDate">Date</th>
+                      <th scope="col" data-i18n="archive.thSpot">Spot USD/oz</th>
+                      <th scope="col" data-i18n="archive.thSelected">Selected view</th>
+                      <th scope="col" data-i18n="archive.thUae24">UAE 24K/g</th>
+                      <th scope="col" data-i18n="archive.thSource">Source</th>
                     </tr>
                   </thead>
                   <tbody id="tp-archive-body"></tbody>
@@ -1471,30 +1466,30 @@
             </article>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Date lookup</h3></div>
-              <p class="tracker-subpanel-intro">
+              <div class="tracker-subpanel-head"><h3 data-i18n="archive.lookupHeading">Date lookup</h3></div>
+              <p class="tracker-subpanel-intro" data-i18n="archive.lookupIntro">
                 Find the closest data point for any date in the archive. Searches baseline +
                 session data.
               </p>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
-                  <span>Lookup date</span>
+                  <span data-i18n="archive.lookupDateLabel">Lookup date</span>
                   <input type="date" id="tp-lookup-date" />
                 </label>
               </div>
               <div class="tracker-inline-actions">
-                <button class="btn btn-primary" type="button" id="tp-run-lookup">
+                <button class="btn btn-primary" type="button" id="tp-run-lookup" data-i18n="archive.runLookup">
                   Look up closest point
                 </button>
               </div>
               <div class="tracker-result-grid" id="tp-lookup-results"></div>
 
-              <div class="tracker-subpanel-head"><h3>Seasonal patterns</h3></div>
+              <div class="tracker-subpanel-head"><h3 data-i18n="archive.seasonalHeading">Seasonal patterns</h3></div>
               <div class="tracker-result-grid" id="tp-seasonal-results"></div>
             </article>
           </div>
 
-          <div class="tracker-empty" id="tp-archive-empty" hidden>
+          <div class="tracker-empty" id="tp-archive-empty" hidden data-i18n="archive.emptyState">
             No archive data available for the selected range. Try expanding the range or refreshing.
           </div>
         </div>
@@ -1512,8 +1507,8 @@
         <section class="tracker-panel">
           <div class="tracker-panel-head">
             <div>
-              <h2>Exports</h2>
-              <p>
+              <h2 data-i18n="exports.title">Exports</h2>
+              <p data-i18n="exports.intro">
                 Trustworthy CSV and JSON exports with clear source and timestamp metadata for the
                 current workspace.
               </p>
@@ -1522,20 +1517,20 @@
 
           <div class="tracker-export-grid">
             <article class="tracker-subpanel tracker-export-card">
-              <div class="tracker-subpanel-head"><h3>Visible chart CSV</h3></div>
-              <p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="exports.chartTitle">Visible chart CSV</h3></div>
+              <p data-i18n="exports.chartBody">
                 Exports the visible historical range with start/end dates, source labels, and
                 data-resolution notes. Includes a freshness header row so recipients know whether
                 points are live, cached, or baseline-derived.
               </p>
-              <button class="btn btn-outline" id="tp-export-chart-2" type="button">
+              <button class="btn btn-outline" id="tp-export-chart-2" type="button" data-i18n="exports.chartButton">
                 Export visible chart CSV
               </button>
             </article>
 
             <article class="tracker-subpanel tracker-export-card">
-              <div class="tracker-subpanel-head"><h3>Comparison CSV</h3></div>
-              <p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="exports.compareTitle">Comparison CSV</h3></div>
+              <p data-i18n="exports.compareBody">
                 Downloads the current country + karat comparison cards in the same order shown in
                 the Compare workspace. Includes currency, karat, unit, and reference-price columns.
                 All values are spot-linked estimates — not retail quotes.
@@ -1546,46 +1541,46 @@
             </article>
 
             <article class="tracker-subpanel tracker-export-card">
-              <div class="tracker-subpanel-head"><h3>Archive CSVs</h3></div>
-              <p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="exports.archiveTitle">Archive CSVs</h3></div>
+              <p data-i18n="exports.archiveBody">
                 Download the cached daily archive (visible range) or the full baseline + cache
                 history for longer-term reference. Archive data may include estimated or baseline
                 points — the Source column identifies each.
               </p>
               <div class="tracker-inline-actions">
-                <button class="btn btn-outline" id="tp-export-archive-2" type="button">
+                <button class="btn btn-outline" id="tp-export-archive-2" type="button" data-i18n="exports.archiveButton">
                   Visible archive CSV
                 </button>
-                <button class="btn btn-ghost" id="tp-export-history-2" type="button">
+                <button class="btn btn-ghost" id="tp-export-history-2" type="button" data-i18n="exports.historyButton">
                   Full history CSV
                 </button>
               </div>
             </article>
 
             <article class="tracker-subpanel tracker-export-card">
-              <div class="tracker-subpanel-head"><h3>Snapshot JSON</h3></div>
-              <p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="exports.snapshotTitle">Snapshot JSON</h3></div>
+              <p data-i18n="exports.snapshotBody">
                 Structured JSON with the live snapshot, freshness label, FX rate, selected karat,
                 comparison setup, and export timestamp. Suitable for integrating into scripts or
                 spreadsheets.
               </p>
-              <button class="btn btn-outline" id="tp-download-json-2" type="button">
+              <button class="btn btn-outline" id="tp-download-json-2" type="button" data-i18n="exports.snapshotButton">
                 Download snapshot JSON
               </button>
             </article>
 
             <article class="tracker-subpanel tracker-export-card">
-              <div class="tracker-subpanel-head"><h3>Market brief text</h3></div>
-              <p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="exports.briefTitle">Market brief text</h3></div>
+              <p data-i18n="exports.briefBody">
                 Plain-text summary of current gold conditions for the selected view — suitable for
                 email or note-taking. Includes freshness label and reference-price disclaimer.
               </p>
-              <button class="btn btn-outline" id="tp-download-brief" type="button">
+              <button class="btn btn-outline" id="tp-download-brief" type="button" data-i18n="exports.briefButton">
                 Download brief
               </button>
             </article>
           </div>
-          <p class="source-note tracker-export-disclaimer">
+          <p class="source-note tracker-export-disclaimer" id="tp-export-disclaimer">
             All exports contain reference prices only — spot-linked estimates before making charges, premiums, and tax.
             The Source column in every file identifies whether each data point is live, cached, or baseline-derived.
             <a href="methodology.html" class="tracker-inline-link">Methodology →</a>

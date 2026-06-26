@@ -306,7 +306,7 @@ async function fetchWithDedup(url) {
 ```javascript
 // Prefetch likely next pages
 const prefetchPages = () => {
-  const prefetchLinks = ['/tracker.html', '/calculator.html', '/countries/uae.html'];
+  const prefetchLinks = ['/tracker.html', '/calculator.html', '/countries/uae/'];
 
   prefetchLinks.forEach((url) => {
     const link = document.createElement('link');

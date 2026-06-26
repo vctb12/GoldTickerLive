@@ -958,10 +958,23 @@ function syncCrossPageLinks() {
 }
 
 // ── Apply full page language ───────────────────────────────────────────────
+// Declarative hydrator: any element tagged data-i18n / data-i18n-aria-label
+// gets its text/aria-label from tx('home.<value>'). Lets static home copy be
+// localized with one attribute instead of a bespoke setTextById call.
+function hydrateHomeI18n() {
+  for (const el of document.querySelectorAll('[data-i18n]')) {
+    el.textContent = tx(el.dataset.i18n);
+  }
+  for (const el of document.querySelectorAll('[data-i18n-aria-label]')) {
+    el.setAttribute('aria-label', tx(el.dataset.i18nAriaLabel));
+  }
+}
+
 function applyLangToPage() {
   const isAr = lang === 'ar';
   document.documentElement.lang = lang;
   document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+  hydrateHomeI18n();
 
   setTextById('hero-live-label', tx('heroLive'));
   setTextById('hero-title-main', tx('heroTitle'));

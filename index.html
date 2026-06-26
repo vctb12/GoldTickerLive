@@ -5,7 +5,6 @@
     <script src="assets/analytics.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="DENY" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="google-site-verification" content="Sf_5tfVLL-oHt6cc8dnfIELUMbrSR7L5LgxZSYxWvMg" />
     <meta name="msvalidate.01" content="E88623E4C36CDC8E8D44913FA9192725" />
@@ -132,7 +131,7 @@
   </script>
   </head>
   <body class="home-page">
-    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <a class="skip-link" href="#main-content" data-i18n="skipLink">Skip to main content</a>
 
     <!-- ═══════ NAV (injected by home.js) ═══════ -->
 
@@ -222,15 +221,15 @@
             <div class="hlc-sparkline" id="hlc-sparkline" aria-hidden="true"></div>
             <div class="hlc-stats-row" id="hlc-stats-row" hidden>
               <div class="hlc-stat">
-                <span class="hlc-stat-label">Open</span>
+                <span class="hlc-stat-label" data-i18n="statOpenLabel">Open</span>
                 <span class="hlc-stat-value" id="hlc-stat-open">—</span>
               </div>
               <div class="hlc-stat">
-                <span class="hlc-stat-label">High</span>
+                <span class="hlc-stat-label" data-i18n="statHighLabel">High</span>
                 <span class="hlc-stat-value hlc-stat-value--up" id="hlc-stat-high">—</span>
               </div>
               <div class="hlc-stat">
-                <span class="hlc-stat-label">Low</span>
+                <span class="hlc-stat-label" data-i18n="statLowLabel">Low</span>
                 <span class="hlc-stat-value hlc-stat-value--down" id="hlc-stat-low">—</span>
               </div>
             </div>
@@ -260,7 +259,7 @@
                   type="button"
                   class="hlc-export-btn"
                   id="hlc-export-btn"
-                  aria-label="Export session price history as CSV"
+                  aria-label="Export session price history as CSV" data-i18n-aria-label="exportCsvAria"
                   hidden
                 >⬇ CSV</button>
                 <a href="tracker.html" class="hlc-tracker-link" id="hlc-tracker-link"
@@ -596,6 +595,7 @@
               aria-selected="true"
               aria-controls="gcc-quick-grid"
               id="gcc-tab-gcc"
+              data-i18n="gccTabGccLabel"
             >
               GCC (6)
             </button>
@@ -606,6 +606,7 @@
               aria-selected="false"
               aria-controls="gcc-quick-grid"
               id="gcc-tab-mena"
+              data-i18n="gccTabMenaLabel"
             >
               MENA (8+)
             </button>
@@ -616,6 +617,7 @@
               aria-selected="false"
               aria-controls="gcc-quick-grid"
               id="gcc-tab-global"
+              data-i18n="gccTabGlobalLabel"
             >
               Global (24+)
             </button>
@@ -1045,9 +1047,9 @@
             </div>
           </div>
           <p class="explainer-strip-footer">
-            <a href="methodology.html" class="section-link" id="explainer-methodology-link">Full price methodology &amp; data sources →</a>
+            <a href="methodology.html" class="section-link" id="explainer-methodology-link" data-i18n="explainerMethodologyLink">Full price methodology &amp; data sources →</a>
             <br>
-            <a href="content/spot-vs-retail-gold-price/" class="section-link" id="explainer-svr-link">Spot vs retail price difference explained →</a>
+            <a href="content/spot-vs-retail-gold-price/" class="section-link" id="explainer-svr-link" data-i18n="explainerSvrLink">Spot vs retail price difference explained →</a>
           </p>
         </div>
       </section>

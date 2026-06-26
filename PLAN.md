@@ -17,6 +17,25 @@ Endless prompts:
 
 ## 🔴 In Progress
 
+### Tracker HTML 50-Phase Flagship Revamp (2026-06-26)
+
+Canonical plan:
+[`docs/plans/2026-06-26_tracker-html-50-phase-revamp.md`](docs/plans/2026-06-26_tracker-html-50-phase-revamp.md)
+· branch `claude/tracker-html-revamp-bpk97i` · owner-requested full-surface revamp (design / UX /
+features / reliability / a11y / RTL / perf / SEO). Self-contained working prompt; 10 tracks × 50
+phases; one phase per PR, baseline stays green.
+
+- [ ] **Phases 1–50** — see the plan's §7 phase tracker. Track A (foundation/audit) first.
+
+**Overhaul session 2026-06-26** (see
+[`docs/plans/2026-06-26_overhaul-session-report.md`](docs/plans/2026-06-26_overhaul-session-report.md)
+for the defect-closure table + verification receipts): 17 gated commits — freshness-honesty export
+fix, D1/D2/D5/D6/D8 defects, a11y batch, dead-code, doc reconciliation, and i18n parity
+(hero/source/tabs/live-toolbar wired + Batch-0 187 keys; dataset
+[`_artifacts/2026-06-26_tracker-i18n-parity-dataset.md`](docs/plans/_artifacts/2026-06-26_tracker-i18n-parity-dataset.md)
+ready for Batches 2–6). LOCKED pricing assertion verified (24K=478.03). Baseline 1205→1214 tests.
+**Outstanding:** i18n Batches 2–6, Phase C redesign, Phase B regeneration, D4/D7/D9.
+
 ### Tracker HTML 30-Phase Visual Revamp (2026-06-25)
 
 Canonical plan:
