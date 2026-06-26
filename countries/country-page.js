@@ -56,6 +56,7 @@ const STATE = {
 
 const T = {
   en: {
+    skipLink: 'Skip to main content',
     livePrice: 'Live Gold Price',
     perGram: 'per gram',
     perOz: 'per troy oz',
@@ -102,6 +103,7 @@ const T = {
     referenceOnly: 'Reference only — not financial advice.',
   },
   ar: {
+    skipLink: 'تخطّ إلى المحتوى الرئيسي',
     livePrice: 'سعر الذهب المباشر',
     perGram: 'للغرام',
     perOz: 'للأوقية',
@@ -628,6 +630,8 @@ function renderAll(cfg) {
   renderFaq(cfg);
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
+  const skip = document.querySelector('a.skip-link');
+  if (skip) skip.textContent = t('skipLink');
 }
 
 // ── Live data fetch ──────────────────────────────────────────────────────────

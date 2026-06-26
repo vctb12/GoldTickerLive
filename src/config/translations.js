@@ -1027,6 +1027,8 @@ export const TRANSLATIONS = {
 
     'tracker.quickToolsCountryPage': '📄 Current country page',
     'country.referenceKicker': 'Country gold price',
+    'country.inlineMethodology': 'Methodology',
+    'country.skipLink': 'Skip to main content',
     'country.referenceEyebrow': '{currency} · {market}',
     'country.heroTitle': 'Gold price today in {country}',
     'country.heroCopy':
@@ -2298,6 +2300,8 @@ export const TRANSLATIONS = {
 
     'tracker.quickToolsCountryPage': '📄 صفحة الدولة الحالية',
     'country.referenceKicker': 'سعر الذهب حسب الدولة',
+    'country.inlineMethodology': 'المنهجية',
+    'country.skipLink': 'تخطّ إلى المحتوى الرئيسي',
     'country.referenceEyebrow': '{currency} · {market}',
     'country.heroTitle': 'سعر الذهب اليوم في {country}',
     'country.heroCopy':
