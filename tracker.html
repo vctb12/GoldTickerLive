@@ -1257,38 +1257,39 @@
       >
         <div class="tp-overlay-panel">
           <div class="tp-overlay-header">
-            <h2 id="tp-overlay-planner-title">Planners + estimators</h2>
+            <h2 id="tp-overlay-planner-title" data-i18n="planner.overlayTitle">Planners + estimators</h2>
             <button
               class="tp-overlay-close"
               type="button"
               data-close-overlay="planner"
               aria-label="Close planner panel"
+              data-i18n-aria-label="planner.closeLabel"
             >
               ✕
             </button>
           </div>
           <div class="tp-overlay-body">
             <div class="tp-drawer-inner">
-            <p class="tp-overlay-intro">
+            <p class="tp-overlay-intro" data-i18n="planner.intro">
               Turn reference prices into decisions. All calculations use spot-linked estimates —
               not retail or jewelry quotes.
             </p>
-            <p class="tracker-help-text">
+            <p class="tracker-help-text" id="tp-planner-fees-note">
               ⚠ Actual purchase prices include making charges, dealer premiums, and applicable taxes.
               Add these in the fields below or use the full calculator for a more detailed estimate.
               <a href="methodology.html" class="tracker-inline-link">Methodology →</a>
             </p>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Budget planner</h3></div>
-              <p class="tracker-subpanel-intro">How many grams can I buy with my budget?</p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="planner.budgetTitle">Budget planner</h3></div>
+              <p class="tracker-subpanel-intro" data-i18n="planner.budgetIntro">How many grams can I buy with my budget?</p>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
-                  <span id="tp-budget-amount-label">Budget amount (in selected currency)</span>
+                  <span id="tp-budget-amount-label" data-i18n="planner.budgetAmountLabel">Budget amount (in selected currency)</span>
                   <input type="number" id="tp-budget-amount" aria-labelledby="tp-budget-amount-label" min="0" step="0.01" value="10000" />
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-budget-fee-label">Extra fee / premium %</span>
+                  <span id="tp-budget-fee-label" data-i18n="planner.budgetFeeLabel">Extra fee / premium %</span>
                   <input type="number" id="tp-budget-fee" aria-labelledby="tp-budget-fee-label" min="0" step="0.01" value="0" />
                 </label>
               </div>
@@ -1296,15 +1297,15 @@
             </article>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Position tracker</h3></div>
-              <p class="tracker-subpanel-intro">What is my unrealised gain or loss at the current reference price?</p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="planner.positionTitle">Position tracker</h3></div>
+              <p class="tracker-subpanel-intro" data-i18n="planner.positionIntro">What is my unrealised gain or loss at the current reference price?</p>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
-                  <span id="tp-position-entry-label">Entry price (per gram, selected currency)</span>
+                  <span id="tp-position-entry-label" data-i18n="planner.positionEntryLabel">Entry price (per gram, selected currency)</span>
                   <input type="number" id="tp-position-entry" aria-labelledby="tp-position-entry-label" min="0" step="0.01" value="0" />
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-position-qty-label">Quantity (grams)</span>
+                  <span id="tp-position-qty-label" data-i18n="planner.positionQtyLabel">Quantity (grams)</span>
                   <input type="number" id="tp-position-qty" aria-labelledby="tp-position-qty-label" min="0" step="0.0001" value="0" />
                 </label>
               </div>
@@ -1312,41 +1313,41 @@
             </article>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Jewelry ticket estimate</h3></div>
-              <p class="tracker-subpanel-intro">Estimate the reference value of a jewelry piece — add making charges, premiums, and VAT to get closer to a retail estimate.</p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="planner.jewelryTitle">Jewelry ticket estimate</h3></div>
+              <p class="tracker-subpanel-intro" data-i18n="planner.jewelryIntro">Estimate the reference value of a jewelry piece — add making charges, premiums, and VAT to get closer to a retail estimate.</p>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
-                  <span id="tp-jewelry-weight-label">Weight (grams)</span>
+                  <span id="tp-jewelry-weight-label" data-i18n="planner.jewelryWeightLabel">Weight (grams)</span>
                   <input type="number" id="tp-jewelry-weight" aria-labelledby="tp-jewelry-weight-label" min="0" step="0.01" value="20" />
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-jewelry-karat-label">Karat</span>
+                  <span id="tp-jewelry-karat-label" data-i18n="planner.jewelryKaratLabel">Karat</span>
                   <select id="tp-jewelry-karat" aria-labelledby="tp-jewelry-karat-label"></select>
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-jewelry-making-label">Making charge per gram</span>
+                  <span id="tp-jewelry-making-label" data-i18n="planner.jewelryMakingLabel">Making charge per gram</span>
                   <input type="number" id="tp-jewelry-making" aria-labelledby="tp-jewelry-making-label" min="0" step="0.01" value="0" />
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-jewelry-premium-label">Dealer premium %</span>
+                  <span id="tp-jewelry-premium-label" data-i18n="planner.jewelryPremiumLabel">Dealer premium %</span>
                   <input type="number" id="tp-jewelry-premium" aria-labelledby="tp-jewelry-premium-label" min="0" step="0.01" value="0" />
                 </label>
               </div>
               <div class="tracker-inline-actions">
                 <label class="tracker-checkbox">
                   <input type="checkbox" id="tp-jewelry-vat" checked />
-                  <span>Include 5% UAE VAT</span>
+                  <span data-i18n="planner.jewelryVatLabel">Include 5% UAE VAT</span>
                 </label>
               </div>
               <div class="tracker-result-list" id="tp-jewelry-results"></div>
             </article>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Accumulation planner</h3></div>
-              <p class="tracker-subpanel-intro">How long will it take to reach my target weight at the current reference price?</p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="planner.accumTitle">Accumulation planner</h3></div>
+              <p class="tracker-subpanel-intro" data-i18n="planner.accumIntro">How long will it take to reach my target weight at the current reference price?</p>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
-                  <span id="tp-accum-monthly-label">Monthly contribution (selected currency)</span>
+                  <span id="tp-accum-monthly-label" data-i18n="planner.accumMonthlyLabel">Monthly contribution (selected currency)</span>
                   <input
                     type="number"
                     id="tp-accum-monthly"
@@ -1357,7 +1358,7 @@
                   />
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-accum-target-label">Target quantity (grams)</span>
+                  <span id="tp-accum-target-label" data-i18n="planner.accumTargetLabel">Target quantity (grams)</span>
                   <input
                     type="number"
                     id="tp-accum-target"
@@ -1372,7 +1373,7 @@
             </article>
 
             <div class="tracker-panel-footer-link">
-              <a href="calculator.html" class="tracker-link">Open full calculator for more options →</a>
+              <a href="calculator.html" class="tracker-link" data-i18n="planner.openFullCalculator">Open full calculator for more options →</a>
             </div>
             </div><!-- /.tp-drawer-inner -->
           </div>

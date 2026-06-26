@@ -229,6 +229,14 @@ function localizeStaticTrackerCopy() {
     trackerTx('exports.disclaimerLink')
   );
 
+  // Planner overlay — link-bearing fees note (the rest of the chrome is data-i18n).
+  setInlineLinkText(
+    document.getElementById('tp-planner-fees-note'),
+    trackerTx('planner.feesNote'),
+    'methodology.html',
+    trackerTx('planner.feesNoteLink')
+  );
+
   setInlineLinkText(
     document.getElementById('tp-hero-copy'),
     trackerTx('heroCopy'),
