@@ -1,6 +1,7 @@
 // tracker/events.js — all event bindings for tracker-pro
 import { persistState } from './state.js';
 import { el } from '../lib/safe-dom.js';
+import { tx } from './_ctx.js';
 import { track, EVENTS } from '../lib/analytics.js';
 
 let _state, _el, _cb;
@@ -155,7 +156,9 @@ export function bindCoreEvents() {
   // Auto-refresh toggle
   _el.autoRefresh?.addEventListener('click', () => {
     _state.autoRefresh = !_state.autoRefresh;
-    _el.autoRefresh.textContent = `Auto refresh: ${_state.autoRefresh ? 'on' : 'off'}`;
+    _el.autoRefresh.textContent = tx(
+      _state.autoRefresh ? 'liveToolbar.autoRefreshOn' : 'liveToolbar.autoRefreshOff'
+    );
     persistState(_state);
     if (_state.autoRefresh) _cb.startAutoRefresh();
     else _cb.stopAutoRefresh();
@@ -170,7 +173,7 @@ export function bindCoreEvents() {
     if (!track) return;
     const paused = track.style.animationPlayState === 'paused';
     track.style.animationPlayState = paused ? 'running' : 'paused';
-    _el.wireToggle.textContent = paused ? 'Pause' : 'Resume';
+    _el.wireToggle.textContent = paused ? tx('wire.pause') : tx('wire.resume');
     _el.wireToggle.setAttribute('aria-pressed', String(!paused));
   });
 

@@ -169,6 +169,35 @@ function localizeStaticTrackerCopy() {
     if (label) label.textContent = trackerTx(`tabs.${id}`);
   }
 
+  // Live-mode toolbar — static control labels (active state is class-driven).
+  const compareMarketLabel = document.getElementById('tp-compare-market-label');
+  if (compareMarketLabel)
+    compareMarketLabel.textContent = trackerTx('liveToolbar.compareMarketLabel');
+  for (const [range, key] of Object.entries({
+    '3Y': 'liveToolbar.range3y',
+    '5Y': 'liveToolbar.range5y',
+    ALL: 'liveToolbar.rangeAll',
+  })) {
+    const pill = document.querySelector(`.tracker-pill[data-range="${range}"]`);
+    if (pill) pill.textContent = trackerTx(key);
+  }
+  for (const [sel, key] of Object.entries({
+    '[data-metric="selected"]': 'liveToolbar.chipSelected',
+    '[data-metric="spot"]': 'liveToolbar.chipSpotOnly',
+    '[data-metric="compare"]': 'liveToolbar.chipCompare',
+    '[data-toggle="wire"]': 'liveToolbar.chipWire',
+    '[data-toggle="favorites"]': 'liveToolbar.chipFavorites',
+  })) {
+    const chip = document.querySelector(`.tracker-chip${sel}`);
+    if (chip) chip.textContent = trackerTx(key);
+  }
+  const autoRefreshChip = document.getElementById('tp-auto-refresh');
+  if (autoRefreshChip) {
+    autoRefreshChip.textContent = trackerTx(
+      state.autoRefresh === false ? 'liveToolbar.autoRefreshOff' : 'liveToolbar.autoRefreshOn'
+    );
+  }
+
   setInlineLinkText(
     document.getElementById('tp-hero-copy'),
     trackerTx('heroCopy'),
