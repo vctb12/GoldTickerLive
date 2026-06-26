@@ -1392,17 +1392,17 @@
         <div class="tracker-panel">
           <div class="tracker-panel-head">
             <div>
-              <h2>Archive + lookup</h2>
-              <p>
+              <h2 data-i18n="archive.title">Archive + lookup</h2>
+              <p data-i18n="archive.intro">
                 Browse unified history (baseline + cache), export slices, and jump to the nearest
                 archived point for any date.
               </p>
             </div>
             <div class="tracker-head-actions">
               <label class="tracker-field tracker-field-inline">
-                <span>Archive range</span>
+                <span data-i18n="archive.rangeLabel">Archive range</span>
                 <select id="tp-archive-range">
-                  <option value="ALL">All</option>
+                  <option value="ALL" data-i18n="archive.rangeAll">All</option>
                   <option value="5Y">5Y</option>
                   <option value="3Y">3Y</option>
                   <option value="1Y">1Y</option>
@@ -1411,11 +1411,11 @@
                 </select>
               </label>
               <label class="tracker-search">
-                <span class="sr-only">Search archive</span>
+                <span class="sr-only" data-i18n="archive.searchLabel">Search archive</span>
                 <input
                   type="text"
                   id="tp-archive-search"
-                  placeholder="Search month, year, source"
+                  placeholder="Search month, year, source" data-i18n-placeholder="archive.searchPlaceholder"
                 />
               </label>
             </div>
@@ -1424,12 +1424,12 @@
           <div class="tracker-two-up">
             <article class="tracker-subpanel">
               <div class="tracker-subpanel-head">
-                <h3>Archive browser</h3>
+                <h3 data-i18n="archive.browserHeading">Archive browser</h3>
                 <div class="tracker-inline-actions">
-                  <button class="btn btn-sm btn-outline" type="button" id="tp-export-archive">
+                  <button class="btn btn-sm btn-outline" type="button" id="tp-export-archive" data-i18n="archive.exportVisible">
                     Download visible archive CSV
                   </button>
-                  <button class="btn btn-sm btn-ghost" type="button" id="tp-export-history">
+                  <button class="btn btn-sm btn-ghost" type="button" id="tp-export-history" data-i18n="archive.exportHistory">
                     Download full history CSV
                   </button>
                 </div>
@@ -1445,14 +1445,14 @@
               </p>
               <div class="tracker-table-scroll">
                 <table class="tracker-table">
-                  <caption class="sr-only">Gold price archive — historical XAU/USD spot and selected market reference prices with data source labels</caption>
+                  <caption class="sr-only" data-i18n="archive.tableCaption">Gold price archive — historical XAU/USD spot and selected market reference prices with data source labels</caption>
                   <thead>
                     <tr>
-                      <th scope="col">Date</th>
-                      <th scope="col">Spot USD/oz</th>
-                      <th scope="col">Selected view</th>
-                      <th scope="col">UAE 24K/g</th>
-                      <th scope="col">Source</th>
+                      <th scope="col" data-i18n="archive.thDate">Date</th>
+                      <th scope="col" data-i18n="archive.thSpot">Spot USD/oz</th>
+                      <th scope="col" data-i18n="archive.thSelected">Selected view</th>
+                      <th scope="col" data-i18n="archive.thUae24">UAE 24K/g</th>
+                      <th scope="col" data-i18n="archive.thSource">Source</th>
                     </tr>
                   </thead>
                   <tbody id="tp-archive-body"></tbody>
@@ -1462,30 +1462,30 @@
             </article>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Date lookup</h3></div>
-              <p class="tracker-subpanel-intro">
+              <div class="tracker-subpanel-head"><h3 data-i18n="archive.lookupHeading">Date lookup</h3></div>
+              <p class="tracker-subpanel-intro" data-i18n="archive.lookupIntro">
                 Find the closest data point for any date in the archive. Searches baseline +
                 session data.
               </p>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
-                  <span>Lookup date</span>
+                  <span data-i18n="archive.lookupDateLabel">Lookup date</span>
                   <input type="date" id="tp-lookup-date" />
                 </label>
               </div>
               <div class="tracker-inline-actions">
-                <button class="btn btn-primary" type="button" id="tp-run-lookup">
+                <button class="btn btn-primary" type="button" id="tp-run-lookup" data-i18n="archive.runLookup">
                   Look up closest point
                 </button>
               </div>
               <div class="tracker-result-grid" id="tp-lookup-results"></div>
 
-              <div class="tracker-subpanel-head"><h3>Seasonal patterns</h3></div>
+              <div class="tracker-subpanel-head"><h3 data-i18n="archive.seasonalHeading">Seasonal patterns</h3></div>
               <div class="tracker-result-grid" id="tp-seasonal-results"></div>
             </article>
           </div>
 
-          <div class="tracker-empty" id="tp-archive-empty" hidden>
+          <div class="tracker-empty" id="tp-archive-empty" hidden data-i18n="archive.emptyState">
             No archive data available for the selected range. Try expanding the range or refreshing.
           </div>
         </div>
