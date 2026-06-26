@@ -151,18 +151,16 @@ function localizeStaticTrackerCopy() {
     trustClose.setAttribute('title', trackerTx('referenceBannerClose'));
   }
 
+  // Hero heading parts are independent siblings (not nested in the <h1>) so the
+  // <h1> accessible name is a single clean title — not a run-on of the kicker
+  // eyebrow + title + tagline (D6). The kicker is decorative branding that
+  // duplicates the title, so it is aria-hidden in the markup.
   const titleSub = document.querySelector('.tracker-hero-title-sub');
   if (titleSub) titleSub.textContent = trackerTx('heroSub');
   const heroKicker = document.getElementById('tp-hero-kicker');
   if (heroKicker) heroKicker.textContent = trackerTx('heroKicker');
   const heroTitle = document.getElementById('tp-hero-title');
-  if (heroTitle && titleSub) {
-    if (heroKicker) {
-      heroTitle.replaceChildren(heroKicker, ` ${trackerTx('heroTitle')} `, titleSub);
-    } else {
-      heroTitle.replaceChildren(`${trackerTx('heroTitle')} `, titleSub);
-    }
-  }
+  if (heroTitle) heroTitle.textContent = trackerTx('heroTitle');
 
   setInlineLinkText(
     document.getElementById('tp-hero-copy'),
