@@ -89,7 +89,7 @@ function shopVsRefT(key) {
 const T = {
   en: {
     pageTitle: 'Gold Calculator',
-    pageSub: 'Spot-linked estimates · Multiple karats · AED & USD',
+    pageSub: 'Spot-linked reference estimates · Multiple karats · AED & USD',
     spotLabel: 'Spot:',
     flow_kicker: 'Mobile flow',
     flow_title: 'Choose a tool, enter values, review the result',
@@ -194,7 +194,7 @@ const T = {
   },
   ar: {
     pageTitle: 'حاسبة الذهب',
-    pageSub: 'تقديرات مرجعية فورية · عيارات متعددة · درهم ودولار',
+    pageSub: 'تقديرات مرجعية مرتبطة بالسعر الفوري · عيارات متعددة · درهم ودولار',
     spotLabel: 'السعر الفوري:',
     flow_kicker: 'مسار الموبايل',
     flow_title: 'اختر الأداة، أدخل القيم، ثم راجع النتيجة',
