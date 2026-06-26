@@ -237,6 +237,14 @@ function localizeStaticTrackerCopy() {
     trackerTx('planner.feesNoteLink')
   );
 
+  // Hero readout reference-vs-retail disclaimer (link-bearing; under the live price).
+  setInlineLinkText(
+    document.getElementById('tp-readout-disclaimer'),
+    trackerTx('readout.disclaimer'),
+    'methodology.html#spot-vs-retail',
+    trackerTx('readout.disclaimerLink')
+  );
+
   setInlineLinkText(
     document.getElementById('tp-hero-copy'),
     trackerTx('heroCopy'),
