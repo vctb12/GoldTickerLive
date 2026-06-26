@@ -679,7 +679,7 @@
             <div class="tracker-panel-head">
               <div>
                 <h2 id="tp-karat-heading">Karat reference table</h2>
-                <p>
+                <p data-i18n="karat.introCopy">
                   Scan 24K/22K/21K/18K reference levels first, then compare with your selected
                   market context and freshness labels.
                 </p>
@@ -689,15 +689,15 @@
               Reference values are derived from spot and purity. Final shop pricing may include
               making charges, dealer margin, and VAT.
             </p>
-            <div class="tracker-ladder-table-wrap" aria-label="Karat ladder">
+            <div class="tracker-ladder-table-wrap" aria-label="Karat ladder" data-i18n-aria-label="karat.ladderAriaLabel">
               <table class="tracker-table tracker-karat-table table-interactive ds-table">
-                <caption class="sr-only">Karat ladder — spot-linked reference price per selected unit for the selected market</caption>
+                <caption class="sr-only" data-i18n="karat.tableCaption">Karat ladder — spot-linked reference price per selected unit for the selected market</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Karat</th>
-                    <th scope="col">Purity</th>
-                    <th scope="col">Selected price</th>
-                    <th scope="col">vs 24K</th>
+                    <th scope="col" data-i18n="karat.colKarat">Karat</th>
+                    <th scope="col" data-i18n="karat.colPurity">Purity</th>
+                    <th scope="col" data-i18n="karat.colSelectedPrice">Selected price</th>
+                    <th scope="col" data-i18n="karat.colVs24k">vs 24K</th>
                   </tr>
                 </thead>
                 <tbody id="tp-karat-table" aria-live="polite" aria-atomic="false"></tbody>
@@ -708,8 +708,8 @@
           <section class="tracker-panel">
             <div class="tracker-panel-head">
               <div>
-                <h2 tabindex="-1" id="tp-chart-heading">Chart and trend context</h2>
-                <p>
+                <h2 tabindex="-1" id="tp-chart-heading" data-i18n="chart.heading">Chart and trend context</h2>
+                <p data-i18n="chart.headingCopy">
                   Blended spot-linked history: recent ranges use live and cached snapshots; longer
                   ranges use monthly baseline anchored to XAU/USD.
                 </p>
@@ -719,6 +719,7 @@
                   type="button"
                   class="btn btn-sm btn-outline tracker-advanced-only"
                   id="tp-export-chart"
+                  data-i18n="chart.exportCsv"
                 >
                   Export visible chart CSV
                 </button>
@@ -726,6 +727,7 @@
                   type="button"
                   class="btn btn-sm btn-ghost tracker-advanced-only"
                   id="tp-download-json"
+                  data-i18n="chart.downloadJson"
                 >
                   Download snapshot JSON
                 </button>
@@ -736,13 +738,13 @@
               <div class="tracker-legend">
                 <span class="tracker-legend-item">
                   <span class="tracker-legend-dot"></span>
-                  <span id="tp-legend-main">Selected series</span>
+                  <span id="tp-legend-main" data-i18n="chart.legendMain">Selected series</span>
                 </span>
               </div>
               <div class="tracker-mini-strip" id="tp-mini-strip"></div>
             </div>
 
-            <div class="tracker-chart-wrap" aria-label="Gold price chart" role="group" aria-describedby="tp-chart-source-note">
+            <div class="tracker-chart-wrap" aria-label="Gold price chart" data-i18n-aria-label="chart.chartAriaLabel" role="group" aria-describedby="tp-chart-source-note">
               <div class="tracker-chart-skeleton" id="tp-chart-skeleton" aria-hidden="true">
                 <div class="tracker-chart-skeleton__line"></div>
                 <div class="tracker-chart-skeleton__line"></div>
@@ -758,8 +760,8 @@
                 aria-live="polite"
               ></div>
               <div class="tracker-chart-empty" id="tp-chart-empty" hidden>
-                <p>Waiting for price data — select a time range above or refresh to load history.</p>
-                <p class="source-note">Short ranges use live and cached snapshots. Longer ranges use the monthly baseline anchored to XAU/USD.</p>
+                <p data-i18n="chart.emptyTitle">Waiting for price data — select a time range above or refresh to load history.</p>
+                <p class="source-note" data-i18n="chart.emptyNote">Short ranges use live and cached snapshots. Longer ranges use the monthly baseline anchored to XAU/USD.</p>
               </div>
             </div>
             <p class="tracker-chart-caption" id="tp-history-caption" role="status" aria-live="polite">
@@ -799,9 +801,9 @@
             <div class="tracker-two-up">
               <article class="tracker-subpanel">
                 <div class="tracker-subpanel-head">
-                  <h3>Range playback</h3>
+                  <h3 data-i18n="chart.rangePlaybackTitle">Range playback</h3>
                   <div class="tracker-subpanel-actions">
-                    <button type="button" class="btn btn-sm btn-ghost" id="tp-playback-btn">
+                    <button type="button" class="btn btn-sm btn-ghost" id="tp-playback-btn" data-i18n="chart.playHistory">
                       Play history
                     </button>
                   </div>
@@ -811,7 +813,7 @@
 
               <article class="tracker-subpanel">
                 <div class="tracker-subpanel-head">
-                  <h3>Visible range notes</h3>
+                  <h3 data-i18n="chart.visibleRangeNotesTitle">Visible range notes</h3>
                 </div>
                 <div class="tracker-note-list" id="tp-range-notes"></div>
               </article>
