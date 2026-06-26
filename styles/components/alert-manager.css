@@ -121,8 +121,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border: none;
   background: var(--color-surface-2);
   border-radius: var(--radius-sm, 8px);
@@ -171,7 +171,7 @@
   transition:
     border-color 180ms ease,
     background 180ms ease;
-  min-height: 36px;
+  min-height: 44px;
 }
 
 .alert-mgr-tool-btn:hover {
@@ -396,8 +396,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm, 8px);
   background: var(--color-surface);

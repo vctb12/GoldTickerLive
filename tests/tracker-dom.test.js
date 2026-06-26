@@ -40,6 +40,34 @@ test('tracker-dom: primary hero title element exists', () => {
   assert.ok(/id="tp-hero-title"/.test(HTML), '#tp-hero-title must exist');
 });
 
+// A11y: exactly one tick-driven price live region. #tp-refresh-badge is the
+// sole announcer; its ancestor #tp-live-badge must NOT also be a live region
+// (that produced duplicate/nested announcements on every 90s tick), and
+// #tp-live-badge-text must never carry aria-live. See docs/tracker-state.md.
+test('tracker-dom: #tp-live-badge wrapper is not a duplicate live region', () => {
+  const wrapper = HTML.match(/<span\b[^>]*id="tp-live-badge"[^>]*>/);
+  assert.ok(wrapper, '#tp-live-badge wrapper must exist');
+  assert.ok(
+    !/aria-live/.test(wrapper[0]),
+    '#tp-live-badge wrapper must not carry aria-live (nested live region → double announcement)'
+  );
+  assert.ok(
+    !/role="status"/.test(wrapper[0]),
+    '#tp-live-badge wrapper must not be role=status (it would imply an aria-live region)'
+  );
+});
+
+test('tracker-dom: #tp-refresh-badge is the single price live region', () => {
+  const badge = HTML.match(/<span\b[^>]*id="tp-refresh-badge"[^>]*>/);
+  assert.ok(badge, '#tp-refresh-badge must exist');
+  assert.ok(
+    /aria-live="polite"/.test(badge[0]) && /role="status"/.test(badge[0]),
+    '#tp-refresh-badge must be the role=status aria-live=polite price announcer'
+  );
+  const text = HTML.match(/<span\b[^>]*id="tp-live-badge-text"[^>]*>/);
+  assert.ok(text && !/aria-live/.test(text[0]), '#tp-live-badge-text must not carry aria-live');
+});
+
 test('tracker-dom: freshness badge row exists', () => {
   assert.ok(/class="[^"]*tracker-badge-row[^"]*"/.test(HTML), 'freshness badge row must exist');
 });

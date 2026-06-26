@@ -258,12 +258,15 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   const shortcutMap = getShortcutMap();
   window.addEventListener('keydown', (evt) => {
     if (evt.altKey || evt.metaKey || evt.ctrlKey) return;
-    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(evt.target.tagName)) return;
     const key = evt.key.toLowerCase();
+    // Escape must close an open modal even while a field inside it has focus —
+    // the planner/alerts overlays are mostly inputs, so the form-element guard
+    // below would otherwise trap keyboard users in the dialog.
     if (key === 'escape') {
       if (_openPanel) closeOverlay(_openPanel);
       return;
     }
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(evt.target.tagName)) return;
     if (key === 'r') {
       els.refreshBtn?.click();
       return;
