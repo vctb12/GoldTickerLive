@@ -13,18 +13,19 @@ them into the right section here before execution. Agent operating rules are in
 - Keep completed items as `[x]` with enough context to serve as a record. Don't re-open closed items
   to pad status; don't invent new phases to look ambitious.
 
-**Last updated:** 2026-05-30 (Session 7b visual excellence — full-surface interaction rollout: tracker/calc/shops/country/content polish, integration links, mobile 380px, error banner)
+**Last updated:** 2026-05-30 (Session 7b visual excellence — full-surface interaction rollout:
+tracker/calc/shops/country/content polish, integration links, mobile 380px, error banner)
 
-Previous: 2026-05-30 (Session 7 visual excellence — global interaction system, homepage
-hero/GCC polish, price-pulse count-ups, page-enter on flagship pages, tracker deep-links from home)
+Previous: 2026-05-30 (Session 7 visual excellence — global interaction system, homepage hero/GCC
+polish, price-pulse count-ups, page-enter on flagship pages, tracker deep-links from home)
 
-Previous: 2026-05-30 (Session 6 launch push — content page audit + `content-page-boot`,
-methodology live formula, learn hub catalog, insights market pulse, CI content/SW audits. See
+Previous: 2026-05-30 (Session 6 launch push — content page audit + `content-page-boot`, methodology
+live formula, learn hub catalog, insights market pulse, CI content/SW audits. See
 [`docs/plans/2026-05-30_session6-launch-push.md`](./plans/2026-05-30_session6-launch-push.md).)
 
-Previous: 2026-05-30 (Session 5 terminal polish — tracker K/U/⇧C shortcuts, tola/kg units,
-currency flags, hero count-up + day-change strip; shops copy/group/sort/filter counts + city gold-rate
-links; badge system, page-enter fade, related guides. See
+Previous: 2026-05-30 (Session 5 terminal polish — tracker K/U/⇧C shortcuts, tola/kg units, currency
+flags, hero count-up + day-change strip; shops copy/group/sort/filter counts + city gold-rate links;
+badge system, page-enter fade, related guides. See
 [`docs/plans/2026-05-30_session5-terminal-polish.md`](./plans/2026-05-30_session5-terminal-polish.md).)
 
 Previous: 2026-05-30 (Premium UI/UX revamp — homepage quick-convert widget, shared copy toast,
@@ -32,24 +33,25 @@ smooth count-up on hero/command metrics, calculator shop-vs-reference panel + ka
 country hero card hover polish. See
 [`docs/plans/2026-05-30_premium-ui-ux-revamp.md`](./plans/2026-05-30_premium-ui-ux-revamp.md).)
 
-Previous: 2026-05-29 (Deep clean session 3 — 22 broken content links fixed; `invest.js`
-migrated off `innerHTML` (11→0 DOM baseline); learn vs insights differentiated (no merge);
+Previous: 2026-05-29 (Deep clean session 3 — 22 broken content links fixed; `invest.js` migrated off
+`innerHTML` (11→0 DOM baseline); learn vs insights differentiated (no merge);
 `cache.getPreference()` added for learn page lang restore; SEO reports regenerated. See
 [`docs/plans/2026-05-29_deep-clean-session3.md`](./plans/2026-05-29_deep-clean-session3.md).)
 
 Previous: 2026-05-29 (Autonomous cleanup pass — stale `gold-prices` refs removed from live
 code/generators; 69 city hub stubs rebuilt with shared CSS + deduped links; `invest.html` inline JS
 extracted to `src/pages/invest.js`; orphan `search.js` + unused exports trimmed; SEO reports
-regenerated. See [`docs/plans/2026-05-29_autonomous-cleanup-consolidation.md`](./plans/2026-05-29_autonomous-cleanup-consolidation.md).)
+regenerated. See
+[`docs/plans/2026-05-29_autonomous-cleanup-consolidation.md`](./plans/2026-05-29_autonomous-cleanup-consolidation.md).)
 
-Previous: 2026-05-29 (Harsh country URL consolidation — removed ~345 thin city pages
-(per-karat + duplicate `gold-prices`), consolidated live pricing on `/countries/{c}/{city}/gold-rate/`,
-301 redirects, sitemap regen to ~252 indexable URLs, `invest.html` noindex).
+Previous: 2026-05-29 (Harsh country URL consolidation — removed ~345 thin city pages (per-karat +
+duplicate `gold-prices`), consolidated live pricing on `/countries/{c}/{city}/gold-rate/`, 301
+redirects, sitemap regen to ~252 indexable URLs, `invest.html` noindex).
 
-Previous: 2026-04-30 (Round 16 — 404 page redesigned with live freshness pill, bilingual
-EN/AR, search pre-fill, primary-intent card links, and analytics error logging; `_redirects`
-extended with clean-URL aliases, country shorthands, and legacy guide slug redirects; `not-found.js`
-fully rewritten; `translations.js` extended with `notfound.*` key family in both locales).
+Previous: 2026-04-30 (Round 16 — 404 page redesigned with live freshness pill, bilingual EN/AR,
+search pre-fill, primary-intent card links, and analytics error logging; `_redirects` extended with
+clean-URL aliases, country shorthands, and legacy guide slug redirects; `not-found.js` fully
+rewritten; `translations.js` extended with `notfound.*` key family in both locales).
 
 Previous: Round 15 — prefers-reduced-motion guards added to shops.css, calculator.css, invest.css,
 tracker-pro.css; WCAG 2.5.5 touch target pass — all interactive elements raised to ≥44px across
@@ -60,14 +62,21 @@ order.css, global.css).
 
 ### 2026-05-30 session 7b — full-surface visual rollout
 
-- [x] Tracker: interactive stat cards, karat table highlight + selected row, chart range crossfade, mobile dock pulse, inline calc → calculator deep link
-- [x] Calculator: tab crossfade panels, purity ring `@property` transition, copy shimmer, result → shops link
-- [x] Shops: `card-interactive`, copy ✓ feedback, grid `--updating` fade, city group `[data-reveal]`, empty fade-in
-- [x] Country pages (`page-hydrator`): hero/karat `countUp` + pulse, karat copy buttons, FAQ smooth accordion, city card hover
-- [x] Learn / methodology / insights: guide card hover, formula step reveal stagger, pulse card countUp
+- [x] Tracker: interactive stat cards, karat table highlight + selected row, chart range crossfade,
+      mobile dock pulse, inline calc → calculator deep link
+- [x] Calculator: tab crossfade panels, purity ring `@property` transition, copy shimmer, result →
+      shops link
+- [x] Shops: `card-interactive`, copy ✓ feedback, grid `--updating` fade, city group
+      `[data-reveal]`, empty fade-in
+- [x] Country pages (`page-hydrator`): hero/karat `countUp` + pulse, karat copy buttons, FAQ smooth
+      accordion, city card hover
+- [x] Learn / methodology / insights: guide card hover, formula step reveal stagger, pulse card
+      countUp
 - [x] Home: `data-status-banner` on prolonged fetch failure with retry
-- [x] Mobile 380px CSS pass (home GCC 2-col, tracker pills wrap, calc full-width inputs, shops single-column)
-- [x] Verified: `npm run build`; `npm test` 937/940 (3 pre-existing cache/provider/content-audit failures)
+- [x] Mobile 380px CSS pass (home GCC 2-col, tracker pills wrap, calc full-width inputs, shops
+      single-column)
+- [x] Verified: `npm run build`; `npm test` 937/940 (3 pre-existing cache/provider/content-audit
+      failures)
 
 ### 2026-05-30 session 7 — visual excellence (interaction foundation)
 
@@ -93,12 +102,14 @@ order.css, global.css).
 - [x] Tracker: chart pills labeled 1D/1W/1M/3M/1Y; tabular nums + market pulse CSS
 - [x] Shops: copy details, group-by-city, sort modes, filter counts, city `gold-rate/` links
 - [x] Design: `.badge` family, `page-enter` fade, `RelatedGuides` on guides hub
-- [x] Verified: `npm run validate`, `npm run build`; tracker tests green; 2 pre-existing cache/provider failures in full `npm test`
+- [x] Verified: `npm run validate`, `npm run build`; tracker tests green; 2 pre-existing
+      cache/provider failures in full `npm test`
 
 ### 2026-05-30 premium UI/UX revamp (build phase)
 
 - [x] Shared `copy-toast.js` + global toast / compare / purity / quick-convert CSS primitives
-- [x] Homepage: quick-convert widget in command center, count-up on command metrics + hero karat cells
+- [x] Homepage: quick-convert widget in command center, count-up on command metrics + hero karat
+      cells
 - [x] Calculator: shop vs reference comparison panel, karat purity ring, animated result value
 - [x] Country pages: hero price-card hover + karat % pill styling
 - [x] EN/AR translation keys for quick convert + copy feedback
@@ -142,8 +153,8 @@ and no long-term roadmap/platform items.
 - [x] Shops empty-state sub-slice: query-aware no-result messaging in both languages.
 - [x] Calculator copy-button sub-slice: bilingual copied-state aria-label feedback on delegated copy
       buttons.
-- [x] Phase 2 planning kickoff completed: learn/methodology/insights consolidation dependencies mapped
-      and first execution leaf selected in
+- [x] Phase 2 planning kickoff completed: learn/methodology/insights consolidation dependencies
+      mapped and first execution leaf selected in
       [`docs/plans/2026-05-21_next-session-prompts.md`](./plans/2026-05-21_next-session-prompts.md)
       (learn-first shared renderer migration).
 - [ ] Shared-shell follow-up items (if still needed after verification): nav/footer parity pass.
@@ -1680,7 +1691,8 @@ Canonical plan:
       tokens, tracker + home Spot Terminal classes, nav view-transition boot.
 - [x] **Phases 1–4** — SLO panel (`?debugSlo=1`), `REALTIME_SLO` analytics, parallel race provider,
       5 s freshness policy + UI bridge, backoff cap 5 s, wire/history decoupled from spot poll.
-- [ ] **Phases 5–8** — Tracker shell split, Spot Terminal hero, sitewide price motion, fast render path.
+- [ ] **Phases 5–8** — Tracker shell split, Spot Terminal hero, sitewide price motion, fast render
+      path.
 - [ ] **Phases 9–14** — Command deck, chart sync, karat binding, quote bus, surface hooks.
 - [ ] **Phases 15–20** — Lazy modes, CSS split, PWA hardening, optional relay, CI SLO gates.
 
@@ -1813,13 +1825,13 @@ a stable reference inventory, not an actionable backlog._
 
 ### 25.2 Active risks (carry forward)
 
-| #   | Risk                                                                               | Mitigation                                                                               | Residual impact                       |
-| --- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------- |
-| R1  | AdSense integration incomplete                                                     | Placeholder code already in place; flips live when owner supplies publisher ID.          | Low — monetisation only, no UX impact |
-| R2  | Supabase anon key is committed in `config/supabase.js`                             | Anon key is designed for client-side use; Row-Level Security only exposes verified rows. | Low — intended Supabase architecture  |
-| R3  | Vite / esbuild moderate vuln (≤ 0.24.2)                                            | Only affects local dev server; prod build is unaffected.                                 | None in production                    |
-| R4  | GitHub Pages cannot set HTTP security headers                                      | Meta-equivalents in `.htaccess` + proper headers on Express server when self-hosted.     | Medium — CSP / HSTS meta is limited   |
-| R5  | Dual routing (legacy flat `/countries/uae.html` + hierarchical `/uae/gold-price/`) | `.htaccess` redirects cover some paths; canonical tags on 97% of pages.                  | Medium — possible split link equity   |
+| #   | Risk                                                                           | Mitigation                                                                               | Residual impact                       |
+| --- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- | ------------------------------------- |
+| R1  | AdSense integration incomplete                                                 | Placeholder code already in place; flips live when owner supplies publisher ID.          | Low — monetisation only, no UX impact |
+| R2  | Supabase anon key is committed in `config/supabase.js`                         | Anon key is designed for client-side use; Row-Level Security only exposes verified rows. | Low — intended Supabase architecture  |
+| R3  | Vite / esbuild moderate vuln (≤ 0.24.2)                                        | Only affects local dev server; prod build is unaffected.                                 | None in production                    |
+| R4  | GitHub Pages cannot set HTTP security headers                                  | Meta-equivalents in `.htaccess` + proper headers on Express server when self-hosted.     | Medium — CSP / HSTS meta is limited   |
+| R5  | Dual routing (legacy flat `/countries/uae/` + hierarchical `/uae/gold-price/`) | `.htaccess` redirects cover some paths; canonical tags on 97% of pages.                  | Medium — possible split link equity   |
 
 ### 25.3 PR-reconciliation audit (snapshot 2026-04-13)
 
