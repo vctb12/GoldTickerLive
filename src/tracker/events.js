@@ -1,6 +1,6 @@
 // tracker/events.js — all event bindings for tracker-pro
 import { persistState } from './state.js';
-import { el, escape } from '../lib/safe-dom.js';
+import { el } from '../lib/safe-dom.js';
 import { track, EVENTS } from '../lib/analytics.js';
 
 let _state, _el, _cb;
@@ -401,9 +401,9 @@ export function bindCoreEvents() {
       const sourceBadge = el(
         'span',
         {
-          class: `tracker-source-badge tracker-source-badge--${escape(closest.source)}`,
+          class: `tracker-source-badge tracker-source-badge--${closest.source}`,
         },
-        [escape(closest.source)]
+        [closest.source]
       );
       const grid = el('div', { class: 'tracker-result-grid' }, [
         el('div', { class: 'tracker-result-card' }, [

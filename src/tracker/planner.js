@@ -1,5 +1,5 @@
 import { KARATS } from '../config/index.js';
-import { clear, el, escape } from '../lib/safe-dom.js';
+import { clear, el } from '../lib/safe-dom.js';
 import { tx, _currentSpot, _el, _priceFor, _state } from './_ctx.js';
 
 export function renderPresets() {
@@ -24,7 +24,7 @@ export function renderPresets() {
       _state.selectedUnit === p.unit &&
       _state.range === p.range;
     const metaParts = [
-      `${escape(p.karat)}K · ${escape(p.currency)}/${escape(p.unit)} · ${escape(p.range)} range`,
+      `${p.karat}K · ${p.currency}/${p.unit} · ${p.range} range`,
       ...(isCurrent
         ? [' · ', el('span', { style: { color: 'var(--tp-accent)' } }, tx('presets.current'))]
         : []),
@@ -90,13 +90,10 @@ export function renderPlanners() {
         ? (() => {
             const f = document.createDocumentFragment();
             f.append(
-              resultItem(
-                tx('planner.netBudget'),
-                `${net.toFixed(2)} ${escape(_state.selectedCurrency)}`
-              ),
+              resultItem(tx('planner.netBudget'), `${net.toFixed(2)} ${_state.selectedCurrency}`),
               resultItem(
                 tx('planner.goldCanBuy'),
-                `${(net / p).toFixed(3)} g (${escape(_state.selectedKarat)}K)`
+                `${(net / p).toFixed(3)} g (${_state.selectedKarat}K)`
               )
             );
             return f;
@@ -123,17 +120,14 @@ export function renderPlanners() {
       const gainPrefix = gainLoss >= 0 ? '+' : '';
       const frag = document.createDocumentFragment();
       frag.append(
-        resultItem(
-          tx('planner.entryValue'),
-          `${entryValue.toFixed(2)} ${escape(_state.selectedCurrency)}`
-        ),
+        resultItem(tx('planner.entryValue'), `${entryValue.toFixed(2)} ${_state.selectedCurrency}`),
         resultItem(
           tx('planner.currentValue'),
-          `${currentValue.toFixed(2)} ${escape(_state.selectedCurrency)}`
+          `${currentValue.toFixed(2)} ${_state.selectedCurrency}`
         ),
         resultItem(
           tx('planner.gainLoss'),
-          `${gainPrefix}${gainLoss.toFixed(2)} ${escape(_state.selectedCurrency)} (${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%)`,
+          `${gainPrefix}${gainLoss.toFixed(2)} ${_state.selectedCurrency} (${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%)`,
           { color: gainColor }
         )
       );
@@ -163,7 +157,7 @@ export function renderPlanners() {
       const subtotal = goldValue + makingTotal + premiumTotal;
       const vatAmount = subtotal * vat;
       const total = subtotal + vatAmount;
-      const cur = escape(_state.selectedCurrency);
+      const cur = _state.selectedCurrency;
       const frag = document.createDocumentFragment();
       frag.append(
         resultItem(tx('planner.goldValue'), `${goldValue.toFixed(2)} ${cur}`),
