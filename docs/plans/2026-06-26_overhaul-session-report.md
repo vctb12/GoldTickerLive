@@ -76,26 +76,55 @@ D6 h1 · `c5638a1` tab-label i18n · `deb9ea8` D1 country links · `2a65fd1` D2 
 
 ---
 
-## i18n parity integration — status (started this session)
+## i18n parity track — BEFORE / AFTER + guard coverage
 
-The `tracker-i18n-parity-dataset` Ultracode workflow produced an integration-ready dataset of **183
-strings** (committed: `docs/plans/_artifacts/2026-06-26_tracker-i18n-parity-dataset.md`).
-Integration is staged per the dataset's §5 batch order:
+Two Ultracode workflows mapped the parity gap: **183** verified-unhydrated strings in the tracker +
+**95** across home/calculator/shops/methodology/country = **~278 EN/AR-parity strings** (the
+original audit's "~120" was a low estimate). Datasets committed under `docs/plans/_artifacts/`.
 
-- ✅ **Batch 0** — all 187 EN+AR keys added to `translations.js` (inert, 915→1102 each). `2071c1b`
-- ✅ **hero/source/tabs** — readout/commandMeta, the 8 freshness `source.*` labels, and the 7 tab
-  labels wired + Playwright-verified in AR. (earlier commits)
-- ✅ **Batch 1 — live-toolbar** — chips, range pills, compare label, and the events.js
-  auto-refresh + wire pause/resume dynamic strings. Playwright-verified AR. `5323f56`
-- ⬜ **Batches 2–6** — chart-panel, alerts-overlay, planner-overlay, archive-mode, exports-mode,
-  method-mode, wire/keyboard static labels. Dataset has EN/AR + id-additions + wiring.
+### Counts
 
-> **Integrator note (verified this session):** do NOT blindly apply the dataset's `chart.stat*` keys
-> — `src/tracker/chart.js` already rebuilds the stat cards on render via
-> `tx('historical.summary.*')`, so those are NOT a parity bug and new keys would be redundant. Each
-> section must be checked against actual render behavior (static-unhydrated vs JS-rebuilt) before
-> wiring. exports-mode/method-mode are pure static content (safe); chart-panel/alerts/planner mix
-> static + JS-rendered.
+| Surface                                        | Before (unhydrated)                          | After (localized this session)                                                                                                                                                   | Remaining                                             |
+| ---------------------------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| Tracker                                        | 183                                          | ~129 — hero/readout/commandMeta, 8 `source.*`, 7 tabs, live-toolbar (chips + events.js auto-refresh/wire), **103 `data-i18n`** across exports/archive/planner/alerts/chart/karat | wire+keyboard (~25), method-mode rich bodies (~29)    |
+| Home                                           | ~30                                          | 10 (`data-i18n` chrome: skip link, GCC tabs, OHLC labels, export aria, explainer links)                                                                                          | FAQ accordion (rich answers), hero/section copy (~20) |
+| Calculator / shops / methodology / country     | ~65                                          | 0 (dataset ready)                                                                                                                                                                | ~65                                                   |
+| **Leaked raw keys (runtime, 6 pages × EN/AR)** | **≥1 (`tracker.source.estimated` observed)** | **0**                                                                                                                                                                            | 0                                                     |
+
+`translations.js`: **915 → 1113 EN keys = 1113 AR keys** (perfectly symmetric). Localized via the
+new generic `data-i18n` hydrators in `tracker-pro.js` + `home.js` (one attribute per string).
+
+### Guard coverage (the new safety net)
+
+**Static — `tests/i18n-sitewide-guard.test.js` (runs in `npm test` → CI):**
+
+1. EN/AR key-set parity — identical key sets (fails if any key is one-language-only).
+2. Global-helper key references — every literal key passed to a `TRANSLATIONS`-backed helper (home
+   `tx`/`txGlobal`, tracker `trackerTx`/`tx`, country `page-hydrator` `tx`→`country.*`) must exist.
+3. `data-i18n` attribute coverage — every `data-i18n*` key in `tracker.html` + `index.html`
+   resolves.
+
+Plus `tests/tracker-i18n-key-coverage.test.js` (4 tracker-specific computed-key guards: literal
+keys, freshness `source.*`, tab labels, `data-i18n`).
+
+**Runtime — `scripts/qa/leaked-key-scan.mjs` (`npm run i18n:leaked-scan`):** loads home, tracker,
+calculator, shops, methodology, country in EN+AR and fails if any visible text is a raw key
+(`namespace.key.key` / `UPPER.CASE.DOT`) — catches leaks from ANY helper, including the local-dict
+pages (calculator `T`, shops `TXT`) the static layer can't model. **Result: 0 leaks.**
+
+### Section-by-section (tracker)
+
+- ✅ Batch 0 — 187 inert keys · ✅ hero/source/tabs · ✅ live-toolbar · ✅ exports · ✅ archive · ✅
+  planner · ✅ alerts · ✅ chart-panel + karat table · ✅ home chrome.
+- ⬜ Remaining: tracker wire/keyboard-help, method-mode rich bodies; home FAQ; calculator, shops,
+  methodology, country pages (datasets ready).
+
+> **Integrator notes (verified):** (1) `chart.stat*` cards are JS-rebuilt by `chart.js` via
+> `tx('historical.summary.*')` — already localized, do not double-wire. (2) The alerts overlay was
+> partially pre-wired (delivery/email labels) — only the unwired chrome was tagged. (3) Always grep
+> for existing `setNodeText`/`setButtonCopy` wiring of an id before tagging (e.g. the compare export
+> buttons use `compare.exportLabel`). (4) Rich content with inline `<code>`/`<a>` (method bodies,
+> FAQ answers) needs `setInlineLinkText` or fragment-splitting, not `data-i18n` textContent.
 
 ## OUTSTANDING (the bulk of the overhaul — for follow-up PRs)
 
