@@ -191,6 +191,36 @@ const T = {
     save_result: 'Save to account',
     saved_result: 'Saved',
     save_requires_auth: 'Sign in to sync this result across devices?',
+    aed_label: '24K AED/g:',
+    presets_label: 'Quick:',
+    hero_bd_reference: 'Spot-linked reference value',
+    hero_bd_karats: '24K through 9K',
+    hero_bd_peg: 'AED peg 3.6725',
+    hero_bd_excludes: 'Excludes making charges & VAT',
+    bd_purity: 'Purity ({karat}K)',
+    bd_spot_per_gram: 'Spot price per gram ({currency})',
+    bd_usd_equivalent: 'USD equivalent',
+    bd_refinery_deduction: 'Refinery deduction',
+    bd_24k_equivalent: '24K equivalent',
+    bd_nisab: 'Nisab',
+    bd_total_gold_value: 'Total gold value',
+    bd_nisab_threshold: 'Nisab threshold',
+    bd_in_troy_ounces: 'In troy ounces',
+    bd_in_tolas: 'In tolas',
+    bd_price_per_gram: 'Price per gram ({karat}K)',
+    rel_tracker_title: 'Live Tracker',
+    rel_tracker_desc: '24+ countries, seven karats (14K-24K), alerts & history',
+    rel_shops_title: 'Find a Shop',
+    rel_shops_desc: 'Browse gold shops by region, country & city',
+    rel_learn_title: 'Karat Guide',
+    rel_learn_desc: 'Learn about karats, purity, and gold standards',
+    rel_22k_title: '22K Gold Guide',
+    rel_22k_desc: '22K purity, AED prices, and what to expect at UAE jewellers',
+    rel_24k_title: '24K Gold Guide',
+    rel_24k_desc: 'Pure gold prices, bars vs coins, and investment context',
+    rel_spot_retail_title: 'Spot vs Retail',
+    rel_spot_retail_desc: 'Why calculator outputs differ from jewellery shop prices',
+    skip_to_main: 'Skip to main content',
   },
   ar: {
     pageTitle: 'حاسبة الذهب',
@@ -294,6 +324,36 @@ const T = {
     save_result: 'حفظ في الحساب',
     saved_result: 'تم الحفظ',
     save_requires_auth: 'هل تريد تسجيل الدخول لمزامنة هذه النتيجة عبر الأجهزة؟',
+    aed_label: 'عيار 24 درهم/غرام:',
+    presets_label: 'سريع:',
+    hero_bd_reference: 'قيمة مرجعية مرتبطة بالسعر الفوري',
+    hero_bd_karats: 'من عيار 24 إلى عيار 9',
+    hero_bd_peg: 'ربط الدرهم 3.6725',
+    hero_bd_excludes: 'لا يشمل المصنعية وضريبة القيمة المضافة',
+    bd_purity: 'النقاء (عيار {karat})',
+    bd_spot_per_gram: 'السعر الفوري لكل غرام ({currency})',
+    bd_usd_equivalent: 'المعادل بالدولار الأمريكي',
+    bd_refinery_deduction: 'خصم رسوم التكرير',
+    bd_24k_equivalent: 'المعادل بعيار 24',
+    bd_nisab: 'النصاب',
+    bd_total_gold_value: 'إجمالي قيمة الذهب',
+    bd_nisab_threshold: 'حد النصاب',
+    bd_in_troy_ounces: 'بالأوقية التروي',
+    bd_in_tolas: 'بالتولة',
+    bd_price_per_gram: 'السعر لكل غرام (عيار {karat})',
+    rel_tracker_title: 'المتتبع المباشر',
+    rel_tracker_desc: 'أكثر من 24 دولة، سبعة عيارات (عيار 14-24)، تنبيهات وسجلّ تاريخي',
+    rel_shops_title: 'ابحث عن محل',
+    rel_shops_desc: 'تصفّح محلات الذهب حسب المنطقة والدولة والمدينة',
+    rel_learn_title: 'دليل العيارات',
+    rel_learn_desc: 'تعرّف على العيارات والنقاء ومعايير الذهب',
+    rel_22k_title: 'دليل الذهب عيار 22',
+    rel_22k_desc: 'نقاء عيار 22 وأسعار الدرهم وما تتوقعه عند جواهرجي الإمارات',
+    rel_24k_title: 'دليل الذهب عيار 24',
+    rel_24k_desc: 'أسعار الذهب الخالص والسبائك مقابل العملات وسياق الاستثمار',
+    rel_spot_retail_title: 'السعر الفوري مقابل التجزئة',
+    rel_spot_retail_desc: 'لماذا تختلف نتائج الحاسبة عن أسعار محلات المجوهرات',
+    skip_to_main: 'تخطَّ إلى المحتوى الرئيسي',
   },
 };
 
@@ -591,13 +651,13 @@ function calcValue() {
 
   const breakdown = document.getElementById('val-result-breakdown');
   const rows = [
-    ['Weight', `${weightGrams.toFixed(3)} g`],
-    [`Purity (${karat}K)`, `${(purity * 100).toFixed(1)}%`],
-    [`Spot price per gram (${currency})`, formatPrice(gramPriceUsd * rate, currency, decimals)],
-    ['USD equivalent', formatPrice(totalUsd, 'USD', 2)],
+    [t('val_weight'), `${weightGrams.toFixed(3)} g`],
+    [t('bd_purity', { karat }), `${(purity * 100).toFixed(1)}%`],
+    [t('bd_spot_per_gram', { currency }), formatPrice(gramPriceUsd * rate, currency, decimals)],
+    [t('bd_usd_equivalent'), formatPrice(totalUsd, 'USD', 2)],
   ];
   if (scrapChecked && STATE.valueMode === 'weight') {
-    rows.push(['Refinery deduction', '5%']);
+    rows.push([t('bd_refinery_deduction'), '5%']);
   }
   renderBreakdownRows(breakdown, rows);
   const shopMount = document.getElementById('val-shop-vs-ref-mount');
@@ -740,17 +800,20 @@ function calcZakat() {
     if (valueEl) valueEl.textContent = formatPrice(0, currency, decimals);
     if (belowNisab) belowNisab.hidden = false;
     renderBreakdownRows(breakdown, [
-      ['24K equivalent', `${grams24kEquiv.toFixed(2)} g`],
-      ['Nisab', `${NISAB_GRAMS_24K} g`],
+      [t('bd_24k_equivalent'), `${grams24kEquiv.toFixed(2)} g`],
+      [t('bd_nisab'), `${NISAB_GRAMS_24K} g`],
     ]);
   } else {
     const zakatLocal = totalLocal * 0.025;
     if (valueEl) valueEl.textContent = formatPrice(zakatLocal, currency, decimals);
     if (belowNisab) belowNisab.hidden = true;
     renderBreakdownRows(breakdown, [
-      ['Total gold value', formatPrice(totalLocal, currency, decimals)],
-      ['24K equivalent', `${grams24kEquiv.toFixed(2)} g`],
-      ['Nisab threshold', `${NISAB_GRAMS_24K} g (${formatPrice(nisabLocal, currency, decimals)})`],
+      [t('bd_total_gold_value'), formatPrice(totalLocal, currency, decimals)],
+      [t('bd_24k_equivalent'), `${grams24kEquiv.toFixed(2)} g`],
+      [
+        t('bd_nisab_threshold'),
+        `${NISAB_GRAMS_24K} g (${formatPrice(nisabLocal, currency, decimals)})`,
+      ],
     ]);
   }
 
@@ -797,10 +860,10 @@ function calcBuying() {
 
   const breakdown = document.getElementById('buy-result-breakdown');
   renderBreakdownRows(breakdown, [
-    ['In troy ounces', `${ozYouGet.toFixed(4)} ozt`],
-    ['In tolas', `${tolaYouGet.toFixed(3)} tola`],
+    [t('bd_in_troy_ounces'), `${ozYouGet.toFixed(4)} ozt`],
+    [t('bd_in_tolas'), `${tolaYouGet.toFixed(3)} tola`],
     [
-      `Price per gram (${karat}K)`,
+      t('bd_price_per_gram', { karat }),
       formatPrice(
         gramPriceLocal,
         currency,
@@ -1056,10 +1119,68 @@ function applyLang() {
   set('calc-copy-link-btn', STATE.lang === 'ar' ? 'نسخ الرابط' : 'Copy Link');
   set('calc-copy-image-btn', STATE.lang === 'ar' ? '📸 نسخ كصورة' : '📸 Copy as image');
 
+  // Static parity strings (skip link, hero breakdown, related cards, dealer label).
+  set('calc-skip-link', t('skip_to_main'));
+  set('calc-aed-label', t('aed_label'));
+  set('calc-presets-label', t('presets_label'));
+  for (const [id, marker, key] of [
+    ['calc-hero-bd-1', '✓', 'hero_bd_reference'],
+    ['calc-hero-bd-2', '✓', 'hero_bd_karats'],
+    ['calc-hero-bd-3', '✓', 'hero_bd_peg'],
+    ['calc-hero-bd-4', '✗', 'hero_bd_excludes'],
+  ]) {
+    const item = document.getElementById(id);
+    if (item) {
+      const m = document.createElement('span');
+      m.setAttribute('aria-hidden', 'true');
+      m.textContent = marker;
+      item.replaceChildren(m, ` ${t(key)}`);
+    }
+  }
+  for (const [id, key] of [
+    ['calc-rel-tracker-title', 'rel_tracker_title'],
+    ['calc-rel-tracker-desc', 'rel_tracker_desc'],
+    ['calc-rel-shops-title', 'rel_shops_title'],
+    ['calc-rel-shops-desc', 'rel_shops_desc'],
+    ['calc-rel-learn-title', 'rel_learn_title'],
+    ['calc-rel-learn-desc', 'rel_learn_desc'],
+    ['calc-rel-22k-title', 'rel_22k_title'],
+    ['calc-rel-22k-desc', 'rel_22k_desc'],
+    ['calc-rel-24k-title', 'rel_24k_title'],
+    ['calc-rel-24k-desc', 'rel_24k_desc'],
+    ['calc-rel-spot-retail-title', 'rel_spot_retail_title'],
+    ['calc-rel-spot-retail-desc', 'rel_spot_retail_desc'],
+  ]) {
+    set(id, t(key));
+  }
+  {
+    // Keep the live percentage span; only translate the "Dealer Payout" label.
+    const dealerLabel = document.getElementById('scrap-label-dealer');
+    const pctEl = document.getElementById('scrap-pct-display');
+    if (dealerLabel && pctEl) {
+      dealerLabel.replaceChildren(`${t('scrap_label_dealer')} (`, pctEl, '%)');
+    }
+  }
+
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
   populateKaratSelects();
   refreshMobileDockForActiveTab();
+  rerenderActiveCalc();
+}
+
+// Re-run the calc for whichever tab is showing a result, so breakdown row
+// labels (rendered via t()) flip on language toggle, not only on the next calc.
+function rerenderActiveCalc() {
+  const active = document.querySelector('.calc-tab.active')?.dataset.calc;
+  try {
+    if (active === 'value' && !document.getElementById('val-result')?.hidden) calcValue();
+    else if (active === 'scrap' && !document.getElementById('scrap-result')?.hidden) calcScrap();
+    else if (active === 'zakat' && !document.getElementById('zakat-result')?.hidden) calcZakat();
+    else if (active === 'buying' && !document.getElementById('buy-result')?.hidden) calcBuying();
+  } catch {
+    /* a blank/invalid input just means there is nothing to re-render */
+  }
 }
 
 // ── Spot badge ───────────────────────────────────────────────────────────────
