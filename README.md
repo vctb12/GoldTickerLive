@@ -223,7 +223,7 @@ Append `?debug=true` to any page URL to expose a debug panel for:
 
 ```bash
 npm install
-npm test             # ~350 unit tests across the suite
+npm test             # 1,200+ tests across the suite (node:test)
 npm run lint         # ESLint (flat config in eslint.config.mjs)
 npm run validate     # build integrity + DOM safety + SEO + sitemap + sw-coverage gates
 npm run quality      # lint + prettier --check + stylelint
@@ -691,7 +691,7 @@ GoldTickerLive/
 │   ├── CHANGELOG.md           # Version history
 │   └── …                      # SEO, Supabase, automation, risk docs
 ├── .env.example               # Environment variable template
-└── tests/                     # Test suite (205 tests across 10 files)
+└── tests/                     # Test suite (1,200+ tests across 137 files)
 ```
 
 ---
