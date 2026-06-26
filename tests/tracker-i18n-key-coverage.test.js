@@ -118,3 +118,18 @@ test('tracker: every freshness state has a source.<state> label in EN and AR', a
     `Missing freshness source labels (would leak as raw keys):\n  ${missing.join('\n  ')}`
   );
 });
+
+// Computed-key guard: the 7 workspace tab labels are wired via trackerTx(`tabs.${id}`)
+// for each frozen mode/panel id (see docs/tracker-state.md IA order). Each must
+// have a text-only label in EN and AR or the tab renders the raw key in AR.
+test('tracker: every workspace tab has a text label in EN and AR', async () => {
+  const { TRANSLATIONS } = await loadTranslations();
+  const TAB_IDS = ['live', 'compare', 'archive', 'alerts', 'planner', 'exports', 'method'];
+  const missing = [];
+  for (const id of TAB_IDS) {
+    const key = `tracker.tabs.${id}`;
+    if (!Object.prototype.hasOwnProperty.call(TRANSLATIONS.en, key)) missing.push(`${key} [EN]`);
+    if (!Object.prototype.hasOwnProperty.call(TRANSLATIONS.ar, key)) missing.push(`${key} [AR]`);
+  }
+  assert.deepEqual(missing, [], `Missing tab labels:\n  ${missing.join('\n  ')}`);
+});

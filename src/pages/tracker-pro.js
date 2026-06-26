@@ -162,6 +162,13 @@ function localizeStaticTrackerCopy() {
   const heroTitle = document.getElementById('tp-hero-title');
   if (heroTitle) heroTitle.textContent = trackerTx('heroTitle');
 
+  // Workspace tab labels — text only (the emoji lives in a separate aria-hidden
+  // .tp-tab-icon). Previously static English, so AR users saw English tabs.
+  for (const id of ['live', 'compare', 'archive', 'alerts', 'planner', 'exports', 'method']) {
+    const label = document.querySelector(`#tab-${id} .tp-tab-label`);
+    if (label) label.textContent = trackerTx(`tabs.${id}`);
+  }
+
   setInlineLinkText(
     document.getElementById('tp-hero-copy'),
     trackerTx('heroCopy'),
