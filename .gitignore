@@ -132,3 +132,4 @@ data/provider_scorecard_*.json
 # Auto-generated empty lockfile for src/package.json (no deps; type:module shim).
 # npm regenerates it on install; nothing to track.
 src/package-lock.json
+docs/plans/_artifacts/2026-06-26-overhaul-qa/

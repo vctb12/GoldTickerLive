@@ -86,3 +86,35 @@ test('tracker: every literal trackerTx/tx key exists in EN and AR (no leaked key
     `These tracker keys are referenced in code but absent from translations (they would leak as raw keys in the DOM):\n  ${missing.join('\n  ')}`
   );
 });
+
+// Computed-key guard: freshness/source labels are looked up as tx(`source.${key}`)
+// / trackerTx(`source.${key}`), so the static literal scan above can't see them.
+// The canonical freshness vocabulary is getLiveFreshness()'s 6 keys
+// (live | delayed | cached | stale | fallback | unavailable) plus the
+// market-closed override ('closed') and the realtime freshness-policy 'estimated'
+// state. Every one must have a tracker.source.<key> entry in EN and AR, or it
+// leaks (e.g. the observed "tracker.source.estimated" in the fallback state).
+test('tracker: every freshness state has a source.<state> label in EN and AR', async () => {
+  const { TRANSLATIONS } = await loadTranslations();
+  const FRESHNESS_STATES = [
+    'live',
+    'delayed',
+    'cached',
+    'stale',
+    'fallback',
+    'unavailable',
+    'closed',
+    'estimated',
+  ];
+  const missing = [];
+  for (const state of FRESHNESS_STATES) {
+    const key = `tracker.source.${state}`;
+    if (!Object.prototype.hasOwnProperty.call(TRANSLATIONS.en, key)) missing.push(`${key} [EN]`);
+    if (!Object.prototype.hasOwnProperty.call(TRANSLATIONS.ar, key)) missing.push(`${key} [AR]`);
+  }
+  assert.deepEqual(
+    missing,
+    [],
+    `Missing freshness source labels (would leak as raw keys):\n  ${missing.join('\n  ')}`
+  );
+});
