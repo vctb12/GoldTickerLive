@@ -530,7 +530,9 @@
 }
 
 .calc-zakat-nisab strong {
-  color: var(--color-gold-light);
+  /* --text-accent is the AA-passing gold text token (dark gold on light,
+     light gold on dark); --color-gold-light was ~1.7:1 on the light wash. */
+  color: var(--text-accent);
   font-variant-numeric: tabular-nums;
 }
 

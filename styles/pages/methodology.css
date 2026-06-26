@@ -345,7 +345,7 @@ code.method-formula {
 .method-warning {
   background: rgb(180 80 0 / 10%);
   border: 1px solid rgb(180 80 0 / 35%);
-  border-inline-start: 3px solid #c85a00;
+  border-inline-start: 3px solid var(--color-stale); /* accent tracks theme */
   border-radius: var(--radius-md, 8px);
   padding: 1rem 1.25rem;
   margin: 1.25rem 0;
@@ -354,13 +354,13 @@ code.method-formula {
 .method-warning--info {
   background: rgb(30 90 180 / 8%);
   border-color: rgb(30 90 180 / 30%);
-  border-inline-start-color: #25b;
+  border-inline-start-color: var(--color-fixed);
 }
 
 .method-warning--strong {
   background: rgb(140 0 0 / 10%);
   border-color: rgb(200 0 0 / 30%);
-  border-inline-start-color: #c00;
+  border-inline-start-color: var(--color-error);
 }
 
 .method-warning strong {

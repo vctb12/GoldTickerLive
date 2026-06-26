@@ -309,7 +309,7 @@
 
 .guide-cta-btn-primary {
   background: var(--color-gold);
-  color: var(--text-on-dark);
+  color: var(--color-on-gold); /* ink on gold — --text-on-dark (#fff) failed AA */
 }
 
 .guide-cta-btn-secondary {

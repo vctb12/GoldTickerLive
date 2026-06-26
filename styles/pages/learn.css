@@ -700,7 +700,9 @@
 
 /* Article header — richer gradient */
 .learn-hub-article-header {
-  background: linear-gradient(160deg, var(--gradient-hero-light) 0%, var(--surface-secondary) 100%);
+  /* Was nesting a gradient token inside linear-gradient() (invalid → dropped).
+     Compose from theme-aware surface tokens so it renders and flips. */
+  background: linear-gradient(160deg, var(--surface-primary) 0%, var(--surface-secondary) 100%);
   border: 1.5px solid var(--border-subtle);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-xs);

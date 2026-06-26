@@ -930,11 +930,11 @@
 }
 
 .insights-pulse-value--up {
-  color: var(--color-up, #15803d);
+  color: var(--color-up); /* token is always defined + dark-tuned; drop light-only fallback */
 }
 
 .insights-pulse-value--down {
-  color: var(--color-down, #b91c1c);
+  color: var(--color-down);
 }
 
 .insights-market-updated {

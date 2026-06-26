@@ -206,6 +206,11 @@ body.tracker-pro-page {
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 50%);
 }
 
+/* Dim the bright top-highlight on dark so it isn't a hard white edge. */
+[data-theme='dark'] .tracker-welcome-strip {
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 5%);
+}
+
 .tracker-welcome-inner {
   display: flex;
   align-items: center;
@@ -1687,6 +1692,14 @@ body.tracker-workspace-basic .tracker-advanced-only {
   transition:
     border-color var(--duration-fast) var(--ease-out),
     box-shadow var(--duration-fast) var(--ease-out);
+}
+
+/* The 60% white top-highlight reads as a hard white line on dark fields
+   (matches the existing tracker-ladder-table-wrap dark fix). */
+[data-theme='dark'] .tracker-field select,
+[data-theme='dark'] .tracker-field input,
+[data-theme='dark'] .tracker-search input {
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 4%);
 }
 
 .tracker-field select:hover,
@@ -3274,6 +3287,10 @@ td.tracker-chg-down {
   cursor: pointer;
 }
 
+[data-theme='dark'] .tp-control-select {
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 4%);
+}
+
 .tp-control-select:focus {
   outline: none;
   border-color: var(--tp-gold);
@@ -4112,15 +4129,17 @@ td.tracker-chg-down {
 }
 
 .tracker-price-change-strip--up {
-  background: rgb(34 197 94 / 14%);
-  color: var(--color-success, #15803d);
-  border: 1px solid rgb(34 197 94 / 28%);
+  background: var(--color-move-up-bg);
+  color: var(--color-move-up);
+  border: 1px solid var(--color-move-up-border);
 }
 
 .tracker-price-change-strip--down {
-  background: rgb(239 68 68 / 12%);
-  color: var(--color-danger, #b91c1c);
-  border: 1px solid rgb(239 68 68 / 25%);
+  /* Was --color-danger, which has no dark override → light-mode red on dark.
+     The movement tokens flip (#b81428 light / #f87171 dark). */
+  background: var(--color-move-down-bg);
+  color: var(--color-move-down);
+  border: 1px solid var(--color-move-down-border);
 }
 
 .tracker-badge-market.tracker-badge--open::before,

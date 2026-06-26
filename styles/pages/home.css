@@ -1282,7 +1282,9 @@
    Phase 24: Data Trust Banner — more prominent, premium feel
    ══════════════════════════════════════════════════════════════ */
 .home-section--trust-banner {
-  background: linear-gradient(135deg, rgb(253 248 238 / 90%) 0%, rgb(253 250 244 / 75%) 100%);
+  /* Token-driven so the band flips with the theme instead of staying a bright
+     ivory strip (with invisible light text) in dark mode. */
+  background: linear-gradient(135deg, var(--color-gold-bg) 0%, var(--surface-secondary) 100%);
   border-top: 1px solid var(--color-border-subtle);
   border-bottom: 1px solid var(--color-border-subtle);
   padding: 1.75rem 1.5rem;
@@ -2459,7 +2461,14 @@
   font-weight: var(--weight-bold);
   color: var(--color-gold-dark);
   text-align: center;
-  background: linear-gradient(180deg, transparent, rgb(250 247 240 / 96%));
+
+  /* Fade matches the card surface in both themes (was a fixed near-white wash
+     that flashed bright over dark cards on hover). */
+  background: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in srgb, var(--surface-primary) 96%, transparent)
+  );
   opacity: 0;
   transform: translateY(6px);
   transition:
@@ -3246,35 +3255,28 @@
   padding: 1px 5px;
 }
 
+/* Movement pills use auto-flipping status tokens (light + dark values live in
+   tokens.css) so they track the explicit theme toggle, not the OS preference. */
 .price-trend-change--up {
-  background: rgb(34 197 94 / 12%);
-  color: var(--color-up, #16a34a);
+  background: var(--color-up-bg);
+  color: var(--color-up);
 }
 
 .price-trend-change--down {
-  background: rgb(239 68 68 / 10%);
-  color: var(--color-down, #dc2626);
+  background: var(--color-down-bg);
+  color: var(--color-down);
 }
 
-@media (prefers-color-scheme: dark) {
-  .price-trend-card {
-    background: var(--surface-secondary, rgb(255 255 255 / 4%));
-    border-color: var(--border-subtle, rgb(255 255 255 / 8%));
-  }
+/* Key dark card chrome off the explicit [data-theme] attribute (set pre-paint by
+   the inline theme script) instead of @media (prefers-color-scheme), which
+   ignored the manual toggle and desynced from the surrounding token surfaces. */
+[data-theme='dark'] .price-trend-card {
+  background: var(--surface-secondary);
+  border-color: var(--border-subtle);
+}
 
-  .price-trend-card:hover {
-    box-shadow: 0 4px 20px rgb(0 0 0 / 30%);
-  }
-
-  .price-trend-change--up {
-    background: rgb(34 197 94 / 18%);
-    color: #4ade80;
-  }
-
-  .price-trend-change--down {
-    background: rgb(239 68 68 / 16%);
-    color: #f87171;
-  }
+[data-theme='dark'] .price-trend-card:hover {
+  box-shadow: 0 4px 20px rgb(0 0 0 / 30%);
 }
 
 @media (width <= 640px) {
@@ -3395,34 +3397,35 @@
   font-size: 0.85rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  .home-chart-section {
-    background: var(--surface-secondary, rgb(255 255 255 / 3%));
-    border-color: rgb(255 255 255 / 6%);
-  }
+/* Dark chart chrome keyed off the explicit [data-theme] attribute (not the OS
+   preference) so it follows the manual toggle and stays in sync with the
+   token-driven page surfaces; hardcoded golds replaced with palette tokens. */
+[data-theme='dark'] .home-chart-section {
+  background: var(--surface-secondary);
+  border-color: var(--border-subtle);
+}
 
-  .home-chart-wrap {
-    border-color: rgb(255 255 255 / 8%);
-    box-shadow: 0 2px 20px rgb(0 0 0 / 20%);
-  }
+[data-theme='dark'] .home-chart-wrap {
+  border-color: var(--border-subtle);
+  box-shadow: 0 2px 20px rgb(0 0 0 / 20%);
+}
 
-  .home-chart-range-btn {
-    border-color: rgb(255 255 255 / 12%);
-    background: rgb(255 255 255 / 4%);
-    color: var(--text-secondary);
-  }
+[data-theme='dark'] .home-chart-range-btn {
+  border-color: var(--border-default);
+  background: var(--surface-tertiary);
+  color: var(--text-secondary);
+}
 
-  .home-chart-range-btn:hover {
-    background: rgb(201 168 76 / 15%);
-    color: #e8c96a;
-    border-color: #c9a84c;
-  }
+[data-theme='dark'] .home-chart-range-btn:hover {
+  background: var(--color-gold-glow);
+  color: var(--color-gold-light);
+  border-color: var(--color-gold);
+}
 
-  .home-chart-range-btn.is-active {
-    background: #c9a84c;
-    color: #1a1500;
-    border-color: #c9a84c;
-  }
+[data-theme='dark'] .home-chart-range-btn.is-active {
+  background: var(--color-gold);
+  color: var(--color-on-gold);
+  border-color: var(--color-gold);
 }
 
 @media (width <= 640px) {

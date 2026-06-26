@@ -1177,7 +1177,7 @@ body > * {
     --color-warning: var(--color-amber, #f59e0b);
     --color-warning-bg: rgb(245 158 11 / 15%);
     --color-warning-border: rgb(245 158 11 / 45%);
-    --color-warning-text: #e8c76a;
+    --color-warning-text: #e0b060;
   }
 }
 
@@ -1185,7 +1185,7 @@ body > * {
   --color-warning: var(--color-amber, #f59e0b);
   --color-warning-bg: rgb(245 158 11 / 15%);
   --color-warning-border: rgb(245 158 11 / 45%);
-  --color-warning-text: #e8c76a;
+  --color-warning-text: #e0b060;
 }
 
 /* ═══════════════════════════════════════════════
