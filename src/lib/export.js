@@ -20,7 +20,7 @@ import { showCopyToast } from './copy-toast.js';
  * @param {{ source?: string, granularity?: string, freshnessState?: string }} record
  * @returns {'live'|'historical'|'cached'}
  */
-function rowFreshnessState(record) {
+export function rowFreshnessState(record) {
   if (record.freshnessState) return record.freshnessState;
   if (record.source === 'live' || record.granularity === 'live') return 'live';
   if (record.granularity === 'monthly') return 'historical';

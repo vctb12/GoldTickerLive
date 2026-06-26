@@ -14,6 +14,8 @@ import {
 import { resolveGoldIsFresh } from '../lib/quote-freshness-bridge.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 import { createInitialState, persistState } from '../tracker/state.js';
+import { getFreshnessModel } from '../tracker/freshness.js';
+import { deriveLiveRowFreshness } from '../tracker/chart.js';
 import { el as safeEl } from '../lib/safe-dom.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { getBaselineRange } from '../lib/historical-data.js';
@@ -985,7 +987,13 @@ async function exportChartData() {
   const rangeFiltered = state.range ? filterByRange(flat, state.range) : flat;
   const rows = rangeFiltered.filter(Boolean);
   if (spot)
-    rows.push({ date: new Date().toISOString().slice(0, 10), spot, price: spot, source: 'live' });
+    rows.push({
+      date: new Date().toISOString().slice(0, 10),
+      spot,
+      price: spot,
+      granularity: 'live',
+      ...deriveLiveRowFreshness(getFreshnessModel().effectiveKey),
+    });
   try {
     const expMod = await import('../lib/export.js');
     expMod.exportChartCSV(rows, state.range, state.selectedKarat);
@@ -1821,5 +1829,9 @@ function initShareButtons() {
 // English modal overlay was removed in phase 16 (EN/AR parity — it had no
 // translation keys and showed an all-English dialog to Arabic users).
 
-init();
+init().catch((err) => {
+  // Surface a boot failure instead of a silent unhandled rejection. The static
+  // HTML still renders the last cached/skeleton state; this just logs the cause.
+  console.error('[tracker] initialisation failed', err);
+});
 initShareButtons();
