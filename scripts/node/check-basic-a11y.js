@@ -49,7 +49,15 @@ const CONTRAST_PAIRS = [
   ['--text-accent', '--color-bg'],
   ['--color-gold-dark', '--color-bg'],
   ['--color-gold-dark', '--color-surface'],
+  // Gold text/accent also sits on the tinted surfaces — these used to fail AA
+  // before --color-gold-dark was darkened to #7e5912; locked here so it can't regress.
+  ['--color-gold-dark', '--color-surface-2'],
+  ['--color-gold-dark', '--color-surface-3'],
+  ['--text-accent', '--color-surface-2'],
   ['--color-text', '--color-surface'],
+  // Success is used as status text on light surfaces — locked after the #137a36 fix.
+  ['--color-success', '--color-bg'],
+  ['--color-success', '--color-surface'],
 ];
 
 const MIN_NORMAL_CONTRAST = 4.5;
@@ -69,6 +77,7 @@ const DARK_CONTRAST_PAIRS = [
   ['--color-stale', '--surface-secondary'],
   ['--color-warning-text', '--surface-secondary'],
   ['--color-text-faint', '--surface-tertiary'],
+  ['--color-success', '--surface-primary'],
 ];
 
 let errors = 0;

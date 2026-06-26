@@ -211,7 +211,7 @@
 .mkt-link-btn-primary {
   background: var(--color-gold);
   border-color: var(--color-gold);
-  color: var(--text-on-dark);
+  color: var(--color-on-gold); /* ink on gold — --text-on-dark (#fff) failed AA */
 }
 
 /* ── Related Markets ────────────────────────────────── */

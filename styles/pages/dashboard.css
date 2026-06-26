@@ -96,6 +96,14 @@
   border: 1px solid var(--border-muted, #d1d5db);
   border-radius: 0.6rem;
   padding: 0.45rem 0.65rem;
+
+  /* Without these the field renders as a native white box on the dark card. */
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.dashboard-field input::placeholder {
+  color: var(--color-text-faint);
 }
 
 .dashboard-card-privacy .btn-danger {

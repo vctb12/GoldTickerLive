@@ -183,7 +183,7 @@
 
 .developer-table th {
   font-weight: 600;
-  background: var(--surface-2, #f9fafb);
+  background: var(--surface-secondary); /* --surface-2 undefined → leaked light hex */
   color: var(--color-text-muted, #6b7280);
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -243,7 +243,7 @@
 .dev-form-input:focus {
   outline: none;
   border-color: var(--color-gold, #d97706);
-  box-shadow: 0 0 0 3px rgb(217, 119, 6, 0.12);
+  box-shadow: 0 0 0 3px var(--color-gold-alpha); /* brand gold focus ring (was off-hue amber) */
 }
 
 .dev-form-status {
@@ -434,7 +434,7 @@
 
 .developer-usage-quota-bar-wrap {
   height: 0.5rem;
-  background: var(--surface-2, #f3f4f6);
+  background: var(--surface-tertiary); /* --surface-2 undefined → leaked light track */
   border-radius: 9999px;
   overflow: hidden;
   margin: 0.25rem 0 0.5rem;

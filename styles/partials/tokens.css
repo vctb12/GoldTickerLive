@@ -4,6 +4,12 @@
    50-Phase Visual Overhaul
    ═══════════════════════════════════════════════ */
 :root {
+  /* Native UA chrome (scrollbars, form controls, spin buttons) must follow the
+     explicit theme toggle, not only the OS. Paired with `color-scheme: dark`
+     inside [data-theme='dark'] below so an explicit-dark user on a light OS
+     (or vice-versa) gets matching native controls instead of a light/dark split. */
+  color-scheme: light;
+
   /* ── Phase 1: Richer background layers — warm parchment ── */
   --color-bg: #fefcf7;
   --color-surface: #fff;
@@ -15,13 +21,13 @@
   /* ── Phase 2: Deeper warm ink text ── */
   --color-text: #15110a;
   --color-text-muted: #6a5c48;
-  --color-text-faint: #776a56; /* WCAG AA ≥4.5:1 on all light surfaces incl. surface-3 */
+  --color-text-faint: #6f6350; /* WCAG AA ≥4.5:1 on all light surfaces incl. surface-3 (≈5:1 headroom) */
 
   /* ── Phase 3: Richer metallic gold palette ── */
   --color-gold: #c4902e;
   --color-gold-light: #ddb040;
   --color-gold-bright: #f0ca5c;
-  --color-gold-dark: #966a1a;
+  --color-gold-dark: #7e5912; /* text/accent gold — darkened for AA on tinted surfaces (surface-2/3) */
   --color-gold-deep: #6b4a0e;
   --color-gold-bg: #fdf8e8;
   --color-gold-tint: #f8f2dc;
@@ -58,7 +64,7 @@
   --color-warning-border: rgb(245 158 11 / 35%);
   --color-warning-text: #7a4f15;
   --color-warning-subtle: #fef9c3; /* very light warning wash */
-  --color-success: #16a34a;
+  --color-success: #137a36; /* AA ≥4.5:1 as text on white/tinted light surfaces */
   --color-success-bg: #dcfce7;
   --color-on-gold: #1a1305; /* text placed directly on gold backgrounds */
 
@@ -334,6 +340,11 @@
    Deeper blacks, richer gold highlights, better contrast
    ═══════════════════════════════════════════════ */
 [data-theme='dark'] {
+  /* Make native UA chrome (scrollbars, form fields, date/number pickers,
+     autofill) follow the explicit dark toggle even when the OS is in light
+     mode. Mirrors the OS-pref fallback block below. */
+  color-scheme: dark;
+
   --color-bg: #060708;
   --color-surface: #0c0e14;
   --color-surface-2: #141720;
@@ -468,6 +479,27 @@
     --color-accent-strong: var(--color-gold-bright);
     --color-surface-raised: #141720;
     --color-text-secondary: #a09890;
+
+    /* Status / accent tokens — mirror the [data-theme='dark'] block so that
+       no-JS dark-OS users get legible signal colours and gold accents too
+       (the saturated light mid-tones fail AA on the dark fallback surface). */
+    --color-gold-dark: #c4902e;
+    --color-live: #5dd98b;
+    --color-daily: #f0a350;
+    --color-fixed: #6ba3f0;
+    --color-stale: #f0a350;
+    --color-move-up: #5dd98b;
+    --color-move-down: #f87171;
+    --color-move-up-bg: rgb(93 217 139 / 12%);
+    --color-move-down-bg: rgb(248 113 113 / 12%);
+    --color-move-up-border: rgb(93 217 139 / 28%);
+    --color-move-down-border: rgb(248 113 113 / 28%);
+    --color-error: #f87171;
+    --color-error-border: #ef4444;
+    --color-warning: #e0b060;
+    --color-warning-text: #e0b060;
+    --color-success: #4ade80;
+    --color-success-bg: rgb(74 222 128 / 12%);
 
     color-scheme: dark;
   }

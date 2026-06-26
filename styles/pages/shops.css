@@ -836,9 +836,12 @@
   align-items: center;
   font-size: 0.63rem;
   font-weight: var(--weight-bold);
-  color: rgb(255 248 234 / 75%);
-  background: rgb(180 100 0 / 18%);
-  border: 1px solid rgb(180 100 0 / 30%);
+
+  /* Status tokens flip per theme — the near-white-on-light-orange was authored
+     for the old dark card and is illegible on the light shop card. */
+  color: var(--color-daily);
+  background: var(--color-daily-bg);
+  border: 1px solid var(--color-daily-border);
   border-radius: var(--radius-pill);
   padding: 0.15rem 0.45rem;
   letter-spacing: 0.03em;
@@ -856,15 +859,15 @@
 }
 
 .shop-listing-type--market {
-  color: rgb(255 248 234 / 86%);
-  background: rgb(180 100 0 / 20%);
-  border: 1px solid rgb(180 100 0 / 28%);
+  color: var(--color-daily);
+  background: var(--color-daily-bg);
+  border: 1px solid var(--color-daily-border);
 }
 
 .shop-listing-type--store {
-  color: rgb(76 175 80 / 86%);
-  background: rgb(76 175 80 / 10%);
-  border: 1px solid rgb(76 175 80 / 20%);
+  color: var(--color-live);
+  background: var(--color-live-bg);
+  border: 1px solid var(--color-live-border);
 }
 
 .shop-featured {
@@ -892,7 +895,7 @@
   font-size: 0.68rem;
   font-weight: var(--weight-bold);
   color: var(--text-primary);
-  background: rgb(255 255 255 / 4%);
+  background: var(--surface-secondary); /* white-alpha was invisible on the light card */
   border: 1px solid var(--border-default);
   border-radius: var(--radius-pill);
   padding: 0.28rem 0.65rem;
@@ -901,21 +904,21 @@
 }
 
 .shop-signal--full {
-  color: rgb(76 175 80 / 80%);
-  background: rgb(76 175 80 / 8%);
-  border-color: rgb(76 175 80 / 20%);
+  color: var(--color-live);
+  background: var(--color-live-bg);
+  border-color: var(--color-live-border);
 }
 
 .shop-signal--partial {
-  color: rgb(255 193 7 / 80%);
-  background: rgb(255 193 7 / 8%);
-  border-color: rgb(255 193 7 / 20%);
+  color: var(--color-warning-text);
+  background: var(--color-warning-bg);
+  border-color: var(--color-warning-border);
 }
 
 .shop-signal--limited {
-  color: rgb(244 67 54 / 70%);
-  background: rgb(244 67 54 / 8%);
-  border-color: rgb(244 67 54 / 20%);
+  color: var(--color-error);
+  background: var(--color-error-bg);
+  border-color: var(--color-error-border);
 }
 
 .shop-card--cluster {
@@ -937,7 +940,7 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: var(--weight-extrabold);
-  color: rgb(176 138 62 / 95%);
+  color: var(--color-gold-dark); /* AA on the gold wash in both themes */
 }
 
 .shop-confidence-grid {
@@ -1004,7 +1007,7 @@
 .shop-tag {
   font-size: 0.72rem;
   padding: 0.22rem 0.6rem;
-  background: rgb(255 255 255 / 4%);
+  background: var(--surface-secondary);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-pill);
   color: var(--text-secondary);
@@ -1152,7 +1155,7 @@
 .shops-info-card {
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
-  background: rgb(255 255 255 / 2%);
+  background: var(--surface-secondary);
   padding: 0.9rem 1rem;
   transition:
     border-color 0.18s,
@@ -1523,7 +1526,7 @@
   gap: 0.8rem;
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background: rgb(255 255 255 / 2%);
+  background: var(--surface-secondary);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
 }
@@ -1983,7 +1986,7 @@
   padding: 0.35rem 0.65rem;
   border: 1px solid var(--border-default);
   border-radius: var(--radius-pill);
-  background: rgb(255 255 255 / 2%);
+  background: var(--surface-secondary);
   color: var(--text-secondary);
   font-weight: var(--weight-semibold);
   font-size: var(--text-xs);
@@ -2009,50 +2012,53 @@
   background: rgb(76 175 80 / 12%);
 }
 
+/* Semantic status tokens so the action-button labels stay legible on the
+   light shop card and flip correctly in dark mode (were light foregrounds
+   tuned only for the old dark card). */
 .shop-action-btn--country {
-  border-color: rgb(99 102 241 / 35%);
-  background: rgb(99 102 241 / 6%);
-  color: rgb(99 102 241 / 90%);
+  border-color: var(--color-fixed-border);
+  background: var(--color-fixed-bg);
+  color: var(--color-fixed);
 }
 
 .shop-action-btn--country:hover {
-  border-color: rgb(99 102 241 / 60%);
-  background: rgb(99 102 241 / 12%);
-  color: rgb(99 102 241 / 100%);
+  border-color: var(--color-fixed);
+  background: color-mix(in srgb, var(--color-fixed) 14%, transparent);
+  color: var(--color-fixed);
 }
 
 .shop-action-btn--guide {
-  border-color: rgb(0 188 212 / 35%);
-  background: rgb(0 188 212 / 8%);
-  color: rgb(102 233 255 / 94%);
+  border-color: var(--color-fixed-border);
+  background: var(--color-fixed-bg);
+  color: var(--color-fixed);
 }
 
 .shop-action-btn--guide:hover {
-  border-color: rgb(0 188 212 / 58%);
-  background: rgb(0 188 212 / 16%);
-  color: rgb(142 240 255 / 100%);
+  border-color: var(--color-fixed);
+  background: color-mix(in srgb, var(--color-fixed) 16%, transparent);
+  color: var(--color-fixed);
 }
 
 .shop-action-btn--website {
-  border-color: rgb(76 175 80 / 35%);
-  background: rgb(76 175 80 / 8%);
-  color: rgb(125 211 129 / 95%);
+  border-color: var(--color-live-border);
+  background: var(--color-live-bg);
+  color: var(--color-live);
 }
 
 .shop-action-btn--website:hover {
-  border-color: rgb(76 175 80 / 55%);
-  background: rgb(76 175 80 / 15%);
+  border-color: var(--color-live);
+  background: color-mix(in srgb, var(--color-live) 15%, transparent);
 }
 
 .shop-action-btn--directions {
-  border-color: rgb(245 158 11 / 35%);
-  background: rgb(245 158 11 / 8%);
-  color: rgb(253 186 116 / 96%);
+  border-color: var(--color-daily-border);
+  background: var(--color-daily-bg);
+  color: var(--color-daily);
 }
 
 .shop-action-btn--directions:hover {
-  border-color: rgb(245 158 11 / 55%);
-  background: rgb(245 158 11 / 16%);
+  border-color: var(--color-daily);
+  background: color-mix(in srgb, var(--color-daily) 16%, transparent);
 }
 
 .shop-action-icon {
@@ -2082,7 +2088,7 @@
   padding: 0.5rem 0.85rem;
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
-  background: rgb(255 255 255 / 2%);
+  background: var(--surface-secondary); /* white-alpha was invisible on light surfaces */
   color: var(--text-primary);
   font-weight: var(--weight-semibold);
   font-size: 0.85rem;
@@ -2406,7 +2412,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: rgb(19 18 16 / 40%);
+
+  /* Scrim dims toward the current canvas so the loading state reads in both themes. */
+  background: color-mix(in srgb, var(--color-bg) 55%, transparent);
   border-radius: var(--radius-card);
   animation: shops-upgrading-pulse 1.4s ease-in-out infinite;
   pointer-events: none;
@@ -2465,12 +2473,11 @@
     z-index: 35;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    background: rgb(255 255 255 / 92%);
-    border-bottom: 1px solid var(--color-border);
-  }
 
-  html[data-theme='dark'] .shops-controls {
-    background: rgb(18 18 20 / 92%);
+    /* --surface-glass flips per theme (and covers the OS-pref fallback), so the
+       sticky bar no longer needs a hardcoded light/dark pair. */
+    background: var(--surface-glass);
+    border-bottom: 1px solid var(--color-border);
   }
 }
 

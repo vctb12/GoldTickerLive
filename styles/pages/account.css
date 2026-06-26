@@ -54,6 +54,14 @@
   border: 1px solid var(--border-muted, #e5e7eb);
   border-radius: 0.6rem;
   padding: 0.65rem 0.7rem;
+
+  /* Without these the field renders as a native white box on the dark card. */
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.account-form input::placeholder {
+  color: var(--color-text-faint);
 }
 
 .account-status {

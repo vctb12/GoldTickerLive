@@ -57,7 +57,7 @@
 
 .order-price-badge {
   background: var(--color-gold);
-  color: var(--color-white);
+  color: var(--color-on-gold); /* near-black ink on gold — white failed AA (~2.1:1) */
   font-size: 1.1rem;
   font-weight: 700;
   padding: var(--space-2) var(--space-4);
@@ -72,8 +72,10 @@
 
 .order-price-refresh {
   font-size: 0.78rem;
-  color: rgb(255 255 255 / 60%);
-  background: rgb(255 255 255 / 8%);
+
+  /* The order hero is a light token surface, so white-on-white was invisible. */
+  color: var(--text-secondary);
+  background: var(--surface-secondary);
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-pill);
 }
@@ -133,7 +135,7 @@
 .order-pill.active {
   background: var(--color-gold);
   border-color: var(--color-gold);
-  color: var(--color-white);
+  color: var(--color-on-gold); /* ink on gold — white failed AA */
   box-shadow: var(--shadow-gold);
 }
 
@@ -348,7 +350,7 @@
 
 .order-btn-primary {
   background: var(--gradient-gold);
-  color: var(--color-white);
+  color: var(--color-on-gold); /* ink on gold gradient — white failed AA */
   box-shadow: var(--shadow-gold);
 }
 
@@ -694,20 +696,21 @@
   margin-top: var(--space-3, 0.75rem);
 }
 
-@media (prefers-color-scheme: dark) {
-  .order-info-notice {
-    background: rgb(46 125 50 / 14%);
-    border-color: rgb(46 125 50 / 30%);
-  }
+/* Keyed off the explicit [data-theme] attribute (set pre-paint) and routed
+   through the success tokens so these surfaces follow the manual toggle and
+   flip in sync with the rest of the page, not just the OS preference. */
+[data-theme='dark'] .order-info-notice {
+  background: var(--color-success-bg);
+  border-color: var(--color-success);
+}
 
-  .shop-badge--verified {
-    background: rgb(46 125 50 / 18%);
-    border-color: rgb(46 125 50 / 30%);
-  }
+[data-theme='dark'] .shop-badge--verified {
+  background: var(--color-success-bg);
+  border-color: var(--color-success);
+}
 
-  .order-shop-card {
-    background: var(--surface-secondary);
-  }
+[data-theme='dark'] .order-shop-card {
+  background: var(--surface-secondary);
 }
 
 @media (prefers-reduced-motion: reduce) {
