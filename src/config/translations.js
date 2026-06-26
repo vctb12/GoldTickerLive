@@ -127,6 +127,240 @@ export const TRANSLATIONS = {
     'tracker.tabs.planner': 'Planner',
     'tracker.tabs.exports': 'Exports',
     'tracker.tabs.method': 'Method',
+    /* ── Tracker · live-toolbar ── */
+    'tracker.liveToolbar.compareMarketLabel': 'Compare market',
+    'tracker.liveToolbar.range3y': '3Y',
+    'tracker.liveToolbar.range5y': '5Y',
+    'tracker.liveToolbar.rangeAll': 'All',
+    'tracker.liveToolbar.autoRefreshOn': 'Auto refresh: on',
+    'tracker.liveToolbar.chipSelected': 'Selected view',
+    'tracker.liveToolbar.chipSpotOnly': 'Spot only',
+    'tracker.liveToolbar.chipCompare': 'Compare market',
+    'tracker.liveToolbar.chipWire': 'Wire headlines',
+    'tracker.liveToolbar.chipFavorites': 'Favorites only',
+
+    /* ── Tracker · chart-panel ── */
+    'tracker.karat.introCopy':
+      'Scan 24K/22K/21K/18K reference levels first, then compare with your selected market context and freshness labels.',
+    'tracker.karat.ladderAriaLabel': 'Karat ladder',
+    'tracker.karat.tableCaption':
+      'Karat ladder — spot-linked reference price per selected unit for the selected market',
+    'tracker.karat.colKarat': 'Karat',
+    'tracker.karat.colPurity': 'Purity',
+    'tracker.karat.colSelectedPrice': 'Selected price',
+    'tracker.karat.colVs24k': 'vs 24K',
+    'tracker.chart.heading': 'Chart and trend context',
+    'tracker.chart.headingCopy':
+      'Blended spot-linked history: recent ranges use live and cached snapshots; longer ranges use monthly baseline anchored to XAU/USD.',
+    'tracker.chart.exportCsv': 'Export visible chart CSV',
+    'tracker.chart.downloadJson': 'Download snapshot JSON',
+    'tracker.chart.legendMain': 'Selected series',
+    'tracker.chart.chartAriaLabel': 'Gold price chart',
+    'tracker.chart.emptyTitle':
+      'Waiting for price data — select a time range above or refresh to load history.',
+    'tracker.chart.emptyNote':
+      'Short ranges use live and cached snapshots. Longer ranges use the monthly baseline anchored to XAU/USD.',
+    'tracker.chart.statSelectedRange': 'Selected range',
+    'tracker.chart.statSelectedRangeNote': 'Waiting for history',
+    'tracker.chart.statRangeStart': 'Range start',
+    'tracker.chart.statRangeStartNote': 'Reference point',
+    'tracker.chart.statRangeMovement': 'Range movement',
+    'tracker.chart.statRangeMovementNote': 'Absolute and percentage change',
+    'tracker.chart.statDataResolution': 'Data resolution',
+    'tracker.chart.statDataResolutionNote': 'Live, daily, or monthly reference history',
+    'tracker.chart.rangePlaybackTitle': 'Range playback',
+    'tracker.chart.playHistory': 'Play history',
+    'tracker.chart.visibleRangeNotesTitle': 'Visible range notes',
+
+    /* ── Tracker · alerts-overlay ── */
+    'tracker.alerts.overlayTitle': 'Alerts + presets',
+    'tracker.alerts.closeLabel': 'Close alerts panel',
+    'tracker.alerts.overlayIntro':
+      'Browser-based price alerts — stored locally in your browser only. Alerts fire only while this tab is open. No SMS, email, or server-side notifications.',
+    'tracker.alerts.createTitle': 'Create alert',
+    'tracker.alerts.scopeLabel': 'Watch price',
+    'tracker.alerts.scopeSelected': 'Selected view (current karat + currency)',
+    'tracker.alerts.scopeSpot': 'Spot XAU/USD per ounce',
+    'tracker.alerts.scopeUae24': 'UAE 24K per gram (AED)',
+    'tracker.alerts.directionLabel': 'Trigger when price is',
+    'tracker.alerts.directionAbove': 'Above target',
+    'tracker.alerts.directionBelow': 'Below target',
+    'tracker.alerts.targetLabel': 'Target price',
+    'tracker.alerts.targetPlaceholder': 'Enter target price',
+    'tracker.alerts.targetHint':
+      'Use spot-linked reference prices as a guide. Retail prices may differ.',
+    'tracker.alerts.saveAlert': 'Save alert',
+    'tracker.alerts.enableNotifications': 'Enable notifications',
+    'tracker.alerts.savedTitle': 'Saved alerts',
+    'tracker.alerts.browserOnlyNote':
+      'Local alerts: Browser alerts fire only while this tab is open. Server email alerts (if available) require verification and run from backend checks. They may be unavailable when backend services are unreachable.',
+    'tracker.alerts.savePresetTitle': 'Save preset',
+    'tracker.alerts.presetNameLabel': 'Preset name',
+    'tracker.alerts.presetNamePlaceholder': 'Example: UAE 24K per gram',
+    'tracker.alerts.saveCurrentSetup': 'Save current setup',
+    'tracker.alerts.copyShareableUrl': 'Copy shareable URL',
+    'tracker.alerts.savedPresetsTitle': 'Saved presets',
+    'tracker.alerts.notifyUnsupported': 'Browser notifications not supported.',
+    'tracker.alerts.notifyGranted': 'Notifications enabled.',
+    'tracker.alerts.notifyBlocked': 'Notifications blocked.',
+    'tracker.alerts.notifyRequestFailed': 'Could not request notification permission.',
+    'tracker.alerts.notifyTitle': 'Gold Price Alert',
+    'tracker.alerts.notifyBody': 'XAU/USD {direction} {target}: now ${spot}',
+    'tracker.alerts.liveRegionTriggered': 'Alert triggered: {alerts} — current price ${spot}',
+
+    /* ── Tracker · planner-overlay ── */
+    'tracker.planner.overlayTitle': 'Planners + estimators',
+    'tracker.planner.closeLabel': 'Close planner panel',
+    'tracker.planner.intro':
+      'Turn reference prices into decisions. All calculations use spot-linked estimates — not retail or jewelry quotes.',
+    'tracker.planner.feesNote':
+      '⚠ Actual purchase prices include making charges, dealer premiums, and applicable taxes. Add these in the fields below or use the full calculator for a more detailed estimate.',
+    'tracker.planner.feesNoteLink': 'Methodology →',
+    'tracker.planner.budgetTitle': 'Budget planner',
+    'tracker.planner.budgetIntro': 'How many grams can I buy with my budget?',
+    'tracker.planner.budgetAmountLabel': 'Budget amount (in selected currency)',
+    'tracker.planner.budgetFeeLabel': 'Extra fee / premium %',
+    'tracker.planner.positionTitle': 'Position tracker',
+    'tracker.planner.positionIntro':
+      'What is my unrealised gain or loss at the current reference price?',
+    'tracker.planner.positionEntryLabel': 'Entry price (per gram, selected currency)',
+    'tracker.planner.positionQtyLabel': 'Quantity (grams)',
+    'tracker.planner.jewelryTitle': 'Jewelry ticket estimate',
+    'tracker.planner.jewelryIntro':
+      'Estimate the reference value of a jewelry piece — add making charges, premiums, and VAT to get closer to a retail estimate.',
+    'tracker.planner.jewelryWeightLabel': 'Weight (grams)',
+    'tracker.planner.jewelryKaratLabel': 'Karat',
+    'tracker.planner.jewelryMakingLabel': 'Making charge per gram',
+    'tracker.planner.jewelryPremiumLabel': 'Dealer premium %',
+    'tracker.planner.jewelryVatLabel': 'Include 5% UAE VAT',
+    'tracker.planner.accumTitle': 'Accumulation planner',
+    'tracker.planner.accumIntro':
+      'How long will it take to reach my target weight at the current reference price?',
+    'tracker.planner.accumMonthlyLabel': 'Monthly contribution (selected currency)',
+    'tracker.planner.accumTargetLabel': 'Target quantity (grams)',
+    'tracker.planner.openFullCalculator': 'Open full calculator for more options →',
+
+    /* ── Tracker · archive-mode ── */
+    'tracker.archive.title': 'Archive + lookup',
+    'tracker.archive.intro':
+      'Browse unified history (baseline + cache), export slices, and jump to the nearest archived point for any date.',
+    'tracker.archive.rangeLabel': 'Archive range',
+    'tracker.archive.rangeAll': 'All',
+    'tracker.archive.searchLabel': 'Search archive',
+    'tracker.archive.searchPlaceholder': 'Search month, year, source',
+    'tracker.archive.browserHeading': 'Archive browser',
+    'tracker.archive.exportVisible': 'Download visible archive CSV',
+    'tracker.archive.exportHistory': 'Download full history CSV',
+    'tracker.archive.tableCaption':
+      'Gold price archive — historical XAU/USD spot and selected market reference prices with data source labels',
+    'tracker.archive.thDate': 'Date',
+    'tracker.archive.thSpot': 'Spot USD/oz',
+    'tracker.archive.thSelected': 'Selected view',
+    'tracker.archive.thUae24': 'UAE 24K/g',
+    'tracker.archive.thSource': 'Source',
+    'tracker.archive.lookupHeading': 'Date lookup',
+    'tracker.archive.lookupIntro':
+      'Find the closest data point for any date in the archive. Searches baseline + session data.',
+    'tracker.archive.lookupDateLabel': 'Lookup date',
+    'tracker.archive.runLookup': 'Look up closest point',
+    'tracker.archive.seasonalHeading': 'Seasonal patterns',
+    'tracker.archive.emptyState':
+      'No archive data available for the selected range. Try expanding the range or refreshing.',
+
+    /* ── Tracker · exports-mode ── */
+    'tracker.exports.title': 'Exports',
+    'tracker.exports.intro':
+      'Trustworthy CSV and JSON exports with clear source and timestamp metadata for the current workspace.',
+    'tracker.exports.chartTitle': 'Visible chart CSV',
+    'tracker.exports.chartBody':
+      'Exports the visible historical range with start/end dates, source labels, and data-resolution notes. Includes a freshness header row so recipients know whether points are live, cached, or baseline-derived.',
+    'tracker.exports.chartButton': 'Export visible chart CSV',
+    'tracker.exports.compareTitle': 'Comparison CSV',
+    'tracker.exports.compareBody':
+      'Downloads the current country + karat comparison cards in the same order shown in the Compare workspace. Includes currency, karat, unit, and reference-price columns. All values are spot-linked estimates — not retail quotes.',
+    'tracker.exports.archiveTitle': 'Archive CSVs',
+    'tracker.exports.archiveBody':
+      'Download the cached daily archive (visible range) or the full baseline + cache history for longer-term reference. Archive data may include estimated or baseline points — the Source column identifies each.',
+    'tracker.exports.archiveButton': 'Visible archive CSV',
+    'tracker.exports.historyButton': 'Full history CSV',
+    'tracker.exports.snapshotTitle': 'Snapshot JSON',
+    'tracker.exports.snapshotBody':
+      'Structured JSON with the live snapshot, freshness label, FX rate, selected karat, comparison setup, and export timestamp. Suitable for integrating into scripts or spreadsheets.',
+    'tracker.exports.snapshotButton': 'Download snapshot JSON',
+    'tracker.exports.briefTitle': 'Market brief text',
+    'tracker.exports.briefBody':
+      'Plain-text summary of current gold conditions for the selected view — suitable for email or note-taking. Includes freshness label and reference-price disclaimer.',
+    'tracker.exports.briefButton': 'Download brief',
+    'tracker.exports.disclaimer':
+      'All exports contain reference prices only — spot-linked estimates before making charges, premiums, and tax. The Source column in every file identifies whether each data point is live, cached, or baseline-derived.',
+    'tracker.exports.disclaimerLink': 'Methodology →',
+
+    /* ── Tracker · method-mode ── */
+    'tracker.method.panelTitle': 'Methodology + sources',
+    'tracker.method.panelCopy':
+      'This workspace is explicit about what is live, what is cached, what is estimated, and what is synthetic baseline.',
+    'tracker.method.spotHeading': 'Live spot layer',
+    'tracker.method.spotBody':
+      'Live spot is pulled in XAU/USD hourly during market hours by .github/workflows/gold-price-fetch.yml and committed to the repository as data/gold_price.json, with retries and fallbacks from cache when networks fail.',
+    'tracker.method.spotBodyBefore':
+      'Live spot is pulled in XAU/USD hourly during market hours by ',
+    'tracker.method.spotBodyMid': ' and committed to the repository as ',
+    'tracker.method.spotBodyAfter': ', with retries and fallbacks from cache when networks fail.',
+    'tracker.method.spotLink': 'Site methodology →',
+    'tracker.method.fxHeading': 'FX conversion layer',
+    'tracker.method.fxBody':
+      "FX conversion comes from ExchangeRate-API's USD base feed. AED uses the fixed central-bank peg (3.6725) stored in the site constants — not the API feed — so AED prices are always exact.",
+    'tracker.method.fxDocsLink': 'ExchangeRate-API docs',
+    'tracker.method.fxSiteLink': 'Site methodology →',
+    'tracker.method.karatHeading': 'Karat purity',
+    'tracker.method.karatBody':
+      'Prices are scaled by karat purity: 24K = 1.0, 22K = 22/24 ≈ 0.9167, 21K = 21/24 ≈ 0.875, 18K = 0.75, 14K = 14/24 ≈ 0.5833. All values are derived mathematically from the spot price — no separate quote per karat.',
+    'tracker.method.karatLink': 'Karat math explained →',
+    'tracker.method.historyHeading': 'Historical layer',
+    'tracker.method.historyBody':
+      'Short ranges draw on recent live snapshots cached in your browser. Longer ranges use a monthly baseline merged with those snapshots to avoid gaps and keep exports stable.',
+    'tracker.method.historyDataLink': 'DataHub gold dataset',
+    'tracker.method.historySiteLink': 'Site methodology →',
+    'tracker.method.retailHeading': 'Retail vs bullion',
+    'tracker.method.retailBody':
+      'All prices are bullion-equivalent estimates based on spot. Actual jewelry and retail prices can differ due to making charges, premiums, and taxes.',
+    'tracker.method.retailNotLink': 'What our prices are not →',
+    'tracker.method.retailDisclaimerLink': 'Disclaimer →',
+    'tracker.method.newsHeading': 'News wire',
+    'tracker.method.newsBody':
+      'The market wire uses the GDELT DOC API in article-list mode, suitable for static sites. When it fails, the workspace falls back to cached headlines or a static explainer strip.',
+    'tracker.method.newsDocLink': 'GDELT DOC API',
+    'tracker.method.footerFullLink': 'Read full methodology →',
+    'tracker.method.footerFreshnessLink': 'Freshness labels explained',
+    'tracker.method.footerLimitationsLink': 'Known limitations',
+
+    /* ── Tracker · wire / keyboard / misc ── */
+    'tracker.wire.ariaLabel': 'Market wire',
+    'tracker.wire.label': 'Market wire',
+    'tracker.wire.metaPrefix': 'Live headlines ·',
+    'tracker.wire.metaWaiting': 'waiting…',
+    'tracker.wire.loadingItem': 'Loading live market headlines…',
+    'tracker.wire.refresh': 'Refresh wire',
+    'tracker.wire.pause': 'Pause',
+    'tracker.wire.resume': 'Resume',
+    'tracker.skipLink.label': 'Skip to main content',
+    'tracker.heroStats.ariaLabel': 'Key live metrics',
+    'tracker.xauusdBadge.ariaLabel': 'XAU/USD spot price',
+    'tracker.keyboard.dialogAriaLabel': 'Keyboard shortcuts',
+    'tracker.keyboard.closeAriaLabel': 'Close keyboard shortcuts',
+    'tracker.keyboard.title': 'Keyboard shortcuts',
+    'tracker.keyboard.colKey': 'Key',
+    'tracker.keyboard.colAction': 'Action',
+    'tracker.keyboard.rowRefresh': 'Refresh prices',
+    'tracker.keyboard.rowCycleKarat': 'Cycle karat',
+    'tracker.keyboard.rowCycleUnit': 'Cycle unit (g / oz / tola / kg)',
+    'tracker.keyboard.rowCopy': 'Copy spot + selected price',
+    'tracker.keyboard.rowLive': 'Switch to Live mode',
+    'tracker.keyboard.rowCompare': 'Switch to Compare mode',
+    'tracker.keyboard.rowAlerts': 'Open Alerts panel',
+    'tracker.keyboard.rowPlanner': 'Open Planner panel',
+    'tracker.keyboard.rowClose': 'Close open panel',
+    'tracker.keyboard.rowHelp': 'Show this help',
     'tracker.heroTitle': 'Gold Command Center',
     'tracker.heroSub': 'Spot-linked live reference workspace',
     'tracker.heroKicker': 'Gold command center',
@@ -1160,6 +1394,240 @@ export const TRANSLATIONS = {
     'tracker.tabs.planner': 'المخطط',
     'tracker.tabs.exports': 'تصدير',
     'tracker.tabs.method': 'المنهجية',
+    /* ── Tracker · live-toolbar ── */
+    'tracker.liveToolbar.compareMarketLabel': 'قارن السوق',
+    'tracker.liveToolbar.range3y': '3 سنوات',
+    'tracker.liveToolbar.range5y': '5 سنوات',
+    'tracker.liveToolbar.rangeAll': 'الكل',
+    'tracker.liveToolbar.autoRefreshOn': 'تحديث تلقائي: تشغيل',
+    'tracker.liveToolbar.chipSelected': 'العرض المحدد',
+    'tracker.liveToolbar.chipSpotOnly': 'السعر الفوري فقط',
+    'tracker.liveToolbar.chipCompare': 'قارن السوق',
+    'tracker.liveToolbar.chipWire': 'عناوين الأخبار',
+    'tracker.liveToolbar.chipFavorites': 'المفضلة فقط',
+
+    /* ── Tracker · chart-panel ── */
+    'tracker.karat.introCopy':
+      'راجع المستويات المرجعية للعيارات 24 و22 و21 و18 أولاً، ثم قارنها مع سياق السوق المحدد وملصقات الحداثة.',
+    'tracker.karat.ladderAriaLabel': 'سلم العيارات',
+    'tracker.karat.tableCaption':
+      'سلم العيارات — السعر المرجعي المرتبط بالسعر الفوري لكل وحدة محددة للسوق المختار',
+    'tracker.karat.colKarat': 'العيار',
+    'tracker.karat.colPurity': 'النقاء',
+    'tracker.karat.colSelectedPrice': 'السعر المختار',
+    'tracker.karat.colVs24k': 'مقارنة بعيار 24',
+    'tracker.chart.heading': 'الرسم البياني وسياق الاتجاه',
+    'tracker.chart.headingCopy':
+      'سجل مدمج مرتبط بالسعر الفوري: النطاقات الحديثة تستخدم لقطات مباشرة ومخزنة، والنطاقات الأطول تستخدم خط أساس شهري مرتبط بـ XAU/USD.',
+    'tracker.chart.exportCsv': 'تصدير الرسم البياني المرئي بصيغة CSV',
+    'tracker.chart.downloadJson': 'تنزيل اللقطة بصيغة JSON',
+    'tracker.chart.legendMain': 'السلسلة المختارة',
+    'tracker.chart.chartAriaLabel': 'الرسم البياني لسعر الذهب',
+    'tracker.chart.emptyTitle':
+      'في انتظار بيانات السعر — اختر نطاقاً زمنياً أعلاه أو حدّث الصفحة لتحميل السجل.',
+    'tracker.chart.emptyNote':
+      'النطاقات القصيرة تستخدم لقطات مباشرة ومخزنة. النطاقات الأطول تستخدم خط الأساس الشهري المرتبط بـ XAU/USD.',
+    'tracker.chart.statSelectedRange': 'النطاق المختار',
+    'tracker.chart.statSelectedRangeNote': 'في انتظار السجل',
+    'tracker.chart.statRangeStart': 'بداية النطاق',
+    'tracker.chart.statRangeStartNote': 'النقطة المرجعية',
+    'tracker.chart.statRangeMovement': 'حركة النطاق',
+    'tracker.chart.statRangeMovementNote': 'التغير المطلق والنسبة المئوية',
+    'tracker.chart.statDataResolution': 'دقة البيانات',
+    'tracker.chart.statDataResolutionNote': 'سجل مرجعي مباشر أو يومي أو شهري',
+    'tracker.chart.rangePlaybackTitle': 'تشغيل النطاق',
+    'tracker.chart.playHistory': 'تشغيل السجل',
+    'tracker.chart.visibleRangeNotesTitle': 'ملاحظات النطاق المرئي',
+
+    /* ── Tracker · alerts-overlay ── */
+    'tracker.alerts.overlayTitle': 'التنبيهات + الإعدادات الجاهزة',
+    'tracker.alerts.closeLabel': 'إغلاق لوحة التنبيهات',
+    'tracker.alerts.overlayIntro':
+      'تنبيهات أسعار قائمة على المتصفح — تُخزَّن محلياً في متصفحك فقط. تُطلَق التنبيهات أثناء فتح هذه العلامة فقط. لا توجد رسائل SMS أو بريد إلكتروني أو إشعارات من جهة الخادم.',
+    'tracker.alerts.createTitle': 'إنشاء تنبيه',
+    'tracker.alerts.scopeLabel': 'مراقبة السعر',
+    'tracker.alerts.scopeSelected': 'العرض المحدد (العيار والعملة الحاليان)',
+    'tracker.alerts.scopeSpot': 'السعر الفوري XAU/USD لكل أوقية',
+    'tracker.alerts.scopeUae24': 'الإمارات عيار 24 لكل غرام (درهم)',
+    'tracker.alerts.directionLabel': 'أطلِق التنبيه عندما يكون السعر',
+    'tracker.alerts.directionAbove': 'أعلى من الهدف',
+    'tracker.alerts.directionBelow': 'أدنى من الهدف',
+    'tracker.alerts.targetLabel': 'السعر المستهدف',
+    'tracker.alerts.targetPlaceholder': 'أدخل السعر المستهدف',
+    'tracker.alerts.targetHint':
+      'استخدم الأسعار المرجعية المرتبطة بالسعر الفوري كدليل. قد تختلف أسعار التجزئة.',
+    'tracker.alerts.saveAlert': 'حفظ التنبيه',
+    'tracker.alerts.enableNotifications': 'تفعيل الإشعارات',
+    'tracker.alerts.savedTitle': 'التنبيهات المحفوظة',
+    'tracker.alerts.browserOnlyNote':
+      'التنبيهات المحلية: تُطلَق تنبيهات المتصفح أثناء فتح هذه العلامة فقط. تتطلب تنبيهات البريد الإلكتروني عبر الخادم (إن وُجدت) التحقق وتعمل عبر فحوصات الواجهة الخلفية. وقد تكون غير متاحة عند تعذّر الوصول إلى خدمات الواجهة الخلفية.',
+    'tracker.alerts.savePresetTitle': 'حفظ الإعداد الجاهز',
+    'tracker.alerts.presetNameLabel': 'اسم الإعداد الجاهز',
+    'tracker.alerts.presetNamePlaceholder': 'مثال: الإمارات عيار 24 لكل غرام',
+    'tracker.alerts.saveCurrentSetup': 'حفظ الإعداد الحالي',
+    'tracker.alerts.copyShareableUrl': 'نسخ رابط قابل للمشاركة',
+    'tracker.alerts.savedPresetsTitle': 'الإعدادات الجاهزة المحفوظة',
+    'tracker.alerts.notifyUnsupported': 'إشعارات المتصفح غير مدعومة.',
+    'tracker.alerts.notifyGranted': 'تم تفعيل الإشعارات.',
+    'tracker.alerts.notifyBlocked': 'تم حظر الإشعارات.',
+    'tracker.alerts.notifyRequestFailed': 'تعذّر طلب إذن الإشعارات.',
+    'tracker.alerts.notifyTitle': 'تنبيه سعر الذهب',
+    'tracker.alerts.notifyBody': 'XAU/USD {direction} {target}: الآن ${spot}',
+    'tracker.alerts.liveRegionTriggered': 'تم إطلاق تنبيه: {alerts} — السعر الحالي ${spot}',
+
+    /* ── Tracker · planner-overlay ── */
+    'tracker.planner.overlayTitle': 'أدوات التخطيط والتقدير',
+    'tracker.planner.closeLabel': 'إغلاق لوحة أدوات التخطيط',
+    'tracker.planner.intro':
+      'حوّل الأسعار المرجعية إلى قرارات. تستند جميع الحسابات إلى تقديرات مرتبطة بالسعر الفوري — وليست أسعار التجزئة أو عروض المجوهرات.',
+    'tracker.planner.feesNote':
+      '⚠ تشمل أسعار الشراء الفعلية المصنعية وعلاوات التاجر والضرائب المطبّقة. أضِفها في الحقول أدناه أو استخدم الحاسبة الكاملة للحصول على تقدير أكثر تفصيلاً.',
+    'tracker.planner.feesNoteLink': 'المنهجية ←',
+    'tracker.planner.budgetTitle': 'مخطط الميزانية',
+    'tracker.planner.budgetIntro': 'كم غراماً يمكنني شراؤه بميزانيتي؟',
+    'tracker.planner.budgetAmountLabel': 'مبلغ الميزانية (بالعملة المختارة)',
+    'tracker.planner.budgetFeeLabel': 'رسوم / علاوة إضافية %',
+    'tracker.planner.positionTitle': 'متتبّع المركز',
+    'tracker.planner.positionIntro': 'ما هو ربحي أو خسارتي غير المحققة بالسعر المرجعي الحالي؟',
+    'tracker.planner.positionEntryLabel': 'سعر الدخول (لكل غرام، بالعملة المختارة)',
+    'tracker.planner.positionQtyLabel': 'الكمية (غرامات)',
+    'tracker.planner.jewelryTitle': 'تقدير سعر المجوهرات',
+    'tracker.planner.jewelryIntro':
+      'قدّر القيمة المرجعية لقطعة مجوهرات — أضِف المصنعية والعلاوات وضريبة القيمة المضافة للاقتراب من تقدير سعر التجزئة.',
+    'tracker.planner.jewelryWeightLabel': 'الوزن (غرامات)',
+    'tracker.planner.jewelryKaratLabel': 'العيار',
+    'tracker.planner.jewelryMakingLabel': 'المصنعية لكل غرام',
+    'tracker.planner.jewelryPremiumLabel': 'علاوة التاجر %',
+    'tracker.planner.jewelryVatLabel': 'تضمين ضريبة القيمة المضافة الإماراتية 5%',
+    'tracker.planner.accumTitle': 'مخطط التراكم',
+    'tracker.planner.accumIntro':
+      'كم من الوقت سيستغرق الوصول إلى وزني المستهدف بالسعر المرجعي الحالي؟',
+    'tracker.planner.accumMonthlyLabel': 'المساهمة الشهرية (بالعملة المختارة)',
+    'tracker.planner.accumTargetLabel': 'الكمية المستهدفة (غرامات)',
+    'tracker.planner.openFullCalculator': 'افتح الحاسبة الكاملة لمزيد من الخيارات ←',
+
+    /* ── Tracker · archive-mode ── */
+    'tracker.archive.title': 'الأرشيف والبحث',
+    'tracker.archive.intro':
+      'تصفّح السجل الموحّد (خط الأساس + الذاكرة المؤقتة)، وصدّر شرائح منه، وانتقل إلى أقرب نقطة مؤرشفة لأي تاريخ.',
+    'tracker.archive.rangeLabel': 'نطاق الأرشيف',
+    'tracker.archive.rangeAll': 'الكل',
+    'tracker.archive.searchLabel': 'البحث في الأرشيف',
+    'tracker.archive.searchPlaceholder': 'ابحث بالشهر أو السنة أو المصدر',
+    'tracker.archive.browserHeading': 'متصفّح الأرشيف',
+    'tracker.archive.exportVisible': 'تنزيل ملف CSV للأرشيف الظاهر',
+    'tracker.archive.exportHistory': 'تنزيل ملف CSV للسجل الكامل',
+    'tracker.archive.tableCaption':
+      'أرشيف أسعار الذهب — السعر الفوري التاريخي لـ XAU/USD والأسعار المرجعية للسوق المختارة مع تسميات مصدر البيانات',
+    'tracker.archive.thDate': 'التاريخ',
+    'tracker.archive.thSpot': 'السعر الفوري بالدولار/أونصة',
+    'tracker.archive.thSelected': 'العرض المختار',
+    'tracker.archive.thUae24': 'الإمارات عيار 24 / غرام',
+    'tracker.archive.thSource': 'المصدر',
+    'tracker.archive.lookupHeading': 'البحث بالتاريخ',
+    'tracker.archive.lookupIntro':
+      'ابحث عن أقرب نقطة بيانات لأي تاريخ في الأرشيف. يشمل البحث خط الأساس وبيانات الجلسة.',
+    'tracker.archive.lookupDateLabel': 'تاريخ البحث',
+    'tracker.archive.runLookup': 'ابحث عن أقرب نقطة',
+    'tracker.archive.seasonalHeading': 'الأنماط الموسمية',
+    'tracker.archive.emptyState':
+      'لا تتوفّر بيانات أرشيف للنطاق المختار. جرّب توسيع النطاق أو تحديث البيانات.',
+
+    /* ── Tracker · exports-mode ── */
+    'tracker.exports.title': 'التصدير',
+    'tracker.exports.intro':
+      'تصدير CSV وJSON موثوق مع بيانات وصفية واضحة للمصدر والطابع الزمني لمساحة العمل الحالية.',
+    'tracker.exports.chartTitle': 'ملف CSV للمخطط المرئي',
+    'tracker.exports.chartBody':
+      'يصدّر النطاق التاريخي المرئي مع تواريخ البداية/النهاية ووسوم المصدر وملاحظات دقة البيانات. يتضمن صف ترويسة للحداثة ليعرف المستلمون ما إذا كانت النقاط مباشرة أو مخزّنة مؤقتاً أو مشتقّة من خط الأساس.',
+    'tracker.exports.chartButton': 'تصدير ملف CSV للمخطط المرئي',
+    'tracker.exports.compareTitle': 'ملف CSV للمقارنة',
+    'tracker.exports.compareBody':
+      'يُنزّل بطاقات مقارنة الدولة والعيار الحالية بالترتيب نفسه المعروض في مساحة عمل المقارنة. يتضمن أعمدة العملة والعيار والوحدة والسعر المرجعي. جميع القيم تقديرات مرتبطة بالسعر الفوري — وليست عروض أسعار تجزئة.',
+    'tracker.exports.archiveTitle': 'ملفات CSV للأرشيف',
+    'tracker.exports.archiveBody':
+      'نزّل الأرشيف اليومي المخزّن مؤقتاً (النطاق المرئي) أو سجل خط الأساس والتخزين المؤقت الكامل للرجوع إليه على المدى الأطول. قد يتضمن الأرشيف نقاطاً تقديرية أو من خط الأساس — يحدّد عمود المصدر كلاً منها.',
+    'tracker.exports.archiveButton': 'ملف CSV للأرشيف المرئي',
+    'tracker.exports.historyButton': 'ملف CSV للسجل الكامل',
+    'tracker.exports.snapshotTitle': 'لقطة JSON',
+    'tracker.exports.snapshotBody':
+      'ملف JSON منظّم يتضمن اللقطة المباشرة ووسم الحداثة وسعر الصرف والعيار المحدّد وإعداد المقارنة والطابع الزمني للتصدير. مناسب للدمج في البرامج النصية أو جداول البيانات.',
+    'tracker.exports.snapshotButton': 'تنزيل لقطة JSON',
+    'tracker.exports.briefTitle': 'نص الموجز السوقي',
+    'tracker.exports.briefBody':
+      'ملخص نصي بسيط لظروف الذهب الحالية للعرض المحدّد — مناسب للبريد الإلكتروني أو تدوين الملاحظات. يتضمن وسم الحداثة وإخلاء مسؤولية السعر المرجعي.',
+    'tracker.exports.briefButton': 'تنزيل الموجز',
+    'tracker.exports.disclaimer':
+      'تحتوي جميع الملفات المصدّرة على الأسعار المرجعية فقط — تقديرات مرتبطة بالسعر الفوري قبل المصنعية والعلاوات والضريبة. يحدّد عمود المصدر في كل ملف ما إذا كانت كل نقطة بيانات مباشرة أو مخزّنة مؤقتاً أو مشتقّة من خط الأساس.',
+    'tracker.exports.disclaimerLink': 'المنهجية ←',
+
+    /* ── Tracker · method-mode ── */
+    'tracker.method.panelTitle': 'المنهجية والمصادر',
+    'tracker.method.panelCopy':
+      'تُوضّح مساحة العمل هذه صراحةً ما هو مباشر، وما هو مخزَّن مؤقتًا، وما هو تقديري، وما هو خط أساس اصطناعي.',
+    'tracker.method.spotHeading': 'طبقة السعر الفوري المباشر',
+    'tracker.method.spotBody':
+      'يُسحب السعر الفوري المباشر بزوج XAU/USD كل ساعة خلال ساعات السوق عبر .github/workflows/gold-price-fetch.yml ويُحفظ في المستودع كملف data/gold_price.json، مع إعادة المحاولات والرجوع إلى الذاكرة المؤقتة عند تعذّر الاتصال بالشبكة.',
+    'tracker.method.spotBodyBefore':
+      'يُسحب السعر الفوري المباشر بزوج XAU/USD كل ساعة خلال ساعات السوق عبر ',
+    'tracker.method.spotBodyMid': ' ويُحفظ في المستودع كملف ',
+    'tracker.method.spotBodyAfter':
+      '، مع إعادة المحاولات والرجوع إلى الذاكرة المؤقتة عند تعذّر الاتصال بالشبكة.',
+    'tracker.method.spotLink': 'منهجية الموقع ←',
+    'tracker.method.fxHeading': 'طبقة تحويل العملات',
+    'tracker.method.fxBody':
+      'يأتي تحويل العملات من تغذية الدولار الأمريكي الأساسية في ExchangeRate-API. ويستخدم الدرهم الإماراتي ربط البنك المركزي الثابت (3.6725) المخزَّن في ثوابت الموقع — وليس من تغذية الواجهة البرمجية — لذا تكون أسعار الدرهم دقيقة دائمًا.',
+    'tracker.method.fxDocsLink': 'وثائق ExchangeRate-API',
+    'tracker.method.fxSiteLink': 'منهجية الموقع ←',
+    'tracker.method.karatHeading': 'نقاء العيار',
+    'tracker.method.karatBody':
+      'تُحسب الأسعار وفق نقاء العيار: عيار 24 = 1.0، وعيار 22 = 22/24 ≈ 0.9167، وعيار 21 = 21/24 ≈ 0.875، وعيار 18 = 0.75، وعيار 14 = 14/24 ≈ 0.5833. وتُشتق جميع القيم رياضيًا من السعر الفوري — دون عرض سعر منفصل لكل عيار.',
+    'tracker.method.karatLink': 'شرح حساب العيار ←',
+    'tracker.method.historyHeading': 'الطبقة التاريخية',
+    'tracker.method.historyBody':
+      'تعتمد النطاقات القصيرة على لقطات مباشرة حديثة مخزَّنة مؤقتًا في متصفحك. أما النطاقات الأطول فتستخدم خط أساس شهريًا مدمجًا مع تلك اللقطات لتجنّب الفجوات والحفاظ على ثبات عمليات التصدير.',
+    'tracker.method.historyDataLink': 'مجموعة بيانات الذهب من DataHub',
+    'tracker.method.historySiteLink': 'منهجية الموقع ←',
+    'tracker.method.retailHeading': 'التجزئة مقابل السبائك',
+    'tracker.method.retailBody':
+      'جميع الأسعار تقديرات مكافئة للسبائك مبنية على السعر الفوري. وقد تختلف أسعار المجوهرات والتجزئة الفعلية بسبب المصنعية والعلاوات والضرائب.',
+    'tracker.method.retailNotLink': 'ما لا تمثّله أسعارنا ←',
+    'tracker.method.retailDisclaimerLink': 'إخلاء المسؤولية ←',
+    'tracker.method.newsHeading': 'شريط الأخبار',
+    'tracker.method.newsBody':
+      'يستخدم شريط السوق واجهة GDELT DOC البرمجية في وضع قائمة المقالات، وهو مناسب للمواقع الثابتة. وعند تعذّره، ترجع مساحة العمل إلى العناوين المخزَّنة مؤقتًا أو إلى شريط توضيحي ثابت.',
+    'tracker.method.newsDocLink': 'واجهة GDELT DOC البرمجية',
+    'tracker.method.footerFullLink': 'اقرأ المنهجية الكاملة ←',
+    'tracker.method.footerFreshnessLink': 'شرح بطاقات الحداثة',
+    'tracker.method.footerLimitationsLink': 'القيود المعروفة',
+
+    /* ── Tracker · wire / keyboard / misc ── */
+    'tracker.wire.ariaLabel': 'شريط أخبار السوق',
+    'tracker.wire.label': 'شريط أخبار السوق',
+    'tracker.wire.metaPrefix': 'عناوين مباشرة ·',
+    'tracker.wire.metaWaiting': 'بانتظار…',
+    'tracker.wire.loadingItem': 'جارٍ تحميل عناوين السوق المباشرة…',
+    'tracker.wire.refresh': 'تحديث الشريط',
+    'tracker.wire.pause': 'إيقاف مؤقت',
+    'tracker.wire.resume': 'استئناف',
+    'tracker.skipLink.label': 'تخطٍّ إلى المحتوى الرئيسي',
+    'tracker.heroStats.ariaLabel': 'أهم المؤشرات المباشرة',
+    'tracker.xauusdBadge.ariaLabel': 'السعر الفوري XAU/USD',
+    'tracker.keyboard.dialogAriaLabel': 'اختصارات لوحة المفاتيح',
+    'tracker.keyboard.closeAriaLabel': 'إغلاق اختصارات لوحة المفاتيح',
+    'tracker.keyboard.title': 'اختصارات لوحة المفاتيح',
+    'tracker.keyboard.colKey': 'المفتاح',
+    'tracker.keyboard.colAction': 'الإجراء',
+    'tracker.keyboard.rowRefresh': 'تحديث الأسعار',
+    'tracker.keyboard.rowCycleKarat': 'تبديل العيار',
+    'tracker.keyboard.rowCycleUnit': 'تبديل الوحدة (غرام / أونصة / تولة / كغ)',
+    'tracker.keyboard.rowCopy': 'نسخ السعر الفوري والسعر المحدد',
+    'tracker.keyboard.rowLive': 'التبديل إلى الوضع المباشر',
+    'tracker.keyboard.rowCompare': 'التبديل إلى وضع المقارنة',
+    'tracker.keyboard.rowAlerts': 'فتح لوحة التنبيهات',
+    'tracker.keyboard.rowPlanner': 'فتح لوحة المخطِّط',
+    'tracker.keyboard.rowClose': 'إغلاق اللوحة المفتوحة',
+    'tracker.keyboard.rowHelp': 'عرض هذه المساعدة',
     'tracker.heroTitle': 'مركز قيادة الذهب',
     'tracker.heroSub': 'مساحة مرجعية مباشرة مرتبطة بالسعر الفوري',
     'tracker.heroKicker': 'مركز قيادة الذهب',
