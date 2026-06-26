@@ -1109,19 +1109,20 @@
       >
         <div class="tp-overlay-panel">
           <div class="tp-overlay-header">
-            <h2 id="tp-overlay-alerts-title">Alerts + presets</h2>
+            <h2 id="tp-overlay-alerts-title" data-i18n="alerts.overlayTitle">Alerts + presets</h2>
             <button
               class="tp-overlay-close"
               type="button"
               data-close-overlay="alerts"
               aria-label="Close alerts panel"
+              data-i18n-aria-label="alerts.closeLabel"
             >
               ✕
             </button>
           </div>
           <div class="tp-overlay-body">
             <div class="tp-drawer-inner">
-            <p class="tp-overlay-intro">
+            <p class="tp-overlay-intro" data-i18n="alerts.overlayIntro">
               Browser-based price alerts — stored locally in your browser only. Alerts fire only
               while this tab is open. No SMS, email, or server-side notifications.
             </p>
@@ -1135,7 +1136,7 @@
             ></div>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Create alert</h3></div>
+              <div class="tracker-subpanel-head"><h3 data-i18n="alerts.createTitle">Create alert</h3></div>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
                   <span id="tp-alert-delivery-label">Delivery</span>
@@ -1145,22 +1146,22 @@
                   </select>
                 </label>
                 <label class="tracker-field" id="tp-alert-scope-wrap">
-                  <span id="tp-alert-scope-label">Watch price</span>
+                  <span id="tp-alert-scope-label" data-i18n="alerts.scopeLabel">Watch price</span>
                   <select id="tp-alert-scope" aria-labelledby="tp-alert-scope-label">
-                    <option value="selected">Selected view (current karat + currency)</option>
-                    <option value="spot">Spot XAU/USD per ounce</option>
-                    <option value="uae24">UAE 24K per gram (AED)</option>
+                    <option value="selected" data-i18n="alerts.scopeSelected">Selected view (current karat + currency)</option>
+                    <option value="spot" data-i18n="alerts.scopeSpot">Spot XAU/USD per ounce</option>
+                    <option value="uae24" data-i18n="alerts.scopeUae24">UAE 24K per gram (AED)</option>
                   </select>
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-alert-direction-label">Trigger when price is</span>
+                  <span id="tp-alert-direction-label" data-i18n="alerts.directionLabel">Trigger when price is</span>
                   <select id="tp-alert-direction" aria-labelledby="tp-alert-direction-label">
-                    <option value="above">Above target</option>
-                    <option value="below">Below target</option>
+                    <option value="above" data-i18n="alerts.directionAbove">Above target</option>
+                    <option value="below" data-i18n="alerts.directionBelow">Below target</option>
                   </select>
                 </label>
                 <label class="tracker-field">
-                  <span id="tp-alert-target-label">Target price</span>
+                  <span id="tp-alert-target-label" data-i18n="alerts.targetLabel">Target price</span>
                   <input
                     type="number"
                     id="tp-alert-target"
@@ -1168,9 +1169,9 @@
                     aria-describedby="tp-alert-target-hint"
                     min="0"
                     step="0.01"
-                    placeholder="Enter target price"
+                    placeholder="Enter target price" data-i18n-placeholder="alerts.targetPlaceholder"
                   />
-                  <span class="tracker-help-text" id="tp-alert-target-hint">
+                  <span class="tracker-help-text" id="tp-alert-target-hint" data-i18n="alerts.targetHint">
                     Use spot-linked reference prices as a guide. Retail prices may differ.
                   </span>
                 </label>
@@ -1192,10 +1193,10 @@
                 </p>
               </div>
               <div class="tracker-inline-actions">
-                <button class="btn btn-primary" type="button" id="tp-save-alert">
+                <button class="btn btn-primary" type="button" id="tp-save-alert" data-i18n="alerts.saveAlert">
                   Save alert
                 </button>
-                <button class="btn btn-outline" type="button" id="tp-enable-notifications">
+                <button class="btn btn-outline" type="button" id="tp-enable-notifications" data-i18n="alerts.enableNotifications">
                   Enable notifications
                 </button>
               </div>
@@ -1204,8 +1205,8 @@
             </article>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Saved alerts</h3></div>
-              <p class="tracker-help-text tracker-browser-only-note" id="tp-alert-browser-note">
+              <div class="tracker-subpanel-head"><h3 data-i18n="alerts.savedTitle">Saved alerts</h3></div>
+              <p class="tracker-help-text tracker-browser-only-note" id="tp-alert-browser-note" data-i18n="alerts.browserOnlyNote">
                 <strong>Local alerts:</strong> Browser alerts fire only while this tab is open.
                 Server email alerts (if available) require verification and run from backend checks.
                 They may be unavailable when backend services are unreachable.
@@ -1214,29 +1215,29 @@
             </article>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Save preset</h3></div>
+              <div class="tracker-subpanel-head"><h3 data-i18n="alerts.savePresetTitle">Save preset</h3></div>
               <div class="tracker-form-grid">
                 <label class="tracker-field">
-                  <span>Preset name</span>
+                  <span data-i18n="alerts.presetNameLabel">Preset name</span>
                   <input
                     type="text"
                     id="tp-preset-name"
-                    placeholder="Example: UAE 24K per gram"
+                    placeholder="Example: UAE 24K per gram" data-i18n-placeholder="alerts.presetNamePlaceholder"
                   />
                 </label>
               </div>
               <div class="tracker-inline-actions">
-                <button class="btn btn-primary" type="button" id="tp-save-preset">
+                <button class="btn btn-primary" type="button" id="tp-save-preset" data-i18n="alerts.saveCurrentSetup">
                   Save current setup
                 </button>
-                <button class="btn btn-ghost" type="button" id="tp-copy-url">
+                <button class="btn btn-ghost" type="button" id="tp-copy-url" data-i18n="alerts.copyShareableUrl">
                   Copy shareable URL
                 </button>
               </div>
             </article>
 
             <article class="tracker-subpanel">
-              <div class="tracker-subpanel-head"><h3>Saved presets</h3></div>
+              <div class="tracker-subpanel-head"><h3 data-i18n="alerts.savedPresetsTitle">Saved presets</h3></div>
               <div class="tracker-stack-list" id="tp-preset-list"></div>
             </article>
             </div><!-- /.tp-drawer-inner -->
