@@ -720,6 +720,16 @@ export const TRANSLATIONS = {
 
     /* ── Homepage (home.js) ── */
     'home.heroLive': 'Auto-refresh · freshness labeled',
+    'home.skipLink': 'Skip to main content',
+    'home.gccTabGccLabel': 'GCC (6)',
+    'home.gccTabMenaLabel': 'MENA (8+)',
+    'home.gccTabGlobalLabel': 'Global (24+)',
+    'home.statOpenLabel': 'Open',
+    'home.statHighLabel': 'High',
+    'home.statLowLabel': 'Low',
+    'home.exportCsvAria': 'Export session price history as CSV',
+    'home.explainerMethodologyLink': 'Full price methodology & data sources →',
+    'home.explainerSvrLink': 'Spot vs retail price difference explained →',
     'home.heroTitle': 'Gold Prices Today',
     'home.heroSub': 'UAE, GCC & Arab World',
     'home.heroLead':
@@ -1986,6 +1996,16 @@ export const TRANSLATIONS = {
 
     /* ── Homepage (home.js) ── */
     'home.heroLive': 'تحديث تلقائي · مع عرض حالة التحديث',
+    'home.skipLink': 'تخطّ إلى المحتوى الرئيسي',
+    'home.gccTabGccLabel': 'دول الخليج (6)',
+    'home.gccTabMenaLabel': 'الشرق الأوسط وشمال أفريقيا (8+)',
+    'home.gccTabGlobalLabel': 'عالمي (24+)',
+    'home.statOpenLabel': 'الافتتاح',
+    'home.statHighLabel': 'الأعلى',
+    'home.statLowLabel': 'الأدنى',
+    'home.exportCsvAria': 'تصدير سجل أسعار الجلسة بصيغة CSV',
+    'home.explainerMethodologyLink': 'منهجية الأسعار الكاملة ومصادر البيانات ←',
+    'home.explainerSvrLink': 'شرح الفرق بين السعر الفوري وسعر التجزئة ←',
     'home.heroTitle': 'أسعار الذهب اليوم',
     'home.heroSub': 'الإمارات والخليج والعالم العربي',
     'home.heroLead':

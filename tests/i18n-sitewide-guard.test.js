@@ -123,18 +123,17 @@ test('i18n: global-TRANSLATIONS helper keys all exist in EN and AR', async () =>
 test('i18n: every data-i18n attribute key resolves in EN and AR', async () => {
   const { TRANSLATIONS } = await loadTranslations();
   const { en, ar } = TRANSLATIONS;
-  // Today only tracker.html uses data-i18n (tracker.* namespace via trackerTx).
-  // The scan is generic: any HTML adopting data-i18n with a tracker.* key is
-  // covered; extend the namespace map here if another page adopts the pattern.
-  const htmlFiles = ['tracker.html'];
+  // Map each HTML file that uses data-i18n to the namespace its hydrator prepends
+  // (tracker.html → trackerTx → tracker.*; index.html → home tx → home.*).
+  const htmlNamespaces = { 'tracker.html': 'tracker.', 'index.html': 'home.' };
   const re = /\bdata-i18n(?:-placeholder|-aria-label|-title)?="([^"]+)"/g;
   const missing = [];
-  for (const rel of htmlFiles) {
+  for (const [rel, ns] of Object.entries(htmlNamespaces)) {
     const html = read(rel);
     re.lastIndex = 0;
     let m;
     while ((m = re.exec(html))) {
-      const key = `tracker.${m[1]}`;
+      const key = ns + m[1];
       if (!Object.prototype.hasOwnProperty.call(en, key)) missing.push(`${key} [EN] <- ${rel}`);
       if (!Object.prototype.hasOwnProperty.call(ar, key)) missing.push(`${key} [AR] <- ${rel}`);
     }
