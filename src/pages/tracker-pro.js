@@ -131,9 +131,32 @@ function syncCurrentCountryPageLink() {
       : `📄 ${selectedCountry.nameEn}`;
 }
 
+// Generic declarative hydrator for static tracker copy. Any element tagged
+// data-i18n="<key>" gets its textContent set from trackerTx('<key>'); the
+// -placeholder / -aria-label / -title variants set those attributes instead.
+// This replaces dozens of per-element setNodeText calls for the static modes
+// (exports / method / archive / planner / alerts chrome) — one attribute per
+// string, re-applied on every language change. Keys are guarded by
+// tests/tracker-i18n-key-coverage.test.js (which scans data-i18n attributes).
+function hydrateStaticI18n() {
+  for (const el of document.querySelectorAll('[data-i18n]')) {
+    el.textContent = trackerTx(el.dataset.i18n);
+  }
+  for (const el of document.querySelectorAll('[data-i18n-placeholder]')) {
+    el.setAttribute('placeholder', trackerTx(el.dataset.i18nPlaceholder));
+  }
+  for (const el of document.querySelectorAll('[data-i18n-aria-label]')) {
+    el.setAttribute('aria-label', trackerTx(el.dataset.i18nAriaLabel));
+  }
+  for (const el of document.querySelectorAll('[data-i18n-title]')) {
+    el.setAttribute('title', trackerTx(el.dataset.i18nTitle));
+  }
+}
+
 function localizeStaticTrackerCopy() {
   document.documentElement.lang = state.lang;
   document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+  hydrateStaticI18n();
 
   const trustContent = document.querySelector('.tracker-trust-content');
   if (trustContent) {
@@ -197,6 +220,14 @@ function localizeStaticTrackerCopy() {
       state.autoRefresh === false ? 'liveToolbar.autoRefreshOff' : 'liveToolbar.autoRefreshOn'
     );
   }
+
+  // Exports mode — link-bearing disclaimer (the static card copy is data-i18n).
+  setInlineLinkText(
+    document.getElementById('tp-export-disclaimer'),
+    trackerTx('exports.disclaimer'),
+    'methodology.html',
+    trackerTx('exports.disclaimerLink')
+  );
 
   setInlineLinkText(
     document.getElementById('tp-hero-copy'),

@@ -133,3 +133,26 @@ test('tracker: every workspace tab has a text label in EN and AR', async () => {
   }
   assert.deepEqual(missing, [], `Missing tab labels:\n  ${missing.join('\n  ')}`);
 });
+
+// Declarative-hydration guard: every data-i18n / data-i18n-placeholder /
+// data-i18n-aria-label / data-i18n-title attribute in tracker.html is resolved
+// via trackerTx('<value>') -> tracker.<value>. Each must exist in EN and AR.
+test('tracker: every data-i18n attribute key exists in EN and AR', async () => {
+  const { TRANSLATIONS } = await loadTranslations();
+  const html = fs.readFileSync(path.join(ROOT, 'tracker.html'), 'utf8');
+  const re = /\bdata-i18n(?:-placeholder|-aria-label|-title)?="([^"]+)"/g;
+  const keys = new Set();
+  let m;
+  while ((m = re.exec(html))) keys.add(`tracker.${m[1]}`);
+  assert.ok(keys.size > 0, 'expected at least one data-i18n attribute in tracker.html');
+  const missing = [];
+  for (const key of keys) {
+    if (!Object.prototype.hasOwnProperty.call(TRANSLATIONS.en, key)) missing.push(`${key} [EN]`);
+    if (!Object.prototype.hasOwnProperty.call(TRANSLATIONS.ar, key)) missing.push(`${key} [AR]`);
+  }
+  assert.deepEqual(
+    missing,
+    [],
+    `data-i18n keys missing from translations:\n  ${missing.join('\n  ')}`
+  );
+});

@@ -1503,8 +1503,8 @@
         <section class="tracker-panel">
           <div class="tracker-panel-head">
             <div>
-              <h2>Exports</h2>
-              <p>
+              <h2 data-i18n="exports.title">Exports</h2>
+              <p data-i18n="exports.intro">
                 Trustworthy CSV and JSON exports with clear source and timestamp metadata for the
                 current workspace.
               </p>
@@ -1513,20 +1513,20 @@
 
           <div class="tracker-export-grid">
             <article class="tracker-subpanel tracker-export-card">
-              <div class="tracker-subpanel-head"><h3>Visible chart CSV</h3></div>
-              <p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="exports.chartTitle">Visible chart CSV</h3></div>
+              <p data-i18n="exports.chartBody">
                 Exports the visible historical range with start/end dates, source labels, and
                 data-resolution notes. Includes a freshness header row so recipients know whether
                 points are live, cached, or baseline-derived.
               </p>
-              <button class="btn btn-outline" id="tp-export-chart-2" type="button">
+              <button class="btn btn-outline" id="tp-export-chart-2" type="button" data-i18n="exports.chartButton">
                 Export visible chart CSV
               </button>
             </article>
 
             <article class="tracker-subpanel tracker-export-card">
-              <div class="tracker-subpanel-head"><h3>Comparison CSV</h3></div>
-              <p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="exports.compareTitle">Comparison CSV</h3></div>
+              <p data-i18n="exports.compareBody">
                 Downloads the current country + karat comparison cards in the same order shown in
                 the Compare workspace. Includes currency, karat, unit, and reference-price columns.
                 All values are spot-linked estimates — not retail quotes.
@@ -1537,46 +1537,46 @@
             </article>
 
             <article class="tracker-subpanel tracker-export-card">
-              <div class="tracker-subpanel-head"><h3>Archive CSVs</h3></div>
-              <p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="exports.archiveTitle">Archive CSVs</h3></div>
+              <p data-i18n="exports.archiveBody">
                 Download the cached daily archive (visible range) or the full baseline + cache
                 history for longer-term reference. Archive data may include estimated or baseline
                 points — the Source column identifies each.
               </p>
               <div class="tracker-inline-actions">
-                <button class="btn btn-outline" id="tp-export-archive-2" type="button">
+                <button class="btn btn-outline" id="tp-export-archive-2" type="button" data-i18n="exports.archiveButton">
                   Visible archive CSV
                 </button>
-                <button class="btn btn-ghost" id="tp-export-history-2" type="button">
+                <button class="btn btn-ghost" id="tp-export-history-2" type="button" data-i18n="exports.historyButton">
                   Full history CSV
                 </button>
               </div>
             </article>
 
             <article class="tracker-subpanel tracker-export-card">
-              <div class="tracker-subpanel-head"><h3>Snapshot JSON</h3></div>
-              <p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="exports.snapshotTitle">Snapshot JSON</h3></div>
+              <p data-i18n="exports.snapshotBody">
                 Structured JSON with the live snapshot, freshness label, FX rate, selected karat,
                 comparison setup, and export timestamp. Suitable for integrating into scripts or
                 spreadsheets.
               </p>
-              <button class="btn btn-outline" id="tp-download-json-2" type="button">
+              <button class="btn btn-outline" id="tp-download-json-2" type="button" data-i18n="exports.snapshotButton">
                 Download snapshot JSON
               </button>
             </article>
 
             <article class="tracker-subpanel tracker-export-card">
-              <div class="tracker-subpanel-head"><h3>Market brief text</h3></div>
-              <p>
+              <div class="tracker-subpanel-head"><h3 data-i18n="exports.briefTitle">Market brief text</h3></div>
+              <p data-i18n="exports.briefBody">
                 Plain-text summary of current gold conditions for the selected view — suitable for
                 email or note-taking. Includes freshness label and reference-price disclaimer.
               </p>
-              <button class="btn btn-outline" id="tp-download-brief" type="button">
+              <button class="btn btn-outline" id="tp-download-brief" type="button" data-i18n="exports.briefButton">
                 Download brief
               </button>
             </article>
           </div>
-          <p class="source-note tracker-export-disclaimer">
+          <p class="source-note tracker-export-disclaimer" id="tp-export-disclaimer">
             All exports contain reference prices only — spot-linked estimates before making charges, premiums, and tax.
             The Source column in every file identifies whether each data point is live, cached, or baseline-derived.
             <a href="methodology.html" class="tracker-inline-link">Methodology →</a>
