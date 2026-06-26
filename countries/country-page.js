@@ -57,7 +57,7 @@ const STATE = {
 const T = {
   en: {
     skipLink: 'Skip to main content',
-    livePrice: 'Live Gold Price',
+    livePrice: 'Reference Gold Price',
     perGram: 'per gram',
     perOz: 'per troy oz',
     karat24: '24K (Pure)',
@@ -104,7 +104,7 @@ const T = {
   },
   ar: {
     skipLink: 'تخطّ إلى المحتوى الرئيسي',
-    livePrice: 'سعر الذهب المباشر',
+    livePrice: 'سعر الذهب المرجعي',
     perGram: 'للغرام',
     perOz: 'للأوقية',
     karat24: 'عيار 24 (خالص)',
