@@ -17,6 +17,16 @@ Endless prompts:
 
 ## 🔴 In Progress
 
+### Tracker HTML 50-Phase Flagship Revamp (2026-06-26)
+
+Canonical plan:
+[`docs/plans/2026-06-26_tracker-html-50-phase-revamp.md`](docs/plans/2026-06-26_tracker-html-50-phase-revamp.md)
+· branch `claude/tracker-html-revamp-bpk97i` · owner-requested full-surface revamp (design / UX /
+features / reliability / a11y / RTL / perf / SEO). Self-contained working prompt; 10 tracks × 50
+phases; one phase per PR, baseline stays green.
+
+- [ ] **Phases 1–50** — see the plan's §7 phase tracker. Track A (foundation/audit) first.
+
 ### Tracker HTML 30-Phase Visual Revamp (2026-06-25)
 
 Canonical plan:
