@@ -5,6 +5,29 @@
 - **Legend:** ✅ committed (GREEN) · 🟥 staged only (RED → `OWNER_REVIEW.md`) · 🟦 GREEN staged as a
   proposal (judgment-heavy/large — plan + risk below) · ⏭️ spec only · ⤴️ out of scope for #443
 
+## 🟢 2026-06-27 QA harness repair (branch `claude/gold-ticker-qa-harness-2veso4`)
+
+Track A / Phase 1 groundwork — the reusable **regression-evidence harness** every later phase relies
+on. Baseline re-verified green before any change: **1240 tests / 0 fail**, lint + style + validate
+(`0 errors, 0 warnings`) + build (`✓ built in ~4s`) all green; LOCKED pricing untouched.
+
+- **`tests/qa/qa-harness.mjs` (new, replaces ad-hoc `scripts/qa/tracker-shot.mjs`).** Fixes the
+  hang: no `networkidle` (tracker polls every 90 s → never idle) — uses `domcontentloaded` →
+  `waitForSelector('#tp-hero-readout')` → fixed `~1500 ms` settle. Pins `executablePath` to the
+  pre-installed Chromium 1194 (no `playwright install`; PW 1.61 wants 1228). Writes metrics with
+  `fs.writeFileSync` → `tests/qa/report.json` (no longer lost to stdout). Auto-serves repo root on
+  `:8080` (reuse-if-up). Captures **full-page** screenshots, console errors, network failures,
+  leaked-i18n-key scan, h1 count/structure, and RTL overflow (`scrollWidth > innerWidth + 2`).
+  GA/GTM/ Clarity/`ERR_ABORTED` filtered from the error logs. Exits non-zero on a dirty report so it
+  can gate.
+- **Baseline artifacts committed:** `tests/qa/report.json` + `tests/qa/baseline/*.png` (tracker
+  EN/AR × 390/1366). **0 leaked keys · 0 network errors · 0 RTL overflow · h1=1 per view.** The 4
+  `net::ERR_CONNECTION_CLOSED` console errors are **environmental** (sandbox has no outbound access
+  to the live gold-price source → tracker degrades to a non-live freshness state, honesty intact),
+  documented in `tests/qa/README.md`.
+- **Docs:** `tests/qa/README.md` — why it exists, what it captures, how to run, baseline notes,
+  relationship to `leaked-key-scan.mjs` + the e2e suite.
+
 ## 🟢 2026-06-26 Overhaul session (branch `claude/tracker-html-revamp-bpk97i`)
 
 Separate from PR #443. Full record:
