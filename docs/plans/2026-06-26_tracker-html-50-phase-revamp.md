@@ -37,7 +37,7 @@ don't re-litigate a decision already made.
 | Styles | `styles/pages/tracker-pro.css` (~121 KB) + `styles/pages/tracker-pro-v4.css` (elevation layer, `@import`ed) | v4 is the newer elevation/transition layer. |
 | Tokens | `styles/tokens.css` (single source of truth, per `PROGRESS.md` phase 03) | Never fork dark mode; `[data-theme]` is canonical. |
 | Pricing | `src/lib/price-calculator.js`, `src/config/karats.js`, `src/config/constants.js` (AED peg `3.6725`, troy oz `31.1035`) | **Immutable constants.** |
-| Freshness | `src/lib/live-status.js` (`getLiveFreshness`, `STALE_AFTER_MS` = 12 min), `src/tracker/freshness.js` | State machine: `live` / `cached` / `stale` / `unavailable`. |
+| Freshness | `src/lib/live-status.js` (`getLiveFreshness`, `STALE_AFTER_MS` = 75 min, `DELAYED_AFTER_MS` = 30 min), `src/tracker/freshness.js` (`getFreshnessModel().effectiveKey`) | Canonical 6-key model: `live` / `delayed` / `cached` / `stale` / `fallback` / `unavailable`, plus `closed` from the tracker layer. Build against `getFreshnessModel().effectiveKey` — never hard-code the list or thresholds. |
 | Strings | `src/config/translations.js` | All user-visible text. No literals in JS/HTML. |
 | Hash contract | `docs/tracker-state.md` (FROZEN, §22b Phase 7) | Tests: `tests/tracker-hash.test.js`. |
 | Mode/IA contract | `docs/tracker-state.md` "IA & mode ordering" | Tests: `tests/tracker-modes.test.js`. |
@@ -314,8 +314,9 @@ Specific work · Acceptance · Verify**.
 - Goal: make "updated every 90 s" feel alive and trustworthy.
 - Files: `src/tracker/freshness.js`, `src/lib/live-status.js` (read-only contract), `tracker.html`
   (`#tp-countdown`, `#tp-refresh-badge`), `styles/pages/tracker-pro.css`.
-- Work: refine the countdown + pulse animation; ensure the 12-min `STALE_AFTER_MS` boundary copy is
-  exact for all four states; the pulse must not fire on `stale`/`unavailable`.
+- Work: refine the countdown + pulse animation; ensure the `DELAYED_AFTER_MS` (30 min) and
+  `STALE_AFTER_MS` (75 min) boundary copy is exact for every `getFreshnessModel().effectiveKey`
+  state; the pulse must not fire on `delayed`/`cached`/`stale`/`fallback`/`unavailable`/`closed`.
 - Acceptance: state→copy mapping matches `tracker-state.md`; `tests/freshness-*` +
   `tests/live-status.test.js` green.
 - Verify: gate green; simulate stale (mock `updatedAt`) and confirm copy + no-pulse.
