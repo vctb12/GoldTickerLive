@@ -133,3 +133,5 @@ data/provider_scorecard_*.json
 # npm regenerates it on install; nothing to track.
 src/package-lock.json
 docs/plans/_artifacts/2026-06-26-overhaul-qa/
+# Tracker visual-harness output (regenerable via scripts/node/tracker-shots.mjs).
+docs/plans/_artifacts/tracker-shots/
