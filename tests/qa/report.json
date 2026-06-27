@@ -1,0 +1,93 @@
+{
+  "meta": {
+    "label": "baseline",
+    "generatedAt": "2026-06-27T06:07:49.560Z",
+    "base": "http://127.0.0.1:8080",
+    "chromium": "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
+    "settleMs": 1500,
+    "pages": ["tracker"],
+    "viewports": ["390", "1366"],
+    "langs": ["en", "ar"]
+  },
+  "summary": {
+    "views": 4,
+    "consoleErrors": 0,
+    "networkErrors": 0,
+    "leakedKeys": 0,
+    "overflowViews": []
+  },
+  "results": [
+    {
+      "page": "tracker",
+      "lang": "en",
+      "viewport": "390",
+      "url": "http://127.0.0.1:8080/tracker.html#mode=live&cur=AED&k=24&u=gram&r=30D&cmp=USD&lang=en",
+      "dir": "ltr",
+      "htmlLang": "en",
+      "scrollW": 390,
+      "innerW": 390,
+      "overflowPx": 0,
+      "overflow": false,
+      "h1count": 1,
+      "h1": ["Gold Command Center"],
+      "consoleErrors": [],
+      "networkErrors": [],
+      "leakedKeys": [],
+      "screenshot": "tests/qa/baseline/baseline-tracker-en-390.png"
+    },
+    {
+      "page": "tracker",
+      "lang": "en",
+      "viewport": "1366",
+      "url": "http://127.0.0.1:8080/tracker.html#mode=live&cur=AED&k=24&u=gram&r=30D&cmp=USD&lang=en",
+      "dir": "ltr",
+      "htmlLang": "en",
+      "scrollW": 1366,
+      "innerW": 1366,
+      "overflowPx": 0,
+      "overflow": false,
+      "h1count": 1,
+      "h1": ["Gold Command Center"],
+      "consoleErrors": [],
+      "networkErrors": [],
+      "leakedKeys": [],
+      "screenshot": "tests/qa/baseline/baseline-tracker-en-1366.png"
+    },
+    {
+      "page": "tracker",
+      "lang": "ar",
+      "viewport": "390",
+      "url": "http://127.0.0.1:8080/tracker.html#mode=live&cur=AED&k=24&u=gram&r=30D&cmp=USD&lang=ar",
+      "dir": "rtl",
+      "htmlLang": "ar",
+      "scrollW": 390,
+      "innerW": 390,
+      "overflowPx": 0,
+      "overflow": false,
+      "h1count": 1,
+      "h1": ["مركز قيادة الذهب"],
+      "consoleErrors": [],
+      "networkErrors": [],
+      "leakedKeys": [],
+      "screenshot": "tests/qa/baseline/baseline-tracker-ar-390.png"
+    },
+    {
+      "page": "tracker",
+      "lang": "ar",
+      "viewport": "1366",
+      "url": "http://127.0.0.1:8080/tracker.html#mode=live&cur=AED&k=24&u=gram&r=30D&cmp=USD&lang=ar",
+      "dir": "rtl",
+      "htmlLang": "ar",
+      "scrollW": 1366,
+      "innerW": 1366,
+      "overflowPx": 0,
+      "overflow": false,
+      "h1count": 1,
+      "h1": ["مركز قيادة الذهب"],
+      "consoleErrors": [],
+      "networkErrors": [],
+      "leakedKeys": [],
+      "screenshot": "tests/qa/baseline/baseline-tracker-ar-1366.png"
+    }
+  ]
+}
