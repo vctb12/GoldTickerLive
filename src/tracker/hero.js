@@ -42,7 +42,10 @@ function renderPriceChangeStrip(spot, dayOpenSpot) {
   }
   const delta = spot - dayOpenSpot;
   const pct = (delta / dayOpenSpot) * 100;
-  const dir = classifyDelta(delta); // classify on the displayed amount
+  // Classify on percent so the strip agrees with the hero stat + karat-table
+  // change cells (all percent-based). Classifying the strip on the dollar amount
+  // let a sub-0.01% move read as ▲ here but • flat next to it.
+  const dir = classifyDelta(pct);
   strip.hidden = false;
   strip.classList.remove(
     'tracker-price-change-strip--up',
@@ -248,7 +251,11 @@ export function renderHero() {
     if (dayOpenSpot && dayOpenSpot > 0) {
       const pct = ((spot - dayOpenSpot) / dayOpenSpot) * 100;
       const dir = classifyDelta(pct); // classify on the displayed percent
-      spotSubText = `${tx('heroStatSpotSub', { source: freshness.sourceLabel })} ${tx('heroStatDayChange', { sign: DIRECTION_GLYPH[dir], pct: Math.abs(pct).toFixed(2) })}`;
+      const dayChangeText =
+        dir === 'flat'
+          ? tx('heroStatDayChangeFlat')
+          : tx('heroStatDayChange', { sign: DIRECTION_GLYPH[dir], pct: Math.abs(pct).toFixed(2) });
+      spotSubText = `${tx('heroStatSpotSub', { source: freshness.sourceLabel })} ${dayChangeText}`;
     }
 
     const statDefs = [

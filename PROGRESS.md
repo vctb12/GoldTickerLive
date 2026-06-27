@@ -32,6 +32,11 @@ karats). Freshness honesty respected (`getFreshnessModel().effectiveKey`).
   - **Numeric rhythm.** `tabular-nums` + `font-variant-numeric` extended to the hero readout values
     (`#tp-readout-spot-value`, `#tp-readout-selected-value`, `.tracker-hero-readout__v`) so digits
     don't reflow on the 90 s tick.
+  - **Review follow-up (PR #458, Gold Integrity Agent):** unified the day-change direction basis —
+    the strip classified on dollar amount while hero-stat + karat cells used percent, so a sub-0.01%
+    move could read ▲ in the strip and • flat beside it. All three now classify on percent; added a
+    `flat` hero-stat string (`heroStatDayChangeFlat`, EN+AR), harmonized the AR
+    `heroChangeStripFlat` preposition to `مقابل`, and added a cross-surface guard test.
 - **Cluster 2 — clear loading skeleton when content arrives** (slice of plan Phase 15):
   - The hero badge row (`#tp-xauusd-value`, `#tp-live-badge-text`, `#tp-refresh-badge`) and the five
     mobile-dock readouts carried the `skeleton-inline` shimmer + `shell-skeleton-*` size classes on

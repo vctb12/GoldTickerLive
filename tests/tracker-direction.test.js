@@ -48,6 +48,20 @@ test('classifyDelta: epsilon is overridable for amount vs percent call sites', a
   assert.equal(classifyDelta(0.3, 0.5), 'flat');
 });
 
+test('cross-surface basis: strip/hero-stat/karat all classify on percent and agree', async () => {
+  const { classifyDelta } = await load();
+  // A sub-0.01% move (e.g. +$0.10 on ~$4090 spot) must read the SAME on every
+  // day-change surface. All three now classify on the spot percent, so a move
+  // that rounds to 0.00% is `flat` everywhere — no green ▲ in the strip next to
+  // a neutral • in the stat row. (Classifying the strip on the dollar amount
+  // used to return 'up' here, which is the divergence this guards against.)
+  const spot = 4090.6;
+  const dayOpen = spot - 0.1; // +$0.10 move
+  const pct = ((spot - dayOpen) / dayOpen) * 100; // ≈ 0.00244%
+  assert.equal(classifyDelta(pct), 'flat', 'percent basis → flat');
+  assert.equal(classifyDelta(spot - dayOpen), 'up', 'amount basis would have diverged (up)');
+});
+
 test('DIRECTION_GLYPH: distinct non-colour cue per direction; flat is not an up arrow', async () => {
   const { DIRECTION_GLYPH } = await load();
   assert.equal(DIRECTION_GLYPH.up, '▲');
