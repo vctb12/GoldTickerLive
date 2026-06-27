@@ -24,6 +24,14 @@
   outline-offset: 2px;
 }
 
+/* ── Navigation: banner landmark wrapper ──
+   <header class="site-header" role="banner"> wraps the sticky nav purely to
+   provide the banner landmark. `display: contents` makes it generate no box, so
+   the nav keeps the <body> as its sticky containing block — zero layout change. */
+.site-header {
+  display: contents;
+}
+
 /* ── Phase 40: Navigation — crisper glass with stronger gold accent ── */
 .site-nav {
   position: sticky;

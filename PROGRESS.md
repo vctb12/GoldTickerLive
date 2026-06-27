@@ -29,6 +29,27 @@ re-verified through the real `src/lib/price-calculator.js`: `usdPerGram(4048.60,
   constant) and a factual error in the active plan `docs/plans/2026-06-26_tracker-html-50-phase-revamp.md`
   (§1 table + Phase 18). All reconciled. `docs/tracker-state.md` + `README.md` were **already**
   reconciled by the prior overhaul session — verified, left as-is.
+**Commit 2 — site-wide `<header role="banner">` landmark (GREEN; design-system / a11y propagation):**
+
+- The JS-injected nav (`src/components/nav.js`, universal via `site-shell` / `content-page-boot` /
+  `page-hydrator` / per-page boots) rendered a `<nav role="navigation">` but **no banner
+  landmark** — only 1 of 11 root pages had any `<header>`. Wrapped the nav in
+  `<header class="site-header" role="banner">` and added `.site-header { display: contents }`
+  (`components.css` + `critical.css`) so the wrapper generates no box — the sticky nav keeps
+  `<body>` as its containing block. Updated the `navEl` lookup in nav.js to find the nav inside the
+  wrapper (so `applyPageShell` still tags it).
+- **Verified with Playwright (chromium) against the dev server, before→after:**
+  - `getByRole('banner')` = **1** on home/shops/tracker/calculator/methodology (was 0); each page
+    now has `banner > navigation` + `main`. `display:contents` does **not** strip the landmark.
+  - **Zero layout shift:** nav `getBoundingClientRect().top` identical before vs after
+    (home 51.4/53 px, calculator 92.7/105.1 px @ 390/1366); nav stays `position:sticky` and pins on
+    scroll. Desktop before/after screenshots pixel-identical.
+  - **RTL:** `?lang=ar` → `dir=rtl` / `lang=ar`, **zero horizontal overflow** at 390 and 1366.
+  - Banner template + `.site-header{display:contents}` present in the built `dist/` (footer JS
+    chunk + critical & global CSS bundles).
+- Full gate GREEN: `npm run lint` 0 · `npm run style` 0 · `npm test` **1240/0** · `npm run validate`
+  exit 0 (basic-a11y gate + AA contrast pass) · `npm run build` exit 0.
+
 - **Grounding findings (no change — documented for honesty):** `npm run check-links` GREEN (390
   files, all internal links resolve). `sitemap.xml` already matches its generator (`npm run build`
   leaves the tree clean). The `seo-audit` "28 pages not in sitemap" set is dominated by
