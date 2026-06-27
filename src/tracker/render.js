@@ -92,8 +92,8 @@ export function renderAll() {
   } else {
     document.title =
       _state.lang === 'ar'
-        ? 'متتبع الذهب — أسعار مباشرة'
-        : 'Gold Tracker — Live Prices | Gold Ticker Live';
+        ? 'متتبع أسعار الذهب — أسعار مرجعية'
+        : 'Gold Price Tracker — Reference Rates | Gold Ticker Live';
   }
 
   renderHero();
