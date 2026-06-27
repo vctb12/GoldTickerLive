@@ -57,27 +57,32 @@ function mapRow(row) {
  */
 export async function fetchShops() {
   try {
-    const candidates = [
-      `${SUPABASE_URL}/rest/v1/shop_listings?status=eq.active&select=*&order=sponsored.desc,featured.desc,name.asc`,
-      `${SUPABASE_URL}/rest/v1/shops?verified=eq.true&select=*&order=featured.desc,name.asc`,
-    ];
-    const baseHeaders = {
-      apikey: SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      Accept: 'application/json',
-    };
+    // Query ONLY the canonical `shop_listings` table (supabase/schema.sql). The
+    // legacy `shops` table was removed as a fallback candidate on purpose: its
+    // columns (country, is_verified, confidence_score) do not match mapRow's
+    // expectations (country_code, verified, confidence), so mapping its rows
+    // silently downgraded the curated data/shops.js directory to sparse,
+    // mis-grouped cards (empty countryCode → wrong country grouping).
+    //
+    // `shop_listings` is currently not deployed (REST returns 404 PGRST205
+    // "Could not find the table 'public.shop_listings'"). On any non-ok / empty
+    // response fetchShops returns null and the caller keeps the curated local
+    // directory — never a blank page. When the table is deployed with the
+    // canonical schema, the live upgrade resumes automatically. Only the public
+    // anon key is used (RLS-protected); no service-role key in browser code.
+    const url = `${SUPABASE_URL}/rest/v1/shop_listings?status=eq.active&select=*&order=sponsored.desc,featured.desc,name.asc`;
+    const res = await fetch(url, {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        Accept: 'application/json',
+      },
+    });
 
-    let res = null;
-    for (const url of candidates) {
-      const probe = await fetch(url, { headers: baseHeaders });
-      if (probe.ok) {
-        res = probe;
-        break;
-      }
-    }
-
-    if (!res?.ok) {
-      console.warn('[supabase-data] Fetch failed on all Supabase shop endpoints');
+    if (!res.ok) {
+      console.warn(
+        `[supabase-data] shop_listings fetch failed (HTTP ${res.status}); keeping local directory`
+      );
       return null;
     }
 
