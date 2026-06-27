@@ -1,0 +1,49 @@
+---
+description: Design feel revamp — branch boundary, ownership, and immutable guardrails for presentation-layer work. Applies to cursor/design-feel-revamp* branches.
+globs:
+  - styles/**
+  - "**/*.html"
+  - "**/*.css"
+alwaysApply: false
+---
+
+# Design Feel Revamp — Coordination & Guardrails
+
+> **Do not collide with PR #443** (`claude/elegant-cori-lyo379`). Never commit on that branch.
+
+## Branch rule
+
+- Work only on `cursor/design-feel-revamp*` (or successor branches created by the design agent).
+- Before editing, run `git diff --name-only main origin/claude/elegant-cori-lyo379` and **avoid files PR #443 has modified** when possible.
+- If `main` does not yet contain PR #443, rebase the design branch after #443 merges.
+
+## Ownership boundary (presentation layer only)
+
+**In scope:** `tokens.css`, design-token / theme CSS, component & page CSS, HTML markup/layout (structure, classes, semantic tags), fonts, icons, chart styling/theming, motion/transitions.
+
+**Out of scope — do not touch:**
+
+- `supabase/`, `*.sql`, RLS, migrations
+- Stripe / billing / checkout server logic, webhooks
+- `inject-schema.js`, JSON-LD generation, canonical/hreflang/sitemap logic
+- `.github/workflows/`, Python price-ingestion, social-posting automation
+- Express route handlers / business logic / data layer
+
+If a visual fix requires a forbidden file or logic change, **STOP** and add a proposal to `OPEN_FOR_OWNER.md` — do not implement.
+
+## Immutable guardrails
+
+1. **No SPA / framework migration.** Static multi-page + `tokens.css` only.
+2. **Frozen domain constants:** AED/USD peg **3.6725**, troy ounce **31.1035 g** — never change.
+3. **Reference vs retail prices stay visually distinct** — never merge styling.
+4. **Trust markers are features.** Freshness labels, disclaimers, methodology links must stay visible and become *more* legible — never hidden to “clean up.”
+5. **EN/AR parity mandatory.** User-visible strings via `src/config/translations.js`. RTL: logical CSS (`margin-inline`, `padding-inline`), mirrored directional icons.
+6. **Keep all tests green.** Update test selectors only when new markup is genuinely correct; flag every such change.
+7. **Accessibility:** WCAG AA contrast, visible focus, keyboard nav, `prefers-reduced-motion`, semantic HTML, alt text.
+8. **Minimal diffs.** One area per PR; no drive-by rewrites.
+
+## Workflow
+
+1. Diagnose → `DESIGN_AUDIT.md` → **wait for owner approval** before implementing.
+2. Plan area → implement smallest correct change → before/after screenshots (EN + AR, desktop + mobile) → `npm test` green → commit.
+3. Document rationale in `DESIGN_RATIONALE.md`; blockers in `OPEN_FOR_OWNER.md`.
