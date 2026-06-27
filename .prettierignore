@@ -23,6 +23,8 @@ src/data/historical-baseline.json
 # --check-capable scripts. Prettier's array-compaction fights the
 # generators' output and the files are not hand-edited.
 reports/seo/inventory.json
+reports/seo/governance.json
+reports/analytics/event-inventory.json
 reports/freshness-coverage.json
 reports/freshness-coverage.md
 

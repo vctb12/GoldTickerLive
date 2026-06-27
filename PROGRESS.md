@@ -5,6 +5,38 @@
 - **Legend:** ✅ committed (GREEN) · 🟥 staged only (RED → `OWNER_REVIEW.md`) · 🟦 GREEN staged as a
   proposal (judgment-heavy/large — plan + risk below) · ⏭️ spec only · ⤴️ out of scope for #443
 
+## 🟢 2026-06-27 S0 session (branch `claude/gold-ticker-live-overhaul-c0b6pl`)
+
+Track: **propagate the new system + harden the whole, then reconcile docs.** Baseline re-verified
+green before any change: `npm test` **1240 pass / 0 fail** (146 suites) · `npm run lint` clean ·
+`npm run style` clean · `npm run validate` exit 0 · `npm run build` exit 0. LOCKED pricing assertion
+re-verified through the real `src/lib/price-calculator.js`: `usdPerGram(4048.60, 1.0) = 130.1654` →
+`× 3.6725` = **AED/g 24K = 478.03** (divisor 31.1035, peg 3.6725 intact).
+
+**Commit 1 — generated-report + freshness-model doc truthfulness (GREEN):**
+
+- **Report staleness root-caused & fixed.** `reports/seo/governance.json` +
+  `reports/analytics/event-inventory.json` were prettier-formatted (array-compaction) while their
+  `--check` generators emit multi-line arrays, so `npm run validate` permanently printed two
+  "report is stale" warnings. Added both to `.prettierignore` (matching the sibling deterministic
+  reports already exempt there) and regenerated them in generator format. Validate now prints
+  `[seo-governance] check ok (376 pages…)` — **0 stale warnings** (was 2); still exit 0.
+- **Freshness-model docs reconciled to code.** The canonical model is `getLiveFreshness()` (6 keys:
+  `live`/`delayed`/`cached`/`stale`/`fallback`/`unavailable`) + `closed` from
+  `getFreshnessModel()`, with `STALE_AFTER_MS = 75 min` / `DELAYED_AFTER_MS = 30 min`. The stale
+  "12 min / 4 states" model survived in `docs/GOLD_TICKER_LIVE_AGENT_PROMPTS.md` (12 occurrences,
+  incl. "Locked" / "Do not change" claims that would mislead a future agent into reverting the
+  constant) and a factual error in the active plan `docs/plans/2026-06-26_tracker-html-50-phase-revamp.md`
+  (§1 table + Phase 18). All reconciled. `docs/tracker-state.md` + `README.md` were **already**
+  reconciled by the prior overhaul session — verified, left as-is.
+- **Grounding findings (no change — documented for honesty):** `npm run check-links` GREEN (390
+  files, all internal links resolve). `sitemap.xml` already matches its generator (`npm run build`
+  leaves the tree clean). The `seo-audit` "28 pages not in sitemap" set is dominated by
+  intentional/redirect/app pages and the sitemap is **test-locked** (`tests/sitemap.test.js`
+  explicitly expects `/methodology.html`) — out of scope without owner sign-off. `feed.xml` is
+  generated at deploy (`deploy.yml` → `generate-rss.js`) but is undiscoverable (no
+  `<link rel="alternate" type="application/rss+xml">`, not in `robots.txt`) — flagged as a follow-up.
+
 ## 🟢 2026-06-26 Overhaul session (branch `claude/tracker-html-revamp-bpk97i`)
 
 Separate from PR #443. Full record:
