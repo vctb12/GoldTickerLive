@@ -156,6 +156,11 @@ function hydrateStaticI18n() {
 function localizeStaticTrackerCopy() {
   document.documentElement.lang = state.lang;
   document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+  // Hydrate the head <meta name="description"> for the AR hreflang alternate
+  // (?lang=ar). render.js owns <title>; nothing else touches the meta
+  // description, so it would otherwise stay English for AR crawlers.
+  const metaDescription = document.querySelector('meta[name="description"]');
+  if (metaDescription) metaDescription.setAttribute('content', trackerTx('metaDescription'));
   hydrateStaticI18n();
 
   const trustContent = document.querySelector('.tracker-trust-content');

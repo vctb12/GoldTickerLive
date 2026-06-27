@@ -364,6 +364,8 @@ export const TRANSLATIONS = {
     'tracker.keyboard.rowPlanner': 'Open Planner panel',
     'tracker.keyboard.rowClose': 'Close open panel',
     'tracker.keyboard.rowHelp': 'Show this help',
+    'tracker.metaDescription':
+      'Spot-linked reference gold rates across UAE, Saudi, Kuwait, Qatar and 20+ markets. Compare karats 24K–14K, chart history, and export — per gram, ounce or tola. EN/AR.',
     'tracker.heroTitle': 'Gold Command Center',
     'tracker.heroSub': 'Spot-linked reference workspace',
     'tracker.heroKicker': 'Gold command center',
@@ -1676,6 +1678,8 @@ export const TRANSLATIONS = {
     'tracker.keyboard.rowPlanner': 'فتح لوحة المخطِّط',
     'tracker.keyboard.rowClose': 'إغلاق اللوحة المفتوحة',
     'tracker.keyboard.rowHelp': 'عرض هذه المساعدة',
+    'tracker.metaDescription':
+      'أسعار ذهب مرجعية مرتبطة بالسعر الفوري عبر الإمارات والسعودية والكويت وقطر وأكثر من 20 سوقاً. قارن العيارات 24–14، وتصفّح سجل الأسعار، وصدّر البيانات — لكل غرام أو أونصة أو تولة. EN/AR.',
     'tracker.heroTitle': 'مركز قيادة الذهب',
     'tracker.heroSub': 'مساحة مرجعية مرتبطة بالسعر الفوري',
     'tracker.heroKicker': 'مركز قيادة الذهب',
