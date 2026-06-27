@@ -5,6 +5,34 @@
 - **Legend:** ✅ committed (GREEN) · 🟥 staged only (RED → `OWNER_REVIEW.md`) · 🟦 GREEN staged as a
   proposal (judgment-heavy/large — plan + risk below) · ⏭️ spec only · ⤴️ out of scope for #443
 
+## 🟢 2026-06-27 Tracker design + UX rebuild (branch `claude/gold-ticker-live-overhaul-puf4va`)
+
+Resuming **Tracks B–G** of
+[`docs/plans/2026-06-26_tracker-html-50-phase-revamp.md`](docs/plans/2026-06-26_tracker-html-50-phase-revamp.md).
+One green PR per phase-cluster, baseline **1240 → 1246 tests / 0 fail**; lint + style + validate +
+build green on every commit. LOCKED pricing intact (verified
+`usdPerGram(4048.60, 24K)=130.1654 → ×3.6725 = 478.03 AED/g`; peg 3.6725; troy-oz 31.1035; 7
+karats). Freshness honesty respected (`getFreshnessModel().effectiveKey`).
+
+- **S1 visual harness** — `scripts/node/tracker-shots.mjs` captures the tracker across EN+AR ×
+  390/1366 × light/dark for paired before/after evidence (output
+  `docs/plans/_artifacts/tracker-shots/`, gitignored + regenerable). Drives every cluster below.
+- **Cluster 1 — honest price direction + AA-legible movement colours** (slices of plan Phases
+  7/8/10/17):
+  - **No default "up = green".** Day-change strip, hero-stat day-change, and karat-table change
+    cells used `delta >= 0 ? up : down`, so a rounded-to-zero change rendered as a green ▲ up-move.
+    New shared `classifyDelta(value, epsilon)` + `DIRECTION_GLYPH` (`src/tracker/_ctx.js`) add a
+    `flat` band → neutral copy (`tracker.heroChangeStripFlat`, EN+AR) and neutral `--flat` styles;
+    ▲/▼/• keep direction legible without colour alone. Guarded by `tests/tracker-direction.test.js`
+    (6).
+  - **AA on the always-dark hero.** The hero is dark in both site themes but used the light-theme
+    green (`#176832`), measured **2.58:1 (FAIL)** by pixel-sampling. Remapped movement colours on
+    `.tracker-hero-wrap` to new `--color-move-up/down-strong` tokens → measured **flat 13.68:1 / up
+    8.42:1 / down 5.65:1 (light) and ≈8–13:1 (dark) — all PASS**.
+  - **Numeric rhythm.** `tabular-nums` + `font-variant-numeric` extended to the hero readout values
+    (`#tp-readout-spot-value`, `#tp-readout-selected-value`, `.tracker-hero-readout__v`) so digits
+    don't reflow on the 90 s tick.
+
 ## 🟢 2026-06-26 Overhaul session (branch `claude/tracker-html-revamp-bpk97i`)
 
 Separate from PR #443. Full record:

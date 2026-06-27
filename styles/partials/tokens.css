@@ -52,6 +52,14 @@
   --color-move-down-bg: rgb(184 20 40 / 8%);
   --color-move-up-border: rgb(23 104 50 / 22%);
   --color-move-down-border: rgb(184 20 40 / 22%);
+
+  /* Movement colours that stay WCAG-AA legible on always-dark surfaces (the
+     tracker hero / chart terminal) regardless of the site light/dark theme.
+     The default move-up/down above are tuned for light backgrounds and fail
+     AA on a dark surface (measured 2.58:1 for #176832). These mirror the
+     dark-theme values, which pass on dark (≈8:1). */
+  --color-move-up-strong: #5dd98b;
+  --color-move-down-strong: #f87171;
   --color-up: var(--color-move-up);
   --color-down: var(--color-move-down);
   --color-up-bg: var(--color-move-up-bg);

@@ -553,6 +553,7 @@ export const TRANSLATIONS = {
     'tracker.controls.unitKg': 'kg',
     'tracker.toast.priceCopied': 'Price copied to clipboard',
     'tracker.heroChangeStrip': 'Day change · {sign} {amount} ({pct}%) vs session open',
+    'tracker.heroChangeStripFlat': 'Day change · unchanged vs session open',
     'tracker.heroChangeStripUnavailable': 'Day change · awaiting session open',
     'tracker.inlineCalcTitle': 'Quick Calculator',
     'tracker.inlineCalcSub':
@@ -1836,6 +1837,7 @@ export const TRANSLATIONS = {
     'tracker.controls.unitKg': 'كيلوغرام',
     'tracker.toast.priceCopied': 'تم نسخ السعر إلى الحافظة',
     'tracker.heroChangeStrip': 'تغير اليوم · {sign} {amount} ({pct}%) مقابل افتتاح الجلسة',
+    'tracker.heroChangeStripFlat': 'تغير اليوم · دون تغيير عن افتتاح الجلسة',
     'tracker.heroChangeStripUnavailable': 'تغير اليوم · بانتظار افتتاح الجلسة',
     'tracker.inlineCalcTitle': 'الحاسبة السريعة',
     'tracker.inlineCalcSub':
