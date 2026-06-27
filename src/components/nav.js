@@ -351,7 +351,7 @@ export function injectNav(lang = 'en', depth = 0) {
   const mobileGroupsHtml = data.groups.map((g) => buildDrawerGroup(g, depth)).join('');
 
   const html = `
-<a class="nav-skip-link" href="#main-content">${lang === 'ar' ? 'تخطي إلى المحتوى' : 'Skip to main content'}</a>
+<a class="nav-skip-link" href="#main-content">${escapeHtml(data.skipLink || 'Skip to main content')}</a>
 <header class="site-header" role="banner">
 <nav class="site-nav site-nav--premium" role="navigation" aria-label="${data.mainNav}" dir="${isRtl ? 'rtl' : 'ltr'}">
   <div class="nav-inner">

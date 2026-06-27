@@ -50,6 +50,32 @@ re-verified through the real `src/lib/price-calculator.js`: `usdPerGram(4048.60,
 - Full gate GREEN: `npm run lint` 0 · `npm run style` 0 · `npm test` **1240/0** · `npm run validate`
   exit 0 (basic-a11y gate + AA contrast pass) · `npm run build` exit 0.
 
+**Commit 3 — address PR #456 automated review (GREEN; all reviewers APPROVE/PASS/HEALTHY):**
+
+Cursor automation agents reviewed #456: Gold Integrity **APPROVE** (low risk), Bilingual **PASS**,
+SERP **HEALTHY** (no blockers). Addressed their small, in-scope findings — each completes work
+already shipped this session:
+
+- **Two residual freshness-doc bullets** my Commit-1 sweep missed (Gold Integrity, both [low]):
+  `GOLD_TICKER_LIVE_AGENT_PROMPTS.md` step 4 wrongly placed `STALE_AFTER_MS`/`FX_STALE_AFTER_MS`
+  under `src/config/constants.js` → corrected to `src/lib/live-status.js`
+  (`GOLD_MARKET.*`/`FX_MARKET.*`); and the home-hero `data-freshness-key` bullet still listed the
+  comma-form 4-state set → now the 6 canonical states (`live, delayed, cached, stale, fallback,
+  unavailable`). Verified `constants.js` does not export those thresholds.
+- **Skip-link hard-coded string** (Bilingual, charter violation in the template I touched): the nav
+  skip link used an inline `lang === 'ar' ? 'تخطي إلى المحتوى' : …` ternary. Moved it to
+  `NAV_DATA.{en,ar}.skipLink` (canonical AR `تخطّ إلى المحتوى الرئيسي`, matching
+  `tracker/home/country.skipLink` in `translations.js`) and render via `data.skipLink`. Runtime-
+  verified: EN "Skip to main content", AR "تخطّ إلى المحتوى الرئيسي".
+- **Test-lock the banner landmark** (Gold Integrity optional): new `tests/nav-banner-landmark.test.js`
+  (dependency-free, source-level — no DOM lib added) asserts exactly one `<header role="banner">`
+  wrapping `.site-nav`, `.site-header{display:contents}` in both components.css + critical.css, and
+  that the skip-link is NAV_DATA-sourced. (+3 tests → 1243 total.)
+- Full gate GREEN: lint 0 · style 0 · `npm test` **1243/0** · validate exit 0 · `i18n:leaked-scan`
+  0 leaked · build exit 0. SERP residuals (homepage "Live Gold Prices" terminology, tracker
+  brand-first title, country/city metas, orphaned `feed.xml`) are explicitly out-of-scope follow-ups
+  — left for a dedicated SEO/copy PR, not this infra/a11y PR.
+
 - **Grounding findings (no change — documented for honesty):** `npm run check-links` GREEN (390
   files, all internal links resolve). `sitemap.xml` already matches its generator (`npm run build`
   leaves the tree clean). The `seo-audit` "28 pages not in sitemap" set is dominated by

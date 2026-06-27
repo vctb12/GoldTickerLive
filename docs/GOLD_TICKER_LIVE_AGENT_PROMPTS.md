@@ -1404,8 +1404,9 @@ INSPECT FIRST
    `src/lib/price-calculator.js`, `src/lib/formatter.js`, `src/lib/freshness-pulse.js`,
    `src/lib/historical-data.js`.
 4. Read `src/config/constants.js` (`AED_PEG = 3.6725`, `TROY_OZ_GRAMS = 31.1035`,
-   `GOLD_REFRESH_MS = 90000`, `CACHE_KEYS`, `STALE_AFTER_MS = 75*60*1000`,
-   `FX_STALE_AFTER_MS = 26*60*60*1000`).
+   `GOLD_REFRESH_MS = 90000`, `CACHE_KEYS`) and `src/lib/live-status.js` for the freshness
+   thresholds (`GOLD_MARKET.DELAYED_AFTER_MS = 30*60*1000`, `GOLD_MARKET.STALE_AFTER_MS = 75*60*1000`,
+   `FX_MARKET.FX_STALE_AFTER_MS = 26*60*60*1000`).
 5. Read `src/config/karats.js` (purity values).
 6. Read `src/config/translations.js` (`tracker.*` keys, including `welcome.*`,
    `pagination.*`, `marketOpenAriaLabel`, `marketClosedAriaLabel`).
@@ -3340,8 +3341,9 @@ WORK — hero
 - Make the hero answer in one glance: "Live UAE & GCC gold prices, derived from XAU/USD spot."
   No corporate fluff, no hype, no "best price guaranteed" wording.
 - The freshness pill (`#hlc-updated`) must be visible above the fold on 360 px width. Use the
-  existing `data-freshness-key` states (`live`, `cached`, `stale`, `unavailable`) and the
-  CSS `::before` icons. Do not move the threshold (75 min; delayed at 30 min) without owner approval.
+  existing `data-freshness-key` states (`live`, `delayed`, `cached`, `stale`, `fallback`,
+  `unavailable`) and the CSS `::before` icons. Do not move the threshold (75 min; delayed at 30 min)
+  without owner approval.
 - Primary CTA → tracker. Secondary CTA → calculator. Tertiary text link → methodology.
   All three labels live in translations.
 - The hero AED + USD price card must surface its source line (e.g. "Spot · derived from
