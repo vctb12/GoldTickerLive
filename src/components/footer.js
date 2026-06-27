@@ -35,14 +35,14 @@ export function injectFooter(lang = 'en', depth = 0) {
             .map((item) => `<a href="${r(item.href)}">${escapeHtml(item.label)}</a>`)
             .join('');
           return `<div class="footer-link-section">
-            <h5 class="footer-section-heading">${escapeHtml(section.label)}</h5>
+            <h3 class="footer-section-heading">${escapeHtml(section.label)}</h3>
             ${links}
           </div>`;
         })
         .join('');
 
       return `<div class="footer-col footer-col--links">
-        <h4 class="footer-col-heading">${escapeHtml(group.label)}</h4>
+        <h2 class="footer-col-heading">${escapeHtml(group.label)}</h2>
         <p class="footer-col-note">${escapeHtml(group.description)}</p>
         ${sectionLinks}
       </div>`;

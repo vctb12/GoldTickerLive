@@ -351,7 +351,7 @@ export function injectNav(lang = 'en', depth = 0) {
   const mobileGroupsHtml = data.groups.map((g) => buildDrawerGroup(g, depth)).join('');
 
   const html = `
-<a class="nav-skip-link" href="#main-content">${escapeHtml(data.skipLink || 'Skip to main content')}</a>
+<a class="nav-skip-link" href="#main-content">${lang === 'ar' ? 'تخطي إلى المحتوى' : 'Skip to main content'}</a>
 <header class="site-header" role="banner">
 <nav class="site-nav site-nav--premium" role="navigation" aria-label="${data.mainNav}" dir="${isRtl ? 'rtl' : 'ltr'}">
   <div class="nav-inner">
@@ -498,18 +498,15 @@ export function injectNav(lang = 'en', depth = 0) {
   // Mount nav before the first child of body (or before <main>)
   const wrapper = document.createElement('div');
   wrapper.innerHTML = html.trim();
-  // Move every rendered top-level node (skip link + nav) before the anchor, in order.
+  // Move every rendered top-level node (skip link + banner header) before the anchor, in order.
   const nodes = Array.from(wrapper.children);
   const anchor = document.querySelector('main') || document.body.firstElementChild;
   for (const n of nodes) document.body.insertBefore(n, anchor);
-  // The nav now lives inside a <header role="banner"> landmark wrapper, so look
-  // both at the top-level nodes and one level inside them.
+  // The <nav> now lives inside the <header class="site-header" role="banner"> wrapper.
+  const headerEl = nodes.find((n) => n.matches && n.matches('header.site-header'));
   const navEl =
+    (headerEl && headerEl.querySelector('nav.site-nav')) ||
     nodes.find((n) => n.matches && n.matches('nav.site-nav')) ||
-    nodes.reduce(
-      (found, n) => found || (n.querySelector ? n.querySelector('nav.site-nav') : null),
-      null
-    ) ||
     nodes[nodes.length - 1];
   applyPageShell(navEl);
 
