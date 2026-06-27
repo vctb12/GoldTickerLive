@@ -319,6 +319,17 @@ body.tracker-pro-page {
   background: var(--gradient-hero-dark);
   padding: var(--space-8) 0 var(--space-7);
   isolation: isolate;
+
+  /* The hero is always dark (midnight gold), independent of the site theme.
+     Re-map the movement colours to the dark-surface-legible variants so the
+     day-change strip and any up/down cue inside the hero keep WCAG AA — the
+     light-theme defaults fail here (measured 2.58:1 → fixed to ≈8:1). */
+  --color-move-up: var(--color-move-up-strong);
+  --color-move-down: var(--color-move-down-strong);
+  --color-move-up-bg: color-mix(in srgb, var(--color-move-up-strong) 12%, transparent);
+  --color-move-down-bg: color-mix(in srgb, var(--color-move-down-strong) 12%, transparent);
+  --color-move-up-border: color-mix(in srgb, var(--color-move-up-strong) 28%, transparent);
+  --color-move-down-border: color-mix(in srgb, var(--color-move-down-strong) 28%, transparent);
 }
 
 /* Subtle mesh texture overlay */
@@ -2035,6 +2046,14 @@ td.tracker-chg-up {
 
 td.tracker-chg-down {
   color: var(--color-error, #c94040);
+}
+
+/* Flat / no-change karat row — neutral, never green. */
+td.tracker-chg-flat {
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--tp-text-muted);
 }
 
 .tracker-table-footer {
@@ -4104,7 +4123,10 @@ td.tracker-chg-down {
 /* ── Session 5: terminal polish ───────────────────────────────── */
 .tracker-tabular-nums,
 .tracker-hero-v,
+.tracker-hero-readout__v,
 .tracker-karat-table td[data-karat-price],
+#tp-readout-spot-value,
+#tp-readout-selected-value,
 #tp-mobile-price-value,
 #tp-xauusd-value {
   font-family: var(--font-numeric);
@@ -4140,6 +4162,14 @@ td.tracker-chg-down {
   background: var(--color-move-down-bg);
   color: var(--color-move-down);
   border: 1px solid var(--color-move-down-border);
+}
+
+/* Flat / no-change: neutral, never green. Lives on the dark hero, so the
+   muted hero ink keeps it legible without implying an up-move. */
+.tracker-price-change-strip--flat {
+  background: color-mix(in srgb, var(--tp-hero-muted) 10%, transparent);
+  color: var(--tp-hero-text);
+  border: 1px solid color-mix(in srgb, var(--tp-hero-muted) 24%, transparent);
 }
 
 .tracker-badge-market.tracker-badge--open::before,

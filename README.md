@@ -306,10 +306,10 @@ template ships in repo root.
 | 🇯🇴 Jordan       | [`/countries/jordan/`](https://goldtickerlive.com/countries/jordan/)             | Amman, Irbid, Zarqa                                  |
 | 🇱🇧 Lebanon      | [`/countries/lebanon/`](https://goldtickerlive.com/countries/lebanon/)           | Beirut, Tripoli, Sidon                               |
 | 🇲🇦 Morocco      | [`/countries/morocco/`](https://goldtickerlive.com/countries/morocco/)           | Casablanca, Rabat, Marrakech                         |
-| 🇹🇳 Tunisia      | [`/countries/tunisia.html`](https://goldtickerlive.com/countries/tunisia.html)   | Tunis, Sfax, Sousse                                  |
-| 🇩🇿 Algeria      | [`/countries/algeria.html`](https://goldtickerlive.com/countries/algeria.html)   | Algiers, Oran, Constantine                           |
-| 🇱🇾 Libya        | [`/countries/libya.html`](https://goldtickerlive.com/countries/libya.html)       | Tripoli, Benghazi, Misrata                           |
-| 🇸🇩 Sudan        | [`/countries/sudan.html`](https://goldtickerlive.com/countries/sudan.html)       | Khartoum, Omdurman, Port Sudan                       |
+| 🇹🇳 Tunisia      | [`/countries/tunisia/`](https://goldtickerlive.com/countries/tunisia/)           | Tunis, Sfax, Sousse                                  |
+| 🇩🇿 Algeria      | [`/countries/algeria/`](https://goldtickerlive.com/countries/algeria/)           | Algiers, Oran, Constantine                           |
+| 🇱🇾 Libya        | [`/countries/libya/`](https://goldtickerlive.com/countries/libya/)               | Tripoli, Benghazi, Misrata                           |
+| 🇸🇩 Sudan        | [`/countries/sudan/`](https://goldtickerlive.com/countries/sudan/)               | Khartoum, Omdurman, Port Sudan                       |
 | 🇮🇳 India        | [`/countries/india/`](https://goldtickerlive.com/countries/india/)               | Mumbai, Delhi, Chennai                               |
 
 ---

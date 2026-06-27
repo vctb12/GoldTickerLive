@@ -1,9 +1,73 @@
 # Gold Ticker Live — Revamp Progress (PR #443)
 
+## 🛠 2026-06-27 Defect-closure session (branch `claude/gold-ticker-defects-ia4fgz`)
+
+Baseline at start: **1240 tests / 0 fail**, lint + style + validate + build green. Held green on
+every commit; **end state 1249 / 0** (+9 regression guards). LOCKED pricing/freshness untouched; the
+live-URL set (sitemap, 212 URLs) is byte-identical before and after every commit. One commit per
+defect. Accessible-name/landmark claims verified with a Playwright "S1 harness" (DOM accessible-name
+computation + `getByRole` landmark probe) against the built `dist/` and raw source.
+
+| ID  | Status     | Root cause                                                                                                                                                                                               | Fix                                                                                                                                                   | Evidence                                                                                                                          |
+| --- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| D1  | ✅ Fixed   | Country pages live at `/countries/<slug>/`; nav/breadcrumbs already directory-form, but README had 4 `.html` stragglers and `.htaccess` lacked the `.html`→`/` redirects `_redirects` already had        | README → directory form; added the 21-slug `/countries/<slug>.html`→`/countries/<slug>/` 301 block to `.htaccess`                                     | `npm run check-links` green (390 files); sitemap 212 unchanged                                                                    |
+| D5  | ✅ Guarded | Dead `X-Frame-Options` `<meta>` (no-op; real header is in `_headers`/`.htaccess`) already swept to **0** site-wide, but no regression guard existed                                                      | `tests/security-meta-guard.test.js` — walks all public HTML, fails if a dead XFO meta returns                                                         | guard passes clean; fails when a meta is injected; tests 1240→1241                                                                |
+| D6  | ✅ Fixed   | Shared footer used `<h4>`/`<h5>` → `h2→h4` skipped level on every page; masthead `<nav>` had no banner landmark; (tracker `<h1>` run-on already fixed on main)                                           | footer `h4/h5`→`h2/h3`; wrapped nav in `<header class="site-header" role="banner">` with `.site-header{display:contents}` (keeps sticky)              | S1 harness on home/tracker/country: h1=1, banner present (`getByRole('banner')=1`), **0 skips**; sticky pinned at scroll 0 & 2000 |
+| D2  | ✅ Fixed   | `offline.html` (SW fallback served for **arbitrary** URLs) linked `favicon.svg`/`critical.css`/`global.css` **relatively** → broke from `/countries/…`                                                   | made the 4 refs root-absolute (analytics was already `/assets/…`); `tests/fallback-page-asset-paths.test.js` guard                                    | guard test-the-test (pass clean / fail on injected relative); 404.html already clean                                              |
+| D3  | ✅ Fixed   | `shop_listings` **404** (table not deployed — PGRST205); legacy `shops` fallback returns a **mismatched schema** (`country`/`is_verified`) → `mapRow` mangled it → curated directory silently downgraded | query **only** the canonical `shop_listings`; on 404/empty keep curated `data/shops.js` (never blank); **anon key only**, no service-role             | live anon probe: `shop_listings`=404, `shops`=200-mismatched; tests +2 (canonical-only, no service-role ref)                      |
+| D7  | 📋 Filed   | Imagery ~100% CSS/SVG (0 `<img>`, 0 `<picture>`); no content image assets; optimised delivery is staged **Phase 13**                                                                                     | [`docs/plans/2026-06-27_d7-imagery-plan.md`](docs/plans/2026-06-27_d7-imagery-plan.md) — `<img>` contract + candidate surfaces + staging              | grep: 0 `<img>` / 0 `<picture>`; validate basic-a11y "0 images"                                                                   |
+| D9  | 📋 Filed   | Homepage Cairo at 5 weights × {arabic, latin, latin-ext} = **15 woff2** + `local()` ≈ **16 faces**; `latin-ext` unused; self-host/subset is staged **Phase 11**                                          | [`docs/plans/2026-06-27_d9-fonts-plan.md`](docs/plans/2026-06-27_d9-fonts-plan.md) — drop latin-ext, trim weights, self-host subset, preload one face | fetched Cairo css2 → 15 `@font-face` blocks; `display=swap`/preconnect already present                                            |
+
+Discovered (out of D1 scope, not a live 404): 69 city pages link `../../../../styles/global.css`
+(one `../` too many); browsers clamp `../` at root so it resolves to `/styles/global.css` in
+production — latent, fix as a follow-up.
+
 - **Branch:** `claude/elegant-cori-lyo379` · **PR:** vctb12/GoldTickerLive#443
 - **Baseline:** 1081 tests passing, 0 failing — held green on every committed phase.
 - **Legend:** ✅ committed (GREEN) · 🟥 staged only (RED → `OWNER_REVIEW.md`) · 🟦 GREEN staged as a
   proposal (judgment-heavy/large — plan + risk below) · ⏭️ spec only · ⤴️ out of scope for #443
+
+## 🟢 2026-06-27 Tracker design + UX rebuild (branch `claude/gold-ticker-live-overhaul-puf4va`)
+
+Resuming **Tracks B–G** of
+[`docs/plans/2026-06-26_tracker-html-50-phase-revamp.md`](docs/plans/2026-06-26_tracker-html-50-phase-revamp.md).
+One green PR per phase-cluster, baseline **1240 → 1246 tests / 0 fail**; lint + style + validate +
+build green on every commit. LOCKED pricing intact (verified
+`usdPerGram(4048.60, 24K)=130.1654 → ×3.6725 = 478.03 AED/g`; peg 3.6725; troy-oz 31.1035; 7
+karats). Freshness honesty respected (`getFreshnessModel().effectiveKey`).
+
+- **S1 visual harness** — `scripts/node/tracker-shots.mjs` captures the tracker across EN+AR ×
+  390/1366 × light/dark for paired before/after evidence (output
+  `docs/plans/_artifacts/tracker-shots/`, gitignored + regenerable). Drives every cluster below.
+- **Cluster 1 — honest price direction + AA-legible movement colours** (slices of plan Phases
+  7/8/10/17):
+  - **No default "up = green".** Day-change strip, hero-stat day-change, and karat-table change
+    cells used `delta >= 0 ? up : down`, so a rounded-to-zero change rendered as a green ▲ up-move.
+    New shared `classifyDelta(value, epsilon)` + `DIRECTION_GLYPH` (`src/tracker/_ctx.js`) add a
+    `flat` band → neutral copy (`tracker.heroChangeStripFlat`, EN+AR) and neutral `--flat` styles;
+    ▲/▼/• keep direction legible without colour alone. Guarded by `tests/tracker-direction.test.js`
+    (6).
+  - **AA on the always-dark hero.** The hero is dark in both site themes but used the light-theme
+    green (`#176832`), measured **2.58:1 (FAIL)** by pixel-sampling. Remapped movement colours on
+    `.tracker-hero-wrap` to new `--color-move-up/down-strong` tokens → measured **flat 13.68:1 / up
+    8.42:1 / down 5.65:1 (light) and ≈8–13:1 (dark) — all PASS**.
+  - **Numeric rhythm.** `tabular-nums` + `font-variant-numeric` extended to the hero readout values
+    (`#tp-readout-spot-value`, `#tp-readout-selected-value`, `.tracker-hero-readout__v`) so digits
+    don't reflow on the 90 s tick.
+  - **Review follow-up (PR #458, Gold Integrity Agent):** unified the day-change direction basis —
+    the strip classified on dollar amount while hero-stat + karat cells used percent, so a sub-0.01%
+    move could read ▲ in the strip and • flat beside it. All three now classify on percent; added a
+    `flat` hero-stat string (`heroStatDayChangeFlat`, EN+AR), harmonized the AR
+    `heroChangeStripFlat` preposition to `مقابل`, and added a cross-surface guard test.
+- **Cluster 2 — clear loading skeleton when content arrives** (slice of plan Phase 15):
+  - The hero badge row (`#tp-xauusd-value`, `#tp-live-badge-text`, `#tp-refresh-badge`) and the five
+    mobile-dock readouts carried the `skeleton-inline` shimmer + `shell-skeleton-*` size classes on
+    themselves; the render path set their text but never removed the classes, so the shimmer sat
+    behind the value (a leftover light box) and pinned the element to the skeleton's fixed size.
+  - Extended the unused `clearSkeletonBusy` into `clearSkeleton` (`src/components/skeleton.js`) — it
+    now strips `skeleton-inline` + `shell-skeleton-*` + `aria-busy` while preserving layout/state
+    classes — and wired it into `renderHero` for all eight self-skeleton nodes. Guarded by
+    `tests/tracker-skeleton.test.js` (3). Before/after captured via the S1 harness.
 
 ## 🟢 2026-06-26 Overhaul session (branch `claude/tracker-html-revamp-bpk97i`)
 

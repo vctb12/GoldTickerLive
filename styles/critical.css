@@ -104,6 +104,12 @@ a {
   min-height: 64px;
 }
 
+/* Banner landmark wrapper generates no box — nav keeps <body> as its sticky
+   containing block (see styles/partials/components.css). */
+.site-header {
+  display: contents;
+}
+
 .skip-link {
   position: absolute;
   left: -10000px;
