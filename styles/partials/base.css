@@ -445,13 +445,7 @@
    The OS-dark first-paint fallback now lives in tokens.css under
    @media (prefers-color-scheme: dark) :root:not([data-theme]). */
 
-/* Font loading optimization to reduce layout shift */
-@font-face {
-  font-family: 'Cairo';
-  font-display: swap;
-  font-weight: 400 800;
-  src: local('Cairo');
-}
+/* Fonts load from styles/partials/fonts.css (self-hosted Source Sans 3 + Cairo). */
 
 /* ═══════════════════════════════════════════════
    Reset & Base
@@ -765,12 +759,18 @@ svg {
   display: block;
 }
 
-/* Tabular numerics for all price/rate values */
+/* Tabular lining figures for all price/rate values */
 .price,
 [data-price],
 .rate,
-[data-rate] {
-  font-variant-numeric: tabular-nums;
+[data-rate],
+[data-testid='gold-price'],
+.cp-price-value,
+.hlc-price,
+.order-price-badge {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: var(--font-feature-tabular);
 }
 
 /* ── Keyboard accessibility baseline ── */

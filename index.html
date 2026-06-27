@@ -65,18 +65,14 @@
 
     <!-- DNS Prefetch -->
     <link rel="dns-prefetch" href="https://open.er-api.com" />
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+
+    <!-- Self-hosted fonts (Area A) — preload critical subsets -->
+    <link rel="preload" href="assets/fonts/source-sans-3/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="assets/fonts/cairo/cairo-arabic.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Critical Preloads -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://open.er-api.com" />
     <link rel="preload" as="style" href="styles/critical.css" />
-    <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
-    />
     <link rel="preload" as="style" href="styles/global.css" />
     <link rel="preload" as="style" href="styles/pages/home.css" />
     <link rel="modulepreload" href="src/pages/home.js" />
@@ -86,12 +82,6 @@
 
     <!-- Resource Hints for Prefetching -->
     <link rel="prefetch" href="countries/index.html" as="document" />
-
-    <!-- Fonts with font-display: swap for faster FCP -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
 
     <!-- Critical CSS (inlined file to improve FCP) -->
     <link rel="stylesheet" href="styles/critical.css" />

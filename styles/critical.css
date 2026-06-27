@@ -8,7 +8,7 @@
   /* Matches base.css link colour (--color-gold-dark) so above-fold links clear
      WCAG AA during the render-blocking window and don't shift when base.css loads. */
   --tp-accent: #7e5912;
-  --tp-font-sans: 'Cairo', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  --tp-font-sans: 'Source Sans 3', 'Cairo', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* Dark first-paint tokens — mirror tokens.css so dark-mode / OS-dark users do not
