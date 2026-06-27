@@ -27,84 +27,47 @@ production — latent, fix as a follow-up.
 - **Legend:** ✅ committed (GREEN) · 🟥 staged only (RED → `OWNER_REVIEW.md`) · 🟦 GREEN staged as a
   proposal (judgment-heavy/large — plan + risk below) · ⏭️ spec only · ⤴️ out of scope for #443
 
-## 🟢 2026-06-27 S0 session (branch `claude/gold-ticker-live-overhaul-c0b6pl`)
+## 🟢 2026-06-27 Tracker design + UX rebuild (branch `claude/gold-ticker-live-overhaul-puf4va`)
 
-Track: **propagate the new system + harden the whole, then reconcile docs.** Baseline re-verified
-green before any change: `npm test` **1240 pass / 0 fail** (146 suites) · `npm run lint` clean ·
-`npm run style` clean · `npm run validate` exit 0 · `npm run build` exit 0. LOCKED pricing assertion
-re-verified through the real `src/lib/price-calculator.js`: `usdPerGram(4048.60, 1.0) = 130.1654` →
-`× 3.6725` = **AED/g 24K = 478.03** (divisor 31.1035, peg 3.6725 intact).
+Resuming **Tracks B–G** of
+[`docs/plans/2026-06-26_tracker-html-50-phase-revamp.md`](docs/plans/2026-06-26_tracker-html-50-phase-revamp.md).
+One green PR per phase-cluster, baseline **1240 → 1246 tests / 0 fail**; lint + style + validate +
+build green on every commit. LOCKED pricing intact (verified
+`usdPerGram(4048.60, 24K)=130.1654 → ×3.6725 = 478.03 AED/g`; peg 3.6725; troy-oz 31.1035; 7
+karats). Freshness honesty respected (`getFreshnessModel().effectiveKey`).
 
-**Commit 1 — generated-report + freshness-model doc truthfulness (GREEN):**
-
-- **Report staleness root-caused & fixed.** `reports/seo/governance.json` +
-  `reports/analytics/event-inventory.json` were prettier-formatted (array-compaction) while their
-  `--check` generators emit multi-line arrays, so `npm run validate` permanently printed two
-  "report is stale" warnings. Added both to `.prettierignore` (matching the sibling deterministic
-  reports already exempt there) and regenerated them in generator format. Validate now prints
-  `[seo-governance] check ok (376 pages…)` — **0 stale warnings** (was 2); still exit 0.
-- **Freshness-model docs reconciled to code.** The canonical model is `getLiveFreshness()` (6 keys:
-  `live`/`delayed`/`cached`/`stale`/`fallback`/`unavailable`) + `closed` from
-  `getFreshnessModel()`, with `STALE_AFTER_MS = 75 min` / `DELAYED_AFTER_MS = 30 min`. The stale
-  "12 min / 4 states" model survived in `docs/GOLD_TICKER_LIVE_AGENT_PROMPTS.md` (12 occurrences,
-  incl. "Locked" / "Do not change" claims that would mislead a future agent into reverting the
-  constant) and a factual error in the active plan `docs/plans/2026-06-26_tracker-html-50-phase-revamp.md`
-  (§1 table + Phase 18). All reconciled. `docs/tracker-state.md` + `README.md` were **already**
-  reconciled by the prior overhaul session — verified, left as-is.
-**Commit 2 — site-wide `<header role="banner">` landmark (GREEN; design-system / a11y propagation):**
-
-- The JS-injected nav (`src/components/nav.js`, universal via `site-shell` / `content-page-boot` /
-  `page-hydrator` / per-page boots) rendered a `<nav role="navigation">` but **no banner
-  landmark** — only 1 of 11 root pages had any `<header>`. Wrapped the nav in
-  `<header class="site-header" role="banner">` and added `.site-header { display: contents }`
-  (`components.css` + `critical.css`) so the wrapper generates no box — the sticky nav keeps
-  `<body>` as its containing block. Updated the `navEl` lookup in nav.js to find the nav inside the
-  wrapper (so `applyPageShell` still tags it).
-- **Verified with Playwright (chromium) against the dev server, before→after:**
-  - `getByRole('banner')` = **1** on home/shops/tracker/calculator/methodology (was 0); each page
-    now has `banner > navigation` + `main`. `display:contents` does **not** strip the landmark.
-  - **Zero layout shift:** nav `getBoundingClientRect().top` identical before vs after
-    (home 51.4/53 px, calculator 92.7/105.1 px @ 390/1366); nav stays `position:sticky` and pins on
-    scroll. Desktop before/after screenshots pixel-identical.
-  - **RTL:** `?lang=ar` → `dir=rtl` / `lang=ar`, **zero horizontal overflow** at 390 and 1366.
-  - Banner template + `.site-header{display:contents}` present in the built `dist/` (footer JS
-    chunk + critical & global CSS bundles).
-- Full gate GREEN: `npm run lint` 0 · `npm run style` 0 · `npm test` **1240/0** · `npm run validate`
-  exit 0 (basic-a11y gate + AA contrast pass) · `npm run build` exit 0.
-
-**Commit 3 — address PR #456 automated review (GREEN; all reviewers APPROVE/PASS/HEALTHY):**
-
-Cursor automation agents reviewed #456: Gold Integrity **APPROVE** (low risk), Bilingual **PASS**,
-SERP **HEALTHY** (no blockers). Addressed their small, in-scope findings — each completes work
-already shipped this session:
-
-- **Two residual freshness-doc bullets** my Commit-1 sweep missed (Gold Integrity, both [low]):
-  `GOLD_TICKER_LIVE_AGENT_PROMPTS.md` step 4 wrongly placed `STALE_AFTER_MS`/`FX_STALE_AFTER_MS`
-  under `src/config/constants.js` → corrected to `src/lib/live-status.js`
-  (`GOLD_MARKET.*`/`FX_MARKET.*`); and the home-hero `data-freshness-key` bullet still listed the
-  comma-form 4-state set → now the 6 canonical states (`live, delayed, cached, stale, fallback,
-  unavailable`). Verified `constants.js` does not export those thresholds.
-- **Skip-link hard-coded string** (Bilingual, charter violation in the template I touched): the nav
-  skip link used an inline `lang === 'ar' ? 'تخطي إلى المحتوى' : …` ternary. Moved it to
-  `NAV_DATA.{en,ar}.skipLink` (canonical AR `تخطّ إلى المحتوى الرئيسي`, matching
-  `tracker/home/country.skipLink` in `translations.js`) and render via `data.skipLink`. Runtime-
-  verified: EN "Skip to main content", AR "تخطّ إلى المحتوى الرئيسي".
-- **Test-lock the banner landmark** (Gold Integrity optional): new `tests/nav-banner-landmark.test.js`
-  (dependency-free, source-level — no DOM lib added) asserts exactly one `<header role="banner">`
-  wrapping `.site-nav`, `.site-header{display:contents}` in both components.css + critical.css, and
-  that the skip-link is NAV_DATA-sourced. (+3 tests → 1243 total.)
-- Full gate GREEN: lint 0 · style 0 · `npm test` **1243/0** · validate exit 0 · `i18n:leaked-scan`
-  0 leaked · build exit 0. SERP residuals (homepage "Live Gold Prices" terminology, tracker
-  brand-first title, country/city metas, orphaned `feed.xml`) are explicitly out-of-scope follow-ups
-  — left for a dedicated SEO/copy PR, not this infra/a11y PR.
-
-- **Grounding findings (no change — documented for honesty):** `npm run check-links` GREEN (390
-  files, all internal links resolve). `sitemap.xml` already matches its generator (`npm run build`
-  leaves the tree clean). The `seo-audit` "28 pages not in sitemap" set is dominated by
-  intentional/redirect/app pages and the sitemap is **test-locked** (`tests/sitemap.test.js`
-  explicitly expects `/methodology.html`) — out of scope without owner sign-off. `feed.xml` is
-  generated at deploy (`deploy.yml` → `generate-rss.js`) but is undiscoverable (no
-  `<link rel="alternate" type="application/rss+xml">`, not in `robots.txt`) — flagged as a follow-up.
+- **S1 visual harness** — `scripts/node/tracker-shots.mjs` captures the tracker across EN+AR ×
+  390/1366 × light/dark for paired before/after evidence (output
+  `docs/plans/_artifacts/tracker-shots/`, gitignored + regenerable). Drives every cluster below.
+- **Cluster 1 — honest price direction + AA-legible movement colours** (slices of plan Phases
+  7/8/10/17):
+  - **No default "up = green".** Day-change strip, hero-stat day-change, and karat-table change
+    cells used `delta >= 0 ? up : down`, so a rounded-to-zero change rendered as a green ▲ up-move.
+    New shared `classifyDelta(value, epsilon)` + `DIRECTION_GLYPH` (`src/tracker/_ctx.js`) add a
+    `flat` band → neutral copy (`tracker.heroChangeStripFlat`, EN+AR) and neutral `--flat` styles;
+    ▲/▼/• keep direction legible without colour alone. Guarded by `tests/tracker-direction.test.js`
+    (6).
+  - **AA on the always-dark hero.** The hero is dark in both site themes but used the light-theme
+    green (`#176832`), measured **2.58:1 (FAIL)** by pixel-sampling. Remapped movement colours on
+    `.tracker-hero-wrap` to new `--color-move-up/down-strong` tokens → measured **flat 13.68:1 / up
+    8.42:1 / down 5.65:1 (light) and ≈8–13:1 (dark) — all PASS**.
+  - **Numeric rhythm.** `tabular-nums` + `font-variant-numeric` extended to the hero readout values
+    (`#tp-readout-spot-value`, `#tp-readout-selected-value`, `.tracker-hero-readout__v`) so digits
+    don't reflow on the 90 s tick.
+  - **Review follow-up (PR #458, Gold Integrity Agent):** unified the day-change direction basis —
+    the strip classified on dollar amount while hero-stat + karat cells used percent, so a sub-0.01%
+    move could read ▲ in the strip and • flat beside it. All three now classify on percent; added a
+    `flat` hero-stat string (`heroStatDayChangeFlat`, EN+AR), harmonized the AR
+    `heroChangeStripFlat` preposition to `مقابل`, and added a cross-surface guard test.
+- **Cluster 2 — clear loading skeleton when content arrives** (slice of plan Phase 15):
+  - The hero badge row (`#tp-xauusd-value`, `#tp-live-badge-text`, `#tp-refresh-badge`) and the five
+    mobile-dock readouts carried the `skeleton-inline` shimmer + `shell-skeleton-*` size classes on
+    themselves; the render path set their text but never removed the classes, so the shimmer sat
+    behind the value (a leftover light box) and pinned the element to the skeleton's fixed size.
+  - Extended the unused `clearSkeletonBusy` into `clearSkeleton` (`src/components/skeleton.js`) — it
+    now strips `skeleton-inline` + `shell-skeleton-*` + `aria-busy` while preserving layout/state
+    classes — and wired it into `renderHero` for all eight self-skeleton nodes. Guarded by
+    `tests/tracker-skeleton.test.js` (3). Before/after captured via the S1 harness.
 
 ## 🟢 2026-06-26 Overhaul session (branch `claude/tracker-html-revamp-bpk97i`)
 

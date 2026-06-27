@@ -1,8 +1,23 @@
 // tracker/hero.js — tracker hero, mini strip, and karat table rendering
 import { CONSTANTS, KARATS, COUNTRIES } from '../config/index.js';
-import { _state, _el, _priceFor, _currentSpot, tx, formatUsd, formatUnitLabel } from './_ctx.js';
+import {
+  _state,
+  _el,
+  _priceFor,
+  _currentSpot,
+  tx,
+  formatUsd,
+  formatUnitLabel,
+  classifyDelta,
+  DIRECTION_GLYPH,
+} from './_ctx.js';
 import { clear, el, setText } from '../lib/safe-dom.js';
-import { mountSkeleton, skeletonNode, skeletonTableRow } from '../components/skeleton.js';
+import {
+  mountSkeleton,
+  skeletonNode,
+  skeletonTableRow,
+  clearSkeleton,
+} from '../components/skeleton.js';
 import { getMarketStatus } from '../lib/live-status.js';
 import { countUp } from '../lib/count-up.js';
 import { pulseFreshness } from '../lib/freshness-pulse.js';
@@ -27,17 +42,28 @@ function renderPriceChangeStrip(spot, dayOpenSpot) {
   }
   const delta = spot - dayOpenSpot;
   const pct = (delta / dayOpenSpot) * 100;
-  const isUp = delta >= 0;
+  // Classify on percent so the strip agrees with the hero stat + karat-table
+  // change cells (all percent-based). Classifying the strip on the dollar amount
+  // let a sub-0.01% move read as ▲ here but • flat next to it.
+  const dir = classifyDelta(pct);
   strip.hidden = false;
-  strip.classList.remove('tracker-price-change-strip--up', 'tracker-price-change-strip--down');
-  strip.classList.add(isUp ? 'tracker-price-change-strip--up' : 'tracker-price-change-strip--down');
+  strip.classList.remove(
+    'tracker-price-change-strip--up',
+    'tracker-price-change-strip--down',
+    'tracker-price-change-strip--flat'
+  );
+  strip.classList.add(`tracker-price-change-strip--${dir}`);
   strip.setAttribute('role', 'status');
   strip.setAttribute('aria-live', 'polite');
-  const sign = isUp ? '+' : '−';
+  if (dir === 'flat') {
+    setText(strip, tx('heroChangeStripFlat'));
+    return;
+  }
+  const sign = dir === 'up' ? '+' : '−';
   setText(
     strip,
     tx('heroChangeStrip', {
-      sign: isUp ? '▲' : '▼',
+      sign: DIRECTION_GLYPH[dir],
       amount: `${sign}$${Math.abs(delta).toFixed(2)}`,
       pct: Math.abs(pct).toFixed(2),
     })
@@ -72,6 +98,12 @@ export function renderHero() {
     : freshness;
 
   if (summaryHeading) setText(summaryHeading, tx('liveDeskTitle'));
+
+  // These badge-row nodes carry the skeleton classes on themselves and receive
+  // real text (or '—') below; clear the placeholder so the shimmer doesn't sit
+  // behind the value and pin its size. (xauUsdValue re-mounts a child skeleton
+  // in its own loading branch.)
+  [_el.liveBadgeText, _el.refreshBadge, sourceStateBadge].forEach(clearSkeleton);
 
   if (liveBadge) {
     liveBadge.classList.remove(...TRACKER_BADGE_CLASSES);
@@ -113,13 +145,12 @@ export function renderHero() {
 
   if (_el.xauUsdValue) {
     if (spot) {
-      const prevSpot = parseFloat(String(_el.xauUsdValue.textContent || '').replace(/[^0-9.-]/g, ''));
+      clearSkeleton(_el.xauUsdValue);
+      const prevSpot = parseFloat(
+        String(_el.xauUsdValue.textContent || '').replace(/[^0-9.-]/g, '')
+      );
       const direction =
-        Number.isFinite(prevSpot) && prevSpot !== spot
-          ? spot > prevSpot
-            ? 'up'
-            : 'down'
-          : null;
+        Number.isFinite(prevSpot) && prevSpot !== spot ? (spot > prevSpot ? 'up' : 'down') : null;
 
       animatePrice(_el.xauUsdValue, spot, {
         decimals: 2,
@@ -142,6 +173,7 @@ export function renderHero() {
         tickFreshnessPill(liveBadge);
       }
     } else if (_state.hasLiveFailure) {
+      clearSkeleton(_el.xauUsdValue);
       setText(_el.xauUsdValue, '—');
     } else {
       mountSkeleton(_el.xauUsdValue, 'priceLg');
@@ -218,8 +250,12 @@ export function renderHero() {
     let spotSubText = tx('heroStatSpotSub', { source: freshness.sourceLabel });
     if (dayOpenSpot && dayOpenSpot > 0) {
       const pct = ((spot - dayOpenSpot) / dayOpenSpot) * 100;
-      const sign = pct >= 0 ? '▲' : '▼';
-      spotSubText = `${tx('heroStatSpotSub', { source: freshness.sourceLabel })} ${tx('heroStatDayChange', { sign, pct: Math.abs(pct).toFixed(2) })}`;
+      const dir = classifyDelta(pct); // classify on the displayed percent
+      const dayChangeText =
+        dir === 'flat'
+          ? tx('heroStatDayChangeFlat')
+          : tx('heroStatDayChange', { sign: DIRECTION_GLYPH[dir], pct: Math.abs(pct).toFixed(2) });
+      spotSubText = `${tx('heroStatSpotSub', { source: freshness.sourceLabel })} ${dayChangeText}`;
     }
 
     const statDefs = [
@@ -251,11 +287,19 @@ export function renderHero() {
     if (isFirst) {
       clear(_el.heroStats);
       statDefs.forEach((def) => {
-        const card = el('div', { class: 'tracker-hero-stat card-interactive', 'data-stat-key': def.key }, [
-          el('div', { class: 'tracker-hero-k' }, def.label),
-          el('div', { class: 'tracker-hero-v tracker-tabular-nums', 'data-stat-value': def.key }, '—'),
-          el('div', { class: 'tracker-hero-s', 'data-stat-sub': def.key }, def.sub),
-        ]);
+        const card = el(
+          'div',
+          { class: 'tracker-hero-stat card-interactive', 'data-stat-key': def.key },
+          [
+            el('div', { class: 'tracker-hero-k' }, def.label),
+            el(
+              'div',
+              { class: 'tracker-hero-v tracker-tabular-nums', 'data-stat-value': def.key },
+              '—'
+            ),
+            el('div', { class: 'tracker-hero-s', 'data-stat-sub': def.key }, def.sub),
+          ]
+        );
         _el.heroStats.append(card);
       });
     } else {
@@ -285,11 +329,15 @@ export function renderHero() {
     const labels = ['XAU/USD', 'UAE 24K', 'UAE 22K', 'USD/g 24K'];
     labels.forEach((label) => {
       _el.heroStats.append(
-        el('div', { class: 'tracker-hero-stat tracker-hero-stat--skeleton', 'aria-hidden': 'true' }, [
-          el('div', { class: 'tracker-hero-k' }, label),
-          el('div', { class: 'tracker-hero-v' }, [skeletonNode('priceMd', { block: true })]),
-          el('div', { class: 'tracker-hero-s' }, [skeletonNode('freshnessStrip')]),
-        ])
+        el(
+          'div',
+          { class: 'tracker-hero-stat tracker-hero-stat--skeleton', 'aria-hidden': 'true' },
+          [
+            el('div', { class: 'tracker-hero-k' }, label),
+            el('div', { class: 'tracker-hero-v' }, [skeletonNode('priceMd', { block: true })]),
+            el('div', { class: 'tracker-hero-s' }, [skeletonNode('freshnessStrip')]),
+          ]
+        )
       );
     });
   }
@@ -319,6 +367,16 @@ export function renderHero() {
 
     _el.summaryList.append(...summaryItems);
   }
+
+  // Mobile-dock readouts also carry self-skeleton classes; clear them so values
+  // render without the leftover shimmer/size box.
+  [
+    'tp-mobile-summary-status',
+    'tp-mobile-selected-value',
+    'tp-mobile-price-value',
+    'tp-mobile-spot-value',
+    'tp-mobile-updated-value',
+  ].forEach((id) => clearSkeleton(document.getElementById(id)));
 
   const selectedCountry = COUNTRIES.find((country) => country.currency === _state.selectedCurrency);
   const selectedLabel = selectedCountry
@@ -452,13 +510,13 @@ export function renderKaratTable() {
     });
     if (!now || !open) return el('td', { 'data-karat-chg': k.code }, '—');
     const pct = ((now - open) / open) * 100;
-    const isUp = pct >= 0;
-    const text = `${isUp ? '▲' : '▼'} ${Math.abs(pct).toFixed(2)}%`;
+    const dir = classifyDelta(pct);
+    const text = `${DIRECTION_GLYPH[dir]} ${Math.abs(pct).toFixed(2)}%`;
     return el(
       'td',
       {
         'data-karat-chg': k.code,
-        class: isUp ? 'tracker-chg-up' : 'tracker-chg-down',
+        class: `tracker-chg-${dir}`,
         'aria-label': tx('karatDayChangeAria', { text }),
       },
       text
@@ -499,8 +557,7 @@ export function renderKaratTable() {
         vsCell,
       ];
       if (dayOpenSpot) cells.push(buildChangeIndicator(k));
-      const rowAttrs =
-        k.code === _state.selectedKarat ? { class: 'is-selected' } : {};
+      const rowAttrs = k.code === _state.selectedKarat ? { class: 'is-selected' } : {};
       fragment.append(el('tr', rowAttrs, cells));
     }
     clear(_el.karatTable);
@@ -540,10 +597,10 @@ export function renderKaratTable() {
           });
           if (p && open) {
             const pct = ((p - open) / open) * 100;
-            const isUp = pct >= 0;
-            const text = `${isUp ? '▲' : '▼'} ${Math.abs(pct).toFixed(2)}%`;
+            const dir = classifyDelta(pct);
+            const text = `${DIRECTION_GLYPH[dir]} ${Math.abs(pct).toFixed(2)}%`;
             chgCell.textContent = text;
-            chgCell.className = isUp ? 'tracker-chg-up' : 'tracker-chg-down';
+            chgCell.className = `tracker-chg-${dir}`;
             chgCell.setAttribute('aria-label', tx('karatDayChangeAria', { text }));
           }
         } else if (row) {

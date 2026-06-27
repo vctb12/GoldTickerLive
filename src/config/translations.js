@@ -399,6 +399,7 @@ export const TRANSLATIONS = {
     'tracker.heroStatSpotSub': 'per troy oz · {source}',
     'tracker.heroStatGramSub': 'per gram · reference',
     'tracker.heroStatDayChange': '· {sign} {pct}% today',
+    'tracker.heroStatDayChangeFlat': '· unchanged today',
     'tracker.karatColDayChange': 'Day change',
     'tracker.karatDayChangeAria': 'Day change: {text}',
     'tracker.liveDeskTitle': 'Command center desk',
@@ -575,6 +576,7 @@ export const TRANSLATIONS = {
     'tracker.controls.unitKg': 'kg',
     'tracker.toast.priceCopied': 'Price copied to clipboard',
     'tracker.heroChangeStrip': 'Day change · {sign} {amount} ({pct}%) vs session open',
+    'tracker.heroChangeStripFlat': 'Day change · unchanged vs session open',
     'tracker.heroChangeStripUnavailable': 'Day change · awaiting session open',
     'tracker.inlineCalcTitle': 'Quick Calculator',
     'tracker.inlineCalcSub':
@@ -1711,6 +1713,7 @@ export const TRANSLATIONS = {
     'tracker.heroStatSpotSub': 'لكل أوقية تروي · {source}',
     'tracker.heroStatGramSub': 'لكل غرام · مرجع',
     'tracker.heroStatDayChange': '· {sign} {pct}% اليوم',
+    'tracker.heroStatDayChangeFlat': '· دون تغيير اليوم',
     'tracker.karatColDayChange': 'التغير اليومي',
     'tracker.karatDayChangeAria': 'التغير اليومي: {text}',
     'tracker.liveDeskTitle': 'لوحة مركز القيادة',
@@ -1887,6 +1890,7 @@ export const TRANSLATIONS = {
     'tracker.controls.unitKg': 'كيلوغرام',
     'tracker.toast.priceCopied': 'تم نسخ السعر إلى الحافظة',
     'tracker.heroChangeStrip': 'تغير اليوم · {sign} {amount} ({pct}%) مقابل افتتاح الجلسة',
+    'tracker.heroChangeStripFlat': 'تغير اليوم · دون تغيير مقابل افتتاح الجلسة',
     'tracker.heroChangeStripUnavailable': 'تغير اليوم · بانتظار افتتاح الجلسة',
     'tracker.inlineCalcTitle': 'الحاسبة السريعة',
     'tracker.inlineCalcSub':
