@@ -19,6 +19,31 @@ RewriteRule ^cities/riyadh\.html$ countries/saudi-arabia/cities/riyadh.html [R=3
 RewriteRule ^markets/dubai-gold-souk\.html$ countries/uae/markets/dubai-gold-souk.html [R=301,L]
 RewriteRule ^markets/khan-el-khalili-cairo\.html$ countries/egypt/markets/khan-el-khalili-cairo.html [R=301,L]
 
+# Country pages: flat /countries/<slug>.html → /countries/<slug>/ (directory form).
+# Mirrors the same 21-slug set already in _redirects (Netlify/Cloudflare). Real pages
+# live at countries/<slug>/index.html; the flat .html form 404s without these rules.
+RewriteRule ^countries/uae\.html$ /countries/uae/ [R=301,L]
+RewriteRule ^countries/saudi-arabia\.html$ /countries/saudi-arabia/ [R=301,L]
+RewriteRule ^countries/bahrain\.html$ /countries/bahrain/ [R=301,L]
+RewriteRule ^countries/kuwait\.html$ /countries/kuwait/ [R=301,L]
+RewriteRule ^countries/jordan\.html$ /countries/jordan/ [R=301,L]
+RewriteRule ^countries/qatar\.html$ /countries/qatar/ [R=301,L]
+RewriteRule ^countries/oman\.html$ /countries/oman/ [R=301,L]
+RewriteRule ^countries/egypt\.html$ /countries/egypt/ [R=301,L]
+RewriteRule ^countries/morocco\.html$ /countries/morocco/ [R=301,L]
+RewriteRule ^countries/india\.html$ /countries/india/ [R=301,L]
+RewriteRule ^countries/pakistan\.html$ /countries/pakistan/ [R=301,L]
+RewriteRule ^countries/turkey\.html$ /countries/turkey/ [R=301,L]
+RewriteRule ^countries/iraq\.html$ /countries/iraq/ [R=301,L]
+RewriteRule ^countries/syria\.html$ /countries/syria/ [R=301,L]
+RewriteRule ^countries/lebanon\.html$ /countries/lebanon/ [R=301,L]
+RewriteRule ^countries/palestine\.html$ /countries/palestine/ [R=301,L]
+RewriteRule ^countries/yemen\.html$ /countries/yemen/ [R=301,L]
+RewriteRule ^countries/sudan\.html$ /countries/sudan/ [R=301,L]
+RewriteRule ^countries/libya\.html$ /countries/libya/ [R=301,L]
+RewriteRule ^countries/tunisia\.html$ /countries/tunisia/ [R=301,L]
+RewriteRule ^countries/algeria\.html$ /countries/algeria/ [R=301,L]
+
 </IfModule>
 
 # ═══════════════════════════════════════════════════════════════
