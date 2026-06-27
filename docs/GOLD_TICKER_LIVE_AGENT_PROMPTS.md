@@ -358,8 +358,8 @@ HARD RULES
   service-worker scope, or canonical URLs without an explicit owner instruction.
 - Never change pricing math (`price_per_gram = (XAU/USD ÷ 31.1035) × purity × FX`), the AED
   peg constant `3.6725`, the troy-ounce constant `31.1035`, karat purity values, the FX
-  source, the `STALE_AFTER_MS = 12 minutes` threshold, or the `FX_STALE_AFTER_MS = 26 hours`
-  threshold without an explicit owner instruction.
+  source, the `STALE_AFTER_MS = 75 minutes` threshold (`DELAYED_AFTER_MS = 30 minutes`), or the
+  `FX_STALE_AFTER_MS = 26 hours` threshold without an explicit owner instruction.
 - Every user-visible string change ships in EN + AR via `src/config/translations.js`.
 - DOM-safety baseline (per `scripts/node/check-unsafe-dom.js`) is 0 sinks in
   `src/tracker/render.js`. Do not add `innerHTML`, `outerHTML`, or `insertAdjacentHTML` calls;
@@ -1267,9 +1267,12 @@ WORK — RTL
 WORK — TRUST SIGNALS
 - Add visible trust signals where they strengthen the page (source label, last-updated
   pill, methodology link, "spot estimate vs retail" disclaimer near every price).
-- Freshness states are: 'live' (≤12 min, no failure), 'cached' (≤12 min, hasLiveFailure),
-  'stale' (>12 min), 'unavailable' (no updatedAt). Render every state visibly with
-  color-blind-accessible affordance (icon ::before, not color-only).
+- Freshness keys come from `getLiveFreshness()` (the canonical 6-key model): 'live'
+  (≤30 min, no failure), 'delayed' (>30 min, ≤75 min), 'cached' (within window,
+  hasLiveFailure), 'stale' (>75 min / upstream-stale), 'fallback' (upstream fallback),
+  'unavailable' (no updatedAt) — plus 'closed' from `getFreshnessModel()` when the market
+  is closed. Render every state visibly with color-blind-accessible affordance (icon
+  ::before, not color-only).
 
 WORK — MOTION
 - Respect `prefers-reduced-motion: reduce` for any new motion. Per-class guards are
@@ -1283,7 +1286,7 @@ CONSTRAINTS
 - Don't change `CNAME`, `vite.config.js` `base` (currently `'/'`), service-worker scope,
   canonical URLs, or the `countries/**/gold-prices/` URL paths.
 - Don't touch the AED peg constant (`3.6725`), the troy-ounce constant (`31.1035`),
-  karat purity values, freshness thresholds (`STALE_AFTER_MS = 12*60*1000`,
+  karat purity values, freshness thresholds (`STALE_AFTER_MS = 75*60*1000`,
   `FX_STALE_AFTER_MS = 26*60*60*1000`), or pricing math.
 - Every user-visible string change ships in EN + AR via `src/config/translations.js`.
 - Do not introduce new innerHTML/outerHTML/insertAdjacentHTML sinks — use `el()` /
@@ -1401,8 +1404,9 @@ INSPECT FIRST
    `src/lib/price-calculator.js`, `src/lib/formatter.js`, `src/lib/freshness-pulse.js`,
    `src/lib/historical-data.js`.
 4. Read `src/config/constants.js` (`AED_PEG = 3.6725`, `TROY_OZ_GRAMS = 31.1035`,
-   `GOLD_REFRESH_MS = 90000`, `CACHE_KEYS`, `STALE_AFTER_MS = 12*60*1000`,
-   `FX_STALE_AFTER_MS = 26*60*60*1000`).
+   `GOLD_REFRESH_MS = 90000`, `CACHE_KEYS`) and `src/lib/live-status.js` for the freshness
+   thresholds (`GOLD_MARKET.DELAYED_AFTER_MS = 30*60*1000`, `GOLD_MARKET.STALE_AFTER_MS = 75*60*1000`,
+   `FX_MARKET.FX_STALE_AFTER_MS = 26*60*60*1000`).
 5. Read `src/config/karats.js` (purity values).
 6. Read `src/config/translations.js` (`tracker.*` keys, including `welcome.*`,
    `pagination.*`, `marketOpenAriaLabel`, `marketClosedAriaLabel`).
@@ -1412,7 +1416,7 @@ INSPECT FIRST
 9. Read `docs/tracker-state.md` and `docs/methodology.md`.
 
 WORK — FRESHNESS STATES
-- Render all four freshness states visibly: `live`, `cached`, `stale`, `unavailable`.
+- Render every freshness key visibly: `live`, `delayed`, `cached`, `stale`, `fallback`, `unavailable` (plus `closed`).
   Use a color-blind-accessible affordance (icon ::before, not color-only).
 - The home/tracker freshness key is set on `data-freshness-key` and (where used)
   `data-freshness-age`. The home freshness timer ticks every 1s
@@ -1459,7 +1463,7 @@ CONSTRAINTS — DO NOT TOUCH
 - Troy ounce `31.1035`. Locked.
 - Karat purity table. Locked.
 - FX source `open.er-api.com/v6/latest/USD`. Locked.
-- `STALE_AFTER_MS = 12 minutes` and `FX_STALE_AFTER_MS = 26 hours`. Locked.
+- `STALE_AFTER_MS = 75 minutes` (`DELAYED_AFTER_MS = 30 minutes`) and `FX_STALE_AFTER_MS = 26 hours`. Locked.
 - `GOLD_REFRESH_MS = 90000`. Locked unless you have an owner instruction.
 - `CACHE_KEYS` (e.g. `gold_price_cache`, `gold_price_history`). Locked.
 - DOM-safety baseline in `src/tracker/render.js` must remain at 0 sinks per
@@ -1479,7 +1483,7 @@ VERIFY
 DELIVERABLE
 - Themed commits: `feat(tracker-states): ...`, `feat(tracker-i18n): ...`,
   `feat(tracker-mobile): ...`, `chore(sw): bump CACHE_NAME`, `docs(tracker-state): ...`.
-- §51 final report citing the 4 freshness states verified.
+- §51 final report citing the 6 freshness keys verified.
 ```
 
 **Files / surfaces Copilot should inspect:**
@@ -1505,7 +1509,7 @@ DELIVERABLE
 
 **Expected final report:**
 
-- 4 freshness states verified with screenshots.
+- 6 freshness keys (live/delayed/cached/stale/fallback/unavailable, + closed) verified with screenshots.
 - Confirmation that pricing math, AED peg, troy ounce, karat values, FX source, and freshness
   thresholds were not touched.
 - SW `CACHE_NAME` bump value.
@@ -2354,8 +2358,8 @@ honestly labeled with its source, freshness, and limitations.
 INSPECT FIRST
 1. Read `src/lib/api.js` (gold + FX fetchers, timeouts, fallbacks).
 2. Read `src/lib/cache.js` (`CACHE_KEYS` from `src/config/constants.js`).
-3. Read `src/lib/live-status.js` (`STALE_AFTER_MS = 12 minutes` for gold,
-   `FX_STALE_AFTER_MS = 26 hours` for FX).
+3. Read `src/lib/live-status.js` (`STALE_AFTER_MS = 75 minutes` /
+   `DELAYED_AFTER_MS = 30 minutes` for gold, `FX_STALE_AFTER_MS = 26 hours` for FX).
 4. Read `src/lib/price-calculator.js` and `src/lib/formatter.js`.
 5. Read `src/config/constants.js` (`API_GOLD_URL = '/data/gold_price.json'`,
    `API_FX_URL = 'https://open.er-api.com/v6/latest/USD'`, `AED_PEG = 3.6725`,
@@ -2371,11 +2375,12 @@ INSPECT FIRST
 WORK — SOURCE LABELS
 - Every price card shows the source ("XAU/USD spot via <source>") and the FX source
   ("FX via open.er-api.com").
-- Every cached/stale render is visibly labeled. The four states are `live`, `cached`,
-  `stale`, `unavailable` (per `src/lib/live-status.js`).
+- Every cached/stale render is visibly labeled. The canonical keys are `live`, `delayed`,
+  `cached`, `stale`, `fallback`, `unavailable` (per `getLiveFreshness()` in
+  `src/lib/live-status.js`), plus `closed` from `getFreshnessModel()`.
 
 WORK — FRESHNESS
-- `STALE_AFTER_MS = 12 * 60 * 1000` for gold prices. Do not change.
+- `STALE_AFTER_MS = 75 * 60 * 1000` (`DELAYED_AFTER_MS = 30 * 60 * 1000`) for gold prices. Do not change.
 - `FX_STALE_AFTER_MS = 26 * 60 * 60 * 1000` for FX (one day + margin). Do not change.
 - `GOLD_REFRESH_MS = 90000` (90s polling). Do not change without owner approval.
 - Show a relative-time label ("Updated 3 min ago"). Use `src/lib/formatter.js`.
@@ -2428,7 +2433,7 @@ VERIFY
 - `npm run validate`
 - `npm run quality`
 - Manual: simulate API failure, confirm fallback render and label.
-- Manual: simulate stale > 12 min, confirm `stale` badge.
+- Manual: simulate stale > 75 min, confirm `stale` badge.
 - Manual: methodology.html in EN + AR, confirm formulas match constants.
 
 DELIVERABLE
@@ -3327,8 +3332,8 @@ INSPECT FIRST
 3. Read `styles/pages/home.css` — hero card, freshness pill `::before` pseudo-elements
    (⚠ / ✕ for stale / unavailable, color-blind accessible), `.country-search-input`,
    `.country-search-empty`, `.kstrip-unit-toggle`.
-4. Read `src/lib/live-status.js` — `STALE_AFTER_MS = 12 * 60 * 1000`, freshness states
-   `live | cached | stale | unavailable`.
+4. Read `src/lib/live-status.js` — `STALE_AFTER_MS = 75 * 60 * 1000`, freshness states
+   `live | delayed | cached | stale | fallback | unavailable` (+ `closed`).
 5. Read translations `home.*`, `home.karatStripLabelGram/Tola/Oz`, `gold.freshness.label`,
    `gold.badge`, `aed.badge` in `src/config/translations.js`.
 
@@ -3336,8 +3341,9 @@ WORK — hero
 - Make the hero answer in one glance: "Live UAE & GCC gold prices, derived from XAU/USD spot."
   No corporate fluff, no hype, no "best price guaranteed" wording.
 - The freshness pill (`#hlc-updated`) must be visible above the fold on 360 px width. Use the
-  existing `data-freshness-key` states (`live`, `cached`, `stale`, `unavailable`) and the
-  CSS `::before` icons. Do not move the threshold (12 min) without owner approval.
+  existing `data-freshness-key` states (`live`, `delayed`, `cached`, `stale`, `fallback`,
+  `unavailable`) and the CSS `::before` icons. Do not move the threshold (75 min; delayed at 30 min)
+  without owner approval.
 - Primary CTA → tracker. Secondary CTA → calculator. Tertiary text link → methodology.
   All three labels live in translations.
 - The hero AED + USD price card must surface its source line (e.g. "Spot · derived from
@@ -3398,7 +3404,7 @@ Update `docs/tracker-state.md` if you clarified any freshness copy.
 **Expected final report:**
 
 - Hero copy diff (EN + AR).
-- Freshness pill verified across all four states with screenshots.
+- Freshness pill verified across all six keys with screenshots.
 - Karat strip: unit toggle persistence verified; copy button works in EN + AR.
 - Country search keyboard nav verified.
 - 7-part report per [§51](#51-expected-final-report-format).
@@ -6160,7 +6166,7 @@ When the agent reports preserved carve-outs in
 - `TROY_OZ_GRAMS = 31.1035` — do not change.
 - Karat purity table (24K=0.999, 22K=0.916, 21K=0.875, 18K=0.750) — do not change.
 - FX logic — do not change unless explicitly asked.
-- `STALE_AFTER_MS = 12 * 60 * 1000` and `FX_STALE_AFTER_MS = 26 * 60 * 60 * 1000` — do not change
+- `STALE_AFTER_MS = 75 * 60 * 1000` and `FX_STALE_AFTER_MS = 26 * 60 * 60 * 1000` — do not change
   without owner approval.
 - `GOLD_REFRESH_MS = 90 * 1000` — do not change without owner approval.
 
@@ -6316,7 +6322,7 @@ change.
 - `AED_PEG = 3.6725`.
 - `TROY_OZ_GRAMS = 31.1035`.
 - `GOLD_REFRESH_MS = 90 * 1000` (90 s).
-- `STALE_AFTER_MS = 12 * 60 * 1000` (12 min).
+- `STALE_AFTER_MS = 75 * 60 * 1000` (75 min; `DELAYED_AFTER_MS = 30 * 60 * 1000`).
 - `FX_STALE_AFTER_MS = 26 * 60 * 60 * 1000` (26 h).
 - `BASE_PATH = '/'` (custom domain).
 - `CACHE_KEYS.alerts = 'gold_price_alerts'`.
