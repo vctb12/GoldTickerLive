@@ -66,16 +66,18 @@ function readChartTheme() {
     line: pick('--color-gold', '#c4902e'),
     areaTop: pick('--color-gold-glow', 'rgba(196,144,46,0.22)'),
     areaBottom: 'rgba(196,144,46,0.02)',
+    fontFamily: pick('--font-main', "'Source Sans 3', system-ui, sans-serif"),
   };
 }
 
 function applyChartTheme(chart, series) {
   if (!chart || !series) return;
   const theme = readChartTheme();
-  chart.applyOptions({
+    chart.applyOptions({
     layout: {
       background: { color: 'transparent' },
       textColor: theme.text,
+      fontFamily: theme.fontFamily,
     },
     grid: {
       vertLines: { color: theme.grid },
@@ -155,13 +157,14 @@ export class GoldChart {
     const wrap = container.closest('.tracker-chart-wrap');
     const chartHeight = wrap ? Math.max(240, wrap.clientHeight - 4) : 380;
 
+    const theme = readChartTheme();
     this._chart = this._LW.createChart(container, {
       width: container.clientWidth,
       height: chartHeight,
       layout: {
         background: { color: 'transparent' },
-        textColor: readChartTheme().text,
-        fontFamily: "'Cairo', system-ui, sans-serif",
+        textColor: theme.text,
+        fontFamily: theme.fontFamily,
       },
       grid: {
         vertLines: { color: readChartTheme().grid },
@@ -183,7 +186,6 @@ export class GoldChart {
       handleScale: true,
     });
 
-    const theme = readChartTheme();
     this._series = this._chart.addSeries(this._LW.AreaSeries, {
       lineColor: theme.line,
       topColor: theme.areaTop,
@@ -259,7 +261,9 @@ export class GoldChart {
   _getChartData() {
     const range = (this.range || '1Y').toUpperCase();
 
-    if (Array.isArray(this._customData) && this._customData.length) {
+    // When custom data is set (even empty), do not fall back to spot snapshots — those use USD/oz scale.
+    if (this._customData !== null) {
+      if (!Array.isArray(this._customData) || !this._customData.length) return null;
       const normalized = this._customData
         .map((point) => {
           if (!point || typeof point !== 'object') return null;

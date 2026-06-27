@@ -211,3 +211,20 @@
   font-weight: var(--weight-extrabold);
   letter-spacing: var(--tracking-tight);
 }
+
+/* Chart hero — latest reference price above controls */
+.chart-hero {
+  margin-block-end: var(--space-2);
+}
+
+.chart-hero__inner {
+  max-width: 28rem;
+}
+
+#chart-freshness {
+  margin-block-end: var(--space-3);
+}
+
+#chart-freshness .freshness-chip {
+  margin-block-end: 0;
+}

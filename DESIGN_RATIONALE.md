@@ -84,3 +84,33 @@ The price is the product — one authoritative treatment, direction shown with c
 | Command | Result |
 |---------|--------|
 | `npm test` | **1240 pass / 0 fail** |
+
+---
+
+## Areas D–H (2026-06-27)
+
+### D — Chart theming + scale fix
+- Chart uses `--font-main` from tokens (not hardcoded Cairo).
+- Chart hero (`#chart-hero`) shows latest reference price + karat/currency unit.
+- **Scale bug fixed:** empty `setCustomData([])` no longer falls back to USD/oz snapshots.
+
+### E — City gold-rate template
+- `styles/pages/city-gold-rate.css` — token-based layout, RTL-safe FAQ chevrons, karat card polish.
+- `scripts/node/migrate-city-gold-rate-styles.js` migrated **69** `countries/**/gold-rate/` pages.
+- `consolidate-country-pages.js` generator updated for new markup.
+
+### F — Motion
+- Staggered karat card enter animation on city pages (`prefers-reduced-motion` respected).
+- Existing `ph-loading-skeleton` shimmer retained for city loading.
+
+### H — Performance
+- `scripts/node/strip-google-fonts.js` removed duplicate CDN font loads from **272** HTML shells.
+
+### Verification (full revamp)
+| Command | Result |
+|---------|--------|
+| `npm test` | run at commit |
+| `npm run lint` | run at commit |
+| `npm run validate` | run at commit |
+| `npm run build` | run at commit |
+

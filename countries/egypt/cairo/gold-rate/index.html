@@ -72,62 +72,9 @@
       href="https://goldtickerlive.com/countries/egypt/cairo/gold-rate/?lang=ar"
     />
     <title>Gold Price in Cairo Today — 24K, 22K, 21K, 18K in EGP | Gold Ticker Live</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    
-    <link rel="preconnect" href="https://open.er-api.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../../../../styles/global.css" />
+<link rel="preconnect" href="https://open.er-api.com" />
+<link rel="stylesheet" href="../../../../styles/global.css" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <style>
-      .city-faq {
-        margin-top: 2.5rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid #e2e8f0;
-      }
-      .city-faq h2 {
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        color: #1e293b;
-      }
-      .city-faq details {
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        margin-bottom: 0.6rem;
-        overflow: hidden;
-      }
-      .city-faq summary {
-        padding: 0.85rem 1rem;
-        font-weight: 600;
-        font-size: 0.9rem;
-        cursor: pointer;
-        list-style: none;
-        color: #1e293b;
-        background: #f8fafc;
-      }
-      .city-faq summary::-webkit-details-marker {
-        display: none;
-      }
-      .city-faq summary::after {
-        content: '+';
-        float: right;
-        font-size: 1.1rem;
-        color: #94a3b8;
-      }
-      .city-faq details[open] summary::after {
-        content: '−';
-      }
-      .city-faq .faq-body {
-        padding: 0.85rem 1rem;
-        font-size: 0.875rem;
-        line-height: 1.65;
-        color: #475569;
-      }
-    </style>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -192,153 +139,37 @@
     <a class="skip-link" href="#main-content">Skip to main content</a>
     <div id="nav-root"></div>
 
-    <main id="main-content" class="country-page-main" style="max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem">
+    <main id="main-content" class="country-page-main cgr-page">
       <nav class="breadcrumb" aria-label="Breadcrumb" id="breadcrumb-root"></nav>
 
-      <h1 style="font-size: 1.75rem; font-weight: 700; margin: 1rem 0 0.5rem">
+      <h1 class="cgr-page__title">
         Gold Price in Cairo, Egypt Today
       </h1>
-      <p style="color: #64748b; margin-bottom: 1.5rem">
+      <p class="cgr-page__intro">
         Current gold rates for Cairo in EGP. All karats, updated every 90 seconds.
       </p>
 
       <!-- Live price placeholder — hydrated by page-hydrator.js -->
-      <div id="price-display" style="display: none">
-        <div id="freshness-badge" style="margin-bottom: 1rem"></div>
-        <div
-          id="karat-cards"
-          style="
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-          "
-        ></div>
+      <div id="price-display">
+        <div id="freshness-badge"></div>
+        <div id="karat-cards"></div>
         <div id="price-disclaimer"></div>
       </div>
 
-      <div id="price-loading" style="padding: 2rem; text-align: center; color: #94a3b8">
+      <div id="price-loading">
         Loading live prices…
       </div>
 
-      <section
-        style="
-          margin-top: 1.5rem;
-          padding: 1rem;
-          background: #fef9c3;
-          border-radius: 10px;
-          border: 1px solid #fde68a;
-        "
-      >
-        <h2 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.6rem; color: #92400e">
-          📖 Gold Buying Resources
-        </h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem">
-          <a
-            href="/content/guides/buying-guide.html"
-            style="
-              padding: 0.35rem 0.7rem;
-              background: #fff;
-              border: 1px solid #fde68a;
-              border-radius: 6px;
-              font-size: 0.825rem;
-              text-decoration: none;
-              color: #92400e;
-              font-weight: 500;
-            "
-            >How to Buy Gold →</a
+      <section class="cgr-related">
+        <h2 class="cgr-related__title">Related Pages</h2>
+        <div class="cgr-related__links">
+          <a class="cgr-chip" href="https://goldtickerlive.com/countries/egypt/">Egypt Overview</a
           >
-          <a
-            href="/content/guides/24k-vs-22k.html"
-            style="
-              padding: 0.35rem 0.7rem;
-              background: #fff;
-              border: 1px solid #e2e8f0;
-              border-radius: 6px;
-              font-size: 0.825rem;
-              text-decoration: none;
-              color: #1e293b;
-            "
-            >24K vs 22K →</a
+          <a class="cgr-chip cgr-chip--gold" href="https://goldtickerlive.com/countries/egypt/cairo/gold-shops/">Gold Shops in Cairo</a
           >
-          <a
-            href="/content/guides/gold-karat-comparison.html"
-            style="
-              padding: 0.35rem 0.7rem;
-              background: #fff;
-              border: 1px solid #e2e8f0;
-              border-radius: 6px;
-              font-size: 0.825rem;
-              text-decoration: none;
-              color: #1e293b;
-            "
-            >Karat Guide →</a
+          <a class="cgr-chip" href="https://goldtickerlive.com/countries/egypt/alexandria/gold-rate/">Alexandria</a
           >
-          <a
-            href="/calculator.html"
-            style="
-              padding: 0.35rem 0.7rem;
-              background: #fff;
-              border: 1px solid #e2e8f0;
-              border-radius: 6px;
-              font-size: 0.825rem;
-              text-decoration: none;
-              color: #1e293b;
-            "
-            >Gold Calculator →</a
-          >
-        </div>
-      </section>
-      <section style="margin-top: 2rem">
-        <h2 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.75rem">Related Pages</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem">
-          <a
-            href="https://goldtickerlive.com/countries/egypt/"
-            style="
-              padding: 0.4rem 0.75rem;
-              background: #f1f5f9;
-              border-radius: 6px;
-              font-size: 0.875rem;
-              text-decoration: none;
-              color: #1e293b;
-            "
-            >Egypt Overview</a
-          >
-          <a
-            href="https://goldtickerlive.com/countries/egypt/cairo/gold-shops/"
-            style="
-              padding: 0.4rem 0.75rem;
-              background: #fef9c3;
-              border-radius: 6px;
-              font-size: 0.875rem;
-              text-decoration: none;
-              color: #713f12;
-            "
-            >Gold Shops in Cairo</a
-          >
-          <a
-            href="https://goldtickerlive.com/countries/egypt/alexandria/gold-rate/"
-            style="
-              padding: 0.4rem 0.75rem;
-              background: #f1f5f9;
-              border-radius: 6px;
-              font-size: 0.875rem;
-              text-decoration: none;
-              color: #1e293b;
-            "
-            >Alexandria</a
-          >
-          <a
-            href="https://goldtickerlive.com/countries/egypt/giza/gold-rate/"
-            style="
-              padding: 0.4rem 0.75rem;
-              background: #f1f5f9;
-              border-radius: 6px;
-              font-size: 0.875rem;
-              text-decoration: none;
-              color: #1e293b;
-            "
-            >Giza</a
+          <a class="cgr-chip" href="https://goldtickerlive.com/countries/egypt/giza/gold-rate/">Giza</a
           >
         </div>
       </section>

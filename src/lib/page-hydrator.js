@@ -917,7 +917,7 @@ function applyLegacyPriceRender({ country, karatSlug, gold, fx }) {
     hasLiveFailure: gold.source === 'cache-fallback',
   });
 
-  if (displayEl) displayEl.style.display = '';
+  if (displayEl) displayEl.classList.add('is-visible');
   if (loadingEl) {
     loadingEl.style.display = 'none';
     loadingEl.hidden = true;
@@ -945,7 +945,7 @@ async function hydrateLegacyPage({ country, karatSlug, lang = 'en' }) {
         });
         loadingEl.style.display = '';
         loadingEl.hidden = false;
-        if (displayEl) displayEl.style.display = 'none';
+        if (displayEl) displayEl.classList.remove('is-visible');
       }
       updateSpotBar({ updatedAt: null });
       return;
