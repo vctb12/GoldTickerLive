@@ -384,7 +384,7 @@
     135deg,
     var(--color-gold-tint) 0%,
     var(--color-gold-bg) 60%,
-    rgb(253 250 240 / 80%) 100%
+    color-mix(in srgb, var(--surface-primary) 85%, transparent) 100%
   );
   border: 1.5px solid rgb(196 144 46 / 40%);
   border-radius: var(--radius-lg);

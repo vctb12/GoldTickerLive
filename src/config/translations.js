@@ -495,6 +495,28 @@ export const TRANSLATIONS = {
     'tracker.compare.perGramLabel': 'reference price / gram',
     'tracker.compare.cardNote':
       'Freshness: {freshness}. FX source: {fxSource}. Shop prices may still add making charges, VAT, and dealer premiums.',
+    'tracker.compare.boardTitle': 'Markets compare board',
+    'tracker.compare.boardCopy':
+      'Spot-linked reference prices across GCC, Arab, and international markets. All prices are bullion estimates — not retail or jewelry quotes.',
+    'tracker.compare.boardCopyLink': 'Why shop prices differ →',
+    'tracker.compare.builderIntro':
+      'Compare up to 3 countries and 4 common karats in stacked cards. Missing or delayed data stays labeled.',
+    'tracker.compare.regionGcc': 'GCC',
+    'tracker.compare.regionArab': 'Arab',
+    'tracker.compare.regionReference': 'Reference',
+    'tracker.compare.regionTabsAriaLabel': 'Market regions',
+    'tracker.compare.builderEmpty': 'Select at least one country and one karat to compare.',
+    'tracker.compare.filterMarketsLabel': 'Filter markets',
+    'tracker.compare.filterPlaceholder': 'Filter by country or currency',
+    'tracker.compare.sortLabel': 'Sort',
+    'tracker.compare.sortHighLow': 'High to low',
+    'tracker.compare.sortLowHigh': 'Low to high',
+    'tracker.compare.sortAlpha': 'A–Z',
+    'tracker.compare.sortFavorites': 'Favorites first',
+    'tracker.compare.viewLabel': 'View',
+    'tracker.compare.viewCard': 'Card grid',
+    'tracker.compare.viewRow': 'Compact rows',
+    'tracker.compare.marketEmpty': 'No markets match the current filters.',
     'tracker.referenceBannerTitle': 'Reference prices only',
     'tracker.referenceBannerBody':
       'Spot-linked estimates derived from gold-api.com spot snapshots, with FX from open.er-api.com for non-AED currencies. AED uses the fixed 3.6725 peg. Freshness labels stay visible: Live, Cached, Delayed, Fallback.',
@@ -581,7 +603,14 @@ export const TRANSLATIONS = {
     'tracker.karatSectionNote':
       'Reference values are derived from spot and purity. Final shop pricing may include making charges, dealer margin, and VAT.',
     'tracker.alertsWatchlistTitle': 'Alerts and watchlist desk',
+    'tracker.alertsWatchlistIntro':
+      'Keep thresholds, favorites, and decision cues in one place. Logged-in users can jump to server email alerts directly.',
     'tracker.watchlistTitle': 'Market watchlist',
+    'tracker.watchlistExportCsv': 'Export watchlist CSV',
+    'tracker.watchlistSaveAccount': 'Save watchlist to account',
+    'tracker.marketBriefTitle': 'Market brief',
+    'tracker.marketBriefIntro':
+      'One-paragraph summary of current gold conditions for your selected view, updated as you change markets, karats, and time ranges.',
     'tracker.decisionCuesTitle': 'Decision cues',
     'tracker.actions.openAlertsPanel': 'Open alerts panel',
     'tracker.actions.openExportsPanel': 'Open exports panel',
@@ -1778,6 +1807,28 @@ export const TRANSLATIONS = {
     'tracker.compare.perGramLabel': 'سعر مرجعي / غرام',
     'tracker.compare.cardNote':
       'الحداثة: {freshness}. مصدر الصرف: {fxSource}. قد تضيف أسعار المحلات المصنعية والضريبة وهوامش التاجر.',
+    'tracker.compare.boardTitle': 'لوحة مقارنة الأسواق',
+    'tracker.compare.boardCopy':
+      'أسعار مرجعية مرتبطة بالسعر الفوري عبر أسواق الخليج والعالم العربي والأسواق الدولية. جميع الأسعار تقديرات للسبائك — وليست أسعار تجزئة أو مجوهرات.',
+    'tracker.compare.boardCopyLink': 'لماذا تختلف أسعار المحلات ←',
+    'tracker.compare.builderIntro':
+      'قارن حتى 3 دول و4 عيارات شائعة في بطاقات مرتّبة. تبقى البيانات الناقصة أو المتأخرة موضّحة.',
+    'tracker.compare.regionGcc': 'الخليج',
+    'tracker.compare.regionArab': 'عربي',
+    'tracker.compare.regionReference': 'مرجعي',
+    'tracker.compare.regionTabsAriaLabel': 'مناطق الأسواق',
+    'tracker.compare.builderEmpty': 'اختر دولة واحدة وعياراً واحداً على الأقل للمقارنة.',
+    'tracker.compare.filterMarketsLabel': 'تصفية الأسواق',
+    'tracker.compare.filterPlaceholder': 'التصفية حسب الدولة أو العملة',
+    'tracker.compare.sortLabel': 'الترتيب',
+    'tracker.compare.sortHighLow': 'من الأعلى إلى الأدنى',
+    'tracker.compare.sortLowHigh': 'من الأدنى إلى الأعلى',
+    'tracker.compare.sortAlpha': 'أ–ي',
+    'tracker.compare.sortFavorites': 'المفضلة أولاً',
+    'tracker.compare.viewLabel': 'العرض',
+    'tracker.compare.viewCard': 'شبكة بطاقات',
+    'tracker.compare.viewRow': 'صفوف مدمجة',
+    'tracker.compare.marketEmpty': 'لا توجد أسواق تطابق عوامل التصفية الحالية.',
     'tracker.referenceBannerTitle': 'أسعار مرجعية فقط',
     'tracker.referenceBannerBody':
       'تقديرات مرتبطة بالسعر الفوري مبنية على لقطات gold-api.com، مع أسعار صرف من open.er-api.com للعملات غير المرتبطة بالدرهم. الدرهم يستخدم الربط الثابت 3.6725. وتبقى حالات الحداثة ظاهرة دائمًا: مباشر، مخزن، متأخر، نسخة احتياطية.',
@@ -1862,7 +1913,14 @@ export const TRANSLATIONS = {
     'tracker.karatSectionNote':
       'تُشتق القيم المرجعية من السعر الفوري ونقاء العيار. قد تضيف أسعار المحلات المصنعية وهامش التاجر وضريبة القيمة المضافة.',
     'tracker.alertsWatchlistTitle': 'مركز التنبيهات وقائمة المتابعة',
+    'tracker.alertsWatchlistIntro':
+      'اجمع الحدود والمفضلة وإشارات القرار في مكان واحد. يمكن للمستخدمين المسجّلين الانتقال إلى تنبيهات البريد الإلكتروني عبر الخادم مباشرة.',
     'tracker.watchlistTitle': 'قائمة متابعة الأسواق',
+    'tracker.watchlistExportCsv': 'تصدير قائمة المتابعة CSV',
+    'tracker.watchlistSaveAccount': 'حفظ قائمة المتابعة في الحساب',
+    'tracker.marketBriefTitle': 'موجز السوق',
+    'tracker.marketBriefIntro':
+      'ملخص من فقرة واحدة لظروف الذهب الحالية للعرض المحدّد، يُحدَّث مع تغييرك للأسواق والعيارات والنطاقات الزمنية.',
     'tracker.decisionCuesTitle': 'إشارات القرار',
     'tracker.actions.openAlertsPanel': 'افتح لوحة التنبيهات',
     'tracker.actions.openExportsPanel': 'افتح لوحة التصدير',
