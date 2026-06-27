@@ -5,7 +5,8 @@
  * Uses the Supabase REST API directly (PostgREST) — no SDK required in the
  * browser bundle.
  *
- * RLS policy on the shops table restricts anonymous reads to verified=true rows.
+ * Queries only the canonical `shop_listings` table (status=eq.active), whose RLS
+ * policy restricts anonymous reads to active listings (see supabase/schema.sql).
  *
  * Returns an array shaped like data/shops.js entries so scripts/pages/shops.js
  * can swap it in without changing rendering logic.  Returns null on any error
