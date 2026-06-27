@@ -602,7 +602,14 @@ export const TRANSLATIONS = {
     'tracker.karatSectionNote':
       'Reference values are derived from spot and purity. Final shop pricing may include making charges, dealer margin, and VAT.',
     'tracker.alertsWatchlistTitle': 'Alerts and watchlist desk',
+    'tracker.alertsWatchlistIntro':
+      'Keep thresholds, favorites, and decision cues in one place. Logged-in users can jump to server email alerts directly.',
     'tracker.watchlistTitle': 'Market watchlist',
+    'tracker.watchlistExportCsv': 'Export watchlist CSV',
+    'tracker.watchlistSaveAccount': 'Save watchlist to account',
+    'tracker.marketBriefTitle': 'Market brief',
+    'tracker.marketBriefIntro':
+      'One-paragraph summary of current gold conditions for your selected view, updated as you change markets, karats, and time ranges.',
     'tracker.decisionCuesTitle': 'Decision cues',
     'tracker.actions.openAlertsPanel': 'Open alerts panel',
     'tracker.actions.openExportsPanel': 'Open exports panel',
@@ -1904,7 +1911,14 @@ export const TRANSLATIONS = {
     'tracker.karatSectionNote':
       'تُشتق القيم المرجعية من السعر الفوري ونقاء العيار. قد تضيف أسعار المحلات المصنعية وهامش التاجر وضريبة القيمة المضافة.',
     'tracker.alertsWatchlistTitle': 'مركز التنبيهات وقائمة المتابعة',
+    'tracker.alertsWatchlistIntro':
+      'اجمع الحدود والمفضلة وإشارات القرار في مكان واحد. يمكن للمستخدمين المسجّلين الانتقال إلى تنبيهات البريد الإلكتروني عبر الخادم مباشرة.',
     'tracker.watchlistTitle': 'قائمة متابعة الأسواق',
+    'tracker.watchlistExportCsv': 'تصدير قائمة المتابعة CSV',
+    'tracker.watchlistSaveAccount': 'حفظ قائمة المتابعة في الحساب',
+    'tracker.marketBriefTitle': 'موجز السوق',
+    'tracker.marketBriefIntro':
+      'ملخص من فقرة واحدة لظروف الذهب الحالية للعرض المحدّد، يُحدَّث مع تغييرك للأسواق والعيارات والنطاقات الزمنية.',
     'tracker.decisionCuesTitle': 'إشارات القرار',
     'tracker.actions.openAlertsPanel': 'افتح لوحة التنبيهات',
     'tracker.actions.openExportsPanel': 'افتح لوحة التصدير',

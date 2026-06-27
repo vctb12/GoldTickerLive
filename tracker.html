@@ -843,7 +843,7 @@
           <div class="tracker-panel-head compact">
             <div>
               <h2 id="tp-alerts-watchlist-title">Alerts and watchlist desk</h2>
-              <p>
+              <p data-i18n="alertsWatchlistIntro">
                 Keep thresholds, favorites, and decision cues in one place. Logged-in users can
                 jump to server email alerts directly.
               </p>
@@ -869,10 +869,11 @@
                 type="button"
                 class="btn btn-sm btn-outline tracker-advanced-only"
                 id="tp-export-watchlist"
+                data-i18n="watchlistExportCsv"
               >
                 Export watchlist CSV
               </button>
-              <button type="button" class="btn btn-sm btn-outline" id="tp-save-watchlist-account">
+              <button type="button" class="btn btn-sm btn-outline" id="tp-save-watchlist-account" data-i18n="watchlistSaveAccount">
                 Save watchlist to account
               </button>
             </div>
@@ -1718,12 +1719,12 @@
       </section>
 
       <!-- ── Market brief (shared across modes) ────────────── -->
-      <section class="tracker-shell tracker-brief-shell" aria-label="Market brief" data-reveal>
+      <section class="tracker-shell tracker-brief-shell" aria-label="Market brief" data-i18n-aria-label="marketBriefTitle" data-reveal>
         <section class="tracker-panel">
           <div class="tracker-panel-head">
             <div>
-              <h2>Market brief</h2>
-              <p>
+              <h2 data-i18n="marketBriefTitle">Market brief</h2>
+              <p data-i18n="marketBriefIntro">
                 One-paragraph summary of current gold conditions for your selected view, updated as
                 you change markets, karats, and time ranges.
               </p>
