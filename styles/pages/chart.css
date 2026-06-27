@@ -73,7 +73,17 @@
 
 .chart-empty {
   margin-top: var(--space-3);
+  padding: var(--space-5);
+  text-align: center;
   color: var(--text-secondary);
+  font-size: var(--text-ui-sm);
+  background: var(--surface-secondary);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.chart-panel[aria-busy='true'] #chart-canvas {
+  opacity: 0.45;
 }
 
 .chart-stats {

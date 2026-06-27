@@ -720,12 +720,13 @@
 /* ── HLC footer ── */
 .hlc-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
   border-top: var(--rule-hairline);
   padding-top: 0.85rem;
+  margin-top: var(--space-2);
 }
 
 .hlc-footer > * {
@@ -760,95 +761,9 @@
   border-color: var(--color-gold-glow);
 }
 
-/* Freshness chip — compact pill badge that ticks every second */
-.hlc-updated {
-  display: inline-flex;
-  align-items: center;
-  font-size: 0.67rem;
-  font-family: var(--font-numeric);
-  font-variant-numeric: tabular-nums;
-  color: var(--text-secondary);
-  background: var(--surface-secondary);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-pill);
-  padding: 0.18rem 0.65rem;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-  transition:
-    color 0.4s,
-    background 0.4s,
-    border-color 0.4s;
-}
+/* Freshness chip base + state colours: styles/partials/price-display.css */
 
-/* Live state: green pill */
-.hlc-updated[data-freshness-key='live'] {
-  color: var(--color-live);
-  background: var(--color-live-bg);
-  border-color: var(--color-live-border);
-}
-
-.hlc-updated[data-freshness-key='live']::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-live);
-  margin-inline-end: 0.4rem;
-  animation: pulse-live-hero 2s ease-in-out infinite;
-  flex-shrink: 0;
-}
-
-/* Cached / delayed: amber pill */
-.hlc-updated[data-freshness-key='cached'],
-.hlc-updated[data-freshness-key='delayed'] {
-  color: var(--color-amber);
-  background: rgb(245 158 11 / 8%);
-  border-color: rgb(245 158 11 / 25%);
-}
-
-.hlc-updated[data-freshness-key='cached']::before,
-.hlc-updated[data-freshness-key='delayed']::before {
-  content: '⚠ ';
-}
-
-/* Stale: red danger */
-.hlc-updated[data-freshness-key='stale'] {
-  color: var(--color-danger);
-  background: rgb(239 68 68 / 8%);
-  border-color: rgb(239 68 68 / 25%);
-}
-
-.hlc-updated[data-freshness-key='stale']::before {
-  content: '⚠ ';
-}
-
-.hlc-updated[data-freshness-key='unavailable'] {
-  color: var(--color-stale);
-}
-
-.hlc-updated[data-freshness-key='unavailable']::before {
-  content: '✕ ';
-}
-
-/* Granular age-based overrides (updated every second by home.js) */
-.hlc-updated[data-freshness-age='amber'] {
-  color: var(--color-amber);
-}
-
-.hlc-updated[data-freshness-age='amber']::before {
-  content: '⚠ ';
-}
-
-.hlc-updated[data-freshness-age='stale'] {
-  color: var(--color-danger);
-}
-
-.hlc-updated[data-freshness-age='stale']::before {
-  content: '⚠ ';
-}
-
-.karat-strip-updated[data-freshness-key='cached'],
+/* Granular age-based overrides for karat strip */
 .karat-strip-updated[data-freshness-key='stale'] {
   color: var(--color-amber);
 }

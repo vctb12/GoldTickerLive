@@ -213,18 +213,32 @@
             aria-describedby="hlc-trust-line"
           >
             <div class="hlc-header">
-              <span class="hlc-title" id="hlc-title">Gold Spot Price</span>
+              <span class="hlc-title price-kind price-kind--reference" id="hlc-title">Gold Spot Price</span>
               <span class="hlc-market" id="hlc-market-status"></span>
             </div>
-            <div class="hlc-price-wrap">
-              <div class="hlc-price hlc-price--loading" id="hlc-price" data-testid="gold-price">
-                <span class="skeleton-inline shell-skeleton-price-lg"></span>
+            <div class="price-hero price-hero--reference">
+              <div class="hlc-price-wrap price-hero__row">
+                <div
+                  class="hlc-price price-hero__value price-hero__value--xl hlc-price--loading"
+                  id="hlc-price"
+                  data-testid="gold-price"
+                >
+                  <span class="skeleton-inline shell-skeleton-price-lg"></span>
+                </div>
               </div>
-            </div>
-            <div class="hlc-change-row">
-              <span class="hlc-direction" id="hlc-direction" hidden aria-hidden="true"></span>
-              <span class="hlc-change" id="hlc-change" hidden>—</span>
-              <span class="hlc-sub" id="hlc-sub">per troy ounce</span>
+              <div class="hlc-change-row price-hero__meta">
+                <span class="hlc-direction price-hero__direction" id="hlc-direction" hidden aria-hidden="true"></span>
+                <span class="hlc-change price-hero__change" id="hlc-change" hidden>—</span>
+                <span class="hlc-sub price-hero__unit" id="hlc-sub">per troy ounce</span>
+              </div>
+              <span
+                class="hlc-updated freshness-chip skeleton-text"
+                id="hlc-updated"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                ><span class="skeleton-inline shell-skeleton-freshness-strip" role="presentation" aria-hidden="true"></span></span
+              >
             </div>
             <div class="hlc-sparkline" id="hlc-sparkline" aria-hidden="true"></div>
             <div class="hlc-stats-row" id="hlc-stats-row" hidden>
@@ -254,14 +268,6 @@
               >
             </p>
             <div class="hlc-footer">
-              <span
-                class="hlc-updated skeleton-text"
-                id="hlc-updated"
-                role="status"
-                aria-live="polite"
-                aria-atomic="true"
-                ><span class="skeleton-inline shell-skeleton-freshness-strip" role="presentation" aria-hidden="true"></span></span
-              >
               <div class="hlc-footer-actions">
                 <button
                   type="button"

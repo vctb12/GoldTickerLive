@@ -63,3 +63,24 @@ The audit identified a **serif/sans split** and **Cairo-only Latin** as cheap-fe
 | `npm test` | **1240 pass / 0 fail** |
 | `npm run lint` | pass |
 | `npm run validate` | pass |
+
+---
+
+## Area B — Unified price display (2026-06-27)
+
+### What changed
+- New `styles/partials/price-display.css` — shared primitive for reference prices, direction/change badges, freshness chips, retail vs reference distinction.
+- **Home:** `price-hero` wrapper; freshness chip moved adjacent to price (bound to number); reference kind chip on spot title; footer simplified.
+- **Country:** Hero prices use `--text-data-lg`; `freshness-chip` on update line; retail intel stat visually distinct.
+- **Order:** Reference price badge restyled (ink on surface, not gold pill); pending breakdown guided empty state.
+
+### Why
+The price is the product — one authoritative treatment, direction shown with colour **and** glyph, freshness legible beside the number, reference vs retail instantly distinguishable.
+
+### Screenshots
+`docs/audit-screenshots/area-b-after/`
+
+### Verification (Area B)
+| Command | Result |
+|---------|--------|
+| `npm test` | **1240 pass / 0 fail** |
