@@ -795,24 +795,24 @@
 
             <div class="tracker-stat-grid" id="tp-chart-stats">
               <div class="tracker-stat-card">
-                <div class="tracker-stat-k">Selected range</div>
+                <div class="tracker-stat-k" data-i18n="chart.statSelectedRange">Selected range</div>
                 <div class="tracker-stat-v">—</div>
-                <div class="tracker-stat-s">Waiting for history</div>
+                <div class="tracker-stat-s" data-i18n="chart.statSelectedRangeNote">Waiting for history</div>
               </div>
               <div class="tracker-stat-card">
-                <div class="tracker-stat-k">Range start</div>
+                <div class="tracker-stat-k" data-i18n="chart.statRangeStart">Range start</div>
                 <div class="tracker-stat-v">—</div>
-                <div class="tracker-stat-s">Reference point</div>
+                <div class="tracker-stat-s" data-i18n="chart.statRangeStartNote">Reference point</div>
               </div>
               <div class="tracker-stat-card">
-                <div class="tracker-stat-k">Range movement</div>
+                <div class="tracker-stat-k" data-i18n="chart.statRangeMovement">Range movement</div>
                 <div class="tracker-stat-v">—</div>
-                <div class="tracker-stat-s">Absolute and percentage change</div>
+                <div class="tracker-stat-s" data-i18n="chart.statRangeMovementNote">Absolute and percentage change</div>
               </div>
               <div class="tracker-stat-card">
-                <div class="tracker-stat-k">Data resolution</div>
+                <div class="tracker-stat-k" data-i18n="chart.statDataResolution">Data resolution</div>
                 <div class="tracker-stat-v">—</div>
-                <div class="tracker-stat-s">Live, daily, or monthly reference history</div>
+                <div class="tracker-stat-s" data-i18n="chart.statDataResolutionNote">Live, daily, or monthly reference history</div>
               </div>
             </div>
 
@@ -843,7 +843,7 @@
           <div class="tracker-panel-head compact">
             <div>
               <h2 id="tp-alerts-watchlist-title">Alerts and watchlist desk</h2>
-              <p>
+              <p data-i18n="alertsWatchlistIntro">
                 Keep thresholds, favorites, and decision cues in one place. Logged-in users can
                 jump to server email alerts directly.
               </p>
@@ -869,10 +869,11 @@
                 type="button"
                 class="btn btn-sm btn-outline tracker-advanced-only"
                 id="tp-export-watchlist"
+                data-i18n="watchlistExportCsv"
               >
                 Export watchlist CSV
               </button>
-              <button type="button" class="btn btn-sm btn-outline" id="tp-save-watchlist-account">
+              <button type="button" class="btn btn-sm btn-outline" id="tp-save-watchlist-account" data-i18n="watchlistSaveAccount">
                 Save watchlist to account
               </button>
             </div>
@@ -999,8 +1000,8 @@
         <div class="tracker-panel">
           <div class="tracker-panel-head">
             <div>
-              <h2>Markets compare board</h2>
-              <p>
+              <h2 data-i18n="compare.boardTitle">Markets compare board</h2>
+              <p id="tp-compare-board-copy">
                 Spot-linked reference prices across GCC, Arab, and international markets.
                 All prices are bullion estimates — not retail or jewelry quotes.
                 <a href="methodology.html#spot-vs-retail" class="tracker-inline-link">Why shop prices differ →</a>
@@ -1012,12 +1013,13 @@
                 id="tp-region-tabs"
                 role="tablist"
                 aria-label="Market regions"
+                data-i18n-aria-label="compare.regionTabsAriaLabel"
               >
-                <button type="button" class="tracker-region-pill is-active" data-region="gcc">
+                <button type="button" class="tracker-region-pill is-active" data-region="gcc" data-i18n="compare.regionGcc">
                   GCC
                 </button>
-                <button type="button" class="tracker-region-pill" data-region="arab">Arab</button>
-                <button type="button" class="tracker-region-pill" data-region="global">
+                <button type="button" class="tracker-region-pill" data-region="arab" data-i18n="compare.regionArab">Arab</button>
+                <button type="button" class="tracker-region-pill" data-region="global" data-i18n="compare.regionReference">
                   Reference
                 </button>
               </div>
@@ -1028,7 +1030,7 @@
             <div class="tracker-subpanel-head comparison-workspace__head">
               <div>
                 <h3 id="tp-compare-builder-title">Build a mobile comparison</h3>
-                <p class="tracker-subpanel-intro">
+                <p class="tracker-subpanel-intro" data-i18n="compare.builderIntro">
                   Compare up to 3 countries and 4 common karats in stacked cards. Missing or delayed
                   data stays labeled.
                 </p>
@@ -1074,7 +1076,7 @@
               AED fixed peg note stay attached to each card.
             </p>
             <div id="tp-compare-hints-slot" class="tracker-addon-slot"></div>
-            <div class="tracker-empty empty-state-card" id="tp-comparison-empty" hidden>
+            <div class="tracker-empty empty-state-card" id="tp-comparison-empty" hidden data-i18n="compare.builderEmpty">
               Select at least one country and one karat to compare.
             </div>
             <div class="comparison-card-grid" id="tp-comparison-cards"></div>
@@ -1082,27 +1084,27 @@
 
           <div class="tracker-compare-toolbar">
             <label class="tracker-search">
-              <span class="sr-only">Filter markets</span>
+              <span class="sr-only" data-i18n="compare.filterMarketsLabel">Filter markets</span>
               <input
                 type="text"
                 id="tp-market-filter"
-                placeholder="Filter by country or currency"
+                placeholder="Filter by country or currency" data-i18n-placeholder="compare.filterPlaceholder"
               />
             </label>
             <label class="tracker-field tracker-field-inline">
-              <span>Sort</span>
+              <span data-i18n="compare.sortLabel">Sort</span>
               <select id="tp-market-sort">
-                <option value="high">High to low</option>
-                <option value="low">Low to high</option>
-                <option value="alpha">A–Z</option>
-                <option value="favorites">Favorites first</option>
+                <option value="high" data-i18n="compare.sortHighLow">High to low</option>
+                <option value="low" data-i18n="compare.sortLowHigh">Low to high</option>
+                <option value="alpha" data-i18n="compare.sortAlpha">A–Z</option>
+                <option value="favorites" data-i18n="compare.sortFavorites">Favorites first</option>
               </select>
             </label>
             <label class="tracker-field tracker-field-inline">
-              <span>View</span>
+              <span data-i18n="compare.viewLabel">View</span>
               <select id="tp-market-view">
-                <option value="card">Card grid</option>
-                <option value="row">Compact rows</option>
+                <option value="card" data-i18n="compare.viewCard">Card grid</option>
+                <option value="row" data-i18n="compare.viewRow">Compact rows</option>
               </select>
             </label>
           </div>
@@ -1111,7 +1113,7 @@
           </p>
 
           <div class="tracker-board-grid" id="tp-market-board"></div>
-          <div class="tracker-empty" id="tp-market-empty" hidden>
+          <div class="tracker-empty" id="tp-market-empty" hidden data-i18n="compare.marketEmpty">
             No markets match the current filters.
           </div>
         </div>
@@ -1619,8 +1621,8 @@
         <section class="tracker-panel">
           <div class="tracker-panel-head">
             <div>
-              <h2>Methodology + sources</h2>
-              <p>
+              <h2 data-i18n="method.panelTitle">Methodology + sources</h2>
+              <p data-i18n="method.panelCopy">
                 This workspace is explicit about what is live, what is cached, what is estimated,
                 and what is synthetic baseline.
               </p>
@@ -1629,19 +1631,19 @@
 
           <div class="tracker-method-grid">
             <article class="tracker-method-card">
-              <h3>Live spot layer</h3>
-              <p>
+              <h3 data-i18n="method.spotHeading">Live spot layer</h3>
+              <p id="tp-method-spot-body">
                 Live spot is pulled in XAU/USD hourly during market hours by
                 <code>.github/workflows/gold-price-fetch.yml</code> and committed
                 to the repository as <code>data/gold_price.json</code>, with retries and
                 fallbacks from cache when networks fail.
               </p>
-              <a href="methodology.html#gold-data" class="tracker-inline-link">Site methodology →</a>
+              <a href="methodology.html#gold-data" class="tracker-inline-link" data-i18n="method.spotLink">Site methodology →</a>
             </article>
 
             <article class="tracker-method-card">
-              <h3>FX conversion layer</h3>
-              <p>
+              <h3 data-i18n="method.fxHeading">FX conversion layer</h3>
+              <p data-i18n="method.fxBody">
                 FX conversion comes from ExchangeRate-API's USD base feed. AED uses the fixed
                 central-bank peg (3.6725) stored in the site constants — not the API feed —
                 so AED prices are always exact.
@@ -1650,24 +1652,25 @@
                 href="https://www.exchangerate-api.com/docs/free"
                 target="_blank"
                 rel="noopener noreferrer"
+                data-i18n="method.fxDocsLink"
                 >ExchangeRate-API docs</a
               > ·
-              <a href="methodology.html#fx-rates" class="tracker-inline-link">Site methodology →</a>
+              <a href="methodology.html#fx-rates" class="tracker-inline-link" data-i18n="method.fxSiteLink">Site methodology →</a>
             </article>
 
             <article class="tracker-method-card">
-              <h3>Karat purity</h3>
-              <p>
+              <h3 data-i18n="method.karatHeading">Karat purity</h3>
+              <p data-i18n="method.karatBody">
                 Prices are scaled by karat purity: 24K = 1.0, 22K = 22/24 ≈ 0.9167, 21K = 21/24 ≈
                 0.875, 18K = 0.75, 14K = 14/24 ≈ 0.5833. All values are derived mathematically
                 from the spot price — no separate quote per karat.
               </p>
-              <a href="methodology.html#karat-conversion" class="tracker-inline-link">Karat math explained →</a>
+              <a href="methodology.html#karat-conversion" class="tracker-inline-link" data-i18n="method.karatLink">Karat math explained →</a>
             </article>
 
             <article class="tracker-method-card">
-              <h3>Historical layer</h3>
-              <p>
+              <h3 data-i18n="method.historyHeading">Historical layer</h3>
+              <p data-i18n="method.historyBody">
                 Short ranges draw on recent live snapshots cached in your browser. Longer ranges
                 use a monthly baseline merged with those snapshots to avoid gaps and keep exports
                 stable.
@@ -1676,24 +1679,25 @@
                 href="https://datahub.io/core/gold-prices"
                 target="_blank"
                 rel="noopener noreferrer"
+                data-i18n="method.historyDataLink"
                 >DataHub gold dataset</a
               > ·
-              <a href="methodology.html#fallback" class="tracker-inline-link">Site methodology →</a>
+              <a href="methodology.html#fallback" class="tracker-inline-link" data-i18n="method.historySiteLink">Site methodology →</a>
             </article>
 
             <article class="tracker-method-card">
-              <h3>Retail vs bullion</h3>
-              <p>
+              <h3 data-i18n="method.retailHeading">Retail vs bullion</h3>
+              <p data-i18n="method.retailBody">
                 All prices are bullion-equivalent estimates based on spot. Actual jewelry and
                 retail prices can differ due to making charges, premiums, and taxes.
               </p>
-              <a href="methodology.html#not-included" class="tracker-inline-link">What our prices are not →</a>
-              · <a href="methodology.html#disclaimer" class="tracker-inline-link">Disclaimer →</a>
+              <a href="methodology.html#not-included" class="tracker-inline-link" data-i18n="method.retailNotLink">What our prices are not →</a>
+              · <a href="methodology.html#disclaimer" class="tracker-inline-link" data-i18n="method.retailDisclaimerLink">Disclaimer →</a>
             </article>
 
             <article class="tracker-method-card">
-              <h3>News wire</h3>
-              <p>
+              <h3 data-i18n="method.newsHeading">News wire</h3>
+              <p data-i18n="method.newsBody">
                 The market wire uses the GDELT DOC API in article-list mode, suitable for static
                 sites. When it fails, the workspace falls back to cached headlines or a static
                 explainer strip.
@@ -1702,25 +1706,26 @@
                 href="https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/amp/"
                 target="_blank"
                 rel="noopener noreferrer"
+                data-i18n="method.newsDocLink"
                 >GDELT DOC API</a
               >
             </article>
           </div>
           <div class="tracker-method-footer">
-            <a href="methodology.html" class="btn btn-outline btn-sm">Read full methodology →</a>
-            <a href="methodology.html#gold-data" class="tracker-inline-link">Freshness labels explained</a>
-            · <a href="methodology.html#disclaimer" class="tracker-inline-link">Known limitations</a>
+            <a href="methodology.html" class="btn btn-outline btn-sm" data-i18n="method.footerFullLink">Read full methodology →</a>
+            <a href="methodology.html#gold-data" class="tracker-inline-link" data-i18n="method.footerFreshnessLink">Freshness labels explained</a>
+            · <a href="methodology.html#disclaimer" class="tracker-inline-link" data-i18n="method.footerLimitationsLink">Known limitations</a>
           </div>
         </section>
       </section>
 
       <!-- ── Market brief (shared across modes) ────────────── -->
-      <section class="tracker-shell tracker-brief-shell" aria-label="Market brief" data-reveal>
+      <section class="tracker-shell tracker-brief-shell" aria-label="Market brief" data-i18n-aria-label="marketBriefTitle" data-reveal>
         <section class="tracker-panel">
           <div class="tracker-panel-head">
             <div>
-              <h2>Market brief</h2>
-              <p>
+              <h2 data-i18n="marketBriefTitle">Market brief</h2>
+              <p data-i18n="marketBriefIntro">
                 One-paragraph summary of current gold conditions for your selected view, updated as
                 you change markets, karats, and time ranges.
               </p>
@@ -1741,28 +1746,29 @@
         aria-modal="true"
         role="dialog"
         aria-label="Keyboard shortcuts"
+        data-i18n-aria-label="keyboard.dialogAriaLabel"
       >
         <div class="tp-keyboard-help-panel">
-          <button class="tp-keyboard-help-close" type="button" id="tp-keyboard-help-close" aria-label="Close keyboard shortcuts">✕</button>
-          <h2>Keyboard shortcuts</h2>
+          <button class="tp-keyboard-help-close" type="button" id="tp-keyboard-help-close" aria-label="Close keyboard shortcuts" data-i18n-aria-label="keyboard.closeAriaLabel">✕</button>
+          <h2 data-i18n="keyboard.title">Keyboard shortcuts</h2>
           <table class="tp-keyboard-table">
             <thead>
               <tr>
-                <th scope="col">Key</th>
-                <th scope="col">Action</th>
+                <th scope="col" data-i18n="keyboard.colKey">Key</th>
+                <th scope="col" data-i18n="keyboard.colAction">Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td><kbd class="tracker-kbd">R</kbd></td><td>Refresh prices</td></tr>
-              <tr><td><kbd class="tracker-kbd">K</kbd></td><td>Cycle karat</td></tr>
-              <tr><td><kbd class="tracker-kbd">U</kbd></td><td>Cycle unit (g / oz / tola / kg)</td></tr>
-              <tr><td><kbd class="tracker-kbd">⇧C</kbd></td><td>Copy spot + selected price</td></tr>
-              <tr><td><kbd class="tracker-kbd">H</kbd></td><td>Switch to Live mode</td></tr>
-              <tr><td><kbd class="tracker-kbd">C</kbd></td><td>Switch to Compare mode</td></tr>
-              <tr><td><kbd class="tracker-kbd">A</kbd></td><td>Open Alerts panel</td></tr>
-              <tr><td><kbd class="tracker-kbd">P</kbd></td><td>Open Planner panel</td></tr>
-              <tr><td><kbd class="tracker-kbd">Esc</kbd></td><td>Close open panel</td></tr>
-              <tr><td><kbd class="tracker-kbd">?</kbd></td><td>Show this help</td></tr>
+              <tr><td><kbd class="tracker-kbd">R</kbd></td><td data-i18n="keyboard.rowRefresh">Refresh prices</td></tr>
+              <tr><td><kbd class="tracker-kbd">K</kbd></td><td data-i18n="keyboard.rowCycleKarat">Cycle karat</td></tr>
+              <tr><td><kbd class="tracker-kbd">U</kbd></td><td data-i18n="keyboard.rowCycleUnit">Cycle unit (g / oz / tola / kg)</td></tr>
+              <tr><td><kbd class="tracker-kbd">⇧C</kbd></td><td data-i18n="keyboard.rowCopy">Copy spot + selected price</td></tr>
+              <tr><td><kbd class="tracker-kbd">H</kbd></td><td data-i18n="keyboard.rowLive">Switch to Live mode</td></tr>
+              <tr><td><kbd class="tracker-kbd">C</kbd></td><td data-i18n="keyboard.rowCompare">Switch to Compare mode</td></tr>
+              <tr><td><kbd class="tracker-kbd">A</kbd></td><td data-i18n="keyboard.rowAlerts">Open Alerts panel</td></tr>
+              <tr><td><kbd class="tracker-kbd">P</kbd></td><td data-i18n="keyboard.rowPlanner">Open Planner panel</td></tr>
+              <tr><td><kbd class="tracker-kbd">Esc</kbd></td><td data-i18n="keyboard.rowClose">Close open panel</td></tr>
+              <tr><td><kbd class="tracker-kbd">?</kbd></td><td data-i18n="keyboard.rowHelp">Show this help</td></tr>
             </tbody>
           </table>
         </div>

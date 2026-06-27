@@ -134,6 +134,45 @@ test('fetchShops() applies safe defaults for missing optional fields', async () 
   }
 });
 
+test('fetchShops() queries only the canonical shop_listings table (D3)', async () => {
+  // The legacy `shops` table has a mismatched schema; querying it downgrades the
+  // curated directory. fetchShops must hit shop_listings and never fall back to
+  // the legacy `shops` table, even when the canonical endpoint 404s.
+  const orig = globalThis.fetch;
+  const urls = [];
+  globalThis.fetch = async (u) => {
+    urls.push(String(u));
+    return { ok: false, status: 404, statusText: 'Not Found', json: async () => ({}) };
+  };
+  try {
+    const { fetchShops } = await load();
+    const result = await fetchShops();
+    assert.equal(result, null, '404 → null (caller keeps curated directory)');
+    assert.ok(
+      urls.some((u) => u.includes('/rest/v1/shop_listings')),
+      'must query the canonical shop_listings table'
+    );
+    assert.ok(
+      !urls.some((u) => /\/rest\/v1\/shops\?/.test(u)),
+      'must NOT fall back to the legacy shops table (schema mismatch downgrades curated data)'
+    );
+  } finally {
+    globalThis.fetch = orig;
+  }
+});
+
+test('fetchShops() does not reference any service-role key (anon only)', async () => {
+  const fs = require('node:fs');
+  const src = fs.readFileSync(
+    path.resolve(__dirname, '..', 'src', 'lib', 'supabase-data.js'),
+    'utf8'
+  );
+  assert.ok(
+    !/service_role|SERVICE_ROLE/i.test(src),
+    'browser shop fetch must never reference a service-role key'
+  );
+});
+
 test('fetchShops() returns null when rows is not an array', async () => {
   const orig = globalThis.fetch;
   globalThis.fetch = mockFetch(200, { error: 'unexpected' });

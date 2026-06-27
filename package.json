@@ -41,6 +41,7 @@
     "analytics:inventory:check": "node scripts/node/export-analytics-inventory.js --check",
     "a11y": "pa11y-ci --config .pa11yci.js",
     "i18n:leaked-scan": "node scripts/qa/leaked-key-scan.mjs",
+    "i18n:parity-scan": "node scripts/qa/parity-diff-scan.mjs",
     "image-audit": "node scripts/node/image-audit.js",
     "perf:ci": "npm run image-audit && npx playwright test --reporter=list || true",
     "check-links": "node scripts/node/check-links.js",
