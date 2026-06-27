@@ -5,6 +5,44 @@
 - **Legend:** ✅ committed (GREEN) · 🟥 staged only (RED → `OWNER_REVIEW.md`) · 🟦 GREEN staged as a
   proposal (judgment-heavy/large — plan + risk below) · ⏭️ spec only · ⤴️ out of scope for #443
 
+## 🟢 2026-06-27 i18n parity track (branch `claude/gold-ticker-i18n-parity-2kxn5q`)
+
+EN/AR parity sweep — fixing JS-hydrated visible strings that render English in Arabic (a parity bug
+that does **not** leak a raw key, so the existing leaked-key scan reported it clean). Baseline held
+green on every commit: **1240 → 1245 tests / 0 fail**; lint + style + validate + build green per
+commit. LOCKED pricing intact (24K AED/g = 478.03 assertion still green).
+
+**Method.** An Ultracode read-only discovery fan-out (1 agent/surface) inventoried **130 real gaps**
+across tracker/home/calculator/shops/methodology/country, verified against a new runtime EN↔AR
+parity-diff scan. Full file:line + wiring work-list:
+[`docs/plans/_artifacts/2026-06-27_i18n-parity-remaining-surfaces.md`](docs/plans/_artifacts/2026-06-27_i18n-parity-remaining-surfaces.md).
+
+**Landed (5 commits, all green + pushed):**
+
+- ✅ **Tracker Method mode + Keyboard-help + chart-stats** — wired 33 already-existing keys (no new
+  AR) + dropped 2 dead `trackerTx(…) || 'literal'` fallbacks. (`aea2366`)
+- ✅ **Site-wide guard extension** — new `tests/i18n-local-dict-parity.test.js` (acorn AST) asserts
+  EN/AR key parity for the local-dict pages (calculator/shops/methodology/compare/invest) the old
+  guard never covered; **caught + fixed a real bug** (`shops` `TXT.en.contactQuality` had no AR).
+  Added `scripts/qa/parity-diff-scan.mjs` + `npm run i18n:parity-scan`. (`9cf47ed`)
+- ✅ **Tracker Compare board** — 19 new EN/AR keys (header, region tabs, filter/sort/view toolbar,
+  empty states). (`8c47d94`)
+- ✅ **Tracker Market-brief + alerts/watchlist desk** — 5 new EN/AR keys. (`da048c6`)
+
+**Proof (runtime EN↔AR scan — identical-EN/AR visible strings):** tracker **124 → 59**. The
+remaining 59 are false positives (currency flags/codes, karat codes, brand, source proper-nouns)
+plus the JS-param archive source-note and wire `pause`/`metaPrefix` rendered by `wire.js`. Raw
+leaked keys stayed **0** throughout (`npm run i18n:leaked-scan`).
+
+**Guard coverage now:** EN/AR key-set parity for the global `TRANSLATIONS` table (pre-existing) **+
+every local `en`/`ar` dict (new)** + `data-i18n` key existence (tracker.html/index.html) +
+global-helper key references (home `tx`, tracker `trackerTx`, country page-hydrator).
+
+**Outstanding (next session — artifact has file:line + wiring):** home FAQ (7 Q&A, needs AR) + unit
+tooltips; calculator (6, local dict); shops (11); methodology (61 — 52 are dense body prose, the
+highest AR-authoring risk); country template (4); tracker stragglers (archive source-note JS param,
+wire `pause`/`metaPrefix`, karat-selector long labels).
+
 ## 🟢 2026-06-26 Overhaul session (branch `claude/tracker-html-revamp-bpk97i`)
 
 Separate from PR #443. Full record:
