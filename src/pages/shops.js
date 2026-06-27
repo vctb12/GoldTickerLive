@@ -349,6 +349,7 @@ const TXT = {
       'قد تمثل بعض الإدراجات مناطق سوق أو تجمعات تجار ما لم تُعرض بيانات اتصال مباشرة.',
     listingConfidenceTitle: 'نوع الإدراج + مستوى الثقة بالتفاصيل',
     detailsConfidence: 'ثقة التفاصيل',
+    contactQuality: 'جودة بيانات التواصل',
     rankFull: 'مرتفع',
     rankPartial: 'متوسط',
     rankLimited: 'أساسي',

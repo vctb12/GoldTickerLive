@@ -229,6 +229,24 @@ function localizeStaticTrackerCopy() {
     trackerTx('exports.disclaimerLink')
   );
 
+  // Method mode — "Live spot layer" body wraps two literal <code> repo paths, so
+  // it can't be a single data-i18n string; rebuild it from the localized
+  // before/mid/after fragments with the (untranslated) code paths preserved.
+  const methodSpotBody = document.getElementById('tp-method-spot-body');
+  if (methodSpotBody) {
+    const codeWorkflow = document.createElement('code');
+    codeWorkflow.textContent = '.github/workflows/gold-price-fetch.yml';
+    const codeData = document.createElement('code');
+    codeData.textContent = 'data/gold_price.json';
+    methodSpotBody.replaceChildren(
+      trackerTx('method.spotBodyBefore'),
+      codeWorkflow,
+      trackerTx('method.spotBodyMid'),
+      codeData,
+      trackerTx('method.spotBodyAfter')
+    );
+  }
+
   // Planner overlay — link-bearing fees note (the rest of the chrome is data-i18n).
   setInlineLinkText(
     document.getElementById('tp-planner-fees-note'),
@@ -415,6 +433,13 @@ function localizeStaticTrackerCopy() {
   setNodeText('tp-archive-scroll-hint', trackerTx('archiveScrollHint'));
   setNodeText('tp-compare-builder-title', trackerTx('compare.builderTitle'));
   setNodeText('tp-compare-note', trackerTx('compare.builderNote'));
+  // Compare board intro carries a methodology link, so it can't be data-i18n.
+  setInlineLinkText(
+    document.getElementById('tp-compare-board-copy'),
+    trackerTx('compare.boardCopy'),
+    'methodology.html#spot-vs-retail',
+    trackerTx('compare.boardCopyLink')
+  );
   const monthLabel = document.querySelector('.tracker-history-month-field > span');
   if (monthLabel) monthLabel.textContent = trackerTx('compare.monthLabel');
   setButtonCopy(document.getElementById('tp-history-month-clear'), trackerTx('compare.clearMonth'));
@@ -904,7 +929,7 @@ function syncHeroReadout() {
     spot,
   });
 
-  if (spotLabelEl) spotLabelEl.textContent = trackerTx('readout.spotLabel') || 'XAU/USD spot';
+  if (spotLabelEl) spotLabelEl.textContent = trackerTx('readout.spotLabel');
   if (selectedLabelEl) {
     selectedLabelEl.textContent =
       trackerTx('readout.selectedLabel', {
@@ -934,7 +959,7 @@ function syncHeroReadout() {
     unitNoteEl.textContent = trackerTx(`controls.unit${unitKey}`) || state.selectedUnit;
   }
   if (metaHeading) {
-    metaHeading.textContent = trackerTx('commandMeta.heading') || 'Quote context';
+    metaHeading.textContent = trackerTx('commandMeta.heading');
   }
 }
 
