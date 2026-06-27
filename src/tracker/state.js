@@ -103,7 +103,7 @@ export function createInitialState() {
 
   // Tracker-specific saved state
   const saved = readLocal(STORAGE_KEYS.core, {});
-  base.lang = saved.lang || readLanguagePref() || base.lang;
+  base.lang = readQueryLang() || saved.lang || readLanguagePref() || base.lang;
   base.mode = (VALID_MODES.has(saved.mode) ? saved.mode : null) || base.mode;
   base.workspaceLevel = saved.workspaceLevel === 'advanced' ? 'advanced' : base.workspaceLevel;
   base.selectedCurrency = saved.selectedCurrency || base.selectedCurrency;
@@ -282,6 +282,20 @@ function readLanguagePref() {
   try {
     const prefs = JSON.parse(localStorage.getItem(CONSTANTS.CACHE_KEYS.userPrefs) || '{}');
     return prefs.lang;
+  } catch {
+    return null;
+  }
+}
+
+// The tracker's hreflang AR alternate is tracker.html?lang=ar (a query param),
+// but applyUrlState only reads the hash — so a crawler/user landing on that URL
+// otherwise rendered fully English. Read ?lang= as a fallback (the hash still
+// wins via applyUrlState), mirroring home.js / page-hydrator. Does NOT touch the
+// frozen hash schema.
+function readQueryLang() {
+  try {
+    const v = new URLSearchParams(window.location.search).get('lang');
+    return v === 'en' || v === 'ar' ? v : null;
   } catch {
     return null;
   }
