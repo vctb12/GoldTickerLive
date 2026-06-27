@@ -999,8 +999,8 @@
         <div class="tracker-panel">
           <div class="tracker-panel-head">
             <div>
-              <h2>Markets compare board</h2>
-              <p>
+              <h2 data-i18n="compare.boardTitle">Markets compare board</h2>
+              <p id="tp-compare-board-copy">
                 Spot-linked reference prices across GCC, Arab, and international markets.
                 All prices are bullion estimates — not retail or jewelry quotes.
                 <a href="methodology.html#spot-vs-retail" class="tracker-inline-link">Why shop prices differ →</a>
@@ -1013,11 +1013,11 @@
                 role="tablist"
                 aria-label="Market regions"
               >
-                <button type="button" class="tracker-region-pill is-active" data-region="gcc">
+                <button type="button" class="tracker-region-pill is-active" data-region="gcc" data-i18n="compare.regionGcc">
                   GCC
                 </button>
-                <button type="button" class="tracker-region-pill" data-region="arab">Arab</button>
-                <button type="button" class="tracker-region-pill" data-region="global">
+                <button type="button" class="tracker-region-pill" data-region="arab" data-i18n="compare.regionArab">Arab</button>
+                <button type="button" class="tracker-region-pill" data-region="global" data-i18n="compare.regionReference">
                   Reference
                 </button>
               </div>
@@ -1028,7 +1028,7 @@
             <div class="tracker-subpanel-head comparison-workspace__head">
               <div>
                 <h3 id="tp-compare-builder-title">Build a mobile comparison</h3>
-                <p class="tracker-subpanel-intro">
+                <p class="tracker-subpanel-intro" data-i18n="compare.builderIntro">
                   Compare up to 3 countries and 4 common karats in stacked cards. Missing or delayed
                   data stays labeled.
                 </p>
@@ -1074,7 +1074,7 @@
               AED fixed peg note stay attached to each card.
             </p>
             <div id="tp-compare-hints-slot" class="tracker-addon-slot"></div>
-            <div class="tracker-empty empty-state-card" id="tp-comparison-empty" hidden>
+            <div class="tracker-empty empty-state-card" id="tp-comparison-empty" hidden data-i18n="compare.builderEmpty">
               Select at least one country and one karat to compare.
             </div>
             <div class="comparison-card-grid" id="tp-comparison-cards"></div>
@@ -1082,27 +1082,27 @@
 
           <div class="tracker-compare-toolbar">
             <label class="tracker-search">
-              <span class="sr-only">Filter markets</span>
+              <span class="sr-only" data-i18n="compare.filterMarketsLabel">Filter markets</span>
               <input
                 type="text"
                 id="tp-market-filter"
-                placeholder="Filter by country or currency"
+                placeholder="Filter by country or currency" data-i18n-placeholder="compare.filterPlaceholder"
               />
             </label>
             <label class="tracker-field tracker-field-inline">
-              <span>Sort</span>
+              <span data-i18n="compare.sortLabel">Sort</span>
               <select id="tp-market-sort">
-                <option value="high">High to low</option>
-                <option value="low">Low to high</option>
-                <option value="alpha">A–Z</option>
-                <option value="favorites">Favorites first</option>
+                <option value="high" data-i18n="compare.sortHighLow">High to low</option>
+                <option value="low" data-i18n="compare.sortLowHigh">Low to high</option>
+                <option value="alpha" data-i18n="compare.sortAlpha">A–Z</option>
+                <option value="favorites" data-i18n="compare.sortFavorites">Favorites first</option>
               </select>
             </label>
             <label class="tracker-field tracker-field-inline">
-              <span>View</span>
+              <span data-i18n="compare.viewLabel">View</span>
               <select id="tp-market-view">
-                <option value="card">Card grid</option>
-                <option value="row">Compact rows</option>
+                <option value="card" data-i18n="compare.viewCard">Card grid</option>
+                <option value="row" data-i18n="compare.viewRow">Compact rows</option>
               </select>
             </label>
           </div>
@@ -1111,7 +1111,7 @@
           </p>
 
           <div class="tracker-board-grid" id="tp-market-board"></div>
-          <div class="tracker-empty" id="tp-market-empty" hidden>
+          <div class="tracker-empty" id="tp-market-empty" hidden data-i18n="compare.marketEmpty">
             No markets match the current filters.
           </div>
         </div>

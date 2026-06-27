@@ -433,6 +433,13 @@ function localizeStaticTrackerCopy() {
   setNodeText('tp-archive-scroll-hint', trackerTx('archiveScrollHint'));
   setNodeText('tp-compare-builder-title', trackerTx('compare.builderTitle'));
   setNodeText('tp-compare-note', trackerTx('compare.builderNote'));
+  // Compare board intro carries a methodology link, so it can't be data-i18n.
+  setInlineLinkText(
+    document.getElementById('tp-compare-board-copy'),
+    trackerTx('compare.boardCopy'),
+    'methodology.html#spot-vs-retail',
+    trackerTx('compare.boardCopyLink')
+  );
   const monthLabel = document.querySelector('.tracker-history-month-field > span');
   if (monthLabel) monthLabel.textContent = trackerTx('compare.monthLabel');
   setButtonCopy(document.getElementById('tp-history-month-clear'), trackerTx('compare.clearMonth'));
