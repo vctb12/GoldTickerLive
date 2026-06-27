@@ -178,42 +178,50 @@
     var(--color-gold-dark)
   );
 
-  /* ── Spacing scale ── */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-7: 3rem;
-  --space-8: 4rem;
-  --space-9: 5rem;
-  --space-10: 6rem;
+  /* ── Spacing scale (4px / 0.25rem base unit) ── */
+  --space-unit: 0.25rem;
+  --space-0: 0;
+  --space-px: 1px;
+  --space-0_5: calc(var(--space-unit) * 0.5);
+  --space-1: calc(var(--space-unit) * 1);
+  --space-2: calc(var(--space-unit) * 2);
+  --space-3: calc(var(--space-unit) * 3);
+  --space-4: calc(var(--space-unit) * 4);
+  --space-5: calc(var(--space-unit) * 6);
+  --space-6: calc(var(--space-unit) * 8);
+  --space-7: calc(var(--space-unit) * 12);
+  --space-8: calc(var(--space-unit) * 16);
+  --space-9: calc(var(--space-unit) * 20);
+  --space-10: calc(var(--space-unit) * 24);
 
   /* ── Rhythm ── */
   --rhythm-section: var(--space-7);
 
-  /* ── Typography ── */
-  --font-main: 'Cairo', -apple-system, blinkmacsystemfont, 'Segoe UI', sans-serif;
+  /* ── Typography — modular scale (ratio 1.25 from 16px base) ── */
+  --type-ratio: 1.25;
+  --type-base: 1rem;
+  --font-latin: 'Source Sans 3', system-ui, -apple-system, blinkmacsystemfont, 'Segoe UI', sans-serif;
+  --font-arabic: 'Cairo', 'Source Sans 3', system-ui, sans-serif;
+  --font-main: var(--font-latin);
   --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
-  --font-display: ui-serif, georgia, 'Iowan Old Style', 'Times New Roman', 'Cairo', serif;
-  --font-numeric: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', menlo, monospace;
-  --font-sans:
-    -apple-system, blinkmacsystemfont, 'Segoe UI Variable', 'Segoe UI', 'Cairo', sans-serif;
+  --font-display: var(--font-main);
+  --font-numeric: var(--font-latin);
+  --font-sans: var(--font-main);
+  --font-feature-tabular: 'tnum' 1, 'lnum' 1;
 
-  /* ── Type scale ── */
+  /* Type scale — Major Third (×1.25); sm/md kept for dense UI rows */
   --text-2xs: 0.625rem;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
-  --text-base: 1rem;
+  --text-base: var(--type-base);
   --text-md: 1.0625rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.25rem;
-  --text-5xl: 3rem;
-  --text-6xl: 3.75rem;
+  --text-lg: calc(var(--type-base) * var(--type-ratio));
+  --text-xl: calc(var(--type-base) * var(--type-ratio) * var(--type-ratio));
+  --text-2xl: calc(var(--type-base) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio));
+  --text-3xl: 2.4375rem;
+  --text-4xl: 3.0625rem;
+  --text-5xl: 3.8125rem;
+  --text-6xl: 4.75rem;
 
   /* ── Font weights ── */
   --weight-light: 300;
@@ -313,19 +321,29 @@
     transparent
   );
 
-  /* ── Design System v4 — unified movement + readable data scale ── */
+  /* ── Design System v4 — movement, data scale, semantic aliases ── */
   --color-champagne: #d4b86a;
   --color-champagne-soft: #f5ecd4;
 
-  /* Readable UI / data type scale — fixes tiny-text walls */
-  --text-ui-xs: 0.8125rem;
-  --text-ui-sm: 0.875rem;
-  --text-ui-base: 0.9375rem;
-  --text-ui-md: 1.0625rem;
-  --text-data-sm: 1rem;
-  --text-data-md: 1.25rem;
-  --text-data-lg: clamp(1.65rem, 3.6vw, 2.35rem);
-  --text-data-xl: clamp(2.1rem, 4.8vw, 3.15rem);
+  /* Semantic aliases (use these in new CSS — no raw hex) */
+  --text-muted: var(--color-text-muted);
+  --surface-raised: var(--color-surface-raised);
+  --price-up: var(--color-move-up);
+  --price-down: var(--color-move-down);
+  --price-up-bg: var(--color-move-up-bg);
+  --price-down-bg: var(--color-move-down-bg);
+  --price-up-border: var(--color-move-up-border);
+  --price-down-border: var(--color-move-down-border);
+
+  /* Readable UI / data type scale */
+  --text-ui-xs: var(--text-sm);
+  --text-ui-sm: var(--text-sm);
+  --text-ui-base: var(--text-base);
+  --text-ui-md: var(--text-md);
+  --text-data-sm: var(--text-base);
+  --text-data-md: var(--text-xl);
+  --text-data-lg: clamp(1.95rem, 3.6vw, 2.75rem);
+  --text-data-xl: clamp(2.5rem, 4.8vw, 3.85rem);
 
   /* Component primitive tokens */
   --control-height: 44px;
@@ -514,8 +532,10 @@
 }
 
 /* ═══════════════════════════════════════════════
-   RTL — Arabic keeps Cairo; numerics stay mono
+   RTL — Arabic-primary stack; Latin fallback for mixed numerals
    ═══════════════════════════════════════════════ */
 [dir='rtl'] {
-  --font-display: 'Cairo', var(--font-main);
+  --font-main: var(--font-arabic);
+  --font-display: var(--font-main);
+  --font-numeric: var(--font-arabic);
 }

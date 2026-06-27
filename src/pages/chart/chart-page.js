@@ -186,6 +186,37 @@ function setupPage() {
     return filterSeriesByPeriod(full, state.period);
   }
 
+  function renderChartHero(series) {
+    const hero = document.getElementById('chart-hero');
+    if (!hero) return;
+    const latest = series[series.length - 1];
+    if (!latest) {
+      hero.hidden = true;
+      return;
+    }
+    hero.hidden = false;
+    clear(hero);
+    const refLabel = lang === 'ar' ? 'سعر مرجعي' : 'Reference';
+    const unitLabel =
+      lang === 'ar'
+        ? `/غرام · ${state.karat}K`
+        : `/gram · ${state.karat}K`;
+    const formatted = formatPrice(
+      latest.value,
+      state.currency,
+      state.currency === 'AED' ? 2 : 3
+    );
+    hero.appendChild(
+      el('div', { class: 'chart-hero__inner price-hero price-hero--reference' }, [
+        el('span', { class: 'price-kind price-kind--reference' }, [refLabel]),
+        el('div', { class: 'price-hero__row' }, [
+          el('strong', { class: 'price-hero__value price-hero__value--lg' }, [formatted]),
+          el('span', { class: 'price-hero__unit' }, [unitLabel]),
+        ]),
+      ])
+    );
+  }
+
   function renderStats(series) {
     const statsRoot = document.getElementById('chart-stats');
     if (!statsRoot) return;
@@ -254,11 +285,14 @@ function setupPage() {
     if (empty) empty.hidden = true;
     if (!series.length) {
       chart.setCustomData([]);
+      const hero = document.getElementById('chart-hero');
+      if (hero) hero.hidden = true;
       renderFallback();
       return;
     }
     chart.setCustomData(buildChartData(series));
     chart.setRange(state.period);
+    renderChartHero(series);
     renderStats(series);
     renderFreshness(series);
     updateUrl();

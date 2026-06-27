@@ -79,7 +79,7 @@ function buildCityGoldRatePage({ country, city, depth }) {
     .slice(0, 4)
     .map(
       (c) =>
-        `<a href="${SITE_URL}/countries/${country.slug}/${c.slug}/gold-rate/" style="padding:0.4rem 0.75rem;background:#f1f5f9;border-radius:6px;font-size:0.875rem;text-decoration:none;color:#1e293b;">${c.nameEn}</a>`
+        `<a class="cgr-chip" href="${SITE_URL}/countries/${country.slug}/${c.slug}/gold-rate/">${c.nameEn}</a>`
     )
     .join('\n          ');
 
@@ -136,10 +136,7 @@ function buildCityGoldRatePage({ country, city, depth }) {
   <link rel="alternate" hreflang="en" href="${canonical}/" />
   <link rel="alternate" hreflang="ar" href="${canonical}/?lang=ar" />
   <title>${title}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://open.er-api.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="${rel}styles/global.css" />
   <link rel="icon" href="${rel}favicon.svg" type="image/svg+xml" />
   <script type="application/ld+json">
@@ -148,21 +145,21 @@ ${JSON.stringify(jsonLd, null, 2)}
 </head>
 <body>
   <div id="nav-root"></div>
-  <main id="main-content" class="country-page-main" style="max-width:900px;margin:0 auto;padding:1.5rem 1rem;">
+  <main id="main-content" class="country-page-main cgr-page">
     <nav class="breadcrumb" aria-label="Breadcrumb" id="breadcrumb-root"></nav>
-    <h1 style="font-size:1.75rem;font-weight:700;margin:1rem 0 0.5rem;">${h1}</h1>
-    <p style="color:#64748b;margin-bottom:1.5rem;">${intro}</p>
-    <div id="price-display" style="display:none;">
-      <div id="freshness-badge" style="margin-bottom:1rem;"></div>
-      <div id="karat-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem;"></div>
+    <h1 class="cgr-page__title">${h1}</h1>
+    <p class="cgr-page__intro">${intro}</p>
+    <div id="price-display">
+      <div id="freshness-badge"></div>
+      <div id="karat-cards"></div>
       <div id="price-disclaimer"></div>
     </div>
-    <div id="price-loading" style="padding:2rem;text-align:center;color:#94a3b8;">Loading live prices…</div>
-    <section style="margin-top:2rem;">
-      <h2 style="font-size:1.1rem;font-weight:600;margin-bottom:0.75rem;">Related Pages</h2>
-      <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
-        <a href="${SITE_URL}/countries/${country.slug}/" style="padding:0.4rem 0.75rem;background:#f1f5f9;border-radius:6px;font-size:0.875rem;text-decoration:none;color:#1e293b;">${country.nameEn} overview</a>
-        <a href="${SITE_URL}/countries/${country.slug}/${city.slug}/gold-shops/" style="padding:0.4rem 0.75rem;background:#fef9c3;border-radius:6px;font-size:0.875rem;text-decoration:none;color:#713f12;">Gold shops in ${city.nameEn}</a>
+    <div id="price-loading">Loading live prices…</div>
+    <section class="cgr-related">
+      <h2 class="cgr-related__title">Related Pages</h2>
+      <div class="cgr-related__links">
+        <a class="cgr-chip" href="${SITE_URL}/countries/${country.slug}/">${country.nameEn} overview</a>
+        <a class="cgr-chip cgr-chip--gold" href="${SITE_URL}/countries/${country.slug}/${city.slug}/gold-shops/">Gold shops in ${city.nameEn}</a>
         ${siblingLinks}
       </div>
     </section>

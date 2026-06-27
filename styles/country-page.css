@@ -51,9 +51,11 @@
 }
 
 .cp-hero-title {
-  font-size: 1.15rem;
-  font-weight: var(--weight-bold);
-  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
 }
 
 .cp-hero-badges {
@@ -155,8 +157,8 @@
 }
 
 .cp-update-time {
-  font-size: 0.72rem;
-  color: var(--text-tertiary);
+  margin-top: var(--space-3);
+  max-width: 100%;
 }
 
 @media (width <= 640px) {
@@ -231,21 +233,36 @@
 
 .cp-table th {
   background: var(--color-surface-2);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--table-cell-padding, 0.85rem 1rem);
   text-align: start;
-  font-size: var(--text-xs);
+  font-size: var(--table-header-size, var(--text-ui-xs));
   font-weight: var(--weight-bold);
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wider);
   white-space: nowrap;
   border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .cp-table td {
-  padding: 0.85rem var(--space-4);
+  padding: var(--table-cell-padding, 0.85rem 1rem);
   border-bottom: 1px solid var(--color-border);
   white-space: nowrap;
+  font-size: var(--table-body-size, var(--text-ui-sm));
+}
+
+.cp-table tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--surface-secondary) 65%, transparent);
+}
+
+.cp-table .cp-price-cell,
+.cp-table td[data-numeric] {
+  text-align: end;
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums lining-nums;
 }
 
 .cp-table tbody tr:last-child td {
@@ -901,13 +918,7 @@
   pointer-events: none;
 }
 
-/* Hero title sizing */
-.cp-hero-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.1rem, 2.8vw, 1.55rem);
-  font-weight: var(--weight-extrabold);
-  letter-spacing: var(--tracking-tight);
-}
+/* Hero title sizing — see also .cp-hero-title at top of file */
 
 /* Price cards — gradient card with lift + gold shadow */
 .cp-price-card {

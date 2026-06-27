@@ -67,12 +67,7 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
-    <link rel="stylesheet" href="../../styles/global.css" />
+<link rel="stylesheet" href="../../styles/global.css" />
     <link rel="stylesheet" href="../../styles/pages/content-landing.css" />
     <link rel="stylesheet" href="../../styles/order.css" />
   <script type="application/ld+json">
@@ -137,12 +132,12 @@
         <p class="order-hero-sub" data-i18n="ord_sub">
           Spot-based price reference — then find verified shops in your city
         </p>
-        <div class="order-hero-badges">
-          <span class="order-price-badge">
+        <div class="order-hero-badges price-hero price-hero--reference price-hero--compact">
+          <span class="order-price-badge price-hero__value price-hero__value--md">
             <span id="live-price-badge">—</span>
-            <span class="order-price-unit"> AED/g (24K)</span>
+            <span class="order-price-unit price-hero__unit"> AED/g (24K)</span>
           </span>
-          <span class="order-price-refresh" id="refresh-countdown"></span>
+          <span class="order-price-refresh freshness-chip" id="refresh-countdown"></span>
         </div>
       </section>
 
@@ -198,7 +193,7 @@
         </div>
 
         <!-- Price breakdown -->
-        <div class="price-breakdown" id="price-breakdown">
+        <div class="price-breakdown is-pending" id="price-breakdown">
           <div class="price-breakdown-title" data-i18n="ord_breakdown_title">Price Breakdown</div>
           <div class="price-breakdown-row">
             <span data-i18n="ord_gold_price" id="gold-price-label">Gold price (10g × 24K)</span>

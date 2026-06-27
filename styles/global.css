@@ -1,3 +1,5 @@
+@import url('./partials/fonts.css');
+@import url('./partials/price-display.css');
 @import url('./partials/shell.css');
 @import url('./partials/skeleton.css');
 @import url('./partials/market-summary-ticker.css');
@@ -7,3 +9,4 @@
 @import url('./partials/components.css');
 @import url('./partials/utilities.css');
 @import url('./partials/motion-advanced.css');
+@import url('./pages/city-gold-rate.css');

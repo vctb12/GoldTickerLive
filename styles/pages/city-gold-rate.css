@@ -1,0 +1,292 @@
+/* ═══════════════════════════════════════════════
+   City gold-rate pages — Area E (+ F motion)
+   Hydrated by src/lib/page-hydrator.js
+   ═══════════════════════════════════════════════ */
+
+.cgr-page {
+  max-width: 900px;
+  margin-inline: auto;
+  padding: var(--space-6) var(--space-4);
+}
+
+.cgr-page__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 3.5vw, 1.75rem);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  color: var(--text-primary);
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.cgr-page__intro {
+  color: var(--text-secondary);
+  font-size: var(--text-ui-sm);
+  line-height: var(--leading-relaxed);
+  margin-block-end: var(--space-6);
+}
+
+/* ── Price panel (legacy hydrator IDs) ── */
+#price-display {
+  display: none;
+}
+
+#price-display.is-visible {
+  display: block;
+}
+
+#freshness-badge {
+  margin-block-end: var(--space-4);
+}
+
+#karat-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-4);
+  margin-block-end: var(--space-6);
+}
+
+#price-loading {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--text-ui-sm);
+}
+
+#price-loading[hidden] {
+  display: none;
+}
+
+/* Legacy karat cards from page-hydrator */
+.cgr-page .ph-karat-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cgr-page .ph-karat-card {
+    animation: cgr-card-enter var(--duration-normal) var(--ease-out) both;
+  }
+
+  .cgr-page .ph-karat-card:nth-child(2) {
+    animation-delay: 50ms;
+  }
+
+  .cgr-page .ph-karat-card:nth-child(3) {
+    animation-delay: 100ms;
+  }
+
+  .cgr-page .ph-karat-card:nth-child(4) {
+    animation-delay: 150ms;
+  }
+}
+
+.cgr-page .ph-karat-card:hover {
+  border-color: color-mix(in srgb, var(--color-gold) 35%, transparent);
+  box-shadow: var(--shadow-gold);
+}
+
+.cgr-page .ph-karat-card__label {
+  font-size: var(--text-ui-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.cgr-page .ph-karat-card__price {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: var(--font-feature-tabular);
+  font-size: var(--text-data-md);
+  font-weight: var(--weight-extrabold);
+  color: var(--text-primary);
+  margin-block: var(--space-1);
+}
+
+.cgr-page .ph-karat-card__unit {
+  font-size: var(--text-ui-xs);
+  color: var(--text-muted);
+}
+
+@keyframes cgr-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Resources callout ── */
+.cgr-resources {
+  margin-block-start: var(--space-6);
+  padding: var(--space-4);
+  background: var(--color-gold-tint);
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+}
+
+.cgr-resources__title {
+  font-size: var(--text-ui-sm);
+  font-weight: var(--weight-bold);
+  margin-block-end: var(--space-3);
+  color: var(--color-gold-deep);
+}
+
+.cgr-resources__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ── Related pages ── */
+.cgr-related {
+  margin-block-start: var(--space-8);
+}
+
+.cgr-related__title {
+  font-size: var(--text-ui-md);
+  font-weight: var(--weight-bold);
+  margin-block-end: var(--space-3);
+  color: var(--text-primary);
+}
+
+.cgr-related__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.cgr-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.75rem;
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: var(--text-ui-sm);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.cgr-chip:hover {
+  border-color: var(--color-gold);
+  background: var(--color-gold-tint);
+  color: var(--color-gold-deep);
+}
+
+.cgr-chip--gold {
+  background: var(--color-gold-tint);
+  border-color: color-mix(in srgb, var(--color-gold) 25%, transparent);
+  color: var(--color-gold-deep);
+}
+
+.cgr-chip--accent {
+  background: var(--surface-primary);
+  border-color: color-mix(in srgb, var(--color-gold) 40%, transparent);
+  color: var(--color-gold-deep);
+  font-weight: var(--weight-semibold);
+}
+
+/* ── FAQ (RTL-safe chevron) ── */
+.city-faq {
+  margin-block-start: var(--space-8);
+  padding-block-start: var(--space-6);
+  border-block-start: 1px solid var(--border-subtle);
+}
+
+.city-faq h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-ui-md);
+  font-weight: var(--weight-bold);
+  margin-block-end: var(--space-4);
+  color: var(--text-primary);
+}
+
+.city-faq details,
+.city-faq .faq-item {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin-block-end: var(--space-2);
+  overflow: hidden;
+  background: var(--surface-secondary);
+}
+
+.city-faq summary,
+.city-faq .faq-question {
+  padding: var(--space-3) var(--space-4);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-ui-sm);
+  cursor: pointer;
+  list-style: none;
+  color: var(--text-primary);
+  background: var(--surface-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.city-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.city-faq summary::after,
+.city-faq .faq-question::after {
+  content: '+';
+  flex-shrink: 0;
+  font-size: var(--text-lg);
+  color: var(--text-muted);
+  float: none;
+}
+
+.city-faq details[open] summary::after,
+.city-faq .faq-item[open] .faq-question::after {
+  content: '−';
+}
+
+.city-faq .faq-body,
+.city-faq .faq-answer {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-ui-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+}
+
+[dir='rtl'] .city-faq summary,
+[dir='rtl'] .city-faq .faq-question {
+  flex-direction: row-reverse;
+  text-align: start;
+}
+
+@media (width <= 360px) {
+  #karat-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cgr-page {
+    padding: var(--space-4) var(--space-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cgr-page .ph-karat-card {
+    animation: none;
+  }
+}

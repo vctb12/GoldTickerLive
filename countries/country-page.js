@@ -200,7 +200,7 @@ function renderHero(cfg) {
   if (!heroEl) return;
 
   heroEl.innerHTML = `
-    <div class="cp-hero-main${staleClass}">
+    <div class="cp-hero-main${staleClass} price-hero price-hero--reference">
       <div class="cp-hero-row">
         <span class="cp-hero-flag">${cfg.flag}</span>
         <div class="cp-hero-labels">
@@ -211,15 +211,15 @@ function renderHero(cfg) {
       <div class="cp-prices-row">
         <div class="cp-price-card">
           <div class="cp-price-label">${t('karat22')} · ${t('perGram')}</div>
-          <div class="cp-price-value" data-cp-key="g22" data-cp-target="${Number.isFinite(gram22) ? gram22 : ''}" data-cp-cur="${cfg.currency}" data-cp-dec="${cfg.decimals}">${priceValueMarkup(gram22, cfg.currency, cfg.decimals)}</div>
+          <div class="cp-price-value price-hero__value price-hero__value--lg" data-cp-key="g22" data-cp-target="${Number.isFinite(gram22) ? gram22 : ''}" data-cp-cur="${cfg.currency}" data-cp-dec="${cfg.decimals}">${priceValueMarkup(gram22, cfg.currency, cfg.decimals)}</div>
         </div>
         <div class="cp-price-card">
           <div class="cp-price-label">${t('karat24')} · ${t('perGram')}</div>
-          <div class="cp-price-value" data-cp-key="g24" data-cp-target="${Number.isFinite(gram24) ? gram24 : ''}" data-cp-cur="${cfg.currency}" data-cp-dec="${cfg.decimals}">${priceValueMarkup(gram24, cfg.currency, cfg.decimals)}</div>
+          <div class="cp-price-value price-hero__value price-hero__value--lg" data-cp-key="g24" data-cp-target="${Number.isFinite(gram24) ? gram24 : ''}" data-cp-cur="${cfg.currency}" data-cp-dec="${cfg.decimals}">${priceValueMarkup(gram24, cfg.currency, cfg.decimals)}</div>
         </div>
         <div class="cp-price-card">
           <div class="cp-price-label">${t('karat24')} · ${t('perOz')}</div>
-          <div class="cp-price-value" data-cp-key="oz24" data-cp-target="${Number.isFinite(oz24usd) ? oz24usd : ''}" data-cp-cur="USD" data-cp-dec="2">${priceValueMarkup(oz24usd, 'USD', 2)}</div>
+          <div class="cp-price-value price-hero__value price-hero__value--lg" data-cp-key="oz24" data-cp-target="${Number.isFinite(oz24usd) ? oz24usd : ''}" data-cp-cur="USD" data-cp-dec="2">${priceValueMarkup(oz24usd, 'USD', 2)}</div>
         </div>
       </div>
       ${
@@ -231,7 +231,7 @@ function renderHero(cfg) {
       </div>`
           : ''
       }
-      <div class="cp-update-time">${t('lastUpdate')}: ${STATE.status.goldStale ? t('freshnessCachedFallback') : t('freshnessLive')} · ${STATE.freshness.goldUpdatedAt ? new Date(STATE.freshness.goldUpdatedAt).toLocaleString(STATE.lang === 'ar' ? 'ar-AE' : 'en-AE', { timeZone: cfg.timezone, hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'} · Gold: ${DATA_ATTRIBUTION.gold.label} · FX: ${DATA_ATTRIBUTION.fx.label}</div>
+      <div class="cp-update-time freshness-chip" data-freshness-key="${STATE.status.goldStale ? 'cached' : 'live'}">${t('lastUpdate')}: ${STATE.status.goldStale ? t('freshnessCachedFallback') : t('freshnessLive')} · ${STATE.freshness.goldUpdatedAt ? new Date(STATE.freshness.goldUpdatedAt).toLocaleString(STATE.lang === 'ar' ? 'ar-AE' : 'en-AE', { timeZone: cfg.timezone, hour12: true, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'} · Gold: ${DATA_ATTRIBUTION.gold.label} · FX: ${DATA_ATTRIBUTION.fx.label}</div>
     </div>`;
 
   animatePriceCells(heroEl);
