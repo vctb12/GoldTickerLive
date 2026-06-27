@@ -24,6 +24,14 @@
   outline-offset: 2px;
 }
 
+/* Banner landmark wrapping the masthead nav. `display: contents` makes the
+   <header role="banner"> add the landmark to the a11y tree without generating a
+   box — so the inner .site-nav keeps its `position: sticky` behaviour
+   (a real box here would clamp the sticky range to the header's height). */
+.site-header {
+  display: contents;
+}
+
 /* ── Phase 40: Navigation — crisper glass with stronger gold accent ── */
 .site-nav {
   position: sticky;
