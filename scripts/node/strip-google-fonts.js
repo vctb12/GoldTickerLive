@@ -17,6 +17,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '../..');
 const dryRun = process.argv.includes('--dry-run');
 const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'playwright-report', 'test-results']);
+const GOOGLE_FONT_HOSTS = new Set(['fonts.googleapis.com', 'fonts.gstatic.com']);
 
 function walkHtml(dir, acc = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -26,6 +27,21 @@ function walkHtml(dir, acc = []) {
     else if (entry.name.endsWith('.html')) acc.push(full);
   }
   return acc;
+}
+
+function hasGoogleFontsHost(html) {
+  const hrefRe = /<link[^>]*\bhref=(["'])([^"']+)\1[^>]*>/gi;
+  let match;
+  while ((match = hrefRe.exec(html)) !== null) {
+    const href = match[2];
+    try {
+      const host = new URL(href).hostname;
+      if (GOOGLE_FONT_HOSTS.has(host)) return true;
+    } catch (_) {
+      // Ignore non-absolute or malformed URLs.
+    }
+  }
+  return false;
 }
 
 function stripGoogleFonts(html) {
@@ -45,7 +61,7 @@ let changed = 0;
 
 for (const file of files) {
   const original = fs.readFileSync(file, 'utf8');
-  if (!original.includes('fonts.googleapis.com') && !original.includes('fonts.gstatic.com')) continue;
+  if (!hasGoogleFontsHost(original)) continue;
   const stripped = stripGoogleFonts(original);
   if (stripped === original) continue;
   changed += 1;
