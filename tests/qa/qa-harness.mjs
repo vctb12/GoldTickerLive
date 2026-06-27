@@ -172,7 +172,17 @@ try {
         const consoleErrors = [];
         const networkErrors = [];
         page.on('console', (m) => {
-          if (m.type() === 'error' && !isNoise(m.text())) consoleErrors.push(m.text());
+          if (m.type() !== 'error') return;
+          const text = m.text();
+          if (isNoise(text)) return;
+          // "Failed to load resource: …" console errors carry no URL, so they can't be
+          // attributed/noise-filtered here. The same failures are captured (with their
+          // URL, properly filtered) by the requestfailed handler below — so skip the
+          // URL-less console echo to avoid double-counting. In this sandbox these are
+          // the blocked Google-Fonts request; a real non-noise fetch failure still
+          // surfaces in networkErrors with its URL.
+          if (/^Failed to load resource:/.test(text)) return;
+          consoleErrors.push(text);
         });
         page.on('pageerror', (e) => consoleErrors.push(`pageerror: ${e.message}`));
         page.on('requestfailed', (req) => {
@@ -268,4 +278,12 @@ console.log(
   `Report: ${path.relative(REPO_ROOT, REPORT_PATH)} · Screenshots: ${path.relative(REPO_ROOT, OUT_DIR)}/`
 );
 
-process.exitCode = summary.consoleErrors + summary.networkErrors + summary.leakedKeys > 0 ? 1 : 0;
+// Gate on real regressions: console/network errors, leaked i18n keys, AND RTL/overflow.
+process.exitCode =
+  summary.consoleErrors +
+    summary.networkErrors +
+    summary.leakedKeys +
+    summary.overflowViews.length >
+  0
+    ? 1
+    : 0;

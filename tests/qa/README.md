@@ -39,7 +39,14 @@ Per **page × lang × viewport** (default: `tracker` × `en/ar` × `390/1366`):
 | `overflowPx`, `overflow` | RTL/overflow check: `documentElement.scrollWidth > innerWidth + 2`              |
 
 The run also prints a one-line summary and exits **non-zero** if any console error, network error,
-or leaked key was found — so a later session (or CI) can gate on a clean report.
+leaked key, **or RTL/overflow** was found — so a later session (or CI) can gate on a clean report.
+
+**Noise handling.** `console.error` is filtered two ways: (1) GA/GTM/Clarity/`ERR_ABORTED`-style
+strings, and (2) URL-less `"Failed to load resource: …"` echoes — those carry no URL, so they can't
+be attributed/filtered at the console layer; the same failures are captured **with** their URL (and
+properly noise-filtered) by the `requestfailed` → `networkErrors` path. A real non-noise fetch
+failure therefore still surfaces in `networkErrors` with its URL; only the un-attributable console
+echo is dropped.
 
 ## Run it
 
@@ -64,13 +71,15 @@ non-recursive) nor by Playwright (`testDir: ./tests/e2e`).
 
 `report.json` + `baseline/*.png` are the captured starting state for the revamp.
 
-- **4 views** (tracker EN/AR × 390/1366) · **0 leaked keys** · **0 network errors (filtered)** · **0
-  RTL overflow** · h1 = 1 per view (`Gold Command Center` / `مركز قيادة الذهب`).
-- **4 console errors** — all `net::ERR_CONNECTION_CLOSED`. These are **environmental, not a tracker
-  defect**: this sandbox has no outbound access to the live gold-price source, so the price fetch
-  fails and the tracker correctly degrades to a non-live freshness state (freshness honesty intact).
-  In an environment with network access these disappear, and any **new** console error a later phase
-  introduces stands out against this baseline.
+- **4 views** (tracker EN/AR × 390/1366) · **0 console errors** · **0 network errors** · **0 leaked
+  keys** · **0 RTL overflow** · h1 = 1 per view (`Gold Command Center` / `مركز قيادة الذهب`).
+  Harness exits **0**.
+- The one network failure in this sandbox is the **Google-Fonts** request
+  (`fonts.googleapis.com/css2?family=Cairo…`, `net::ERR_CONNECTION_CLOSED`) — no outbound access
+  here. It is filtered as noise (URL contains `google`), and its URL-less console echo is dropped
+  per the noise-handling rule above, so it does not pollute the baseline. The tracker still renders
+  and, with no live price source, correctly shows a non-live freshness state (freshness honesty
+  intact). Any **new** error a later phase introduces stands out against this clean baseline.
 
 ## Relationship to the other QA tools
 
