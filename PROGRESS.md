@@ -32,6 +32,15 @@ karats). Freshness honesty respected (`getFreshnessModel().effectiveKey`).
   - **Numeric rhythm.** `tabular-nums` + `font-variant-numeric` extended to the hero readout values
     (`#tp-readout-spot-value`, `#tp-readout-selected-value`, `.tracker-hero-readout__v`) so digits
     don't reflow on the 90 s tick.
+- **Cluster 2 — clear loading skeleton when content arrives** (slice of plan Phase 15):
+  - The hero badge row (`#tp-xauusd-value`, `#tp-live-badge-text`, `#tp-refresh-badge`) and the five
+    mobile-dock readouts carried the `skeleton-inline` shimmer + `shell-skeleton-*` size classes on
+    themselves; the render path set their text but never removed the classes, so the shimmer sat
+    behind the value (a leftover light box) and pinned the element to the skeleton's fixed size.
+  - Extended the unused `clearSkeletonBusy` into `clearSkeleton` (`src/components/skeleton.js`) — it
+    now strips `skeleton-inline` + `shell-skeleton-*` + `aria-busy` while preserving layout/state
+    classes — and wired it into `renderHero` for all eight self-skeleton nodes. Guarded by
+    `tests/tracker-skeleton.test.js` (3). Before/after captured via the S1 harness.
 
 ## 🟢 2026-06-26 Overhaul session (branch `claude/tracker-html-revamp-bpk97i`)
 

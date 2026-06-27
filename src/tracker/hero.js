@@ -12,7 +12,12 @@ import {
   DIRECTION_GLYPH,
 } from './_ctx.js';
 import { clear, el, setText } from '../lib/safe-dom.js';
-import { mountSkeleton, skeletonNode, skeletonTableRow } from '../components/skeleton.js';
+import {
+  mountSkeleton,
+  skeletonNode,
+  skeletonTableRow,
+  clearSkeleton,
+} from '../components/skeleton.js';
 import { getMarketStatus } from '../lib/live-status.js';
 import { countUp } from '../lib/count-up.js';
 import { pulseFreshness } from '../lib/freshness-pulse.js';
@@ -91,6 +96,12 @@ export function renderHero() {
 
   if (summaryHeading) setText(summaryHeading, tx('liveDeskTitle'));
 
+  // These badge-row nodes carry the skeleton classes on themselves and receive
+  // real text (or '—') below; clear the placeholder so the shimmer doesn't sit
+  // behind the value and pin its size. (xauUsdValue re-mounts a child skeleton
+  // in its own loading branch.)
+  [_el.liveBadgeText, _el.refreshBadge, sourceStateBadge].forEach(clearSkeleton);
+
   if (liveBadge) {
     liveBadge.classList.remove(...TRACKER_BADGE_CLASSES);
     liveBadge.classList.add(isConnecting ? 'tracker-badge-live' : freshness.badgeClass);
@@ -131,6 +142,7 @@ export function renderHero() {
 
   if (_el.xauUsdValue) {
     if (spot) {
+      clearSkeleton(_el.xauUsdValue);
       const prevSpot = parseFloat(
         String(_el.xauUsdValue.textContent || '').replace(/[^0-9.-]/g, '')
       );
@@ -158,6 +170,7 @@ export function renderHero() {
         tickFreshnessPill(liveBadge);
       }
     } else if (_state.hasLiveFailure) {
+      clearSkeleton(_el.xauUsdValue);
       setText(_el.xauUsdValue, '—');
     } else {
       mountSkeleton(_el.xauUsdValue, 'priceLg');
@@ -347,6 +360,16 @@ export function renderHero() {
 
     _el.summaryList.append(...summaryItems);
   }
+
+  // Mobile-dock readouts also carry self-skeleton classes; clear them so values
+  // render without the leftover shimmer/size box.
+  [
+    'tp-mobile-summary-status',
+    'tp-mobile-selected-value',
+    'tp-mobile-price-value',
+    'tp-mobile-spot-value',
+    'tp-mobile-updated-value',
+  ].forEach((id) => clearSkeleton(document.getElementById(id)));
 
   const selectedCountry = COUNTRIES.find((country) => country.currency === _state.selectedCurrency);
   const selectedLabel = selectedCountry

@@ -42,11 +42,23 @@ export function mountSkeleton(target, variant = 'karat') {
 }
 
 /**
+ * Clear a node's loading placeholder once real content arrives: drops
+ * `aria-busy` plus any self-applied skeleton classes (`skeleton-inline` and the
+ * `shell-skeleton-*` size utilities). Without this, elements that carry the
+ * skeleton classes on themselves (vs. an inner placeholder span) keep the
+ * shimmer behind the value and stay pinned to the skeleton's fixed size.
+ * Other classes (layout/state) are preserved. Idempotent.
  * @param {HTMLElement|null} target
  */
-export function clearSkeletonBusy(target) {
+export function clearSkeleton(target) {
   if (!target) return;
-  target.removeAttribute('aria-busy');
+  if (typeof target.removeAttribute === 'function') target.removeAttribute('aria-busy');
+  if (!target.classList) return;
+  for (const cls of Array.from(target.classList)) {
+    if (cls === 'skeleton-inline' || cls.startsWith('shell-skeleton-')) {
+      target.classList.remove(cls);
+    }
+  }
 }
 
 /**
