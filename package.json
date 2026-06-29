@@ -88,7 +88,7 @@
     "jsonwebtoken": "^9.0.3",
     "lightweight-charts": "^5.2.0",
     "morgan": "^1.11.0",
-    "stripe": "^22.2.2"
+    "stripe": "^22.3.0"
   },
   "lint-staged": {
     "*.js": [
