@@ -50,6 +50,7 @@
       }
     ],
     "selector-class-pattern": null,
+    "custom-property-pattern": "^[a-z][a-z0-9]*(?:[-_][a-z0-9]+)*$",
     "property-no-vendor-prefix": null,
     "keyframes-name-pattern": null,
     "no-descending-specificity": null,

@@ -11,20 +11,21 @@
   color-scheme: light;
 
   /* ── Phase 1: Richer background layers — warm parchment ── */
-  --color-bg: #fefcf7;
+  --color-bg: #fdfbf5; /* Phase 1: parchment cooled ~1.5% off "cream" toward "paper" */
   --color-surface: #fff;
   --color-surface-2: #faf7ee;
   --color-surface-3: #f3eedd;
-  --color-border: #e4d9c0;
+  --color-border: #d9cfb6; /* Phase 1: calmed warm-tan rule colour */
   --color-border-subtle: #ece5d2;
 
   /* ── Phase 2: Deeper warm ink text ── */
   --color-text: #15110a;
   --color-text-muted: #6a5c48;
   --color-text-faint: #6f6350; /* WCAG AA ≥4.5:1 on all light surfaces incl. surface-3 (≈5:1 headroom) */
+  --color-ink-data: #0f0c06; /* Phase 1: darkest mark on the page — live spot price value + tracker readout (≈18.7:1 on bg) */
 
   /* ── Phase 3: Richer metallic gold palette ── */
-  --color-gold: #c4902e;
+  --color-gold: #b07d1f; /* Phase 1: desaturated/deepened struck-metal gold — value signal only, never a fill; only ever a graphical object (dot/ring/border) at ≥3:1, never small text */
   --color-gold-light: #ddb040;
   --color-gold-bright: #f0ca5c;
   --color-gold-dark: #7e5912; /* text/accent gold — darkened for AA on tinted surfaces (surface-2/3) */
@@ -200,7 +201,8 @@
   /* ── Typography — modular scale (ratio 1.25 from 16px base) ── */
   --type-ratio: 1.25;
   --type-base: 1rem;
-  --font-latin: 'Source Sans 3', system-ui, -apple-system, blinkmacsystemfont, 'Segoe UI', sans-serif;
+  --font-latin:
+    'Source Sans 3', system-ui, -apple-system, blinkmacsystemfont, 'Segoe UI', sans-serif;
   --font-arabic: 'Cairo', 'Source Sans 3', system-ui, sans-serif;
   --font-main: var(--font-latin);
   --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
@@ -218,7 +220,10 @@
   --text-lg: calc(var(--type-base) * var(--type-ratio));
   --text-xl: calc(var(--type-base) * var(--type-ratio) * var(--type-ratio));
   --text-2xl: calc(var(--type-base) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio));
-  --text-3xl: 2.4375rem;
+  --text-3xl: calc(
+    var(--type-base) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio)
+  ); /* Phase 1 fix: ×1.25^4 ≈ 2.441rem — restores the modular ratio (was hand-set 2.4375) */
+
   --text-4xl: 3.0625rem;
   --text-5xl: 3.8125rem;
   --text-6xl: 4.75rem;
@@ -343,7 +348,11 @@
   --text-data-sm: var(--text-base);
   --text-data-md: var(--text-xl);
   --text-data-lg: clamp(1.95rem, 3.6vw, 2.75rem);
-  --text-data-xl: clamp(2.5rem, 4.8vw, 3.85rem);
+  --text-data-xl: clamp(
+    2.6rem,
+    5vw,
+    3.9rem
+  ); /* Phase 1: hero spot price (caps the old 5.25rem/800 .hlc-price override) */
 
   /* Component primitive tokens */
   --control-height: 44px;
@@ -359,6 +368,22 @@
   --badge-height: 28px;
   --section-fade-height: 48px;
   --section-gap: var(--space-6);
+
+  /* ── Phase 1 redesign — Precision Instrument tokens (see redesign/DESIGN-SYSTEM.md) ── */
+  --color-rule: var(
+    --color-border
+  ); /* the single structural seam — readout spot/retail divider, table baseline */
+
+  --readout-radius: var(
+    --radius-lg
+  ); /* hero live-price readout corner (16px — sharper than 2xl=28) */
+
+  --readout-chrome: var(--shadow-md); /* the hero readout's entire elevation budget */
+  --rim-inset:
+    inset 0 1px 0 rgb(255 255 255 / 70%), inset 0 -1px 0 rgb(21 17 10 / 8%); /* struck/milled edge — block-axis only, no RTL mirroring */
+
+  --font-numeric-features:
+    'tnum' 1, 'lnum' 1, 'zero' 1; /* tabular + lining + slashed-zero — the data voice, zero new font bytes */
 }
 
 /* ═══════════════════════════════════════════════
@@ -380,6 +405,7 @@
   --color-text: #f2eedd;
   --color-text-muted: #a09890;
   --color-text-faint: #8f857a; /* WCAG AA ≥4.5:1 on all dark surfaces incl. surface-3 */
+  --color-ink-data: #f7f3e6; /* Phase 1: brightest readout ink on dark — live spot price value */
   --color-gold: #ddb040;
   --color-gold-light: #f0ca5c;
   --color-gold-bright: #fad97a;
@@ -447,6 +473,9 @@
   --shadow-gold-lg: 0 8px 36px rgb(221 176 64 / 32%), 0 3px 12px rgb(221 176 64 / 18%);
   --shadow-gold-xl: 0 16px 56px rgb(221 176 64 / 38%), 0 6px 20px rgb(221 176 64 / 22%);
   --shadow-card-hover: 0 14px 44px rgb(0 0 0 / 55%), 0 4px 12px rgb(0 0 0 / 28%);
+  --rim-inset:
+    inset 0 1px 0 rgb(255 255 255 / 6%), inset 0 -1px 0 rgb(0 0 0 / 40%); /* Phase 1: struck edge on dark */
+
   --gradient-surface: linear-gradient(180deg, #0c0e14 0%, #090b10 100%);
   --gradient-paper: linear-gradient(180deg, #0c0e14 0%, #08090e 100%);
   --gradient-hero-light: linear-gradient(160deg, #08090e 0%, #0e1326 40%, #121830 100%);
@@ -484,6 +513,7 @@
     --color-text: #f2eedd;
     --color-text-muted: #a09890;
     --color-text-faint: #8f857a;
+    --color-ink-data: #f7f3e6; /* Phase 1: readout ink for no-JS dark-OS first paint */
     --color-gold: #ddb040;
     --color-gold-light: #f0ca5c;
     --color-gold-bright: #fad97a;
