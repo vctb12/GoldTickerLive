@@ -739,8 +739,8 @@
 }
 
 .cp-mi-stat--retail {
-  border-color: var(--color-gold);
-  background: var(--color-gold-tint);
+  border-color: var(--border-subtle);
+  background: var(--surface-secondary);
 }
 
 .cp-mi-label {
@@ -1085,8 +1085,8 @@
 }
 
 .cp-mi-stat--retail {
-  border-color: rgb(196 144 46 / 35%);
-  background: linear-gradient(135deg, var(--color-gold-tint) 0%, var(--gradient-card) 100%);
+  border-color: var(--border-subtle);
+  background: var(--surface-secondary);
 }
 
 .cp-mi-buy {

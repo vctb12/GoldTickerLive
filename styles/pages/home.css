@@ -102,50 +102,14 @@
   isolation: isolate;
 }
 
-/* Multi-layer gold orb radial glows — richer and more dimensional */
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: -40% 0;
-  background:
-    radial-gradient(ellipse 75% 65% at 78% 36%, rgb(221 176 64 / 13%) 0%, transparent 58%),
-    radial-gradient(ellipse 55% 45% at 22% 72%, rgb(21 17 10 / 4%) 0%, transparent 58%),
-    radial-gradient(ellipse 35% 28% at 88% 88%, rgb(196 144 46 / 8%) 0%, transparent 52%),
-    radial-gradient(ellipse 40% 30% at 10% 15%, rgb(240 202 92 / 5%) 0%, transparent 50%);
-  pointer-events: none;
-  will-change: transform;
-  transform: translateY(calc(var(--hero-parallax-y, 0px) * -0.4));
-}
+/* Precision Instrument: hero orb radials + scroll parallax retired.
+   Structure comes from weight/scale/space; the freshness dot is the only hero animation. */
 
-@media (prefers-reduced-motion: reduce) {
-  .hero::before {
-    transform: none !important;
-  }
-}
+/* Foil bottom rule retired — the 1px --color-border-subtle border-block-end on .hero is the seam. */
 
-/* Gold foil hairline bottom — richer rule */
-.hero::after {
-  content: '';
-  position: absolute;
-  inset-inline: 0;
-  inset-block-end: 0;
-  block-size: 3px;
-  background: var(--rule-foil);
-  opacity: 0.9;
-  pointer-events: none;
-}
-
-/* Phase 44 dark mode hero — deep midnight with richer gold orbs */
+/* Phase 44 dark mode hero — deep midnight (orb override retired with .hero::before) */
 [data-theme='dark'] .hero {
   background: var(--gradient-hero-dark);
-}
-
-[data-theme='dark'] .hero::before {
-  background:
-    radial-gradient(ellipse 75% 65% at 78% 36%, rgb(221 176 64 / 22%) 0%, transparent 58%),
-    radial-gradient(ellipse 55% 45% at 22% 72%, rgb(6 7 8 / 70%) 0%, transparent 58%),
-    radial-gradient(ellipse 35% 28% at 88% 88%, rgb(196 144 46 / 12%) 0%, transparent 52%),
-    radial-gradient(ellipse 40% 30% at 10% 15%, rgb(240 202 92 / 8%) 0%, transparent 50%);
 }
 
 /* Phase 13: Hero inner layout — wider gap, better proportions */
@@ -177,7 +141,8 @@
   margin-bottom: 1.6rem;
   width: fit-content;
   box-shadow: 0 0 0 4px rgb(26 122 50 / 6%);
-  animation: badge-glow 3s ease-in-out infinite;
+
+  /* badge-glow animation retired — the hero badge is static; only the dot pulses */
 }
 
 .hero-badge-dot {
@@ -207,17 +172,17 @@
   display: block;
   font-family: var(--font-display);
   font-size: clamp(2.8rem, 6.2vw, 4.1rem);
-  font-weight: var(--weight-extrabold);
+  font-weight: var(--weight-bold);
   line-height: 1.03;
   color: var(--text-primary);
   letter-spacing: var(--tracking-tighter);
   text-rendering: optimizelegibility;
 }
 
-/* Gold accent on the price number / key word */
+/* Gold accent on a key word — AA-safe text gold (--color-gold is graphical-object-only) */
 .hero-title-main mark {
   background: none;
-  color: var(--color-gold);
+  color: var(--color-gold-dark);
   font-style: normal;
 }
 
@@ -226,11 +191,9 @@
   font-family: var(--font-display);
   font-size: clamp(1.1rem, 2.6vw, 1.5rem);
   font-weight: var(--weight-regular);
-  color: var(--text-accent);
+  color: var(--color-text-muted);
   margin-top: 0.5rem;
   letter-spacing: 0.01em;
-  font-style: italic;
-  opacity: 0.9;
 }
 
 /* Phase 16: Hero lead — slightly larger, better spacing */
@@ -380,84 +343,30 @@
 /* ══════════════════════════════════════════════════════════════
    Phase 19: Hero Live Card — Premium elevated glass card
    ══════════════════════════════════════════════════════════════ */
+
+/* Precision Instrument readout: chrome budget = readout-radius + struck rim + one shadow-md.
+   No blur, no foil rule, no corner glow, no hover-lift, no gold-glow. */
 .hero-live-card {
   background: var(--surface-primary);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-2xl, 28px);
+  border-radius: var(--readout-radius);
   padding: var(--space-6) var(--space-6);
-  box-shadow: var(--shadow-xl), var(--shadow-gold);
+  box-shadow: var(--rim-inset), var(--readout-chrome);
   position: relative;
   overflow: hidden;
-  transition:
-    box-shadow var(--transition-premium),
-    transform var(--transition-premium);
-  backdrop-filter: blur(2px);
 }
 
-.hero-live-card:hover {
-  box-shadow: var(--shadow-2xl), var(--shadow-gold-xl);
-  transform: translateY(-2px);
-}
-
-/* Gold foil top rule — richer */
-.hero-live-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--rule-foil);
-  opacity: 1;
-}
-
-/* Larger, richer radial glow in top-right corner of card */
-.hero-live-card::after {
-  content: '';
-  position: absolute;
-  top: -60px;
-  right: -60px;
-  width: 220px;
-  height: 220px;
-  background: radial-gradient(circle, rgb(221 176 64 / 10%) 0%, transparent 65%);
-  pointer-events: none;
-}
+/* Foil top rule (::before) + corner radial glow (::after) retired — this also deletes
+   the only non-mirroring physical-prop (top/left/right) paths in the hero (RTL positive). */
 
 [data-theme='dark'] .hero-live-card {
   background: var(--color-surface);
-  border-color: rgb(221 176 64 / 18%);
-  box-shadow:
-    var(--shadow-xl),
-    var(--shadow-gold),
-    inset 0 0 0 1px rgb(221 176 64 / 10%);
+  border-color: var(--color-border);
+  box-shadow: var(--rim-inset), var(--readout-chrome);
 }
 
-[data-theme='dark'] .hero-live-card::after {
-  background: radial-gradient(circle, rgb(221 176 64 / 18%) 0%, transparent 65%);
-}
-
-[data-theme='dark'] .hero-live-card:hover {
-  box-shadow:
-    var(--shadow-2xl),
-    var(--shadow-gold-xl),
-    inset 0 0 0 1px rgb(221 176 64 / 14%);
-}
-
-/* Amplified LIVE state: stronger gold glow on the hero card */
-.hero-live-card.spot-terminal--live {
-  box-shadow:
-    var(--shadow-xl),
-    var(--shadow-gold),
-    0 0 0 1px rgb(221 176 64 / 20%);
-}
-
-[data-theme='dark'] .hero-live-card.spot-terminal--live {
-  box-shadow:
-    var(--shadow-xl),
-    var(--shadow-gold-xl),
-    0 0 28px rgb(221 176 64 / 14%),
-    inset 0 0 0 1px rgb(221 176 64 / 18%);
-}
+/* LIVE state is signalled by the freshness dot + explicit state word only — never a card glow
+   (DESIGN-SYSTEM §Elevation: value signalled by ink density + the live dot, not by glow). */
 
 .hlc-header {
   display: flex;
@@ -518,10 +427,11 @@
 /* Hero price — dominant terminal-grade display */
 .hlc-price {
   font-family: var(--font-numeric);
-  font-size: clamp(3.4rem, 8.5vw, 5.25rem);
-  font-weight: var(--weight-extrabold);
-  color: var(--text-primary);
-  font-variant-numeric: tabular-nums;
+  font-size: var(--text-data-xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-ink-data);
+  font-variant-numeric: tabular-nums lining-nums slashed-zero;
+  font-feature-settings: var(--font-numeric-features);
   line-height: 1;
   letter-spacing: var(--tracking-tight);
   min-block-size: 1em;
@@ -648,14 +558,49 @@
 }
 
 .hlc-trust-line {
-  margin: 0 0 var(--space-4);
-  padding: var(--space-3);
-  color: var(--text-secondary);
-  background: var(--color-gold-tint);
-  border: 1px solid var(--color-gold-glow);
-  border-radius: var(--radius-md);
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  color: var(--text-muted);
   font-size: var(--text-xs);
   line-height: var(--leading-normal);
+}
+
+/* The single structural rule + subordinate retail row (DESIGN-SYSTEM §Signature hero 5–6).
+   Retail is one type-step below the price, muted, on plain canvas — never a gold box. */
+.hlc-rule {
+  block-size: 1px;
+  border: 0;
+  background: var(--color-rule);
+  margin: var(--space-5) 0 var(--space-4);
+}
+
+.hlc-retail {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+}
+
+.hlc-retail-link {
+  font-size: var(--text-ui-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-gold-dark);
+  text-decoration: none;
+  margin-inline-start: auto;
+}
+
+.hlc-retail-link:hover {
+  text-decoration: underline;
+}
+
+.hlc-retail-link:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-xs);
 }
 
 .hlc-change {
@@ -765,7 +710,7 @@
 
 /* Granular age-based overrides for karat strip */
 .karat-strip-updated[data-freshness-key='stale'] {
-  color: var(--color-amber);
+  color: var(--color-warning-text); /* was --color-amber (#f59e0b ≈2.08:1, AA fail) → ≈6.86:1 */
 }
 
 .karat-strip-updated[data-freshness-key='cached']::before {
@@ -786,7 +731,7 @@
 
 /* Granular age-based color shifts for karat strip */
 .karat-strip-updated[data-freshness-age='amber'] {
-  color: var(--color-amber);
+  color: var(--color-warning-text); /* AA-passing; matches the freshness-chip amber treatment */
 }
 
 .karat-strip-updated[data-freshness-age='amber']::before {
@@ -1318,9 +1263,8 @@
   inset-inline-start: 0;
   width: 3rem;
   height: 3px;
-  background: var(--gradient-gold);
+  background: var(--color-gold-dark);
   border-radius: 3px;
-  box-shadow: var(--shadow-gold);
 }
 
 .section-intro.centered .home-section-title::after {
@@ -1430,9 +1374,8 @@
 
 .gcc-card:hover,
 .tool-card:hover {
-  box-shadow: var(--shadow-gold-lg), var(--shadow-lg);
+  /* hover-lift + gold glow retired; quiet border affordance only */
   border-color: var(--color-gold);
-  transform: translateY(-5px);
   text-decoration: none;
   color: inherit;
 }
@@ -1477,7 +1420,7 @@
 }
 
 .gcc-flag {
-  font-size: 1.45rem;
+  font-size: var(--text-base);
   flex-shrink: 0;
 }
 
@@ -1657,16 +1600,7 @@
   box-shadow: var(--shadow-gold), var(--shadow-sm);
 }
 
-.tool-card--primary::after {
-  content: '◈';
-  position: absolute;
-  top: 0.75rem;
-  right: 0.85rem;
-  font-size: 0.9rem;
-  color: var(--color-gold);
-  opacity: 0.75;
-  line-height: 1;
-}
+/* ◈ tool-card glyph retired (DESIGN-SYSTEM §4 — no decorative glyphs) */
 
 .tool-card--primary .tool-card-icon {
   font-size: 2.2rem;
@@ -1689,11 +1623,6 @@
 
 [data-theme='dark'] .tool-card--primary:hover {
   background: linear-gradient(145deg, rgb(212 168 64 / 12%) 0%, rgb(212 168 64 / 6%) 100%);
-}
-
-[dir='rtl'] .tool-card--primary::after {
-  right: auto;
-  left: 0.75rem;
 }
 
 /* ── Phase 38: Alert row — more visible call to action ── */
@@ -2602,8 +2531,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+
+  /* WCAG 2.5.8: target size ≥ 24px (was 22px). Logical sizing keeps RTL parity. */
+  inline-size: 24px;
+  block-size: 24px;
+  min-inline-size: 24px;
+  min-block-size: 24px;
   padding: 0;
   background: transparent;
   border: 1px solid transparent;
@@ -3053,16 +2986,14 @@
 }
 
 .home-stat-value {
+  /* solid gold-deep fill (gradient text-clip retired — solid is strictly more legible) */
   color: var(--color-gold-deep);
   font-size: clamp(var(--text-3xl), 4vw, var(--text-4xl));
-  font-weight: var(--weight-extrabold);
-  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums lining-nums slashed-zero;
+  font-feature-settings: var(--font-numeric-features);
   line-height: var(--leading-none);
   font-family: var(--font-numeric);
-  background: var(--gradient-gold);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .home-stat-label {
@@ -3375,8 +3306,11 @@
 .hlc-price {
   font-family: var(--font-numeric);
   font-size: var(--text-data-xl);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
+  font-weight: var(--weight-bold);
+  color: var(--color-ink-data);
+  font-variant-numeric: tabular-nums lining-nums slashed-zero;
+  font-feature-settings: var(--font-numeric-features);
+  letter-spacing: var(--tracking-tight);
 }
 
 .hlc-stat-value,
