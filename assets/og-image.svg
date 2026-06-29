@@ -17,17 +17,19 @@
   <!-- Left accent line -->
   <rect x="80" y="140" width="3" height="350" fill="#c49a44" opacity="0.6"/>
 
-  <!-- Gold bar icon (simplified) -->
-  <rect x="530" y="170" width="140" height="90" rx="6" fill="#c49a44"/>
-  <rect x="540" y="178" width="120" height="74" rx="4" fill="#d4b05a"/>
-  <rect x="548" y="185" width="104" height="60" rx="3" fill="#c49a44" opacity="0.6"/>
-  <text x="600" y="221" font-family="Georgia, serif" font-size="18" font-weight="700" fill="#1a1610" text-anchor="middle">999.9</text>
+  <!-- Unified coin + geometric-G brand mark -->
+  <g transform="translate(555,168) scale(2.8)" fill="none" stroke="#d4b05a">
+    <circle cx="16" cy="16" r="11" stroke-width="1.5"/>
+    <circle cx="16" cy="16" r="8.7" fill="#d4b05a" opacity="0.10" stroke="none"/>
+    <path d="M21.08 12.44 A6.2 6.2 0 1 0 21.08 19.56 L21.08 16.1 L16.7 16.1" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="9.5" y="25.4" width="13" height="1.25" rx="0.62" fill="#d4b05a" opacity="0.65" stroke="none"/>
+  </g>
 
   <!-- Site name -->
-  <text x="600" y="320" font-family="Georgia, serif" font-size="58" font-weight="700" fill="#d4b05a" text-anchor="middle" letter-spacing="-1">Gold Ticker Live</text>
+  <text x="600" y="320" font-family="-apple-system, 'Source Sans 3', Arial, sans-serif" font-size="58" font-weight="700" fill="#d4b05a" text-anchor="middle" letter-spacing="-1">Gold Ticker Live</text>
 
   <!-- Tagline -->
-  <text x="600" y="372" font-family="-apple-system, Arial, sans-serif" font-size="22" fill="#9d8c72" text-anchor="middle" letter-spacing="2">LIVE · HISTORICAL · GCC &amp; ARAB MARKETS</text>
+  <text x="600" y="372" font-family="-apple-system, Arial, sans-serif" font-size="22" fill="#9d8c72" text-anchor="middle" letter-spacing="2">REFERENCE PRICES · GCC &amp; ARAB MARKETS</text>
 
   <!-- Divider -->
   <rect x="480" y="398" width="240" height="1" fill="#3a3020"/>
@@ -36,7 +38,7 @@
   <text x="600" y="432" font-family="-apple-system, Arial, sans-serif" font-size="18" fill="#6b5f4a" text-anchor="middle">goldtickerlive.com</text>
 
   <!-- Corner decoration - top right -->
-  <text x="1100" y="60" font-family="Georgia, serif" font-size="48" fill="#c49a44" opacity="0.15" text-anchor="middle">Au</text>
+  <text x="1100" y="60" font-family="-apple-system, 'Source Sans 3', Arial, sans-serif" font-size="48" fill="#c49a44" opacity="0.15" text-anchor="middle">Au</text>
 
   <!-- NOTE: The production social card is the photoreal raster at assets/og-image.png -->
   <!-- (1200x630), referenced by all page <meta og:image>. This SVG is a lightweight -->

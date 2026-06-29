@@ -361,14 +361,15 @@ export function injectNav(lang = 'en', depth = 0) {
       <svg class="nav-brand-logo" viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="nb-g" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#e8bf5a"/>
-            <stop offset="50%" stop-color="#d4a840"/>
-            <stop offset="100%" stop-color="#b8892c"/>
+            <stop offset="0%" stop-color="#f0ca5c"/>
+            <stop offset="45%" stop-color="#d8aa3e"/>
+            <stop offset="100%" stop-color="#b07d1f"/>
           </linearGradient>
         </defs>
         <circle cx="16" cy="16" r="11" fill="none" stroke="url(#nb-g)" stroke-width="1.5"/>
-        <circle cx="16" cy="16" r="8.5" fill="url(#nb-g)" opacity="0.15"/>
-        <text x="16" y="20.5" font-size="11" text-anchor="middle" fill="url(#nb-g)" font-family="Georgia,serif" font-weight="700" letter-spacing="-0.5">G</text>
+        <circle cx="16" cy="16" r="8.7" fill="url(#nb-g)" opacity="0.12"/>
+        <path d="M21.08 12.44 A6.2 6.2 0 1 0 21.08 19.56 L21.08 16.1 L16.7 16.1" fill="none" stroke="url(#nb-g)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="9.5" y="25.4" width="13" height="1.25" rx="0.62" fill="url(#nb-g)" opacity="0.6"/>
       </svg>
       <span class="nav-brand-text">
         <span class="nav-brand-name">Gold Ticker Live</span>

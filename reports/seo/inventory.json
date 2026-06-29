@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtDate": "2026-06-26",
+  "generatedAtDate": "2026-06-29",
   "summary": {
     "totalHtmlFiles": 343,
     "withCanonical": 341,
@@ -335,11 +335,11 @@
       "robots": null,
       "ogTitle": "Gold Calculator — Value, Scrap, Zakat | Gold Ticker Live",
       "ogDescription": "Calculate gold value, scrap, Zakat, and buying power using spot-linked reference rates.",
-      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogImage": "https://goldtickerlive.com/assets/og/calculator.png",
       "ogUrl": "https://goldtickerlive.com/calculator.html",
       "ogType": "website",
       "twitterCard": "summary_large_image",
-      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "twitterImage": "https://goldtickerlive.com/assets/og/calculator.png",
       "hreflang": [
         {
           "lang": "ar",
@@ -408,11 +408,11 @@
       "robots": null,
       "ogTitle": "Compare Gold Prices by Country | Gold Ticker Live",
       "ogDescription": "Side-by-side gold price comparison across the GCC and Arab world — live reference prices, VAT, making charges and all-in retail estimates.",
-      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogImage": "https://goldtickerlive.com/assets/og/compare.png",
       "ogUrl": "https://goldtickerlive.com/compare.html",
       "ogType": "website",
       "twitterCard": "summary_large_image",
-      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "twitterImage": "https://goldtickerlive.com/assets/og/compare.png",
       "hreflang": [
         {
           "lang": "ar",
@@ -12117,11 +12117,11 @@
       "robots": null,
       "ogTitle": "Gold Market Insights & Analysis | Gold Ticker Live",
       "ogDescription": "Gold market insights, price analysis, and educational content for UAE, GCC and Arab world gold buyers.",
-      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogImage": "https://goldtickerlive.com/assets/og/insights.png",
       "ogUrl": "https://goldtickerlive.com/insights.html",
       "ogType": "article",
       "twitterCard": "summary_large_image",
-      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "twitterImage": "https://goldtickerlive.com/assets/og/insights.png",
       "hreflang": [
         {
           "lang": "ar",
@@ -12153,11 +12153,11 @@
       "robots": null,
       "ogTitle": "Gold Investing Guide | Rational Gold Plan for UAE, Saudi & Egypt",
       "ogDescription": "A practical gold investing guide for UAE, Saudi Arabia, and Egypt. Build a live budget plan, compare bullion vs jewelry vs ETFs, and buy gold more rationally.",
-      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogImage": "https://goldtickerlive.com/assets/og/invest.png",
       "ogUrl": "https://goldtickerlive.com/invest.html",
       "ogType": "article",
       "twitterCard": "summary_large_image",
-      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "twitterImage": "https://goldtickerlive.com/assets/og/invest.png",
       "hreflang": [
         {
           "lang": "ar",
@@ -12189,11 +12189,11 @@
       "robots": null,
       "ogTitle": "Learn About Gold — Karats, Pricing, Zakat & History | Gold Ticker Live",
       "ogDescription": "Gold karats explained, pricing methodology, AED peg, Zakat on gold, hallmarking and more.",
-      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogImage": "https://goldtickerlive.com/assets/og/learn.png",
       "ogUrl": "https://goldtickerlive.com/learn.html",
       "ogType": "article",
       "twitterCard": "summary_large_image",
-      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "twitterImage": "https://goldtickerlive.com/assets/og/learn.png",
       "hreflang": [
         {
           "lang": "ar",
@@ -12225,11 +12225,11 @@
       "robots": null,
       "ogTitle": "Data Sources & Methodology | Gold Ticker Live",
       "ogDescription": "Full transparency on how we calculate gold prices: data sources, AED peg, karat math, and fallback logic.",
-      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogImage": "https://goldtickerlive.com/assets/og/methodology.png",
       "ogUrl": "https://goldtickerlive.com/methodology.html",
       "ogType": "article",
       "twitterCard": "summary_large_image",
-      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "twitterImage": "https://goldtickerlive.com/assets/og/methodology.png",
       "hreflang": [
         {
           "lang": "ar",
@@ -12318,11 +12318,11 @@
       "robots": null,
       "ogTitle": "Pricing Plans — Gold Ticker Live",
       "ogDescription": "Choose the perfect plan for gold price tracking. Free, Pro, and API tiers with ad-free experience, advanced alerts, and API access.",
-      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogImage": "https://goldtickerlive.com/assets/og/pricing.png",
       "ogUrl": "https://goldtickerlive.com/pricing.html",
       "ogType": "website",
       "twitterCard": "summary_large_image",
-      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "twitterImage": "https://goldtickerlive.com/assets/og/pricing.png",
       "hreflang": [
         {
           "lang": "ar",
@@ -12390,11 +12390,11 @@
       "robots": null,
       "ogTitle": "Gold Shops & Markets Directory by Region | Gold Ticker Live",
       "ogDescription": "Listed gold shops and known gold markets by region, country, city, and specialty across GCC, Levant, Africa, and India. Compare dealers and clusters.",
-      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogImage": "https://goldtickerlive.com/assets/og/shops.png",
       "ogUrl": "https://goldtickerlive.com/shops.html",
       "ogType": "website",
       "twitterCard": "summary_large_image",
-      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "twitterImage": "https://goldtickerlive.com/assets/og/shops.png",
       "hreflang": [
         {
           "lang": "ar",
@@ -12463,11 +12463,11 @@
       "robots": null,
       "ogTitle": "Gold Command Center — Gold Tracker for UAE, GCC & Arab World | Gold Ticker Live",
       "ogDescription": "Spot-linked reference gold prices for UAE, Saudi, Kuwait, Qatar and 20+ markets — 24K–18K per gram and ounce, with visible freshness labels. EN/AR.",
-      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogImage": "https://goldtickerlive.com/assets/og/tracker.png",
       "ogUrl": "https://goldtickerlive.com/tracker.html",
       "ogType": "website",
       "twitterCard": "summary_large_image",
-      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "twitterImage": "https://goldtickerlive.com/assets/og/tracker.png",
       "hreflang": [
         {
           "lang": "ar",
