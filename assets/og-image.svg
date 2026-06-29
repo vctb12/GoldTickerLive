@@ -38,6 +38,7 @@
   <!-- Corner decoration - top right -->
   <text x="1100" y="60" font-family="Georgia, serif" font-size="48" fill="#c49a44" opacity="0.15" text-anchor="middle">Au</text>
 
-  <!-- Placeholder notice (invisible in social previews - just for internal use) -->
-  <!-- SWAP THIS FILE: Replace with a proper 1200×630 PNG/JPG before launch -->
+  <!-- NOTE: The production social card is the photoreal raster at assets/og-image.png -->
+  <!-- (1200x630), referenced by all page <meta og:image>. This SVG is a lightweight -->
+  <!-- vector fallback/sketch only and is not referenced by any page. -->
 </svg>
