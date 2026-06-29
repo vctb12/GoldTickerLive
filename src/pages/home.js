@@ -993,6 +993,14 @@ function applyLangToPage() {
   setTextById('hero-cta-methodology', tx('heroCtaMethodology'));
   setTextById('hero-trust-line', tx('heroTrustLine'));
   setTextById('hlc-trust-line', tx('heroTrustShort'));
+  // Preserve language on the spot-vs-retail handoff (mirrors RelatedGuides AR hrefs)
+  const retailLink = document.getElementById('hlc-retail-link');
+  if (retailLink) {
+    retailLink.setAttribute(
+      'href',
+      isAr ? 'content/spot-vs-retail-gold-price/?lang=ar' : 'content/spot-vs-retail-gold-price/'
+    );
+  }
   setTextById('home-tools-kicker', tx('toolsKicker'));
   setTextById('home-tools-title', tx('actionRailTitle'));
   setTextById('home-tools-sub', tx('quickToolsSub'));

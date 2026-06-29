@@ -775,9 +775,9 @@ export const TRANSLATIONS = {
     'home.heroCtaMethodology': 'How prices work',
     'home.heroTrustLine':
       'Spot-linked reference prices before retail premiums, making charges, and tax.',
-    'home.heroTrustShort':
-      'Spot-linked reference · shop prices can add making charges, VAT, and margin',
-    'home.heroRetailNote': 'Retail prices add making charges, VAT, and margin',
+    'home.heroTrustShort': 'Spot-linked reference price',
+    'home.heroRetailNote':
+      'Retail prices can add making charges, VAT, and margin — illustrative only',
     'home.heroRetailLink': 'How retail differs →',
     'home.freshnessDismiss': 'Dismiss freshness banner',
     'home.heroLiveStatusAria': 'Live status chips',
@@ -2089,8 +2089,9 @@ export const TRANSLATIONS = {
     'home.heroCtaMethodology': 'كيف نحسب الأسعار',
     'home.heroTrustLine':
       'أسعار مرجعية مرتبطة بالسعر الفوري قبل الهامش التجاري والمصنعية والضريبة.',
-    'home.heroTrustShort': 'مرجع مرتبط بالسعر الفوري · قد تضيف المحلات المصنعية والضريبة والهامش',
-    'home.heroRetailNote': 'تضيف أسعار التجزئة المصنعية وضريبة القيمة المضافة والهامش',
+    'home.heroTrustShort': 'سعر مرجعي مرتبط بالسعر الفوري',
+    'home.heroRetailNote':
+      'أسعار التجزئة قد تضيف المصنعية وضريبة القيمة المضافة والهامش — تقدير توضيحي فقط',
     'home.heroRetailLink': 'كيف تختلف أسعار التجزئة ←',
     'home.freshnessDismiss': 'إغلاق شريط حالة التحديث',
     'home.heroLiveStatusAria': 'شرائح حالة التحديث المباشر',
