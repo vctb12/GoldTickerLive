@@ -11,6 +11,12 @@
  * Usage:
  *   node scripts/node/check-sitemap-coverage.js           # repo-root (post-build)
  *   node scripts/node/check-sitemap-coverage.js --dir dist
+ *   node scripts/node/check-sitemap-coverage.js --sitemap public/sitemap.xml
+ *                                                         # gate the committed
+ *                                                         # sitemap at merge time
+ *
+ * --dir      root the HTML tree is scanned from (default: repo root)
+ * --sitemap  path to the sitemap to validate (default: <dir>/sitemap.xml)
  */
 'use strict';
 
@@ -70,9 +76,13 @@ function urlForFile(file) {
 }
 
 function main() {
-  const sitemapPath = path.join(ROOT_DIR, 'sitemap.xml');
+  const smIdx = args.indexOf('--sitemap');
+  const sitemapPath =
+    smIdx >= 0 && args[smIdx + 1]
+      ? path.resolve(args[smIdx + 1])
+      : path.join(ROOT_DIR, 'sitemap.xml');
   if (!fs.existsSync(sitemapPath)) {
-    console.error(`check-sitemap-coverage: sitemap.xml not found at ${sitemapPath}`);
+    console.error(`check-sitemap-coverage: sitemap not found at ${sitemapPath}`);
     console.error('Run `node scripts/node/generate-sitemap.js` first.');
     process.exit(1);
   }

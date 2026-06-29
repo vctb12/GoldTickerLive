@@ -88,7 +88,8 @@ Checks every hour (`:30`). Fires to all configured channels when gold moves >2% 
 
 Both `sitemap.xml` and `feed.xml` are regenerated on every deploy:
 
-- `node scripts/generate-sitemap.js` — updates `sitemap.xml`
+- `node scripts/node/generate-sitemap.js` — updates `sitemap.xml` (canonical generator; the
+  `generate-sitemap` workflow runs it with `--out public/sitemap.xml` to refresh the committed copy)
 - `node scripts/generate-rss.js` — generates `feed.xml`
 - Both are copied to `dist/` automatically
 

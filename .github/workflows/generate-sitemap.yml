@@ -27,7 +27,9 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
-      - run: node scripts/generate-sitemap.js
+      - run: node scripts/node/generate-sitemap.js --out public/sitemap.xml
+      - name: Enforce sitemap coverage
+        run: node scripts/node/check-sitemap-coverage.js --sitemap public/sitemap.xml
       - if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'true' }}
         run: git status --short public/sitemap.xml && git diff -- public/sitemap.xml
       - if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true' }}

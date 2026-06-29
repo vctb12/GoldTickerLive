@@ -99,9 +99,10 @@ build/
 *.tar.xz
 *.tar.zst
 
-# Generated at deploy time by CI
-sitemap.xml
-feed.xml
+# Generated at deploy time by CI (repo-root artifacts only).
+# The committed, Vite-served sitemap lives at public/sitemap.xml and IS tracked.
+/sitemap.xml
+/feed.xml
 
 # macOS
 .DS_Store

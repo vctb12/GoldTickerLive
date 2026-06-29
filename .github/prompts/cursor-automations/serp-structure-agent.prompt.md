@@ -25,7 +25,7 @@ Protect and improve how important pages are structured for search engines and us
 - Indexability risks (`noindex`, stub pages, thin duplicates)
 
 Read: `.github/instructions/seo.instructions.md`, `scripts/node/seo-governance.js` (policy),
-`robots.txt`, sitemap generation in `scripts/generate-sitemap.js`.
+`robots.txt`, sitemap generation in `scripts/node/generate-sitemap.js`.
 
 ## Scope boundaries
 

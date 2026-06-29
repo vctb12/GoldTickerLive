@@ -1,12 +1,21 @@
 #!/usr/bin/env node
 /**
- * scripts/generate-sitemap.js
+ * scripts/node/generate-sitemap.js
  * Auto-generates sitemap.xml from the filesystem.
  *
  * Walks all .html files and index.html dirs, assigns priority/changefreq
  * based on depth, adds <lastmod> from file mtime, and writes sitemap.xml.
  *
- * Usage:  node scripts/generate-sitemap.js [--base <url>]
+ * This is the single canonical sitemap generator. It is invoked by:
+ *   - `.github/workflows/generate-sitemap.yml`  → `--out public/sitemap.xml`
+ *      (refreshes the committed sitemap that ships via Vite's publicDir)
+ *   - `.github/workflows/deploy.yml` / `ci.yml`  → default repo-root sitemap.xml
+ *      (regenerated post-build and copied into `dist/`)
+ *
+ * Usage:  node scripts/node/generate-sitemap.js [--base <url>] [--out <path>]
+ *   --base  canonical origin (default https://goldtickerlive.com)
+ *   --out   output path, resolved against the repo root
+ *           (default: ./sitemap.xml — gitignored, deploy-time artifact)
  */
 
 'use strict';
@@ -145,6 +154,12 @@ ${urls}
 </urlset>
 `;
 
-const outPath = path.join(ROOT, 'sitemap.xml');
+const outPath = (() => {
+  const i = process.argv.indexOf('--out');
+  return i >= 0 && process.argv[i + 1]
+    ? path.resolve(ROOT, process.argv[i + 1])
+    : path.join(ROOT, 'sitemap.xml');
+})();
+fs.mkdirSync(path.dirname(outPath), { recursive: true });
 fs.writeFileSync(outPath, xml, 'utf8');
-console.log(`✅  Generated sitemap.xml with ${allEntries.length} URLs → ${outPath}`);
+console.log(`✅  Generated sitemap with ${allEntries.length} URLs → ${outPath}`);
