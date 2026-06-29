@@ -3,6 +3,14 @@ import { CONSTANTS } from '../config/index.js';
 import { COUNTRIES } from '../config/index.js';
 import * as cache from '../lib/cache.js';
 import { showStorageQuotaWarning } from '../lib/cache.js';
+import { getLiveFreshness } from '../lib/live-status.js';
+import {
+  emitTrackerChange,
+  emitGoldPriceUpdate,
+  emitFreshnessChange,
+  getPriceDirection,
+  isLiveFreshness,
+} from '../lib/animation.js';
 
 export const STORAGE_KEYS = {
   core: 'tracker_pro_state_v5',
@@ -289,4 +297,205 @@ function readLanguagePref() {
 
 function writeLanguagePref(lang) {
   cache.savePreference('lang', lang);
+}
+
+/* ───────────────────────── Optimistic control updates ──────────────────────── */
+
+/**
+ * The user-facing tracker controls that support optimistic updates, mapped to
+ * their backing `state` property and a validator. `mode` is constrained to
+ * {@link VALID_MODES}; the rest accept any non-empty string (currency/karat/unit
+ * vocabularies are owned by config and validated at render time).
+ */
+const CONTROL_FIELDS = {
+  mode: { prop: 'mode', validate: (v) => VALID_MODES.has(v) },
+  currency: { prop: 'selectedCurrency', validate: (v) => typeof v === 'string' && v.length > 0 },
+  karat: { prop: 'selectedKarat', validate: (v) => typeof v === 'string' && v.length > 0 },
+  unit: { prop: 'selectedUnit', validate: (v) => typeof v === 'string' && v.length > 0 },
+  range: { prop: 'range', validate: (v) => typeof v === 'string' && v.length > 0 },
+};
+
+/** Field names that {@link updateControl} accepts. */
+export const CONTROL_FIELD_NAMES = Object.freeze(Object.keys(CONTROL_FIELDS));
+
+/**
+ * @typedef {Object} ControlChangeResult
+ * @property {string}  field      The control that was targeted.
+ * @property {*}       [previous] Prior value (present unless the field is unknown).
+ * @property {*}       [current]  New (or unchanged) value.
+ * @property {boolean} changed    Whether the value actually changed.
+ * @property {boolean} [rejected] Set when the field is unknown or the value invalid.
+ * @property {string}  [reason]   Why the update was rejected.
+ */
+
+/**
+ * Optimistically update a single tracker control, persist it, keep the URL hash
+ * in sync, and emit `tracker:change` SYNCHRONOUSLY so the UI can repaint before
+ * any async data settles. No event fires when the value is unchanged or invalid.
+ *
+ * Persistence and URL sync are best-effort and never block the synchronous
+ * event — a quota error or missing History API must not stop the optimistic
+ * repaint. URL-hash sync delegates to {@link syncUrlFromState}, preserving the
+ * `#mode=…&cur=…&k=…&u=…&r=…&cmp=…&lang=…` contract verbatim.
+ *
+ * @param {object} state
+ * @param {'mode'|'currency'|'karat'|'unit'|'range'} field
+ * @param {string} value
+ * @param {{ persist?: boolean, syncUrl?: boolean, optimistic?: boolean }} [opts]
+ * @returns {ControlChangeResult}
+ */
+export function updateControl(
+  state,
+  field,
+  value,
+  { persist = true, syncUrl = true, optimistic = true } = {}
+) {
+  const cfg = CONTROL_FIELDS[field];
+  if (!cfg) {
+    return { field, changed: false, rejected: true, reason: 'unknown-field' };
+  }
+  if (cfg.validate && !cfg.validate(value)) {
+    return {
+      field,
+      previous: state[cfg.prop],
+      current: state[cfg.prop],
+      changed: false,
+      rejected: true,
+      reason: 'invalid-value',
+    };
+  }
+
+  const previous = state[cfg.prop];
+  if (previous === value) {
+    return { field, previous, current: value, changed: false };
+  }
+
+  state[cfg.prop] = value;
+
+  if (persist) {
+    try {
+      persistState(state);
+    } catch {
+      // Storage may be unavailable (private mode / quota) — optimistic UI still proceeds.
+    }
+  }
+  if (syncUrl && typeof window !== 'undefined' && window.location) {
+    try {
+      syncUrlFromState(state);
+    } catch {
+      // History API may be unavailable — URL sync is non-blocking.
+    }
+  }
+
+  // Synchronous emission: the UI reacts to this before the next data refresh.
+  emitTrackerChange({ field, previous, current: value, optimistic });
+
+  return { field, previous, current: value, changed: true };
+}
+
+/** Optimistically change the tracker mode (live/compare/archive/exports/method). */
+export function setMode(state, mode, opts) {
+  return updateControl(state, 'mode', mode, opts);
+}
+/** Optimistically change the selected currency. */
+export function setCurrency(state, currency, opts) {
+  return updateControl(state, 'currency', currency, opts);
+}
+/** Optimistically change the selected karat. */
+export function setKarat(state, karat, opts) {
+  return updateControl(state, 'karat', karat, opts);
+}
+/** Optimistically change the selected unit (gram/oz/…). */
+export function setUnit(state, unit, opts) {
+  return updateControl(state, 'unit', unit, opts);
+}
+/** Optimistically change the selected history range. */
+export function setRange(state, range, opts) {
+  return updateControl(state, 'range', range, opts);
+}
+
+/* ─────────────────────────── Live data reconciliation ──────────────────────── */
+
+/**
+ * @typedef {Object} LiveUpdateResult
+ * @property {number|null} previous          Prior spot the tracker was showing.
+ * @property {number|null} current           New spot (or `previous` if invalid).
+ * @property {'up'|'down'|'unchanged'} direction  Trust-aware: only non-`unchanged` for a live tick.
+ * @property {string} freshness              Resolved freshness key.
+ * @property {boolean} freshnessChanged      Whether freshness transitioned.
+ * @property {string|null} previousFreshness Prior freshness key (null on first reconcile).
+ * @property {boolean} changed               Whether the spot value changed.
+ */
+
+/**
+ * Reconcile the tracker's live slice with freshly-arrived data, replacing the
+ * optimistic view once real data settles. Updates `state.live`,
+ * `state.hasLiveFailure`, and the tracked freshness key, and returns a
+ * trust-aware summary the caller can feed to {@link import('../lib/animation.js').animateValue}.
+ *
+ * The trust rule is enforced: `direction` is `'unchanged'` unless the resolved
+ * freshness is a genuine LIVE state, so a cached/fallback/estimated value can
+ * never drive a directional flash.
+ *
+ * By default this does NOT dispatch `goldprice:update` — that event is emitted
+ * by `lib/api.js` at fetch time, and double-emitting would fire listeners twice.
+ * Pass `{ emit: true }` only if the tracker is the sole emission point (e.g. data
+ * arrives through a channel other than `lib/api.js`).
+ *
+ * @param {object} state
+ * @param {{ price?: number, updatedAt?: string, isFresh?: boolean|null, isFallback?: boolean|null, hasLiveFailure?: boolean }} [data]
+ * @param {{ emit?: boolean }} [opts]
+ * @returns {LiveUpdateResult}
+ */
+export function applyLiveUpdate(
+  state,
+  { price, updatedAt, isFresh = null, isFallback = null, hasLiveFailure = false } = {},
+  { emit = false } = {}
+) {
+  const previous = state.live && Number.isFinite(state.live.price) ? state.live.price : null;
+  const numericPrice = Number(price);
+  const hasPrice = Number.isFinite(numericPrice);
+
+  const { key } = getLiveFreshness({ updatedAt, isFresh, isFallback, hasLiveFailure });
+
+  if (hasPrice) {
+    state.live = {
+      price: numericPrice,
+      updatedAt: updatedAt || new Date().toISOString(),
+      raw: (state.live && state.live.raw) || {},
+    };
+  }
+
+  // A cached/fallback/stale read means the live path did not succeed cleanly.
+  state.hasLiveFailure =
+    Boolean(hasLiveFailure) || key === 'cached' || key === 'fallback' || key === 'stale';
+
+  const direction =
+    isLiveFreshness(key) && hasPrice ? getPriceDirection(previous, numericPrice) : 'unchanged';
+
+  const previousFreshness = state._freshnessKey ?? null;
+  const freshnessChanged = previousFreshness !== null && previousFreshness !== key;
+  state._freshnessKey = key;
+
+  if (emit) {
+    emitGoldPriceUpdate({
+      previous,
+      current: hasPrice ? numericPrice : previous,
+      freshness: key,
+      timestamp: updatedAt,
+    });
+    if (freshnessChanged) {
+      emitFreshnessChange({ previous: previousFreshness, current: key, kind: 'gold' });
+    }
+  }
+
+  return {
+    previous,
+    current: hasPrice ? numericPrice : previous,
+    direction,
+    freshness: key,
+    freshnessChanged,
+    previousFreshness,
+    changed: hasPrice && previous !== numericPrice,
+  };
 }

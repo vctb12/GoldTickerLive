@@ -1,6 +1,97 @@
 import { CONSTANTS } from '../config/index.js';
 import { getFallbackGoldPrice, getFallbackFXRates } from './cache.js';
 import { isSaneGoldSpotUsd } from './quote-providers/fetch-utils.js';
+import { getLiveFreshness, getFXFreshness } from './live-status.js';
+import { emitGoldPriceUpdate, emitFxUpdate, emitFreshnessChange } from './animation.js';
+
+/**
+ * Liveness telemetry trackers. These let the data layer publish the substrate
+ * events (`goldprice:update`, `fx:update`, `freshness:change`) with a correct
+ * `previous` value and detect freshness transitions across successive fetches.
+ * They are intentionally private; reset them via `_resetLivenessTracking()`.
+ */
+let _lastGoldPrice = null;
+let _lastGoldFreshness = null;
+let _lastFxRates = null;
+let _lastFxFreshness = null;
+
+/**
+ * Reset the liveness trackers (used by tests and the debug panel so a fresh
+ * session starts with no remembered "previous" value or freshness state).
+ */
+export function _resetLivenessTracking() {
+  _lastGoldPrice = null;
+  _lastGoldFreshness = null;
+  _lastFxRates = null;
+  _lastFxFreshness = null;
+}
+
+/**
+ * Publish liveness events for a resolved gold quote and update the trackers.
+ * Freshness is derived via the sanctioned `getLiveFreshness` so the trust rule
+ * (no flash on non-live data) is enforced centrally. Telemetry must never break
+ * the data path, so all of this is best-effort.
+ *
+ * @template {{ price: number, updatedAt: string, isFresh?: boolean|null, isFallback?: boolean|null }} T
+ * @param {T} result
+ * @param {{ hasLiveFailure?: boolean }} [opts]
+ * @returns {T} the same `result`, unchanged.
+ */
+function emitGoldResolved(result, { hasLiveFailure = false } = {}) {
+  try {
+    const { key } = getLiveFreshness({
+      updatedAt: result.updatedAt,
+      isFresh: result.isFresh ?? null,
+      isFallback: result.isFallback ?? null,
+      hasLiveFailure,
+    });
+    emitGoldPriceUpdate({
+      previous: _lastGoldPrice,
+      current: result.price,
+      freshness: key,
+      timestamp: result.updatedAt,
+    });
+    if (_lastGoldFreshness !== null && _lastGoldFreshness !== key) {
+      emitFreshnessChange({ previous: _lastGoldFreshness, current: key, kind: 'gold' });
+    }
+    _lastGoldFreshness = key;
+    if (Number.isFinite(result.price)) _lastGoldPrice = result.price;
+  } catch {
+    // Liveness telemetry is non-essential — never let it break price delivery.
+  }
+  return result;
+}
+
+/**
+ * Publish liveness events for a resolved FX payload and update the trackers.
+ *
+ * @template {{ rates: object, time_last_update_utc: string|null }} T
+ * @param {T} result
+ * @param {{ hasCacheFailure?: boolean }} [opts]
+ * @returns {T} the same `result`, unchanged.
+ */
+function emitFxResolved(result, { hasCacheFailure = false } = {}) {
+  try {
+    const { key } = getFXFreshness({
+      fxUpdatedAt: result.time_last_update_utc,
+      hasCacheFailure,
+    });
+    emitFxUpdate({
+      previous: _lastFxRates,
+      current: result.rates,
+      freshness: key,
+      timestamp: result.time_last_update_utc,
+    });
+    if (_lastFxFreshness !== null && _lastFxFreshness !== key) {
+      emitFreshnessChange({ previous: _lastFxFreshness, current: key, kind: 'fx' });
+    }
+    _lastFxFreshness = key;
+    if (result.rates) _lastFxRates = result.rates;
+  } catch {
+    // Liveness telemetry is non-essential — never let it break FX delivery.
+  }
+  return result;
+}
 
 class NetworkError extends Error {
   constructor(msg) {
@@ -208,33 +299,38 @@ export async function fetchGold({ signal, timeoutMs } = {}) {
       );
       const backendData = await backendRes.json();
       const normalized = normalizeGoldResponse(backendData);
-      if (normalized) return normalized;
+      if (normalized) return emitGoldResolved(normalized);
     } catch {
       // Backend unavailable or invalid; continue to static fallback.
     }
   }
 
   try {
-    return await retryWithBackoff(async () => {
+    const normalized = await retryWithBackoff(async () => {
       const res = await fetchWithTimeout(`${GOLD_DATA_URL}?t=${Date.now()}`, effectiveTimeoutMs, {
         signal,
       });
       const data = await res.json();
-      const normalized = normalizeGoldResponse(data);
-      if (!normalized) throw new DataError('Invalid gold price data file');
-      return normalized;
+      const result = normalizeGoldResponse(data);
+      if (!result) throw new DataError('Invalid gold price data file');
+      return result;
     });
+    return emitGoldResolved(normalized);
   } catch {
     // Fetching the static data file failed — fall through to cached fallback.
   }
 
   const cached = getFallbackGoldPrice();
   if (cached) {
-    return {
-      price: cached.price,
-      updatedAt: cached.updatedAt,
-      source: 'cache-fallback',
-    };
+    // Local live fetch failed — this is a cached value, never a live tick.
+    return emitGoldResolved(
+      {
+        price: cached.price,
+        updatedAt: cached.updatedAt,
+        source: 'cache-fallback',
+      },
+      { hasLiveFailure: true }
+    );
   }
   throw new NetworkError('Gold price unavailable — data file could not be read');
 }
@@ -252,7 +348,7 @@ export async function fetchFX() {
   if (_simulateFxFail) throw new NetworkError('Simulated FX API failure');
 
   try {
-    return await retryWithBackoff(async () => {
+    const result = await retryWithBackoff(async () => {
       const res = await fetchWithTimeout(CONSTANTS.API_FX_URL, CONSTANTS.FX_FETCH_TIMEOUT);
       const data = await res.json();
       if (!data.rates || typeof data.rates !== 'object') {
@@ -269,18 +365,22 @@ export async function fetchFX() {
         source: 'live',
       };
     });
+    return emitFxResolved(result);
   } catch {
     // Live FX fetch failed — fall through to localStorage cache.
   }
 
   const cached = getFallbackFXRates();
   if (cached && cached.rates) {
-    return {
-      rates: cached.rates,
-      time_last_update_utc: cached.time_last_update_utc || null,
-      time_next_update_utc: cached.time_next_update_utc || null,
-      source: 'cache-fallback',
-    };
+    return emitFxResolved(
+      {
+        rates: cached.rates,
+        time_last_update_utc: cached.time_last_update_utc || null,
+        time_next_update_utc: cached.time_next_update_utc || null,
+        source: 'cache-fallback',
+      },
+      { hasCacheFailure: true }
+    );
   }
   throw new NetworkError('FX rates unavailable — live fetch and cache both failed');
 }
