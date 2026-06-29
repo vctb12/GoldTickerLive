@@ -11,8 +11,8 @@
  * Deployment base path: '/' (custom domain goldtickerlive.com).
  */
 
-const CACHE_NAME = 'goldtickerlive-v17';
-const RUNTIME_CACHE = 'goldtickerlive-runtime-v17';
+const CACHE_NAME = 'goldtickerlive-v18';
+const RUNTIME_CACHE = 'goldtickerlive-runtime-v18';
 
 // Static assets to pre-cache on install — kept intentionally small.
 // Country/city/guide pages are added lazily to RUNTIME_CACHE on first visit.

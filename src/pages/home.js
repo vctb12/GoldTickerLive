@@ -328,7 +328,7 @@ function startFreshnessTimer() {
     if (!goldPrice || !goldUpdatedAt) return;
     const { ageText, statusText, sourceText, key } = getFreshnessMeta();
     const ageClass = freshnessAgeClass(getLiveFreshness({ updatedAt: goldUpdatedAt, lang }).ageMs);
-    const hlcText = `${sourceText} · ${ageText}`;
+    const hlcText = `${statusText} · ${sourceText} · ${ageText}`;
     const kstripText = `${txGlobal('freshness.statusLabel')}: ${statusText} · ${tx('source')}: ${sourceText} · ${tx('updated')}: ${ageText}`;
     const hlcEl = document.getElementById('hlc-updated');
     if (hlcEl && hlcText !== prevHlcText) {
@@ -429,11 +429,11 @@ function renderHeroCard() {
       'shell-skeleton-freshness-strip'
     );
     hlcUpdatedEl.removeAttribute('aria-busy');
-    hlcUpdatedEl.textContent = `${sourceText} · ${ageText}`;
+    hlcUpdatedEl.textContent = `${statusText} · ${sourceText} · ${ageText}`;
     hlcUpdatedEl.dataset.freshnessKey = key;
     hlcUpdatedEl.dataset.freshnessAge = ageClass;
   } else {
-    setTextById('hlc-updated', `${sourceText} · ${ageText}`);
+    setTextById('hlc-updated', `${statusText} · ${sourceText} · ${ageText}`);
   }
   const kstripUpdatedEl = document.getElementById('karat-strip-updated');
   if (kstripUpdatedEl) {
@@ -1577,30 +1577,8 @@ async function init() {
   // Tick the "Updated X sec/min ago" label every second without a full price re-fetch.
   startFreshnessTimer();
 
-  // Gentle hero-backdrop parallax (transform-only, reduced-motion bypass)
-  const heroEl = document.querySelector('.hero');
-  if (heroEl) {
-    const prefersReduced =
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!prefersReduced) {
-      let parallaxTicking = false;
-      window.addEventListener(
-        'scroll',
-        () => {
-          if (parallaxTicking) return;
-          parallaxTicking = true;
-          window.requestAnimationFrame(() => {
-            // Parallax offset: 30% of scroll position, capped at the hero height
-            const offset = Math.min(window.scrollY * 0.3, heroEl.offsetHeight);
-            heroEl.style.setProperty('--hero-parallax-y', `${offset}px`);
-            parallaxTicking = false;
-          });
-        },
-        { passive: true }
-      );
-    }
-  }
+  // Hero-backdrop scroll parallax retired (Precision Instrument: the freshness dot is the
+  // only hero animation; the orb layer it drove was removed in home.css).
 
   // Clean up timers on page unload to prevent memory leaks
   window.addEventListener(

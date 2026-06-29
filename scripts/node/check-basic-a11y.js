@@ -58,6 +58,11 @@ const CONTRAST_PAIRS = [
   // Success is used as status text on light surfaces — locked after the #137a36 fix.
   ['--color-success', '--color-bg'],
   ['--color-success', '--color-surface'],
+  // Freshness warning ink (karat-strip stale/amber labels + freshness-chip cached/delayed).
+  // Locked after replacing raw --color-amber (#f59e0b ≈2.08:1, AA fail) with --color-warning-text.
+  ['--color-warning-text', '--color-bg'],
+  ['--color-warning-text', '--color-surface-2'],
+  ['--color-warning-text', '--color-surface-3'],
 ];
 
 const MIN_NORMAL_CONTRAST = 4.5;
